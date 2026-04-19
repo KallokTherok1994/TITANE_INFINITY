@@ -151,7 +151,10 @@ mod tests {
             value: "persisted".to_string(),
         };
 
-        service.save("roundtrip", &fixture).await.expect("save fixture");
+        service
+            .save("roundtrip", &fixture)
+            .await
+            .expect("save fixture");
         let loaded: StorageFixture = service.load("roundtrip").await.expect("load fixture");
 
         assert_eq!(loaded, fixture);

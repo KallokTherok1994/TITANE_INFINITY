@@ -6,8 +6,8 @@
 use std::fs;
 
 use titane_infinity::secure_engine::{
-    decrypt_secret, derive_key_from_passphrase, encrypt_secret, purge_env_key,
-    read_secret_file, write_secret_file,
+    decrypt_secret, derive_key_from_passphrase, encrypt_secret, purge_env_key, read_secret_file,
+    write_secret_file,
 };
 
 #[test]

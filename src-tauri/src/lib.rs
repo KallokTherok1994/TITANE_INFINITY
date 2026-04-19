@@ -163,9 +163,9 @@ pub mod engines; // ✅ Engines Core (QA, Monitoring, Developer Mode)
 
 pub mod cluster; // ✅ Node-Cluster
 pub mod evolution; // ✅ Auto-Évolution
+pub mod hybrid_memory_bridge; // ✅ Governed desktop export for hybrid memory reports
 pub mod hypervision; // ✅ HyperVision
 pub mod introspection; // ✅ Introspection
-pub mod hybrid_memory_bridge; // ✅ Governed desktop export for hybrid memory reports
 pub mod knowledge; // ✅ Knowledge Fusion
 pub mod knowledge_base_default; // ✅ Default Knowledge Base v30.0.0 — pre-seeded at installation
 

@@ -201,7 +201,11 @@ mod tests {
         let guard = PermissionGuard::new();
 
         guard
-            .check("perm\u{0000}ission\u{0008}_write", Role::User, "pane\u{0000}l\u{0007}")
+            .check(
+                "perm\u{0000}ission\u{0008}_write",
+                Role::User,
+                "pane\u{0000}l\u{0007}",
+            )
             .await
             .ok();
 

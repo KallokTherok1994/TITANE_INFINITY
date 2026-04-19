@@ -485,15 +485,21 @@ mod tests {
             .set_secret(KEY_GEMINI, "token-value".to_string())
             .expect("valid key should be accepted");
 
-        assert!(engine.has_secret(KEY_GEMINI).expect("has_secret should succeed"));
+        assert!(engine
+            .has_secret(KEY_GEMINI)
+            .expect("has_secret should succeed"));
         assert_eq!(
-            engine.get_secret(KEY_GEMINI).expect("get_secret should succeed"),
+            engine
+                .get_secret(KEY_GEMINI)
+                .expect("get_secret should succeed"),
             Some("token-value".to_string())
         );
 
         engine
             .clear_secret(KEY_GEMINI)
             .expect("clear_secret should succeed");
-        assert!(!engine.has_secret(KEY_GEMINI).expect("has_secret should succeed after clear"));
+        assert!(!engine
+            .has_secret(KEY_GEMINI)
+            .expect("has_secret should succeed after clear"));
     }
 }

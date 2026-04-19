@@ -241,7 +241,10 @@ fn resolve_developer_mode_patch_path(path: &str) -> Result<PathBuf, String> {
     };
 
     if !anchor.starts_with(&workspace_root_canonical) {
-        return Err(format!("Patch file path escapes workspace root: {}", trimmed));
+        return Err(format!(
+            "Patch file path escapes workspace root: {}",
+            trimmed
+        ));
     }
 
     Ok(resolved)
@@ -398,9 +401,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_dev_mode_validate_patch_accepts_workspace_file() {
-        let result = dev_mode_validate_patch(valid_patch("src-tauri/src/engines/developer_mode.rs"), "Kevin Thibault".to_string())
-            .await
-            .expect("validation should succeed");
+        let result = dev_mode_validate_patch(
+            valid_patch("src-tauri/src/engines/developer_mode.rs"),
+            "Kevin Thibault".to_string(),
+        )
+        .await
+        .expect("validation should succeed");
 
         assert!(result.valid);
         assert!(result.file_allowed);
@@ -409,19 +415,24 @@ mod tests {
 
     #[tokio::test]
     async fn test_dev_mode_validate_patch_rejects_path_traversal() {
-        let result = dev_mode_validate_patch(valid_patch("../package.json"), "Kevin Thibault".to_string())
-            .await
-            .expect("validation should return structured rejection");
+        let result =
+            dev_mode_validate_patch(valid_patch("../package.json"), "Kevin Thibault".to_string())
+                .await
+                .expect("validation should return structured rejection");
 
         assert!(!result.valid);
-        assert!(result.issues.iter().any(|issue| issue.contains("traversal")));
+        assert!(result
+            .issues
+            .iter()
+            .any(|issue| issue.contains("traversal")));
     }
 
     #[tokio::test]
     async fn test_dev_mode_validate_patch_rejects_outside_workspace_absolute_path() {
-        let result = dev_mode_validate_patch(valid_patch("/etc/passwd"), "Kevin Thibault".to_string())
-            .await
-            .expect("validation should return structured rejection");
+        let result =
+            dev_mode_validate_patch(valid_patch("/etc/passwd"), "Kevin Thibault".to_string())
+                .await
+                .expect("validation should return structured rejection");
 
         assert!(!result.valid);
         assert!(result
@@ -432,19 +443,26 @@ mod tests {
 
     #[tokio::test]
     async fn test_dev_mode_validate_patch_rejects_protocol_scheme() {
-        let result = dev_mode_validate_patch(valid_patch("https://example.com/file.ts"), "Kevin Thibault".to_string())
-            .await
-            .expect("validation should return structured rejection");
+        let result = dev_mode_validate_patch(
+            valid_patch("https://example.com/file.ts"),
+            "Kevin Thibault".to_string(),
+        )
+        .await
+        .expect("validation should return structured rejection");
 
         assert!(!result.valid);
-        assert!(result.issues.iter().any(|issue| issue.contains("protocol scheme")));
+        assert!(result
+            .issues
+            .iter()
+            .any(|issue| issue.contains("protocol scheme")));
     }
 
     #[tokio::test]
     async fn test_dev_mode_validate_patch_rejects_unsupported_extension() {
-        let result = dev_mode_validate_patch(valid_patch("README.md"), "Kevin Thibault".to_string())
-            .await
-            .expect("validation should return structured rejection");
+        let result =
+            dev_mode_validate_patch(valid_patch("README.md"), "Kevin Thibault".to_string())
+                .await
+                .expect("validation should return structured rejection");
 
         assert!(!result.valid);
         assert!(result

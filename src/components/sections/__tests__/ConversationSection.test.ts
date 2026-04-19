@@ -13,6 +13,7 @@ import {
   getConversationViewportHeight,
   isConversationTransparencyPrompt,
   isConversationNearBottom,
+  sanitizeConversationInput,
   resolveConversationCitations,
   resolveConversationDisplayProvider,
   shouldShowConversationScrollToBottom,
@@ -263,6 +264,16 @@ describe('ConversationSection runtime provider label', () => {
         value: originalVisualViewport,
       });
     }
+  });
+
+  it('preserves ultra-long prompts instead of slicing them at 10000 chars', () => {
+    const ultraLongPrompt = `ULTRA-START ${'segment ultra long '.repeat(900)}ULTRA-END`;
+
+    const sanitized = sanitizeConversationInput(ultraLongPrompt);
+
+    expect(sanitized).toContain('ULTRA-START');
+    expect(sanitized).toContain('ULTRA-END');
+    expect(sanitized.length).toBe(ultraLongPrompt.length);
   });
 
   it('falls back to visualViewport height when innerHeight is unavailable', () => {

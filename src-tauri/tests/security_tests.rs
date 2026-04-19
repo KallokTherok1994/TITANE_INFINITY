@@ -104,7 +104,10 @@ fn test_scheme_like_path_blocked() {
     let guard = StorageGuard::new(temp_dir.clone());
 
     let result = guard.validate_and_resolve("file:///etc/passwd");
-    assert!(result.is_err(), "Les chemins de type scheme doivent etre bloques");
+    assert!(
+        result.is_err(),
+        "Les chemins de type scheme doivent etre bloques"
+    );
 
     let _ = std::fs::remove_dir_all(&temp_dir);
 }

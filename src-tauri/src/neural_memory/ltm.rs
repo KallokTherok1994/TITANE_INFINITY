@@ -77,10 +77,12 @@ impl LongTermMemory {
             ));
         }
 
-        if id_path
-            .components()
-            .any(|component| matches!(component, Component::ParentDir | Component::RootDir | Component::Prefix(_)))
-        {
+        if id_path.components().any(|component| {
+            matches!(
+                component,
+                Component::ParentDir | Component::RootDir | Component::Prefix(_)
+            )
+        }) {
             return Err(MemoryError::ValidationError(
                 "LTM entry id cannot escape entries directory".to_string(),
             ));
@@ -115,10 +117,12 @@ impl LongTermMemory {
             ));
         }
 
-        if file_path_value
-            .components()
-            .any(|component| matches!(component, Component::ParentDir | Component::RootDir | Component::Prefix(_)))
-        {
+        if file_path_value.components().any(|component| {
+            matches!(
+                component,
+                Component::ParentDir | Component::RootDir | Component::Prefix(_)
+            )
+        }) {
             return Err(MemoryError::ValidationError(
                 "LTM metadata file_path cannot escape entries directory".to_string(),
             ));
@@ -309,11 +313,8 @@ mod tests {
     use tempfile::TempDir;
 
     fn create_test_entry(id: &str) -> MemoryEntry {
-        let mut entry = MemoryEntry::new(
-            format!("Content for {}", id),
-            0.8,
-            MemoryType::Conversation,
-        );
+        let mut entry =
+            MemoryEntry::new(format!("Content for {}", id), 0.8, MemoryType::Conversation);
         entry.id = id.to_string();
         entry
     }

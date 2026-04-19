@@ -49,8 +49,12 @@ fn csv_path() -> std::path::PathBuf {
 }
 
 fn validate_csv_source_path(path: &Path) -> Result<(), String> {
-    let metadata = fs::symlink_metadata(path)
-        .map_err(|e| format!("SOURCE_INVALID: impossible d'inspecter la source CSV: {}", e))?;
+    let metadata = fs::symlink_metadata(path).map_err(|e| {
+        format!(
+            "SOURCE_INVALID: impossible d'inspecter la source CSV: {}",
+            e
+        )
+    })?;
 
     if metadata.file_type().is_symlink() {
         return Err(format!(
@@ -391,8 +395,11 @@ mod tests {
         let dir = tempdir().expect("tempdir");
         let target = dir.path().join("real.csv");
         let symlink = dir.path().join("linked.csv");
-        std::fs::write(&target, b"timestamp,rss_initial_mb,rss_current_mb\n2026-01-01T00:00:00Z,180.0,192.0\n")
-            .expect("write target csv");
+        std::fs::write(
+            &target,
+            b"timestamp,rss_initial_mb,rss_current_mb\n2026-01-01T00:00:00Z,180.0,192.0\n",
+        )
+        .expect("write target csv");
         std::os::unix::fs::symlink(&target, &symlink).expect("create symlink");
 
         let err = validate_csv_source_path(&symlink)

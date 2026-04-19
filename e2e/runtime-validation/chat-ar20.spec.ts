@@ -61,13 +61,25 @@ async function sendChatMessage(page, message: string) {
   const userMessages = page.locator(USER_MESSAGE_SELECTOR);
   const initialCount = await userMessages.count();
 
-  const sendBtn = page.locator(SEND_BUTTON_SELECTOR).first();
-  const sendVisible = await sendBtn.isVisible().catch(() => false);
+  await input.press('Enter');
 
-  if (sendVisible) {
-    await sendBtn.click();
-  } else {
-    await input.press('Enter');
+  const sentViaKeyboard = await userMessages
+    .nth(initialCount)
+    .waitFor({ state: 'visible', timeout: 1500 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (!sentViaKeyboard) {
+    const sendBtn = page.locator(SEND_BUTTON_SELECTOR).first();
+    const sendVisible = await sendBtn.isVisible().catch(() => false);
+
+    if (sendVisible) {
+      await sendBtn.evaluate(button => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      });
+    } else {
+      await input.press('Enter');
+    }
   }
 
   await expect(userMessages).toHaveCount(initialCount + 1, { timeout: 10000 });

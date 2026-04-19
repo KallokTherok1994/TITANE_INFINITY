@@ -56,6 +56,8 @@
 
 > 2026-04-18 — Conversation metadata continuity alignment: src-tauri/src/conversation_engine/commands.rs et src/services/conversationEngine.ts partagent maintenant la même vérité de metadata conversation pour provider_used et citations. Le backend sérialise explicitement ces champs dans metadata, la couche frontend sait encore retomber honnêtement sur meta.provider_used et trace.citations pendant une phase transitoire, et src/hooks/useConversationEngine.ts les persiste ensuite sur la surface UI active sans reformulation silencieuse.
 
+> 2026-04-19 — Conversation ultra-long intake alignment: la chaîne conversation canonique supprime désormais la divergence entre l intake UI et le preprocess backend pour les messages ultra-longs. `src/components/chat/ChatInput.tsx` et `src/components/sections/ConversationSection.tsx` ne coupent plus localement les prompts au seuil hérité de 10000 caracteres, tandis que `src-tauri/src/conversation_engine/pipeline.rs` conserve le garde `empty input` sans refuser les charges ultra-longues non vides. Le contrat actif reste unidirectionnel UI -> hook -> service -> IPC/backend, mais il n introduit plus de troncature dure invisible avant la preuve E2E canonique.
+
 > 2026-04-18 — Window zoom finite-value truth: `src-tauri/src/commands/window_controls_commands.rs` traite maintenant `window_set_zoom` comme une surface n acceptant que des niveaux de zoom finis. Les valeurs `NaN` ou infinies sont rabattues sur `1.0` avant stockage et emission de l evenement `zoom-change`, ce qui garde la voie CSS frontend sur une echelle canonique et exploitable.
 
 > 2026-04-18 — Memory telemetry env-lock truth: `src-tauri/src/memory/telemetry.rs` traite maintenant le mutex de test `ENV_LOCK` comme une barriere de serialisation recuperable et non comme une source de cascade d echecs. Les tests qui partagent l environnement recuperent desormais le guard meme si un test precedent a empoisonne le mutex, ce qui garde la lane telemetry focalisee sur le vrai echec initial.
@@ -386,6 +388,12 @@ L’agent d’explicabilité assure la traçabilité des décisions IA, la gén�
 - **Rôle** : Traçabilité, justification, audit explicable, logs d’inférences.
 - **Flux** : Explainability Dashboard UI → Explainability Engine → Kernel Rust (collecte) → Rapports/Explications.
 - **Gates** : Génération automatique de rapports d’explicabilité, logs d’inférences, tests E2E sur la traçabilité.
+
+## [2026-04-19] Conversation budget propagation truth
+
+- `conversation_generate` reste la porte canonique UI -> IPC -> backend pour le chat, et les budgets de réponse doivent désormais voyager dans les champs de contrat top-level `maxTokens` / `temperature`.
+- `src-tauri/src/conversation_engine/commands.rs` accepte aussi le payload hérité `aiConfig` comme source de compatibilité descendante lorsque le frontend vivant n'a pas encore convergé sur le contrat top-level.
+- `src-tauri/src/conversation_engine/omega_integration.rs` ne doit plus utiliser de fallback local/Ollama court; le plancher backend implicite est aligné sur la génération longue pour éviter la troncature des réponses lorsque le budget explicite manque.
 
 ---
 ```

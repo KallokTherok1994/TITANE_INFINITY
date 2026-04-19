@@ -196,7 +196,11 @@ mod tests {
     fn unique_audit_path(test_name: &str) -> PathBuf {
         let unique = AUDIT_TEST_COUNTER.fetch_add(1, Ordering::Relaxed);
         env::temp_dir()
-            .join(format!("titane_audit_test_{}_{}", std::process::id(), unique))
+            .join(format!(
+                "titane_audit_test_{}_{}",
+                std::process::id(),
+                unique
+            ))
             .join(test_name)
             .join("audit.log")
     }
@@ -223,7 +227,9 @@ mod tests {
             AuditSeverity::Info.into(),
         );
 
-        assert!(matches!(event.event_type, AuditEventType::Custom(ref value) if value == "CUSTOM_ACTION"));
+        assert!(
+            matches!(event.event_type, AuditEventType::Custom(ref value) if value == "CUSTOM_ACTION")
+        );
     }
 
     #[test]
@@ -235,7 +241,9 @@ mod tests {
             AuditSeverity::Info.into(),
         );
 
-        assert!(matches!(event.event_type, AuditEventType::Custom(ref value) if value == "customevent"));
+        assert!(
+            matches!(event.event_type, AuditEventType::Custom(ref value) if value == "customevent")
+        );
     }
 
     #[test]
@@ -264,7 +272,8 @@ mod tests {
 
     #[test]
     fn test_audit_event_defaults_empty_user_id_to_anonymous() {
-        let oversized_whitespace = format!("{}\u{0000}\u{0007}", " ".repeat(MAX_AUDIT_USER_ID_LEN + 10));
+        let oversized_whitespace =
+            format!("{}\u{0000}\u{0007}", " ".repeat(MAX_AUDIT_USER_ID_LEN + 10));
         let event = AuditEvent::new(
             AuditEventType::DataAccess,
             oversized_whitespace,
@@ -290,7 +299,10 @@ mod tests {
             AuditSeverity::Warning.into(),
         );
 
-        logger.log(event).await.expect("audit logging should succeed");
+        logger
+            .log(event)
+            .await
+            .expect("audit logging should succeed");
 
         let content = std::fs::read_to_string(&log_path).expect("audit log should exist");
         assert!(content.contains("SecurityViolation"));

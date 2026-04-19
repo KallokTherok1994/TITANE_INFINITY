@@ -44,7 +44,7 @@ interface ChatInputState {
 
 // Configuration OMEGA
 const OMEGA_INPUT_CONFIG = {
-  maxLength: 10000, // Max caractères par message
+  softWarningLength: 10000, // Seuil informatif uniquement
   minInterval: 600, // Min millisecondes entre messages
   maxSpam: 15, // Max messages spam avant block
   spamResetTime: 15000, // Reset compteur spam après 15s
@@ -108,13 +108,6 @@ function useOmegaInputProtection() {
         // Validation longueur
         if (message.length === 0) {
           return { valid: false, reason: 'Message vide' };
-        }
-
-        if (message.length > OMEGA_INPUT_CONFIG.maxLength) {
-          return {
-            valid: false,
-            reason: `Message trop long (max ${OMEGA_INPUT_CONFIG.maxLength} caractères)`,
-          };
         }
 
         // Validation patterns dangereux
@@ -259,7 +252,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
       if (!mountedRef.current) return;
 
       try {
-        if (textareaRef.current && value.length <= OMEGA_INPUT_CONFIG.maxLength) {
+        if (textareaRef.current) {
           textareaRef.current.style.height = 'auto';
           textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
         }
@@ -424,15 +417,6 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         try {
           const newValue = e.target.value;
-
-          // Limite de caractères stricte
-          if (newValue.length > OMEGA_INPUT_CONFIG.maxLength) {
-            handleInputError(
-              new Error(`Limite de ${OMEGA_INPUT_CONFIG.maxLength} caractères atteinte`),
-              'input-length-limit'
-            );
-            return;
-          }
 
           setValue(newValue);
 
@@ -686,7 +670,6 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               onKeyDown={handleKeyDown}
               disabled={isInputDisabled}
               rows={1}
-              maxLength={OMEGA_INPUT_CONFIG.maxLength}
               aria-label="Message à envoyer"
               aria-describedby={`char-count chat-input-hint${inputState.inputError ? ' input-error-message' : ''}`}
               aria-invalid={!!inputState.inputError}
@@ -704,15 +687,15 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               <span className="sr-only">Nombre de caractères: </span>
               <span
                 className={
-                  characterCount > OMEGA_INPUT_CONFIG.maxLength * 0.9
+                  characterCount > OMEGA_INPUT_CONFIG.softWarningLength * 0.9
                     ? 'chat-counter-warning'
                     : ''
                 }
               >
-                {characterCount} / {OMEGA_INPUT_CONFIG.maxLength}
+                {characterCount} / illimité
               </span>
-              {characterCount > OMEGA_INPUT_CONFIG.maxLength * 0.9 && (
-                <span className="sr-only"> - Limite bientôt atteinte</span>
+              {characterCount > OMEGA_INPUT_CONFIG.softWarningLength * 0.9 && (
+                <span className="sr-only"> - message long détecté</span>
               )}
             </div>
 

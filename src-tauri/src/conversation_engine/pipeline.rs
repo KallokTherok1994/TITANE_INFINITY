@@ -25,6 +25,18 @@ use super::self_healing::SelfHealingConversation;
 use super::types::*;
 use super::ConversationEngineError;
 
+fn preprocess_message_input(message: &str) -> Result<String, ConversationEngineError> {
+    let trimmed = message.trim();
+
+    if trimmed.is_empty() {
+        return Err(ConversationEngineError::ValidationError(
+            "Message vide".to_string(),
+        ));
+    }
+
+    Ok(trimmed.to_string())
+}
+
 /// Pipeline unifié de traitement conversationnel
 pub struct ConversationPipeline {
     memory: Arc<ConversationMemoryEngine>,
@@ -284,21 +296,7 @@ impl ConversationPipeline {
 
     /// Prétraitement et validation du message
     fn preprocess(&self, message: &str) -> Result<String, ConversationEngineError> {
-        let trimmed = message.trim();
-
-        if trimmed.is_empty() {
-            return Err(ConversationEngineError::ValidationError(
-                "Message vide".to_string(),
-            ));
-        }
-
-        if trimmed.len() > 10000 {
-            return Err(ConversationEngineError::ValidationError(
-                "Message trop long (max 10000 caractères)".to_string(),
-            ));
-        }
-
-        Ok(trimmed.to_string())
+        preprocess_message_input(message)
     }
 
     /// Construire le prompt enrichi avec SYSTEM PROMPT ADAPTATIF PAR MODE
@@ -485,4 +483,35 @@ pub struct CognitiveSummary {
     pub memory_layers: MemoryLayers,
     pub links: Vec<String>,
     pub coherence_score: f32,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::preprocess_message_input;
+
+    #[test]
+    fn preprocess_accepts_ultra_long_messages() {
+        let ultra_long_message = format!(
+            "ULTRA-START {} ULTRA-END",
+            "segment ultra long ".repeat(1500)
+        );
+
+        let processed = preprocess_message_input(&ultra_long_message)
+            .expect("ultra-long messages should remain valid");
+
+        assert!(processed.contains("ULTRA-START"));
+        assert!(processed.contains("ULTRA-END"));
+        assert_eq!(processed.len(), ultra_long_message.len());
+    }
+
+    #[test]
+    fn preprocess_rejects_empty_messages() {
+        let error = preprocess_message_input("   ").expect_err("empty input must fail");
+
+        assert!(matches!(
+            error,
+            super::ConversationEngineError::ValidationError(_)
+        ));
+        assert_eq!(error.to_string(), "Validation error: Message vide");
+    }
 }

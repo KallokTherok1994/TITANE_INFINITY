@@ -31,6 +31,7 @@ const memoryIntegrationMock = vi.hoisted(() => ({
   loadContext: vi.fn(),
   loadPreferences: vi.fn(),
   getDepthPreference: vi.fn(),
+  getHybridMemoryDiagnostics: vi.fn(),
 }));
 
 const singularityBridgeMock = vi.hoisted(() => ({
@@ -220,6 +221,12 @@ describe('conversationEngine.processMessage', () => {
     });
     memoryIntegrationMock.loadPreferences.mockReturnValue([]);
     memoryIntegrationMock.getDepthPreference.mockReturnValue(null);
+    memoryIntegrationMock.getHybridMemoryDiagnostics.mockReturnValue({
+      hybridOrchestrationEnabled: false,
+      lastHybridOrchestrationStatus: 'idle',
+      lastHybridOrchestrationCount: 0,
+      lastHybridOrchestrationReason: 'test',
+    });
     singularityBridgeMock.getCachedCoherence.mockReturnValue(0.5);
     canonicalKernelMock.discern.mockReturnValue(createCanonicalDecisionMock());
     vi.mocked(aiOrchestrator.getProvidersStatus).mockResolvedValue({
@@ -309,9 +316,39 @@ describe('conversationEngine.processMessage', () => {
         args: expect.objectContaining({
           message: 'Hi',
           conversationId: 'c3',
+          temperature: 0.7,
+          maxTokens: 32768,
           aiConfig: expect.objectContaining({
             max_tokens: 32768,
           }),
+        }),
+      })
+    );
+  });
+
+  it('does not truncate an ultra-long conversation payload before conversation_generate', async () => {
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        content: 'Ok ultra long',
+        conversationId: 'c3-ultra',
+        messageId: 'm3-ultra',
+        metadata: {},
+      });
+
+    const ultraLongMessage = `ULTRA-START ${'segment ultra long '.repeat(3200)}ULTRA-END`;
+
+    await processMessage(ultraLongMessage, { conversationId: 'c3-ultra' });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          message: ultraLongMessage,
+          conversationId: 'c3-ultra',
         }),
       })
     );
@@ -358,6 +395,8 @@ describe('conversationEngine.processMessage', () => {
     expect(generateCall?.[1]).toEqual(
       expect.objectContaining({
         args: expect.objectContaining({
+          temperature: 0.61,
+          maxTokens: 32768,
           aiConfig: expect.objectContaining({
             temperature: 0.61,
             max_tokens: 32768,

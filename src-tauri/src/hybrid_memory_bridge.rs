@@ -274,10 +274,10 @@ mod tests {
         let export = publish_hybrid_memory_report_to_dir(dir.path(), sample_payload())
             .expect("hybrid memory export should succeed");
 
-        let markdown = fs::read_to_string(&export.export_path)
-            .expect("markdown export should be readable");
-        let metadata = fs::read_to_string(&export.metadata_path)
-            .expect("metadata export should be readable");
+        let markdown =
+            fs::read_to_string(&export.export_path).expect("markdown export should be readable");
+        let metadata =
+            fs::read_to_string(&export.metadata_path).expect("metadata export should be readable");
 
         assert!(markdown.contains("Preset actif: Equilibre"));
         assert!(metadata.contains("hybrid-memory-governed-export"));

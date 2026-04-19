@@ -412,7 +412,9 @@ mod tests {
 
     #[test]
     fn test_validate_file_extension_rejects_scheme_path() {
-        assert!(PayloadValidator::validate_file_extension("file:///tmp/test.txt", &["txt"]).is_err());
+        assert!(
+            PayloadValidator::validate_file_extension("file:///tmp/test.txt", &["txt"]).is_err()
+        );
     }
 
     #[test]

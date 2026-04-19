@@ -35,7 +35,7 @@ const DEFAULTS = {
 
 const SAFETY_LIMITS = {
   // Keep frontend payloads aligned with the Rust validator to avoid oversized-request churn.
-  maxUserMessageChars: 12_000,
+  maxUserMessageChars: 100_000,
   maxSystemPromptChars: 24_000,
   maxOutputTokens: 32_768,
 } as const;

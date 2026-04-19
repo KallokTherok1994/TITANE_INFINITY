@@ -242,8 +242,14 @@ mod tests {
             .expect("list dir should succeed");
 
         let expected = vec![
-            dir.path().join("alpha.txt").canonicalize().expect("alpha canonical"),
-            dir.path().join("zeta.txt").canonicalize().expect("zeta canonical"),
+            dir.path()
+                .join("alpha.txt")
+                .canonicalize()
+                .expect("alpha canonical"),
+            dir.path()
+                .join("zeta.txt")
+                .canonicalize()
+                .expect("zeta canonical"),
         ];
 
         assert_eq!(files, expected);

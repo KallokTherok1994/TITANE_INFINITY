@@ -12,7 +12,10 @@ use serde_json::json;
 #[tauri::command]
 pub async fn get_rate_limit_stats(user_id: Option<String>) -> Result<RateLimitStats, String> {
     let user = user_id.unwrap_or_else(|| "anonymous".to_string());
-    GLOBAL_RATE_LIMITER.get_stats(&user).await.map_err(Into::into)
+    GLOBAL_RATE_LIMITER
+        .get_stats(&user)
+        .await
+        .map_err(Into::into)
 }
 
 /// Reset rate limit for user (admin only)
@@ -27,7 +30,10 @@ pub async fn reset_rate_limit(user_id: String) -> Result<(), String> {
     // - Rate limit: Only allow admins to reset rate limits for security
     // - Multi-tenant: In multi-user systems, restrict to super-admin role
     // For now: allow all (single-user desktop app)
-    GLOBAL_RATE_LIMITER.reset(&user_id).await.map_err(Into::into)
+    GLOBAL_RATE_LIMITER
+        .reset(&user_id)
+        .await
+        .map_err(Into::into)
 }
 
 /// Nettoyer les anciennes entrées de rate limiting
@@ -54,7 +60,10 @@ pub async fn test_rate_limit() -> Result<String, String> {
     }
 
     // Reset pour cleanup
-    GLOBAL_RATE_LIMITER.reset(test_user).await.map_err(String::from)?;
+    GLOBAL_RATE_LIMITER
+        .reset(test_user)
+        .await
+        .map_err(String::from)?;
 
     Ok(results.join("\n"))
 }

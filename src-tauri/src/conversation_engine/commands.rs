@@ -24,6 +24,16 @@ use super::ConversationEngineState;
 
 #[derive(Debug, Clone, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct ConversationGenerateAiConfigArgs {
+    #[serde(alias = "max_tokens")]
+    pub max_tokens: Option<usize>,
+    pub temperature: Option<f32>,
+    #[serde(alias = "provider_preference")]
+    pub provider_preference: Option<String>,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ConversationGenerateArgs {
     pub message: String,
     pub conversation_id: String,
@@ -34,6 +44,7 @@ pub struct ConversationGenerateArgs {
     pub context_envelope: Option<serde_json::Value>,
     pub max_tokens: Option<usize>,
     pub temperature: Option<f32>,
+    pub ai_config: Option<ConversationGenerateAiConfigArgs>,
 }
 
 type CommandResult<T> = Result<T, String>;
@@ -107,6 +118,35 @@ fn build_memory_used_ids(
         ids.push(format!("ltm_session_{}", conversation_id));
     }
     ids
+}
+
+fn resolve_requested_provider(
+    provider: Option<&str>,
+    ai_config: Option<&ConversationGenerateAiConfigArgs>,
+) -> Option<String> {
+    provider
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .or_else(|| {
+            ai_config
+                .and_then(|config| config.provider_preference.as_ref())
+                .map(|value| value.trim().to_string())
+                .filter(|value| !value.is_empty())
+        })
+}
+
+fn resolve_requested_temperature(
+    temperature: Option<f32>,
+    ai_config: Option<&ConversationGenerateAiConfigArgs>,
+) -> Option<f32> {
+    temperature.or_else(|| ai_config.and_then(|config| config.temperature))
+}
+
+fn resolve_requested_max_tokens(
+    max_tokens: Option<usize>,
+    ai_config: Option<&ConversationGenerateAiConfigArgs>,
+) -> Option<usize> {
+    max_tokens.or_else(|| ai_config.and_then(|config| config.max_tokens))
 }
 
 fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serde_json::Value {
@@ -237,7 +277,11 @@ pub async fn conversation_generate(
         context_envelope,
         max_tokens,
         temperature,
+        ai_config,
     } = args;
+    let requested_provider = resolve_requested_provider(provider.as_deref(), ai_config.as_ref());
+    let requested_temperature = resolve_requested_temperature(temperature, ai_config.as_ref());
+    let requested_max_tokens = resolve_requested_max_tokens(max_tokens, ai_config.as_ref());
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
         Some("coach") => ConversationMode::Default, // Coach = Default avec personnalité
@@ -321,7 +365,7 @@ pub async fn conversation_generate(
             .unwrap_or(false),
     };
 
-    let wants_external_ai = provider
+    let wants_external_ai = requested_provider
         .as_ref()
         .map(|entry| !matches!(entry.as_str(), "ollama" | "local"))
         .unwrap_or(false);
@@ -559,7 +603,7 @@ pub async fn conversation_generate(
         Some("local".to_string())
     } else if !policy_verdict.allow_external_ai {
         // Policy gate: external AI not allowed (offline/blocked/no-credentials)
-        if provider
+        if requested_provider
             .as_deref()
             .map(|p| matches!(p, "gemini" | "openai" | "gpt" | "claude" | "anthropic"))
             .unwrap_or(false)
@@ -571,7 +615,7 @@ pub async fn conversation_generate(
         }
         Some("local".to_string())
     } else {
-        provider
+        requested_provider
     };
 
     // PATCH-012 + IMPROVE-003: Load conversation history from SQLite for LTM context injection.
@@ -812,8 +856,8 @@ pub async fn conversation_generate(
                 .unwrap_or(configured_provider);
 
             AIConfig {
-                temperature: args.temperature.unwrap_or(0.7),
-                max_tokens: args.max_tokens,
+                temperature: requested_temperature.unwrap_or(0.7),
+                max_tokens: requested_max_tokens,
                 provider_preference: provider_pref,
             }
         }),
@@ -1473,9 +1517,17 @@ mod tests {
         assert!(meta.get("attempts").is_some());
         assert!(meta.get("latency_ms_total").is_some());
         let metadata = json.get("metadata").expect("metadata missing");
-        assert_eq!(metadata.get("provider_used").and_then(|value| value.as_str()), Some("local"));
+        assert_eq!(
+            metadata
+                .get("provider_used")
+                .and_then(|value| value.as_str()),
+            Some("local")
+        );
         assert_eq!(metadata["citations"][0]["excerpt"], "Extrait test");
-        assert_eq!(metadata["citations"][0]["accessed_at"], "2026-04-18T10:00:00Z");
+        assert_eq!(
+            metadata["citations"][0]["accessed_at"],
+            "2026-04-18T10:00:00Z"
+        );
 
         write_output(&json);
     }
@@ -1773,6 +1825,50 @@ mod tests {
             assert!(ids.iter().any(|id| id.starts_with("snap_conv-recall_req")));
             assert!(!ids.iter().any(|id| id.contains("external")));
         }
+    }
+
+    #[test]
+    fn resolve_requested_ai_config_supports_legacy_nested_payload() {
+        let ai_config = ConversationGenerateAiConfigArgs {
+            max_tokens: Some(8096),
+            temperature: Some(0.42),
+            provider_preference: Some("ollama".to_string()),
+        };
+
+        assert_eq!(
+            resolve_requested_provider(None, Some(&ai_config)).as_deref(),
+            Some("ollama")
+        );
+        assert_eq!(
+            resolve_requested_temperature(None, Some(&ai_config)),
+            Some(0.42)
+        );
+        assert_eq!(
+            resolve_requested_max_tokens(None, Some(&ai_config)),
+            Some(8096)
+        );
+    }
+
+    #[test]
+    fn resolve_requested_ai_config_prefers_top_level_contract_fields() {
+        let ai_config = ConversationGenerateAiConfigArgs {
+            max_tokens: Some(8096),
+            temperature: Some(0.42),
+            provider_preference: Some("ollama".to_string()),
+        };
+
+        assert_eq!(
+            resolve_requested_provider(Some("gemini"), Some(&ai_config)).as_deref(),
+            Some("gemini")
+        );
+        assert_eq!(
+            resolve_requested_temperature(Some(0.73), Some(&ai_config)),
+            Some(0.73)
+        );
+        assert_eq!(
+            resolve_requested_max_tokens(Some(32768), Some(&ai_config)),
+            Some(32768)
+        );
     }
 }
 

@@ -130,9 +130,8 @@ impl LocalTTS {
         let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
         let piper_path = format!("{}/.local/bin/piper", home);
         // STEP 3 — Use request.voice as model name if provided, otherwise default
-        let model_name = validate_piper_voice_id(
-            request.voice.as_deref().unwrap_or("fr_FR-siwis-medium"),
-        )?;
+        let model_name =
+            validate_piper_voice_id(request.voice.as_deref().unwrap_or("fr_FR-siwis-medium"))?;
         let model_path = format!("{}/.local/share/piper/voices/{}.onnx", home, model_name);
         // Fall back to default if requested model file is absent
         let model_path = if std::path::Path::new(&model_path).exists() {

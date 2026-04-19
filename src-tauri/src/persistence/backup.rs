@@ -619,14 +619,14 @@ impl BackupEngine {
             report.files_imported += 1;
 
             // Compter events/snapshots
-                if file_name.contains("snapshots") {
-                    if let Ok(snapshots) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
-                        report.snapshots_imported = snapshots.len() as u32;
-                    }
-                } else if file_name.contains("events") {
-                    if let Ok(events) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
-                        report.events_imported = events.len() as u64;
-                    }
+            if file_name.contains("snapshots") {
+                if let Ok(snapshots) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
+                    report.snapshots_imported = snapshots.len() as u32;
+                }
+            } else if file_name.contains("events") {
+                if let Ok(events) = serde_json::from_slice::<Vec<serde_json::Value>>(content) {
+                    report.events_imported = events.len() as u64;
+                }
             }
         }
 
@@ -789,7 +789,8 @@ mod tests {
         };
 
         let metadata_json = serde_json::to_vec(&metadata).expect("metadata should serialize");
-        let compressed = BackupEngine::compress_data(&archive_data).expect("archive should compress");
+        let compressed =
+            BackupEngine::compress_data(&archive_data).expect("archive should compress");
 
         let mut final_archive = Vec::new();
         final_archive.extend_from_slice(b"TITANE_ARCHIVE\x00\x01");

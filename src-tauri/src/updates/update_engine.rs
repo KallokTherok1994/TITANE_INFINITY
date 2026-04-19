@@ -480,6 +480,8 @@ mod tests {
 
         let result = engine.run_migration("migration_v1_to_v2").await;
 
-        assert!(matches!(result, Err(UpdateError::MigrationFailed(message)) if message.contains("Script not found")));
+        assert!(
+            matches!(result, Err(UpdateError::MigrationFailed(message)) if message.contains("Script not found"))
+        );
     }
 }

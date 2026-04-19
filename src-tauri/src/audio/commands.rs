@@ -205,12 +205,9 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
     let result = match settings.engine.as_str() {
         "piper" => {
             let piper_bin = format!("{}/.local/bin/piper", home);
-            let voice_id =
-                validate_piper_voice_id(&settings.voice_id).map_err(|err| format!("Invalid Piper voice id: {}", err))?;
-            let model_path = format!(
-                "{}/.local/share/piper/voices/{}.onnx",
-                home, voice_id
-            );
+            let voice_id = validate_piper_voice_id(&settings.voice_id)
+                .map_err(|err| format!("Invalid Piper voice id: {}", err))?;
+            let model_path = format!("{}/.local/share/piper/voices/{}.onnx", home, voice_id);
 
             log::info!("[TTS] Piper binary: {}", piper_bin);
             log::info!("[TTS] Model path: {}", model_path);

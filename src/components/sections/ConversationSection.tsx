@@ -475,13 +475,12 @@ export function buildConversationJournalSearchLabel(
 /**
  * Sanitize input pour sécurité renforcée (XSS prevention)
  */
-function sanitizeInput(input: string): string {
+export function sanitizeConversationInput(input: string): string {
   return input
     .trim()
     .replace(/<script[^>]*>.*?<\/script>/gi, '')
     .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
-    .replace(/on\w+="[^"]*"/gi, '')
-    .slice(0, 10000);
+    .replace(/on\w+="[^"]*"/gi, '');
 }
 
 function shouldHandoffToResearch(input: string): boolean {
@@ -2058,7 +2057,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       if (!trimmedInput || isLoading || sendingRef.current) return;
       sendingRef.current = true;
 
-      const sanitized = sanitizeInput(rawInput);
+      const sanitized = sanitizeConversationInput(rawInput);
       if (!sanitized || sanitized.length === 0) {
         pageLogger.debug('Input vide apres sanitization');
         sendingRef.current = false;

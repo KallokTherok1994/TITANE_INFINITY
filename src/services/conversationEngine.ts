@@ -1437,6 +1437,8 @@ export async function processMessage(
   const classifierProfile = RESPONSE_PROFILES[canonicalDecision.profileId];
   const classifierTemperature = classifierProfile?.temperature ?? 0.7;
   const classifierMaxTokens = classifierProfile?.maxTokens;
+  const resolvedTemperature =
+    canonicalDecision.provider.temperature ?? classifierTemperature;
   const resolvedMaxTokens = Math.max(
     canonicalDecision.provider.maxTokens ?? classifierMaxTokens ?? 0,
     MIN_CANONICAL_CHAT_OUTPUT_TOKENS
@@ -1450,6 +1452,8 @@ export async function processMessage(
     provider: kernelProviderPreference,
     systemPrompt: systemPromptBudget.text,
     requestId,
+    temperature: resolvedTemperature,
+    maxTokens: resolvedMaxTokens,
     classifierMeta: {
       canonical_mode:
         canonicalDecision.modeClassification?.canonicalMode ??
@@ -1463,7 +1467,7 @@ export async function processMessage(
         canonicalDecision.modeClassification?.reasonCode ?? modeClassification.reasonCode,
     },
     aiConfig: {
-      temperature: canonicalDecision.provider.temperature ?? classifierTemperature,
+      temperature: resolvedTemperature,
       max_tokens: resolvedMaxTokens,
       provider_preference: kernelProviderPreference,
     },

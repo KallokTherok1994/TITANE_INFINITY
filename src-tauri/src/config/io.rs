@@ -312,7 +312,10 @@ mod tests {
         let validated = validate_import_file_path(file_path.to_string_lossy().as_ref())
             .expect("local json import file should be accepted");
 
-        assert_eq!(validated, file_path.canonicalize().expect("canonical file path"));
+        assert_eq!(
+            validated,
+            file_path.canonicalize().expect("canonical file path")
+        );
     }
 
     #[test]
@@ -346,8 +349,11 @@ mod tests {
     fn test_validate_import_file_path_rejects_large_file() {
         let dir = tempdir().expect("temp dir");
         let file_path = dir.path().join("oversized.json");
-        fs::write(&file_path, "x".repeat((MAX_IMPORTED_CONFIG_BYTES as usize) + 1))
-            .expect("oversized fixture should be written");
+        fs::write(
+            &file_path,
+            "x".repeat((MAX_IMPORTED_CONFIG_BYTES as usize) + 1),
+        )
+        .expect("oversized fixture should be written");
 
         let err = validate_import_file_path(file_path.to_string_lossy().as_ref())
             .expect_err("oversized file should be rejected");

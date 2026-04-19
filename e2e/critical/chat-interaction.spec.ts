@@ -154,6 +154,23 @@ const buildLongStructuredPrompt = () => {
   ].join('\n');
 };
 
+const buildUltraLongPlainPrompt = () => {
+  const sections = Array.from({ length: 240 }, (_, index) => {
+    const sectionNumber = String(index + 1).padStart(3, '0');
+    return [
+      `ULTRA-SECTION-${sectionNumber}`,
+      'question ultra longue desktop',
+      `SIGMA-${sectionNumber}`,
+      `KAPPA-${sectionNumber}`,
+      'verification integrale sans coupe',
+    ].join(' ');
+  });
+
+  return ['ULTRA-START', ...sections, 'ULTRA-MIDDLE-SENTINEL', ...sections, 'ULTRA-END']
+    .join('\n')
+    .trim();
+};
+
 test.describe('Critical Path: Chat Interaction', () => {
   if (!FULL_E2E_ENABLED) {
     test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
@@ -259,7 +276,8 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     const terminalMarker = assistantContent.getByText('OMEGA-FINAL-BLOCK', {
       exact: true,
-    });
+    }).last();
+    await terminalMarker.scrollIntoViewIfNeeded();
     await expect(terminalMarker).toBeVisible();
     await expect(terminalMarker).toBeInViewport();
     await expect(assistantContent).toContainText('Bloc terminal');
@@ -272,6 +290,48 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     expect(scrollState.scrollHeight).toBeGreaterThan(scrollState.clientHeight);
     expect(scrollState.scrollTop).toBeGreaterThan(0);
+  });
+
+  test('ULTRA_LONG_QUESTION_AND_RESPONSE_RENDER_COMPLETE_WITHOUT_TRUNCATION', async ({
+    page,
+  }) => {
+    const ultraLongPrompt = buildUltraLongPlainPrompt();
+    const expectedAssistantText = `[MOCK_OK] ${ultraLongPrompt}`;
+
+    let truncationAlertCount = 0;
+    await page.exposeFunction('onTitaneMessageTruncated', () => {
+      truncationAlertCount += 1;
+    });
+    await page.evaluate(() => {
+      window.addEventListener('titane-message-truncated', () => {
+        // @ts-expect-error Playwright injecte ce helper sur window pour le comptage.
+        window.onTitaneMessageTruncated();
+      });
+    });
+
+    await submitChatMessage(page, ultraLongPrompt);
+
+    const userContent = getUserContent(page);
+    await expect(userContent).toContainText('ULTRA-START', { timeout: 15000 });
+    await expect(userContent).toContainText('ULTRA-MIDDLE-SENTINEL');
+    await expect(userContent).toContainText('ULTRA-END');
+
+    const assistantContent = getAssistantContent(page);
+    await expect(assistantContent).toContainText('[MOCK_OK]', { timeout: 15000 });
+    await expect(assistantContent).toContainText('ULTRA-START');
+    await expect(assistantContent).toContainText('ULTRA-MIDDLE-SENTINEL');
+    await expect(assistantContent).toContainText('ULTRA-END');
+
+    const userText = await userContent.evaluate(element => element.textContent ?? '');
+    const assistantText = await assistantContent.evaluate(
+      element => element.textContent ?? ''
+    );
+
+    expect(userText.trim()).toBe(ultraLongPrompt);
+    expect(assistantText.trim()).toBe(expectedAssistantText);
+    expect(assistantText.length).toBe(expectedAssistantText.length);
+    expect(assistantText.trim().endsWith('ULTRA-END')).toBe(true);
+    expect(truncationAlertCount).toBe(0);
   });
 
   test('SWITCH_CONVERSATION_PERSISTS: UI reste en SPA', async ({ page }) => {
@@ -328,12 +388,11 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     await submitChatMessage(page, 'Active la connaissance runtime One Door');
 
-    await expect(
-      page.getByText(/\[MOCK_OK\].*Active la connaissance runtime One Door/s)
-    ).toBeVisible({
+    const firstAssistantContent = getAssistantContent(page);
+    await expect(firstAssistantContent).toContainText('Active la connaissance runtime One Door', {
       timeout: 15000,
     });
-    await expect(page.getByText(/\[MOCK_KNOWLEDGE\].*One Door Governance/s)).toBeVisible({
+    await expect(firstAssistantContent).toContainText('One Door Governance', {
       timeout: 15000,
     });
 
@@ -354,9 +413,10 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     await submitChatMessage(page, 'Rappelle le dernier échange mémoire');
 
-    await expect(
-      page.getByText(/\[MOCK_MEMORY\].*Active la connaissance runtime One Door/s)
-    ).toBeVisible({ timeout: 15000 });
+    const secondAssistantContent = getAssistantContent(page);
+    await expect(secondAssistantContent).toContainText('Active la connaissance runtime One Door', {
+      timeout: 15000,
+    });
 
     const finalMemoryLog = await page.evaluate(() => {
       return (

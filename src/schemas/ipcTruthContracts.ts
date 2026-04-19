@@ -231,7 +231,7 @@ export interface PromptBudgetConfig {
 
 /** Default prompt budgets — safe for local+remote providers */
 export const DEFAULT_PROMPT_BUDGET: PromptBudgetConfig = {
-  maxUserMessageChars: 50_000,
+  maxUserMessageChars: 100_000,
   maxSystemPromptChars: 30_000,
   maxHistoryMessages: 20,
   maxHistoryMessageChars: 300,

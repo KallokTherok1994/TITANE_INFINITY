@@ -60,6 +60,13 @@ impl Default for OmegaBridgeConfig {
     }
 }
 
+fn resolve_bridge_default_max_tokens(provider_preference: Option<&ProviderPreference>) -> usize {
+    match provider_preference {
+        Some(ProviderPreference::Local | ProviderPreference::Ollama) => 8192,
+        _ => 12000,
+    }
+}
+
 impl OmegaConversationBridge {
     /// Create new bridge with configuration
     pub fn new(
@@ -330,11 +337,12 @@ impl OmegaConversationBridge {
                         }
                         _ => None,
                     });
-            let default_max_tokens =
-                match request.ai_config.as_ref().map(|c| &c.provider_preference) {
-                    Some(ProviderPreference::Local | ProviderPreference::Ollama) => 160,
-                    _ => 2000,
-                };
+            let default_max_tokens = resolve_bridge_default_max_tokens(
+                request
+                    .ai_config
+                    .as_ref()
+                    .map(|config| &config.provider_preference),
+            );
 
             let ai_request = AIRequest {
                 prompt,
@@ -798,5 +806,22 @@ mod tests {
             "[TEST] ✅ P2 Direct conversion validated | latency={}ms",
             response.metadata.latency_ms
         );
+    }
+
+    #[test]
+    fn bridge_default_max_tokens_stays_aligned_with_pipeline_floor() {
+        assert_eq!(
+            resolve_bridge_default_max_tokens(Some(&ProviderPreference::Local)),
+            8192
+        );
+        assert_eq!(
+            resolve_bridge_default_max_tokens(Some(&ProviderPreference::Ollama)),
+            8192
+        );
+        assert_eq!(
+            resolve_bridge_default_max_tokens(Some(&ProviderPreference::Gemini)),
+            12000
+        );
+        assert_eq!(resolve_bridge_default_max_tokens(None), 12000);
     }
 }

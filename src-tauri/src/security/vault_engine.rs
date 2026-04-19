@@ -79,7 +79,9 @@ impl VaultEngine {
         }
 
         if file_id.contains('\0') {
-            return Err(VaultError::IoError("Invalid file id: null byte".to_string()));
+            return Err(VaultError::IoError(
+                "Invalid file id: null byte".to_string(),
+            ));
         }
 
         let path = Path::new(file_id);
@@ -645,7 +647,9 @@ mod tests {
     #[tokio::test]
     async fn test_vault_save_rejects_path_traversal_file_id() {
         let master_key = MasterKey::generate();
-        let vault = VaultEngine::new(&master_key).await.expect("vault init should succeed");
+        let vault = VaultEngine::new(&master_key)
+            .await
+            .expect("vault init should succeed");
 
         let err = vault
             .save("../escape", &"blocked")
@@ -658,7 +662,9 @@ mod tests {
     #[tokio::test]
     async fn test_vault_load_rejects_absolute_file_id() {
         let master_key = MasterKey::generate();
-        let vault = VaultEngine::new(&master_key).await.expect("vault init should succeed");
+        let vault = VaultEngine::new(&master_key)
+            .await
+            .expect("vault init should succeed");
 
         let err = vault
             .load::<String>("/tmp/escape")

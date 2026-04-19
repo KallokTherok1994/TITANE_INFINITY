@@ -259,8 +259,7 @@ mod tests {
         let persistence = MemoryPersistence::new(dir.path(), None);
         persistence.init().await.expect("init should succeed");
 
-        std::fs::write(dir.path().join("stm").join("zeta.json"), "{}")
-            .expect("write zeta fixture");
+        std::fs::write(dir.path().join("stm").join("zeta.json"), "{}").expect("write zeta fixture");
         std::fs::write(dir.path().join("stm").join("alpha.json"), "{}")
             .expect("write alpha fixture");
 

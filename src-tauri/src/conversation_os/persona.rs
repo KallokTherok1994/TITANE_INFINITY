@@ -133,8 +133,8 @@ impl PersonaConfig {
             voice: VoiceCharacteristics {
                 tone: "Lucide, structurant, humain, sobre".to_string(),
                 pace: "Calme, recentrage avant expansion".to_string(),
-                expression_style:
-                    "Diagnostic, axe clair, protocole simple, action concrete".to_string(),
+                expression_style: "Diagnostic, axe clair, protocole simple, action concrete"
+                    .to_string(),
                 signature_phrases: vec![
                     "Voici l axe reel".to_string(),
                     "Je reduis le bruit avant d ajouter de la structure".to_string(),
@@ -389,7 +389,13 @@ mod tests {
         );
         assert_eq!(persona.voice.tone, "Lucide, structurant, humain, sobre");
         assert!(persona.values.contains(&"Cohérence".to_string()));
-        assert_eq!(persona.style_preferences.response_length, ResponseLength::Detailed);
-        assert_eq!(persona.style_preferences.structure_level, StructureLevel::High);
+        assert_eq!(
+            persona.style_preferences.response_length,
+            ResponseLength::Detailed
+        );
+        assert_eq!(
+            persona.style_preferences.structure_level,
+            StructureLevel::High
+        );
     }
 }
