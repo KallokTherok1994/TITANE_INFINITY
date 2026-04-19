@@ -19,6 +19,7 @@ import type {
   IVectorStore,
   IEmbeddingGenerator,
   UnifiedMemoryEntry,
+  UnifiedMemoryConfig,
 } from '../UnifiedMemory';
 
 // Mock implementations
@@ -219,6 +220,7 @@ describe('UnifiedMemory', () => {
   let embeddingGenerator: MockEmbeddingGenerator;
 
   beforeEach(async () => {
+    localStorage.clear();
     vectorStore = new MockVectorStore();
     embeddingGenerator = new MockEmbeddingGenerator();
     memory = new UnifiedMemory(vectorStore, embeddingGenerator, {
@@ -233,6 +235,7 @@ describe('UnifiedMemory', () => {
   afterEach(async () => {
     await memory.shutdown();
     vectorStore.clear();
+    localStorage.clear();
   });
 
   describe('Initialization', () => {
@@ -245,6 +248,53 @@ describe('UnifiedMemory', () => {
     it('should not initialize twice', async () => {
       await memory.initialize(); // Already initialized in beforeEach
       expect(vectorStore.size()).toBe(0);
+    });
+
+    it('should preserve nested defaults when partial config overrides are provided', async () => {
+      const partiallyConfiguredMemory = new UnifiedMemory(vectorStore, embeddingGenerator, {
+        cleanup: { enabled: false } as UnifiedMemoryConfig['cleanup'],
+      });
+
+      const config = partiallyConfiguredMemory.getConfig();
+      expect(config.cleanup.enabled).toBe(false);
+      expect(config.cleanup.intervalMs).toBe(60000);
+      expect(config.cleanup.removeBelowScore).toBe(0.3);
+
+      await partiallyConfiguredMemory.shutdown();
+    });
+  });
+
+  describe('Configuration Persistence', () => {
+    it('should persist updated config and load it on restart', async () => {
+      const updatedConfig = memory.updateConfig({
+        scoring: {
+          similarityThreshold: 0.81,
+        } as UnifiedMemoryConfig['scoring'],
+        cleanup: {
+          enabled: false,
+        } as UnifiedMemoryConfig['cleanup'],
+      });
+
+      expect(updatedConfig.scoring.similarityThreshold).toBe(0.81);
+      expect(updatedConfig.cleanup.enabled).toBe(false);
+      expect(updatedConfig.cleanup.intervalMs).toBe(0);
+
+      const persisted = JSON.parse(
+        localStorage.getItem('titane_unified_memory_config') || '{}'
+      ) as UnifiedMemoryConfig;
+      expect(persisted.scoring.similarityThreshold).toBe(0.81);
+      expect(persisted.cleanup.enabled).toBe(false);
+
+      await memory.shutdown();
+
+      const restartedMemory = new UnifiedMemory(vectorStore, embeddingGenerator);
+      const restartedConfig = restartedMemory.getConfig();
+
+      expect(restartedConfig.scoring.similarityThreshold).toBe(0.81);
+      expect(restartedConfig.cleanup.enabled).toBe(false);
+      expect(restartedConfig.cleanup.intervalMs).toBe(0);
+
+      await restartedMemory.shutdown();
     });
   });
 

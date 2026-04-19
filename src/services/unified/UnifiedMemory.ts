@@ -331,6 +331,91 @@ const DEFAULT_CONFIG: UnifiedMemoryConfig = {
   },
 };
 
+const UNIFIED_MEMORY_CONFIG_STORAGE_KEY = 'titane_unified_memory_config';
+
+type StorageLike = Pick<Storage, 'getItem' | 'setItem'>;
+
+function mergeUnifiedMemoryConfig(
+  base: UnifiedMemoryConfig,
+  overrides?: Partial<UnifiedMemoryConfig>
+): UnifiedMemoryConfig {
+  if (!overrides) {
+    return JSON.parse(JSON.stringify(base)) as UnifiedMemoryConfig;
+  }
+
+  return {
+    enabled: overrides.enabled ?? base.enabled,
+    embedding: {
+      ...base.embedding,
+      ...overrides.embedding,
+    },
+    storage: {
+      ...base.storage,
+      ...overrides.storage,
+    },
+    limits: {
+      ...base.limits,
+      ...overrides.limits,
+      maxMemoriesPerTier: {
+        ...base.limits.maxMemoriesPerTier,
+        ...overrides.limits?.maxMemoriesPerTier,
+      },
+    },
+    scoring: {
+      ...base.scoring,
+      ...overrides.scoring,
+    },
+    cleanup: {
+      ...base.cleanup,
+      ...overrides.cleanup,
+    },
+    consolidation: {
+      ...base.consolidation,
+      ...overrides.consolidation,
+    },
+    decay: {
+      ...base.decay,
+      ...overrides.decay,
+    },
+  };
+}
+
+function getUnifiedMemoryStorage(): StorageLike | null {
+  if (typeof globalThis === 'undefined' || !('localStorage' in globalThis)) {
+    return null;
+  }
+
+  return (globalThis as { localStorage?: StorageLike }).localStorage ?? null;
+}
+
+function readPersistedUnifiedMemoryConfig(): Partial<UnifiedMemoryConfig> | null {
+  const storage = getUnifiedMemoryStorage();
+  if (!storage) {
+    return null;
+  }
+
+  const rawConfig = storage.getItem(UNIFIED_MEMORY_CONFIG_STORAGE_KEY);
+  if (!rawConfig) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawConfig) as Partial<UnifiedMemoryConfig>;
+  } catch (error) {
+    logger.warn('[UnifiedMemory] Ignoring invalid persisted config', error);
+    return null;
+  }
+}
+
+function persistUnifiedMemoryConfig(config: UnifiedMemoryConfig): void {
+  const storage = getUnifiedMemoryStorage();
+  if (!storage) {
+    return;
+  }
+
+  storage.setItem(UNIFIED_MEMORY_CONFIG_STORAGE_KEY, JSON.stringify(config));
+}
+
 /**
  * Unified Memory Engine
  *
@@ -368,7 +453,9 @@ export class UnifiedMemory {
     embeddingGenerator: IEmbeddingGenerator,
     config?: Partial<UnifiedMemoryConfig>
   ) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
+    const persistedConfig = readPersistedUnifiedMemoryConfig();
+    const baseConfig = mergeUnifiedMemoryConfig(DEFAULT_CONFIG, persistedConfig ?? undefined);
+    this.config = mergeUnifiedMemoryConfig(baseConfig, config);
     this.vectorStore = vectorStore;
     this.embeddingGenerator = embeddingGenerator;
   }
@@ -422,10 +509,7 @@ export class UnifiedMemory {
     try {
       logger.info('[UnifiedMemory] Shutting down...');
 
-      // Stop schedulers
-      if (this.cleanupScheduler) clearInterval(this.cleanupScheduler);
-      if (this.consolidationScheduler) clearInterval(this.consolidationScheduler);
-      if (this.decayScheduler) clearInterval(this.decayScheduler);
+      this.stopSchedulers();
 
       // Close vector store
       await this.vectorStore.close();
@@ -1102,6 +1186,18 @@ export class UnifiedMemory {
     };
   }
 
+  getConfig(): UnifiedMemoryConfig {
+    return mergeUnifiedMemoryConfig(this.config);
+  }
+
+  updateConfig(config: Partial<UnifiedMemoryConfig>): UnifiedMemoryConfig {
+    this.config = mergeUnifiedMemoryConfig(this.config, config);
+    persistUnifiedMemoryConfig(this.config);
+    this.refreshSchedulers();
+    logger.info('[UnifiedMemory] Configuration updated and persisted');
+    return this.getConfig();
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // UTILITY FUNCTIONS
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1138,6 +1234,39 @@ export class UnifiedMemory {
     if (params.tags.includes('important')) score = Math.min(1.0, score + 0.1);
 
     return score;
+  }
+
+  private refreshSchedulers(): void {
+    if (!this.isInitialized) {
+      return;
+    }
+
+    this.stopSchedulers();
+
+    if (this.config.cleanup.enabled) {
+      this.startCleanupScheduler();
+    }
+    if (this.config.consolidation.enabled) {
+      this.startConsolidationScheduler();
+    }
+    if (this.config.decay.enabled) {
+      this.startDecayScheduler();
+    }
+  }
+
+  private stopSchedulers(): void {
+    if (this.cleanupScheduler) {
+      clearInterval(this.cleanupScheduler);
+      this.cleanupScheduler = undefined;
+    }
+    if (this.consolidationScheduler) {
+      clearInterval(this.consolidationScheduler);
+      this.consolidationScheduler = undefined;
+    }
+    if (this.decayScheduler) {
+      clearInterval(this.decayScheduler);
+      this.decayScheduler = undefined;
+    }
   }
 }
 

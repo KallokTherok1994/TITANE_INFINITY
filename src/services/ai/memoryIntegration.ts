@@ -15,6 +15,9 @@
 
 import { memoryService } from '../api/memory';
 import type { StructuredMemoryEntry } from '@/core/prompts';
+import { createUnifiedMemory } from '@/services/unified';
+import type { UnifiedMemoryType } from '@/services/unified';
+import { MemoryTier } from '@/services/mcp/mcp.types';
 import type {
   MemoryContext,
   ProjectSummary,
@@ -28,6 +31,60 @@ import type { DurablePreference } from './preferenceEngine';
 import { filterPreferences, mergePreferences } from './preferenceEngine';
 
 const logger = createLogger('Memory');
+const HYBRID_MEMORY_SHADOW_WRITE_FLAG = 'titane_hybrid_memory_shadow_write_enabled';
+
+let unifiedMemoryShadowInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null =
+  null;
+
+function isHybridMemoryShadowWriteEnabled(): boolean {
+  if (typeof localStorage === 'undefined') {
+    return false;
+  }
+
+  const raw = localStorage.getItem(HYBRID_MEMORY_SHADOW_WRITE_FLAG);
+  return raw === 'true' || raw === '1';
+}
+
+async function getShadowUnifiedMemory() {
+  if (!unifiedMemoryShadowInstance) {
+    unifiedMemoryShadowInstance = await createUnifiedMemory();
+  }
+
+  return unifiedMemoryShadowInstance;
+}
+
+function mapStructuredEntryToUnifiedMemoryType(entry: StructuredMemoryEntry): UnifiedMemoryType {
+  const templateId = entry.templateId.toLowerCase();
+
+  if (templateId.includes('decision')) {
+    return 'decision';
+  }
+  if (templateId.includes('preference')) {
+    return 'preference';
+  }
+  if (templateId.includes('pattern')) {
+    return 'pattern';
+  }
+  if (templateId.includes('milestone')) {
+    return 'milestone';
+  }
+  if (templateId.includes('fact') || templateId.includes('knowledge')) {
+    return 'fact';
+  }
+
+  return 'context';
+}
+
+function deriveStructuredEntrySummary(entry: StructuredMemoryEntry): string {
+  const summaryCandidate = [
+    entry.data?.title,
+    entry.data?.summary,
+    entry.data?.label,
+    entry.templateId,
+  ].find((value): value is string => typeof value === 'string' && value.trim().length > 0);
+
+  return summaryCandidate ?? entry.templateId;
+}
 
 // Re-export for compatibility
 export type { MemoryContext } from '../memory/types';
@@ -126,6 +183,7 @@ export class MemoryIntegration {
         emotionState: data.emotionState,
         timestamp: new Date().toISOString(),
       });
+      await this.shadowWriteInteractionToUnifiedMemory(data);
       this.clearCache();
     } catch (error) {
       logger.error('Failed to save interaction', error);
@@ -142,6 +200,7 @@ export class MemoryIntegration {
 
     try {
       await memoryService.saveStructuredEntry(normalized);
+      await this.shadowWriteStructuredEntryToUnifiedMemory(normalized);
       this.clearCache();
     } catch (error) {
       logger.error('Failed to save structured entry', error);
@@ -373,6 +432,96 @@ export class MemoryIntegration {
    */
   clearCache(): void {
     this.cache.clear();
+  }
+
+  private async shadowWriteInteractionToUnifiedMemory(data: {
+    userMessage: string;
+    aiResponse: string;
+    mode: string;
+    emotionState?: { valence: number; activation: number; dominant_emotion: string };
+  }): Promise<void> {
+    if (!isHybridMemoryShadowWriteEnabled()) {
+      return;
+    }
+
+    try {
+      const unifiedMemory = await getShadowUnifiedMemory();
+      const sharedTags = ['hybrid-shadow-write', 'conversation', data.mode];
+
+      await Promise.all([
+        unifiedMemory.createMemory({
+          tier: MemoryTier.MEDIUM_TERM,
+          type: 'conversation',
+          owner: 'chat-engine',
+          summary: data.userMessage.slice(0, 200),
+          details: data.userMessage,
+          tags: [...sharedTags, 'user'],
+          importance: 0.72,
+          source: {
+            type: 'conversation',
+            context: 'memoryIntegration.saveInteraction:user',
+          },
+        }),
+        unifiedMemory.createMemory({
+          tier: MemoryTier.MEDIUM_TERM,
+          type: 'conversation',
+          owner: 'chat-engine',
+          summary: data.aiResponse.slice(0, 200),
+          details: data.aiResponse,
+          tags: [
+            ...sharedTags,
+            'assistant',
+            ...(data.emotionState?.dominant_emotion
+              ? [data.emotionState.dominant_emotion]
+              : []),
+          ],
+          importance: 0.64,
+          source: {
+            type: 'conversation',
+            context: 'memoryIntegration.saveInteraction:assistant',
+          },
+        }),
+      ]);
+
+      logger.info('UnifiedMemory shadow write stored chat interaction');
+    } catch (error) {
+      logger.warn('UnifiedMemory shadow write for interaction unavailable', error);
+    }
+  }
+
+  private async shadowWriteStructuredEntryToUnifiedMemory(
+    entry: StructuredMemoryEntry
+  ): Promise<void> {
+    if (!isHybridMemoryShadowWriteEnabled()) {
+      return;
+    }
+
+    try {
+      const unifiedMemory = await getShadowUnifiedMemory();
+      const timestamp = Date.parse(entry.timestamp || new Date().toISOString());
+
+      await unifiedMemory.createMemory({
+        tier: entry.target === 'long' ? MemoryTier.LONG_TERM : MemoryTier.MEDIUM_TERM,
+        type: mapStructuredEntryToUnifiedMemoryType(entry),
+        owner: 'memory-service',
+        summary: deriveStructuredEntrySummary(entry).slice(0, 200),
+        details: JSON.stringify(entry.data),
+        tags: ['hybrid-shadow-write', 'structured-entry', entry.templateId, entry.target],
+        importance: entry.target === 'long' ? 0.82 : 0.74,
+        source: {
+          type: 'manual',
+          id: entry.id,
+          timestamp: Number.isFinite(timestamp) ? timestamp : Date.now(),
+          context: 'memoryIntegration.saveStructuredEntry',
+        },
+      });
+
+      logger.info('UnifiedMemory shadow write stored structured entry', {
+        templateId: entry.templateId,
+      });
+    } catch (error) {
+      logger.warn('UnifiedMemory shadow write for structured entry unavailable', error);
+    }
   }
 
   private generateEntryId(): string {
