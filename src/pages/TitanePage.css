@@ -1122,15 +1122,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.42rem;
-  max-width: min(84%, 72ch);
+  max-width: min(92%, 88ch);
 }
 
 .conversation-container[data-fullscreen='true'] .conversation-message-content {
-  max-width: min(88%, 78ch);
+  max-width: min(94%, 96ch);
 }
 
 .conversation-message.assistant .conversation-message-content {
-  max-width: min(86%, 74ch);
+  max-width: min(93%, 92ch);
 }
 
 .conversation-message.user .conversation-message-content {
@@ -1188,6 +1188,51 @@
   word-wrap: break-word;
   overflow-wrap: anywhere;
   box-shadow: 0 10px 26px rgba(2, 6, 23, 0.12);
+}
+
+.conversation-message-markdown {
+  display: grid;
+  gap: 0.38rem;
+  max-width: 100%;
+}
+
+.conversation-message-markdown > :first-child {
+  margin-top: 0;
+}
+
+.conversation-message-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.conversation-message-markdown ul,
+.conversation-message-markdown ol {
+  margin-left: 0.2rem;
+}
+
+.conversation-message-markdown pre {
+  width: 100%;
+}
+
+.conversation-message-markdown blockquote,
+.conversation-message-markdown table {
+  max-width: 100%;
+}
+
+.conversation-message-markdown h1,
+.conversation-message-markdown h2,
+.conversation-message-markdown h3,
+.conversation-message-markdown h4,
+.conversation-message-markdown h5,
+.conversation-message-markdown h6 {
+  max-width: 100%;
+}
+
+.conversation-message-markdown a:hover {
+  opacity: 0.9;
+}
+
+.conversation-message-markdown table {
+  table-layout: auto;
 }
 
 .conversation-container[data-fullscreen='true'] .conversation-message-text {
@@ -1550,7 +1595,7 @@
 
 .conversation-container[data-density='compact'] .conversation-message-content {
   gap: 0.42rem;
-  max-width: min(100%, 70ch);
+  max-width: min(100%, 82ch);
 }
 
 .conversation-container[data-density='compact'] .conversation-message-role {

@@ -28,11 +28,14 @@ interface ParsedNode {
     | 'heading'
     | 'list'
     | 'link'
+    | 'blockquote'
+    | 'table'
     | 'break';
   content: string;
   language?: string;
   href?: string;
   children?: ParsedNode[];
+  rows?: string[][];
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -41,7 +44,7 @@ interface ParsedNode {
 
 /**
  * Simple markdown parser (no external dependencies)
- * Supports: bold, italic, code, code blocks, headings, lists, links, line breaks
+ * Supports: bold, italic, code, code blocks, headings, lists, links, blockquotes, tables, line breaks
  */
 class MarkdownParser {
   private text: string;
@@ -76,6 +79,29 @@ class MarkdownParser {
           currentText = '';
         }
         nodes.push(this.parseHeading());
+        continue;
+      }
+
+      // Check for markdown table
+      if (this.isTableStart()) {
+        if (currentText) {
+          nodes.push({ type: 'text', content: currentText });
+          currentText = '';
+        }
+        nodes.push(this.parseTable());
+        continue;
+      }
+
+      // Check for blockquote
+      if (
+        this.text[this.position] === '>' &&
+        (this.position === 0 || this.text[this.position - 1] === '\n')
+      ) {
+        if (currentText) {
+          nodes.push({ type: 'text', content: currentText });
+          currentText = '';
+        }
+        nodes.push(this.parseBlockquote());
         continue;
       }
 
@@ -276,6 +302,114 @@ class MarkdownParser {
 
     return { type: 'list', content: items.join('\n') };
   }
+
+  private isTableStart(): boolean {
+    if (!(this.position === 0 || this.text[this.position - 1] === '\n')) {
+      return false;
+    }
+
+    const currentLineEnd = this.text.indexOf('\n', this.position);
+    const firstLineEnd = currentLineEnd === -1 ? this.text.length : currentLineEnd;
+    const firstLine = this.text.substring(this.position, firstLineEnd).trim();
+
+    if (!firstLine.includes('|')) {
+      return false;
+    }
+
+    if (firstLine.replace(/\|/g, '').trim().length === 0) {
+      return false;
+    }
+
+    if (firstLineEnd >= this.text.length) {
+      return false;
+    }
+
+    const secondLineStart = firstLineEnd + 1;
+    const secondLineEndIndex = this.text.indexOf('\n', secondLineStart);
+    const secondLineEnd = secondLineEndIndex === -1 ? this.text.length : secondLineEndIndex;
+    const secondLine = this.text.substring(secondLineStart, secondLineEnd).trim();
+
+    return /^\|?(\s*:?-{3,}:?\s*\|)+\s*:?-{3,}:?\s*\|?$/.test(secondLine);
+  }
+
+  private parseTable(): ParsedNode {
+    const rows: string[][] = [];
+
+    const consumeLine = () => {
+      const start = this.position;
+      while (this.position < this.text.length && this.text[this.position] !== '\n') {
+        this.position++;
+      }
+      const line = this.text.substring(start, this.position);
+      if (this.text[this.position] === '\n') {
+        this.position++;
+      }
+      return line;
+    };
+
+    const parseCells = (line: string) =>
+      line
+        .trim()
+        .replace(/^\|/, '')
+        .replace(/\|$/, '')
+        .split('|')
+        .map(cell => cell.trim());
+
+    rows.push(parseCells(consumeLine()));
+    consumeLine();
+
+    while (this.position < this.text.length) {
+      const lineStart = this.position;
+      while (this.position < this.text.length && this.text[this.position] !== '\n') {
+        this.position++;
+      }
+      const line = this.text.substring(lineStart, this.position);
+
+      if (!line.trim() || !line.includes('|')) {
+        break;
+      }
+
+      rows.push(parseCells(line));
+
+      if (this.text[this.position] === '\n') {
+        this.position++;
+      }
+    }
+
+    return { type: 'table', content: '', rows };
+  }
+
+  private parseBlockquote(): ParsedNode {
+    const lines: string[] = [];
+
+    while (this.position < this.text.length) {
+      if (this.text[this.position] !== '>') {
+        break;
+      }
+
+      this.position += 1;
+      if (this.text[this.position] === ' ') {
+        this.position += 1;
+      }
+
+      let line = '';
+      while (this.position < this.text.length && this.text[this.position] !== '\n') {
+        line += this.text[this.position];
+        this.position++;
+      }
+      lines.push(line.trim());
+
+      if (this.text[this.position] === '\n') {
+        this.position++;
+      }
+
+      if (this.text[this.position] !== '>') {
+        break;
+      }
+    }
+
+    return { type: 'blockquote', content: lines.join('\n') };
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -287,6 +421,30 @@ interface RendererProps {
   index: number;
 }
 
+const resolveHeadingAccent = (level: number) => {
+  if (level <= 1) {
+    return {
+      paddingLeft: '0.7rem',
+      borderLeft: '3px solid rgba(125, 211, 252, 0.92)',
+      textTransform: 'none' as const,
+    };
+  }
+
+  if (level === 2) {
+    return {
+      paddingBottom: '0.2rem',
+      borderBottom: '1px solid rgba(148, 163, 184, 0.26)',
+      textTransform: 'none' as const,
+    };
+  }
+
+  return {
+    paddingLeft: '0.45rem',
+    borderLeft: '2px solid rgba(148, 163, 184, 0.22)',
+    textTransform: 'uppercase' as const,
+  };
+};
+
 const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
   switch (node.type) {
     case 'text':
@@ -294,14 +452,21 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
 
     case 'bold':
       return (
-        <strong key={index} style={{ fontWeight: 700 }}>
+        <strong
+          key={index}
+          style={{
+            fontWeight: 800,
+            color: 'rgba(248, 250, 252, 0.98)',
+            letterSpacing: '0.01em',
+          }}
+        >
           {node.content}
         </strong>
       );
 
     case 'italic':
       return (
-        <em key={index} style={{ fontStyle: 'italic' }}>
+        <em key={index} style={{ fontStyle: 'italic', color: 'rgba(191, 219, 254, 0.96)' }}>
           {node.content}
         </em>
       );
@@ -311,12 +476,13 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
         <code
           key={index}
           style={{
-            background: 'rgba(114, 123, 129, 0.2)',
-            padding: '2px 6px',
-            borderRadius: '4px',
-            fontFamily: 'monospace',
+            background: 'rgba(15, 23, 42, 0.7)',
+            padding: '0.14rem 0.42rem',
+            borderRadius: '6px',
+            border: '1px solid rgba(148, 163, 184, 0.24)',
+            fontFamily: 'JetBrains Mono, Fira Code, monospace',
             fontSize: '0.9em',
-            color: '#C4C4C4',
+            color: 'rgba(191, 219, 254, 0.98)',
           }}
         >
           {node.content}
@@ -328,16 +494,50 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
         <pre
           key={index}
           style={{
-            background: 'rgba(4, 15, 31, 0.8)',
-            padding: '12px',
-            borderRadius: '8px',
+            background: 'linear-gradient(180deg, rgba(2, 6, 23, 0.94), rgba(15, 23, 42, 0.92))',
+            padding: '0',
+            borderRadius: '12px',
             overflow: 'auto',
-            margin: '8px 0',
-            border: '1px solid rgba(114, 123, 129, 0.3)',
+            margin: '10px 0',
+            border: '1px solid rgba(96, 165, 250, 0.18)',
+            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.04)',
           }}
         >
+          {node.language ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '0.75rem',
+                padding: '0.62rem 0.9rem',
+                borderBottom: '1px solid rgba(148, 163, 184, 0.16)',
+                background: 'rgba(30, 41, 59, 0.72)',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'Sora, system-ui, sans-serif',
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(125, 211, 252, 0.96)',
+                }}
+              >
+                {node.language}
+              </span>
+            </div>
+          ) : null}
           <code
-            style={{ fontFamily: 'monospace', color: '#C4C4C4', whiteSpace: 'pre-wrap' }}
+            style={{
+              display: 'block',
+              padding: '14px 16px',
+              fontFamily: 'JetBrains Mono, Fira Code, monospace',
+              color: 'rgba(226, 232, 240, 0.98)',
+              whiteSpace: 'pre-wrap',
+              lineHeight: 1.65,
+            }}
           >
             {node.content}
           </code>
@@ -347,14 +547,18 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
     case 'heading': {
       const level = parseInt(node.language?.substring(1) || '1');
       const headingSizes = ['2em', '1.75em', '1.5em', '1.25em', '1.1em', '1em'];
+      const accentStyle = resolveHeadingAccent(level);
       return (
         <h1
           key={index}
           style={{
             fontSize: headingSizes[level - 1],
-            fontWeight: 700,
-            margin: '12px 0 8px 0',
-            color: '#C4C4C4',
+            fontWeight: level <= 2 ? 800 : 700,
+            margin: level <= 2 ? '18px 0 10px 0' : '14px 0 8px 0',
+            lineHeight: level <= 2 ? 1.14 : 1.22,
+            letterSpacing: '-0.02em',
+            color: 'rgba(248, 250, 252, 0.98)',
+            ...accentStyle,
           }}
         >
           {node.content}
@@ -368,17 +572,103 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
         <ul
           key={index}
           style={{
-            margin: '8px 0',
-            paddingLeft: '20px',
-            color: '#C4C4C4',
+            margin: '10px 0',
+            paddingLeft: '22px',
+            color: 'rgba(226, 232, 240, 0.98)',
           }}
         >
           {listItems.map((item, idx) => (
-            <li key={idx} style={{ marginBottom: '4px' }}>
+            <li key={idx} style={{ marginBottom: '6px' }}>
               {item}
             </li>
           ))}
         </ul>
+      );
+    }
+
+    case 'blockquote':
+      return (
+        <blockquote
+          key={index}
+          style={{
+            margin: '12px 0',
+            padding: '0.78rem 0.95rem',
+            borderLeft: '3px solid rgba(125, 211, 252, 0.72)',
+            borderRadius: '0 12px 12px 0',
+            background: 'linear-gradient(180deg, rgba(8, 47, 73, 0.28), rgba(15, 23, 42, 0.22))',
+            color: 'rgba(224, 242, 254, 0.98)',
+            fontStyle: 'italic',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {node.content}
+        </blockquote>
+      );
+
+    case 'table': {
+      const rows = node.rows ?? [];
+      const [headerRow = [], ...bodyRows] = rows;
+
+      return (
+        <div key={index} style={{ overflowX: 'auto', margin: '12px 0', maxWidth: '100%' }}>
+          <table
+            style={{
+              width: '100%',
+              minWidth: '320px',
+              borderCollapse: 'separate',
+              borderSpacing: 0,
+              border: '1px solid rgba(148, 163, 184, 0.18)',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              background: 'rgba(15, 23, 42, 0.44)',
+            }}
+          >
+            <thead>
+              <tr>
+                {headerRow.map((cell, cellIndex) => (
+                  <th
+                    key={cellIndex}
+                    scope="col"
+                    style={{
+                      padding: '0.72rem 0.82rem',
+                      textAlign: 'left',
+                      background: 'rgba(30, 41, 59, 0.92)',
+                      color: 'rgba(226, 232, 240, 0.98)',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      textTransform: 'uppercase',
+                      borderBottom: '1px solid rgba(148, 163, 184, 0.16)',
+                    }}
+                  >
+                    {cell}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bodyRows.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  {row.map((cell, cellIndex) => (
+                    <td
+                      key={cellIndex}
+                      style={{
+                        padding: '0.72rem 0.82rem',
+                        color: 'rgba(226, 232, 240, 0.96)',
+                        borderBottom:
+                          rowIndex === bodyRows.length - 1
+                            ? 'none'
+                            : '1px solid rgba(148, 163, 184, 0.12)',
+                      }}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
     }
 
@@ -390,8 +680,9 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            color: '#727B81',
+            color: 'rgba(125, 211, 252, 0.98)',
             textDecoration: 'underline',
+            textUnderlineOffset: '0.18em',
             cursor: 'pointer',
           }}
         >
@@ -421,6 +712,8 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
  * - Headings (# ## ### etc.)
  * - Lists (* - + followed by space)
  * - Links ([text](url))
+ * - Blockquotes (> quote)
+ * - Tables (GitHub-style header + separator)
  * - Line breaks (\n\n)
  */
 export const MarkdownContent: React.FC<MarkdownContentProps> = ({
@@ -436,7 +729,13 @@ export const MarkdownContent: React.FC<MarkdownContentProps> = ({
   return (
     <div
       className={className}
-      style={{ ...style, lineHeight: '1.6', wordBreak: 'break-word' }}
+      style={{
+        ...style,
+        display: 'grid',
+        gap: '0.3rem',
+        lineHeight: '1.6',
+        wordBreak: 'break-word',
+      }}
     >
       {nodes.map((node, index) => (
         <NodeRenderer key={index} node={node} index={index} />

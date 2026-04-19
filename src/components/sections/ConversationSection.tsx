@@ -44,6 +44,7 @@ import {
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
+import { MarkdownContent } from '@/components/chat/MarkdownContent';
 import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
 import { registerCustomMode } from '@/config/chatModes.config';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
@@ -1062,7 +1063,14 @@ const ConversationMessage = memo(
             )}
           </div>
           <div className="conversation-message-text" data-testid="chat-message-content">
-            {message.content}
+            {message.role === 'assistant' ? (
+              <MarkdownContent
+                content={message.content}
+                className="conversation-message-markdown"
+              />
+            ) : (
+              message.content
+            )}
           </div>
           {message.role === 'assistant' && citations.length > 0 && (
             <div

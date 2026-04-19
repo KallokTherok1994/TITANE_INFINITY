@@ -171,6 +171,35 @@ test.describe('Critical Path: Chat Interaction', () => {
     await expect(assistantContent).toContainText('segment-1');
     await expect(assistantContent).toContainText('segment-20');
     await expect(assistantContent).toContainText('segment-40');
+    await expect(assistantContent.getByText('segment-40', { exact: false })).toBeVisible();
+  });
+
+  test('ASSISTANT_MARKDOWN_RENDERING: la surface canonique rend le markdown assistant sans marqueurs bruts', async ({
+    page,
+  }) => {
+    await submitChatMessage(page, 'Plan **Alpha**\n\n- Beta\n- Gamma');
+
+    const assistantContent = getAssistantContent(page);
+    await expect(assistantContent).toContainText('[MOCK_OK]', { timeout: 15000 });
+    await expect(assistantContent.locator('strong')).toHaveText('Alpha');
+    await expect(assistantContent.locator('ul li')).toHaveCount(2);
+    await expect(assistantContent).not.toContainText('**Alpha**');
+  });
+
+  test('ASSISTANT_MARKDOWN_TABLES_AND_QUOTES: la surface canonique rend citations markdown et tableaux', async ({
+    page,
+  }) => {
+    await submitChatMessage(
+      page,
+      'Synthèse\n\n> Citation importante\n\n| Colonne | Valeur |\n| --- | --- |\n| Alpha | 42 |'
+    );
+
+    const assistantContent = getAssistantContent(page);
+    await expect(assistantContent).toContainText('[MOCK_OK]', { timeout: 15000 });
+    await expect(assistantContent.locator('blockquote')).toContainText('Citation importante');
+    await expect(assistantContent.locator('table thead th')).toHaveCount(2);
+    await expect(assistantContent.locator('table tbody td').first()).toHaveText('Alpha');
+    await expect(assistantContent).not.toContainText('| --- | --- |');
   });
 
   test('SWITCH_CONVERSATION_PERSISTS: UI reste en SPA', async ({ page }) => {
