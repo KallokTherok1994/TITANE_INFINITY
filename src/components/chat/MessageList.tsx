@@ -18,6 +18,7 @@ import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import { ChatFallback } from './ChatFallback'; // ✨ UI vΩ - Anti-Silence Contract
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import './MessageList.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -70,91 +71,25 @@ function useOmegaErrorBoundary() {
     hasCorruption: false,
   });
 
+  // Reset error state
   const resetError = useCallback(() => {
-    setState(prev => ({
-      ...prev,
-      renderError: null,
-      hasCorruption: false,
-    }));
+    setState(prev => ({ ...prev, renderError: null }));
   }, []);
 
-  const handleError = useCallback(
-    (error: Error, context: string, messages?: AIMessage[]) => {
-      const now = Date.now();
-      const maxMessageLength = getRenderMessageLimit();
-
-      // Auto-heal trigger
-      autoHealEngine.heal('message-list', error, 'validation', {
-        context,
-        messageCount: messages?.length || 0,
-        timestamp: now,
-      });
-
-      setState(prev => {
-        const newRecoveryCount = prev.recoveryCount + 1;
-
-        // Safe message filtering
-        let safeMessages: AIMessage[] = [];
-        if (messages) {
-          safeMessages = messages.filter(msg => {
-            try {
-              // Validate message structure
-              return (
-                msg &&
-                typeof msg === 'object' &&
-                typeof msg.role === 'string' &&
-                typeof msg.content === 'string' &&
-                typeof msg.timestamp === 'number' &&
-                // OMEGA: allow empty content for assistant streaming placeholders
-                (msg.content.length > 0 || msg.role === 'assistant') &&
-                msg.content.length <= maxMessageLength
-              );
-            } catch (filterError) {
-              return false;
-            }
-          });
-        }
-
-        // Alerte UI/log si troncature détectée
-        if (safeMessages.length !== (messages?.length || 0)) {
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(
-              new CustomEvent('titane-message-truncated', {
-                detail: {
-                  originalCount: messages?.length || 0,
-                  safeCount: safeMessages.length,
-                  maxLength: maxMessageLength,
-                },
-              })
-            );
-          }
-          if (isDev) {
-            logger.warn('Troncature de message détectée', {
-              originalCount: messages?.length || 0,
-              safeCount: safeMessages.length,
-              maxLength: maxMessageLength,
-            });
-          }
-        }
-        return {
-          renderError: error.message,
-          recoveryCount: newRecoveryCount,
-          lastRecovery: now,
-          safeMessages,
-          hasCorruption: safeMessages.length !== (messages?.length || 0),
-        };
-      });
-
-      if (isDev) {
-        logger.error(
-          'Message list error handled',
-          { component: 'MessageList', action: 'handleError', context },
-          error
-        );
-      }
-    },
-    []
-  );
+  // Handle error and update state
+  const handleError = useCallback((error: Error, context: string, messages?: AIMessage[]) => {
+    setState(prev => ({
+      ...prev,
+      renderError: error.message,
+      recoveryCount: prev.recoveryCount + 1,
+      lastRecovery: Date.now(),
+      safeMessages: messages || [],
+      hasCorruption: !!messages && messages.length > 0,
+    }));
+    if (isDev) {
+      logger.error('Message list error handled', { component: 'MessageList', action: 'handleError', context }, error);
+    }
+  }, []);
 
   return { state, resetError, handleError };
 }

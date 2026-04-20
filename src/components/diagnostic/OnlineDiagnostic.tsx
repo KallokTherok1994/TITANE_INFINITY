@@ -7,8 +7,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, ZapOff, Wifi, WifiOff, Globe, Clock, AlertCircle } from 'lucide-react';
 import { cn } from '@/utils/cn';
-import { safeInvoke } from '@/utils/invoke';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface ApiEndpointStatus {
   name: string;
@@ -42,22 +42,30 @@ export const OnlineDiagnostic: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const checkCapabilities = async () => {
     if (!isTauriRuntimeAvailable()) {
+      setErrorMessage('Diagnostic online indisponible hors runtime Tauri.');
       setLoading(false);
       return;
     }
 
     try {
       setRefreshing(true);
-      const result = await safeInvoke<OnlineCapabilities>('check_online_capabilities');
+      setErrorMessage(null);
+      const result =
+        (await tauriClient.checkOnlineCapabilities()) as OnlineCapabilities;
       if (result) {
         setCapabilities(result);
         setLastCheck(new Date());
       }
     } catch (error) {
       console.error('Failed to check online capabilities:', error);
+      const message =
+        error instanceof Error ? error.message : String(error);
+      setCapabilities(null);
+      setErrorMessage(message);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -88,15 +96,22 @@ export const OnlineDiagnostic: React.FC = () => {
   }
 
   if (!capabilities) {
+    const diagnosticMessage = !isTauriRuntimeAvailable()
+      ? 'Diagnostic disponible uniquement en runtime Tauri (non accessible en mode navigateur)'
+      : errorMessage?.includes('not in whitelist') ||
+          errorMessage?.includes('not allowed') ||
+          errorMessage?.includes('capability') ||
+          errorMessage?.includes('check_online_capabilities')
+        ? 'Impossible de vérifier les capacités online — la voie frontend/Tauri pour check_online_capabilities n est pas alignée'
+        : errorMessage
+          ? `Impossible de vérifier les capacités online — ${errorMessage}`
+          : 'Impossible de vérifier les capacités online.';
+
     return (
       <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
         <div className="flex items-center gap-2 text-yellow-500">
           <AlertCircle size={18} />
-          <span>
-            {isTauriRuntimeAvailable()
-              ? 'Impossible de vérifier les capacités online — vérifiez la commande IPC check_online_capabilities'
-              : 'Diagnostic disponible uniquement en runtime Tauri (non accessible en mode navigateur)'}
-          </span>
+          <span>{diagnosticMessage}</span>
         </div>
       </div>
     );

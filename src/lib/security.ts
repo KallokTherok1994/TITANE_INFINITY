@@ -292,6 +292,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_prune',
   'memory_delete',
   'memory_import',
+  'check_online_capabilities',
   'read_production_week1_csv',
 
   // ═══════════════════════════════════════════════════════════════

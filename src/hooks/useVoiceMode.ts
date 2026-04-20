@@ -117,10 +117,7 @@ export function useVoiceMode(): UseVoiceModeReturn {
     setError(null);
 
     try {
-      // Tauri 2.0 attend camelCase pour les paramètres
-      const transcript = await secureInvoke<string>('transcribe_audio', {
-        audioData: Array.from(audioData),
-      });
+      const transcript = await voiceService.transcribe(audioData);
 
       setState(prev => ({
         ...prev,

@@ -12,6 +12,7 @@
  */
 
 import React, { memo, useEffect, useState } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -47,23 +48,23 @@ interface ConnectionEdge {
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────
 
-export const SingularityMonitor: React.FC = memo(() => {
+const SingularityMonitor = memo(() => {
   const {
-    consciousness,
-    autoCoherence,
-    formStability,
-    expressionQuality,
-    globalHarmony,
-    globalEntropy,
-    systemHealth,
-    isInitialized,
-    field,
     unity,
     convergence,
     overmind,
     signature,
     essence,
     updateState,
+    isInitialized,
+    consciousness,
+    autoCoherence,
+    formStability,
+    systemHealth,
+    globalHarmony,
+    globalEntropy,
+    expressionQuality,
+    field,
   } = useSingularity();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -353,3 +354,4 @@ export const SingularityMonitor: React.FC = memo(() => {
 SingularityMonitor.displayName = 'SingularityMonitor';
 
 export default SingularityMonitor;
+export { SingularityMonitor };

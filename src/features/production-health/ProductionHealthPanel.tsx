@@ -40,10 +40,21 @@ const getStatusLabel = (status: ProductionHealthStatus): string => {
 };
 
 const getNoDataMessage = (
-  kind: ProductionHealthErrorKind | null
+  kind: ProductionHealthErrorKind | null,
+  rawError: string | null
 ): { title: string; detail: string } => {
   switch (kind) {
     case 'SOURCE_UNAVAILABLE':
+      if (
+        rawError?.includes('Tauri runtime non disponible') ||
+        rawError?.includes('Tauri not available')
+      ) {
+        return {
+          title: '🖥️ Runtime Tauri indisponible',
+          detail:
+            "La source production n'a pas pu être interrogée car le runtime Tauri n'est pas disponible sur cette surface.",
+        };
+      }
       return {
         title: '📂 Source absente',
         detail:
@@ -109,7 +120,7 @@ export const ProductionHealthPanel: React.FC = () => {
     }
 
     if (error && !data) {
-      const noDataMsg = getNoDataMessage(errorKind ?? null);
+      const noDataMsg = getNoDataMessage(errorKind ?? null, error);
       return (
         <div className="ph-state ph-error" data-testid="production-health-no-data">
           <p className="ph-error-title">{noDataMsg.title}</p>

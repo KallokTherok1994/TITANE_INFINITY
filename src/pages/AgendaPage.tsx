@@ -9,6 +9,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useTimeAgenda } from '@/hooks/useTimeAgenda';
 import type { AgendaEvent, EventCategory, AgendaView } from '@/engines/time';
 import './AgendaPage.css';
@@ -56,6 +57,11 @@ const VIEW_LABELS: Record<AgendaView, string> = {
 /**
  * Barre d'outils de l'agenda
  */
+interface SidebarProps {
+  stats: any;
+  todayEvents: any;
+  onEventClick: (event: any) => void;
+}
 interface ToolbarProps {
   currentView: AgendaView;
   currentDate: Date;
@@ -424,19 +430,16 @@ const MonthView: React.FC<MonthViewProps> = ({
 /**
  * Sidebar avec résumé et énergie
  */
-interface SidebarProps {
-  stats: {
-    totalEvents: number;
-    eventsToday: number;
-    eventsThisWeek: number;
-    currentEnergy: number;
-    currentSegment: string;
-    isWorkHours: boolean;
-  };
-  todayEvents: AgendaEvent[];
-  onEventClick?: (event: AgendaEvent) => void;
+interface ToolbarProps {
+  currentView: AgendaView;
+  currentDate: Date;
+  onViewChange: (view: AgendaView) => void;
+  onToday: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+  showEnergyOverlay: boolean;
+  onToggleEnergy: () => void;
 }
-
 const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClick }) => {
   const energyPercent = Math.round(stats.currentEnergy * 100);
   const energyClass =
@@ -508,7 +511,7 @@ const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClic
           ) : (
             todayEvents
               .slice(0, 5)
-              .map(event => (
+              .map((event: any) => (
                 <EventCard key={event.id} event={event} compact onClick={onEventClick} />
               ))
           )}

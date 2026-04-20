@@ -1,7 +1,5 @@
 {
-  "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "TITANE Infinity",
-  "version": "31.0.4",
+  "version": "31.0.5",
   "identifier": "com.titane.infinity",
   "bundle": {
     "icon": [
@@ -18,23 +16,6 @@
     "targets": "all"
   },
   "app": {
-    "windows": [
-      {
-        "label": "main",
-        "title": "TITANE Infinity - Multi-Provider AI",
-        "width": 1400,
-        "height": 900,
-        "minWidth": 1200,
-        "minHeight": 800,
-        "resizable": true,
-        "fullscreen": false,
-        "decorations": true,
-        "transparent": false,
-        "center": true,
-        "visible": true,
-        "devtools": false
-      }
-    ],
     "security": {
       "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
@@ -73,45 +54,6 @@
             "core:app:allow-app-hide"
           ],
           "allow": [
-            {
-              "command": "agenda_save_event"
-            },
-            {
-              "command": "agenda_save_events"
-            },
-            {
-              "command": "agenda_delete_event"
-            },
-            {
-              "command": "agenda_sync"
-            },
-            {
-              "command": "calibrate_titane_voice"
-            },
-            {
-              "command": "chat_mode_change"
-            },
-            {
-              "command": "chat_mode_sync"
-            },
-            {
-              "command": "evolution_save_state"
-            },
-            {
-              "command": "submit_evolution_data"
-            },
-            {
-              "command": "knowledge_ingest"
-            },
-            {
-              "command": "knowledge_base_runtime_snapshot"
-            },
-            {
-              "command": "knowledge_save_state"
-            },
-            {
-              "command": "progression_save_state"
-            },
             {
               "command": "get_helios_state"
             },
@@ -317,6 +259,9 @@
               "command": "memory_import"
             },
             {
+              "command": "check_online_capabilities"
+            },
+            {
               "command": "read_production_week1_csv"
             },
             {
@@ -399,15 +344,6 @@
             },
             {
               "command": "persistent_memory_export"
-            },
-            {
-              "command": "security_audit_sync_journal"
-            },
-            {
-              "command": "security_audit_publish_signed_export"
-            },
-            {
-              "command": "hybrid_memory_publish_governed_report"
             },
             {
               "command": "ai_send_prompt"

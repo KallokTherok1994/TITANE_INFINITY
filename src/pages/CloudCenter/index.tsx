@@ -9,6 +9,7 @@
 import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import React, { useState, useEffect, useCallback } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import VaultStatus from './VaultStatus';
 import SyncConfig from './SyncConfig';
 import SyncLogs from './SyncLogs';
@@ -151,79 +152,81 @@ const CloudCenter: React.FC = () => {
   // Formulaire d'initialisation
   if (!initialized) {
     return (
-      <div className="cloud-center">
-        <header className="cloud-header">
-          <h1>☁️ TITANE∞ Cloud Center</h1>
-          <p className="subtitle">Vault chiffré & synchronisation multi-device</p>
-        </header>
+      <ErrorBoundary>
+        <div className="cloud-center">
+          <header className="cloud-header">
+            <h1>☁️ TITANE∞ Cloud Center</h1>
+            <p className="subtitle">Vault chiffré & synchronisation multi-device</p>
+          </header>
 
-        <div className="init-container">
-          {!showInitForm ? (
-            <div className="init-welcome">
-              <div className="init-icon">🔐</div>
-              <h2>Cloud Sync Engine v∞</h2>
-              <p>
-                Synchronisez vos données de manière sécurisée entre vos appareils.
-                <br />
-                Chiffrement AES-256-GCM + signatures Ed25519.
-              </p>
-              <button className="btn-primary" onClick={() => setShowInitForm(true)}>
-                Initialiser le Cloud Sync
-              </button>
-            </div>
-          ) : (
-            <div className="init-form">
-              <h2>🔑 Initialisation du Vault</h2>
-
-              <div className="form-group">
-                <label htmlFor="deviceName">Nom de l&apos;appareil</label>
-                <input
-                  id="deviceName"
-                  type="text"
-                  value={deviceName}
-                  onChange={e => setDeviceName(e.target.value)}
-                  placeholder="Ex: Pop!_OS Laptop"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="passphrase">Mot de passe du Vault</label>
-                <input
-                  id="passphrase"
-                  type="password"
-                  value={passphrase}
-                  onChange={e => setPassphrase(e.target.value)}
-                  placeholder="Mot de passe fort..."
-                />
-                <small>
-                  Ce mot de passe chiffre votre vault localement.
+          <div className="init-container">
+            {!showInitForm ? (
+              <div className="init-welcome">
+                <div className="init-icon">🔐</div>
+                <h2>Cloud Sync Engine v∞</h2>
+                <p>
+                  Synchronisez vos données de manière sécurisée entre vos appareils.
                   <br />
-                  Il ne sera jamais synchronisé.
-                </small>
-              </div>
-
-              {error && <div className="error-message">{error}</div>}
-
-              <div className="form-actions">
-                <button
-                  className="btn-secondary"
-                  onClick={() => setShowInitForm(false)}
-                  disabled={loading}
-                >
-                  Annuler
-                </button>
-                <button
-                  className="btn-primary"
-                  onClick={handleInitialize}
-                  disabled={loading || !passphrase || !deviceName}
-                >
-                  {loading ? 'Initialisation...' : 'Initialiser'}
+                  Chiffrement AES-256-GCM + signatures Ed25519.
+                </p>
+                <button className="btn-primary" onClick={() => setShowInitForm(true)}>
+                  Initialiser le Cloud Sync
                 </button>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="init-form">
+                <h2>🔑 Initialisation du Vault</h2>
+
+                <div className="form-group">
+                  <label htmlFor="deviceName">Nom de l&apos;appareil</label>
+                  <input
+                    id="deviceName"
+                    type="text"
+                    value={deviceName}
+                    onChange={e => setDeviceName(e.target.value)}
+                    placeholder="Ex: Pop!_OS Laptop"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="passphrase">Mot de passe du Vault</label>
+                  <input
+                    id="passphrase"
+                    type="password"
+                    value={passphrase}
+                    onChange={e => setPassphrase(e.target.value)}
+                    placeholder="Mot de passe fort..."
+                  />
+                  <small>
+                    Ce mot de passe chiffre votre vault localement.
+                    <br />
+                    Il ne sera jamais synchronisé.
+                  </small>
+                </div>
+
+                {error && <div className="error-message">{error}</div>}
+
+                <div className="form-actions">
+                  <button
+                    className="btn-secondary"
+                    onClick={() => setShowInitForm(false)}
+                    disabled={loading}
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    className="btn-primary"
+                    onClick={handleInitialize}
+                    disabled={loading || !passphrase || !deviceName}
+                  >
+                    {loading ? 'Initialisation...' : 'Initialiser'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </ErrorBoundary>
     );
   }
 

@@ -191,7 +191,7 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
       provider: 'ollama',
       error: {
         code: 'OLLAMA_IPC_FAILED',
-        message: lastHealthError,
+        message: lastHealthError || '',
         retryable: true,
       },
     };

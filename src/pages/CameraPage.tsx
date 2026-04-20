@@ -15,6 +15,7 @@
  */
 
 import React, { useState } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useVisionStore, selectIsCameraActive } from '@/stores/useVisionStore';
 import { CameraPreview } from '@/components/vision/CameraPreview';
 import { detectEnvironment } from '@/core/tauri/environment';
@@ -63,6 +64,7 @@ const EthicalDisclaimer: React.FC = () => (
 // ============================================================================
 
 const levelToPercent = (level: VisualLevel): number => {
+
   switch (level) {
     case 'low':
       return 25;
@@ -73,7 +75,7 @@ const levelToPercent = (level: VisualLevel): number => {
     default:
       return 50;
   }
-};
+}
 
 const levelToColor = (level: VisualLevel): string => {
   switch (level) {
@@ -88,11 +90,16 @@ const levelToColor = (level: VisualLevel): string => {
   }
 };
 
+
+
+
+
+
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
-export const CameraPage: React.FC = () => {
+function CameraPage() {
   const env = detectEnvironment();
   const [error, setError] = useState<string | null>(null);
 
@@ -158,242 +165,245 @@ export const CameraPage: React.FC = () => {
   };
 
   return (
-    <div className="camera-page">
-      {/* Header */}
-      <header className="camera-page-header">
-        <h1>📷 Centre Vision</h1>
-        <span className="camera-version">Vision Engine v∞</span>
-      </header>
+    <ErrorBoundary>
+      <div className="camera-page" data-testid="page-camera">
+        {/* Header */}
+        <header className="camera-page-header">
+          <h1>📷 Centre Vision</h1>
+          <span className="camera-version">Vision Engine v∞</span>
+        </header>
 
-      {/* Status Bar */}
-      <div className="camera-status-bar">
-        <StatusIndicator active={isCameraActive} label="Caméra" />
-        <StatusIndicator active={isObservationActive} label="Vision Engine" />
-        <StatusIndicator active={isProcessing} label="Analyse" />
-        <StatusIndicator active={bodyLanguage.landmarksDetected} label="Body Tracking" />
-      </div>
-
-      {/* Error Display */}
-      {(error || lastError) && (
-        <div className="camera-error">
-          <span className="error-icon">⚠️</span>
-          <span>{error || lastError?.message}</span>
+        {/* Status Bar */}
+        <div className="camera-status-bar">
+          <StatusIndicator active={isCameraActive} label="Caméra" />
+          <StatusIndicator active={isObservationActive} label="Vision Engine" />
+          <StatusIndicator active={isProcessing} label="Analyse" />
+          <StatusIndicator active={bodyLanguage.landmarksDetected} label="Body Tracking" />
         </div>
-      )}
 
-      {/* Environment Warning */}
-      {!env.isTauri && (
-        <div className="camera-warning">
-          <strong>Note:</strong> En mode navigateur, certaines fonctionnalités peuvent
-          être limitées. Pour une expérience complète, utilisez l&apos;application Tauri
-          native.
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="camera-page-content">
-        {/* Left Column: Controls */}
-        <div className="camera-controls-panel">
-          <h2>Contrôles</h2>
-
-          <div className="control-group">
-            <button
-              className={`camera-btn ${isCameraActive ? 'active' : ''}`}
-              onClick={handleToggleCamera}
-              disabled={isProcessing}
-            >
-              {isCameraActive ? '⏹️ Arrêter Caméra' : '▶️ Démarrer Caméra'}
-            </button>
-
-            <button
-              className={`camera-btn ${isObservationActive ? 'active' : ''}`}
-              onClick={handleToggleVision}
-              disabled={!isCameraActive || isProcessing}
-            >
-              {isObservationActive ? '🔴 Désactiver Vision' : '🟢 Activer Vision Engine'}
-            </button>
+        {/* Error Display */}
+        {(error || lastError) && (
+          <div className="camera-error">
+            <span className="error-icon">⚠️</span>
+            <span>{error || lastError?.message}</span>
           </div>
+        )}
 
-          <div className="control-group">
-            <h3>Configuration</h3>
-            <label className="config-toggle">
-              <input
-                type="checkbox"
-                checked={config.processingEnabled}
-                onChange={e => updateConfig({ processingEnabled: e.target.checked })}
-              />
-              <span>Traitement actif</span>
-            </label>
-            <label className="config-toggle">
-              <input
-                type="checkbox"
-                checked={config.debugOverlayEnabled}
-                onChange={e => updateConfig({ debugOverlayEnabled: e.target.checked })}
-              />
-              <span>Overlay Debug</span>
-            </label>
+        {/* Environment Warning */}
+        {!env.isTauri && (
+          <div className="camera-warning">
+            <strong>Note:</strong> En mode navigateur, certaines fonctionnalités peuvent
+            être limitées. Pour une expérience complète, utilisez l&apos;application Tauri
+            native.
           </div>
+        )}
 
-          <EthicalDisclaimer />
-        </div>
+        {/* Main Content */}
+        <div className="camera-page-content">
+          {/* Left Column: Controls */}
+          <div className="camera-controls-panel">
+            <h2>Contrôles</h2>
 
-        {/* Center: Camera Preview */}
-        <div className="camera-preview-container">
-          {isCameraActive ? (
-            <CameraPreview
-              size="large"
-              position="top-left"
-              showControls={true}
-              showLandmarksOverlay={config.debugOverlayEnabled}
-              mirrored={true}
-            />
-          ) : (
-            <div className="camera-placeholder">
-              <span className="placeholder-icon">📷</span>
-              <p>Caméra inactive</p>
-              <p className="placeholder-hint">
-                Cliquez sur &quot;Démarrer Caméra&quot; pour activer
-              </p>
+            <div className="control-group">
+              <button
+                className={`camera-btn ${isCameraActive ? 'active' : ''}`}
+                onClick={handleToggleCamera}
+                disabled={isProcessing}
+              >
+                {isCameraActive ? '⏹️ Arrêter Caméra' : '▶️ Démarrer Caméra'}
+              </button>
+
+              <button
+                className={`camera-btn ${isObservationActive ? 'active' : ''}`}
+                onClick={handleToggleVision}
+                disabled={!isCameraActive || isProcessing}
+              >
+                {isObservationActive ? '🔴 Désactiver Vision' : '🟢 Activer Vision Engine'}
+              </button>
             </div>
-          )}
-        </div>
 
-        {/* Right Column: Analysis */}
-        <div className="camera-analysis-panel">
-          <h2>Analyse en Temps Réel</h2>
+            <div className="control-group">
+              <h3>Configuration</h3>
+              <label className="config-toggle">
+                <input
+                  type="checkbox"
+                  checked={config.processingEnabled}
+                  onChange={e => updateConfig({ processingEnabled: e.target.checked })}
+                />
+                <span>Traitement actif</span>
+              </label>
+              <label className="config-toggle">
+                <input
+                  type="checkbox"
+                  checked={config.debugOverlayEnabled}
+                  onChange={e => updateConfig({ debugOverlayEnabled: e.target.checked })}
+                />
+                <span>Overlay Debug</span>
+              </label>
+            </div>
 
-          {isObservationActive ? (
-            <>
-              {/* Affect Estimation — only shown when model has produced real estimations */}
-              {affectEstimation.estimationCount > 0 ? (
-                <div className="analysis-section">
-                  <h3>🎭 Indices Visuels (Approximatifs)</h3>
-                  <div className="affect-meters">
-                    <div className="affect-meter">
-                      <label>Énergie</label>
-                      <div className="meter-bar">
-                        <div
-                          className="meter-fill"
-                          style={{
-                            width: `${levelToPercent(affectEstimation.visualEnergyLevel)}%`,
-                            backgroundColor: levelToColor(
-                              affectEstimation.visualEnergyLevel
-                            ),
-                          }}
-                        />
-                      </div>
-                      <span>{affectEstimation.visualEnergyLevel}</span>
-                    </div>
-                    <div className="affect-meter">
-                      <label>Tension</label>
-                      <div className="meter-bar">
-                        <div
-                          className="meter-fill"
-                          style={{
-                            width: `${levelToPercent(affectEstimation.visualTensionLevel)}%`,
-                            backgroundColor: levelToColor(
-                              affectEstimation.visualTensionLevel
-                            ),
-                          }}
-                        />
-                      </div>
-                      <span>{affectEstimation.visualTensionLevel}</span>
-                    </div>
-                    <div className="affect-meter">
-                      <label>Engagement</label>
-                      <div className="meter-bar">
-                        <div
-                          className="meter-fill"
-                          style={{
-                            width: `${levelToPercent(affectEstimation.visualEngagementLevel)}%`,
-                            backgroundColor: levelToColor(
-                              affectEstimation.visualEngagementLevel
-                            ),
-                          }}
-                        />
-                      </div>
-                      <span>{affectEstimation.visualEngagementLevel}</span>
-                    </div>
-                  </div>
-                  <p className="affect-disclaimer">
-                    Ces indices sont approximatifs et ne constituent pas un diagnostic.
-                  </p>
-                </div>
-              ) : (
-                <div className="analysis-section">
-                  <h3>🎭 Indices Visuels</h3>
-                  <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
-                    ⏳ Analyse en cours de développement — aucun modèle actif. Les
-                    métriques seront disponibles une fois le moteur d'analyse intégré.
-                  </p>
-                </div>
-              )}
+            <EthicalDisclaimer />
+          </div>
 
-              {/* Body Language — only shown when landmarks are actually detected */}
-              {bodyLanguage.landmarksDetected ? (
-                <div className="analysis-section">
-                  <h3>🧍 Langage Corporel</h3>
-                  <div className="body-stats">
-                    <div className="body-stat">
-                      <label>Posture</label>
-                      <span>{Math.round(bodyLanguage.postureScore * 100)}%</span>
-                    </div>
-                    <div className="body-stat">
-                      <label>Mouvement</label>
-                      <span>{Math.round(bodyLanguage.movementScore * 100)}%</span>
-                    </div>
-                    <div className="body-stat">
-                      <label>Stabilité regard</label>
-                      <span>{Math.round(bodyLanguage.gazeStabilityScore * 100)}%</span>
-                    </div>
-                    <div className="body-stat">
-                      <label>Confiance</label>
-                      <span>{Math.round(bodyLanguage.confidence * 100)}%</span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="analysis-section">
-                  <h3>🧍 Langage Corporel</h3>
-                  <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
-                    ⏳ Tracking corporel en cours de développement — aucun landmark
-                    détecté.
-                  </p>
-                </div>
-              )}
-
-              {/* Camera Stats */}
-              <div className="analysis-section">
-                <h3>📊 Statistiques Caméra</h3>
-                <div className="camera-stats">
-                  <div className="stat-item">
-                    <label>Permission</label>
-                    <span>{visionInput.permissionStatus}</span>
-                  </div>
-                  <div className="stat-item">
-                    <label>FPS estimé</label>
-                    <span>{visionInput.fpsEstimate}</span>
-                  </div>
-                  <div className="stat-item">
-                    <label>Frames traités</label>
-                    <span>{visionInput.framesProcessed}</span>
-                  </div>
-                </div>
+          {/* Center: Camera Preview */}
+          <div className="camera-preview-container">
+            {isCameraActive ? (
+              <CameraPreview
+                size="large"
+                position="top-left"
+                showControls={true}
+                showLandmarksOverlay={config.debugOverlayEnabled}
+                mirrored={true}
+              />
+            ) : (
+              <div className="camera-placeholder">
+                <span className="placeholder-icon">📷</span>
+                <p>Caméra inactive</p>
+                <p className="placeholder-hint">
+                  Cliquez sur &quot;Démarrer Caméra&quot; pour activer
+                </p>
               </div>
-            </>
-          ) : (
-            <div className="analysis-placeholder">
-              <span className="placeholder-icon">🔒</span>
-              <p>Vision Engine désactivé</p>
-              <p className="placeholder-hint">
-                Activez le Vision Engine pour voir l&apos;analyse en temps réel
-              </p>
-            </div>
-          )}
+            )}
+          </div>
+
+          {/* Right Column: Analysis */}
+          <div className="camera-analysis-panel">
+            <h2>Analyse en Temps Réel</h2>
+
+            {isObservationActive ? (
+              <>
+                {/* Affect Estimation — only shown when model has produced real estimations */}
+                {affectEstimation.estimationCount > 0 ? (
+                  <div className="analysis-section">
+                    <h3>🎭 Indices Visuels (Approximatifs)</h3>
+                    <div className="affect-meters">
+                      <div className="affect-meter">
+                        <label>Énergie</label>
+                        <div className="meter-bar">
+                          <div
+                            className="meter-fill"
+                            style={{
+                              width: `${levelToPercent(affectEstimation.visualEnergyLevel)}%`,
+                              backgroundColor: levelToColor(
+                                affectEstimation.visualEnergyLevel
+                              ),
+                            }}
+                          />
+                        </div>
+                        <span>{affectEstimation.visualEnergyLevel}</span>
+                      </div>
+                      <div className="affect-meter">
+                        <label>Tension</label>
+                        <div className="meter-bar">
+                          <div
+                            className="meter-fill"
+                            style={{
+                              width: `${levelToPercent(affectEstimation.visualTensionLevel)}%`,
+                              backgroundColor: levelToColor(
+                                affectEstimation.visualTensionLevel
+                              ),
+                            }}
+                          />
+                        </div>
+                        <span>{affectEstimation.visualTensionLevel}</span>
+                      </div>
+                      <div className="affect-meter">
+                        <label>Engagement</label>
+                        <div className="meter-bar">
+                          <div
+                            className="meter-fill"
+                            style={{
+                              width: `${levelToPercent(affectEstimation.visualEngagementLevel)}%`,
+                              backgroundColor: levelToColor(
+                                affectEstimation.visualEngagementLevel
+                              ),
+                            }}
+                          />
+                        </div>
+                        <span>{affectEstimation.visualEngagementLevel}</span>
+                      </div>
+                    </div>
+                    <p className="affect-disclaimer">
+                      Ces indices sont approximatifs et ne constituent pas un diagnostic.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="analysis-section">
+                    <h3>🎭 Indices Visuels</h3>
+                    <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
+                      ⏳ Analyse en cours de développement — aucun modèle actif. Les
+                      métriques seront disponibles une fois le moteur d'analyse intégré.
+                    </p>
+                  </div>
+                )}
+
+                {/* Body Language — only shown when landmarks are actually detected */}
+                {bodyLanguage.landmarksDetected ? (
+                  <div className="analysis-section">
+                    <h3>🧍 Langage Corporel</h3>
+                    <div className="body-stats">
+                      <div className="body-stat">
+                        <label>Posture</label>
+                        <span>{Math.round(bodyLanguage.postureScore * 100)}%</span>
+                      </div>
+                      <div className="body-stat">
+                        <label>Mouvement</label>
+                        <span>{Math.round(bodyLanguage.movementScore * 100)}%</span>
+                      </div>
+                      <div className="body-stat">
+                        <label>Stabilité regard</label>
+                        <span>{Math.round(bodyLanguage.gazeStabilityScore * 100)}%</span>
+                      </div>
+                      <div className="body-stat">
+                        <label>Confiance</label>
+                        <span>{Math.round(bodyLanguage.confidence * 100)}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="analysis-section">
+                    <h3>🧍 Langage Corporel</h3>
+                    <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
+                      ⏳ Tracking corporel en cours de développement — aucun landmark
+                      détecté.
+                    </p>
+                  </div>
+                )}
+
+                {/* Camera Stats */}
+                <div className="analysis-section">
+                  <h3>📊 Statistiques Caméra</h3>
+                  <div className="camera-stats">
+                    <div className="stat-item">
+                      <label>Permission</label>
+                      <span>{visionInput.permissionStatus}</span>
+                    </div>
+                    <div className="stat-item">
+                      <label>FPS estimé</label>
+                      <span>{visionInput.fpsEstimate}</span>
+                    </div>
+                    <div className="stat-item">
+                      <label>Frames traités</label>
+                      <span>{visionInput.framesProcessed}</span>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="analysis-placeholder">
+                <span className="placeholder-icon">🔒</span>
+                <p>Vision Engine désactivé</p>
+                <p className="placeholder-hint">
+                  Activez le Vision Engine pour voir l&apos;analyse en temps réel
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
-};
+}
 
 export default CameraPage;
+

@@ -80,6 +80,7 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
       {/* Disclosure banner — données statiques curées, aucune connexion IPC live */}
       <div
         className="roadmap-disclosure-banner"
+        data-testid="transformation-roadmap-disclosure"
         role="note"
         aria-label="Source des données : roadmap statique curéee, mise à jour manuelle"
         style={{
@@ -96,7 +97,7 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
         }}
       >
         📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique curée manuellement. Aucune
-        connexion IPC live. Dernière mise à jour : 2026-03-18.
+        connexion IPC live. Dernière synchronisation avec le code qualifié : 2026-04-20.
       </div>
 
       {/* Header */}
@@ -318,7 +319,7 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
 
 /**
  * DISPLAY_ONLY — Roadmap curée manuellement, aucune connexion IPC live.
- * Les statuts reflètent l'état réel du code vérifié au 2026-03-18.
+ * Les statuts reflètent l'état réel du code vérifié au 2026-04-20.
  */
 function generateMockMilestones(): Milestone[] {
   return [
@@ -377,14 +378,15 @@ function generateMockMilestones(): Milestone[] {
       id: '4',
       version: 'v28.0',
       name: 'AI Multi-Provider Enhanced',
-      description: 'Support avancé de multiples providers IA avec fallback intelligent.',
+      description:
+        'Support multi-provider cloud + local avec fallback intelligent, sélection runtime véridique et exposition publique cohérente.',
       status: 'in-progress',
-      progress: 20,
+      progress: 80,
       features: [
-        'Ollama (local) opérationnel (ollama.rs)',
-        'Gemini provider actif (api_hub/gemini.rs)',
-        'Fallback automatique Auto/Gemini/Ollama (providers.rs)',
-        'Claude / cost optimization : planifié',
+        'Ollama local opérationnel via `ai/providers/local.rs`',
+        'Gemini actif via `ai/providers/gemini.rs` + `api_hub/gemini.rs`',
+        'Claude et OpenAI intégrés dans le multi-orchestrateur',
+        'Best provider + inventaire public sync avec la disponibilité runtime',
       ],
       quarter: 'Q2 2026',
       importance: 'high',
@@ -395,7 +397,7 @@ function generateMockMilestones(): Milestone[] {
       name: 'Voice & Audio Premium',
       description: 'Amélioration majeure des capacités audio avec TTS/STT avancés.',
       status: 'in-progress',
-      progress: 35,
+      progress: 45,
       features: [
         'TTS local Piper (fr_FR-siwis) opérationnel',
         'STT Whisper streaming actif (whisper_streaming.rs)',
@@ -408,6 +410,40 @@ function generateMockMilestones(): Milestone[] {
     {
       id: '6',
       version: 'v30.0',
+      name: 'Memory Hybrid & Identity Kernel',
+      description:
+        'Consolidation de la mémoire hybride, du noyau identitaire et des surfaces de diagnostic gouvernées.',
+      status: 'completed',
+      progress: 100,
+      features: [
+        'Identity kernel structuré injecté dans les prompts actifs',
+        'Shadow-read / orchestration hybride visibles sur la surface mémoire',
+        'Diagnostics et exports gouvernés qualifiés',
+        'Transform & Évo fusionné avec Évolution mémoire',
+      ],
+      quarter: 'Q1 2026',
+      importance: 'critical',
+    },
+    {
+      id: '7',
+      version: 'v31.0',
+      name: 'Runtime Truth & Governance Sync',
+      description:
+        'Réalignement des surfaces actives sur la vérité runtime mesurée: budgets, providers, journaux et documentation canonique.',
+      status: 'in-progress',
+      progress: 65,
+      features: [
+        'Conversation budgets propagés jusqu au backend actif',
+        'Journal OMEGA et statuts runtime alimentés par métadonnées réelles',
+        'Cartographie, UI registry et AutoHeal synchronisés par lot',
+        'Validation doctrine + anti-récurrence après chaque correction ciblée',
+      ],
+      quarter: 'Q2 2026',
+      importance: 'high',
+    },
+    {
+      id: '8',
+      version: 'v32.0',
       name: 'Quantum Leap',
       description:
         'Architecture quantique avec capacités prédictives et auto-amélioration.',

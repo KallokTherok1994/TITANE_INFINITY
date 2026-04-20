@@ -131,7 +131,7 @@ const lazyWithTimeout = <T extends React.ComponentType>(
 // ✨ v24.3.0 - Lazy loaded pages
 const PerformanceTest = lazy(() =>
   import('./pages/PerformanceTest').then(m => ({
-    default: m.PerformanceTest,
+    default: m.default,
   }))
 );
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
@@ -227,7 +227,7 @@ const UltimateOptimizationDashboard = lazy(
 const RealityCenter = lazy(() => import('./pages/RealityCenter'));
 const CreationStudio = lazy(() => import('./pages/CreationStudio'));
 const EvolutionMonitor = lazy(() => import('./pages/EvolutionMonitor'));
-const SingularityMonitor = lazy(() => import('./pages/SingularityMonitor'));
+const SingularityMonitor = lazy(() => import('./pages/SingularityMonitor').then(m => ({ default: m.default })));
 
 const emitBootMarker = (marker: string): void => {
   if (typeof window === 'undefined') {

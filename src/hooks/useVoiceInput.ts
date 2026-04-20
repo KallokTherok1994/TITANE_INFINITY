@@ -34,6 +34,15 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
   const recordingIdRef = useRef<string | null>(null);
 
+  const cleanupAudioStream = useCallback(() => {
+    setAudioStream(currentStream => {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+      }
+      return null;
+    });
+  }, []);
+
   // Get optimal audio constraints with echo cancellation
   const getAudioConstraints = useCallback((): MediaStreamConstraints => {
     const constraints: MediaStreamConstraints = {
@@ -106,6 +115,8 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
         setError(`Failed to start listening: ${error.message || 'Unknown error'}`);
       }
 
+      cleanupAudioStream();
+      recordingIdRef.current = null;
       setIsListening(false);
     }
   };
@@ -114,11 +125,7 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
     try {
       const result = await voiceService.stopRecording();
       setTranscript(result.transcript);
-
-      if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop());
-        setAudioStream(null);
-      }
+      cleanupAudioStream();
 
       setIsListening(false);
       recordingIdRef.current = null;
@@ -128,18 +135,16 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       const error = err as Error;
       logger.error('Failed to stop listening:', error);
       setError(`Failed to stop listening: ${error.message}`);
+      cleanupAudioStream();
       setIsListening(false);
+      recordingIdRef.current = null;
     }
   };
 
   const cancelListening = async () => {
     try {
       await voiceService.cancelRecording();
-
-      if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop());
-        setAudioStream(null);
-      }
+      cleanupAudioStream();
 
       setIsListening(false);
       setTranscript('');
@@ -148,6 +153,9 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
       const error = err as Error;
       logger.error('Failed to cancel listening:', error);
       setError(`Failed to cancel: ${error.message}`);
+      cleanupAudioStream();
+      setIsListening(false);
+      recordingIdRef.current = null;
     }
   };
 
@@ -159,11 +167,9 @@ export function useVoiceInput(config?: AudioConstraints): UseVoiceInputReturn {
           logger.warn('Failed to cancel recording on unmount:', String(err));
         });
       }
-      if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop());
-      }
+      cleanupAudioStream();
     };
-  }, [audioStream]);
+  }, [cleanupAudioStream]);
 
   return {
     isListening,

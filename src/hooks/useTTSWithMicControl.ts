@@ -62,7 +62,11 @@ export function useTTSWithMicControl(
   const vad = externalVAD || internalVAD;
 
   const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const audioIdRef = useRef<string | null>(null);
+  const speakingRef = useRef(false);
+
+  useEffect(() => {
+    speakingRef.current = isSpeaking;
+  }, [isSpeaking]);
 
   /**
    * Speak text and auto-mute microphone during playback
@@ -87,6 +91,7 @@ export function useTTSWithMicControl(
         }
 
         setIsSpeaking(true);
+        speakingRef.current = true;
 
         // Start TTS playback
         await voiceService.speak(textToSpeak, undefined, config?.useOnline ?? false);
@@ -98,13 +103,14 @@ export function useTTSWithMicControl(
           logger.info(`Resuming VAD after ${resumeDelay}ms delay`);
           vad.resumeAfterTTS(resumeDelay);
           setIsSpeaking(false);
-          audioIdRef.current = null;
+          speakingRef.current = false;
         }, resumeDelay);
       } catch (err: unknown) {
         const error = err as Error;
         logger.error('TTS failed:', error);
         setError(`TTS error: ${error.message}`);
         setIsSpeaking(false);
+        speakingRef.current = false;
 
         // ✅ CRITICAL: Always resume VAD even on error
         vad.resumeAfterTTS(0); // No delay on error
@@ -125,9 +131,8 @@ export function useTTSWithMicControl(
       }
 
       // Stop TTS
-      if (audioIdRef.current) {
+      if (speakingRef.current) {
         await voiceService.stopSpeaking();
-        audioIdRef.current = null;
       }
 
       // ✅ CRITICAL: Immediately resume VAD (unmute mic)
@@ -135,6 +140,7 @@ export function useTTSWithMicControl(
       vad.resumeAfterTTS(0); // No delay
 
       setIsSpeaking(false);
+      speakingRef.current = false;
       setText('');
     } catch (err: unknown) {
       const error = err as Error;
@@ -155,7 +161,7 @@ export function useTTSWithMicControl(
       if (resumeTimeoutRef.current) {
         clearTimeout(resumeTimeoutRef.current);
       }
-      if (audioIdRef.current) {
+      if (speakingRef.current) {
         voiceService.stopSpeaking().catch((err: unknown) => {
           logger.warn('Failed to stop speaking on unmount:', String(err));
         });

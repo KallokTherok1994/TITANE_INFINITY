@@ -2710,6 +2710,13 @@ class TauriClient {
     );
   }
 
+  async forceResetVoice(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.FORCE_RESET_VOICE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async startRecording(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.START_RECORDING,
@@ -2865,9 +2872,23 @@ class TauriClient {
     );
   }
 
+  async transcribeAudio(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TRANSCRIBE_AUDIO,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async stopSpeaking(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.STOP_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async isRecording(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IS_RECORDING,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -3532,6 +3553,10 @@ class TauriClient {
       TAURI_COMMANDS.STT_TRANSCRIBE,
       (params as Record<string, unknown>) || {}
     );
+  }
+
+  async checkOnlineCapabilities(): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.CHECK_ONLINE_CAPABILITIES, {});
   }
 
   async readProductionWeek1Csv(): Promise<unknown> {

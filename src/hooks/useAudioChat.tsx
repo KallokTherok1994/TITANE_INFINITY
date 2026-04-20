@@ -251,6 +251,8 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
    * Arrête la parole en cours
    */
   const stopSpeaking = useCallback(() => {
+    void safeInvoke('tts_stop');
+
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }

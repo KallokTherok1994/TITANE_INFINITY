@@ -1053,3 +1053,10 @@ function MyComponent() {
 - La chaîne canonique `src/hooks/useConversationEngine.ts -> src/services/conversationEngine.ts -> conversation_generate` publie désormais le budget de génération dans les champs de contrat actifs `args.maxTokens` et `args.temperature`, au lieu de laisser cette information enfermée dans un sous-objet ignoré par le backend.
 - Le backend `src-tauri/src/conversation_engine/commands.rs` récupère aussi le payload hérité `aiConfig` quand les champs top-level sont absents, ce qui referme la dérive frontend/backend observée sur la surface chat installée.
 - Le bridge `src-tauri/src/conversation_engine/omega_integration.rs` aligne son fallback local/Ollama sur un plancher de génération long (8192) plutôt que sur un budget court, afin qu'un appel partiellement renseigné ne coupe plus les réponses au milieu.
+
+## [2026-04-20] Voice input cleanup truth
+
+- `src/hooks/useVoiceInput.ts` centralise désormais la fermeture du `MediaStream` micro local via `cleanupAudioStream()` et l'appelle autant sur succès que sur échec de `voiceService.stopRecording()`.
+- La voie hook réinitialise aussi `audioStream`, `isListening` et `recordingIdRef` sur ce chemin d erreur, ce qui referme la dérive où la capture navigateur pouvait rester active malgré un échec backend de stop.
+- Le même cleanup est maintenant aussi appliqué au chemin d erreur de `startListening()` quand `getUserMedia()` a réussi mais que `voiceService.startRecording()` casse ensuite.
+- Le chemin `cancelListening()` applique désormais le même cleanup local et la même remise à plat d état si `voiceService.cancelRecording()` échoue, ce qui ferme le dernier reliquat de micro local caché sur annulation backend ratée.

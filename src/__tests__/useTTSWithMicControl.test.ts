@@ -219,6 +219,20 @@ describe('useTTSWithMicControl', () => {
   });
 
   describe('stopSpeaking() — Arrêt TTS', () => {
+    it('should call voiceService.stopSpeaking when stopping active TTS', async () => {
+      const { result } = renderHook(() => useTTSWithMicControl());
+
+      await act(async () => {
+        await result.current.speak('Test');
+      });
+
+      await act(async () => {
+        await result.current.stopSpeaking();
+      });
+
+      expect(voiceService.stopSpeaking).toHaveBeenCalledTimes(1);
+    });
+
     it('should resume VAD immediately when stopping', async () => {
       const { result } = renderHook(() => useTTSWithMicControl());
 
@@ -310,6 +324,18 @@ describe('useTTSWithMicControl', () => {
   });
 
   describe('Cleanup on Unmount', () => {
+    it('should stop active TTS on unmount', async () => {
+      const { result, unmount } = renderHook(() => useTTSWithMicControl());
+
+      await act(async () => {
+        await result.current.speak('Test');
+      });
+
+      unmount();
+
+      expect(voiceService.stopSpeaking).toHaveBeenCalledTimes(1);
+    });
+
     it('should clear timeout on unmount', async () => {
       const { result, unmount } = renderHook(() =>
         useTTSWithMicControl({ resumeDelay: 5000 })

@@ -14,6 +14,7 @@
  */
 
 import { useState } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ModuleCard } from '../components/ModuleCard';
 import { AudioSettings } from '../components/AudioSettings';
 import './ModulePages.css';
@@ -47,17 +48,18 @@ export const Settings = () => {
   });
 
   return (
-    <div className="module-page">
-      <div className="module-page__header">
-        <h1 className="module-page__title">
-          <span className="module-page__icon">⚙️</span>
-          Paramètres — Configuration Système
-        </h1>
-        <p className="module-page__subtitle">Personnalisation et options avancées</p>
-      </div>
+    <ErrorBoundary>
+      <div className="module-page" data-testid="page-settings">
+        <div className="module-page__header">
+          <h1 className="module-page__title">
+            <span className="module-page__icon">⚙️</span>
+            Paramètres — Configuration Système
+          </h1>
+          <p className="module-page__subtitle">Personnalisation et options avancées</p>
+        </div>
 
-      {/* Tabs Navigation */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+        {/* Tabs Navigation */}
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
         <button
           style={tabStyle(activeTab === 'general')}
           onClick={() => setActiveTab('general')}
@@ -323,6 +325,7 @@ export const Settings = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 };

@@ -1,6 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const invokeWithRetryMock = vi.fn();
+const tauriClientMock = {
+  forceResetVoice: vi.fn(),
+  isSpeaking: vi.fn(),
+  isRecording: vi.fn(),
+  transcribeAudio: vi.fn(),
+};
 
 vi.mock('../../../lib/serviceInvoker', () => ({
   invokeWithRetry: invokeWithRetryMock,
@@ -9,10 +15,18 @@ vi.mock('../../../lib/serviceInvoker', () => ({
   LONG_COMMAND_OPTIONS: { timeout: 60000, retries: 3 },
 }));
 
+vi.mock('../../../lib/tauriClient', () => ({
+  tauriClient: tauriClientMock,
+}));
+
 describe('voiceService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
+    tauriClientMock.forceResetVoice.mockResolvedValue(undefined);
+    tauriClientMock.isSpeaking.mockResolvedValue(false);
+    tauriClientMock.isRecording.mockResolvedValue(false);
+    tauriClientMock.transcribeAudio.mockResolvedValue('');
   });
 
   it('startRecording() devrait démarrer et retourner un recordingId', async () => {
@@ -102,14 +116,9 @@ describe('voiceService', () => {
   });
 
   it('getAudioState() devrait utiliser fallback si commandes indisponibles', async () => {
-    invokeWithRetryMock.mockImplementation((command: string) => {
-      if (command === 'start_recording') return Promise.resolve('rec-1');
-      if (command === 'is_speaking')
-        return Promise.reject(new Error('validation failed'));
-      if (command === 'is_recording')
-        return Promise.reject(new Error('validation failed'));
-      throw new Error(`unexpected command: ${command}`);
-    });
+    invokeWithRetryMock.mockResolvedValueOnce('rec-1');
+    tauriClientMock.isSpeaking.mockRejectedValueOnce(new Error('validation failed'));
+    tauriClientMock.isRecording.mockRejectedValueOnce(new Error('validation failed'));
 
     const { voiceService } = await import('../../../services/api/voice');
 
@@ -119,6 +128,26 @@ describe('voiceService', () => {
       isSpeaking: false,
       volume: 0,
       duration: 0,
+    });
+  });
+
+  it('forceResetVoice() devrait utiliser le wrapper canonique tauriClient', async () => {
+    const { voiceService } = await import('../../../services/api/voice');
+
+    await expect(voiceService.forceResetVoice()).resolves.toBeUndefined();
+    expect(tauriClientMock.forceResetVoice).toHaveBeenCalledTimes(1);
+  });
+
+  it('transcribe() devrait utiliser le wrapper canonique tauriClient', async () => {
+    tauriClientMock.transcribeAudio.mockResolvedValueOnce('Bonjour TITANE');
+
+    const { voiceService } = await import('../../../services/api/voice');
+
+    await expect(voiceService.transcribe(new Uint8Array([1, 2, 3]))).resolves.toBe(
+      'Bonjour TITANE'
+    );
+    expect(tauriClientMock.transcribeAudio).toHaveBeenCalledWith({
+      audioData: [1, 2, 3],
     });
   });
 

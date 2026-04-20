@@ -1,3 +1,5 @@
+> 2026-04-20 — Multi-AI provider truth: `multi_ai_providers` retourne maintenant une liste dedupee de familles de providers publiques disponibles, et `multi_ai_best_provider` renvoie le meilleur provider effectivement selectionnable apres routage intelligent et verification de disponibilite. Les aliases internes de modele/rang (`claude_haiku`, `gpt4`, `local_llama3`) ne font plus autorite sur cette surface IPC.
+
 > 2026-04-18 — Knowledge parser hardening truth: `parse_document` et `detect_file_format` n acceptent plus un chemin documentaire purement textuel. Les commandes valident maintenant un fichier local canonique, refusent les entrees vides, NUL, schemes `://`, segments `..`, repertoires, cibles absentes et fichiers sensibles, puis executent la detection ou le parsing sur le fichier valide seulement.
 
 > 2026-04-18 — Developer Mode patch validation hardening truth: `dev_mode_validate_patch` ne se contente plus d un filtre de suffixe sur `patch.file`. La commande resolve maintenant la cible contre la racine workspace canonique, refuse les entrees vides, NUL, schemes `://`, segments `..` et chemins absolus hors workspace, puis n autorise les extensions `.rs`, `.ts`, `.tsx`, `.css`, `.json` qu apres cette resolution.
@@ -1569,4 +1571,3 @@
 | 17 | `voice_test_pipeline` | Voice test pipeline |
 | 18 | `voice_transcribe_audio` | Voice transcribe audio |
 | 19 | `voice_update_config` | Voice update config |
-

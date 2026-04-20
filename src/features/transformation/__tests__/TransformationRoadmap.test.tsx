@@ -15,6 +15,9 @@ describe('TransformationRoadmap', () => {
   it('should render without crashing', () => {
     render(<TransformationRoadmap />);
     expect(screen.getByText(/roadmap de transformation/i)).toBeInTheDocument();
+    expect(screen.getByTestId('transformation-roadmap-disclosure')).toHaveTextContent(
+      /2026-04-20/i
+    );
   });
 
   it('should display status filters', () => {
@@ -101,7 +104,30 @@ describe('TransformationRoadmap', () => {
   it('should show quarter information for each milestone', () => {
     render(<TransformationRoadmap />);
 
-    expect(screen.getAllByText(/Q[1-4] 202[4-5]/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Q[1-4] 202[4-7]/i).length).toBeGreaterThan(0);
+  });
+
+  it('should reflect the synced multi-provider milestone', async () => {
+    render(<TransformationRoadmap />);
+
+    expect(screen.getByText(/AI Multi-Provider Enhanced/i)).toBeInTheDocument();
+
+    const milestoneCard = screen
+      .getByLabelText(/Milestone v28\.0: AI Multi-Provider Enhanced/i)
+      .querySelector('.milestone-card') as HTMLElement | null;
+
+    expect(milestoneCard).not.toBeNull();
+    if (milestoneCard) {
+      fireEvent.click(milestoneCard);
+    }
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          /Best provider \+ inventaire public sync avec la disponibilité runtime/i
+        )
+      ).toBeInTheDocument();
+    });
   });
 
   it('should display features count', () => {

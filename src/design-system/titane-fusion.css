@@ -281,6 +281,9 @@ body {
   justify-content: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
+  min-width: var(--touch-min, 44px);
+  min-height: var(--touch-min, 44px);
+  box-sizing: border-box;
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -314,6 +317,8 @@ body {
   background: var(--primary);
   color: white;
   border-color: var(--primary);
+  min-width: var(--touch-optimal, 48px);
+  min-height: var(--touch-min, 44px);
 }
 
 .titane-btn-primary:hover:not(:disabled) {
@@ -327,7 +332,7 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
-  padding: var(--space-lg);
+  padding: var(--space-md, 16px);
   box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
 }
@@ -354,6 +359,7 @@ body {
 .titane-input {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
+  min-height: var(--touch-min, 44px);
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   color: var(--text);

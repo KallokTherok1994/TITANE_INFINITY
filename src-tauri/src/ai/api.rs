@@ -125,7 +125,7 @@ pub async fn multi_ai_best_provider(
     state: State<'_, OrchestratorState>,
 ) -> Result<Option<String>, String> {
     let orchestrator = state.orchestrator.read().await;
-    Ok(orchestrator.best_provider_for(&mode))
+    Ok(orchestrator.best_provider_for(&mode).await)
 }
 
 /// Évalue une réponse IA

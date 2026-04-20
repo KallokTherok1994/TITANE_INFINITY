@@ -1044,8 +1044,14 @@ export const ConfigurationHub: React.FC = () => {
   const currentRuntime = {
     ollama_url: editedRuntime.ollama_url ?? config.runtime.ollama_url,
     ollama_model: editedRuntime.ollama_model ?? config.runtime.ollama_model,
-    secrets_mode: config.runtime.secrets_mode, // Not editable
-    gemini_configured: config.runtime.gemini_configured, // Not editable
+    ollama_endpoint_kind: config.runtime.ollama_endpoint_kind ?? 'not_checked',
+    ollama_endpoint_source: config.runtime.ollama_endpoint_source ?? 'not_checked',
+    ollama_model_source: config.runtime.ollama_model_source ?? 'not_checked',
+    ollama_network_used: config.runtime.ollama_network_used ?? false,
+    ollama_health: config.runtime.ollama_health ?? 'not_checked',
+    secrets_mode: config.runtime.secrets_mode,
+    gemini_configured: config.runtime.gemini_configured,
+    timestamp: config.runtime.timestamp ?? Math.floor(Date.now() / 1000),
   };
 
   const currentChatEngine = {

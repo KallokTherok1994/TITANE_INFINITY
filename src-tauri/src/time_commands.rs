@@ -3,7 +3,7 @@
 
 // ═══════════════════════════════════════════════════════════════
 //   TIME-TRAVEL COMMANDS — Super-Prompt N
-//   Commandes Tauri pour TimeNavigator UI
+//   Commandes Tauri pour TimePage UI (anciennement TimeNavigator)
 // ═══════════════════════════════════════════════════════════════
 
 use crate::security::permission_guard::PERMISSION_GUARD;

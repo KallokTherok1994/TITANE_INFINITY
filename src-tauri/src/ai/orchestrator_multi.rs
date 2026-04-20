@@ -27,6 +27,31 @@ pub struct MultiAIOrchestrator {
 }
 
 impl MultiAIOrchestrator {
+    fn public_provider_name(provider_name: &str) -> String {
+        match provider_name {
+            "claude" | "claude_opus" | "claude_sonnet" | "claude_haiku" => "claude".to_string(),
+            "openai" | "gpt4" | "gpt4_mini" | "gpt35" => "openai".to_string(),
+            "gemini" | "gemini_flash" => "gemini".to_string(),
+            "local" | "local_llama3" | "local_mistral" | "local_codellama" => "local".to_string(),
+            other => other.to_string(),
+        }
+    }
+
+    async fn first_available_provider<'a>(
+        &self,
+        candidates: impl IntoIterator<Item = &'a str>,
+    ) -> Option<String> {
+        for candidate in candidates {
+            if let Some(provider) = self.providers.get(candidate) {
+                if provider.is_available().await {
+                    return Some(Self::public_provider_name(candidate));
+                }
+            }
+        }
+
+        None
+    }
+
     /// Crée un nouvel orchestrateur avec configuration par défaut
     pub fn new() -> Self {
         let mut providers: HashMap<String, Arc<dyn AiProvider + Send + Sync>> = HashMap::new();
@@ -279,15 +304,38 @@ impl MultiAIOrchestrator {
     }
 
     /// Meilleur provider pour un mode donné
-    pub fn best_provider_for(&self, mode: &str) -> Option<String> {
-        match mode {
-            "fast" => Some("claude_haiku".to_string()),
-            "quality" => Some("claude_sonnet".to_string()),
-            "deep" => Some("claude_opus".to_string()),
-            "creative" => Some("gpt4".to_string()),
-            "analysis" => Some("claude_sonnet".to_string()),
-            _ => None,
+    pub async fn best_provider_for(&self, mode: &str) -> Option<String> {
+        let ai_mode = match mode.to_lowercase().as_str() {
+            "fast" => crate::ai::AiMode::Fast,
+            "quality" => crate::ai::AiMode::Quality,
+            "deep" => crate::ai::AiMode::Deep,
+            "creative" => crate::ai::AiMode::Creative,
+            "analysis" => crate::ai::AiMode::Analysis,
+            _ => return None,
+        };
+
+        let probe_request = AiRequest {
+            prompt: String::new(),
+            mode: ai_mode,
+            user_id: "system".to_string(),
+            session_id: "provider-probe".to_string(),
+            max_tokens: Some(1),
+            temperature: Some(0.0),
+            context: None,
+        };
+
+        let routing = self.router.route(&probe_request).await;
+        let mut candidates = vec![
+            routing.primary,
+            routing.fallback,
+            "titane_engine".to_string(),
+        ];
+        if let Some(secondary) = routing.secondary {
+            candidates.insert(1, secondary);
         }
+
+        self.first_available_provider(candidates.iter().map(std::string::String::as_str))
+            .await
     }
 
     /// Liste des providers disponibles
@@ -295,9 +343,13 @@ impl MultiAIOrchestrator {
         let mut available = Vec::new();
         for (name, provider) in &self.providers {
             if provider.is_available().await {
-                available.push(name.clone());
+                let public_name = Self::public_provider_name(name);
+                if !available.contains(&public_name) {
+                    available.push(public_name);
+                }
             }
         }
+        available.sort();
         available
     }
 
@@ -416,8 +468,35 @@ mod tests {
     async fn test_best_provider_for_mode() {
         let orchestrator = MultiAIOrchestrator::new();
 
-        assert!(orchestrator.best_provider_for("fast").is_some());
-        assert!(orchestrator.best_provider_for("quality").is_some());
-        assert!(orchestrator.best_provider_for("deep").is_some());
+        assert!(orchestrator.best_provider_for("fast").await.is_some());
+        assert!(orchestrator.best_provider_for("quality").await.is_some());
+        assert!(orchestrator.best_provider_for("deep").await.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_best_provider_prefers_available_cloud_provider() {
+        let orchestrator =
+            MultiAIOrchestrator::with_api_keys(Some("claude-key".to_string()), None, None);
+
+        assert_eq!(
+            orchestrator.best_provider_for("quality").await,
+            Some("claude".to_string())
+        );
+    }
+
+    #[tokio::test]
+    async fn test_available_providers_are_public_names() {
+        let orchestrator = MultiAIOrchestrator::with_api_keys(
+            Some("claude-key".to_string()),
+            Some("openai-key".to_string()),
+            Some("gemini-key".to_string()),
+        );
+
+        let providers = orchestrator.available_providers().await;
+        assert!(providers.contains(&"claude".to_string()));
+        assert!(providers.contains(&"openai".to_string()));
+        assert!(providers.contains(&"gemini".to_string()));
+        assert!(!providers.contains(&"claude_haiku".to_string()));
+        assert!(!providers.contains(&"gpt4".to_string()));
     }
 }

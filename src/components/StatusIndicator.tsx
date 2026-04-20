@@ -21,6 +21,7 @@ const UNAVAILABLE_REASON_TEXT: Record<BackendUnavailableReason, string> = {
   'all-backends-down': 'Tauri backend and Ollama are both unavailable',
   'tauri-backend-down': 'Tauri backend unreachable',
   'ollama-offline': 'Ollama service offline',
+  'ollama-remote-unavailable': 'Ollama remote endpoint unavailable',
   'network-error': 'Network error',
   'unknown-error': 'Unknown backend error',
 };

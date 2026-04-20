@@ -40,7 +40,7 @@ export { Memory } from './Memory';
 // Utility Pages
 export { Settings } from './Settings';
 export { DevTools } from './DevTools';
-export { PerformanceTest } from './PerformanceTest';
+export { default as PerformanceTest } from './PerformanceTest';
 export { SecureSettings } from './SecureSettings';
 
 // Cloud Sync Engine
@@ -50,13 +50,13 @@ export { CloudCenter } from './CloudCenter';
 export { AgendaPage } from './AgendaPage';
 
 // Camera & Vision Engine v∞
-export { CameraPage } from './CameraPage';
+export { default as CameraPage } from './CameraPage';
 
 // ✨ v30.1.0 — Pages implémentées (anciennement stubs)
 export { CreationStudio } from './CreationStudio';
 export { RealityCenter } from './RealityCenter';
 export { PerfectFusionDashboard } from './PerfectFusionDashboard';
 export { EvolutionMonitor } from './EvolutionMonitor';
-export { SingularityMonitor } from './SingularityMonitor';
+export { default as SingularityMonitor } from './SingularityMonitor';
 export { UltimateOptimizationDashboard } from './UltimateOptimizationDashboard';
 export { TwinsPage } from './TwinsPage';

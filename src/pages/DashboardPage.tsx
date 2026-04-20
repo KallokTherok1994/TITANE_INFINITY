@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 /**
  * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
@@ -67,7 +68,8 @@ export const DashboardPage = (): JSX.Element => {
   };
 
   return (
-    <Container size="xl">
+    <ErrorBoundary>
+      <Container data-testid="page-dashboard" size="xl">
       <div className="dashboard-fadein">
         <Stack direction="vertical" gap={6}>
           {/* Header modernisé */}
@@ -191,7 +193,8 @@ export const DashboardPage = (): JSX.Element => {
           />
         )}
       </div>
-    </Container>
+      </Container>
+    </ErrorBoundary>
   );
 };
 

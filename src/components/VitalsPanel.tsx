@@ -32,6 +32,7 @@ const UNAVAILABLE_REASON_SHORT: Record<BackendUnavailableReason, string> = {
   'all-backends-down': 'All backends down',
   'tauri-backend-down': 'Tauri down',
   'ollama-offline': 'Ollama offline',
+  'ollama-remote-unavailable': 'Ollama remote unavailable',
   'network-error': 'Network error',
   'unknown-error': 'Unknown error',
 };

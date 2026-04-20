@@ -12,6 +12,7 @@ import {
   FAST_COMMAND_OPTIONS,
   LONG_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
+import { tauriClient } from '@/lib/tauriClient';
 
 import { createLogger } from '@/utils/logger';
 
@@ -233,11 +234,7 @@ class VoiceService {
       this.recordingId = null;
 
       // Call backend force reset
-      await invokeWithRetry<void>(
-        'force_reset_voice',
-        {},
-        { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
-      );
+      await tauriClient.forceResetVoice();
 
       logger.info('[VoiceService] ✅ Voice engine force reset complete');
     } catch (error) {
@@ -256,21 +253,13 @@ class VoiceService {
     try {
       // Utiliser les commandes réelles qui existent côté Rust
       const [isSpeaking, isRecording] = await Promise.all([
-        invokeWithRetry<boolean>(
-          'is_speaking',
-          {},
-          { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
-        ).catch((err: unknown) => {
+        (tauriClient.isSpeaking() as Promise<boolean>).catch((err: unknown) => {
           logger.debug('is_speaking check failed, defaulting to false', {
             error: String(err),
           });
           return false;
         }),
-        invokeWithRetry<boolean>(
-          'is_recording',
-          {},
-          { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
-        ).catch((err: unknown) => {
+        (tauriClient.isRecording() as Promise<boolean>).catch((err: unknown) => {
           logger.debug('is_recording check failed, defaulting to false', {
             error: String(err),
           });
@@ -293,6 +282,17 @@ class VoiceService {
         volume: 0,
         duration: 0,
       };
+    }
+  }
+
+  async transcribe(audioData: Uint8Array): Promise<string> {
+    try {
+      return (await tauriClient.transcribeAudio({
+        audioData: Array.from(audioData),
+      })) as string;
+    } catch (error) {
+      logger.error('[VoiceService] ❌ Erreur transcription:', error);
+      throw new Error(`Transcription échouée: ${error}`);
     }
   }
 

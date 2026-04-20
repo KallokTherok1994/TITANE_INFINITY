@@ -77,7 +77,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   /* v29.0: padding réduit pour maximiser l'espace page */
-  padding: 16px 20px;
+  padding: var(--space-md, 16px) var(--space-lg, 20px);
   position: relative;
 }
 
@@ -105,15 +105,15 @@
   }
 
   .layout__content {
-    padding: 20px;
+    padding: var(--space-lg, 20px);
   }
 
   .layout__header {
-    padding: 14px 20px;
+    padding: var(--space-sm, 14px) var(--space-lg, 20px);
   }
 
   .layout__xpbar {
-    padding: 10px 20px;
+    padding: var(--space-xs, 10px) var(--space-lg, 20px);
   }
 }
 
@@ -132,20 +132,20 @@
     overflow-x: auto;
     overflow-y: hidden;
     flex-direction: row;
-    padding: 8px 12px;
-    gap: 8px;
+    padding: var(--space-xs, 8px) var(--space-sm, 12px);
+    gap: var(--space-xs, 8px);
   }
 
   .layout__header {
-    padding: 12px 16px;
+    padding: var(--space-sm, 12px) var(--space-lg, 16px);
   }
 
   .layout__xpbar {
-    padding: 8px 16px;
+    padding: var(--space-xs, 8px) var(--space-lg, 16px);
   }
 
   .layout__content {
-    padding: 16px;
+    padding: var(--space-md, 16px);
     flex: 1;
     min-height: 0;
   }
@@ -154,20 +154,20 @@
 /* Responsive - Small Mobile */
 @media (max-width: 480px) {
   .layout__sidebar {
-    padding: 6px 8px;
-    gap: 6px;
+    padding: var(--space-xs, 6px) var(--space-xs, 8px);
+    gap: var(--space-xs, 6px);
   }
 
   .layout__header {
-    padding: 10px 12px;
+    padding: var(--space-xs, 10px) var(--space-sm, 12px);
   }
 
   .layout__xpbar {
-    padding: 6px 12px;
+    padding: var(--space-xs, 6px) var(--space-sm, 12px);
   }
 
   .layout__content {
-    padding: 12px;
+    padding: var(--space-xs, 12px);
   }
 }
 
