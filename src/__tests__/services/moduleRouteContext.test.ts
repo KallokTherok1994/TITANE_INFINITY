@@ -155,13 +155,15 @@ describe('moduleRouteContext memory route', () => {
       expect(context.moduleId, `missing canonical context for ${route}`).not.toBe(
         'unknown_module'
       );
-      expect(context.capabilities.length, `missing capabilities for ${route}`).toBeGreaterThan(
-        0
-      );
+      expect(
+        context.capabilities.length,
+        `missing capabilities for ${route}`
+      ).toBeGreaterThan(0);
       expect(context.actions.length, `missing actions for ${route}`).toBeGreaterThan(0);
-      expect(context.memoryKeys.length, `missing memory keys for ${route}`).toBeGreaterThan(
-        0
-      );
+      expect(
+        context.memoryKeys.length,
+        `missing memory keys for ${route}`
+      ).toBeGreaterThan(0);
     }
   });
 

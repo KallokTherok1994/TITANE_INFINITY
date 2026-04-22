@@ -507,7 +507,9 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
       scrollTop: element.scrollTop,
     }));
 
-    expect(bottomScrollState.scrollHeight).toBeGreaterThan(bottomScrollState.clientHeight);
+    expect(bottomScrollState.scrollHeight).toBeGreaterThan(
+      bottomScrollState.clientHeight
+    );
     expect(bottomScrollState.scrollTop).toBeGreaterThan(topScrollState.scrollTop);
   });
 

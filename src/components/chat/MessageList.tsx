@@ -34,12 +34,19 @@ interface MessageListProps {
   onRetry?: () => void;
 }
 
-
-function MessageListImpl({ messages: rawMessages, isLoading = false, error = null, onRetry }: MessageListProps) {
+function MessageListImpl({
+  messages: rawMessages,
+  isLoading = false,
+  error = null,
+  onRetry,
+}: MessageListProps) {
   const endRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   // Simuler un état d'erreur pour la démonstration (remplacer par votre logique réelle)
-  const [errorState] = useState<{ hasCorruption: boolean; safeMessages: AIMessage[] }>({ hasCorruption: false, safeMessages: rawMessages });
+  const [errorState] = useState<{ hasCorruption: boolean; safeMessages: AIMessage[] }>({
+    hasCorruption: false,
+    safeMessages: rawMessages,
+  });
   // Pour la logique réelle, remplacer ci-dessus par votre hook d'erreur (ex: useOmegaErrorBoundary)
   const messages = errorState.hasCorruption ? errorState.safeMessages : rawMessages;
 
@@ -59,25 +66,35 @@ function MessageListImpl({ messages: rawMessages, isLoading = false, error = nul
               <div className="message-list-empty-icon">🟣</div>
               <h3 className="message-list-empty-title">TITANE∞ Chat IA OMEGA v30.0.0Ω</h3>
               <p className="message-list-empty-text">
-                Système cognitif v30 avec architecture anti-crash. Providers intelligents sélectionnés automatiquement pour une fiabilité maximale.
+                Système cognitif v30 avec architecture anti-crash. Providers intelligents
+                sélectionnés automatiquement pour une fiabilité maximale.
               </p>
               <div className="message-list-empty-providers">
-                <span className="provider-badge provider-local">⚡ Local Infaillible</span>
+                <span className="provider-badge provider-local">
+                  ⚡ Local Infaillible
+                </span>
                 <span className="provider-badge provider-cloud">🌟 Gemini API</span>
                 <span className="provider-badge provider-llm">🤖 Ollama Local</span>
               </div>
               {errorState.hasCorruption && (
                 <div className="message-list-corruption-notice">
                   <span>
-                    🛡️ Protection activée : {rawMessages.length - messages.length} messages corrompus filtrés
+                    🛡️ Protection activée : {rawMessages.length - messages.length}{' '}
+                    messages corrompus filtrés
                   </span>
                 </div>
               )}
             </div>
           ) : null}
-          {(messages && messages.length > 0 && (!(!messages || messages.length === 0) || isLoading || error)) &&
+          {messages &&
+            messages.length > 0 &&
+            (!(!messages || messages.length === 0) || isLoading || error) &&
             messages.map((message, index) => {
-              if (!message || typeof message !== 'object' || typeof message.content !== 'string') {
+              if (
+                !message ||
+                typeof message !== 'object' ||
+                typeof message.content !== 'string'
+              ) {
                 if (isDev) {
                   logger.warn('Skipping invalid message', {
                     component: 'MessageList',
@@ -108,5 +125,5 @@ function MessageListImpl({ messages: rawMessages, isLoading = false, error = nul
   );
 }
 
-      export const MessageList = React.memo(MessageListImpl);
-      MessageList.displayName = 'MessageListOmega';
+export const MessageList = React.memo(MessageListImpl);
+MessageList.displayName = 'MessageListOmega';

@@ -71,132 +71,131 @@ export const DashboardPage = (): JSX.Element => {
     <ErrorBoundary>
       <Container data-testid="page-dashboard" size="xl">
         <div className="dashboard-fadein">
-        <Stack direction="vertical" gap={6}>
-          {/* Header modernisé */}
-          <header className="dashboard-header">
-            <div className="dashboard-header__left">
-              <TitaneLogo size={48} />
-              <div>
-                <h1 className="dashboard-title">Bienvenue sur TITANE∞</h1>
-                <p className="dashboard-subtitle">
-                  Système d&apos;intelligence cognitive v∞.19.3Ω — Singularity
-                  Architecture Active
-                </p>
-              </div>
-            </div>
-            <button
-              className="dashboard-edit-btn"
-              onClick={() => setIsEditing(true)}
-              title="Éditer le tableau de bord"
-            >
-              <Settings size={20} />
-              Éditer Dashboard
-            </button>
-          </header>
-
-          {/* 🎭 NEW: Persona Mood Indicator */}
-          <PersonaMoodIndicator />
-
-          {/* XP Progress - Stats Réelles Système v19.3 */}
-          <XPProgressBar
-            currentXP={totalXp}
-            requiredXP={xpForNextLevel}
-            level={level}
-            showDetails
-          />
-
-          {/* Stats Grid - TITANE∞ v30.0.0 Real Metrics */}
-          <div className="dashboard-grid">
-            <Card variant="glass" elevation="lg" hoverable>
-              <Stack direction="vertical" gap={2}>
-                <div className="dashboard-metric-icon">🦀</div>
-                <h3 className="dashboard-metric-value">875</h3>
-                <p className="dashboard-metric-label">Commandes Tauri</p>
-                <Badge variant="success" size="sm">
-                  Backend Rust v∞
-                </Badge>
-              </Stack>
-            </Card>
-            <Card variant="glass" elevation="lg" hoverable>
-              <Stack direction="vertical" gap={2}>
-                <div className="dashboard-metric-icon">📦</div>
-                <h3 className="dashboard-metric-value">26</h3>
-                <p className="dashboard-metric-label">Modules Core (55K+ LOC)</p>
-                <Badge variant="info" size="sm">
-                  20 Engines
-                </Badge>
-              </Stack>
-            </Card>
-            <Card variant="glass" elevation="lg" hoverable>
-              <Stack direction="vertical" gap={2}>
-                <div className="dashboard-metric-icon">⚛️</div>
-                <h3 className="dashboard-metric-value">128</h3>
-                <p className="dashboard-metric-label">Composants React</p>
-                <Badge variant="primary" size="sm">
-                  229 Tests ✓
-                </Badge>
-              </Stack>
-            </Card>
-          </div>
-
-          {/* Activité récente */}
-          <Card variant="solid" elevation="md">
-            <h2 className="dashboard-activity-title">Activité récente</h2>
-            <Stack direction="vertical" gap={3}>
-              {[
-                {
-                  icon: '🧠',
-                  title: 'Cognitive Layer v16 activée',
-                  time: 'Système actif',
-                  type: 'cognitive',
-                },
-                {
-                  icon: '🤖',
-                  title: 'Gemini API opérationnelle (gemini-2.0-flash)',
-                  time: 'Provider principal',
-                  type: 'ai',
-                },
-                {
-                  icon: '🦙',
-                  title: 'Ollama Local actif (llama2:latest v0.13.0)',
-                  time: 'Fallback disponible',
-                  type: 'ai-local',
-                },
-                {
-                  icon: '✅',
-                  title: 'Build v16: 0 warnings, 0 errors (143 tests pass)',
-                  time: 'Production ready',
-                  type: 'build',
-                },
-              ].map((activity, index) => (
-                <div key={index} className="dashboard-activity-row">
-                  <div className="dashboard-activity-icon">{activity.icon}</div>
-                  <div className="dashboard-activity-content">
-                    <div className="dashboard-activity-title-row">{activity.title}</div>
-                    <div className="dashboard-activity-time">{activity.time}</div>
-                  </div>
-                  <Badge variant="neutral" size="sm">
-                    {activity.type}
-                  </Badge>
+          <Stack direction="vertical" gap={6}>
+            {/* Header modernisé */}
+            <header className="dashboard-header">
+              <div className="dashboard-header__left">
+                <TitaneLogo size={48} />
+                <div>
+                  <h1 className="dashboard-title">Bienvenue sur TITANE∞</h1>
+                  <p className="dashboard-subtitle">
+                    Système d&apos;intelligence cognitive v∞.19.3Ω — Singularity
+                    Architecture Active
+                  </p>
                 </div>
-              ))}
-            </Stack>
-          </Card>
-        </Stack>
+              </div>
+              <button
+                className="dashboard-edit-btn"
+                onClick={() => setIsEditing(true)}
+                title="Éditer le tableau de bord"
+              >
+                <Settings size={20} />
+                Éditer Dashboard
+              </button>
+            </header>
 
-        {/* ✨ Modal Éditeur Dashboard */}
-        {isEditing && (
-          <DashboardEditor
-            widgets={widgets}
-            onSave={handleSaveWidgets}
-            onClose={() => setIsEditing(false)}
-          />
-        )}
-      </div>
-    </Container>
-  </ErrorBoundary>
+            {/* 🎭 NEW: Persona Mood Indicator */}
+            <PersonaMoodIndicator />
 
-);
-}
+            {/* XP Progress - Stats Réelles Système v19.3 */}
+            <XPProgressBar
+              currentXP={totalXp}
+              requiredXP={xpForNextLevel}
+              level={level}
+              showDetails
+            />
+
+            {/* Stats Grid - TITANE∞ v30.0.0 Real Metrics */}
+            <div className="dashboard-grid">
+              <Card variant="glass" elevation="lg" hoverable>
+                <Stack direction="vertical" gap={2}>
+                  <div className="dashboard-metric-icon">🦀</div>
+                  <h3 className="dashboard-metric-value">875</h3>
+                  <p className="dashboard-metric-label">Commandes Tauri</p>
+                  <Badge variant="success" size="sm">
+                    Backend Rust v∞
+                  </Badge>
+                </Stack>
+              </Card>
+              <Card variant="glass" elevation="lg" hoverable>
+                <Stack direction="vertical" gap={2}>
+                  <div className="dashboard-metric-icon">📦</div>
+                  <h3 className="dashboard-metric-value">26</h3>
+                  <p className="dashboard-metric-label">Modules Core (55K+ LOC)</p>
+                  <Badge variant="info" size="sm">
+                    20 Engines
+                  </Badge>
+                </Stack>
+              </Card>
+              <Card variant="glass" elevation="lg" hoverable>
+                <Stack direction="vertical" gap={2}>
+                  <div className="dashboard-metric-icon">⚛️</div>
+                  <h3 className="dashboard-metric-value">128</h3>
+                  <p className="dashboard-metric-label">Composants React</p>
+                  <Badge variant="primary" size="sm">
+                    229 Tests ✓
+                  </Badge>
+                </Stack>
+              </Card>
+            </div>
+
+            {/* Activité récente */}
+            <Card variant="solid" elevation="md">
+              <h2 className="dashboard-activity-title">Activité récente</h2>
+              <Stack direction="vertical" gap={3}>
+                {[
+                  {
+                    icon: '🧠',
+                    title: 'Cognitive Layer v16 activée',
+                    time: 'Système actif',
+                    type: 'cognitive',
+                  },
+                  {
+                    icon: '🤖',
+                    title: 'Gemini API opérationnelle (gemini-2.0-flash)',
+                    time: 'Provider principal',
+                    type: 'ai',
+                  },
+                  {
+                    icon: '🦙',
+                    title: 'Ollama Local actif (llama2:latest v0.13.0)',
+                    time: 'Fallback disponible',
+                    type: 'ai-local',
+                  },
+                  {
+                    icon: '✅',
+                    title: 'Build v16: 0 warnings, 0 errors (143 tests pass)',
+                    time: 'Production ready',
+                    type: 'build',
+                  },
+                ].map((activity, index) => (
+                  <div key={index} className="dashboard-activity-row">
+                    <div className="dashboard-activity-icon">{activity.icon}</div>
+                    <div className="dashboard-activity-content">
+                      <div className="dashboard-activity-title-row">{activity.title}</div>
+                      <div className="dashboard-activity-time">{activity.time}</div>
+                    </div>
+                    <Badge variant="neutral" size="sm">
+                      {activity.type}
+                    </Badge>
+                  </div>
+                ))}
+              </Stack>
+            </Card>
+          </Stack>
+
+          {/* ✨ Modal Éditeur Dashboard */}
+          {isEditing && (
+            <DashboardEditor
+              widgets={widgets}
+              onSave={handleSaveWidgets}
+              onClose={() => setIsEditing(false)}
+            />
+          )}
+        </div>
+      </Container>
+    </ErrorBoundary>
+  );
+};
 // v24.3.1 FIX: Add missing default export for lazy loading
 export default DashboardPage;

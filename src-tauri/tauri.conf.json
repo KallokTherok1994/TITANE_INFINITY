@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/v2.json",
   "productName": "Titan-Stable",
-  "version": "31.0.6",
+  "version": "31.1.0",
   "identifier": "com.titane.infinity.stable",
   "bundle": {
     "active": true,
@@ -15,20 +15,10 @@
     ],
     "linux": {
       "deb": {
-        "depends": [
-          "libayatana-appindicator3-1",
-          "libwebkit2gtk-4.1-0",
-          "libgtk-3-0"
-        ],
-        "conflicts": [
-          "titane-infinity"
-        ],
-        "replaces": [
-          "titane-infinity"
-        ],
-        "provides": [
-          "titane-infinity"
-        ],
+        "depends": ["libayatana-appindicator3-1", "libwebkit2gtk-4.1-0", "libgtk-3-0"],
+        "conflicts": ["titane-infinity"],
+        "replaces": ["titane-infinity"],
+        "provides": ["titane-infinity"],
         "postInstallScript": "../scripts/install/stable-postinst.sh"
       }
     }
@@ -57,20 +47,13 @@
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": [
-          "$APPDATA/**",
-          "$RESOURCE/**",
-          "$APPCONFIG/**",
-          "$APPLOCALDATA/**"
-        ]
+        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": [
-            "main"
-          ],
+          "windows": ["main"],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -90,103 +73,297 @@
             "core:app:allow-app-hide"
           ],
           "allow": [
-            { "command": "get_runtime_config" },
-            { "command": "is_onboarding_complete" },
-            { "command": "complete_onboarding" },
-            { "command": "get_onboarding_preferences" },
-            { "command": "get_helios_state" },
-            { "command": "get_system_health" },
-            { "command": "get_helios_metrics" },
-            { "command": "get_memory_state" },
-            { "command": "memory_get_state" },
-            { "command": "write_snapshot" },
-            { "command": "read_snapshot" },
-            { "command": "write_log" },
-            { "command": "read_logs" },
-            { "command": "add_timeline_event" },
-            { "command": "get_timeline" },
-            { "command": "get_active_projects" },
-            { "command": "get_recent_decisions" },
-            { "command": "get_knowledge" },
-            { "command": "get_active_rituals" },
-            { "command": "save_chat_interaction" },
-            { "command": "memory_ingest_file" },
-            { "command": "validate_nexus" },
-            { "command": "get_nexus_graph" },
-            { "command": "orchestration_get_cognitive_state" },
-            { "command": "orchestration_get_unified_state" },
-            { "command": "qa_get_state" },
-            { "command": "qa_get_system_metrics" },
-            { "command": "qa_list_test_suites" },
-            { "command": "qa_list_alerts" },
-            { "command": "qa_run_test_suite" },
-            { "command": "qa_acknowledge_alert" },
-            { "command": "one_core_get_state" },
-            { "command": "one_core_get_metrics" },
-            { "command": "one_core_list_commands" },
-            { "command": "one_core_get_event_history" },
-            { "command": "one_core_execute_command" },
-            { "command": "one_core_run_diagnostic" },
-            { "command": "one_core_force_sync" },
-            { "command": "one_core_cleanup" },
-            { "command": "singularity_get_full_state" },
-            { "command": "singularity_get_physical" },
-            { "command": "singularity_get_cognitive" },
-            { "command": "singularity_get_global_coherence" },
-            { "command": "singularity_is_critical" },
-            { "command": "get_singularity_state" },
-            { "command": "sync_singularity" },
-            { "command": "singularity_get_symbolic" },
-            { "command": "singularity_get_adaptive" },
-            { "command": "singularity_get_meta" },
-            { "command": "singularity_get" },
-            { "command": "singularity_set" },
-            { "command": "singularity_diff" },
-            { "command": "singularity_hash" },
-            { "command": "singularity_sync" },
-            { "command": "singularity_meta" },
-            { "command": "singularity_integrity" },
-            { "command": "singularity_repair" },
-            { "command": "singularity_export_json" },
-            { "command": "singularity_snapshot" },
-            { "command": "singularity_selftest_full" },
-            { "command": "experience_get_state" },
-            { "command": "experience_update_state" },
-            { "command": "import_file" },
-            { "command": "file_analyze" },
-            { "command": "upload_and_process_file" },
-            { "command": "get_logs" },
-            { "command": "clear_logs" },
-            { "command": "get_system_info" },
-            { "command": "cp_get_ai_config" },
-            { "command": "cp_set_ai_config" },
-            { "command": "chat_generate" },
-            { "command": "chat_stream_message" },
-            { "command": "fullbody_init" },
-            { "command": "fullbody_update_pose" },
-            { "command": "fullbody_update_expression" },
-            { "command": "fullbody_get_state" },
-            { "command": "avatar_get_expression" },
-            { "command": "tts_speak_parler" },
-            { "command": "tts_stop" },
-            { "command": "tts_is_speaking" },
-            { "command": "tts_get_status" }
-                        ,{ "command": "agenda_delete_event" }
-            ,{ "command": "agenda_save_event" }
-            ,{ "command": "agenda_save_events" }
-                        ,{ "command": "agenda_sync" }
-                        ,{ "command": "calibrate_titane_voice" }
-                        ,{ "command": "chat_mode_change" }
-                        ,{ "command": "chat_mode_sync" }
-                        ,{ "command": "evolution_save_state" }
-                        ,{ "command": "submit_evolution_data" }
-                        ,{ "command": "knowledge_ingest" }
-                        ,{ "command": "knowledge_save_state" }
-                        ,{ "command": "progression_save_state" }
-            ,{ "command": "security_audit_sync_journal" }
-            ,{ "command": "hybrid_memory_publish_governed_report" }
-            ,{ "command": "knowledge_base_runtime_snapshot" }
-                    ,{ "command": "security_audit_publish_signed_export" }
+            {
+              "command": "get_runtime_config"
+            },
+            {
+              "command": "is_onboarding_complete"
+            },
+            {
+              "command": "complete_onboarding"
+            },
+            {
+              "command": "get_onboarding_preferences"
+            },
+            {
+              "command": "get_helios_state"
+            },
+            {
+              "command": "get_system_health"
+            },
+            {
+              "command": "get_helios_metrics"
+            },
+            {
+              "command": "get_memory_state"
+            },
+            {
+              "command": "memory_get_state"
+            },
+            {
+              "command": "write_snapshot"
+            },
+            {
+              "command": "read_snapshot"
+            },
+            {
+              "command": "write_log"
+            },
+            {
+              "command": "read_logs"
+            },
+            {
+              "command": "add_timeline_event"
+            },
+            {
+              "command": "get_timeline"
+            },
+            {
+              "command": "get_active_projects"
+            },
+            {
+              "command": "get_recent_decisions"
+            },
+            {
+              "command": "get_knowledge"
+            },
+            {
+              "command": "get_active_rituals"
+            },
+            {
+              "command": "save_chat_interaction"
+            },
+            {
+              "command": "memory_ingest_file"
+            },
+            {
+              "command": "validate_nexus"
+            },
+            {
+              "command": "get_nexus_graph"
+            },
+            {
+              "command": "orchestration_get_cognitive_state"
+            },
+            {
+              "command": "orchestration_get_unified_state"
+            },
+            {
+              "command": "qa_get_state"
+            },
+            {
+              "command": "qa_get_system_metrics"
+            },
+            {
+              "command": "qa_list_test_suites"
+            },
+            {
+              "command": "qa_list_alerts"
+            },
+            {
+              "command": "qa_run_test_suite"
+            },
+            {
+              "command": "qa_acknowledge_alert"
+            },
+            {
+              "command": "one_core_get_state"
+            },
+            {
+              "command": "one_core_get_metrics"
+            },
+            {
+              "command": "one_core_list_commands"
+            },
+            {
+              "command": "one_core_get_event_history"
+            },
+            {
+              "command": "one_core_execute_command"
+            },
+            {
+              "command": "one_core_run_diagnostic"
+            },
+            {
+              "command": "one_core_force_sync"
+            },
+            {
+              "command": "one_core_cleanup"
+            },
+            {
+              "command": "singularity_get_full_state"
+            },
+            {
+              "command": "singularity_get_physical"
+            },
+            {
+              "command": "singularity_get_cognitive"
+            },
+            {
+              "command": "singularity_get_global_coherence"
+            },
+            {
+              "command": "singularity_is_critical"
+            },
+            {
+              "command": "get_singularity_state"
+            },
+            {
+              "command": "sync_singularity"
+            },
+            {
+              "command": "singularity_get_symbolic"
+            },
+            {
+              "command": "singularity_get_adaptive"
+            },
+            {
+              "command": "singularity_get_meta"
+            },
+            {
+              "command": "singularity_get"
+            },
+            {
+              "command": "singularity_set"
+            },
+            {
+              "command": "singularity_diff"
+            },
+            {
+              "command": "singularity_hash"
+            },
+            {
+              "command": "singularity_sync"
+            },
+            {
+              "command": "singularity_meta"
+            },
+            {
+              "command": "singularity_integrity"
+            },
+            {
+              "command": "singularity_repair"
+            },
+            {
+              "command": "singularity_export_json"
+            },
+            {
+              "command": "singularity_snapshot"
+            },
+            {
+              "command": "singularity_selftest_full"
+            },
+            {
+              "command": "experience_get_state"
+            },
+            {
+              "command": "experience_update_state"
+            },
+            {
+              "command": "import_file"
+            },
+            {
+              "command": "file_analyze"
+            },
+            {
+              "command": "upload_and_process_file"
+            },
+            {
+              "command": "get_logs"
+            },
+            {
+              "command": "clear_logs"
+            },
+            {
+              "command": "get_system_info"
+            },
+            {
+              "command": "cp_get_ai_config"
+            },
+            {
+              "command": "cp_set_ai_config"
+            },
+            {
+              "command": "chat_generate"
+            },
+            {
+              "command": "chat_stream_message"
+            },
+            {
+              "command": "fullbody_init"
+            },
+            {
+              "command": "fullbody_update_pose"
+            },
+            {
+              "command": "fullbody_update_expression"
+            },
+            {
+              "command": "fullbody_get_state"
+            },
+            {
+              "command": "avatar_get_expression"
+            },
+            {
+              "command": "tts_speak_parler"
+            },
+            {
+              "command": "tts_stop"
+            },
+            {
+              "command": "tts_is_speaking"
+            },
+            {
+              "command": "tts_get_status"
+            },
+            {
+              "command": "agenda_delete_event"
+            },
+            {
+              "command": "agenda_save_event"
+            },
+            {
+              "command": "agenda_save_events"
+            },
+            {
+              "command": "agenda_sync"
+            },
+            {
+              "command": "calibrate_titane_voice"
+            },
+            {
+              "command": "chat_mode_change"
+            },
+            {
+              "command": "chat_mode_sync"
+            },
+            {
+              "command": "evolution_save_state"
+            },
+            {
+              "command": "submit_evolution_data"
+            },
+            {
+              "command": "knowledge_ingest"
+            },
+            {
+              "command": "knowledge_save_state"
+            },
+            {
+              "command": "progression_save_state"
+            },
+            {
+              "command": "security_audit_sync_journal"
+            },
+            {
+              "command": "hybrid_memory_publish_governed_report"
+            },
+            {
+              "command": "knowledge_base_runtime_snapshot"
+            },
+            {
+              "command": "security_audit_publish_signed_export"
+            }
           ],
           "deny": []
         }

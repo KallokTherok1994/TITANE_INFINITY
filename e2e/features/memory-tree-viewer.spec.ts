@@ -32,7 +32,9 @@ async function openTitaneMemoryTree(page: Page) {
   await expect(treeTab).toBeVisible({ timeout: 10000 });
   await treeTab.click();
 
-  await expect(page.locator('.memory-tree-container').first()).toBeVisible({ timeout: 15000 });
+  await expect(page.locator('.memory-tree-container').first()).toBeVisible({
+    timeout: 15000,
+  });
 }
 
 test.describe('Feature: Memory Tree Viewer', () => {
@@ -108,34 +110,36 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await expect(page.getByTestId('memory-hybrid-orchestration-reason')).toContainText(
       'Raison orchestration:'
     );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-rollout-mode')).toContainText(
-      'Rollout shadow read:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-active-preset')).toContainText(
-      'Preset actif:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-canary-state')).toContainText(
-      'Canari:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-canary-reason')).toContainText(
-      'Raison canari:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-canary-operator-hint')).toContainText(
-      'Action:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-preset-history')).toContainText(
-      'Historique presets:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-rollout-controls')).toBeVisible({
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-rollout-mode')
+    ).toContainText('Rollout shadow read:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-active-preset')
+    ).toContainText('Preset actif:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-canary-state')
+    ).toContainText('Canari:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-canary-reason')
+    ).toContainText('Raison canari:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-canary-operator-hint')
+    ).toContainText('Action:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-preset-history')
+    ).toContainText('Historique presets:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-rollout-controls')
+    ).toBeVisible({
       timeout: 10000,
     });
     await page.getByTestId('memory-hybrid-shadow-read-rollout-preset-observe').click();
-    await expect(page.getByTestId('memory-hybrid-shadow-read-rollout-mode')).toContainText(
-      'canary'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-active-preset')).toContainText(
-      'Observation'
-    );
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-rollout-mode')
+    ).toContainText('canary');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-active-preset')
+    ).toContainText('Observation');
     await page
       .getByTestId('memory-hybrid-shadow-read-rollout-mode-select')
       .selectOption('canary');
@@ -146,12 +150,12 @@ test.describe('Feature: Memory Tree Viewer', () => {
       .getByTestId('memory-hybrid-shadow-read-trend-window-select')
       .selectOption('8');
     await page.getByTestId('memory-hybrid-shadow-read-rollout-apply').click();
-    await expect(page.getByTestId('memory-hybrid-shadow-read-rollout-mode')).toContainText(
-      'canary'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-canary-state')).toContainText(
-      /eligible|hors-cible/
-    );
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-rollout-mode')
+    ).toContainText('canary');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-canary-state')
+    ).toContainText(/eligible|hors-cible/);
     await page.getByTestId('memory-hybrid-shadow-read-rollout-probe').click();
     await expect(page.getByTestId('memory-hybrid-shadow-read-query')).toContainText(
       'Requete:'
@@ -159,41 +163,47 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await expect(
       page.getByTestId('memory-hybrid-shadow-read-average-similarity')
     ).toContainText('Similarite moyenne:');
-    await expect(page.getByTestId('memory-hybrid-shadow-read-average-score')).toContainText(
-      'Score retrieval moyen:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-composite-score')).toContainText(
-      'Score compose:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-qualification')).toContainText(
-      'Qualification:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-canonical-preview')).toContainText(
-      'Canonique:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-unified-preview')).toContainText(
-      'UnifiedMemory:'
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-matched-pairs')).toContainText(
-      'Paires:'
-    );
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-average-score')
+    ).toContainText('Score retrieval moyen:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-composite-score')
+    ).toContainText('Score compose:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-qualification')
+    ).toContainText('Qualification:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-canonical-preview')
+    ).toContainText('Canonique:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-unified-preview')
+    ).toContainText('UnifiedMemory:');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-matched-pairs')
+    ).toContainText('Paires:');
     await expect(page.getByTestId('memory-hybrid-shadow-read-history')).toContainText(
       'Historique:'
     );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-trend-summary')).toContainText(
-      'Tendance'
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-trend-summary')
+    ).toContainText('Tendance');
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-extended-trend')
+    ).toContainText('Fenetre etendue:');
+    await expect(page.getByTestId('memory-hybrid-shadow-read-history-chart')).toBeVisible(
+      {
+        timeout: 10000,
+      }
     );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-extended-trend')).toContainText(
-      'Fenetre etendue:'
+    const historySparkline = page.getByTestId(
+      'memory-hybrid-shadow-read-history-sparkline'
     );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-history-chart')).toBeVisible({
-      timeout: 10000,
-    });
-    const historySparkline = page.getByTestId('memory-hybrid-shadow-read-history-sparkline');
     const historyEmpty = page.locator('.memory-hybrid-history-empty').first();
     if ((await historySparkline.count()) > 0) {
       await expect(historySparkline).toBeVisible({ timeout: 10000 });
-      await expect(page.getByTestId('memory-hybrid-shadow-read-history-axis')).toContainText(/%/);
+      await expect(
+        page.getByTestId('memory-hybrid-shadow-read-history-axis')
+      ).toContainText(/%/);
     } else {
       await expect(historyEmpty).toBeVisible({ timeout: 10000 });
       await expect(historyEmpty).toContainText('aucun');
@@ -201,15 +211,15 @@ test.describe('Feature: Memory Tree Viewer', () => {
     await expect(page.getByTestId('memory-hybrid-shadow-read-pairs-list')).toContainText(
       /.+/
     );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-near-matches')).toContainText(
-      /.+/
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-near-stability')).toContainText(
-      /.+/
-    );
-    await expect(page.getByTestId('memory-hybrid-shadow-read-missing-list')).toContainText(
-      /.+/
-    );
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-near-matches')
+    ).toContainText(/.+/);
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-near-stability')
+    ).toContainText(/.+/);
+    await expect(
+      page.getByTestId('memory-hybrid-shadow-read-missing-list')
+    ).toContainText(/.+/);
     await expect(page.getByTestId('memory-hybrid-shadow-read-error')).toContainText(
       'Derniere erreur:'
     );

@@ -167,8 +167,6 @@ describe('MessageBubble TTS controls', () => {
     expect(screen.getByTestId('message-model-requested-7')).toHaveTextContent(
       'Requested: llama3.1:latest'
     );
-    expect(screen.getByTestId('message-model-fallback-7')).toHaveTextContent(
-      'Fallback'
-    );
+    expect(screen.getByTestId('message-model-fallback-7')).toHaveTextContent('Fallback');
   });
 });

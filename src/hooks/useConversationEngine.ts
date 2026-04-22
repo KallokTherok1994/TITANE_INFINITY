@@ -26,10 +26,7 @@ import {
   healthCheck,
   getMemoryStats as _getMemoryStats,
 } from '@/services/conversationEngine';
-import {
-  awardExperience,
-  getExperienceState,
-} from '@/services/experienceService';
+import { awardExperience, getExperienceState } from '@/services/experienceService';
 import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
@@ -288,7 +285,9 @@ function buildActionsPerformed(
       status: 'done',
     },
     {
-      label: hasContextSources ? 'Contexte canonique injecté' : 'Contexte canonique absent',
+      label: hasContextSources
+        ? 'Contexte canonique injecté'
+        : 'Contexte canonique absent',
       status: hasContextSources ? 'done' : 'skipped',
     },
     {
@@ -377,10 +376,7 @@ export function useConversationEngine(
   } = useChatMemory({ mode: currentMode });
 
   const patchMessageMetadata = useCallback(
-    (
-      messageId: string,
-      patch: Partial<NonNullable<ConversationMessage['metadata']>>
-    ) => {
+    (messageId: string, patch: Partial<NonNullable<ConversationMessage['metadata']>>) => {
       setMessages(prev =>
         prev.map(message =>
           message.id === messageId
@@ -678,7 +674,9 @@ Actions immédiates:
           await awardExperience('chat', qualityReward.baseXP, XPSource.ChatMessage, {
             messageLength: content.length,
             provider:
-              response.metadata?.provider_used ?? response.meta?.provider_used ?? 'unknown',
+              response.metadata?.provider_used ??
+              response.meta?.provider_used ??
+              'unknown',
             mode: response.meta?.mode ?? currentMode,
           });
 
@@ -701,7 +699,9 @@ Actions immédiates:
             {
               responseLength: assistantContent.length,
               provider:
-                response.metadata?.provider_used ?? response.meta?.provider_used ?? 'unknown',
+                response.metadata?.provider_used ??
+                response.meta?.provider_used ??
+                'unknown',
               titaneResponseXP: true,
             }
           );

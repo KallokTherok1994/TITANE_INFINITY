@@ -14,9 +14,9 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
-![Release v30.1.34](https://img.shields.io/badge/release-v30.1.34-brightgreen?logo=github)
+![Release v31.1.0](https://img.shields.io/badge/release-v31.1.0-brightgreen?logo=github)
 
-**Version:** v30.1.34 (repository authority)
+**Version:** v31.1.0 (repository authority)
 **Status:** ✅ Production Ready (V30 maintained release stream)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 **Latest certified deployment:** `2026-04-17` via `deployment/latest/MANIFEST.json`

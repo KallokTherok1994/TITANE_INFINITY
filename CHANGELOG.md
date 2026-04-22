@@ -1,3 +1,16 @@
+# [31.1.0] - 2026-04-22 (Governance)
+
+## Nouveautés
+
+- Bump version mineure majeure : passage à 31.1.0 sur toutes les surfaces (frontend, backend, artefacts, docs, mapping)
+- Synchronisation complète des artefacts, mapping, inventaire release, et docs
+- Nettoyage, purge des caches et artefacts obsolètes
+- Preuves d’installation, mapping, rollback et tests archivées
+
+## Corrections
+
+- Voir section "Unreleased" pour les correctifs détaillés apportés depuis la dernière version stable
+
 # Unreleased
 
 - Fixed: durcit `commands::window_controls_commands::window_set_zoom` pour rabattre les niveaux de zoom non finis (`NaN`, `+/-Infinity`) sur `1.0`, ce qui evite de propager des echelles invalides vers la voie CSS frontend.

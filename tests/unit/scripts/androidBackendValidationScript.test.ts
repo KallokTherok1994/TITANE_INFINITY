@@ -17,18 +17,20 @@ describe('android backend validation script', () => {
 
   it('extracts both the configured ollamaUrl and ollamaModel from runtime settings', () => {
     expect(backendValidationScript).toContain(
-      ".ollamaUrl // .ollama_url // .ollama_base_url // empty"
+      '.ollamaUrl // .ollama_url // .ollama_base_url // empty'
     );
-    expect(backendValidationScript).toContain(
-      ".ollamaModel // .ollama_model // empty"
-    );
+    expect(backendValidationScript).toContain('.ollamaModel // .ollama_model // empty');
   });
 
   it('verifies the live Ollama inventory from the configured endpoint', () => {
-    expect(backendValidationScript).toContain('OLLAMA_TAGS_URL="${OLLAMA_URL%/}/api/tags"');
-    expect(backendValidationScript).toContain('curl -fsS --max-time 10 "$OLLAMA_TAGS_URL"');
     expect(backendValidationScript).toContain(
-      "jq -r '.models[]?.name' | grep -Fxq \"$OLLAMA_MODEL\""
+      'OLLAMA_TAGS_URL="${OLLAMA_URL%/}/api/tags"'
+    );
+    expect(backendValidationScript).toContain(
+      'curl -fsS --max-time 10 "$OLLAMA_TAGS_URL"'
+    );
+    expect(backendValidationScript).toContain(
+      'jq -r \'.models[]?.name\' | grep -Fxq "$OLLAMA_MODEL"'
     );
   });
 });

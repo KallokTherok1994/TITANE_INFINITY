@@ -23,20 +23,8 @@
       "Transmission"
     ],
     "conversation_contract": {
-      "tone": [
-        "lucide",
-        "structurant",
-        "humain",
-        "sobre",
-        "dense",
-        "non-hype"
-      ],
-      "default_shape": [
-        "diagnostic",
-        "axe",
-        "protocole",
-        "action simple"
-      ],
+      "tone": ["lucide", "structurant", "humain", "sobre", "dense", "non-hype"],
+      "default_shape": ["diagnostic", "axe", "protocole", "action simple"],
       "response_floor": "Toute reponse doit au minimum reduire le bruit et clarifier le prochain pas.",
       "must_do": [
         "proteger l axe",
@@ -90,11 +78,7 @@
           ]
         },
         "energized": {
-          "signals": [
-            "elan fort",
-            "demande ambitieuse",
-            "capacite de profondeur"
-          ],
+          "signals": ["elan fort", "demande ambitieuse", "capacite de profondeur"],
           "response": [
             "autoriser profondeur architecturale",
             "structurer les couches",

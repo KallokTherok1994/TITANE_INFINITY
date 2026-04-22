@@ -231,7 +231,9 @@ export function useBackendHealth(): BackendHealthState {
 
     const payload = raw as Record<string, unknown>;
     const content =
-      typeof payload.ok === 'boolean' && payload.content && typeof payload.content === 'object'
+      typeof payload.ok === 'boolean' &&
+      payload.content &&
+      typeof payload.content === 'object'
         ? (payload.content as Record<string, unknown>)
         : payload;
 
@@ -309,15 +311,19 @@ export function useBackendHealth(): BackendHealthState {
       ]);
 
       const details = normalizeOllamaDetails(rawStatus);
-      const available = details.health !== 'not_checked'
-        ? details.health !== 'offline'
-        : Boolean((rawStatus as { available?: unknown })?.available);
+      const available =
+        details.health !== 'not_checked'
+          ? details.health !== 'offline'
+          : Boolean((rawStatus as { available?: unknown })?.available);
 
       return { available, details };
     } catch (tauriError) {
-      logger.warn('[BackendHealth] Ollama tauri status check failed, using provider fallback', {
-        error: tauriError,
-      });
+      logger.warn(
+        '[BackendHealth] Ollama tauri status check failed, using provider fallback',
+        {
+          error: tauriError,
+        }
+      );
 
       try {
         const available = await Promise.race([

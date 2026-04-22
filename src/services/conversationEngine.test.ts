@@ -327,14 +327,12 @@ describe('conversationEngine.processMessage', () => {
   });
 
   it('does not truncate an ultra-long conversation payload before conversation_generate', async () => {
-    vi.mocked(secureInvoke)
-      .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce({
-        content: 'Ok ultra long',
-        conversationId: 'c3-ultra',
-        messageId: 'm3-ultra',
-        metadata: {},
-      });
+    vi.mocked(secureInvoke).mockResolvedValueOnce(null).mockResolvedValueOnce({
+      content: 'Ok ultra long',
+      conversationId: 'c3-ultra',
+      messageId: 'm3-ultra',
+      metadata: {},
+    });
 
     const ultraLongMessage = `ULTRA-START ${'segment ultra long '.repeat(3200)}ULTRA-END`;
 

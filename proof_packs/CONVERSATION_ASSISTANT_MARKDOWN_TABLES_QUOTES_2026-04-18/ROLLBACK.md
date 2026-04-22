@@ -51,6 +51,35 @@ Toutes les corrections critiques (lint, check, test, mapping, autoheal, doctrine
 
 ---
 
+## Activation online & Ollama champion (v31.1.0)
+
+**Étapes d’activation (conforme gouvernance)** :
+
+- Placer les clés API dans `.env` ou `.env.production` (OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY)
+- Ouvrir la console développeur TITANE∞ (F12 ou Ctrl+Shift+I)
+- Exécuter :
+```js
+localStorage.setItem('titane.enable_external_ai','1');
+localStorage.setItem('titane.ollama_champion','1');
+```
+- Recharger l’application
+- Vérifier dans Centre Gouvernance/API que les providers sont “activés” et “champion” pour Ollama
+
+**Rollback** :
+- Pour désactiver :
+```js
+localStorage.removeItem('titane.enable_external_ai');
+localStorage.removeItem('titane.ollama_champion');
+```
+- Recharger l’application
+
+**Preuve** :
+- E2E Playwright : tous les tests online/offline PASS, fallback Ollama validé
+- Centre Gouvernance : providers “activés”, Ollama “champion” visible
+- Logs build/tests/artefacts joints
+
+---
+
 ## Preuve de conformité
 - Tous les scripts de validation sont PASS (voir logs ci-joints)
 - Mapping, doctrine, autoheal, test matrix : OK

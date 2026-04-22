@@ -26,7 +26,8 @@ describe('ollamaTransport health truth', () => {
       },
     });
 
-    const { ollamaCheckHealth } = await import('@/services/ai/transports/ollamaTransport');
+    const { ollamaCheckHealth } =
+      await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaCheckHealth();
 
     expect(aiCheckOllamaStatusMock).toHaveBeenCalledTimes(1);
@@ -51,7 +52,8 @@ describe('ollamaTransport health truth', () => {
       },
     });
 
-    const { ollamaCheckHealth } = await import('@/services/ai/transports/ollamaTransport');
+    const { ollamaCheckHealth } =
+      await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaCheckHealth();
 
     expect(result.ok).toBe(false);

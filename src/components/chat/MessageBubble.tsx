@@ -344,16 +344,16 @@ export const MessageBubble = memo(function MessageBubble({
             >
               {providerUsed}
               {providerMismatch && (
-                  <span
-                    className="message-provider-mismatch-indicator"
-                    data-testid={`message-provider-mismatch-${timestamp}`}
-                    title={`Demandé: ${requestedProvider}, fallback: ${providerUsed}`}
-                    aria-label={`Avertissement: demandé ${requestedProvider}, utilisé ${providerUsed}`}
-                  >
-                    {' '}
-                    ⚠
-                  </span>
-                )}
+                <span
+                  className="message-provider-mismatch-indicator"
+                  data-testid={`message-provider-mismatch-${timestamp}`}
+                  title={`Demandé: ${requestedProvider}, fallback: ${providerUsed}`}
+                  aria-label={`Avertissement: demandé ${requestedProvider}, utilisé ${providerUsed}`}
+                >
+                  {' '}
+                  ⚠
+                </span>
+              )}
             </span>
           )}
           {role === 'assistant' && modelUsed && (

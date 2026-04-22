@@ -15,7 +15,9 @@ describe('online chat proof wrapper', () => {
     expect(script).toContain("require('./scripts/e2e/native-binary-policy.cjs')");
     expect(script).toContain('freshness=${policy.freshnessClass}');
     expect(script).toContain('buildRequired=${policy.buildRequired}');
-    expect(script).toContain('Run pnpm run build:tauri:e2e before retrying the embedded desktop proof.');
+    expect(script).toContain(
+      'Run pnpm run build:tauri:e2e before retrying the embedded desktop proof.'
+    );
   });
 
   it('runs the embedded runtime-marker verifier before launching the desktop proof', () => {

@@ -454,7 +454,10 @@ export class UnifiedMemory {
     config?: Partial<UnifiedMemoryConfig>
   ) {
     const persistedConfig = readPersistedUnifiedMemoryConfig();
-    const baseConfig = mergeUnifiedMemoryConfig(DEFAULT_CONFIG, persistedConfig ?? undefined);
+    const baseConfig = mergeUnifiedMemoryConfig(
+      DEFAULT_CONFIG,
+      persistedConfig ?? undefined
+    );
     this.config = mergeUnifiedMemoryConfig(baseConfig, config);
     this.vectorStore = vectorStore;
     this.embeddingGenerator = embeddingGenerator;

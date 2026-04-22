@@ -18,20 +18,28 @@ describe('MarkdownContent', () => {
   it('renders links and code blocks as semantic markdown nodes', () => {
     const { container } = render(
       <MarkdownContent
-        content={'# Titre\n\nVoir [source](https://example.com)\n\n```ts\nconst value = 42;\n```'}
+        content={
+          '# Titre\n\nVoir [source](https://example.com)\n\n```ts\nconst value = 42;\n```'
+        }
       />
     );
 
     expect(container.querySelector('h1')?.textContent).toBe('Titre');
-    expect(container.querySelector('a')?.getAttribute('href')).toBe('https://example.com');
+    expect(container.querySelector('a')?.getAttribute('href')).toBe(
+      'https://example.com'
+    );
     expect(container.textContent).toContain('ts');
-    expect(container.querySelector('pre code')?.textContent).toContain('const value = 42;');
+    expect(container.querySelector('pre code')?.textContent).toContain(
+      'const value = 42;'
+    );
   });
 
   it('renders blockquotes and tables without leaking raw markdown separators', () => {
     const { container } = render(
       <MarkdownContent
-        content={'> Citation importante\n\n| Colonne | Valeur |\n| --- | --- |\n| Alpha | 42 |'}
+        content={
+          '> Citation importante\n\n| Colonne | Valeur |\n| --- | --- |\n| Alpha | 42 |'
+        }
       />
     );
 

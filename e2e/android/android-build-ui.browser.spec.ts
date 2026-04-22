@@ -1203,10 +1203,12 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       });
     };
 
-    await expect.poll(readRateLimitRuntimeProof, {
-      timeout: 15000,
-      intervals: [250, 500, 1000],
-    }).toMatchObject({
+    await expect
+      .poll(readRateLimitRuntimeProof, {
+        timeout: 15000,
+        intervals: [250, 500, 1000],
+      })
+      .toMatchObject({
         providerReason: 'RATE_LIMIT',
         providerMode: 'OFFLINE',
         networkUsed: 'true',
@@ -1281,10 +1283,12 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
       });
     };
 
-    await expect.poll(readMockAssistantProof, {
-      timeout: 15000,
-      intervals: [250, 500, 1000],
-    }).toMatchObject({
+    await expect
+      .poll(readMockAssistantProof, {
+        timeout: 15000,
+        intervals: [250, 500, 1000],
+      })
+      .toMatchObject({
         memoryLog: [
           expect.objectContaining({
             userMessage: 'Active la connaissance runtime One Door',
@@ -1296,15 +1300,19 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     const firstAssistantProof = await readMockAssistantProof();
 
     expect(firstAssistantProof.assistantText).toContain('MOCKOK');
-    expect(firstAssistantProof.assistantText).toContain('Active la connaissance runtime One Door');
+    expect(firstAssistantProof.assistantText).toContain(
+      'Active la connaissance runtime One Door'
+    );
     expect(firstAssistantProof.assistantText).toContain('MOCKKNOWLEDGE');
     expect(firstAssistantProof.assistantText).toContain('One Door Governance');
 
     await submitChatMessage(page, 'Rappelle le dernier echange memoire');
-    await expect.poll(readMockAssistantProof, {
-      timeout: 15000,
-      intervals: [250, 500, 1000],
-    }).toMatchObject({
+    await expect
+      .poll(readMockAssistantProof, {
+        timeout: 15000,
+        intervals: [250, 500, 1000],
+      })
+      .toMatchObject({
         memoryLog: [
           expect.anything(),
           expect.objectContaining({

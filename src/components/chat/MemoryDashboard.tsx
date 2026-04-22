@@ -625,7 +625,10 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
           >
             {hybridDiagnostics.recentShadowReadPresetChanges.length > 0
               ? hybridDiagnostics.recentShadowReadPresetChanges
-                  .map(entry => `${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source})`)
+                  .map(
+                    entry =>
+                      `${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source})`
+                  )
                   .join(' | ')
               : 'Aucun changement de preset persiste.'}
           </p>

@@ -1,3 +1,0 @@
-b90ca8762c32abd9dada1f868bbc2f67005327ea6c0e9a8b0c1d52b561e80cb9  TITANE-Infinity_27.0.5_amd64.deb
-89bd88d2307d7021dfa1f2a1ae6b7a1ebd04adcd79a2d5bf21f896612eab9f0b  TITANE-Infinity_27.0.5_amd64.AppImage
-3eeae0ab9b15b3856c4ef1134af3558c4b9aaa2c46a05199a78236c7d2de69ac  TITANE-Infinity-27.0.5-1.x86_64.rpm

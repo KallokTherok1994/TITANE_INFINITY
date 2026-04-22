@@ -75,7 +75,10 @@ vi.mock('@/components/chat/MemoryDashboard', () => ({
     selectedEntryId?: string | null;
     hybridDiagnostics?: {
       shadowReadActivePresetLabel?: string;
-      recentShadowReadPresetChanges?: Array<{ fromPresetLabel: string; toPresetLabel: string }>;
+      recentShadowReadPresetChanges?: Array<{
+        fromPresetLabel: string;
+        toPresetLabel: string;
+      }>;
     };
   }) => (
     <div data-testid="memory-dashboard">
@@ -123,7 +126,8 @@ vi.mock('@/features/memory/MemoryTreeViewer', () => ({
       {isLoading ? 'loading-tree' : (data?.name ?? 'no-tree')}
       :query:{diagnostics?.lastShadowReadQuery ?? 'none'}
       :error:{diagnostics?.lastError ?? 'none'}
-      :preset-history:{Array.isArray((diagnostics as any)?.recentShadowReadPresetChanges)
+      :preset-history:
+      {Array.isArray((diagnostics as any)?.recentShadowReadPresetChanges)
         ? (diagnostics as any).recentShadowReadPresetChanges.length
         : 0}
       <button
@@ -439,9 +443,7 @@ describe('MemorySection', () => {
     expect(await screen.findByTestId('memory-dashboard')).toHaveTextContent(
       'preset:Equilibre'
     );
-    expect(await screen.findByTestId('memory-dashboard')).toHaveTextContent(
-      'history:1'
-    );
+    expect(await screen.findByTestId('memory-dashboard')).toHaveTextContent('history:1');
     expect(await screen.findByTestId('memory-tree-viewer')).toHaveTextContent(
       'Memoire TITANE'
     );
@@ -451,22 +453,24 @@ describe('MemorySection', () => {
     expect(await screen.findByTestId('memory-tree-viewer')).toHaveTextContent(
       'preset-history:1'
     );
-    expect(await screen.findByTestId('memory-hybrid-overview-summary')).toBeInTheDocument();
-    expect(await screen.findByTestId('memory-hybrid-overview-active-preset')).toHaveTextContent(
-      'Equilibre'
-    );
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-summary')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-active-preset')
+    ).toHaveTextContent('Equilibre');
     expect(
       await screen.findByTestId('memory-hybrid-overview-orchestration-status')
     ).toHaveTextContent('ready (1)');
-    expect(await screen.findByTestId('memory-hybrid-overview-operator-hint')).toHaveTextContent(
-      'Le contexte est dans le canari courant.'
-    );
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-operator-hint')
+    ).toHaveTextContent('Le contexte est dans le canari courant.');
     expect(
       await screen.findByTestId('memory-hybrid-overview-orchestration-preview')
     ).toHaveTextContent('Atlas runtime addendum');
-    expect(await screen.findByTestId('memory-hybrid-overview-preset-history')).toHaveTextContent(
-      'Observation -> Equilibre (preset)'
-    );
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-preset-history')
+    ).toHaveTextContent('Observation -> Equilibre (preset)');
     expect(await screen.findByTestId('memory-search-panel')).toHaveTextContent(
       'entries:1'
     );
@@ -535,9 +539,9 @@ describe('MemorySection', () => {
     await waitFor(() => {
       expect(mockCreateObjectURL).toHaveBeenCalled();
     });
-    expect(await screen.findByTestId('memory-hybrid-overview-export-status')).toHaveTextContent(
-      'Rapport hybride exporte.'
-    );
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-export-status')
+    ).toHaveTextContent('Rapport hybride exporte.');
   });
 
   it('prefers the governed desktop export when available', async () => {
@@ -566,9 +570,9 @@ describe('MemorySection', () => {
       expect(mockPublishGovernedHybridReport).toHaveBeenCalled();
     });
     expect(mockCreateObjectURL).not.toHaveBeenCalled();
-    expect(await screen.findByTestId('memory-hybrid-overview-export-status')).toHaveTextContent(
-      'Export gouverne: /tmp/hybrid-memory-1.md'
-    );
+    expect(
+      await screen.findByTestId('memory-hybrid-overview-export-status')
+    ).toHaveTextContent('Export gouverne: /tmp/hybrid-memory-1.md');
   });
 
   it('passes an honest empty array to semantic search when persistent memory is empty', async () => {

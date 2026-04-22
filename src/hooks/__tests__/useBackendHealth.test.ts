@@ -183,7 +183,9 @@ describe('useBackendHealth Hook', () => {
       });
 
       expect(getTauriMock().isAvailable.mock.calls.length).toBeGreaterThanOrEqual(2);
-      expect(getTauriClientMock().aiCheckOllamaStatus.mock.calls.length).toBeGreaterThanOrEqual(2);
+      expect(
+        getTauriClientMock().aiCheckOllamaStatus.mock.calls.length
+      ).toBeGreaterThanOrEqual(2);
     });
 
     it('should have recheck function', () => {

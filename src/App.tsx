@@ -227,7 +227,9 @@ const UltimateOptimizationDashboard = lazy(
 const RealityCenter = lazy(() => import('./pages/RealityCenter'));
 const CreationStudio = lazy(() => import('./pages/CreationStudio'));
 const EvolutionMonitor = lazy(() => import('./pages/EvolutionMonitor'));
-const SingularityMonitor = lazy(() => import('./pages/SingularityMonitor').then(m => ({ default: m.default })));
+const SingularityMonitor = lazy(() =>
+  import('./pages/SingularityMonitor').then(m => ({ default: m.default }))
+);
 
 const emitBootMarker = (marker: string): void => {
   if (typeof window === 'undefined') {

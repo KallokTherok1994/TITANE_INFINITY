@@ -134,7 +134,10 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
     const height = 48;
 
     return sortedEntries.map((entry, index) => {
-      const x = sortedEntries.length === 1 ? width / 2 : (index / (sortedEntries.length - 1)) * width;
+      const x =
+        sortedEntries.length === 1
+          ? width / 2
+          : (index / (sortedEntries.length - 1)) * width;
       const y = height - entry.compositeScore * height;
       const label = new Date(entry.at).toLocaleTimeString('fr-FR', {
         hour: '2-digit',
@@ -151,7 +154,9 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
       };
     });
   }, [hybridRecentQualifications]);
-  const hybridHistoryPolyline = hybridHistoryPoints.map(point => `${point.x},${point.y}`).join(' ');
+  const hybridHistoryPolyline = hybridHistoryPoints
+    .map(point => `${point.x},${point.y}`)
+    .join(' ');
 
   useEffect(() => {
     if (!diagnostics || isRolloutDraftDirty) {
@@ -348,7 +353,10 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
               Shadow write: {diagnostics.shadowWriteEnabled ? 'actif' : 'inactif'}
             </span>
             <span data-testid="memory-hybrid-shadow-read-state">
-              Shadow read: {diagnostics.shadowReadEnabled ? diagnostics.lastShadowReadStatus : 'inactif'}
+              Shadow read:{' '}
+              {diagnostics.shadowReadEnabled
+                ? diagnostics.lastShadowReadStatus
+                : 'inactif'}
             </span>
             <span data-testid="memory-hybrid-shadow-write-count">
               Ecritures dupliquees: {diagnostics.shadowWriteCount}
@@ -357,7 +365,8 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
               Lectures de controle: {diagnostics.shadowReadCount}
             </span>
             <span data-testid="memory-hybrid-orchestration-state">
-              Orchestration hybride: {diagnostics.hybridOrchestrationEnabled
+              Orchestration hybride:{' '}
+              {diagnostics.hybridOrchestrationEnabled
                 ? diagnostics.lastHybridOrchestrationStatus
                 : 'inactive'}
             </span>
@@ -365,7 +374,8 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
               Complements injectes: {diagnostics.lastHybridOrchestrationCount}
             </span>
             <span data-testid="memory-hybrid-orchestration-preview">
-              Apercu orchestration: {diagnostics.lastHybridOrchestrationPreview.join(' | ') || 'aucun'}
+              Apercu orchestration:{' '}
+              {diagnostics.lastHybridOrchestrationPreview.join(' | ') || 'aucun'}
             </span>
             <span data-testid="memory-hybrid-orchestration-reason">
               Raison orchestration: {diagnostics.lastHybridOrchestrationReason}
@@ -392,9 +402,13 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
               Requete canari: {diagnostics.shadowReadCanaryQueryPreview ?? 'aucune'}
             </span>
             <span data-testid="memory-hybrid-shadow-read-preset-history">
-              Historique presets: {hybridPresetHistory.length > 0
+              Historique presets:{' '}
+              {hybridPresetHistory.length > 0
                 ? hybridPresetHistory
-                    .map(entry => `${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source})`)
+                    .map(
+                      entry =>
+                        `${entry.fromPresetLabel} -> ${entry.toPresetLabel} (${entry.source})`
+                    )
                     .join(' | ')
                 : 'aucun'}
             </span>
@@ -522,38 +536,54 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
               Qualification: {hybridQualificationLabel}
             </span>
             <span data-testid="memory-hybrid-shadow-read-delta">
-              Manquants: {diagnostics.lastShadowReadMissingCount} | Surplus: {diagnostics.lastShadowReadExtraCount}
+              Manquants: {diagnostics.lastShadowReadMissingCount} | Surplus:{' '}
+              {diagnostics.lastShadowReadExtraCount}
             </span>
             <span data-testid="memory-hybrid-shadow-read-canonical-preview">
-              Canonique: {diagnostics.lastShadowReadCanonicalPreview.join(' | ') || 'aucun'}
+              Canonique:{' '}
+              {diagnostics.lastShadowReadCanonicalPreview.join(' | ') || 'aucun'}
             </span>
             <span data-testid="memory-hybrid-shadow-read-unified-preview">
-              UnifiedMemory: {diagnostics.lastShadowReadUnifiedPreview.join(' | ') || 'aucun'}
+              UnifiedMemory:{' '}
+              {diagnostics.lastShadowReadUnifiedPreview.join(' | ') || 'aucun'}
             </span>
             <span data-testid="memory-hybrid-shadow-read-matched-pairs">
-              Paires: {hybridMatchedPairs.length > 0
+              Paires:{' '}
+              {hybridMatchedPairs.length > 0
                 ? hybridMatchedPairs
-                    .map(pair => `${pair.canonicalLabel} -> ${pair.unifiedLabel} (${Math.round(pair.similarity * 100)}%)`)
+                    .map(
+                      pair =>
+                        `${pair.canonicalLabel} -> ${pair.unifiedLabel} (${Math.round(pair.similarity * 100)}%)`
+                    )
                     .join(' | ')
                 : 'aucune'}
             </span>
             <span data-testid="memory-hybrid-shadow-read-history">
-              Historique: {hybridRecentQualifications.length > 0
+              Historique:{' '}
+              {hybridRecentQualifications.length > 0
                 ? hybridRecentQualifications
-                    .map(entry => `${entry.qualification}:${Math.round(entry.compositeScore * 100)}%`)
+                    .map(
+                      entry =>
+                        `${entry.qualification}:${Math.round(entry.compositeScore * 100)}%`
+                    )
                     .join(' | ')
                 : 'aucun'}
             </span>
             <span data-testid="memory-hybrid-shadow-read-trend-summary">
-              Tendance {diagnostics.lastShadowReadTrendSummary.windowSize}: pret {diagnostics.lastShadowReadTrendSummary.readyCount}
-              {' '}| partiel {diagnostics.lastShadowReadTrendSummary.partialCount}
-              {' '}| insuffisant {diagnostics.lastShadowReadTrendSummary.insufficientCount}
-              {' '}| score moyen {hybridTrendSummaryPercent}%
+              Tendance {diagnostics.lastShadowReadTrendSummary.windowSize}: pret{' '}
+              {diagnostics.lastShadowReadTrendSummary.readyCount} | partiel{' '}
+              {diagnostics.lastShadowReadTrendSummary.partialCount} | insuffisant{' '}
+              {diagnostics.lastShadowReadTrendSummary.insufficientCount} | score moyen{' '}
+              {hybridTrendSummaryPercent}%
             </span>
             <span data-testid="memory-hybrid-shadow-read-extended-trend">
-              Fenetre etendue: {hybridExtendedTrend.length > 0
+              Fenetre etendue:{' '}
+              {hybridExtendedTrend.length > 0
                 ? hybridExtendedTrend
-                    .map(entry => `${entry.qualification}:${Math.round(entry.compositeScore * 100)}%`)
+                    .map(
+                      entry =>
+                        `${entry.qualification}:${Math.round(entry.compositeScore * 100)}%`
+                    )
                     .join(' | ')
                 : 'aucune'}
             </span>
@@ -584,7 +614,10 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
                       />
                     ))}
                   </svg>
-                  <div className="memory-hybrid-history-axis" data-testid="memory-hybrid-shadow-read-history-axis">
+                  <div
+                    className="memory-hybrid-history-axis"
+                    data-testid="memory-hybrid-shadow-read-history-axis"
+                  >
                     {hybridHistoryPoints.map(point => (
                       <span key={`${point.label}-${point.scoreLabel}`}>
                         {point.label} {point.scoreLabel}
@@ -640,7 +673,9 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
                   </div>
                 ))
               ) : (
-                <span className="memory-hybrid-shadow-read-empty">aucune quasi-correspondance</span>
+                <span className="memory-hybrid-shadow-read-empty">
+                  aucune quasi-correspondance
+                </span>
               )}
             </div>
             <div
@@ -657,12 +692,18 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
                     <strong>{item.canonicalLabel}</strong>
                     <span>{item.unifiedLabel}</span>
                     <span>Stabilite: {item.stability}</span>
-                    <span>Occurrences: {item.seenCount}/{item.observationWindow}</span>
-                    <span>Similarite moyenne: {Math.round(item.averageSimilarity * 100)}%</span>
+                    <span>
+                      Occurrences: {item.seenCount}/{item.observationWindow}
+                    </span>
+                    <span>
+                      Similarite moyenne: {Math.round(item.averageSimilarity * 100)}%
+                    </span>
                   </div>
                 ))
               ) : (
-                <span className="memory-hybrid-shadow-read-empty">aucune stabilite exploitable</span>
+                <span className="memory-hybrid-shadow-read-empty">
+                  aucune stabilite exploitable
+                </span>
               )}
             </div>
             <div
@@ -677,7 +718,9 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
                     data-testid="memory-hybrid-shadow-read-missing-row"
                   >
                     <strong>{item.canonicalLabel}</strong>
-                    <span className={`memory-hybrid-missing-priority memory-hybrid-missing-priority-${item.priority}`}>
+                    <span
+                      className={`memory-hybrid-missing-priority memory-hybrid-missing-priority-${item.priority}`}
+                    >
                       {item.priority}
                     </span>
                     <span>{item.bestUnifiedLabel ?? 'aucun candidat'}</span>
@@ -686,7 +729,9 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
                   </div>
                 ))
               ) : (
-                <span className="memory-hybrid-shadow-read-empty">aucun manque critique</span>
+                <span className="memory-hybrid-shadow-read-empty">
+                  aucun manque critique
+                </span>
               )}
             </div>
             {diagnostics.lastShadowReadMissingLabels.length > 0 && (

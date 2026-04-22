@@ -14,12 +14,7 @@
         "proposer un protocole",
         "verrouiller une action"
       ],
-      "default_shape": [
-        "diagnostic",
-        "axe",
-        "protocole",
-        "action simple"
-      ]
+      "default_shape": ["diagnostic", "axe", "protocole", "action simple"]
     },
     "state_detection": {
       "overloaded": {
@@ -48,11 +43,7 @@
         ]
       },
       "energized": {
-        "signals": [
-          "elan fort",
-          "demande ambitieuse",
-          "capacite de profondeur"
-        ],
+        "signals": ["elan fort", "demande ambitieuse", "capacite de profondeur"],
         "response": [
           "autoriser profondeur architecturale",
           "structurer les couches",

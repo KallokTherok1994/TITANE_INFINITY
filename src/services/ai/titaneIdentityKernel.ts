@@ -50,8 +50,7 @@ type TitaneIdentityKernelDocument = {
   };
 };
 
-const titaneIdentityKernel =
-  titaneIdentityKernelDocument as TitaneIdentityKernelDocument;
+const titaneIdentityKernel = titaneIdentityKernelDocument as TitaneIdentityKernelDocument;
 
 export const TITANE_IDENTITY_KERNEL_CATEGORY = titaneIdentityKernel.category;
 export const TITANE_IDENTITY_KERNEL_VERSION = titaneIdentityKernel.version;

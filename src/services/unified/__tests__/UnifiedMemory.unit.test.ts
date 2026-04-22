@@ -251,9 +251,13 @@ describe('UnifiedMemory', () => {
     });
 
     it('should preserve nested defaults when partial config overrides are provided', async () => {
-      const partiallyConfiguredMemory = new UnifiedMemory(vectorStore, embeddingGenerator, {
-        cleanup: { enabled: false } as UnifiedMemoryConfig['cleanup'],
-      });
+      const partiallyConfiguredMemory = new UnifiedMemory(
+        vectorStore,
+        embeddingGenerator,
+        {
+          cleanup: { enabled: false } as UnifiedMemoryConfig['cleanup'],
+        }
+      );
 
       const config = partiallyConfiguredMemory.getConfig();
       expect(config.cleanup.enabled).toBe(false);

@@ -55,7 +55,7 @@ const HYBRID_REPORT_FILE_PREFIX = 'titane-hybrid-memory-report';
 type MemorySectionTab = 'overview' | 'dashboard' | 'tree' | 'search';
 
 const SECTION_TABS: { id: MemorySectionTab; label: string; icon: string }[] = [
-  { id: 'overview', label: 'Vue d\'ensemble', icon: '📊' },
+  { id: 'overview', label: "Vue d'ensemble", icon: '📊' },
   { id: 'dashboard', label: 'Dashboard', icon: '📚' },
   { id: 'tree', label: 'Arbre', icon: '🌳' },
   { id: 'search', label: 'Recherche', icon: '🔍' },
@@ -896,7 +896,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               '',
               '### Apercu des complements',
               '',
-              ...hybridDiagnostics.lastHybridOrchestrationPreview.map(title => `- ${title}`),
+              ...hybridDiagnostics.lastHybridOrchestrationPreview.map(
+                title => `- ${title}`
+              ),
             ]
           : []),
         '',
@@ -913,9 +915,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
       }
 
       try {
-        const governedExport = await memoryIntegration.publishGovernedHybridReport(
-          hybridReportContent
-        );
+        const governedExport =
+          await memoryIntegration.publishGovernedHybridReport(hybridReportContent);
 
         if (governedExport) {
           setHybridReportStatus(
@@ -924,7 +925,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           return;
         }
 
-        const blob = new Blob([hybridReportContent], { type: 'text/markdown;charset=utf-8' });
+        const blob = new Blob([hybridReportContent], {
+          type: 'text/markdown;charset=utf-8',
+        });
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.href = url;
@@ -1292,13 +1295,21 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <div data-testid="memory-hybrid-overview-summary">
               <h3 style={{ marginBottom: spacing[2] }}>Hybrid memory rollout</h3>
               <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-                Preset actif: <span data-testid="memory-hybrid-overview-active-preset">{hybridDiagnostics.shadowReadActivePresetLabel}</span>
+                Preset actif:{' '}
+                <span data-testid="memory-hybrid-overview-active-preset">
+                  {hybridDiagnostics.shadowReadActivePresetLabel}
+                </span>
               </p>
               <p
                 data-testid="memory-hybrid-overview-orchestration-status"
-                style={{ fontSize: fontSizes.sm, color: colors.neutral[400], marginTop: spacing[2] }}
+                style={{
+                  fontSize: fontSizes.sm,
+                  color: colors.neutral[400],
+                  marginTop: spacing[2],
+                }}
               >
-                Orchestration hybride: {hybridDiagnostics.hybridOrchestrationEnabled
+                Orchestration hybride:{' '}
+                {hybridDiagnostics.hybridOrchestrationEnabled
                   ? `${hybridDiagnostics.lastHybridOrchestrationStatus} (${hybridDiagnostics.lastHybridOrchestrationCount})`
                   : 'inactive'}
               </p>

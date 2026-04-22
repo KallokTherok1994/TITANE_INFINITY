@@ -6,13 +6,13 @@ Deploy a durable hybrid-memory model that improves relevance and coherence witho
 
 ## Command structure
 
-| Level | Role | Responsibility | Reports to |
-| --- | --- | --- | --- |
-| Root | Memory Root Commander | Final authority, arbitration, go or rollback | Human lead |
-| Tree | Memory Orchestrator | Dispatch, sequencing, gate control | Root commander |
-| Stem | Domain masters | Architecture, backend, frontend, QA and ops | Orchestrator |
-| Leaf | Specialists | One narrow task each, evidence-driven | Their master |
-| Tool layer | Validators | Deterministic proof, tests, logs, diff checks | Relevant master |
+| Level      | Role                  | Responsibility                                | Reports to      |
+| ---------- | --------------------- | --------------------------------------------- | --------------- |
+| Root       | Memory Root Commander | Final authority, arbitration, go or rollback  | Human lead      |
+| Tree       | Memory Orchestrator   | Dispatch, sequencing, gate control            | Root commander  |
+| Stem       | Domain masters        | Architecture, backend, frontend, QA and ops   | Orchestrator    |
+| Leaf       | Specialists           | One narrow task each, evidence-driven         | Their master    |
+| Tool layer | Validators            | Deterministic proof, tests, logs, diff checks | Relevant master |
 
 ## Phases
 

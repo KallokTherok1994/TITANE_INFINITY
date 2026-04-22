@@ -577,7 +577,10 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
                 const maxUserMessageChars = 12000; // Doit être synchronisé avec chatEngine.commands.ts
                 if (maxUserMessageChars > 10000) {
                   return (
-                    <span className="chat-hint-unlimited"> • <span>illimité</span></span>
+                    <span className="chat-hint-unlimited">
+                      {' '}
+                      • <span>illimité</span>
+                    </span>
                   );
                 }
                 return null;

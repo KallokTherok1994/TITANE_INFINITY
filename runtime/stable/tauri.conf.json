@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "Titan-Stable",
-  "version": "31.0.6",
+  "version": "31.1.0",
   "identifier": "com.titane.infinity.stable",
   "build": {
     "beforeDevCommand": "",
@@ -10,26 +10,13 @@
   },
   "bundle": {
     "active": true,
-    "targets": [
-      "appimage",
-      "deb"
-    ],
+    "targets": ["appimage", "deb"],
     "linux": {
       "deb": {
-        "depends": [
-          "libayatana-appindicator3-1",
-          "libwebkit2gtk-4.1-0",
-          "libgtk-3-0"
-        ],
-        "conflicts": [
-          "titane-infinity"
-        ],
-        "replaces": [
-          "titane-infinity"
-        ],
-        "provides": [
-          "titane-infinity"
-        ],
+        "depends": ["libayatana-appindicator3-1", "libwebkit2gtk-4.1-0", "libgtk-3-0"],
+        "conflicts": ["titane-infinity"],
+        "replaces": ["titane-infinity"],
+        "provides": ["titane-infinity"],
         "postInstallScript": "../scripts/install/stable-postinst.sh"
       }
     },
@@ -68,20 +55,13 @@
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": [
-          "$APPDATA/**",
-          "$RESOURCE/**",
-          "$APPCONFIG/**",
-          "$APPLOCALDATA/**"
-        ]
+        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": [
-            "main"
-          ],
+          "windows": ["main"],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -346,33 +326,33 @@
             },
             {
               "command": "agenda_delete_event"
-                        },
-                        {
-                          "command": "agenda_sync"
-                        },
-                        {
-                          "command": "calibrate_titane_voice"
-                        },
-                        {
-                          "command": "chat_mode_change"
-                        },
-                        {
-                          "command": "chat_mode_sync"
-                        },
-                        {
-                          "command": "evolution_save_state"
-                        },
-                        {
-                          "command": "submit_evolution_data"
-                        },
-                        {
-                          "command": "knowledge_ingest"
-                        },
-                        {
-                          "command": "knowledge_save_state"
-                        },
-                        {
-                          "command": "progression_save_state"
+            },
+            {
+              "command": "agenda_sync"
+            },
+            {
+              "command": "calibrate_titane_voice"
+            },
+            {
+              "command": "chat_mode_change"
+            },
+            {
+              "command": "chat_mode_sync"
+            },
+            {
+              "command": "evolution_save_state"
+            },
+            {
+              "command": "submit_evolution_data"
+            },
+            {
+              "command": "knowledge_ingest"
+            },
+            {
+              "command": "knowledge_save_state"
+            },
+            {
+              "command": "progression_save_state"
             }
           ],
           "deny": []

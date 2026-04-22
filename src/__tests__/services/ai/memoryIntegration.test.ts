@@ -55,7 +55,10 @@ describe('memoryIntegration', () => {
     unifiedMemoryInstanceMock.getStats.mockResolvedValue({ total: 3 });
     unifiedMemoryInstanceMock.retrieveMemories.mockResolvedValue([
       { entry: { id: 'm1', summary: 'Atlas', tags: ['Knowledge A'] }, score: 0.9 },
-      { entry: { id: 'm2', summary: 'Shadow extra', details: 'Shadow extra details' }, score: 0.8 },
+      {
+        entry: { id: 'm2', summary: 'Shadow extra', details: 'Shadow extra details' },
+        score: 0.8,
+      },
     ]);
     isTauriAvailableMock.mockReturnValue(false);
     hybridMemoryPublishGovernedReportMock.mockReset();
@@ -95,9 +98,13 @@ describe('memoryIntegration', () => {
   });
 
   it('returns additive hybrid supplemental knowledge when orchestration is enabled', async () => {
-    memoryServiceMock.getActiveProjects.mockResolvedValue([{ id: 'project-a', title: 'Atlas' }]);
+    memoryServiceMock.getActiveProjects.mockResolvedValue([
+      { id: 'project-a', title: 'Atlas' },
+    ]);
     memoryServiceMock.getRecentDecisions.mockResolvedValue([]);
-    memoryServiceMock.getKnowledge.mockResolvedValue([{ id: 'k1', title: 'Knowledge A' }]);
+    memoryServiceMock.getKnowledge.mockResolvedValue([
+      { id: 'k1', title: 'Knowledge A' },
+    ]);
     memoryServiceMock.getActiveRituals.mockResolvedValue([]);
     unifiedMemoryInstanceMock.retrieveMemories.mockResolvedValue([
       {
@@ -374,9 +381,13 @@ describe('memoryIntegration', () => {
   });
 
   it('runs shadow-read diagnostics on context load when the hybrid read flag is enabled', async () => {
-    memoryServiceMock.getActiveProjects.mockResolvedValue([{ id: 'project-a', title: 'Atlas' }]);
+    memoryServiceMock.getActiveProjects.mockResolvedValue([
+      { id: 'project-a', title: 'Atlas' },
+    ]);
     memoryServiceMock.getRecentDecisions.mockResolvedValue([]);
-    memoryServiceMock.getKnowledge.mockResolvedValue([{ id: 'k1', title: 'Knowledge A' }]);
+    memoryServiceMock.getKnowledge.mockResolvedValue([
+      { id: 'k1', title: 'Knowledge A' },
+    ]);
     memoryServiceMock.getActiveRituals.mockResolvedValue([]);
 
     localStorage.setItem('titane_hybrid_memory_shadow_read_enabled', 'true');
@@ -452,9 +463,13 @@ describe('memoryIntegration', () => {
   });
 
   it('captures the last shadow-read error and missing canonical labels when UnifiedMemory lookup fails', async () => {
-    memoryServiceMock.getActiveProjects.mockResolvedValue([{ id: 'project-a', title: 'Atlas' }]);
+    memoryServiceMock.getActiveProjects.mockResolvedValue([
+      { id: 'project-a', title: 'Atlas' },
+    ]);
     memoryServiceMock.getRecentDecisions.mockResolvedValue([]);
-    memoryServiceMock.getKnowledge.mockResolvedValue([{ id: 'k1', title: 'Knowledge A' }]);
+    memoryServiceMock.getKnowledge.mockResolvedValue([
+      { id: 'k1', title: 'Knowledge A' },
+    ]);
     memoryServiceMock.getActiveRituals.mockResolvedValue([]);
     unifiedMemoryInstanceMock.getStats.mockRejectedValue(new Error('unified offline'));
 
@@ -640,7 +655,10 @@ describe('memoryIntegration', () => {
           }),
         ],
         recentShadowReadExtendedTrend: [
-          expect.objectContaining({ qualification: 'insufficient', compositeScore: 0.3125 }),
+          expect.objectContaining({
+            qualification: 'insufficient',
+            compositeScore: 0.3125,
+          }),
         ],
         lastShadowReadTrendSummary: {
           windowSize: 12,
@@ -709,7 +727,9 @@ describe('memoryIntegration', () => {
   });
 
   it('skips shadow read outside the configured canary bucket', async () => {
-    memoryServiceMock.getActiveProjects.mockResolvedValue([{ id: 'project-a', title: 'Atlas' }]);
+    memoryServiceMock.getActiveProjects.mockResolvedValue([
+      { id: 'project-a', title: 'Atlas' },
+    ]);
     memoryServiceMock.getRecentDecisions.mockResolvedValue([]);
     memoryServiceMock.getKnowledge.mockResolvedValue([]);
     memoryServiceMock.getActiveRituals.mockResolvedValue([]);
@@ -747,7 +767,9 @@ describe('memoryIntegration', () => {
   });
 
   it('detects balanced preset and exposes an actionable canary hint', async () => {
-    memoryServiceMock.getActiveProjects.mockResolvedValue([{ id: 'project-a', title: 'Atlas' }]);
+    memoryServiceMock.getActiveProjects.mockResolvedValue([
+      { id: 'project-a', title: 'Atlas' },
+    ]);
     memoryServiceMock.getRecentDecisions.mockResolvedValue([]);
     memoryServiceMock.getKnowledge.mockResolvedValue([]);
     memoryServiceMock.getActiveRituals.mockResolvedValue([]);
@@ -781,12 +803,36 @@ describe('memoryIntegration', () => {
   it('keeps a bounded history of recent preset changes', async () => {
     const { memoryIntegration } = await import('@/services/ai/memoryIntegration');
 
-    memoryIntegration.updateShadowReadRolloutConfig({ mode: 'canary', percentage: 10, trendWindow: 12 });
-    memoryIntegration.updateShadowReadRolloutConfig({ mode: 'canary', percentage: 25, trendWindow: 10 });
-    memoryIntegration.updateShadowReadRolloutConfig({ mode: 'full', percentage: 100, trendWindow: 8 });
-    memoryIntegration.updateShadowReadRolloutConfig({ mode: 'canary', percentage: 50, trendWindow: 12 });
-    memoryIntegration.updateShadowReadRolloutConfig({ mode: 'canary', percentage: 0, trendWindow: 9 });
-    memoryIntegration.updateShadowReadRolloutConfig({ mode: 'canary', percentage: 25, trendWindow: 10 });
+    memoryIntegration.updateShadowReadRolloutConfig({
+      mode: 'canary',
+      percentage: 10,
+      trendWindow: 12,
+    });
+    memoryIntegration.updateShadowReadRolloutConfig({
+      mode: 'canary',
+      percentage: 25,
+      trendWindow: 10,
+    });
+    memoryIntegration.updateShadowReadRolloutConfig({
+      mode: 'full',
+      percentage: 100,
+      trendWindow: 8,
+    });
+    memoryIntegration.updateShadowReadRolloutConfig({
+      mode: 'canary',
+      percentage: 50,
+      trendWindow: 12,
+    });
+    memoryIntegration.updateShadowReadRolloutConfig({
+      mode: 'canary',
+      percentage: 0,
+      trendWindow: 9,
+    });
+    memoryIntegration.updateShadowReadRolloutConfig({
+      mode: 'canary',
+      percentage: 25,
+      trendWindow: 10,
+    });
 
     const diagnostics = memoryIntegration.getHybridMemoryDiagnostics();
     expect(diagnostics.recentShadowReadPresetChanges).toHaveLength(5);
@@ -805,7 +851,9 @@ describe('memoryIntegration', () => {
   });
 
   it('keeps an extended shadow-read trend up to the configured window', async () => {
-    memoryServiceMock.getActiveProjects.mockResolvedValue([{ id: 'project-a', title: 'Atlas' }]);
+    memoryServiceMock.getActiveProjects.mockResolvedValue([
+      { id: 'project-a', title: 'Atlas' },
+    ]);
     memoryServiceMock.getRecentDecisions.mockResolvedValue([]);
     memoryServiceMock.getKnowledge.mockResolvedValue([]);
     memoryServiceMock.getActiveRituals.mockResolvedValue([]);
@@ -834,7 +882,9 @@ describe('memoryIntegration', () => {
     const diagnostics = memoryIntegration.getHybridMemoryDiagnostics();
     expect(diagnostics.recentShadowReadExtendedTrend).toHaveLength(6);
     expect(diagnostics.lastShadowReadTrendSummary.windowSize).toBe(6);
-    expect(diagnostics.lastShadowReadTrendSummary.averageCompositeScore).toBeGreaterThan(0);
+    expect(diagnostics.lastShadowReadTrendSummary.averageCompositeScore).toBeGreaterThan(
+      0
+    );
   });
 
   it('classifies weak hybrid evidence as insufficient', async () => {
@@ -912,7 +962,9 @@ describe('memoryIntegration', () => {
   });
 
   it('keeps a bounded history of recent shadow-read qualifications', async () => {
-    memoryServiceMock.getActiveProjects.mockResolvedValue([{ id: 'project-a', title: 'Atlas' }]);
+    memoryServiceMock.getActiveProjects.mockResolvedValue([
+      { id: 'project-a', title: 'Atlas' },
+    ]);
     memoryServiceMock.getRecentDecisions.mockResolvedValue([]);
     memoryServiceMock.getKnowledge.mockResolvedValue([]);
     memoryServiceMock.getActiveRituals.mockResolvedValue([]);

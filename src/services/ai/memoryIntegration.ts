@@ -40,8 +40,7 @@ const HYBRID_MEMORY_SHADOW_READ_ROLLOUT_CONFIG_KEY =
   'titane_hybrid_memory_shadow_read_rollout';
 const HYBRID_MEMORY_SHADOW_READ_PRESET_HISTORY_KEY =
   'titane_hybrid_memory_shadow_read_preset_history';
-const HYBRID_MEMORY_SHADOW_READ_PRESET_HISTORY_RETENTION_MS =
-  7 * 24 * 60 * 60 * 1000;
+const HYBRID_MEMORY_SHADOW_READ_PRESET_HISTORY_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 
 let unifiedMemoryShadowInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null =
   null;
@@ -286,7 +285,10 @@ function appendShadowReadExtendedTrend(
   entry: HybridMemoryDiagnostics['recentShadowReadExtendedTrend'][number],
   limit: number
 ): HybridMemoryDiagnostics['recentShadowReadExtendedTrend'] {
-  return [entry, ...hybridMemoryDiagnostics.recentShadowReadExtendedTrend].slice(0, limit);
+  return [entry, ...hybridMemoryDiagnostics.recentShadowReadExtendedTrend].slice(
+    0,
+    limit
+  );
 }
 
 function appendShadowReadPresetHistory(
@@ -308,7 +310,9 @@ function sanitizeShadowReadPresetHistory(
 
   return history
     .filter(
-      (entry): entry is HybridMemoryDiagnostics['recentShadowReadPresetChanges'][number] =>
+      (
+        entry
+      ): entry is HybridMemoryDiagnostics['recentShadowReadPresetChanges'][number] =>
         Boolean(entry) &&
         typeof entry.at === 'number' &&
         now - entry.at <= HYBRID_MEMORY_SHADOW_READ_PRESET_HISTORY_RETENTION_MS &&
@@ -372,21 +376,24 @@ function isHybridMemoryGovernedReportExport(
 ): value is HybridMemoryGovernedReportExport {
   return Boolean(
     value &&
-      typeof value === 'object' &&
-      typeof (value as HybridMemoryGovernedReportExport).exportPath === 'string' &&
-      typeof (value as HybridMemoryGovernedReportExport).metadataPath === 'string' &&
-      typeof (value as HybridMemoryGovernedReportExport).sha256 === 'string'
+    typeof value === 'object' &&
+    typeof (value as HybridMemoryGovernedReportExport).exportPath === 'string' &&
+    typeof (value as HybridMemoryGovernedReportExport).metadataPath === 'string' &&
+    typeof (value as HybridMemoryGovernedReportExport).sha256 === 'string'
   );
 }
 
-function appendShadowReadNearMatchHistory(entry: {
-  at: number;
-  items: Array<{
-    canonicalLabel: string;
-    unifiedLabel: string;
-    similarity: number;
-  }>;
-}, limit: number) {
+function appendShadowReadNearMatchHistory(
+  entry: {
+    at: number;
+    items: Array<{
+      canonicalLabel: string;
+      unifiedLabel: string;
+      similarity: number;
+    }>;
+  },
+  limit: number
+) {
   recentNearMatchSnapshots = [entry, ...recentNearMatchSnapshots].slice(0, limit);
   return recentNearMatchSnapshots;
 }
@@ -451,10 +458,12 @@ function resolveShadowReadActivePreset(config: HybridShadowReadRolloutConfig): {
 }
 
 function hashShadowReadQuery(query: string): number {
-  return Array.from(query).reduce((hash, char) => {
-    const next = (hash * 31 + char.charCodeAt(0)) >>> 0;
-    return next;
-  }, 7) % 100;
+  return (
+    Array.from(query).reduce((hash, char) => {
+      const next = (hash * 31 + char.charCodeAt(0)) >>> 0;
+      return next;
+    }, 7) % 100
+  );
 }
 
 function resolveShadowReadCanaryDecision(
@@ -471,7 +480,8 @@ function resolveShadowReadCanaryDecision(
       eligible: true,
       bucket: hashShadowReadQuery(query),
       reason: 'rollout complet actif',
-      operatorHint: 'Tous les contextes passent deja. Utiliser un preset canary uniquement pour reduire le perimetre.',
+      operatorHint:
+        'Tous les contextes passent deja. Utiliser un preset canary uniquement pour reduire le perimetre.',
     };
   }
 
@@ -549,8 +559,7 @@ function summarizeNearMatchStability(
       seenCount,
       observationWindow,
       averageSimilarity: Number(averageSimilarity.toFixed(4)),
-      stability:
-        seenCount >= 4 ? 'stable' : seenCount >= 2 ? 'recurrent' : 'emergent',
+      stability: seenCount >= 4 ? 'stable' : seenCount >= 2 ? 'recurrent' : 'emergent',
     };
   });
 }
@@ -590,7 +599,9 @@ async function getShadowUnifiedMemory() {
   return unifiedMemoryShadowInstance;
 }
 
-function mapStructuredEntryToUnifiedMemoryType(entry: StructuredMemoryEntry): UnifiedMemoryType {
+function mapStructuredEntryToUnifiedMemoryType(
+  entry: StructuredMemoryEntry
+): UnifiedMemoryType {
   const templateId = entry.templateId.toLowerCase();
 
   if (templateId.includes('decision')) {
@@ -618,7 +629,9 @@ function deriveStructuredEntrySummary(entry: StructuredMemoryEntry): string {
     entry.data?.summary,
     entry.data?.label,
     entry.templateId,
-  ].find((value): value is string => typeof value === 'string' && value.trim().length > 0);
+  ].find(
+    (value): value is string => typeof value === 'string' && value.trim().length > 0
+  );
 
   return summaryCandidate ?? entry.templateId;
 }
@@ -634,7 +647,9 @@ function buildShadowReadQuery(context: MemoryContext): string {
   const uniqueSegments = Array.from(
     new Set(
       rawSegments
-        .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+        .filter(
+          (value): value is string => typeof value === 'string' && value.trim().length > 0
+        )
         .map(value => value.trim())
     )
   );
@@ -662,7 +677,9 @@ function calculateLabelSimilarity(left: string, right: string): number {
     return 0;
   }
 
-  const intersectionCount = [...leftTokens].filter(token => rightTokens.has(token)).length;
+  const intersectionCount = [...leftTokens].filter(token =>
+    rightTokens.has(token)
+  ).length;
   const unionCount = new Set([...leftTokens, ...rightTokens]).size;
 
   return unionCount === 0 ? 0 : intersectionCount / unionCount;
@@ -678,7 +695,9 @@ function collectCanonicalContextLabels(context: MemoryContext): string[] {
         ...context.activeRituals.map(ritual => ritual.name),
         ...context.timeline.map(entry => entry.title),
       ]
-        .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+        .filter(
+          (value): value is string => typeof value === 'string' && value.trim().length > 0
+        )
         .map(value => value.trim())
     )
   );
@@ -691,7 +710,9 @@ function collectUnifiedMemorySampleLabels(
     new Set(
       sample
         .flatMap(({ entry }) => [entry.summary, entry.details, ...(entry.tags ?? [])])
-        .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+        .filter(
+          (value): value is string => typeof value === 'string' && value.trim().length > 0
+        )
         .map(value => value.trim())
     )
   );
@@ -794,11 +815,14 @@ function compareCanonicalAndShadowLabels(
       .map(match => match.shadowLabel)
       .filter((value): value is string => typeof value === 'string' && value.length > 0)
   );
-  const extraLabels = shadowLabels.filter(shadowLabel => !matchedShadowLabels.has(shadowLabel));
+  const extraLabels = shadowLabels.filter(
+    shadowLabel => !matchedShadowLabels.has(shadowLabel)
+  );
   const averageSimilarity =
     scoredMatches.length === 0
       ? 1
-      : scoredMatches.reduce((sum, match) => sum + match.similarity, 0) / scoredMatches.length;
+      : scoredMatches.reduce((sum, match) => sum + match.similarity, 0) /
+        scoredMatches.length;
   const matchedPairs = matchedLabels.map(match => ({
     canonicalLabel: match.canonicalLabel,
     unifiedLabel: match.shadowLabel,
@@ -812,13 +836,17 @@ function compareCanonicalAndShadowLabels(
       canonicalLabel: match.canonicalLabel,
       unifiedLabel: match.shadowLabel,
       similarity: Number(match.similarity.toFixed(4)),
-      gapToThreshold: Number(Math.max(0, similarityThreshold - match.similarity).toFixed(4)),
+      gapToThreshold: Number(
+        Math.max(0, similarityThreshold - match.similarity).toFixed(4)
+      ),
     }))
     .sort((left, right) => right.similarity - left.similarity);
   const missingReasons = scoredMatches
     .filter(match => !match.matched)
     .map(match => ({
-      gapToThreshold: Number(Math.max(0, similarityThreshold - match.similarity).toFixed(4)),
+      gapToThreshold: Number(
+        Math.max(0, similarityThreshold - match.similarity).toFixed(4)
+      ),
       canonicalLabel: match.canonicalLabel,
       bestUnifiedLabel: match.shadowLabel || null,
       bestSimilarity: Number(match.similarity.toFixed(4)),
@@ -1019,7 +1047,8 @@ export class MemoryIntegration {
           : 'disabled',
         lastHybridOrchestrationCount: 0,
         lastHybridOrchestrationPreview: [],
-        lastHybridOrchestrationReason: error instanceof Error ? error.message : String(error),
+        lastHybridOrchestrationReason:
+          error instanceof Error ? error.message : String(error),
         lastShadowReadQualification: 'insufficient',
         lastShadowReadCoverageRatio: 0,
         lastShadowReadAverageSimilarity: 0,
@@ -1528,7 +1557,8 @@ export class MemoryIntegration {
         shadowReadTrendWindow: rolloutConfig.trendWindow,
         shadowReadCanaryReason: 'shadow read desactive',
         shadowReadCanaryQueryPreview: null,
-        shadowReadCanaryOperatorHint: 'Activer le shadow read pour evaluer le preset courant sur cette surface.',
+        shadowReadCanaryOperatorHint:
+          'Activer le shadow read pour evaluer le preset courant sur cette surface.',
         lastShadowReadStatus: 'disabled',
         lastShadowReadQualification: 'insufficient',
         lastShadowReadAverageSimilarity: 0,
@@ -1644,14 +1674,17 @@ export class MemoryIntegration {
         currentTrendEntry,
         rolloutConfig.trendWindow
       );
-      const nearMatchHistory = appendShadowReadNearMatchHistory({
-        at: currentTrendEntry.at,
-        items: comparison.lastShadowReadNearMatches.map(item => ({
-          canonicalLabel: item.canonicalLabel,
-          unifiedLabel: item.unifiedLabel,
-          similarity: item.similarity,
-        })),
-      }, rolloutConfig.trendWindow);
+      const nearMatchHistory = appendShadowReadNearMatchHistory(
+        {
+          at: currentTrendEntry.at,
+          items: comparison.lastShadowReadNearMatches.map(item => ({
+            canonicalLabel: item.canonicalLabel,
+            unifiedLabel: item.unifiedLabel,
+            similarity: item.similarity,
+          })),
+        },
+        rolloutConfig.trendWindow
+      );
       const nearMatchStability = summarizeNearMatchStability(
         comparison.lastShadowReadNearMatches,
         nearMatchHistory

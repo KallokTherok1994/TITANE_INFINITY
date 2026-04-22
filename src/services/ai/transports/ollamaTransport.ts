@@ -97,7 +97,9 @@ function normalizeOllamaStatus(raw: unknown): NormalizedOllamaStatus {
 
   const payload = raw as Record<string, unknown>;
   const content =
-    typeof payload.ok === 'boolean' && payload.content && typeof payload.content === 'object'
+    typeof payload.ok === 'boolean' &&
+    payload.content &&
+    typeof payload.content === 'object'
       ? (payload.content as Record<string, unknown>)
       : payload;
 

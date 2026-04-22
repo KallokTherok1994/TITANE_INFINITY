@@ -81,8 +81,10 @@ interface ConversationSectionProps {
   fullscreen?: boolean;
 }
 
-interface ConversationMessageItem
-  extends Pick<ConversationMessage, 'id' | 'role' | 'content' | 'metadata'> {}
+interface ConversationMessageItem extends Pick<
+  ConversationMessage,
+  'id' | 'role' | 'content' | 'metadata'
+> {}
 
 interface RuntimeSignals {
   orchestratorState: string;
@@ -2771,7 +2773,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               latestAssistantMetadata?.cognitiveSummary ?? lastResponse?.cognitive_summary
             }
             actionsPerformed={latestAssistantMetadata?.actionsPerformed}
-            modeLabel={latestAssistantMetadata?.providerMeta?.mode ?? lastResponse?.meta?.mode}
+            modeLabel={
+              latestAssistantMetadata?.providerMeta?.mode ?? lastResponse?.meta?.mode
+            }
             searchLabel={thinkingSearchLabel}
             saveLabel={thinkingSaveLabel}
           />

@@ -75,7 +75,9 @@ async function sendChatMessage(page, message: string) {
 
     if (sendVisible) {
       await sendBtn.evaluate(button => {
-        button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        button.dispatchEvent(
+          new MouseEvent('click', { bubbles: true, cancelable: true })
+        );
       });
     } else {
       await input.press('Enter');

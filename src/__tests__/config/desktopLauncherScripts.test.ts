@@ -59,10 +59,18 @@ describe('desktop launcher scripts', () => {
     const stablePostInstallScript = loadScript('scripts/install/stable-postinst.sh');
 
     // Tolère les espaces et le formatage JSON pretty-print
-    expect(stableTauriConfig.replace(/\s+/g, '')).toContain('"conflicts":["titane-infinity"]');
-    expect(stableTauriConfig.replace(/\s+/g, '')).toContain('"replaces":["titane-infinity"]');
-    expect(stableTauriConfig.replace(/\s+/g, '')).toContain('"provides":["titane-infinity"]');
-    expect(stableTauriConfig.replace(/\s+/g, '')).toContain('"postInstallScript":"../scripts/install/stable-postinst.sh"');
+    expect(stableTauriConfig.replace(/\s+/g, '')).toContain(
+      '"conflicts":["titane-infinity"]'
+    );
+    expect(stableTauriConfig.replace(/\s+/g, '')).toContain(
+      '"replaces":["titane-infinity"]'
+    );
+    expect(stableTauriConfig.replace(/\s+/g, '')).toContain(
+      '"provides":["titane-infinity"]'
+    );
+    expect(stableTauriConfig.replace(/\s+/g, '')).toContain(
+      '"postInstallScript":"../scripts/install/stable-postinst.sh"'
+    );
 
     expect(stablePostInstallScript).toContain('PACKAGE_NAME="titan-stable"');
     expect(stablePostInstallScript).toContain(

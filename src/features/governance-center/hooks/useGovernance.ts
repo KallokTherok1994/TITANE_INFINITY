@@ -164,7 +164,10 @@ export function useGovernance() {
         error: response.error || 'Impossible de récupérer le statut Ollama',
       };
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Impossible de récupérer le statut Ollama';
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Impossible de récupérer le statut Ollama';
       setState(prev => ({ ...prev, ollamaStatus: status }));
       return { ok: false, data: status, error: message };
     }

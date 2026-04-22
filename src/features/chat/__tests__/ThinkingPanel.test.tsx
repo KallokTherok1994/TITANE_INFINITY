@@ -46,10 +46,7 @@ describe('ThinkingPanel runtime truth', () => {
     const progress = screen.getByTestId('reasoning-progress');
     expect(progress).toHaveAttribute('data-runtime-mode', 'LOCAL');
     expect(progress).toHaveAttribute('data-runtime-duration', '1.5s');
-    expect(progress).toHaveAttribute(
-      'data-runtime-search',
-      '2 sources inline capturees'
-    );
+    expect(progress).toHaveAttribute('data-runtime-search', '2 sources inline capturees');
     expect(progress).toHaveAttribute(
       'data-runtime-save',
       'Sauvegarde persistante validee'
@@ -82,6 +79,8 @@ describe('ThinkingPanel runtime truth', () => {
     expect(screen.getByTestId('reasoning-runtime-xp')).toHaveTextContent(/\+8 XP/i);
     expect(screen.getByText('78%')).toBeInTheDocument();
     expect(screen.getByTestId('reasoning-runtime-quality')).toHaveTextContent('78%');
-    expect(screen.queryByText(/NON CAPTURE|NON DISPONIBLE|NON INSTRUMENTE|Inconnu/i)).toBeNull();
+    expect(
+      screen.queryByText(/NON CAPTURE|NON DISPONIBLE|NON INSTRUMENTE|Inconnu/i)
+    ).toBeNull();
   });
 });

@@ -48,7 +48,8 @@ describe('MemoryDashboard hybrid summary', () => {
           lastHybridOrchestrationStatus: 'ready',
           lastHybridOrchestrationCount: 1,
           lastHybridOrchestrationPreview: ['Atlas runtime addendum'],
-          lastHybridOrchestrationReason: 'supplements hybrides additifs injectes dans le contexte prompt',
+          lastHybridOrchestrationReason:
+            'supplements hybrides additifs injectes dans le contexte prompt',
           shadowReadRolloutMode: 'canary',
           shadowReadActivePresetId: 'balanced',
           shadowReadActivePresetLabel: 'Equilibre',
@@ -118,8 +119,8 @@ describe('MemoryDashboard hybrid summary', () => {
     expect(screen.getByTestId('memory-dashboard-hybrid-operator-hint')).toHaveTextContent(
       'Le contexte est dans le canari courant.'
     );
-    expect(screen.getByTestId('memory-dashboard-hybrid-preset-history')).toHaveTextContent(
-      'Observation -> Equilibre (preset)'
-    );
+    expect(
+      screen.getByTestId('memory-dashboard-hybrid-preset-history')
+    ).toHaveTextContent('Observation -> Equilibre (preset)');
   });
 });

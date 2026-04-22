@@ -320,7 +320,8 @@ async function readMessageTruncationProbe() {
 async function readOmegaJournalRuntimeFacts() {
   return await browser.execute(() => {
     const panel = document.querySelector('[data-testid="reasoning-progress"]');
-    const readAttr = name => (panel?.getAttribute(name) || '').replace(/\s+/g, ' ').trim();
+    const readAttr = name =>
+      (panel?.getAttribute(name) || '').replace(/\s+/g, ' ').trim();
 
     return {
       mode: readAttr('data-runtime-mode'),
@@ -666,7 +667,7 @@ async function readRuntimeSnapshot(selectors) {
       ipcReadyState: (ipcReady?.getAttribute('data-state') || '').trim().toUpperCase(),
       sendTraceState: (sendTrace?.getAttribute('data-state') || '').trim().toUpperCase(),
       sendTraceMeta: (sendTrace?.getAttribute('data-meta') || '').trim(),
-        assistantCount: assistantRows.length,
+      assistantCount: assistantRows.length,
       browserMode: window.localStorage?.getItem('titane_browser_mode') === '1',
       providerUsed: (
         panel?.getAttribute('data-provider-used') ||

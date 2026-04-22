@@ -414,7 +414,11 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     moduleName: 'Singularity Monitor',
     moduleType: 'system-monitor',
     pageTitle: 'Singularity',
-    capabilities: ['singularity-state', 'convergence-metrics', 'connection-visualization'],
+    capabilities: [
+      'singularity-state',
+      'convergence-metrics',
+      'connection-visualization',
+    ],
     dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
     actions: ['singularity_get_state', 'singularity_sync_state'],
     limits: ['visualization-mixes-live-hooks-and-derived-edges'],

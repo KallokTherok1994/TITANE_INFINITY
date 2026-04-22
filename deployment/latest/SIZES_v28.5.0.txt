@@ -1,5 +1,0 @@
-AppImage(TITANE-Infinity_28.5.0) 93829624
-DEB(TITANE-Infinity_28.5.0) 21194976
-RPM(TITANE-Infinity_28.5.0) 21181565
-AppImage(Titan-Stable_28.5.0) 93829624
-DEB(Titan-Stable_28.5.0) 21194976

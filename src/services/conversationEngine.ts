@@ -134,7 +134,8 @@ function formatHybridMemoryBlock(entries: KnowledgeEntry[]): string {
 
   const lines = entries.slice(0, 3).map(entry => {
     const summary = entry.content.replace(/\s+/g, ' ').trim().slice(0, 180);
-    const tags = Array.isArray(entry.tags) && entry.tags.length > 0 ? entry.tags.join(', ') : 'none';
+    const tags =
+      Array.isArray(entry.tags) && entry.tags.length > 0 ? entry.tags.join(', ') : 'none';
     return `- ${entry.title} [${entry.category}] relevance=${entry.relevance.toFixed(2)} tags=${tags} excerpt=${summary}`;
   });
 

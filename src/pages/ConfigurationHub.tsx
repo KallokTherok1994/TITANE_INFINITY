@@ -25,7 +25,11 @@ const logger = createLogger('ConfigHub');
 interface RuntimeConfig {
   ollama_url: string;
   ollama_model: string;
-  ollama_endpoint_kind: 'local_loopback' | 'remote_cloudflare' | 'custom_remote' | 'not_checked';
+  ollama_endpoint_kind:
+    | 'local_loopback'
+    | 'remote_cloudflare'
+    | 'custom_remote'
+    | 'not_checked';
   ollama_endpoint_source: 'runtime_persisted' | 'env' | 'default' | 'not_checked';
   ollama_model_source: 'runtime_persisted' | 'env' | 'default' | 'not_checked';
   ollama_network_used: boolean;
@@ -151,8 +155,7 @@ export const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
 
   // Keep the page operational even when a partial runtime payload is returned.
   const ollama_url =
-    pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ??
-    DEFAULT_OLLAMA_URL;
+    pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ?? DEFAULT_OLLAMA_URL;
   const ollama_model =
     pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel)) ??
     DEFAULT_OLLAMA_MODEL;
@@ -161,9 +164,10 @@ export const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
     ollama_url,
     ollama_model,
     ollama_endpoint_kind:
-      (pickDefined(asString(raw.ollama_endpoint_kind), asString(raw.ollamaEndpointKind)) as
-        | RuntimeConfig['ollama_endpoint_kind']
-        | undefined) ?? 'not_checked',
+      (pickDefined(
+        asString(raw.ollama_endpoint_kind),
+        asString(raw.ollamaEndpointKind)
+      ) as RuntimeConfig['ollama_endpoint_kind'] | undefined) ?? 'not_checked',
     ollama_endpoint_source:
       (pickDefined(
         asString(raw.ollama_endpoint_source),
@@ -211,14 +215,17 @@ export const normalizeOllamaRuntimeStatus = (
     url: asString(payload.url) ?? 'not_checked',
     model: asString(payload.model) ?? 'not_checked',
     endpoint_kind:
-      (asString(payload.endpoint_kind) as OllamaRuntimeStatus['endpoint_kind'] | undefined) ??
-      'not_checked',
+      (asString(payload.endpoint_kind) as
+        | OllamaRuntimeStatus['endpoint_kind']
+        | undefined) ?? 'not_checked',
     endpoint_source:
-      (asString(payload.endpoint_source) as OllamaRuntimeStatus['endpoint_source'] | undefined) ??
-      'not_checked',
+      (asString(payload.endpoint_source) as
+        | OllamaRuntimeStatus['endpoint_source']
+        | undefined) ?? 'not_checked',
     model_source:
-      (asString(payload.model_source) as OllamaRuntimeStatus['model_source'] | undefined) ??
-      'not_checked',
+      (asString(payload.model_source) as
+        | OllamaRuntimeStatus['model_source']
+        | undefined) ?? 'not_checked',
     network_used: asBoolean(payload.network_used) ?? false,
     health:
       (asString(payload.health) as OllamaRuntimeStatus['health'] | undefined) ??
@@ -236,7 +243,8 @@ export const mergeRuntimeConfigWithOllamaStatus = (
 
   return {
     ...runtime,
-    ollama_url: ollamaStatus.url !== 'not_checked' ? ollamaStatus.url : runtime.ollama_url,
+    ollama_url:
+      ollamaStatus.url !== 'not_checked' ? ollamaStatus.url : runtime.ollama_url,
     ollama_model:
       ollamaStatus.model !== 'not_checked' ? ollamaStatus.model : runtime.ollama_model,
     ollama_endpoint_kind: ollamaStatus.endpoint_kind,

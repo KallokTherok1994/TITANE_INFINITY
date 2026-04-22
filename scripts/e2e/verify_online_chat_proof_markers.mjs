@@ -94,7 +94,8 @@ function main() {
     return;
   }
 
-  const nextStep = 'Run pnpm run build:tauri:e2e before retrying the embedded desktop proof.';
+  const nextStep =
+    'Run pnpm run build:tauri:e2e before retrying the embedded desktop proof.';
   console.error(
     `[E2E_EMBEDDED_FRESHNESS] FAIL reason=${result.reason} dist=${result.distDir}`
   );

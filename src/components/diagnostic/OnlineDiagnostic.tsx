@@ -54,16 +54,14 @@ export const OnlineDiagnostic: React.FC = () => {
     try {
       setRefreshing(true);
       setErrorMessage(null);
-      const result =
-        (await tauriClient.checkOnlineCapabilities()) as OnlineCapabilities;
+      const result = (await tauriClient.checkOnlineCapabilities()) as OnlineCapabilities;
       if (result) {
         setCapabilities(result);
         setLastCheck(new Date());
       }
     } catch (error) {
       console.error('Failed to check online capabilities:', error);
-      const message =
-        error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
       setCapabilities(null);
       setErrorMessage(message);
     } finally {

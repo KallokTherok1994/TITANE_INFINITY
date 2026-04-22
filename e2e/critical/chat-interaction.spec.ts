@@ -221,7 +221,9 @@ test.describe('Critical Path: Chat Interaction', () => {
     await expect(assistantContent).toContainText('segment-1');
     await expect(assistantContent).toContainText('segment-20');
     await expect(assistantContent).toContainText('segment-40');
-    await expect(assistantContent.getByText('segment-40', { exact: false })).toBeVisible();
+    await expect(
+      assistantContent.getByText('segment-40', { exact: false })
+    ).toBeVisible();
   });
 
   test('ASSISTANT_MARKDOWN_RENDERING: la surface canonique rend le markdown assistant sans marqueurs bruts', async ({
@@ -246,7 +248,9 @@ test.describe('Critical Path: Chat Interaction', () => {
 
     const assistantContent = getAssistantContent(page);
     await expect(assistantContent).toContainText('[MOCK_OK]', { timeout: 15000 });
-    await expect(assistantContent.locator('blockquote')).toContainText('Citation importante');
+    await expect(assistantContent.locator('blockquote')).toContainText(
+      'Citation importante'
+    );
     await expect(assistantContent.locator('table thead th')).toHaveCount(2);
     await expect(assistantContent.locator('table tbody td').first()).toHaveText('Alpha');
     await expect(assistantContent).not.toContainText('| --- | --- |');
@@ -274,9 +278,11 @@ test.describe('Critical Path: Chat Interaction', () => {
     });
     await page.waitForTimeout(120);
 
-    const terminalMarker = assistantContent.getByText('OMEGA-FINAL-BLOCK', {
-      exact: true,
-    }).last();
+    const terminalMarker = assistantContent
+      .getByText('OMEGA-FINAL-BLOCK', {
+        exact: true,
+      })
+      .last();
     await terminalMarker.scrollIntoViewIfNeeded();
     await expect(terminalMarker).toBeVisible();
     await expect(terminalMarker).toBeInViewport();
@@ -389,9 +395,12 @@ test.describe('Critical Path: Chat Interaction', () => {
     await submitChatMessage(page, 'Active la connaissance runtime One Door');
 
     const firstAssistantContent = getAssistantContent(page);
-    await expect(firstAssistantContent).toContainText('Active la connaissance runtime One Door', {
-      timeout: 15000,
-    });
+    await expect(firstAssistantContent).toContainText(
+      'Active la connaissance runtime One Door',
+      {
+        timeout: 15000,
+      }
+    );
     await expect(firstAssistantContent).toContainText('One Door Governance', {
       timeout: 15000,
     });
@@ -414,9 +423,12 @@ test.describe('Critical Path: Chat Interaction', () => {
     await submitChatMessage(page, 'Rappelle le dernier échange mémoire');
 
     const secondAssistantContent = getAssistantContent(page);
-    await expect(secondAssistantContent).toContainText('Active la connaissance runtime One Door', {
-      timeout: 15000,
-    });
+    await expect(secondAssistantContent).toContainText(
+      'Active la connaissance runtime One Door',
+      {
+        timeout: 15000,
+      }
+    );
 
     const finalMemoryLog = await page.evaluate(() => {
       return (

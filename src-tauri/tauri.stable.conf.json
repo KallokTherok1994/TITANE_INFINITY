@@ -15,20 +15,10 @@
     ],
     "linux": {
       "deb": {
-        "depends": [
-          "libayatana-appindicator3-1",
-          "libwebkit2gtk-4.1-0",
-          "libgtk-3-0"
-        ],
-        "conflicts": [
-          "titane-infinity"
-        ],
-        "replaces": [
-          "titane-infinity"
-        ],
-        "provides": [
-          "titane-infinity"
-        ],
+        "depends": ["libayatana-appindicator3-1", "libwebkit2gtk-4.1-0", "libgtk-3-0"],
+        "conflicts": ["titane-infinity"],
+        "replaces": ["titane-infinity"],
+        "provides": ["titane-infinity"],
         "postInstallScript": "../scripts/install/stable-postinst.sh"
       }
     }

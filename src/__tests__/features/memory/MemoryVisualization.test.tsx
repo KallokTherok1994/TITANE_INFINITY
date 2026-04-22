@@ -144,7 +144,11 @@ describe('MemoryTreeViewer Component', () => {
             lastShadowReadUnifiedPreview: ['Atlas', 'Knowledge A', 'Shadow extra'],
             lastShadowReadMatchedPairs: [
               { canonicalLabel: 'Atlas', unifiedLabel: 'Atlas', similarity: 1 },
-              { canonicalLabel: 'Knowledge A', unifiedLabel: 'Knowledge A', similarity: 1 },
+              {
+                canonicalLabel: 'Knowledge A',
+                unifiedLabel: 'Knowledge A',
+                similarity: 1,
+              },
             ],
             lastShadowReadNearMatches: [
               {
@@ -228,104 +232,134 @@ describe('MemoryTreeViewer Component', () => {
       expect(screen.getByTestId('memory-hybrid-orchestration-reason')).toHaveTextContent(
         'supplements hybrides additifs injectes dans le contexte prompt'
       );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-rollout-mode')).toHaveTextContent(
-        'Rollout shadow read: canary'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-canary-state')).toHaveTextContent(
-        'Canari: eligible (18/25)'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-active-preset')).toHaveTextContent(
-        'Preset actif: Equilibre'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-canary-reason')).toHaveTextContent(
-        'Raison canari: bucket 18 inclus dans la cible < 25'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-canary-operator-hint')).toHaveTextContent(
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-rollout-mode')
+      ).toHaveTextContent('Rollout shadow read: canary');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-canary-state')
+      ).toHaveTextContent('Canari: eligible (18/25)');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-active-preset')
+      ).toHaveTextContent('Preset actif: Equilibre');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-canary-reason')
+      ).toHaveTextContent('Raison canari: bucket 18 inclus dans la cible < 25');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-canary-operator-hint')
+      ).toHaveTextContent(
         'Action: Le contexte est dans le canari courant. Conserver ce preset pour observation ou passer en Full pour generaliser.'
       );
       expect(
         screen.getByTestId('memory-hybrid-shadow-read-canary-query-preview')
       ).toHaveTextContent('Requete canari: atlas');
-      expect(screen.getByTestId('memory-hybrid-shadow-read-preset-history')).toHaveTextContent(
-        'Historique presets: Observation -> Equilibre (preset)'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-rollout-controls')).toBeInTheDocument();
-      expect(screen.getByTestId('memory-hybrid-shadow-read-rollout-presets')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-preset-history')
+      ).toHaveTextContent('Historique presets: Observation -> Equilibre (preset)');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-rollout-controls')
+      ).toBeInTheDocument();
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-rollout-presets')
+      ).toBeInTheDocument();
       expect(screen.getByTestId('memory-hybrid-shadow-read-coverage')).toHaveTextContent(
         'Recouvrement canonique: 75%'
       );
       expect(
         screen.getByTestId('memory-hybrid-shadow-read-average-similarity')
       ).toHaveTextContent('Similarite moyenne: 68%');
-      expect(screen.getByTestId('memory-hybrid-shadow-read-average-score')).toHaveTextContent(
-        'Score retrieval moyen: 82%'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-composite-score')).toHaveTextContent(
-        'Score compose: 75%'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-qualification')).toHaveTextContent(
-        'Qualification: partiel'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-canonical-preview')).toHaveTextContent(
-        'Canonique: Atlas | Knowledge A'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-unified-preview')).toHaveTextContent(
-        'UnifiedMemory: Atlas | Knowledge A | Shadow extra'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-matched-pairs')).toHaveTextContent(
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-average-score')
+      ).toHaveTextContent('Score retrieval moyen: 82%');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-composite-score')
+      ).toHaveTextContent('Score compose: 75%');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-qualification')
+      ).toHaveTextContent('Qualification: partiel');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-canonical-preview')
+      ).toHaveTextContent('Canonique: Atlas | Knowledge A');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-unified-preview')
+      ).toHaveTextContent('UnifiedMemory: Atlas | Knowledge A | Shadow extra');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-matched-pairs')
+      ).toHaveTextContent(
         'Paires: Atlas -> Atlas (100%) | Knowledge A -> Knowledge A (100%)'
       );
       expect(screen.getByTestId('memory-hybrid-shadow-read-history')).toHaveTextContent(
         'Historique: partial:75% | ready:81%'
       );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-trend-summary')).toHaveTextContent(
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-trend-summary')
+      ).toHaveTextContent(
         'Tendance 8: pret 1 | partiel 1 | insuffisant 1 | score moyen 59%'
       );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-extended-trend')).toHaveTextContent(
-        'Fenetre etendue: partial:75% | ready:81% | insufficient:22%'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-history-chart')).toBeInTheDocument();
-      expect(screen.getByTestId('memory-hybrid-shadow-read-history-sparkline')).toBeInTheDocument();
-      expect(screen.getAllByTestId('memory-hybrid-shadow-read-history-point')).toHaveLength(2);
-      expect(screen.getByTestId('memory-hybrid-shadow-read-history-axis')).toHaveTextContent('%');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-extended-trend')
+      ).toHaveTextContent('Fenetre etendue: partial:75% | ready:81% | insufficient:22%');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-history-chart')
+      ).toBeInTheDocument();
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-history-sparkline')
+      ).toBeInTheDocument();
+      expect(
+        screen.getAllByTestId('memory-hybrid-shadow-read-history-point')
+      ).toHaveLength(2);
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-history-axis')
+      ).toHaveTextContent('%');
       expect(screen.getAllByTestId('memory-hybrid-shadow-read-pair-row')).toHaveLength(2);
       expect(screen.getAllByTestId('memory-hybrid-shadow-read-near-row')).toHaveLength(1);
-      expect(screen.getByTestId('memory-hybrid-shadow-read-near-matches')).toHaveTextContent(
-        'Similarite: 33%'
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-near-matches')
+      ).toHaveTextContent('Similarite: 33%');
+      expect(
+        screen.getAllByTestId('memory-hybrid-shadow-read-near-stability-row')
+      ).toHaveLength(1);
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-near-stability')
+      ).toHaveTextContent('Stabilite: recurrent');
+      expect(screen.getAllByTestId('memory-hybrid-shadow-read-missing-row')).toHaveLength(
+        1
       );
-      expect(screen.getAllByTestId('memory-hybrid-shadow-read-near-stability-row')).toHaveLength(1);
-      expect(screen.getByTestId('memory-hybrid-shadow-read-near-stability')).toHaveTextContent(
-        'Stabilite: recurrent'
-      );
-      expect(screen.getAllByTestId('memory-hybrid-shadow-read-missing-row')).toHaveLength(1);
-      expect(screen.getByTestId('memory-hybrid-shadow-read-missing-list')).toHaveTextContent(
-        'similarite inferieure au seuil (20%)'
-      );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-missing-list')).toHaveTextContent(
-        'Ecart au seuil: 20%'
-      );
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-missing-list')
+      ).toHaveTextContent('similarite inferieure au seuil (20%)');
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-missing-list')
+      ).toHaveTextContent('Ecart au seuil: 20%');
       expect(screen.getByTestId('memory-hybrid-shadow-read-query')).toHaveTextContent(
         'Requete: atlas'
       );
-      expect(screen.getByTestId('memory-hybrid-shadow-read-missing-labels')).toHaveTextContent(
-        'Libelles absents: Atlas'
-      );
+      expect(
+        screen.getByTestId('memory-hybrid-shadow-read-missing-labels')
+      ).toHaveTextContent('Libelles absents: Atlas');
 
-      fireEvent.change(screen.getByTestId('memory-hybrid-shadow-read-rollout-mode-select'), {
-        target: { value: 'full' },
-      });
+      fireEvent.change(
+        screen.getByTestId('memory-hybrid-shadow-read-rollout-mode-select'),
+        {
+          target: { value: 'full' },
+        }
+      );
       fireEvent.change(
         screen.getByTestId('memory-hybrid-shadow-read-canary-percentage-select'),
         {
           target: { value: '50' },
         }
       );
-      fireEvent.change(screen.getByTestId('memory-hybrid-shadow-read-trend-window-select'), {
-        target: { value: '16' },
-      });
+      fireEvent.change(
+        screen.getByTestId('memory-hybrid-shadow-read-trend-window-select'),
+        {
+          target: { value: '16' },
+        }
+      );
       fireEvent.click(screen.getByTestId('memory-hybrid-shadow-read-rollout-apply'));
       fireEvent.click(screen.getByTestId('memory-hybrid-shadow-read-rollout-probe'));
-      fireEvent.click(screen.getByTestId('memory-hybrid-shadow-read-rollout-preset-observe'));
+      fireEvent.click(
+        screen.getByTestId('memory-hybrid-shadow-read-rollout-preset-observe')
+      );
 
       expect(handleRolloutConfigChange).toHaveBeenCalledWith({
         mode: 'full',

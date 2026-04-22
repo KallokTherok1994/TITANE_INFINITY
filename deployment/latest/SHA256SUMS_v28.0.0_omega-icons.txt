@@ -1,2 +1,0 @@
-600f0e09c6e397ec88adac1d059e9b7f3b79805ae5a93fec86848ca4e325199f  deployment/latest/TITANE-Infinity_28.0.0_amd64.AppImage
-75a3a6826bae988bda7c647afdfc248b3daf84c126dbd599c9051b57733067a3  deployment/latest/TITANE-Infinity_28.0.0_amd64.deb

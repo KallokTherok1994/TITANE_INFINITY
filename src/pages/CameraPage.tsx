@@ -64,7 +64,6 @@ const EthicalDisclaimer: React.FC = () => (
 // ============================================================================
 
 const levelToPercent = (level: VisualLevel): number => {
-
   switch (level) {
     case 'low':
       return 25;
@@ -75,7 +74,7 @@ const levelToPercent = (level: VisualLevel): number => {
     default:
       return 50;
   }
-}
+};
 
 const levelToColor = (level: VisualLevel): string => {
   switch (level) {
@@ -89,11 +88,6 @@ const levelToColor = (level: VisualLevel): string => {
       return 'var(--titane-secondary)';
   }
 };
-
-
-
-
-
 
 // ============================================================================
 // MAIN COMPONENT
@@ -178,7 +172,10 @@ function CameraPage() {
           <StatusIndicator active={isCameraActive} label="Caméra" />
           <StatusIndicator active={isObservationActive} label="Vision Engine" />
           <StatusIndicator active={isProcessing} label="Analyse" />
-          <StatusIndicator active={bodyLanguage.landmarksDetected} label="Body Tracking" />
+          <StatusIndicator
+            active={bodyLanguage.landmarksDetected}
+            label="Body Tracking"
+          />
         </div>
 
         {/* Error Display */}
@@ -218,7 +215,9 @@ function CameraPage() {
                 onClick={handleToggleVision}
                 disabled={!isCameraActive || isProcessing}
               >
-                {isObservationActive ? '🔴 Désactiver Vision' : '🟢 Activer Vision Engine'}
+                {isObservationActive
+                  ? '🔴 Désactiver Vision'
+                  : '🟢 Activer Vision Engine'}
               </button>
             </div>
 
@@ -406,4 +405,3 @@ function CameraPage() {
 }
 
 export default CameraPage;
-

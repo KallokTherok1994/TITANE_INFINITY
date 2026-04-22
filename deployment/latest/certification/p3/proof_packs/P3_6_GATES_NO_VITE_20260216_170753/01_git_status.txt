@@ -1,4 +1,0 @@
- M docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md
-?? scripts/smoke/ipc-ar20.cjs
-?? scripts/smoke/ipc-offline5.cjs
-?? src-tauri/tests/p3_provider_meta_gates.rs

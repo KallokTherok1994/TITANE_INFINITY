@@ -380,20 +380,15 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
     [metrics, showTooltip]
   );
 
+  // Composant statique pour la légende personnalisée (hors du composant principal)
 
-// Composant statique pour la légende personnalisée (hors du composant principal)
+  // Composant statique pour la légende personnalisée (hors du composant principal)
 
-// Composant statique pour la légende personnalisée (hors du composant principal)
+  // Composant statique pour la légende personnalisée (hors du composant principal)
 
-
-// Composant statique pour la légende personnalisée (hors du composant principal)
-
-
-// ============================================================================
-// LÉGENDE PERSONNALISÉE (DOIT ÊTRE AU NIVEAU MODULE)
-// ============================================================================
-
-
+  // ============================================================================
+  // LÉGENDE PERSONNALISÉE (DOIT ÊTRE AU NIVEAU MODULE)
+  // ============================================================================
 
   // Rendu du graphique avec lazy Recharts
   const renderChart = () => {

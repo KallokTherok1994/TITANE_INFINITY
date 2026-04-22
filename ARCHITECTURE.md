@@ -1,3 +1,7 @@
+## Version 31.1.0 — Release du 22/04/2026
+
+Cette version marque la synchronisation complète des artefacts, mapping, inventaire release, et documentation. Voir CHANGELOG.md et README.md pour le détail des nouveautés et corrections.
+
 > 2026-04-22 — Backend runtime default truth: les surfaces Rust `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ai/ollama.rs` et `src-tauri/src/ollama.rs` sont realignees sur `gemma2:2b` comme fallback Ollama gouverne. Cette consolidation supprime une derive backend residuelle vers `llama3.1:latest` qui contredisait deja la doctrine Ollama/Cline et les surfaces frontend actives.
 
 > 2026-04-22 — Route-to-chat context truth: le pont `src/App.tsx -> src/services/chat/moduleRouteContext.ts -> src/hooks/useConversationEngine.ts` couvre maintenant aussi les routes actives `/singularity`, `/sentinel`, `/watchdog`, `/selfheal`, `/adaptive`, `/skills` ainsi que les deep links historiques `titane.sh`. Les pages actives qui deleguent au chat TITANE ne tombent donc plus sur `unknown_module` quand elles publient leur contexte canonique.

@@ -3,10 +3,10 @@
   "name": "titane",
   "compatibility_date": "2026-04-18",
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
-  }
+    "not_found_handling": "single-page-application",
+  },
 }

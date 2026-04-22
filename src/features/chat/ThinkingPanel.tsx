@@ -635,7 +635,10 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Durée</span>
-                  <span className="oj-runtime-value" data-testid="reasoning-runtime-duration">
+                  <span
+                    className="oj-runtime-value"
+                    data-testid="reasoning-runtime-duration"
+                  >
                     {durationDisplay ?? (
                       <span className="oj-non-capture">Aucune duree capturee</span>
                     )}
@@ -674,7 +677,10 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Score qualité</span>
-                  <span className="oj-runtime-value" data-testid="reasoning-runtime-quality">
+                  <span
+                    className="oj-runtime-value"
+                    data-testid="reasoning-runtime-quality"
+                  >
                     {qualityScore !== null && qualityScore !== undefined ? (
                       `${(qualityScore * 100).toFixed(0)}%`
                     ) : (
@@ -801,7 +807,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   <span className="oj-runtime-label">Mémoire injectée</span>
                   <span className="oj-runtime-value">
                     {memoryTrace?.injected ? (
-                      <span className="oj-icon-green">✓ Oui - contexte canonique lie</span>
+                      <span className="oj-icon-green">
+                        ✓ Oui - contexte canonique lie
+                      </span>
                     ) : (
                       <span className="oj-non-capture">
                         Aucun contexte injecte detecte sur ce tour
@@ -817,12 +825,17 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                     }`}
                     data-testid="reasoning-memory-save"
                   >
-                    {memoryTrace?.savedAfter ? `✓ ${resolvedSaveLabel}` : resolvedSaveLabel}
+                    {memoryTrace?.savedAfter
+                      ? `✓ ${resolvedSaveLabel}`
+                      : resolvedSaveLabel}
                   </span>
                 </div>
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Recherche en ligne</span>
-                  <span className="oj-runtime-value" data-testid="reasoning-memory-search">
+                  <span
+                    className="oj-runtime-value"
+                    data-testid="reasoning-memory-search"
+                  >
                     {resolvedSearchLabel}
                   </span>
                 </div>

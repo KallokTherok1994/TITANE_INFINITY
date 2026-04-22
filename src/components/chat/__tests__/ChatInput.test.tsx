@@ -36,7 +36,9 @@ describe('ChatInput ultra-long prompt integrity', () => {
     fireEvent.change(textarea, { target: { value: ultraLongPrompt } });
 
     expect(textarea).toHaveValue(ultraLongPrompt);
-    expect(screen.queryByText(/limite de 10000 caractères atteinte/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/limite de 10000 caractères atteinte/i)
+    ).not.toBeInTheDocument();
 
     fireEvent.keyDown(textarea, { key: 'Enter', code: 'Enter' });
 

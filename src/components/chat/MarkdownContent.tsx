@@ -326,7 +326,8 @@ class MarkdownParser {
 
     const secondLineStart = firstLineEnd + 1;
     const secondLineEndIndex = this.text.indexOf('\n', secondLineStart);
-    const secondLineEnd = secondLineEndIndex === -1 ? this.text.length : secondLineEndIndex;
+    const secondLineEnd =
+      secondLineEndIndex === -1 ? this.text.length : secondLineEndIndex;
     const secondLine = this.text.substring(secondLineStart, secondLineEnd).trim();
 
     return /^\|?(\s*:?-{3,}:?\s*\|)+\s*:?-{3,}:?\s*\|?$/.test(secondLine);
@@ -466,7 +467,10 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
 
     case 'italic':
       return (
-        <em key={index} style={{ fontStyle: 'italic', color: 'rgba(191, 219, 254, 0.96)' }}>
+        <em
+          key={index}
+          style={{ fontStyle: 'italic', color: 'rgba(191, 219, 254, 0.96)' }}
+        >
           {node.content}
         </em>
       );
@@ -494,7 +498,8 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
         <pre
           key={index}
           style={{
-            background: 'linear-gradient(180deg, rgba(2, 6, 23, 0.94), rgba(15, 23, 42, 0.92))',
+            background:
+              'linear-gradient(180deg, rgba(2, 6, 23, 0.94), rgba(15, 23, 42, 0.92))',
             padding: '0',
             borderRadius: '12px',
             overflow: 'auto',
@@ -595,7 +600,8 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
             padding: '0.78rem 0.95rem',
             borderLeft: '3px solid rgba(125, 211, 252, 0.72)',
             borderRadius: '0 12px 12px 0',
-            background: 'linear-gradient(180deg, rgba(8, 47, 73, 0.28), rgba(15, 23, 42, 0.22))',
+            background:
+              'linear-gradient(180deg, rgba(8, 47, 73, 0.28), rgba(15, 23, 42, 0.22))',
             color: 'rgba(224, 242, 254, 0.98)',
             fontStyle: 'italic',
             whiteSpace: 'pre-wrap',
@@ -610,7 +616,10 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
       const [headerRow = [], ...bodyRows] = rows;
 
       return (
-        <div key={index} style={{ overflowX: 'auto', margin: '12px 0', maxWidth: '100%' }}>
+        <div
+          key={index}
+          style={{ overflowX: 'auto', margin: '12px 0', maxWidth: '100%' }}
+        >
           <table
             style={{
               width: '100%',

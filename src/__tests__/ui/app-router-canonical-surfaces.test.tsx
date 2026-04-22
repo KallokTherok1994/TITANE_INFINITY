@@ -104,9 +104,12 @@ describe('AppRouter canonical active surfaces', () => {
         })
       ).toBeInTheDocument();
 
-      await waitFor(() => {
-        expect(screen.getByTestId('route-location-probe')).toHaveTextContent(route);
-      }, { timeout: STABILIZATION_TIMEOUT_MS });
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('route-location-probe')).toHaveTextContent(route);
+        },
+        { timeout: STABILIZATION_TIMEOUT_MS }
+      );
 
       const activeContext = publishActiveModuleContext(route);
       expect(activeContext.moduleId).toBe(moduleId);
@@ -116,7 +119,13 @@ describe('AppRouter canonical active surfaces', () => {
   );
 
   it.each([
-    ['/chat', '/titane?tab=conversation', 'page-titane', 'titane_core', 'tab=conversation'],
+    [
+      '/chat',
+      '/titane?tab=conversation',
+      'page-titane',
+      'titane_core',
+      'tab=conversation',
+    ],
     ['/settings', '/admin?tab=config', 'page-admin', 'admin_center', 'tab=config'],
     ['/voice', '/admin?tab=audio', 'page-admin', 'admin_center', 'tab=audio'],
     ['/titane.sh/deep-link', '/titane', 'page-titane', 'titane_core', undefined],
@@ -130,9 +139,14 @@ describe('AppRouter canonical active surfaces', () => {
           timeout: STABILIZATION_TIMEOUT_MS,
         })
       ).toBeInTheDocument();
-      await waitFor(() => {
-        expect(screen.getByTestId('route-location-probe')).toHaveTextContent(canonicalRoute);
-      }, { timeout: STABILIZATION_TIMEOUT_MS });
+      await waitFor(
+        () => {
+          expect(screen.getByTestId('route-location-probe')).toHaveTextContent(
+            canonicalRoute
+          );
+        },
+        { timeout: STABILIZATION_TIMEOUT_MS }
+      );
 
       const activeContext = publishActiveModuleContext(canonicalRoute);
       expect(activeContext.moduleId).toBe(moduleId);

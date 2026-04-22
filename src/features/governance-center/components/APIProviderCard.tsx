@@ -119,7 +119,10 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
   })();
 
   const isConfigured = isGeminiStatus(status) ? status.configured : false;
-  const isEnabled = provider === 'ollama' ? Boolean(ollamaStatus?.available) : status?.provider_enabled || false;
+  const isEnabled =
+    provider === 'ollama'
+      ? Boolean(ollamaStatus?.available)
+      : status?.provider_enabled || false;
 
   return (
     <div
@@ -185,7 +188,8 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
                   <>✅ Ollama est joignable via un endpoint {ollamaEndpointLabel}</>
                 ) : (
                   <>
-                    ⚠️ Ollama n&apos;est pas joignable sur {ollamaStatus?.url || 'un endpoint non vérifié'}.
+                    ⚠️ Ollama n&apos;est pas joignable sur{' '}
+                    {ollamaStatus?.url || 'un endpoint non vérifié'}.
                   </>
                 )}
               </p>
@@ -193,19 +197,24 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
 
             <div className="grid gap-2 rounded-lg border border-gray-700/50 bg-gray-800/30 p-3 text-xs text-gray-300 sm:grid-cols-2">
               <div data-testid="ollama-provider-url">
-                <span className="font-semibold text-white">Endpoint:</span> {ollamaStatus?.url || 'non vérifié'}
+                <span className="font-semibold text-white">Endpoint:</span>{' '}
+                {ollamaStatus?.url || 'non vérifié'}
               </div>
               <div data-testid="ollama-provider-model">
-                <span className="font-semibold text-white">Modèle:</span> {ollamaStatus?.model || 'non vérifié'}
+                <span className="font-semibold text-white">Modèle:</span>{' '}
+                {ollamaStatus?.model || 'non vérifié'}
               </div>
               <div data-testid="ollama-provider-endpoint-kind">
-                <span className="font-semibold text-white">Type:</span> {ollamaEndpointLabel}
+                <span className="font-semibold text-white">Type:</span>{' '}
+                {ollamaEndpointLabel}
               </div>
               <div data-testid="ollama-provider-endpoint-source">
-                <span className="font-semibold text-white">Source:</span> {ollamaSourceLabel}
+                <span className="font-semibold text-white">Source:</span>{' '}
+                {ollamaSourceLabel}
               </div>
               <div data-testid="ollama-provider-health">
-                <span className="font-semibold text-white">Santé:</span> {ollamaStatus?.health || 'non vérifiée'}
+                <span className="font-semibold text-white">Santé:</span>{' '}
+                {ollamaStatus?.health || 'non vérifiée'}
               </div>
               <div data-testid="ollama-provider-network-used">
                 <span className="font-semibold text-white">Réseau:</span>{' '}
@@ -214,7 +223,10 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
             </div>
 
             {Boolean(ollamaStatus?.models?.length) && (
-              <div data-testid="ollama-provider-model-list" className="rounded-lg border border-gray-700/50 bg-gray-800/20 p-3 text-xs text-gray-300">
+              <div
+                data-testid="ollama-provider-model-list"
+                className="rounded-lg border border-gray-700/50 bg-gray-800/20 p-3 text-xs text-gray-300"
+              >
                 <span className="font-semibold text-white">Modèles détectés:</span>{' '}
                 {ollamaStatus?.models.join(', ')}
               </div>
