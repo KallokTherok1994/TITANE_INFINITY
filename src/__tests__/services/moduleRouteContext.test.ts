@@ -120,4 +120,80 @@ describe('moduleRouteContext memory route', () => {
     expect(evolutionCenterContext.fullRoute).toBe('/titane');
     expect(evolutionCenterContext.aliasResolvedFrom).toBe('/evolution-center');
   });
+
+  it('keeps every active routed page connected to a canonical non-unknown module context', () => {
+    const activeRoutes = [
+      '/titane',
+      '/chat',
+      '/time?tab=agenda',
+      '/admin?tab=governance',
+      '/dev?tab=diagnostics',
+      '/orchestration-center',
+      '/reality-center',
+      '/hyper-center',
+      '/quantum-center',
+      '/twins',
+      '/cloud',
+      '/knowledge',
+      '/creation',
+      '/evolution',
+      '/performance',
+      '/singularity',
+      '/sentinel',
+      '/watchdog',
+      '/selfheal',
+      '/adaptive',
+      '/memory',
+      '/research',
+      '/skills',
+      '/titane.sh/deep-link',
+    ];
+
+    for (const route of activeRoutes) {
+      const context = publishActiveModuleContext(route);
+
+      expect(context.moduleId, `missing canonical context for ${route}`).not.toBe(
+        'unknown_module'
+      );
+      expect(context.capabilities.length, `missing capabilities for ${route}`).toBeGreaterThan(
+        0
+      );
+      expect(context.actions.length, `missing actions for ${route}`).toBeGreaterThan(0);
+      expect(context.memoryKeys.length, `missing memory keys for ${route}`).toBeGreaterThan(
+        0
+      );
+    }
+  });
+
+  it('normalizes engine and skill routes so the TITANE chat can bind real page context', () => {
+    const singularityContext = publishActiveModuleContext('/singularity');
+    const sentinelContext = publishActiveModuleContext('/sentinel');
+    const watchdogContext = publishActiveModuleContext('/watchdog');
+    const selfhealContext = publishActiveModuleContext('/selfheal');
+    const adaptiveContext = publishActiveModuleContext('/adaptive');
+    const skillContext = publishActiveModuleContext('/skills');
+    const shellContext = publishActiveModuleContext('/titane.sh/proof');
+
+    expect(singularityContext.moduleId).toBe('singularity_monitor');
+    expect(singularityContext.actions).toContain('singularity_get_state');
+
+    expect(sentinelContext.moduleId).toBe('sentinel_guard');
+    expect(sentinelContext.actions).toContain('sentinel_subscribe');
+
+    expect(watchdogContext.moduleId).toBe('watchdog_monitor');
+    expect(watchdogContext.actions).toContain('watchdog_subscribe');
+
+    expect(selfhealContext.moduleId).toBe('selfheal_engine');
+    expect(selfhealContext.actions).toContain('selfheal_subscribe');
+
+    expect(adaptiveContext.moduleId).toBe('adaptive_engine');
+    expect(adaptiveContext.actions).toContain('adaptive_subscribe');
+
+    expect(skillContext.moduleId).toBe('skill_os');
+    expect(skillContext.actions).toContain('install_skill');
+
+    expect(shellContext.route).toBe('/titane');
+    expect(shellContext.aliasResolvedFrom).toBe('/titane.sh/proof');
+    expect(shellContext.moduleId).toBe('titane_core');
+  });
 });

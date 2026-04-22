@@ -409,6 +409,72 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     limits: ['diagnostic-only-page'],
     memoryKeys: ['performance_test_state'],
   },
+  '/singularity': {
+    moduleId: 'singularity_monitor',
+    moduleName: 'Singularity Monitor',
+    moduleType: 'system-monitor',
+    pageTitle: 'Singularity',
+    capabilities: ['singularity-state', 'convergence-metrics', 'connection-visualization'],
+    dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
+    actions: ['singularity_get_state', 'singularity_sync_state'],
+    limits: ['visualization-mixes-live-hooks-and-derived-edges'],
+    memoryKeys: ['singularity_monitor_state'],
+  },
+  '/sentinel': {
+    moduleId: 'sentinel_guard',
+    moduleName: 'Sentinel Guard',
+    moduleType: 'security',
+    pageTitle: 'Sentinel',
+    capabilities: ['integrity-monitoring', 'alert-counters', 'threat-level-visibility'],
+    dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
+    actions: ['sentinel_subscribe'],
+    limits: ['engine-subscription-can-fallback-to-empty-state'],
+    memoryKeys: ['sentinel_ui_state'],
+  },
+  '/watchdog': {
+    moduleId: 'watchdog_monitor',
+    moduleName: 'Watchdog Monitor',
+    moduleType: 'observability',
+    pageTitle: 'Watchdog',
+    capabilities: ['health-monitoring', 'anomaly-detection', 'critical-incident-count'],
+    dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
+    actions: ['watchdog_subscribe'],
+    limits: ['engine-subscription-can-fallback-to-empty-state'],
+    memoryKeys: ['watchdog_ui_state'],
+  },
+  '/selfheal': {
+    moduleId: 'selfheal_engine',
+    moduleName: 'SelfHeal Engine',
+    moduleType: 'resilience',
+    pageTitle: 'SelfHeal',
+    capabilities: ['repair-queue', 'auto-correction', 'heal-success-rate'],
+    dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
+    actions: ['selfheal_subscribe'],
+    limits: ['engine-subscription-can-fallback-to-empty-state'],
+    memoryKeys: ['selfheal_ui_state'],
+  },
+  '/adaptive': {
+    moduleId: 'adaptive_engine',
+    moduleName: 'Adaptive Engine',
+    moduleType: 'optimization',
+    pageTitle: 'Adaptive',
+    capabilities: ['adaptive-optimization', 'confidence-telemetry', 'efficiency-score'],
+    dataTruthClass: 'LIVE_TAURI_WITH_FALLBACK',
+    actions: ['adaptive_subscribe'],
+    limits: ['engine-subscription-can-fallback-to-empty-state'],
+    memoryKeys: ['adaptive_engine_state'],
+  },
+  '/skills': {
+    moduleId: 'skill_os',
+    moduleName: 'Skill OS',
+    moduleType: 'skills',
+    pageTitle: 'Skills',
+    capabilities: ['skill-import', 'skill-activation', 'skill-lifecycle'],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: ['list_skills', 'activate_skill', 'deactivate_skill', 'install_skill'],
+    limits: ['local-skill-registry-can-be-empty'],
+    memoryKeys: ['skill_registry_state', 'active_skill_id'],
+  },
 };
 
 const UNKNOWN_DEFINITION: ModuleRouteDefinition = {
@@ -475,8 +541,11 @@ function normalizeRoute(pathWithState: string): {
 } {
   const [rawPath, ...queryParts] = pathWithState.split('?');
   const route = rawPath || '/';
+  const titaneShellRoute =
+    route === '/titane.sh' || route.startsWith('/titane.sh/') ? '/titane' : route;
   const incomingPageState = queryParts.length > 0 ? queryParts.join('?') : undefined;
-  const canonicalTarget = ROUTE_ALIASES[route];
+  const canonicalTarget =
+    titaneShellRoute !== route ? titaneShellRoute : ROUTE_ALIASES[route];
 
   if (!canonicalTarget) {
     return {

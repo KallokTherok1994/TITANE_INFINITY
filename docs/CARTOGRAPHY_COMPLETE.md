@@ -1,5 +1,9 @@
 ---
 
+> 2026-04-22 — Backend runtime default truth: la cartographie backend conserve la meme topologie, mais `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ai/ollama.rs` et `src-tauri/src/ollama.rs` republient maintenant `gemma2:2b` comme fallback Ollama canonique. Cette remise en ligne retire une derive backend vers `llama3.1:latest` qui faisait mentir la runtime config qualifiee par les tests Rust.
+
+> 2026-04-22 — Route-context chat truth: la topologie UI ne change pas, mais `src/services/chat/moduleRouteContext.ts` couvre maintenant aussi les routes actives `/singularity`, `/sentinel`, `/watchdog`, `/selfheal`, `/adaptive`, `/skills` et les deep links `titane.sh`. Le handoff vers `useConversationEngine` conserve ainsi un contexte module canonique sur ces surfaces au lieu de retomber sur `unknown_module`.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :

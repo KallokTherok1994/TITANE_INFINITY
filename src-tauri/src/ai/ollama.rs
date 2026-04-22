@@ -15,7 +15,7 @@ use std::time::{Duration, Instant};
 use tauri::{command, Emitter, Window};
 
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
-const DEFAULT_OLLAMA_MODEL: &str = "llama3.1:latest";
+const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 /// Ordered list of fallback models tried when the default/requested model is absent.
 /// Explicit, no silent switch: each fallback attempt is logged as WARN.
 const OLLAMA_FALLBACK_MODELS: &[&str] = &["llama3.2", "llama3.1", "mistral"];

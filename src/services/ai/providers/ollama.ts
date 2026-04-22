@@ -19,6 +19,7 @@ import { createLogger } from '@/utils/logger';
 import { memoryIntegration } from '../memoryIntegration';
 import type { MemoryContext } from '../memoryIntegration';
 import { PROVIDER_TIMEOUTS, AVAILABILITY_CACHE } from '@/config/aiTimeouts.config';
+import { DEFAULT_OLLAMA_MODEL as GOVERNED_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 import {
   ollamaCheckHealth,
   ollamaGenerate,
@@ -31,10 +32,11 @@ const runtimeEnv = (
     env?: { VITE_OLLAMA_MODEL?: string };
   }
 ).env;
-// Canonical local model truth: llama3.1:latest is the governed baseline across
+// Canonical local model truth: gemma2:2b is the governed baseline across
 // frontend, backend, scripts, registry, and packaging.
 // Override via VITE_OLLAMA_MODEL env var for explicit local experimentation.
-const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'llama3.1:latest';
+const DEFAULT_OLLAMA_MODEL =
+  runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || GOVERNED_OLLAMA_MODEL;
 
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURATION — OLLAMA CANONICAL LOCAL FALLBACK

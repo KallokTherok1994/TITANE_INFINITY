@@ -40,7 +40,7 @@ describe('ConfigurationHub runtime config helpers', () => {
       content: {
         available: true,
         url: 'https://titane.example.com',
-        model: 'llama3.1:latest',
+        model: 'gemma2:2b',
         endpoint_kind: 'remote_cloudflare',
         endpoint_source: 'runtime_persisted',
         model_source: 'runtime_persisted',

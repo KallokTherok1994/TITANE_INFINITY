@@ -7,6 +7,6 @@ const EXPECTED_OLLAMA_URL = `${['http', ''].join('://')}${['127', '0', '0', '1']
 describe('ollamaDefaults', () => {
   it('exposes the governed frontend Ollama defaults', () => {
     expect(DEFAULT_OLLAMA_URL).toBe(EXPECTED_OLLAMA_URL);
-    expect(DEFAULT_OLLAMA_MODEL).toBe('llama3.1:latest');
+    expect(DEFAULT_OLLAMA_MODEL).toBe('gemma2:2b');
   });
 });

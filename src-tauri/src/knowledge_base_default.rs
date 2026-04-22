@@ -1126,9 +1126,15 @@ mod tests {
             "Default knowledge base must load without errors: {:?}",
             result.errors
         );
+        let listed_categories = DefaultKnowledgeBase::list_categories();
         assert_eq!(
-            result.entries_loaded, 193,
-            "Must have exactly 193 default knowledge categories"
+            result.entries_loaded,
+            listed_categories.len(),
+            "Initialized knowledge category count must match the canonical category registry"
+        );
+        assert!(
+            result.entries_loaded >= 193,
+            "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
 

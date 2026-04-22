@@ -222,7 +222,7 @@ fn default_ollama_url() -> String {
 }
 
 fn default_ollama_model() -> String {
-    "llama3.1:latest".to_string()
+    "gemma2:2b".to_string()
 }
 
 fn load_runtime_config_from_disk() -> Option<RuntimeConfigDisk> {
