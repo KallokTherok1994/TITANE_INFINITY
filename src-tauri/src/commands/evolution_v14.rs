@@ -56,7 +56,6 @@ impl EvolutionState14 {
 }
 
 /// Run auto-evolution cycle (simplified v14)
-#[tauri::command]
 pub async fn run_auto_evolution(
     state: State<'_, EvolutionState14>,
 ) -> Result<EvolutionReport, String> {
@@ -125,7 +124,6 @@ pub async fn run_auto_evolution(
 }
 
 /// Get current evolution state
-#[tauri::command]
 pub async fn get_evolution_state(
     state: State<'_, EvolutionState14>,
 ) -> Result<EvolutionStateData, String> {
@@ -143,7 +141,6 @@ pub async fn get_evolution_state(
 }
 
 /// Run quick health check
-#[tauri::command]
 pub async fn evolution_health_check(
     state: State<'_, EvolutionState14>,
 ) -> Result<HealthStatus, String> {

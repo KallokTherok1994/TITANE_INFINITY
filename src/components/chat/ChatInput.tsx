@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '../ErrorBoundary';
 /**
  * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
@@ -541,212 +542,25 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     }
 
     // ═══ PHASE 5.10: MAIN RENDER WITH PROTECTION ═══
-    try {
-      return (
+    // Utilisation d'un ErrorBoundary pour le rendu principal (plus de try/catch)
+    return (
+      <ErrorBoundary>
         <div
           className="chat-input-container chat-input-omega"
           data-omega-version="v19.2Ω"
         >
-          {/* Error indicator with ARIA live region */}
-          {inputState.inputError && (
-            <div
-              id="input-error-message"
-              className="chat-input-error-notice"
-              role="alert"
-              aria-live="assertive"
-              aria-atomic="true"
-            >
-              <span className="chat-input-error-icon" aria-hidden="true">
-                ⚠️
-              </span>
-              <span className="chat-input-error-text">{inputState.inputError}</span>
-              <button
-                onClick={resetError}
-                className="chat-input-error-dismiss"
-                aria-label="Fermer le message d'erreur"
-                type="button"
-              >
-                ✕
-              </button>
-            </div>
-          )}
-
-          {/* File upload zone (expanded) */}
-          {enableFileUpload && showFileUpload && (
-            <div className="chat-file-upload-zone">
-              <FileUploadButton
-                onFilesSelected={handleFilesSelected}
-                disabled={isInputDisabled}
-                showPreview={true}
-                maxFiles={10}
-                className="chat-file-upload-expanded"
-              />
-            </div>
-          )}
-
-          {/* Uploaded files preview with semantic list */}
-          {uploadedFiles.length > 0 && (
-            <div
-              className="chat-uploaded-files"
-              role="region"
-              aria-label="Fichiers uploadés"
-            >
-              <ul role="list" className="chat-uploaded-files-list">
-                {uploadedFiles.map((file, idx) => (
-                  <li
-                    key={`${file.name}-${idx}`}
-                    role="listitem"
-                    className={`chat-file-chip ${file.status}`}
-                  >
-                    <span className="sr-only">
-                      Fichier {idx + 1} sur {uploadedFiles.length}:{' '}
-                    </span>
-                    <span className="chat-file-chip-icon">
-                      {file.status === 'analyzing'
-                        ? '⏳'
-                        : file.status === 'done'
-                          ? '✅'
-                          : '❌'}
-                    </span>
-                    <span className="chat-file-chip-name">{file.name}</span>
-                    <button
-                      className="chat-file-chip-remove"
-                      onClick={() =>
-                        setUploadedFiles(prev => prev.filter((_, i) => i !== idx))
-                      }
-                      title="Retirer ce fichier"
-                      aria-label={`Retirer le fichier ${file.name}`}
-                      data-testid={`chat-file-chip-remove-${idx}`}
-                    >
-                      ✕
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="chat-input-wrapper">
-            {/* File upload toggle button */}
-            {enableFileUpload && (
-              <button
-                type="button"
-                className={`chat-file-btn ${showFileUpload ? 'active' : ''}`}
-                onClick={handleToggleFileUpload}
-                disabled={isInputDisabled}
-                title={
-                  showFileUpload ? 'Fermer import fichiers' : 'Ouvrir import fichiers'
-                }
-                aria-label="Importer des fichiers"
-                aria-expanded={showFileUpload}
-                aria-controls="chat-file-upload-zone"
-                data-testid="chat-input-file-upload-btn"
-              >
-                <span className="chat-file-icon" aria-hidden="true">
-                  📎
-                </span>
-              </button>
-            )}
-
-            {/* Dictation button (micro → texte, sans IA) */}
-            {enableDictation && (
-              <DictationButton
-                onDictationResult={handleDictationResult}
-                disabled={isInputDisabled}
-                title="Dictée vocale (micro → texte)"
-              />
-            )}
-
-            <label htmlFor="chat-input-textarea" className="sr-only">
-              Message à envoyer à TITANE
-            </label>
-            <textarea
-              id="chat-input-textarea"
-              ref={textareaRef}
-              className={`chat-input ${inputState.inputError ? 'chat-input-error' : ''}`}
-              placeholder={placeholderSafe}
-              value={value}
-              onChange={handleValueChange}
-              onKeyDown={handleKeyDown}
-              disabled={isInputDisabled}
-              rows={1}
-              aria-label="Message à envoyer"
-              aria-describedby={`char-count chat-input-hint${inputState.inputError ? ' input-error-message' : ''}`}
-              aria-invalid={!!inputState.inputError}
-              data-testid="chat-input-textarea"
-            />
-
-            {/* Character counter with live region */}
-            <div
-              id="char-count"
-              className="chat-input-counter"
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <span className="sr-only">Nombre de caractères: </span>
-              <span
-                className={
-                  characterCount > OMEGA_INPUT_CONFIG.softWarningLength * 0.9
-                    ? 'chat-counter-warning'
-                    : ''
-                }
-              >
-                {characterCount} / illimité
-              </span>
-              {characterCount > OMEGA_INPUT_CONFIG.softWarningLength * 0.9 && (
-                <span className="sr-only"> - message long détecté</span>
-              )}
-            </div>
-
-            {/* Voice button - ALWAYS VISIBLE */}
-            <button
-              type="button"
-              className={`chat-voice-btn ${voiceModeActive ? 'active' : ''}`}
-              onClick={handleVoiceToggle}
-              disabled={isInputDisabled}
-              title={
-                voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'
-              }
-              aria-label={
-                voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'
-              }
-              aria-pressed={voiceModeActive}
-              data-testid="chat-input-voice-btn"
-            >
-              <span className="chat-voice-icon" aria-hidden="true">
-                🎤
-              </span>
-            </button>
-
-            {/* Send button with protection */}
-            <button
-              type="submit"
-              className="chat-send-btn chat-send-omega"
-              onClick={handleSend}
-              disabled={
-                !trimmedValue ||
-                isInputDisabled ||
-                messageSent.current /* PHASE 4 ÉTAPE 2: Anti-spam réactivé */
-              }
-              aria-label={
-                voiceModeActive ? 'Envoyer message vocal' : 'Envoyer message texte'
-              }
-              aria-disabled={
-                !trimmedValue ||
-                isInputDisabled ||
-                messageSent.current /* PHASE 4 ÉTAPE 2: Anti-spam réactivé */
-              }
-              aria-busy={messageSent.current}
-              title="Envoyer le message (Enter ou Ctrl+Enter)"
-              data-testid="chat-input-send-btn"
-            >
-              <span className="chat-send-icon" aria-hidden="true">
-                {voiceModeActive ? '🎤' : '➤'}
-              </span>
-            </button>
-          </div>
-
+          <textarea
+            ref={textareaRef}
+            className="chat-input"
+            data-testid="chat-input-textarea"
+            placeholder={placeholderSafe}
+            value={value}
+            onChange={handleValueChange}
+            onKeyDown={handleKeyDown}
+            disabled={isInputDisabled}
+            rows={3}
+            aria-label="Zone de saisie du message"
+          />
           <div
             id="chat-input-hint"
             className="chat-input-hint"
@@ -757,6 +571,17 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               Entrée pour envoyer • Maj+Entrée pour nouvelle ligne
               {enableFileUpload && ' • 📎 Fichiers'}
               {typeof onToggleVoiceMode === 'function' && ' • 🎤 Vocal'}
+              {/* Affiche 'illimité' si la limite utilisateur est supérieure à 10000 caractères */}
+              {(() => {
+                // 12 000 = limite actuelle, 10000 = ancienne limite testée
+                const maxUserMessageChars = 12000; // Doit être synchronisé avec chatEngine.commands.ts
+                if (maxUserMessageChars > 10000) {
+                  return (
+                    <span className="chat-hint-unlimited"> • <span>illimité</span></span>
+                  );
+                }
+                return null;
+              })()}
               {inputState.spamCount > 0 && (
                 <span className="chat-hint-spam">
                   {' '}
@@ -778,29 +603,8 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
             </span>
           </div>
         </div>
-      );
-    } catch (renderError) {
-      // ═══ ULTIMATE FALLBACK RENDER ═══
-      handleInputError(
-        renderError instanceof Error ? renderError : new Error(String(renderError)),
-        'main-render'
-      );
-
-      return (
-        <div className="chat-input-container chat-input-critical">
-          <div className="chat-input-critical-error">
-            <span>🆘 Input OMEGA Error</span>
-            <button
-              onClick={() => window.location.reload()}
-              aria-label="Recharger la page"
-              data-testid="chat-input-reload-btn"
-            >
-              Recharger
-            </button>
-          </div>
-        </div>
-      );
-    }
+      </ErrorBoundary>
+    );
   },
   (prevProps, nextProps) => {
     // ═══ MEMOIZATION WITH PROTECTION ═══

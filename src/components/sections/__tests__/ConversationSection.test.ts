@@ -51,7 +51,7 @@ describe('ConversationSection runtime provider label', () => {
         network_used: false,
         cache_hit: false,
       },
-      modelRequested: 'gemma2:2b',
+      modelRequested: 'llama3.1:latest',
       modelUsed: 'llama3.2:latest',
       fallbackUsed: true,
       tags: [],
@@ -62,7 +62,7 @@ describe('ConversationSection runtime provider label', () => {
     });
 
     expect(summary).toContain('Requested: Ollama');
-    expect(summary).toContain('Model requested: gemma2:2b');
+    expect(summary).toContain('Model requested: llama3.1:latest');
     expect(summary).toContain('Model used: llama3.2:latest');
     expect(summary).toContain('Model fallback: true');
     expect(summary).toContain('Provider: Ollama (OMEGA+Singularity)');
@@ -103,7 +103,7 @@ describe('ConversationSection runtime provider label', () => {
         policy: 'web_research_inline',
       },
       tags: ['memory:present'],
-      modelRequested: 'gemma2:2b',
+      modelRequested: 'llama3.1:latest',
       modelUsed: 'llama3.2:latest',
       fallbackUsed: true,
       runtimeSignals: {
@@ -115,7 +115,7 @@ describe('ConversationSection runtime provider label', () => {
     expect(badges).toContain('requested:Ollama');
     expect(badges).toContain('Ollama (OMEGA+Singularity)');
     expect(badges).toContain('policy:web_research_inline');
-    expect(badges).toContain('model-requested:gemma2:2b');
+    expect(badges).toContain('model-requested:llama3.1:latest');
     expect(badges).toContain('model-used:llama3.2:latest');
     expect(badges).toContain('model-fallback:true');
   });

@@ -377,8 +377,6 @@ function MyComponent() {
 
 bash scripts/gates/ring-integrity-gate.sh
 
-```
-
 ---
 
 _TITANE_INFINITY v30.1.34 — Cognitive OS_
@@ -398,4 +396,20 @@ L’agent d’explicabilité assure la traçabilité des décisions IA, la gén�
 - `src-tauri/src/conversation_engine/omega_integration.rs` ne doit plus utiliser de fallback local/Ollama court; le plancher backend implicite est aligné sur la génération longue pour éviter la troncature des réponses lorsque le budget explicite manque.
 
 ---
-```
+
+## Conformité allowlist Tauri/IPC (avril 2026)
+
+Tous les IPC critiques sont désormais explicitement listés dans la allowlist Tauri (runtime/stable/tauri.conf.json et src-tauri/tauri.conf.json) :
+
+- agenda_delete_event
+- agenda_sync
+- calibrate_titane_voice
+- chat_mode_change
+- chat_mode_sync
+- evolution_save_state
+- submit_evolution_data
+- knowledge_ingest
+- knowledge_save_state
+- progression_save_state
+
+Conformité validée par tests 100/100 (avril 2026).

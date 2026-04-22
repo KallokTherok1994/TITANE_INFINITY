@@ -923,15 +923,7 @@
   {
     "command": "check_local_tts"
   },
-  {
-    "command": "titan_persist_event"
-  },
-  {
-    "command": "titan_force_snapshot"
-  },
-  {
-    "command": "titan_force_snapshot_current"
-  },
+  // ...existing code...
   {
     "command": "titan_load_state"
   },
@@ -1907,12 +1899,7 @@
   {
     "command": "titan_state_get"
   },
-  {
-    "command": "titan_persistence_init"
-  },
-  {
-    "command": "titan_persistence_shutdown"
-  },
+  // ...existing code...
   {
     "command": "memory_parse"
   },

@@ -54,7 +54,6 @@ pub struct GLM46VGenerateData {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Générer une réponse avec GLM-4.6V-Flash (local + multimodal)
-#[tauri::command]
 pub async fn chat_generate_glm46v(
     request: GLM46VGenerateRequest,
     state: State<'_, ChatOrchestratorState>,
@@ -115,7 +114,6 @@ pub async fn chat_generate_glm46v(
 }
 
 /// Vérifier l'état de santé de GLM-4.6V (vLLM server)
-#[tauri::command]
 pub async fn check_glm46v_health(
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<GLM46VHealthResponse, String> {
@@ -151,7 +149,6 @@ pub struct GLM46VHealthResponse {
 }
 
 /// Démarrer le serveur vLLM pour GLM-4.6V (commande système)
-#[tauri::command]
 pub async fn start_glm46v_server(
     _state: State<'_, ChatOrchestratorState>,
 ) -> Result<GLM46VServerResponse, String> {
@@ -178,7 +175,6 @@ pub struct GLM46VServerResponse {
 }
 
 /// Arrêter le serveur vLLM pour GLM-4.6V
-#[tauri::command]
 pub async fn stop_glm46v_server(
     _state: State<'_, ChatOrchestratorState>,
 ) -> Result<GLM46VServerStopResponse, String> {

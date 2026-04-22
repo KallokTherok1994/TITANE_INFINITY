@@ -7,42 +7,42 @@
   "champions": {
     "DIRECT": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.8
     },
     "CLARIFY_LIGHT": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.68
     },
     "DEEP_REASONING": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.82
     },
     "ARCHITECT": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.84
     },
     "REPAIR": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.8
     },
     "CERTIFY": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.85
     },
     "EXPLORATION": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 0.67
     },
     "SHADOW_LEARNING": {
       "provider": "ollama",
-      "model": "gemma2:2b",
+      "model": "llama3.1:latest",
       "confidence_threshold": 1.0
     }
   },

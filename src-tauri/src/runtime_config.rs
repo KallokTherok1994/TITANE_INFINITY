@@ -6,7 +6,7 @@
 // ENV FLAGS REFERENCE (all read at runtime):
 //
 //   OLLAMA_BASE_URL          (str)   default: "http://127.0.0.1:11434"
-//   OLLAMA_DEFAULT_MODEL     (str)   default: "gemma2:2b"
+//   OLLAMA_DEFAULT_MODEL     (str)   default: "llama3.1:latest"
 //   TITANE_SECRETS_PASSPHRASE(str)   default: [INSECURE DEV DEFAULT — P0 REQUIRED IN PROD]
 //   CONVOS_SEARCH            (bool)  default: true   — web search in OMEGA pipeline
 //   CONVOS_SOURCES_STORE     (bool)  default: true   — store sources in memory
@@ -56,7 +56,7 @@ fn sanitize_url(url: &str) -> String {
 fn sanitize_model(model: &str) -> String {
     let trimmed = model.trim();
     if trimmed.is_empty() {
-        "gemma2:2b".to_string()
+        "llama3.1:latest".to_string()
     } else {
         trimmed.to_string()
     }
@@ -119,7 +119,7 @@ fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
     let ollama_model = disk_model
         .or_else(|| std::env::var("OLLAMA_DEFAULT_MODEL").ok())
         .or_else(|| std::env::var("OLLAMA_MODEL").ok())
-        .unwrap_or_else(|| "gemma2:2b".to_string());
+        .unwrap_or_else(|| "llama3.1:latest".to_string());
 
     let secrets_mode = match secrets.mode() {
         SecretsMode::Encrypted { .. } => "encrypted".to_string(),

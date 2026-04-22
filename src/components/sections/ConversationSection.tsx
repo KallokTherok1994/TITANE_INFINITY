@@ -2719,7 +2719,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
                 data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
                 data-ollama-model={
-                  selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'
+                  selectedProvider === 'ollama' ? 'llama3.1:latest' : 'unknown'
                 }
                 data-secrets-mode="governed"
               >

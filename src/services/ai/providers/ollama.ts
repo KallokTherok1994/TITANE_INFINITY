@@ -31,10 +31,10 @@ const runtimeEnv = (
     env?: { VITE_OLLAMA_MODEL?: string };
   }
 ).env;
-// Canonical local model truth: gemma2:2b is the governed baseline across
+// Canonical local model truth: llama3.1:latest is the governed baseline across
 // frontend, backend, scripts, registry, and packaging.
 // Override via VITE_OLLAMA_MODEL env var for explicit local experimentation.
-const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'gemma2:2b';
+const DEFAULT_OLLAMA_MODEL = runtimeEnv?.VITE_OLLAMA_MODEL?.trim() || 'llama3.1:latest';
 
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURATION — OLLAMA CANONICAL LOCAL FALLBACK

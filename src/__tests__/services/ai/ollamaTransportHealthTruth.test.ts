@@ -20,8 +20,8 @@ describe('ollamaTransport health truth', () => {
       content: {
         available: true,
         url: 'https://ollama.example.trycloudflare.com',
-        model: 'gemma2:2b',
-        models: ['gemma2:2b', 'llama3.2:latest'],
+        model: 'llama3.1:latest',
+        models: ['llama3.1:latest', 'llama3.2:latest'],
         health: 'healthy',
       },
     });
@@ -33,7 +33,7 @@ describe('ollamaTransport health truth', () => {
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.content.models).toEqual([
-        { name: 'gemma2:2b', modified_at: '', size: 0 },
+        { name: 'llama3.1:latest', modified_at: '', size: 0 },
         { name: 'llama3.2:latest', modified_at: '', size: 0 },
       ]);
     }
@@ -45,8 +45,8 @@ describe('ollamaTransport health truth', () => {
       content: {
         available: false,
         url: 'https://ollama.example.trycloudflare.com',
-        model: 'gemma2:2b',
-        models: ['gemma2:2b'],
+        model: 'llama3.1:latest',
+        models: ['llama3.1:latest'],
         health: 'offline',
       },
     });

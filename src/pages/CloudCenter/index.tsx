@@ -153,7 +153,7 @@ const CloudCenter: React.FC = () => {
   if (!initialized) {
     return (
       <ErrorBoundary>
-        <div className="cloud-center">
+        <div className="cloud-center" data-testid="page-cloud-center">
           <header className="cloud-header">
             <h1>☁️ TITANE∞ Cloud Center</h1>
             <p className="subtitle">Vault chiffré & synchronisation multi-device</p>
@@ -231,7 +231,7 @@ const CloudCenter: React.FC = () => {
   }
 
   return (
-    <div className="cloud-center">
+    <div className="cloud-center" data-testid="page-cloud-center">
       <header className="cloud-header">
         <div className="header-left">
           <h1>☁️ TITANE∞ Cloud Center</h1>

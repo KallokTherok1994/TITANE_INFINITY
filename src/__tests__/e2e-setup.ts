@@ -6,18 +6,24 @@
 import { vi } from 'vitest';
 import { resetChatState } from './e2e-test-utils';
 
+const mockSendMessageLegacy = vi.fn(async () => {
+  throw new Error('Mock backend unavailable');
+});
+
+vi.mock('@/services/api/chat', () => ({
+  chatService: {
+    sendMessageLegacy: (...args: unknown[]) => mockSendMessageLegacy(...args),
+  },
+}));
+
 /**
  * Setup mock for Tauri backend chat service
  * Forces the hook to use its local streaming/generate fallback path
  */
 export const setupChatServiceMock = () => {
-  vi.mock('@/services/api/chat', () => ({
-    chatService: {
-      sendMessageLegacy: vi.fn(async () => {
-        throw new Error('Mock backend unavailable');
-      }),
-    },
-  }));
+  mockSendMessageLegacy.mockReset();
+  mockSendMessageLegacy.mockRejectedValue(new Error('Mock backend unavailable'));
+  return mockSendMessageLegacy;
 };
 
 /**
@@ -25,6 +31,7 @@ export const setupChatServiceMock = () => {
  */
 export const setupE2ETest = () => {
   vi.clearAllMocks();
+  setupChatServiceMock();
   resetChatState();
 };
 

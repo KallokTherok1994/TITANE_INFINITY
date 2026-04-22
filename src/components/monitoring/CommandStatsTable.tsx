@@ -14,12 +14,23 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { logger } from '@/lib/logger';
-import { ServiceMetrics } from '../../lib/serviceMetrics';
-import { ArrowUp, ArrowDown, Clock, AlertCircle, Activity } from 'lucide-react';
 
+import { ArrowUp, ArrowDown, Activity, Clock, AlertCircle } from 'lucide-react';
+import { ServiceMetrics } from '@/lib/serviceMetrics';
+import { logger } from '@/lib/logger';
 type SortColumn = 'command' | 'calls' | 'avgLatency' | 'errorRate';
 type SortDirection = 'asc' | 'desc';
+
+
+export const SortIcon: React.FC<{ column: SortColumn; active: boolean; direction: SortDirection }> = ({ active, direction }) => {
+  if (!active) return null;
+  return direction === 'asc' ? (
+    <ArrowUp className="w-4 h-4" />
+  ) : (
+    <ArrowDown className="w-4 h-4" />
+  );
+};
+
 
 export interface CommandStatsTableProps {
   limit?: number;
@@ -135,15 +146,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
     return date.toLocaleDateString('fr-FR');
   };
 
-  // Render sort icon
-  const SortIcon: React.FC<{ column: SortColumn }> = ({ column }) => {
-    if (sortColumn !== column) return null;
-    return sortDirection === 'asc' ? (
-      <ArrowUp className="w-4 h-4" />
-    ) : (
-      <ArrowDown className="w-4 h-4" />
-    );
-  };
+
 
   // Titre selon mode
   const title =
@@ -175,7 +178,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
               >
                 <div className="flex items-center gap-2">
                   Commande
-                  <SortIcon column="command" />
+                  <SortIcon column="command" active={sortColumn === 'command'} direction={sortDirection} />
                 </div>
               </th>
               <th
@@ -184,7 +187,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
               >
                 <div className="flex items-center justify-end gap-2">
                   Appels
-                  <SortIcon column="calls" />
+                  <SortIcon column="calls" active={sortColumn === 'calls'} direction={sortDirection} />
                 </div>
               </th>
               <th
@@ -193,7 +196,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
               >
                 <div className="flex items-center justify-end gap-2">
                   Latence Moy.
-                  <SortIcon column="avgLatency" />
+                  <SortIcon column="avgLatency" active={sortColumn === 'avgLatency'} direction={sortDirection} />
                 </div>
               </th>
               <th
@@ -202,7 +205,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
               >
                 <div className="flex items-center justify-end gap-2">
                   Taux Erreurs
-                  <SortIcon column="errorRate" />
+                  <SortIcon column="errorRate" active={sortColumn === 'errorRate'} direction={sortDirection} />
                 </div>
               </th>
               <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">

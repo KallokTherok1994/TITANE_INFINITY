@@ -636,7 +636,7 @@ export const AgendaPage: React.FC = React.memo(() => {
   // Affichage de chargement
   if (loading || !initialized) {
     return (
-      <div className="agenda-page agenda-loading">
+      <div className="agenda-page agenda-loading" data-testid="page-agenda">
         <div className="loading-spinner">⏳</div>
         <span>Chargement de l&apos;agenda...</span>
       </div>
@@ -644,7 +644,7 @@ export const AgendaPage: React.FC = React.memo(() => {
   }
 
   return (
-    <div className="agenda-page">
+    <div className="agenda-page" data-testid="page-agenda">
       {/* Header */}
       <header className="agenda-header">
         <h1 className="agenda-title">

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0",
+  "productName": "Titan-Stable",
+  "version": "31.0.6",
+  "identifier": "com.titane.infinity.stable",
+  "bundle": {
+    "active": true,
+    "targets": ["appimage", "deb"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/256x256.png",
+      "icons/512x512.png"
+    ],
+    "linux": {
+      "deb": {
+        "depends": [
+          "libayatana-appindicator3-1",
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0"
+        ],
+        "conflicts": [
+          "titane-infinity"
+        ],
+        "replaces": [
+          "titane-infinity"
+        ],
+        "provides": [
+          "titane-infinity"
+        ],
+        "postInstallScript": "../scripts/install/stable-postinst.sh"
+      }
+    }
+  }
+}

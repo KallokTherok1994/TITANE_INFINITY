@@ -10,7 +10,7 @@ describe('ConfigurationHub runtime config helpers', () => {
   it('normalizes runtime config with explicit ollama truth fields', () => {
     const config = normalizeRuntimeConfig({
       ollamaUrl: 'https://titane.example.com',
-      ollamaModel: 'gemma2:2b',
+      ollamaModel: 'llama3.1:latest',
       ollamaEndpointKind: 'remote_cloudflare',
       ollamaEndpointSource: 'runtime_persisted',
       ollamaModelSource: 'runtime_persisted',
@@ -40,7 +40,7 @@ describe('ConfigurationHub runtime config helpers', () => {
       content: {
         available: true,
         url: 'https://titane.example.com',
-        model: 'gemma2:2b',
+        model: 'llama3.1:latest',
         endpoint_kind: 'remote_cloudflare',
         endpoint_source: 'runtime_persisted',
         model_source: 'runtime_persisted',

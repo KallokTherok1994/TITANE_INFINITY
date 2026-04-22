@@ -251,7 +251,7 @@ mod tests {
         let secrets = SecureSecretsEngine::default();
         let runtime = build_runtime_config(
             "http://127.0.0.1:11434".to_string(),
-            "gemma2:2b".to_string(),
+            "llama3.1:latest".to_string(),
             &secrets,
         );
 

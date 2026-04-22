@@ -1,0 +1,2 @@
+90M	src-tauri/target/release/bundle/appimage/Titan-Stable_31.0.6_amd64.AppImage
+20M	src-tauri/target/release/bundle/deb/Titan-Stable_31.0.6_amd64.deb

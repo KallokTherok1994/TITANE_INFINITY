@@ -1234,7 +1234,7 @@ describe('conversationEngine.processMessage', () => {
           messageId: 'm16b',
           metadata: {
             timestamp: 1617,
-            model_requested: 'gemma2:2b',
+            model_requested: 'llama3.1:latest',
             model_used: 'llama3.2:latest',
             fallback_used: true,
           },
@@ -1262,7 +1262,7 @@ describe('conversationEngine.processMessage', () => {
       providerPreference: 'ollama',
     });
 
-    expect(response.metadata.model_requested).toBe('gemma2:2b');
+    expect(response.metadata.model_requested).toBe('llama3.1:latest');
     expect(response.metadata.model_used).toBe('llama3.2:latest');
     expect(response.metadata.fallback_used).toBe(true);
   });

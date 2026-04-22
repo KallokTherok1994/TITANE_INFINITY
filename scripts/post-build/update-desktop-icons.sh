@@ -1,3 +1,5 @@
+SYSTEM_ICON_DIR="/usr/share/icons/hicolor"
+SYSTEM_ICON_DST="$SYSTEM_ICON_DIR/titane-infinity.png"
 #!/bin/bash
 # TITANE∞ - Post-build: Synchronisation lanceurs, icônes, cache desktop, et binaire
 set -euo pipefail

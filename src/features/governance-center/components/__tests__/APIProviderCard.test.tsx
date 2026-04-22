@@ -13,8 +13,8 @@ describe('APIProviderCard', () => {
           provider_enabled: true,
           available: true,
           url: 'https://titane.example.com',
-          model: 'gemma2:2b',
-          models: ['gemma2:2b', 'llama3.1:latest'],
+          model: 'llama3.1:latest',
+          models: ['llama3.1:latest', 'llama3.1:latest'],
           endpoint_kind: 'remote_cloudflare',
           endpoint_source: 'runtime_persisted',
           model_source: 'runtime_persisted',
@@ -37,7 +37,7 @@ describe('APIProviderCard', () => {
     );
     expect(screen.getByTestId('ollama-provider-health')).toHaveTextContent('healthy');
     expect(screen.getByTestId('ollama-provider-model-list')).toHaveTextContent(
-      'gemma2:2b, llama3.1:latest'
+      'llama3.1:latest, llama3.1:latest'
     );
   });
 });

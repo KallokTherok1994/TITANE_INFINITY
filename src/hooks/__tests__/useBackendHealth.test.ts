@@ -43,7 +43,7 @@ describe('useBackendHealth Hook', () => {
       model_source: 'default',
       network_used: false,
       health: 'healthy',
-      models: ['gemma2:2b'],
+      models: ['llama3.1:latest'],
     });
   });
 
@@ -147,13 +147,13 @@ describe('useBackendHealth Hook', () => {
       getTauriClientMock().aiCheckOllamaStatus.mockResolvedValueOnce({
         available: true,
         url: 'https://titane.example.com',
-        model: 'gemma2:2b',
+        model: 'llama3.1:latest',
         endpoint_kind: 'remote_cloudflare',
         endpoint_source: 'runtime_persisted',
         model_source: 'runtime_persisted',
         network_used: true,
         health: 'healthy',
-        models: ['gemma2:2b'],
+        models: ['llama3.1:latest'],
       });
 
       const { result } = renderHook(() => useBackendHealth());
@@ -220,7 +220,7 @@ describe('useBackendHealth Hook', () => {
       getTauriClientMock().aiCheckOllamaStatus.mockResolvedValueOnce({
         available: false,
         url: 'https://titane.example.com',
-        model: 'gemma2:2b',
+        model: 'llama3.1:latest',
         endpoint_kind: 'remote_cloudflare',
         endpoint_source: 'runtime_persisted',
         model_source: 'runtime_persisted',

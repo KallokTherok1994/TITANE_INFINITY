@@ -636,9 +636,22 @@ pub async fn conversation_generate(
                     } else {
                         "[Assistant]"
                     };
-                    // Token budget: truncate long messages
-                    let truncated = if content.len() > MAX_CONTENT_CHARS {
-                        format!("{}…", &content[..MAX_CONTENT_CHARS])
+                    // Token budget: truncate long messages (UTF-8 safe)
+                    let truncated = if content.chars().count() > MAX_CONTENT_CHARS {
+                        // Trouver la frontière de caractère UTF-8
+                        let mut end = 0;
+                        let mut char_count = 0;
+                        for (i, _) in content.char_indices() {
+                            if char_count == MAX_CONTENT_CHARS {
+                                end = i;
+                                break;
+                            }
+                            char_count += 1;
+                        }
+                        if end == 0 {
+                            end = content.len();
+                        }
+                        format!("{}…", &content[..end])
                     } else {
                         content.to_string()
                     };

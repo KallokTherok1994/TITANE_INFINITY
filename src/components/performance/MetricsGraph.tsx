@@ -1,3 +1,59 @@
+// ============================================================================
+// LÉGENDE PERSONNALISÉE (DOIT ÊTRE AU NIVEAU MODULE)
+// ============================================================================
+
+export const CustomLegend: React.FC<{
+  metrics: MetricSeriesConfig[];
+  visibleSeries: Set<MetricType>;
+  trends: Record<MetricType, 'up' | 'down' | 'stable'>;
+  showLegend: boolean;
+  toggleSeries: (key: MetricType) => void;
+}> = ({ metrics, visibleSeries, trends, showLegend, toggleSeries }) => {
+  if (!showLegend) return null;
+  return (
+    <div className="flex flex-wrap gap-3 mt-4 justify-center">
+      {metrics.map((metric, index) => {
+        const isVisible = visibleSeries.has(metric.key);
+        const trend = trends[metric.key];
+        const TrendIcon =
+          trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
+        return (
+          <motion.button
+            key={metric.key}
+            onClick={() => toggleSeries(metric.key)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className={`
+              flex items-center gap-2 px-3 py-1.5 rounded-lg
+              transition-all duration-200
+              ${
+                isVisible
+                  ? 'bg-slate-700/50 text-white'
+                  : 'bg-slate-800/50 text-slate-500'
+              }
+            `}
+          >
+            <div
+              className={`w-3 h-3 rounded-full ${isVisible ? '' : 'opacity-30'}`}
+              style={{ backgroundColor: metric.color || DEFAULT_COLORS[index] }}
+            />
+            <span className="text-sm">{metric.label}</span>
+            <TrendIcon
+              size={14}
+              className={
+                trend === 'up'
+                  ? 'text-red-400'
+                  : trend === 'down'
+                    ? 'text-green-400'
+                    : 'text-slate-400'
+              }
+            />
+          </motion.button>
+        );
+      })}
+    </div>
+  );
+};
 /**
  * @file MetricsGraph.tsx
  * @description Composant de graphiques de métriques - TITANE∞ Performance Engine vΩ∞Ω+
@@ -324,55 +380,20 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
     [metrics, showTooltip]
   );
 
-  // Légende personnalisée
-  const CustomLegend = useCallback(() => {
-    if (!showLegend) return null;
 
-    return (
-      <div className="flex flex-wrap gap-3 mt-4 justify-center">
-        {metrics.map((metric, index) => {
-          const isVisible = visibleSeries.has(metric.key);
-          const trend = trends[metric.key];
-          const TrendIcon =
-            trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
+// Composant statique pour la légende personnalisée (hors du composant principal)
 
-          return (
-            <motion.button
-              key={metric.key}
-              onClick={() => toggleSeries(metric.key)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`
-                flex items-center gap-2 px-3 py-1.5 rounded-lg
-                transition-all duration-200
-                ${
-                  isVisible
-                    ? 'bg-slate-700/50 text-white'
-                    : 'bg-slate-800/50 text-slate-500'
-                }
-              `}
-            >
-              <div
-                className={`w-3 h-3 rounded-full ${isVisible ? '' : 'opacity-30'}`}
-                style={{ backgroundColor: metric.color || DEFAULT_COLORS[index] }}
-              />
-              <span className="text-sm">{metric.label}</span>
-              <TrendIcon
-                size={14}
-                className={
-                  trend === 'up'
-                    ? 'text-red-400'
-                    : trend === 'down'
-                      ? 'text-green-400'
-                      : 'text-slate-400'
-                }
-              />
-            </motion.button>
-          );
-        })}
-      </div>
-    );
-  }, [metrics, visibleSeries, trends, showLegend, toggleSeries]);
+// Composant statique pour la légende personnalisée (hors du composant principal)
+
+
+// Composant statique pour la légende personnalisée (hors du composant principal)
+
+
+// ============================================================================
+// LÉGENDE PERSONNALISÉE (DOIT ÊTRE AU NIVEAU MODULE)
+// ============================================================================
+
+
 
   // Rendu du graphique avec lazy Recharts
   const renderChart = () => {
@@ -556,13 +577,20 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
         {filteredData.length > 0 ? (
           <>
             {renderChart()}
-            <CustomLegend />
+            <CustomLegend
+              metrics={metrics}
+              visibleSeries={visibleSeries}
+              trends={trends}
+              showLegend={showLegend}
+              toggleSeries={toggleSeries}
+            />
           </>
         ) : (
           <div className="flex items-center justify-center h-64 text-slate-400">
             <div className="text-center">
               <Settings size={48} className="mx-auto mb-2 opacity-50" />
               <p>Aucune donnée disponible</p>
+
               <p className="text-sm">Les métriques apparaîtront ici</p>
             </div>
           </div>

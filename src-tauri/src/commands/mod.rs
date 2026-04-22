@@ -349,7 +349,7 @@ pub async fn adaptive_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Resu
 ///
 /// # Errors
 /// Returns an error if encryption or file operations fail.
-#[tauri::command]
+// #[tauri::command]
 pub async fn memory_save_entry(entry: String) -> Result<(), String> {
     log::debug!("💾 Command: memory_save_entry (length: {})", entry.len());
     crate::system::memory::save_entry(crate::system::memory::MemoryEntry {

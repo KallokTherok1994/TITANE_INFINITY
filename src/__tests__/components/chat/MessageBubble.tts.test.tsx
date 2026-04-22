@@ -150,7 +150,7 @@ describe('MessageBubble TTS controls', () => {
         metadata={{
           providerUsed: 'Ollama (OMEGA+Singularity)',
           requestedProvider: 'Ollama',
-          modelRequested: 'gemma2:2b',
+          modelRequested: 'llama3.1:latest',
           modelUsed: 'llama3.2:latest',
           fallbackUsed: true,
         }}
@@ -165,7 +165,7 @@ describe('MessageBubble TTS controls', () => {
       'Model: llama3.2:latest'
     );
     expect(screen.getByTestId('message-model-requested-7')).toHaveTextContent(
-      'Requested: gemma2:2b'
+      'Requested: llama3.1:latest'
     );
     expect(screen.getByTestId('message-model-fallback-7')).toHaveTextContent(
       'Fallback'

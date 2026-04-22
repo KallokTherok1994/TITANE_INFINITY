@@ -2,6 +2,55 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1776856930318-l1hugt4e",
+      "timestamp": 1776856930318,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776855711442-5xrtj8lq",
+      "timestamp": 1776855711442,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776855561576-brrp5mzb",
+      "timestamp": 1776855561576,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776855495842-lslgb2fl",
+      "timestamp": 1776855495842,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776855226685-6clti0mk",
+      "timestamp": 1776855226685,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776808030477-b5vyiv50",
+      "timestamp": 1776808030477,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776718633470-dqnob31k",
+      "timestamp": 1776718633470,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1776626897877-l1okeapi",
       "timestamp": 1776626897877,
       "level": "Info",
@@ -178,7 +227,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1776626897878,
+    "last_validation_ts": 1776856930319,
     "last_compaction_ts": null
   }
 }

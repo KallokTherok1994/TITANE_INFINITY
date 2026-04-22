@@ -25,7 +25,7 @@ impl Default for OllamaConfig {
     fn default() -> Self {
         OllamaConfig {
             base_url: "http://127.0.0.1:11434".to_string(),
-            model: "gemma2:2b".to_string(),
+            model: "llama3.1:latest".to_string(),
             temperature: 0.7,
             num_ctx: 2048,
             timeout_secs: 30,

@@ -35,7 +35,13 @@ interface PerformanceMetrics {
 
 const PerformanceTest: React.FC = () => {
   // TODO: Implémenter la logique réelle ici (hooks, dashboard, etc.)
-  return null;
+  return (
+    <div className="performance-test-page" data-testid="page-performance-test">
+      <ErrorBoundary>
+        <PerformanceDashboard />
+      </ErrorBoundary>
+    </div>
+  );
 };
 
 export default PerformanceTest;

@@ -214,7 +214,7 @@ async fn ping_ollama_internal() -> ProviderStatus {
 
     let ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
         .or_else(|_| std::env::var("OLLAMA_MODEL"))
-        .unwrap_or_else(|_| "gemma2:2b".into());
+        .unwrap_or_else(|_| "llama3.1:latest".into());
 
     let gateway = orchestration_gateway();
     match gateway

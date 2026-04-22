@@ -502,11 +502,6 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 8: Complete Offline Mode', () => {
     // Mock all network requests to fail
     const mockFetch = vi.fn().mockRejectedValue(new Error('Network unavailable'));
     vi.stubGlobal('fetch', mockFetch);
-
-    // Mock Tauri backend unavailable
-    vi.mock('../../../core/commands/TAURI_COMMANDS', () => ({
-      invokeTauri: vi.fn().mockRejectedValue(new Error('Backend unavailable')),
-    }));
   });
 
   it('should work completely offline using titane-local', async () => {

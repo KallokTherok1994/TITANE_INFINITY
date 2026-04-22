@@ -1,3 +1,16 @@
+---
+
+## Conformité allowlist Tauri/IPC (avril 2026)
+
+Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :
+  - knowledge_ingest
+  - knowledge_save_state
+  - progression_save_state
+
+Tous les tests critiques sont verts (100/100).
+
+---
+
 # TITANE_INFINITY — Cartographie Complète Avancée v30.1.34
 > 2026-04-19 — Conversation dev overlay send-path truth: la topologie canonique `/titane?tab=conversation` ne change pas, mais sa qualification dev ferme un point d obstruction reel. `src/components/dev/ConsoleMonitorDashboard.tsx` ancre désormais le moniteur console en haut a droite au lieu du coin bas droit qui pouvait recouvrir le compositeur et intercepter `chat-send`, tandis que `e2e/runtime-validation/chat-ar20.spec.ts` priorise un envoi clavier puis un fallback DOM borne et que `e2e/critical/chat-interaction.spec.ts` vérifie la connaissance/memoire ainsi que le bloc terminal sur la verite textuelle rendue plutôt que sur des artefacts de formatage mock ou de duplication DOM.
 

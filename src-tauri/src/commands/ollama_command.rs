@@ -114,7 +114,7 @@ mod tests {
     #[tokio::test]
     async fn test_ollama_request_structure() {
         let req = OllamaRequest {
-            model: "gemma2:2b".to_string(),
+            model: "llama3.1:latest".to_string(),
             prompt: "Test prompt".to_string(),
             timeout_secs: 30,
             temperature: Some(0.7),
@@ -123,7 +123,7 @@ mod tests {
             num_ctx: None,
         };
 
-        assert_eq!(req.model, "gemma2:2b");
+        assert_eq!(req.model, "llama3.1:latest");
         assert_eq!(req.prompt, "Test prompt");
         assert_eq!(req.timeout_secs, 30);
         assert_eq!(req.temperature, Some(0.7));

@@ -49,7 +49,7 @@ describe('Provider memory reuse truth', () => {
     mocks.ollamaCheckHealth.mockResolvedValue({
       ok: true,
       provider: 'ollama',
-      content: { models: [{ name: 'gemma2:2b', modified_at: '', size: 0 }] },
+      content: { models: [{ name: 'llama3.1:latest', modified_at: '', size: 0 }] },
     });
 
     mocks.ollamaGenerate.mockResolvedValue({
@@ -57,7 +57,7 @@ describe('Provider memory reuse truth', () => {
       provider: 'ollama',
       content: {
         content: 'Reponse Ollama',
-        model: 'gemma2:2b',
+        model: 'llama3.1:latest',
         latency_ms: 12,
       },
     });

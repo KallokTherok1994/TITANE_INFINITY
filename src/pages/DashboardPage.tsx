@@ -70,7 +70,7 @@ export const DashboardPage = (): JSX.Element => {
   return (
     <ErrorBoundary>
       <Container data-testid="page-dashboard" size="xl">
-      <div className="dashboard-fadein">
+        <div className="dashboard-fadein">
         <Stack direction="vertical" gap={6}>
           {/* Header modernisé */}
           <header className="dashboard-header">
@@ -193,10 +193,10 @@ export const DashboardPage = (): JSX.Element => {
           />
         )}
       </div>
-      </Container>
-    </ErrorBoundary>
-  );
-};
+    </Container>
+  </ErrorBoundary>
 
+);
+}
 // v24.3.1 FIX: Add missing default export for lazy loading
 export default DashboardPage;

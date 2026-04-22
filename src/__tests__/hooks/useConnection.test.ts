@@ -56,7 +56,7 @@ describe('useConnection truth helpers', () => {
           provider: 'ollama',
           available: true,
           latency_ms: 90,
-          models: ['gemma2:2b'],
+          models: ['llama3.1:latest'],
         },
       ])
     ).toBe('PARTIAL');

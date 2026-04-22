@@ -1,0 +1,4 @@
+eb66973197b98941f4f9f93c7c7c8b0dd10181dfcf7e9c911ab018e53b745ab9  titane-infinity_31.0.6_amd64.AppImage
+8852d1f0974f5f1ddd0d34e0366f97602052b2856e603440d7caaaab5d8f6c70  titane-infinity_31.0.5_amd64.deb
+7b0deb35b6ee6ff3c729762010d23f23032d1dd5e883ec770b3c4f07fb6c760a  TITANE Infinity_31.0.5_amd64.deb
+6946d9944905ddb51631dfd81be584a553abcbe016a1ba1f49ba0c1f49e76b81  titane-infinity_31.0.6_amd64.deb

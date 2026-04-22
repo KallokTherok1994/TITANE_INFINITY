@@ -34,7 +34,6 @@ fn get_test_metrics() -> KevinMetrics {
     }
 }
 
-#[tauri::command]
 pub async fn evolution_run_cycle(state: State<'_, EvolutionState>) -> Result<String, String> {
     let mut supervisor: tokio::sync::RwLockWriteGuard<'_, EvolutionSupervisor> =
         state.supervisor.write().await;
@@ -42,21 +41,18 @@ pub async fn evolution_run_cycle(state: State<'_, EvolutionState>) -> Result<Str
     Ok(supervisor.run_evolution_cycle(&metrics))
 }
 
-#[tauri::command]
 pub async fn evolution_safe_reset(state: State<'_, EvolutionState>) -> Result<String, String> {
     let mut supervisor: tokio::sync::RwLockWriteGuard<'_, EvolutionSupervisor> =
         state.supervisor.write().await;
     Ok(supervisor.perform_safe_reset())
 }
 
-#[tauri::command]
 pub async fn evolution_emergency_heal(state: State<'_, EvolutionState>) -> Result<String, String> {
     let mut supervisor: tokio::sync::RwLockWriteGuard<'_, EvolutionSupervisor> =
         state.supervisor.write().await;
     Ok(supervisor.emergency_intervention())
 }
 
-#[tauri::command]
 pub async fn evolution_auto_correct(
     state: State<'_, EvolutionState>,
 ) -> Result<Vec<String>, String> {
@@ -65,7 +61,6 @@ pub async fn evolution_auto_correct(
     Ok(supervisor.auto_correct_system())
 }
 
-#[tauri::command]
 pub async fn evolution_store_memory(
     state: State<'_, EvolutionState>,
     key: String,
@@ -77,7 +72,6 @@ pub async fn evolution_store_memory(
     Ok(())
 }
 
-#[tauri::command]
 pub async fn evolution_recall_memory(
     state: State<'_, EvolutionState>,
     key: String,
@@ -87,14 +81,12 @@ pub async fn evolution_recall_memory(
     Ok(supervisor.recall_memory(&key))
 }
 
-#[tauri::command]
 pub async fn evolution_get_stats(state: State<'_, EvolutionState>) -> Result<String, String> {
     let supervisor: tokio::sync::RwLockReadGuard<'_, EvolutionSupervisor> =
         state.supervisor.read().await;
     Ok(supervisor.get_stats())
 }
 
-#[tauri::command]
 pub async fn evolution_get_pattern(
     state: State<'_, EvolutionState>,
     pattern_type: String,
@@ -116,7 +108,6 @@ pub async fn evolution_get_pattern(
     Ok(supervisor.get_pattern(pattern_type))
 }
 
-#[tauri::command]
 pub async fn evolution_detect_inconsistencies(
     state: State<'_, EvolutionState>,
 ) -> Result<Vec<String>, String> {
@@ -125,7 +116,6 @@ pub async fn evolution_detect_inconsistencies(
     Ok(supervisor.detect_all_inconsistencies())
 }
 
-#[tauri::command]
 pub async fn evolution_record_prediction(
     state: State<'_, EvolutionState>,
     prediction: String,
@@ -136,7 +126,6 @@ pub async fn evolution_record_prediction(
     Ok(())
 }
 
-#[tauri::command]
 pub async fn evolution_get_prediction_history(
     state: State<'_, EvolutionState>,
 ) -> Result<Vec<String>, String> {
@@ -145,7 +134,6 @@ pub async fn evolution_get_prediction_history(
     Ok(supervisor.get_prediction_history())
 }
 
-#[tauri::command]
 pub async fn evolution_adjust_emotional_sensitivity(
     state: State<'_, EvolutionState>,
     target: f32,
@@ -156,7 +144,6 @@ pub async fn evolution_adjust_emotional_sensitivity(
     Ok(())
 }
 
-#[tauri::command]
 pub async fn evolution_get_emotional_recommendations(
     state: State<'_, EvolutionState>,
 ) -> Result<Vec<String>, String> {
@@ -166,7 +153,6 @@ pub async fn evolution_get_emotional_recommendations(
     Ok(supervisor.get_emotional_recommendations(&metrics))
 }
 
-#[tauri::command]
 pub async fn evolution_should_be_proactive(
     state: State<'_, EvolutionState>,
 ) -> Result<bool, String> {
@@ -176,7 +162,6 @@ pub async fn evolution_should_be_proactive(
     Ok(supervisor.should_be_proactive(&metrics))
 }
 
-#[tauri::command]
 pub async fn evolution_auto_detect_mode(
     state: State<'_, EvolutionState>,
 ) -> Result<String, String> {

@@ -28,7 +28,7 @@ impl LocalProvider {
         Self {
             ollama_url: ollama_url.unwrap_or_else(Self::default_ollama_url),
             client: Client::new(),
-            model_fast: "gemma2:2b".to_string(), // ✨ Use installed model (was "llama3")
+            model_fast: "llama3.1:latest".to_string(), // ✨ Use installed model (was "llama3")
             model_quality: "mistral:latest".to_string(), // ✨ Use explicit tag
         }
     }
@@ -170,7 +170,7 @@ mod tests {
     fn test_model_selection() {
         let provider = LocalProvider::new(None);
 
-        assert_eq!(provider.select_model(AiMode::Fast), "gemma2:2b");
+        assert_eq!(provider.select_model(AiMode::Fast), "llama3.1:latest");
         assert_eq!(provider.select_model(AiMode::Quality), "mistral:latest");
     }
 

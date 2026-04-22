@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { AgendaPage } from '../AgendaPage';
+import AgendaPage from '../AgendaPage';
 
 describe('AgendaPage', () => {
   it('renders without crashing and exposes data-testid', () => {

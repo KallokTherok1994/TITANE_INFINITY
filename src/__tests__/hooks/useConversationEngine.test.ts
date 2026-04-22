@@ -30,8 +30,8 @@ const processMessageMock = vi.fn(async (content: string) => ({
   metadata: {
     timestamp: Date.now(),
     provider_used: 'ollama',
-    model_requested: 'gemma2:2b',
-    model_used: 'gemma2:2b',
+    model_requested: 'llama3.1:latest',
+    model_used: 'llama3.1:latest',
     fallback_used: false,
     latency_ms: 12,
     tokens_used: 1,
@@ -388,7 +388,7 @@ describe('useConversationEngine fallback meta truth', () => {
       metadata: {
         timestamp: Date.now(),
         provider_used: 'ollama-runtime',
-        model_requested: 'gemma2:2b',
+        model_requested: 'llama3.1:latest',
         model_used: 'llama3.2:latest',
         fallback_used: true,
         latency_ms: 22,
@@ -424,7 +424,7 @@ describe('useConversationEngine fallback meta truth', () => {
     });
 
     const assistantMessage = result.current.messages.at(-1);
-    expect(assistantMessage?.metadata?.modelRequested).toBe('gemma2:2b');
+    expect(assistantMessage?.metadata?.modelRequested).toBe('llama3.1:latest');
     expect(assistantMessage?.metadata?.modelUsed).toBe('llama3.2:latest');
     expect(assistantMessage?.metadata?.fallbackUsed).toBe(true);
   });

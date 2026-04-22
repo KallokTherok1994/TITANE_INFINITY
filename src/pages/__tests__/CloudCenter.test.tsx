@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { CloudCenter } from '../CloudCenter';
+import CloudCenter from '../CloudCenter';
 
 describe('CloudCenter', () => {
   it('renders without crashing and exposes data-testid', () => {

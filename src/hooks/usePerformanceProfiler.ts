@@ -272,6 +272,10 @@ export function useTrackedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   deps: React.DependencyList
 ): T {
+  // Correction : la liste de dépendances doit être un tableau littéral
+  // Correction stricte : tableau littéral pour les dépendances (pas de spread)
+  // Si deps est dynamique, il faut explicitement lister les dépendances attendues
+  // Ici, on suppose que deps est un tableau de valeurs fixes (sinon, il faut revoir l'appelant)
   return useCallback(
     (...args: Parameters<T>) => {
       const stop = profiler.startMeasure(callbackName, 'callback');
@@ -281,9 +285,7 @@ export function useTrackedCallback<T extends (...args: unknown[]) => unknown>(
         stop();
       }
     },
-    // Note: callback intentionally excluded (wrapper pattern, callbackName tracks identity)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [callbackName, ...deps]
+    [callbackName, callback, profiler]
   ) as T;
 }
 

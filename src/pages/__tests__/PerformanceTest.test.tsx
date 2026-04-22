@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { PerformanceTest } from '../PerformanceTest';
+import PerformanceTest from '../PerformanceTest';
 
 describe('PerformanceTest', () => {
   it('renders without crashing and exposes data-testid', () => {
