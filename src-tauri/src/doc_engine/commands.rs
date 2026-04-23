@@ -52,9 +52,8 @@ pub async fn export_docx_file(req: ExportDocxRequest) -> ExportDocxResponse {
 mod tests {
     use super::*;
     use crate::doc_engine::{
-        Annex, Clause, ClauseCategory, DetailLevel, DocumentStyle, DocumentType,
-        ErrorSeverity, GenerationConfig, Reference, Section, Suggestion, ValidationError,
-        ValidationStatus, ValidationWarning,
+        DetailLevel, DocumentMetadata, DocumentStyle, DocumentType,
+        GenerationConfig, Section, ValidationStatus,
     };
     use std::collections::HashMap;
     use tempfile::tempdir;
