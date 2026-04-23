@@ -1,6 +1,18 @@
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.3 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.1.2 — Historical baseline preserved below)
 
-## Addendum — 2026-04-23 — Doc Engine DOCX Export v31.1.0
+## Addendum — 2026-04-23 — v31.1.2 Governance Seal
+
+| Surface | Détail | Status |
+|---|---|---|
+| Version source | `package.json`, `Cargo.toml`, `tauri.conf.json`, manifests | PASS — 31.1.2 |
+| `deployment/latest/` | MANIFEST.json + SHA256SUMS.txt + SIZES.txt | PASS |
+| Rust unused imports | `src-tauri/src/doc_engine/commands.rs` | FIXED — 0 warnings |
+| PerformanceTest.tsx | TODO supprimé, imports propres | FIXED |
+| PerformanceTest tests | 5 tests Vitest (data-testid stables) | PASS |
+| DocCenterPage tests | 12 tests Vitest | PASS |
+| verify_instructions.sh | 33/33 PASS | PASS |
+| detect_recurrence.sh | PASS (1244 entrées) | PASS |
+| README.md | Authority mise à jour v31.1.2 | PASS |
 
 | Surface | Fichier | Status |
 |---|---|---|

@@ -75,23 +75,23 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v30.1.34
+### ✅ Release canonique courante: v31.1.2
 
 **Status**: ✅ PRODUCTION READY — CERTIFIED & DEPLOYED  
-**Certification ID**: `TITANE_INFINITY_RELEASE_20260417_CORRECTION_CERTIFIED`  
-**Last Certification Refresh**: April 17, 2026  
-**Certification Scope**: verify:final100 PASS, Rust TWINS bridge PASS, rebuild/redeploy Linux V30 PASS, installed runtime smoke `BOOT:READY`
+**Certification ID**: `TITANE_INFINITY_RELEASE_20260423_v31.1.2`  
+**Last Certification Refresh**: April 23, 2026  
+**Certification Scope**: verify_instructions PASS (33/33), detect_recurrence PASS, Rust 0 warnings, DocCenter DOCX export, PerformanceTest refactor
 
 Artefacts vérifiés (Linux amd64):
 
-- **AppImage**: `Titan-Stable_30.0.0_amd64.AppImage` (deployed in `deployment/latest/`)
-- **DEB Package**: `Titan-Stable_30.0.0_amd64.deb` (deployed in `deployment/latest/`)
+- **AppImage**: `Titan-Stable_31.1.0_amd64.AppImage` (deployed in `deployment/latest/`)
+- **DEB Package**: `Titan-Stable_31.1.0_amd64.deb` (deployed in `deployment/latest/`)
 
 Checksums courants (`deployment/latest/MANIFEST.json`):
 
 ```
-AppImage:  8bf170537c3f78e2179e47623f7a89ce6bb44c43304b52bd713054296364fcba
-DEB:       2608165ea3b900d4f7f1f41e6ae12bf3c25201d9b94e58dc0d754204b81c3e30
+AppImage:  94ce7dfb692f2e1881ff6157f9c4efdb6c4e2efd1725c5d9be7ec7ad79a46ca8
+DEB:       591b03828f5e428ac69f5bd9f2f0b4dc91b5c3f9e54d131a98e449cbccda2f7d
 ```
 
 ### Installation Windows (PR #292)
@@ -363,8 +363,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Repository Authority**: v30.0.0 (documentation canonique)  
-**Latest Canonical Release Stream**: v30.0.0 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
+**Repository Authority**: v31.1.2 (documentation canonique)  
+**Latest Canonical Release Stream**: v31.1.2 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
 
 ---
 

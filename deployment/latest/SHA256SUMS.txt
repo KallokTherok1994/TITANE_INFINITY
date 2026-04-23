@@ -1,0 +1,2 @@
+94ce7dfb692f2e1881ff6157f9c4efdb6c4e2efd1725c5d9be7ec7ad79a46ca8  Titan-Stable_31.1.0_amd64.AppImage
+591b03828f5e428ac69f5bd9f2f0b4dc91b5c3f9e54d131a98e449cbccda2f7d  Titan-Stable_31.1.0_amd64.deb

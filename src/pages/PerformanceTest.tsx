@@ -13,25 +13,10 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState, useRef } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { useLivingEngines } from '../hooks';
 import PerformanceDashboard from '../components/PerformanceDashboard';
 
-interface PerformanceMetrics {
-  fps: number;
-  avgFps: number;
-  minFps: number;
-  maxFps: number;
-  frameTime: number;
-  renderCount: number;
-  updateTime: number;
-  memoryUsed: number;
-  timestamp: number;
-}
-
 const PerformanceTest: React.FC = () => {
-  // TODO: Implémenter la logique réelle ici (hooks, dashboard, etc.)
   return (
     <div className="performance-test-page" data-testid="page-performance-test">
       <ErrorBoundary>

@@ -1,7 +1,7 @@
 // TITANE∞ — Doc Engine IPC Commands
 // Commandes Tauri pour l'export de documents (Phase 2)
 
-use super::{Document, DocumentContent, DocumentMetadata, ExportFormat, GenerationConfig};
+use super::{Document, ExportFormat};
 use super::export::ExportEngine;
 use serde::{Deserialize, Serialize};
 
