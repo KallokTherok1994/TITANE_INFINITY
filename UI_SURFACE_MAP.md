@@ -1,3 +1,17 @@
+# [2026-04-23] DocCenter — Export DOCX natif (Phase 3)
+
+- Surface canonique: `/doc-center`
+- Composant: `src/pages/DocCenterPage.tsx`
+- Alias: `/doc` redirige vers `/doc-center`
+- Selectors stables:
+  - `doc-center-page` — conteneur principal de la page
+  - `btn-export-docx` — bouton déclenchant l'export IPC
+  - `doc-export-status` — zone de feedback résultat/erreur
+  - `input-doc-title` — champ titre du document
+  - `input-output-dir` — champ répertoire de sortie
+- IPC: `export_docx_file` via `TAURI_COMMANDS.EXPORT_DOCX_FILE` (doc_engine/commands.rs)
+- Tests: Vitest `src/pages/__tests__/DocCenterPage.test.tsx` (5 tests), E2E `e2e/doc-center-export-docx.spec.ts` (4 scénarios)
+
 # [2026-04-23] Experience page canonical stats/history truth
 
 - Surface canonique: `/experience`
