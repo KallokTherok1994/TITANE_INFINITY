@@ -1,3 +1,34 @@
+# [2026-04-23] Roadmap Évolutive & Évolution — mapping harmonisé
+
+## Roadmap Évolutive (Transformation/Evo)
+
+- Titre harmonisé : « Roadmap Évolutive » (féminin, ponctuation corrigée)
+- Disclosure visible : « Roadmap statique, curée manuellement. Aucune connexion IPC live. Dernière synchronisation avec le code qualifié : 2026-04-20. »
+- Testid disclosure : `transformation-roadmap-disclosure`
+- Testid stats : `roadmap-stats`
+- Titre section : `<h3>Roadmap Évolutive</h3>`
+- Filtres status : boutons avec aria-labels stables (Tous, Complété, En cours, Planifié, Futur)
+- Preuve E2E : selectors stables, test Playwright (grep roadmap|évolut|transform), testid disclosure, testid stats
+- Preuve unitaire : test Vitest sur disclosure, titre, filtres, milestones
+- Fichier : `src/features/transformation/TransformationRoadmap.tsx`, test : `src/features/transformation/__tests__/TransformationRoadmap.test.tsx`
+
+## Section Évolution (Transform & Évo)
+
+- Titre harmonisé : « Transform & Évolution »
+- Testid racine : `transformation-section-root`
+- Onglet : bouton `[data-testid="tab-transformation"]`
+- Section Lignes d'Évolution : `<h3>🌱 Lignes d'Évolution par Thème</h3>`
+- Section Paliers Franchis : `<h3>🎯 Paliers Franchis (Changements Incarnés)</h3>`
+- Preuve E2E : test Playwright/WDIO (activation onglet, racine visible, selectors)
+- Preuve unitaire : test Vitest (clic onglet, sections visibles)
+- Fichier : `src/pages/EvoPage.tsx`, test : `src/pages/__tests__/EvoPage.test.tsx`
+
+## Memory Evolution Center (mode Tauri)
+
+- Testid banner : `memory-evolution-truth-banner`
+- Testid persistent count : `persistent-entry-count`
+- Preuve E2E : test Playwright/WDIO (mode Tauri, banner, state)
+- Fichier : `src/components/MemoryEvolution/MemoryEvolutionCenter.tsx`
 # [2026-04-19] Conversation dev overlay send-path truth: sur la voie dev de la surface canonique `/titane?tab=conversation`, `src/components/dev/ConsoleMonitorDashboard.tsx` n occupe plus le coin bas droit qui pouvait intercepter `chat-send` au-dessus du compositeur. Le panneau reste visible en dev mais se docke maintenant en haut a droite, tandis que `e2e/runtime-validation/chat-ar20.spec.ts` privilegie Enter puis un clic DOM borne en fallback et `e2e/critical/chat-interaction.spec.ts` verrouille la verite metier du message assistant sans dependre du formatage exact des badges mock ni d un locator terminal duplique.
 
 # [2026-04-19] Linux launcher sudo-home truth: la regeneration du launcher TITANE∞ sous sudo ne doit plus faire deriver les actions `Logs` et `Config` vers `/root/.titane`. `scripts/update-desktop-icon.sh` resolve maintenant `TARGET_USER_HOME` depuis `SUDO_USER` via `getent passwd`, puis publie `DESKTOP_INSTALL_DIR`, `LOCAL_ICON_ROOT` et `TARGET_CONFIG_DIR` sur ce home canonique afin que les entrees `.desktop` systeme et utilisateur restent coherentes apres `sudo bash scripts/post-build/update-desktop-icons.sh`.

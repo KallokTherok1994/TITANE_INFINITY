@@ -1,3 +1,13 @@
+> 2026-04-23 — Roadmap Évolutive & Évolution : harmonisation disclosure, titres, selectors, testids, et preuve E2E
+
+La surface roadmap transformation/évolution est désormais harmonisée :
+- Titre unique « Roadmap Évolutive » (féminin, ponctuation corrigée)
+- Disclosure visible et testée (testid `transformation-roadmap-disclosure`)
+- Filtres status et milestones couverts par tests unitaires et E2E
+- Section Évolution fusionnée (Transform & Évo) : testid racine `transformation-section-root`, sections « Lignes d'Évolution » et « Paliers Franchis » testées
+- Preuve E2E Playwright/WDIO (onglet, racine, selectors, banner)
+- Preuve unitaire Vitest (titre, disclosure, filtres, clic onglet, sections)
+- Fichiers : `src/features/transformation/TransformationRoadmap.tsx`, `src/pages/EvoPage.tsx`, `src/components/sections/TransformationSection.tsx`, tests associés
 ---
 
 > 2026-04-22 — Backend runtime default truth: la cartographie backend conserve la meme topologie, mais `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ai/ollama.rs` et `src-tauri/src/ollama.rs` republient maintenant `gemma2:2b` comme fallback Ollama canonique. Cette remise en ligne retire une derive backend vers `llama3.1:latest` qui faisait mentir la runtime config qualifiee par les tests Rust.
