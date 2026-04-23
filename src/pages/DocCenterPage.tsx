@@ -5,8 +5,7 @@
  */
 
 import { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
-import { TAURI_COMMANDS } from '../lib/tauriCommands';
+import { tauriClient } from '../lib/tauriClient';
 
 interface ExportDocxContent {
   path: string;
@@ -76,12 +75,12 @@ export function DocCenterPage() {
     setIsLoading(true);
     setStatus(null);
     try {
-      const resp = await invoke<ExportDocxResponse>(TAURI_COMMANDS.EXPORT_DOCX_FILE, {
+      const resp = await tauriClient.exportDocxFile({
         req: {
           document: buildDemoDocument(title),
           output_dir: outputDir,
         },
-      });
+      }) as ExportDocxResponse;
       if (resp.ok && resp.content) {
         setStatus(`✅ Exporté : ${resp.content.path} (${resp.content.size} octets)`);
       } else {

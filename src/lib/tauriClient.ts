@@ -768,6 +768,13 @@ class TauriClient {
     );
   }
 
+  async exportDocxFile(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.EXPORT_DOCX_FILE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async expGetGlobalState(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.EXP_GET_GLOBAL_STATE,

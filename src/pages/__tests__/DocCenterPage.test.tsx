@@ -6,11 +6,12 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import * as tauriCore from '@tauri-apps/api/core';
 
-// Mock @tauri-apps/api/core
-vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn(),
+// Mock tauriClient — factory doit utiliser vi.fn() inline (vi.mock est hoissté)
+vi.mock('../../lib/tauriClient', () => ({
+  tauriClient: {
+    exportDocxFile: vi.fn(),
+  },
 }));
 
 // Mock tauriCommands
@@ -20,9 +21,10 @@ vi.mock('../../lib/tauriCommands', () => ({
   },
 }));
 
+import { tauriClient } from '../../lib/tauriClient';
 import { DocCenterPage } from '../DocCenterPage';
 
-const mockInvoke = vi.mocked(tauriCore.invoke);
+const mockExportDocxFile = vi.mocked(tauriClient.exportDocxFile);
 
 describe('DocCenterPage', () => {
   beforeEach(() => {
@@ -73,7 +75,7 @@ describe('DocCenterPage', () => {
   // ─── IPC succès ────────────────────────────────────────────────────────────
 
   it('affiche le statut de succès après un export réussi', async () => {
-    mockInvoke.mockResolvedValueOnce({
+    mockExportDocxFile.mockResolvedValueOnce({
       ok: true,
       content: { path: '/tmp/rapport.docx', size: 1234 },
       error: undefined,
@@ -87,7 +89,7 @@ describe('DocCenterPage', () => {
   });
 
   it('affiche la taille du fichier dans le statut succès', async () => {
-    mockInvoke.mockResolvedValueOnce({
+    mockExportDocxFile.mockResolvedValueOnce({
       ok: true,
       content: { path: '/tmp/rapport.docx', size: 5678 },
       error: undefined,
@@ -103,7 +105,7 @@ describe('DocCenterPage', () => {
   // ─── IPC erreur ────────────────────────────────────────────────────────────
 
   it('affiche un message d\'erreur quand ok=false', async () => {
-    mockInvoke.mockResolvedValueOnce({
+    mockExportDocxFile.mockResolvedValueOnce({
       ok: false,
       content: undefined,
       error: 'permission denied',
@@ -117,7 +119,7 @@ describe('DocCenterPage', () => {
   });
 
   it('affiche une erreur IPC en cas de rejet invoke', async () => {
-    mockInvoke.mockRejectedValueOnce(new Error('IPC unreachable'));
+    mockExportDocxFile.mockRejectedValueOnce(new Error('IPC unreachable'));
     render(<DocCenterPage />);
     fireEvent.click(screen.getByTestId('btn-export-docx'));
     await waitFor(() => {
@@ -128,14 +130,14 @@ describe('DocCenterPage', () => {
 
   // ─── Contrat IPC ───────────────────────────────────────────────────────────
 
-  it('appelle invoke avec la commande export_docx_file', async () => {
-    mockInvoke.mockResolvedValueOnce({
+  it('appelle exportDocxFile avec le bon payload', async () => {
+    mockExportDocxFile.mockResolvedValueOnce({
       ok: true,
       content: { path: '/tmp/x.docx', size: 100 },
     });
     render(<DocCenterPage />);
     fireEvent.click(screen.getByTestId('btn-export-docx'));
     await waitFor(() => screen.getByTestId('doc-export-status'));
-    expect(mockInvoke).toHaveBeenCalledWith('export_docx_file', expect.any(Object));
+    expect(mockExportDocxFile).toHaveBeenCalledWith(expect.objectContaining({ req: expect.any(Object) }));
   });
 });
