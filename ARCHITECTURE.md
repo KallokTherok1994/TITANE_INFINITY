@@ -2,6 +2,8 @@
 
 Cette version marque la synchronisation complète des artefacts, mapping, inventaire release, et documentation. Voir CHANGELOG.md et README.md pour le détail des nouveautés et corrections.
 
+> 2026-04-23 — Doc engine DOCX export truth: la surface backend `src-tauri/src/doc_engine/export.rs` supporte maintenant un export DOCX natif via `docx-rs` avec rendu du titre, metadonnees, resume executif, objectifs et sections. Le contrat d export `ExportFormat` inclut desormais `Docx` dans `src-tauri/src/doc_engine/mod.rs`, et un test Rust cible `doc_engine::export::tests::export_docx_writes_file` valide la generation d un fichier `.docx` non vide.
+
 > 2026-04-23 — Monitoring sync supervisor truth: le service Ring 3 `src/services/monitoring/syncSupervisor.ts` publie un état de synchronisation runtime `SYNCED|STALE|DESYNC` consommé par `src/services/monitoring/index.ts` et rendu sur `monitoring-dashboard`. La vérité est dérivée de signaux existants backend/frontend (`useSystemStore.lastUpdate` + `chatMetrics`), sans ouvrir de nouveau chemin réseau et en conservant la doctrine One Door.
 
 > 2026-04-22 — Backend runtime default truth: les surfaces Rust `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ai/ollama.rs` et `src-tauri/src/ollama.rs` sont realignees sur `gemma2:2b` comme fallback Ollama gouverne. Cette consolidation supprime une derive backend residuelle vers `llama3.1:latest` qui contredisait deja la doctrine Ollama/Cline et les surfaces frontend actives.

@@ -102,6 +102,7 @@ tokio-stream = "0.1.17"
 async-stream = "0.3.6"
 md5 = "0.8.0"
 tracing = "0.1.43"
+docx-rs = "0.4"
 
 [features]
 default = ["custom-protocol", "mock"]

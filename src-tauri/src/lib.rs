@@ -180,6 +180,7 @@ pub mod system_center; // ✅ Centre Système Unifié (Diagnostics, DevTools, Cl
 // ═══════════════════════════════════════════════════════════════
 
 pub mod design_center; // ✅ Centre Design & Apparence Unifié (Design System Monochrome v16, Tokens Dynamiques)
+pub mod doc_engine; // ✅ Document Engine (generation + export multi-format)
 
 // ═══════════════════════════════════════════════════════════════
 // DIGITAL / NUMERIC TWIN MODULES

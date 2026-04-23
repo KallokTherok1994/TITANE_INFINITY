@@ -208,6 +208,7 @@ pub enum ExportFormat {
     Markdown,
     Html,
     Pdf,
+    Docx,
     Json,
     Text,
 }

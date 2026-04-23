@@ -10,7 +10,7 @@ use argon2::{
     Argon2,
 };
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 pub struct StorageEngine {
     storage_path: PathBuf,
@@ -169,12 +169,10 @@ impl StorageEngine {
         })?;
 
         // Extraction des 32 premiers octets pour AES-256 avec gestion d'erreur
-        let key_bytes = password_hash
-            .hash
-            .ok_or_else(|| {
-                DocEngineError::StorageError("Hash non disponible après dérivation".to_string())
-            })?
-            .as_bytes();
+        let derived_hash = password_hash.hash.ok_or_else(|| {
+            DocEngineError::StorageError("Hash non disponible après dérivation".to_string())
+        })?;
+        let key_bytes = derived_hash.as_bytes();
         if key_bytes.len() < 32 {
             return Err(DocEngineError::StorageError(
                 "Clé dérivée trop courte".to_string(),
@@ -222,12 +220,10 @@ impl StorageEngine {
         })?;
 
         // Extraction des 32 premiers octets pour AES-256 avec gestion d'erreur
-        let key_bytes = password_hash
-            .hash
-            .ok_or_else(|| {
-                DocEngineError::StorageError("Hash non disponible après dérivation".to_string())
-            })?
-            .as_bytes();
+        let derived_hash = password_hash.hash.ok_or_else(|| {
+            DocEngineError::StorageError("Hash non disponible après dérivation".to_string())
+        })?;
+        let key_bytes = derived_hash.as_bytes();
         if key_bytes.len() < 32 {
             return Err(DocEngineError::StorageError(
                 "Clé dérivée trop courte".to_string(),

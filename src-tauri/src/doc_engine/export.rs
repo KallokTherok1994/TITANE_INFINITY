@@ -1,6 +1,7 @@
 // Module d'export multi-format
 
 use super::*;
+use docx_rs::{Docx, Paragraph, Run};
 use std::fs;
 use std::path::Path;
 
@@ -21,6 +22,7 @@ impl ExportEngine {
             ExportFormat::Text => self.export_text(document).await,
             ExportFormat::Json => self.export_json(document).await,
             ExportFormat::Pdf => self.export_pdf(document).await,
+            ExportFormat::Docx => self.export_docx(document).await,
         }
     }
 
@@ -279,6 +281,54 @@ impl ExportEngine {
         ))
     }
 
+    async fn export_docx(&self, document: &Document) -> Result<ExportResult> {
+        let filename = format!("{}.docx", self.sanitize_filename(&document.metadata.title));
+        let path = Path::new(&self.output_dir).join(&filename);
+
+        let mut docx = Docx::new();
+        docx = docx.add_paragraph(
+            Paragraph::new().add_run(Run::new().add_text(&document.content.title).bold()),
+        );
+        docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(format!(
+            "Version: {} | Date: {}",
+            document.metadata.version,
+            document.metadata.created_at.format("%Y-%m-%d")
+        ))));
+        docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text("Résumé Exécutif")));
+        docx = docx.add_paragraph(
+            Paragraph::new().add_run(Run::new().add_text(&document.content.executive_summary)),
+        );
+
+        if !document.content.objectives.is_empty() {
+            docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text("Objectifs")));
+            for objective in &document.content.objectives {
+                docx = docx.add_paragraph(
+                    Paragraph::new().add_run(Run::new().add_text(format!("- {}", objective))),
+                );
+            }
+        }
+
+        for section in &document.content.sections {
+            docx = docx
+                .add_paragraph(Paragraph::new().add_run(Run::new().add_text(&section.title).bold()))
+                .add_paragraph(Paragraph::new().add_run(Run::new().add_text(&section.content)));
+        }
+
+        let file = fs::File::create(&path)
+            .map_err(|e| DocEngineError::ExportError(format!("Erreur création DOCX: {}", e)))?;
+
+        docx.build()
+            .pack(file)
+            .map_err(|e| DocEngineError::ExportError(format!("Erreur écriture DOCX: {}", e)))?;
+
+        Ok(ExportResult {
+            format: ExportFormat::Docx,
+            path: path.to_string_lossy().to_string(),
+            size: path.metadata().map(|m| m.len()).unwrap_or(0),
+            success: true,
+        })
+    }
+
     fn sanitize_filename(&self, title: &str) -> String {
         title
             .chars()
@@ -298,5 +348,71 @@ impl ExportEngine {
 impl Default for ExportEngine {
     fn default() -> Self {
         Self::new("./exports".to_string())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Utc;
+    use std::collections::HashMap;
+    use tempfile::tempdir;
+
+    #[tokio::test]
+    async fn export_docx_writes_file() {
+        let temp = tempdir().expect("tempdir");
+        let engine = ExportEngine::new(temp.path().to_string_lossy().to_string());
+
+        let document = Document {
+            metadata: DocumentMetadata {
+                id: "doc-1".to_string(),
+                title: "Contrat Test".to_string(),
+                version: "1.0.0".to_string(),
+                created_at: Utc::now(),
+                updated_at: Utc::now(),
+                author: "TITANE".to_string(),
+                tags: vec!["test".to_string()],
+                category: "legal".to_string(),
+            },
+            config: GenerationConfig {
+                doc_type: DocumentType::Contract,
+                style: DocumentStyle::Legal,
+                detail_level: DetailLevel::Standard,
+                tone: "formal".to_string(),
+                language: "fr".to_string(),
+                custom_params: HashMap::new(),
+            },
+            content: DocumentContent {
+                title: "Contrat Test".to_string(),
+                executive_summary: "Résumé de validation DOCX".to_string(),
+                objectives: vec!["Objectif 1".to_string()],
+                sections: vec![Section {
+                    id: "section_1".to_string(),
+                    title: "Section Principale".to_string(),
+                    content: "Contenu de section".to_string(),
+                    subsections: vec![],
+                    level: 1,
+                }],
+                mandatory_clauses: None,
+                annexes: vec![],
+                references: vec![],
+            },
+            validation_status: ValidationStatus {
+                is_valid: true,
+                errors: vec![],
+                warnings: vec![],
+                suggestions: vec![],
+            },
+        };
+
+        let result = engine
+            .export(&document, ExportFormat::Docx)
+            .await
+            .expect("docx export should succeed");
+
+        assert!(result.success);
+        assert!(result.path.ends_with(".docx"));
+        assert!(Path::new(&result.path).exists());
+        assert!(result.size > 0);
     }
 }
