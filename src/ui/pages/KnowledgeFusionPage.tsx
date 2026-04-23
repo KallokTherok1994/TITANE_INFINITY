@@ -118,7 +118,10 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
   }, []);
 
   return (
-    <div className="bg-linear-to-br from-gray-900 via-indigo-900 to-gray-900 p-6">
+    <div
+      className="bg-linear-to-br from-gray-900 via-indigo-900 to-gray-900 p-6"
+      data-testid="page-knowledge"
+    >
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-600">

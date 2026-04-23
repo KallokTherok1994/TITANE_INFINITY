@@ -97,7 +97,10 @@ const SkillManager: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '24px', maxWidth: '960px', margin: '0 auto' }}>
+    <div
+      data-testid="page-skills"
+      style={{ padding: '24px', maxWidth: '960px', margin: '0 auto' }}
+    >
       <div
         style={{
           display: 'flex',

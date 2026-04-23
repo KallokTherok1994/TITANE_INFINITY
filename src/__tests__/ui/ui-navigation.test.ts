@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, act, fireEvent } from '@testing-library/react';
+import { render, screen, act, fireEvent, cleanup } from '@testing-library/react';
 import { BrowserRouter, MemoryRouter, useLocation } from 'react-router-dom';
 import { AppRouter } from '../../App';
 import { ChatPage } from '../../pages/ChatPage';
@@ -163,6 +163,182 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
       'aria-current',
       'page'
     );
+  });
+
+  it('keeps TITANE active for knowledge, creation and evolution routes', async () => {
+    const items: TopNavItem[] = [
+      {
+        id: 'titane',
+        label: 'TITANE',
+        icon: '⚡',
+        route: '/titane',
+        matchRoutes: ['/experience', '/memory', '/research', '/skills', '/knowledge', '/creation', '/evolution'],
+      },
+      { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
+      { id: 'admin', label: 'ADMIN', icon: '⚙️', route: '/admin' },
+      { id: 'dev', label: 'DEV', icon: '🛠️', route: '/dev' },
+      { id: 'fusion', label: 'FUSION', icon: '✨', route: '/fusion' },
+      { id: 'optimization', label: 'OPTIMIZE', icon: '⚡', route: '/optimization' },
+    ];
+
+    for (const route of ['/knowledge', '/creation', '/evolution']) {
+      cleanup();
+
+      await renderWithRouter(
+        React.createElement(TopNav, {
+          items,
+          currentRoute: route,
+          onNavigate: () => undefined,
+          maxVisibleItems: 5,
+        })
+      );
+
+      expect(screen.getByTestId('nav-titane')).toHaveAttribute('aria-current', 'page');
+      expect(screen.getByTestId('btn-nav-more')).not.toHaveAttribute('aria-current', 'page');
+    }
+  });
+
+  it('keeps DEV active for singularity and engine monitoring routes', async () => {
+    const items: TopNavItem[] = [
+      {
+        id: 'titane',
+        label: 'TITANE',
+        icon: '⚡',
+        route: '/titane',
+        matchRoutes: ['/experience', '/memory', '/research', '/skills', '/knowledge', '/creation', '/evolution'],
+      },
+      { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
+      { id: 'admin', label: 'ADMIN', icon: '⚙️', route: '/admin' },
+      {
+        id: 'dev',
+        label: 'DEV',
+        icon: '🛠️',
+        route: '/dev',
+        matchRoutes: ['/orchestration-center', '/orchestration-intelligence', '/singularity', '/sentinel', '/watchdog', '/selfheal', '/adaptive'],
+      },
+      { id: 'fusion', label: 'FUSION', icon: '✨', route: '/fusion' },
+      { id: 'optimization', label: 'OPTIMIZE', icon: '⚡', route: '/optimization' },
+    ];
+
+    for (const route of ['/singularity', '/sentinel', '/watchdog', '/selfheal', '/adaptive']) {
+      cleanup();
+
+      await renderWithRouter(
+        React.createElement(TopNav, {
+          items,
+          currentRoute: route,
+          onNavigate: () => undefined,
+          maxVisibleItems: 5,
+        })
+      );
+
+      expect(screen.getByTestId('nav-dev')).toHaveAttribute('aria-current', 'page');
+      expect(screen.getByTestId('btn-nav-more')).not.toHaveAttribute('aria-current', 'page');
+    }
+  });
+
+  it('keeps every canonical owner nav entry active across secondary and more-menu routes', async () => {
+    const items: TopNavItem[] = [
+      {
+        id: 'titane',
+        label: 'TITANE',
+        icon: '⚡',
+        route: '/titane',
+        matchRoutes: [
+          '/experience',
+          '/memory',
+          '/research',
+          '/skills',
+          '/knowledge',
+          '/creation',
+          '/evolution',
+        ],
+      },
+      { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
+      { id: 'admin', label: 'ADMIN', icon: '⚙️', route: '/admin' },
+      {
+        id: 'dev',
+        label: 'DEV',
+        icon: '🛠️',
+        route: '/dev',
+        matchRoutes: [
+          '/orchestration-center',
+          '/orchestration-intelligence',
+          '/singularity',
+          '/sentinel',
+          '/watchdog',
+          '/selfheal',
+          '/adaptive',
+        ],
+      },
+      {
+        id: 'fusion',
+        label: 'FUSION',
+        icon: '✨',
+        route: '/fusion',
+        matchRoutes: ['/reality-center', '/hyper-center', '/quantum-center', '/cloud'],
+      },
+      {
+        id: 'twins',
+        label: 'TWINS',
+        icon: '🪞',
+        route: '/twins',
+        matchRoutes: ['/identity-center', '/identity', '/persona', '/twin'],
+      },
+      {
+        id: 'optimization',
+        label: 'OPTIMIZE',
+        icon: '⚡',
+        route: '/optimization',
+        matchRoutes: ['/performance'],
+      },
+      { id: 'total-dev', label: 'TOTAL DEV', icon: '🔒', route: '/total-dev' },
+    ];
+
+    const routeExpectations: Array<{ route: string; activeTestId: string }> = [
+      { route: '/titane', activeTestId: 'nav-titane' },
+      { route: '/experience', activeTestId: 'nav-titane' },
+      { route: '/memory', activeTestId: 'nav-titane' },
+      { route: '/research', activeTestId: 'nav-titane' },
+      { route: '/skills', activeTestId: 'nav-titane' },
+      { route: '/knowledge', activeTestId: 'nav-titane' },
+      { route: '/creation', activeTestId: 'nav-titane' },
+      { route: '/evolution', activeTestId: 'nav-titane' },
+      { route: '/time', activeTestId: 'nav-time' },
+      { route: '/admin', activeTestId: 'nav-admin' },
+      { route: '/dev', activeTestId: 'nav-dev' },
+      { route: '/orchestration-center', activeTestId: 'nav-dev' },
+      { route: '/orchestration-intelligence', activeTestId: 'nav-dev' },
+      { route: '/singularity', activeTestId: 'nav-dev' },
+      { route: '/sentinel', activeTestId: 'nav-dev' },
+      { route: '/watchdog', activeTestId: 'nav-dev' },
+      { route: '/selfheal', activeTestId: 'nav-dev' },
+      { route: '/adaptive', activeTestId: 'nav-dev' },
+      { route: '/fusion', activeTestId: 'nav-fusion' },
+      { route: '/cloud', activeTestId: 'nav-fusion' },
+      { route: '/reality-center', activeTestId: 'nav-fusion' },
+      { route: '/hyper-center', activeTestId: 'nav-fusion' },
+      { route: '/quantum-center', activeTestId: 'nav-fusion' },
+      { route: '/twins', activeTestId: 'btn-nav-more' },
+      { route: '/optimization', activeTestId: 'btn-nav-more' },
+      { route: '/performance', activeTestId: 'btn-nav-more' },
+      { route: '/total-dev', activeTestId: 'btn-nav-more' },
+    ];
+
+    for (const { route, activeTestId } of routeExpectations) {
+      cleanup();
+
+      await renderWithRouter(
+        React.createElement(TopNav, {
+          items,
+          currentRoute: route,
+          onNavigate: () => undefined,
+          maxVisibleItems: 5,
+        })
+      );
+
+      expect(screen.getByTestId(activeTestId)).toHaveAttribute('aria-current', 'page');
+    }
   });
 
   it('programmatic check: countTopNavInstances === 1', () => {

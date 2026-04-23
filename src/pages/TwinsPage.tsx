@@ -72,8 +72,11 @@ export const TwinsPage: React.FC = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="twins-root bg-gray-900 text-white p-6">
-      <div className="max-w-7xl mx-auto space-y-6 flex-1 flex flex-col">
+    <div
+      className="twins-root flex min-h-full w-full flex-col bg-gray-900 p-6 text-white"
+      data-testid="page-twins"
+    >
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

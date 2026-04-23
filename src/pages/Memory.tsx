@@ -94,7 +94,11 @@ export const Memory = () => {
     [memoryStats, xpState]
   );
 
-  return <MemorySection stats={stats} conversationId={conversationId} />;
+  return (
+    <div data-testid="page-memory">
+      <MemorySection stats={stats} conversationId={conversationId} />
+    </div>
+  );
 };
 
 export default Memory;

@@ -307,7 +307,7 @@ const HyperCenterContent: React.FC = () => {
 
   if (loading || matrixLoading) {
     return (
-      <div className="hyper-center loading">
+      <div className="hyper-center loading" data-testid="page-hyper-center">
         <div className="loading-animation">
           <span className="brain-icon">🧠</span>
           <div className="loading-pulse" />
@@ -319,7 +319,7 @@ const HyperCenterContent: React.FC = () => {
 
   if (error) {
     return (
-      <div className="hyper-center error">
+      <div className="hyper-center error" data-testid="page-hyper-center">
         <span className="error-icon">⚠️</span>
         <p>{error}</p>
         <button
@@ -337,7 +337,7 @@ const HyperCenterContent: React.FC = () => {
   if (!state) return null;
 
   return (
-    <div className="hyper-center">
+    <div className="hyper-center" data-testid="page-hyper-center">
       {/* Header */}
       <header className="hyper-header">
         <div className="header-left">

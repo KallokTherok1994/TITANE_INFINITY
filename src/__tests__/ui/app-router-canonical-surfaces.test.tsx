@@ -71,11 +71,24 @@ const renderRoute = async (initialRoute: string) => {
 };
 
 const STABILIZATION_TIMEOUT_MS = 5000;
+const SVG_TRANSFORM_STUB = {
+  baseVal: {
+    consolidate: () => ({
+      matrix: { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 },
+    }),
+  },
+};
 
 describe('AppRouter canonical active surfaces', () => {
   beforeEach(() => {
     vi.stubGlobal('__APP_VERSION__', 'test');
     window.localStorage.clear();
+    if (typeof SVGElement !== 'undefined') {
+      Object.defineProperty(SVGElement.prototype, 'transform', {
+        configurable: true,
+        value: SVG_TRANSFORM_STUB,
+      });
+    }
   });
 
   afterEach(() => {
@@ -86,13 +99,32 @@ describe('AppRouter canonical active surfaces', () => {
 
   it.each([
     ['/titane', 'page-titane', 'titane_core'],
+    ['/experience', 'page-experience', 'experience_page'],
     ['/time', 'page-time', 'time_center'],
     ['/admin?tab=config', 'page-admin', 'admin_center'],
     ['/dev?tab=diagnostics', 'page-dev', 'dev_center'],
+    ['/fusion', 'page-fusion', 'fusion_center'],
+    ['/optimization', 'page-optimization', 'optimization_center'],
+    ['/orchestration-intelligence', 'page-orchestration-intelligence', 'orchestration_intelligence'],
+    ['/orchestration-center', 'page-orchestration-meta-center', 'orchestration_meta'],
+    ['/total-dev', 'page-total-dev', 'total_dev_center'],
+    ['/reality-center', 'page-reality-center', 'reality_center'],
+    ['/hyper-center', 'page-hyper-center', 'hyper_center'],
+    ['/quantum-center', 'page-quantum-center', 'quantum_center'],
+    ['/twins', 'page-twins', 'twins_page'],
     ['/cloud', 'page-cloud-center', 'cloud_center'],
+    ['/knowledge', 'page-knowledge', 'knowledge_page'],
+    ['/creation', 'page-creation-studio', 'creation_studio'],
+    ['/evolution', 'page-evolution-monitor', 'evolution_monitor'],
     ['/singularity', 'page-singularity-monitor', 'singularity_monitor'],
+    ['/sentinel', 'page-sentinel', 'sentinel_guard'],
+    ['/watchdog', 'page-watchdog', 'watchdog_monitor'],
+    ['/selfheal', 'page-selfheal', 'selfheal_engine'],
+    ['/adaptive', 'page-adaptive-engine', 'adaptive_engine'],
+    ['/memory', 'page-memory', 'memory_page'],
     ['/performance', 'page-performance-test', 'performance_test'],
     ['/research', 'research-page', 'research_page'],
+    ['/skills', 'page-skills', 'skill_os'],
   ])(
     'mounts %s on its canonical UI surface and keeps the canonical route truth',
     async (route, pageTestId, moduleId) => {
@@ -117,6 +149,40 @@ describe('AppRouter canonical active surfaces', () => {
       expect(activeContext.fullRoute).toBe(route);
     }
   );
+
+  it.each([
+    ['/titane', 'nav-titane'],
+    ['/experience', 'nav-titane'],
+    ['/time', 'nav-time'],
+    ['/admin?tab=config', 'nav-admin'],
+    ['/dev?tab=diagnostics', 'nav-dev'],
+    ['/fusion', 'nav-fusion'],
+    ['/orchestration-intelligence', 'nav-dev'],
+    ['/orchestration-center', 'nav-dev'],
+    ['/reality-center', 'nav-fusion'],
+    ['/hyper-center', 'nav-fusion'],
+    ['/quantum-center', 'nav-fusion'],
+    ['/cloud', 'nav-fusion'],
+    ['/knowledge', 'nav-titane'],
+    ['/creation', 'nav-titane'],
+    ['/evolution', 'nav-titane'],
+    ['/singularity', 'nav-dev'],
+    ['/sentinel', 'nav-dev'],
+    ['/watchdog', 'nav-dev'],
+    ['/selfheal', 'nav-dev'],
+    ['/adaptive', 'nav-dev'],
+    ['/optimization', 'btn-nav-more'],
+    ['/twins', 'btn-nav-more'],
+  ])('keeps %s aligned with the owning TopNav entry %s in the real AppRouter shell', async (route, navTestId) => {
+    await renderRoute(route);
+
+    await waitFor(
+      () => {
+        expect(screen.getByTestId(navTestId)).toHaveAttribute('aria-current', 'page');
+      },
+      { timeout: STABILIZATION_TIMEOUT_MS }
+    );
+  });
 
   it.each([
     [

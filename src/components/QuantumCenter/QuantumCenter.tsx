@@ -656,14 +656,14 @@ const QuantumCenterContent: React.FC = () => {
 
   if (loading || matrixLoading) {
     return (
-      <div className="quantum-center loading">
+      <div className="quantum-center loading" data-testid="page-quantum-center">
         <div className="loading-spinner">⚛️ Initialisation Quantum...</div>
       </div>
     );
   }
 
   return (
-    <div className="quantum-center">
+    <div className="quantum-center" data-testid="page-quantum-center">
       <header className="quantum-header">
         <h1>
           <span className="header-icon">⚛️</span>

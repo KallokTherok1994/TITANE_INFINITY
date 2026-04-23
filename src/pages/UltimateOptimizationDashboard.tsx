@@ -208,7 +208,10 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
   }, [handleRefresh]);
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-6">
+    <div
+      className="bg-gray-900 text-white min-h-screen p-6"
+      data-testid="page-optimization"
+    >
       <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">

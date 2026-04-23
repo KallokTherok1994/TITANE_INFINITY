@@ -120,6 +120,18 @@
 
 # [2026-04-16] Conversation transparency prompt guard: la surface conversation ne bascule plus vers la voie artefact sur une question descriptive mentionnant simplement ce que l'UI peut exporter; seuls les prompts demandant réellement un export/génération de fichier déclenchent désormais le manifeste artefact.
 
+# [2026-04-22] TWINS scroll contract: la page dédiée `/twins` expose maintenant `page-twins` sur une racine `twins-root` en `flex min-h-full w-full flex-col`; la page ne doit plus imposer `height:100%` + `overflow:hidden` sur sa racine, car le défilement est assuré par le scroll host canonique de `AppShell`.
+
+# [2026-04-22] TopNav canonical active-state truth: les routes autonomes `/knowledge`, `/creation` et `/evolution` restent rattachées à l’entrée principale `nav-titane`; ces surfaces ne doivent pas apparaître comme des pages “sans onglet actif” tant qu’elles appartiennent au domaine TITANE.
+
+# [2026-04-22] DEV engine-route sync truth: les pages moteur `/singularity`, `/sentinel`, `/watchdog`, `/selfheal` et `/adaptive` restent rattachées à `nav-dev`; ce sont des surfaces opérationnelles/monitoring et elles ne doivent plus apparaître sans état actif de navigation.
+
+# [2026-04-22] Engine route runtime-proof selectors: les surfaces `/sentinel`, `/watchdog`, `/selfheal` et `/adaptive` exposent maintenant des racines stables `page-sentinel`, `page-watchdog`, `page-selfheal`, `page-adaptive-engine` pour la qualification `AppRouter` et les preuves de routage canonique.
+
+# [2026-04-22] WDIO page inventory truth: l’inventaire `e2e/desktop/page-objects/uiPages.po.js` référence maintenant explicitement `/singularity`, `/sentinel`, `/watchdog`, `/selfheal` et `/adaptive` dans `devEngineRoutePages`, toutes rattachées à `nav-dev` sans les promouvoir au `topLevelPageOrder`.
+
+# [2026-04-22] WDIO engine-route runtime proof: la lane `e2e/desktop/dev-engine-routes.wdio.test.js` ouvre maintenant chaque surface de `devEngineRoutePages`, vérifie son root canonique visible et exige `aria-current=page` sur `nav-dev`.
+
 # [2026-04-16] Conversation fullscreen internal scroll budget: en viewport compact, le shell fullscreen supprime son gap vertical hérité et réserve un budget bas safe-area-aware afin que `chat-messages-scroll-region` garde le scroll interne pendant que l’onglet chat et le compositeur restent visibles simultanément.
 
 # [2026-04-16] Conversation fullscreen persistent header: la surface conversation conserve maintenant son header d’onglet visible sous zoom et en viewport compact, car `TitanePage` ne force plus le scroll vers le textarea et `titane-page-header--conversation` reste collé en haut du shell fullscreen.
@@ -177,6 +189,17 @@
 - Zoom authority truth: TopNav listens to canonical zoom-change events, so its indicator stays aligned with keyboard, Tauri window controls, and UIReading adjustments instead of keeping a stale local value.
 - Keyboard equivalents: Ctrl+- (zoom out), Ctrl++ (zoom in), Ctrl+0 (reset)
 - Item menu Plus: `nav-twins` (route `/twins`, accès unique TWINS côté UI)
+- TITANE active-route extensions: `nav-titane` reste actif aussi pour `/experience`, `/memory`, `/research`, `/skills`, `/knowledge`, `/creation`, `/evolution`
+- DEV active-route extensions: `nav-dev` reste actif aussi pour `/orchestration-center`, `/orchestration-intelligence`, `/singularity`, `/sentinel`, `/watchdog`, `/selfheal`, `/adaptive`
+- Engine route page roots: `page-singularity-monitor`, `page-sentinel`, `page-watchdog`, `page-selfheal`, `page-adaptive-engine`
+- WDIO engine inventory: `devEngineRoutePages` = `/singularity`, `/sentinel`, `/watchdog`, `/selfheal`, `/adaptive` ; toutes ces surfaces héritent de `nav-dev`
+- WDIO engine proof lane: `e2e/desktop/dev-engine-routes.wdio.test.js`
+
+## TWINS Dedicated Surface (`/twins`)
+
+- Page root test id: `page-twins`
+- Page root class contract: `twins-root flex min-h-full w-full flex-col`
+- Scroll contract: la page `/twins` laisse le défilement vertical au host scrollable canonique de `AppShell`; ne pas réintroduire `overflow: hidden` + `height: 100%` sur `.twins-root`
 
 ## Primary Chat Surface (ConversationSection)
 
@@ -282,3 +305,5 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - 2026-04-20 — Voice input cleanup truth: `src/hooks/useVoiceInput.ts` ferme maintenant toujours le `MediaStream` micro local, y compris quand `voiceService.stopRecording()` échoue. La surface hook ne laisse donc plus une capture navigateur ouverte après un échec backend de stop.
 - 2026-04-20 — Voice input start cleanup truth: le même hook `src/hooks/useVoiceInput.ts` ferme aussi désormais le `MediaStream` local si `getUserMedia()` réussit mais que `voiceService.startRecording()` échoue ensuite. La voie start n abandonne donc plus un micro navigateur actif sur échec backend tardif.
 - 2026-04-20 — Voice input cancel cleanup truth: `src/hooks/useVoiceInput.ts` ferme maintenant aussi le `MediaStream` micro local et remet l état d écoute à plat si `voiceService.cancelRecording()` échoue. La voie cancel reste donc idempotente au lieu de laisser un micro navigateur actif caché.
+- 2026-04-23 — Canonical page seal truth: toutes les routes canoniques montées par `AppRouter` exposent désormais une racine stable qualifiable, directement ou via leur état de chargement, pour `/experience`, `/fusion`, `/optimization`, `/orchestration-intelligence`, `/orchestration-center`, `/reality-center`, `/hyper-center`, `/quantum-center`, `/twins`, `/total-dev`, `/knowledge`, `/creation`, `/evolution`, `/memory`, `/skills` en plus des surfaces déjà qualifiées. L’inventaire partagé WDIO expose aussi maintenant ces routes canoniques et leurs groupes d’ownership (`titaneOwnedRoutePages`, `devOwnedRoutePages`, `fusionOwnedRoutePages`, `moreMenuRoutePages`, `canonicalRoutePages`) afin que route, sélecteur racine et item de navigation restent alignés sur une même vérité.
+- 2026-04-23 — Canonical desktop proof lane truth: une lane WDIO dédiée `e2e/desktop/canonical-ui-pages.wdio.test.js` parcourt désormais `canonicalRoutePages` dans le runtime Tauri, vérifie le root visible de chaque route canonique et contrôle l’ownership nav actif, y compris `btn-nav-more` puis l’item propriétaire pour `/twins`, `/optimization`, `/performance` et `/total-dev`. Cette lane existe, mais sa validation native reste `pending-validation` tant que la rebuild `pnpm run build:tauri:e2e` n’a pas produit un nouvel artefact.

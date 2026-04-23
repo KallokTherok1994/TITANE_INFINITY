@@ -182,7 +182,10 @@ export const RealityCenter: React.FC = memo(() => {
     criticalCount > 0 ? 'critical' : degradedCount > 0 ? 'degraded' : 'nominal';
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-6">
+    <div
+      className="bg-gray-900 text-white min-h-screen p-6"
+      data-testid="page-reality-center"
+    >
       <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">

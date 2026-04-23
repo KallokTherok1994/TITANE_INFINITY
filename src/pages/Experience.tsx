@@ -55,7 +55,7 @@ export const Experience = (): JSX.Element => {
   }, [state.history, filter]);
 
   return (
-    <div className="experience-page">
+    <div className="experience-page" data-testid="page-experience">
       {/* Header */}
       <motion.div
         className="exp-header"

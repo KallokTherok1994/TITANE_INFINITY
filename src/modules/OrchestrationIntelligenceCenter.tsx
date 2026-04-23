@@ -31,7 +31,10 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
 
   return (
-    <div className="orchestration-intelligence-center p-6 space-y-6">
+    <div
+      className="orchestration-intelligence-center p-6 space-y-6"
+      data-testid="page-orchestration-intelligence"
+    >
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">

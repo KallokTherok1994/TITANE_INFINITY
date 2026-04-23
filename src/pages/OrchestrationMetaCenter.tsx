@@ -871,7 +871,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
 
   if (loading || matrixLoading) {
     return (
-      <div className="omc-loading">
+      <div className="omc-loading" data-testid="page-orchestration-meta-center">
         <div className="omc-loading-spinner" />
         <p>Initialisation du centre d&apos;orchestration...</p>
       </div>
@@ -879,7 +879,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
   }
 
   return (
-    <div className="omc-container">
+    <div className="omc-container" data-testid="page-orchestration-meta-center">
       {/* Header */}
       <div className="omc-header">
         <div className="omc-header-title">

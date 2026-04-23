@@ -9,7 +9,7 @@ const TOP_NAV_SECTIONS = [
     label: 'TITANE',
     route: '/titane',
     description: 'Le Cœur du Système',
-    matchRoutes: ['/experience', '/memory', '/research', '/skills'],
+    matchRoutes: ['/experience', '/memory', '/research', '/skills', '/knowledge', '/creation', '/evolution'],
   },
   { id: 'time', label: 'TIME', route: '/time', description: 'Centre Temporel' },
   { id: 'admin', label: 'ADMIN', route: '/admin', description: 'Centre Admin Unifié' },
@@ -18,7 +18,15 @@ const TOP_NAV_SECTIONS = [
     label: 'DEV',
     route: '/dev',
     description: 'Centre DEV Unifié',
-    matchRoutes: ['/orchestration-center', '/orchestration-intelligence'],
+    matchRoutes: [
+      '/orchestration-center',
+      '/orchestration-intelligence',
+      '/singularity',
+      '/sentinel',
+      '/watchdog',
+      '/selfheal',
+      '/adaptive',
+    ],
   },
   // Dans menu "Plus"
   {

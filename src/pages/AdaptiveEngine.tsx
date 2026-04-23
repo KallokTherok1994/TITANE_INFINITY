@@ -27,7 +27,7 @@ export const AdaptiveEngine = () => {
   };
   if (loading) {
     return (
-      <div className="module-page">
+      <div className="module-page" data-testid="page-adaptive-engine">
         <div className="module-page__loading">
           <span className="module-page__loading-icon">🎯</span>
           <p>Chargement Adaptive Engine...</p>
@@ -41,7 +41,7 @@ export const AdaptiveEngine = () => {
   const confidence = extractNumber(data?.confidence, 0);
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-adaptive-engine">
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">🎯</span>

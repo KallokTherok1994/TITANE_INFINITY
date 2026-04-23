@@ -27,7 +27,7 @@ export const Watchdog = () => {
   };
   if (loading) {
     return (
-      <div className="module-page">
+      <div className="module-page" data-testid="page-watchdog">
         <div className="module-page__loading">
           <span className="module-page__loading-icon">👁️</span>
           <p>Chargement Watchdog...</p>
@@ -41,7 +41,7 @@ export const Watchdog = () => {
   const critical = extractNumber(data?.critical, 0);
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-watchdog">
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">👁️</span>

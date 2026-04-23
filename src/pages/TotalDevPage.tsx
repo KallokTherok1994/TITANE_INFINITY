@@ -961,7 +961,7 @@ export const TotalDevPage: React.FC = () => {
   ];
 
   return (
-    <div className="total-dev-page">
+    <div className="total-dev-page" data-testid="page-total-dev">
       {/* HEADER ─────────────────────────────────────────── */}
       <header className="total-dev-header" data-testid="total-dev-header">
         <div className="total-dev-header-left">
