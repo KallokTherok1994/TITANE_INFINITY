@@ -14,9 +14,13 @@ test('Monitoring dashboard visible et selectors présents', async ({ page }) => 
   await expect(monitoringDashboard).toBeVisible();
   await expect(monitoringDashboard).toHaveAttribute('data-readiness', 'partial');
   await expect(page.getByTestId('monitoring-dashboard-status')).toContainText('PARTIAL');
+  await expect(page.getByTestId('monitoring-dashboard-sync-state')).toContainText(
+    'Sync runtime:'
+  );
+  await expect(page.getByTestId('monitoring-dashboard-sync-reason')).toBeVisible();
   await expect(page.getByTestId('monitoring-dashboard-proof-0')).toBeVisible();
   await expect(page.getByTestId('monitoring-dashboard-proof-0')).toContainText(
-    'Runtime: lazy-loader'
+    'Runtime Sync:'
   );
   await expect(page.getByTestId('monitoring-dashboard-next-step')).toContainText(
     'publier les metriques live'

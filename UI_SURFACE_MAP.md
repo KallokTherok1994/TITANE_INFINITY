@@ -1,3 +1,16 @@
+# [2026-04-23] Monitoring sync supervisor runtime truth
+
+- Surface canonique: `monitoring-dashboard`
+- Service dédié: `src/services/monitoring/syncSupervisor.ts`
+- Le statut monitoring publie maintenant un état de synchronisation runtime dérivé de signaux réels backend/frontend:
+	- backend: `useSystemStore.lastUpdate`
+	- frontend: timeline `chatMetrics.getRecentEvents()`
+	- drift détecté: comparaison temporelle backend/frontend
+- Nouveaux selectors stables:
+	- `monitoring-dashboard-sync-state`
+	- `monitoring-dashboard-sync-reason`
+- Preuve associée: tests unitaires monitoring + test Playwright `e2e/agents/monitoring-dashboard.e2e.ts`
+
 # [2026-04-23] Roadmap Évolutive & Évolution — mapping harmonisé
 
 ## Roadmap Évolutive (Transformation/Evo)

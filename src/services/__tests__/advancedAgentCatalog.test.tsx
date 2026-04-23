@@ -105,7 +105,10 @@ describe('advancedAgentCatalog', () => {
     expect(status.testId).toBe('monitoring-dashboard');
     expect(status.readiness).toBe('partial');
     expect(status.serviceState).toContain('Monitoring');
-    expect(status.evidence[0]).toContain('Runtime:');
+    expect(status.serviceState).toContain('Sync');
+    expect(status.evidence[0]).toContain('Runtime Sync:');
+    expect(status.syncSnapshot).toBeDefined();
+    expect(status.syncSnapshot.label).toMatch(/SYNCED|STALE|DESYNC/);
   });
 
   it('publishes a bounded structural diagnostic report without duplicating unchanged snapshots', () => {
@@ -277,6 +280,11 @@ describe('advanced agent dashboards', () => {
       expect(screen.getByTestId(`${selector}-proof-0`)).toBeInTheDocument();
       expect(screen.getByTestId(`${selector}-next-step`)).toBeInTheDocument();
       expect(screen.getByTestId(`${selector}-blockers`)).toBeInTheDocument();
+
+      if (selector === 'monitoring-dashboard') {
+        expect(screen.getByTestId('monitoring-dashboard-sync-state')).toBeInTheDocument();
+        expect(screen.getByTestId('monitoring-dashboard-sync-reason')).toBeInTheDocument();
+      }
     }
   );
 

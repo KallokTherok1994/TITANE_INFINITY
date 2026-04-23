@@ -1,78 +1,43 @@
-/**
- * TITANE_INFINITY v∞ — Proprietary License
- * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- *
- * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.D - Experience Page
- * ═══════════════════════════════════════════════════════════════════
- *
- * Page de progression complète : XP, historique, statistiques
- * Intègre le système XP global + les domaines de compétence
- */
-
-import { useState, useMemo } from 'react';
 import { useExperience } from '../hooks/useExperience';
 import { motion } from 'framer-motion';
 
-export const Experience = (): JSX.Element => {
-  const [filter, setFilter] = useState<string>('all');
-
-  // Canonical XP source: experienceService (Tauri → localStorage fallback)
+export function Experience() {
   const {
     state,
-    domains,
-    isLoading: domainsLoading,
+    isLoading,
     totalXp,
     level,
     xpForNextLevel,
     progress,
+    domains,
   } = useExperience();
 
-  // XP within current level (quadratic formula: level^2 * 100 is the floor)
-  const xpInLevel = totalXp - level * level * 100;
-  const xpPerLevel = xpForNextLevel - level * level * 100;
-  const xpToNext = xpForNextLevel - totalXp;
-  // progress is 0-1; convert to percent
-  const progressPct = Math.min(progress * 100, 100);
-
-  // Compute stats by source from canonical history
-  const stats = useMemo(() => {
-    const result: Record<string, { count: number; total: number }> = {};
-    for (const event of state.history) {
-      if (!result[event.source]) result[event.source] = { count: 0, total: 0 };
-      result[event.source]!.count++;
-      result[event.source]!.total += event.amount;
-    }
-    return result;
-  }, [state.history]);
-
-  const sources = useMemo(() => Object.keys(stats).sort(), [stats]);
-
-  // Filtrer l'historique
-  const filteredHistory = useMemo(() => {
-    if (filter === 'all') return state.history;
-    return state.history.filter(e => e.source === filter);
-  }, [state.history, filter]);
+  // Pour la démo, pas de gestion d'erreur spécifique
+  if (isLoading || !state) {
+    return (
+      <div className="experience-page" data-testid="page-experience">
+        <h1>⚡ PROGRESSION TITANE∞</h1>
+        <p>Chargement de la progression...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="experience-page" data-testid="page-experience">
-      {/* Header */}
+
       <motion.div
         className="exp-header"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1>⚡ PROGRESSION TITANE∞</h1>
+      
         <p>Évolution intelligente et persistante</p>
-        <p
-          className="exp-source-label"
-          style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: 4 }}
-        >
-          Source: données locales (backend mock — progression non persistée côté serveur)
+        <p className="exp-source-label" style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: 4 }}>
+          Source: moteur XP canonique (Tauri Rust)
         </p>
       </motion.div>
 
-      {/* Stats globales */}
+
       <motion.div
         className="exp-stats-grid"
         initial={{ opacity: 0 }}
@@ -88,31 +53,16 @@ export const Experience = (): JSX.Element => {
           <div className="exp-stat-value">{totalXp.toLocaleString()}</div>
         </div>
         <div className="exp-stat-card">
-          <div className="exp-stat-label">XP dans ce niveau</div>
-          <div className="exp-stat-value">
-            {xpInLevel} / {xpPerLevel}
-          </div>
+          <div className="exp-stat-label">XP vers prochain niveau</div>
+          <div className="exp-stat-value">{xpForNextLevel}</div>
         </div>
         <div className="exp-stat-card">
-          <div className="exp-stat-label">Vers niveau {level + 1}</div>
-          <div className="exp-stat-value">{xpToNext} XP</div>
+          <div className="exp-stat-label">Progression</div>
+          <div className="exp-stat-value">{(progress * 100).toFixed(1)}%</div>
         </div>
       </motion.div>
 
-      {/* Barre de progression */}
-      <motion.div
-        className="exp-progress-section"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div className="exp-progress-bar-large">
-          <div className="exp-progress-fill" style={{ width: `${progressPct}%` }} />
-        </div>
-        <div className="exp-progress-text">{progressPct.toFixed(1)}%</div>
-      </motion.div>
 
-      {/* Section Domaines de Compétence */}
       <motion.div
         className="exp-domains-section"
         initial={{ opacity: 0 }}
@@ -120,32 +70,33 @@ export const Experience = (): JSX.Element => {
         transition={{ delay: 0.25 }}
       >
         <h2>🎯 Domaines de Compétence</h2>
-        {domainsLoading ? (
+        {domains.length === 0 ? (
           <p className="exp-loading">Chargement des domaines...</p>
         ) : (
           <div className="exp-domains-grid">
             {domains.map(domain => (
               <motion.div
-                key={domain.id}
+                key={domain.category}
                 className={`exp-domain-card exp-domain-card--${domain.category}`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 <div className="exp-domain-header">
                   <span className="exp-domain-icon">{domain.icon}</span>
-                  <span className="exp-domain-label">{domain.label}</span>
+                  <span className="exp-domain-label">{domain.category}</span>
                   <span className="exp-domain-level">Nv.{domain.level}</span>
                 </div>
                 <div className="exp-domain-progress">
                   <div
                     className="exp-domain-progress-fill"
                     style={{
-                      width: `${Math.min(((domain.xp % 100) / 100) * 100, 100)}%`,
+                      width: `${Math.min(domain.progress * 100, 100)}%`,
+                      background: domain.color,
                     }}
                   />
                 </div>
                 <div className="exp-domain-stats">
-                  <span className="exp-domain-xp">{domain.xp.toLocaleString()} XP</span>
+                  <span className="exp-domain-xp">{domain.total_exp.toLocaleString()} XP</span>
                   <span className="exp-domain-category">{domain.category}</span>
                 </div>
               </motion.div>
@@ -153,109 +104,6 @@ export const Experience = (): JSX.Element => {
           </div>
         )}
       </motion.div>
-
-      {/* Statistiques par source */}
-      <motion.div
-        className="exp-sources-section"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <h2>📊 Statistiques par Source</h2>
-        <div className="exp-sources-grid">
-          {sources.map(source => {
-            const sourceStat = stats[source];
-            if (!sourceStat) return null;
-            return (
-              <div key={source} className="exp-source-card">
-                <div className="exp-source-name">{formatSource(source)}</div>
-                <div className="exp-source-stats">
-                  <span>{sourceStat.total} XP</span>
-                  <span className="exp-source-count">{sourceStat.count} événements</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </motion.div>
-
-      {/* Filtres */}
-      <motion.div
-        className="exp-filters"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-      >
-        <button
-          className={filter === 'all' ? 'active' : ''}
-          onClick={() => setFilter('all')}
-        >
-          Tout ({state.history.length})
-        </button>
-        {sources.map(source => {
-          const sourceStat = stats[source];
-          if (!sourceStat) return null;
-          return (
-            <button
-              key={source}
-              className={filter === source ? 'active' : ''}
-              onClick={() => setFilter(source)}
-            >
-              {formatSource(source)} ({sourceStat.count})
-            </button>
-          );
-        })}
-      </motion.div>
-
-      {/* Historique */}
-      <motion.div
-        className="exp-history"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        <h2>📜 Historique ({filteredHistory.length})</h2>
-        <div className="exp-history-list">
-          {filteredHistory
-            .slice()
-            .reverse()
-            .map((event, i) => (
-              <motion.div
-                key={`${event.timestamp}-${i}`}
-                className="exp-event"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: Math.min(i * 0.02, 0.5) }}
-              >
-                <span className="exp-event-time">
-                  {new Date(event.timestamp).toLocaleString('fr-FR')}
-                </span>
-                <span className="exp-event-amount">+{event.amount} XP</span>
-                <span className="exp-event-source">{formatSource(event.source)}</span>
-                {event.domainId && (
-                  <span className="exp-event-desc">{event.domainId}</span>
-                )}
-              </motion.div>
-            ))}
-        </div>
-      </motion.div>
     </div>
   );
-};
-
-// Helper pour formater les noms de sources
-function formatSource(source: string): string {
-  const map: Record<string, string> = {
-    message_user: '💬 Message utilisateur',
-    chat_message: '💬 Message chat',
-    response_ai: '🤖 Réponse IA',
-    file_import: '📁 Import fichier',
-    file_analysis: '🔍 Analyse fichier',
-    memory_promote: '⬆️ Promotion mémoire',
-    memory_archive: '📦 Archivage mémoire',
-    system_update: '⚙️ Mise à jour système',
-    engine_load: '🚀 Chargement moteur',
-    system: '⚙️ Système',
-  };
-  return map[source] || source;
 }

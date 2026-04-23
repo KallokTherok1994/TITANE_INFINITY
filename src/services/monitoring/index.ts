@@ -32,11 +32,15 @@ import {
 import { getAdvancedAgentStatus } from '@/services/agents/advancedAgentCatalog';
 import { chatMetrics } from './chatMetrics';
 import { alerting } from './alerting';
+import { getMonitoringSyncSnapshot } from './syncSupervisor';
 
 export function getMonitoringAgentStatus() {
   const base = getAdvancedAgentStatus('monitoring');
   const globalMetrics = chatMetrics.getGlobalMetrics();
   const activeAlerts = alerting.getActiveAlerts().filter(alert => !alert.resolved);
+  const syncSnapshot = getMonitoringSyncSnapshot({
+    activeAlertCount: activeAlerts.length,
+  });
   const loaderState = getMonitoringLazyLoaderState();
   const monitoringLoaded = isMonitoringLoaded();
   const hasRuntimeSignals =
@@ -58,8 +62,9 @@ export function getMonitoringAgentStatus() {
     ...base,
     readiness: hasRuntimeSignals ? 'partial' : base.readiness,
     readinessLabel: hasRuntimeSignals ? 'PARTIAL' : base.readinessLabel,
-    serviceState: `Monitoring ${monitoringLoaded ? 'charge' : loaderState.loading ? 'initialisation en cours' : 'en veille'} · ${activeAlerts.length} alertes actives · ${globalMetrics.totalMessages} messages traces`,
+    serviceState: `Monitoring ${monitoringLoaded ? 'charge' : loaderState.loading ? 'initialisation en cours' : 'en veille'} · Sync ${syncSnapshot.label} · ${activeAlerts.length} alertes actives · ${globalMetrics.totalMessages} messages traces`,
     evidence: [
+      `Runtime Sync: ${syncSnapshot.label} (backend=${syncSnapshot.backendAgeMs === null ? 'n/a' : `${Math.round(syncSnapshot.backendAgeMs / 1000)}s`} · frontend=${syncSnapshot.frontendAgeMs === null ? 'n/a' : `${Math.round(syncSnapshot.frontendAgeMs / 1000)}s`} · drift=${syncSnapshot.driftMs === null ? 'n/a' : `${Math.round(syncSnapshot.driftMs / 1000)}s`}).`,
       `Runtime: lazy-loader ${loaderSummary} via ${loaderSource}.`,
       `Runtime: ${globalMetrics.activeConversations}/${globalMetrics.totalConversations} conversations actives dans le buffer de metriques.`,
       `Runtime: validation ${(globalMetrics.validationRate * 100).toFixed(1)}% · erreurs ${globalMetrics.totalErrors} · latence moyenne ${Math.round(globalMetrics.avgResponseTime)} ms.`,
@@ -77,10 +82,13 @@ export function getMonitoringAgentStatus() {
             ...base.blockers,
           ],
     nextStep: monitoringLoaded
-      ? 'Connecter le flux live des metriques et alertes puis publier les metriques live dans le dashboard canonique.'
+        ? syncSnapshot.state === 'desync'
+          ? 'Resynchroniser la source backend (system store) et les evenements monitoring frontend pour supprimer la derive runtime.'
+          : 'Connecter le flux live des metriques et alertes puis publier les metriques live dans le dashboard canonique.'
       : loaderState.requestSource === 'boot'
         ? 'Finaliser le bootstrap du monitoring puis publier les metriques live dans le dashboard canonique.'
         : 'Initialiser le monitoring paresseux au boot canonique puis publier les metriques live dans le dashboard.',
+      syncSnapshot,
   };
 }
 

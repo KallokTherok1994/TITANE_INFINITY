@@ -285,14 +285,19 @@ export class WebVitalsMonitor {
     const latest = this.getLatestMetrics();
     if (!latest) return;
 
-    // Send to analytics service (placeholder)
-    console.log('[WebVitals] Analytics report:', latest);
-
-    // In production, send to actual analytics endpoint:
-    // request('/api/analytics/web-vitals', {
-    //   method: 'POST',
-    //   body: JSON.stringify(latest),
-    // });
+    // Envoi réel vers le backend (fetch POST)
+    fetch('/api/analytics/web-vitals', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(latest),
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        console.log('[WebVitals] Synchronisation réussie', latest);
+      })
+      .catch(err => {
+        console.error('[WebVitals] Synchronisation échouée', err);
+      });
   }
 }
 

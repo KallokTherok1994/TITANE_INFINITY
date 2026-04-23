@@ -27,6 +27,12 @@ const MonitoringDashboard: React.FC = () => {
       <p data-testid="monitoring-dashboard-summary" style={{ marginBottom: 10 }}>
         {status.summary}
       </p>
+      <p data-testid="monitoring-dashboard-sync-state" style={{ margin: '0 0 6px', fontSize: 13 }}>
+        {`Sync runtime: ${status.syncSnapshot.label}`}
+      </p>
+      <p data-testid="monitoring-dashboard-sync-reason" style={{ margin: '0 0 8px', fontSize: 12, opacity: 0.9 }}>
+        {status.syncSnapshot.reason}
+      </p>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
       <ul
         data-testid="monitoring-dashboard-proof-list"

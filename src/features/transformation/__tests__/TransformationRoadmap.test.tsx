@@ -14,7 +14,7 @@ describe('TransformationRoadmap', () => {
 
   it('should render without crashing', () => {
     render(<TransformationRoadmap />);
-    expect(screen.getByText(/roadmap de transformation/i)).toBeInTheDocument();
+    expect(screen.getByText(/roadmap évolutive/i)).toBeInTheDocument();
     expect(screen.getByTestId('transformation-roadmap-disclosure')).toHaveTextContent(
       /2026-04-20/i
     );

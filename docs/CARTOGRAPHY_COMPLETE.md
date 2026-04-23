@@ -1,3 +1,5 @@
+> 2026-04-23 — Monitoring sync supervisor runtime truth: la surface canonique `monitoring-dashboard` ajoute une supervision explicite de synchronisation backend/frontend via `src/services/monitoring/syncSupervisor.ts`. Le statut monitoring dérive maintenant un état `SYNCED|STALE|DESYNC` à partir de `useSystemStore.lastUpdate` (heartbeat backend) et de la timeline `chatMetrics.getRecentEvents()` (activité frontend), expose les selectors stables `monitoring-dashboard-sync-state` et `monitoring-dashboard-sync-reason`, puis scelle cette vérité par tests unitaires et preuve Playwright ciblée.
+
 > 2026-04-23 — Roadmap Évolutive & Évolution : harmonisation disclosure, titres, selectors, testids, et preuve E2E
 
 La surface roadmap transformation/évolution est désormais harmonisée :

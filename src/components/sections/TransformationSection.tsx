@@ -122,11 +122,11 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
 
         {/* ═══ TRANSFORMATION: Roadmap ═══ */}
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutif</h3>
+          <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutive</h3>
           <React.Suspense
             fallback={
               <SectionLoadingFallback
-                label="Roadmap évolutif"
+                label="Roadmap évolutive"
                 note="Chargement des paliers de transformation…"
                 testId="loading-transformation-roadmap"
               />
