@@ -6,6 +6,8 @@
 
 > 2026-04-23 — Doc engine DOCX export truth: la cartographie backend ajoute la capacite d export DOCX dans `src-tauri/src/doc_engine/export.rs` via `docx-rs`, activee par la variante `ExportFormat::Docx` dans `src-tauri/src/doc_engine/mod.rs`. Le flux produit un artefact `.docx` avec structure documentaire minimale (titre, metadonnees, resume, objectifs, sections) et une preuve Rust ciblee `doc_engine::export::tests::export_docx_writes_file`.
 
+> 2026-04-23 — DocCenter UI truth (Phase 3): la surface `/doc-center` est exposee par `src/pages/DocCenterPage.tsx` avec data-testid stables `doc-center-page`, `btn-export-docx`, `doc-export-status`. Route enregistree dans `src/App.tsx`. Export barrel dans `src/pages/index.ts`. Test unitaire Vitest: `src/pages/__tests__/DocCenterPage.test.tsx`. Test E2E Playwright: `e2e/doc-center-export-docx.spec.ts`.
+
 > 2026-04-23 — Roadmap Évolutive & Évolution : harmonisation disclosure, titres, selectors, testids, et preuve E2E
 
 La surface roadmap transformation/évolution est désormais harmonisée :
@@ -536,6 +538,7 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | `TitanePage` | Page principale TITANE |
 | `TotalDevPage` | Page dev totale |
 | `TwinsPage` | Jumeaux numériques |
+| `DocCenterPage` | Centre documentaire — export DOCX natif |
 | `UltimateOptimizationDashboard` | Optimisation ultime |
 | `Watchdog` | Interface watchdog |
 
@@ -850,6 +853,7 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | `/memory` | Memory | — |
 | `/research` | ResearchPage | — |
 | `/skills` | SkillManager | — |
+| `/doc-center` | DocCenterPage | ✓ |
 | `/performance` | PerformanceTest | — |
 
 ### Redirects

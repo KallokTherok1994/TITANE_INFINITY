@@ -295,6 +295,24 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     expect(rustCommands.has('knowledge_base_runtime_snapshot')).toBe(true);
   });
 
+  // ─── DOC ENGINE — DOCX export IPC (Phase 2) ───────────────────────────────
+  it('should expose export_docx_file command in Rust, TAURI_COMMANDS, and ALLOWED_COMMANDS', () => {
+    expect(TAURI_COMMANDS.EXPORT_DOCX_FILE).toBe('export_docx_file');
+    expect(
+      rustCommands.has('export_docx_file') || rustNormalized.has(normalize('export_docx_file')),
+      'Missing Rust handler: export_docx_file'
+    ).toBe(true);
+    // ALLOWED_COMMANDS lives in src/lib/security.ts; getAllowedCommands() reads tauri.conf.json
+    // which uses a different schema (permissions vs allow[].command), so allowedCommands is always
+    // empty in this project. Verify security.ts directly instead.
+    const securityPath = path.join(process.cwd(), 'src/lib/security.ts');
+    const securityContent = fs.readFileSync(securityPath, 'utf-8');
+    expect(
+      securityContent.includes("'export_docx_file'") || securityContent.includes('"export_docx_file"'),
+      'Missing ALLOWED_COMMANDS entry in security.ts: export_docx_file'
+    ).toBe(true);
+  });
+
   // Test de performance du contrat
   it('should maintain contract performance', () => {
     const startTime = Date.now();

@@ -1076,6 +1076,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_chat_engine_config',
   'get_chat_request_defaults',
   'export_config',
+  'export_docx_file',
   'import_config',
   'list_config_presets',
   'update_runtime_config',

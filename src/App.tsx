@@ -106,6 +106,9 @@ const Experience = lazy(() =>
 const TwinsPage = lazy(() =>
   import('./pages/TwinsPage').then(m => ({ default: m.default }))
 );
+const DocCenterPage = lazy(() =>
+  import('./pages/DocCenterPage').then(m => ({ default: m.DocCenterPage }))
+);
 
 // v24.3.0 - CognitiveLayoutControl déplacé dans ADMIN (ConfigurationHub)
 
@@ -668,6 +671,16 @@ export const AppRouter: React.FC = () => {
           <Route path="/research" element={<ResearchPage />} />
           {/* ✨ Skill OS — Import/manage external skills */}
           <Route path="/skills" element={<SkillManager />} />
+          {/* ✨ v31.1.0 — DOC CENTER — Export DOCX natif */}
+          <Route
+            path="/doc-center"
+            element={
+              <ErrorBoundary context="DocCenterPage">
+                <DocCenterPage />
+              </ErrorBoundary>
+            }
+          />
+          <Route path="/doc" element={<Navigate to="/doc-center" replace />} />
           {/* System Routes (Phase 9: lazy loaded) */}
           <Route path="/performance" element={<PerformanceTest />} />
           {/* Catch-all - Redirection vers Dashboard */}

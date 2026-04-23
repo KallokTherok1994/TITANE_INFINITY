@@ -60,3 +60,5 @@ export { EvolutionMonitor } from './EvolutionMonitor';
 export { default as SingularityMonitor } from './SingularityMonitor';
 export { UltimateOptimizationDashboard } from './UltimateOptimizationDashboard';
 export { TwinsPage } from './TwinsPage';
+// ✨ v31.1.0 — Doc Engine (export DOCX natif)
+export { DocCenterPage } from './DocCenterPage';

@@ -2869,6 +2869,10 @@ fn main() {
 
             // Governed network gateway — frontend httpClient now routes via IPC
             commands::http_commands::http_request,
+            // ═══════════════════════════════════════════════════════════════
+            // DOC ENGINE — Export natif DOCX (Phase 2)
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::doc_engine::commands::export_docx_file,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

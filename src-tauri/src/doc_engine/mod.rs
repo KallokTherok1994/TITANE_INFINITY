@@ -2,6 +2,7 @@
 // Moteur de génération documentaire professionnel multi-domaines
 
 pub mod admin;
+pub mod commands;
 pub mod editorial;
 pub mod export;
 pub mod formatter;
