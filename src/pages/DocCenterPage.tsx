@@ -42,7 +42,7 @@ function buildDemoDocument(title: string) {
     content: {
       title,
       executive_summary: `Résumé exécutif de "${title}" généré par TITANE∞.`,
-      objectives: ['Démontrer l\'export DOCX natif', 'Valider le moteur doc_engine'],
+      objectives: ["Démontrer l'export DOCX natif", 'Valider le moteur doc_engine'],
       sections: [
         {
           id: 'intro',
@@ -75,12 +75,12 @@ export function DocCenterPage() {
     setIsLoading(true);
     setStatus(null);
     try {
-      const resp = await tauriClient.exportDocxFile({
+      const resp = (await tauriClient.exportDocxFile({
         req: {
           document: buildDemoDocument(title),
           output_dir: outputDir,
         },
-      }) as ExportDocxResponse;
+      })) as ExportDocxResponse;
       if (resp.ok && resp.content) {
         setStatus(`✅ Exporté : ${resp.content.path} (${resp.content.size} octets)`);
       } else {
@@ -94,15 +94,28 @@ export function DocCenterPage() {
   }
 
   return (
-    <div className="doc-center-page" data-testid="doc-center-page" style={{ padding: '2rem' }}>
+    <div
+      className="doc-center-page"
+      data-testid="doc-center-page"
+      style={{ padding: '2rem' }}
+    >
       <h1 style={{ marginBottom: '1.5rem' }}>📄 Centre Documentaire</h1>
       <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>
         Export natif DOCX via <code>doc_engine</code> + docx-rs
       </p>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: 480 }}>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: 480 }}
+      >
         <label>
-          <span style={{ display: 'block', marginBottom: 4, fontSize: '0.85rem', opacity: 0.8 }}>
+          <span
+            style={{
+              display: 'block',
+              marginBottom: 4,
+              fontSize: '0.85rem',
+              opacity: 0.8,
+            }}
+          >
             Titre du document
           </span>
           <input
@@ -110,12 +123,26 @@ export function DocCenterPage() {
             type="text"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            style={{ width: '100%', padding: '0.5rem', borderRadius: 6, border: '1px solid #444', background: '#1a1a1a', color: '#fff' }}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: 6,
+              border: '1px solid #444',
+              background: '#1a1a1a',
+              color: '#fff',
+            }}
           />
         </label>
 
         <label>
-          <span style={{ display: 'block', marginBottom: 4, fontSize: '0.85rem', opacity: 0.8 }}>
+          <span
+            style={{
+              display: 'block',
+              marginBottom: 4,
+              fontSize: '0.85rem',
+              opacity: 0.8,
+            }}
+          >
             Répertoire de sortie
           </span>
           <input
@@ -123,7 +150,14 @@ export function DocCenterPage() {
             type="text"
             value={outputDir}
             onChange={e => setOutputDir(e.target.value)}
-            style={{ width: '100%', padding: '0.5rem', borderRadius: 6, border: '1px solid #444', background: '#1a1a1a', color: '#fff' }}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: 6,
+              border: '1px solid #444',
+              background: '#1a1a1a',
+              color: '#fff',
+            }}
           />
         </label>
 
@@ -151,7 +185,9 @@ export function DocCenterPage() {
             style={{
               padding: '0.75rem 1rem',
               borderRadius: 8,
-              background: status.startsWith('✅') ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)',
+              background: status.startsWith('✅')
+                ? 'rgba(34,197,94,0.15)'
+                : 'rgba(239,68,68,0.15)',
               border: `1px solid ${status.startsWith('✅') ? '#22c55e55' : '#ef444455'}`,
               fontSize: '0.85rem',
             }}

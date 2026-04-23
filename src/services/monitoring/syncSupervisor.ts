@@ -110,15 +110,11 @@ export function getMonitoringSyncSnapshot(params?: {
   }
 
   if (state !== lastState) {
-    logger.info(
-      'Monitoring sync supervisor state updated',
-      'monitoring.syncSupervisor',
-      {
-        previous: lastState,
-        next: state,
-        reason,
-      }
-    );
+    logger.info('Monitoring sync supervisor state updated', 'monitoring.syncSupervisor', {
+      previous: lastState,
+      next: state,
+      reason,
+    });
     lastState = state;
   }
 

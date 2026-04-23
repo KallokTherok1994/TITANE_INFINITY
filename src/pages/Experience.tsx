@@ -3,15 +3,8 @@ import { useExperience } from '../hooks/useExperience';
 import { motion } from 'framer-motion';
 
 export function Experience() {
-  const {
-    state,
-    isLoading,
-    totalXp,
-    level,
-    xpForNextLevel,
-    progress,
-    domains,
-  } = useExperience();
+  const { state, isLoading, totalXp, level, xpForNextLevel, progress, domains } =
+    useExperience();
   const [filter, setFilter] = useState<string>('all');
 
   const stats = useMemo(() => {

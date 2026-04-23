@@ -82,7 +82,11 @@ describe('DocCenter — Export DOCX natif', () => {
         // Soit status affiché, soit bouton redevenu actif (fin de loading)
         return statusExists || btnEnabled;
       },
-      { timeout: 12000, interval: 300, timeoutMsg: 'Aucun feedback du bouton export après 12s' }
+      {
+        timeout: 12000,
+        interval: 300,
+        timeoutMsg: 'Aucun feedback du bouton export après 12s',
+      }
     );
 
     await browser.saveScreenshot(`${ARTIFACTS_DIR}/03-after-click.png`);
@@ -94,8 +98,13 @@ describe('DocCenter — Export DOCX natif', () => {
       const text = await statusEl.getText();
       assert.ok(text.length > 0, 'doc-export-status doit contenir du texte');
       // En mode Tauri desktop: succès attendu; en mode web: erreur IPC attendue
-      const isSuccess = text.includes('✅') || text.includes('Exporté') || text.includes('/');
-      const isError = text.includes('❌') || text.includes('Erreur') || text.includes('error') || text.includes('IPC');
+      const isSuccess =
+        text.includes('✅') || text.includes('Exporté') || text.includes('/');
+      const isError =
+        text.includes('❌') ||
+        text.includes('Erreur') ||
+        text.includes('error') ||
+        text.includes('IPC');
       assert.ok(isSuccess || isError, `Status inattendu: "${text}"`);
     }
   });
@@ -111,8 +120,11 @@ describe('DocCenter — Export DOCX natif', () => {
 
   afterEach(async function () {
     if (this.currentTest?.state === 'failed') {
-      const testTitle = this.currentTest?.title?.replace(/[^a-z0-9]/gi, '-').toLowerCase() ?? 'unknown';
-      await captureFailureScreenshot(`${ARTIFACTS_DIR}/FAIL-${testTitle}.png`).catch(() => {});
+      const testTitle =
+        this.currentTest?.title?.replace(/[^a-z0-9]/gi, '-').toLowerCase() ?? 'unknown';
+      await captureFailureScreenshot(`${ARTIFACTS_DIR}/FAIL-${testTitle}.png`).catch(
+        () => {}
+      );
     }
   });
 });

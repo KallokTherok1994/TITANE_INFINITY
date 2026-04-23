@@ -299,7 +299,8 @@ describe('TITANE∞ - IPC Contract Tests', () => {
   it('should expose export_docx_file command in Rust, TAURI_COMMANDS, and ALLOWED_COMMANDS', () => {
     expect(TAURI_COMMANDS.EXPORT_DOCX_FILE).toBe('export_docx_file');
     expect(
-      rustCommands.has('export_docx_file') || rustNormalized.has(normalize('export_docx_file')),
+      rustCommands.has('export_docx_file') ||
+        rustNormalized.has(normalize('export_docx_file')),
       'Missing Rust handler: export_docx_file'
     ).toBe(true);
     // ALLOWED_COMMANDS lives in src/lib/security.ts; getAllowedCommands() reads tauri.conf.json
@@ -308,7 +309,8 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     const securityPath = path.join(process.cwd(), 'src/lib/security.ts');
     const securityContent = fs.readFileSync(securityPath, 'utf-8');
     expect(
-      securityContent.includes("'export_docx_file'") || securityContent.includes('"export_docx_file"'),
+      securityContent.includes("'export_docx_file'") ||
+        securityContent.includes('"export_docx_file"'),
       'Missing ALLOWED_COMMANDS entry in security.ts: export_docx_file'
     ).toBe(true);
   });

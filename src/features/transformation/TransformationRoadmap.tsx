@@ -78,26 +78,27 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
   return (
     <div className="transformation-roadmap-container">
       {/* Disclosure banner — données statiques curées, aucune connexion IPC live */}
-	  <div
-		className="roadmap-disclosure-banner"
-		data-testid="transformation-roadmap-disclosure"
-		role="note"
-		aria-label="Source des données : roadmap statique, curée manuellement, aucune connexion IPC live, dernière synchronisation avec le code qualifié : 2026-04-20."
-		style={{
-		  fontSize: '0.75rem',
-		  color: '#94a3b8',
-		  background: 'rgba(100,116,139,0.12)',
-		  border: '1px solid rgba(100,116,139,0.25)',
-		  borderRadius: '6px',
-		  padding: '6px 12px',
-		  marginBottom: '12px',
-		  display: 'flex',
-		  alignItems: 'center',
-		  gap: '6px',
-		}}
-	  >
-		📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique, curée manuellement. Aucune connexion IPC live. Dernière synchronisation avec le code qualifié : 2026-04-20.
-	  </div>
+      <div
+        className="roadmap-disclosure-banner"
+        data-testid="transformation-roadmap-disclosure"
+        role="note"
+        aria-label="Source des données : roadmap statique, curée manuellement, aucune connexion IPC live, dernière synchronisation avec le code qualifié : 2026-04-20."
+        style={{
+          fontSize: '0.75rem',
+          color: '#94a3b8',
+          background: 'rgba(100,116,139,0.12)',
+          border: '1px solid rgba(100,116,139,0.25)',
+          borderRadius: '6px',
+          padding: '6px 12px',
+          marginBottom: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+        }}
+      >
+        📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique, curée manuellement. Aucune
+        connexion IPC live. Dernière synchronisation avec le code qualifié : 2026-04-20.
+      </div>
 
       {/* Header */}
       <div className="roadmap-header">

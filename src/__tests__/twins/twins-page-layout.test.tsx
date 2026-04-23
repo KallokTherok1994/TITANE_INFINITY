@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { TwinsPage } from '@/pages/TwinsPage';
 
 vi.mock('@/components/twin/TwinEvolutionPanel', () => ({
-  TwinEvolutionPanel: () => <div data-testid="twin-evolution-panel">Twin evolution panel</div>,
+  TwinEvolutionPanel: () => (
+    <div data-testid="twin-evolution-panel">Twin evolution panel</div>
+  ),
 }));
 
 vi.mock('@/hooks/useTwinIdentity', () => ({

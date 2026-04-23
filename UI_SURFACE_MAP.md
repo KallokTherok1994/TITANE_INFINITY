@@ -17,14 +17,14 @@
 - Surface canonique: `/experience`
 - Composant: `src/pages/Experience.tsx`
 - La page Experience republie une vérité runtime cohérente avec `useExperience`:
-	- bloc `Statistiques` avec métriques globales (`totalXp`, `level`, `xpForNextLevel`, `progress`)
-	- bloc `Historique XP` filtrable par source et rendu déterministe même sans événements
-	- domaines mappés sur les champs canoniques (`id`, `label`, `xp`, `level`, `category`)
+  - bloc `Statistiques` avec métriques globales (`totalXp`, `level`, `xpForNextLevel`, `progress`)
+  - bloc `Historique XP` filtrable par source et rendu déterministe même sans événements
+  - domaines mappés sur les champs canoniques (`id`, `label`, `xp`, `level`, `category`)
 - Selectors/tests stables:
-	- `page-experience`
-	- `experience-stats-advanced`
-	- `experience-history-list`
-	- `experience-history-item`
+  - `page-experience`
+  - `experience-stats-advanced`
+  - `experience-history-list`
+  - `experience-history-item`
 - Preuve associée: Vitest `src/pages/__tests__/Experience.test.tsx` + Playwright `e2e/desktop/xp-history-stats.e2e.spec.ts`
 
 # [2026-04-23] Monitoring sync supervisor runtime truth
@@ -32,12 +32,12 @@
 - Surface canonique: `monitoring-dashboard`
 - Service dédié: `src/services/monitoring/syncSupervisor.ts`
 - Le statut monitoring publie maintenant un état de synchronisation runtime dérivé de signaux réels backend/frontend:
-	- backend: `useSystemStore.lastUpdate`
-	- frontend: timeline `chatMetrics.getRecentEvents()`
-	- drift détecté: comparaison temporelle backend/frontend
+  - backend: `useSystemStore.lastUpdate`
+  - frontend: timeline `chatMetrics.getRecentEvents()`
+  - drift détecté: comparaison temporelle backend/frontend
 - Nouveaux selectors stables:
-	- `monitoring-dashboard-sync-state`
-	- `monitoring-dashboard-sync-reason`
+  - `monitoring-dashboard-sync-state`
+  - `monitoring-dashboard-sync-reason`
 - Preuve associée: tests unitaires monitoring + test Playwright `e2e/agents/monitoring-dashboard.e2e.ts`
 
 # [2026-04-23] Roadmap Évolutive & Évolution — mapping harmonisé
@@ -71,6 +71,7 @@
 - Testid persistent count : `persistent-entry-count`
 - Preuve E2E : test Playwright/WDIO (mode Tauri, banner, state)
 - Fichier : `src/components/MemoryEvolution/MemoryEvolutionCenter.tsx`
+
 # [2026-04-19] Conversation dev overlay send-path truth: sur la voie dev de la surface canonique `/titane?tab=conversation`, `src/components/dev/ConsoleMonitorDashboard.tsx` n occupe plus le coin bas droit qui pouvait intercepter `chat-send` au-dessus du compositeur. Le panneau reste visible en dev mais se docke maintenant en haut a droite, tandis que `e2e/runtime-validation/chat-ar20.spec.ts` privilegie Enter puis un clic DOM borne en fallback et `e2e/critical/chat-interaction.spec.ts` verrouille la verite metier du message assistant sans dependre du formatage exact des badges mock ni d un locator terminal duplique.
 
 # [2026-04-19] Linux launcher sudo-home truth: la regeneration du launcher TITANE∞ sous sudo ne doit plus faire deriver les actions `Logs` et `Config` vers `/root/.titane`. `scripts/update-desktop-icon.sh` resolve maintenant `TARGET_USER_HOME` depuis `SUDO_USER` via `getent passwd`, puis publie `DESKTOP_INSTALL_DIR`, `LOCAL_ICON_ROOT` et `TARGET_CONFIG_DIR` sur ce home canonique afin que les entrees `.desktop` systeme et utilisateur restent coherentes apres `sudo bash scripts/post-build/update-desktop-icons.sh`.

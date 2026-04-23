@@ -12,7 +12,9 @@ test.describe('DocCenterPage — Export DOCX natif', () => {
     await page.waitForSelector('[data-testid="doc-center-page"]', { timeout: 10000 });
   });
 
-  test('la page DocCenter est accessible et affiche les éléments requis', async ({ page }) => {
+  test('la page DocCenter est accessible et affiche les éléments requis', async ({
+    page,
+  }) => {
     await expect(page.locator('[data-testid="doc-center-page"]')).toBeVisible();
     await expect(page.locator('[data-testid="btn-export-docx"]')).toBeVisible();
     await expect(page.locator('[data-testid="input-doc-title"]')).toBeVisible();
@@ -33,7 +35,9 @@ test.describe('DocCenterPage — Export DOCX natif', () => {
     });
   });
 
-  test('clic sur btn-export-docx déclenche l\'IPC (état loading ou status)', async ({ page }) => {
+  test("clic sur btn-export-docx déclenche l'IPC (état loading ou status)", async ({
+    page,
+  }) => {
     // En mode test Web (non-Tauri), l'invoke échoue → feedback erreur IPC attendu
     const btn = page.locator('[data-testid="btn-export-docx"]');
     await btn.click();
@@ -41,8 +45,13 @@ test.describe('DocCenterPage — Export DOCX natif', () => {
     await page.waitForFunction(
       () => {
         const status = document.querySelector('[data-testid="doc-export-status"]');
-        const btnEl = document.querySelector('[data-testid="btn-export-docx"]') as HTMLButtonElement | null;
-        return (status && status.textContent && status.textContent.length > 0) || (btnEl && !btnEl.disabled);
+        const btnEl = document.querySelector(
+          '[data-testid="btn-export-docx"]'
+        ) as HTMLButtonElement | null;
+        return (
+          (status && status.textContent && status.textContent.length > 0) ||
+          (btnEl && !btnEl.disabled)
+        );
       },
       { timeout: 8000 }
     );

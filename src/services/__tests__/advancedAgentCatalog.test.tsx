@@ -283,7 +283,9 @@ describe('advanced agent dashboards', () => {
 
       if (selector === 'monitoring-dashboard') {
         expect(screen.getByTestId('monitoring-dashboard-sync-state')).toBeInTheDocument();
-        expect(screen.getByTestId('monitoring-dashboard-sync-reason')).toBeInTheDocument();
+        expect(
+          screen.getByTestId('monitoring-dashboard-sync-reason')
+        ).toBeInTheDocument();
       }
     }
   );

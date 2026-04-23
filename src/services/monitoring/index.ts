@@ -82,13 +82,13 @@ export function getMonitoringAgentStatus() {
             ...base.blockers,
           ],
     nextStep: monitoringLoaded
-        ? syncSnapshot.state === 'desync'
-          ? 'Resynchroniser la source backend (system store) et les evenements monitoring frontend pour supprimer la derive runtime.'
-          : 'Connecter le flux live des metriques et alertes puis publier les metriques live dans le dashboard canonique.'
+      ? syncSnapshot.state === 'desync'
+        ? 'Resynchroniser la source backend (system store) et les evenements monitoring frontend pour supprimer la derive runtime.'
+        : 'Connecter le flux live des metriques et alertes puis publier les metriques live dans le dashboard canonique.'
       : loaderState.requestSource === 'boot'
         ? 'Finaliser le bootstrap du monitoring puis publier les metriques live dans le dashboard canonique.'
         : 'Initialiser le monitoring paresseux au boot canonique puis publier les metriques live dans le dashboard.',
-      syncSnapshot,
+    syncSnapshot,
   };
 }
 

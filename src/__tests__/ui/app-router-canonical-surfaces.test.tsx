@@ -105,7 +105,11 @@ describe('AppRouter canonical active surfaces', () => {
     ['/dev?tab=diagnostics', 'page-dev', 'dev_center'],
     ['/fusion', 'page-fusion', 'fusion_center'],
     ['/optimization', 'page-optimization', 'optimization_center'],
-    ['/orchestration-intelligence', 'page-orchestration-intelligence', 'orchestration_intelligence'],
+    [
+      '/orchestration-intelligence',
+      'page-orchestration-intelligence',
+      'orchestration_intelligence',
+    ],
     ['/orchestration-center', 'page-orchestration-meta-center', 'orchestration_meta'],
     ['/total-dev', 'page-total-dev', 'total_dev_center'],
     ['/reality-center', 'page-reality-center', 'reality_center'],
@@ -173,16 +177,19 @@ describe('AppRouter canonical active surfaces', () => {
     ['/adaptive', 'nav-dev'],
     ['/optimization', 'btn-nav-more'],
     ['/twins', 'btn-nav-more'],
-  ])('keeps %s aligned with the owning TopNav entry %s in the real AppRouter shell', async (route, navTestId) => {
-    await renderRoute(route);
+  ])(
+    'keeps %s aligned with the owning TopNav entry %s in the real AppRouter shell',
+    async (route, navTestId) => {
+      await renderRoute(route);
 
-    await waitFor(
-      () => {
-        expect(screen.getByTestId(navTestId)).toHaveAttribute('aria-current', 'page');
-      },
-      { timeout: STABILIZATION_TIMEOUT_MS }
-    );
-  });
+      await waitFor(
+        () => {
+          expect(screen.getByTestId(navTestId)).toHaveAttribute('aria-current', 'page');
+        },
+        { timeout: STABILIZATION_TIMEOUT_MS }
+      );
+    }
+  );
 
   it.each([
     [

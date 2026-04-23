@@ -176,10 +176,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div
-      className="bg-gray-900 text-white min-h-screen p-6"
-      data-testid="page-fusion"
-    >
+    <div className="bg-gray-900 text-white min-h-screen p-6" data-testid="page-fusion">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">

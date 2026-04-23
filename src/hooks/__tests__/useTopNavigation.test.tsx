@@ -34,7 +34,9 @@ describe('useTopNavigation', () => {
   it('keeps knowledge, creation and evolution routes synchronized with the TITANE top-level entry', () => {
     const { result } = renderHook(() => useTopNavigation(), { wrapper });
 
-    const titaneEntry = result.current.topNavSections.find(section => section.id === 'titane');
+    const titaneEntry = result.current.topNavSections.find(
+      section => section.id === 'titane'
+    );
 
     expect(titaneEntry).toEqual(
       expect.objectContaining({
@@ -59,7 +61,13 @@ describe('useTopNavigation', () => {
       })
     );
     expect(devEntry?.matchRoutes).toEqual(
-      expect.arrayContaining(['/singularity', '/sentinel', '/watchdog', '/selfheal', '/adaptive'])
+      expect.arrayContaining([
+        '/singularity',
+        '/sentinel',
+        '/watchdog',
+        '/selfheal',
+        '/adaptive',
+      ])
     );
   });
 });

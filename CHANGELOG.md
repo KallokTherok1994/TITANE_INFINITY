@@ -3,6 +3,7 @@
 ## Nouveautés v31.1.0 — Export DOCX Natif
 
 ### Backend — doc_engine (Ring 2 / Rust)
+
 - **Export DOCX natif** : `src-tauri/src/doc_engine/export.rs` produit des fichiers `.docx` via `docx-rs` (titre, métadonnées, résumé exécutif, objectifs, sections)
 - Nouvelle variante `ExportFormat::Docx` dans `src-tauri/src/doc_engine/mod.rs`
 - Commande IPC Tauri `export_docx_file` dans `src-tauri/src/doc_engine/commands.rs` — contrat `{ ok, content: { path, size }, error }`
@@ -10,6 +11,7 @@
 - 3 tests Rust PASS : `export_docx_writes_file`, `export_docx_file_returns_ok`, `export_docx_file_bad_dir_returns_error`
 
 ### Frontend — UI DocCenter (Ring 4)
+
 - **Nouvelle page** `/doc-center` — `src/pages/DocCenterPage.tsx`
   - data-testid stables : `doc-center-page`, `btn-export-docx`, `doc-export-status`, `input-doc-title`, `input-output-dir`
 - Route `/doc-center` ajoutée dans `src/App.tsx` (lazy + ErrorBoundary)
@@ -19,6 +21,7 @@
 - `export_docx_file` ajouté dans `ALLOWED_COMMANDS` (`src/lib/security.ts`)
 
 ### Tests
+
 - **12 tests Vitest** sur `DocCenterPage` : rendu, champs, IPC succès, IPC erreur, contrat invoke
 - **Test WDIO desktop** `e2e/desktop/doc-center-export-docx.wdio.test.js` (6 scénarios : navigation, éléments, interaction, screenshot preuve)
 - **4 tests Playwright E2E** `e2e/doc-center-export-docx.spec.ts`

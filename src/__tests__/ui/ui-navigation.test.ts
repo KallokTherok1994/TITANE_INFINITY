@@ -172,7 +172,15 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
         label: 'TITANE',
         icon: '⚡',
         route: '/titane',
-        matchRoutes: ['/experience', '/memory', '/research', '/skills', '/knowledge', '/creation', '/evolution'],
+        matchRoutes: [
+          '/experience',
+          '/memory',
+          '/research',
+          '/skills',
+          '/knowledge',
+          '/creation',
+          '/evolution',
+        ],
       },
       { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
       { id: 'admin', label: 'ADMIN', icon: '⚙️', route: '/admin' },
@@ -194,7 +202,10 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
       );
 
       expect(screen.getByTestId('nav-titane')).toHaveAttribute('aria-current', 'page');
-      expect(screen.getByTestId('btn-nav-more')).not.toHaveAttribute('aria-current', 'page');
+      expect(screen.getByTestId('btn-nav-more')).not.toHaveAttribute(
+        'aria-current',
+        'page'
+      );
     }
   });
 
@@ -205,7 +216,15 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
         label: 'TITANE',
         icon: '⚡',
         route: '/titane',
-        matchRoutes: ['/experience', '/memory', '/research', '/skills', '/knowledge', '/creation', '/evolution'],
+        matchRoutes: [
+          '/experience',
+          '/memory',
+          '/research',
+          '/skills',
+          '/knowledge',
+          '/creation',
+          '/evolution',
+        ],
       },
       { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
       { id: 'admin', label: 'ADMIN', icon: '⚙️', route: '/admin' },
@@ -214,13 +233,27 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
         label: 'DEV',
         icon: '🛠️',
         route: '/dev',
-        matchRoutes: ['/orchestration-center', '/orchestration-intelligence', '/singularity', '/sentinel', '/watchdog', '/selfheal', '/adaptive'],
+        matchRoutes: [
+          '/orchestration-center',
+          '/orchestration-intelligence',
+          '/singularity',
+          '/sentinel',
+          '/watchdog',
+          '/selfheal',
+          '/adaptive',
+        ],
       },
       { id: 'fusion', label: 'FUSION', icon: '✨', route: '/fusion' },
       { id: 'optimization', label: 'OPTIMIZE', icon: '⚡', route: '/optimization' },
     ];
 
-    for (const route of ['/singularity', '/sentinel', '/watchdog', '/selfheal', '/adaptive']) {
+    for (const route of [
+      '/singularity',
+      '/sentinel',
+      '/watchdog',
+      '/selfheal',
+      '/adaptive',
+    ]) {
       cleanup();
 
       await renderWithRouter(
@@ -233,7 +266,10 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
       );
 
       expect(screen.getByTestId('nav-dev')).toHaveAttribute('aria-current', 'page');
-      expect(screen.getByTestId('btn-nav-more')).not.toHaveAttribute('aria-current', 'page');
+      expect(screen.getByTestId('btn-nav-more')).not.toHaveAttribute(
+        'aria-current',
+        'page'
+      );
     }
   });
 

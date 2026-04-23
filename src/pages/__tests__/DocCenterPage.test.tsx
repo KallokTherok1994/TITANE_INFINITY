@@ -49,7 +49,7 @@ describe('DocCenterPage', () => {
     expect(btn.disabled).toBe(false);
   });
 
-  it('ne montre pas le statut d\'export initialement', () => {
+  it("ne montre pas le statut d'export initialement", () => {
     render(<DocCenterPage />);
     expect(screen.queryByTestId('doc-export-status')).toBeNull();
   });
@@ -104,7 +104,7 @@ describe('DocCenterPage', () => {
 
   // ─── IPC erreur ────────────────────────────────────────────────────────────
 
-  it('affiche un message d\'erreur quand ok=false', async () => {
+  it("affiche un message d'erreur quand ok=false", async () => {
     mockExportDocxFile.mockResolvedValueOnce({
       ok: false,
       content: undefined,
@@ -138,6 +138,8 @@ describe('DocCenterPage', () => {
     render(<DocCenterPage />);
     fireEvent.click(screen.getByTestId('btn-export-docx'));
     await waitFor(() => screen.getByTestId('doc-export-status'));
-    expect(mockExportDocxFile).toHaveBeenCalledWith(expect.objectContaining({ req: expect.any(Object) }));
+    expect(mockExportDocxFile).toHaveBeenCalledWith(
+      expect.objectContaining({ req: expect.any(Object) })
+    );
   });
 });
