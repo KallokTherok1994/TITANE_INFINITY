@@ -1,3 +1,18 @@
+# [2026-04-23] Experience page canonical stats/history truth
+
+- Surface canonique: `/experience`
+- Composant: `src/pages/Experience.tsx`
+- La page Experience republie une vérité runtime cohérente avec `useExperience`:
+	- bloc `Statistiques` avec métriques globales (`totalXp`, `level`, `xpForNextLevel`, `progress`)
+	- bloc `Historique XP` filtrable par source et rendu déterministe même sans événements
+	- domaines mappés sur les champs canoniques (`id`, `label`, `xp`, `level`, `category`)
+- Selectors/tests stables:
+	- `page-experience`
+	- `experience-stats-advanced`
+	- `experience-history-list`
+	- `experience-history-item`
+- Preuve associée: Vitest `src/pages/__tests__/Experience.test.tsx` + Playwright `e2e/desktop/xp-history-stats.e2e.spec.ts`
+
 # [2026-04-23] Monitoring sync supervisor runtime truth
 
 - Surface canonique: `monitoring-dashboard`
