@@ -70,10 +70,14 @@ describe('Canonical UI pages (WDIO/Tauri)', () => {
   it('mounts every canonical UI route on its visible root and keeps navigation ownership aligned', async function () {
     this.timeout(900000);
 
-    await openApp();
-    await waitAppReady();
+    for (const [index, page] of canonicalRoutePages.entries()) {
+      if (index > 0) {
+        await browser.reloadSession();
+      }
 
-    for (const page of canonicalRoutePages) {
+      await openApp();
+      await waitAppReady();
+
       await browser.url(`tauri://localhost${page.route}`);
 
       const root = await $(page.root);
