@@ -109,6 +109,13 @@ export const uiPages = {
     root: '[data-testid="page-twins"]',
     tabs: [],
   },
+  docCenter: {
+    id: 'doc-center',
+    route: '/doc-center',
+    navTestId: null, // accès direct via URL, pas de nav item dédié v31.1.0
+    root: '[data-testid="doc-center-page"]',
+    tabs: [],
+  },
   optimization: {
     id: 'optimization',
     route: '/optimization',

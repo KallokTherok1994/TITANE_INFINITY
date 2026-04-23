@@ -20,8 +20,8 @@ export function Experience() {
       if (!result[event.source]) {
         result[event.source] = { count: 0, total: 0 };
       }
-      result[event.source].count += 1;
-      result[event.source].total += event.amount;
+      (result[event.source] as { count: number; total: number }).count += 1;
+      (result[event.source] as { count: number; total: number }).total += event.amount;
     }
     return result;
   }, [state.history]);

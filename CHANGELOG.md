@@ -1,4 +1,49 @@
-# [31.1.0] - 2026-04-22 (Governance)
+# [31.1.0] - 2026-04-23 (Doc Engine DOCX + TypeScript Fixes + WDIO + Governance)
+
+## Nouveautés v31.1.0 — Export DOCX Natif
+
+### Backend — doc_engine (Ring 2 / Rust)
+- **Export DOCX natif** : `src-tauri/src/doc_engine/export.rs` produit des fichiers `.docx` via `docx-rs` (titre, métadonnées, résumé exécutif, objectifs, sections)
+- Nouvelle variante `ExportFormat::Docx` dans `src-tauri/src/doc_engine/mod.rs`
+- Commande IPC Tauri `export_docx_file` dans `src-tauri/src/doc_engine/commands.rs` — contrat `{ ok, content: { path, size }, error }`
+- Commande enregistrée dans `main.rs` invoke handler
+- 3 tests Rust PASS : `export_docx_writes_file`, `export_docx_file_returns_ok`, `export_docx_file_bad_dir_returns_error`
+
+### Frontend — UI DocCenter (Ring 4)
+- **Nouvelle page** `/doc-center` — `src/pages/DocCenterPage.tsx`
+  - data-testid stables : `doc-center-page`, `btn-export-docx`, `doc-export-status`, `input-doc-title`, `input-output-dir`
+- Route `/doc-center` ajoutée dans `src/App.tsx` (lazy + ErrorBoundary)
+- Alias `/doc` → `/doc-center`
+- Export barrel dans `src/pages/index.ts`
+- `EXPORT_DOCX_FILE` ajouté dans `src/lib/tauriCommands.ts`
+- `export_docx_file` ajouté dans `ALLOWED_COMMANDS` (`src/lib/security.ts`)
+
+### Tests
+- **12 tests Vitest** sur `DocCenterPage` : rendu, champs, IPC succès, IPC erreur, contrat invoke
+- **Test WDIO desktop** `e2e/desktop/doc-center-export-docx.wdio.test.js` (6 scénarios : navigation, éléments, interaction, screenshot preuve)
+- **4 tests Playwright E2E** `e2e/doc-center-export-docx.spec.ts`
+- **1 test contrat IPC** dans `tests/contract/tauri-ipc-contract.test.ts`
+- Page object `docCenter` ajouté dans `e2e/desktop/page-objects/uiPages.po.js`
+
+## Corrections v31.1.0
+
+- **TypeScript** `src/pages/Experience.tsx` : cast explicite `(result[key] as {...}).count/total` pour satisfaire le compilateur strict (TS2532 Object possibly undefined)
+- **TypeScript** `src/services/monitoring/syncSupervisor.ts` : `.at(0)` → `[0]` pour compatibilité avec la cible lib TS du projet (ES2022 non activé)
+- **Capability Tauri** `src-tauri/capabilities/export_import.json` : retrait de `core:allow-export_docx_file` (identifiants Tauri 2.0 n'acceptent pas les underscores — les commandes custom via `invoke_handler!` ne nécessitent pas de capability explicite)
+
+## Governance v31.1.0
+
+- `ARCHITECTURE.md` : truth DocCenter IPC + UI Phase 2-3
+- `docs/CARTOGRAPHY_COMPLETE.md` : surface `/doc-center` + `DocCenterPage`
+- `UI_SURFACE_MAP.md` : mapping complet DocCenter avec selectors stables
+- `docs/IPC_CATALOG.md` : entrée `export_docx_file`
+- `scripts/autoheal/autoheal_rules.jsonl` : 3 nouvelles entrées (AH-0001, AH-0002, AH-0003)
+- `verify_instructions` : PASS=33 FAIL=0
+- `detect_recurrence` : PASS
+
+---
+
+# [31.1.0] - 2026-04-22 (Governance — Baseline)
 
 ## Nouveautés
 

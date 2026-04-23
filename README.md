@@ -25,7 +25,9 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 **Canal de release canonique:** v30.1.34
 
-**Qualité (2026-04-11) :** `verify:final100` PASS, `twins_memory_bridge_test` PASS, build stable Linux PASS, réinstallation desktop V30 et smoke-run `BOOT:READY` validés.
+**Nouveautés v31.1.0 (2026-04-23):** Export DOCX natif via `doc_engine` + `docx-rs` (Ring 2 Rust), surface UI `/doc-center` (`DocCenterPage`), commande IPC `export_docx_file`, 12 tests Vitest + WDIO desktop + Playwright E2E, correction TS `Experience.tsx` + `syncSupervisor.ts`, governance complète.
+
+**Qualité (2026-04-23) :** `pnpm run check` PASS, Vitest 26/26 PASS, Rust `doc_engine` 3/3 PASS, `verify_instructions` PASS=33 FAIL=0, `detect_recurrence` PASS.
 **Archive & legacy policy:** les surfaces obsolètes sont conservées sous `docs/99_ARCHIVE/` et `_archive/`; les surfaces actives V30 restent `src/`, `src-tauri/`, `README.md`, `CHANGELOG.md` et `docs/user/{fr,en}/`.
 
 ---

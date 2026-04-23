@@ -1,5 +1,18 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.0.3 — Historical baseline preserved below)
 
+## Addendum — 2026-04-23 — Doc Engine DOCX Export v31.1.0
+
+| Surface | Fichier | Status |
+|---|---|---|
+| Backend `export_docx_file` IPC | `src-tauri/src/doc_engine/commands.rs` | PASS — 3/3 Rust tests |
+| Frontend `/doc-center` UI | `src/pages/DocCenterPage.tsx` | PASS — 12/12 Vitest tests |
+| E2E Playwright | `e2e/doc-center-export-docx.spec.ts` | READY |
+| E2E WDIO desktop | `e2e/desktop/doc-center-export-docx.wdio.test.js` | READY |
+| Contrat IPC | `tests/contract/tauri-ipc-contract.test.ts` | PASS |
+| TypeScript check | `pnpm run check` | PASS — 0 erreurs |
+| AutoHeal | `scripts/autoheal/autoheal_rules.jsonl` | AH-0001/0002/0003 ajoutés |
+| Governance | `UI_SURFACE_MAP.md`, `ARCHITECTURE.md`, `CARTOGRAPHY_COMPLETE.md` | PASS |
+
 ## Addendum — 2026-04-19 — Linux System Launcher User-Home Truth
 
 | Surface | Truth | Status |

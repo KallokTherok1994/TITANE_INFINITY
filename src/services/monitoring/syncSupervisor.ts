@@ -59,7 +59,7 @@ export function getMonitoringSyncSnapshot(params?: {
   const now = Date.now();
   const systemState = useSystemStore.getState();
   const backendLastUpdateAt = systemState.lastUpdate ?? null;
-  const frontendLastEvent = chatMetrics.getRecentEvents(1).at(0);
+  const frontendLastEvent = chatMetrics.getRecentEvents(1)[0];
   const frontendLastEventAt = parseIsoTimestamp(frontendLastEvent?.timestamp);
 
   const backendAgeMs =
