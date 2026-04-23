@@ -165,9 +165,9 @@ fn test_filename_sanitization() {
     let safe = StorageGuard::sanitize_filename("hello|world.txt");
     assert_eq!(safe, "helloworld.txt");
 
-    // Dots are preserved (leading dots kept)
+    // Les dots initiaux sont retirés pour eviter les noms caches/ambigus
     let safe = StorageGuard::sanitize_filename("../../etc/passwd");
-    assert_eq!(safe, "....etcpasswd");
+    assert_eq!(safe, "etcpasswd");
 
     // Pipes removed, hyphens preserved
     let safe = StorageGuard::sanitize_filename("file;rm -rf /.txt");
