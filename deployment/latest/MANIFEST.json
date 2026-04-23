@@ -1,22 +1,21 @@
 {
-  "version": "31.1.2",
-  "canonical_version": "31.1.2",
+  "version": "31.1.3",
+  "canonical_version": "31.1.3",
   "build_date": "2026-04-23",
   "artifacts": [
     {
-      "filename": "Titan-Stable_31.1.0_amd64.AppImage",
+      "name": "Titan-Stable_31.1.3_amd64.AppImage",
       "type": "AppImage",
       "platform": "linux-x86_64",
-      "size_bytes": 93944312,
-      "sha256": "94ce7dfb692f2e1881ff6157f9c4efdb6c4e2efd1725c5d9be7ec7ad79a46ca8"
+      "size_bytes": 93948408,
+      "sha256": "eb530f06719b01552d72fd5f01245201405e8b4b26f44010ba9cece7ca38e60e"
     },
     {
-      "filename": "Titan-Stable_31.1.0_amd64.deb",
-      "type": "DEB",
+      "name": "Titan-Stable_31.1.3_amd64.deb",
+      "type": "deb",
       "platform": "linux-x86_64",
-      "size_bytes": 21228576,
-      "sha256": "591b03828f5e428ac69f5bd9f2f0b4dc91b5c3f9e54d131a98e449cbccda2f7d"
+      "size_bytes": 21221456,
+      "sha256": "b524b5bbe059a95ed7a4d66adc2b307004b6403b4b545389c08ab6479b94bb8c"
     }
-  ],
-  "notes": "v31.1.2: DocCenter DOCX export, Rust import cleanup, PerformanceTest refactor"
+  ]
 }

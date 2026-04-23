@@ -1,2 +1,2 @@
-Titan-Stable_31.1.0_amd64.AppImage  93944312 bytes  (90M)
-Titan-Stable_31.1.0_amd64.deb       21228576 bytes  (21M)
+93948408  Titan-Stable_31.1.3_amd64.AppImage
+21221456  Titan-Stable_31.1.3_amd64.deb

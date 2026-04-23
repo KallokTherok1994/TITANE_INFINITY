@@ -1,0 +1,11 @@
+# TITANE∞ v31.1.3 — Release Artifacts Checksums
+# Build date: 2026-04-23
+# Platform: linux-x86_64
+
+## SHA256
+eb530f06719b01552d72fd5f01245201405e8b4b26f44010ba9cece7ca38e60e  Titan-Stable_31.1.3_amd64.AppImage
+b524b5bbe059a95ed7a4d66adc2b307004b6403b4b545389c08ab6479b94bb8c  Titan-Stable_31.1.3_amd64.deb
+
+## Sizes (bytes)
+93948408  Titan-Stable_31.1.3_amd64.AppImage
+21221456  Titan-Stable_31.1.3_amd64.deb
