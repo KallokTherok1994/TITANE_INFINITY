@@ -257,6 +257,8 @@ export const titaneOwnedRoutePages = [
   uiPages.evolution,
 ];
 
+export const directRoutePages = [uiPages.docCenter];
+
 export const devOwnedRoutePages = [
   uiPages.orchestrationIntelligence,
   uiPages.orchestrationCenter,
@@ -280,6 +282,7 @@ export const moreMenuRoutePages = [
 export const canonicalRoutePages = [
   uiPages.titane,
   ...titaneOwnedRoutePages,
+  ...directRoutePages,
   uiPages.time,
   uiPages.admin,
   uiPages.dev,

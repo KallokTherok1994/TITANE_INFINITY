@@ -20,6 +20,8 @@
 - Surface canonique: `/doc-center`
 - Composant: `src/pages/DocCenterPage.tsx`
 - Alias: `/doc` redirige vers `/doc-center`
+- Contexte route/orchestrateur: `src/services/chat/moduleRouteContext.ts` publie `moduleId=doc_center` pour `/doc-center` et normalise `/doc` vers cette surface.
+- Inventaire page: `e2e/desktop/page-objects/uiPages.po.js` classe `doc-center` dans `directRoutePages` car la surface est accessible par URL directe sans propriétaire TopNav.
 - Selectors stables:
   - `doc-center-page` — conteneur principal de la page
   - `btn-export-docx` — bouton déclenchant l'export IPC
@@ -27,7 +29,7 @@
   - `input-doc-title` — champ titre du document
   - `input-output-dir` — champ répertoire de sortie
 - IPC: `export_docx_file` via `TAURI_COMMANDS.EXPORT_DOCX_FILE` (doc_engine/commands.rs)
-- Tests: Vitest `src/pages/__tests__/DocCenterPage.test.tsx` (5 tests), E2E `e2e/doc-center-export-docx.spec.ts` (4 scénarios)
+- Tests: Vitest `src/pages/__tests__/DocCenterPage.test.tsx` (12 tests), E2E `e2e/doc-center-export-docx.spec.ts` (4 scénarios), route/context `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`, inventaire `src/__tests__/ui/ui-page-objects-inventory.test.ts`
 
 # [2026-04-23] Experience page canonical stats/history truth
 
@@ -406,5 +408,6 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - 2026-04-20 — Voice input cleanup truth: `src/hooks/useVoiceInput.ts` ferme maintenant toujours le `MediaStream` micro local, y compris quand `voiceService.stopRecording()` échoue. La surface hook ne laisse donc plus une capture navigateur ouverte après un échec backend de stop.
 - 2026-04-20 — Voice input start cleanup truth: le même hook `src/hooks/useVoiceInput.ts` ferme aussi désormais le `MediaStream` local si `getUserMedia()` réussit mais que `voiceService.startRecording()` échoue ensuite. La voie start n abandonne donc plus un micro navigateur actif sur échec backend tardif.
 - 2026-04-20 — Voice input cancel cleanup truth: `src/hooks/useVoiceInput.ts` ferme maintenant aussi le `MediaStream` micro local et remet l état d écoute à plat si `voiceService.cancelRecording()` échoue. La voie cancel reste donc idempotente au lieu de laisser un micro navigateur actif caché.
-- 2026-04-23 — Canonical page seal truth: toutes les routes canoniques montées par `AppRouter` exposent désormais une racine stable qualifiable, directement ou via leur état de chargement, pour `/experience`, `/fusion`, `/optimization`, `/orchestration-intelligence`, `/orchestration-center`, `/reality-center`, `/hyper-center`, `/quantum-center`, `/twins`, `/total-dev`, `/knowledge`, `/creation`, `/evolution`, `/memory`, `/skills` en plus des surfaces déjà qualifiées. L’inventaire partagé WDIO expose aussi maintenant ces routes canoniques et leurs groupes d’ownership (`titaneOwnedRoutePages`, `devOwnedRoutePages`, `fusionOwnedRoutePages`, `moreMenuRoutePages`, `canonicalRoutePages`) afin que route, sélecteur racine et item de navigation restent alignés sur une même vérité.
+- 2026-04-24 — DocCenter route-context sync truth: `/doc-center` est maintenant branche au contexte actif par `moduleRouteContext` avec `moduleId=doc_center`, et `/doc` est normalise vers cette surface. L inventaire partage WDIO ajoute `directRoutePages` pour qualifier les routes URL directes sans propriétaire TopNav tout en les gardant dans `canonicalRoutePages`.
+- 2026-04-23 — Canonical page seal truth: toutes les routes canoniques montées par `AppRouter` exposent désormais une racine stable qualifiable, directement ou via leur état de chargement, pour `/experience`, `/fusion`, `/optimization`, `/orchestration-intelligence`, `/orchestration-center`, `/reality-center`, `/hyper-center`, `/quantum-center`, `/twins`, `/total-dev`, `/knowledge`, `/creation`, `/evolution`, `/memory`, `/skills`, `/doc-center` en plus des surfaces déjà qualifiées. L’inventaire partagé WDIO expose aussi maintenant ces routes canoniques et leurs groupes d’ownership (`titaneOwnedRoutePages`, `directRoutePages`, `devOwnedRoutePages`, `fusionOwnedRoutePages`, `moreMenuRoutePages`, `canonicalRoutePages`) afin que route, sélecteur racine et item de navigation restent alignés sur une même vérité.
 - 2026-04-23 — Canonical desktop proof lane truth: une lane WDIO dédiée `e2e/desktop/canonical-ui-pages.wdio.test.js` parcourt désormais `canonicalRoutePages` dans le runtime Tauri, vérifie le root visible de chaque route canonique et contrôle l’ownership nav actif, y compris `btn-nav-more` puis l’item propriétaire pour `/twins`, `/optimization`, `/performance` et `/total-dev`. Cette lane existe, mais sa validation native reste `pending-validation` tant que la rebuild `pnpm run build:tauri:e2e` n’a pas produit un nouvel artefact.

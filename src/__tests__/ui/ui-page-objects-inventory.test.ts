@@ -4,6 +4,7 @@ import {
   devOwnedRoutePages,
   uiPages,
   topLevelPageOrder,
+  directRoutePages,
   devEngineRoutePages,
   fusionOwnedRoutePages,
   moreMenuRoutePages,
@@ -56,7 +57,20 @@ describe('WDIO UI page inventory', () => {
     for (const page of canonicalRoutePages) {
       expect(page.route.startsWith('/')).toBe(true);
       expect(page.root).toContain('[data-testid=');
-      expect(page.navTestId).toMatch(/^nav-/);
+      if (page.navTestId !== null) {
+        expect(page.navTestId).toMatch(/^nav-/);
+      }
+    }
+  });
+
+  it('keeps direct URL surfaces explicitly inventoried without a TopNav owner', () => {
+    expect(directRoutePages.map(page => page.id)).toEqual(['doc-center']);
+
+    for (const page of directRoutePages) {
+      expect(page.navTestId).toBeNull();
+      expect(page.route).toBe('/doc-center');
+      expect(page.root).toBe('[data-testid="doc-center-page"]');
+      expect(topLevelPageOrder.map(item => item.id)).not.toContain(page.id);
     }
   });
 

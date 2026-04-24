@@ -116,6 +116,7 @@ const ROUTE_ALIASES: Record<string, string> = {
   '/memory-evolution': '/titane?tab=transformation',
   '/cloud-sync': '/cloud',
   '/vault': '/cloud',
+  '/doc': '/doc-center',
 };
 
 const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
@@ -478,6 +479,21 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     actions: ['list_skills', 'activate_skill', 'deactivate_skill', 'install_skill'],
     limits: ['local-skill-registry-can-be-empty'],
     memoryKeys: ['skill_registry_state', 'active_skill_id'],
+  },
+  '/doc-center': {
+    moduleId: 'doc_center',
+    moduleName: 'Doc Center',
+    moduleType: 'documents',
+    pageTitle: 'Doc Center',
+    capabilities: ['docx-export', 'document-generation', 'governed-ipc-export'],
+    dataTruthClass: 'LIVE_TAURI_GOVERNED',
+    actions: ['export_docx_file'],
+    limits: [
+      'requires-tauri-runtime-for-successful-export',
+      'browser-mode-shows-visible-ipc-error',
+      'direct-url-surface-without-topnav-owner',
+    ],
+    memoryKeys: ['doc_center_export_state', 'doc_center_last_output_dir'],
   },
 };
 

@@ -5,6 +5,7 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { AppRouter } from '@/App';
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
+import { canonicalRoutePages } from '../../../e2e/desktop/page-objects/uiPages.po.js';
 
 vi.mock('@tauri-apps/api/event', () => ({
   listen: vi.fn(async () => () => undefined),
@@ -129,6 +130,7 @@ describe('AppRouter canonical active surfaces', () => {
     ['/performance', 'page-performance-test', 'performance_test'],
     ['/research', 'research-page', 'research_page'],
     ['/skills', 'page-skills', 'skill_os'],
+    ['/doc-center', 'doc-center-page', 'doc_center'],
   ])(
     'mounts %s on its canonical UI surface and keeps the canonical route truth',
     async (route, pageTestId, moduleId) => {
@@ -153,6 +155,16 @@ describe('AppRouter canonical active surfaces', () => {
       expect(activeContext.fullRoute).toBe(route);
     }
   );
+
+  it('keeps every canonical route inventory entry connected to a known module context', () => {
+    for (const page of canonicalRoutePages) {
+      const activeContext = publishActiveModuleContext(page.route);
+
+      expect(activeContext.moduleId).not.toBe('unknown_module');
+      expect(activeContext.route).toBe(page.route);
+      expect(activeContext.fullRoute).toBe(page.route);
+    }
+  });
 
   it.each([
     ['/titane', 'nav-titane'],
@@ -201,6 +213,7 @@ describe('AppRouter canonical active surfaces', () => {
     ],
     ['/settings', '/admin?tab=config', 'page-admin', 'admin_center', 'tab=config'],
     ['/voice', '/admin?tab=audio', 'page-admin', 'admin_center', 'tab=audio'],
+    ['/doc', '/doc-center', 'doc-center-page', 'doc_center', undefined],
     ['/titane.sh/deep-link', '/titane', 'page-titane', 'titane_core', undefined],
   ])(
     'normalizes %s to %s and keeps route/page truth aligned with canonical context mapping',

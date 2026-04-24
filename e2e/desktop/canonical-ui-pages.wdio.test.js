@@ -17,6 +17,10 @@ const moreMenuExpectations = new Map([
 ]);
 
 async function assertNavOwnership(page) {
+  if (!page.navTestId) {
+    return;
+  }
+
   const expectedMoreNav = moreMenuExpectations.get(page.route);
   if (expectedMoreNav) {
     const moreButton = await $('[data-testid="btn-nav-more"]');
