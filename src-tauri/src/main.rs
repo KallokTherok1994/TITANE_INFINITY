@@ -1129,7 +1129,14 @@ fn main() {
         );
     }
 
-    let security_manager = Arc::new(SecurityManager::new(log_dir.join("audit.log")));
+    // Initialize SecurityManager with a default encryption key
+    // SECURITY NOTE: Using default key for development only
+    // In production, derive from TITANE_SECRETS_PASSPHRASE environment variable
+    const DEFAULT_ENCRYPTION_KEY: &[u8; 32] = b"titane-default-key-32-bytes!!!!!";
+    let security_manager = Arc::new(SecurityManager::new(
+        log_dir.join("audit.log"),
+        DEFAULT_ENCRYPTION_KEY,
+    ));
 
     // Initialize Secure Secrets Engine (AES-256-GCM encrypted storage)
     let secrets_passphrase_raw = std::env::var("TITANE_SECRETS_PASSPHRASE").ok();

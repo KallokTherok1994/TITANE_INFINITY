@@ -5,8 +5,14 @@
 //   AUTH OS — DEV TOKEN MANAGER
 // ═══════════════════════════════════════════════════════════════
 
-use crate::auth::{AuthResult, DevTokenData, Keystore};
+#[cfg(not(debug_assertions))]
+use crate::auth::AuthError;
+use crate::auth::AuthResult;
+#[cfg(debug_assertions)]
+use crate::auth::{DevTokenData, Keystore};
+#[cfg(debug_assertions)]
 use log::{info, warn};
+#[cfg(debug_assertions)]
 use rand::Rng;
 
 pub struct DevTokenManager;
@@ -101,5 +107,29 @@ impl DevTokenManager {
     pub fn exists() -> AuthResult<bool> {
         let keystore = Keystore::load()?;
         Ok(keystore.dev_token.is_some())
+    }
+
+    /// Dev tokens are a debug-only capability; release builds expose the command
+    /// but do not mint or accept development credentials.
+    #[cfg(not(debug_assertions))]
+    pub fn get_or_create() -> AuthResult<String> {
+        Err(AuthError::PermissionDenied(
+            "Dev token generation is disabled in release builds".to_string(),
+        ))
+    }
+
+    #[cfg(not(debug_assertions))]
+    pub fn validate(_input: &str) -> AuthResult<bool> {
+        Ok(false)
+    }
+
+    #[cfg(not(debug_assertions))]
+    pub fn revoke() -> AuthResult<()> {
+        Ok(())
+    }
+
+    #[cfg(not(debug_assertions))]
+    pub fn exists() -> AuthResult<bool> {
+        Ok(false)
     }
 }
