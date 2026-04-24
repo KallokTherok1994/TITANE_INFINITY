@@ -1,0 +1,5 @@
+commit 059090c02c3ef3f5d449c31ef123a69d4f725802
+Author: Copilot Production Agent <copilot@titane-infinity.local>
+Date:   Fri Apr 24 09:02:18 2026 -0400
+
+    docs: migration documentaire 2026-04-24 (centralisation archives, .md.md, index, mapping, logs, autoheal)
