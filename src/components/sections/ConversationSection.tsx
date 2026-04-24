@@ -2801,6 +2801,17 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             }
             searchLabel={thinkingSearchLabel}
             saveLabel={thinkingSaveLabel}
+            modelUsed={
+              selectedProvider === 'ollama'
+                ? resolveConversationOllamaModel(selectedProvider, latestAssistantRuntime)
+                : latestAssistantRuntime?.modelUsed
+            }
+            modelRequested={
+              latestAssistantRuntime?.modelRequested ??
+              (selectedProvider === 'ollama'
+                ? resolveConversationOllamaModel(selectedProvider, latestAssistantRuntime)
+                : undefined)
+            }
           />
 
           {/* ═══ MESSAGES AREA ═══ */}

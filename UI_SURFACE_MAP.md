@@ -5,6 +5,12 @@
 - Verite appliquee: fallback determine `APP_VERSION=dev` quand la variable globale n est pas injectee, ce qui conserve le badge `Nouveau` et evite le crash test par `ReferenceError`.
 - Tests impactes: `src/services/__tests__/advancedAgentCatalog.test.tsx`, `src/components/layout/__tests__/AppShell.test.tsx`, `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`.
 
+# [2026-04-24] Agent UI ThinkingPanel model trace
+
+- Surface canonique: `reasoning-progress` dans `src/features/chat/ThinkingPanel.tsx`, alimentee par `src/components/sections/ConversationSection.tsx`.
+- Verite modele visible: `reasoning-progress`, `reasoning-summary-model` et `reasoning-runtime-model` publient `data-model-used` et `data-model-requested` depuis `latestAssistantRuntime`.
+- Preuve UI: `e2e/desktop/chat-model-truth-chain.wdio.test.js` verifie maintenant le modele gouverne `gemma2:2b` dans le panneau runtime chat et dans le journal OMEGA.
+
 # [2026-04-24] Agent UI chat runtime truth chain
 
 - Surface canonique: `/titane?tab=conversation`, composant actif `src/components/sections/ConversationSection.tsx`.

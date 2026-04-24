@@ -671,6 +671,10 @@
   color: rgba(203, 213, 225, 0.9);
   font-weight: 500;
 }
+.oj-model-requested {
+  margin-left: 0.5rem;
+  color: rgba(148, 163, 184, 0.78);
+}
 
 /* Topology */
 .oj-topology-wrap {

@@ -90,6 +90,8 @@ interface ThinkingPanelProps {
   // ── OMEGA v4.1: Reasoning & Actions ──────────────────────────
   reasoningSummary?: string | null;
   actionsPerformed?: ThinkingAction[];
+  modelUsed?: string;
+  modelRequested?: string;
 }
 
 type ViewMode = 'essentiel' | 'detaille' | 'expert';
@@ -115,6 +117,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   responseLength,
   reasoningSummary,
   actionsPerformed,
+  modelUsed,
+  modelRequested,
 }) => {
   const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
     state ??
@@ -249,6 +253,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               ? `${(qualityScore * 100).toFixed(0)}%`
               : ''
           }
+          data-model-used={modelUsed ?? ''}
+          data-model-requested={modelRequested ?? ''}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -329,6 +335,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             ? `${(qualityScore * 100).toFixed(0)}%`
             : ''
         }
+        data-model-used={modelUsed ?? ''}
+        data-model-requested={modelRequested ?? ''}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -16 }}
@@ -489,6 +497,25 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 </span>
               </div>
             )}
+            <div className="oj-summary-row">
+              <Cpu size={14} className="oj-icon-blue" />
+              <span className="oj-summary-label">Modèle utilisé :</span>
+              <span
+                className="oj-summary-value"
+                data-testid="reasoning-summary-model"
+                data-model-used={modelUsed ?? ''}
+                data-model-requested={modelRequested ?? ''}
+              >
+                {modelUsed ? (
+                  modelUsed
+                ) : (
+                  <span className="oj-non-capture">Non capturé</span>
+                )}
+                {modelRequested && modelRequested !== modelUsed && (
+                  <span className="oj-model-requested">(demandé : {modelRequested})</span>
+                )}
+              </span>
+            </div>
             <div className="oj-summary-row oj-summary-row--caption">
               <Globe size={11} className="oj-icon-muted" />
               <span className="oj-non-capture">
@@ -624,6 +651,26 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                       </>
                     ) : (
                       <span className="oj-non-capture">NON CAPTURÉ</span>
+                    )}
+                  </span>
+                </div>
+                <div className="oj-runtime-item">
+                  <span className="oj-runtime-label">Modèle utilisé</span>
+                  <span
+                    className="oj-runtime-value"
+                    data-testid="reasoning-runtime-model"
+                    data-model-used={modelUsed ?? ''}
+                    data-model-requested={modelRequested ?? ''}
+                  >
+                    {modelUsed ? (
+                      modelUsed
+                    ) : (
+                      <span className="oj-non-capture">Non capturé</span>
+                    )}
+                    {modelRequested && modelRequested !== modelUsed && (
+                      <span className="oj-model-requested">
+                        (demandé : {modelRequested})
+                      </span>
                     )}
                   </span>
                 </div>

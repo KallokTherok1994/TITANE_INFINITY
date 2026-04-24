@@ -31,6 +31,8 @@ describe('ThinkingPanel runtime truth', () => {
           systemPromptSources: ['route:/titane?tab=conversation', 'memory:present'],
         }}
         reasoningSummary="Le contexte runtime a ete injecte puis la reponse a ete generee."
+        modelUsed="gemma2:2b"
+        modelRequested="gemma2:2b"
         steps={[
           {
             id: 'step-1',
@@ -56,6 +58,8 @@ describe('ThinkingPanel runtime truth', () => {
       '2 sources contexte injectees'
     );
     expect(progress).toHaveAttribute('data-runtime-quality', '78%');
+    expect(progress).toHaveAttribute('data-model-used', 'gemma2:2b');
+    expect(progress).toHaveAttribute('data-model-requested', 'gemma2:2b');
 
     fireEvent.click(screen.getByTestId('reasoning-progress'));
     fireEvent.click(screen.getByText('Détaillé'));
@@ -64,6 +68,15 @@ describe('ThinkingPanel runtime truth', () => {
     expect(screen.getByTestId('reasoning-runtime-mode')).toHaveTextContent('LOCAL');
     expect(screen.getByText('1.5s')).toBeInTheDocument();
     expect(screen.getByTestId('reasoning-runtime-duration')).toHaveTextContent('1.5s');
+    expect(screen.getByTestId('reasoning-summary-model')).toHaveAttribute(
+      'data-model-used',
+      'gemma2:2b'
+    );
+    expect(screen.getByTestId('reasoning-runtime-model')).toHaveTextContent('gemma2:2b');
+    expect(screen.getByTestId('reasoning-runtime-model')).toHaveAttribute(
+      'data-model-requested',
+      'gemma2:2b'
+    );
     expect(screen.getByText(/Sauvegarde persistante validee/i)).toBeInTheDocument();
     expect(screen.getByTestId('reasoning-memory-save')).toHaveTextContent(
       /Sauvegarde persistante validee/i
