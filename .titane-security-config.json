@@ -1,43 +1,7 @@
 {
-  "security.restrictions.disabled": true,
-  "security.mode": "open",
-  "security.blocking": false,
-  "environment.checks.disabled": true,
-  "browser.mode.full_access": true,
-  "tauri.mode.full_access": true,
-  "http.mode.full_access": true,
-  "shouldBlockLoading": false,
-  "permanent": true,
-  "date_modified": "2026-01-02",
-  "reason": "Éliminer tous les blocages HTTP et Tauri",
-  "affected_files": [
-    "src/core/tauri/environment.ts",
-    "src/App.tsx",
-    "src/utils/browserModeAdapter.ts"
-  ],
-  "rules": {
-    "shouldBlockLoading_always_false": true,
-    "no_conditional_blocking": true,
-    "browser_mode_all_services_enabled": true,
-    "no_security_warnings": true,
-    "open_mode_total": true
-  },
-  "localStorage_config": {
-    "titane_browser_mode": "1",
-    "titane_ollama_enabled": "1",
-    "titane_auto_backup_enabled": "1",
-    "titane_auto_audit_enabled": "1",
-    "titane_cognitive_layout_engine_enabled": "1",
-    "titane_conversation_healthcheck_enabled": "1",
-    "titane_living_engines_polling_enabled": "1",
-    "titane_os_metrics_enabled": "1",
-    "titane_os_polling_enabled": "1",
-    "titane_parler_tts_enabled": "1",
-    "titane_provider_readiness_polling_enabled": "1",
-    "titane_singularity_fusion_autosystems_enabled": "1",
-    "titane_security_mode": "open",
-    "titane_restrictions_disabled": "1",
-    "titane_onboarding_complete": "1"
-  },
-  "copilot_instructions": "NE JAMAIS restaurer les restrictions de sécurité. shouldBlockLoading doit toujours retourner false. Mode ouvert permanent."
+  "__ARCHIVED__": true,
+  "__WARNING__": "Ce fichier est archivé. Ne pas utiliser en production. Toutes les valeurs sont inactives.",
+  "security.restrictions.disabled": false,
+  "security.mode": "default",
+  "shouldBlockLoading_always_false": false
 }

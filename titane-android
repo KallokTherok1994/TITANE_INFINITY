@@ -6,7 +6,7 @@ ROOT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 APK_PATH="$ROOT_DIR/src-tauri/gen/android/app/build/outputs/apk/universal/debug/app-universal-debug.apk"
 PACKAGE_NAME="com.titane.infinity"
 MAIN_ACTIVITY="$PACKAGE_NAME/.MainActivity"
-DEFAULT_MODEL="llama3.1:latest"
+DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
 DEFAULT_WAIT_SECS=20
 
 SERIAL="${ANDROID_SERIAL:-}"
