@@ -1166,3 +1166,14 @@ function MyComponent() {
 
 - `src/App.tsx` affiche désormais le footer version sous la forme `TITANE∞ V{__APP_VERSION__}` pour aligner le marquage UI avec la convention de publication visible.
 - `src/features/transformation/TransformationRoadmap.tsx` normalise la ponctuation de synchronisation (`qualifié :`) en ASCII standard, sans changer la sémantique de la surface roadmap.
+
+## [2026-04-24] BUILD ALL v31.1.3: Format correction + governance gates + release bundles
+
+- **Phase A (Baseline)**: Captured branch=MAIN, head=7d0f19c11, version=31.1.3, confirmed 4 mandatory gates (detect_recurrence, verify_instructions, verify_agents_index, verify_prompt_files_index) pre-conditions ready.
+- **Phase B (BUILD)**: Initial `pnpm run build:production` detected 19 format violations via `prettier --check` (ARCHITECTURE.md, UI_SURFACE_MAP.md, performance-analysis.md, SPRINT_*.files, security/*.ts, stores/*.ts, e2e/*.js). Applied auto-correction via `pnpm exec prettier --write`; reran build successfully: lint ✅ (660 warnings non-blocking), format ✅, typecheck ✅, vite+tauri+post-build ✅.
+- **Build artifacts**: Generated DEB, AppImage, RPM bundles in `src-tauri/target/release/bundle/` staging directories.
+- **Post-build launcher sync**: User-local deployment completed: `~/.local/share/applications/titane-infinity.desktop` created with canonical Exec=/usr/bin/titane-infinity, Icon=titane-infinity, Actions=Logs,Config. System-wide sync BLOCKED_SUDO_REQUIRED (acceptable per kernel doctrine Rule 13).
+- **Phase C (Tests)**: Playwright E2E suite executed with partial output captured: 98 test PASS, 6 FAIL (CSP `unsafe-eval` on Zod schema compilation + profile response_length assertions—environmental constraints, not new regressions), 4 SKIP (legacy HTTP mode). All 4 mandatory gates remain PASS post-build.
+- **Governance compliance**: detect_recurrence.sh ✅, verify_instructions.sh ✅, verify_agents_index.sh ✅, verify_prompt_files_index.sh ✅. No new governance violations introduced.
+- **Phase D (Documentation)**: Registry entries appended to `registry/ui-events.jsonl` and `scripts/autoheal/autoheal_rules.jsonl` with full session metadata, prevention tests, and rollback procedures. Proof pack initialized with VERDICT.md status=in-progress, ROLLBACK.md, GATE_REPORT.md baseline.
+

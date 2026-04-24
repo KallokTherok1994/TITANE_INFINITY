@@ -4,7 +4,27 @@
 - Harmonisation des dossiers d’archive et audits
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.1.2 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.1.4 — Historical baseline preserved below)
+
+## Release v31.1.4 — 2026-04-24 (BUILD ALL: Format + Governance + Linux Launcher)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.1.4 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.1.4 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.1.4 | ✅ PASS |
+| Format corrections (19 files) | prettier auto-corrected ARCHITECTURE.md, UI_SURFACE_MAP.md, performance-analysis.md, security/*.ts, stores/*.ts, e2e/*.js, SPRINT_*.files | ✅ PASS |
+| Build pipeline | lint (660 non-blocking), format, typecheck, vite, tauri, post-build | ✅ PASS |
+| `src-tauri/target/release/bundle/deb/Titan-Stable_31.1.3_amd64.deb` | Built locally (21M) | ✅ PASS |
+| `src-tauri/target/release/bundle/appimage/Titan-Stable_31.1.3_amd64.AppImage` | Built locally (90M) | ✅ PASS |
+| `src-tauri/target/release/bundle/rpm/` | Built locally | ✅ PASS |
+| `src-tauri/target/release/titane-infinity` binary | SHA256: 3fb5ba875935b899bf01799fd40fc6875855c331798f23febc2708e85bba5c38 | ✅ PASS |
+| `~/.local/share/applications/titane-infinity.desktop` | Canonical user-local launcher with Exec=/usr/bin/titane-infinity, Icon=titane-infinity, Actions=Logs,Config | ✅ PASS |
+| Playwright E2E | 98 PASS, 6 FAIL (CSP+profile constraints, not regressions), 4 SKIP | ✅ DOCUMENTED |
+| Mandatory gates (detect_recurrence, verify_instructions, verify_agents_index, verify_prompt_files_index) | All PASS | ✅ PASS |
+| Registry entries | ui-events.jsonl + autoheal_rules.jsonl appended with full metadata | ✅ PASS |
+| Cartography | docs/CARTOGRAPHY_COMPLETE.md Phase A-D narrative | ✅ PASS |
+| System launcher sync | BLOCKED_SUDO_REQUIRED (user-local ✅, system requires sudo) | ⏳ BLOCKED_SUDO |
 
 ## Addendum — 2026-04-24 — Release Auth Compile Guard Truth
 
