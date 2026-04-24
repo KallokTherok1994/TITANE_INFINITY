@@ -75,6 +75,26 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 - Wildcard imports in src: 18
 - Deep-import pattern count (3+ levels): 25
 
+## Increment 5 Delivered In This Pass
+
+- Reduced deep-import usage across additional test and UI surfaces:
+  - src/__tests__/features/chat/artifactIntent.test.ts
+  - src/__tests__/services/ai/behavioralRouter.test.ts
+  - src/__tests__/services/ai/behavioralRouterIntegration.test.ts
+  - src/__tests__/services/performanceEngine/performanceEngine.test.ts
+  - src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts
+  - src/__tests__/services/ai/canonicalDiscernmentKernel.test.ts
+  - src/__tests__/services/operator/desktopPerception.test.ts
+  - src/__tests__/services/adminEngine/adminEngine.test.ts
+- Impact:
+  - deep-import pattern count reduced from 25 to 4 on this increment
+  - cumulative reduction remains behavior-safe (typecheck + targeted suites pass)
+
+## Delta Snapshot (after increment 5)
+
+- Wildcard imports in src: 18
+- Deep-import pattern count (3+ levels): 4
+
 ## Priority Plan (Sprint 5)
 
 1. P0: Eliminate remaining wildcard imports in frontend runtime paths.

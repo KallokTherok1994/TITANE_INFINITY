@@ -66,7 +66,7 @@ import {
   AdminEngine,
   getAdminEngine,
   resetAdminEngine,
-} from '../../../services/adminEngine';
+} from '@/services/adminEngine';
 
 // =============================================================================
 // SETUP / TEARDOWN

@@ -5,7 +5,7 @@ import {
   classifyArtifactIntent,
   resolveArtifactRoute,
   validateNoFakeArtifactResponse,
-} from '../../../features/chat/artifactIntent';
+} from '@/features/chat/artifactIntent';
 
 describe('artifactIntent', () => {
   it('classifies plain chat as ANSWER_ONLY', () => {

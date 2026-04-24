@@ -4,10 +4,10 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CanonicalDiscernmentKernel } from '../../../services/ai/canonicalDiscernmentKernel';
-import type { DiscernmentInput } from '../../../services/ai/canonicalDiscernmentKernel';
-import type { MemoryContext } from '../../../services/ai/memoryIntegration';
-import type { DurablePreference } from '../../../services/ai/preferenceEngine';
+import { CanonicalDiscernmentKernel } from '@/services/ai/canonicalDiscernmentKernel';
+import type { DiscernmentInput } from '@/services/ai/canonicalDiscernmentKernel';
+import type { MemoryContext } from '@/services/ai/memoryIntegration';
+import type { DurablePreference } from '@/services/ai/preferenceEngine';
 
 describe('CanonicalDiscernmentKernel', () => {
   let kernel: CanonicalDiscernmentKernel;

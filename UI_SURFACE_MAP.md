@@ -51,6 +51,13 @@
 - Surface moteur test impactee: `src/engines/conversation/__tests__/conversationLifecycleEngine.test.ts` et `src/engines/flow/__tests__/FlowEngine.test.ts` alignes aussi sur alias types partages.
 - Preuve execution: `pnpm run check` + `pnpm exec vitest run` (4 fichiers cibles) + gates AutoHeal/instructions.
 
+# [2026-04-24] Sprint 5 — Deep imports reduction on service test matrix
+
+- Surfaces impactees: `src/__tests__/services/**` + `src/__tests__/features/chat/artifactIntent.test.ts`.
+- Changement: migration de references `../../../services/...` et `../../../features/...` vers alias canoniques `@/services/...` et `@/features/...`.
+- Surface UI complementaire: `src/ui/pages/ChatIA/ModeEditor.tsx` deja alignee sur `@/stores/uiStore.selectors` dans l increment precedent, conservee conforme dans ce lot.
+- Preuve execution: `pnpm run check` + `pnpm exec vitest run` (8 fichiers cibles) + metrique deep imports `4`.
+
 # [2026-04-24] Desktop UI driver complete page audit truth
 
 - Surface canonique de preuve: `e2e/desktop/canonical-ui-pages.wdio.test.js`.

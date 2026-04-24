@@ -26,7 +26,7 @@ import {
   LOWPOWER_THRESHOLDS,
   DEFAULT_PERFORMANCE_CONFIG,
   METRIC_DEFINITIONS,
-} from '../../../services/performanceEngine/performanceEngine.config';
+} from '@/services/performanceEngine/performanceEngine.config';
 
 import type {
   MetricType,
@@ -39,7 +39,7 @@ import type {
   ThresholdViolation,
   Recommendation,
   MetricsSnapshot,
-} from '../../../services/performanceEngine/performanceEngine.config';
+} from '@/services/performanceEngine/performanceEngine.config';
 
 // ============================================================================
 // TESTS - GÉNÉRATION D'IDS

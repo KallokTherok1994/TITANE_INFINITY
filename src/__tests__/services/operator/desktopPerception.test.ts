@@ -10,7 +10,7 @@ import {
   handoffDesktopSession,
   killDesktopSession,
   getDesktopControlStatus,
-} from '../../../services/operator/desktopPerception';
+} from '@/services/operator/desktopPerception';
 
 import { safeInvokeCanonical } from '@/utils/invoke';
 const mockSafeInvoke = safeInvokeCanonical as ReturnType<typeof vi.fn>;

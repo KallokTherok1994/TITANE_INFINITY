@@ -200,8 +200,8 @@ vi.mock('@/services/memory/types', () => ({
 }));
 
 // ── IMPORTS (after mocks) ────────────────────────────────────────
-import { chatEngine } from '../../../services/ai/chatEngine';
-import { chatEngineCommands } from '../../../services/tauri/chatEngine.commands';
+import { chatEngine } from '@/services/ai/chatEngine';
+import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
 
 // ── TESTS ────────────────────────────────────────────────────────
 

@@ -4,11 +4,11 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { BehavioralRouter } from '../../../services/ai/behavioralRouter';
-import type { BehavioralSignal } from '../../../services/ai/behavioralRouter';
-import type { MemoryContext } from '../../../services/ai/memoryIntegration';
-import type { DurablePreference } from '../../../services/ai/preferenceEngine';
-import type { IntentClassification } from '../../../services/ai/responsePolicy';
+import { BehavioralRouter } from '@/services/ai/behavioralRouter';
+import type { BehavioralSignal } from '@/services/ai/behavioralRouter';
+import type { MemoryContext } from '@/services/ai/memoryIntegration';
+import type { DurablePreference } from '@/services/ai/preferenceEngine';
+import type { IntentClassification } from '@/services/ai/responsePolicy';
 
 describe('BehavioralRouter', () => {
   let router: BehavioralRouter;

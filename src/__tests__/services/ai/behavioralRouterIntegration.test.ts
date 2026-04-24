@@ -4,11 +4,11 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { behavioralRouter } from '../../../services/ai/behavioralRouter';
-import { getEffectiveProfile } from '../../../services/ai/responsePolicy';
-import type { MemoryContext } from '../../../services/ai/memoryIntegration';
-import type { DurablePreference } from '../../../services/ai/preferenceEngine';
-import type { IntentClassification } from '../../../services/ai/responsePolicy';
+import { behavioralRouter } from '@/services/ai/behavioralRouter';
+import { getEffectiveProfile } from '@/services/ai/responsePolicy';
+import type { MemoryContext } from '@/services/ai/memoryIntegration';
+import type { DurablePreference } from '@/services/ai/preferenceEngine';
+import type { IntentClassification } from '@/services/ai/responsePolicy';
 
 describe('BehavioralRouter → Profile Selection Integration', () => {
   const emptyMemory: MemoryContext = {
