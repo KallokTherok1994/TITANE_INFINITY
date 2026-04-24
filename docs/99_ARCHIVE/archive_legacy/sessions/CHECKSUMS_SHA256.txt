@@ -1,0 +1,12 @@
+# TITANE∞ v19.2Ω — SHA256 Checksums
+# Date: 29 novembre 2025
+# Version: 19.2.0
+
+# AppImage (Linux Portable)
+f473cb6ae47fae78a00197786178207f3df4da421eb2522b45020ded7fdacffd  TITANE∞ v19.2Ω_19.2.0_amd64.AppImage
+
+# Debian Package
+b999831ddd8f2a743b526cd0b7fe5bcc34b3f738372e6d2611c27bc468562c8d  TITANE∞ v19.2Ω_19.2.0_amd64.deb
+
+# Vérification:
+# sha256sum -c CHECKSUMS_SHA256.txt

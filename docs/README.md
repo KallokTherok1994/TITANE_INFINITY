@@ -19,11 +19,27 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - Les lignes binaires `v28.90.0`, `v28.88.0` et `v27.0.5` sont conservees comme historique documente
 - `CHANGELOG.md` + `deployment/latest/MANIFEST.json` portent la reference de release canonique courante
 
+
 ## Navigation canonique
 
 - Entrée racine: [`../README.md`](../README.md)
-- Index documentaire global: [`INDEX.md`](INDEX.md)
+- Documentation principale: ce fichier (`README.md`)
+- **Tous les anciens index** (`INDEX.md`, `INDEX_MASTER.md`, `INDEX_DOCUMENTATION*`) sont archivés dans [`99_ARCHIVE/`](99_ARCHIVE)
+- **Tous les fichiers .md.md** sont archivés dans [`99_ARCHIVE/`](99_ARCHIVE)
 - Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
+---
+
+## 🗂️ Migration documentaire 2026-04-24
+
+Une opération de nettoyage et d'archivage a été réalisée sur l'ensemble du dossier `docs/` :
+
+- **Tous les fichiers `.md.md`** ont été déplacés dans [`docs/99_ARCHIVE/`](99_ARCHIVE)
+- **Tous les anciens index** (`INDEX.md`, `INDEX_MASTER.md`, `INDEX_DOCUMENTATION*`) sont archivés dans [`99_ARCHIVE/`](99_ARCHIVE)
+- **Tous les dossiers d'archive** ont été centralisés dans [`99_ARCHIVE/`](99_ARCHIVE)
+- **audit/audits** : un seul dossier archivé, voir `99_ARCHIVE/`
+- **Preuves et inventaires** : voir [`docs/92_maintenance/`](92_maintenance)
+
+La navigation documentaire canonique passe désormais exclusivement par ce `README.md`.
 
 ## 🌟 Caracteristiques v30.0.0
 

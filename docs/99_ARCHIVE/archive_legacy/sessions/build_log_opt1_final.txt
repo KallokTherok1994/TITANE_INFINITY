@@ -1,0 +1,91 @@
+
+> titane-infinity@24.3.0 build
+> vite build
+
+vite v6.4.1 building for production...
+transforming...
+✓ 3319 modules transformed.
+Generated an empty chunk: "i18n".
+rendering chunks...
+computing gzip size...
+dist/index.html                                            6.09 kB │ gzip:   2.14 kB
+dist/assets/titane-reactor-awen-CDlleqco.svg              13.92 kB │ gzip:   2.51 kB
+dist/assets/DesignSystemPage-mUyiyG_c.css                  1.28 kB │ gzip:   0.45 kB
+dist/assets/ui-experience-DhxbLwec.css                     2.19 kB │ gzip:   0.83 kB
+dist/assets/ModulePages-F2tAf4hR.css                       2.36 kB │ gzip:   0.77 kB
+dist/assets/TimeNavigator-DrniIofm.css                     3.26 kB │ gzip:   1.10 kB
+dist/assets/page-camera-Buz2zTfu.css                       6.25 kB │ gzip:   1.41 kB
+dist/assets/index-DBs13sjj.css                             7.26 kB │ gzip:   1.69 kB
+dist/assets/ui-audio-BBNp3xap.css                          8.26 kB │ gzip:   1.87 kB
+dist/assets/ui-primitives-B4rkT2SJ.css                     9.01 kB │ gzip:   2.35 kB
+dist/assets/index-BldNRfkf.css                             9.35 kB │ gzip:   2.08 kB
+dist/assets/page-agenda-CVXML3ox.css                       9.50 kB │ gzip:   2.15 kB
+dist/assets/OrchestrationMetaCenter-gvgtHcGt.css          13.35 kB │ gzip:   2.14 kB
+dist/assets/index-Co36-XYd.css                            14.82 kB │ gzip:   2.99 kB
+dist/assets/index-C6Mfm4aQ.css                            15.97 kB │ gzip:   3.03 kB
+dist/assets/index-GYUOvrtW.css                            26.85 kB │ gzip:   3.69 kB
+dist/assets/ui-chat-C5hkEHu2.css                          42.13 kB │ gzip:   8.26 kB
+dist/assets/index-6Mt1L5bc.css                           105.27 kB │ gzip:  18.89 kB
+dist/assets/ui-common-ByBLkZcm.css                       127.67 kB │ gzip:  20.99 kB
+dist/assets/i18n-l0sNRNKZ.js                               0.00 kB │ gzip:   0.02 kB
+dist/assets/XPProgressBar-vp7U0Mxr.js                      1.66 kB │ gzip:   0.82 kB
+dist/assets/Nexus-ftHkGJ5C.js                              1.87 kB │ gzip:   0.87 kB
+dist/assets/Watchdog-B0qrcMyd.js                           1.88 kB │ gzip:   0.87 kB
+dist/assets/SelfHeal-BIBCuVl6.js                           1.91 kB │ gzip:   0.88 kB
+dist/assets/AdaptiveEngine-CiwnQosP.js                     1.92 kB │ gzip:   0.87 kB
+dist/assets/Harmonia-BQjN8026.js                           1.95 kB │ gzip:   0.90 kB
+dist/assets/Sentinel-DBYRlRGQ.js                           1.97 kB │ gzip:   0.91 kB
+dist/assets/Helios-B2wkQDkt.js                             2.32 kB │ gzip:   1.05 kB
+dist/assets/ProgressionPage-BYx0-EaC.js                    2.94 kB │ gzip:   1.18 kB
+dist/assets/ui-experience-CXVwQOIz.js                      3.61 kB │ gzip:   1.63 kB
+dist/assets/Memory-D0NIPFs9.js                             3.87 kB │ gzip:   1.60 kB
+dist/assets/service-memory-XK7AJSkR.js                     5.07 kB │ gzip:   1.43 kB
+dist/assets/memoryEngine-CxfUUYDx.js                       5.17 kB │ gzip:   1.75 kB
+dist/assets/DesignSystemPage-BK9_tGez.js                   5.70 kB │ gzip:   1.75 kB
+dist/assets/Experience-b2wVmtaf.js                         5.72 kB │ gzip:   1.95 kB
+dist/assets/TimeNavigator-Cyxwahun.js                      6.12 kB │ gzip:   1.98 kB
+dist/assets/ui-layout-C0ZVBbsz.js                          6.14 kB │ gzip:   2.41 kB
+dist/assets/DatasetBuilder-DWuHzI1T.js                     6.88 kB │ gzip:   2.20 kB
+dist/assets/VocalDevConsoleEngine-DXaxzuQ0.js             10.77 kB │ gzip:   3.66 kB
+dist/assets/web-vitals-P36_w669.js                        10.94 kB │ gzip:   3.47 kB
+dist/assets/LiveDebuggerEngine-D_7ms9rO.js                11.19 kB │ gzip:   3.93 kB
+dist/assets/PerformanceTest-ChTXj5gU.js                   11.28 kB │ gzip:   2.57 kB
+dist/assets/FusionEngine-DEnZTc-F.js                      12.29 kB │ gzip:   3.91 kB
+dist/assets/ConfigurationHub-CyjbH4O3.js                  12.70 kB │ gzip:   3.74 kB
+dist/assets/DataCollectorEngine-x8RuyjGz.js               13.00 kB │ gzip:   4.29 kB
+dist/assets/tauri-vendor-CazgKQ4m.js                      13.43 kB │ gzip:   3.60 kB
+dist/assets/CognitivePage-BY0XaTIS.js                     13.52 kB │ gzip:   4.34 kB
+dist/assets/OrchestrationIntelligenceCenter-C4uf_G5H.js   13.99 kB │ gzip:   3.53 kB
+dist/assets/index-F9tL1Hnt.js                             15.16 kB │ gzip:   4.51 kB
+dist/assets/DashboardPage-cEJ3fT7B.js                     15.42 kB │ gzip:   4.52 kB
+dist/assets/index-D_GumXZq.js                             15.50 kB │ gzip:   4.57 kB
+dist/assets/page-camera-HPSYlfOH.js                       16.76 kB │ gzip:   5.39 kB
+dist/assets/OrchestrationMetaCenter-U7jDHECS.js           17.56 kB │ gzip:   4.37 kB
+dist/assets/TemporalFlowCenter-I8gRf17b.js                18.17 kB │ gzip:   4.87 kB
+dist/assets/IdentityMemoryEvolutionCenter-DTtRwiuD.js     18.23 kB │ gzip:   4.59 kB
+dist/assets/ui-audio-4TJ0Qdp1.js                          20.37 kB │ gzip:   6.11 kB
+dist/assets/index-BsXl9mdG.js                             21.06 kB │ gzip:   5.26 kB
+dist/assets/index-DBip-cUw.js                             22.17 kB │ gzip:   5.11 kB
+dist/assets/markdown-CpZ58Vzv.js                          24.50 kB │ gzip:   7.28 kB
+dist/assets/index-BIHCRVJ_.js                             28.75 kB │ gzip:   6.81 kB
+dist/assets/ui-primitives-DICAUADg.js                     31.70 kB │ gzip:   7.52 kB
+dist/assets/EvolutionCenterPage-bin1eTA5.js               34.13 kB │ gzip:   9.06 kB
+dist/assets/index-DX4FOcZr.js                             35.21 kB │ gzip:   8.77 kB
+dist/assets/index-Z9DO_Ux_.js                             36.42 kB │ gzip:   9.75 kB
+dist/assets/page-agenda-CnwSrQ72.js                       37.39 kB │ gzip:  11.08 kB
+dist/assets/index-25tkgivp.js                             42.52 kB │ gzip:   9.59 kB
+dist/assets/index-CWb828Wn.js                             42.74 kB │ gzip:   9.75 kB
+dist/assets/ui-chat-gITZdIMY.js                           48.66 kB │ gzip:  15.28 kB
+dist/assets/validation-Cy99jhhg.js                        61.08 kB │ gzip:  16.70 kB
+dist/assets/service-cognitive-CLNGxfsU.js                 66.99 kB │ gzip:  20.75 kB
+dist/assets/service-audio-BfKqZZAK.js                     74.90 kB │ gzip:  21.12 kB
+dist/assets/ai-transformers-C_VaXBlq.js                  196.48 kB │ gzip:  54.84 kB
+dist/assets/charts-DsNbbpxg.js                           199.47 kB │ gzip:  67.18 kB
+dist/assets/ui-common-Dt5yo2pC.js                        200.35 kB │ gzip:  52.05 kB
+dist/assets/vendor-utils-C97hOsS3.js                     219.98 kB │ gzip:  70.62 kB
+dist/assets/monitoring-B8Gdj8V8.js                       245.87 kB │ gzip:  80.86 kB
+dist/assets/services-common-B2y7UaMz.js                  253.11 kB │ gzip:  78.29 kB
+dist/assets/react-vendor-B320Iifd.js                     321.67 kB │ gzip: 104.27 kB
+dist/assets/page-chat-jRFcyUwx.js                        394.23 kB │ gzip: 109.20 kB
+dist/assets/ai-onnx-DCPcm3U2.js                          545.27 kB │ gzip: 130.32 kB
+✓ built in 13.43s

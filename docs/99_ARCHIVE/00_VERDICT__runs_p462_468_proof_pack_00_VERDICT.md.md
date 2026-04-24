@@ -1,0 +1,12 @@
+]633;E;{   echo '# VERDICT'\x3b   echo "- Window: $WINDOW ($SLUG)"\x3b   echo "- RUN_1: EXIT=$RUN1_EXIT"\x3b   echo "- RUN_2: EXIT=$RUN2_EXIT"\x3b   echo "- RUN_3: EXIT=$RUN3_EXIT"\x3b   echo "- Hashes: $SHA1 | $SHA2 | $SHA3"\x3b   echo "- No-skip hits: $SKIP_HITS"\x3b   echo "- REAL_SECRET: $REAL_COUNT"\x3b   echo "- NEEDS_REVIEW: $NEEDS_COUNT"\x3b   echo "- POSTFIX_HITS: $POST_HITS"\x3b   echo "- Decision: $VERDICT"\x3b   echo "- Root cause: $CAUSE"\x3b } > runs/current/00_VERDICT.md;e99512ee-eb41-47ad-ba70-e987d0e9646e]633;C# VERDICT
+- Window: P462→P468 (p462_468)
+- RUN_1: EXIT=0
+- RUN_2: EXIT=0
+- RUN_3: EXIT=0
+- Hashes: f8eaa9559d4997866eeb95f30bb2cf5200f2cf44bb150ca89f0df65bf9c5df72 | f8eaa9559d4997866eeb95f30bb2cf5200f2cf44bb150ca89f0df65bf9c5df72 | f8eaa9559d4997866eeb95f30bb2cf5200f2cf44bb150ca89f0df65bf9c5df72
+- No-skip hits: 0
+- REAL_SECRET: 0
+- NEEDS_REVIEW: 0
+- POSTFIX_HITS: 0
+- Decision: PASS
+- Root cause: all checks green

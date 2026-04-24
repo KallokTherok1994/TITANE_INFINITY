@@ -1,0 +1,4 @@
+]633;E;{   echo "# ROLLBACK"\x3b   echo\x3b   echo "git restore -- .github/copilot-instructions.md .github/instructions scripts/verify/verify-copilot-instructions.sh scripts/heal/heal-copilot-instructions.sh scripts/guard/guard-no-human-go.sh scripts/guard/guard-no-server-web.sh package.json docs/current/GOV_COPILOT_INSTRUCTIONS.md src-tauri/src/perf_metrics_capture.rs src-tauri/src/perf_bench.rs"\x3b   echo "Si commit: git revert <hash>"\x3b } > "$DIR/ROLLBACK.md";457a7e9b-f635-409a-81e8-a0b489972b5b]633;C# ROLLBACK
+
+git restore -- .github/copilot-instructions.md .github/instructions scripts/verify/verify-copilot-instructions.sh scripts/heal/heal-copilot-instructions.sh scripts/guard/guard-no-human-go.sh scripts/guard/guard-no-server-web.sh package.json docs/current/GOV_COPILOT_INSTRUCTIONS.md src-tauri/src/perf_metrics_capture.rs src-tauri/src/perf_bench.rs
+Si commit: git revert <hash>

@@ -1,3 +1,9 @@
+## 2026-04-24 : Migration documentaire
+
+- Centralisation de tous les fichiers `.md.md` et anciens index dans `docs/99_ARCHIVE/`
+- Harmonisation des dossiers d’archive et audits
+- README.md = surface documentaire canonique
+- Inventaires et logs : `docs/92_maintenance/`
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.1.2 — Historical baseline preserved below)
 
 ## Addendum — 2026-04-24 — Release Auth Compile Guard Truth

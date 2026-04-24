@@ -1,0 +1,69 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    TITANE∞ — DEPLOYMENT QUICK REFERENCE                    ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 COMMANDES PRINCIPALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  🏥 Health Check              ./titane health
+  🧹 Clean Build              ./titane clean
+  🔧 Repair Dependencies      ./titane repair
+  🩹 Fix TypeScript/ESLint    ./titane fix
+  🏗️  Build Dev Runtime        ./titane build dev
+  🏗️  Build Stable Runtime     ./titane build stable
+  🚀 Deploy Production        ./titane deploy
+  🎯 Full Cycle (All)         ./titane full
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 WORKFLOWS COURANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📅 Démarrage journalier:
+   ./titane health && git pull
+
+🔄 Après git pull (si package.json modifié):
+   ./titane repair
+
+🐛 Correction erreurs:
+   ./titane fix
+
+🧪 Avant commit:
+   ./titane fix && npm run check && npm test
+
+📦 Release production:
+   git checkout MAIN && ./titane full
+
+🆘 Reset complet (en cas de problème):
+   ./titane clean && ./titane repair && ./titane fix
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ NPM SCRIPTS SHORTCUTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  npm run titane:health        # = ./titane health
+  npm run titane:clean          # = ./titane clean
+  npm run titane:repair         # = ./titane repair
+  npm run titane:fix            # = ./titane fix
+  npm run titane:build          # = ./titane build
+  npm run titane:deploy         # = ./titane deploy
+  npm run titane:full           # = ./titane full
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📂 ARTEFACTS DE BUILD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🐧 Linux:       runtime/stable/*.AppImage
+🍎 macOS:       runtime/stable/*.app
+�� Windows:     runtime/stable/*.msi
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  📖 Guide complet:              cat TITANE_DEPLOY_README.md
+  📊 Rapport d'analyse:          cat TITANE_DEPLOY_ANALYSIS_REPORT.md
+  ❓ Aide commande:              ./titane help
+
+TITANE∞ v24.2.0 — Cognitive Operating System
+© 2025 Humain Total / Kevin Thibault / TITANE Team
