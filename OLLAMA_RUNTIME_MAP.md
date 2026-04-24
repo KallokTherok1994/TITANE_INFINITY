@@ -1,5 +1,7 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+> 2026-04-24 — Frontend CSP one-door truth: `src/security/constants.ts` ne liste plus `http://127.0.0.1:11434` dans `connect-src`. La surface frontend reste bornee a `'self'`; les appels Ollama passent par le transport IPC gouverne `src/services/ai/transports/ollamaTransport.ts`, puis par le backend Tauri qui possede le loopback local.
+
 > 2026-04-22 — Backend runtime default truth: `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ai/ollama.rs` et `src-tauri/src/ollama.rs` utilisent de nouveau `gemma2:2b` comme modèle Ollama par défaut gouverné. Cette voie retire une dérive backend vers `llama3.1:latest` qui contredisait déjà la cartographie active et faisait échouer la qualification Rust de la runtime config.
 
 > 2026-04-19 — Android runtime endpoint qualification truth: `scripts/e2e/validate-android-backends.sh` ne se limite plus a verifier qu un `ollamaUrl` Android est non-loopback. La voie de qualification extrait maintenant aussi `ollamaModel`, probe `${ollamaUrl}/api/tags` via `curl`, valide le JSON de l inventaire et exige que le modele configure par l application Android installee soit effectivement publie par l endpoint cible. La lane device `e2e/android/android-build-ui.device.spec.ts` capture en plus `runtime_settings_v1.json` et `runtime_config.json` pour sceller cette verite sur l APK reellement lancee.

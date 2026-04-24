@@ -1,5 +1,13 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.1.2 — Historical baseline preserved below)
 
+## Addendum — 2026-04-24 — Release Auth Compile Guard Truth
+
+| Surface | Truth | Status |
+|---|---|---|
+| `src-tauri/src/auth/dev_token.rs` | Dev-token generation remains debug-only; release builds return explicit disabled/false no-op stubs | PASS |
+| `src-tauri/src/main.rs` | `DEFAULT_ENCRYPTION_KEY` is exactly 32 bytes for `SecurityManager::new` | PASS |
+| `cargo check --manifest-path src-tauri/Cargo.toml` | Auth/dev-token command surface compiles after guarded release stubs | PASS |
+
 ## Addendum — 2026-04-24 — Post-build Launcher Noninteractive Sudo Truth
 
 | Surface | Truth | Status |
