@@ -14,6 +14,8 @@ pub struct DevTokenManager;
 impl DevTokenManager {
     /// Générer un nouveau dev token
     /// Format: TITANE-DEV-KEY-<64 hex chars>
+    /// ONLY AVAILABLE IN DEBUG MODE
+    #[cfg(debug_assertions)]
     pub fn generate() -> String {
         let mut rng = rand::thread_rng();
         let random_bytes: Vec<u8> = (0..32).map(|_| rng.gen()).collect();
@@ -25,6 +27,8 @@ impl DevTokenManager {
     }
 
     /// Obtenir ou créer dev token
+    /// ONLY AVAILABLE IN DEBUG MODE
+    #[cfg(debug_assertions)]
     pub fn get_or_create() -> AuthResult<String> {
         let mut keystore = Keystore::load()?;
 
@@ -50,6 +54,8 @@ impl DevTokenManager {
     }
 
     /// Valider dev token
+    /// ONLY AVAILABLE IN DEBUG MODE - returns false in release
+    #[cfg(debug_assertions)]
     pub fn validate(input: &str) -> AuthResult<bool> {
         let keystore = Keystore::load()?;
 
@@ -79,6 +85,8 @@ impl DevTokenManager {
     }
 
     /// Révoquer dev token (supprimer du keystore)
+    /// ONLY AVAILABLE IN DEBUG MODE
+    #[cfg(debug_assertions)]
     pub fn revoke() -> AuthResult<()> {
         let mut keystore = Keystore::load()?;
         keystore.dev_token = None;
@@ -88,6 +96,8 @@ impl DevTokenManager {
     }
 
     /// Vérifier si dev token existe
+    /// ONLY AVAILABLE IN DEBUG MODE
+    #[cfg(debug_assertions)]
     pub fn exists() -> AuthResult<bool> {
         let keystore = Keystore::load()?;
         Ok(keystore.dev_token.is_some())

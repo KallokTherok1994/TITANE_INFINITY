@@ -133,7 +133,7 @@ module.exports = {
     // ─────────────────────────────────────────────────────────────
     // Règles générales
     // ─────────────────────────────────────────────────────────────
-    'no-console': 'off', // Logger unifié used instead
+    'no-console': ['warn', { allow: ['warn', 'error'] }], // Use createLogger() instead; allow console.warn/error only
     'prefer-const': 'warn',
     'no-var': 'error',
     eqeqeq: 'off',

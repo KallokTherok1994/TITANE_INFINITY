@@ -189,17 +189,20 @@ pub struct SecurityManager {
     validator: InputValidator,
     rate_limiter: RateLimiter,
     audit_logger: AuditLogger,
-    encryptor: Option<Encryptor>,
+    encryptor: Encryptor,
 }
 
 impl SecurityManager {
-    pub fn new(audit_log_path: std::path::PathBuf) -> Self {
-        Self {
+    pub fn new(
+        audit_log_path: std::path::PathBuf,
+        encryption_key: &[u8; 32],
+    ) -> crate::error::TitaneResult<Self> {
+        Ok(Self {
             validator: InputValidator::default(),
             rate_limiter: RateLimiter::new(100, 60),
             audit_logger: AuditLogger::new(audit_log_path),
-            encryptor: None,
-        }
+            encryptor: Encryptor::new(encryption_key)?,
+        })
     }
 
     pub async fn validate_and_rate_limit(&self, user_id: &str, message: &str) -> TitaneResult<()> {
