@@ -23,6 +23,21 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
   - wildcard-import count reduced by 1 candidate
   - minor dead-code elimination opportunity for dashboard entry bundle
 
+## Increment 2 Delivered In This Pass
+
+- Reduced deep-import usage in AI providers by replacing relative paths with alias imports:
+  - src/services/ai/providers/copilot.ts
+  - src/services/ai/providers/gemini.ts
+  - src/services/ai/providers/tauriChat.ts
+- Impact:
+  - deep-import candidates reduced for hot AI provider surface
+  - import graph readability improved without behavior change
+
+## Delta Snapshot (after increment 2)
+
+- Wildcard imports in src: 18
+- Deep-import delta: reduced by 4 in targeted providers
+
 ## Priority Plan (Sprint 5)
 
 1. P0: Eliminate remaining wildcard imports in frontend runtime paths.

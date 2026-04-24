@@ -13,8 +13,8 @@
 
 import type { AIMessage, AIProvider, AIResponse } from '../types';
 import type { TauriCommandArgs } from '@/types/tauri';
-import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
-import { safeInvokeTauri } from '../../../utils/tauriProtector';
+import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
+import { safeInvokeTauri } from '@/utils/tauriProtector';
 import { autoHealEngine } from '../autoHealEngine';
 import { createLogger } from '@/utils/logger';
 import { getSystemPrompt } from '@/config/chatModes.config';
