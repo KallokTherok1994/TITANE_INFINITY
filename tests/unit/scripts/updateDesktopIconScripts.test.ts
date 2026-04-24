@@ -41,7 +41,7 @@ describe('desktop icon refresh scripts', () => {
       'install_system_icon_resolution "$resolution"'
     );
     expect(postBuildDesktopIconsScript).toContain(
-      'sudo gtk-update-icon-cache -f -t /usr/share/icons/hicolor'
+      'run_with_root_if_available gtk-update-icon-cache -f -t /usr/share/icons/hicolor'
     );
     expect(postBuildDesktopIconsScript).not.toContain('update-icon-caches');
   });

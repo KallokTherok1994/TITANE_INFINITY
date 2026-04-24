@@ -155,7 +155,10 @@ function testExport() {
   const parsed = JSON.parse(exported);
 
   console.warn(`✅ Exported ${parsed.length} logs as JSON`);
-  console.warn(`✅ Sample:`, JSON.stringify(parsed[0], null, 2).substring(0, 200) + '...');
+  console.warn(
+    `✅ Sample:`,
+    JSON.stringify(parsed[0], null, 2).substring(0, 200) + '...'
+  );
 
   return Array.isArray(parsed) && parsed.length > 0;
 }

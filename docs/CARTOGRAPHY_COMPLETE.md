@@ -1180,3 +1180,10 @@ function MyComponent() {
 - **Governance compliance**: detect_recurrence.sh ✅, verify_instructions.sh ✅, verify_agents_index.sh ✅, verify_prompt_files_index.sh ✅. No new governance violations introduced.
 - **Phase D (Documentation)**: Registry entries appended to `registry/ui-events.jsonl` and `scripts/autoheal/autoheal_rules.jsonl` with full session metadata, prevention tests, and rollback procedures. Proof pack initialized with VERDICT.md status=in-progress, ROLLBACK.md, GATE_REPORT.md baseline.
 
+## [2026-04-24] Continuation conformance: SessionGuard lifecycle + version surfaces v31.2.0
+
+- `src/security/SessionGuard.ts` renforce l idempotence de re-initialisation: `initialize()` nettoie d abord les timeouts en cours puis remet `warningShown` a `false` avant de rattacher les listeners.
+- `src/security/__tests__/SessionGuard.spec.ts` qualifie le comportement evenementiel sur timers virtuels (`advanceTimersByTime`) pour valider la chaine warning/timeout sans dependance a un trigger d activite manuel.
+- Le lot de continuation conserve la synchronisation des surfaces de version `31.2.0` entre frontend/runtime/stable: `package.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock`, `src-tauri/tauri.conf.json`, `src-tauri/tauri.base.json`, `tauri.base.json`, `runtime/stable/tauri.conf.json`, `runtime/stable/manifest.json`.
+- Les traces de conformite append-only sont completees dans `registry/ui-events.jsonl` et `scripts/autoheal/autoheal_rules.jsonl` avec rollback explicite et prevention gates.
+

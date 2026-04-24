@@ -7,7 +7,7 @@ describe('services/audio/audioStateMachine', () => {
   });
 
   it('AudioStateMachine: transitions valides + listener + history', async () => {
-    const consoleInfo = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
     const { AudioStateMachine } =
       await import('../../../services/audio/audioStateMachine');
@@ -39,8 +39,8 @@ describe('services/audio/audioStateMachine', () => {
     expect(history.length).toBeGreaterThanOrEqual(4);
     expect(history[0]).toHaveProperty('timestamp');
 
-    expect(consoleInfo).toHaveBeenCalled();
-    consoleInfo.mockRestore();
+    expect(consoleWarn).toHaveBeenCalled();
+    consoleWarn.mockRestore();
   });
 
   it('AudioStateMachine: transition invalide retourne false (sans auto-recovery)', async () => {
@@ -93,7 +93,7 @@ describe('services/audio/audioStateMachine', () => {
   });
 
   it('AudioStateMachine: history est bornée à 50 entrées', async () => {
-    const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
     const { AudioStateMachine } =
       await import('../../../services/audio/audioStateMachine');
@@ -110,7 +110,7 @@ describe('services/audio/audioStateMachine', () => {
 
     expect(machine.getHistory().length).toBeLessThanOrEqual(50);
 
-    consoleLog.mockRestore();
+    consoleWarn.mockRestore();
   });
 
   it('AudioStateMachine: helpers canUserSpeak/canAISpeak suivent l’état', async () => {

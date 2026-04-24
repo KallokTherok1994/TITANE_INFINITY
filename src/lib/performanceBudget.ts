@@ -351,9 +351,7 @@ export class PerformanceMonitor {
    * Logger rapport en console
    */
   private static logReport(report: PerformanceReport): void {
-    logger.info(
-      `Performance Report - Grade ${report.grade} (${report.score}/100)`
-    );
+    logger.info(`Performance Report - Grade ${report.grade} (${report.score}/100)`);
 
     logger.info('Core Web Vitals:');
     logger.info(report.vitals);

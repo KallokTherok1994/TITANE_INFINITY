@@ -28,12 +28,14 @@ export class SessionGuard {
    * Initialize session guard with optional custom config
    */
   static initialize(config?: Partial<SessionConfig>): void {
+    this.clearTimeouts();
     if (config) {
       this.config = { ...this.config, ...config };
     }
 
     this.sessionActive = true;
     this.lastActivity = Date.now();
+    this.warningShown = false;
     this.attachActivityListeners();
     this.resetTimeouts();
   }

@@ -4,7 +4,7 @@
 
 ### Build Phase Summary
 
-- **Format correction**: prettier auto-corrected 19 files (ARCHITECTURE.md, UI_SURFACE_MAP.md, performance-analysis.md, security/*.ts, stores/*.ts, e2e/*.js, SPRINT_*.files)
+- **Format correction**: prettier auto-corrected 19 files (ARCHITECTURE.md, UI*SURFACE_MAP.md, performance-analysis.md, security/*.ts, stores/_.ts, e2e/\*.js, SPRINT_\*.files)
 - **Build pipeline**: vite + tauri + post-build ✅ (lint: 660 non-blocking warnings, format: ✅, typecheck: ✅)
 - **Artifacts**: DEB (21M), AppImage (90M), RPM generated in src-tauri/target/release/bundle/
 - **Launcher sync**: User-local deployment completed (~/.local/share/applications/titane-infinity.desktop with canonical Exec=/usr/bin/titane-infinity)

@@ -864,3 +864,33 @@ Canonical target version: **30.1.29**
 > `deployment/latest` was intentionally left on 30.1.28 because no honest 30.1.29 desktop artifact, size, or checksum existed yet in this session.
 > Local launcher regeneration completed truthfully through `bash scripts/update-desktop-icon.sh`, and the menu/dock entries still advertise `v30.1.26` because `/usr/bin/titane-infinity` remains the selected installed binary.
 > System install and system launcher synchronization remain blocked by interactive `sudo`, so no claim is made for `/usr/bin/titane-infinity` or `/usr/share/applications` moving to 30.1.29 in this session.
+
+---
+
+## Addendum — 2026-04-24 — Continuation Version Sync v31.2.0
+
+Session: `CONTINUATION_CONFORMANCE_V31_2_0`
+Canonical target version: **31.2.0**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `31.2.0` | UPDATED_TO_31_2_0 |
+| `src-tauri/Cargo.toml` | `31.2.0` | UPDATED_TO_31_2_0 |
+| `src-tauri/Cargo.lock` | `31.2.0` | UPDATED_TO_31_2_0 |
+| `src-tauri/tauri.conf.json` | `31.2.0` | UPDATED_TO_31_2_0 |
+| `src-tauri/tauri.base.json` | `31.2.0` | UPDATED_TO_31_2_0 |
+| `tauri.base.json` | `31.2.0` | UPDATED_TO_31_2_0 |
+| `runtime/stable/tauri.conf.json` | `31.2.0` | UPDATED_TO_31_2_0 |
+| `runtime/stable/manifest.json` | `31.2.0` | UPDATED_TO_31_2_0 |
+
+### Artifact Status Summary — v31.2.0
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `src-tauri/target/release/bundle/*31.2.0*` | — | — | NOT_PROVEN_IN_THIS_CONTINUATION |
+| `deployment/latest/*` | — | — | NOT_UPDATED_IN_THIS_CONTINUATION |
+| `dpkg -s titane-infinity` | unknown | host install truth | NOT_RECHECKED |
+
+> This continuation seals version-surface synchronization only. No new production artifact publication is claimed in this addendum.

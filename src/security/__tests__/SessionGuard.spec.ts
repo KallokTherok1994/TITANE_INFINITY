@@ -76,7 +76,7 @@ describe('SessionGuard', () => {
     const callback = vi.fn();
     const unsubscribe = SessionGuard.onSessionEvent(callback);
 
-    SessionGuard.recordActivity();
+    vi.advanceTimersByTime(8500);
 
     // Callback should be called
     expect(callback).toHaveBeenCalled();
@@ -85,7 +85,7 @@ describe('SessionGuard', () => {
     unsubscribe();
     const callCount = callback.mock.calls.length;
 
-    SessionGuard.recordActivity();
+    vi.advanceTimersByTime(11000);
 
     // Should not be called again
     expect(callback.mock.calls.length).toBe(callCount);

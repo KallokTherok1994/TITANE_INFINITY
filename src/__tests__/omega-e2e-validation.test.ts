@@ -326,7 +326,9 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
       const endTime = Date.now();
       expect(endTime - startTime).toBeLessThan(60000);
 
-      console.warn('🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully');
+      console.warn(
+        '🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully'
+      );
     });
   });
 

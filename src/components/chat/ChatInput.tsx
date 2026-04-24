@@ -326,7 +326,10 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
           return;
         }
 
-        console.warn('[ChatInput OMEGA] ✅ Envoi du message:', sanitized.substring(0, 50));
+        console.warn(
+          '[ChatInput OMEGA] ✅ Envoi du message:',
+          sanitized.substring(0, 50)
+        );
 
         // Marquer comme envoyé pour éviter les doubles
         messageSent.current = true;

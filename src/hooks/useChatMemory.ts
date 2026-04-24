@@ -87,7 +87,9 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     if (options.autoCleanup) {
       const cleanup = chatMemoryCompactor.autoCleanupIfNeeded();
       if (cleanup.cleaned) {
-        console.warn(`✅ SELFHEAL++: Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`);
+        console.warn(
+          `✅ SELFHEAL++: Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`
+        );
       }
     }
   }, [options.mode, options.autoCleanup, syncVisibleState]);

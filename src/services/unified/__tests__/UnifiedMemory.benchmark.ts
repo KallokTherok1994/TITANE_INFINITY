@@ -526,7 +526,9 @@ function printReport(report: BenchmarkReport): void {
     console.warn(`   Memory Delta: ${formatBytes(result.memoryDelta)}`);
 
     if (result.target && result.actual) {
-      console.warn(`   Target: ${result.target} | Actual: ${formatNumber(result.actual)}`);
+      console.warn(
+        `   Target: ${result.target} | Actual: ${formatNumber(result.actual)}`
+      );
     }
 
     if (result.improvement) {
