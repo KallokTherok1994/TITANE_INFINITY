@@ -1,3 +1,10 @@
+# [2026-04-23] Agent dashboards version fallback truth
+
+- Surface canonique: `agent-dashboards-panel` dans `src/components/AgentDashboardsPanel.tsx`
+- Durcissement runtime/test: le marquage de version du panneau n accede plus directement a `__APP_VERSION__` (qui peut etre absent en environnement Vitest).
+- Verite appliquee: fallback determine `APP_VERSION=dev` quand la variable globale n est pas injectee, ce qui conserve le badge `Nouveau` et evite le crash test par `ReferenceError`.
+- Tests impactes: `src/services/__tests__/advancedAgentCatalog.test.tsx`, `src/components/layout/__tests__/AppShell.test.tsx`, `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`.
+
 # [2026-04-24] All pages sync truth (XP, Vue, TIME, Admin hubs)
 
 - Surface canonique de synchronisation ajoutee: `e2e/features/all-pages-sync.spec.ts`.

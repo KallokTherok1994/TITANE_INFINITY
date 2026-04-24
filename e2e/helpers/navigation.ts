@@ -45,7 +45,10 @@ const ADMIN_TAB_IDS = new Set([
 
 const isAdminTabId = (value: string): boolean => ADMIN_TAB_IDS.has(value);
 
-export async function openAdminTab(page: Page, tabTarget: string | RegExp): Promise<void> {
+export async function openAdminTab(
+  page: Page,
+  tabTarget: string | RegExp
+): Promise<void> {
   await gotoWithRetry(page, '/admin');
 
   await closeBootBeaconIfPresent(page);
@@ -65,7 +68,9 @@ export async function openAdminTab(page: Page, tabTarget: string | RegExp): Prom
     if (isAdminTabId(normalizedTarget)) {
       tabButton = tabsNav.getByTestId(`tab-admin-${normalizedTarget}`).first();
     } else {
-      tabButton = tabsNav.getByRole('button', { name: new RegExp(normalizedTarget, 'i') }).first();
+      tabButton = tabsNav
+        .getByRole('button', { name: new RegExp(normalizedTarget, 'i') })
+        .first();
     }
   } else {
     tabButton = tabsNav.getByRole('button', { name: tabTarget }).first();

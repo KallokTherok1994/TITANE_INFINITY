@@ -37,8 +37,12 @@ test.describe('Feature: All Pages Sync', () => {
   test('syncs XP dedicated page and primary XP widgets', async ({ page }) => {
     await page.goto('/experience');
     await expect(page.getByTestId('page-experience')).toBeVisible({ timeout: 15000 });
-    await expect(page.getByTestId('experience-stats-advanced')).toBeVisible({ timeout: 15000 });
-    await expect(page.getByTestId('experience-history-list')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('experience-stats-advanced')).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByTestId('experience-history-list')).toBeVisible({
+      timeout: 15000,
+    });
   });
 
   test('syncs all TIME tabs', async ({ page }) => {
@@ -61,12 +65,16 @@ test.describe('Feature: All Pages Sync', () => {
     }
   });
 
-  test('syncs ADMIN Configuration Hub, Design, Gouvernance and Sante prod', async ({ page }) => {
+  test('syncs ADMIN Configuration Hub, Design, Gouvernance and Sante prod', async ({
+    page,
+  }) => {
     await openAdminTab(page, 'config');
 
     const configRoot = page.locator('[data-testid="page-configuration-hub"]').first();
     const configDegraded = page
-      .locator('text=/Erreur de chargement de la configuration|Configuration incomplete/i')
+      .locator(
+        'text=/Erreur de chargement de la configuration|Configuration incomplete/i'
+      )
       .first();
     await expect(configRoot.or(configDegraded)).toBeVisible({ timeout: 20000 });
 
@@ -76,7 +84,9 @@ test.describe('Feature: All Pages Sync', () => {
     });
 
     await openAdminTab(page, 'governance');
-    await expect(page.locator('[data-testid="page-governance-center"]').first()).toBeVisible({
+    await expect(
+      page.locator('[data-testid="page-governance-center"]').first()
+    ).toBeVisible({
       timeout: 20000,
     });
 

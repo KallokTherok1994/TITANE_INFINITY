@@ -89,9 +89,9 @@ describe('AgentDashboardsPanel', () => {
     expect(
       screen.getByTestId('agent-dashboards-panel-whats-new-badge')
     ).toHaveTextContent('Nouveau');
-    expect(
-      screen.getByTestId('agent-dashboards-panel-whats-new-text')
-    ).toHaveTextContent('Dashboards mis a jour en vtest');
+    expect(screen.getByTestId('agent-dashboards-panel-whats-new-text')).toHaveTextContent(
+      'Dashboards mis a jour en vtest'
+    );
 
     fireEvent.click(toggle);
 
@@ -102,9 +102,9 @@ describe('AgentDashboardsPanel', () => {
     expect(
       screen.queryByTestId('agent-dashboards-panel-whats-new-badge')
     ).not.toBeInTheDocument();
-    expect(window.localStorage.getItem('titane.agentDashboardsPanel.lastSeenVersion')).toBe(
-      'test'
-    );
+    expect(
+      window.localStorage.getItem('titane.agentDashboardsPanel.lastSeenVersion')
+    ).toBe('test');
   });
 
   it('keeps the whats-new affordance hidden when the current version was already acknowledged', async () => {

@@ -11,6 +11,15 @@ type AgentDashboardsPanelMode = 'default' | 'compact';
 const COMPACT_PANEL_VIEWPORT_HEIGHT = 760;
 const AGENT_DASHBOARDS_SEEN_VERSION_KEY = 'titane.agentDashboardsPanel.lastSeenVersion';
 
+function getRuntimeAppVersion(): string {
+  const versionCandidate = (globalThis as Record<string, unknown>).__APP_VERSION__;
+  if (typeof versionCandidate === 'string' && versionCandidate.trim().length > 0) {
+    return versionCandidate;
+  }
+
+  return 'dev';
+}
+
 function getAgentDashboardsPanelSeenVersion(): string | null {
   if (typeof window === 'undefined') {
     return null;
@@ -112,7 +121,7 @@ const AgentDashboardsPanel: React.FC = () => {
   );
   const [isExpanded, setIsExpanded] = useState(runtimeState.mode === 'default');
   const [hasSeenCurrentVersion, setHasSeenCurrentVersion] = useState(() => {
-    return getAgentDashboardsPanelSeenVersion() === __APP_VERSION__;
+    return getAgentDashboardsPanelSeenVersion() === getRuntimeAppVersion();
   });
 
   useEffect(() => {
@@ -163,13 +172,15 @@ const AgentDashboardsPanel: React.FC = () => {
   }, [runtimeState.mode]);
 
   useEffect(() => {
-    setHasSeenCurrentVersion(getAgentDashboardsPanelSeenVersion() === __APP_VERSION__);
+    setHasSeenCurrentVersion(
+      getAgentDashboardsPanelSeenVersion() === getRuntimeAppVersion()
+    );
   }, []);
 
   const showWhatsNewBadge = !hasSeenCurrentVersion;
 
   const acknowledgeCurrentVersion = () => {
-    setAgentDashboardsPanelSeenVersion(__APP_VERSION__);
+    setAgentDashboardsPanelSeenVersion(getRuntimeAppVersion());
     setHasSeenCurrentVersion(true);
   };
 
@@ -225,7 +236,7 @@ const AgentDashboardsPanel: React.FC = () => {
             data-testid="agent-dashboards-panel-whats-new-text"
             className="agent-dashboards-panel__toggle-update"
           >
-            Dashboards mis a jour en v{__APP_VERSION__}
+            Dashboards mis a jour en v{getRuntimeAppVersion()}
           </span>
         )}
       </button>
