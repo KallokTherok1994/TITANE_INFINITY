@@ -1,3 +1,8 @@
+## 2026-04-24 : Migration documentaire
+
+- README.md = surface documentaire canonique (tous les anciens index archivés)
+- Tous les fichiers `.md.md` et dossiers d’archive centralisés dans `docs/99_ARCHIVE/`
+- Inventaires et logs : `docs/92_maintenance/`
 # [2026-04-23] Agent dashboards version fallback truth
 
 - Surface canonique: `agent-dashboards-panel` dans `src/components/AgentDashboardsPanel.tsx`
@@ -38,6 +43,13 @@
 - Changement: remplacement des imports relatifs profonds (`../../../...`, `../../../../...`) par des alias canoniques `@/...` pour les types et utilitaires partages.
 - Test associe: `src/features/system-center/hooks/__tests__/useHyperVision.test.ts` aligne aussi le mock `tauriClient` sur alias canonique.
 - Preuve execution: `pnpm run check` + `pnpm exec vitest run src/features/system-center/hooks/__tests__/useHyperVision.test.ts` + gates AutoHeal/instructions.
+
+# [2026-04-24] Sprint 5 — Deep imports reduction on ChatIA and system-center tests
+
+- Surfaces impactees: `src/ui/pages/ChatIA/ModeEditor.tsx`, `src/features/system-center/hooks/__tests__/useSystemLogs.test.ts`, `src/features/system-center/hooks/__tests__/useNodeCluster.test.ts`.
+- Changement: bascule des imports relatifs profonds vers alias canoniques `@/...` (dont mocks Vitest sur `tauriClient`).
+- Surface moteur test impactee: `src/engines/conversation/__tests__/conversationLifecycleEngine.test.ts` et `src/engines/flow/__tests__/FlowEngine.test.ts` alignes aussi sur alias types partages.
+- Preuve execution: `pnpm run check` + `pnpm exec vitest run` (4 fichiers cibles) + gates AutoHeal/instructions.
 
 # [2026-04-24] Desktop UI driver complete page audit truth
 

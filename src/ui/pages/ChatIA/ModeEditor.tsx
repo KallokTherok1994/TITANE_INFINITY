@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { InstructionMode, instructionModeManager } from './InstructionModeManager';
-import { useToastActions } from '../../../stores/uiStore.selectors';
+import { useToastActions } from '@/stores/uiStore.selectors';
 import './ModeEditor.css';
 
 interface ModeEditorProps {

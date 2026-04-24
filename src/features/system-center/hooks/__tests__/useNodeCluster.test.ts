@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { tauriClient } from '../../../../lib/tauriClient';
+import { tauriClient } from '@/lib/tauriClient';
 
 import { useNodeCluster } from '../useNodeCluster';
 
-vi.mock('../../../../lib/tauriClient', () => ({
+vi.mock('@/lib/tauriClient', () => ({
   tauriClient: {
     scGetClusterStatus: vi.fn(),
     scGetClusterPeers: vi.fn(),

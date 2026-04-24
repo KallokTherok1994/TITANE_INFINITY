@@ -58,6 +58,23 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 - Wildcard imports in src: 18
 - Deep-import delta cumulative (increments 2+3): reduced by 14
 
+## Increment 4 Delivered In This Pass
+
+- Reduced deep-import usage in targeted hooks/tests/UI files:
+  - src/features/system-center/hooks/__tests__/useSystemLogs.test.ts
+  - src/features/system-center/hooks/__tests__/useNodeCluster.test.ts
+  - src/ui/pages/ChatIA/ModeEditor.tsx
+  - src/engines/conversation/__tests__/conversationLifecycleEngine.test.ts
+  - src/engines/flow/__tests__/FlowEngine.test.ts
+- Impact:
+  - deep-import pattern count reduced from 31 to 25 on this increment
+  - cumulative reduction maintained with zero behavior change
+
+## Delta Snapshot (after increment 4)
+
+- Wildcard imports in src: 18
+- Deep-import pattern count (3+ levels): 25
+
 ## Priority Plan (Sprint 5)
 
 1. P0: Eliminate remaining wildcard imports in frontend runtime paths.

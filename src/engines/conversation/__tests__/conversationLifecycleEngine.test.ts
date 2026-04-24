@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ConversationLifecycleEngine } from '../conversationLifecycleEngine';
-import type { ConversationLifecycleEvent } from '../../../types/conversation';
+import type { ConversationLifecycleEvent } from '@/types/conversation';
 
 describe('ConversationLifecycleEngine', () => {
   let engine: ConversationLifecycleEngine;

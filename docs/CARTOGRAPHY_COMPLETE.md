@@ -1,3 +1,13 @@
+## Migration documentaire 2026-04-24
+
+Opération de nettoyage et d’archivage sur tout le dossier `docs/` :
+
+- Tous les fichiers `.md.md` déplacés dans `docs/99_ARCHIVE/`
+- Tous les anciens index (`INDEX.md`, `INDEX_MASTER.md`, `INDEX_DOCUMENTATION*`) archivés dans `docs/99_ARCHIVE/`
+- Tous les dossiers d’archive centralisés dans `docs/99_ARCHIVE/`
+- Dossiers `audit/audits` harmonisés et archivés
+- README.md mis à jour pour navigation canonique
+- Preuves et inventaires : `docs/92_maintenance/`
 > 2026-04-23 — Agent dashboards version fallback truth: `src/components/AgentDashboardsPanel.tsx` ne depend plus d un acces direct a `__APP_VERSION__` pour la persistance du badge de nouveaute. Un fallback runtime borne (`dev`) est applique quand la globale n est pas injectee (notamment en Vitest), ce qui realigne les surfaces `AppShell`, `advancedAgentCatalog` et `app-router-canonical-surfaces` sans modifier la topologie UI active.
 
 > 2026-04-24 — Sprint 4 context test standardization truth: ajout de `src/contexts/__tests__/AnimationContext.test.tsx` pour qualifier la surface `AnimationContext` (valeurs runtime provider + garde hook hors provider), avec passage Vitest cible et typecheck global.
@@ -7,6 +17,8 @@
 > 2026-04-24 — Sprint 5 import graph optimization (increment 2): reduction des deep imports dans `src/services/ai/providers/copilot.ts`, `src/services/ai/providers/gemini.ts`, et `src/services/ai/providers/tauriChat.ts` via alias `@/...` pour conserver un graphe d imports plus stable sans changement fonctionnel.
 
 > 2026-04-24 — Sprint 5 import graph optimization (increment 3): reduction additionnelle des deep imports sur les surfaces UI `DevTools/DeveloperTools` et `ControlPanel` via bascule vers alias `@/...`, plus alignement du test `useHyperVision` sur le meme contrat d import canoniqe.
+
+> 2026-04-24 — Sprint 5 import graph optimization (increment 4): reduction complementaire des deep imports sur `ChatIA/ModeEditor`, hooks system-center (`useSystemLogs`, `useNodeCluster`) et tests moteurs conversation/flow via migration vers alias `@/...`, avec validation ciblee Vitest et typecheck global.
 
 > 2026-04-24 — Agent UI ThinkingPanel model trace: `src/components/sections/ConversationSection.tsx` transmet maintenant `latestAssistantRuntime.modelUsed` et `modelRequested` a `src/features/chat/ThinkingPanel.tsx`. Le journal OMEGA publie cette verite sur `reasoning-progress[data-model-used][data-model-requested]`, `reasoning-summary-model` et `reasoning-runtime-model`, avec preuve unitaire et WDIO sur le modele gouverne `gemma2:2b`.
 

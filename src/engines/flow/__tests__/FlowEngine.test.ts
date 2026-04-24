@@ -9,8 +9,8 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { FlowEngine } from '../FlowEngine';
-import type { MultimodalState } from '../../../types/multimodalFusion';
-import { getDefaultMultimodalState } from '../../../types/multimodalFusion';
+import type { MultimodalState } from '@/types/multimodalFusion';
+import { getDefaultMultimodalState } from '@/types/multimodalFusion';
 
 // ============================================================================
 // HELPERS
