@@ -69,6 +69,7 @@ import {
   useMessageSpeechState,
   type MessageSpeechStatus,
 } from '@/services/tts/messageSpeechController';
+import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -335,6 +336,27 @@ export function buildConversationRuntimeBadges(
   ].filter((value): value is string => Boolean(value && value.trim()));
 
   return Array.from(new Set(values)).slice(0, 10);
+}
+
+export function resolveConversationOllamaModel(
+  selectedProvider: ConversationProviderPreference,
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+): string {
+  if (selectedProvider !== 'ollama') {
+    return 'unknown';
+  }
+
+  const modelUsed = latestAssistantRuntime?.modelUsed?.trim();
+  if (modelUsed) {
+    return modelUsed;
+  }
+
+  const modelRequested = latestAssistantRuntime?.modelRequested?.trim();
+  if (modelRequested) {
+    return modelRequested;
+  }
+
+  return DEFAULT_OLLAMA_MODEL;
 }
 
 function normalizeTransparencyPrompt(input: string): string {
@@ -2720,9 +2742,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 }
                 data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
                 data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
-                data-ollama-model={
-                  selectedProvider === 'ollama' ? 'llama3.1:latest' : 'unknown'
-                }
+                data-ollama-model={resolveConversationOllamaModel(
+                  selectedProvider,
+                  latestAssistantRuntime
+                )}
                 data-secrets-mode="governed"
               >
                 <div className="conversation-runtime-copy">

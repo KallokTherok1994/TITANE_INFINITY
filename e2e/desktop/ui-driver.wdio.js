@@ -1052,6 +1052,72 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
   }
 }
 
+export async function openChat() {
+  await openApp();
+  await waitAppReady();
+  await browser.url('tauri://localhost/titane?tab=conversation');
+  await waitAppReady();
+  await waitForDisplayed(testId('page-conversation'));
+  await clickDeclaredTabs([testId('tab-conversation')], {
+    strict: true,
+    timeout: 15000,
+  });
+  await waitForDisplayed(testId('chat-input'));
+  await waitForDisplayed(testId('chat-send'));
+}
+
+export async function sendMessage(message, timeoutMs = 45000) {
+  await sendChatAndAssertNoSilence(message, timeoutMs);
+  return getChatRuntimeTruth();
+}
+
+export async function getChatRuntimeTruth() {
+  return browser.execute(() => {
+    const text = selector => (document.querySelector(selector)?.textContent || '').trim();
+    const runtimePanel = document.querySelector('[data-testid="chat-runtime-state"]');
+    const badges = Array.from(
+      document.querySelectorAll('[data-testid="chat-runtime-badge"]')
+    )
+      .map(node => (node.textContent || '').trim())
+      .filter(Boolean);
+
+    const readBadgeValue = prefix => {
+      const match = badges.find(item => item.startsWith(prefix));
+      return match ? match.slice(prefix.length).trim() : '';
+    };
+
+    const modelUsedFromBadge = readBadgeValue('model-used:');
+    const modelRequestedFromBadge = readBadgeValue('model-requested:');
+    const ollamaModel = runtimePanel?.getAttribute('data-ollama-model') || '';
+    const summary = text('[data-testid="chat-runtime-summary"]');
+
+    return {
+      providerUsed: runtimePanel?.getAttribute('data-provider-used') || '',
+      providerMode: runtimePanel?.getAttribute('data-provider-mode') || '',
+      providerReason: runtimePanel?.getAttribute('data-provider-reason') || '',
+      networkUsed: runtimePanel?.getAttribute('data-network-used') || '',
+      orchestratorState: runtimePanel?.getAttribute('data-orchestrator-state') || '',
+      memoryState: runtimePanel?.getAttribute('data-memory-state') || '',
+      ollamaModel,
+      summary,
+      badges,
+      modelRequested: modelRequestedFromBadge || ollamaModel,
+      modelUsed: modelUsedFromBadge || ollamaModel,
+      modelShown: ollamaModel || modelUsedFromBadge || summary,
+    };
+  });
+}
+
+export async function getModelBadges() {
+  const runtime = await getChatRuntimeTruth();
+  return {
+    requested: runtime.modelRequested || null,
+    used: runtime.modelUsed || null,
+    shown: runtime.modelShown || null,
+    runtime,
+  };
+}
+
 export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000) {
   const chatSettleTimeout = Math.max(DEFAULT_TIMEOUT, timeoutMs, 120000);
 

@@ -5,6 +5,14 @@
 - Verite appliquee: fallback determine `APP_VERSION=dev` quand la variable globale n est pas injectee, ce qui conserve le badge `Nouveau` et evite le crash test par `ReferenceError`.
 - Tests impactes: `src/services/__tests__/advancedAgentCatalog.test.tsx`, `src/components/layout/__tests__/AppShell.test.tsx`, `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`.
 
+# [2026-04-24] Agent UI chat runtime truth chain
+
+- Surface canonique: `/titane?tab=conversation`, composant actif `src/components/sections/ConversationSection.tsx`.
+- Verite modele: `chat-runtime-state[data-ollama-model]` derive maintenant du runtime assistant (`modelUsed`, puis `modelRequested`) et retombe seulement ensuite sur le defaut gouverne `gemma2:2b`.
+- Anti-fake UI: les badges temporaires ajoutes dans `ChatWindow` ont ete retires; la preuve E2E lit uniquement `chat-runtime-state`, `chat-runtime-summary` et `chat-runtime-badge`.
+- Driver desktop: `e2e/desktop/ui-driver.wdio.js` expose `openChat`, `sendMessage`, `getChatRuntimeTruth` et `getModelBadges` pour qualifier provider, orchestrateur, memoire et modele depuis la surface active.
+- Preuves ajoutees: `e2e/desktop/chat-model-truth-chain.wdio.test.js` et `e2e/desktop/chat-orchestrator-advanced-stress.wdio.test.js`.
+
 # [2026-04-24] Desktop UI driver complete page audit truth
 
 - Surface canonique de preuve: `e2e/desktop/canonical-ui-pages.wdio.test.js`.

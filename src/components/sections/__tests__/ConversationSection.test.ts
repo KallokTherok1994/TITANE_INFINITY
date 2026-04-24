@@ -10,6 +10,7 @@ import {
   resolveConversationPendingInput,
   buildConversationRuntimeBadges,
   buildConversationRuntimeSummary,
+  resolveConversationOllamaModel,
   getConversationViewportHeight,
   isConversationTransparencyPrompt,
   isConversationNearBottom,
@@ -118,6 +119,36 @@ describe('ConversationSection runtime provider label', () => {
     expect(badges).toContain('model-requested:llama3.1:latest');
     expect(badges).toContain('model-used:llama3.2:latest');
     expect(badges).toContain('model-fallback:true');
+  });
+
+  it('publishes the governed Ollama model from runtime truth before falling back to defaults', () => {
+    expect(
+      resolveConversationOllamaModel('ollama', {
+        providerMeta: {
+          provider_used: 'Ollama (OMEGA+Singularity)',
+          provider_class: 'local',
+          mode: 'LOCAL',
+          reason_code: 'OK',
+          latency_ms_total: 42,
+          timeout_ms: 30000,
+          retries: 0,
+          attempts: [],
+          network_used: false,
+          cache_hit: false,
+        },
+        modelRequested: 'gemma2:2b',
+        modelUsed: 'gemma2:2b',
+        fallbackUsed: false,
+        tags: [],
+        runtimeSignals: {
+          orchestratorState: 'running',
+          memoryState: 'present',
+        },
+      })
+    ).toBe('gemma2:2b');
+
+    expect(resolveConversationOllamaModel('ollama', null)).toBe('gemma2:2b');
+    expect(resolveConversationOllamaModel('openai', null)).toBe('unknown');
   });
 
   it('publishes explicit journal labels for save and search states', () => {
