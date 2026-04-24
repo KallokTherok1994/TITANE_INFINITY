@@ -1,4 +1,5 @@
 # 01_BOOTSTRAP — G_BOOT_TRUTH
+
 **Proof Pack:** AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53  
 **Timestamp:** 2026-03-05T15:08:56Z  
 **SHA:** 67b7b53  
@@ -113,14 +114,15 @@ $ ls -la registry/
 
 ## Prérequis Manquants (BLOCKED)
 
-| Prérequis | Statut | Impact |
-|-----------|--------|--------|
-| pnpm | NOT FOUND | Tests/Lint/Build BLOCKED |
-| node_modules | ABSENT | All npm scripts BLOCKED |
+| Prérequis    | Statut    | Impact                    |
+| ------------ | --------- | ------------------------- |
+| pnpm         | NOT FOUND | Tests/Lint/Build BLOCKED  |
+| node_modules | ABSENT    | All npm scripts BLOCKED   |
 | GTK/glib-2.0 | NOT FOUND | cargo check/build BLOCKED |
-| cross-env | NOT FOUND | vitest BLOCKED |
+| cross-env    | NOT FOUND | vitest BLOCKED            |
 
 **Débloquage requis:**
+
 ```bash
 npm install -g pnpm@10.28.2
 pnpm install --frozen-lockfile

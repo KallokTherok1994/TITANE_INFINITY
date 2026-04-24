@@ -16,6 +16,7 @@ RESIDUAL_RISK    : BUILD_PROVEN non confirmé (cargo build non exécuté)
 ```
 
 **Changements appliqués dans main.rs :**
+
 1. Ajout mock stubs `stop_speaking()` et `is_speaking()` dans le bloc `#[cfg(feature = "mock")]` du module `audio::commands` (après `cancel_recording`, lignes 170-183)
 2. Enregistrement `audio::commands::stop_speaking` et `audio::commands::is_speaking` dans `generate_handler![]` (lignes 1921-1925)
 
@@ -37,6 +38,7 @@ RESIDUAL_RISK    : BUILD_PROVEN requis pour confirmer absence d'erreur compilati
 ```
 
 **Changements appliqués dans main.rs :**
+
 - Ajout mock stub `transcribe_audio(_audio_data: Vec<u8>) -> Result<String, String>` retournant `"(mock-transcription)"`
 - Ajout mock stub `is_recording() -> Result<bool, String>` retournant `false`
 - Tous deux dans le bloc `#[cfg(feature = "mock")]` du module `audio::commands` (lignes 184-196)
@@ -44,5 +46,6 @@ RESIDUAL_RISK    : BUILD_PROVEN requis pour confirmer absence d'erreur compilati
 ---
 
 ## AutoHeal
+
 - `AH-2026-03-15-AUDIO-001` ajouté à `scripts/autoheal/autoheal_rules.jsonl` (ligne 262)
 - Gates post-fix : `detect_recurrence.sh` PASS, `verify_instructions.sh` PASS=20 FAIL=0

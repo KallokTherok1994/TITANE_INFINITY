@@ -1,4 +1,5 @@
 # 06_RENDERER_MAP
+
 - Markdown renderer: src-tauri/src/doc_engine/export.rs generate_markdown() -> PROVEN_RUNTIME
 - HTML renderer: src-tauri/src/doc_engine/export.rs generate_html() -> PROVEN_RUNTIME
 - JSON renderer: src-tauri/src/doc_engine/export.rs export_json() -> PROVEN_RUNTIME

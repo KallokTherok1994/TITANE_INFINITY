@@ -8,6 +8,7 @@
 - pnpm: 10.30.2 (unsupported node version — tests run via direct node_modules/.bin)
 
 ## Files inspected
+
 - src/features/production-health/ProductionHealthPanel.tsx ✓
 - src/services/telemetry/useProductionHealthTelemetry.ts ✓
 - src/lib/tauriClient.ts ✓

@@ -1,4 +1,5 @@
 # 00_EXEC_SUMMARY — Résumé Exécutif
+
 **Proof Pack:** AUDIT_MODULES_2026-03-05_1433_0f7d943  
 **Timestamp:** 2026-03-05T14:33:25Z  
 **VERDICT: BLOCKED** (env manquant: pnpm + GTK + node_modules)
@@ -34,6 +35,7 @@
 ## Plan de Correction (10 fixes)
 
 Voir `13_FIX_PLAN.md` pour le détail complet. Priorités:
+
 - **Phase 1** (30min): Débloquer environnement (FIX-005, FIX-006)
 - **Phase 2** (3-4h): Corrections P0/P1 (FIX-001 à FIX-004)
 - **Phase 3-5** (2h): Nettoyage, maintenance, docs

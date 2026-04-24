@@ -7,7 +7,7 @@ Use only if this audio/TTS continuation lane must be reverted.
 1. git restore -- src-tauri/src/identity/voice_profile.rs
 2. git restore -- src/features/audio-center/AudioCenterPage.tsx
 3. git restore -- src/features/audio-center/titaneVoiceProfiles.ts
-4. git restore -- src/__tests__/features/audio/titaneVoiceProfiles.test.ts
+4. git restore -- src/**tests**/features/audio/titaneVoiceProfiles.test.ts
 5. git restore -- scripts/autoheal/autoheal_rules.jsonl
 
 ## Proof Rollback

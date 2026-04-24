@@ -1,4 +1,5 @@
 # 10_ROLLBACK — Plan de Rollback
+
 **Proof Pack:** AUDIT_MODULES_2026-03-05_1433_0f7d943  
 **Timestamp:** 2026-03-05T14:33:25Z
 
@@ -20,6 +21,7 @@ rm -rf proof_packs/AUDIT_MODULES_2026-03-05_1433_0f7d943/
 ### Si des corrections sont appliquées suite au FIX_PLAN
 
 #### Frontend (src/)
+
 ```bash
 git restore -- src/services/selfHealing/selfHealingObserver.ts
 git restore -- src/os/bridge/TauriBridge.ts
@@ -31,6 +33,7 @@ git restore -- src/
 ```
 
 #### Backend Rust (src-tauri/)
+
 ```bash
 git restore -- src-tauri/src/engines/unified_memory/summarizer.rs
 git restore -- src-tauri/src/engines/unified_memory/embeddings.rs
@@ -40,12 +43,14 @@ git restore -- src-tauri/
 ```
 
 #### CI/Workflows (.github/)
+
 ```bash
 git restore -- .github/workflows/ci-unified.yml
 git restore -- .github/workflows/
 ```
 
 #### Scripts
+
 ```bash
 git restore -- scripts/
 ```
@@ -55,6 +60,7 @@ git restore -- scripts/
 ## Rollback vers Tag Stable
 
 Si le repo dispose de tags de release:
+
 ```bash
 # Lister les tags disponibles
 git tag -l | sort -V | tail -n 10
@@ -71,6 +77,7 @@ git checkout -b rollback/v27.0.3 v27.0.3
 ## Rollback Tauri (Runtime)
 
 Si un build a été effectué et déployé:
+
 ```bash
 # Revenir aux artifacts de deployment/latest/
 ls deployment/latest/
@@ -85,6 +92,7 @@ cargo build --release  # (après installation des deps GTK)
 ## Garde-fous AutoHeal
 
 Avant tout rollback, exécuter:
+
 ```bash
 bash scripts/autoheal/detect_recurrence.sh
 bash scripts/verify_instructions.sh

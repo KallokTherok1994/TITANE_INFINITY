@@ -5,14 +5,16 @@
 **SHA HEAD** : 4a77788ee  
 **EXEC_MODE** : BACKGROUND  
 **RISK** : P1  
-**POLITIQUE** : STOPLINE HARD · proof-first · no fake green  
+**POLITIQUE** : STOPLINE HARD · proof-first · no fake green
 
 ---
 
 ## A) EXEC_MODE
+
 BACKGROUND
 
 ## B) SCOPE_RING
+
 - Ring 1 : `src/types/telemetry.ts` (types — non modifié)
 - Ring 3 : `src-tauri/src/api/telemetry_api.rs` (IPC / service — MODIFIÉ)
 - Ring 3 : `src/services/telemetry/useProductionHealthTelemetry.ts` (service hook — MODIFIÉ)
@@ -20,9 +22,11 @@ BACKGROUND
 - Ring 4 : `src/features/admin/types.ts` (config UI — MODIFIÉ)
 
 ## C) RISK
+
 P1 — surface admin UI, pas de build prod déclenché, pas de déploiement.
 
 ## D) PLAN (≤ 7 étapes)
+
 1. Bootstrap truth — versions, git état, surface discovery
 2. Analyse root cause — localisation des strings symptômes + chaîne de données
 3. Création proof pack (fichiers 00–20)
@@ -32,10 +36,12 @@ P1 — surface admin UI, pas de build prod déclenché, pas de déploiement.
 7. Tests x3 + gates + verdict
 
 ## E) PREUVES
+
 - Obtenues : git log, tooling versions, source code discovery, CSV absent confirmé
 - Attendues : tests unitaires x3 PASS, build propre, gates PASS
 
 ## F) ROLLBACK
+
 ```
 git restore -- src-tauri/src/api/telemetry_api.rs \
                src/services/telemetry/useProductionHealthTelemetry.ts \
@@ -46,6 +52,7 @@ git restore -- src-tauri/src/api/telemetry_api.rs \
 ---
 
 ## SYMPTÔMES OBSERVÉS (avant fix)
+
 - Onglet ADMIN → "Santé Prod (V25)"
 - Titre page : "Production V25 Week 1"
 - Badge : "Inconnu"
@@ -55,7 +62,9 @@ git restore -- src-tauri/src/api/telemetry_api.rs \
 - Échantillons = 0
 
 ## CAUSE RACINE PRINCIPALE
+
 Le backend Rust retourne un `Ok(ProductionHealthSummary{status:"UNKNOWN", zeros...})` quand `/tmp/titane_production_week1.csv` est absent. Ce faux succès traverse la garde `isProductionHealthSummary()` dans le hook, `data` est peuplé avec des zéros, l'UI affiche le panneau complet avec toutes les valeurs à zéro et le badge "Inconnu" — **données fabriquées, non réelles**.
 
 ## VERDICT FINAL
+
 → Voir `20_VERDICT.md`

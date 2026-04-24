@@ -1,10 +1,13 @@
 # AUDIO TRACES INDEX
+
 **Date:** 2026-03-17 23:00
 
 ## Primary Artifact
+
 - `reports/e2e-desktop/audio_tts_runtime_controls_metrics.json` — last run (Run 3) full metrics JSON
 
 ## Key Trace Data (from all 3 runs)
+
 ```
 assistantMessageDetected: true    ← real LLM response received
 ttsControlsVisible: true          ← TTS button rendered in chat
@@ -22,15 +25,18 @@ verdict: "PASS"                         ← All gates passed
 ```
 
 ## WDIO Logs
+
 - `reports/e2e-desktop/wdio.log` — full WDIO session log (last run)
 - `reports/e2e-desktop/diagnostics.log` — tauri-driver diagnostics
 - `reports/e2e-desktop/tauri_driver.log` — tauri-driver stdio
 - `reports/e2e-desktop/webkit_driver.log` — WebKitWebDriver stdio
 
 ## Driver Chain
+
 ```
 WDIO → tauri-driver (port 4444) → WebKitWebDriver (/usr/bin/WebKitWebDriver) → Tauri binary (WebKitGTK WebView)
 ```
 
 ## No Screenshots
+
 No screenshots captured (not required for PASS runs — UI state confirmed via testid selectors and metrics.json).

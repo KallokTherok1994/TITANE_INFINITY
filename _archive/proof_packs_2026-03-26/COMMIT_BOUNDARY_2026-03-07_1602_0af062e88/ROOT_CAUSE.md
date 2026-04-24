@@ -9,6 +9,7 @@
 Executed boundary was exact and successful, but it intentionally did not include deferred runtime/proof-pack buckets.
 
 Evidence:
+
 - `raw/readiness_recalc_counts.env`
 - `raw/post_commit_status_short_fresh.txt`
 - `08_READINESS_RECALC.md`

@@ -7,6 +7,7 @@ B) SCOPE_RING: `official baseline declaration`
 C) RISK: `P1`
 
 D) PLAN (<=7):
+
 1. Declare canonical baseline in strict fields.
 2. Keep statement short and unambiguous.
 
@@ -23,4 +24,5 @@ GOVERNANCE_RULE: PASS
 REOPEN_CONDITION: drift prouve uniquement
 
 F) ROLLBACK:
+
 - Declaration is documentary-only.

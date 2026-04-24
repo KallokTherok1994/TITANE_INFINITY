@@ -8,6 +8,6 @@
 
 - command: `git diff --name-only`
 - result:
-	- `registry/autofix-autoheal-rules.jsonl`
-	- `scripts/autoheal/autoheal_rules.jsonl`
-	- `scripts/verify/verify_chat_online.sh`
+  - `registry/autofix-autoheal-rules.jsonl`
+  - `scripts/autoheal/autoheal_rules.jsonl`
+  - `scripts/verify/verify_chat_online.sh`

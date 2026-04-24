@@ -57,7 +57,9 @@ export class CspManager {
    */
   static applyToDocument(): void {
     // Check if meta tag already exists
-    let metaTag = document.querySelector('meta[http-equiv="Content-Security-Policy"]') as HTMLMetaElement | null;
+    let metaTag = document.querySelector(
+      'meta[http-equiv="Content-Security-Policy"]'
+    ) as HTMLMetaElement | null;
 
     if (!metaTag) {
       metaTag = document.createElement('meta') as HTMLMetaElement;

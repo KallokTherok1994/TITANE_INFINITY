@@ -1,4 +1,5 @@
 # ROLLBACK — Procédure de rollback
+
 **Session:** AUDIT360_20260304_132822  
 **Horodatage UTC:** 2026-03-04T13:28:22Z
 
@@ -7,6 +8,7 @@
 ## Périmètre des changements de cette session
 
 Cette session crée uniquement des fichiers de preuve en mode append-only dans :
+
 - `proof_packs/AUDIT360_20260304_132822/` (nouveau répertoire)
 - `reports/MAP_PROOFS.log` (append-only)
 
@@ -58,12 +60,12 @@ tail -5 reports/MAP_PROOFS.log
 
 ## Niveau de risque du rollback
 
-| Dimension | Risque | Justification |
-|-----------|--------|---------------|
-| Code source | 🟢 NUL | Aucun code source modifié |
-| Configuration runtime | 🟢 NUL | Aucune configuration modifiée |
-| Données utilisateur | 🟢 NUL | Preuves uniquement |
-| Documentation | 🟢 MINIMAL | Seule l'entrée MAP_PROOFS.log est impactée |
+| Dimension             | Risque     | Justification                              |
+| --------------------- | ---------- | ------------------------------------------ |
+| Code source           | 🟢 NUL     | Aucun code source modifié                  |
+| Configuration runtime | 🟢 NUL     | Aucune configuration modifiée              |
+| Données utilisateur   | 🟢 NUL     | Preuves uniquement                         |
+| Documentation         | 🟢 MINIMAL | Seule l'entrée MAP_PROOFS.log est impactée |
 
 ---
 

@@ -1,4 +1,5 @@
 # 14 DIFF FILES
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## Fichiers modifiés dans cette session
@@ -8,12 +9,14 @@
 **Lignes touchées**: ~660-700
 **Nature**: Fix RUST_CAPTURE_NOT_CAUSAL
 **Changement**:
+
 - Remplacement `Command::new("pw-record")` par `Command::new("timeout")` avec duration_arg
 - Suppression `.env("PW_DURATION_LIMIT", ...)` (inventé, sans effet)
 - Suppression `-D "hw:{id},0"` dans arecord fallback (ID wpctl ≠ ID ALSA)
 - Arecord fallback utilise désormais OS default (wpctl set-default déjà appelé)
 
 **diff résumé**:
+
 ```
 src-tauri/src/audio/commands.rs | ~15 lignes modifiées
 ```

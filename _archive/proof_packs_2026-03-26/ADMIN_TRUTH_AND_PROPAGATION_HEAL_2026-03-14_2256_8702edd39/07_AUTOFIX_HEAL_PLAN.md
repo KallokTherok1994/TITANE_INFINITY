@@ -1,6 +1,7 @@
 # AUTOFIX HEAL PLAN
 
 Ordre applique:
+
 1. Validation charge route/admin + detection import failures.
 2. Capture details ErrorBoundary (proof directe).
 3. Hardening contrat IPC System diagnostics.

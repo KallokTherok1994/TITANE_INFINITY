@@ -2,14 +2,14 @@
 
 ## Métadonnées
 
-| Champ | Valeur |
-|---|---|
-| Pack | CHAT_ULTIMATE_POLICY_2026-03-17_2144_3b3907080 |
-| Date | 2026-03-17 |
-| SHA | 3b3907080 |
-| Branche | MAIN |
-| Mode | REPAIR + HARDEN |
-| Scope Ring | Ring 4 (UI) → Ring 3 (Services) |
+| Champ      | Valeur                                         |
+| ---------- | ---------------------------------------------- |
+| Pack       | CHAT_ULTIMATE_POLICY_2026-03-17_2144_3b3907080 |
+| Date       | 2026-03-17                                     |
+| SHA        | 3b3907080                                      |
+| Branche    | MAIN                                           |
+| Mode       | REPAIR + HARDEN                                |
+| Scope Ring | Ring 4 (UI) → Ring 3 (Services)                |
 
 ## EXEC_MODE
 

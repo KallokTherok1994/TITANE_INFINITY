@@ -1,22 +1,25 @@
 # 05_COMMANDS_USED.md — Commandes utilisees
 
 ## Bootstrap
+
 - git status
 - git rev-parse --short HEAD
 - git log -20 --oneline
 - node -v && pnpm -v && cargo -V && rustc -V
 
 ## Discovery
-- rg -n "voice_|tts_|whisper|speech|audio|..." -S src src-tauri docs
+
+- rg -n "voice*|tts*|whisper|speech|audio|..." -S src src-tauri docs
 - grep -n "generate_handler" src-tauri/src/main.rs
-- grep -n "fn tts_|fn get_audio_|fn voice_|fn start_recording..." src-tauri/src/audio/commands.rs
-- grep -rn "invoke(" src/ --include="*.ts" | grep -iE "tts|voice|audio|record|whisper"
+- grep -n "fn tts*|fn get_audio*|fn voice\_|fn start_recording..." src-tauri/src/audio/commands.rs
+- grep -rn "invoke(" src/ --include="\*.ts" | grep -iE "tts|voice|audio|record|whisper"
 - grep -n "navigator.mediaDevices|SpeechRecognition|AudioContext..." src/
 - grep -n "transcribe_audio|is_recording|get_vad_state" src-tauri/src/main.rs
 - grep -n "realtime_stream_tts" src-tauri/src/ (no results — BROKEN confirmed)
 - cargo test --manifest-path=src-tauri/Cargo.toml (BLOCKED — too long)
 
 ## Files read
+
 - src-tauri/src/audio/mod.rs
 - src-tauri/src/audio/commands.rs (full)
 - src-tauri/src/commands/whisper_commands.rs (full)

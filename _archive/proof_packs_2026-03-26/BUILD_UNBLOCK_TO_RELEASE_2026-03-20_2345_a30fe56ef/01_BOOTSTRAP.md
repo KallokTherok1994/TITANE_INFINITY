@@ -1,4 +1,5 @@
 # 01 BOOTSTRAP
+
 Node: v22.22.1 (via nvm — v18.19.1 system default bypassed)
 pnpm: 10.30.2
 cargo: 1.94.0-stable

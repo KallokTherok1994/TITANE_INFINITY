@@ -1,4 +1,5 @@
 # 14_ROLLBACK — Plan de Rollback Safe
+
 **Proof Pack:** AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53  
 **Timestamp:** 2026-03-05T15:08:56Z
 
@@ -21,6 +22,7 @@ rm -rf proof_packs/AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53/
 ## Rollbacks des Recommandations (si implémentées)
 
 ### R1 — Déplacer HTTP Ring 2 → Ring 3 (Rust)
+
 ```bash
 git restore -- \
   src-tauri/src/engines/unified_memory/summarizer.rs \
@@ -29,6 +31,7 @@ git restore -- \
 ```
 
 ### R2 — Supprimer monkey-patch fetch
+
 ```bash
 git restore -- src/services/selfHealing/selfHealingObserver.ts
 # Vérifier: grep -n "window.fetch\s*=" src/services/selfHealing/selfHealingObserver.ts
@@ -36,16 +39,19 @@ git restore -- src/services/selfHealing/selfHealingObserver.ts
 ```
 
 ### R3 — TauriBridge/StateBridge
+
 ```bash
 git restore -- src/os/bridge/TauriBridge.ts src/os/bridge/StateBridge.ts
 ```
 
 ### R4 — Setup script
+
 ```bash
 git restore -- scripts/setup/setup-dev.sh README.md
 ```
 
 ### R5 — Workflows CI
+
 ```bash
 git restore -- .github/workflows/
 # Ou restaurer workflows archivés:
@@ -53,11 +59,13 @@ mv .github/workflows/archive/cosmic-*.yml .github/workflows/
 ```
 
 ### R6 — reqwest bump
+
 ```bash
 git restore -- src-tauri/Cargo.toml src-tauri/Cargo.lock
 ```
 
 ### R7 — SHA256SUMS
+
 ```bash
 git restore -- src-tauri/SHA256SUMS_v27.2.0
 # Recréer le v19.5.2 si nécessaire
@@ -83,6 +91,7 @@ git show <commit_sha>:<path/to/file> > path/to/file
 ## Commandes Safe (Audit-Only)
 
 Ces commandes sont sans risque (lecture seule):
+
 ```bash
 git status --porcelain=v1      # Vérifier propreté working tree
 git diff HEAD --name-only      # Voir changements

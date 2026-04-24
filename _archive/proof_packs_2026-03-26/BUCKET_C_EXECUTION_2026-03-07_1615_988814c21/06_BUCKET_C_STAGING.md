@@ -19,4 +19,3 @@
 ## Staging Verdict
 
 - STAGE_EXECUTION: `PASS`
-

@@ -1,7 +1,7 @@
 /**
  * @module src/security
  * @description TITANE Security Module - Comprehensive frontend security hardening
- * 
+ *
  * Includes:
  * - Content Security Policy (CSP) management
  * - Input validation with Zod schemas
@@ -19,7 +19,13 @@ import { ApiKeyGuard } from './ApiKeyGuard';
 export { Sanitizer, CspManager, InputValidator, SessionGuard, ApiKeyGuard };
 
 // Re-export types
-export type { ValidationResult, CspPolicy, SessionConfig, ApiKeyMetadata, SecurityEvent } from './types';
+export type {
+  ValidationResult,
+  CspPolicy,
+  SessionConfig,
+  ApiKeyMetadata,
+  SecurityEvent,
+} from './types';
 
 // Re-export constants
 export {
@@ -38,7 +44,7 @@ export {
  * Call this once during app startup
  */
 export function initializeSecurity(): void {
-  if (typeof window === 'undefined') return;  // Skip on SSR
+  if (typeof window === 'undefined') return; // Skip on SSR
 
   // Initialize CSP
   CspManager.initialize();

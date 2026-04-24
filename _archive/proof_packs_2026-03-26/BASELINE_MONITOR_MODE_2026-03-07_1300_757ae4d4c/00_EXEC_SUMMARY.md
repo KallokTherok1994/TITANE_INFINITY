@@ -7,6 +7,7 @@ B) SCOPE_RING: `baseline monitoring only`
 C) RISK: `P0`
 
 D) PLAN:
+
 1. Bootstrap monitor pack and baseline references.
 2. Monitor workspace drift signals.
 3. Monitor CI baseline status.
@@ -15,6 +16,7 @@ D) PLAN:
 6. Emit unique monitoring decision.
 
 E) PROOFS:
+
 - `raw/baseline_reference.txt`
 - `raw/workspace_monitor_metrics.txt`
 - `raw/ci_monitor_metrics.txt`
@@ -23,4 +25,5 @@ E) PROOFS:
 - `raw/monitor_decision_eval.txt`
 
 F) ROLLBACK:
+
 - Monitoring artifacts only.

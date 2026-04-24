@@ -29,7 +29,7 @@ export class InputValidator {
     if (!result.success) {
       return {
         valid: false,
-        error: result.error.issues[0]?.message || 'Invalid API key'
+        error: result.error.issues[0]?.message || 'Invalid API key',
       };
     }
 
@@ -46,13 +46,16 @@ export class InputValidator {
     const schema = z
       .string()
       .min(1, 'Message cannot be empty')
-      .max(INPUT_LIMITS.chatMessage, `Message exceeds ${INPUT_LIMITS.chatMessage} characters`);
+      .max(
+        INPUT_LIMITS.chatMessage,
+        `Message exceeds ${INPUT_LIMITS.chatMessage} characters`
+      );
 
     const result = schema.safeParse(input);
     if (!result.success) {
       return {
         valid: false,
-        error: result.error.issues[0]?.message || 'Invalid message'
+        error: result.error.issues[0]?.message || 'Invalid message',
       };
     }
 
@@ -62,7 +65,7 @@ export class InputValidator {
     if (THREAT_PATTERNS.xss.test(message)) {
       return {
         valid: false,
-        error: 'Message contains potential XSS patterns'
+        error: 'Message contains potential XSS patterns',
       };
     }
 
@@ -75,16 +78,13 @@ export class InputValidator {
    * - No javascript:/vbscript: schemes
    */
   static validateUrl(input: unknown): ValidationResult {
-    const schema = z
-      .string()
-      .min(1)
-      .max(INPUT_LIMITS.url);
+    const schema = z.string().min(1).max(INPUT_LIMITS.url);
 
     const result = schema.safeParse(input);
     if (!result.success) {
       return {
         valid: false,
-        error: 'Invalid URL format'
+        error: 'Invalid URL format',
       };
     }
 
@@ -95,7 +95,7 @@ export class InputValidator {
       if (url.toLowerCase().startsWith(scheme)) {
         return {
           valid: false,
-          error: `URL scheme ${scheme} is not allowed`
+          error: `URL scheme ${scheme} is not allowed`,
         };
       }
     }
@@ -107,7 +107,7 @@ export class InputValidator {
     } catch {
       return {
         valid: false,
-        error: 'Invalid URL format'
+        error: 'Invalid URL format',
       };
     }
   }
@@ -128,7 +128,7 @@ export class InputValidator {
     if (!result.success) {
       return {
         valid: false,
-        error: result.error.issues[0]?.message || 'Invalid user name'
+        error: result.error.issues[0]?.message || 'Invalid user name',
       };
     }
 
@@ -141,16 +141,13 @@ export class InputValidator {
    * - Detect dangerous patterns
    */
   static validateCommand(input: unknown): ValidationResult {
-    const schema = z
-      .string()
-      .min(1)
-      .max(INPUT_LIMITS.command);
+    const schema = z.string().min(1).max(INPUT_LIMITS.command);
 
     const result = schema.safeParse(input);
     if (!result.success) {
       return {
         valid: false,
-        error: 'Invalid command format'
+        error: 'Invalid command format',
       };
     }
 
@@ -160,7 +157,7 @@ export class InputValidator {
     if (THREAT_PATTERNS.commandInjection.test(command)) {
       return {
         valid: false,
-        error: 'Command contains dangerous characters (injection risk)'
+        error: 'Command contains dangerous characters (injection risk)',
       };
     }
 
@@ -175,11 +172,11 @@ export class InputValidator {
     if (!result.success) {
       return {
         valid: false,
-        error: result.error.issues[0]?.message || 'Validation failed'
+        error: result.error.issues[0]?.message || 'Validation failed',
       };
     }
 
-    return { valid: true, sanitized: (result.data as unknown as string | undefined) };
+    return { valid: true, sanitized: result.data as unknown as string | undefined };
   }
 
   static validateOrThrow(input: unknown, schema: z.ZodSchema, fieldName: string): any {

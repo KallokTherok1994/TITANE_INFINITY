@@ -8,6 +8,7 @@
 **Concurrent modification check :** `scripts/autoheal/autoheal_rules.jsonl` modifié dans git status avant session (parmi les fichiers modifiés non commitées) — entrée ajoutée en append-only sans conflit.
 
 ## Prévention Textuelle
+
 ```bash
 # Vérifier que stop_speaking + is_speaking sont bien enregistrés ET mockés
 grep -n 'stop_speaking\|is_speaking' src-tauri/src/main.rs | \
@@ -16,6 +17,7 @@ grep -n 'stop_speaking\|is_speaking' src-tauri/src/main.rs | \
 ```
 
 ## Test de Non-Régression Proposé
+
 ```bash
 grep -c 'audio::commands::stop_speaking' src-tauri/src/main.rs | grep -q 1 && \
 grep -c 'audio::commands::is_speaking' src-tauri/src/main.rs | grep -q 1 && \
@@ -24,5 +26,6 @@ echo "OK: stop_speaking + is_speaking enregistrés + mockés"
 ```
 
 ## Registry Partagée
+
 - `scripts/autoheal/autoheal_rules.jsonl` : **1 entrée ajoutée** (AH-2026-03-15-AUDIO-001)
 - Protocole respecté : backup raw/env/, schéma validé, fix appliqué avant écriture, append-only

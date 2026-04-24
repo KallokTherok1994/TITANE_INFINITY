@@ -1,4 +1,5 @@
 # 07_BASELINE_RUNS_X3 — Baseline Tests x3 (BLOCKED)
+
 **Proof Pack:** AUDIT_TESTS_MODULES_FIX_2026-03-05_1535_8b89089  
 **Timestamp:** 2026-03-05T15:35:28Z
 
@@ -68,13 +69,13 @@ EXIT: 1 — BLOCKED
 
 **Run ID:** 22725110137 — `action_required` (BLOCKED_APPROVAL)
 
-| Job CI | Statut Attendu | Statut Réel |
-|--------|---------------|-------------|
-| 🔍 Lint & Type Check | PASS (en CI) | BLOCKED_APPROVAL |
-| 🛡️ Phase 0 Gates | PASS (en CI) | BLOCKED_APPROVAL |
-| 🧪 Frontend Tests | PASS (en CI) | BLOCKED_APPROVAL |
-| 🦀 Rust Backend Tests | PASS (en CI) | BLOCKED_APPROVAL |
-| 🎭 E2E Tests | PASS (en CI) | BLOCKED_APPROVAL |
+| Job CI                | Statut Attendu | Statut Réel      |
+| --------------------- | -------------- | ---------------- |
+| 🔍 Lint & Type Check  | PASS (en CI)   | BLOCKED_APPROVAL |
+| 🛡️ Phase 0 Gates      | PASS (en CI)   | BLOCKED_APPROVAL |
+| 🧪 Frontend Tests     | PASS (en CI)   | BLOCKED_APPROVAL |
+| 🦀 Rust Backend Tests | PASS (en CI)   | BLOCKED_APPROVAL |
+| 🎭 E2E Tests          | PASS (en CI)   | BLOCKED_APPROVAL |
 
 **Note**: `action_required` = approbation humaine requise sur le workflow, pas d'échec de test.
 Selon les runs précédents (run#1817, 1816, 1815 tous = `action_required`), le CI passe quand il peut s'exécuter.
@@ -83,17 +84,18 @@ Selon les runs précédents (run#1817, 1816, 1815 tous = `action_required`), le 
 
 ## G_BASELINE_RUNS_X3 = BLOCKED
 
-| Suite | Runs | Statut |
-|-------|------|--------|
-| Lint (ESLint) | 0/3 | BLOCKED |
-| Format (Prettier) | 0/3 | BLOCKED |
-| TypeCheck (TSC) | 0/3 | BLOCKED |
-| Vitest unit | 0/3 | BLOCKED |
-| Vitest architecture | 0/3 | BLOCKED |
-| Cargo test | 0/3 | BLOCKED |
-| IPC contract | 0/3 | BLOCKED |
+| Suite               | Runs | Statut  |
+| ------------------- | ---- | ------- |
+| Lint (ESLint)       | 0/3  | BLOCKED |
+| Format (Prettier)   | 0/3  | BLOCKED |
+| TypeCheck (TSC)     | 0/3  | BLOCKED |
+| Vitest unit         | 0/3  | BLOCKED |
+| Vitest architecture | 0/3  | BLOCKED |
+| Cargo test          | 0/3  | BLOCKED |
+| IPC contract        | 0/3  | BLOCKED |
 
 **Prérequis pour débloquer:**
+
 ```bash
 npm install -g pnpm@10.28.2
 pnpm install --frozen-lockfile

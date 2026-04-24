@@ -1,4 +1,5 @@
 # 06_BUILD_X3.log — Build x3
+
 **Proof Pack:** AUDIT_MODULES_2026-03-05_1433_0f7d943  
 **Timestamp:** 2026-03-05T14:33:25Z
 
@@ -67,13 +68,13 @@ Exit code: 127
 
 ## Résumé Build
 
-| Build | Commande | Statut | Raison |
-|-------|----------|--------|--------|
-| Frontend (Vite) | `pnpm build` | BLOCKED | pnpm absent |
-| TypeScript Check | `pnpm check` | BLOCKED | pnpm absent |
-| Rust check | `cargo check` | BLOCKED | GTK libs absent |
-| Rust clippy | `cargo clippy` | BLOCKED | GTK libs absent |
-| Tauri DEV | `pnpm dev` | BLOCKED | GTK + pnpm absent |
+| Build            | Commande       | Statut  | Raison            |
+| ---------------- | -------------- | ------- | ----------------- |
+| Frontend (Vite)  | `pnpm build`   | BLOCKED | pnpm absent       |
+| TypeScript Check | `pnpm check`   | BLOCKED | pnpm absent       |
+| Rust check       | `cargo check`  | BLOCKED | GTK libs absent   |
+| Rust clippy      | `cargo clippy` | BLOCKED | GTK libs absent   |
+| Tauri DEV        | `pnpm dev`     | BLOCKED | GTK + pnpm absent |
 
 ---
 
@@ -101,6 +102,7 @@ pnpm check  # tsc --noEmit
 ## Observations Statiques
 
 Bien que les builds soient BLOCKED, l'inspection statique révèle:
+
 - `vite.config.ts` existe et est complet
 - `tsconfig.json` strict mode activé
 - `src-tauri/Cargo.toml` version 27.2.0 avec profil release optimisé

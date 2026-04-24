@@ -1,4 +1,5 @@
 # 10 RUNTIME ACTION PROOFS
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## Preuve 1: wpctl device enumeration (INPUT_DEVICES_OS)
@@ -47,7 +48,7 @@ RÉSULTAT: PASS — arecord OS default fonctionnel
 
 ```
 $ espeak-ng → COMMANDE NON TROUVÉE
-$ espeak   → COMMANDE NON TROUVÉE  
+$ espeak   → COMMANDE NON TROUVÉE
 $ piper    → NON INSTALLÉ
 RÉSULTAT: Le Rust retournera success=false, errorMessage="Erreur espeak/espeak-ng: ..."
 NO_LIE: PAS de faux succès. Erreur honnête ✓
@@ -70,9 +71,9 @@ RÉSULTAT: Fichier en existence, persistance fonctionnelle ✓
 ## X3 Scenario complet
 
 | Run | Inputs | Outputs | Capture (bytes) | Status |
-|-----|--------|---------|-----------------|--------|
-| 1 | 2 | 3 | 62792 | PASS |
-| 2 | 2 | 3 | 63474 | PASS |
-| 3 | 2 | 3 | 63474 | PASS |
+| --- | ------ | ------- | --------------- | ------ |
+| 1   | 2      | 3       | 62792           | PASS   |
+| 2   | 2      | 3       | 63474           | PASS   |
+| 3   | 2      | 3       | 63474           | PASS   |
 
 All X3: PASS ✓

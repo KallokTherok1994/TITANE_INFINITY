@@ -54,13 +54,13 @@ Streaming réponse → useChat.ts stream handlers
 
 ## Entrypoints identifiés
 
-| Entrypoint | Fichier | Trigger |
-|------------|---------|---------|
-| sendMessage() | src/hooks/useChat.ts | ChatInput submit |
-| sendMessageStream() | src/services/api/chat.ts | config.streaming=true |
-| sendMessageLegacy() | src/services/api/chat.ts | compat (délègue à sendMessage) |
-| sendMessage() | src/hooks/useConversationEngine.ts | hook alternatif |
-| E2E mock | src/services/api/chat.ts | window.__TITANE_E2E_CHAT_MOCK__=true |
+| Entrypoint          | Fichier                            | Trigger                              |
+| ------------------- | ---------------------------------- | ------------------------------------ |
+| sendMessage()       | src/hooks/useChat.ts               | ChatInput submit                     |
+| sendMessageStream() | src/services/api/chat.ts           | config.streaming=true                |
+| sendMessageLegacy() | src/services/api/chat.ts           | compat (délègue à sendMessage)       |
+| sendMessage()       | src/hooks/useConversationEngine.ts | hook alternatif                      |
+| E2E mock            | src/services/api/chat.ts           | window.**TITANE_E2E_CHAT_MOCK**=true |
 
 ## Verdict
 

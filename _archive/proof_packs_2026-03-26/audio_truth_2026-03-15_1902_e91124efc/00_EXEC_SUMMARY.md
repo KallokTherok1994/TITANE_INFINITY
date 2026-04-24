@@ -1,4 +1,5 @@
 # 00 EXEC SUMMARY — AUDIO TRUTH CERT
+
 # TITANE∞ — proof_packs/audio_truth_2026-03-15_1902_e91124efc
 
 Date: 2026-03-15 19:02
@@ -6,7 +7,7 @@ SHA: e91124efc
 Branch: MAIN
 Mode: BACKGROUND EXEC_MODE
 Risk: P1
-Scope: R2→R4 + src-tauri/src/audio* + src-tauri/src/commands* + src/services/* + src/pages/Admin* + settings/config canonical
+Scope: R2→R4 + src-tauri/src/audio* + src-tauri/src/commands* + src/services/_ + src/pages/Admin_ + settings/config canonical
 
 ## RÉSUMÉ EXÉCUTIF
 
@@ -14,11 +15,11 @@ Mission: Certifier la chaîne audio complète Ubuntu → Rust → Tauri → IPC 
 
 ### Défauts identifiés et classifiés
 
-| ID | Catégorie | Sévérité | Statut |
-|----|-----------|----------|--------|
-| D-01 | RUST_CAPTURE_NOT_CAUSAL | CRITIQUE | FIXÉ |
-| D-02 | RUST_CAPTURE_NOT_CAUSAL (arecord fallback mauvais ID ALSA) | MINEUR | FIXÉ |
-| D-03 | OS_DEVICE_UNAVAILABLE (espeak/piper non installés) | INFO | NON BLOQUANT — test speaker honnête (retourne erreur) |
+| ID   | Catégorie                                                  | Sévérité | Statut                                                |
+| ---- | ---------------------------------------------------------- | -------- | ----------------------------------------------------- |
+| D-01 | RUST_CAPTURE_NOT_CAUSAL                                    | CRITIQUE | FIXÉ                                                  |
+| D-02 | RUST_CAPTURE_NOT_CAUSAL (arecord fallback mauvais ID ALSA) | MINEUR   | FIXÉ                                                  |
+| D-03 | OS_DEVICE_UNAVAILABLE (espeak/piper non installés)         | INFO     | NON BLOQUANT — test speaker honnête (retourne erreur) |
 
 ### Patches appliqués
 

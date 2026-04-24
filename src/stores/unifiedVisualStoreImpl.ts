@@ -35,7 +35,7 @@ export interface UnifiedVisualState {
   // ─────────────────────────────────────────────────────────────────
   // CORE VISUAL STATE (from visualStore + visualStateStore)
   // ─────────────────────────────────────────────────────────────────
-  
+
   // Current state and transitions
   currentState: string; // e.g. 'thinking', 'responding', 'idle'
   previousState: string | null;
@@ -56,7 +56,7 @@ export interface UnifiedVisualState {
   // ─────────────────────────────────────────────────────────────────
   // PERFORMANCE METRICS (from visualStore + visualStateStoreV21)
   // ─────────────────────────────────────────────────────────────────
-  
+
   metrics: {
     fps: number;
     cpuLoad: number;
@@ -70,7 +70,7 @@ export interface UnifiedVisualState {
   // ─────────────────────────────────────────────────────────────────
   // STATE HISTORY (from visualStore)
   // ─────────────────────────────────────────────────────────────────
-  
+
   stateHistory: Array<{
     state: string;
     timestamp: number;
@@ -80,7 +80,7 @@ export interface UnifiedVisualState {
   // ─────────────────────────────────────────────────────────────────
   // TITANE STATE CONFIG (from visualStateStoreV21)
   // ─────────────────────────────────────────────────────────────────
-  
+
   config: {
     [key: string]: any;
   };
@@ -178,7 +178,7 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
             const { currentState, stateHistory } = get();
             if (currentState === state) return;
 
-            set((prevState) => ({
+            set(prevState => ({
               previousState: prevState.currentState,
               currentState: state,
               isTransitioning: true,
@@ -201,7 +201,7 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
 
           setStateImmediate: (state: string) => {
             const { stateHistory } = get();
-            set((prevState) => ({
+            set(prevState => ({
               previousState: prevState.currentState,
               currentState: state,
               isTransitioning: false,
@@ -219,7 +219,7 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
           revertToPreviousState: () => {
             const { previousState, stateHistory } = get();
             if (previousState) {
-              set((prevState) => ({
+              set(prevState => ({
                 currentState: previousState,
                 previousState: prevState.currentState,
                 stateHistory: [...stateHistory.slice(-9)],
@@ -255,8 +255,8 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
           // METRICS
           // ─────────────────────────────────────────────────────────────────
 
-          updateMetrics: (updates) => {
-            set((prevState) => ({
+          updateMetrics: updates => {
+            set(prevState => ({
               metrics: {
                 ...prevState.metrics,
                 ...updates,
@@ -265,12 +265,12 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
             }));
           },
 
-          setMetrics: (metrics) => {
+          setMetrics: metrics => {
             set({ metrics: { ...metrics, lastUpdate: Date.now() } });
           },
 
           recordFrameTime: (frameTime: number) => {
-            set((prevState) => ({
+            set(prevState => ({
               metrics: {
                 ...prevState.metrics,
                 frameTime,
@@ -284,8 +284,8 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
           // CONFIGURATION
           // ─────────────────────────────────────────────────────────────────
 
-          updateConfig: (config) => {
-            set((prevState) => ({
+          updateConfig: config => {
+            set(prevState => ({
               config: {
                 ...prevState.config,
                 ...config,
@@ -293,15 +293,15 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
             }));
           },
 
-          setEnableOrchestration: (enable) => {
+          setEnableOrchestration: enable => {
             set({ enableOrchestration: enable });
           },
 
-          setAdaptiveFPS: (enable) => {
+          setAdaptiveFPS: enable => {
             set({ adaptiveFPS: enable });
           },
 
-          setDebug: (enable) => {
+          setDebug: enable => {
             set({ debug: enable });
           },
 
@@ -347,7 +347,7 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
     ),
     {
       name: 'unified-visual-store',
-      partialize: (state) => ({
+      partialize: state => ({
         currentState: state.currentState,
         config: state.config,
         debug: state.debug,
@@ -365,19 +365,18 @@ export const useUnifiedVisualStore = create<UnifiedVisualStore>()(
  * Select only current state (minimal re-renders)
  */
 export const useVisualCurrentState = () =>
-  useUnifiedVisualStore((state) => state.currentState);
+  useUnifiedVisualStore(state => state.currentState);
 
 /**
  * Select only metrics (for performance monitoring)
  */
-export const useVisualMetrics = () =>
-  useUnifiedVisualStore((state) => state.metrics);
+export const useVisualMetrics = () => useUnifiedVisualStore(state => state.metrics);
 
 /**
  * Select only engine status
  */
 export const useVisualEngineStatus = () =>
-  useUnifiedVisualStore((state) => ({
+  useUnifiedVisualStore(state => ({
     isRunning: state.isRunning,
     isPaused: state.isPaused,
     isInitialized: state.isInitialized,
@@ -387,14 +386,13 @@ export const useVisualEngineStatus = () =>
 /**
  * Select only FPS
  */
-export const useVisualFPS = () =>
-  useUnifiedVisualStore((state) => state.metrics.fps);
+export const useVisualFPS = () => useUnifiedVisualStore(state => state.metrics.fps);
 
 /**
  * Select actions only
  */
 export const useVisualActions = () =>
-  useUnifiedVisualStore((state) => ({
+  useUnifiedVisualStore(state => ({
     setState: state.setState,
     start: state.start,
     stop: state.stop,

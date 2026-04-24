@@ -1,14 +1,17 @@
 # SCOPE AND COLLISIONS
 
 Bootstrap:
+
 - `git branch --show-current` => MAIN
 - `git rev-parse --short HEAD` => 8702edd39
 - `git status --porcelain` => clean
 
 Collisions actives:
+
 - Aucune collision active detectee sur fichiers ADMIN au moment du bootstrap final.
 
 Scope reel audite:
+
 - `src/features/admin/**`
 - `src/features/system-center/**`
 - `src/pages/ConfigurationHub.tsx`

@@ -6,12 +6,12 @@
 
 ## Toolchain
 
-| Outil    | Version          |
-|----------|------------------|
-| Node.js  | v18.19.1         |
-| pnpm     | 10.30.2          |
-| cargo    | 1.94.0           |
-| rustc    | 1.94.0           |
+| Outil   | Version  |
+| ------- | -------- |
+| Node.js | v18.19.1 |
+| pnpm    | 10.30.2  |
+| cargo   | 1.94.0   |
+| rustc   | 1.94.0   |
 
 Note: Node.js v18 < required v20 → `pnpm typecheck` inaccessible via pnpm (engines check).
 

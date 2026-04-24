@@ -15,4 +15,3 @@
 
 - DRY_RUN_STRICT: `PASS`
 - DRY_RUN_CONTAMINATION: `FAIL` not triggered
-

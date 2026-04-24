@@ -5,6 +5,7 @@
 Aucun smoke Android exécutable dans cet environnement.
 
 ## Tests smoke à effectuer après init Android
+
 1. Build APK debug: `tauri android build --debug`
 2. Install sur émulateur: `adb install app-debug.apk`
 3. Launch app: `adb shell am start -n com.titane.infinity/.MainActivity`

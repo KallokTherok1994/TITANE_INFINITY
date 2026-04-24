@@ -78,7 +78,9 @@ describe('InputValidator', () => {
     });
 
     it('should reject data: HTML URLs', () => {
-      const result = InputValidator.validateUrl('data:text/html,<script>alert(1)</script>');
+      const result = InputValidator.validateUrl(
+        'data:text/html,<script>alert(1)</script>'
+      );
       expect(result.valid).toBe(false);
     });
 

@@ -8,6 +8,7 @@ Runtime logs could not be captured from browser devtools or Rust process stdout.
 ## What runtime logs WOULD show (expected based on patched code):
 
 ### Browser Console — [TTS:BOOTSTRAP] group (hybridTTS.ts)
+
 ```
 [TTS:BOOTSTRAP] ─── Voice Engine Diagnostic ───
   selectedVoice (UI stored) : fr_FR-upmc-medium
@@ -20,6 +21,7 @@ Runtime logs could not be captured from browser devtools or Rust process stdout.
 ```
 
 ### Rust process stdout (local_tts.rs)
+
 ```
 [LocalTTS] speak engine=Piper voice=Some("fr_FR-upmc-medium")
 [LocalTTS] speak_piper model: /home/titane-os/.local/share/piper/voices/fr_FR-upmc-medium.onnx
@@ -28,21 +30,28 @@ Runtime logs could not be captured from browser devtools or Rust process stdout.
 ## Static Verification Executed
 
 ### TypeScript compile:
+
 ```
 npx tsc --noEmit → exit code 0 (no errors)
 ```
 
 ### Cargo check:
+
 ```
 cd src-tauri && cargo check → Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.40s
 ```
 
 ### AutoHeal entry AH-2026-03-17-TTS-VOICE-NOT-BOUND:
+
 ```json
-{"id":"AH-2026-03-17-TTS-VOICE-NOT-BOUND","date":"2026-03-17",
- "scope":"src/services/tts/hybridTTS.ts, src-tauri/src/tts/local_tts.rs",
- "symptom":"Audio always robotic and identical regardless of voice selection..."}
+{
+  "id": "AH-2026-03-17-TTS-VOICE-NOT-BOUND",
+  "date": "2026-03-17",
+  "scope": "src/services/tts/hybridTTS.ts, src-tauri/src/tts/local_tts.rs",
+  "symptom": "Audio always robotic and identical regardless of voice selection..."
+}
 ```
 
 ### verify_instructions.sh: PASS=20 FAIL=0
+
 ### detect_recurrence.sh: PASS, entries=408

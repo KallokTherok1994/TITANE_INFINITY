@@ -33,12 +33,12 @@ deserialized stored result without `errors` triggers the same crash.
 
 ## Contract Analysis
 
-| Source | `errors` field |
-|--------|---------------|
-| Rust `EvolutionResult` struct (backend) | `errors: Vec<String>` — always present in real IPC |
-| `tauriProtector` generic fallback | **ABSENT** — lying fallback |
-| TS interface `EvolutionResult` (before fix) | `errors: string[]` — required (wrong) |
-| TS interface `EvolutionResult` (after fix) | `errors?: string[]` — optional (correct) |
+| Source                                      | `errors` field                                     |
+| ------------------------------------------- | -------------------------------------------------- |
+| Rust `EvolutionResult` struct (backend)     | `errors: Vec<String>` — always present in real IPC |
+| `tauriProtector` generic fallback           | **ABSENT** — lying fallback                        |
+| TS interface `EvolutionResult` (before fix) | `errors: string[]` — required (wrong)              |
+| TS interface `EvolutionResult` (after fix)  | `errors?: string[]` — optional (correct)           |
 
 ## Patch Applied (minimal)
 

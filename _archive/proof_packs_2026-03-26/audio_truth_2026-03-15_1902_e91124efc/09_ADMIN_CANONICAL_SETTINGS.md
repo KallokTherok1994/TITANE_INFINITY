@@ -1,4 +1,5 @@
 # 09 ADMIN CANONICAL SETTINGS
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## Source canonique (Rust)
@@ -53,12 +54,14 @@ Non bloquant: la chaîne fonctionnelle reste intacte.
 ## Écriture depuis AudioService
 
 setOutputDevice(id):
+
 1. this.config.output.deviceId = id → localStorage ✓
 2. tauriClient.setAudioOutputDevice({deviceId: id}) → wpctl set-default ✓
-3. _resolveDeviceLabel(id, 'output') → nom du device ✓
+3. \_resolveDeviceLabel(id, 'output') → nom du device ✓
 4. saveAudioDeviceConfig({...current, outputDeviceId: id, outputDeviceLabel}) ✓
 
 setInputDevice(id): même pattern ✓
 
 ## PERSISTENCE_NOT_CANONICAL: NONE ✓
+
 ## Drift Admin/AudioCenter: NONE ✓

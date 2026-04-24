@@ -1,6 +1,7 @@
 # 12_TTS_STT_MATRIX.md — Matrice TTS/STT
 
 ## TTS: Piper
+
 - Provider: Piper local (~/.local/bin/piper)
 - Input: String
 - Output: Fichier WAV temp + lecture paplay/aplay
@@ -13,6 +14,7 @@
 - Verdict: PARTIAL (runtime non prouve sans Piper installe)
 
 ## TTS: espeak
+
 - Provider: espeak systeme
 - Input: String
 - Output: Lecture directe espeak
@@ -21,6 +23,7 @@
 - Verdict: PARTIAL (runtime non prouve)
 
 ## TTS: hybridTTS Strategie 3 (Web Speech API)
+
 - Provider: window.speechSynthesis
 - Input: String
 - Output: Audio navigateur
@@ -29,6 +32,7 @@
 - Verdict: DOC_ONLY / LEGACY (non recommande en production Tauri)
 
 ## STT: voice_start_listening (overdrive)
+
 - Provider: Pas de moteur ASR reel (etat interne seulement)
 - Input: N/A
 - Output: "Ecoute activee" String
@@ -37,6 +41,7 @@
 - Verdict: STUB (infrastructure sans moteur STT reel)
 
 ## STT: Whisper streaming (commands_v21)
+
 - Provider: AUCUN (stub)
 - Input: Vec<u8> chunks
 - Output: Ok(()) seulement
@@ -45,6 +50,7 @@
 - Verdict: STUB
 
 ## STT: useAudioChat.tsx Web Speech API
+
 - Provider: window.SpeechRecognition / webkitSpeechRecognition
 - I2: VIOLATION
 - Verdict: DOC_ONLY (non supporte Linux en general)

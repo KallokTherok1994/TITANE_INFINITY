@@ -1,12 +1,15 @@
 # 01_BOOTSTRAP.md — Environnement système
 
 ## Date: 2026-03-15T13:21:56Z
+
 ## SHA: c59e9b5b3
 
 ## git status
+
 Sur la branche MAIN — copie de travail propre
 
 ## git log -20 --oneline
+
 c59e9b5b3 chore: commit tout le lot restant
 ba6098c0e chore(release-proof): seal v28 go gates and launcher alignment
 795c081be fix(android): add [lib] crate-type for Tauri mobile .so generation
@@ -29,6 +32,7 @@ b7b086daf fix(android): guard STOPLINE#5 cpal + STOPLINE#4 pre_boot path
 c1b5c5d23 feat(android): bootstrap cartographie + guard STOPLINE#4 devops
 
 ## Versions
+
 - node: v18.19.1 (AVERTISSEMENT: <20.0.0 — pnpm tauri inaccessible via pnpm global)
 - pnpm: 10.30.2
 - cargo: 1.94.0
@@ -36,11 +40,14 @@ c1b5c5d23 feat(android): bootstrap cartographie + guard STOPLINE#4 devops
 - pnpm tauri: ERR_PNPM_UNSUPPORTED_ENGINE (Node v18 < v20 requis)
 
 ## Structure src-tauri/src/audio/
+
 asr.rs | capture.rs | commands.rs | mod.rs | recorder.rs | recording_engine.rs | streaming_engine.rs | vad.rs | voice_fingerprint.rs | whisper_streaming.rs
 
 ## Structure src-tauri/src/commands/
+
 whisper_commands.rs (et 30+ autres commands)
 
 ## Note critique
+
 pnpm tauri build / pnpm run test non exécutables depuis le shell shell (Node v18).
 cargo test en cours de compilation (très long, non utilisé pour verdict — BLOCKED).

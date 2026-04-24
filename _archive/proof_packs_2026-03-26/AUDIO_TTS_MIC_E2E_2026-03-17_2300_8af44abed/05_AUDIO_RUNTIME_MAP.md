@@ -1,4 +1,5 @@
 # AUDIO RUNTIME MAP
+
 **HEAD:** 8af44abed | **Date:** 2026-03-17 23:00
 
 ## TTS Speak Chain (9 hops)
@@ -19,6 +20,7 @@ UI Action (ConversationSection "read aloud" button)
 ```
 
 ## TTS Stop Chain
+
 ```
 UI "stop" button [data-testid="message-tts-stop"]
   → audioService.stop()
@@ -29,6 +31,7 @@ UI "stop" button [data-testid="message-tts-stop"]
 ```
 
 ## TTS Pause/Resume Chain
+
 ```
 UI pause/resume button
   → audioService.pause() / audioService.resume()
@@ -38,6 +41,7 @@ UI pause/resume button
 ```
 
 ## Device List Chain (Output Devices)
+
 ```
 Admin > Audio tab → AudioCenterPage mount
   → navigator.mediaDevices.enumerateDevices() [frontend-only]
@@ -50,6 +54,7 @@ Admin > Audio tab → AudioCenterPage mount
 ```
 
 ## Microphone Test Chain
+
 ```
 UI mic test button → audioService.testMicrophone()
   → invoke("test_microphone")
@@ -60,6 +65,7 @@ UI mic test button → audioService.testMicrophone()
 ```
 
 ## Speaker Test Chain
+
 ```
 UI speaker test button → audioService.testSpeaker()
   → invoke("test_tts")
@@ -70,6 +76,7 @@ UI speaker test button → audioService.testSpeaker()
 ```
 
 ## E2E Test Buffer Chain (NEW at HEAD 8af44abed)
+
 ```
 Playwright test (audio-truth.spec.ts)
   → page.evaluate: __TAURI__.core.invoke("tts_generate_test_buffer", {voice, duration_ms})
@@ -81,6 +88,7 @@ Playwright test (audio-truth.spec.ts)
 ```
 
 ## Settings Persistence Chain
+
 ```
 AudioCenter / ConfigurationHub settings change
   → audioService.updateTTSSettings(settings)
@@ -92,6 +100,7 @@ AudioCenter / ConfigurationHub settings change
 ```
 
 ## Voice Profile Sync Chain
+
 ```
 audioService.syncVoiceIdentityProfile(voiceProfileId)
   → titaneVoiceProfiles.ts lookup

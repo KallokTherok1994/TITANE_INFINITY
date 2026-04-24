@@ -95,7 +95,7 @@ export class SessionGuard {
       timestamp: Date.now(),
       type: 'session',
       severity: 'warning',
-      message: 'Session terminated due to inactivity'
+      message: 'Session terminated due to inactivity',
     });
 
     // Clear sensitive data from memory
@@ -149,10 +149,7 @@ export class SessionGuard {
 
     // Warning timeout
     if (this.config.warningMs && this.config.warningMs < this.config.timeoutMs) {
-      this.warningTimeoutId = setTimeout(
-        () => this.showWarning(),
-        warningTime
-      );
+      this.warningTimeoutId = setTimeout(() => this.showWarning(), warningTime);
     }
 
     // Session timeout
@@ -183,7 +180,7 @@ export class SessionGuard {
       timestamp: Date.now(),
       type: 'session',
       severity: 'warning',
-      message: 'Session will expire soon due to inactivity'
+      message: 'Session will expire soon due to inactivity',
     });
   }
 

@@ -3,16 +3,16 @@
 ## Hostile Checks
 
 - Candidate set equals staged set:
-	- source: `raw/bucket_c_candidate_paths.txt`
-	- source: `raw/bucket_c_staged_names.txt`
-	- result: `PASS`
+  - source: `raw/bucket_c_candidate_paths.txt`
+  - source: `raw/bucket_c_staged_names.txt`
+  - result: `PASS`
 - Staged set equals committed set:
-	- source: `raw/bucket_c_staged_names.txt`
-	- source: `raw/bucket_c_commit_changed_files.txt`
-	- result: `PASS`
+  - source: `raw/bucket_c_staged_names.txt`
+  - source: `raw/bucket_c_commit_changed_files.txt`
+  - result: `PASS`
 - Contamination guard:
-	- source: `raw/bucket_c_contamination_check.txt`
-	- result: `CONTAMINATION_ZERO:PASS`
+  - source: `raw/bucket_c_contamination_check.txt`
+  - result: `CONTAMINATION_ZERO:PASS`
 
 ## Residual Arithmetic
 
@@ -29,10 +29,9 @@
 ## Mandatory Gates (Rule 10)
 
 - `bash scripts/autoheal/detect_recurrence.sh`
-	- log: `raw/gate_detect_recurrence.log`
-	- exit: `raw/gate_detect_recurrence.exitcode` -> `0`
+  - log: `raw/gate_detect_recurrence.log`
+  - exit: `raw/gate_detect_recurrence.exitcode` -> `0`
 - `bash scripts/verify_instructions.sh`
-	- log: `raw/gate_verify_instructions.log`
-	- exit: `raw/gate_verify_instructions.exitcode` -> `0`
+  - log: `raw/gate_verify_instructions.log`
+  - exit: `raw/gate_verify_instructions.exitcode` -> `0`
 - GATES_RULE10_STATUS: `PASS`
-

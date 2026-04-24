@@ -9,6 +9,7 @@
 ### P1 — Création `src/services/ai/responsePolicy.ts`
 
 **Contenu** :
+
 - 4 profils canoniques : DIRECT (512t), BALANCED (2048t), DEEP (4000t), ARCHITECT (6000t)
 - `selectResponseProfile()` : sélection lexicale + mode default + heuristiques longueur/complexité
 - `evaluateInferenceState()` : 4 états bornés (SAFE_TO_INFER, INFER_WITH_DISCLOSURE, CLARIFY_REQUIRED, BLOCKED_BY_MISSING_FACT)
@@ -28,6 +29,7 @@ import { getEffectiveProfile } from './responsePolicy'; // v24.4.0: Canonical re
 ### P3 — Computation profil dans `generate()` (non-stream path)
 
 Après `const modeConfig = (chatModes[...])`:
+
 ```typescript
 const { profile: effectiveResponseProfile } = getEffectiveProfile(
   finalConfig.mode,
@@ -36,6 +38,7 @@ const { profile: effectiveResponseProfile } = getEffectiveProfile(
   modeConfig.temperature
 );
 ```
+
 Passé comme `modeMaxTokens` + `modeTemperature` à `tryBackendPipeline`.
 
 ### P4 — Payload non-stream `tryBackendPipeline`
@@ -61,6 +64,7 @@ const { profile: streamResponseProfile } = getEffectiveProfile(
   modeConfig.temperature
 );
 ```
+
 Passé à `tryBackendStream`.
 
 ## Principes respectés

@@ -4,7 +4,7 @@
 
 1. git restore -- src/features/audio-center/services/audioService.ts
 2. git restore -- src/features/audio-center/hooks/useAudio.ts
-3. git restore -- src/__tests__/features/audio/audioService.runtimeTtsPolicy.test.ts
+3. git restore -- src/**tests**/features/audio/audioService.runtimeTtsPolicy.test.ts
 4. git restore -- src/lib/tauriCommands.ts
 5. git restore -- src/lib/tauriClient.ts
 6. git restore -- src/lib/security.ts

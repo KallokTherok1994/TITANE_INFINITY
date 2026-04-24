@@ -2,17 +2,17 @@
 
 **Session** : ADMIN_SANTE_PROD_RUNTIME_2026-03-15_1813_4a77788  
 **Date clôture** : 2026-03-15  
-**SHA final** : voir commit  
+**SHA final** : voir commit
 
 ## VERDICT : PASS
 
 ## Gates exécutés
 
-| Gate | Résultat |
-|------|----------|
-| `bash scripts/verify_instructions.sh` | PASS (20/20) |
-| `bash scripts/autoheal/detect_recurrence.sh` | PASS (entries=293) |
-| `npx tsc --noEmit` (fichiers modifiés) | PASS (0 erreurs sur scope) |
+| Gate                                         | Résultat                   |
+| -------------------------------------------- | -------------------------- |
+| `bash scripts/verify_instructions.sh`        | PASS (20/20)               |
+| `bash scripts/autoheal/detect_recurrence.sh` | PASS (entries=293)         |
+| `npx tsc --noEmit` (fichiers modifiés)       | PASS (0 erreurs sur scope) |
 
 ## Patches appliqués
 

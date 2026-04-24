@@ -17,7 +17,7 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 ## Increment Delivered In This Pass
 
 - Removed wildcard import from src/pages/DashboardPage.tsx:
-  - before: import * as tokens from '@themes/tokens'
+  - before: import \* as tokens from '@themes/tokens'
   - after: removed (unused)
 - Impact:
   - wildcard-import count reduced by 1 candidate
@@ -48,7 +48,7 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
   - src/ui/pages/ControlPanel/ControlPanel.tsx
   - src/ui/pages/ControlPanel/sections/SystemSection.tsx
   - src/ui/pages/ControlPanel/components/ControlPanelLayout.tsx
-  - src/features/system-center/hooks/__tests__/useHyperVision.test.ts
+  - src/features/system-center/hooks/**tests**/useHyperVision.test.ts
 - Impact:
   - deep-import candidates reduced by 10 on this increment
   - UI-heavy import graph aligned to alias-based imports
@@ -61,11 +61,11 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 ## Increment 4 Delivered In This Pass
 
 - Reduced deep-import usage in targeted hooks/tests/UI files:
-  - src/features/system-center/hooks/__tests__/useSystemLogs.test.ts
-  - src/features/system-center/hooks/__tests__/useNodeCluster.test.ts
+  - src/features/system-center/hooks/**tests**/useSystemLogs.test.ts
+  - src/features/system-center/hooks/**tests**/useNodeCluster.test.ts
   - src/ui/pages/ChatIA/ModeEditor.tsx
-  - src/engines/conversation/__tests__/conversationLifecycleEngine.test.ts
-  - src/engines/flow/__tests__/FlowEngine.test.ts
+  - src/engines/conversation/**tests**/conversationLifecycleEngine.test.ts
+  - src/engines/flow/**tests**/FlowEngine.test.ts
 - Impact:
   - deep-import pattern count reduced from 31 to 25 on this increment
   - cumulative reduction maintained with zero behavior change
@@ -78,14 +78,14 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 ## Increment 5 Delivered In This Pass
 
 - Reduced deep-import usage across additional test and UI surfaces:
-  - src/__tests__/features/chat/artifactIntent.test.ts
-  - src/__tests__/services/ai/behavioralRouter.test.ts
-  - src/__tests__/services/ai/behavioralRouterIntegration.test.ts
-  - src/__tests__/services/performanceEngine/performanceEngine.test.ts
-  - src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts
-  - src/__tests__/services/ai/canonicalDiscernmentKernel.test.ts
-  - src/__tests__/services/operator/desktopPerception.test.ts
-  - src/__tests__/services/adminEngine/adminEngine.test.ts
+  - src/**tests**/features/chat/artifactIntent.test.ts
+  - src/**tests**/services/ai/behavioralRouter.test.ts
+  - src/**tests**/services/ai/behavioralRouterIntegration.test.ts
+  - src/**tests**/services/performanceEngine/performanceEngine.test.ts
+  - src/**tests**/services/ai/chatEngineCanonicalIntegration.test.ts
+  - src/**tests**/services/ai/canonicalDiscernmentKernel.test.ts
+  - src/**tests**/services/operator/desktopPerception.test.ts
+  - src/**tests**/services/adminEngine/adminEngine.test.ts
 - Impact:
   - deep-import pattern count reduced from 25 to 4 on this increment
   - cumulative reduction remains behavior-safe (typecheck + targeted suites pass)
@@ -98,9 +98,9 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 ## Increment 6 Delivered In This Pass
 
 - Reduced deep-import usage across UI route inventory tests by introducing a shared test adapter:
-  - src/__tests__/ui/uiPagesInventory.adapter.ts
-  - src/__tests__/ui/ui-page-objects-inventory.test.ts
-  - src/__tests__/ui/app-router-canonical-surfaces.test.tsx
+  - src/**tests**/ui/uiPagesInventory.adapter.ts
+  - src/**tests**/ui/ui-page-objects-inventory.test.ts
+  - src/**tests**/ui/app-router-canonical-surfaces.test.tsx
 - Impact:
   - deep-import pattern count reduced from 4 to 3 on this increment
   - canonical route inventory assertions now share one import surface for WDIO page objects

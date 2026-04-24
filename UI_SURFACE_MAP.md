@@ -3,6 +3,7 @@
 - README.md = surface documentaire canonique (tous les anciens index archivés)
 - Tous les fichiers `.md.md` et dossiers d’archive centralisés dans `docs/99_ARCHIVE/`
 - Inventaires et logs : `docs/92_maintenance/`
+
 # [2026-04-23] Agent dashboards version fallback truth
 
 - Surface canonique: `agent-dashboards-panel` dans `src/components/AgentDashboardsPanel.tsx`

@@ -10,10 +10,12 @@ Non enregistrée dans generate_handler![] (intentionnel). Handler = stub 16KB si
 **Ce qui N'a PAS été modifié :** capabilities/audio_tts.json, overdrive/voice_engine.rs
 
 **Condition de Déblocage :**
+
 1. `grep -rn "voice_synthesize_speech" src/ --include="*.ts"` → si 0 résultat : retrait safe
 2. PR dédiée pour retirer la ligne de capabilities/audio_tts.json
 
 **Prochaine Action (< 30 min) :**
+
 ```bash
 grep -rn "voice_synthesize_speech" src/ --include="*.ts" --include="*.tsx"
 ```
@@ -30,6 +32,7 @@ Absent de l'allowlist ET de generate_handler![]. Handler existe dans audio/comma
 **Ce qui N'a PAS été modifié :** capabilities/audio_tts.json, main.rs (hors fix-001/002)
 
 **Condition de Déblocage :**
+
 1. Ajouter `"get_recording_status"` à capabilities/audio_tts.json
 2. Ajouter `audio::commands::get_recording_status` + mock stub dans main.rs
 3. Vérifier type de retour côté frontend
@@ -48,6 +51,7 @@ PR capabilities pour Q-001 + Q-002 simultanément.
 **Ce qui N'a PAS été modifié :** overdrive/voice_engine.rs
 
 **Condition de Déblocage :**
+
 - voice_play_audio : intégrer `rodio` ou appel `aplay` comme dans tts_speak()
 - voice_calibrate_microphone : arecord + analyse RMS
 - voice_detect_wake_word : Porcupine / Snowboy / impl custom
@@ -61,6 +65,7 @@ PR capabilities pour Q-001 + Q-002 simultanément.
 **Note :** FIX-002 a ajouté les mock stubs pour transcribe_audio et is_recording.
 Le risque BUILD_RISK est résolu statiquement (STATIC_PROVEN).
 **Condition de Closure Complète :**
+
 ```bash
 cargo build --features "custom-protocol,mock,audio-capture" 2>&1 | grep "^error"
 # Attendu : 0 erreurs

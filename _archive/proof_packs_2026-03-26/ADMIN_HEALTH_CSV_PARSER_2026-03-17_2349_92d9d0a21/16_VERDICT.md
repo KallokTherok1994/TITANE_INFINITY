@@ -18,8 +18,8 @@ VERDICT: PASS
 
 When /tmp/titane_production_week1.csv is absent:
 BEFORE: UI showed "⚠️ Erreur de parsing" / "format est invalide. Vérifier la structure CSV."
-AFTER:  UI shows "📂 Source absente" / "Le fichier de télémétrie production est absent."
+AFTER: UI shows "📂 Source absente" / "Le fichier de télémétrie production est absent."
 
 When CSV has semicolon delimiter (SCHEMA_DRIFT):
 BEFORE: classified as PARSER_ERROR
-AFTER:  classified as SCHEMA_DRIFT with message "Structure CSV incompatible avec le schéma attendu"
+AFTER: classified as SCHEMA_DRIFT with message "Structure CSV incompatible avec le schéma attendu"

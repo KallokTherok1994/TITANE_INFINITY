@@ -23,12 +23,15 @@
    - Not used in the main Chat.tsx send path
 
 ### Conclusion
+
 No code change produces truthful improvement. Applying the patch policy:
+
 > "If UI is poll-based: keep it, document it, classify as DELAYED_BUT_HONEST"
 
 Classification stands as: **UI_STATUS_TRUTH_DELAYED_BUT_HONEST**
 
 ### What Would Constitute a Future Improvement (Not Required Now)
+
 - Initialize ProviderStatusPanel Ollama status to 'unknown' instead of 'offline' (cosmetic)
 - Trigger `refresh()` after a successful chat response to update panel status (optional enhancement)
 - Neither is required for correctness per the anti-lie rules

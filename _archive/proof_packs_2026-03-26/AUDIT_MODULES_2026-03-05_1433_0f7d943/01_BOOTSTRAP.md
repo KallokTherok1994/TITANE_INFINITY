@@ -1,4 +1,5 @@
 # 01_BOOTSTRAP — G_BOOT_TRUTH
+
 **Proof Pack:** AUDIT_MODULES_2026-03-05_1433_0f7d943  
 **Timestamp:** 2026-03-05T14:33:25Z  
 **SHA:** 0f7d943  
@@ -87,12 +88,12 @@ no node_modules
 
 ## Key Observations
 
-| Tool    | Version        | Status      |
-|---------|----------------|-------------|
-| node    | v24.14.0       | ✅ FOUND    |
-| pnpm    | N/A            | ❌ NOT FOUND|
-| rustc   | 1.93.1         | ✅ FOUND    |
-| cargo   | 1.93.1         | ✅ FOUND    |
+| Tool  | Version  | Status       |
+| ----- | -------- | ------------ |
+| node  | v24.14.0 | ✅ FOUND     |
+| pnpm  | N/A      | ❌ NOT FOUND |
+| rustc | 1.93.1   | ✅ FOUND     |
+| cargo | 1.93.1   | ✅ FOUND     |
 
 ## Top Directory Structure
 

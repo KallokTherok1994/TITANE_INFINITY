@@ -44,27 +44,27 @@
 
 ## DEFECT CLASSIFICATION
 
-| Defect | Classification | Severity | Status |
-|---|---|---|---|
-| Historical files in `.clinerules/` | ACTIVE_SURFACE_POLLUTED | HIGH | FIXED |
-| `verdict_final_sealed.md` claiming SEALED | SEALED_UNPROVEN | HIGH | FIXED (archived) |
-| PostToolUse `files_changed: []` | AUTOHEAL_TOO_BROAD (dormant) | MEDIUM | DEFERRED (0 impact) |
+| Defect                                    | Classification               | Severity | Status              |
+| ----------------------------------------- | ---------------------------- | -------- | ------------------- |
+| Historical files in `.clinerules/`        | ACTIVE_SURFACE_POLLUTED      | HIGH     | FIXED               |
+| `verdict_final_sealed.md` claiming SEALED | SEALED_UNPROVEN              | HIGH     | FIXED (archived)    |
+| PostToolUse `files_changed: []`           | AUTOHEAL_TOO_BROAD (dormant) | MEDIUM   | DEFERRED (0 impact) |
 
 ---
 
 ## GATE SUMMARY (post-patch)
 
-| Gate | Verdict |
-|---|---|
-| G_BOOTSTRAP_TRUTH | PASS |
-| G_ACTIVE_SURFACE_PURITY | PASS |
-| G_AUTHORITY_UNIQUENESS | PASS |
-| G_HOOK_SOBRIETY | PASS |
-| G_AUTOHEAL_DISCIPLINE | PASS (Patch 2) |
-| G_VALIDATOR_RELEVANCE | PASS |
-| G_SYNTHETIC_VS_NATURAL_SEPARATION | PASS |
-| G_VERDICT_INTEGRITY | PASS |
-| G_ROLLBACK_READY | PASS |
+| Gate                              | Verdict        |
+| --------------------------------- | -------------- |
+| G_BOOTSTRAP_TRUTH                 | PASS           |
+| G_ACTIVE_SURFACE_PURITY           | PASS           |
+| G_AUTHORITY_UNIQUENESS            | PASS           |
+| G_HOOK_SOBRIETY                   | PASS           |
+| G_AUTOHEAL_DISCIPLINE             | PASS (Patch 2) |
+| G_VALIDATOR_RELEVANCE             | PASS           |
+| G_SYNTHETIC_VS_NATURAL_SEPARATION | PASS           |
+| G_VERDICT_INTEGRITY               | PASS           |
+| G_ROLLBACK_READY                  | PASS           |
 
 ---
 
@@ -88,6 +88,7 @@ Bloc auto-capture PostToolUse supprimé. Aucun verrou ouvert restant.
 **STABLE**
 
 Justification:
+
 - `SEALED` FORBIDDEN: only synthetic scenario proof existed for hooks system (Jan 2026 harnesses, now archived)
 - System is coherent, operational, all gates PASS
 - Active surface clean (10 files, all ACTIVE)

@@ -1,4 +1,5 @@
 # INVARIANTS CHECK
+
 I1 Tauri-only: PASS — no new HTTP added
 I2 No direct frontend network: PASS
 I3 Honest fallback: PASS — safeInvoke already has error handling

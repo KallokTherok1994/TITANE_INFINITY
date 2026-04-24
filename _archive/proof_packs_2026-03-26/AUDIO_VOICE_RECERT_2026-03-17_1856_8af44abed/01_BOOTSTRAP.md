@@ -1,17 +1,19 @@
 # BOOTSTRAP — AUDIO VOICE RECERTIFICATION
+
 **Date:** 2026-03-17 18:56 UTC
 
 ## Environment
 
-| Item | Value |
-|------|-------|
-| HEAD | `8af44abed` |
-| Branch | MAIN |
-| node | v18.19.1 |
-| cargo | 1.94.0 (85eff7c80 2026-01-15) |
-| rustc | 1.94.0 (4a4ef493e 2026-03-02) |
+| Item   | Value                         |
+| ------ | ----------------------------- |
+| HEAD   | `8af44abed`                   |
+| Branch | MAIN                          |
+| node   | v18.19.1                      |
+| cargo  | 1.94.0 (85eff7c80 2026-01-15) |
+| rustc  | 1.94.0 (4a4ef493e 2026-03-02) |
 
 ## Git Log (last 10)
+
 ```
 8af44abed feat(e2e): add Audio E2E Truth System (STEP3-8)
 8b78ce1e2 docs(proof): force-add LOCAL_TRUTH_V4 log artifacts
@@ -26,14 +28,16 @@ be2cc878c docs(proof): FIX-016 verdict + autoheal entries for runtime REAL class
 ```
 
 ## TTS Runtime Availability
-| Component | Status | Path |
-|-----------|--------|------|
-| piper binary | ✅ PRESENT | `~/.local/bin/piper` |
-| fr_FR-siwis-medium.onnx | ✅ PRESENT | `~/.local/share/piper/voices/` |
-| fr_FR-upmc-medium.onnx | ✅ PRESENT | `~/.local/share/piper/voices/` |
-| en_US-amy-medium.onnx | ❌ MISSING | `~/.local/share/piper/voices/en_US-amy-medium.onnx` |
-| espeak-ng | ✅ PRESENT | `/usr/bin/espeak-ng` |
+
+| Component               | Status     | Path                                                |
+| ----------------------- | ---------- | --------------------------------------------------- |
+| piper binary            | ✅ PRESENT | `~/.local/bin/piper`                                |
+| fr_FR-siwis-medium.onnx | ✅ PRESENT | `~/.local/share/piper/voices/`                      |
+| fr_FR-upmc-medium.onnx  | ✅ PRESENT | `~/.local/share/piper/voices/`                      |
+| en_US-amy-medium.onnx   | ❌ MISSING | `~/.local/share/piper/voices/en_US-amy-medium.onnx` |
+| espeak-ng               | ✅ PRESENT | `/usr/bin/espeak-ng`                                |
 
 ## AutoHeal
+
 - entries: 408 (added AH-2026-03-17-TTS-VOICE-NOT-BOUND)
 - verify_instructions.sh: PASS=20 FAIL=0 (HEAD 8af44abed)

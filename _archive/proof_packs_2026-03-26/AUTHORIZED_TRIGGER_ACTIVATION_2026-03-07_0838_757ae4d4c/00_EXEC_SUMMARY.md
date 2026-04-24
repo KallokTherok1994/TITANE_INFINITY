@@ -7,6 +7,7 @@ B) SCOPE_RING: `trigger activation qualification only`
 C) RISK: `P1`
 
 D) PLAN (<=7):
+
 1. Bootstrap activation pack and baseline references.
 2. Capture raw potential trigger signal without inference.
 3. Validate threshold for authorized triggers.
@@ -16,6 +17,7 @@ D) PLAN (<=7):
 7. Emit unique activation decision.
 
 E) PROOFS:
+
 - `raw/bootstrap_summary.txt`
 - `raw/trigger_signal_capture.txt`
 - `raw/check_state_standby_confirmed.txt`
@@ -24,5 +26,6 @@ E) PROOFS:
 - `raw/check_baseline_757ae4d4c_from_wake.txt`
 
 F) ROLLBACK:
+
 - No product/config/CI/runtime/tests mutation before acceptance.
 - Rollback limited to this activation pack if trigger rejected.

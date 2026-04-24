@@ -7,6 +7,7 @@ Preuve runtime non exécutée (runtime Tauri non disponible dans cet environneme
 Rollback immédiat disponible.
 
 Gates:
+
 - G_SCOPE_ISOLATED: PASS — 2 fichiers uniquement
 - G_NO_ACTIVE_PHASE_COLLISION: PASS — fichiers non touchés par phase active (ConfigurationHub.tsx était modifié mais patch non conflictuel)
 - G_FLOATING_CALLSITE_IDENTIFIED: PASS — App.tsx:127-132 (import) + App.tsx:1297-1300 (mount)

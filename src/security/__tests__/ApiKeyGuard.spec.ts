@@ -36,13 +36,13 @@ describe('ApiKeyGuard', () => {
     it('should reject short keys', () => {
       const callback = vi.fn();
       ApiKeyGuard.onKeyEvent(callback);
-      
+
       ApiKeyGuard.registerKey('invalid', 'short');
-      
+
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({
           severity: 'warning',
-          message: expect.stringContaining('suspiciously short')
+          message: expect.stringContaining('suspiciously short'),
         })
       );
     });
@@ -52,7 +52,7 @@ describe('ApiKeyGuard', () => {
     it('should list all providers', () => {
       ApiKeyGuard.registerKey('openai', 'sk-openai-1234567890abcdef');
       ApiKeyGuard.registerKey('anthropic', 'sk-ant-1234567890abcdef');
-      
+
       const providers = ApiKeyGuard.listProviders();
       expect(providers).toContain('openai');
       expect(providers).toContain('anthropic');
@@ -61,9 +61,9 @@ describe('ApiKeyGuard', () => {
 
     it('should get key metadata', () => {
       ApiKeyGuard.registerKey('openai', 'sk-1234567890abcdef', {
-        lastUsed: 12345
+        lastUsed: 12345,
       });
-      
+
       const metadata = ApiKeyGuard.getMetadata('openai');
       expect(metadata).toBeDefined();
       expect(metadata?.provider).toBe('openai');
@@ -72,14 +72,14 @@ describe('ApiKeyGuard', () => {
 
     it('should track usage', () => {
       ApiKeyGuard.registerKey('openai', 'sk-1234567890abcdef');
-      
+
       const before = ApiKeyGuard.getMetadata('openai')?.lastUsed;
       vi.useFakeTimers();
       vi.advanceTimersByTime(1000);
-      
+
       ApiKeyGuard.recordUsage('openai');
       const after = ApiKeyGuard.getMetadata('openai')?.lastUsed;
-      
+
       expect(after).toBeGreaterThan(before || 0);
       vi.useRealTimers();
     });
@@ -87,7 +87,7 @@ describe('ApiKeyGuard', () => {
     it('should get summary', () => {
       ApiKeyGuard.registerKey('openai', 'sk-openai-1234567890abcdef');
       ApiKeyGuard.registerKey('anthropic', 'sk-ant-1234567890abcdef');
-      
+
       const summary = ApiKeyGuard.getSummary();
       expect(summary.openai).toBeDefined();
       expect(summary.anthropic).toBeDefined();
@@ -100,14 +100,14 @@ describe('ApiKeyGuard', () => {
       const key = 'sk-1234567890abcdef';
       const callback = vi.fn();
       ApiKeyGuard.onKeyEvent(callback);
-      
+
       const result = ApiKeyGuard.validateNotInContent('Error: abcdef', key);
-      
+
       expect(result).toBe(false);
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({
           severity: 'critical',
-          message: expect.stringContaining('potentially exposed')
+          message: expect.stringContaining('potentially exposed'),
         })
       );
     });
@@ -115,7 +115,7 @@ describe('ApiKeyGuard', () => {
     it('should allow safe content', () => {
       const key = 'sk-1234567890abcdef';
       const result = ApiKeyGuard.validateNotInContent('Error: something went wrong', key);
-      
+
       expect(result).toBe(true);
     });
 
@@ -134,31 +134,31 @@ describe('ApiKeyGuard', () => {
     it('should emit registration event', () => {
       const callback = vi.fn();
       ApiKeyGuard.onKeyEvent(callback);
-      
+
       ApiKeyGuard.registerKey('openai', 'sk-1234567890abcdef');
-      
+
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'api_key',
           severity: 'info',
-          message: expect.stringContaining('registered')
+          message: expect.stringContaining('registered'),
         })
       );
     });
 
     it('should emit clear event', () => {
       ApiKeyGuard.registerKey('openai', 'sk-1234567890abcdef');
-      
+
       const callback = vi.fn();
       ApiKeyGuard.onKeyEvent(callback);
-      
+
       ApiKeyGuard.clearAll();
-      
+
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'api_key',
           severity: 'info',
-          message: expect.stringContaining('Cleared')
+          message: expect.stringContaining('Cleared'),
         })
       );
     });
@@ -166,12 +166,12 @@ describe('ApiKeyGuard', () => {
     it('should support unsubscribe', () => {
       const callback = vi.fn();
       const unsubscribe = ApiKeyGuard.onKeyEvent(callback);
-      
+
       ApiKeyGuard.registerKey('openai', 'sk-key');
       const callCount = callback.mock.calls.length;
-      
+
       unsubscribe();
-      
+
       ApiKeyGuard.registerKey('anthropic', 'sk-key2');
       expect(callback.mock.calls.length).toBe(callCount);
     });
@@ -192,9 +192,9 @@ describe('ApiKeyGuard', () => {
       ApiKeyGuard.registerKey('key1', 'sk-1234567890abcdef');
       ApiKeyGuard.registerKey('key2', 'sk-1234567890abcdef');
       ApiKeyGuard.registerKey('key3', 'sk-1234567890abcdef');
-      
+
       ApiKeyGuard.clearAll();
-      
+
       expect(ApiKeyGuard.listProviders()).toHaveLength(0);
     });
   });

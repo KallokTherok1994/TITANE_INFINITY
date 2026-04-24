@@ -1,4 +1,5 @@
 # 15 ROLLBACK
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## Rollback complet — fichier par fichier
@@ -17,6 +18,7 @@ git restore -- scripts/autoheal/autoheal_rules.jsonl
 ## Effet du rollback
 
 Après `git restore -- src-tauri/src/audio/commands.rs`:
+
 - test_microphone revient à la version bloquante (pw-record sans timeout)
 - PW_DURATION_LIMIT env var fictif réapparaît
 - arecord fallback revient avec `-D hw:{wpctl_id},0`

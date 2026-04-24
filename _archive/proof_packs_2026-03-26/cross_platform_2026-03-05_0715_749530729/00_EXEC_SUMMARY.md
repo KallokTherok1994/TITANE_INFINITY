@@ -1,4 +1,5 @@
 # 00_EXEC_SUMMARY
+
 - Objective: Qualification cross-platform Windows + Android with proof-oriented gates and strict bounded autofix.
 - EXEC_MODE: BACKGROUND
 - Scope: bootstrap truth, invariant scans, Windows/Android qualification attempts, PASS/FAIL/BLOCKED verdict.

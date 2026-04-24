@@ -28,4 +28,3 @@ git restore --worktree \
 ## Rollback Status
 
 - ROLLBACK_READY: `PASS`
-

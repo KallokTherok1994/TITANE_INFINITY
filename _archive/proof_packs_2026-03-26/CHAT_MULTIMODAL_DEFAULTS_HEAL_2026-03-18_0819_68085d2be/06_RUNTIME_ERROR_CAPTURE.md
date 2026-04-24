@@ -1,11 +1,13 @@
 # 06 — RUNTIME ERROR CAPTURE
 
 ## Reported Errors (from user runtime capture)
+
 - "no microphone detected" — Root cause: APISupport.hasMicrophone() checked `d.label !== ''` which returns false before permission grant. **FIXED.**
 - "audio conversation mode unavailable" — Same root cause. **FIXED.**
-- "no camera detected" — Root cause: no /dev/video* hardware. **HONEST BLOCK — not fixable without hardware.**
+- "no camera detected" — Root cause: no /dev/video\* hardware. **HONEST BLOCK — not fixable without hardware.**
 
 ## OS Device Truth
+
 ```
 # Real hardware found:
 arecord -l:
@@ -17,6 +19,7 @@ ls /dev/video*: no video devices
 ```
 
 ## After Fix
+
 - hasMicrophone() will return `true` when audioinput devices are present (regardless of label)
 - hasCamera() will return `true` only if videoinput devices exist (none on this system → honest false)
 - Camera controls will still show honest "no camera" toast — correct

@@ -1,6 +1,7 @@
 # 12 — PATCH PLAN
 
 ## PATCH-A: list_restorable_conversations
+
 - RING: R2 (Rust backend) + R3 (IPC) + R1 (frontend callsite)
 - FICHIERS: commands.rs, main.rs, chat.ts
 - IMPACT_RESEAU: aucun
@@ -11,6 +12,7 @@
 - ROLLBACK: git restore -- src-tauri/src/conversation_engine/commands.rs src-tauri/src/main.rs src/services/api/chat.ts
 
 ## PATCH-B: Deduplication guard useChat.ts
+
 - RING: R4 (UI/Modules)
 - FICHIERS: useChat.ts
 - IMPACT_RESEAU: aucun
@@ -21,6 +23,7 @@
 - ROLLBACK: git restore -- src/hooks/useChat.ts
 
 ## PATCH-C: V6 validator + test script
+
 - RING: scripts (hors Ring)
 - FICHIERS: validate_restore_no_duplication.sh, chat_restore_x3.sh
 - IMPACT: observabilité uniquement

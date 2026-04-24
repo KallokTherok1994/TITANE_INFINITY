@@ -1,4 +1,5 @@
 # 01_BOOTSTRAP — G_BOOT_TRUTH
+
 **Proof Pack:** AUDIT_TESTS_MODULES_FIX_2026-03-05_1535_8b89089  
 **Timestamp:** 2026-03-05T15:35:28Z
 
@@ -59,12 +60,12 @@ $ git log -10 --oneline
 
 ## == PRÉREQUIS MANQUANTS ==
 
-| Outil | Statut | Commande de déblocage |
-|-------|--------|----------------------|
-| pnpm | MISSING | `npm install -g pnpm@10.28.2` |
-| node_modules | ABSENT | `pnpm install --frozen-lockfile` |
-| libgtk-3-dev | ABSENT | `sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev` |
-| cross-env | ABSENT | inclus dans `pnpm install` |
+| Outil        | Statut  | Commande de déblocage                                                                                             |
+| ------------ | ------- | ----------------------------------------------------------------------------------------------------------------- |
+| pnpm         | MISSING | `npm install -g pnpm@10.28.2`                                                                                     |
+| node_modules | ABSENT  | `pnpm install --frozen-lockfile`                                                                                  |
+| libgtk-3-dev | ABSENT  | `sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev` |
+| cross-env    | ABSENT  | inclus dans `pnpm install`                                                                                        |
 
 ## == CI STATUS ==
 

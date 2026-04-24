@@ -1,4 +1,5 @@
 # 11_VERDICT.md — Verdict FINAL session ANDROID_FULL
+
 # Mis à jour: 2026-03-15 | HEAD: f112e2594
 
 ## VERDICT: BLOCKED (environnement) — Code QUALIFIED
@@ -7,32 +8,32 @@
 
 ## TOUTES LES STOPLINES CORRIGÉES ✓
 
-| # | Stopline | Fichier | Statut |
-|---|---|---|---|
-| #4 | devops.rs hardcoded path | commands/devops.rs | CORRIGÉE ✓ |
-| #4 | pre_boot_validation.rs desktop path | security/pre_boot_validation.rs | CORRIGÉE ✓ |
-| #4 | ollama.rs endpoint const | src-tauri/src/ollama.rs | CORRIGÉE ✓ |
-| #4 | memory_vectorizer endpoint const | memory_evolution/memory_vectorizer.rs | CORRIGÉE ✓ |
-| #4 | IntrospectionDashboard UI path | src/ui/pages/IntrospectionDashboard.tsx | CORRIGÉE ✓ |
-| #4 | IntrospectionTab UI path | src/features/system-center/tabs/IntrospectionTab.tsx | CORRIGÉE ✓ |
-| #5 | cpal audio sans garde mobile | package.json + .cargo/config.toml | GUARDÉE ✓ |
-| — | Ollama auto-start spawn desktop | src-tauri/src/main.rs | GUARDÉE ✓ |
-| — | devops mod sans cfg guard | src-tauri/src/main.rs | GUARDÉE ✓ |
-| PHASE D | zoom: 75% global (mobile cassé) | src/index.css | CORRIGÉE ✓ |
-| PHASE D | TopNav sans safe-area-inset-top | components/layout/TopNav.tsx | CORRIGÉE ✓ |
-| PHASE D | AppShell sans safe-area-inset | components/layout/AppShell.tsx | CORRIGÉE ✓ |
+| #       | Stopline                            | Fichier                                              | Statut     |
+| ------- | ----------------------------------- | ---------------------------------------------------- | ---------- |
+| #4      | devops.rs hardcoded path            | commands/devops.rs                                   | CORRIGÉE ✓ |
+| #4      | pre_boot_validation.rs desktop path | security/pre_boot_validation.rs                      | CORRIGÉE ✓ |
+| #4      | ollama.rs endpoint const            | src-tauri/src/ollama.rs                              | CORRIGÉE ✓ |
+| #4      | memory_vectorizer endpoint const    | memory_evolution/memory_vectorizer.rs                | CORRIGÉE ✓ |
+| #4      | IntrospectionDashboard UI path      | src/ui/pages/IntrospectionDashboard.tsx              | CORRIGÉE ✓ |
+| #4      | IntrospectionTab UI path            | src/features/system-center/tabs/IntrospectionTab.tsx | CORRIGÉE ✓ |
+| #5      | cpal audio sans garde mobile        | package.json + .cargo/config.toml                    | GUARDÉE ✓  |
+| —       | Ollama auto-start spawn desktop     | src-tauri/src/main.rs                                | GUARDÉE ✓  |
+| —       | devops mod sans cfg guard           | src-tauri/src/main.rs                                | GUARDÉE ✓  |
+| PHASE D | zoom: 75% global (mobile cassé)     | src/index.css                                        | CORRIGÉE ✓ |
+| PHASE D | TopNav sans safe-area-inset-top     | components/layout/TopNav.tsx                         | CORRIGÉE ✓ |
+| PHASE D | AppShell sans safe-area-inset       | components/layout/AppShell.tsx                       | CORRIGÉE ✓ |
 
 ---
 
 ## PREUVES ACCUMULÉES
 
-| Preuve | Statut | Runs |
-|---|---|---|
-| cargo check | PASS | ×4 |
-| tsc --noEmit | PASS | ×2 |
-| verify_instructions.sh | PASS 20/20 | ×6 |
-| detect_recurrence.sh | PASS 249 entries | ×6 |
-| Commits atomiques | 7 commits | — |
+| Preuve                 | Statut           | Runs |
+| ---------------------- | ---------------- | ---- |
+| cargo check            | PASS             | ×4   |
+| tsc --noEmit           | PASS             | ×2   |
+| verify_instructions.sh | PASS 20/20       | ×6   |
+| detect_recurrence.sh   | PASS 249 entries | ×6   |
+| Commits atomiques      | 7 commits        | —    |
 
 ---
 

@@ -4,14 +4,15 @@ generated_at=2026-03-05T12:52:36Z
 pack=proof_packs/CHAT_ONLINE_ULTRA_2026-03-05_0752_749530729
 
 ## git status --porcelain=v1
- M docs/tests/UI_COVERAGE_MAP.md
- M e2e/desktop/page-objects/uiPages.po.js
- M e2e/desktop/ui-driver.wdio.js
- M e2e/desktop/ui-ultra-full.e2e.js
- M e2e/desktop/ui-ultra-smoke.e2e.js
- M scripts/autoheal/autoheal_rules.jsonl
- M scripts/e2e/run-desktop-suite.js
- M src/hooks/useAudioSettings.ts
+
+M docs/tests/UI_COVERAGE_MAP.md
+M e2e/desktop/page-objects/uiPages.po.js
+M e2e/desktop/ui-driver.wdio.js
+M e2e/desktop/ui-ultra-full.e2e.js
+M e2e/desktop/ui-ultra-smoke.e2e.js
+M scripts/autoheal/autoheal_rules.jsonl
+M scripts/e2e/run-desktop-suite.js
+M src/hooks/useAudioSettings.ts
 ?? docs/MAP_UI_CHAT.md
 ?? proof_packs/CHAT_ONLINE_ULTRA_2026-03-05_0752_749530729/
 ?? proof_packs/CHAT_UI_E2E_2026-03-05_0658_749530729/
@@ -19,9 +20,11 @@ pack=proof_packs/CHAT_ONLINE_ULTRA_2026-03-05_0752_749530729
 ?? proof_packs/cross_platform_2026-03-05_0715_749530729/
 
 ## git rev-parse --short HEAD
+
 749530729
 
 ## git log -20 --oneline
+
 749530729 ci(prod): add ALSA dev package for tauri build job
 bccee8b17 ci(prod): fix build dependency order and dedupe setup steps
 0845eadb0 ci(prod): install build native deps before pnpm install
@@ -44,15 +47,19 @@ a96c978be chore(final): verification finale — proof pack UI_E2E_ULTRA + ui-dri
 155bf644b chore(testids): format + stage UI testid additions (app-ready, ipc-ready, chat-ready, chat-error, chat-message)
 
 ## node/pnpm
+
 v24.0.0
 10.30.2
 
 ## rustc/cargo
+
 rustc 1.91.1 (ed61e7d7e 2025-11-07)
 cargo 1.91.1 (ea2d97820 2025-10-10)
 
 ## playwright
+
 Version 1.58.2
 
 ## wdio
+
 9.24.0

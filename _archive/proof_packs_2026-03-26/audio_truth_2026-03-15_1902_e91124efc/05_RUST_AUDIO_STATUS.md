@@ -1,4 +1,5 @@
 # 05 RUST AUDIO STATUS
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## Fichiers inspectés
@@ -11,28 +12,33 @@
 ## Commandes Rust — Statut
 
 ### get_audio_output_devices — OK ✓
+
 - Stratégie: wpctl status → parse Sinks → fallback pactl → fallback aplay
 - IDs retournés: wpctl numeric IDs (33, 49, 51) utilisables avec wpctl set-default
 - Parsing wpctl: VALIDÉ sur données réelles (Rust + shell concordent)
 - Fallback honnête: retourne Err si aucun device trouvé (pas de fake default)
 
 ### get_audio_input_devices — OK ✓
+
 - Stratégie: wpctl status → parse Sources → fallback pactl → fallback arecord
 - Filtre monitors: OUI (lignes avec "monitor" exclues)
 - IDs retournés: 50, 52 (réels OS)
 - Fallback honnête: retourne Err si aucun device trouvé
 
 ### set_audio_output_device — OK ✓
+
 - wpctl set-default <id> → PASS
 - Fallback pactl set-default-sink → SKIP (pactl non installé)
 - Acceptation gracieuse si pw-cli présent mais pas pactl/wpctl
 
 ### set_audio_input_device — OK ✓
+
 - Même stratégie que set_audio_output_device
 
 ### test_microphone — FIXÉ ✓ (was RUST_CAPTURE_NOT_CAUSAL)
 
 **Avant (BROKEN):**
+
 ```rust
 Command::new("pw-record")
     .args(["--target", id, ...])
@@ -41,6 +47,7 @@ Command::new("pw-record")
 ```
 
 **Après (FIXÉ):**
+
 ```rust
 let duration_arg = format!("{:.0}", duration_secs + 1.0);
 Command::new("timeout")
@@ -53,6 +60,7 @@ Command::new("timeout")
 - Succès basé sur taille fichier (réaliste, non inventé)
 
 ### test_tts / tts_speak — PARTIELLEMENT OK
+
 - Causal: tente réellement piper/espeak/espeak-ng
 - piper non installé → fallback espeak
 - espeak non installé → Err honnête propagée
@@ -60,6 +68,7 @@ Command::new("timeout")
 - Classification: OS_DEVICE_UNAVAILABLE (TTS engine)
 
 ### AudioDeviceConfig (src-tauri/src/config/mod.rs) — OK ✓
+
 ```rust
 pub struct AudioDeviceConfig {
     pub input_device_id: String,
@@ -72,6 +81,7 @@ pub struct AudioDeviceConfig {
     pub auto_gain_control: bool,
 }
 ```
+
 - get_audio_device_config: lit app_data_dir/audio_device_config.json ✓
 - save_audio_device_config: écrit app_data_dir/audio_device_config.json ✓
 

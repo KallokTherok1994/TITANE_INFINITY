@@ -32,6 +32,7 @@ proof_packs/CLINE_LAST_UPDATES_RECERT_2026-03-20_1300_d9c3dceb9/archived_from_cl
 ```
 
 ## No Source Code Modified
+
 No `.clinerules/*.md` active rules modified.  
 No hooks modified.  
 No `scripts/` modified.  

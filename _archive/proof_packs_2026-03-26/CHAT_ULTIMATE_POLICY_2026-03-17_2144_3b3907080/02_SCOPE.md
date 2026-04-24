@@ -26,12 +26,12 @@
 
 ## Chantiers réalisés
 
-| Chantier | Description | Statut |
-|---|---|---|
-| A — DEFAULT DEPTH | Profil DEEP/ARCHITECT avec maxTokens 4000-6000 câblé | WIRED |
-| B — DEFAULT LENGTH | Mode tokens appliqués via fallback chain | WIRED |
-| C — IMPLICIT UNDERSTANDING | Inférence bornée 4 états | WIRED |
-| D — MEMORY RELEVANCE | Memory policy par profil définie | DEFINED |
-| E — PROVIDER ADAPTATION | PROVIDER_UNSUPPORTED_PARAMS + mapReasoningEffort | DEFINED |
-| F — TRUTH LABELS | TruthStatus type + valeurs honnêtes par profil | DEFINED |
-| G — MODULE CAPABILITY CERT | Tous profils marqués honnêtement | CERTIFIED |
+| Chantier                   | Description                                          | Statut    |
+| -------------------------- | ---------------------------------------------------- | --------- |
+| A — DEFAULT DEPTH          | Profil DEEP/ARCHITECT avec maxTokens 4000-6000 câblé | WIRED     |
+| B — DEFAULT LENGTH         | Mode tokens appliqués via fallback chain             | WIRED     |
+| C — IMPLICIT UNDERSTANDING | Inférence bornée 4 états                             | WIRED     |
+| D — MEMORY RELEVANCE       | Memory policy par profil définie                     | DEFINED   |
+| E — PROVIDER ADAPTATION    | PROVIDER_UNSUPPORTED_PARAMS + mapReasoningEffort     | DEFINED   |
+| F — TRUTH LABELS           | TruthStatus type + valeurs honnêtes par profil       | DEFINED   |
+| G — MODULE CAPABILITY CERT | Tous profils marqués honnêtement                     | CERTIFIED |

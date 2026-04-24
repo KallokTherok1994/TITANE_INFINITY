@@ -4,6 +4,7 @@ Date: 2026-03-15
 Pack: `proof_packs/ADMIN_TOTAL_AUDIT_FIX_2026-03-14_1901_b771239b0`
 
 Rollback Commands
+
 - `git restore -- src-tauri/src/commands/governance_commands.rs`
 - `git restore -- src/features/governance-center/services/governanceService.ts`
 - `git restore -- scripts/autoheal/autoheal_rules.jsonl`

@@ -1,4 +1,5 @@
 # 14_ROLLBACK — Plan de Rollback
+
 **Proof Pack:** AUDIT_TESTS_MODULES_FIX_2026-03-05_1535_8b89089  
 **Timestamp:** 2026-03-05T15:35:28Z
 
@@ -20,6 +21,7 @@ git restore -- scripts/autoheal/autoheal_rules.jsonl  # uniquement si non commis
 ## Rollback par FIX (une fois implémentés)
 
 ### FIX-001 — Ring 2 I/O extraction
+
 ```bash
 git restore -- \
   src-tauri/src/engines/unified_memory/summarizer.rs \
@@ -28,29 +30,34 @@ git restore -- \
 ```
 
 ### FIX-002 — Test Ring 2 no-I/O Rust
+
 ```bash
 git restore -- src-tauri/tests/unified_memory_tests.rs
 ```
 
 ### FIX-003 — window.fetch monkey-patch removal
+
 ```bash
 git restore -- src/services/selfHealing/selfHealingObserver.ts
 # Vérifier: grep -n "window.fetch\s*=" src/services/selfHealing/selfHealingObserver.ts → 1 ligne
 ```
 
 ### FIX-004 — Bridge IPC documentation
+
 ```bash
 git restore -- scripts/verify/enforce-ipc-canonical.sh
 git restore -- docs/MAP_IPC_COMMANDS.md
 ```
 
 ### FIX-005 — Ring 2 Rust architecture test
+
 ```bash
 git restore -- src-tauri/tests/ring2_architecture_test.rs
 git restore -- src-tauri/Cargo.toml
 ```
 
 ### FIX-006 — Dev setup script
+
 ```bash
 git restore -- scripts/setup/setup-dev.sh
 git restore -- README.md

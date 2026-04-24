@@ -1,17 +1,17 @@
 # 11_IPC_MATRIX.md — Matrice IPC Audio/Voix
 
-| Commande | Handler trouve | generate_handler | Appelant frontend | Payload | Succes | Erreur | Timeout | Logs | Verdict |
-|----------|---------------|-----------------|------------------|---------|--------|--------|---------|------|---------|
-| tts_speak | OUIS (audio::commands) | OUI | UnifiedCognitivePipeline, useAudioChat | {text, settings:TTSSettings} | Result<()> | Err(String) | Non borne (process sync) | OUI | PARTIAL (type mismatch cote frontend — FIXE) |
-| tts_stop | OUI | OUI | - | - | Result<()> | Err(String) | N/A | NON | PARTIAL |
-| transcribe_audio | OUI (audio::commands) | OUI (FIXE 2026-03-15) | useVoiceMode | {audioData:[u8]} | String | Err(String) | Non borne | OUI | PARTIAL |
-| is_recording | OUI (audio::commands) | OUI (FIXE 2026-03-15) | - | - | bool | Err(String) | N/A | NON | PARTIAL |
-| get_audio_output_devices | OUI | OUI | - | - | Vec<AudioDevice> | Err(String) | N/A | NON | PROVEN |
-| get_audio_input_devices | OUI | OUI | - | - | Vec<AudioDevice> | Err(String) | N/A | NON | PROVEN |
-| vad_get_state | OUI | OUI | useVoiceMode (FIXE nom) | - | VADStatus | Err(String) | N/A | NON | PROVEN |
-| get_vad_state (frontend bug) | N/A | N/A | useVoiceMode (avant fix) | - | N/A | N/A | N/A | N/A | BROKEN (FIXE) |
-| realtime_stream_tts | NON | NON | RealTimeExecutionEngine | {text} | ArrayBuffer[] | N/A | N/A | N/A | BROKEN |
-| start_whisper_streaming | OUI (stub) | OUI | useWhisperStream | WhisperConfig | Ok(()) | TitaneError | N/A | OUI | STUB |
-| send_audio_chunk | OUI (stub) | OUI | useWhisperStream | Vec<u8> | Ok(()) | TitaneError | N/A | DEBUG | STUB |
-| voice_start_listening | OUI | OUI | useVoiceEngine | - | String | TAPIError | N/A | OUI | PROVEN |
-| voice_transcribe_audio | OUI | OUI | - | audio_data | TranscriptionResult | TAPIError | Borne | OUI | PARTIAL |
+| Commande                     | Handler trouve         | generate_handler      | Appelant frontend                      | Payload                      | Succes              | Erreur      | Timeout                  | Logs  | Verdict                                      |
+| ---------------------------- | ---------------------- | --------------------- | -------------------------------------- | ---------------------------- | ------------------- | ----------- | ------------------------ | ----- | -------------------------------------------- |
+| tts_speak                    | OUIS (audio::commands) | OUI                   | UnifiedCognitivePipeline, useAudioChat | {text, settings:TTSSettings} | Result<()>          | Err(String) | Non borne (process sync) | OUI   | PARTIAL (type mismatch cote frontend — FIXE) |
+| tts_stop                     | OUI                    | OUI                   | -                                      | -                            | Result<()>          | Err(String) | N/A                      | NON   | PARTIAL                                      |
+| transcribe_audio             | OUI (audio::commands)  | OUI (FIXE 2026-03-15) | useVoiceMode                           | {audioData:[u8]}             | String              | Err(String) | Non borne                | OUI   | PARTIAL                                      |
+| is_recording                 | OUI (audio::commands)  | OUI (FIXE 2026-03-15) | -                                      | -                            | bool                | Err(String) | N/A                      | NON   | PARTIAL                                      |
+| get_audio_output_devices     | OUI                    | OUI                   | -                                      | -                            | Vec<AudioDevice>    | Err(String) | N/A                      | NON   | PROVEN                                       |
+| get_audio_input_devices      | OUI                    | OUI                   | -                                      | -                            | Vec<AudioDevice>    | Err(String) | N/A                      | NON   | PROVEN                                       |
+| vad_get_state                | OUI                    | OUI                   | useVoiceMode (FIXE nom)                | -                            | VADStatus           | Err(String) | N/A                      | NON   | PROVEN                                       |
+| get_vad_state (frontend bug) | N/A                    | N/A                   | useVoiceMode (avant fix)               | -                            | N/A                 | N/A         | N/A                      | N/A   | BROKEN (FIXE)                                |
+| realtime_stream_tts          | NON                    | NON                   | RealTimeExecutionEngine                | {text}                       | ArrayBuffer[]       | N/A         | N/A                      | N/A   | BROKEN                                       |
+| start_whisper_streaming      | OUI (stub)             | OUI                   | useWhisperStream                       | WhisperConfig                | Ok(())              | TitaneError | N/A                      | OUI   | STUB                                         |
+| send_audio_chunk             | OUI (stub)             | OUI                   | useWhisperStream                       | Vec<u8>                      | Ok(())              | TitaneError | N/A                      | DEBUG | STUB                                         |
+| voice_start_listening        | OUI                    | OUI                   | useVoiceEngine                         | -                            | String              | TAPIError   | N/A                      | OUI   | PROVEN                                       |
+| voice_transcribe_audio       | OUI                    | OUI                   | -                                      | audio_data                   | TranscriptionResult | TAPIError   | Borne                    | OUI   | PARTIAL                                      |

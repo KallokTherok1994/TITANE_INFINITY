@@ -2,14 +2,14 @@
 
 ## TAURI_AUTHORITY_MATRIX
 
-| Fichier capability | Commandes exposées (chat scope) | Fenêtre | Risque | Statut |
-|--------------------|---------------------------------|---------|--------|--------|
-| chat_ai.json | conversation_generate, chat_stream_message, chat_create_conversation, chat_get_conversation, chat_delete_conversation, chat_get_providers_status, chat_set_gemini_key, chat_check_providers, ai_query, cp_get_ai_config, cp_set_ai_config, validate_chat_message, ollama_generate, test_ollama, ping_ollama, ollama_query | main | Moyen — cp_set_ai_config permet modification config IA | QUALIFIED |
-| persistence.json | db_put_event, db_get_stream, db_put_snapshot, db_get_snapshot, db_kv_set, db_kv_get, db_sync_now, db_sync_status | main | Normal | PASS |
-| self_heal.json | (à vérifier) | main | — | UNKNOWN |
-| singularity.json | singularity_get_state, etc. | main | Normal | PASS |
-| audio_tts.json | Commandes voice/TTS | main | Normal | PASS |
-| developer_mode.json | (à vérifier) | main | Dev only | UNKNOWN |
+| Fichier capability  | Commandes exposées (chat scope)                                                                                                                                                                                                                                                                                           | Fenêtre | Risque                                                 | Statut    |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------ | --------- |
+| chat_ai.json        | conversation_generate, chat_stream_message, chat_create_conversation, chat_get_conversation, chat_delete_conversation, chat_get_providers_status, chat_set_gemini_key, chat_check_providers, ai_query, cp_get_ai_config, cp_set_ai_config, validate_chat_message, ollama_generate, test_ollama, ping_ollama, ollama_query | main    | Moyen — cp_set_ai_config permet modification config IA | QUALIFIED |
+| persistence.json    | db_put_event, db_get_stream, db_put_snapshot, db_get_snapshot, db_kv_set, db_kv_get, db_sync_now, db_sync_status                                                                                                                                                                                                          | main    | Normal                                                 | PASS      |
+| self_heal.json      | (à vérifier)                                                                                                                                                                                                                                                                                                              | main    | —                                                      | UNKNOWN   |
+| singularity.json    | singularity_get_state, etc.                                                                                                                                                                                                                                                                                               | main    | Normal                                                 | PASS      |
+| audio_tts.json      | Commandes voice/TTS                                                                                                                                                                                                                                                                                                       | main    | Normal                                                 | PASS      |
+| developer_mode.json | (à vérifier)                                                                                                                                                                                                                                                                                                              | main    | Dev only                                               | UNKNOWN   |
 
 ## Constats
 

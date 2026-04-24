@@ -20,7 +20,7 @@ Le pipeline chat OMEGA est réel et fonctionnel sur sa chaîne principale. Les c
 - Chaîne chat : useChat.ts → chatService → IPC → conversation_generate → OMEGA → SQLite
 - Mémoire : STM (RAM session), MTM (localStorage), LTM (SQLite conversation_os_v1.db)
 - routeContext / moduleContext : publishActiveModuleContext → buildChatContextEnvelope → context_envelope
-- TWINS : TwinsPage + twin_* backend commands
+- TWINS : TwinsPage + twin\_\* backend commands
 - TIME : TimePage (localStorage uniquement)
 - IPC parity : conversation_generate, chat_stream_message, load_conversation_history, send_message stub
 - Capabilities : chat_ai.json, persistence.json, audio_tts.json, singularity.json
@@ -83,12 +83,12 @@ Le pipeline chat OMEGA est réel et fonctionnel sur sa chaîne principale. Les c
 
 ## 9. Risques ouverts
 
-| Risque | Sévérité | Note |
-|--------|----------|------|
-| Build prod avec features="mock" embarque mock_commands::generate_response | MOYEN | Vérifier CI release build utilise --features full |
-| SQLite LTM sans TTL/purge | FAIBLE | Croissance illimitée à terme |
-| TWINS déconnecté du chat | INFO | Classification honnête, non un bug en soi |
-| TIME cognitive state non injecté dans chat | INFO | Classification honnête |
+| Risque                                                                    | Sévérité | Note                                              |
+| ------------------------------------------------------------------------- | -------- | ------------------------------------------------- |
+| Build prod avec features="mock" embarque mock_commands::generate_response | MOYEN    | Vérifier CI release build utilise --features full |
+| SQLite LTM sans TTL/purge                                                 | FAIBLE   | Croissance illimitée à terme                      |
+| TWINS déconnecté du chat                                                  | INFO     | Classification honnête, non un bug en soi         |
+| TIME cognitive state non injecté dans chat                                | INFO     | Classification honnête                            |
 
 ---
 
@@ -97,6 +97,7 @@ Le pipeline chat OMEGA est réel et fonctionnel sur sa chaîne principale. Les c
 > **Vérifier que le pipeline CI release utilise `--features full --no-default-features` pour ne pas embarquer mock_commands en production.**
 
 Commande de vérification :
+
 ```bash
 grep -r "features" .github/workflows/ | grep -E "full|mock" | head -10
 ```
@@ -117,14 +118,14 @@ git restore -- \
 
 ## Compteurs de gates
 
-| Verdict | Nombre |
-|---------|--------|
-| PASS | 12 |
-| PARTIAL | 3 |
-| BLOCKED | 2 |
-| QUALIFIED | 1 |
-| FAIL | 0 |
-| UNKNOWN | 0 |
+| Verdict   | Nombre |
+| --------- | ------ |
+| PASS      | 12     |
+| PARTIAL   | 3      |
+| BLOCKED   | 2      |
+| QUALIFIED | 1      |
+| FAIL      | 0      |
+| UNKNOWN   | 0      |
 
 **VERDICT GLOBAL : QUALIFIED**  
 **Pack de preuves** : `proof_packs/CHAT_TRUTH_CERT_2026-03-16_2226_48956c3db/`
@@ -139,9 +140,9 @@ Troisième round de corrections. Verdict maintenu QUALIFIED.
 
 ### Trouvé et corrigé
 
-| Problème | Gravité | Fix appliqué | SHA |
-|----------|---------|--------------|-----|
-| `generate_response` IPC résolvait vers `mock_commands` dans tous les builds par défaut (Cargo.toml default features include `mock`) | MEDIUM | Guard dans `tryBackendPipeline()` : si `provider==='mock'` ou content commence par `(MOCK)` → `return null` → fall-through vers `aiOrchestrator.generate()` | 97c2bcf09 |
+| Problème                                                                                                                            | Gravité | Fix appliqué                                                                                                                                                | SHA       |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `generate_response` IPC résolvait vers `mock_commands` dans tous les builds par défaut (Cargo.toml default features include `mock`) | MEDIUM  | Guard dans `tryBackendPipeline()` : si `provider==='mock'` ou content commence par `(MOCK)` → `return null` → fall-through vers `aiOrchestrator.generate()` | 97c2bcf09 |
 
 ### Analyse feature flag
 
@@ -157,12 +158,12 @@ Troisième round de corrections. Verdict maintenu QUALIFIED.
 
 ### Gates R3
 
-| Gate | Statut |
-|------|--------|
+| Gate                        | Statut                                             |
+| --------------------------- | -------------------------------------------------- |
 | G_NO_CRITICAL_LEGACY_BYPASS | QUALIFIED (guard actif, risque résiduel documenté) |
-| G_AUTOHEAL_NON_LYING | PASS |
-| detect_recurrence | PASS (entries=342) |
-| verify_instructions | PASS=20 FAIL=0 |
+| G_AUTOHEAL_NON_LYING        | PASS                                               |
+| detect_recurrence           | PASS (entries=342)                                 |
+| verify_instructions         | PASS=20 FAIL=0                                     |
 
 ### Risque résiduel documenté
 
@@ -174,7 +175,6 @@ Troisième round de corrections. Verdict maintenu QUALIFIED.
 
 **Vérifier que CI release n'active pas accidentellement `generate_response` plein avec `--features full`** (risque panic). CI actuel : `pnpm exec tauri build` sans flags → default features → mock → guard frontend actif → SAFE.
 
-
 ---
 
 ## ADDENDUM R4 — 2026-03-17 (SHA 69488e3a8)
@@ -185,39 +185,39 @@ Quatrième round. Toutes les lacunes IPC critiques comblées. Verdict upgrade : 
 
 ### Trouvé et corrigé
 
-| Commande | Gravité | Impact |
-|----------|---------|--------|
-| `load_conversation_history` | HIGH | LTM restore silencieusement bloqué (useChat.ts:617 + useLTMContext.ts:57) |
-| `list_restorable_conversations` | MEDIUM | Redécouverte de conversation impossible |
-| `conversation_process_message` | MEDIUM | Enregistrée main.rs, non accessible |
-| `generate_response` | LOW | Mock path, guard frontend déjà actif |
-| `set_state` / `delete_state` | MEDIUM | State bridge frontend bloqué |
-| `ping` | LOW | Health checks silencieux |
-| `system_get_status` | LOW | Monitoring bloqué |
+| Commande                        | Gravité | Impact                                                                    |
+| ------------------------------- | ------- | ------------------------------------------------------------------------- |
+| `load_conversation_history`     | HIGH    | LTM restore silencieusement bloqué (useChat.ts:617 + useLTMContext.ts:57) |
+| `list_restorable_conversations` | MEDIUM  | Redécouverte de conversation impossible                                   |
+| `conversation_process_message`  | MEDIUM  | Enregistrée main.rs, non accessible                                       |
+| `generate_response`             | LOW     | Mock path, guard frontend déjà actif                                      |
+| `set_state` / `delete_state`    | MEDIUM  | State bridge frontend bloqué                                              |
+| `ping`                          | LOW     | Health checks silencieux                                                  |
+| `system_get_status`             | LOW     | Monitoring bloqué                                                         |
 
 **Méthode :** Cross-check automatisé — (invoke_cmds ∩ registered_in_main_rs) − allow_cmds. **Résultat final : 0 gap critique restant.**
 
 ### Gates R4
 
-| Gate | Statut |
-|------|--------|
-| G_TAURI_AUTHORITY_ALIGNED | PASS |
+| Gate                           | Statut                          |
+| ------------------------------ | ------------------------------- |
+| G_TAURI_AUTHORITY_ALIGNED      | PASS                            |
 | G_CAPABILITIES_NOT_OVEREXPOSED | PASS (aucun ajout non justifié) |
-| cargo check | PASS |
-| cargo test --no-run | PASS |
-| detect_recurrence | PASS (entries=344) |
-| verify_instructions | PASS=20 FAIL=0 |
-| Conflict markers | 0 |
+| cargo check                    | PASS                            |
+| cargo test --no-run            | PASS                            |
+| detect_recurrence              | PASS (entries=344)              |
+| verify_instructions            | PASS=20 FAIL=0                  |
+| Conflict markers               | 0                               |
 
 ### Verdict compteurs finals
 
-| Verdict | Nombre |
-|---------|--------|
-| PASS | 15 |
-| PARTIAL | 3 |
+| Verdict | Nombre                   |
+| ------- | ------------------------ |
+| PASS    | 15                       |
+| PARTIAL | 3                        |
 | BLOCKED | 2 (TWINS/TIME — honnête) |
-| FAIL | 0 |
-| UNKNOWN | 0 |
+| FAIL    | 0                        |
+| UNKNOWN | 0                        |
 
 **VERDICT GLOBAL FINAL : STABLE**
 
@@ -232,39 +232,43 @@ Upgrade de STABLE → **PASS**. Les deux blocages honnêtes TWINS et TIME sont d
 ### Intégrations débloquées
 
 #### TIME → Chat pipeline
+
 - **Source** : `TimePage.tsx` écrit `titane_cognitive_state` dans localStorage (`flowActive`, `energy`, `mode`)
 - **Ajout** : `buildChatContextEnvelope()` lit `titane_cognitive_state` et l'injecte dans `ChatContextEnvelope.cognitiveContext`
 - **Backend** : `extract_context_binding()` extrait `cognitiveFlowActive` + `cognitiveMode` et les expose dans le `context_binding` envoyé au pipeline OMEGA
 
 #### TWINS → Chat pipeline
+
 - **Source** : `useTwinEvolution.ts` fetch `twin_get_fusion_index` depuis le backend Rust
 - **Ajout** : Après fetch réussi, persist `{globalScore, trend, updatedAt}` dans `localStorage['titane_twin_fusion_v1']`
 - **Ajout** : `buildChatContextEnvelope()` lit `titane_twin_fusion_v1` et l'injecte dans `ChatContextEnvelope.twinsContext`
 - **Backend** : `extract_context_binding()` extrait `twinsFusionScore` + `twinsTrend` et les expose dans le `context_binding`
 
 ### Fichiers modifiés
+
 - `src/hooks/useTwinEvolution.ts` — persist `fusionIndex` vers `titane_twin_fusion_v1`
 - `src/services/chat/chatMemorySingleDoor.ts` — ajout `cognitiveContext?` + `twinsContext?` dans `ChatContextEnvelope`; lecture localStorage dans `buildChatContextEnvelope`
 - `src-tauri/src/conversation_engine/commands.rs` — ajout extraction `cognitiveFlowActive`, `cognitiveMode`, `twinsFusionScore`, `twinsTrend` dans `extract_context_binding`
 
 ### Gates R5
-| Gate | Statut |
-|------|--------|
+
+| Gate                               | Statut                                   |
+| ---------------------------------- | ---------------------------------------- |
 | G_TWINS_RELATION_PROVEN_OR_BLOCKED | **PASS** (localStorage→envelope→backend) |
-| G_TIME_RELATION_PROVEN_OR_BLOCKED | **PASS** (localStorage→envelope→backend) |
-| cargo check | PASS |
-| detect_recurrence | PASS (entries=345) |
-| verify_instructions | PASS=20 FAIL=0 |
+| G_TIME_RELATION_PROVEN_OR_BLOCKED  | **PASS** (localStorage→envelope→backend) |
+| cargo check                        | PASS                                     |
+| detect_recurrence                  | PASS (entries=345)                       |
+| verify_instructions                | PASS=20 FAIL=0                           |
 
 ### Verdict final compteurs
 
-| Verdict | Nombre |
-|---------|--------|
-| PASS | 17 |
+| Verdict | Nombre                                 |
+| ------- | -------------------------------------- |
+| PASS    | 17                                     |
 | PARTIAL | 2 (STM non-persistent, MTM non-synced) |
-| BLOCKED | 0 |
-| FAIL | 0 |
-| UNKNOWN | 0 |
+| BLOCKED | 0                                      |
+| FAIL    | 0                                      |
+| UNKNOWN | 0                                      |
 
 **VERDICT GLOBAL FINAL : PASS**
 
@@ -285,23 +289,24 @@ Upgrade de STABLE → **PASS**. Les deux blocages honnêtes TWINS et TIME sont d
 - **Fichiers** : `src-tauri/src/main.rs`, `src-tauri/src/commands/memory_system_commands.rs`
 
 ### Gates R6
-| Gate | Statut |
-|------|--------|
-| G_STM_REAL | **PASS** (pré-tour injection active) |
-| G_MTM_REAL_OR_PARTIAL | **PASS** (invoke_handler corrigé) |
-| cargo check | PASS |
-| detect_recurrence | PASS (entries=348) |
-| verify_instructions | PASS=20 FAIL=0 |
+
+| Gate                  | Statut                               |
+| --------------------- | ------------------------------------ |
+| G_STM_REAL            | **PASS** (pré-tour injection active) |
+| G_MTM_REAL_OR_PARTIAL | **PASS** (invoke_handler corrigé)    |
+| cargo check           | PASS                                 |
+| detect_recurrence     | PASS (entries=348)                   |
+| verify_instructions   | PASS=20 FAIL=0                       |
 
 ### Verdict final compteurs
 
 | Verdict | Nombre |
-|---------|--------|
-| PASS | 19 |
-| PARTIAL | 0 |
-| BLOCKED | 0 |
-| FAIL | 0 |
-| UNKNOWN | 0 |
+| ------- | ------ |
+| PASS    | 19     |
+| PARTIAL | 0      |
+| BLOCKED | 0      |
+| FAIL    | 0      |
+| UNKNOWN | 0      |
 
 **VERDICT GLOBAL FINAL : PASS (19/19)**
 
@@ -313,37 +318,38 @@ Commit: `59e5c80b7` — fix(mtm+stm): register missing memory backend commands +
 
 ### Problèmes résolus
 
-| Commande | Statut avant | Fix | Statut après |
-|---|---|---|---|
-| `get_state` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
-| `memory_debug_scan` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
-| `singularity_get_state` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
-| `get_evolution_state` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
+| Commande                | Statut avant        | Fix                        | Statut après |
+| ----------------------- | ------------------- | -------------------------- | ------------ |
+| `get_state`             | allow list manquant | Ajouté à `tauri.conf.json` | PASS         |
+| `memory_debug_scan`     | allow list manquant | Ajouté à `tauri.conf.json` | PASS         |
+| `singularity_get_state` | allow list manquant | Ajouté à `tauri.conf.json` | PASS         |
+| `get_evolution_state`   | allow list manquant | Ajouté à `tauri.conf.json` | PASS         |
 
 ### Risques ouverts (hors scope chat cert)
 
 Un scan large du codebase TS révèle ~215 chaînes d'invocation potentielles dont ~15-20 ont des callers actifs mais des backends non-enregistrés ou non-exposés :
 
-| Surface | Commandes | Problème | Priorité |
-|---|---|---|---|
-| `meta_mode` | `meta_mode_process`, `meta_mode_get_current_mode`, etc. (5 cmd) | Backend `meta_mode.rs` existe + callers actifs, mais **non enregistrés** dans `invoke_handler` NI dans allow list | MEDIUM |
-| `engine_api` | `run_evolution`, `quick_health_check` | `engine_api.rs` orphelin (non exporté depuis `api/mod.rs`), non enregistré | LOW |
-| Divers | ~190 autres | Mix doc/JSDoc examples, dead code, legacy stubs | LOW/NONE |
+| Surface      | Commandes                                                       | Problème                                                                                                          | Priorité |
+| ------------ | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------- |
+| `meta_mode`  | `meta_mode_process`, `meta_mode_get_current_mode`, etc. (5 cmd) | Backend `meta_mode.rs` existe + callers actifs, mais **non enregistrés** dans `invoke_handler` NI dans allow list | MEDIUM   |
+| `engine_api` | `run_evolution`, `quick_health_check`                           | `engine_api.rs` orphelin (non exporté depuis `api/mod.rs`), non enregistré                                        | LOW      |
+| Divers       | ~190 autres                                                     | Mix doc/JSDoc examples, dead code, legacy stubs                                                                   | LOW/NONE |
 
 Ces risques sont **hors scope de la certification chat** mais documentés pour un audit IPC app-wide à planifier séparément.
 
 ### Commits R7
+
 - `536c80335` — fix(capabilities): get_state + memory_debug_scan
 - `2f8083815` — fix(capabilities): singularity_get_state + get_evolution_state
 
 ### Verdict final R7
 
-| Verdict | Nombre |
-|---------|--------|
-| PASS (chat chain) | 19 |
+| Verdict                  | Nombre                             |
+| ------------------------ | ---------------------------------- |
+| PASS (chat chain)        | 19                                 |
 | OPEN_RISK (non-chat IPC) | 2 surfaces (meta_mode, engine_api) |
-| BLOCKED | 0 |
-| FAIL | 0 |
+| BLOCKED                  | 0                                  |
+| FAIL                     | 0                                  |
 
 **VERDICT GLOBAL FINAL : PASS (chat chain 19/19) — OPEN_RISK (app-wide IPC audit recommandé)**
 
@@ -353,15 +359,15 @@ Ces risques sont **hors scope de la certification chat** mais documentés pour u
 
 ### Problèmes résolus
 
-| Surface | Commandes | Fix | Statut |
-|---|---|---|---|
-| `meta_mode` (7 cmd) | `meta_mode_process`, `meta_mode_get_current_mode`, etc. | Module dual-cfg, state `.manage()`, invoke_handler + allow list | PASS |
-| 200 cmd enregistrées | auth_*, audio_*, autoheal_*, autofix_*, sc_*, agent_*, etc. | Batch-ajout allow list (total=995) | PASS |
+| Surface              | Commandes                                                       | Fix                                                             | Statut |
+| -------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------ |
+| `meta_mode` (7 cmd)  | `meta_mode_process`, `meta_mode_get_current_mode`, etc.         | Module dual-cfg, state `.manage()`, invoke_handler + allow list | PASS   |
+| 200 cmd enregistrées | auth*\*, audio*_, autoheal\__, autofix*\*, sc*_, agent\__, etc. | Batch-ajout allow list (total=995)                              | PASS   |
 
 ### Risque documenté (BLOCKED — hors scope minimal)
 
-| Surface | Raison | Action |
-|---|---|---|
+| Surface                                              | Raison                                                              | Action                       |
+| ---------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------- |
 | `engine_api` (`run_evolution`, `quick_health_check`) | NexusCore/HarmoniaCore/SentinelCore/AutoEvolutionEngine non managés | BLOCKED — app-wide IPC audit |
 
 ### Résultat final
@@ -369,17 +375,18 @@ Ces risques sont **hors scope de la certification chat** mais documentés pour u
 **Parité invoke_handler ↔ allow list : COMPLÈTE** (0 commandes manquantes)
 
 ### Commits R8
+
 - `d11bb5695` — fix(meta-mode): 7 commandes + allow list
 - `c935cda73` — fix(capabilities): batch-add 200 registered commands
 
 ### Verdict global R8
 
-| Verdict | Valeur |
-|---------|--------|
-| invoke_handler ↔ allow list parité | **COMPLÈTE** |
-| Chat chain | **PASS 19/19** |
-| Blocked (engine_api) | 1 surface |
-| FAIL | 0 |
+| Verdict                            | Valeur         |
+| ---------------------------------- | -------------- |
+| invoke_handler ↔ allow list parité | **COMPLÈTE**   |
+| Chat chain                         | **PASS 19/19** |
+| Blocked (engine_api)               | 1 surface      |
+| FAIL                               | 0              |
 
 **VERDICT GLOBAL FINAL : PASS — parité IPC complète établie**
 
@@ -389,11 +396,11 @@ Ces risques sont **hors scope de la certification chat** mais documentés pour u
 
 ### Surface BLOCKED résolue
 
-| Surface | Problème | Solution | Statut |
-|---|---|---|---|
-| `run_evolution` | `engine_api.rs` dépendait de 5 états non managés | `engine_evolution_commands.rs` : appel direct `AutoEvolutionEngine` + `*State::default()` | **PASS** |
-| `quick_health_check` | Idem | Idem | **PASS** |
-| `get_evolution_state` | Enregistré mais chemin wrong | Re-enregistré via `engine_evolution_commands` | **PASS** |
+| Surface               | Problème                                         | Solution                                                                                  | Statut   |
+| --------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------- | -------- |
+| `run_evolution`       | `engine_api.rs` dépendait de 5 états non managés | `engine_evolution_commands.rs` : appel direct `AutoEvolutionEngine` + `*State::default()` | **PASS** |
+| `quick_health_check`  | Idem                                             | Idem                                                                                      | **PASS** |
+| `get_evolution_state` | Enregistré mais chemin wrong                     | Re-enregistré via `engine_evolution_commands`                                             | **PASS** |
 
 ### Vérifications finales
 
@@ -407,17 +414,18 @@ verify_instructions          : PASS=20 FAIL=0
 ```
 
 ### Commit R9
+
 - `dab8393e0` — fix(engine-api): unlock run_evolution + quick_health_check
 
 ### VERDICT GLOBAL FINAL DÉFINITIF
 
-| Indicateur | Valeur |
-|---|---|
-| Chat chain | **PASS 19/19** |
+| Indicateur                  | Valeur                             |
+| --------------------------- | ---------------------------------- |
+| Chat chain                  | **PASS 19/19**                     |
 | invoke_handler ↔ allow list | **COMPLÈTE (997 entries, 0 gaps)** |
-| BLOCKED | **0** |
-| FAIL | **0** |
-| Tests compile | **PASS** |
+| BLOCKED                     | **0**                              |
+| FAIL                        | **0**                              |
+| Tests compile               | **PASS**                           |
 
 **🟢 VERDICT : PASS TOTAL — ZERO BLOCKED — ZÉRO GAP IPC**
 
@@ -428,6 +436,7 @@ verify_instructions          : PASS=20 FAIL=0
 **Commit**: `38405fb1a`
 
 ### Actions
+
 - R10 sweep: 65 commands avec backends réels mais non enregistrés dans invoke_handler
 - Enregistrés: evolution_engine_commands (20), persona_commands (5), agenda_commands (3), ia_commands (3), orchestration_center ping (2), multi_agents_commands (3), selfheal extras (2), mock utilities (7)
 - Correction: `evolution_run_cycle` / `evolution_get_stats` n'existent pas — retirés
@@ -436,11 +445,13 @@ verify_instructions          : PASS=20 FAIL=0
 - AH-355 ajouté (autoheal_rules.jsonl → 355 entrées)
 
 ### Gates R10
+
 - cargo check: PASS
 - detect_recurrence: G_AH_RECURRENCE_GUARD_PASS
 - verify_instructions: 20/20 PASS
 
 ### Verdict R10
+
 **STABLE** — Toutes les commandes avec backend réel sont maintenant enregistrées et allowlistées.
 17 commandes sans backend (stubs/doc-only) documentées dans MOCK_BYPASS_MATRIX — pas de crash, échec silencieux côté IPC.
 
@@ -451,21 +462,24 @@ verify_instructions          : PASS=20 FAIL=0
 **Commit**: `2cbfb35a4`
 
 ### Audit final automatisé
+
 - Analyse croisée automatisée: `#[tauri::command]` fns ↔ invoke_handler ↔ allow list
 - Résultat: 3 gaps résiduels trouvés et corrigés (`chat_get_memory_stats`, `read_production_week1_csv`, `send_message`)
 - **Parité finale: 0 commandes enregistrées manquantes du allow list**
 
 ### État final certifié
-| Metric | Valeur |
-|--------|--------|
-| `#[tauri::command]` fns dans le codebase | 1152 |
-| Enregistrées dans `invoke_handler` | 527 |
-| Couvertes dans allow list | 527 (100%) |
-| Allow list total | 1011 |
-| Fns `#[tauri::command]` non enregistrées (dead code) | 625 |
-| AH-rules total | 356 |
+
+| Metric                                               | Valeur     |
+| ---------------------------------------------------- | ---------- |
+| `#[tauri::command]` fns dans le codebase             | 1152       |
+| Enregistrées dans `invoke_handler`                   | 527        |
+| Couvertes dans allow list                            | 527 (100%) |
+| Allow list total                                     | 1011       |
+| Fns `#[tauri::command]` non enregistrées (dead code) | 625        |
+| AH-rules total                                       | 356        |
 
 ### Verdict Final
+
 **STABLE — PARITÉ IPC COMPLÈTE**
 
 Toutes les commandes enregistrées dans `invoke_handler` sont couvertes par le allow list.
@@ -478,20 +492,23 @@ Aucun gap critique restant.
 **Commit**: `6da458028`
 
 ### Risques supprimés
-| Risque | Avant R11 | Après R11 |
-|--------|-----------|-----------|
-| Commandes registered sans allow list | 0 | 0 |
-| Appels frontend sans backend | 31 | 0* |
-| Stubs inexistants | 10 | 0 (remplacés par vrais stubs) |
-| Backends existants non enregistrés | 20 | 0 |
-| FusionEngineState non managé | oui | non |
 
-*`invalid_command` est intentionnel (test de rejet)
+| Risque                               | Avant R11 | Après R11                     |
+| ------------------------------------ | --------- | ----------------------------- |
+| Commandes registered sans allow list | 0         | 0                             |
+| Appels frontend sans backend         | 31        | 0\*                           |
+| Stubs inexistants                    | 10        | 0 (remplacés par vrais stubs) |
+| Backends existants non enregistrés   | 20        | 0                             |
+| FusionEngineState non managé         | oui       | non                           |
+
+\*`invalid_command` est intentionnel (test de rejet)
 
 ### Fichiers créés
+
 - `src-tauri/src/commands/stub_commands.rs` — 10 stubs sécurisés
 
 ### État certifié final
+
 - **556 commandes enregistrées** dans invoke_handler
 - **556/556 couvertes** dans allow list (100%)
 - **0 appel frontend sans handler**
@@ -500,6 +517,7 @@ Aucun gap critique restant.
 - AH-rules: **357**
 
 ### Verdict
+
 **PASS — ZÉRO RISQUE IPC — CERTIFICATION COMPLÈTE**
 
 ---
@@ -507,29 +525,34 @@ Aucun gap critique restant.
 ## SCEAU DE SESSION — 2026-03-17 — CERTIFICATION COMPLÈTE
 
 ### Commits de cette session (R10 → R11)
-| Commit | Description |
-|--------|-------------|
+
+| Commit      | Description                                                                   |
+| ----------- | ----------------------------------------------------------------------------- |
 | `38405fb1a` | R10: register 46 commands (evolution/persona/agenda/ia/multi-agents/selfheal) |
-| `b6a50531d` | proof: R10 addendum |
-| `2cbfb35a4` | R10+: 3 residual allow list gaps closed |
-| `3e3f2aff1` | proof: R10+ addendum — parité 527/527 |
-| `6da458028` | R11: eliminate all IPC silent failure risks (stubs + real backends) |
-| `e249b3843` | proof: R11 addendum — ZÉRO RISQUE |
+| `b6a50531d` | proof: R10 addendum                                                           |
+| `2cbfb35a4` | R10+: 3 residual allow list gaps closed                                       |
+| `3e3f2aff1` | proof: R10+ addendum — parité 527/527                                         |
+| `6da458028` | R11: eliminate all IPC silent failure risks (stubs + real backends)           |
+| `e249b3843` | proof: R11 addendum — ZÉRO RISQUE                                             |
 
 ### Métriques finales certifiées
-| Métrique | Valeur |
-|----------|--------|
-| Commandes invoke_handler | **556** |
-| Parité allow list | **556/556 — 100%** |
-| Allow list total | **1021** |
-| Risques IPC | **0** |
-| Conflits de fusion | **0** |
-| Erreurs cargo | **0** |
-| AutoHeal rules | **357** |
+
+| Métrique                 | Valeur             |
+| ------------------------ | ------------------ |
+| Commandes invoke_handler | **556**            |
+| Parité allow list        | **556/556 — 100%** |
+| Allow list total         | **1021**           |
+| Risques IPC              | **0**              |
+| Conflits de fusion       | **0**              |
+| Erreurs cargo            | **0**              |
+| AutoHeal rules           | **357**            |
 
 ### Statut origin/MAIN
+
 `HEAD == origin/MAIN` — tout poussé ✅
 
 ---
+
 ## VERDICT FINAL GLOBAL — PASS
+
 **TITANE∞ Chat Truth Certification — SEALED**

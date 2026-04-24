@@ -2,17 +2,17 @@
 
 ## IPC_PARITY_MATRIX
 
-| Frontend (invoke) | Commande Tauri | Wrapper canonique | Dérive? | Enregistré main.rs? | Statut |
-|-------------------|----------------|------------------|---------|---------------------|--------|
-| `conversation_generate` | `conversation_generate` | invokeWithRetry + validateIpcPayload | Aucune | OUI (ligne 1337) | PASS |
-| `chat_stream_message` | `chat_stream_message` | invokeWithRetry | Aucune | OUI (ligne 1344) | PASS |
-| `load_conversation_history` | `load_conversation_history` | chatService.loadConversationHistory() | Aucune | OUI (ligne 1342) | PASS |
-| `create_new_conversation` | `create_new_conversation` | chatService.createConversation() | Aucune | OUI (ligne 1336) | PASS |
-| `chat_get_providers_status` | `chat_get_providers_status` | — | Aucune | OUI (overdrive + main.rs) | PASS |
-| `chat_create_conversation` | `chat_create_conversation` | — | Aucune | OUI (overdrive) | PASS |
-| `send_message` | `send_message` | main.rs direct | **STUB** — retourne Err, log::warn | OUI mais STUB (ligne 699) | FAIL (stub) |
-| `twin_get_state` | `twin_get_state` | lib/security.ts whitelist | — | OUI (main.rs ligne 1972) | PASS (mais non utilisé par chat) |
-| `ollama_query` | `ollama_query` | — | Aucune | OUI | PASS |
+| Frontend (invoke)           | Commande Tauri              | Wrapper canonique                     | Dérive?                            | Enregistré main.rs?       | Statut                           |
+| --------------------------- | --------------------------- | ------------------------------------- | ---------------------------------- | ------------------------- | -------------------------------- |
+| `conversation_generate`     | `conversation_generate`     | invokeWithRetry + validateIpcPayload  | Aucune                             | OUI (ligne 1337)          | PASS                             |
+| `chat_stream_message`       | `chat_stream_message`       | invokeWithRetry                       | Aucune                             | OUI (ligne 1344)          | PASS                             |
+| `load_conversation_history` | `load_conversation_history` | chatService.loadConversationHistory() | Aucune                             | OUI (ligne 1342)          | PASS                             |
+| `create_new_conversation`   | `create_new_conversation`   | chatService.createConversation()      | Aucune                             | OUI (ligne 1336)          | PASS                             |
+| `chat_get_providers_status` | `chat_get_providers_status` | —                                     | Aucune                             | OUI (overdrive + main.rs) | PASS                             |
+| `chat_create_conversation`  | `chat_create_conversation`  | —                                     | Aucune                             | OUI (overdrive)           | PASS                             |
+| `send_message`              | `send_message`              | main.rs direct                        | **STUB** — retourne Err, log::warn | OUI mais STUB (ligne 699) | FAIL (stub)                      |
+| `twin_get_state`            | `twin_get_state`            | lib/security.ts whitelist             | —                                  | OUI (main.rs ligne 1972)  | PASS (mais non utilisé par chat) |
+| `ollama_query`              | `ollama_query`              | —                                     | Aucune                             | OUI                       | PASS                             |
 
 ## Constats
 

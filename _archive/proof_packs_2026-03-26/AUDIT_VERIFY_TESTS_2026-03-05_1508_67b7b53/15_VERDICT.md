@@ -1,4 +1,5 @@
 # 15_VERDICT — Verdict Final Unique
+
 **Proof Pack:** AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53  
 **Timestamp:** 2026-03-05T15:08:56Z  
 **SHA:** 67b7b53  
@@ -11,50 +12,51 @@
 **Justification principale**: L'environnement d'exécution est insuffisant pour valider les gates critiques (pnpm absent, node_modules absents, GTK absent → tests/lint/build tous BLOCKED). Des violations prouvées ont été détectées statiquement (Ring 2 I/O Rust), mais les tests qui les valideraient ne peuvent pas s'exécuter.
 
 **STOP-THE-LINE marqué** (invariant FAIL détecté, audit continué):
+
 - Invariant FAIL: ONE DOOR NETWORK — Ring 2 engines font du HTTP directement
 
 ---
 
 ## Table des Gates
 
-| Gate | Statut | Justification |
-|------|--------|---------------|
-| **G_BOOT_TRUTH** | ✅ PASS | git clean, SHA prouvé, env documenté |
-| **G_RING_INTEGRITY** | ❌ **FAIL** | Ring 2 I/O Rust (summarizer.rs:315, embeddings.rs:216) |
-| **G_INV_UI_NO_WEB** | ⚠️ RISK | httpClient.ts bloque prod; selfHealingObserver monkey-patch fetch |
-| **G_INV_ONE_DOOR** | ❌ **FAIL** | Ring 2 engines HTTP direct (bypass overdrive gateway) |
-| **G_INV_TAURI_ONLY** | ✅ PASS | 0 serveurs web autonomes |
-| **G_INV_IPC_CANONICAL** | ⚠️ SUSPICION | TauriBridge/StateBridge invoke direct |
-| **G_INV_ALLOWLIST** | ✅ PASS | 6 capabilities + allowlist 18KB |
-| **G_VERSION_SYNC** | ✅ PASS | 27.2.0 aligné sur 4 fichiers |
-| **G_LINT_FORMAT_X3** | 🔴 BLOCKED | pnpm + node_modules absents |
-| **G_TESTS_X3** | 🔴 BLOCKED | node_modules + GTK absents |
-| **G_BUILD_X3** | 🔴 BLOCKED | pnpm + GTK absents |
-| **G_CI_REVIEW** | ✅ PASS | CI unifié fonctionnel (44 workflows, ~13 décoratifs) |
-| **G_PROOF_ARTIFACTS** | ✅ PASS | 14 proof packs, 7 registres, 8 MAP docs |
-| **G_AH_RULE_CAPTURED** | ✅ PASS | Rule AH-2026-03-05-0002 ajoutée |
-| **G_AH_RECURRENCE** | ✅ PASS | detect_recurrence.sh → PASS |
+| Gate                    | Statut       | Justification                                                     |
+| ----------------------- | ------------ | ----------------------------------------------------------------- |
+| **G_BOOT_TRUTH**        | ✅ PASS      | git clean, SHA prouvé, env documenté                              |
+| **G_RING_INTEGRITY**    | ❌ **FAIL**  | Ring 2 I/O Rust (summarizer.rs:315, embeddings.rs:216)            |
+| **G_INV_UI_NO_WEB**     | ⚠️ RISK      | httpClient.ts bloque prod; selfHealingObserver monkey-patch fetch |
+| **G_INV_ONE_DOOR**      | ❌ **FAIL**  | Ring 2 engines HTTP direct (bypass overdrive gateway)             |
+| **G_INV_TAURI_ONLY**    | ✅ PASS      | 0 serveurs web autonomes                                          |
+| **G_INV_IPC_CANONICAL** | ⚠️ SUSPICION | TauriBridge/StateBridge invoke direct                             |
+| **G_INV_ALLOWLIST**     | ✅ PASS      | 6 capabilities + allowlist 18KB                                   |
+| **G_VERSION_SYNC**      | ✅ PASS      | 27.2.0 aligné sur 4 fichiers                                      |
+| **G_LINT_FORMAT_X3**    | 🔴 BLOCKED   | pnpm + node_modules absents                                       |
+| **G_TESTS_X3**          | 🔴 BLOCKED   | node_modules + GTK absents                                        |
+| **G_BUILD_X3**          | 🔴 BLOCKED   | pnpm + GTK absents                                                |
+| **G_CI_REVIEW**         | ✅ PASS      | CI unifié fonctionnel (44 workflows, ~13 décoratifs)              |
+| **G_PROOF_ARTIFACTS**   | ✅ PASS      | 14 proof packs, 7 registres, 8 MAP docs                           |
+| **G_AH_RULE_CAPTURED**  | ✅ PASS      | Rule AH-2026-03-05-0002 ajoutée                                   |
+| **G_AH_RECURRENCE**     | ✅ PASS      | detect_recurrence.sh → PASS                                       |
 
 ---
 
 ## Distribution des Statuts
 
-| Statut | Gates | % |
-|--------|-------|---|
-| ✅ PASS | 7 | 47% |
-| ❌ FAIL | 2 | 13% |
-| ⚠️ RISK/SUSPICION | 2 | 13% |
-| 🔴 BLOCKED | 3 | 20% |
-| N/A | 1 | 7% |
+| Statut            | Gates | %   |
+| ----------------- | ----- | --- |
+| ✅ PASS           | 7     | 47% |
+| ❌ FAIL           | 2     | 13% |
+| ⚠️ RISK/SUSPICION | 2     | 13% |
+| 🔴 BLOCKED        | 3     | 20% |
+| N/A               | 1     | 7%  |
 
 ---
 
 ## Violations Critiques (Stop-The-Line)
 
-| ID | Sévérité | Fichier | Ligne | Correction |
-|----|----------|---------|-------|-----------|
-| CRIT-01 | P0 | `src-tauri/src/engines/unified_memory/summarizer.rs` | 298, 315 | Déplacer HTTP vers Ring 3 (R1 dans 13_RECOMMENDATIONS_MINIMAL.md) |
-| CRIT-01b | P0 | `src-tauri/src/engines/unified_memory/embeddings.rs` | 213, 216 | Même correction |
+| ID       | Sévérité | Fichier                                              | Ligne    | Correction                                                        |
+| -------- | -------- | ---------------------------------------------------- | -------- | ----------------------------------------------------------------- |
+| CRIT-01  | P0       | `src-tauri/src/engines/unified_memory/summarizer.rs` | 298, 315 | Déplacer HTTP vers Ring 3 (R1 dans 13_RECOMMENDATIONS_MINIMAL.md) |
+| CRIT-01b | P0       | `src-tauri/src/engines/unified_memory/embeddings.rs` | 213, 216 | Même correction                                                   |
 
 ---
 

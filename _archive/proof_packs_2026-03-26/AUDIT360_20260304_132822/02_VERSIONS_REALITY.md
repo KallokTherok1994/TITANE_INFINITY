@@ -1,4 +1,5 @@
 # 02_VERSIONS_REALITY — Synchronisation des versions
+
 **Session:** AUDIT360_20260304_132822  
 **Horodatage UTC:** 2026-03-04T13:28:22Z
 
@@ -18,23 +19,23 @@ ls deployment/latest/SHA256SUMS_v*.txt deployment/latest/SIZES_v*.txt
 
 ## Résultats de vérification
 
-| Fichier | Clé | Valeur observée | Attendu | Résultat |
-|---------|-----|-----------------|---------|----------|
-| `package.json` | `version` | `27.2.0` | `27.2.0` | ✅ PASS |
-| `src-tauri/Cargo.toml` | `version` | `27.2.0` | `27.2.0` | ✅ PASS |
-| `src-tauri/tauri.conf.json` | `version` | `27.2.0` | `27.2.0` | ✅ PASS |
-| `deployment/latest/MANIFEST.json` | `version` | `27.2.0` | `27.2.0` | ✅ PASS |
+| Fichier                           | Clé       | Valeur observée | Attendu  | Résultat |
+| --------------------------------- | --------- | --------------- | -------- | -------- |
+| `package.json`                    | `version` | `27.2.0`        | `27.2.0` | ✅ PASS  |
+| `src-tauri/Cargo.toml`            | `version` | `27.2.0`        | `27.2.0` | ✅ PASS  |
+| `src-tauri/tauri.conf.json`       | `version` | `27.2.0`        | `27.2.0` | ✅ PASS  |
+| `deployment/latest/MANIFEST.json` | `version` | `27.2.0`        | `27.2.0` | ✅ PASS  |
 
 ---
 
 ## Artefacts de déploiement v27.2.0
 
-| Fichier | Présence | Statut |
-|---------|----------|--------|
-| `deployment/latest/SHA256SUMS_v27.2.0.txt` | ✅ Présent | PASS |
-| `deployment/latest/SIZES_v27.2.0.txt` | ✅ Présent | PASS |
-| `deployment/latest/SHA256SUMS_v27.0.5.txt` | ✅ Présent (version précédente) | INFO |
-| `deployment/latest/SHA256SUMS_v27.0.2.txt` | ✅ Présent (version précédente) | INFO |
+| Fichier                                    | Présence                        | Statut |
+| ------------------------------------------ | ------------------------------- | ------ |
+| `deployment/latest/SHA256SUMS_v27.2.0.txt` | ✅ Présent                      | PASS   |
+| `deployment/latest/SIZES_v27.2.0.txt`      | ✅ Présent                      | PASS   |
+| `deployment/latest/SHA256SUMS_v27.0.5.txt` | ✅ Présent (version précédente) | INFO   |
+| `deployment/latest/SHA256SUMS_v27.0.2.txt` | ✅ Présent (version précédente) | INFO   |
 
 ---
 

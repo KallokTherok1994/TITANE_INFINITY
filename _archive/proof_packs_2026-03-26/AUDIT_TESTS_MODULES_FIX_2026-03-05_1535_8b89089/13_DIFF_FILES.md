@@ -1,4 +1,5 @@
 # 13_DIFF_FILES — Diffs de Fichiers
+
 **Proof Pack:** AUDIT_TESTS_MODULES_FIX_2026-03-05_1535_8b89089  
 **Timestamp:** 2026-03-05T15:35:28Z
 
@@ -74,6 +75,7 @@ $ git status --porcelain
 ```
 
 Contenu type:
+
 ```rust
 // Test: Ring 2 Rust engines must not import http_client/reqwest/hyper
 #[test]

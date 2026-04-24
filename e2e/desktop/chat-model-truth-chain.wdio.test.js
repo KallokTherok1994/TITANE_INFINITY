@@ -68,7 +68,9 @@ describe('Chat model truth chain (WDIO/Tauri)', () => {
     await browser.waitUntil(
       async () =>
         browser.execute(() => {
-          const summary = document.querySelector('[data-testid="reasoning-summary-model"]');
+          const summary = document.querySelector(
+            '[data-testid="reasoning-summary-model"]'
+          );
           return Boolean(summary && summary.getAttribute('data-model-used'));
         }),
       {

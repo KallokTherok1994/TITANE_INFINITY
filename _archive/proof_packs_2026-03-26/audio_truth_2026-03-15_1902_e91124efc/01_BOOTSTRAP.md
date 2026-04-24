@@ -1,15 +1,17 @@
 # 01 BOOTSTRAP
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## Git State
 
 ```
 HEAD: e91124efc (MAIN)
-Branch: MAIN  
+Branch: MAIN
 Tag: origin/MAIN
 ```
 
 ## Modified files (uncommitted)
+
 ```
  M src-tauri/src/audio/commands.rs              ← PATCH-01 appliqué
  M scripts/autoheal/autoheal_rules.jsonl        ← AH-2026-03-15-0211

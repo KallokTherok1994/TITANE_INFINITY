@@ -15,4 +15,3 @@
 
 - SCOPE_FROZEN: `PASS`
 - SCOPE_AMBIGUITY: `FAIL` not triggered
-

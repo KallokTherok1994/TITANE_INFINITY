@@ -22,19 +22,19 @@
 
 ## Gate Summary (updated HEAD 17838b9b1)
 
-| Gate | Status | Evidence |
-|------|--------|----------|
-| G_BOOT_TRUTH | PASS | HEAD=17838b9b1; piper installed; FR models confirmed |
-| G_PATCH_CLAIMS_REVIEWED | PASS | All 5 claims + 2 new fixes verified |
-| G_RUNTIME_PATH_MAPPED | PASS | Full 9-hop chain traced, voice NOT dropped |
-| G_CHAT_PATH_PROVEN | PASS | enrichConfigWithStoredVoice() auto-enriches all callers |
-| G_PROVIDER_TRUTH_VISIBLE | PASS | [TTS:BOOTSTRAP] log group on every speak() call |
-| G_MODEL_TRUTH_VISIBLE | PASS | log::info! speak_piper model in local_tts.rs |
-| G_FALLBACK_HONESTY | PASS | addToast warning on all fallback paths |
-| G_TWO_VOICE_DIFFERENCE | PARTIAL | siwis+upmc models installed; routes correctly; perceptual BLOCKED |
-| G_DESKTOP_TARGET_TRUTH | PARTIAL | Prior V10 PASS; this HEAD needs rebuild |
-| G_NO_ACTIVE_BYPASS | PASS | All bypasses fixed; auto-TTS uses fr_FR-siwis-medium |
-| G_ROLLBACK_READY | PASS | git restore documented |
+| Gate                     | Status  | Evidence                                                          |
+| ------------------------ | ------- | ----------------------------------------------------------------- |
+| G_BOOT_TRUTH             | PASS    | HEAD=17838b9b1; piper installed; FR models confirmed              |
+| G_PATCH_CLAIMS_REVIEWED  | PASS    | All 5 claims + 2 new fixes verified                               |
+| G_RUNTIME_PATH_MAPPED    | PASS    | Full 9-hop chain traced, voice NOT dropped                        |
+| G_CHAT_PATH_PROVEN       | PASS    | enrichConfigWithStoredVoice() auto-enriches all callers           |
+| G_PROVIDER_TRUTH_VISIBLE | PASS    | [TTS:BOOTSTRAP] log group on every speak() call                   |
+| G_MODEL_TRUTH_VISIBLE    | PASS    | log::info! speak_piper model in local_tts.rs                      |
+| G_FALLBACK_HONESTY       | PASS    | addToast warning on all fallback paths                            |
+| G_TWO_VOICE_DIFFERENCE   | PARTIAL | siwis+upmc models installed; routes correctly; perceptual BLOCKED |
+| G_DESKTOP_TARGET_TRUTH   | PARTIAL | Prior V10 PASS; this HEAD needs rebuild                           |
+| G_NO_ACTIVE_BYPASS       | PASS    | All bypasses fixed; auto-TTS uses fr_FR-siwis-medium              |
+| G_ROLLBACK_READY         | PASS    | git restore documented                                            |
 
 **PASS: 9/11 | PARTIAL: 2/11 | FAIL: 0/11**
 
@@ -42,14 +42,14 @@
 
 ## What was Fixed
 
-| Fix | Status |
-|-----|--------|
-| Voice enrichment in hybridTTS.speak() | DONE |
-| local_tts dynamic piper routing | DONE |
-| speak_piper dynamic model selection | DONE |
-| Fallback events with UI toast notification | DONE |
-| Backend auto-TTS voice:None -> fr_FR-siwis-medium | DONE |
-| Amy (en_US) model download | BLOCKED (no internet) |
+| Fix                                               | Status                |
+| ------------------------------------------------- | --------------------- |
+| Voice enrichment in hybridTTS.speak()             | DONE                  |
+| local_tts dynamic piper routing                   | DONE                  |
+| speak_piper dynamic model selection               | DONE                  |
+| Fallback events with UI toast notification        | DONE                  |
+| Backend auto-TTS voice:None -> fr_FR-siwis-medium | DONE                  |
+| Amy (en_US) model download                        | BLOCKED (no internet) |
 
 ---
 
@@ -66,6 +66,7 @@ Only remaining blocker: **perceptual proof** — human listening confirmation th
 5. Check browser console [TTS:BOOTSTRAP] shows different voiceId
 
 ## Gates
+
 ```
 verify_instructions.sh  -> PASS=20 FAIL=0
 detect_recurrence.sh    -> PASS, entries=411

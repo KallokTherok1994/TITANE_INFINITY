@@ -13,7 +13,7 @@
 
 ## Executed Proof Commands
 
-1. corepack pnpm vitest run src/__tests__/features/audio/titaneVoiceProfiles.test.ts src/__tests__/components/chat/MessageBubble.tts.test.tsx
+1. corepack pnpm vitest run src/**tests**/features/audio/titaneVoiceProfiles.test.ts src/**tests**/components/chat/MessageBubble.tts.test.tsx
 2. cargo test --manifest-path src-tauri/Cargo.toml voice_profile -- --nocapture
 3. WDIO_SPEC=./e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js pnpm run e2e:desktop
 4. WDIO_SPEC=./e2e/desktop/ui-ultra-smoke.e2e.js pnpm run e2e:desktop

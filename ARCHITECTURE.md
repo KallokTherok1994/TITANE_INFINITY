@@ -3,6 +3,7 @@
 - Centralisation de tous les fichiers `.md.md` et anciens index dans `docs/99_ARCHIVE/`
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
+
 ## Version 31.1.0 — Release du 22/04/2026
 
 Cette version marque la synchronisation complète des artefacts, mapping, inventaire release, et documentation. Voir CHANGELOG.md et README.md pour le détail des nouveautés et corrections.

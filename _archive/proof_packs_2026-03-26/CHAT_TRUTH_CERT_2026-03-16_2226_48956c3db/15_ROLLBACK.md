@@ -2,12 +2,12 @@
 
 ## Fichiers modifiés par ce cycle de certification
 
-| Fichier | Modification | Commande rollback |
-|---------|-------------|-------------------|
+| Fichier                                         | Modification                                                                      | Commande rollback                                              |
+| ----------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
 | `src-tauri/src/conversation_engine/commands.rs` | Résolution conflit merge committé (<<<<<<< / >>>>>>>) — kept IMPROVE-003 upstream | `git restore -- src-tauri/src/conversation_engine/commands.rs` |
-| `src-tauri/tests/p3_provider_meta_gates.rs` | Ajout `history: None` (4 occurrences) | `git restore -- src-tauri/tests/p3_provider_meta_gates.rs` |
-| `src-tauri/tests/omega_p2_performance_test.rs` | Ajout `history: None` (3 occurrences) | `git restore -- src-tauri/tests/omega_p2_performance_test.rs` |
-| `scripts/autoheal/autoheal_rules.jsonl` | Résolution conflit merge committé + entrée AH-COMMITTED-MERGE-CONFLICTS | `git restore -- scripts/autoheal/autoheal_rules.jsonl` |
+| `src-tauri/tests/p3_provider_meta_gates.rs`     | Ajout `history: None` (4 occurrences)                                             | `git restore -- src-tauri/tests/p3_provider_meta_gates.rs`     |
+| `src-tauri/tests/omega_p2_performance_test.rs`  | Ajout `history: None` (3 occurrences)                                             | `git restore -- src-tauri/tests/omega_p2_performance_test.rs`  |
+| `scripts/autoheal/autoheal_rules.jsonl`         | Résolution conflit merge committé + entrée AH-COMMITTED-MERGE-CONFLICTS           | `git restore -- scripts/autoheal/autoheal_rules.jsonl`         |
 
 ## Rollback complet en une commande
 

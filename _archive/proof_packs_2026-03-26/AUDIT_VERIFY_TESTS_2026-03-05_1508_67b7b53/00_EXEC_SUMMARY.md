@@ -1,4 +1,5 @@
 # 00_EXEC_SUMMARY — Résumé Exécutif
+
 **Proof Pack:** AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53  
 **Timestamp:** 2026-03-05T15:08:56Z  
 **VERDICT: BLOCKED** (env) | **STOP-THE-LINE: FAIL** (Ring 2 I/O Rust)
@@ -22,19 +23,19 @@
 
 ## Pointeurs Clés
 
-| Sujet | Fichier |
-|-------|---------|
-| Bootstrap + env | `01_BOOTSTRAP.md` |
-| Scope + rings | `02_SCOPE.md` |
-| Modules map | `03_MODULE_MAP.md` |
-| Ring integrity (FAIL) | `04_RING_INTEGRITY.md` |
-| Scans invariants | `05_INVARIANTS_SCAN.md` |
-| Lint/format (BLOCKED) | `07_LINT_FORMAT_X3.md` |
-| Tests (BLOCKED) | `08_TESTS_X3.md` |
-| Build (BLOCKED) | `09_BUILD_X3.md` |
-| CI workflows (44) | `10_CI_WORKFLOWS_REVIEW.md` |
-| Proof artifacts | `11_PROOF_ARTIFACTS_REVIEW.md` |
-| Violations + dettes | `12_FINDINGS.md` |
-| 7 recommandations | `13_RECOMMENDATIONS_MINIMAL.md` |
-| Rollback plan | `14_ROLLBACK.md` |
-| **Verdict final** | **`15_VERDICT.md`** |
+| Sujet                 | Fichier                         |
+| --------------------- | ------------------------------- |
+| Bootstrap + env       | `01_BOOTSTRAP.md`               |
+| Scope + rings         | `02_SCOPE.md`                   |
+| Modules map           | `03_MODULE_MAP.md`              |
+| Ring integrity (FAIL) | `04_RING_INTEGRITY.md`          |
+| Scans invariants      | `05_INVARIANTS_SCAN.md`         |
+| Lint/format (BLOCKED) | `07_LINT_FORMAT_X3.md`          |
+| Tests (BLOCKED)       | `08_TESTS_X3.md`                |
+| Build (BLOCKED)       | `09_BUILD_X3.md`                |
+| CI workflows (44)     | `10_CI_WORKFLOWS_REVIEW.md`     |
+| Proof artifacts       | `11_PROOF_ARTIFACTS_REVIEW.md`  |
+| Violations + dettes   | `12_FINDINGS.md`                |
+| 7 recommandations     | `13_RECOMMENDATIONS_MINIMAL.md` |
+| Rollback plan         | `14_ROLLBACK.md`                |
+| **Verdict final**     | **`15_VERDICT.md`**             |

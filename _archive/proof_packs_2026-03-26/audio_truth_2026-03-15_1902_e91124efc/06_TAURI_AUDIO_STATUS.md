@@ -1,4 +1,5 @@
 # 06 TAURI AUDIO STATUS
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## generate_handler registration (main.rs ligne ~1291)
@@ -43,6 +44,7 @@ STATUS: TOUTES ENREGISTRÉES ✓
 ## Capabilities (src-tauri/capabilities/audio_tts.json)
 
 Allowlist complet:
+
 - tts_speak, tts_stop, test_tts ✓
 - speak, stop_speaking, is_speaking ✓
 - get_audio_output_devices ✓
@@ -59,4 +61,5 @@ Note: audio_capture_start/stop/status/chunk/wav NON dans audio_tts.json
 (sont dans generate_handler mais non exposés UI Audio Center — scope cohérent)
 
 ## TAURI_PERMISSION_MISSING: NONE ✓
+
 ## TAURI_COMMAND_NOT_REGISTERED: NONE ✓

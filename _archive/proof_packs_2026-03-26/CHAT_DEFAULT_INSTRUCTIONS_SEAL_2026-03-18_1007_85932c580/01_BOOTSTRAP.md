@@ -8,6 +8,7 @@
 - rustc: 1.94.0
 
 ## Files inspected
+
 - src/config/chatModes.config.ts
 - src/services/conversationEngine.ts
 - src/core/prompts/profiles.ts

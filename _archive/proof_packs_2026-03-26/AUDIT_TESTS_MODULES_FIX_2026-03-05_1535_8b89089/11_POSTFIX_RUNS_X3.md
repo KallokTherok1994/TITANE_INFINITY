@@ -1,4 +1,5 @@
 # 11_POSTFIX_RUNS_X3 — Post-Fix Tests x3
+
 **Proof Pack:** AUDIT_TESTS_MODULES_FIX_2026-03-05_1535_8b89089  
 **Timestamp:** 2026-03-05T15:35:28Z
 
@@ -40,12 +41,12 @@ Même commandes — confirmation triple
 
 ## G_POSTFIX_RUNS_X3 = BLOCKED
 
-| Suite | Statut | Raison |
-|-------|--------|--------|
-| Lint x3 | BLOCKED | pnpm absent |
-| Format x3 | BLOCKED | pnpm absent |
-| Tests x3 | BLOCKED | node_modules absent |
-| Cargo x3 | BLOCKED | GTK absent |
+| Suite           | Statut  | Raison              |
+| --------------- | ------- | ------------------- |
+| Lint x3         | BLOCKED | pnpm absent         |
+| Format x3       | BLOCKED | pnpm absent         |
+| Tests x3        | BLOCKED | node_modules absent |
+| Cargo x3        | BLOCKED | GTK absent          |
 | IPC contract x3 | BLOCKED | node_modules absent |
 
 ---
@@ -53,6 +54,7 @@ Même commandes — confirmation triple
 ## Prochaine Exécution Autorisée
 
 Après installation de l'env:
+
 ```bash
 npm install -g pnpm@10.28.2
 pnpm install --frozen-lockfile

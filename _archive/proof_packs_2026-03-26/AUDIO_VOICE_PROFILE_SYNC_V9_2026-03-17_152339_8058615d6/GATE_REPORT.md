@@ -15,7 +15,7 @@
 
 ## Executed Proof Commands
 
-1. pnpm exec vitest run src/__tests__/features/audio/audioService.runtimeTtsPolicy.test.ts
+1. pnpm exec vitest run src/**tests**/features/audio/audioService.runtimeTtsPolicy.test.ts
 2. pnpm run guard:ipc-contract
 3. bash scripts/autoheal/detect_recurrence.sh
 4. bash scripts/verify_instructions.sh
@@ -26,7 +26,7 @@
 
 - src/features/audio-center/services/audioService.ts
 - src/features/audio-center/hooks/useAudio.ts
-- src/__tests__/features/audio/audioService.runtimeTtsPolicy.test.ts
+- src/**tests**/features/audio/audioService.runtimeTtsPolicy.test.ts
 - src/lib/tauriCommands.ts
 - src/lib/tauriClient.ts
 - src/lib/security.ts

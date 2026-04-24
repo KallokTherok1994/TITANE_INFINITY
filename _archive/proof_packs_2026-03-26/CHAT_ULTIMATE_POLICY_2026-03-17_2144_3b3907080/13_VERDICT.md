@@ -9,24 +9,25 @@
 
 ## TARGET_DELTA atteint
 
-| Item | Atteint ? |
-|---|---|
-| Profils DIRECT/BALANCED/DEEP/ARCHITECT | OUI |
-| Sélection dynamique profil | OUI |
-| Inférence bornée 4 états | OUI |
-| Mode maxTokens appliqués au payload | OUI |
-| Provider compat. définie | OUI |
-| Truth labels définis honnêtement | OUI |
-| Memory policy par profil définie | OUI |
-| Tests x3 PASS | OUI |
-| Zero TypeScript errors | OUI |
-| Zero régression | OUI |
+| Item                                   | Atteint ? |
+| -------------------------------------- | --------- |
+| Profils DIRECT/BALANCED/DEEP/ARCHITECT | OUI       |
+| Sélection dynamique profil             | OUI       |
+| Inférence bornée 4 états               | OUI       |
+| Mode maxTokens appliqués au payload    | OUI       |
+| Provider compat. définie               | OUI       |
+| Truth labels définis honnêtement       | OUI       |
+| Memory policy par profil définie       | OUI       |
+| Tests x3 PASS                          | OUI       |
+| Zero TypeScript errors                 | OUI       |
+| Zero régression                        | OUI       |
 
 ## CURRENT_REAL_LOCK
 
 Lock résolu : **Mode maxTokens/temperature non appliqués au payload** → FERMÉ.
 
 Locks secondaires identifiés (non dans ce patch minimal) :
+
 - G_NO_UNSUPPORTED_PARAM_DRIFT : PROVIDER_UNSUPPORTED_PARAMS non encore câblé dans orchestrateur
 - G_UI_TRUTH_LABELS : TruthStatus non encore exposé dans ChatDiagnostic.tsx
 - G_MEMORY_INJECTION_TRUTH : Memory policy par profil non encore conditionnée dans chatEngine
@@ -60,6 +61,7 @@ QUALIFIED
 ```
 
 **Justification** :
+
 - Lock primaire (token budget mode-aware) : RÉSOLU et TESTÉ x3
 - Politique canonique : CÂBLÉE et PROUVÉE en unit tests
 - Zéro fake intelligence affirmée (I3-I6 respectés)

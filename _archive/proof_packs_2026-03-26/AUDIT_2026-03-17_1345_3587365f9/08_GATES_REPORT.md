@@ -1,4 +1,5 @@
 # GATES REPORT
+
 G_IPC_get_nexus_state: FAIL→PASS (remapped to registered command)
 G_IPC_get_harmonia_state: FAIL→PASS (remapped)
 G_IPC_get_sentinel_state: FAIL→PASS (remapped)

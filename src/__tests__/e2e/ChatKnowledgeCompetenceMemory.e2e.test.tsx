@@ -34,9 +34,12 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
       // Simule des réponses selon la question
       if (/capitale de la France/i.test(message)) return { assistant_message: 'Paris' };
       if (/2\s*\+\s*2/i.test(message)) return { assistant_message: '4' };
-      if (/Qui es-tu/i.test(message)) return { assistant_message: 'Je suis TITANE, une intelligence cognitive.' };
-      if (/rappelle-moi mon prénom/i.test(message)) return { assistant_message: 'Ton prénom est Testeur.' };
-      if (/explique.*raisonnement/i.test(message)) return { assistant_message: 'J’ai utilisé la logique pour répondre.' };
+      if (/Qui es-tu/i.test(message))
+        return { assistant_message: 'Je suis TITANE, une intelligence cognitive.' };
+      if (/rappelle-moi mon prénom/i.test(message))
+        return { assistant_message: 'Ton prénom est Testeur.' };
+      if (/explique.*raisonnement/i.test(message))
+        return { assistant_message: 'J’ai utilisé la logique pour répondre.' };
       return { assistant_message: 'Réponse générique.' };
     });
   });
@@ -50,15 +53,15 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     const chatTab = screen.getByRole('tab', { name: /chat/i });
     fireEvent.click(chatTab);
     const input = screen.getByPlaceholderText(/tapez votre message/i);
-    fireEvent.change(input, { target: { value: 'Quelle est la capitale de la France ?' } });
+    fireEvent.change(input, {
+      target: { value: 'Quelle est la capitale de la France ?' },
+    });
     const sendButton = screen.getByRole('button', { name: /envoyer/i });
     fireEvent.click(sendButton);
     await waitFor(() => {
       const assistants = screen.getAllByTestId('chat-message-assistant');
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(
-        contents.some((node) => /paris/i.test(node.textContent || ''))
-      ).toBe(true);
+      expect(contents.some(node => /paris/i.test(node.textContent || ''))).toBe(true);
     });
   });
 
@@ -74,9 +77,9 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(sendButton);
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(
-        contents.some((node) => /^4$/.test((node.textContent || '').trim()))
-      ).toBe(true);
+      expect(contents.some(node => /^4$/.test((node.textContent || '').trim()))).toBe(
+        true
+      );
     });
   });
 
@@ -95,9 +98,7 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(
-        contents.some((node) => /testeur/i.test(node.textContent || ''))
-      ).toBe(true);
+      expect(contents.some(node => /testeur/i.test(node.textContent || ''))).toBe(true);
     });
   });
 
@@ -112,9 +113,7 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(
-        contents.some((node) => /titane/i.test(node.textContent || ''))
-      ).toBe(true);
+      expect(contents.some(node => /titane/i.test(node.textContent || ''))).toBe(true);
     });
   });
 
@@ -129,9 +128,9 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(screen.getByRole('button', { name: /envoyer/i }));
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(
-        contents.some((node) => /logique|raison/i.test(node.textContent || ''))
-      ).toBe(true);
+      expect(contents.some(node => /logique|raison/i.test(node.textContent || ''))).toBe(
+        true
+      );
     });
   });
 });

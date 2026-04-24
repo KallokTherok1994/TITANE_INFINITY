@@ -20,18 +20,19 @@ Navigation
 
 ## Détail par lien
 
-| Lien | Fichier | Fonction/Composant | Input | Output | Modes de défaillance | Statut |
-|---|---|---|---|---|---|---|
-| Navigation → Admin | `AdminPage.tsx` | `TabContent` switch | `tab="production-health"` | lazy import `ProductionHealthPanel` | import fail | PROVEN |
-| Types tab | `types.ts` | `ADMIN_TABS` | — | `label: 'Santé Prod (V25)'` | label mismatch V25/V26 | MISMATCHED |
-| UI → Hook | `ProductionHealthPanel.tsx` | `useProductionHealthTelemetry()` | options | `{data, loading, error, refresh}` | infinite re-render (dep bug) | BROKEN |
-| Hook → IPC | `useProductionHealthTelemetry.ts` | `loadData` | — | `tauriClient.readProductionWeek1Csv()` | stale closure | BROKEN |
-| IPC Client | `tauriClient.ts` | `readProductionWeek1Csv()` | — | `invoke(READ_PRODUCTION_WEEK1_CSV)` | IPC timeout | PROVEN |
-| Tauri command | `telemetry_api.rs` | `read_production_week1_csv` | — | `ProductionHealthSummary` | **retourne faux Ok si CSV absent** | BROKEN |
-| CSV lecture | `telemetry_api.rs` | `parse_and_summarize` | CSV bytes | `ProductionHealthSummary` | CSV absent → faux Ok | BROKEN |
-| Source CSV | `/tmp/titane_production_week1.csv` | fichier | — | lignes CSV | **ABSENT** | BROKEN |
+| Lien               | Fichier                            | Fonction/Composant               | Input                     | Output                                 | Modes de défaillance               | Statut     |
+| ------------------ | ---------------------------------- | -------------------------------- | ------------------------- | -------------------------------------- | ---------------------------------- | ---------- |
+| Navigation → Admin | `AdminPage.tsx`                    | `TabContent` switch              | `tab="production-health"` | lazy import `ProductionHealthPanel`    | import fail                        | PROVEN     |
+| Types tab          | `types.ts`                         | `ADMIN_TABS`                     | —                         | `label: 'Santé Prod (V25)'`            | label mismatch V25/V26             | MISMATCHED |
+| UI → Hook          | `ProductionHealthPanel.tsx`        | `useProductionHealthTelemetry()` | options                   | `{data, loading, error, refresh}`      | infinite re-render (dep bug)       | BROKEN     |
+| Hook → IPC         | `useProductionHealthTelemetry.ts`  | `loadData`                       | —                         | `tauriClient.readProductionWeek1Csv()` | stale closure                      | BROKEN     |
+| IPC Client         | `tauriClient.ts`                   | `readProductionWeek1Csv()`       | —                         | `invoke(READ_PRODUCTION_WEEK1_CSV)`    | IPC timeout                        | PROVEN     |
+| Tauri command      | `telemetry_api.rs`                 | `read_production_week1_csv`      | —                         | `ProductionHealthSummary`              | **retourne faux Ok si CSV absent** | BROKEN     |
+| CSV lecture        | `telemetry_api.rs`                 | `parse_and_summarize`            | CSV bytes                 | `ProductionHealthSummary`              | CSV absent → faux Ok               | BROKEN     |
+| Source CSV         | `/tmp/titane_production_week1.csv` | fichier                          | —                         | lignes CSV                             | **ABSENT**                         | BROKEN     |
 
 ## Mode d'alimentation actuel
+
 - ❌ Direct CSV read : **ABSENT**
 - ✅ Tauri command snapshot : OUI (mais retourne fake data)
 - ❌ Store hydration : non utilisé

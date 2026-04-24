@@ -6,10 +6,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * SPRINT 4 - Context & Test Standardization Reference
- * 
+ *
  * Status: PLANNING & DOCUMENTATION
  * Target: Standardize React Context patterns and test coverage
- * 
+ *
  * Current State Analysis:
  * - LoggingContext.tsx (exists)
  * - AnimationContext.tsx (exists)

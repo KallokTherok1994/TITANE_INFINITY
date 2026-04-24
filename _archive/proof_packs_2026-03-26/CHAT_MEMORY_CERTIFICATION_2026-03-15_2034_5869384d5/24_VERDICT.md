@@ -19,7 +19,7 @@ localStorage (chatMemoryCompactor) : **PROVEN** — volatile, perte si clear
 SQLite conversation_os_v1.db backend : **PARTIAL** — écrit, jamais rechargé UI  
 memory_core_state.json::chat_history : **BROKEN** — toujours vide, disconnect permanent  
 PersistentMemory 3-niveaux : **PARTIAL** — write OK, read partiellement câblé  
-LTM long-term memory : **ABSENT** — désactivé par défaut  
+LTM long-term memory : **ABSENT** — désactivé par défaut
 
 ## 3. NIVEAU_REEL_DE_PERSISTANCE
 
@@ -34,14 +34,14 @@ LTM long-term memory : **ABSENT** — désactivé par défaut
 
 ## 5. RISQUES_RESTANTS_DE_PERTE
 
-| Risque | Niveau | Statut |
-|---|---|---|
-| Clear localStorage = historique UI perdu | P0 CRITIQUE | OPEN |
-| SQLite non rechargé après restart | P0 CRITIQUE | BLOCKED_STRUCTURAL |
-| memory_core_state::chat_history vide | P0 CRITIQUE | OPEN |
-| LTM désactivé par défaut | P1 ÉLEVÉ | OPEN |
-| PersistentMemory /tmp fallback | P1 ÉLEVÉ | OPEN |
-| Timeout 30s sans draft save | P1 ÉLEVÉ | OPEN |
+| Risque                                   | Niveau      | Statut             |
+| ---------------------------------------- | ----------- | ------------------ |
+| Clear localStorage = historique UI perdu | P0 CRITIQUE | OPEN               |
+| SQLite non rechargé après restart        | P0 CRITIQUE | BLOCKED_STRUCTURAL |
+| memory_core_state::chat_history vide     | P0 CRITIQUE | OPEN               |
+| LTM désactivé par défaut                 | P1 ÉLEVÉ    | OPEN               |
+| PersistentMemory /tmp fallback           | P1 ÉLEVÉ    | OPEN               |
+| Timeout 30s sans draft save              | P1 ÉLEVÉ    | OPEN               |
 
 ## 6. DRIFTS_RESTANTS
 
@@ -65,7 +65,7 @@ LTM long-term memory : **ABSENT** — désactivé par défaut
 3. **B3 (P1):** LTM désactivé par défaut → SQLite vide en prod
 4. **B4 (N/A):** Tests x3 non exécutés (app non buildée, pas de PROD token)
 
-## 9. PROCHAINE_ACTION_UNIQUE_<=30_MIN
+## 9. PROCHAINE*ACTION_UNIQUE*<=30_MIN
 
 **Implémenter `load_conversation_history` IPC dans `conversation_engine::commands.rs`**
 
@@ -77,15 +77,16 @@ pub async fn load_conversation_history(
 ) -> CommandResult<Vec<serde_json::Value>>
 ```
 
-+ Enregistrer dans `generate_handler!` de `main.rs`  
-+ Appeler depuis `src/services/api/chat.ts::startNewConversation()` si `conversation_id` connu  
-+ Cela résoudra B1 + permettra de débloquer B2
+- Enregistrer dans `generate_handler!` de `main.rs`
+- Appeler depuis `src/services/api/chat.ts::startNewConversation()` si `conversation_id` connu
+- Cela résoudra B1 + permettra de débloquer B2
 
 ## 10. VERDICT_GLOBAL
 
 **QUALIFIED**
 
 JUSTIFICATION:
+
 - Vérité du noyau établie sur fichiers réels (pas de narration)
 - 4 patches minimaux appliqués, 3 PASS gagnés (V1+V3+V4)
 - Bloqueur structurel P0 identifié et documenté honnêtement (V2 FAIL permanent)
@@ -96,6 +97,7 @@ JUSTIFICATION:
 - Aucune perte silencieuse non détectée
 
 **"SEALED" nécessiterait:**
+
 - load_conversation_history implémenté + testé x3
 - restart_survival_x3 PASS
 - crash_recovery_x3 PASS

@@ -1,4 +1,5 @@
 # 07_LINT_FORMAT_X3 — Lint & Format x3
+
 **Proof Pack:** AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53  
 **Timestamp:** 2026-03-05T15:08:56Z
 
@@ -65,15 +66,16 @@ Same error — BLOCKED
 
 ## G_LINT_FORMAT_X3 = BLOCKED
 
-| Suite | Commande | Runs | Statut |
-|-------|----------|------|--------|
-| ESLint | `pnpm run lint` | 0/3 | BLOCKED |
-| Prettier | `pnpm run format:check` | 0/3 | BLOCKED |
-| TypeScript | `pnpm run check` | 0/3 | BLOCKED |
-| cargo fmt | `cargo fmt --all -- --check` | 0/3 | BLOCKED |
-| cargo clippy | `cargo clippy -D warnings` | 0/3 | BLOCKED |
+| Suite        | Commande                     | Runs | Statut  |
+| ------------ | ---------------------------- | ---- | ------- |
+| ESLint       | `pnpm run lint`              | 0/3  | BLOCKED |
+| Prettier     | `pnpm run format:check`      | 0/3  | BLOCKED |
+| TypeScript   | `pnpm run check`             | 0/3  | BLOCKED |
+| cargo fmt    | `cargo fmt --all -- --check` | 0/3  | BLOCKED |
+| cargo clippy | `cargo clippy -D warnings`   | 0/3  | BLOCKED |
 
 **Prérequis pour débloquer:**
+
 ```bash
 npm install -g pnpm@10.28.2 && pnpm install --frozen-lockfile
 sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev

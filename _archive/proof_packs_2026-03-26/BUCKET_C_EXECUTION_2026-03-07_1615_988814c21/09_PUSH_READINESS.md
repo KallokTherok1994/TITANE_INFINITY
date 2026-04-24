@@ -14,4 +14,3 @@
 - Stage/commit this proof pack documentation without contaminating unrelated sets.
 - Re-run mandatory governance gates after proof pack finalization.
 - Recalculate post-commit git truth and confirm expected state.
-

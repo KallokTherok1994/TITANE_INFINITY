@@ -1,4 +1,5 @@
 # 03 AUDIO CHAIN MAP
+
 # TITANE∞ — audio_truth_2026-03-15_1902_e91124efc
 
 ## Chaîne complète Ubuntu → UI
@@ -73,7 +74,7 @@ useAudio Hook (src/features/audio-center/hooks/useAudio.ts)
        ▼
 Admin Audio Page (src/features/audio-center/AudioCenterPage.tsx)
   DeviceSelector input/output  → useAudio.inputDevices/outputDevices ✓
-  testSpeaker button            → useAudio.testSpeaker()               ✓  
+  testSpeaker button            → useAudio.testSpeaker()               ✓
   testMicrophone button         → useAudio.testMicrophone()            ✓
        │
        │  via: tauriClient.getAudioDeviceConfig / saveAudioDeviceConfig

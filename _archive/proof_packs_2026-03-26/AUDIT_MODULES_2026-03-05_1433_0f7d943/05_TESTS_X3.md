@@ -1,4 +1,5 @@
 # 05_TESTS_X3.log — Tests x3
+
 **Proof Pack:** AUDIT_MODULES_2026-03-05_1433_0f7d943  
 **Timestamp:** 2026-03-05T14:33:25Z
 
@@ -57,13 +58,13 @@ Exit code: 127
 
 ## Résumé Tests
 
-| Suite | Commande | Statut | Raison |
-|-------|----------|--------|--------|
-| Unit + Integration | `pnpm test` | BLOCKED | node_modules absent |
-| Architecture | `pnpm test:architecture` | BLOCKED | node_modules absent |
-| IPC Contract | `pnpm run guard:ipc-contract` | BLOCKED | node_modules absent |
-| E2E Desktop | `pnpm test:e2e` | BLOCKED | Runtime Tauri + GTK absent |
-| Rust Tests | `cargo test --all` | BLOCKED | GTK/glib-2.0 absent |
+| Suite              | Commande                      | Statut  | Raison                     |
+| ------------------ | ----------------------------- | ------- | -------------------------- |
+| Unit + Integration | `pnpm test`                   | BLOCKED | node_modules absent        |
+| Architecture       | `pnpm test:architecture`      | BLOCKED | node_modules absent        |
+| IPC Contract       | `pnpm run guard:ipc-contract` | BLOCKED | node_modules absent        |
+| E2E Desktop        | `pnpm test:e2e`               | BLOCKED | Runtime Tauri + GTK absent |
+| Rust Tests         | `cargo test --all`            | BLOCKED | GTK/glib-2.0 absent        |
 
 ---
 
@@ -101,6 +102,7 @@ $ ls tests/
 ```
 
 Configurations test trouvées:
+
 - `vitest.config.ts` — config principale
 - `vitest.unit.config.ts` — unit only
 - `vitest.integration.config.ts` — integration

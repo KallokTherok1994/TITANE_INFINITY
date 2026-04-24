@@ -6,7 +6,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * SPRINT 3: Visual Stores Consolidation Index
- * 
+ *
  * This file documents the consolidation path and provides
  * a single point for imports.
  *
@@ -58,7 +58,11 @@ export type {
 export const CONSOLIDATION_INFO = {
   date: '2026-04-24',
   sprint: 'SPRINT 3 - MEDIUM-01',
-  stores_consolidated: ['visualStore.ts', 'visualStateStore.ts', 'visualStateStoreV21.ts'],
+  stores_consolidated: [
+    'visualStore.ts',
+    'visualStateStore.ts',
+    'visualStateStoreV21.ts',
+  ],
   implementation: 'unifiedVisualStoreImpl.ts',
   line_reduction: '60%+',
   breaking_changes: 'None (full backward compatibility via re-exports)',

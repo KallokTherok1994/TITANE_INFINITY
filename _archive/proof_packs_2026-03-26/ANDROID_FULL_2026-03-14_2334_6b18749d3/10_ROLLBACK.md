@@ -3,6 +3,7 @@
 ## Rollback complet de cette session
 
 ### Commandes de rollback
+
 ```bash
 # Rollback des changements code
 git restore -- src-tauri/src/main.rs
@@ -16,11 +17,13 @@ git status
 ```
 
 ## Impact du rollback
+
 - Restaure STOPLINE #4 (hardcoded path) — intentionnel si rollback requis
 - Ne casse aucun build existant
 - Ne touche aucune fonctionnalité utilisateur
 
 ## Rollback prérequis Android (si init effectué ultérieurement)
+
 ```bash
 # Si tauri android init a été exécuté et doit être annulé
 rm -rf src-tauri/android/

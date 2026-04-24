@@ -1,6 +1,7 @@
 # DESKTOP_RUNTIME_PROOF_READY
 
 ## Environment Status
+
 - Node: v18.19.1 — INCOMPATIBLE (requires >=20)
 - nvm: NOT AVAILABLE
 - node20: NOT FOUND
@@ -8,6 +9,7 @@
 - Desktop proof: BLOCKED_ENV
 
 ## Prerequisite Commands (run in desktop environment)
+
 ```bash
 # 1. Ensure Node >= 20
 nvm use 20  # or install via https://nodejs.org
@@ -64,6 +66,7 @@ echo "  response.provider = local/mock after Ollama probe passes" | tee -a "$PRO
 ## Pass/Fail Conditions
 
 ### PASS (DESKTOP_RUNTIME_PASS)
+
 - [ ] Tauri window opens and renders Chat UI
 - [ ] Ollama send works at least once (x1)
 - [ ] After 3 forced failures + 30s wait: provider re-enables (confirmed by response.provider)
@@ -72,15 +75,18 @@ echo "  response.provider = local/mock after Ollama probe passes" | tee -a "$PRO
 - [ ] x3 repetitions all pass
 
 ### FAIL
+
 - [ ] "temporairement désactivé (3 échecs)" still appears after probe success
 - [ ] Provider stays disabled beyond 30s cache TTL when Ollama is alive
 - [ ] UI shows "local" or "fallback" while Ollama is responding
 
 ### BLOCKED
+
 - [ ] Node < 20 — upgrade required
 - [ ] No display — run in desktop X11/Wayland session
 
 ## Rollback After Desktop Test
+
 ```bash
 # If desktop test reveals new defect needing rollback:
 git restore -- src-tauri/src/overdrive/chat_orchestrator.rs src/services/ai/circuitBreaker.ts
@@ -89,4 +95,5 @@ cargo check --manifest-path src-tauri/Cargo.toml
 ```
 
 ## Classification
+
 DESKTOP_RUNTIME_BLOCKED_ENV — proof plan is READY TO EXECUTE when Node >=20 and display available.

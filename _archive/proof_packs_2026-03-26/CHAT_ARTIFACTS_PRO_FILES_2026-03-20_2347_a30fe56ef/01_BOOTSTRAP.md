@@ -1,13 +1,17 @@
 # 01_BOOTSTRAP RESUME
+
 2026-03-21T00:01:06-04:00
 
 ## git status
- M proof_packs/CHAT_ARTIFACTS_PRO_FILES_2026-03-20_2347_a30fe56ef/01_BOOTSTRAP.md
+
+M proof_packs/CHAT_ARTIFACTS_PRO_FILES_2026-03-20_2347_a30fe56ef/01_BOOTSTRAP.md
 
 ## git rev-parse --short HEAD
+
 48877cdea
 
 ## git log -20 --oneline
+
 48877cdea chore: stage CHAT_ARTIFACTS proof pack from agent session
 679e5a7b6 feat(export): Tauri-native save dialog for conversation export + capability fix
 ac630e8a4 fix(ci): bump NODE_VERSION 20->22, RUST_VERSION stable, add createUpdaterArtifacts
@@ -30,6 +34,7 @@ b02cae75d feat(e2e): add native TOTAL_DEV test to WebdriverIO/Tauri suite
 5d6e45c20 fix(e2e): add data-testid attributes for smoke test Playwright selectors
 
 ## versions
+
 v24.0.0
 10.30.2
 cargo 1.94.0 (85eff7c80 2026-01-15)

@@ -20,26 +20,30 @@ export class ApiKeyGuard {
    * Register an API key
    * Stores metadata only, not the actual key
    */
-  static registerKey(provider: string, key: string, metadata?: Partial<ApiKeyMetadata>): void {
+  static registerKey(
+    provider: string,
+    key: string,
+    metadata?: Partial<ApiKeyMetadata>
+  ): void {
     if (!key || key.length < 10) {
       this.emitEvent({
         timestamp: Date.now(),
         type: 'api_key',
         severity: 'warning',
         message: `Attempted to register suspiciously short key for ${provider}`,
-        details: { provider, keyLength: key.length }
+        details: { provider, keyLength: key.length },
       });
       return;
     }
 
     // Store only masked version
     const masked = this.maskKey(key);
-    
+
     this.keys.set(provider, {
       provider,
       masked,
       createdAt: Date.now(),
-      ...metadata
+      ...metadata,
     });
 
     this.emitEvent({
@@ -47,7 +51,7 @@ export class ApiKeyGuard {
       type: 'api_key',
       severity: 'info',
       message: `API key registered for ${provider}`,
-      details: { provider, masked }
+      details: { provider, masked },
     });
   }
 
@@ -81,20 +85,20 @@ export class ApiKeyGuard {
    */
   static validateNotInContent(content: string, key: string): boolean {
     if (!key || typeof content !== 'string') {
-      return true;  // No key to check
+      return true; // No key to check
     }
 
-    const lastChars = key.slice(-6);  // Check last 6 chars
+    const lastChars = key.slice(-6); // Check last 6 chars
     if (content.includes(lastChars)) {
       this.emitEvent({
         timestamp: Date.now(),
         type: 'api_key',
         severity: 'critical',
         message: 'API key potentially exposed in content',
-        details: { 
+        details: {
           contentLength: content.length,
-          keyTailFound: true 
-        }
+          keyTailFound: true,
+        },
       });
       return false;
     }
@@ -108,12 +112,12 @@ export class ApiKeyGuard {
   static clearAll(): void {
     const count = this.keys.size;
     this.keys.clear();
-    
+
     this.emitEvent({
       timestamp: Date.now(),
       type: 'api_key',
       severity: 'info',
-      message: `Cleared ${count} API keys from memory`
+      message: `Cleared ${count} API keys from memory`,
     });
   }
 
@@ -167,14 +171,14 @@ export class ApiKeyGuard {
    */
   static getSummary(): Record<string, { masked: string; lastUsed?: number }> {
     const summary: Record<string, { masked: string; lastUsed?: number }> = {};
-    
+
     for (const [provider, metadata] of this.keys.entries()) {
       summary[provider] = {
         masked: metadata.masked,
-        lastUsed: metadata.lastUsed
+        lastUsed: metadata.lastUsed,
       };
     }
-    
+
     return summary;
   }
 }

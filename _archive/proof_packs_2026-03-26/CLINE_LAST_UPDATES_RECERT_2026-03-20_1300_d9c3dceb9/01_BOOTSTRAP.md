@@ -9,6 +9,7 @@ STATUS: clean (0 uncommitted files)
 ```
 
 ## Recent Log (-20)
+
 ```
 d9c3dceb9 fix(desktop): utiliser nom d'icône XDG standard
 4c0ab5f51 deploy(v28.0.0): artifacts with OMEGA icons
@@ -27,12 +28,14 @@ ec2eafb52 Complete production deployment proof pack
 ```
 
 ## Constitution Scan
+
 - `.github/copilot-instructions.md`: PRESENT ✅
 - `.clinerules/00-kernel.md`: PRESENT, mirrors Copilot ✅
 - `AGENTS.md` files: docs/, e2e/, scripts/, src/, src-tauri/ ✅
 - Hooks: PostToolUse, PreToolUse, TaskStart, UserPromptSubmit ✅
 
 ## verify_instructions.sh (pre-patch)
+
 `SUMMARY: PASS=20 FAIL=0` — EXIT:0
 
 ## BOOTSTRAP STATUS: PASS

@@ -17,4 +17,3 @@
 - Dry-run, stage, contamination checks, and commit all have direct proof artifacts.
 - Post-commit tracked/staged state is clean (`0/0`).
 - Push remains blocked by unresolved untracked proof-pack residue, not by Bucket C execution quality.
-

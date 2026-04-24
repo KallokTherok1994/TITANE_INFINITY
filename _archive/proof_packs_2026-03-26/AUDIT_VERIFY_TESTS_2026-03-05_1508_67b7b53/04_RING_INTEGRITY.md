@@ -1,4 +1,5 @@
 # 04_RING_INTEGRITY — Intégrité 4-Ring
+
 **Proof Pack:** AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53  
 **Timestamp:** 2026-03-05T15:08:56Z
 
@@ -7,12 +8,14 @@
 ## Méthodologie
 
 Structure ring déduite de l'arborescence réelle (pas d'invention):
+
 - R1: `src/types/`, `src/constants/`
 - R2: `src/engines/` (TS), `src-tauri/src/engines/` (Rust)
 - R3: `src/services/`, `src/lib/`, `src/core/`, `src/os/bridge/`, `src-tauri/src/overdrive/`, `src-tauri/src/services/`
 - R4: `src/components/`, `src/pages/`, `src/features/`, `src/apps/`, `src-tauri/src/commands/`
 
 Règles strictes:
+
 - R1 → aucun import
 - R2 → imports R1 uniquement, **zéro I/O**
 - R3 → imports R1+R2, I/O orchestré
@@ -73,18 +76,19 @@ $ grep -rn "invoke(" src/ --include="*.ts" --include="*.tsx" \
 
 **Résultats:**
 
-| Fichier | Ligne | Pattern | Classification |
-|---------|-------|---------|----------------|
-| `src/os/bridge/TauriBridge.ts` | 32 | `await this.invoke('ping')` | ⚠️ Suspicion — Bridge interne, utilise `@tauri-apps/api/core` directement |
-| `src/os/bridge/TauriBridge.ts` | 162 | `this.invoke(cmd.name, cmd.args)` | ⚠️ Suspicion — Batch invoke via bridge |
-| `src/os/bridge/TauriBridge.ts` | 172 | `await this.invoke('ping')` | ⚠️ Suspicion — Health check |
-| `src/os/bridge/StateBridge.ts` | 84 | `this.bridge.invoke('set_state', ...)` | ⚠️ Suspicion — State bridge |
-| `src/os/bridge/StateBridge.ts` | 116 | `this.bridge.invoke('delete_state', ...)` | ⚠️ Suspicion — State bridge |
-| `src/os/bridge/StateBridge.ts` | 225 | `this.bridge.invoke('set_state', ...)` | ⚠️ Suspicion — State bridge |
+| Fichier                        | Ligne | Pattern                                   | Classification                                                            |
+| ------------------------------ | ----- | ----------------------------------------- | ------------------------------------------------------------------------- |
+| `src/os/bridge/TauriBridge.ts` | 32    | `await this.invoke('ping')`               | ⚠️ Suspicion — Bridge interne, utilise `@tauri-apps/api/core` directement |
+| `src/os/bridge/TauriBridge.ts` | 162   | `this.invoke(cmd.name, cmd.args)`         | ⚠️ Suspicion — Batch invoke via bridge                                    |
+| `src/os/bridge/TauriBridge.ts` | 172   | `await this.invoke('ping')`               | ⚠️ Suspicion — Health check                                               |
+| `src/os/bridge/StateBridge.ts` | 84    | `this.bridge.invoke('set_state', ...)`    | ⚠️ Suspicion — State bridge                                               |
+| `src/os/bridge/StateBridge.ts` | 116   | `this.bridge.invoke('delete_state', ...)` | ⚠️ Suspicion — State bridge                                               |
+| `src/os/bridge/StateBridge.ts` | 225   | `this.bridge.invoke('set_state', ...)`    | ⚠️ Suspicion — State bridge                                               |
 
 **Note**: `TauriBridge` et `StateBridge` sont des bridges OS de bas niveau dans `src/os/bridge/`. Ils n'importent pas `@tauri-apps/api/core` directement s'ils passent par `this.invoke` — à vérifier si `this` est une instance dérivée de tauriClient. Statut: **⚠️ SUSPICION** (pas de violation prouvée sans lecture complète du constructeur).
 
 **Vérification partielle:**
+
 ```bash
 $ head -30 src/os/bridge/TauriBridge.ts
 # TauriBridge.invoke est défini dans la classe elle-même,
@@ -116,12 +120,12 @@ $ grep -rn "use http_client\|HttpClient::new\|reqwest::Client" src-tauri/src/ \
 
 **Résultats:**
 
-| Fichier | Ligne | Pattern | Classification |
-|---------|-------|---------|----------------|
-| `src-tauri/src/engines/unified_memory/summarizer.rs` | 298 | `use http_client;` | ❌ **VIOLATION** — Ring 2 engine importe http_client |
-| `src-tauri/src/engines/unified_memory/summarizer.rs` | 315 | `let client = HttpClient::new();` | ❌ **VIOLATION** — Ring 2 crée un client HTTP |
-| `src-tauri/src/engines/unified_memory/embeddings.rs` | 213 | `use http_client;` | ❌ **VIOLATION** — Ring 2 engine importe http_client |
-| `src-tauri/src/engines/unified_memory/embeddings.rs` | 216 | `let client = HttpClient::new();` | ❌ **VIOLATION** — Ring 2 crée un client HTTP |
+| Fichier                                              | Ligne | Pattern                           | Classification                                       |
+| ---------------------------------------------------- | ----- | --------------------------------- | ---------------------------------------------------- |
+| `src-tauri/src/engines/unified_memory/summarizer.rs` | 298   | `use http_client;`                | ❌ **VIOLATION** — Ring 2 engine importe http_client |
+| `src-tauri/src/engines/unified_memory/summarizer.rs` | 315   | `let client = HttpClient::new();` | ❌ **VIOLATION** — Ring 2 crée un client HTTP        |
+| `src-tauri/src/engines/unified_memory/embeddings.rs` | 213   | `use http_client;`                | ❌ **VIOLATION** — Ring 2 engine importe http_client |
+| `src-tauri/src/engines/unified_memory/embeddings.rs` | 216   | `let client = HttpClient::new();` | ❌ **VIOLATION** — Ring 2 crée un client HTTP        |
 
 **Impact**: Ring 2 (engines = logique pure, zéro I/O) fait du réseau directement.
 **Preuve**: `src-tauri/src/engines/unified_memory/{summarizer,embeddings}.rs` lignes 298, 315, 213, 216.
@@ -143,13 +147,13 @@ $ grep -rn "reqwest\b" src-tauri/src/ | grep -v "//|target|pub use|http_types|mo
 
 ## Récapitulatif Ring Integrity
 
-| Zone | Statut | Violations |
-|------|--------|-----------|
-| R1 → Higher (TS) | ✅ PASS | Aucune |
-| R2 → Higher (TS) | ✅ PASS | Aucune |
-| R3 → R4 (TS) | ✅ PASS | Aucune |
-| IPC canonical (TS) | ⚠️ SUSPICION | TauriBridge/StateBridge (FIX-003) |
-| R2 I/O (Rust) | ❌ **FAIL** | summarizer.rs:298,315 + embeddings.rs:213,216 |
-| R3 Réseau (Rust) | ✅ PASS | overdrive gateway avec timeouts |
+| Zone               | Statut       | Violations                                    |
+| ------------------ | ------------ | --------------------------------------------- |
+| R1 → Higher (TS)   | ✅ PASS      | Aucune                                        |
+| R2 → Higher (TS)   | ✅ PASS      | Aucune                                        |
+| R3 → R4 (TS)       | ✅ PASS      | Aucune                                        |
+| IPC canonical (TS) | ⚠️ SUSPICION | TauriBridge/StateBridge (FIX-003)             |
+| R2 I/O (Rust)      | ❌ **FAIL**  | summarizer.rs:298,315 + embeddings.rs:213,216 |
+| R3 Réseau (Rust)   | ✅ PASS      | overdrive gateway avec timeouts               |
 
 **G_RING_INTEGRITY: FAIL** (violation R2 I/O Rust prouvée)

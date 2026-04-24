@@ -1,5 +1,7 @@
 # 04_CHAT_FILE_INTENT_MAP
+
 Current truth:
+
 - answer-only: implemented (regular sendMessage flow in ConversationSection)
 - generate file: NOT explicit class routing found
 - open editor: NOT explicit from chat intent
@@ -7,6 +9,7 @@ Current truth:
 - save: now explicit in export helpers with truthful result contract
 
 Classification:
+
 - ANSWER_ONLY: PROVEN_RUNTIME
 - CREATE_FILE: CHAT_FILE_INTENT_UNPROVEN
 - OPEN_EDITOR: CHAT_FILE_INTENT_UNPROVEN

@@ -5,21 +5,27 @@
 **Branch**: MAIN
 
 ## A) EXEC_MODE
+
 REPAIR + CERTIFY
 
 ## B) SCOPE_RING
+
 Ring 3 (Services/IPC) + Ring 4 (UI/Tauri)
 
 ## C) RISK
+
 MEDIUM — provider state machine lying (stale disabled state)
 
 ## D) PLAN
+
 bootstrap → discover → classify → patch (one lock) → prove → proof-pack
 
 ## E) PROOFS
+
 cargo check (exit 0), git diff, file inspection, autoheal capture
 
 ## F) ROLLBACK
+
 ```
 git restore -- src-tauri/src/overdrive/chat_orchestrator.rs src/services/ai/circuitBreaker.ts
 ```
@@ -43,5 +49,6 @@ Probe success = provider presumed available = fresh failure window.
 stale failure timestamps to prevent old degraded-window timestamps from spuriously reopening the circuit.
 
 ## FINAL UNIQUE VERDICT
+
 **LOCAL_PROVIDER_RECOVERED_STATE_NOT_PROPAGATED**
 (Primary defect resolved. TS secondary hardened. Proof pack complete.)

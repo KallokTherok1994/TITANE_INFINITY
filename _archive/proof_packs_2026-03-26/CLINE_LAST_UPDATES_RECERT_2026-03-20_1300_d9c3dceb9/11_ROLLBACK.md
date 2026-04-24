@@ -19,10 +19,12 @@ git restore -- .clinerules/verdict_final_sealed.md
 ```
 
 ## Rollback Risk Assessment
+
 - **Impact**: LOW — only documentation/protocol/verdict files moved, no code changed
 - **Reversibility**: IMMEDIATE — single `git restore` per file
 - **Side effects**: NONE — no cross-references in active rules, validator, or hooks
 - **Time estimate**: < 30 seconds
 
 ## Why rollback would be needed
+
 Only if a downstream tool (e.g. future CLINE rule checker) expects these files in `.clinerules/` by hardcoded path. No such reference found in current codebase (verified by grep).

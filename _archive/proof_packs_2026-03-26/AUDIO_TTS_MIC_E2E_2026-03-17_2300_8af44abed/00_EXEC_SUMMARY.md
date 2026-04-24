@@ -1,17 +1,22 @@
 # EXEC SUMMARY — AUDIO TTS MIC E2E CERTIFICATION
-**Date:** 2026-03-17  **Time:** 23:00  **HEAD start:** 8af44abed → **HEAD end:** 17838b9b1
+
+**Date:** 2026-03-17 **Time:** 23:00 **HEAD start:** 8af44abed → **HEAD end:** 17838b9b1
 
 ## A) EXEC_MODE
+
 BACKGROUND / PROOF-DRIVEN / TAURI-FIRST / NO FAKE PASS / MINIMAL PATCH / ONE REAL LOCK AT A TIME
 
 ## B) SCOPE_RING
+
 Ring 4 (Tauri Desktop + OS Audio + WebKitGTK WebView)
 Ring 3 (Frontend Services: audioService, hybridTTS, tauriClient)
 
 ## C) RISK
+
 MEDIUM-LOW — binary rebuilt, x3 PASS, voice quality separately classified
 
 ## D) PLAN
+
 1. Bootstrap → versions, git status, tooling check
 2. Discovery → 5 matrices (TEST_STACK, AUDIO_SURFACE, AUDIO_RUNTIME, TARGET_AUTHORITY, GAP_MATRIX)
 3. Commit prior session's uncommitted changes (voice binding, nav cleanup)
@@ -23,6 +28,7 @@ MEDIUM-LOW — binary rebuilt, x3 PASS, voice quality separately classified
 9. Verdict
 
 ## E) PROOFS
+
 - Stale binary lock IDENTIFIED and FIXED (binary now at 19:23:11, after HEAD 19:13:10)
 - WDIO x3: all exit 0, all metrics.json verdict="PASS"
 - ttsStatusAfterRead="Lecture en cours..." — real TTS engine proven
@@ -33,6 +39,7 @@ MEDIUM-LOW — binary rebuilt, x3 PASS, voice quality separately classified
 - detect_recurrence.sh: G_AH_RECURRENCE_GUARD_PASS, entries=411
 
 ## F) ROLLBACK
+
 ```bash
 # Full rollback to V10:
 git reset --hard df3147c64 && cargo build --release

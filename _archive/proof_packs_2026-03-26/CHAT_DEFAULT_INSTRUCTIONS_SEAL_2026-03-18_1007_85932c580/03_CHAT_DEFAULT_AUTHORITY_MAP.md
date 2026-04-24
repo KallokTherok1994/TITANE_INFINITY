@@ -1,16 +1,16 @@
 # CHAT_DEFAULT_AUTHORITY_MAP
 
-| surface | fichier/service/store | rôle | runtime actif ? | autorité ? | statut |
-|---------|----------------------|------|-----------------|------------|--------|
-| SYSTEM_PROMPTS.default | src/config/chatModes.config.ts | Base system prompt for all chat messages (default mode) | YES | CANONICAL_AUTHORITY | THIN — needs enrichment |
-| getSystemPrompt() | src/config/chatModes.config.ts | Resolves mode ID → system prompt string | YES | CANONICAL_AUTHORITY | PASS — already has custom registry |
-| processMessage() | src/services/conversationEngine.ts:387 | Calls getSystemPrompt(mode) at line 387 | YES | CANONICAL_AUTHORITY | PASS |
-| systemPrompt assembly | src/services/conversationEngine.ts:452-468 | Joins base+contextual+persona+memory+progression+cognitive | YES | CANONICAL_AUTHORITY | PASS — but base is thin |
-| CORE_SYSTEM_PROMPT | src/core/prompts/profiles.ts | Rich TITANE identity + FULL_CONSTITUTIONAL_PROMPT | NO (not in ConversationSection path) | SECONDARY_AUTHORITY | CONTRADICTION with SYSTEM_PROMPTS.default |
-| buildSystemPrompt() | src/core/prompts/index.ts | Assembles from promptProfiles.core | NO (only chatEngine.ts) | SECONDARY_AUTHORITY | WIRED_BUT_UNPROVEN for main chat |
-| promptProfiles.core | src/core/prompts/profiles.ts | Core profile with CORE_SYSTEM_PROMPT | NO (only chatEngine.ts) | SECONDARY_AUTHORITY | LEGACY_PATH |
-| getEffectiveProfile() | src/services/ai/responsePolicy.ts | DIRECT/BALANCED/DEEP/ARCHITECT selection | NO (only chatEngine.ts) | SECONDARY_AUTHORITY | NOT CONSUMED by conversationEngine.ts |
-| usePreferences | src/hooks/usePreferences.ts | Audio, UI, recording, vision prefs | YES (ConversationSection) | RUNTIME_OVERRIDE | does NOT override system prompt |
-| localStorage[titane_persona_profile] | readPersonaContext() conversationEngine.ts:299 | Persona context appended to system prompt | YES | RUNTIME_OVERRIDE | PARTIAL — persona appended after base |
-| localStorage[titane_custom_modes] | ConversationSection.tsx:1237 | Custom modes loaded and registered | YES | RUNTIME_OVERRIDE | PASS (fixed in prior session) |
-| FULL_CONSTITUTIONAL_PROMPT | src/core/prompts/constitution.ts | 11 laws + interdictions (~20KB) | NO (chatEngine.ts only) | SECONDARY_AUTHORITY | DOC_ONLY for main chat path |
+| surface                              | fichier/service/store                          | rôle                                                       | runtime actif ?                      | autorité ?          | statut                                    |
+| ------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------- | ------------------------------------ | ------------------- | ----------------------------------------- |
+| SYSTEM_PROMPTS.default               | src/config/chatModes.config.ts                 | Base system prompt for all chat messages (default mode)    | YES                                  | CANONICAL_AUTHORITY | THIN — needs enrichment                   |
+| getSystemPrompt()                    | src/config/chatModes.config.ts                 | Resolves mode ID → system prompt string                    | YES                                  | CANONICAL_AUTHORITY | PASS — already has custom registry        |
+| processMessage()                     | src/services/conversationEngine.ts:387         | Calls getSystemPrompt(mode) at line 387                    | YES                                  | CANONICAL_AUTHORITY | PASS                                      |
+| systemPrompt assembly                | src/services/conversationEngine.ts:452-468     | Joins base+contextual+persona+memory+progression+cognitive | YES                                  | CANONICAL_AUTHORITY | PASS — but base is thin                   |
+| CORE_SYSTEM_PROMPT                   | src/core/prompts/profiles.ts                   | Rich TITANE identity + FULL_CONSTITUTIONAL_PROMPT          | NO (not in ConversationSection path) | SECONDARY_AUTHORITY | CONTRADICTION with SYSTEM_PROMPTS.default |
+| buildSystemPrompt()                  | src/core/prompts/index.ts                      | Assembles from promptProfiles.core                         | NO (only chatEngine.ts)              | SECONDARY_AUTHORITY | WIRED_BUT_UNPROVEN for main chat          |
+| promptProfiles.core                  | src/core/prompts/profiles.ts                   | Core profile with CORE_SYSTEM_PROMPT                       | NO (only chatEngine.ts)              | SECONDARY_AUTHORITY | LEGACY_PATH                               |
+| getEffectiveProfile()                | src/services/ai/responsePolicy.ts              | DIRECT/BALANCED/DEEP/ARCHITECT selection                   | NO (only chatEngine.ts)              | SECONDARY_AUTHORITY | NOT CONSUMED by conversationEngine.ts     |
+| usePreferences                       | src/hooks/usePreferences.ts                    | Audio, UI, recording, vision prefs                         | YES (ConversationSection)            | RUNTIME_OVERRIDE    | does NOT override system prompt           |
+| localStorage[titane_persona_profile] | readPersonaContext() conversationEngine.ts:299 | Persona context appended to system prompt                  | YES                                  | RUNTIME_OVERRIDE    | PARTIAL — persona appended after base     |
+| localStorage[titane_custom_modes]    | ConversationSection.tsx:1237                   | Custom modes loaded and registered                         | YES                                  | RUNTIME_OVERRIDE    | PASS (fixed in prior session)             |
+| FULL_CONSTITUTIONAL_PROMPT           | src/core/prompts/constitution.ts               | 11 laws + interdictions (~20KB)                            | NO (chatEngine.ts only)              | SECONDARY_AUTHORITY | DOC_ONLY for main chat path               |

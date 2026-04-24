@@ -1,4 +1,5 @@
 # 11_VERDICT — Verdict Final
+
 **Proof Pack:** AUDIT_MODULES_2026-03-05_1433_0f7d943  
 **Timestamp:** 2026-03-05T14:33:25Z  
 **SHA:** 0f7d943  
@@ -14,33 +15,33 @@
 
 ## Détail des Verdicts par Domaine
 
-| Domaine | Verdict | Justification |
-|---------|---------|---------------|
-| Architecture 4-Ring | ✅ PASS (surface) | Pas d'import inversé trouvé statiquement |
-| Tauri-Only | ✅ PASS | Aucun serveur web autonome |
-| Version Sync | ✅ PASS | 27.2.0 aligné sur 4 fichiers |
-| Allowlist/Capabilities | ✅ PASS | 6 fichiers capabilities présents |
-| Frontend NO WEB | ⚠️ RISK (PASS conditionnel) | httpClient bloque en prod; selfHealingObserver monkey-patch fetch (FIX-001) |
-| Network ONE DOOR | ⚠️ RISK | Ring 2 engines font HTTP (FIX-002) |
-| IPC Canonique | ⚠️ RISK | Bridges + utils/invoke contournent canonical (FIX-003, FIX-004) |
-| Tests Vitest | 🔴 BLOCKED | node_modules absent |
-| Build Frontend | 🔴 BLOCKED | pnpm absent |
-| Build Rust | 🔴 BLOCKED | GTK/glib-2.0 absent |
-| E2E Desktop | 🔴 BLOCKED_E2E_RUNTIME | Runtime Tauri absent |
+| Domaine                | Verdict                     | Justification                                                               |
+| ---------------------- | --------------------------- | --------------------------------------------------------------------------- |
+| Architecture 4-Ring    | ✅ PASS (surface)           | Pas d'import inversé trouvé statiquement                                    |
+| Tauri-Only             | ✅ PASS                     | Aucun serveur web autonome                                                  |
+| Version Sync           | ✅ PASS                     | 27.2.0 aligné sur 4 fichiers                                                |
+| Allowlist/Capabilities | ✅ PASS                     | 6 fichiers capabilities présents                                            |
+| Frontend NO WEB        | ⚠️ RISK (PASS conditionnel) | httpClient bloque en prod; selfHealingObserver monkey-patch fetch (FIX-001) |
+| Network ONE DOOR       | ⚠️ RISK                     | Ring 2 engines font HTTP (FIX-002)                                          |
+| IPC Canonique          | ⚠️ RISK                     | Bridges + utils/invoke contournent canonical (FIX-003, FIX-004)             |
+| Tests Vitest           | 🔴 BLOCKED                  | node_modules absent                                                         |
+| Build Frontend         | 🔴 BLOCKED                  | pnpm absent                                                                 |
+| Build Rust             | 🔴 BLOCKED                  | GTK/glib-2.0 absent                                                         |
+| E2E Desktop            | 🔴 BLOCKED_E2E_RUNTIME      | Runtime Tauri absent                                                        |
 
 ---
 
 ## Invariants Critiques: Statut
 
-| Invariant | Statut | Preuve |
-|-----------|--------|--------|
-| Zéro supposition | ✅ PASS | Toutes affirmations pointent vers fichier/commande/log |
-| Patch minimal | ✅ PASS | Audit-only, aucun code modifié |
-| Architecture 4-Ring | ✅ PASS (surface) | `grep -rn "from.*services" src/engines/` → 0 |
-| Tauri-only | ✅ PASS | `grep -rn "express\(" src/` → 0 |
-| Online-first gouverné | ⚠️ RISK | Ring 2 HTTP (FIX-002) + selfHealingObserver (FIX-001) |
-| IPC canonique `{ok,content,error}` | ⚠️ RISK | Bridges hors canonical (FIX-003, FIX-004) |
-| Fallback local | ✅ PASS (doc) | Ollama fallback documenté, capabilities présentes |
+| Invariant                          | Statut            | Preuve                                                 |
+| ---------------------------------- | ----------------- | ------------------------------------------------------ |
+| Zéro supposition                   | ✅ PASS           | Toutes affirmations pointent vers fichier/commande/log |
+| Patch minimal                      | ✅ PASS           | Audit-only, aucun code modifié                         |
+| Architecture 4-Ring                | ✅ PASS (surface) | `grep -rn "from.*services" src/engines/` → 0           |
+| Tauri-only                         | ✅ PASS           | `grep -rn "express\(" src/` → 0                        |
+| Online-first gouverné              | ⚠️ RISK           | Ring 2 HTTP (FIX-002) + selfHealingObserver (FIX-001)  |
+| IPC canonique `{ok,content,error}` | ⚠️ RISK           | Bridges hors canonical (FIX-003, FIX-004)              |
+| Fallback local                     | ✅ PASS (doc)     | Ollama fallback documenté, capabilities présentes      |
 
 ---
 
@@ -75,14 +76,14 @@ cargo check --all-targets  # PASS
 
 ## Résumé Risques
 
-| Risk ID | Sévérité | Description |
-|---------|----------|-------------|
-| FIX-002 | P0 | I/O HTTP dans Ring 2 Rust (summarizer + embeddings) |
-| FIX-001 | P1 | Monkey-patch window.fetch (selfHealingObserver) |
-| FIX-003 | P1 | invoke() directs dans OS bridges |
-| FIX-004 | P1 | Wrapper invoke parallèle (utils/invoke.ts) |
-| FIX-005 | P1 | Environnement local non déblocable sans pnpm+GTK |
-| FIX-006 | P1 | reqwest 0.11 potentiellement non audité |
+| Risk ID | Sévérité | Description                                         |
+| ------- | -------- | --------------------------------------------------- |
+| FIX-002 | P0       | I/O HTTP dans Ring 2 Rust (summarizer + embeddings) |
+| FIX-001 | P1       | Monkey-patch window.fetch (selfHealingObserver)     |
+| FIX-003 | P1       | invoke() directs dans OS bridges                    |
+| FIX-004 | P1       | Wrapper invoke parallèle (utils/invoke.ts)          |
+| FIX-005 | P1       | Environnement local non déblocable sans pnpm+GTK    |
+| FIX-006 | P1       | reqwest 0.11 potentiellement non audité             |
 
 ---
 
@@ -107,18 +108,18 @@ Actions next: voir 13_FIX_PLAN.md — Phase 1 (déblocage env) → Phase 2 (corr
 
 ## Index du Proof Pack
 
-| Fichier | Contenu |
-|---------|---------|
-| `00_EXEC_SUMMARY.md` | Résumé exécutif (10 lignes) |
-| `01_BOOTSTRAP.md` | Sorties bootstrap + état environnement |
-| `02_SCOPE.md` | Périmètre + versions + architecture |
-| `03_INVARIANTS_CHECK.md` | Scans invariants détaillés |
-| `04_COMMANDS_USED.md` | Journal chronologique des commandes |
-| `05_TESTS_X3.log` | Tests x3 (BLOCKED) |
-| `06_BUILD_X3.log` | Build x3 (BLOCKED) |
-| `08_GATES_REPORT.md` | CI + Gates + proof packs |
-| `09_DIFF_FILES.md` | Diff = vide (audit-only) |
-| `10_ROLLBACK.md` | Plan rollback complet |
-| `11_VERDICT.md` | **CE FICHIER** — Verdict unique |
-| `12_MODULE_AUDIT_MATRIX.md` | Matrice 25 modules |
-| `13_FIX_PLAN.md` | Plan 10 corrections priorisées |
+| Fichier                     | Contenu                                |
+| --------------------------- | -------------------------------------- |
+| `00_EXEC_SUMMARY.md`        | Résumé exécutif (10 lignes)            |
+| `01_BOOTSTRAP.md`           | Sorties bootstrap + état environnement |
+| `02_SCOPE.md`               | Périmètre + versions + architecture    |
+| `03_INVARIANTS_CHECK.md`    | Scans invariants détaillés             |
+| `04_COMMANDS_USED.md`       | Journal chronologique des commandes    |
+| `05_TESTS_X3.log`           | Tests x3 (BLOCKED)                     |
+| `06_BUILD_X3.log`           | Build x3 (BLOCKED)                     |
+| `08_GATES_REPORT.md`        | CI + Gates + proof packs               |
+| `09_DIFF_FILES.md`          | Diff = vide (audit-only)               |
+| `10_ROLLBACK.md`            | Plan rollback complet                  |
+| `11_VERDICT.md`             | **CE FICHIER** — Verdict unique        |
+| `12_MODULE_AUDIT_MATRIX.md` | Matrice 25 modules                     |
+| `13_FIX_PLAN.md`            | Plan 10 corrections priorisées         |

@@ -22,4 +22,3 @@
 - Contamination check: `raw/bucket_c_contamination_check.txt`
 - Commit proof: `raw/bucket_c_commit.log`, `raw/bucket_c_commit_hash.txt`
 - Post-commit truth: `raw/post_bucket_c_status_sb.txt`, `raw/post_bucket_c_counts.env`
-

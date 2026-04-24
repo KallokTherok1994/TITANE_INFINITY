@@ -3,6 +3,7 @@
 ## PASS
 
 ### Evidence
+
 1. SYSTEM_PROMPTS.default upgraded with canonical TITANE policy (identity, OMEGA pipeline, response modes, memory, provider, anti-lie, truth statuses)
 2. Single canonical authority confirmed: `chatModes.config.ts:SYSTEM_PROMPTS.default` → `conversationEngine.ts:getSystemPrompt()` — no competing default in this chain
 3. No persisted settings override the canonical default
@@ -14,6 +15,7 @@
 9. Rollback documented
 
 ### What improved
+
 - TITANE identity: generic → OS cognitif de cohérence, clarté, mémoire, gouvernance
 - Pipeline: none → OMEGA 10-step declared
 - Response modes: none → FAST/BALANCED/DEEP/ARCHITECT
@@ -22,6 +24,7 @@
 - Truth status: none → LOI DE VÉRITÉ with all canonical labels
 
 ### Remaining limitations
+
 - G_RESPONSE_POLICY_APPLIED is declared in prompt but not dynamically enforced by conversationEngine.ts (responsePolicy.ts still not called in that path)
-- PARTIAL_CHAIN: response mode *selection* logic (responsePolicy.ts) still only active for chatEngine.ts path
+- PARTIAL_CHAIN: response mode _selection_ logic (responsePolicy.ts) still only active for chatEngine.ts path
 - LTM availability is declared "seulement si prouvé actif" — honest classification maintained

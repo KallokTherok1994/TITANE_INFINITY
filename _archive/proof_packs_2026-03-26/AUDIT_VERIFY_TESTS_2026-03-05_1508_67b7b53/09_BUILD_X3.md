@@ -1,4 +1,5 @@
 # 09_BUILD_X3 — Build x3
+
 **Proof Pack:** AUDIT_VERIFY_TESTS_2026-03-05_1508_67b7b53  
 **Timestamp:** 2026-03-05T15:08:56Z
 
@@ -55,27 +56,28 @@ EXIT: 1 — BLOCKED (GTK/glib-2.0 absent)
 
 ## Observations Statiques (sans exécution)
 
-| Observation | Source | Confiance |
-|-------------|--------|-----------|
-| Vite config présent et complet | `vite.config.ts` (23KB) | HIGH |
-| tsconfig.json strict mode activé | `tsconfig.json` | HIGH |
-| reqwest 0.11 (potentiellement obsolète) | `src-tauri/Cargo.toml` | MEDIUM |
-| Artifacts build pré-compilés disponibles | `deployment/latest/` (240MB LFS) | HIGH |
-| Profil release optimisé (lto=thin, opt-level=3) | `src-tauri/Cargo.toml` | HIGH |
+| Observation                                     | Source                           | Confiance |
+| ----------------------------------------------- | -------------------------------- | --------- |
+| Vite config présent et complet                  | `vite.config.ts` (23KB)          | HIGH      |
+| tsconfig.json strict mode activé                | `tsconfig.json`                  | HIGH      |
+| reqwest 0.11 (potentiellement obsolète)         | `src-tauri/Cargo.toml`           | MEDIUM    |
+| Artifacts build pré-compilés disponibles        | `deployment/latest/` (240MB LFS) | HIGH      |
+| Profil release optimisé (lto=thin, opt-level=3) | `src-tauri/Cargo.toml`           | HIGH      |
 
 ---
 
 ## G_BUILD_X3 = BLOCKED
 
-| Build | Runs | Statut | Raison |
-|-------|------|--------|--------|
-| Vite (frontend) | 0/3 | BLOCKED | pnpm absent |
-| TypeScript check | 0/3 | BLOCKED | node_modules absent |
-| Cargo check | 0/3 | BLOCKED | GTK/glib-2.0 absent |
-| Tauri build | 0/3 | BLOCKED | GTK + pnpm absent |
-| Build prod-safe | 0/3 | BLOCKED | pnpm absent |
+| Build            | Runs | Statut  | Raison              |
+| ---------------- | ---- | ------- | ------------------- |
+| Vite (frontend)  | 0/3  | BLOCKED | pnpm absent         |
+| TypeScript check | 0/3  | BLOCKED | node_modules absent |
+| Cargo check      | 0/3  | BLOCKED | GTK/glib-2.0 absent |
+| Tauri build      | 0/3  | BLOCKED | GTK + pnpm absent   |
+| Build prod-safe  | 0/3  | BLOCKED | pnpm absent         |
 
 **Prérequis build:**
+
 ```bash
 # Frontend
 npm install -g pnpm@10.28.2 && pnpm install --frozen-lockfile

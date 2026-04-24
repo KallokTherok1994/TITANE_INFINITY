@@ -11,6 +11,7 @@
 - `local` (fallback)
 
 Source proofs:
+
 - `src-tauri/src/overdrive/chat_orchestrator.rs` (`chat_check_providers` / provider availability)
 - `src/services/ai/AIProviderLazyLoader.ts` (lazy cloud providers)
 - `src/services/ai/orchestrator.ts` (online-first orchestration + fallback)

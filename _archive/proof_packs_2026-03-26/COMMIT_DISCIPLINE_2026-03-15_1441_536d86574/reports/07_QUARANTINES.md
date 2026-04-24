@@ -13,10 +13,12 @@ En réalité : T4/T5 = BLOCKED_ENV (Node.js v18 incompatible, app non lancée).
 **Ce qui N'a PAS été Modifié :** Aucun fichier — quarantaine documentaire.
 
 **Condition de Déblocage :**
+
 - Node.js ≥20 + `pnpm dev` + test ChatWindow visible + test affect disclaimer visible = T5 PRODUCT_LOCAL
 - Ajouter note "T4/T5 ABSENT — runtime not tested" aux proof packs concernés
 
 **Prochaine Action (< 30 min) :**
+
 ```bash
 node --version  # Mettre à jour vers ≥20.0.0
 # Puis: pnpm dev + vérification visuelle ChatWindow + CameraPage
@@ -36,6 +38,7 @@ issu d'un agent parallèle).
 **Ce qui N'a PAS été Modifié :** Les proof packs — lecture seule dans cet audit.
 
 **Condition de Déblocage :**
+
 - Non critique — artifacts de documentation. Commit déjà effectué.
 - Acceptable comme référence d'audit, pas comme preuve de closure locale.
 
@@ -43,7 +46,7 @@ issu d'un agent parallèle).
 
 ## Q-AUDIO-001 — voice_synthesize_speech deprecated dans allowlist
 
-**Reporté de l'audit AUDIO_VOICE_FORENSIC :** voir proof_packs/AUDIO_VOICE_FORENSIC_*/reports/11_QUARANTINE.md Q-001.
+**Reporté de l'audit AUDIO_VOICE_FORENSIC :** voir proof*packs/AUDIO_VOICE_FORENSIC*\*/reports/11_QUARANTINE.md Q-001.
 Non résolu. Non critique. PR capabilities à ouvrir.
 
 ---

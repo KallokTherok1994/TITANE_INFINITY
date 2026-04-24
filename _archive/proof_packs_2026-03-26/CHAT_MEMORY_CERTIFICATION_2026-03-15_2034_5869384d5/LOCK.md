@@ -5,4 +5,4 @@
 **Verdict:** QUALIFIED  
 **Session:** ed2ed380-5c3b-4395-ac80-794e07021dde  
 **Locker:** audit-subagent + implement-subagent (Copilot Kernel)  
-**Status:** APPEND_ONLY — no modification allowed after this lock  
+**Status:** APPEND_ONLY — no modification allowed after this lock

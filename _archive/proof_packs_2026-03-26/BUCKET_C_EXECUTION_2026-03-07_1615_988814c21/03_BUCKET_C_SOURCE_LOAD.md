@@ -25,4 +25,3 @@
 ## Source Load Verdict
 
 - BUCKET_C_SOURCE_LOAD: `PASS`
-

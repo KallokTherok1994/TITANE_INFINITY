@@ -33,6 +33,7 @@ Le backend retourne un `Ok()` structurellement valide avec des zéros fabriqués
 
 **Famille** : D. V25/V26 schema drift  
 **Preuve** :
+
 - `src/features/admin/types.ts:61` : `label: 'Santé Prod (V25)'`
 - `ProductionHealthPanel.tsx:~90` : `<h3>Production V25 Week 1</h3>` (hardcodé)
 - `ProductionHealthPanel.tsx:~160` : `Source: CSV local (Tauri IPC) · V26 Telemetry` (hardcodé)
@@ -45,14 +46,16 @@ Le titre UI dit "V25" (période de déploiement) mais le footer dit "V26" (syst�
 
 **Famille** : I. store never hydrates (variant : hook hydraté avec fake data)  
 **Preuve** : `useProductionHealthTelemetry.ts`
+
 ```typescript
 const loadData = useCallback(async () => {
   // ...
-  if (!data) {  // ← stale closure sur `data` — ne vide jamais les données stales
+  if (!data) {
+    // ← stale closure sur `data` — ne vide jamais les données stales
     setData(null);
   }
-}, [data]);  // ← dépendance `data` dans useCallback → re-création à chaque succès
-             //   → useEffect redémarre l'intervalle à chaque chargement réussi
+}, [data]); // ← dépendance `data` dans useCallback → re-création à chaque succès
+//   → useEffect redémarre l'intervalle à chaque chargement réussi
 ```
 
 Deux défauts : (1) la donnée stale est préservée silencieusement sur erreur. (2) `loadData` se recrée à chaque changement de `data` → relance l'intervalle.
@@ -61,10 +64,10 @@ Deux défauts : (1) la donnée stale est préservée silencieusement sur erreur.
 
 ## Résumé
 
-| # | Famille | Preuve | Sévérité |
-|---|---|---|---|
-| 1 (primaire) | K — fake defaults | `telemetry_api.rs:52–75` | CRITIQUE |
-| 2 (secondaire) | D — V25/V26 drift | `types.ts:61`, `ProductionHealthPanel.tsx:~90,~160` | MOYEN |
-| 3 (secondaire) | I — hook dep bug | `useProductionHealthTelemetry.ts:useCallback` | MOYEN |
+| #              | Famille           | Preuve                                              | Sévérité |
+| -------------- | ----------------- | --------------------------------------------------- | -------- |
+| 1 (primaire)   | K — fake defaults | `telemetry_api.rs:52–75`                            | CRITIQUE |
+| 2 (secondaire) | D — V25/V26 drift | `types.ts:61`, `ProductionHealthPanel.tsx:~90,~160` | MOYEN    |
+| 3 (secondaire) | I — hook dep bug  | `useProductionHealthTelemetry.ts:useCallback`       | MOYEN    |
 
 **Règle** : pas de "probablement". Chaque cause ci-dessus est prouvée par pointeur de code exact.

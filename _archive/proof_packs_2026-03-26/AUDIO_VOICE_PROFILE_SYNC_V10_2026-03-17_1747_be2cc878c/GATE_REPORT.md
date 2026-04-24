@@ -19,7 +19,7 @@
 ## Executed Proof Commands (in order)
 
 1. cargo test test_voice_profile_manager_get_active -- --nocapture
-2. pnpm exec vitest run src/__tests__/features/audio/audioService.runtimeTtsPolicy.test.ts
+2. pnpm exec vitest run src/**tests**/features/audio/audioService.runtimeTtsPolicy.test.ts
 3. pnpm run build:tauri:e2e > /tmp/v10_build.log 2>&1
 4. env TITANE_E2E=1 TAURI_BINARY_PATH=src-tauri/target/release/titane-infinity TITANE_E2E_ARTIFACTS_DIR=/tmp/titane-voice-v10-proof-v10-online WDIO_SPEC=./e2e/desktop/audio-tts-runtime-controls.wdio.test.js pnpm -s e2e:desktop:run
 5. env TITANE_E2E=1 OFFLINE_SIM=1 TAURI_BINARY_PATH=src-tauri/target/release/titane-infinity TITANE_E2E_ARTIFACTS_DIR=/tmp/titane-voice-v10-proof-v10-offline WDIO_SPEC=./e2e/desktop/audio-tts-runtime-controls.wdio.test.js pnpm -s e2e:desktop:run

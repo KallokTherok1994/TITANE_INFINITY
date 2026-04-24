@@ -7,6 +7,7 @@ B) SCOPE_RING: `bootstrap gate`
 C) RISK: `P1`
 
 D) PLAN (<=7):
+
 1. Create activation pack folder.
 2. Capture mandatory git bootstrap facts.
 3. Verify canonical baseline stays `757ae4d4c`.
@@ -14,6 +15,7 @@ D) PLAN (<=7):
 5. Capture raw source signal for potential wake.
 
 E) PROOFS:
+
 - Mandatory captures:
   - `raw/git_rev_parse_short.txt`
   - `raw/git_branch_show_current.txt`
@@ -31,4 +33,5 @@ E) PROOFS:
   - `raw/trigger_signal_origin_current_idle_signals.txt`
 
 F) ROLLBACK:
+
 - Delete activation pack only.

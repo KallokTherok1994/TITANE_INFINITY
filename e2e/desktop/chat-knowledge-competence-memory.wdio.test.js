@@ -16,13 +16,16 @@ async function sendAndCheck(question, expectedPattern, timeout = 15000) {
   await send.waitForEnabled({ timeout });
   await send.click();
   // Attente réponse
-  await browser.waitUntil(async () => {
-    const nodes = await $$('[data-testid="chat-message-content"]');
-    return nodes.some(async n => {
-      const txt = await n.getText();
-      return expectedPattern.test(txt);
-    });
-  }, { timeout, interval: 500, timeoutMsg: `Pas de réponse pour: ${question}` });
+  await browser.waitUntil(
+    async () => {
+      const nodes = await $$('[data-testid="chat-message-content"]');
+      return nodes.some(async n => {
+        const txt = await n.getText();
+        return expectedPattern.test(txt);
+      });
+    },
+    { timeout, interval: 500, timeoutMsg: `Pas de réponse pour: ${question}` }
+  );
 }
 
 describe('TITANE∞ Chat - Compétences, Connaissances, Mémoire (E2E)', () => {

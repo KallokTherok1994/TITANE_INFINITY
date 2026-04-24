@@ -47,10 +47,10 @@
 ## Remediation Executed (non-destructive)
 
 - Applied targeted stash:
-	- `git stash push -m "pre-chat-online-unblock-20260305T1315Z" -- docs/tests/UI_COVERAGE_MAP.md e2e/desktop/page-objects/uiPages.po.js e2e/desktop/ui-driver.wdio.js e2e/desktop/ui-ultra-full.e2e.js e2e/desktop/ui-ultra-smoke.e2e.js scripts/autoheal/autoheal_rules.jsonl scripts/e2e/run-desktop-suite.js src/hooks/useAudioSettings.ts`
+  - `git stash push -m "pre-chat-online-unblock-20260305T1315Z" -- docs/tests/UI_COVERAGE_MAP.md e2e/desktop/page-objects/uiPages.po.js e2e/desktop/ui-driver.wdio.js e2e/desktop/ui-ultra-full.e2e.js e2e/desktop/ui-ultra-smoke.e2e.js scripts/autoheal/autoheal_rules.jsonl scripts/e2e/run-desktop-suite.js src/hooks/useAudioSettings.ts`
 - Post-state:
-	- `git diff --name-only` => empty
-	- `node scripts/qa/check_autofix_autoheal_registry.mjs` => PASS (coverage check skipped, no governed fix files)
+  - `git diff --name-only` => empty
+  - `node scripts/qa/check_autofix_autoheal_registry.mjs` => PASS (coverage check skipped, no governed fix files)
 
 ## Updated Decision
 
