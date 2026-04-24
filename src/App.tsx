@@ -16,6 +16,7 @@
  */
 
 import React, { useEffect, Suspense, lazy } from 'react';
+import { initializeSecurity } from './security'; // ✨ SPRINT 2: Security module initialization
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import { useLivingEngines } from './hooks/useLivingEngines';
@@ -252,6 +253,7 @@ export const AppRouter: React.FC = () => {
     emitBootMarker('BOOT:AFTER_ROUTER');
     emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
     emitBootMarker('BOOT:BEFORE_ORCHESTRATOR_INIT');
+    initializeSecurity(); // ✨ Initialize security modules on app boot
   }, []);
 
   useEffect(() => {
