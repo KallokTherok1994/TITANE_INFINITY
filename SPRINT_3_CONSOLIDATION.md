@@ -1,6 +1,6 @@
 # SPRINT 3 - Visual Stores Consolidation (MEDIUM-01)
 
-## Status: IMPLEMENTATION IN PROGRESS
+## Status: PHASE 2 ACTIVE (BACKWARD COMPATIBILITY)
 
 **Date**: 2026-04-24  
 **Version**: v31.2.0  
@@ -42,7 +42,7 @@ src/stores/consolidation.index.ts        (reference, 47 lines)
 
 ---
 
-### Phase 2: Backward Compatibility (In Progress)
+### Phase 2: Backward Compatibility ✅
 
 **Strategy**: Gradual migration without breaking changes
 
@@ -50,6 +50,7 @@ src/stores/consolidation.index.ts        (reference, 47 lines)
 1. New code should import from `consolidation.index.ts` or directly use `unifiedVisualStore`
 2. Legacy code continues to work via old file structure
 3. No forced migrations - teams can adopt at their pace
+4. Legacy entrypoint `visualStore.ts` now emits a one-time dev deprecation warning
 
 **Migration Path**:
 ```typescript
@@ -69,7 +70,7 @@ import { useUnifiedVisualStore, useVisualCurrentState } from '@/stores';
 ### Phase 3: Gradual Deprecation (Sprints 4-5)
 - [ ] Update high-traffic consumers (ChatPanel, DevToolsPanel, etc.)
 - [ ] Create migration guide for remaining components
-- [ ] Add deprecation warnings to old imports
+- [x] Add deprecation warnings to old imports
 - [ ] Measure impact on bundle size and performance
 
 ### Phase 4: Final Cleanup (Sprint 6)
@@ -147,11 +148,15 @@ import { useVisualStore } from '@/stores/visualStore';
 
 ## Commit Info
 
-**SPRINT 3 Commit**: `<pending>`
+**SPRINT 3 Commit**: `3cb949cb8`
 - unifiedVisualStoreImpl.ts: Core consolidated implementation
 - unifiedVisualStore.ts: Updated exports
 - consolidation.index.ts: Reference documentation
 - SPRINT_3_CONSOLIDATION.md: This file
+
+**Phase 2 Follow-up Commit**: `a venir`
+- visualStore.ts: one-time dev deprecation warning for legacy entrypoint
+- SPRINT_3_CONSOLIDATION.md: phase state and migration checklist update
 
 ---
 

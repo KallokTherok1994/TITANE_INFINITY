@@ -29,6 +29,20 @@ import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('VisualStore');
 
+const VISUAL_STORE_DEPRECATION_FLAG = '__titane_visual_store_deprecation_warned__';
+
+if (import.meta.env.DEV) {
+  const marker = globalThis as typeof globalThis & {
+    [VISUAL_STORE_DEPRECATION_FLAG]?: boolean;
+  };
+  if (!marker[VISUAL_STORE_DEPRECATION_FLAG]) {
+    marker[VISUAL_STORE_DEPRECATION_FLAG] = true;
+    logger.warn(
+      '[visualStore] Deprecated surface: prefer useUnifiedVisualStore from src/stores/unifiedVisualStore.ts'
+    );
+  }
+}
+
 /**
  * Interface pour l'état du Visual Engine
  */
