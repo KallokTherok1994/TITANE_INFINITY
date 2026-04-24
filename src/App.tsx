@@ -326,7 +326,7 @@ export const AppRouter: React.FC = () => {
       }
       footer={
         <span className="select-none opacity-60 text-xs tracking-widest">
-          TITANE∞ v{__APP_VERSION__}
+          TITANE∞ V{__APP_VERSION__}
         </span>
       }
     >

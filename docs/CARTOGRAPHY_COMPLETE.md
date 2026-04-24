@@ -1120,3 +1120,8 @@ function MyComponent() {
 - `AppShell` expose désormais une chaîne de sélecteurs structurels dédiée: `app-shell-root`, `app-shell-main` et `app-shell-scroll-host`.
 - Le test unitaire `src/components/layout/__tests__/AppShell.test.tsx` verrouille cette chaîne pour éviter une dérive silencieuse des surfaces shell critiques.
 - La lane Playwright `e2e/critical/engine-navigation.spec.ts` vérifie explicitement ces sélecteurs TopNav structurels sur la surface runtime canonique.
+
+## [2026-04-24] Footer/version and transformation copy truth
+
+- `src/App.tsx` affiche désormais le footer version sous la forme `TITANE∞ V{__APP_VERSION__}` pour aligner le marquage UI avec la convention de publication visible.
+- `src/features/transformation/TransformationRoadmap.tsx` normalise la ponctuation de synchronisation (`qualifié :`) en ASCII standard, sans changer la sémantique de la surface roadmap.

@@ -97,7 +97,7 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
         }}
       >
         📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique, curée manuellement. Aucune
-        connexion IPC live. Dernière synchronisation avec le code qualifié : 2026-04-20.
+        connexion IPC live. Dernière synchronisation avec le code qualifié : 2026-04-20.
       </div>
 
       {/* Header */}
