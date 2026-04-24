@@ -3,7 +3,7 @@
  */
 
 import { LazyCognitiveModuleCard } from '../../DevToolsLazy';
-import type { LivingEnginesState } from '../../../hooks/useLivingEngines';
+import type { LivingEnginesState } from '@/hooks/useLivingEngines';
 
 type LivingEngines = { state: LivingEnginesState };
 

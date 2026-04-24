@@ -38,6 +38,26 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 - Wildcard imports in src: 18
 - Deep-import delta: reduced by 4 in targeted providers
 
+## Increment 3 Delivered In This Pass
+
+- Reduced deep-import usage on UI tab/control-panel surfaces:
+  - src/pages/tabs/DevTools/PerformanceTab.tsx
+  - src/pages/tabs/DevTools/SystemTab.tsx
+  - src/pages/tabs/DeveloperTools/PerformanceTab.tsx
+  - src/pages/tabs/DeveloperTools/SystemTab.tsx
+  - src/ui/pages/ControlPanel/ControlPanel.tsx
+  - src/ui/pages/ControlPanel/sections/SystemSection.tsx
+  - src/ui/pages/ControlPanel/components/ControlPanelLayout.tsx
+  - src/features/system-center/hooks/__tests__/useHyperVision.test.ts
+- Impact:
+  - deep-import candidates reduced by 10 on this increment
+  - UI-heavy import graph aligned to alias-based imports
+
+## Delta Snapshot (after increment 3)
+
+- Wildcard imports in src: 18
+- Deep-import delta cumulative (increments 2+3): reduced by 14
+
 ## Priority Plan (Sprint 5)
 
 1. P0: Eliminate remaining wildcard imports in frontend runtime paths.

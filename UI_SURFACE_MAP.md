@@ -32,6 +32,13 @@
 - Driver desktop: `e2e/desktop/ui-driver.wdio.js` expose `openChat`, `sendMessage`, `getChatRuntimeTruth` et `getModelBadges` pour qualifier provider, orchestrateur, memoire et modele depuis la surface active.
 - Preuves ajoutees: `e2e/desktop/chat-model-truth-chain.wdio.test.js` et `e2e/desktop/chat-orchestrator-advanced-stress.wdio.test.js`.
 
+# [2026-04-24] Sprint 5 — Deep imports reduction on tabs and control panel
+
+- Surfaces impactees: `src/pages/tabs/DevTools/*`, `src/pages/tabs/DeveloperTools/*`, `src/ui/pages/ControlPanel/*`.
+- Changement: remplacement des imports relatifs profonds (`../../../...`, `../../../../...`) par des alias canoniques `@/...` pour les types et utilitaires partages.
+- Test associe: `src/features/system-center/hooks/__tests__/useHyperVision.test.ts` aligne aussi le mock `tauriClient` sur alias canonique.
+- Preuve execution: `pnpm run check` + `pnpm exec vitest run src/features/system-center/hooks/__tests__/useHyperVision.test.ts` + gates AutoHeal/instructions.
+
 # [2026-04-24] Desktop UI driver complete page audit truth
 
 - Surface canonique de preuve: `e2e/desktop/canonical-ui-pages.wdio.test.js`.

@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
-import { SystemInfo } from '../../../../types/tauri';
+import { SystemInfo } from '@/types/tauri';
 
 interface SystemSectionProps {
   systemInfo: SystemInfo;

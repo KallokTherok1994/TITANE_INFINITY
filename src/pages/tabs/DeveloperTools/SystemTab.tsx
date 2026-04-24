@@ -7,8 +7,8 @@ import {
   LazyLivingEnginesCard,
   LazyCognitiveModuleCard,
 } from '../../DevToolsLazy';
-import type { SystemStatus } from '../../../components/monitoring/SystemStatusCard';
-import type { LivingEnginesState } from '../../../hooks/useLivingEngines';
+import type { SystemStatus } from '@/components/monitoring/SystemStatusCard';
+import type { LivingEnginesState } from '@/hooks/useLivingEngines';
 
 type LivingEngines = { state: LivingEnginesState };
 

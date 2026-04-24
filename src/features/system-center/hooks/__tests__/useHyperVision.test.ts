@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useHyperVision } from '../useHyperVision';
-import { tauriClient } from '../../../../lib/tauriClient';
+import { tauriClient } from '@/lib/tauriClient';
 
-vi.mock('../../../../lib/tauriClient', () => ({
+vi.mock('@/lib/tauriClient', () => ({
   tauriClient: {
     scHypervisionGetState: vi.fn(),
     scHypervisionGetMetrics: vi.fn(),

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { ControlPanelSection } from '../types';
-import { SystemInfo } from '../../../../types/tauri';
+import { SystemInfo } from '@/types/tauri';
 import './ControlPanelLayout.css';
 
 interface ControlPanelLayoutProps {

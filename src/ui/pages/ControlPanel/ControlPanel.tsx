@@ -10,7 +10,7 @@
 import React, { useState, useEffect, lazy, Suspense, useCallback, memo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
-import { SystemInfo } from '../../../types/tauri';
+import { SystemInfo } from '@/types/tauri';
 import { ControlPanelLayout } from './components/ControlPanelLayout';
 import './ControlPanel.css';
 
