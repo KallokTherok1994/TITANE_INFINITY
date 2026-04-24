@@ -1120,7 +1120,7 @@ function MyComponent() {
 - Les pages `Experience`, `DocCenterPage`, `PerfectFusionDashboard`, `UltimateOptimizationDashboard`, `OrchestrationMetaCenter`, `OrchestrationIntelligenceCenter`, `RealityCenter`, `HyperCenter`, `QuantumCenter`, `KnowledgeFusionPage`, `CreationStudio`, `EvolutionMonitor`, `Memory`, `SkillManager` et `TotalDevPage` exposent maintenant un `data-testid` racine stable.
 - `e2e/desktop/page-objects/uiPages.po.js` publie désormais les groupes `titaneOwnedRoutePages`, `directRoutePages`, `devOwnedRoutePages`, `fusionOwnedRoutePages`, `moreMenuRoutePages` et `canonicalRoutePages` pour relier explicitement chaque route canonique à son root selector et à son entrée de navigation quand elle existe.
 - `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`, `src/__tests__/ui/ui-page-objects-inventory.test.ts` et `src/__tests__/ui/ui-navigation.test.ts` scellent ensemble le triplet canonique `route -> root selector -> owner nav`.
-- Une lane desktop complémentaire `e2e/desktop/canonical-ui-pages.wdio.test.js` a été ajoutée pour porter ce contrat sur le runtime Tauri réel via `canonicalRoutePages`. Dans cette session, la lane n’a pas encore pu être exécutée sur un binaire reconstruit à jour, car `pnpm run build:tauri:e2e` est resté en compilation release sans produire de nouvel artefact pendant la fenêtre de preuve.
+- Une lane desktop complémentaire `e2e/desktop/canonical-ui-pages.wdio.test.js` porte maintenant ce contrat sur le runtime Tauri réel via `canonicalRoutePages`. Elle a été rejouée après `pnpm run build:tauri:e2e` sur le binaire release frais `src-tauri/target/release/titane-infinity` (`FRESH_RELEASE_BINARY`) et passe avec 1 spec / 1 test en 2m34.2s.
 
 ## [2026-04-24] TopNav/AppShell structural selectors truth
 
