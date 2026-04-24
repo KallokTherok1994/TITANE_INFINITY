@@ -41,6 +41,7 @@ export const AppShell = ({
 }: AppShellProps): JSX.Element => {
   return (
     <div
+      data-testid="app-shell-root"
       className={cn(
         'flex h-full min-h-0 w-full min-w-0 max-w-full flex-col overflow-hidden bg-titanium-bg-base',
         className
@@ -55,6 +56,7 @@ export const AppShell = ({
 
       {/* Main Content (plein écran, sans sidebar) */}
       <main
+        data-testid="app-shell-main"
         role="main"
         className="relative flex h-full min-h-0 max-w-full min-w-0 flex-1 flex-col overflow-hidden"
         style={
@@ -66,6 +68,7 @@ export const AppShell = ({
         }
       >
         <div
+          data-testid="app-shell-scroll-host"
           className="scrollbar-custom flex h-full min-h-0 w-full min-w-0 max-w-full flex-1 flex-col overflow-auto"
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >

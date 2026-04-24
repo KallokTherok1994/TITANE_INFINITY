@@ -5,10 +5,7 @@
   "identifier": "com.titane.infinity.stable",
   "bundle": {
     "active": true,
-    "targets": [
-      "appimage",
-      "deb"
-    ],
+    "targets": ["appimage", "deb"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -18,20 +15,10 @@
     ],
     "linux": {
       "deb": {
-        "depends": [
-          "libayatana-appindicator3-1",
-          "libwebkit2gtk-4.1-0",
-          "libgtk-3-0"
-        ],
-        "conflicts": [
-          "titane-infinity"
-        ],
-        "replaces": [
-          "titane-infinity"
-        ],
-        "provides": [
-          "titane-infinity"
-        ],
+        "depends": ["libayatana-appindicator3-1", "libwebkit2gtk-4.1-0", "libgtk-3-0"],
+        "conflicts": ["titane-infinity"],
+        "replaces": ["titane-infinity"],
+        "provides": ["titane-infinity"],
         "postInstallScript": "../scripts/install/stable-postinst.sh"
       }
     }
@@ -60,20 +47,13 @@
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": [
-          "$APPDATA/**",
-          "$RESOURCE/**",
-          "$APPCONFIG/**",
-          "$APPLOCALDATA/**"
-        ]
+        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": [
-            "main"
-          ],
+          "windows": ["main"],
           "permissions": [
             "core:default",
             "core:event:default",

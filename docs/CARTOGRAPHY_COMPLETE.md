@@ -1113,3 +1113,10 @@ function MyComponent() {
 - `e2e/desktop/page-objects/uiPages.po.js` publie désormais les groupes `titaneOwnedRoutePages`, `devOwnedRoutePages`, `fusionOwnedRoutePages`, `moreMenuRoutePages` et `canonicalRoutePages` pour relier explicitement chaque route canonique à son root selector et à son entrée de navigation.
 - `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`, `src/__tests__/ui/ui-page-objects-inventory.test.ts` et `src/__tests__/ui/ui-navigation.test.ts` scellent ensemble le triplet canonique `route -> root selector -> owner nav`.
 - Une lane desktop complémentaire `e2e/desktop/canonical-ui-pages.wdio.test.js` a été ajoutée pour porter ce contrat sur le runtime Tauri réel via `canonicalRoutePages`. Dans cette session, la lane n’a pas encore pu être exécutée sur un binaire reconstruit à jour, car `pnpm run build:tauri:e2e` est resté en compilation release sans produire de nouvel artefact pendant la fenêtre de preuve.
+
+## [2026-04-24] TopNav/AppShell structural selectors truth
+
+- `TopNav` expose désormais des sélecteurs structurels stables pour les preuves de surface: `topnav-brand`, `topnav-more-menu` et `topnav-ai-status[data-state=online|offline]`.
+- `AppShell` expose désormais une chaîne de sélecteurs structurels dédiée: `app-shell-root`, `app-shell-main` et `app-shell-scroll-host`.
+- Le test unitaire `src/components/layout/__tests__/AppShell.test.tsx` verrouille cette chaîne pour éviter une dérive silencieuse des surfaces shell critiques.
+- La lane Playwright `e2e/critical/engine-navigation.spec.ts` vérifie explicitement ces sélecteurs TopNav structurels sur la surface runtime canonique.

@@ -248,7 +248,7 @@ export const TopNav: React.FC<TopNavProps> = ({
       aria-label="Navigation principale"
     >
       {/* Logo */}
-      <div className="flex items-center gap-4 shrink-0">
+      <div className="flex items-center gap-4 shrink-0" data-testid="topnav-brand">
         <TitaneLogo size={32} />
         <span className="text-lg font-semibold text-titanium-text-primary hidden sm:inline">
           TITANE∞
@@ -323,6 +323,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             <AnimatePresence>
               {isMoreMenuOpen && (
                 <motion.div
+                  data-testid="topnav-more-menu"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -409,6 +410,8 @@ export const TopNav: React.FC<TopNavProps> = ({
         {/* ✨ v30.0.0 AI Provider Status Indicator */}
         {aiStatus.percent !== null && (
           <div
+            data-testid="topnav-ai-status"
+            data-state="online"
             className={cn(
               'flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium',
               'transition-colors duration-200',
@@ -431,6 +434,8 @@ export const TopNav: React.FC<TopNavProps> = ({
         )}
         {aiStatus.percent === null && (
           <div
+            data-testid="topnav-ai-status"
+            data-state="offline"
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-500/10 text-gray-500 border border-gray-500/20"
             title="Statut IA indisponible"
           >

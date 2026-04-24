@@ -49,6 +49,21 @@ test.describe('Critical Path: Engine Navigation', () => {
     expect(navButtons).toBeGreaterThanOrEqual(5);
   });
 
+  test('top navigation exposes structural selectors for governed UI proofs', async ({
+    page,
+  }) => {
+    const topNav = page.getByTestId('nav-top-main');
+    await expect(topNav).toBeVisible({ timeout: 15000 });
+
+    await expect(page.getByTestId('topnav-brand')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('topnav-ai-status')).toBeVisible({ timeout: 15000 });
+
+    const moreButton = page.getByTestId('btn-nav-more');
+    await expect(moreButton).toBeVisible({ timeout: 15000 });
+    await moreButton.click({ force: true });
+    await expect(page.getByTestId('topnav-more-menu')).toBeVisible({ timeout: 15000 });
+  });
+
   test('can navigate between different sections', async ({ page }) => {
     // Close boot beacon if present to avoid click interception
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });

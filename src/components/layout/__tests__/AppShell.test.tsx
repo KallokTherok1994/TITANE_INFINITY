@@ -21,5 +21,8 @@ describe('AppShell fullscreen shell', () => {
     expect(main).toHaveStyle({
       paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))',
     });
+    expect(screen.getByTestId('app-shell-root')).toBeInTheDocument();
+    expect(screen.getByTestId('app-shell-main')).toBeInTheDocument();
+    expect(screen.getByTestId('app-shell-scroll-host')).toBeInTheDocument();
   });
 });

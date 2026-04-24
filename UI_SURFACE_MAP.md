@@ -257,7 +257,11 @@
 - TopNav zoom controls container test id: `topnav-zoom-controls`
 - TopNav zoom-out button test id: `topnav-zoom-out`
 - TopNav zoom-in button test id: `topnav-zoom-in`
+- TopNav brand container test id: `topnav-brand`
+- TopNav more-menu panel test id: `topnav-more-menu`
+- TopNav AI status badge test id: `topnav-ai-status` with `data-state=online|offline`
 - File: `src/components/layout/TopNav.tsx`
+- Critical proof lane: `e2e/critical/engine-navigation.spec.ts` valide `topnav-brand`, `topnav-ai-status` et `topnav-more-menu`
 - Zoom range: 50% – 200%, persisted to localStorage key `titane_zoom_level`
 - Zoom step truth: TopNav and keyboard shortcuts use the same canonical additive step, so one zoom-in followed by one zoom-out returns exactly to 100%.
 - Zoom authority truth: TopNav listens to canonical zoom-change events, so its indicator stays aligned with keyboard, Tauri window controls, and UIReading adjustments instead of keeping a stale local value.
@@ -369,6 +373,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 ## Conversation Fullscreen Shell
 
 - Root shell contract: la chaîne fullscreen `AppShell -> titane-page--conversation -> titane-content--conversation -> conversation-container` doit rester parent-bound (`flex/min-height:0/max-height:100%`) et non pilotée par un double offset ou une hauteur viewport forcée.
+- AppShell structural selectors: `app-shell-root`, `app-shell-main`, `app-shell-scroll-host`
 - Header persistence truth: `titane-page-header--conversation` reste collé en haut du shell fullscreen pour garder l’onglet chat visible quand la hauteur utile se compacte.
 - App shell offset truth: la compensation TopNav reste portée uniquement par `paddingTop: calc(4rem + env(safe-area-inset-top, 0px))` dans `AppShell`.
 - Parent-bound shell truth: `AppShell` ne contre-echelle plus largeur/hauteur contre `--titane-ui-scale`; le shell racine reste en `h-full/w-full/min-h-0/max-w-full`, et la mise a l echelle canonique passe par `src/hooks/zoomScale.ts` via la taille de police racine et `--titane-ui-scale`.
