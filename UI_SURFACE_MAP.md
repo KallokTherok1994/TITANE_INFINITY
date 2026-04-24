@@ -1,3 +1,13 @@
+# [2026-04-24] All pages sync truth (XP, Vue, TIME, Admin hubs)
+
+- Surface canonique de synchronisation ajoutee: `e2e/features/all-pages-sync.spec.ts`.
+- Verite UI verrouillee sur les surfaces demandees:
+  - XP: route `/experience` et indicateurs `experience-stats-advanced` + `experience-history-list`
+  - Vue: onglet TITANE `tab-overview` sur `/titane?tab=overview`
+  - TIME: onglets `tab-time-now`, `tab-time-agenda`, `tab-time-timeline`, `tab-time-snapshots`, `tab-time-cognitive`
+  - ADMIN hubs: `tab-admin-config`, `tab-admin-design`, `tab-admin-governance`, `tab-admin-production-health`
+- Durcissement anti-derive E2E: `openAdminTab` privilegie maintenant les testids canoniques `tab-admin-{id}` (avec fallback label) dans `e2e/helpers/navigation.ts`, ce qui supprime la fragilite regex/locale sur la nav admin.
+
 # [2026-04-23] DocCenter — Export DOCX natif (Phase 3)
 
 - Surface canonique: `/doc-center`

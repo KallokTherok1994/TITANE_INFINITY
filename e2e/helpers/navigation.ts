@@ -33,7 +33,19 @@ export async function openTitane(page: Page): Promise<void> {
   await expect(page).toHaveURL(/\/titane(\?|$)/, { timeout: 15000 });
 }
 
-export async function openAdminTab(page: Page, tabName: RegExp): Promise<void> {
+const ADMIN_TAB_IDS = new Set([
+  'system',
+  'config',
+  'audio',
+  'design',
+  'governance',
+  'anti-regression',
+  'production-health',
+]);
+
+const isAdminTabId = (value: string): boolean => ADMIN_TAB_IDS.has(value);
+
+export async function openAdminTab(page: Page, tabTarget: string | RegExp): Promise<void> {
   await gotoWithRetry(page, '/admin');
 
   await closeBootBeaconIfPresent(page);
@@ -46,7 +58,19 @@ export async function openAdminTab(page: Page, tabName: RegExp): Promise<void> {
   const tabsNav = page.locator('nav.admin-tabs');
   await expect(tabsNav).toBeVisible({ timeout: 15000 });
 
-  const tabButton = tabsNav.getByRole('button', { name: tabName }).first();
+  let tabButton;
+
+  if (typeof tabTarget === 'string') {
+    const normalizedTarget = tabTarget.trim().toLowerCase();
+    if (isAdminTabId(normalizedTarget)) {
+      tabButton = tabsNav.getByTestId(`tab-admin-${normalizedTarget}`).first();
+    } else {
+      tabButton = tabsNav.getByRole('button', { name: new RegExp(normalizedTarget, 'i') }).first();
+    }
+  } else {
+    tabButton = tabsNav.getByRole('button', { name: tabTarget }).first();
+  }
+
   await expect(tabButton).toBeVisible({ timeout: 15000 });
   await tabButton.scrollIntoViewIfNeeded();
   await tabButton.evaluate(el => {

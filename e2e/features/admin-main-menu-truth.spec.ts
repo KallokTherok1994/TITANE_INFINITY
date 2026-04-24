@@ -57,7 +57,7 @@ test.describe('Feature: Admin Main Menu Truth', () => {
       }
     });
 
-    await openAdminTab(page, /Systeme|Syst[eè]me|System/i);
+    await openAdminTab(page, 'system');
 
     const tabAssertions = [
       {
@@ -111,15 +111,15 @@ test.describe('Feature: Admin Main Menu Truth', () => {
   });
 
   test('exposes expected sub-tabs and controls per admin section', async ({ page }) => {
-    await openAdminTab(page, /Systeme|Syst[eè]me|System/i);
+    await openAdminTab(page, 'system');
     await assertNoAdminBoundaryError(page);
 
     // Systeme
-    await expect(page.getByRole('button', { name: /Diagnostics/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /DevTools/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Node Cluster/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Introspection/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /HyperVision/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Diagnostics/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /DevTools/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Node Cluster/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Introspection/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /HyperVision/i })).toBeVisible();
 
     // Configuration
     await page.getByTestId('tab-admin-config').click({ force: true });
@@ -152,10 +152,10 @@ test.describe('Feature: Admin Main Menu Truth', () => {
 
     // Gouvernance
     await page.getByTestId('tab-admin-governance').click({ force: true });
-    await expect(page.getByRole('button', { name: /Secrets/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Politiques/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Permissions/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Journal/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Secrets/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Politiques/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Permissions/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Journal/i })).toBeVisible();
 
     // Sante Prod
     await page.getByTestId('tab-admin-production-health').click({ force: true });

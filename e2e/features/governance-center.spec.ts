@@ -19,7 +19,7 @@ test.describe('Feature: Governance Center', () => {
   }
 
   test.beforeEach(async ({ page }) => {
-    await openAdminTab(page, /Gouvernance/i);
+    await openAdminTab(page, 'governance');
     await page.waitForTimeout(500);
   });
 
@@ -30,10 +30,10 @@ test.describe('Feature: Governance Center', () => {
   });
 
   test('Governance Center displays 4 tabs', async ({ page }) => {
-    const secretsTab = page.getByRole('button', { name: /Secrets/i }).first();
-    const policiesTab = page.getByRole('button', { name: /Politiques/i }).first();
-    const permissionsTab = page.getByRole('button', { name: /Permissions/i }).first();
-    const logsTab = page.getByRole('button', { name: /Journal/i }).first();
+    const secretsTab = page.getByRole('tab', { name: /Secrets/i }).first();
+    const policiesTab = page.getByRole('tab', { name: /Politiques/i }).first();
+    const permissionsTab = page.getByRole('tab', { name: /Permissions/i }).first();
+    const logsTab = page.getByRole('tab', { name: /Journal/i }).first();
 
     await expect(secretsTab).toBeVisible({ timeout: 15000 });
     await expect(policiesTab).toBeVisible({ timeout: 15000 });
@@ -43,7 +43,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Secrets tab displays API key management', async ({ page }) => {
     await page
-      .getByRole('button', { name: /Secrets/i })
+      .getByRole('tab', { name: /Secrets/i })
       .first()
       .click({ force: true });
 
@@ -54,7 +54,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Policies tab displays IA policies list', async ({ page }) => {
     await page
-      .getByRole('button', { name: /Politiques/i })
+      .getByRole('tab', { name: /Politiques/i })
       .first()
       .click({ force: true });
 
@@ -67,7 +67,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Permissions tab displays permission matrix', async ({ page }) => {
     await page
-      .getByRole('button', { name: /Permissions/i })
+      .getByRole('tab', { name: /Permissions/i })
       .first()
       .click({ force: true });
 
@@ -78,7 +78,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Security Log tab displays audit entries', async ({ page }) => {
     await page
-      .getByRole('button', { name: /Journal/i })
+      .getByRole('tab', { name: /Journal/i })
       .first()
       .click({ force: true });
 
@@ -91,7 +91,7 @@ test.describe('Feature: Governance Center', () => {
     page,
   }) => {
     await page
-      .getByRole('button', { name: /Secrets/i })
+      .getByRole('tab', { name: /Secrets/i })
       .first()
       .click({ force: true });
 
@@ -118,15 +118,8 @@ test.describe('Feature: Governance Center', () => {
   });
 
   test('Governance Center: superAdmin badge visible', async ({ page }) => {
-    // Navigate to Governance Center
-    await page.goto('/admin');
-    await page.waitForTimeout(2000);
-
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
+    await openAdminTab(page, 'governance');
+    await page.waitForTimeout(500);
 
     // Look for SuperAdmin badge (👑 Kevin Thibault)
     const superAdminBadge = page.locator('text=/SuperAdmin|Kevin Thibault|👑/i').first();
@@ -139,15 +132,8 @@ test.describe('Feature: Governance Center', () => {
   });
 
   test('Governance Center: refresh button works', async ({ page }) => {
-    // Navigate to Governance Center
-    await page.goto('/admin');
-    await page.waitForTimeout(2000);
-
-    const governanceTab = page.locator('button:has-text("Gouvernance")').first();
-    if (await governanceTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await governanceTab.click();
-      await page.waitForTimeout(500);
-    }
+    await openAdminTab(page, 'governance');
+    await page.waitForTimeout(500);
 
     // Look for refresh button
     const refreshButton = page
