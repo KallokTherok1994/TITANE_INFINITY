@@ -11,6 +11,13 @@
 - Verite modele visible: `reasoning-progress`, `reasoning-summary-model` et `reasoning-runtime-model` publient `data-model-used` et `data-model-requested` depuis `latestAssistantRuntime`.
 - Preuve UI: `e2e/desktop/chat-model-truth-chain.wdio.test.js` verifie maintenant le modele gouverne `gemma2:2b` dans le panneau runtime chat et dans le journal OMEGA.
 
+# [2026-04-24] Contexts standardization — AnimationContext test truth
+
+- Surface qualifiee: `src/contexts/AnimationContext.tsx` (provider `AnimationProvider` + hook `useAnimation`).
+- Verite runtime testee: `animationConfig`, `shouldReduceMotion`, `shouldThrottle` et `fps` exposes par le provider.
+- Guard de contrat testee: `useAnimation must be used within AnimationProvider` hors provider.
+- Preuve execution: `pnpm exec vitest run src/contexts/__tests__/AnimationContext.test.tsx src/contexts/__tests__/LoggingContext.test.tsx`.
+
 # [2026-04-24] Agent UI chat runtime truth chain
 
 - Surface canonique: `/titane?tab=conversation`, composant actif `src/components/sections/ConversationSection.tsx`.

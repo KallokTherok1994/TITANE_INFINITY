@@ -1,5 +1,7 @@
 > 2026-04-23 — Agent dashboards version fallback truth: `src/components/AgentDashboardsPanel.tsx` ne depend plus d un acces direct a `__APP_VERSION__` pour la persistance du badge de nouveaute. Un fallback runtime borne (`dev`) est applique quand la globale n est pas injectee (notamment en Vitest), ce qui realigne les surfaces `AppShell`, `advancedAgentCatalog` et `app-router-canonical-surfaces` sans modifier la topologie UI active.
 
+> 2026-04-24 — Sprint 4 context test standardization truth: ajout de `src/contexts/__tests__/AnimationContext.test.tsx` pour qualifier la surface `AnimationContext` (valeurs runtime provider + garde hook hors provider), avec passage Vitest cible et typecheck global.
+
 > 2026-04-24 — Agent UI ThinkingPanel model trace: `src/components/sections/ConversationSection.tsx` transmet maintenant `latestAssistantRuntime.modelUsed` et `modelRequested` a `src/features/chat/ThinkingPanel.tsx`. Le journal OMEGA publie cette verite sur `reasoning-progress[data-model-used][data-model-requested]`, `reasoning-summary-model` et `reasoning-runtime-model`, avec preuve unitaire et WDIO sur le modele gouverne `gemma2:2b`.
 
 > 2026-04-24 — Frontend CSP Ollama one-door truth: `src/security/constants.ts` retire l exception `connect-src` directe vers le loopback Ollama. La cartographie active conserve Ollama sur la voie UI -> IPC -> backend Tauri -> `127.0.0.1:11434`, avec `guard:ollama-proxy` comme preuve anti-regression.
