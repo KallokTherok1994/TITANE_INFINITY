@@ -15,47 +15,34 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-// ─────────────────────────────────────────────────────────────────
-// RE-EXPORTS : visualStore (v21 orchestrated store)
-// Le visualStore est le store principal — on le réexporte tel quel.
-// ─────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// CANONICAL EXPORTS FROM UNIFIED IMPLEMENTATION
+// ═══════════════════════════════════════════════════════════════
+
+// Primary unified store
 export {
-  useVisualStore,
-  visualSelectors,
-  useVisualState,
+  useUnifiedVisualStore,
+  useVisualCurrentState,
   useVisualMetrics,
+  useVisualEngineStatus,
   useVisualFPS,
-  useVisualGPULoad,
   useVisualActions,
-} from './visualStore';
-export type { VisualEngineState, VisualStoreActions, VisualStore } from './visualStore';
+} from './unifiedVisualStoreImpl';
 
-// ─────────────────────────────────────────────────────────────────
-// RE-EXPORTS : visualStateStore (v19 engine wrapper)
-// ─────────────────────────────────────────────────────────────────
-export { useVisualStateStore } from './visualStateStore';
+export type {
+  UnifiedVisualState,
+  UnifiedVisualActions,
+  UnifiedVisualStore,
+} from './unifiedVisualStoreImpl';
 
-// ─────────────────────────────────────────────────────────────────
-// RE-EXPORTS : visualStateStoreV21 (multi-dimensional TitaneState)
-// ─────────────────────────────────────────────────────────────────
-export {
-  useVisualStateStoreV21,
-  useVisualEngine,
-  useCurrentState,
-  useCurrentConfig,
-  useIsTransitioning,
-  usePerformanceMetrics,
-} from './visualStateStoreV21';
-
-// ─────────────────────────────────────────────────────────────────
-// CONVENIENCE HOOKS (surface unifiée pour les nouveaux consumers)
-// ─────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// BACKWARD COMPATIBILITY ALIASES (Gradual Migration Path)
+// ═══════════════════════════════════════════════════════════════
 
 /**
- * Hook d'accès à l'état visuel courant via le store principal (v21 orchestrated).
- * Préférer ce hook pour les nouveaux composants.
- *
- * @example
- * const { currentState, isTransitioning, metrics } = useUnifiedVisual();
+ * Legacy aliases for smooth migration
+ * Use useUnifiedVisualStore + selector hooks instead
  */
-export { useVisualStore as useUnifiedVisual } from './visualStore';
+export { useUnifiedVisualStore as useVisualStore } from './unifiedVisualStoreImpl';
+export { useUnifiedVisualStore as useVisualStateStore } from './unifiedVisualStoreImpl';
+export { useUnifiedVisualStore as useVisualStateStoreV21 } from './unifiedVisualStoreImpl';
