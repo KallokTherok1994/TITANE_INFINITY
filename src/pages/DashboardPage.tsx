@@ -21,8 +21,6 @@ import { Stack } from '@components/layout/Stack';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { XPProgressBar } from '@features/progression/XPProgressBar';
-import * as tokens from '@themes/tokens';
-const { colors, spacing, fontSizes, fontWeights } = tokens;
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { TitaneLogo } from '@components/branding/TitaneLogo';

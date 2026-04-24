@@ -18,6 +18,12 @@
 - Guard de contrat testee: `useAnimation must be used within AnimationProvider` hors provider.
 - Preuve execution: `pnpm exec vitest run src/contexts/__tests__/AnimationContext.test.tsx src/contexts/__tests__/LoggingContext.test.tsx`.
 
+# [2026-04-24] Sprint 5 — Dashboard import optimization
+
+- Surface impactee: `src/pages/DashboardPage.tsx`.
+- Changement: suppression d un wildcard import non utilise (`@themes/tokens`) pour reduire le bruit bundle et le compteur wildcard imports du baseline performance.
+- Preuve execution: `pnpm run check` + baseline `pnpm run audit:performance` documente dans `performance-analysis.md`.
+
 # [2026-04-24] Agent UI chat runtime truth chain
 
 - Surface canonique: `/titane?tab=conversation`, composant actif `src/components/sections/ConversationSection.tsx`.
