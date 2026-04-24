@@ -22,6 +22,8 @@ Opération de nettoyage et d’archivage sur tout le dossier `docs/` :
 
 > 2026-04-24 — Sprint 5 import graph optimization (increment 5): reduction additionnelle des deep imports sur la matrice de tests services/features (`behavioralRouter`, `canonicalDiscernmentKernel`, `chatEngineCanonicalIntegration`, `performanceEngine`, `desktopPerception`, `adminEngine`, `artifactIntent`) via alias `@/...`, ramenant le compteur pattern 3+ niveaux a `4`.
 
+> 2026-04-24 — Sprint 5 import graph optimization (increment 6): reduction additionnelle des deep imports sur les tests d inventaire routeur/UI (`ui-page-objects-inventory`, `app-router-canonical-surfaces`) via un adaptateur commun `uiPagesInventory.adapter`, ramenant le compteur pattern 3+ niveaux a `3`.
+
 > 2026-04-24 — Agent UI ThinkingPanel model trace: `src/components/sections/ConversationSection.tsx` transmet maintenant `latestAssistantRuntime.modelUsed` et `modelRequested` a `src/features/chat/ThinkingPanel.tsx`. Le journal OMEGA publie cette verite sur `reasoning-progress[data-model-used][data-model-requested]`, `reasoning-summary-model` et `reasoning-runtime-model`, avec preuve unitaire et WDIO sur le modele gouverne `gemma2:2b`.
 
 > 2026-04-24 — Frontend CSP Ollama one-door truth: `src/security/constants.ts` retire l exception `connect-src` directe vers le loopback Ollama. La cartographie active conserve Ollama sur la voie UI -> IPC -> backend Tauri -> `127.0.0.1:11434`, avec `guard:ollama-proxy` comme preuve anti-regression.

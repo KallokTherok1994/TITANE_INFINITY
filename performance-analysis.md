@@ -95,6 +95,21 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 - Wildcard imports in src: 18
 - Deep-import pattern count (3+ levels): 4
 
+## Increment 6 Delivered In This Pass
+
+- Reduced deep-import usage across UI route inventory tests by introducing a shared test adapter:
+  - src/__tests__/ui/uiPagesInventory.adapter.ts
+  - src/__tests__/ui/ui-page-objects-inventory.test.ts
+  - src/__tests__/ui/app-router-canonical-surfaces.test.tsx
+- Impact:
+  - deep-import pattern count reduced from 4 to 3 on this increment
+  - canonical route inventory assertions now share one import surface for WDIO page objects
+
+## Delta Snapshot (after increment 6)
+
+- Wildcard imports in src: 18
+- Deep-import pattern count (3+ levels): 3
+
 ## Priority Plan (Sprint 5)
 
 1. P0: Eliminate remaining wildcard imports in frontend runtime paths.

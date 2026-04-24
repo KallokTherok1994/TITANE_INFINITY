@@ -9,7 +9,7 @@ import {
   fusionOwnedRoutePages,
   moreMenuRoutePages,
   titaneOwnedRoutePages,
-} from '../../../e2e/desktop/page-objects/uiPages.po.js';
+} from './uiPagesInventory.adapter';
 
 describe('WDIO UI page inventory', () => {
   it('keeps engine route pages explicitly inventoried under the DEV navigation owner', () => {

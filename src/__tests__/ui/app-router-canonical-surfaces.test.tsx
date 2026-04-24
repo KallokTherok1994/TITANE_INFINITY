@@ -5,7 +5,7 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { AppRouter } from '@/App';
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
-import { canonicalRoutePages } from '../../../e2e/desktop/page-objects/uiPages.po.js';
+import { canonicalRoutePages } from './uiPagesInventory.adapter';
 
 vi.mock('@tauri-apps/api/event', () => ({
   listen: vi.fn(async () => () => undefined),

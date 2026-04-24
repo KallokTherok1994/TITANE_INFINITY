@@ -58,6 +58,12 @@
 - Surface UI complementaire: `src/ui/pages/ChatIA/ModeEditor.tsx` deja alignee sur `@/stores/uiStore.selectors` dans l increment precedent, conservee conforme dans ce lot.
 - Preuve execution: `pnpm run check` + `pnpm exec vitest run` (8 fichiers cibles) + metrique deep imports `4`.
 
+# [2026-04-24] Sprint 5 — Deep imports reduction on UI route inventory tests
+
+- Surfaces impactees: `src/__tests__/ui/ui-page-objects-inventory.test.ts`, `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`.
+- Changement: extraction d un adaptateur de test commun `src/__tests__/ui/uiPagesInventory.adapter.ts` pour centraliser l import WDIO `uiPages.po.js` et reduire les occurrences deep imports.
+- Preuve execution: `pnpm run check` + `pnpm exec vitest run` (2 fichiers UI) + metrique deep imports `3`.
+
 # [2026-04-24] Desktop UI driver complete page audit truth
 
 - Surface canonique de preuve: `e2e/desktop/canonical-ui-pages.wdio.test.js`.
