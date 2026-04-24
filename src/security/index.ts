@@ -39,6 +39,17 @@ export {
   THREAT_PATTERNS,
 } from './constants';
 
+function isTauriRuntime(): boolean {
+  if (typeof window === 'undefined') return false;
+
+  const protocol = window.location?.protocol;
+  const hasTauriInternals =
+    typeof (window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__ !==
+    'undefined';
+
+  return protocol === 'tauri:' || protocol === 'asset:' || hasTauriInternals;
+}
+
 /**
  * Initialize all security modules
  * Call this once during app startup
@@ -48,7 +59,11 @@ export function initializeSecurity(): void {
 
   // Initialize CSP
   CspManager.initialize();
-  CspManager.applyToDocument();
+  // In Tauri runtime, CSP must stay governed by tauri.conf.json.
+  // Injecting a frontend meta CSP can clamp script-src and break IPC internals.
+  if (!isTauriRuntime()) {
+    CspManager.applyToDocument();
+  }
 
   // Initialize Session Guard
   SessionGuard.initialize();

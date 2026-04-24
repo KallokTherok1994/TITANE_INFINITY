@@ -50,6 +50,9 @@ interface OmegaXPTrace {
   cognitiveXP: number;
   totalXP: number;
   level: number;
+  chatGainAmount?: number;
+  cognitiveGainAmount?: number;
+  totalGainAmount?: number;
   lastGainDomain?: string;
   lastGainAmount?: number;
   lastGainTimestamp?: number;
@@ -234,6 +237,38 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
     systemPromptSourceCount > 0
       ? `${systemPromptSourceCount} source${systemPromptSourceCount > 1 ? 's' : ''} contexte injectee${systemPromptSourceCount > 1 ? 's' : ''}`
       : 'Aucune source contexte capturee';
+  const chatGainAmount =
+    xpTrace?.chatGainAmount ??
+    (xpTrace?.lastGainDomain === 'chat' ? xpTrace.lastGainAmount : undefined);
+  const cognitiveGainAmount = xpTrace?.cognitiveGainAmount;
+  const totalGainAmount =
+    xpTrace?.totalGainAmount ??
+    (chatGainAmount !== undefined || cognitiveGainAmount !== undefined
+      ? (chatGainAmount ?? 0) + (cognitiveGainAmount ?? 0)
+      : undefined);
+
+  const renderXpGain = () => {
+    if (!xpTrace) {
+      return <span className="oj-non-capture">Aucun XP capture sur ce tour</span>;
+    }
+
+    return (
+      <>
+        {chatGainAmount !== undefined ? (
+          <span className="oj-xp-gain">+{chatGainAmount} XP</span>
+        ) : (
+          <span className="oj-non-capture">Gain Chat non capture</span>
+        )}{' '}
+        Chat
+        {cognitiveGainAmount !== undefined && (
+          <>
+            {' '}
+            · <span className="oj-xp-gain">+{cognitiveGainAmount} XP</span> Cognitif
+          </>
+        )}
+      </>
+    );
+  };
 
   // ── Mode compact ─────────────────────────────────────────────────────────
   if (!isExpanded) {
@@ -252,6 +287,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             qualityScore !== null && qualityScore !== undefined
               ? `${(qualityScore * 100).toFixed(0)}%`
               : ''
+          }
+          data-runtime-xp-gain={
+            totalGainAmount !== undefined ? String(totalGainAmount) : ''
           }
           data-model-used={modelUsed ?? ''}
           data-model-requested={modelRequested ?? ''}
@@ -334,6 +372,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           qualityScore !== null && qualityScore !== undefined
             ? `${(qualityScore * 100).toFixed(0)}%`
             : ''
+        }
+        data-runtime-xp-gain={
+          totalGainAmount !== undefined ? String(totalGainAmount) : ''
         }
         data-model-used={modelUsed ?? ''}
         data-model-requested={modelRequested ?? ''}
@@ -464,20 +505,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               </div>
             )}
             {xpTrace && !isThinking && (
-              <div className="oj-summary-row">
+              <div className="oj-summary-row" data-testid="reasoning-summary-xp">
                 <Zap size={14} className="oj-icon-yellow" />
-                <span className="oj-summary-label">XP attendu :</span>
+                <span className="oj-summary-label">XP gagné :</span>
                 <span className="oj-summary-value">
-                  {xpTrace.lastGainDomain === 'chat' &&
-                  xpTrace.lastGainAmount !== undefined ? (
-                    <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP Chat</span>
-                  ) : (
-                    <span className="oj-xp-gain">+5 XP Chat</span>
-                  )}
-                  {(responseLength ?? 0) > 200 && (
-                    <span className="oj-xp-gain"> · +2 XP Cognitif</span>
-                  )}{' '}
-                  — Niveau {xpTrace.level} · Total{' '}
+                  {renderXpGain()} — Niveau {xpTrace.level} · Total{' '}
                   {xpTrace.totalXP.toLocaleString('fr-FR')} XP
                 </span>
               </div>
@@ -701,27 +733,20 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">XP gagné</span>
                   <span className="oj-runtime-value" data-testid="reasoning-runtime-xp">
-                    {xpTrace ? (
-                      <>
-                        {xpTrace.lastGainDomain === 'chat' &&
-                        xpTrace.lastGainAmount !== undefined ? (
-                          <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP</span>
-                        ) : (
-                          <span className="oj-xp-gain">+5 XP</span>
-                        )}{' '}
-                        Chat
-                        {(responseLength ?? 0) > 200 && (
-                          <>
-                            {' '}
-                            · <span className="oj-xp-gain">+2 XP</span> Cognitif
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      <span className="oj-non-capture">Aucun XP capture sur ce tour</span>
-                    )}
+                    {renderXpGain()}
                   </span>
                 </div>
+                {totalGainAmount !== undefined && (
+                  <div className="oj-runtime-item">
+                    <span className="oj-runtime-label">Gain total du tour</span>
+                    <span
+                      className="oj-runtime-value"
+                      data-testid="reasoning-runtime-xp-total"
+                    >
+                      +{totalGainAmount} XP
+                    </span>
+                  </div>
+                )}
                 <div className="oj-runtime-item">
                   <span className="oj-runtime-label">Score qualité</span>
                   <span
@@ -773,22 +798,14 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   <div className="oj-runtime-grid">
                     <div className="oj-runtime-item">
                       <span className="oj-runtime-label">Gain par message</span>
-                      <span className="oj-runtime-value">
-                        {xpTrace.lastGainDomain === 'chat' &&
-                        xpTrace.lastGainAmount !== undefined ? (
-                          <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP</span>
-                        ) : (
-                          <span className="oj-xp-gain">+5 XP</span>
-                        )}{' '}
-                        domaine Chat
-                        {(responseLength ?? 0) > 200 && (
-                          <>
-                            {' '}
-                            · <span className="oj-xp-gain">+2 XP</span> Cognitif
-                          </>
-                        )}
-                      </span>
+                      <span className="oj-runtime-value">{renderXpGain()}</span>
                     </div>
+                    {totalGainAmount !== undefined && (
+                      <div className="oj-runtime-item">
+                        <span className="oj-runtime-label">Gain total du tour</span>
+                        <span className="oj-runtime-value">+{totalGainAmount} XP</span>
+                      </div>
+                    )}
                     <div className="oj-runtime-item">
                       <span className="oj-runtime-label">XP Chat cumulé</span>
                       <span className="oj-runtime-value">

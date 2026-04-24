@@ -4,6 +4,31 @@
 - Tous les fichiers `.md.md` et dossiers d’archive centralisés dans `docs/99_ARCHIVE/`
 - Inventaires et logs : `docs/92_maintenance/`
 
+# [2026-04-24] Security bootstrap CSP authority truth
+
+- Surface canonique bootstrap: `src/App.tsx` -> `src/security/index.ts::initializeSecurity()`.
+- Verite runtime corrigee: en runtime Tauri, la couche frontend n injecte plus de meta `Content-Security-Policy` via `CspManager.applyToDocument()`.
+- Autorite CSP unique restauree: `src-tauri/tauri.conf.json` pilote `script-src` (incluant `unsafe-eval`) pour eviter le blocage IPC `conversation_generate` et le fallback `TITANE∞ — Réponse indisponible`.
+- Preuve test ajoutee: `src/security/__tests__/securityInit.spec.ts` valide `applyToDocument` hors Tauri et son bypass en Tauri.
+
+# [2026-04-24] Chat XP durable persistence to Experience UI truth
+
+- Surface canonique chat: `/titane?tab=conversation` via `src/hooks/useConversationEngine.ts`.
+- Surface canonique XP: `/experience` via `src/pages/Experience.tsx`.
+- Verite corrigee: `src-tauri/src/mock_commands.rs` persiste maintenant `experience_get_state` / `experience_update_state` dans `experience_state.json` au lieu de retourner un etat mock vide a chaque lecture.
+- Synchronisation frontend: `src/services/experienceService.ts` miroir toujours l etat XP dans `localStorage`, compare backend et localStorage, puis garde la source la plus fraiche/non vide avant de notifier `useExperience`.
+- Visibilite UI ajoutee: la page XP publie `experience-chat-sync-summary`, `experience-chat-xp-total`, `experience-chat-event-count` et `experience-chat-last-gain` pour rendre les XP issus du chat immediatement lisibles.
+- Preuves associees: Rust `mock_commands::experience_state_tests::*`, Vitest `experienceService.chat-sync`, `useExperience`, `Experience`, et Playwright `CHAT_XP_GENERATION_SYNC` avec preuve reload/localStorage.
+
+# [2026-04-24] Chat XP generation to Experience sync truth
+
+- Surface canonique chat: `/titane?tab=conversation` via `src/components/sections/ConversationSection.tsx` + `src/hooks/useConversationEngine.ts`.
+- Surface canonique XP: `/experience` via `src/pages/Experience.tsx`.
+- Verite corrigee: `src/services/experienceService.ts` initialise ou recharge la source locale avant toute attribution XP chat, puis preserve les gains de session quand la page Experience monte apres le chat.
+- Trace runtime: `ThinkingPanel` expose maintenant les gains exacts `Chat`, `Cognitif` et `Gain total du tour` via `reasoning-summary-xp`, `reasoning-runtime-xp`, `reasoning-runtime-xp-total` et `reasoning-progress[data-runtime-xp-gain]`.
+- Selectors Experience ajoutes: `experience-runtime-source`, `experience-total-xp`, `experience-level`, `experience-next-level-xp`, `experience-progress`, `experience-filter-*`.
+- Preuves associees: Vitest `experienceService.chat-sync`, `useConversationEngine`, `ThinkingPanel`, `Experience`; Playwright `CHAT_XP_GENERATION_SYNC` dans `e2e/critical/chat-interaction.spec.ts`.
+
 # [2026-04-24] Lint no-console normalization truth
 
 - Surface transversale: journalisation runtime UI sur les surfaces `chat-diagnostic`, `monitoring-dashboard`, `ui-logger` et couches utilitaires (`logger`, `structured-logger`, `performance-budget`).

@@ -21,6 +21,9 @@ describe('ThinkingPanel runtime truth', () => {
           cognitiveXP: 25,
           totalXP: 145,
           level: 1,
+          chatGainAmount: 8,
+          cognitiveGainAmount: 5,
+          totalGainAmount: 13,
           lastGainDomain: 'chat',
           lastGainAmount: 8,
           lastGainTimestamp: 1713431040000,
@@ -58,6 +61,7 @@ describe('ThinkingPanel runtime truth', () => {
       '2 sources contexte injectees'
     );
     expect(progress).toHaveAttribute('data-runtime-quality', '78%');
+    expect(progress).toHaveAttribute('data-runtime-xp-gain', '13');
     expect(progress).toHaveAttribute('data-model-used', 'gemma2:2b');
     expect(progress).toHaveAttribute('data-model-requested', 'gemma2:2b');
 
@@ -89,7 +93,13 @@ describe('ThinkingPanel runtime truth', () => {
     expect(screen.getByTestId('reasoning-memory-sources')).toHaveTextContent(
       /2 sources contexte injectees/i
     );
+    expect(screen.getByTestId('reasoning-summary-xp')).toHaveTextContent(/\+8 XP/i);
+    expect(screen.getByTestId('reasoning-summary-xp')).toHaveTextContent(/\+5 XP/i);
     expect(screen.getByTestId('reasoning-runtime-xp')).toHaveTextContent(/\+8 XP/i);
+    expect(screen.getByTestId('reasoning-runtime-xp')).toHaveTextContent(/\+5 XP/i);
+    expect(screen.getByTestId('reasoning-runtime-xp-total')).toHaveTextContent(
+      /\+13 XP/i
+    );
     expect(screen.getByText('78%')).toBeInTheDocument();
     expect(screen.getByTestId('reasoning-runtime-quality')).toHaveTextContent('78%');
     expect(

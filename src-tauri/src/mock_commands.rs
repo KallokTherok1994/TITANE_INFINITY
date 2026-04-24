@@ -9,9 +9,10 @@
 use crate::memory::telemetry;
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
-use crate::utils::AppResult;
+use crate::utils::{AppError, AppResult};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::path::{Path, PathBuf};
 use std::time::Duration;
 use tauri::{async_runtime, Emitter, Window};
 use tokio::time::sleep;
@@ -842,21 +843,17 @@ pub async fn get_system_info() -> AppResult<serde_json::Value> {
 // EXPERIENCE - XP & Knowledge Domains (v24)
 // ═══════════════════════════════════════════════════════════════
 
-#[tauri::command]
-pub async fn experience_get_state() -> AppResult<serde_json::Value> {
-    // Return default experience state matching TypeScript ExperienceState interface
-    log::info!("Mock: experience_get_state called - returning default state");
-
-    let default_state = serde_json::json!({
+fn default_experience_state() -> serde_json::Value {
+    serde_json::json!({
         "totalXp": 0,
-        "level": 1,
+        "level": 0,
         "domains": {
             "cognitive": {
                 "id": "cognitive",
                 "label": "Cognition",
                 "description": "Intelligence cognitive, analyse, raisonnement",
                 "xp": 0,
-                "level": 1,
+                "level": 0,
                 "category": "cognitive",
                 "lastUpdated": chrono::Utc::now().timestamp_millis(),
                 "icon": "🧠",
@@ -867,7 +864,7 @@ pub async fn experience_get_state() -> AppResult<serde_json::Value> {
                 "label": "Business",
                 "description": "Stratégie, management, opérations",
                 "xp": 0,
-                "level": 1,
+                "level": 0,
                 "category": "business",
                 "lastUpdated": chrono::Utc::now().timestamp_millis(),
                 "icon": "💼",
@@ -878,7 +875,7 @@ pub async fn experience_get_state() -> AppResult<serde_json::Value> {
                 "label": "Mémoire",
                 "description": "Ingestion de fichiers, stockage de connaissances",
                 "xp": 0,
-                "level": 1,
+                "level": 0,
                 "category": "memory",
                 "lastUpdated": chrono::Utc::now().timestamp_millis(),
                 "icon": "📂",
@@ -889,7 +886,7 @@ pub async fn experience_get_state() -> AppResult<serde_json::Value> {
                 "label": "Chat IA",
                 "description": "Interactions conversationnelles",
                 "xp": 0,
-                "level": 1,
+                "level": 0,
                 "category": "cognitive",
                 "lastUpdated": chrono::Utc::now().timestamp_millis(),
                 "icon": "💬",
@@ -900,7 +897,7 @@ pub async fn experience_get_state() -> AppResult<serde_json::Value> {
                 "label": "Système",
                 "description": "Événements système, auto-heal, évolution",
                 "xp": 0,
-                "level": 1,
+                "level": 0,
                 "category": "system",
                 "lastUpdated": chrono::Utc::now().timestamp_millis(),
                 "icon": "⚙️",
@@ -910,19 +907,163 @@ pub async fn experience_get_state() -> AppResult<serde_json::Value> {
         "history": [],
         "lastUpdated": chrono::Utc::now().timestamp_millis(),
         "version": "1.0.0"
-    });
+    })
+}
 
-    Ok(default_state)
+fn experience_state_path() -> PathBuf {
+    if let Ok(path) = std::env::var("TITANE_EXPERIENCE_STATE_PATH") {
+        return PathBuf::from(path);
+    }
+
+    dirs::data_local_dir()
+        .unwrap_or_else(std::env::temp_dir)
+        .join("TITANE_INFINITY")
+        .join("experience_state.json")
+}
+
+fn is_experience_state_like(state: &serde_json::Value) -> bool {
+    state
+        .get("totalXp")
+        .and_then(|value| value.as_f64())
+        .is_some()
+        && state
+            .get("level")
+            .and_then(|value| value.as_f64())
+            .is_some()
+        && state
+            .get("domains")
+            .and_then(|value| value.as_object())
+            .is_some()
+        && state
+            .get("history")
+            .and_then(|value| value.as_array())
+            .is_some()
+}
+
+fn read_experience_state_from_path(path: &Path) -> AppResult<Option<serde_json::Value>> {
+    if !path.exists() {
+        return Ok(None);
+    }
+
+    let raw = std::fs::read_to_string(path)?;
+    let state: serde_json::Value = serde_json::from_str(&raw)?;
+    if !is_experience_state_like(&state) {
+        return Err(AppError::Validation(format!(
+            "Invalid experience state schema at {}",
+            path.display()
+        )));
+    }
+
+    Ok(Some(state))
+}
+
+fn write_experience_state_to_path(path: &Path, state: &serde_json::Value) -> AppResult<()> {
+    if !is_experience_state_like(state) {
+        return Err(AppError::Validation(
+            "Invalid experience state payload".to_string(),
+        ));
+    }
+
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+
+    let tmp_path = path.with_extension("json.tmp");
+    let serialized = serde_json::to_string_pretty(state)?;
+    std::fs::write(&tmp_path, serialized)?;
+    std::fs::rename(&tmp_path, path)?;
+
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn experience_get_state() -> AppResult<serde_json::Value> {
+    let path = experience_state_path();
+    match read_experience_state_from_path(&path)? {
+        Some(state) => {
+            log::info!(
+                "Experience: experience_get_state loaded persisted state from {}",
+                path.display()
+            );
+            Ok(state)
+        }
+        None => {
+            log::info!(
+                "Experience: experience_get_state no persisted state at {}, returning default",
+                path.display()
+            );
+            Ok(default_experience_state())
+        }
+    }
 }
 
 #[tauri::command]
 pub async fn experience_update_state(state: serde_json::Value) -> AppResult<()> {
+    let path = experience_state_path();
+    write_experience_state_to_path(&path, &state)?;
     log::info!(
-        "Mock: experience_update_state called with state: {:?}",
-        state
+        "Experience: experience_update_state persisted state to {}",
+        path.display()
     );
-    // In mock mode, we just log. Real impl would save to JSON file.
     Ok(())
+}
+
+#[cfg(test)]
+mod experience_state_tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    #[test]
+    fn experience_state_round_trips_to_disk() {
+        let dir = tempdir().expect("tempdir");
+        let path = dir.path().join("experience_state.json");
+        let mut state = default_experience_state();
+        state["domains"]["chat"]["xp"] = serde_json::json!(42);
+        state["totalXp"] = serde_json::json!(42);
+        state["history"] = serde_json::json!([
+            {
+                "id": "chat-gain",
+                "domainId": "chat",
+                "amount": 42,
+                "source": "chat_message",
+                "timestamp": 1
+            }
+        ]);
+
+        write_experience_state_to_path(&path, &state).expect("write state");
+        let loaded = read_experience_state_from_path(&path)
+            .expect("read state")
+            .expect("state exists");
+
+        assert_eq!(loaded["totalXp"], serde_json::json!(42));
+        assert_eq!(loaded["domains"]["chat"]["xp"], serde_json::json!(42));
+        assert_eq!(
+            loaded["history"][0]["source"],
+            serde_json::json!("chat_message")
+        );
+    }
+
+    #[test]
+    fn experience_state_missing_file_returns_none() {
+        let dir = tempdir().expect("tempdir");
+        let path = dir.path().join("missing_experience_state.json");
+
+        let loaded = read_experience_state_from_path(&path).expect("missing read ok");
+
+        assert!(loaded.is_none());
+    }
+
+    #[test]
+    fn experience_state_rejects_malformed_payload() {
+        let dir = tempdir().expect("tempdir");
+        let path = dir.path().join("experience_state.json");
+        let malformed = serde_json::json!({ "totalXp": 10 });
+
+        let result = write_experience_state_to_path(&path, &malformed);
+
+        assert!(result.is_err());
+        assert!(!path.exists());
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════

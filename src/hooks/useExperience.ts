@@ -22,10 +22,11 @@ import {
   awardExperience,
   subscribeToExperience,
   getDomain,
-  getAllDomains,
-  getXpForNextLevel,
-  getProgressToNextLevel,
 } from '../services/experienceService';
+import {
+  calculateProgress,
+  xpForNextLevel as calculateXpForNextLevel,
+} from '../types/experience';
 
 export interface UseExperienceReturn {
   // État
@@ -59,6 +60,7 @@ export const useExperience = (): UseExperienceReturn => {
   const hookLogger = createLogger('useExperience');
   const [state, setState] = useState<ExperienceState>(getExperienceState());
   const [isLoading, setIsLoading] = useState(true);
+  const nextLevelXp = calculateXpForNextLevel(state.level);
 
   // Initialisation au mount
   useEffect(() => {
@@ -103,11 +105,11 @@ export const useExperience = (): UseExperienceReturn => {
     // Métriques globales
     totalXp: state.totalXp,
     level: state.level,
-    xpForNextLevel: getXpForNextLevel(),
-    progress: getProgressToNextLevel(),
+    xpForNextLevel: nextLevelXp,
+    progress: calculateProgress(state.totalXp, state.level),
 
     // Domaines
-    domains: getAllDomains(),
+    domains: Object.values(state.domains),
     getDomainById: getDomain,
 
     // Actions

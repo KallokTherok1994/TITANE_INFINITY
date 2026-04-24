@@ -525,6 +525,9 @@ describe('useConversationEngine fallback meta truth', () => {
       cognitiveXP: 25,
       totalXP: 145,
       level: 1,
+      chatGainAmount: expect.any(Number),
+      cognitiveGainAmount: expect.any(Number),
+      totalGainAmount: expect.any(Number),
       lastGainDomain: 'chat',
       lastGainAmount: expect.any(Number),
       lastGainTimestamp: expect.any(Number),
@@ -539,6 +542,77 @@ describe('useConversationEngine fallback meta truth', () => {
       ])
     );
     expect(awardExperienceMock).toHaveBeenCalled();
+  });
+
+  it('awards exact chat and cognitive XP for a generated chat answer', async () => {
+    const prompt =
+      'Peux-tu analyser ce module TypeScript, expliquer les risques et proposer un plan de correction detaille ?';
+    const { calculateQualityXPReward, calculateTitaneResponseXP } =
+      await import('@/services/xp/messageQualityScorer');
+    const qualityReward = calculateQualityXPReward(prompt, {
+      messageCount: 1,
+      recentTopics: [],
+      previousUserMessage: undefined,
+      previousAssistantResponse: undefined,
+    });
+    const titaneResponseXP = calculateTitaneResponseXP(`ok:${prompt}`.length, true);
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({
+        autoHealthCheck: false,
+        providerPreference: 'ollama',
+      })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage(prompt);
+    });
+
+    const assistantMessage = result.current.messages.at(-1);
+    expect(assistantMessage?.metadata?.xpTrace).toEqual(
+      expect.objectContaining({
+        chatGainAmount: qualityReward.totalXP,
+        cognitiveGainAmount: titaneResponseXP,
+        totalGainAmount: qualityReward.totalXP + titaneResponseXP,
+        lastGainDomain: 'chat',
+        lastGainAmount: qualityReward.totalXP,
+      })
+    );
+    expect(assistantMessage?.metadata?.xpAwarded).toBe(qualityReward.totalXP);
+    expect(assistantMessage?.metadata?.qualityTier).toBe(qualityReward.tier);
+
+    expect(awardExperienceMock).toHaveBeenNthCalledWith(
+      1,
+      'chat',
+      qualityReward.baseXP,
+      'chat_message',
+      expect.objectContaining({
+        messageLength: prompt.length,
+        provider: 'ollama',
+      })
+    );
+    expect(awardExperienceMock).toHaveBeenNthCalledWith(
+      2,
+      'chat',
+      qualityReward.qualityBonusXP,
+      'chat_quality_bonus',
+      expect.objectContaining({
+        qualityTier: qualityReward.tier,
+        qualityScore: qualityReward.score.total,
+      })
+    );
+    expect(awardExperienceMock).toHaveBeenNthCalledWith(
+      3,
+      'cognitive',
+      titaneResponseXP,
+      'chat_titane_response',
+      expect.objectContaining({
+        responseLength: `ok:${prompt}`.length,
+        provider: 'ollama',
+        titaneResponseXP: true,
+      })
+    );
   });
 
   it('avoids overlapping health checks while a previous probe is still pending', async () => {

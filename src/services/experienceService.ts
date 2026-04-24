@@ -29,6 +29,7 @@ import {
 } from '../types/experience';
 
 const logger = createLogger('Experience');
+const EXPERIENCE_STORAGE_KEY = 'titane_experience';
 
 // ─────────────────────────────────────────────────────────────────
 // STATE MANAGEMENT
@@ -40,6 +41,127 @@ let isInitialized = false;
 // Listeners pour changements d'état
 type StateListener = (state: ExperienceState) => void;
 const listeners: Set<StateListener> = new Set();
+
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+};
+
+const isValidExperienceState = (value: unknown): value is ExperienceState => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    typeof value.totalXp === 'number' &&
+    typeof value.level === 'number' &&
+    isRecord(value.domains) &&
+    Array.isArray(value.history)
+  );
+};
+
+const hasRecordedExperience = (state: ExperienceState = experienceState): boolean => {
+  return (
+    state.totalXp > 0 ||
+    state.history.length > 0 ||
+    Object.values(state.domains).some(domain => domain.xp > 0)
+  );
+};
+
+const readLocalStorageState = (): ExperienceState | null => {
+  if (typeof localStorage === 'undefined') {
+    return null;
+  }
+
+  try {
+    const saved = localStorage.getItem(EXPERIENCE_STORAGE_KEY);
+    const parsed = saved ? JSON.parse(saved) : null;
+    return isValidExperienceState(parsed) ? parsed : null;
+  } catch (err) {
+    logger.error('Erreur lecture localStorage XP:', err);
+    return null;
+  }
+};
+
+const writeLocalStorageState = (state: ExperienceState = experienceState): void => {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+
+  try {
+    localStorage.setItem(
+      EXPERIENCE_STORAGE_KEY,
+      JSON.stringify(normalizeExperienceState(state))
+    );
+  } catch (err) {
+    logger.warn('Erreur sauvegarde localStorage XP:', err);
+  }
+};
+
+const selectFreshestExperienceState = (
+  backendState: ExperienceState | null,
+  localState: ExperienceState | null
+): ExperienceState | null => {
+  if (!backendState) {
+    return localState;
+  }
+
+  if (!localState) {
+    return backendState;
+  }
+
+  const backendHasXp = hasRecordedExperience(backendState);
+  const localHasXp = hasRecordedExperience(localState);
+
+  if (localHasXp && !backendHasXp) {
+    return localState;
+  }
+
+  if (backendHasXp && !localHasXp) {
+    return backendState;
+  }
+
+  if (backendHasXp && localHasXp) {
+    return localState.lastUpdated > backendState.lastUpdated ? localState : backendState;
+  }
+
+  return backendState.lastUpdated >= localState.lastUpdated ? backendState : localState;
+};
+
+const normalizeExperienceState = (state: ExperienceState): ExperienceState => {
+  const defaults = createDefaultExperienceState();
+  const now = Date.now();
+  const domains: ExperienceState['domains'] = { ...defaults.domains };
+
+  for (const [domainId, domain] of Object.entries(state.domains)) {
+    const fallback = defaults.domains[domainId];
+    const xp = Number.isFinite(domain.xp) ? Math.max(0, domain.xp) : 0;
+    domains[domainId] = {
+      ...(fallback ?? domain),
+      ...domain,
+      id: domain.id || domainId,
+      xp,
+      level: calculateLevel(xp),
+      lastUpdated: Number.isFinite(domain.lastUpdated) ? domain.lastUpdated : now,
+    };
+  }
+
+  const totalXp = Object.values(domains).reduce((sum, domain) => sum + domain.xp, 0);
+
+  return {
+    ...defaults,
+    ...state,
+    domains,
+    totalXp,
+    level: calculateLevel(totalXp),
+    history: state.history.slice(0, 100),
+    lastUpdated: Number.isFinite(state.lastUpdated) ? state.lastUpdated : now,
+    version: state.version || defaults.version,
+  };
+};
+
+const setExperienceState = (state: ExperienceState): void => {
+  experienceState = normalizeExperienceState(state);
+};
 
 // ─────────────────────────────────────────────────────────────────
 // PUBLIC API
@@ -53,26 +175,57 @@ export const initExperienceService = async (): Promise<void> => {
     return;
   }
 
+  if (hasRecordedExperience()) {
+    isInitialized = true;
+    await saveState();
+    notifyListeners();
+    return;
+  }
+
+  const localState = readLocalStorageState();
+
+  if (!isTauriRuntimeAvailable()) {
+    if (localState) {
+      setExperienceState(localState);
+    } else {
+      setExperienceState(createDefaultExperienceState());
+      writeLocalStorageState();
+    }
+    isInitialized = true;
+    notifyListeners();
+    return;
+  }
+
   try {
     // Tenter de charger l'état depuis le backend
     const savedState = await safeInvoke<ExperienceState>('experience_get_state');
+    const backendState = isValidExperienceState(savedState) ? savedState : null;
+    const selectedState = selectFreshestExperienceState(backendState, localState);
 
-    if (savedState && typeof savedState === 'object' && savedState.domains) {
-      experienceState = savedState;
-      logger.info('État chargé depuis Tauri:', experienceState);
+    if (selectedState) {
+      setExperienceState(selectedState);
+      logger.info('État XP chargé:', {
+        source: selectedState === localState ? 'localStorage' : 'tauri',
+        totalXp: experienceState.totalXp,
+        lastUpdated: experienceState.lastUpdated,
+      });
     } else {
-      // État invalide ou vide : créer état par défaut
-      logger.info('État backend invalide, création état par défaut');
-      experienceState = createDefaultExperienceState();
-      await saveState();
+      logger.info('État backend invalide, fallback localStorage');
+      setExperienceState(createDefaultExperienceState());
     }
+
+    await saveState();
 
     isInitialized = true;
     notifyListeners();
   } catch (err) {
     // Si commande Tauri pas disponible (mode browser), utiliser localStorage
     logger.warn('Tauri non disponible, fallback localStorage:', err);
-    loadFromLocalStorage();
+    if (localState) {
+      setExperienceState(localState);
+    } else {
+      loadFromLocalStorage();
+    }
     isInitialized = true;
   }
 };
@@ -93,6 +246,10 @@ export const awardExperience = async (
   source: XPSource | string,
   metadata?: Record<string, unknown>
 ): Promise<ExperienceDomain | null> => {
+  if (!isInitialized && !hasRecordedExperience()) {
+    await initExperienceService();
+  }
+
   const domain = experienceState.domains[domainId];
 
   if (!domain) {
@@ -202,15 +359,16 @@ export const getProgressToNextLevel = (): number => {
  */
 const saveState = async (): Promise<void> => {
   try {
+    writeLocalStorageState();
+
     if (!isTauriRuntimeAvailable()) {
-      localStorage.setItem('titane_experience', JSON.stringify(experienceState));
       return;
     }
     await safeInvoke('experience_update_state', { state: experienceState });
   } catch (err) {
     // Fallback localStorage si Tauri non disponible
     logger.warn('Tauri save failed, using localStorage:', err);
-    localStorage.setItem('titane_experience', JSON.stringify(experienceState));
+    writeLocalStorageState();
   }
 };
 
@@ -219,18 +377,21 @@ const saveState = async (): Promise<void> => {
  */
 const loadFromLocalStorage = (): void => {
   try {
-    const saved = localStorage.getItem('titane_experience');
-    if (saved) {
-      experienceState = JSON.parse(saved);
+    const parsed = readLocalStorageState();
+
+    if (parsed) {
+      setExperienceState(parsed);
       logger.info('État chargé depuis localStorage');
-    } else {
-      experienceState = createDefaultExperienceState();
-      localStorage.setItem('titane_experience', JSON.stringify(experienceState));
+    } else if (!hasRecordedExperience()) {
+      setExperienceState(createDefaultExperienceState());
+      writeLocalStorageState();
       logger.info('État initial créé (localStorage)');
     }
   } catch (err) {
     logger.error('Erreur chargement localStorage:', err);
-    experienceState = createDefaultExperienceState();
+    if (!hasRecordedExperience()) {
+      setExperienceState(createDefaultExperienceState());
+    }
   }
 };
 
@@ -255,7 +416,7 @@ const notifyListeners = (): void => {
  * Réinitialiser l'état (dev only)
  */
 export const resetExperienceState = async (): Promise<void> => {
-  experienceState = createDefaultExperienceState();
+  setExperienceState(createDefaultExperienceState());
   await saveState();
   notifyListeners();
   logger.info('État réinitialisé');

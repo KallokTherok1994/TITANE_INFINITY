@@ -440,6 +440,57 @@ test.describe('Critical Path: Chat Interaction', () => {
     expect(finalMemoryLog).toHaveLength(2);
   });
 
+  test('CHAT_XP_GENERATION_SYNC: le chat genere des XP visibles sur la page Experience', async ({
+    page,
+  }) => {
+    const xpPrompt =
+      'Peux-tu analyser ce module TypeScript, expliquer les risques et proposer un plan de correction detaille ?';
+
+    await submitChatMessage(page, xpPrompt);
+
+    const assistantContent = getAssistantContent(page);
+    await expect(assistantContent).toContainText('[MOCK_OK]', { timeout: 15000 });
+
+    const reasoningProgress = page.getByTestId('reasoning-progress');
+    await expect(reasoningProgress).toHaveAttribute('data-runtime-xp-gain', /[1-9]\d*/);
+    await reasoningProgress.click();
+    await expect(page.getByTestId('reasoning-summary-xp')).toContainText('XP gagné');
+    await page.getByText('Détaillé').click();
+    await expect(page.getByTestId('reasoning-runtime-xp')).toContainText('Chat');
+    await expect(page.getByTestId('reasoning-runtime-xp')).toContainText('Cognitif');
+    await expect(page.getByTestId('reasoning-runtime-xp-total')).toContainText(
+      /^\+\d+ XP$/
+    );
+
+    await page.goto('/experience');
+    await expect(page.getByTestId('page-experience')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('experience-total-xp')).not.toHaveText(/^0$/);
+    await expect(page.getByTestId('experience-chat-sync-summary')).toBeVisible();
+    await expect(page.getByTestId('experience-chat-xp-total')).not.toHaveText(/^\+0 XP$/);
+    await expect(page.getByTestId('experience-filter-chat_message')).toBeVisible();
+    await expect(page.getByTestId('experience-filter-chat_quality_bonus')).toBeVisible();
+    await expect(
+      page.getByTestId('experience-filter-chat_titane_response')
+    ).toBeVisible();
+
+    await page.getByTestId('experience-filter-chat_message').click();
+    await expect(page.getByTestId('experience-history-item').first()).toContainText(
+      'Message chat'
+    );
+
+    const persistedExperienceState = await page.evaluate(() => {
+      const raw = localStorage.getItem('titane_experience');
+      return raw ? JSON.parse(raw) : null;
+    });
+    expect(persistedExperienceState?.totalXp).toBeGreaterThan(0);
+    expect(persistedExperienceState?.domains?.chat?.xp).toBeGreaterThan(0);
+
+    await page.reload();
+    await expect(page.getByTestId('page-experience')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('experience-total-xp')).not.toHaveText(/^0$/);
+    await expect(page.getByTestId('experience-chat-xp-total')).not.toHaveText(/^\+0 XP$/);
+  });
+
   test('INLINE_WEB_RESEARCH_CITATIONS_TRUTH: la conversation rend les citations inline du handoff web', async ({
     page,
   }) => {

@@ -8,6 +8,8 @@
 
 Cette version marque la synchronisation complète des artefacts, mapping, inventaire release, et documentation. Voir CHANGELOG.md et README.md pour le détail des nouveautés et corrections.
 
+> 2026-04-24 — Experience XP persistence truth: les commandes Tauri `experience_get_state` et `experience_update_state`, exposees par `src-tauri/src/mock_commands.rs` sous feature `mock`, ne sont plus des stubs volatils. Elles persisent l etat XP dans `dirs::data_local_dir()/TITANE_INFINITY/experience_state.json` avec ecriture atomique, ce qui aligne la page `/experience` et les gains issus du chat sur une verite disque backend en plus du miroir frontend localStorage.
+
 > 2026-04-24 — Release auth/dev-token compile truth: `src-tauri/src/auth/dev_token.rs` expose maintenant des stubs release explicites pour `get_or_create`, `validate`, `revoke` et `exists`, afin que les commandes Tauri auth restent compilables sans activer la capacite debug-only de generation de token. `src-tauri/src/main.rs` corrige aussi la cle `DEFAULT_ENCRYPTION_KEY` a 32 octets pour restaurer le build release.
 
 > 2026-04-23 — Doc engine DOCX export truth: la surface backend `src-tauri/src/doc_engine/export.rs` supporte maintenant un export DOCX natif via `docx-rs` avec rendu du titre, metadonnees, resume executif, objectifs et sections. Le contrat d export `ExportFormat` inclut desormais `Docx` dans `src-tauri/src/doc_engine/mod.rs`, et un test Rust cible `doc_engine::export::tests::export_docx_writes_file` valide la generation d un fichier `.docx` non vide.

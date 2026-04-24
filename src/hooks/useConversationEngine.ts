@@ -222,6 +222,9 @@ export interface ConversationMessage {
       cognitiveXP: number;
       totalXP: number;
       level: number;
+      chatGainAmount?: number;
+      cognitiveGainAmount?: number;
+      totalGainAmount?: number;
       lastGainDomain?: string;
       lastGainAmount?: number;
       lastGainTimestamp?: number;
@@ -712,6 +715,9 @@ Actions immédiates:
             cognitiveXP: experienceState.domains.cognitive?.xp ?? 0,
             totalXP: experienceState.totalXp,
             level: experienceState.level,
+            chatGainAmount: qualityReward.totalXP,
+            cognitiveGainAmount: titaneResponseXP,
+            totalGainAmount: qualityReward.totalXP + titaneResponseXP,
             lastGainDomain: 'chat',
             lastGainAmount: qualityReward.totalXP,
             lastGainTimestamp: Date.now(),

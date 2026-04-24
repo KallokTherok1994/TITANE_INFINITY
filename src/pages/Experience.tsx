@@ -20,6 +20,15 @@ export function Experience() {
   }, [state.history]);
 
   const sources = useMemo(() => Object.keys(stats).sort(), [stats]);
+  const chatEvents = useMemo(
+    () => state.history.filter(event => isChatExperienceSource(event.source)),
+    [state.history]
+  );
+  const chatXpTotal = useMemo(
+    () => chatEvents.reduce((sum, event) => sum + event.amount, 0),
+    [chatEvents]
+  );
+  const latestChatEvent = chatEvents[0];
 
   const filteredHistory = useMemo(() => {
     if (filter === 'all') {
@@ -49,9 +58,10 @@ export function Experience() {
         <p>Évolution intelligente et persistante</p>
         <p
           className="exp-source-label"
+          data-testid="experience-runtime-source"
           style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: 4 }}
         >
-          Source: moteur XP canonique (Tauri Rust)
+          Source: service XP canonique (Tauri IPC + localStorage fallback)
         </p>
       </motion.div>
 
@@ -63,19 +73,27 @@ export function Experience() {
       >
         <div className="exp-stat-card">
           <div className="exp-stat-label">Niveau</div>
-          <div className="exp-stat-value">{level}</div>
+          <div className="exp-stat-value" data-testid="experience-level">
+            {level}
+          </div>
         </div>
         <div className="exp-stat-card">
           <div className="exp-stat-label">XP Total</div>
-          <div className="exp-stat-value">{totalXp.toLocaleString()}</div>
+          <div className="exp-stat-value" data-testid="experience-total-xp">
+            {totalXp.toLocaleString()}
+          </div>
         </div>
         <div className="exp-stat-card">
           <div className="exp-stat-label">Prochain palier XP</div>
-          <div className="exp-stat-value">{xpForNextLevel.toLocaleString()}</div>
+          <div className="exp-stat-value" data-testid="experience-next-level-xp">
+            {xpForNextLevel.toLocaleString()}
+          </div>
         </div>
         <div className="exp-stat-card">
           <div className="exp-stat-label">Progression</div>
-          <div className="exp-stat-value">{(progress * 100).toFixed(1)}%</div>
+          <div className="exp-stat-value" data-testid="experience-progress">
+            {(progress * 100).toFixed(1)}%
+          </div>
         </div>
       </motion.div>
 
@@ -95,10 +113,49 @@ export function Experience() {
       </motion.div>
 
       <motion.div
+        className="exp-sources-section"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        data-testid="experience-chat-sync-summary"
+      >
+        <h2>XP généré par le chat</h2>
+        <div className="exp-sources-grid">
+          <div className="exp-source-card">
+            <div className="exp-source-name">Conversation TITANE</div>
+            <div className="exp-source-stats">
+              <span data-testid="experience-chat-xp-total">
+                {`+${chatXpTotal.toLocaleString()} XP`}
+              </span>
+              <span
+                className="exp-source-count"
+                data-testid="experience-chat-event-count"
+              >
+                {`${chatEvents.length} gain${chatEvents.length > 1 ? 's' : ''}`}
+              </span>
+            </div>
+          </div>
+          <div className="exp-source-card">
+            <div className="exp-source-name">Dernier gain chat</div>
+            <div className="exp-source-stats">
+              <span data-testid="experience-chat-last-gain">
+                {latestChatEvent
+                  ? `+${latestChatEvent.amount.toLocaleString()} XP`
+                  : 'Aucun gain'}
+              </span>
+              <span className="exp-source-count">
+                {latestChatEvent ? formatSource(latestChatEvent.source) : 'Chat'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
         className="exp-domains-section"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.25 }}
+        transition={{ delay: 0.3 }}
       >
         <h2>🎯 Domaines de Compétence</h2>
         {domains.length === 0 ? (
@@ -139,11 +196,12 @@ export function Experience() {
         className="exp-filters"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.35 }}
       >
         <button
           className={filter === 'all' ? 'active' : ''}
           onClick={() => setFilter('all')}
+          data-testid="experience-filter-all"
         >
           {`Tout (${state.history.length})`}
         </button>
@@ -158,6 +216,7 @@ export function Experience() {
               key={source}
               className={filter === source ? 'active' : ''}
               onClick={() => setFilter(source)}
+              data-testid={`experience-filter-${source}`}
             >
               {`${formatSource(source)} (${sourceStat.count})`}
             </button>
@@ -169,7 +228,7 @@ export function Experience() {
         className="exp-history"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.35 }}
+        transition={{ delay: 0.4 }}
       >
         <h2>Historique XP</h2>
         <div className="exp-history-list" data-testid="experience-history-list">
@@ -197,6 +256,10 @@ export function Experience() {
       </motion.div>
     </div>
   );
+}
+
+function isChatExperienceSource(source: string): boolean {
+  return source.startsWith('chat_');
 }
 
 function domainProgressPercent(domain: { xp: number; level: number }): number {
