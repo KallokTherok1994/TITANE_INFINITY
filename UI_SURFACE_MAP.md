@@ -10,6 +10,12 @@
 - Verite appliquee: remplacement des appels `console.log|info|debug|group|table|time` par des chemins autorises `warn|error` ou par des wrappers `nativeConsole`, sans changement fonctionnel des flux de diagnostic.
 - Effet qualifie: reduction des warnings lint `no-console` de 660 a 0 avec preservation des traces de debug en environnement dev.
 
+# [2026-04-24] DashboardPage isolated test truth
+
+- Surface canonique: `page-dashboard` dans `src/pages/DashboardPage.tsx`.
+- Durcissement test: `src/pages/__tests__/DashboardPage.test.tsx` isole maintenant `useExperience`, `useVisualEngines` et `PersonaMoodIndicator` pour eviter les effets de bord IPC/persona dans le lane Vitest.
+- Preuve qualifiee: `pnpm exec vitest run src/pages/__tests__/DashboardPage.test.tsx` passe proprement sans warnings React `act(...)` ni bruit de mock handler Tauri sur cette surface.
+
 # [2026-04-23] Agent dashboards version fallback truth
 
 - Surface canonique: `agent-dashboards-panel` dans `src/components/AgentDashboardsPanel.tsx`
