@@ -425,6 +425,245 @@ export async function waitForDisplayed(selector, timeout = DEFAULT_TIMEOUT) {
   return el;
 }
 
+async function getSelectorSnapshot(selector) {
+  try {
+    const el = await $(selector);
+    const exists = await el.isExisting();
+    if (!exists) {
+      return {
+        selector,
+        exists: false,
+        displayed: false,
+      };
+    }
+
+    const displayed = await el.isDisplayed();
+    return {
+      selector,
+      exists,
+      displayed,
+      text: displayed ? ((await el.getText()) || '').trim().slice(0, 120) : '',
+      ariaCurrent: await el.getAttribute('aria-current'),
+      ariaSelected: await el.getAttribute('aria-selected'),
+      className: await el.getAttribute('class'),
+      dataState: await el.getAttribute('data-state'),
+    };
+  } catch (error) {
+    if (isSessionInvalidError(error)) throw error;
+    return {
+      selector,
+      exists: false,
+      displayed: false,
+      error: String(error?.message || error).slice(0, 180),
+    };
+  }
+}
+
+function isSelectorActive(snapshot) {
+  if (snapshot.ariaSelected !== null && snapshot.ariaSelected !== undefined) {
+    return snapshot.ariaSelected === 'true';
+  }
+  if (snapshot.ariaCurrent !== null && snapshot.ariaCurrent !== undefined) {
+    return snapshot.ariaCurrent === 'page' || snapshot.ariaCurrent === 'true';
+  }
+  if (snapshot.dataState !== null && snapshot.dataState !== undefined) {
+    return snapshot.dataState === 'active' || snapshot.dataState === 'selected';
+  }
+  const className = snapshot.className || '';
+  return (
+    className.includes('active') ||
+    className.includes('--active') ||
+    className.includes('bg-blue-600')
+  );
+}
+
+export async function clickDeclaredTabs(tabSelectors = [], options = {}) {
+  const timeout = options.timeout ?? 5000;
+  const strict = options.strict ?? true;
+  const results = [];
+
+  for (const selector of tabSelectors) {
+    try {
+      let before = await getSelectorSnapshot(selector);
+      if (strict && (!before.exists || !before.displayed)) {
+        await browser.waitUntil(
+          async () => {
+            before = await getSelectorSnapshot(selector);
+            return before.exists && before.displayed;
+          },
+          {
+            timeout,
+            interval: 200,
+            timeoutMsg: `declared tab missing or hidden: ${selector}`,
+          }
+        );
+      }
+
+      if (!before.exists || !before.displayed) {
+        if (strict) {
+          throw new Error(`declared tab missing or hidden: ${selector}`);
+        }
+        results.push({
+          selector,
+          status: 'skipped',
+          before,
+          after: before,
+          clicked: false,
+        });
+        continue;
+      }
+
+      let clicked = false;
+      if (!isSelectorActive(before)) {
+        clicked = await clickSafely(selector);
+        if (!clicked && strict) {
+          throw new Error(`declared tab could not be clicked: ${selector}`);
+        }
+      }
+
+      await browser.waitUntil(
+        async () => {
+          const current = await getSelectorSnapshot(selector);
+          if (!current.exists) return !strict;
+          if (!current.displayed) return !strict;
+          return isSelectorActive(current);
+        },
+        {
+          timeout,
+          interval: 150,
+          timeoutMsg: `declared tab did not activate: ${selector}`,
+        }
+      );
+
+      const after = await getSelectorSnapshot(selector);
+      results.push({
+        selector,
+        status: 'activated',
+        before,
+        after,
+        clicked,
+      });
+    } catch (error) {
+      if (isSessionInvalidError(error)) throw error;
+      if (strict) throw error;
+      results.push({
+        selector,
+        status: 'skipped',
+        clicked: false,
+        error: String(error?.message || error).slice(0, 180),
+      });
+    }
+  }
+
+  return results;
+}
+
+async function assertCanonicalNavOwnership(page, moreMenuExpectations = new Map()) {
+  if (!page.navTestId) {
+    return {
+      type: 'direct-route',
+      owner: null,
+      status: 'skipped',
+    };
+  }
+
+  const expectedMoreNav = moreMenuExpectations.get(page.route);
+  if (expectedMoreNav) {
+    const moreButton = await waitForDisplayed(testId('btn-nav-more'), 10000);
+    await browser.waitUntil(
+      async () => (await moreButton.getAttribute('aria-current')) === 'page',
+      {
+        timeout: 10000,
+        interval: 200,
+        timeoutMsg: `btn-nav-more should stay active on ${page.route}`,
+      }
+    );
+
+    await clickSafely(testId('btn-nav-more'));
+    const ownerNav = await $(testId(expectedMoreNav));
+    await ownerNav.waitForExist({ timeout: 10000 });
+    await browser.waitUntil(
+      async () => (await ownerNav.getAttribute('aria-current')) === 'page',
+      {
+        timeout: 10000,
+        interval: 200,
+        timeoutMsg: `${expectedMoreNav} should stay active on ${page.route}`,
+      }
+    );
+
+    return {
+      type: 'more-menu',
+      owner: expectedMoreNav,
+      moreButton: testId('btn-nav-more'),
+      status: 'aligned',
+    };
+  }
+
+  const ownerNav = await $(testId(page.navTestId));
+  await ownerNav.waitForExist({ timeout: 10000 });
+  await browser.waitUntil(
+    async () => (await ownerNav.getAttribute('aria-current')) === 'page',
+    {
+      timeout: 10000,
+      interval: 200,
+      timeoutMsg: `${page.navTestId} should stay active on ${page.route}`,
+    }
+  );
+
+  return {
+    type: 'top-nav',
+    owner: page.navTestId,
+    status: 'aligned',
+  };
+}
+
+export async function auditCanonicalDesktopPage(page, options = {}) {
+  const root = await $(page.root);
+  await root.waitForExist({ timeout: options.timeout ?? 10000 });
+  const rootDisplayed = await root.isDisplayed();
+  if (!rootDisplayed) {
+    throw new Error(`root not visible for ${page.id}`);
+  }
+
+  const pathname = await getCurrentPathname();
+  if (pathname !== page.route) {
+    throw new Error(
+      `canonical route mismatch for ${page.id}: expected ${page.route}, got ${pathname}`
+    );
+  }
+
+  const nav = await assertCanonicalNavOwnership(
+    page,
+    options.moreMenuExpectations ?? new Map()
+  );
+  const tabs = await clickDeclaredTabs(page.tabs ?? [], {
+    strict: true,
+    timeout: options.tabTimeout ?? 15000,
+  });
+
+  return {
+    id: page.id,
+    route: page.route,
+    root: page.root,
+    pathname,
+    rootDisplayed,
+    nav,
+    declaredTabCount: page.tabs?.length ?? 0,
+    tabs,
+    auditedAt: new Date().toISOString(),
+  };
+}
+
+export async function writeDesktopPageAuditReport(
+  report,
+  fileName = 'canonical-ui-pages-audit.json'
+) {
+  await ensureArtifactsDir();
+  const reportPath = path.join(ARTIFACTS_DIR, fileName);
+  await fs.writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  return reportPath;
+}
+
 async function recoverBrowserSession(startUrl = 'tauri://localhost') {
   try {
     await browser.reloadSession();
@@ -563,48 +802,10 @@ export async function gotoTopNavPage(page) {
 }
 
 export async function clickAllTabs(tabSelectors = []) {
-  for (const selector of tabSelectors) {
-    try {
-      const initial = await $(selector);
-      if (!(await initial.isExisting())) continue;
-      if (!(await initial.isDisplayed())) continue;
-
-      const selectedBefore = await initial.getAttribute('aria-selected');
-      if (selectedBefore === 'true') continue;
-
-      const clicked = await clickSafely(selector);
-      if (!clicked) continue;
-
-      await browser.waitUntil(
-        async () => {
-          try {
-            const current = await $(selector);
-            if (!(await current.isExisting())) return true;
-            const selected = await current.getAttribute('aria-selected');
-            if (selected !== null) return selected === 'true';
-            const cls = (await current.getAttribute('class')) || '';
-            return (
-              cls.includes('active') ||
-              cls.includes('--active') ||
-              cls.includes('bg-blue-600')
-            );
-          } catch (error) {
-            if (isSessionInvalidError(error)) throw error;
-            return true;
-          }
-        },
-        {
-          timeout: 2500,
-          interval: 150,
-          timeoutMsg: `tab did not activate: ${selector}`,
-        }
-      );
-    } catch (error) {
-      if (isSessionInvalidError(error)) throw error;
-      if (isTransientInteractionError(error)) continue;
-      continue;
-    }
-  }
+  return clickDeclaredTabs(tabSelectors, {
+    strict: false,
+    timeout: 2500,
+  });
 }
 
 export async function toggleAllVisibleCheckboxes() {

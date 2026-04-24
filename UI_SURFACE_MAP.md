@@ -5,6 +5,15 @@
 - Verite appliquee: fallback determine `APP_VERSION=dev` quand la variable globale n est pas injectee, ce qui conserve le badge `Nouveau` et evite le crash test par `ReferenceError`.
 - Tests impactes: `src/services/__tests__/advancedAgentCatalog.test.tsx`, `src/components/layout/__tests__/AppShell.test.tsx`, `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`.
 
+# [2026-04-24] Desktop UI driver complete page audit truth
+
+- Surface canonique de preuve: `e2e/desktop/canonical-ui-pages.wdio.test.js`.
+- Driver canonique: `e2e/desktop/ui-driver.wdio.js` publie maintenant `auditCanonicalDesktopPage`, `clickDeclaredTabs` et `writeDesktopPageAuditReport`.
+- Verite verrouillee par page: route courante, root visible, ownership TopNav/More ou route directe, puis activation stricte de chaque onglet declare dans `e2e/desktop/page-objects/uiPages.po.js`.
+- Artefact runtime attendu: `reports/e2e-desktop/canonical-ui-pages-audit.json`, avec un enregistrement par page canonique et le detail des onglets actives.
+- Test source anti-derive: `src/__tests__/ui/ui-page-objects-inventory.test.ts` exige que les pages tabbees (`titane`, `time`, `admin`, `dev`) declarent des selectors `data-testid="tab-..."` stables.
+- Preuve native obtenue: WDIO/Tauri `1 passing (2m 48.1s)` sur `FRESH_RELEASE_BINARY`, rapport JSON `pageCount=28`, `tabbedPageCount=4`, `totalTabs=22`.
+
 # [2026-04-24] All pages sync truth (XP, Vue, TIME, Admin hubs)
 
 - Surface canonique de synchronisation ajoutee: `e2e/features/all-pages-sync.spec.ts`.
@@ -411,3 +420,4 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - 2026-04-24 — DocCenter route-context sync truth: `/doc-center` est maintenant branche au contexte actif par `moduleRouteContext` avec `moduleId=doc_center`, et `/doc` est normalise vers cette surface. L inventaire partage WDIO ajoute `directRoutePages` pour qualifier les routes URL directes sans propriétaire TopNav tout en les gardant dans `canonicalRoutePages`.
 - 2026-04-23 — Canonical page seal truth: toutes les routes canoniques montées par `AppRouter` exposent désormais une racine stable qualifiable, directement ou via leur état de chargement, pour `/experience`, `/fusion`, `/optimization`, `/orchestration-intelligence`, `/orchestration-center`, `/reality-center`, `/hyper-center`, `/quantum-center`, `/twins`, `/total-dev`, `/knowledge`, `/creation`, `/evolution`, `/memory`, `/skills`, `/doc-center` en plus des surfaces déjà qualifiées. L’inventaire partagé WDIO expose aussi maintenant ces routes canoniques et leurs groupes d’ownership (`titaneOwnedRoutePages`, `directRoutePages`, `devOwnedRoutePages`, `fusionOwnedRoutePages`, `moreMenuRoutePages`, `canonicalRoutePages`) afin que route, sélecteur racine et item de navigation restent alignés sur une même vérité.
 - 2026-04-24 — Canonical desktop proof lane truth: la lane WDIO dédiée `e2e/desktop/canonical-ui-pages.wdio.test.js` a été rejouée après `pnpm run build:tauri:e2e` sur le binaire release frais `src-tauri/target/release/titane-infinity` (`FRESH_RELEASE_BINARY`). Résultat natif: 1 spec passée, 1 test passé, `1 passing (2m 34.2s)`, avec route, root visible et ownership nav vérifiés sur `canonicalRoutePages`.
+- 2026-04-24 — Desktop UI driver complete page audit truth: la meme lane WDIO ne s arrete plus a route/root/nav; elle appelle maintenant `auditCanonicalDesktopPage` pour activer strictement les onglets declares et produire `reports/e2e-desktop/canonical-ui-pages-audit.json` comme preuve structuree page par page. Preuve native: `1 passing (2m 48.1s)`, 28 pages, 4 pages tabbees, 22 onglets.

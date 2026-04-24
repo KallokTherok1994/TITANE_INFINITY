@@ -2,11 +2,12 @@ import assert from 'node:assert/strict';
 
 import { canonicalRoutePages } from './page-objects/uiPages.po.js';
 import {
+  auditCanonicalDesktopPage,
   captureFailureScreenshot,
   ensureArtifactsDir,
-  getCurrentPathname,
   openApp,
   waitAppReady,
+  writeDesktopPageAuditReport,
 } from './ui-driver.wdio.js';
 
 const moreMenuExpectations = new Map([
@@ -15,50 +16,6 @@ const moreMenuExpectations = new Map([
   ['/performance', 'nav-optimization'],
   ['/total-dev', 'nav-total-dev'],
 ]);
-
-async function assertNavOwnership(page) {
-  if (!page.navTestId) {
-    return;
-  }
-
-  const expectedMoreNav = moreMenuExpectations.get(page.route);
-  if (expectedMoreNav) {
-    const moreButton = await $('[data-testid="btn-nav-more"]');
-    await moreButton.waitForExist({ timeout: 10000 });
-    await browser.waitUntil(
-      async () => (await moreButton.getAttribute('aria-current')) === 'page',
-      {
-        timeout: 10000,
-        interval: 200,
-        timeoutMsg: `btn-nav-more should stay active on ${page.route}`,
-      }
-    );
-
-    await moreButton.click();
-    const ownerNav = await $(`[data-testid="${expectedMoreNav}"]`);
-    await ownerNav.waitForExist({ timeout: 10000 });
-    await browser.waitUntil(
-      async () => (await ownerNav.getAttribute('aria-current')) === 'page',
-      {
-        timeout: 10000,
-        interval: 200,
-        timeoutMsg: `${expectedMoreNav} should stay active on ${page.route}`,
-      }
-    );
-    return;
-  }
-
-  const ownerNav = await $(`[data-testid="${page.navTestId}"]`);
-  await ownerNav.waitForExist({ timeout: 10000 });
-  await browser.waitUntil(
-    async () => (await ownerNav.getAttribute('aria-current')) === 'page',
-    {
-      timeout: 10000,
-      interval: 200,
-      timeoutMsg: `${page.navTestId} should stay active on ${page.route}`,
-    }
-  );
-}
 
 describe('Canonical UI pages (WDIO/Tauri)', () => {
   before(async () => {
@@ -71,8 +28,9 @@ describe('Canonical UI pages (WDIO/Tauri)', () => {
     }
   });
 
-  it('mounts every canonical UI route on its visible root and keeps navigation ownership aligned', async function () {
+  it('audits every canonical UI route root, owner navigation and declared desktop tabs', async function () {
     this.timeout(900000);
+    const pageAudits = [];
 
     for (const [index, page] of canonicalRoutePages.entries()) {
       if (index > 0) {
@@ -84,14 +42,23 @@ describe('Canonical UI pages (WDIO/Tauri)', () => {
 
       await browser.url(`tauri://localhost${page.route}`);
 
-      const root = await $(page.root);
-      await root.waitForExist({ timeout: 10000 });
-      assert.equal(await root.isDisplayed(), true, `root not visible for ${page.id}`);
-
-      const pathname = await getCurrentPathname();
-      assert.equal(pathname, page.route, `canonical route mismatch for ${page.id}`);
-
-      await assertNavOwnership(page);
+      pageAudits.push(
+        await auditCanonicalDesktopPage(page, {
+          moreMenuExpectations,
+        })
+      );
     }
+
+    const reportPath = await writeDesktopPageAuditReport({
+      suite: 'canonical-ui-pages',
+      runtime: 'tauri-wdio',
+      auditedAt: new Date().toISOString(),
+      pageCount: canonicalRoutePages.length,
+      tabbedPageCount: pageAudits.filter(page => page.declaredTabCount > 0).length,
+      pages: pageAudits,
+    });
+
+    assert.equal(pageAudits.length, canonicalRoutePages.length);
+    assert.ok(reportPath.endsWith('canonical-ui-pages-audit.json'));
   });
 });

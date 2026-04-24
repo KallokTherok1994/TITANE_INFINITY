@@ -74,6 +74,19 @@ describe('WDIO UI page inventory', () => {
     }
   });
 
+  it('keeps tabbed desktop surfaces declared with stable data-testid selectors', () => {
+    const tabbedPages = canonicalRoutePages.filter(page => page.tabs.length > 0);
+
+    expect(tabbedPages.map(page => page.id)).toEqual(['titane', 'time', 'admin', 'dev']);
+
+    for (const page of tabbedPages) {
+      expect(page.tabs.length).toBeGreaterThan(0);
+      for (const selector of page.tabs) {
+        expect(selector).toMatch(/^\[data-testid="tab-[^"]+"\]$/);
+      }
+    }
+  });
+
   it('keeps secondary canonical route groups aligned to their owning top-level nav entries', () => {
     for (const page of titaneOwnedRoutePages) {
       expect(page.navTestId).toBe('nav-titane');

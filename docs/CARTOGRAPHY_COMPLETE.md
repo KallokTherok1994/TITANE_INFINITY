@@ -1121,6 +1121,7 @@ function MyComponent() {
 - `e2e/desktop/page-objects/uiPages.po.js` publie désormais les groupes `titaneOwnedRoutePages`, `directRoutePages`, `devOwnedRoutePages`, `fusionOwnedRoutePages`, `moreMenuRoutePages` et `canonicalRoutePages` pour relier explicitement chaque route canonique à son root selector et à son entrée de navigation quand elle existe.
 - `src/__tests__/ui/app-router-canonical-surfaces.test.tsx`, `src/__tests__/ui/ui-page-objects-inventory.test.ts` et `src/__tests__/ui/ui-navigation.test.ts` scellent ensemble le triplet canonique `route -> root selector -> owner nav`.
 - Une lane desktop complémentaire `e2e/desktop/canonical-ui-pages.wdio.test.js` porte maintenant ce contrat sur le runtime Tauri réel via `canonicalRoutePages`. Elle a été rejouée après `pnpm run build:tauri:e2e` sur le binaire release frais `src-tauri/target/release/titane-infinity` (`FRESH_RELEASE_BINARY`) et passe avec 1 spec / 1 test en 2m34.2s.
+- Le driver desktop `e2e/desktop/ui-driver.wdio.js` expose aussi `auditCanonicalDesktopPage` pour qualifier chaque page canonique en profondeur: route courante, root visible, owner TopNav/More ou route directe, activation stricte des onglets declares et export JSON `reports/e2e-desktop/canonical-ui-pages-audit.json`. La preuve native obtenue passe avec `1 passing (2m 48.1s)` et le rapport declare 28 pages, 4 pages tabbees et 22 onglets.
 
 ## [2026-04-24] TopNav/AppShell structural selectors truth
 
