@@ -60,8 +60,8 @@ async function measureStep<T>(
  * Utilitaire: Sauvegarde trace JSON
  */
 function saveTrace(trace: E2ETrace): void {
-  console.log(`[E2E Trace] ${trace.scenario}`);
-  console.log(JSON.stringify(trace, null, 2));
+  console.warn(`[E2E Trace] ${trace.scenario}`);
+  console.warn(JSON.stringify(trace, null, 2));
 }
 
 function extractChatContent(response: unknown): string {
@@ -634,5 +634,5 @@ describe('E2E Scenario 5: Complex Multi-Module Interaction', () => {
  * Fonction utilitaire pour exporter toutes les traces E2E
  */
 export function exportE2ETraces(): void {
-  console.log('[E2E] All scenarios completed - traces exported');
+  console.warn('[E2E] All scenarios completed - traces exported');
 }

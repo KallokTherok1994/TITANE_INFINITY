@@ -125,7 +125,7 @@ export function useWhisperStream(
    */
   const start = useCallback(async () => {
     try {
-      console.log('[useWhisperStream] 🎙️ Starting...');
+      console.warn('[useWhisperStream] 🎙️ Starting...');
 
       // Start backend streaming
       await tauriClient.startWhisperStreaming({
@@ -139,7 +139,7 @@ export function useWhisperStream(
         event => {
           const { text, confidence } = event.payload;
 
-          console.log('[useWhisperStream] 📝 Partial:', text);
+          console.warn('[useWhisperStream] 📝 Partial:', text);
 
           if (mountedRef.current) {
             setState(prev => ({
@@ -159,7 +159,7 @@ export function useWhisperStream(
       const unlistenFinal = await listen<TranscriptionEvent>('whisper:final', event => {
         const { text, confidence } = event.payload;
 
-        console.log('[useWhisperStream] ✅ Final:', text);
+        console.warn('[useWhisperStream] ✅ Final:', text);
 
         if (mountedRef.current) {
           setState(prev => {
@@ -189,7 +189,7 @@ export function useWhisperStream(
         }));
       }
 
-      console.log('[useWhisperStream] ✅ Started');
+      console.warn('[useWhisperStream] ✅ Started');
     } catch (error) {
       console.error('[useWhisperStream] ❌ Start error:', error);
 
@@ -212,7 +212,7 @@ export function useWhisperStream(
    */
   const stop = useCallback(async () => {
     try {
-      console.log('[useWhisperStream] 🛑 Stopping...');
+      console.warn('[useWhisperStream] 🛑 Stopping...');
 
       // Stop backend streaming
       await tauriClient.stopWhisperStreaming();
@@ -237,7 +237,7 @@ export function useWhisperStream(
         }));
       }
 
-      console.log('[useWhisperStream] ✅ Stopped');
+      console.warn('[useWhisperStream] ✅ Stopped');
     } catch (error) {
       console.error('[useWhisperStream] ❌ Stop error:', error);
 

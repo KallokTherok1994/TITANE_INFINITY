@@ -293,7 +293,7 @@ export class WebVitalsMonitor {
     })
       .then(res => {
         if (!res.ok) throw new Error('HTTP ' + res.status);
-        console.log('[WebVitals] Synchronisation réussie', latest);
+        console.warn('[WebVitals] Synchronisation réussie', latest);
       })
       .catch(err => {
         console.error('[WebVitals] Synchronisation échouée', err);

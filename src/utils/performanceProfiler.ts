@@ -499,7 +499,7 @@ export function time(label: string): () => void {
   const start = performance.now();
   return () => {
     const duration = performance.now() - start;
-    console.log(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
+    console.warn(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
   };
 }
 

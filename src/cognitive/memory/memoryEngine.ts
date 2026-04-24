@@ -185,7 +185,7 @@ class MemoryEngineClass {
       this.state.lastConsolidation = Date.now();
       this.initialized = true;
 
-      console.log(
+      console.warn(
         '[MemoryEngine] Initialized from persistent memory with',
         this.state.stats.totalMemories,
         'memories'
@@ -264,7 +264,7 @@ class MemoryEngineClass {
         associations: [],
       } as MemoryEntry);
 
-    console.log(
+    console.warn(
       `[MemoryEngine] Stored memory in persistent layer: ${memory.id} (${type})`
     );
     return memory;
@@ -414,7 +414,7 @@ class MemoryEngineClass {
     this.updateStats();
     await this.persist();
 
-    console.log(`[MemoryEngine] Consolidated ${consolidated} memories`);
+    console.warn(`[MemoryEngine] Consolidated ${consolidated} memories`);
     return consolidated;
   }
 
@@ -436,7 +436,7 @@ class MemoryEngineClass {
       memory.strength = Math.max(0.01, memory.strength - decay);
     }
 
-    console.log(
+    console.warn(
       `[MemoryEngine] Applied decay over ${daysSinceConsolidation.toFixed(1)} days`
     );
   }
@@ -455,7 +455,7 @@ class MemoryEngineClass {
 
     const pruned = before - this.state.memories.length;
     if (pruned > 0) {
-      console.log(`[MemoryEngine] Pruned ${pruned} weak memories`);
+      console.warn(`[MemoryEngine] Pruned ${pruned} weak memories`);
     }
   }
 

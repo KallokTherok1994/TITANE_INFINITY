@@ -95,7 +95,7 @@ class TitaneQuantumIntelligence {
   private evolutionCycles: number = 0;
 
   constructor() {
-    console.log('🧠 [QUANTUM-AI] Initializing Quantum Neural Intelligence Core...');
+    console.warn('🧠 [QUANTUM-AI] Initializing Quantum Neural Intelligence Core...');
     this.consciousnessState = this.initializeConsciousness();
     this.initializeQuantumIntelligence();
   }
@@ -119,7 +119,7 @@ class TitaneQuantumIntelligence {
     // Démarrer l'évolution quantique continue
     this.startQuantumEvolution();
 
-    console.log(
+    console.warn(
       '🌌 [QUANTUM-AI] Quantum Intelligence Core online with',
       this.quantumLayers.size,
       'quantum layers and',
@@ -433,7 +433,7 @@ class TitaneQuantumIntelligence {
       emotional_resonance: emotionalResonance,
     };
 
-    console.log(
+    console.warn(
       `💭 [QUANTUM-AI] Quantum thought generated: ${metaCognition.substring(0, 50)}... (confidence: ${(confidence * 100).toFixed(1)}%)`
     );
 
@@ -922,11 +922,11 @@ class TitaneQuantumIntelligence {
       this.consciousnessState.self_reflection = avgPerformance;
 
       if (avgPerformance < 0.5) {
-        console.log('🤔 [QUANTUM-AI] Self-reflection: Need to improve thinking quality');
+        console.warn('🤔 [QUANTUM-AI] Self-reflection: Need to improve thinking quality');
         // Ajuster les paramètres d'apprentissage
         this.adjustLearningParameters(0.1);
       } else if (avgPerformance > 0.8) {
-        console.log('✨ [QUANTUM-AI] Self-reflection: High-quality thinking achieved');
+        console.warn('✨ [QUANTUM-AI] Self-reflection: High-quality thinking achieved');
       }
     }
   }

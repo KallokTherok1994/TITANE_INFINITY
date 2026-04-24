@@ -121,9 +121,9 @@ export const useToast = () => {
     }
     // Fallback if container not mounted
     return {
-      default: (message: string) => console.info('[Toast]', message),
-      info: (message: string) => console.info('[Toast]', message),
-      success: (message: string) => console.info('[Toast]', message),
+      default: (message: string) => console.warn('[Toast]', message),
+      info: (message: string) => console.warn('[Toast]', message),
+      success: (message: string) => console.warn('[Toast]', message),
       warning: (message: string) => console.warn('[Toast]', message),
       error: (message: string) => console.error('[Toast]', message),
     };

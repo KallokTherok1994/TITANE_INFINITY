@@ -128,7 +128,7 @@ export class GPUAcceleratorV2 {
       const success = await this.initializeWebGPU();
       if (success) {
         this.metrics.isWebGPUActive = true;
-        console.log('[GPUAcceleratorV2] WebGPU initialized successfully');
+        console.warn('[GPUAcceleratorV2] WebGPU initialized successfully');
         return true;
       }
     }
@@ -138,7 +138,7 @@ export class GPUAcceleratorV2 {
       const success = this.initializeWebGL();
       if (success) {
         this.metrics.fallbackMode = true;
-        console.log('[GPUAcceleratorV2] WebGL fallback initialized');
+        console.warn('[GPUAcceleratorV2] WebGL fallback initialized');
         return true;
       }
     }

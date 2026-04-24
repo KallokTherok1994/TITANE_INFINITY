@@ -35,7 +35,7 @@ export async function getSynestheticEmotionEngine() {
 export async function startSynestheticEngine() {
   const engine = await getSynestheticEmotionEngine();
   engine.start();
-  console.log('  ✅ Synesthetic Emotion Engine active (30Hz, 12 emotional states)');
+  console.warn('  ✅ Synesthetic Emotion Engine active (30Hz, 12 emotional states)');
 }
 
 /**

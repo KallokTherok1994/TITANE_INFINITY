@@ -827,7 +827,7 @@ class CognitiveOmegaOrchestrator {
     } else if (level === 'warn') {
       console.warn(`${prefix} ${timestamp} ${message}`, data || '');
     } else {
-      console.log(`${prefix} ${timestamp} ${message}`, data || '');
+      console.warn(`${prefix} ${timestamp} ${message}`, data || '');
     }
   }
 }

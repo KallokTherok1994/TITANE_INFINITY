@@ -190,7 +190,7 @@ class RuntimeLogLevelManager {
     // Notify listeners
     this.notifyListeners();
 
-    console.info(`[LogLevelManager] Global log level set to: ${level}`);
+    console.warn(`[LogLevelManager] Global log level set to: ${level}`);
   }
 
   /**
@@ -219,7 +219,7 @@ class RuntimeLogLevelManager {
     // Notify listeners
     this.notifyListeners();
 
-    console.info(`[LogLevelManager] Module "${module}" log level set to: ${level}`);
+    console.warn(`[LogLevelManager] Module "${module}" log level set to: ${level}`);
   }
 
   /**
@@ -236,7 +236,7 @@ class RuntimeLogLevelManager {
 
     this.notifyListeners();
 
-    console.info(`[LogLevelManager] Module "${module}" log level reset to global`);
+    console.warn(`[LogLevelManager] Module "${module}" log level reset to global`);
   }
 
   /**
@@ -246,7 +246,7 @@ class RuntimeLogLevelManager {
     if (!this.config.excluded.includes(module)) {
       this.config.excluded.push(module);
       this.notifyListeners();
-      console.info(`[LogLevelManager] Module "${module}" excluded from logging`);
+      console.warn(`[LogLevelManager] Module "${module}" excluded from logging`);
     }
   }
 
@@ -257,7 +257,7 @@ class RuntimeLogLevelManager {
     if (!this.config.forced.includes(module)) {
       this.config.forced.push(module);
       this.notifyListeners();
-      console.info(`[LogLevelManager] Module "${module}" force-enabled for logging`);
+      console.warn(`[LogLevelManager] Module "${module}" force-enabled for logging`);
     }
   }
 
@@ -302,7 +302,7 @@ class RuntimeLogLevelManager {
 
     this.notifyListeners();
 
-    console.info('[LogLevelManager] Configuration reset to defaults');
+    console.warn('[LogLevelManager] Configuration reset to defaults');
   }
 
   /**
@@ -369,7 +369,7 @@ class RuntimeLogLevelManager {
       },
     };
 
-    console.info(
+    console.warn(
       '[LogLevelManager] Global API exposed: window.__TITANE_LOG__',
       `\nCurrent level: ${this.config.global}`,
       `\nUsage:`,

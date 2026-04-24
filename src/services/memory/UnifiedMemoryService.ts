@@ -423,7 +423,7 @@ export class UnifiedMemoryService {
     const removedCount = beforeCount - afterCount;
 
     if (removedCount > 0) {
-      console.log(`Cleaned up ${removedCount} entries from ${tier}`);
+      console.warn(`Cleaned up ${removedCount} entries from ${tier}`);
 
       // Save changes
       if (this.config.persistenceEnabled) {
@@ -580,7 +580,7 @@ export class UnifiedMemoryService {
     const removedLtm = this.ltm.length - newLtm.length;
 
     if (removedStm > 0 || removedMtm > 0 || removedLtm > 0) {
-      console.log(
+      console.warn(
         `cleanupExpiredEntries: Removed ${removedStm} STM, ${removedMtm} MTM, ${removedLtm} LTM entries`
       );
     }

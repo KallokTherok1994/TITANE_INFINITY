@@ -143,7 +143,7 @@ export function useEngineVitals(
       setVitals(engineVitals);
 
       if (import.meta.env.DEV) {
-        console.debug('[useEngineVitals] refreshed', {
+        console.warn('[useEngineVitals] refreshed', {
           harmonia: `${engineVitals.harmonia.load}%`,
           helios: `${engineVitals.helios.health}%`,
           nexus: `${engineVitals.nexus.coherence}%`,

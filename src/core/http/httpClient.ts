@@ -161,7 +161,7 @@ async function request<T = unknown>(
   }
 
   try {
-    console.log(`[HTTP] ${method} ${url}`);
+    console.warn(`[HTTP] ${method} ${url}`);
 
     // Préparer body pour le transport standard
     let fetchBody: BodyInit | undefined;
@@ -198,7 +198,7 @@ async function request<T = unknown>(
         timeoutPromise,
       ]);
       // ... continue processing response below
-      console.log(`[HTTP] ${method} ${url} → ${response.status} (MOCK)`);
+      console.warn(`[HTTP] ${method} ${url} → ${response.status} (MOCK)`);
       let data: T;
       try {
         const text = await response.text();
@@ -247,7 +247,7 @@ async function request<T = unknown>(
       headers: Record<string, string>;
     };
 
-    console.log(`[HTTP] ${method} ${url} → ${tauriData.status}`);
+    console.warn(`[HTTP] ${method} ${url} → ${tauriData.status}`);
 
     // Parse Tauri IPC response
     let data: T;

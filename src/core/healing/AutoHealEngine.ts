@@ -99,7 +99,7 @@ export class AutoHealEngine {
    * Détecte les modules cassés
    */
   public async detectBrokenModules(): Promise<BrokenModule[]> {
-    console.log('[AutoHeal] 🔍 Detecting broken modules...');
+    console.warn('[AutoHeal] 🔍 Detecting broken modules...');
 
     const broken: BrokenModule[] = [];
 
@@ -115,7 +115,7 @@ export class AutoHealEngine {
       this.brokenModules.set(module.name, module);
     }
 
-    console.log(`[AutoHeal] Found ${broken.length} broken modules`);
+    console.warn(`[AutoHeal] Found ${broken.length} broken modules`);
 
     return broken;
   }
@@ -152,7 +152,7 @@ export class AutoHealEngine {
     symptoms: string
   ): Promise<SelfHealingRunResult | null> {
     try {
-      console.log('[AutoHeal] 🤖 Running TITANE Local self-healing...');
+      console.warn('[AutoHeal] 🤖 Running TITANE Local self-healing...');
       const result = await runSelfHealing(symptoms);
       this.lastSelfHealingResult = result;
       return result;
@@ -173,7 +173,7 @@ export class AutoHealEngine {
    * Répare un module spécifique
    */
   private async healModule(module: BrokenModule): Promise<HealResult> {
-    console.log(`[AutoHeal] 🩹 Healing module: ${module.name}`);
+    console.warn(`[AutoHeal] 🩹 Healing module: ${module.name}`);
 
     const startTime = Date.now();
     const actionsTaken: string[] = [];
@@ -283,11 +283,11 @@ export class AutoHealEngine {
    * Resynchronise l'état global
    */
   public async resyncState(): Promise<void> {
-    console.log('[AutoHeal] 🔄 Resynchronizing state...');
+    console.warn('[AutoHeal] 🔄 Resynchronizing state...');
 
     try {
       await secureInvoke('autoheal_resync_state');
-      console.log('[AutoHeal] ✅ State resynchronized');
+      console.warn('[AutoHeal] ✅ State resynchronized');
     } catch (error) {
       console.error('[AutoHeal] State resync failed:', error);
       throw error;

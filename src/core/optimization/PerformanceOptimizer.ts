@@ -142,7 +142,7 @@ export class PerformanceOptimizer {
    */
   public configure(config: Partial<OptimizationConfig>): void {
     this.config = { ...this.config, ...config };
-    console.log('[PerformanceOptimizer] 🔧 Configuration updated');
+    console.warn('[PerformanceOptimizer] 🔧 Configuration updated');
   }
 
   /**
@@ -167,7 +167,7 @@ export class PerformanceOptimizer {
       }
     }, interval);
 
-    console.log('[PerformanceOptimizer] 📊 Monitoring started');
+    console.warn('[PerformanceOptimizer] 📊 Monitoring started');
   }
 
   /**
@@ -178,7 +178,7 @@ export class PerformanceOptimizer {
       clearInterval(this.metricsInterval);
       this.metricsInterval = null;
       this.isMonitoringCycleRunning = false;
-      console.log('[PerformanceOptimizer] 🛑 Monitoring stopped');
+      console.warn('[PerformanceOptimizer] 🛑 Monitoring stopped');
     }
   }
 
@@ -417,7 +417,7 @@ export class PerformanceOptimizer {
       await secureInvoke('performance_reset_optimizations');
     }
     this.optimizationHistory = [];
-    console.log('[PerformanceOptimizer] ♻️ Optimizations reset');
+    console.warn('[PerformanceOptimizer] ♻️ Optimizations reset');
   }
 }
 

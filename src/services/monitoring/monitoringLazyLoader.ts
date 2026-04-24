@@ -95,7 +95,7 @@ export async function initMonitoringAsync(
     // Capture Web Vitals for performance tracking
     monitoring.captureWebVitals();
 
-    console.log('✅ [MONITORING] Lazy initialization complete');
+    console.warn('✅ [MONITORING] Lazy initialization complete');
     return true;
   } catch (error) {
     console.warn('⚠️ [MONITORING] Lazy initialization failed:', error);

@@ -15,7 +15,7 @@ export function clearMenuCache(): void {
       localStorage.removeItem(key);
     });
 
-    console.log('✅ Cache menu nettoyé - Rechargez la page');
+    console.warn('✅ Cache menu nettoyé - Rechargez la page');
   } catch (error) {
     console.error('❌ Erreur nettoyage cache menu:', error);
   }

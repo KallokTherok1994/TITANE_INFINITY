@@ -277,7 +277,7 @@ function startAutoCleanup() {
     MetricsCache.cleanup();
   }, 10000); // Every 10s
 
-  console.log('[MetricsCache] Auto-cleanup activé (10s)');
+  console.warn('[MetricsCache] Auto-cleanup activé (10s)');
 }
 
 /**
@@ -287,7 +287,7 @@ export function stopAutoCleanup() {
   if (autoCleanupIntervalId !== null) {
     clearInterval(autoCleanupIntervalId);
     autoCleanupIntervalId = null;
-    console.log('[MetricsCache] Auto-cleanup désactivé');
+    console.warn('[MetricsCache] Auto-cleanup désactivé');
   }
 }
 

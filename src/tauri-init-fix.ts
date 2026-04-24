@@ -14,7 +14,7 @@
 
     // Tauri v2 devrait injecter __TAURI__ globalement
     if (w.__TAURI__ && w.__TAURI__.core && w.__TAURI__.core.invoke) {
-      console.log('✅ [TauriInit] Tauri detected and initialized');
+      console.warn('✅ [TauriInit] Tauri detected and initialized');
       // ✅ SET INITIALIZATION FLAG for TauriProtector
       w.__TITANE_TAURI_INITIALIZED = true;
       window.dispatchEvent(new Event('tauri-ready'));
@@ -23,7 +23,7 @@
 
     // Vérifier aussi __TAURI_INTERNALS__
     if (w.__TAURI_INTERNALS__) {
-      console.log('✅ [TauriInit] Tauri internals detected');
+      console.warn('✅ [TauriInit] Tauri internals detected');
       // ✅ SET INITIALIZATION FLAG for TauriProtector
       w.__TITANE_TAURI_INITIALIZED = true;
       window.dispatchEvent(new Event('tauri-ready'));
@@ -58,12 +58,12 @@
       const w = window as any;
       if (!w.__TITANE_NOT_TAURI__) {
         w.__TITANE_NOT_TAURI__ = true;
-        console.info('💡 [TauriInit] Set __TITANE_NOT_TAURI__ flag');
+        console.warn('💡 [TauriInit] Set __TITANE_NOT_TAURI__ flag');
       }
     }
   }, checkInterval);
 
   // 3. Émettre un événement au chargement
-  console.log('🔄 [TauriInit] Waiting for Tauri initialization...');
+  console.warn('🔄 [TauriInit] Waiting for Tauri initialization...');
   window.dispatchEvent(new Event('titane-init-check'));
 })();

@@ -919,7 +919,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     } else if (level === 'warn') {
       console.warn(`[CognitiveObservabilityEngine] ${timestamp} ${message}`, data || '');
     } else {
-      console.log(`[CognitiveObservabilityEngine] ${timestamp} ${message}`, data || '');
+      console.warn(`[CognitiveObservabilityEngine] ${timestamp} ${message}`, data || '');
     }
 
     this.emit('log', { timestamp, level, message, data });

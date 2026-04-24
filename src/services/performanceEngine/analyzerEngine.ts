@@ -138,7 +138,7 @@ export class PerformanceAnalyzer {
     this.state = this.createInitialState();
     this.eventListeners = new Map();
 
-    console.log('[PerformanceAnalyzer] Initialisé avec config:', this.config);
+    console.warn('[PerformanceAnalyzer] Initialisé avec config:', this.config);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -156,7 +156,7 @@ export class PerformanceAnalyzer {
 
     this.isRunning = true;
     this.emit('engine_started', { component: 'analyzer', timestamp: Date.now() });
-    console.log('[PerformanceAnalyzer] Démarré');
+    console.warn('[PerformanceAnalyzer] Démarré');
   }
 
   /**
@@ -170,7 +170,7 @@ export class PerformanceAnalyzer {
 
     this.isRunning = false;
     this.emit('engine_stopped', { component: 'analyzer', timestamp: Date.now() });
-    console.log('[PerformanceAnalyzer] Arrêté');
+    console.warn('[PerformanceAnalyzer] Arrêté');
   }
 
   /**
@@ -262,7 +262,7 @@ export class PerformanceAnalyzer {
    */
   updateThresholds(thresholds: Partial<ThresholdConfig>): void {
     this.config.thresholds = { ...this.config.thresholds, ...thresholds };
-    console.log('[PerformanceAnalyzer] Thresholds mis à jour:', thresholds);
+    console.warn('[PerformanceAnalyzer] Thresholds mis à jour:', thresholds);
   }
 
   /**
@@ -270,7 +270,7 @@ export class PerformanceAnalyzer {
    */
   reset(): void {
     this.state = this.createInitialState();
-    console.log('[PerformanceAnalyzer] État réinitialisé');
+    console.warn('[PerformanceAnalyzer] État réinitialisé');
   }
 
   /**

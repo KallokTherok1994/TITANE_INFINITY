@@ -113,7 +113,7 @@ export class AudioSignature {
     //   4. Connect: oscillator -> gain -> audioContext.destination
     //   5. Start/stop: oscillator.start(now), oscillator.stop(now + duration)
     // Use case: Notification sounds, state transition cues
-    console.debug('[AudioSignature] playPulseTone:', frequency, duration);
+    console.warn('[AudioSignature] playPulseTone:', frequency, duration);
   }
 
   /**
@@ -135,7 +135,7 @@ export class AudioSignature {
     //   - Upward sweep (focus): energizing, alerting
     //   - Downward sweep (calm): relaxing, settling
     //   - Short sweep: quick state change acknowledgment
-    console.debug('[AudioSignature] playTransition:', fromState, '->', toState);
+    console.warn('[AudioSignature] playTransition:', fromState, '->', toState);
   }
 
   /**
@@ -157,7 +157,7 @@ export class AudioSignature {
     //      - Focus: 800-1200Hz (neutral, centered)
     //   4. Adjust volume based on intensity: gain.gain.value = intensity * maxVolume
     // Use case: Background soundscapes for extended work sessions
-    console.debug('[AudioSignature] updateAmbient:', emotional, intensity);
+    console.warn('[AudioSignature] updateAmbient:', emotional, intensity);
   }
 
   /**

@@ -536,10 +536,10 @@ class SelfHealingEngineOrchestrator {
       const prefix = '[SelfHealingEngine]';
       switch (level) {
         case 'debug':
-          console.debug(prefix, message);
+          console.warn(prefix, message);
           break;
         case 'info':
-          console.log(prefix, message);
+          console.warn(prefix, message);
           break;
         case 'warn':
           logger.warn(message, { component: 'SelfHealingEngine', action: 'log' });

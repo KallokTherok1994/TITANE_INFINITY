@@ -393,7 +393,7 @@ const useBootWatchdog = () => {
   const copyDiagnostics = useCallback(() => {
     const text = JSON.stringify(diagnostics, null, 2);
     navigator.clipboard.writeText(text).then(
-      () => console.log('✅ Diagnostics copiés'),
+      () => console.warn('✅ Diagnostics copiés'),
       () => console.error('❌ Échec copie clipboard')
     );
   }, [diagnostics]);

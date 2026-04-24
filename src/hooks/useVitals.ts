@@ -211,7 +211,7 @@ export function useVitals(options: UseVitalsOptions = {}): UseVitalsReturn {
           onIntervalChange: newInterval => {
             setCurrentInterval(newInterval);
             if (process.env.NODE_ENV === 'development') {
-              console.log(`[useVitals] Adaptive interval: ${newInterval}ms`);
+              console.warn(`[useVitals] Adaptive interval: ${newInterval}ms`);
             }
           },
         }

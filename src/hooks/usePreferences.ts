@@ -81,7 +81,7 @@ export function usePreferences() {
 
         // Sauvegarder dans localStorage
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-        console.log(`[usePreferences] Saved ${key}:`, value);
+        console.warn(`[usePreferences] Saved ${key}:`, value);
       } catch (err) {
         console.error(`[usePreferences] Failed to save ${key}:`, err);
       }
@@ -94,7 +94,7 @@ export function usePreferences() {
     try {
       setPreferences(DEFAULT_PREFERENCES);
       localStorage.removeItem(STORAGE_KEY);
-      console.log('[usePreferences] Reset to defaults');
+      console.warn('[usePreferences] Reset to defaults');
     } catch (err) {
       console.error('[usePreferences] Failed to reset:', err);
     }

@@ -52,7 +52,7 @@ function MessageListImpl({
 
   useEffect(() => {
     if (isDev && rawMessages?.length > 0) {
-      console.log('[MessageList] Messages:', rawMessages.length);
+      console.warn('[MessageList] Messages:', rawMessages.length);
     }
   }, [rawMessages]);
 

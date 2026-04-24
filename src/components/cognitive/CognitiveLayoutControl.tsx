@@ -246,7 +246,7 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
       oscillator.stop(audioContext.currentTime + 0.1);
     } catch (error) {
       // Silently fail if audio not supported
-      console.debug('Audio feedback not available:', error);
+      console.warn('Audio feedback not available:', error);
     }
   }, []);
 
@@ -323,7 +323,7 @@ export const CognitiveLayoutControl = memo(function CognitiveLayoutControl() {
   // Log performance stats in DEV
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' && stats) {
-      console.log('[CognitiveLayout] Performance Stats:', {
+      console.warn('[CognitiveLayout] Performance Stats:', {
         avgRenderTime: stats.avgTime?.toFixed(2) + 'ms',
         renderCount: stats.count,
         maxRender: stats.maxTime?.toFixed(2) + 'ms',

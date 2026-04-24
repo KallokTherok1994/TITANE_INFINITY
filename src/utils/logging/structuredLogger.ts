@@ -239,9 +239,9 @@ class StructuredLoggerImpl {
   private getConsoleMethod(level: LogLevel): (...args: unknown[]) => void {
     switch (level) {
       case 'debug':
-        return console.debug;
+        return console.warn;
       case 'info':
-        return console.info;
+        return console.warn;
       case 'warn':
         return console.warn;
       case 'error':

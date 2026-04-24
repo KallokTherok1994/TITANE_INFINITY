@@ -167,13 +167,13 @@ export function validateTauriOnlyMode(): { valid: boolean; violations: string[] 
 
 // Log current configuration in dev mode
 if (FEATURE_FLAGS.DEV_MODE) {
-  console.log('🎯 TITANE∞ Feature Flags:', FEATURE_FLAGS);
-  console.log('🌐 Network allowed:', isNetworkAllowed());
-  console.log('🤖 Active AI providers:', getActiveAIProviders());
+  console.warn('🎯 TITANE∞ Feature Flags:', FEATURE_FLAGS);
+  console.warn('🌐 Network allowed:', isNetworkAllowed());
+  console.warn('🤖 Active AI providers:', getActiveAIProviders());
 
   const validation = validateTauriOnlyMode();
   if (validation.valid) {
-    console.log('✅ Tauri-only mode: ENFORCED');
+    console.warn('✅ Tauri-only mode: ENFORCED');
   } else {
     console.warn('⚠️ Tauri-only violations:', validation.violations);
   }

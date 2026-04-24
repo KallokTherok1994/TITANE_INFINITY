@@ -620,7 +620,7 @@ export const AgendaPage: React.FC = React.memo(() => {
 
   const handleEventClick = useCallback((event: AgendaEvent) => {
     setSelectedEvent(event);
-    console.log('[AgendaPage] Événement sélectionné:', event.title);
+    console.warn('[AgendaPage] Événement sélectionné:', event.title);
   }, []);
 
   const handleDayClick = useCallback(

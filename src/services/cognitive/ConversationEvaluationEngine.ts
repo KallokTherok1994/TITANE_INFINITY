@@ -1162,7 +1162,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
     level: 'info' | 'warn' | 'error' = 'info'
   ): void {
     const timestamp = new Date().toISOString();
-    console.log(`[ConversationEvaluationEngine] ${timestamp} ${message}`, data || '');
+    console.warn(`[ConversationEvaluationEngine] ${timestamp} ${message}`, data || '');
     this.emit('log', { timestamp, level, message, data });
   }
 }

@@ -201,7 +201,7 @@ class EvolutionEngine {
       const backendState = await secureInvoke<EvolutionState>('evolution_get_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
-        console.log('[EvolutionEngine] État chargé depuis backend:', this.state.version);
+        console.warn('[EvolutionEngine] État chargé depuis backend:', this.state.version);
       }
     } catch {
       try {
@@ -209,7 +209,7 @@ class EvolutionEngine {
         if (stored) {
           const parsed = JSON.parse(stored);
           this.state = { ...createDefaultState(), ...parsed };
-          console.log('[EvolutionEngine] État chargé depuis localStorage');
+          console.warn('[EvolutionEngine] État chargé depuis localStorage');
         }
       } catch (e) {
         console.warn('[EvolutionEngine] Erreur chargement:', e);
@@ -294,7 +294,7 @@ class EvolutionEngine {
     await this.persist();
     this.notifyListeners();
 
-    console.log(
+    console.warn(
       `[EvolutionEngine] Cycle ${cycleNumber} complété - Phase: ${this.state.phase}`
     );
 
@@ -334,7 +334,7 @@ class EvolutionEngine {
         avgMetrics >= threshold.minMetrics
       ) {
         if (this.state.phase !== phase) {
-          console.log(
+          console.warn(
             `[EvolutionEngine] 🎉 Phase upgrade: ${this.state.phase} → ${phase}`
           );
           this.state.phase = phase;

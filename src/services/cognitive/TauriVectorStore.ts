@@ -60,7 +60,7 @@ export class TauriVectorStore implements VectorStore {
       });
 
       this.isInitialized = true;
-      console.log('[TauriVectorStore] Initialized:', this.storeId);
+      console.warn('[TauriVectorStore] Initialized:', this.storeId);
     } catch (error) {
       console.error('[TauriVectorStore] Initialization failed:', error);
       throw error;
@@ -273,7 +273,7 @@ export class TauriVectorStore implements VectorStore {
    */
   async cleanup(): Promise<void> {
     // Backend handles cleanup automatically
-    console.log('[TauriVectorStore] Cleanup requested');
+    console.warn('[TauriVectorStore] Cleanup requested');
   }
 
   /**
@@ -282,7 +282,7 @@ export class TauriVectorStore implements VectorStore {
   async close(): Promise<void> {
     this.storeId = null;
     this.isInitialized = false;
-    console.log('[TauriVectorStore] Closed');
+    console.warn('[TauriVectorStore] Closed');
   }
 }
 

@@ -93,7 +93,7 @@ export class ChatInterruptionHandler {
       },
     };
 
-    console.log('[ChatInterruptionHandler] 🧠 Initialized');
+    console.warn('[ChatInterruptionHandler] 🧠 Initialized');
   }
 
   /**
@@ -101,7 +101,7 @@ export class ChatInterruptionHandler {
    */
   enable(): void {
     this.config.enabled = true;
-    console.log('[ChatInterruptionHandler] ✅ Enabled');
+    console.warn('[ChatInterruptionHandler] ✅ Enabled');
   }
 
   /**
@@ -109,7 +109,7 @@ export class ChatInterruptionHandler {
    */
   disable(): void {
     this.config.enabled = false;
-    console.log('[ChatInterruptionHandler] 🔇 Disabled');
+    console.warn('[ChatInterruptionHandler] 🔇 Disabled');
   }
 
   /**
@@ -180,9 +180,9 @@ export class ChatInterruptionHandler {
       timestamp: Date.now(),
     };
 
-    console.log(`[ChatInterruptionHandler] 🚨 Interruption: ${type}`);
-    console.log(`   User: "${userText}"`);
-    console.log(`   Interrupted at: ${(interruptedAt * 100).toFixed(0)}%`);
+    console.warn(`[ChatInterruptionHandler] 🚨 Interruption: ${type}`);
+    console.warn(`   User: "${userText}"`);
+    console.warn(`   Interrupted at: ${(interruptedAt * 100).toFixed(0)}%`);
 
     // Add to history
     this.history.push(context);
@@ -226,7 +226,7 @@ export class ChatInterruptionHandler {
    */
   clearHistory(): void {
     this.history = [];
-    console.log('[ChatInterruptionHandler] 🗑️ History cleared');
+    console.warn('[ChatInterruptionHandler] 🗑️ History cleared');
   }
 
   /**

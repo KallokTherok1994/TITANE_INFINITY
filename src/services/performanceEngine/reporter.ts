@@ -978,10 +978,10 @@ export class PerformanceReporter {
           console.warn(message, context ?? '');
           break;
         case 'info':
-          console.log(message, context ?? '');
+          console.warn(message, context ?? '');
           break;
         case 'debug':
-          console.debug(message, context ?? '');
+          console.warn(message, context ?? '');
           break;
       }
     }

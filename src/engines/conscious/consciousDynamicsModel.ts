@@ -163,7 +163,7 @@ export class ConsciousDynamicsModel {
   constructor() {
     this.state = this.getDefaultState();
     this.repairState = this.getDefaultRepairState();
-    console.log('🧠 [CONSCIOUS] Initializing Conscious Dynamics Model...');
+    console.warn('🧠 [CONSCIOUS] Initializing Conscious Dynamics Model...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -173,7 +173,7 @@ export class ConsciousDynamicsModel {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🧠 [CONSCIOUS] Starting conscious dynamics at 30Hz...');
+    console.warn('🧠 [CONSCIOUS] Starting conscious dynamics at 30Hz...');
     this.updateInterval = setInterval(() => this.tick(), 33); // 30 Hz
   }
 
@@ -181,7 +181,7 @@ export class ConsciousDynamicsModel {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('🧠 [CONSCIOUS] Conscious dynamics stopped.');
+      console.warn('🧠 [CONSCIOUS] Conscious dynamics stopped.');
     }
   }
 
@@ -337,7 +337,7 @@ export class ConsciousDynamicsModel {
   }
 
   private initiateRepair(reason: string): void {
-    console.log(`🛠️ [CONSCIOUS] Initiating self-repair: ${reason}`);
+    console.warn(`🛠️ [CONSCIOUS] Initiating self-repair: ${reason}`);
 
     this.repairState = {
       active: true,
@@ -373,7 +373,7 @@ export class ConsciousDynamicsModel {
 
     // Fin de la réparation
     if (this.repairState.progress >= 1) {
-      console.log('✅ [CONSCIOUS] Self-repair complete.');
+      console.warn('✅ [CONSCIOUS] Self-repair complete.');
       this.repairState = this.getDefaultRepairState();
     }
   }
@@ -406,7 +406,7 @@ export class ConsciousDynamicsModel {
   setMode(mode: ConsciousMode): void {
     if (mode === this.state.mode) return;
 
-    console.log(`🧠 [CONSCIOUS] Switching mode: ${this.state.mode} → ${mode}`);
+    console.warn(`🧠 [CONSCIOUS] Switching mode: ${this.state.mode} → ${mode}`);
 
     this.state.mode = mode;
     this.state.transitionState = 'initiating';

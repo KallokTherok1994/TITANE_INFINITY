@@ -463,8 +463,8 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
   };
 
   const logDiagnostics = () => {
-    console.group('[ChatDiagnostic] Résultats');
-    console.table(
+    console.warn('[ChatDiagnostic] Résultats');
+    console.warn(
       Object.values(results).map(item => ({
         id: item.id,
         statut: item.status,
@@ -472,7 +472,6 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
         durée: formatDuration(item.durationMs),
       }))
     );
-    console.groupEnd();
   };
 
   const isRunning = (id: string): boolean => runningAll || runningIds.includes(id);

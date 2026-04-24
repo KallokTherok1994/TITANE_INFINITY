@@ -56,7 +56,7 @@ export class HarmoniaAgent implements Agent {
   }> = [];
 
   async initialize(): Promise<void> {
-    console.log('🎼 [HARMONIA] Initializing emotional calibration agent...');
+    console.warn('🎼 [HARMONIA] Initializing emotional calibration agent...');
     this.state.status = 'active';
     this.state.health = 100;
     this.updateMetrics();
@@ -238,22 +238,22 @@ export class HarmoniaAgent implements Agent {
   }
 
   emit(event: AgentEvent): void {
-    console.log(`🎼 [HARMONIA] Emitting event: ${event.type}`);
+    console.warn(`🎼 [HARMONIA] Emitting event: ${event.type}`);
   }
 
   async pause(): Promise<void> {
     this.state.status = 'paused';
-    console.log('⏸️  [HARMONIA] Paused');
+    console.warn('⏸️  [HARMONIA] Paused');
   }
 
   async resume(): Promise<void> {
     this.state.status = 'active';
-    console.log('▶️  [HARMONIA] Resumed');
+    console.warn('▶️  [HARMONIA] Resumed');
   }
 
   async shutdown(): Promise<void> {
     this.state.status = 'idle';
-    console.log('🔻 [HARMONIA] Shutdown');
+    console.warn('🔻 [HARMONIA] Shutdown');
   }
 
   getHealth(): number {

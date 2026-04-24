@@ -99,7 +99,7 @@ export class SemanticMemoryEngine {
       }
 
       this.isInitialized = true;
-      console.log('[SemanticMemory] Engine initialized');
+      console.warn('[SemanticMemory] Engine initialized');
     } catch (error) {
       console.error('[SemanticMemory] Initialization failed:', error);
       throw error;

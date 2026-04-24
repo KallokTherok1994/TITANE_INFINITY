@@ -38,7 +38,7 @@ export const authClient = {
    * @example
    * ```typescript
    * const token = await authClient.generateDevToken();
-   * console.log('Dev token:', token);
+   * console.warn('Dev token:', token);
    * ```
    */
   async generateDevToken(): Promise<string> {

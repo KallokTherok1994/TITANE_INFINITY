@@ -203,7 +203,7 @@ export class RealTimeExecutionEngine {
     // Démarrer boucle d'exécution
     this.executionLoop();
 
-    console.log(`[RealtimeEngine] ✨ Started at ${targetFPS} FPS`);
+    console.warn(`[RealtimeEngine] ✨ Started at ${targetFPS} FPS`);
   }
 
   /**
@@ -222,7 +222,7 @@ export class RealTimeExecutionEngine {
     this.audioScheduler.clear();
     this.uiEventBatcher.clear();
 
-    console.log('[RealtimeEngine] Stopped');
+    console.warn('[RealtimeEngine] Stopped');
   }
 
   /**

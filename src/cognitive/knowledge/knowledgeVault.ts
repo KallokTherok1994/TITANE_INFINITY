@@ -198,7 +198,7 @@ class KnowledgeVaultEngine {
         );
         if (backendState) {
           this.state = { ...createDefaultState(), ...backendState };
-          console.log(
+          console.warn(
             '[KnowledgeVault] État chargé depuis backend:',
             this.state.totalDocuments,
             'documents'
@@ -214,7 +214,7 @@ class KnowledgeVaultEngine {
         if (stored) {
           const parsed = JSON.parse(stored);
           this.state = { ...createDefaultState(), ...parsed };
-          console.log('[KnowledgeVault] État chargé depuis localStorage');
+          console.warn('[KnowledgeVault] État chargé depuis localStorage');
         }
       } catch (e) {
         console.warn('[KnowledgeVault] Erreur chargement localStorage:', e);
@@ -296,7 +296,7 @@ class KnowledgeVaultEngine {
     // Notifier
     this.notifyListeners();
 
-    console.log(`[KnowledgeVault] Document ingéré: ${entry.title} (${category})`);
+    console.warn(`[KnowledgeVault] Document ingéré: ${entry.title} (${category})`);
 
     // Envoyer au backend Tauri
     try {

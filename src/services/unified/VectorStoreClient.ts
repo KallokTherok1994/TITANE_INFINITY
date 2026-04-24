@@ -75,7 +75,7 @@ export class VectorStoreClient implements IVectorStore {
       });
 
       this.isInitialized = true;
-      console.log('[VectorStoreClient] Initialized:', this.storeId);
+      console.warn('[VectorStoreClient] Initialized:', this.storeId);
     } catch (error) {
       console.error('[VectorStoreClient] Initialization failed:', error);
       throw error;

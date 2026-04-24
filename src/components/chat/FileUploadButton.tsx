@@ -293,7 +293,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
           return;
         }
 
-        isDev && console.log('[FileUpload] Processing', files.length, 'files');
+        isDev && console.warn('[FileUpload] Processing', files.length, 'files');
 
         const results: AnalyzedFile[] = [];
 
@@ -339,7 +339,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
               });
 
               isDev &&
-                console.log(
+                console.warn(
                   '[FileUpload] ✅ File ingested to memory:',
                   result.name,
                   memoryResult
@@ -358,7 +358,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                 }
               );
               isDev &&
-                console.log(
+                console.warn(
                   '[FileUpload] ✨ +20 XP awarded for file import:',
                   result.name
                 );
@@ -377,7 +377,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                   localOnly: true,
                 });
                 isDev &&
-                  console.log(
+                  console.warn(
                     '[FileUpload] ✨ +10 XP awarded for local analysis:',
                     result.name
                   );
@@ -392,7 +392,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
         onFilesSelected(results);
         setIsProcessing(false);
 
-        isDev && console.log('[FileUpload] Processed files:', results);
+        isDev && console.warn('[FileUpload] Processed files:', results);
       },
       [maxFiles, processFile, onFilesSelected, onFileAnalyzed]
     );

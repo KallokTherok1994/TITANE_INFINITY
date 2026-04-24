@@ -299,7 +299,7 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
           🔄 Refresh Status
         </button>
         <button
-          onClick={() => console.log('Restart failing cores')}
+          onClick={() => console.warn('Restart failing cores')}
           className="px-4 py-2 text-sm bg-orange-600 hover:bg-orange-700 rounded text-white transition"
           disabled={healthPercentage === 100}
         >

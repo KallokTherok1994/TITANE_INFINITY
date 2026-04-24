@@ -554,5 +554,5 @@ export async function generateRegressionReport(): Promise<RegressionReport> {
  * Exporte les alertes de régression
  */
 export function exportRegressionAlerts(alerts: RegressionAlert[]): void {
-  console.log('[Regression] Alertes détectées:', JSON.stringify(alerts, null, 2));
+  console.warn('[Regression] Alertes détectées:', JSON.stringify(alerts, null, 2));
 }

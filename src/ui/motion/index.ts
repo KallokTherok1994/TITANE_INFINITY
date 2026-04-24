@@ -62,7 +62,7 @@ export function initializeMicroInteractions(): void {
   injectRippleStyles();
   injectFocusGlowStyles();
 
-  console.debug('[TITANE∞] Micro-interactions initialized');
+  console.warn('[TITANE∞] Micro-interactions initialized');
 }
 
 /**

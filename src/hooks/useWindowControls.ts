@@ -54,7 +54,7 @@ const isZoomResetShortcut = (event: KeyboardEvent): boolean =>
  */
 function applyZoom(level: number): void {
   const appliedScale = applyZoomScale(mapTauriZoomLevelToScale(level));
-  console.log(
+  console.warn(
     `[WindowControls] Applied zoom: ${Math.round(appliedScale * 100)}% (backend=${level})`
   );
 }
@@ -92,7 +92,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
     try {
       await tauriClient.windowZoomReset();
       applyZoom(1.0);
-      console.log('[WindowControls] Zoom reset: baseline restored');
+      console.warn('[WindowControls] Zoom reset: baseline restored');
     } catch (error) {
       console.error('[WindowControls] Failed to reset zoom:', error);
     }
@@ -101,7 +101,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
   const handleToggleFullscreen = useCallback(async () => {
     try {
       const isFullscreen = (await tauriClient.windowToggleFullscreen()) as boolean;
-      console.log(`[WindowControls] Fullscreen: ${isFullscreen ? 'ON' : 'OFF'}`);
+      console.warn(`[WindowControls] Fullscreen: ${isFullscreen ? 'ON' : 'OFF'}`);
       return isFullscreen;
     } catch (error) {
       console.error('[WindowControls] Failed to toggle fullscreen:', error);

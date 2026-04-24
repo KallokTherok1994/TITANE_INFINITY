@@ -83,7 +83,7 @@ class ChatModeService {
       await this.syncWithBackend();
 
       this.initialized = true;
-      console.log(
+      console.warn(
         '[ChatModeService] ✅ Initialized with mode:',
         this.state.current_mode_id
       );
@@ -138,7 +138,7 @@ class ChatModeService {
       });
     } catch (error) {
       // Backend non disponible - continuer en mode local
-      console.debug('[ChatModeService] Backend sync skipped:', error);
+      console.warn('[ChatModeService] Backend sync skipped:', error);
     }
   }
 
@@ -282,7 +282,7 @@ class ChatModeService {
       };
       this.notifyListeners(event);
 
-      console.log(
+      console.warn(
         `[ChatModeService] ✅ Mode changed: ${previousModeId} → ${new_mode_id}`
       );
 
@@ -355,7 +355,7 @@ class ChatModeService {
     this.state.mode_xp[modeId] = (this.state.mode_xp[modeId] ?? 0) + amount;
 
     this.saveState();
-    console.log(
+    console.warn(
       `[ChatModeService] +${amount} XP (mode: ${modeId}, total: ${this.userXP})`
     );
   }
@@ -435,7 +435,7 @@ class ChatModeService {
     this.state = { ...INITIAL_CHAT_MODE_STATE };
     this.userXP = 0;
     this.saveState();
-    console.log('[ChatModeService] State reset');
+    console.warn('[ChatModeService] State reset');
   }
 }
 

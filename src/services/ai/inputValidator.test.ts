@@ -71,7 +71,7 @@ describe('InputValidator', () => {
       const malicious = `Avant
 <script>
   alert("XSS");
-  console.log("danger");
+  console.warn("danger");
 </script>
 Après`;
       const sanitized = inputValidator.validate(malicious);

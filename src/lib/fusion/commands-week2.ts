@@ -63,7 +63,7 @@ export async function generateIAResponse(
  * const response = await generateWithCache(
  *   'What is the meaning of life?'
  * );
- * console.log(`Response was ${response.cached ? 'cached' : 'generated'}`);
+ * console.warn(`Response was ${response.cached ? 'cached' : 'generated'}`);
  * ```
  */
 export async function generateWithCache(
@@ -206,7 +206,7 @@ export async function prepareVoiceAudio(
  * @example
  * ```typescript
  * const response = await prepareTTSStream('Hello!');
- * console.log(`Prepared ${response.chunks_prepared} chunks`);
+ * console.warn(`Prepared ${response.chunks_prepared} chunks`);
  * ```
  */
 export async function prepareTTSStream(

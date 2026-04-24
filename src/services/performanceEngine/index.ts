@@ -219,7 +219,7 @@ export class PerformanceEngine {
       cycleCount: this.state.cycleCount,
     });
 
-    console.log('[PerformanceEngine] Arrêté');
+    console.warn('[PerformanceEngine] Arrêté');
   }
 
   /**
@@ -257,7 +257,7 @@ export class PerformanceEngine {
       timestamp: Date.now(),
     });
 
-    console.log('[PerformanceEngine] Profil changé:', profile);
+    console.warn('[PerformanceEngine] Profil changé:', profile);
   }
 
   /**
@@ -277,7 +277,7 @@ export class PerformanceEngine {
       this.analyzer.updateThresholds(config.thresholds);
     }
 
-    console.log('[PerformanceEngine] Configuration mise à jour');
+    console.warn('[PerformanceEngine] Configuration mise à jour');
   }
 
   /**
@@ -285,7 +285,7 @@ export class PerformanceEngine {
    */
   setSelfHealingIntegration(integration: SelfHealingIntegration): void {
     this.reporter.setSelfHealingIntegration(integration);
-    console.log('[PerformanceEngine] Self-Healing intégré');
+    console.warn('[PerformanceEngine] Self-Healing intégré');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -438,7 +438,7 @@ export class PerformanceEngine {
     this.reporter.reset();
     this.state = this.createInitialState();
 
-    console.log('[PerformanceEngine] Réinitialisé');
+    console.warn('[PerformanceEngine] Réinitialisé');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════

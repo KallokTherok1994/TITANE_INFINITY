@@ -453,7 +453,7 @@ export class CognitiveStrategy
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[CognitiveStrategy] ${message}`, ...args);
+    console.warn(`[CognitiveStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {

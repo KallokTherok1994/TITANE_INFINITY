@@ -112,7 +112,7 @@ export class ParticleSystem extends EventEmitter {
     this.initializeParticlePool();
 
     if (this.config.debug) {
-      console.log('[ParticleSystem] v21 initialized with config:', this.config);
+      console.warn('[ParticleSystem] v21 initialized with config:', this.config);
     }
   }
 
@@ -287,7 +287,7 @@ export class ParticleSystem extends EventEmitter {
     this.throttleLevel++;
 
     if (this.config.debug) {
-      console.log(`[ParticleSystem] Throttle increased to level ${this.throttleLevel}`);
+      console.warn(`[ParticleSystem] Throttle increased to level ${this.throttleLevel}`);
     }
 
     this.emit('throttleChange', { level: this.throttleLevel });
@@ -302,7 +302,7 @@ export class ParticleSystem extends EventEmitter {
     this.throttleLevel--;
 
     if (this.config.debug) {
-      console.log(`[ParticleSystem] Throttle decreased to level ${this.throttleLevel}`);
+      console.warn(`[ParticleSystem] Throttle decreased to level ${this.throttleLevel}`);
     }
 
     this.emit('throttleChange', { level: this.throttleLevel });

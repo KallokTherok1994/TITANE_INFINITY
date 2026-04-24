@@ -40,7 +40,7 @@ export function Engines() {
     // 4. State: Display internal state (queues, caches, active operations)
     // 5. Performance: Real-time graphs (last 5min) using Chart.js or Recharts
     // 6. Actions: Restart, reset, export logs, run diagnostics
-    console.log('Inspect engine:', id);
+    console.warn('Inspect engine:', id);
   };
 
   const handleViewLogs = (id: string) => {
@@ -51,7 +51,7 @@ export function Engines() {
     // 3. Filter UI: Display "Showing logs for: {engineName}" with clear filter button
     // 4. Log query: Filter by log.source === id or log.tags.includes(engineName)
     // 5. Persistence: Save filter state in sessionStorage for tab switches
-    console.log('View logs for:', id);
+    console.warn('View logs for:', id);
   };
 
   return (

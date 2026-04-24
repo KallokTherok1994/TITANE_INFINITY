@@ -146,7 +146,7 @@ class InteroceptionEngine {
   public start(): void {
     if (this.isRunning) return;
 
-    console.log('🌬️ [INTEROCEPTION] Starting internal state engine...');
+    console.warn('🌬️ [INTEROCEPTION] Starting internal state engine...');
     this.isRunning = true;
     this.lastUpdateTime = Date.now();
 
@@ -159,7 +159,7 @@ class InteroceptionEngine {
   public stop(): void {
     if (!this.isRunning) return;
 
-    console.log('🌬️ [INTEROCEPTION] Stopping internal state engine...');
+    console.warn('🌬️ [INTEROCEPTION] Stopping internal state engine...');
     this.isRunning = false;
 
     if (this.updateInterval) {

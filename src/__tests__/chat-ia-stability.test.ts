@@ -202,7 +202,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     });
 
     const countAfterFirst = result.current.messages.length;
-    console.log(`✅ Après message 1: ${countAfterFirst} messages`);
+    console.warn(`✅ Après message 1: ${countAfterFirst} messages`);
 
     await act(async () => {
       await result.current.sendMessage('Message 2');
@@ -213,7 +213,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     });
 
     const countAfterSecond = result.current.messages.length;
-    console.log(`✅ Après message 2: ${countAfterSecond} messages`);
+    console.warn(`✅ Après message 2: ${countAfterSecond} messages`);
 
     await act(async () => {
       await result.current.sendMessage('Message 3');
@@ -224,7 +224,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     });
 
     const finalCount = result.current.messages.length;
-    console.log(`✅ Après message 3: ${finalCount} messages`);
+    console.warn(`✅ Après message 3: ${finalCount} messages`);
 
     // Vérification finale : on doit avoir AU MOINS 6 messages (3 user + 3 IA)
     expect(finalCount).toBeGreaterThanOrEqual(6);
@@ -234,7 +234,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     expect(result.current.messages[2].content).toContain('Message 2');
     expect(result.current.messages[4].content).toContain('Message 3');
 
-    console.log('✅ SCÉNARIO A: SUCCÈS - Tous les messages persistent');
+    console.warn('✅ SCÉNARIO A: SUCCÈS - Tous les messages persistent');
   });
 
   it('SCÉNARIO B: Changement de mode ne doit pas effacer les messages en cours', async () => {
@@ -260,7 +260,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     // C'est le comportement attendu : chaque mode a sa propre conversation
     expect(result.current.currentMode).toBe('brainstorming');
 
-    console.log(
+    console.warn(
       `✅ SCÉNARIO B: Mode changé, messages sauvegardés (count avant: ${countBefore})`
     );
   });
@@ -283,7 +283,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     const uniqueContents = new Set(messageContents);
     expect(uniqueContents.size).toBe(messageContents.length);
 
-    console.log('✅ SCÉNARIO C: Aucun doublon détecté');
+    console.warn('✅ SCÉNARIO C: Aucun doublon détecté');
   });
 
   it('SCÉNARIO D: Loading state correct', async () => {
@@ -336,7 +336,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
       { timeout: 5000 }
     );
 
-    console.log('✅ SCÉNARIO D: Loading state géré correctement');
+    console.warn('✅ SCÉNARIO D: Loading state géré correctement');
   });
 
   it('SCÉNARIO E: Erreur IA ne fait pas crasher', async () => {
@@ -364,7 +364,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
       )
     ).toBe(true);
 
-    console.log('✅ SCÉNARIO E: Erreur gérée proprement');
+    console.warn('✅ SCÉNARIO E: Erreur gérée proprement');
   });
 });
 
@@ -373,15 +373,15 @@ describe('Chat IA - Vérification Anti-Régression', () => {
     const { result } = renderHook(() => useChat());
 
     let effectTriggerCount = 0;
-    const originalConsoleLog = console.log;
-    console.log = (...args: unknown[]) => {
+    const originalConsoleWarn = console.warn;
+    console.warn = (...args: unknown[]) => {
       if (
         typeof args[0] === 'string' &&
         args[0].includes('🔄 USE CHAT v24.20: Mode changed')
       ) {
         effectTriggerCount++;
       }
-      originalConsoleLog(...args);
+      originalConsoleWarn(...args);
     };
 
     // Envoyer 3 messages sans changer de mode
@@ -401,12 +401,12 @@ describe('Chat IA - Vérification Anti-Régression', () => {
       expect(result.current.messages.length).toBeGreaterThanOrEqual(6);
     });
 
-    console.log = originalConsoleLog;
+    console.warn = originalConsoleWarn;
 
     // Le useEffect ne doit se déclencher qu'UNE SEULE FOIS (mode initial)
     // Pas à chaque message !
     expect(effectTriggerCount).toBeLessThanOrEqual(1);
 
-    console.log('✅ GUARD: useEffect stable, pas de re-trigger involontaire');
+    console.warn('✅ GUARD: useEffect stable, pas de re-trigger involontaire');
   });
 });

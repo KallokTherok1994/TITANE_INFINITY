@@ -16,14 +16,14 @@ const LogsTab = ({ logs, errorCount }: LogsTabProps) => {
         <LazyLogsCard
           totalLogs={logs.length}
           recentLogs={logs.slice(-10).reverse()}
-          onViewAll={() => console.log('[DevTools] View all logs requested')}
+          onViewAll={() => console.warn('[DevTools] View all logs requested')}
         />
 
         <LazyErrorsCard
           errorCount={errorCount}
           latestError={logs.filter(log => log.includes('[ERROR]')).slice(-1)[0]}
           errorType={errorCount > 5 ? 'critical' : errorCount > 0 ? 'warning' : 'info'}
-          onViewErrors={() => console.log('[DevTools] View errors requested')}
+          onViewErrors={() => console.warn('[DevTools] View errors requested')}
         />
       </div>
 

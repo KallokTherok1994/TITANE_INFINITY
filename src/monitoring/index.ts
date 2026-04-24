@@ -21,34 +21,24 @@ const logger = {
   configure: (_config: unknown) => {},
   trace: (..._args: unknown[]) => {},
   debug: (..._args: unknown[]) => {},
-  info: (...args: unknown[]) => console.log('[Monitoring]', ...args),
+  info: (...args: unknown[]) => console.warn('[Monitoring]', ...args),
   warn: (...args: unknown[]) => console.warn('[Monitoring]', ...args),
   error: (...args: unknown[]) => console.error('[Monitoring]', ...args),
   fatal: (...args: unknown[]) => console.error('[Monitoring][FATAL]', ...args),
   group: (...args: unknown[]) => {
-    if (typeof console.group === 'function') {
-      console.group('[Monitoring]', ...args);
-    }
+    console.warn('[Monitoring][GROUP]', ...args);
   },
   groupEnd: () => {
-    if (typeof console.groupEnd === 'function') {
-      console.groupEnd();
-    }
+    noop();
   },
   table: (data: unknown) => {
-    if (typeof console.table === 'function') {
-      console.table(data);
-    }
+    console.warn('[Monitoring][TABLE]', data);
   },
   time: (label: string) => {
-    if (typeof console.time === 'function') {
-      console.time(`[Monitoring] ${label}`);
-    }
+    console.warn(`[Monitoring][TIME] ${label}`);
   },
   timeEnd: (label: string) => {
-    if (typeof console.timeEnd === 'function') {
-      console.timeEnd(`[Monitoring] ${label}`);
-    }
+    console.warn(`[Monitoring][TIME_END] ${label}`);
   },
   noop,
 } as const;

@@ -156,7 +156,7 @@ export class ChatScheduler {
           : undefined,
       };
 
-      console.log('[ChatScheduler] ✅ Commande parsée:', command.type, command.title);
+      console.warn('[ChatScheduler] ✅ Commande parsée:', command.type, command.title);
       return command;
     } catch (error) {
       console.error('[ChatScheduler] Erreur parsing JSON:', error);
@@ -179,7 +179,7 @@ export class ChatScheduler {
    * Exécute une commande agenda
    */
   async executeAgendaCommand(command: AgendaCommand): Promise<CommandExecutionResult> {
-    console.log('[ChatScheduler] 🚀 Exécution commande:', command.type);
+    console.warn('[ChatScheduler] 🚀 Exécution commande:', command.type);
 
     try {
       let result: CommandExecutionResult;
@@ -441,7 +441,7 @@ export class ChatScheduler {
   private async syncAgendaAfterAction(): Promise<void> {
     try {
       await agendaEngine.loadEvents();
-      console.log('[ChatScheduler] 🔄 Agenda synchronisé');
+      console.warn('[ChatScheduler] 🔄 Agenda synchronisé');
     } catch (error) {
       console.warn('[ChatScheduler] Erreur sync:', error);
     }
@@ -489,7 +489,7 @@ export class ChatScheduler {
    */
   setEnabled(enabled: boolean): void {
     this.enabled = enabled;
-    console.log('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
+    console.warn('[ChatScheduler]', enabled ? '✅ Activé' : '❌ Désactivé');
   }
 
   /**

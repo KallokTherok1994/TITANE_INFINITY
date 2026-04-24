@@ -70,11 +70,11 @@ class AutoBackupService {
   private listeners: Set<(state: BackupState) => void> = new Set();
 
   async initialize(): Promise<void> {
-    console.log('[AutoBackup] Initializing Auto-Backup Service v30.0.0...');
+    console.warn('[AutoBackup] Initializing Auto-Backup Service v30.0.0...');
     this.loadState();
     this.startBackupTimer();
     this.checkImmediateBackup();
-    console.log(
+    console.warn(
       '[AutoBackup] Initialized - Next backup:',
       new Date(this.state.nextBackupTime).toLocaleString()
     );

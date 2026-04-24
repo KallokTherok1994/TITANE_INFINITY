@@ -486,11 +486,11 @@ export class MemorySelfHealEngine {
     const results: RepairResult[] = [];
 
     if (toRepair.length === 0) {
-      console.log('[MemorySelfHeal] ✅ No corruptions to repair');
+      console.warn('[MemorySelfHeal] ✅ No corruptions to repair');
       return results;
     }
 
-    console.log(`[MemorySelfHeal] 🔧 Repairing ${toRepair.length} corruptions...`);
+    console.warn(`[MemorySelfHeal] 🔧 Repairing ${toRepair.length} corruptions...`);
 
     // Group by layer
     const byLayer = toRepair.reduce(
@@ -520,7 +520,7 @@ export class MemorySelfHealEngine {
       results.push(result);
     }
 
-    console.log(
+    console.warn(
       `[MemorySelfHeal] ✅ Repair complete: ${results.filter(r => r.success).length}/${results.length} successful`
     );
 
@@ -811,7 +811,7 @@ export class MemorySelfHealEngine {
       return;
     }
 
-    console.log('[MemorySelfHeal] 🏥 Starting auto-monitoring...');
+    console.warn('[MemorySelfHeal] 🏥 Starting auto-monitoring...');
 
     // Health check périodique
     this.healthCheckTimer = window.setInterval(async () => {
@@ -826,7 +826,7 @@ export class MemorySelfHealEngine {
             c => c.severity === 'critical' || c.severity === 'high'
           );
           if (critical.length > 0) {
-            console.log('[MemorySelfHeal] 🔧 Triggering auto-repair...');
+            console.warn('[MemorySelfHeal] 🔧 Triggering auto-repair...');
             await this.repair(critical);
           }
         }
@@ -858,7 +858,7 @@ export class MemorySelfHealEngine {
       this.autoRepairTimer = null;
     }
 
-    console.log('[MemorySelfHeal] 🛑 Auto-monitoring stopped');
+    console.warn('[MemorySelfHeal] 🛑 Auto-monitoring stopped');
   }
 
   /**

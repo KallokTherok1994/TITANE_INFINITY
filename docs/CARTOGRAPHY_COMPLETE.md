@@ -8,6 +8,8 @@ Opération de nettoyage et d’archivage sur tout le dossier `docs/` :
 - Dossiers `audit/audits` harmonisés et archivés
 - README.md mis à jour pour navigation canonique
 - Preuves et inventaires : `docs/92_maintenance/`
+
+> 2026-04-24 — Lint no-console normalization truth: correction transversale des couches `src/**` de journalisation et de diagnostics pour retirer les appels console interdits (`log|info|debug|group|table|time`) au profit de chemins `warn|error` et wrappers `nativeConsole`. Cette mise a niveau preserve la topologie fonctionnelle des surfaces monitoring/chat/logger et aligne la qualite sur `eslint no-console` (warnings 660 -> 0) avec typecheck inchangé.
 > 2026-04-23 — Agent dashboards version fallback truth: `src/components/AgentDashboardsPanel.tsx` ne depend plus d un acces direct a `__APP_VERSION__` pour la persistance du badge de nouveaute. Un fallback runtime borne (`dev`) est applique quand la globale n est pas injectee (notamment en Vitest), ce qui realigne les surfaces `AppShell`, `advancedAgentCatalog` et `app-router-canonical-surfaces` sans modifier la topologie UI active.
 
 > 2026-04-24 — Sprint 4 context test standardization truth: ajout de `src/contexts/__tests__/AnimationContext.test.tsx` pour qualifier la surface `AnimationContext` (valeurs runtime provider + garde hook hors provider), avec passage Vitest cible et typecheck global.

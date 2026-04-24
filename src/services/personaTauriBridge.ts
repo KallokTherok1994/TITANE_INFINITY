@@ -181,7 +181,7 @@ export class PersonaTauriBridge {
 
     try {
       await personaService.initialize();
-      console.log('🌟 Persona Engine (Rust/Tauri) Initialized');
+      console.warn('🌟 Persona Engine (Rust/Tauri) Initialized');
     } catch (error) {
       console.error('[PersonaTauriBridge] Initialization failed:', error);
       throw error;

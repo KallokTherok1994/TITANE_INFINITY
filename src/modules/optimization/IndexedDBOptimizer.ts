@@ -155,7 +155,7 @@ export class IndexedDBOptimizer {
           0
         );
 
-        console.log('[IndexedDBOptimizer] Initialized:', this.config.dbName);
+        console.warn('[IndexedDBOptimizer] Initialized:', this.config.dbName);
         resolve(true);
       };
 
@@ -191,7 +191,7 @@ export class IndexedDBOptimizer {
           }
         }
 
-        console.log('[IndexedDBOptimizer] Schema upgraded to v' + this.config.version);
+        console.warn('[IndexedDBOptimizer] Schema upgraded to v' + this.config.version);
       };
     });
   }
@@ -567,7 +567,7 @@ export class IndexedDBOptimizer {
   }
 
   private async compact(storeName: string): Promise<void> {
-    console.log('[IndexedDBOptimizer] Compacting store:', storeName);
+    console.warn('[IndexedDBOptimizer] Compacting store:', storeName);
 
     // Read all records
     const records = await this.query(storeName);
@@ -580,7 +580,7 @@ export class IndexedDBOptimizer {
       await this.put(storeName, record);
     }
 
-    console.log('[IndexedDBOptimizer] Compaction complete');
+    console.warn('[IndexedDBOptimizer] Compaction complete');
   }
 
   private async calculateFragmentation(storeName: string): Promise<number> {

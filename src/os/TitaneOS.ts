@@ -440,10 +440,10 @@ export class TitaneOS {
 
     switch (level) {
       case 'debug':
-        console.debug(`${timestamp} ${prefix}`, message, ...args);
+        console.warn(`${timestamp} ${prefix}`, message, ...args);
         break;
       case 'info':
-        console.info(`${timestamp} ${prefix}`, message, ...args);
+        console.warn(`${timestamp} ${prefix}`, message, ...args);
         break;
       case 'warn':
         console.warn(`${timestamp} ${prefix}`, message, ...args);

@@ -54,7 +54,7 @@ function formatRelativeTime(timestamp: number): string {
  * ```tsx
  * <LogLine
  *   log={logEntry}
- *   onFilter={(source) => console.log('Filter by', source)}
+ *   onFilter={(source) => console.warn('Filter by', source)}
  *   onCopy={(msg) => navigator.clipboard.writeText(msg)}
  * />
  * ```

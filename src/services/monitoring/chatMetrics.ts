@@ -372,7 +372,7 @@ class ChatMetricsService {
       this.conversations.delete(conversationId);
     });
 
-    console.log(
+    console.warn(
       `[ChatMetrics] Nettoyage: ${toDelete.length} conversations supprimées (conservation: ${keepLast} dernières)`
     );
   }

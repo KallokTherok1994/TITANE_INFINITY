@@ -95,7 +95,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
     if (this.isInitialized) return;
 
     try {
-      console.log('[LocalEmbedding] Loading model:', this.config.modelName);
+      console.warn('[LocalEmbedding] Loading model:', this.config.modelName);
 
       // Dynamic import of Transformers.js
       const { pipeline } = await import('@xenova/transformers');
@@ -118,7 +118,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
       )) as unknown as Pipeline;
 
       this.isInitialized = true;
-      console.log('[LocalEmbedding] Model loaded successfully');
+      console.warn('[LocalEmbedding] Model loaded successfully');
     } catch (error) {
       console.error('[LocalEmbedding] Initialization failed:', error);
       // Fallback to deterministic generator

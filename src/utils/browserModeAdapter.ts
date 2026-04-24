@@ -58,8 +58,8 @@ export const configureBrowserMode = (): void => {
     localStorage.removeItem('titane_restrictions_disabled');
   }
 
-  console.log('🌐 TITANE∞ - Mode Navigateur (fallback dégradé)');
-  console.log('ℹ️ Backend Tauri indisponible - fonctionnalités limitées au mode local');
+  console.warn('🌐 TITANE∞ - Mode Navigateur (fallback dégradé)');
+  console.warn('ℹ️ Backend Tauri indisponible - fonctionnalités limitées au mode local');
 };
 
 // Auto-configure au chargement du module

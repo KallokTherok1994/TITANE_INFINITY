@@ -158,7 +158,7 @@ export const lazyImportDiagnostic = {
   async testImport(importFn: () => Promise<any>, name: string): Promise<boolean> {
     try {
       await importFn();
-      console.log(`[LAZY-DIAG] ✅ ${name} importable`);
+      console.warn(`[LAZY-DIAG] ✅ ${name} importable`);
       return true;
     } catch (error) {
       console.error(`[LAZY-DIAG] ❌ ${name} non importable:`, error);
@@ -170,7 +170,7 @@ export const lazyImportDiagnostic = {
    * Log les stats des imports lazy
    */
   logStats(successCount: number, failCount: number) {
-    console.log(
+    console.warn(
       `[LAZY-STATS] Success: ${successCount}, Fail: ${failCount}, Total: ${successCount + failCount}`
     );
   },

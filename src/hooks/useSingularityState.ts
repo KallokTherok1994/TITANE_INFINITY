@@ -171,7 +171,7 @@ export function useSingularityState(
       setError(null);
 
       const result = await secureInvoke<string>('engine_init_singularity');
-      console.log('[useSingularityState] Init:', result);
+      console.warn('[useSingularityState] Init:', result);
 
       // Refresh state after init
       await refreshState();
@@ -189,7 +189,7 @@ export function useSingularityState(
   const tickEngine = useCallback(async () => {
     try {
       const result = await secureInvoke<string>('engine_tick');
-      console.log('[useSingularityState] Tick:', result);
+      console.warn('[useSingularityState] Tick:', result);
 
       // Refresh state after tick
       await refreshState();

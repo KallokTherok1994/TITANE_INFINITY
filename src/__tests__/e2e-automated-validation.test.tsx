@@ -560,7 +560,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
       /(titane|intelligence|cognitive|système)/
     );
 
-    console.log('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
+    console.warn('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
   });
 
   it('should demonstrate absolute infallibility under extreme stress', async () => {
@@ -619,7 +619,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     // Performance validation under stress
     expect(endTime - startTime).toBeLessThan(120000); // Max 2 minutes total
 
-    console.log('🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully');
+    console.warn('🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully');
   });
 });
 
@@ -1109,7 +1109,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
       /(titane|intelligence|cognitive|système)/
     );
 
-    console.log('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
+    console.warn('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
   });
 
   it('should demonstrate absolute infallibility under extreme stress', async () => {
@@ -1168,7 +1168,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Full System Integration', () => {
     // Performance validation under stress
     expect(endTime - startTime).toBeLessThan(120000); // Max 2 minutes total
 
-    console.log('🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully');
+    console.warn('🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully');
   });
 });
 
@@ -1335,7 +1335,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
       const assistantMessages = result.current.messages.filter(
         message => message.role === 'assistant'
       );
-      console.log(
+      console.warn(
         'Providers (all fail):',
         assistantMessages.map(msg => msg.provider)
       );
@@ -1400,7 +1400,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
       const assistantMessages = result.current.messages.filter(
         message => message.role === 'assistant'
       );
-      console.log(
+      console.warn(
         'Messages after network auto-heal:',
         assistantMessages.map(msg => msg.content)
       );

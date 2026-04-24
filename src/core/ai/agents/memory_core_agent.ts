@@ -77,7 +77,7 @@ export class MemoryCoreAgent implements Agent {
   async initialize(): Promise<void> {
     this.state.status = 'active';
     await this.loadFromStorage();
-    console.log(
+    console.warn(
       `[Memory-Core] Initialized with ${this.knowledge.size} entries, ${this.totalXP} XP`
     );
   }
@@ -85,7 +85,7 @@ export class MemoryCoreAgent implements Agent {
   async shutdown(): Promise<void> {
     await this.saveToStorage();
     this.state.status = 'idle';
-    console.log('[Memory-Core] Shutdown complete');
+    console.warn('[Memory-Core] Shutdown complete');
   }
 
   async tick(): Promise<void> {
@@ -104,12 +104,12 @@ export class MemoryCoreAgent implements Agent {
 
   async pause(): Promise<void> {
     this.state.status = 'paused';
-    console.log('[Memory-Core] Paused');
+    console.warn('[Memory-Core] Paused');
   }
 
   async resume(): Promise<void> {
     this.state.status = 'active';
-    console.log('[Memory-Core] Resumed');
+    console.warn('[Memory-Core] Resumed');
   }
 
   async handle(event: AgentEvent): Promise<AgentResponse> {
@@ -167,7 +167,7 @@ export class MemoryCoreAgent implements Agent {
       // Merge with existing knowledge
       similar.confidence = Math.min(100, similar.confidence + 10);
       similar.timestamp = Date.now();
-      console.log(`[Memory-Core] Merged duplicate knowledge: ${entry.id}`);
+      console.warn(`[Memory-Core] Merged duplicate knowledge: ${entry.id}`);
       return;
     }
 
@@ -179,7 +179,7 @@ export class MemoryCoreAgent implements Agent {
     const xpGained = this.calculateXP(entry);
     this.totalXP += xpGained;
 
-    console.log(
+    console.warn(
       `[Memory-Core] Learned: ${entry.id} (+${xpGained} XP, total: ${this.totalXP})`
     );
   }
@@ -362,7 +362,7 @@ export class MemoryCoreAgent implements Agent {
 
   // Emit event to other agents
   emit(event: AgentEvent): void {
-    console.log(`[Memory-Core] Emitting event: ${event.type}`);
+    console.warn(`[Memory-Core] Emitting event: ${event.type}`);
   }
 
   // Get current health

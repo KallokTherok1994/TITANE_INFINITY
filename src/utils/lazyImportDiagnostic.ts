@@ -38,12 +38,12 @@ export const lazyWithDiagnostic = <T extends React.ComponentType<any>>(
   label: string
 ): React.LazyExoticComponent<T> => {
   return React.lazy(async () => {
-    console.log(`[LAZY-DIAGNOSTIC] Tentative chargement: ${label}`);
+    console.warn(`[LAZY-DIAGNOSTIC] Tentative chargement: ${label}`);
     try {
       const startTime = performance.now();
       const module = await factory();
       const loadTime = performance.now() - startTime;
-      console.log(`[LAZY-READY] ${label} chargé en ${loadTime.toFixed(2)}ms`);
+      console.warn(`[LAZY-READY] ${label} chargé en ${loadTime.toFixed(2)}ms`);
       return module;
     } catch (error: any) {
       console.error(`[LAZY-IMPORT-FAIL] ${label}:`, {
@@ -82,7 +82,7 @@ export const lazyWithTimeout = <T extends React.ComponentType<any>>(
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
-        console.log(`[LAZY-TIMEOUT] Tentative ${attempt + 1}/${retries + 1}: ${label}`);
+        console.warn(`[LAZY-TIMEOUT] Tentative ${attempt + 1}/${retries + 1}: ${label}`);
 
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(
@@ -94,7 +94,7 @@ export const lazyWithTimeout = <T extends React.ComponentType<any>>(
         const loadPromise = factory();
         const result = await Promise.race([loadPromise, timeoutPromise]);
 
-        console.log(`[LAZY-READY] ${label} chargé (tentative ${attempt + 1})`);
+        console.warn(`[LAZY-READY] ${label} chargé (tentative ${attempt + 1})`);
         return result;
       } catch (error: any) {
         lastError = error;
@@ -102,7 +102,7 @@ export const lazyWithTimeout = <T extends React.ComponentType<any>>(
 
         if (attempt < retries) {
           const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-          console.log(`[LAZY-RETRY] Nouvel essai dans ${delay}ms...`);
+          console.warn(`[LAZY-RETRY] Nouvel essai dans ${delay}ms...`);
           await new Promise(resolve => setTimeout(resolve, delay));
         }
       }

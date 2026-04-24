@@ -96,7 +96,7 @@ describe('UnifiedMemory Benchmarks', () => {
     const duration = performance.now() - start;
     const opsPerSecond = (iterations / duration) * 1000;
 
-    console.log(`  ✓ Throughput: ${opsPerSecond.toFixed(2)} ops/s`);
+    console.warn(`  ✓ Throughput: ${opsPerSecond.toFixed(2)} ops/s`);
     expect(opsPerSecond).toBeGreaterThan(10); // Lowered target for CI
   }, 30000);
 
@@ -114,7 +114,7 @@ describe('UnifiedMemory Benchmarks', () => {
     }
 
     const avgDuration = totalDuration / iterations;
-    console.log(`  ✓ Avg Latency: ${avgDuration.toFixed(2)}ms`);
+    console.warn(`  ✓ Avg Latency: ${avgDuration.toFixed(2)}ms`);
 
     expect(avgDuration).toBeLessThan(500); // Generous for fallback embeddings
   }, 30000);
@@ -137,7 +137,7 @@ describe('UnifiedMemory Benchmarks', () => {
     const memoryAfter = getMemoryUsage();
     const memoryDelta = memoryAfter - memoryBefore;
 
-    console.log(`  ✓ Memory Delta: ${memoryDelta}MB`);
+    console.warn(`  ✓ Memory Delta: ${memoryDelta}MB`);
     expect(memoryDelta).toBeLessThan(300); // Generous target
   }, 60000);
 
@@ -146,7 +146,7 @@ describe('UnifiedMemory Benchmarks', () => {
     const merged = await memory.consolidate();
     const duration = performance.now() - start;
 
-    console.log(`  ✓ Duration: ${duration.toFixed(2)}ms (merged: ${merged})`);
+    console.warn(`  ✓ Duration: ${duration.toFixed(2)}ms (merged: ${merged})`);
     expect(duration).toBeLessThan(10000);
   });
 
@@ -155,7 +155,7 @@ describe('UnifiedMemory Benchmarks', () => {
     const deleted = await memory.decay();
     const duration = performance.now() - start;
 
-    console.log(`  ✓ Duration: ${duration.toFixed(2)}ms (deleted: ${deleted})`);
+    console.warn(`  ✓ Duration: ${duration.toFixed(2)}ms (deleted: ${deleted})`);
     expect(duration).toBeLessThan(5000);
   });
 
@@ -170,7 +170,7 @@ describe('UnifiedMemory Benchmarks', () => {
     const duration = performance.now() - start;
     const avgDuration = duration / iterations;
 
-    console.log(`  ✓ Avg Stats Query: ${avgDuration.toFixed(2)}ms`);
+    console.warn(`  ✓ Avg Stats Query: ${avgDuration.toFixed(2)}ms`);
     expect(avgDuration).toBeLessThan(50);
   });
 });

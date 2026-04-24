@@ -215,7 +215,7 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
           🔄 Refresh
         </button>
         <button
-          onClick={() => console.log('Export metrics', categories)}
+          onClick={() => console.warn('Export metrics', categories)}
           className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white transition"
         >
           💾 Export

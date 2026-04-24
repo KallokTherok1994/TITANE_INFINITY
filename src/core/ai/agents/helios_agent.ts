@@ -41,7 +41,7 @@ export class HeliosAgent implements Agent {
   };
 
   async initialize(): Promise<void> {
-    console.log('🔥 [HELIOS] Initializing physical monitoring agent...');
+    console.warn('🔥 [HELIOS] Initializing physical monitoring agent...');
     this.state.status = 'active';
     this.state.health = 100;
     await this.updateMetrics();
@@ -170,22 +170,22 @@ export class HeliosAgent implements Agent {
 
   emit(event: AgentEvent): void {
     // Events are handled by MultiAgentEngine
-    console.log(`🔥 [HELIOS] Emitting event: ${event.type}`);
+    console.warn(`🔥 [HELIOS] Emitting event: ${event.type}`);
   }
 
   async pause(): Promise<void> {
     this.state.status = 'paused';
-    console.log('⏸️  [HELIOS] Paused');
+    console.warn('⏸️  [HELIOS] Paused');
   }
 
   async resume(): Promise<void> {
     this.state.status = 'active';
-    console.log('▶️  [HELIOS] Resumed');
+    console.warn('▶️  [HELIOS] Resumed');
   }
 
   async shutdown(): Promise<void> {
     this.state.status = 'idle';
-    console.log('🔻 [HELIOS] Shutdown');
+    console.warn('🔻 [HELIOS] Shutdown');
   }
 
   getHealth(): number {

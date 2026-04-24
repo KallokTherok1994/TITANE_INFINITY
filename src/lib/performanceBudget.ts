@@ -351,22 +351,19 @@ export class PerformanceMonitor {
    * Logger rapport en console
    */
   private static logReport(report: PerformanceReport): void {
-    console.group(
-      `%c Performance Report - Grade ${report.grade} (${report.score}/100)`,
-      `color: white; background-color: ${this.getGradeColor(report.grade)}; font-weight: bold; padding: 4px 8px; border-radius: 4px;`
+    logger.info(
+      `Performance Report - Grade ${report.grade} (${report.score}/100)`
     );
 
     logger.info('Core Web Vitals:');
-    console.table(report.vitals);
+    logger.info(report.vitals);
 
     if (report.violations.length > 0) {
       logger.warn(`${report.violations.length} Budget Violations:`);
-      console.table(report.violations);
+      logger.warn(report.violations);
     } else {
       logger.info('✅ All budgets met!');
     }
-
-    console.groupEnd();
   }
 
   /**

@@ -106,7 +106,7 @@ export class AutoFixEngine {
    * Détecte les problèmes
    */
   public async detectIssues(): Promise<DetectedIssue[]> {
-    console.log('[AutoFix] 🔍 Detecting issues...');
+    console.warn('[AutoFix] 🔍 Detecting issues...');
 
     const issues: DetectedIssue[] = [];
 
@@ -128,7 +128,7 @@ export class AutoFixEngine {
 
     this.detectedIssues = issues;
 
-    console.log(`[AutoFix] Found ${issues.length} issues`);
+    console.warn(`[AutoFix] Found ${issues.length} issues`);
 
     return issues;
   }
@@ -156,7 +156,7 @@ export class AutoFixEngine {
    * Corrige un problème spécifique
    */
   private async fixIssue(issue: DetectedIssue): Promise<FixResult> {
-    console.log(`[AutoFix] 🔧 Fixing: ${issue.description}`);
+    console.warn(`[AutoFix] 🔧 Fixing: ${issue.description}`);
 
     const startTime = Date.now();
 

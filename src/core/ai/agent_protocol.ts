@@ -250,7 +250,7 @@ export class AgentProtocol {
     if (encryptionKey) {
       this.encryption.setKey(encryptionKey);
     }
-    console.log('[AgentProtocol] Initialized');
+    console.warn('[AgentProtocol] Initialized');
   }
 
   // Create secure event
@@ -312,7 +312,7 @@ export class AgentProtocol {
 
   private async processEvent(event: AgentEvent): Promise<void> {
     // Event processing logic (placeholder)
-    console.log(`[AgentProtocol] Processing event: ${event.type} from ${event.source}`);
+    console.warn(`[AgentProtocol] Processing event: ${event.type} from ${event.source}`);
   }
 
   // Register operation with deadlock prevention
@@ -358,7 +358,7 @@ export class AgentProtocol {
     this.eventQueue = [];
     this.rateLimiter.resetAll();
     this.deadlockPrevention.clearAll();
-    console.log('[AgentProtocol] Shutdown complete');
+    console.warn('[AgentProtocol] Shutdown complete');
   }
 }
 

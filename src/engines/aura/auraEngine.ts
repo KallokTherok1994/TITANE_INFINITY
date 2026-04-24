@@ -278,7 +278,7 @@ class AuraEngine {
 
     this.callbacks = new Set();
 
-    console.log('💫 [AURA] Aura Engine initialized');
+    console.warn('💫 [AURA] Aura Engine initialized');
   }
 
   /**
@@ -321,7 +321,7 @@ class AuraEngine {
     };
 
     animate();
-    console.log('💫 [AURA] Animation started');
+    console.warn('💫 [AURA] Animation started');
   }
 
   /**
@@ -331,7 +331,7 @@ class AuraEngine {
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
-      console.log('💫 [AURA] Animation stopped');
+      console.warn('💫 [AURA] Animation stopped');
     }
   }
 
@@ -518,7 +518,7 @@ class AuraEngine {
       this.updateAffectiveProfile(emotionProfile.emotion, emotionProfile.intensity);
     }, 500);
 
-    console.log('💫 [AURA] Insight flash triggered');
+    console.warn('💫 [AURA] Insight flash triggered');
   }
 
   /**
@@ -530,7 +530,7 @@ class AuraEngine {
     this.state.layers.halo.radius *= 1.5; // Expansion
     this.state.pattern = 'listening_pulse';
 
-    console.log('💫 [AURA] WakeWord flash');
+    console.warn('💫 [AURA] WakeWord flash');
   }
 
   /**
@@ -564,7 +564,7 @@ class AuraEngine {
    */
   setPattern(pattern: AuraAnimationPattern): void {
     this.state.pattern = pattern;
-    console.log(`💫 [AURA] Pattern changed to: ${pattern}`);
+    console.warn(`💫 [AURA] Pattern changed to: ${pattern}`);
     this.notifyCallbacks();
   }
 
@@ -582,7 +582,7 @@ class AuraEngine {
     this.state.layers.halo.color = secondaryHSL;
     // Note: corona layer doesn't have color property in current type definition
 
-    console.log(`💫 [AURA] Colors updated`);
+    console.warn(`💫 [AURA] Colors updated`);
     this.notifyCallbacks();
   }
 
@@ -607,7 +607,7 @@ class AuraEngine {
     // Reactivity affecte turbulence
     this.state.affective.turbulence = dynamics.reactivity * 0.8;
 
-    console.log(`💫 [AURA] Dynamics updated`);
+    console.warn(`💫 [AURA] Dynamics updated`);
     this.notifyCallbacks();
   }
 
@@ -628,7 +628,7 @@ class AuraEngine {
     this.state.layers.core.opacity = 0.9 * (1 - spatial.layering * 0.3);
     this.state.layers.halo.opacity = 0.6 * (1 + spatial.layering * 0.4);
 
-    console.log(`💫 [AURA] Spatial params updated`);
+    console.warn(`💫 [AURA] Spatial params updated`);
     this.notifyCallbacks();
   }
 

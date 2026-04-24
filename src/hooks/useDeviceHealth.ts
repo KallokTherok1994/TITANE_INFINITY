@@ -135,7 +135,7 @@ export function useDeviceHealth(
           !autoHealingRef.current
         ) {
           autoHealingRef.current = true;
-          console.log('[useDeviceHealth] 🚨 Critical status, auto-healing...');
+          console.warn('[useDeviceHealth] 🚨 Critical status, auto-healing...');
           await selfHeal();
           autoHealingRef.current = false;
         }

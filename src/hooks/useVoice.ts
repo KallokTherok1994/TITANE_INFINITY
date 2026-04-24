@@ -259,7 +259,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
       recognition.lang = language;
 
       recognition.onstart = () => {
-        console.log('[useVoice] STT started');
+        console.warn('[useVoice] STT started');
         if (mountedRef.current) {
           setState(prev => ({
             ...prev,
@@ -311,7 +311,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
       };
 
       recognition.onend = () => {
-        console.log('[useVoice] STT ended');
+        console.warn('[useVoice] STT ended');
         if (mountedRef.current) {
           setState(prev => ({
             ...prev,

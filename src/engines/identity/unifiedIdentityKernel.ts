@@ -232,7 +232,7 @@ export class UnifiedIdentityKernel {
 
   constructor() {
     this.state = this.getDefaultState();
-    console.log('🌌 [IDENTITY KERNEL] Initializing Unified Identity Kernel...');
+    console.warn('🌌 [IDENTITY KERNEL] Initializing Unified Identity Kernel...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ export class UnifiedIdentityKernel {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🌌 [IDENTITY KERNEL] Starting identity kernel at 10Hz...');
+    console.warn('🌌 [IDENTITY KERNEL] Starting identity kernel at 10Hz...');
 
     // Subscribe aux moteurs existants
     this.subscribeToEngines();
@@ -255,7 +255,7 @@ export class UnifiedIdentityKernel {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('🌌 [IDENTITY KERNEL] Identity kernel stopped.');
+      console.warn('🌌 [IDENTITY KERNEL] Identity kernel stopped.');
     }
   }
 
@@ -508,7 +508,7 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   updateFromContext(context: ContextFrame): void {
-    console.log('🌌 [IDENTITY KERNEL] Updating from context...');
+    console.warn('🌌 [IDENTITY KERNEL] Updating from context...');
 
     // Adapter énergie à l'utilisateur
     if (context.userEnergy !== undefined) {
@@ -552,7 +552,7 @@ export class UnifiedIdentityKernel {
   // ───────────────────────────────────────────────────────────────────────────
 
   alignBeforeResponse(): void {
-    console.log('🌌 [IDENTITY KERNEL] Aligning before response...');
+    console.warn('🌌 [IDENTITY KERNEL] Aligning before response...');
 
     // Vérifier cohérence
     if (this.state.globalCoherence < this.COHERENCE_THRESHOLD) {

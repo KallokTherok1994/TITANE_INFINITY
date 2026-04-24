@@ -52,9 +52,9 @@ export interface UseAudioStreamingReturn {
  * @example
  * ```tsx
  * const { isStreaming, state, startStreaming, stopStreaming } = useAudioStreaming({
- *   onStateChange: (state) => console.log('State:', state),
+ *   onStateChange: (state) => console.warn('State:', state),
  *   onStreamingComplete: (result) => {
- *     console.log('Audio captured:', result.audioData.length, 'samples');
+ *     console.warn('Audio captured:', result.audioData.length, 'samples');
  *   },
  * });
  * ```

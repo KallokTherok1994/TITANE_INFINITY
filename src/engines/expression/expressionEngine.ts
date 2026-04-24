@@ -154,7 +154,7 @@ export class ExpressionEngine {
 
   constructor() {
     this.state = this.getDefaultState();
-    console.log('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
+    console.warn('🎭 [EXPRESSION ENGINE] Initializing Expression Engine...');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -164,7 +164,7 @@ export class ExpressionEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
+    console.warn('🎭 [EXPRESSION ENGINE] Starting expression engine at 15Hz...');
 
     // Subscribe to Identity Kernel
     this.subscribeToIdentityKernel();
@@ -177,7 +177,7 @@ export class ExpressionEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
+      console.warn('🎭 [EXPRESSION ENGINE] Expression engine stopped.');
     }
   }
 

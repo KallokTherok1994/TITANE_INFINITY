@@ -216,7 +216,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     enableDictation = true,
   }) => {
     // Debug: vérifier si onToggleVoiceMode est défini
-    console.log(
+    console.warn(
       '[ChatInput] onToggleVoiceMode:',
       typeof externalToggleVoiceMode,
       !!externalToggleVoiceMode
@@ -272,7 +272,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
 
         try {
           textareaRef.current?.focus();
-          isDev && console.log('[OMEGA CHAT INPUT] Component mounted with focus');
+          isDev && console.warn('[OMEGA CHAT INPUT] Component mounted with focus');
         } catch (focusError) {
           handleInputError(
             focusError instanceof Error ? focusError : new Error(String(focusError)),
@@ -296,14 +296,14 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
 
     // ═══ PHASE 5.4: PROTECTED SEND HANDLER ═══
     const handleSend = useCallback(async () => {
-      console.log('[ChatInput OMEGA] 🔘 handleSend appelé', {
+      console.warn('[ChatInput OMEGA] 🔘 handleSend appelé', {
         value: value.substring(0, 30),
         disabled,
         mounted: mountedRef.current,
       });
 
       if (!mountedRef.current) {
-        console.log('[ChatInput OMEGA] ❌ Non monté, abandon');
+        console.warn('[ChatInput OMEGA] ❌ Non monté, abandon');
         return;
       }
 
@@ -311,10 +311,10 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         const sanitized = sanitizeInput(value);
         const validation = validateMessage(sanitized);
 
-        console.log('[ChatInput OMEGA] 🔍 Validation:', validation);
+        console.warn('[ChatInput OMEGA] 🔍 Validation:', validation);
 
         if (!validation.valid) {
-          console.log('[ChatInput OMEGA] ❌ Validation échouée:', validation.reason);
+          console.warn('[ChatInput OMEGA] ❌ Validation échouée:', validation.reason);
           if (validation.reason) {
             handleInputError(new Error(validation.reason), 'send-validation', sanitized);
           }
@@ -322,11 +322,11 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
         }
 
         if (disabled || messageSent.current) {
-          console.log('[ChatInput OMEGA] ❌ Disabled ou déjà envoyé');
+          console.warn('[ChatInput OMEGA] ❌ Disabled ou déjà envoyé');
           return;
         }
 
-        console.log('[ChatInput OMEGA] ✅ Envoi du message:', sanitized.substring(0, 50));
+        console.warn('[ChatInput OMEGA] ✅ Envoi du message:', sanitized.substring(0, 50));
 
         // Marquer comme envoyé pour éviter les doubles
         messageSent.current = true;
@@ -456,7 +456,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
 
     const handleFilesSelected = useCallback(
       (files: AnalyzedFile[]) => {
-        isDev && console.log('[ChatInput] Files selected:', files.length);
+        isDev && console.warn('[ChatInput] Files selected:', files.length);
         setUploadedFiles(files);
 
         // Notifier le parent
@@ -487,7 +487,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
 
     // ═══ PHASE 5.7.2: DICTATION HANDLER ═══
     const handleDictationResult = useCallback((text: string) => {
-      isDev && console.log('[ChatInput] Dictation result:', text);
+      isDev && console.warn('[ChatInput] Dictation result:', text);
 
       // Insérer le texte dicté dans le champ de saisie
       setValue(prev => {

@@ -32,7 +32,7 @@ interface UseAutoTimeoutOptions {
  *   timeoutMs: 5 * 60 * 1000, // 5 minutes
  *   isActive: isRecording,
  *   onTimeout: () => {
- *     console.log('Enregistrement arrêté automatiquement');
+ *     console.warn('Enregistrement arrêté automatiquement');
  *     setIsRecording(false);
  *   },
  * });

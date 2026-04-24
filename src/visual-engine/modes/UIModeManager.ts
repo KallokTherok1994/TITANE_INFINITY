@@ -358,7 +358,7 @@ export class UIModeManager {
     this.currentMode = mode;
     this.currentConfig = { ...MODE_CONFIGS[mode] };
 
-    console.log(`[UIModeManager] Mode changed: ${previousMode} → ${mode}`);
+    console.warn(`[UIModeManager] Mode changed: ${previousMode} → ${mode}`);
 
     // Initialiser AUTO mode si nécessaire
     if (mode === UIMode.AUTO) {
@@ -465,7 +465,7 @@ export class UIModeManager {
    * Ajuste pour basse performance
    */
   private adjustForLowPerformance(): void {
-    console.log('[UIModeManager] Low performance detected, reducing quality');
+    console.warn('[UIModeManager] Low performance detected, reducing quality');
 
     // Réduire densité particules
     if (this.currentConfig.particleDensity > 0.3) {
@@ -492,7 +492,7 @@ export class UIModeManager {
    * Ajuste pour haute performance
    */
   private adjustForHighPerformance(): void {
-    console.log('[UIModeManager] High performance detected, increasing quality');
+    console.warn('[UIModeManager] High performance detected, increasing quality');
 
     // Augmenter densité particules
     if (this.currentConfig.particleDensity < 1.0) {

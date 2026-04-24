@@ -80,7 +80,7 @@ export function enableCloudMode(provider: 'gemini' | 'openai' = 'gemini') {
     localFirst: false,
   };
   localStorage.setItem('titane_ai_config', JSON.stringify(config));
-  console.log('🌐 Mode Cloud activé:', provider);
+  console.warn('🌐 Mode Cloud activé:', provider);
 }
 
 /**
@@ -94,7 +94,7 @@ export function disableCloudMode() {
     localFirst: true,
   };
   localStorage.setItem('titane_ai_config', JSON.stringify(config));
-  console.log('🏠 Mode Local activé');
+  console.warn('🏠 Mode Local activé');
 }
 
 /**

@@ -325,7 +325,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    */
   async initialize(): Promise<void> {
     if (this.config.debug) {
-      console.log('[SingularityEngine] Initializing...');
+      console.warn('[SingularityEngine] Initializing...');
     }
 
     if (this.config.autoSync) {
@@ -336,7 +336,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
     this.state.consciousness = 1.0;
 
     if (this.config.debug) {
-      console.log('[SingularityEngine] Initialized successfully');
+      console.warn('[SingularityEngine] Initialized successfully');
     }
   }
 

@@ -11,15 +11,15 @@ import { uiLogger, logInfo, logError, logSecurity } from '../UILogger';
  * Test 1: Basic logging
  */
 function testBasicLogging() {
-  console.log('\n=== TEST 1: Basic Logging ===');
+  console.warn('\n=== TEST 1: Basic Logging ===');
 
   logInfo('Test info message', { userId: 123 });
   logError('Test error message', new Error('Test error'));
   logSecurity('Test security alert', { violation: 'XSS' });
 
   const logs = uiLogger.getLogs();
-  console.log(`✅ Total logs: ${logs.length}`);
-  console.log(`✅ Logs created successfully`);
+  console.warn(`✅ Total logs: ${logs.length}`);
+  console.warn(`✅ Logs created successfully`);
 
   return logs.length === 3;
 }
@@ -28,7 +28,7 @@ function testBasicLogging() {
  * Test 2: Sanitization
  */
 function testSanitization() {
-  console.log('\n=== TEST 2: Sanitization ===');
+  console.warn('\n=== TEST 2: Sanitization ===');
 
   // Clear previous logs
   uiLogger.clearLogs();
@@ -47,8 +47,8 @@ function testSanitization() {
       !log.message.includes('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9')
   );
 
-  console.log(`✅ All sensitive data redacted: ${hasRedacted && noSensitive}`);
-  console.log('Sample log:', logs[0].message);
+  console.warn(`✅ All sensitive data redacted: ${hasRedacted && noSensitive}`);
+  console.warn('Sample log:', logs[0].message);
 
   return hasRedacted && noSensitive;
 }
@@ -57,7 +57,7 @@ function testSanitization() {
  * Test 3: Throttling
  */
 function testThrottling() {
-  console.log('\n=== TEST 3: Throttling ===');
+  console.warn('\n=== TEST 3: Throttling ===');
 
   // Clear previous logs
   uiLogger.clearLogs();
@@ -70,8 +70,8 @@ function testThrottling() {
   const logs = uiLogger.getLogs();
   const throttled = logs.length <= 100;
 
-  console.log(`✅ Logs created: ${logs.length}/150`);
-  console.log(`✅ Throttling active: ${throttled}`);
+  console.warn(`✅ Logs created: ${logs.length}/150`);
+  console.warn(`✅ Throttling active: ${throttled}`);
 
   return throttled;
 }
@@ -80,7 +80,7 @@ function testThrottling() {
  * Test 4: Storage & Rotation
  */
 function testStorage() {
-  console.log('\n=== TEST 4: Storage & Rotation ===');
+  console.warn('\n=== TEST 4: Storage & Rotation ===');
 
   // Clear previous logs
   uiLogger.clearLogs();
@@ -93,8 +93,8 @@ function testStorage() {
   const logs = uiLogger.getLogs();
   const rotated = logs.length <= 1000;
 
-  console.log(`✅ Logs stored: ${logs.length}/1200`);
-  console.log(`✅ Rotation active: ${rotated}`);
+  console.warn(`✅ Logs stored: ${logs.length}/1200`);
+  console.warn(`✅ Rotation active: ${rotated}`);
 
   return rotated;
 }
@@ -103,7 +103,7 @@ function testStorage() {
  * Test 5: Filtering
  */
 function testFiltering() {
-  console.log('\n=== TEST 5: Filtering ===');
+  console.warn('\n=== TEST 5: Filtering ===');
 
   // Clear previous logs
   uiLogger.clearLogs();
@@ -118,9 +118,9 @@ function testFiltering() {
   const errorLogs = uiLogger.getLogs({ level: 'error' });
   const recentErrors = uiLogger.getRecentErrors(10);
 
-  console.log(`✅ Total logs: ${allLogs.length}`);
-  console.log(`✅ Error logs: ${errorLogs.length}`);
-  console.log(`✅ Recent errors: ${recentErrors.length}`);
+  console.warn(`✅ Total logs: ${allLogs.length}`);
+  console.warn(`✅ Error logs: ${errorLogs.length}`);
+  console.warn(`✅ Recent errors: ${recentErrors.length}`);
 
   return errorLogs.length === 1 && recentErrors.length === 2;
 }
@@ -129,16 +129,16 @@ function testFiltering() {
  * Test 6: Statistics
  */
 function testStatistics() {
-  console.log('\n=== TEST 6: Statistics ===');
+  console.warn('\n=== TEST 6: Statistics ===');
 
   const stats = uiLogger.getStats();
 
-  console.log(`✅ Total logs: ${stats.totalLogs}`);
-  console.log(`✅ By level:`, stats.byLevel);
-  console.log(
+  console.warn(`✅ Total logs: ${stats.totalLogs}`);
+  console.warn(`✅ By level:`, stats.byLevel);
+  console.warn(
     `✅ Oldest log: ${stats.oldestLog ? new Date(stats.oldestLog).toISOString() : 'N/A'}`
   );
-  console.log(
+  console.warn(
     `✅ Newest log: ${stats.newestLog ? new Date(stats.newestLog).toISOString() : 'N/A'}`
   );
 
@@ -149,13 +149,13 @@ function testStatistics() {
  * Test 7: Export
  */
 function testExport() {
-  console.log('\n=== TEST 7: Export ===');
+  console.warn('\n=== TEST 7: Export ===');
 
   const exported = uiLogger.exportLogs();
   const parsed = JSON.parse(exported);
 
-  console.log(`✅ Exported ${parsed.length} logs as JSON`);
-  console.log(`✅ Sample:`, JSON.stringify(parsed[0], null, 2).substring(0, 200) + '...');
+  console.warn(`✅ Exported ${parsed.length} logs as JSON`);
+  console.warn(`✅ Sample:`, JSON.stringify(parsed[0], null, 2).substring(0, 200) + '...');
 
   return Array.isArray(parsed) && parsed.length > 0;
 }
@@ -164,9 +164,9 @@ function testExport() {
  * Run all tests
  */
 export function runUILoggerTests() {
-  console.log('\n╔════════════════════════════════════════════════════════════════╗');
-  console.log('║  🧪 TITANE∞ v30.0.0 — UI LOGGER INTEGRATION TESTS              ║');
-  console.log('╚════════════════════════════════════════════════════════════════╝');
+  console.warn('\n╔════════════════════════════════════════════════════════════════╗');
+  console.warn('║  🧪 TITANE∞ v30.0.0 — UI LOGGER INTEGRATION TESTS              ║');
+  console.warn('╚════════════════════════════════════════════════════════════════╝');
 
   const results = {
     basicLogging: testBasicLogging(),
@@ -178,25 +178,25 @@ export function runUILoggerTests() {
     export: testExport(),
   };
 
-  console.log('\n╔════════════════════════════════════════════════════════════════╗');
-  console.log('║  📊 TEST RESULTS                                              ║');
-  console.log('╚════════════════════════════════════════════════════════════════╝');
+  console.warn('\n╔════════════════════════════════════════════════════════════════╗');
+  console.warn('║  📊 TEST RESULTS                                              ║');
+  console.warn('╚════════════════════════════════════════════════════════════════╝');
 
   Object.entries(results).forEach(([test, passed]) => {
-    console.log(`${passed ? '✅' : '❌'} ${test}: ${passed ? 'PASSED' : 'FAILED'}`);
+    console.warn(`${passed ? '✅' : '❌'} ${test}: ${passed ? 'PASSED' : 'FAILED'}`);
   });
 
   const totalTests = Object.keys(results).length;
   const passedTests = Object.values(results).filter(Boolean).length;
 
-  console.log(
+  console.warn(
     `\n📈 Total: ${passedTests}/${totalTests} tests passed (${Math.round((passedTests / totalTests) * 100)}%)`
   );
 
   if (passedTests === totalTests) {
-    console.log('\n🎉 All tests passed! UILogger is working correctly.');
+    console.warn('\n🎉 All tests passed! UILogger is working correctly.');
   } else {
-    console.log('\n⚠️ Some tests failed. Check implementation.');
+    console.warn('\n⚠️ Some tests failed. Check implementation.');
   }
 
   return passedTests === totalTests;

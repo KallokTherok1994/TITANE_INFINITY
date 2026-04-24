@@ -4,6 +4,12 @@
 - Tous les fichiers `.md.md` et dossiers d’archive centralisés dans `docs/99_ARCHIVE/`
 - Inventaires et logs : `docs/92_maintenance/`
 
+# [2026-04-24] Lint no-console normalization truth
+
+- Surface transversale: journalisation runtime UI sur les surfaces `chat-diagnostic`, `monitoring-dashboard`, `ui-logger` et couches utilitaires (`logger`, `structured-logger`, `performance-budget`).
+- Verite appliquee: remplacement des appels `console.log|info|debug|group|table|time` par des chemins autorises `warn|error` ou par des wrappers `nativeConsole`, sans changement fonctionnel des flux de diagnostic.
+- Effet qualifie: reduction des warnings lint `no-console` de 660 a 0 avec preservation des traces de debug en environnement dev.
+
 # [2026-04-23] Agent dashboards version fallback truth
 
 - Surface canonique: `agent-dashboards-panel` dans `src/components/AgentDashboardsPanel.tsx`

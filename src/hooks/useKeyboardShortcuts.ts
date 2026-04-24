@@ -109,7 +109,7 @@ export function useKeyboardShortcuts({
           !altRequired
         ) {
           if (debug) {
-            console.log('[Keyboard Shortcut]', {
+            console.warn('[Keyboard Shortcut]', {
               key: shortcut.key,
               ctrl: shortcut.ctrl,
               shift: shortcut.shift,

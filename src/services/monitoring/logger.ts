@@ -209,10 +209,10 @@ class StructuredLogger {
     // Choisir la méthode console appropriée
     switch (entry.level) {
       case LogLevel.DEBUG:
-        console.debug(...logArgs);
+        console.warn(...logArgs);
         break;
       case LogLevel.INFO:
-        console.info(...logArgs);
+        console.warn(...logArgs);
         break;
       case LogLevel.WARN:
         console.warn(...logArgs);

@@ -108,7 +108,7 @@ export function useProviderStatus(
           retries: 0, // Pas de retry pour status (temps réel)
         }),
       statuses => {
-        console.log(`✅ Provider status refreshed (${statuses.length} providers)`);
+        console.warn(`✅ Provider status refreshed (${statuses.length} providers)`);
       },
       'Provider status error'
     );
@@ -126,7 +126,7 @@ export function useProviderStatus(
         }),
       statuses => {
         const available = statuses.filter(p => p.available);
-        console.log(
+        console.warn(
           `✅ Provider check complete (${available.length}/${statuses.length} available)`
         );
       },
@@ -162,7 +162,7 @@ export function useProviderStatus(
     }
 
     if (import.meta.env.DEV) {
-      console.log(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
+      console.warn(`🔄 Auto-refresh providers enabled (${refreshInterval}ms)`);
     }
 
     // Initial check
@@ -176,7 +176,7 @@ export function useProviderStatus(
     return () => {
       clearInterval(interval);
       if (import.meta.env.DEV) {
-        console.log('🛑 Auto-refresh providers stopped');
+        console.warn('🛑 Auto-refresh providers stopped');
       }
     };
   }, [autoRefresh, refreshInterval, refresh]);

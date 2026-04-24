@@ -257,14 +257,14 @@ class EmbodiedPresenceEngine {
   start(): void {
     if (this.updateInterval) return;
 
-    console.log('🧘 [EMBODIED] Starting Embodied Presence Engine...');
+    console.warn('🧘 [EMBODIED] Starting Embodied Presence Engine...');
 
     const intervalMs = 1000 / this.config.updateFrequency;
     this.updateInterval = window.setInterval(() => {
       this.updatePresence();
     }, intervalMs);
 
-    console.log(`✅ [EMBODIED] Engine active (${this.config.updateFrequency}Hz)`);
+    console.warn(`✅ [EMBODIED] Engine active (${this.config.updateFrequency}Hz)`);
   }
 
   /**
@@ -274,7 +274,7 @@ class EmbodiedPresenceEngine {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('🛑 [EMBODIED] Engine stopped');
+      console.warn('🛑 [EMBODIED] Engine stopped');
     }
   }
 
@@ -499,7 +499,7 @@ class EmbodiedPresenceEngine {
         break;
     }
 
-    console.log(`🧘 [EMBODIED] Posture transition → ${target}`);
+    console.warn(`🧘 [EMBODIED] Posture transition → ${target}`);
   }
 
   /**
@@ -530,7 +530,7 @@ class EmbodiedPresenceEngine {
    * Appliquer émotion forte (créer inertie)
    */
   applyStrongEmotion(emotion: string, intensity: number, duration: number = 2500): void {
-    console.log(
+    console.warn(
       `💫 [EMBODIED] Strong emotion applied: ${emotion} (${Math.round(intensity * 100)}%)`
     );
 
@@ -552,7 +552,7 @@ class EmbodiedPresenceEngine {
    * Activer synchronisation utilisateur
    */
   activateUserSync(userBreathingCycle?: number, userEnergy?: number): void {
-    console.log('🔗 [EMBODIED] User synchronization activated');
+    console.warn('🔗 [EMBODIED] User synchronization activated');
 
     this.state.userSync.active = true;
     if (userBreathingCycle) this.state.userSync.userBreathingCycle = userBreathingCycle;
@@ -565,7 +565,7 @@ class EmbodiedPresenceEngine {
    * Désactiver synchronisation utilisateur
    */
   deactivateUserSync(): void {
-    console.log('🔗 [EMBODIED] User synchronization deactivated');
+    console.warn('🔗 [EMBODIED] User synchronization deactivated');
 
     this.state.userSync.active = false;
     this.state.userSync.userBreathingCycle = null;

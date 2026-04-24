@@ -72,7 +72,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
 
     recognition.onstart = () => {
       setState(prev => ({ ...prev, isListening: true, error: null }));
-      console.log('🎤 Écoute activée');
+      console.warn('🎤 Écoute activée');
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -116,7 +116,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
 
     recognition.onend = () => {
       setState(prev => ({ ...prev, isListening: false }));
-      console.log('🎤 Écoute terminée');
+      console.warn('🎤 Écoute terminée');
     };
 
     recognitionRef.current = recognition;
@@ -207,7 +207,7 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
         });
 
         if (result?.success) {
-          console.log('✅ TTS Tauri réussi');
+          console.warn('✅ TTS Tauri réussi');
           setState(prev => ({ ...prev, isSpeaking: false }));
           return;
         }

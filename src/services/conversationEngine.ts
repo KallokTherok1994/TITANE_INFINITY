@@ -1491,7 +1491,7 @@ export async function processMessage(
   logger.info('[CONV_SEND] Provider request', convSendLog);
   // Fallback pour STRUCT-1: log console explicite
   // eslint-disable-next-line no-console
-  console.log('[CONV_SEND]', JSON.stringify(convSendLog));
+  console.warn('[CONV_SEND]', JSON.stringify(convSendLog));
 
   // Preflight guard — required args must be set before IPC
   if (
@@ -1930,7 +1930,7 @@ export async function processMessage(
   logger.info('[conversationEngine] 📥 Backend response:', convRecvLog);
   // Fallback pour STRUCT-1: log console explicite
   // eslint-disable-next-line no-console
-  console.log('[CONV_RECV]', JSON.stringify(convRecvLog));
+  console.warn('[CONV_RECV]', JSON.stringify(convRecvLog));
 
   // ✨ OBSERVABILITY: Log provider decision meta
   if (providerMeta) {
@@ -1945,7 +1945,7 @@ export async function processMessage(
     logger.info('[CONV_RECV] Provider decision', convRecvMetaLog);
     // Fallback pour STRUCT-1: log console explicite
     // eslint-disable-next-line no-console
-    console.log('[CONV_RECV]', JSON.stringify(convRecvMetaLog));
+    console.warn('[CONV_RECV]', JSON.stringify(convRecvMetaLog));
   } else {
     logger.warn('[CONV_RECV] ⚠️ Provider meta missing in response');
   }

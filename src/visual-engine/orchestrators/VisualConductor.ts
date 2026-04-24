@@ -635,7 +635,7 @@ export class VisualConductor extends EventEmitter {
 
   private log(...args: unknown[]): void {
     if (this.config.debug) {
-      console.log('[VisualConductor]', ...args);
+      console.warn('[VisualConductor]', ...args);
     }
   }
 }

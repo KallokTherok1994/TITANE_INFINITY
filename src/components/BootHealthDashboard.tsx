@@ -279,11 +279,11 @@ const BootHealthDashboard: React.FC = () => {
             <button
               style={styles.actionButton}
               onClick={() => {
-                console.log(
+                console.warn(
                   '[HEALTH-DASHBOARD] Full health report:',
                   bootHealthMonitor.generateReport()
                 );
-                console.log(
+                console.warn(
                   '[HEALTH-DASHBOARD] Performance report:',
                   performanceOptimizer.generatePerformanceReport()
                 );

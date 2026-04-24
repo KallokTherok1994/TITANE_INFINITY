@@ -57,7 +57,7 @@ export class PersonaAgent implements Agent {
   private behaviorHistory: Array<{ mode: BehaviorMode; timestamp: number }> = [];
 
   async initialize(): Promise<void> {
-    console.log('🎭 [PERSONA] Initializing behavioral agent...');
+    console.warn('🎭 [PERSONA] Initializing behavioral agent...');
     this.state.status = 'active';
     this.state.health = 100;
     this.updateMetrics();
@@ -162,22 +162,22 @@ export class PersonaAgent implements Agent {
   }
 
   emit(event: AgentEvent): void {
-    console.log(`🎭 [PERSONA] Emitting event: ${event.type}`);
+    console.warn(`🎭 [PERSONA] Emitting event: ${event.type}`);
   }
 
   async pause(): Promise<void> {
     this.state.status = 'paused';
-    console.log('⏸️  [PERSONA] Paused');
+    console.warn('⏸️  [PERSONA] Paused');
   }
 
   async resume(): Promise<void> {
     this.state.status = 'active';
-    console.log('▶️  [PERSONA] Resumed');
+    console.warn('▶️  [PERSONA] Resumed');
   }
 
   async shutdown(): Promise<void> {
     this.state.status = 'idle';
-    console.log('🔻 [PERSONA] Shutdown');
+    console.warn('🔻 [PERSONA] Shutdown');
   }
 
   getHealth(): number {

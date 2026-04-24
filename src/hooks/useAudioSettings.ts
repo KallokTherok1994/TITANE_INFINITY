@@ -730,7 +730,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         await refreshDevicesRef.current();
       }
 
-      console.log('[useAudioSettings] Audio system reset');
+      console.warn('[useAudioSettings] Audio system reset');
     } catch (error) {
       console.error('[useAudioSettings] Reset error:', error);
       setLastError('Échec de la réinitialisation audio');

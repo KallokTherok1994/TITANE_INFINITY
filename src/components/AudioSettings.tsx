@@ -121,7 +121,7 @@ export const AudioSettings = () => {
     try {
       const testText =
         'Bonjour, je suis TITANE, votre assistant intelligent. La synthèse vocale fonctionne parfaitement.';
-      console.log('[AudioSettings] Testing TTS with:', testText);
+      console.warn('[AudioSettings] Testing TTS with:', testText);
       await audioService.speak(testText);
       setTestStatus('success');
     } catch (error) {

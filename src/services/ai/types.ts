@@ -340,7 +340,7 @@ export interface AiErr {
  * ```typescript
  * const result = await ollamaGenerate(req);
  * if (result.ok) {
- *   console.log(result.content);
+ *   console.warn(result.content);
  * } else {
  *   displayError(result.error.message, result.error.hint);
  * }

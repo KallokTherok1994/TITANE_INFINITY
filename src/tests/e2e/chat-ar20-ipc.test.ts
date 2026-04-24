@@ -84,7 +84,7 @@ describe('AR20 IPC Certification: 20 consecutive messages', () => {
         duration_ms,
       });
 
-      console.log(
+      console.warn(
         `[AR20-IPC] ${i + 1}/20 success=${success} duration=${Math.round(duration_ms)}ms`
       );
 
@@ -95,11 +95,11 @@ describe('AR20 IPC Certification: 20 consecutive messages', () => {
     const allPass = results.every(r => r.success);
     const failedIndices = results.filter(r => !r.success).map(r => r.index);
 
-    console.log(
+    console.warn(
       `[AR20-IPC] VERDICT: ${allPass ? 'PASS' : 'FAIL'} — ${results.length}/20 responded`
     );
     if (failedIndices.length > 0) {
-      console.log(`[AR20-IPC] Failed messages: ${failedIndices.join(', ')}`);
+      console.warn(`[AR20-IPC] Failed messages: ${failedIndices.join(', ')}`);
     }
 
     expect(allPass, `AR20 IPC: ${failedIndices.length} messages did not respond`).toBe(

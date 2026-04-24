@@ -136,7 +136,7 @@ export async function safeInvokeWithRetry<T = unknown>(
     if (result.ok) {
       // Succès dès la première tentative
       if (attempt > 1) {
-        console.log(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
+        console.warn(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
       }
 
       return result.content;

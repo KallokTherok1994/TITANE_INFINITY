@@ -187,7 +187,7 @@ export function BootErrorFallback({
 
         <button
           onClick={() => {
-            console.log('🔧 TITANE∞ Boot Diagnostic Info:', {
+            console.warn('🔧 TITANE∞ Boot Diagnostic Info:', {
               error: error?.message,
               userAgent: navigator.userAgent,
               url: window.location.href,

@@ -176,7 +176,7 @@ class MCPOrchestratorClass implements MCPOperations {
   // ─────────────────────────────────────────────────────────────────────────
 
   private log(message: string, ...args: unknown[]) {
-    console.log(`[MCP OS v1.1] ${message}`, ...args);
+    console.warn(`[MCP OS v1.1] ${message}`, ...args);
   }
 
   private warn(message: string, ...args: unknown[]) {

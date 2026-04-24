@@ -441,7 +441,7 @@ export class MCPStrategy
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[MCPStrategy] ${message}`, ...args);
+    console.warn(`[MCPStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {

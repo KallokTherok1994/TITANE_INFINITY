@@ -222,7 +222,7 @@ export const MessageListOptimized: React.FC<MessageListOptimizedProps> = ({
   // Debug logging
   useEffect(() => {
     isDev &&
-      console.log('[MessageListOptimized] 📊 Render:', {
+      console.warn('[MessageListOptimized] 📊 Render:', {
         messagesCount: messages?.length || 0,
         isLoading,
         hasError: !!error,

@@ -267,7 +267,7 @@ class AutopoiesisEngine {
   start(): void {
     if (this.state.isRunning) return;
 
-    console.log('[AutopoiesisEngine] Starting self-evolution engine...');
+    console.warn('[AutopoiesisEngine] Starting self-evolution engine...');
 
     this.state.isRunning = true;
     this.intervalId = setInterval(() => this.tick(), 1000); // 1 Hz
@@ -278,7 +278,7 @@ class AutopoiesisEngine {
   stop(): void {
     if (!this.state.isRunning) return;
 
-    console.log('[AutopoiesisEngine] Stopping...');
+    console.warn('[AutopoiesisEngine] Stopping...');
 
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -645,7 +645,7 @@ class AutopoiesisEngine {
     // 5. Rollback on failure: Revert changes if metrics degrade significantly
     // 6. Log execution: Record strategy application in audit log for analysis
     // For now, just log
-    console.log(`[AutopoiesisEngine] Triggering strategy: ${strategy.name}`);
+    console.warn(`[AutopoiesisEngine] Triggering strategy: ${strategy.name}`);
 
     // Simuler succès (70% du temps)
     strategy.successCount = strategy.successCount || 0;

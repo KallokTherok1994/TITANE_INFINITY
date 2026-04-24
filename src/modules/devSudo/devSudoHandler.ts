@@ -1393,7 +1393,7 @@ async function callLazyHandler(
   try {
     // Get domain and load handler module
     const domain = getActionDomain(action);
-    console.log(`[DEV-SUDO LAZY] Action "${action}" → Domain "${domain}"`);
+    console.warn(`[DEV-SUDO LAZY] Action "${action}" → Domain "${domain}"`);
 
     const handlerModule = await getHandlerForAction(action);
 
@@ -1430,7 +1430,7 @@ async function callLazyHandler(
 export async function executeDevSudoCommand(
   command: DevSudoCommand
 ): Promise<DevSudoResult> {
-  console.log('[DEV-SUDO] Exécution commande:', command);
+  console.warn('[DEV-SUDO] Exécution commande:', command);
 
   try {
     switch (command.action) {

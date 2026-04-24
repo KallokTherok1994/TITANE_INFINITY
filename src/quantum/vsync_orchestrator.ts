@@ -64,7 +64,7 @@ export class VSyncOrchestrator {
             this.detectedRefreshRate = 144;
           }
 
-          console.log(
+          console.warn(
             `[VSyncOrchestrator] Detected refresh rate: ${this.detectedRefreshRate}Hz`
           );
           resolve();
@@ -84,7 +84,7 @@ export class VSyncOrchestrator {
     this.isActive = true;
     this.lastSyncTime = performance.now();
 
-    console.log('[VSyncOrchestrator] Started');
+    console.warn('[VSyncOrchestrator] Started');
   }
 
   /**

@@ -58,7 +58,7 @@ export class WatchdogAgent implements Agent {
 
   async initialize(): Promise<void> {
     this.state.status = 'active';
-    console.log('[Watchdog] Security monitoring active');
+    console.warn('[Watchdog] Security monitoring active');
   }
 
   async shutdown(): Promise<void> {
@@ -81,12 +81,12 @@ export class WatchdogAgent implements Agent {
 
   async pause(): Promise<void> {
     this.state.status = 'paused';
-    console.log('[Watchdog] Monitoring paused');
+    console.warn('[Watchdog] Monitoring paused');
   }
 
   async resume(): Promise<void> {
     this.state.status = 'active';
-    console.log('[Watchdog] Monitoring resumed');
+    console.warn('[Watchdog] Monitoring resumed');
   }
 
   async handle(event: AgentEvent): Promise<AgentResponse> {
@@ -331,7 +331,7 @@ export class WatchdogAgent implements Agent {
       recentAlerts: this.alerts.slice(-20), // Last 20 alerts
     };
 
-    console.log('[Watchdog] Security Report:', report);
+    console.warn('[Watchdog] Security Report:', report);
 
     return {
       success: true,
@@ -363,7 +363,7 @@ export class WatchdogAgent implements Agent {
 
   // Emit event to other agents
   emit(event: AgentEvent): void {
-    console.log(`[Watchdog] Emitting event: ${event.type}`);
+    console.warn(`[Watchdog] Emitting event: ${event.type}`);
   }
 
   // Get current health

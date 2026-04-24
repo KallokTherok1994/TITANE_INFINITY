@@ -27,7 +27,7 @@ export async function getI18n(): Promise<typeof i18n> {
   }
 
   // Start lazy loading
-  console.log('[i18n LAZY] ⚡ Lazy-loading i18n...');
+  console.warn('[i18n LAZY] ⚡ Lazy-loading i18n...');
 
   loadingPromise = (async () => {
     try {
@@ -67,7 +67,7 @@ export async function getI18n(): Promise<typeof i18n> {
       i18nInstance = i18nLib;
       loadingPromise = null;
 
-      console.log('[i18n LAZY] ✅ i18n loaded successfully');
+      console.warn('[i18n LAZY] ✅ i18n loaded successfully');
       return i18nLib;
     } catch (error) {
       loadingPromise = null;

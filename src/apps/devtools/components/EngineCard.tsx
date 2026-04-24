@@ -32,8 +32,8 @@ const statusToVariant: Record<EngineStatus, StatusVariant> = {
  * ```tsx
  * <EngineCard
  *   engine={heliosEngine}
- *   onRestart={(id) => console.log('Restart', id)}
- *   onInspect={(id) => console.log('Inspect', id)}
+ *   onRestart={(id) => console.warn('Restart', id)}
+ *   onInspect={(id) => console.warn('Inspect', id)}
  * />
  * ```
  */

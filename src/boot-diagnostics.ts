@@ -28,7 +28,7 @@ class BootDiagnostics {
     };
     this.events.push(event);
     this.lastStage = stage;
-    console.log(`[BOOT-${stage}] ${message}`, data ?? '');
+    console.warn(`[BOOT-${stage}] ${message}`, data ?? '');
   }
 
   warn(stage: string, message: string, data?: unknown) {

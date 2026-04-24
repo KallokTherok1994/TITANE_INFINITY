@@ -135,7 +135,7 @@ export const UltimateOptimizationDashboard: React.FC<
       const b = new Float32Array([6, 7, 8, 9, 10]);
 
       const result = await gpuAcceleratorV2.vectorAdd(a, b);
-      console.log('[GPU Test] Vector addition result:', result);
+      console.warn('[GPU Test] Vector addition result:', result);
 
       alert(
         `GPU Test Success!\nInput: [1,2,3,4,5] + [6,7,8,9,10]\nOutput: [${Array.from(result).join(', ')}]`
@@ -151,7 +151,7 @@ export const UltimateOptimizationDashboard: React.FC<
       const b = new Float32Array([1, 3, 5]);
 
       const result = await webAssemblyCompute.dotProduct(a, b);
-      console.log('[WASM Test] Dot product result:', result);
+      console.warn('[WASM Test] Dot product result:', result);
 
       alert(`WASM Test Success!\nDot product of [2,4,6] · [1,3,5] = ${result}`);
     } catch (error) {

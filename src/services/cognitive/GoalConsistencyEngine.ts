@@ -1164,7 +1164,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     } else if (level === 'warn') {
       console.warn('[GoalConsistencyEngine]', logEntry);
     } else {
-      console.log('[GoalConsistencyEngine]', logEntry);
+      console.warn('[GoalConsistencyEngine]', logEntry);
     }
 
     this.emit('log', logEntry);

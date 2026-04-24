@@ -84,6 +84,7 @@ export class UILogger {
   private logs: LogEntry[] = [];
   private throttleState: Map<LogLevel, ThrottleState> = new Map();
   private sessionId: string;
+  private readonly nativeConsole = globalThis.console;
   private originalConsole: {
     log: typeof console.log;
     warn: typeof console.warn;
@@ -97,10 +98,10 @@ export class UILogger {
 
     // Backup original console methods
     this.originalConsole = {
-      log: console.log.bind(console),
+      log: console.warn.bind(console),
       warn: console.warn.bind(console),
       error: console.error.bind(console),
-      debug: console.debug.bind(console),
+      debug: console.warn.bind(console),
     };
 
     // Load logs from localStorage
@@ -158,28 +159,28 @@ export class UILogger {
   // ─────────────────────────────────────────────────────────────
 
   private overrideConsole(): void {
-    console.log = (...args: unknown[]) => {
+    this.nativeConsole.log = (...args: unknown[]) => {
       this.log('info', this.formatArgs(args));
       if (import.meta.env.DEV) {
         this.originalConsole.log(...args);
       }
     };
 
-    console.warn = (...args: unknown[]) => {
+    this.nativeConsole.warn = (...args: unknown[]) => {
       this.log('warn', this.formatArgs(args));
       if (import.meta.env.DEV) {
         this.originalConsole.warn(...args);
       }
     };
 
-    console.error = (...args: unknown[]) => {
+    this.nativeConsole.error = (...args: unknown[]) => {
       this.log('error', this.formatArgs(args));
       if (import.meta.env.DEV) {
         this.originalConsole.error(...args);
       }
     };
 
-    console.debug = (...args: unknown[]) => {
+    this.nativeConsole.debug = (...args: unknown[]) => {
       this.log('debug', this.formatArgs(args));
       if (import.meta.env.DEV) {
         this.originalConsole.debug(...args);
@@ -304,12 +305,12 @@ export class UILogger {
     if (import.meta.env.DEV) {
       const consoleMethod =
         level === 'debug'
-          ? 'debug'
+          ? 'warn'
           : level === 'warn'
             ? 'warn'
             : level === 'error' || level === 'security'
               ? 'error'
-              : 'log';
+              : 'warn';
       this.originalConsole[consoleMethod](
         `[UILogger:${level}]`,
         sanitizedMessage,
@@ -387,7 +388,7 @@ export class UILogger {
     this.logs = [];
     try {
       localStorage.removeItem('titane_ui_logs');
-      this.originalConsole.log('[UILogger] UI logs cleared');
+      this.originalConsole.warn('[UILogger] UI logs cleared');
     } catch (error) {
       this.originalConsole.error('[UILogger] Failed to clear logs:', error);
     }
@@ -441,10 +442,10 @@ export class UILogger {
   }
 
   restoreConsole(): void {
-    console.log = this.originalConsole.log;
-    console.warn = this.originalConsole.warn;
-    console.error = this.originalConsole.error;
-    console.debug = this.originalConsole.debug;
+    this.nativeConsole.log = this.originalConsole.log;
+    this.nativeConsole.warn = this.originalConsole.warn;
+    this.nativeConsole.error = this.originalConsole.error;
+    this.nativeConsole.debug = this.originalConsole.debug;
   }
 }
 

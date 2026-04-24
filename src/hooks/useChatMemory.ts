@@ -79,7 +79,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     const history = chatMemoryCompactor.loadForMode(options.mode);
     syncVisibleState(history);
 
-    console.log(
+    console.warn(
       `🧠 USE CHAT MEMORY: Loaded ${history.length} messages for mode ${options.mode}`
     );
 
@@ -87,7 +87,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     if (options.autoCleanup) {
       const cleanup = chatMemoryCompactor.autoCleanupIfNeeded();
       if (cleanup.cleaned) {
-        console.log(`✅ SELFHEAL++: Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`);
+        console.warn(`✅ SELFHEAL++: Memory cleaned (was ${cleanup.sizeMB.toFixed(2)}MB)`);
       }
     }
   }, [options.mode, options.autoCleanup, syncVisibleState]);
@@ -111,7 +111,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       const updatedMessages = chatMemoryCompactor.addMessageToMode(options.mode, message);
 
       // 🔒 v26.4.0: Force immediate flush to prevent loss on tab switch
-      console.log(
+      console.warn(
         `🔒 [useChatMemory] Forcing immediate flush after save (mode: ${options.mode})`
       );
       chatMemoryCompactor.flushPendingSaves();
@@ -119,7 +119,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       // ✅ FIX v15.1: synchronisation immédiate UI + stats
       syncVisibleState(updatedMessages);
 
-      console.log(
+      console.warn(
         `💾 USE CHAT MEMORY: Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
       );
     },
@@ -136,7 +136,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
         messages
       );
 
-      console.log(
+      console.warn(
         `🔒 [useChatMemory] Forcing immediate flush after replace (mode: ${options.mode})`
       );
       chatMemoryCompactor.flushPendingSaves();
@@ -153,7 +153,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     setMessagesForMode([]);
     setMemoryStats({ count: 0, sizeMB: 0, compressed: false });
 
-    console.log(`🧹 USE CHAT MEMORY: Mode ${options.mode} cleared`);
+    console.warn(`🧹 USE CHAT MEMORY: Mode ${options.mode} cleared`);
   }, [options.mode]);
 
   /**
@@ -173,7 +173,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
           messageLength,
           provider,
         });
-        console.log(`✨ USE CHAT MEMORY: +${amount} XP awarded to ${domain}`);
+        console.warn(`✨ USE CHAT MEMORY: +${amount} XP awarded to ${domain}`);
       } catch (err) {
         console.warn('⚠️ XP award failed (non-blocking):', err);
       }

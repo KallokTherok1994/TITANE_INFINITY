@@ -483,7 +483,7 @@ export class SelfHealingAnalyzer {
     // Appliquer les règles de diagnostic
     const diagnosis = this.applyRules(event, context);
 
-    console.log(
+    console.warn(
       `[SelfHealingAnalyzer] 🔬 Diagnosis: [${diagnosis.severity}] ${diagnosis.nature} - confidence: ${(diagnosis.confidence * 100).toFixed(0)}%`
     );
 

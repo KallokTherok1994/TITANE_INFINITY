@@ -63,12 +63,13 @@ interface ErrorPattern {
 // ═══════════════════════════════════════════════════════════════
 
 class ConsoleMonitor {
+  private readonly nativeConsole = globalThis.console;
   private originalConsole = {
-    log: console.log.bind(console),
+    log: console.warn.bind(console),
     warn: console.warn.bind(console),
     error: console.error.bind(console),
-    debug: console.debug.bind(console),
-    info: console.info.bind(console),
+    debug: console.warn.bind(console),
+    info: console.warn.bind(console),
   };
 
   private logs: ConsoleLogEntry[] = [];
@@ -226,11 +227,11 @@ class ConsoleMonitor {
     this.isMonitoring = true;
 
     // Intercept console methods
-    console.log = this.intercept('log', this.originalConsole.log);
-    console.warn = this.intercept('warn', this.originalConsole.warn);
-    console.error = this.intercept('error', this.originalConsole.error);
-    console.debug = this.intercept('debug', this.originalConsole.debug);
-    console.info = this.intercept('info', this.originalConsole.info);
+    this.nativeConsole.log = this.intercept('log', this.originalConsole.log);
+    this.nativeConsole.warn = this.intercept('warn', this.originalConsole.warn);
+    this.nativeConsole.error = this.intercept('error', this.originalConsole.error);
+    this.nativeConsole.debug = this.intercept('debug', this.originalConsole.debug);
+    this.nativeConsole.info = this.intercept('info', this.originalConsole.info);
 
     // Start periodic cleanup and analysis
     setInterval(() => this.analyzeAndCleanup(), 60000); // Every minute
@@ -244,11 +245,11 @@ class ConsoleMonitor {
   stop(): void {
     if (!this.isMonitoring) return;
 
-    console.log = this.originalConsole.log;
-    console.warn = this.originalConsole.warn;
-    console.error = this.originalConsole.error;
-    console.debug = this.originalConsole.debug;
-    console.info = this.originalConsole.info;
+    this.nativeConsole.log = this.originalConsole.log;
+    this.nativeConsole.warn = this.originalConsole.warn;
+    this.nativeConsole.error = this.originalConsole.error;
+    this.nativeConsole.debug = this.originalConsole.debug;
+    this.nativeConsole.info = this.originalConsole.info;
 
     this.isMonitoring = false;
     logger.info('Console monitoring stopped');

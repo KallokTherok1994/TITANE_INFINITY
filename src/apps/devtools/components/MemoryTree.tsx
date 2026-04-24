@@ -141,7 +141,7 @@ function MemoryTreeNode({
  * ```tsx
  * <MemoryTree
  *   nodes={memoryNodes}
- *   onNodeClick={(node) => console.log('Clicked', node)}
+ *   onNodeClick={(node) => console.warn('Clicked', node)}
  * />
  * ```
  */

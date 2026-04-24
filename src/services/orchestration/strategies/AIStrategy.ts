@@ -445,7 +445,7 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[AIStrategy] ${message}`, ...args);
+    console.warn(`[AIStrategy] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {

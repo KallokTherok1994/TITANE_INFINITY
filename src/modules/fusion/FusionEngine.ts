@@ -477,7 +477,7 @@ export class FusionEngine {
         });
       }
 
-      console.log(`[FusionEngine] Collected ${entries.length} logs from LogEngine`);
+      console.warn(`[FusionEngine] Collected ${entries.length} logs from LogEngine`);
     } catch (error) {
       console.warn('[FusionEngine] Log collection failed:', error);
     }
@@ -550,7 +550,7 @@ ${introspection.futureVision.priorityImprovements
           });
         }
 
-        console.log(
+        console.warn(
           `[FusionEngine] Collected Singularity data: 1 introspection + ${introspection.diagnostic.criticalIssues.length} issues`
         );
       }

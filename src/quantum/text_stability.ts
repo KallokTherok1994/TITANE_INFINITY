@@ -33,7 +33,7 @@ export class TextStabilityEngine {
     this.waitForFonts();
     this.optimizeRootTypography();
 
-    console.log('[TextStabilityEngine] Applied text stability optimizations');
+    console.warn('[TextStabilityEngine] Applied text stability optimizations');
   }
 
   /**

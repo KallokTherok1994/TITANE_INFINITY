@@ -62,7 +62,7 @@ export const DashboardPage = (): JSX.Element => {
   const handleSaveWidgets = (newWidgets: DashboardWidget[]) => {
     setWidgets(newWidgets);
     localStorage.setItem('titane_dashboard_widgets', JSON.stringify(newWidgets));
-    console.log('✅ Dashboard sauvegardé:', newWidgets.length, 'widgets');
+    console.warn('✅ Dashboard sauvegardé:', newWidgets.length, 'widgets');
   };
 
   return (

@@ -33,8 +33,8 @@ if (typeof window !== 'undefined') {
   }
 
   // Information de démarrage
-  console.log('🛡️ TITANE∞ Tauri Invoke Protection: ACTIVE');
-  console.log('✅ Fallback mode available for browser context');
+  console.warn('🛡️ TITANE∞ Tauri Invoke Protection: ACTIVE');
+  console.warn('✅ Fallback mode available for browser context');
 }
 
 // Le validator d'invoke est un outil de debug; ne jamais l'exécuter en prod.

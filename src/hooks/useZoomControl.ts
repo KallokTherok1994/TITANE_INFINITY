@@ -52,7 +52,7 @@ export const useZoomControl = () => {
  */
 function adjustZoom(direction: 1 | -1) {
   const newZoom = applyZoomScale(stepZoomScale(readCurrentZoomScale(), direction));
-  console.log(`🔍 Zoom ajusté: ${(newZoom * 100).toFixed(1)}%`);
+  console.warn(`🔍 Zoom ajusté: ${(newZoom * 100).toFixed(1)}%`);
 }
 
 /**
@@ -60,7 +60,7 @@ function adjustZoom(direction: 1 | -1) {
  */
 function resetZoom() {
   const defaultZoom = applyZoomScale(BASE_ZOOM_SCALE);
-  console.log(`🔍 Zoom réinitialisé: ${(defaultZoom * 100).toFixed(1)}%`);
+  console.warn(`🔍 Zoom réinitialisé: ${(defaultZoom * 100).toFixed(1)}%`);
 }
 
 /**

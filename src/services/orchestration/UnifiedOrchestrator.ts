@@ -424,7 +424,7 @@ export class UnifiedOrchestrator {
   }
 
   private log(message: string, ...args: unknown[]): void {
-    console.log(`[UnifiedOrchestrator] ${message}`, ...args);
+    console.warn(`[UnifiedOrchestrator] ${message}`, ...args);
   }
 
   private logError(message: string, error?: unknown): void {

@@ -156,7 +156,7 @@ export class AdvancedTelemetry {
     });
 
     if (this.config.enableConsoleLogging) {
-      console.info(`[Telemetry Info] ${category}: ${message}`);
+      console.warn(`[Telemetry Info] ${category}: ${message}`);
     }
   }
 
@@ -268,7 +268,7 @@ export class AdvancedTelemetry {
 
     // In production, send to backend/storage
     if (this.config.enableConsoleLogging) {
-      console.log('[Telemetry Flush]', {
+      console.warn('[Telemetry Flush]', {
         eventCount: eventsToFlush.length,
         timestamp: Date.now(),
       });
@@ -296,7 +296,7 @@ export class AdvancedTelemetry {
     });
 
     if (this.config.enableConsoleLogging) {
-      console.log('[Telemetry Summary]', summary);
+      console.warn('[Telemetry Summary]', summary);
     }
   }
 

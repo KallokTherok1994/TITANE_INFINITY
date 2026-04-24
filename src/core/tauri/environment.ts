@@ -125,7 +125,7 @@ export function logEnvironmentWarnings(): void {
   const env = detectEnvironment();
 
   if (env.isTauri) {
-    console.log(
+    console.warn(
       '✅ TITANE∞ - Contexte Tauri confirmé',
       '\n   Protocol:',
       env.protocol,
@@ -138,7 +138,7 @@ export function logEnvironmentWarnings(): void {
   }
 
   if (env.isDev) {
-    console.info(
+    console.warn(
       '📱 TITANE∞ - Mode développement browser',
       '\n   Contexte:',
       env.origin,

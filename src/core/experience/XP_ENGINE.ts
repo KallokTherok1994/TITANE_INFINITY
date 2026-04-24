@@ -62,7 +62,7 @@ export const XP = {
 
     // Log level-up
     if (XP.state.level > previousLevel) {
-      console.log(`🎉 [XP] Level UP! ${previousLevel} → ${XP.state.level}`);
+      console.warn(`🎉 [XP] Level UP! ${previousLevel} → ${XP.state.level}`);
     }
 
     // Synchroniser avec experienceService (Tauri backend)
@@ -132,9 +132,9 @@ export const XP = {
           level: loaded.level || 1,
           history: loaded.history || [],
         };
-        console.log(`[XP] État chargé: Level ${XP.state.level}, ${XP.state.total} XP`);
+        console.warn(`[XP] État chargé: Level ${XP.state.level}, ${XP.state.total} XP`);
       } else {
-        console.log('[XP] Nouvel état initialisé');
+        console.warn('[XP] Nouvel état initialisé');
       }
     } catch (e) {
       console.error('[XP] Erreur chargement localStorage:', e);
@@ -206,7 +206,7 @@ function startAutoSave() {
     XP.persist();
   }, 60000); // Every 60s
 
-  console.log('[XP] Auto-save activé (60s)');
+  console.warn('[XP] Auto-save activé (60s)');
 }
 
 /**
@@ -216,7 +216,7 @@ export function stopAutoSave() {
   if (autoSaveIntervalId !== null) {
     clearInterval(autoSaveIntervalId);
     autoSaveIntervalId = null;
-    console.log('[XP] Auto-save désactivé');
+    console.warn('[XP] Auto-save désactivé');
   }
 }
 

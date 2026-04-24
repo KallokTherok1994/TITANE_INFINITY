@@ -254,7 +254,7 @@ class PhaseSpaceEngine {
   start(): void {
     if (this.state.isRunning) return;
 
-    console.log('[PhaseSpaceEngine] Starting phase-space navigation...');
+    console.warn('[PhaseSpaceEngine] Starting phase-space navigation...');
 
     this.state.isRunning = true;
     this.intervalId = setInterval(() => this.tick(), 500); // 2 Hz
@@ -265,7 +265,7 @@ class PhaseSpaceEngine {
   stop(): void {
     if (!this.state.isRunning) return;
 
-    console.log('[PhaseSpaceEngine] Stopping...');
+    console.warn('[PhaseSpaceEngine] Stopping...');
 
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -518,7 +518,7 @@ class PhaseSpaceEngine {
 
         this.state.attractors.push(attractor);
 
-        console.log(`[PhaseSpaceEngine] New attractor detected: ${attractor.name}`);
+        console.warn(`[PhaseSpaceEngine] New attractor detected: ${attractor.name}`);
       }
     });
 
@@ -724,7 +724,7 @@ class PhaseSpaceEngine {
 
       this.state.bifurcations.push(bifurcation);
 
-      console.log(
+      console.warn(
         `[PhaseSpaceEngine] Bifurcation detected at coherence=${bifurcation.criticalValue.toFixed(2)}`
       );
 
@@ -957,7 +957,7 @@ class PhaseSpaceEngine {
       return;
     }
 
-    console.log(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
+    console.warn(`[PhaseSpaceEngine] Navigating to attractor: ${attractor.name}`);
 
     // IMPLEMENTATION: Navigate to attractor by adjusting engine parameters
     // 1. Get target parameters: const target = attractor.parameters (e.g., creativity: 0.8)

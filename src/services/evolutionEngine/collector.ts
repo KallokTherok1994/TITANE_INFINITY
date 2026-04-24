@@ -226,7 +226,7 @@ export class Collector {
       }
     } catch (error) {
       // Silencieux si le backend n'est pas disponible
-      console.debug('[Collector] IA stats non disponibles');
+      console.warn('[Collector] IA stats non disponibles');
     }
   }
 

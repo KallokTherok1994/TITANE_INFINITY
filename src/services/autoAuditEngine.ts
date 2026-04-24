@@ -66,7 +66,7 @@ export class AutoAuditEngine {
       return;
     }
 
-    console.log('🔍 [AUTO-AUDIT] Starting automatic audits every 30s');
+    console.warn('🔍 [AUTO-AUDIT] Starting automatic audits every 30s');
     this.isRunning = true;
 
     // Premier scan immédiat
@@ -98,7 +98,7 @@ export class AutoAuditEngine {
   stop(): void {
     if (!this.isRunning) return;
 
-    console.log('🛑 [AUTO-AUDIT] Stopping automatic audits');
+    console.warn('🛑 [AUTO-AUDIT] Stopping automatic audits');
     this.isRunning = false;
 
     if (this.intervalId) {
@@ -114,7 +114,7 @@ export class AutoAuditEngine {
     const startTime = performance.now();
     const results: AuditResult[] = [];
 
-    console.log('🔍 [AUTO-AUDIT] Running scan...');
+    console.warn('🔍 [AUTO-AUDIT] Running scan...');
 
     // 1. Vérifier intégrité du système de fichiers
     results.push(...(await this.checkFileSystemIntegrity()));
@@ -422,7 +422,7 @@ export class AutoAuditEngine {
   private logReport(report: AuditReport): void {
     const statusIcon = report.critical > 0 ? '🚨' : report.errors > 0 ? '⚠️' : '✅';
 
-    console.log(
+    console.warn(
       `${statusIcon} [AUTO-AUDIT] Scan completed in ${report.duration.toFixed(0)}ms | ` +
         `✅ ${report.passed} | ⚠️ ${report.warnings} | ❌ ${report.errors} | 🚨 ${report.critical}`
     );
@@ -432,7 +432,7 @@ export class AutoAuditEngine {
       .filter(r => r.status !== 'ok')
       .forEach(r => {
         const icon = r.status === 'critical' ? '🚨' : r.status === 'error' ? '❌' : '⚠️';
-        console.log(`  ${icon} [${r.category}] ${r.message}`);
+        console.warn(`  ${icon} [${r.category}] ${r.message}`);
       });
   }
 

@@ -177,17 +177,17 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   const clear = useCallback(() => {
     // Clear handled by chat hook internally
     // Could add explicit clear method to useChat if needed
-    console.info('[GlobalAIChat] Clear requested');
+    console.warn('[GlobalAIChat] Clear requested');
   }, []);
 
   const setModel = useCallback((model: string) => {
     setCurrentModel(model);
-    console.info('[GlobalAIChat] Model changed:', model);
+    console.warn('[GlobalAIChat] Model changed:', model);
   }, []);
 
   const setProvider = useCallback((provider: string) => {
     setCurrentProvider(provider);
-    console.info('[GlobalAIChat] Provider changed:', provider);
+    console.warn('[GlobalAIChat] Provider changed:', provider);
   }, []);
 
   const toggleFullscreen = useCallback(() => {
@@ -195,7 +195,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   }, []);
 
   const enableDevMode = useCallback(() => {
-    console.info('[GlobalAIChat] Dev mode enabled');
+    console.warn('[GlobalAIChat] Dev mode enabled');
     // Could trigger devSudo mode or specific dev features
   }, []);
 

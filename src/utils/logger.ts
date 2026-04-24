@@ -135,7 +135,7 @@ class Logger {
    */
   trace(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.TRACE)) return;
-    console.log(...this.format('TRACE', ...args));
+    console.warn(...this.format('TRACE', ...args));
   }
 
   /**
@@ -143,7 +143,7 @@ class Logger {
    */
   debug(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    console.log(...this.format('DEBUG', ...args));
+    console.warn(...this.format('DEBUG', ...args));
   }
 
   /**
@@ -151,7 +151,7 @@ class Logger {
    */
   info(...args: LogArgs) {
     if (!this.shouldLog(LogLevel.INFO)) return;
-    console.info(...this.format('INFO', ...args));
+    console.warn(...this.format('INFO', ...args));
   }
 
   /**
@@ -182,16 +182,13 @@ class Logger {
    */
   group(label: string, collapsed = false) {
     if (this.config.isProduction) return;
-    if (collapsed) {
-      console.groupCollapsed(...this.format('GROUP', label));
-    } else {
-      console.group(...this.format('GROUP', label));
-    }
+    const prefix = collapsed ? '[GROUP_COLLAPSED]' : '[GROUP]';
+    console.warn(prefix, ...this.format('GROUP', label));
   }
 
   groupEnd() {
     if (this.config.isProduction) return;
-    console.groupEnd();
+    return;
   }
 
   /**
@@ -199,7 +196,7 @@ class Logger {
    */
   table(data: TableData) {
     if (this.config.isProduction) return;
-    console.table(data);
+    console.warn('[TABLE]', data);
   }
 
   /**
@@ -207,12 +204,12 @@ class Logger {
    */
   time(label: string) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    console.time(`[${this.config.prefix}] ${label}`);
+    console.warn(`[${this.config.prefix}] time start: ${label}`);
   }
 
   timeEnd(label: string) {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    console.timeEnd(`[${this.config.prefix}] ${label}`);
+    console.warn(`[${this.config.prefix}] time end: ${label}`);
   }
 }
 
@@ -301,16 +298,16 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
     },
     trace: (...args: LogArgs) => {
       if (!isProduction) {
-        console.log(`[${prefix}][TRACE]`, ...args);
+        console.warn(`[${prefix}][TRACE]`, ...args);
       }
     },
     debug: (...args: LogArgs) => {
       if (!isProduction) {
-        console.log(`[${prefix}][DEBUG]`, ...args);
+        console.warn(`[${prefix}][DEBUG]`, ...args);
       }
     },
     info: (...args: LogArgs) => {
-      console.info(`[${prefix}][INFO]`, ...args);
+      console.warn(`[${prefix}][INFO]`, ...args);
     },
     warn: (...args: LogArgs) => {
       console.warn(`[${prefix}][WARN]`, ...args);
@@ -323,28 +320,25 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
     },
     group: (label: string, collapsed = false) => {
       if (isProduction) return;
-      if (collapsed) {
-        console.groupCollapsed(`[${prefix}][GROUP] ${label}`);
-      } else {
-        console.group(`[${prefix}][GROUP] ${label}`);
-      }
+      const mode = collapsed ? 'GROUP_COLLAPSED' : 'GROUP';
+      console.warn(`[${prefix}][${mode}] ${label}`);
     },
     groupEnd: () => {
       if (isProduction) return;
-      console.groupEnd();
+      return;
     },
     table: (data: TableData) => {
       if (isProduction) return;
-      console.table(data);
+      console.warn(`[${prefix}][TABLE]`, data);
     },
     time: (label: string) => {
       if (!isProduction) {
-        console.time(`[${prefix}] ${label}`);
+        console.warn(`[${prefix}] time start: ${label}`);
       }
     },
     timeEnd: (label: string) => {
       if (!isProduction) {
-        console.timeEnd(`[${prefix}] ${label}`);
+        console.warn(`[${prefix}] time end: ${label}`);
       }
     },
   } as unknown as Logger;
@@ -386,7 +380,7 @@ export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Avant:
- *   console.log('[AI Provider]', 'Selected:', provider);
+ *   console.warn('[AI Provider]', 'Selected:', provider);
  *   console.warn('[Memory]', 'Cache miss');
  *
  * Après:

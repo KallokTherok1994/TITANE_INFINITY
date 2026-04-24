@@ -150,14 +150,14 @@ export class WebAssemblyCompute {
           abort: () => console.error('[WASM] Abort called'),
         },
         js: {
-          log: (value: number) => console.log('[WASM]', value),
+          log: (value: number) => console.warn('[WASM]', value),
         },
       });
 
       this.metrics.isWASMActive = true;
       this.metrics.memoryUsage = this.wasmMemory.buffer.byteLength;
 
-      console.log('[WebAssemblyCompute] Initialized successfully');
+      console.warn('[WebAssemblyCompute] Initialized successfully');
       return true;
     } catch (error) {
       console.error('[WebAssemblyCompute] Initialization failed:', error);

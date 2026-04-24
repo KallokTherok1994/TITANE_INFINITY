@@ -55,7 +55,7 @@ export const preloadRoute = (
     const preloadFn = () => {
       import(componentPath)
         .then(() => {
-          console.debug(`✅ Preloaded: ${componentPath}`);
+          console.warn(`✅ Preloaded: ${componentPath}`);
           resolve();
         })
         .catch(err => {
@@ -114,7 +114,7 @@ export const useRoutePreloading = () => {
       // Preload next likely routes with low priority
       preloadRoutes(nextRoutes, 'low')
         .then(() => {
-          console.debug(
+          console.warn(
             `✅ Preloaded ${nextRoutes.length} chunks for route: ${currentRoute}`
           );
         })
@@ -194,7 +194,7 @@ export const preloadCriticalChunks = async (): Promise<void> => {
 
   try {
     await preloadRoutes(criticalChunks, 'high');
-    console.debug('✅ Critical chunks preloaded');
+    console.warn('✅ Critical chunks preloaded');
   } catch (err) {
     console.warn('⚠️ Failed to preload critical chunks:', err);
   }

@@ -514,7 +514,7 @@ export class MetricsCollector {
     };
 
     this.initializeModuleMetrics();
-    console.log('[MetricsCollector] 📊 Initialized');
+    console.warn('[MetricsCollector] 📊 Initialized');
   }
 
   /**
@@ -546,7 +546,7 @@ export class MetricsCollector {
    */
   start(): void {
     if (this.state.running) {
-      console.log('[MetricsCollector] ⚠️ Already running');
+      console.warn('[MetricsCollector] ⚠️ Already running');
       return;
     }
 
@@ -569,7 +569,7 @@ export class MetricsCollector {
       source: 'collector',
     });
 
-    console.log(`[MetricsCollector] ▶️ Started (interval: ${this.config.intervalMs}ms)`);
+    console.warn(`[MetricsCollector] ▶️ Started (interval: ${this.config.intervalMs}ms)`);
   }
 
   /**
@@ -593,7 +593,7 @@ export class MetricsCollector {
       source: 'collector',
     });
 
-    console.log('[MetricsCollector] ⏹️ Stopped');
+    console.warn('[MetricsCollector] ⏹️ Stopped');
   }
 
   /**

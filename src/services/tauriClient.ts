@@ -190,7 +190,7 @@ class TauriClient {
       }
       // Passage en half-open après timeout
       breaker.state = 'half-open';
-      console.log(`🔄 Circuit breaker HALF-OPEN for ${command}`);
+      console.warn(`🔄 Circuit breaker HALF-OPEN for ${command}`);
     }
 
     let lastError: TAPIError | null = null;
@@ -294,7 +294,7 @@ class TauriClient {
   private resetCircuitBreaker(command: string): void {
     const breaker = this.getCircuitBreaker(command);
     if (breaker.state !== 'closed') {
-      console.log(`✅ Circuit breaker CLOSED for ${command}`);
+      console.warn(`✅ Circuit breaker CLOSED for ${command}`);
     }
     breaker.failures = 0;
     breaker.state = 'closed';

@@ -97,7 +97,7 @@ class ParallelProviderLoader {
     // Recommandation intelligente
     const recommendedProvider = this.determineRecommendation(providers);
 
-    console.log(
+    console.warn(
       `[ParallelLoader] Loaded ${providers.length} providers in ${Date.now() - startTime}ms`
     );
 

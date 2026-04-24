@@ -10,28 +10,28 @@ import { safeInvokeTauri } from '../utils/tauriProtector';
 
 // Tests de validation
 async function validateTauriInvokeFixes(): Promise<void> {
-  console.log('🔧 VALIDATING TAURI INVOKE FIXES...\n');
+  console.warn('🔧 VALIDATING TAURI INVOKE FIXES...\n');
 
   try {
     // Test 1: Providers Status
-    console.log('❓ 1. Testing Providers Status...');
+    console.warn('❓ 1. Testing Providers Status...');
     const providersResult = await safeInvokeTauri('chat_get_providers_status');
-    console.log('✅ 1. Providers Status: SUCCESS', typeof providersResult);
+    console.warn('✅ 1. Providers Status: SUCCESS', typeof providersResult);
 
     // Test 2: Local Echo (command simple)
-    console.log('❓ 2. Testing Local Echo...');
+    console.warn('❓ 2. Testing Local Echo...');
     const echoResult = await safeInvokeTauri('get_system_health');
-    console.log('✅ 2. Local Echo: SUCCESS', typeof echoResult);
+    console.warn('✅ 2. Local Echo: SUCCESS', typeof echoResult);
 
     // Test 3: Auto Cascade (command complexe)
-    console.log('❓ 3. Testing Auto Cascade...');
+    console.warn('❓ 3. Testing Auto Cascade...');
     const cascadeResult = await safeInvokeTauri('singularity_get_state');
-    console.log('✅ 3. Auto Cascade: SUCCESS', typeof cascadeResult);
+    console.warn('✅ 3. Auto Cascade: SUCCESS', typeof cascadeResult);
 
-    console.log('\n🟢 ALL TESTS PASSED - Invoke fixes working correctly!');
+    console.warn('\n🟢 ALL TESTS PASSED - Invoke fixes working correctly!');
   } catch (error) {
     console.warn('⚠️ Test failed (expected in browser mode):', error);
-    console.log('🔄 This is normal - fallback responses working correctly');
+    console.warn('🔄 This is normal - fallback responses working correctly');
   }
 }
 
@@ -39,9 +39,9 @@ async function validateTauriInvokeFixes(): Promise<void> {
 if (typeof window !== 'undefined') {
   // Run in browser context
   validateTauriInvokeFixes();
-  console.log('🔧 Tauri Invoke Protection: ACTIVE');
+  console.warn('🔧 Tauri Invoke Protection: ACTIVE');
 } else {
-  console.log('🔧 Tauri Invoke Protection: LOADED');
+  console.warn('🔧 Tauri Invoke Protection: LOADED');
 }
 
 export { validateTauriInvokeFixes };

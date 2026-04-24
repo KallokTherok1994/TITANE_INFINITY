@@ -229,13 +229,13 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
   });
 
   it('should pass comprehensive OMEGA validation test', async () => {
-    console.log('🟣 Starting OMEGA comprehensive validation...');
+    console.warn('🟣 Starting OMEGA comprehensive validation...');
 
     // 1. Répondre toujours (never silent)
     const response1 = await aiOrchestrator.generate('OMEGA Test: Always respond', []);
     expect(response1.content).toBeTruthy();
     expect(response1.content.length).toBeGreaterThan(0);
-    console.log('✅ Criterion 1: Always respond - PASSED');
+    console.warn('✅ Criterion 1: Always respond - PASSED');
 
     // 2. Ne jamais geler (never freeze) - timeout test
     const timeoutPromise: Promise<never> = new Promise((_, reject) =>
@@ -247,7 +247,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
     const response2 = await Promise.race([messagePromise, timeoutPromise]);
     expect(response2).toBeDefined();
     expect(response2.content).toBeTruthy();
-    console.log('✅ Criterion 2: Never freeze - PASSED');
+    console.warn('✅ Criterion 2: Never freeze - PASSED');
 
     // 3. Toujours fallback (always fallback)
     const mockFetch = vi.fn().mockRejectedValue(new Error('All providers down'));
@@ -257,13 +257,13 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
     expect(response3).toBeDefined();
     expect(response3.content).toBeTruthy();
     expect(response3.provider).toBe('titane-local');
-    console.log('✅ Criterion 3: Always fallback - PASSED');
+    console.warn('✅ Criterion 3: Always fallback - PASSED');
 
     // 4. S'auto-guérir (self-healing)
     const healStats = autoHealEngine.getStats();
     expect(healStats).toBeDefined();
     expect(healStats).toHaveProperty('providers');
-    console.log('✅ Criterion 4: Self-healing - PASSED');
+    console.warn('✅ Criterion 4: Self-healing - PASSED');
 
     // 5. Supporter long-contexte (long context support)
     const longContext: AIMessage[] = Array.from({ length: 50 }, (_, i) => ({
@@ -275,21 +275,21 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
     const response5 = await aiOrchestrator.generate('Summarize context', longContext);
     expect(response5).toBeDefined();
     expect(response5.content).toBeTruthy();
-    console.log('✅ Criterion 5: Long context support - PASSED');
+    console.warn('✅ Criterion 5: Long context support - PASSED');
 
     // 6. Offrir cohérence TITANE∞ (TITANE consistency)
     const response6 = await aiOrchestrator.generate('OMEGA Test: Who are you?', []);
     expect(response6.content.toLowerCase()).toMatch(
       /(titane|intelligence|cognitive|système)/
     );
-    console.log('✅ Criterion 6: TITANE consistency - PASSED');
+    console.warn('✅ Criterion 6: TITANE consistency - PASSED');
 
-    console.log('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
+    console.warn('🟣 OMEGA Phase 7Ω - All criteria validated successfully');
   });
 
   it('should demonstrate absolute infallibility under stress', async () => {
     await runWithDeterministicOrchestrator(async () => {
-      console.log('🟣 Starting OMEGA stress test...');
+      console.warn('🟣 Starting OMEGA stress test...');
 
       const stressConditions = [
         { message: 'Normal stress test', context: [] },
@@ -326,7 +326,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
       const endTime = Date.now();
       expect(endTime - startTime).toBeLessThan(60000);
 
-      console.log('🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully');
+      console.warn('🟣 OMEGA Phase 7Ω - Absolute infallibility demonstrated successfully');
     });
   });
 

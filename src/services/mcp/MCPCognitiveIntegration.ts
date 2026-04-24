@@ -48,7 +48,7 @@ class MCPCognitiveIntegrationClass {
   }
 
   private log(message: string, ...args: unknown[]) {
-    console.log(`[MCP-Cognitive Integration] ${message}`, ...args);
+    console.warn(`[MCP-Cognitive Integration] ${message}`, ...args);
   }
 
   private warn(message: string, ...args: unknown[]) {

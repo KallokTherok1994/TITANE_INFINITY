@@ -184,7 +184,7 @@ export async function invokeWithRetry<T>(
 
       // Succès - log si retry
       if (attempt > 0) {
-        console.log(
+        console.warn(
           `[${context}] ✓ "${command}" succeeded on attempt ${attempt + 1}/${maxAttempts}`
         );
       }

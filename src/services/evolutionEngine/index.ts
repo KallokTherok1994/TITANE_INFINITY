@@ -252,7 +252,7 @@ export class EvolutionEngine {
     try {
       const snapshot = this.getSnapshot();
       // await invoke('sync_evolution_state', { snapshot });
-      console.debug('[EvolutionEngine] Singularity sync:', snapshot.scores.overallScore);
+      console.warn('[EvolutionEngine] Singularity sync:', snapshot.scores.overallScore);
     } catch (error) {
       console.error('[EvolutionEngine] Singularity sync error:', error);
     }

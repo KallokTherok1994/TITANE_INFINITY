@@ -514,7 +514,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
 
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
-      console.log('[UIThemeProvider] Tokens réinitialisés');
+      console.warn('[UIThemeProvider] Tokens réinitialisés');
     } catch (err) {
       console.error('[UIThemeProvider] Erreur reset:', err);
       // En cas d'erreur, utiliser les valeurs par défaut

@@ -1031,7 +1031,7 @@ class AIOrchestrator {
     let finalProviderUsed: string | null = null;
 
     // 🚨 DEBUG CRITICAL: Log entrée orchestrator (désactivé en production)
-    // console.log('[aiOrchestrator] 📨 generate() APPELÉ', {
+    // console.warn('[aiOrchestrator] 📨 generate() APPELÉ', {
     //   message: message.substring(0, 100),
     //   historyLength: history.length,
     //   preferredProvider: config?.preferredProvider,
@@ -1276,7 +1276,7 @@ class AIOrchestrator {
           );
 
           // 🚨 DEBUG CRITICAL: Log avant tentative provider (désactivé en production)
-          // console.log(`[aiOrchestrator] 🎯 Tentative provider #${attempts}`, {
+          // console.warn(`[aiOrchestrator] 🎯 Tentative provider #${attempts}`, {
           //   providerName,
           //   totalProviders: providersToTry.length,
           //   isAvailable: !!provider,
@@ -1308,7 +1308,7 @@ class AIOrchestrator {
           );
 
           // 🚨 DEBUG CRITICAL: Log succès provider (désactivé en production)
-          // console.log(`[aiOrchestrator] ✅ Succès provider`, {
+          // console.warn(`[aiOrchestrator] ✅ Succès provider`, {
           //   providerName,
           //   contentLength: response.content?.length,
           //   provider: response.provider,

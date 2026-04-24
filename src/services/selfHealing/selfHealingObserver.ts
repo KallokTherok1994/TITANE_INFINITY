@@ -227,7 +227,7 @@ export class SelfHealingObserver {
       return;
     }
 
-    console.log('[SelfHealingObserver] 🔍 Starting observation...');
+    console.warn('[SelfHealingObserver] 🔍 Starting observation...');
 
     if (this.config.captureGlobalErrors) {
       this.installGlobalErrorHandler();
@@ -253,7 +253,7 @@ export class SelfHealingObserver {
     this.state.isActive = true;
     this.state.startTime = Date.now();
 
-    console.log('[SelfHealingObserver] ✅ Observation active');
+    console.warn('[SelfHealingObserver] ✅ Observation active');
   }
 
   public async stop(): Promise<void> {
@@ -261,7 +261,7 @@ export class SelfHealingObserver {
       return;
     }
 
-    console.log('[SelfHealingObserver] 🛑 Stopping observation...');
+    console.warn('[SelfHealingObserver] 🛑 Stopping observation...');
 
     // Restaurer handlers originaux
     if (this.originalOnerror !== null) {
@@ -286,7 +286,7 @@ export class SelfHealingObserver {
 
     this.state.isActive = false;
 
-    console.log('[SelfHealingObserver] Observer stopped');
+    console.warn('[SelfHealingObserver] Observer stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -570,7 +570,7 @@ export class SelfHealingObserver {
     const healingEvent = this.toHealingEvent(observedError);
     this.emit(healingEvent);
 
-    console.log(
+    console.warn(
       `[SelfHealingObserver] 🚨 Captured: [${params.severity}] ${params.type} - ${params.message.slice(0, 100)}`
     );
   }

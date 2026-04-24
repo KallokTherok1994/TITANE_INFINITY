@@ -175,7 +175,7 @@ export class QuantumRenderer {
     // Démarrer la boucle de rendu quantique
     this.startQuantumLoop();
 
-    console.log('[QuantumRenderer] Started - Premium rendering active');
+    console.warn('[QuantumRenderer] Started - Premium rendering active');
   }
 
   stop(): void {
@@ -191,7 +191,7 @@ export class QuantumRenderer {
 
     this.vsyncOrchestrator.stop();
 
-    console.log('[QuantumRenderer] Stopped');
+    console.warn('[QuantumRenderer] Stopped');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

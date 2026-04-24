@@ -51,7 +51,7 @@ export class GPUAccelerator {
     // Démarrer le cleanup périodique
     this.startCleanup();
 
-    console.log('[GPUAccelerator] Initialized');
+    console.warn('[GPUAccelerator] Initialized');
   }
 
   /**
