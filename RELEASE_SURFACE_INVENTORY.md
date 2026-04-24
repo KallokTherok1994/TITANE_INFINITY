@@ -1,5 +1,18 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.1.2 — Historical baseline preserved below)
 
+## Addendum — 2026-04-24 — Post-build Launcher Noninteractive Sudo Truth
+
+| Surface | Truth | Status |
+|---|---|---|
+| `scripts/post-build/update-desktop-icons.sh` | No longer exits fatally when only host-wide binary/launcher sync needs interactive sudo | PASS |
+| `~/.local/share/applications/titane-infinity.desktop` | Regenerated through `scripts/update-desktop-icon.sh` during post-build | PASS |
+| User icon/cache refresh | `update-desktop-database`, `gtk-update-icon-cache`, `xdg-desktop-menu forceupdate` are attempted without root and tolerated when unavailable | PASS |
+| `/usr/bin/titane-infinity` | Copy remains blocked without noninteractive/root sudo | BLOCKED_SUDO_REQUIRED |
+| `/usr/share/applications/titane-infinity.desktop` | System launcher replication remains blocked without noninteractive/root sudo | BLOCKED_SUDO_REQUIRED |
+| `/usr/share/icons/hicolor/*/apps/titane-infinity.png` | System icon replication remains blocked without noninteractive/root sudo | BLOCKED_SUDO_REQUIRED |
+
+> The canonical post-build script now returns exit 0 after completing user-scoped launcher/icon/cache refresh and prints explicit `sync système=BLOCKED_SUDO_REQUIRED, sync binaire=BLOCKED_SUDO_REQUIRED` when host-wide sync cannot run. This closes the false fatal error in noninteractive build sessions while preserving the missing system proof honestly.
+
 ## Addendum — 2026-04-23 — v31.1.2 Governance Seal
 
 | Surface | Détail | Status |

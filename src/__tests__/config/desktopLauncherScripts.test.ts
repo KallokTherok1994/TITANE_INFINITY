@@ -43,8 +43,10 @@ describe('desktop launcher scripts', () => {
     expect(postBuildScript).toContain(
       'SYSTEM_DESKTOP_DST1="$SYSTEM_DESKTOP_DIR/titane-infinity.desktop"'
     );
+    expect(postBuildScript).toContain('run_with_root_if_available() {');
+    expect(postBuildScript).toContain('SYSTEM_SYNC_STATUS="BLOCKED_SUDO_REQUIRED"');
     expect(postBuildScript).toContain(
-      'sudo rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop"'
+      'run_with_root_if_available rm -f "$SYSTEM_DESKTOP_DIR/TITANE-Infinity.desktop"'
     );
     expect(postBuildScript).toContain(
       'SYSTEM_ICON_DST="$SYSTEM_ICON_DIR/titane-infinity.png"'
@@ -52,6 +54,7 @@ describe('desktop launcher scripts', () => {
     expect(postBuildScript).not.toContain('SYSTEM_DESKTOP_DST2=');
     expect(postBuildScript).not.toContain('DESKTOP_SRC1=');
     expect(postBuildScript).toContain('cmp -s "$BIN_SRC" "$BIN_DST"');
+    expect(postBuildScript).toContain('sync système=$SYSTEM_SYNC_STATUS');
   });
 
   it('declares stable deb replacement metadata and launcher postinst', () => {
