@@ -2,6 +2,41 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1776993389565-b6rbp0zj",
+      "timestamp": 1776993389565,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776991986362-h98dwaq6",
+      "timestamp": 1776991986362,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776991035338-iqwhvrvw",
+      "timestamp": 1776991035338,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776988016308-eyj3jhr8",
+      "timestamp": 1776988016308,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1776987359224-6dml4yut",
+      "timestamp": 1776987359224,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1776856930318-l1hugt4e",
       "timestamp": 1776856930318,
       "level": "Info",
@@ -227,7 +262,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1776856930319,
+    "last_validation_ts": 1776993389572,
     "last_compaction_ts": null
   }
 }
