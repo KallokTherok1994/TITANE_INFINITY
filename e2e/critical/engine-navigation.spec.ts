@@ -64,6 +64,17 @@ test.describe('Critical Path: Engine Navigation', () => {
     await expect(page.getByTestId('topnav-more-menu')).toBeVisible({ timeout: 15000 });
   });
 
+  test('agent dashboards toggle exposes a visible whats-new affordance for fresh UI updates', async ({
+    page,
+  }) => {
+    const toggle = page.getByTestId('agent-dashboards-panel-toggle');
+    await expect(toggle).toBeVisible({ timeout: 15000 });
+    await expect(toggle).toHaveAttribute('data-has-update', 'true');
+    await expect(page.getByTestId('agent-dashboards-panel-whats-new-badge')).toBeVisible({
+      timeout: 15000,
+    });
+  });
+
   test('can navigate between different sections', async ({ page }) => {
     // Close boot beacon if present to avoid click interception
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });

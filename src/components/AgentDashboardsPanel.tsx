@@ -9,6 +9,31 @@ import './AgentDashboardsPanel.css';
 type AgentDashboardsPanelMode = 'default' | 'compact';
 
 const COMPACT_PANEL_VIEWPORT_HEIGHT = 760;
+const AGENT_DASHBOARDS_SEEN_VERSION_KEY = 'titane.agentDashboardsPanel.lastSeenVersion';
+
+function getAgentDashboardsPanelSeenVersion(): string | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    return window.localStorage.getItem(AGENT_DASHBOARDS_SEEN_VERSION_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function setAgentDashboardsPanelSeenVersion(version: string): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(AGENT_DASHBOARDS_SEEN_VERSION_KEY, version);
+  } catch {
+    // Ignore storage denial and keep the visual affordance visible.
+  }
+}
 
 export function resolveAgentDashboardsPanelMode(params: {
   pathname?: string;
@@ -86,6 +111,9 @@ const AgentDashboardsPanel: React.FC = () => {
     getAgentDashboardsPanelRuntimeState()
   );
   const [isExpanded, setIsExpanded] = useState(runtimeState.mode === 'default');
+  const [hasSeenCurrentVersion, setHasSeenCurrentVersion] = useState(() => {
+    return getAgentDashboardsPanelSeenVersion() === __APP_VERSION__;
+  });
 
   useEffect(() => {
     const syncRuntimeState = () => {
@@ -134,6 +162,17 @@ const AgentDashboardsPanel: React.FC = () => {
     setIsExpanded(runtimeState.mode === 'default');
   }, [runtimeState.mode]);
 
+  useEffect(() => {
+    setHasSeenCurrentVersion(getAgentDashboardsPanelSeenVersion() === __APP_VERSION__);
+  }, []);
+
+  const showWhatsNewBadge = !hasSeenCurrentVersion;
+
+  const acknowledgeCurrentVersion = () => {
+    setAgentDashboardsPanelSeenVersion(__APP_VERSION__);
+    setHasSeenCurrentVersion(true);
+  };
+
   const panelLabel = useMemo(() => {
     return isExpanded
       ? 'Masquer les dashboards agents'
@@ -159,16 +198,36 @@ const AgentDashboardsPanel: React.FC = () => {
       <button
         type="button"
         data-testid="agent-dashboards-panel-toggle"
+        data-has-update={showWhatsNewBadge ? 'true' : 'false'}
         className="agent-dashboards-panel__toggle"
         aria-expanded={isExpanded}
         aria-label={panelLabel}
         title={panelLabel}
         onClick={() => {
+          acknowledgeCurrentVersion();
           setIsExpanded(prev => !prev);
         }}
       >
-        <span className="agent-dashboards-panel__toggle-title">Agents</span>
+        <span className="agent-dashboards-panel__toggle-title-row">
+          <span className="agent-dashboards-panel__toggle-title">Agents</span>
+          {showWhatsNewBadge && (
+            <span
+              data-testid="agent-dashboards-panel-whats-new-badge"
+              className="agent-dashboards-panel__toggle-badge"
+            >
+              Nouveau
+            </span>
+          )}
+        </span>
         <span className="agent-dashboards-panel__toggle-meta">5 dashboards</span>
+        {showWhatsNewBadge && (
+          <span
+            data-testid="agent-dashboards-panel-whats-new-text"
+            className="agent-dashboards-panel__toggle-update"
+          >
+            Dashboards mis a jour en v{__APP_VERSION__}
+          </span>
+        )}
       </button>
 
       <div

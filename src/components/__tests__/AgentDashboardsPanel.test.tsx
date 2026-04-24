@@ -1,10 +1,19 @@
 import React from 'react';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import AgentDashboardsPanel, {
   resolveAgentDashboardsPanelMode,
 } from '../AgentDashboardsPanel';
+
+function setSeenVersion(version: string | null) {
+  if (version === null) {
+    window.localStorage.removeItem('titane.agentDashboardsPanel.lastSeenVersion');
+    return;
+  }
+
+  window.localStorage.setItem('titane.agentDashboardsPanel.lastSeenVersion', version);
+}
 
 function setWindowLocation(url: string) {
   window.history.replaceState({}, 'test', url);
@@ -19,10 +28,16 @@ function appendFullscreenConversationMarker() {
 }
 
 describe('AgentDashboardsPanel', () => {
+  beforeEach(() => {
+    vi.stubGlobal('__APP_VERSION__', 'test');
+  });
+
   afterEach(() => {
     cleanup();
     document.body.innerHTML = '';
+    window.localStorage.clear();
     setWindowLocation('/');
+    vi.unstubAllGlobals();
   });
 
   it('classifies fullscreen conversation surfaces as compact-safe', () => {
@@ -57,6 +72,57 @@ describe('AgentDashboardsPanel', () => {
       'hidden'
     );
     expect(screen.getByTestId('monitoring-dashboard')).toBeInTheDocument();
+  });
+
+  it('shows a versioned whats-new affordance until the panel is opened once', async () => {
+    setWindowLocation('/dev');
+    setSeenVersion('older-version');
+
+    render(<AgentDashboardsPanel />);
+
+    const toggle = screen.getByTestId('agent-dashboards-panel-toggle');
+
+    await waitFor(() => {
+      expect(toggle).toHaveAttribute('data-has-update', 'true');
+    });
+
+    expect(
+      screen.getByTestId('agent-dashboards-panel-whats-new-badge')
+    ).toHaveTextContent('Nouveau');
+    expect(
+      screen.getByTestId('agent-dashboards-panel-whats-new-text')
+    ).toHaveTextContent('Dashboards mis a jour en vtest');
+
+    fireEvent.click(toggle);
+
+    await waitFor(() => {
+      expect(toggle).toHaveAttribute('data-has-update', 'false');
+    });
+
+    expect(
+      screen.queryByTestId('agent-dashboards-panel-whats-new-badge')
+    ).not.toBeInTheDocument();
+    expect(window.localStorage.getItem('titane.agentDashboardsPanel.lastSeenVersion')).toBe(
+      'test'
+    );
+  });
+
+  it('keeps the whats-new affordance hidden when the current version was already acknowledged', async () => {
+    setWindowLocation('/dev');
+    setSeenVersion('test');
+
+    render(<AgentDashboardsPanel />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('agent-dashboards-panel-toggle')).toHaveAttribute(
+        'data-has-update',
+        'false'
+      );
+    });
+
+    expect(
+      screen.queryByTestId('agent-dashboards-panel-whats-new-badge')
+    ).not.toBeInTheDocument();
   });
 
   it('collapses into a safe dock on the fullscreen conversation surface', async () => {
