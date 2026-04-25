@@ -46,16 +46,19 @@ describe('One Door Network Gateway — anti-regression (Rule 5)', () => {
 
   it('http_commands.rs uses gateway, not direct reqwest::Client::builder()', () => {
     expect(httpCommands).not.toContain('reqwest::Client::builder()');
+    expect(httpCommands).not.toContain('Client::builder()');
     expect(httpCommands).toContain('gateway::network::build_http_client');
   });
 
   it('rag_commands.rs uses gateway, not direct reqwest::Client::builder()', () => {
     expect(ragCommands).not.toContain('reqwest::Client::builder()');
+    expect(ragCommands).not.toContain('Client::builder()');
     expect(ragCommands).toContain('gateway::network::build_http_client');
   });
 
   it('web_search_commands.rs uses gateway, not direct reqwest::Client::builder()', () => {
     expect(webSearchCommands).not.toContain('reqwest::Client::builder()');
+    expect(webSearchCommands).not.toContain('Client::builder()');
     expect(webSearchCommands).toContain('gateway::network::build_http_client');
   });
 });
