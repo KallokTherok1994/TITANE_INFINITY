@@ -28,7 +28,6 @@ function isTauriEnvironment(): boolean {
   return typeof window !== 'undefined' && '__TAURI__' in window;
 }
 
-const IS_TAURI = isTauriEnvironment();
 const TRANSPORT_MODE = 'IPC';
 
 const HEALTH_CACHE_TTL_MS = 10_000;

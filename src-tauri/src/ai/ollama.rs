@@ -598,6 +598,34 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     let client = build_ollama_client()?;
     let runtime = resolve_ollama_runtime();
 
+    // Probe /api/version for a real version string (best-effort, 3s timeout).
+    let version_client = crate::core::http_types::Client::builder()
+        .timeout(std::time::Duration::from_secs(3))
+        .build()
+        .ok();
+    let ollama_version: Option<String> = if let Some(vc) = version_client {
+        vc.get(format!("{}/api/version", runtime.base_url))
+            .send()
+            .await
+            .ok()
+            .and_then(|r| if r.status().is_success() { Some(r) } else { None })
+            .and_then(|r| {
+                let text = tokio::task::block_in_place(|| {
+                    tokio::runtime::Handle::current()
+                        .block_on(r.text())
+                        .ok()
+                });
+                text
+            })
+            .and_then(|body| {
+                serde_json::from_str::<serde_json::Value>(&body)
+                    .ok()
+                    .and_then(|v| v["version"].as_str().map(str::to_string))
+            })
+    } else {
+        None
+    };
+
     // Test de disponibilité
     let response = client
         .get(format!("{}/api/tags", runtime.base_url))
@@ -617,7 +645,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 
             OllamaStatus {
                 available: true,
-                version: Some("unknown".to_string()), // Ollama n'expose pas facilement la version
+                version: ollama_version.clone().or_else(|| Some("unknown".to_string())),
                 models: model_names,
                 url: runtime.base_url.clone(),
                 model: runtime.model.clone(),
@@ -632,7 +660,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
             log::warn!("[OLLAMA] Health check failed | status={}", resp.status());
             OllamaStatus {
                 available: false,
-                version: None,
+                version: ollama_version.clone().or_else(|| Some("unknown".to_string())),
                 models: vec![],
                 url: runtime.base_url.clone(),
                 model: runtime.model.clone(),
@@ -648,7 +676,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
             log::debug!("[OLLAMA] Health check failed | error={}", e);
             OllamaStatus {
                 available: false,
-                version: None,
+                version: ollama_version,
                 models: vec![],
                 url: runtime.base_url.clone(),
                 model: runtime.model.clone(),
@@ -669,10 +697,6 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 
     Ok(status)
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-//   LEGACY CLIENT (Compatibility v15)
-// ═══════════════════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   LEGACY CLIENT (Compatibility v15)

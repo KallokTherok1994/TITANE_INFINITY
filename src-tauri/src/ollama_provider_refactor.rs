@@ -25,9 +25,9 @@ impl Default for OllamaConfig {
     fn default() -> Self {
         OllamaConfig {
             base_url: "http://127.0.0.1:11434".to_string(),
-            model: "llama3.1:latest".to_string(),
+            model: "gemma2:2b".to_string(),
             temperature: 0.7,
-            num_ctx: 2048,
+            num_ctx: 8192,
             timeout_secs: 30,
             num_predict: Some(512),
         }
@@ -381,12 +381,22 @@ mod tests {
         assert!(caps.contains(&"local_inference".to_string()));
     }
 
+    /// Rule 17 — canonical model alignment: default config must carry gemma2:2b / 8192.
+    #[test]
+    fn test_ollama_config_default_model_canonical() {
+        let config = OllamaConfig::default();
+        assert_eq!(config.model, "gemma2:2b", "default model must be gemma2:2b (Rule 17)");
+        assert_eq!(config.num_ctx, 8192, "default num_ctx must be 8192");
+        assert_eq!(config.base_url, "http://127.0.0.1:11434", "default URL must be loopback");
+    }
+
     #[test]
     fn test_ollama_build_endpoint() {
         let config = OllamaConfig::default();
         let provider = OllamaProvider::new(config).unwrap();
         let endpoint = provider.build_endpoint();
-        assert_eq!(endpoint, "http://localhost:11434/api/generate");
+        // Default base_url is 127.0.0.1 (not localhost) — Rule 17 loopback canon.
+        assert_eq!(endpoint, "http://127.0.0.1:11434/api/generate");
     }
 
     #[tokio::test]

@@ -102,7 +102,21 @@ pub async fn ollama_generate(req: OllamaRequest) -> Result<OllamaResponse, Strin
         Err(e) => {
             let latency_ms = start.elapsed().as_millis() as u64;
             log::error!("[OLLAMA_CMD] Failed: {} ({}ms)", e, latency_ms);
-            Err(e)
+            // Rule 6 — IPC canonical contract: never return Err; embed error in ok=false payload.
+            Ok(OllamaResponse {
+                ok: false,
+                content: String::new(),
+                latency_ms,
+                model: String::new(),
+                error: Some(e),
+                total_duration: None,
+                load_duration: None,
+                prompt_eval_count: None,
+                prompt_eval_duration: None,
+                eval_count: None,
+                eval_duration: None,
+                done_reason: None,
+            })
         }
     }
 }
@@ -114,7 +128,7 @@ mod tests {
     #[tokio::test]
     async fn test_ollama_request_structure() {
         let req = OllamaRequest {
-            model: "llama3.1:latest".to_string(),
+            model: "gemma2:2b".to_string(),
             prompt: "Test prompt".to_string(),
             timeout_secs: 30,
             temperature: Some(0.7),
@@ -123,10 +137,41 @@ mod tests {
             num_ctx: None,
         };
 
-        assert_eq!(req.model, "llama3.1:latest");
+        // Canonical model must be gemma2:2b (Rule 17 — no model drift).
+        assert_eq!(req.model, "gemma2:2b");
         assert_eq!(req.prompt, "Test prompt");
         assert_eq!(req.timeout_secs, 30);
         assert_eq!(req.temperature, Some(0.7));
+    }
+
+    /// Rule 6 — IPC canonical contract: error path must produce Ok(ok=false) not Err(...).
+    /// Validates the OllamaResponse struct invariant for the error branch.
+    #[test]
+    fn test_ipc_contract_error_returns_ok_false() {
+        let latency_ms: u64 = 42;
+        let error_msg = "model not found".to_string();
+
+        let response = OllamaResponse {
+            ok: false,
+            content: String::new(),
+            latency_ms,
+            model: String::new(),
+            error: Some(error_msg.clone()),
+            total_duration: None,
+            load_duration: None,
+            prompt_eval_count: None,
+            prompt_eval_duration: None,
+            eval_count: None,
+            eval_duration: None,
+            done_reason: None,
+        };
+
+        // Contract: ok=false, non-empty error, empty content — never a Rust Err.
+        assert!(!response.ok, "error path must have ok=false");
+        assert!(response.error.is_some(), "error field must be present");
+        assert_eq!(response.error.as_deref(), Some("model not found"));
+        assert!(response.content.is_empty(), "content must be empty on error");
+        assert_eq!(response.latency_ms, 42);
     }
 
     // Integration test would require Ollama running

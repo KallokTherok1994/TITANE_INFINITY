@@ -1,5 +1,7 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+> 2026-04-25 — Audit & correction complète backend+frontend: (1) `ollama_generate` (Rust) retourne désormais `Ok({ok:false, error:Some(e)})` au lieu de `Err(String)` — conformité Rule 6 IPC contract; (2) `ai_check_ollama_status` sonde maintenant `GET /api/version` (timeout 3s, non-bloquant) pour publier la version réelle au lieu de `"unknown"`; commentaire section `LEGACY CLIENT` dupliqué supprimé; (3) `OllamaConfig::default()` dans `ollama_provider_refactor.rs` corrigé: `model: "gemma2:2b"`, `num_ctx: 8192` — alignement canon; (4) `const IS_TAURI` inutilisée retirée de `ollamaTransport.ts` (dead code post-refactor IPC-only). Verdict: PASS — tous les gates `verify:ollama:cline`, `guard:ollama-proxy`, `tsc --noEmit`, `detect_recurrence` green.
+
 > 2026-04-24 — Frontend CSP one-door truth: `src/security/constants.ts` ne liste plus `http://127.0.0.1:11434` dans `connect-src`. La surface frontend reste bornee a `'self'`; les appels Ollama passent par le transport IPC gouverne `src/services/ai/transports/ollamaTransport.ts`, puis par le backend Tauri qui possede le loopback local.
 
 > 2026-04-22 — Backend runtime default truth: `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ai/ollama.rs` et `src-tauri/src/ollama.rs` utilisent de nouveau `gemma2:2b` comme modèle Ollama par défaut gouverné. Cette voie retire une dérive backend vers `llama3.1:latest` qui contredisait déjà la cartographie active et faisait échouer la qualification Rust de la runtime config.
