@@ -11,6 +11,7 @@ layers:
   - id: L3
     name: local-agents
     path_patterns:
+      - AGENTS.md
       - src/AGENTS.md
       - src-tauri/AGENTS.md
       - e2e/AGENTS.md

@@ -4,9 +4,8 @@ import { SessionGuard } from '../SessionGuard';
 import { initializeSecurity } from '../index';
 
 describe('initializeSecurity', () => {
-  const originalTauriInternals = (
-    window as Window & { __TAURI_INTERNALS__?: unknown }
-  ).__TAURI_INTERNALS__;
+  const originalTauriInternals = (window as Window & { __TAURI_INTERNALS__?: unknown })
+    .__TAURI_INTERNALS__;
 
   beforeEach(() => {
     document.head.innerHTML = '';

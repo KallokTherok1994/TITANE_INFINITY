@@ -127,6 +127,9 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 
 ## Chain-of-Thought Validation
 
+1. Identify the scope: which Ring is impacted (Ring 0-4), which files are touched, and whether the change is IPC, UI, or infra.
+2. Verify no higher-layer invariant (L1 kernel, L2 path-specific) is violated by this change.
+3. Confirm the patch is minimal (Rule 1) — no gratuitous refactor, no scope creep.
 4. Confirm tests exist or will be created (Rule 16).
 5. Plan AutoHeal entry (Rule 10).
 6. Identify which mapping docs need updating (Rule 15).
