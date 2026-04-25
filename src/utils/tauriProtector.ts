@@ -18,6 +18,7 @@ import type {
 import type { TauriCore, TauriCommandArgs, TauriCacheEntry } from '@/types/tauri';
 import { classifyError } from '@/lib/errorClassification';
 import { createLogger } from '@/utils/logger';
+import { getRemoteTransport } from '@/lib/remoteTransport';
 
 const logger = createLogger('TauriProtector');
 
@@ -415,6 +416,15 @@ export class TauriInvokeProtector {
     // If isTauriAvailable is FALSE (confirmed unavailable), skip invoke
     // If isTauriAvailable is NULL or TRUE (not yet checked, or confirmed available), proceed
     if (this.isTauriAvailable === false && !this.isTestEnv) {
+      // ✅ REMOTE-GATEWAY FIX: In remote browser mode, route through HTTP gateway
+      // instead of local fallback. window.__TITANE_REMOTE__ is injected by axum SPA server.
+      const isRemoteBrowser =
+        typeof window !== 'undefined' &&
+        (window as Window & { __TITANE_REMOTE__?: boolean }).__TITANE_REMOTE__ === true;
+      if (isRemoteBrowser) {
+        logger.info('[TauriProtector] Remote context detected — routing via HTTP gateway', command);
+        return getRemoteTransport().invoke<T>(command, args as Record<string, unknown>);
+      }
       logger.info(
         '[TauriProtector] Skipping invoke for',
         command,
