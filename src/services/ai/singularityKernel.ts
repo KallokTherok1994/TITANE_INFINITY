@@ -29,6 +29,7 @@ import type {
 } from './metaKernel';
 import type { CognitiveProcess as _CognitiveProcess } from './cognitiveKernel';
 import { createLogger } from '@/utils/logger';
+import { isRemoteContext } from '@/lib/transport';
 
 const logger = createLogger('SingularityKernel');
 
@@ -1256,8 +1257,11 @@ class SingularityKernel {
   private autoOrganize(): void {
     logger.debug('Auto-organization...');
 
-    // Réorganiser kernels selon besoin
-    metaKernel.executeSuperCycle();
+    // En mode remote (navigateur sans Tauri), les métriques IPC ne sont pas disponibles —
+    // on saute executeSuperCycle pour éviter le spam de warns de détection de fragilité.
+    if (!isRemoteContext()) {
+      metaKernel.executeSuperCycle();
+    }
 
     this.operationalSingularity.autoOrganization.lastReorganization = Date.now();
     this.operationalSingularity.autoOrganization.score = 95;

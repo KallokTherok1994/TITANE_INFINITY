@@ -39,6 +39,7 @@ export interface UILoggerConfig {
 interface ThrottleState {
   count: number;
   windowStart: number;
+  notified: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -127,7 +128,7 @@ export class UILogger {
   private initializeThrottle(): void {
     const levels: LogLevel[] = ['debug', 'info', 'warn', 'error', 'security'];
     levels.forEach(level => {
-      this.throttleState.set(level, { count: 0, windowStart: Date.now() });
+      this.throttleState.set(level, { count: 0, windowStart: Date.now(), notified: false });
     });
   }
 
@@ -229,6 +230,7 @@ export class UILogger {
     if (now - state.windowStart >= windowDuration) {
       state.count = 0;
       state.windowStart = now;
+      state.notified = false;
       this.throttleState.set(level, state);
     }
 
@@ -267,7 +269,10 @@ export class UILogger {
     if (!this.shouldLog(level)) return;
     if (!this.checkThrottle(level)) {
       // Throttled - log warning once per window
-      if (this.throttleState.get(level)?.count === this.config.maxLogsPerMinute) {
+      const ts = this.throttleState.get(level);
+      if (ts && !ts.notified) {
+        ts.notified = true;
+        this.throttleState.set(level, ts);
         this.originalConsole.warn(
           `[UILogger] Throttle limit reached for level "${level}" (${this.config.maxLogsPerMinute}/min)`
         );

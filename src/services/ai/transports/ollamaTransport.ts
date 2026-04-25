@@ -14,6 +14,7 @@ import type { AiResult, AiOk, AiErr } from '../types';
 import { classifyError, isAbortError } from '@/lib/errorClassification';
 import { getProviderTimeout } from '@/config/aiTimeouts.config';
 import { tauriClient } from '@/lib/tauriClient';
+import { isRemoteContext } from '@/lib/transport';
 
 const logger = createLogger('OllamaTransport');
 
@@ -28,7 +29,7 @@ function isTauriEnvironment(): boolean {
   return typeof window !== 'undefined' && '__TAURI__' in window;
 }
 
-const TRANSPORT_MODE = 'IPC';
+const TRANSPORT_MODE: string = isRemoteContext() ? 'REMOTE_GATEWAY' : 'IPC';
 
 const HEALTH_CACHE_TTL_MS = 10_000;
 let lastHealthCheckTs = 0;
@@ -339,6 +340,6 @@ export async function ollamaGenerate(
 /**
  * Get transport mode for debugging
  */
-export function getTransportMode(): 'IPC' | 'HTTP' {
+export function getTransportMode(): string {
   return TRANSPORT_MODE;
 }
