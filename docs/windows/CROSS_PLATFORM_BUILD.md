@@ -1,6 +1,6 @@
 # TITANE∞ — Cross-Platform Build Runbook (Linux + Windows)
 
-> Version: 31.2.0 · Tauri 2 · Node 24 · pnpm · Rust stable
+> Current version: see `package.json` · Tauri 2 · Node 24 · pnpm · Rust stable
 
 This document describes how the TITANE∞ project is built on **Linux** and
 **Windows** without either platform corrupting the other's environment.
@@ -129,7 +129,7 @@ If a Windows build produces unexpected changes in git:
 ```powershell
 # Discard all untracked build artifacts
 git clean -fdx src-tauri/target/
-git checkout -- .
+git restore .
 ```
 
 ---
