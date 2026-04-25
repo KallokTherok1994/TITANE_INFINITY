@@ -47,7 +47,7 @@ export const ALLOWED_HTML_ATTRIBUTES = [
  */
 export const CSP_DEFAULT_POLICY = {
   'default-src': ["'self'"],
-  'script-src': ["'self'", "'unsafe-inline'"], // Tauri requires inline scripts
+  'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Tauri + remote mode: unsafe-eval required by bundled runtime (telemetry, Zod JIT)
   'style-src': ["'self'", "'unsafe-inline'"], // Dynamic styles from Tauri
   'img-src': ["'self'", 'data:', 'blob:'], // Local + generated images
   'connect-src': ["'self'"], // Ollama access is routed through governed IPC transport

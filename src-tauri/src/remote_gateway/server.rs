@@ -6,7 +6,7 @@
 
 use axum::{
     extract::{Request, State},
-    http::{HeaderMap, StatusCode},
+    http::{HeaderMap, HeaderName, HeaderValue, StatusCode},
     middleware::{self, Next},
     response::IntoResponse,
     routing::{get, post},
@@ -14,6 +14,9 @@ use axum::{
 };
 use std::{net::SocketAddr, sync::Arc, path::PathBuf};
 use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer};
+use tower_http::set_header::SetResponseHeaderLayer;
+
+use crate::security::csp::get_csp_headers;
 
 use crate::{
     conversation_engine::ConversationEngineState,
@@ -148,12 +151,31 @@ fn build_router(config: &RemoteGatewayConfig, engine: Arc<ConversationEngineStat
     // Static frontend (lowest priority — catch-all)
     let static_routes = static_router(&config.dist_remote_path);
 
-    Router::new()
+    // Security headers — applied to every response
+    let csp_headers = get_csp_headers();
+    let mut security_layers = Vec::new();
+    for (name, value) in &csp_headers {
+        if let (Ok(hn), Ok(hv)) = (
+            HeaderName::from_bytes(name.as_bytes()),
+            HeaderValue::from_str(value),
+        ) {
+            security_layers.push((hn, hv));
+        }
+    }
+
+    let mut router = Router::new()
         .merge(public_routes)
         .merge(protected_routes)
         .merge(ws_routes)
         .fallback_service(static_routes)
-        .layer(cors)
+        .layer(cors);
+
+    // Stack security headers (override — replace any existing value)
+    for (hn, hv) in security_layers {
+        router = router.layer(SetResponseHeaderLayer::overriding(hn, hv));
+    }
+
+    router
 }
 
 fn build_cors(origin: &str) -> CorsLayer {
