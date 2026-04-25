@@ -1,3 +1,7 @@
+## Remote Gateway — Accès Internet à TITANE (2026-04-28)
+
+> **Remote Gateway** (`src-tauri/src/remote_gateway/`) : 6 nouveaux fichiers Rust (mod.rs, auth.rs, audit.rs, handlers.rs, rate_limit.rs, server.rs, static_serve.rs, ws_stream.rs). Serveur axum 0.7 (JWT HS256, tower-http CORS, WS) démarré dans le runtime tokio Tauri via `tauri::async_runtime::spawn()`. Enregistré dans `src-tauri/src/lib.rs` (`pub mod remote_gateway`). Spawn conditionnel dans `main.rs` setup (`TITANE_REMOTE_ENABLED=1`). `RuntimeConfig` étendu avec `remote_enabled/remote_port/remote_origin`. Transport TypeScript : `src/lib/remoteTransport.ts`, `src/lib/remoteStream.ts`, `src/lib/transport.ts`. Scripts Cloudflare : `scripts/remote/`. Tests : `tests/contract/remote-gateway-contract.test.ts`, `e2e/remote-gateway.spec.ts`. AutoHeal : `REMOTE-GATEWAY-001`.
+
 ## Migration documentaire 2026-04-24
 
 Opération de nettoyage et d’archivage sur tout le dossier `docs/` :
@@ -553,6 +557,10 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | `CognitivePage` | Interface cognitive |
 | `ConfigurationHub` | Hub de configuration |
 | `CreationStudio` | Studio de création |
+
+> 2026-04-24 — `ConfigurationHub` réaligne aussi sa vérité locale de configuration audio sur un seul état `audioConfig`, partagé entre chargement, affichage et sauvegarde. La surface active conserve les sélecteurs `audio-input-device-*`, `audio-output-device-*`, `audio-volume`, `audio-config-reload` et `audio-config-save`, mais ne référence plus un setter/état TypeScript inexistant.
+
+> 2026-04-24 — La chaîne de build production `31.2.1` réaligne également le backend Tauri actif: `src-tauri/src/main.rs` publie explicitement `commands_v21::persistent_memory_v30` pour l enregistrement des IPC `persistent_memory_*`, tandis que `src-tauri/src/commands/http_commands.rs`, `rag_commands.rs` et `web_search_commands.rs` consomment la gateway réseau canonique du crate bibliothèque (`titane_infinity::gateway::network`) au lieu d un chemin binaire non résolu.
 | `DashboardPage` | Tableau de bord principal |
 | `DesignSystemPage` | Système de design |
 | `DesignSystemShowcase` | Showcase design system |

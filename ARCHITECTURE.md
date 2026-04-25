@@ -1,3 +1,7 @@
+## 2026-04-28 : Remote Gateway — Accès Internet à TITANE (v31.2.2+)
+
+> **Remote Gateway** (`src-tauri/src/remote_gateway/`) : serveur axum HTTP/WebSocket démarré dans le même runtime tokio que Tauri. Activé uniquement via `TITANE_REMOTE_ENABLED=1` (désactivé par défaut). Architecture : Ring 0 — axum handlers proxifient les fonctions Ring 2 existantes ; aucun chemin réseau sortant ajouté (Rule 5 One Door préservée). JWT HS256 dérivé du vault SecretsEngine. Rate limit 60 req/min/IP. Audit logging intégré. Port configurable via `TITANE_REMOTE_PORT` (défaut : 7420). Cloudflare Tunnel pour l'accès depuis n'importe quel navigateur internet (`scripts/remote/`). Transport TypeScript unifié (`src/lib/transport.ts`) détecte automatiquement le contexte Tauri vs Remote et route via `secureInvoke` ou `RemoteTransport`.
+
 ## 2026-04-24 : Migration documentaire
 
 - Centralisation de tous les fichiers `.md.md` et anciens index dans `docs/99_ARCHIVE/`
@@ -447,3 +451,9 @@ Conformité validée par tests 100/100 (avril 2026).
 - Doctrine TITANE : One Door, anti-dérive, rollback prêt, test E2E à venir
 
 > 2026-04-24 — Display System (Experimental) UI integration: ajout du panneau "display-system-panel" dans `src/pages/ConfigurationHub.tsx` (testids stables, sélecteurs moniteur/mode/luminosité, boutons Appliquer/Rollback désactivés). Service associé mocké `src/services/display/displaySystemService.ts` prêt pour intégration IPC Tauri. Mapping UI_SURFACE_MAP.md et cartographie à jour.
+
+## Addendum — 2026-04-24 — Production Build v31.2.1
+
+- Les commandes backend `http_commands`, `rag_commands` et `web_search_commands` consomment désormais la gateway réseau gouvernée depuis le crate bibliothèque `titane_infinity::gateway::network`, ce qui réaligne le binaire Tauri avec la vérité One Door utilisée par les tests et évite un drift `crate::gateway` au packaging.
+- Le module `commands_v21::persistent_memory_v30` est maintenant publié explicitement pour que `PersistentMemoryState` et les IPC `persistent_memory_*` restent accessibles depuis `main.rs` au runtime de production, sans dépendre d un chemin de module privé.
+- Build production validé sur `31.2.1` avec artefacts Linux générés: `Titan-Stable_31.2.1_amd64.AppImage` et `Titan-Stable_31.2.1_amd64.deb`.

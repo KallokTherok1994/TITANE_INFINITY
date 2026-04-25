@@ -45,12 +45,13 @@ pub mod bounded; // ✅ v21.1Ω - Bounded collections for memory safety (NEW)
 pub mod cache_multilevel; // ✅ v21.1Ω - Multi-level caching system (NEW)
 pub mod cognitive; // ✅ Cognitive Layer v16 (NEW)
 pub mod core; // ✅ SingularityEngine v16 + modules
-pub mod gateway; // ✅ One Door Network Gateway (Rule 5) — single HTTP client factory
 pub mod engine; // ✅ Auto-Evolution & Engine Diagnostics v16 (existing)
 pub mod engine_trait; // ✅ v24 - Engine trait + OrchestratorEngine (stable, in use)
 pub mod error; // ✅ v24 - Unified TitaneError enum (stable, in use)
 pub mod errors;
 pub mod fusion; // ✅ FIX-014: Fusion Engine (fusion_merge/fusion_sync)
+pub mod gateway; // ✅ One Door Network Gateway (Rule 5) — single HTTP client factory
+pub mod remote_gateway; // ✅ Remote Gateway (axum HTTP server, opt-in TITANE_REMOTE_ENABLED=1)
 pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
 pub mod qa; // ✅ QA Engine v19.8 (NEW)
 pub mod runtime_real; // ✅ FIX-016: Real runtime state commands (memory KV, toggles, logs, selfheal, XP)

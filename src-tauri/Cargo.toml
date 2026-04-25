@@ -1,6 +1,6 @@
 [package]
 name         = "titane-infinity"
-version      = "31.2.0"
+version      = "31.2.2"
 description  = "TITANE∞ v31.0.0 - Full Version Upgrade Cycle"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
@@ -98,6 +98,17 @@ rustfft = "6.2"                               # FFT for spectral analysis (voice
 # SUPER PROMPT #15: Multimodal Expansion vΩ
 image = { version = "0.25", default-features = false, features = ["rayon", "bmp", "dds", "ff", "gif", "hdr", "ico", "jpeg", "png", "pnm", "qoi", "tga", "tiff", "webp"] }  # Standard image formats without avif to avoid ravif/paste audit baggage; ff = farbfeld (renamed from farbfeld in 0.25)
 ort = { version = "2.0.0-rc.10", optional = true }  # ONNX Runtime (optional, requires system libs)
+
+# ═══════════════════════════════════════════════════════════════
+# REMOTE GATEWAY (TITANE Remote Access — Phase 1)
+# Axum HTTP server + JWT auth — spawned in same tokio runtime as Tauri
+# Enabled only when TITANE_REMOTE_ENABLED=1 (disabled by default)
+# ═══════════════════════════════════════════════════════════════
+axum            = { version = "0.7", features = ["ws"] }
+tower           = { version = "0.5", features = ["util"] }
+tower-http      = { version = "0.6", features = ["cors", "fs", "trace", "set-header"] }
+jsonwebtoken    = "9"
+http            = "1"
 tokio-stream = "0.1.17"
 async-stream = "0.3.6"
 md5 = "0.8.0"

@@ -1546,6 +1546,52 @@ fn main() {
                 });
             }
 
+            // ─────────────────────────────────────────────────────────────
+            // REMOTE GATEWAY — opt-in via TITANE_REMOTE_ENABLED=1
+            // Starts axum HTTP server on port 7420 (TITANE_REMOTE_PORT)
+            // in the same tokio runtime as Tauri (Rule 4 preserved).
+            // JWT secret derived from SecretsEngine passphrase (never hardcoded).
+            // ─────────────────────────────────────────────────────────────
+            if std::env::var("TITANE_REMOTE_ENABLED")
+                .ok()
+                .is_some_and(|v| v == "1")
+            {
+                let jwt_passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE")
+                    .unwrap_or_else(|_| "default-dev-passphrase-change-in-production".to_string());
+                let shared_secret = std::env::var("TITANE_REMOTE_SECRET")
+                    .unwrap_or_else(|_| {
+                        log::warn!(
+                            "⚠️ [RemoteGateway] TITANE_REMOTE_SECRET not set — using insecure default. \
+                             Set a strong random value in production."
+                        );
+                        "change-me-in-production".to_string()
+                    });
+
+                let log_dir_for_gw = if let Some(home) = dirs::home_dir() {
+                    home.join(".titane").join("logs")
+                } else {
+                    std::path::PathBuf::from("/tmp/titane/logs")
+                };
+                let _ = std::fs::create_dir_all(&log_dir_for_gw);
+
+                let gw_config = titane_infinity::remote_gateway::server::RemoteGatewayConfig::from_env(
+                    &jwt_passphrase,
+                    &shared_secret,
+                    log_dir_for_gw,
+                );
+
+                log::info!(
+                    "🌐 [RemoteGateway] Enabled on port {} (TITANE_REMOTE_ENABLED=1)",
+                    gw_config.port
+                );
+
+                tauri::async_runtime::spawn(
+                    titane_infinity::remote_gateway::server::start(gw_config),
+                );
+            } else {
+                log::info!("🔒 [RemoteGateway] Disabled (set TITANE_REMOTE_ENABLED=1 to activate)");
+            }
+
             // ✅ CRITICAL FIX: Show main window that was auto-created from tauri.conf.json
             // In Tauri v2, windows defined in app.windows are created but start HIDDEN
             match app.get_webview_window("main") {

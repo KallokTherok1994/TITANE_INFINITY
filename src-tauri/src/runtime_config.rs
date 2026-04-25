@@ -14,6 +14,9 @@
 //   CONVOS_DEBUG_PANEL       (bool)  default: true   — debug panel data
 //   CONVOS_MEMORY_LTM        (bool)  default: FALSE  — ⚠️ LTM disabled by default
 //   TITANE_CONVOS_ALLOWLIST  (str)   default: ""     — comma-separated feature allowlist
+//   TITANE_REMOTE_ENABLED    (bool)  default: false  — activate remote HTTP gateway
+//   TITANE_REMOTE_PORT       (u16)   default: 7420   — axum server port
+//   TITANE_REMOTE_ORIGIN     (str)   default: "*"    — CORS allowed origin
 //
 // ═══════════════════════════════════════════════════════════════
 
@@ -33,6 +36,12 @@ pub struct RuntimeConfig {
     pub convos_ltm_enabled: bool,
     /// Whether conversation memory snapshots are enabled (env: CONVOS_MEMORY_SNAPSHOTS, default: true)
     pub convos_snapshots_enabled: bool,
+    /// Whether the remote HTTP gateway is enabled (env: TITANE_REMOTE_ENABLED)
+    pub remote_enabled: bool,
+    /// Port the remote HTTP gateway is bound to (env: TITANE_REMOTE_PORT, default: 7420)
+    pub remote_port: u16,
+    /// CORS origin for the remote gateway (env: TITANE_REMOTE_ORIGIN, default: "*")
+    pub remote_origin: String,
     pub timestamp: u64,
 }
 
@@ -145,6 +154,15 @@ fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
         convos_snapshots_enabled: std::env::var("CONVOS_MEMORY_SNAPSHOTS")
             .map(|v| !matches!(v.to_lowercase().trim(), "false" | "0" | "no"))
             .unwrap_or(true),
+        remote_enabled: std::env::var("TITANE_REMOTE_ENABLED")
+            .map(|v| v == "1" || v == "true")
+            .unwrap_or(false),
+        remote_port: std::env::var("TITANE_REMOTE_PORT")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(7420),
+        remote_origin: std::env::var("TITANE_REMOTE_ORIGIN")
+            .unwrap_or_else(|_| "*".into()),
         timestamp: now_ts(),
     }
 }
