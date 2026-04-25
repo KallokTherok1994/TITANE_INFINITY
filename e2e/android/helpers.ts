@@ -90,7 +90,12 @@ export function extractCriticalConsoleErrors(entries: string[]): string[] {
       !entry.includes('Provider tauri-backend is not available') &&
       !entry.includes('Fallback response received') &&
       !entry.includes('[[AUTO-HEAL]][ERROR] Error detected') &&
-      !entry.includes('Maximum update depth exceeded')
+      !entry.includes('Maximum update depth exceeded') &&
+      // Expected in browser dev mode without Tauri IPC / live LLM
+      !entry.includes('[ConversationEngine] Erreur finale') &&
+      !entry.includes('schema_eval_error') &&
+      !entry.includes('unsafe-eval') &&
+      !entry.includes('Content Security Policy')
   );
 }
 

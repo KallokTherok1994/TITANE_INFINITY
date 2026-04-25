@@ -170,6 +170,7 @@ test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
   }
 
   test('MEASURE: DIRECT profile (fast, minimal)', async ({ page, context }) => {
+    test.skip(!MEASUREMENT_MODE, 'Set TITANE_PROFILE_MEASUREMENT=1 to enable live LLM profile comparison');
     // Fast baseline: should be concise, <50 words ideally
     // Direct example response: "IA moderne utilise: Entrée → Modèle → Sortie. Contexte stocké en mémoire."
     const result = await testProfileResponse(page, 'DIRECT');
@@ -180,6 +181,7 @@ test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
   });
 
   test('MEASURE: DEEP profile (thorough, developed)', async ({ page }) => {
+    test.skip(!MEASUREMENT_MODE, 'Set TITANE_PROFILE_MEASUREMENT=1 to enable live LLM profile comparison');
     // Should produce longer, more detailed response
     // Expect 2-3x more tokens than DIRECT
     const result = await testProfileResponse(page, 'DEEP');
@@ -190,6 +192,7 @@ test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
   });
 
   test('MEASURE: ARCHITECT profile (strategic, structured)', async ({ page }) => {
+    test.skip(!MEASUREMENT_MODE, 'Set TITANE_PROFILE_MEASUREMENT=1 to enable live LLM profile comparison');
     // Should expose axes/priorities/structure
     // Expect highly structured output
     const result = await testProfileResponse(page, 'ARCHITECT');

@@ -176,15 +176,19 @@ export function validateProviderDecisionMeta(
 ):
   | { ok: true; data: z.infer<typeof ProviderDecisionMetaSchema> }
   | { ok: false; errors: string[] } {
-  const result = ProviderDecisionMetaSchema.safeParse(raw);
-  if (result.success) {
-    return { ok: true, data: result.data };
+  try {
+    const result = ProviderDecisionMetaSchema.safeParse(raw);
+    if (result.success) {
+      return { ok: true, data: result.data };
+    }
+    const errors = result.error.issues.map(
+      issue => `${issue.path.join('.')}: ${issue.message}`
+    );
+    return { ok: false, errors };
+  } catch (e) {
+    // Zod JIT (new Function) may be blocked by CSP in browser dev mode — degrade gracefully
+    return { ok: false, errors: [`schema_eval_error: ${String(e)}`] };
   }
-
-  const errors = result.error.issues.map(
-    issue => `${issue.path.join('.')}: ${issue.message}`
-  );
-  return { ok: false, errors };
 }
 
 /**
@@ -195,15 +199,19 @@ export function validateOmegaTraceMeta(
 ):
   | { ok: true; data: z.infer<typeof OmegaTraceMetaSchema> }
   | { ok: false; errors: string[] } {
-  const result = OmegaTraceMetaSchema.safeParse(raw);
-  if (result.success) {
-    return { ok: true, data: result.data };
+  try {
+    const result = OmegaTraceMetaSchema.safeParse(raw);
+    if (result.success) {
+      return { ok: true, data: result.data };
+    }
+    const errors = result.error.issues.map(
+      issue => `${issue.path.join('.')}: ${issue.message}`
+    );
+    return { ok: false, errors };
+  } catch (e) {
+    // Zod JIT (new Function) may be blocked by CSP in browser dev mode — degrade gracefully
+    return { ok: false, errors: [`schema_eval_error: ${String(e)}`] };
   }
-
-  const errors = result.error.issues.map(
-    issue => `${issue.path.join('.')}: ${issue.message}`
-  );
-  return { ok: false, errors };
 }
 
 // ═══════════════════════════════════════════════════════════════════
