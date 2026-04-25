@@ -1,3 +1,7 @@
+## 2026-04-28 : Remote Transport — Accès Internet TITANE v31.2.2
+
+# [2026-04-28] Remote Gateway transport factory truth: `src/lib/transport.ts` expose `getTransport()` qui retourne `TauriTransport` (via `secureInvoke`) en contexte Tauri ou `RemoteTransportWrapper` (fetch HTTP `src/lib/remoteTransport.ts`) quand `window.__TITANE_REMOTE__` est actif. La détection se fait via `window.__TAURI_INTERNALS__`. Aucun composant UI ne doit accéder directement à `secureInvoke` ou `fetch` — tout passe par `getTransport().invoke()`. Streaming via `src/lib/remoteStream.ts` (WebSocket `wss://`). Singleton cachable, resetable en test via `resetTransport()`.
+
 ## 2026-04-24 : Migration documentaire
 
 - README.md = surface documentaire canonique (tous les anciens index archivés)
@@ -236,6 +240,8 @@
 # [2026-04-18] Governance Ollama endpoint truth: la surface canonique de gouvernance `provider-card-ollama` n affiche plus le faux fallback `/api/ollama` quand le backend est opt-in ou partiellement indisponible. `src-tauri/src/ai/ollama.rs` résout maintenant l endpoint et le modèle effectifs depuis la config runtime persistée puis l environnement, et `src/features/governance-center/components/APIProviderCard.tsx` publie `ollama-provider-url`, `ollama-provider-model`, `ollama-provider-endpoint-kind`, `ollama-provider-endpoint-source`, `ollama-provider-health`, `ollama-provider-network-used` et `ollama-provider-model-list` à partir de cette vérité Tauri unique.
 
 # [2026-04-18] Ollama runtime propagation truth: la vérité enrichie Ollama ne reste plus confinée à la gouvernance. `src/hooks/useBackendHealth.ts` publie maintenant `ollamaDetails` depuis `ai_check_ollama_status` avec fallback provider honnête si Tauri est indisponible, tandis que `src/pages/ConfigurationHub.tsx` expose `runtime-ollama-endpoint-kind`, `runtime-ollama-endpoint-source`, `runtime-ollama-model-source`, `runtime-ollama-network-used` et `runtime-ollama-health` à partir du même contrat backend.
+
+# [2026-04-24] Configuration hub audio truth: la surface canonique `src/pages/ConfigurationHub.tsx` réaligne son onglet audio sur un unique état local `audioConfig`, utilisé à la fois au chargement, à l affichage (`audio-input-device-*`, `audio-output-device-*`, `audio-volume`) et aux actions `audio-config-reload` / `audio-config-save`, évitant un blocage TypeScript sur une paire d identifiants divergente.
 
 # [2026-04-18] Conversation runtime-disk knowledge base truth: la surface canonique `/titane?tab=conversation` ne dépend plus uniquement de la KB par défaut embarquée au build. `src/services/api/defaultKnowledgeBase.ts` tente maintenant d abord la commande IPC gouvernée `knowledge_base_runtime_snapshot`, ce qui permet au chat actif de consommer en priorité le contenu réel de `/data/knowledge_base/default` quand le runtime Tauri le voit, tout en gardant le fallback embarqué `knowledge_base_get_all` puis le fallback bundle frontend si la voie disque est indisponible.
 

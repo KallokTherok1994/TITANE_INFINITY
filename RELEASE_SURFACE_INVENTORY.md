@@ -894,3 +894,61 @@ Canonical target version: **31.2.0**
 | `dpkg -s titane-infinity` | unknown | host install truth | NOT_RECHECKED |
 
 > This continuation seals version-surface synchronization only. No new production artifact publication is claimed in this addendum.
+
+---
+
+## Addendum — 2026-04-24 — Production Build v31.2.1
+
+Session: `BUILD_PROD_V31_2_1`
+Canonical target version: **31.2.1**
+
+### Updated Current Surfaces
+
+| File / Surface | Version | Action |
+|---|---|---|
+| `package.json` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `src-tauri/Cargo.toml` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `src-tauri/Cargo.lock` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `src-tauri/tauri.conf.json` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `src-tauri/tauri.base.json` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `tauri.base.json` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `runtime/stable/tauri.conf.json` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `runtime/stable/manifest.json` | `31.2.1` | UPDATED_TO_31_2_1 |
+| `RELEASE_SURFACE_INVENTORY.md` | `31.2.1` | UPDATED_TO_31_2_1 |
+
+### Artifact Status Summary — v31.2.1
+
+| Artifact | Size | SHA256 | Status |
+|---|---|---|---|
+| `src-tauri/target/release/bundle/appimage/Titan-Stable_31.2.1_amd64.AppImage` | `90M` | `573421210bd158002658270c1c4ae483145fbc2995506569028ba68052beb8ac` | BUILT |
+| `src-tauri/target/release/bundle/deb/Titan-Stable_31.2.1_amd64.deb` | `21M` | `6631088a9f45c53b2722d2ef29849e34baff172d7d801d0526d4e2fbb298979e` | BUILT |
+| `/home/titane-os/.local/share/applications/titane-infinity.desktop` | `Exec=/usr/bin/titane-infinity` | `Icon=titane-infinity` | VERIFIED_USER_LAUNCHER |
+| `/usr/share/applications/titane-infinity.desktop` | `Exec=/usr/bin/titane-infinity` | `Icon=titane-infinity` | VERIFIED_EXISTING_SYSTEM_LAUNCHER |
+
+> Production build completed with `pnpm run build:production`. Post-build launcher refresh succeeded for the user launcher and reported `BLOCKED_SUDO_REQUIRED` for system-wide synchronization; however, the existing system desktop entry already exposes the canonical `Exec=/usr/bin/titane-infinity` and `Icon=titane-infinity` values.
+
+## Addendum — 2026-04-28 — Remote Gateway v31.2.2
+
+Session: `REMOTE_GATEWAY_INTERNET_ACCESS`
+Canonical target version: **31.2.2**
+
+New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué + Cloudflare Tunnel.
+
+| Fichier | Version | Statut |
+|---|---|---|
+| `package.json` | `31.2.2` | UPDATED_TO_31_2_2 |
+| `src-tauri/Cargo.toml` | `31.2.2` | UPDATED_TO_31_2_2 |
+| `src-tauri/Cargo.lock` | `31.2.2` | UPDATED_TO_31_2_2 |
+| `runtime/stable/manifest.json` | `31.2.2` | UPDATED_TO_31_2_2 |
+
+### New Surfaces — v31.2.2
+
+| Surface | Fichiers | Statut |
+|---|---|---|
+| `remote_gateway` Rust (Ring 0) | `src-tauri/src/remote_gateway/` (8 fichiers) | ADDED |
+| Transport TypeScript | `src/lib/remoteTransport.ts`, `remoteStream.ts`, `transport.ts` | ADDED |
+| Cloudflare Tunnel scripts | `scripts/remote/` (5 scripts + template) | ADDED |
+| Tests contrat | `tests/contract/remote-gateway-contract.test.ts` (20 PASS) | ADDED |
+| E2E remote | `e2e/remote-gateway.spec.ts` (8 scenarios) | ADDED |
+
+**Activation** : `TITANE_REMOTE_ENABLED=1` (opt-in, désactivé par défaut). Port `TITANE_REMOTE_PORT=7420`.
