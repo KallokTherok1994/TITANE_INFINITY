@@ -111,6 +111,10 @@ const DocCenterPage = lazy(() =>
   import('./pages/DocCenterPage').then(m => ({ default: m.DocCenterPage }))
 );
 
+const HTFPage = lazy(() =>
+  import('./pages/HTFPage').then(m => ({ default: m.HTFPage }))
+);
+
 // v24.3.0 - CognitiveLayoutControl déplacé dans ADMIN (ConfigurationHub)
 
 import './components/psyche/DeepPsychePanel.css';
@@ -685,6 +689,15 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route path="/doc" element={<Navigate to="/doc-center" replace />} />
+          {/* HTF Module — L'Humain à tout faire */}
+          <Route
+            path="/htf"
+            element={
+              <ErrorBoundary context="HTFPage">
+                <HTFPage />
+              </ErrorBoundary>
+            }
+          />
           {/* System Routes (Phase 9: lazy loaded) */}
           <Route path="/performance" element={<PerformanceTest />} />
           {/* Catch-all - Redirection vers Dashboard */}

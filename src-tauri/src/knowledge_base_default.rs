@@ -438,6 +438,18 @@ const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str = include_str!(
     "../../data/knowledge_base/default/analyse_transactionnelle_psychogenealogie.json"
 );
 
+// ── HTF module — L'Humain à tout faire ──────────────────────────────────────
+const HTF_MODULE_IDENTITY: &str =
+    include_str!("../../data/knowledge_base/default/htf_module_identity.json");
+const HTF_FORMATION_MANUEL: &str =
+    include_str!("../../data/knowledge_base/default/htf_formation_manuel.json");
+const HTF_ESTIMATION_RULES: &str =
+    include_str!("../../data/knowledge_base/default/htf_estimation_rules.json");
+const HTF_SERVICES_CATALOGUE: &str =
+    include_str!("../../data/knowledge_base/default/htf_services_catalogue.json");
+const HTF_SOUMISSION_TEMPLATE: &str =
+    include_str!("../../data/knowledge_base/default/htf_soumission_template.json");
+
 // ─────────────────────────────────────────────────────────────────
 // LAZY STATIC CACHE — parsed once, reused on every call
 // ─────────────────────────────────────────────────────────────────
@@ -811,6 +823,12 @@ impl DefaultKnowledgeBase {
             "analyse_transactionnelle_psychogenealogie",
             ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE,
         ),
+        // HTF module — L'Humain à tout faire
+        ("htf_module_identity", HTF_MODULE_IDENTITY),
+        ("htf_formation_manuel", HTF_FORMATION_MANUEL),
+        ("htf_estimation_rules", HTF_ESTIMATION_RULES),
+        ("htf_services_catalogue", HTF_SERVICES_CATALOGUE),
+        ("htf_soumission_template", HTF_SOUMISSION_TEMPLATE),
     ];
 
     /// Load all default knowledge entries from embedded JSON.

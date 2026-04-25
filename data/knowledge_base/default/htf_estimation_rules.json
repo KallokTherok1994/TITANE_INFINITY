@@ -1,0 +1,82 @@
+{
+  "version": "v1.0.0",
+  "category": "htf_estimation_rules",
+  "description": "Règles de calcul et de tarification pour les estimations et soumissions de L'Humain à tout faire. Créé par Kevin Thibault — tarifs 2025 région Saguenay-Lac-Saint-Jean.",
+  "taux_horaires": {
+    "T1": { "taux_h": 35.00, "note": "Aide/initiation, travaux simples sous supervision" },
+    "T2": { "taux_h": 55.00, "note": "Technicien autonome, interventions standard" },
+    "T3": { "taux_h": 75.00, "note": "Expert, projets complexes, aménagement spécialisé" },
+    "deplacement": { "taux_km": 0.70, "forfait_min": 25.00, "note": "Frais déplacement au-delà de 10km" }
+  },
+  "taxes_quebec": {
+    "TPS": 0.05,
+    "TVQ": 0.09975,
+    "total_taxes": 0.14975,
+    "note": "Les prix dans les soumissions sont présentés hors taxes et avec taxes"
+  },
+  "majorations": {
+    "urgence_moins_24h": { "multiplicateur": 1.35, "description": "Intervention urgente moins de 24h" },
+    "urgence_moins_4h": { "multiplicateur": 1.50, "description": "Intervention urgente moins de 4h" },
+    "acces_difficile": { "multiplicateur": 1.20, "description": "Accès difficile (escalier étroit, sous-sol, hauteur)" },
+    "materiaux_speciaux": { "multiplicateur": 1.15, "description": "Matériaux rares ou commande spéciale" },
+    "chantier_salete_extreme": { "multiplicateur": 1.25, "description": "Conditions de travail dégradées" },
+    "travaux_hauteur": { "multiplicateur": 1.30, "description": "Travaux en hauteur > 3m avec équipement" },
+    "fin_de_semaine": { "multiplicateur": 1.20, "description": "Samedi et dimanche" },
+    "ferie": { "multiplicateur": 1.50, "description": "Jours fériés québécois" }
+  },
+  "modes_tarification": {
+    "horaire": { "description": "Facturation au temps réel (taux_h × heures)", "utilisation": "Travaux à durée variable, réparations imprévues" },
+    "forfait": { "description": "Prix fixe pour prestation définie", "utilisation": "Services standards bien définis (nettoyage, entretien saisonnier)" },
+    "m2": { "description": "Prix au mètre carré installé", "utilisation": "Pose dalles, pavés, gazon, peinture" },
+    "ml": { "description": "Prix au mètre linéaire", "utilisation": "Haies, bordures, clôtures" },
+    "unite": { "description": "Prix par unité (plante, borne, tablette)", "utilisation": "Éléments discrets et dénombrables" }
+  },
+  "marges_recommandees": {
+    "main_oeuvre": { "marge_min": 0.30, "marge_cible": 0.40, "description": "Marge sur coût main-d'œuvre directe" },
+    "materiaux": { "marge_min": 0.20, "marge_cible": 0.30, "description": "Marge sur coût matériaux" },
+    "sous_traitance": { "marge_min": 0.15, "marge_cible": 0.20, "description": "Marge sur sous-traitance" }
+  },
+  "garanties_standard": {
+    "pose_materiaux": "5 ans nivelage et stabilité",
+    "systeme_electrique": "5 ans composants, 3 ans labour",
+    "vegetaux": "3 ans reprise en conditions normales",
+    "nettoyage": "Satisfaction garantie 48h",
+    "reparations": "2 ans matériaux défauts fabrication, 1 an labour",
+    "general": "Service après-vente 1 an inclus"
+  },
+  "calculs_surfaces": {
+    "rectangulaire": "Longueur × Largeur (m²)",
+    "circulaire": "π × rayon² (m²)",
+    "irregulier": "Décomposer en rectangles + triangles",
+    "chute_standard": "Ajouter 5-10% pour les chutes selon le matériau",
+    "haie_ml": "Nombre de plantes = longueur_ml / espacement_cm × 100"
+  },
+  "quantites_materiaux": {
+    "dalles_60x60": { "par_m2": 2.78, "chute": 0.05, "note": "2.78 dalles/m² + 5% chutes" },
+    "paves_20x16x6": { "par_m2": 31.3, "chute": 0.03, "note": "31.3 pavés/m² + 3% chutes" },
+    "sable_pose": { "m3_par_m2": 0.04, "note": "4cm épaisseur sable de pose" },
+    "sable_joints": { "m3_par_m2": 0.003, "note": "0.3cm balayage joints" },
+    "gravel_fondation": { "m3_par_m2": 0.15, "note": "15cm fondation compactée" },
+    "geotextile": { "m2_plus_10pct": true, "note": "Surface + 10% pour recouvrement" },
+    "thuya_smaragd_haie": { "par_ml": 1.25, "espacement_cm": 80, "note": "1.25 plants/ml, 80cm c/c" }
+  },
+  "structure_soumission": {
+    "numero_format": "S{AAAA}{MM}-{NNN}",
+    "validite_jours": 30,
+    "acompte_recommande": 0.30,
+    "solde_a_completion": 0.70,
+    "sections_obligatoires": [
+      "Informations client",
+      "Description détaillée du projet",
+      "Plan de mise en œuvre étape par étape",
+      "Liste matériaux avec prix unitaires",
+      "Main-d'œuvre (heures × taux)",
+      "Sous-total hors taxes",
+      "TPS (5%) et TVQ (9.975%)",
+      "Total avec taxes",
+      "Garanties applicables",
+      "Conditions et modalités de paiement",
+      "Signature client (espace)"
+    ]
+  }
+}

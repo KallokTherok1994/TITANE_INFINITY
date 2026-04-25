@@ -1,0 +1,92 @@
+{
+  "version": "v1.0.0",
+  "category": "htf_soumission_template",
+  "description": "Modèle officiel de soumission L'Humain à tout faire — structure, sections, mise en page et instructions de génération. Créé par Kevin Thibault.",
+  "en_tete": {
+    "nom_entreprise": "L'Humain à tout faire",
+    "site_web": "www.humainatoutfaire.com",
+    "courriel": "info@humainatoutfaire.com",
+    "note_bas_page": "L'Humain à tout faire — Services professionnels, Saguenay-Lac-Saint-Jean | www.humainatoutfaire.com"
+  },
+  "numerotation": {
+    "format": "S{AAAA}{MM}-{NNN}",
+    "exemple": "S202604-001",
+    "description": "S = Soumission, AAAA = année, MM = mois, NNN = numéro séquentiel"
+  },
+  "sections_soumission": [
+    {
+      "ordre": 1,
+      "titre": "INFORMATIONS CLIENT",
+      "champs": ["Nom complet", "Adresse du projet", "Courriel", "Téléphone", "Numéro de soumission", "Date d'émission", "Date de validité (30 jours)"]
+    },
+    {
+      "ordre": 2,
+      "titre": "DESCRIPTION DU PROJET",
+      "contenu": "Description claire et précise du projet, incluant: type de service, localisation exacte, dimensions/superficie, conditions particulières, matériaux spécifiés, niveau de complexité"
+    },
+    {
+      "ordre": 3,
+      "titre": "PLAN DE MISE EN ŒUVRE",
+      "contenu": "Étapes numérotées avec durée estimée par étape: 1) Préparation/sécurisation, 2) Matériaux/livraison, 3) Exécution techniques dans l'ordre, 4) Contrôle qualité/nettoyage, 5) Validation client"
+    },
+    {
+      "ordre": 4,
+      "titre": "MATÉRIAUX ET FOURNITURES",
+      "colonnes": ["Code HTF", "Description", "Quantité", "Unité", "Prix unitaire", "Total"],
+      "note": "Inclure fournisseur et délai de livraison si pertinent"
+    },
+    {
+      "ordre": 5,
+      "titre": "MAIN-D'ŒUVRE",
+      "colonnes": ["Description", "Niveau (T1/T2/T3)", "Heures estimées", "Taux horaire", "Total"],
+      "note": "Inclure déplacements si applicable"
+    },
+    {
+      "ordre": 6,
+      "titre": "RÉCAPITULATIF DES COÛTS",
+      "lignes": [
+        "Sous-total matériaux (HT)",
+        "Sous-total main-d'œuvre (HT)",
+        "Frais de déplacement (si applicable)",
+        "Sous-total avant taxes",
+        "TPS 5%",
+        "TVQ 9.975%",
+        "TOTAL AVEC TAXES"
+      ]
+    },
+    {
+      "ordre": 7,
+      "titre": "GARANTIES APPLICABLES",
+      "contenu": "Lister les garanties spécifiques au projet selon le catalogue HTF"
+    },
+    {
+      "ordre": 8,
+      "titre": "CONDITIONS ET PAIEMENT",
+      "contenu": "Acompte 30% à la signature, solde 70% à la complétion. Modes de paiement: virement Interac, chèque, comptant. Soumission valide 30 jours."
+    },
+    {
+      "ordre": 9,
+      "titre": "SIGNATURE",
+      "champs": ["Accepté par (client) : _______________", "Date : _______________", "Kevin Thibault, L'Humain à tout faire"]
+    }
+  ],
+  "instructions_generation_ia": {
+    "etape_1_analyse": "Analyser les informations fournies: type de service, photos si disponibles, superficie/dimensions, complexité",
+    "etape_2_pos": "Charger la POS correspondante depuis htf_formation_manuel pour déterminer les étapes et niveaux de technicien",
+    "etape_3_materiaux": "Identifier les matériaux nécessaires depuis htf_services_catalogue, calculer les quantités avec formules htf_estimation_rules",
+    "etape_4_prix": "Appliquer les prix du catalogue HTF + rechercher les prix actuels en ligne pour validation ('{matériau} prix Saguenay 2025')",
+    "etape_5_main_oeuvre": "Calculer les heures par niveau de technicien selon le catalogue formation × taux horaires",
+    "etape_6_majorations": "Appliquer les majorations pertinentes (urgence, accès difficile, fin de semaine, etc.)",
+    "etape_7_taxes": "Calculer TPS (5%) + TVQ (9.975%) sur le sous-total",
+    "etape_8_plan": "Générer le plan de mise en œuvre détaillé étape par étape avec durées",
+    "etape_9_format": "Formater selon le modèle officiel avec toutes les sections obligatoires",
+    "etape_10_sauvegarde": "Sauvegarder dans le CRM clients et l'historique des soumissions"
+  },
+  "style_redaction": {
+    "langue": "Français québécois professionnel",
+    "ton": "Chaleureux, précis, rassurant",
+    "paragraphes": "Courts, lisibles sur mobile",
+    "format_nombres": "Virgule décimale, espace milliers: 4 850,00 $",
+    "eviter": "Jargon technique non expliqué, phrases trop longues, formulations impersonnelles"
+  }
+}

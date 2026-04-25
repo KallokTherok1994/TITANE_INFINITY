@@ -1,0 +1,172 @@
+{
+  "version": "v1.0.0",
+  "category": "htf_services_catalogue",
+  "description": "Catalogue complet de services et matériaux de L'Humain à tout faire — 5 sections, codes HTF standardisés, prix 2025 région Saguenay. Créé par Kevin Thibault.",
+  "fournisseurs_verifies": {
+    "materiaux_beton": { "nom": "Béton Lafarge Saguenay", "specialite": "Dalles, pavés, bordures béton", "stock_permanent": true, "delai_livraison_h": 48 },
+    "pepiniere": { "nom": "Pépinière Villeneuve Saint-Augustin", "specialite": "Végétaux Zone 3 certifiés", "note": "5/5 étoiles", "taux_reprise": 0.985 },
+    "eclairage": { "nom": "Éclairage Concept Chicoutimi", "specialite": "Éclairage LED extérieur et domotique" }
+  },
+  "section_1_solutions_completes": {
+    "HTF-SOL-001": {
+      "nom": "Terrasse Moderne Clés en Main",
+      "surface": "24m² (4m × 6m)",
+      "prix_forfait_taxes_incluses": 4850,
+      "prix_m2": 202,
+      "delai_jours": "2-3",
+      "materiaux_inclus": [
+        "67 dalles béton texturé 60×60×5cm graphite (HTF-DAL-001)",
+        "28m bordures béton moulées (HTF-BOR-001)",
+        "4m³ sable de pose calibré + géotextile 105g",
+        "6 spots LED encastrés 3W blanc chaud (HTF-ECL-003)",
+        "Transformateur 72W étanche + câblage"
+      ],
+      "services_inclus": ["Excavation 25cm + évacuation débris", "Nivellement laser + compactage", "Pose complète + raccordement électrique", "Nettoyage final + formation entretien"],
+      "garanties": { "nivellement": "5 ans", "electrique": "3 ans", "materiaux": "2 ans" },
+      "popularite": "65% clients terrasses choisissent ce package"
+    },
+    "HTF-SOL-002": {
+      "nom": "Entrée Véhiculaire Prestige",
+      "surface": "50m² (5m × 10m)",
+      "prix_forfait_taxes_incluses": 6750,
+      "prix_m2": 135,
+      "delai_jours": "3-4 + séchage 48h",
+      "materiaux_inclus": [
+        "1400 pavés autobloquants 6cm anthracite (HTF-PAV-001)",
+        "30m bordures granit local scié 10×20cm",
+        "Fondation gravel 0-20mm 15cm compactée",
+        "Sable polymère joints haute résistance",
+        "Scellant protecteur 10 ans inclus"
+      ],
+      "garantie_unique": "10 ans stabilité carrossable",
+      "plus_value_propriete": "+8500$ valeur municipale estimée"
+    },
+    "HTF-SOL-003": {
+      "nom": "Jardin Zen Thérapeutique",
+      "surface": "15m²",
+      "prix_forfait_tout_inclus": 3950,
+      "delai_jours": "2",
+      "elements_zen": ["3m³ gravier marbre blanc 10-20mm", "Fontaine circuit fermé design moderne", "7 hostas géants Patriot", "5 fougères royales indigènes", "3 pierres décoratives Saguenay 100-200kg", "Éclairage LED spots couleurs zen"],
+      "garanties": { "vegetaux": "2 ans", "fontaine": "5 ans" }
+    }
+  },
+  "section_2_materiaux": {
+    "HTF-DAL-001": {
+      "nom": "Dalle Béton Décorative Texture Premium",
+      "dimensions_cm": "60 × 60 × 5",
+      "poids_kg": 33,
+      "resistance_compression_MPa": 40,
+      "resistance_gel_degel_cycles": 300,
+      "coefficient_antiderapant": "R11",
+      "prix_unitaire": 11.75,
+      "prix_m2": 28.45,
+      "installation_htf_m2": 15.25,
+      "total_installe_m2": 43.70,
+      "couleurs": ["Graphite mat (Pantone Cool Gray 11)", "Beige sable (RAL 1019)", "Gris perle (RAL 7035)", "Blanc cassé (RAL 9001)"],
+      "fournisseur": "Béton Lafarge Saguenay",
+      "satisfaction_client": 0.94
+    },
+    "HTF-PAV-001": {
+      "nom": "Pavé Autobloquant Ingénierie Circulation",
+      "forme": "H double (emboîtement 4 directions)",
+      "dimensions_cm": "20.0 × 16.5 × 6.0",
+      "resistance_compression_MPa": 45,
+      "charge_admissible_essieu_kg": 2500,
+      "prix_gris_naturel": 1.35,
+      "prix_couleurs_standard": 1.55,
+      "prix_couleurs_speciales": 1.85,
+      "prix_m2_materiau": 42.25,
+      "pose_htf_m2": 78.50,
+      "fournisseur": "Béton Lafarge Saguenay",
+      "satisfaction_durabilite": 0.96
+    }
+  },
+  "section_3_vegetaux_zone3": {
+    "HTF-ARB-001": {
+      "nom": "Érable à Sucre — Arbre Emblème Québec",
+      "nom_scientifique": "Acer saccharum",
+      "zone_rusticite": "3a (survit -42°C)",
+      "hauteur_25ans_m": "12-15",
+      "hauteur_50ans_m": "20-25",
+      "croissance_an1_5_cm": "40-60",
+      "prix_par_taille": {
+        "semis_30_50cm": "18-25$",
+        "baliveau_60_80cm": "35-48$",
+        "tige_150_200cm": "85-125$",
+        "fort_tige_250_300cm": "185-275$",
+        "specimen_350cm_plus": "450-850$"
+      },
+      "garantie_reprise_htf": "3 ans conditions normales",
+      "exigences": "Sol pH 6.0-7.5, espace vital 8m, arrosage suivi 2 ans"
+    },
+    "HTF-ARU-001": {
+      "nom": "Thuya Occidental 'Smaragd' — Haie Premium",
+      "nom_scientifique": "Thuja occidentalis 'Smaragd'",
+      "zone_rusticite": "3a (-37°C garanti, -42°C survécu)",
+      "hauteur_10ans_cm": "180-220",
+      "hauteur_20ans_cm": "350-400",
+      "espacement_haie_cm": 80,
+      "croissance_annuelle_cm": "15-25 hauteur + 5cm largeur",
+      "qualite_feuillage": "Vert émeraude constant, 95% opacité visuelle",
+      "prix_par_taille": {
+        "30_40cm": "15.50$",
+        "50_60cm": "24.75$",
+        "80_100cm": "42.50$",
+        "120_140cm": "68.25$",
+        "160_180cm": "95.75$",
+        "200cm_plus": "125.50$"
+      },
+      "prix_ml_haie_pose_htf": 35,
+      "garantie_reprise_htf": "98.5% taux reprise 2023-2024"
+    }
+  },
+  "section_4_elements_signature": {
+    "HTF-ECL-001": {
+      "nom": "Borne LED Moderne Haute Performance",
+      "module_led": "Samsung LM301B — 12W réels",
+      "driver": "Mean Well constant current 350mA",
+      "flux_lumineux_lumens": 1200,
+      "temperature_couleur_K": 3000,
+      "duree_vie_h": 50000,
+      "etancheite": "IP65",
+      "resistance_temperature": "-40°C à +60°C",
+      "prix_borne_seule": 285,
+      "prix_piquet_fondation": 65,
+      "prix_installation_electrique": 185,
+      "total_installe": 535,
+      "pannes_siganlees_pct": 0,
+      "satisfaction": 4.8
+    },
+    "HTF-FNT-001": {
+      "nom": "Fontaine Circuit Fermé Design Moderne",
+      "utilisation": "Jardins zen, cours intérieures, espaces détente",
+      "garantie_ans": 5,
+      "inclus_dans": "HTF-SOL-003"
+    }
+  },
+  "section_5_finitions_services": {
+    "HTF-SER-001": {
+      "nom": "Contrat Maintenance Annuelle Complète",
+      "programme": "4 saisons",
+      "tarifs_annuels_m2": {
+        "jusqu_50m2": 485,
+        "51_100m2": 785,
+        "101_200m2": 1285,
+        "201_500m2": 2850,
+        "500m2_plus": "Sur devis"
+      },
+      "inclus": ["Inspection printemps + nettoyage haute pression", "Entretien végétaux 2×/été", "Hivernage complet automne", "Déneigement accès prioritaires hiver", "Rapport photo mensuel", "Interventions urgence 24h incluses"],
+      "economies_vs_ponctuel": 0.35,
+      "satisfaction_renouvellements": 0.97
+    }
+  },
+  "statistiques_htf_2024": {
+    "terrasses_realisees": 45,
+    "haies_ml_installes": 850,
+    "bornes_led_installees": 67,
+    "erables_plantes": 23,
+    "satisfaction_globale": 0.94,
+    "taux_reprise_vegetaux": 0.96,
+    "pannes_equipements": 0
+  }
+}

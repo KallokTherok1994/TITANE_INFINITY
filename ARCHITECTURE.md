@@ -461,3 +461,25 @@ Conformité validée par tests 100/100 (avril 2026).
 - Les commandes backend `http_commands`, `rag_commands` et `web_search_commands` consomment désormais la gateway réseau gouvernée depuis le crate bibliothèque `titane_infinity::gateway::network`, ce qui réaligne le binaire Tauri avec la vérité One Door utilisée par les tests et évite un drift `crate::gateway` au packaging.
 - Le module `commands_v21::persistent_memory_v30` est maintenant publié explicitement pour que `PersistentMemoryState` et les IPC `persistent_memory_*` restent accessibles depuis `main.rs` au runtime de production, sans dépendre d un chemin de module privé.
 - Build production validé sur `31.2.1` avec artefacts Linux générés: `Titan-Stable_31.2.1_amd64.AppImage` et `Titan-Stable_31.2.1_amd64.deb`.
+
+## [HTF Module — L'Humain à tout faire]
+
+- **Scope**: Ring 3/4 — Aucun IPC Rust, données en localStorage uniquement
+- **Route**: `/htf` → `src/pages/HTFPage.tsx`
+- **Services** (`src/services/htf/`):
+  - `htfKnowledgeService` — Charge le contexte KB depuis `defaultKnowledgeBase`
+  - `htfEstimationService` — Génération d'estimations + plan d'implémentation
+  - `htfCrmService` — CRUD clients (localStorage `titane_htf_clients`)
+  - `htfSubmissionService` — CRUD soumissions (localStorage `titane_htf_submissions`)
+  - `htfLearningService` — Boucle apprentissage estimé vs réel (localStorage `titane_htf_learning`)
+  - `htfSkillDefinition` — Définition Skill OS `titane-skill-htf-estimateur`
+  - `installHtfSkill` — Auto-install du skill au démarrage
+- **KB** (5 fichiers JSON in `data/knowledge_base/default/`, embedded Rust `knowledge_base_default.rs`):
+  - `htf_module_identity` — Identité entreprise, membre unique Kevin Thibault
+  - `htf_formation_manuel` — Manuel T1/T2/T3, procédures POS
+  - `htf_estimation_rules` — Taux horaires, taxes TPS/TVQ, majorations, format S{AAAA}{MM}-{NNN}
+  - `htf_services_catalogue` — Catalogue produits/services codes HTF-*
+  - `htf_soumission_template` — Modèle officiel 9 sections
+- **Store**: `src/stores/useHTFStore.ts` (Zustand)
+- **Chat mode**: `htf_soumission` dans `chatModes.config.ts`
+- **Tests**: 14 unitaires (Vitest) + 7 E2E (Playwright) — zéro IPC Rust, persistance localStorage

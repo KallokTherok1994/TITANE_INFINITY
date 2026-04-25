@@ -34,7 +34,8 @@ export type ChatModeId =
   | 'coach'
   | 'dev'
   | 'admin'
-  | 'audit';
+  | 'audit'
+  | 'htf_soumission';
 
 /** Catégories fonctionnelles pour regroupement UI */
 export type ChatModeCategory =
@@ -1118,6 +1119,65 @@ Kevin veut auditer. Sois son œil critique bienveillant et professionnel.
     enabled: true,
     sortOrder: 10,
     tags: ['technical', 'audit', 'quality', 'security'],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MODE: HTF_SOUMISSION — L'Humain à tout faire
+  // ═══════════════════════════════════════════════════════════════════════════
+  htf_soumission: {
+    id: 'htf_soumission',
+    label: 'HTF — Soumission',
+    description: "Génération de soumissions professionnelles pour L'Humain à tout faire",
+    category: 'productivity',
+    icon: '🏡',
+    themeColor: '#16a34a',
+
+    defaultProvider: 'auto',
+    systemPrompt: `Tu es l'assistant estimateur de L'Humain à tout faire (Kevin Thibault, Saguenay, Québec).
+
+MISSION : Générer des soumissions professionnelles précises pour des travaux d'aménagement extérieur.
+
+WORKFLOW SOUMISSION :
+1. ANALYSER : Type de service, superficie/dimensions, complexité, photos si disponibles
+2. CHARGER LA POS : Procédure Opératoire Standard correspondante
+3. CALCULER : Quantités matériaux (formules HTF) + heures main-d'œuvre
+4. VALIDER PRIX : Catalogue HTF 2025 + recherche en ligne si nécessaire
+5. MAJORATIONS : Urgence, accès difficile, fin de semaine, etc.
+6. PLAN : Étapes numérotées avec durées estimées
+7. FORMATER : Numéro S{AAAA}{MM}-{NNN}, toutes sections, taxes TPS/TVQ
+
+RÈGLES ABSOLUES :
+- Seul membre : Kevin Thibault (fondateur, opérateur, estimateur, technicien)
+- Prix en dollars canadiens, TPS 5% + TVQ 9.975%
+- Soumission valide 30 jours — acompte 30% à la signature
+- Style québécois professionnel et chaleureux
+- Format numérotation : S{AAAA}{MM}-{NNN}
+
+🍁 Réponds TOUJOURS en français québécois professionnel.
+`,
+    temperature: 0.3,
+    maxTokens: 4096,
+
+    responseStyle: 'detailed',
+    tone: 'professional',
+    suggestedActions: [
+      'Génère une soumission pour une terrasse',
+      'Calcule le prix pour une haie de Thuyas',
+      'Prépare une soumission entrée véhiculaire',
+    ],
+
+    permissionLevel: 2,
+    toolsAllowed: TOOLS_STANDARD,
+    memoryScope: 'project',
+
+    profileId: 'htf_estimateur',
+    enginesEnabled: ['cognitive', 'memory', 'web'],
+    capabilities: ['htf-estimation', 'soumission-generation', 'material-pricing'],
+
+    version: '1.0.0',
+    enabled: true,
+    sortOrder: 15,
+    tags: ['htf', 'soumission', 'estimation', 'amenagement', 'saguenay'],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════

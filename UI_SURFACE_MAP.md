@@ -542,3 +542,23 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Mapping main.rs : commande exposée dans `generate_handler!`
 - Preuve : log `data/web_vitals_report.jsonl` (append), artefact runtime, test E2E à venir
 - Doctrine : plus de fetch direct, analytics = UI → IPC → backend (preuve runtime, rollback documenté)
+
+# [2025-HTF] Module HTF — L'Humain à tout faire
+
+- Surface canonique: `/htf`
+- Composant principal: `src/pages/HTFPage.tsx`
+- data-testid principal: `htf-module-page`
+- Tabs internes: dashboard | soumission | crm | historique | connaissance
+- Composants:
+  - `src/components/htf/HTFDashboard.tsx` — `data-testid="htf-dashboard"`
+  - `src/components/htf/HTFSubmissionWizard.tsx` — `data-testid="htf-submission-wizard"`
+  - `src/components/htf/HTFClientPanel.tsx` — `data-testid="htf-client-panel"`
+  - `src/components/htf/HTFEstimationResult.tsx` — `data-testid="htf-estimation-result"`
+- Services: `src/services/htf/` (htfKnowledgeService, htfEstimationService, htfCrmService, htfSubmissionService, htfLearningService, htfSkillDefinition, installHtfSkill)
+- Store Zustand: `src/stores/useHTFStore.ts`
+- Chat mode: `htf_soumission` (ajouté dans `src/services/ai/chatModes.config.ts`)
+- KB JSON (data/knowledge_base/default/): htf_module_identity, htf_formation_manuel, htf_estimation_rules, htf_services_catalogue, htf_soumission_template
+- KB Rust: `src-tauri/src/knowledge_base_default.rs` — 5 consts HTF + 5 entrées SOURCES
+- Skill OS: `titane-skill-htf-estimateur` (category: custom, state: ACTIVE)
+- Persistance: localStorage (`titane_htf_clients`, `titane_htf_submissions`, `titane_htf_learning`) — zéro IPC Rust
+- Tests: `tests/unit/htf/htfEstimationService.test.ts` (5 tests), `tests/unit/htf/htfCrmService.test.ts` (9 tests), `e2e/htf.spec.ts` (7 scénarios)

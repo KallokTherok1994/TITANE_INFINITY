@@ -1207,3 +1207,31 @@ function MyComponent() {
 - Backend : `src-tauri/src/commands/web_vitals_commands.rs` (commande Tauri, log JSONL)
 - Mapping main.rs : handler exposé, preuve runtime, artefact log
 - Doctrine : anti-dérive fetch, rollback documenté, test E2E à venir
+
+## [HTF — 2025] Module L'Humain à tout faire
+
+| Élément | Chemin | Note |
+|---------|--------|------|
+| Page | `src/pages/HTFPage.tsx` | Route `/htf`, 5 tabs |
+| Dashboard | `src/components/htf/HTFDashboard.tsx` | testid `htf-dashboard` |
+| Wizard soumission | `src/components/htf/HTFSubmissionWizard.tsx` | testid `htf-submission-wizard` |
+| Panel CRM | `src/components/htf/HTFClientPanel.tsx` | testid `htf-client-panel` |
+| Résultat estimation | `src/components/htf/HTFEstimationResult.tsx` | testid `htf-estimation-result` |
+| Store | `src/stores/useHTFStore.ts` | Zustand |
+| Service KB | `src/services/htf/htfKnowledgeService.ts` | Lit KB via defaultKnowledgeBase |
+| Service estimation | `src/services/htf/htfEstimationService.ts` | Génération + tarification |
+| Service CRM | `src/services/htf/htfCrmService.ts` | localStorage |
+| Service soumissions | `src/services/htf/htfSubmissionService.ts` | localStorage |
+| Service apprentissage | `src/services/htf/htfLearningService.ts` | localStorage |
+| Skill OS | `src/services/htf/htfSkillDefinition.ts` | titane-skill-htf-estimateur |
+| Install skill | `src/services/htf/installHtfSkill.ts` | auto-install au boot |
+| Types | `src/services/htf/types.ts` | HTFClient, HTFSubmission, etc. |
+| Chat mode | `src/services/ai/chatModes.config.ts` | `htf_soumission` |
+| KB identity | `data/knowledge_base/default/htf_module_identity.json` | embedded Rust |
+| KB formation | `data/knowledge_base/default/htf_formation_manuel.json` | embedded Rust |
+| KB estimation | `data/knowledge_base/default/htf_estimation_rules.json` | embedded Rust |
+| KB services | `data/knowledge_base/default/htf_services_catalogue.json` | embedded Rust |
+| KB template | `data/knowledge_base/default/htf_soumission_template.json` | embedded Rust |
+| KB Rust loader | `src-tauri/src/knowledge_base_default.rs` | 5 consts + 5 SOURCES |
+| Tests unitaires | `tests/unit/htf/*.test.ts` | 14 tests Vitest |
+| Tests E2E | `e2e/htf.spec.ts` | 7 scénarios Playwright |

@@ -1,0 +1,59 @@
+{
+  "version": "v1.0.0",
+  "category": "htf_module_identity",
+  "description": "Identité complète de L'Humain à tout faire — entreprise de services manuels et travaux fondée et opérée exclusivement par Kevin Thibault.",
+  "enterprise": {
+    "nom_officiel": "L'Humain à tout faire",
+    "note_historique": "Anciennement 'Humain à Tout Faire Inc.' — renommée et restructurée. Tous les documents et données de référence ont été créés par Kevin Thibault.",
+    "site_web": "https://www.humainatoutfaire.com",
+    "courriel": "info@humainatoutfaire.com",
+    "zone_principale": "Saguenay-Lac-Saint-Jean, Québec (Zone de rusticité 3)",
+    "fondateur_et_operateur": {
+      "nom": "Kevin Thibault",
+      "role": "Fondateur, propriétaire unique, technicien principal, estimateur, auteur de toute la documentation",
+      "expertise": "Travaux manuels résidentiels et commerciaux, aménagement paysager, rénovation légère, installation, entretien"
+    }
+  },
+  "mission": "Simplifier la vie des clients en offrant des services manuels rapides, efficaces, adaptés et de haute qualité — avec une approche humaine, locale et bienveillante.",
+  "valeurs": ["Excellence", "Humanité", "Rigueur", "Adaptabilité"],
+  "vision": "Devenir la référence en services de conciergerie et d'assistance aux tâches quotidiennes dans la région, en combinant expertise technique et excellence humaine.",
+  "positionnement": {
+    "marche_cible": "Résidentiel et commercial — particuliers et entreprises",
+    "zone_geographique": "Saguenay, Chicoutimi, Jonquière, Lac-Saint-Jean, et environ",
+    "differenciateurs": [
+      "Service personnalisé par un seul expert responsable",
+      "Expertise Zone 3 (climat boréal -40°C)",
+      "Catalogue 115+ services vérifiés avec codes HTF",
+      "Estimations précises basées sur le Manuel de Formation",
+      "Garanties étendues sur matériaux et main-d'œuvre",
+      "Suivi client moderne et accessible"
+    ]
+  },
+  "domaines_services": [
+    "Ménager et nettoyage",
+    "Réparations et installations intérieures",
+    "Aménagement paysager et extérieur",
+    "Rénovation légère",
+    "Entretien saisonnier",
+    "Services VIP et multi-logements",
+    "Interventions urgentes"
+  ],
+  "certifications": [
+    "Agriculture et Agroalimentaire Canada — Spécialiste Zones Rusticité Québec",
+    "APLDQ — Association des Paysagistes du Québec (Membre professionnel)",
+    "Corporation des Maîtres Électriciens du Québec (Licence éclairage extérieur)",
+    "ISO 14001 Environnement (certification en cours)"
+  ],
+  "partenaires": [
+    "Béton Lafarge Saguenay (matériaux)",
+    "Pépinière Villeneuve Saint-Augustin (végétaux Zone 3)",
+    "Éclairage Concept Chicoutimi (équipements LED)",
+    "Hydro-Québec Affaires (programme efficacité énergétique)"
+  ],
+  "titane_integration": {
+    "description": "TITANE∞ agit comme assistant IA officiel de L'Humain à tout faire pour la génération de soumissions, la gestion CRM clients, l'application des POS et l'amélioration continue des estimations.",
+    "mode_chat": "htf_soumission",
+    "skill_id": "titane-skill-htf-estimateur",
+    "workflow": "analyse_pos → recherche_prix_web → calcul_estimation → plan_mise_en_oeuvre → soumission_officielle → sauvegarde_crm → apprentissage"
+  }
+}
