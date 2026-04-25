@@ -179,6 +179,7 @@ export async function writeFileSync(path: string, data: string): Promise<void> {
     localStorageWrite(path, data);
   } catch (error) {
     console.error('[tauriFsAdapter] writeFileSync error:', error);
+    throw error;
   }
 }
 
@@ -220,6 +221,7 @@ export const promises = {
       }
     } catch (error) {
       console.error('[tauriFsAdapter] appendFile error:', error);
+      throw error;
     }
   },
 
@@ -235,7 +237,7 @@ export const promises = {
         if (tauriPath && tauriFs) {
           const appDir = await tauriPath.appDataDir();
           const fullPath = await tauriPath.join(appDir, path);
-          await tauriFs.create(fullPath);
+          await tauriFs.mkdir(fullPath, { recursive: true });
         }
       }
       // Browser: no-op, localStorage doesn't need directories

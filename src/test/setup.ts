@@ -328,15 +328,24 @@ const handleTauriInvoke = async (
     case 'memory_get_active_rituals':
       return [];
     case 'parse_document': {
-      const content = String(payload?.content ?? '');
-      const sections = content
-        .split(/\n+/)
-        .map((line: string) => line.trim())
-        .filter(Boolean);
+      const filePath = String(payload?.filePath ?? payload?.file_path ?? '');
+      const filename = filePath.split('/').pop() ?? 'unknown';
       return {
-        format: payload?.format ?? 'text',
-        sections,
-        tokens: content.length,
+        id: `mock-${filename}`,
+        title: filename,
+        content: `Mock content for ${filename}`,
+        format: 'PlainText',
+        metadata: {
+          author: null,
+          created: null,
+          modified: null,
+          size_bytes: 0,
+          language: null,
+          keywords: [],
+        },
+        categories: [],
+        confidence: 1.0,
+        timestamp: Date.now(),
       };
     }
     case 'memory_get_state':

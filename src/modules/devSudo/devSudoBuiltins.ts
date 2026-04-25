@@ -14,38 +14,13 @@ import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine
 import type { DevSudoResult } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// STUBS - Modules supprimés en PHASE 1 (OPTION B)
+// LAZY LOADER — dataCollector (real DataCollectorEngine)
 // ═══════════════════════════════════════════════════════════════════════════
 
-// Stub pour dataCollector
-const dataCollector = {
-  getStats: () => ({
-    totalEntries: 0,
-    sizeInMB: 0,
-    categories: {} as Record<string, number>,
-    totalTokens: 0,
-    avgQuality: 0.8,
-    avgImportance: 0.7,
-    byCategory: {
-      conversation: 0,
-      action: 0,
-      coaching: 0,
-      analysis: 0,
-      memory: 0,
-      error: 0,
-      'super-prompt': 0,
-      interaction: 0,
-      'auto-heal': 0,
-      introspection: 0,
-      patch: 0,
-      style: 0,
-    } as Record<string, number>,
-  }),
-  exportToFile: async () => {},
-  clear: () => {},
-  addEntry: (_entry: unknown) => {},
-  cleanDataset: () => ({ removed: 0, remaining: 0 }),
-};
+async function getDataCollector() {
+  const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+  return dataCollector;
+}
 
 // Stub pour vocalDevConsole
 const vocalDevConsole = {
@@ -1628,8 +1603,9 @@ copy(dataCollector.exportToJSONL())
  * Handler: dataset.training-pack
  * Génère le pack complet d'entraînement (dataset + Modelfile + script)
  */
-function handleDatasetTrainingPack(): DevSudoResult {
+async function handleDatasetTrainingPack(): Promise<DevSudoResult> {
   try {
+    const dataCollector = await getDataCollector();
     const stats = dataCollector.getStats();
 
     return {
@@ -1694,8 +1670,9 @@ chmod +x train.sh
  * Handler: dataset.compress
  * Compresse le dataset (optimise taille)
  */
-function handleDatasetCompress(): DevSudoResult {
+async function handleDatasetCompress(): Promise<DevSudoResult> {
   try {
+    const dataCollector = await getDataCollector();
     const statsBefore = dataCollector.getStats();
     // Compression via cleanDataset (supprime redondances)
     dataCollector.cleanDataset();
@@ -1818,8 +1795,9 @@ async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
  * Handler: dataset.export
  * Exporte le dataset complet (stats + JSONL)
  */
-function handleDatasetExport(): DevSudoResult {
+async function handleDatasetExport(): Promise<DevSudoResult> {
   try {
+    const dataCollector = await getDataCollector();
     const stats = dataCollector.getStats();
 
     return {

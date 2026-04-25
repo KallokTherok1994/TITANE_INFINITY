@@ -82,25 +82,25 @@ mod commands_v21 {
         include!("commands/window_controls_commands.rs");
     }
 
-// ✅ AUTOFIX(memory-chat): Persistent Memory v30.0.0Ω — full 3-level pipeline
-// Previously orphaned; provides persistent_memory_read/get_stats/get_context/write_entry/etc.
-mod persistent_memory_v30 {
-    include!("commands/persistent_memory.rs");
+    // ✅ AUTOFIX(memory-chat): Persistent Memory v30.0.0Ω — full 3-level pipeline
+    // Previously orphaned; provides persistent_memory_read/get_stats/get_context/write_entry/etc.
+    pub mod persistent_memory_v30 {
+        include!("commands/persistent_memory.rs");
 
-    mod memory_system_commands {
-        include!("commands/memory_system_commands.rs");
-    }
+        mod memory_system_commands {
+            include!("commands/memory_system_commands.rs");
+        }
 
-    // Auto-Evolution Engine API — run_evolution, get_evolution_state, quick_health_check
-    mod engine_evolution_commands {
-        include!("commands/engine_evolution_commands.rs");
-    }
+        // Auto-Evolution Engine API — run_evolution, get_evolution_state, quick_health_check
+        mod engine_evolution_commands {
+            include!("commands/engine_evolution_commands.rs");
+        }
 
-    // Evolution Engine v∞ commands (evolution_get_state, evolution_start/stop, etc.)
-    mod evolution_engine_commands {
-        include!("evolution/evolution_commands.rs");
-    }
-} // <-- ferme persistent_memory_v30
+        // Evolution Engine v∞ commands (evolution_get_state, evolution_start/stop, etc.)
+        mod evolution_engine_commands {
+            include!("evolution/evolution_commands.rs");
+        }
+    } // <-- ferme persistent_memory_v30
 } // <-- ferme commands_v21
 
 // Persona Engine commands (persona_get_state, persona_react, etc.)
@@ -307,7 +307,6 @@ mod runtime_config {
     include!("runtime_config.rs");
 }
 
-
 // Legacy AI/Engine/Memory command bridge.
 // In full backend mode we forward to the library commands.
 // In mock/not-full builds we expose lightweight stubs to keep IPC symbols resolvable.
@@ -335,9 +334,9 @@ mod legacy_ai_bridge {
         engines_build_get_status, engines_build_start, engines_devmode_analyze_file,
         engines_devmode_apply_patch, engines_devmode_changelog, engines_devmode_create_backup,
         engines_devmode_disable, engines_devmode_enable, engines_devmode_get_history,
-        engines_devmode_get_state, engines_devmode_get_suggestions,
-        engines_devmode_preview, engines_devmode_restore_backup,
-        engines_devmode_rollback, engines_devmode_validate_patch, engines_monitoring_get_health,
+        engines_devmode_get_state, engines_devmode_get_suggestions, engines_devmode_preview,
+        engines_devmode_restore_backup, engines_devmode_rollback, engines_devmode_validate_patch,
+        engines_monitoring_get_health,
     };
     // [FIX-016] Real runtime state commands (always-available real implementations)
     pub use titane_infinity::ai::ollama::{
@@ -1304,7 +1303,9 @@ fn main() {
 
             // ✅ AUTOFIX(memory-chat): PersistentMemoryState v30.0.0Ω — required by
             //    persistent_memory_read/get_stats/get_context/write_entry IPC commands
-            app.manage(persistent_memory_v30::PersistentMemoryState::new(app.handle()));
+            app.manage(commands_v21::persistent_memory_v30::PersistentMemoryState::new(
+                app.handle(),
+            ));
             log::info!("✅ PersistentMemoryState v30.0.0Ω initialized");
 
             // ✅ DEFAULT KNOWLEDGE BASE v30.0.0 — Pre-seeded knowledge at installation time
@@ -2005,18 +2006,18 @@ fn main() {
             api::memory_api::memory_get_timeline,
             api::memory_api::memory_get_active_rituals,
             api::memory_api::memory_debug_scan,
-            persistent_memory_v30::persistent_memory_read,
-            persistent_memory_v30::persistent_memory_get_stats,
-            persistent_memory_v30::persistent_memory_get_bundles,
-            persistent_memory_v30::persistent_memory_get_context,
-            persistent_memory_v30::persistent_memory_write_entry,
-            persistent_memory_v30::persistent_memory_create_summary,
-            persistent_memory_v30::persistent_memory_create_bundle,
-            persistent_memory_v30::persistent_memory_export,
-            persistent_memory_v30::persistent_memory_promote_entry,
-            persistent_memory_v30::persistent_memory_archive_entry,
-            persistent_memory_v30::persistent_memory_delete_entry,
-            persistent_memory_v30::persistent_memory_add_to_bundle,
+            commands_v21::persistent_memory_v30::persistent_memory_read,
+            commands_v21::persistent_memory_v30::persistent_memory_get_stats,
+            commands_v21::persistent_memory_v30::persistent_memory_get_bundles,
+            commands_v21::persistent_memory_v30::persistent_memory_get_context,
+            commands_v21::persistent_memory_v30::persistent_memory_write_entry,
+            commands_v21::persistent_memory_v30::persistent_memory_create_summary,
+            commands_v21::persistent_memory_v30::persistent_memory_create_bundle,
+            commands_v21::persistent_memory_v30::persistent_memory_export,
+            commands_v21::persistent_memory_v30::persistent_memory_promote_entry,
+            commands_v21::persistent_memory_v30::persistent_memory_archive_entry,
+            commands_v21::persistent_memory_v30::persistent_memory_delete_entry,
+            commands_v21::persistent_memory_v30::persistent_memory_add_to_bundle,
             // Persona Engine commands — R9 unlock
             persona_commands::persona_get_state,
             persona_commands::persona_get_multipliers,
@@ -2421,9 +2422,6 @@ fn main() {
             titane_infinity::meta::commands::meta_get_state,
             titane_infinity::meta::commands::meta_selftest_all,
             titane_infinity::meta::commands::meta_get_monitoring_metrics,
-
-            // knowledge::parser
-            titane_infinity::knowledge::parser::parse_document,
 
             // cognitive_learning::semantic_map
             titane_infinity::cognitive_learning::semantic_map::cognitive_get_map,

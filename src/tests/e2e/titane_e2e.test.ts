@@ -243,8 +243,7 @@ describe('E2E Scenario 2: Legal Designer Workflow', () => {
     // Step 2: Parser un template légal (mock)
     const step2 = await measureStep('Parse legal template', async () => {
       const parsed = await invoke('parse_document', {
-        content: 'CONTRAT DE PRESTATION\n\nArticle 1: Objet',
-        format: 'text',
+        filePath: '/tmp/contrat-prestation.txt',
       });
       expect(parsed).toBeDefined();
       return parsed;
@@ -574,8 +573,7 @@ describe('E2E Scenario 5: Complex Multi-Module Interaction', () => {
     // Step 3: Parser document de projet
     const step3 = await measureStep('Parse project document', async () => {
       const parsed = await invoke('parse_document', {
-        content: 'PROJECT: TITANE v19.8 QA System',
-        format: 'text',
+        filePath: '/tmp/project-titane-v19.8.txt',
       });
       return parsed;
     });

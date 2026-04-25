@@ -249,8 +249,7 @@ describe('Regression Test 5: Template Modifications', () => {
 
     try {
       await invoke('parse_document', {
-        content: 'test',
-        format: 'text',
+        filePath: '/tmp/test-regression.txt',
       });
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
@@ -259,7 +258,7 @@ describe('Regression Test 5: Template Modifications', () => {
           module: 'knowledge',
           cause: 'Signature parse_document modifiée',
           severity: 'MEDIUM',
-          solution_suggeree: 'Vérifier paramètres parse_document(content, format)',
+          solution_suggeree: 'Vérifier paramètres parse_document(filePath: String)',
           timestamp: new Date().toISOString(),
         });
       }

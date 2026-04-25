@@ -51,7 +51,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
 
       // Detect format
       const format = (await tauriClient.detectFileFormat({
-        file_path: filePath,
+        filePath: filePath,
       })) as string;
       setDetectedFormat(format);
     } catch (err) {
@@ -68,7 +68,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
 
     try {
       const doc = (await tauriClient.parseDocument({
-        file_path: selectedFile,
+        filePath: selectedFile,
       })) as KnowledgeDocument | null;
       setParsedDoc(doc);
 

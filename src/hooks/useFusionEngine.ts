@@ -180,8 +180,8 @@ export function useFusionEngine(): UseFusionEngineReturn {
     metadataLink.click();
     URL.revokeObjectURL(metadataUrl);
 
-    alert(
-      '✅ Training Pack téléchargé !\n\n4 fichiers:\n- dataset.jsonl\n- Modelfile\n- train_titane_local.sh\n- metadata.json'
+    console.info(
+      '[FusionEngine] Training Pack téléchargé : dataset.jsonl, Modelfile, train_titane_local.sh, metadata.json'
     );
   }, [exportTrainingPackage]);
 
