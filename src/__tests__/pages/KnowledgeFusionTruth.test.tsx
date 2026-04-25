@@ -42,7 +42,7 @@ describe('Knowledge fusion truth', () => {
 
     await waitFor(() => {
       expect(detectFileFormat).toHaveBeenCalledWith({
-        file_path: '/tmp/guide.md',
+        filePath: '/tmp/guide.md',
       });
     });
 
@@ -71,7 +71,7 @@ describe('Knowledge fusion truth', () => {
 
     await waitFor(() => {
       expect(parseDocument).toHaveBeenCalledWith({
-        file_path: '/tmp/guide.md',
+        filePath: '/tmp/guide.md',
       });
     });
 

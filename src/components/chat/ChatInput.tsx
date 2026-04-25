@@ -23,7 +23,6 @@ import { UI_DELAYS } from '@/constants/timeouts';
 import './ChatInput.css';
 
 const isDev = process.env.NODE_ENV === 'development';
-const CONTROL_CHAR_PATTERN = /\p{Cc}+/gu;
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -163,11 +162,10 @@ function useOmegaInputProtection() {
   const sanitizeInput = useCallback(
     (input: string): string => {
       try {
-        // Nettoyage basique mais sécurisé
         return input
-          .replace(CONTROL_CHAR_PATTERN, '') // Caractères de contrôle
-          .replace(/\s+/g, ' ') // Espaces multiples
-          .trim(); // Trim sécurisé
+          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x80-\x9F]/g, '') // Control chars, preserve \n and \t
+          .replace(/[^\S\n]+/g, ' ') // Collapse horizontal whitespace, keep newlines
+          .trim();
       } catch (sanitizeError) {
         handleInputError(
           sanitizeError instanceof Error
@@ -202,7 +200,8 @@ function useOmegaInputProtection() {
 
 function extCategory(filename: string): FileCategory {
   const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
-  if (['.ts', '.tsx', '.js', '.jsx', '.rs', '.py', '.java', '.cpp', '.c', '.go', '.rb'].includes(ext)) return 'code';
+  if (['.ts', '.tsx', '.js', '.jsx', '.rs', '.py', '.java', '.cpp', '.c', '.go', '.rb',
+       '.sh', '.bash', '.css', '.scss', '.html', '.htm', '.graphql', '.proto'].includes(ext)) return 'code';
   if (['.md', '.txt', '.doc', '.docx', '.pdf', '.log'].includes(ext)) return 'document';
   if (['.json', '.xml', '.yaml', '.yml', '.csv', '.sql'].includes(ext)) return 'data';
   if (['.toml', '.ini', '.env', '.config'].includes(ext)) return 'config';
@@ -231,13 +230,6 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     enableFileUpload = true,
     enableDictation = true,
   }) => {
-    // Debug: vérifier si onToggleVoiceMode est défini
-    console.warn(
-      '[ChatInput] onToggleVoiceMode:',
-      typeof externalToggleVoiceMode,
-      !!externalToggleVoiceMode
-    );
-
     // État vocal interne si pas de props externes
     const [internalVoiceMode, setInternalVoiceMode] = useState(false);
 
@@ -313,40 +305,20 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
 
     // ═══ PHASE 5.4: PROTECTED SEND HANDLER ═══
     const handleSend = useCallback(async () => {
-      console.warn('[ChatInput OMEGA] 🔘 handleSend appelé', {
-        value: value.substring(0, 30),
-        disabled,
-        mounted: mountedRef.current,
-      });
-
-      if (!mountedRef.current) {
-        console.warn('[ChatInput OMEGA] ❌ Non monté, abandon');
-        return;
-      }
+      if (!mountedRef.current) return;
 
       try {
         const sanitized = sanitizeInput(value);
         const validation = validateMessage(sanitized);
 
-        console.warn('[ChatInput OMEGA] 🔍 Validation:', validation);
-
         if (!validation.valid) {
-          console.warn('[ChatInput OMEGA] ❌ Validation échouée:', validation.reason);
           if (validation.reason) {
             handleInputError(new Error(validation.reason), 'send-validation', sanitized);
           }
           return;
         }
 
-        if (disabled || messageSent.current) {
-          console.warn('[ChatInput OMEGA] ❌ Disabled ou déjà envoyé');
-          return;
-        }
-
-        console.warn(
-          '[ChatInput OMEGA] ✅ Envoi du message:',
-          sanitized.substring(0, 50)
-        );
+        if (disabled || messageSent.current) return;
 
         // Marquer comme envoyé pour éviter les doubles
         messageSent.current = true;
@@ -740,18 +712,10 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
               Entrée pour envoyer • Maj+Entrée pour nouvelle ligne
               {enableFileUpload && ' • 📎 Fichiers'}
               {enableDictation && ' • 🎤 Vocal'}
-              {(() => {
-                const maxUserMessageChars = 12000;
-                if (maxUserMessageChars > 10000) {
-                  return (
-                    <span className="chat-hint-unlimited">
-                      {' '}
-                      • <span>illimité</span>
-                    </span>
-                  );
-                }
-                return null;
-              })()}
+              <span className="chat-hint-unlimited">
+                {' '}
+                • <span>illimité</span>
+              </span>
               {inputState.spamCount > 0 && (
                 <span className="chat-hint-spam">
                   {' '}
