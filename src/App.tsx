@@ -116,6 +116,8 @@ const DocCenterPage = lazy(() =>
 import './components/psyche/DeepPsychePanel.css';
 // ✨ P0.Ω∞ - Splash Watchdog (Anti-freeze diagnostic)
 import { SplashWatchdog } from './components/diagnostics/SplashWatchdog';
+import { isRemoteContext } from './lib/transport';
+import { RemoteGatewayLayout } from './pages/RemoteGatewayLayout';
 
 type LazyModule<T> = { default: T };
 
@@ -762,10 +764,31 @@ const App: React.FC = () => {
 
   return (
     <ToastProvider>
-      {/* ✨ P0.Ω∞ - Splash Watchdog: Diagnostic si boot timeout (10s) */}
-      <SplashWatchdog />
+      {/* ✨ Remote browser mode — wrap entire app in auth guard */}
+      {isRemoteContext() ? (
+        <RemoteGatewayLayout>
+          <ThemeProvider>
+            <UIThemeProvider>
+              <LoggingProvider>
+                <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+                  <TitanStateProvider>
+                    <BrowserRouter>
+                      <AutoHealErrorBoundary>
+                        <AppRouter />
+                      </AutoHealErrorBoundary>
+                    </BrowserRouter>
+                  </TitanStateProvider>
+                </AnimationProvider>
+              </LoggingProvider>
+            </UIThemeProvider>
+          </ThemeProvider>
+        </RemoteGatewayLayout>
+      ) : (
+        <>
+          {/* ✨ P0.Ω∞ - Splash Watchdog: Diagnostic si boot timeout (10s) — Tauri only */}
+          <SplashWatchdog />
 
-      <ThemeProvider>
+          <ThemeProvider>
         <UIThemeProvider>
           <LoggingProvider>
             <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
@@ -797,6 +820,8 @@ const App: React.FC = () => {
           </LoggingProvider>
         </UIThemeProvider>
       </ThemeProvider>
+        </>
+      )}
     </ToastProvider>
   );
 };

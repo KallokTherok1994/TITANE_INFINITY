@@ -130,8 +130,10 @@ export function getRemoteStreamClient(baseUrl?: string): RemoteStreamClient {
   if (!_client) {
     const base =
       baseUrl ??
-      (typeof window !== 'undefined' && (window as Window & { __TITANE_REMOTE_BASE__?: string }).__TITANE_REMOTE_BASE__) ||
-      window.location.origin;
+      (typeof window !== 'undefined'
+        ? ((window as Window & { __TITANE_REMOTE_BASE__?: string }).__TITANE_REMOTE_BASE__ ||
+           window.location.origin)
+        : 'http://localhost:7420');
     _client = new RemoteStreamClient(base as string);
   }
   return _client;

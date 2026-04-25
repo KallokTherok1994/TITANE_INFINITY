@@ -1580,13 +1580,16 @@ fn main() {
                     log_dir_for_gw,
                 );
 
+                let gw_engine = app.state::<Arc<titane_infinity::conversation_engine::ConversationEngineState>>().inner().clone();
+                let gw_orchestrator = app.state::<titane_infinity::overdrive::chat_orchestrator::ChatOrchestratorState>().inner().clone();
+
                 log::info!(
                     "🌐 [RemoteGateway] Enabled on port {} (TITANE_REMOTE_ENABLED=1)",
                     gw_config.port
                 );
 
                 tauri::async_runtime::spawn(
-                    titane_infinity::remote_gateway::server::start(gw_config),
+                    titane_infinity::remote_gateway::server::start(gw_config, gw_engine, gw_orchestrator),
                 );
             } else {
                 log::info!("🔒 [RemoteGateway] Disabled (set TITANE_REMOTE_ENABLED=1 to activate)");

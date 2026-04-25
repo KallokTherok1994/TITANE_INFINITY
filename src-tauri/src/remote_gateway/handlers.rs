@@ -13,6 +13,11 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::sync::Arc;
 
+use crate::conversation_engine::{
+    commands::{conversation_generate_inner, ConversationGenerateArgs},
+    ConversationEngineState,
+};
+use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 use crate::remote_gateway::auth::{
     generate_access_token, generate_refresh_token, validate_token, verify_shared_secret,
     RemoteAuthState,
@@ -42,6 +47,8 @@ impl IpcResponse {
 #[derive(Clone)]
 pub struct GatewayState {
     pub auth: Arc<RemoteAuthState>,
+    pub engine: Arc<ConversationEngineState>,
+    pub orchestrator: ChatOrchestratorState,
 }
 
 // ── GET /api/health ─────────────────────────────────────────
@@ -149,7 +156,7 @@ pub struct InvokeRequest {
 /// Dispatch a named IPC-like command to the corresponding Ring 2 function.
 /// This is the primary endpoint for the frontend RemoteTransport.
 pub async fn invoke_handler(
-    State(_state): State<GatewayState>,
+    State(state): State<GatewayState>,
     Json(payload): Json<InvokeRequest>,
 ) -> impl IntoResponse {
     // Allowlist of commands reachable via remote gateway
@@ -196,11 +203,27 @@ pub async fn invoke_handler(
                     .unwrap_or_else(|_| "gemma2:2b".into()),
             })))
         }
+        "conversation_generate" => {
+            // Deserialize into ConversationGenerateArgs from the optional payload field
+            let args: ConversationGenerateArgs = match payload.payload {
+                Some(v) => match serde_json::from_value(v) {
+                    Ok(a) => a,
+                    Err(e) => {
+                        return Json(IpcResponse::err(format!("invalid args: {e}")));
+                    }
+                },
+                None => {
+                    return Json(IpcResponse::err("conversation_generate requires a payload"));
+                }
+            };
+            match conversation_generate_inner(&state.engine, &state.orchestrator, args).await {
+                Ok(value) => Json(IpcResponse::ok(value)),
+                Err(e) => Json(IpcResponse::err(e)),
+            }
+        }
         _ => {
-            // For commands that need the full Tauri backend, return a clear partial status.
-            // Phase 1: inline basic commands above. Phase 2 will wire Tauri AppHandle.
             Json(IpcResponse::err(format!(
-                "command '{}' requires Tauri AppHandle wiring (Phase 2)",
+                "command '{}' not yet wired in remote gateway",
                 payload.command
             )))
         }
@@ -250,11 +273,32 @@ mod tests {
     use crate::remote_gateway::auth::{derive_jwt_secret, hash_shared_secret};
 
     fn make_gateway_state() -> GatewayState {
+        use std::sync::Arc;
+        use tokio::sync::RwLock;
+        let dir = tempfile::tempdir().unwrap();
+        let ai_router = Arc::new(RwLock::new(
+            crate::ai::router::AIRouter::new(None, Some("gemma2:2b".into())),
+        ));
+        let singularity = Arc::new(RwLock::new(
+            crate::singularity::singularity_state::SingularityState::default(),
+        ));
+        let engine = Arc::new(
+            crate::conversation_engine::ConversationEngineState::new(
+                dir.into_path(),
+                "test-password".into(),
+                ai_router,
+                singularity,
+            )
+            .expect("engine init in test"),
+        );
+        let orchestrator = crate::overdrive::chat_orchestrator::init();
         GatewayState {
             auth: Arc::new(RemoteAuthState::new(
                 derive_jwt_secret("test-pass"),
                 hash_shared_secret("test-secret"),
             )),
+            engine,
+            orchestrator,
         }
     }
 

@@ -15,16 +15,20 @@ use axum::{
 use std::{net::SocketAddr, sync::Arc, path::PathBuf};
 use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer};
 
-use crate::remote_gateway::{
-    audit::RemoteAuditLogger,
-    auth::{derive_jwt_secret, hash_shared_secret, validate_token, RemoteAuthState},
-    handlers::{
-        agents_status_handler, auth_refresh_handler, auth_token_handler, config_runtime_handler,
-        health_handler, invoke_handler, system_health_handler, GatewayState,
+use crate::{
+    conversation_engine::ConversationEngineState,
+    overdrive::chat_orchestrator::ChatOrchestratorState,
+    remote_gateway::{
+        audit::RemoteAuditLogger,
+        auth::{derive_jwt_secret, hash_shared_secret, validate_token, RemoteAuthState},
+        handlers::{
+            agents_status_handler, auth_refresh_handler, auth_token_handler, config_runtime_handler,
+            health_handler, invoke_handler, system_health_handler, GatewayState,
+        },
+        rate_limit::RemoteRateLimiter,
+        static_serve::static_router,
+        ws_stream::{ws_stream_handler, WsState},
     },
-    rate_limit::RemoteRateLimiter,
-    static_serve::static_router,
-    ws_stream::{ws_stream_handler, WsState},
 };
 
 // ── Config ────────────────────────────────────────────────────
@@ -98,7 +102,7 @@ fn extract_bearer<'a>(headers: &'a HeaderMap) -> Option<&'a str> {
 
 // ── Build Router ──────────────────────────────────────────────
 
-fn build_router(config: &RemoteGatewayConfig) -> Router {
+fn build_router(config: &RemoteGatewayConfig, engine: Arc<ConversationEngineState>, orchestrator: ChatOrchestratorState) -> Router {
     let auth_state = Arc::new(RemoteAuthState::new(
         derive_jwt_secret(&config.jwt_passphrase),
         hash_shared_secret(&config.shared_secret),
@@ -109,6 +113,8 @@ fn build_router(config: &RemoteGatewayConfig) -> Router {
 
     let gateway_state = GatewayState {
         auth: auth_state.clone(),
+        engine,
+        orchestrator,
     };
 
     let ws_state = WsState {
@@ -170,10 +176,10 @@ fn build_cors(origin: &str) -> CorsLayer {
 // ── Start Server ──────────────────────────────────────────────
 
 /// Start the remote gateway axum server.
-/// Call via: `tauri::async_runtime::spawn(start(config))` from main.rs setup hook.
-pub async fn start(config: RemoteGatewayConfig) {
+/// Call via: `tauri::async_runtime::spawn(start(config, engine, orchestrator))` from main.rs setup hook.
+pub async fn start(config: RemoteGatewayConfig, engine: Arc<ConversationEngineState>, orchestrator: ChatOrchestratorState) {
     let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
-    let router = build_router(&config);
+    let router = build_router(&config, engine, orchestrator);
 
     log::info!(
         "🌐 [RemoteGateway] Starting on http://0.0.0.0:{} (CORS: {})",
@@ -211,7 +217,24 @@ mod tests {
     fn test_build_router_no_panic() {
         let dir = tempdir().unwrap();
         let cfg = RemoteGatewayConfig::from_env("pass", "secret", dir.path().to_path_buf());
-        let _router = build_router(&cfg);
+        let engine_dir = tempdir().unwrap();
+        let ai_router = std::sync::Arc::new(tokio::sync::RwLock::new(
+            crate::ai::router::AIRouter::new(None, Some("gemma2:2b".into())),
+        ));
+        let singularity = std::sync::Arc::new(tokio::sync::RwLock::new(
+            crate::singularity::singularity_state::SingularityState::default(),
+        ));
+        let engine = std::sync::Arc::new(
+            crate::conversation_engine::ConversationEngineState::new(
+                engine_dir.into_path(),
+                "test-password".into(),
+                ai_router,
+                singularity,
+            )
+            .expect("engine init in test"),
+        );
+        let orchestrator = crate::overdrive::chat_orchestrator::init();
+        let _router = build_router(&cfg, engine, orchestrator);
         // Verifies router construction succeeds
     }
 

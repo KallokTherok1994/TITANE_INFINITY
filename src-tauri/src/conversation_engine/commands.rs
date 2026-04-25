@@ -260,13 +260,12 @@ pub async fn create_new_conversation(
     Ok(conversation_id)
 }
 
-/// Générer une réponse via le pipeline OMEGA complet
-#[tauri::command]
-pub async fn conversation_generate(
-    engine: State<'_, Arc<ConversationEngineState>>,
-    orchestrator: State<'_, ChatOrchestratorState>,
+/// Inner implementation callable without Tauri State extractors (used by axum remote gateway).
+pub async fn conversation_generate_inner(
+    engine: &Arc<ConversationEngineState>,
+    orchestrator: &ChatOrchestratorState,
     args: ConversationGenerateArgs,
-) -> CommandResult<serde_json::Value> {
+) -> Result<serde_json::Value, String> {
     let ConversationGenerateArgs {
         message,
         conversation_id,
@@ -951,6 +950,16 @@ pub async fn conversation_generate(
             "citations": citations_for_frontend,
         }
     }))
+}
+
+/// Générer une réponse via le pipeline OMEGA complet (Tauri IPC command)
+#[tauri::command]
+pub async fn conversation_generate(
+    engine: State<'_, Arc<ConversationEngineState>>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+    args: ConversationGenerateArgs,
+) -> CommandResult<serde_json::Value> {
+    conversation_generate_inner(&*engine, &*orchestrator, args).await
 }
 
 fn ensure_provider_meta(
