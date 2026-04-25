@@ -13,7 +13,7 @@ pub const AI_RESPONSE_MAX_SIZE: usize = 1024 * 1024; // 1 MB
 
 /// Sanitize error messages to prevent API key leakage.
 /// Strips any key/token query parameters from error strings that may include
-/// full URLs (e.g., from reqwest error formatting).
+/// full URLs (e.g., from HTTP client error formatting).
 /// Uses case-insensitive matching on the lowercase form, then slices the
 /// original string at the matched position.
 pub fn sanitize_api_error(raw: &str) -> String {

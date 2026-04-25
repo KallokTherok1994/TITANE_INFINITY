@@ -5,6 +5,7 @@
 
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
+use crate::services::network_gateway::build_client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::time::Duration;
@@ -75,10 +76,8 @@ pub async fn http_request(params: HttpRequestParams) -> Result<HttpResponse, Str
     let timeout_ms = params.timeout.unwrap_or(30000);
     let timeout = Duration::from_millis(timeout_ms);
 
-    // Build request
-    let client = reqwest::Client::builder()
-        .timeout(timeout)
-        .build()
+    // Build request via Network Gateway (One Door Rule 5)
+    let client = build_client(timeout)
         .map_err(|e| format!("Client build error: {}", e))?;
 
     let mut req_builder = match method.to_uppercase().as_str() {
