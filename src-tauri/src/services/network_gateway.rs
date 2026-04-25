@@ -19,7 +19,7 @@ use tokio::sync::Mutex;
 // reqwest::Client without the full NetworkGatewayService overhead.
 // ─────────────────────────────────────────────────────────────────
 
-const DEFAULT_USER_AGENT: &str = "TITANE-infinity/31";
+const DEFAULT_USER_AGENT: &str = concat!("TITANE-infinity/", env!("CARGO_PKG_VERSION"));
 
 /// Build a governed HTTP client with the given timeout.
 ///
