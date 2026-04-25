@@ -40,6 +40,7 @@ import {
   downloadConversation,
   downloadMarkdown,
   copyToClipboard,
+  generateAndSaveFile,
 } from '@/features/chat/exportImport';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
@@ -62,7 +63,12 @@ import {
   buildProfessionalDocumentManifest,
   resolveArtifactRoute,
   validateNoFakeArtifactResponse,
+  buildFileGenerationPrompt,
+  extractFileContent,
+  inferFileExtension,
+  buildSafeFilename,
   type ProfessionalDocumentManifest,
+  type ArtifactActionContract,
 } from '@/features/chat/artifactIntent';
 import {
   messageSpeechController,
@@ -2092,6 +2098,28 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       updateInputValue('');
 
       const artifactContract = buildArtifactActionContract(messageText);
+      let messageToSend = messageText;
+      let pendingFileSave: { manifest: ProfessionalDocumentManifest; contract: ArtifactActionContract; ext: string } | null = null;
+
+      // Export de la conversation existante (sans appel IA)
+      if (artifactContract.intent === 'EXPORT_EXISTING_ARTIFACT') {
+        const exportFormat = messageText.toLowerCase().includes('json') ? 'json' : 'markdown';
+        const exportResult = exportFormat === 'json'
+          ? await downloadConversation('current', 'Conversation TITANE', messages)
+          : await downloadMarkdown('Conversation TITANE', messages);
+        if (exportResult.ok) {
+          toastSuccess(
+            exportResult.status === 'SAVED_TAURI'
+              ? `Conversation exportée : ${exportResult.path ?? `conversation.${exportFormat}`}`
+              : `Conversation téléchargée (${exportFormat}).`
+          );
+        } else if (exportResult.status !== 'SAVE_CANCELLED_HONEST') {
+          errorToast(`Échec export conversation : ${exportResult.error ?? exportResult.status}`);
+        }
+        sendingRef.current = false;
+        return;
+      }
+
       if (artifactContract.intent !== 'ANSWER_ONLY') {
         const route = resolveArtifactRoute(artifactContract, {
           documentEditorAvailable: true,
@@ -2100,19 +2128,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         const manifest = buildProfessionalDocumentManifest(messageText, route.contract);
         setActiveArtifactManifest(manifest);
 
-        const antiLie = validateNoFakeArtifactResponse(
-          messageText,
-          route.contract,
-          manifest
-        );
+        const antiLie = validateNoFakeArtifactResponse(messageText, route.contract, manifest);
         if (!antiLie.ok) {
           await appendLocalExchange(
             messageText,
-            `⛔ Requête fichier détectée, mais contrat artefact invalide: ${antiLie.violations.join(' | ')}`,
-            {
-              intention: 'artifact_intent_validation',
-              tags: ['artifact', 'anti-lie', 'blocked'],
-            }
+            `⛔ Requête fichier invalide: ${antiLie.violations.join(' | ')}`,
+            { intention: 'artifact_intent_validation', tags: ['artifact', 'anti-lie', 'blocked'] }
           );
           sendingRef.current = false;
           return;
@@ -2121,68 +2142,32 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         if (route.status === 'BLOCKED') {
           await appendLocalExchange(
             messageText,
-            [
-              '⛔ Requête fichier comprise, mais ouverture éditeur non disponible depuis ce flux chat.',
-              `Intent: ${route.contract.intent}`,
-              `Motif: ${route.contract.blocked_reason ?? 'UNSPECIFIED_BLOCK'}`,
-              `Manifest: ${manifest.id}`,
-            ].join('\n'),
-            {
-              intention: 'artifact_route_blocked',
-              tags: ['artifact', 'OPEN_FROM_CHAT_UNPROVEN', 'blocked'],
-            }
+            `⛔ Route artefact bloquée — intent: ${route.contract.intent}, motif: ${route.contract.blocked_reason ?? 'UNSPECIFIED'}`,
+            { intention: 'artifact_route_blocked', tags: ['artifact', 'blocked'] }
           );
-          errorToast(
-            'Demande fichier détectée, mais éditeur non ouvrable depuis le chat.'
-          );
+          errorToast('Route artefact bloquée.');
           sendingRef.current = false;
           return;
         }
 
-        const openedEditor = route.contract.open_editor;
-        if (openedEditor) {
+        if (route.contract.open_editor) {
           setShowModeBuilder(true);
         }
 
-        const draft = [
-          `# ${manifest.title}`,
-          '',
-          `- Manifest: ${manifest.id}`,
-          `- Kind: ${manifest.artifact_kind}`,
-          `- Grade: ${manifest.professional_grade}`,
-          `- Format: ${manifest.target_formats.join(', ')}`,
-          '',
-          '## Context',
-          manifest.sections[0]?.content ?? '',
-        ].join('\n');
+        // Inférer l'extension une seule fois pour prompt ET sauvegarde
+        const resolvedExt = inferFileExtension(route.contract, messageText);
 
-        await appendLocalExchange(
-          messageText,
-          [
-            '✅ Requête fichier comprise et routée vers la voie artefact.',
-            openedEditor
-              ? 'Éditeur ouvert: ModeBuilder affiché pour édition guidée.'
-              : 'Éditeur non requis pour cette requête, génération préparée côté chat.',
-            `Manifest: ${manifest.id}`,
-            '',
-            draft,
-          ].join('\n'),
-          {
-            intention: 'artifact_route_ready',
-            tags: [
-              'artifact',
-              'manifest',
-              openedEditor ? 'editor_opened_modebuilder' : 'no_editor_needed',
-            ],
-          }
-        );
-        toastSuccess(
-          openedEditor
-            ? 'Route artefact activée, éditeur ouvert avec manifeste canonique.'
-            : 'Route artefact activée avec manifeste canonique.'
-        );
-        sendingRef.current = false;
-        return;
+        // Enrichir le message pour que l'IA génère un fichier de qualité professionnelle
+        messageToSend = buildFileGenerationPrompt(messageText, route.contract, resolvedExt);
+
+        // Marquer pour sauvegarde automatique après réponse IA
+        if (
+          route.contract.intent === 'CREATE_FILE' ||
+          route.contract.intent === 'GENERATE_AND_SAVE' ||
+          route.contract.intent === 'GENERATE_AND_OPEN'
+        ) {
+          pendingFileSave = { manifest, contract: route.contract, ext: resolvedExt };
+        }
       }
 
       if (isConversationTransparencyPrompt(messageText)) {
@@ -2279,7 +2264,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
       try {
         thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
-        const response = await sendMessage(messageText);
+        const response = await sendMessage(messageToSend);
         setSendTraceState('responded');
         setSendTraceMeta(
           `provider=${response?.meta?.provider_used ?? 'unknown'};reason=${response?.meta?.reason_code ?? 'UNKNOWN'}`
@@ -2292,6 +2277,27 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         }
 
         thinking.stopThinking();
+
+        // Sauvegarde automatique du fichier généré
+        if (pendingFileSave && response?.assistant_message) {
+          try {
+            const { manifest, contract, ext } = pendingFileSave;
+            const content = extractFileContent(response.assistant_message, contract.target_format);
+            const safeName = buildSafeFilename(manifest.title);
+            const result = await generateAndSaveFile(content, ext, safeName);
+            if (result.ok) {
+              toastSuccess(
+                result.status === 'SAVED_TAURI'
+                  ? `Fichier sauvegardé : ${result.path ?? `${safeName}.${ext}`}`
+                  : `Fichier téléchargé : ${safeName}.${ext}`
+              );
+            } else if (result.status !== 'SAVE_CANCELLED_HONEST') {
+              pageLogger.warn('Auto-save fichier généré échoué', result.error);
+            }
+          } catch (saveErr) {
+            pageLogger.warn('Erreur non bloquante sauvegarde fichier généré', saveErr);
+          }
+        }
 
         if (audioEnabled && response?.assistant_message) {
           try {

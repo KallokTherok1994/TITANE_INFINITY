@@ -58,10 +58,9 @@ impl MemoryBuilder {
             .map(|s| s.to_lowercase())
             .collect();
 
-        let summary = if message.len() > 100 {
-            format!("{}...", &message[..100])
-        } else {
-            message.clone()
+        let summary = match message.char_indices().nth(100) {
+            Some((idx, _)) => format!("{}...", &message[..idx]),
+            None => message.clone(),
         };
 
         let importance = (concepts.len() as f32 / 10.0).min(1.0);

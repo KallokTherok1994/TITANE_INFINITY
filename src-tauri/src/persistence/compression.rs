@@ -394,10 +394,9 @@ impl CognitiveCompressionEngine {
             .take(3)
             .chain(messages.iter().rev().take(2))
             .map(|m| KeyPoint {
-                content: if m.content.len() > 100 {
-                    format!("{}...", &m.content[..100])
-                } else {
-                    m.content.clone()
+                content: match m.content.char_indices().nth(100) {
+                    Some((idx, _)) => format!("{}...", &m.content[..idx]),
+                    None => m.content.clone(),
                 },
                 importance: 0.7,
                 timestamp: m.timestamp,

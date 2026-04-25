@@ -75,16 +75,28 @@ export function isTauriContext(): boolean {
 /**
  * Returns true when the page is served by the TITANE remote gateway
  * (i.e. a browser accessing the axum server, not the Tauri WebView).
+ *
+ * Detection rules (all must be non-Tauri):
+ *  1. `window.__TITANE_REMOTE__ === true` is injected by the axum static server, OR
+ *  2. The URL search param `?titane_remote=1` is present (useful for manual testing).
+ *
+ * A plain Vite dev server or normal browser open is NOT a remote context.
  */
 export function isRemoteContext(): boolean {
-  return (
-    typeof window !== 'undefined' &&
-    !isTauriContext() &&
-    (
-      !!(window as Window & { __TITANE_REMOTE__?: boolean }).__TITANE_REMOTE__ ||
-      window.location.pathname.startsWith('/') // any non-Tauri context is remote
-    )
-  );
+  if (typeof window === 'undefined') return false;
+  if (isTauriContext()) return false;
+
+  const w = window as Window & { __TITANE_REMOTE__?: boolean };
+  if (w.__TITANE_REMOTE__ === true) return true;
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('titane_remote') === '1') return true;
+  } catch {
+    // ignore
+  }
+
+  return false;
 }
 
 // ── Factory ───────────────────────────────────────────────────

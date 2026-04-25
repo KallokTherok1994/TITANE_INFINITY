@@ -69,6 +69,7 @@ async function saveTextExport(
         defaultPath: options.defaultName,
         filters: [
           { name: options.extension.toUpperCase(), extensions: [options.extension] },
+          { name: 'Tous les fichiers', extensions: ['*'] },
         ],
       });
 
@@ -119,6 +120,62 @@ async function saveTextExport(
       error: message,
     };
   }
+}
+
+const FILE_MIME_MAP: Record<string, string> = {
+  md: 'text/markdown',
+  markdown: 'text/markdown',
+  txt: 'text/plain',
+  log: 'text/plain',
+  json: 'application/json',
+  csv: 'text/csv',
+  html: 'text/html',
+  htm: 'text/html',
+  yaml: 'text/yaml',
+  yml: 'text/yaml',
+  xml: 'application/xml',
+  ts: 'text/plain',
+  tsx: 'text/plain',
+  js: 'text/javascript',
+  jsx: 'text/javascript',
+  py: 'text/x-python',
+  rs: 'text/plain',
+  go: 'text/plain',
+  java: 'text/plain',
+  cpp: 'text/plain',
+  c: 'text/plain',
+  rb: 'text/plain',
+  toml: 'text/plain',
+  ini: 'text/plain',
+  env: 'text/plain',
+  sh: 'text/x-sh',
+  sql: 'application/sql',
+  css: 'text/css',
+  scss: 'text/plain',
+  graphql: 'text/plain',
+  proto: 'text/plain',
+};
+
+/**
+ * Sauvegarde n'importe quel contenu texte sous n'importe quelle extension.
+ * Utilise Tauri save-dialog si disponible, sinon téléchargement navigateur.
+ */
+export async function generateAndSaveFile(
+  content: string,
+  ext: string,
+  defaultName: string
+): Promise<ExportSaveResult> {
+  const cleanExt = ext.replace(/^\./, '').toLowerCase();
+  const mime = FILE_MIME_MAP[cleanExt] ?? 'text/plain';
+  const filename = defaultName.endsWith(`.${cleanExt}`)
+    ? defaultName
+    : `${defaultName}.${cleanExt}`;
+
+  return saveTextExport(content, {
+    defaultName: filename,
+    extension: cleanExt,
+    mime,
+  });
 }
 
 /**

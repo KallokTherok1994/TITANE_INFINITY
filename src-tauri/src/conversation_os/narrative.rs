@@ -173,10 +173,9 @@ impl NarrativeEngine {
 
     /// Crée un élément narratif à partir de l'entrée
     fn create_element(&self, input: &str, intent: &UserIntent) -> NarrativeElement {
-        let summary = if input.len() > 100 {
-            format!("{}...", &input[..100])
-        } else {
-            input.to_string()
+        let summary = match input.char_indices().nth(100) {
+            Some((idx, _)) => format!("{}...", &input[..idx]),
+            None => input.to_string(),
         };
 
         let importance = self.calculate_importance(input, intent);

@@ -2,6 +2,13 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1777112204975-z04rbffh",
+      "timestamp": 1777112204975,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1777069022900-4bc1cbmk",
       "timestamp": 1777069022900,
       "level": "Info",
@@ -290,7 +297,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1777069022901,
+    "last_validation_ts": 1777112204976,
     "last_compaction_ts": null
   }
 }

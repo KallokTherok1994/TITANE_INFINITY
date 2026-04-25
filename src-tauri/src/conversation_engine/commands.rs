@@ -759,15 +759,13 @@ pub async fn conversation_generate_inner(
                 .iter()
                 .rev()
                 .map(|(u, a)| {
-                    let u_trunc = if u.len() > 120 {
-                        format!("{}…", &u[..120])
-                    } else {
-                        u.clone()
+                    let u_trunc = match u.char_indices().nth(120) {
+                        Some((idx, _)) => format!("{}…", &u[..idx]),
+                        None => u.clone(),
                     };
-                    let a_trunc = if a.len() > 120 {
-                        format!("{}…", &a[..120])
-                    } else {
-                        a.clone()
+                    let a_trunc = match a.char_indices().nth(120) {
+                        Some((idx, _)) => format!("{}…", &a[..idx]),
+                        None => a.clone(),
                     };
                     format!("[User]: {u_trunc}\n[TITANE]: {a_trunc}")
                 })

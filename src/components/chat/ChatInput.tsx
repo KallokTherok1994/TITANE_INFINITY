@@ -16,8 +16,9 @@ import { ErrorBoundary } from '../ErrorBoundary';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '@/lib/logger';
 import { autoHealEngine } from '../../services/ai/system';
-import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
+import { FileUploadButton, type AnalyzedFile, type FileCategory } from './FileUploadButton';
 import { DictationButton } from './DictationButton';
+import { resolveImportedFileContent } from './fileImportSupport';
 import { UI_DELAYS } from '@/constants/timeouts';
 import './ChatInput.css';
 
@@ -199,6 +200,21 @@ function useOmegaInputProtection() {
   };
 }
 
+function extCategory(filename: string): FileCategory {
+  const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+  if (['.ts', '.tsx', '.js', '.jsx', '.rs', '.py', '.java', '.cpp', '.c', '.go', '.rb'].includes(ext)) return 'code';
+  if (['.md', '.txt', '.doc', '.docx', '.pdf', '.log'].includes(ext)) return 'document';
+  if (['.json', '.xml', '.yaml', '.yml', '.csv', '.sql'].includes(ext)) return 'data';
+  if (['.toml', '.ini', '.env', '.config'].includes(ext)) return 'config';
+  if (['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'].includes(ext)) return 'image';
+  return 'unknown';
+}
+
+function extIcon(category: FileCategory): string {
+  const map: Record<FileCategory, string> = { code: '📄', document: '📝', data: '📊', config: '⚙️', image: '🖼️', unknown: '📁' };
+  return map[category];
+}
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  * CHAT INPUT OMEGA COMPONENT
@@ -235,6 +251,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     const [value, setValue] = useState('');
     const [showFileUpload, setShowFileUpload] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState<AnalyzedFile[]>([]);
+    const [isDragOver, setIsDragOver] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const mountedRef = useRef(false);
 
@@ -502,6 +519,86 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
       textareaRef.current?.focus();
     }, []);
 
+    // ═══ PHASE 5.7.3: DRAG & DROP SUR LE CONTAINER DU CHAT ═══
+    const processDroppedFiles = useCallback(
+      async (fileList: FileList | File[]) => {
+        const files = Array.from(fileList);
+        if (files.length === 0) return;
+        const results: AnalyzedFile[] = [];
+        for (const file of files) {
+          const category = extCategory(file.name);
+          const id = `file-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+          try {
+            const content = await resolveImportedFileContent(file);
+            const lines = content.split('\n').length;
+            const words = content.split(/\s+/).filter(w => w.length > 0).length;
+            results.push({
+              id,
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              category,
+              sourcePath: (file as File & { path?: string }).path ?? null,
+              content,
+              preview: content.substring(0, 200),
+              status: 'done',
+              analysis: {
+                summary: `${file.name} • ${lines} lignes • ${words} mots`,
+                lineCount: lines,
+                wordCount: words,
+                charCount: content.length,
+                contentType: file.name.slice(file.name.lastIndexOf('.')).slice(1).toUpperCase(),
+                metadata: {},
+              },
+            });
+          } catch (err) {
+            results.push({
+              id,
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              category: 'unknown',
+              sourcePath: null,
+              content: null,
+              preview: '',
+              status: 'error',
+              error: err instanceof Error ? err.message : 'Erreur de lecture',
+            });
+          }
+        }
+        handleFilesSelected(results);
+      },
+      [handleFilesSelected]
+    );
+
+    const handleContainerDragOver = useCallback((e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!disabled && e.dataTransfer.types.includes('Files')) {
+        setIsDragOver(true);
+      }
+    }, [disabled]);
+
+    const handleContainerDragLeave = useCallback((e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+        setIsDragOver(false);
+      }
+    }, []);
+
+    const handleContainerDrop = useCallback(
+      async (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(false);
+        if (disabled || !e.dataTransfer.files.length) return;
+        setShowFileUpload(true);
+        await processDroppedFiles(e.dataTransfer.files);
+      },
+      [disabled, processDroppedFiles]
+    );
+
     // ═══ PHASE 5.8: MEMOIZED COMPUTATIONS ═══
     const isInputDisabled = useMemo(() => {
       return disabled || inputState.isBlocked || !!inputState.inputError;
@@ -510,10 +607,6 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     const trimmedValue = useMemo(() => {
       return value.trim();
     }, [value]);
-
-    const characterCount = useMemo(() => {
-      return value.length;
-    }, [value.length]);
 
     const placeholderSafe = useMemo(() => {
       if (inputState.inputError) return "⚠️ Erreur d'input - Réessayez...";
@@ -545,25 +638,98 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
     }
 
     // ═══ PHASE 5.10: MAIN RENDER WITH PROTECTION ═══
-    // Utilisation d'un ErrorBoundary pour le rendu principal (plus de try/catch)
     return (
       <ErrorBoundary>
         <div
-          className="chat-input-container chat-input-omega"
+          className={`chat-input-container chat-input-omega${isDragOver ? ' drag-over' : ''}`}
           data-omega-version="v19.2Ω"
+          onDragOver={handleContainerDragOver}
+          onDragLeave={handleContainerDragLeave}
+          onDrop={handleContainerDrop}
         >
-          <textarea
-            ref={textareaRef}
-            className="chat-input"
-            data-testid="chat-input-textarea"
-            placeholder={placeholderSafe}
-            value={value}
-            onChange={handleValueChange}
-            onKeyDown={handleKeyDown}
-            disabled={isInputDisabled}
-            rows={3}
-            aria-label="Zone de saisie du message"
-          />
+          {/* Zone d'import fichiers (expandable) */}
+          {enableFileUpload && showFileUpload && (
+            <div className="chat-file-upload-zone">
+              <FileUploadButton
+                className="chat-file-upload-expanded"
+                onFilesSelected={handleFilesSelected}
+                disabled={isInputDisabled}
+              />
+            </div>
+          )}
+
+          {/* Chips fichiers uploadés */}
+          {uploadedFiles.length > 0 && (
+            <div className="chat-uploaded-files">
+              {uploadedFiles.map(file => (
+                <div key={file.id} className={`chat-file-chip ${file.status}`}>
+                  <span className="chat-file-chip-icon">
+                    {extIcon(file.category)}
+                  </span>
+                  <span className="chat-file-chip-name" title={file.name}>
+                    {file.name}
+                  </span>
+                  <button
+                    type="button"
+                    className="chat-file-chip-remove"
+                    onClick={() => setUploadedFiles(prev => prev.filter(f => f.id !== file.id))}
+                    title="Retirer ce fichier"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Wrapper principal : boutons + textarea */}
+          <div className="chat-input-wrapper">
+            {enableFileUpload && (
+              <button
+                type="button"
+                className={`chat-file-btn${showFileUpload ? ' active' : ''}`}
+                onClick={handleToggleFileUpload}
+                disabled={isInputDisabled}
+                title="Importer un fichier (ou glisser-déposer)"
+                aria-label="Importer un fichier"
+              >
+                <span className="chat-file-icon">📎</span>
+              </button>
+            )}
+
+            <textarea
+              ref={textareaRef}
+              className="chat-input"
+              data-testid="chat-input-textarea"
+              placeholder={isDragOver ? 'Déposez vos fichiers ici...' : placeholderSafe}
+              value={value}
+              onChange={handleValueChange}
+              onKeyDown={handleKeyDown}
+              disabled={isInputDisabled}
+              rows={3}
+              aria-label="Zone de saisie du message"
+            />
+
+            {enableDictation && (
+              <DictationButton
+                onDictationResult={handleDictationResult}
+                disabled={isInputDisabled}
+              />
+            )}
+
+            <button
+              type="button"
+              className="chat-send-btn"
+              onClick={handleSend}
+              disabled={isInputDisabled || !trimmedValue}
+              title="Envoyer (Entrée)"
+              aria-label="Envoyer le message"
+            >
+              <span className="chat-send-icon">➤</span>
+            </button>
+          </div>
+
+          {/* Hint bas de page */}
           <div
             id="chat-input-hint"
             className="chat-input-hint"
@@ -573,11 +739,9 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
             <span className="chat-hint-text">
               Entrée pour envoyer • Maj+Entrée pour nouvelle ligne
               {enableFileUpload && ' • 📎 Fichiers'}
-              {typeof onToggleVoiceMode === 'function' && ' • 🎤 Vocal'}
-              {/* Affiche 'illimité' si la limite utilisateur est supérieure à 10000 caractères */}
+              {enableDictation && ' • 🎤 Vocal'}
               {(() => {
-                // 12 000 = limite actuelle, 10000 = ancienne limite testée
-                const maxUserMessageChars = 12000; // Doit être synchronisé avec chatEngine.commands.ts
+                const maxUserMessageChars = 12000;
                 if (maxUserMessageChars > 10000) {
                   return (
                     <span className="chat-hint-unlimited">
