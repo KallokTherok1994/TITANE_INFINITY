@@ -31,8 +31,20 @@ export const displaySystemService = {
   async listMonitors(): Promise<DisplayMonitor[]> {
     // Placeholder: à remplacer par IPC
     return [
-      { id: 'HDMI-1', name: 'HDMI-1', modes: ['1920x1080@60', '1280x720@60'], current: '1920x1080@60', brightness: 0.8 },
-      { id: 'eDP-1', name: 'eDP-1', modes: ['1920x1080@60'], current: '1920x1080@60', brightness: 0.6 },
+      {
+        id: 'HDMI-1',
+        name: 'HDMI-1',
+        modes: ['1920x1080@60', '1280x720@60'],
+        current: '1920x1080@60',
+        brightness: 0.8,
+      },
+      {
+        id: 'eDP-1',
+        name: 'eDP-1',
+        modes: ['1920x1080@60'],
+        current: '1920x1080@60',
+        brightness: 0.6,
+      },
     ];
   },
   async setMonitorMode(monitorId: string, mode: string): Promise<boolean> {

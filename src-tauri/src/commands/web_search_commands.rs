@@ -7,6 +7,7 @@
 
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
+use titane_infinity::gateway::network;
 
 const SEARCH_TIMEOUT_SECS: u64 = 10;
 const DEFAULT_MAX_RESULTS: u32 = 10;
@@ -64,7 +65,7 @@ fn search_api_url() -> String {
 
 async fn perform_web_search(query: &str, max_results: u32) -> Result<Vec<WebSearchResult>, String> {
     let base_url = search_api_url();
-    let client = crate::gateway::network::build_http_client(Duration::from_secs(SEARCH_TIMEOUT_SECS))?;
+    let client = network::build_http_client(Duration::from_secs(SEARCH_TIMEOUT_SECS))?;
 
     let url = reqwest::Url::parse_with_params(&base_url, &[("q", query), ("format", "json")])
         .map_err(|e| format!("Failed to build search URL: {e}"))?;
@@ -173,7 +174,7 @@ async fn perform_ddg_lite_search(
     query: &str,
     max_results: u32,
 ) -> Result<Vec<WebSearchResult>, String> {
-    let client = crate::gateway::network::build_http_client_with_user_agent(
+    let client = network::build_http_client_with_user_agent(
         Duration::from_secs(SEARCH_TIMEOUT_SECS),
         "Mozilla/5.0 (compatible; TITANE-search/1.0)",
     )?;

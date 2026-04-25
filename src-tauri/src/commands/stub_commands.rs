@@ -199,7 +199,10 @@ mod tests {
     #[tokio::test]
     async fn test_fs_exists_accepts_workspace_path() {
         let result = fs_exists("package.json".to_string()).await;
-        assert_eq!(result.expect("workspace file existence should be readable"), true);
+        assert_eq!(
+            result.expect("workspace file existence should be readable"),
+            true
+        );
     }
 
     #[tokio::test]
@@ -217,7 +220,10 @@ mod tests {
         assert!(result.is_ok());
 
         let parsed = result.expect("package.json should parse as JSON");
-        assert_eq!(parsed.get("name"), Some(&Value::String("titane-infinity".to_string())));
+        assert_eq!(
+            parsed.get("name"),
+            Some(&Value::String("titane-infinity".to_string()))
+        );
     }
 
     #[tokio::test]

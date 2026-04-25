@@ -2,8 +2,8 @@
 // Commandes Tauri pour le contrôle des paramètres d'affichage (expérimental)
 // (c) TITANE_INFINITY 2026
 
+use serde::{Deserialize, Serialize};
 use tauri::command;
-use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DisplayEnvironment {
@@ -12,8 +12,8 @@ pub struct DisplayEnvironment {
     pub quality: Option<String>,    // e.g. "high", "medium", "low"
     pub monitor_count: Option<u8>,
     pub active_monitor: Option<u8>,
-    pub color_depth: Option<u8>,    // bits
-    pub refresh_rate: Option<u16>,  // Hz
+    pub color_depth: Option<u8>,   // bits
+    pub refresh_rate: Option<u16>, // Hz
 }
 
 #[command]
@@ -45,7 +45,7 @@ pub struct DisplaySettingsUpdate {
 }
 
 #[command]
-pub async fn display_set_environment(update: DisplaySettingsUpdate) -> Result<bool, String> {
+pub async fn display_set_environment(_update: DisplaySettingsUpdate) -> Result<bool, String> {
     // TODO: Appliquer les changements via API système (stub)
     // Pour l’instant, toujours succès
     Ok(true)

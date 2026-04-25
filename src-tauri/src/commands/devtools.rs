@@ -3,6 +3,9 @@
 //   Tauri commands for observability: logging, metrics, core discovery, cognitive state
 // ═══════════════════════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+use tauri::State;
 use titane_infinity::cognitive::engine::CognitiveEngine;
 use titane_infinity::cognitive::mental::{CognitiveMode, StructurePhase};
 use titane_infinity::cognitive::state::{CognitiveState, SystemRecommendation};
@@ -10,9 +13,6 @@ use titane_infinity::compat::plugin_system;
 use titane_infinity::compat::plugin_system::registry::CoreRegistry;
 use titane_infinity::devtools::logging::{LogCollector, LogEntry, LogFilters, LogLevel};
 use titane_infinity::devtools::metrics::{MetricPoint, MetricStats, MetricsCollector};
-use serde::{Deserialize, Serialize};
-use std::sync::Arc;
-use tauri::State;
 use tokio::sync::RwLock;
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -235,7 +235,8 @@ pub async fn get_metric(
     metrics_collector: State<'_, Arc<RwLock<MetricsCollector>>>,
     metric_name: String,
 ) -> Result<MetricResponse, String> {
-    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> = metrics_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> =
+        metrics_collector.read().await;
     let series = collector.get_metric_series(&metric_name).await;
     let (points, stats) = if let Some(series) = series {
         (
@@ -271,7 +272,8 @@ pub async fn get_metric(
 pub async fn list_all_metrics(
     metrics_collector: State<'_, Arc<RwLock<MetricsCollector>>>,
 ) -> Result<Vec<String>, String> {
-    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> = metrics_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> =
+        metrics_collector.read().await;
     Ok(collector.list_metrics().await)
 }
 
@@ -287,7 +289,8 @@ pub async fn get_core_metrics(
     metrics_collector: State<'_, Arc<RwLock<MetricsCollector>>>,
     core_name: String,
 ) -> Result<std::collections::HashMap<String, MetricResponse>, String> {
-    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> = metrics_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> =
+        metrics_collector.read().await;
     let series = collector.get_core_metrics(&core_name).await;
     let mut out = std::collections::HashMap::new();
     for metric in series {
@@ -376,7 +379,6 @@ pub async fn get_core_info(
 // ═══════════════════════════════════════════════════════════════════════════════
 // COGNITIVE STATE API COMMANDS
 // ═══════════════════════════════════════════════════════════════════════════════
-
 
 /// Update cognitive mode
 ///

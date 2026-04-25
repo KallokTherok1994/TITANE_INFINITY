@@ -193,10 +193,7 @@ pub struct SecurityManager {
 }
 
 impl SecurityManager {
-    pub fn new(
-        audit_log_path: std::path::PathBuf,
-        encryption_key: &[u8; 32],
-    ) -> Self {
+    pub fn new(audit_log_path: std::path::PathBuf, encryption_key: &[u8; 32]) -> Self {
         Self {
             validator: InputValidator::default(),
             rate_limiter: RateLimiter::new(100, 60),

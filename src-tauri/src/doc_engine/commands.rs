@@ -1,8 +1,8 @@
 // TITANE∞ — Doc Engine IPC Commands
 // Commandes Tauri pour l'export de documents (Phase 2)
 
-use super::{Document, ExportFormat};
 use super::export::ExportEngine;
+use super::{Document, ExportFormat};
 use serde::{Deserialize, Serialize};
 
 /// Payload d'entrée pour export_docx_file
@@ -52,8 +52,8 @@ pub async fn export_docx_file(req: ExportDocxRequest) -> ExportDocxResponse {
 mod tests {
     use super::*;
     use crate::doc_engine::{
-        DetailLevel, DocumentMetadata, DocumentStyle, DocumentType,
-        GenerationConfig, Section, ValidationStatus,
+        DetailLevel, DocumentMetadata, DocumentStyle, DocumentType, GenerationConfig, Section,
+        ValidationStatus,
     };
     use std::collections::HashMap;
     use tempfile::tempdir;

@@ -168,7 +168,7 @@ pub async fn cognitive_get_progression() -> CommandResult<ProgressionState> {
 pub async fn cognitive_add_xp(
     amount: u64,
     source: String,
-    description: String,
+    _description: String,
 ) -> CommandResult<ProgressionState> {
     log::info!("[Cognitive] add_xp: {} from {}", amount, source);
 

@@ -24,7 +24,9 @@ pub struct DashboardMetrics {
 
 /// Obtenir les métriques du dashboard pour les graphiques
 #[tauri::command]
-pub async fn dashboard_get_metrics(time_range: Option<String>) -> Result<DashboardMetrics, String> {
+pub async fn dashboard_get_metrics(
+    _time_range: Option<String>,
+) -> Result<DashboardMetrics, String> {
     PERMISSION_GUARD
         .require("system_read", Role::User, "dashboard_get_metrics")
         .await

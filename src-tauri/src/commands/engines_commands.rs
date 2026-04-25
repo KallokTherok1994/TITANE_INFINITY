@@ -10,14 +10,14 @@ use serde::{Deserialize, Serialize};
 use tauri::command;
 
 // Import engines
-use titane_infinity::engines::{
-    DetectedAnomaly, DeveloperModeState, DiffPreview, EngineHeartbeat, HealthStatus, MonitoringState,
-    PatchAction, PatchHistory, PatchResult, QAEngineState, QAReport, QATestSuite, SecurityValidation,
-    SystemInfo, SystemMetricsRealtime,
-};
-use titane_infinity::engines::monitoring_engine;
 use titane_infinity::engines::developer_mode;
+use titane_infinity::engines::monitoring_engine;
 use titane_infinity::engines::qa_engine;
+use titane_infinity::engines::{
+    DetectedAnomaly, DeveloperModeState, DiffPreview, EngineHeartbeat, HealthStatus,
+    MonitoringState, PatchAction, PatchHistory, PatchResult, QAEngineState, QAReport, QATestSuite,
+    SecurityValidation, SystemInfo, SystemMetricsRealtime,
+};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // QA ENGINE COMMANDS
@@ -133,11 +133,10 @@ pub async fn engines_monitoring_get_history(
     period: Option<String>,
 ) -> Result<serde_json::Value, String> {
     let history: serde_json::Value = serde_json::to_value(
-        monitoring_engine::monitoring_get_history(
-            period.unwrap_or_else(|| "24h".to_string()),
-        )
-        .await?
-    ).map_err(|e| e.to_string())?;
+        monitoring_engine::monitoring_get_history(period.unwrap_or_else(|| "24h".to_string()))
+            .await?,
+    )
+    .map_err(|e| e.to_string())?;
     Ok(history)
 }
 
@@ -147,7 +146,8 @@ pub async fn engines_monitoring_get_dashboard() -> Result<serde_json::Value, Str
     let state: MonitoringState = monitoring_engine::monitoring_get_state().await?;
     let metrics: SystemMetricsRealtime = monitoring_engine::monitoring_get_metrics().await?;
     let heartbeats: Vec<EngineHeartbeat> = monitoring_engine::monitoring_get_heartbeats().await?;
-    let anomalies: Vec<DetectedAnomaly> = monitoring_engine::monitoring_get_anomalies(false).await?;
+    let anomalies: Vec<DetectedAnomaly> =
+        monitoring_engine::monitoring_get_anomalies(false).await?;
     let health: HealthStatus = state.status.clone();
 
     Ok(serde_json::json!({
@@ -203,8 +203,7 @@ pub async fn engines_devmode_disable() -> Result<bool, String> {
 pub async fn engines_devmode_validate_patch(
     patch: PatchAction,
 ) -> Result<SecurityValidation, String> {
-    developer_mode::dev_mode_validate_patch(patch, "Kevin Thibault".to_string())
-        .await
+    developer_mode::dev_mode_validate_patch(patch, "Kevin Thibault".to_string()).await
 }
 
 /// Apply a validated patch
@@ -383,9 +382,7 @@ pub async fn engines_get_dashboard() -> Result<serde_json::Value, String> {
     let qa_state: QAEngineState = QAEngineState::default();
     let monitoring_state: MonitoringState = monitoring_engine::monitoring_get_state().await?;
     let devmode_state: DeveloperModeState = developer_mode::dev_mode_get_state().await?;
-    let health: HealthStatus = monitoring_engine::monitoring_get_state()
-        .await?
-        .status;
+    let health: HealthStatus = monitoring_engine::monitoring_get_state().await?.status;
 
     Ok(serde_json::json!({
         "qa": {

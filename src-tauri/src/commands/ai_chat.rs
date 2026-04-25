@@ -3,6 +3,10 @@
 // Clean architecture v15: Unified SingularityEngine, documented, production-ready
 // V24 OPTIMIZATION: Response streaming support for memory efficiency
 
+use dashmap::DashMap;
+use std::path::PathBuf;
+use std::sync::Arc;
+use tauri::State;
 use titane_infinity::ai::router::AIRouter;
 use titane_infinity::audio::asr::ASREngine;
 use titane_infinity::audio::recorder::AudioRecorder;
@@ -15,10 +19,6 @@ use titane_infinity::security::secrets_engine::SecureSecretsEngine;
 use titane_infinity::tts::local_tts::LocalTTS;
 use titane_infinity::tts::online_tts::OnlineTTS;
 use titane_infinity::tts::TTSRequest;
-use dashmap::DashMap;
-use std::path::PathBuf;
-use std::sync::Arc;
-use tauri::{State};
 use tokio::sync::RwLock;
 // use uuid::Uuid;
 
@@ -172,12 +172,14 @@ pub async fn is_speaking(state: State<'_, AIChatState>) -> Result<bool, String> 
 }
 
 pub async fn start_recording(state: State<'_, AIChatState>) -> Result<(), String> {
-    let recorder: tokio::sync::RwLockReadGuard<'_, AudioRecorder> = state.audio_recorder.read().await;
+    let recorder: tokio::sync::RwLockReadGuard<'_, AudioRecorder> =
+        state.audio_recorder.read().await;
     recorder.start().map_err(|e: AudioError| e.to_string())
 }
 
 pub async fn stop_recording(state: State<'_, AIChatState>) -> Result<(), String> {
-    let recorder: tokio::sync::RwLockReadGuard<'_, AudioRecorder> = state.audio_recorder.read().await;
+    let recorder: tokio::sync::RwLockReadGuard<'_, AudioRecorder> =
+        state.audio_recorder.read().await;
     recorder.stop().map_err(|e: AudioError| e.to_string())
 }
 
@@ -186,9 +188,10 @@ pub async fn transcribe_audio(
     audio_data: Vec<u8>,
 ) -> Result<String, String> {
     let asr: tokio::sync::RwLockReadGuard<'_, ASREngine> = state.asr_engine.read().await;
-    asr.transcribe(&audio_data).await.map_err(|e: AudioError| e.to_string())
+    asr.transcribe(&audio_data)
+        .await
+        .map_err(|e: AudioError| e.to_string())
 }
-
 
 #[tauri::command]
 pub async fn check_connection() -> Result<bool, String> {

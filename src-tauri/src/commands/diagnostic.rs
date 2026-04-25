@@ -3,8 +3,8 @@
 //   Backend self-check and validation
 // ═══════════════════════════════════════════════════════════════
 
-use titane_infinity::core::types::{EngineHealth, EngineMetrics, ModuleInfo};
 use serde::{Deserialize, Serialize};
+use titane_infinity::core::types::{EngineMetrics, ModuleInfo};
 
 fn vergen_or_unknown(key: &str) -> &'static str {
     match key {
@@ -51,9 +51,7 @@ pub struct BackendStatus {
 }
 
 /// Global diagnostic state
-pub struct DiagnosticState {
-}
-
+pub struct DiagnosticState {}
 
 /// Backend self-check command
 ///

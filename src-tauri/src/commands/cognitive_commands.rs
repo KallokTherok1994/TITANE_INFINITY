@@ -1,12 +1,12 @@
 // TITANE∞ v30.0.0 - Cognitive Commands
 // Tauri commands for cognitive layer interaction
 
-use titane_infinity::cognitive::{
-    AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
-};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
+use titane_infinity::cognitive::{
+    AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
+};
 use tokio::sync::Mutex;
 
 /// Global cognitive state v16
@@ -91,7 +91,8 @@ pub async fn cognitive_learn(
 ) -> Result<(), String> {
     log::info!("[Cognitive v16] cognitive_learn");
 
-    let mut engine: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> = state.evolution.lock().await;
+    let mut engine: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> =
+        state.evolution.lock().await;
     engine.learn(&experience);
 
     Ok(())
@@ -105,9 +106,12 @@ pub async fn cognitive_get_status(
     log::info!("[Cognitive v16] cognitive_get_status");
 
     let analysis: tokio::sync::MutexGuard<'_, AnalysisEngine> = state.analysis.lock().await;
-    let consistency: tokio::sync::MutexGuard<'_, ConsistencyEngine> = state.consistency.lock().await;
-    let integration: tokio::sync::MutexGuard<'_, IntegrationEngine> = state.integration.lock().await;
-    let evolution: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> = state.evolution.lock().await;
+    let consistency: tokio::sync::MutexGuard<'_, ConsistencyEngine> =
+        state.consistency.lock().await;
+    let integration: tokio::sync::MutexGuard<'_, IntegrationEngine> =
+        state.integration.lock().await;
+    let evolution: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> =
+        state.evolution.lock().await;
 
     Ok(CognitiveStatus {
         analysis_scans: analysis.scan_count(),
@@ -123,7 +127,8 @@ pub async fn cognitive_get_status(
 pub async fn cognitive_optimize(state: State<'_, CognitiveSystemState>) -> Result<(), String> {
     log::info!("[Cognitive v16] cognitive_optimize");
 
-    let mut engine: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> = state.evolution.lock().await;
+    let mut engine: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> =
+        state.evolution.lock().await;
     engine.optimize();
 
     Ok(())

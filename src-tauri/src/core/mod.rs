@@ -18,13 +18,13 @@ pub mod utils; // Unified utilities (timestamps, helpers) // Standard error type
 mod tests_engine;
 
 // Re-export main types
-pub use boot_orchestrator::*;
-pub use utils::*;
 pub use crate::core::engine::*;
 pub use crate::core::modules::*;
 pub use crate::core::state::*;
 pub use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 pub use crate::core::types::*;
+pub use boot_orchestrator::*;
+pub use utils::*;
 
 // Re-export legacy adapters for backward compatibility
 pub use legacy::{HarmoniaCore, HeliosCore, MemoryCore, NexusCore, SentinelCore};

@@ -3,11 +3,11 @@
 // Reçoit les métriques Web Vitals du frontend via IPC sécurisé
 // ═══════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tauri::command;
-use std::fs::{OpenOptions};
-use std::io::Write;
 use chrono::Utc;
+use serde::{Deserialize, Serialize};
+use std::fs::OpenOptions;
+use std::io::Write;
+use tauri::command;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WebVitalsMetrics {
@@ -41,5 +41,8 @@ pub async fn web_vitals_report(args: WebVitalsReportArgs) -> Result<String, Stri
         .open(log_path)
         .map_err(|e| format!("Failed to open log: {}", e))?;
     writeln!(file, "{}", entry).map_err(|e| format!("Failed to write log: {}", e))?;
-    Ok(format!("WebVitals report reçu à {}", Utc::now().to_rfc3339()))
+    Ok(format!(
+        "WebVitals report reçu à {}",
+        Utc::now().to_rfc3339()
+    ))
 }

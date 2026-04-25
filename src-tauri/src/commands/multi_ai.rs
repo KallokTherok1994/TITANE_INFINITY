@@ -1,3 +1,5 @@
+#![allow(unused_imports)]
+
 // ╔══════════════════════════════════════════════════════════════════════════════╗
 // ║ TITANE∞ v∞ - Multi-IA Orchestrator Commands (SUPER PROMPT #8)              ║
 // ║ Re-export API commands for handlers.rs integration                          ║

@@ -3,11 +3,11 @@
 //   Tauri commands for SingularityEngine v14
 // ═══════════════════════════════════════════════════════════════
 
-use titane_infinity::core::types::{EngineHealth, EngineMetrics, ModuleInfo};
-use titane_infinity::core::engine::SingularityEngine;
-use titane_infinity::core::state::SingularityState;
 use std::sync::Arc;
 use tauri::State;
+use titane_infinity::core::engine::SingularityEngine;
+use titane_infinity::core::state::SingularityState;
+use titane_infinity::core::types::{EngineHealth, EngineMetrics, ModuleInfo};
 use tokio::sync::Mutex;
 
 /// Global engine state for Tauri
@@ -17,7 +17,10 @@ pub type EngineState = Arc<Mutex<SingularityEngine>>;
 #[tauri::command]
 pub async fn engine_init(engine: State<'_, EngineState>) -> Result<String, String> {
     let mut engine: tokio::sync::MutexGuard<'_, SingularityEngine> = engine.lock().await;
-    engine.init().await.map_err(|e| format!("Engine initialization failed: {}", e))?;
+    engine
+        .init()
+        .await
+        .map_err(|e| format!("Engine initialization failed: {}", e))?;
     Ok("SingularityEngine v14 initialized successfully".to_string())
 }
 
@@ -25,7 +28,10 @@ pub async fn engine_init(engine: State<'_, EngineState>) -> Result<String, Strin
 #[tauri::command]
 pub async fn engine_tick(engine: State<'_, EngineState>) -> Result<EngineHealth, String> {
     let mut engine: tokio::sync::MutexGuard<'_, SingularityEngine> = engine.lock().await;
-    engine.tick().await.map_err(|e| format!("Engine tick failed: {}", e))?;
+    engine
+        .tick()
+        .await
+        .map_err(|e| format!("Engine tick failed: {}", e))?;
     Ok(engine.health())
 }
 
@@ -33,7 +39,10 @@ pub async fn engine_tick(engine: State<'_, EngineState>) -> Result<EngineHealth,
 #[tauri::command]
 pub async fn engine_sync(engine: State<'_, EngineState>) -> Result<String, String> {
     let mut engine: tokio::sync::MutexGuard<'_, SingularityEngine> = engine.lock().await;
-    engine.sync().await.map_err(|e| format!("Engine sync failed: {}", e))?;
+    engine
+        .sync()
+        .await
+        .map_err(|e| format!("Engine sync failed: {}", e))?;
     Ok("Engine state synchronized".to_string())
 }
 
@@ -69,7 +78,10 @@ pub async fn engine_snapshot(engine: State<'_, EngineState>) -> Result<Singulari
 #[tauri::command]
 pub async fn engine_stop(engine: State<'_, EngineState>) -> Result<String, String> {
     let mut engine: tokio::sync::MutexGuard<'_, SingularityEngine> = engine.lock().await;
-    engine.stop().await.map_err(|e| format!("Engine stop failed: {}", e))?;
+    engine
+        .stop()
+        .await
+        .map_err(|e| format!("Engine stop failed: {}", e))?;
     Ok("Engine stopped successfully".to_string())
 }
 

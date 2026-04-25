@@ -165,7 +165,8 @@ fn is_total_dev_command_allowed(input: &str) -> bool {
     ALLOWED_TOTAL_DEV_COMMANDS.contains(&input.trim())
 }
 
-const ALLOWED_TOTAL_DEV_GIT_OPS: &[&str] = &["status", "diff", "log", "branch", "show", "rev-parse"];
+const ALLOWED_TOTAL_DEV_GIT_OPS: &[&str] =
+    &["status", "diff", "log", "branch", "show", "rev-parse"];
 
 fn are_total_dev_git_args_allowed(op: &str, args: &[String]) -> bool {
     match op {
@@ -412,7 +413,10 @@ pub async fn total_dev_run_command(command: String) -> Result<TotalDevConsoleRes
     }
 
     if contains_shell_control(&trimmed) {
-        log::warn!("TOTAL_DEV console command rejected (shell control): {}", trimmed);
+        log::warn!(
+            "TOTAL_DEV console command rejected (shell control): {}",
+            trimmed
+        );
         return Err("Operateurs shell interdits dans TOTAL_DEV".to_string());
     }
 
@@ -499,7 +503,10 @@ pub async fn total_dev_read_file(path: String) -> Result<TotalDevFileResult, Str
     }
 
     if !resolved.is_file() {
-        return Err(format!("Lecture refusée: la cible n est pas un fichier ({})", path));
+        return Err(format!(
+            "Lecture refusée: la cible n est pas un fichier ({})",
+            path
+        ));
     }
 
     let canonical_path = resolved
@@ -555,10 +562,14 @@ mod tests {
     #[test]
     fn total_dev_command_allowlist_is_exact() {
         assert!(is_total_dev_command_allowed("git status"));
-        assert!(is_total_dev_command_allowed("cargo check --manifest-path src-tauri/Cargo.toml"));
+        assert!(is_total_dev_command_allowed(
+            "cargo check --manifest-path src-tauri/Cargo.toml"
+        ));
         assert!(!is_total_dev_command_allowed("git status --porcelain"));
         assert!(!is_total_dev_command_allowed("pnpm run verify:registry"));
-        assert!(!is_total_dev_command_allowed("cat src/pages/TotalDevPage.tsx"));
+        assert!(!is_total_dev_command_allowed(
+            "cat src/pages/TotalDevPage.tsx"
+        ));
     }
 
     #[test]
@@ -615,7 +626,10 @@ mod tests {
     #[test]
     fn total_dev_git_args_are_exact() {
         assert!(are_total_dev_git_args_allowed("status", &[]));
-        assert!(are_total_dev_git_args_allowed("diff", &["--stat".to_string()]));
+        assert!(are_total_dev_git_args_allowed(
+            "diff",
+            &["--stat".to_string()]
+        ));
         assert!(are_total_dev_git_args_allowed(
             "rev-parse",
             &["--short".to_string(), "HEAD".to_string()]
@@ -634,9 +648,12 @@ mod tests {
     async fn total_dev_git_op_rejects_mutating_operation() {
         unlock_for_test();
 
-        let err = total_dev_git_op("push".to_string(), vec!["origin".to_string(), "HEAD".to_string()])
-            .await
-            .expect_err("mutating git ops must be rejected");
+        let err = total_dev_git_op(
+            "push".to_string(),
+            vec!["origin".to_string(), "HEAD".to_string()],
+        )
+        .await
+        .expect_err("mutating git ops must be rejected");
 
         assert!(err.contains("Opération git non autorisée"));
     }
@@ -669,12 +686,16 @@ mod tests {
     async fn total_dev_read_file_reports_missing_workspace_file() {
         unlock_for_test();
 
-        let result = total_dev_read_file("src/definitely-missing-total-dev-read-file.ts".to_string())
-            .await
-            .expect("missing workspace file should return a structured miss");
+        let result =
+            total_dev_read_file("src/definitely-missing-total-dev-read-file.ts".to_string())
+                .await
+                .expect("missing workspace file should return a structured miss");
 
         assert!(!result.ok);
-        assert!(result.error.unwrap_or_default().contains("Fichier introuvable"));
+        assert!(result
+            .error
+            .unwrap_or_default()
+            .contains("Fichier introuvable"));
     }
 
     #[tokio::test]
