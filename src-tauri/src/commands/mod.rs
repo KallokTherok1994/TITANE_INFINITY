@@ -1,3 +1,5 @@
+#![allow(unused_imports)]
+
 pub mod stub_commands;
 pub mod total_dev_commands;
 pub use total_dev_commands::*;
@@ -5,10 +7,10 @@ pub mod db_commands;
 pub use db_commands::*;
 pub mod display_system_commands; // EXP: Contrôle des paramètres d'affichage (expérimental)
 pub use display_system_commands::*; // EXP: Expose toutes les commandes display_system
-// ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v30.0.0 - Tauri Commands Central Hub (Phase 2 Fusion #1)             ║
-// ║ Unified command handlers for frontend-backend communication                 ║
-// ╚══════════════════════════════════════════════════════════════════════════════╝
+                                    // ╔══════════════════════════════════════════════════════════════════════════════╗
+                                    // ║ TITANE∞ v30.0.0 - Tauri Commands Central Hub (Phase 2 Fusion #1)             ║
+                                    // ║ Unified command handlers for frontend-backend communication                 ║
+                                    // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod ai_chat; // required for full-backend state/types; keep non-re-exported to avoid handler drift
@@ -26,7 +28,7 @@ pub mod chat_modes; // ✅ v19.2Ω: Chat Modes System
 pub mod cognitive_center; // ✅ v19.3: Centre d'Évolution Cognitive (OPUS #4)
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
                             // pub mod coherence_commands; // disabled: unresolved external crate path in current full build
-// pub mod devops; // disabled: also include!'d as devops_commands in main.rs → double #[macro_export] __cmd__*
+                            // pub mod devops; // disabled: also include!'d as devops_commands in main.rs → double #[macro_export] __cmd__*
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod devtools;
 pub mod diagnostic; // ✅ Phase 9: Backend diagnostics & validation
@@ -43,11 +45,11 @@ pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
 pub mod memory_os; // ✅ NEW v∞: Memory OS + Vector Database (SUPER PROMPTs #6-7-8)
                    // pub mod meta_mode; // disabled: unresolved imports in current full build
 pub mod multi_ai; // ✅ v∞: Multi-IA Orchestrator (SUPER PROMPT #8)
-// pub mod one_core; // disabled: also include!'d as one_core_commands in main.rs → double #[macro_export] __cmd__*
-// pub mod orchestration_center; // disabled: also include!'d as orchestration_center_commands in main.rs → double __cmd__*
-// pub mod persistent_memory; // disabled: also include!'d as persistent_memory_v30 in main.rs → double __cmd__*
-// pub mod qa_monitoring; // disabled: also include!'d as qa_monitoring_commands in main.rs → double __cmd__*
-#[cfg(test)]
+                  // pub mod one_core; // disabled: also include!'d as one_core_commands in main.rs → double #[macro_export] __cmd__*
+                  // pub mod orchestration_center; // disabled: also include!'d as orchestration_center_commands in main.rs → double __cmd__*
+                  // pub mod persistent_memory; // disabled: also include!'d as persistent_memory_v30 in main.rs → double __cmd__*
+                  // pub mod qa_monitoring; // disabled: also include!'d as qa_monitoring_commands in main.rs → double __cmd__*
+#[cfg(all(test, not(feature = "mock"), feature = "full"))]
 mod tests_ai_chat; // ✅ v19.7: QA Monitoring Center - OPUS #7
 
 // Re-export engine commands
@@ -56,7 +58,7 @@ mod tests_ai_chat; // ✅ v19.7: QA Monitoring Center - OPUS #7
 pub use cognitive_center::*; // ✅ v19.3: Export cognitive center commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
                                // pub use coherence_commands::*; // disabled with module
-// pub use devops::*; // disabled: devops module removed (include!'d as devops_commands in main.rs)
+                               // pub use devops::*; // disabled: devops module removed (include!'d as devops_commands in main.rs)
 pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
 #[cfg(not(feature = "mock"))]
 pub use engine_v14::*;
@@ -97,13 +99,13 @@ pub use web_vitals_commands::*;
 // pub use whisper_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
 // audio_config_commands removed - duplicates audio::commands
 pub use multi_ai::*; // ✅ v∞: Export Multi-IA Orchestrator commands
-// pub use one_core::*; // disabled: one_core module removed above (double __cmd__ fix)
-// pub use orchestration_center::*; // disabled: duplicate __cmd__ — orchestration_center_commands include! is authoritative
-                                 // pub use persistent_memory::*; // disabled: duplicate __cmd__ exports
-                                 // pub use persistent_memory_commands::*; // disabled: duplicate __cmd__ exports
-// pub use self_healing_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
-// pub use singularity_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
-// pub use ui_theme_commands::*; // disabled: duplicate __cmd__ exports
+                     // pub use one_core::*; // disabled: one_core module removed above (double __cmd__ fix)
+                     // pub use orchestration_center::*; // disabled: duplicate __cmd__ — orchestration_center_commands include! is authoritative
+                     // pub use persistent_memory::*; // disabled: duplicate __cmd__ exports
+                     // pub use persistent_memory_commands::*; // disabled: duplicate __cmd__ exports
+                     // pub use self_healing_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
+                     // pub use singularity_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
+                     // pub use ui_theme_commands::*; // disabled: duplicate __cmd__ exports
 
 #[cfg(any())]
 use crate::types::ModuleHealthInfo as ModuleHealth;

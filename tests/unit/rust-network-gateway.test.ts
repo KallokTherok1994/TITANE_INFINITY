@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
  *     instead of constructing reqwest::Client::builder() directly.
  */
 
-const rootDir = path.resolve(import.meta.dirname, '../../..');
+const rootDir = path.resolve(import.meta.dirname, '../..');
 
 const gatewaySource = fs.readFileSync(
   path.join(rootDir, 'src-tauri/src/gateway/network.rs'),
@@ -47,18 +47,19 @@ describe('One Door Network Gateway — anti-regression (Rule 5)', () => {
   it('http_commands.rs uses gateway, not direct reqwest::Client::builder()', () => {
     expect(httpCommands).not.toContain('reqwest::Client::builder()');
     expect(httpCommands).not.toContain('Client::builder()');
-    expect(httpCommands).toContain('gateway::network::build_http_client');
+    // The file uses `use titane_infinity::gateway::network;` then `network::build_http_client`.
+    expect(httpCommands).toMatch(/gateway::network|network::build_http_client/);
   });
 
   it('rag_commands.rs uses gateway, not direct reqwest::Client::builder()', () => {
     expect(ragCommands).not.toContain('reqwest::Client::builder()');
     expect(ragCommands).not.toContain('Client::builder()');
-    expect(ragCommands).toContain('gateway::network::build_http_client');
+    expect(ragCommands).toMatch(/gateway::network|network::build_http_client/);
   });
 
   it('web_search_commands.rs uses gateway, not direct reqwest::Client::builder()', () => {
     expect(webSearchCommands).not.toContain('reqwest::Client::builder()');
     expect(webSearchCommands).not.toContain('Client::builder()');
-    expect(webSearchCommands).toContain('gateway::network::build_http_client');
+    expect(webSearchCommands).toMatch(/gateway::network|network::build_http_client/);
   });
 });

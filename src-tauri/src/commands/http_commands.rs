@@ -8,6 +8,7 @@ use crate::security::permissions::Role;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::time::Duration;
+use titane_infinity::gateway::network;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HttpRequestParams {
@@ -76,7 +77,7 @@ pub async fn http_request(params: HttpRequestParams) -> Result<HttpResponse, Str
     let timeout = Duration::from_millis(timeout_ms);
 
     // Build request — governed via One Door Network Gateway (Rule 5)
-    let client = crate::gateway::network::build_http_client(timeout)?;
+    let client = network::build_http_client(timeout)?;
 
     let mut req_builder = match method.to_uppercase().as_str() {
         "GET" => client.get(&params.url),
@@ -135,4 +136,100 @@ pub async fn http_request(params: HttpRequestParams) -> Result<HttpResponse, Str
         body,
         headers: response_headers,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── is_url_allowed — OWASP A01 allowlist ──────────────────────────────────
+
+    #[test]
+    fn test_allowlist_localhost_allowed() {
+        assert!(is_url_allowed("http://localhost:11434/api/tags"));
+        assert!(is_url_allowed("http://localhost:8080/api/health"));
+        assert!(is_url_allowed("https://localhost/"));
+    }
+
+    #[test]
+    fn test_allowlist_loopback_allowed() {
+        assert!(is_url_allowed("http://127.0.0.1:11434/api/version"));
+        assert!(is_url_allowed("http://127.0.0.1:1420/"));
+    }
+
+    #[test]
+    fn test_allowlist_gemini_api_allowed() {
+        assert!(is_url_allowed(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+        ));
+    }
+
+    #[test]
+    fn test_allowlist_unauthorized_domain_blocked() {
+        // OWASP A01 — all unknown domains must be blocked.
+        assert!(!is_url_allowed("https://evil.attacker.com/steal"));
+        assert!(!is_url_allowed("http://github.com/user/repo"));
+        assert!(!is_url_allowed("https://api.openai.com/v1/chat"));
+        assert!(!is_url_allowed("http://169.254.169.254/metadata")); // AWS metadata SSRF
+    }
+
+    #[test]
+    fn test_allowlist_invalid_url_blocked() {
+        assert!(!is_url_allowed("not-a-url"));
+        assert!(!is_url_allowed(""));
+        assert!(!is_url_allowed("://missing-scheme"));
+    }
+
+    #[test]
+    fn test_allowlist_subdomain_of_allowed_blocked_unless_parent() {
+        // Sub-domains of non-allowlisted roots must be blocked.
+        assert!(!is_url_allowed("https://evil.localhost.attacker.com/"));
+        // Sub-domain of googleapis.com is allowed (endsWith logic).
+        assert!(is_url_allowed(
+            "https://generativelanguage.googleapis.com/v1beta/"
+        ));
+    }
+
+    // ── HttpResponse struct contract (Rule 6) ─────────────────────────────────
+
+    #[test]
+    fn test_http_response_ok_contract() {
+        let resp = HttpResponse {
+            ok: true,
+            status: 200,
+            status_text: "OK".to_string(),
+            body: r#"{"models":["gemma2:2b"]}"#.to_string(),
+            headers: HashMap::new(),
+        };
+        assert!(resp.ok);
+        assert_eq!(resp.status, 200);
+        assert!(resp.body.contains("gemma2:2b"));
+    }
+
+    #[test]
+    fn test_http_response_error_contract() {
+        let resp = HttpResponse {
+            ok: false,
+            status: 404,
+            status_text: "Not Found".to_string(),
+            body: r#"{"error":"not found"}"#.to_string(),
+            headers: HashMap::new(),
+        };
+        assert!(!resp.ok);
+        assert_eq!(resp.status, 404);
+    }
+
+    #[test]
+    fn test_http_request_params_defaults() {
+        let params = HttpRequestParams {
+            url: "http://127.0.0.1:11434/api/tags".to_string(),
+            method: None,
+            headers: None,
+            body: None,
+            timeout: None,
+        };
+        assert_eq!(params.url, "http://127.0.0.1:11434/api/tags");
+        assert!(params.method.is_none());
+        assert!(params.timeout.is_none());
+    }
 }
