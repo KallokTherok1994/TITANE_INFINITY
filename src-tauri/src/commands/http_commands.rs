@@ -75,11 +75,8 @@ pub async fn http_request(params: HttpRequestParams) -> Result<HttpResponse, Str
     let timeout_ms = params.timeout.unwrap_or(30000);
     let timeout = Duration::from_millis(timeout_ms);
 
-    // Build request
-    let client = reqwest::Client::builder()
-        .timeout(timeout)
-        .build()
-        .map_err(|e| format!("Client build error: {}", e))?;
+    // Build request — governed via One Door Network Gateway (Rule 5)
+    let client = crate::gateway::network::build_http_client(timeout)?;
 
     let mut req_builder = match method.to_uppercase().as_str() {
         "GET" => client.get(&params.url),

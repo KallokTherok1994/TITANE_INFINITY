@@ -88,10 +88,7 @@ async fn call_ollama_embed(text: &str) -> Result<Vec<f32>, String> {
     let model = embed_model();
     let endpoint = format!("{}/api/embeddings", base_url);
 
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(EMBED_TIMEOUT_SECS))
-        .build()
-        .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
+    let client = crate::gateway::network::build_http_client(Duration::from_secs(EMBED_TIMEOUT_SECS))?;
 
     let body = OllamaEmbedRequest {
         model: &model,
