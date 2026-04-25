@@ -1,6 +1,9 @@
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ — Conversation OS v1 — NetworkGatewayService (Ring 3)
 // Governed network access with allowlist, budgets, timeouts.
+//
+// Rule 5 (One Door): this is the ONLY file allowed to use reqwest
+// directly. All Tauri commands must import build_client() from here.
 // ═══════════════════════════════════════════════════════════════
 
 use crate::core::http_types::{Client, Policy};
@@ -10,6 +13,37 @@ use serde_json::Value;
 use std::collections::HashMap;
 use std::time::Duration;
 use tokio::sync::Mutex;
+
+// ─────────────────────────────────────────────────────────────────
+// One Door helpers — used by Tauri commands that need a plain
+// reqwest::Client without the full NetworkGatewayService overhead.
+// ─────────────────────────────────────────────────────────────────
+
+const DEFAULT_USER_AGENT: &str = "TITANE-infinity/31";
+
+/// Build a governed HTTP client with the given timeout.
+///
+/// This is the canonical entry point for constructing an HTTP client
+/// in Tauri commands (One Door, Rule 5).  All commands MUST call this
+/// instead of using `reqwest::Client::builder()` directly.
+pub fn build_client(timeout: Duration) -> Result<Client, String> {
+    Client::builder()
+        .timeout(timeout)
+        .user_agent(DEFAULT_USER_AGENT)
+        .build()
+        .map_err(|e| format!("[NetworkGateway] Failed to build HTTP client: {e}"))
+}
+
+/// Build a governed HTTP client with a custom user-agent string.
+///
+/// Used for scraping fallbacks that require a browser-like user-agent.
+pub fn build_client_with_user_agent(timeout: Duration, user_agent: &str) -> Result<Client, String> {
+    Client::builder()
+        .timeout(timeout)
+        .user_agent(user_agent)
+        .build()
+        .map_err(|e| format!("[NetworkGateway] Failed to build HTTP client: {e}"))
+}
 
 #[derive(Debug, Clone)]
 pub struct NetworkGatewayConfig {
@@ -453,5 +487,32 @@ mod tests {
         assert_eq!(meta.max_bytes_total, 1024);
         assert_eq!(meta.budget_remaining_requests, 17);
         assert_eq!(meta.budget_remaining_bytes, 512);
+    }
+
+    #[test]
+    fn test_build_client_succeeds() {
+        let client = build_client(Duration::from_secs(10));
+        assert!(
+            client.is_ok(),
+            "build_client must succeed in normal conditions"
+        );
+    }
+
+    #[test]
+    fn test_build_client_with_user_agent_succeeds() {
+        let client = build_client_with_user_agent(
+            Duration::from_secs(5),
+            "Mozilla/5.0 (compatible; test/1.0)",
+        );
+        assert!(
+            client.is_ok(),
+            "build_client_with_user_agent must succeed in normal conditions"
+        );
+    }
+
+    #[test]
+    fn test_build_client_large_timeout() {
+        let client = build_client(Duration::from_secs(300));
+        assert!(client.is_ok(), "build_client must accept large timeout");
     }
 }

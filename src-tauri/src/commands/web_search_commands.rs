@@ -5,8 +5,10 @@
 //   Fallback: DuckDuckGo Lite if SearXNG unavailable
 // ═══════════════════════════════════════════════════════════════
 
+use crate::services::network_gateway::{build_client, build_client_with_user_agent};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
+use url::Url;
 
 const SEARCH_TIMEOUT_SECS: u64 = 10;
 const DEFAULT_MAX_RESULTS: u32 = 10;
@@ -64,12 +66,10 @@ fn search_api_url() -> String {
 
 async fn perform_web_search(query: &str, max_results: u32) -> Result<Vec<WebSearchResult>, String> {
     let base_url = search_api_url();
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(SEARCH_TIMEOUT_SECS))
-        .build()
+    let client = build_client(Duration::from_secs(SEARCH_TIMEOUT_SECS))
         .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
 
-    let url = reqwest::Url::parse_with_params(&base_url, &[("q", query), ("format", "json")])
+    let url = Url::parse_with_params(&base_url, &[("q", query), ("format", "json")])
         .map_err(|e| format!("Failed to build search URL: {e}"))?;
 
     let response = client
@@ -176,13 +176,13 @@ async fn perform_ddg_lite_search(
     query: &str,
     max_results: u32,
 ) -> Result<Vec<WebSearchResult>, String> {
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(SEARCH_TIMEOUT_SECS))
-        .user_agent("Mozilla/5.0 (compatible; TITANE-search/1.0)")
-        .build()
-        .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
+    let client = build_client_with_user_agent(
+        Duration::from_secs(SEARCH_TIMEOUT_SECS),
+        "Mozilla/5.0 (compatible; TITANE-search/1.0)",
+    )
+    .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
 
-    let url = reqwest::Url::parse_with_params(DDG_LITE_URL, &[("q", query)])
+    let url = Url::parse_with_params(DDG_LITE_URL, &[("q", query)])
         .map_err(|e| format!("Failed to build DDG Lite URL: {e}"))?;
 
     let response = client
@@ -328,7 +328,7 @@ mod tests {
 
         // Build the query URL as perform_web_search would
         let url =
-            reqwest::Url::parse_with_params(&base, &[("q", "hello world"), ("format", "json")])
+            Url::parse_with_params(&base, &[("q", "hello world"), ("format", "json")])
                 .expect("URL construction must succeed");
 
         let url_str = url.as_str();

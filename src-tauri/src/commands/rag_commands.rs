@@ -4,6 +4,7 @@
 //   One Door: UI → IPC → Rust → Ollama → return
 // ═══════════════════════════════════════════════════════════════
 
+use crate::services::network_gateway::build_client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -88,9 +89,7 @@ async fn call_ollama_embed(text: &str) -> Result<Vec<f32>, String> {
     let model = embed_model();
     let endpoint = format!("{}/api/embeddings", base_url);
 
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(EMBED_TIMEOUT_SECS))
-        .build()
+    let client = build_client(Duration::from_secs(EMBED_TIMEOUT_SECS))
         .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
 
     let body = OllamaEmbedRequest {
