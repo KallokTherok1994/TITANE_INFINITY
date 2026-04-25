@@ -164,6 +164,7 @@ pub async fn invoke_handler(
         "health_check",
         "get_system_health",
         "conversation_generate",
+        "create_new_conversation",
         "ai_check_ollama_status",
         "get_runtime_config",
         "memory_get_all_keys",
@@ -202,6 +203,11 @@ pub async fn invoke_handler(
                 "ollamaModel": std::env::var("OLLAMA_DEFAULT_MODEL")
                     .unwrap_or_else(|_| "gemma2:2b".into()),
             })))
+        }
+        "create_new_conversation" => {
+            // Return a new UUID-based conversation id (no engine state required)
+            let conv_id = format!("remote-{}", uuid::Uuid::new_v4());
+            Json(IpcResponse::ok(serde_json::Value::String(conv_id)))
         }
         "conversation_generate" => {
             // Deserialize into ConversationGenerateArgs from the optional payload field

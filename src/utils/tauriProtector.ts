@@ -423,7 +423,13 @@ export class TauriInvokeProtector {
         (window as Window & { __TITANE_REMOTE__?: boolean }).__TITANE_REMOTE__ === true;
       if (isRemoteBrowser) {
         logger.info('[TauriProtector] Remote context detected — routing via HTTP gateway', command);
-        return getRemoteTransport().invoke<T>(command, args as Record<string, unknown>);
+        // Tauri v2 wraps payloads as { args: inner } for the command macro,
+        // but the remote gateway expects the inner payload directly.
+        const remoteArgs: Record<string, unknown> =
+          args && typeof args === 'object' && 'args' in (args as object)
+            ? ((args as Record<string, unknown>).args as Record<string, unknown>) ?? {}
+            : (args as Record<string, unknown>) ?? {};
+        return getRemoteTransport().invoke<T>(command, remoteArgs);
       }
       logger.info(
         '[TauriProtector] Skipping invoke for',
