@@ -98,12 +98,17 @@ impl ASREngine {
             .to_str()
             .ok_or_else(|| AudioError::ProcessingError("Invalid temp path".into()))?;
 
+        // Cross-platform Vosk model path: override via TITANE_VOSK_MODEL_PATH env var.
+        // Default is the Linux system path; set the env var on Windows/macOS.
+        let vosk_model_path = std::env::var("TITANE_VOSK_MODEL_PATH")
+            .unwrap_or_else(|_| "/usr/share/vosk/models/vosk-model-fr".to_string());
+
         // NOTE: vosk-transcriber NOT in default whitelist, will fail unless added
         let output = self
             .shell_guard
             .execute_verified(
                 "vosk-transcriber",
-                &["-i", path_str, "-m", "/usr/share/vosk/models/vosk-model-fr"],
+                &["-i", path_str, "-m", &vosk_model_path],
             )
             .map_err(AudioError::ProcessingError)?;
 

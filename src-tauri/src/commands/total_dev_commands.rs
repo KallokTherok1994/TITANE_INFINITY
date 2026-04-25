@@ -27,9 +27,13 @@ const TOTAL_DEV_UNLOCK_HASH: &str =
 /// Monotonic session counter — reset on restart (in-process only)
 static SESSION_EXPIRY: AtomicU64 = AtomicU64::new(0);
 
+// Cross-platform fallback: uses the user's Documents directory via the `dirs` crate.
 fn workspace_dir() -> String {
-    std::env::var("TITANE_WORKSPACE_DIR")
-        .unwrap_or_else(|_| "/home/titane-os/Documents/GitHub/TITANE_INFINITY".to_string())
+    std::env::var("TITANE_WORKSPACE_DIR").unwrap_or_else(|_| {
+        dirs::document_dir()
+            .map(|d| d.join("TITANE_INFINITY").to_string_lossy().into_owned())
+            .unwrap_or_else(|| ".".to_string())
+    })
 }
 
 fn workspace_dir_path() -> PathBuf {
