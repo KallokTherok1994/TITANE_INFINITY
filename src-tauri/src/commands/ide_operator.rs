@@ -176,8 +176,11 @@ fn generate_session_id() -> String {
 }
 
 fn workspace_dir() -> String {
-    std::env::var("TITANE_WORKSPACE_DIR")
-        .unwrap_or_else(|_| "/home/titane-os/Documents/GitHub/TITANE_INFINITY".to_string())
+    std::env::var("TITANE_WORKSPACE_DIR").unwrap_or_else(|_| {
+        dirs::document_dir()
+            .map(|d| d.join("TITANE_INFINITY").to_string_lossy().into_owned())
+            .unwrap_or_else(|| ".".to_string())
+    })
 }
 
 fn check_git_available() -> bool {

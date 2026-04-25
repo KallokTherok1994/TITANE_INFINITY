@@ -10,11 +10,14 @@ use serde::{Deserialize, Serialize};
 use tauri::command;
 
 // Import engines
-use crate::engines::{
-    DetectedAnomaly, DeveloperModeState, EngineHeartbeat, HealthStatus, MonitoringState,
-    PatchAction, PatchResult, QAEngineState, QAReport, QATestSuite, SecurityValidation, SystemInfo,
-    SystemMetricsRealtime,
+use titane_infinity::engines::{
+    DetectedAnomaly, DeveloperModeState, DiffPreview, EngineHeartbeat, HealthStatus, MonitoringState,
+    PatchAction, PatchHistory, PatchResult, QAEngineState, QAReport, QATestSuite, SecurityValidation,
+    SystemInfo, SystemMetricsRealtime,
 };
+use titane_infinity::engines::monitoring_engine;
+use titane_infinity::engines::developer_mode;
+use titane_infinity::engines::qa_engine;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // QA ENGINE COMMANDS
@@ -30,10 +33,10 @@ pub async fn engines_qa_get_state() -> Result<QAEngineState, String> {
 #[command]
 pub async fn engines_qa_run_all() -> Result<Vec<QATestSuite>, String> {
     // Call the engine functions
-    let system = crate::engines::qa_engine::qa_run_system_test().await?;
-    let memory = crate::engines::qa_engine::qa_run_memory_test().await?;
-    let security = crate::engines::qa_engine::qa_run_security_test().await?;
-    let performance = crate::engines::qa_engine::qa_run_self_healing_test().await?;
+    let system = qa_engine::qa_run_system_test().await?;
+    let memory = qa_engine::qa_run_memory_test().await?;
+    let security = qa_engine::qa_run_security_test().await?;
+    let performance = qa_engine::qa_run_self_healing_test().await?;
 
     Ok(vec![system, memory, security, performance])
 }
@@ -42,16 +45,16 @@ pub async fn engines_qa_run_all() -> Result<Vec<QATestSuite>, String> {
 #[command]
 pub async fn engines_qa_run_suite(suite_name: String) -> Result<QATestSuite, String> {
     match suite_name.as_str() {
-        "system" => crate::engines::qa_engine::qa_run_system_test().await,
-        "memory" => crate::engines::qa_engine::qa_run_memory_test().await,
-        "ai" => crate::engines::qa_engine::qa_run_ai_test().await,
-        "security" => crate::engines::qa_engine::qa_run_security_test().await,
-        "ui" => crate::engines::qa_engine::qa_run_ui_test().await,
-        "backend" => crate::engines::qa_engine::qa_run_backend_test().await,
-        "build" => crate::engines::qa_engine::qa_run_build_test().await,
-        "coherence" => crate::engines::qa_engine::qa_run_coherence_test().await,
-        "performance" => crate::engines::qa_engine::qa_run_self_healing_test().await,
-        "integration" => crate::engines::qa_engine::qa_run_self_healing_test().await,
+        "system" => qa_engine::qa_run_system_test().await,
+        "memory" => qa_engine::qa_run_memory_test().await,
+        "ai" => qa_engine::qa_run_ai_test().await,
+        "security" => qa_engine::qa_run_security_test().await,
+        "ui" => qa_engine::qa_run_ui_test().await,
+        "backend" => qa_engine::qa_run_backend_test().await,
+        "build" => qa_engine::qa_run_build_test().await,
+        "coherence" => qa_engine::qa_run_coherence_test().await,
+        "performance" => qa_engine::qa_run_self_healing_test().await,
+        "integration" => qa_engine::qa_run_self_healing_test().await,
         _ => Err(format!("Unknown test suite: {}", suite_name)),
     }
 }
@@ -59,7 +62,7 @@ pub async fn engines_qa_run_suite(suite_name: String) -> Result<QATestSuite, Str
 /// Generate full QA report
 #[command]
 pub async fn engines_qa_generate_report() -> Result<QAReport, String> {
-    crate::engines::qa_engine::qa_generate_full_report().await
+    qa_engine::qa_generate_full_report().await
 }
 
 /// Get system info for QA
@@ -79,8 +82,8 @@ pub async fn engines_qa_get_system_info() -> Result<SystemInfo, String> {
 /// Get QA dashboard data
 #[command]
 pub async fn engines_qa_get_dashboard() -> Result<serde_json::Value, String> {
-    let report = crate::engines::qa_engine::qa_generate_full_report().await?;
-    let system_info = engines_qa_get_system_info().await?;
+    let report: QAReport = qa_engine::qa_generate_full_report().await?;
+    let system_info: SystemInfo = engines_qa_get_system_info().await?;
 
     Ok(serde_json::json!({
         "report": report,
@@ -96,31 +99,31 @@ pub async fn engines_qa_get_dashboard() -> Result<serde_json::Value, String> {
 /// Get current monitoring state
 #[command]
 pub async fn engines_monitoring_get_state() -> Result<MonitoringState, String> {
-    crate::engines::monitoring_engine::monitoring_get_state().await
+    monitoring_engine::monitoring_get_state().await
 }
 
 /// Get real-time system metrics
 #[command]
 pub async fn engines_monitoring_get_metrics() -> Result<SystemMetricsRealtime, String> {
-    crate::engines::monitoring_engine::monitoring_get_metrics().await
+    monitoring_engine::monitoring_get_metrics().await
 }
 
 /// Get engine heartbeats
 #[command]
 pub async fn engines_monitoring_get_heartbeats() -> Result<Vec<EngineHeartbeat>, String> {
-    crate::engines::monitoring_engine::monitoring_get_heartbeats().await
+    monitoring_engine::monitoring_get_heartbeats().await
 }
 
 /// Get detected anomalies
 #[command]
 pub async fn engines_monitoring_get_anomalies() -> Result<Vec<DetectedAnomaly>, String> {
-    crate::engines::monitoring_engine::monitoring_get_anomalies(false).await
+    monitoring_engine::monitoring_get_anomalies(false).await
 }
 
 /// Get overall system health
 #[command]
 pub async fn engines_monitoring_get_health() -> Result<HealthStatus, String> {
-    let state = crate::engines::monitoring_engine::monitoring_get_state().await?;
+    let state = monitoring_engine::monitoring_get_state().await?;
     Ok(state.status)
 }
 
@@ -129,21 +132,23 @@ pub async fn engines_monitoring_get_health() -> Result<HealthStatus, String> {
 pub async fn engines_monitoring_get_history(
     period: Option<String>,
 ) -> Result<serde_json::Value, String> {
-    let history = crate::engines::monitoring_engine::monitoring_get_history(
-        period.unwrap_or_else(|| "24h".to_string()),
-    )
-    .await?;
-    Ok(serde_json::to_value(history).map_err(|e| e.to_string())?)
+    let history: serde_json::Value = serde_json::to_value(
+        monitoring_engine::monitoring_get_history(
+            period.unwrap_or_else(|| "24h".to_string()),
+        )
+        .await?
+    ).map_err(|e| e.to_string())?;
+    Ok(history)
 }
 
 /// Get monitoring dashboard data
 #[command]
 pub async fn engines_monitoring_get_dashboard() -> Result<serde_json::Value, String> {
-    let state = crate::engines::monitoring_engine::monitoring_get_state().await?;
-    let metrics = crate::engines::monitoring_engine::monitoring_get_metrics().await?;
-    let heartbeats = crate::engines::monitoring_engine::monitoring_get_heartbeats().await?;
-    let anomalies = crate::engines::monitoring_engine::monitoring_get_anomalies(false).await?;
-    let health = state.status.clone();
+    let state: MonitoringState = monitoring_engine::monitoring_get_state().await?;
+    let metrics: SystemMetricsRealtime = monitoring_engine::monitoring_get_metrics().await?;
+    let heartbeats: Vec<EngineHeartbeat> = monitoring_engine::monitoring_get_heartbeats().await?;
+    let anomalies: Vec<DetectedAnomaly> = monitoring_engine::monitoring_get_anomalies(false).await?;
+    let health: HealthStatus = state.status.clone();
 
     Ok(serde_json::json!({
         "state": state,
@@ -174,13 +179,13 @@ pub async fn engines_monitoring_reset_alerts() -> Result<bool, String> {
 /// Get developer mode state
 #[command]
 pub async fn engines_devmode_get_state() -> Result<DeveloperModeState, String> {
-    crate::engines::developer_mode::dev_mode_get_state().await
+    titane_infinity::engines::developer_mode::dev_mode_get_state().await
 }
 
 /// Enable developer mode (Kevin only)
 #[command]
 pub async fn engines_devmode_enable(auth_token: String) -> Result<bool, String> {
-    crate::engines::developer_mode::dev_mode_toggle(true, auth_token)
+    developer_mode::dev_mode_toggle(true, auth_token)
         .await
         .map(|s| s.enabled)
 }
@@ -188,7 +193,7 @@ pub async fn engines_devmode_enable(auth_token: String) -> Result<bool, String> 
 /// Disable developer mode
 #[command]
 pub async fn engines_devmode_disable() -> Result<bool, String> {
-    crate::engines::developer_mode::dev_mode_toggle(false, "Kevin Thibault".to_string())
+    developer_mode::dev_mode_toggle(false, "Kevin Thibault".to_string())
         .await
         .map(|s| !s.enabled)
 }
@@ -198,27 +203,27 @@ pub async fn engines_devmode_disable() -> Result<bool, String> {
 pub async fn engines_devmode_validate_patch(
     patch: PatchAction,
 ) -> Result<SecurityValidation, String> {
-    crate::engines::developer_mode::dev_mode_validate_patch(patch, "Kevin Thibault".to_string())
+    developer_mode::dev_mode_validate_patch(patch, "Kevin Thibault".to_string())
         .await
 }
 
 /// Apply a validated patch
 #[command]
 pub async fn engines_devmode_apply_patch(patch: PatchAction) -> Result<PatchResult, String> {
-    crate::engines::developer_mode::dev_mode_apply_patch(patch, "Kevin Thibault".to_string()).await
+    developer_mode::dev_mode_apply_patch(patch, "Kevin Thibault".to_string()).await
 }
 
 /// Preview changes before applying
 #[command]
 pub async fn engines_devmode_preview(patch: PatchAction) -> Result<serde_json::Value, String> {
-    let preview = crate::engines::developer_mode::dev_mode_preview_patch(patch).await?;
+    let preview: DiffPreview = developer_mode::dev_mode_preview_patch(patch).await?;
     Ok(serde_json::to_value(preview).map_err(|e| e.to_string())?)
 }
 
 /// Rollback last change
 #[command]
 pub async fn engines_devmode_rollback(patch_id: String) -> Result<bool, String> {
-    crate::engines::developer_mode::dev_mode_rollback_patch(patch_id, "Kevin Thibault".to_string())
+    developer_mode::dev_mode_rollback_patch(patch_id, "Kevin Thibault".to_string())
         .await
         .map(|res| res.success)
 }
@@ -226,7 +231,7 @@ pub async fn engines_devmode_rollback(patch_id: String) -> Result<bool, String> 
 /// Get patch history
 #[command]
 pub async fn engines_devmode_get_history(limit: Option<u32>) -> Result<serde_json::Value, String> {
-    let history = crate::engines::developer_mode::dev_mode_get_history(limit).await?;
+    let history: PatchHistory = developer_mode::dev_mode_get_history(limit).await?;
     Ok(serde_json::to_value(history).map_err(|e| e.to_string())?)
 }
 
@@ -253,7 +258,7 @@ pub async fn engines_devmode_analyze_file(
 /// Generate changelog
 #[command]
 pub async fn engines_devmode_changelog(since: Option<String>) -> Result<String, String> {
-    crate::engines::developer_mode::dev_mode_generate_changelog(since).await
+    developer_mode::dev_mode_generate_changelog(since).await
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -375,10 +380,10 @@ pub async fn engines_build_clean() -> Result<bool, String> {
 /// Get complete engines dashboard data
 #[command]
 pub async fn engines_get_dashboard() -> Result<serde_json::Value, String> {
-    let qa_state = QAEngineState::default();
-    let monitoring_state = crate::engines::monitoring_engine::monitoring_get_state().await?;
-    let devmode_state = crate::engines::developer_mode::dev_mode_get_state().await?;
-    let health: HealthStatus = crate::engines::monitoring_engine::monitoring_get_state()
+    let qa_state: QAEngineState = QAEngineState::default();
+    let monitoring_state: MonitoringState = monitoring_engine::monitoring_get_state().await?;
+    let devmode_state: DeveloperModeState = developer_mode::dev_mode_get_state().await?;
+    let health: HealthStatus = monitoring_engine::monitoring_get_state()
         .await?
         .status;
 

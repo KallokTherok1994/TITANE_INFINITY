@@ -1,3 +1,16 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![allow(dead_code)]
+#![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
+mod commands;
+// Import display system commands (expérimental)
+// TITANE_INFINITY v30.0.0 — Proprietary License
+// © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+// ═══════════════════════════════════════════════════════════════
+//   TITANE∞ v30.0.0 — MAIN ENTRY POINT (Singularity Architecture)
+//   Tests 93.0% Production Ready + UI Enhanced + COPILOT-XS Compliant
+//   20 Engines Unified + OMEGA Pipeline + Production Ready
+// ═══════════════════════════════════════════════════════════════
+// Import display system commands (expérimental)
 // TITANE_INFINITY v30.0.0 — Proprietary License
 // © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
@@ -6,10 +19,6 @@
 //   Tests 93.0% Production Ready + UI Enhanced + COPILOT-XS Compliant
 //   20 Engines Unified + OMEGA Pipeline + Production Ready
 // ═══════════════════════════════════════════════════════════════
-
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-#![allow(dead_code)]
-#![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
 
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ HARDENING: Import Hygiene v19.5.2
@@ -72,27 +81,27 @@ mod commands_v21 {
     pub mod window_controls_commands {
         include!("commands/window_controls_commands.rs");
     }
-}
 
 // ✅ AUTOFIX(memory-chat): Persistent Memory v30.0.0Ω — full 3-level pipeline
 // Previously orphaned; provides persistent_memory_read/get_stats/get_context/write_entry/etc.
 mod persistent_memory_v30 {
     include!("commands/persistent_memory.rs");
-}
 
-mod memory_system_commands {
-    include!("commands/memory_system_commands.rs");
-}
+    mod memory_system_commands {
+        include!("commands/memory_system_commands.rs");
+    }
 
-// Auto-Evolution Engine API — run_evolution, get_evolution_state, quick_health_check
-mod engine_evolution_commands {
-    include!("commands/engine_evolution_commands.rs");
-}
+    // Auto-Evolution Engine API — run_evolution, get_evolution_state, quick_health_check
+    mod engine_evolution_commands {
+        include!("commands/engine_evolution_commands.rs");
+    }
 
-// Evolution Engine v∞ commands (evolution_get_state, evolution_start/stop, etc.)
-mod evolution_engine_commands {
-    include!("evolution/evolution_commands.rs");
-}
+    // Evolution Engine v∞ commands (evolution_get_state, evolution_start/stop, etc.)
+    mod evolution_engine_commands {
+        include!("evolution/evolution_commands.rs");
+    }
+} // <-- ferme persistent_memory_v30
+} // <-- ferme commands_v21
 
 // Persona Engine commands (persona_get_state, persona_react, etc.)
 // full: real PersonaEngine; mock/default: lightweight stubs
@@ -298,55 +307,6 @@ mod runtime_config {
     include!("runtime_config.rs");
 }
 
-// Chat Generate Commands v21 Phase 1 - Provider-specific AI generation
-mod commands {
-    pub mod chat_generate_commands {
-        include!("commands/chat_generate_commands.rs");
-    }
-
-    pub mod db_commands {
-        include!("commands/db_commands.rs");
-    }
-
-    // EXP Fusion Engine commands (XP/EXP UI)
-    pub mod exp_fusion {
-        include!("commands/exp_fusion.rs");
-    }
-
-    // ✨ v26.3: GitHub Copilot provider commands
-    pub mod copilot_commands {
-        include!("commands/copilot_commands.rs");
-    }
-
-    // ✅ R11: Stub commands — fill IPC gaps for frontend-called commands with no real backend
-    pub mod stub_commands {
-        include!("commands/stub_commands.rs");
-    }
-
-    // ✅ AUDIT FIX #1: Unified Ollama provider command
-    pub mod ollama_command {
-        include!("commands/ollama_command.rs");
-    }
-
-    // ✨ TOTAL_DEV v30.0.0 — GOD DEV secure space (unlock, git, console, file)
-    pub mod total_dev_commands {
-        include!("commands/total_dev_commands.rs");
-    }
-
-    pub mod http_commands {
-        include!("commands/http_commands.rs");
-    }
-
-    // ✅ RAG Embeddings backend via Ollama /api/embeddings
-    pub mod rag_commands {
-        include!("commands/rag_commands.rs");
-    }
-
-    // ✅ Web search via SearXNG (One Door governed)
-    pub mod web_search_commands {
-        include!("commands/web_search_commands.rs");
-    }
-}
 
 // Legacy AI/Engine/Memory command bridge.
 // In full backend mode we forward to the library commands.
@@ -375,7 +335,8 @@ mod legacy_ai_bridge {
         engines_build_get_status, engines_build_start, engines_devmode_analyze_file,
         engines_devmode_apply_patch, engines_devmode_changelog, engines_devmode_create_backup,
         engines_devmode_disable, engines_devmode_enable, engines_devmode_get_history,
-        engines_devmode_get_state, engines_devmode_preview, engines_devmode_restore_backup,
+        engines_devmode_get_state, engines_devmode_get_suggestions,
+        engines_devmode_preview, engines_devmode_restore_backup,
         engines_devmode_rollback, engines_devmode_validate_patch, engines_monitoring_get_health,
     };
     // [FIX-016] Real runtime state commands (always-available real implementations)
@@ -841,15 +802,6 @@ mod state_bridge_commands {
 }
 
 // IA Commands v19.5.2 - OpenAI + Claude + Unified Engine
-mod ia_commands {
-    include!("commands/ia_commands.rs");
-}
-
-// AI Prompt Generator v25.4.2 - Mode Builder AI
-mod ai_prompt_generator {
-    include!("commands/ai_prompt_generator.rs");
-}
-
 // Meta-Mode Engine + Auto-Evolution v15 commands
 // In full backend mode we load the real engine.
 // In mock/not-full builds we provide stubs so IPC symbols resolve.
@@ -1851,6 +1803,9 @@ fn main() {
             overdrive::chat_orchestrator::chat_generate_suggestions,
             overdrive::chat_orchestrator::chat_get_memory_stats, // R04 FIX
             overdrive::chat_orchestrator::chat_memory_backup,    // LTM backup coverage
+
+            // Web Vitals Report (frontend analytics via IPC)
+            commands::web_vitals_commands::web_vitals_report,
             overdrive::chat_orchestrator::chat_memory_restore,   // LTM restore coverage
 
             // Multi-IA Orchestrator Commands (v28.0)
@@ -1973,7 +1928,7 @@ fn main() {
             commands::copilot_commands::get_copilot_key_status,
             commands::copilot_commands::test_copilot_connection,
             // AI Prompt Generator v25.4.2 (Mode Builder)
-            ai_prompt_generator::generate_mode_prompt,
+            commands::ai_prompt_generator::generate_mode_prompt,
             // Meta-Mode Engine v15 commands — R7 fix: was present in backend, missing from handler
             meta_mode_commands::meta_mode_process,
             meta_mode_commands::meta_mode_get_current_mode,
@@ -2050,32 +2005,18 @@ fn main() {
             api::memory_api::memory_get_timeline,
             api::memory_api::memory_get_active_rituals,
             api::memory_api::memory_debug_scan,
-            memory_system_commands::memory_save_entry,
-            // Auto-Evolution Engine — R8 unlock
-            engine_evolution_commands::run_evolution,
-            engine_evolution_commands::get_evolution_state,
-            engine_evolution_commands::quick_health_check,
-            // Evolution Engine v∞ commands — R9 unlock
-            evolution_engine_commands::evolution_get_state,
-            evolution_engine_commands::evolution_start,
-            evolution_engine_commands::evolution_stop,
-            evolution_engine_commands::evolution_run_full_cycle,
-            evolution_engine_commands::evolution_get_history,
-            evolution_engine_commands::evolution_get_suggestions,
-            evolution_engine_commands::evolution_approve_suggestion,
-            evolution_engine_commands::evolution_reject_suggestion,
-            evolution_engine_commands::evolution_create_action,
-            evolution_engine_commands::evolution_execute_action,
-            evolution_engine_commands::evolution_rollback_action,
-            evolution_engine_commands::evolution_get_data_points,
-            evolution_engine_commands::evolution_add_data_point,
-            evolution_engine_commands::evolution_update_score,
-            evolution_engine_commands::evolution_get_scores,
-            evolution_engine_commands::evolution_get_insights,
-            evolution_engine_commands::evolution_get_patterns,
-            evolution_engine_commands::evolution_get_statistics,
-            evolution_engine_commands::evolution_generate_report,
-            evolution_engine_commands::evolution_clear_old_history,
+            persistent_memory_v30::persistent_memory_read,
+            persistent_memory_v30::persistent_memory_get_stats,
+            persistent_memory_v30::persistent_memory_get_bundles,
+            persistent_memory_v30::persistent_memory_get_context,
+            persistent_memory_v30::persistent_memory_write_entry,
+            persistent_memory_v30::persistent_memory_create_summary,
+            persistent_memory_v30::persistent_memory_create_bundle,
+            persistent_memory_v30::persistent_memory_export,
+            persistent_memory_v30::persistent_memory_promote_entry,
+            persistent_memory_v30::persistent_memory_archive_entry,
+            persistent_memory_v30::persistent_memory_delete_entry,
+            persistent_memory_v30::persistent_memory_add_to_bundle,
             // Persona Engine commands — R9 unlock
             persona_commands::persona_get_state,
             persona_commands::persona_get_multipliers,
@@ -2169,20 +2110,7 @@ fn main() {
             commands_v21::whisper_commands::stop_whisper_streaming,
             commands_v21::whisper_commands::send_audio_chunk,
             // Audio Config Commands - NOTE: Already exist in audio::commands (set/get_audio_*_device)
-            // ✅ AUTOFIX(memory-chat): Persistent Memory v30.0.0Ω — full IPC suite
-            //    (stubs v21 remplacés; module orphelin désormais enregistré)
-            persistent_memory_v30::persistent_memory_read,
-            persistent_memory_v30::persistent_memory_get_stats,
-            persistent_memory_v30::persistent_memory_get_bundles,
-            persistent_memory_v30::persistent_memory_get_context,
-            persistent_memory_v30::persistent_memory_write_entry,
-            persistent_memory_v30::persistent_memory_create_summary,
-            persistent_memory_v30::persistent_memory_create_bundle,
-            persistent_memory_v30::persistent_memory_export,
-            persistent_memory_v30::persistent_memory_promote_entry,
-            persistent_memory_v30::persistent_memory_archive_entry,
-            persistent_memory_v30::persistent_memory_delete_entry,
-            persistent_memory_v30::persistent_memory_add_to_bundle,
+            // persistent_memory block removed here — already registered at lines 2008-2019
             // UI Theme Commands
             design_center::theme_manager::save_ui_theme,
             design_center::theme_manager::load_ui_theme,
@@ -2421,9 +2349,9 @@ fn main() {
             // IA COMMANDS — R10 unlock
             // ia_commands module (include! at mod ia_commands block)
             // ═══════════════════════════════════════════════════════════════
-            ia_commands::list_ai_providers,
-            ia_commands::set_api_key,
-            ia_commands::test_api_key,
+            commands::ia_commands::list_ai_providers,
+            commands::ia_commands::set_api_key,
+            commands::ia_commands::test_api_key,
 
             // ═══════════════════════════════════════════════════════════════
             // ORCHESTRATION CENTER — ping commands — R10 unlock
@@ -2880,6 +2808,13 @@ fn main() {
             // DOC ENGINE — Export natif DOCX (Phase 2)
             // ═══════════════════════════════════════════════════════════════
             titane_infinity::doc_engine::commands::export_docx_file,
+
+            // ═══════════════════════════════════════════════════════════════
+            // DISPLAY SYSTEM COMMANDS (expérimental)
+            // ═══════════════════════════════════════════════════════════════
+            commands::display_get_environment,
+            commands::display_set_environment,
+            commands::display_list_monitors,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

@@ -19,12 +19,12 @@ mod tests_engine;
 
 // Re-export main types
 pub use boot_orchestrator::*;
-pub use engine::*;
-pub use modules::*;
-pub use state::*;
-pub use tapi_error::{TAPIError, TAPIErrorKind};
-pub use types::*;
 pub use utils::*;
+pub use crate::core::engine::*;
+pub use crate::core::modules::*;
+pub use crate::core::state::*;
+pub use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+pub use crate::core::types::*;
 
 // Re-export legacy adapters for backward compatibility
 pub use legacy::{HarmoniaCore, HeliosCore, MemoryCore, NexusCore, SentinelCore};

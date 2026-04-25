@@ -491,7 +491,32 @@ export const ConfigurationHub: React.FC = () => {
   const [saving, setSaving] = useState(false);
 
   // Audio device config state (canonical — single source of truth)
-  const [audioConfig, setAudioConfig] = useState<{
+  // Display System state (future integration)
+  const [displayEnv, setDisplayEnv] = useState<any>(null);
+  const [displayMonitors, setDisplayMonitors] = useState<any[]>([]);
+  const [displayStatus, setDisplayStatus] = useState<string>('');
+  const [displayLoading, setDisplayLoading] = useState(false);
+  const [displayError, setDisplayError] = useState<string | null>(null);
+
+  // Placeholder: simulate loading display environment (to be replaced by real service)
+  useEffect(() => {
+    setDisplayLoading(true);
+    setTimeout(() => {
+      setDisplayEnv({
+        session: 'x11',
+        permissions: 'ok',
+        tools: ['xrandr', 'brightnessctl'],
+        blocked: false,
+      });
+      setDisplayMonitors([
+        { id: 'HDMI-1', name: 'HDMI-1', modes: ['1920x1080@60', '1280x720@60'], current: '1920x1080@60', brightness: 0.8 },
+        { id: 'eDP-1', name: 'eDP-1', modes: ['1920x1080@60'], current: '1920x1080@60', brightness: 0.6 },
+      ]);
+      setDisplayStatus('Disponible');
+      setDisplayLoading(false);
+    }, 800);
+  }, []);
+  const [audioDeviceConfig, setAudioDeviceConfig] = useState<{
     inputDeviceId: string;
     inputDeviceLabel: string;
     outputDeviceId: string;
@@ -1098,6 +1123,69 @@ export const ConfigurationHub: React.FC = () => {
       <div className="module-page__header">
         <div>
           <h1 className="module-page__title">
+                  {/* Display System (Experimental) Section */}
+                  <section
+                    className="config-section display-system-panel"
+                    data-testid="display-system-panel"
+                    style={{ margin: '2rem 0', padding: '1.5rem', background: 'rgba(0,0,0,0.08)', borderRadius: 12 }}
+                  >
+                    <h2 style={{ marginBottom: 8 }}>🖥️ Display System <span style={{ fontSize: '0.8em', color: '#888' }}>(Experimental)</span></h2>
+                    {displayLoading ? (
+                      <div style={{ color: '#888', padding: '1rem' }}>Chargement de l’environnement d’affichage…</div>
+                    ) : displayError ? (
+                      <div data-testid="display-system-status" style={{ color: 'var(--color-error)' }}>{displayError}</div>
+                    ) : (
+                      <>
+                        <div data-testid="display-system-status" style={{ marginBottom: 12 }}>
+                          <b>Statut&nbsp;:</b> {displayStatus}
+                        </div>
+                        <div data-testid="display-system-env" style={{ marginBottom: 12 }}>
+                          <b>Session&nbsp;:</b> {displayEnv?.session} &nbsp;|
+                          <b> Permissions&nbsp;:</b> {displayEnv?.permissions} &nbsp;|
+                          <b> Outils&nbsp;:</b> {(displayEnv?.tools || []).join(', ')}
+                        </div>
+                        <div>
+                          <label htmlFor="monitor-select"><b>Moniteur&nbsp;:</b></label>
+                          <select id="monitor-select" data-testid="display-monitor-select" style={{ marginLeft: 8 }}>
+                            {displayMonitors.map(m => (
+                              <option key={m.id} value={m.id}>{m.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div style={{ marginTop: 12 }}>
+                          <label htmlFor="mode-select"><b>Mode vidéo&nbsp;:</b></label>
+                          <select id="mode-select" data-testid="display-mode-select" style={{ marginLeft: 8 }}>
+                            {displayMonitors[0]?.modes.map((mode: string) => (
+                              <option key={mode} value={mode}>{mode}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div style={{ marginTop: 12 }}>
+                          <label htmlFor="brightness-slider"><b>Luminosité&nbsp;:</b></label>
+                          <input
+                            id="brightness-slider"
+                            data-testid="display-brightness-slider"
+                            type="range"
+                            min={0}
+                            max={1}
+                            step={0.01}
+                            value={displayMonitors[0]?.brightness ?? 0.5}
+                            style={{ marginLeft: 8, width: 180 }}
+                            readOnly
+                          />
+                          <span style={{ marginLeft: 8 }}>{Math.round((displayMonitors[0]?.brightness ?? 0.5) * 100)}%</span>
+                        </div>
+                        <div style={{ marginTop: 16 }}>
+                          <button data-testid="display-apply" style={{ marginRight: 12, padding: '0.5rem 1.2rem', borderRadius: 6, background: '#667eea', color: 'white', border: 'none' }} disabled>
+                            Appliquer
+                          </button>
+                          <button data-testid="display-rollback" style={{ padding: '0.5rem 1.2rem', borderRadius: 6, background: '#aaa', color: 'white', border: 'none' }} disabled>
+                            Rollback
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </section>
             <span className="module-page__icon">🎯</span>
             Configuration Hub
             {editMode && (

@@ -3,25 +3,24 @@
 // Clean architecture v15: Unified SingularityEngine, documented, production-ready
 // V24 OPTIMIZATION: Response streaming support for memory efficiency
 
-use crate::ai::router::AIRouter;
-use crate::ai::AIRequest;
-use crate::audio::asr::ASREngine;
-use crate::audio::recorder::AudioRecorder;
-use crate::audio::vad::VoiceActivityDetector;
-use crate::audio::AudioConfig;
-use crate::compat::CoreCollection;
-use crate::memory::model::Conversation;
-use crate::memory::storage::MemoryStorage;
-use crate::security::secrets_engine::SecureSecretsEngine;
-use crate::tts::local_tts::LocalTTS;
-use crate::tts::online_tts::OnlineTTS;
-use crate::tts::TTSRequest;
+use titane_infinity::ai::router::AIRouter;
+use titane_infinity::audio::asr::ASREngine;
+use titane_infinity::audio::recorder::AudioRecorder;
+use titane_infinity::audio::vad::VoiceActivityDetector;
+use titane_infinity::audio::{AudioConfig, AudioError};
+use titane_infinity::compat::core_collection::CoreCollection;
+use titane_infinity::memory::model::Conversation;
+use titane_infinity::memory::storage::MemoryStorage;
+use titane_infinity::security::secrets_engine::SecureSecretsEngine;
+use titane_infinity::tts::local_tts::LocalTTS;
+use titane_infinity::tts::online_tts::OnlineTTS;
+use titane_infinity::tts::TTSRequest;
 use dashmap::DashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
-use tauri::{Emitter, State, Window};
+use tauri::{State};
 use tokio::sync::RwLock;
-use uuid::Uuid;
+// use uuid::Uuid;
 
 // Global state for AI Chat system (v15)
 // v19.5.2 P2-1: Optimized with DashMap for concurrent access (Phase 2)
@@ -156,253 +155,6 @@ impl AIChatState {
         }
     }
 }
-
-// P2-002 AUDIT FIX (2026-03-06): AIChatState::default() required for .manage()
-impl Default for AIChatState {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-#[tauri::command]
-pub async fn ai_query(
-    state: State<'_, AIChatState>,
-    prompt: String,
-    temperature: Option<f32>,
-    max_tokens: Option<usize>,
-) -> Result<String, String> {
-    log::info!("[AI Chat v15] Query received: {}", prompt);
-
-    // Create AI request v15
-    let request = AIRequest {
-        prompt,
-        temperature: temperature.unwrap_or(0.7),
-        max_tokens: max_tokens.unwrap_or(2000),
-        stream: false,
-        provider_preference: None,
-    };
-
-    // Query AI through router (cascade Gemini → Ollama → Local)
-    // v19.5.2 P2-1: DashMap lock-free access (no .read().await needed!)
-    let response = {
-        let router_ref = state
-            .ai_router
-            .get("default")
-            .ok_or_else(|| "AI Router not initialized".to_string())?;
-        router_ref.query(request).await.map_err(|e| e.to_string())?
-    };
-
-    log::info!(
-        "[AI Router v15] Response from {:?} ({} tokens)",
-        response.provider,
-        response.tokens
-    );
-
-    let balanced_response = response.content.clone();
-
-    Ok(serde_json::json!({
-        "content": balanced_response,
-        "provider": format!("{:?}", response.provider),
-        "tokens": response.tokens,
-        "timestamp": response.timestamp,
-    })
-    .to_string())
-}
-
-/// V24 OPTIMIZATION: Stream AI response in chunks to reduce memory buffering
-/// Emits "ai_response_chunk" events progressively instead of returning full response at once
-/// Expected memory gain: -3-5% (no sustained full response buffer)
-#[tauri::command]
-pub async fn ai_query_streaming(
-    window: Window,
-    state: State<'_, AIChatState>,
-    prompt: String,
-    temperature: Option<f32>,
-    max_tokens: Option<usize>,
-) -> Result<String, String> {
-    log::info!("[AI Chat v24] Streaming query received: {}", prompt);
-
-    // Create AI request
-    let request = AIRequest {
-        prompt,
-        temperature: temperature.unwrap_or(0.7),
-        max_tokens: max_tokens.unwrap_or(2000),
-        stream: false,
-        provider_preference: None,
-    };
-
-    // Query AI through router (cascade Gemini → Ollama → Local)
-    let response = {
-        let router_ref = state
-            .ai_router
-            .get("default")
-            .ok_or_else(|| "AI Router not initialized".to_string())?;
-        router_ref.query(request).await.map_err(|e| e.to_string())?
-    };
-
-    log::info!(
-        "[AI Router v24] Response from {:?} ({} tokens)",
-        response.provider,
-        response.tokens
-    );
-
-    // Generate unique response ID for chunking correlation
-    let response_id = Uuid::new_v4().to_string();
-
-    // Emit start event
-    let _ = window.emit(
-        "ai_response_start",
-        serde_json::json!({
-            "response_id": response_id,
-            "provider": format!("{:?}", response.provider),
-            "total_tokens": response.tokens,
-        }),
-    );
-
-    // V24: Chunk response by words (50-word chunks)
-    const CHUNK_SIZE_WORDS: usize = 50;
-    let words: Vec<&str> = response.content.split_whitespace().collect();
-    let chunks: Vec<Vec<&str>> = words.chunks(CHUNK_SIZE_WORDS).map(|c| c.to_vec()).collect();
-
-    log::info!(
-        "[AI Chat v24] Response chunked into {} chunks",
-        chunks.len()
-    );
-
-    // Emit chunks progressively
-    for (i, chunk_words) in chunks.iter().enumerate() {
-        let chunk_text = chunk_words.join(" ");
-        let is_last = i == chunks.len() - 1;
-
-        // Emit chunk event
-        let _ = window.emit(
-            "ai_response_chunk",
-            serde_json::json!({
-                "response_id": response_id,
-                "chunk": chunk_text,
-                "index": i,
-                "total_chunks": chunks.len(),
-                "is_last": is_last,
-            }),
-        );
-
-        // Small delay to simulate streaming effect (optional, helps UI perception)
-        // Uncomment if needed for better streaming illusion:
-        // tokio::time::sleep(Duration::from_millis(5)).await;
-    }
-
-    // Emit end event
-    let _ = window.emit(
-        "ai_response_end",
-        serde_json::json!({
-            "response_id": response_id,
-            "content": response.content.clone(),
-            "provider": format!("{:?}", response.provider),
-            "tokens": response.tokens,
-            "timestamp": response.timestamp,
-        }),
-    );
-
-    // Return response ID and metadata for UI correlation
-    Ok(serde_json::json!({
-        "response_id": response_id,
-        "provider": format!("{:?}", response.provider),
-        "tokens": response.tokens,
-        "chunk_count": chunks.len(),
-        "status": "streaming_complete",
-    })
-    .to_string())
-}
-
-/// v24.20: TTS avec streaming + background task (non-blocking)
-/// Legacy helper wrapper: canonical IPC command lives in `crate::audio::commands`.
-pub async fn speak(
-    state: State<'_, AIChatState>,
-    text: String,
-    use_online: bool,
-    rate: Option<f32>,
-    pitch: Option<f32>,
-    voice: Option<String>,
-) -> Result<(), String> {
-    // Validation entrée
-    if text.trim().is_empty() {
-        return Err("Text cannot be empty".to_string());
-    }
-    if text.len() > 10000 {
-        return Err("Text too long (max 10000 chars)".to_string());
-    }
-
-    // v24.20: RwLock anti-superposition (async-safe)
-    {
-        let is_speaking = state.is_speaking.read().await;
-        if *is_speaking {
-            return Err(
-                "TTS busy: another synthesis is in progress. Please wait or call stop_speaking()."
-                    .to_string(),
-            );
-        }
-    }
-
-    // Clone state for background task
-    let is_speaking = state.is_speaking.clone();
-    let online_tts = state.online_tts.clone();
-    let local_tts = state.local_tts.clone();
-
-    // Validation + clamp paramètres
-    let speed = rate.unwrap_or(1.0).clamp(0.5, 2.0);
-    let pitch_value = pitch.unwrap_or(1.0).clamp(0.5, 2.0);
-
-    // v24.20: Spawn background task (non-blocking UI)
-    tokio::spawn(async move {
-        // Set speaking flag
-        {
-            let mut speaking = is_speaking.write().await;
-            *speaking = true;
-        }
-
-        log::info!(
-            "[TTS v24.20] Background synthesis: mode={}, rate={:.2}, pitch={:.2}, voice={:?}, len={}",
-            if use_online { "online" } else { "local" },
-            speed,
-            pitch_value,
-            voice,
-            text.len()
-        );
-
-        let request = TTSRequest {
-            text,
-            voice,
-            speed,
-            pitch: pitch_value,
-        };
-
-        // Execute synthesis in background
-        let result = if use_online {
-            let tts = online_tts.read().await;
-            tts.speak(&request).await
-        } else {
-            let tts = local_tts.read().await;
-            tts.speak(&request)
-        };
-
-        // Release speaking flag
-        {
-            let mut speaking = is_speaking.write().await;
-            *speaking = false;
-        }
-
-        match result {
-            Ok(_) => log::info!("[TTS v24.20] Background synthesis complete"),
-            Err(e) => log::error!("[TTS v24.20] Background synthesis failed: {:?}", e),
-        }
-    });
-
-    // Return immediately (non-blocking)
-    log::info!("[TTS v24.20] Synthesis started in background (non-blocking)");
-    Ok(())
-}
-
-/// v24.20: Arrêt synthèse TTS en cours (async-safe)
 pub async fn stop_speaking(state: State<'_, AIChatState>) -> Result<(), String> {
     let mut is_speaking = state.is_speaking.write().await;
     if !*is_speaking {
@@ -420,84 +172,23 @@ pub async fn is_speaking(state: State<'_, AIChatState>) -> Result<bool, String> 
 }
 
 pub async fn start_recording(state: State<'_, AIChatState>) -> Result<(), String> {
-    let recorder = state.audio_recorder.read().await;
-    recorder.start().map_err(|e| e.to_string())
+    let recorder: tokio::sync::RwLockReadGuard<'_, AudioRecorder> = state.audio_recorder.read().await;
+    recorder.start().map_err(|e: AudioError| e.to_string())
 }
 
 pub async fn stop_recording(state: State<'_, AIChatState>) -> Result<(), String> {
-    let recorder = state.audio_recorder.read().await;
-    recorder.stop().map_err(|e| e.to_string())
+    let recorder: tokio::sync::RwLockReadGuard<'_, AudioRecorder> = state.audio_recorder.read().await;
+    recorder.stop().map_err(|e: AudioError| e.to_string())
 }
 
 pub async fn transcribe_audio(
     state: State<'_, AIChatState>,
     audio_data: Vec<u8>,
 ) -> Result<String, String> {
-    let asr = state.asr_engine.read().await;
-    asr.transcribe(&audio_data).await.map_err(|e| e.to_string())
+    let asr: tokio::sync::RwLockReadGuard<'_, ASREngine> = state.asr_engine.read().await;
+    asr.transcribe(&audio_data).await.map_err(|e: AudioError| e.to_string())
 }
 
-#[tauri::command]
-pub async fn create_conversation(
-    state: State<'_, AIChatState>,
-    title: String,
-) -> Result<String, String> {
-    let conversation = Conversation::new(title);
-    let id = conversation.id.clone();
-
-    let storage = state.memory_storage.read().await;
-    storage
-        .save_conversation(&conversation)
-        .map_err(|e| e.to_string())?;
-
-    let mut current = state.current_conversation.write().await;
-    *current = Some(conversation);
-
-    Ok(id)
-}
-
-#[tauri::command]
-pub async fn load_conversation(
-    state: State<'_, AIChatState>,
-    conversation_id: String,
-) -> Result<String, String> {
-    let storage = state.memory_storage.read().await;
-    let conversation = storage
-        .load_conversation(&conversation_id)
-        .map_err(|e| e.to_string())?;
-
-    let json = serde_json::to_string(&conversation).map_err(|e| e.to_string())?;
-
-    let mut current = state.current_conversation.write().await;
-    *current = Some(conversation);
-
-    Ok(json)
-}
-
-#[tauri::command]
-pub async fn list_conversations(state: State<'_, AIChatState>) -> Result<String, String> {
-    let storage = state.memory_storage.read().await;
-    let conversations = storage.list_conversations().map_err(|e| e.to_string())?;
-
-    serde_json::to_string(&conversations).map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-pub async fn delete_conversation(
-    state: State<'_, AIChatState>,
-    conversation_id: String,
-) -> Result<(), String> {
-    let storage = state.memory_storage.read().await;
-    storage
-        .delete_conversation(&conversation_id)
-        .map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-pub async fn clear_all_memory(state: State<'_, AIChatState>) -> Result<(), String> {
-    let storage = state.memory_storage.read().await;
-    storage.clear_all().map_err(|e| e.to_string())
-}
 
 #[tauri::command]
 pub async fn check_connection() -> Result<bool, String> {

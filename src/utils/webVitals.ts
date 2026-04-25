@@ -285,19 +285,17 @@ export class WebVitalsMonitor {
     const latest = this.getLatestMetrics();
     if (!latest) return;
 
-    // Envoi réel vers le backend (fetch POST)
-    fetch('/api/analytics/web-vitals', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(latest),
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        console.warn('[WebVitals] Synchronisation réussie', latest);
-      })
-      .catch(err => {
-        console.error('[WebVitals] Synchronisation échouée', err);
-      });
+    // Envoi via IPC/service (Tauri ou fallback sécurisé)
+    import('@/lib/security').then(({ secureInvoke }) => {
+      secureInvoke('web_vitals_report', { metrics: latest })
+        .then((res: any) => {
+          if (!res?.ok) throw new Error(res?.error || 'IPC error');
+          console.warn('[WebVitals] Synchronisation IPC réussie', latest);
+        })
+        .catch((err: any) => {
+          console.error('[WebVitals] Synchronisation IPC échouée', err);
+        });
+    });
   }
 }
 

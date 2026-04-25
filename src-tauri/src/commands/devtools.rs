@@ -3,16 +3,13 @@
 //   Tauri commands for observability: logging, metrics, core discovery, cognitive state
 // ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::cognitive::{
-    engine::CognitiveEngine,
-    mental::CognitiveMode,
-    state::{CognitiveState, SystemRecommendation},
-};
-use crate::compat::plugin_system::registry::CoreRegistry;
-use crate::devtools::{
-    logging::{LogCollector, LogEntry, LogFilters, LogLevel},
-    metrics::{MetricPoint, MetricStats, MetricsCollector},
-};
+use titane_infinity::cognitive::engine::CognitiveEngine;
+use titane_infinity::cognitive::mental::{CognitiveMode, StructurePhase};
+use titane_infinity::cognitive::state::{CognitiveState, SystemRecommendation};
+use titane_infinity::compat::plugin_system;
+use titane_infinity::compat::plugin_system::registry::CoreRegistry;
+use titane_infinity::devtools::logging::{LogCollector, LogEntry, LogFilters, LogLevel};
+use titane_infinity::devtools::metrics::{MetricPoint, MetricStats, MetricsCollector};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
@@ -100,7 +97,7 @@ pub async fn get_logs(
     limit: Option<usize>,
     offset: Option<usize>,
 ) -> Result<LogsResponse, String> {
-    let collector = log_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, LogCollector> = log_collector.read().await;
 
     let log_level = level
         .as_ref()
@@ -118,7 +115,7 @@ pub async fn get_logs(
         ..Default::default()
     };
 
-    let mut logs = collector.filter_logs(&filters).await;
+    let mut logs: Vec<LogEntry> = collector.filter_logs(&filters).await;
 
     let total = logs.len();
     let offset_val = offset.unwrap_or(0);
@@ -148,7 +145,7 @@ pub async fn get_correlated_logs(
     log_collector: State<'_, Arc<RwLock<LogCollector>>>,
     correlation_id: String,
 ) -> Result<Vec<LogEntry>, String> {
-    let collector = log_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, LogCollector> = log_collector.read().await;
     Ok(collector.get_correlated_logs(&correlation_id).await)
 }
 
@@ -166,8 +163,8 @@ pub async fn search_logs(
     query: String,
     limit: Option<usize>,
 ) -> Result<Vec<LogEntry>, String> {
-    let collector = log_collector.read().await;
-    let all_logs = collector.get_recent(10_000).await;
+    let collector: tokio::sync::RwLockReadGuard<'_, LogCollector> = log_collector.read().await;
+    let all_logs: Vec<LogEntry> = collector.get_recent(10_000).await;
 
     let query_lower = query.to_lowercase();
     let mut results: Vec<LogEntry> = all_logs
@@ -199,7 +196,7 @@ pub async fn export_logs(
     level: Option<String>,
     source: Option<String>,
 ) -> Result<String, String> {
-    let collector = log_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, LogCollector> = log_collector.read().await;
 
     let log_level = level
         .as_ref()
@@ -238,7 +235,7 @@ pub async fn get_metric(
     metrics_collector: State<'_, Arc<RwLock<MetricsCollector>>>,
     metric_name: String,
 ) -> Result<MetricResponse, String> {
-    let collector = metrics_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> = metrics_collector.read().await;
     let series = collector.get_metric_series(&metric_name).await;
     let (points, stats) = if let Some(series) = series {
         (
@@ -274,7 +271,7 @@ pub async fn get_metric(
 pub async fn list_all_metrics(
     metrics_collector: State<'_, Arc<RwLock<MetricsCollector>>>,
 ) -> Result<Vec<String>, String> {
-    let collector = metrics_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> = metrics_collector.read().await;
     Ok(collector.list_metrics().await)
 }
 
@@ -290,7 +287,7 @@ pub async fn get_core_metrics(
     metrics_collector: State<'_, Arc<RwLock<MetricsCollector>>>,
     core_name: String,
 ) -> Result<std::collections::HashMap<String, MetricResponse>, String> {
-    let collector = metrics_collector.read().await;
+    let collector: tokio::sync::RwLockReadGuard<'_, MetricsCollector> = metrics_collector.read().await;
     let series = collector.get_core_metrics(&core_name).await;
     let mut out = std::collections::HashMap::new();
     for metric in series {
@@ -380,17 +377,6 @@ pub async fn get_core_info(
 // COGNITIVE STATE API COMMANDS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// Get current cognitive state
-///
-/// # Returns
-/// Complete CognitiveState with mental, heart, body, and coherence
-#[tauri::command]
-pub async fn get_cognitive_state(
-    cognitive_engine: State<'_, Arc<RwLock<CognitiveEngine>>>,
-) -> Result<CognitiveState, String> {
-    let engine = cognitive_engine.read().await;
-    Ok(engine.get_state().await)
-}
 
 /// Update cognitive mode
 ///
@@ -404,7 +390,7 @@ pub async fn update_cognitive_mode(
     cognitive_engine: State<'_, Arc<RwLock<CognitiveEngine>>>,
     mode: String,
 ) -> Result<(), String> {
-    let engine = cognitive_engine.read().await;
+    let engine: tokio::sync::RwLockReadGuard<'_, CognitiveEngine> = cognitive_engine.read().await;
 
     let cognitive_mode = match mode.to_lowercase().as_str() {
         "discovery" => CognitiveMode::Discovery {
@@ -417,7 +403,7 @@ pub async fn update_cognitive_mode(
         },
         "organization" => CognitiveMode::Organization {
             clarity_target: 0.8,
-            structuring_phase: crate::cognitive::mental::StructurePhase::Collecting,
+            structuring_phase: StructurePhase::Collecting,
         },
         "rest" => CognitiveMode::Rest { recovery_rate: 0.6 },
         _ => return Err(format!("Invalid cognitive mode: {}", mode)),
@@ -435,7 +421,7 @@ pub async fn update_cognitive_mode(
 pub async fn get_three_centers_coherence(
     cognitive_engine: State<'_, Arc<RwLock<CognitiveEngine>>>,
 ) -> Result<ThreeCentersCoherence, String> {
-    let engine = cognitive_engine.read().await;
+    let engine: tokio::sync::RwLockReadGuard<'_, CognitiveEngine> = cognitive_engine.read().await;
     let state = engine.get_state().await;
 
     Ok(ThreeCentersCoherence {
@@ -454,7 +440,7 @@ pub async fn get_three_centers_coherence(
 pub async fn get_system_recommendations(
     cognitive_engine: State<'_, Arc<RwLock<CognitiveEngine>>>,
 ) -> Result<Vec<SystemRecommendation>, String> {
-    let engine = cognitive_engine.read().await;
+    let engine: tokio::sync::RwLockReadGuard<'_, CognitiveEngine> = cognitive_engine.read().await;
     Ok(engine.get_recommendations().await)
 }
 
@@ -466,7 +452,7 @@ pub async fn get_system_recommendations(
 pub async fn check_needs_intervention(
     cognitive_engine: State<'_, Arc<RwLock<CognitiveEngine>>>,
 ) -> Result<bool, String> {
-    let engine = cognitive_engine.read().await;
+    let engine: tokio::sync::RwLockReadGuard<'_, CognitiveEngine> = cognitive_engine.read().await;
     Ok(engine.needs_intervention().await)
 }
 
@@ -482,7 +468,7 @@ pub async fn update_mental_charge(
     cognitive_engine: State<'_, Arc<RwLock<CognitiveEngine>>>,
     charge: f32,
 ) -> Result<(), String> {
-    let engine = cognitive_engine.read().await;
+    let engine: tokio::sync::RwLockReadGuard<'_, CognitiveEngine> = cognitive_engine.read().await;
     engine.update_mental_charge(charge).await;
     Ok(())
 }
@@ -501,7 +487,7 @@ pub async fn update_heart_alignment(
     alignment: f32,
     motivation: f32,
 ) -> Result<(), String> {
-    let engine = cognitive_engine.read().await;
+    let engine: tokio::sync::RwLockReadGuard<'_, CognitiveEngine> = cognitive_engine.read().await;
     engine.update_heart_alignment(alignment, motivation).await;
     Ok(())
 }
@@ -518,7 +504,7 @@ pub async fn update_body_energy(
     cognitive_engine: State<'_, Arc<RwLock<CognitiveEngine>>>,
     energy: f32,
 ) -> Result<(), String> {
-    let engine = cognitive_engine.read().await;
+    let engine: tokio::sync::RwLockReadGuard<'_, CognitiveEngine> = cognitive_engine.read().await;
     engine.update_body_energy(energy).await;
     Ok(())
 }

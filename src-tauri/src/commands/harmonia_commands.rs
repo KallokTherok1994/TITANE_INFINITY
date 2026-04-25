@@ -7,7 +7,7 @@
  * To activate: add get_harmonia_status, should_throttle, get_recommended_watch_delay,
  * get_harmonia_metrics to the generate_handler![] list in main.rs.
  */
-use crate::harmonia_engine::{
+use titane_infinity::harmonia_engine::{
     get_cpu_status, get_watch_delay, should_throttle_watchers, CpuStatus,
 };
 

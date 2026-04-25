@@ -527,3 +527,12 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Lifecycle truth: `initialize()` nettoie les timeouts precedents (`clearTimeouts()`) avant reconfiguration et reinitialise `warningShown=false` pour eviter une derive d etat de session lors des re-initialisations.
 - Test truth: `src/security/__tests__/SessionGuard.spec.ts` qualifie la sequence warning/timeout via timers virtuels, sans dependre d un appel manuel `recordActivity()`.
 - Version-sync context truth: le lot de continuation aligne les surfaces de version sur `31.2.0` dans `package.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock`, `src-tauri/tauri.conf.json`, `src-tauri/tauri.base.json`, `tauri.base.json`, `runtime/stable/tauri.conf.json` et `runtime/stable/manifest.json`.
+
+# [2026-04-24] Web Vitals Analytics IPC truth
+
+- Surface canonique : analytics web-vitals via IPC sécurisé (One Door)
+- Frontend : `src/utils/webVitals.ts` (remplace fetch direct par `secureInvoke('web_vitals_report', ...)`)
+- Backend : `src-tauri/src/commands/web_vitals_commands.rs` (commande Tauri `web_vitals_report`)
+- Mapping main.rs : commande exposée dans `generate_handler!`
+- Preuve : log `data/web_vitals_report.jsonl` (append), artefact runtime, test E2E à venir
+- Doctrine : plus de fetch direct, analytics = UI → IPC → backend (preuve runtime, rollback documenté)

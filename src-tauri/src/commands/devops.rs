@@ -11,9 +11,13 @@ use std::process::Command;
 
 // DESKTOP-ONLY: This module is guarded with #[cfg(not(target_os = "android"))] in main.rs.
 // Override via env var TITANE_WORKSPACE_DIR for non-standard installations.
-const WORKSPACE_DIR_FALLBACK: &str = "/home/titane/Documents/TITANE_INFINITY";
+// Cross-platform fallback: uses the user's Documents directory via the `dirs` crate.
 fn workspace_dir() -> String {
-    std::env::var("TITANE_WORKSPACE_DIR").unwrap_or_else(|_| WORKSPACE_DIR_FALLBACK.to_string())
+    std::env::var("TITANE_WORKSPACE_DIR").unwrap_or_else(|_| {
+        dirs::document_dir()
+            .map(|d| d.join("TITANE_INFINITY").to_string_lossy().into_owned())
+            .unwrap_or_else(|| ".".to_string())
+    })
 }
 
 #[derive(Debug, Clone, Copy)]

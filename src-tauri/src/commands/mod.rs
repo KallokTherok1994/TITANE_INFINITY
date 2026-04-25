@@ -1,8 +1,16 @@
+pub mod stub_commands;
+pub mod total_dev_commands;
+pub use total_dev_commands::*;
+pub mod db_commands;
+pub use db_commands::*;
+pub mod display_system_commands; // EXP: Contrôle des paramètres d'affichage (expérimental)
+pub use display_system_commands::*; // EXP: Expose toutes les commandes display_system
 // ╔══════════════════════════════════════════════════════════════════════════════╗
 // ║ TITANE∞ v30.0.0 - Tauri Commands Central Hub (Phase 2 Fusion #1)             ║
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+#[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod ai_chat; // required for full-backend state/types; keep non-re-exported to avoid handler drift
 pub mod ai_prompt_generator; // ✅ v25.4.2: AI Prompt Generator for Mode Builder
 pub mod automations; // ✅ v19.2Ω: Automation System
@@ -18,11 +26,14 @@ pub mod chat_modes; // ✅ v19.2Ω: Chat Modes System
 pub mod cognitive_center; // ✅ v19.3: Centre d'Évolution Cognitive (OPUS #4)
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
                             // pub mod coherence_commands; // disabled: unresolved external crate path in current full build
-pub mod devops; // ✅ v19: DevOps Commands for Dashboard
+// pub mod devops; // disabled: also include!'d as devops_commands in main.rs → double #[macro_export] __cmd__*
+#[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod devtools;
 pub mod diagnostic; // ✅ Phase 9: Backend diagnostics & validation
-pub mod engine_v14; // ✅ NEW: SingularityEngine v14 commands
-pub mod engines_commands; // ✅ v∞: Unified Engines Commands (OPUS #7/#9/#10)
+#[cfg(not(feature = "mock"))]
+pub mod engine_v14; // ✅ NEW: SingularityEngine v14 commands (gated: conflict with legacy_ai_bridge stubs in mock)
+#[cfg(not(feature = "mock"))]
+pub mod engines_commands; // ✅ v∞: Unified Engines Commands (gated: conflict with legacy_ai_bridge stubs in mock)
                           // pub mod evolution; // disabled: duplicate commands with evolution_v14
                           // pub mod evolution_v14; // disabled: duplicate commands with evolution
 pub mod exp_fusion;
@@ -32,10 +43,10 @@ pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
 pub mod memory_os; // ✅ NEW v∞: Memory OS + Vector Database (SUPER PROMPTs #6-7-8)
                    // pub mod meta_mode; // disabled: unresolved imports in current full build
 pub mod multi_ai; // ✅ v∞: Multi-IA Orchestrator (SUPER PROMPT #8)
-pub mod one_core; // ✅ v19.6: TITANE∞ ONE CORE - Unified Command Center (OPUS #6)
-pub mod orchestration_center; // ✅ v19.5: Centre d'Orchestration Cognitive (OPUS #5/6/7)
-pub mod persistent_memory; // ✅ v19.2Ω: Persistent Memory 3-Level System
-pub mod qa_monitoring;
+// pub mod one_core; // disabled: also include!'d as one_core_commands in main.rs → double #[macro_export] __cmd__*
+// pub mod orchestration_center; // disabled: also include!'d as orchestration_center_commands in main.rs → double __cmd__*
+// pub mod persistent_memory; // disabled: also include!'d as persistent_memory_v30 in main.rs → double __cmd__*
+// pub mod qa_monitoring; // disabled: also include!'d as qa_monitoring_commands in main.rs → double __cmd__*
 #[cfg(test)]
 mod tests_ai_chat; // ✅ v19.7: QA Monitoring Center - OPUS #7
 
@@ -45,10 +56,12 @@ mod tests_ai_chat; // ✅ v19.7: QA Monitoring Center - OPUS #7
 pub use cognitive_center::*; // ✅ v19.3: Export cognitive center commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
                                // pub use coherence_commands::*; // disabled with module
-pub use devops::*; // ✅ v19: Export devops commands
+// pub use devops::*; // disabled: devops module removed (include!'d as devops_commands in main.rs)
 pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
+#[cfg(not(feature = "mock"))]
 pub use engine_v14::*;
-pub use engines_commands::*; // ✅ v∞: Export unified engines commands
+#[cfg(not(feature = "mock"))]
+pub use engines_commands::*; // ✅ v∞: Export unified engines commands (gated: not mock)
                              // pub use evolution_v14::*; // disabled: duplicate __cmd__ exports with evolution module
 pub use harmonia_commands::*;
 pub use ia_commands::*; // ✅ v∞.19.3Ω: Export IA commands
@@ -59,36 +72,37 @@ pub use memory_os::*; // ✅ v∞: Export Memory OS commands (SUPER PROMPTs #6-7
 // NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
 // ═══════════════════════════════════════════════════════════════
 // pub mod devtools_commands; // disabled: duplicates with devtools
-pub mod governance_commands;
+// pub mod governance_commands; // disabled: also include!'d as commands_v21::governance_commands in main.rs → double __cmd__*
 // pub mod memory_os_commands; // disabled: duplicates with memory_os + local commands
 // pub mod system_center_commands; // disabled: duplicates with system_center legacy surface
-pub mod whisper_commands;
+// pub mod whisper_commands; // disabled: also include!'d as commands_v21::whisper_commands in main.rs → double __cmd__*
 // audio_config_commands removed - duplicates audio::commands
 // pub mod persistent_memory_commands; // disabled: duplicates with persistent_memory module
 pub mod dashboard_metrics_commands;
 pub mod http_commands;
 pub mod identity_commands;
 pub mod security;
-pub mod self_healing_commands;
-pub mod singularity_commands;
+// pub mod self_healing_commands; // disabled: also include!'d as commands_v21::self_healing_commands in main.rs → double __cmd__*
+// pub mod singularity_commands; // disabled: also include!'d as commands_v21::singularity_commands in main.rs → double __cmd__*
 pub mod temporal_commands;
 pub mod voice_dsp_commands;
 // pub mod ui_theme_commands; // disabled: duplicates with existing UI theme commands
 
 // pub use devtools_commands::*;
-pub use governance_commands::*;
+// pub use governance_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
 // pub use memory_os_commands::*; // disabled: duplicate __cmd__ exports
+pub mod web_vitals_commands; // ✅ Web Vitals Report (frontend analytics via IPC)
+pub use web_vitals_commands::*;
 // pub use system_center_commands::*; // disabled: duplicate __cmd__ exports
-pub use whisper_commands::*;
+// pub use whisper_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
 // audio_config_commands removed - duplicates audio::commands
 pub use multi_ai::*; // ✅ v∞: Export Multi-IA Orchestrator commands
-pub use one_core::*; // ✅ v19.6: Export ONE CORE commands
-pub use orchestration_center::*; // ✅ v19.5: Export orchestration center commands
+// pub use one_core::*; // disabled: one_core module removed above (double __cmd__ fix)
+// pub use orchestration_center::*; // disabled: duplicate __cmd__ — orchestration_center_commands include! is authoritative
                                  // pub use persistent_memory::*; // disabled: duplicate __cmd__ exports
                                  // pub use persistent_memory_commands::*; // disabled: duplicate __cmd__ exports
-pub use qa_monitoring::*;
-pub use self_healing_commands::*;
-pub use singularity_commands::*;
+// pub use self_healing_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
+// pub use singularity_commands::*; // disabled: duplicate __cmd__ — commands_v21 include! is authoritative
 // pub use ui_theme_commands::*; // disabled: duplicate __cmd__ exports
 
 #[cfg(any())]
@@ -352,10 +366,18 @@ pub async fn adaptive_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Resu
 // #[tauri::command]
 pub async fn memory_save_entry(entry: String) -> Result<(), String> {
     log::debug!("💾 Command: memory_save_entry (length: {})", entry.len());
-    crate::system::memory::save_entry(crate::system::memory::MemoryEntry {
-        content: entry,
-        timestamp: 0,
-    })
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    {
+        titane_infinity::system::memory::save_entry(titane_infinity::system::memory::MemoryEntry {
+            content: entry,
+            timestamp: 0,
+        })
+    }
+    #[cfg(any(feature = "mock", not(feature = "full")))]
+    {
+        // Stub fallback
+        Ok(())
+    }
 }
 
 /// Load all encrypted entries from persistent memory
@@ -367,8 +389,15 @@ pub async fn memory_save_entry(entry: String) -> Result<(), String> {
 /// Returns an error if decryption or deserialization fails.
 pub async fn memory_load_entries() -> Result<String, String> {
     log::debug!("💾 Command: memory_load_entries");
-    let entries = crate::system::memory::load_entries()?;
-    serde_json::to_string(&entries).map_err(|e| e.to_string())
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    {
+        let entries = titane_infinity::system::memory::load_entries()?;
+        serde_json::to_string(&entries).map_err(|e| e.to_string())
+    }
+    #[cfg(any(feature = "mock", not(feature = "full")))]
+    {
+        serde_json::to_string(&Vec::<String>::new()).map_err(|e| e.to_string())
+    }
 }
 
 /// Clear all entries from encrypted memory storage
@@ -380,7 +409,14 @@ pub async fn memory_load_entries() -> Result<String, String> {
 /// Returns an error if file deletion fails.
 pub async fn memory_clear() -> Result<(), String> {
     log::debug!("💾 Command: memory_clear");
-    crate::system::memory::clear_memory()
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    {
+        titane_infinity::system::memory::clear_memory()
+    }
+    #[cfg(any(feature = "mock", not(feature = "full")))]
+    {
+        Ok(())
+    }
 }
 
 /// Get current memory system state
@@ -395,7 +431,14 @@ pub async fn memory_clear() -> Result<(), String> {
 /// Returns an error if state retrieval or serialization fails.
 pub async fn memory_get_state() -> Result<String, String> {
     log::debug!("💾 Command: memory_get_state");
-    crate::system::memory::get_memory_state()
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    {
+        titane_infinity::system::memory::get_memory_state()
+    }
+    #[cfg(any(feature = "mock", not(feature = "full")))]
+    {
+        Ok("Memory stub active".to_string())
+    }
 }
 
 // ═════════════════════════════════════════════════════════════════════════════

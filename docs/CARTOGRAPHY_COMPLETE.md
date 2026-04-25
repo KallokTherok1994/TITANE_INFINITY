@@ -449,7 +449,7 @@ Modules kernel : `kernel/`, `core/`, `security/`, `constitution/`
   - `scripts/launch/launch-titane.bat` (batch)
   - `scripts/launch/launch-ollama.ps1` (**installation Ollama + modèles IA**)
 - **Backend Ollama** : la boucle locale canonique cote Rust cible `127.0.0.1:11434` dans l'orchestrateur desktop et reutilise `gemma2:2b` comme fallback streaming canonique pour stabiliser les probes et generations WDIO/Tauri.
-- **Active fallback truth** : `src/main.tsx`, `src/pages/ConfigurationHub.tsx` et `src-tauri/src/config/update.rs` partagent maintenant le meme fallback runtime canonique `http://127.0.0.1:11434` + `gemma2:2b`, et `scripts/verify/verify-ollama-cline-alignment.sh` qualifie explicitement ces surfaces actives ainsi que les hooks Cline associes.
+- **Active fallback truth** : `src/main.tsx`, `src/pages/ConfigurationHub.tsx` et `src-tauri/src/config/update.rs` partagent maintenant le meme fallback runtime canonique `http://127.0.0.1:11434` + `gemma2:2b`, et `scripts/verify/verify-ollama-cline-alignment.sh` qualifie explicitement ces surfaces actives ainsi que les hooks Cline associés.
 - **Android** : voir `titane-android/`
 
 ---
@@ -532,7 +532,7 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | Chat Mode | `useChatModeStore.ts` | Mode de chat actif |
 | Memory Engine | `useMemoryEngineStore.ts` | Moteur mémoire actif |
 | Performance | `usePerformanceStore.ts` | Métriques de performance |
-| In-Flight Requests | `useRequestInFlightStore.ts` | Requêtes en cours |
+| In-Flight | `useRequestInFlightStore.ts` | Requêtes en cours |
 | Self-Healing | `useSelfHealingStore.ts` | État auto-guérison |
 | TTS Engine | `useTTSEngineStore.ts` | Moteur TTS actif |
 | Vision | `useVisionStore.ts` + `useVisionStore.selectors.ts` | État vision/caméra |
@@ -639,12 +639,11 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | Cognitive Engine | 44 | Repair/Healing | 6 |
 | Config / Control Panel | 38 | Security | 9 |
 | Conversation Engine | 15 | Self-Healing | 31 |
-| Cycle Engine | 7 | Semantic Skills | 10 |
-| Dashboard | 3 | Singularity | 37 |
-| Database | 8 | Snapshots | 5 |
-| Desktop Agent | 11 | State Management | 14 |
-| DevTools | 24 | System Center | 22 |
-| Digital Twin | 8 | TITAN Core | 33 |
+| Cycle Engine | 7 | Singularity | 37 |
+| Dashboard | 3 | Snapshots | 5 |
+| Database | 8 | State Management | 14 |
+| Desktop Agent | 11 | System Center | 22 |
+| DevTools | 24 | TITAN Core | 33 |
 | Engines | 40 | Tasks | 4 |
 | Evolution | 40 | Temporal Engine | 7 |
 | Experience/XP | 23 | Training | 15 |
@@ -951,18 +950,18 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 |---------|---------|------|--------------|
 | IPC Canonical | `tauriCommands.ts` | Wrapper IPC officiel | `invokeTauriCommandCanonical`, `invokeTauriCommand` (deprecated) |
 | Tauri Bridge | `tauriBridge.ts` | Bridge Tauri bas niveau | `TauriBridgeService` |
-| Tauri Client | `tauriClient.ts` (3456L) | Client IPC complet | `TauriClientService` |
-| Chat Engine | `ai/chatEngine.ts` (3356L) | Moteur chat AI | `ChatEngine`, `sendMessage`, `streamResponse` |
+| Tauri Client | `tauriClient.ts` (3456L) | Client Tauri complet, toutes commandes IPC |
+| Chat Engine | `ai/chatEngine.ts` (3356L) | Moteur de chat AI principal | `ChatEngine`, `sendMessage`, `streamResponse` |
 | AI Orchestrator | `ai/orchestrator.ts` (2133L) | Orchestrateur multi-AI | `AIOrchestrator`, `selectProvider` |
 | RAG | `ragService.ts` | Recherche sémantique | `safeInvokeCanonical`, `ragSearch` |
 | Evolution Engine | `evolutionEngine/` | Évolution continue | `EvolutionEngine`, `runEvolution` |
 | Singularity Bridge | `singularityBridge.ts` | Pont singularité v1 | `SingularityBridge` |
 | Singularity vΩ | `singularityBridgeVInfinity.ts` | Pont singularité vΩ | `SingularityBridgeVInfinity` |
-| Conversation | `conversationEngine.ts` | Moteur conversation | `ConversationEngine` |
+| Conversation | `conversationEngine.ts` | Moteur de conversation | `ConversationEngine` |
 | Agenda | `agendaService.ts` | Agenda/timeline | `AgendaService` |
 | Auto Audit | `autoAuditEngine.ts` | Audit automatisé | `AutoAuditEngine` |
 | Web Research | `webResearchService.ts` | Recherche web | `WebResearchService` |
-| User Prefs | `userPreferencesEngine.ts` | Préférences | `UserPreferencesEngine` |
+| User Prefs | `userPreferencesEngine.ts` | Préférences utilisateur | `UserPreferencesEngine` |
 | Experience | `experienceService.ts` | Gestion XP | `ExperienceService` |
 
 ---
@@ -1192,3 +1191,11 @@ function MyComponent() {
 - `src/security/__tests__/SessionGuard.spec.ts` qualifie le comportement evenementiel sur timers virtuels (`advanceTimersByTime`) pour valider la chaine warning/timeout sans dependance a un trigger d activite manuel.
 - Le lot de continuation conserve la synchronisation des surfaces de version `31.2.0` entre frontend/runtime/stable: `package.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock`, `src-tauri/tauri.conf.json`, `src-tauri/tauri.base.json`, `tauri.base.json`, `runtime/stable/tauri.conf.json`, `runtime/stable/manifest.json`.
 - Les traces de conformite append-only sont completees dans `registry/ui-events.jsonl` et `scripts/autoheal/autoheal_rules.jsonl` avec rollback explicite et prevention gates.
+
+# [2026-04-24] Web Vitals Analytics IPC mapping
+
+- Nouvelle surface : analytics web-vitals (UI → IPC → backend)
+- Frontend : `src/utils/webVitals.ts` (One Door, secureInvoke)
+- Backend : `src-tauri/src/commands/web_vitals_commands.rs` (commande Tauri, log JSONL)
+- Mapping main.rs : handler exposé, preuve runtime, artefact log
+- Doctrine : anti-dérive fetch, rollback documenté, test E2E à venir

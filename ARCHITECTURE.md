@@ -437,3 +437,13 @@ Tous les IPC critiques sont désormais explicitement listés dans la allowlist T
 - progression_save_state
 
 Conformité validée par tests 100/100 (avril 2026).
+
+# [2026-04-24] Web Vitals Analytics IPC (One Door)
+
+- Nouvelle chaîne analytics : UI (webVitals.ts) → IPC sécurisé (secureInvoke) → backend Tauri (web_vitals_report)
+- Contrat : { ok, content, error } (aucun fetch direct, aucune dérive réseau)
+- Preuve : log append-only `data/web_vitals_report.jsonl`, artefact runtime, rollback documenté
+- Mapping : commande exposée dans main.rs, module dédié `src-tauri/src/commands/web_vitals_commands.rs`
+- Doctrine TITANE : One Door, anti-dérive, rollback prêt, test E2E à venir
+
+> 2026-04-24 — Display System (Experimental) UI integration: ajout du panneau "display-system-panel" dans `src/pages/ConfigurationHub.tsx` (testids stables, sélecteurs moniteur/mode/luminosité, boutons Appliquer/Rollback désactivés). Service associé mocké `src/services/display/displaySystemService.ts` prêt pour intégration IPC Tauri. Mapping UI_SURFACE_MAP.md et cartographie à jour.

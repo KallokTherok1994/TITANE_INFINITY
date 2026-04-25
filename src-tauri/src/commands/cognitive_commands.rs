@@ -1,7 +1,7 @@
 // TITANE∞ v30.0.0 - Cognitive Commands
 // Tauri commands for cognitive layer interaction
 
-use crate::cognitive::{
+use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
 };
 use serde::{Deserialize, Serialize};
@@ -46,7 +46,7 @@ pub async fn cognitive_analyze(
 ) -> Result<String, String> {
     log::info!("[Cognitive v16] cognitive_analyze");
 
-    let mut engine = state.analysis.lock().await;
+    let mut engine: tokio::sync::MutexGuard<'_, AnalysisEngine> = state.analysis.lock().await;
     let result = engine.scan(&data);
 
     serde_json::to_string(&result).map_err(|e| e.to_string())
@@ -60,7 +60,7 @@ pub async fn cognitive_check_coherence(
 ) -> Result<String, String> {
     log::info!("[Cognitive v16] cognitive_check_coherence");
 
-    let mut engine = state.consistency.lock().await;
+    let mut engine: tokio::sync::MutexGuard<'_, ConsistencyEngine> = state.consistency.lock().await;
     let result = engine.check_coherence(&state_data);
 
     serde_json::to_string(&result).map_err(|e| e.to_string())
@@ -77,7 +77,7 @@ pub async fn cognitive_integrate(
         signals.len()
     );
 
-    let mut engine = state.integration.lock().await;
+    let mut engine: tokio::sync::MutexGuard<'_, IntegrationEngine> = state.integration.lock().await;
     let result = engine.integrate(signals);
 
     serde_json::to_string(&result).map_err(|e| e.to_string())
@@ -91,7 +91,7 @@ pub async fn cognitive_learn(
 ) -> Result<(), String> {
     log::info!("[Cognitive v16] cognitive_learn");
 
-    let mut engine = state.evolution.lock().await;
+    let mut engine: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> = state.evolution.lock().await;
     engine.learn(&experience);
 
     Ok(())
@@ -104,10 +104,10 @@ pub async fn cognitive_get_status(
 ) -> Result<CognitiveStatus, String> {
     log::info!("[Cognitive v16] cognitive_get_status");
 
-    let analysis = state.analysis.lock().await;
-    let consistency = state.consistency.lock().await;
-    let integration = state.integration.lock().await;
-    let evolution = state.evolution.lock().await;
+    let analysis: tokio::sync::MutexGuard<'_, AnalysisEngine> = state.analysis.lock().await;
+    let consistency: tokio::sync::MutexGuard<'_, ConsistencyEngine> = state.consistency.lock().await;
+    let integration: tokio::sync::MutexGuard<'_, IntegrationEngine> = state.integration.lock().await;
+    let evolution: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> = state.evolution.lock().await;
 
     Ok(CognitiveStatus {
         analysis_scans: analysis.scan_count(),
@@ -123,7 +123,7 @@ pub async fn cognitive_get_status(
 pub async fn cognitive_optimize(state: State<'_, CognitiveSystemState>) -> Result<(), String> {
     log::info!("[Cognitive v16] cognitive_optimize");
 
-    let mut engine = state.evolution.lock().await;
+    let mut engine: tokio::sync::MutexGuard<'_, EvolutionCognitiveEngine> = state.evolution.lock().await;
     engine.optimize();
 
     Ok(())
