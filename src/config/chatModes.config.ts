@@ -22,6 +22,12 @@ import type {
   createDefaultToolsPermissions,
   createFullToolsPermissions,
 } from '@/types/chatModes';
+import {
+  CHAT_MODES_CONFIG,
+  type ChatModeConfigExtended,
+  type ChatModeId as ExtendedChatModeId,
+  type ToolPermissions as ExtendedToolPermissions,
+} from '@/services/ai/chatModes.config';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PROMPTS SYSTÈME PAR MODE LEGACY
@@ -239,11 +245,138 @@ const createAuditTools = (): ToolsPermissions => ({
   automation_execution: false,
 });
 
+const LEGACY_STATIC_MODE_IDS = new Set<string>([
+  'default',
+  'coach',
+  'dev_junior',
+  'dev_senior',
+  'admin',
+  'strategist',
+  'auditor',
+  'creative',
+  'hybrid',
+]);
+
+const mapExtendedCategoryToLegacy = (
+  mode: ChatModeConfigExtended
+): ChatMode['category'] => {
+  switch (mode.id) {
+    case 'coach':
+      return 'coach';
+    case 'dev':
+    case 'debug_cognitive':
+      return 'dev';
+    case 'admin':
+    case 'emergency':
+      return 'admin';
+    case 'audit':
+      return 'audit';
+    case 'strategy':
+    case 'planning':
+      return 'strategy';
+    case 'creation':
+    case 'brainstorming':
+      return 'creative';
+    default:
+      return 'hybrid';
+  }
+};
+
+const mapExtendedProviderToLegacy = (
+  provider: ChatModeConfigExtended['defaultProvider']
+): ChatMode['default_model'] => {
+  switch (provider) {
+    case 'gemini':
+    case 'ollama':
+    case 'local':
+      return provider;
+    case 'auto':
+    default:
+      return 'hybrid';
+  }
+};
+
+const mapExtendedResponseStyleToLegacy = (
+  style: ChatModeConfigExtended['responseStyle']
+): ChatMode['response_style'] => {
+  switch (style) {
+    case 'exhaustive':
+      return 'expert';
+    case 'detailed':
+      return 'detailed';
+    case 'concise':
+      return 'concise';
+    case 'moderate':
+    default:
+      return 'moderate';
+  }
+};
+
+const mapExtendedToolsToLegacy = (
+  tools: ExtendedToolPermissions
+): ToolsPermissions => ({
+  code_analysis: tools.codeReview || tools.debugAssist || tools.systemAnalysis,
+  code_generation: tools.codeGeneration,
+  code_refactoring: tools.codeGeneration,
+  architecture_review: tools.contextAnalysis || tools.systemAnalysis,
+  system_diagnostics: tools.systemAnalysis,
+  performance_monitoring: tools.systemAnalysis,
+  log_analysis: tools.auditLogs,
+  memory_read: tools.memoryAccess,
+  memory_write: tools.memoryAccess,
+  memory_search: tools.contextAnalysis,
+  ai_training: false,
+  prompt_engineering: false,
+  text_generation: tools.suggestionEngine || tools.brainstormAssist,
+  document_creation: tools.synthesisTool,
+  security_audit: tools.auditLogs || tools.systemAnalysis,
+  quality_check: tools.codeReview || tools.synthesisTool,
+  web_search: tools.contextAnalysis,
+  file_operations: tools.fileSystemAccess,
+  automation_execution: tools.shellExecution || tools.configModification,
+});
+
+const mapExtendedModeToLegacy = (mode: ChatModeConfigExtended): ChatMode => ({
+  id: mode.id,
+  label: mode.label,
+  description: `${mode.description} (bridge runtime unifié)`,
+  icon: mode.icon,
+  category: mapExtendedCategoryToLegacy(mode),
+  default_model: mapExtendedProviderToLegacy(mode.defaultProvider),
+  system_prompt: mode.systemPrompt,
+  tools_allowed: mapExtendedToolsToLegacy(mode.toolsAllowed),
+  permissions_level: mode.permissionLevel,
+  memory_scope: mode.memoryScope,
+  response_style: mapExtendedResponseStyleToLegacy(mode.responseStyle),
+  tone: mode.tone,
+  theme_color: mode.themeColor,
+  display_priority: mode.sortOrder,
+  enabled: mode.enabled,
+  capabilities: mode.capabilities,
+  xp_required: 0,
+  metadata: {
+    sourceRegistry: 'extended-bridge',
+    profileId: mode.profileId,
+    version: mode.version,
+  },
+});
+
+const BRIDGED_EXTENDED_CHAT_MODES: Record<string, ChatMode> = Object.fromEntries(
+  Object.values(CHAT_MODES_CONFIG)
+    .filter(mode => !LEGACY_STATIC_MODE_IDS.has(mode.id))
+    .map(mode => [mode.id, mapExtendedModeToLegacy(mode)])
+);
+
+const getExtendedModeSystemPrompt = (modeId: string): string | undefined => {
+  const mode = CHAT_MODES_CONFIG[modeId as ExtendedChatModeId];
+  return mode?.systemPrompt;
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // DÉFINITION DES MODES
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const CHAT_MODES: Record<string, ChatMode> = {
+const LEGACY_STATIC_CHAT_MODES: Record<string, ChatMode> = {
   default: {
     id: 'default',
     label: 'Assistant',
@@ -453,6 +586,11 @@ export const CHAT_MODES: Record<string, ChatMode> = {
   },
 };
 
+export const CHAT_MODES: Record<string, ChatMode> = {
+  ...LEGACY_STATIC_CHAT_MODES,
+  ...BRIDGED_EXTENDED_CHAT_MODES,
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // ÉTAT INITIAL
 // ═══════════════════════════════════════════════════════════════════════════
@@ -530,6 +668,13 @@ export const getSystemPrompt = (modeId: string): string => {
     return _customModeRegistry[modeId];
   }
   const mode = CHAT_MODES[modeId];
+  if (mode?.system_prompt) {
+    return mode.system_prompt;
+  }
+  const bridgedPrompt = getExtendedModeSystemPrompt(modeId);
+  if (bridgedPrompt) {
+    return bridgedPrompt;
+  }
   if (!mode) {
     // G_FALLBACK_HONESTY: explicit warn when unknown modeId falls back to default
     console.warn(
@@ -537,7 +682,7 @@ export const getSystemPrompt = (modeId: string): string => {
         'If this is a custom mode, ensure registerCustomMode() was called before chat send.'
     );
   }
-  return mode?.system_prompt ?? SYSTEM_PROMPTS.default;
+  return SYSTEM_PROMPTS.default;
 };
 
 /**

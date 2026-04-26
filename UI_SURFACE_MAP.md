@@ -8,6 +8,13 @@
 - Tous les fichiers `.md.md` et dossiers d’archive centralisés dans `docs/99_ARCHIVE/`
 - Inventaires et logs : `docs/92_maintenance/`
 
+# [2026-04-26] Chat unified runtime bridge truth
+
+- Surface canonique UI: [src/components/chat/ChatModeSelector.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ChatModeSelector.tsx) publie désormais des selectors stables `chat-mode-selector`, `chat-mode-selector-trigger`, `chat-mode-selector-menu` et `chat-mode-option-*` pour les preuves gouvernées.
+- Surface canonique runtime: [src/config/chatModes.config.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/config/chatModes.config.ts) devient la porte unique de résolution runtime via `CHAT_MODES` unifié, qui conserve les modes legacy statiques et bridge les modes étendus issus de `src/services/ai/chatModes.config.ts`.
+- Vérité scellée: une sélection UI moderne comme `quick` ou `strategy` atteint maintenant la résolution finale du prompt runtime sans fallback mensonger via `getSystemPrompt()`.
+- Preuves associées: [src/__tests__/services/ai/chatModeUnifiedRuntimeBridge.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatModeUnifiedRuntimeBridge.test.ts) et [src/__tests__/components/chat/ChatModeSelector.runtimePromptBridge.test.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/components/chat/ChatModeSelector.runtimePromptBridge.test.tsx).
+
 # [2026-04-24] Security bootstrap CSP authority truth
 
 - Surface canonique bootstrap: `src/App.tsx` -> `src/security/index.ts::initializeSecurity()`.

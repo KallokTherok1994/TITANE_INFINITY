@@ -139,11 +139,13 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
     return (
       <div
         ref={dropdownRef}
+        data-testid="chat-mode-selector"
         className={`chat-mode-selector chat-mode-selector--dropdown ${className} ${disabled ? 'chat-mode-selector--disabled' : ''}`}
       >
         {/* Trigger Button */}
         <button
           type="button"
+          data-testid="chat-mode-selector-trigger"
           className="chat-mode-selector__trigger"
           onClick={handleToggle}
           disabled={disabled}
@@ -162,7 +164,11 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
 
         {/* Dropdown Menu */}
         {isOpen && (
-          <div className="chat-mode-selector__menu" role="listbox">
+          <div
+            className="chat-mode-selector__menu"
+            role="listbox"
+            data-testid="chat-mode-selector-menu"
+          >
             {Object.entries(modesByCategory).map(([category, modes]) => (
               <div key={category} className="chat-mode-selector__group">
                 <div className="chat-mode-selector__group-label">
@@ -171,6 +177,7 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
                 {modes?.map(mode => (
                   <div
                     key={mode.id}
+                    data-testid={`chat-mode-option-${mode.id}`}
                     className={`chat-mode-selector__option ${mode.id === currentMode ? 'chat-mode-selector__option--selected' : ''}`}
                     onClick={() => handleModeSelect(mode.id)}
                     onKeyDown={e => handleKeyDown(e, mode.id)}
@@ -229,12 +236,16 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
 
   // ═══ RENDER COMPACT ═══
   return (
-    <div className={`chat-mode-selector chat-mode-selector--compact ${className}`}>
+    <div
+      className={`chat-mode-selector chat-mode-selector--compact ${className}`}
+      data-testid="chat-mode-selector"
+    >
       <select
         value={currentMode}
         onChange={e => handleModeSelect(e.target.value as ChatModeId)}
         disabled={disabled}
         className="chat-mode-selector__select"
+        data-testid="chat-mode-selector-select"
       >
         {accessibleModes.map(mode => (
           <option key={mode.id} value={mode.id}>
