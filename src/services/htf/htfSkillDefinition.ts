@@ -72,7 +72,7 @@ RÈGLES ABSOLUES :
       'soumission',
       'estimation',
       'devis',
-      'humain à tout faire',
+      "humain à tout faire",
       'htf',
       'aménagement',
       'terrasse',
@@ -93,11 +93,11 @@ RÈGLES ABSOLUES :
   },
   knowledge: {
     assets: [
-      { id: 'htf_module_identity', name: 'Identité HTF', content: '', indexed: false, searchMode: 'hybrid', mimeType: 'application/json' },
-      { id: 'htf_formation_manuel', name: 'Manuel formation T1/T2/T3', content: '', indexed: false, searchMode: 'hybrid', mimeType: 'application/json' },
-      { id: 'htf_estimation_rules', name: 'Règles de tarification', content: '', indexed: false, searchMode: 'hybrid', mimeType: 'application/json' },
-      { id: 'htf_services_catalogue', name: 'Catalogue services', content: '', indexed: false, searchMode: 'hybrid', mimeType: 'application/json' },
-      { id: 'htf_soumission_template', name: 'Modèle soumission', content: '', indexed: false, searchMode: 'hybrid', mimeType: 'application/json' },
+      { id: 'htf_module_identity', name: 'Identité HTF', content: '', indexed: true, searchMode: 'hybrid', mimeType: 'application/json' },
+      { id: 'htf_formation_manuel', name: 'Manuel de formation T1/T2/T3', content: '', indexed: true, searchMode: 'hybrid', mimeType: 'application/json' },
+      { id: 'htf_estimation_rules', name: 'Règles de tarification', content: '', indexed: true, searchMode: 'hybrid', mimeType: 'application/json' },
+      { id: 'htf_services_catalogue', name: 'Catalogue services', content: '', indexed: true, searchMode: 'hybrid', mimeType: 'application/json' },
+      { id: 'htf_soumission_template', name: 'Modèle de soumission', content: '', indexed: true, searchMode: 'hybrid', mimeType: 'application/json' },
     ],
     searchMode: 'hybrid',
     totalSize: 0,
@@ -116,13 +116,16 @@ RÈGLES ABSOLUES :
     conflictResolution: 'override',
   },
   proof: {
-    installedCriteria: ['skill in registry', 'localStorage key titane_htf_clients accessible'],
-    activatedCriteria: ['htf_soumission mode active', 'HTF skill selected in chat'],
-    consumedCriteria: ['response contains soumission number S{AAAA}{MM}-{NNN}', 'response contains TPS/TVQ'],
+    installedCriteria: [
+      'KB entries htf_module_identity + htf_estimation_rules présents',
+      'skill enregistré dans skillRegistry sous ' + HTF_SKILL_ID,
+    ],
+    activatedCriteria: ['mode htf_estimateur actif dans la session'],
+    consumedCriteria: ['réponse contient numéro S{AAAA}{MM}', 'TPS 5%', 'TVQ 9.975%', 'Kevin Thibault'],
   },
   rollback: {
-    disablePath: `skillRegistry.updateSkillState(HTF_SKILL_ID, 'DISABLED')`,
-    uninstallPath: `skillRegistry.uninstallSkill(HTF_SKILL_ID)`,
-    revertPath: 'localStorage.removeItem("titane_htf_clients"); localStorage.removeItem("titane_htf_submissions")',
+    disablePath: 'skillRegistry.disableSkill(HTF_SKILL_ID)',
+    uninstallPath: 'skillRegistry.uninstallSkill(HTF_SKILL_ID)',
+    revertPath: 'localStorage.removeItem("titane_htf_clients"); localStorage.removeItem("titane_htf_submissions"); localStorage.removeItem("titane_htf_learning")',
   },
 };

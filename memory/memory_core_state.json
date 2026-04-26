@@ -2,6 +2,69 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1777236629954-oqtk9ufa",
+      "timestamp": 1777236629954,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777143416258-05zmt3lc",
+      "timestamp": 1777143416258,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777141985377-sizkkdxm",
+      "timestamp": 1777141985377,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777137650036-nh5q157a",
+      "timestamp": 1777137650036,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777133559566-s8kuyuzg",
+      "timestamp": 1777133559566,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777133511760-p9lp1zyl",
+      "timestamp": 1777133511760,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777128968951-yiba6n0w",
+      "timestamp": 1777128968951,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777128206256-6olka3bi",
+      "timestamp": 1777128206256,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777127245271-iq0irc3n",
+      "timestamp": 1777127245271,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1777125769849-nb3xgone",
       "timestamp": 1777125769849,
       "level": "Info",
@@ -311,7 +374,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1777125769857,
+    "last_validation_ts": 1777236629956,
     "last_compaction_ts": null
   }
 }
