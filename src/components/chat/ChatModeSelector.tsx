@@ -32,6 +32,8 @@ export interface ChatModeSelectorProps {
   currentMode: ChatModeId;
   /** Callback de changement de mode */
   onModeChange: (mode: ChatModeId) => void;
+  /** IDs de modes autorisés sur la surface courante */
+  allowedModes?: ChatModeId[];
   /** Niveau de permission utilisateur (0-5) */
   userPermissionLevel?: PermissionLevel;
   /** Style d'affichage */
@@ -62,6 +64,7 @@ const CATEGORY_LABELS: Record<ChatModeCategory, string> = {
 export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
   currentMode,
   onModeChange,
+  allowedModes,
   userPermissionLevel = 3,
   variant = 'dropdown',
   disabled = false,
@@ -73,8 +76,16 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
 
   // Modes accessibles selon permission
   const accessibleModes = useMemo(
-    () => getAccessibleModes(userPermissionLevel),
-    [userPermissionLevel]
+    () => {
+      const modes = getAccessibleModes(userPermissionLevel);
+      if (!allowedModes || allowedModes.length === 0) {
+        return modes;
+      }
+
+      const allowed = new Set<ChatModeId>(allowedModes);
+      return modes.filter(mode => allowed.has(mode.id));
+    },
+    [allowedModes, userPermissionLevel]
   );
 
   // Mode courant config

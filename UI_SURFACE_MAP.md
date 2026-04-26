@@ -8,6 +8,13 @@
 - Tous les fichiers `.md.md` et dossiers d’archive centralisés dans `docs/99_ARCHIVE/`
 - Inventaires et logs : `docs/92_maintenance/`
 
+# [2026-04-26] Conversation modern mode surface truth
+
+- Surface canonique: [src/components/sections/ConversationSection.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/sections/ConversationSection.tsx) expose maintenant le sélecteur moderne compact des modes via `chat-mode-selector-select` directement dans la toolbar active du chat.
+- Vérité runtime visible: la surface `page-conversation` publie `data-conversation-mode` et `data-chat-store-mode`, ce qui rend lisible l alignement entre moteur conversationnel actif et store de modes gouverné.
+- Bridge de surface: un choix moderne compatible comme `planning` met à jour à la fois `setMode()` du moteur de conversation et `useChatModeStore().changeMode()` sans quitter la route canonique `/titane?tab=conversation`.
+- Preuves associées: [src/components/sections/__tests__/ConversationSection.modeBridge.test.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/sections/__tests__/ConversationSection.modeBridge.test.tsx) et [e2e/critical/chat-interaction.spec.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/critical/chat-interaction.spec.ts).
+
 # [2026-04-26] Chat unified runtime bridge truth
 
 - Surface canonique UI: [src/components/chat/ChatModeSelector.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ChatModeSelector.tsx) publie désormais des selectors stables `chat-mode-selector`, `chat-mode-selector-trigger`, `chat-mode-selector-menu` et `chat-mode-option-*` pour les preuves gouvernées.

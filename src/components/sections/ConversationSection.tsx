@@ -44,10 +44,12 @@ import {
 } from '@/features/chat/exportImport';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
+import { ChatModeSelector } from '@/components/chat/ChatModeSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
 import { MarkdownContent } from '@/components/chat/MarkdownContent';
 import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
 import { registerCustomMode } from '@/config/chatModes.config';
+import { useChatModeStore } from '@/stores/useChatModeStore';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
@@ -76,6 +78,7 @@ import {
   type MessageSpeechStatus,
 } from '@/services/tts/messageSpeechController';
 import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
+import type { ChatModeId as ModernChatModeId } from '@/services/ai/chatModes.config';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -144,6 +147,15 @@ const BUILT_IN_CONVERSATION_MODES = [
     icon: '🔧',
     description: 'Analyse système',
   },
+];
+
+export const CONVERSATION_MODERN_MODE_IDS: ModernChatModeId[] = [
+  'default',
+  'brainstorming',
+  'synthesis',
+  'planning',
+  'journal',
+  'debug_cognitive',
 ];
 
 const CONVERSATION_SUGGESTIONS = [
@@ -307,6 +319,12 @@ export function buildConversationLoadingLabel(
   const modeLabel = currentModeLabel && currentModeLabel.trim() ? currentModeLabel : '—';
 
   return `Route demandee: ${providerLabel} | Mode: ${modeLabel}`;
+}
+
+export function resolveModernConversationMode(
+  mode: ConversationMode
+): ModernChatModeId {
+  return mode;
 }
 
 export function buildConversationRuntimeBadges(
@@ -1313,6 +1331,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
   ({ showSectionHeader = true, fullscreen = false }) => {
     // ═══ HOOKS ═══
     const { success: toastSuccess, error: errorToast } = useToast();
+    const syncChatModeStore = useChatModeStore(state => state.changeMode);
+    const currentChatStoreModeId = useChatModeStore(state => state.currentModeId);
     const [selectedProvider, setSelectedProvider] =
       useState<ConversationProviderPreference>(getInitialSelectedProvider);
     const [providerReadiness, setProviderReadiness] =
@@ -2077,6 +2097,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       pageLogger.debug('Mode personnalisé sauvegardé', mode);
     }, []);
 
+    const handleModernModeChange = useCallback(
+      (modeId: ModernChatModeId) => {
+        setMode(modeId as ConversationMode);
+        void syncChatModeStore(modeId).catch(error => {
+          pageLogger.warn('Modern chat mode store sync failed', error);
+        });
+      },
+      [setMode, syncChatModeStore]
+    );
+
     const handleSend = useCallback(async () => {
       const rawInput = resolveConversationPendingInput(
         inputValue,
@@ -2542,6 +2572,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         className={`titane-section titane-section-conversation${fullscreen ? ' titane-section-conversation--fullscreen' : ''}`}
         data-testid="page-conversation"
         data-layout={fullscreen ? 'fullscreen' : 'standard'}
+        data-conversation-mode={currentMode}
+        data-chat-store-mode={currentChatStoreModeId}
       >
         {showSectionHeader && (
           <TSectionHeader
@@ -2564,6 +2596,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   selectedProvider={selectedProvider}
                   onChange={handleProviderChange}
                   providers={availableProviders}
+                />
+
+                <ChatModeSelector
+                  currentMode={resolveModernConversationMode(currentMode)}
+                  onModeChange={handleModernModeChange}
+                  allowedModes={CONVERSATION_MODERN_MODE_IDS}
+                  userPermissionLevel={3}
+                  variant="compact"
+                  className="conversation-modern-mode-selector"
                 />
 
                 {/* Mode Selector */}

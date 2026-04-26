@@ -207,6 +207,41 @@ test.describe('Critical Path: Chat Interaction', () => {
     await expect(page.getByText('[MOCK_OK] Beta')).toBeVisible({ timeout: 15000 });
   });
 
+  test('MODERN_MODE_SELECTOR_BRIDGES_PAGE_RUNTIME_AND_STORE', async ({ page }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+
+    await page.getByTestId('chat-mode-selector-select').selectOption('planning');
+
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'planning');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveValue('planning');
+
+    await expect
+      .poll(async () => {
+        return page.evaluate(() => {
+          const raw = window.localStorage.getItem('titane_chat_mode_default');
+          if (!raw) {
+            return null;
+          }
+
+          try {
+            const parsed = JSON.parse(raw) as { state?: { currentModeId?: string } };
+            return parsed.state?.currentModeId ?? null;
+          } catch {
+            return 'invalid-json';
+          }
+        });
+      })
+      .toBe('planning');
+
+    await submitChatMessage(page, 'Confirme le mode planning en une phrase.');
+    await expect(page.getByText('[MOCK_OK] Confirme le mode planning en une phrase.')).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'planning');
+  });
+
   test('LONG_RESPONSE_VISIBLE_COMPLETE: réponse longue mock affichée complètement', async ({
     page,
   }) => {
