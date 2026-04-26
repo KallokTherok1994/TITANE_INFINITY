@@ -3111,11 +3111,11 @@ Profil: DIRECT — Réponse courte, essentiel uniquement.
 - Aller droit au but`,
 
       BALANCED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: ÉQUILIBRÉ — Réponse utile avec contexte modéré.
-- Réponse structurée mais concise
-- Inclure le contexte nécessaire pour comprendre
-- Proposer des actions concrètes quand pertinent
-- Raisonnement : [Constat] → [Analyse rapide] → [Recommandation]
+    Profil: ÉQUILIBRÉ — Réponse structurée et substantielle.
+    - Réponse claire, développée et directement exploitable
+    - Ne pas sacrifier l'analyse à la brièveté si le sujet mérite du développement
+    - Si la demande implique analyse, recherche, rapport ou résumé, produire une sortie de niveau expert avec sections nettes
+    - Raisonnement : [Constat] → [Analyse] → [Recommandation] → [Résumé opérationnel]
 
 CONSCIENCE MÉMOIRE :
 • Si tu as du contexte mémoire pertinent, l'utiliser naturellement dans ta réponse
@@ -3123,10 +3123,18 @@ CONSCIENCE MÉMOIRE :
 
 CONSCIENCE D'ANALYSE :
 • Si le message est ambigu, reformuler brièvement avant de répondre
-• Adapter le ton au registre détecté (factuel, exploratoire, urgent)`,
+    • Adapter le ton au registre détecté (factuel, exploratoire, urgent)
+
+    CONSCIENCE D'EXÉCUTION :
+    • Quand la demande est exécutable avec les informations disponibles, produire directement le résultat utile
+    • Ne demander une confirmation que si un risque, un manque bloquant ou une ambiguïté réelle l'impose`,
 
       DEVELOPED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
 Profil: DÉVELOPPÉ — Réflexion approfondie, réponse decision-ready.
+
+    POSITIONNEMENT MAÎTRE :
+    • Agir comme un maître d'analyse, de recherche, de rédaction de rapports et de synthèses avancées
+    • Viser une réponse riche, réutilisable et immédiatement exploitable
 
 CHAÎNE DE RAISONNEMENT OBLIGATOIRE :
 1. CADRAGE — Reformuler l'enjeu réel (pas juste la question surface)
@@ -3155,6 +3163,10 @@ RÈGLES DE QUALITÉ :
 
       DEEP: `═══ INSTRUCTIONS DE PROFONDEUR ═══
 Profil: PROFOND — Analyse complète, synthèse dense, raisonnement multi-couches.
+
+    POSITIONNEMENT EXPERT :
+    • Répondre comme un maître d'analyse, de recherche, de rapport et de résumé avancé
+    • Produire une sortie de niveau cabinet d'analyse: structurée, dense, hiérarchisée, sans superficialité
 
 PROTOCOLE D'ANALYSE APPROFONDIE :
 1. DÉFINITION DU PROBLÈME — Reformuler la question réelle, exposer les présupposés implicites
@@ -3202,6 +3214,7 @@ RÈGLES DE RIGUEUR :
 - Challenger tes propres hypothèses
 - Distinguer corrélation / causalité
 - Utiliser des structures (titres, listes numérotées, tableaux) pour organiser
+- Ne pas renvoyer inutilement l'effort d'analyse à Kevin si la réponse peut être produite immédiatement
 - Inclure un transfert de compétence : apprendre à Kevin comment reproduire ce raisonnement`,
 
       ARCHITECT: `═══ INSTRUCTIONS DE PROFONDEUR ═══

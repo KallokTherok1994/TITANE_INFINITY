@@ -1,0 +1,10 @@
+# TITANE Chat Response Depth 2026-04-26
+
+- mission: relever le plancher qualitatif des réponses TITANE sur la chaîne runtime et sur le fallback d'instructions visible dans ChatIA.
+- scope: `src/services/ai/chatEngine.ts`, `src/services/ai/chatModes.ts`, `src/config/chatModes.config.ts`, `src/ui/pages/ChatIA/InstructionModeManager.ts`, tests ciblés, cartographie, registres.
+- actions: durcissement des consignes `BALANCED`, `DEVELOPED`, `DEEP`; ajout d'un positionnement explicite maître analyse/recherche/rapport/résumé avancé dans les prompts par défaut; alignement du mode assistant fallback; ajout de tests ciblés; mise à jour de la cartographie et des registres.
+- evidence: `runTests` PASS sur `src/__tests__/chatEngine.test.ts`, `src/__tests__/config/customModeRegistry.test.ts`, `src/ui/pages/ChatIA/InstructionModeManager.test.ts`; `runTests` PASS sur `src/__tests__/config/chatModes.phase17.test.ts`; `bash scripts/autoheal/detect_recurrence.sh` PASS; `bash scripts/verify_instructions.sh` PASS; `bash scripts/verify/verify_agents_index.sh` PASS; `bash scripts/verify/verify_prompt_files_index.sh` PASS.
+- risks: la suite large `src/__tests__/chatModes.config.test.ts` remonte encore un écart de cardinalité/ordre (`sortOrders.length=18`, `uniqueSortOrders.size=17`) non causé par ce correctif de prompts.
+- verdict: PASS
+- next step: si souhaité, traiter séparément la dette de configuration des `sortOrder` du registre des modes pour rétablir la suite large.
+- rollback note: `git restore -- src/services/ai/chatEngine.ts src/services/ai/chatModes.ts src/config/chatModes.config.ts src/ui/pages/ChatIA/InstructionModeManager.ts src/__tests__/chatEngine.test.ts src/__tests__/config/customModeRegistry.test.ts src/ui/pages/ChatIA/InstructionModeManager.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/TITANE_CHAT_RESPONSE_DEPTH_2026-04-26.md proof_packs/TITANE_CHAT_RESPONSE_DEPTH_2026-04-26`
