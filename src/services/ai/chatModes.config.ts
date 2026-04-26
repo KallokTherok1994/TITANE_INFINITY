@@ -227,7 +227,10 @@ export const TOOLS_ADMIN: ToolPermissions = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CONFIGURATION DES MODES (SOURCE DE VÉRITÉ)
+// CONFIGURATION DES MODES ÉTENDUS (SOURCE DE VÉRITÉ UI/SELECTOR)
+// Ce registre pilote les surfaces UI modernes des modes étendus.
+// La résolution runtime legacy des prompts et les modes personnalisés
+// restent volontairement portés par src/config/chatModes.config.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const CHAT_MODES_CONFIG: Record<ChatModeId, ChatModeConfigExtended> = {

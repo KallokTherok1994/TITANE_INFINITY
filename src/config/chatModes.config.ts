@@ -1,6 +1,10 @@
 /**
- * TITANE∞ vΩ∞ — CONFIGURATION DES MODES DE CHAT IA
- * Source de vérité pour tous les modes IA disponibles
+ * TITANE∞ vΩ∞ — REGISTRE LEGACY DES MODES DE CHAT IA
+ * Source canonique pour la résolution runtime des prompts legacy,
+ * le ChatModeService historique et l'enregistrement des modes personnalisés.
+ *
+ * Ce fichier ne pilote pas le sélecteur moderne des modes étendus affichés dans l'UI.
+ * Cette responsabilité appartient à src/services/ai/chatModes.config.ts.
  *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  *
@@ -20,7 +24,7 @@ import type {
 } from '@/types/chatModes';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PROMPTS SYSTÈME PAR MODE
+// PROMPTS SYSTÈME PAR MODE LEGACY
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const SYSTEM_PROMPTS = {
