@@ -1,0 +1,6 @@
+# VERDICT
+
+PASS
+
+- Le scénario critique de synchronisation XP verrouille maintenant aussi la baseline modernisée de mode conversationnel.
+- Les validateurs `detect_recurrence`, `verify_instructions` et `verify:registry` sont PASS.

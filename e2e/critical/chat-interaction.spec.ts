@@ -550,6 +550,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   test('CHAT_XP_GENERATION_SYNC: le chat genere des XP visibles sur la page Experience', async ({
     page,
   }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     const xpPrompt =
       'Peux-tu analyser ce module TypeScript, expliquer les risques et proposer un plan de correction detaille ?';
 
