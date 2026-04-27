@@ -419,7 +419,7 @@ export async function refreshProjectHealth(projectId: string): Promise<ProjectHe
   const idx = registry.findIndex(p => p.id === projectId);
   if (idx !== -1) {
     const next = [...registry];
-    next[idx] = { ...next[idx], healthSnapshot: snapshot, updatedAt: snapshot.computedAt };
+    next[idx] = { ...next[idx]!, healthSnapshot: snapshot, updatedAt: snapshot.computedAt } as MultiProject;
     saveRegistry(next);
   }
 
@@ -456,6 +456,183 @@ export function getMultiProjectRollup(): MultiProjectRollup {
     failingCount,
     computedAt: new Date().toISOString(),
   };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase F2 — Enhanced capabilities
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Pause an active project (status: active → paused).
+ * No-op if already paused/archived/blocked.
+ */
+export function pauseProject(id: string): MultiProject | null {
+  const project = getProject(id);
+  if (!project || project.status !== 'active') return null;
+  return updateProject(id, { status: 'paused' });
+}
+
+/**
+ * Unblock or resume a paused/blocked project (status → active).
+ * No-op if already active or archived.
+ */
+export function resumeProject(id: string): MultiProject | null {
+  const project = getProject(id);
+  if (!project || project.status === 'active' || project.status === 'archived') return null;
+  return updateProject(id, { status: 'active' });
+}
+
+/**
+ * Search projects by name substring (case-insensitive) or status.
+ * Returns sorted by priority ascending.
+ */
+export function searchProjects(
+  query: string,
+  options: { status?: ProjectStatus; limit?: number } = {}
+): MultiProject[] {
+  const lower = query.toLowerCase();
+  let results = loadRegistry().filter(p => {
+    const matchesText =
+      p.name.toLowerCase().includes(lower) ||
+      p.description.toLowerCase().includes(lower);
+    const matchesStatus = options.status ? p.status === options.status : true;
+    return matchesText && matchesStatus;
+  });
+  results.sort((a, b) => a.priority - b.priority);
+  if (options.limit && options.limit > 0) {
+    results = results.slice(0, options.limit);
+  }
+  return results;
+}
+
+/**
+ * Return projects ordered by priority (lower number = higher priority).
+ * Only returns active (non-archived, non-blocked) projects by default.
+ */
+export function getPriorityQueue(includeAll = false): MultiProject[] {
+  return loadRegistry()
+    .filter(p => includeAll || p.status === 'active')
+    .sort((a, b) => a.priority - b.priority);
+}
+
+/**
+ * Detect dependency cycles using DFS.
+ * Returns the first cycle found as an array of project IDs, or null if acyclic.
+ */
+export function detectDependencyCycle(): string[] | null {
+  const registry = loadRegistry();
+  const depMap = new Map<string, string[]>();
+  for (const p of registry) {
+    depMap.set(p.id, p.dependsOn ?? []);
+  }
+
+  const visited = new Set<string>();
+  const stack = new Set<string>();
+
+  function dfs(nodeId: string, path: string[]): string[] | null {
+    if (stack.has(nodeId)) {
+      // Cycle detected — return the cycle slice
+      const cycleStart = path.indexOf(nodeId);
+      return path.slice(cycleStart).concat(nodeId);
+    }
+    if (visited.has(nodeId)) return null;
+
+    visited.add(nodeId);
+    stack.add(nodeId);
+
+    const deps = depMap.get(nodeId) ?? [];
+    for (const dep of deps) {
+      const cycle = dfs(dep, [...path, nodeId]);
+      if (cycle) return cycle;
+    }
+
+    stack.delete(nodeId);
+    return null;
+  }
+
+  for (const p of registry) {
+    if (!visited.has(p.id)) {
+      const cycle = dfs(p.id, []);
+      if (cycle) return cycle;
+    }
+  }
+  return null;
+}
+
+/**
+ * Return the full dependency chain for a project (BFS traversal, acyclic-safe).
+ * Returns an ordered list from the project outwards to its deepest dependencies.
+ */
+export function getProjectDependencyChain(projectId: string): string[] {
+  const registry = loadRegistry();
+  const depMap = new Map<string, string[]>();
+  for (const p of registry) {
+    depMap.set(p.id, p.dependsOn ?? []);
+  }
+
+  const result: string[] = [];
+  const visited = new Set<string>();
+  const queue = [projectId];
+
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    if (visited.has(current)) continue;
+    visited.add(current);
+    if (current !== projectId) result.push(current);
+    const deps = depMap.get(current) ?? [];
+    for (const dep of deps) {
+      if (!visited.has(dep)) queue.push(dep);
+    }
+  }
+  return result;
+}
+
+/**
+ * Auto-mark projects as blocked if all their direct dependencies are blocked/failed.
+ * Returns array of project IDs that were newly blocked.
+ */
+export function detectAndMarkBlockedProjects(): string[] {
+  const registry = loadRegistry();
+  const blockedIds = new Set(
+    registry.filter(p => p.status === 'blocked').map(p => p.id)
+  );
+  const failedHealthIds = new Set(
+    registry
+      .filter(p => p.healthSnapshot?.verdict === 'FAIL' || p.healthSnapshot?.verdict === 'BLOCKED')
+      .map(p => p.id)
+  );
+
+  const newlyBlocked: string[] = [];
+
+  for (const p of registry) {
+    if (p.status !== 'active' || !p.dependsOn || p.dependsOn.length === 0) continue;
+    const allDepsBlocked = p.dependsOn.every(
+      dep => blockedIds.has(dep) || failedHealthIds.has(dep)
+    );
+    if (allDepsBlocked) {
+      updateProject(p.id, { status: 'blocked' });
+      newlyBlocked.push(p.id);
+    }
+  }
+  return newlyBlocked;
+}
+
+/**
+ * Batch refresh health for all active projects.
+ * Returns a map of projectId → snapshot.
+ */
+export async function refreshAllProjectsHealth(): Promise<Map<string, ProjectHealthSnapshot>> {
+  const activeProjects = loadRegistry().filter(p => p.status === 'active');
+  const results = new Map<string, ProjectHealthSnapshot>();
+
+  await Promise.allSettled(
+    activeProjects.map(async p => {
+      const snapshot = await refreshProjectHealth(p.id);
+      results.set(p.id, snapshot);
+    })
+  );
+
+  return results;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -526,6 +703,6 @@ export function getMultiProjectAgentStatus(): MultiProjectAgentStatus {
     nextStep:
       blockers.length === 0
         ? 'Extend with Tauri-backed file persistence for cross-session project history.'
-        : blockers[0],
+        : blockers[0] ?? 'Resolve blockers above.',
   };
 }

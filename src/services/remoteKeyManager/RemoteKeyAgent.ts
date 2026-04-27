@@ -115,7 +115,7 @@ export class RemoteKeyAgent {
 
     try {
       const result = await remoteKeyList();
-      if (!result.ok) throw new Error(result.error ?? 'list failed');
+      if (!result || !result.ok) throw new Error(result?.error ?? 'list failed');
 
       const keys = result.keys ?? [];
 
@@ -146,8 +146,8 @@ export class RemoteKeyAgent {
     try {
       const effectiveScopes = scopes ?? this._config.defaultScopes;
       const result = await remoteKeyCreate(label, effectiveScopes);
-      if (!result.ok || !result.secret_once || !result.key_id) {
-        throw new Error(result.error ?? 'create failed');
+      if (!result || !result.ok || !result.secret_once || !result.key_id) {
+        throw new Error(result?.error ?? 'create failed');
       }
       this.logUsage({ action: 'create', keyId: result.key_id, label });
       this._emit({
@@ -171,7 +171,7 @@ export class RemoteKeyAgent {
     this._setState({ status: 'loading', error: null });
     try {
       const result = await remoteKeyRevoke(key_id);
-      if (!result.ok) throw new Error(result.error ?? 'revoke failed');
+      if (!result || !result.ok) throw new Error(result?.error ?? 'revoke failed');
       this.logUsage({ action: 'revoke', keyId: key_id });
       this._emit({ type: 'onRevoke', key_id });
       await this._refresh(null, null);
@@ -189,8 +189,8 @@ export class RemoteKeyAgent {
     this._setState({ status: 'loading', error: null });
     try {
       const result = await remoteKeyRotate(key_id);
-      if (!result.ok || !result.new_secret_once || !result.new_key_id) {
-        throw new Error(result.error ?? 'rotate failed');
+      if (!result || !result.ok || !result.new_secret_once || !result.new_key_id) {
+        throw new Error(result?.error ?? 'rotate failed');
       }
       this.logUsage({ action: 'rotate', keyId: key_id });
       this._emit({
@@ -323,8 +323,8 @@ export class RemoteKeyAgent {
       'Memory',
       'System',
     ]);
-    if (!result.ok || !result.secret_once || !result.key_id) {
-      throw new Error(result.error ?? 'auto-create default key failed');
+    if (!result || !result.ok || !result.secret_once || !result.key_id) {
+      throw new Error(result?.error ?? 'auto-create default key failed');
     }
     this.logUsage({
       action: 'create',
@@ -346,7 +346,7 @@ export class RemoteKeyAgent {
     keyIdOnce: string | null
   ): Promise<void> {
     const result = await remoteKeyList();
-    const keys = result.ok ? (result.keys ?? []) : [];
+    const keys = result?.ok ? (result.keys ?? []) : [];
     this._setState({
       status: 'ready',
       keys,
@@ -354,7 +354,7 @@ export class RemoteKeyAgent {
       lastKeyIdOnce: keyIdOnce,
       error: null,
     });
-    if (result.ok) this._emit({ type: 'onReady', keys });
+    if (result?.ok) this._emit({ type: 'onReady', keys });
   }
 
   private _setState(partial: Partial<AgentKeyState>): void {

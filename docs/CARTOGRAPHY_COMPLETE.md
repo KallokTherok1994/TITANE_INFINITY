@@ -1331,3 +1331,29 @@ function MyComponent() {
 - Rule 16: 116 tests PASS (5 fichiers test)
 - verify_instructions: PASS=33/0
 - detect_recurrence: entries=1368, PASS
+
+## Phase F (2026-04-27) — Deep Optimization: One Door + AI Services + Multiproject Enhanced API
+
+### Modifications
+| Fichier | Type | Changement |
+|---|---|---|
+| `src/services/monitoring/index.ts` | Service TypeScript | Fix One Door: direct invoke() → safeInvoke(). Ajout `forceRefreshProjectHealthMetrics()`. Fix TS2532 (sorted[0]!). |
+| `src/services/multiproject/index.ts` | Service TypeScript | +8 fonctions: pauseProject, resumeProject, searchProjects, getPriorityQueue, detectDependencyCycle, getProjectDependencyChain, detectAndMarkBlockedProjects, refreshAllProjectsHealth. Fix TS (as MultiProject, ?? fallback). |
+| `src/services/orchestrator/index.ts` | Service TypeScript | Ajout `dispatchToAgentsWithTimeout(event, timeoutMs)`. Fix nom méthode security (getSecurityActiveAgentStatus). |
+| `src/services/remoteKeyManager/AgentAI.ts` | Service TypeScript | Fix One Door: invoke → safeInvokeCanonical. Fix type safeInvokeCanonical<string>. |
+| `src/services/remoteKeyManager/index.ts` | Service TypeScript | Fix One Door: invoke → safeInvoke sur 4 fonctions (create/list/revoke/rotate). Return types → T \| null. |
+| `src/services/remoteKeyManager/RemoteKeyAgent.ts` | Service TypeScript | Null guards sur result (create/list/revoke/rotate/autoCreate/_refresh). |
+| `src/__tests__/omega-singularity-unified-sync.test.ts` | Test | KB canonical count sync: 202 → 233 (getFallbackEntries() growth). |
+| `tests/unit/services/ai/circuitBreaker.test.ts` | Tests unitaires | 17 tests (CRÉÉ Phase F1) |
+| `tests/unit/services/ai/rateLimiter.test.ts` | Tests unitaires | 17 tests (CRÉÉ Phase F1) |
+| `tests/unit/services/ai/retryStrategy.test.ts` | Tests unitaires | 22 tests (CRÉÉ Phase F1) |
+| `tests/unit/services/ai/championChallenger.test.ts` | Tests unitaires | 21 tests (CRÉÉ Phase F1) |
+| `tests/unit/services/multiproject/multiProjectAgent.test.ts` | Tests unitaires | +21 tests F2 (pause/resume/search/priorityQueue/cycle/depChain/blocked) |
+| `tests/unit/services/orchestrator/parallelDispatch.test.ts` | Tests unitaires | +4 tests F3 (dispatchToAgentsWithTimeout) |
+
+### Gates
+- Rule 10 AutoHeal: AH-2026-04-27-OPTIMIZE-F-0054
+- Rule 15: ARCHITECTURE.md + CARTOGRAPHY_COMPLETE.md mis à jour
+- Rule 16: 226 tests PASS (11 fichiers services)
+- TypeScript: 0 erreurs sur fichiers modifiés (2 pre-existants 282/379 exclus — Rule 1 minimal patch)
+- verify_instructions + detect_recurrence: PASS (voir F5 commit)

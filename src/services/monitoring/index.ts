@@ -30,6 +30,7 @@ import {
 } from './monitoringLazyLoader';
 
 import { getAdvancedAgentStatus } from '@/services/agents/advancedAgentCatalog';
+import { safeInvoke } from '@/utils/invoke';
 import { chatMetrics } from './chatMetrics';
 import { alerting } from './alerting';
 import { getMonitoringSyncSnapshot } from './syncSupervisor';
@@ -143,6 +144,16 @@ export function resetProjectHealthMetricsCacheForTests(): void {
 }
 
 /**
+ * Force a fresh computation of project health metrics, bypassing the 15-min TTL.
+ * Use for manual dashboard refresh actions.
+ */
+export async function forceRefreshProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
+  _projectHealthCache = null;
+  _projectHealthComputedAt = 0;
+  return getProjectHealthMetrics();
+}
+
+/**
  * Read cross-session health metrics from governance registries.
  * Falls back to stubs with honest evidence labels when registries are unavailable
  * (desktop runtime without file access, or first boot).
@@ -154,15 +165,12 @@ export async function getProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
   }
 
   try {
-    // Dynamic import to avoid circular dep on Tauri IPC at module load time.
-    const { invoke } = await import('@tauri-apps/api/core');
-
     const [autohealRaw, uiEventsRaw] = await Promise.allSettled([
-      invoke<string>('read_json_file', {
+      safeInvoke<string>('read_json_file', {
         path: 'scripts/autoheal/autoheal_rules.jsonl',
         relative: true,
       }),
-      invoke<string>('read_json_file', {
+      safeInvoke<string>('read_json_file', {
         path: 'registry/ui-events.jsonl',
         relative: true,
       }),
@@ -206,7 +214,7 @@ export async function getProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
       }
       const sorted = Object.entries(ringCounts).sort((a, b) => b[1] - a[1]);
       if (sorted.length > 0) {
-        mostImpactedRing = sorted[0][0];
+        mostImpactedRing = sorted[0]![0];
       }
     }
 

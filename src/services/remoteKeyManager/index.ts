@@ -8,7 +8,7 @@
  *   import { remoteKeyCreate, remoteKeyList, remoteKeyRevoke, remoteKeyRotate } from '@/services/remoteKeyManager';
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '@/utils/invoke';
 
 export interface RemoteKeyEntry {
   key_id: string;
@@ -51,24 +51,24 @@ export interface RemoteKeyRotateResult {
 export const remoteKeyCreate = (
   label: string,
   scopes?: string[]
-): Promise<RemoteKeyCreateResult> =>
-  invoke('remote_key_create', { label, scopes: scopes ?? null });
+): Promise<RemoteKeyCreateResult | null> =>
+  safeInvoke<RemoteKeyCreateResult>('remote_key_create', { label, scopes: scopes ?? null });
 
 /**
  * List all API keys (masked — secrets never returned).
  */
-export const remoteKeyList = (): Promise<RemoteKeyListResult> =>
-  invoke('remote_key_list');
+export const remoteKeyList = (): Promise<RemoteKeyListResult | null> =>
+  safeInvoke<RemoteKeyListResult>('remote_key_list');
 
 /**
  * Revoke (disable) an API key by key_id.
  */
-export const remoteKeyRevoke = (keyId: string): Promise<RemoteKeyRevokeResult> =>
-  invoke('remote_key_revoke', { keyId });
+export const remoteKeyRevoke = (keyId: string): Promise<RemoteKeyRevokeResult | null> =>
+  safeInvoke<RemoteKeyRevokeResult>('remote_key_revoke', { keyId });
 
 /**
  * Rotate an API key: old key is disabled, new key_id + new secret returned.
  * Secret is shown only once — store securely.
  */
-export const remoteKeyRotate = (keyId: string): Promise<RemoteKeyRotateResult> =>
-  invoke('remote_key_rotate', { keyId });
+export const remoteKeyRotate = (keyId: string): Promise<RemoteKeyRotateResult | null> =>
+  safeInvoke<RemoteKeyRotateResult>('remote_key_rotate', { keyId });

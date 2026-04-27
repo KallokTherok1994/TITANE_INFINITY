@@ -485,3 +485,211 @@ describe('refreshProjectHealth', () => {
     expect(s.readiness).toBe('qualified');
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase F2 — Enhanced capabilities tests
+// ─────────────────────────────────────────────────────────────────────────────
+
+import {
+  pauseProject,
+  resumeProject,
+  searchProjects,
+  getPriorityQueue,
+  detectDependencyCycle,
+  getProjectDependencyChain,
+  detectAndMarkBlockedProjects,
+} from '@/services/multiproject';
+
+describe('pauseProject / resumeProject', () => {
+  beforeEach(() => {
+    resetMultiProjectRegistryForTests();
+    mockDispatchToAgents.mockReset();
+  });
+
+  it('pause un projet actif', () => {
+    const p = createProject({ name: 'Proj A', priority: 1 })!;
+    const paused = pauseProject(p.id);
+    expect(paused?.status).toBe('paused');
+  });
+
+  it('retourne null si le projet est déjà paused', () => {
+    const p = createProject({ name: 'Proj B', priority: 1 })!;
+    pauseProject(p.id);
+    const result = pauseProject(p.id);
+    expect(result).toBeNull();
+  });
+
+  it('retourne null si le projet est archived', () => {
+    const p = createProject({ name: 'Proj Arch', priority: 1 })!;
+    archiveProject(p.id);
+    expect(pauseProject(p.id)).toBeNull();
+  });
+
+  it('resume un projet pausé → active', () => {
+    const p = createProject({ name: 'Proj C', priority: 1 })!;
+    pauseProject(p.id);
+    const resumed = resumeProject(p.id);
+    expect(resumed?.status).toBe('active');
+  });
+
+  it('resume un projet bloqué → active', () => {
+    const p = createProject({ name: 'Proj Blocked', priority: 1 })!;
+    updateProject(p.id, { status: 'blocked' });
+    const resumed = resumeProject(p.id);
+    expect(resumed?.status).toBe('active');
+  });
+
+  it('retourne null si le projet est already active', () => {
+    const p = createProject({ name: 'Proj Active', priority: 1 })!;
+    expect(resumeProject(p.id)).toBeNull();
+  });
+});
+
+describe('searchProjects', () => {
+  beforeEach(() => {
+    resetMultiProjectRegistryForTests();
+  });
+
+  it('trouve un projet par nom (case-insensitive)', () => {
+    createProject({ name: 'Alpha Project', priority: 1 });
+    createProject({ name: 'Beta Work', priority: 2 });
+    const results = searchProjects('alpha');
+    expect(results).toHaveLength(1);
+    expect(results[0].name).toBe('Alpha Project');
+  });
+
+  it('retourne [] si aucun résultat', () => {
+    createProject({ name: 'Gamma', priority: 1 });
+    expect(searchProjects('zzz-nonexistent')).toHaveLength(0);
+  });
+
+  it('filtre par status', () => {
+    const p1 = createProject({ name: 'Active Proj', priority: 1 })!;
+    const p2 = createProject({ name: 'Active Proj 2', priority: 2 })!;
+    archiveProject(p2.id);
+    const results = searchProjects('active', { status: 'active' });
+    expect(results.every(p => p.status === 'active')).toBe(true);
+    expect(results.some(p => p.id === p1.id)).toBe(true);
+  });
+
+  it('respecte la limite (limit option)', () => {
+    for (let i = 0; i < 5; i++) createProject({ name: `Limit Test ${i}`, priority: i + 1 });
+    const results = searchProjects('limit', { limit: 3 });
+    expect(results.length).toBeLessThanOrEqual(3);
+  });
+
+  it('retourne les résultats triés par priorité', () => {
+    createProject({ name: 'Sort C', priority: 3 });
+    createProject({ name: 'Sort A', priority: 1 });
+    createProject({ name: 'Sort B', priority: 2 });
+    const results = searchProjects('sort');
+    const priorities = results.map(p => p.priority);
+    expect(priorities).toEqual([...priorities].sort((a, b) => a - b));
+  });
+});
+
+describe('getPriorityQueue', () => {
+  beforeEach(() => {
+    resetMultiProjectRegistryForTests();
+  });
+
+  it('retourne les projets actifs triés par priorité', () => {
+    createProject({ name: 'P3', priority: 3 });
+    createProject({ name: 'P1', priority: 1 });
+    createProject({ name: 'P2', priority: 2 });
+    const queue = getPriorityQueue();
+    const priorities = queue.map(p => p.priority);
+    expect(priorities).toEqual([1, 2, 3]);
+  });
+
+  it('exclut les projets archivés par défaut', () => {
+    const p = createProject({ name: 'Archived', priority: 1 })!;
+    archiveProject(p.id);
+    createProject({ name: 'Active', priority: 2 });
+    const queue = getPriorityQueue();
+    expect(queue.every(p => p.status !== 'archived')).toBe(true);
+  });
+
+  it('includeAll=true retourne aussi les archivés', () => {
+    const p = createProject({ name: 'Arc', priority: 1 })!;
+    archiveProject(p.id);
+    const queue = getPriorityQueue(true);
+    expect(queue.some(proj => proj.id === p.id)).toBe(true);
+  });
+});
+
+describe('detectDependencyCycle', () => {
+  beforeEach(() => {
+    resetMultiProjectRegistryForTests();
+  });
+
+  it('retourne null si aucun cycle', () => {
+    const p1 = createProject({ name: 'P1', priority: 1 })!;
+    const p2 = createProject({ name: 'P2', priority: 2 })!;
+    updateProject(p2.id, { dependsOn: [p1.id] });
+    expect(detectDependencyCycle()).toBeNull();
+  });
+
+  it('détecte un cycle direct A → B → A', () => {
+    const p1 = createProject({ name: 'PA', priority: 1 })!;
+    const p2 = createProject({ name: 'PB', priority: 2 })!;
+    updateProject(p1.id, { dependsOn: [p2.id] });
+    updateProject(p2.id, { dependsOn: [p1.id] });
+    const cycle = detectDependencyCycle();
+    expect(cycle).not.toBeNull();
+    expect(cycle!.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('retourne null pour registre vide', () => {
+    expect(detectDependencyCycle()).toBeNull();
+  });
+});
+
+describe('getProjectDependencyChain', () => {
+  beforeEach(() => {
+    resetMultiProjectRegistryForTests();
+  });
+
+  it('retourne [] pour projet sans dépendances', () => {
+    const p = createProject({ name: 'Solo', priority: 1 })!;
+    expect(getProjectDependencyChain(p.id)).toEqual([]);
+  });
+
+  it('retourne la chaîne complète des dépendances', () => {
+    const p1 = createProject({ name: 'P1', priority: 1 })!;
+    const p2 = createProject({ name: 'P2', priority: 2 })!;
+    const p3 = createProject({ name: 'P3', priority: 3 })!;
+    updateProject(p2.id, { dependsOn: [p1.id] });
+    updateProject(p3.id, { dependsOn: [p2.id] });
+    const chain = getProjectDependencyChain(p3.id);
+    expect(chain).toContain(p2.id);
+    expect(chain).toContain(p1.id);
+  });
+});
+
+describe('detectAndMarkBlockedProjects', () => {
+  beforeEach(() => {
+    resetMultiProjectRegistryForTests();
+    mockDispatchToAgents.mockReset();
+  });
+
+  it('retourne [] si aucun projet bloqué par ses dépendances', () => {
+    createProject({ name: 'Standalone', priority: 1 });
+    expect(detectAndMarkBlockedProjects()).toEqual([]);
+  });
+
+  it('marque comme bloqué un projet dont toutes les dépendances sont FAIL', async () => {
+    mockDispatchToAgents.mockResolvedValueOnce(
+      { verdicts: { a: 'FAIL' }, aggregated: 'FAIL', blockers: ['dep failed'], timestamp: Date.now() }
+    );
+    const dep = createProject({ name: 'Dep', priority: 1 })!;
+    const proj = createProject({ name: 'Proj', priority: 2 })!;
+    updateProject(proj.id, { dependsOn: [dep.id] });
+    // Simuler health FAIL sur la dépendance
+    await refreshProjectHealth(dep.id);
+
+    const blocked = detectAndMarkBlockedProjects();
+    expect(blocked).toContain(proj.id);
+    expect(getProject(proj.id)?.status).toBe('blocked');
+  });
+});

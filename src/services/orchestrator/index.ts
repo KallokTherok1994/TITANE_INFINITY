@@ -394,7 +394,7 @@ export async function dispatchToAgents(event: AgentEvent): Promise<AgentConsensu
   const [monitoringMod, diagnosticMod, securityMod] = await Promise.allSettled([
     import('@/services/monitoring').then(m => m.getMonitoringAgentStatus as AgentStatusFn),
     import('@/services/diagnostic').then(m => m.getDiagnosticAgentStatus as AgentStatusFn),
-    import('@/services/security_active').then(m => m.getSecurityAgentStatus as AgentStatusFn),
+    import('@/services/security_active').then(m => m.getSecurityActiveAgentStatus as AgentStatusFn),
   ]);
 
   const agentMap: Record<string, PromiseSettledResult<AgentStatusFn>> = {
@@ -445,4 +445,36 @@ export async function dispatchToAgents(event: AgentEvent): Promise<AgentConsensu
     blockers,
     timestamp: Date.now(),
   };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase F3 — Timeout-aware dispatch
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Dispatch an AgentEvent with a per-agent timeout guard.
+ * If the overall dispatch exceeds `timeoutMs`, the consensus is returned with
+ * a BLOCKED verdict and a timeout blocker entry.
+ *
+ * @param event     - The AgentEvent to dispatch.
+ * @param timeoutMs - Max milliseconds to wait (default: 5000ms).
+ */
+export async function dispatchToAgentsWithTimeout(
+  event: AgentEvent,
+  timeoutMs = 5000
+): Promise<AgentConsensus> {
+  const timeoutPromise: Promise<AgentConsensus> = new Promise(resolve =>
+    setTimeout(
+      () =>
+        resolve({
+          verdicts: { timeout: 'BLOCKED' },
+          aggregated: 'BLOCKED',
+          blockers: [`dispatchToAgents timed out after ${timeoutMs}ms`],
+          timestamp: Date.now(),
+        }),
+      timeoutMs
+    )
+  );
+
+  return Promise.race([dispatchToAgents(event), timeoutPromise]);
 }

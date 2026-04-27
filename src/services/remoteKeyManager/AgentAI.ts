@@ -5,7 +5,7 @@
  * All AI methods are safe: they degrade gracefully when Ollama is unavailable.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import type { AgentConfig, UsageLogEntry } from './AgentConfig';
 import { appendUsageLog } from './AgentConfig';
 
@@ -49,7 +49,7 @@ async function ollamaGenerate(
   temperature: number
 ): Promise<string> {
   // Use Tauri IPC conversation_generate so all traffic goes through One Door
-  const result = await invoke<{ ok: boolean; content?: string; error?: string }>(
+  const ipcResult = await safeInvokeCanonical<string>(
     'conversation_generate',
     {
       prompt: userMessage,
@@ -59,10 +59,10 @@ async function ollamaGenerate(
       max_tokens: 512,
     }
   );
-  if (!result.ok || !result.content) {
-    throw new Error(result.error ?? 'Ollama returned no content');
+  if (!ipcResult.ok || !ipcResult.content) {
+    throw new Error(ipcResult.error?.message ?? 'Ollama returned no content');
   }
-  return result.content;
+  return ipcResult.content;
 }
 
 // ─── AgentAI class ───────────────────────────────────────────────────────────
