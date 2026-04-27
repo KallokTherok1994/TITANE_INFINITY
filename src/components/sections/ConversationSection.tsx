@@ -332,9 +332,7 @@ export function buildConversationLoadingLabel(
   return `Route demandee: ${providerLabel} | Mode: ${modeLabel}`;
 }
 
-export function resolveModernConversationMode(
-  mode: ConversationMode
-): ModernChatModeId {
+export function resolveModernConversationMode(mode: ConversationMode): ModernChatModeId {
   return mode;
 }
 
@@ -1349,7 +1347,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const { success: toastSuccess, error: errorToast } = useToast();
     const syncChatModeStore = useChatModeStore(state => state.changeMode);
     const currentChatStoreModeId = useChatModeStore(state => state.currentModeId);
-    const resolvedChatStoreModeId: ModernChatModeId = validateModeId(currentChatStoreModeId)
+    const resolvedChatStoreModeId: ModernChatModeId = validateModeId(
+      currentChatStoreModeId
+    )
       ? currentChatStoreModeId
       : 'default';
     const [selectedProvider, setSelectedProvider] =
@@ -1840,7 +1840,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           currentMode,
           resolvedChatStoreModeId
         ),
-      [currentMode, latestAssistantRuntime, resolvedChatStoreModeId, selectedProviderLabel]
+      [
+        currentMode,
+        latestAssistantRuntime,
+        resolvedChatStoreModeId,
+        selectedProviderLabel,
+      ]
     );
 
     const loadingSummary = useMemo(
@@ -1856,7 +1861,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           currentMode,
           resolvedChatStoreModeId
         ),
-      [currentMode, latestAssistantRuntime, resolvedChatStoreModeId, selectedProviderLabel]
+      [
+        currentMode,
+        latestAssistantRuntime,
+        resolvedChatStoreModeId,
+        selectedProviderLabel,
+      ]
     );
 
     useEffect(() => {
@@ -2161,14 +2171,21 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
       const artifactContract = buildArtifactActionContract(messageText);
       let messageToSend = messageText;
-      let pendingFileSave: { manifest: ProfessionalDocumentManifest; contract: ArtifactActionContract; ext: string } | null = null;
+      let pendingFileSave: {
+        manifest: ProfessionalDocumentManifest;
+        contract: ArtifactActionContract;
+        ext: string;
+      } | null = null;
 
       // Export de la conversation existante (sans appel IA)
       if (artifactContract.intent === 'EXPORT_EXISTING_ARTIFACT') {
-        const exportFormat = messageText.toLowerCase().includes('json') ? 'json' : 'markdown';
-        const exportResult = exportFormat === 'json'
-          ? await downloadConversation('current', 'Conversation TITANE', messages)
-          : await downloadMarkdown('Conversation TITANE', messages);
+        const exportFormat = messageText.toLowerCase().includes('json')
+          ? 'json'
+          : 'markdown';
+        const exportResult =
+          exportFormat === 'json'
+            ? await downloadConversation('current', 'Conversation TITANE', messages)
+            : await downloadMarkdown('Conversation TITANE', messages);
         if (exportResult.ok) {
           toastSuccess(
             exportResult.status === 'SAVED_TAURI'
@@ -2176,7 +2193,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               : `Conversation téléchargée (${exportFormat}).`
           );
         } else if (exportResult.status !== 'SAVE_CANCELLED_HONEST') {
-          errorToast(`Échec export conversation : ${exportResult.error ?? exportResult.status}`);
+          errorToast(
+            `Échec export conversation : ${exportResult.error ?? exportResult.status}`
+          );
         }
         sendingRef.current = false;
         return;
@@ -2190,12 +2209,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         const manifest = buildProfessionalDocumentManifest(messageText, route.contract);
         setActiveArtifactManifest(manifest);
 
-        const antiLie = validateNoFakeArtifactResponse(messageText, route.contract, manifest);
+        const antiLie = validateNoFakeArtifactResponse(
+          messageText,
+          route.contract,
+          manifest
+        );
         if (!antiLie.ok) {
           await appendLocalExchange(
             messageText,
             `⛔ Requête fichier invalide: ${antiLie.violations.join(' | ')}`,
-            { intention: 'artifact_intent_validation', tags: ['artifact', 'anti-lie', 'blocked'] }
+            {
+              intention: 'artifact_intent_validation',
+              tags: ['artifact', 'anti-lie', 'blocked'],
+            }
           );
           sendingRef.current = false;
           return;
@@ -2220,7 +2246,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         const resolvedExt = inferFileExtension(route.contract, messageText);
 
         // Enrichir le message pour que l'IA génère un fichier de qualité professionnelle
-        messageToSend = buildFileGenerationPrompt(messageText, route.contract, resolvedExt);
+        messageToSend = buildFileGenerationPrompt(
+          messageText,
+          route.contract,
+          resolvedExt
+        );
 
         // Marquer pour sauvegarde automatique après réponse IA
         if (
@@ -2353,7 +2383,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         if (pendingFileSave && response?.assistant_message) {
           try {
             const { manifest, contract, ext } = pendingFileSave;
-            const content = extractFileContent(response.assistant_message, contract.target_format);
+            const content = extractFileContent(
+              response.assistant_message,
+              contract.target_format
+            );
             const safeName = buildSafeFilename(manifest.title);
             const result = await generateAndSaveFile(content, ext, safeName);
             if (result.ok) {

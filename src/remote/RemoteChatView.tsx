@@ -193,9 +193,21 @@ export default function RemoteChatView({
       </header>
 
       {/* Messages */}
-      <div style={styles.messages} data-testid="remote-chat-messages" role="log" aria-live="polite">
+      <div
+        style={styles.messages}
+        data-testid="remote-chat-messages"
+        role="log"
+        aria-live="polite"
+      >
         {messages.length === 0 && !loading && (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '40px', fontSize: '14px' }}>
+          <p
+            style={{
+              color: 'var(--text-muted)',
+              textAlign: 'center',
+              marginTop: '40px',
+              fontSize: '14px',
+            }}
+          >
             Commencez à discuter avec TITANE∞
           </p>
         )}
@@ -209,7 +221,10 @@ export default function RemoteChatView({
           </div>
         ))}
         {loading && (
-          <div style={{ ...styles.bubbleAi, padding: '14px 16px' }} aria-label="TITANE est en train de répondre">
+          <div
+            style={{ ...styles.bubbleAi, padding: '14px 16px' }}
+            aria-label="TITANE est en train de répondre"
+          >
             <span style={styles.typingDot} />
             <span style={{ ...styles.typingDot, animationDelay: '0.2s' }} />
             <span style={{ ...styles.typingDot, animationDelay: '0.4s' }} />
@@ -219,7 +234,11 @@ export default function RemoteChatView({
       </div>
 
       {/* Error */}
-      {error && <p style={styles.error} role="alert">{error}</p>}
+      {error && (
+        <p style={styles.error} role="alert">
+          {error}
+        </p>
+      )}
 
       {/* Input */}
       <div style={styles.inputRow}>

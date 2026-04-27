@@ -17,7 +17,9 @@ function save(entries: HTFLearningEntry[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
 }
 
-export function recordEstimate(entry: Omit<HTFLearningEntry, 'id' | 'facteurCorrection'>): HTFLearningEntry {
+export function recordEstimate(
+  entry: Omit<HTFLearningEntry, 'id' | 'facteurCorrection'>
+): HTFLearningEntry {
   const entries = load();
   const newEntry: HTFLearningEntry = {
     ...entry,
@@ -56,9 +58,10 @@ export function getLearningInsights(): {
   }
 
   const valid = entries.filter(e => e.facteurCorrection > 0 && e.coutReel > 0);
-  const facteurMoyenGlobal = valid.length > 0
-    ? valid.reduce((acc, e) => acc + e.facteurCorrection, 0) / valid.length
-    : 1;
+  const facteurMoyenGlobal =
+    valid.length > 0
+      ? valid.reduce((acc, e) => acc + e.facteurCorrection, 0) / valid.length
+      : 1;
 
   const byType: Record<string, number[]> = {};
   for (const e of valid) {
@@ -69,7 +72,7 @@ export function getLearningInsights(): {
 
   const facteurParType: Record<string, number> = {};
   for (const [type, factors] of Object.entries(byType)) {
-    facteurParType[type] = (factors.reduce((a, b) => a + b, 0)) / factors.length;
+    facteurParType[type] = factors.reduce((a, b) => a + b, 0) / factors.length;
   }
 
   return { facteurMoyenGlobal, nbrEntrees: valid.length, facteurParType };

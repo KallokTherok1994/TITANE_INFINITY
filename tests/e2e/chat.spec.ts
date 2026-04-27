@@ -132,7 +132,9 @@ test.describe('Chat Interface', () => {
     // Secondary assertion: if chat-runtime-state becomes visible (requires live LLM),
     // it must not show any editor launch intent — checked opportunistically.
     const runtimeState = page.getByTestId('chat-runtime-state');
-    const runtimeVisible = await runtimeState.isVisible({ timeout: 5000 }).catch(() => false);
+    const runtimeVisible = await runtimeState
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
     if (runtimeVisible) {
       await expect(runtimeState).not.toContainText('OPEN_FROM_CHAT_PROVEN');
     }

@@ -15,7 +15,9 @@ import {
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
-function makeContract(overrides: Partial<ArtifactActionContract> = {}): ArtifactActionContract {
+function makeContract(
+  overrides: Partial<ArtifactActionContract> = {}
+): ArtifactActionContract {
   return {
     intent: 'CREATE_FILE',
     artifact_kind: 'code',
@@ -37,7 +39,9 @@ describe('classifyArtifactIntent', () => {
     });
 
     it('returns ANSWER_ONLY for plain question', () => {
-      expect(classifyArtifactIntent('Quelle est la capitale de la France ?')).toBe('ANSWER_ONLY');
+      expect(classifyArtifactIntent('Quelle est la capitale de la France ?')).toBe(
+        'ANSWER_ONLY'
+      );
     });
 
     it('returns ANSWER_ONLY for capability description with export', () => {
@@ -49,7 +53,9 @@ describe('classifyArtifactIntent', () => {
     });
 
     it('returns ANSWER_ONLY when only exporter is mentioned without target', () => {
-      expect(classifyArtifactIntent("peut-on exporter quelque chose ?")).toBe('ANSWER_ONLY');
+      expect(classifyArtifactIntent('peut-on exporter quelque chose ?')).toBe(
+        'ANSWER_ONLY'
+      );
     });
   });
 
@@ -75,11 +81,15 @@ describe('classifyArtifactIntent', () => {
     });
 
     it('detects explicit .py extension with generator verb', () => {
-      expect(classifyArtifactIntent('génère un fichier .py pour moi')).toBe('CREATE_FILE');
+      expect(classifyArtifactIntent('génère un fichier .py pour moi')).toBe(
+        'CREATE_FILE'
+      );
     });
 
     it('detects explicit .ts extension with generator verb', () => {
-      expect(classifyArtifactIntent('écris un fichier .ts avec les types')).toBe('CREATE_FILE');
+      expect(classifyArtifactIntent('écris un fichier .ts avec les types')).toBe(
+        'CREATE_FILE'
+      );
     });
 
     it('detects code extension via CODE_EXTENSIONS_RE + generator verb', () => {
@@ -95,21 +105,29 @@ describe('classifyArtifactIntent', () => {
     });
 
     it('detects "produce a json file"', () => {
-      expect(classifyArtifactIntent('produce a json file with the data')).toBe('CREATE_FILE');
+      expect(classifyArtifactIntent('produce a json file with the data')).toBe(
+        'CREATE_FILE'
+      );
     });
   });
 
   describe('GENERATE_AND_SAVE', () => {
     it('detects save+file intent (French)', () => {
-      expect(classifyArtifactIntent('génère et sauvegarde un fichier python')).toBe('GENERATE_AND_SAVE');
+      expect(classifyArtifactIntent('génère et sauvegarde un fichier python')).toBe(
+        'GENERATE_AND_SAVE'
+      );
     });
 
     it('detects "enregistre" variant', () => {
-      expect(classifyArtifactIntent('crée et enregistre un script bash')).toBe('GENERATE_AND_SAVE');
+      expect(classifyArtifactIntent('crée et enregistre un script bash')).toBe(
+        'GENERATE_AND_SAVE'
+      );
     });
 
     it('detects English save variant', () => {
-      expect(classifyArtifactIntent('create and save a python file')).toBe('GENERATE_AND_SAVE');
+      expect(classifyArtifactIntent('create and save a python file')).toBe(
+        'GENERATE_AND_SAVE'
+      );
     });
   });
 
@@ -161,7 +179,7 @@ describe('classifyArtifactIntent', () => {
     });
 
     it('does NOT classify export capability description as EXPORT', () => {
-      const intent = classifyArtifactIntent('permet d\'exporter la conversation');
+      const intent = classifyArtifactIntent("permet d'exporter la conversation");
       expect(intent).toBe('ANSWER_ONLY');
     });
   });
@@ -557,7 +575,10 @@ describe('extractFileContent', () => {
 // ─── inferFileExtension ───────────────────────────────────────────────────────
 
 describe('inferFileExtension', () => {
-  const unknownContract = makeContract({ target_format: 'unknown', artifact_kind: 'unknown' });
+  const unknownContract = makeContract({
+    target_format: 'unknown',
+    artifact_kind: 'unknown',
+  });
 
   it('returns explicit .py extension', () => {
     expect(inferFileExtension(unknownContract, 'génère un fichier .py')).toBe('py');
@@ -612,7 +633,9 @@ describe('inferFileExtension', () => {
   });
 
   it('returns "java" for "java" (not javascript)', () => {
-    expect(inferFileExtension(unknownContract, 'classe java avec interface')).toBe('java');
+    expect(inferFileExtension(unknownContract, 'classe java avec interface')).toBe(
+      'java'
+    );
   });
 
   it('returns "sh" for "bash"', () => {
@@ -675,7 +698,10 @@ describe('inferFileExtension', () => {
   });
 
   it('defaults to "md" for unknown everything', () => {
-    const contract = makeContract({ target_format: 'markdown', artifact_kind: 'unknown' });
+    const contract = makeContract({
+      target_format: 'markdown',
+      artifact_kind: 'unknown',
+    });
     expect(inferFileExtension(contract, '')).toBe('md');
   });
 });
@@ -839,27 +865,46 @@ describe('validateNoFakeArtifactResponse', () => {
   it('flags when file request but contract stayed ANSWER_ONLY', () => {
     const badContract = makeContract({ intent: 'ANSWER_ONLY' });
     const manifest = buildProfessionalDocumentManifest('génère', badContract);
-    const result = validateNoFakeArtifactResponse('génère un fichier python', badContract, manifest);
+    const result = validateNoFakeArtifactResponse(
+      'génère un fichier python',
+      badContract,
+      manifest
+    );
     expect(result.ok).toBe(false);
     expect(result.violations.some(v => v.includes('ANSWER_ONLY'))).toBe(true);
   });
 
   it('flags when file request but manifest is null', () => {
-    const result = validateNoFakeArtifactResponse('génère un fichier python', fileContract, null);
+    const result = validateNoFakeArtifactResponse(
+      'génère un fichier python',
+      fileContract,
+      null
+    );
     expect(result.ok).toBe(false);
     expect(result.violations.some(v => v.includes('manifest'))).toBe(true);
   });
 
   it('returns ok:true when file request, contract correct, manifest present', () => {
-    const manifest = buildProfessionalDocumentManifest('génère un fichier python', fileContract);
-    const result = validateNoFakeArtifactResponse('génère un fichier python', fileContract, manifest);
+    const manifest = buildProfessionalDocumentManifest(
+      'génère un fichier python',
+      fileContract
+    );
+    const result = validateNoFakeArtifactResponse(
+      'génère un fichier python',
+      fileContract,
+      manifest
+    );
     expect(result.ok).toBe(true);
     expect(result.violations).toHaveLength(0);
   });
 
   it('accumulates multiple violations', () => {
     const badContract = makeContract({ intent: 'ANSWER_ONLY' });
-    const result = validateNoFakeArtifactResponse('génère un fichier python', badContract, null);
+    const result = validateNoFakeArtifactResponse(
+      'génère un fichier python',
+      badContract,
+      null
+    );
     expect(result.ok).toBe(false);
     expect(result.violations.length).toBeGreaterThanOrEqual(2);
   });

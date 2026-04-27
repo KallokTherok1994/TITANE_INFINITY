@@ -31,13 +31,22 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: (k: string) => store[k] ?? null,
-    setItem: (k: string, v: string) => { store[k] = v; },
-    removeItem: (k: string) => { delete store[k]; },
-    clear: () => { store = {}; },
+    setItem: (k: string, v: string) => {
+      store[k] = v;
+    },
+    removeItem: (k: string) => {
+      delete store[k];
+    },
+    clear: () => {
+      store = {};
+    },
   };
 })();
 
-Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock, writable: false });
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+  writable: false,
+});
 
 // ─── AgentConfig tests ───────────────────────────────────────────────────────
 
@@ -65,7 +74,10 @@ describe('AgentConfig', () => {
 
   it('merges partial config with defaults on reload', () => {
     // Simulate partial legacy storage
-    localStorage.setItem(AGENT_CONFIG_STORAGE_KEY, JSON.stringify({ rotation: { autoRotateDays: 7 } }));
+    localStorage.setItem(
+      AGENT_CONFIG_STORAGE_KEY,
+      JSON.stringify({ rotation: { autoRotateDays: 7 } })
+    );
     const loaded = loadAgentConfig();
     // training defaults should still be present
     expect(loaded.training.model).toBe('gemma2:2b');
@@ -73,7 +85,10 @@ describe('AgentConfig', () => {
   });
 
   it('resetAgentConfig restores defaults', () => {
-    saveAgentConfig({ ...DEFAULT_AGENT_CONFIG, rotation: { autoRotateDays: 7, warnAfterDays: 5 } });
+    saveAgentConfig({
+      ...DEFAULT_AGENT_CONFIG,
+      rotation: { autoRotateDays: 7, warnAfterDays: 5 },
+    });
     const reset = resetAgentConfig();
     expect(reset.rotation.autoRotateDays).toBe(90);
   });
@@ -120,14 +135,28 @@ describe('AgentAI.getRotationWarnings', () => {
 
   it('returns no warnings when all keys are recent', () => {
     const keys = [
-      { keyId: 'k1', label: 'Test', scopes: ['chat'], createdAt: new Date().toISOString(), active: true, daysSinceCreation: 5 },
+      {
+        keyId: 'k1',
+        label: 'Test',
+        scopes: ['chat'],
+        createdAt: new Date().toISOString(),
+        active: true,
+        daysSinceCreation: 5,
+      },
     ];
     expect(ai.getRotationWarnings(keys)).toHaveLength(0);
   });
 
   it('returns warning for key older than warnAfterDays', () => {
     const keys = [
-      { keyId: 'k1', label: 'Old Key', scopes: ['chat'], createdAt: '2020-01-01T00:00:00.000Z', active: true, daysSinceCreation: 65 },
+      {
+        keyId: 'k1',
+        label: 'Old Key',
+        scopes: ['chat'],
+        createdAt: '2020-01-01T00:00:00.000Z',
+        active: true,
+        daysSinceCreation: 65,
+      },
     ];
     const warnings = ai.getRotationWarnings(keys);
     expect(warnings).toHaveLength(1);
@@ -137,7 +166,14 @@ describe('AgentAI.getRotationWarnings', () => {
 
   it('marks critical for key older than autoRotateDays', () => {
     const keys = [
-      { keyId: 'k2', label: 'Critical Key', scopes: ['admin'], createdAt: '2020-01-01T00:00:00.000Z', active: true, daysSinceCreation: 95 },
+      {
+        keyId: 'k2',
+        label: 'Critical Key',
+        scopes: ['admin'],
+        createdAt: '2020-01-01T00:00:00.000Z',
+        active: true,
+        daysSinceCreation: 95,
+      },
     ];
     const warnings = ai.getRotationWarnings(keys);
     expect(warnings[0].critical).toBe(true);
@@ -145,15 +181,32 @@ describe('AgentAI.getRotationWarnings', () => {
 
   it('skips inactive keys', () => {
     const keys = [
-      { keyId: 'k3', label: 'Revoked', scopes: ['chat'], createdAt: '2020-01-01T00:00:00.000Z', active: false, daysSinceCreation: 200 },
+      {
+        keyId: 'k3',
+        label: 'Revoked',
+        scopes: ['chat'],
+        createdAt: '2020-01-01T00:00:00.000Z',
+        active: false,
+        daysSinceCreation: 200,
+      },
     ];
     expect(ai.getRotationWarnings(keys)).toHaveLength(0);
   });
 
   it('returns no warnings when warnAfterDays is 0 (disabled)', () => {
-    const aiOff = new AgentAI({ ...config, rotation: { autoRotateDays: 0, warnAfterDays: 0 } });
+    const aiOff = new AgentAI({
+      ...config,
+      rotation: { autoRotateDays: 0, warnAfterDays: 0 },
+    });
     const keys = [
-      { keyId: 'k4', label: 'Any', scopes: ['chat'], createdAt: '2020-01-01T00:00:00.000Z', active: true, daysSinceCreation: 500 },
+      {
+        keyId: 'k4',
+        label: 'Any',
+        scopes: ['chat'],
+        createdAt: '2020-01-01T00:00:00.000Z',
+        active: true,
+        daysSinceCreation: 500,
+      },
     ];
     expect(aiOff.getRotationWarnings(keys)).toHaveLength(0);
   });

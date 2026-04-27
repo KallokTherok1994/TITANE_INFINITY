@@ -88,17 +88,17 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       // Hors Tauri, pas de mock → la gouvernance doit bloquer
       const { httpClient } = await import('@/core/http/httpClient');
 
-      await expect(
-        httpClient.get('https://evil.attacker.com/steal')
-      ).rejects.toThrow(/unauthorized domain|Frontend HTTP disabled/i);
+      await expect(httpClient.get('https://evil.attacker.com/steal')).rejects.toThrow(
+        /unauthorized domain|Frontend HTTP disabled/i
+      );
     });
 
     it('bloque les requêtes http:// vers domaines non autorisés', async () => {
       const { httpClient } = await import('@/core/http/httpClient');
 
-      await expect(
-        httpClient.get('http://malicious.example.com/api')
-      ).rejects.toThrow(/unauthorized domain|Frontend HTTP disabled/i);
+      await expect(httpClient.get('http://malicious.example.com/api')).rejects.toThrow(
+        /unauthorized domain|Frontend HTTP disabled/i
+      );
     });
 
     it('permet localhost (Ollama / dev server)', async () => {
@@ -132,9 +132,9 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
     it('bloque github.com (hors allowlist)', async () => {
       const { httpClient } = await import('@/core/http/httpClient');
 
-      await expect(
-        httpClient.get('https://github.com/user/repo')
-      ).rejects.toThrow(/unauthorized domain|Frontend HTTP disabled/i);
+      await expect(httpClient.get('https://github.com/user/repo')).rejects.toThrow(
+        /unauthorized domain|Frontend HTTP disabled/i
+      );
     });
   });
 

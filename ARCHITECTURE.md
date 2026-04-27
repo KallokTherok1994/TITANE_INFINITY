@@ -482,7 +482,7 @@ Conformité validée par tests 100/100 (avril 2026).
   - `htf_module_identity` — Identité entreprise, membre unique Kevin Thibault
   - `htf_formation_manuel` — Manuel T1/T2/T3, procédures POS
   - `htf_estimation_rules` — Taux horaires, taxes TPS/TVQ, majorations, format S{AAAA}{MM}-{NNN}
-  - `htf_services_catalogue` — Catalogue produits/services codes HTF-*
+  - `htf_services_catalogue` — Catalogue produits/services codes HTF-\*
   - `htf_soumission_template` — Modèle officiel 9 sections
 - **Store**: `src/stores/useHTFStore.ts` (Zustand)
 - **Chat mode**: `htf_soumission` dans `chatModes.config.ts`

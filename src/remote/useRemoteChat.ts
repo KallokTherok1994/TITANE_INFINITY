@@ -45,7 +45,9 @@ export function useRemoteChat(transport: RemoteTransport | null) {
   const convIdRef = useRef<string | null>(null);
   // Keep a ref to always have the latest transport without stale closure issues
   const transportRef = useRef<RemoteTransport | null>(transport);
-  useEffect(() => { transportRef.current = transport; }, [transport]);
+  useEffect(() => {
+    transportRef.current = transport;
+  }, [transport]);
 
   const login = useCallback(
     async (secret: string, transportOverride?: RemoteTransport) => {
@@ -56,10 +58,10 @@ export function useRemoteChat(transport: RemoteTransport | null) {
         // Always authenticate — transportOverride may be a fresh unauthenticated transport
         await t.authenticate(secret);
         // Create a new conversation
-        const result = await t.invoke<{ ok: boolean; content: { conversation_id?: string } }>(
-          'create_new_conversation',
-          {},
-        );
+        const result = await t.invoke<{
+          ok: boolean;
+          content: { conversation_id?: string };
+        }>('create_new_conversation', {});
         const convId =
           (result as ConversationGenerateResult).content?.conversation_id ??
           `remote-${Date.now()}`;
@@ -78,13 +80,19 @@ export function useRemoteChat(transport: RemoteTransport | null) {
         }));
       }
     },
-    [transport],
+    [transport]
   );
 
   const logout = useCallback(() => {
     transport?.clearTokens();
     convIdRef.current = null;
-    setState({ authenticated: false, loading: false, error: null, messages: [], conversationId: null });
+    setState({
+      authenticated: false,
+      loading: false,
+      error: null,
+      messages: [],
+      conversationId: null,
+    });
   }, [transport]);
 
   const sendMessage = useCallback(
@@ -99,7 +107,12 @@ export function useRemoteChat(transport: RemoteTransport | null) {
         timestamp: Date.now(),
       };
 
-      setState(s => ({ ...s, loading: true, error: null, messages: [...s.messages, userMsg] }));
+      setState(s => ({
+        ...s,
+        loading: true,
+        error: null,
+        messages: [...s.messages, userMsg],
+      }));
 
       try {
         const result = await t.invoke<ConversationGenerateResult>(
@@ -109,7 +122,7 @@ export function useRemoteChat(transport: RemoteTransport | null) {
             conversation_id: convIdRef.current ?? undefined,
             context_binding: {},
             stream: false,
-          },
+          }
         );
 
         const raw = result as unknown as ConversationGenerateResult;
@@ -135,11 +148,11 @@ export function useRemoteChat(transport: RemoteTransport | null) {
         setState(s => ({
           ...s,
           loading: false,
-          error: e instanceof Error ? e.message : 'Erreur lors de l\'envoi',
+          error: e instanceof Error ? e.message : "Erreur lors de l'envoi",
         }));
       }
     },
-    [transport, state.authenticated],
+    [transport, state.authenticated]
   );
 
   return { state, login, logout, sendMessage };

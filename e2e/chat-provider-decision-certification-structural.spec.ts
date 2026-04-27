@@ -25,15 +25,23 @@ function extractLogPatterns(filePath: string): {
   const content = readFileSync(filePath, 'utf-8');
 
   // Pattern pour [CONV_SEND] — accept console.log, console.warn, logger.info/warn
-  const sendMatches = content.match(/(?:console\.(?:log|warn|error)\('[^']*\[CONV_SEND\][^']*'|logger\.\w+\('[^']*\[CONV_SEND\][^']*')/g) || [];
+  const sendMatches =
+    content.match(
+      /(?:console\.(?:log|warn|error)\('[^']*\[CONV_SEND\][^']*'|logger\.\w+\('[^']*\[CONV_SEND\][^']*')/g
+    ) || [];
   // Also check for template literal / variable patterns
   const sendRaw = content.match(/\[CONV_SEND\]/g) || [];
-  const sendPatterns = sendMatches.length > 0 ? sendMatches : (sendRaw.length > 0 ? ['[CONV_SEND]'] : []);
+  const sendPatterns =
+    sendMatches.length > 0 ? sendMatches : sendRaw.length > 0 ? ['[CONV_SEND]'] : [];
 
   // Pattern pour [CONV_RECV]
-  const recvMatches = content.match(/(?:console\.(?:log|warn|error)\('[^']*\[CONV_RECV\][^']*'|logger\.\w+\('[^']*\[CONV_RECV\][^']*')/g) || [];
+  const recvMatches =
+    content.match(
+      /(?:console\.(?:log|warn|error)\('[^']*\[CONV_RECV\][^']*'|logger\.\w+\('[^']*\[CONV_RECV\][^']*')/g
+    ) || [];
   const recvRaw = content.match(/\[CONV_RECV\]/g) || [];
-  const recvPatterns = recvMatches.length > 0 ? recvMatches : (recvRaw.length > 0 ? ['[CONV_RECV]'] : []);
+  const recvPatterns =
+    recvMatches.length > 0 ? recvMatches : recvRaw.length > 0 ? ['[CONV_RECV]'] : [];
 
   return { send: sendPatterns, recv: recvPatterns };
 }

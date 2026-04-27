@@ -55,9 +55,7 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
   // ── Rule 17: transport mode ─────────────────────────────────────────────────
 
   it('getTransportMode() returns IPC (Rule 17 — IPC-only canon)', async () => {
-    const { getTransportMode } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { getTransportMode } = await import('@/services/ai/transports/ollamaTransport');
     expect(getTransportMode()).toBe('IPC');
   });
 
@@ -66,9 +64,7 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
   it('ollamaGenerate returns ok=true with content on success (Rule 6)', async () => {
     secureInvokeMock.mockResolvedValueOnce(successPayload);
 
-    const { ollamaGenerate } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaGenerate } = await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaGenerate(baseGenerateReq);
 
     expect(secureInvokeMock).toHaveBeenCalledTimes(1);
@@ -94,9 +90,7 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
       error: 'model not found',
     });
 
-    const { ollamaGenerate } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaGenerate } = await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaGenerate(baseGenerateReq);
 
     // Must NOT throw — must return ok=false
@@ -112,16 +106,12 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
   it('ollamaGenerate returns ok=false when secureInvoke throws (Rule 6 — no re-throw)', async () => {
     secureInvokeMock.mockRejectedValueOnce(new Error('IPC channel closed'));
 
-    const { ollamaGenerate } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaGenerate } = await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaGenerate(baseGenerateReq);
 
     expect(result.ok).toBe(false);
     if (!result.ok) {
-      expect(['OLLAMA_IPC_EXCEPTION', 'IPC_CONTRACT_ERROR']).toContain(
-        result.error.code
-      );
+      expect(['OLLAMA_IPC_EXCEPTION', 'IPC_CONTRACT_ERROR']).toContain(result.error.code);
     }
   });
 
@@ -131,9 +121,7 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     secureInvokeMock.mockResolvedValueOnce(successPayload);
 
-    const { ollamaGenerate } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaGenerate } = await import('@/services/ai/transports/ollamaTransport');
     await ollamaGenerate(baseGenerateReq);
 
     expect(fetchSpy).not.toHaveBeenCalled();
@@ -154,14 +142,13 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
       },
     });
 
-    const { ollamaCheckHealth } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaCheckHealth } =
+      await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaCheckHealth();
 
     expect(result.ok).toBe(true);
     if (result.ok) {
-      const names = result.content.models.map((m) => m.name);
+      const names = result.content.models.map(m => m.name);
       expect(names).toContain('gemma2:2b');
     }
   });
@@ -180,9 +167,8 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
       },
     });
 
-    const { ollamaCheckHealth } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaCheckHealth } =
+      await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaCheckHealth();
 
     expect(result.ok).toBe(false);
@@ -197,9 +183,8 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
   it('ollamaCheckHealth returns ok=false when tauriClient throws (Rule 6 — no re-throw)', async () => {
     aiCheckOllamaStatusMock.mockRejectedValueOnce(new Error('invoke failed'));
 
-    const { ollamaCheckHealth } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaCheckHealth } =
+      await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaCheckHealth();
 
     expect(result.ok).toBe(false);
@@ -215,9 +200,7 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     secureInvokeMock.mockResolvedValueOnce(successPayload);
 
-    const { ollamaGenerate } = await import(
-      '@/services/ai/transports/ollamaTransport'
-    );
+    const { ollamaGenerate } = await import('@/services/ai/transports/ollamaTransport');
     const result = await ollamaGenerate(baseGenerateReq);
 
     expect(fetchSpy).not.toHaveBeenCalled();

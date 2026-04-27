@@ -32,18 +32,12 @@ export function useRemoteKeyAgent(): UseRemoteKeyAgentReturn {
 
   const createKey = useCallback(
     (label: string, scopes?: string[]) => remoteKeyAgent.createKey(label, scopes),
-    [],
+    []
   );
 
-  const revokeKey = useCallback(
-    (key_id: string) => remoteKeyAgent.revokeKey(key_id),
-    [],
-  );
+  const revokeKey = useCallback((key_id: string) => remoteKeyAgent.revokeKey(key_id), []);
 
-  const rotateKey = useCallback(
-    (key_id: string) => remoteKeyAgent.rotateKey(key_id),
-    [],
-  );
+  const rotateKey = useCallback((key_id: string) => remoteKeyAgent.rotateKey(key_id), []);
 
   const refresh = useCallback(() => remoteKeyAgent.refresh(), []);
 

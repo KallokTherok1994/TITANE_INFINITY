@@ -312,12 +312,10 @@ async function collectChatSnapshot() {
         memoryState: runtimePanel?.getAttribute('data-memory-state') || '',
         runtimeConversationMode:
           runtimePanel?.getAttribute('data-conversation-mode') || '',
-        runtimeChatStoreMode:
-          runtimePanel?.getAttribute('data-chat-store-mode') || '',
+        runtimeChatStoreMode: runtimePanel?.getAttribute('data-chat-store-mode') || '',
         pageConversationMode:
           conversationPage?.getAttribute('data-conversation-mode') || '',
-        pageChatStoreMode:
-          conversationPage?.getAttribute('data-chat-store-mode') || '',
+        pageChatStoreMode: conversationPage?.getAttribute('data-chat-store-mode') || '',
         ollamaModel: runtimePanel?.getAttribute('data-ollama-model') || '',
         badges: runtimeBadges.filter(Boolean),
       },
@@ -474,7 +472,7 @@ describe('Desktop chat UI complete runtime proof', () => {
     }
 
     const providerSelect = await $('[data-testid="select-chat-provider"]');
-  const modeSelect = await $('[data-testid="chat-mode-selector-select"]');
+    const modeSelect = await $('[data-testid="chat-mode-selector-select"]');
     assert.equal(await providerSelect.getValue(), 'ollama');
     assert.equal(await modeSelect.getValue(), 'default');
 

@@ -33,7 +33,9 @@ export function HTFPage() {
       {/* Header */}
       <div className="htf-page__header bg-green-700 text-white px-6 py-4">
         <h1 className="text-2xl font-bold">🏡 L'Humain à tout faire</h1>
-        <p className="text-green-100 text-sm">Kevin Thibault · Saguenay · www.humainatoutfaire.com</p>
+        <p className="text-green-100 text-sm">
+          Kevin Thibault · Saguenay · www.humainatoutfaire.com
+        </p>
       </div>
 
       {/* Tabs */}
@@ -41,7 +43,7 @@ export function HTFPage() {
         data-testid="htf-tabs"
         className="htf-page__tabs flex overflow-x-auto border-b border-gray-200 bg-gray-50"
       >
-        {tabs.map((tab) => (
+        {tabs.map(tab => (
           <button
             key={tab.id}
             data-testid={`htf-tab-${tab.id}`}
@@ -79,11 +81,15 @@ export function HTFPage() {
 
         {activeTab === 'historique' && (
           <div data-testid="htf-historique" className="p-4 space-y-3">
-            <h3 className="text-lg font-bold text-gray-700">🗂️ Historique des soumissions</h3>
+            <h3 className="text-lg font-bold text-gray-700">
+              🗂️ Historique des soumissions
+            </h3>
             {submissions.length === 0 && (
-              <p className="text-sm text-gray-400 italic">Aucune soumission enregistrée</p>
+              <p className="text-sm text-gray-400 italic">
+                Aucune soumission enregistrée
+              </p>
             )}
-            {submissions.map((sub) => (
+            {submissions.map(sub => (
               <div
                 key={sub.id}
                 data-testid={`htf-historique-item-${sub.id}`}
@@ -91,20 +97,24 @@ export function HTFPage() {
               >
                 <div>
                   <p className="font-semibold text-gray-800 text-sm">{sub.numero}</p>
-                  <p className="text-xs text-gray-500">{sub.clientNom ?? 'Client non spécifié'}</p>
+                  <p className="text-xs text-gray-500">
+                    {sub.clientNom ?? 'Client non spécifié'}
+                  </p>
                   <p className="text-xs text-gray-400">{sub.dateCreation.slice(0, 10)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-green-700 text-sm">{sub.totalAvecTaxes.toFixed(2)} $</p>
+                  <p className="font-bold text-green-700 text-sm">
+                    {sub.totalAvecTaxes.toFixed(2)} $
+                  </p>
                   <span
                     className={`text-xs px-1.5 py-0.5 rounded ${
                       sub.statut === 'acceptee'
                         ? 'bg-green-100 text-green-700'
                         : sub.statut === 'envoyee'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : sub.statut === 'refusee'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-gray-100 text-gray-500'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : sub.statut === 'refusee'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-gray-100 text-gray-500'
                     }`}
                   >
                     {sub.statut}
@@ -117,10 +127,12 @@ export function HTFPage() {
 
         {activeTab === 'connaissance' && (
           <div data-testid="htf-connaissance" className="p-4 space-y-3">
-            <h3 className="text-lg font-bold text-gray-700">📚 Base de connaissance HTF</h3>
+            <h3 className="text-lg font-bold text-gray-700">
+              📚 Base de connaissance HTF
+            </h3>
             <p className="text-sm text-gray-600">
-              La base de connaissance HTF est chargée automatiquement dans le contexte TITANE∞.
-              Elle comprend 5 modules :
+              La base de connaissance HTF est chargée automatiquement dans le contexte
+              TITANE∞. Elle comprend 5 modules :
             </p>
             <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
               <li>Identité de L'Humain à tout faire</li>
@@ -130,7 +142,8 @@ export function HTFPage() {
               <li>Modèle officiel de soumission</li>
             </ul>
             <p className="text-xs text-gray-400 mt-2">
-              Activez le mode chat « HTF — Soumission » pour générer des soumissions par IA.
+              Activez le mode chat « HTF — Soumission » pour générer des soumissions par
+              IA.
             </p>
           </div>
         )}

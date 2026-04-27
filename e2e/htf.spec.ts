@@ -3,14 +3,14 @@
 
 import { test, expect } from '@playwright/test';
 
-test.describe('HTF Module — L\'Humain à tout faire', () => {
+test.describe("HTF Module — L'Humain à tout faire", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/htf');
   });
 
   test('affiche la page HTF avec le header', async ({ page }) => {
     await expect(page.getByTestId('htf-module-page')).toBeVisible();
-    await expect(page.locator('text=L\'Humain à tout faire')).toBeVisible();
+    await expect(page.locator("text=L'Humain à tout faire")).toBeVisible();
     await expect(page.locator('text=Kevin Thibault')).toBeVisible();
   });
 
@@ -35,17 +35,17 @@ test.describe('HTF Module — L\'Humain à tout faire', () => {
     await expect(page.getByTestId('htf-step-description')).toBeVisible();
     await expect(page.getByTestId('htf-btn-next-surface')).toBeDisabled();
 
-    await page.getByTestId('htf-input-description').fill(
-      'Pose dalles béton texturées 60×60 sur terrasse arrière 24m²'
-    );
+    await page
+      .getByTestId('htf-input-description')
+      .fill('Pose dalles béton texturées 60×60 sur terrasse arrière 24m²');
     await expect(page.getByTestId('htf-btn-next-surface')).toBeEnabled();
   });
 
-  test('wizard soumission — navigation complète jusqu\'à surface', async ({ page }) => {
+  test("wizard soumission — navigation complète jusqu'à surface", async ({ page }) => {
     await page.getByTestId('htf-tab-soumission').click();
-    await page.getByTestId('htf-input-description').fill(
-      'Terrasse dalles béton 20m² accès facile Saguenay'
-    );
+    await page
+      .getByTestId('htf-input-description')
+      .fill('Terrasse dalles béton 20m² accès facile Saguenay');
     await page.getByTestId('htf-btn-next-surface').click();
     await expect(page.getByTestId('htf-step-surface')).toBeVisible();
     await page.getByTestId('htf-input-surface').fill('20');

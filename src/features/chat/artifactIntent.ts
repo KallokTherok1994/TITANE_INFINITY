@@ -83,7 +83,8 @@ function inferFormat(request: string): ArtifactActionContract['target_format'] {
     text.includes('xml') ||
     CODE_EXTENSIONS_RE.test(text) ||
     CODE_LANGUAGES_RE.test(text)
-  ) return 'text';
+  )
+    return 'text';
   return 'markdown';
 }
 
@@ -100,7 +101,8 @@ function inferKind(request: string): ArtifactActionContract['artifact_kind'] {
     text.includes('class') ||
     CODE_EXTENSIONS_RE.test(text) ||
     CODE_LANGUAGES_RE.test(text)
-  ) return 'code';
+  )
+    return 'code';
   if (text.includes('rapport') || text.includes('report')) return 'report';
   if (
     text.includes('lettre') ||
@@ -109,16 +111,22 @@ function inferKind(request: string): ArtifactActionContract['artifact_kind'] {
     text.includes('memo') ||
     text.includes('mail') ||
     text.includes('email')
-  ) return 'document';
+  )
+    return 'document';
   return 'unknown';
 }
 
 export function classifyArtifactIntent(request: string): ArtifactIntent {
   const text = request.toLowerCase();
   const asksFile =
-    /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write|produis|fais).*(fichier|file|document|rapport|script|programme|code|csv|html|yaml|json|xml|sql)/.test(text) ||
-    /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write).*(\.py|\.rs|\.ts|\.js|\.go|\.java|\.cpp|\.rb|\.sh|\.css|\.md)/.test(text) ||
-    CODE_EXTENSIONS_RE.test(text) && /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write|produis|fais)/.test(text);
+    /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write|produis|fais).*(fichier|file|document|rapport|script|programme|code|csv|html|yaml|json|xml|sql)/.test(
+      text
+    ) ||
+    /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write).*(\.py|\.rs|\.ts|\.js|\.go|\.java|\.cpp|\.rb|\.sh|\.css|\.md)/.test(
+      text
+    ) ||
+    (CODE_EXTENSIONS_RE.test(text) &&
+      /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write|produis|fais)/.test(text));
   const asksOpen = /(ouvre|open).*([eé]diteur|editor|canvas|artifact)/.test(text);
   const asksSave = /(sauve|enregistre|save)/.test(text);
   const mentionsExport = /(exporte|export|exporter)/.test(text);
@@ -224,53 +232,61 @@ export function buildProfessionalDocumentManifest(
 const FORMAT_INSTRUCTIONS: Record<string, string> = {
   py: "Python 3.10+. Inclure : imports, type hints (PEP 484), docstrings (PEP 257), gestion d'erreurs, if __name__ == '__main__' si applicable. Code directement exécutable.",
   rs: "Rust edition 2021. Inclure : use statements, types explicites, Result/Option, doc comments ///, clippy-clean. Pas d'unwrap() sans justification.",
-  ts: "TypeScript 5+ strict. Imports ESM, interfaces/types explicites, aucun any, JSDoc sur les exports publics.",
-  tsx: "TypeScript React 18+. Functional components, props typées avec interface, React hooks si nécessaire, export named + default.",
-  js: "JavaScript ES2022. Modules ESM, async/await, const/let, aucun var.",
-  jsx: "React JSX ES2022. Props destructurées, hooks si besoin, export default.",
-  go: "Go 1.21 idiomatique. Package déclaré, imports groupés (stdlib/external), error handling explicite, godoc comments.",
-  java: "Java 17+ LTS. Imports complets, Javadoc, exceptions typées, conventions Oracle (camelCase/PascalCase).",
-  cpp: "C++17. Includes STL nécessaires, namespace, RAII, smart pointers préférés aux raw pointers.",
-  c: "C11. #include standard, prototypes avant usage, vérification NULL, pas de VLA.",
-  rb: "Ruby 3.x. Conventions (snake_case, ?/! pour prédicats), rescue/raise, rdoc si API.",
-  sh: "Bash 5+. #!/usr/bin/env bash en première ligne, set -euo pipefail, fonctions nommées, variables entre ${}.",
-  sql: "SQL ANSI (compatible PostgreSQL/MySQL). Mots-clés en MAJUSCULES, noms en snake_case, commentaires sur les jointures complexes.",
-  css: "CSS3. Variables custom (--nom), media queries mobile-first, flexbox/grid, commentaires de sections.",
-  scss: "SCSS 1.x. Variables $, mixins @mixin, nesting max 3 niveaux, @use au lieu de @import.",
+  ts: 'TypeScript 5+ strict. Imports ESM, interfaces/types explicites, aucun any, JSDoc sur les exports publics.',
+  tsx: 'TypeScript React 18+. Functional components, props typées avec interface, React hooks si nécessaire, export named + default.',
+  js: 'JavaScript ES2022. Modules ESM, async/await, const/let, aucun var.',
+  jsx: 'React JSX ES2022. Props destructurées, hooks si besoin, export default.',
+  go: 'Go 1.21 idiomatique. Package déclaré, imports groupés (stdlib/external), error handling explicite, godoc comments.',
+  java: 'Java 17+ LTS. Imports complets, Javadoc, exceptions typées, conventions Oracle (camelCase/PascalCase).',
+  cpp: 'C++17. Includes STL nécessaires, namespace, RAII, smart pointers préférés aux raw pointers.',
+  c: 'C11. #include standard, prototypes avant usage, vérification NULL, pas de VLA.',
+  rb: 'Ruby 3.x. Conventions (snake_case, ?/! pour prédicats), rescue/raise, rdoc si API.',
+  sh: 'Bash 5+. #!/usr/bin/env bash en première ligne, set -euo pipefail, fonctions nommées, variables entre ${}.',
+  sql: 'SQL ANSI (compatible PostgreSQL/MySQL). Mots-clés en MAJUSCULES, noms en snake_case, commentaires sur les jointures complexes.',
+  css: 'CSS3. Variables custom (--nom), media queries mobile-first, flexbox/grid, commentaires de sections.',
+  scss: 'SCSS 1.x. Variables $, mixins @mixin, nesting max 3 niveaux, @use au lieu de @import.',
   html: "HTML5 valide. <!DOCTYPE html>, <meta charset='UTF-8'>, lang='fr', viewport, structure sémantique (header/main/article/footer), styles inline minimaux.",
-  yaml: "YAML 1.2. Indentation 2 espaces, pas de tabulations, guillemets sur les valeurs ambiguës, commentaires # utiles.",
-  yml: "YAML 1.2. Indentation 2 espaces, pas de tabulations.",
-  toml: "TOML 1.0 valide. Sections [[array]] et [table], types stricts, commentaires # descriptifs.",
-  ini: "INI standard. Sections [section], clé=valeur sans espaces autour de =, commentaires ;.",
-  json: "JSON RFC 8259. Pas de trailing comma, pas de commentaires, pretty-print 2 espaces, encodage UTF-8.",
-  csv: "CSV RFC 4180. Première ligne = en-têtes descriptifs, valeurs contenant des virgules entre guillemets doubles, encodage UTF-8.",
+  yaml: 'YAML 1.2. Indentation 2 espaces, pas de tabulations, guillemets sur les valeurs ambiguës, commentaires # utiles.',
+  yml: 'YAML 1.2. Indentation 2 espaces, pas de tabulations.',
+  toml: 'TOML 1.0 valide. Sections [[array]] et [table], types stricts, commentaires # descriptifs.',
+  ini: 'INI standard. Sections [section], clé=valeur sans espaces autour de =, commentaires ;.',
+  json: 'JSON RFC 8259. Pas de trailing comma, pas de commentaires, pretty-print 2 espaces, encodage UTF-8.',
+  csv: 'CSV RFC 4180. Première ligne = en-têtes descriptifs, valeurs contenant des virgules entre guillemets doubles, encodage UTF-8.',
   xml: "XML 1.0. Déclaration <?xml version='1.0' encoding='UTF-8'?>, indentation 2 espaces, DTD ou commentaire de structure si complexe.",
-  graphql: "GraphQL SDL. Types, queries, mutations avec descriptions entre \"\"\", directives si utile.",
-  proto: "Protocol Buffers 3. syntax = \"proto3\"; en tête, package, imports si besoin, types scalaires corrects.",
+  graphql:
+    'GraphQL SDL. Types, queries, mutations avec descriptions entre """, directives si utile.',
+  proto:
+    'Protocol Buffers 3. syntax = "proto3"; en tête, package, imports si besoin, types scalaires corrects.',
   md: '',
   txt: '',
 };
 
-function buildGradeInstructions(grade: ProfessionalGrade, kind: ArtifactActionContract['artifact_kind']): string {
+function buildGradeInstructions(
+  grade: ProfessionalGrade,
+  kind: ArtifactActionContract['artifact_kind']
+): string {
   if (kind === 'document') {
     switch (grade) {
       case 'NOTARY_GRADE_STYLE':
-        return "Document notarial complet : identification des parties (NOM Prénom, né(e) le, domicilié(e) à), objet précis, clauses numérotées avec références légales (Code civil, etc.), mentions obligatoires, espace signatures daté.";
+        return 'Document notarial complet : identification des parties (NOM Prénom, né(e) le, domicilié(e) à), objet précis, clauses numérotées avec références légales (Code civil, etc.), mentions obligatoires, espace signatures daté.';
       case 'FORMAL_OFFICIAL':
-        return "Document officiel structuré : en-tête (émetteur, destinataire, référence, date), objet, corps en paragraphes numérotés, formule de politesse, signature.";
+        return 'Document officiel structuré : en-tête (émetteur, destinataire, référence, date), objet, corps en paragraphes numérotés, formule de politesse, signature.';
       case 'PROFESSIONAL_PREMIUM':
-        return "Document professionnel premium : introduction contextuelle, développement structuré (sections et sous-sections), langage impeccable, conclusion avec synthèse, annexes si pertinent.";
+        return 'Document professionnel premium : introduction contextuelle, développement structuré (sections et sous-sections), langage impeccable, conclusion avec synthèse, annexes si pertinent.';
       case 'PROFESSIONAL_STANDARD':
-        return "Document professionnel standard : structure claire (introduction, corps, conclusion), langage correct et direct.";
+        return 'Document professionnel standard : structure claire (introduction, corps, conclusion), langage correct et direct.';
       default:
-        return "Document de travail : structure de base utilisable immédiatement.";
+        return 'Document de travail : structure de base utilisable immédiatement.';
     }
   }
   if (kind === 'report') {
-    const premium = grade === 'PROFESSIONAL_PREMIUM' || grade === 'FORMAL_OFFICIAL' || grade === 'NOTARY_GRADE_STYLE';
+    const premium =
+      grade === 'PROFESSIONAL_PREMIUM' ||
+      grade === 'FORMAL_OFFICIAL' ||
+      grade === 'NOTARY_GRADE_STYLE';
     return premium
-      ? "Rapport professionnel complet : résumé exécutif, contexte, méthodologie, analyse détaillée avec données, conclusion et recommandations concrètes."
-      : "Rapport structuré : résumé, sections thématiques, conclusion.";
+      ? 'Rapport professionnel complet : résumé exécutif, contexte, méthodologie, analyse détaillée avec données, conclusion et recommandations concrètes.'
+      : 'Rapport structuré : résumé, sections thématiques, conclusion.';
   }
   return "Contenu de qualité professionnelle, complet et prêt à l'emploi.";
 }
@@ -287,7 +303,9 @@ export function buildFileGenerationPrompt(
   fileExt = ''
 ): string {
   const ext = fileExt.toLowerCase().replace(/^\./, '');
-  const formatSpec = FORMAT_INSTRUCTIONS[ext] || buildGradeInstructions(contract.professional_grade, contract.artifact_kind);
+  const formatSpec =
+    FORMAT_INSTRUCTIONS[ext] ||
+    buildGradeInstructions(contract.professional_grade, contract.artifact_kind);
   const extLabel = ext ? `.${ext}` : contract.target_format;
 
   return [
@@ -325,7 +343,12 @@ export function extractFileContent(aiResponse: string, _format: string): string 
     (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
     (trimmed.startsWith('[') && trimmed.endsWith(']'))
   ) {
-    try { JSON.parse(trimmed); return trimmed; } catch { /* pas JSON valide */ }
+    try {
+      JSON.parse(trimmed);
+      return trimmed;
+    } catch {
+      /* pas JSON valide */
+    }
   }
 
   // Supprimer les lignes d'introduction courtes (≤ 3 lignes, < 120 chars chacune)
@@ -334,7 +357,9 @@ export function extractFileContent(aiResponse: string, _format: string): string 
   while (
     startIdx < Math.min(3, lines.length - 1) &&
     (lines[startIdx] ?? '').trim().length < 120 &&
-    /^(voici|here|ci-dessous|contenu|fichier|output|result|génér|generat)/i.test((lines[startIdx] ?? '').trim())
+    /^(voici|here|ci-dessous|contenu|fichier|output|result|génér|generat)/i.test(
+      (lines[startIdx] ?? '').trim()
+    )
   ) {
     startIdx++;
   }
@@ -362,7 +387,8 @@ export function inferFileExtension(
   if (text.includes('javascript')) return 'js';
   if (text.includes('golang') || /\bgo\b/.test(text)) return 'go';
   if (text.includes('java') && !text.includes('javascript')) return 'java';
-  if (text.includes('bash') || text.includes('shell') || text.includes('script sh')) return 'sh';
+  if (text.includes('bash') || text.includes('shell') || text.includes('script sh'))
+    return 'sh';
   if (text.includes('sql')) return 'sql';
   if (text.includes('css') && !text.includes('scss')) return 'css';
   if (text.includes('scss')) return 'scss';

@@ -29,7 +29,9 @@ export async function getHTFKnowledgeContext(): Promise<HTFKnowledgeContext> {
 }
 
 /** Retourne la POS (Procédure Opératoire Standard) d'un code de service */
-export async function getRelevantPOS(codeService: string): Promise<Record<string, unknown> | null> {
+export async function getRelevantPOS(
+  codeService: string
+): Promise<Record<string, unknown> | null> {
   const ctx = await getHTFKnowledgeContext();
   const catalogue = ctx.servicesCatalogue as Record<string, Record<string, unknown>>;
   for (const section of Object.values(catalogue)) {
@@ -47,7 +49,9 @@ export async function getEstimationRules(): Promise<Record<string, unknown>> {
 }
 
 /** Retourne un service par son code HTF */
-export async function getServiceByCode(code: string): Promise<Record<string, unknown> | null> {
+export async function getServiceByCode(
+  code: string
+): Promise<Record<string, unknown> | null> {
   return getRelevantPOS(code);
 }
 

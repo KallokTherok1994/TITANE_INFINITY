@@ -6,21 +6,36 @@
     "T1": {
       "label": "Initiation / Aide",
       "description": "Tâches simples, non structurelles, nécessitant encadrement. Rapport via formulaire simplifié.",
-      "exemples_taches": ["Nettoyage standard", "Transport matériaux", "Aide préparation chantier"],
+      "exemples_taches": [
+        "Nettoyage standard",
+        "Transport matériaux",
+        "Aide préparation chantier"
+      ],
       "supervision_requise": true,
       "rapport_simplifie": true
     },
     "T2": {
       "label": "Autonome",
       "description": "Réparations intérieures et extérieures standards. Travail autonome avec suivi.",
-      "exemples_taches": ["Pose tablettes", "Réparations murales", "Nettoyage complet", "Installation légère", "Entretien paysager standard"],
+      "exemples_taches": [
+        "Pose tablettes",
+        "Réparations murales",
+        "Nettoyage complet",
+        "Installation légère",
+        "Entretien paysager standard"
+      ],
       "supervision_requise": false,
       "rapport_complet": true
     },
     "T3": {
       "label": "Expert / Formateur",
       "description": "Projets complexes, multi-phases, supervision d'équipe. Leader technique.",
-      "exemples_taches": ["Projets aménagement complets", "Installation électrique éclairage", "Rénovation légère structurée", "Coordination multi-intervenants"],
+      "exemples_taches": [
+        "Projets aménagement complets",
+        "Installation électrique éclairage",
+        "Rénovation légère structurée",
+        "Coordination multi-intervenants"
+      ],
       "supervision_requise": false,
       "peut_former": true,
       "rapport_detaille": true
@@ -38,33 +53,166 @@
   },
   "catalogue_services": {
     "menager_nettoyage": {
-      "nettoyage_regulier": { "code": "HTF-NET-001", "duree_T2_h": 2.5, "duree_T3_h": 2.0, "unite": "logement", "epi": ["gants", "lunettes"], "description": "Nettoyage complet résidentiel standard" },
-      "grand_menage": { "code": "HTF-NET-002", "duree_T2_h": 5.0, "duree_T3_h": 4.0, "unite": "logement", "epi": ["gants", "lunettes", "masque"], "description": "Grand ménage approfondi (printemps/automne)" },
-      "nettoyage_vitres": { "code": "HTF-NET-003", "duree_T2_h": 1.5, "duree_T3_h": 1.0, "unite": "par 10 vitres", "epi": ["gants", "harnais si hauteur"], "description": "Nettoyage vitres intérieur et extérieur" },
-      "nettoyage_haute_pression": { "code": "HTF-NET-004", "duree_T2_h": 2.0, "duree_T3_h": 1.5, "unite": "100m²", "epi": ["lunettes", "bottes", "vêtements protection"], "description": "Nettoyage haute pression surfaces extérieures" }
+      "nettoyage_regulier": {
+        "code": "HTF-NET-001",
+        "duree_T2_h": 2.5,
+        "duree_T3_h": 2.0,
+        "unite": "logement",
+        "epi": ["gants", "lunettes"],
+        "description": "Nettoyage complet résidentiel standard"
+      },
+      "grand_menage": {
+        "code": "HTF-NET-002",
+        "duree_T2_h": 5.0,
+        "duree_T3_h": 4.0,
+        "unite": "logement",
+        "epi": ["gants", "lunettes", "masque"],
+        "description": "Grand ménage approfondi (printemps/automne)"
+      },
+      "nettoyage_vitres": {
+        "code": "HTF-NET-003",
+        "duree_T2_h": 1.5,
+        "duree_T3_h": 1.0,
+        "unite": "par 10 vitres",
+        "epi": ["gants", "harnais si hauteur"],
+        "description": "Nettoyage vitres intérieur et extérieur"
+      },
+      "nettoyage_haute_pression": {
+        "code": "HTF-NET-004",
+        "duree_T2_h": 2.0,
+        "duree_T3_h": 1.5,
+        "unite": "100m²",
+        "epi": ["lunettes", "bottes", "vêtements protection"],
+        "description": "Nettoyage haute pression surfaces extérieures"
+      }
     },
     "reparations_installations": {
-      "reparation_murale_fissure": { "code": "HTF-REP-001", "duree_T2_h": 1.0, "duree_T3_h": 0.75, "unite": "par fissure", "epi": ["masque poussière", "lunettes"], "description": "Réparation fissures et trous muraux" },
-      "pose_tablette": { "code": "HTF-INS-001", "duree_T2_h": 0.75, "duree_T3_h": 0.5, "unite": "par tablette", "epi": ["lunettes", "gants"], "description": "Pose et fixation tablettes murales" },
-      "pose_tringle_rideau": { "code": "HTF-INS-002", "duree_T2_h": 0.5, "duree_T3_h": 0.4, "unite": "par tringle", "epi": ["lunettes"], "description": "Installation tringles à rideaux" },
-      "installation_domotique_legere": { "code": "HTF-INS-003", "duree_T2_h": 1.5, "duree_T3_h": 1.0, "unite": "par appareil", "epi": ["gants isolants", "vérificateur tension"], "description": "Installation domotique légère (thermostats, prises connectées)" },
-      "babyproofing": { "code": "HTF-INS-004", "duree_T2_h": 2.0, "duree_T3_h": 1.5, "unite": "logement", "epi": ["gants"], "description": "Installation protections sécurité enfants" }
+      "reparation_murale_fissure": {
+        "code": "HTF-REP-001",
+        "duree_T2_h": 1.0,
+        "duree_T3_h": 0.75,
+        "unite": "par fissure",
+        "epi": ["masque poussière", "lunettes"],
+        "description": "Réparation fissures et trous muraux"
+      },
+      "pose_tablette": {
+        "code": "HTF-INS-001",
+        "duree_T2_h": 0.75,
+        "duree_T3_h": 0.5,
+        "unite": "par tablette",
+        "epi": ["lunettes", "gants"],
+        "description": "Pose et fixation tablettes murales"
+      },
+      "pose_tringle_rideau": {
+        "code": "HTF-INS-002",
+        "duree_T2_h": 0.5,
+        "duree_T3_h": 0.4,
+        "unite": "par tringle",
+        "epi": ["lunettes"],
+        "description": "Installation tringles à rideaux"
+      },
+      "installation_domotique_legere": {
+        "code": "HTF-INS-003",
+        "duree_T2_h": 1.5,
+        "duree_T3_h": 1.0,
+        "unite": "par appareil",
+        "epi": ["gants isolants", "vérificateur tension"],
+        "description": "Installation domotique légère (thermostats, prises connectées)"
+      },
+      "babyproofing": {
+        "code": "HTF-INS-004",
+        "duree_T2_h": 2.0,
+        "duree_T3_h": 1.5,
+        "unite": "logement",
+        "epi": ["gants"],
+        "description": "Installation protections sécurité enfants"
+      }
     },
     "amenagement_paysager": {
-      "terrasse_dalles": { "code": "HTF-SOL-001", "duree_T3_h_par_m2": 1.5, "unite": "m²", "niveau_min": "T3", "epi": ["lunettes", "genouillères", "gants résistants"], "description": "Pose terrasse dalles béton" },
-      "entree_vehiculaire": { "code": "HTF-SOL-002", "duree_T3_h_par_m2": 2.0, "unite": "m²", "niveau_min": "T3", "epi": ["lunettes", "bottes acier", "gants"], "description": "Pose entrée véhiculaire pavés autobloquants" },
-      "jardin_zen": { "code": "HTF-SOL-003", "duree_T3_h": 8.0, "unite": "forfait 15m²", "niveau_min": "T3", "epi": ["gants", "lunettes"], "description": "Aménagement jardin zen avec fontaine" },
-      "haie_thuya": { "code": "HTF-VEG-001", "duree_T2_h_par_ml": 0.5, "unite": "ml", "niveau_min": "T2", "epi": ["gants", "genouillères"], "description": "Plantation haie Thuya Smaragd Zone 3" },
-      "erable_sucre": { "code": "HTF-ARB-001", "duree_T2_h": 1.5, "unite": "par arbre", "niveau_min": "T2", "epi": ["gants", "bottes"], "description": "Plantation érable à sucre certifié Zone 3" },
-      "entretien_saisonnier_ext": { "code": "HTF-ENT-001", "duree_T2_h": 3.0, "unite": "forfait résidentiel", "niveau_min": "T2", "epi": ["lunettes", "gants", "masque"], "description": "Entretien saisonnier extérieur complet" },
-      "debroussaillage": { "code": "HTF-ENT-002", "duree_T2_h_par_100m2": 2.0, "unite": "100m²", "niveau_min": "T2", "epi": ["lunettes", "gants résistants", "bottes", "casque bruit"], "description": "Débroussaillage et nettoyage terrain" }
+      "terrasse_dalles": {
+        "code": "HTF-SOL-001",
+        "duree_T3_h_par_m2": 1.5,
+        "unite": "m²",
+        "niveau_min": "T3",
+        "epi": ["lunettes", "genouillères", "gants résistants"],
+        "description": "Pose terrasse dalles béton"
+      },
+      "entree_vehiculaire": {
+        "code": "HTF-SOL-002",
+        "duree_T3_h_par_m2": 2.0,
+        "unite": "m²",
+        "niveau_min": "T3",
+        "epi": ["lunettes", "bottes acier", "gants"],
+        "description": "Pose entrée véhiculaire pavés autobloquants"
+      },
+      "jardin_zen": {
+        "code": "HTF-SOL-003",
+        "duree_T3_h": 8.0,
+        "unite": "forfait 15m²",
+        "niveau_min": "T3",
+        "epi": ["gants", "lunettes"],
+        "description": "Aménagement jardin zen avec fontaine"
+      },
+      "haie_thuya": {
+        "code": "HTF-VEG-001",
+        "duree_T2_h_par_ml": 0.5,
+        "unite": "ml",
+        "niveau_min": "T2",
+        "epi": ["gants", "genouillères"],
+        "description": "Plantation haie Thuya Smaragd Zone 3"
+      },
+      "erable_sucre": {
+        "code": "HTF-ARB-001",
+        "duree_T2_h": 1.5,
+        "unite": "par arbre",
+        "niveau_min": "T2",
+        "epi": ["gants", "bottes"],
+        "description": "Plantation érable à sucre certifié Zone 3"
+      },
+      "entretien_saisonnier_ext": {
+        "code": "HTF-ENT-001",
+        "duree_T2_h": 3.0,
+        "unite": "forfait résidentiel",
+        "niveau_min": "T2",
+        "epi": ["lunettes", "gants", "masque"],
+        "description": "Entretien saisonnier extérieur complet"
+      },
+      "debroussaillage": {
+        "code": "HTF-ENT-002",
+        "duree_T2_h_par_100m2": 2.0,
+        "unite": "100m²",
+        "niveau_min": "T2",
+        "epi": ["lunettes", "gants résistants", "bottes", "casque bruit"],
+        "description": "Débroussaillage et nettoyage terrain"
+      }
     },
     "eclairage_exterieur": {
-      "borne_led": { "code": "HTF-ECL-001", "duree_T3_h": 1.5, "unite": "par borne", "niveau_min": "T3", "epi": ["gants isolants", "vérificateur tension"], "description": "Installation borne LED extérieure" },
-      "spot_encastre": { "code": "HTF-ECL-003", "duree_T3_h": 0.75, "unite": "par spot", "niveau_min": "T3", "epi": ["gants isolants"], "description": "Installation spots LED encastrés" }
+      "borne_led": {
+        "code": "HTF-ECL-001",
+        "duree_T3_h": 1.5,
+        "unite": "par borne",
+        "niveau_min": "T3",
+        "epi": ["gants isolants", "vérificateur tension"],
+        "description": "Installation borne LED extérieure"
+      },
+      "spot_encastre": {
+        "code": "HTF-ECL-003",
+        "duree_T3_h": 0.75,
+        "unite": "par spot",
+        "niveau_min": "T3",
+        "epi": ["gants isolants"],
+        "description": "Installation spots LED encastrés"
+      }
     },
     "deneigement": {
-      "deneigement_acces": { "code": "HTF-DEN-001", "duree_T2_h": 1.0, "unite": "intervention", "niveau_min": "T2", "epi": ["vêtements chauds", "bottes grip"], "description": "Déneigement entrée et accès prioritaires" }
+      "deneigement_acces": {
+        "code": "HTF-DEN-001",
+        "duree_T2_h": 1.0,
+        "unite": "intervention",
+        "niveau_min": "T2",
+        "epi": ["vêtements chauds", "bottes grip"],
+        "description": "Déneigement entrée et accès prioritaires"
+      }
     }
   },
   "epi_requis_standard": {

@@ -75,18 +75,15 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Modes accessibles selon permission
-  const accessibleModes = useMemo(
-    () => {
-      const modes = getAccessibleModes(userPermissionLevel);
-      if (!allowedModes || allowedModes.length === 0) {
-        return modes;
-      }
+  const accessibleModes = useMemo(() => {
+    const modes = getAccessibleModes(userPermissionLevel);
+    if (!allowedModes || allowedModes.length === 0) {
+      return modes;
+    }
 
-      const allowed = new Set<ChatModeId>(allowedModes);
-      return modes.filter(mode => allowed.has(mode.id));
-    },
-    [allowedModes, userPermissionLevel]
-  );
+    const allowed = new Set<ChatModeId>(allowedModes);
+    return modes.filter(mode => allowed.has(mode.id));
+  }, [allowedModes, userPermissionLevel]);
 
   // Mode courant config
   const currentModeConfig = useMemo(() => CHAT_MODES_CONFIG[currentMode], [currentMode]);

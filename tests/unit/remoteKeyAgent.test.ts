@@ -62,7 +62,10 @@ describe('RemoteKeyAgent', () => {
       await agent.init();
 
       expect(mockCreate).toHaveBeenCalledWith('TITANE-Default', [
-        'Admin', 'Chat', 'Memory', 'System',
+        'Admin',
+        'Chat',
+        'Memory',
+        'System',
       ]);
       expect(events).toContain('onCreate');
       expect(events).toContain('onReady');
@@ -82,7 +85,9 @@ describe('RemoteKeyAgent', () => {
       mockList.mockResolvedValueOnce({ ok: false, error: 'IPC error' });
 
       const errors: string[] = [];
-      agent.onEvent(e => { if (e.type === 'onError') errors.push(e.message); });
+      agent.onEvent(e => {
+        if (e.type === 'onError') errors.push(e.message);
+      });
       await agent.init();
 
       expect(agent.state.status).toBe('error');
@@ -155,7 +160,9 @@ describe('RemoteKeyAgent', () => {
       });
       mockList.mockResolvedValueOnce({ ok: true, keys: [MOCK_ENTRY] });
 
-      const events: ReturnType<typeof agent.onEvent extends (l: infer L) => void ? never : never>[] = [];
+      const events: ReturnType<
+        typeof agent.onEvent extends (l: infer L) => void ? never : never
+      >[] = [];
       const receivedEvents: string[] = [];
       agent.onEvent(e => receivedEvents.push(e.type));
 

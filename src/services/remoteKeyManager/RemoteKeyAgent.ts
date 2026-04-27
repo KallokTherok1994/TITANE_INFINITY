@@ -28,7 +28,12 @@ import {
   type AgentConfig,
 } from './AgentConfig';
 
-import { AgentAI, type AiAnalysisResult, type AiLabelSuggestion, type KeySummary } from './AgentAI';
+import {
+  AgentAI,
+  type AiAnalysisResult,
+  type AiLabelSuggestion,
+  type KeySummary,
+} from './AgentAI';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -118,7 +123,12 @@ export class RemoteKeyAgent {
         // Auto-create default key
         await this._autoCreateDefault();
       } else {
-        this._setState({ status: 'ready', keys, lastSecretOnce: null, lastKeyIdOnce: null });
+        this._setState({
+          status: 'ready',
+          keys,
+          lastSecretOnce: null,
+          lastKeyIdOnce: null,
+        });
         this._emit({ type: 'onReady', keys });
       }
     } catch (e) {
@@ -140,7 +150,12 @@ export class RemoteKeyAgent {
         throw new Error(result.error ?? 'create failed');
       }
       this.logUsage({ action: 'create', keyId: result.key_id, label });
-      this._emit({ type: 'onCreate', key_id: result.key_id, secret_once: result.secret_once, label });
+      this._emit({
+        type: 'onCreate',
+        key_id: result.key_id,
+        secret_once: result.secret_once,
+        label,
+      });
       await this._refresh(result.secret_once, result.key_id);
       return result.secret_once;
     } catch (e) {
@@ -216,7 +231,12 @@ export class RemoteKeyAgent {
    * Propagates changes to the AI layer immediately.
    */
   configure(partial: Partial<AgentConfig>): AgentConfig {
-    this._config = { ...this._config, ...partial, version: 1, updatedAt: new Date().toISOString() };
+    this._config = {
+      ...this._config,
+      ...partial,
+      version: 1,
+      updatedAt: new Date().toISOString(),
+    };
     saveAgentConfig(this._config);
     this._ai.updateConfig(this._config);
     this._emit({ type: 'onConfigUpdate', config: { ...this._config } });
@@ -245,7 +265,7 @@ export class RemoteKeyAgent {
    * Degraded gracefully when Ollama is unreachable.
    */
   async analyzeWithAI(): Promise<AiAnalysisResult> {
-    const keySummaries: KeySummary[] = this._state.keys.map((k) => ({
+    const keySummaries: KeySummary[] = this._state.keys.map(k => ({
       keyId: k.key_id,
       label: k.label,
       scopes: k.scopes ?? [],
@@ -274,7 +294,7 @@ export class RemoteKeyAgent {
    * Returns keys that need rotation according to the configured policy.
    */
   getRotationWarnings(): ReturnType<AgentAI['getRotationWarnings']> {
-    const keySummaries: KeySummary[] = this._state.keys.map((k) => ({
+    const keySummaries: KeySummary[] = this._state.keys.map(k => ({
       keyId: k.key_id,
       label: k.label,
       scopes: k.scopes ?? [],
@@ -297,11 +317,21 @@ export class RemoteKeyAgent {
   // ── Internals ─────────────────────────────────────────────────────────────
 
   private async _autoCreateDefault(): Promise<void> {
-    const result = await remoteKeyCreate('TITANE-Default', ['Admin', 'Chat', 'Memory', 'System']);
+    const result = await remoteKeyCreate('TITANE-Default', [
+      'Admin',
+      'Chat',
+      'Memory',
+      'System',
+    ]);
     if (!result.ok || !result.secret_once || !result.key_id) {
       throw new Error(result.error ?? 'auto-create default key failed');
     }
-    this.logUsage({ action: 'create', keyId: result.key_id, label: 'TITANE-Default', detail: 'auto-init' });
+    this.logUsage({
+      action: 'create',
+      keyId: result.key_id,
+      label: 'TITANE-Default',
+      detail: 'auto-init',
+    });
     this._emit({
       type: 'onCreate',
       key_id: result.key_id,
@@ -311,7 +341,10 @@ export class RemoteKeyAgent {
     await this._refresh(result.secret_once, result.key_id);
   }
 
-  private async _refresh(secretOnce: string | null, keyIdOnce: string | null): Promise<void> {
+  private async _refresh(
+    secretOnce: string | null,
+    keyIdOnce: string | null
+  ): Promise<void> {
     const result = await remoteKeyList();
     const keys = result.ok ? (result.keys ?? []) : [];
     this._setState({

@@ -2,7 +2,12 @@
 // Store Zustand central
 
 import { create } from 'zustand';
-import type { HTFClient, HTFSubmission, HTFEstimation, HTFLearningEntry } from '../services/htf/types';
+import type {
+  HTFClient,
+  HTFSubmission,
+  HTFEstimation,
+  HTFLearningEntry,
+} from '../services/htf/types';
 import { getAllClients } from '../services/htf/htfCrmService';
 import { getAllSubmissions } from '../services/htf/htfSubmissionService';
 import { getAllLearningEntries } from '../services/htf/htfLearningService';
@@ -46,7 +51,7 @@ const initialState: HTFState = {
   wizardSurfaceM2: null,
 };
 
-export const useHTFStore = create<HTFState & HTFActions>((set) => ({
+export const useHTFStore = create<HTFState & HTFActions>(set => ({
   ...initialState,
 
   loadAll: () => {
@@ -57,18 +62,16 @@ export const useHTFStore = create<HTFState & HTFActions>((set) => ({
     });
   },
 
-  setActiveClient: (client) => set({ activeClient: client }),
-  setActiveEstimation: (est) => set({ activeEstimation: est }),
-  setIsGenerating: (v) => set({ isGenerating: v }),
-  setCurrentStep: (step) => set({ currentStep: step }),
-  setWizardDescription: (desc) => set({ wizardDescription: desc }),
-  setWizardSurfaceM2: (m2) => set({ wizardSurfaceM2: m2 }),
+  setActiveClient: client => set({ activeClient: client }),
+  setActiveEstimation: est => set({ activeEstimation: est }),
+  setIsGenerating: v => set({ isGenerating: v }),
+  setCurrentStep: step => set({ currentStep: step }),
+  setWizardDescription: desc => set({ wizardDescription: desc }),
+  setWizardSurfaceM2: m2 => set({ wizardSurfaceM2: m2 }),
 
-  addSubmission: (sub) =>
-    set((state) => ({ submissions: [sub, ...state.submissions] })),
+  addSubmission: sub => set(state => ({ submissions: [sub, ...state.submissions] })),
 
-  addClient: (client) =>
-    set((state) => ({ clients: [client, ...state.clients] })),
+  addClient: client => set(state => ({ clients: [client, ...state.clients] })),
 
   reset: () => set({ ...initialState }),
 }));

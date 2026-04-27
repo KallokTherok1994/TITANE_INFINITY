@@ -71,7 +71,7 @@ export default RemoteGatewayLayout;
  * Use in App.tsx root render function.
  */
 export function withRemoteGateway<P extends object>(
-  Component: React.ComponentType<P>,
+  Component: React.ComponentType<P>
 ): React.FC<P> {
   return function RemoteGatewayWrapped(props: P) {
     if (!isRemoteContext()) {

@@ -128,7 +128,11 @@ export class UILogger {
   private initializeThrottle(): void {
     const levels: LogLevel[] = ['debug', 'info', 'warn', 'error', 'security'];
     levels.forEach(level => {
-      this.throttleState.set(level, { count: 0, windowStart: Date.now(), notified: false });
+      this.throttleState.set(level, {
+        count: 0,
+        windowStart: Date.now(),
+        notified: false,
+      });
     });
   }
 

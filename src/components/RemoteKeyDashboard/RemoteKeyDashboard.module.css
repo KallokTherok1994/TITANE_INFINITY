@@ -65,12 +65,31 @@
   transition: opacity 0.15s;
 }
 
-.btn { background: var(--accent, #c084fc); color: #000; }
-.btnRefresh { background: var(--surface-3, #2a2a2a); color: var(--text-primary, #e8e8e8); }
-.btnCopy { background: #10b981; color: #000; }
-.btnDismiss { background: var(--surface-3, #333); color: var(--text-primary, #e8e8e8); }
-.btnRotate { background: #3b82f6; color: #fff; margin-right: 0.25rem; }
-.btnRevoke { background: #ef4444; color: #fff; }
+.btn {
+  background: var(--accent, #c084fc);
+  color: #000;
+}
+.btnRefresh {
+  background: var(--surface-3, #2a2a2a);
+  color: var(--text-primary, #e8e8e8);
+}
+.btnCopy {
+  background: #10b981;
+  color: #000;
+}
+.btnDismiss {
+  background: var(--surface-3, #333);
+  color: var(--text-primary, #e8e8e8);
+}
+.btnRotate {
+  background: #3b82f6;
+  color: #fff;
+  margin-right: 0.25rem;
+}
+.btnRevoke {
+  background: #ef4444;
+  color: #fff;
+}
 
 .btn:disabled,
 .btnRotate:disabled,
@@ -138,8 +157,12 @@
   vertical-align: middle;
 }
 
-.rowEnabled td { color: var(--text-primary, #e8e8e8); }
-.rowDisabled td { color: var(--text-secondary, #666); }
+.rowEnabled td {
+  color: var(--text-primary, #e8e8e8);
+}
+.rowDisabled td {
+  color: var(--text-secondary, #666);
+}
 
 .cellId {
   font-family: monospace;

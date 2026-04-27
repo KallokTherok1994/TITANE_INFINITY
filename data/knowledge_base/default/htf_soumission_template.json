@@ -17,7 +17,15 @@
     {
       "ordre": 1,
       "titre": "INFORMATIONS CLIENT",
-      "champs": ["Nom complet", "Adresse du projet", "Courriel", "Téléphone", "Numéro de soumission", "Date d'émission", "Date de validité (30 jours)"]
+      "champs": [
+        "Nom complet",
+        "Adresse du projet",
+        "Courriel",
+        "Téléphone",
+        "Numéro de soumission",
+        "Date d'émission",
+        "Date de validité (30 jours)"
+      ]
     },
     {
       "ordre": 2,
@@ -32,13 +40,26 @@
     {
       "ordre": 4,
       "titre": "MATÉRIAUX ET FOURNITURES",
-      "colonnes": ["Code HTF", "Description", "Quantité", "Unité", "Prix unitaire", "Total"],
+      "colonnes": [
+        "Code HTF",
+        "Description",
+        "Quantité",
+        "Unité",
+        "Prix unitaire",
+        "Total"
+      ],
       "note": "Inclure fournisseur et délai de livraison si pertinent"
     },
     {
       "ordre": 5,
       "titre": "MAIN-D'ŒUVRE",
-      "colonnes": ["Description", "Niveau (T1/T2/T3)", "Heures estimées", "Taux horaire", "Total"],
+      "colonnes": [
+        "Description",
+        "Niveau (T1/T2/T3)",
+        "Heures estimées",
+        "Taux horaire",
+        "Total"
+      ],
       "note": "Inclure déplacements si applicable"
     },
     {
@@ -67,7 +88,11 @@
     {
       "ordre": 9,
       "titre": "SIGNATURE",
-      "champs": ["Accepté par (client) : _______________", "Date : _______________", "Kevin Thibault, L'Humain à tout faire"]
+      "champs": [
+        "Accepté par (client) : _______________",
+        "Date : _______________",
+        "Kevin Thibault, L'Humain à tout faire"
+      ]
     }
   ],
   "instructions_generation_ia": {

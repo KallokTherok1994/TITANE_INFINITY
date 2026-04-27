@@ -25,7 +25,9 @@ export function getClient(id: string): HTFClient | undefined {
   return loadClients().find(c => c.id === id);
 }
 
-export function createClient(data: Omit<HTFClient, 'id' | 'dateCreation' | 'nbSoumissions'>): HTFClient {
+export function createClient(
+  data: Omit<HTFClient, 'id' | 'dateCreation' | 'nbSoumissions'>
+): HTFClient {
   const clients = loadClients();
   const newClient: HTFClient = {
     nom: data.nom,
@@ -42,11 +44,14 @@ export function createClient(data: Omit<HTFClient, 'id' | 'dateCreation' | 'nbSo
   return newClient;
 }
 
-export function updateClient(id: string, data: Partial<HTFClient>): HTFClient | undefined {
+export function updateClient(
+  id: string,
+  data: Partial<HTFClient>
+): HTFClient | undefined {
   const clients = loadClients();
   const idx = clients.findIndex(c => c.id === id);
   if (idx === -1) return undefined;
-  clients[idx] = { ...clients[idx] as HTFClient, ...data } as HTFClient;
+  clients[idx] = { ...(clients[idx] as HTFClient), ...data } as HTFClient;
   saveClients(clients);
   return clients[idx];
 }

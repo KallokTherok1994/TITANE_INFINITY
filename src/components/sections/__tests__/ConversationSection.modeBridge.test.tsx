@@ -34,7 +34,12 @@ vi.mock('@hooks/useConversationEngine', () => ({
 }));
 
 vi.mock('@/stores/useChatModeStore', () => ({
-  useChatModeStore: (selector: (state: { currentModeId: string; changeMode: typeof conversationModeBridgeFixtures.changeMode }) => unknown) =>
+  useChatModeStore: (
+    selector: (state: {
+      currentModeId: string;
+      changeMode: typeof conversationModeBridgeFixtures.changeMode;
+    }) => unknown
+  ) =>
     selector({
       currentModeId: conversationModeBridgeFixtures.currentModeId,
       changeMode: conversationModeBridgeFixtures.changeMode,
@@ -116,7 +121,10 @@ vi.mock('@/hooks/useLTMContext', () => ({
 vi.mock('@/features/chat/artifactIntent', () => ({
   buildArtifactActionContract: vi.fn(() => ({ intent: 'ANSWER_ONLY' })),
   buildProfessionalDocumentManifest: vi.fn(() => null),
-  resolveArtifactRoute: vi.fn(() => ({ status: 'READY', contract: { intent: 'ANSWER_ONLY' } })),
+  resolveArtifactRoute: vi.fn(() => ({
+    status: 'READY',
+    contract: { intent: 'ANSWER_ONLY' },
+  })),
   validateNoFakeArtifactResponse: vi.fn(() => ({ ok: true, violations: [] })),
   buildFileGenerationPrompt: vi.fn(() => ''),
   extractFileContent: vi.fn(() => ''),

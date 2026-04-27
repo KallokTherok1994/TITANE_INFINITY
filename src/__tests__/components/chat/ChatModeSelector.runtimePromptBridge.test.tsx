@@ -32,7 +32,11 @@ describe('ChatModeSelector -> runtime prompt bridge', () => {
     const onModeChange = vi.fn();
 
     render(
-      <ChatModeSelector currentMode="default" userPermissionLevel={3} onModeChange={onModeChange} />
+      <ChatModeSelector
+        currentMode="default"
+        userPermissionLevel={3}
+        onModeChange={onModeChange}
+      />
     );
 
     expect(screen.getByTestId('chat-mode-selector')).toBeInTheDocument();

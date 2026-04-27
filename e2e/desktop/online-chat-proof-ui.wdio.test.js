@@ -715,19 +715,13 @@ async function readRuntimeSnapshot(selectors) {
       )
         .trim()
         .toLowerCase(),
-      pageChatStoreMode: (
-        conversationPage?.getAttribute('data-chat-store-mode') || ''
-      )
+      pageChatStoreMode: (conversationPage?.getAttribute('data-chat-store-mode') || '')
         .trim()
         .toLowerCase(),
-      runtimeConversationMode: (
-        panel?.getAttribute('data-conversation-mode') || ''
-      )
+      runtimeConversationMode: (panel?.getAttribute('data-conversation-mode') || '')
         .trim()
         .toLowerCase(),
-      runtimeChatStoreMode: (
-        panel?.getAttribute('data-chat-store-mode') || ''
-      )
+      runtimeChatStoreMode: (panel?.getAttribute('data-chat-store-mode') || '')
         .trim()
         .toLowerCase(),
       runtimeSummary: (summary?.textContent || '').trim(),

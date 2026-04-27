@@ -30,8 +30,8 @@ export class RemoteStreamClient {
 
   constructor(baseUrl: string) {
     // Convert https://host → wss://host, http://host → ws://host
-    this.wsUrl = baseUrl.replace(/^https?:\/\//, (m) =>
-      m.startsWith('https') ? 'wss://' : 'ws://',
+    this.wsUrl = baseUrl.replace(/^https?:\/\//, m =>
+      m.startsWith('https') ? 'wss://' : 'ws://'
     );
   }
 
@@ -44,7 +44,7 @@ export class RemoteStreamClient {
    */
   async *stream(
     token: string,
-    request: StreamRequest,
+    request: StreamRequest
   ): AsyncGenerator<StreamChunk, void, unknown> {
     const url = `${this.wsUrl}/api/stream?token=${encodeURIComponent(token)}`;
     const ws = new WebSocket(url);
@@ -59,7 +59,7 @@ export class RemoteStreamClient {
       ws.send(JSON.stringify(request));
     };
 
-    ws.onerror = (e) => {
+    ws.onerror = e => {
       openError = new Error('WebSocket error');
       if (resolve) {
         resolve(undefined);
@@ -75,7 +75,7 @@ export class RemoteStreamClient {
       }
     };
 
-    ws.onmessage = (evt) => {
+    ws.onmessage = evt => {
       try {
         const chunk: StreamChunk = JSON.parse(evt.data);
         if (resolve) {
@@ -95,7 +95,7 @@ export class RemoteStreamClient {
     const next = (): Promise<StreamChunk | undefined> => {
       if (queue.length > 0) return Promise.resolve(queue.shift());
       if (done) return Promise.resolve(undefined);
-      return new Promise((r) => {
+      return new Promise(r => {
         resolve = r;
       });
     };
@@ -131,8 +131,8 @@ export function getRemoteStreamClient(baseUrl?: string): RemoteStreamClient {
     const base =
       baseUrl ??
       (typeof window !== 'undefined'
-        ? ((window as Window & { __TITANE_REMOTE_BASE__?: string }).__TITANE_REMOTE_BASE__ ||
-           window.location.origin)
+        ? (window as Window & { __TITANE_REMOTE_BASE__?: string })
+            .__TITANE_REMOTE_BASE__ || window.location.origin
         : 'http://localhost:7420');
     _client = new RemoteStreamClient(base as string);
   }

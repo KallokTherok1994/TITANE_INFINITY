@@ -3,9 +3,22 @@
   "category": "htf_services_catalogue",
   "description": "Catalogue complet de services et matériaux de L'Humain à tout faire — 5 sections, codes HTF standardisés, prix 2025 région Saguenay. Créé par Kevin Thibault.",
   "fournisseurs_verifies": {
-    "materiaux_beton": { "nom": "Béton Lafarge Saguenay", "specialite": "Dalles, pavés, bordures béton", "stock_permanent": true, "delai_livraison_h": 48 },
-    "pepiniere": { "nom": "Pépinière Villeneuve Saint-Augustin", "specialite": "Végétaux Zone 3 certifiés", "note": "5/5 étoiles", "taux_reprise": 0.985 },
-    "eclairage": { "nom": "Éclairage Concept Chicoutimi", "specialite": "Éclairage LED extérieur et domotique" }
+    "materiaux_beton": {
+      "nom": "Béton Lafarge Saguenay",
+      "specialite": "Dalles, pavés, bordures béton",
+      "stock_permanent": true,
+      "delai_livraison_h": 48
+    },
+    "pepiniere": {
+      "nom": "Pépinière Villeneuve Saint-Augustin",
+      "specialite": "Végétaux Zone 3 certifiés",
+      "note": "5/5 étoiles",
+      "taux_reprise": 0.985
+    },
+    "eclairage": {
+      "nom": "Éclairage Concept Chicoutimi",
+      "specialite": "Éclairage LED extérieur et domotique"
+    }
   },
   "section_1_solutions_completes": {
     "HTF-SOL-001": {
@@ -21,8 +34,17 @@
         "6 spots LED encastrés 3W blanc chaud (HTF-ECL-003)",
         "Transformateur 72W étanche + câblage"
       ],
-      "services_inclus": ["Excavation 25cm + évacuation débris", "Nivellement laser + compactage", "Pose complète + raccordement électrique", "Nettoyage final + formation entretien"],
-      "garanties": { "nivellement": "5 ans", "electrique": "3 ans", "materiaux": "2 ans" },
+      "services_inclus": [
+        "Excavation 25cm + évacuation débris",
+        "Nivellement laser + compactage",
+        "Pose complète + raccordement électrique",
+        "Nettoyage final + formation entretien"
+      ],
+      "garanties": {
+        "nivellement": "5 ans",
+        "electrique": "3 ans",
+        "materiaux": "2 ans"
+      },
       "popularite": "65% clients terrasses choisissent ce package"
     },
     "HTF-SOL-002": {
@@ -46,7 +68,14 @@
       "surface": "15m²",
       "prix_forfait_tout_inclus": 3950,
       "delai_jours": "2",
-      "elements_zen": ["3m³ gravier marbre blanc 10-20mm", "Fontaine circuit fermé design moderne", "7 hostas géants Patriot", "5 fougères royales indigènes", "3 pierres décoratives Saguenay 100-200kg", "Éclairage LED spots couleurs zen"],
+      "elements_zen": [
+        "3m³ gravier marbre blanc 10-20mm",
+        "Fontaine circuit fermé design moderne",
+        "7 hostas géants Patriot",
+        "5 fougères royales indigènes",
+        "3 pierres décoratives Saguenay 100-200kg",
+        "Éclairage LED spots couleurs zen"
+      ],
       "garanties": { "vegetaux": "2 ans", "fontaine": "5 ans" }
     }
   },
@@ -61,8 +90,13 @@
       "prix_unitaire": 11.75,
       "prix_m2": 28.45,
       "installation_htf_m2": 15.25,
-      "total_installe_m2": 43.70,
-      "couleurs": ["Graphite mat (Pantone Cool Gray 11)", "Beige sable (RAL 1019)", "Gris perle (RAL 7035)", "Blanc cassé (RAL 9001)"],
+      "total_installe_m2": 43.7,
+      "couleurs": [
+        "Graphite mat (Pantone Cool Gray 11)",
+        "Beige sable (RAL 1019)",
+        "Gris perle (RAL 7035)",
+        "Blanc cassé (RAL 9001)"
+      ],
       "fournisseur": "Béton Lafarge Saguenay",
       "satisfaction_client": 0.94
     },
@@ -76,7 +110,7 @@
       "prix_couleurs_standard": 1.55,
       "prix_couleurs_speciales": 1.85,
       "prix_m2_materiau": 42.25,
-      "pose_htf_m2": 78.50,
+      "pose_htf_m2": 78.5,
       "fournisseur": "Béton Lafarge Saguenay",
       "satisfaction_durabilite": 0.96
     }
@@ -155,7 +189,14 @@
         "201_500m2": 2850,
         "500m2_plus": "Sur devis"
       },
-      "inclus": ["Inspection printemps + nettoyage haute pression", "Entretien végétaux 2×/été", "Hivernage complet automne", "Déneigement accès prioritaires hiver", "Rapport photo mensuel", "Interventions urgence 24h incluses"],
+      "inclus": [
+        "Inspection printemps + nettoyage haute pression",
+        "Entretien végétaux 2×/été",
+        "Hivernage complet automne",
+        "Déneigement accès prioritaires hiver",
+        "Rapport photo mensuel",
+        "Interventions urgence 24h incluses"
+      ],
       "economies_vs_ponctuel": 0.35,
       "satisfaction_renouvellements": 0.97
     }

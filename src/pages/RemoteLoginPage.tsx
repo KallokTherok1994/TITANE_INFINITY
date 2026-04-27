@@ -97,7 +97,7 @@ export const RemoteLoginPage: React.FC<RemoteLoginPageProps> = ({ onAuthenticate
               data-testid="remote-login-secret-input"
               type="password"
               value={secret}
-              onChange={(e) => setSecret(e.target.value)}
+              onChange={e => setSecret(e.target.value)}
               placeholder="Entrez votre clé partagée"
               disabled={loading}
               autoFocus
@@ -113,10 +113,10 @@ export const RemoteLoginPage: React.FC<RemoteLoginPageProps> = ({ onAuthenticate
                 boxSizing: 'border-box',
                 transition: 'border-color 0.2s',
               }}
-              onFocus={(e) => {
+              onFocus={e => {
                 e.target.style.borderColor = 'rgba(99,102,241,0.6)';
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 e.target.style.borderColor = 'rgba(255,255,255,0.12)';
               }}
             />

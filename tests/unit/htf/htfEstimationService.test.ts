@@ -58,7 +58,10 @@ describe('HTFEstimationService', () => {
       const expectedTvq = est.sousTotal * 0.09975;
       expect(est.tps).toBeCloseTo(expectedTps, 2);
       expect(est.tvq).toBeCloseTo(expectedTvq, 2);
-      expect(est.totalAvecTaxes).toBeCloseTo(est.sousTotal + expectedTps + expectedTvq, 2);
+      expect(est.totalAvecTaxes).toBeCloseTo(
+        est.sousTotal + expectedTps + expectedTvq,
+        2
+      );
     });
 
     it('applique la majoration urgence 24h correctement', async () => {
@@ -69,7 +72,9 @@ describe('HTFEstimationService', () => {
       const urgent = await generateEstimation({
         descriptionProjet: 'Nettoyage urgent',
         surfaceM2: 20,
-        majorations: [{ type: 'urgence_24h', multiplicateur: 1.35, description: 'Urgence' }],
+        majorations: [
+          { type: 'urgence_24h', multiplicateur: 1.35, description: 'Urgence' },
+        ],
       });
 
       expect(urgent.sousTotal).toBeCloseTo(normal.sousTotal * 1.35, 1);
@@ -87,10 +92,15 @@ describe('HTFEstimationService', () => {
     });
 
     it('génère une dateValidite à 30 jours', async () => {
-      const est = await generateEstimation({ descriptionProjet: 'Test date', surfaceM2: 5 });
+      const est = await generateEstimation({
+        descriptionProjet: 'Test date',
+        surfaceM2: 5,
+      });
       const created = new Date(est.dateCreation);
       const valid = new Date(est.dateValidite);
-      const diffJours = Math.round((valid.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+      const diffJours = Math.round(
+        (valid.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
+      );
       // Tolérance ±1 jour pour les variations de fuseau horaire UTC
       expect(diffJours).toBeGreaterThanOrEqual(29);
       expect(diffJours).toBeLessThanOrEqual(31);

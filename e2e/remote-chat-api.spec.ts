@@ -27,7 +27,14 @@ test.beforeAll(async () => {
 
 // ── Auth helpers ──────────────────────────────────────────────
 
-async function getTokens(request: Parameters<typeof test>[1] extends (args: infer A) => void ? A extends { request: infer R } ? R : never : never, secret = REMOTE_SECRET) {
+async function getTokens(
+  request: Parameters<typeof test>[1] extends (args: infer A) => void
+    ? A extends { request: infer R }
+      ? R
+      : never
+    : never,
+  secret = REMOTE_SECRET
+) {
   const resp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
     data: { secret },
   });
@@ -57,7 +64,9 @@ test('remote-chat: GET /api/system/health — no auth required', async ({ reques
 
 // ── Auth flow ─────────────────────────────────────────────────
 
-test('remote-chat: POST /api/auth/token — valid secret returns tokens', async ({ request }) => {
+test('remote-chat: POST /api/auth/token — valid secret returns tokens', async ({
+  request,
+}) => {
   const { resp, data } = await getTokens(request);
   expect(resp.status()).toBe(200);
   expect(data.ok).toBe(true);
@@ -66,7 +75,9 @@ test('remote-chat: POST /api/auth/token — valid secret returns tokens', async 
   expect(typeof data.refresh_token).toBe('string');
 });
 
-test('remote-chat: POST /api/auth/token — wrong secret returns 401', async ({ request }) => {
+test('remote-chat: POST /api/auth/token — wrong secret returns 401', async ({
+  request,
+}) => {
   const resp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
     data: { secret: 'definitely-wrong-secret-12345' },
   });
@@ -119,7 +130,9 @@ test('remote-chat: invoke blocked command returns ok:false', async ({ request })
 
 // ── conversation_generate (live AI) ──────────────────────────
 
-test('remote-chat: conversation_generate returns valid IPC response', async ({ request }) => {
+test('remote-chat: conversation_generate returns valid IPC response', async ({
+  request,
+}) => {
   const { data: authData } = await getTokens(request);
   expect(authData.ok).toBe(true);
 
@@ -168,13 +181,15 @@ test('remote-chat: conversation_generate returns valid IPC response', async ({ r
       'timeout',
     ];
     const errLower = data.error.toLowerCase();
-    const isAcceptableError = acceptableErrors.some((e) => errLower.includes(e));
+    const isAcceptableError = acceptableErrors.some(e => errLower.includes(e));
     console.log(`[E2E] conversation_generate error (acceptable): ${data.error}`);
     expect(isAcceptableError).toBe(true);
   }
 });
 
-test('remote-chat: conversation_generate missing payload returns error', async ({ request }) => {
+test('remote-chat: conversation_generate missing payload returns error', async ({
+  request,
+}) => {
   const { data: authData } = await getTokens(request);
 
   const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
@@ -190,7 +205,9 @@ test('remote-chat: conversation_generate missing payload returns error', async (
 
 // ── Token refresh ────────────────────────────────────────────
 
-test('remote-chat: POST /api/auth/refresh with valid refresh_token', async ({ request }) => {
+test('remote-chat: POST /api/auth/refresh with valid refresh_token', async ({
+  request,
+}) => {
   const { data: authData } = await getTokens(request);
   expect(authData.refresh_token).toBeTruthy();
 
@@ -226,7 +243,8 @@ test('remote-chat: WebSocket /api/stream — ping/pong roundtrip', async ({ requ
   const { data: authData } = await getTokens(request);
   expect(authData.ok).toBe(true);
 
-  const wsUrl = REMOTE_BASE_URL.replace(/^http/, 'ws') + `/api/stream?token=${authData.access_token}`;
+  const wsUrl =
+    REMOTE_BASE_URL.replace(/^http/, 'ws') + `/api/stream?token=${authData.access_token}`;
 
   // Use browser-based WebSocket via Playwright page
   // Since we're in API test mode, we verify the endpoint at least responds to upgrade
@@ -234,7 +252,7 @@ test('remote-chat: WebSocket /api/stream — ping/pong roundtrip', async ({ requ
   // We test this via a quick HTTP check that invalid token => 401
   const badWsResp = await request.get(
     `${REMOTE_BASE_URL}/api/stream?token=invalid-token`,
-    { headers: { Upgrade: 'websocket', Connection: 'Upgrade' } },
+    { headers: { Upgrade: 'websocket', Connection: 'Upgrade' } }
   );
   // Should be 401 for bad token
   expect(badWsResp.status()).toBe(401);

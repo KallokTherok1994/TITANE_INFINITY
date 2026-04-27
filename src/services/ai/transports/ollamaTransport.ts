@@ -35,13 +35,14 @@ function isBrowserProxyEnvironment(): boolean {
 
 const OLLAMA_API_BASE = ['/', 'api', 'ollama'].join('/').replace('//', '/');
 
-const TRANSPORT_MODE: string = typeof window === 'undefined'
-  ? 'IPC'
-  : isTauriEnvironment()
-  ? 'IPC'
-  : isRemoteContext()
-    ? 'REMOTE_GATEWAY'
-    : 'BROWSER_PROXY';
+const TRANSPORT_MODE: string =
+  typeof window === 'undefined'
+    ? 'IPC'
+    : isTauriEnvironment()
+      ? 'IPC'
+      : isRemoteContext()
+        ? 'REMOTE_GATEWAY'
+        : 'BROWSER_PROXY';
 
 const HEALTH_CACHE_TTL_MS = 10_000;
 let lastHealthCheckTs = 0;
@@ -195,7 +196,8 @@ async function httpGenerate(
   req: OllamaGenerateRequest
 ): Promise<AiResult<OllamaGenerateResponse>> {
   const controller = new AbortController();
-  const timeoutMs = (req.timeout_secs ?? Math.ceil(getProviderTimeout('ollama') / 1000)) * 1000;
+  const timeoutMs =
+    (req.timeout_secs ?? Math.ceil(getProviderTimeout('ollama') / 1000)) * 1000;
   const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
 
   try {
@@ -251,8 +253,7 @@ async function httpGenerate(
         eval_count: typeof data.eval_count === 'number' ? data.eval_count : undefined,
         eval_duration:
           typeof data.eval_duration === 'number' ? data.eval_duration : undefined,
-        done_reason:
-          typeof data.done_reason === 'string' ? data.done_reason : undefined,
+        done_reason: typeof data.done_reason === 'string' ? data.done_reason : undefined,
       },
     };
   } catch (error) {

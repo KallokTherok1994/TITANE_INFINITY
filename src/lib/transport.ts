@@ -39,7 +39,10 @@ export interface Transport {
 class TauriTransport implements Transport {
   readonly isRemote = false;
 
-  async invoke<T = unknown>(command: string, payload?: Record<string, unknown>): Promise<T> {
+  async invoke<T = unknown>(
+    command: string,
+    payload?: Record<string, unknown>
+  ): Promise<T> {
     return secureInvoke<T>(command, payload ?? {});
   }
 }
@@ -54,7 +57,10 @@ class RemoteTransportWrapper implements Transport {
     this.inner = remote;
   }
 
-  async invoke<T = unknown>(command: string, payload?: Record<string, unknown>): Promise<T> {
+  async invoke<T = unknown>(
+    command: string,
+    payload?: Record<string, unknown>
+  ): Promise<T> {
     return this.inner.invoke<T>(command, payload);
   }
 }

@@ -15,14 +15,13 @@ export function HTFDashboard() {
   const insights = getLearningInsights();
 
   const totalRevenu = submissions
-    .filter((s) => s.statut === 'acceptee')
+    .filter(s => s.statut === 'acceptee')
     .reduce((acc, s) => acc + s.totalAvecTaxes, 0);
 
-  const nbAcceptees = submissions.filter((s) => s.statut === 'acceptee').length;
-  const nbEnvoyees = submissions.filter((s) => s.statut === 'envoyee').length;
-  const tauxConversion = submissions.length > 0
-    ? Math.round((nbAcceptees / submissions.length) * 100)
-    : 0;
+  const nbAcceptees = submissions.filter(s => s.statut === 'acceptee').length;
+  const nbEnvoyees = submissions.filter(s => s.statut === 'envoyee').length;
+  const tauxConversion =
+    submissions.length > 0 ? Math.round((nbAcceptees / submissions.length) * 100) : 0;
 
   return (
     <div data-testid="htf-dashboard" className="htf-dashboard p-4 space-y-6">
@@ -62,9 +61,7 @@ export function HTFDashboard() {
           data-testid="htf-metric-revenu"
           className="htf-metric rounded-lg bg-purple-50 p-4 border border-purple-200"
         >
-          <p className="text-2xl font-bold text-purple-700">
-            {totalRevenu.toFixed(0)} $
-          </p>
+          <p className="text-2xl font-bold text-purple-700">{totalRevenu.toFixed(0)} $</p>
           <p className="text-sm text-gray-600">Revenu accepté</p>
         </div>
       </div>
@@ -87,7 +84,8 @@ export function HTFDashboard() {
             Apprentissage continu — {insights.nbrEntrees} travaux complétés
           </p>
           <p className="text-gray-500">
-            Facteur de précision global : {(insights.facteurMoyenGlobal * 100).toFixed(1)}%
+            Facteur de précision global : {(insights.facteurMoyenGlobal * 100).toFixed(1)}
+            %
           </p>
         </div>
       )}

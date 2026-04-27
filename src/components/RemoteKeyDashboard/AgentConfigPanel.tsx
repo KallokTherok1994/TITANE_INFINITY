@@ -34,7 +34,9 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
   const [labelCtx, setLabelCtx] = useState('');
   const [suggestedLabels, setSuggestedLabels] = useState<string[]>([]);
   const [suggestLoading, setSuggestLoading] = useState(false);
-  const [rotationWarnings, setRotationWarnings] = useState<ReturnType<typeof remoteKeyAgent.getRotationWarnings>>([]);
+  const [rotationWarnings, setRotationWarnings] = useState<
+    ReturnType<typeof remoteKeyAgent.getRotationWarnings>
+  >([]);
 
   // Sync rotation warnings whenever state changes
   useEffect(() => {
@@ -82,8 +84,8 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
       ? analysis.anomalyScore >= 0.8
         ? '#ef4444'
         : analysis.anomalyScore >= 0.5
-        ? '#f97316'
-        : '#22c55e'
+          ? '#f97316'
+          : '#22c55e'
       : '#6b7280';
 
   return (
@@ -93,8 +95,19 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
       style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
     >
       {/* ─── Training Status Badge ─────────────────────────────────────── */}
-      <div data-testid="agent-training-status" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+      <div
+        data-testid="agent-training-status"
+        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+      >
+        <span
+          style={{
+            width: 10,
+            height: 10,
+            borderRadius: '50%',
+            background: '#22c55e',
+            display: 'inline-block',
+          }}
+        />
         <span style={{ fontSize: '0.85rem', color: '#9ca3af' }}>
           Agent: <strong style={{ color: '#e5e7eb' }}>titane-key-agent</strong> — modèle:{' '}
           <strong style={{ color: '#a78bfa' }}>{config.training.model}</strong>
@@ -112,11 +125,21 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
             padding: '0.75rem 1rem',
           }}
         >
-          <p style={{ color: '#f97316', fontWeight: 600, marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+          <p
+            style={{
+              color: '#f97316',
+              fontWeight: 600,
+              marginBottom: '0.5rem',
+              fontSize: '0.875rem',
+            }}
+          >
             ⚠ {rotationWarnings.length} clé(s) à renouveler
           </p>
-          {rotationWarnings.map((w) => (
-            <div key={w.keyId} style={{ fontSize: '0.8rem', color: '#d1d5db', marginBottom: '0.25rem' }}>
+          {rotationWarnings.map(w => (
+            <div
+              key={w.keyId}
+              style={{ fontSize: '0.8rem', color: '#d1d5db', marginBottom: '0.25rem' }}
+            >
               <span style={{ color: w.critical ? '#ef4444' : '#f97316' }}>
                 {w.critical ? '🔴' : '🟠'}
               </span>{' '}
@@ -181,7 +204,11 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
                 {analysis.recommendations.length > 0 && (
                   <ul
                     data-testid="agent-analysis-recommendations"
-                    style={{ paddingLeft: '1.25rem', color: '#d1d5db', fontSize: '0.85rem' }}
+                    style={{
+                      paddingLeft: '1.25rem',
+                      color: '#d1d5db',
+                      fontSize: '0.85rem',
+                    }}
                   >
                     {analysis.recommendations.map((r, i) => (
                       <li key={i}>{r}</li>
@@ -204,7 +231,7 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
             data-testid="agent-suggest-labels-input"
             type="text"
             value={labelCtx}
-            onChange={(e) => setLabelCtx(e.target.value)}
+            onChange={e => setLabelCtx(e.target.value)}
             placeholder="Décris l'usage de la clé…"
             style={{
               flex: 1,
@@ -236,7 +263,12 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
         {suggestedLabels.length > 0 && (
           <div
             data-testid="agent-labels-result"
-            style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}
+            style={{
+              display: 'flex',
+              gap: '0.5rem',
+              marginTop: '0.5rem',
+              flexWrap: 'wrap',
+            }}
           >
             {suggestedLabels.map((l, i) => (
               <span
@@ -263,14 +295,21 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
           Configuration de l'agent
         </h3>
 
-        <label style={{ color: '#9ca3af', fontSize: '0.8rem', display: 'block', marginBottom: '0.25rem' }}>
+        <label
+          style={{
+            color: '#9ca3af',
+            fontSize: '0.8rem',
+            display: 'block',
+            marginBottom: '0.25rem',
+          }}
+        >
           Modèle IA
         </label>
         <select
           data-testid="agent-config-model-select"
           value={config.training.model}
-          onChange={(e) =>
-            setConfig((c) => ({ ...c, training: { ...c.training, model: e.target.value } }))
+          onChange={e =>
+            setConfig(c => ({ ...c, training: { ...c.training, model: e.target.value } }))
           }
           style={{
             width: '100%',
@@ -282,20 +321,32 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
             marginBottom: '0.75rem',
           }}
         >
-          {AVAILABLE_MODELS.map((m) => (
-            <option key={m} value={m}>{m}</option>
+          {AVAILABLE_MODELS.map(m => (
+            <option key={m} value={m}>
+              {m}
+            </option>
           ))}
         </select>
 
-        <label style={{ color: '#9ca3af', fontSize: '0.8rem', display: 'block', marginBottom: '0.25rem' }}>
+        <label
+          style={{
+            color: '#9ca3af',
+            fontSize: '0.8rem',
+            display: 'block',
+            marginBottom: '0.25rem',
+          }}
+        >
           Prompt système (training)
         </label>
         <textarea
           data-testid="agent-config-prompt-textarea"
           rows={5}
           value={config.training.systemPrompt}
-          onChange={(e) =>
-            setConfig((c) => ({ ...c, training: { ...c.training, systemPrompt: e.target.value } }))
+          onChange={e =>
+            setConfig(c => ({
+              ...c,
+              training: { ...c.training, systemPrompt: e.target.value },
+            }))
           }
           style={{
             width: '100%',
@@ -312,9 +363,23 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
           }}
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '0.75rem',
+            marginBottom: '0.75rem',
+          }}
+        >
           <div>
-            <label style={{ color: '#9ca3af', fontSize: '0.8rem', display: 'block', marginBottom: '0.25rem' }}>
+            <label
+              style={{
+                color: '#9ca3af',
+                fontSize: '0.8rem',
+                display: 'block',
+                marginBottom: '0.25rem',
+              }}
+            >
               Rotation auto (jours, 0=off)
             </label>
             <input
@@ -323,10 +388,13 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
               min={0}
               max={365}
               value={config.rotation.autoRotateDays}
-              onChange={(e) =>
-                setConfig((c) => ({
+              onChange={e =>
+                setConfig(c => ({
                   ...c,
-                  rotation: { ...c.rotation, autoRotateDays: parseInt(e.target.value) || 0 },
+                  rotation: {
+                    ...c.rotation,
+                    autoRotateDays: parseInt(e.target.value) || 0,
+                  },
                 }))
               }
               style={{
@@ -341,7 +409,14 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
             />
           </div>
           <div>
-            <label style={{ color: '#9ca3af', fontSize: '0.8rem', display: 'block', marginBottom: '0.25rem' }}>
+            <label
+              style={{
+                color: '#9ca3af',
+                fontSize: '0.8rem',
+                display: 'block',
+                marginBottom: '0.25rem',
+              }}
+            >
               Alerte après (jours, 0=off)
             </label>
             <input
@@ -350,10 +425,13 @@ export const AgentConfigPanel: React.FC<Props> = ({ className }) => {
               min={0}
               max={365}
               value={config.rotation.warnAfterDays}
-              onChange={(e) =>
-                setConfig((c) => ({
+              onChange={e =>
+                setConfig(c => ({
                   ...c,
-                  rotation: { ...c.rotation, warnAfterDays: parseInt(e.target.value) || 0 },
+                  rotation: {
+                    ...c.rotation,
+                    warnAfterDays: parseInt(e.target.value) || 0,
+                  },
                 }))
               }
               style={{

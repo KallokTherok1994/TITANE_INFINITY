@@ -98,7 +98,7 @@
 }
 
 /* Désactive le scroll externe du shell quand le chat est actif */
-[data-testid="app-shell-scroll-host"]:has(.titane-page--conversation) {
+[data-testid='app-shell-scroll-host']:has(.titane-page--conversation) {
   overflow: hidden;
 }
 

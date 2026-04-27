@@ -92,7 +92,7 @@ export const USAGE_LOG_KEY = 'titane::agent::remote_key_usage_log';
 const MAX_LOG_ENTRIES = 200;
 
 export interface UsageLogEntry {
-  ts: string;          // ISO
+  ts: string; // ISO
   action: 'create' | 'revoke' | 'rotate' | 'verify_ok' | 'verify_fail' | 'ai_query';
   keyId?: string;
   label?: string;

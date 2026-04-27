@@ -109,7 +109,7 @@ export class RemoteTransport {
    */
   async invoke<T = unknown>(
     command: string,
-    payload?: Record<string, unknown>,
+    payload?: Record<string, unknown>
   ): Promise<T> {
     const token = this.getAccessToken();
     if (!token) {
@@ -123,7 +123,7 @@ export class RemoteTransport {
   private async _invokeWithToken<T>(
     command: string,
     payload: Record<string, unknown> | undefined,
-    token: string,
+    token: string
   ): Promise<T> {
     let resp: Response;
     try {
@@ -136,7 +136,9 @@ export class RemoteTransport {
         body: JSON.stringify({ command, payload }),
       });
     } catch (err) {
-      throw new Error(`Network error: ${err instanceof Error ? err.message : String(err)}`);
+      throw new Error(
+        `Network error: ${err instanceof Error ? err.message : String(err)}`
+      );
     }
 
     // On 401 — try refresh once
@@ -182,10 +184,11 @@ let _instance: RemoteTransport | null = null;
 
 export function getRemoteTransport(): RemoteTransport {
   if (!_instance) {
-    const base = (
-      (typeof window !== 'undefined' && (window as Window & { __TITANE_REMOTE_BASE__?: string }).__TITANE_REMOTE_BASE__) ||
-      window.location.origin
-    );
+    const base =
+      (typeof window !== 'undefined' &&
+        (window as Window & { __TITANE_REMOTE_BASE__?: string })
+          .__TITANE_REMOTE_BASE__) ||
+      window.location.origin;
     _instance = new RemoteTransport({ baseUrl: base });
   }
   return _instance;

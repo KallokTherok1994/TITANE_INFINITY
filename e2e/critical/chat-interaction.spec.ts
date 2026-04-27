@@ -248,7 +248,9 @@ test.describe('Critical Path: Chat Interaction', () => {
       .toBe('planning');
 
     await submitChatMessage(page, 'Confirme le mode planning en une phrase.');
-    await expect(page.getByText('[MOCK_OK] Confirme le mode planning en une phrase.')).toBeVisible({
+    await expect(
+      page.getByText('[MOCK_OK] Confirme le mode planning en une phrase.')
+    ).toBeVisible({
       timeout: 15000,
     });
     await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'planning');
@@ -263,7 +265,9 @@ test.describe('Critical Path: Chat Interaction', () => {
     await expect(page.getByTestId('chat-runtime-summary')).toContainText(
       'Conversation mode: planning'
     );
-    await expect(page.getByTestId('chat-runtime-summary')).toContainText('Store mode: planning');
+    await expect(page.getByTestId('chat-runtime-summary')).toContainText(
+      'Store mode: planning'
+    );
   });
 
   test('LONG_RESPONSE_VISIBLE_COMPLETE: réponse longue mock affichée complètement', async ({

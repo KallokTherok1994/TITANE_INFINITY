@@ -377,21 +377,27 @@ describe('generateAndSaveFile (Tauri path)', () => {
 
   it('calls save with correct defaultPath', async () => {
     await generateAndSaveFile('content', 'py', 'myscript');
-    const callArg = tauriSaveMock.mock.calls[0]?.[0] as { defaultPath?: string } | undefined;
+    const callArg = tauriSaveMock.mock.calls[0]?.[0] as
+      | { defaultPath?: string }
+      | undefined;
     expect(callArg?.defaultPath).toBe('myscript.py');
   });
 
   it('does not double-append extension when defaultName already has it', async () => {
     await generateAndSaveFile('content', 'rs', 'main.rs');
-    const callArg = tauriSaveMock.mock.calls[0]?.[0] as { defaultPath?: string } | undefined;
+    const callArg = tauriSaveMock.mock.calls[0]?.[0] as
+      | { defaultPath?: string }
+      | undefined;
     expect(callArg?.defaultPath).toBe('main.rs');
   });
 
   it('includes "Tous les fichiers" wildcard filter', async () => {
     await generateAndSaveFile('content', 'py', 'script');
-    const callArg = tauriSaveMock.mock.calls[0]?.[0] as {
-      filters?: Array<{ name: string; extensions: string[] }>;
-    } | undefined;
+    const callArg = tauriSaveMock.mock.calls[0]?.[0] as
+      | {
+          filters?: Array<{ name: string; extensions: string[] }>;
+        }
+      | undefined;
     const wildcard = callArg?.filters?.find(f => f.extensions.includes('*'));
     expect(wildcard).toBeDefined();
   });

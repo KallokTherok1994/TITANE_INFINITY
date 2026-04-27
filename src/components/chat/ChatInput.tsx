@@ -16,7 +16,11 @@ import { ErrorBoundary } from '../ErrorBoundary';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '@/lib/logger';
 import { autoHealEngine } from '../../services/ai/system';
-import { FileUploadButton, type AnalyzedFile, type FileCategory } from './FileUploadButton';
+import {
+  FileUploadButton,
+  type AnalyzedFile,
+  type FileCategory,
+} from './FileUploadButton';
 import { DictationButton } from './DictationButton';
 import { resolveImportedFileContent } from './fileImportSupport';
 import { UI_DELAYS } from '@/constants/timeouts';
@@ -162,8 +166,10 @@ function useOmegaInputProtection() {
   const sanitizeInput = useCallback(
     (input: string): string => {
       try {
-        return input
-          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x80-\x9F]/g, '') // Control chars, preserve \n and \t
+        /* eslint-disable no-control-regex */
+        const stripped = input.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x80-\x9F]/g, ''); // Control chars, preserve \n and \t
+        /* eslint-enable no-control-regex */
+        return stripped
           .replace(/[^\S\n]+/g, ' ') // Collapse horizontal whitespace, keep newlines
           .trim();
       } catch (sanitizeError) {
@@ -200,8 +206,30 @@ function useOmegaInputProtection() {
 
 function extCategory(filename: string): FileCategory {
   const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
-  if (['.ts', '.tsx', '.js', '.jsx', '.rs', '.py', '.java', '.cpp', '.c', '.go', '.rb',
-       '.sh', '.bash', '.css', '.scss', '.html', '.htm', '.graphql', '.proto'].includes(ext)) return 'code';
+  if (
+    [
+      '.ts',
+      '.tsx',
+      '.js',
+      '.jsx',
+      '.rs',
+      '.py',
+      '.java',
+      '.cpp',
+      '.c',
+      '.go',
+      '.rb',
+      '.sh',
+      '.bash',
+      '.css',
+      '.scss',
+      '.html',
+      '.htm',
+      '.graphql',
+      '.proto',
+    ].includes(ext)
+  )
+    return 'code';
   if (['.md', '.txt', '.doc', '.docx', '.pdf', '.log'].includes(ext)) return 'document';
   if (['.json', '.xml', '.yaml', '.yml', '.csv', '.sql'].includes(ext)) return 'data';
   if (['.toml', '.ini', '.env', '.config'].includes(ext)) return 'config';
@@ -210,7 +238,14 @@ function extCategory(filename: string): FileCategory {
 }
 
 function extIcon(category: FileCategory): string {
-  const map: Record<FileCategory, string> = { code: '📄', document: '📝', data: '📊', config: '⚙️', image: '🖼️', unknown: '📁' };
+  const map: Record<FileCategory, string> = {
+    code: '📄',
+    document: '📝',
+    data: '📊',
+    config: '⚙️',
+    image: '🖼️',
+    unknown: '📁',
+  };
   return map[category];
 }
 
@@ -519,7 +554,10 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
                 lineCount: lines,
                 wordCount: words,
                 charCount: content.length,
-                contentType: file.name.slice(file.name.lastIndexOf('.')).slice(1).toUpperCase(),
+                contentType: file.name
+                  .slice(file.name.lastIndexOf('.'))
+                  .slice(1)
+                  .toUpperCase(),
                 metadata: {},
               },
             });
@@ -543,13 +581,16 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
       [handleFilesSelected]
     );
 
-    const handleContainerDragOver = useCallback((e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!disabled && e.dataTransfer.types.includes('Files')) {
-        setIsDragOver(true);
-      }
-    }, [disabled]);
+    const handleContainerDragOver = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!disabled && e.dataTransfer.types.includes('Files')) {
+          setIsDragOver(true);
+        }
+      },
+      [disabled]
+    );
 
     const handleContainerDragLeave = useCallback((e: React.DragEvent) => {
       e.preventDefault();
@@ -635,16 +676,16 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
             <div className="chat-uploaded-files">
               {uploadedFiles.map(file => (
                 <div key={file.id} className={`chat-file-chip ${file.status}`}>
-                  <span className="chat-file-chip-icon">
-                    {extIcon(file.category)}
-                  </span>
+                  <span className="chat-file-chip-icon">{extIcon(file.category)}</span>
                   <span className="chat-file-chip-name" title={file.name}>
                     {file.name}
                   </span>
                   <button
                     type="button"
                     className="chat-file-chip-remove"
-                    onClick={() => setUploadedFiles(prev => prev.filter(f => f.id !== file.id))}
+                    onClick={() =>
+                      setUploadedFiles(prev => prev.filter(f => f.id !== file.id))
+                    }
                     title="Retirer ce fichier"
                   >
                     ✕

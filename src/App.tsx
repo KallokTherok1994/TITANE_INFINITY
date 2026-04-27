@@ -111,9 +111,7 @@ const DocCenterPage = lazy(() =>
   import('./pages/DocCenterPage').then(m => ({ default: m.DocCenterPage }))
 );
 
-const HTFPage = lazy(() =>
-  import('./pages/HTFPage').then(m => ({ default: m.HTFPage }))
-);
+const HTFPage = lazy(() => import('./pages/HTFPage').then(m => ({ default: m.HTFPage })));
 
 // v24.3.0 - CognitiveLayoutControl déplacé dans ADMIN (ConfigurationHub)
 
@@ -802,37 +800,37 @@ const App: React.FC = () => {
           <SplashWatchdog />
 
           <ThemeProvider>
-        <UIThemeProvider>
-          <LoggingProvider>
-            <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
-              <TitanStateProvider>
-                {/* ✨ v30.0.0 - Console Monitor Dashboard (Dev only) */}
-                {import.meta.env.DEV && (
-                  <Suspense fallback={null}>
-                    <ConsoleMonitorDashboard />
-                  </Suspense>
-                )}
+            <UIThemeProvider>
+              <LoggingProvider>
+                <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+                  <TitanStateProvider>
+                    {/* ✨ v30.0.0 - Console Monitor Dashboard (Dev only) */}
+                    {import.meta.env.DEV && (
+                      <Suspense fallback={null}>
+                        <ConsoleMonitorDashboard />
+                      </Suspense>
+                    )}
 
-                {/* ✨ v30.0.0 - Predictive AI Dashboard (Dev only) */}
-                {import.meta.env.DEV && (
-                  <Suspense fallback={null}>
-                    <PredictiveDashboard />
-                  </Suspense>
-                )}
+                    {/* ✨ v30.0.0 - Predictive AI Dashboard (Dev only) */}
+                    {import.meta.env.DEV && (
+                      <Suspense fallback={null}>
+                        <PredictiveDashboard />
+                      </Suspense>
+                    )}
 
-                {/* ✨ v30.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
-                <AuraConnectedParticles />
+                    {/* ✨ v30.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
+                    <AuraConnectedParticles />
 
-                <BrowserRouter>
-                  <AutoHealErrorBoundary>
-                    <AppRouter />
-                  </AutoHealErrorBoundary>
-                </BrowserRouter>
-              </TitanStateProvider>
-            </AnimationProvider>
-          </LoggingProvider>
-        </UIThemeProvider>
-      </ThemeProvider>
+                    <BrowserRouter>
+                      <AutoHealErrorBoundary>
+                        <AppRouter />
+                      </AutoHealErrorBoundary>
+                    </BrowserRouter>
+                  </TitanStateProvider>
+                </AnimationProvider>
+              </LoggingProvider>
+            </UIThemeProvider>
+          </ThemeProvider>
         </>
       )}
     </ToastProvider>

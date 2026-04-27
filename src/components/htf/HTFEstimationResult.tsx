@@ -16,7 +16,10 @@ export function HTFEstimationResult({ estimation }: HTFEstimationResultProps) {
   }
 
   return (
-    <div data-testid="htf-estimation-result" className="htf-estimation-result p-4 space-y-4">
+    <div
+      data-testid="htf-estimation-result"
+      className="htf-estimation-result p-4 space-y-4"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h3 className="font-bold text-green-700">Soumission {estimation.numero}</h3>
@@ -62,9 +65,13 @@ export function HTFEstimationResult({ estimation }: HTFEstimationResultProps) {
               {estimation.items.map((item, i) => (
                 <tr key={i} className="border-t border-gray-100">
                   <td className="p-2">{item.description}</td>
-                  <td className="text-right p-2">{item.quantite} {item.unite}</td>
+                  <td className="text-right p-2">
+                    {item.quantite} {item.unite}
+                  </td>
                   <td className="text-right p-2">{item.prixUnitaire.toFixed(2)} $</td>
-                  <td className="text-right p-2 font-medium">{item.total.toFixed(2)} $</td>
+                  <td className="text-right p-2 font-medium">
+                    {item.total.toFixed(2)} $
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -90,7 +97,9 @@ export function HTFEstimationResult({ estimation }: HTFEstimationResultProps) {
         </div>
         <div className="flex justify-between font-bold text-green-800 text-base border-t border-green-300 pt-1 mt-1">
           <span>TOTAL</span>
-          <span data-testid="htf-result-total">{estimation.totalAvecTaxes.toFixed(2)} $</span>
+          <span data-testid="htf-result-total">
+            {estimation.totalAvecTaxes.toFixed(2)} $
+          </span>
         </div>
         <p className="text-xs text-gray-500 pt-1">
           Acompte 30% : {(estimation.totalAvecTaxes * 0.3).toFixed(2)} $
@@ -99,9 +108,11 @@ export function HTFEstimationResult({ estimation }: HTFEstimationResultProps) {
 
       {estimation.planMiseEnOeuvre.length > 0 && (
         <div data-testid="htf-result-plan">
-          <h4 className="text-sm font-semibold text-gray-700 mb-2">Plan de mise en œuvre</h4>
+          <h4 className="text-sm font-semibold text-gray-700 mb-2">
+            Plan de mise en œuvre
+          </h4>
           <ol className="list-decimal list-inside space-y-1">
-            {estimation.planMiseEnOeuvre.map((step) => (
+            {estimation.planMiseEnOeuvre.map(step => (
               <li key={step.ordre} className="text-sm text-gray-600">
                 <span className="font-medium">{step.titre}</span>
                 {step.dureeEstimeeH > 0 && (

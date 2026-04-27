@@ -35,7 +35,7 @@ export function HTFClientPanel() {
         <h3 className="text-lg font-bold text-blue-700">👥 CRM Clients</h3>
         <button
           data-testid="htf-btn-nouveau-client"
-          onClick={() => setShowForm((v) => !v)}
+          onClick={() => setShowForm(v => !v)}
           className="rounded bg-blue-600 px-3 py-1.5 text-sm text-white"
         >
           + Nouveau client
@@ -53,7 +53,7 @@ export function HTFClientPanel() {
             required
             placeholder="Nom complet *"
             value={nom}
-            onChange={(e) => setNom(e.target.value)}
+            onChange={e => setNom(e.target.value)}
             className="w-full rounded border border-gray-300 p-2 text-sm"
           />
           <input
@@ -61,14 +61,14 @@ export function HTFClientPanel() {
             type="email"
             placeholder="Courriel"
             value={courriel}
-            onChange={(e) => setCourriel(e.target.value)}
+            onChange={e => setCourriel(e.target.value)}
             className="w-full rounded border border-gray-300 p-2 text-sm"
           />
           <input
             data-testid="htf-input-telephone"
             placeholder="Téléphone"
             value={telephone}
-            onChange={(e) => setTelephone(e.target.value)}
+            onChange={e => setTelephone(e.target.value)}
             className="w-full rounded border border-gray-300 p-2 text-sm"
           />
           <button
@@ -103,7 +103,7 @@ export function HTFClientPanel() {
             </div>
             <button
               data-testid={`htf-btn-delete-client-${c.id}`}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleDelete(c.id);
               }}

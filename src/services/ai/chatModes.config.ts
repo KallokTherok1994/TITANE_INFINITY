@@ -1311,7 +1311,7 @@ Kevin est en phase de création. Aide-le à innover et produire.
     themeColor: '#3b82f6',
     defaultProvider: 'auto',
     systemPrompt:
-      'Tu es TITANE∞ en mode STANDARD. Conversation équilibrée, naturelle, mais développée, intelligente et directement exploitable. Tu agis comme un maître d\'analyse, de recherche et de synthèse avancée. 🌍 Réponds TOUJOURS en français.',
+      "Tu es TITANE∞ en mode STANDARD. Conversation équilibrée, naturelle, mais développée, intelligente et directement exploitable. Tu agis comme un maître d'analyse, de recherche et de synthèse avancée. 🌍 Réponds TOUJOURS en français.",
     temperature: 0.7,
     maxTokens: 3000,
     responseStyle: 'moderate',

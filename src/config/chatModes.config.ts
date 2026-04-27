@@ -312,9 +312,7 @@ const mapExtendedResponseStyleToLegacy = (
   }
 };
 
-const mapExtendedToolsToLegacy = (
-  tools: ExtendedToolPermissions
-): ToolsPermissions => ({
+const mapExtendedToolsToLegacy = (tools: ExtendedToolPermissions): ToolsPermissions => ({
   code_analysis: tools.codeReview || tools.debugAssist || tools.systemAnalysis,
   code_generation: tools.codeGeneration,
   code_refactoring: tools.codeGeneration,

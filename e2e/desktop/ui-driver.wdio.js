@@ -1099,14 +1099,11 @@ export async function getChatRuntimeTruth() {
       networkUsed: runtimePanel?.getAttribute('data-network-used') || '',
       orchestratorState: runtimePanel?.getAttribute('data-orchestrator-state') || '',
       memoryState: runtimePanel?.getAttribute('data-memory-state') || '',
-      runtimeConversationMode:
-        runtimePanel?.getAttribute('data-conversation-mode') || '',
-      runtimeChatStoreMode:
-        runtimePanel?.getAttribute('data-chat-store-mode') || '',
+      runtimeConversationMode: runtimePanel?.getAttribute('data-conversation-mode') || '',
+      runtimeChatStoreMode: runtimePanel?.getAttribute('data-chat-store-mode') || '',
       pageConversationMode:
         conversationPage?.getAttribute('data-conversation-mode') || '',
-      pageChatStoreMode:
-        conversationPage?.getAttribute('data-chat-store-mode') || '',
+      pageChatStoreMode: conversationPage?.getAttribute('data-chat-store-mode') || '',
       ollamaModel,
       summary,
       badges,

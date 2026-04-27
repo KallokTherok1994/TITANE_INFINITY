@@ -48,7 +48,10 @@ test.beforeAll(async () => {
   if (gatewayReachable === null) {
     gatewayReachable = await isGatewayReachable(REMOTE_BASE_URL);
   }
-  test.skip(!gatewayReachable, 'Remote gateway not running — start TITANE with TITANE_REMOTE_ENABLED=1');
+  test.skip(
+    !gatewayReachable,
+    'Remote gateway not running — start TITANE with TITANE_REMOTE_ENABLED=1'
+  );
 });
 
 // ── RemoteLoginPage ───────────────────────────────────────────
@@ -66,7 +69,9 @@ test.describe('RemoteLoginPage UI', () => {
   });
 
   test('login form has required elements', async ({ page }) => {
-    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({
+      timeout: 10_000,
+    });
     await expect(page.locator('[data-testid="remote-gateway-url-input"]')).toBeVisible();
     await expect(page.locator('[data-testid="remote-api-key-input"]')).toBeVisible();
     await expect(page.locator('[data-testid="remote-login-button"]')).toBeVisible();
@@ -74,13 +79,17 @@ test.describe('RemoteLoginPage UI', () => {
   });
 
   test('submit button is disabled with empty input', async ({ page }) => {
-    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({
+      timeout: 10_000,
+    });
     const submitBtn = page.locator('[data-testid="remote-login-button"]');
     await expect(submitBtn).toBeDisabled();
   });
 
   test('shows error on wrong secret', async ({ page }) => {
-    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({
+      timeout: 10_000,
+    });
 
     await page.fill('[data-testid="remote-gateway-url-input"]', REMOTE_BASE_URL);
     await page.fill('[data-testid="remote-api-key-input"]', 'wrong-secret-xyz');
@@ -93,7 +102,9 @@ test.describe('RemoteLoginPage UI', () => {
   });
 
   test('successful login reveals remote gateway layout', async ({ page }) => {
-    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({
+      timeout: 10_000,
+    });
 
     await page.fill('[data-testid="remote-gateway-url-input"]', REMOTE_BASE_URL);
     await page.fill('[data-testid="remote-api-key-input"]', REMOTE_SECRET);
@@ -113,21 +124,29 @@ test.describe('RemoteGatewayLayout — authenticated session', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => sessionStorage.clear());
     await page.goto(REMOTE_BASE_URL);
-    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({
+      timeout: 10_000,
+    });
     await page.fill('[data-testid="remote-gateway-url-input"]', REMOTE_BASE_URL);
     await page.fill('[data-testid="remote-api-key-input"]', REMOTE_SECRET);
     await page.click('[data-testid="remote-login-button"]');
-    await expect(page.locator('[data-testid="remote-chat-view"]')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('[data-testid="remote-chat-view"]')).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
-  test('authenticated user sees RemoteGatewayLayout (not login page)', async ({ page }) => {
+  test('authenticated user sees RemoteGatewayLayout (not login page)', async ({
+    page,
+  }) => {
     const chatView = page.locator('[data-testid="remote-chat-view"]');
     await expect(chatView).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('[data-testid="remote-auth-screen"]')).not.toBeVisible();
   });
 
   test('app content is rendered inside gateway layout', async ({ page }) => {
-    await expect(page.locator('[data-testid="remote-chat-view"]')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('[data-testid="remote-chat-view"]')).toBeVisible({
+      timeout: 15_000,
+    });
     await expect(page.locator('[data-testid="remote-chat-messages"]')).toBeVisible();
     await expect(page.locator('[data-testid="remote-chat-input"]')).toBeVisible();
     await expect(page.locator('[data-testid="remote-chat-send-button"]')).toBeVisible();

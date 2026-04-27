@@ -123,43 +123,43 @@ describe('ChatEngine — importance boosting keywords', () => {
     expect(importance).toBe(0.5);
   });
 
-describe('ChatEngine — depth instructions quality floor', () => {
-  test('balanced instructions enforce expert-grade output when analysis is needed', () => {
-    // @ts-expect-error: accessing private method for testing
-    const instructions = chatEngine.buildDepthInstructions(
-      'BALANCED',
-      { id: 'BALANCED', label: 'Balanced', structureLevel: 2, maxTokens: 4096 },
-      0.6
-    );
+  describe('ChatEngine — depth instructions quality floor', () => {
+    test('balanced instructions enforce expert-grade output when analysis is needed', () => {
+      // @ts-expect-error: accessing private method for testing
+      const instructions = chatEngine.buildDepthInstructions(
+        'BALANCED',
+        { id: 'BALANCED', label: 'Balanced', structureLevel: 2, maxTokens: 4096 },
+        0.6
+      );
 
-    expect(instructions).toContain('analyse, recherche, rapport ou résumé');
-    expect(instructions).toContain('confirmation');
+      expect(instructions).toContain('analyse, recherche, rapport ou résumé');
+      expect(instructions).toContain('confirmation');
+    });
+
+    test('developed instructions include master-analysis positioning', () => {
+      // @ts-expect-error: accessing private method for testing
+      const instructions = chatEngine.buildDepthInstructions(
+        'DEVELOPED',
+        { id: 'DEVELOPED', label: 'Developed', structureLevel: 3, maxTokens: 8192 },
+        0.8
+      );
+
+      expect(instructions).toContain("maître d'analyse");
+      expect(instructions).toContain('rapports');
+    });
+
+    test('deep instructions require cabinet-grade analysis output', () => {
+      // @ts-expect-error: accessing private method for testing
+      const instructions = chatEngine.buildDepthInstructions(
+        'DEEP',
+        { id: 'DEEP', label: 'Deep', structureLevel: 4, maxTokens: 12000 },
+        0.9
+      );
+
+      expect(instructions).toContain("cabinet d'analyse");
+      expect(instructions).toContain('rapport');
+    });
   });
-
-  test('developed instructions include master-analysis positioning', () => {
-    // @ts-expect-error: accessing private method for testing
-    const instructions = chatEngine.buildDepthInstructions(
-      'DEVELOPED',
-      { id: 'DEVELOPED', label: 'Developed', structureLevel: 3, maxTokens: 8192 },
-      0.8
-    );
-
-    expect(instructions).toContain("maître d'analyse");
-    expect(instructions).toContain('rapports');
-  });
-
-  test('deep instructions require cabinet-grade analysis output', () => {
-    // @ts-expect-error: accessing private method for testing
-    const instructions = chatEngine.buildDepthInstructions(
-      'DEEP',
-      { id: 'DEEP', label: 'Deep', structureLevel: 4, maxTokens: 12000 },
-      0.9
-    );
-
-    expect(instructions).toContain('cabinet d\'analyse');
-    expect(instructions).toContain('rapport');
-  });
-});
 
   test('keyword "objectif" boosts importance', () => {
     // @ts-expect-error: accessing private method for testing

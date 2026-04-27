@@ -74,7 +74,11 @@ function SecretBanner({
   }
 
   return (
-    <div data-testid="remote-key-secret-banner" className={styles.secretBanner} role="alert">
+    <div
+      data-testid="remote-key-secret-banner"
+      className={styles.secretBanner}
+      role="alert"
+    >
       <p className={styles.secretWarning}>
         ⚠️ Copiez cette clé maintenant — elle ne sera plus jamais affichée.
       </p>
@@ -168,7 +172,8 @@ function KeyRow({
 type DashboardTab = 'keys' | 'agent';
 
 export default function RemoteKeyDashboard() {
-  const { state, createKey, revokeKey, rotateKey, refresh, clearSecret } = useRemoteKeyAgent();
+  const { state, createKey, revokeKey, rotateKey, refresh, clearSecret } =
+    useRemoteKeyAgent();
   const [activeTab, setActiveTab] = useState<DashboardTab>('keys');
 
   async function handleCreate(label: string) {
@@ -233,70 +238,68 @@ export default function RemoteKeyDashboard() {
       )}
 
       {/* Agent IA tab */}
-      {activeTab === 'agent' && (
-        <AgentConfigPanel />
-      )}
+      {activeTab === 'agent' && <AgentConfigPanel />}
 
       {/* Keys tab */}
       {activeTab === 'keys' && (
         <>
-      {/* Error state */}
-      {state.error && (
-        <p data-testid="remote-key-error" className={styles.error} role="alert">
-          {state.error}
-        </p>
-      )}
+          {/* Error state */}
+          {state.error && (
+            <p data-testid="remote-key-error" className={styles.error} role="alert">
+              {state.error}
+            </p>
+          )}
 
-      {/* Create form */}
-      <CreateKeyForm onSubmit={handleCreate} />
+          {/* Create form */}
+          <CreateKeyForm onSubmit={handleCreate} />
 
-      {/* Loading indicator */}
-      {state.status === 'loading' && (
-        <p data-testid="remote-key-loading" className={styles.loading}>
-          Chargement…
-        </p>
-      )}
+          {/* Loading indicator */}
+          {state.status === 'loading' && (
+            <p data-testid="remote-key-loading" className={styles.loading}>
+              Chargement…
+            </p>
+          )}
 
-      {/* Key list */}
-      {state.keys.length > 0 ? (
-        <div className={styles.tableWrapper}>
-          <table data-testid="remote-key-table" className={styles.table}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Scopes</th>
-                <th>Créée</th>
-                <th>Dernier usage</th>
-                <th>État</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {state.keys.map(k => (
-                <KeyRow
-                  key={k.key_id}
-                  entry={k}
-                  onRevoke={revokeKey}
-                  onRotate={rotateKey}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        state.status === 'ready' && (
-          <p data-testid="remote-key-empty" className={styles.empty}>
-            Aucune clé active. Créez-en une pour accéder à TITANE depuis n'importe où.
-          </p>
-        )
-      )}
+          {/* Key list */}
+          {state.keys.length > 0 ? (
+            <div className={styles.tableWrapper}>
+              <table data-testid="remote-key-table" className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Scopes</th>
+                    <th>Créée</th>
+                    <th>Dernier usage</th>
+                    <th>État</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {state.keys.map(k => (
+                    <KeyRow
+                      key={k.key_id}
+                      entry={k}
+                      onRevoke={revokeKey}
+                      onRotate={rotateKey}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            state.status === 'ready' && (
+              <p data-testid="remote-key-empty" className={styles.empty}>
+                Aucune clé active. Créez-en une pour accéder à TITANE depuis n'importe où.
+              </p>
+            )
+          )}
 
-      <footer className={styles.footer}>
-        <span data-testid="remote-key-count">
-          {state.keys.filter(k => k.enabled).length} clé(s) active(s)
-        </span>
-      </footer>
+          <footer className={styles.footer}>
+            <span data-testid="remote-key-count">
+              {state.keys.filter(k => k.enabled).length} clé(s) active(s)
+            </span>
+          </footer>
         </>
       )}
     </section>

@@ -23,15 +23,9 @@ import {
   updateClient,
 } from '../htfCrmService';
 
-import {
-  generateEstimation,
-  searchMaterialPrices,
-} from '../htfEstimationService';
+import { generateEstimation, searchMaterialPrices } from '../htfEstimationService';
 
-import {
-  resetHTFKnowledgeCache,
-  getHTFKnowledgeContext,
-} from '../htfKnowledgeService';
+import { resetHTFKnowledgeCache, getHTFKnowledgeContext } from '../htfKnowledgeService';
 
 import {
   getAllLearningEntries,
@@ -63,8 +57,12 @@ beforeEach(() => {
   Object.defineProperty(globalThis, 'localStorage', {
     value: {
       getItem: (k: string) => store[k] ?? null,
-      setItem: (k: string, v: string) => { store[k] = v; },
-      removeItem: (k: string) => { delete store[k]; },
+      setItem: (k: string, v: string) => {
+        store[k] = v;
+      },
+      removeItem: (k: string) => {
+        delete store[k];
+      },
       clear: () => Object.keys(store).forEach(k => delete store[k]),
     },
     writable: true,
@@ -74,7 +72,9 @@ beforeEach(() => {
   getCategoryMock.mockResolvedValue({
     content: {
       taux_horaires: { T2: { taux_h: 55 } },
-      pos_format: { etapes: ['Préparation', 'Approvisionnement', 'Exécution', 'Qualité', 'Remise'] },
+      pos_format: {
+        etapes: ['Préparation', 'Approvisionnement', 'Exécution', 'Qualité', 'Remise'],
+      },
     },
   });
 
@@ -256,7 +256,7 @@ describe('exportSubmissionText', () => {
         },
         {
           code: 'MO-T2',
-          description: 'Main-d\'œuvre T2',
+          description: "Main-d'œuvre T2",
           quantite: 6,
           unite: 'h',
           prixUnitaire: 55,
@@ -375,16 +375,48 @@ describe('htfLearningService', () => {
   });
 
   it('getLearningInsights computes correct average facteur', () => {
-    recordEstimate({ soumissionId: 's1', typeService: 'terrasse', coutEstime: 1000, coutReel: 1100, heuresEstimees: 8, heuresReelles: 9, date: '' });
-    recordEstimate({ soumissionId: 's2', typeService: 'terrasse', coutEstime: 500, coutReel: 600, heuresEstimees: 4, heuresReelles: 5, date: '' });
+    recordEstimate({
+      soumissionId: 's1',
+      typeService: 'terrasse',
+      coutEstime: 1000,
+      coutReel: 1100,
+      heuresEstimees: 8,
+      heuresReelles: 9,
+      date: '',
+    });
+    recordEstimate({
+      soumissionId: 's2',
+      typeService: 'terrasse',
+      coutEstime: 500,
+      coutReel: 600,
+      heuresEstimees: 4,
+      heuresReelles: 5,
+      date: '',
+    });
     const insights = getLearningInsights();
     expect(insights.nbrEntrees).toBe(2);
     expect(insights.facteurMoyenGlobal).toBeCloseTo((1.1 + 1.2) / 2);
   });
 
   it('getLearningInsights groups by typeService', () => {
-    recordEstimate({ soumissionId: 's1', typeService: 'terrasse', coutEstime: 1000, coutReel: 1100, heuresEstimees: 8, heuresReelles: 9, date: '' });
-    recordEstimate({ soumissionId: 's2', typeService: 'gazon', coutEstime: 500, coutReel: 400, heuresEstimees: 4, heuresReelles: 3, date: '' });
+    recordEstimate({
+      soumissionId: 's1',
+      typeService: 'terrasse',
+      coutEstime: 1000,
+      coutReel: 1100,
+      heuresEstimees: 8,
+      heuresReelles: 9,
+      date: '',
+    });
+    recordEstimate({
+      soumissionId: 's2',
+      typeService: 'gazon',
+      coutEstime: 500,
+      coutReel: 400,
+      heuresEstimees: 4,
+      heuresReelles: 3,
+      date: '',
+    });
     const insights = getLearningInsights();
     expect(insights.facteurParType['terrasse']).toBeCloseTo(1.1);
     expect(insights.facteurParType['gazon']).toBeCloseTo(0.8);
@@ -437,8 +469,16 @@ describe('htfEstimationService', () => {
     webSearchMock.mockResolvedValue({
       ok: true,
       content: [
-        { title: 'RONA Saguenay', url: 'https://rona.ca', snippet: 'Dalle 40x40 : 4.99$' },
-        { title: 'Home Depot', url: 'https://homedepot.ca', snippet: 'Dalle béton : 5.50$' },
+        {
+          title: 'RONA Saguenay',
+          url: 'https://rona.ca',
+          snippet: 'Dalle 40x40 : 4.99$',
+        },
+        {
+          title: 'Home Depot',
+          url: 'https://homedepot.ca',
+          snippet: 'Dalle béton : 5.50$',
+        },
       ],
       error: null,
     });
@@ -478,12 +518,18 @@ describe('htfEstimationService', () => {
     });
     expect(estimation.tps / estimation.sousTotal).toBeCloseTo(0.05, 3);
     expect(estimation.tvq / estimation.sousTotal).toBeCloseTo(0.09975, 3);
-    expect(estimation.totalAvecTaxes).toBeCloseTo(estimation.sousTotal + estimation.tps + estimation.tvq, 2);
+    expect(estimation.totalAvecTaxes).toBeCloseTo(
+      estimation.sousTotal + estimation.tps + estimation.tvq,
+      2
+    );
   });
 
   it('generateEstimation sets dateValidite to ~30 days ahead', async () => {
     const before = new Date();
-    const estimation = await generateEstimation({ descriptionProjet: 'Test', surfaceM2: 5 });
+    const estimation = await generateEstimation({
+      descriptionProjet: 'Test',
+      surfaceM2: 5,
+    });
     const validite = new Date(estimation.dateValidite);
     const diffDays = Math.round((validite.getTime() - before.getTime()) / 86400000);
     expect(diffDays).toBeGreaterThanOrEqual(29);
@@ -495,7 +541,9 @@ describe('htfEstimationService', () => {
     const withMaj = await generateEstimation({
       descriptionProjet: 'Urgent',
       surfaceM2: 10,
-      majorations: [{ type: 'urgence_24h', multiplicateur: 1.5, description: 'Urgence 24h' }],
+      majorations: [
+        { type: 'urgence_24h', multiplicateur: 1.5, description: 'Urgence 24h' },
+      ],
     });
     expect(withMaj.sousTotal).toBeCloseTo(base.sousTotal * 1.5, 0);
   });
@@ -519,7 +567,10 @@ describe('htfEstimationService', () => {
   });
 
   it('generateEstimation has implementation plan with correct step count', async () => {
-    const estimation = await generateEstimation({ descriptionProjet: 'Gazon', surfaceM2: 50 });
+    const estimation = await generateEstimation({
+      descriptionProjet: 'Gazon',
+      surfaceM2: 50,
+    });
     expect(estimation.planMiseEnOeuvre.length).toBe(5);
     estimation.planMiseEnOeuvre.forEach((step, i) => {
       expect(step.ordre).toBe(i + 1);

@@ -5,7 +5,12 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RemoteTransport } from '@/lib/remoteTransport';
-import { isTauriContext, isRemoteContext, getTransport, resetTransport } from '@/lib/transport';
+import {
+  isTauriContext,
+  isRemoteContext,
+  getTransport,
+  resetTransport,
+} from '@/lib/transport';
 
 // ── Helpers ───────────────────────────────────────────────────
 
@@ -45,7 +50,9 @@ describe('RemoteTransport IPC contract', () => {
 
     sessionStorage.setItem('titane_remote_access_token', 'fake-token');
 
-    await expect(transport.invoke('forbidden_cmd')).rejects.toThrow('command_not_allowed');
+    await expect(transport.invoke('forbidden_cmd')).rejects.toThrow(
+      'command_not_allowed'
+    );
   });
 
   it('throws when not authenticated', async () => {

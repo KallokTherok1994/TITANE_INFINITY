@@ -64,7 +64,9 @@ describe('RemoteTransport — auth flow', () => {
     const { initRemoteTransport } = await import('../../src/lib/remoteTransport');
     const transport = initRemoteTransport({ baseUrl: 'http://localhost:7420' });
 
-    await expect(transport.authenticate('wrong-secret')).rejects.toThrow('invalid_secret');
+    await expect(transport.authenticate('wrong-secret')).rejects.toThrow(
+      'invalid_secret'
+    );
     expect(transport.isAuthenticated()).toBe(false);
   });
 
@@ -108,10 +110,13 @@ describe('conversation_generate — IPC contract shape', () => {
     const transport = initRemoteTransport({ baseUrl: 'http://localhost:7420' });
 
     // invoke() returns content directly (not the IpcContract wrapper)
-    const content = await transport.invoke<typeof expectedContent>('conversation_generate', {
-      message: 'Bonjour',
-      conversation_id: 'conv-123',
-    });
+    const content = await transport.invoke<typeof expectedContent>(
+      'conversation_generate',
+      {
+        message: 'Bonjour',
+        conversation_id: 'conv-123',
+      }
+    );
 
     expect(content).toBeTruthy();
     expect(content.response).toBeDefined();
@@ -132,10 +137,10 @@ describe('conversation_generate — IPC contract shape', () => {
     const transport = initRemoteTransport({ baseUrl: 'http://localhost:7420' });
 
     // invoke() resolves with content directly
-    const content = await transport.invoke<{ response: string; meta: Record<string, unknown> }>(
-      'conversation_generate',
-      { message: 'test', conversation_id: 'test-conv' },
-    );
+    const content = await transport.invoke<{
+      response: string;
+      meta: Record<string, unknown>;
+    }>('conversation_generate', { message: 'test', conversation_id: 'test-conv' });
 
     expect(typeof content.response).toBe('string');
     expect(typeof content.meta.provider_used).toBe('string');
@@ -184,10 +189,13 @@ describe('RemoteTransport — token refresh on 401', () => {
     const { initRemoteTransport } = await import('../../src/lib/remoteTransport');
     const transport = initRemoteTransport({ baseUrl: 'http://localhost:7420' });
 
-    const content = await transport.invoke<{ response: string }>('conversation_generate', {
-      message: 'test',
-      conversation_id: 'c1',
-    });
+    const content = await transport.invoke<{ response: string }>(
+      'conversation_generate',
+      {
+        message: 'test',
+        conversation_id: 'c1',
+      }
+    );
 
     expect(typeof content.response).toBe('string');
     expect(sessionStorage.getItem('titane_remote_access_token')).toBe('new-token');

@@ -15,7 +15,7 @@ export interface AiAnalysisResult {
   ok: boolean;
   summary: string;
   recommendations: string[];
-  anomalyScore: number;  // 0.0 (clean) to 1.0 (critical)
+  anomalyScore: number; // 0.0 (clean) to 1.0 (critical)
   rawResponse?: string;
   error?: string;
 }
@@ -46,7 +46,7 @@ async function ollamaGenerate(
   model: string,
   systemPrompt: string,
   userMessage: string,
-  temperature: number,
+  temperature: number
 ): Promise<string> {
   // Use Tauri IPC conversation_generate so all traffic goes through One Door
   const result = await invoke<{ ok: boolean; content?: string; error?: string }>(
@@ -57,7 +57,7 @@ async function ollamaGenerate(
       temperature,
       system: systemPrompt,
       max_tokens: 512,
-    },
+    }
   );
   if (!result.ok || !result.content) {
     throw new Error(result.error ?? 'Ollama returned no content');
@@ -81,19 +81,22 @@ export class AgentAI {
    */
   async analyzeKeyUsage(
     keys: KeySummary[],
-    usageLog: UsageLogEntry[],
+    usageLog: UsageLogEntry[]
   ): Promise<AiAnalysisResult> {
     try {
       const keySummary = keys
         .map(
-          (k) =>
-            `- [${k.keyId.slice(0, 12)}] "${k.label}" | scopes: ${k.scopes.join(',')} | ${k.daysSinceCreation}j | actif: ${k.active}`,
+          k =>
+            `- [${k.keyId.slice(0, 12)}] "${k.label}" | scopes: ${k.scopes.join(',')} | ${k.daysSinceCreation}j | actif: ${k.active}`
         )
         .join('\n');
 
       const logSummary = usageLog
         .slice(-30)
-        .map((e) => `${e.ts.slice(0, 16)} ${e.action} ${e.keyId?.slice(0, 12) ?? '-'} ${e.detail ?? ''}`)
+        .map(
+          e =>
+            `${e.ts.slice(0, 16)} ${e.action} ${e.keyId?.slice(0, 12) ?? '-'} ${e.detail ?? ''}`
+        )
         .join('\n');
 
       const prompt = `INVENTAIRE DES CLÉS API (${keys.length} clés):
@@ -115,7 +118,7 @@ Analyse la sécurité et l'utilisation de ces clés. Réponds en JSON strictemen
         this.config.training.model,
         this.config.training.systemPrompt,
         prompt,
-        this.config.training.temperature,
+        this.config.training.temperature
       );
 
       // Parse the JSON block from response
@@ -167,7 +170,7 @@ Réponds en JSON: { "suggestions": ["label1", "label2", "label3"] }`;
         this.config.training.model,
         this.config.training.systemPrompt,
         prompt,
-        0.5,
+        0.5
       );
 
       const jsonMatch = raw.match(/\{[\s\S]*\}/);
@@ -186,12 +189,14 @@ Réponds en JSON: { "suggestions": ["label1", "label2", "label3"] }`;
   /**
    * Check which keys need rotation according to the configured policy.
    */
-  getRotationWarnings(keys: KeySummary[]): { keyId: string; label: string; days: number; critical: boolean }[] {
+  getRotationWarnings(
+    keys: KeySummary[]
+  ): { keyId: string; label: string; days: number; critical: boolean }[] {
     const { autoRotateDays, warnAfterDays } = this.config.rotation;
     if (warnAfterDays === 0) return [];
     return keys
-      .filter((k) => k.active && k.daysSinceCreation >= warnAfterDays)
-      .map((k) => ({
+      .filter(k => k.active && k.daysSinceCreation >= warnAfterDays)
+      .map(k => ({
         keyId: k.keyId,
         label: k.label,
         days: k.daysSinceCreation,

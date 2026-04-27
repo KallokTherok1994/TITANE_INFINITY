@@ -3,7 +3,12 @@
 
 import { getHTFKnowledgeContext } from './htfKnowledgeService';
 import { webSearch } from '../webResearchService';
-import type { HTFEstimation, HTFEstimationItem, HTFImplementationStep, HTFMajoration } from './types';
+import type {
+  HTFEstimation,
+  HTFEstimationItem,
+  HTFImplementationStep,
+  HTFMajoration,
+} from './types';
 
 const TPS = 0.05;
 const TVQ = 0.09975;
@@ -27,7 +32,10 @@ export async function searchMaterialPrices(materiau: string): Promise<string> {
   try {
     const result = await webSearch(`${materiau} prix Saguenay 2025`);
     if (result.content && result.content.length > 0) {
-      return result.content.slice(0, 2).map((r) => `${r.title}: ${r.snippet}`).join(' | ');
+      return result.content
+        .slice(0, 2)
+        .map(r => `${r.title}: ${r.snippet}`)
+        .join(' | ');
     }
   } catch {
     // Silencieux — prix catalogue utilisés par défaut
@@ -83,7 +91,8 @@ export async function generateEstimation(
 ): Promise<HTFEstimation> {
   const ctx = await getHTFKnowledgeContext();
   const rules = ctx.estimationRules as Record<string, unknown>;
-  const tauxHoraires = (rules['taux_horaires'] as Record<string, { taux_h: number }>) ?? {};
+  const tauxHoraires =
+    (rules['taux_horaires'] as Record<string, { taux_h: number }>) ?? {};
   const tauxT2 = tauxHoraires['T2']?.taux_h ?? 55;
 
   const items: HTFEstimationItem[] = params.items ?? [];
@@ -93,7 +102,7 @@ export async function generateEstimation(
     const heuresEstimees = Math.ceil(params.surfaceM2 * 0.15);
     items.push({
       code: 'MO-T2',
-      description: 'Main-d\'œuvre technicien T2',
+      description: "Main-d'œuvre technicien T2",
       quantite: heuresEstimees,
       unite: 'h',
       prixUnitaire: tauxT2,
@@ -112,7 +121,10 @@ export async function generateEstimation(
   const tvq = sousTotal * TVQ;
   const totalAvecTaxes = sousTotal + tps + tvq;
 
-  const planMiseEnOeuvre = await generateImplementationPlan(params.descriptionProjet, items);
+  const planMiseEnOeuvre = await generateImplementationPlan(
+    params.descriptionProjet,
+    items
+  );
 
   const now = new Date().toISOString();
   return {

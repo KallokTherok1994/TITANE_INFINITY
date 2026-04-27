@@ -50,7 +50,7 @@ export interface RemoteKeyRotateResult {
  */
 export const remoteKeyCreate = (
   label: string,
-  scopes?: string[],
+  scopes?: string[]
 ): Promise<RemoteKeyCreateResult> =>
   invoke('remote_key_create', { label, scopes: scopes ?? null });
 

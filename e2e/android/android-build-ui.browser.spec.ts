@@ -694,7 +694,10 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     // In Tauri production runtime or with TITANE_E2E_LIVE_LLM=1, this must pass.
     if (!noSilence) {
       const hasLiveLLM = process.env.TITANE_E2E_LIVE_LLM === '1';
-      test.skip(!hasLiveLLM, 'T9 non-silence requires a live LLM backend (set TITANE_E2E_LIVE_LLM=1)');
+      test.skip(
+        !hasLiveLLM,
+        'T9 non-silence requires a live LLM backend (set TITANE_E2E_LIVE_LLM=1)'
+      );
     }
     expect(noSilence).toBe(true);
     expect(criticalErrors).toHaveLength(0);
@@ -1470,8 +1473,7 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
             document
               .querySelector('[data-testid="page-conversation"]')
               ?.getAttribute('data-chat-store-mode') ?? null,
-          runtimeConversationMode:
-            panel?.getAttribute('data-conversation-mode') ?? null,
+          runtimeConversationMode: panel?.getAttribute('data-conversation-mode') ?? null,
           runtimeStoreMode: panel?.getAttribute('data-chat-store-mode') ?? null,
           summary: summary?.textContent?.trim() ?? null,
           badges,

@@ -86,7 +86,8 @@ export function exportSubmissionText(submission: HTFSubmission): string {
     'ITEMS',
     '─────',
     ...submission.items.map(
-      i => `  ${i.description.padEnd(40)} ${i.quantite} ${i.unite} × ${i.prixUnitaire.toFixed(2)}$ = ${i.total.toFixed(2)}$`
+      i =>
+        `  ${i.description.padEnd(40)} ${i.quantite} ${i.unite} × ${i.prixUnitaire.toFixed(2)}$ = ${i.total.toFixed(2)}$`
     ),
     '',
     `Sous-total : ${submission.sousTotal.toFixed(2)} $`,

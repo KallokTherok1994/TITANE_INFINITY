@@ -83,7 +83,11 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function RemoteAuthScreen({ onLogin, loading, error }: RemoteAuthScreenProps) {
+export default function RemoteAuthScreen({
+  onLogin,
+  loading,
+  error,
+}: RemoteAuthScreenProps) {
   const [gatewayUrl, setGatewayUrl] = useState('');
   const [secret, setSecret] = useState('');
 
@@ -100,9 +104,14 @@ export default function RemoteAuthScreen({ onLogin, loading, error }: RemoteAuth
         <div style={styles.logo}>TITANE∞</div>
         <p style={styles.subtitle}>Intelligence distante • Connexion sécurisée</p>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+        >
           <div>
-            <label style={styles.label} htmlFor="remote-gateway-url">URL de la Gateway</label>
+            <label style={styles.label} htmlFor="remote-gateway-url">
+              URL de la Gateway
+            </label>
             <input
               id="remote-gateway-url"
               data-testid="remote-gateway-url-input"
@@ -117,7 +126,9 @@ export default function RemoteAuthScreen({ onLogin, loading, error }: RemoteAuth
           </div>
 
           <div>
-            <label style={styles.label} htmlFor="remote-api-key">Clé API / Secret</label>
+            <label style={styles.label} htmlFor="remote-api-key">
+              Clé API / Secret
+            </label>
             <input
               id="remote-api-key"
               data-testid="remote-api-key-input"
@@ -131,14 +142,21 @@ export default function RemoteAuthScreen({ onLogin, loading, error }: RemoteAuth
             />
           </div>
 
-          {error && <p style={styles.error} role="alert">{error}</p>}
+          {error && (
+            <p style={styles.error} role="alert">
+              {error}
+            </p>
+          )}
 
           <button
             data-testid="remote-login-button"
             style={{
               ...styles.button,
-              opacity: (loading || !gatewayUrl.trim() || !secret.trim()) ? 0.65 : 1,
-              cursor: (loading || !gatewayUrl.trim() || !secret.trim()) ? 'not-allowed' : 'pointer',
+              opacity: loading || !gatewayUrl.trim() || !secret.trim() ? 0.65 : 1,
+              cursor:
+                loading || !gatewayUrl.trim() || !secret.trim()
+                  ? 'not-allowed'
+                  : 'pointer',
             }}
             type="submit"
             disabled={loading || !gatewayUrl.trim() || !secret.trim()}

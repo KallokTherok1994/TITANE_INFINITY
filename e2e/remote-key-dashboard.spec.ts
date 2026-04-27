@@ -17,7 +17,9 @@ import { test, expect } from '@playwright/test';
 const ADMIN_REMOTE_KEYS_URL = '/admin?tab=remote-keys';
 
 // Helper: navigate to admin remote-keys tab and wait for dashboard
-async function openRemoteKeyDashboard(page: Parameters<typeof test>[1] extends never ? never : import('@playwright/test').Page) {
+async function openRemoteKeyDashboard(
+  page: Parameters<typeof test>[1] extends never ? never : import('@playwright/test').Page
+) {
   await page.goto(ADMIN_REMOTE_KEYS_URL);
   await page.waitForSelector('[data-testid="remote-key-dashboard"]', { timeout: 20_000 });
 }
@@ -66,7 +68,9 @@ test.describe('RemoteKeyDashboard — Admin tab', () => {
 
   test('switching to Agent IA tab shows AgentConfigPanel', async ({ page }) => {
     await page.locator('[data-testid="remote-key-tab-agent"]').click();
-    await expect(page.locator('[data-testid="agent-config-panel"]')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="agent-config-panel"]')).toBeVisible({
+      timeout: 10_000,
+    });
   });
 });
 
@@ -88,7 +92,9 @@ test.describe('AgentConfigPanel — Agent IA tab', () => {
   });
 
   test('label suggestion input and button are present', async ({ page }) => {
-    await expect(page.locator('[data-testid="agent-suggest-labels-input"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="agent-suggest-labels-input"]')
+    ).toBeVisible();
     await expect(page.locator('[data-testid="agent-suggest-labels-btn"]')).toBeVisible();
   });
 
@@ -102,12 +108,21 @@ test.describe('AgentConfigPanel — Agent IA tab', () => {
     const select = page.locator('[data-testid="agent-config-model-select"]');
     await expect(select).toBeVisible();
     const value = await select.inputValue();
-    expect(['gemma2:2b', 'titane-key-agent', 'qwen2.5:latest', 'llama3.1:latest']).toContain(value);
+    expect([
+      'gemma2:2b',
+      'titane-key-agent',
+      'qwen2.5:latest',
+      'llama3.1:latest',
+    ]).toContain(value);
   });
 
   test('config form inputs are present (prompt, rotation)', async ({ page }) => {
-    await expect(page.locator('[data-testid="agent-config-prompt-textarea"]')).toBeVisible();
-    await expect(page.locator('[data-testid="agent-config-auto-rotate-input"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="agent-config-prompt-textarea"]')
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-testid="agent-config-auto-rotate-input"]')
+    ).toBeVisible();
     await expect(page.locator('[data-testid="agent-config-warn-input"]')).toBeVisible();
   });
 
@@ -128,7 +143,9 @@ test.describe('AgentConfigPanel — Agent IA tab', () => {
 
   test('switching back to keys tab hides agent panel', async ({ page }) => {
     await page.locator('[data-testid="remote-key-tab-keys"]').click();
-    await expect(page.locator('[data-testid="agent-config-panel"]')).not.toBeVisible({ timeout: 5_000 });
+    await expect(page.locator('[data-testid="agent-config-panel"]')).not.toBeVisible({
+      timeout: 5_000,
+    });
     await expect(page.locator('[data-testid="remote-key-create-form"]')).toBeVisible();
   });
 });

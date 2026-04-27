@@ -27,9 +27,18 @@ async function isGatewayReachable(url: string): Promise<boolean> {
       const port = parseInt(parsed.port || '7420', 10);
       const host = parsed.hostname;
       const socket = net.createConnection({ host, port, timeout: 2000 });
-      socket.once('connect', () => { socket.destroy(); resolve(true); });
-      socket.once('error', () => { socket.destroy(); resolve(false); });
-      socket.once('timeout', () => { socket.destroy(); resolve(false); });
+      socket.once('connect', () => {
+        socket.destroy();
+        resolve(true);
+      });
+      socket.once('error', () => {
+        socket.destroy();
+        resolve(false);
+      });
+      socket.once('timeout', () => {
+        socket.destroy();
+        resolve(false);
+      });
     } catch {
       resolve(false);
     }
@@ -166,4 +175,3 @@ test('POST /api/auth/refresh returns new access token', async ({ request }) => {
   expect(data.ok).toBe(true);
   expect(typeof data.access_token).toBe('string');
 });
-

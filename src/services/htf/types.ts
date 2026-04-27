@@ -34,7 +34,14 @@ export interface HTFImplementationStep {
 }
 
 export type HTFMajoration = {
-  type: 'urgence_24h' | 'urgence_4h' | 'acces_difficile' | 'fin_semaine' | 'ferie' | 'hauteur' | 'materiaux_speciaux';
+  type:
+    | 'urgence_24h'
+    | 'urgence_4h'
+    | 'acces_difficile'
+    | 'fin_semaine'
+    | 'ferie'
+    | 'hauteur'
+    | 'materiaux_speciaux';
   multiplicateur: number;
   description: string;
 };
