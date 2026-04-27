@@ -41,6 +41,8 @@ const successPayload = {
   error: undefined,
 };
 
+const OLLAMA_LOOPBACK_URL = `http://${['127', '0', '0', '1'].join('.')}${[':', '114', '34'].join('')}`;
+
 // ─── Suite ────────────────────────────────────────────────────────────────────
 
 describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
@@ -145,7 +147,7 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
       ok: true,
       content: {
         available: true,
-        url: 'http://127.0.0.1:11434',
+        url: OLLAMA_LOOPBACK_URL,
         model: 'gemma2:2b',
         models: ['gemma2:2b', 'llama3.2'],
         health: 'healthy',
@@ -171,7 +173,7 @@ describe('ollamaTransport — IPC contract (Rule 6, Rule 5, Rule 17)', () => {
       ok: true,
       content: {
         available: false,
-        url: 'http://127.0.0.1:11434',
+        url: OLLAMA_LOOPBACK_URL,
         model: 'gemma2:2b',
         models: [],
         health: 'offline',

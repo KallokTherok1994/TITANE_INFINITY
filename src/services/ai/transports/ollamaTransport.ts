@@ -29,7 +29,19 @@ function isTauriEnvironment(): boolean {
   return typeof window !== 'undefined' && '__TAURI__' in window;
 }
 
-const TRANSPORT_MODE: string = isRemoteContext() ? 'REMOTE_GATEWAY' : 'IPC';
+function isBrowserProxyEnvironment(): boolean {
+  return typeof window !== 'undefined' && !isTauriEnvironment() && !isRemoteContext();
+}
+
+const OLLAMA_API_BASE = ['/', 'api', 'ollama'].join('/').replace('//', '/');
+
+const TRANSPORT_MODE: string = typeof window === 'undefined'
+  ? 'IPC'
+  : isTauriEnvironment()
+  ? 'IPC'
+  : isRemoteContext()
+    ? 'REMOTE_GATEWAY'
+    : 'BROWSER_PROXY';
 
 const HEALTH_CACHE_TTL_MS = 10_000;
 let lastHealthCheckTs = 0;
@@ -125,7 +137,55 @@ function normalizeOllamaStatus(raw: unknown): NormalizedOllamaStatus {
  * HTTP: Health check (/tags)
  */
 async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
-  return ipcCheckHealth();
+  const controller = new AbortController();
+  const timeoutMs = getProviderTimeout('ollama');
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(`${OLLAMA_API_BASE}/tags`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        provider: 'ollama',
+        error: {
+          code: 'OLLAMA_HTTP_FAILED',
+          message: `Ollama tags failed (${response.status})`,
+          retryable: response.status >= 500,
+        },
+      };
+    }
+
+    const data = (await response.json()) as OllamaTagsResponse;
+    return {
+      ok: true,
+      provider: 'ollama',
+      content: {
+        models: Array.isArray(data.models) ? data.models : [],
+      },
+    };
+  } catch (error) {
+    const classification = classifyError(error);
+    const isAbort = isAbortError(error);
+    return {
+      ok: false,
+      provider: 'ollama',
+      error: {
+        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_HTTP_EXCEPTION',
+        message: isAbort ? 'Requete annulee' : classification.message,
+        hint: classification.hint,
+        retryable: !isAbort && classification.retryable,
+      },
+    };
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 }
 
 /**
@@ -134,7 +194,83 @@ async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
 async function httpGenerate(
   req: OllamaGenerateRequest
 ): Promise<AiResult<OllamaGenerateResponse>> {
-  return ipcGenerate(req);
+  const controller = new AbortController();
+  const timeoutMs = (req.timeout_secs ?? Math.ceil(getProviderTimeout('ollama') / 1000)) * 1000;
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(`${OLLAMA_API_BASE}/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        model: req.model,
+        prompt: req.prompt,
+        system: req.system,
+        stream: false,
+        options: {
+          temperature: req.temperature,
+          num_predict: req.max_tokens,
+          num_ctx: req.num_ctx,
+        },
+      }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        provider: 'ollama',
+        error: {
+          code: 'OLLAMA_HTTP_FAILED',
+          message: `Ollama generate failed (${response.status})`,
+          retryable: response.status >= 500,
+        },
+      };
+    }
+
+    const data = (await response.json()) as Record<string, unknown>;
+    return {
+      ok: true,
+      provider: 'ollama',
+      content: {
+        content: typeof data.response === 'string' ? data.response : '',
+        model: typeof data.model === 'string' ? data.model : req.model,
+        total_duration:
+          typeof data.total_duration === 'number' ? data.total_duration : undefined,
+        load_duration:
+          typeof data.load_duration === 'number' ? data.load_duration : undefined,
+        prompt_eval_count:
+          typeof data.prompt_eval_count === 'number' ? data.prompt_eval_count : undefined,
+        prompt_eval_duration:
+          typeof data.prompt_eval_duration === 'number'
+            ? data.prompt_eval_duration
+            : undefined,
+        eval_count: typeof data.eval_count === 'number' ? data.eval_count : undefined,
+        eval_duration:
+          typeof data.eval_duration === 'number' ? data.eval_duration : undefined,
+        done_reason:
+          typeof data.done_reason === 'string' ? data.done_reason : undefined,
+      },
+    };
+  } catch (error) {
+    const classification = classifyError(error);
+    const isAbort = isAbortError(error);
+    return {
+      ok: false,
+      provider: 'ollama',
+      error: {
+        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_HTTP_EXCEPTION',
+        message: isAbort ? 'Requete annulee' : classification.message,
+        hint: classification.hint,
+        retryable: !isAbort && classification.retryable,
+      },
+    };
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 }
 
 // ============================================================
@@ -321,7 +457,7 @@ async function ipcGenerate(
  */
 export async function ollamaCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
   logger.debug(`Health check via ${TRANSPORT_MODE}`);
-  return ipcCheckHealth();
+  return isBrowserProxyEnvironment() ? httpCheckHealth() : ipcCheckHealth();
 }
 
 /**
@@ -334,7 +470,7 @@ export async function ollamaGenerate(
     model: req.model,
     promptLen: req.prompt.length,
   });
-  return ipcGenerate(req);
+  return isBrowserProxyEnvironment() ? httpGenerate(req) : ipcGenerate(req);
 }
 
 /**

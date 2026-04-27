@@ -12,6 +12,7 @@ import { validateIpcPayload } from '@/lib/ipcContract';
 import { isIPCError } from '@/lib/errorClassification';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
+import { ollamaProvider } from '@/services/ai/providers/ollama';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import type { AIMessage } from '@/services/ai/types';
 import { createLogger } from '@/utils/logger';
@@ -105,6 +106,9 @@ const rememberE2EConversationId = (conversationId: string): void => {
 };
 
 const getChatEngine = async () => chatEngine;
+
+const shouldPreferBrowserOllama = (provider?: string): boolean =>
+  provider === undefined || provider === 'auto' || provider === 'ollama';
 
 /**
  * Type pour l'ID de conversation OMEGA
@@ -440,6 +444,48 @@ class ChatService {
       logger.warn(
         '[ChatService-OMEGA] Tauri unavailable - using chatEngine (web backend)'
       );
+
+      if (shouldPreferBrowserOllama(config?.provider)) {
+        try {
+          const ollamaResponse = await ollamaProvider.generate(message, [], {
+            preferredProvider: 'ollama',
+            maxTokens: config?.maxTokens,
+            temperature: config?.temperature,
+          });
+
+          return {
+            content: ollamaResponse.content,
+            finishReason:
+              typeof ollamaResponse.metadata?.finishReason === 'string'
+                ? ollamaResponse.metadata.finishReason
+                : 'stop',
+            model: ollamaResponse.model ?? 'ollama',
+            provider: ollamaResponse.provider,
+            latencyMs:
+              typeof ollamaResponse.metadata?.latencyMs === 'number'
+                ? ollamaResponse.metadata.latencyMs
+                : Date.now() - startedAt,
+            metadata: {
+              source: 'browser-ollama-proxy',
+              messageId: `web-ollama-${Date.now()}`,
+              timestamp: Date.now(),
+              conversationId,
+              selectedProvider: config?.provider ?? 'auto',
+              provider_used: ollamaResponse.provider,
+              mode: 'REMOTE',
+              reason_code: 'BROWSER_OLLAMA_PROXY',
+              fallback_used: false,
+              network_used: true,
+              ...(ollamaResponse.metadata ?? {}),
+            },
+          };
+        } catch (error) {
+          logger.warn(
+            '[ChatService-OMEGA] Browser Ollama unavailable - falling back to chatEngine',
+            error
+          );
+        }
+      }
 
       try {
         const engineResponse = await (

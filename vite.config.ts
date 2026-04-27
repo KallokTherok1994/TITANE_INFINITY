@@ -218,6 +218,7 @@ export default defineConfig(({ command }) => ({
             console.error('🔴 Ollama proxy error:', err.message);
           });
           proxy.on('proxyReq', (proxyReq, req, _res) => {
+            proxyReq.removeHeader('origin');
             console.log('🔵 Proxying:', req.method, req.url, '→', proxyReq.path);
           });
         },

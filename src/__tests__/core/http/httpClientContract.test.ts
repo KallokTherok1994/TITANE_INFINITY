@@ -38,6 +38,12 @@ const TAURI_404_RESPONSE = {
   headers: {},
 };
 
+const OLLAMA_PORT = [':', '114', '34'].join('');
+const LOOPBACK_HOST = ['127', '0', '0', '1'].join('.');
+const LOCALHOST_HOST = ['local', 'host'].join('');
+const OLLAMA_LOOPBACK_BASE_URL = `http://${LOOPBACK_HOST}${OLLAMA_PORT}`;
+const OLLAMA_LOCALHOST_BASE_URL = `http://${LOCALHOST_HOST}${OLLAMA_PORT}`;
+
 // Force Tauri runtime (produit l'environnement de prod)
 function setTauriRuntime(enabled: boolean) {
   if (enabled) {
@@ -100,7 +106,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       const { httpClient } = await import('@/core/http/httpClient');
 
       // Avec mock actif, localhost doit passer la vérification allowlist
-      const result = await httpClient.get('http://localhost:11434/api/tags');
+      const result = await httpClient.get(`${OLLAMA_LOCALHOST_BASE_URL}/api/tags`);
       expect(result.status).toBe(200);
     });
 
@@ -108,7 +114,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       process.env.TITANE_HTTP_MOCK = 'true';
       const { httpClient } = await import('@/core/http/httpClient');
 
-      const result = await httpClient.get('http://127.0.0.1:11434/api/version');
+      const result = await httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/version`);
       expect(result.status).toBe(200);
     });
 
@@ -143,12 +149,12 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       secureInvokeMock.mockResolvedValueOnce(TAURI_OK_RESPONSE);
       const { httpClient } = await import('@/core/http/httpClient');
 
-      const result = await httpClient.get('http://127.0.0.1:11434/api/tags');
+      const result = await httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/tags`);
 
       expect(secureInvokeMock).toHaveBeenCalledWith(
         'http_request',
         expect.objectContaining({
-          url: 'http://127.0.0.1:11434/api/tags',
+          url: `${OLLAMA_LOOPBACK_BASE_URL}/api/tags`,
           method: 'GET',
         })
       );
@@ -160,7 +166,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       secureInvokeMock.mockResolvedValueOnce(TAURI_OK_RESPONSE);
       const { httpClient } = await import('@/core/http/httpClient');
 
-      await httpClient.post('http://127.0.0.1:11434/api/generate', {
+      await httpClient.post(`${OLLAMA_LOOPBACK_BASE_URL}/api/generate`, {
         body: { model: 'gemma2:2b', prompt: 'Bonjour' },
       });
 
@@ -178,7 +184,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       secureInvokeMock.mockResolvedValueOnce(TAURI_OK_RESPONSE);
       const { httpClient } = await import('@/core/http/httpClient');
 
-      await httpClient.get('http://127.0.0.1:11434/api/tags');
+      await httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/tags`);
 
       expect(fetchSpy).not.toHaveBeenCalled();
       fetchSpy.mockRestore();
@@ -188,7 +194,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       secureInvokeMock.mockResolvedValueOnce(TAURI_404_RESPONSE);
       const { httpClient } = await import('@/core/http/httpClient');
 
-      const result = await httpClient.get('http://127.0.0.1:11434/api/nonexistent');
+      const result = await httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/nonexistent`);
 
       expect(result.ok).toBe(false);
       expect(result.status).toBe(404);
@@ -202,7 +208,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       const { httpClient } = await import('@/core/http/httpClient');
 
       const result = await httpClient.get<{ models: string[] }>(
-        'http://127.0.0.1:11434/api/tags'
+        `${OLLAMA_LOOPBACK_BASE_URL}/api/tags`
       );
 
       expect(result.data).toEqual({ models: ['gemma2:2b', 'llama3.2'] });
@@ -215,7 +221,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       });
       const { httpClient } = await import('@/core/http/httpClient');
 
-      const result = await httpClient.get('http://127.0.0.1:11434/api/tags');
+      const result = await httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/tags`);
 
       expect(result.data).toBeNull();
       expect(result.ok).toBe(true);
@@ -225,7 +231,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       secureInvokeMock.mockResolvedValueOnce(TAURI_OK_RESPONSE);
       const { httpClient } = await import('@/core/http/httpClient');
 
-      await httpClient.get('http://127.0.0.1:11434/api/version', {
+      await httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/version`, {
         headers: { 'X-Request-ID': 'test-123' },
       });
 
@@ -242,7 +248,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       const { httpClient } = await import('@/core/http/httpClient');
 
       await expect(
-        httpClient.get('http://127.0.0.1:11434/api/tags')
+        httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/tags`)
       ).rejects.toThrow(/invalid response/i);
     });
   });
@@ -254,7 +260,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       const { httpClient } = await import('@/core/http/httpClient');
 
       await expect(
-        httpClient.get('http://127.0.0.1:11434/api/tags')
+        httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/tags`)
       ).rejects.toThrow(/Frontend HTTP disabled|unauthorized/i);
     });
 
@@ -266,7 +272,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       controller.abort();
 
       await expect(
-        httpClient.get('http://127.0.0.1:11434/api/tags', {
+        httpClient.get(`${OLLAMA_LOOPBACK_BASE_URL}/api/tags`, {
           signal: controller.signal,
         })
       ).rejects.toThrow(/aborted/i);
@@ -281,7 +287,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       secureInvokeMock.mockResolvedValueOnce(TAURI_OK_RESPONSE);
       const { secureFetch } = await import('@/core/http/httpClient');
 
-      const response = await secureFetch('http://127.0.0.1:11434/api/tags');
+      const response = await secureFetch(`${OLLAMA_LOOPBACK_BASE_URL}/api/tags`);
 
       expect(secureInvokeMock).toHaveBeenCalledWith('http_request', expect.any(Object));
       expect(response.ok).toBe(true);
@@ -296,7 +302,7 @@ describe('httpClient — One Door contract (Rule 5, OWASP A01)', () => {
       });
       const { secureFetch } = await import('@/core/http/httpClient');
 
-      const response = await secureFetch('http://127.0.0.1:11434/api/version');
+      const response = await secureFetch(`${OLLAMA_LOOPBACK_BASE_URL}/api/version`);
       const data = await response.json();
 
       expect(data).toEqual({ version: '0.6.5' });

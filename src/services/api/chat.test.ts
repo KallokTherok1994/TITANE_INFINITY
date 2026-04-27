@@ -13,12 +13,37 @@ vi.mock('@/utils/tauriProtector', () => {
   };
 });
 
+vi.mock('@/services/ai/chatEngine', () => {
+  return {
+    chatEngine: {
+      generate: vi.fn().mockResolvedValue({
+        content: 'local fallback',
+        provider: 'titane-local',
+        model: 'titane-local-v30.0.0Ω',
+        metadata: {},
+      }),
+    },
+  };
+});
+
+vi.mock('@/services/ai/providers/ollama', () => {
+  return {
+    ollamaProvider: {
+      generate: vi.fn(),
+    },
+  };
+});
+
 import { invokeWithRetry } from '@/lib/serviceInvoker';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
+import { ollamaProvider } from '@/services/ai/providers/ollama';
+import { chatEngine } from '@/services/ai/chatEngine';
 import { chatService, type ChatMessage } from '@/services/api/chat';
 
 describe('ChatService normalizeResponse', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(true);
   });
 
   it('falls back provider/latency when backend omits them (OMEGA)', async () => {
@@ -65,6 +90,47 @@ describe('ChatService normalizeResponse', () => {
       (conversationGenerateCall?.[1] as { args?: { maxTokens?: number } }).args?.maxTokens
     ).toBe(32768);
   });
+
+  it('uses Ollama proxy first in browser mode before local fallback', async () => {
+    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(false);
+    vi.mocked(ollamaProvider.generate).mockResolvedValueOnce({
+      content: 'bonjour depuis ollama',
+      provider: 'ollama',
+      timestamp: Date.now(),
+      model: 'gemma2:2b',
+      metadata: {
+        latencyMs: 42,
+      },
+    } as any);
+
+    const response = await chatService.sendMessage('hi', 'conv-browser', {
+      provider: 'auto',
+    });
+
+    expect(response.provider).toBe('ollama');
+    expect(response.metadata?.source).toBe('browser-ollama-proxy');
+    expect(response.metadata?.network_used).toBe(true);
+    expect(vi.mocked(chatEngine.generate)).not.toHaveBeenCalled();
+  });
+
+  it('falls back to chatEngine in browser mode when Ollama proxy fails', async () => {
+    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(false);
+    vi.mocked(ollamaProvider.generate).mockRejectedValueOnce(new Error('proxy down'));
+    vi.mocked(chatEngine.generate).mockResolvedValueOnce({
+      content: 'fallback local',
+      provider: 'titane-local',
+      model: 'titane-local-v30.0.0Ω',
+      metadata: {},
+    } as any);
+
+    const response = await chatService.sendMessage('hi', 'conv-browser-fallback', {
+      provider: 'auto',
+    });
+
+    expect(response.provider).toBe('titane-local');
+    expect(response.metadata?.source).toBe('browser-chatEngine');
+    expect(vi.mocked(chatEngine.generate)).toHaveBeenCalledOnce();
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════
@@ -76,6 +142,7 @@ describe('ChatService normalizeResponse', () => {
 describe('LOCK1 — Provider truth chain: backend meta → ChatResponse', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(true);
   });
 
   /**
