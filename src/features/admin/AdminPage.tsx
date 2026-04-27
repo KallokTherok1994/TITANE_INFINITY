@@ -84,6 +84,10 @@ const ProductionHealthPanel = lazy(async () => {
   return { default: m.ProductionHealthPanel };
 });
 
+const RemoteKeyDashboard = lazy(() =>
+  import('../../components/RemoteKeyDashboard').then(m => ({ default: m.default }))
+);
+
 // ══════════════════════════════════════════════════════════════════
 // LOADING SPINNER
 // ══════════════════════════════════════════════════════════════════
@@ -166,6 +170,15 @@ const TabContent: React.FC<TabContentProps> = ({ tab }) => {
         <Suspense fallback={<LoadingSpinner message="Chargement Santé Production..." />}>
           <ErrorBoundary context="AdminProductionHealth">
             <ProductionHealthPanel />
+          </ErrorBoundary>
+        </Suspense>
+      );
+
+    case 'remote-keys':
+      return (
+        <Suspense fallback={<LoadingSpinner message="Chargement Clés Remote..." />}>
+          <ErrorBoundary context="AdminRemoteKeys">
+            <RemoteKeyDashboard />
           </ErrorBoundary>
         </Suspense>
       );

@@ -644,3 +644,11 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Persistance agent config: `localStorage['titane::agent::remote_key_config']`
 - Usage log: `localStorage['titane::agent::remote_key_usage_log']` (200 entrées max)
 - Tests: `tests/unit/agentConfig.test.ts` (15/15 PASS)
+
+## 2026-05-02 — RemoteKeyDashboard monté dans AdminPage (onglet remote-keys)
+- Route: `/admin?tab=remote-keys`
+- Onglet AdminPage: `remote-keys` (label "Clés Remote", icon 🔑, badge NEW)
+- Composant lazy: `import('../../components/RemoteKeyDashboard')` dans `src/features/admin/AdminPage.tsx`
+- ErrorBoundary context: `AdminRemoteKeys`
+- E2E: `e2e/remote-key-dashboard.spec.ts` — 15/15 PASS
+- Version: 31.2.8

@@ -11,7 +11,8 @@ export type AdminTab =
   | 'design' // Design (Gesign)
   | 'governance' // Gouvernance & Sécurité
   | 'anti-regression' // Dashboard anti-régression canonique
-  | 'production-health'; // Production telemetry panel (V30)
+  | 'production-health' // Production telemetry panel (V30)
+  | 'remote-keys'; // Clés API Remote + Agent IA
 
 export interface AdminTabDefinition {
   id: AdminTab;
@@ -70,5 +71,12 @@ export const ADMIN_TABS: AdminTabDefinition[] = [
     icon: '📊',
     description: 'Métriques production Week 1 - Observabilité temps réel',
     badge: 'V30',
+  },
+  {
+    id: 'remote-keys',
+    label: 'Clés Remote',
+    icon: '🔑',
+    description: 'Gestion des clés API TITANE Remote + Agent IA de supervision',
+    badge: 'NEW',
   },
 ];
