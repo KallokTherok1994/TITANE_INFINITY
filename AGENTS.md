@@ -71,6 +71,13 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Switch to patch/code mode only after scope is fixed, touched files are known, one dominant lock is identified, and rollback is obvious.
 - Keep one real lock at a time.
 
+## Mode Switch Protocol (Rule 19)
+
+- **Plan Mode** → explore architecture, diagnose, map surfaces. No code produced.
+- **Exploration Mode** → branch `explore/*` or explicit `MODE=EXPLORATION`. Lightweight AutoHeal, no bump, no proof_pack. Code is disposable.
+- **Durable/Production Mode** → default for `MAIN` / `feature/*`. Full Rule 1–18 discipline. All gates mandatory.
+- Transition Exploration → Durable requires explicit promotion gate: full tests, full AutoHeal schema, version bump, proof_pack.
+
 ## Agent Specialization
 
 ### Backend Agent (src-tauri/, Rust)

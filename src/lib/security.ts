@@ -204,6 +204,18 @@ export const NULLABLE_COMMANDS = new Set<string>([
  * Whitelist des commandes Tauri autorisées
  * DOIT correspondre à commands/security.rs côté Rust
  * ✅ SYNCHRONISÉ v16.2.2+ (27 nov 2025)
+ *
+ * ── IPC Risk-Tiering (Rule A2 — 2026-04-27) ─────────────────────
+ * Tier 1 — Read-only, zero side effect: get_*, health_*, ping_*, status_*
+ *           Safe for remote gateway. No autoheal gate required.
+ * Tier 2 — Write, local impact: save_*, write_*, store_*, create_*, update_*, set_*
+ *           Autoheal validation recommended before execution in remote context.
+ * Tier 3 — Ring 0 critical, irreversible or network/vault/FS: remote_key_*,
+ *           total_dev_*, engines_devmode_*, dev_apply_patch, dev_run_command,
+ *           window_set_fullscreen, secure_store_*, delete_secret, clear_memory
+ *           Requires explicit user approval gate in governed sessions.
+ *           Never exposed via remote gateway without explicit scope annotation.
+ * ────────────────────────────────────────────────────────────────
  */
 export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
@@ -541,7 +553,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'devops_stats',
 
   // ═══════════════════════════════════════════════════════════════
-  // TOTAL_DEV — GOD DEV Governed Space (v30.0.0)
+  // TOTAL_DEV — GOD DEV Governed Space (v30.0.0) [TIER 3 — privileged execution]
   // ═══════════════════════════════════════════════════════════════
   'total_dev_unlock',
   'total_dev_session_status',
@@ -944,7 +956,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'twin_recalculate_fusion',
 
   // ═══════════════════════════════════════════════════════════════
-  // ENGINES DEVMODE (v∞.Ω - Kevin Only)
+  // ENGINES DEVMODE (v∞.Ω - Kevin Only) [TIER 3 — live patch, requires approval gate]
   // ═══════════════════════════════════════════════════════════════
   'engines_devmode_get_state',
   'engines_devmode_enable',
@@ -1088,7 +1100,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_config_preset',
   'delete_config_preset',
   'save_ui_theme',
-  // Phase 1 — Remote Named API Keys
+  // Phase 1 — Remote Named API Keys [TIER 3 — vault/auth mutation, approval gate required]
   'remote_key_create',
   'remote_key_list',
   'remote_key_revoke',
@@ -1234,11 +1246,11 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'read_json_file',
 
   // ═══════════════════════════════════════════════════════════════
-  // DEV SUDO (v24.4+)
+  // DEV SUDO (v24.4+) [TIER 3 — arbitrary FS/command execution]
   // ═══════════════════════════════════════════════════════════════
   'dev_inspect_file',
-  'dev_apply_patch',
-  'dev_run_command',
+  'dev_apply_patch',  // TIER 3
+  'dev_run_command',  // TIER 3
   'dev_get_logs',
   'hybrid_analyze_code',
 

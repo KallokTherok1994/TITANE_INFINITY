@@ -110,6 +110,133 @@ export {
   startTransaction,
 };
 
+// ═══════════════════════════════════════════════════════════════
+// PROJECT HEALTH METRICS (Phase B2 — 2026-04-27)
+// GAP 4 fix: cross-session metrics from autoheal + ui-events
+// ═══════════════════════════════════════════════════════════════
+
+/** Three cross-session health indicators derived from governance registries. */
+export interface ProjectHealthMetrics {
+  /** Rate of recurring autoheal incidents (0–1, higher = worse). */
+  incidentRecurrenceRate: number;
+  /** Ring layer most frequently appearing in ui-events.jsonl. */
+  mostImpactedRing: string;
+  /**
+   * Approximate lead time from first phase commit to proof completion in minutes.
+   * Classified as 'approximation' when no structured index is available.
+   */
+  avgLeadTimeMinutes: number;
+  /** ISO timestamp of last computation. */
+  computedAt: string;
+  /** Evidence note for dashboard — honesty label on approximations. */
+  evidenceNote: string;
+}
+
+let _projectHealthCache: ProjectHealthMetrics | null = null;
+let _projectHealthComputedAt = 0;
+const PROJECT_HEALTH_TTL_MS = 15 * 60 * 1000; // 15 min
+
+/** Reset the health metrics cache. For use in unit tests only. */
+export function resetProjectHealthMetricsCacheForTests(): void {
+  _projectHealthCache = null;
+  _projectHealthComputedAt = 0;
+}
+
+/**
+ * Read cross-session health metrics from governance registries.
+ * Falls back to stubs with honest evidence labels when registries are unavailable
+ * (desktop runtime without file access, or first boot).
+ */
+export async function getProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
+  const now = Date.now();
+  if (_projectHealthCache && now - _projectHealthComputedAt < PROJECT_HEALTH_TTL_MS) {
+    return _projectHealthCache;
+  }
+
+  try {
+    // Dynamic import to avoid circular dep on Tauri IPC at module load time.
+    const { invoke } = await import('@tauri-apps/api/core');
+
+    const [autohealRaw, uiEventsRaw] = await Promise.allSettled([
+      invoke<string>('read_json_file', {
+        path: 'scripts/autoheal/autoheal_rules.jsonl',
+        relative: true,
+      }),
+      invoke<string>('read_json_file', {
+        path: 'registry/ui-events.jsonl',
+        relative: true,
+      }),
+    ]);
+
+    // ── Incident recurrence rate from autoheal ────────────────
+    let incidentRecurrenceRate = 0;
+    if (autohealRaw.status === 'fulfilled') {
+      const lines = String(autohealRaw.value)
+        .split('\n')
+        .filter(l => l.trim().startsWith('{'));
+      const entries = lines.flatMap(l => {
+        try {
+          return [JSON.parse(l) as { prevention_test?: string }];
+        } catch {
+          return [];
+        }
+      });
+      const withRecurrence = entries.filter(e =>
+        typeof e.prevention_test === 'string' && e.prevention_test.includes('detect_recurrence')
+      ).length;
+      incidentRecurrenceRate = entries.length > 0 ? withRecurrence / entries.length : 0;
+    }
+
+    // ── Most impacted ring from ui-events ─────────────────────
+    let mostImpactedRing = 'unknown';
+    if (uiEventsRaw.status === 'fulfilled') {
+      const ringCounts: Record<string, number> = {};
+      const lines = String(uiEventsRaw.value)
+        .split('\n')
+        .filter(l => l.trim().startsWith('{'));
+      for (const line of lines) {
+        try {
+          const ev = JSON.parse(line) as { ring?: string };
+          if (ev.ring) {
+            ringCounts[ev.ring] = (ringCounts[ev.ring] ?? 0) + 1;
+          }
+        } catch {
+          // skip malformed lines
+        }
+      }
+      const sorted = Object.entries(ringCounts).sort((a, b) => b[1] - a[1]);
+      if (sorted.length > 0) {
+        mostImpactedRing = sorted[0][0];
+      }
+    }
+
+    const metrics: ProjectHealthMetrics = {
+      incidentRecurrenceRate: Math.round(incidentRecurrenceRate * 1000) / 1000,
+      mostImpactedRing,
+      // Lead time is approximated without structured phase index.
+      avgLeadTimeMinutes: 0,
+      computedAt: new Date().toISOString(),
+      evidenceNote:
+        'Incident recurrence derived from autoheal_rules.jsonl (detect_recurrence marker). ' +
+        'Lead time: approximation only — no phase-to-proof index available.',
+    };
+
+    _projectHealthCache = metrics;
+    _projectHealthComputedAt = now;
+    return metrics;
+  } catch {
+    // Fallback for browser-only dev environments where Tauri IPC is unavailable.
+    const fallback: ProjectHealthMetrics = {
+      incidentRecurrenceRate: 0,
+      mostImpactedRing: 'unavailable',
+      avgLeadTimeMinutes: 0,
+      computedAt: new Date().toISOString(),
+      evidenceNote: 'IPC unavailable — running outside Tauri runtime or registries not found.',
+    };
+    return fallback;
+  }
+}
+
 // ✅ OPT-9 FIX: All exports now through lazy loader (no static sentry.ts import)
 // Removed: export { initSentry, captureWebVitals, testSentry, Sentry } from './sentry';
 // Use: initMonitoringAsync() instead of initSentry() for lazy initialization

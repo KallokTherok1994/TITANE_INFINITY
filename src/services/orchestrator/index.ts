@@ -345,3 +345,104 @@ export function getOrchestratorAgentStatus() {
 export function startOrchestratorAgent() {
   return getOrchestratorAgentStatus();
 }
+
+// ═══════════════════════════════════════════════════════════════
+// PARALLEL AGENT EVENT BUS (Phase B1 — 2026-04-27)
+// GAP 1 fix: parallel dispatch via Promise.allSettled()
+// ═══════════════════════════════════════════════════════════════
+
+/** Classification of runtime event triggering a consensus round. */
+export type AgentEventType =
+  | 'build'
+  | 'ring0_change'
+  | 'ipc_tier3'
+  | 'security_alert'
+  | 'anomaly_detected'
+  | 'health_check';
+
+/** Structured event broadcast to all agents for consensus. */
+export interface AgentEvent {
+  type: AgentEventType;
+  payload: unknown;
+  timestamp: number;
+  /** Source component or subsystem that emitted the event. */
+  source: string;
+}
+
+/** Per-agent classification returned after consensus round. */
+export type AgentVerdict = 'PASS' | 'FAIL' | 'BLOCKED' | 'UNKNOWN';
+
+/** Aggregated consensus across all agents for a given AgentEvent. */
+export interface AgentConsensus {
+  /** Per-agent verdicts keyed by agent name. */
+  verdicts: Record<string, AgentVerdict>;
+  /** Aggregated verdict: FAIL if any agent fails, BLOCKED if any is blocked, else PASS. */
+  aggregated: 'PASS' | 'FAIL' | 'BLOCKED';
+  /** Human-readable blocker descriptions collected from FAIL/BLOCKED agents. */
+  blockers: string[];
+  timestamp: number;
+}
+
+type AgentStatusFn = () => { readiness?: string; blockers?: string[] };
+
+/**
+ * Dispatch an AgentEvent to all registered agents in parallel.
+ * Uses Promise.allSettled() so a failing agent never blocks the verdict.
+ */
+export async function dispatchToAgents(event: AgentEvent): Promise<AgentConsensus> {
+  // Lazy dynamic imports to avoid circular deps and keep bundle lean.
+  const [monitoringMod, diagnosticMod, securityMod] = await Promise.allSettled([
+    import('@/services/monitoring').then(m => m.getMonitoringAgentStatus as AgentStatusFn),
+    import('@/services/diagnostic').then(m => m.getDiagnosticAgentStatus as AgentStatusFn),
+    import('@/services/security_active').then(m => m.getSecurityAgentStatus as AgentStatusFn),
+  ]);
+
+  const agentMap: Record<string, PromiseSettledResult<AgentStatusFn>> = {
+    monitoring: monitoringMod,
+    diagnostic: diagnosticMod,
+    security: securityMod,
+  };
+
+  const verdicts: Record<string, AgentVerdict> = {};
+  const blockers: string[] = [];
+
+  for (const [name, result] of Object.entries(agentMap)) {
+    if (result.status === 'rejected') {
+      verdicts[name] = 'UNKNOWN';
+      blockers.push(`Agent ${name} load failed: ${String(result.reason)}`);
+      continue;
+    }
+
+    try {
+      const statusFn = result.value;
+      const status = statusFn();
+      const readiness = status?.readiness ?? 'unknown';
+
+      if (readiness === 'ready' || readiness === 'partial') {
+        verdicts[name] = 'PASS';
+      } else if (readiness === 'blocked') {
+        verdicts[name] = 'BLOCKED';
+        (status?.blockers ?? []).forEach(b => blockers.push(`[${name}] ${b}`));
+      } else {
+        verdicts[name] = 'FAIL';
+        blockers.push(`Agent ${name} readiness: ${readiness}`);
+      }
+    } catch (err) {
+      verdicts[name] = 'UNKNOWN';
+      blockers.push(`Agent ${name} threw: ${String(err)}`);
+    }
+  }
+
+  // Aggregation: FAIL > BLOCKED > PASS
+  let aggregated: 'PASS' | 'FAIL' | 'BLOCKED' = 'PASS';
+  const vals = Object.values(verdicts);
+  if (vals.includes('FAIL')) aggregated = 'FAIL';
+  else if (vals.includes('BLOCKED')) aggregated = 'BLOCKED';
+
+  return {
+    verdicts,
+    aggregated,
+    blockers,
+    timestamp: Date.now(),
+  };
+}

@@ -7,6 +7,7 @@
 //                 Rule 6 (IPC contract { ok, content, error })
 // ═══════════════════════════════════════════════════════════════
 
+pub mod anomaly_detector;
 pub mod api_key_store;
 pub mod auth;
 pub mod audit;

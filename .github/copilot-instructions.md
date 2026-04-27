@@ -112,3 +112,13 @@ Ollama and Cline alignment truth: keep the governed local stack aligned on `http
 ## Rule 18 - Direct-to-main phase commits
 
 When direct work on `MAIN` is authorized, every completed correction phase or coherent fix batch must end with a targeted commit on `MAIN` after proofs pass. Do not accumulate unrelated finished fixes in an uncommitted worktree. Each direct-to-main commit must stay scope-limited, mention the corrected surface or subsystem, and wait for AutoHeal plus mandatory validators. If proof is incomplete, do not commit the phase yet.
+
+## Rule 19 - Exploration Mode vs Durable Mode
+
+Every coding session operates in one of two modes. Declare the mode explicitly before starting work.
+
+**Exploration Mode** — activated by naming a branch `explore/*`, a file `*.spike.*`, or by explicit declaration `MODE=EXPLORATION` in the session. Governance is lightweight: AutoHeal entry with reduced schema (id, date, scope, symptom, fix only), no version bump, no proof_pack required, no mapping update obligation. Exploration code is disposable by default — it must be explicitly promoted to Durable before merge to `MAIN`.
+
+**Durable Mode** — the default for all work on `MAIN` and `feature/*` branches. Full Rule 1–18 discipline applies: AutoHeal full schema, version bump at BUILD, proof_pack, mapping updates, tests (Rule 16), rollback plan.
+
+**Promotion gate**: before merging Exploration code to MAIN, classify the code as `durable` explicitly, run full test gates, append AutoHeal full schema entry, and bump version. Undeclared Exploration code merged to MAIN = FAIL.

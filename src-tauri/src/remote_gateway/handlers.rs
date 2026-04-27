@@ -63,6 +63,45 @@ pub async fn health_handler() -> impl IntoResponse {
     })))
 }
 
+// ── Payload sanitization helpers (Phase C1 — 2026-04-27) ─────
+
+/// Maximum accepted JSON payload size for invoke endpoint.
+const MAX_INVOKE_PAYLOAD_BYTES: usize = 65_536; // 64 KiB
+
+/// Rejects payloads exceeding the size cap to prevent DoS via large inputs.
+/// Returns Err with an IpcResponse ready to be returned to the caller.
+fn validate_payload_size(raw_bytes: usize) -> Result<(), IpcResponse> {
+    if raw_bytes > MAX_INVOKE_PAYLOAD_BYTES {
+        return Err(IpcResponse::err(format!(
+            "payload too large: {} bytes (max {})",
+            raw_bytes, MAX_INVOKE_PAYLOAD_BYTES
+        )));
+    }
+    Ok(())
+}
+
+/// Strips ASCII control characters (0x00–0x1F, 0x7F) from a string field
+/// to neutralise injection vectors via command or payload strings.
+fn sanitize_string_field(s: &str) -> String {
+    s.chars()
+        .filter(|c| !c.is_ascii_control())
+        .collect()
+}
+
+/// Validate and sanitize an InvokeRequest:
+/// 1. Command name is sanitized of control chars.
+/// 2. Payload JSON is serialized to measure size, rejected if > MAX_INVOKE_PAYLOAD_BYTES.
+fn sanitize_invoke_request(req: &mut InvokeRequest) -> Result<(), IpcResponse> {
+    req.command = sanitize_string_field(&req.command);
+
+    if let Some(ref payload) = req.payload {
+        let serialized = serde_json::to_vec(payload).unwrap_or_default();
+        validate_payload_size(serialized.len())?;
+    }
+
+    Ok(())
+}
+
 // ── POST /api/auth/token ──────────────────────────────────────
 
 #[derive(Deserialize)]
@@ -166,8 +205,13 @@ pub struct InvokeRequest {
 /// This is the primary endpoint for the frontend RemoteTransport.
 pub async fn invoke_handler(
     State(state): State<GatewayState>,
-    Json(payload): Json<InvokeRequest>,
+    Json(mut payload): Json<InvokeRequest>,
 ) -> impl IntoResponse {
+    // ── Phase C1: sanitize and size-check before dispatch ────
+    if let Err(rejection) = sanitize_invoke_request(&mut payload) {
+        return Json(rejection);
+    }
+
     // Allowlist of commands reachable via remote gateway
     const ALLOWED_COMMANDS: &[&str] = &[
         "health_check",

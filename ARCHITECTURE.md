@@ -1,3 +1,17 @@
+## 2026-04-27 : Multi-Agent Optimization — GAP Closure Phases A–C (v31.2.x)
+
+> **Phase A1 — Rule 19 Governance (Exploration Mode)** : `.github/copilot-instructions.md` + `AGENTS.md` — Rule 19 ajoutée (Exploration Mode vs Durable Mode + promotion gate). AGENTS.md enrichi avec Mode Switch Protocol (Plan/Exploration/Durable). AutoHeal : AH-2026-04-27-GOVERNANCE-PHASE-A1A2-0048.
+
+> **Phase A2 — IPC Risk-Tiering** : `src/lib/security.ts` — JSDoc tier-tiering ajouté au header ALLOWED_COMMANDS (Tier 1 read-only, Tier 2 write isolé, Tier 3 Ring 0 critique). Annotations inline TIER 3 sur `remote_key_*`, `total_dev_*`, `engines_devmode_*`, `dev_apply_patch`, `dev_run_command`. AutoHeal : AH-2026-04-27-GOVERNANCE-PHASE-A1A2-0048.
+
+> **Phase B1 — Parallel Agent Event Bus** : `src/services/orchestrator/index.ts` — `AgentEventType`, `AgentEvent`, `AgentVerdict`, `AgentConsensus` interfaces + `dispatchToAgents()` via `Promise.allSettled()`. Dispatch parallèle sans blocage vers monitoring/diagnostic/security agents. Tests : `tests/unit/services/orchestrator/parallelDispatch.test.ts`. AutoHeal : AH-2026-04-27-AGENT-EVENT-BUS-B1-0049.
+
+> **Phase B2 — Cross-Session Health Metrics** : `src/services/monitoring/index.ts` — `ProjectHealthMetrics` interface + `getProjectHealthMetrics()` (TTL 15min, IPC read_json_file, fallback honnête). 3 métriques : incidentRecurrenceRate, mostImpactedRing, avgLeadTimeMinutes. Tests : `tests/unit/services/monitoring/projectHealthMetrics.test.ts`. AutoHeal : AH-2026-04-27-HEALTH-METRICS-B2-0050.
+
+> **Phase C1 — Remote Gateway Payload Sanitization** : `src-tauri/src/remote_gateway/handlers.rs` — `MAX_INVOKE_PAYLOAD_BYTES=65536`, `validate_payload_size()`, `sanitize_string_field()` (strip control chars), `sanitize_invoke_request()`. `invoke_handler` câblé avec validation avant dispatch. Tests TS : `tests/unit/security/remote-payload-sanitization.test.ts` (7 PASS). AutoHeal : AH-2026-04-27-GATEWAY-SANITIZATION-C1C2-0051.
+
+> **Phase C2 — Remote Gateway Anomaly Detector** : `src-tauri/src/remote_gateway/anomaly_detector.rs` — `AnomalyDetector` (Arc<Mutex>), `IpStats` sliding windows, `AnomalyEvent` WARN/ALERT seuils (`>45 req/min WARN`, `>3 rotations/h ALERT`), persistance JSON `app_data_dir()/remote_gateway/anomaly_state.json`. Module déclaré dans `mod.rs`. Tests Rust inline. AutoHeal : AH-2026-04-27-GATEWAY-SANITIZATION-C1C2-0051.
+
 ## 2026-04-27 : Remote Gateway Phase 1 — Named API Keys + Remote SPA (v31.2.7+)
 
 > **Phase 1 — Named API Keys (argon2id)** : `src-tauri/src/remote_gateway/api_key_store.rs` — `ApiKeyStore` en mémoire avec hachage argon2id par clé, scopes granulaires (Admin/Chat/Memory/System), CRUD complet (create/list/revoke/rotate). `auth.rs` étendu : `JwtClaims.key_id`, `verify_secret_any()` (ApiKeyStore first → SHA-256 fallback), `generate_*_with_key()`. 4 commandes Tauri IPC : `remote_key_create/list/revoke/rotate` (`src-tauri/src/remote_key_commands.rs`), `RemoteKeyStoreState` enregistré dans `main.rs`. Service TypeScript : `src/services/remoteKeyManager/index.ts`. 12 commandes `invoke_handler` précédemment manquantes désormais câblées. **Remote SPA** : `src/remote/` — `RemoteApp`, `RemoteAuthScreen`, `RemoteChatView`, `useRemoteChat` — build via `pnpm run build:remote` (vite.config.remote.ts → `dist/remote/`). Scripts opérationnels : `scripts/remote/{start,stop,status}-titane-remote.sh`. AutoHeal : AH-2026-04-27-REMOTE-GATEWAY-NAMED-API-KEYS-PHASE1-0035.
