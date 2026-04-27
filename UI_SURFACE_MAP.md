@@ -654,3 +654,16 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - ErrorBoundary context: `AdminRemoteKeys`
 - E2E: `e2e/remote-key-dashboard.spec.ts` — 15/15 PASS
 - Version: 31.2.8
+
+## 2026-04-27 — Multi-Project Management Dashboard (src/pages/MultiProjectDashboard.tsx)
+
+- Surface: `multiproject-dashboard` — page de gestion multi-projets
+- Composant: `src/pages/MultiProjectDashboard.tsx`
+- Service: `src/services/multiproject/index.ts`
+- Testids stables: `multiproject-dashboard`, `multiproject-rollup`, `multiproject-agent-status`, `multiproject-project-list`, `multiproject-project-card-{id}`, `multiproject-health-badge-{id}`, `multiproject-create-form`, `multiproject-create-submit`
+- Capacités: CRUD projets, allocation agents, priorités 1–10, dependsOn graph, healthSnapshot via dispatchToAgents()
+- Persistance: `localStorage['titane_multiproject_registry']` (max 50 projets)
+- intégration: `dispatchToAgents({ type: 'health_check', source: 'multiproject_agent' })` pour santé consensus
+- Tests: `tests/unit/services/multiproject/multiProjectAgent.test.ts` (52 tests PASS), `tests/unit/pages/multiProjectDashboard.test.tsx` (24 tests PASS)
+- AutoHeal: AH-2026-04-27-MULTIPROJECT-0053
+- Version: 31.2.13

@@ -1311,3 +1311,23 @@ function MyComponent() {
 > 2026-04-27 — Conversation runtime typed store-mode guard truth: la pré-build `pnpm run check` a révélé que `src/components/sections/ConversationSection.tsx` relayait encore la `string` brute exposée par `useChatModeStore(state => state.currentModeId)` vers `buildConversationRuntimeSummary` et `buildConversationRuntimeBadges`, alors que ces helpers exigent un `ChatModeId` gouverné. Le lot corrige localement la frontière active en validant une seule fois la valeur du store via `validateModeId`, avec repli canonique sur `default`, ce qui réaligne la surface conversationnelle, le résumé runtime et les badges sans élargir la logique métier ni casser la vérité publiée par `page-conversation`.
 
 > 2026-04-27 — Remote Gateway Phase 1 — Named API Keys + Remote SPA: `src-tauri/src/remote_gateway/api_key_store.rs` (argon2id, scopes Admin/Chat/Memory/System, create/list/revoke/rotate). `auth.rs` étendu : `JwtClaims.key_id`, `verify_secret_any()` avec fallback SHA-256 pour rétrocompatibilité. 4 commandes Tauri IPC (`remote_key_create/list/revoke/rotate`) dans `src-tauri/src/remote_key_commands.rs` ; `RemoteKeyStoreState` enregistré dans `main.rs`. 12 branches `invoke_handler` précédemment manquantes câblées dans `handlers.rs`. SPA standalone `src/remote/` (RemoteApp, RemoteAuthScreen, RemoteChatView, useRemoteChat) — build `pnpm run build:remote` → `dist/remote/`. Scripts `scripts/remote/{start,stop,status}-titane-remote.sh`. Service TypeScript `src/services/remoteKeyManager/index.ts`. 27/27 IPC contract tests PASS. AutoHeal AH-2026-04-27-0035. ARCHITECTURE.md, UI_SURFACE_MAP.md, docs/IPC_CATALOG.md mis à jour.
+
+## Phase E (2026-04-27) — Tests agents avancés + Agent Multi-Projet
+
+### Nouveaux fichiers
+| Fichier | Type | Rôle |
+|---|---|---|
+| `src/services/multiproject/index.ts` | Service TypeScript | Agent gestion multi-projets : CRUD projets, allocation agents, priorités, healthSnapshot, dispatchToAgents intégration |
+| `src/pages/MultiProjectDashboard.tsx` | Page React | Dashboard multi-projets avec data-testid stables : `multiproject-dashboard`, `multiproject-rollup`, etc. |
+| `tests/unit/services/multiproject/multiProjectAgent.test.ts` | Tests unitaires | 52 tests couvrant CRUD, allocation, rollup, healthSnapshot, getMultiProjectAgentStatus |
+| `tests/unit/pages/multiProjectDashboard.test.tsx` | Tests UI | 24 tests couvrant render, rollup, agent status, project list, create form, actions |
+| `tests/unit/services/diagnostic/diagnosticAgent.test.ts` | Tests unitaires | 12 tests pour getDiagnosticAgentStatus, startDiagnosticAgent (Rule 16 gap comblé) |
+| `tests/unit/services/security_active/securityActiveAgent.test.ts` | Tests unitaires | 15 tests pour getSecurityActiveAgentStatus, startSecurityActiveAgent, refresh interval, acknowledge (Rule 16 gap comblé) |
+| `tests/unit/services/explainability/explainabilityAgent.test.ts` | Tests unitaires | 14 tests pour getExplainabilityAgentStatus, startExplainabilityAgent, reset (Rule 16 gap comblé) |
+
+### Gates
+- Rule 10 AutoHeal: AH-2026-04-27-MULTIPROJECT-0053
+- Rule 15: UI_SURFACE_MAP.md + CARTOGRAPHY_COMPLETE.md mis à jour
+- Rule 16: 116 tests PASS (5 fichiers test)
+- verify_instructions: PASS=33/0
+- detect_recurrence: entries=1368, PASS
