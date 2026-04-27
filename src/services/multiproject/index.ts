@@ -279,7 +279,7 @@ export function updateProject(id: string, req: UpdateProjectRequest): MultiProje
     if (req.priority < 1 || req.priority > 10) return null;
   }
 
-  const updated: MultiProject = {
+  const updated = {
     ...existing,
     ...(req.name !== undefined ? { name: req.name.trim() } : {}),
     ...(req.description !== undefined ? { description: req.description.trim() } : {}),
@@ -288,7 +288,7 @@ export function updateProject(id: string, req: UpdateProjectRequest): MultiProje
     ...(req.tags !== undefined ? { tags: req.tags } : {}),
     ...(req.dependsOn !== undefined ? { dependsOn: req.dependsOn } : {}),
     updatedAt: new Date().toISOString(),
-  };
+  } as MultiProject;
 
   const newRegistry = [...registry];
   newRegistry[idx] = updated;
@@ -376,11 +376,11 @@ function updateProjectResources(
   const idx = registry.findIndex(p => p.id === projectId);
   if (idx === -1) return null;
 
-  const updated: MultiProject = {
-    ...registry[idx],
+  const updated = {
+    ...registry[idx]!,
     resources,
     updatedAt: new Date().toISOString(),
-  };
+  } as MultiProject;
 
   const next = [...registry];
   next[idx] = updated;

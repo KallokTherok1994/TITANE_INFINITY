@@ -14,6 +14,7 @@
 import championChallengerRegistry from '../../../config/championChallenger.json';
 import type { CanonicalMode } from './omegaModeClassifier';
 import { createLogger } from '@/utils/logger';
+import { secureInvoke } from '@/lib/security';
 
 const logger = createLogger('ChampionChallenger');
 
@@ -230,4 +231,83 @@ export function getPromotionRules(): PromotionRules {
 export function resetRegistryCache(): void {
   cachedRegistry = null;
   comparisonHistory.clear();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RUNTIME VALIDATION — v31.2.13: Proactive champion availability check
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface ChampionAvailabilityResult {
+  available: boolean;
+  championModel: string;
+  installedModels: string[];
+  warning: string | null;
+}
+
+/**
+ * Proactively validates that the declared champion model is installed in Ollama.
+ * Called at startup — non-blocking. Emits a structured warning if champion is absent.
+ * Never throws; returns `available: false` with warning on any error.
+ *
+ * Uses the canonical `ai_check_ollama_status` IPC command via secureInvoke.
+ * Rule 5 One Door: all IPC routed through secureInvoke.
+ */
+export async function validateChampionAvailability(
+  mode: CanonicalMode = 'DIRECT',
+): Promise<ChampionAvailabilityResult> {
+  const champion = getChampion(mode);
+  const championModel = champion?.model ?? 'gemma2:2b';
+
+  try {
+    const status = await secureInvoke<{ ok: boolean; content?: { models?: string[] } }>(
+      'ai_check_ollama_status',
+    );
+
+    if (!status?.ok || !status.content) {
+      logger.warn('[ChampionChallenger] Ollama offline — cannot validate champion availability', {
+        championModel,
+        mode,
+      });
+      return { available: false, championModel, installedModels: [], warning: 'OLLAMA_OFFLINE' };
+    }
+
+    const installedModels: string[] = (status.content.models ?? []).map((m: string) =>
+      m.toLowerCase(),
+    );
+
+    const available =
+      installedModels.includes(championModel.toLowerCase()) ||
+      installedModels.some((m) => m.startsWith((championModel.split(':')[0] ?? championModel).toLowerCase()));
+
+    if (!available) {
+      logger.warn(
+        `[ChampionChallenger] Champion model "${championModel}" not found in Ollama. ` +
+          `Installed: ${installedModels.join(', ')}. Fallback will activate automatically.`,
+        { championModel, mode, installedModels },
+      );
+    } else {
+      logger.debug(`[ChampionChallenger] Champion "${championModel}" confirmed available.`, {
+        mode,
+      });
+    }
+
+    return {
+      available,
+      championModel,
+      installedModels,
+      warning: available ? null : 'CHAMPION_MODEL_NOT_INSTALLED',
+    };
+  } catch (err) {
+    logger.warn('[ChampionChallenger] Failed to validate champion availability', {
+      error: String(err),
+      championModel,
+      mode,
+    });
+    return {
+      available: false,
+      championModel,
+      installedModels: [],
+      warning: 'VALIDATION_ERROR',
+    };
+  }
 }
