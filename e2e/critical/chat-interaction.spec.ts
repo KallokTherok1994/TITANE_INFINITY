@@ -449,6 +449,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   test('RATE_LIMIT_RUNTIME_TRUTH: le panneau runtime expose le blocage de quota GitHub', async ({
     page,
   }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     await setE2EChatScenario(page, 'rate_limit');
 
     await submitChatMessage(page, 'Lance une exploration GitHub');
