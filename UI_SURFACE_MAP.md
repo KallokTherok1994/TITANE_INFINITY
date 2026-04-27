@@ -623,3 +623,13 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Qualification critique synchronisation XP: `e2e/critical/chat-interaction.spec.ts` verrouille désormais dans le scénario de synchronisation XP chat -> Experience la même baseline modernisée de `page-conversation` avant l envoi, avec absence de `select-conversation-mode`, `chat-mode-selector-select=default` et `data-conversation-mode=default` / `data-chat-store-mode=default`.
 - Qualification critique citations inline web: `e2e/critical/chat-interaction.spec.ts` verrouille désormais dans le scénario de citations inline du handoff web la même baseline modernisée de `page-conversation` avant l envoi, avec absence de `select-conversation-mode`, `chat-mode-selector-select=default` et `data-conversation-mode=default` / `data-chat-store-mode=default`.
 - Surface conversation canonique: `src/components/sections/ConversationSection.tsx` normalise désormais la valeur brute `currentModeId` du store via `validateModeId` avant de construire le résumé runtime et les badges, afin qu une dérive de type du store ne bloque plus la pré-build TypeScript ni la publication runtime de mode sur `page-conversation`.
+
+## 2026-04-27 — Remote Key Agent Dashboard (src/components/RemoteKeyDashboard/)
+
+- Surface: `data-testid="remote-key-dashboard"` — tableau de bord de gestion des clés API TITANE remote
+- Composant: `src/components/RemoteKeyDashboard/index.tsx`
+- Service agent: `src/services/remoteKeyManager/RemoteKeyAgent.ts` (singleton `remoteKeyAgent`, auto-init, events, state)
+- Hook React: `src/services/remoteKeyManager/useRemoteKeyAgent.ts`
+- Testids stables: `remote-key-dashboard`, `remote-key-create-form`, `remote-key-label-input`, `remote-key-create-button`, `remote-key-refresh-button`, `remote-key-secret-banner`, `remote-key-secret-value`, `remote-key-copy-button`, `remote-key-dismiss-button`, `remote-key-table`, `remote-key-row-{key_id}`, `remote-key-rotate-{key_id}`, `remote-key-revoke-{key_id}`, `remote-key-count`, `remote-key-error`, `remote-key-loading`, `remote-key-empty`
+- Tests: `tests/unit/remoteKeyAgent.test.ts` (12 tests PASS)
+- IPC: remote_key_create / remote_key_list / remote_key_revoke / remote_key_rotate (ALLOWED_COMMANDS)
