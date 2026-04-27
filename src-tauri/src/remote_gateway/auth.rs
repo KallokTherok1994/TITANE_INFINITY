@@ -2,6 +2,7 @@
 //   TITANE∞ Remote Gateway — JWT Authentication (Ring 0)
 //   HS256, short-lived access token (1h) + refresh token (7d)
 //   Secret stored in SecretsEngine vault — never hardcoded
+//   Phase 1: Named API keys via ApiKeyStore (argon2id)
 // ═══════════════════════════════════════════════════════════════
 
 use chrono::{Duration, Utc};
@@ -9,6 +10,8 @@ use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
+
+use crate::remote_gateway::api_key_store::ApiKeyStore;
 
 pub const REMOTE_SECRET_KEY: &str = "remote_gateway_jwt_secret";
 pub const ACCESS_TOKEN_TTL_SECS: i64 = 3600;    // 1 hour
@@ -18,10 +21,13 @@ pub const REFRESH_TOKEN_TTL_SECS: i64 = 604_800; // 7 days
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JwtClaims {
-    pub sub: String,    // subject (always "titane_remote_user")
-    pub exp: i64,       // expiry (unix timestamp)
-    pub iat: i64,       // issued at
-    pub kind: String,   // "access" | "refresh"
+    pub sub: String,             // subject (always "titane_remote_user")
+    pub exp: i64,                // expiry (unix timestamp)
+    pub iat: i64,                // issued at
+    pub kind: String,            // "access" | "refresh"
+    /// Named API key identifier (Phase 1) — None for legacy tokens
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub key_id: Option<String>,
 }
 
 // ── Auth State (shared via Arc) ────────────────────────────────
@@ -30,22 +36,49 @@ pub struct JwtClaims {
 pub struct RemoteAuthState {
     /// JWT signing secret (derived from SecretsEngine at startup)
     pub jwt_secret: Arc<RwLock<Vec<u8>>>,
-    /// Shared secret used to obtain the first token (hashed at startup)
+    /// Shared secret used to obtain the first token — legacy SHA-256 hash
+    /// Kept for backward compat; prefer key_store for new clients.
     pub shared_secret_hash: Arc<RwLock<String>>,
+    /// Named API key store (argon2id hashing, per-client scopes)
+    pub key_store: Arc<RwLock<ApiKeyStore>>,
 }
 
 impl RemoteAuthState {
+    /// Legacy constructor — creates an in-memory ApiKeyStore that will have a
+    /// "default" key auto-seeded from `shared_secret_hash` on first verify.
     pub fn new(jwt_secret: Vec<u8>, shared_secret_hash: String) -> Self {
         Self {
             jwt_secret: Arc::new(RwLock::new(jwt_secret)),
             shared_secret_hash: Arc::new(RwLock::new(shared_secret_hash)),
+            key_store: Arc::new(RwLock::new(ApiKeyStore::new_in_memory())),
+        }
+    }
+
+    /// Full constructor with explicit ApiKeyStore.
+    pub fn new_with_store(
+        jwt_secret: Vec<u8>,
+        shared_secret_hash: String,
+        key_store: ApiKeyStore,
+    ) -> Self {
+        Self {
+            jwt_secret: Arc::new(RwLock::new(jwt_secret)),
+            shared_secret_hash: Arc::new(RwLock::new(shared_secret_hash)),
+            key_store: Arc::new(RwLock::new(key_store)),
         }
     }
 }
 
 // ── Token generation ──────────────────────────────────────────
 
+/// Generate an access token. Optionally embed a `key_id` (Phase 1).
 pub async fn generate_access_token(state: &RemoteAuthState) -> Result<String, String> {
+    generate_access_token_with_key(state, None).await
+}
+
+pub async fn generate_access_token_with_key(
+    state: &RemoteAuthState,
+    key_id: Option<String>,
+) -> Result<String, String> {
     let secret = state.jwt_secret.read().await;
     let now = Utc::now();
     let claims = JwtClaims {
@@ -53,6 +86,7 @@ pub async fn generate_access_token(state: &RemoteAuthState) -> Result<String, St
         exp: (now + Duration::seconds(ACCESS_TOKEN_TTL_SECS)).timestamp(),
         iat: now.timestamp(),
         kind: "access".to_string(),
+        key_id,
     };
     encode(
         &Header::new(Algorithm::HS256),
@@ -62,7 +96,15 @@ pub async fn generate_access_token(state: &RemoteAuthState) -> Result<String, St
     .map_err(|e| format!("JWT encode error: {e}"))
 }
 
+/// Generate a refresh token. Optionally embed a `key_id` (Phase 1).
 pub async fn generate_refresh_token(state: &RemoteAuthState) -> Result<String, String> {
+    generate_refresh_token_with_key(state, None).await
+}
+
+pub async fn generate_refresh_token_with_key(
+    state: &RemoteAuthState,
+    key_id: Option<String>,
+) -> Result<String, String> {
     let secret = state.jwt_secret.read().await;
     let now = Utc::now();
     let claims = JwtClaims {
@@ -70,6 +112,7 @@ pub async fn generate_refresh_token(state: &RemoteAuthState) -> Result<String, S
         exp: (now + Duration::seconds(REFRESH_TOKEN_TTL_SECS)).timestamp(),
         iat: now.timestamp(),
         kind: "refresh".to_string(),
+        key_id,
     };
     encode(
         &Header::new(Algorithm::HS256),
@@ -109,13 +152,51 @@ pub async fn validate_token(
 
 // ── Shared secret check ────────────────────────────────────────
 
-/// Timing-safe comparison of the provided secret against the stored hash
+/// Legacy: timing-safe comparison of the provided secret against the SHA-256 hash.
+/// Prefer `verify_api_key` for new clients.
 pub async fn verify_shared_secret(state: &RemoteAuthState, candidate: &str) -> bool {
     use sha2::{Digest, Sha256};
     let stored = state.shared_secret_hash.read().await;
     let candidate_hash = format!("{:x}", Sha256::digest(candidate.as_bytes()));
-    // Constant-time comparison via zeroize-ready approach
     candidate_hash == *stored
+}
+
+/// Phase 1: verify a named API key (key_id + secret) via argon2id.
+/// Returns the key_id on success (for JWT embedding), None on failure.
+pub async fn verify_api_key(
+    state: &RemoteAuthState,
+    key_id: &str,
+    candidate: &str,
+) -> Option<String> {
+    let mut store = state.key_store.write().await;
+    if store.verify(key_id, candidate) {
+        Some(key_id.to_string())
+    } else {
+        None
+    }
+}
+
+/// Phase 1 backward compat: verify candidate against any enabled key.
+/// Used when auth payload has `secret` only (no key_id).
+/// Returns the matched key_id, or falls back to legacy SHA-256 check.
+pub async fn verify_secret_any(
+    state: &RemoteAuthState,
+    candidate: &str,
+) -> Option<String> {
+    // Try named keys first (argon2id, Phase 1)
+    {
+        let mut store = state.key_store.write().await;
+        if let Some(key_id) = store.verify_any(candidate) {
+            return Some(key_id);
+        }
+    }
+
+    // Fallback: legacy SHA-256 hash check
+    if verify_shared_secret(state, candidate).await {
+        Some("legacy".to_string())
+    } else {
+        None
+    }
 }
 
 // ── Derive JWT secret from passphrase ─────────────────────────

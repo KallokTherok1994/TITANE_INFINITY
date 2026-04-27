@@ -1088,6 +1088,11 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_config_preset',
   'delete_config_preset',
   'save_ui_theme',
+  // Phase 1 — Remote Named API Keys
+  'remote_key_create',
+  'remote_key_list',
+  'remote_key_revoke',
+  'remote_key_rotate',
 
   // ═══════════════════════════════════════════════════════════════
   // SYSTEM & DIAGNOSTIC (v24.4+)

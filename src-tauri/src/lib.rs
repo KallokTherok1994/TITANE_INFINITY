@@ -52,6 +52,7 @@ pub mod errors;
 pub mod fusion; // ✅ FIX-014: Fusion Engine (fusion_merge/fusion_sync)
 pub mod gateway; // ✅ One Door Network Gateway (Rule 5) — single HTTP client factory
 pub mod remote_gateway; // ✅ Remote Gateway (axum HTTP server, opt-in TITANE_REMOTE_ENABLED=1)
+pub mod remote_key_commands; // ✅ Phase 1 — Named API key CRUD (IPC commands)
 pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
 pub mod qa; // ✅ QA Engine v19.8 (NEW)
 pub mod runtime_real; // ✅ FIX-016: Real runtime state commands (memory KV, toggles, logs, selfheal, XP)

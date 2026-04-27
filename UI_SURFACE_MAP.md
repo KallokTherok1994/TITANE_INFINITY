@@ -1,3 +1,7 @@
+## 2026-04-27 : Remote SPA — src/remote/ (Phase 1 Named API Keys)
+
+# [2026-04-27] Remote SPA standalone : `src/remote/` — build séparé via `vite.config.remote.ts` → `dist/remote/`. Composants : `RemoteApp` (root, gestion transport), `RemoteAuthScreen` (data-testid=remote-auth-screen, remote-api-key-input, remote-gateway-url-input, remote-login-button), `RemoteChatView` (data-testid=remote-chat-view, remote-chat-messages, remote-chat-input, remote-chat-send-button, remote-logout-button). Hook : `useRemoteChat` (auth + conversation + sendMessage via RemoteTransport). Pas de Tauri APIs — transport 100% fetch via `src/lib/remoteTransport.ts`. Pas de routing interne — SPA mono-page. Build : `pnpm run build:remote`.
+
 ## 2026-04-28 : Remote Transport — Accès Internet TITANE v31.2.2
 
 # [2026-04-28] Remote Gateway transport factory truth: `src/lib/transport.ts` expose `getTransport()` qui retourne `TauriTransport` (via `secureInvoke`) en contexte Tauri ou `RemoteTransportWrapper` (fetch HTTP `src/lib/remoteTransport.ts`) quand `window.__TITANE_REMOTE__` est actif. La détection se fait via `window.__TAURI_INTERNALS__`. Aucun composant UI ne doit accéder directement à `secureInvoke` ou `fetch` — tout passe par `getTransport().invoke()`. Streaming via `src/lib/remoteStream.ts` (WebSocket `wss://`). Singleton cachable, resetable en test via `resetTransport()`.

@@ -1579,3 +1579,16 @@
 | 17 | `voice_test_pipeline` | Voice test pipeline |
 | 18 | `voice_transcribe_audio` | Voice transcribe audio |
 | 19 | `voice_update_config` | Voice update config |
+
+## Remote API Key Management (Phase 1 — 2026-04-27)
+
+| # | Command | Description | Ring | Source |
+|---|---------|-------------|------|--------|
+| 1 | `remote_key_create` | Crée une clé API nommée (argon2id) avec scopes configurables. Retourne `key_id` + `secret_once` (affiché une seule fois). | Ring 0 | `src-tauri/src/remote_key_commands.rs` |
+| 2 | `remote_key_list` | Liste toutes les clés (masquées — aucun secret exposé). | Ring 0 | `src-tauri/src/remote_key_commands.rs` |
+| 3 | `remote_key_revoke` | Désactive une clé par `key_id`. | Ring 0 | `src-tauri/src/remote_key_commands.rs` |
+| 4 | `remote_key_rotate` | Révoque l'ancienne clé, génère une nouvelle. Retourne `new_key_id` + `new_secret_once`. | Ring 0 | `src-tauri/src/remote_key_commands.rs` |
+
+**Managed state**: `RemoteKeyStoreState` enregistré dans `main.rs` via `.manage()`.  
+**Frontend service**: `src/services/remoteKeyManager/index.ts`  
+**Security**: toutes les 4 commandes présentes dans `ALLOWED_COMMANDS` (`src/lib/security.ts`).

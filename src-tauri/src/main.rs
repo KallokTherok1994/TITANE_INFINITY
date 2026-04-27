@@ -1229,6 +1229,15 @@ fn main() {
     // local/Ollama provider works through ConversationEngineState's ai_router.
     let builder = builder.manage(titane_infinity::overdrive::chat_orchestrator::init());
 
+    // [REMOTE-KEYS] Named API key store for remote gateway — Phase 1
+    let builder = builder.manage(
+        titane_infinity::remote_key_commands::RemoteKeyStoreState(
+            std::sync::Mutex::new(
+                titane_infinity::remote_gateway::api_key_store::ApiKeyStore::new_in_memory()
+            )
+        )
+    );
+
     builder
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
@@ -2387,6 +2396,15 @@ fn main() {
             titane_infinity::numeric_twin::twin_commands::twin_get_evolution_profile,
             titane_infinity::numeric_twin::twin_commands::twin_get_identity,
             titane_infinity::numeric_twin::twin_commands::twin_recalculate_fusion,
+
+            // ═══════════════════════════════════════════════════════════════
+            // REMOTE API KEY MANAGEMENT COMMANDS (Phase 1 — v31.2.x)
+            // Named per-client API keys with argon2id hashing for remote access
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::remote_key_commands::remote_key_create,
+            titane_infinity::remote_key_commands::remote_key_list,
+            titane_infinity::remote_key_commands::remote_key_revoke,
+            titane_infinity::remote_key_commands::remote_key_rotate,
 
             // ═══════════════════════════════════════════════════════════════
             // SECURITY — validate_chat_message

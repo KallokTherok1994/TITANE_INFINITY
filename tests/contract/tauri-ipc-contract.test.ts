@@ -328,3 +328,72 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     expect(duration, `Contract check too slow: ${duration}ms`).toBeLessThan(1000);
   });
 });
+
+// ─── Remote Key Management IPC Contract ───────────────────────────────────
+describe('TITANE∞ - Remote Key IPC Contract (Phase 1)', () => {
+  const rustCommands = getRustCommands();
+  const rustNormalized = new Set([...rustCommands].map(normalize));
+  const securityPath = path.join(process.cwd(), 'src/lib/security.ts');
+  const securityContent = fs.readFileSync(securityPath, 'utf-8');
+
+  const remoteKeyCommands = [
+    'remote_key_create',
+    'remote_key_list',
+    'remote_key_revoke',
+    'remote_key_rotate',
+  ] as const;
+
+  for (const cmd of remoteKeyCommands) {
+    it(`Rust handler present: ${cmd}`, () => {
+      expect(
+        rustCommands.has(cmd) || rustNormalized.has(normalize(cmd)),
+        `Missing Rust #[tauri::command] for: ${cmd}`
+      ).toBe(true);
+    });
+
+    it(`ALLOWED_COMMANDS entry present in security.ts: ${cmd}`, () => {
+      expect(
+        securityContent.includes(`'${cmd}'`) || securityContent.includes(`"${cmd}"`),
+        `Missing ALLOWED_COMMANDS entry in security.ts: ${cmd}. Add '${cmd}' to the ALLOWED_COMMANDS array.`
+      ).toBe(true);
+    });
+  }
+
+  it('remote_key_create contract: returns key_id + secret_once', () => {
+    // Structural contract validation — no live IPC call (unit test environment)
+    const contractPath = path.join(process.cwd(), 'src-tauri/src/remote_key_commands.rs');
+    const content = fs.readFileSync(contractPath, 'utf-8');
+    expect(content).toContain('remote_key_create');
+    expect(content).toContain('key_id');
+    expect(content).toContain('secret_once');
+  });
+
+  it('remote_key_list contract: returns masked keys (no secrets)', () => {
+    const contractPath = path.join(process.cwd(), 'src-tauri/src/remote_key_commands.rs');
+    const content = fs.readFileSync(contractPath, 'utf-8');
+    expect(content).toContain('remote_key_list');
+    // Must NOT expose raw hashes in the list response
+    expect(content).not.toContain('secret_hash');
+  });
+
+  it('remote_key_revoke contract: accepts key_id, returns ok', () => {
+    const contractPath = path.join(process.cwd(), 'src-tauri/src/remote_key_commands.rs');
+    const content = fs.readFileSync(contractPath, 'utf-8');
+    expect(content).toContain('remote_key_revoke');
+    expect(content).toContain('key_id');
+  });
+
+  it('remote_key_rotate contract: returns new_key_id + new_secret_once', () => {
+    const contractPath = path.join(process.cwd(), 'src-tauri/src/remote_key_commands.rs');
+    const content = fs.readFileSync(contractPath, 'utf-8');
+    expect(content).toContain('remote_key_rotate');
+    expect(content).toContain('new_key_id');
+    expect(content).toContain('new_secret_once');
+  });
+
+  it('RemoteKeyStoreState is registered in main.rs', () => {
+    const mainPath = path.join(process.cwd(), 'src-tauri/src/main.rs');
+    const content = fs.readFileSync(mainPath, 'utf-8');
+    expect(content).toContain('RemoteKeyStoreState');
+  });
+});
