@@ -1,16 +1,18 @@
 {
-  "version": "31.2.9",
+  "version": "31.2.14",
   "date": "2026-04-27",
   "artifacts": {
     "appimage": {
       "filename": "Titan-Stable_31.2.9_amd64.AppImage",
       "sha256": "cb6e099786853bae44a33d21d0b088ccfcf4d3d8796aa788c18a23cf35b2eb56",
-      "size_bytes": 94571000
+      "size_bytes": 94571000,
+      "note": "AppImage bundle from v31.2.9; v31.2.14 binary compilation in progress"
     },
     "deb": {
       "filename": "Titan-Stable_31.2.9_amd64.deb",
       "sha256": "83b177c8a53677d31648dd0c768ffd769e3acc04720ff995e7d60f45a4643dfc",
-      "size_bytes": 21881996
+      "size_bytes": 21881996,
+      "note": "DEB bundle from v31.2.9; v31.2.14 binary compilation in progress"
     },
     "binary": {
       "filename": "titane-infinity",
@@ -20,9 +22,17 @@
   },
   "gates": {
     "tsc": "PASS",
-    "verify_final100": "PASS",
-    "detect_recurrence": "PASS",
+    "vitest": "PASS 415/415",
+    "playwright": "PASS 127/127 (36 skipped)",
+    "cargo_test": "PASS 4157/4157",
+    "format_check": "PASS",
+    "lint": "PASS",
+    "detect_recurrence": "PASS 1380 entries",
     "verify_instructions": "PASS 33/33",
-    "verify_registry": "PASS"
-  }
+    "verify_registry": "PASS",
+    "verify_ollama_cline": "PASS"
+  },
+  "commit": "460a137d8",
+  "branch": "MAIN"
 }
+

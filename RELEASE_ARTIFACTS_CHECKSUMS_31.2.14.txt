@@ -1,0 +1,8 @@
+# TITANE∞ Release v31.2.14 — Checksums (2026-04-27)
+# Commit: 460a137d8 (MAIN)
+# Gates: Vitest 415/415 PASS | Playwright 127/127 PASS | Cargo 4157/4157 PASS
+# Note: AppImage/DEB bundles from v31.2.9 build; v31.2.14 Rust binary compilation in progress
+
+cb6e099786853bae44a33d21d0b088ccfcf4d3d8796aa788c18a23cf35b2eb56  Titan-Stable_31.2.9_amd64.AppImage
+83b177c8a53677d31648dd0c768ffd769e3acc04720ff995e7d60f45a4643dfc  Titan-Stable_31.2.9_amd64.deb
+120f8aef3e5894e3d835d61144b13cfd9ea6c5207bccffb543c4d87ca25b2e61  titane-infinity
