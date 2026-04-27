@@ -85,6 +85,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-26 — ChatModeSelector compact variant proof: la garde composant `src/__tests__/components/chat/ChatModeSelector.runtimePromptBridge.test.tsx` couvre maintenant explicitement la variante `compact` utilisée par `ConversationSection`. Le micro-lot verrouille le selector stable `chat-mode-selector-select` et la propagation de `planning` vers `onModeChange`, afin qu une dérive du contrôle réellement monté sur la surface canonique casse d abord un test unitaire ciblé avant les lanes Playwright/WDIO.
 
+> 2026-04-26 — Conversation page-root mode attrs proof: la suite `src/components/sections/__tests__/ConversationSection.modeBridge.test.tsx` verrouille désormais aussi les attributs de mode portés par la racine canonique `page-conversation`. Le micro-lot confirme que `data-conversation-mode`, `data-chat-store-mode` et la valeur initiale de `chat-mode-selector-select` restent alignés quand le hook conversation et le store publient déjà `planning`.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :

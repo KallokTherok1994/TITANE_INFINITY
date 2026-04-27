@@ -163,4 +163,21 @@ describe('ConversationSection modern mode bridge', () => {
       expect(conversationModeBridgeFixtures.changeMode).toHaveBeenCalledWith('planning');
     });
   });
+
+  it('publishes the active conversation mode and store mode on the canonical page root', () => {
+    conversationModeBridgeFixtures.currentMode = 'planning';
+    conversationModeBridgeFixtures.currentModeId = 'planning';
+
+    render(<ConversationSection fullscreen />);
+
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-conversation-mode',
+      'planning'
+    );
+    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
+      'data-chat-store-mode',
+      'planning'
+    );
+    expect(screen.getByTestId('chat-mode-selector-select')).toHaveValue('planning');
+  });
 });
