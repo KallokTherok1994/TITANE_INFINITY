@@ -430,6 +430,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   });
 
   test('SWITCH_CONVERSATION_PERSISTS: UI reste en SPA', async ({ page }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     const initialUrl = page.url();
 
     await submitChatMessage(page, 'Statut URL');
