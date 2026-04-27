@@ -815,3 +815,115 @@ select,
   padding: 0 !important;
   box-sizing: border-box;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONVERSATION MOBILE — Chrome Reduction v31.2.15
+   Libère ~200px de chrome → zone messages ≥ 340px sur mobile
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Bouton ⋮ overflow : caché sur desktop, visible via CSS mobile */
+.conversation-more-btn {
+  display: none;
+}
+
+/* Menu overflow mobile */
+.conversation-more-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 200;
+  background: rgba(10, 15, 30, 0.97);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.conversation-more-menu button {
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  min-height: 36px;
+  width: 100%;
+  transition: background 0.15s ease;
+}
+
+.conversation-more-menu button:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.conversation-more-menu button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.conversation-more-menu-container {
+  position: relative;
+}
+
+@media (max-width: 767px) {
+  /* Filtres/recherche masqués par défaut — toggle via bouton mobile */
+  .conversation-filters {
+    display: none;
+  }
+
+  .conversation-filters.search-visible {
+    display: flex;
+  }
+
+  /* Boutons secondaires toolbar-right cachés sur mobile (accès via ⋮) */
+  .conversation-toolbar-right > [data-testid='btn-export-json'],
+  .conversation-toolbar-right > [data-testid='btn-export-markdown'],
+  .conversation-toolbar-right > [data-testid='btn-copy-chat'],
+  .conversation-toolbar-right > [data-testid='btn-mode-builder'],
+  .conversation-toolbar-right > [data-testid='btn-health-check'],
+  .conversation-toolbar-right > [data-testid='btn-clear-chat'] {
+    display: none;
+  }
+
+  /* Afficher les boutons mobiles */
+  .conversation-toolbar-right .conversation-more-btn {
+    display: flex;
+  }
+
+  /* Toolbar layout compact */
+  .conversation-toolbar {
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px 8px;
+  }
+
+  .conversation-toolbar-left {
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .conversation-toolbar-right {
+    gap: 4px;
+  }
+
+  /* Zone messages — visibilité minimale garantie */
+  .conversation-messages {
+    flex: 1 1 0%;
+    min-height: 120px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Runtime panel masqué sur mobile (info dev) */
+  .conversation-runtime-panel {
+    display: none;
+  }
+}

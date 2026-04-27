@@ -200,3 +200,36 @@
     padding: 0.5rem 0.75rem;
   }
 }
+
+/* ═══ MOBILE CHROME REDUCTION v31.2.15 ═══ */
+@media (max-width: 767px) {
+  /* Tabs ultra-compacts — scroll horizontal */
+  .titane-inline-tabs {
+    gap: 2px;
+    padding: 3px 6px;
+  }
+
+  .titane-inline-tabs > button {
+    padding: 5px 8px;
+    font-size: 0.72rem;
+    min-height: 34px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Header de page compact — logo non nécessaire en mode mobile */
+  .titane-page-header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .titane-page-header-brand {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  /* Très petit écran : seul le tab actif garde son label texte */
+  .titane-inline-tabs > button:not([aria-selected='true']) .tab-label-text {
+    display: none;
+  }
+}

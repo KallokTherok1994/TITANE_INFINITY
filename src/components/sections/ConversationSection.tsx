@@ -1407,6 +1407,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       getConversationViewportHeight
     );
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
     const conversationInputRef = useRef<HTMLTextAreaElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -2676,6 +2678,18 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               </div>
 
               <div className="conversation-toolbar-right">
+                {/* Mobile: toggle recherche */}
+                <button
+                  className="conversation-icon-btn conversation-more-btn"
+                  data-testid="btn-mobile-search-toggle"
+                  onClick={() => setShowSearch(p => !p)}
+                  title="Rechercher dans la conversation"
+                  aria-label="Afficher/masquer la recherche"
+                  aria-pressed={showSearch}
+                >
+                  <Search size={16} />
+                </button>
+
                 {/* Export JSON */}
                 <button
                   className="conversation-icon-btn"
@@ -2772,11 +2786,72 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 >
                   <Trash2 size={16} aria-hidden="true" />
                 </button>
+
+                {/* Mobile: menu overflow ⋮ */}
+                <div className="conversation-more-menu-container">
+                  <button
+                    className="conversation-icon-btn conversation-more-btn"
+                    data-testid="btn-mobile-more"
+                    onClick={() => setShowMoreMenu(p => !p)}
+                    title="Plus d'options"
+                    aria-label="Plus d'options"
+                    aria-expanded={showMoreMenu}
+                  >
+                    ⋮
+                  </button>
+                  {showMoreMenu && (
+                    <div
+                      className="conversation-more-menu"
+                      data-testid="mobile-more-menu"
+                      role="menu"
+                    >
+                      <button
+                        onClick={() => { handleExportJson(); setShowMoreMenu(false); }}
+                        disabled={!hasMessages}
+                        role="menuitem"
+                      >
+                        📥 Export JSON
+                      </button>
+                      <button
+                        onClick={() => { handleExportMarkdown(); setShowMoreMenu(false); }}
+                        disabled={!hasMessages}
+                        role="menuitem"
+                      >
+                        📄 Export MD
+                      </button>
+                      <button
+                        onClick={() => { handleCopyAll(); setShowMoreMenu(false); }}
+                        disabled={!hasMessages}
+                        role="menuitem"
+                      >
+                        📋 Copier
+                      </button>
+                      <button
+                        onClick={() => { toggleModeBuilder(); setShowMoreMenu(false); }}
+                        role="menuitem"
+                      >
+                        ⚙️ Modes
+                      </button>
+                      <button
+                        onClick={() => { refreshHealth(); setShowMoreMenu(false); }}
+                        role="menuitem"
+                      >
+                        {isHealthy ? '✅' : '⚠️'} Santé
+                      </button>
+                      <button
+                        onClick={() => { handleClearChat(); setShowMoreMenu(false); }}
+                        role="menuitem"
+                      >
+                        🗑️ Effacer
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* ═══ SEARCH / FILTERS ═══ */}
-            <div className="conversation-filters">
+            <div className={`conversation-filters${showSearch ? ' search-visible' : ''}`}>
               <div className="conversation-filters-search">
                 <Search size={16} />
                 <input
