@@ -112,6 +112,13 @@ test.describe('Chat Interface', () => {
 
     await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
     await page.getByTestId('tab-conversation').click();
+    const conversationPage = page.getByTestId('page-conversation');
+    await expect(conversationPage).toBeVisible({ timeout: 60000 });
+
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+    await expect(conversationPage).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(conversationPage).toHaveAttribute('data-chat-store-mode', 'default');
 
     const input = page.getByTestId('chat-input');
     await expect(input).toBeVisible({ timeout: 60000 });
