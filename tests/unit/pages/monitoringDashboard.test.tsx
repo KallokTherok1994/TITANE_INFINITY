@@ -94,7 +94,7 @@ describe('MonitoringDashboard — ProjectHealthCard', () => {
 
     await waitFor(() => {
       expect(mockDispatchToAgents).toHaveBeenCalledWith(
-        expect.objectContaining({ type: 'health_check', source: 'monitoring_dashboard' }),
+        expect.objectContaining({ type: 'health_check', source: 'monitoring_dashboard' })
       );
     });
   });

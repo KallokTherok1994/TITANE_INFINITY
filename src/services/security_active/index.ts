@@ -1093,11 +1093,11 @@ export interface ThreatScore {
   level: ThreatLevel;
   label: string;
   breakdown: {
-    detectionEventScore: number;     // Nombre + sévérité des événements détection
-    containmentViolations: number;   // Confinements actifs critiques
-    oneDoorViolation: number;        // 0 ou 50 — violation One Door = toujours élevée
-    unacknowledgedCritical: number;  // Événements critiques non acquittés
-    consecutiveFailures: number;     // Providers avec erreurs consécutives
+    detectionEventScore: number; // Nombre + sévérité des événements détection
+    containmentViolations: number; // Confinements actifs critiques
+    oneDoorViolation: number; // 0 ou 50 — violation One Door = toujours élevée
+    unacknowledgedCritical: number; // Événements critiques non acquittés
+    consecutiveFailures: number; // Providers avec erreurs consécutives
   };
   topThreats: string[];
   mitigations: string[];
@@ -1106,7 +1106,12 @@ export interface ThreatScore {
 
 export interface IPCPatternAnomaly {
   id: string;
-  pattern: 'BURST' | 'REPEATED_FAIL' | 'UNKNOWN_COMMAND' | 'RATE_EXCEEDED' | 'TRANSPORT_MISMATCH';
+  pattern:
+    | 'BURST'
+    | 'REPEATED_FAIL'
+    | 'UNKNOWN_COMMAND'
+    | 'RATE_EXCEEDED'
+    | 'TRANSPORT_MISMATCH';
   severity: SecurityEventSeverity;
   detail: string;
   command?: string;
@@ -1147,7 +1152,10 @@ function loadIPCCallWindow(): IPCCallRecord[] {
 function saveIPCCallWindow(records: IPCCallRecord[]): void {
   if (typeof window === 'undefined') return;
   try {
-    window.sessionStorage.setItem(IPC_CALL_WINDOW_KEY, JSON.stringify(records.slice(-200)));
+    window.sessionStorage.setItem(
+      IPC_CALL_WINDOW_KEY,
+      JSON.stringify(records.slice(-200))
+    );
   } catch {
     // storage full
   }
@@ -1230,18 +1238,22 @@ export function detectIPCAnomalies(): IPCAnomalyReport {
     });
   }
 
-  const highestSeverity: SecurityEventSeverity =
-    anomalies.some(a => a.severity === 'critical') ? 'critical' :
-    anomalies.some(a => a.severity === 'warning') ? 'warning' :
-    'info';
+  const highestSeverity: SecurityEventSeverity = anomalies.some(
+    a => a.severity === 'critical'
+  )
+    ? 'critical'
+    : anomalies.some(a => a.severity === 'warning')
+      ? 'warning'
+      : 'info';
 
   return {
     anomalies,
     totalAnomalies: anomalies.length,
     highestSeverity,
-    summary: anomalies.length === 0
-      ? `Aucune anomalie IPC détectée sur ${records.length} appels / 60s`
-      : `${anomalies.length} anomalie(s) IPC — sévérité max ${highestSeverity}`,
+    summary:
+      anomalies.length === 0
+        ? `Aucune anomalie IPC détectée sur ${records.length} appels / 60s`
+        : `${anomalies.length} anomalie(s) IPC — sévérité max ${highestSeverity}`,
     computedAt: now,
   };
 }
@@ -1258,17 +1270,26 @@ export function computeThreatScore(
   severityFilter: SecurityAuditSeverityFilter = 'all'
 ): ThreatScore {
   const now = Date.now();
-  const auditView = buildSecurityAuditView(collectCurrentSecurityEvents(), severityFilter);
+  const auditView = buildSecurityAuditView(
+    collectCurrentSecurityEvents(),
+    severityFilter
+  );
   const governance = getGovernanceConnector();
   const transportMode = getTransportMode();
 
   // 1. Detection events scoring
-  const criticalDetections = auditView.activeDetectionEvents.filter(e => e.severity === 'critical').length;
-  const warnDetections = auditView.activeDetectionEvents.filter(e => e.severity === 'warning').length;
+  const criticalDetections = auditView.activeDetectionEvents.filter(
+    e => e.severity === 'critical'
+  ).length;
+  const warnDetections = auditView.activeDetectionEvents.filter(
+    e => e.severity === 'warning'
+  ).length;
   const detectionEventScore = Math.min(40, criticalDetections * 15 + warnDetections * 5);
 
   // 2. Containment violations (critical containment events)
-  const criticalContainment = auditView.activeContainmentEvents.filter(e => e.severity === 'critical').length;
+  const criticalContainment = auditView.activeContainmentEvents.filter(
+    e => e.severity === 'critical'
+  ).length;
   const containmentViolations = Math.min(20, criticalContainment * 10);
 
   // 3. One Door violation
@@ -1276,7 +1297,9 @@ export function computeThreatScore(
   const oneDoorViolation = oneDoorOk ? 0 : 50;
 
   // 4. Unacknowledged critical events
-  const unackCritical = auditView.filteredHistory.filter(e => !e.acknowledged && e.severity === 'critical').length;
+  const unackCritical = auditView.filteredHistory.filter(
+    e => !e.acknowledged && e.severity === 'critical'
+  ).length;
   const unacknowledgedCritical = Math.min(20, unackCritical * 5);
 
   // 5. Provider consecutive failures
@@ -1284,31 +1307,45 @@ export function computeThreatScore(
   const highFailureProviders = providers.filter(p => p.consecutiveFailures >= 3).length;
   const consecutiveFailures = Math.min(20, highFailureProviders * 10);
 
-  const rawScore = detectionEventScore + containmentViolations + oneDoorViolation +
-    unacknowledgedCritical + consecutiveFailures;
+  const rawScore =
+    detectionEventScore +
+    containmentViolations +
+    oneDoorViolation +
+    unacknowledgedCritical +
+    consecutiveFailures;
   const score = Math.min(100, rawScore);
 
   const level: ThreatLevel =
-    score === 0 ? 'none' :
-    score < 20 ? 'low' :
-    score < 40 ? 'medium' :
-    score < 70 ? 'high' :
-    'critical';
+    score === 0
+      ? 'none'
+      : score < 20
+        ? 'low'
+        : score < 40
+          ? 'medium'
+          : score < 70
+            ? 'high'
+            : 'critical';
 
   const topThreats: string[] = [];
   const mitigations: string[] = [];
 
   if (!oneDoorOk) {
-    topThreats.push(`⚠ One Door violation: transport actuel "${transportMode}" (IPC requis)`);
+    topThreats.push(
+      `⚠ One Door violation: transport actuel "${transportMode}" (IPC requis)`
+    );
     mitigations.push('Restaurer le transport IPC canonique immédiatement');
   }
   if (criticalDetections > 0) {
     topThreats.push(`${criticalDetections} événement(s) détection critique(s) actif(s)`);
-    mitigations.push('Acquitter et traiter les événements critiques dans le dashboard sécurité');
+    mitigations.push(
+      'Acquitter et traiter les événements critiques dans le dashboard sécurité'
+    );
   }
   if (highFailureProviders > 0) {
     topThreats.push(`${highFailureProviders} provider(s) avec ≥3 échecs consécutifs`);
-    mitigations.push('Vérifier la santé des providers AI et réinitialiser les circuit-breakers');
+    mitigations.push(
+      'Vérifier la santé des providers AI et réinitialiser les circuit-breakers'
+    );
   }
   if (unackCritical > 0) {
     topThreats.push(`${unackCritical} alerte(s) critique(s) non acquittée(s)`);
@@ -1319,13 +1356,23 @@ export function computeThreatScore(
     score,
     level,
     label: `${score}/100 (${level.toUpperCase()}) — ${
-      level === 'none' ? 'Aucune menace détectée' :
-      level === 'low' ? 'Menace faible — surveillance normale' :
-      level === 'medium' ? 'Menace modérée — attention requise' :
-      level === 'high' ? 'Menace élevée — action recommandée' :
-      'Menace critique — intervention immédiate'
+      level === 'none'
+        ? 'Aucune menace détectée'
+        : level === 'low'
+          ? 'Menace faible — surveillance normale'
+          : level === 'medium'
+            ? 'Menace modérée — attention requise'
+            : level === 'high'
+              ? 'Menace élevée — action recommandée'
+              : 'Menace critique — intervention immédiate'
     }`,
-    breakdown: { detectionEventScore, containmentViolations, oneDoorViolation, unacknowledgedCritical, consecutiveFailures },
+    breakdown: {
+      detectionEventScore,
+      containmentViolations,
+      oneDoorViolation,
+      unacknowledgedCritical,
+      consecutiveFailures,
+    },
     topThreats,
     mitigations,
     computedAt: now,

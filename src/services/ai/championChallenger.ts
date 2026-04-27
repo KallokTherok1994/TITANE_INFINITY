@@ -253,42 +253,55 @@ export interface ChampionAvailabilityResult {
  * Rule 5 One Door: all IPC routed through secureInvoke.
  */
 export async function validateChampionAvailability(
-  mode: CanonicalMode = 'DIRECT',
+  mode: CanonicalMode = 'DIRECT'
 ): Promise<ChampionAvailabilityResult> {
   const champion = getChampion(mode);
   const championModel = champion?.model ?? 'gemma2:2b';
 
   try {
     const status = await secureInvoke<{ ok: boolean; content?: { models?: string[] } }>(
-      'ai_check_ollama_status',
+      'ai_check_ollama_status'
     );
 
     if (!status?.ok || !status.content) {
-      logger.warn('[ChampionChallenger] Ollama offline — cannot validate champion availability', {
+      logger.warn(
+        '[ChampionChallenger] Ollama offline — cannot validate champion availability',
+        {
+          championModel,
+          mode,
+        }
+      );
+      return {
+        available: false,
         championModel,
-        mode,
-      });
-      return { available: false, championModel, installedModels: [], warning: 'OLLAMA_OFFLINE' };
+        installedModels: [],
+        warning: 'OLLAMA_OFFLINE',
+      };
     }
 
     const installedModels: string[] = (status.content.models ?? []).map((m: string) =>
-      m.toLowerCase(),
+      m.toLowerCase()
     );
 
     const available =
       installedModels.includes(championModel.toLowerCase()) ||
-      installedModels.some((m) => m.startsWith((championModel.split(':')[0] ?? championModel).toLowerCase()));
+      installedModels.some(m =>
+        m.startsWith((championModel.split(':')[0] ?? championModel).toLowerCase())
+      );
 
     if (!available) {
       logger.warn(
         `[ChampionChallenger] Champion model "${championModel}" not found in Ollama. ` +
           `Installed: ${installedModels.join(', ')}. Fallback will activate automatically.`,
-        { championModel, mode, installedModels },
+        { championModel, mode, installedModels }
       );
     } else {
-      logger.debug(`[ChampionChallenger] Champion "${championModel}" confirmed available.`, {
-        mode,
-      });
+      logger.debug(
+        `[ChampionChallenger] Champion "${championModel}" confirmed available.`,
+        {
+          mode,
+        }
+      );
     }
 
     return {

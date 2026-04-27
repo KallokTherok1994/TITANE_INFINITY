@@ -70,11 +70,12 @@ const ProjectHealthCard: React.FC = () => {
     if (v === 'BLOCKED') return 'text-yellow-400';
     return 'text-gray-400';
   };
-  const VerdictIcon = consensus?.aggregated === 'PASS'
-    ? CheckCircle
-    : consensus?.aggregated === 'FAIL'
-      ? AlertTriangle
-      : Activity;
+  const VerdictIcon =
+    consensus?.aggregated === 'PASS'
+      ? CheckCircle
+      : consensus?.aggregated === 'FAIL'
+        ? AlertTriangle
+        : Activity;
 
   return (
     <div
@@ -96,9 +97,7 @@ const ProjectHealthCard: React.FC = () => {
         </button>
       </div>
 
-      {error && (
-        <p className="text-red-400 text-sm mb-3">{error}</p>
-      )}
+      {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
 
       {metrics && (
         <div className="grid grid-cols-3 gap-4 mb-4">
@@ -125,7 +124,9 @@ const ProjectHealthCard: React.FC = () => {
 
       {consensus && (
         <div className="flex items-center gap-3 bg-gray-900 rounded-lg p-3">
-          <VerdictIcon className={`w-5 h-5 flex-shrink-0 ${verdictColor(consensus.aggregated)}`} />
+          <VerdictIcon
+            className={`w-5 h-5 flex-shrink-0 ${verdictColor(consensus.aggregated)}`}
+          />
           <div className="flex-1 min-w-0">
             <p className="text-sm text-gray-300">
               Consensus agents :{' '}
@@ -150,7 +151,8 @@ const ProjectHealthCard: React.FC = () => {
 
       {metrics && (
         <p className="text-xs text-gray-600 mt-3">
-          {metrics.evidenceNote} · Calculé à {new Date(metrics.computedAt).toLocaleTimeString()}
+          {metrics.evidenceNote} · Calculé à{' '}
+          {new Date(metrics.computedAt).toLocaleTimeString()}
         </p>
       )}
     </div>
@@ -236,10 +238,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
   }, []);
 
   return (
-    <div
-      data-testid="monitoring-dashboard-page"
-      className="bg-gray-900 p-6"
-    >
+    <div data-testid="monitoring-dashboard-page" className="bg-gray-900 p-6">
       <div className="max-w-450 mx-auto space-y-6">
         {/* Project Health Metrics — Phase B2/B1 surface */}
         <ProjectHealthCard />

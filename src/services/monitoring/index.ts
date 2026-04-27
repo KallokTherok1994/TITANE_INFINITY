@@ -189,8 +189,10 @@ export async function getProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
           return [];
         }
       });
-      const withRecurrence = entries.filter(e =>
-        typeof e.prevention_test === 'string' && e.prevention_test.includes('detect_recurrence')
+      const withRecurrence = entries.filter(
+        e =>
+          typeof e.prevention_test === 'string' &&
+          e.prevention_test.includes('detect_recurrence')
       ).length;
       incidentRecurrenceRate = entries.length > 0 ? withRecurrence / entries.length : 0;
     }
@@ -239,7 +241,8 @@ export async function getProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
       mostImpactedRing: 'unavailable',
       avgLeadTimeMinutes: 0,
       computedAt: new Date().toISOString(),
-      evidenceNote: 'IPC unavailable — running outside Tauri runtime or registries not found.',
+      evidenceNote:
+        'IPC unavailable — running outside Tauri runtime or registries not found.',
     };
     return fallback;
   }
@@ -327,11 +330,41 @@ export async function refreshAgentHealthMatrix(): Promise<AgentHealthMatrix> {
   const agents: Record<string, AgentHealthEntry> = {};
 
   const agentLoaders: Array<{ id: string; loader: () => Promise<AgentStatusGetter> }> = [
-    { id: 'monitoring', loader: () => import('@/services/monitoring').then(m => m.getMonitoringAgentStatus as AgentStatusGetter) },
-    { id: 'diagnostic', loader: () => import('@/services/diagnostic').then(m => m.getDiagnosticAgentStatus as AgentStatusGetter) },
-    { id: 'explainability', loader: () => import('@/services/explainability').then(m => m.getExplainabilityAgentStatus as AgentStatusGetter) },
-    { id: 'orchestrator', loader: () => import('@/services/orchestrator').then(m => m.getOrchestratorAgentStatus as AgentStatusGetter) },
-    { id: 'security_active', loader: () => import('@/services/security_active').then(m => m.getSecurityActiveAgentStatus as AgentStatusGetter) },
+    {
+      id: 'monitoring',
+      loader: () =>
+        import('@/services/monitoring').then(
+          m => m.getMonitoringAgentStatus as AgentStatusGetter
+        ),
+    },
+    {
+      id: 'diagnostic',
+      loader: () =>
+        import('@/services/diagnostic').then(
+          m => m.getDiagnosticAgentStatus as AgentStatusGetter
+        ),
+    },
+    {
+      id: 'explainability',
+      loader: () =>
+        import('@/services/explainability').then(
+          m => m.getExplainabilityAgentStatus as AgentStatusGetter
+        ),
+    },
+    {
+      id: 'orchestrator',
+      loader: () =>
+        import('@/services/orchestrator').then(
+          m => m.getOrchestratorAgentStatus as AgentStatusGetter
+        ),
+    },
+    {
+      id: 'security_active',
+      loader: () =>
+        import('@/services/security_active').then(
+          m => m.getSecurityActiveAgentStatus as AgentStatusGetter
+        ),
+    },
   ];
 
   const results = await Promise.allSettled(
@@ -366,10 +399,9 @@ export async function refreshAgentHealthMatrix(): Promise<AgentHealthMatrix> {
     const prev = stored?.agents?.[id];
     const prevStatus = prev?.status ?? 'unknown';
     const consecutiveDegradations =
-      healthStatus === 'healthy'
-        ? 0
-        : (prev?.consecutiveDegradations ?? 0) + 1;
-    const lastChangedAt = prevStatus !== healthStatus ? now : (prev?.lastChangedAt ?? now);
+      healthStatus === 'healthy' ? 0 : (prev?.consecutiveDegradations ?? 0) + 1;
+    const lastChangedAt =
+      prevStatus !== healthStatus ? now : (prev?.lastChangedAt ?? now);
 
     agents[id] = {
       id,
@@ -387,7 +419,9 @@ export async function refreshAgentHealthMatrix(): Promise<AgentHealthMatrix> {
       consecutiveDegradations >= DEGRADATION_ALERT_THRESHOLD &&
       healthStatus !== 'healthy'
     ) {
-      alertTriggers.push(`Agent ${id} dégradé x${consecutiveDegradations} (${healthStatus})`);
+      alertTriggers.push(
+        `Agent ${id} dégradé x${consecutiveDegradations} (${healthStatus})`
+      );
       _degradationCallbacks.forEach(cb => cb(agents[id]!));
     }
   }
@@ -396,10 +430,13 @@ export async function refreshAgentHealthMatrix(): Promise<AgentHealthMatrix> {
   const offlineCount = healthStatuses.filter(s => s === 'offline').length;
   const degradedCount = healthStatuses.filter(s => s === 'degraded').length;
   const overallHealth: AgentHealthStatus =
-    offlineCount > 0 ? 'offline' :
-    degradedCount > 1 ? 'degraded' :
-    degradedCount === 1 ? 'degraded' :
-    'healthy';
+    offlineCount > 0
+      ? 'offline'
+      : degradedCount > 1
+        ? 'degraded'
+        : degradedCount === 1
+          ? 'degraded'
+          : 'healthy';
 
   const matrix: AgentHealthMatrix = {
     agents,

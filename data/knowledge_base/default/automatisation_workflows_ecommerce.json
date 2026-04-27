@@ -8,11 +8,31 @@
       "règle_80_20_temps": "80% de votre temps doit être consacré à ce qui génère de la valeur (création, marketing, stratégie). L'automatisation libère ce temps en prenant en charge les tâches répétitives.",
       "audit_temps_préalable": "Lister toutes les tâches hebdomadaires. Identifier celles < 5 minutes, répétitives, et suivant un processus fixe → candidats à l'automatisation.",
       "outils_clés": [
-        {"outil": "Zapier", "coût": "Gratuit (100 tâches/mois) / 19$/mois (starter)", "usage": "Connecter apps sans code — 5000+ intégrations"},
-        {"outil": "Make (Integromat)", "coût": "Gratuit (1000 ops/mois) / 9$/mois", "usage": "Automatisations plus complexes, visuelles"},
-        {"outil": "Klaviyo", "coût": "Gratuit (500 contacts)", "usage": "Automatisation email marketing e-commerce"},
-        {"outil": "Printful", "coût": "Gratuit", "usage": "Automatisation production et expédition 100%"},
-        {"outil": "Shopify/Etsy + Printful", "coût": "Intégré", "usage": "Commande → Production → Expédition sans intervention"}
+        {
+          "outil": "Zapier",
+          "coût": "Gratuit (100 tâches/mois) / 19$/mois (starter)",
+          "usage": "Connecter apps sans code — 5000+ intégrations"
+        },
+        {
+          "outil": "Make (Integromat)",
+          "coût": "Gratuit (1000 ops/mois) / 9$/mois",
+          "usage": "Automatisations plus complexes, visuelles"
+        },
+        {
+          "outil": "Klaviyo",
+          "coût": "Gratuit (500 contacts)",
+          "usage": "Automatisation email marketing e-commerce"
+        },
+        {
+          "outil": "Printful",
+          "coût": "Gratuit",
+          "usage": "Automatisation production et expédition 100%"
+        },
+        {
+          "outil": "Shopify/Etsy + Printful",
+          "coût": "Intégré",
+          "usage": "Commande → Production → Expédition sans intervention"
+        }
       ]
     },
     "automatisations_prioritaires": {
@@ -45,9 +65,21 @@
       },
       "automatisation_réseaux_sociaux": {
         "outils": [
-          {"outil": "Buffer", "coût": "Gratuit (3 comptes, 10 posts planifiés)", "usage": "Planifier posts Instagram/Facebook"},
-          {"outil": "Later", "coût": "Gratuit (14 posts/mois)", "usage": "Planification visuelle Instagram"},
-          {"outil": "Metricool", "coût": "Gratuit", "usage": "Planification + analytics multi-réseaux"}
+          {
+            "outil": "Buffer",
+            "coût": "Gratuit (3 comptes, 10 posts planifiés)",
+            "usage": "Planifier posts Instagram/Facebook"
+          },
+          {
+            "outil": "Later",
+            "coût": "Gratuit (14 posts/mois)",
+            "usage": "Planification visuelle Instagram"
+          },
+          {
+            "outil": "Metricool",
+            "coût": "Gratuit",
+            "usage": "Planification + analytics multi-réseaux"
+          }
         ],
         "workflow_création_contenu": [
           "Lundi matin (2h) : Créer tout le contenu de la semaine (7 posts, 5 Reels scripts)",
@@ -59,8 +91,19 @@
       "automatisation_reporting": {
         "dashboard_automatique": {
           "outil": "Looker Studio (Google) — gratuit",
-          "sources_données": ["Google Analytics 4", "Facebook Ads Manager API", "Etsy Stats API (via outils tiers)", "Klaviyo"],
-          "métriques_auto_actualisées": ["CA quotidien/hebdo/mensuel", "ROAS par canal", "Nouveaux abonnés email", "Top produits", "Taux conversion"]
+          "sources_données": [
+            "Google Analytics 4",
+            "Facebook Ads Manager API",
+            "Etsy Stats API (via outils tiers)",
+            "Klaviyo"
+          ],
+          "métriques_auto_actualisées": [
+            "CA quotidien/hebdo/mensuel",
+            "ROAS par canal",
+            "Nouveaux abonnés email",
+            "Top produits",
+            "Taux conversion"
+          ]
         },
         "email_rapport_auto": {
           "outil": "Klaviyo ou Google Sheets + Zapier",
@@ -114,9 +157,21 @@
         "Traitement des remboursements simples"
       ],
       "plateformes_trouver_va": [
-        {"plateforme": "Upwork", "coût": "10-25$/h", "profil": "VA international anglophone/francophone"},
-        {"plateforme": "OnlineJobs.ph", "coût": "5-12$/h", "profil": "VA Philippines — excellent rapport qualité/prix"},
-        {"plateforme": "Fiverr", "coût": "Variable", "profil": "Tâches ponctuelles, pas récurrent"}
+        {
+          "plateforme": "Upwork",
+          "coût": "10-25$/h",
+          "profil": "VA international anglophone/francophone"
+        },
+        {
+          "plateforme": "OnlineJobs.ph",
+          "coût": "5-12$/h",
+          "profil": "VA Philippines — excellent rapport qualité/prix"
+        },
+        {
+          "plateforme": "Fiverr",
+          "coût": "Variable",
+          "profil": "Tâches ponctuelles, pas récurrent"
+        }
       ],
       "coût_mensuel_estimé": {
         "10h_par_semaine": "200-400$/mois selon profil",

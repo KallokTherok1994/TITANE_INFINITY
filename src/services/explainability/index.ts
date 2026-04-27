@@ -332,11 +332,11 @@ export interface ExplainabilityScore {
   score: number;
   /** Détail par critère. */
   breakdown: {
-    chainCoverage: number;       // % traces avec providerMeta
-    championAlignment: number;   // % modes alignés sur gemma2:2b
-    localUsageRate: number;      // % requêtes via provider local
-    fallbackPenalty: number;     // pénalité pour requêtes en fallback
-    historyDepth: number;        // couverture historique bornée
+    chainCoverage: number; // % traces avec providerMeta
+    championAlignment: number; // % modes alignés sur gemma2:2b
+    localUsageRate: number; // % requêtes via provider local
+    fallbackPenalty: number; // pénalité pour requêtes en fallback
+    historyDepth: number; // couverture historique bornée
   };
   grade: 'A' | 'B' | 'C' | 'D' | 'F';
   label: string;
@@ -356,7 +356,12 @@ export interface InferenceAuditLogEntry {
   timeoutMs: number;
   retries: number;
   latencyMs: number | null;
-  attempts: Array<{ provider_id: string; outcome: string; reason_code: string; latency_ms: number }>;
+  attempts: Array<{
+    provider_id: string;
+    outcome: string;
+    reason_code: string;
+    latency_ms: number;
+  }>;
   contentPreview: string;
   championAligned: boolean;
   explainabilityScore: number;
@@ -390,49 +395,61 @@ export function computeExplainabilityScore(): ExplainabilityScore {
 
   const totalTraces = history.length;
   const tracesWithMeta = history.filter(e => e.usedProvider !== 'none').length;
-  const chainCoverage = totalTraces > 0 ? Math.round((tracesWithMeta / totalTraces) * 100) : 0;
+  const chainCoverage =
+    totalTraces > 0 ? Math.round((tracesWithMeta / totalTraces) * 100) : 0;
 
   const championModels = Object.values(registry.champions)
     .filter(e => e.provider === 'ollama')
     .map(e => e.model);
   const totalModes = Object.keys(registry.champions).length;
   const alignedModes = championModels.length;
-  const championAlignment = totalModes > 0 ? Math.round((alignedModes / totalModes) * 100) : 0;
+  const championAlignment =
+    totalModes > 0 ? Math.round((alignedModes / totalModes) * 100) : 0;
 
-  const localTraces = history.filter(e => e.usedProvider === 'ollama' || !e.networkUsed).length;
-  const localUsageRate = totalTraces > 0 ? Math.round((localTraces / totalTraces) * 100) : 100;
+  const localTraces = history.filter(
+    e => e.usedProvider === 'ollama' || !e.networkUsed
+  ).length;
+  const localUsageRate =
+    totalTraces > 0 ? Math.round((localTraces / totalTraces) * 100) : 100;
 
   const networkTraces = history.filter(e => e.networkUsed).length;
-  const fallbackPenalty = totalTraces > 0 ? Math.round((networkTraces / totalTraces) * 30) : 0; // max 30 pts pénalité
+  const fallbackPenalty =
+    totalTraces > 0 ? Math.round((networkTraces / totalTraces) * 30) : 0; // max 30 pts pénalité
 
   const historyDepth = Math.round((Math.min(totalTraces, 8) / 8) * 100);
 
   // Weighted composite score
   const raw =
-    chainCoverage * 0.30 +
+    chainCoverage * 0.3 +
     championAlignment * 0.25 +
     localUsageRate * 0.25 +
-    (100 - fallbackPenalty) * 0.10 +
-    historyDepth * 0.10;
+    (100 - fallbackPenalty) * 0.1 +
+    historyDepth * 0.1;
 
   const score = Math.round(Math.min(100, Math.max(0, raw)));
   const grade: ExplainabilityScore['grade'] =
-    score >= 90 ? 'A' :
-    score >= 75 ? 'B' :
-    score >= 60 ? 'C' :
-    score >= 40 ? 'D' :
-    'F';
+    score >= 90 ? 'A' : score >= 75 ? 'B' : score >= 60 ? 'C' : score >= 40 ? 'D' : 'F';
 
   return {
     score,
-    breakdown: { chainCoverage, championAlignment, localUsageRate, fallbackPenalty, historyDepth },
+    breakdown: {
+      chainCoverage,
+      championAlignment,
+      localUsageRate,
+      fallbackPenalty,
+      historyDepth,
+    },
     grade,
     label: `${score}/100 (${grade}) — ${
-      grade === 'A' ? 'Transparence excellente' :
-      grade === 'B' ? 'Bonne transparence' :
-      grade === 'C' ? 'Transparence partielle' :
-      grade === 'D' ? 'Transparence faible' :
-      'Transparence insuffisante'
+      grade === 'A'
+        ? 'Transparence excellente'
+        : grade === 'B'
+          ? 'Bonne transparence'
+          : grade === 'C'
+            ? 'Transparence partielle'
+            : grade === 'D'
+              ? 'Transparence faible'
+              : 'Transparence insuffisante'
     }`,
     computedAt: new Date().toISOString(),
   };
@@ -452,8 +469,8 @@ export function exportInferenceAuditLog(): InferenceAuditLog {
   );
 
   const entries: InferenceAuditLogEntry[] = history.map(entry => {
-    const championAligned = championModels.has(entry.usedProvider) ||
-      entry.usedProvider === 'ollama';
+    const championAligned =
+      championModels.has(entry.usedProvider) || entry.usedProvider === 'ollama';
     const entryScore =
       (entry.usedProvider !== 'none' ? 40 : 0) +
       (championAligned ? 30 : 0) +
@@ -481,12 +498,16 @@ export function exportInferenceAuditLog(): InferenceAuditLog {
   });
 
   const networkCount = entries.filter(e => e.networkUsed).length;
-  const localRate = entries.length > 0
-    ? Math.round(((entries.length - networkCount) / entries.length) * 100)
-    : 100;
-  const avgScore = entries.length > 0
-    ? Math.round(entries.reduce((acc, e) => acc + e.explainabilityScore, 0) / entries.length)
-    : 0;
+  const localRate =
+    entries.length > 0
+      ? Math.round(((entries.length - networkCount) / entries.length) * 100)
+      : 100;
+  const avgScore =
+    entries.length > 0
+      ? Math.round(
+          entries.reduce((acc, e) => acc + e.explainabilityScore, 0) / entries.length
+        )
+      : 0;
 
   return {
     exportId: `audit-${Date.now()}`,

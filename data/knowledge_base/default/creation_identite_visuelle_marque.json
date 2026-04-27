@@ -23,14 +23,46 @@
     "développement_charte_graphique": {
       "couleurs": {
         "psychologie_couleurs": [
-          {"couleur": "Noir", "perception": "Luxe, sophistication, premium, mystère", "usage": "Marques mode, art contemporain, tech premium"},
-          {"couleur": "Blanc", "perception": "Pureté, minimalisme, clarté, espace", "usage": "Marques clean, design, cosmétique premium"},
-          {"couleur": "Or/Doré", "perception": "Prestige, exclusivité, succès", "usage": "Marques luxe, bijoux, art haut de gamme"},
-          {"couleur": "Bleu", "perception": "Confiance, sécurité, professionnalisme", "usage": "Technologie, finance, santé"},
-          {"couleur": "Vert", "perception": "Nature, bio, croissance, sérénité", "usage": "Marques éco-responsables, bien-être"},
-          {"couleur": "Rouge", "perception": "Énergie, passion, urgence, appétit", "usage": "Promotions, food, action"},
-          {"couleur": "Violet", "perception": "Créativité, spiritualité, royauté", "usage": "Art, beauté, créativité"},
-          {"couleur": "Terracotta/Nude", "perception": "Chaleur, artisanat, authenticité, tendance", "usage": "Décoration, art, mode bohème"}
+          {
+            "couleur": "Noir",
+            "perception": "Luxe, sophistication, premium, mystère",
+            "usage": "Marques mode, art contemporain, tech premium"
+          },
+          {
+            "couleur": "Blanc",
+            "perception": "Pureté, minimalisme, clarté, espace",
+            "usage": "Marques clean, design, cosmétique premium"
+          },
+          {
+            "couleur": "Or/Doré",
+            "perception": "Prestige, exclusivité, succès",
+            "usage": "Marques luxe, bijoux, art haut de gamme"
+          },
+          {
+            "couleur": "Bleu",
+            "perception": "Confiance, sécurité, professionnalisme",
+            "usage": "Technologie, finance, santé"
+          },
+          {
+            "couleur": "Vert",
+            "perception": "Nature, bio, croissance, sérénité",
+            "usage": "Marques éco-responsables, bien-être"
+          },
+          {
+            "couleur": "Rouge",
+            "perception": "Énergie, passion, urgence, appétit",
+            "usage": "Promotions, food, action"
+          },
+          {
+            "couleur": "Violet",
+            "perception": "Créativité, spiritualité, royauté",
+            "usage": "Art, beauté, créativité"
+          },
+          {
+            "couleur": "Terracotta/Nude",
+            "perception": "Chaleur, artisanat, authenticité, tendance",
+            "usage": "Décoration, art, mode bohème"
+          }
         ],
         "règle_60_30_10": {
           "description": "60% couleur dominante, 30% couleur secondaire, 10% couleur accent",
@@ -73,10 +105,26 @@
       },
       "logo_principes": {
         "types_logos": [
-          {"type": "Wordmark (Lettermark)", "description": "Nom seul stylisé — ex: Kallok's Arts en police distinctive", "avantage": "Simple, mémorable, scalable"},
-          {"type": "Brandmark (Icône)", "description": "Symbole graphique seul", "avantage": "Reconnaissable sans texte (Nike, Apple)"},
-          {"type": "Combination Mark", "description": "Icône + Texte", "avantage": "Polyvalent — utiliser séparément ou ensemble"},
-          {"type": "Emblème", "description": "Texte à l'intérieur d'une forme (badge)", "avantage": "Premium, heritage, artisanal"}
+          {
+            "type": "Wordmark (Lettermark)",
+            "description": "Nom seul stylisé — ex: Kallok's Arts en police distinctive",
+            "avantage": "Simple, mémorable, scalable"
+          },
+          {
+            "type": "Brandmark (Icône)",
+            "description": "Symbole graphique seul",
+            "avantage": "Reconnaissable sans texte (Nike, Apple)"
+          },
+          {
+            "type": "Combination Mark",
+            "description": "Icône + Texte",
+            "avantage": "Polyvalent — utiliser séparément ou ensemble"
+          },
+          {
+            "type": "Emblème",
+            "description": "Texte à l'intérieur d'une forme (badge)",
+            "avantage": "Premium, heritage, artisanal"
+          }
         ],
         "fichiers_nécessaires": [
           "SVG (scalable — site web, print haute résolution)",
@@ -86,10 +134,26 @@
           "Version negative (blanc sur fond sombre)"
         ],
         "outils_création_logo": [
-          {"outil": "Canva Pro", "coût": "15$/mois", "niveau": "Débutant — templates nombreux"},
-          {"outil": "Adobe Illustrator", "coût": "22$/mois", "niveau": "Pro — standard industrie"},
-          {"outil": "Figma", "coût": "Gratuit", "niveau": "Intermédiaire — collaboratif"},
-          {"outil": "Looka/Brandmark", "coût": "20-65$ unique", "niveau": "Débutant — IA génère logo"}
+          {
+            "outil": "Canva Pro",
+            "coût": "15$/mois",
+            "niveau": "Débutant — templates nombreux"
+          },
+          {
+            "outil": "Adobe Illustrator",
+            "coût": "22$/mois",
+            "niveau": "Pro — standard industrie"
+          },
+          {
+            "outil": "Figma",
+            "coût": "Gratuit",
+            "niveau": "Intermédiaire — collaboratif"
+          },
+          {
+            "outil": "Looka/Brandmark",
+            "coût": "20-65$ unique",
+            "niveau": "Débutant — IA génère logo"
+          }
         ]
       }
     },
@@ -180,7 +244,13 @@
     "tone_of_voice": {
       "définition": "La voix de marque = comment vous communiquez dans TOUS vos textes : site, emails, réseaux, fiches produit.",
       "exemple_kalloks_arts": {
-        "adjectifs": ["Chaleureux", "Inspirant", "Accessible", "Artistique", "Authentique"],
+        "adjectifs": [
+          "Chaleureux",
+          "Inspirant",
+          "Accessible",
+          "Artistique",
+          "Authentique"
+        ],
         "ton_à_éviter": "Corporate froid, jargon technique, arrogant, trop formel",
         "ton_à_adopter": "Comme un ami passionné d'art qui partage sa découverte",
         "exemple_description_produit_froid": "Canvas imprimé haute définition. Dimensions : 30x45cm. Livraison 5-7 jours.",

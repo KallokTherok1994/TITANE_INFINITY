@@ -53,9 +53,19 @@ describe('getDiagnosticAgentStatus', () => {
     resetDiagnosticReportHistoryForTests();
     mockGetAdvancedAgentStatus.mockReturnValue(STATUS_QUALIFIED);
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
-    mockOllamaGetMetrics.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockOllamaGetMetrics.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
     mockAlertingGetActiveAlerts.mockReturnValue([]);
-    mockChatMetricsGetSnapshot.mockReturnValue({ totalErrors: 0, successCount: 0, errorCount: 0, totalSessions: 0, avgResponseTime: 0 });
+    mockChatMetricsGetSnapshot.mockReturnValue({
+      totalErrors: 0,
+      successCount: 0,
+      errorCount: 0,
+      totalSessions: 0,
+      avgResponseTime: 0,
+    });
   });
 
   it('returns an object with id=diagnostic', () => {
@@ -105,9 +115,19 @@ describe('startDiagnosticAgent', () => {
     resetDiagnosticReportHistoryForTests();
     mockGetAdvancedAgentStatus.mockReturnValue(STATUS_QUALIFIED);
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
-    mockOllamaGetMetrics.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockOllamaGetMetrics.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
     mockAlertingGetActiveAlerts.mockReturnValue([]);
-    mockChatMetricsGetSnapshot.mockReturnValue({ totalErrors: 0, successCount: 0, errorCount: 0, totalSessions: 0, avgResponseTime: 0 });
+    mockChatMetricsGetSnapshot.mockReturnValue({
+      totalErrors: 0,
+      successCount: 0,
+      errorCount: 0,
+      totalSessions: 0,
+      avgResponseTime: 0,
+    });
   });
 
   it('does not throw', () => {

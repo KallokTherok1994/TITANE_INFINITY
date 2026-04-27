@@ -72,7 +72,13 @@
             "Partage posts clients (reshare mentions)"
           ],
           "frequence_recommandée": "1-2 sessions stories/jour",
-          "stickers_clés": ["Sondage", "Question", "Compte à rebours", "Quiz", "Curseur emoji"]
+          "stickers_clés": [
+            "Sondage",
+            "Question",
+            "Compte à rebours",
+            "Quiz",
+            "Curseur emoji"
+          ]
         },
         {
           "format": "Posts Carrousel",
@@ -112,10 +118,20 @@
           "marque": "1-2 hashtags propres ex: #KalloksArts"
         },
         "hashtags_canvas_art": [
-          "#canvasmural", "#toilemurale", "#artprint", "#decomurale",
-          "#decorationinterieur", "#homedecor", "#wallart", "#artcanvas",
-          "#tableaudeco", "#maisondecoration", "#interiordesign",
-          "#livingroomdecor", "#abstractart", "#impressioncanvas"
+          "#canvasmural",
+          "#toilemurale",
+          "#artprint",
+          "#decomurale",
+          "#decorationinterieur",
+          "#homedecor",
+          "#wallart",
+          "#artcanvas",
+          "#tableaudeco",
+          "#maisondecoration",
+          "#interiordesign",
+          "#livingroomdecor",
+          "#abstractart",
+          "#impressioncanvas"
         ]
       }
     },
@@ -215,11 +231,31 @@
     },
     "metriques_organiques": {
       "kpis_prioritaires": [
-        {"metrique": "Taux d'engagement", "formule": "(Likes+Commentaires+Partages) / Portée × 100", "benchmark_bon": "> 3% Instagram, > 1% Facebook"},
-        {"metrique": "Portée organique", "formule": "Nombre de comptes uniques touchés", "suivi": "Évolution semaine/semaine"},
-        {"metrique": "Croissance abonnés", "formule": "Nouveaux abonnés - Désabonnements par période", "objectif": "+ 5-10% par mois organique"},
-        {"metrique": "Saves (Instagram)", "formule": "Nombre de sauvegardes d'un post", "importance": "Signal fort = contenu à valeur durable"},
-        {"metrique": "Clics lien bio", "formule": "Clics vers boutique depuis Instagram", "outil": "Instagram Insights > Activité"}
+        {
+          "metrique": "Taux d'engagement",
+          "formule": "(Likes+Commentaires+Partages) / Portée × 100",
+          "benchmark_bon": "> 3% Instagram, > 1% Facebook"
+        },
+        {
+          "metrique": "Portée organique",
+          "formule": "Nombre de comptes uniques touchés",
+          "suivi": "Évolution semaine/semaine"
+        },
+        {
+          "metrique": "Croissance abonnés",
+          "formule": "Nouveaux abonnés - Désabonnements par période",
+          "objectif": "+ 5-10% par mois organique"
+        },
+        {
+          "metrique": "Saves (Instagram)",
+          "formule": "Nombre de sauvegardes d'un post",
+          "importance": "Signal fort = contenu à valeur durable"
+        },
+        {
+          "metrique": "Clics lien bio",
+          "formule": "Clics vers boutique depuis Instagram",
+          "outil": "Instagram Insights > Activité"
+        }
       ]
     }
   }

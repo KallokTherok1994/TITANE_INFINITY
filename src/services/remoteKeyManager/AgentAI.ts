@@ -49,16 +49,13 @@ async function ollamaGenerate(
   temperature: number
 ): Promise<string> {
   // Use Tauri IPC conversation_generate so all traffic goes through One Door
-  const ipcResult = await safeInvokeCanonical<string>(
-    'conversation_generate',
-    {
-      prompt: userMessage,
-      model,
-      temperature,
-      system: systemPrompt,
-      max_tokens: 512,
-    }
-  );
+  const ipcResult = await safeInvokeCanonical<string>('conversation_generate', {
+    prompt: userMessage,
+    model,
+    temperature,
+    system: systemPrompt,
+    max_tokens: 512,
+  });
   if (!ipcResult.ok || !ipcResult.content) {
     throw new Error(ipcResult.error?.message ?? 'Ollama returned no content');
   }

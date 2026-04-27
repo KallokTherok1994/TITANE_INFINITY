@@ -21,10 +21,10 @@
       "formule_marge": {
         "calcul": "Prix de vente - Coût POD - Frais plateforme (Etsy ~6.5%) - Frais transaction (~3%) - Coût pub (estimé) = Marge nette",
         "exemple_canvas": {
-          "canvas_30x45_printful": 18.50,
+          "canvas_30x45_printful": 18.5,
           "prix_vente_suggéré": 49.99,
           "frais_etsy": 3.25,
-          "frais_transaction": 1.50,
+          "frais_transaction": 1.5,
           "marge_brute_avant_pub": 26.74,
           "note": "Canvas = très bonne marge en POD vs vêtements"
         },
@@ -52,7 +52,12 @@
           "Prix production plus élevés que concurrents",
           "Marges canvas/art prints compressées à bas prix de vente"
         ],
-        "meilleurs_produits": ["Canvas prints", "Framed posters", "Art prints", "Phone cases"],
+        "meilleurs_produits": [
+          "Canvas prints",
+          "Framed posters",
+          "Art prints",
+          "Phone cases"
+        ],
         "délai_production": "2-5 jours ouvrés"
       },
       "printify": {
@@ -67,7 +72,11 @@
           "Besoin de tester et valider chaque fournisseur",
           "Support moins réactif"
         ],
-        "meilleurs_fournisseurs_canvas": ["Monster Digital", "Underground Printing", "Dream Junction"],
+        "meilleurs_fournisseurs_canvas": [
+          "Monster Digital",
+          "Underground Printing",
+          "Dream Junction"
+        ],
         "recommandation": "Commander échantillons avant de vendre — qualité hétérogène"
       },
       "gelato": {

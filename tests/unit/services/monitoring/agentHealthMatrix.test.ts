@@ -5,28 +5,53 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock only the sub-agents that are dynamically imported inside monitoring
-vi.mock('@/services/monitoring', async (importOriginal) => {
+vi.mock('@/services/monitoring', async importOriginal => {
   const actual = await importOriginal<typeof import('@/services/monitoring')>();
   return {
     ...actual,
-    getMonitoringAgentStatus: vi.fn().mockReturnValue({ readiness: 'partial', blockers: [], serviceState: 'ok', evidence: [] }),
+    getMonitoringAgentStatus: vi.fn().mockReturnValue({
+      readiness: 'partial',
+      blockers: [],
+      serviceState: 'ok',
+      evidence: [],
+    }),
   };
 });
 vi.mock('@/services/diagnostic', async () => ({
-  getDiagnosticAgentStatus: vi.fn().mockReturnValue({ readiness: 'partial', blockers: [], serviceState: 'ok', evidence: [] }),
+  getDiagnosticAgentStatus: vi.fn().mockReturnValue({
+    readiness: 'partial',
+    blockers: [],
+    serviceState: 'ok',
+    evidence: [],
+  }),
 }));
 vi.mock('@/services/explainability', async () => ({
-  getExplainabilityAgentStatus: vi.fn().mockReturnValue({ readiness: 'partial', blockers: [], serviceState: 'ok', evidence: [] }),
+  getExplainabilityAgentStatus: vi.fn().mockReturnValue({
+    readiness: 'partial',
+    blockers: [],
+    serviceState: 'ok',
+    evidence: [],
+  }),
 }));
-vi.mock('@/services/orchestrator', async (importOriginal) => {
+vi.mock('@/services/orchestrator', async importOriginal => {
   const actual = await importOriginal<typeof import('@/services/orchestrator')>();
   return {
     ...actual,
-    getOrchestratorAgentStatus: vi.fn().mockReturnValue({ readiness: 'qualified', blockers: [], serviceState: 'ok', evidence: [] }),
+    getOrchestratorAgentStatus: vi.fn().mockReturnValue({
+      readiness: 'qualified',
+      blockers: [],
+      serviceState: 'ok',
+      evidence: [],
+    }),
   };
 });
 vi.mock('@/services/security_active', async () => ({
-  getSecurityActiveAgentStatus: vi.fn().mockReturnValue({ readiness: 'partial', blockers: [], serviceState: 'ok', evidence: [] }),
+  getSecurityActiveAgentStatus: vi.fn().mockReturnValue({
+    readiness: 'partial',
+    blockers: [],
+    serviceState: 'ok',
+    evidence: [],
+  }),
 }));
 
 import {

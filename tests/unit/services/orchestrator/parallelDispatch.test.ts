@@ -12,7 +12,10 @@ vi.mock('@/services/monitoring', () => ({
 }));
 
 vi.mock('@/services/diagnostic', () => ({
-  getDiagnosticAgentStatus: vi.fn(() => ({ readiness: 'partial', blockers: ['minor drift'] })),
+  getDiagnosticAgentStatus: vi.fn(() => ({
+    readiness: 'partial',
+    blockers: ['minor drift'],
+  })),
 }));
 
 vi.mock('@/services/security_active', () => ({
@@ -119,7 +122,9 @@ describe('dispatchToAgentsWithTimeout', () => {
   it('timeout BLOCKED inclut le message de timeout dans les blockers', async () => {
     // Simuler un dispatch très lent via timeout court
     // On mock dispatchToAgents pour qu'il dure plus longtemps que le timeout
-    const slowPromise = new Promise<never>(resolve => setTimeout(resolve as () => void, 10000));
+    const slowPromise = new Promise<never>(resolve =>
+      setTimeout(resolve as () => void, 10000)
+    );
     const realDispatch = vi.fn(() => slowPromise as unknown as Promise<AgentConsensus>);
 
     // Remplacer dispatchToAgents momentanément n'est pas possible sans re-import

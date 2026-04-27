@@ -21,8 +21,8 @@
       "calcul_prix_wholesale": {
         "formule": "Prix Wholesale = Coût production × 2.2 (marge 55%)",
         "exemple_canvas": {
-          "coût_printful": 18.50,
-          "prix_wholesale_minimum": 40.70,
+          "coût_printful": 18.5,
+          "prix_wholesale_minimum": 40.7,
           "prix_retail_boutiquer": "Le boutiquier revend à 79-89$",
           "ta_marge": "22.20$ par unité minimum"
         },

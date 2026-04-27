@@ -108,8 +108,8 @@ const AgentStatusCard: React.FC<AgentStatusCardProps> = ({ status }) => (
           status.readiness === 'qualified'
             ? 'bg-green-700/40 text-green-300'
             : status.readiness === 'partial'
-            ? 'bg-yellow-700/40 text-yellow-300'
-            : 'bg-slate-700/40 text-slate-400'
+              ? 'bg-yellow-700/40 text-yellow-300'
+              : 'bg-slate-700/40 text-slate-400'
         }`}
       >
         {status.readinessLabel}
@@ -419,11 +419,14 @@ const MultiProjectDashboard: React.FC = () => {
     refresh();
 
     // Auto-refresh every 5 minutes (no health dispatch on mount — explicit only)
-    autoRefreshRef.current = setInterval(() => {
-      setProjects(listProjects());
-      setRollup(getMultiProjectRollup());
-      setAgentStatus(getMultiProjectAgentStatus());
-    }, 5 * 60 * 1000);
+    autoRefreshRef.current = setInterval(
+      () => {
+        setProjects(listProjects());
+        setRollup(getMultiProjectRollup());
+        setAgentStatus(getMultiProjectAgentStatus());
+      },
+      5 * 60 * 1000
+    );
 
     return () => {
       if (autoRefreshRef.current) clearInterval(autoRefreshRef.current);

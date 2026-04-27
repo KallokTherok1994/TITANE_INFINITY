@@ -82,7 +82,7 @@ describe('CircuitBreaker', () => {
       expect(circuitBreaker.canExecute(prov)).toBe(false);
     });
 
-    it('incrémente openCount quand le circuit s\'ouvre', () => {
+    it("incrémente openCount quand le circuit s'ouvre", () => {
       const prov = 'prov-open-count';
       for (let i = 0; i < 10; i++) circuitBreaker.recordFailure(prov);
       expect(circuitBreaker.getStats(prov).openCount).toBeGreaterThan(0);
@@ -166,7 +166,7 @@ describe('CircuitBreaker', () => {
     it('ollama a un failureThreshold plus élevé (tolérance locale)', () => {
       const ollamaConf = PROVIDER_CIRCUIT_CONFIGS['ollama'];
       const claudeConf = PROVIDER_CIRCUIT_CONFIGS['claude'];
-      expect((ollamaConf?.failureThreshold ?? 0)).toBeGreaterThan(
+      expect(ollamaConf?.failureThreshold ?? 0).toBeGreaterThan(
         claudeConf?.failureThreshold ?? 99
       );
     });
@@ -174,7 +174,7 @@ describe('CircuitBreaker', () => {
     it('tauri-backend a un recoveryTimeoutMs plus court', () => {
       const tauriConf = PROVIDER_CIRCUIT_CONFIGS['tauri-backend'];
       const claudeConf = PROVIDER_CIRCUIT_CONFIGS['claude'];
-      expect((tauriConf?.recoveryTimeoutMs ?? 0)).toBeLessThan(
+      expect(tauriConf?.recoveryTimeoutMs ?? 0).toBeLessThan(
         claudeConf?.recoveryTimeoutMs ?? 0
       );
     });

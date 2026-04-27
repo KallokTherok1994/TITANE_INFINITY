@@ -131,7 +131,19 @@
       },
       "negatifs": {
         "importance": "La liste de mots-clés négatifs est aussi importante que la liste positive. Chaque clic non-pertinent = budget gaspillé.",
-        "liste_negative_universelle_ecommerce": ["gratuit", "pdf", "tutoriel", "comment faire", "diy", "occasion", "deuxième main", "recrutement", "emploi", "formation", "cours"],
+        "liste_negative_universelle_ecommerce": [
+          "gratuit",
+          "pdf",
+          "tutoriel",
+          "comment faire",
+          "diy",
+          "occasion",
+          "deuxième main",
+          "recrutement",
+          "emploi",
+          "formation",
+          "cours"
+        ],
         "niveau_application": "Négatifs au niveau Campagne (toute la campagne) ou Groupe d'annonces (spécifique). Utiliser les listes négatives partagées pour appliquer sur plusieurs campagnes."
       },
       "extensions_annonces": {

@@ -10,7 +10,11 @@
         "TOFU": {
           "nom": "Top of Funnel — Notoriété",
           "objectif": "Toucher de nouvelles audiences froides",
-          "audiences": ["Lookalike 1-3% acheteurs", "Intérêts larges niche", "Audiences thématiques"],
+          "audiences": [
+            "Lookalike 1-3% acheteurs",
+            "Intérêts larges niche",
+            "Audiences thématiques"
+          ],
           "budget_allocation": "40% du budget total",
           "KPIs_cibles": ["CPM < 12$", "CTR > 1.5%", "Fréquence < 3"]
         },
@@ -87,11 +91,31 @@
     "audiences_lookalike": {
       "definition": "Les audiences Lookalike permettent à Facebook/Meta de trouver des personnes ressemblant à vos meilleurs clients.",
       "sources_recommandées_par_priorité": [
-        {"rang": 1, "source": "Liste acheteurs (emails clients)", "qualité": "EXCELLENTE — tes vrais clients"},
-        {"rang": 2, "source": "Pixel Purchases (180 jours)", "qualité": "TRÈS BONNE — comportement d'achat réel"},
-        {"rang": 3, "source": "Valeur client (Customer Value Lookalike)", "qualité": "MEILLEURE — basée sur LTV"},
-        {"rang": 4, "source": "Visiteurs site 30 jours", "qualité": "BONNE — intention d'achat signalée"},
-        {"rang": 5, "source": "Engagement Instagram 60 jours", "qualité": "MOYENNE — intérêt mais pas d'intention claire"}
+        {
+          "rang": 1,
+          "source": "Liste acheteurs (emails clients)",
+          "qualité": "EXCELLENTE — tes vrais clients"
+        },
+        {
+          "rang": 2,
+          "source": "Pixel Purchases (180 jours)",
+          "qualité": "TRÈS BONNE — comportement d'achat réel"
+        },
+        {
+          "rang": 3,
+          "source": "Valeur client (Customer Value Lookalike)",
+          "qualité": "MEILLEURE — basée sur LTV"
+        },
+        {
+          "rang": 4,
+          "source": "Visiteurs site 30 jours",
+          "qualité": "BONNE — intention d'achat signalée"
+        },
+        {
+          "rang": 5,
+          "source": "Engagement Instagram 60 jours",
+          "qualité": "MOYENNE — intérêt mais pas d'intention claire"
+        }
       ],
       "tailles_recommandées": {
         "1_pourcent": "Plus semblable — volume faible, qualité maximale. Idéal BOFU.",
@@ -206,9 +230,21 @@
         }
       },
       "smart_bidding_strategies": [
-        {"stratégie": "Target ROAS", "quand": "Suffisamment de données conversions (50+/mois)", "paramètre": "Définir ROAS cible réaliste +20% au-dessus historique"},
-        {"stratégie": "Target CPA", "quand": "Volume conversions régulier", "paramètre": "CPA cible = CAC max acceptable"},
-        {"stratégie": "Maximize Conversion Value", "quand": "Démarrage ou nouveau produit", "paramètre": "Sans contrainte ROAS au début"}
+        {
+          "stratégie": "Target ROAS",
+          "quand": "Suffisamment de données conversions (50+/mois)",
+          "paramètre": "Définir ROAS cible réaliste +20% au-dessus historique"
+        },
+        {
+          "stratégie": "Target CPA",
+          "quand": "Volume conversions régulier",
+          "paramètre": "CPA cible = CAC max acceptable"
+        },
+        {
+          "stratégie": "Maximize Conversion Value",
+          "quand": "Démarrage ou nouveau produit",
+          "paramètre": "Sans contrainte ROAS au début"
+        }
       ]
     },
     "reporting_et_analyse": {

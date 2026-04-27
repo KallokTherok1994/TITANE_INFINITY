@@ -392,9 +392,15 @@ type AgentStatusFn = () => { readiness?: string; blockers?: string[] };
 export async function dispatchToAgents(event: AgentEvent): Promise<AgentConsensus> {
   // Lazy dynamic imports to avoid circular deps and keep bundle lean.
   const [monitoringMod, diagnosticMod, securityMod] = await Promise.allSettled([
-    import('@/services/monitoring').then(m => m.getMonitoringAgentStatus as AgentStatusFn),
-    import('@/services/diagnostic').then(m => m.getDiagnosticAgentStatus as AgentStatusFn),
-    import('@/services/security_active').then(m => m.getSecurityActiveAgentStatus as AgentStatusFn),
+    import('@/services/monitoring').then(
+      m => m.getMonitoringAgentStatus as AgentStatusFn
+    ),
+    import('@/services/diagnostic').then(
+      m => m.getDiagnosticAgentStatus as AgentStatusFn
+    ),
+    import('@/services/security_active').then(
+      m => m.getSecurityActiveAgentStatus as AgentStatusFn
+    ),
   ]);
 
   const agentMap: Record<string, PromiseSettledResult<AgentStatusFn>> = {
@@ -491,7 +497,7 @@ export interface ProviderLoadEntry {
   avgLatencyMs: number;
   errorCount: number;
   isHealthy: boolean;
-  loadScore: number;     // 0–100 — 0 = surchargé/dégradé, 100 = idéal
+  loadScore: number; // 0–100 — 0 = surchargé/dégradé, 100 = idéal
   circuitOpen: boolean;
 }
 
@@ -499,16 +505,16 @@ export interface ProviderLoadMatrix {
   providers: ProviderLoadEntry[];
   totalLoad: number;
   dominantProvider: string;
-  balanceScore: number;   // 0–100 — 100 = distribution parfaite
+  balanceScore: number; // 0–100 — 100 = distribution parfaite
   computedAt: number;
 }
 
 export type DispatchRecommendation =
-  | 'USE_LOCAL_CHAMPION'    // Ollama gemma2:2b optimal — situation normale
-  | 'REDUCE_CLOUD_LOAD'     // Cloud providers surchargés, basculer vers local
-  | 'FALLBACK_REQUIRED'     // Champion dégradé, activer fallback
-  | 'CIRCUIT_OPEN'          // Circuit ouvert sur provider principal
-  | 'LOAD_BALANCED';        // Distribution équilibrée confirmée
+  | 'USE_LOCAL_CHAMPION' // Ollama gemma2:2b optimal — situation normale
+  | 'REDUCE_CLOUD_LOAD' // Cloud providers surchargés, basculer vers local
+  | 'FALLBACK_REQUIRED' // Champion dégradé, activer fallback
+  | 'CIRCUIT_OPEN' // Circuit ouvert sur provider principal
+  | 'LOAD_BALANCED'; // Distribution équilibrée confirmée
 
 export interface AdaptiveDispatchPolicy {
   recommendation: DispatchRecommendation;
@@ -528,18 +534,21 @@ export function getProviderLoadMatrix(): ProviderLoadMatrix {
   const governance = getGovernanceConnector();
   const providerSnapshots = governance.getAllProviders();
 
-  const providerMetricsMap = new Map(
-    metrics.providers.map(p => [p.provider, p])
-  );
+  const providerMetricsMap = new Map(metrics.providers.map(p => [p.provider, p]));
 
   const entries: ProviderLoadEntry[] = providerSnapshots
     .filter(p => p.isActive || p.id === 'local' || p.id === 'ollama')
     .map(snapshot => {
-      const pm = providerMetricsMap.get(snapshot.id) ?? providerMetricsMap.get(snapshot.id.replace('-', ''));
+      const pm =
+        providerMetricsMap.get(snapshot.id) ??
+        providerMetricsMap.get(snapshot.id.replace('-', ''));
       const totalRequests = pm?.totalRequests ?? 0;
-      const successRate = pm?.successCount != null && totalRequests > 0
-        ? pm.successCount / totalRequests
-        : snapshot.isHealthy ? 1 : 0;
+      const successRate =
+        pm?.successCount != null && totalRequests > 0
+          ? pm.successCount / totalRequests
+          : snapshot.isHealthy
+            ? 1
+            : 0;
       const avgLatencyMs = pm?.avgLatency ?? 0;
       const errorCount = pm?.errorCount ?? snapshot.failureCount;
 
@@ -562,13 +571,17 @@ export function getProviderLoadMatrix(): ProviderLoadMatrix {
     });
 
   const totalLoad = entries.reduce((acc, e) => acc + e.totalRequests, 0);
-  const dominantProvider = entries.sort((a, b) => b.totalRequests - a.totalRequests)[0]?.provider ?? 'none';
+  const dominantProvider =
+    entries.sort((a, b) => b.totalRequests - a.totalRequests)[0]?.provider ?? 'none';
 
   // Balance score: std dev normalized
   const avgLoad = totalLoad / Math.max(entries.length, 1);
-  const variance = entries.reduce((acc, e) => acc + Math.pow(e.totalRequests - avgLoad, 2), 0) / Math.max(entries.length, 1);
+  const variance =
+    entries.reduce((acc, e) => acc + Math.pow(e.totalRequests - avgLoad, 2), 0) /
+    Math.max(entries.length, 1);
   const stdDev = Math.sqrt(variance);
-  const balanceScore = avgLoad > 0 ? Math.max(0, Math.round(100 - (stdDev / avgLoad) * 100)) : 100;
+  const balanceScore =
+    avgLoad > 0 ? Math.max(0, Math.round(100 - (stdDev / avgLoad) * 100)) : 100;
 
   return {
     providers: entries,
@@ -589,13 +602,19 @@ export function computeAdaptiveDispatchPolicy(): AdaptiveDispatchPolicy {
   const activeProviders = getActiveAIProviders();
   const autoHealStats = autoHealEngine.getStats();
 
-  const localEntry = matrix.providers.find(p => p.provider === 'ollama' || p.provider === 'local');
-  const cloudEntries = matrix.providers.filter(p => p.provider !== 'ollama' && p.provider !== 'local' && p.provider !== 'tauri-backend');
+  const localEntry = matrix.providers.find(
+    p => p.provider === 'ollama' || p.provider === 'local'
+  );
+  const cloudEntries = matrix.providers.filter(
+    p =>
+      p.provider !== 'ollama' && p.provider !== 'local' && p.provider !== 'tauri-backend'
+  );
   const championModel = Object.values(registry.champions)[0]?.model ?? 'gemma2:2b';
 
   // Circuit open → hard fallback
   if (localEntry?.circuitOpen) {
-    const cloudFallback = cloudEntries.filter(p => p.isHealthy && !p.circuitOpen)[0]?.provider ?? 'none';
+    const cloudFallback =
+      cloudEntries.filter(p => p.isHealthy && !p.circuitOpen)[0]?.provider ?? 'none';
     return {
       recommendation: 'CIRCUIT_OPEN',
       reason: `Circuit ouvert sur ${localEntry.provider} (${localEntry.errorCount} erreurs). Basculement requis.`,
@@ -628,7 +647,8 @@ export function computeAdaptiveDispatchPolicy(): AdaptiveDispatchPolicy {
       recommendation: 'REDUCE_CLOUD_LOAD',
       reason: `${overloadedCloud.length} provider(s) cloud surchargé(s). Favoriser le champion local ${championModel}.`,
       preferredProvider: localEntry?.provider ?? 'ollama',
-      fallbackProvider: cloudEntries.filter(p => !overloadedCloud.includes(p))[0]?.provider ?? 'none',
+      fallbackProvider:
+        cloudEntries.filter(p => !overloadedCloud.includes(p))[0]?.provider ?? 'none',
       maxConcurrent: 3,
       timeoutMs: PROVIDER_TIMEOUTS.ollama,
       computedAt: Date.now(),

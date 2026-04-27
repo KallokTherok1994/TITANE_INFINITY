@@ -52,7 +52,10 @@ export const remoteKeyCreate = (
   label: string,
   scopes?: string[]
 ): Promise<RemoteKeyCreateResult | null> =>
-  safeInvoke<RemoteKeyCreateResult>('remote_key_create', { label, scopes: scopes ?? null });
+  safeInvoke<RemoteKeyCreateResult>('remote_key_create', {
+    label,
+    scopes: scopes ?? null,
+  });
 
 /**
  * List all API keys (masked — secrets never returned).

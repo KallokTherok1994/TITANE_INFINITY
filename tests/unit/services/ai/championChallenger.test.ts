@@ -127,10 +127,23 @@ describe('ChampionChallenger', () => {
   describe('recordComparison() + getComparisonStats()', () => {
     const MODE: CanonicalMode = 'DIRECT' as CanonicalMode;
 
-    const makeResult = (divergence: boolean, challengerFaster: boolean): ComparisonResult => ({
+    const makeResult = (
+      divergence: boolean,
+      challengerFaster: boolean
+    ): ComparisonResult => ({
       mode: MODE,
-      champion: { provider: 'ollama', model: 'gemma2:2b', latency_ms: challengerFaster ? 200 : 100, token_count: 50 },
-      challenger: { provider: 'claude', model: 'claude-3-haiku', latency_ms: challengerFaster ? 100 : 200, token_count: 50 },
+      champion: {
+        provider: 'ollama',
+        model: 'gemma2:2b',
+        latency_ms: challengerFaster ? 200 : 100,
+        token_count: 50,
+      },
+      challenger: {
+        provider: 'claude',
+        model: 'claude-3-haiku',
+        latency_ms: challengerFaster ? 100 : 200,
+        token_count: 50,
+      },
       divergence,
       divergence_detail: divergence ? 'different answer' : undefined,
     });
@@ -203,8 +216,18 @@ describe('ChampionChallenger', () => {
         for (let i = 0; i < 20; i++) {
           recordComparison({
             mode: 'DIRECT' as CanonicalMode,
-            champion: { provider: 'ollama', model: 'gemma2:2b', latency_ms: 200, token_count: 50 },
-            challenger: { provider: 'claude', model: 'claude-3-haiku', latency_ms: 80, token_count: 40 },
+            champion: {
+              provider: 'ollama',
+              model: 'gemma2:2b',
+              latency_ms: 200,
+              token_count: 50,
+            },
+            challenger: {
+              provider: 'claude',
+              model: 'claude-3-haiku',
+              latency_ms: 80,
+              token_count: 40,
+            },
             divergence: false,
           });
         }

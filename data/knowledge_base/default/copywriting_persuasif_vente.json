@@ -169,12 +169,50 @@
       ]
     },
     "mots_déclencheurs_émotionnels": {
-      "luxe_premium": ["Exclusif", "Unique", "Artisanal", "Signature", "Édition limitée", "Premium", "Raffiné"],
-      "urgence_rareté": ["Limité", "Derniers exemplaires", "Expire aujourd'hui", "Plus que X en stock", "Ne manquez pas"],
-      "sécurité_confiance": ["Garanti", "Sans risque", "Remboursé si", "Certifié", "Satisfaction garantie"],
-      "appartenance_communauté": ["Rejoignez", "Nos clients", "Famille", "Communauté", "Ensemble"],
-      "transformation_résultat": ["Transformez", "Imaginez", "Découvrez", "Ressentez", "Créez votre"],
-      "mots_à_éviter": ["Pas cher", "Bon marché", "Discount excessif", "Meilleur du monde", "Révolutionnaire (surutilisé)"]
+      "luxe_premium": [
+        "Exclusif",
+        "Unique",
+        "Artisanal",
+        "Signature",
+        "Édition limitée",
+        "Premium",
+        "Raffiné"
+      ],
+      "urgence_rareté": [
+        "Limité",
+        "Derniers exemplaires",
+        "Expire aujourd'hui",
+        "Plus que X en stock",
+        "Ne manquez pas"
+      ],
+      "sécurité_confiance": [
+        "Garanti",
+        "Sans risque",
+        "Remboursé si",
+        "Certifié",
+        "Satisfaction garantie"
+      ],
+      "appartenance_communauté": [
+        "Rejoignez",
+        "Nos clients",
+        "Famille",
+        "Communauté",
+        "Ensemble"
+      ],
+      "transformation_résultat": [
+        "Transformez",
+        "Imaginez",
+        "Découvrez",
+        "Ressentez",
+        "Créez votre"
+      ],
+      "mots_à_éviter": [
+        "Pas cher",
+        "Bon marché",
+        "Discount excessif",
+        "Meilleur du monde",
+        "Révolutionnaire (surutilisé)"
+      ]
     }
   }
 }

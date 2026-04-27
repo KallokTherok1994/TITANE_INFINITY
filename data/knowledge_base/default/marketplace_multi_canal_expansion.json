@@ -22,8 +22,17 @@
         "frais": "0.20$ listing + 6.5% transaction + 3-4% paiement = ~10-11% total",
         "trafic": "Inclus — 90 millions acheteurs actifs",
         "audience": "Femmes 25-45, revenus moyens/élevés, cherchent unique et handmade",
-        "avantages": ["Trafic organique massif inclus", "Acheteurs prêts à acheter art/handmade", "Communauté vendeurs très active"],
-        "inconvénients": ["Concurrence très forte", "Suspensions arbitraires", "Algorithme changeant", "Pas de relation directe client (email)"],
+        "avantages": [
+          "Trafic organique massif inclus",
+          "Acheteurs prêts à acheter art/handmade",
+          "Communauté vendeurs très active"
+        ],
+        "inconvénients": [
+          "Concurrence très forte",
+          "Suspensions arbitraires",
+          "Algorithme changeant",
+          "Pas de relation directe client (email)"
+        ],
         "idéal_pour": "Démarrage — validation produit — trafic rapide"
       },
       "amazon_handmade": {
@@ -31,8 +40,17 @@
         "frais": "15% transaction (inclut tous frais)",
         "trafic": "Inclus — 300 millions clients Amazon",
         "audience": "Plus mainstream, achat impulsif, cherchent prix vs valeur",
-        "avantages": ["Prime = livraison rapide = conversion haute", "Trafic colossal", "Trust Amazon = haute conversion"],
-        "inconvénients": ["15% de frais élevés", "Processus approbation long (2-6 semaines)", "Moins adapté art haut de gamme", "Prix tirés vers le bas"],
+        "avantages": [
+          "Prime = livraison rapide = conversion haute",
+          "Trafic colossal",
+          "Trust Amazon = haute conversion"
+        ],
+        "inconvénients": [
+          "15% de frais élevés",
+          "Processus approbation long (2-6 semaines)",
+          "Moins adapté art haut de gamme",
+          "Prix tirés vers le bas"
+        ],
         "idéal_pour": "Artistes avec gros volumes, prix <50$, style accessible"
       },
       "society6": {
@@ -40,8 +58,16 @@
         "frais": "Vous fixez marque (markup), Society6 garde base + commission",
         "trafic": "Inclus (modéré)",
         "audience": "Amateurs d'art, déco bohème, urbains créatifs",
-        "avantages": ["0 stock, 0 production", "Large catalogue produits (prints, coussins, mugs, etc.)", "Exposition internationale"],
-        "inconvénients": ["Marges très faibles si pas de markup agressif", "Peu de contrôle marque", "Competition interne forte"],
+        "avantages": [
+          "0 stock, 0 production",
+          "Large catalogue produits (prints, coussins, mugs, etc.)",
+          "Exposition internationale"
+        ],
+        "inconvénients": [
+          "Marges très faibles si pas de markup agressif",
+          "Peu de contrôle marque",
+          "Competition interne forte"
+        ],
         "idéal_pour": "Exposition passive, diversification produit sans effort, art print téléchargeable"
       },
       "redbubble": {
@@ -49,8 +75,16 @@
         "frais": "Vous définissez markup sur base price Redbubble",
         "trafic": "Inclus — très fort trafic SEO organique",
         "audience": "Fandoms, culture pop, gamers, millennials",
-        "avantages": ["SEO organique très fort", "Trafic global massif", "Facile à ajouter designs existants"],
-        "inconvénients": ["Très forte concurrence prix", "Moins adapté art premium/luxe", "Peu de contrôle expérience client"],
+        "avantages": [
+          "SEO organique très fort",
+          "Trafic global massif",
+          "Facile à ajouter designs existants"
+        ],
+        "inconvénients": [
+          "Très forte concurrence prix",
+          "Moins adapté art premium/luxe",
+          "Peu de contrôle expérience client"
+        ],
         "idéal_pour": "Designs tendance, pop culture, patterns, logos — complément passif"
       },
       "faire_wholesale": {
@@ -58,8 +92,16 @@
         "frais": "15% premières commandes / 0% réapprovisionnements",
         "trafic": "Inclus — 700 000+ boutiques B2B",
         "audience": "Boutiquiers retail cherchant produits uniques à revendre",
-        "avantages": ["Commandes volume = CA stable", "Réapprovisionnements récurrents", "Notoriété professionnelle"],
-        "inconvénients": ["Marges réduites (prix wholesale = 50% retail)", "Délais paiement 60 jours possible", "Volume minimum requis"],
+        "avantages": [
+          "Commandes volume = CA stable",
+          "Réapprovisionnements récurrents",
+          "Notoriété professionnelle"
+        ],
+        "inconvénients": [
+          "Marges réduites (prix wholesale = 50% retail)",
+          "Délais paiement 60 jours possible",
+          "Volume minimum requis"
+        ],
         "idéal_pour": "Artistes avec produits sériels, art prints, items décoration"
       },
       "wix_boutique_propre": {
@@ -67,8 +109,17 @@
         "frais": "Wix 17-35$/mois (plans e-commerce) + frais paiement Stripe (2.9%+0.30$)",
         "trafic": "AUCUN — vous devez générer tout le trafic",
         "audience": "Vos fans directs, communauté email, réseaux sociaux",
-        "avantages": ["0% commission plateforme tierce", "Relation directe client (emails)", "Contrôle total branding/expérience", "Pas de suspension arbitraire"],
-        "inconvénients": ["Vous devez générer 100% du trafic", "Coût mensuel fixe", "Complexité technique initiale"],
+        "avantages": [
+          "0% commission plateforme tierce",
+          "Relation directe client (emails)",
+          "Contrôle total branding/expérience",
+          "Pas de suspension arbitraire"
+        ],
+        "inconvénients": [
+          "Vous devez générer 100% du trafic",
+          "Coût mensuel fixe",
+          "Complexité technique initiale"
+        ],
         "idéal_pour": "Moyen/long terme — base principale après validation sur Etsy"
       }
     },

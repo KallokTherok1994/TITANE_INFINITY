@@ -43,20 +43,36 @@
       "méthode_cost_plus": {
         "formule": "Coût production + Frais variables + Frais fixes / unités + Marge désirée = Prix de vente minimum",
         "exemple_canvas": {
-          "coût_printful": 18.50,
+          "coût_printful": 18.5,
           "frais_etsy_6_5_pourcent": 3.25,
-          "frais_transaction_3_pourcent": 1.50,
-          "coût_acquisition_pub_estimé": 8.00,
+          "frais_transaction_3_pourcent": 1.5,
+          "coût_acquisition_pub_estimé": 8.0,
           "total_coûts": 31.25,
           "marge_désirée_60_pourcent": "= Prix de vente minimum ≈ 50$",
           "prix_recommandé": 49.99
         }
       },
       "pricing_psychologique": [
-        {"technique": "Prix ancre", "exemple": "Afficher 'Prix habituel 79$ — Maintenant 49$'", "effet": "Augmente perception valeur"},
-        {"technique": "Charm pricing", "exemple": "49.99$ vs 50$", "effet": "Perçu nettement moins cher cognitivement"},
-        {"technique": "Prix décroissant bundle", "exemple": "1 canvas 49$ / 2 pour 89$ / 3 pour 119$", "effet": "Incite achats multiples AOV++"},
-        {"technique": "Edition limitée premium", "exemple": "'Collection signée numérotée' à +30% prix", "effet": "Justifie premium, crée urgence"}
+        {
+          "technique": "Prix ancre",
+          "exemple": "Afficher 'Prix habituel 79$ — Maintenant 49$'",
+          "effet": "Augmente perception valeur"
+        },
+        {
+          "technique": "Charm pricing",
+          "exemple": "49.99$ vs 50$",
+          "effet": "Perçu nettement moins cher cognitivement"
+        },
+        {
+          "technique": "Prix décroissant bundle",
+          "exemple": "1 canvas 49$ / 2 pour 89$ / 3 pour 119$",
+          "effet": "Incite achats multiples AOV++"
+        },
+        {
+          "technique": "Edition limitée premium",
+          "exemple": "'Collection signée numérotée' à +30% prix",
+          "effet": "Justifie premium, crée urgence"
+        }
       ],
       "ajustement_prix_concurrentiel": {
         "principe": "Ne pas se baser uniquement sur la concurrence — baser sur la valeur perçue",
@@ -66,21 +82,48 @@
     },
     "gestion_trésorerie": {
       "tableau_trésorerie_mensuel": {
-        "entrées": ["Ventes Etsy", "Ventes site web", "Ventes Instagram/FB Shop", "Remboursements assurance", "Autres revenus"],
+        "entrées": [
+          "Ventes Etsy",
+          "Ventes site web",
+          "Ventes Instagram/FB Shop",
+          "Remboursements assurance",
+          "Autres revenus"
+        ],
         "sorties": {
-          "coûts_variables": ["Printful/POD (% du CA)", "Frais Etsy (6.5%)", "Frais transaction (2-3%)", "Frais pub (Meta/Google)"],
-          "coûts_fixes": ["Abonnement Etsy Plus (10$/mois)", "Canva Pro/Adobe", "Klaviyo/Mailchimp", "Domaine + hébergement"],
-          "coûts_occasionnels": ["Échantillons/tests", "Équipement photo", "Formations/outils", "Comptable/avocat"]
+          "coûts_variables": [
+            "Printful/POD (% du CA)",
+            "Frais Etsy (6.5%)",
+            "Frais transaction (2-3%)",
+            "Frais pub (Meta/Google)"
+          ],
+          "coûts_fixes": [
+            "Abonnement Etsy Plus (10$/mois)",
+            "Canva Pro/Adobe",
+            "Klaviyo/Mailchimp",
+            "Domaine + hébergement"
+          ],
+          "coûts_occasionnels": [
+            "Échantillons/tests",
+            "Équipement photo",
+            "Formations/outils",
+            "Comptable/avocat"
+          ]
         }
       },
       "réserve_trésorerie_recommandée": "Maintenir 2-3 mois de charges fixes en réserve liquide",
       "fonds_publicité": {
         "règle": "Réinvestir 20-30% du CA en publicité pendant la phase de croissance",
         "paliers": [
-          {"CA_mensuel": "0-1 000$", "budget_pub": "50-150$/mois — tester, valider"},
-          {"CA_mensuel": "1 000-5 000$", "budget_pub": "300-1 000$/mois — scaler ce qui marche"},
-          {"CA_mensuel": "5 000-15 000$", "budget_pub": "1 000-3 500$/mois — diversifier canaux"},
-          {"CA_mensuel": "15 000$+", "budget_pub": "20-25% CA — optimiser ROAS strict"}
+          { "CA_mensuel": "0-1 000$", "budget_pub": "50-150$/mois — tester, valider" },
+          {
+            "CA_mensuel": "1 000-5 000$",
+            "budget_pub": "300-1 000$/mois — scaler ce qui marche"
+          },
+          {
+            "CA_mensuel": "5 000-15 000$",
+            "budget_pub": "1 000-3 500$/mois — diversifier canaux"
+          },
+          { "CA_mensuel": "15 000$+", "budget_pub": "20-25% CA — optimiser ROAS strict" }
         ]
       }
     },
@@ -155,17 +198,32 @@
       "paliers_de_croissance": [
         {
           "phase": "Validation (0-2 000$/mois)",
-          "priorités": ["Trouver le product-market fit", "Tester 10+ designs", "Optimiser conversion Etsy", "Zéro pub ou micro-budget 50$/mois"],
+          "priorités": [
+            "Trouver le product-market fit",
+            "Tester 10+ designs",
+            "Optimiser conversion Etsy",
+            "Zéro pub ou micro-budget 50$/mois"
+          ],
           "réinvestissement": "100% en designs et tests"
         },
         {
           "phase": "Traction (2 000-8 000$/mois)",
-          "priorités": ["Scaler les best-sellers", "Activer publicité Facebook/Instagram", "Construire liste email", "Améliorer LTV (upsell, bundles)"],
+          "priorités": [
+            "Scaler les best-sellers",
+            "Activer publicité Facebook/Instagram",
+            "Construire liste email",
+            "Améliorer LTV (upsell, bundles)"
+          ],
           "réinvestissement": "30% pub, 30% création contenu, 20% outils, 20% épargne"
         },
         {
           "phase": "Scale (8 000-20 000$/mois)",
-          "priorités": ["Diversifier canaux (Pinterest Ads, Google Shopping)", "Recruter VA (assistant virtuel)", "Automatiser service client", "Développer wholesale ou B2B"],
+          "priorités": [
+            "Diversifier canaux (Pinterest Ads, Google Shopping)",
+            "Recruter VA (assistant virtuel)",
+            "Automatiser service client",
+            "Développer wholesale ou B2B"
+          ],
           "réinvestissement": "25% pub, 15% équipe, 20% outils, 40% profits"
         }
       ]

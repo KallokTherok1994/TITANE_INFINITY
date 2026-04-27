@@ -6,7 +6,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AlertSeverity } from '@/services/monitoring/alerting';
 
 // ── Mocks ──────────────────────────────────────────────────────
-vi.mock('@/services/monitoring/alerting', async (importOriginal) => {
+vi.mock('@/services/monitoring/alerting', async importOriginal => {
   const actual = await importOriginal<typeof import('@/services/monitoring/alerting')>();
   return {
     ...actual,
@@ -38,7 +38,12 @@ vi.mock('@/config/featureFlags', async () => ({
   getActiveAIProviders: vi.fn().mockReturnValue(['ollama']),
 }));
 vi.mock('@/services/agents/advancedAgentCatalog', async () => ({
-  getAdvancedAgentStatus: vi.fn().mockReturnValue({ readiness: 'partial', blockers: [], serviceState: '', evidence: [] }),
+  getAdvancedAgentStatus: vi.fn().mockReturnValue({
+    readiness: 'partial',
+    blockers: [],
+    serviceState: '',
+    evidence: [],
+  }),
 }));
 
 import {

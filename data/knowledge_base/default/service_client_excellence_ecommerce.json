@@ -8,11 +8,31 @@
       "principe": "Le service client est le marketing le moins cher qui soit. Un client satisfait = 5-10 recommandations. Un client insatisfait = 15-20 avis négatifs.",
       "objectif_ultime": "Transformer des acheteurs ponctuels en ambassadeurs de marque qui achètent à nouveau et recommandent activement.",
       "métriques_clés": [
-        {"nom": "CSAT (Customer Satisfaction Score)", "mesure": "Satisfaction immédiate après interaction", "benchmark_excellent": "> 90%"},
-        {"nom": "NPS (Net Promoter Score)", "mesure": "Probabilité de recommandation 0-10", "benchmark_excellent": "> 50"},
-        {"nom": "First Reply Time", "mesure": "Délai 1ère réponse", "benchmark_excellent": "< 4h (idéal < 1h)"},
-        {"nom": "Résolution au 1er contact", "mesure": "Problèmes résolus sans escalade", "benchmark_excellent": "> 80%"},
-        {"nom": "Taux de rétention", "mesure": "% clients qui rachètent à 12 mois", "benchmark_excellent": "> 25% e-commerce"}
+        {
+          "nom": "CSAT (Customer Satisfaction Score)",
+          "mesure": "Satisfaction immédiate après interaction",
+          "benchmark_excellent": "> 90%"
+        },
+        {
+          "nom": "NPS (Net Promoter Score)",
+          "mesure": "Probabilité de recommandation 0-10",
+          "benchmark_excellent": "> 50"
+        },
+        {
+          "nom": "First Reply Time",
+          "mesure": "Délai 1ère réponse",
+          "benchmark_excellent": "< 4h (idéal < 1h)"
+        },
+        {
+          "nom": "Résolution au 1er contact",
+          "mesure": "Problèmes résolus sans escalade",
+          "benchmark_excellent": "> 80%"
+        },
+        {
+          "nom": "Taux de rétention",
+          "mesure": "% clients qui rachètent à 12 mois",
+          "benchmark_excellent": "> 25% e-commerce"
+        }
       ]
     },
     "scripts_service_client": {
@@ -81,23 +101,38 @@
           {
             "niveau": "Fan",
             "condition": "1er achat",
-            "avantages": ["Code -10% bienvenue", "Accès early access nouvelles collections"]
+            "avantages": [
+              "Code -10% bienvenue",
+              "Accès early access nouvelles collections"
+            ]
           },
           {
             "niveau": "Collector",
             "condition": "2e achat ou 100$+ dépensés",
-            "avantages": ["Code -15% permanent", "Livraison prioritaire", "Aperçu exclusif nouveautés"]
+            "avantages": [
+              "Code -15% permanent",
+              "Livraison prioritaire",
+              "Aperçu exclusif nouveautés"
+            ]
           },
           {
             "niveau": "Ambassadeur",
             "condition": "5+ achats ou parrainage 3 clients",
-            "avantages": ["Code -20%", "Canvas gratuit par an", "Mention sur réseaux sociaux Kallok's Arts"]
+            "avantages": [
+              "Code -20%",
+              "Canvas gratuit par an",
+              "Mention sur réseaux sociaux Kallok's Arts"
+            ]
           }
         ]
       },
       "parrainage_referral": {
         "mécanisme": "Client A partage lien unique → Client B achète → Client A reçoit 15$ crédit",
-        "outils": ["ReferralCandy (Shopify)", "Friendbuy", "Manuel via codes personnalisés"],
+        "outils": [
+          "ReferralCandy (Shopify)",
+          "Friendbuy",
+          "Manuel via codes personnalisés"
+        ],
         "LTV_impact": "Les clients référés ont un LTV 25% plus élevé en moyenne"
       }
     },
@@ -110,10 +145,22 @@
         "Insert physique avec QR code vers lien avis direct"
       ],
       "plateformes_prioritaires": [
-        {"plateforme": "Etsy Reviews", "importance": "CRITIQUE — directement visible sur la liste produit"},
-        {"plateforme": "Google Business Profile", "importance": "HAUTE — référencement local + crédibilité marque"},
-        {"plateforme": "Facebook Page", "importance": "MOYENNE — social proof communauté"},
-        {"plateforme": "Trustpilot", "importance": "OPTIONNELLE — surtout si site propre Wix/Shopify"}
+        {
+          "plateforme": "Etsy Reviews",
+          "importance": "CRITIQUE — directement visible sur la liste produit"
+        },
+        {
+          "plateforme": "Google Business Profile",
+          "importance": "HAUTE — référencement local + crédibilité marque"
+        },
+        {
+          "plateforme": "Facebook Page",
+          "importance": "MOYENNE — social proof communauté"
+        },
+        {
+          "plateforme": "Trustpilot",
+          "importance": "OPTIONNELLE — surtout si site propre Wix/Shopify"
+        }
       ],
       "répondre_à_tous_les_avis": "Répondre aux avis (positifs ET négatifs) montre que la marque est active et se soucie. Boost SEO également."
     },
@@ -127,10 +174,22 @@
         ]
       },
       "segmentation_clients": [
-        {"segment": "Champions (achat récent + fréquent + AOV élevé)", "action": "Programme VIP Ambassadeur, early access"},
-        {"segment": "Loyaux (achats réguliers)", "action": "Réductions fidélité, upsell collection premium"},
-        {"segment": "À risque (baisse fréquence)", "action": "Win-back séquence, offre exclusive"},
-        {"segment": "Inactifs (90j+ sans achat)", "action": "Réactivation agressive puis suppression liste si no response"}
+        {
+          "segment": "Champions (achat récent + fréquent + AOV élevé)",
+          "action": "Programme VIP Ambassadeur, early access"
+        },
+        {
+          "segment": "Loyaux (achats réguliers)",
+          "action": "Réductions fidélité, upsell collection premium"
+        },
+        {
+          "segment": "À risque (baisse fréquence)",
+          "action": "Win-back séquence, offre exclusive"
+        },
+        {
+          "segment": "Inactifs (90j+ sans achat)",
+          "action": "Réactivation agressive puis suppression liste si no response"
+        }
       ]
     }
   }

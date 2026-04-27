@@ -1249,8 +1249,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // DEV SUDO (v24.4+) [TIER 3 — arbitrary FS/command execution]
   // ═══════════════════════════════════════════════════════════════
   'dev_inspect_file',
-  'dev_apply_patch',  // TIER 3
-  'dev_run_command',  // TIER 3
+  'dev_apply_patch', // TIER 3
+  'dev_run_command', // TIER 3
   'dev_get_logs',
   'hybrid_analyze_code',
 

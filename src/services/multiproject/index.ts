@@ -99,7 +99,10 @@ export interface CreateProjectRequest {
 
 /** Input to update project fields. */
 export type UpdateProjectRequest = Partial<
-  Pick<MultiProject, 'name' | 'description' | 'status' | 'priority' | 'tags' | 'dependsOn'>
+  Pick<
+    MultiProject,
+    'name' | 'description' | 'status' | 'priority' | 'tags' | 'dependsOn'
+  >
 >;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -261,7 +264,10 @@ export function getProject(id: string): MultiProject | null {
  * Update mutable fields of a project.
  * Returns the updated project, or null if not found.
  */
-export function updateProject(id: string, req: UpdateProjectRequest): MultiProject | null {
+export function updateProject(
+  id: string,
+  req: UpdateProjectRequest
+): MultiProject | null {
   const registry = loadRegistry();
   const idx = registry.findIndex(p => p.id === id);
   if (idx === -1) return null;
@@ -397,7 +403,9 @@ function updateProjectResources(
  * Stores the resulting snapshot on the project and returns it.
  * Falls back to 'UNKNOWN' verdict on IPC failure.
  */
-export async function refreshProjectHealth(projectId: string): Promise<ProjectHealthSnapshot> {
+export async function refreshProjectHealth(
+  projectId: string
+): Promise<ProjectHealthSnapshot> {
   const consensus: AgentConsensus = await dispatchToAgents({
     type: 'health_check',
     payload: { projectId },
@@ -419,7 +427,11 @@ export async function refreshProjectHealth(projectId: string): Promise<ProjectHe
   const idx = registry.findIndex(p => p.id === projectId);
   if (idx !== -1) {
     const next = [...registry];
-    next[idx] = { ...next[idx]!, healthSnapshot: snapshot, updatedAt: snapshot.computedAt } as MultiProject;
+    next[idx] = {
+      ...next[idx]!,
+      healthSnapshot: snapshot,
+      updatedAt: snapshot.computedAt,
+    } as MultiProject;
     saveRegistry(next);
   }
 
@@ -438,12 +450,9 @@ export function getMultiProjectRollup(): MultiProjectRollup {
   const archived = projects.filter(p => p.status === 'archived').length;
   const blocked = projects.filter(p => p.status === 'blocked').length;
 
-  const healthyCount = projects.filter(
-    p => p.healthSnapshot?.verdict === 'PASS'
-  ).length;
+  const healthyCount = projects.filter(p => p.healthSnapshot?.verdict === 'PASS').length;
   const failingCount = projects.filter(
-    p =>
-      p.healthSnapshot?.verdict === 'FAIL' || p.healthSnapshot?.verdict === 'BLOCKED'
+    p => p.healthSnapshot?.verdict === 'FAIL' || p.healthSnapshot?.verdict === 'BLOCKED'
   ).length;
 
   return {
@@ -478,7 +487,8 @@ export function pauseProject(id: string): MultiProject | null {
  */
 export function resumeProject(id: string): MultiProject | null {
   const project = getProject(id);
-  if (!project || project.status === 'active' || project.status === 'archived') return null;
+  if (!project || project.status === 'active' || project.status === 'archived')
+    return null;
   return updateProject(id, { status: 'active' });
 }
 
@@ -493,8 +503,7 @@ export function searchProjects(
   const lower = query.toLowerCase();
   let results = loadRegistry().filter(p => {
     const matchesText =
-      p.name.toLowerCase().includes(lower) ||
-      p.description.toLowerCase().includes(lower);
+      p.name.toLowerCase().includes(lower) || p.description.toLowerCase().includes(lower);
     const matchesStatus = options.status ? p.status === options.status : true;
     return matchesText && matchesStatus;
   });
@@ -593,12 +602,13 @@ export function getProjectDependencyChain(projectId: string): string[] {
  */
 export function detectAndMarkBlockedProjects(): string[] {
   const registry = loadRegistry();
-  const blockedIds = new Set(
-    registry.filter(p => p.status === 'blocked').map(p => p.id)
-  );
+  const blockedIds = new Set(registry.filter(p => p.status === 'blocked').map(p => p.id));
   const failedHealthIds = new Set(
     registry
-      .filter(p => p.healthSnapshot?.verdict === 'FAIL' || p.healthSnapshot?.verdict === 'BLOCKED')
+      .filter(
+        p =>
+          p.healthSnapshot?.verdict === 'FAIL' || p.healthSnapshot?.verdict === 'BLOCKED'
+      )
       .map(p => p.id)
   );
 
@@ -621,7 +631,9 @@ export function detectAndMarkBlockedProjects(): string[] {
  * Batch refresh health for all active projects.
  * Returns a map of projectId → snapshot.
  */
-export async function refreshAllProjectsHealth(): Promise<Map<string, ProjectHealthSnapshot>> {
+export async function refreshAllProjectsHealth(): Promise<
+  Map<string, ProjectHealthSnapshot>
+> {
   const activeProjects = loadRegistry().filter(p => p.status === 'active');
   const results = new Map<string, ProjectHealthSnapshot>();
 
@@ -663,7 +675,8 @@ export function getMultiProjectAgentStatus(): MultiProjectAgentStatus {
   const hasProjects = activeProjects.length > 0;
   const hasHealthSnapshots = activeProjects.some(p => p.healthSnapshot !== null);
 
-  const readiness = hasProjects && hasHealthSnapshots ? 'qualified' : hasProjects ? 'partial' : 'planned';
+  const readiness =
+    hasProjects && hasHealthSnapshots ? 'qualified' : hasProjects ? 'partial' : 'planned';
 
   const evidence: string[] = [
     `Project registry active (${registry.length} entries, ${activeProjects.length} non-archived).`,
@@ -673,12 +686,16 @@ export function getMultiProjectAgentStatus(): MultiProjectAgentStatus {
   ];
 
   if (hasHealthSnapshots) {
-    evidence.push('Health consensus snapshots available via dispatchToAgents() integration.');
+    evidence.push(
+      'Health consensus snapshots available via dispatchToAgents() integration.'
+    );
   }
 
   const blockers: string[] = [];
   if (!hasProjects) {
-    blockers.push('No active projects in registry — create a project to activate the agent.');
+    blockers.push(
+      'No active projects in registry — create a project to activate the agent.'
+    );
   }
   if (!hasHealthSnapshots) {
     blockers.push(
@@ -703,6 +720,6 @@ export function getMultiProjectAgentStatus(): MultiProjectAgentStatus {
     nextStep:
       blockers.length === 0
         ? 'Extend with Tauri-backed file persistence for cross-session project history.'
-        : blockers[0] ?? 'Resolve blockers above.',
+        : (blockers[0] ?? 'Resolve blockers above.'),
   };
 }

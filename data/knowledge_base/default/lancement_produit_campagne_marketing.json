@@ -7,7 +7,12 @@
     "framework_lancement_90j": {
       "phase_prelancement": {
         "durée": "30 jours avant le lancement",
-        "objectifs": ["Construire une audience", "Créer de l'anticipation", "Collecter des emails", "Valider la demande"],
+        "objectifs": [
+          "Construire une audience",
+          "Créer de l'anticipation",
+          "Collecter des emails",
+          "Valider la demande"
+        ],
         "actions": [
           {
             "semaine": "S-4",
@@ -60,11 +65,31 @@
           "Stories toutes les 2h (unboxing, réactions, mise en scène)"
         ],
         "emails_sequence_lancement": [
-          {"jour": "J0", "objet": "🎉 C'est lancé — Accès Early Bird (-15% encore 48h)", "cta": "Voir la collection"},
-          {"jour": "J1", "objet": "Les premières commandes sont arrivées ! [photo client]", "cta": "Rejoins-les"},
-          {"jour": "J3", "objet": "Il reste [X] exemplaires — offre Early Bird expire ce soir", "cta": "Commander maintenant"},
-          {"jour": "J7", "objet": "Une semaine et déjà [N] familles ont transformé leur espace ✨", "cta": "Voir les témoignages"},
-          {"jour": "J14", "objet": "Dernière chance — fin de la promo de lancement", "cta": "Offre finale"}
+          {
+            "jour": "J0",
+            "objet": "🎉 C'est lancé — Accès Early Bird (-15% encore 48h)",
+            "cta": "Voir la collection"
+          },
+          {
+            "jour": "J1",
+            "objet": "Les premières commandes sont arrivées ! [photo client]",
+            "cta": "Rejoins-les"
+          },
+          {
+            "jour": "J3",
+            "objet": "Il reste [X] exemplaires — offre Early Bird expire ce soir",
+            "cta": "Commander maintenant"
+          },
+          {
+            "jour": "J7",
+            "objet": "Une semaine et déjà [N] familles ont transformé leur espace ✨",
+            "cta": "Voir les témoignages"
+          },
+          {
+            "jour": "J14",
+            "objet": "Dernière chance — fin de la promo de lancement",
+            "cta": "Offre finale"
+          }
         ],
         "budget_pub_lancement_recommandé": {
           "J0_J3": "50-100$/j — momentum max",
@@ -128,9 +153,19 @@
         "Paragraphe 5 : Tags #hashtags Etsy (13 maximum)"
       ],
       "13_tags_etsy_canvas_art": [
-        "canvas mural", "wall art", "décoration salon", "art abstrait", "home decor",
-        "impression toile", "décoration moderne", "cadeau déco", "art print",
-        "tableau mural", "décoration chambre", "toile déco", "art contemporain"
+        "canvas mural",
+        "wall art",
+        "décoration salon",
+        "art abstrait",
+        "home decor",
+        "impression toile",
+        "décoration moderne",
+        "cadeau déco",
+        "art print",
+        "tableau mural",
+        "décoration chambre",
+        "toile déco",
+        "art contemporain"
       ]
     }
   }

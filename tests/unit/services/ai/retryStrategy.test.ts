@@ -121,9 +121,9 @@ describe('RetryStrategy', () => {
     it('throw après maxAttempts si toujours en erreur', async () => {
       const fn = vi.fn().mockRejectedValue(new Error('503 Service Unavailable'));
 
-      await expect(
-        withRetry(fn, { maxAttempts: 3, initialDelayMs: 0 })
-      ).rejects.toThrow('503 Service Unavailable');
+      await expect(withRetry(fn, { maxAttempts: 3, initialDelayMs: 0 })).rejects.toThrow(
+        '503 Service Unavailable'
+      );
       expect(fn).toHaveBeenCalledTimes(3);
     });
   });
@@ -148,7 +148,11 @@ describe('RetryStrategy', () => {
         .mockResolvedValue('ok');
 
       const shouldRetry = vi.fn().mockReturnValue(true);
-      const result = await withRetry(fn, { maxAttempts: 3, initialDelayMs: 0, shouldRetry });
+      const result = await withRetry(fn, {
+        maxAttempts: 3,
+        initialDelayMs: 0,
+        shouldRetry,
+      });
       expect(result).toBe('ok');
       expect(shouldRetry).toHaveBeenCalled();
     });
@@ -158,7 +162,11 @@ describe('RetryStrategy', () => {
   describe('withRetryAndTimeout()', () => {
     it('retourne le résultat si fn réussit avant timeout', async () => {
       const fn = vi.fn().mockResolvedValue('fast');
-      const result = await withRetryAndTimeout(fn, { maxAttempts: 1, initialDelayMs: 0 }, 5000);
+      const result = await withRetryAndTimeout(
+        fn,
+        { maxAttempts: 1, initialDelayMs: 0 },
+        5000
+      );
       expect(result).toBe('fast');
     });
 
@@ -166,7 +174,13 @@ describe('RetryStrategy', () => {
       vi.useFakeTimers({ shouldAdvanceTime: false });
       let settled = false;
       const fn = vi.fn().mockImplementation(
-        () => new Promise<string>(resolve => { setTimeout(() => { settled = true; resolve('late'); }, 10000); })
+        () =>
+          new Promise<string>(resolve => {
+            setTimeout(() => {
+              settled = true;
+              resolve('late');
+            }, 10000);
+          })
       );
 
       const promise = withRetryAndTimeout(fn, { maxAttempts: 1, initialDelayMs: 0 }, 500);

@@ -32,7 +32,14 @@
     "optimisation_fiche_produit": {
       "above_the_fold": {
         "principe": "Ce que le visiteur voit SANS scroller est décisif. Ces éléments doivent être présents au-dessus de la ligne de flottaison sur mobile ET desktop.",
-        "elements_obligatoires": ["Photo principale haute qualité", "Titre clair avec le produit", "Prix visible", "Note clients (si disponible)", "Bouton 'Ajouter au panier' (couleur contrastée, grand, visible)", "2-3 micro-engagements : livraison gratuite badge, retour 30j, paiement sécurisé"]
+        "elements_obligatoires": [
+          "Photo principale haute qualité",
+          "Titre clair avec le produit",
+          "Prix visible",
+          "Note clients (si disponible)",
+          "Bouton 'Ajouter au panier' (couleur contrastée, grand, visible)",
+          "2-3 micro-engagements : livraison gratuite badge, retour 30j, paiement sécurisé"
+        ]
       },
       "photos_impact_conversion": {
         "quantite": "6-10 photos. Chaque photo supplémentaire jusqu'à 8 = +2-5% de conversion.",

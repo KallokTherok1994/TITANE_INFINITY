@@ -70,9 +70,16 @@
           "renouvellemnt": "Uploader régulièrement de nouveaux produits. Algorithme Etsy favorise les boutiques actives (1-3 nouveaux listings/semaine minimum)."
         },
         "mots_cles_prioritaires": [
-          "Canvas Wall Art", "Abstract Canvas Print", "Living Room Decor", "Large Wall Art",
-          "Bedroom Decor Canvas", "Motivational Wall Art", "Colorful Abstract Print",
-          "Modern Wall Decor", "Housewarming Gift", "Office Wall Art"
+          "Canvas Wall Art",
+          "Abstract Canvas Print",
+          "Living Room Decor",
+          "Large Wall Art",
+          "Bedroom Decor Canvas",
+          "Motivational Wall Art",
+          "Colorful Abstract Print",
+          "Modern Wall Decor",
+          "Housewarming Gift",
+          "Office Wall Art"
         ],
         "etsy_ads": "Sponsoriser les listings avec des enchères (Etsy Ads). Budget 1-5$/jour pour démarrer. Cibler les keywords avec forte intention d'achat. ROAS Etsy Ads typique : 3-8×."
       },
@@ -177,7 +184,20 @@
       },
       "seo_etsy_kalloks": {
         "titres_types": "Abstract Canvas Print Blue Gold | Living Room Wall Art | Large Canvas Painting | Modern Home Decor",
-        "tags_principaux": ["Canvas Wall Art", "Abstract Wall Art", "Living Room Decor", "Large Wall Art Canvas", "Bedroom Wall Art", "Motivational Canvas", "Colorful Abstract Print", "Housewarming Gift", "Modern Home Decor", "Canadian Art", "Quebec Artist", "Positive Vibes Art"],
+        "tags_principaux": [
+          "Canvas Wall Art",
+          "Abstract Wall Art",
+          "Living Room Decor",
+          "Large Wall Art Canvas",
+          "Bedroom Wall Art",
+          "Motivational Canvas",
+          "Colorful Abstract Print",
+          "Housewarming Gift",
+          "Modern Home Decor",
+          "Canadian Art",
+          "Quebec Artist",
+          "Positive Vibes Art"
+        ],
         "renouvellement": "3-5 nouveaux listings par semaine au lancement. 1-2 par semaine en régime de croisière."
       }
     },

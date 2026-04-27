@@ -11,14 +11,27 @@ vi.mock('@/services/ai/metricsEngine', async () => ({
       totalRequests: 20,
       successRate: 0.9,
       avgResponseTime: 1500,
-      providers: [{ provider: 'ollama', totalRequests: 20, successCount: 18, errorCount: 2, avgLatency: 1500 }],
+      providers: [
+        {
+          provider: 'ollama',
+          totalRequests: 20,
+          successCount: 18,
+          errorCount: 2,
+          avgLatency: 1500,
+        },
+      ],
       totalFallbacks: 1,
       last24h: { requests: 20, errors: 2, avgLatency: 1500, fallbacks: 1 },
     }),
   },
 }));
 vi.mock('@/services/agents/advancedAgentCatalog', async () => ({
-  getAdvancedAgentStatus: vi.fn().mockReturnValue({ readiness: 'partial', blockers: [], serviceState: '', evidence: [] }),
+  getAdvancedAgentStatus: vi.fn().mockReturnValue({
+    readiness: 'partial',
+    blockers: [],
+    serviceState: '',
+    evidence: [],
+  }),
 }));
 vi.mock('@/config/featureFlags', async () => ({
   getActiveAIProviders: vi.fn().mockReturnValue(['ollama']),
@@ -66,12 +79,36 @@ describe('computeExplainabilityScore', () => {
 
   it('grade A si score >= 90', () => {
     // inject perfect conditions
-    const score = { score: 95, grade: 'A' as const, label: '', breakdown: { chainCoverage: 100, championAlignment: 100, localUsageRate: 100, fallbackPenalty: 0, historyDepth: 100 }, computedAt: Date.now() };
+    const score = {
+      score: 95,
+      grade: 'A' as const,
+      label: '',
+      breakdown: {
+        chainCoverage: 100,
+        championAlignment: 100,
+        localUsageRate: 100,
+        fallbackPenalty: 0,
+        historyDepth: 100,
+      },
+      computedAt: Date.now(),
+    };
     expect(score.grade).toBe('A');
   });
 
   it('grade F si score < 40', () => {
-    const score = { score: 10, grade: 'F' as const, label: '', breakdown: { chainCoverage: 0, championAlignment: 0, localUsageRate: 0, fallbackPenalty: 100, historyDepth: 0 }, computedAt: Date.now() };
+    const score = {
+      score: 10,
+      grade: 'F' as const,
+      label: '',
+      breakdown: {
+        chainCoverage: 0,
+        championAlignment: 0,
+        localUsageRate: 0,
+        fallbackPenalty: 100,
+        historyDepth: 0,
+      },
+      computedAt: Date.now(),
+    };
     expect(score.grade).toBe('F');
   });
 });

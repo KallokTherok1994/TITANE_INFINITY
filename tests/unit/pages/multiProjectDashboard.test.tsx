@@ -1,7 +1,7 @@
 /**
  * TITANE∞ — MultiProjectDashboard unit tests
  * Rule 16: new UI page requires Vitest + data-testid tests.
- * Covers: initial render, rollup display, project list, create form, 
+ * Covers: initial render, rollup display, project list, create form,
  *         archive/delete actions, health refresh.
  */
 import React from 'react';
@@ -187,7 +187,9 @@ describe('MultiProjectDashboard — agent status', () => {
   it('displays PLANNED readiness label when no projects', () => {
     mockListProjects.mockReturnValue([]);
     render(<MultiProjectDashboard />);
-    expect(screen.getByTestId('multiproject-agent-status').textContent).toContain('PLANNED');
+    expect(screen.getByTestId('multiproject-agent-status').textContent).toContain(
+      'PLANNED'
+    );
   });
 
   it('displays evidence from agent status', () => {
@@ -262,7 +264,9 @@ describe('MultiProjectDashboard — project list', () => {
   it('displays health badge with PASS verdict when snapshot exists', () => {
     mockListProjects.mockReturnValue([PROJECT_WITH_HEALTH]);
     render(<MultiProjectDashboard />);
-    const badge = screen.getByTestId(`multiproject-health-badge-${PROJECT_WITH_HEALTH.id}`);
+    const badge = screen.getByTestId(
+      `multiproject-health-badge-${PROJECT_WITH_HEALTH.id}`
+    );
     expect(badge.textContent).toBe('PASS');
   });
 
@@ -350,7 +354,9 @@ describe('MultiProjectDashboard — project actions', () => {
 
   it('calls archiveProject when Archive button clicked', async () => {
     render(<MultiProjectDashboard />);
-    const archiveBtn = screen.getByLabelText(`Archiver le projet ${PROJECT_FIXTURE.name}`);
+    const archiveBtn = screen.getByLabelText(
+      `Archiver le projet ${PROJECT_FIXTURE.name}`
+    );
     await act(async () => {
       fireEvent.click(archiveBtn);
     });
@@ -359,7 +365,9 @@ describe('MultiProjectDashboard — project actions', () => {
 
   it('calls deleteProject when Delete button clicked', async () => {
     render(<MultiProjectDashboard />);
-    const deleteBtn = screen.getByLabelText(`Supprimer le projet ${PROJECT_FIXTURE.name}`);
+    const deleteBtn = screen.getByLabelText(
+      `Supprimer le projet ${PROJECT_FIXTURE.name}`
+    );
     await act(async () => {
       fireEvent.click(deleteBtn);
     });
@@ -368,7 +376,9 @@ describe('MultiProjectDashboard — project actions', () => {
 
   it('calls refreshProjectHealth when Santé button clicked', async () => {
     render(<MultiProjectDashboard />);
-    const healthBtn = screen.getByLabelText(`Rafraîchir la santé du projet ${PROJECT_FIXTURE.name}`);
+    const healthBtn = screen.getByLabelText(
+      `Rafraîchir la santé du projet ${PROJECT_FIXTURE.name}`
+    );
     await act(async () => {
       fireEvent.click(healthBtn);
     });

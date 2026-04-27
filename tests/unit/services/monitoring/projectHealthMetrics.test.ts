@@ -16,7 +16,10 @@ vi.mock('@tauri-apps/api/core', () => ({
 
 // ── Import target ────────────────────────────────────────────
 
-import { getProjectHealthMetrics, resetProjectHealthMetricsCacheForTests } from '@/services/monitoring';
+import {
+  getProjectHealthMetrics,
+  resetProjectHealthMetricsCacheForTests,
+} from '@/services/monitoring';
 
 // ── Tests ────────────────────────────────────────────────────
 
@@ -132,7 +135,7 @@ describe('getProjectHealthMetrics', () => {
 
     mockInvoke
       .mockResolvedValueOnce(autohealLines) // autoheal
-      .mockResolvedValueOnce('');           // ui-events
+      .mockResolvedValueOnce(''); // ui-events
 
     // Re-import to bypass TTL cache
     const { getProjectHealthMetrics: fn } = await import('@/services/monitoring');

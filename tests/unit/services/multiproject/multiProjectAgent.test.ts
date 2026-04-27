@@ -573,7 +573,8 @@ describe('searchProjects', () => {
   });
 
   it('respecte la limite (limit option)', () => {
-    for (let i = 0; i < 5; i++) createProject({ name: `Limit Test ${i}`, priority: i + 1 });
+    for (let i = 0; i < 5; i++)
+      createProject({ name: `Limit Test ${i}`, priority: i + 1 });
     const results = searchProjects('limit', { limit: 3 });
     expect(results.length).toBeLessThanOrEqual(3);
   });
@@ -679,9 +680,12 @@ describe('detectAndMarkBlockedProjects', () => {
   });
 
   it('marque comme bloqué un projet dont toutes les dépendances sont FAIL', async () => {
-    mockDispatchToAgents.mockResolvedValueOnce(
-      { verdicts: { a: 'FAIL' }, aggregated: 'FAIL', blockers: ['dep failed'], timestamp: Date.now() }
-    );
+    mockDispatchToAgents.mockResolvedValueOnce({
+      verdicts: { a: 'FAIL' },
+      aggregated: 'FAIL',
+      blockers: ['dep failed'],
+      timestamp: Date.now(),
+    });
     const dep = createProject({ name: 'Dep', priority: 1 })!;
     const proj = createProject({ name: 'Proj', priority: 2 })!;
     updateProject(proj.id, { dependsOn: [dep.id] });

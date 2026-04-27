@@ -35,7 +35,12 @@
       "aov": {
         "definition": "Average Order Value = panier moyen",
         "calcul": "AOV = Revenus totaux / Nombre de commandes",
-        "leviers": ["Upsell produit (proposer une version premium)", "Cross-sell (produits complémentaires)", "Bundles (2 canvas pour le prix de 1,8)", "Seuil livraison gratuite (ex: gratuit dès 75$ → AOV moyen augmente)"],
+        "leviers": [
+          "Upsell produit (proposer une version premium)",
+          "Cross-sell (produits complémentaires)",
+          "Bundles (2 canvas pour le prix de 1,8)",
+          "Seuil livraison gratuite (ex: gratuit dès 75$ → AOV moyen augmente)"
+        ],
         "impact": "Augmenter le panier moyen de 20% = 20% de revenus supplémentaires sans un seul visiteur en plus"
       },
       "marge_nette": {
@@ -48,7 +53,13 @@
     "ga4_configuration_ecommerce": {
       "enhanced_ecommerce": {
         "activation": "Google Analytics 4 → Admin → Events → Enhanced measurement. Activer le suivi automatique des événements e-commerce.",
-        "evenements_standards": ["view_item (fiche produit vue)", "add_to_cart (ajout au panier)", "begin_checkout (début checkout)", "add_payment_info", "purchase (achat confirmé)"],
+        "evenements_standards": [
+          "view_item (fiche produit vue)",
+          "add_to_cart (ajout au panier)",
+          "begin_checkout (début checkout)",
+          "add_payment_info",
+          "purchase (achat confirmé)"
+        ],
         "integration_wix": "Wix intègre GA4 nativement via Wix Analytics Hub. Activer GA4 dans les paramètres Wix + entrer l'ID de mesure GA4.",
         "integration_etsy": "Etsy ne supporte pas GA4 directement. Utiliser l'outil 'Etsy Pattern' ou analyser via l'URL de destination avec UTM parameters."
       },
@@ -92,15 +103,36 @@
 
     "tableaux_de_bord_operationnels": {
       "tableau_de_bord_quotidien": {
-        "metriques": ["Revenus du jour vs objectif vs J-1 vs même jour semaine passée", "Nombre de commandes", "Panier moyen", "Trafic total et par canal", "Dépenses publicitaires du jour", "ROAS approximatif (revenus Ads / dépenses Ads)"],
+        "metriques": [
+          "Revenus du jour vs objectif vs J-1 vs même jour semaine passée",
+          "Nombre de commandes",
+          "Panier moyen",
+          "Trafic total et par canal",
+          "Dépenses publicitaires du jour",
+          "ROAS approximatif (revenus Ads / dépenses Ads)"
+        ],
         "outil": "Google Looker Studio (gratuit, ex Data Studio). Connecter GA4 + Google Ads + Meta Ads. Dashboard live accessible sur mobile."
       },
       "tableau_de_bord_hebdomadaire": {
-        "analyse": ["Meilleure source de trafic de la semaine", "Produits les plus vendus", "Panier moyen cette semaine vs semaine précédente", "Taux de conversion par device (mobile vs desktop)", "Emails envoyés et revenus email", "Nouveaux vs clients récurrents ratio"],
+        "analyse": [
+          "Meilleure source de trafic de la semaine",
+          "Produits les plus vendus",
+          "Panier moyen cette semaine vs semaine précédente",
+          "Taux de conversion par device (mobile vs desktop)",
+          "Emails envoyés et revenus email",
+          "Nouveaux vs clients récurrents ratio"
+        ],
         "action": "Prendre 1-2 décisions concrètes (augmenter le budget sur le canal qui performe, tester une nouvelle creative Ads, modifier le prix d'un produit)"
       },
       "tableau_de_bord_mensuel": {
-        "analyse": ["CAC par canal ce mois", "LTV cohorte clients ce mois", "Taux de réachat clients existants", "Croissance liste email", "ROI de chaque canal marketing", "Progression vers les objectifs annuels"],
+        "analyse": [
+          "CAC par canal ce mois",
+          "LTV cohorte clients ce mois",
+          "Taux de réachat clients existants",
+          "Croissance liste email",
+          "ROI de chaque canal marketing",
+          "Progression vers les objectifs annuels"
+        ],
         "decisions": "Réallouer le budget marketing selon le ROI réel par canal. Stopper les canaux sous-performants. Investir dans les gagnants."
       }
     },

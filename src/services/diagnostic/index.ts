@@ -303,9 +303,16 @@ export function runActiveDiagnosticScan(): ActiveDiagnosticScanResult {
 
   // ── Check 1: Active alerts ───────────────────────────────────
   if (activeAlerts.length === 0) {
-    checks.push({ id: 'alerts', label: 'Alertes actives', status: 'pass', detail: 'Aucune alerte active' });
+    checks.push({
+      id: 'alerts',
+      label: 'Alertes actives',
+      status: 'pass',
+      detail: 'Aucune alerte active',
+    });
   } else {
-    const sev = activeAlerts.some(a => a.severity === AlertSeverity.CRITICAL) ? 'fail' : 'warn';
+    const sev = activeAlerts.some(a => a.severity === AlertSeverity.CRITICAL)
+      ? 'fail'
+      : 'warn';
     checks.push({
       id: 'alerts',
       label: 'Alertes actives',
@@ -317,24 +324,48 @@ export function runActiveDiagnosticScan(): ActiveDiagnosticScanResult {
   }
 
   // ── Check 2: Erreurs globales ────────────────────────────────
-  const errorRate = globalMetrics.totalMessages > 0
-    ? globalMetrics.totalErrors / globalMetrics.totalMessages
-    : 0;
+  const errorRate =
+    globalMetrics.totalMessages > 0
+      ? globalMetrics.totalErrors / globalMetrics.totalMessages
+      : 0;
   if (errorRate === 0) {
-    checks.push({ id: 'error-rate', label: 'Taux d\'erreur', status: 'pass', detail: '0% erreurs' });
+    checks.push({
+      id: 'error-rate',
+      label: "Taux d'erreur",
+      status: 'pass',
+      detail: '0% erreurs',
+    });
   } else if (errorRate < 0.1) {
-    checks.push({ id: 'error-rate', label: 'Taux d\'erreur', status: 'warn', detail: `${(errorRate * 100).toFixed(1)}% erreurs`, suggestedAction: 'Surveiller la tendance des erreurs' });
+    checks.push({
+      id: 'error-rate',
+      label: "Taux d'erreur",
+      status: 'warn',
+      detail: `${(errorRate * 100).toFixed(1)}% erreurs`,
+      suggestedAction: 'Surveiller la tendance des erreurs',
+    });
     correctiveActions.push('MONITOR_ERROR_TREND');
   } else {
-    checks.push({ id: 'error-rate', label: 'Taux d\'erreur', status: 'fail', detail: `${(errorRate * 100).toFixed(1)}% erreurs — seuil critique dépassé`, suggestedAction: 'Identifier et corriger la source d\'erreurs principale' });
+    checks.push({
+      id: 'error-rate',
+      label: "Taux d'erreur",
+      status: 'fail',
+      detail: `${(errorRate * 100).toFixed(1)}% erreurs — seuil critique dépassé`,
+      suggestedAction: "Identifier et corriger la source d'erreurs principale",
+    });
     correctiveActions.push('INVESTIGATE_ERROR_SOURCE');
   }
 
   // ── Check 3: Ollama santé ────────────────────────────────────
   if (ollamaStats.endpointHealthy === true && ollamaStats.errorCount === 0) {
-    checks.push({ id: 'ollama', label: 'Santé Ollama', status: 'pass', detail: `${ollamaStats.config.model} @ ${ollamaStats.config.endpoint} — sain` });
+    checks.push({
+      id: 'ollama',
+      label: 'Santé Ollama',
+      status: 'pass',
+      detail: `${ollamaStats.config.model} @ ${ollamaStats.config.endpoint} — sain`,
+    });
   } else if (ollamaStats.endpointHealthy === false || ollamaStats.errorCount > 0) {
-    const sev: DiagnosticCheckStatus = ollamaStats.endpointHealthy === false ? 'fail' : 'warn';
+    const sev: DiagnosticCheckStatus =
+      ollamaStats.endpointHealthy === false ? 'fail' : 'warn';
     checks.push({
       id: 'ollama',
       label: 'Santé Ollama',
@@ -342,37 +373,78 @@ export function runActiveDiagnosticScan(): ActiveDiagnosticScanResult {
       detail: `${ollamaStats.endpointHealthy === false ? 'endpoint inaccessible' : `${ollamaStats.errorCount} erreurs récentes`} — modèle ${ollamaStats.config.model}`,
       suggestedAction: 'Relancer Ollama: ollama serve && ollama pull gemma2:2b',
     });
-    correctiveActions.push(ollamaStats.endpointHealthy === false ? 'RESTART_OLLAMA' : 'CLEAR_OLLAMA_ERRORS');
+    correctiveActions.push(
+      ollamaStats.endpointHealthy === false ? 'RESTART_OLLAMA' : 'CLEAR_OLLAMA_ERRORS'
+    );
   } else {
-    checks.push({ id: 'ollama', label: 'Santé Ollama', status: 'warn', detail: 'État Ollama non sondé' });
+    checks.push({
+      id: 'ollama',
+      label: 'Santé Ollama',
+      status: 'warn',
+      detail: 'État Ollama non sondé',
+    });
   }
 
   // ── Check 4: Providers actifs ────────────────────────────────
   if (activeProviders.length === 0) {
-    checks.push({ id: 'providers', label: 'Providers actifs', status: 'fail', detail: 'Aucun provider IA actif', suggestedAction: 'Activer au minimum le provider Ollama local' });
+    checks.push({
+      id: 'providers',
+      label: 'Providers actifs',
+      status: 'fail',
+      detail: 'Aucun provider IA actif',
+      suggestedAction: 'Activer au minimum le provider Ollama local',
+    });
     correctiveActions.push('ACTIVATE_LOCAL_PROVIDER');
   } else {
-    checks.push({ id: 'providers', label: 'Providers actifs', status: 'pass', detail: `${activeProviders.join(', ')} actifs` });
+    checks.push({
+      id: 'providers',
+      label: 'Providers actifs',
+      status: 'pass',
+      detail: `${activeProviders.join(', ')} actifs`,
+    });
   }
 
   // ── Check 5: Latence de réponse ──────────────────────────────
   const avgLatency = globalMetrics.avgResponseTime;
   if (avgLatency === 0 || globalMetrics.totalMessages === 0) {
-    checks.push({ id: 'latency', label: 'Latence réponse', status: 'pass', detail: 'Pas encore de données de latence' });
+    checks.push({
+      id: 'latency',
+      label: 'Latence réponse',
+      status: 'pass',
+      detail: 'Pas encore de données de latence',
+    });
   } else if (avgLatency < 3000) {
-    checks.push({ id: 'latency', label: 'Latence réponse', status: 'pass', detail: `${Math.round(avgLatency)}ms moyenne` });
+    checks.push({
+      id: 'latency',
+      label: 'Latence réponse',
+      status: 'pass',
+      detail: `${Math.round(avgLatency)}ms moyenne`,
+    });
   } else if (avgLatency < 8000) {
-    checks.push({ id: 'latency', label: 'Latence réponse', status: 'warn', detail: `${Math.round(avgLatency)}ms — latence élevée`, suggestedAction: 'Vérifier la charge réseau et la disponibilité Ollama' });
+    checks.push({
+      id: 'latency',
+      label: 'Latence réponse',
+      status: 'warn',
+      detail: `${Math.round(avgLatency)}ms — latence élevée`,
+      suggestedAction: 'Vérifier la charge réseau et la disponibilité Ollama',
+    });
     correctiveActions.push('CHECK_NETWORK_LOAD');
   } else {
-    checks.push({ id: 'latency', label: 'Latence réponse', status: 'fail', detail: `${Math.round(avgLatency)}ms — latence critique`, suggestedAction: 'Basculer vers le provider local, vérifier Ollama serve' });
+    checks.push({
+      id: 'latency',
+      label: 'Latence réponse',
+      status: 'fail',
+      detail: `${Math.round(avgLatency)}ms — latence critique`,
+      suggestedAction: 'Basculer vers le provider local, vérifier Ollama serve',
+    });
     correctiveActions.push('SWITCH_TO_LOCAL_PROVIDER');
   }
 
-  const overallStatus: DiagnosticCheckStatus =
-    checks.some(c => c.status === 'fail') ? 'fail' :
-    checks.some(c => c.status === 'warn') ? 'warn' :
-    'pass';
+  const overallStatus: DiagnosticCheckStatus = checks.some(c => c.status === 'fail')
+    ? 'fail'
+    : checks.some(c => c.status === 'warn')
+      ? 'warn'
+      : 'pass';
 
   const scanResult: ActiveDiagnosticScanResult = {
     scanId: `diag-scan-${start}`,
@@ -384,7 +456,12 @@ export function runActiveDiagnosticScan(): ActiveDiagnosticScanResult {
     rawSignals: {
       activeAlerts: activeAlerts.length,
       totalErrors: globalMetrics.totalErrors,
-      ollamaHealth: ollamaStats.endpointHealthy === true ? 'sain' : ollamaStats.endpointHealthy === false ? 'dégradé' : 'non sondé',
+      ollamaHealth:
+        ollamaStats.endpointHealthy === true
+          ? 'sain'
+          : ollamaStats.endpointHealthy === false
+            ? 'dégradé'
+            : 'non sondé',
       ollamaErrorCount: ollamaStats.errorCount,
       activeProviders,
     },

@@ -34,12 +34,30 @@
       "preuve_sociale": {
         "définition": "Nous suivons le comportement des autres, surtout en situation d'incertitude.",
         "formes": [
-          {"type": "Avis étoiles", "impact": "⭐⭐⭐⭐⭐ visible dès la liste produit Etsy — +25% clics estimés"},
-          {"type": "Nombre de ventes", "impact": "'5 847 ventes' sur Etsy — signal de popularité fort"},
-          {"type": "Photos clients UGC", "impact": "Photos authentiques dans leur maison = +40% conversion vs photos studio"},
-          {"type": "Témoignages spécifiques", "impact": "'Ce canvas a transformé mon salon gris en espace chaleureux' > 'Super produit'"},
-          {"type": "Followers réseaux", "impact": "10K+ followers = crédibilité immédiate"},
-          {"type": "Médias / presse", "impact": "'Tel que vu sur Décor Mag' — même petites mentions comptent"}
+          {
+            "type": "Avis étoiles",
+            "impact": "⭐⭐⭐⭐⭐ visible dès la liste produit Etsy — +25% clics estimés"
+          },
+          {
+            "type": "Nombre de ventes",
+            "impact": "'5 847 ventes' sur Etsy — signal de popularité fort"
+          },
+          {
+            "type": "Photos clients UGC",
+            "impact": "Photos authentiques dans leur maison = +40% conversion vs photos studio"
+          },
+          {
+            "type": "Témoignages spécifiques",
+            "impact": "'Ce canvas a transformé mon salon gris en espace chaleureux' > 'Super produit'"
+          },
+          {
+            "type": "Followers réseaux",
+            "impact": "10K+ followers = crédibilité immédiate"
+          },
+          {
+            "type": "Médias / presse",
+            "impact": "'Tel que vu sur Décor Mag' — même petites mentions comptent"
+          }
         ],
         "maximiser_preuve_sociale": [
           "Email post-achat avec lien direct vers la page avis Etsy",
