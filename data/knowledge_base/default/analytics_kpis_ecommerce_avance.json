@@ -1,0 +1,151 @@
+{
+  "version": "v31.3.0",
+  "category": "analytics_kpis_ecommerce_avance",
+  "description": "Analytics e-commerce avancé et KPIs — GA4 e-commerce configuration complète (enhanced measurement, purchase events, funnel exploration, attribution), métriques financières essentielles (CAC, LTV, ROAS, RoAS réel, marge nette), attribution multi-touch (premier clic vs dernier clic vs linéaire vs data-driven), cohort analysis clients, LTV prediction, tableaux de bord opérationnels (journalier, hebdomadaire, mensuel), Pixel Meta avancé (Conversions API CAPI, événements standards et custom), Google Tag Manager pour e-commerce, analyse concurrentielle par les données, reporting automatisé (Google Looker Studio), KPIs spécifiques par canal (Facebook Ads, Google Ads, email, organic), décisions data-driven pour la croissance",
+  "analytics_kpis_ecommerce_avance": {
+    "introduction": "Les données sont l'avantage compétitif des boutiques qui durent. Décider sans données = jouer à la loterie. Décider avec les bonnes données = investir de façon prévisible. La plupart des boutiques mesurent peu de chose — maîtriser l'analytics vous donne un avantage sur 90% de vos concurrents. TITANE vous donne le système de mesure complet, des KPIs aux tableaux de bord en passant par l'attribution.",
+
+    "metriques_financieres_essentielles": {
+      "cac": {
+        "definition": "Customer Acquisition Cost = combien coûte l'acquisition d'UN nouveau client en moyenne, tous canaux confondus.",
+        "calcul": "CAC = Dépenses marketing totales du mois / Nombre de nouveaux clients du mois",
+        "exemple": "5000$ de dépenses marketing → 100 nouveaux clients = CAC de 50$",
+        "objectif": "CAC < LTV/3. Si votre LTV est 150$, votre CAC ne devrait pas dépasser 50$.",
+        "par_canal": "Calculer le CAC par canal séparément (Facebook Ads, Google Ads, email, organique). Le canal le plus efficient = celui avec le plus bas CAC et la meilleure LTV."
+      },
+      "ltv": {
+        "definition": "Lifetime Value = revenu total généré par un client sur toute sa relation avec votre boutique.",
+        "calcul_simple": "LTV = Panier moyen × Nombre moyen d'achats par an × Nombre d'années de rétention",
+        "exemple": "75$ panier × 2,5 achats/an × 2 ans = LTV 375$",
+        "ltv_12_mois": "LTV sur 12 mois = métrique plus actionnable pour les décisions à court terme",
+        "importance": "Une LTV haute justifie un CAC plus élevé. Une boutique avec LTV 375$ peut se permettre de payer 100$ par nouveau client et rester rentable."
+      },
+      "roas": {
+        "definition": "Return on Ad Spend = revenus générés / dépenses publicitaires",
+        "calcul": "ROAS = Revenus attribués aux Ads / Dépenses Ads",
+        "exemple": "1000$ de Facebook Ads → 4000$ de revenus = ROAS 4x (ou 400%)",
+        "roas_cible_par_marge": {
+          "marge_60_pourcent": "ROAS minimum 2x pour être profitable (couvrir les coûts variables + Ads)",
+          "marge_40_pourcent": "ROAS minimum 2,5x",
+          "marge_30_pourcent": "ROAS minimum 3,3x",
+          "canvas_printful": "Marge nette typique 35-45% (après coût Printful + Ads + frais plateforme). ROAS minimum rentable : ~2,5-3x"
+        },
+        "roas_reel_vs_platforme": "Le ROAS affiché par Facebook ou Google inclut souvent des ventes qui auraient eu lieu sans l'annonce. GA4 avec attribution multi-touch est plus proche de la réalité. Viser un ROAS 'réel' GA4 2x minimum."
+      },
+      "aov": {
+        "definition": "Average Order Value = panier moyen",
+        "calcul": "AOV = Revenus totaux / Nombre de commandes",
+        "leviers": ["Upsell produit (proposer une version premium)", "Cross-sell (produits complémentaires)", "Bundles (2 canvas pour le prix de 1,8)", "Seuil livraison gratuite (ex: gratuit dès 75$ → AOV moyen augmente)"],
+        "impact": "Augmenter le panier moyen de 20% = 20% de revenus supplémentaires sans un seul visiteur en plus"
+      },
+      "marge_nette": {
+        "calcul": "Marge nette = Prix de vente - Coût production Printful - Frais plateforme - Frais Ads - Frais fixes (abonnements, outils)",
+        "exemple_canvas_60x80": "Prix vente 85$ - Printful 38$ - Etsy 5,5$ (6,5%) - Ads 15$ (17,6% budget) - Frais fixes 3$ = Marge nette 23,5$ (27,6%)",
+        "objectif_boutique_canvas": "Marge nette cible : 25-40% après tous les coûts. En dessous de 20% = modèle à revoir (prix trop bas, Ads trop chers, mauvais format)."
+      }
+    },
+
+    "ga4_configuration_ecommerce": {
+      "enhanced_ecommerce": {
+        "activation": "Google Analytics 4 → Admin → Events → Enhanced measurement. Activer le suivi automatique des événements e-commerce.",
+        "evenements_standards": ["view_item (fiche produit vue)", "add_to_cart (ajout au panier)", "begin_checkout (début checkout)", "add_payment_info", "purchase (achat confirmé)"],
+        "integration_wix": "Wix intègre GA4 nativement via Wix Analytics Hub. Activer GA4 dans les paramètres Wix + entrer l'ID de mesure GA4.",
+        "integration_etsy": "Etsy ne supporte pas GA4 directement. Utiliser l'outil 'Etsy Pattern' ou analyser via l'URL de destination avec UTM parameters."
+      },
+      "rapports_cles": {
+        "monetisation": "GA4 → Monétisation → Synthèse e-commerce. Voir les revenus, transactions, articles achetés par jour/semaine/mois.",
+        "acquisition": "GA4 → Acquisition → Sources / Canaux. Identifier quels canaux génèrent le plus de revenus et la meilleure LTV.",
+        "comportement": "GA4 → Engagement → Pages et écrans. Voir les pages les plus vues et celles qui convertissent le mieux.",
+        "exploration_entonnoir": "GA4 → Explorations → Entonnoir. Créer un entonnoir personnalisé de votre parcours d'achat et mesurer chaque abandon."
+      },
+      "conversions_personnalisees": "Configurer des conversions dans GA4 : ajout à la liste de souhaits, inscription newsletter, premier achat vs réachat. Ces événements segmentent les audiences pour Google Ads.",
+      "attribution_ga4": "Fenêtre d'attribution recommandée : 30 jours post-clic, 1 jour post-vue. Modèle : Data-driven (IA Google attribue le crédit à chaque point de contact). Plus précis que le Last Click."
+    },
+
+    "pixel_meta_avance": {
+      "pixel_standard": "Code JavaScript installé sur votre site. Suit les événements automatiquement. Précision réduite depuis iOS 14 (blocage tracking).",
+      "conversions_api_capi": {
+        "importance": "CAPI = Conversions API de Meta. Envoie les données d'événements directement de votre serveur à Meta, sans passer par le navigateur. Contourne les blocages iOS/adblocks.",
+        "benefice": "Améliore la précision des données de 20-40%. Améliore l'efficacité du machine learning des Ads Meta. Réduction du coût par conversion.",
+        "implementation": "Wix : intégration CAPI native disponible dans les paramètres Meta Business. Shopify : via l'app Meta officielle. API directe pour les sites custom.",
+        "deduplication": "Quand Pixel + CAPI sont actifs ensemble : obligatoire d'utiliser le 'event_id' unique pour que Meta ne compte pas les événements en double."
+      },
+      "evenements_personnalises_meta": {
+        "ViewContent": "Fiche produit vue (standard). Créer des Custom Audiences des visiteurs qui ont vu un canvas mais n'ont pas acheté → retargeting.",
+        "AddToCart": "Standard. Audience de retargeting panier abandonné.",
+        "Purchase": "Standard. Audience des acheteurs → exclus des Ads acquisition, inclus dans les Ads de réachat.",
+        "custom_subscribe": "Inscription newsletter. Audience des abonnés → Ads pour les convertir en acheteurs."
+      }
+    },
+
+    "attribution_multitouch": {
+      "modeles": {
+        "last_click": "100% du crédit au dernier clic. Favorise les canaux de conversion directe (retargeting, branded search). Pénalise les canaux de découverte (social organique, display).",
+        "first_click": "100% du crédit au premier clic. Favorise les canaux de découverte. Pénalise les canaux de nurturing.",
+        "lineaire": "Crédit distribué équitablement entre tous les points de contact. Plus équitable mais dilué.",
+        "data_driven": "IA attribue le crédit en fonction de l'impact statistique réel de chaque canal. Le plus précis. Disponible dans GA4 et Google Ads.",
+        "position_based": "40% premier clic + 40% dernier clic + 20% distribué. Bon compromis découverte + conversion."
+      },
+      "parcours_type_client_art": "Découverte via Pinterest → Visite blog (article déco) → Retargeting Facebook → Email (abonné) → Achat via Google Search. Attribution last-click créditant Google Search seul = erreur de pilotage. Le vrai ROI de Pinterest et du blog est sous-estimé.",
+      "google_analytics_paths": "GA4 → Publicité → Attribution → Chemins de conversion. Visualiser les séquences de canaux réelles avant l'achat."
+    },
+
+    "tableaux_de_bord_operationnels": {
+      "tableau_de_bord_quotidien": {
+        "metriques": ["Revenus du jour vs objectif vs J-1 vs même jour semaine passée", "Nombre de commandes", "Panier moyen", "Trafic total et par canal", "Dépenses publicitaires du jour", "ROAS approximatif (revenus Ads / dépenses Ads)"],
+        "outil": "Google Looker Studio (gratuit, ex Data Studio). Connecter GA4 + Google Ads + Meta Ads. Dashboard live accessible sur mobile."
+      },
+      "tableau_de_bord_hebdomadaire": {
+        "analyse": ["Meilleure source de trafic de la semaine", "Produits les plus vendus", "Panier moyen cette semaine vs semaine précédente", "Taux de conversion par device (mobile vs desktop)", "Emails envoyés et revenus email", "Nouveaux vs clients récurrents ratio"],
+        "action": "Prendre 1-2 décisions concrètes (augmenter le budget sur le canal qui performe, tester une nouvelle creative Ads, modifier le prix d'un produit)"
+      },
+      "tableau_de_bord_mensuel": {
+        "analyse": ["CAC par canal ce mois", "LTV cohorte clients ce mois", "Taux de réachat clients existants", "Croissance liste email", "ROI de chaque canal marketing", "Progression vers les objectifs annuels"],
+        "decisions": "Réallouer le budget marketing selon le ROI réel par canal. Stopper les canaux sous-performants. Investir dans les gagnants."
+      }
+    },
+
+    "kpis_par_canal": {
+      "facebook_instagram_ads": {
+        "kpis_primaires": "ROAS (cible > 2,5x), CPM (benchmark déco/art : 8-20 USD), CTR (cible > 1,5%), CPC (< 1 USD), Fréquence (si > 3,5 = saturation audience, changer la creative).",
+        "signaux_alerte": "CTR < 0,8% = creative faible. ROAS < 1,5x sur 7 jours = mettre en pause. Fréquence > 4 = burn out creative."
+      },
+      "google_ads": {
+        "kpis_primaires": "ROAS (cible > 3x pour Search, > 2x pour Shopping), Quality Score mots-clés (cible > 7), CTR Search (cible > 5%), Impression Share (part de voix).",
+        "signaux_alerte": "Quality Score < 5 = problème de pertinence annonce/page. CTR Search < 2% = annonce peu pertinente."
+      },
+      "email": {
+        "kpis_primaires": "Open Rate (cible > 22%), Click Rate (cible > 2,5%), Conversion Rate email (cible > 1%), Revenue per Email (cible > 0,15 USD), Unsubscribe Rate (< 0,4%).",
+        "signaux_alerte": "Taux de délivrabilité < 95% = problème de domaine/réputation. Open rate en baisse progressive = liste qui se refroidit."
+      },
+      "seo_organique": {
+        "kpis_primaires": "Trafic organique (mois/mois), Positions moyennes keywords cibles, CTR organique, Pages indexées, Domain Authority / DR (Ahrefs).",
+        "objectifs": "Croissance trafic organique > 10% par mois pendant les 6 premiers mois d'une nouvelle boutique bien optimisée."
+      },
+      "etsy_specifique": {
+        "kpis_primaires": "Listing views, Conversion rate (cible > 2%), Revenue per listing, Favorites ratio (favoris / vues = désir non converti), Return visitor rate.",
+        "signaux_alerte": "Conversion < 1% sur un listing avec > 100 vues = problème de prix ou de photos. Favorites rate élevé sans ventes = prix trop élevé ou manque de confiance."
+      }
+    },
+
+    "cohort_analysis": {
+      "principe": "Grouper les clients par leur date d'acquisition (mois d'achat) et suivre leur comportement dans le temps. Mesurer combien achètent une 2ème fois à M+1, M+3, M+6, M+12.",
+      "pourquoi": "La cohorte révèle si votre rétention s'améliore. Si la cohorte Janvier réachète plus que la cohorte Octobre → quelque chose s'est amélioré entre temps (email marketing? meilleure sélection produits?).",
+      "dans_ga4": "GA4 → Explorations → Analyse de cohortes. Sélectionner la dimension 'Date d'acquisition' et la métrique 'Revenus' ou 'Transactions'.",
+      "objectifs_retention": "Canal art/déco : 15-25% de réachat à M+12 = bon niveau. > 35% = excellent programme de fidélisation."
+    },
+
+    "looker_studio_dashboard": {
+      "creation": "studio.google.com — gratuit. Connecter GA4, Google Ads, et les données Google Sheets (pour les coûts Meta Ads importés manuellement).",
+      "composants_dashboard_ecommerce": [
+        "Scorecard revenus du mois + flèche comparaison mois précédent",
+        "Graphique revenus quotidiens (sparkline 30 jours)",
+        "Tableau canaux d'acquisition + revenus + taux de conversion + ROAS",
+        "Tableau produits bestsellers du mois",
+        "KPIs email (si connecté via feuille de calcul)",
+        "Panier moyen par canal (bar chart)"
+      ],
+      "partage": "Partager le dashboard en lecture seule avec un comptable ou un associé. Accès temps réel sans accès aux données brutes GA4."
+    }
+  }
+}

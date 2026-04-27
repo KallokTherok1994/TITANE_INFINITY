@@ -1,0 +1,157 @@
+{
+  "version": "v31.3.0",
+  "category": "printful_etsy_integration_avancee",
+  "description": "Guide complet Printful et Etsy pour la vente print-on-demand — intégration technique Printful (centres de fulfilment, qualité produits, mockups, pricing calculator, délais), stratégie Etsy avancée (SEO Etsy, algorithme Etsy, listings optimisés, campagnes Etsy Ads, badges, politique boutique), synchronisation Printful-Etsy-Wix-Shopify, catalogue produits recommandés par niche (art/canvas, mode, déco, accessoires), gestion des marges, customisation branding, retours et SAV print-on-demand, stratégie spécifique Kallok's Arts",
+  "printful_etsy_integration_avancee": {
+    "introduction": "Printful + Etsy = la combinaison la plus puissante pour lancer une boutique de canvas, d'art imprimé ou de mode sans stock et sans investissement initial. Printful gère la production et la livraison ; Etsy apporte un trafic organique massif de 96 millions d'acheteurs actifs. TITANE vous guide pour maîtriser les deux plateformes et maximiser vos marges.",
+
+    "printful_guide_complet": {
+      "presentation": "Printful est un service Print-on-Demand (POD) et fulfillment fondé en 2013. Aucun stock à gérer, aucun minimum de commande. Production déclenchée à chaque vente. Centres de production en Amérique du Nord, Europe et Australie.",
+      "centres_production": {
+        "canada_usa": "Charlotte (NC), Los Angeles, Toronto — délai prod 2-5 jours ouvrables. Idéal pour les commandes canadiennes et américaines.",
+        "europe": "Riga (Lettonie), Birmingham (UK), Amsterdam — délai prod 2-7 jours. Parfait pour réduire les coûts et délais vers l'UE.",
+        "australie": "Adélaïde — pour les marchés Océanie.",
+        "impact_kalloks_arts": "Depuis Montréal, les commandes canadiennes sont produites localement → livraison 3-7 jours. Les commandes US passent par Charlotte → 4-8 jours."
+      },
+      "catalogue_produits_prioritaires": {
+        "canvas_art": {
+          "produit_vedette": "Canvas (stretched) — toile tendue sur châssis bois épais 3,8cm. Format le plus vendu pour l'art mural.",
+          "formats_recommandes": "30×45cm (budget, cadeau), 45×60cm (populaire), 60×80cm (best-seller salon), 70×100cm (impact visuel), 90×120cm (premium). Bords miroir (image étendue sur les bords) ou bords blancs.",
+          "qualite_encres": "Impression giclée HP Latex — encres à base d'eau, archivales, résistantes aux UV. Conservation estimée 75-100 ans.",
+          "qualite_toile": "Polyester 260g/m² avec apprêt — rendu légèrement texturé, similaire à une véritable toile de peinture.",
+          "prix_production_printful": "Selon format : ~12-18 USD (30×45), ~18-28 USD (45×60), ~28-42 USD (60×80), ~45-65 USD (70×100). Variables selon le centre.",
+          "marge_recommandee": "Multiplier le coût de production par 2,5 à 3,5 pour les petits formats, 2 à 2,5 pour les grands formats (prix psychologique du marché).",
+          "framing_option": "Printful propose aussi des toiles avec cadre (framed canvas). Prix de vente 20-40% plus élevé mais conversion supérieure pour les cadeaux."
+        },
+        "posters_prints": {
+          "papier_matte": "Impression sur papier matte 170g/m² — idéal pour les œuvres abstraites, illustrations, typographie.",
+          "papier_premium_lustre": "Papier lustré premium 260g/m² — rendu photo-réaliste, couleurs vives. Parfait pour photos d'art et peintures réalistes.",
+          "formats": "A5 (14,8×21cm) à A0 (84×119cm) + formats américains (8×10\", 11×14\", 16×20\", 18×24\", 24×36\").",
+          "avantage": "Marges très élevées — coût prod ~3-8 USD pour un A3, prix de vente 20-45 USD. Excellent pour tester une audience sans gros risque."
+        },
+        "vetements": {
+          "t_shirt_bestseller": "Bella+Canvas 3001 — référence absolue du t-shirt premium POD. Coton ringspun doux, coupe ajustée, 30+ coloris. ~12-15 USD prod.",
+          "hoodie": "Gildan 18500 (basique/économique) ou Bella+Canvas 3719 (premium). ~22-35 USD prod selon coloris.",
+          "tote_bags": "Coût prod ~8-12 USD, prix de vente 25-45 USD. Fort taux de conversion comme accessoire lifestyle.",
+          "conseil_niche_art": "T-shirts et hoodies avec œuvres de Kallok's Arts = double marché : les fans d'art ET les amateurs de mode artistique. Créer une collection 'wearable art'."
+        },
+        "accessoires": {
+          "mugs": "Coût ~8-10 USD, vente 20-35 USD. Cadeau bestseller (anniversaire, Noël). Toujours proposer.",
+          "phone_cases": "Coût ~10-14 USD, vente 25-45 USD. Audience jeune (18-34 ans). Instagram-friendly.",
+          "puzzles": "Coût ~18-25 USD, vente 45-80 USD. Niche cadeau très rentable avec les œuvres d'art."
+        }
+      },
+      "mockups_et_presentation": {
+        "mockup_generator": "Outil intégré Printful Mockup Generator — créer des visuels lifestyle professionnels en quelques clics. Indispensable pour les listings Etsy.",
+        "types_mockups": {
+          "packshot": "Produit seul sur fond blanc/neutre — pour la photo principale Etsy (algorithme favorise le fond clair).",
+          "lifestyle": "Produit dans un intérieur ou porté par un modèle — pour les photos secondaires. Augmente la conversion de 20-35%.",
+          "detail_closeup": "Zoom sur la texture de la toile ou la qualité d'impression — rassure sur la qualité.",
+          "scale_photo": "Canvas accroché dans une pièce avec meubles — montre l'échelle réelle. Critique pour réduire les retours."
+        },
+        "outils_complementaires": "Placeit (mockups lifestyle premium), Canva (scènes lifestyle DIY), Smartmockups, Creative Market templates.",
+        "conseil_kalloks_arts": "Créer au minimum 7 photos par listing : 1 packshot, 2-3 lifestyle différentes pièces (salon/chambre/bureau), 1 détail texture, 1 scale/proportion, 1 multi-format (montrer les 4-5 formats disponibles), 1 packaging/unboxing."
+      },
+      "pricing_strategy": {
+        "calculer_prix_de_vente": {
+          "formule": "Prix de vente = (Coût production + Frais Etsy) / (1 - Marge souhaitée)",
+          "frais_etsy": "0,20$ USD par listing actif + 6,5% de commission sur vente + frais de traitement paiement ~3%",
+          "exemple_canvas_60x80": "Coût Printful ~35 USD + Frais Etsy ~9,75 USD (sur vente 75 USD) = coût réel ~44,75 USD. Prix de vente 75 USD = marge ~40%. Marge acceptable.",
+          "prix_competitif": "Avant de fixer votre prix, analyser les 20 premiers résultats Etsy pour votre mot-clé principal. Positionner dans le 40e-70e percentile de prix (ni le moins cher, ni le plus cher)."
+        },
+        "politique_livraison": "Livraison GRATUITE incluse dans le prix = +15-25% de conversion sur Etsy. Intégrer le coût de livraison Printful dans le prix de vente plutôt que de facturer séparément.",
+        "bundles": "Proposer des packs de 2-3 canvas coordinateurs à prix réduit (set déco). La valeur du panier moyen augmente de 40-60%.",
+        "seasonal_pricing": "Augmenter les prix de 10-15% en novembre-décembre (demande Noël). Tester les promotions Etsy Ads pendant les pics saisonniers."
+      },
+      "branding_printful": {
+        "pack_in": "Printful permet d'inclure un insert personnalisé (carte de remerciement avec logo et message) dans chaque commande. ~0,75 USD par commande. ROI immense pour l'expérience client et les avis.",
+        "label_personnalise": "Étiquette personnalisée sur les vêtements (recto/verso). Bâtir l'identité de marque Kallok's Arts dès le premier contact physique.",
+        "emballage": "Option 'packing slip' personnalisé inclus dans le prix Printful. Ajouter l'URL de la boutique et un code promo pour la prochaine commande.",
+        "packaging_ecologique": "Printful utilise des matériaux d'emballage recyclables depuis 2023. À mentionner dans les listings pour les acheteurs eco-conscients."
+      }
+    },
+
+    "etsy_strategie_avancee": {
+      "algorithme_etsy": {
+        "facteurs_principaux": [
+          "Pertinence du listing (titre, tags, catégorie, attributs) — 35% du score",
+          "Qualité du listing (photos, vidéo, descriptions complètes) — 25%",
+          "Récence des ventes et vélocité (combien de ventes récentes) — 20%",
+          "Avis clients (quantité et note) — 10%",
+          "Engagement client (favoris, clics, temps sur la page) — 10%"
+        ],
+        "customer_and_market_experience_score": "Etsy calcule un score global de la boutique. Répondre aux messages < 24h, éviter les commandes annulées, maintenir des avis 4,5+ stars = booster la visibilité organique.",
+        "listing_quality_score": "Score interne Etsy basé sur les conversions. Plus vos visiteurs achètent → meilleur score → plus de visibilité. Améliorer le taux de conversion = améliorer le ranking Etsy."
+      },
+      "seo_etsy_complet": {
+        "titre": {
+          "longueur": "140 caractères maximum — Etsy affiche les 40-55 premiers caractères dans les résultats. Mot-clé principal EN PREMIER.",
+          "formule": "[Mot-clé principal] [Attribut 1] [Attribut 2] — [Mots-clés secondaires] [Usage]",
+          "exemple_canvas": "Canvas Abstrait Bleu Or — Art Mural Salon Moderne, Décoration Murale Unique, Peinture Contemporaine Minimaliste 60x80cm",
+          "conseil": "Utiliser les VIRGULES et TIRETS pour séparer naturellement les mots-clés. Etsy indexe chaque mot séparément."
+        },
+        "tags": {
+          "nombre": "13 tags — utiliser les 13. Chaque tag peut avoir 20 caractères max.",
+          "strategie": "Tags en anglais si vous vendez au USA/international + tags en français si vous ciblez le marché FR/CA.",
+          "exemples_canvas_abstrait": "abstract canvas art, blue wall art, living room decor, modern art print, salon décoration, toile abstraite, art mural bleu, contemporary wall art, bedroom art, home decor gift, canvas wall art, large wall art, artiste canadien",
+          "recherche_tags": "Utiliser eRank.io (gratuit partiel) ou Marmalead pour voir le volume de recherche et la compétition par tag Etsy."
+        },
+        "attributs": "Remplir TOUS les attributs disponibles (couleur principale, taille, matériau, style, chambre/pièce cible). Les attributs alimentent les filtres de recherche Etsy — souvent négligés mais très importants.",
+        "categorie": "Choisir la catégorie la plus précise possible (Art > Peinture > Acrylique). La catégorie détermine quels attributs sont disponibles et dans quels filtres vos produits apparaissent.",
+        "renouvellement": "Les listings récemment renouvelés ont un léger boost temporaire dans l'algorithme. Renouveler les listings stratégiques (bestsellers) pendant les pics de trafic."
+      },
+      "photographie_etsy": {
+        "format": "Photo principale : fond BLANC ou CLAIR recommandé par Etsy pour les produits (fond foncé pénalisé dans certaines catégories). Ratio 1:1 (carré) ou 4:3.",
+        "nombre_photos": "10 photos maximum disponibles sur Etsy — en utiliser 8-10. Plus de photos = plus d'engagement = meilleur score.",
+        "video": "Etsy supporte les vidéos 5-15 secondes. La vidéo augmente la visibilité dans l'algorithme. Même une vidéo simple (360° du canvas, ou timelapse du processus artistique) suffit.",
+        "ugc_etsy": "Photos envoyées par les clients (avec leur permission) dans les avis = preuve sociale immense. Les demander activement dans le message post-commande."
+      },
+      "etsy_ads": {
+        "principe": "Etsy Ads = CPC (coût par clic) dans les résultats de recherche Etsy. Budget quotidien minimum 1 USD.",
+        "strategie_debutant": "Commencer avec 1-3 USD/jour sur les 5-10 listings à plus fort potentiel. Analyser après 30 jours. Ne pas dépenser plus avant de valider les conversions organiques.",
+        "metriques": {
+          "roas": "Objectif minimum ROAS 2x (2$ de CA pour 1$ d'Ads). En dessous, arrêter les Ads sur ce listing et améliorer d'abord la conversion.",
+          "ctr": "Click-through rate. Si CTR < 1% = problème de photo principale ou titre. > 3% = excellent.",
+          "listing_views_to_sale": "Si > 50 vues sans vente → problème de prix, photos secondaires ou description."
+        },
+        "offsite_ads": "Etsy Offsite Ads (annonces sur Google, Facebook, Pinterest par Etsy) = automatique si > 10k$ ventes/an (13% commission). En dessous, opt-out possible. À évaluer selon la niche."
+      },
+      "avis_clients_etsy": {
+        "impact": "Les avis sont le facteur #1 de confiance sur Etsy. Passer de 0 à 20 avis 5 étoiles = +40% de conversion.",
+        "demander_avis": "Message automatisé post-livraison (via Etsy Messages automatiques dans les paramètres boutique). Ton chaleureux, non invasif : 'J'espère que votre canvas vous plaît ! Si vous avez un moment, un avis m'aiderait énormément à faire connaître ma boutique 🙏'",
+        "repondre": "Répondre à chaque avis (positif et négatif). Réponse publique = montrer le soin apporté à chaque client. Etsy note la réactivité.",
+        "gerer_avis_negatifs": "Ne jamais confronter. Toujours proposer une solution. Un vendeur qui gère bien un avis négatif convertit parfois mieux qu'un vendeur avec 100% d'avis positifs."
+      },
+      "kalloks_arts_etsy_roadmap": {
+        "phase_1_lancement": "Créer 10-20 listings optimisés avec 5+ photos chacun. Focus sur les canvas les plus vendables (abstraits colorés 50×70 et 60×80 cm). Budget Etsy Ads 2$/jour sur les 5 meilleurs.",
+        "phase_2_croissance": "Après 50 ventes : analyser les bestsellers, dupliquer en variants (nouvelles tailles, coloris), créer des bundles décoratifs (set de 2-3 pièces coordonnées).",
+        "phase_3_scale": "Après 200 ventes et 4,8+ étoiles : demander le badge 'Star Seller' (répond < 24h, 95%+ commandes dans les délais, 4,8+ étoiles sur 3 mois). Augmenter les Ads.",
+        "multi_plateforme": "Dupliquer les listings performants d'Etsy vers Wix/boutique directe et vers Society6 / Redbubble. Ne pas dépendre d'une seule plateforme."
+      }
+    },
+
+    "integration_technique": {
+      "printful_etsy_sync": {
+        "etapes": [
+          "1. Créer compte Printful → aller dans 'Stores' → 'Add new store' → choisir Etsy",
+          "2. Autoriser la connexion OAuth Etsy ↔ Printful",
+          "3. Dans Printful : créer un produit, choisir le fichier de design (PNG haute résolution minimum 150 DPI pour canvas)",
+          "4. Définir les variants (formats, couleurs si applicable)",
+          "5. Publier le listing sur Etsy depuis Printful (Printful remplit automatiquement titre/description de base — À REÉCRIRE pour le SEO)",
+          "6. Dans Etsy : compléter le titre SEO, les 13 tags, les attributs, uploader les photos mockup"
+        ],
+        "fichiers_design": "PNG ou JPG, minimum 150 DPI, idéalement 300 DPI. Pour un canvas 60×80cm = fichier de 3543×4724 pixels minimum à 150 DPI. Printful indique les specs exactes par produit.",
+        "synchronisation_stock": "Printful gère le stock automatiquement (en réalité pas de stock = toujours 'in stock'). Les prix Printful sont mis à jour automatiquement dans les listings Etsy si vous avez activé la synchronisation."
+      },
+      "printful_wix": {
+        "integration": "Via l'app Printful dans le Wix App Market. Même process que Etsy. Avantage : contrôle total du design de la boutique et 0% de commission plateforme (vs 6,5% Etsy).",
+        "quand_utiliser": "Wix pour les clients fidèles et le trafic organique/social. Etsy pour capter les nouvelles audiences via la recherche Etsy. Les deux sont complémentaires."
+      },
+      "resolution_problemes_courants": {
+        "couleurs_delavees": "Si les couleurs imprimées semblent délavées : s'assurer que le fichier est en mode couleur sRGB (pas CMJN). Ajuster la saturation +10-15% dans le fichier original. Imprimer un échantillon test (2-5 USD) avant de mettre en vente.",
+        "retours_pour_qualite": "Printful couvre les réimpressions gratuites en cas de défaut de production prouvé (photo du défaut requise). Pour les erreurs client (mauvaise taille commandée), Printful propose une réduction sur la commande de remplacement.",
+        "delais_pic_saison": "En novembre-décembre, les délais Printful peuvent doubler. Mettre à jour les délais estimés dans les listings Etsy et commencer les Ads Halloween/Noël en septembre."
+      }
+    }
+  }
+}

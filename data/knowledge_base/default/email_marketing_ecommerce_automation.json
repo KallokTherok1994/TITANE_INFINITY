@@ -1,0 +1,193 @@
+{
+  "version": "v31.3.0",
+  "category": "email_marketing_ecommerce_automation",
+  "description": "Email marketing e-commerce avancé — flows d'automation complets (welcome série 5 emails, abandon panier 3 emails, post-achat + upsell, win-back, anniversaire), segmentation client avancée, Klaviyo guide complet (flows, listes, segments, templates), Mailchimp e-commerce, stratégie SMS marketing, rédaction d'emails haute conversion, A/B testing emails, métriques email marketing (taux ouverture, clics, revenus), email marketing pour boutique art/canvas, newsletter créative, stratégie liste vs audience payante",
+  "email_marketing_ecommerce_automation": {
+    "introduction": "L'email marketing génère en moyenne 42$ de revenus pour chaque dollar investi (ROI 4200%). C'est le canal le plus rentable du e-commerce — plus que Facebook Ads, Google Ads ou Instagram. Une liste email vous appartient : aucun algorithme ne peut vous couper de vos clients. TITANE vous donne le système complet pour transformer chaque visiteur en abonné et chaque abonné en client fidèle.",
+
+    "strategie_construction_liste": {
+      "importance": "Votre liste email = votre actif le plus précieux. Instagram peut vous bannir, Google peut dé-indexer votre site, Etsy peut fermer votre boutique — mais votre liste email reste. Priorité absolue : construire la liste dès le jour 1.",
+      "opt_in_taux_conversion": {
+        "popup_depart": "Pop-up déclenché à l'intention de sortie (exit intent) ou après 30-60s sur la page. Objectif : 2-5% des visiteurs. Offrir un lead magnet concret.",
+        "lead_magnet_ecommerce": {
+          "boutique_art": "Fond d'écran exclusif haute résolution (œuvre de Kallok's Arts), guide PDF 'Comment choisir la taille de son canvas pour chaque pièce', code promo -10% sur la première commande.",
+          "boutique_mode": "Guide de tailles interactif, lookbook saisonnier exclusif, -15% première commande.",
+          "boutique_deco": "Moodboard décoration gratuit téléchargeable, guide 'Harmoniser ses couleurs de décoration', -10% première commande."
+        },
+        "formulaire_inline": "Formulaire dans le footer et dans les articles de blog. Conversion plus faible (0,5-1%) mais non intrusif.",
+        "quiz": "Quiz interactif ('Quel style de décoration vous correspond ?') avec résultat envoyé par email. Taux opt-in : 35-60% des complétants. Outil : Typeform, interact.io."
+      },
+      "nurturer_la_liste": "Une liste qui n'achète pas est normale — le but est d'envoyer de la valeur régulièrement pour rester en top of mind. Règle 80/20 : 80% de contenu valeur, 20% de promotions directes.",
+      "frequence": "Boutique e-commerce : 2-4 emails/mois minimum pour maintenir l'engagement. Pendant les périodes promotionnelles (Black Friday, Noël) : jusqu'à 2 emails/semaine."
+    },
+
+    "flows_automation_complets": {
+      "welcome_serie": {
+        "objectif": "Transformer un nouvel abonné en premier acheteur. La série welcome génère en moyenne 3x plus de revenus par email que les campagnes newsletters normales.",
+        "email_1": {
+          "timing": "Immédiatement après opt-in (< 5 minutes)",
+          "objet": "[Prénom], voici ce que vous avez demandé 🎁",
+          "contenu": "Livraison du lead magnet promis (lien de téléchargement ou code promo). Introduction courte et chaleureuse de la marque. Ton humain, authentique. Signature avec photo du fondateur.",
+          "cta": "Découvrir la boutique"
+        },
+        "email_2": {
+          "timing": "J+2",
+          "objet": "Notre histoire (en 3 minutes)",
+          "contenu": "Le 'why' de la marque — pourquoi vous faites ce que vous faites. Pour Kallok's Arts : la passion de l'artiste, l'inspiration derrière les œuvres, le processus créatif. Les gens achètent l'histoire autant que le produit.",
+          "cta": "Voir les œuvres originales"
+        },
+        "email_3": {
+          "timing": "J+4",
+          "objet": "Les 5 produits que nos clients adorent",
+          "contenu": "Bestsellers de la boutique avec photos et avis clients. Présentation des catégories principales. Mettre en avant la preuve sociale (nombre de ventes, note moyenne).",
+          "cta": "Explorer les bestsellers"
+        },
+        "email_4": {
+          "timing": "J+7",
+          "objet": "Une question pour vous, [Prénom]",
+          "contenu": "Email court, texte seulement, ton conversationnel. Demander : 'Qu'est-ce qui vous a amené sur notre boutique ?' ou 'Cherchez-vous quelque chose en particulier ?'. Les réponses = données clients précieuses + engagement fort.",
+          "cta": "Répondre à cet email"
+        },
+        "email_5": {
+          "timing": "J+10",
+          "objet": "Dernière chance : votre -10% expire ce soir",
+          "contenu": "Rappel du code promo (si pas encore utilisé). Urgence authentique. Lever les dernières objections (politique de retour, livraison, qualité). Témoignages clients.",
+          "cta": "Utiliser mon code avant minuit"
+        }
+      },
+      "abandon_panier": {
+        "objectif": "Récupérer les ventes perdues. 70-75% des paniers sont abandonnés. La séquence 3 emails récupère 5-15% de ces paniers.",
+        "email_1": {
+          "timing": "1 heure après abandon",
+          "objet": "Vous avez oublié quelque chose... 🛒",
+          "contenu": "Image du produit abandonné, nom, prix. Message court et chaleureux (pas agressif). Lien direct vers le panier. AUCUNE remise à ce stade.",
+          "note": "Email le plus important de la séquence — 40-60% des récupérations viennent de cet email seul."
+        },
+        "email_2": {
+          "timing": "24 heures après abandon",
+          "objet": "[Produit] vous attend encore 💙",
+          "contenu": "Photo lifestyle du produit dans son contexte (canvas accroché dans une belle pièce). Avis clients en lien avec le produit. FAQ rapide : 'Ce canvas vient-il avec le châssis ?' 'Quels sont les délais ?' Lever les objections qui ont pu causer l'abandon.",
+          "cta": "Finaliser ma commande"
+        },
+        "email_3": {
+          "timing": "72 heures après abandon",
+          "objet": "Un petit cadeau pour vous décider 🎁 (expire dans 24h)",
+          "contenu": "Offre de dernier recours : -10% ou livraison gratuite avec compte à rebours 24h. Si cette offre ne convertit pas, ne plus contacter pour cet abandon.",
+          "note": "Ne pas offrir une remise systématique — les acheteurs avertis abandonnent intentionnellement pour obtenir la remise. A/B tester l'email 3 avec et sans remise."
+        }
+      },
+      "post_achat": {
+        "objectif": "Transformer l'acheteur unique en client fidèle. Augmenter la LTV (lifetime value).",
+        "email_confirmation": {
+          "timing": "Immédiatement après l'achat",
+          "contenu": "Récapitulatif commande, délai de livraison estimé, instructions de suivi. Message chaleureux de remerciement. Inviter à partager sur Instagram avec hashtag de la marque.",
+          "upsell": "Proposer discrètement un produit complémentaire (si canvas 60×80 acheté → proposer un canvas plus petit pour la même pièce)."
+        },
+        "email_livraison": {
+          "timing": "Notification expédition (via Printful automatiquement + email marketing)",
+          "contenu": "Numéro de suivi en évidence. Anticipation : 'Votre canvas arrive bientôt — avez-vous choisi l'emplacement parfait ?' Photo lifestyle inspirante.",
+          "cta": "Préparer l'accrochage"
+        },
+        "email_post_livraison": {
+          "timing": "J+14 après livraison estimée",
+          "objet": "Comment est votre nouveau canvas, [Prénom] ? 📸",
+          "contenu": "Demande d'avis Etsy + invitation à partager une photo avec le hashtag. Si c'est sur Wix : demande d'avis Google My Business ou directement sur le site. Offrir un code promo -5% pour la prochaine commande en échange d'une photo.",
+          "impact": "Collecte d'UGC (User Generated Content) + avis clients = double bénéfice."
+        },
+        "serie_upsell_crosssell": {
+          "timing": "J+30 après achat",
+          "objet": "Des idées pour compléter votre décoration 🎨",
+          "contenu": "Recommandations personnalisées basées sur l'achat (si canvas abstrait bleu → proposer canvas complémentaires en bleu/gris, ou collection coordonnée). Présenter les nouvelles créations depuis leur achat."
+        }
+      },
+      "win_back": {
+        "objectif": "Réactiver les clients inactifs (pas d'achat depuis 90+ jours).",
+        "email_1": {
+          "timing": "90 jours sans achat",
+          "objet": "On ne vous a pas vu depuis un moment, [Prénom]",
+          "contenu": "Ton chaleureux, pas culpabilisant. Montrer les nouveautés depuis leur dernier achat. Rappeler les produits qu'ils avaient favoris ou regardés."
+        },
+        "email_2": {
+          "timing": "J+7 si pas d'ouverture",
+          "objet": "Un cadeau pour votre retour 🎁",
+          "contenu": "Remise de réactivation spéciale (-15% ou livraison gratuite). Validité limitée (7 jours)."
+        },
+        "email_3_nettoyage": {
+          "timing": "J+14 si toujours pas d'engagement",
+          "objet": "Dois-je vous retirer de ma liste ?",
+          "contenu": "Email de désabonnement proactif. Paradoxalement très efficace pour réactiver (les gens ne veulent pas partir). Simple bouton 'Rester abonné' vs 'Me désabonner'. Nettoyer la liste améliore la délivrabilité générale."
+        }
+      },
+      "anniversaire": {
+        "timing": "Jour de l'anniversaire client (si données collectées)",
+        "objet": "Joyeux anniversaire [Prénom] 🎂 — Un cadeau vous attend !",
+        "contenu": "Code promo exclusif -15% valable 7 jours. Très fort taux de conversion (les gens se font plaisir pour leur anniversaire). À activer dès le début si la plateforme email supporte les anniversaires."
+      }
+    },
+
+    "klaviyo_guide": {
+      "presentation": "Klaviyo est la plateforme email marketing leader pour l'e-commerce. Integration native Shopify, Wix, WooCommerce, Etsy (via intégration tierce). Gratuit jusqu'à 250 contacts et 500 emails/mois.",
+      "fonctionnalites_cles": {
+        "flows": "Automation avancée basée sur événements (ajout au panier, achat, inactivité, anniversaire). Visuel drag-and-drop. Conditions, délais, A/B tests dans chaque flow.",
+        "segmentation": "Segmentation ultra-précise basée sur comportement : 'A acheté canvas dans les 30 derniers jours ET a ouvert au moins 3 emails' = audience très qualifiée pour un upsell.",
+        "predictive_analytics": "Klaviyo prédit la prochaine date d'achat, la LTV à 6 mois, le risque de churn. Basé sur l'IA.",
+        "sms_integration": "SMS marketing intégré avec les flows email. Coordination email + SMS pour les événements critiques (abandon panier).",
+        "templates": "Bibliothèque de templates responsive mobile-first. Éditeur drag-and-drop ou HTML."
+      },
+      "configuration_initiale": {
+        "etapes": [
+          "1. Connecter votre boutique (Shopify/Wix/etc.)",
+          "2. Importer les contacts existants",
+          "3. Activer les 4 flows prioritaires : Welcome, Abandon Panier, Post-Achat, Win-Back",
+          "4. Configurer le pop-up d'opt-in",
+          "5. Créer vos segments principaux (New Subscribers, One-Time Buyers, VIP 2+ achats)",
+          "6. Créer un calendrier de newsletters (1-2/mois minimum)"
+        ],
+        "utm_tracking": "Ajouter des UTM parameters sur tous les liens : utm_source=klaviyo&utm_medium=email&utm_campaign=nom_flow. Permet de voir précisément les revenus email dans GA4."
+      },
+      "metriques_benchmark_ecommerce": {
+        "taux_ouverture": "Benchmark e-commerce 2024 : 20-30%. Si < 15% = problème de délivrabilité ou objet d'email à améliorer.",
+        "taux_clic": "Benchmark : 2-5%. Si < 1% = problème de contenu ou CTA.",
+        "taux_conversion": "Benchmark flows automatisés : 1-5%. Campagnes newsletters : 0,5-2%.",
+        "revenue_per_email": "Métrique clé. Un bon flow abandon panier : 1-3 USD par email envoyé.",
+        "unsubscribe_rate": "Acceptable : < 0,5%. Si > 1% = contenu non pertinent ou fréquence trop élevée."
+      }
+    },
+
+    "redaction_email_haute_conversion": {
+      "objet_email": {
+        "principes": [
+          "Court : 30-50 caractères (affiché entier sur mobile)",
+          "Curiosité ou bénéfice direct (pas de clickbait)",
+          "Personnalisation avec [Prénom] = +26% taux d'ouverture en moyenne",
+          "Tester les emojis (certaines audiences les aiment, d'autres non)",
+          "Éviter les mots spam : GRATUIT, URGENT, $$, OFFRE EXCLUSIVE"
+        ],
+        "formules_efficaces": {
+          "curiosite": "[Prénom], j'ai quelque chose à vous montrer",
+          "benefice_direct": "Livraison gratuite aujourd'hui seulement",
+          "preuve_sociale": "3000 clients ont choisi ce canvas",
+          "urgence": "Plus que 48h pour profiter de -20%",
+          "question": "Cherchez-vous le canvas parfait pour votre salon ?",
+          "histoire": "Comment j'ai créé ce tableau à 3h du matin"
+        }
+      },
+      "structure_email": {
+        "preheader": "Texte affiché après l'objet dans la boîte mail (50-100 caractères). À ne jamais négliger — c'est le co-pilote de l'objet pour déclencher l'ouverture.",
+        "hero_image": "Image lifestyle ou produit, large (600px de large). Doit fonctionner même si les images sont désactivées (alt text descriptif).",
+        "titre_h1": "Bénéfice principal ou message clé en 1 ligne. Lisible sans les images.",
+        "corps": "Court. 3-5 phrases maximum avant le CTA. Mobile-first (55% des emails ouverts sur mobile). Pas de blocs texte longs.",
+        "cta_bouton": "1 seul CTA principal (pas 5 boutons différents). Couleur contrastée. Texte actionnable ('Voir la collection', 'Obtenir mon code', 'Acheter maintenant').",
+        "footer": "Informations légales (adresse physique requise légalement), lien désabonnement visible, liens réseaux sociaux."
+      },
+      "email_texte_seulement": "Les emails 'plain text' (sans image, juste texte) ont souvent les meilleurs taux d'ouverture et d'engagement — semblent plus personnels. À utiliser pour les emails relationnels (Email 4 welcome série, win-back, questions directes)."
+    },
+
+    "sms_marketing": {
+      "pourquoi": "SMS = 98% de taux d'ouverture. La plupart des messages sont lus dans les 3 minutes. Complémentaire à l'email pour les moments critiques (abandon panier).",
+      "quand_utiliser": "Abandon panier haute valeur, confirmation expédition, flash sale 24h, restock d'un bestseller épuisé.",
+      "regles": "Obtenir le consentement explicite pour les SMS (différent du consentement email). Être concis (160 caractères). Ne pas sur-utiliser (max 2-4 SMS/mois par contact).",
+      "cout": "Klaviyo SMS : environ 0,01 USD par SMS aux USA/Canada. ROI très élevé si bien utilisé."
+    }
+  }
+}

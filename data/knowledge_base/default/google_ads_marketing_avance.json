@@ -1,0 +1,220 @@
+{
+  "version": "v31.2.0",
+  "category": "google_ads_marketing_avance",
+  "description": "Google Ads marketing avancé pour e-commerce — Google Merchant Center (flux produits, optimisation), Google Shopping Standard, Performance Max (PMax), Search Ads e-commerce (mots-clés intention, extensions), Smart Bidding (CPA/ROAS cible, transition), YouTube Ads e-commerce, Remarketing Google, GA4 intégration, structure de compte optimale, audit et troubleshooting, benchmarks ROAS/CPC/CTR 2025",
+  "google_ads_marketing_avance": {
+    "introduction": "Google Ads est le canal d'acquisition à intention d'achat la plus élevée qui existe. Quand quelqu'un tape 'acheter canvas décoration salon', il est PRÊT à acheter maintenant. Google Shopping et Search capturent cette intention avec un ROAS souvent 3-8× pour les e-commerces bien configurés. Contrairement à Meta Ads (interruption), Google Ads répond à une demande existante. TITANE maîtrise l'intégralité de l'écosystème Google Ads pour l'e-commerce.",
+
+    "google_merchant_center": {
+      "role": "Plateforme centrale pour soumettre le catalogue produits à Google. Requis pour Google Shopping et Performance Max. GMC valide et distribue le flux produits aux surfaces Google (Shopping, Images, YouTube, Gmail, Maps).",
+      "configuration": [
+        "1. Créer un compte sur merchants.google.com",
+        "2. Vérifier et revendiquer le site (balise HTML ou fichier de vérification)",
+        "3. Choisir le pays et la devise cible",
+        "4. Créer un flux produits (manuel ou automatique)",
+        "5. Résoudre toutes les erreurs et avertissements du flux",
+        "6. Lier le compte GMC au compte Google Ads"
+      ],
+      "flux_produits": {
+        "attributs_obligatoires": {
+          "id": "Identifiant unique stable. Ne jamais changer l'ID d'un produit existant (perd l'historique de performance).",
+          "title": "Titre optimisé SEO. 150 caractères max. Mots-clés d'achat en premier.",
+          "description": "150-500 mots. Bénéfices + caractéristiques + mots-clés secondaires.",
+          "link": "URL de la fiche produit canonique. HTTPS obligatoire.",
+          "image_link": "URL image haute qualité. Min 800×800px. Fond blanc pour Shopping (algo favorise).",
+          "availability": "in_stock / out_of_stock / preorder. Mettre à jour en temps réel.",
+          "price": "Prix exact avec devise. Ex: '49.99 CAD'. Doit correspondre au prix sur le site.",
+          "brand": "Nom de la marque. Obligatoire pour les produits de marque.",
+          "condition": "new / used / refurbished."
+        },
+        "attributs_importants": {
+          "gtin": "Code barres EAN (Europe) ou UPC (USA). CRITIQUE : permet à Google de matcher le produit dans sa base de données et améliore le classement Shopping. Obligatoire si le produit a un GTIN.",
+          "product_type": "Catégorie personnalisée. Ex: 'Canvas Art > Abstrait > Grand Format'. Utilisée pour la structure des campagnes Shopping.",
+          "google_product_category": "Taxonomie officielle Google. Ex: '6 > 588' (Art > Impressions d'art). Améliore la pertinence des annonces.",
+          "shipping": "Règles d'expédition. Si 'livraison gratuite' → Google affiche le badge 'Livraison gratuite' = CTR +20%.",
+          "color_size": "Obligatoire pour le mode. Permet les filtres dans Google Shopping.",
+          "sale_price": "Prix promotionnel + sale_price_effective_date. Google affiche le prix barré automatiquement."
+        },
+        "optimisation_titres": {
+          "mode": "[Marque] + [Type vêtement] + [Couleur] + [Matière] + [Taille si pertinent]. Ex: 'Kallok's Arts T-Shirt Homme Coton Bio Blanc Oversize XL'",
+          "deco_canvas": "[Type produit] + [Style] + [Couleur/Thème] + [Dimensions]. Ex: 'Canvas Mural Abstrait Bleu Décoration Salon 60×80cm'",
+          "bijoux": "[Métal] + [Type bijou] + [Pierre/Motif] + [Occasion]. Ex: 'Bague Argent Sterling Lune Femme Cadeau'",
+          "conseil": "Les 70 premiers caractères sont les plus visibles. Front-load les mots-clés transactionnels."
+        },
+        "outils_flux": "DataFeedWatch, Feedonomics, GoDataFeed (optimisation avancée). Shopify : app Google & YouTube Channel (native). WooCommerce : plugin WooCommerce Google Feed. Wix : intégration native Marketing → Google."
+      },
+      "erreurs_courantes": {
+        "titre_trop_vague": "Titre générique sans attributs → améliorer avec couleur, taille, style.",
+        "image_mauvaise_qualite": "Image < 800×800px ou trop petite → refus ou mauvaise position.",
+        "gtin_incorrect": "GTIN manquant ou invalide pour les produits de marque → demande de renseignement obligatoire ou disparition des annonces.",
+        "prix_non_synchro": "Prix flux ≠ prix site → suspension du produit.",
+        "landing_page_inaccessible": "Robots.txt bloquant le Googlebot ou page 404 → suspension."
+      }
+    },
+
+    "google_shopping": {
+      "principe": "Annonces visuelles affichées en haut des résultats Google quand un utilisateur cherche un produit. Contenu : image produit, titre, prix, nom boutique, avis (étoiles). Pas de mots-clés à configurer : Google lit le flux.",
+      "types_campagnes": {
+        "standard_shopping": {
+          "definition": "Campagnes Shopping classiques avec contrôle manuel des enchères par groupe de produits. Plus de visibilité et contrôle qu'avec PMax.",
+          "structure": "Campagne → Groupes d'annonces → Groupes de produits. Subdiviser par : catégorie → sous-catégorie → marque → produit individuel (pour les bestsellers).",
+          "priorite": "Haute (promotions spéciales) > Moyenne (bestsellers) > Basse (catalogue entier). Permet de contrôler quel type de campagne gagne les enchères sur les mêmes produits.",
+          "quand_utiliser": "Phase de test, comptes peu matures (<50 conversions/mois), besoin de transparence sur les search terms."
+        },
+        "performance_max": {
+          "definition": "Campagne IA Google diffusant sur toutes les surfaces : Search, Shopping, Display, YouTube, Gmail, Maps, Discover. Un seul budget gère tout.",
+          "quand_utiliser": "Compte mature avec >30 conversions/mois. Données historiques disponibles. Principal type de campagne recommandé par Google depuis 2022.",
+          "voir_section_dediee": "Voir section performance_max ci-dessous pour la configuration complète."
+        }
+      },
+      "search_terms_report": {
+        "importance": "Rapport critique : voir les termes de recherche EXACTS qui ont déclenché les annonces Shopping. Source de mots-clés négatifs.",
+        "acces": "Google Ads → Campagne Shopping → Mots-clés → Termes de recherche.",
+        "action": "Ajouter les termes non-pertinents en exclusions (mots-clés négatifs). Ex: 'gratuit', 'occasion', 'tutoriel', 'recette'. Économie de budget 10-30% typique."
+      },
+      "encheres_shopping": {
+        "cpc_manuel": "Contrôle total. Idéal pour comprendre les données. Commencer avec enchères basses (0.30-0.50€) et ajuster selon le CTR.",
+        "roas_cible": "Enchère automatique IA. Requiert >50 conversions/mois. ROAS cible réaliste : commencer avec le ROAS actuel -20% pour ne pas bloquer le volume.",
+        "maximiser_clics": "Bonne pour la phase de découverte et remplissage du pipeline de conversions.",
+        "maximiser_valeur_conversions": "Optimise pour la valeur totale des achats plutôt que le nombre. Idéal si AOV très variable."
+      },
+      "optimisation_shopping": {
+        "images_produit": "Photos fond blanc = meilleures performances Shopping. Google favorise les images nettes et professionnelles. Tester plusieurs images (l'algo sélectionne la meilleure).",
+        "prix_competitifs": "Google affiche une comparaison de prix entre vendeurs. Prix non-compétitif = position plus basse même avec enchères élevées.",
+        "avis_produits": "Intégrer Google Customer Reviews ou collecter des avis via des partenaires agréés. Les étoiles dans les annonces Shopping = CTR +15-25%.",
+        "promotions_marchand": "Configurer les promotions dans GMC (ex: '10% de réduction sur tout le site'). Google affiche un badge 'Promotion' = CTR +10-15%."
+      }
+    },
+
+    "performance_max": {
+      "principe": "Campagne unique alimentée par IA qui diffuse sur toutes les surfaces Google : Search, Shopping, Display, YouTube, Gmail, Maps, Discover. Remplace les campagnes Shopping Standard + Display + Discovery en une seule.",
+      "actifs_requis": {
+        "images": "Jusqu'à 15 images. Formats : 1,91:1 (1200×628), 1:1 (1200×1200), 4:5 (960×1200), 9:16 (image portrait). Plus de formats = plus de placements disponibles.",
+        "logos": "Jusqu'à 5 logos. Format carré (1:1) et horizontal (4:1). Fond transparent recommandé.",
+        "titres": "Jusqu'à 5 titres de 30 caractères. Inclure le mot-clé produit principal, la proposition de valeur, la marque.",
+        "titres_longs": "Jusqu'à 5 titres de 90 caractères. Bénéfice principal + appel à l'action.",
+        "descriptions": "Jusqu'à 5 descriptions de 90 caractères. Caractéristiques, offres, garanties, livraison.",
+        "videos": "YouTube : au moins 1 vidéo (sinon Google en génère une automatiquement — souvent médiocre). 15-30 secondes recommandé. Vertical ET horizontal.",
+        "conseil": "Fournir un maximum d'actifs de qualité. L'IA combine et teste automatiquement les meilleures combinaisons."
+      },
+      "signal_audience": {
+        "definition": "Recommandation d'audience (pas une restriction — PMax peut aller au-delà). Donne à l'IA un point de départ.",
+        "meilleures_sources": "Acheteurs passés (liste email + tag GA4) + Visiteurs convertis (Pixel) + Custom intent (termes de recherche acheteurs).",
+        "configuration": "Groupe d'actifs → Signal d'audience → Ajouter des segments → Vos données + Audiences personnalisées avec intention."
+      },
+      "structure_pmax": {
+        "groupes_actifs": "1 groupe d'actifs par gamme de produits ou par thème. Ex: 'Canvas Abstraits', 'Citations Inspirantes', 'Collection Été'. Actifs différents par groupe.",
+        "groupes_produits": "Sélectionner les produits du catalogue GMC associés à chaque groupe d'actifs. Exclure les produits en rupture de stock ou à faible marge.",
+        "budget": "Min 30-50€/jour. PMax a besoin de volume pour apprendre. Période d'apprentissage : 4-6 semaines. Patience obligatoire."
+      },
+      "conseils": {
+        "patience": "PMax prend 4-8 semaines pour atteindre sa performance optimale. Ne pas modifier trop souvent (reset learning à chaque changement significatif).",
+        "exclusions": "Exclure les termes de marques concurrentes (Brand Safety). Exclure les URLs non-pertinentes. Exclure les audiences déjà converties si objectif acquisition.",
+        "brand_campaign_separee": "Toujours avoir une campagne Search séparée sur la marque propre. PMax cannibalisera le trafic marque sinon.",
+        "limites": "Peu de visibilité sur la distribution du budget entre les canaux. Difficile d'auditer les placements Display. Confiance obligatoire dans l'IA."
+      }
+    },
+
+    "search_ads_ecommerce": {
+      "role": "Annonces textuelles sur requêtes à forte intention transactionnelle. Complémentaires de Shopping : Shopping = produit visuel + prix, Search = message personnalisé + extensions.",
+      "types_correspondance": {
+        "exact": "[canvas décoration salon] → Déclenche UNIQUEMENT cette requête exacte (et variantes proches). Contrôle total, volume limité. Idéal pour les mots-clés les plus profitables.",
+        "expression": "\"canvas décoration\" → Requêtes CONTENANT cette expression dans cet ordre. Bon équilibre contrôle/volume.",
+        "large_modifie": "Disparu en 2021. Remplacé par expression.",
+        "large": "canvas décoration → Très large, inclut les synonymes et topics liés. Potentiel de découverte mais attention aux gaspillages. Utiliser avec liste négative agressive."
+      },
+      "mots_cles_ecommerce": {
+        "transactionnels": "'acheter canvas', 'canvas décoration prix', 'boutique canvas en ligne', 'canvas livraison rapide'. Conversion élevée.",
+        "commerciaux": "'meilleur canvas pour salon', 'canvas décoration comparatif', 'canvas abstrait pas cher'. Intention d'achat forte mais encore en phase de comparaison.",
+        "informationnels_a_exclure": "'comment faire un canvas', 'tutoriel canvas', 'canvas bricolage diy' → ajouter en négatifs.",
+        "marques_concurrentes": "Enchérir sur les marques concurrentes = pratique courante mais risquée. À tester avec message de différenciation clair."
+      },
+      "negatifs": {
+        "importance": "La liste de mots-clés négatifs est aussi importante que la liste positive. Chaque clic non-pertinent = budget gaspillé.",
+        "liste_negative_universelle_ecommerce": ["gratuit", "pdf", "tutoriel", "comment faire", "diy", "occasion", "deuxième main", "recrutement", "emploi", "formation", "cours"],
+        "niveau_application": "Négatifs au niveau Campagne (toute la campagne) ou Groupe d'annonces (spécifique). Utiliser les listes négatives partagées pour appliquer sur plusieurs campagnes."
+      },
+      "extensions_annonces": {
+        "sitelinks": "Liens supplémentaires sous l'annonce (Nouveautés, Bestsellers, Soldes, À propos). Augmentent le CTR de 10-20%. Remplir le maximum.",
+        "accroche": "Textes courts non-cliquables : 'Livraison gratuite dès 50€', 'Retours sous 30j', 'Satisfaction garantie'. Renforcent la confiance.",
+        "extrait_de_site": "Listes de produits ou services. Ex: 'Types de canvas : Abstrait, Nature, Citations, Géométrique'.",
+        "prix": "Afficher les prix directement dans l'annonce. Pré-qualifie les clics (les personnes qui cliquent savent le prix).",
+        "promotions": "Badge promo automatique lors des ventes/soldes. Affiche l'économie en euros ou en %.",
+        "avis": "Google Customer Reviews : étoiles sous l'annonce. Augmente le CTR massivement (+20-30%). Intégrer le programme GCR."
+      }
+    },
+
+    "smart_bidding": {
+      "principe": "Stratégies d'enchères automatisées par IA Google basées sur les données historiques et les signaux contextuels (appareil, heure, localisation, historique de recherche, comportement sur le site).",
+      "strategies": {
+        "cpc_manuel": "Contrôle total. Recommandé au démarrage pour comprendre les données. Chronophage à optimiser.",
+        "maximiser_clics": "IA maximise les clics dans le budget. Bonne pour la phase d'apprentissage et remplissage du Pixel.",
+        "cpa_cible": "IA optimise pour atteindre un CPA (Coût Par Acquisition) cible. Requiert minimum 30 conversions/mois. Commencer avec CPA +20% au-dessus du CPA actuel.",
+        "roas_cible": "IA optimise pour le ROAS cible. Idéal pour les e-commerces. Requiert minimum 50 conversions/mois pour être stable. ROAS cible = ROAS actuel -15% au démarrage.",
+        "maximiser_conversions": "IA maximise le nombre de conversions dans le budget. Pas de cible. Bon pour démarrer l'automatisation sans savoir le CPA cible.",
+        "maximiser_valeur": "Maximiser la valeur totale des achats. Idéal si AOV variable et on préfère les grosses commandes."
+      },
+      "transition_vers_smart_bidding": [
+        "1. Démarrer en CPC manuel ou Maximiser les clics",
+        "2. Accumuler 50 conversions (achats) en 30 jours",
+        "3. Passer à Maximiser les conversions (sans cible) pendant 2-3 semaines",
+        "4. Passer à CPA cible ou ROAS cible avec objectif réaliste",
+        "5. Ajuster la cible progressivement toutes les 2-3 semaines (+/-10%)"
+      ],
+      "pieges": "Ne jamais forcer l'IA avec une cible trop agressive dès le départ (réduira le volume à 0). Patience : chaque modification relance l'apprentissage (1-2 semaines)."
+    },
+
+    "youtube_ads_ecommerce": {
+      "formats": {
+        "trueview_instream": "Skippable après 5 secondes. Payer seulement si visionnage >30s ou interaction. Idéal notoriété + conversion. Format le plus courant.",
+        "non_skippable": "15-20 secondes. CPM. 100% du message garanti vu. Awareness forte. Plus cher.",
+        "bumper": "6 secondes non-skippable. Mémorisation du message clé. Complément de campagne.",
+        "video_action": "Vidéo + CTA + extensions d'annonces. Optimisé pour les conversions. Recommandé pour l'e-commerce directement.",
+        "youtube_shorts": "Vidéos verticales 9:16, <60s. Croissance massive 2024-2025. Format moins compétitif = CPM plus bas."
+      },
+      "ciblage_youtube": {
+        "affinite_personnalisee": "Personnes passionnées par un sujet. Ex: 'passionnés de décoration intérieure'. Awareness.",
+        "intention_achat_personnalisee": "Personnes ayant récemment cherché des termes spécifiques sur Google. Ex: 'canvas décoration murale'. Très performant pour la conversion.",
+        "remarketing": "Recibler les visiteurs du site ou les abonnés YouTube. ROAS souvent 5-10×.",
+        "correspondance_clients": "Uploader liste email pour cibler les clients existants sur YouTube.",
+        "life_events": "Personnes vivant un événement de vie (déménagement = très pertinent pour déco/canvas)."
+      },
+      "creatif_youtube": {
+        "hook_5_secondes": "AVANT le skip : montrer le problème ou le produit en action. 'Votre salon mérite mieux.' + image produit.",
+        "structure": "Hook (0-5s) → Bénéfice principal (5-15s) → Preuve/démonstration (15-25s) → CTA (25-30s).",
+        "qualite": "Sous-titres obligatoires (60% regardent sans son). Ratio 16:9 pour instream + 9:16 pour Shorts. Éviter le style pub corporate.",
+        "ugc_youtube": "Vidéo style témoignage client ou unboxing = meilleure conversion que les vidéos produites professionnellement."
+      }
+    },
+
+    "ga4_integration": {
+      "importance": "GA4 est la source de vérité pour mesurer les performances e-commerce multi-canal. Configurer avant de lancer des campagnes pour avoir des données historiques.",
+      "configuration_ecommerce": {
+        "evenements": "Activer les événements e-commerce Enhanced (GA4) : view_item, add_to_cart, begin_checkout, purchase. Shopify via app Google & YouTube Channel. WooCommerce via plugin Enhanced eCommerce. Wix natif dans les paramètres.",
+        "conversions_ga4": "Marquer 'purchase' comme conversion dans GA4. Importer les conversions GA4 dans Google Ads (préférable aux tags Google Ads directs pour la cohérence).",
+        "liaison": "Google Ads → Outils → Liaisons → Google Analytics 4. Lier les deux comptes pour l'import des audiences et des conversions."
+      },
+      "audiences_ga4": {
+        "principe": "Créer des audiences dans GA4 et les importer dans Google Ads. Plus riches que les audiences Google Ads natives (comportement sur site détaillé, LTV, segments personnalisés).",
+        "segments": "Acheteurs 30j, Acheteurs LTV élevée (top 25%), Abandons panier 7j, Nouveaux visiteurs, Utilisateurs mobiles, Segments par localisation.",
+        "import": "GA4 → Configurer → Audiences → Créer → Dans Google Ads → Bibliothèque partagée → Audiences → Importer depuis Analytics."
+      },
+      "attribution_ga4": "Utiliser le modèle d'attribution Data-Driven (ML) dans GA4 pour voir la vraie contribution de chaque canal. Last Click surestime Google Ads, First Click surestime le SEO."
+    },
+
+    "structure_compte_optimale": {
+      "campagnes_recommandees": {
+        "performance_max": "70-80% du budget. Principal levier de croissance.",
+        "search_brand": "5-10% du budget. CPC bas, ROAS très élevé. Protège la marque contre les concurrents.",
+        "shopping_standard": "10-15% du budget (optionnel en complément PMax pour le contrôle). Ou test A/B PMax vs Shopping.",
+        "display_remarketing": "5% du budget. Reciblage des visiteurs non-convertis sur le réseau Display."
+      },
+      "budget_minimum": "Min 30€/jour par campagne active pour que l'IA puisse apprendre. Budget total recommandé pour démarrer : 50-100€/jour.",
+      "metriques_sante": {
+        "search": "CTR > 5%, Quality Score > 7/10, Impression Share > 50% pour les mots-clés prioritaires.",
+        "shopping": "CTR > 1%, Impression Share produits prioritaires > 70%.",
+        "global": "ROAS total > 3× (pour marge 30%+), CPA < marge brute par commande, MER (Marketing Efficiency Ratio) > 3."
+      }
+    }
+  }
+}

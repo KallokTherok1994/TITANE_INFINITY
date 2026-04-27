@@ -1,0 +1,191 @@
+{
+  "category": "creation_identite_visuelle_marque",
+  "version": "31.3.0",
+  "title": "Création Identité Visuelle & Branding — Marque E-commerce, Art & Mode",
+  "summary": "Guide complet création d'identité visuelle et branding pour marques e-commerce, art, décoration et mode. Logo, charte graphique, couleurs, typographies, univers de marque, cohérence visuelle multi-plateformes. Outils Canva, Adobe, Figma. Cas pratique Kallok's Arts.",
+  "content": {
+    "fondamentaux_branding": {
+      "définition": "Le branding = la somme de toutes les perceptions qu'une personne a de votre marque. C'est ce que les gens ressentent et pensent quand ils entendent votre nom.",
+      "pourquoi_crucial_ecommerce": [
+        "Justifie des prix plus élevés (prime de marque)",
+        "Réduit le coût d'acquisition (mémorabilité)",
+        "Construit la confiance immédiate",
+        "Différencie dans un marché saturé",
+        "Crée de la loyauté client au-delà du produit"
+      ],
+      "identité_de_marque_composantes": {
+        "core": "Valeurs, mission, vision, personnalité de marque",
+        "verbal": "Nom, tagline, tone of voice, storytelling",
+        "visuel": "Logo, couleurs, typographies, patterns, iconographie",
+        "expérientiel": "Packaging, service client, expérience d'achat, unboxing"
+      }
+    },
+    "développement_charte_graphique": {
+      "couleurs": {
+        "psychologie_couleurs": [
+          {"couleur": "Noir", "perception": "Luxe, sophistication, premium, mystère", "usage": "Marques mode, art contemporain, tech premium"},
+          {"couleur": "Blanc", "perception": "Pureté, minimalisme, clarté, espace", "usage": "Marques clean, design, cosmétique premium"},
+          {"couleur": "Or/Doré", "perception": "Prestige, exclusivité, succès", "usage": "Marques luxe, bijoux, art haut de gamme"},
+          {"couleur": "Bleu", "perception": "Confiance, sécurité, professionnalisme", "usage": "Technologie, finance, santé"},
+          {"couleur": "Vert", "perception": "Nature, bio, croissance, sérénité", "usage": "Marques éco-responsables, bien-être"},
+          {"couleur": "Rouge", "perception": "Énergie, passion, urgence, appétit", "usage": "Promotions, food, action"},
+          {"couleur": "Violet", "perception": "Créativité, spiritualité, royauté", "usage": "Art, beauté, créativité"},
+          {"couleur": "Terracotta/Nude", "perception": "Chaleur, artisanat, authenticité, tendance", "usage": "Décoration, art, mode bohème"}
+        ],
+        "règle_60_30_10": {
+          "description": "60% couleur dominante, 30% couleur secondaire, 10% couleur accent",
+          "application": "Site web, communications, réseaux sociaux"
+        },
+        "palette_kalloks_suggestion": {
+          "dominante": "Blanc cassé #F8F5F0 — espace, clarté, galerie d'art",
+          "secondaire": "Charbon #2D2D2D — sophistication, modernité",
+          "accent": "Terracotta #C4704A — chaleur, art, émotion",
+          "neutre": "Beige gris #B8B2A7 — harmonie"
+        }
+      },
+      "typographies": {
+        "combinaisons_recommandées": [
+          {
+            "style": "Luxe Minimaliste",
+            "titre": "Playfair Display (serif élégant)",
+            "corps": "Lato ou Montserrat (sans-serif lisible)",
+            "usage": "Art prints premium, galerie haut de gamme"
+          },
+          {
+            "style": "Moderne Dynamique",
+            "titre": "Bebas Neue ou Oswald",
+            "corps": "Open Sans",
+            "usage": "Mode streetwear, jeune adulte"
+          },
+          {
+            "style": "Artisanal Authentique",
+            "titre": "Cormorant Garamond",
+            "corps": "Raleway",
+            "usage": "Art fait main, décoration artisanale"
+          }
+        ],
+        "règles_typographie": [
+          "Utiliser maximum 2-3 polices dans une identité",
+          "Titre (display) + Corps (lisible) + Accent (optionnel)",
+          "Google Fonts pour usage gratuit commercial",
+          "Tester la lisibilité mobile — minimum 16px corps de texte"
+        ]
+      },
+      "logo_principes": {
+        "types_logos": [
+          {"type": "Wordmark (Lettermark)", "description": "Nom seul stylisé — ex: Kallok's Arts en police distinctive", "avantage": "Simple, mémorable, scalable"},
+          {"type": "Brandmark (Icône)", "description": "Symbole graphique seul", "avantage": "Reconnaissable sans texte (Nike, Apple)"},
+          {"type": "Combination Mark", "description": "Icône + Texte", "avantage": "Polyvalent — utiliser séparément ou ensemble"},
+          {"type": "Emblème", "description": "Texte à l'intérieur d'une forme (badge)", "avantage": "Premium, heritage, artisanal"}
+        ],
+        "fichiers_nécessaires": [
+          "SVG (scalable — site web, print haute résolution)",
+          "PNG fond transparent (réseaux sociaux, email)",
+          "PNG fond blanc (documents, factures)",
+          "Favicon 32x32px (site web)",
+          "Version negative (blanc sur fond sombre)"
+        ],
+        "outils_création_logo": [
+          {"outil": "Canva Pro", "coût": "15$/mois", "niveau": "Débutant — templates nombreux"},
+          {"outil": "Adobe Illustrator", "coût": "22$/mois", "niveau": "Pro — standard industrie"},
+          {"outil": "Figma", "coût": "Gratuit", "niveau": "Intermédiaire — collaboratif"},
+          {"outil": "Looka/Brandmark", "coût": "20-65$ unique", "niveau": "Débutant — IA génère logo"}
+        ]
+      }
+    },
+    "cohérence_visuelle_multi_plateformes": {
+      "formats_requis_par_plateforme": {
+        "instagram": {
+          "photo_profil": "180x180px minimum",
+          "post_carré": "1080x1080px",
+          "post_portrait": "1080x1350px (4:5) — plus de place dans le feed",
+          "stories_reels": "1080x1920px (9:16)",
+          "cover_highlights": "1080x1920px"
+        },
+        "facebook": {
+          "photo_profil": "170x170px",
+          "cover": "851x315px",
+          "post_image": "1200x630px"
+        },
+        "etsy": {
+          "photo_boutique": "3360x840px",
+          "icône_boutique": "500x500px",
+          "mockup_listing": "2000x2000px minimum (carré)",
+          "note": "10 photos par listing — utiliser toutes les 10"
+        },
+        "pinterest": {
+          "épingle_standard": "1000x1500px (2:3)",
+          "épingle_longue": "1000x2100px (1:2.1)",
+          "photo_profil": "165x165px"
+        },
+        "wix_shopify": {
+          "bannière_hero": "1920x600px minimum",
+          "image_produit": "2048x2048px (carré, fond blanc ou ambiance)"
+        }
+      },
+      "bible_de_marque_document": {
+        "contenu_recommandé": [
+          "Histoire et mission de la marque",
+          "Valeurs fondamentales (3-5 mots)",
+          "Persona client cible détaillé",
+          "Palette de couleurs avec codes HEX/RGB/CMJN",
+          "Typographies officielles + exemples d'usage",
+          "Logo et ses déclinaisons (usage autorisé/interdit)",
+          "Ton et voix de la marque (3-5 adjectifs + exemples)",
+          "Grille photos et style photographique",
+          "Templates réseaux sociaux"
+        ]
+      }
+    },
+    "mockups_et_présentation_produit": {
+      "importance": "Les mockups remplacent les photos de studio. Avec POD, l'impression ne coûte rien — la présentation fait tout.",
+      "types_mockups_art_canvas": [
+        {
+          "type": "Lifestyle (mise en scène)",
+          "description": "Canvas intégré dans un salon/chambre/bureau réel",
+          "source": "Placeit.net, Creative Market, Printful Mockup Generator",
+          "impact": "Fort — le client se projette dans son espace"
+        },
+        {
+          "type": "Flat lay (à plat)",
+          "description": "Canvas posé avec accessoires déco (plante, livre, etc.)",
+          "source": "Canva mockups, shots.io",
+          "impact": "Moyen — esthétique mais moins immersif"
+        },
+        {
+          "type": "Gallery wall",
+          "description": "Ensemble 3-5 œuvres assemblées en mur galerie",
+          "source": "Placeit, mockups Etsy",
+          "impact": "Très fort — inspire le client à acheter plusieurs"
+        },
+        {
+          "type": "Zoom détail",
+          "description": "Gros plan texture impression et qualité",
+          "impact": "Rassurant — montre la qualité réelle"
+        }
+      ],
+      "règle_10_photos_etsy": [
+        "Photo 1 — Hero lifestyle (salon moderne)",
+        "Photo 2 — Gros plan qualité impression",
+        "Photo 3 — Gallery wall (en contexte avec autres œuvres)",
+        "Photo 4 — Différents formats comparatifs",
+        "Photo 5 — Chambre adulte mise en scène",
+        "Photo 6 — Bureau workspace mise en scène",
+        "Photo 7 — Infographie dimensions/formats disponibles",
+        "Photo 8 — Détail dos et système d'accrochage",
+        "Photo 9 — Unboxing / packaging",
+        "Photo 10 — Photo client UGC (si disponible)"
+      ]
+    },
+    "tone_of_voice": {
+      "définition": "La voix de marque = comment vous communiquez dans TOUS vos textes : site, emails, réseaux, fiches produit.",
+      "exemple_kalloks_arts": {
+        "adjectifs": ["Chaleureux", "Inspirant", "Accessible", "Artistique", "Authentique"],
+        "ton_à_éviter": "Corporate froid, jargon technique, arrogant, trop formel",
+        "ton_à_adopter": "Comme un ami passionné d'art qui partage sa découverte",
+        "exemple_description_produit_froid": "Canvas imprimé haute définition. Dimensions : 30x45cm. Livraison 5-7 jours.",
+        "exemple_description_produit_chaud": "Ce canvas capture la douce énergie du matin — ces premiers rayons qui réchauffent une pièce et mettent le sourire aux lèvres. Imprimé sur toile premium avec des encres résistantes aux UV, il illuminera votre espace pendant des années."
+      }
+    }
+  }
+}

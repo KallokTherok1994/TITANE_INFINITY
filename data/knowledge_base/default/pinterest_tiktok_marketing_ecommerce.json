@@ -1,0 +1,155 @@
+{
+  "version": "v31.3.0",
+  "category": "pinterest_tiktok_marketing_ecommerce",
+  "description": "Pinterest et TikTok pour le e-commerce — Pinterest stratégie complète (SEO Pinterest, Rich Pins, Pinterest Shopping, boards, Idea Pins, Pinterest Ads, analyse), TikTok commerce (TikTok Shop, TikTok Ads, contenu organique viral, hashtags, créateurs UGC, tendances), stratégie contenu social media pour boutiques art/canvas/mode/décoration, planning de contenu, viralité organique, outils de création (CapCut, Canva), algorythmes, KPIs, stratégie Kallok's Arts sur ces plateformes",
+  "pinterest_tiktok_marketing_ecommerce": {
+    "introduction": "Pinterest est la plateforme d'inspiration achat numéro 1 : 85% des utilisateurs l'utilisent pour planifier leurs achats. TikTok est la plateforme de découverte la plus rapide — un contenu peut passer de 0 à 100k vues en 48h pour un nouveau compte. Ces deux plateformes sont sous-exploitées par la majorité des boutiques e-commerce et offrent donc un avantage compétitif massif à ceux qui les maîtrisent.",
+
+    "pinterest_guide_complet": {
+      "profil_business": {
+        "creation": "Compte Pinterest Business (gratuit). Activer les 'Rich Pins' (synchronisation automatique prix/disponibilité depuis votre boutique).",
+        "optimisation_profil": "Photo de profil professionnelle, bio avec mots-clés principaux ('Artiste canadienne | Canvas abstraits | Décoration intérieure'), URL boutique vérifiée, activer l'analytique.",
+        "claim_website": "Réclamer votre site web dans les paramètres Pinterest. Obligatoire pour les Rich Pins et pour suivre le trafic Pinterest dans GA4."
+      },
+      "algorithme_pinterest": {
+        "principe": "Pinterest est un MOTEUR DE RECHERCHE visuel, pas un réseau social. Les Pins ne disparaissent pas — un Pin créé il y a 2 ans peut encore générer du trafic aujourd'hui.",
+        "facteurs_classement": [
+          "Pertinence du texte (titre, description, alt text) vs la requête",
+          "Qualité du Pin (résolution image, verticalité, texte sur image)",
+          "Engagement (sauvegardes, clics, commentaires)",
+          "Autorité du compte (ancienneté, cohérence de niche, engagement général)",
+          "Fraîcheur (nouveaux Pins favorisés — publier régulièrement)"
+        ],
+        "seo_pinterest": "Les mots-clés sont aussi importants sur Pinterest que sur Google. Intégrer les mots-clés dans le titre du Pin, la description (3-5 phrases), les noms de boards, et la description du profil."
+      },
+      "strategie_boards": {
+        "structure_recommandee": {
+          "boards_principaux": [
+            "[Nom Boutique] — Art & Canvas (pour toutes les créations propres)",
+            "Décoration Salon Inspiration (contenu mixte propre + curated)",
+            "Décoration Chambre Adulte (idem)",
+            "Art Abstrait Contemporain (niche)",
+            "Couleurs Tendance Décoration [Année] (saisonnalisé)",
+            "Idées Cadeaux Originaux (conversion directe avant Noël/fêtes)",
+            "Style de Vie Créatif (lifestyle, processus artistique)"
+          ],
+          "kalloks_arts_boards": [
+            "Kallok's Arts — Collection Officielle",
+            "Canvas Abstraits Colorés",
+            "Art Mural Grande Taille",
+            "Décoration Bohème & Moderne",
+            "Peintures Inspirantes Bureau",
+            "Cadeaux Art Original",
+            "Behind The Art — Processus Créatif"
+          ]
+        },
+        "board_sections": "Organiser chaque board en sections (sous-catégories). Ex: Board 'Canvas Abstraits' → Sections : Bleus & Verts, Oranges & Terracotta, Noir & Or, Multicolores.",
+        "boards_collaboratifs": "Inviter des collaborateurs (autres artistes, décorateurs d'intérieur) dans vos boards = diversifier le contenu et atteindre leurs audiences."
+      },
+      "creation_pins_optimises": {
+        "format_image": {
+          "ratio": "2:3 (1000×1500 px recommandé) = format vertical qui prend plus de place dans le feed. Les images carrées ou horizontales sont pénalisées.",
+          "resolution": "Minimum 600px de largeur. 1000-2000px recommandé pour la qualité.",
+          "texte_sur_image": "Titre de l'œuvre ou bénéfice clé en overlay texte (ex: 'Livraison gratuite Canada' ou 'Disponible en 5 formats'). Police lisible, contraste élevé."
+        },
+        "titre_pin": "100 caractères max affichés. Mot-clé principal EN PREMIER. Ex: 'Canvas Abstrait Bleu — Décoration Salon Moderne | Kallok's Arts'",
+        "description_pin": "500 caractères max. 2-3 paragraphes. Décrire l'œuvre avec mots-clés (couleurs, style, ambiance). Mentionner les usages (décoration salon, chambre, bureau, cadeau). Appel à l'action en fin ('Voir tous les formats disponibles dans notre boutique').",
+        "lien_url": "Lien direct vers la fiche produit (pas la page d'accueil). Si vendez sur Etsy ET sur votre boutique → tester les deux et analyser les conversions dans Pinterest Analytics.",
+        "video_pins": "Les Pins vidéo (15s-10min) ont 5x plus d'impressions que les Pins statiques. Timelapse du processus créatif, visite de l'atelier, installation d'un canvas chez un client.",
+        "idea_pins": "Idea Pins = Stories Pinterest multiframe (pas de lien externe). Idéal pour le processus créatif, tutoriels déco, 'avant/après'. Fort engagement et découvrabilité."
+      },
+      "pinterest_shopping": {
+        "configuration": "Activer Pinterest Shopping en connectant votre catalogue produits (via Shopify/Wix ou import CSV). Les produits apparaissent avec le prix et la disponibilité directement dans le Pin.",
+        "shopping_ads": "Promouvoir vos produits catalogue directement depuis Pinterest. CPC typique décoration : 0,30-1 USD. Excellent ROI pour l'art et la décoration.",
+        "collections": "Regrouper plusieurs produits en Collections (ex: 'Collection Automne Terracotta'). Une Collection = un seul Promoted Pin avec plusieurs produits."
+      },
+      "pinterest_analytics": {
+        "metriques_cles": {
+          "impressions": "Nombre de fois que vos Pins ont été vus. Indicateur de reach.",
+          "saves": "Nombre de fois que vos Pins ont été sauvegardés dans des boards. La métrique la plus importante pour la viralité Pinterest — un Pin sauvegardé est re-diffusé.",
+          "clicks": "Clics vers votre site. Mesure directement le trafic généré.",
+          "ctr": "Click-Through Rate. Benchmark Pinterest : 0,3-1%. > 1% = excellent.",
+          "top_pins": "Identifier vos Pins les plus performants → créer des Pins similaires (même sujet, style, couleurs)."
+        },
+        "objectif_mensuel": "100k impressions/mois = trafic e-commerce significatif (1000-3000 visiteurs/mois selon CTR). 1M impressions/mois = channel acquisition majeur."
+      },
+      "calendrier_pinterest": {
+        "frequence": "5-10 Pins nouveaux par jour pour la croissance rapide. 1-3 Pins/jour minimum pour maintenir. Utiliser Tailwind (outil scheduling Pinterest) pour planifier en avance.",
+        "timing": "Les meilleures heures : 20h-23h heure locale de votre audience principale. Tester avec Pinterest Analytics.",
+        "contenu_saisonnier": "Créer du contenu saisonnier 45-60 JOURS EN AVANCE (Pinterest indexe plus lentement). Préparer les Pins de Noël en octobre. Les Pins Valentine en décembre."
+      }
+    },
+
+    "tiktok_ecommerce": {
+      "pourquoi_tiktok": "TikTok : 1 milliard d'utilisateurs actifs. L'algorithme distribute le contenu à des non-abonnés dès les premières vues — un nouveau compte peut devenir viral. 35% des utilisateurs TikTok ont acheté un produit découvert sur TikTok. Niche mode, décoration et art = très actives (#homedecor 150B+ vues).",
+      "contenu_organique": {
+        "types_videos_performantes": {
+          "transformation": "'Before & After' d'un espace décoré avec vos canvas. Fort engagement et viralité naturelle. Hashtags : #homedecor #roomtransformation #decorationinterieure",
+          "processus_creatif": "Timelapse ou vidéo accélérée de la création d'une œuvre. Touche authentique et humaine. Audience artiste très engagée. #artistprocess #painting #abstractart",
+          "unboxing": "Déballer et accrocher un canvas. Montrer la qualité de l'emballage Printful, la texture de la toile, le rendu final. #unboxing #artprint #canvas",
+          "pack_with_me": "'Pack With Me' si vous gérez vous-même certaines commandes ou si vous montrez le processus depuis la commande jusqu'à la livraison. Trust building maximal.",
+          "pov": "Point de vue créatif : 'POV : vous changez toute l'ambiance de votre salon avec un canvas'. + vidéo avant/après. Très partageable.",
+          "educationnel": "'3 erreurs à éviter quand vous choisissez la taille de votre canvas.' Positionne comme expert, non promotionnel, fort reach."
+        },
+        "hooks_3_premieres_secondes": "TikTok décide en 3 secondes si une vidéo mérite d'être distribuée. Hook obligatoire : question provocatrice, image saisissante, action immédiate. 'J'ai transformé ce salon en 2 heures pour moins de 100$.' (+ coupe directe vers la transformation)",
+        "longueur_optimale": "15-30 secondes = meilleur taux de complétion et distribution. 60-90s pour les vidéos éducationnelles avec forte valeur. Eviter les vidéos > 3min sauf si très engageantes.",
+        "texte_et_sous_titres": "60% des TikToks sont regardés SANS le son. Ajouter les sous-titres automatiques (TikTok CapCut) + texte overlay clé. CapCut est l'outil de montage recommandé.",
+        "son_musique": "Les sons trending boostent la distribution. Utiliser les sons populaires du moment (onglet 'Sons' dans TikTok). Créer votre propre son/musique si possible = différenciation."
+      },
+      "hashtags_tiktok": {
+        "strategie": "5-10 hashtags par vidéo. Mix : 1-2 hashtags très larges (#homedecor), 2-3 hashtags mid-range (#abstractart #canvasart), 2-3 hashtags de niche (#kalloksarts #artcanadien), 1-2 hashtags tendance.",
+        "hashtags_decoration_art": "#homedecor #walldecor #roomdecor #canvasart #abstractart #livingroomdesign #interiordesign #artprint #homeinspo #decorationinterieure #artmurale",
+        "hashtags_mode": "#outfitinspo #ootd #fashiontiktok #styletips #fashion #mode #lookdujour #tenuedujour",
+        "hashtags_kalloks": "#kalloksarts #artcanadien #canadianartist #toileabstraite #abstractcanvas"
+      },
+      "tiktok_shop": {
+        "presentation": "TikTok Shop = vente directe dans TikTok. Disponible au Canada depuis 2024. Les produits tagués dans les vidéos ou dans une vitrine in-app.",
+        "avantage": "Réduction de friction maximale : l'utilisateur voit le produit → 1 clic → achat sans quitter TikTok. Taux de conversion supérieur aux liens bio.",
+        "integration_printful": "Printful a lancé l'intégration TikTok Shop en 2024. Créer les produits dans Printful → synchroniser automatiquement vers TikTok Shop.",
+        "commission": "TikTok prend 5-8% de commission + 1,8% de frais de transaction. À intégrer dans la stratégie de pricing."
+      },
+      "tiktok_ads": {
+        "types": {
+          "in_feed_ads": "Publicités dans le feed principal. Format identique aux vidéos organiques. CPM ~5-15 USD (moins cher que Meta). Fort reach.",
+          "spark_ads": "Booster une vidéo organique existante en publicité. Recommandé — le contenu a déjà prouvé son engagement. Meilleur ROI que les Ads créées de zéro.",
+          "top_view": "Publicité qui apparaît immédiatement à l'ouverture de l'app. Premium, très cher — réservé aux grands budgets."
+        },
+        "budget_depart": "Commencer avec 20-50 USD/jour sur Spark Ads (booster vos meilleures vidéos organiques). Analyser le CPC et le ROAS sur 7 jours. Scaler les winners.",
+        "objectifs": {
+          "awareness": "Pour les créateurs/artistes qui veulent bâtir une audience d'abord.",
+          "traffic": "Envoyer du trafic vers Etsy, Wix ou la boutique.",
+          "conversions": "Optimiser pour les achats directement. Nécessite le TikTok Pixel sur votre site."
+        }
+      },
+      "ugc_createurs": {
+        "principe": "User Generated Content = vidéos créées par de vrais clients ou créateurs utilisant votre produit. Plus authentique que la publicité traditionnelle.",
+        "trouver_creators": "TikTok Creator Marketplace (pour les budgets > 500$/mois). Micro-créateurs (10k-100k abonnés niche déco/art) = meilleur ROI. Envoyer un canvas gratuitement en échange d'une vidéo honnête.",
+        "brief_createur": "Donner une liberté créative (les créateurs savent ce qui performe pour leur audience). Préciser : montrer le canvas dans un vrai appartement, processus de déballage, impression authentique. Ne pas scripter à l'excès."
+      },
+      "kalloks_arts_tiktok_strategy": {
+        "contenu_differenciateur": "Montrer le processus créatif de l'artiste — la naissance d'une œuvre abstraite de la toile vierge au résultat final. L'histoire derrière chaque pièce. Les erreurs, les repentirs, les moments de doute. L'AUTHENTICITÉ = viralité sur TikTok.",
+        "series_de_contenu": [
+          "Série 'L'œuvre de la semaine' — timelapse de création chaque semaine",
+          "Série 'Avant / Après' — transformation d'une pièce avec nos canvas",
+          "Série 'Questions sur l'art' — répondre aux questions fréquentes de l'audience (Q&R TikTok)",
+          "Série 'Décoration à petit budget' — comment décorer avec 1-2 canvas pour un impact maximal"
+        ]
+      }
+    },
+
+    "planning_contenu_social_media": {
+      "template_semaine_type": {
+        "lundi": "TikTok : Vidéo éducationnelle ou conseil déco. Pinterest : 3-5 nouveaux Pins depuis les nouvelles créations.",
+        "mercredi": "TikTok : Contenu lifestyle ou before/after. Pinterest : Repin de contenu curated + 2 nouveaux Pins produits.",
+        "vendredi": "TikTok : Processus créatif ou behind-the-scenes. Pinterest : 3-5 Pins saisonniers ou thématiques.",
+        "dimanche": "TikTok : Contenu humain/authentique (artiste, atelier). Pinterest : 5 nouveaux Pins produits catalogue."
+      },
+      "outils_creation": {
+        "capcut": "Montage vidéo TikTok — gratuit, templates tendances intégrés, sous-titres auto. L'outil recommandé pour TikTok.",
+        "canva": "Visuels Pinterest, stories, templates. Version pro recommandée pour les boutiques (suppression fond, mockups).",
+        "lightroom_mobile": "Retouche photo produit et lifestyle. Gratuit sur mobile. Créer un préréglage cohérent pour l'identité visuelle.",
+        "later_tailwind": "Scheduling Pinterest et Instagram. Planifier 2-4 semaines en avance pour rester constant sans y passer des heures quotidiennes."
+      }
+    }
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "category": "reseaux_sociaux_contenu_organique",
+  "version": "31.3.0",
+  "title": "Réseaux Sociaux — Contenu Organique & Stratégie de Marque",
+  "summary": "Stratégie complète de contenu organique multi-plateformes pour marques e-commerce, art, décoration et mode. Instagram, Facebook, TikTok, Pinterest, YouTube Shorts. Calendrier éditorial, storytelling de marque, engagement communautaire.",
+  "content": {
+    "strategie_globale": {
+      "principe_cle": "Le contenu organique construit la confiance et la communauté à long terme. C'est le fondement sur lequel la publicité payante performe mieux.",
+      "regle_80_20": {
+        "80_pourcent": "Contenu valeur ajoutée — éducatif, inspirant, divertissant, authentique",
+        "20_pourcent": "Contenu promotionnel — produits, offres, ventes",
+        "erreur_commune": "Trop de posts promotionnels tue l'engagement organique"
+      },
+      "piliers_contenu": [
+        {
+          "pilier": "Inspiration",
+          "description": "Visuels haute qualité, ambiance, univers de marque",
+          "exemple": "Photo d'un canvas Kallok's Arts mis en scène dans un salon moderne",
+          "frequence": "30% du contenu"
+        },
+        {
+          "pilier": "Éducation",
+          "description": "Tips, tutoriels, processus de création, coulisses",
+          "exemple": "Vidéo time-lapse de création d'un canvas, article blog 'Comment choisir sa toile murale'",
+          "frequence": "30% du contenu"
+        },
+        {
+          "pilier": "Communauté",
+          "description": "UGC (user-generated content), témoignages, partages clients",
+          "exemple": "Repost photo client avec sa commande reçue, sondages Stories",
+          "frequence": "20% du contenu"
+        },
+        {
+          "pilier": "Entertainment",
+          "description": "Contenu viral, tendances, humour de niche, derrière les coulisses",
+          "exemple": "Avant/après transformation d'une pièce avec un canvas, réaction aux commentaires drôles",
+          "frequence": "20% du contenu"
+        }
+      ]
+    },
+    "instagram_strategie": {
+      "overview": "Instagram = plateforme visuelle n°1 pour art, décoration, mode. ROI organique fort pour marques lifestyle.",
+      "formats_prioritaires": [
+        {
+          "format": "Reels",
+          "portée": "HAUTE — algorithme favorise fortement les Reels",
+          "durée_optimale": "7 à 30 secondes pour max engagement",
+          "types": [
+            "Processus de création time-lapse",
+            "Transformation before/after d'une pièce",
+            "Unboxing client satisfait",
+            "Tendances décoration commentées",
+            "Tips art/déco en 3 points"
+          ],
+          "frequence_recommandée": "4-5 Reels/semaine",
+          "hooks_efficaces": [
+            "POV: tu reçois ta commande Kallok's Arts 👀",
+            "3 erreurs que tout le monde fait pour décorer son salon",
+            "Comment j'ai transformé mon appartement avec un seul achat",
+            "Ce que personne ne te dit sur la décoration murale"
+          ]
+        },
+        {
+          "format": "Stories",
+          "portée": "MOYENNE — audience fidèle uniquement",
+          "durée_optimale": "5-7 stories par session",
+          "types": [
+            "Sondages (Quel canvas tu préfères ?)",
+            "Questions (Posez-moi vos questions déco)",
+            "Backstage création",
+            "Countdown avant lancement",
+            "Partage posts clients (reshare mentions)"
+          ],
+          "frequence_recommandée": "1-2 sessions stories/jour",
+          "stickers_clés": ["Sondage", "Question", "Compte à rebours", "Quiz", "Curseur emoji"]
+        },
+        {
+          "format": "Posts Carrousel",
+          "portée": "ÉLEVÉE — fort temps de consultation = signal positif algo",
+          "types": [
+            "Guide '5 styles de décoration murale à connaître' (slide éducatif)",
+            "Comparatif canvas 50x70 vs 100x150 (quel format choisir)",
+            "Process de commande étape par étape",
+            "Catalogue produits par collection",
+            "Avant/après 3 espaces différents"
+          ],
+          "astuce": "Première slide = accroche forte. Dernière slide = CTA clair (lien bio, site)",
+          "frequence_recommandée": "2-3 carrousels/semaine"
+        },
+        {
+          "format": "Post Photo Unique",
+          "portée": "FAIBLE désormais — à utiliser avec parcimonie",
+          "usage": "Photos produit haute qualité pour le feed (esthétique profil)",
+          "frequence_recommandée": "1-2/semaine max"
+        }
+      ],
+      "bio_optimisee": {
+        "structure": [
+          "Ligne 1 : Ce que tu fais en 1 phrase (qui, quoi, pour qui)",
+          "Ligne 2 : Valeur unique / bénéfice client",
+          "Ligne 3 : Social proof ou CTA",
+          "Lien : Linktree ou lien boutique direct"
+        ],
+        "exemple_kalloks": "🎨 Canvas Art Print Unique | Livraison 🇨🇦\n✨ Transforme ton espace, exprime ta personnalité\n⬇️ Boutique en ligne"
+      },
+      "hashtags_strategie": {
+        "nb_optimal": "5-15 hashtags (qualité > quantité depuis 2023)",
+        "structure_recommandée": {
+          "niche_spécifique": "3-5 hashtags (10K-100K posts) ex: #canvasmural #decointerieur",
+          "mid_range": "3-5 hashtags (100K-500K posts) ex: #decomurale #artprint",
+          "large": "2-3 hashtags (500K-2M posts) ex: #decoration #homedecor",
+          "marque": "1-2 hashtags propres ex: #KalloksArts"
+        },
+        "hashtags_canvas_art": [
+          "#canvasmural", "#toilemurale", "#artprint", "#decomurale",
+          "#decorationinterieur", "#homedecor", "#wallart", "#artcanvas",
+          "#tableaudeco", "#maisondecoration", "#interiordesign",
+          "#livingroomdecor", "#abstractart", "#impressioncanvas"
+        ]
+      }
+    },
+    "facebook_strategie_organique": {
+      "overview": "Facebook organique = reach limité mais communauté fidèle via groupes et engagement",
+      "formats_efficaces": [
+        {
+          "format": "Groupes Facebook",
+          "potentiel": "TRÈS ÉLEVÉ — reach organique fort dans les groupes vs pages",
+          "strategie": [
+            "Rejoindre des groupes niche actifs (décoration intérieur, art canadien, etc.)",
+            "Apporter de la valeur avant de promouvoir",
+            "Créer son propre groupe communautaire autour de la décoration/art",
+            "Interactions authentiques = notoriété organique"
+          ]
+        },
+        {
+          "format": "Facebook Live",
+          "potentiel": "ÉLEVÉ — les lives sont favorisés par l'algorithme",
+          "idées": [
+            "Live peinture / création en direct",
+            "Q&A déco avec les clients",
+            "Dévoilement nouvelle collection",
+            "Comparaison formats de canvas"
+          ]
+        },
+        {
+          "format": "Reels Facebook",
+          "potentiel": "MOYEN-ÉLEVÉ — cross-post depuis Instagram",
+          "note": "Les Reels Instagram se publient automatiquement sur Facebook — double portée sans effort"
+        }
+      ]
+    },
+    "calendrier_editorial_semaine_type": {
+      "lundi": {
+        "theme": "Motivation / Nouvelle semaine",
+        "format": "Reel ou Carrousel",
+        "exemple": "3 idées déco pour transformer ton espace ce weekend"
+      },
+      "mardi": {
+        "theme": "Éducatif / Tips",
+        "format": "Carrousel éducatif",
+        "exemple": "Comment choisir la taille de canvas parfaite pour ton mur"
+      },
+      "mercredi": {
+        "theme": "Produit / Collection",
+        "format": "Reel produit ou Photo",
+        "exemple": "Nouveau canvas disponible — collection [Nom]"
+      },
+      "jeudi": {
+        "theme": "Communauté / UGC",
+        "format": "Reshare client ou Stories sondage",
+        "exemple": "Photo client + témoignage authentique"
+      },
+      "vendredi": {
+        "theme": "Entertainment / Fun",
+        "format": "Reel tendance",
+        "exemple": "Avant/après transformation salon avec canvas"
+      },
+      "samedi": {
+        "theme": "Inspiration / Lifestyle",
+        "format": "Photo ou Carrousel ambiance",
+        "exemple": "Ambiance weekend cosy — mise en scène produit"
+      },
+      "dimanche": {
+        "theme": "Coulisses / Authentique",
+        "format": "Stories ou Reel backstage",
+        "exemple": "Coulisses de la semaine, préparation commandes"
+      }
+    },
+    "ugc_strategie": {
+      "definition": "User Generated Content = contenu créé par vos clients. Le marketing le plus puissant qui soit.",
+      "comment_générer": [
+        "Email post-achat demandant une photo avec le produit reçu",
+        "Hashtag de marque dédié à promouvoir (#MonKalloks)",
+        "Programme ambassadeur simple (réduction en échange de contenu)",
+        "Sélectionner et resharer les mentions client",
+        "Encourager les avis avec photos sur Google/Etsy"
+      ],
+      "valeur_ugc": "Les photos clients convertissent 5x mieux que les photos de marque en publicité.",
+      "outil_collecte": "Créer un dossier Instagram 'Collaborations' pour regrouper les mentions"
+    },
+    "storytelling_de_marque": {
+      "definition": "Le storytelling transforme une transaction en connexion émotionnelle.",
+      "elements_narratif_kalloks": {
+        "fondateur": "Qui est derrière Kallok's Arts ? Quelle passion, quel parcours ?",
+        "mission": "Pourquoi ce projet existe ? (Rendre l'art accessible, transformer les espaces de vie)",
+        "processus": "Comment chaque canvas est-il créé ? (Attention aux détails, qualité)",
+        "impact": "Quel effet sur la vie des clients ? (Histoires émouvantes)"
+      },
+      "formats_storytelling": [
+        "Série 'Histoire de Kallok's Arts' — 5 posts évolution de la marque",
+        "Video fondateur — face caméra authentic",
+        "Before/after histoires clients — emotional storytelling",
+        "Processus de création — transparence et artisanat"
+      ]
+    },
+    "metriques_organiques": {
+      "kpis_prioritaires": [
+        {"metrique": "Taux d'engagement", "formule": "(Likes+Commentaires+Partages) / Portée × 100", "benchmark_bon": "> 3% Instagram, > 1% Facebook"},
+        {"metrique": "Portée organique", "formule": "Nombre de comptes uniques touchés", "suivi": "Évolution semaine/semaine"},
+        {"metrique": "Croissance abonnés", "formule": "Nouveaux abonnés - Désabonnements par période", "objectif": "+ 5-10% par mois organique"},
+        {"metrique": "Saves (Instagram)", "formule": "Nombre de sauvegardes d'un post", "importance": "Signal fort = contenu à valeur durable"},
+        {"metrique": "Clics lien bio", "formule": "Clics vers boutique depuis Instagram", "outil": "Instagram Insights > Activité"}
+      ]
+    }
+  }
+}

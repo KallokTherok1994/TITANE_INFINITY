@@ -1,0 +1,137 @@
+{
+  "category": "service_client_excellence_ecommerce",
+  "version": "31.3.0",
+  "title": "Service Client Excellence E-commerce — Fidélisation & Expérience Post-Achat",
+  "summary": "Système complet de service client e-commerce haute performance : scripts de réponse, gestion réclamations, programme fidélité, expérience unboxing, avis clients, NPS, retention stratégies. Transformer chaque interaction en opportunité de fidélisation.",
+  "content": {
+    "philosophie_service_client": {
+      "principe": "Le service client est le marketing le moins cher qui soit. Un client satisfait = 5-10 recommandations. Un client insatisfait = 15-20 avis négatifs.",
+      "objectif_ultime": "Transformer des acheteurs ponctuels en ambassadeurs de marque qui achètent à nouveau et recommandent activement.",
+      "métriques_clés": [
+        {"nom": "CSAT (Customer Satisfaction Score)", "mesure": "Satisfaction immédiate après interaction", "benchmark_excellent": "> 90%"},
+        {"nom": "NPS (Net Promoter Score)", "mesure": "Probabilité de recommandation 0-10", "benchmark_excellent": "> 50"},
+        {"nom": "First Reply Time", "mesure": "Délai 1ère réponse", "benchmark_excellent": "< 4h (idéal < 1h)"},
+        {"nom": "Résolution au 1er contact", "mesure": "Problèmes résolus sans escalade", "benchmark_excellent": "> 80%"},
+        {"nom": "Taux de rétention", "mesure": "% clients qui rachètent à 12 mois", "benchmark_excellent": "> 25% e-commerce"}
+      ]
+    },
+    "scripts_service_client": {
+      "réponse_commande_reçue_parfaite": {
+        "objet": "🎨 Votre commande est arrivée ! Comment ça s'est passé ?",
+        "corps": "Bonjour [Prénom],\n\nJ'espère que votre canvas est bien arrivé et qu'il illumine déjà votre espace !\n\nVotre satisfaction est vraiment importante pour moi. Si vous avez une seconde, je serais tellement reconnaissant(e) de lire vos impressions 😊\n\n⭐ Laisser un avis : [lien direct]\n\nEt si vous souhaitez partager une photo de votre décoration sur Instagram, n'hésitez pas à me taguer @KalloksArts — j'adore voir comment vous donnez vie à votre espace !\n\nMerci de votre confiance,\n[Prénom Fondateur]\nKallok's Arts"
+      },
+      "gestion_retard_livraison": {
+        "objet": "Important — Mise à jour concernant votre commande #[XXX]",
+        "corps": "Bonjour [Prénom],\n\nJe voulais vous contacter personnellement concernant votre commande.\n\nVotre colis rencontre un léger retard dans son acheminement. Je comprends que c'est frustrant et je m'en excuse sincèrement.\n\nVoici où en est votre commande : [lien tracking]\nDate de livraison estimée révisée : [date]\n\nEn signe d'excuse pour ce désagrément, voici un code de réduction de 15% sur votre prochaine commande : [CODE15]\n\nN'hésitez pas à me contacter si vous avez d'autres questions. Je reste disponible pour vous.\n\nCordialement,\n[Prénom]"
+      },
+      "gestion_produit_endommagé": {
+        "objet": "Solution immédiate — Votre commande #[XXX]",
+        "corps": "Bonjour [Prénom],\n\nJe suis vraiment désolé(e) d'apprendre que votre canvas est arrivé endommagé. C'est totalement inacceptable et vous méritez mieux.\n\nVoici ce que je fais immédiatement pour vous :\n✅ Je vous envoie un remplacement GRATUIT dès aujourd'hui\n✅ Vous n'avez rien à faire ni à retourner\n✅ Votre nouveau canvas partira sous [X jours]\n\nPourriez-vous simplement m'envoyer une photo du dommage pour mes dossiers ? (Pour améliorer notre packaging)\n\nEncore toutes mes excuses. Vous avez choisi Kallok's Arts et je veux que vous soyez fier(e) de ce choix.\n\n[Prénom]"
+      },
+      "réponse_avis_5_étoiles": "Merci infiniment pour ces mots touchants ! 🙏 Votre satisfaction est notre plus belle récompense. C'est exactement pour créer ce genre d'expérience que nous existons. N'hésitez pas à partager votre espace décoré sur Instagram @KalloksArts — nous adorons voir vos intérieurs ✨",
+      "réponse_avis_négatif": {
+        "structure": [
+          "1. Remercier pour le retour (sincèrement)",
+          "2. S'excuser sans chercher à se justifier",
+          "3. Prendre responsabilité",
+          "4. Proposer solution concrète et immédiate",
+          "5. Inviter à recontacter en privé pour résoudre"
+        ],
+        "exemple": "Bonjour, merci d'avoir pris le temps de nous faire ce retour. Je suis sincèrement désolé(e) que votre expérience n'ait pas été à la hauteur de vos attentes — et des nôtres. Ceci est totalement inacceptable et je veux arranger cela immédiatement. Pourriez-vous m'envoyer un message privé ? Je vais personnellement m'occuper de votre situation. Merci pour votre confiance."
+      }
+    },
+    "expérience_unboxing": {
+      "importance": "L'unboxing est un moment de vérité — c'est là que la valeur perçue est validée ou déçue.",
+      "éléments_unboxing_premium": [
+        {
+          "élément": "Packaging soigné",
+          "description": "Boîte brandée ou papier de soie aux couleurs de la marque",
+          "impact": "Première impression = confirmation d'achat de qualité",
+          "coût_estimé": "0.50-2$ par commande"
+        },
+        {
+          "élément": "Carte de remerciement manuscrite (ou imprimée)",
+          "description": "Mot personnalisé du fondateur, authentique et chaleureux",
+          "impact": "Connexion émotionnelle forte, augmente les avis positifs de 30%+",
+          "template": "Bonjour [Prénom], merci de faire confiance à Kallok's Arts pour décorer votre espace. Chaque canvas est créé avec passion. J'espère qu'il apportera autant de joie à regarder qu'à créer. [Signature]"
+        },
+        {
+          "élément": "Insert code réduction prochain achat",
+          "description": "Coupon physique -15% valable 30 jours",
+          "impact": "Augmente LTV et rachats, coût = 0",
+          "conversion_moyenne": "8-15% des inserts sont utilisés"
+        },
+        {
+          "élément": "QR code vers page 'Comment accrocher'",
+          "description": "Video ou guide installation murale canvas",
+          "impact": "Réduit réclamations 'canvas mal accroché', ajoute valeur"
+        }
+      ],
+      "printful_options_branding": [
+        "Pack-in inserts (cartes, flyers) — inclure avec chaque commande",
+        "Inside label personnalisé — discret mais professionnel",
+        "Custom packing slip — remplacer le bon de livraison Printful par le sien",
+        "Packaging premium (boîtes branded) — disponible depuis Printful Warehouse"
+      ]
+    },
+    "programme_fidélité_simple": {
+      "modèle_recommandé_petit_ecommerce": {
+        "nom": "Programme VIP Kallok's Arts",
+        "tiers": [
+          {
+            "niveau": "Fan",
+            "condition": "1er achat",
+            "avantages": ["Code -10% bienvenue", "Accès early access nouvelles collections"]
+          },
+          {
+            "niveau": "Collector",
+            "condition": "2e achat ou 100$+ dépensés",
+            "avantages": ["Code -15% permanent", "Livraison prioritaire", "Aperçu exclusif nouveautés"]
+          },
+          {
+            "niveau": "Ambassadeur",
+            "condition": "5+ achats ou parrainage 3 clients",
+            "avantages": ["Code -20%", "Canvas gratuit par an", "Mention sur réseaux sociaux Kallok's Arts"]
+          }
+        ]
+      },
+      "parrainage_referral": {
+        "mécanisme": "Client A partage lien unique → Client B achète → Client A reçoit 15$ crédit",
+        "outils": ["ReferralCandy (Shopify)", "Friendbuy", "Manuel via codes personnalisés"],
+        "LTV_impact": "Les clients référés ont un LTV 25% plus élevé en moyenne"
+      }
+    },
+    "collecte_et_gestion_avis": {
+      "importance_avis": "92% des consommateurs lisent les avis avant d'acheter. 1 étoile de plus sur Etsy = +18% de conversion estimée.",
+      "stratégie_collecte_systématique": [
+        "Email J+7 après livraison estimée → demande avis Google Business",
+        "Email J+10 → demande avis Etsy si commande Etsy",
+        "Message Etsy après marquage 'delivered' → demande douce",
+        "Insert physique avec QR code vers lien avis direct"
+      ],
+      "plateformes_prioritaires": [
+        {"plateforme": "Etsy Reviews", "importance": "CRITIQUE — directement visible sur la liste produit"},
+        {"plateforme": "Google Business Profile", "importance": "HAUTE — référencement local + crédibilité marque"},
+        {"plateforme": "Facebook Page", "importance": "MOYENNE — social proof communauté"},
+        {"plateforme": "Trustpilot", "importance": "OPTIONNELLE — surtout si site propre Wix/Shopify"}
+      ],
+      "répondre_à_tous_les_avis": "Répondre aux avis (positifs ET négatifs) montre que la marque est active et se soucie. Boost SEO également."
+    },
+    "retention_strategies_avancées": {
+      "email_winback": {
+        "déclencheur": "Aucun achat depuis 90 jours",
+        "séquence": [
+          "Email 1 — 'Tu nous manques !' + aperçu nouvelles collections",
+          "Email 2 — Offre -20% exclusive 'pour fêter ton retour'",
+          "Email 3 — Dernière chance + code différent si pas converti"
+        ]
+      },
+      "segmentation_clients": [
+        {"segment": "Champions (achat récent + fréquent + AOV élevé)", "action": "Programme VIP Ambassadeur, early access"},
+        {"segment": "Loyaux (achats réguliers)", "action": "Réductions fidélité, upsell collection premium"},
+        {"segment": "À risque (baisse fréquence)", "action": "Win-back séquence, offre exclusive"},
+        {"segment": "Inactifs (90j+ sans achat)", "action": "Réactivation agressive puis suppression liste si no response"}
+      ]
+    }
+  }
+}

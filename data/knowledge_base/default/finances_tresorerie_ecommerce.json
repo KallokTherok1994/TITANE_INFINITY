@@ -1,0 +1,174 @@
+{
+  "category": "finances_tresorerie_ecommerce",
+  "version": "31.3.0",
+  "title": "Finances & Trésorerie E-commerce — Gestion, Fiscalité, Croissance",
+  "summary": "Guide complet finances e-commerce : structure comptable, séparation pro/perso, TVA/taxes selon pays, gestion trésorerie, pricing strategy avancé, reinvestissement budgétaire, outils comptabilité (QuickBooks, Wave, FreshBooks), auto-évaluation santé financière.",
+  "content": {
+    "fondations_financières": {
+      "règle_n1": "Séparer immédiatement les finances personnelles et professionnelles. Même si vous êtes solo.",
+      "structure_recommandée_canada": {
+        "compte_bancaire": "Compte chèques dédié à la boutique (Desjardins, BMO, TD ou Wise Business)",
+        "carte_crédit": "Carte crédit affaires uniquement pour dépenses business",
+        "PayPal_Business": "Compte PayPal Business séparé si utilisation PayPal",
+        "Stripe": "Compte Stripe lié au compte bancaire business",
+        "avantages": [
+          "Simplifie la comptabilité × 10",
+          "Facilite la déclaration fiscale",
+          "Prouve le caractère commercial de l'activité",
+          "Protège en cas de vérification fiscale"
+        ]
+      },
+      "statuts_juridiques_canada": [
+        {
+          "statut": "Travailleur autonome (sole proprietor)",
+          "quand": "Démarrage, revenus < 30 000$ CAD/an",
+          "avantages": "Simple, pas d'incorporation, rapport T1",
+          "inconvénients": "Responsabilité personnelle illimitée"
+        },
+        {
+          "statut": "Corporation provinciale ou fédérale",
+          "quand": "Revenus > 30 000$ CAD/an ou volonté de protéger patrimoine perso",
+          "avantages": "Protection responsabilité, taux impôt PME préférentiel (9% fédéral), crédibilité",
+          "inconvénients": "Coût incorporation (300-2000$), comptabilité plus complexe"
+        }
+      ],
+      "TPS_TVQ": {
+        "seuil_inscription": "30 000$ CAD de revenus bruts → inscription obligatoire TPS (5%) + TVQ Québec (9.975%)",
+        "avant_seuil": "Pas d'obligation de percevoir TPS/TVH avant 30 000$",
+        "Etsy_marketplace": "Etsy perçoit et remet TPS/TVH pour les ventes aux acheteurs canadiens depuis 2022 — vérifier les nouvelles règles",
+        "conseil": "Ouvrir un compte TPS dès le départ pour simplifier la transition"
+      }
+    },
+    "structure_prix_avancée": {
+      "méthode_cost_plus": {
+        "formule": "Coût production + Frais variables + Frais fixes / unités + Marge désirée = Prix de vente minimum",
+        "exemple_canvas": {
+          "coût_printful": 18.50,
+          "frais_etsy_6_5_pourcent": 3.25,
+          "frais_transaction_3_pourcent": 1.50,
+          "coût_acquisition_pub_estimé": 8.00,
+          "total_coûts": 31.25,
+          "marge_désirée_60_pourcent": "= Prix de vente minimum ≈ 50$",
+          "prix_recommandé": 49.99
+        }
+      },
+      "pricing_psychologique": [
+        {"technique": "Prix ancre", "exemple": "Afficher 'Prix habituel 79$ — Maintenant 49$'", "effet": "Augmente perception valeur"},
+        {"technique": "Charm pricing", "exemple": "49.99$ vs 50$", "effet": "Perçu nettement moins cher cognitivement"},
+        {"technique": "Prix décroissant bundle", "exemple": "1 canvas 49$ / 2 pour 89$ / 3 pour 119$", "effet": "Incite achats multiples AOV++"},
+        {"technique": "Edition limitée premium", "exemple": "'Collection signée numérotée' à +30% prix", "effet": "Justifie premium, crée urgence"}
+      ],
+      "ajustement_prix_concurrentiel": {
+        "principe": "Ne pas se baser uniquement sur la concurrence — baser sur la valeur perçue",
+        "exercice": "Lister 5 concurrents directs Etsy, noter leurs prix, se positionner middle-to-premium si qualité le justifie",
+        "erreur_courante": "Baisser les prix pour concurrencer = race to the bottom = destruction marges"
+      }
+    },
+    "gestion_trésorerie": {
+      "tableau_trésorerie_mensuel": {
+        "entrées": ["Ventes Etsy", "Ventes site web", "Ventes Instagram/FB Shop", "Remboursements assurance", "Autres revenus"],
+        "sorties": {
+          "coûts_variables": ["Printful/POD (% du CA)", "Frais Etsy (6.5%)", "Frais transaction (2-3%)", "Frais pub (Meta/Google)"],
+          "coûts_fixes": ["Abonnement Etsy Plus (10$/mois)", "Canva Pro/Adobe", "Klaviyo/Mailchimp", "Domaine + hébergement"],
+          "coûts_occasionnels": ["Échantillons/tests", "Équipement photo", "Formations/outils", "Comptable/avocat"]
+        }
+      },
+      "réserve_trésorerie_recommandée": "Maintenir 2-3 mois de charges fixes en réserve liquide",
+      "fonds_publicité": {
+        "règle": "Réinvestir 20-30% du CA en publicité pendant la phase de croissance",
+        "paliers": [
+          {"CA_mensuel": "0-1 000$", "budget_pub": "50-150$/mois — tester, valider"},
+          {"CA_mensuel": "1 000-5 000$", "budget_pub": "300-1 000$/mois — scaler ce qui marche"},
+          {"CA_mensuel": "5 000-15 000$", "budget_pub": "1 000-3 500$/mois — diversifier canaux"},
+          {"CA_mensuel": "15 000$+", "budget_pub": "20-25% CA — optimiser ROAS strict"}
+        ]
+      }
+    },
+    "comptabilité_outils": {
+      "outils_recommandés": [
+        {
+          "outil": "Wave Accounting",
+          "coût": "Gratuit",
+          "usage": "Comptabilité de base, factures, connexion bancaire",
+          "idéal_pour": "Démarrage, budget serré"
+        },
+        {
+          "outil": "QuickBooks Self-Employed",
+          "coût": "15$/mois CAD",
+          "usage": "Séparation perso/pro auto, déclaration impôts, kilométrage",
+          "idéal_pour": "Travailleur autonome Canada"
+        },
+        {
+          "outil": "FreshBooks",
+          "coût": "19$/mois",
+          "usage": "Facturation clients, suivi heures, rapports",
+          "idéal_pour": "Si vous avez des clients B2B + e-commerce"
+        },
+        {
+          "outil": "A2X (Etsy/Shopify → comptabilité)",
+          "coût": "19$/mois",
+          "usage": "Importe automatiquement les transactions Etsy/Shopify dans QuickBooks/Xero",
+          "idéal_pour": "Volume > 50 commandes/mois"
+        }
+      ],
+      "rapports_mensuels_à_générer": [
+        "Compte de résultats (P&L) mensuel",
+        "ROAS par canal publicitaire",
+        "Marge brute et nette par produit",
+        "Top 10 produits par chiffre d'affaires",
+        "CAC et LTV par segment client"
+      ]
+    },
+    "kpis_financiers_santé_boutique": {
+      "indicateurs": [
+        {
+          "KPI": "Marge brute",
+          "formule": "(CA - Coûts variables) / CA × 100",
+          "benchmark_sain": "> 40% pour POD art/déco",
+          "alerte": "< 30% = réviser pricing immédiatement"
+        },
+        {
+          "KPI": "MER (Marketing Efficiency Ratio)",
+          "formule": "CA total / Dépenses pub totales",
+          "benchmark_sain": "> 3x",
+          "note": "Plus holistique que le ROAS par canal"
+        },
+        {
+          "KPI": "Contribution Margin",
+          "formule": "CA - Coûts variables (sans frais fixes)",
+          "usage": "Évaluer la rentabilité réelle d'un produit"
+        },
+        {
+          "KPI": "Break-even mensuel",
+          "formule": "Charges fixes totales / Marge brute %",
+          "usage": "Savoir à quel CA mensuel vous couvrez vos coûts fixes"
+        },
+        {
+          "KPI": "Runway trésorerie",
+          "formule": "Cash disponible / Dépenses mensuelles moyennes",
+          "benchmark_sain": "> 3 mois",
+          "alerte": "< 1 mois = urgence — réduire dépenses ou lever capital"
+        }
+      ]
+    },
+    "croissance_et_réinvestissement": {
+      "paliers_de_croissance": [
+        {
+          "phase": "Validation (0-2 000$/mois)",
+          "priorités": ["Trouver le product-market fit", "Tester 10+ designs", "Optimiser conversion Etsy", "Zéro pub ou micro-budget 50$/mois"],
+          "réinvestissement": "100% en designs et tests"
+        },
+        {
+          "phase": "Traction (2 000-8 000$/mois)",
+          "priorités": ["Scaler les best-sellers", "Activer publicité Facebook/Instagram", "Construire liste email", "Améliorer LTV (upsell, bundles)"],
+          "réinvestissement": "30% pub, 30% création contenu, 20% outils, 20% épargne"
+        },
+        {
+          "phase": "Scale (8 000-20 000$/mois)",
+          "priorités": ["Diversifier canaux (Pinterest Ads, Google Shopping)", "Recruter VA (assistant virtuel)", "Automatiser service client", "Développer wholesale ou B2B"],
+          "réinvestissement": "25% pub, 15% équipe, 20% outils, 40% profits"
+        }
+      ]
+    }
+  }
+}

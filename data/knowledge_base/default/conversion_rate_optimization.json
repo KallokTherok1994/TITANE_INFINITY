@@ -1,0 +1,117 @@
+{
+  "version": "v31.3.0",
+  "category": "conversion_rate_optimization",
+  "description": "Optimisation du taux de conversion (CRO) pour boutiques e-commerce — analyse du funnel de conversion complet (acquisition → landing → fiche produit → panier → checkout → confirmation), heat maps et enregistrements de sessions (Hotjar, Microsoft Clarity), tests A/B CRO, optimisation UX checkout (friction reduction, confiance, payment UX), optimisation mobile e-commerce, page de collection, trust signals et badges de confiance, chat en direct et chatbots, popups et gamification, personnalisation, vitesse de chargement comme facteur CRO, benchmarks de conversion par secteur (art, mode, déco), stratégie CRO pour Wix et Etsy, analyse des obstacles à l'achat et solutions",
+  "conversion_rate_optimization": {
+    "introduction": "Le taux de conversion moyen d'un site e-commerce est de 1-3%. Doubler ce taux sans augmenter le trafic = doubler les revenus. C'est l'opportunité la plus rapide et la moins coûteuse pour une boutique en ligne. Chaque élément de votre boutique influence la décision d'achat — TITANE vous donne les outils pour identifier les freins et les éliminer systématiquement.",
+
+    "benchmarks_conversion": {
+      "e_commerce_general": "1-3% de taux de conversion moyen. Top performers (top 10%) : 3-5%.",
+      "art_et_deco": "Art mural et canvas : 1,5-3,5%. La catégorie bénéficie d'une forte intention d'achat sur Pinterest et Etsy.",
+      "mode": "Mode femme/homme : 1-2,5%. Plus difficile (taille, coupe) — la politique de retour influence fortement.",
+      "etsy": "Etsy boutique : 1-4%. L'algorithme Etsy favorise les boutiques avec un fort taux de conversion.",
+      "mobile_vs_desktop": "Desktop : 2-4%. Mobile : 0,5-2%. L'expérience mobile est le principal levier d'amélioration pour la plupart des boutiques."
+    },
+
+    "analyse_funnel": {
+      "etapes_mesurer": {
+        "acquisition": "D'où viennent vos visiteurs ? (GA4 source/medium). Quel canal convertit le mieux ?",
+        "page_categories": "Taux de rebond sur les pages catégories. Si > 60% = problème de pertinence ou d'UX.",
+        "fiche_produit": "Taux d'ajout au panier. Benchmark : 5-15%. Si < 3% = problème de prix, photos, ou description.",
+        "panier": "Taux d'abandon de panier. Benchmark : 68-75%. Chaque point de friction = perte de ventes.",
+        "checkout": "Taux de complétion checkout. Benchmark : 50-60% des sessions checkout aboutissent à un achat. Si < 40% = problème de checkout.",
+        "confirmation": "Post-achat : LTV, réachat, partage."
+      },
+      "outils_analyse": {
+        "google_analytics_4": "Funnel exploration dans GA4 — visualiser chaque étape et identifier les drop-offs. 'Explorations → Funnel exploration'.",
+        "hotjar": "Heatmaps (où cliquent les visiteurs), enregistrements de sessions (voir exactement ce que font les visiteurs), sondages. Gratuit jusqu'à 1000 sessions/mois.",
+        "microsoft_clarity": "Alternative Hotjar 100% gratuite. Sessions recordings, heatmaps, filtres comportementaux. Recommandé si budget limité."
+      }
+    },
+
+    "optimisation_fiche_produit": {
+      "above_the_fold": {
+        "principe": "Ce que le visiteur voit SANS scroller est décisif. Ces éléments doivent être présents au-dessus de la ligne de flottaison sur mobile ET desktop.",
+        "elements_obligatoires": ["Photo principale haute qualité", "Titre clair avec le produit", "Prix visible", "Note clients (si disponible)", "Bouton 'Ajouter au panier' (couleur contrastée, grand, visible)", "2-3 micro-engagements : livraison gratuite badge, retour 30j, paiement sécurisé"]
+      },
+      "photos_impact_conversion": {
+        "quantite": "6-10 photos. Chaque photo supplémentaire jusqu'à 8 = +2-5% de conversion.",
+        "photo_360_ou_video": "Vidéo produit 15-30s = +20-35% de conversion en moyenne. Pour les canvas : timelapse d'accrochage, ambiance lumière naturelle vs lumière artificielle.",
+        "zoom": "Permettre le zoom sur les photos. Les acheteurs veulent voir la texture de la toile et la qualité des couleurs.",
+        "mobile": "Swipe galleries sur mobile = obligatoire. Les images doivent se charger en < 1 seconde sur mobile 4G."
+      },
+      "prix_et_ancrage": {
+        "prix_barre": "Prix original barré + prix promo = augmentation de conversion de 10-25%. Le cerveau perçoit une économie.",
+        "prix_par_unite": "Pour les bundles : afficher le prix unitaire ('soit X$/unité'). Rend le bundle plus attractif.",
+        "paiement_fractionne": "Afficher les options de paiement fractionné (Klarna, Afterpay, PayBright au Canada) sur la fiche produit. 'Payez 25$/mois en 4 fois' vs '89$ tout de suite' = conversion supérieure sur les montants > 60$."
+      },
+      "trust_signals": {
+        "reviews": "Les étoiles et le nombre d'avis doivent être visibles en haut de page (au-dessus du fold ou très proche). Avis avec photos = preuve sociale maximale.",
+        "badges_securite": "SSL, paiement sécurisé, satisfait ou remboursé, délai de retour. Visibles sur la fiche produit ET dans le checkout.",
+        "social_proof_dynamique": "'X personnes regardent ce produit en ce moment' ou 'X vendus cette semaine' — crée l'urgence et la preuve de popularité. À n'utiliser que si les chiffres sont vrais.",
+        "garanties": "Politique de retour claire et rassurante. 'Satisfait ou remboursé 30 jours' réduit l'anxiété d'achat et augmente la conversion même si très peu de personnes retournent réellement."
+      }
+    },
+
+    "optimisation_checkout": {
+      "frictions_courantes": [
+        "Obligation de créer un compte avant d'acheter — autoriser le checkout en tant qu'invité",
+        "Trop d'étapes (idéalement 1-3 étapes maximum)",
+        "Formulaire trop long (ne demander que le nécessaire)",
+        "Coût de livraison affiché seulement au checkout (surprise = abandon)",
+        "Options de paiement insuffisantes (pas de Paypal, Apple Pay, Google Pay)",
+        "Page lente sur mobile",
+        "Manque de sécurité visible (pas de HTTPS visible, pas de badges)"
+      ],
+      "one_page_checkout": "Le checkout en une seule page réduit les abandons de 20-35% vs un checkout multi-étapes. Wix et Shopify proposent cette option nativement.",
+      "livraison_gratuite": "La livraison gratuite (même incluse dans le prix) est le facteur #1 de décision d'achat en ligne (82% des acheteurs). Si possible, inclure le coût de livraison dans le prix et afficher 'Livraison gratuite' partout.",
+      "recovery_checkout": "Sauvegarder automatiquement le panier pour les visiteurs identifiés. Si un client revient 3 jours après, son panier est intact.",
+      "upsell_checkout": "Proposer un produit complémentaire à faible coût dans le checkout ('Ajoutez ce mini canvas pour 9$ de plus'). Augmente le panier moyen de 10-15% si bien fait."
+    },
+
+    "optimisation_mobile": {
+      "importance": "55-65% du trafic e-commerce est mobile. Mais seulement 30-40% des achats. Le gap = problème d'UX mobile. Corriger l'UX mobile est le levier CRO #1 pour la plupart des boutiques.",
+      "points_critiques": {
+        "vitesse": "LCP mobile < 2,5s. Tester avec PageSpeed Insights mobile. Sur mobile 4G, une page qui met 4+ secondes à charger = 80% de rebond.",
+        "boutons_cta": "Bouton CTA 44px minimum de hauteur (recommandation Apple et Google). Assez grand pour être tapé sans erreur. Couleur contrastée. En position basse de l'écran (pouce).",
+        "images": "Swipe gallery naturel. Zoom en pinch & spread. Images optimisées pour mobile (format WebP, taille < 200Ko).",
+        "formulaires": "Champs de formulaire avec le bon type de keyboard (type=email lance le clavier email sur mobile, type=tel lance le clavier numérique).",
+        "pop_ups": "Les pop-ups non optimisés pour mobile = pénalité Google (Google Mobile Interstitial Penalty). Pop-up doit être facilement fermable avec un X grand et accessible."
+      },
+      "ats_mobile": "Tester votre boutique sur un vrai appareil Android et iOS. Les émulateurs ne simulent pas fidèlement l'expérience. Demander à 5-10 personnes de tester et observer (test utilisateur informel)."
+    },
+
+    "ab_testing_cro": {
+      "methodologie": {
+        "un_element_a_la_fois": "Changer UN seul élément par test. Sinon impossible de savoir ce qui a causé le changement de conversion.",
+        "echantillon_minimum": "Minimum 200 conversions (achats) par variante pour avoir un résultat statistiquement significatif. Pour une petite boutique → calculer combien de jours nécessaires.",
+        "duree_minimum": "2 semaines (capturer la variabilité lundi/weekend). Ne pas arrêter prématurément même si une variante semble gagner.",
+        "outils": "Google Optimize (gratuit, intégré GA4, disponible jusqu'à disponibilité), VWO (payant), Convert.com. Sur Shopify : Intelligems, Neat A/B Testing."
+      },
+      "tests_prioritaires_impact": [
+        "1. Couleur et texte du bouton CTA 'Ajouter au panier' (impact direct)",
+        "2. Photo principale du produit (packshot vs lifestyle)",
+        "3. Prix affiché (89 USD vs 88,99 USD vs 87 USD ancré → 75 USD)",
+        "4. Position des avis clients (en haut vs en bas de page)",
+        "5. Livraison gratuite affichée dans le titre produit vs seulement en bullet point",
+        "6. Nombre de photos dans le carousel (6 photos vs 10 photos)",
+        "7. Checkout 1 page vs 2 pages"
+      ]
+    },
+
+    "outils_cro_recommandes": {
+      "microsoft_clarity": "100% gratuit. Heatmaps, session recordings, rage clicks (clics de frustration). Indispensable. Installer dès le premier jour.",
+      "hotjar": "Version gratuite (1000 sessions). Version payante pour les boutiques avec plus de trafic. Sondages exit intent très précieux ('Pourquoi n'avez-vous pas complété votre achat ?').",
+      "lucky_orange": "Alternative mid-price (10-20 USD/mois). Sessions recordings + chat en direct + heatmaps.",
+      "livechat_intercom": "Chat en direct sur la boutique. Réduire l'anxiété des acheteurs indécis. ROI positif pour les produits > 50 USD.",
+      "tidio": "Chat en direct + chatbot. Gratuit avec fonctionnalités de base. Parfait pour les petites boutiques. Intégration Wix native."
+    },
+
+    "personalisation": {
+      "par_source_trafic": "Afficher un message différent selon la source : 'Bienvenue de la part de TikTok — voici nos canvas trending' pour le trafic TikTok. Outils : Privy, Klaviyo.",
+      "par_comportement": "Afficher 'Vous avez regardé ceci' ou 'D'autres personnes ayant vu ce canvas ont aussi aimé'. Cross-sell et upsell contextuels.",
+      "par_geographie": "Afficher les prix dans la devise locale, les délais de livraison selon le pays. Réduit la friction internationale.",
+      "email_vs_premier_visiteur": "Les abonnés email qui cliquent vers la boutique = déjà qualifiés. Leur montrer une version avec leur prénom ou avec l'offre spécifique de l'email. Klaviyo peut pré-remplir le code promo automatiquement."
+    }
+  }
+}

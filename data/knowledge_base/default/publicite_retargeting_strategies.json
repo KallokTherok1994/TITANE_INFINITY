@@ -1,0 +1,230 @@
+{
+  "category": "publicite_retargeting_strategies",
+  "version": "31.3.0",
+  "title": "Publicité Payante Avancée — Retargeting, Lookalike & Scaling",
+  "summary": "Stratégies avancées de publicité payante : retargeting multi-étapes, audiences lookalike, scaling structuré, créatifs haute performance. Facebook Ads, Instagram Ads, Google Ads, TikTok Ads. Entonnoir complet TOFU/MOFU/BOFU.",
+  "content": {
+    "architecture_publicitaire_complete": {
+      "principe": "Structure en entonnoir à 3 niveaux pour maximiser ROAS et minimiser CPA.",
+      "niveaux": {
+        "TOFU": {
+          "nom": "Top of Funnel — Notoriété",
+          "objectif": "Toucher de nouvelles audiences froides",
+          "audiences": ["Lookalike 1-3% acheteurs", "Intérêts larges niche", "Audiences thématiques"],
+          "budget_allocation": "40% du budget total",
+          "KPIs_cibles": ["CPM < 12$", "CTR > 1.5%", "Fréquence < 3"]
+        },
+        "MOFU": {
+          "nom": "Middle of Funnel — Considération",
+          "objectif": "Re-toucher les personnes ayant interagi",
+          "audiences": [
+            "Visiteurs site 30 jours (non acheteurs)",
+            "Engagement Instagram/Facebook 30-60 jours",
+            "Vues vidéo 50%+ (30 jours)",
+            "Ajout panier sans achat 14 jours"
+          ],
+          "budget_allocation": "35% du budget total",
+          "KPIs_cibles": ["CPC < 0.80$", "ROAS > 2x", "CTR > 2%"]
+        },
+        "BOFU": {
+          "nom": "Bottom of Funnel — Conversion",
+          "objectif": "Convertir les audiences les plus chaudes",
+          "audiences": [
+            "Visiteurs pages produit 7 jours",
+            "Ajout panier 3-7 jours",
+            "Checkout initié 3 jours",
+            "Clients existants (cross-sell / upsell)"
+          ],
+          "budget_allocation": "25% du budget total",
+          "KPIs_cibles": ["ROAS > 4x", "CPA < 15$", "CTR > 3%"]
+        }
+      }
+    },
+    "retargeting_strategies": {
+      "definition": "Retargeting = re-cibler les personnes ayant déjà interagi avec votre marque ou site.",
+      "retargeting_par_comportement": [
+        {
+          "audience": "Visiteurs page produit (7 jours, sans achat)",
+          "message": "Tu as repéré quelque chose ? Il est encore disponible !",
+          "format": "Dynamic Product Ads (catalogue)",
+          "urgence": "Ajouter countdown ou mention stock limité"
+        },
+        {
+          "audience": "Ajout panier sans achat (3-7 jours)",
+          "message": "Tu as laissé quelque chose dans ton panier 🎁",
+          "format": "Carrousel catalogue avec CTA direct 'Terminer commande'",
+          "incitation": "Offre -10% pendant 24h ou livraison gratuite"
+        },
+        {
+          "audience": "Checkout initié (1-3 jours)",
+          "message": "Plus qu'un clic ! Ta commande t'attend.",
+          "format": "Single image ou vidéo courte avec CTA fort",
+          "urgence_maximale": "Ajouter compte à rebours offre limitée"
+        },
+        {
+          "audience": "Anciens acheteurs (180 jours)",
+          "message": "Nouvelle collection disponible — tu vas adorer 🎨",
+          "format": "Carousel nouvelles collections",
+          "objectif": "Cross-sell et upsell LTV"
+        },
+        {
+          "audience": "Engagement vidéo 75%+ (30 jours)",
+          "message": "Tu as regardé, tu as aimé — maintenant découvre la collection",
+          "format": "Photo/carrousel produit avec social proof"
+        }
+      ],
+      "retargeting_email_ads_combo": {
+        "principe": "Synchroniser retargeting publicitaire ET emails pour maximiser la conversion",
+        "séquence": [
+          "J0 — Abandon panier → Email H+1 + Pub Facebook/Instagram activée",
+          "J1 — Abandon panier → Email J+1 avec offre",
+          "J2 — Pub retargeting Instagram avec social proof (avis clients)",
+          "J3 — Email final urgence + pub 'Dernière chance' BOFU",
+          "J7 — Si non converti → sortir de la séquence, passer en nurturing"
+        ]
+      }
+    },
+    "audiences_lookalike": {
+      "definition": "Les audiences Lookalike permettent à Facebook/Meta de trouver des personnes ressemblant à vos meilleurs clients.",
+      "sources_recommandées_par_priorité": [
+        {"rang": 1, "source": "Liste acheteurs (emails clients)", "qualité": "EXCELLENTE — tes vrais clients"},
+        {"rang": 2, "source": "Pixel Purchases (180 jours)", "qualité": "TRÈS BONNE — comportement d'achat réel"},
+        {"rang": 3, "source": "Valeur client (Customer Value Lookalike)", "qualité": "MEILLEURE — basée sur LTV"},
+        {"rang": 4, "source": "Visiteurs site 30 jours", "qualité": "BONNE — intention d'achat signalée"},
+        {"rang": 5, "source": "Engagement Instagram 60 jours", "qualité": "MOYENNE — intérêt mais pas d'intention claire"}
+      ],
+      "tailles_recommandées": {
+        "1_pourcent": "Plus semblable — volume faible, qualité maximale. Idéal BOFU.",
+        "2_3_pourcent": "Bon équilibre qualité/volume. Idéal campagnes TOFU ciblées.",
+        "5_10_pourcent": "Volume élevé — qualité moindre mais utile pour notoriété large."
+      },
+      "stack_lookalike_recommandé": {
+        "campagne_1": "LAL 1% Acheteurs — Conversions",
+        "campagne_2": "LAL 2-3% Acheteurs — Trafic/Conversions",
+        "campagne_3": "LAL 1% Valeur client — Conversions (si CAPI bien configuré)"
+      }
+    },
+    "creatifs_haute_performance": {
+      "structure_video_ads": {
+        "hook_0_3s": "Accroche visuelle ou déclaration choc (stopper le scroll)",
+        "valeur_4_10s": "Montrer le produit, bénéfice clé, ou transformation",
+        "preuve_10_20s": "Témoignage, avis client, social proof, stats",
+        "cta_final": "CTA clair et simple : 'Commande maintenant', 'Voir la collection'"
+      },
+      "types_créatifs_par_performance": [
+        {
+          "type": "UGC (client réel face caméra)",
+          "performance": "⭐⭐⭐⭐⭐",
+          "pourquoi": "Authenticité maximale = confiance immédiate, contourne ad fatigue"
+        },
+        {
+          "type": "Before/After (transformation espace)",
+          "performance": "⭐⭐⭐⭐⭐",
+          "pourquoi": "Résultat concret = désir immédiat"
+        },
+        {
+          "type": "Unboxing / Réception commande",
+          "performance": "⭐⭐⭐⭐",
+          "pourquoi": "Satisfaction vicarielle, montre qualité packaging"
+        },
+        {
+          "type": "Listicle vidéo ('5 raisons de...')",
+          "performance": "⭐⭐⭐⭐",
+          "pourquoi": "Éducatif = engagement, mémorable"
+        },
+        {
+          "type": "Static image produit fond blanc",
+          "performance": "⭐⭐",
+          "pourquoi": "Performance faible — manque de contexte émotionnel"
+        }
+      ],
+      "règles_créatifs": [
+        "Toujours tester 3-5 créatifs différents par groupe d'annonce",
+        "Laisser tourner minimum 3-4 jours avant d'optimiser",
+        "Changer un seul élément à la fois (AB test pur)",
+        "Rafraîchir les créatifs tous les 3-4 semaines (ad fatigue)",
+        "Les meilleurs créatifs organiques → tester en payant (winning formula)"
+      ]
+    },
+    "scaling_structure": {
+      "méthode_horizontal": {
+        "définition": "Dupliquer les ad sets gagnants vers de nouvelles audiences similaires",
+        "quand": "Ad set avec ROAS > 3x pendant 3 jours consécutifs",
+        "comment": [
+          "Dupliquer l'ad set exact",
+          "Changer uniquement la géo, l'âge, ou la plateforme",
+          "Budget identique au départ (ne pas augmenter)",
+          "Observer 3 jours avant conclusion"
+        ]
+      },
+      "méthode_vertical": {
+        "définition": "Augmenter le budget sur les ad sets gagnants",
+        "règle_doree": "Augmenter maximum 20% du budget par jour",
+        "erreur_commune": "Doubler le budget d'un coup = algorithme se réinitialise",
+        "seuil_safe": "Augmentations de 10-20% toutes les 48-72h"
+      },
+      "CBO_vs_ABO": {
+        "CBO": {
+          "nom": "Campaign Budget Optimization",
+          "avantage": "Facebook alloue budget aux meilleurs ad sets automatiquement",
+          "usage_optimal": "Scaling — audiences testées et validées",
+          "inconvénient": "Peut sur-dépenser sur une seule audience"
+        },
+        "ABO": {
+          "nom": "Ad Set Budget Optimization",
+          "avantage": "Contrôle total par audience",
+          "usage_optimal": "Phase de test — valider chaque audience indépendamment",
+          "inconvénient": "Plus long à gérer manuellement"
+        },
+        "recommendation": "ABO pour tester, CBO pour scaler"
+      }
+    },
+    "google_ads_strategie_avancee": {
+      "structure_recommandée": {
+        "campagne_1": {
+          "type": "Performance Max",
+          "objectif": "Couvrir tous les canaux Google (Search, Shopping, YouTube, Display, Gmail)",
+          "budget": "40% du budget Google",
+          "asset_groups": "Créer 1 asset group par collection/produit principal"
+        },
+        "campagne_2": {
+          "type": "Shopping Standard",
+          "objectif": "Contrôle et visibilité sur requêtes shopping explicites",
+          "budget": "30% du budget Google",
+          "priorité": "Configurer priorités campagne pour éviter cannibalisation PMax"
+        },
+        "campagne_3": {
+          "type": "Search Branded",
+          "objectif": "Capturer les recherches marque (nom boutique, produits spécifiques)",
+          "budget": "20% du budget Google",
+          "CPC_bas": "Très faible CPC sur branded, ROAS maximal"
+        },
+        "campagne_4": {
+          "type": "Remarketing Display",
+          "objectif": "Retargeting visiteurs sur le réseau Display Google",
+          "budget": "10% du budget Google"
+        }
+      },
+      "smart_bidding_strategies": [
+        {"stratégie": "Target ROAS", "quand": "Suffisamment de données conversions (50+/mois)", "paramètre": "Définir ROAS cible réaliste +20% au-dessus historique"},
+        {"stratégie": "Target CPA", "quand": "Volume conversions régulier", "paramètre": "CPA cible = CAC max acceptable"},
+        {"stratégie": "Maximize Conversion Value", "quand": "Démarrage ou nouveau produit", "paramètre": "Sans contrainte ROAS au début"}
+      ]
+    },
+    "reporting_et_analyse": {
+      "dashboard_publicitaire_quotidien": [
+        "Dépenses totales vs budget",
+        "ROAS global et par campagne",
+        "CPC moyen et CPM",
+        "Fréquence (alerter si > 3 pour audiences froides)",
+        "CTR et taux de conversion"
+      ],
+      "alertes_automatiques_à_configurer": [
+        "ROAS < 2x → alerte email",
+        "CPA > 20$ → pause ad set",
+        "Fréquence > 4 → rotation créatifs obligatoire",
+        "Budget dépassé 105% → notification"
+      ]
+    }
+  }
+}

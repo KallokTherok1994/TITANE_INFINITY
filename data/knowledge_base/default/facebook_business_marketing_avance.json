@@ -1,0 +1,242 @@
+{
+  "version": "v31.2.0",
+  "category": "facebook_business_marketing_avance",
+  "description": "Facebook Business Marketing avancé — Meta Business Suite, Business Manager, Pixel Meta + CAPI, Catalogue produits, Facebook Shop, Ads Manager structure (CBO/ABO/Advantage+ Shopping), audiences (Core/Custom/Lookalike), créatifs haute performance, formats publicitaires 2025, stratégies e-commerce/POD/boutique, remarketing avancé, Conversions API, gestion de budget et scaling, politique publicitaire, métriques clés, stratégie Kallok's Arts/décoration",
+  "facebook_business_marketing_avance": {
+    "introduction": "Meta (Facebook + Instagram + Messenger + WhatsApp) est la plateforme publicitaire la plus puissante pour le B2C, l'e-commerce, le dropshipping et les boutiques en ligne. Avec 3,2 milliards d'utilisateurs actifs quotidiens (2025), elle permet de cibler des audiences ultra-précises et de scaler des campagnes rentables. TITANE maîtrise cet écosystème de la configuration technique à l'optimisation avancée.",
+
+    "meta_business_suite": {
+      "business_manager": {
+        "definition": "Outil central pour gérer tous les actifs Meta d'une entreprise : pages, comptes publicitaires, pixels, catalogues, comptes Instagram, accès équipes et agences. Accès : business.facebook.com.",
+        "configuration_etapes": [
+          "1. Créer un Business Manager sur business.facebook.com",
+          "2. Ajouter la Page Facebook de la boutique",
+          "3. Créer le compte publicitaire (1 compte = 1 méthode de paiement)",
+          "4. Installer le Pixel Meta sur le site",
+          "5. Créer le Catalogue produits dans Commerce Manager",
+          "6. Configurer la méthode de paiement (carte ou virement)"
+        ],
+        "roles_acces": {
+          "admin": "Accès total — gérer actifs, facturation, rôles. Toujours avoir 2 admins minimum.",
+          "editeur": "Créer et modifier campagnes, audiences, publicités. Accès limité aux paramètres de compte.",
+          "analyste": "Lecture seule des résultats et rapports. Idéal pour les clients ou partenaires."
+        },
+        "securite": "Activer l'authentification à deux facteurs (obligatoire). Ne jamais partager les identifiants. Utiliser les rôles de partenaire pour les agences (pas les identifiants directs). Compte personnel réel comme admin principal — jamais un faux compte.",
+        "compte_publicitaire_sante": "Maintenir un historique de paiement propre. Score de confiance Meta augmente avec l'ancienneté et le respect des politiques. Nouveau compte = spending limit bas (peut limiter à 25-50$/jour)."
+      },
+      "page_facebook_business": {
+        "optimisation_profil": {
+          "photo_profil": "170×170px minimum. Logo ou visage reconnaissable. Cohérent avec tous les canaux.",
+          "photo_couverture": "820×312px (desktop). Vidéo couverture : 820×312px, 20-90s, autoplay silencieux. Mettre en avant la proposition de valeur.",
+          "bouton_cta": "Configurer : Acheter (boutique), Contacter (service), Réserver (rendez-vous). Pointe directement vers la boutique ou le bon formulaire.",
+          "section_a_propos": "Compléter à 100% : description, site web, horaires, téléphone, email, catégorie précise. Google indexe les Pages Facebook.",
+          "modele_reponse": "Configurer les réponses automatiques pour les messages fréquents (heures d'ouverture, délai livraison, politique retour). Maintenir un temps de réponse < 1 heure."
+        },
+        "contenu_organique": {
+          "regle_80_20": "80% contenu valeur/éducation/divertissement, 20% promotionnel maximum. Algorithme pénalise les pages trop commerciales.",
+          "formats_performants": "Vidéos natives (algorithme favorise) > Reels > Carrousels > Images > Texte seul. Vidéo génère 3× plus d'engagement en moyenne.",
+          "frequence": "3-5 publications par semaine. Cohérence > intensité. Publier aux heures d'audience (souvent 11h-13h et 19h-21h selon le public cible).",
+          "contenu_gagnant": "Derrière les coulisses, process de création, histoire de la marque, témoignages clients avec photos, tutoriels, polls et sondages, annonces de nouveautés."
+        },
+        "facebook_shop": {
+          "principe": "Boutique native intégrée dans la Page Facebook et Instagram. Permet aux clients d'acheter sans quitter Meta. Réduction de friction = augmentation de conversion.",
+          "configuration": "Commerce Manager → Créer une boutique → Choisir méthode de paiement → Créer/importer catalogue → Créer collections → Personnaliser l'apparence → Soumettre pour examen.",
+          "checkout_meta": "Disponible principalement USA. Canada/FR redirige vers le site. Si checkout Meta disponible : activer impérativement (conversion +15-25%).",
+          "instagram_shopping": "Lier la boutique Facebook à Instagram Shopping pour les tags produits dans les posts et Stories. Configurer via Paramètres Instagram → Shopping → Catalogue."
+        }
+      }
+    },
+
+    "pixel_meta_avance": {
+      "principe": "Code JavaScript installé sur le site qui envoie des événements de comportement à Meta. Permet la mesure des conversions, l'optimisation des campagnes et la création d'audiences personnalisées.",
+      "installation": {
+        "methodes": "Via Gestionnaire d'événements → Créer un Pixel → Méthode : code manuel (dans <head>), partenaire (Shopify natif, WooCommerce plugin, Wix intégration), ou CAPI.",
+        "shopify": "Paramètres → Apps et canaux de vente → Facebook & Instagram → Connecter → Pixel s'installe automatiquement avec les événements standards.",
+        "wix": "Marketing & SEO → Outils marketing → Pixel Facebook. Entrer l'ID Pixel. Les événements e-commerce se configurent séparément.",
+        "verification": "Meta Pixel Helper (extension Chrome) pour vérifier que le Pixel envoie les bons événements. Tester dans Events Manager → Test Events."
+      },
+      "evenements_standards": {
+        "PageView": "Automatique sur chaque page visitée. Baseline de l'audience.",
+        "ViewContent": "Vue d'une fiche produit. Paramètres requis : content_id (SKU), content_type ('product'), value (prix), currency ('CAD' ou 'EUR').",
+        "AddToCart": "Ajout au panier. Paramètres : content_ids (tableau de SKUs), value (montant panier), currency.",
+        "InitiateCheckout": "Début du processus de paiement. Segment critique pour le remarketing.",
+        "Purchase": "Achat finalisé. ÉVÉNEMENT CRITIQUE pour le ROAS. Paramètres : value (montant total), currency, content_ids, num_items.",
+        "Lead": "Génération de lead (inscription newsletter, formulaire contact).",
+        "Search": "Recherche interne sur le site. Paramètre search_string."
+      },
+      "conversions_api_capi": {
+        "definition": "Envoyer les événements directement depuis le serveur backend à Meta (server-side tracking). Contourne les blocages iOS 14+, Safari ITP, et les adblockers.",
+        "importance": "Depuis iOS 14 (App Tracking Transparency), Meta a perdu 15-40% du tracking côté navigateur. CAPI restaure la précision. Combinaison Pixel + CAPI = Event Match Quality élevée = meilleure optimisation.",
+        "deduplication": "Envoyer le même event_id depuis le Pixel ET le CAPI. Meta déduplique automatiquement. Double précision sans double comptage.",
+        "implementation": "Shopify (natif depuis 2022 via l'app Facebook), via Elevar ou Stape.io (solutions clé-en-main), ou développement serveur direct (Meta SDK).",
+        "event_match_quality": "Score Meta 0-10 sur la qualité du matching événement-utilisateur. Améliorer avec : email hashé, téléphone hashé, IP, user-agent, external_id. Viser > 7/10."
+      },
+      "audiences_pixel": {
+        "visiteurs_site": "Visiteurs 30j, 60j, 180j. Segmenter par comportement (visiteurs page produit, visiteurs blog).",
+        "entonnoir": "Visiteurs 30j > ViewContent 14j > AddToCart 7j > InitiateCheckout 7j > Acheteurs 180j. Chaque segment = message publicitaire différent.",
+        "valeur_vie_client": "Uploader les achats avec valeur pour créer des audiences LTV (sélectionner les top 25% des clients par valeur). Source idéale pour les Lookalike premium."
+      }
+    },
+
+    "catalogue_produits_meta": {
+      "principe": "Base de données structurée de tous les produits, synchronisée avec Meta pour les Dynamic Ads, Instagram Shopping, et Facebook Shop. Requis pour les campagnes Catalogue.",
+      "configuration": "Commerce Manager → Catalogues → Ajouter produits → Méthode : manuel (peu de produits), flux automatique (e-commerce actif), partenaire (Shopify/Wix natif).",
+      "champs_requis": "id (unique, stable), title (titre optimisé), description (150-500 mots), availability (in_stock/out_of_stock/preorder), condition (new), price (ex: '49.99 CAD'), link (URL produit), image_link (URL image HD min 500×500px).",
+      "champs_recommandes": "brand (nom de marque), product_type (catégorie personnalisée), google_product_category (taxonomie), sale_price (prix promo), additional_image_links (jusqu'à 10), color, size (mode).",
+      "flux_automatique": "Shopify : synchronisation native via app Facebook & Instagram. Wix : intégration Commerce. Mise à jour recommandée : toutes les 4-24 heures pour garder les prix/stocks corrects.",
+      "dynamic_ads": {
+        "principe": "Publicités générées automatiquement depuis le catalogue. Montrent les produits que le client a vus, ajoutés au panier, ou consultés. Ultra-personnalisées.",
+        "performances": "CTR 2-5× plus élevé que les pubs statiques. ROAS souvent 4-8× pour les boutiques e-commerce bien configurées.",
+        "setup": "Créer campagne avec objectif Ventes → Sélectionner le catalogue → Choisir le set de produits → Configurer l'audience Dynamic (Retargeting ou Prospection large)."
+      },
+      "collections": "Groupes de produits dans le catalogue (Nouveautés, Bestsellers, Déco Salon, Collection Été). Utilisées pour Facebook Shop navigation et les campagnes Collection."
+    },
+
+    "ads_manager_structure": {
+      "niveaux": {
+        "campagne": "Objectif marketing : Notoriété, Trafic, Engagement, Leads, Promotion d'application, ou Ventes. L'objectif conditionne toute l'optimisation Meta.",
+        "ensemble_de_publicites": "Audience + Budget + Placement + Calendar + Événement d'optimisation. Le niveau de test des audiences.",
+        "publicite": "Créatif (image/vidéo) + Texte + Destination URL. Le niveau de test des créatifs."
+      },
+      "objectifs_ecommerce": {
+        "ventes": "L'objectif roi pour l'e-commerce. Optimise pour les achats via Pixel/CAPI. Requis : Pixel avec >50 événements Purchase/semaine pour optimisation maximale.",
+        "trafic": "Optimise pour les clics vers le site. Utile pour les nouveaux sites sans données Pixel.",
+        "engagement": "Interactions posts. Utile pour bâtir la preuve sociale avant de scaler les pubs."
+      },
+      "CBO_vs_ABO": {
+        "ABO": "Ad Set Budget Optimization. Budget fixé par adset. Contrôle précis du spend par audience. Idéal pour tester des audiences en parallèle avec budget égal.",
+        "CBO": "Campaign Budget Optimization. Budget au niveau campagne, Meta distribue selon la performance. Idéal pour scaler les adsets gagnants — Meta donne plus au meilleur.",
+        "strategie": "Phase test : ABO avec budget égal par adset → identifier les winners → Phase scale : CBO avec les audiences gagnantes."
+      },
+      "advantage_plus": {
+        "shopping_campaigns": "ASC = Advantage+ Shopping Campaigns. IA Meta gère le ciblage, les placements, les enchères et les créatifs. Très performant 2024-2025. Budget min 50€/jour. Recommandé pour boutiques avec Pixel mature (>50 achats/semaine).",
+        "audience": "Ciblage broad géré par IA. Convertit souvent mieux que les audiences manuelles si le Pixel est alimenté. Donner un signal d'audience existante (liste acheteurs) comme point de départ.",
+        "creative": "Meta adapte automatiquement les créatifs : recadrage, enrichissement, variation des textes, ajout musique. Activer Advantage+ Creative sur tous les ensembles.",
+        "catalog_campaigns": "Advantage+ Catalog Ads : IA sélectionne les produits du catalogue les plus pertinents pour chaque utilisateur. Combine prospection et remarketing automatiquement."
+      },
+      "placements": {
+        "recommandation": "Placements automatiques Advantage+ (recommandé) : Meta distribue sur Facebook Feed, Instagram Feed, Stories, Reels, Audience Network selon la performance.",
+        "placements_manuels_performants": "Facebook Feed (conversion), Instagram Feed (visual), Instagram Stories (mobile), Instagram Reels (vidéo courte), Marketplace (e-commerce).",
+        "eviter": "Audience Network (fraude clicks), Facebook Right Column (mauvais CTR), Messenger (contexte inapproprié pour e-commerce)."
+      }
+    },
+
+    "audiences": {
+      "core_audiences": {
+        "definition": "Ciblage basé sur démographie, localisation, intérêts, comportements. Audience de départ avant d'avoir des données Pixel.",
+        "localisation": "Cibler par pays, région, ville, ou rayon autour d'un point. Pour boutique canadienne : Canada + Québec spécifique si produit en français.",
+        "interets_ecommerce": {
+          "art_deco": "Art, Wall Art, Canvas Painting, Home Decoration, Interior Design, HGTV, Maisons du Monde, Pinterest, Interior Decorator.",
+          "mode": "Fashion, Zara, H&M, ASOS, Style, Vêtements, Mode Femme, Lookbook.",
+          "dropshipping_produits": "Intérêts liés au problème résolu par le produit. Ne pas cibler 'dropshipping' — cibler le client final."
+        },
+        "comportements": "Acheteurs en ligne actifs (option disponible dans certains pays), utilisateurs appareils Apple (pouvoir d'achat), voyageurs fréquents.",
+        "conseil_2025": "Le broad targeting (sans restrictions d'intérêts) + créatif fort surpasse souvent le ciblage précis. Meta connaît ses utilisateurs — faire confiance à l'algorithme avec du volume."
+      },
+      "custom_audiences": {
+        "visiteurs_pixel": "Créer dans Audiences → Custom Audience → Site Web → Sélectionner les événements et la fenêtre (7/14/30/60/180 jours).",
+        "liste_email": "Uploader CSV d'emails clients. Meta hache et match. Taux de match typique : 50-70%. Utiliser pour exclusion acheteurs et source Lookalike.",
+        "engagement": "Personnes ayant interagi avec la Page, le profil Instagram, regardé une vidéo (25%/50%/75%), rempli un formulaire Lead.",
+        "acheteurs": "Événement Purchase sur 180 jours. La custom audience la plus précieuse — source des meilleurs Lookalike."
+      },
+      "lookalike_audiences": {
+        "principe": "Meta analyse la custom audience source et trouve des personnes similaires parmi ses utilisateurs. Plus la source est qualitative, meilleur le Lookalike.",
+        "tailles": "1% (très similaire, restreint), 2%, 3% (équilibre), 5%, 10% (large, moins précis). Commencer par 1-3%.",
+        "meilleures_sources": "Acheteurs LTV élevée > Acheteurs 90j > Initiate Checkout > AddToCart > Visiteurs 30j. Qualité > quantité dans la source.",
+        "multi_pays": "Créer des Lookalike séparés par pays cible. Un Lookalike France ≠ Lookalike Canada.",
+        "fraicheur": "Rafraîchir les Lookalike tous les 30-60 jours quand la source a de nouvelles données."
+      }
+    },
+
+    "creatifs_haute_performance": {
+      "regle_fondamentale": "Le créatif est responsable de 60-70% de la performance d'une campagne Meta. Une bonne créative sur une audience moyenne bat une mauvaise créative sur une audience parfaite.",
+      "formats_2025": {
+        "video_courte_ugc": "9-30 secondes. Ratio 9:16 (vertical, Stories/Reels). Style User Generated Content authentique. Meilleur format en 2024-2025 pour la conversion. Hook dans les 3 premières secondes.",
+        "carousel": "3-10 cartes swipables. Chaque carte = 1 produit ou 1 bénéfice. Idéal pour boutiques multi-produits (mode, déco). CTR souvent supérieur aux images simples.",
+        "image_statique": "1200×628px (feed horizontal), 1080×1080px (carré, feed + stories), 1080×1920px (Stories/Reels). Tester systématiquement image vs vidéo.",
+        "collection": "Format immersif : image/vidéo hero + grille de 4 produits du catalogue. Click = ouverture d'une mini-boutique en plein écran. Idéal pour les catalogues mode/déco.",
+        "instant_experience": "Plein écran mobile. Peut contenir images, vidéos, textes, boutons. Temps de chargement quasi instantané (assets pré-chargés Meta). Excellent pour les storytelling de marque."
+      },
+      "hook_3_secondes": {
+        "importance": "Les 3 premières secondes déterminent si le scroll s'arrête. 65% des personnes qui voient une pub 3 secondes n'en voient pas 10.",
+        "types_hooks": {
+          "question_choc": "'Saviez-vous que votre salon peut transformer votre humeur en 5 minutes ?'",
+          "before_after": "Montrer le problème puis la solution immédiatement.",
+          "demonstration_directe": "Le produit en action dès la première image/frame.",
+          "statistique_etonnante": "'3 personnes sur 4 n'ont pas de décoration murale chez elles.'",
+          "situation_reconnaissable": "Scène de vie que le client vit tous les jours (bureau en désordre, mur vide)."
+        }
+      },
+      "texte_publicitaire": {
+        "texte_principal": "Idéalement 125 caractères (affichés avant 'voir plus' sur mobile). Les éléments clés AVANT les 125 caractères. Bénéfice ou douleur en premier.",
+        "titre": "25 caractères visibles. Accrocheur. Verbe d'action ou chiffre.",
+        "description": "Renforcer la proposition de valeur. Créer l'urgence ou réduire le risque.",
+        "cta_boutons": "Acheter maintenant, En savoir plus, Obtenir le prix, Profiter de l'offre, Voir la collection. 'Acheter maintenant' convertit mieux pour les produits impulsifs."
+      },
+      "testing_creatif": {
+        "methode": "Tester 3-5 créatifs par ensemble de publicités. Budget min 20-30€/créatif.",
+        "decision": "Identifier le winner après 1000 impressions ET 50€ dépensés minimum. Tuer les perdants (CTR < 1% ou CPA > 2× objectif). Dupliquer et scaler le winner.",
+        "frequence_rotation": "Renouveler les créatifs toutes les 2-4 semaines pour éviter la fatigue publicitaire (fréquence > 3-4)."
+      }
+    },
+
+    "strategies_ecommerce": {
+      "structure_campagne_complete": {
+        "prospection": "Campagne Ventes + CBO. Adsets : Broad (sans restriction), Lookalike 1% acheteurs, Lookalike 2-3%, Intérêts niche. Budget : 70% du budget total.",
+        "remarketing": "Campagne Ventes séparée. Adsets : Visiteurs 7j, ViewContent 7j, AddToCart 7j, InitiateCheckout 7j. Budget : 30%. EXCLURE impérativement les acheteurs.",
+        "retention": "Cibler les acheteurs (90j) avec nouvelles collections, upsells, cross-sells. Budget faible mais ROAS très élevé (audience déjà convaincue)."
+      },
+      "budget_minimum": "50-100€/jour pour avoir des données valides. En-dessous : Meta ne peut pas optimiser correctement. Phase d'apprentissage : 7-14 jours minimum avant de juger.",
+      "learning_phase": "Meta a besoin de 50 événements d'optimisation en 7 jours pour sortir de la phase d'apprentissage. Si trop peu d'achats → optimiser pour AddToCart ou Initiate Checkout.",
+      "scaling_rules": {
+        "vertical": "Augmenter le budget de max 20-30% à la fois. Attendre 3 jours entre chaque modification. Ne jamais doubler le budget d'un coup (reset learning).",
+        "horizontal": "Dupliquer les adsets gagnants avec nouvelles audiences. Dupliquer la campagne pour tester de nouveaux créatifs sans casser l'apprentissage.",
+        "advantage_plus": "Quand le compte est mature (>100 achats/mois) : basculer vers Advantage+ Shopping Campaigns pour laisser l'IA gérer le scaling."
+      },
+      "black_friday_strategy": "Commencer à chauffer les audiences en octobre. Créer des custom audiences visiteurs 90j avant le BF. Budget ×3-5 sur la période BF/CM. Créatifs spéciaux promo. Séquence email parallèle."
+    },
+
+    "metriques_facebook_ads": {
+      "CTR": "Click-Through Rate = Clics / Impressions × 100. Objectif > 2% (bon), > 3% (excellent). Si < 1% : créatif trop faible ou audience saturée.",
+      "CPM": "Cost Per Mille = Coût pour 1000 impressions. Varie selon concurrence et période. Benchmarks FR/CA : 5-15€ normal, 25-50€+ pendant Black Friday/Noël.",
+      "CPC": "Cost Per Click. Objectif < 0.50-1.50€ pour l'e-commerce standard. Si CPC élevé avec CTR correct : landing page problème (taux de conversion bas).",
+      "ROAS": "Return On Ad Spend = Revenus attribués / Dépenses pub. Break-even = 1 ÷ Marge brute. Marge 50% → ROAS min 2.0. Objectif 3.0+. Benchmark e-commerce 2025 : 3-5×.",
+      "CPA": "Cost Per Acquisition. CPA cible = Prix de vente × Marge brute. Si marge 40€ sur produit à 100€ → CPA max 40€.",
+      "frequence": "Nombre moyen d'impressions par utilisateur unique. > 3 = début de saturation. > 5 = rotation créative urgente. Surveiller chaque semaine.",
+      "score_opportunite": "Score Meta 0-100 sur l'optimisation des campagnes. Consulter dans Ads Manager onglet Campagnes. Appliquer les recommandations haute valeur.",
+      "attribution": "Fenêtre standard Meta : 7 jours clic + 1 jour vue. Réduire à 7 jours clic uniquement pour une mesure plus conservative et réaliste."
+    },
+
+    "politique_publicitaire": {
+      "categories_speciales": "Crédit, emploi, logement, questions sociales/politiques/élections : déclaration obligatoire, restrictions de ciblage (pas de ciblage par âge/genre/code postal).",
+      "causes_refus_frequentes": [
+        "Avant/après corporels (perdre du poids, transformation physique trop marquée)",
+        "Affirmations de santé non prouvées ou exagérées",
+        "Ciblage de caractéristiques personnelles sensibles dans le texte ('Vous avez X ans et...')",
+        "Contenu trompeur ou pages de destination ne correspondant pas à la pub",
+        "Redirections multiples ou landing pages avec popups excessifs",
+        "Produits interdits : tabac, armes, médicaments, contrefaçons"
+      ],
+      "bonnes_pratiques": "Éviter les superlatifs non prouvés. Texte clair et honnête. Landing page cohérente avec la pub. Tester avec petit budget avant de scaler.",
+      "compte_bloque": "Avoir toujours 2 comptes publicitaires minimum (compte principal + compte de secours). Demande de réexamen immédiate en cas de restriction. Ne pas créer plusieurs comptes sans raison légitime."
+    },
+
+    "facebook_pour_kalloks_arts": {
+      "positionnement": "Kallok's Arts est une boutique d'art positif, coloré, inspirant et accessible. Public cible : femmes et hommes 25-55 ans passionnés de décoration intérieure, bien-être, art abordable.",
+      "page_facebook": "Catégorie : Artiste / Boutique d'art. Cover photo : mosaïque d'œuvres. CTA bouton : Acheter. Répondre aux commentaires sous 2h pour booster l'algorithme.",
+      "facebook_shop_kalloks": "Créer des collections : Abstraits Colorés, Citations Inspirantes, Nature & Botanique, Petits Formats (cadeau), Grands Formats (statement piece). Lier au catalogue Printful.",
+      "contenu_organique_art": {
+        "reels": "Timelapse de création d'un canvas. Process artistique. 15-30 secondes. Très engageant — l'art en train de se faire fascine.",
+        "stories": "Sondages ('Lequel de ces deux designs vous préférez ?'), questions, teaser de nouvelles collections, derrière les coulisses.",
+        "posts": "Photos lifestyle de canvas dans des intérieurs. Témoignages clients avec photo. Annonces de nouvelles collections. Inspiration déco.",
+        "video": "Présentation d'une collection, installation d'un canvas, inspiration d'intérieur avant/après."
+      },
+      "ads_art_canvas": {
+        "ciblage": "Intérêts : Art, Canvas Wall Art, Home Decoration, Interior Design, DIY Home Decor, Maisons du Monde, IKEA, Pinterest. Démographie : femmes 25-55 (acheteurs d'art déco principaux).",
+        "format": "Carrousel (multi-designs, swipe) + Vidéo courte (timelapse création). Collection (galerie immersive).",
+        "message": "'Transformez votre espace en galerie d'art. Canvas livrés prêts à accrocher.' + preuve sociale + livraison gratuite si applicable.",
+        "remarketing": "Recibler les visiteurs de la boutique Wix/Shopify/Etsy qui n'ont pas acheté. Montrer les produits vus (Dynamic Ads depuis catalogue Printful)."
+      }
+    }
+  }
+}

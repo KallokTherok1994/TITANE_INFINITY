@@ -1,0 +1,201 @@
+{
+  "version": "v31.2.0",
+  "category": "vente_art_canvas_en_ligne",
+  "description": "Vente d'art et canvas en ligne — modèles de vente (originaux, impressions giclée, POD canvas Printful), plateformes (Etsy/Society6/Redbubble/Saatchi/boutique propre), pricing art, photographie d'œuvres, fiches produit art, droit d'auteur artistique, collection capsule, stratégie Instagram artiste, Facebook Shop art, intégration Printful canvas, storytelling artiste, niche décoration murale (tendances 2025), stratégie complète Kallok's Arts (marché canadien/québécois)",
+  "vente_art_canvas_en_ligne": {
+    "introduction": "La vente d'art en ligne connaît une croissance explosive (marché estimé à 13,6 milliards de dollars en 2024, +14% annuel). Les canvas d'art décoration murale sont l'une des catégories les plus vendues en home decor en ligne. Que ce soit pour un artiste vendant ses originaux ou une boutique de reproductions d'art comme Kallok's Arts, TITANE fournit une stratégie complète de la création à la vente, optimisée pour le marché canadien et international.",
+
+    "marche_art_en_ligne": {
+      "taille": "13,6 milliards USD en 2024. Prévision : 23 milliards USD d'ici 2030. Croissance annuelle de 14%.",
+      "democratisation": "L'art en ligne a démocratisé l'accès aux œuvres. Les acheteurs d'art 25-45 ans sont de plus en plus à l'aise pour acheter en ligne.",
+      "tendances_2025": {
+        "art_abstrait_colore": "Très demandé pour la décoration intérieure moderne. Couleurs vives, optimisme post-pandémie.",
+        "art_nature_botanique": "Feuilles tropicales, fleurs séchées, botanique. Tendance durable 2022-2025.",
+        "citations_typographiques": "Texte inspirant en lettrage soigné. Très bien en POD (design purement graphique, faible coût de création).",
+        "art_minimal": "Lignes simples, formes géométriques, neutral tones. Tendance forte en décoration nordique.",
+        "art_local_culturel": "Demande forte pour l'art ancré dans une identité culturelle locale (art québécois, art autochtone, paysages régionaux).",
+        "diptyques_triptyques": "Ensembles de 2-3 canvas coordonnés pour un mur. Prix moyen ×2,5 vs un canvas seul."
+      }
+    },
+
+    "modeles_de_vente": {
+      "originaux": {
+        "principe": "Vente de pièces uniques. Prix élevé, volume faible. Marge maximale (90%+). Chaque vente est un événement.",
+        "avantages": "Valeur perçue maximale, marque artiste forte, collectionneurs fidèles, pas de production complexe.",
+        "inconvenients": "Scalabilité nulle (une seule vente par œuvre), risques de dommages expédition, prix souvent hors portée pour un public large.",
+        "prix": "Formule : (Coût matériaux × 2) + (Heures de travail × taux horaire artiste) + (Frais d'expédition + assurance). Ne jamais brader ses originaux — cela dévalue l'ensemble du travail présent et futur.",
+        "certificat_authenticite": "Inclure un certificat signé et numéroté avec : titre de l'œuvre, dimensions, date de création, matériaux utilisés, signature originale, numéro de série. Plastifié ou encadré. Ajoute valeur perçue et protège contre les contrefaçons.",
+        "edition_limitee": "10, 25 ou 50 originaux numérotés par série. Crée la rareté et la valeur collectionniste. Prix croissant selon le numéro de série ou la série."
+      },
+      "impressions_giclée": {
+        "principe": "Reproduction haute qualité de l'œuvre originale sur papier fine art ou canvas. Permet de vendre des dizaines/centaines de copies d'une même œuvre.",
+        "qualite": "Impression Giclée = archival quality. Encres pigmentées sur papier coton ou canvas avec résistance aux UV. Conservation garantie 100+ ans. Standard de l'industrie pour les artistes sérieux.",
+        "formats_populaires": "A4 (21×29,7cm), A3 (30×42cm), 40×60cm, 50×70cm, 60×90cm, 70×100cm. Pour les canvas : ajouter les bords entoilés (wrap de 2-4cm).",
+        "fournisseurs": {
+          "printful": "Canvas et Fine Art Prints. Production en 2-7 jours. Qualité premium. Intégration Shopify/Wix/Etsy native. Recommandé pour Kallok's Arts.",
+          "printify": "Alternative Printful. Réseau de fournisseurs multiple. Prix parfois plus bas. Qualité variable selon le pod partner.",
+          "prodigi": "Fournisseur UK/EU spécialisé fine art. Qualité professionnelle très haute. Délais EU plus courts.",
+          "local_montreal": "Imprimeries locales à Montréal : contrôle qualité direct, délais courts, délais CO2. Utile pour les commandes locales et les expos."
+        },
+        "prix_recommandes": {
+          "print_A3": "Coût 8-15€ → Prix de vente 30-60€. Marge 50-70%.",
+          "canvas_50x70": "Coût Printful 40-55$ CAD → Prix de vente 100-150$ CAD. Marge 50-65%.",
+          "canvas_60x90": "Coût Printful 55-75$ CAD → Prix de vente 150-220$ CAD. Marge 55-70%.",
+          "canvas_grand_format": "100×150cm et plus → Prix de vente 300-600$+ CAD. Marge premium."
+        }
+      },
+      "pod_canvas": {
+        "principe": "Uploader les designs sur Printful → client commande → impression et expédition automatiques par Printful. Zéro stock, zéro risque d'invendus, aucune gestion d'expédition.",
+        "avantages": "Revenus passifs (uploader 1 fois → vendre indéfiniment), scalabilité infinie, pas d'investissement initial en stock, focus possible sur la création artistique.",
+        "inconvenients": "Marges plus faibles (20-45% vs 60-80% pour l'impression propre), moins de contrôle qualité, dépendance à un fournisseur tiers.",
+        "printful_canvas_details": {
+          "gallery_canvas": "Impression sur chassis bois. 20+ formats disponibles du 8×8 pouces au 24×36 pouces. Qualité d'impression premium (encres UV-résistantes).",
+          "formats_populaires": "8×8 (carré, très tendance), 12×16, 16×20, 18×24, 20×20 (grand carré), 24×36.",
+          "options_bords": "White (bords blancs), Black (bords noirs), Mirror (effet miroir des bords), Color wrap (prolongation du design).",
+          "prix_base": "De ~25$ à ~85$ USD selon le format. Délai de production : 2-7 jours ouvrables.",
+          "livraison_canada": "Printful a des partenaires de production en Amérique du Nord. Livraison Canada : 4-10 jours ouvrables."
+        }
+      }
+    },
+
+    "plateformes_vente_art": {
+      "etsy": {
+        "avantages": "95M+ d'acheteurs actifs mondiaux. Trafic existant cherchant spécifiquement art et déco. Acheteurs sensibles à l'authenticité et au fait-main. SEO Etsy puissant.",
+        "frais": "0,20 USD par listing (renouvelé automatiquement tous les 4 mois ou à la vente). 6,5% de frais de transaction sur le prix + expédition. 3-4% de frais de traitement des paiements. Total : environ 10-12% par vente.",
+        "seo_etsy": {
+          "titre": "Mots-clés d'achat en premier. 'Canvas Wall Art Abstract Blue | Living Room Decor | Housewarming Gift'. 140 caractères max.",
+          "tags": "13 tags maximum. Utiliser TOUS les 13. Termes en anglais (marché principal Etsy) + quelques français si marché CA/FR cible.",
+          "categories": "Choisir la catégorie la plus précise possible. Sous-catégories = meilleure visibilité dans les filtres.",
+          "photos": "10 photos possibles. Utiliser les 10 : lifestyle, détail, mockup intérieur, dimensions, processus création.",
+          "renouvellemnt": "Uploader régulièrement de nouveaux produits. Algorithme Etsy favorise les boutiques actives (1-3 nouveaux listings/semaine minimum)."
+        },
+        "mots_cles_prioritaires": [
+          "Canvas Wall Art", "Abstract Canvas Print", "Living Room Decor", "Large Wall Art",
+          "Bedroom Decor Canvas", "Motivational Wall Art", "Colorful Abstract Print",
+          "Modern Wall Decor", "Housewarming Gift", "Office Wall Art"
+        ],
+        "etsy_ads": "Sponsoriser les listings avec des enchères (Etsy Ads). Budget 1-5$/jour pour démarrer. Cibler les keywords avec forte intention d'achat. ROAS Etsy Ads typique : 3-8×."
+      },
+      "society6": {
+        "principe": "Artistes uploadent leurs designs. Society6 gère la production, l'expédition et le service client.",
+        "commission": "Royalties fixes de 10% de base (pas personnalisable). 15-30% sur certains produits.",
+        "avantages": "Trafic existant important, pas de gestion boutique, produits variés (canvas, prints, textiles, housewares).",
+        "inconvenients": "Peu de contrôle sur le pricing, royalties faibles, impossible de construire une marque propre, pas de liste client.",
+        "pour_qui": "Artiste qui veut juste uploader et voir si les designs se vendent. Pas pour construire une boutique sérieuse."
+      },
+      "redbubble": {
+        "principe": "Similaire à Society6. Marketplace avec trafic propre.",
+        "commission": "Markup personnalisable au-dessus du prix de base Redbubble. Par défaut 20% (vous pouvez augmenter).",
+        "avantages": "Grande communauté d'artistes et d'acheteurs. Nombreux types de produits. Moins de frais de setup qu'une boutique propre.",
+        "pour_qui": "Complément de distribution. Tester la demande pour des designs avant d'investir dans une boutique propre."
+      },
+      "saatchi_art": {
+        "principe": "Galerie en ligne internationale premium pour originaux et impressions.",
+        "commission": "35% sur chaque vente (inclut l'expédition et l'emballage spécial art).",
+        "avantages": "Accès à des collectionneurs internationaux, positionnement premium, sélection éditoriale qui booste la visibilité.",
+        "conditions": "Profil artiste complet avec biographie, statement artistique, photos atelier. Processus de vérification editorial.",
+        "pour_qui": "Artistes avec une pratique artistique établie visant les collectionneurs premium."
+      },
+      "boutique_propre": {
+        "avantages": "Marges supérieures (0% de commission plateforme), contrôle total sur le branding, construction d'une audience propre, données clients complètes.",
+        "inconvenients": "Trafic à construire soi-même (SEO + réseaux sociaux + pub). Plus de travail de configuration initiale.",
+        "recommandation": "Stratégie optimale : Etsy pour le trafic gratuit existant + boutique Wix/Shopify propre pour la marge et la marque. Utiliser Etsy comme canal d'acquisition, boutique propre pour la rétention et les marges maximales.",
+        "etsy_to_boutique": "Inclure une carte avec chaque commande Etsy : 'Pour les futures commandes, économisez 10% sur notre boutique officielle : kalloksarts.com'"
+      }
+    },
+
+    "photographie_oeuvres": {
+      "importance": "La photo de l'œuvre EST la vente en ligne. Un client ne peut pas toucher ni voir la texture. La photo doit transmettre les couleurs exactes, la texture, la dimension et l'émotion.",
+      "setup_de_base": {
+        "lumiere": "Lumière naturelle (fenêtre côté nord ou ciel couvert pour éviter les reflets). Diffuseur ou voilage si lumière directe trop forte. Pas de lumière artificielle jaune (dégrade les couleurs).",
+        "fond": "Fond neutre blanc ou mur lisse gris/beige. Peut être augmenté avec des props stylistiques (plante, café, livre) pour le lifestyle.",
+        "stabilite": "Trépied obligatoire pour les photos de précision. Empêche le flou de bougé, essentiel pour les détails de texture.",
+        "appareil": "DSLR ou mirrorless idéal (objectif 50mm ou 85mm). Smartphone récent (iPhone 14+, Samsung S23+) suffisant avec bonne lumière. Mode RAW si disponible pour la retouche."
+      },
+      "types_de_photos": {
+        "photo_canonique_mur": "L'œuvre accrochée sur un mur blanc ou gris uniforme. Vue de face parfaitement perpendiculaire (pas d'angle). Lumière équilibrée sans ombre. Photo de référence principale.",
+        "lifestyle_interieur": "L'œuvre dans un vrai intérieur (salon, chambre, bureau). La photo la plus puissante pour la conversion. Le client voit le résultat final chez lui.",
+        "detail_texture": "Zoom maximal sur la texture de la peinture, les coups de pinceaux, les effets de matière, le relief. Prouve la qualité artisanale et l'unicité.",
+        "echelle_perspective": "Photo avec un humain ou un meuble courant pour donner l'échelle. CRITIQUE pour les grands formats. 'Notre modèle mesure 170cm' devant le canvas.",
+        "flat_lay": "L'œuvre posée à plat au sol vue de dessus. Avec props accessoires (plante, bougie, livre de déco). Populaire sur Instagram.",
+        "processus_creation": "Photos du making-of : esquisse, premières couches, détails en cours. Humanise le travail et crée de l'engagement."
+      },
+      "mockups": {
+        "utilite": "Montrer l'œuvre dans des intérieurs variés sans shooting photo. Gain de temps énorme. Idéal pour tester de nouveaux designs.",
+        "outils": "Placeit.net (payant, 100+ mockups intérieur), Canva Pro (mockups disponibles), Creative Market (packs mockups), Artboard Studio.",
+        "conseil": "Combiner mockups (pour la quantité) + vraies photos lifestyle (pour l'authenticité). Les vrais clients préfèrent les photos réelles."
+      },
+      "retouche": {
+        "objectif": "Reproduire les couleurs exactes de l'œuvre originale. Ne pas sur-saturer. Ajuster luminosité/contraste pour correspondre à la réalité.",
+        "outils": "Lightroom (ajustements précis des couleurs), Photoshop (retouches avancées), Snapseed (mobile gratuit).",
+        "test_impression": "Commander un petit sample imprimé et comparer avec l'original. Ajuster le profil couleur si nécessaire avant de vendre à grande échelle."
+      }
+    },
+
+    "pricing_art": {
+      "formule_base": "Prix de vente = Coût de production ÷ (1 - Marge souhaitée). Exemple : coût Printful 45$ CAD → marge souhaitée 60% → Prix = 45 ÷ 0,40 = 112,50$ CAD (arrondir à 115$ ou 119$).",
+      "positionnement": {
+        "entree_gamme": "Canvas <50cm, prints papier : 25-60$. Accessible, volume, cible large. Idéal pour Etsy.",
+        "milieu_gamme": "Canvas 50-80cm, prints fine art, diptyques : 80-200$. Cœur du marché décoration murale.",
+        "premium": "Canvas grand format >80cm, originaux, éditions limitées : 200-800$+. Marge maximale, clientèle de collectionneurs."
+      },
+      "erreurs_frequentes": [
+        "Brader pour vendre rapidement — dévalue la marque durablement",
+        "Augmenter les prix de façon incohérente sans communication",
+        "Ne pas facturer l'expédition correctement (erreur fréquente POD : sous-estimer le coût d'expédition réel)",
+        "Oublier les frais de plateforme dans le calcul (Etsy 10-12%, frais CB 3%)",
+        "Copier les prix des concurrents sans calculer ses propres coûts"
+      ],
+      "augmentation_progressive": "Augmenter les prix de 10-15% tous les 6-12 mois au fur et à mesure de la croissance de la notoriété. Communiquer la hausse comme une valorisation du travail artistique.",
+      "prix_psychologie_art": "Les prix ronds (150$, 200$, 300$) fonctionnent mieux que les prix .99 pour l'art. L'art est un produit émotionnel et premium — les prix ronds renforcent ce positionnement."
+    },
+
+    "strategie_kalloks_arts": {
+      "positionnement": {
+        "marque": "Kallok's Arts : boutique d'art positif, coloré, inspirant et accessible. Art qui transforme l'espace et élève l'énergie.",
+        "valeurs": "Positivité, couleurs vives, art accessible pour tous les budgets, livraison rapide depuis le Canada.",
+        "marche_cible": "Canada (francophone : Québec + billingue Ontario) + France + Belgique (pour les francophones). USA comme marché secondaire anglophone."
+      },
+      "collections_prioritaires": {
+        "art_abstrait_colore": "Très demandé. Designs colorés abstraits expressifs. Formats populaires : 20×20cm (carré), 40×60cm.",
+        "citations_inspirantes": "Typo soignée sur fond coloré ou neutre. Collections : Motivation, Bien-être, Famille, Amour. Version française ET anglaise.",
+        "nature_botanique": "Feuilles tropicales, fleurs, botanicals. Tendance durable. Populaire chez femmes 25-45.",
+        "art_saisons": "Collections thématiques : Noël/Hiver, Printemps/Fleurs, Automne, Été. Pics de vente saisonniers très forts."
+      },
+      "canal_distribution": {
+        "production": "Printful (POD canvas + prints). Zéro stock, automatique.",
+        "etsy": "Canal d'acquisition principal. Trafic organique existant. Boutique bilingue (FR + EN) recommandée.",
+        "boutique_wix": "Marques et marges. Contrôle total. Intégration Printful native.",
+        "facebook_instagram_shop": "Social commerce. Catalogue synchronisé avec Printful via boutique Wix/Shopify.",
+        "local": "Marchés d'artisanat locaux (Québec) pour la présence physique et les photos UGC."
+      },
+      "contenu_social": {
+        "instagram_reels": "Timelapse de création de canvas (très engageant — l'art qui se fait fascine). 15-60 secondes. Hashtags art : #CanvasArt #WallArt #ArtQuébec #HomeDecor.",
+        "tiktok": "#ArtistOfTikTok, #ArtTikTok, #CanvasCreation. Tendances virales arte. Duos avec d'autres artistes.",
+        "facebook_page": "Posts procesus, révélations de nouveaux designs, sondages sur les couleurs, témoignages clients.",
+        "pinterest": "Boards organisés par style, couleur, pièce. Épingles avec lien direct vers Etsy/boutique. Trafic organique durable."
+      },
+      "seo_etsy_kalloks": {
+        "titres_types": "Abstract Canvas Print Blue Gold | Living Room Wall Art | Large Canvas Painting | Modern Home Decor",
+        "tags_principaux": ["Canvas Wall Art", "Abstract Wall Art", "Living Room Decor", "Large Wall Art Canvas", "Bedroom Wall Art", "Motivational Canvas", "Colorful Abstract Print", "Housewarming Gift", "Modern Home Decor", "Canadian Art", "Quebec Artist", "Positive Vibes Art"],
+        "renouvellement": "3-5 nouveaux listings par semaine au lancement. 1-2 par semaine en régime de croisière."
+      }
+    },
+
+    "droit_auteur_artistique": {
+      "protection_automatique": {
+        "canada": "Protection automatique dès la création. Aucun enregistrement requis. Durée : vie de l'artiste + 70 ans.",
+        "france_europe": "Identique : protection automatique dès la création. Convention de Berne = protection internationale dans 180+ pays.",
+        "formalite_utile": "En cas de litige, déposer l'œuvre avec preuves de création : photos datées, fichiers numériques avec métadonnées, dépôt légal INPI (France) ou CIPO (Canada) optionnel mais recommandé pour les œuvres commerciales importantes."
+      },
+      "watermark": "Watermark discret sur les images de la boutique et des réseaux sociaux. Opacité 20-30%, position coin bas-droit. Ne doit pas gâcher la présentation mais décourager le vol.",
+      "art_ia": {
+        "zone_legale": "Les œuvres générées à 100% par IA sont dans une zone légale floue (pas de protection d'auteur claire sans apport humain créatif).",
+        "transparence": "Recommandé : mentionner si l'IA a été utilisée comme outil. Les plateformes (Etsy, Redbubble) demandent une déclaration.",
+        "creation_hybride": "Création où l'IA est un outil avec modification substantielle humaine = plus de protection. Le curation, l'arrangement, la touche finale artistique comptent."
+      },
+      "contrats_commandes": "Pour les commandes personnalisées : email ou contrat simple stipulant que l'artiste garde le droit d'auteur, le client achète une licence d'utilisation personnelle (non commerciale). Utilisation commerciale = licence séparée + prix majoré.",
+      "prints_droit": "Pour vendre des reproductions d'œuvres d'autres artistes (pas les siennes) : obtenir une licence explicite par écrit. Jamais utiliser des images trouvées en ligne sans vérifier les droits."
+    }
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "version": "v31.2.0",
+  "category": "fiche_produit_redaction_seo_avancee",
+  "description": "Rédaction de fiche produit e-commerce et SEO avancé — structure optimale (titre SEO H1, description, bullet points, FAQ, avis clients), formules de copywriting e-commerce (AIDA, PAS, 5 objections), rédaction spécialisée par catégorie (canvas/art, mode/vêtements, décoration), optimisation SEO on-page produit (balises meta, données structurées Schema.org Product + FAQ, maillage interne), photographie produit e-commerce, social proof, A/B testing des fiches, rédaction publicitaire (Facebook Ads, Google Shopping, email marketing), templates complets prêts à l'emploi",
+  "fiche_produit_redaction_seo_avancee": {
+    "introduction": "La fiche produit est l'élément le plus important de votre boutique en ligne — c'est là que se décide l'achat ou l'abandon. Une fiche bien rédigée convertit 2 à 5 fois mieux qu'une fiche banale avec les mêmes produits et le même trafic. TITANE fournit un système complet de rédaction optimisée, du titre SEO au template par catégorie, pour maximiser les conversions et le référencement naturel.",
+
+    "structure_fiche_produit_optimale": {
+      "titre_seo": {
+        "importance": "Le titre H1 est lu par 100% des visiteurs et par Google. C'est le facteur de ranking SEO numéro 1 d'une fiche produit. Un bon titre = +30-50% de trafic organique.",
+        "formule_generale": "[Attribut distinctif] + [Type de produit] + [Caractéristique clé] + [Usage/Pièce] si pertinent",
+        "exemples": {
+          "canvas": "Canvas Abstrait Bleu et Or — Décoration Salon Fine Art 60×80cm",
+          "t_shirt": "T-Shirt Femme Col V Coton Bio Blanc — Coupe Ample Oversize XS-3XL",
+          "bougie": "Bougie Parfumée Vanille & Santal — Cire Végétale Artisanale 200g 50h"
+        },
+        "regles_seo": "Mot-clé principal dans les 50 premiers caractères. Unique sur tout le site (pas de duplication). H1 = titre du produit. Balise title de l'onglet : Titre produit | Nom boutique.",
+        "longueur": "50-80 caractères pour le titre affiché. Balise title (onglet) : max 60 caractères."
+      },
+      "description_principale": {
+        "structure_recommandee": [
+          "1. Phrase d'ouverture impactante : bénéfice principal ou image évocatrice (2-3 phrases)",
+          "2. Corps : caractéristiques TRANSFORMÉES en bénéfices (3-5 paragraphes courts)",
+          "3. Identification : pour qui c'est fait, dans quelles occasions",
+          "4. CTA naturel : inciter à l'ajout au panier sans être agressif"
+        ],
+        "regles_redaction": [
+          "Écrire POUR le client — utiliser 'vous/votre' pas 'nous/notre'",
+          "Transformer chaque caractéristique en bénéfice : '100% coton' → 'Doux sur la peau, respirant toute la journée'",
+          "Utiliser des mots sensoriels pour l'art/déco : lumineux, chaleureux, apaisant, profond, texturé, vivant",
+          "Paragraphes courts (2-3 phrases max). Espaces blancs. Facile à scanner en diagonale",
+          "Longueur : 150-300 mots pour les produits courants. 300-600 mots pour les produits premium"
+        ],
+        "integration_mots_cles": "Mot-clé principal 1-2 fois dans les 100 premiers mots. Mots-clés secondaires et synonymes répartis naturellement dans le texte. Google NLP comprend le contexte — pas besoin de sur-répéter.",
+        "formule_aida": {
+          "attention": "Accrocher immédiatement avec le bénéfice principal ou une question pertinente.",
+          "interet": "Développer les caractéristiques importantes en les connectant au quotidien du client.",
+          "desir": "Créer l'envie avec les avantages uniques, la social proof, les visuels.",
+          "action": "CTA naturel : 'Ajoutez au panier pour...' ou 'Commandez maintenant et recevez...'"
+        }
+      },
+      "bullet_points": {
+        "nombre": "3-7 points. Ni trop peu (incomplet) ni trop (fatigue).",
+        "format_recommande": "Caractéristique principale en gras ou MAJUSCULES → explication du bénéfice concret (1 ligne).",
+        "contenu_type": "Dimensions/taille, matériaux/composition, finition/qualité, contenu du colis, délai de fabrication/livraison, option personnalisation, politique de retour/garantie.",
+        "exemples_canvas": [
+          "IMPRESSION FINE ART GICLÉE — Encres archivales UV-résistantes, conservation garantie 100+ ans",
+          "FORMAT 60×80cm — Idéal pour un mur de salon ou de chambre adulte. Rendu immédiatement visible",
+          "CHASSIS BOIS ÉPAIS 3,8cm — Toile tendue professionnellement, bords imprimés (wrap), prêt à accrocher sans cadre",
+          "LIVRAISON SÉCURISÉE — Emballage rigide renforcé anti-choc, assurance livraison incluse",
+          "FABRIQUÉ AU CANADA — Imprimé par Printful depuis Montréal, livraison 3-7 jours ouvrables"
+        ]
+      },
+      "faq_produit": {
+        "importance": "La FAQ répond aux objections AVANT qu'elles bloquent l'achat. Améliore le SEO via le FAQ Schema. Réduit les contacts SAV de 30-40%.",
+        "questions_universelles": [
+          "Q : Quels sont les délais de livraison ? — R : [délai exact selon la destination]",
+          "Q : Le cadre est-il inclus ? — R : [préciser si prêt à accrocher ou non]",
+          "Q : Les couleurs sont-elles fidèles à l'écran ? — R : [préciser la gestion des couleurs, mention 'couleurs peuvent varier légèrement selon votre écran']",
+          "Q : Puis-je retourner le produit si je ne suis pas satisfait(e) ? — R : [politique complète]",
+          "Q : Proposez-vous des tailles personnalisées ? — R : [réponse directe]"
+        ],
+        "questions_specifiques_art": [
+          "Q : L'œuvre est-elle une reproduction ou un original ? — R : préciser clairement",
+          "Q : Quelle technique a été utilisée pour créer ce canvas ? — R : expliquer le processus",
+          "Q : Ce canvas viendra-t-il avec un certificat d'authenticité ? — R : préciser"
+        ],
+        "faq_schema_json_ld": "Implémenter le JSON-LD FAQ Schema pour que les questions/réponses apparaissent dans les extraits enrichis Google (rich snippets FAQ). Augmente le CTR de 20-30% dans les résultats Google."
+      },
+      "avis_clients": {
+        "importance": "92% des consommateurs lisent les avis avant d'acheter en ligne. Les avis sont la preuve sociale la plus puissante — et gratuite.",
+        "collecter": {
+          "timing": "Email automatisé J+14 après la livraison estimée. Pas avant — le client doit avoir reçu et utilisé le produit.",
+          "incentive": "10% de réduction sur la prochaine commande pour un avis avec photo. Légalement acceptable si non conditionné à un avis positif.",
+          "friction_zero": "Lien direct vers le formulaire d'avis dans l'email. Maximum 2 clics pour laisser un avis."
+        },
+        "afficher": "Étoiles + note globale visible en haut de page. Avis les plus détaillés et avec photos en premier. UGC (photos clients) = preuve sociale visuelle maximale.",
+        "repondre": "Répondre à TOUS les avis, positifs et négatifs. Réponse publique aux avis négatifs = montrer le professionnalisme et l'écoute. Critère de décision d'achat pour 45% des shoppers."
+      },
+      "images_produit_dans_fiche": {
+        "nombre": "6-10 images minimum pour les produits e-commerce standards. 10 maximum recommandé.",
+        "ordre_optimal": [
+          "1. Photo principale : produit seul ou packshot (fond blanc/neutre)",
+          "2. Vue lifestyle : produit dans son contexte d'utilisation",
+          "3. Détails close-up : matière, finition, texture",
+          "4. Vue angle différent (dos, profil, dessous selon le produit)",
+          "5. Échelle/taille : avec objet de référence ou humain",
+          "6. Packaging : l'unboxing (si premium ou cadeau)",
+          "7. Photos UGC clients (si disponibles)"
+        ],
+        "video": "1 vidéo courte (15-30s) montrant le produit en action ou le contexte = +20% de conversion en moyenne. Shopify/Wix supportent les vidéos produit nativement."
+      }
+    },
+
+    "templates_par_categorie": {
+      "canvas_art": {
+        "titre_formule": "[Style] Canvas [Thème/Couleur] — [Pièce cible] [Dimensions]",
+        "exemple_titre": "Canvas Abstrait Orange et Terracotta — Décoration Salon Moderne 50×70cm",
+        "description_template": "Donnez vie à votre intérieur avec ce canvas [courte description de l'œuvre : couleurs, ambiance, effet]. Ses [adjectifs évocateurs : teintes chaleureuses, compositions dynamiques, formes épurées] s'harmonisent naturellement avec les décors [styles compatibles : moderne, scandinave, bohème, industriel]. Chaque impression est réalisée sur [support : toile qualité musée / papier fine art coton] avec des encres archivales pour une fidélité des couleurs exceptionnelle et une durabilité garantie [X] ans.\n\nQue ce soit pour transformer votre [pièce : salon, chambre, bureau] ou offrir un cadeau mémorable, ce canvas [formats] s'installe en quelques secondes — livré tendu sur chassis bois, prêt à accrocher.",
+        "bullet_points_type": [
+          "IMPRESSION FINE ART — [type d'encres], résistant aux UV, conservation [X] ans garantie",
+          "FORMAT [DIM] — [description de l'effet visuel pour cette taille dans cette pièce]",
+          "CHASSIS BOIS [épaisseur]cm — [options de bords], prêt à accrocher sans cadre ni outillage",
+          "LIVRAISON SÉCURISÉE — [emballage], [assurance si applicable], [délai]",
+          "[Élément différenciant : Fabriqué au Canada / Option personnalisation / Certificat inclus]"
+        ]
+      },
+      "vetements": {
+        "titre_formule": "[Type de vêtement] [Genre] [Caractéristique principale] [Couleur/Style]",
+        "exemple_titre": "Hoodie Femme Oversize Brodé Coton Bio Blanc Cassé — Coupe Décontractée Douce",
+        "description_template": "Le [vêtement] parfait pour [occasion/style de vie] : [caractéristique principale en bénéfice]. Confectionné en [matière], il offre [bénéfice matière 1] et [bénéfice matière 2] pour un confort [adjectif] toute la journée. La coupe [type : oversized / slim / regular] est pensée pour [silhouette/usage] : [explication du fit en bénéfice].\n\nAssez polyvalent pour [usage A] comme pour [usage B]. [Social proof optionnel : Bestseller depuis X saisons / Plus de X exemplaires vendus / Note X/5 par nos clients.]",
+        "bullet_points_type": [
+          "MATIÈRE — [composition %] : [bénéfice tactile et pratique]",
+          "COUPE [type] — Taille [indication fit : taille normalement / taille grand] — Modèle [taille du modèle] porte un(e) [taille]",
+          "ENTRETIEN — Lavage machine [°C], [précautions], [durabilité]",
+          "TAILLES XS à [max] — Guide des tailles détaillé disponible dans les photos du produit",
+          "[Certifications : GOTS / OEKO-TEX / Fabriqué en France] si applicable"
+        ]
+      },
+      "decoration": {
+        "titre_formule": "[Type d'objet] [Style] [Matière] [Couleur/Thème] — [Dimension si pertinent]",
+        "exemple_titre": "Coussin Décoratif Bohème Velours Terracotta — 45×45cm avec Housse",
+        "description_template": "Donnez du caractère et de la chaleur à votre intérieur avec ce [produit]. Son design [adjectifs : épuré, chaleureux, artisanal, contemporain] s'intègre parfaitement dans une décoration [styles compatibles]. Fabriqué en [matière] de qualité, ce [produit] apporte [bénéfice tangible : une touche de couleur, une ambiance cosy, un point focal visuel] à votre [pièce].\n\nParfait pour [occasion : décorer son salon, offrir en cadeau, créer une ambiance cocooning], ce [produit] est [avantage pratique : facile à entretenir, résistant, lavable en machine].",
+        "bullet_points_type": [
+          "DIMENSIONS — [dimensions précises en cm] : [contexte d'utilisation pour cette taille]",
+          "MATIÈRE — [composition] : [bénéfice pratique + entretien]",
+          "CONTENU DU COLIS — [ce qui est inclus précisément]",
+          "LIVRAISON — [délai], [emballage], [conditions de retour]",
+          "[Option distinctive : personnalisation possible / disponible en X coloris / made in France...]"
+        ]
+      }
+    },
+
+    "seo_fiche_produit": {
+      "balises_obligatoires": {
+        "h1": "Titre du produit avec le mot-clé principal. UNE SEULE balise H1 par page.",
+        "meta_title": "55-60 caractères. Format : Mot-clé produit + attribut clé | Marque. Unique par page.",
+        "meta_description": "150-160 caractères. Résumé accrocheur avec mot-clé principal + secondaire + appel à l'action ('Commandez maintenant', 'Livraison gratuite').",
+        "url_slug": "Minuscules, tirets (pas underscores), sans accents, mot-clé principal. Ex: /canvas-abstrait-bleu-salon-60x80"
+      },
+      "donnees_structurees": {
+        "product_schema": {
+          "utilite": "Permet les rich snippets Google : prix, disponibilité, note, avis directement dans les résultats. Augmente le CTR de 20-40%.",
+          "champs_principaux": "name, image, description, sku, offers (price, currency, availability), brand, aggregateRating (ratingValue, reviewCount).",
+          "exemple_json_ld": "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Canvas Abstrait Bleu\",\"image\":\"url\",\"description\":\"...\",\"sku\":\"SKU123\",\"brand\":{\"@type\":\"Brand\",\"name\":\"Kallok's Arts\"},\"offers\":{\"@type\":\"Offer\",\"price\":\"89.99\",\"priceCurrency\":\"CAD\",\"availability\":\"https://schema.org/InStock\"}}"
+        },
+        "faq_schema": {
+          "utilite": "Fait apparaître les Q&R directement dans Google avec un accordéon dépliant. Prend beaucoup plus de place dans les résultats. CTR +20-30%.",
+          "ou_utiliser": "Sur les fiches produit qui ont une section FAQ. Sur les pages collections également."
+        },
+        "breadcrumb_schema": "Navigation en fil d'Ariane structurée. Améliore la compréhension de l'architecture du site par Google et l'affichage dans les résultats."
+      },
+      "maillage_interne": {
+        "principe": "Sur chaque fiche produit, créer des liens vers : la collection parente, 2-3 produits complémentaires, un article de blog pertinent.",
+        "benefices": "Booste le SEO (distribution du jus SEO), augmente le temps sur le site, améliore le taux de conversion (cross-sell naturel).",
+        "exemple": "Fiche canvas salon → 'Voir tous nos canvas salon' + 'Vous pourriez aussi aimer' (coussins, luminaires) + 'Comment choisir la taille de son canvas' (blog)"
+      },
+      "recherche_mots_cles_produit": {
+        "outils": [
+          "Google Autocomplete : taper le début d'une requête pour voir les suggestions populaires",
+          "Google 'Searches related to' en bas des résultats",
+          "Google Shopping : voir les titres utilisés par les concurrents",
+          "Etsy Search Bar Suggestions : mots-clés populaires sur Etsy",
+          "eRank / Marmalead : outils SEO spécifiques Etsy",
+          "Semrush / Ahrefs (payants) : volume de recherche précis, difficultés, suggestions"
+        ],
+        "people_also_ask": "La section 'Les gens demandent aussi' dans Google = sujets FAQ parfaits pour enrichir la fiche produit et générer des rich snippets."
+      }
+    },
+
+    "redaction_publicitaire_ecommerce": {
+      "facebook_ads": {
+        "structure_texte_principal": "Hook (problème ou désir en 1-2 phrases) → Solution (votre produit) → Bénéfice clé → Social proof → CTA. TOUT avant les 125 caractères = affichés sans 'voir plus' sur mobile.",
+        "exemple_canvas": "'Votre salon mérite mieux qu'un mur vide. Nos canvas abstraits apportent couleur et caractère à votre intérieur — livrés prêts à accrocher. ⭐️ Rejoint 3000+ clients satisfaits. Voir la collection →'",
+        "exemple_mode": "'T-shirts faits pour durer toute la saison. Coton biologique, coupe parfaite, couleurs qui restent après 50 lavages. Livraison gratuite dès 50$. 30 jours pour changer d'avis ✓'",
+        "types_hooks": {
+          "probleme": "'Marre des murs blancs et vides dans votre maison ?'",
+          "solution_directe": "'Votre boutique de canvas préférée vient de lancer sa collection automne.'",
+          "social_proof": "'Plus de 5000 clients ont transformé leur intérieur avec nos canvas. Regardez leurs photos.'",
+          "urgence": "'Livraison garantie avant Noël encore 3 jours. Profitez-en !'"
+        }
+      },
+      "google_shopping_titres": {
+        "format_canonique": "[Marque] + [Type produit] + [Attribut 1] + [Attribut 2] + [Dimension si e-commerce physique]",
+        "règles": "Les 70 premiers caractères = les plus visibles. Mots d'intention d'achat en premier. Tester plusieurs variantes (modifier le flux et comparer les CTR).",
+        "exemples": {
+          "canvas": "Kallok's Arts Canvas Abstrait Bleu Décoration Salon 60x80cm",
+          "mode": "Kallok's Arts T-Shirt Femme Bio Blanc Oversize XL"
+        }
+      },
+      "email_ecommerce": {
+        "objet_email": {
+          "formules_efficaces": [
+            "[Prénom], cette pièce vous attendait...",
+            "Nouveau : [Nom collection] vient d'arriver 🎨",
+            "Plus que [X] en stock — [Nom produit]",
+            "Votre panier vous manque (et vous lui manquez aussi)",
+            "Offre se termine ce soir : [remise] sur [catégorie]"
+          ],
+          "taux_ouverture_cible": "Secteur e-commerce moyenne : 15-25%. Viser 25%+ avec la personnalisation."
+        },
+        "corps_email_produit": "Image produit lifestyle en haut (60% de la hauteur visible). Bénéfice principal en 1 phrase. 2-3 bullet points clés. CTA bouton visible (couleur contrastée). Signature humaine.",
+        "abandon_panier": {
+          "sequence": "Email 1 (1h après abandon) : rappel simple avec image du produit. Email 2 (24h) : ajouter social proof + FAQ objections. Email 3 (72h) : petite remise ou livraison gratuite comme dernier levier.",
+          "taux_recuperation": "Séquence 3 emails = récupérer 5-15% des paniers abandonnés. ROI très élevé."
+        },
+        "email_welcome": "Email 1 : remerciement + code promo promis. Email 2 (J+2) : bestsellers de la boutique. Email 3 (J+5) : contenu valeur (guide de style ou inspiration déco). Email 4 (J+10) : invitation à suivre sur les réseaux."
+      }
+    },
+
+    "ab_testing_fiches": {
+      "elements_a_tester": {
+        "titre": "Avec/sans dimensions, avec/sans marque, ordre des attributs, question vs affirmation",
+        "photo_principale": "Packshot vs lifestyle, couleur vs noir et blanc, avec vs sans humain",
+        "prix": "Prix rond (89$) vs prix psychologique (88,99$) vs prix premium ancré (99$ → 79$)",
+        "cta": "Texte ('Ajouter au panier' vs 'Obtenir le mien'), couleur (rouge vs vert vs orange), position (haut vs bas vs flottant)",
+        "description": "Courte vs longue, bullet points vs paragraphes, ton formel vs ton casual",
+        "social_proof": "Avec vs sans nombre de ventes, avec vs sans photos clients, avec vs sans badges"
+      },
+      "methode": {
+        "principe": "Tester UN SEUL élément à la fois pour isoler l'impact. Minimum 200 visiteurs par variante avant de conclure.",
+        "duree": "Min 2 semaines pour capturer les variations hebdomadaires (lundi ≠ samedi).",
+        "outils": "Google Optimize (intégré à GA4, gratuit), VWO, Convert.com. Sur Shopify : apps Neat A/B Testing, Intelligems."
+      },
+      "metriques_cles": {
+        "add_to_cart_rate": "Taux d'ajout au panier = visiteurs qui cliquent 'Ajouter au panier' / visiteurs totaux. Objectif : 5-15% selon la catégorie.",
+        "conversion_rate": "Taux d'achat = achats / visiteurs. Objectif e-commerce : 1-4% selon le canal d'acquisition.",
+        "scroll_depth": "Jusqu'où les visiteurs scrollent dans la fiche. Si 70% ne voient pas les bullet points = les remonter.",
+        "time_on_page": "Temps passé sur la fiche. <30s = contenu non pertinent ou confiance insuffisante. >2min = engagement élevé."
+      }
+    },
+
+    "formules_copywriting_avancees": {
+      "PAS": {
+        "definition": "Problem → Agitate → Solution. Identifier le problème → amplifier la frustration → présenter la solution.",
+        "exemple": "Problème : 'Votre salon a l'air froid et impersonnel.' Agitation : 'Vous avez passé des heures à le décorer, mais quelque chose manque — une âme, une identité visuelle forte.' Solution : 'Nos canvas abstraits sont conçus pour donner ce caractère unique que votre espace mérite.'"
+      },
+      "5_objections": {
+        "principe": "Anticiper et répondre aux 5 principales objections : Prix, Qualité, Livraison/risque, Pertinence, Urgence.",
+        "dans_la_fiche": "Prix → 'Livraison gratuite dès 75$, retour 30j'. Qualité → photos détails + avis clients + certifications. Livraison → délais précis + suivi. Pertinence → guide de tailles + photos contexte. Urgence → badge 'Dernières pièces' si vrai."
+      },
+      "storytelling_produit": {
+        "technique": "Raconter l'histoire du produit ou de sa création. Pour l'art surtout : l'inspiration de l'artiste, le processus créatif, ce que l'œuvre représente émotionnellement.",
+        "impact": "Le storytelling crée une connexion émotionnelle. Les clients achètent une histoire plus qu'un objet. ROI mesuré : +15-40% de conversion sur les fiches avec storytelling vs sans."
+      }
+    }
+  }
+}

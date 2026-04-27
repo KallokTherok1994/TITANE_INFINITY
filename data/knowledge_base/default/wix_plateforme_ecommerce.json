@@ -1,0 +1,242 @@
+{
+  "version": "v31.2.0",
+  "category": "wix_plateforme_ecommerce",
+  "description": "Wix e-commerce et création de boutique — Wix Store (gestion produits, variantes, paiements, expédition), Wix SEO (Wix SEO Wiz, balises, URL, alt text, performances), Wix Apps Marketplace recommandées, Wix Payments, comparatif Wix vs Shopify vs WooCommerce vs Etsy, Wix pour boutique mode/déco/art (templates, galerie), Wix Blog pour content marketing SEO, Wix Analytics, intégration Printful native sur Wix, limites et best practices 2025",
+  "wix_plateforme_ecommerce": {
+    "introduction": "Wix est une plateforme de création de sites web et e-commerce tout-en-un, utilisée par plus de 230 millions de personnes dans 190 pays. Sa force : créer un site beau et professionnel sans compétences techniques en code, avec un éditeur visuel drag-and-drop intuitif. TITANE couvre Wix de la configuration initiale à l'optimisation avancée pour les boutiques mode, décoration et art comme Kallok's Arts.",
+
+    "wix_store": {
+      "configuration_initiale": [
+        "1. Créer un compte Wix (wix.com) — essai gratuit 14 jours",
+        "2. Choisir un template dans la catégorie Boutique en ligne",
+        "3. Ajouter la fonctionnalité Wix Store depuis le tableau de bord",
+        "4. Configurer les informations de boutique (nom, devise, pays)",
+        "5. Configurer les méthodes de paiement (Wix Payments, PayPal...)",
+        "6. Configurer les règles d'expédition",
+        "7. Ajouter les produits (manuellement ou via import CSV)",
+        "8. Passer sur un plan payant avant de publier (obligatoire pour e-commerce)"
+      ],
+      "plans_tarifaires": {
+        "core": "29$/mois (annuel). E-commerce de base. 50GB stockage. Pas de frais de transaction Wix.",
+        "business": "36$/mois (annuel). Tout Core + plus de stockage, plus d'apps, analytics avancés.",
+        "business_elite": "159$/mois (annuel). Tout Business + illimité, support prioritaire, événements avancés.",
+        "conseil": "Commencer par Core pour tester. Passer à Business quand la boutique génère des revenus."
+      },
+      "gestion_produits": {
+        "types_produits": "Physique (avec expédition), Numérique (téléchargement direct), Service (sur rendez-vous), Événement (billetterie).",
+        "fiche_produit": "Tableau de bord → Boutique → Produits → Ajouter un produit. Champs : Nom, Description (éditeur riche), Prix, Stock, Images (jusqu'à 15), Vidéo.",
+        "variantes": {
+          "configuration": "Onglet Variantes dans la fiche produit. Créer des options (Couleur, Taille, Format...) avec des valeurs (Rouge/Bleu/Vert, S/M/L...).",
+          "personnalisation_par_variante": "Chaque combinaison peut avoir son propre prix, stock, SKU, image. Idéal pour mode (couleur × taille) et canvas (format × type de finition).",
+          "sku": "Attribuer un SKU unique à chaque variante. Important pour la gestion des stocks et les intégrations externes."
+        },
+        "collections": {
+          "principe": "Organiser les produits en collections (équivalent des catégories). Un produit peut appartenir à plusieurs collections.",
+          "creation": "Boutique → Collections → Créer une collection → Ajouter des produits manuellement ou via règles automatiques (ex: tous les produits avec le tag 'Abstrait').",
+          "navigation": "Ajouter les collections dans le menu de navigation du site. Hiérarchie recommandée : max 2 niveaux."
+        },
+        "import_csv": {
+          "principe": "Importer des dizaines ou centaines de produits via un fichier CSV. Gain de temps pour les boutiques avec beaucoup de références.",
+          "colonnes": "productName, description, price, currency, inventory, sku, productImageUrl, collections, visible, productOptions.",
+          "template": "Télécharger le template CSV depuis Wix → Boutique → Import/Export. Remplir et réimporter."
+        }
+      },
+      "paiements": {
+        "wix_payments": {
+          "principe": "Processeur de paiement natif de Wix. Disponible en France, Canada, Belgique, Suisse, USA et +35 pays.",
+          "taux": "2,9% + 0,30 USD par transaction (USA). Taux similaires pour FR/CA. Pas de frais mensuels additionnels.",
+          "methodes": "Cartes (Visa, Mastercard, Amex), Apple Pay, Google Pay, BNPL (Buy Now Pay Later selon région).",
+          "virements": "Virement vers votre compte bancaire après un délai de 5-7 jours ouvrables. Configuration dans Wix Payments Dashboard.",
+          "avantage": "0% de frais de transaction Wix avec Wix Payments (contrairement à Shopify qui prend 0,5-2% si vous n'utilisez pas Shopify Payments)."
+        },
+        "paypal": "Intégration native. Permet les achats sans créer de compte — important pour les clients qui font confiance à PayPal.",
+        "stripe": "Intégration via app Wix Payments Advanced ou connexion directe. Supporte Apple Pay, Google Pay, et les paiements locaux (iDEAL, Bancontact).",
+        "autres": "Square, Authorize.net (USA principalement). Options via partenaires tiers dans le Wix App Market."
+      },
+      "expedition": {
+        "configuration": "Tableau de bord → Boutique → Paramètres → Expédition et livraison. Créer des profils d'expédition par région.",
+        "livraison_gratuite": "FORTEMENT recommandé : livraison gratuite dès X$ (augmente l'AOV). Configurer un seuil (ex: gratuit dès 50$). Afficher dans le panier 'Plus que X$ pour la livraison gratuite !'.",
+        "taux_calcule": "Intégration native Postes Canada, UPS, FedEx (via apps) pour le calcul en temps réel. Idéal pour les produits de tailles/poids variables.",
+        "retrait_boutique": "Option click & collect si boutique physique. Configurer l'adresse de retrait dans les paramètres.",
+        "pod_printful": "Avec Printful : l'expédition est gérée par Printful directement. Wix synchronise automatiquement les informations de suivi vers le client."
+      }
+    },
+
+    "wix_seo": {
+      "seo_wiz": {
+        "principe": "Outil guidé intégré dans Wix qui analyse le site et génère un plan SEO personnalisé étape par étape.",
+        "acces": "Tableau de bord → Marketing → SEO → Outil de référencement Wix (SEO Wiz).",
+        "actions": "Analyse des balises, soumission à Google Search Console, suivi du ranking des mots-clés, checklist SEO par page."
+      },
+      "meta_tags": {
+        "principe": "Chaque page, collection, fiche produit a ses propres balises title et meta description éditables.",
+        "acces": "En mode édition du site → Pages → Paramètres SEO de la page. Ou via le panneau SEO de chaque élément.",
+        "title": "55-60 caractères. Format : Mot-clé principal | Nom de la boutique. Ex: 'Canvas Abstrait Décoration Salon | Kallok's Arts'.",
+        "meta_description": "150-160 caractères. Résumé de la page avec les mots-clés secondaires + appel à l'action. Ex: 'Découvrez nos canvas abstraits colorés pour décorer votre salon. Livraison gratuite dès 75$. Fabriqués avec amour au Canada.'",
+        "conseil": "Ne pas dupliquer les meta descriptions. Chaque page doit avoir une description unique."
+      },
+      "url_structure": {
+        "principe": "Wix génère des URLs propres et personnalisables : monsite.com/boutique/canvas-abstrait-bleu",
+        "personnalisation": "En mode édition → Pages → Paramètres SEO → Slug URL. Utiliser le mot-clé principal, minuscules, tirets (pas d'underscores), pas d'accents.",
+        "exemples": "Bon : /canvas-abstrait-colore-salon. Mauvais : /Product123 ou /canvas-abstrait-coloré-salon (accent)."
+      },
+      "alt_text_images": {
+        "importance": "Google indexe les images → trafic additionnel via Google Images. CRUCIAL pour l'art et la décoration.",
+        "redaction": "Décrire l'image avec les mots-clés naturellement. 'Canvas abstrait bleu doré décoration salon moderne' plutôt que 'image123' ou 'canvas'.",
+        "acces": "En édition d'image dans Wix → clic droit → Paramètres → Texte alternatif."
+      },
+      "sitemap": "Wix génère automatiquement un sitemap XML et le soumet à Google Search Console. Vérifier dans Wix SEO Dashboard → Sitemaps. Forcer la resoumission après une refonte.",
+      "schema_markup": "Wix génère automatiquement les données structurées Product Schema pour les fiches produit. Vérifier avec l'outil de test Google Rich Results.",
+      "vitesse_performances": {
+        "images": "Compresser avant upload : max 500KB recommandé pour les images générales, max 2MB pour les photos produit HD. Wix convertit en WebP automatiquement.",
+        "taille_images": "Max 2500px sur le grand côté pour les produits. Utiliser les images du format requis par Wix (ne pas uploader 5000px si affiché en 400px).",
+        "templates_performance": "Certains templates Wix sont plus légers que d'autres. Tester Google PageSpeed Insights avant de lancer la boutique.",
+        "apps": "Chaque app Wix installée peut ralentir le site. N'installer que les apps vraiment nécessaires. Désactiver/supprimer les apps inutilisées."
+      },
+      "blog_wix_seo": {
+        "principe": "Wix Blog intégré. Créer du contenu SEO pour attirer du trafic organique sur les mots-clés cibles.",
+        "idees_articles_deco": [
+          "Comment décorer son salon avec des canvas (guide 2025)",
+          "10 tendances décoration murale pour 2025",
+          "Comment choisir la taille de son canvas selon la pièce",
+          "Art abstrait vs art figuratif : lequel choisir pour sa déco ?"
+        ],
+        "structure_article": "H1 (mot-clé principal), H2 (sous-thèmes), texte 800-1500 mots, images optimisées, lien vers produits pertinents, CTA en fin d'article.",
+        "frequence": "1-2 articles par semaine pour un impact SEO significatif. Cibler des mots-clés long-tail (moins concurrentiels, plus convertissants)."
+      }
+    },
+
+    "wix_vs_concurrents": {
+      "wix_vs_shopify": {
+        "wix_avantages": [
+          "Moins cher pour démarrer (dès 29$/mois vs 39$/mois Shopify, mais Wix = 0% frais transaction vs 0,5-2% Shopify sans Shopify Payments)",
+          "Éditeur de pages drag-and-drop plus intuitif pour les non-développeurs",
+          "Blog et content marketing nativement intégré et performant",
+          "Meilleur pour les sites mixtes boutique + portfolio + blog",
+          "Meilleur rendu visuel sans code pour les artistes et créateurs"
+        ],
+        "shopify_avantages": [
+          "Écosystème d'apps beaucoup plus large (8000+ vs ~300 Wix)",
+          "Meilleur pour les très gros volumes (10000+ commandes/mois)",
+          "Intégrations avancées (3PL, ERP, marketplace) plus solides",
+          "Migration et scaling plus facilement automatisés",
+          "Checkout plus optimisé nativement pour la conversion"
+        ],
+        "verdict": "Wix pour les boutiques <500 produits qui veulent un beau site rapidement sans développeur. Shopify pour les boutiques ambitieuses avec fort volume prévu et besoin d'intégrations avancées."
+      },
+      "wix_vs_woocommerce": {
+        "wix_avantages": [
+          "Pas besoin d'hébergement séparé (inclus dans l'abonnement)",
+          "Mises à jour et sécurité gérées automatiquement",
+          "Support Wix disponible (chat, téléphone, email)",
+          "Pas de compétences techniques requises"
+        ],
+        "woocommerce_avantages": [
+          "Gratuit (hors hébergement et plugins premium)",
+          "Personnalisation infinie via le code PHP et l'écosystème WordPress",
+          "Propriété totale des données",
+          "Migration facile vers une autre solution WordPress"
+        ],
+        "verdict": "Wix pour les entrepreneurs sans compétences techniques. WooCommerce pour ceux qui veulent le contrôle total et disposent de compétences web."
+      },
+      "wix_vs_etsy": {
+        "wix_avantages": "Marges supérieures (0% commission vs 11%+ Etsy), branding complet, liste email propriétaire, données clients.",
+        "etsy_avantages": "Trafic existant immédiat (95M+ acheteurs), pas de marketing nécessaire pour les premières ventes, coût de lancement minimal.",
+        "verdict": "Stratégie optimale : Etsy pour l'acquisition (trafic gratuit), Wix pour la rétention et les marges. Commencer par Etsy, construire Wix en parallèle."
+      },
+      "quand_choisir_wix": [
+        "Artiste ou créateur qui débute en e-commerce",
+        "Boutique déco/art/mode avec moins de 500 produits",
+        "Budget limité (moins cher que Shopify pour commencer)",
+        "Priorité au beau rendu visuel et à la simplicité",
+        "Besoin d'un site complet (boutique + portfolio + blog) sur une seule plateforme",
+        "Pas de développeur disponible"
+      ]
+    },
+
+    "wix_apps_recommandees": {
+      "marketing_email": {
+        "omnisend": "Email marketing e-commerce avancé. Flows automatisés (welcome, abandon panier, post-achat). Intégration native Wix.",
+        "brevo": "Anciennement Sendinblue. Bon rapport qualité/prix. Email + SMS marketing. Gratuit jusqu'à 300 emails/jour.",
+        "mailchimp": "Très connu. Bon pour les débutants. Intégration Wix disponible."
+      },
+      "fidelite_social_proof": {
+        "smile_io": "Programme de points fidélité. Gamification de l'achat. Augmente la rétention de 20-30%.",
+        "product_reviews": "App native Wix. Collecter et afficher des avis clients avec photos. Essentiel pour la conversion.",
+        "loox": "App avis clients avec photos. Très performant pour l'art et la mode où les visuels clients sont importants."
+      },
+      "conversion": {
+        "tidio": "Chat en direct + chatbot. Répondre aux questions des visiteurs en temps réel. Réduit les abandons.",
+        "countdown_timer": "Urgence sur les offres limitées. 'Offre se termine dans 2h'. Augmente les conversions de 15-25%.",
+        "back_in_stock": "Notification automatique quand un produit en rupture revient en stock. Récupère des ventes perdues."
+      },
+      "analytics_tracking": {
+        "google_analytics": "Intégration native dans Wix Paramètres → Intégrations → Google Analytics. Entrer l'ID de mesure GA4.",
+        "facebook_pixel": "Marketing & SEO → Outils marketing → Pixel Facebook. Entrer l'ID Pixel. CAPI à configurer séparément.",
+        "wix_analytics": "Analytics natif Wix : tableau de bord revenus, produits bestsellers, sources de trafic, entonnoir de conversion."
+      },
+      "livraison": {
+        "shipstation": "Gestion d'expédition multi-transporteurs. Étiquettes, tracking, règles d'automatisation.",
+        "shipbob": "Fulfillment 3PL intégré avec Wix. Pour les boutiques avec volume élevé qui veulent externaliser la logistique."
+      },
+      "pod": {
+        "printful": "Application officielle Printful dans le Wix App Market. Installation en 5 minutes. Synchronisation automatique produits et commandes. RECOMMANDÉ pour Kallok's Arts.",
+        "printify": "Alternative Printful. Plusieurs partenaires de production. Parfois prix plus bas.",
+        "gelato": "POD mondial. Impression locale dans 32 pays. Délais de livraison courts, empreinte carbone réduite."
+      }
+    },
+
+    "wix_pour_art_et_deco": {
+      "templates_recommandes": {
+        "acces": "Wix.com → Créer un site → Choisir un template → Filtrer : Boutique en ligne → Sous-catégorie : Art et Photo ou Mode.",
+        "caracteristiques_template_ideal": "Grandes images dominantes, peu de texte en page d'accueil, galerie produits visuelle, navigation simple.",
+        "exemples_styles": "Minimalist White Art Store, Modern Gallery, Creative Portfolio Shop. Éviter les templates trop chargés en éléments."
+      },
+      "galerie_produits": {
+        "wix_pro_gallery": "Widget Wix Pro Gallery pour créer des pages d'exposition artistique. Styles : Masonry (cascade), Grille, Diaporama, Collage.",
+        "page_atelier": "Créer une page 'Processus créatif' ou 'Dans l'atelier' avec une galerie de photos du making-of. Renforce la crédibilité et l'attachement à la marque.",
+        "page_expositions": "Si l'artiste expose physiquement : page Expositions avec lieu, dates, photos des accrochages. Build l'autorité artistique."
+      },
+      "page_artiste": {
+        "importance": "Pour une boutique d'art, la page À propos est parfois aussi importante que la boutique. Les acheteurs d'art achètent aussi l'histoire et la personnalité de l'artiste.",
+        "contenu": "Photo de l'artiste, courte biographie, style artistique et inspiration, parcours créatif, valeurs, photos de l'atelier, presse/expositions si applicable.",
+        "conseil": "Écrire à la première personne. Être authentique et personnel. L'authenticité vend l'art bien plus que le marketing conventionnel."
+      },
+      "integration_printful_wix": {
+        "etapes": [
+          "1. Ouvrir le tableau de bord Wix",
+          "2. Aller dans App Market → chercher 'Printful'",
+          "3. Installer l'application Printful",
+          "4. Connecter le compte Printful (ou en créer un)",
+          "5. Depuis le dashboard Printful : ajouter des produits (canvas, prints)",
+          "6. Choisir le design → uploader l'artwork",
+          "7. Configurer le prix de vente",
+          "8. Pousser le produit vers la boutique Wix",
+          "9. Les commandes Wix sont automatiquement transmises à Printful pour production et expédition"
+        ],
+        "avantages": "Synchronisation stock et commandes automatique. Produits canvas accessibles directement dans Wix. Aucun stock à gérer.",
+        "configuration_avancee": "Dans Printful : configurer l'adresse d'expédition, les notifications emails aux clients, le packaging (possibilité d'ajouter une carte personnalisée dans le colis)."
+      }
+    },
+
+    "wix_analytics": {
+      "tableau_de_bord_principal": {
+        "acces": "Tableau de bord Wix → Analytics.",
+        "vue_globale": "Revenus, commandes, taux de conversion, visiteurs. Comparaison périodes (semaine, mois, année).",
+        "entonnoir": "Visualiser le parcours : visiteurs → vues produits → ajouts panier → checkouts → achats. Identifier les points de friction."
+      },
+      "rapports_produits": {
+        "bestsellers": "Quels produits génèrent le plus de revenus. Optimiser les stocks et les promotions en conséquence.",
+        "taux_conversion_produit": "Ratio vues → achats par produit. Un produit très vu mais peu acheté = problème de fiche produit ou de prix.",
+        "abandons_panier": "Nombre de paniers abandonnés. Taux cible : réduire sous 70%. Utiliser les emails de récupération de panier abandonné."
+      },
+      "comportement_visiteurs": {
+        "pages_populaires": "Quelles pages attirent le plus de trafic. Investir dans l'optimisation des pages à fort trafic.",
+        "sources_trafic": "Organique (Google), Réseaux sociaux, Direct, Payant, Référence. Comprendre d'où viennent les acheteurs.",
+        "appareils": "Mobile vs Desktop. Si plus de 60% de trafic mobile : optimiser l'expérience mobile en priorité."
+      },
+      "integration_ga4": "Ajouter l'ID de mesure GA4 dans Paramètres Wix → Intégrations → Google Analytics. GA4 donne des données bien plus approfondies (comportements, cohortes, LTV).",
+      "search_console": "Connecter Google Search Console dans Wix SEO Dashboard → Connecter à Google Search Console. Voir les impressions et clics depuis Google."
+    }
+  }
+}

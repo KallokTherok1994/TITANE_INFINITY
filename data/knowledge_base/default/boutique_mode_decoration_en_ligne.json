@@ -1,0 +1,195 @@
+{
+  "version": "v31.2.0",
+  "category": "boutique_mode_decoration_en_ligne",
+  "description": "Boutique en ligne mode et décoration — spécificités fashion e-commerce (sizing, retours, saisonnalité, photographie mode, lookbook), boutique décoration (home decor, lifestyle photography, cross-sell déco, collections saisonnières), choix de plateforme, merchandising visuel en ligne, calendrier e-commerce annuel (soldes, Black Friday, Noël), fidélisation client mode/déco, stratégie visuelle de marque, programme fidélité",
+  "boutique_mode_decoration_en_ligne": {
+    "introduction": "Les boutiques en ligne de mode et de décoration sont parmi les segments e-commerce les plus visuels, les plus saisonniers et les plus concurrentiels. Réussir demande une maîtrise parfaite de la présentation visuelle, du storytelling de marque, de la gestion des collections et de la relation client. TITANE fournit une approche opérationnelle et esthétique pour créer et scaler ces boutiques.",
+
+    "fashion_ecommerce": {
+      "specificites": {
+        "saisonnalite": {
+          "principe": "Mode = 4 saisons minimum + collections capsules spéciales. Planifier le catalogue 3-4 mois à l'avance. Synchronisation avec les soldes légales.",
+          "calendrier_achats": "Printemps-Été : achat fournisseurs novembre-janvier, lancement mars-avril. Automne-Hiver : achat avril-juin, lancement août-septembre.",
+          "fins_de_saison": "Promotions de désengorgement : -20% semaine 1 → -30% semaine 2 → -40%+ semaine 3. Éviter les soldes sauvages qui dévaluent la marque."
+        },
+        "sizing": {
+          "importance": "Le sizing est le plus grand pain point de l'e-commerce mode. Clarifier = moins de retours, plus de conversions.",
+          "guide_des_tailles": "Guide obligatoire sur chaque fiche produit avec : mesures exactes en cm (tour de poitrine, taille, hanches), tableau de correspondance (XS→3XL, tailles FR/UK/US/EU/IT), conseils de mesure avec illustrations.",
+          "modeles_representatifs": "Indiquer la taille et les mensurations du modèle sur chaque photo. 'Notre modèle mesure 170cm et porte une taille M.' — Réduit les retours de 20-30%.",
+          "fit_guide": "Décrire la coupe : ample (oversized), régulière (regular fit), ajustée (slim fit). Indiquer si le produit taille grand ou petit.",
+          "option_personnalisation": "Sur commande en tailles hors-standard (+10-20€). Différenciateur pour certaines niches (grande taille, petite taille)."
+        },
+        "retours_mode": {
+          "taux": "E-commerce mode : 20-40% de retours (vs 5-10% autres catégories). Normal et à anticiper.",
+          "politique_simple": "Retour gratuit OU retour payant (selon la marge) — mais toujours clairement affiché. Délai 30 jours minimum. Remboursement ou avoir en boutique.",
+          "reduction_retours": "Photos multiples angles, guide des tailles, vidéos du vêtement porté, descriptions précises des matières, avis clients avec tailles portées."
+        },
+        "photographie_mode": {
+          "packshots": "Photos fond blanc ou fond neutre (gris, beige). Mettre en évidence le produit. Angles obligatoires : face, dos, profil, détail matière/finition.",
+          "lifestyle": "Port réel par des modèles diversifiés (taille, morphologie, âge, ethnie). Contexte de vie réel (café, rue, appartement). Crée l'identification et le désir d'achat.",
+          "details": "Zoom sur les matières, les coutures, les fermetures, les étiquettes. Rassure sur la qualité. Obligatoire pour les produits premium.",
+          "video_produit": "Vidéo 360° tournant ou vidéo courte de la pièce portée en mouvement. Réduit les retours car le client visualise le produit sur un corps réel.",
+          "flat_lay": "Vêtements disposés à plat, vue de dessus. Populaire sur Instagram. Ajouter des accessoires complémentaires pour créer une tenue complète.",
+          "setup_photo": "Lumière naturelle indirecte (fenêtre). Fond 100% blanc ou mur neutre. Objectif 50mm ou 85mm sur DSLR. Smartphone suffisant si lumière parfaite. Consistency = professional look."
+        }
+      },
+      "categories_populaires": {
+        "pod_bestsellers": "T-shirts, hoodies/sweats à capuche, sweatshirts, tote bags. Universels = meilleur ROI pour débuter.",
+        "boutique_mode_propre": "T-shirts, robes, jeans/pantalons, vestes, manteaux, accessoires (sacs, bijoux, ceintures), chaussures.",
+        "niche_rentable": "Vêtements oversize (tendance forte), vêtements durables/bio (premium), lingerie, sportswear, streetwear, grande taille."
+      },
+      "lookbook": {
+        "principe": "Collection de photos thématiques qui créent une atmosphère de marque. Storytelling visuel cohérent — vendre un style de vie, pas des vêtements.",
+        "production": "10-20 photos par saison. Cohérence de palette de couleurs, de lieux, de modèles. Thème narratif (une journée de vacances, un week-end en ville).",
+        "calendrier": "Publier avant la saison : lookbook automne en fin août, lookbook printemps en fin février. Canal prioritaire : Instagram + Pinterest.",
+        "distribution": "Instagram posts + Stories + Reels extraits. Pinterest boards. Page Lookbook dédiée sur le site. PDF téléchargeable pour les clients fidèles."
+      },
+      "bundles_mode": {
+        "tenue_complete": "Suggérer des tenues complètes sur chaque fiche produit (haut + bas + accessoires). 'Compléter le look' avec produits complémentaires.",
+        "reduction_tenue": "Réduction 10-15% sur l'achat de la tenue complète. Augmente l'AOV de 30-50%.",
+        "gift_sets": "Coffrets cadeaux pour Noël, fête des mères, anniversaires. Prêts à offrir avec emballage cadeau. Très demandés en décembre."
+      },
+      "influenceurs_mode": {
+        "gifting": "Offrir des pièces à des créateurs de contenu en échange d'un contenu authentique. Faible investissement, UGC authentique.",
+        "collaboration_nano": "Nano-influenceurs (1k-10k) : engagement 5-10%, coût faible (50-200€ ou gifting), audience très fidèle. Idéal pour les petites boutiques.",
+        "micro_influenceurs": "Micro (10k-100k) : engagement 2-5%, coût 200-2000€, reach significatif. Meilleur ROI que les macro pour les niches.",
+        "affiliate": "Programme d'affiliation : 10-15% de commission sur les ventes générées. Outils : Shopify Collabs, RewardStyle, LTK."
+      }
+    },
+
+    "decoration_ecommerce": {
+      "specificites": {
+        "photographie_deco": {
+          "principe": "La mise en scène est TOUT dans la décoration. Ne pas vendre le produit — vendre l'ambiance, l'émotion, le style de vie.",
+          "flat_lay": "Pour les petits objets (bougies, coussins, bibelots). Vue de dessus. Mise en scène soignée avec accessoires complémentaires.",
+          "room_staging": "Montrer l'objet dans un espace complet (salon, chambre, bureau). Lumière naturelle préférée. Style d'intérieur cohérent avec la cible (scandinave, bohème, industriel).",
+          "multi_styles": "Montrer le même produit dans différents styles d'intérieur. Un canvas dans un appartement moderne + dans une maison de campagne + dans un bureau. Multiplie les scenarios d'identification.",
+          "couleurs_matiere": "Afficher chaque coloris/matière avec sa propre photo. Pas juste un carré de couleur — une photo lifestyle par couleur."
+        },
+        "dimensions_et_echelle": {
+          "importance": "CRITIQUE en décoration. Le client ne peut pas évaluer la taille à l'écran.",
+          "solutions": [
+            "Photo avec un objet de référence connu (standard de porte, canapé, bougie standard)",
+            "Photo avec silhouette humaine pour les grandes pièces (canvas, miroirs, luminaires)",
+            "Schéma de dimensions clairement affiché dans les photos",
+            "Visualisation AR (Réalité Augmentée) pour voir le produit chez soi"
+          ]
+        },
+        "realite_augmentee": "Outil de visualisation AR disponible via Shopify (Zakeke, Auglio apps), ou Ikea Place-style via développement custom. Réduit les retours de 25-40% selon les études."
+      },
+      "collections_saisonnieres": {
+        "printemps_ete": {
+          "palette": "Tons clairs et lumineux, pastel, blanc, naturel, lin, osier. Fleurs, botanicals, été.",
+          "produits": "Coussins lin, plaids légers, vases céramique, art floral, éclairage estival (guirlandes extérieur).",
+          "periode": "Lancement mars, promotion active avril-août."
+        },
+        "automne_hiver": {
+          "palette": "Tons chauds et profonds : terracotta, kaki, bordeaux, caramel, bois, vert forêt.",
+          "produits": "Bougies parfumées, plaids chauds, tapis laine, coussins velours, éclairage chaleureux, art saisonnier.",
+          "periode": "Lancement septembre, promotion active jusqu'en janvier (Noël)."
+        },
+        "noel": {
+          "importance": "La saison la plus importante pour la déco — souvent 30-40% du CA annuel. Préparer dès octobre.",
+          "produits": "Collections spéciales (ornements, guirlandes, coussins), packaging cadeau premium, options de personnalisation, coffrets cadeaux déco.",
+          "communication": "Commencer communication fin octobre. Calendrier de l'Avent sur les réseaux. Deadline livraison garantie avant Noël clairement affichée."
+        }
+      },
+      "cross_sell_deco": {
+        "principe": "La décoration se vend en groupes cohérents. Un client qui achète un canvas achètera souvent un coussin, une plante artificielle, un luminaire dans le même style.",
+        "implementation": "'Complétez le tableau', 'Les clients ont aussi acheté', 'Ensemble suggéré'. Augmente l'AOV de 30-50%.",
+        "bundle_cadeau": "Bundle prêt-à-offrir (emballage cadeau inclus). Idéal Noël, fête des mères. Marge supérieure car prix bundle > somme des parties.",
+        "interieurs_complets": "Proposer des 'shopping rooms' : une pièce complète en cohérence stylistique. Acheter tous les éléments d'un coup. Pinterest-style."
+      }
+    },
+
+    "creation_boutique": {
+      "choix_plateforme": {
+        "shopify": {
+          "avantages": "Leader e-commerce. 8000+ apps. Scalable à l'infini. Meilleur pour volume élevé et intégrations avancées. Support solide.",
+          "inconvenients": "Plus cher (39-399$/mois + frais transaction), courbe d'apprentissage modérée, personnalisation limitée sans développeur.",
+          "pour_qui": "Boutique ambitieuse avec plan de croissance, volume >500 commandes/mois visé, besoin d'intégrations avancées (3PL, ERP)."
+        },
+        "wix_ecommerce": {
+          "avantages": "Simple, beau rendu visuel sans code, bon pour créateurs et artistes, moins cher, éditeur de pages excellent.",
+          "inconvenients": "Moins d'apps qu'Shopify, moins performant sur très gros volumes, migrations difficiles.",
+          "pour_qui": "Artistes, boutiques <500 produits, débutants en e-commerce, priorité au visuel et à la simplicité."
+        },
+        "woocommerce": {
+          "avantages": "Gratuit (hors hébergement), personnalisation infinie, propriété totale des données, migration facile vers d'autres solutions.",
+          "inconvenients": "Hébergement à gérer, mises à jour à maintenir, sécurité à assurer, courbe d'apprentissage technique.",
+          "pour_qui": "Déjà sous WordPress, compétences techniques disponibles, veut contrôle total et zéro frais de plateforme."
+        },
+        "etsy": {
+          "avantages": "Marketplace avec trafic existant immédiat (10M+ acheteurs actifs), idéal pour art/artisanat/vintage, peu de configuration.",
+          "inconvenients": "Frais élevés (11%+ par vente), dépendance à la plateforme, concurrence intense, peu de personnalisation marque.",
+          "pour_qui": "Artistes, artisans, boutiques d'art/déco fait main. Idéal en complément d'une boutique propre, pas à la place."
+        }
+      },
+      "architecture_boutique_mode": "Page accueil → Collections (Femme/Homme, Saison, Bestsellers) → Fiches produits → Lookbook → Promotions → À propos → Blog → Contact.",
+      "architecture_boutique_deco": "Page accueil → Collections (par pièce : Salon/Chambre/Bureau; par style : Scandinave/Industriel; par type : Canvas/Coussins/Bougies) → Fiches produits → Inspirations/Lookbook → Blog déco → Contact.",
+      "home_page_essentiels": {
+        "hero_section": "Image lifestyle forte qui capture l'identité de marque. Proposition de valeur en 5-7 mots. CTA primaire.",
+        "social_proof": "Nombre de clients satisfaits, note moyenne, logos presse si applicable.",
+        "nouveautes_bestsellers": "Section Nouvelles Arrivées + Bestsellers. Ce que les clients veulent voir en premier.",
+        "ugc_section": "Photos de vrais clients utilisant/portant les produits. Trust signal #1 pour les nouveaux visiteurs.",
+        "newsletter": "Formulaire d'inscription avec incentive (10% de réduction sur première commande, accès early à la collection)."
+      }
+    },
+
+    "merchandising_en_ligne": {
+      "tri_et_filtres": {
+        "tri": "Nouveautés, Bestsellers, Prix croissant/décroissant, Pertinence. 'Bestsellers' en option par défaut.",
+        "filtres_mode": "Taille, Couleur, Prix (fourchettes), Style, Matière, Catégorie.",
+        "filtres_deco": "Style (Scandinave, Industriel, Bohème...), Couleur dominante, Type de pièce (Salon, Chambre...), Prix, Dimensions, Matière.",
+        "importance": "Sans filtres efficaces : le client frustré quitte. Avec filtres bien conçus : +20-30% de conversion sur les catégories."
+      },
+      "badges_produits": {
+        "types": "Nouveau, Bestseller, Promo (-30%), Dernières pièces, Coup de cœur, Exclusif, Bientôt disponible.",
+        "impact": "Augmentent le CTR sur les listings de 15-25%. 'Dernières pièces' crée l'urgence douce = conversion immédiate.",
+        "regles": "Limiter à 1-2 badges par produit maximum. Ne pas sur-utiliser 'Bestseller' — perd son sens."
+      },
+      "prix_psychologie": {
+        "terminaison_9": "39.99€ > 40€. Toujours utiliser des prix se terminant par .99 ou .95 pour l'entrée/milieu de gamme.",
+        "prix_barre": "Ancien prix barré + nouveau prix = sentiment d'économie. Légalement requis : l'ancien prix doit avoir été appliqué 30j auparavant (France).",
+        "livraison_gratuite": "Seuil de livraison gratuite (ex: 'dès 50€') = levier d'augmentation de l'AOV le plus efficace. Afficher dans le panier : 'Plus que 15€ pour la livraison gratuite !'",
+        "lot": "Pack de 2 = -10%, Pack de 3 = -15%. Réduit le coût par unité, augmente la valeur de commande."
+      }
+    },
+
+    "calendrier_ecommerce_annuel": {
+      "janvier": "Soldes d'hiver (France : début janvier, 4-6 semaines). Liquider les stocks AH. Teaser collections PE à venir.",
+      "fevrier": "Saint-Valentin (14 fév) : cadeaux, rouge, romantisme, coffrets. Fin des soldes d'hiver. Collections PE en preview.",
+      "mars_avril": "Fin des soldes. Lancement officiel collections Printemps-Été. Pâques (déco festive). Journée de la femme (8 mars).",
+      "mai_juin": "Fête des Mères (2e dim. de mai) : TOP 3 moment e-commerce. Collections estivales en plein régime. Fête des Pères (3e dim. de juin).",
+      "juillet_aout": "Soldes d'été (France : début juillet). Collections estivales peak. Déstockage fin août. Premières previews collections AH.",
+      "septembre_octobre": "Rentrée (home office, décoration chambre d'enfant). Lancement officiel Automne-Hiver. Halloween (fin oct) pour déco.",
+      "novembre": {
+        "black_friday": "4e jeudi de novembre. ÉVÉNEMENT #1 de l'e-commerce. Préparer dès septembre : teasers, liste d'attente, exclusivités BF.",
+        "cyber_monday": "Lundi suivant le BF. Souvent e-commerce exclusif (vs BF plus physique).",
+        "preparation": "Stocks doublés. Créatifs BF prêts. Emails BF programmés. Budget pub ×3-5. Site testé pour le trafic.",
+        "strategie": "Early Access pour les abonnés email (48h avant). BF exclusif (produits non disponibles le reste de l'année). Compte à rebours."
+      },
+      "decembre": "Fêtes de Noël. Rush final. Deadline livraison Noël affichée et mise à jour. Cartes cadeaux en avant (revenus immédiats, dépensés en janvier). Ventes 26-31 décembre pour les retardataires."
+    },
+
+    "fidelisation_client": {
+      "programme_fidelite": {
+        "points": "1€ = 1 point. 100 points = 5€ de réduction (5% de remise implicite). Outils : Smile.io, LoyaltyLion.",
+        "niveaux": "Bronze (0-500 pts), Argent (500-2000 pts), Or (2000+ pts). Avantages croissants : livraison gratuite, early access, service VIP.",
+        "impact": "Programme de fidélité = +30-40% de taux de rétention, +20-25% d'AOV. Clients fidèles = coût d'acquisition zéro."
+      },
+      "acces_prioritaire": "Les meilleurs clients reçoivent les nouvelles collections 24-48h avant. Accès exclusif aux ventes privées. Sentiment d'appartenance = fidélité émotionnelle.",
+      "contenu_exclusif": {
+        "newsletter_valeur": "Tips de style ou déco, tutoriels, inspirations, nouvelles collections en avant-première. Valeur au-delà du produit.",
+        "behind_the_scenes": "Présentation des artisans, du processus de création, des coulisses. Humanise la marque.",
+        "communaute": "Groupe Facebook privé pour les clients fidèles. Espace d'échanges, concours, avis en avant-première."
+      },
+      "unboxing_experience": {
+        "principe": "L'emballage est une extension de la marque. La première impression physique.",
+        "elements": "Papier de soie coloré à la marque, boîte premium, carte personnalisée manuscrite ou imprimée, sticker de marque, code promo pour la prochaine commande.",
+        "ugc": "Un bon unboxing = photos et vidéos client sur Instagram et TikTok. UGC gratuit et authentique.",
+        "cout": "Investir 1-3€ par colis dans le packaging = ROI × en fidélisation et UGC généré."
+      }
+    }
+  }
+}

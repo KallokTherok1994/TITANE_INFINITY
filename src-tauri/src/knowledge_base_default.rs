@@ -242,6 +242,49 @@ const ECOMMERCE_SCALING_AVANCE: &str =
     include_str!("../../data/knowledge_base/default/ecommerce_scaling_avance.json");
 const DROPSHIPPING_PRINT_ON_DEMAND: &str =
     include_str!("../../data/knowledge_base/default/dropshipping_print_on_demand.json");
+
+// ── v31.2.0 expansion — phase 20 (facebook-ads-avancé, google-ads-avancé, boutique-mode-déco, art-canvas, wix, fiche-produit-seo) ─
+const FACEBOOK_BUSINESS_MARKETING_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/facebook_business_marketing_avance.json");
+const GOOGLE_ADS_MARKETING_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/google_ads_marketing_avance.json");
+const BOUTIQUE_MODE_DECORATION_EN_LIGNE: &str =
+    include_str!("../../data/knowledge_base/default/boutique_mode_decoration_en_ligne.json");
+const VENTE_ART_CANVAS_EN_LIGNE: &str =
+    include_str!("../../data/knowledge_base/default/vente_art_canvas_en_ligne.json");
+const WIX_PLATEFORME_ECOMMERCE: &str =
+    include_str!("../../data/knowledge_base/default/wix_plateforme_ecommerce.json");
+const FICHE_PRODUIT_REDACTION_SEO_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/fiche_produit_redaction_seo_avancee.json");
+
+// ── v31.3.0 expansion — phase 21 (printful/etsy, email-automation, pinterest/tiktok, seo-technique, CRO, analytics-kpis) ─
+const PRINTFUL_ETSY_INTEGRATION_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/printful_etsy_integration_avancee.json");
+const EMAIL_MARKETING_ECOMMERCE_AUTOMATION: &str =
+    include_str!("../../data/knowledge_base/default/email_marketing_ecommerce_automation.json");
+const PINTEREST_TIKTOK_MARKETING_ECOMMERCE: &str =
+    include_str!("../../data/knowledge_base/default/pinterest_tiktok_marketing_ecommerce.json");
+const SEO_TECHNIQUE_ECOMMERCE_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/seo_technique_ecommerce_avance.json");
+const CONVERSION_RATE_OPTIMIZATION: &str =
+    include_str!("../../data/knowledge_base/default/conversion_rate_optimization.json");
+const ANALYTICS_KPIS_ECOMMERCE_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/analytics_kpis_ecommerce_avance.json");
+
+// ── v31.3.0 expansion — phase 22 (réseaux-sociaux-organique, publicité-retargeting, dropshipping-pod, service-client, identité-visuelle, finances-trésorerie) ─
+const RESEAUX_SOCIAUX_CONTENU_ORGANIQUE: &str =
+    include_str!("../../data/knowledge_base/default/reseaux_sociaux_contenu_organique.json");
+const PUBLICITE_RETARGETING_STRATEGIES: &str =
+    include_str!("../../data/knowledge_base/default/publicite_retargeting_strategies.json");
+const DROPSHIPPING_PRINT_ON_DEMAND_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/dropshipping_print_on_demand_avance.json");
+const SERVICE_CLIENT_EXCELLENCE_ECOMMERCE: &str =
+    include_str!("../../data/knowledge_base/default/service_client_excellence_ecommerce.json");
+const CREATION_IDENTITE_VISUELLE_MARQUE: &str =
+    include_str!("../../data/knowledge_base/default/creation_identite_visuelle_marque.json");
+const FINANCES_TRESORERIE_ECOMMERCE: &str =
+    include_str!("../../data/knowledge_base/default/finances_tresorerie_ecommerce.json");
+
 const FREELANCE_CONSULTING_PREMIUM: &str =
     include_str!("../../data/knowledge_base/default/freelance_consulting_premium.json");
 const INFOPRODUITS_FORMATIONS_EN_LIGNE: &str =
@@ -671,6 +714,75 @@ impl DefaultKnowledgeBase {
         ),
         ("ecommerce_scaling_avance", ECOMMERCE_SCALING_AVANCE),
         ("dropshipping_print_on_demand", DROPSHIPPING_PRINT_ON_DEMAND),
+        // v31.2.0 expansion — phase 20 (facebook-ads-avancé, google-ads-avancé, boutique-mode-déco, art-canvas, wix, fiche-produit-seo)
+        (
+            "facebook_business_marketing_avance",
+            FACEBOOK_BUSINESS_MARKETING_AVANCE,
+        ),
+        (
+            "google_ads_marketing_avance",
+            GOOGLE_ADS_MARKETING_AVANCE,
+        ),
+        (
+            "boutique_mode_decoration_en_ligne",
+            BOUTIQUE_MODE_DECORATION_EN_LIGNE,
+        ),
+        ("vente_art_canvas_en_ligne", VENTE_ART_CANVAS_EN_LIGNE),
+        ("wix_plateforme_ecommerce", WIX_PLATEFORME_ECOMMERCE),
+        (
+            "fiche_produit_redaction_seo_avancee",
+            FICHE_PRODUIT_REDACTION_SEO_AVANCEE,
+        ),
+        // v31.3.0 expansion — phase 21 (printful/etsy, email-automation, pinterest/tiktok, seo-technique, CRO, analytics-kpis)
+        (
+            "printful_etsy_integration_avancee",
+            PRINTFUL_ETSY_INTEGRATION_AVANCEE,
+        ),
+        (
+            "email_marketing_ecommerce_automation",
+            EMAIL_MARKETING_ECOMMERCE_AUTOMATION,
+        ),
+        (
+            "pinterest_tiktok_marketing_ecommerce",
+            PINTEREST_TIKTOK_MARKETING_ECOMMERCE,
+        ),
+        (
+            "seo_technique_ecommerce_avance",
+            SEO_TECHNIQUE_ECOMMERCE_AVANCE,
+        ),
+        (
+            "conversion_rate_optimization",
+            CONVERSION_RATE_OPTIMIZATION,
+        ),
+        (
+            "analytics_kpis_ecommerce_avance",
+            ANALYTICS_KPIS_ECOMMERCE_AVANCE,
+        ),
+        // v31.3.0 expansion — phase 22 (réseaux-sociaux-organique, publicité-retargeting, dropshipping-pod, service-client, identité-visuelle, finances-trésorerie)
+        (
+            "reseaux_sociaux_contenu_organique",
+            RESEAUX_SOCIAUX_CONTENU_ORGANIQUE,
+        ),
+        (
+            "publicite_retargeting_strategies",
+            PUBLICITE_RETARGETING_STRATEGIES,
+        ),
+        (
+            "dropshipping_print_on_demand_avance",
+            DROPSHIPPING_PRINT_ON_DEMAND_AVANCE,
+        ),
+        (
+            "service_client_excellence_ecommerce",
+            SERVICE_CLIENT_EXCELLENCE_ECOMMERCE,
+        ),
+        (
+            "creation_identite_visuelle_marque",
+            CREATION_IDENTITE_VISUELLE_MARQUE,
+        ),
+        (
+            "finances_tresorerie_ecommerce",
+            FINANCES_TRESORERIE_ECOMMERCE,
+        ),
         ("freelance_consulting_premium", FREELANCE_CONSULTING_PREMIUM),
         (
             "infoproduits_formations_en_ligne",

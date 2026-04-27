@@ -1,0 +1,148 @@
+{
+  "version": "v31.3.0",
+  "category": "seo_technique_ecommerce_avance",
+  "description": "SEO technique e-commerce avancé — architecture de site optimale (silos, maillage interne, pagination, URLs canoniques), Core Web Vitals et Page Experience (LCP, CLS, INP, TTFB), optimisation des images e-commerce, balises Hreflang multi-langues, structured data Schema.org complet pour e-commerce (Product, Breadcrumb, Organization, FAQ, HowTo), backlinks e-commerce (link building, digital PR, guest posting), content marketing SEO pour boutiques (blog e-commerce, pillar pages, clusters), audit SEO technique complet, outils SEO (Semrush, Ahrefs, Screaming Frog, Google Search Console), stratégie SEO pour boutique Wix et Etsy, SEO local pour boutiques physiques-digitales, stratégie SEO pour Kallok's Arts",
+  "seo_technique_ecommerce_avance": {
+    "introduction": "Le SEO est le seul canal d'acquisition qui génère du trafic gratuitement de façon permanente. Une boutique bien positionnée sur Google reçoit du trafic qualifié 24h/24, 7j/7, sans payer par clic. Contrairement aux Ads qui s'arrêtent dès que vous arrêtez de payer, le SEO est un actif qui prend de la valeur avec le temps. TITANE vous donne le système complet pour dominer les résultats de recherche dans votre niche.",
+
+    "architecture_site_seo": {
+      "structure_silos": {
+        "principe": "Organiser le site en silos thématiques : chaque catégorie = un silo. Les pages d'une catégorie se linkent entre elles mais peu vers d'autres catégories. Renforce l'autorité topicale.",
+        "exemple_boutique_art": {
+          "silo_canvas": "Page catégorie Canvas → Canvas Abstraits → Canvas Salon → Canvas Chambre → Canvas Bureau. Chaque page lie vers les autres dans le silo.",
+          "silo_mode": "Page catégorie Vêtements → T-Shirts Artistiques → Hoodies → Accessoires Mode Art.",
+          "silo_blog": "Articles de blog en cluster autour de chaque silo (ex: 'Comment choisir la taille de son canvas' → lie vers la catégorie canvas)"
+        }
+      },
+      "urls_canoniques": {
+        "principe": "Une URL unique par contenu. Éviter les duplications (pages de filtres qui créent des milliers d'URLs similaires).",
+        "paginations": "Utiliser rel='canonical' ou rel='next/prev' pour les pages de collection paginées. Google ne doit pas indexer chaque page de filtre (/collection?couleur=bleu&taille=medium).",
+        "slash_final": "Cohérence absolue : soit avec / final (example.com/canvas/) soit sans (example.com/canvas). Choisir et s'y tenir partout."
+      },
+      "maillage_interne": {
+        "importance": "Le maillage interne distribue le 'PageRank' dans le site. Les pages importantes doivent recevoir le plus de liens internes.",
+        "regles": [
+          "Page catégorie → pages produits dans la catégorie",
+          "Pages produits → catégorie parente + produits complémentaires",
+          "Articles blog → pages produits pertinentes + catégories",
+          "Page d'accueil → pages catégories principales + bestsellers"
+        ],
+        "ancres": "Utiliser des ancres descriptives avec mots-clés (pas 'cliquez ici' mais 'voir nos canvas abstraits 60×80cm').",
+        "profondeur_clic": "Aucune page importante ne devrait être à plus de 3 clics de la page d'accueil."
+      }
+    },
+
+    "core_web_vitals": {
+      "importance": "Google utilise les Core Web Vitals comme facteur de classement depuis 2021. Des scores mauvais = pénalité de visibilité. Mesurer dans Google Search Console → Rapport Core Web Vitals.",
+      "lcp": {
+        "definition": "Largest Contentful Paint — temps pour afficher l'élément le plus grand (souvent l'image hero). Cible : < 2,5 secondes.",
+        "optimisation_ecommerce": [
+          "Servir les images en WebP (30-50% plus léger que JPEG)",
+          "Utiliser le lazy loading sur les images hors écran (pas sur l'image hero)",
+          "Pré-charger l'image hero avec <link rel='preload'>",
+          "Utiliser un CDN (Cloudflare, Fastly) pour servir les images depuis le serveur le plus proche de l'utilisateur",
+          "Wix optimise automatiquement les images si vous activez Wix Image Optimization"
+        ]
+      },
+      "cls": {
+        "definition": "Cumulative Layout Shift — mesure les sauts visuels inattendus (contenu qui se déplace pendant le chargement). Cible : < 0,1.",
+        "causes_courantes": "Images sans dimensions définies (width/height), publicités qui se chargent et poussent le contenu, fonts qui se chargent après le texte.",
+        "fix": "Toujours définir width et height sur les balises img. Réserver l'espace pour les polices web (font-display: swap)."
+      },
+      "inp": {
+        "definition": "Interaction to Next Paint — mesure la réactivité de la page aux interactions utilisateur (clics, saisies). Remplace FID depuis mars 2024. Cible : < 200ms.",
+        "optimisation": "Réduire le JavaScript inutile, différer les scripts non critiques, éviter les longues tâches JavaScript au chargement."
+      }
+    },
+
+    "images_ecommerce_seo": {
+      "nommage_fichiers": "Le nom du fichier est lu par Google. 'canvas-abstrait-bleu-salon-60x80cm.webp' >> 'IMG_0042.jpg'. Utiliser des tirets, pas d'underscores ni d'espaces.",
+      "alt_text": "Décrire l'image avec naturel en incluant des mots-clés. 'Canvas abstrait avec dominantes bleues et dorées, idéal pour décorer un salon moderne, format 60x80cm.' Max 125 caractères.",
+      "format": "WebP pour les photos produit et lifestyle. SVG pour les logos et icônes. Eviter les PNG pour les photos (trop lourds).",
+      "compression": "Viser < 200Ko par image produit. Outils : Squoosh (Google, gratuit), TinyPNG, ImageOptim. Wix compresse automatiquement.",
+      "responsive_images": "Utiliser srcset pour servir différentes tailles selon l'écran. Sur mobile (375px), inutile de charger une image 2000px.",
+      "google_image_search": "Google Images génère un trafic e-commerce significatif pour les boutiques de décoration et d'art. Les images bien optimisées peuvent ranker dans les résultats images et générer des visiteurs."
+    },
+
+    "structured_data_schema": {
+      "product": {
+        "importance": "Schema.org Product = rich snippets dans Google : prix, disponibilité, note. Augmente le CTR de 20-40% en moyenne.",
+        "champs_essentiels": "name, image, description, sku, brand, offers (price, priceCurrency, availability), aggregateRating.",
+        "champs_optionnels": "color, size, material, itemCondition, gtin13 (code EAN), mpn.",
+        "ou_implementer": "Sur chaque page produit individuelle. Pas sur les pages de collection ou d'accueil."
+      },
+      "breadcrumb": {
+        "utilite": "Affiche la navigation fil d'Ariane dans les résultats Google. Améliore la compréhension architecturale du site.",
+        "exemple": "{@type: BreadcrumbList, itemListElement: [{@type: ListItem, position: 1, name: Accueil, item: url}, {position: 2, name: Canvas, item: /canvas}, {position: 3, name: Canvas Abstrait Bleu}]}"
+      },
+      "faq_schema": "Sur les fiches produit avec FAQ et sur les pages catégories avec questions courantes. Génère des extraits enrichis FAQ dans Google.",
+      "organization": "Sur la page d'accueil et À propos : nom de la boutique, logo, URL, réseaux sociaux. Aide Google à comprendre votre entité.",
+      "local_business": "Si boutique physique + boutique en ligne : LocalBusiness Schema avec adresse, horaires, téléphone. Boost le SEO local."
+    },
+
+    "content_marketing_seo": {
+      "blog_ecommerce": {
+        "pourquoi": "Le blog génère du trafic organique pour des requêtes informatives à fort volume. Ces visiteurs deviennent ensuite des acheteurs ('comment choisir la taille de son canvas' → arrive sur l'article → clique vers la boutique).",
+        "structure_article_seo": {
+          "titre_h1": "Mot-clé principal + promesse de valeur. 50-60 caractères.",
+          "introduction": "200-300 mots. Répondre immédiatement à la question principale (Featured Snippet bait). Mot-clé dans les 100 premiers mots.",
+          "sous_sections_h2_h3": "Structurer en sections logiques avec sous-titres contenant des mots-clés secondaires. Google lit les H2/H3 pour comprendre le contenu.",
+          "longueur": "Pour le contenu informatif approfondi : 1500-3000 mots. Pour les articles de tendance ou news : 500-1000 mots.",
+          "images": "1 image par 300-400 mots. Images pertinentes, optimisées, avec alt text. Idéalement vos propres photos.",
+          "cta_contextuel": "Lier naturellement vers vos produits quand le contexte s'y prête. 'Pour ce type de décoration, notre canvas abstrait format 60×80cm s'intègre parfaitement → [lien produit]'"
+        },
+        "sujets_blog_boutique_art_deco": [
+          "'Comment choisir la taille de son canvas selon la pièce' — fort volume, intention achat",
+          "'Quels styles d'art s'harmonisent avec la décoration moderne/scandinave/bohème'",
+          "'5 idées pour créer un mur galerie dans son salon'",
+          "'Canvas ou tableau encadré : lequel choisir pour sa décoration ?'",
+          "'Comment prendre soin de son canvas (entretien, humidité, nettoyage)'",
+          "'Idées cadeaux pour les amateurs d'art : les meilleures options'",
+          "'Tendances décoration intérieure [année actuelle]'"
+        ]
+      },
+      "pillar_pages_et_clusters": {
+        "pillar_page": "Page longue et complète sur un sujet large (ex: 'Le guide complet de la décoration par le canvas'). 2000-5000 mots. Cible des mots-clés généraux à fort volume.",
+        "cluster_pages": "Articles de blog courts et spécifiques qui gravitent autour de la pillar page, chacun ciblant un sous-sujet. Tous se linkent vers la pillar page.",
+        "benefice": "Établit une autorité topicale complète sur un sujet. Google comprend que votre site est une référence dans la niche."
+      }
+    },
+
+    "link_building_ecommerce": {
+      "pourquoi": "Les backlinks (liens d'autres sites vers le vôtre) restent le facteur SEO off-page le plus puissant. 1 bon backlink d'un site d'autorité vaut plus que 100 backlinks de mauvaise qualité.",
+      "strategies": {
+        "digital_pr": "Créer du contenu digne d'être mentionné (études, infographies, données exclusives). Contacter les journalistes et blogueurs de déco/art avec ce contenu. Un article dans un magazine déco populaire = backlink précieux.",
+        "partenariats_artistes": "Échanges de liens avec d'autres artistes ou boutiques complémentaires (mais pas concurrentes directes). Ex: boutique de cadres ↔ boutique de canvas.",
+        "guest_posting": "Écrire un article invité sur des blogs de décoration d'intérieur populaires avec un lien vers votre boutique.",
+        "listings_et_annuaires": "Inscriptions dans les annuaires artistes (Singulart, Artfinder, Saatchi Art) = backlinks + trafic direct.",
+        "presse_locale": "Articles dans les médias locaux canadiens sur l'artiste et la boutique. Les sites de presse ont une très haute autorité.",
+        "ugc_mentions": "Inviter les clients à partager et mentionner votre boutique sur leurs blogs ou sites. Certains clients ont des blogs avec de l'autorité."
+      },
+      "a_eviter": "Les liens achetés en masse, les fermes de liens, les échanges de liens non naturels. Google Penguin pénalise le 'link spam' et peut désindexer votre site."
+    },
+
+    "seo_wix_specifique": {
+      "avantages_wix_seo": "Wix a considérablement amélioré son SEO depuis 2020. SSR (Server-Side Rendering) activé par défaut, URLs personnalisables, Schema auto-généré, Google Search Console intégration native.",
+      "wix_seo_wiz": "Outil SEO guidé de Wix. Suivre toutes les étapes. Optimise titre, meta, balises H et connecte à Google Search Console.",
+      "parametres_seo_par_page": "Pour chaque page et produit : personnaliser le titre SEO, la meta description, l'URL slug. Ne pas laisser les valeurs par défaut Wix.",
+      "wix_structured_data": "Wix génère automatiquement un Schema.org basique pour les produits. Vérifier qu'il est complet avec Google Rich Results Test.",
+      "wix_blog_seo": "Le blog Wix est bien optimisé pour le SEO depuis 2022. Utiliser les catégories de tags comme des mini-silos.",
+      "performances_wix": "Wix gère automatiquement le CDN et la compression d'images. Pour améliorer les Core Web Vitals : minimiser les applications installées (chaque app = JavaScript supplémentaire)."
+    },
+
+    "outils_seo_essentiels": {
+      "gratuits": {
+        "google_search_console": "Obligatoire. Voir quels mots-clés génèrent des impressions et des clics, les erreurs d'indexation, les Core Web Vitals de votre site.",
+        "google_analytics_4": "Analyser le comportement des visiteurs, les sources de trafic, les conversions, le funnel e-commerce.",
+        "semrush_gratuit": "Version gratuite : 10 requêtes/jour pour analyser vos mots-clés et ceux des concurrents.",
+        "ubersuggest": "Outil SEO accessible pour débutants (Neil Patel). Volume de recherche, idées de mots-clés, audit de site basique.",
+        "google_keyword_planner": "Dans Google Ads (compte gratuit requis). Volume de recherche officiel Google pour les mots-clés."
+      },
+      "payants": {
+        "semrush": "190 USD/mois. La référence pour l'analyse concurrentielle, les audits techniques, le tracking de positions. ROI si vous faites du SEO sérieusement.",
+        "ahrefs": "99-399 USD/mois. Leader pour l'analyse de backlinks. Index de liens le plus complet du marché.",
+        "screaming_frog": "~200 USD/an. Crawler SEO pour auditer techniquement votre site (pages 404, redirections, balises manquantes)."
+      }
+    }
+  }
+}
