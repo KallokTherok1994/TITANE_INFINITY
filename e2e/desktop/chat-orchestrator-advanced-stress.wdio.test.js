@@ -66,10 +66,22 @@ describe('Chat orchestrator Agent UI runtime proof (WDIO/Tauri)', () => {
       assert.notEqual(runtime.orchestratorState, '');
       assert.notEqual(runtime.memoryState, '');
       assert.notEqual(runtime.providerReason, 'UNKNOWN');
+      assert.equal(runtime.pageConversationMode, 'default');
+      assert.equal(runtime.pageChatStoreMode, 'default');
+      assert.equal(runtime.runtimeConversationMode, 'default');
+      assert.equal(runtime.runtimeChatStoreMode, 'default');
+      assert.ok(runtime.summary.includes('Conversation mode: default'));
+      assert.ok(runtime.summary.includes('Store mode: default'));
+      assert.ok(runtime.badges.includes('conversation-mode:default'));
+      assert.ok(runtime.badges.includes('chat-store-mode:default'));
     }
 
     const finalRuntime = await getChatRuntimeTruth();
     assert.equal(finalRuntime.ollamaModel, 'gemma2:2b');
+    assert.equal(finalRuntime.pageConversationMode, 'default');
+    assert.equal(finalRuntime.pageChatStoreMode, 'default');
+    assert.equal(finalRuntime.runtimeConversationMode, 'default');
+    assert.equal(finalRuntime.runtimeChatStoreMode, 'default');
     assert.ok(report.turns.length >= 3);
   });
 });
