@@ -1,28 +1,28 @@
 {
-  "version": "31.2.7",
-  "canonical_version": "31.2.7",
-  "build_date": "2026-04-27",
-  "artifacts": [
-    {
-      "name": "Titan-Stable_31.2.7_amd64.AppImage",
-      "type": "AppImage",
-      "platform": "linux-x86_64",
-      "size_bytes": 94484984,
-      "sha256": "cca0b17f07bc9a71934d2f19d551bb2ccb270743b62dde5331063fabfc9abac6"
+  "version": "31.2.9",
+  "date": "2026-04-27",
+  "artifacts": {
+    "appimage": {
+      "filename": "Titan-Stable_31.2.9_amd64.AppImage",
+      "sha256": "cb6e099786853bae44a33d21d0b088ccfcf4d3d8796aa788c18a23cf35b2eb56",
+      "size_bytes": 94571000
     },
-    {
-      "name": "Titan-Stable_31.2.7_amd64.deb",
-      "type": "deb",
-      "platform": "linux-x86_64",
-      "size_bytes": 21797182,
-      "sha256": "925a4faee40c9213b73966d0973f7519c8d32bb2bd5c6009c713fc74f3b5a0b0"
+    "deb": {
+      "filename": "Titan-Stable_31.2.9_amd64.deb",
+      "sha256": "83b177c8a53677d31648dd0c768ffd769e3acc04720ff995e7d60f45a4643dfc",
+      "size_bytes": 21881996
     },
-    {
-      "name": "titane-infinity",
-      "type": "binary",
-      "platform": "linux-x86_64",
-      "size_bytes": 47470008,
-      "sha256": "272b66159ec37a1e68afb3444f3768c75237bd64bf0aef8b2f668e1b118884ec"
+    "binary": {
+      "filename": "titane-infinity",
+      "sha256": "120f8aef3e5894e3d835d61144b13cfd9ea6c5207bccffb543c4d87ca25b2e61",
+      "size_bytes": 47630384
     }
-  ]
+  },
+  "gates": {
+    "tsc": "PASS",
+    "verify_final100": "PASS",
+    "detect_recurrence": "PASS",
+    "verify_instructions": "PASS 33/33",
+    "verify_registry": "PASS"
+  }
 }

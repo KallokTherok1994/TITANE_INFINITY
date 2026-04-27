@@ -976,3 +976,47 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | E2E remote | `e2e/remote-gateway.spec.ts` (8 scenarios) | ADDED |
 
 **Activation** : `TITANE_REMOTE_ENABLED=1` (opt-in, désactivé par défaut). Port `TITANE_REMOTE_PORT=7420`.
+
+---
+
+## v31.2.9 — BUILD ALL (2026-04-27)
+
+| Fichier | Version | Statut |
+|---|---|---|
+| `package.json` | `31.2.9` | UPDATED_TO_31_2_9 |
+| `src-tauri/Cargo.toml` | `31.2.9` | UPDATED_TO_31_2_9 |
+| `src-tauri/Cargo.lock` | `31.2.9` | UPDATED_TO_31_2_9 |
+| `tauri.base.json` | `31.2.9` | UPDATED_TO_31_2_9 |
+| `src-tauri/tauri.conf.json` | `31.2.9` | UPDATED_TO_31_2_9 |
+| `runtime/stable/manifest.json` | `31.2.9` | UPDATED_TO_31_2_9 |
+
+### Artifacts — v31.2.9
+
+| Artifact | SHA256 | Taille |
+|---|---|---|
+| `Titan-Stable_31.2.9_amd64.AppImage` | `cb6e0997...` | 91 MiB |
+| `Titan-Stable_31.2.9_amd64.deb` | `83b177c8...` | 21 MiB |
+| `titane-infinity` (binary) | `120f8aef...` | 46 MiB |
+
+### New Surfaces — v31.2.9
+
+| Surface | Fichiers | Statut |
+|---|---|---|
+| Admin onglet `remote-keys` | `src/features/admin/AdminPage.tsx`, `types.ts` | ADDED |
+| `RemoteKeyDashboard` monté | `/admin?tab=remote-keys` | MOUNTED |
+| `AgentConfigPanel` | `src/components/RemoteKeyDashboard/AgentConfigPanel.tsx` | ADDED |
+| `RemoteKeyAgent` étendu (train/AI) | `src/services/remoteKeyManager/` | UPDATED |
+| HTF module complet | `src/services/htf/`, `src/components/htf/`, `src/stores/useHTFStore.ts` | ADDED |
+| Gateway remote network v31.2.9 | Port 7420, PID 499009, `/api/health` OK | ACTIVE |
+
+### Gates v31.2.9
+
+| Gate | Résultat |
+|---|---|
+| `tsc --noEmit` | PASS |
+| `verify:final100` | PASS |
+| `detect_recurrence` | PASS (1357 entrées) |
+| `verify_instructions` | PASS 33/33 |
+| `verify:registry` | PASS |
+| Remote gateway health | `{"ok":true,"version":"31.2.9"}` |
+| JWT auth smoke | TOKEN 185 chars OK |
