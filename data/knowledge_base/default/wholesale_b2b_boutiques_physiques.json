@@ -1,0 +1,128 @@
+{
+  "category": "wholesale_b2b_boutiques_physiques",
+  "version": "31.3.0",
+  "title": "Wholesale, B2B & Boutiques Physiques — Diversifier les Revenus E-commerce",
+  "summary": "Stratégies de vente en gros (wholesale) et B2B pour marques art, décoration et mode. Comment approcher des boutiques physiques, hôtels, bureaux, galeries. Grilles tarifaires wholesale, processus de vente, contrats, conditions. Diversification revenus au-delà du e-commerce direct.",
+  "content": {
+    "modèle_wholesale": {
+      "définition": "Wholesale = vendre vos produits en gros à d'autres entreprises qui les revendent à leurs clients. Prix wholesale = 40-60% du prix de détail.",
+      "avantages": [
+        "Commandes en volume = CA prévisible",
+        "Notoriété de marque dans de nouveaux canaux",
+        "Cash flow régulier (commandes récurrentes)",
+        "Validation de votre produit par d'autres professionnels"
+      ],
+      "prérequis": [
+        "Marges suffisantes pour absorber -50% sur prix retail",
+        "Capacité à produire en volume (POD = pas de limite)",
+        "Catalogue professionnel",
+        "Conditions claires (minimums de commande, délais, paiement)"
+      ],
+      "calcul_prix_wholesale": {
+        "formule": "Prix Wholesale = Coût production × 2.2 (marge 55%)",
+        "exemple_canvas": {
+          "coût_printful": 18.50,
+          "prix_wholesale_minimum": 40.70,
+          "prix_retail_boutiquer": "Le boutiquier revend à 79-89$",
+          "ta_marge": "22.20$ par unité minimum"
+        },
+        "minimum_commande": "Recommandé : 150-300$ minimum par commande pour rentabilité"
+      }
+    },
+    "cibles_b2b_canvas_art": {
+      "boutiques_décoration": {
+        "profil": "Boutiques décoration intérieure indépendantes",
+        "potentiel": "Commandes 10-50 unités, récurrentes chaque saison",
+        "comment_trouver": [
+          "Google Maps 'boutique décoration [ville]'",
+          "Instagram search '#boutiqueinterior' + localisation",
+          "Marchés artisanaux et foires décoration",
+          "Catalogues professionnels (Faire.com, Abound)"
+        ]
+      },
+      "hôtels_bed_breakfast": {
+        "profil": "Hôtels boutique, Airbnb premium, lodges",
+        "potentiel": "Grosses commandes ponctuelles (20-100 canvas pour décoration complète)",
+        "angle_vente": "Décoration complète d'établissement avec identité visuelle cohérente",
+        "démarchage": "LinkedIn search + email directeur commercial"
+      },
+      "galeries_art": {
+        "profil": "Petites galeries cherchant des artistes locaux/accessibles",
+        "potentiel": "Consignment (commission 30-50%) ou wholesale",
+        "note": "Prestige et exposition médias — moins rentable mais valuable"
+      },
+      "espaces_bureau": {
+        "profil": "Co-working spaces, startups, agences créatives",
+        "potentiel": "Commandes décoration complète, budget corporate disponible",
+        "angle": "Art pour créer ambiance inspirante en espace de travail"
+      },
+      "cliniques_salons_spa": {
+        "profil": "Cliniques médicales, salons beauté, spas",
+        "potentiel": "Décoration apaisante — abstraits nature, botaniques",
+        "angle": "Créer ambiance zen et professionnelle pour les patients/clients"
+      }
+    },
+    "catalogue_wholesale_professionnel": {
+      "contenu_obligatoire": [
+        "Présentation marque (1 page)",
+        "Catalogue produits avec photos professionnelles",
+        "Grille tarifaire wholesale claire",
+        "Conditions minimum de commande",
+        "Délais de production et livraison",
+        "Politique retours wholesale",
+        "Informations de contact dédiées"
+      ],
+      "créer_le_catalogue": {
+        "outil": "Canva Pro — templates 'Product Catalog' professionnels",
+        "format": "PDF envoyé par email ou lien téléchargeable"
+      }
+    },
+    "plateformes_wholesale_en_ligne": {
+      "faire_com": {
+        "description": "La plus grande plateforme wholesale en ligne — boutiquier se connecte et commande directement",
+        "avantages": "Exposition à 700 000+ boutiques B2B, pas de frais fixes",
+        "commission": "15% sur premières commandes, 0% sur réapprovisionnements",
+        "idéal_pour": "Art prints, décoration, mode — très actif en Amérique du Nord et Europe"
+      },
+      "abound": {
+        "description": "Alternative à Faire pour boutiques américaines",
+        "commission": "15% frais plateforme"
+      },
+      "tundra": {
+        "description": "Wholesale sans commission — modèle économique différent",
+        "avantage": "0% commission"
+      }
+    },
+    "processus_vente_b2b": {
+      "prospection": [
+        "Identifier 20 cibles locales par mois (boutiques, hôtels, etc.)",
+        "Rechercher le contact décideur (propriétaire, directeur artistique)",
+        "Premier contact : DM Instagram ou email personnalisé"
+      ],
+      "email_prospection_boutique": {
+        "objet": "Collaboration Art Canvas — Kallok's Arts × [Nom Boutique]",
+        "corps": "Bonjour [Prénom],\n\nJe m'appelle [Prénom] de Kallok's Arts, une marque spécialisée en art canvas contemporain.\n\nEn visitant votre boutique [Instagram/en personne], j'ai remarqué que notre style artistique s'intègrerait parfaitement à votre espace.\n\nNous proposons une gamme wholesale avec un minimum de commande accessible ([X]$) et des marges attrayantes pour vos clients (60% marge retail suggérée).\n\nPuis-je vous envoyer notre catalogue ou vous appeler 15 minutes cette semaine ?\n\nCordialement,\n[Nom]\nKallok's Arts\n[Site] | [Instagram]"
+      },
+      "suivi_séquence": [
+        "Email J0 : Premier contact",
+        "Email J4 : Suivi avec 1 exemple produit (image attachée)",
+        "Email J10 : Dernière relance détendue",
+        "Pause 30 jours puis recontact si tendances nouvelles"
+      ]
+    },
+    "programme_revendeurs": {
+      "description": "Créer un réseau de revendeurs affiliés qui font la promotion de vos produits dans leur réseau local.",
+      "structure": {
+        "commission": "15-20% sur chaque vente générée",
+        "matériaux_fournis": "Photos HD, descriptions, miniature catalogue",
+        "tracking": "Code promo unique par revendeur"
+      },
+      "recrutement": [
+        "Décorateurs d'intérieur indépendants",
+        "Home stagers",
+        "Blogueurs décoration",
+        "Photographes immobiliers"
+      ]
+    }
+  }
+}

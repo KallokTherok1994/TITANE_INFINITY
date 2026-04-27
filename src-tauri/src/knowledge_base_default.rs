@@ -285,6 +285,24 @@ const CREATION_IDENTITE_VISUELLE_MARQUE: &str =
 const FINANCES_TRESORERIE_ECOMMERCE: &str =
     include_str!("../../data/knowledge_base/default/finances_tresorerie_ecommerce.json");
 
+// ── v31.2.13 expansion — phase 23 (lancement-produit, psychologie-achat, automatisation, tendances-design, wholesale-b2b, strategie-prix, multi-canal, copywriting) ─
+const LANCEMENT_PRODUIT_CAMPAGNE_MARKETING: &str =
+    include_str!("../../data/knowledge_base/default/lancement_produit_campagne_marketing.json");
+const PSYCHOLOGIE_ACHAT_NEUROMARKETING: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_achat_neuromarketing.json");
+const AUTOMATISATION_WORKFLOWS_ECOMMERCE: &str =
+    include_str!("../../data/knowledge_base/default/automatisation_workflows_ecommerce.json");
+const TENDANCES_MARCHE_DESIGN_2025_2026: &str =
+    include_str!("../../data/knowledge_base/default/tendances_marche_design_2025_2026.json");
+const WHOLESALE_B2B_BOUTIQUES_PHYSIQUES: &str =
+    include_str!("../../data/knowledge_base/default/wholesale_b2b_boutiques_physiques.json");
+const STRATEGIE_PRIX_RENTABILITE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/strategie_prix_rentabilite_avancee.json");
+const MARKETPLACE_MULTI_CANAL_EXPANSION: &str =
+    include_str!("../../data/knowledge_base/default/marketplace_multi_canal_expansion.json");
+const COPYWRITING_PERSUASIF_VENTE: &str =
+    include_str!("../../data/knowledge_base/default/copywriting_persuasif_vente.json");
+
 const FREELANCE_CONSULTING_PREMIUM: &str =
     include_str!("../../data/knowledge_base/default/freelance_consulting_premium.json");
 const INFOPRODUITS_FORMATIONS_EN_LIGNE: &str =
@@ -783,6 +801,36 @@ impl DefaultKnowledgeBase {
             "finances_tresorerie_ecommerce",
             FINANCES_TRESORERIE_ECOMMERCE,
         ),
+        // v31.2.13 expansion — phase 23
+        (
+            "lancement_produit_campagne_marketing",
+            LANCEMENT_PRODUIT_CAMPAGNE_MARKETING,
+        ),
+        (
+            "psychologie_achat_neuromarketing",
+            PSYCHOLOGIE_ACHAT_NEUROMARKETING,
+        ),
+        (
+            "automatisation_workflows_ecommerce",
+            AUTOMATISATION_WORKFLOWS_ECOMMERCE,
+        ),
+        (
+            "tendances_marche_design_2025_2026",
+            TENDANCES_MARCHE_DESIGN_2025_2026,
+        ),
+        (
+            "wholesale_b2b_boutiques_physiques",
+            WHOLESALE_B2B_BOUTIQUES_PHYSIQUES,
+        ),
+        (
+            "strategie_prix_rentabilite_avancee",
+            STRATEGIE_PRIX_RENTABILITE_AVANCEE,
+        ),
+        (
+            "marketplace_multi_canal_expansion",
+            MARKETPLACE_MULTI_CANAL_EXPANSION,
+        ),
+        ("copywriting_persuasif_vente", COPYWRITING_PERSUASIF_VENTE),
         ("freelance_consulting_premium", FREELANCE_CONSULTING_PREMIUM),
         (
             "infoproduits_formations_en_ligne",

@@ -1,0 +1,167 @@
+{
+  "category": "tendances_marche_design_2025_2026",
+  "version": "31.3.0",
+  "title": "Tendances Marché Design, Décoration & Mode 2025-2026",
+  "summary": "Analyse complète des tendances décoration intérieure, art mural, mode et design pour 2025-2026. Couleurs Pantone, styles architecturaux dominants, matériaux tendance, niches e-commerce porteuses, comportements consommateurs émergents. Base de données pour orienter les collections Kallok's Arts et les boutiques e-commerce.",
+  "content": {
+    "tendances_décoration_2025_2026": {
+      "couleur_pantone_2025": {
+        "couleur": "Mocha Mousse — Pantone 17-1230",
+        "hex": "#A0785A",
+        "description": "Brun chaud doux, évocateur de confort et de luxe discret. La couleur phare de 2025.",
+        "implications_produits": [
+          "Canvas avec tonalités brun/terracotta/mocha très porteurs",
+          "Palette chaudes (rust, copper, warm beige) — préférer aux palettes froides",
+          "Associations gagnantes : Mocha + crème + vert sauge + noir mat"
+        ]
+      },
+      "palettes_tendance_2026": [
+        {
+          "nom": "Earthy Warmth",
+          "couleurs": ["Terracotta", "Sable chaud", "Vert olive", "Brun caramel"],
+          "ambiance": "Connexion à la nature, artisanat, chaleur",
+          "produits_canvas": "Abstraits organiques, motifs botaniques, paysages naturels"
+        },
+        {
+          "nom": "Quiet Luxury",
+          "couleurs": ["Beige chaud", "Crème ivory", "Champagne", "Gris warm"],
+          "ambiance": "Minimalisme premium, sophistication discrète",
+          "produits_canvas": "Art minimaliste en ligne, silhouettes épurées, typographie artistique"
+        },
+        {
+          "nom": "Bold Maximalism",
+          "couleurs": ["Bleu cobalt", "Vert émeraude", "Or", "Rouge bordeaux"],
+          "ambiance": "Osé, expressif, coloré, éclectique",
+          "produits_canvas": "Art abstrait expressionniste, pop art revisité, couleurs saturées"
+        },
+        {
+          "nom": "Moody Botanicals",
+          "couleurs": ["Vert foncé forêt", "Bordeaux", "Brun tabac", "Crème"],
+          "ambiance": "Nature sombre et luxuriante, jungle intérieure",
+          "produits_canvas": "Illustrations botaniques détaillées, feuillages tropicaux"
+        }
+      ],
+      "styles_décoration_dominants": [
+        {
+          "style": "Japandi",
+          "description": "Fusion japonaise + scandinave. Minimalisme, naturel, zen, fonctionnel.",
+          "produits_porteurs": "Art minimaliste lignes simples, encre sur papier, bambou, nature stylisée"
+        },
+        {
+          "style": "Biophilic Design",
+          "description": "Intégration de la nature dans l'espace de vie — plantes, bois, pierre, eau.",
+          "produits_porteurs": "Canvas botaniques, forêts, paysages naturels, abstrait organique"
+        },
+        {
+          "style": "Maximalism Curated",
+          "description": "Mélange audacieux mais cohérent de patterns, couleurs et textures.",
+          "produits_porteurs": "Art coloré expressif, gallery walls, patterns géométriques"
+        },
+        {
+          "style": "Coastal Grandmother",
+          "description": "Tendance TikTok — décoration côtière douce, lin, bois flotté, blanc cassé.",
+          "produits_porteurs": "Canvas paysages marins, illustrations nautiques douces"
+        },
+        {
+          "style": "Dark Academia",
+          "description": "Ambiance bibliothèque, tons sombres, velours, bois sombre.",
+          "produits_porteurs": "Illustrations architecturales, cartes géographiques, portraits artistiques"
+        }
+      ]
+    },
+    "niches_ecommerce_porteurs_2025_2026": {
+      "art_décoration": [
+        {
+          "niche": "Gallery Wall Sets",
+          "croissance": "↑ forte — TikTok/Pinterest très viral",
+          "produit": "Set 3-5 prints assortis pour mur galerie",
+          "prix_moyen": "79-199$"
+        },
+        {
+          "niche": "Abstract Warm Art",
+          "croissance": "↑ stable — tendance durable",
+          "produit": "Canvas abstraits tons chauds (terracotta, mocha)",
+          "prix_moyen": "49-129$"
+        },
+        {
+          "niche": "Botanical Illustrations",
+          "croissance": "↑ croissante",
+          "produit": "Prints botaniques détaillés, séries plantes",
+          "prix_moyen": "29-79$"
+        },
+        {
+          "niche": "Custom Text Art",
+          "croissance": "↑ croissante — personnalisation tendance",
+          "produit": "Prints avec prénoms, citations, coordonnées GPS",
+          "prix_moyen": "39-99$"
+        },
+        {
+          "niche": "Celestial & Astrology Art",
+          "croissance": "↑ très forte — génération Z/Millennials",
+          "produit": "Cartes étoiles, zodiaque, lune, astronomie",
+          "prix_moyen": "29-79$"
+        }
+      ],
+      "mode_print_on_demand": [
+        {
+          "niche": "Graphic Tees Niche",
+          "croissance": "Stable — marché saturé mais niches rentables",
+          "angle": "Niches super-précises : cat moms, plant dads, nurses, etc.",
+          "prix_moyen": "34-55$"
+        },
+        {
+          "niche": "Sustainable Fashion Message",
+          "croissance": "↑ forte — conscience environnementale",
+          "angle": "Messages éco-responsables, nature, durabilité",
+          "prix_moyen": "39-65$"
+        },
+        {
+          "niche": "Cottagecore & Fairy Aesthetic",
+          "croissance": "↑ — forte communauté TikTok",
+          "angle": "Illustrations florales, nature romantique, champignons",
+          "prix_moyen": "34-59$"
+        }
+      ]
+    },
+    "comportements_consommateurs_2025": {
+      "tendances_achat": [
+        "Achat mobile dominant : 72% des achats e-commerce en 2025 sont mobiles",
+        "Recherche visuelle : TikTok et Pinterest = nouveaux moteurs de recherche produits",
+        "Social commerce : achat direct depuis Instagram/TikTok sans quitter l'app",
+        "Authenticité > Perfection : contenu brut et authentique performe mieux",
+        "Conscience valeurs : 67% des Millennials préfèrent marques avec mission claire",
+        "Paiement fractionné : Klarna/Afterpay augmente AOV de 20-40%"
+      ],
+      "gen_z_spécifique": {
+        "note": "Gen Z (18-28 ans) représente 25% du pouvoir d'achat en 2025",
+        "caractéristiques": [
+          "TikTok = première source de découverte produit",
+          "Méfiance publicité directe → UGC et authenticité essentiels",
+          "Valeurs : durabilité, inclusivité, transparence, DIY",
+          "Canal préféré : DM Instagram, TikTok comments > email"
+        ]
+      }
+    },
+    "mots_clés_seo_tendance_2025": {
+      "art_décoration": [
+        "canvas mural abstrait",
+        "décoration salon tendance 2025",
+        "gallery wall ideas",
+        "art print boho",
+        "japandi wall art",
+        "moody botanical print",
+        "terracotta art canvas",
+        "minimaliste mural",
+        "gallery wall ensemble"
+      ],
+      "volume_recherche_canada": {
+        "wall art": "40 500/mois",
+        "canvas print": "33 100/mois",
+        "art print": "27 100/mois",
+        "home decor canvas": "8 100/mois",
+        "canvas mural": "2 900/mois (FR)",
+        "décoration murale": "5 400/mois (FR)"
+      }
+    }
+  }
+}

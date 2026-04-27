@@ -1,0 +1,127 @@
+{
+  "category": "automatisation_workflows_ecommerce",
+  "version": "31.3.0",
+  "title": "Automatisation & Workflows E-commerce — Systèmes Sans Intervention Manuelle",
+  "summary": "Systèmes d'automatisation complète pour boutique e-commerce solo : Zapier, Make (Integromat), outils no-code, automatisation service client, reporting automatique, flux de commandes, gestion stock, notifications. Objectif : 80% des tâches répétitives automatisées.",
+  "content": {
+    "philosophie_automatisation": {
+      "règle_80_20_temps": "80% de votre temps doit être consacré à ce qui génère de la valeur (création, marketing, stratégie). L'automatisation libère ce temps en prenant en charge les tâches répétitives.",
+      "audit_temps_préalable": "Lister toutes les tâches hebdomadaires. Identifier celles < 5 minutes, répétitives, et suivant un processus fixe → candidats à l'automatisation.",
+      "outils_clés": [
+        {"outil": "Zapier", "coût": "Gratuit (100 tâches/mois) / 19$/mois (starter)", "usage": "Connecter apps sans code — 5000+ intégrations"},
+        {"outil": "Make (Integromat)", "coût": "Gratuit (1000 ops/mois) / 9$/mois", "usage": "Automatisations plus complexes, visuelles"},
+        {"outil": "Klaviyo", "coût": "Gratuit (500 contacts)", "usage": "Automatisation email marketing e-commerce"},
+        {"outil": "Printful", "coût": "Gratuit", "usage": "Automatisation production et expédition 100%"},
+        {"outil": "Shopify/Etsy + Printful", "coût": "Intégré", "usage": "Commande → Production → Expédition sans intervention"}
+      ]
+    },
+    "automatisations_prioritaires": {
+      "flux_commande_complet": {
+        "description": "De la commande client à la livraison — zéro action manuelle",
+        "flux": [
+          "1. Client achète sur Etsy/Wix",
+          "2. Commande transmise automatiquement à Printful",
+          "3. Printful produit et expédie",
+          "4. Numéro de tracking envoyé au client automatiquement",
+          "5. Email post-achat déclenché par Klaviyo (J+1 après commande)",
+          "6. Rappel avis déclenché automatiquement (J+7 après livraison estimée)"
+        ],
+        "résultat": "0 minutes de travail par commande standard"
+      },
+      "automatisation_service_client": {
+        "réponses_automatiques_étsy": {
+          "message_bienvenue": "Message automatique Etsy : 'Bonjour ! Merci pour votre commande. Elle sera traitée sous 24h. N'hésitez pas à me contacter si besoin 😊'",
+          "FAQ_automatique": "Utiliser les réponses sauvegardées Etsy pour : délais, tracking, tailles, politique retour"
+        },
+        "chatbot_wix": {
+          "outil": "Wix Chat ou Tidio (gratuit jusqu'à 100 conversations)",
+          "réponses_programmées": [
+            "Question 'délai livraison' → Réponse automatique avec délais",
+            "Question 'retour échange' → Politique retour complète",
+            "Question 'taille canvas' → Guide dimensions avec photos",
+            "Hors horaires → 'Je suis absent, réponse sous 24h. Voici notre FAQ : [lien]'"
+          ]
+        }
+      },
+      "automatisation_réseaux_sociaux": {
+        "outils": [
+          {"outil": "Buffer", "coût": "Gratuit (3 comptes, 10 posts planifiés)", "usage": "Planifier posts Instagram/Facebook"},
+          {"outil": "Later", "coût": "Gratuit (14 posts/mois)", "usage": "Planification visuelle Instagram"},
+          {"outil": "Metricool", "coût": "Gratuit", "usage": "Planification + analytics multi-réseaux"}
+        ],
+        "workflow_création_contenu": [
+          "Lundi matin (2h) : Créer tout le contenu de la semaine (7 posts, 5 Reels scripts)",
+          "Lundi après-midi : Planifier et programmer dans Buffer/Later",
+          "Du mardi au dimanche : Engager (répondre commentaires, DM) — 30 min/j max",
+          "Résultat : Présence constante avec 2.5h de travail/semaine au lieu de 14h"
+        ]
+      },
+      "automatisation_reporting": {
+        "dashboard_automatique": {
+          "outil": "Looker Studio (Google) — gratuit",
+          "sources_données": ["Google Analytics 4", "Facebook Ads Manager API", "Etsy Stats API (via outils tiers)", "Klaviyo"],
+          "métriques_auto_actualisées": ["CA quotidien/hebdo/mensuel", "ROAS par canal", "Nouveaux abonnés email", "Top produits", "Taux conversion"]
+        },
+        "email_rapport_auto": {
+          "outil": "Klaviyo ou Google Sheets + Zapier",
+          "fréquence": "Rapport hebdo automatique chaque lundi matin à 8h",
+          "contenu": "Résumé : ventes, dépenses pub, ROAS, nouveaux clients, best-sellers"
+        }
+      },
+      "automatisations_zapier_recommandées": [
+        {
+          "zap": "Etsy New Order → Google Sheet (log commandes)",
+          "valeur": "Historique complet commandes pour comptabilité"
+        },
+        {
+          "zap": "Etsy New Review → Email notification + Slack",
+          "valeur": "Répondre vite aux avis (positifs et négatifs)"
+        },
+        {
+          "zap": "Nouveau abonné Klaviyo → Tag dans Google Sheet CRM",
+          "valeur": "Suivi manuel clients VIP"
+        },
+        {
+          "zap": "Facebook Lead Ad → Klaviyo list add",
+          "valeur": "Leads pubs directement dans la séquence email"
+        },
+        {
+          "zap": "Etsy Order (valeur > 100$) → SMS personnel",
+          "valeur": "Alerte sur grosses commandes pour VIP treatment"
+        }
+      ]
+    },
+    "seo_automatisation_contenu": {
+      "blog_automatisation": {
+        "outil_IA": "ChatGPT / Claude pour générer des brouillons d'articles SEO",
+        "workflow": [
+          "Identifier 5 mots-clés cibles (SEMrush, Ubersuggest)",
+          "Prompt IA : 'Rédige un article de 800 mots sur [mot-clé] pour une boutique de canvas art'",
+          "Réviser et personnaliser (15 min)",
+          "Publier sur Wix blog ou Etsy blog",
+          "Partager sur Pinterest (trafic SEO long terme)"
+        ],
+        "rythme_recommandé": "1 article/semaine = 52 articles/an = trafic organique cumulatif"
+      }
+    },
+    "assistant_virtuel_delegation": {
+      "quand_recruter_va": "Dès que votre boutique génère > 2 000$/mois — votre temps vaut plus que le coût d'un VA.",
+      "tâches_à_déléguer_va": [
+        "Service client basique (répondre aux messages Etsy)",
+        "Publication réseaux sociaux (programmer les posts que vous créez)",
+        "Recherche de tendances décoration",
+        "Réponse aux avis clients",
+        "Traitement des remboursements simples"
+      ],
+      "plateformes_trouver_va": [
+        {"plateforme": "Upwork", "coût": "10-25$/h", "profil": "VA international anglophone/francophone"},
+        {"plateforme": "OnlineJobs.ph", "coût": "5-12$/h", "profil": "VA Philippines — excellent rapport qualité/prix"},
+        {"plateforme": "Fiverr", "coût": "Variable", "profil": "Tâches ponctuelles, pas récurrent"}
+      ],
+      "coût_mensuel_estimé": {
+        "10h_par_semaine": "200-400$/mois selon profil",
+        "retour_sur_investissement": "Si le VA libère 10h que vous utilisez pour générer 1 000$ de ventes → ROI = +600$/mois net"
+      }
+    }
+  }
+}

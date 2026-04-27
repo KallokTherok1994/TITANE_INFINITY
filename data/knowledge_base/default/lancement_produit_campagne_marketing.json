@@ -1,0 +1,137 @@
+{
+  "category": "lancement_produit_campagne_marketing",
+  "version": "31.3.0",
+  "title": "Lancement Produit & Campagne Marketing — De Zéro à 10 000$ en 90 Jours",
+  "summary": "Playbook complet de lancement produit e-commerce : stratégie pré-lancement (waitlist, teasing), lancement (J-7 à J+30), post-lancement (scale). Campagnes Facebook/Instagram, email sequences, contenu organique coordonné. Templates et calendriers prêts à l'emploi pour boutique art/décoration/mode.",
+  "content": {
+    "framework_lancement_90j": {
+      "phase_prelancement": {
+        "durée": "30 jours avant le lancement",
+        "objectifs": ["Construire une audience", "Créer de l'anticipation", "Collecter des emails", "Valider la demande"],
+        "actions": [
+          {
+            "semaine": "S-4",
+            "actions": [
+              "Teaser mystère sur Instagram/TikTok — 'Quelque chose arrive...'",
+              "Créer une landing page waitlist simple (Mailchimp ou Klaviyo)",
+              "Story poll Instagram — 'Quelle collection préférez-vous ?'",
+              "Lancer une mini-campagne Facebook 'early access' (budget 5-10$/j)"
+            ]
+          },
+          {
+            "semaine": "S-3",
+            "actions": [
+              "Révéler partiellement le produit (gros plan, couleur, ambiance)",
+              "Email à liste existante — 'Tu seras le premier à savoir'",
+              "Contacter 5-10 micro-influenceurs décoration (10K-100K abonnés)",
+              "Préparer tous les créatifs publicitaires du lancement"
+            ]
+          },
+          {
+            "semaine": "S-2",
+            "actions": [
+              "Révéler le produit complet sur réseaux sociaux",
+              "Email waitlist — accès anticipé -15%",
+              "Lancer campagne retargeting sur visiteurs landing page",
+              "Publier article blog SEO sur la thématique du produit"
+            ]
+          },
+          {
+            "semaine": "S-1",
+            "actions": [
+              "Countdown Stories — '7 jours, 6 jours...'",
+              "Email J-7 puis J-3 puis J-1",
+              "Activer partenariats influenceurs (posts prévus J-lancement)",
+              "Vérifier toutes les intégrations Printful/Etsy/Wix fonctionnelles"
+            ]
+          }
+        ]
+      },
+      "phase_lancement": {
+        "durée": "J0 à J+14",
+        "j0_checklist": [
+          "Email 'C'est lancé !' à toute la liste (objet : 🎉 C'est enfin là !)",
+          "Post Instagram + Reel de lancement",
+          "Story swipe-up vers boutique",
+          "Activer campagnes Facebook Conversion (budget journalier 20-50$)",
+          "Post Facebook + Groupe décoration",
+          "TikTok vidéo lancement",
+          "Pinterest : épingles nouvelles collections",
+          "Stories toutes les 2h (unboxing, réactions, mise en scène)"
+        ],
+        "emails_sequence_lancement": [
+          {"jour": "J0", "objet": "🎉 C'est lancé — Accès Early Bird (-15% encore 48h)", "cta": "Voir la collection"},
+          {"jour": "J1", "objet": "Les premières commandes sont arrivées ! [photo client]", "cta": "Rejoins-les"},
+          {"jour": "J3", "objet": "Il reste [X] exemplaires — offre Early Bird expire ce soir", "cta": "Commander maintenant"},
+          {"jour": "J7", "objet": "Une semaine et déjà [N] familles ont transformé leur espace ✨", "cta": "Voir les témoignages"},
+          {"jour": "J14", "objet": "Dernière chance — fin de la promo de lancement", "cta": "Offre finale"}
+        ],
+        "budget_pub_lancement_recommandé": {
+          "J0_J3": "50-100$/j — momentum max",
+          "J4_J7": "30-50$/j — maintien",
+          "J8_J14": "20-30$/j — consolidation",
+          "objectif_ROAS_cible": "> 3x sur la période lancement"
+        }
+      },
+      "phase_post_lancement": {
+        "durée": "J15 à J90",
+        "actions": [
+          "Analyser les données : quel créatif a le mieux performé ?",
+          "Scaler le budget sur les meilleures audiences (LAL acheteurs)",
+          "Collecter et publier les UGC clients reçus",
+          "Lancer une campagne 'Best-sellers' sur les produits phares du lancement",
+          "Séquence email post-achat → demande avis → cross-sell",
+          "Créer du contenu SEO basé sur les requêtes générées par le lancement"
+        ]
+      }
+    },
+    "templates_contenus_lancement": {
+      "caption_reel_lancement": {
+        "hook": "Cette pièce manquait dans votre salon depuis toujours.",
+        "corps": "Notre nouvelle collection [Nom] est enfin disponible 🎨\n\nConçue pour transformer votre espace en véritable galerie d'art, chaque canvas est imprimé avec des encres UV sur toile premium.\n\n✨ Qualité musée, prix accessible\n🚀 Livraison rapide\n🎁 -15% pour les 48 premières heures\n\n👆 Lien en bio pour découvrir toute la collection",
+        "hashtags": "#nouveautés #decointerieur #artcanvas #homedecor #wallart #KalloksArts #decoration #canvasmural"
+      },
+      "script_video_lancement_60s": [
+        "0-3s : Hook — 'Attends, regarde ça...' (zoom sur le canvas dans un beau salon)",
+        "3-10s : Révélation produit — mise en scène lifestyle élégante",
+        "10-25s : Détails qualité — gros plan texture, couleurs, encres",
+        "25-40s : Témoignages / réactions (si disponibles) ou fondateur face caméra",
+        "40-55s : Offre lancement — -15%, lien en bio, stock limité",
+        "55-60s : CTA final fort — 'Rejoins les [N] qui ont déjà commandé'"
+      ]
+    },
+    "micro_influenceurs_strategie": {
+      "profil_cible": "10 000 à 200 000 abonnés, niche décoration/maison/lifestyle, taux engagement > 3%",
+      "comment_trouver": [
+        "Recherche Instagram #decomurale #homedecor Canada/France",
+        "Plateformes : Aspire, CreatorIQ, ou outreach manuel DM Instagram",
+        "Chercher des créateurs qui ont déjà posté du contenu décoration maison"
+      ],
+      "proposition_collaboration": {
+        "nano_influenceur_1K_10K": "Produit gratuit en échange d'un post + story",
+        "micro_influenceur_10K_100K": "Produit gratuit + 50-150$ ou commission 15%",
+        "mid_influenceur_100K_500K": "150-500$ + produit gratuit"
+      },
+      "brief_influenceur_template": "Bonjour [Prénom], je suis [Nom] de Kallok's Arts. J'adore ton contenu sur la décoration intérieure ! Je t'envoie un de nos canvas premium [lien produit] et j'adorerais voir comment tu le mets en valeur dans ton espace. En échange, un post/story authentique de ta part serait parfait. Aucun script imposé — juste ton ressenti sincère. Intéressé(e) ? 😊"
+    },
+    "optimisation_fiche_etsy_lancement": {
+      "titre_optimisé": {
+        "structure": "[Mot-clé principal] [Format] [Style] [Usage] — [Bénéfice]",
+        "exemple": "Canvas Mural Abstrait Moderne 50x70 cm — Décoration Salon Chambre — Art Print Premium Kallok's Arts",
+        "longueur_cible": "120-140 caractères (maximum Etsy)"
+      },
+      "description_structure": [
+        "Paragraphe 1 (50 mots) : Accroche émotionnelle — ce que l'acheteur va ressentir",
+        "Paragraphe 2 (75 mots) : Détails produit — dimensions, matériaux, qualité impression",
+        "Paragraphe 3 (50 mots) : Process de commande et livraison",
+        "Paragraphe 4 (50 mots) : Politique satisfait ou remplacé",
+        "Paragraphe 5 : Tags #hashtags Etsy (13 maximum)"
+      ],
+      "13_tags_etsy_canvas_art": [
+        "canvas mural", "wall art", "décoration salon", "art abstrait", "home decor",
+        "impression toile", "décoration moderne", "cadeau déco", "art print",
+        "tableau mural", "décoration chambre", "toile déco", "art contemporain"
+      ]
+    }
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "category": "strategie_prix_rentabilite_avancee",
+  "version": "31.3.0",
+  "title": "Stratégie de Prix & Rentabilité Avancée — Maximiser Marges et Valeur Perçue",
+  "summary": "Stratégies de pricing psychologique, positionnement premium, élasticité prix, bundles, abonnements, promotions stratégiques. Méthodes pour augmenter les marges sans perdre de clients, optimiser AOV, et construire un modèle de revenus durable pour boutique e-commerce.",
+  "content": {
+    "principes_pricing_psychologique": {
+      "anchoring_prix": {
+        "définition": "Présenter d'abord un prix élevé pour que les prix suivants semblent raisonnables.",
+        "exemple_canvas": {
+          "mauvais": "Canvas 50$ (seule option)",
+          "bon": "Canvas XL 149$ | Canvas Standard 89$ | Canvas Small 49$",
+          "résultat": "Le canvas à 89$ semble 'raisonnable' comparé au 149$. Ventes du milieu +40%."
+        }
+      },
+      "prix_charme": {
+        "règle": "Terminer par 7 ou 9 mais pas .99 pour premium",
+        "exemples": {
+          "économique": "Prix .99 (ex: 49.99$) — perçu comme promo/économique",
+          "premium": "Prix rond ou .0 (ex: 89$ ou 87$) — perçu comme artisanal/premium",
+          "art_canvas_recommandé": "89$ plutôt que 89.99$ — plus authentique, artisanal"
+        }
+      },
+      "prix_100_sous": {
+        "règle": "Sous 100$ : montrer réduction en % (économisez 30%). Au-dessus de 100$ : montrer réduction en $ (économisez 45$).",
+        "exemple": "79$ → 55$ : 'Économisez 30%' (impactant). 189$ → 144$ : 'Économisez 45$' (impactant)."
+      }
+    },
+    "structure_prix_canvas_art": {
+      "tiers_recommandés": [
+        {
+          "tier": "Entry Level",
+          "format": "5×7 ou 8×10 print",
+          "prix_cible": "19-39$",
+          "objectif": "Acquérir de nouveaux clients, ventes premier achat"
+        },
+        {
+          "tier": "Core Offer",
+          "format": "12×16 ou 16×20 canvas",
+          "prix_cible": "69-99$",
+          "objectif": "Ventes principales, marge optimale, bestsellers"
+        },
+        {
+          "tier": "Premium",
+          "format": "24×36 ou canvas gallery wrap 1.5 pouce",
+          "prix_cible": "129-199$",
+          "objectif": "AOV élevé, ancrage pour valoriser la gamme entière"
+        },
+        {
+          "tier": "Statement Piece",
+          "format": "36×48 ou Triptique",
+          "prix_cible": "249-499$",
+          "objectif": "Signalement premium, rareté, prestige de marque"
+        }
+      ],
+      "stratégie_bundle": {
+        "règle": "Bundle = 3 produits = économie 15-20% vs à l'unité",
+        "exemples": [
+          "Set Gallery Wall 3 pieces (8×10) : 79$ (vs 99$ à l'unité)",
+          "Collection Saison (5 prints) : 149$ (vs 175$ à l'unité)",
+          "Bundle Chambre Adulte (canvas + deux petits prints) : 189$"
+        ],
+        "impact_aov": "Les bundles augmentent l'AOV moyen de 35-60%"
+      }
+    },
+    "positionnement_premium": {
+      "justifier_prix_élevé": [
+        "Matériaux premium : papier 300gsm ou canvas gallery wrap — mentionner explicitement",
+        "Processus artisanal : 'Chaque pièce est supervisée personnellement'",
+        "Encres archival quality : 'Résistent 75+ ans sans décoloration'",
+        "Packaging premium : boîte rigide, papier de soie, carte manuscrite",
+        "Édition limitée : 'Tirage limité à 50 exemplaires' — exclure des offres promo"
+      ],
+      "signaux_premium_fiche_produit": [
+        "Photos lifestyle haute qualité (décoration réelle, pas fond blanc seul)",
+        "Texte soigné, pas de fautes, vocabulaire artisanal",
+        "Certifications (si applicable) : matériaux éco, made in Canada",
+        "Reviews avec photos (UGC = validation sociale)"
+      ]
+    },
+    "promotions_stratégiques_calendrier": {
+      "règle_or": "Ne jamais baisser le prix de base. Promotions sur prix spéciaux (bundles) ou avec raison valable (fêtes).",
+      "calendrier_promo_annuel": [
+        {
+          "période": "Fête des Mères (mai)",
+          "offre": "Livraison gratuite + carte manuscrite offerte",
+          "timing_campagne": "3 semaines avant"
+        },
+        {
+          "période": "Fête des Pères (juin)",
+          "offre": "Set 2 canvas achetés = 1 petit print offert",
+          "timing_campagne": "2 semaines avant"
+        },
+        {
+          "période": "Back to School / Rentrée (août-sept)",
+          "offre": "Décoration bureau/chambre étudiante — bundle spécial",
+          "timing_campagne": "Début août"
+        },
+        {
+          "période": "Black Friday (novembre)",
+          "offre": "30% sur collections saisonnières (pas sur bestsellers permanents)",
+          "timing_campagne": "Email J-7, social J-3, reminder le jour J"
+        },
+        {
+          "période": "Fêtes de fin d'année (déc)",
+          "offre": "Bundle cadeau emballé + message personnalisé (premium price)",
+          "timing_campagne": "1er décembre → 20 décembre (dernier délai livraison)"
+        },
+        {
+          "période": "Saint-Valentin (février)",
+          "offre": "Personnalisation initiales ou message amour — prix premium +20$",
+          "timing_campagne": "Jan 20 → Feb 10"
+        }
+      ],
+      "black_friday_stratégie_avancée": {
+        "semaine_avant": "Teasing email + social 'Vente exclusive pour abonnés en avant-première'",
+        "j_7_vip": "Offre exclusive 24h pour liste email (sentiment d'appartenance)",
+        "j_black_friday": "Offre publique — limiter dans le temps (48h max)",
+        "cyber_monday": "Dernière chance avec countdown timer",
+        "piège_à_éviter": "Ne pas brader les produits premium core — ça dévalorise la marque"
+      }
+    },
+    "test_ab_pricing": {
+      "comment_tester": {
+        "étsy": "Modifier prix sur 30 jours, comparer taux conversion avant/après",
+        "shopify": "Application Price Intelligently ou simple A/B manuel sur 2 listings similaires",
+        "règle": "Tester une variable à la fois. Attendre 30 jours pour données statistiquement valides."
+      },
+      "expériences_communes": [
+        "Prix 79$ vs 89$ : souvent ventes identiques → choisir 89$ (marge +12%)",
+        "Bundle vs unité : bundle augmente AOV mais peut réduire volume — analyser revenu total",
+        "Livraison gratuite incluse dans prix vs frais séparés : incluse dans prix augmente conversion"
+      ]
+    },
+    "modèles_revenus_récurrents": {
+      "abonnement_art": {
+        "concept": "1 print/mois livré chez l'abonné = 29-49$/mois",
+        "avantages": "CA prévisible, fidélisation extrême, engagement communautaire",
+        "mise_en_oeuvre": "Patreon ou Wix Pricing Plans + liste email exclusive abonnés"
+      },
+      "adhésion_vip": {
+        "concept": "Club VIP 5$/mois : accès early access collections, -15% permanent, behind-the-scenes",
+        "cible": "Clients récurrents qui aiment la marque — leur donner un sentiment d'appartenance",
+        "outil": "Patreon, Wix Pricing Plans, ou simple liste email segmentée"
+      },
+      "commissions_personnalisées": {
+        "concept": "Service haut de gamme : canvas personnalisé unique 299-999$",
+        "process": "Questionnaire client → proposition visuelle → paiement 50% dépôt → livraison → solde",
+        "canal": "Instagram DM ou formulaire contact Wix dédiée"
+      }
+    }
+  }
+}

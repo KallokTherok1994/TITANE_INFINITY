@@ -1,0 +1,141 @@
+{
+  "category": "psychologie_achat_neuromarketing",
+  "version": "31.3.0",
+  "title": "Psychologie de l'Achat & Neuromarketing E-commerce",
+  "summary": "Principes de psychologie cognitive et neuromarketing appliqués à l'e-commerce : biais cognitifs, déclencheurs émotionnels, architecture des choix, urgence/rareté, preuve sociale, ancrage, réciprocité. Applications pratiques pour fiches produit, publicités et tunnels de vente art/déco/mode.",
+  "content": {
+    "biais_cognitifs_achat": {
+      "biais_ancrage": {
+        "définition": "Le premier prix vu crée une référence mentale. Tout prix ultérieur est évalué par rapport à cette ancre.",
+        "applications": [
+          "Afficher un prix barré (Prix habituel : 79$ → Maintenant : 49$)",
+          "Présenter la version premium en premier sur votre catalogue",
+          "Mentionner le coût d'alternatives (vs 200$ pour un tableau de galerie)",
+          "Proposer 3 formats : petit (29$), moyen (49$), grand (79$) — le moyen devient l'ancre"
+        ],
+        "exemple_etsy": "Titre listing : 'Valeur estimée 80$ — Prix lancement 49$'"
+      },
+      "biais_rareté_urgence": {
+        "définition": "Ce qui est rare ou limité dans le temps est perçu comme plus désirable (FOMO — Fear of Missing Out).",
+        "déclencheurs_rareté": [
+          "Stock limité : 'Plus que 3 disponibles'",
+          "Edition limitée numérotée : 'Canvas #47/100'",
+          "Collection saisonnière : 'Disponible jusqu'au [date]'",
+          "Production artisanale : 'Fabriqué à la demande — délai 5 jours'"
+        ],
+        "déclencheurs_urgence": [
+          "Countdown timer sur landing page lancement",
+          "Offre flash 24h : 'Expire dans 18:24:07'",
+          "Prix augmente après X commandes : 'Prix Early Bird encore disponible pour 12 acheteurs'",
+          "Livraison garantie : 'Commander avant 14h = livré vendredi'"
+        ],
+        "éthique": "Utiliser des données réelles (stock Printful, temps limité authentique). La fausse rareté détruit la confiance à long terme."
+      },
+      "preuve_sociale": {
+        "définition": "Nous suivons le comportement des autres, surtout en situation d'incertitude.",
+        "formes": [
+          {"type": "Avis étoiles", "impact": "⭐⭐⭐⭐⭐ visible dès la liste produit Etsy — +25% clics estimés"},
+          {"type": "Nombre de ventes", "impact": "'5 847 ventes' sur Etsy — signal de popularité fort"},
+          {"type": "Photos clients UGC", "impact": "Photos authentiques dans leur maison = +40% conversion vs photos studio"},
+          {"type": "Témoignages spécifiques", "impact": "'Ce canvas a transformé mon salon gris en espace chaleureux' > 'Super produit'"},
+          {"type": "Followers réseaux", "impact": "10K+ followers = crédibilité immédiate"},
+          {"type": "Médias / presse", "impact": "'Tel que vu sur Décor Mag' — même petites mentions comptent"}
+        ],
+        "maximiser_preuve_sociale": [
+          "Email post-achat avec lien direct vers la page avis Etsy",
+          "Créer un highlight Instagram 'Avis clients'",
+          "Afficher le badge Star Seller Etsy dans les photos du listing",
+          "Screenshot témoignages Facebook → publier sur Instagram Stories"
+        ]
+      },
+      "réciprocité": {
+        "définition": "Lorsqu'on reçoit quelque chose, on ressent une obligation de rendre.",
+        "applications_ecommerce": [
+          "Offrir guide PDF gratuit 'Les 5 styles de décoration murale' en échange d'un email",
+          "Carte manuscrite dans le colis — génère des avis spontanés",
+          "Code promo -10% après 1er achat — stimule le 2e achat",
+          "Contenu éducatif gratuit sur Instagram — crée sentiment de dette positive"
+        ]
+      },
+      "effet_dotation": {
+        "définition": "On valorise davantage ce qu'on possède déjà ou ce qu'on 'considère comme nôtre'.",
+        "applications": [
+          "Configurateur de canvas : 'Visualise ton canvas dans ton salon' (Placeit ou AR preview)",
+          "Essai virtuel : 'Comment ce canvas rendrait dans ta pièce ?'",
+          "Période d'essai fictive : 'Commande, si tu n'es pas satisfait sous 30 jours = remboursé'",
+          "Personnalisation : permettre le choix de couleur/format = le client se l'approprie mentalement"
+        ]
+      },
+      "paradoxe_du_choix": {
+        "définition": "Trop de choix paralyse la décision (Barry Schwartz). Moins de choix = plus de conversions.",
+        "règles": [
+          "Proposer maximum 3 formats (pas 8)",
+          "Mettre en avant 1 produit recommandé ('Best-seller' ou 'Notre choix')",
+          "Limiter les options de personnalisation aux plus populaires",
+          "Page collection : maximum 20-30 produits affichés"
+        ]
+      },
+      "biais_confirmations": {
+        "définition": "Les gens cherchent des informations qui confirment ce qu'ils veulent croire.",
+        "application": "Si votre client visualise déjà le canvas dans son salon, votre contenu doit confirmer que c'est un bon choix : témoignages, garantie, photos lifestyle."
+      }
+    },
+    "neuromarketing_appliqué": {
+      "émotions_vs_logique": {
+        "neuroscience": "95% des décisions d'achat sont prises inconsciemment — les émotions précèdent la logique (Damasio, 1994).",
+        "implications": [
+          "Les images d'ambiance émouvantes convertissent mieux que les specs techniques",
+          "Les histoires activent plus de zones cérébrales que les données",
+          "Un client qui ressent quelque chose devant votre produit achète — le reste justifie"
+        ]
+      },
+      "couleurs_et_conversions": {
+        "bouton_CTA": "Orange et rouge augmentent les clics sur les CTA (urgence, action)",
+        "confiance": "Bleu dans les éléments de sécurité (paiement, garantie)",
+        "premium": "Noir et or pour les offres premium",
+        "boutique_art": "Palette neutre (blanc, beige, gris) pour mettre le produit en valeur"
+      },
+      "fluidité_cognitive": {
+        "principe": "Plus quelque chose est facile à traiter mentalement, plus on l'apprécie et lui fait confiance.",
+        "applications": [
+          "Noms produits simples et mémorables",
+          "Prix ronds ou proches du rond (49 vs 47.83)",
+          "Navigation boutique Wix/Etsy intuitive — 3 clics max vers achat",
+          "Descriptions sans jargon technique",
+          "Police lisible, contraste fort, espacement généreux"
+        ]
+      },
+      "storytelling_neuro": {
+        "principe": "Un récit active le cortex sensoriel (on ressent physiquement l'histoire).",
+        "structure_hero_journey_produit": [
+          "Le problème : 'Ton salon te semble fade et sans âme ?'",
+          "La rencontre : 'Découvre comment une seule œuvre peut tout changer'",
+          "La transformation : 'Nos clients décrivent une pièce comme 'enfin vivante' après l'installation'",
+          "L'invitation : 'Rejoins les [N] qui ont transformé leur espace'"
+        ]
+      }
+    },
+    "tunnel_vente_psychologie": {
+      "page_produit_hiérarchie_visuelle": {
+        "above_the_fold": "Photo hero lifestyle, titre accrocheur, prix avec ancre, bouton CTA visible sans scroll",
+        "zone_2": "Photos multiples (ambiance, détail, dimensions, mise en scène), bullet points bénéfices",
+        "zone_3": "Preuve sociale (avis, nombre ventes, témoignages), garanties",
+        "zone_4": "FAQ réduisant les objections, détails techniques, FAQ livraison",
+        "footer": "Cross-sell / Vous aimerez aussi"
+      },
+      "réduction_friction_paiement": [
+        "Badges sécurité visibles (SSL, PayPal, Visa/MC logos)",
+        "Politique retour claire et généreuse visible avant checkout",
+        "Option paiement en 4x (Klarna, Afterpay si disponible)",
+        "Guest checkout disponible (ne pas forcer création compte)",
+        "Autofill des adresses activé"
+      ],
+      "objections_courantes_canvas": {
+        "prix": "Réponse : 'Un tableau équivalent en galerie coûterait 200-500$. Kallok's Arts rend l'art accessible.'",
+        "qualité_impression": "Réponse : Photos gros plan + garantie 30 jours + témoignages avec photos",
+        "livraison_délai": "Réponse : 'Livraison 5-8 jours ouvrés. Suivi inclus. Emballage renforcé anti-dommages.'",
+        "bon_format": "Réponse : Guide dimensions avec visualisation (A4 = 21cm, lettre = 28cm, etc.)"
+      }
+    }
+  }
+}

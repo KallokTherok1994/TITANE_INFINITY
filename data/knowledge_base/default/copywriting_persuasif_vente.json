@@ -1,0 +1,180 @@
+{
+  "category": "copywriting_persuasif_vente",
+  "version": "31.3.0",
+  "title": "Copywriting Persuasif & Haute Conversion — Mots qui Vendent",
+  "summary": "Frameworks de copywriting éprouvés (AIDA, PAS, FAB, PASTOR, Hook-Story-CTA) pour fiches produit, publicités Facebook/Instagram, emails, landing pages, descriptions Etsy. Techniques de rédaction persuasive, mots déclencheurs émotionnels, hooks d'accroche, CTA efficaces. Exemples spécifiques pour canvas, art, décoration et mode.",
+  "content": {
+    "frameworks_copywriting": {
+      "AIDA": {
+        "signification": "Attention → Intérêt → Désir → Action",
+        "usage": "Fiches produit, emails, landing pages",
+        "structure": {
+          "Attention": "Accrocher avec un titre/hook fort qui arrête le scroll",
+          "Intérêt": "Développer ce qui rend le produit unique, contexte, histoire",
+          "Désir": "Créer l'envie : bénéfices, transformation, résultats, lifestyle",
+          "Action": "CTA clair et unique avec urgence si applicable"
+        },
+        "exemple_canvas": {
+          "Attention": "Votre salon mérite plus qu'une décoration ordinaire.",
+          "Intérêt": "Ce canvas abstrait aux tonalités terracotta chaleureuses a été créé pour transformer un espace — pas juste le décorer.",
+          "Désir": "Imaginez rentrer chez vous et sourire en voyant ce mur. Vos invités qui le remarquent instantanément. Cette sensation que votre espace vous ressemble vraiment.",
+          "Action": "Commandez avant jeudi pour une livraison avant le weekend."
+        }
+      },
+      "PAS": {
+        "signification": "Problème → Agitation → Solution",
+        "usage": "Publicités Facebook/Instagram, emails promotionnels, landing pages",
+        "structure": {
+          "Problème": "Identifier le problème que ressent le client — nommer sa douleur",
+          "Agitation": "Approfondir la frustration, rendre le problème plus réel et urgent",
+          "Solution": "Présenter votre produit comme la solution parfaite"
+        },
+        "exemple_décoration": {
+          "Problème": "Votre salon semble vide et impersonnel, mais vous ne savez pas quoi accrocher aux murs.",
+          "Agitation": "Vous scrollez Pinterest pendant des heures, vous adorez tout mais rien ne correspond vraiment à votre style. Les tableaux des grands magasins font 'générique'. Les oeuvres d'artistes réputés dépassent votre budget de loin.",
+          "Solution": "Kallok's Arts : Art original, fait à la main, prix accessible. Trouvez la pièce qui transforme votre espace — ou je la crée sur mesure pour vous."
+        }
+      },
+      "FAB": {
+        "signification": "Feature → Advantage → Benefit",
+        "usage": "Fiches produit Etsy, descriptions techniques",
+        "règle": "Ne jamais lister des features seules. Toujours connecter à un avantage et un bénéfice client.",
+        "exemples_canvas": [
+          {
+            "Feature": "Canvas gallery wrap 1.5 pouce d'épaisseur",
+            "Advantage": "Prêt à accrocher sans cadre supplémentaire",
+            "Benefit": "Économisez 30-80$ de cadre et installez en 5 minutes"
+          },
+          {
+            "Feature": "Encres UV archival quality",
+            "Advantage": "Résistance à la décoloration sur 75+ ans",
+            "Benefit": "Investissez dans une pièce qui durera toute une vie et se transmet"
+          },
+          {
+            "Feature": "Emballage sécurisé double épaisseur avec coins renforcés",
+            "Advantage": "Arrivée garantie sans dommage",
+            "Benefit": "Recevez votre commande en parfait état — sinon remplacement 100% gratuit"
+          }
+        ]
+      },
+      "PASTOR": {
+        "signification": "Problem → Amplify → Story → Transformation → Offer → Response",
+        "usage": "Emails longs, landing pages, pages About, posts Instagram longs",
+        "note": "Version avancée de PAS avec storytelling et transformation visibles"
+      },
+      "Hook_Story_CTA": {
+        "signification": "Hook (accroche) → Story (récit) → CTA (appel à l'action)",
+        "usage": "Reels Instagram, TikTok videos, stories, posts courts",
+        "structure": {
+          "Hook": "3 secondes pour arrêter le scroll — question provocante, déclaration surprenante, visuel choc",
+          "Story": "15-45 secondes de contenu qui donne de la valeur ou raconte quelque chose",
+          "CTA": "Action précise et simple : 'Lien en bio', 'Commenter OUI', 'Swipe up'"
+        },
+        "exemples_hooks_instagram": [
+          "Ce canvas a pris 3 jours à peindre. La livraison en a pris 2. Voici le résultat...",
+          "Combien coûte réellement la décoration de salon qui vous ressemble ? (je vous donne les chiffres)",
+          "POV : Vous rentrez chez vous après une longue journée et votre mur vous sourit...",
+          "La décoration la plus appréciée de mes clients cette année est... (révélation à la fin)",
+          "3 erreurs que font 90% des gens en décorant leur salon (et comment les éviter)"
+        ]
+      }
+    },
+    "copywriting_fiche_produit_etsy": {
+      "structure_titre_optimal": {
+        "formule": "[Mot-clé principal] + [Descripteur style] + [Descripteur taille/format] + [Complément différenciateur]",
+        "exemples": [
+          "Canvas Mural Abstrait Terracotta — Art Moderne Salon Chambre — 16×20 Gallery Wrap",
+          "Botanical Art Print Set of 3 — Minimalist Boho Wall Decor — Digital Download",
+          "Warm Abstract Canvas — Living Room Wall Art — Ready to Hang — Earthy Tones"
+        ],
+        "règles": [
+          "Mot-clé principal au début (SEO Etsy)",
+          "140 caractères max",
+          "Ne pas répéter les mots",
+          "Mots interdits Etsy : 'handmade by', 'artisanal', 'made with love' (trop génériques)"
+        ]
+      },
+      "structure_description_parfaite": {
+        "partie_1_hook": "2-3 lignes d'accroche émotionnelle. Pourquoi ce produit transforme-t-il un espace ?",
+        "partie_2_détails": "Spécifications techniques complètes (taille, matériaux, finition, délai)",
+        "partie_3_bénéfices": "Ce que l'acheteur gagne vraiment (gain de temps, valorisation espace, sentiment)",
+        "partie_4_processus": "Comment ça marche (commande → production → livraison)",
+        "partie_5_garantie": "Politique retour, satisfaction garantie, remplacement si dommages",
+        "partie_6_cta_soft": "Invitation à contacter pour personnalisation ou questions",
+        "exemple_complet": {
+          "hook": "Transformez votre salon avec une pièce d'art unique qui crée instantanément une ambiance chaleureuse et contemporaine.",
+          "détails": "Format : 16×20 pouces (40×50 cm). Canvas premium gallery wrap 1.5 pouce, prêt à accrocher. Encres archival resistantes 75 ans. Expédié roulé dans tube protecteur sécurisé.",
+          "bénéfices": "Fini les murs nus qui vous donnent l'impression d'un appartement temporaire. Cette pièce crée le foyer que vous méritez.",
+          "processus": "Commande → Production en 2-3 jours ouvrables → Expédition → Livraison en 5-12 jours (Canada) ou 10-21 jours (international).",
+          "garantie": "Arrivée endommagée ? Remplacement ou remboursement complet, zéro question. Je veux votre satisfaction totale.",
+          "cta": "Des questions sur tailles, couleurs ou personnalisation ? Envoyez-moi un message — je réponds sous 24h!"
+        }
+      }
+    },
+    "copywriting_publicites_facebook_instagram": {
+      "structure_annonce_image": {
+        "ligne_1_hook": "Accrocher en 5 mots max. Arrêter le scroll.",
+        "corps": "3-5 lignes. PAS ou AIDA court.",
+        "cta_bouton": "Verbes d'action : 'Découvrir', 'Commander', 'Voir la collection', 'Obtenir -20%'"
+      },
+      "exemples_annonces_canvas": [
+        {
+          "type": "Publicité trafic froid (awareness)",
+          "texte": "Votre salon mérite une vraie transformation.\n\nPas un cadre générique acheté en grande surface. Une vraie pièce d'art qui vous ressemble.\n\nKallok's Arts crée des canvas originaux livrés chez vous — prêts à accrocher en 5 minutes.\n\nDécouvrez la collection →"
+        },
+        {
+          "type": "Retargeting (visiteurs boutique)",
+          "texte": "Vous l'avez regardé. Il vous attend encore.\n\nCe canvas terracotta est toujours disponible — mais les stocks sont limités.\n\n🎁 Livraison gratuite jusqu'au [date]\n\nCommander maintenant →"
+        },
+        {
+          "type": "Lookalike clients existants",
+          "texte": "127 clients ont transformé leur salon avec nos canvas cette année.\n\nVoici ce qu'ils disent : 'J'ai enfin un mur dont je suis fière' — Marie R., Montréal\n\nVous aussi ? Explorez la collection →"
+        }
+      ]
+    },
+    "emails_haute_conversion": {
+      "séquence_bienvenue_5_emails": [
+        {
+          "email": "J0 — Bienvenue",
+          "objet": "Bienvenue ! Voici votre cadeau de bienvenue 🎨",
+          "contenu": "Introduction marque + histoire personnelle courte + coupon 10% off + 1 bestseller featured"
+        },
+        {
+          "email": "J2 — Valeur",
+          "objet": "3 erreurs qui ruinent la décoration d'un salon (et comment les éviter)",
+          "contenu": "Article/conseil déco utile — pas de vente. Construire confiance."
+        },
+        {
+          "email": "J5 — Social proof",
+          "objet": "Ce que nos clients disent vraiment...",
+          "contenu": "3-5 témoignages réels avec photos. Lien boutique naturel à la fin."
+        },
+        {
+          "email": "J7 — Offre",
+          "objet": "Votre coupon expire dans 48h",
+          "contenu": "Rappel coupon J0. Urgence vraie. 3 bestsellers mis en avant."
+        },
+        {
+          "email": "J14 — Histoire",
+          "objet": "Pourquoi j'ai lancé Kallok's Arts (histoire vraie)",
+          "contenu": "Behind the scenes. Humaniser la marque. Fidélisation long terme."
+        }
+      ],
+      "objets_email_haute_ouverture": [
+        "Questions : 'Vous avez oublié quelque chose ?'",
+        "Curiosité : 'Je ne devais pas vous montrer ça...'",
+        "Exclusivité : '[VIP seulement] Accès avant tout le monde'",
+        "Urgence : 'Il reste 3 pièces (vraiment)'",
+        "Personnalisation : 'Pour vous, [Prénom]'"
+      ]
+    },
+    "mots_déclencheurs_émotionnels": {
+      "luxe_premium": ["Exclusif", "Unique", "Artisanal", "Signature", "Édition limitée", "Premium", "Raffiné"],
+      "urgence_rareté": ["Limité", "Derniers exemplaires", "Expire aujourd'hui", "Plus que X en stock", "Ne manquez pas"],
+      "sécurité_confiance": ["Garanti", "Sans risque", "Remboursé si", "Certifié", "Satisfaction garantie"],
+      "appartenance_communauté": ["Rejoignez", "Nos clients", "Famille", "Communauté", "Ensemble"],
+      "transformation_résultat": ["Transformez", "Imaginez", "Découvrez", "Ressentez", "Créez votre"],
+      "mots_à_éviter": ["Pas cher", "Bon marché", "Discount excessif", "Meilleur du monde", "Révolutionnaire (surutilisé)"]
+    }
+  }
+}
