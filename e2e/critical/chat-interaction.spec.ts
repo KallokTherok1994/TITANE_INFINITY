@@ -482,6 +482,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   test('KNOWLEDGE_MEMORY_RUNTIME_TRUTH: la lane mock expose la connaissance seedee et le rappel memoire', async ({
     page,
   }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     await setE2EChatKnowledgeSeed(page, [
       {
         title: 'One Door Governance',
