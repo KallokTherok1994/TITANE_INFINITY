@@ -14,6 +14,7 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, renderHook, screen, fireEvent, waitFor, act } from '@/test-utils';
+import { MemoryRouter } from 'react-router-dom';
 import { chatEngine } from '../services/ai/chatEngine';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
@@ -133,17 +134,23 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
 
 describe('🟣 OMEGA Phase 7Ω - Canonical Chat Surface', () => {
   it('renders the active Titane conversation surface instead of the legacy chat page', () => {
-    const { container } = render(<TitanePage />);
+    const { container } = render(
+      <MemoryRouter>
+        <TitanePage />
+      </MemoryRouter>
+    );
+    const conversationPage = screen.getByTestId('page-conversation');
 
     expect(container).toBeTruthy();
     expect(screen.getByTestId('page-titane')).toHaveAttribute(
       'data-layout',
       'chat-fullscreen'
     );
-    expect(screen.getByTestId('page-conversation')).toHaveAttribute(
-      'data-layout',
-      'fullscreen'
-    );
+    expect(conversationPage).toHaveAttribute('data-layout', 'fullscreen');
+    expect(screen.queryByTestId('select-conversation-mode')).not.toBeInTheDocument();
+    expect(screen.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+    expect(conversationPage).toHaveAttribute('data-conversation-mode', 'default');
+    expect(conversationPage).toHaveAttribute('data-chat-store-mode', 'default');
   });
 });
 
