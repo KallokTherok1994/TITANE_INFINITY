@@ -5,12 +5,13 @@
 // ═══════════════════════════════════════════════════════════════
 
 use axum::{
-    extract::{Json, State},
+    extract::{ConnectInfo, Json, State},
     http::StatusCode,
     response::IntoResponse,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::net::SocketAddr;
 use std::sync::Arc;
 
 use crate::conversation_engine::{
@@ -18,6 +19,7 @@ use crate::conversation_engine::{
     ConversationEngineState,
 };
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+use crate::remote_gateway::anomaly_detector::AnomalyDetector;
 use crate::remote_gateway::auth::{
     generate_access_token, generate_access_token_with_key,
     generate_refresh_token_with_key,
@@ -51,6 +53,8 @@ pub struct GatewayState {
     pub auth: Arc<RemoteAuthState>,
     pub engine: Arc<ConversationEngineState>,
     pub orchestrator: ChatOrchestratorState,
+    /// Phase C2 — anomaly detector wired for real-time request monitoring
+    pub anomaly: Arc<AnomalyDetector>,
 }
 
 // ── GET /api/health ─────────────────────────────────────────
@@ -205,8 +209,14 @@ pub struct InvokeRequest {
 /// This is the primary endpoint for the frontend RemoteTransport.
 pub async fn invoke_handler(
     State(state): State<GatewayState>,
+    ConnectInfo(addr): ConnectInfo<SocketAddr>,
     Json(mut payload): Json<InvokeRequest>,
 ) -> impl IntoResponse {
+    // ── Phase C2: anomaly detection — record request per IP ──
+    if let Some(event) = state.anomaly.record_request(addr.ip()) {
+        log::warn!("[AnomalyDetector] {:?} from {}: {}", event.severity, event.ip, event.message);
+    }
+
     // ── Phase C1: sanitize and size-check before dispatch ────
     if let Err(rejection) = sanitize_invoke_request(&mut payload) {
         return Json(rejection);

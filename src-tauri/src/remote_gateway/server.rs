@@ -22,6 +22,7 @@ use crate::{
     conversation_engine::ConversationEngineState,
     overdrive::chat_orchestrator::ChatOrchestratorState,
     remote_gateway::{
+        anomaly_detector::AnomalyDetector,
         audit::RemoteAuditLogger,
         auth::{derive_jwt_secret, hash_shared_secret, validate_token, RemoteAuthState},
         handlers::{
@@ -114,10 +115,15 @@ fn build_router(config: &RemoteGatewayConfig, engine: Arc<ConversationEngineStat
     let rate_limiter = RemoteRateLimiter::new();
     let audit_logger = RemoteAuditLogger::new(config.log_dir.join("remote_gateway.log"));
 
+    // Phase C2 — instantiate anomaly detector with persist path adjacent to audit log
+    let anomaly_path = config.log_dir.join("anomaly_state.json");
+    let anomaly_detector = AnomalyDetector::new(anomaly_path);
+
     let gateway_state = GatewayState {
         auth: auth_state.clone(),
         engine,
         orchestrator,
+        anomaly: anomaly_detector,
     };
 
     let ws_state = WsState {
@@ -217,7 +223,10 @@ pub async fn start(config: RemoteGatewayConfig, engine: Arc<ConversationEngineSt
         }
     };
 
-    if let Err(e) = axum::serve(listener, router).await {
+    if let Err(e) = axum::serve(
+        listener,
+        router.into_make_service_with_connect_info::<SocketAddr>(),
+    ).await {
         log::error!("❌ [RemoteGateway] Server error: {e}");
     }
 }
