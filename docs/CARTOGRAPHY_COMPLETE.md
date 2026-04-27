@@ -83,6 +83,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-26 — Provider-flow conversation mode runtime proof: la lane Playwright riche `tests/e2e/provider-flow.test.ts` qualifie désormais elle aussi la vérité de mode conversationnelle sur l alias `/chat`. Le test T8 vérifie l absence de `select-conversation-mode`, force `planning` via `chat-mode-selector-select`, puis confirme que l alias canonique exposé par `page-conversation` et `chat-runtime-state` garde les attributs `data-conversation-mode` / `data-chat-store-mode`, le résumé `Conversation mode: planning` / `Store mode: planning` et les badges runtime correspondants.
 
+> 2026-04-26 — ChatModeSelector compact variant proof: la garde composant `src/__tests__/components/chat/ChatModeSelector.runtimePromptBridge.test.tsx` couvre maintenant explicitement la variante `compact` utilisée par `ConversationSection`. Le micro-lot verrouille le selector stable `chat-mode-selector-select` et la propagation de `planning` vers `onModeChange`, afin qu une dérive du contrôle réellement monté sur la surface canonique casse d abord un test unitaire ciblé avant les lanes Playwright/WDIO.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :

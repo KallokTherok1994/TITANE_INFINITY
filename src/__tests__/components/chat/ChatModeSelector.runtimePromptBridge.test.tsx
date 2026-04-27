@@ -40,4 +40,25 @@ describe('ChatModeSelector -> runtime prompt bridge', () => {
     expect(screen.getByTestId('chat-mode-selector-menu')).toBeInTheDocument();
     expect(screen.getByTestId('chat-mode-option-quick')).toBeInTheDocument();
   });
+
+  it('keeps the compact selector variant stable for the canonical conversation surface', () => {
+    const onModeChange = vi.fn();
+
+    render(
+      <ChatModeSelector
+        currentMode="default"
+        userPermissionLevel={3}
+        variant="compact"
+        allowedModes={['default', 'planning', 'journal']}
+        onModeChange={onModeChange}
+      />
+    );
+
+    const select = screen.getByTestId('chat-mode-selector-select');
+    expect(select).toBeInTheDocument();
+
+    fireEvent.change(select, { target: { value: 'planning' } });
+
+    expect(onModeChange).toHaveBeenCalledWith('planning');
+  });
 });
