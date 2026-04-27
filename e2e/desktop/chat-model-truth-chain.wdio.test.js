@@ -34,6 +34,14 @@ describe('Chat model truth chain (WDIO/Tauri)', () => {
     assert.equal(shown, 'gemma2:2b');
     assert.match(runtime.providerUsed, /ollama|local|omega/i);
     assert.notEqual(runtime.orchestratorState, '');
+    assert.equal(runtime.pageConversationMode, 'default');
+    assert.equal(runtime.pageChatStoreMode, 'default');
+    assert.equal(runtime.runtimeConversationMode, 'default');
+    assert.equal(runtime.runtimeChatStoreMode, 'default');
+    assert.ok(runtime.summary.includes('Conversation mode: default'));
+    assert.ok(runtime.summary.includes('Store mode: default'));
+    assert.ok(runtime.badges.includes('conversation-mode:default'));
+    assert.ok(runtime.badges.includes('chat-store-mode:default'));
 
     await browser.execute(() => {
       const panel = document.querySelector('[data-testid="reasoning-progress"]');

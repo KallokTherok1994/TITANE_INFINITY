@@ -93,6 +93,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-27 — Desktop conversation critical mode baseline proof: la lane courte `e2e/desktop/ui-connectivity-critical.wdio.test.js` verrouille désormais elle aussi la baseline modernisée de mode conversationnel avant tout tour de chat. Le micro-lot confirme l absence de `select-conversation-mode`, la valeur initiale `default` sur `chat-mode-selector-select`, ainsi que `data-conversation-mode=default` et `data-chat-store-mode=default` directement sur `page-conversation`, afin qu une régression de surface desktop casse aussi la spec critique la plus rapide.
 
+> 2026-04-27 — Desktop model truth chain mode proof: la lane native `e2e/desktop/chat-model-truth-chain.wdio.test.js`, déjà dédiée à la vérité provider/modèle/thinking panel, verrouille maintenant aussi la vérité de mode conversationnelle publiée par la surface canonique. Le micro-lot confirme `pageConversationMode=default`, `pageChatStoreMode=default`, `runtimeConversationMode=default`, `runtimeChatStoreMode=default`, plus les chaînes `Conversation mode: default` / `Store mode: default` et les badges `conversation-mode:default` / `chat-store-mode:default`, afin qu une dérive entre vérité modèle et vérité de mode casse aussi cette lane desktop spécialisée.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :
