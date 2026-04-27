@@ -1269,3 +1269,5 @@ function MyComponent() {
 | KB Rust loader | `src-tauri/src/knowledge_base_default.rs` | 5 consts + 5 SOURCES |
 | Tests unitaires | `tests/unit/htf/*.test.ts` | 14 tests Vitest |
 | Tests E2E | `e2e/htf.spec.ts` | 7 scénarios Playwright |
+
+> 2026-04-27 — Web chat baseline mode truth: la lane Playwright web générique `tests/e2e/chat.spec.ts`, déjà utilisée pour la navigation et les interactions minimales du chat, verrouille désormais aussi la baseline modernisée de mode sur la surface canonique `page-conversation`. Le micro-lot confirme l absence de `select-conversation-mode`, la valeur initiale `default` de `chat-mode-selector-select`, puis `data-conversation-mode=default` et `data-chat-store-mode=default`, afin qu une régression web de surface casse aussi la lane la plus générique du chat.

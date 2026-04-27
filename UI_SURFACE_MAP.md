@@ -602,3 +602,4 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Skill OS: `titane-skill-htf-estimateur` (category: custom, state: ACTIVE)
 - Persistance: localStorage (`titane_htf_clients`, `titane_htf_submissions`, `titane_htf_learning`) — zéro IPC Rust
 - Tests: `tests/unit/htf/htfEstimationService.test.ts` (5 tests), `tests/unit/htf/htfCrmService.test.ts` (9 tests), `e2e/htf.spec.ts` (7 scénarios)
+- Qualification web baseline conversation: `tests/e2e/chat.spec.ts` verrouille désormais sur la lane Playwright web générique l absence de `select-conversation-mode`, la valeur initiale `default` de `chat-mode-selector-select`, ainsi que `data-conversation-mode=default` et `data-chat-store-mode=default` directement sur `page-conversation` avant toute interaction enrichie.

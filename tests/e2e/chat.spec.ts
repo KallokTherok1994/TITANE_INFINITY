@@ -57,7 +57,13 @@ test.describe('Chat Interface', () => {
     // Navigate to conversation tab (attente page chargée)
     await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
     await page.getByTestId('tab-conversation').click();
-    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 60000 });
+    const conversationPage = page.getByTestId('page-conversation');
+    await expect(conversationPage).toBeVisible({ timeout: 60000 });
+
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+    await expect(conversationPage).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(conversationPage).toHaveAttribute('data-chat-store-mode', 'default');
 
     // Verify conversation search input is accessible (data-testid="input-conversation-search")
     const searchInput = page.getByTestId('input-conversation-search');
