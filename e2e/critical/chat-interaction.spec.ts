@@ -269,6 +269,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   test('LONG_RESPONSE_VISIBLE_COMPLETE: réponse longue mock affichée complètement', async ({
     page,
   }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     const longPrompt = Array.from({ length: 40 }, (_, index) => `segment-${index + 1}`)
       .join(' ')
       .trim();
