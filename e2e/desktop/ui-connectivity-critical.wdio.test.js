@@ -244,7 +244,7 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
 
     const controls = [
       'select-chat-provider',
-      'select-conversation-mode',
+      'chat-mode-selector-select',
       'btn-export-json',
       'btn-export-markdown',
       'btn-clear-chat',
@@ -374,8 +374,15 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
       const region = document.querySelector(
         '[data-testid="chat-messages-scroll-region"]'
       );
-      region?.scrollTo({ top: 0, behavior: 'auto' });
-      region?.dispatchEvent(new Event('scroll', { bubbles: true }));
+      if (!(region instanceof HTMLElement)) {
+        return;
+      }
+
+      region.scrollTop = 0;
+      if (region.scrollTop !== 0) {
+        region.scrollTo(0, 0);
+      }
+      region.dispatchEvent(new Event('scroll', { bubbles: true }));
     });
 
     const offsetFromBottom = await browser.execute(() => {

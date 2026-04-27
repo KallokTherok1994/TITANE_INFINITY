@@ -105,6 +105,7 @@ interface LatestAssistantRuntimeSnapshot {
   providerMeta?: ProviderDecisionMeta;
   tags: string[];
   runtimeSignals: RuntimeSignals;
+  providerUsed?: string;
   modelRequested?: string;
   modelUsed?: string;
   fallbackUsed?: boolean;
@@ -278,11 +279,16 @@ export function resolveConversationDisplayProvider(
 
 export function buildConversationRuntimeSummary(
   requestedProviderLabel: string,
-  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null,
+  conversationMode: ConversationMode,
+  chatStoreModeId: ModernChatModeId
 ): string {
   if (!latestAssistantRuntime) return '';
 
-  const provider = latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown';
+  const provider =
+    latestAssistantRuntime.providerMeta?.provider_used ??
+    latestAssistantRuntime.providerUsed ??
+    'unknown';
   const mode = latestAssistantRuntime.providerMeta?.mode ?? 'unknown';
   const reason = latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN';
   const networkUsed =
@@ -304,8 +310,10 @@ export function buildConversationRuntimeSummary(
   const modelUsedSuffix = modelUsed ? ` | Model used: ${modelUsed}` : '';
   const fallbackSuffix =
     latestAssistantRuntime.fallbackUsed === true ? ' | Model fallback: true' : '';
+  const conversationModeSuffix = ` | Conversation mode: ${conversationMode}`;
+  const storeModeSuffix = ` | Store mode: ${chatStoreModeId}`;
 
-  return `${requestedPrefix}${modelRequestedPrefix}Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}${modelUsedSuffix}${fallbackSuffix}`;
+  return `${requestedPrefix}${modelRequestedPrefix}Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}${modelUsedSuffix}${fallbackSuffix}${conversationModeSuffix}${storeModeSuffix}`;
 }
 
 export function buildConversationLoadingLabel(
@@ -329,7 +337,9 @@ export function resolveModernConversationMode(
 
 export function buildConversationRuntimeBadges(
   requestedProviderLabel: string,
-  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null,
+  conversationMode: ConversationMode,
+  chatStoreModeId: ModernChatModeId
 ): string[] {
   if (!latestAssistantRuntime) return [];
 
@@ -338,11 +348,12 @@ export function buildConversationRuntimeBadges(
 
   const values = [
     requestedProviderLabel &&
-    providerMeta?.provider_used &&
-    requestedProviderLabel !== providerMeta.provider_used
+    (providerMeta?.provider_used ?? latestAssistantRuntime.providerUsed) &&
+    requestedProviderLabel !==
+      (providerMeta?.provider_used ?? latestAssistantRuntime.providerUsed)
       ? `requested:${requestedProviderLabel}`
       : null,
-    providerMeta?.provider_used,
+    providerMeta?.provider_used ?? latestAssistantRuntime.providerUsed ?? null,
     providerMeta?.mode,
     providerMeta?.provider_class,
     providerMeta?.reason_code,
@@ -356,6 +367,8 @@ export function buildConversationRuntimeBadges(
       ? `model-used:${latestAssistantRuntime.modelUsed}`
       : null,
     latestAssistantRuntime.fallbackUsed === true ? 'model-fallback:true' : null,
+    `conversation-mode:${conversationMode}`,
+    `chat-store-mode:${chatStoreModeId}`,
     ...tags,
   ].filter((value): value is string => Boolean(value && value.trim()));
 
@@ -1737,16 +1750,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       [conversationModes, currentMode]
     );
 
-    const conversationModeOptions = useMemo(
-      () =>
-        conversationModes.map(mode => (
-          <option key={mode.id} value={mode.id}>
-            {mode.icon} {mode.name}
-          </option>
-        )),
-      [conversationModes]
-    );
-
     const hasMessages = messages.length > 0;
     const isHealthy = healthReport?.status === 'Healthy';
     const showLoadingIndicator = isLoading || loadingVisibleUntil > Date.now();
@@ -1769,7 +1772,18 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
       const providerMeta = latestAssistantMetadata?.providerMeta;
       const tags = latestAssistantMetadata?.tags ?? [];
-      if (!providerMeta && tags.length === 0) {
+      const providerUsed = latestAssistantMetadata?.providerUsed?.trim();
+      const modelRequested = latestAssistantMetadata?.modelRequested?.trim();
+      const modelUsed = latestAssistantMetadata?.modelUsed?.trim();
+      const hasRuntimeEvidence =
+        Boolean(providerMeta) ||
+        tags.length > 0 ||
+        Boolean(providerUsed) ||
+        Boolean(modelRequested) ||
+        Boolean(modelUsed) ||
+        latestAssistantMetadata?.fallbackUsed === true;
+
+      if (!hasRuntimeEvidence) {
         return null;
       }
 
@@ -1779,8 +1793,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         providerMeta,
         tags,
         runtimeSignals,
-        modelRequested: latestAssistantMetadata?.modelRequested,
-        modelUsed: latestAssistantMetadata?.modelUsed,
+        providerUsed,
+        modelRequested,
+        modelUsed,
         fallbackUsed: latestAssistantMetadata?.fallbackUsed,
       };
     }, [latestAssistantMessage, latestAssistantMetadata]);
@@ -1813,8 +1828,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     const runtimeSummary = useMemo(
       () =>
-        buildConversationRuntimeSummary(selectedProviderLabel, latestAssistantRuntime),
-      [latestAssistantRuntime, selectedProviderLabel]
+        buildConversationRuntimeSummary(
+          selectedProviderLabel,
+          latestAssistantRuntime,
+          currentMode,
+          currentChatStoreModeId
+        ),
+      [currentChatStoreModeId, currentMode, latestAssistantRuntime, selectedProviderLabel]
     );
 
     const loadingSummary = useMemo(
@@ -1823,8 +1843,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     );
 
     const runtimeBadges = useMemo(
-      () => buildConversationRuntimeBadges(selectedProviderLabel, latestAssistantRuntime),
-      [latestAssistantRuntime, selectedProviderLabel]
+      () =>
+        buildConversationRuntimeBadges(
+          selectedProviderLabel,
+          latestAssistantRuntime,
+          currentMode,
+          currentChatStoreModeId
+        ),
+      [currentChatStoreModeId, currentMode, latestAssistantRuntime, selectedProviderLabel]
     );
 
     useEffect(() => {
@@ -2206,6 +2232,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           buildConversationTransparencyReply(latestAssistantRuntime),
           {
             intention: 'runtime_transparency_answer',
+            tags: latestAssistantRuntime?.tags ?? [],
+            providerMeta: latestAssistantRuntime?.providerMeta,
+            providerUsed:
+              latestAssistantRuntime?.providerMeta?.provider_used ??
+              latestAssistantRuntime?.providerUsed,
+            requestedProvider: selectedProvider,
+            modelRequested: latestAssistantRuntime?.modelRequested,
+            modelUsed: latestAssistantRuntime?.modelUsed,
+            fallbackUsed: latestAssistantRuntime?.fallbackUsed,
           }
         );
         toastSuccess('Resume de transparence runtime ajoute dans la conversation.');
@@ -2516,13 +2551,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       [sendMessage]
     );
 
-    const handleModeChange = useCallback(
-      (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setMode(e.target.value as ConversationMode);
-      },
-      [setMode]
-    );
-
     const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchQuery(e.target.value);
     }, []);
@@ -2606,16 +2634,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   variant="compact"
                   className="conversation-modern-mode-selector"
                 />
-
-                {/* Mode Selector */}
-                <select
-                  className="conversation-mode-select"
-                  data-testid="select-conversation-mode"
-                  value={currentMode}
-                  onChange={handleModeChange}
-                >
-                  {conversationModeOptions}
-                </select>
               </div>
 
               <div className="conversation-toolbar-right">
@@ -2777,7 +2795,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'
                 }
                 data-provider-used={
-                  latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'
+                  latestAssistantRuntime.providerMeta?.provider_used ??
+                  latestAssistantRuntime.providerUsed ??
+                  'unknown'
                 }
                 data-network-used={
                   latestAssistantRuntime.providerMeta
@@ -2788,6 +2808,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   latestAssistantRuntime.runtimeSignals.orchestratorState
                 }
                 data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
+                data-conversation-mode={currentMode}
+                data-chat-store-mode={currentChatStoreModeId}
                 data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
                 data-ollama-model={resolveConversationOllamaModel(
                   selectedProvider,

@@ -211,11 +211,11 @@ test.describe('Critical Path: Chat Interaction', () => {
     const pageConversation = page.getByTestId('page-conversation');
 
     await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
 
     await page.getByTestId('chat-mode-selector-select').selectOption('planning');
 
     await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'planning');
-    await expect(page.getByTestId('select-conversation-mode')).toHaveValue('planning');
 
     await expect
       .poll(async () => {
@@ -240,6 +240,18 @@ test.describe('Critical Path: Chat Interaction', () => {
       timeout: 15000,
     });
     await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'planning');
+    await expect(page.getByTestId('chat-runtime-state')).toHaveAttribute(
+      'data-conversation-mode',
+      'planning'
+    );
+    await expect(page.getByTestId('chat-runtime-state')).toHaveAttribute(
+      'data-chat-store-mode',
+      'planning'
+    );
+    await expect(page.getByTestId('chat-runtime-summary')).toContainText(
+      'Conversation mode: planning'
+    );
+    await expect(page.getByTestId('chat-runtime-summary')).toContainText('Store mode: planning');
   });
 
   test('LONG_RESPONSE_VISIBLE_COMPLETE: réponse longue mock affichée complètement', async ({

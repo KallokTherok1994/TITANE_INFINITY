@@ -77,6 +77,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-22 — Route-context chat truth: la topologie UI ne change pas, mais `src/services/chat/moduleRouteContext.ts` couvre maintenant aussi les routes actives `/singularity`, `/sentinel`, `/watchdog`, `/selfheal`, `/adaptive`, `/skills` et les deep links `titane.sh`. Le handoff vers `useConversationEngine` conserve ainsi un contexte module canonique sur ces surfaces au lieu de retomber sur `unknown_module`.
 
+> 2026-04-26 — Conversation runtime mode truth: la surface active `/titane?tab=conversation` ne conserve plus de select legacy interne sur sa toolbar. `src/components/sections/ConversationSection.tsx` publie désormais la vérité du mode actif à deux niveaux cohérents: racine `page-conversation` et panneau `chat-runtime-state`, avec duplication gouvernée de `data-conversation-mode`, `data-chat-store-mode`, d un résumé textuel (`Conversation mode`, `Store mode`) et de badges runtime (`conversation-mode:<id>`, `chat-store-mode:<id>`). Les preuves web et les deux lanes WDIO ciblées passent sur cette vérité unifiée; la réponse locale de transparence réinjecte aussi les métadonnées runtime qualifiées au lieu d effacer la surface, et la lane de retour-bas utilise un scroll programmatique robuste sous WRY.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :

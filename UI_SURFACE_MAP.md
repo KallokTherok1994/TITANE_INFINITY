@@ -79,6 +79,14 @@
 - Guard de contrat testee: `useAnimation must be used within AnimationProvider` hors provider.
 - Preuve execution: `pnpm exec vitest run src/contexts/__tests__/AnimationContext.test.tsx src/contexts/__tests__/LoggingContext.test.tsx`.
 
+# [2026-04-26] Conversation runtime mode truth
+
+- Surface canonique: [src/components/sections/ConversationSection.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/sections/ConversationSection.tsx) retire le select legacy local et garde `chat-mode-selector-select` comme seul contrôle actif de mode sur la toolbar conversationnelle.
+- Vérité runtime visible: `chat-runtime-state` publie maintenant `data-conversation-mode` et `data-chat-store-mode`, tandis que `chat-runtime-summary` et `chat-runtime-badge` exposent `Conversation mode: ...`, `Store mode: ...`, `conversation-mode:<id>` et `chat-store-mode:<id>`.
+- Compatibilité réduite: `select-conversation-mode` n est plus une surface live de la route canonique.
+- Qualification native: les lanes WDIO conversationnelles ciblées lisent désormais la même vérité runtime et passent sur binaire debug frais, y compris le scénario de transparence locale et le CTA de retour au bas de conversation.
+- Preuves associées: [src/components/sections/__tests__/ConversationSection.modeBridge.test.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/sections/__tests__/ConversationSection.modeBridge.test.tsx), [e2e/critical/chat-interaction.spec.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/critical/chat-interaction.spec.ts), [e2e/desktop/chat-ui-complete-runtime.wdio.test.js](/home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/desktop/chat-ui-complete-runtime.wdio.test.js), [e2e/desktop/ui-connectivity-critical.wdio.test.js](/home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/desktop/ui-connectivity-critical.wdio.test.js).
+
 # [2026-04-24] Sprint 5 — Dashboard import optimization
 
 - Surface impactee: `src/pages/DashboardPage.tsx`.

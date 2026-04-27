@@ -447,7 +447,7 @@ describe('Desktop chat UI complete runtime proof', () => {
     const requiredControls = [
       'page-conversation',
       'select-chat-provider',
-      'select-conversation-mode',
+      'chat-mode-selector-select',
       'btn-export-json',
       'btn-export-markdown',
       'btn-clear-chat',
@@ -465,7 +465,7 @@ describe('Desktop chat UI complete runtime proof', () => {
     }
 
     const providerSelect = await $('[data-testid="select-chat-provider"]');
-    const modeSelect = await $('[data-testid="select-conversation-mode"]');
+  const modeSelect = await $('[data-testid="chat-mode-selector-select"]');
     assert.equal(await providerSelect.getValue(), 'ollama');
     assert.equal(await modeSelect.getValue(), 'default');
 
@@ -519,6 +519,14 @@ describe('Desktop chat UI complete runtime proof', () => {
       transparencyOutcome.runtime.ollamaModel,
       'gemma2:2b',
       'transparency: runtime panel did not expose the governed Ollama model marker'
+    );
+    assert.ok(
+      transparencyOutcome.runtime.summary.includes('Conversation mode: default'),
+      `runtime summary missing conversation mode truth (${transparencyOutcome.runtime.summary})`
+    );
+    assert.ok(
+      transparencyOutcome.runtime.badges.includes('conversation-mode:default'),
+      `runtime badges missing conversation mode truth (${transparencyOutcome.runtime.badges.join(', ')})`
     );
 
     await setFieldValue('[data-testid="input-conversation-search"]', MEMORY_FACTS.code);

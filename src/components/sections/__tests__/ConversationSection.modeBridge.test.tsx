@@ -152,6 +152,8 @@ describe('ConversationSection modern mode bridge', () => {
   it('bridges the modern selector to the conversation engine and the chat mode store', async () => {
     render(<ConversationSection fullscreen />);
 
+    expect(screen.queryByTestId('select-conversation-mode')).not.toBeInTheDocument();
+
     fireEvent.change(screen.getByTestId('chat-mode-selector-select'), {
       target: { value: 'planning' },
     });
