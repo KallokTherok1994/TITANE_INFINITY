@@ -89,6 +89,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-26 — Conversation runtime helper mode proof: la suite `src/components/sections/__tests__/ConversationSection.test.ts` verrouille maintenant explicitement la logique helper qui alimente le panneau runtime. Le micro-lot couvre les suffixes `Conversation mode: planning` / `Store mode: planning` de `buildConversationRuntimeSummary()` et les badges `conversation-mode:planning` / `chat-store-mode:planning` de `buildConversationRuntimeBadges()`, pour capter toute dérive dans la logique de construction avant même le rendu de surface.
 
+> 2026-04-27 — Desktop conversation runtime direct mode proof: la lane WDIO complète `e2e/desktop/chat-ui-complete-runtime.wdio.test.js` lit maintenant directement la vérité de mode conversationnelle publiée par la surface canonique, au lieu de se limiter au résumé textuel et à un seul badge. Le driver `e2e/desktop/ui-driver.wdio.js` expose `pageConversationMode`, `pageChatStoreMode`, `runtimeConversationMode` et `runtimeChatStoreMode`; la preuve desktop verrouille ensuite que `page-conversation` et `chat-runtime-state` publient tous deux `default`, en plus des chaînes `Conversation mode: default`, `Store mode: default`, `conversation-mode:default` et `chat-store-mode:default`.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :

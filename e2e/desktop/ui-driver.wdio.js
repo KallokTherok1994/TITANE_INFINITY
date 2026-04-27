@@ -1075,6 +1075,7 @@ export async function getChatRuntimeTruth() {
   return browser.execute(() => {
     const text = selector => (document.querySelector(selector)?.textContent || '').trim();
     const runtimePanel = document.querySelector('[data-testid="chat-runtime-state"]');
+    const conversationPage = document.querySelector('[data-testid="page-conversation"]');
     const badges = Array.from(
       document.querySelectorAll('[data-testid="chat-runtime-badge"]')
     )
@@ -1098,6 +1099,14 @@ export async function getChatRuntimeTruth() {
       networkUsed: runtimePanel?.getAttribute('data-network-used') || '',
       orchestratorState: runtimePanel?.getAttribute('data-orchestrator-state') || '',
       memoryState: runtimePanel?.getAttribute('data-memory-state') || '',
+      runtimeConversationMode:
+        runtimePanel?.getAttribute('data-conversation-mode') || '',
+      runtimeChatStoreMode:
+        runtimePanel?.getAttribute('data-chat-store-mode') || '',
+      pageConversationMode:
+        conversationPage?.getAttribute('data-conversation-mode') || '',
+      pageChatStoreMode:
+        conversationPage?.getAttribute('data-chat-store-mode') || '',
       ollamaModel,
       summary,
       badges,

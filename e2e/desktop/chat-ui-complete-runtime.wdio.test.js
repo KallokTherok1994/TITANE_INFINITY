@@ -262,6 +262,7 @@ async function collectChatSnapshot() {
     const lastAssistant = assistantRows[assistantRows.length - 1] || null;
     const lastUser = userRows[userRows.length - 1] || null;
     const runtimePanel = document.querySelector('[data-testid="chat-runtime-state"]');
+    const conversationPage = document.querySelector('[data-testid="page-conversation"]');
     const runtimeSummary = document.querySelector('[data-testid="chat-runtime-summary"]');
     const runtimeBadges = Array.from(
       document.querySelectorAll('[data-testid="chat-runtime-badge"]')
@@ -309,6 +310,14 @@ async function collectChatSnapshot() {
         networkUsed: runtimePanel?.getAttribute('data-network-used') || '',
         orchestratorState: runtimePanel?.getAttribute('data-orchestrator-state') || '',
         memoryState: runtimePanel?.getAttribute('data-memory-state') || '',
+        runtimeConversationMode:
+          runtimePanel?.getAttribute('data-conversation-mode') || '',
+        runtimeChatStoreMode:
+          runtimePanel?.getAttribute('data-chat-store-mode') || '',
+        pageConversationMode:
+          conversationPage?.getAttribute('data-conversation-mode') || '',
+        pageChatStoreMode:
+          conversationPage?.getAttribute('data-chat-store-mode') || '',
         ollamaModel: runtimePanel?.getAttribute('data-ollama-model') || '',
         badges: runtimeBadges.filter(Boolean),
       },
@@ -524,9 +533,33 @@ describe('Desktop chat UI complete runtime proof', () => {
       transparencyOutcome.runtime.summary.includes('Conversation mode: default'),
       `runtime summary missing conversation mode truth (${transparencyOutcome.runtime.summary})`
     );
+    assert.equal(
+      transparencyOutcome.runtime.pageConversationMode,
+      'default',
+      `page root missing conversation mode truth (${transparencyOutcome.runtime.pageConversationMode})`
+    );
+    assert.equal(
+      transparencyOutcome.runtime.pageChatStoreMode,
+      'default',
+      `page root missing store mode truth (${transparencyOutcome.runtime.pageChatStoreMode})`
+    );
+    assert.equal(
+      transparencyOutcome.runtime.runtimeConversationMode,
+      'default',
+      `runtime panel missing conversation mode truth (${transparencyOutcome.runtime.runtimeConversationMode})`
+    );
+    assert.equal(
+      transparencyOutcome.runtime.runtimeChatStoreMode,
+      'default',
+      `runtime panel missing store mode truth (${transparencyOutcome.runtime.runtimeChatStoreMode})`
+    );
     assert.ok(
       transparencyOutcome.runtime.badges.includes('conversation-mode:default'),
       `runtime badges missing conversation mode truth (${transparencyOutcome.runtime.badges.join(', ')})`
+    );
+    assert.ok(
+      transparencyOutcome.runtime.badges.includes('chat-store-mode:default'),
+      `runtime badges missing store mode truth (${transparencyOutcome.runtime.badges.join(', ')})`
     );
 
     await setFieldValue('[data-testid="input-conversation-search"]', MEMORY_FACTS.code);
