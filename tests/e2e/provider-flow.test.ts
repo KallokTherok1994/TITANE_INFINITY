@@ -32,6 +32,8 @@ type RuntimeSnapshot = {
   providerReason: string;
   networkUsed: string;
   memoryState: string;
+  conversationMode: string;
+  chatStoreMode: string;
   runtimeSummary: string;
   assistantText: string;
 };
@@ -227,6 +229,24 @@ async function sendMessageAndWaitAssistant(
         )
           .trim()
           .toUpperCase(),
+        conversationMode: (
+          panel?.getAttribute('data-conversation-mode') ||
+          document
+            .querySelector('[data-testid="page-conversation"]')
+            ?.getAttribute('data-conversation-mode') ||
+          ''
+        )
+          .trim()
+          .toLowerCase(),
+        chatStoreMode: (
+          panel?.getAttribute('data-chat-store-mode') ||
+          document
+            .querySelector('[data-testid="page-conversation"]')
+            ?.getAttribute('data-chat-store-mode') ||
+          ''
+        )
+          .trim()
+          .toLowerCase(),
         runtimeSummary: (summary?.textContent || '').trim(),
         assistantText: (
           contentNode?.textContent ||
@@ -823,6 +843,51 @@ test.describe('Provider Flow v21.0', () => {
     expect(outcome.runtime.runtimeSummary).toContain('Provider: github-copilot');
     expect(outcome.responseText).toContain('limite de taux');
     expect(outcome.responseText).not.toContain('[MOCK_OK]');
+  });
+
+  test('Test 8: Modern conversation mode truth on /chat alias', async ({ page }) => {
+    await enableE2EChatMock(page, 'success');
+
+    await page.goto('/chat');
+    await page.waitForLoadState('networkidle');
+
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 20000 });
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('page-conversation')).toHaveAttribute(
+      'data-conversation-mode',
+      'default'
+    );
+
+    await page.getByTestId('chat-mode-selector-select').selectOption('planning');
+    await expect(page.getByTestId('page-conversation')).toHaveAttribute(
+      'data-conversation-mode',
+      'planning'
+    );
+    await expect(page.getByTestId('page-conversation')).toHaveAttribute(
+      'data-chat-store-mode',
+      'planning'
+    );
+
+    const { messageInput, sendButton, assistantMessages } = getChatLocators(page);
+    const outcome = await sendMessageAndWaitAssistant(
+      page,
+      messageInput,
+      sendButton,
+      assistantMessages,
+      'Confirme le mode planning sur la surface riche alias /chat.'
+    );
+
+    expect(outcome.kind).not.toBe('timeout');
+    expect(outcome.runtime.conversationMode).toBe('planning');
+    expect(outcome.runtime.chatStoreMode).toBe('planning');
+    expect(outcome.runtime.runtimeSummary).toContain('Conversation mode: planning');
+    expect(outcome.runtime.runtimeSummary).toContain('Store mode: planning');
+
+    const runtimeBadges = await page
+      .getByTestId('chat-runtime-badge')
+      .evaluateAll(nodes => nodes.map(node => node.textContent?.trim() ?? ''));
+    expect(runtimeBadges).toContain('conversation-mode:planning');
+    expect(runtimeBadges).toContain('chat-store-mode:planning');
   });
 });
 

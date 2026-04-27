@@ -81,6 +81,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-26 — Android browser conversation mode runtime proof: la surface mobile navigateur qualifie maintenant explicitement la même vérité de mode conversationnelle que web et desktop. `e2e/android/android-build-ui.browser.spec.ts` ajoute T21 pour verrouiller l absence de `select-conversation-mode`, le changement via `chat-mode-selector-select`, l alignement des attributs `data-conversation-mode` / `data-chat-store-mode` sur `page-conversation` et `chat-runtime-state`, puis la présence des chaînes `Conversation mode: planning` et `Store mode: planning` après un tour mock.
 
+> 2026-04-26 — Provider-flow conversation mode runtime proof: la lane Playwright riche `tests/e2e/provider-flow.test.ts` qualifie désormais elle aussi la vérité de mode conversationnelle sur l alias `/chat`. Le test T8 vérifie l absence de `select-conversation-mode`, force `planning` via `chat-mode-selector-select`, puis confirme que l alias canonique exposé par `page-conversation` et `chat-runtime-state` garde les attributs `data-conversation-mode` / `data-chat-store-mode`, le résumé `Conversation mode: planning` / `Store mode: planning` et les badges runtime correspondants.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :
