@@ -88,6 +88,29 @@ vi.mock('@/components/conversation/ModeBuilder', () => ({
 
 vi.mock('@/config/chatModes.config', () => ({
   registerCustomMode: vi.fn(),
+  INITIAL_CHAT_MODE_STATE: {
+    current_mode_id: 'default',
+    mode_history: [],
+    mode_xp: {},
+    favorite_modes: ['coach', 'dev_senior'],
+    custom_modes: [],
+    last_updated: 0,
+  },
+  CHAT_MODES: {
+    default: {
+      id: 'default',
+      label: 'Assistant',
+      icon: '🤖',
+      category: 'hybrid',
+      enabled: true,
+      xp_required: 0,
+      display_priority: 0,
+    },
+  },
+  getChatMode: vi.fn().mockReturnValue(undefined),
+  getAvailableModes: vi.fn().mockReturnValue([]),
+  getSystemPrompt: vi.fn().mockReturnValue(''),
+  isModeUnlocked: vi.fn().mockReturnValue(true),
 }));
 
 vi.mock('@/hooks/useVoiceEngine', () => ({

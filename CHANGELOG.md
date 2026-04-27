@@ -1,3 +1,53 @@
+# [31.2.14] - 2026-04-27 (BUILD ALL: Release complète + Tests + Governance)
+
+## Release v31.2.14 — BUILD ALL Complet (Range consolidé 31.2.9 → 31.2.14)
+
+### Résumé des changements (versions 31.2.10 → 31.2.14)
+
+Ce BUILD ALL consolide les changements cumulés depuis v31.2.9 et produit une release complète
+avec artefacts Linux (AppImage + DEB), build Android APK, déploiement deployment/latest/,
+et mise à jour complète de la gouvernance.
+
+### Corrections Tests (v31.2.14)
+
+- **Vitest — 415 fichiers PASS (5320 tests)** :
+  - `ConversationSection.render.test.tsx` : mock `chatModes.config` enrichi (`INITIAL_CHAT_MODE_STATE`, `CHAT_MODES`, exports utilitaires)
+  - `providerLoadMatrix.test.ts` : `vi.hoisted()` avec `mockReturnValue` initial pour éviter TDZ sur factory hoistée
+  - `threatScore.test.ts` : `vi.hoisted()` avec `mockReturnValue('IPC')` + mock corrigé sur `@/services/ai/transports/ollamaTransport` (path réel) au lieu de `@/lib/security`
+- **Playwright E2E — 125+ PASS, 0 FAIL** :
+  - `e2e/agents/security-dashboard.e2e.ts` : nextStep assertion alignée sur runtime réel (`'transport'` substring au lieu de `'export gouverne signe'`)
+  - `e2e/htf.spec.ts` : strict mode violation corrigée via `.first()` sur `text=L'Humain à tout faire` et `text=Kevin Thibault`
+- **Rust — cargo test PASS** :
+  - `src-tauri/src/remote_gateway/handlers.rs` : champ `anomaly` ajouté à `make_gateway_state()` dans les tests (Phase C2 `AnomalyDetector`)
+  - `invoke_handler` tests : `ConnectInfo(SocketAddr)` ajouté (3ème argument requis par la nouvelle signature Phase C2)
+
+### Format (v31.2.14)
+
+- **Prettier auto-fix** sur 48 fichiers tests (services/diagnostic, orchestrator, monitoring, security_active, multiproject) via `pnpm run format`
+
+### Gouvernance
+
+- **Mandatory gates** (tous PASS) :
+  - `check` (TypeScript) ✅
+  - `lint` (ESLint) ✅
+  - `format:check` ✅
+  - `verify_instruction_layers.sh` ✅ (FAIL=0)
+  - `detect_recurrence.sh` ✅ (entries=1378)
+  - `verify:registry` ✅ (integrity + quality PASS)
+  - `verify:ollama:cline` ✅ (gemma2:2b, 127.0.0.1:11434, no token gate)
+- **Version bump** : 31.2.13 → 31.2.14 (package.json, Cargo.toml, tauri.conf.json, runtime/)
+- **AutoHeal** : entrée AH-2026-04-27-BUILD-ALL-31.2.14-0001 (full schema)
+
+### Artefacts Release
+
+- `Titan-Stable_31.2.14_amd64.AppImage` (AppImage Linux)
+- `Titan-Stable_31.2.14_amd64.deb` (DEB Debian/Ubuntu)
+- Android APK (Samsung Galaxy S25 Ultra, ADB install)
+- `deployment/latest/` mis à jour (MANIFEST.json, SHA256SUMS.txt, SIZES.txt)
+- `RELEASE_ARTIFACTS_CHECKSUMS_31.2.14.txt`
+
+---
+
 # [31.1.4] - 2026-04-24 (BUILD ALL v31.1.3: Format Correction + Governance + Release)
 
 ## Release v31.1.4 — Comprehensive Build Governance

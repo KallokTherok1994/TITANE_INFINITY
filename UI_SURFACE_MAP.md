@@ -1,3 +1,7 @@
+## 2026-04-27 : BUILD ALL v31.2.14 — Test fixes + Release
+
+> Corrections surfaces E2E : `e2e/htf.spec.ts` — `.first()` sur locators `text=L'Humain à tout faire` et `text=Kevin Thibault` (strict mode violation). `e2e/agents/security-dashboard.e2e.ts` — `nextStep` assertion alignée sur runtime réel `'transport'` (sans Tauri IPC = `oneDoorHealthy=false`). Version surface : v31.2.14 dans footer.
+
 ## 2026-04-27 : Remote SPA — src/remote/ (Phase 1 Named API Keys)
 
 # [2026-04-27] Remote SPA standalone : `src/remote/` — build séparé via `vite.config.remote.ts` → `dist/remote/`. Composants : `RemoteApp` (root, gestion transport), `RemoteAuthScreen` (data-testid=remote-auth-screen, remote-api-key-input, remote-gateway-url-input, remote-login-button), `RemoteChatView` (data-testid=remote-chat-view, remote-chat-messages, remote-chat-input, remote-chat-send-button, remote-logout-button). Hook : `useRemoteChat` (auth + conversation + sendMessage via RemoteTransport). Pas de Tauri APIs — transport 100% fetch via `src/lib/remoteTransport.ts`. Pas de routing interne — SPA mono-page. Build : `pnpm run build:remote`.

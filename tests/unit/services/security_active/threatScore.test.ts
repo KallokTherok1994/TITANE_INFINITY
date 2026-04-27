@@ -4,9 +4,28 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// ── Mocks ──────────────────────────────────────────────────────
+// ── Mocks hoisted ───────────────────────────────────────
+const { mockGetTransportMode, mockGetAllProviders } = vi.hoisted(() => ({
+  mockGetTransportMode: vi.fn().mockReturnValue('IPC'),
+  mockGetAllProviders: vi.fn().mockReturnValue([
+    {
+      id: 'ollama',
+      isActive: true,
+      isHealthy: true,
+      failureCount: 0,
+      consecutiveFailures: 0,
+      lastFailure: null,
+    },
+  ]),
+}));
+
 vi.mock('@/services/monitoring/alerting', async () => ({
-  AlertSeverity: { INFO: 'info', WARNING: 'warning', CRITICAL: 'critical', ERROR: 'error' },
+  AlertSeverity: {
+    INFO: 'info',
+    WARNING: 'warning',
+    CRITICAL: 'critical',
+    ERROR: 'error',
+  },
   alerting: { getActiveAlerts: vi.fn().mockReturnValue([]) },
   aiHealthMonitor: { getActiveAlerts: vi.fn().mockReturnValue([]) },
 }));
@@ -23,18 +42,22 @@ vi.mock('@/config/featureFlags', async () => ({
   getActiveAIProviders: vi.fn().mockReturnValue(['ollama']),
   FEATURE_FLAGS: { ENABLE_EXTERNAL_AI: false, ENABLE_LOCAL_LLM: true },
 }));
-const mockGetTransportMode = vi.fn().mockReturnValue('IPC');
-vi.mock('@/lib/security', async () => ({
+vi.mock('@/services/ai/transports/ollamaTransport', async () => ({
   getTransportMode: mockGetTransportMode,
+  OllamaTransport: class {},
 }));
-const mockGetAllProviders = vi.fn().mockReturnValue([
-  { id: 'ollama', isActive: true, isHealthy: true, failureCount: 0, consecutiveFailures: 0, lastFailure: null },
-]);
 vi.mock('@/services/governance/GovernanceConnector', async () => ({
-  getGovernanceConnector: vi.fn().mockReturnValue({ getAllProviders: mockGetAllProviders }),
+  getGovernanceConnector: vi
+    .fn()
+    .mockReturnValue({ getAllProviders: mockGetAllProviders }),
 }));
 vi.mock('@/services/agents/advancedAgentCatalog', async () => ({
-  getAdvancedAgentStatus: vi.fn().mockReturnValue({ readiness: 'partial', blockers: [], serviceState: '', evidence: [] }),
+  getAdvancedAgentStatus: vi.fn().mockReturnValue({
+    readiness: 'partial',
+    blockers: [],
+    serviceState: '',
+    evidence: [],
+  }),
 }));
 vi.mock('@/lib/tauri-client', async () => ({
   tauriClient: {},
@@ -53,7 +76,14 @@ beforeEach(() => {
   vi.clearAllMocks();
   mockGetTransportMode.mockReturnValue('IPC');
   mockGetAllProviders.mockReturnValue([
-    { id: 'ollama', isActive: true, isHealthy: true, failureCount: 0, consecutiveFailures: 0, lastFailure: null },
+    {
+      id: 'ollama',
+      isActive: true,
+      isHealthy: true,
+      failureCount: 0,
+      consecutiveFailures: 0,
+      lastFailure: null,
+    },
   ]);
 });
 
@@ -75,7 +105,14 @@ describe('computeThreatScore', () => {
 
   it('level escalade avec providers dégradés', () => {
     mockGetAllProviders.mockReturnValue([
-      { id: 'ollama', isActive: true, isHealthy: false, failureCount: 5, consecutiveFailures: 3, lastFailure: Date.now() },
+      {
+        id: 'ollama',
+        isActive: true,
+        isHealthy: false,
+        failureCount: 5,
+        consecutiveFailures: 3,
+        lastFailure: Date.now(),
+      },
     ]);
     const result = computeThreatScore();
     expect(result.score).toBeGreaterThan(0);

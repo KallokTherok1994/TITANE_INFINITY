@@ -4,7 +4,34 @@
 - Harmonisation des dossiers d’archive et audits
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.13 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.14 — Historical baseline preserved below)
+
+## Release v31.2.14 — 2026-04-27 (BUILD ALL — Release complète + Tests + Governance)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.2.14 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.2.14 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.2.14 | ✅ PASS |
+| `runtime/stable/tauri.conf.json` version | 31.2.14 | ✅ PASS |
+| `tauri.base.json` version | 31.2.14 | ✅ PASS |
+| Vitest | 415 fichiers PASS (5320+ tests) | ✅ PASS |
+| Playwright E2E | 125+ PASS, 0 FAIL | ✅ PASS |
+| Rust cargo test | PASS (handlers.rs fixes: anomaly field + ConnectInfo args) | ✅ PASS |
+| Prettier format | 48 fichiers auto-fix | ✅ PASS |
+| TypeScript check | 0 erreurs | ✅ PASS |
+| ESLint | 0 erreurs | ✅ PASS |
+| AppImage artifact | `Titan-Stable_31.2.14_amd64.AppImage` | ✅ PASS |
+| DEB artifact | `Titan-Stable_31.2.14_amd64.deb` | ✅ PASS |
+| Android APK | Samsung Galaxy S25 Ultra — `com.titane.infinity` | ✅ PASS |
+| `deployment/latest/` | v31.2.14 MANIFEST.json + SHA256SUMS.txt + SIZES.txt | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_31.2.14.txt` | généré | ✅ PASS |
+| Mandatory gates | `detect_recurrence`, `verify_instructions`, `verify:registry`, `verify:ollama:cline` | ✅ PASS |
+| AutoHeal | AH-2026-04-27-BUILD-ALL-31.2.14-0001 (full schema) | ✅ PASS |
+
+> Release v31.2.14 : BUILD ALL complet couvrant range 31.2.9→31.2.14. Corrections test Vitest (mock hoisting TDZ), Playwright (strict mode + nextStep runtime), Rust (AnomalyDetector missing field + ConnectInfo arg count). 48 fichiers reformatés. Artefacts Linux + Android produits et déployés.
+
+
 
 ## Release v31.2.13 — 2026-04-27 (DX Optimization + Champion Runtime Validation + Scripts Archive)
 

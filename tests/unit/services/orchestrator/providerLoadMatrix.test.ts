@@ -4,19 +4,40 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// ── Mocks ──────────────────────────────────────────────────────
-const mockGetAggregatedMetrics = vi.fn().mockReturnValue({
+// ── Mocks hoisted (vi.mock factories are hoisted before const declarations) ──
+const { mockGetAggregatedMetrics, mockGetHealthStats, mockGetAllProviders } = vi.hoisted(
+  () => ({
+    mockGetAggregatedMetrics: vi.fn(),
+    mockGetHealthStats: vi.fn(),
+    mockGetAllProviders: vi.fn(),
+  })
+);
+
+// ── Initial return values (set before tests run) ──────────────────────────
+mockGetAggregatedMetrics.mockReturnValue({
   totalRequests: 50,
   successRate: 0.95,
   avgResponseTime: 1000,
   providers: [
-    { provider: 'ollama', totalRequests: 40, successCount: 38, errorCount: 2, avgLatency: 800 },
-    { provider: 'openai', totalRequests: 10, successCount: 9, errorCount: 1, avgLatency: 2000 },
+    {
+      provider: 'ollama',
+      totalRequests: 40,
+      successCount: 38,
+      errorCount: 2,
+      avgLatency: 800,
+    },
+    {
+      provider: 'openai',
+      totalRequests: 10,
+      successCount: 9,
+      errorCount: 1,
+      avgLatency: 2000,
+    },
   ],
   totalFallbacks: 2,
   last24h: { requests: 50, errors: 3, avgLatency: 1000, fallbacks: 2 },
 });
-const mockGetHealthStats = vi.fn().mockReturnValue({ overall: 'healthy' });
+mockGetHealthStats.mockReturnValue({ overall: 'healthy' });
 
 vi.mock('@/services/ai/metricsEngine', async () => ({
   metricsEngine: {
@@ -25,15 +46,33 @@ vi.mock('@/services/ai/metricsEngine', async () => ({
   },
 }));
 
-const mockGetAllProviders = vi.fn().mockReturnValue([
-  { id: 'ollama', isActive: true, isHealthy: true, failureCount: 2, consecutiveFailures: 0, lastFailure: null },
-  { id: 'openai', isActive: true, isHealthy: true, failureCount: 1, consecutiveFailures: 0, lastFailure: null },
+mockGetAllProviders.mockReturnValue([
+  {
+    id: 'ollama',
+    isActive: true,
+    isHealthy: true,
+    failureCount: 2,
+    consecutiveFailures: 0,
+    lastFailure: null,
+  },
+  {
+    id: 'openai',
+    isActive: true,
+    isHealthy: true,
+    failureCount: 1,
+    consecutiveFailures: 0,
+    lastFailure: null,
+  },
 ]);
 vi.mock('@/services/governance/GovernanceConnector', async () => ({
-  getGovernanceConnector: vi.fn().mockReturnValue({ getAllProviders: mockGetAllProviders }),
+  getGovernanceConnector: vi
+    .fn()
+    .mockReturnValue({ getAllProviders: mockGetAllProviders }),
 }));
 vi.mock('@/services/ai/autoHealEngine', async () => ({
-  autoHealEngine: { getStats: vi.fn().mockReturnValue({ healthScore: 85, totalErrors: 3, totalHeals: 2 }) },
+  autoHealEngine: {
+    getStats: vi.fn().mockReturnValue({ healthScore: 85, totalErrors: 3, totalHeals: 2 }),
+  },
 }));
 vi.mock('@/config/aiTimeouts.config', async () => ({
   PROVIDER_TIMEOUTS: { ollama: 30000, openai: 15000 },
@@ -42,9 +81,17 @@ vi.mock('@/config/featureFlags', async () => ({
   getActiveAIProviders: vi.fn().mockReturnValue(['ollama', 'openai']),
 }));
 vi.mock('@/services/agents/advancedAgentCatalog', async () => ({
-  getAdvancedAgentStatus: vi.fn().mockReturnValue({ readiness: 'qualified', blockers: [], serviceState: '', evidence: [] }),
+  getAdvancedAgentStatus: vi.fn().mockReturnValue({
+    readiness: 'qualified',
+    blockers: [],
+    serviceState: '',
+    evidence: [],
+  }),
 }));
-import { getProviderLoadMatrix, computeAdaptiveDispatchPolicy } from '@/services/orchestrator';
+import {
+  getProviderLoadMatrix,
+  computeAdaptiveDispatchPolicy,
+} from '@/services/orchestrator';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -53,15 +100,41 @@ beforeEach(() => {
     successRate: 0.95,
     avgResponseTime: 1000,
     providers: [
-      { provider: 'ollama', totalRequests: 40, successCount: 38, errorCount: 2, avgLatency: 800 },
-      { provider: 'openai', totalRequests: 10, successCount: 9, errorCount: 1, avgLatency: 2000 },
+      {
+        provider: 'ollama',
+        totalRequests: 40,
+        successCount: 38,
+        errorCount: 2,
+        avgLatency: 800,
+      },
+      {
+        provider: 'openai',
+        totalRequests: 10,
+        successCount: 9,
+        errorCount: 1,
+        avgLatency: 2000,
+      },
     ],
     totalFallbacks: 2,
     last24h: { requests: 50, errors: 3, avgLatency: 1000, fallbacks: 2 },
   });
   mockGetAllProviders.mockReturnValue([
-    { id: 'ollama', isActive: true, isHealthy: true, failureCount: 2, consecutiveFailures: 0, lastFailure: null },
-    { id: 'openai', isActive: true, isHealthy: true, failureCount: 1, consecutiveFailures: 0, lastFailure: null },
+    {
+      id: 'ollama',
+      isActive: true,
+      isHealthy: true,
+      failureCount: 2,
+      consecutiveFailures: 0,
+      lastFailure: null,
+    },
+    {
+      id: 'openai',
+      isActive: true,
+      isHealthy: true,
+      failureCount: 1,
+      consecutiveFailures: 0,
+      lastFailure: null,
+    },
   ]);
 });
 
@@ -103,13 +176,33 @@ describe('getProviderLoadMatrix', () => {
 describe('computeAdaptiveDispatchPolicy', () => {
   it('retourne USE_LOCAL_CHAMPION en situation normale', () => {
     const policy = computeAdaptiveDispatchPolicy();
-    expect(['USE_LOCAL_CHAMPION', 'LOAD_BALANCED', 'REDUCE_CLOUD_LOAD', 'FALLBACK_REQUIRED', 'CIRCUIT_OPEN']).toContain(policy.recommendation);
+    expect([
+      'USE_LOCAL_CHAMPION',
+      'LOAD_BALANCED',
+      'REDUCE_CLOUD_LOAD',
+      'FALLBACK_REQUIRED',
+      'CIRCUIT_OPEN',
+    ]).toContain(policy.recommendation);
   });
 
   it('retourne CIRCUIT_OPEN si provider ollama a ≥3 echecs consecutifs', () => {
     mockGetAllProviders.mockReturnValue([
-      { id: 'ollama', isActive: true, isHealthy: true, failureCount: 5, consecutiveFailures: 3, lastFailure: Date.now() },
-      { id: 'openai', isActive: true, isHealthy: true, failureCount: 0, consecutiveFailures: 0, lastFailure: null },
+      {
+        id: 'ollama',
+        isActive: true,
+        isHealthy: true,
+        failureCount: 5,
+        consecutiveFailures: 3,
+        lastFailure: Date.now(),
+      },
+      {
+        id: 'openai',
+        isActive: true,
+        isHealthy: true,
+        failureCount: 0,
+        consecutiveFailures: 0,
+        lastFailure: null,
+      },
     ]);
     const policy = computeAdaptiveDispatchPolicy();
     expect(policy.recommendation).toBe('CIRCUIT_OPEN');
@@ -117,8 +210,22 @@ describe('computeAdaptiveDispatchPolicy', () => {
 
   it('retourne FALLBACK_REQUIRED si provider ollama non healthy', () => {
     mockGetAllProviders.mockReturnValue([
-      { id: 'ollama', isActive: true, isHealthy: false, failureCount: 5, consecutiveFailures: 0, lastFailure: Date.now() },
-      { id: 'openai', isActive: true, isHealthy: true, failureCount: 0, consecutiveFailures: 0, lastFailure: null },
+      {
+        id: 'ollama',
+        isActive: true,
+        isHealthy: false,
+        failureCount: 5,
+        consecutiveFailures: 0,
+        lastFailure: Date.now(),
+      },
+      {
+        id: 'openai',
+        isActive: true,
+        isHealthy: true,
+        failureCount: 0,
+        consecutiveFailures: 0,
+        lastFailure: null,
+      },
     ]);
     const policy = computeAdaptiveDispatchPolicy();
     expect(policy.recommendation).toBe('FALLBACK_REQUIRED');

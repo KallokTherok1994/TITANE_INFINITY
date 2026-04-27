@@ -10,8 +10,8 @@ test.describe("HTF Module — L'Humain à tout faire", () => {
 
   test('affiche la page HTF avec le header', async ({ page }) => {
     await expect(page.getByTestId('htf-module-page')).toBeVisible();
-    await expect(page.locator("text=L'Humain à tout faire")).toBeVisible();
-    await expect(page.locator('text=Kevin Thibault')).toBeVisible();
+    await expect(page.locator("text=L'Humain à tout faire").first()).toBeVisible();
+    await expect(page.locator('text=Kevin Thibault').first()).toBeVisible();
   });
 
   test('les 5 onglets sont présents et navigables', async ({ page }) => {

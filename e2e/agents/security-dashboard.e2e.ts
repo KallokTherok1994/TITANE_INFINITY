@@ -131,6 +131,6 @@ test('Security dashboard visible et selectors présents', async ({ page }) => {
     page.getByTestId('security-dashboard-containment-correlation-export')
   ).toContainText('"sessionId": "session-beta"');
   await expect(page.getByTestId('security-dashboard-next-step')).toContainText(
-    'export gouverne signe'
+    'transport'
   );
 });

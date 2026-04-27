@@ -444,6 +444,9 @@ mod tests {
             .expect("engine init in test"),
         );
         let orchestrator = crate::overdrive::chat_orchestrator::init();
+        let anomaly = crate::remote_gateway::anomaly_detector::AnomalyDetector::new(
+            std::path::PathBuf::from("/tmp/test_anomaly_state.json"),
+        );
         GatewayState {
             auth: Arc::new(RemoteAuthState::new(
                 derive_jwt_secret("test-pass"),
@@ -451,6 +454,7 @@ mod tests {
             )),
             engine,
             orchestrator,
+            anomaly,
         }
     }
 
@@ -477,7 +481,12 @@ mod tests {
             command: "health_check".into(),
             payload: None,
         };
-        let result = invoke_handler(State(state), Json(req)).await;
+        let result = invoke_handler(
+            State(state),
+            ConnectInfo("127.0.0.1:0".parse::<std::net::SocketAddr>().unwrap()),
+            Json(req),
+        )
+        .await;
         // Just verifies no panic
         let _ = result;
     }
@@ -489,7 +498,12 @@ mod tests {
             command: "total_dev_run_command".into(), // not in allowlist
             payload: None,
         };
-        let result = invoke_handler(State(state), Json(req)).await;
+        let result = invoke_handler(
+            State(state),
+            ConnectInfo("127.0.0.1:0".parse::<std::net::SocketAddr>().unwrap()),
+            Json(req),
+        )
+        .await;
         let _ = result;
     }
 }

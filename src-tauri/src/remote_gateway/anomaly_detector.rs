@@ -205,9 +205,18 @@ mod tests {
     }
 
     fn tmp_path() -> PathBuf {
+        let d = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default();
+        let tid = format!("{:?}", std::thread::current().id())
+            .chars()
+            .filter(|c| c.is_ascii_alphanumeric())
+            .collect::<String>();
         std::env::temp_dir().join(format!(
-            "titane_anomaly_test_{}.json",
-            unix_now()
+            "titane_anomaly_test_{}_{}_{}.json",
+            d.as_secs(),
+            d.subsec_nanos(),
+            tid
         ))
     }
 
