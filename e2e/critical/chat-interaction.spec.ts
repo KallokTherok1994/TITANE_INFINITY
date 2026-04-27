@@ -312,6 +312,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   test('ASSISTANT_MARKDOWN_TABLES_AND_QUOTES: la surface canonique rend citations markdown et tableaux', async ({
     page,
   }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     await submitChatMessage(
       page,
       'Synthèse\n\n> Citation importante\n\n| Colonne | Valeur |\n| --- | --- |\n| Alpha | 42 |'
