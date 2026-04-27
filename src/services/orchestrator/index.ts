@@ -478,3 +478,184 @@ export async function dispatchToAgentsWithTimeout(
 
   return Promise.race([dispatchToAgents(event), timeoutPromise]);
 }
+
+// ═══════════════════════════════════════════════════════════════
+// PROVIDER LOAD MATRIX + ADAPTIVE DISPATCH — v31.2.14
+// Matrice de charge temps réel + politique de routage adaptative
+// ═══════════════════════════════════════════════════════════════
+
+export interface ProviderLoadEntry {
+  provider: string;
+  totalRequests: number;
+  successRate: number;
+  avgLatencyMs: number;
+  errorCount: number;
+  isHealthy: boolean;
+  loadScore: number;     // 0–100 — 0 = surchargé/dégradé, 100 = idéal
+  circuitOpen: boolean;
+}
+
+export interface ProviderLoadMatrix {
+  providers: ProviderLoadEntry[];
+  totalLoad: number;
+  dominantProvider: string;
+  balanceScore: number;   // 0–100 — 100 = distribution parfaite
+  computedAt: number;
+}
+
+export type DispatchRecommendation =
+  | 'USE_LOCAL_CHAMPION'    // Ollama gemma2:2b optimal — situation normale
+  | 'REDUCE_CLOUD_LOAD'     // Cloud providers surchargés, basculer vers local
+  | 'FALLBACK_REQUIRED'     // Champion dégradé, activer fallback
+  | 'CIRCUIT_OPEN'          // Circuit ouvert sur provider principal
+  | 'LOAD_BALANCED';        // Distribution équilibrée confirmée
+
+export interface AdaptiveDispatchPolicy {
+  recommendation: DispatchRecommendation;
+  reason: string;
+  preferredProvider: string;
+  fallbackProvider: string;
+  maxConcurrent: number;
+  timeoutMs: number;
+  computedAt: number;
+}
+
+/**
+ * Build a real-time provider load matrix from metricsEngine + governance connector.
+ */
+export function getProviderLoadMatrix(): ProviderLoadMatrix {
+  const metrics = metricsEngine.getAggregatedMetrics();
+  const governance = getGovernanceConnector();
+  const providerSnapshots = governance.getAllProviders();
+
+  const providerMetricsMap = new Map(
+    metrics.providers.map(p => [p.provider, p])
+  );
+
+  const entries: ProviderLoadEntry[] = providerSnapshots
+    .filter(p => p.isActive || p.id === 'local' || p.id === 'ollama')
+    .map(snapshot => {
+      const pm = providerMetricsMap.get(snapshot.id) ?? providerMetricsMap.get(snapshot.id.replace('-', ''));
+      const totalRequests = pm?.totalRequests ?? 0;
+      const successRate = pm?.successCount != null && totalRequests > 0
+        ? pm.successCount / totalRequests
+        : snapshot.isHealthy ? 1 : 0;
+      const avgLatencyMs = pm?.avgLatency ?? 0;
+      const errorCount = pm?.errorCount ?? snapshot.failureCount;
+
+      // Load score: 100 = parfait, pénalités pour erreurs + latence + circuit ouvert
+      const latencyPenalty = Math.min(50, Math.floor(avgLatencyMs / 200)); // -0.5 pt per 200ms
+      const errorPenalty = Math.min(40, errorCount * 5);
+      const healthBonus = snapshot.isHealthy ? 0 : -20;
+      const loadScore = Math.max(0, 100 - latencyPenalty - errorPenalty + healthBonus);
+
+      return {
+        provider: snapshot.id,
+        totalRequests,
+        successRate: Math.round(successRate * 1000) / 1000,
+        avgLatencyMs: Math.round(avgLatencyMs),
+        errorCount,
+        isHealthy: snapshot.isHealthy,
+        loadScore,
+        circuitOpen: snapshot.consecutiveFailures >= 3,
+      };
+    });
+
+  const totalLoad = entries.reduce((acc, e) => acc + e.totalRequests, 0);
+  const dominantProvider = entries.sort((a, b) => b.totalRequests - a.totalRequests)[0]?.provider ?? 'none';
+
+  // Balance score: std dev normalized
+  const avgLoad = totalLoad / Math.max(entries.length, 1);
+  const variance = entries.reduce((acc, e) => acc + Math.pow(e.totalRequests - avgLoad, 2), 0) / Math.max(entries.length, 1);
+  const stdDev = Math.sqrt(variance);
+  const balanceScore = avgLoad > 0 ? Math.max(0, Math.round(100 - (stdDev / avgLoad) * 100)) : 100;
+
+  return {
+    providers: entries,
+    totalLoad,
+    dominantProvider,
+    balanceScore,
+    computedAt: Date.now(),
+  };
+}
+
+/**
+ * Compute adaptive dispatch policy based on current load matrix.
+ * Returns actionable routing recommendation.
+ */
+export function computeAdaptiveDispatchPolicy(): AdaptiveDispatchPolicy {
+  const matrix = getProviderLoadMatrix();
+  const registry = loadRegistry();
+  const activeProviders = getActiveAIProviders();
+  const autoHealStats = autoHealEngine.getStats();
+
+  const localEntry = matrix.providers.find(p => p.provider === 'ollama' || p.provider === 'local');
+  const cloudEntries = matrix.providers.filter(p => p.provider !== 'ollama' && p.provider !== 'local' && p.provider !== 'tauri-backend');
+  const championModel = Object.values(registry.champions)[0]?.model ?? 'gemma2:2b';
+
+  // Circuit open → hard fallback
+  if (localEntry?.circuitOpen) {
+    const cloudFallback = cloudEntries.filter(p => p.isHealthy && !p.circuitOpen)[0]?.provider ?? 'none';
+    return {
+      recommendation: 'CIRCUIT_OPEN',
+      reason: `Circuit ouvert sur ${localEntry.provider} (${localEntry.errorCount} erreurs). Basculement requis.`,
+      preferredProvider: cloudFallback,
+      fallbackProvider: 'none',
+      maxConcurrent: 1,
+      timeoutMs: PROVIDER_TIMEOUTS.ollama,
+      computedAt: Date.now(),
+    };
+  }
+
+  // Champion dégradé → fallback
+  if (localEntry && !localEntry.isHealthy) {
+    const cloudFallback = cloudEntries.filter(p => p.isHealthy)[0]?.provider ?? 'none';
+    return {
+      recommendation: 'FALLBACK_REQUIRED',
+      reason: `Provider local ${localEntry.provider} dégradé (score=${localEntry.loadScore}). Fallback cloud activé.`,
+      preferredProvider: cloudFallback,
+      fallbackProvider: 'none',
+      maxConcurrent: 2,
+      timeoutMs: 10_000,
+      computedAt: Date.now(),
+    };
+  }
+
+  // Cloud surchargé → push vers local
+  const overloadedCloud = cloudEntries.filter(p => p.loadScore < 30 || p.errorCount > 5);
+  if (overloadedCloud.length > 0) {
+    return {
+      recommendation: 'REDUCE_CLOUD_LOAD',
+      reason: `${overloadedCloud.length} provider(s) cloud surchargé(s). Favoriser le champion local ${championModel}.`,
+      preferredProvider: localEntry?.provider ?? 'ollama',
+      fallbackProvider: cloudEntries.filter(p => !overloadedCloud.includes(p))[0]?.provider ?? 'none',
+      maxConcurrent: 3,
+      timeoutMs: PROVIDER_TIMEOUTS.ollama,
+      computedAt: Date.now(),
+    };
+  }
+
+  // Distribution équilibrée + autoHeal sain
+  if (matrix.balanceScore >= 70 && autoHealStats.healthScore >= 70) {
+    return {
+      recommendation: 'LOAD_BALANCED',
+      reason: `Distribution équilibrée (score=${matrix.balanceScore}) · champion ${championModel} optimal · autoheal score=${autoHealStats.healthScore}.`,
+      preferredProvider: localEntry?.provider ?? 'ollama',
+      fallbackProvider: cloudEntries[0]?.provider ?? 'none',
+      maxConcurrent: 5,
+      timeoutMs: PROVIDER_TIMEOUTS.ollama,
+      computedAt: Date.now(),
+    };
+  }
+
+  // Situation normale — utiliser champion local
+  return {
+    recommendation: 'USE_LOCAL_CHAMPION',
+    reason: `Champion local ${championModel} actif · ${activeProviders.length} provider(s) actifs · load total=${matrix.totalLoad}.`,
+    preferredProvider: localEntry?.provider ?? 'ollama',
+    fallbackProvider: cloudEntries[0]?.provider ?? 'none',
+    maxConcurrent: 3,
+    timeoutMs: PROVIDER_TIMEOUTS.ollama,
+    computedAt: Date.now(),
+  };
+}

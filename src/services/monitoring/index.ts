@@ -248,3 +248,213 @@ export async function getProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
 // ✅ OPT-9 FIX: All exports now through lazy loader (no static sentry.ts import)
 // Removed: export { initSentry, captureWebVitals, testSentry, Sentry } from './sentry';
 // Use: initMonitoringAsync() instead of initSentry() for lazy initialization
+
+// ═══════════════════════════════════════════════════════════════
+// AGENT HEALTH MATRIX — v31.2.14
+// Supervision croisée des 5 agents avancés avec heartbeat proactif
+// ═══════════════════════════════════════════════════════════════
+
+export type AgentHealthStatus = 'healthy' | 'degraded' | 'offline' | 'unknown';
+
+export interface AgentHealthEntry {
+  id: string;
+  status: AgentHealthStatus;
+  readiness: string;
+  lastCheckedAt: number;
+  lastChangedAt: number;
+  consecutiveDegradations: number;
+  blockers: string[];
+  evidence: string;
+}
+
+export interface AgentHealthMatrix {
+  agents: Record<string, AgentHealthEntry>;
+  overallHealth: AgentHealthStatus;
+  degradedCount: number;
+  offlineCount: number;
+  lastRefreshedAt: number;
+  alertTriggers: string[];
+}
+
+type AgentStatusGetter = () => {
+  readiness?: string;
+  blockers?: string[];
+  serviceState?: string;
+  evidence?: string[];
+};
+
+const HEALTH_MATRIX_STORAGE_KEY = 'titane_agent_health_matrix';
+const HEARTBEAT_INTERVAL_MS = 30_000; // 30 s
+const DEGRADATION_ALERT_THRESHOLD = 2; // N consecutifs → alerte
+
+let _heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+let _degradationCallbacks: Array<(entry: AgentHealthEntry) => void> = [];
+let _healthMatrix: AgentHealthMatrix | null = null;
+
+function resolveAgentHealth(readiness?: string): AgentHealthStatus {
+  if (readiness === 'qualified') return 'healthy';
+  if (readiness === 'partial') return 'degraded';
+  if (readiness === 'planned') return 'offline';
+  return 'unknown';
+}
+
+function loadStoredMatrix(): AgentHealthMatrix | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(HEALTH_MATRIX_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as AgentHealthMatrix) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveMatrix(matrix: AgentHealthMatrix): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(HEALTH_MATRIX_STORAGE_KEY, JSON.stringify(matrix));
+  } catch {
+    // storage full or blocked
+  }
+}
+
+/**
+ * Probe all 5 advanced agents and return the consolidated health matrix.
+ * Uses dynamic imports to avoid circular deps.
+ */
+export async function refreshAgentHealthMatrix(): Promise<AgentHealthMatrix> {
+  const now = Date.now();
+  const stored = _healthMatrix ?? loadStoredMatrix();
+  const agents: Record<string, AgentHealthEntry> = {};
+
+  const agentLoaders: Array<{ id: string; loader: () => Promise<AgentStatusGetter> }> = [
+    { id: 'monitoring', loader: () => import('@/services/monitoring').then(m => m.getMonitoringAgentStatus as AgentStatusGetter) },
+    { id: 'diagnostic', loader: () => import('@/services/diagnostic').then(m => m.getDiagnosticAgentStatus as AgentStatusGetter) },
+    { id: 'explainability', loader: () => import('@/services/explainability').then(m => m.getExplainabilityAgentStatus as AgentStatusGetter) },
+    { id: 'orchestrator', loader: () => import('@/services/orchestrator').then(m => m.getOrchestratorAgentStatus as AgentStatusGetter) },
+    { id: 'security_active', loader: () => import('@/services/security_active').then(m => m.getSecurityActiveAgentStatus as AgentStatusGetter) },
+  ];
+
+  const results = await Promise.allSettled(
+    agentLoaders.map(async ({ id, loader }) => {
+      const fn = await loader();
+      const status = fn();
+      return { id, status };
+    })
+  );
+
+  const alertTriggers: string[] = [];
+
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      const id = agentLoaders[results.indexOf(result)]?.id ?? 'unknown';
+      const prev = stored?.agents?.[id];
+      agents[id] = {
+        id,
+        status: 'offline',
+        readiness: 'unknown',
+        lastCheckedAt: now,
+        lastChangedAt: prev?.status !== 'offline' ? now : (prev?.lastChangedAt ?? now),
+        consecutiveDegradations: (prev?.consecutiveDegradations ?? 0) + 1,
+        blockers: [`Agent ${id} load failed: ${String(result.reason)}`],
+        evidence: 'Import failed',
+      };
+      continue;
+    }
+
+    const { id, status } = result.value;
+    const healthStatus = resolveAgentHealth(status?.readiness);
+    const prev = stored?.agents?.[id];
+    const prevStatus = prev?.status ?? 'unknown';
+    const consecutiveDegradations =
+      healthStatus === 'healthy'
+        ? 0
+        : (prev?.consecutiveDegradations ?? 0) + 1;
+    const lastChangedAt = prevStatus !== healthStatus ? now : (prev?.lastChangedAt ?? now);
+
+    agents[id] = {
+      id,
+      status: healthStatus,
+      readiness: status?.readiness ?? 'unknown',
+      lastCheckedAt: now,
+      lastChangedAt,
+      consecutiveDegradations,
+      blockers: status?.blockers?.slice(0, 3) ?? [],
+      evidence: status?.evidence?.[0] ?? status?.serviceState ?? 'no evidence',
+    };
+
+    // Fire degradation callbacks
+    if (
+      consecutiveDegradations >= DEGRADATION_ALERT_THRESHOLD &&
+      healthStatus !== 'healthy'
+    ) {
+      alertTriggers.push(`Agent ${id} dégradé x${consecutiveDegradations} (${healthStatus})`);
+      _degradationCallbacks.forEach(cb => cb(agents[id]!));
+    }
+  }
+
+  const healthStatuses = Object.values(agents).map(a => a.status);
+  const offlineCount = healthStatuses.filter(s => s === 'offline').length;
+  const degradedCount = healthStatuses.filter(s => s === 'degraded').length;
+  const overallHealth: AgentHealthStatus =
+    offlineCount > 0 ? 'offline' :
+    degradedCount > 1 ? 'degraded' :
+    degradedCount === 1 ? 'degraded' :
+    'healthy';
+
+  const matrix: AgentHealthMatrix = {
+    agents,
+    overallHealth,
+    degradedCount,
+    offlineCount,
+    lastRefreshedAt: now,
+    alertTriggers,
+  };
+
+  _healthMatrix = matrix;
+  saveMatrix(matrix);
+  return matrix;
+}
+
+/** Get the last known health matrix (synchronous, no probe). */
+export function getLastAgentHealthMatrix(): AgentHealthMatrix | null {
+  return _healthMatrix ?? loadStoredMatrix();
+}
+
+/** Register a callback fired when an agent reaches DEGRADATION_ALERT_THRESHOLD. */
+export function onAgentDegraded(cb: (entry: AgentHealthEntry) => void): () => void {
+  _degradationCallbacks.push(cb);
+  return () => {
+    _degradationCallbacks = _degradationCallbacks.filter(fn => fn !== cb);
+  };
+}
+
+/**
+ * Start the proactive heartbeat loop (30s interval).
+ * Safe to call multiple times — idempotent.
+ */
+export function startAgentHeartbeatLoop(): void {
+  if (_heartbeatTimer !== null) return;
+  // Initial probe at start
+  void refreshAgentHealthMatrix();
+  _heartbeatTimer = setInterval(() => {
+    void refreshAgentHealthMatrix();
+  }, HEARTBEAT_INTERVAL_MS);
+}
+
+/** Stop the heartbeat loop. */
+export function stopAgentHeartbeatLoop(): void {
+  if (_heartbeatTimer !== null) {
+    clearInterval(_heartbeatTimer);
+    _heartbeatTimer = null;
+  }
+}
+
+/** Reset for tests */
+export function resetAgentHealthMatrixForTests(): void {
+  stopAgentHeartbeatLoop();
+  _healthMatrix = null;
+  _degradationCallbacks = [];
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem(HEALTH_MATRIX_STORAGE_KEY);
+  }
+}

@@ -1079,3 +1079,262 @@ export function getSecurityActiveAgentStatus(
 export function startSecurityActiveAgent() {
   return getSecurityActiveAgentStatus();
 }
+
+// ═══════════════════════════════════════════════════════════════
+// THREAT SCORING + IPC ANOMALY DETECTION — v31.2.14
+// Score de menace 0–100 + détection de patterns IPC anormaux
+// ═══════════════════════════════════════════════════════════════
+
+export type ThreatLevel = 'none' | 'low' | 'medium' | 'high' | 'critical';
+
+export interface ThreatScore {
+  /** Score global de menace 0–100. 0 = aucune menace, 100 = critique. */
+  score: number;
+  level: ThreatLevel;
+  label: string;
+  breakdown: {
+    detectionEventScore: number;     // Nombre + sévérité des événements détection
+    containmentViolations: number;   // Confinements actifs critiques
+    oneDoorViolation: number;        // 0 ou 50 — violation One Door = toujours élevée
+    unacknowledgedCritical: number;  // Événements critiques non acquittés
+    consecutiveFailures: number;     // Providers avec erreurs consécutives
+  };
+  topThreats: string[];
+  mitigations: string[];
+  computedAt: number;
+}
+
+export interface IPCPatternAnomaly {
+  id: string;
+  pattern: 'BURST' | 'REPEATED_FAIL' | 'UNKNOWN_COMMAND' | 'RATE_EXCEEDED' | 'TRANSPORT_MISMATCH';
+  severity: SecurityEventSeverity;
+  detail: string;
+  command?: string;
+  count?: number;
+  detectedAt: number;
+}
+
+export interface IPCAnomalyReport {
+  anomalies: IPCPatternAnomaly[];
+  totalAnomalies: number;
+  highestSeverity: SecurityEventSeverity;
+  summary: string;
+  computedAt: number;
+}
+
+const IPC_CALL_WINDOW_KEY = 'titane_ipc_call_window';
+const IPC_CALL_WINDOW_MS = 60_000; // 1 min
+
+interface IPCCallRecord {
+  command: string;
+  timestamp: number;
+  success: boolean;
+}
+
+function loadIPCCallWindow(): IPCCallRecord[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.sessionStorage.getItem(IPC_CALL_WINDOW_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as IPCCallRecord[];
+    const cutoff = Date.now() - IPC_CALL_WINDOW_MS;
+    return parsed.filter(r => r.timestamp >= cutoff);
+  } catch {
+    return [];
+  }
+}
+
+function saveIPCCallWindow(records: IPCCallRecord[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.sessionStorage.setItem(IPC_CALL_WINDOW_KEY, JSON.stringify(records.slice(-200)));
+  } catch {
+    // storage full
+  }
+}
+
+/** Record an IPC call for anomaly detection (call from secureInvoke wrapper). */
+export function recordIPCCall(command: string, success: boolean): void {
+  const records = loadIPCCallWindow();
+  records.push({ command, timestamp: Date.now(), success });
+  saveIPCCallWindow(records);
+}
+
+/**
+ * Analyze IPC call patterns for anomalies in the last 60s window.
+ */
+export function detectIPCAnomalies(): IPCAnomalyReport {
+  const records = loadIPCCallWindow();
+  const now = Date.now();
+  const anomalies: IPCPatternAnomaly[] = [];
+
+  // ── Pattern 1: Burst detection (>30 calls/min to same command) ──
+  const byCommand = new Map<string, IPCCallRecord[]>();
+  records.forEach(r => {
+    const existing = byCommand.get(r.command) ?? [];
+    existing.push(r);
+    byCommand.set(r.command, existing);
+  });
+
+  byCommand.forEach((calls, command) => {
+    if (calls.length > 30) {
+      anomalies.push({
+        id: `burst-${command}-${now}`,
+        pattern: 'BURST',
+        severity: calls.length > 60 ? 'critical' : 'warning',
+        detail: `${calls.length} appels à "${command}" en < 60s`,
+        command,
+        count: calls.length,
+        detectedAt: now,
+      });
+    }
+  });
+
+  // ── Pattern 2: Repeated failures (>5 failures same command) ───
+  byCommand.forEach((calls, command) => {
+    const failures = calls.filter(c => !c.success);
+    if (failures.length >= 5) {
+      anomalies.push({
+        id: `fail-${command}-${now}`,
+        pattern: 'REPEATED_FAIL',
+        severity: failures.length >= 10 ? 'critical' : 'warning',
+        detail: `${failures.length} échecs consécutifs sur "${command}"`,
+        command,
+        count: failures.length,
+        detectedAt: now,
+      });
+    }
+  });
+
+  // ── Pattern 3: Rate exceeded (>100 total calls/min) ────────────
+  if (records.length > 100) {
+    anomalies.push({
+      id: `rate-${now}`,
+      pattern: 'RATE_EXCEEDED',
+      severity: records.length > 200 ? 'critical' : 'warning',
+      detail: `${records.length} appels IPC en < 60s — seuil 100 dépassé`,
+      count: records.length,
+      detectedAt: now,
+    });
+  }
+
+  // ── Pattern 4: Transport mismatch detection ────────────────────
+  const transportMode = getTransportMode();
+  if (transportMode.toUpperCase() !== 'IPC') {
+    anomalies.push({
+      id: `transport-mismatch-${now}`,
+      pattern: 'TRANSPORT_MISMATCH',
+      severity: 'critical',
+      detail: `Transport actif "${transportMode}" — violation One Door (IPC obligatoire)`,
+      detectedAt: now,
+    });
+  }
+
+  const highestSeverity: SecurityEventSeverity =
+    anomalies.some(a => a.severity === 'critical') ? 'critical' :
+    anomalies.some(a => a.severity === 'warning') ? 'warning' :
+    'info';
+
+  return {
+    anomalies,
+    totalAnomalies: anomalies.length,
+    highestSeverity,
+    summary: anomalies.length === 0
+      ? `Aucune anomalie IPC détectée sur ${records.length} appels / 60s`
+      : `${anomalies.length} anomalie(s) IPC — sévérité max ${highestSeverity}`,
+    computedAt: now,
+  };
+}
+
+/**
+ * Compute a consolidated threat score (0–100) combining:
+ * - Detection events (count + severity)
+ * - Containment violations
+ * - One Door transport integrity
+ * - Unacknowledged critical events
+ * - Provider consecutive failures
+ */
+export function computeThreatScore(
+  severityFilter: SecurityAuditSeverityFilter = 'all'
+): ThreatScore {
+  const now = Date.now();
+  const auditView = buildSecurityAuditView(collectCurrentSecurityEvents(), severityFilter);
+  const governance = getGovernanceConnector();
+  const transportMode = getTransportMode();
+
+  // 1. Detection events scoring
+  const criticalDetections = auditView.activeDetectionEvents.filter(e => e.severity === 'critical').length;
+  const warnDetections = auditView.activeDetectionEvents.filter(e => e.severity === 'warning').length;
+  const detectionEventScore = Math.min(40, criticalDetections * 15 + warnDetections * 5);
+
+  // 2. Containment violations (critical containment events)
+  const criticalContainment = auditView.activeContainmentEvents.filter(e => e.severity === 'critical').length;
+  const containmentViolations = Math.min(20, criticalContainment * 10);
+
+  // 3. One Door violation
+  const oneDoorOk = transportMode.toUpperCase() === 'IPC';
+  const oneDoorViolation = oneDoorOk ? 0 : 50;
+
+  // 4. Unacknowledged critical events
+  const unackCritical = auditView.filteredHistory.filter(e => !e.acknowledged && e.severity === 'critical').length;
+  const unacknowledgedCritical = Math.min(20, unackCritical * 5);
+
+  // 5. Provider consecutive failures
+  const providers = governance.getAllProviders();
+  const highFailureProviders = providers.filter(p => p.consecutiveFailures >= 3).length;
+  const consecutiveFailures = Math.min(20, highFailureProviders * 10);
+
+  const rawScore = detectionEventScore + containmentViolations + oneDoorViolation +
+    unacknowledgedCritical + consecutiveFailures;
+  const score = Math.min(100, rawScore);
+
+  const level: ThreatLevel =
+    score === 0 ? 'none' :
+    score < 20 ? 'low' :
+    score < 40 ? 'medium' :
+    score < 70 ? 'high' :
+    'critical';
+
+  const topThreats: string[] = [];
+  const mitigations: string[] = [];
+
+  if (!oneDoorOk) {
+    topThreats.push(`⚠ One Door violation: transport actuel "${transportMode}" (IPC requis)`);
+    mitigations.push('Restaurer le transport IPC canonique immédiatement');
+  }
+  if (criticalDetections > 0) {
+    topThreats.push(`${criticalDetections} événement(s) détection critique(s) actif(s)`);
+    mitigations.push('Acquitter et traiter les événements critiques dans le dashboard sécurité');
+  }
+  if (highFailureProviders > 0) {
+    topThreats.push(`${highFailureProviders} provider(s) avec ≥3 échecs consécutifs`);
+    mitigations.push('Vérifier la santé des providers AI et réinitialiser les circuit-breakers');
+  }
+  if (unackCritical > 0) {
+    topThreats.push(`${unackCritical} alerte(s) critique(s) non acquittée(s)`);
+    mitigations.push('Acquitter les alertes critiques depuis le panneau de sécurité');
+  }
+
+  return {
+    score,
+    level,
+    label: `${score}/100 (${level.toUpperCase()}) — ${
+      level === 'none' ? 'Aucune menace détectée' :
+      level === 'low' ? 'Menace faible — surveillance normale' :
+      level === 'medium' ? 'Menace modérée — attention requise' :
+      level === 'high' ? 'Menace élevée — action recommandée' :
+      'Menace critique — intervention immédiate'
+    }`,
+    breakdown: { detectionEventScore, containmentViolations, oneDoorViolation, unacknowledgedCritical, consecutiveFailures },
+    topThreats,
+    mitigations,
+    computedAt: now,
+  };
+}
+
+/** Reset for tests */
+export function resetIPCCallWindowForTests(): void {
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.removeItem(IPC_CALL_WINDOW_KEY);
+  }
+}

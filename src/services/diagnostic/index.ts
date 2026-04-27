@@ -1,7 +1,7 @@
 import { getAdvancedAgentStatus } from '@/services/agents/advancedAgentCatalog';
 import { getActiveAIProviders } from '@/config/featureFlags';
 import { ollamaProvider } from '@/services/ai/providers/ollama';
-import { alerting } from '@/services/monitoring/alerting';
+import { alerting, AlertSeverity } from '@/services/monitoring/alerting';
 import { chatMetrics } from '@/services/monitoring/chatMetrics';
 
 const DIAGNOSTIC_REPORT_HISTORY_KEY = 'titane_diagnostic_report_history';
@@ -216,4 +216,225 @@ export function getDiagnosticAgentStatus() {
 
 export function startDiagnosticAgent() {
   return getDiagnosticAgentStatus();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ACTIVE DIAGNOSTIC ENGINE — v31.2.14
+// Scan actif périodique avec rapport structuré et actions correctives
+// ═══════════════════════════════════════════════════════════════
+
+export type DiagnosticCheckStatus = 'pass' | 'warn' | 'fail';
+
+export interface DiagnosticCheckResult {
+  id: string;
+  label: string;
+  status: DiagnosticCheckStatus;
+  detail: string;
+  suggestedAction?: string;
+}
+
+export interface ActiveDiagnosticScanResult {
+  scanId: string;
+  timestamp: number;
+  durationMs: number;
+  overallStatus: DiagnosticCheckStatus;
+  checks: DiagnosticCheckResult[];
+  correctiveActions: string[];
+  rawSignals: {
+    activeAlerts: number;
+    totalErrors: number;
+    ollamaHealth: string;
+    ollamaErrorCount: number;
+    activeProviders: string[];
+  };
+}
+
+const ACTIVE_SCAN_HISTORY_KEY = 'titane_diagnostic_active_scan_history';
+const ACTIVE_SCAN_HISTORY_LIMIT = 10;
+const ACTIVE_SCAN_INTERVAL_MS = 60_000; // 1 min
+
+let _activeScanTimer: ReturnType<typeof setInterval> | null = null;
+let _activeScanListeners: Array<(result: ActiveDiagnosticScanResult) => void> = [];
+
+function loadActiveScanHistory(): ActiveDiagnosticScanResult[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(ACTIVE_SCAN_HISTORY_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveActiveScanHistory(history: ActiveDiagnosticScanResult[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(ACTIVE_SCAN_HISTORY_KEY, JSON.stringify(history));
+  } catch {
+    // storage full
+  }
+}
+
+function appendActiveScanHistory(result: ActiveDiagnosticScanResult): void {
+  const history = loadActiveScanHistory();
+  const next = [...history, result].slice(-ACTIVE_SCAN_HISTORY_LIMIT);
+  saveActiveScanHistory(next);
+}
+
+/**
+ * Execute an active diagnostic scan across all observable signals.
+ * Returns a structured report with check results and corrective actions.
+ */
+export function runActiveDiagnosticScan(): ActiveDiagnosticScanResult {
+  const start = Date.now();
+  const globalMetrics = chatMetrics.getGlobalMetrics();
+  const activeAlerts = alerting.getActiveAlerts().filter(alert => !alert.resolved);
+  const ollamaStats = (ollamaProvider.getStats?.() ?? {
+    errorCount: 0,
+    endpointHealthy: null,
+    config: { model: 'unknown', endpoint: 'unknown' },
+  }) as DiagnosticOllamaStats;
+  const activeProviders = getActiveAIProviders();
+
+  const checks: DiagnosticCheckResult[] = [];
+  const correctiveActions: string[] = [];
+
+  // ── Check 1: Active alerts ───────────────────────────────────
+  if (activeAlerts.length === 0) {
+    checks.push({ id: 'alerts', label: 'Alertes actives', status: 'pass', detail: 'Aucune alerte active' });
+  } else {
+    const sev = activeAlerts.some(a => a.severity === AlertSeverity.CRITICAL) ? 'fail' : 'warn';
+    checks.push({
+      id: 'alerts',
+      label: 'Alertes actives',
+      status: sev,
+      detail: `${activeAlerts.length} alerte(s) active(s)`,
+      suggestedAction: 'Résoudre les alertes actives dans le dashboard monitoring',
+    });
+    if (sev === 'fail') correctiveActions.push('RESOLVE_ACTIVE_ALERTS');
+  }
+
+  // ── Check 2: Erreurs globales ────────────────────────────────
+  const errorRate = globalMetrics.totalMessages > 0
+    ? globalMetrics.totalErrors / globalMetrics.totalMessages
+    : 0;
+  if (errorRate === 0) {
+    checks.push({ id: 'error-rate', label: 'Taux d\'erreur', status: 'pass', detail: '0% erreurs' });
+  } else if (errorRate < 0.1) {
+    checks.push({ id: 'error-rate', label: 'Taux d\'erreur', status: 'warn', detail: `${(errorRate * 100).toFixed(1)}% erreurs`, suggestedAction: 'Surveiller la tendance des erreurs' });
+    correctiveActions.push('MONITOR_ERROR_TREND');
+  } else {
+    checks.push({ id: 'error-rate', label: 'Taux d\'erreur', status: 'fail', detail: `${(errorRate * 100).toFixed(1)}% erreurs — seuil critique dépassé`, suggestedAction: 'Identifier et corriger la source d\'erreurs principale' });
+    correctiveActions.push('INVESTIGATE_ERROR_SOURCE');
+  }
+
+  // ── Check 3: Ollama santé ────────────────────────────────────
+  if (ollamaStats.endpointHealthy === true && ollamaStats.errorCount === 0) {
+    checks.push({ id: 'ollama', label: 'Santé Ollama', status: 'pass', detail: `${ollamaStats.config.model} @ ${ollamaStats.config.endpoint} — sain` });
+  } else if (ollamaStats.endpointHealthy === false || ollamaStats.errorCount > 0) {
+    const sev: DiagnosticCheckStatus = ollamaStats.endpointHealthy === false ? 'fail' : 'warn';
+    checks.push({
+      id: 'ollama',
+      label: 'Santé Ollama',
+      status: sev,
+      detail: `${ollamaStats.endpointHealthy === false ? 'endpoint inaccessible' : `${ollamaStats.errorCount} erreurs récentes`} — modèle ${ollamaStats.config.model}`,
+      suggestedAction: 'Relancer Ollama: ollama serve && ollama pull gemma2:2b',
+    });
+    correctiveActions.push(ollamaStats.endpointHealthy === false ? 'RESTART_OLLAMA' : 'CLEAR_OLLAMA_ERRORS');
+  } else {
+    checks.push({ id: 'ollama', label: 'Santé Ollama', status: 'warn', detail: 'État Ollama non sondé' });
+  }
+
+  // ── Check 4: Providers actifs ────────────────────────────────
+  if (activeProviders.length === 0) {
+    checks.push({ id: 'providers', label: 'Providers actifs', status: 'fail', detail: 'Aucun provider IA actif', suggestedAction: 'Activer au minimum le provider Ollama local' });
+    correctiveActions.push('ACTIVATE_LOCAL_PROVIDER');
+  } else {
+    checks.push({ id: 'providers', label: 'Providers actifs', status: 'pass', detail: `${activeProviders.join(', ')} actifs` });
+  }
+
+  // ── Check 5: Latence de réponse ──────────────────────────────
+  const avgLatency = globalMetrics.avgResponseTime;
+  if (avgLatency === 0 || globalMetrics.totalMessages === 0) {
+    checks.push({ id: 'latency', label: 'Latence réponse', status: 'pass', detail: 'Pas encore de données de latence' });
+  } else if (avgLatency < 3000) {
+    checks.push({ id: 'latency', label: 'Latence réponse', status: 'pass', detail: `${Math.round(avgLatency)}ms moyenne` });
+  } else if (avgLatency < 8000) {
+    checks.push({ id: 'latency', label: 'Latence réponse', status: 'warn', detail: `${Math.round(avgLatency)}ms — latence élevée`, suggestedAction: 'Vérifier la charge réseau et la disponibilité Ollama' });
+    correctiveActions.push('CHECK_NETWORK_LOAD');
+  } else {
+    checks.push({ id: 'latency', label: 'Latence réponse', status: 'fail', detail: `${Math.round(avgLatency)}ms — latence critique`, suggestedAction: 'Basculer vers le provider local, vérifier Ollama serve' });
+    correctiveActions.push('SWITCH_TO_LOCAL_PROVIDER');
+  }
+
+  const overallStatus: DiagnosticCheckStatus =
+    checks.some(c => c.status === 'fail') ? 'fail' :
+    checks.some(c => c.status === 'warn') ? 'warn' :
+    'pass';
+
+  const scanResult: ActiveDiagnosticScanResult = {
+    scanId: `diag-scan-${start}`,
+    timestamp: start,
+    durationMs: Date.now() - start,
+    overallStatus,
+    checks,
+    correctiveActions: [...new Set(correctiveActions)],
+    rawSignals: {
+      activeAlerts: activeAlerts.length,
+      totalErrors: globalMetrics.totalErrors,
+      ollamaHealth: ollamaStats.endpointHealthy === true ? 'sain' : ollamaStats.endpointHealthy === false ? 'dégradé' : 'non sondé',
+      ollamaErrorCount: ollamaStats.errorCount,
+      activeProviders,
+    },
+  };
+
+  appendActiveScanHistory(scanResult);
+  _activeScanListeners.forEach(cb => cb(scanResult));
+  return scanResult;
+}
+
+/** Get the scan history (last N scans). */
+export function getActiveScanHistory(): ActiveDiagnosticScanResult[] {
+  return loadActiveScanHistory();
+}
+
+/**
+ * Start periodic active diagnostic loop (1-min interval).
+ * Idempotent — safe to call multiple times.
+ */
+export function startDiagnosticLoop(): void {
+  if (_activeScanTimer !== null) return;
+  void runActiveDiagnosticScan();
+  _activeScanTimer = setInterval(() => {
+    void runActiveDiagnosticScan();
+  }, ACTIVE_SCAN_INTERVAL_MS);
+}
+
+/** Stop the periodic diagnostic loop. */
+export function stopDiagnosticLoop(): void {
+  if (_activeScanTimer !== null) {
+    clearInterval(_activeScanTimer);
+    _activeScanTimer = null;
+  }
+}
+
+/** Subscribe to scan results in real time. Returns unsubscribe function. */
+export function onDiagnosticScan(
+  cb: (result: ActiveDiagnosticScanResult) => void
+): () => void {
+  _activeScanListeners.push(cb);
+  return () => {
+    _activeScanListeners = _activeScanListeners.filter(fn => fn !== cb);
+  };
+}
+
+/** Reset for tests */
+export function resetDiagnosticLoopForTests(): void {
+  stopDiagnosticLoop();
+  _activeScanListeners = [];
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem(ACTIVE_SCAN_HISTORY_KEY);
+  }
 }
