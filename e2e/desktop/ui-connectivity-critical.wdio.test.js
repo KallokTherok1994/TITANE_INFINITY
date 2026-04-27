@@ -242,6 +242,9 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
     const tabConversation = await $('[data-testid="tab-conversation"]');
     await tabConversation.waitForExist({ timeout: 10000 });
 
+    const conversationPage = await $('[data-testid="page-conversation"]');
+    await conversationPage.waitForExist({ timeout: 10000 });
+
     const controls = [
       'select-chat-provider',
       'chat-mode-selector-select',
@@ -259,6 +262,26 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
       await element.waitForExist({ timeout: 10000 });
       assert.equal(await element.isExisting(), true, `Missing ${testId}`);
     }
+
+    const legacyModeSelect = await $('[data-testid="select-conversation-mode"]');
+    assert.equal(
+      await legacyModeSelect.isExisting(),
+      false,
+      'legacy conversation mode select should not remain live on desktop'
+    );
+
+    const modeSelect = await $('[data-testid="chat-mode-selector-select"]');
+    assert.equal(await modeSelect.getValue(), 'default');
+    assert.equal(
+      await conversationPage.getAttribute('data-conversation-mode'),
+      'default',
+      'page-conversation should publish the default conversation mode'
+    );
+    assert.equal(
+      await conversationPage.getAttribute('data-chat-store-mode'),
+      'default',
+      'page-conversation should publish the default store mode'
+    );
   });
 
   it('keeps TWINS in overflow while chat stays fullscreen on Titane', async () => {
