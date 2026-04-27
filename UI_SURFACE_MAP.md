@@ -633,3 +633,14 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Testids stables: `remote-key-dashboard`, `remote-key-create-form`, `remote-key-label-input`, `remote-key-create-button`, `remote-key-refresh-button`, `remote-key-secret-banner`, `remote-key-secret-value`, `remote-key-copy-button`, `remote-key-dismiss-button`, `remote-key-table`, `remote-key-row-{key_id}`, `remote-key-rotate-{key_id}`, `remote-key-revoke-{key_id}`, `remote-key-count`, `remote-key-error`, `remote-key-loading`, `remote-key-empty`
 - Tests: `tests/unit/remoteKeyAgent.test.ts` (12 tests PASS)
 - IPC: remote_key_create / remote_key_list / remote_key_revoke / remote_key_rotate (ALLOWED_COMMANDS)
+
+## 2026-05-01 — Agent IA Configuration Panel (src/components/RemoteKeyDashboard/AgentConfigPanel.tsx)
+- Surface: `agent-config-panel` — onglet "Agent IA" dans RemoteKeyDashboard
+- Composant: `src/components/RemoteKeyDashboard/AgentConfigPanel.tsx`
+- Services: `src/services/remoteKeyManager/AgentConfig.ts`, `src/services/remoteKeyManager/AgentAI.ts`
+- Testids stables: `agent-config-panel`, `agent-training-status`, `agent-rotation-warnings`, `agent-analyze-btn`, `agent-analysis-summary`, `agent-analysis-recommendations`, `agent-analysis-anomaly`, `agent-suggest-labels-input`, `agent-suggest-labels-btn`, `agent-labels-result`, `agent-config-model-select`, `agent-config-prompt-textarea`, `agent-config-auto-rotate-input`, `agent-config-warn-input`, `agent-config-save-btn`, `agent-config-reset-btn`
+- Tabs: `remote-key-tab-keys`, `remote-key-tab-agent`
+- Modèle Ollama: `titane-key-agent` (FROM gemma2:2b, Modelfile: TITANE_KEY_AGENT.Modelfile)
+- Persistance agent config: `localStorage['titane::agent::remote_key_config']`
+- Usage log: `localStorage['titane::agent::remote_key_usage_log']` (200 entrées max)
+- Tests: `tests/unit/agentConfig.test.ts` (15/15 PASS)

@@ -1229,11 +1229,17 @@ fn main() {
     // local/Ollama provider works through ConversationEngineState's ai_router.
     let builder = builder.manage(titane_infinity::overdrive::chat_orchestrator::init());
 
-    // [REMOTE-KEYS] Named API key store for remote gateway — Phase 1
+    // [REMOTE-KEYS] Named API key store — persisted to ~/.local/share/titane-infinity/api_keys.json
+    let key_store_path: std::path::PathBuf = {
+        let base = std::env::var("HOME").unwrap_or_else(|_| "/tmp".into());
+        std::path::PathBuf::from(base)
+            .join(".local/share/titane-infinity")
+            .join("api_keys.json")
+    };
     let builder = builder.manage(
         titane_infinity::remote_key_commands::RemoteKeyStoreState(
             std::sync::Mutex::new(
-                titane_infinity::remote_gateway::api_key_store::ApiKeyStore::new_in_memory()
+                titane_infinity::remote_gateway::api_key_store::ApiKeyStore::load_or_create(key_store_path)
             )
         )
     );

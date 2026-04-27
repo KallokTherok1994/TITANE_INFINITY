@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { useRemoteKeyAgent } from '../../services/remoteKeyManager/useRemoteKeyAgent';
 import type { RemoteKeyEntry } from '../../services/remoteKeyManager';
 import styles from './RemoteKeyDashboard.module.css';
+import { AgentConfigPanel } from './AgentConfigPanel';
 
 // ── Create form ───────────────────────────────────────────────────────────────
 
@@ -164,8 +165,11 @@ function KeyRow({
 
 // ── Main dashboard ────────────────────────────────────────────────────────────
 
+type DashboardTab = 'keys' | 'agent';
+
 export default function RemoteKeyDashboard() {
   const { state, createKey, revokeKey, rotateKey, refresh, clearSecret } = useRemoteKeyAgent();
+  const [activeTab, setActiveTab] = useState<DashboardTab>('keys');
 
   async function handleCreate(label: string) {
     await createKey(label, ['Admin', 'Chat', 'Memory', 'System']);
@@ -175,14 +179,48 @@ export default function RemoteKeyDashboard() {
     <section data-testid="remote-key-dashboard" className={styles.dashboard}>
       <header className={styles.header}>
         <h2 className={styles.title}>🔑 Clés API TITANE Remote</h2>
-        <button
-          data-testid="remote-key-refresh-button"
-          className={styles.btnRefresh}
-          onClick={refresh}
-          disabled={state.status === 'loading'}
-        >
-          ↻ Actualiser
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            data-testid="remote-key-tab-keys"
+            onClick={() => setActiveTab('keys')}
+            style={{
+              background: activeTab === 'keys' ? '#7c3aed' : 'transparent',
+              color: activeTab === 'keys' ? '#fff' : '#9ca3af',
+              border: `1px solid ${activeTab === 'keys' ? '#7c3aed' : '#374151'}`,
+              borderRadius: 6,
+              padding: '0.35rem 0.9rem',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+            }}
+          >
+            Clés
+          </button>
+          <button
+            data-testid="remote-key-tab-agent"
+            onClick={() => setActiveTab('agent')}
+            style={{
+              background: activeTab === 'agent' ? '#7c3aed' : 'transparent',
+              color: activeTab === 'agent' ? '#fff' : '#9ca3af',
+              border: `1px solid ${activeTab === 'agent' ? '#7c3aed' : '#374151'}`,
+              borderRadius: 6,
+              padding: '0.35rem 0.9rem',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+            }}
+          >
+            🧠 Agent IA
+          </button>
+          <button
+            data-testid="remote-key-refresh-button"
+            className={styles.btnRefresh}
+            onClick={refresh}
+            disabled={state.status === 'loading'}
+          >
+            ↻ Actualiser
+          </button>
+        </div>
       </header>
 
       {/* Secret once banner */}
@@ -194,6 +232,14 @@ export default function RemoteKeyDashboard() {
         />
       )}
 
+      {/* Agent IA tab */}
+      {activeTab === 'agent' && (
+        <AgentConfigPanel />
+      )}
+
+      {/* Keys tab */}
+      {activeTab === 'keys' && (
+        <>
       {/* Error state */}
       {state.error && (
         <p data-testid="remote-key-error" className={styles.error} role="alert">
@@ -251,6 +297,8 @@ export default function RemoteKeyDashboard() {
           {state.keys.filter(k => k.enabled).length} clé(s) active(s)
         </span>
       </footer>
+        </>
+      )}
     </section>
   );
 }

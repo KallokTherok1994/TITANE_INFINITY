@@ -6,6 +6,8 @@
  *   - Stores the session secret in memory (never persisted to disk by the agent)
  *   - Emits typed events: onCreate | onRevoke | onRotate | onError | onReady
  *   - Provides reactive state: AgentKeyState
+ *   - AI-powered analysis via Ollama (gemma2:2b / titane-key-agent)
+ *   - Persistent configuration via AgentConfig (localStorage)
  *
  * Rule 16: backed by unit tests in tests/unit/remoteKeyAgent.test.ts
  */
@@ -18,6 +20,16 @@ import {
   type RemoteKeyEntry,
 } from './index';
 
+import {
+  loadAgentConfig,
+  saveAgentConfig,
+  appendUsageLog,
+  readUsageLog,
+  type AgentConfig,
+} from './AgentConfig';
+
+import { AgentAI, type AiAnalysisResult, type AiLabelSuggestion, type KeySummary } from './AgentAI';
+
 // ── Types ────────────────────────────────────────────────────────────────────
 
 export type AgentKeyStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -29,6 +41,8 @@ export interface AgentKeyState {
   lastSecretOnce: string | null;
   lastKeyIdOnce: string | null;
   error: string | null;
+  /** Latest AI analysis result — null until analyzeWithAI() is called */
+  lastAnalysis: AiAnalysisResult | null;
 }
 
 export type AgentKeyEvent =
@@ -36,7 +50,9 @@ export type AgentKeyEvent =
   | { type: 'onRevoke'; key_id: string }
   | { type: 'onRotate'; old_key_id: string; new_key_id: string; new_secret_once: string }
   | { type: 'onError'; message: string }
-  | { type: 'onReady'; keys: RemoteKeyEntry[] };
+  | { type: 'onReady'; keys: RemoteKeyEntry[] }
+  | { type: 'onAnalysis'; result: AiAnalysisResult }
+  | { type: 'onConfigUpdate'; config: AgentConfig };
 
 export type AgentKeyListener = (event: AgentKeyEvent) => void;
 
@@ -49,11 +65,18 @@ export class RemoteKeyAgent {
     lastSecretOnce: null,
     lastKeyIdOnce: null,
     error: null,
+    lastAnalysis: null,
   };
 
   private _listeners: Set<AgentKeyListener> = new Set();
   private _stateListeners: Set<(state: AgentKeyState) => void> = new Set();
   private _initialized = false;
+
+  /** Agent configuration (loaded from localStorage on first access) */
+  private _config: AgentConfig = loadAgentConfig();
+
+  /** AI intelligence layer */
+  private _ai: AgentAI = new AgentAI(this._config);
 
   // ── Subscriptions ────────────────────────────────────────────────────────
 
@@ -111,10 +134,12 @@ export class RemoteKeyAgent {
   async createKey(label: string, scopes?: string[]): Promise<string | null> {
     this._setState({ status: 'loading', error: null });
     try {
-      const result = await remoteKeyCreate(label, scopes);
+      const effectiveScopes = scopes ?? this._config.defaultScopes;
+      const result = await remoteKeyCreate(label, effectiveScopes);
       if (!result.ok || !result.secret_once || !result.key_id) {
         throw new Error(result.error ?? 'create failed');
       }
+      this.logUsage({ action: 'create', keyId: result.key_id, label });
       this._emit({ type: 'onCreate', key_id: result.key_id, secret_once: result.secret_once, label });
       await this._refresh(result.secret_once, result.key_id);
       return result.secret_once;
@@ -132,6 +157,7 @@ export class RemoteKeyAgent {
     try {
       const result = await remoteKeyRevoke(key_id);
       if (!result.ok) throw new Error(result.error ?? 'revoke failed');
+      this.logUsage({ action: 'revoke', keyId: key_id });
       this._emit({ type: 'onRevoke', key_id });
       await this._refresh(null, null);
       return true;
@@ -151,6 +177,7 @@ export class RemoteKeyAgent {
       if (!result.ok || !result.new_secret_once || !result.new_key_id) {
         throw new Error(result.error ?? 'rotate failed');
       }
+      this.logUsage({ action: 'rotate', keyId: key_id });
       this._emit({
         type: 'onRotate',
         old_key_id: key_id,
@@ -177,6 +204,96 @@ export class RemoteKeyAgent {
     this._setState({ lastSecretOnce: null, lastKeyIdOnce: null });
   }
 
+  // ── Configuration ─────────────────────────────────────────────────────────
+
+  /** Return a copy of the current agent configuration */
+  getConfig(): AgentConfig {
+    return { ...this._config };
+  }
+
+  /**
+   * Update the agent configuration and persist it to localStorage.
+   * Propagates changes to the AI layer immediately.
+   */
+  configure(partial: Partial<AgentConfig>): AgentConfig {
+    this._config = { ...this._config, ...partial, version: 1, updatedAt: new Date().toISOString() };
+    saveAgentConfig(this._config);
+    this._ai.updateConfig(this._config);
+    this._emit({ type: 'onConfigUpdate', config: { ...this._config } });
+    return { ...this._config };
+  }
+
+  // ── AI / Training ─────────────────────────────────────────────────────────
+
+  /**
+   * Train the agent: sets a new system prompt and model.
+   * Equivalent to updating the training section of the config.
+   */
+  train(systemPrompt: string, model?: string): AgentConfig {
+    return this.configure({
+      training: {
+        ...this._config.training,
+        systemPrompt,
+        ...(model ? { model } : {}),
+      },
+    });
+  }
+
+  /**
+   * Analyse keys + usage log with AI.
+   * Returns the analysis and stores it in state.lastAnalysis.
+   * Degraded gracefully when Ollama is unreachable.
+   */
+  async analyzeWithAI(): Promise<AiAnalysisResult> {
+    const keySummaries: KeySummary[] = this._state.keys.map((k) => ({
+      keyId: k.key_id,
+      label: k.label,
+      scopes: k.scopes ?? [],
+      createdAt: new Date((k.created_at ?? 0) * 1000).toISOString(),
+      active: k.enabled,
+      daysSinceCreation: k.created_at
+        ? Math.floor((Date.now() - k.created_at * 1000) / 86_400_000)
+        : 0,
+    }));
+
+    const usageLog = this._config.enableUsageLog ? readUsageLog() : [];
+    const result = await this._ai.analyzeKeyUsage(keySummaries, usageLog);
+    this._setState({ lastAnalysis: result });
+    this._emit({ type: 'onAnalysis', result });
+    return result;
+  }
+
+  /**
+   * Ask the AI to suggest labels for a given context string.
+   */
+  async suggestLabels(context: string): Promise<AiLabelSuggestion> {
+    return this._ai.suggestLabels(context);
+  }
+
+  /**
+   * Returns keys that need rotation according to the configured policy.
+   */
+  getRotationWarnings(): ReturnType<AgentAI['getRotationWarnings']> {
+    const keySummaries: KeySummary[] = this._state.keys.map((k) => ({
+      keyId: k.key_id,
+      label: k.label,
+      scopes: k.scopes ?? [],
+      createdAt: new Date((k.created_at ?? 0) * 1000).toISOString(),
+      active: k.enabled,
+      daysSinceCreation: k.created_at
+        ? Math.floor((Date.now() - k.created_at * 1000) / 86_400_000)
+        : 0,
+    }));
+    return this._ai.getRotationWarnings(keySummaries);
+  }
+
+  /** Log a key operation in the usage log (if enabled) */
+  logUsage(entry: Parameters<typeof appendUsageLog>[0]): void {
+    if (this._config.enableUsageLog) {
+      appendUsageLog(entry);
+    }
+  }
+
   // ── Internals ─────────────────────────────────────────────────────────────
 
   private async _autoCreateDefault(): Promise<void> {
@@ -184,6 +301,7 @@ export class RemoteKeyAgent {
     if (!result.ok || !result.secret_once || !result.key_id) {
       throw new Error(result.error ?? 'auto-create default key failed');
     }
+    this.logUsage({ action: 'create', keyId: result.key_id, label: 'TITANE-Default', detail: 'auto-init' });
     this._emit({
       type: 'onCreate',
       key_id: result.key_id,
