@@ -87,6 +87,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-26 — Conversation page-root mode attrs proof: la suite `src/components/sections/__tests__/ConversationSection.modeBridge.test.tsx` verrouille désormais aussi les attributs de mode portés par la racine canonique `page-conversation`. Le micro-lot confirme que `data-conversation-mode`, `data-chat-store-mode` et la valeur initiale de `chat-mode-selector-select` restent alignés quand le hook conversation et le store publient déjà `planning`.
 
+> 2026-04-26 — Conversation runtime helper mode proof: la suite `src/components/sections/__tests__/ConversationSection.test.ts` verrouille maintenant explicitement la logique helper qui alimente le panneau runtime. Le micro-lot couvre les suffixes `Conversation mode: planning` / `Store mode: planning` de `buildConversationRuntimeSummary()` et les badges `conversation-mode:planning` / `chat-store-mode:planning` de `buildConversationRuntimeBadges()`, pour capter toute dérive dans la logique de construction avant même le rendu de surface.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :

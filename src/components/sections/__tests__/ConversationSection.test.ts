@@ -39,28 +39,33 @@ describe('ConversationSection runtime provider label', () => {
   });
 
   it('includes the requested provider when runtime resolves to a different provider', () => {
-    const summary = buildConversationRuntimeSummary('Ollama', {
-      providerMeta: {
-        provider_used: 'Ollama (OMEGA+Singularity)',
-        provider_class: 'local',
-        mode: 'LOCAL',
-        reason_code: 'OK',
-        latency_ms_total: 42,
-        timeout_ms: 30000,
-        retries: 0,
-        attempts: [],
-        network_used: false,
-        cache_hit: false,
+    const summary = buildConversationRuntimeSummary(
+      'Ollama',
+      {
+        providerMeta: {
+          provider_used: 'Ollama (OMEGA+Singularity)',
+          provider_class: 'local',
+          mode: 'LOCAL',
+          reason_code: 'OK',
+          latency_ms_total: 42,
+          timeout_ms: 30000,
+          retries: 0,
+          attempts: [],
+          network_used: false,
+          cache_hit: false,
+        },
+        modelRequested: 'llama3.1:latest',
+        modelUsed: 'llama3.2:latest',
+        fallbackUsed: true,
+        tags: [],
+        runtimeSignals: {
+          orchestratorState: 'running',
+          memoryState: 'present',
+        },
       },
-      modelRequested: 'llama3.1:latest',
-      modelUsed: 'llama3.2:latest',
-      fallbackUsed: true,
-      tags: [],
-      runtimeSignals: {
-        orchestratorState: 'running',
-        memoryState: 'present',
-      },
-    });
+      'default',
+      'default'
+    );
 
     expect(summary).toContain('Requested: Ollama');
     expect(summary).toContain('Model requested: llama3.1:latest');
@@ -89,7 +94,45 @@ describe('ConversationSection runtime provider label', () => {
   });
 
   it('includes requested provider and policy in runtime badges when execution differs', () => {
-    const badges = buildConversationRuntimeBadges('Ollama', {
+    const badges = buildConversationRuntimeBadges(
+      'Ollama',
+      {
+        providerMeta: {
+          provider_used: 'Ollama (OMEGA+Singularity)',
+          provider_class: 'local',
+          mode: 'LOCAL',
+          reason_code: 'OK',
+          latency_ms_total: 42,
+          timeout_ms: 30000,
+          retries: 0,
+          attempts: [],
+          network_used: false,
+          cache_hit: false,
+          policy: 'web_research_inline',
+        },
+        tags: ['memory:present'],
+        modelRequested: 'llama3.1:latest',
+        modelUsed: 'llama3.2:latest',
+        fallbackUsed: true,
+        runtimeSignals: {
+          orchestratorState: 'running',
+          memoryState: 'present',
+        },
+      },
+      'default',
+      'default'
+    );
+
+    expect(badges).toContain('requested:Ollama');
+    expect(badges).toContain('Ollama (OMEGA+Singularity)');
+    expect(badges).toContain('policy:web_research_inline');
+    expect(badges).toContain('model-requested:llama3.1:latest');
+    expect(badges).toContain('model-used:llama3.2:latest');
+    expect(badges).toContain('model-fallback:true');
+  });
+
+  it('includes conversation mode truth in runtime summary and badges helpers', () => {
+    const runtime = {
       providerMeta: {
         provider_used: 'Ollama (OMEGA+Singularity)',
         provider_class: 'local',
@@ -101,24 +144,34 @@ describe('ConversationSection runtime provider label', () => {
         attempts: [],
         network_used: false,
         cache_hit: false,
-        policy: 'web_research_inline',
       },
-      tags: ['memory:present'],
-      modelRequested: 'llama3.1:latest',
-      modelUsed: 'llama3.2:latest',
-      fallbackUsed: true,
+      tags: [],
+      modelRequested: 'gemma2:2b',
+      modelUsed: 'gemma2:2b',
+      fallbackUsed: false,
       runtimeSignals: {
         orchestratorState: 'running',
         memoryState: 'present',
       },
-    });
+    };
 
-    expect(badges).toContain('requested:Ollama');
-    expect(badges).toContain('Ollama (OMEGA+Singularity)');
-    expect(badges).toContain('policy:web_research_inline');
-    expect(badges).toContain('model-requested:llama3.1:latest');
-    expect(badges).toContain('model-used:llama3.2:latest');
-    expect(badges).toContain('model-fallback:true');
+    const summary = buildConversationRuntimeSummary(
+      'Ollama',
+      runtime,
+      'planning',
+      'planning'
+    );
+    const badges = buildConversationRuntimeBadges(
+      'Ollama',
+      runtime,
+      'planning',
+      'planning'
+    );
+
+    expect(summary).toContain('Conversation mode: planning');
+    expect(summary).toContain('Store mode: planning');
+    expect(badges).toContain('conversation-mode:planning');
+    expect(badges).toContain('chat-store-mode:planning');
   });
 
   it('publishes the governed Ollama model from runtime truth before falling back to defaults', () => {
