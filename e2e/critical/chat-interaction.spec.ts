@@ -294,6 +294,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   test('ASSISTANT_MARKDOWN_RENDERING: la surface canonique rend le markdown assistant sans marqueurs bruts', async ({
     page,
   }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     await submitChatMessage(page, 'Plan **Alpha**\n\n- Beta\n- Gamma');
 
     const assistantContent = getAssistantContent(page);
