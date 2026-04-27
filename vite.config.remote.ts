@@ -13,7 +13,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  root: resolve(__dirname),
+  root: resolve(__dirname, 'src/remote'),
   base: './',
   define: {
     'import.meta.env.VITE_REMOTE_MODE': JSON.stringify('true'),

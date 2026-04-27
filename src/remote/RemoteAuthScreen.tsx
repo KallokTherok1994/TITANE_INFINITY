@@ -137,11 +137,11 @@ export default function RemoteAuthScreen({ onLogin, loading, error }: RemoteAuth
             data-testid="remote-login-button"
             style={{
               ...styles.button,
-              opacity: loading ? 0.65 : 1,
-              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: (loading || !gatewayUrl.trim() || !secret.trim()) ? 0.65 : 1,
+              cursor: (loading || !gatewayUrl.trim() || !secret.trim()) ? 'not-allowed' : 'pointer',
             }}
             type="submit"
-            disabled={loading}
+            disabled={loading || !gatewayUrl.trim() || !secret.trim()}
           >
             {loading ? 'Connexion…' : 'Se connecter'}
           </button>

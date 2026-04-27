@@ -53,8 +53,8 @@ export function useRemoteChat(transport: RemoteTransport | null) {
       if (!t) return;
       setState(s => ({ ...s, loading: true, error: null }));
       try {
-        // If no override, authenticate with stored transport (normal path)
-        if (!transportOverride) await t.authenticate(secret);
+        // Always authenticate — transportOverride may be a fresh unauthenticated transport
+        await t.authenticate(secret);
         // Create a new conversation
         const result = await t.invoke<{ ok: boolean; content: { conversation_id?: string } }>(
           'create_new_conversation',
