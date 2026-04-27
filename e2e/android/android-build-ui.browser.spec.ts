@@ -1421,4 +1421,95 @@ test.describe('Android Build UI - Browser and Android Emulation', () => {
     expect(criticalErrors).toHaveLength(0);
     expect(criticalPageErrors).toHaveLength(0);
   });
+
+  // ─── T21: Mobile conversation runtime mode truth ───────────────────────
+  test('T21 - mobile conversation mode selector keeps page and runtime mode truth aligned', async ({
+    page,
+  }) => {
+    const { consoleErrors, pageErrors } = collectConsoleAndPageErrors(page);
+
+    await awaitAppReady(page);
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 15000 });
+
+    await enableE2EChatMock(page);
+
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('page-conversation')).toHaveAttribute(
+      'data-conversation-mode',
+      'default'
+    );
+
+    await page.getByTestId('chat-mode-selector-select').selectOption('planning');
+
+    await expect(page.getByTestId('page-conversation')).toHaveAttribute(
+      'data-conversation-mode',
+      'planning'
+    );
+    await expect(page.getByTestId('page-conversation')).toHaveAttribute(
+      'data-chat-store-mode',
+      'planning'
+    );
+
+    await submitChatMessage(page, 'Confirme le mode planning sur mobile en une phrase.');
+
+    const readModeRuntimeProof = async () => {
+      return page.evaluate(() => {
+        const panel = document.querySelector('[data-testid="chat-runtime-state"]');
+        const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
+        const badges = Array.from(
+          document.querySelectorAll('[data-testid="chat-runtime-badge"]')
+        ).map(node => node.textContent?.trim() ?? '');
+
+        return {
+          pageConversationMode:
+            document
+              .querySelector('[data-testid="page-conversation"]')
+              ?.getAttribute('data-conversation-mode') ?? null,
+          pageStoreMode:
+            document
+              .querySelector('[data-testid="page-conversation"]')
+              ?.getAttribute('data-chat-store-mode') ?? null,
+          runtimeConversationMode:
+            panel?.getAttribute('data-conversation-mode') ?? null,
+          runtimeStoreMode: panel?.getAttribute('data-chat-store-mode') ?? null,
+          summary: summary?.textContent?.trim() ?? null,
+          badges,
+        };
+      });
+    };
+
+    await expect
+      .poll(readModeRuntimeProof, {
+        timeout: 15000,
+        intervals: [250, 500, 1000],
+      })
+      .toMatchObject({
+        pageConversationMode: 'planning',
+        pageStoreMode: 'planning',
+        runtimeConversationMode: 'planning',
+        runtimeStoreMode: 'planning',
+      });
+
+    const runtimeProof = await readModeRuntimeProof();
+
+    expect(runtimeProof.summary ?? '').toContain('Conversation mode: planning');
+    expect(runtimeProof.summary ?? '').toContain('Store mode: planning');
+    expect(runtimeProof.badges).toContain('conversation-mode:planning');
+    expect(runtimeProof.badges).toContain('chat-store-mode:planning');
+
+    const filteredErrors = filterKnownConsoleNoise(consoleErrors);
+    const criticalErrors = extractCriticalConsoleErrors(filteredErrors);
+    const criticalPageErrors = extractCriticalPageErrors(pageErrors);
+
+    writeJsonArtifact(ARTIFACT_DIR, 'T21_mobile_mode_runtime_truth.json', {
+      runtimeProof,
+      project: test.info().project.name,
+      criticalErrors,
+      criticalPageErrors,
+    });
+
+    expect(criticalErrors).toHaveLength(0);
+    expect(criticalPageErrors).toHaveLength(0);
+  });
 });

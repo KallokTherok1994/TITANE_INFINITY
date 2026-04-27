@@ -79,6 +79,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-26 — Conversation runtime mode truth: la surface active `/titane?tab=conversation` ne conserve plus de select legacy interne sur sa toolbar. `src/components/sections/ConversationSection.tsx` publie désormais la vérité du mode actif à deux niveaux cohérents: racine `page-conversation` et panneau `chat-runtime-state`, avec duplication gouvernée de `data-conversation-mode`, `data-chat-store-mode`, d un résumé textuel (`Conversation mode`, `Store mode`) et de badges runtime (`conversation-mode:<id>`, `chat-store-mode:<id>`). Les preuves web et les deux lanes WDIO ciblées passent sur cette vérité unifiée; la réponse locale de transparence réinjecte aussi les métadonnées runtime qualifiées au lieu d effacer la surface, et la lane de retour-bas utilise un scroll programmatique robuste sous WRY.
 
+> 2026-04-26 — Android browser conversation mode runtime proof: la surface mobile navigateur qualifie maintenant explicitement la même vérité de mode conversationnelle que web et desktop. `e2e/android/android-build-ui.browser.spec.ts` ajoute T21 pour verrouiller l absence de `select-conversation-mode`, le changement via `chat-mode-selector-select`, l alignement des attributs `data-conversation-mode` / `data-chat-store-mode` sur `page-conversation` et `chat-runtime-state`, puis la présence des chaînes `Conversation mode: planning` et `Store mode: planning` après un tour mock.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :
