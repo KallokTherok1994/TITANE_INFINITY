@@ -206,6 +206,12 @@ test.describe('Critical Path: Chat Interaction', () => {
   });
 
   test('SEND_MESSAGE_ALWAYS_RESPOND: deux messages', async ({ page }) => {
+    const pageConversation = page.getByTestId('page-conversation');
+    await expect(pageConversation).toHaveAttribute('data-conversation-mode', 'default');
+    await expect(pageConversation).toHaveAttribute('data-chat-store-mode', 'default');
+    await expect(page.getByTestId('select-conversation-mode')).toHaveCount(0);
+    await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
+
     await submitChatMessage(page, 'Alpha');
     await expect(page.getByText('[MOCK_OK] Alpha')).toBeVisible({ timeout: 15000 });
 
