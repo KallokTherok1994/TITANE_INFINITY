@@ -646,6 +646,7 @@ async function readRuntimeSnapshot(selectors) {
   return await browser.execute(responseSelector => {
     const panel = document.querySelector('[data-testid="chat-runtime-state"]');
     const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
+    const conversationPage = document.querySelector('[data-testid="page-conversation"]');
     const ipcReady = document.querySelector('[data-testid="ipc-ready"]');
     const sendTrace = document.querySelector('[data-testid="chat-send-trace"]');
     const assistantRows = document.querySelectorAll(
@@ -709,6 +710,26 @@ async function readRuntimeSnapshot(selectors) {
       )
         .trim()
         .toUpperCase(),
+      pageConversationMode: (
+        conversationPage?.getAttribute('data-conversation-mode') || ''
+      )
+        .trim()
+        .toLowerCase(),
+      pageChatStoreMode: (
+        conversationPage?.getAttribute('data-chat-store-mode') || ''
+      )
+        .trim()
+        .toLowerCase(),
+      runtimeConversationMode: (
+        panel?.getAttribute('data-conversation-mode') || ''
+      )
+        .trim()
+        .toLowerCase(),
+      runtimeChatStoreMode: (
+        panel?.getAttribute('data-chat-store-mode') || ''
+      )
+        .trim()
+        .toLowerCase(),
       runtimeSummary: (summary?.textContent || '').trim(),
       assistantText: (
         assistantContent?.textContent ||
@@ -1514,6 +1535,36 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       for (const [index, prompt] of prompts.entries()) {
         const outcome = await sendMessageAndWaitOutcome(selectors, prompt);
         outcomes.push(outcome);
+        assert.equal(
+          outcome.runtime.pageConversationMode,
+          'default',
+          `[MEMORY_TURN_${index + 1}] page root missing conversation mode truth (${outcome.runtime.pageConversationMode})`
+        );
+        assert.equal(
+          outcome.runtime.pageChatStoreMode,
+          'default',
+          `[MEMORY_TURN_${index + 1}] page root missing store mode truth (${outcome.runtime.pageChatStoreMode})`
+        );
+        assert.equal(
+          outcome.runtime.runtimeConversationMode,
+          'default',
+          `[MEMORY_TURN_${index + 1}] runtime panel missing conversation mode truth (${outcome.runtime.runtimeConversationMode})`
+        );
+        assert.equal(
+          outcome.runtime.runtimeChatStoreMode,
+          'default',
+          `[MEMORY_TURN_${index + 1}] runtime panel missing store mode truth (${outcome.runtime.runtimeChatStoreMode})`
+        );
+        assert.match(
+          outcome.runtime.runtimeSummary,
+          /Conversation mode:\s*default/i,
+          `[MEMORY_TURN_${index + 1}] runtime summary missing conversation mode truth (${outcome.runtime.runtimeSummary})`
+        );
+        assert.match(
+          outcome.runtime.runtimeSummary,
+          /Store mode:\s*default/i,
+          `[MEMORY_TURN_${index + 1}] runtime summary missing store mode truth (${outcome.runtime.runtimeSummary})`
+        );
         console.log(
           `[MEMORY_TURN_${index + 1}] kind=${outcome.kind} latencyMs=${outcome.latencyMs} runtime=${JSON.stringify(outcome.runtime)}`
         );

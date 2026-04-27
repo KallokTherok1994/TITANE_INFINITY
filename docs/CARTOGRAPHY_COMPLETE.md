@@ -97,6 +97,8 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-27 — Desktop orchestrator runtime mode proof: la lane native `e2e/desktop/chat-orchestrator-advanced-stress.wdio.test.js`, déjà chargée de qualifier orchestrateur, mémoire et modèle gouverné sur plusieurs tours, verrouille désormais aussi la vérité de mode conversationnelle pendant tout le scénario. Le micro-lot confirme à chaque tour et sur le runtime final `pageConversationMode=default`, `pageChatStoreMode=default`, `runtimeConversationMode=default`, `runtimeChatStoreMode=default`, ainsi que les chaînes `Conversation mode: default` / `Store mode: default` et les badges `conversation-mode:default` / `chat-store-mode:default`, pour empêcher toute dérive spécialisée de la lane orchestrator.
 
+> 2026-04-27 — Desktop online chat UI runtime mode proof: la lane native `e2e/desktop/online-chat-proof-ui.wdio.test.js`, déjà utilisée pour prouver les tours réels, la mémoire et les états runtime du chat online desktop, remonte maintenant aussi la vérité de mode conversationnelle depuis `page-conversation` et `chat-runtime-state`. Le micro-lot verrouille sur chaque tour mémoire `pageConversationMode=default`, `pageChatStoreMode=default`, `runtimeConversationMode=default`, `runtimeChatStoreMode=default`, ainsi que les chaînes `Conversation mode: default` / `Store mode: default`, pour empêcher qu une dérive de mode survive dans cette lane desktop multi-tours distincte des lanes conversation, modèle et orchestrator déjà qualifiées.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :
