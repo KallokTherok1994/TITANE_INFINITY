@@ -4,7 +4,26 @@
 - Harmonisation des dossiers d’archive et audits
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.7 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.13 — Historical baseline preserved below)
+
+## Release v31.2.13 — 2026-04-27 (DX Optimization + Champion Runtime Validation + Scripts Archive)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.2.13 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.2.13 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.2.13 | ✅ PASS |
+| `src/services/ai/championChallenger.ts` | `validateChampionAvailability()` — validation proactive champion vs Ollama `/api/tags` au démarrage | ✅ PASS |
+| `scripts/ollama/install-models.sh` | Champion `gemma2:2b` promu modèle principal (alignement doctrine) | ✅ PASS |
+| `scripts/ollama/install-models-auto.sh` | Champion `gemma2:2b` promu modèle principal | ✅ PASS |
+| `scripts/ollama/quick-install.sh` | Modèle canonique aligné sur `gemma2:2b` | ✅ PASS |
+| `package.json` scripts DX | `dev:quick-check`, `dev:proof-quick`, `dev:gates-fast` ajoutés | ✅ PASS |
+| `scripts/archive/` | Scripts obsolètes v24/v26 archivés (non supprimés) | ✅ PASS |
+| `src-tauri/Cargo.toml` description | Mise à jour vers v31.2.13 Multi-Agent + Remote Gateway | ✅ PASS |
+| Mandatory gates | `detect_recurrence`, `verify_instructions`, `verify:registry` | ✅ PASS |
+| `tests/unit/services/ai/championChallengerValidation.test.ts` | 5 tests validation champion runtime | ✅ PASS |
+
+> Cette release 31.2.13 est la release de gouvernance DX : validation runtime champion Ollama, alignement modèle canonique dans les scripts, archivage scripts obsolètes, raccourcis DX, et correction drift description Cargo.toml. Aucun bump de version binaire — governance-only release.
 
 ## Release v31.2.7 — 2026-04-27 (Build prod + release locale + serveur réseau)
 

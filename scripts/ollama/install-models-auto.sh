@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-MODELS=("qwen2.5:latest" "llama3.1:8b" "mistral:7b")
+MODELS=("gemma2:2b" "qwen2.5:latest" "llama3.1:8b" "mistral:7b")
 OLLAMA_URL="http://localhost:11434"
 
 # Vérifications

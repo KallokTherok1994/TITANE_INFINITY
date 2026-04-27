@@ -12,7 +12,8 @@ set -euo pipefail
 
 # Modèles TITANE∞ (ordre de priorité)
 MODELS=(
-    "qwen2.5:latest"        # Modèle principal - Rapide, multilingue, excellent français
+    "gemma2:2b"             # Modèle canonique local gouverné (champion registry)
+    "qwen2.5:latest"        # Alternative - Rapide, multilingue, excellent français
     "llama3.1:8b"           # Alternative - Meta, mémoire réduite, polyvalent  
     "mistral:7b"            # Backup - Français optimisé, Mistral AI
 )

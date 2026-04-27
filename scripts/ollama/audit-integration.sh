@@ -315,7 +315,7 @@ test_ollama_request() {
         return
     fi
     
-    local model=$(grep "^OLLAMA_DEFAULT_MODEL=" .env 2>/dev/null | cut -d= -f2 || echo "qwen2.5:latest")
+    local model=$(grep "^OLLAMA_DEFAULT_MODEL=" .env 2>/dev/null | cut -d= -f2 || echo "gemma2:2b")
     
     log "Test génération avec modèle: $model"
     
