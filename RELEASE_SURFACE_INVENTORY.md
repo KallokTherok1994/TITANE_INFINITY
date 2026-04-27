@@ -4,7 +4,31 @@
 - Harmonisation des dossiers d’archive et audits
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.1.4 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.7 — Historical baseline preserved below)
+
+## Release v31.2.7 — 2026-04-27 (Build prod + release locale + serveur réseau)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.2.7 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.2.7 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.2.7 | ✅ PASS |
+| `src/components/sections/ConversationSection.tsx` | Mode store brut normalisé via `validateModeId` avant résumé runtime et badges | ✅ PASS |
+| `pnpm run check` | TypeScript repasse à 0 erreur après le correctif local | ✅ PASS |
+| `src-tauri/target/release/bundle/appimage/Titan-Stable_31.2.7_amd64.AppImage` | Built locally (94484984 bytes) | ✅ PASS |
+| `src-tauri/target/release/bundle/deb/Titan-Stable_31.2.7_amd64.deb` | Built locally (21797182 bytes) | ✅ PASS |
+| `src-tauri/target/release/titane-infinity` | Built locally (SHA256: 272b66159ec37a1e68afb3444f3768c75237bd64bf0aef8b2f668e1b118884ec) | ✅ PASS |
+| `deployment/latest/MANIFEST.json` | Published to 31.2.7 desktop truth | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | Published to 31.2.7 desktop truth | ✅ PASS |
+| `deployment/latest/SIZES.txt` | Published to 31.2.7 desktop truth | ✅ PASS |
+| `deployment/latest/Titan-Stable_31.2.7_amd64.AppImage` | Published to 31.2.7 desktop truth | ✅ PASS |
+| `deployment/latest/Titan-Stable_31.2.7_amd64.deb` | Published to 31.2.7 desktop truth | ✅ PASS |
+| `deployment/latest/titane-infinity` | Published to 31.2.7 desktop truth | ✅ PASS |
+| `scripts/post-build/update-desktop-icons.sh` | Launcher local et caches utilisateur synchronisés; sync système et binaire installés requièrent sudo non interactif | ✅ PASS / ⏳ BLOCKED_SUDO |
+| `scripts/android/vite-network-server.sh` | Serveur canonique prêt sur `http://127.0.0.1:1420` et exposé en réseau | ✅ PASS |
+| Mandatory gates (`detect_recurrence`, `verify_instructions`, `verify:registry`) | All PASS post-fix | ✅ PASS |
+
+> Cette release locale 31.2.7 est scellée pour la vérité desktop publiée et pour l autorité réseau canonique. La synchronisation hôte `/usr/bin/titane-infinity` et `/usr/share/applications/titane-infinity.desktop` reste honnêtement `BLOCKED_SUDO_REQUIRED` car le post-build non interactif ne peut pas pousser les surfaces système sans sudo.
 
 ## Release v31.1.4 — 2026-04-24 (BUILD ALL: Format + Governance + Linux Launcher)
 

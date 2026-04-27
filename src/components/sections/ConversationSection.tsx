@@ -78,7 +78,10 @@ import {
   type MessageSpeechStatus,
 } from '@/services/tts/messageSpeechController';
 import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
-import type { ChatModeId as ModernChatModeId } from '@/services/ai/chatModes.config';
+import {
+  validateModeId,
+  type ChatModeId as ModernChatModeId,
+} from '@/services/ai/chatModes.config';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -1346,6 +1349,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const { success: toastSuccess, error: errorToast } = useToast();
     const syncChatModeStore = useChatModeStore(state => state.changeMode);
     const currentChatStoreModeId = useChatModeStore(state => state.currentModeId);
+    const resolvedChatStoreModeId: ModernChatModeId = validateModeId(currentChatStoreModeId)
+      ? currentChatStoreModeId
+      : 'default';
     const [selectedProvider, setSelectedProvider] =
       useState<ConversationProviderPreference>(getInitialSelectedProvider);
     const [providerReadiness, setProviderReadiness] =
@@ -1832,9 +1838,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           selectedProviderLabel,
           latestAssistantRuntime,
           currentMode,
-          currentChatStoreModeId
+          resolvedChatStoreModeId
         ),
-      [currentChatStoreModeId, currentMode, latestAssistantRuntime, selectedProviderLabel]
+      [currentMode, latestAssistantRuntime, resolvedChatStoreModeId, selectedProviderLabel]
     );
 
     const loadingSummary = useMemo(
@@ -1848,9 +1854,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           selectedProviderLabel,
           latestAssistantRuntime,
           currentMode,
-          currentChatStoreModeId
+          resolvedChatStoreModeId
         ),
-      [currentChatStoreModeId, currentMode, latestAssistantRuntime, selectedProviderLabel]
+      [currentMode, latestAssistantRuntime, resolvedChatStoreModeId, selectedProviderLabel]
     );
 
     useEffect(() => {
