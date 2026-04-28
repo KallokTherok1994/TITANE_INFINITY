@@ -181,108 +181,192 @@
   overflow: hidden;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE ULTRA-COMPACT v31.2.21
+   Éléments et textes réduits + haute résolution DPI
+   ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .titane-page-shell--conversation {
-    gap: 0;
-  }
+  /* ── Shell ── */
+  .titane-page-shell--conversation { gap: 0; }
 
+  /* ── Header encore plus compact ── */
   .titane-page-header--conversation {
-    padding: 0.4rem 0.65rem 0.22rem;
+    padding: 0.18rem 0.45rem 0.12rem;
   }
+  .titane-page-header {
+    padding: 0.2rem 0.45rem;
+  }
+  .titane-page-header-brand { display: none; }
 
+  /* ── Libère la zone messages ── */
   .titane-content--conversation {
-    /* v31.2.17: réduit de 4.75rem→1.5rem — libère ~52px pour la zone messages */
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
   }
 
-  .titane-inline-tabs--conversation button {
-    min-height: 40px;
-    padding: 0.5rem 0.75rem;
-  }
-}
-
-/* ═══ MOBILE CHROME REDUCTION v31.2.15 ═══ */
-@media (max-width: 767px) {
-  /* Tabs ultra-compacts — scroll horizontal */
+  /* ── Tabs ultra-compacts ── */
   .titane-inline-tabs {
-    gap: 2px;
-    padding: 3px 6px;
+    gap: 1px;
+    padding: 2px 4px;
   }
-
-  .titane-inline-tabs > button {
-    padding: 5px 8px;
-    font-size: 0.72rem;
-    min-height: 34px;
+  .titane-inline-tabs > button,
+  .titane-inline-tabs--conversation button {
+    padding: 3px 6px;
+    font-size: 0.62rem;
+    min-height: 26px;
     white-space: nowrap;
     flex-shrink: 0;
+    border-radius: 10px;
   }
 
-  /* Header de page compact — logo non nécessaire en mode mobile */
-  .titane-page-header {
-    padding: 0.5rem 0.75rem;
+  /* ── Toolbar icônes serrés ── */
+  .conversation-icon-btn {
+    padding: 0.2rem 0.3rem;
+    font-size: 0.82rem;
+    border-radius: 4px;
+  }
+  .conversation-toolbar-left,
+  .conversation-toolbar-right { gap: 0.2rem; }
+  .conversation-mode-select {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.65rem;
+    border-radius: 5px;
   }
 
-  .titane-page-header-brand {
-    display: none;
+  /* ── Input container mobile ── */
+  .conversation-input-container {
+    padding: 0.35rem 0.5rem;
+    padding-bottom: calc(0.4rem + env(safe-area-inset-bottom, 0px));
+    gap: 0.35rem;
+  }
+  .conversation-input {
+    min-height: 36px;
+    max-height: min(18vh, 90px);
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+  }
+  .conversation-send-btn {
+    min-width: 80px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.72rem;
+  }
+
+  /* ── Chat toolbar bottom ── */
+  .chat-toolbar-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+  }
+  .chat-toolbar {
+    padding: 0.3rem 0.4rem;
+    gap: 0.2rem;
+    border-radius: 7px;
+  }
+  .toolbar-section-label { font-size: 0.5rem; }
+  .toolbar-buttons { gap: 0.18rem; }
+
+  /* ── Messages ── */
+  .conversation-message-text {
+    font-size: 0.78rem;
+    line-height: 1.48;
+  }
+  .conversation-message-role { font-size: 0.6rem; }
+  .conversation-message-avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 0.78rem;
+  }
+
+  /* ── Thinking panel ── */
+  .thinking-panel-compact {
+    padding: 0.22rem 0.45rem;
+    font-size: 0.62rem;
+    gap: 0.3rem;
+  }
+
+  /* ── Filters/search ── */
+  .conversation-filters-search {
+    padding: 0.22rem 0.4rem;
+    font-size: 0.68rem;
+    border-radius: 5px;
+  }
+  .conversation-filters-search input { font-size: 0.68rem; }
+
+  /* ── Suggestions 2 colonnes compactes ── */
+  .conversation-empty-suggestions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+  }
+  .conversation-empty-suggestions button {
+    padding: 0.32rem 0.4rem;
+    font-size: 0.68rem;
+    text-align: center;
+    border-radius: 6px;
+  }
+
+  /* ── Empty state réduit ── */
+  .conversation-empty {
+    gap: 0.45rem;
+    padding: 0.75rem 0.65rem;
+  }
+  .conversation-empty-icon { font-size: 1.5rem; }
+  .conversation-empty h3 { font-size: 0.85rem; }
+  .conversation-empty p { font-size: 0.7rem; }
+
+  /* ── Overlays masqués ── */
+  #titane-boot-beacon { display: none !important; }
+  .fixed.bottom-24.right-4 { display: none !important; }
+  .agent-dashboards-panel {
+    transform: scale(0.65);
+    transform-origin: bottom right;
+  }
+
+  /* ── Runtime panel compact ── */
+  .conversation-runtime-panel {
+    padding: 0.18rem 0.4rem !important;
+    border-radius: 6px !important;
+  }
+  .conversation-runtime-summary { font-size: 0.6rem; }
+  .conversation-runtime-badge {
+    font-size: 0.56rem;
+    padding: 0.1rem 0.28rem;
   }
 }
 
 @media (max-width: 400px) {
-  /* Très petit écran : seul le tab actif garde son label texte */
   .titane-inline-tabs > button:not([aria-selected='true']) .tab-label-text {
     display: none;
   }
 }
 
-/* ═══ MOBILE OVERLAY CLEANUP v31.2.19 ═══ */
-@media (max-width: 768px) {
-  /* Suggestions en 2 colonnes plutôt que pleine largeur */
-  .conversation-empty-suggestions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+/* ═══ HAUTE RÉSOLUTION DPI — rendu net sur Android/iOS haute densité ═══ */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
-
-  .conversation-empty-suggestions button {
-    padding: 0.55rem 0.6rem;
-    font-size: 0.78rem;
-    text-align: center;
-    border-radius: 8px;
+  svg, img, [class*='icon'] {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
-
-  /* Boot Beacon — masqué sur mobile (dev overlay inutile) */
-  #titane-boot-beacon {
-    display: none !important;
+  .conversation-message-avatar {
+    border: 0.5px solid rgba(255,255,255,0.08);
   }
+}
 
-  /* Panneau Agents flottant — réduit sur mobile */
-  .agent-dashboards-panel {
-    transform: scale(0.75);
-    transform-origin: bottom right;
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+  /* S25 Ultra / haute densité 3x — rendu ultra-net */
+  body {
+    -webkit-text-stroke: 0.01px transparent;
   }
-
-  /* Predictive AI badge — masqué sur mobile */
-  .fixed.bottom-24.right-4 {
-    display: none !important;
+  .titane-inline-tabs > button {
+    border-width: 0.5px;
   }
-
-  /* Empty state: moins de hauteur inutile */
-  .conversation-empty {
-    gap: 0.75rem;
-    padding: 1.25rem 1rem;
-  }
-
-  .conversation-empty-icon {
-    font-size: 2rem;
-  }
-
-  .conversation-empty h3 {
-    font-size: 1rem;
-  }
-
-  .conversation-empty p {
-    font-size: 0.78rem;
+  .conversation-message-text {
+    letter-spacing: 0.008em;
   }
 }
 
