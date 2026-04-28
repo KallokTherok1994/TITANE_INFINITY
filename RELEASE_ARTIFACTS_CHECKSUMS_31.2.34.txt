@@ -1,0 +1,2 @@
+81d0c11fa19861124d9fbf9ed19ab7f9cd5b85fc8fe0bc71650c0ca13edaeffc  src-tauri/target/release/bundle/appimage/Titan-Stable_31.2.34_amd64.AppImage
+142201b19f99bdad5f61d2e977b6e8b313ce8a3dc8310eded31c446832d8b36d  src-tauri/target/release/bundle/deb/Titan-Stable_31.2.34_amd64.deb
