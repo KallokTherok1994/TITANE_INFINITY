@@ -85,11 +85,11 @@ function pruneExpired(store: EnrichmentStore): EnrichmentStore {
   const keys = Object.keys(entries);
   if (keys.length > MAX_ENRICHED_ENTRIES) {
     const toKeep = keys
-      .sort((a, b) => entries[b].enrichedAt - entries[a].enrichedAt)
+      .sort((a, b) => (entries[b]?.enrichedAt ?? 0) - (entries[a]?.enrichedAt ?? 0))
       .slice(0, MAX_ENRICHED_ENTRIES);
-    return { entries: Object.fromEntries(toKeep.map(k => [k, entries[k]])), lastPruned: now };
+      return { entries: Object.fromEntries(toKeep.map(k => [k, entries[k]!])) as Record<string, EnrichedEntry>, lastPruned: now };
   }
-  return { entries, lastPruned: now };
+  return { entries: entries as Record<string, EnrichedEntry>, lastPruned: now };
 }
 
 // ─────────────────────────────────────────────────────────────────

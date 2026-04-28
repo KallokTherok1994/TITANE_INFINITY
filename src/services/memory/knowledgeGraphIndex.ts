@@ -156,8 +156,8 @@ class KnowledgeGraphIndexService {
       if (nodeIds.length < 2) continue;
       for (let i = 0; i < nodeIds.length; i++) {
         for (let j = i + 1; j < nodeIds.length; j++) {
-          const a = nodeIds[i];
-          const b = nodeIds[j];
+          const a = nodeIds[i]!;
+          const b = nodeIds[j]!;
           if (a !== b) {
             this._addOrUpdateEdge(graph, a, b, 0.5);
             this._addOrUpdateEdge(graph, b, a, 0.5);
@@ -267,7 +267,7 @@ class KnowledgeGraphIndexService {
       // Limit edges per node
       if (edges.length >= MAX_EDGES_PER_NODE) {
         // Remove weakest edge
-        const minIdx = edges.reduce((minI, e, i, arr) => (e.weight < arr[minI].weight ? i : minI), 0);
+        const minIdx = edges.reduce((minI, e, i, arr) => (e.weight < arr[minI]!.weight ? i : minI), 0);
         edges.splice(minIdx, 1);
       }
       edges.push({ targetId: toId, weight, updatedAt: Date.now() });
