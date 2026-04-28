@@ -113,6 +113,14 @@ import { predictivePreloader } from '@/services/cache/predictivePreloader';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 // v30: OMEGA DevTools Bridge — wires real pipeline data → DevTools Journal
 import { omegaDevToolsBridge } from './omegaDevToolsBridge';
+// v31.2.33: Self-RAG Reflective Verifier
+import {
+  verifyCritique,
+  applyReflectiveCorrections,
+  REFLECTIVE_VERIFIER_ENABLED,
+} from './reflectiveVerifier';
+// v31.2.33: Working Memory Compressor
+import { compress as compressHistory, COMPRESSION_HISTORY_THRESHOLD } from './workingMemoryCompressor';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
@@ -1026,8 +1034,26 @@ Format: [Audit complet] + [Réponse utilisateur]
         };
       }
 
+      // ═══ PHASE 1.2.5: WORKING MEMORY COMPRESSION (Memory Survey) ═══
+      // v31.2.33: Compress long history before prompt building to stay within token budget
+      let workingHistory = history;
+      if (history.length > COMPRESSION_HISTORY_THRESHOLD) {
+        try {
+          const compressed = await compressHistory(history);
+          workingHistory = compressed.messages;
+          pipelineSteps.push('working-memory-compressed');
+          logger.debug('Working memory compressed', {
+            from: compressed.originalLength,
+            to: compressed.messages.length,
+            ratio: compressed.compressionRatio.toFixed(2),
+          });
+        } catch (compressErr) {
+          logger.warn('Working memory compression failed (non-blocking)', compressErr);
+        }
+      }
+
       const enrichedHistory = this.buildEnrichedHistory(
-        history,
+        workingHistory,
         context,
         modeConfig,
         promptContext,
@@ -1246,6 +1272,39 @@ Format: [Audit complet] + [Réponse utilisateur]
       } catch (error) {
         logger.warn('Consistency check failed (non-blocking)', { error });
         autoHealed = true;
+      }
+
+      // ═══ PHASE 1.5.2: REFLECTIVE VERIFICATION (Self-RAG) ═══
+      // v31.2.33: Vérifie fiabilité factuelle, enrichit avec sources web si confiance faible
+      if (REFLECTIVE_VERIFIER_ENABLED) {
+        try {
+          const critique = await verifyCritique(
+            validatedMessage,
+            response.content,
+            {
+              singularityCoherence,
+              memoryMatches: context.sources.length,
+              mode: finalConfig.mode,
+            }
+          );
+          if (critique.shouldRevise && critique.corrections.length >= 0) {
+            response.content = applyReflectiveCorrections(response.content, critique);
+          }
+          if (!critique.verified) {
+            pipelineSteps.push('reflective-verification-low-confidence');
+          } else {
+            pipelineSteps.push('reflective-verification-pass');
+          }
+          logger.debug('Reflective verification', {
+            confidence: critique.confidence.toFixed(2),
+            hasFactualClaims: critique.hasFactualClaims,
+            shouldRevise: critique.shouldRevise,
+            webSourcesCount: critique.webSources.length,
+            ms: critique.processingMs,
+          });
+        } catch (reflectErr) {
+          logger.warn('Reflective verification failed (non-blocking)', reflectErr);
+        }
       }
 
       // ═══ PHASE 1.6: POST-TRAITEMENT SELON MODE ═══

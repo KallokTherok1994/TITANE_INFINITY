@@ -31,6 +31,8 @@ import { isTauriAvailable } from '@/api/tauriClient';
 import { tauriClient } from '@/lib/tauriClient';
 import type { DurablePreference } from './preferenceEngine';
 import { filterPreferences, mergePreferences } from './preferenceEngine';
+// v31.2.33: Web enrichment for long-term memories (HippoRAG-inspired)
+import { memoryWebEnricher } from '@/services/memory/memoryWebEnricher';
 
 const logger = createLogger('Memory');
 const HYBRID_MEMORY_SHADOW_WRITE_FLAG = 'titane_hybrid_memory_shadow_write_enabled';
@@ -1086,6 +1088,12 @@ export class MemoryIntegration {
       });
       await this.shadowWriteInteractionToUnifiedMemory(data);
       this.clearCache();
+      // v31.2.33: Schedule idle web enrichment for the AI response (HippoRAG-inspired)
+      memoryWebEnricher.scheduleEnrichment({
+        id: `interaction_${Date.now()}`,
+        userMessage: data.userMessage,
+        aiResponse: data.aiResponse,
+      });
     } catch (error) {
       logger.error('Failed to save interaction', error);
     }

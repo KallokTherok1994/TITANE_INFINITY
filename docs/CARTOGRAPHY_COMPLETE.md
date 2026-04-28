@@ -1383,3 +1383,34 @@ function MyComponent() {
 - Rule 15: UI_SURFACE_MAP.md + CARTOGRAPHY_COMPLETE.md mis à jour
 - Rule 16: 124 tests PASS (4 nouveaux fichiers)
 - Suite globale: 5652/5652 PASS
+
+## Session 2026-04-28 — Self-RAG + HippoRAG + Memory Compressor + Web Enricher (v31.2.33)
+
+### Nouveaux fichiers
+| Fichier | Type | Contenu |
+|---------|------|---------|
+| `src/services/ai/reflectiveVerifier.ts` | Service Ring 3 | Self-RAG: verifyCritique, detectFactualClaims, computeConfidence, applyReflectiveCorrections — REFLECTIVE_CONFIDENCE_THRESHOLD=0.65 |
+| `src/services/ai/__tests__/reflectiveVerifier.test.ts` | Tests unitaires | ~30 tests — detectFactualClaims (dates/noms/URLs), computeConfidence, applyReflectiveCorrections, verifyCritique |
+| `src/services/memory/memoryWebEnricher.ts` | Service Ring 3 | HippoRAG idle enrichment: scheduleEnrichment (requestIdleCallback), startIdleEnrichment, getEnrichment/getAllEnrichments — localStorage TTL 7j |
+| `src/services/memory/__tests__/memoryWebEnricher.test.ts` | Tests unitaires | Tests extractMainConcept, scheduleEnrichment, getEnrichment, getAllEnrichments |
+| `src/services/memory/knowledgeGraphIndex.ts` | Service Ring 3 | HippoRAG 2-hop graph: buildIndex (summary+tags), addEdge (upsert nodes), getRelatedNodes/getRelatedLabels/getRelatedEntryIds — localStorage max 500 nœuds |
+| `src/services/memory/__tests__/knowledgeGraphIndex.test.ts` | Tests unitaires | Tests extractTokens, nodeId, buildIndex, addEdge, getRelatedNodes, getRelatedLabels, getRelatedEntryIds, clear |
+| `src/services/ai/workingMemoryCompressor.ts` | Service Ring 3 | Memory Survey compression: compress, selectAnchors, isAnchorMessage, estimateTokens — COMPRESSION_HISTORY_THRESHOLD=20 |
+| `src/services/ai/__tests__/workingMemoryCompressor.test.ts` | Tests unitaires | Tests estimateTokens, isAnchorMessage, selectAnchors, compress (threshold, Ollama fallback, anchors preserved) |
+
+### Modifications (v31.2.33)
+| Fichier | Modification |
+|---------|-------------|
+| `src/services/ai/chatEngine.ts` | Hook 1.2.5 (compress history > 20 msgs), Hook 1.5.2 (Self-RAG verifyCritique + applyReflectiveCorrections) — imports reflectiveVerifier + workingMemoryCompressor |
+| `src/services/ai/memoryIntegration.ts` | saveInteraction(): fire-and-forget memoryWebEnricher.scheduleEnrichment() après shadow write |
+| `src/services/cognitive/cognitiveOmegaIntegration.ts` | enrichContext(): graphContext 2-hop via knowledgeGraphIndex.getRelatedLabels() injecté dans combined |
+| `src/services/webResearchService.ts` | browserWebResearchFallback(): persist web findings via dynamic import (évite import circulaire → memoryWebEnricher) |
+| `src/services/memory/knowledgeGraphIndex.ts` | addEdge() upsert nodes, buildIndex() inclut tags |
+| `scripts/autoheal/autoheal_rules.jsonl` | +2 entrées: AH-2026-04-28-REFLECTIVE-VERIFIER-0006, AH-2026-04-28-KNOWLEDGE-GRAPH-COMPRESSOR-0007 |
+| `ARCHITECTURE.md` | Section v31.2.33 ajoutée |
+
+### Gates
+- Rule 10 AutoHeal: AH-2026-04-28-REFLECTIVE-VERIFIER-0006 + AH-2026-04-28-KNOWLEDGE-GRAPH-COMPRESSOR-0007
+- Rule 15: ARCHITECTURE.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour
+- Rule 16: 188 tests PASS (4 nouveaux suites)
+- detect_recurrence: PASS

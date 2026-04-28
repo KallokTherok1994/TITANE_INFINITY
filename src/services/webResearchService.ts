@@ -186,6 +186,16 @@ async function browserWebResearchFallback(question: string): Promise<ResearchRep
     .map(r => `**${r.title}** : ${r.snippet}`)
     .join('\n\n');
 
+  // v31.2.33: Persist web findings for long-term memory enrichment (dynamic import avoids circular dep)
+  setTimeout(() => {
+    import('@/services/memory/memoryWebEnricher').then(({ memoryWebEnricher }) => {
+      memoryWebEnricher.scheduleEnrichment({
+        id: `web_research_${Date.now()}`,
+        content: summaryParts,
+      });
+    }).catch(() => { /* non-blocking */ });
+  }, 0);
+
   return {
     answer: {
       answer: summaryParts,

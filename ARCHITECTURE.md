@@ -275,8 +275,10 @@ L’agent orchestrateur dynamique répartit intelligemment les tâches entre les
 
 > 2026-04-16 — Advanced-agent live runtime surfaces: les services Ring 3 `src/services/orchestrator/`, `src/services/explainability/` et `src/services/security_active/` publient maintenant des snapshots runtime synchrones consommés directement par leurs dashboards canoniques. La vérité active reste bornée au frontend gouverné: métriques locales et santé providers pour l orchestrateur, trace conversationnelle persistée pour l explainability, et corrélation alertes/logs/politiques de confinement pour la sécurité active, sans créer de second chemin réseau hors One Door.
 
-**Version:** 30.1.34  
-**Date:** 2026-04-17T11:43:00Z  
+> 2026-04-28 — Self-RAG Reflective Verifier + HippoRAG Knowledge Graph + Memory Compressor + Web Enricher (v31.2.33): Quatre nouveaux services Ring 3 enrichissent la chaîne IA cognitive. `src/services/ai/reflectiveVerifier.ts` (Self-RAG) vérifie la fiabilité factuelle de chaque réponse via `verifyCritique`, déclenche une recherche web Wikipedia si la confiance est < 0.65 et que des claims factuels sont détectés, puis appelle `applyReflectiveCorrections`. `src/services/memory/knowledgeGraphIndex.ts` (HippoRAG-inspired) construit un index de graphe de connaissances 2-hop par co-occurrence des tokens de résumés/tags; `addEdge` upsert les nœuds, `getRelatedNodes` et `getRelatedLabels` traversent jusqu'à 2 sauts. `src/services/ai/workingMemoryCompressor.ts` (Memory Survey) compresse l'historique de conversation quand `history.length > 20` via `selectAnchors` (premiers 3 + marqueurs décision/fait/important + derniers 2) et un résumé Ollama asynchrone. `src/services/memory/memoryWebEnricher.ts` (HippoRAG idle) enrichit les entrées mémoire long-terme via `requestIdleCallback` en interrogeant Wikipedia. Points d'intégration: `chatEngine.ts` (Hook 1.2.5 compression + Hook 1.5.2 Self-RAG), `memoryIntegration.ts` (`saveInteraction` fire-and-forget enrichment), `cognitiveOmegaIntegration.ts` (`enrichContext` graphContext 2-hop), `webResearchService.ts` (`browserWebResearchFallback` persist findings via dynamic import pour éviter la dépendance circulaire). Tests: 188 PASS (4 nouveaux suites).
+
+**Version:** 31.2.33
+**Date:** 2026-04-28T00:00:00Z
 **Classification:** CANON
 
 ---
