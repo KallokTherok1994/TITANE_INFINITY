@@ -98,7 +98,7 @@ describe('Conversation fullscreen shell truth', () => {
     expect(css).toContain('position: sticky;');
     expect(css).toContain('top: 0;');
     expect(css).toContain(
-      'padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));'
+      'padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));'
     );
     expect(page).not.toContain('chatInput?.scrollIntoView');
   });
