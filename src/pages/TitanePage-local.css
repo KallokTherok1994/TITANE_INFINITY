@@ -182,8 +182,8 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOBILE NANO v31.2.23
-   Réduction maximale — textes/icônes/éléments nano
+   MOBILE NANO v31.2.24
+   Boutons et icônes encore réduits — dimension minimale
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   /* ── Shell ── */
@@ -211,26 +211,28 @@
   }
   .titane-inline-tabs > button,
   .titane-inline-tabs--conversation button {
-    padding: 1px 4px !important;
-    font-size: 0.46rem !important;
-    min-height: 16px !important;
+    padding: 1px 3px !important;
+    font-size: 0.4rem !important;
+    min-height: 13px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
-    border-radius: 6px !important;
+    border-radius: 5px !important;
   }
 
   /* ── Toolbar icônes nano ── */
   .conversation-icon-btn {
-    padding: 0.08rem 0.14rem !important;
-    font-size: 0.58rem !important;
+    padding: 0.04rem 0.08rem !important;
+    font-size: 0.48rem !important;
     border-radius: 2px !important;
+    min-width: 0 !important;
+    line-height: 1 !important;
   }
   .conversation-toolbar-left,
-  .conversation-toolbar-right { gap: 0.08rem !important; }
+  .conversation-toolbar-right { gap: 0.05rem !important; }
   .conversation-mode-select {
-    padding: 0.08rem 0.2rem !important;
-    font-size: 0.48rem !important;
-    border-radius: 3px !important;
+    padding: 0.04rem 0.14rem !important;
+    font-size: 0.42rem !important;
+    border-radius: 2px !important;
   }
 
   /* ── Input container nano ── */
@@ -248,25 +250,28 @@
     font-size: 0.6rem !important;
   }
   .conversation-send-btn {
-    min-width: 48px !important;
-    padding: 0.22rem 0.4rem !important;
-    font-size: 0.54rem !important;
+    min-width: 36px !important;
+    padding: 0.14rem 0.28rem !important;
+    font-size: 0.46rem !important;
+    border-radius: 4px !important;
   }
 
   /* ── Chat toolbar bottom ── */
   .chat-toolbar-btn {
-    width: 15px !important;
-    height: 15px !important;
+    width: 12px !important;
+    height: 12px !important;
     border-radius: 2px !important;
-    font-size: 0.5rem !important;
+    font-size: 0.42rem !important;
+    min-width: 0 !important;
+    padding: 0 !important;
   }
   .chat-toolbar {
-    padding: 0.14rem 0.22rem !important;
-    gap: 0.1rem !important;
-    border-radius: 5px !important;
+    padding: 0.1rem 0.16rem !important;
+    gap: 0.07rem !important;
+    border-radius: 4px !important;
   }
-  .toolbar-section-label { font-size: 0.36rem !important; }
-  .toolbar-buttons { gap: 0.08rem !important; }
+  .toolbar-section-label { font-size: 0.3rem !important; }
+  .toolbar-buttons { gap: 0.05rem !important; }
 
   /* ── Messages ── */
   .conversation-message-text {
