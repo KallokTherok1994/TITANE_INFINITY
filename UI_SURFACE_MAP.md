@@ -671,3 +671,5 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Tests: `tests/unit/services/multiproject/multiProjectAgent.test.ts` (52 tests PASS), `tests/unit/pages/multiProjectDashboard.test.tsx` (24 tests PASS)
 - AutoHeal: AH-2026-04-27-MULTIPROJECT-0053
 - Version: 31.2.13
+
+# [2026-04-28] ConversationSection research handoff truth (v31.2.32): les fonctions `shouldHandoffToResearch()`, `buildResearchHandoff()`, `classifyResearchOutcome()` et `buildResearchReply()` sont maintenant exportées depuis `src/components/sections/ConversationSection.tsx`. `shouldHandoffToResearch()` déclenche la recherche web non seulement sur "recherche internet/web" explicite, mais aussi sur les patterns implicites quand `deep_internet_analysis: true` (actualité, analyse, tendances, dernières nouvelles, informations récentes, URLs http://). La préférence `deep_internet_analysis` est lue via `userPreferencesEngine.getPreferences()` injecté dans la surface chat. Tests: `src/components/sections/__tests__/ConversationSection.research.test.ts` (42 tests PASS). AutoHeal: AH-2026-04-28-CHAT-MEMORY-OMEGA-SINGULARITY-0004.

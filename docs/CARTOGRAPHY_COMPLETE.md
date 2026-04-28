@@ -1361,3 +1361,25 @@ function MyComponent() {
 - Rule 16: 226 tests PASS (11 fichiers services)
 - TypeScript: 0 erreurs sur fichiers modifiés (2 pre-existants 282/379 exclus — Rule 1 minimal patch)
 - verify_instructions + detect_recurrence: PASS (voir F5 commit)
+
+## Session 2026-04-28 — Chat Memory OMEGA Singularity + HTTP Server tests
+
+### Nouveaux fichiers de tests (v31.2.32)
+| Fichier | Type | Contenu |
+|---------|------|---------|
+| `src/components/sections/__tests__/ConversationSection.research.test.ts` | Tests unitaires | 42 tests — shouldHandoffToResearch, buildResearchHandoff, classifyResearchOutcome, buildResearchReply (deep_internet_analysis-aware) |
+| `src/services/__tests__/userPreferencesEngine.test.ts` | Tests unitaires | 24 tests — UserPreferencesEngine CRUD, deep_internet_analysis toggle, localStorage mock |
+| `src/__tests__/chat-memory-twins-omega-singularity.test.ts` | Tests intégration | 30 tests — pipeline chatEngine ↔ memoryIntegration/cognitiveOmega/SingularityBridge/userPreferencesEngine |
+| `src/__tests__/http-server-vite-proxy.test.ts` | Tests proxy Vite | 28 tests — /api/wiki-search, /api/ollama, One Door compliance, sécurité OWASP |
+
+### Modifications (v31.2.32)
+| Fichier | Modification |
+|---------|-------------|
+| `src/components/sections/ConversationSection.tsx` | shouldHandoffToResearch() étendu avec deep_internet_analysis patterns; useEffect loadingVisibleUntil fix boucle infinie; exports buildResearchHandoff/classifyResearchOutcome/buildResearchReply |
+| `src/services/userPreferencesEngine.ts` | Fix bug `désactive` capturé par enable-matcher (substring `active`); DEFAULT_PREFERENCES.deep_internet_analysis = true |
+
+### Gates
+- Rule 10 AutoHeal: AH-2026-04-28-CHAT-MEMORY-OMEGA-SINGULARITY-0004
+- Rule 15: UI_SURFACE_MAP.md + CARTOGRAPHY_COMPLETE.md mis à jour
+- Rule 16: 124 tests PASS (4 nouveaux fichiers)
+- Suite globale: 5652/5652 PASS
