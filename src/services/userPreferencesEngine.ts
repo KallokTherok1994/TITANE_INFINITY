@@ -403,7 +403,9 @@ class UserPreferencesEngine {
 
     const hasTopic = deepAnalysisEnableTopics.some(kw => lower.includes(kw));
     const hasQualifier = deepAnalysisEnableQualifiers.some(kw => lower.includes(kw));
-    const hasExplicitEnable = deepAnalysisExplicitEnable.some(kw => lower.includes(kw));
+    const hasExplicitEnable =
+      deepAnalysisExplicitEnable.some(kw => lower.includes(kw)) &&
+      !lower.includes('désactive');
     const hasDisable =
       lower.includes('désactive') &&
       deepAnalysisDisableMarkers.some(kw => lower.includes(kw));

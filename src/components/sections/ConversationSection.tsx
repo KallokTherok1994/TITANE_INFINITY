@@ -82,6 +82,7 @@ import {
   validateModeId,
   type ChatModeId as ModernChatModeId,
 } from '@/services/ai/chatModes.config';
+import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -545,7 +546,7 @@ export function sanitizeConversationInput(input: string): string {
     .replace(/on\w+="[^"]*"/gi, '');
 }
 
-function shouldHandoffToResearch(input: string): boolean {
+export function shouldHandoffToResearch(input: string): boolean {
   const normalized = input.toLowerCase();
 
   const hasResearchVerb =
@@ -560,7 +561,27 @@ function shouldHandoffToResearch(input: string): boolean {
     normalized.includes('en ligne') ||
     normalized.includes('online');
 
-  return hasResearchVerb && hasWebTarget;
+  if (hasResearchVerb && hasWebTarget) return true;
+
+  // When deep_internet_analysis preference is active, expand triggers to
+  // include analytical/actuality queries that benefit from live web sources.
+  const deepActive =
+    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] ===
+    true;
+  if (deepActive) {
+    const hasDeepAnalyticIntent =
+      normalized.includes('actualité') ||
+      normalized.includes('dernières nouvelles') ||
+      normalized.includes('informations récentes') ||
+      normalized.includes('récentes sur') ||
+      normalized.includes('tendances actuelles') ||
+      (normalized.includes('analyse') && hasResearchVerb) ||
+      (normalized.includes('cherche') && normalized.includes('sur')) ||
+      /https?:\/\//.test(normalized);
+    if (hasDeepAnalyticIntent) return true;
+  }
+
+  return false;
 }
 
 export function resolveConversationCitations(
@@ -652,7 +673,7 @@ function toTopicSlug(topic: string): string {
     .replace(/_+/g, '_');
 }
 
-function buildResearchHandoff(input: string): {
+export function buildResearchHandoff(input: string): {
   q: string;
   mode: 'WEB_LIVE';
   target_url: string;
@@ -773,7 +794,7 @@ function detectBlockCause(report: ResearchReport): string {
   return 'POLICY_BLOCKED';
 }
 
-function classifyResearchOutcome(report: ResearchReport): ResearchOutcome {
+export function classifyResearchOutcome(report: ResearchReport): ResearchOutcome {
   const markers = report.trace.markers || [];
   if (markers.includes('VERDICT_BLOCKED')) {
     return 'blocked';
@@ -806,7 +827,7 @@ function classifyResearchOutcome(report: ResearchReport): ResearchOutcome {
   return 'pass';
 }
 
-function buildResearchReply(report: ResearchReport, outcome: ResearchOutcome): string {
+export function buildResearchReply(report: ResearchReport, outcome: ResearchOutcome): string {
   const verdict =
     report.trace.markers.find(m => m.startsWith('VERDICT_')) ?? 'VERDICT_UNKNOWN';
   const verdictLabel = verdict.replace('VERDICT_', '');
@@ -1873,7 +1894,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     useEffect(() => {
       if (isLoading) {
-        setLoadingVisibleUntil(Date.now() + LOADING_INDICATOR_GRACE_MS);
+        // Only extend the deadline when it has already expired to avoid re-triggering
+        // this effect on every render while loading (infinite update loop).
+        if (loadingVisibleUntil <= Date.now()) {
+          setLoadingVisibleUntil(Date.now() + LOADING_INDICATOR_GRACE_MS);
+        }
         return;
       }
 
