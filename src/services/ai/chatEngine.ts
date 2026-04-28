@@ -1287,7 +1287,7 @@ Format: [Audit complet] + [Réponse utilisateur]
               mode: finalConfig.mode,
             }
           );
-          if (critique.shouldRevise && critique.corrections.length >= 0) {
+          if (critique.shouldRevise && critique.webSources.length > 0) {
             response.content = applyReflectiveCorrections(response.content, critique);
           }
           if (!critique.verified) {
