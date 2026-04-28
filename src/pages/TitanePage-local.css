@@ -372,12 +372,80 @@
   font-size: 0.8rem;
 }
 
+/* ─── Toolbar left/right: gap serré ─── */
+.conversation-toolbar-left,
+.conversation-toolbar-right {
+  gap: 0.4rem;
+}
+
+/* ─── Mode select dropdown compact ─── */
+.conversation-mode-select {
+  padding: 0.32rem 0.7rem;
+  font-size: 0.78rem;
+  border-radius: 6px;
+}
+
+/* ─── Runtime panel (0 étapes) ultra-compact ─── */
+.conversation-runtime-panel {
+  padding: 0.3rem 0.65rem !important;
+  border-radius: 8px !important;
+  gap: 0.4rem 0.6rem !important;
+}
+
+.conversation-container[data-fullscreen='true'] .conversation-runtime-panel {
+  padding: 0.3rem 0.65rem;
+  border-radius: 8px;
+}
+
+.conversation-runtime-summary {
+  font-size: 0.7rem;
+  line-height: 1.25;
+}
+
+.conversation-runtime-badge {
+  font-size: 0.65rem;
+  padding: 0.14rem 0.38rem;
+}
+
+/* ─── Filters bar: plus fine ─── */
+.conversation-filters {
+  padding: 0.1rem 0 0;
+  gap: 0.4rem;
+}
+
+.conversation-filters-search {
+  padding: 0.28rem 0.55rem;
+  font-size: 0.78rem;
+  border-radius: 6px;
+}
+
+.conversation-filters-search input {
+  font-size: 0.78rem;
+}
+
+/* ─── Tab top bar (Chat/Vue/Vision/…): réduire hauteur ─── */
+.titane-inline-tabs {
+  gap: 3px;
+}
+
 /* ─── Console Monitor & Predictive AI floating panels — masqués en desktop ─── */
 @media (min-width: 769px) {
-  /* Réduire uniquement la hauteur sans masquer — maintenir l'accessibilité */
-  .fixed.top-4.right-4 {
-    /* réduit au minimum visible */
-    transform: scale(0.88);
-    transform-origin: top right;
+  /* Panneau Agents flottant (bas-droite) — réduit */
+  .agent-dashboards-panel {
+    transform: scale(0.8);
+    transform-origin: bottom right;
+  }
+
+  /* Boot Beacon dev overlay */
+  #titane-boot-beacon {
+    transform: scale(0.72);
+    transform-origin: bottom right;
+    opacity: 0.5;
+  }
+
+  /* Predictive AI badge (bottom-24 right-4) */
+  .fixed.bottom-24.right-4 {
+    transform: scale(0.78);
+    transform-origin: bottom right;
   }
 }
