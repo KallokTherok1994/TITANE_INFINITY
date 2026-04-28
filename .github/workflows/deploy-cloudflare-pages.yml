@@ -1,0 +1,75 @@
+name: 🌐 Deploy TITANE∞ to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - MAIN
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deploy even without code changes'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-cloudflare-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  deployments: write
+
+env:
+  NODE_VERSION: '24'
+  PNPM_VERSION: '10'
+
+jobs:
+  deploy:
+    name: 🚀 Build & Deploy to Cloudflare Pages
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🗂️ Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 🔁 Cache pnpm modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build frontend (dist/)
+        run: pnpm run build
+        env:
+          NODE_ENV: production
+
+      - name: 🌐 Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: titane-infinity
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
