@@ -182,8 +182,8 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOBILE NANO v31.2.26
-   Send inline, suggestions compactes, layout épuré
+   MOBILE NANO v31.2.27
+   Textes et titres réduits −− encore plus compacts
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   /* ── Shell ── */
@@ -211,9 +211,9 @@
   }
   .titane-inline-tabs > button,
   .titane-inline-tabs--conversation button {
-    padding: 2px 5px !important;
-    font-size: 0.5rem !important;
-    min-height: 16px !important;
+    padding: 1px 4px !important;
+    font-size: 0.42rem !important;
+    min-height: 14px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     border-radius: 5px !important;
@@ -247,19 +247,19 @@
   /* Couvre aussi la spécificité fullscreen de TitanePage.css */
   .conversation-input,
   .conversation-container[data-fullscreen='true'] .conversation-input {
-    min-height: 28px !important;
-    max-height: min(14vh, 72px) !important;
-    padding: 0.28rem 0.44rem !important;
-    font-size: 0.62rem !important;
+    min-height: 26px !important;
+    max-height: min(14vh, 64px) !important;
+    padding: 0.24rem 0.38rem !important;
+    font-size: 0.54rem !important;
     flex: 1 1 auto !important;
   }
   .conversation-send-btn,
   .conversation-container[data-fullscreen='true'] .conversation-send-btn {
     width: auto !important;
-    min-width: 44px !important;
-    min-height: 28px !important;
-    padding: 0.18rem 0.32rem !important;
-    font-size: 0.5rem !important;
+    min-width: 40px !important;
+    min-height: 26px !important;
+    padding: 0.16rem 0.28rem !important;
+    font-size: 0.44rem !important;
     border-radius: 5px !important;
     flex-shrink: 0 !important;
   }
@@ -281,37 +281,37 @@
     gap: 0.1rem !important;
     border-radius: 5px !important;
   }
-  .toolbar-section-label { font-size: 0.34rem !important; }
+  .toolbar-section-label { font-size: 0.28rem !important; }
   .toolbar-buttons { gap: 0.07rem !important; }
 
   /* ── Messages ── */
   .conversation-message-text {
-    font-size: 0.6rem !important;
-    line-height: 1.42 !important;
+    font-size: 0.52rem !important;
+    line-height: 1.38 !important;
   }
-  .conversation-message-role { font-size: 0.44rem !important; }
+  .conversation-message-role { font-size: 0.37rem !important; }
   .conversation-message-avatar {
-    width: 14px !important;
-    height: 14px !important;
-    font-size: 0.56rem !important;
+    width: 12px !important;
+    height: 12px !important;
+    font-size: 0.48rem !important;
   }
-  .conversation-message { gap: 0.22rem !important; }
-  .conversation-messages-list { gap: 0.28rem !important; padding: 0.22rem 0.3rem !important; }
+  .conversation-message { gap: 0.18rem !important; }
+  .conversation-messages-list { gap: 0.22rem !important; padding: 0.18rem 0.26rem !important; }
 
   /* ── Thinking panel ── */
   .thinking-panel-compact {
-    padding: 0.1rem 0.25rem !important;
-    font-size: 0.46rem !important;
-    gap: 0.14rem !important;
+    padding: 0.08rem 0.2rem !important;
+    font-size: 0.39rem !important;
+    gap: 0.1rem !important;
   }
 
   /* ── Filters/search ── */
   .conversation-filters-search {
-    padding: 0.1rem 0.22rem !important;
-    font-size: 0.48rem !important;
+    padding: 0.08rem 0.18rem !important;
+    font-size: 0.4rem !important;
     border-radius: 3px !important;
   }
-  .conversation-filters-search input { font-size: 0.48rem !important; }
+  .conversation-filters-search input { font-size: 0.4rem !important; }
 
   /* ── Suggestions 2 colonnes compactes ── */
   .conversation-empty-suggestions {
@@ -321,8 +321,8 @@
     margin-top: 0.12rem !important;
   }
   .conversation-empty-suggestions button {
-    padding: 0.1rem 0.16rem !important;
-    font-size: 0.44rem !important;
+    padding: 0.08rem 0.12rem !important;
+    font-size: 0.38rem !important;
     text-align: center !important;
     border-radius: 4px !important;
     line-height: 1.2 !important;
@@ -330,12 +330,12 @@
 
   /* ── Empty state nano ── */
   .conversation-empty {
-    gap: 0.14rem !important;
-    padding: 0.28rem 0.3rem !important;
+    gap: 0.1rem !important;
+    padding: 0.2rem 0.24rem !important;
   }
-  .conversation-empty-icon { font-size: 0.8rem !important; }
-  .conversation-empty h3 { font-size: 0.52rem !important; margin: 0 !important; }
-  .conversation-empty p { font-size: 0.44rem !important; margin: 0 !important; }
+  .conversation-empty-icon { font-size: 0.66rem !important; }
+  .conversation-empty h3 { font-size: 0.44rem !important; margin: 0 !important; }
+  .conversation-empty p { font-size: 0.37rem !important; margin: 0 !important; }
 
   /* ── Overlays masqués ── */
   #titane-boot-beacon { display: none !important; }
