@@ -2,15 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Always-on: reprise au boot (doit être explicitement accordé par l'utilisateur sur certains OEM) -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- Always-on: Foreground Service pour traitements de longue durée visibles utilisateur -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- Android 14+: type de foreground service requis -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-    <!-- WorkManager: POST_NOTIFICATIONS pour la notification persistante (Android 13+) -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <!-- AndroidTV support -->
     <uses-feature android:name="android.software.leanback" android:required="false" />
 
@@ -32,25 +23,6 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Always-on: Foreground Service pour maintien actif -->
-        <service
-            android:name=".TitaneForegroundService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
-
-        <!-- Always-on: reprise après reboot système -->
-        <receiver
-            android:name=".BootCompletedReceiver"
-            android:exported="true"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <!-- Support démarrage rapide (Quick Boot) sur certains OEM Samsung -->
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
 
         <provider
           android:name="androidx.core.content.FileProvider"

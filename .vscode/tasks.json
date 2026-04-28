@@ -1389,6 +1389,33 @@
 			"label": "prod-isolation:tail-tauri-log",
 			"type": "shell",
 			"command": "set -e; cd ${workspaceFolder}; tail -n 320 runtime/dev/logs/tauri.log"
+		},
+		{
+			"label": "📱 MobileView — iPhone X (TITANE∞ dev:1420)",
+			"type": "shell",
+			"command": "echo 'URL: http://127.0.0.1:1420/titane' && echo 'Ouvrez la palette de commandes (Ctrl+Shift+P) > MobileView > entrez http://127.0.0.1:1420/titane'",
+			"options": { "cwd": "${workspaceFolder}" },
+			"problemMatcher": [],
+			"presentation": { "reveal": "always", "panel": "shared", "focus": true },
+			"detail": "Rappel URL MobileView iPhone X — copier: http://127.0.0.1:1420/titane"
+		},
+		{
+			"label": "📱 MobileView — Pixel (TITANE∞ dev:1420)",
+			"type": "shell",
+			"command": "echo 'URL: http://127.0.0.1:1420/titane' && echo 'Ouvrez la palette de commandes (Ctrl+Shift+P) > startPixel > entrez http://127.0.0.1:1420/titane'",
+			"options": { "cwd": "${workspaceFolder}" },
+			"problemMatcher": [],
+			"presentation": { "reveal": "always", "panel": "shared", "focus": true },
+			"detail": "Rappel URL MobileView Pixel — copier: http://127.0.0.1:1420/titane"
+		},
+		{
+			"label": "🌐 TITANE∞ — Navigateur mobile devtools (Ctrl+Shift+M)",
+			"type": "shell",
+			"command": "xdg-open 'http://127.0.0.1:1420/titane' 2>/dev/null &",
+			"options": { "cwd": "${workspaceFolder}" },
+			"problemMatcher": [],
+			"presentation": { "reveal": "silent", "panel": "shared" },
+			"detail": "Ouvre TITANE∞ dans Chrome — activer DevTools > Toggle device toolbar (Ctrl+Shift+M) pour vue mobile"
 		}
 	],
 	"inputs": [
