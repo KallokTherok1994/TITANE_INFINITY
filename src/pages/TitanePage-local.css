@@ -182,161 +182,161 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOBILE ULTRA-COMPACT v31.2.22
-   Éléments, textes et icônes encore réduits — plus compacts
+   MOBILE NANO v31.2.23
+   Réduction maximale — textes/icônes/éléments nano
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   /* ── Shell ── */
   .titane-page-shell--conversation { gap: 0; }
 
-  /* ── Header micro ── */
+  /* ── Header nano ── */
   .titane-page-header--conversation {
-    padding: 0.12rem 0.35rem 0.08rem;
+    padding: 0.06rem 0.25rem 0.04rem;
   }
   .titane-page-header {
-    padding: 0.12rem 0.35rem;
+    padding: 0.06rem 0.25rem;
   }
   .titane-page-header-brand { display: none; }
 
   /* ── Libère la zone messages ── */
   .titane-content--conversation {
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
   }
 
-  /* ── Tabs micro ── */
+  /* ── Tabs nano ── */
   .titane-inline-tabs {
     gap: 1px !important;
-    padding: 1px 3px !important;
+    padding: 1px 2px !important;
   }
   .titane-inline-tabs > button,
   .titane-inline-tabs--conversation button {
-    padding: 2px 5px !important;
-    font-size: 0.54rem !important;
-    min-height: 20px !important;
+    padding: 1px 4px !important;
+    font-size: 0.46rem !important;
+    min-height: 16px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
   }
 
-  /* ── Toolbar icônes micro ── */
+  /* ── Toolbar icônes nano ── */
   .conversation-icon-btn {
-    padding: 0.12rem 0.2rem !important;
-    font-size: 0.7rem !important;
-    border-radius: 3px !important;
+    padding: 0.08rem 0.14rem !important;
+    font-size: 0.58rem !important;
+    border-radius: 2px !important;
   }
   .conversation-toolbar-left,
-  .conversation-toolbar-right { gap: 0.12rem !important; }
+  .conversation-toolbar-right { gap: 0.08rem !important; }
   .conversation-mode-select {
-    padding: 0.12rem 0.28rem !important;
-    font-size: 0.56rem !important;
-    border-radius: 4px !important;
+    padding: 0.08rem 0.2rem !important;
+    font-size: 0.48rem !important;
+    border-radius: 3px !important;
   }
 
-  /* ── Input container mobile ── */
+  /* ── Input container nano ── */
   .conversation-input-container {
-    padding: 0.25rem 0.4rem !important;
-    padding-bottom: calc(0.3rem + env(safe-area-inset-bottom, 0px)) !important;
-    gap: 0.25rem !important;
+    padding: 0.18rem 0.3rem !important;
+    padding-bottom: calc(0.22rem + env(safe-area-inset-bottom, 0px)) !important;
+    gap: 0.18rem !important;
   }
   /* Couvre aussi la spécificité fullscreen de TitanePage.css */
   .conversation-input,
   .conversation-container[data-fullscreen='true'] .conversation-input {
-    min-height: 28px !important;
-    max-height: min(15vh, 72px) !important;
-    padding: 0.3rem 0.5rem !important;
-    font-size: 0.7rem !important;
+    min-height: 22px !important;
+    max-height: min(12vh, 56px) !important;
+    padding: 0.22rem 0.38rem !important;
+    font-size: 0.6rem !important;
   }
   .conversation-send-btn {
-    min-width: 62px !important;
-    padding: 0.3rem 0.55rem !important;
-    font-size: 0.62rem !important;
+    min-width: 48px !important;
+    padding: 0.22rem 0.4rem !important;
+    font-size: 0.54rem !important;
   }
 
   /* ── Chat toolbar bottom ── */
   .chat-toolbar-btn {
-    width: 19px !important;
-    height: 19px !important;
-    border-radius: 3px !important;
-    font-size: 0.6rem !important;
+    width: 15px !important;
+    height: 15px !important;
+    border-radius: 2px !important;
+    font-size: 0.5rem !important;
   }
   .chat-toolbar {
-    padding: 0.2rem 0.3rem !important;
-    gap: 0.14rem !important;
-    border-radius: 6px !important;
+    padding: 0.14rem 0.22rem !important;
+    gap: 0.1rem !important;
+    border-radius: 5px !important;
   }
-  .toolbar-section-label { font-size: 0.42rem !important; }
-  .toolbar-buttons { gap: 0.12rem !important; }
+  .toolbar-section-label { font-size: 0.36rem !important; }
+  .toolbar-buttons { gap: 0.08rem !important; }
 
   /* ── Messages ── */
   .conversation-message-text {
-    font-size: 0.7rem !important;
-    line-height: 1.44 !important;
+    font-size: 0.6rem !important;
+    line-height: 1.42 !important;
   }
-  .conversation-message-role { font-size: 0.52rem !important; }
+  .conversation-message-role { font-size: 0.44rem !important; }
   .conversation-message-avatar {
-    width: 18px !important;
-    height: 18px !important;
-    font-size: 0.68rem !important;
+    width: 14px !important;
+    height: 14px !important;
+    font-size: 0.56rem !important;
   }
-  .conversation-message { gap: 0.3rem !important; }
-  .conversation-messages-list { gap: 0.4rem !important; padding: 0.3rem 0.4rem !important; }
+  .conversation-message { gap: 0.22rem !important; }
+  .conversation-messages-list { gap: 0.28rem !important; padding: 0.22rem 0.3rem !important; }
 
   /* ── Thinking panel ── */
   .thinking-panel-compact {
-    padding: 0.16rem 0.35rem !important;
-    font-size: 0.54rem !important;
-    gap: 0.2rem !important;
+    padding: 0.1rem 0.25rem !important;
+    font-size: 0.46rem !important;
+    gap: 0.14rem !important;
   }
 
   /* ── Filters/search ── */
   .conversation-filters-search {
-    padding: 0.16rem 0.3rem !important;
-    font-size: 0.58rem !important;
-    border-radius: 4px !important;
+    padding: 0.1rem 0.22rem !important;
+    font-size: 0.48rem !important;
+    border-radius: 3px !important;
   }
-  .conversation-filters-search input { font-size: 0.58rem !important; }
+  .conversation-filters-search input { font-size: 0.48rem !important; }
 
-  /* ── Suggestions 2 colonnes micro ── */
+  /* ── Suggestions 2 colonnes nano ── */
   .conversation-empty-suggestions {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 0.25rem !important;
-    margin-top: 0.25rem !important;
+    gap: 0.18rem !important;
+    margin-top: 0.18rem !important;
   }
   .conversation-empty-suggestions button {
-    padding: 0.22rem 0.3rem !important;
-    font-size: 0.58rem !important;
+    padding: 0.16rem 0.22rem !important;
+    font-size: 0.48rem !important;
     text-align: center !important;
-    border-radius: 5px !important;
+    border-radius: 4px !important;
   }
 
-  /* ── Empty state micro ── */
+  /* ── Empty state nano ── */
   .conversation-empty {
-    gap: 0.3rem !important;
-    padding: 0.55rem 0.5rem !important;
+    gap: 0.22rem !important;
+    padding: 0.4rem 0.38rem !important;
   }
-  .conversation-empty-icon { font-size: 1.2rem !important; }
-  .conversation-empty h3 { font-size: 0.72rem !important; }
-  .conversation-empty p { font-size: 0.6rem !important; }
+  .conversation-empty-icon { font-size: 1rem !important; }
+  .conversation-empty h3 { font-size: 0.6rem !important; }
+  .conversation-empty p { font-size: 0.5rem !important; }
 
   /* ── Overlays masqués ── */
   #titane-boot-beacon { display: none !important; }
   .fixed.bottom-24.right-4 { display: none !important; }
   .agent-dashboards-panel {
-    transform: scale(0.55) !important;
+    transform: scale(0.45) !important;
     transform-origin: bottom right !important;
   }
 
-  /* ── Runtime panel micro ── */
+  /* ── Runtime panel nano ── */
   .conversation-runtime-panel {
-    padding: 0.12rem 0.3rem !important;
-    border-radius: 5px !important;
-  }
-  .conversation-runtime-summary { font-size: 0.52rem !important; }
-  .conversation-runtime-badge {
-    font-size: 0.48rem !important;
     padding: 0.08rem 0.22rem !important;
+    border-radius: 4px !important;
+  }
+  .conversation-runtime-summary { font-size: 0.44rem !important; }
+  .conversation-runtime-badge {
+    font-size: 0.4rem !important;
+    padding: 0.06rem 0.16rem !important;
   }
 }
 
