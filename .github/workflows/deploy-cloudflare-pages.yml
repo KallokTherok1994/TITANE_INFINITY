@@ -62,7 +62,6 @@ jobs:
           NODE_ENV: production
 
       - name: 🌐 Deploy to Cloudflare Workers (Static Assets SPA)
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy --config wrangler.jsonc
+        run: pnpm exec wrangler deploy --config wrangler.jsonc
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
