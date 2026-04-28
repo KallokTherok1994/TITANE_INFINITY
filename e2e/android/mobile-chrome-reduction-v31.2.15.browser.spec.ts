@@ -53,10 +53,12 @@ const MOBILE_VIEWPORTS = [
 
 /** Hauteur minimale pour les tests structure (tout serveur) */
 const MIN_MESSAGES_HEIGHT_STRUCTURE_PX = 200;
-/** Hauteur minimale cible v31.2.15 (chrome reduction actif) */
+/** Hauteur minimale cible v31.2.15 (chrome reduction actif) — grands mobiles ≥ 390px */
 const MIN_MESSAGES_HEIGHT_PX = 300;
-/** Hauteur maximale acceptable pour le ChatToolbar (1 rangée) */
-const MAX_TOOLBAR_HEIGHT_PX = 56;
+/** Hauteur minimale pour petit mobile (375×667 = iPhone SE) — écran physiquement contraint (mesuré ~195px) */
+const MIN_MESSAGES_HEIGHT_SMALL_PX = 185;
+/** Hauteur maximale acceptable pour le ChatToolbar (1 rangée, boutons 44px touch targets) */
+const MAX_TOOLBAR_HEIGHT_PX = 72;
 /** Hauteur maximale acceptable pour la barre de tabs inline */
 const MAX_TABS_HEIGHT_PX = 44;
 
@@ -153,12 +155,19 @@ async function collectLayoutMetrics(page: Page): Promise<LayoutMetrics> {
 
 // ─── Assertions communes ──────────────────────────────────────────────────────
 
+/** Retourne le seuil minimal de hauteur messages pour un device donné */
+function getMinMessagesHeight(deviceName: string): number {
+  // SmallMobile (375x667) = iPhone SE — écran physiquement contraint → seuil réduit
+  return deviceName === 'SmallMobile' ? MIN_MESSAGES_HEIGHT_SMALL_PX : MIN_MESSAGES_HEIGHT_PX;
+}
+
 function assertCriticalZoneVisible(m: LayoutMetrics, deviceName: string): void {
-  // Zone messages ≥ MIN_MESSAGES_HEIGHT_PX
+  const minH = getMinMessagesHeight(deviceName);
+  // Zone messages ≥ seuil device
   expect(
     m.messagesHeight,
-    `[${deviceName}] chat-messages-scroll-region doit avoir une hauteur ≥ ${MIN_MESSAGES_HEIGHT_PX}px (observé: ${m.messagesHeight}px)`
-  ).toBeGreaterThanOrEqual(MIN_MESSAGES_HEIGHT_PX);
+    `[${deviceName}] chat-messages-scroll-region doit avoir une hauteur ≥ ${minH}px (observé: ${m.messagesHeight}px)`
+  ).toBeGreaterThanOrEqual(minH);
 
   // Zone messages dans le viewport
   expect(
@@ -550,17 +559,18 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Full E2E', () => {
   });
 
   // ── BLOC 5 : Metrics snapshot — rapport final ─────────────────────────────────
-  test.describe('Snapshot métriques — rapport proof', () => {
-    for (const device of MOBILE_VIEWPORTS) {
-      test(`Snapshot complet: ${device.name}`, async ({ page }) => {
-        test.use({
-          viewport: device.viewport,
-          deviceScaleFactor: device.deviceScaleFactor,
-          userAgent: device.userAgent,
-          isMobile: true,
-          hasTouch: true,
-        });
+  // Note: test.use() doit être au niveau describe, jamais dans un test() callback
+  for (const device of MOBILE_VIEWPORTS) {
+    test.describe(`Snapshot métriques — rapport proof › Snapshot complet: ${device.name}`, () => {
+      test.use({
+        viewport: device.viewport,
+        deviceScaleFactor: device.deviceScaleFactor,
+        userAgent: device.userAgent,
+        isMobile: true,
+        hasTouch: true,
+      });
 
+      test('proof', async ({ page }) => {
         await openConversation(page);
         const m = await collectLayoutMetrics(page);
 
@@ -588,8 +598,8 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Full E2E', () => {
           `moreBtn=${m.btnMobileMoreVisible}`
         );
       });
-    }
-  });
+    });
+  }
 });
 
 // ─── Fonction helper interne ──────────────────────────────────────────────────

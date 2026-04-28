@@ -1,6 +1,6 @@
 {
   "name": "titane-infinity-stable",
-  "version": "31.2.14",
+  "version": "31.2.16",
   "build_target": "production",
   "certification_level": "P3_STABLE_BUILD",
   "build_timestamp": "2026-04-11T12:07:31Z",
@@ -45,7 +45,10 @@
   ],
   "success_criteria": {
     "exit_code": 0,
-    "artifacts_created": ["*.AppImage", "*.deb"],
+    "artifacts_created": [
+      "*.AppImage",
+      "*.deb"
+    ],
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },
