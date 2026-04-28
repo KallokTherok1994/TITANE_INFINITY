@@ -1,6 +1,6 @@
 {
   "name": "titane-infinity-stable",
-  "version": "31.2.25",
+  "version": "31.2.26",
   "build_target": "production",
   "certification_level": "P3_STABLE_BUILD",
   "build_timestamp": "2026-04-11T12:07:31Z",

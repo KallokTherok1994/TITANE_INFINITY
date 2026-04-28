@@ -182,8 +182,8 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOBILE NANO v31.2.25
-   Layout équilibré — compacité + utilisabilité
+   MOBILE NANO v31.2.26
+   Send inline, suggestions compactes, layout épuré
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   /* ── Shell ── */
@@ -235,8 +235,11 @@
     border-radius: 2px !important;
   }
 
-  /* ── Input container nano ── */
-  .conversation-input-container {
+  /* ── Input container inline ── */
+  .conversation-input-container,
+  .conversation-container[data-fullscreen='true'] .conversation-input-container {
+    flex-direction: row !important;
+    align-items: flex-end !important;
     padding: 0.18rem 0.3rem !important;
     padding-bottom: calc(0.22rem + env(safe-area-inset-bottom, 0px)) !important;
     gap: 0.18rem !important;
@@ -244,16 +247,21 @@
   /* Couvre aussi la spécificité fullscreen de TitanePage.css */
   .conversation-input,
   .conversation-container[data-fullscreen='true'] .conversation-input {
-    min-height: 26px !important;
-    max-height: min(14vh, 64px) !important;
-    padding: 0.26rem 0.42rem !important;
+    min-height: 28px !important;
+    max-height: min(14vh, 72px) !important;
+    padding: 0.28rem 0.44rem !important;
     font-size: 0.62rem !important;
+    flex: 1 1 auto !important;
   }
-  .conversation-send-btn {
-    min-width: 42px !important;
+  .conversation-send-btn,
+  .conversation-container[data-fullscreen='true'] .conversation-send-btn {
+    width: auto !important;
+    min-width: 44px !important;
+    min-height: 28px !important;
     padding: 0.18rem 0.32rem !important;
     font-size: 0.5rem !important;
     border-radius: 5px !important;
+    flex-shrink: 0 !important;
   }
 
   /* ── Chat toolbar bottom ── */
@@ -305,28 +313,29 @@
   }
   .conversation-filters-search input { font-size: 0.48rem !important; }
 
-  /* ── Suggestions 2 colonnes nano ── */
+  /* ── Suggestions 2 colonnes compactes ── */
   .conversation-empty-suggestions {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 0.18rem !important;
-    margin-top: 0.18rem !important;
+    gap: 0.12rem !important;
+    margin-top: 0.12rem !important;
   }
   .conversation-empty-suggestions button {
-    padding: 0.16rem 0.22rem !important;
-    font-size: 0.48rem !important;
+    padding: 0.1rem 0.16rem !important;
+    font-size: 0.44rem !important;
     text-align: center !important;
     border-radius: 4px !important;
+    line-height: 1.2 !important;
   }
 
   /* ── Empty state nano ── */
   .conversation-empty {
-    gap: 0.22rem !important;
-    padding: 0.4rem 0.38rem !important;
+    gap: 0.14rem !important;
+    padding: 0.28rem 0.3rem !important;
   }
-  .conversation-empty-icon { font-size: 1rem !important; }
-  .conversation-empty h3 { font-size: 0.6rem !important; }
-  .conversation-empty p { font-size: 0.5rem !important; }
+  .conversation-empty-icon { font-size: 0.8rem !important; }
+  .conversation-empty h3 { font-size: 0.52rem !important; margin: 0 !important; }
+  .conversation-empty p { font-size: 0.44rem !important; margin: 0 !important; }
 
   /* ── Overlays masqués ── */
   #titane-boot-beacon { display: none !important; }
