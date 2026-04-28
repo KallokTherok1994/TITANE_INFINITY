@@ -982,4 +982,96 @@ describe('webSearch — content undefined/null Tauri', () => {
   });
 });
 
+// ═══════════════════════════════════════════════════════════════════
+// 11. webResearch() — browser mode fallback
+// ═══════════════════════════════════════════════════════════════════
+
+describe('webResearch() — browser mode fallback', () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(() => {
+    isTauriAvailableMock.mockReturnValue(false);
+    tauriMock.mockReset();
+    vi.stubGlobal('fetch', fetchMock);
+    fetchMock.mockReset();
+    delete windowRecord.__TITANE_E2E_WEB_RESEARCH_MOCK__;
+    delete windowRecord.__TITANE_E2E_WEB_RESEARCH_REPORT__;
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('retourne un ResearchReport avec citations quand Wikipedia retourne des résultats', async () => {
+    fetchMock.mockResolvedValueOnce(
+      makeFetchSuccess(makeWikiJson([
+        { title: 'Intelligence artificielle', snippet: 'Capacité des systèmes.' },
+        { title: 'Machine learning', snippet: "Sous-domaine de l'IA." },
+      ]))
+    );
+
+    const { webResearch } = await import('../webResearchService');
+    const report = await webResearch({ question: 'intelligence artificielle' }, { mode: 'WEB_LIVE' });
+
+    expect(report.answer.citations).toHaveLength(2);
+    expect(report.answer.citations[0].title).toBe('Intelligence artificielle');
+    expect(report.answer.citations[0].url).toContain('wikipedia.org/wiki/');
+    expect(report.answer.sources_count).toBe(2);
+    expect(report.answer.retrieved_passages_count).toBe(2);
+    expect(report.trace.markers).toContain('BROWSER_WIKI_OK');
+    expect(report.trace.markers).toContain('VERDICT_PASS');
+    expect(tauriMock).not.toHaveBeenCalled();
+  });
+
+  it("n'appelle pas tauri() en mode browser", async () => {
+    fetchMock.mockResolvedValueOnce(
+      makeFetchSuccess(makeWikiJson([{ title: 'Test', snippet: 'Résultat.' }]))
+    );
+
+    const { webResearch } = await import('../webResearchService');
+    await webResearch({ question: 'test' }, { mode: 'WEB_LIVE' });
+
+    expect(tauriMock).not.toHaveBeenCalled();
+  });
+
+  it('retourne BROWSER_WIKI_EMPTY quand Wikipedia retourne []', async () => {
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
+
+    const { webResearch } = await import('../webResearchService');
+    const report = await webResearch({ question: 'sujet vide' }, { mode: 'WEB_LIVE' });
+
+    expect(report.answer.citations).toHaveLength(0);
+    expect(report.answer.sources_count).toBe(0);
+    expect(report.trace.markers).toContain('BROWSER_WIKI_EMPTY');
+    expect(report.trace.errors.length).toBeGreaterThan(0);
+  });
+
+  it('retourne BROWSER_WIKI_EMPTY sur erreur proxy HTTP 503', async () => {
+    fetchMock.mockResolvedValueOnce(makeFetchError(503));
+
+    const { webResearch } = await import('../webResearchService');
+    const report = await webResearch({ question: 'erreur réseau' }, { mode: 'WEB_LIVE' });
+
+    expect(report.answer.citations).toHaveLength(0);
+    expect(report.trace.markers).toContain('BROWSER_WIKI_EMPTY');
+    expect(report.trace.errors.length).toBeGreaterThan(0);
+    expect(tauriMock).not.toHaveBeenCalled();
+  });
+
+  it('appelle tauri() quand Tauri est disponible (régression)', async () => {
+    isTauriAvailableMock.mockReturnValue(true);
+    const mockReport = makeResearchReport();
+    tauriMock.mockResolvedValueOnce(mockReport);
+
+    const { webResearch } = await import('../webResearchService');
+    await webResearch({ question: 'test natif' }, { mode: 'WEB_LIVE' });
+
+    expect(tauriMock).toHaveBeenCalledWith('web_research', expect.objectContaining({
+      query: { question: 'test natif' },
+    }));
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
+
+
 

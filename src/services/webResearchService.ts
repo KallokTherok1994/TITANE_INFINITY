@@ -143,8 +143,72 @@ export async function webSearch(
   };
 }
 
+// ─────────────────────────────────────────────────────────────────
+// Browser-mode full research fallback (Wikipedia → ResearchReport)
+// Called when Tauri is unavailable. Constructs a governed ResearchReport
+// from Wikipedia Search results so ConversationSection renders real content.
+// ─────────────────────────────────────────────────────────────────
+
+async function browserWebResearchFallback(question: string): Promise<ResearchReport> {
+  const traceId = `browser-wiki-${Date.now()}`;
+  const searchResp = await browserWebSearch(question, 8);
+
+  if (!searchResp.ok || !searchResp.content || searchResp.content.length === 0) {
+    const errorMsg = searchResp.error?.message ?? 'Aucun résultat Wikipedia.';
+    return {
+      answer: {
+        answer: `Aucun résultat trouvé pour : "${question}". ${errorMsg}`,
+        citations: [],
+        confidence: 0,
+        limitations: ['Résultats Wikipedia vides ou proxy indisponible'],
+        trace_id: traceId,
+        sources_count: 0,
+        retrieved_passages_count: 0,
+      },
+      trace: {
+        trace_id: traceId,
+        markers: ['VERDICT_PASS', 'BROWSER_WIKI_EMPTY'],
+        errors: [errorMsg],
+      },
+    };
+  }
+
+  const citations = searchResp.content.map(r => ({
+    url: r.url,
+    title: r.title,
+    excerpt: r.snippet,
+    accessed_at: new Date().toISOString(),
+    locator_text: r.snippet.slice(0, 100),
+  }));
+
+  const summaryParts = searchResp.content
+    .slice(0, 5)
+    .map(r => `**${r.title}** : ${r.snippet}`)
+    .join('\n\n');
+
+  return {
+    answer: {
+      answer: summaryParts,
+      citations,
+      confidence: 0.7,
+      limitations: [],
+      trace_id: traceId,
+      sources_count: citations.length,
+      retrieved_passages_count: citations.length,
+    },
+    trace: {
+      trace_id: traceId,
+      markers: ['VERDICT_PASS', 'BROWSER_WIKI_OK'],
+      errors: [],
+    },
+  };
+}
+
 /**
  * Invoke the `web_research` Tauri command (full research pipeline).
+ *
+ * - Tauri mode: IPC → Rust → full research pipeline (One Door).
+ * - Browser mode: Wikipedia proxy fallback → governed ResearchReport.
  *
  * Returns a `ResearchReport` with full trace and markers.
  */
@@ -155,6 +219,11 @@ export async function webResearch(
   const e2eMockReport = getE2EWebResearchMockReport();
   if (e2eMockReport) {
     return e2eMockReport;
+  }
+
+  // Browser mode fallback: Wikipedia proxy (no Tauri runtime available)
+  if (!isTauriAvailable()) {
+    return browserWebResearchFallback(query.question);
   }
 
   return tauri<ResearchReport>('web_research', { query, options });
