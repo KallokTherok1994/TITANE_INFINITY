@@ -61,16 +61,6 @@ jobs:
         env:
           NODE_ENV: production
 
-      - name: 🔍 Debug token presence
-        run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "::error::CLOUDFLARE_API_TOKEN is EMPTY — check repo secret value"
-            exit 1
-          fi
-          echo "Token length: ${#CLOUDFLARE_API_TOKEN}"
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
       - name: 🌐 Deploy to Cloudflare Workers (Static Assets SPA)
         run: pnpm exec wrangler deploy --config wrangler.jsonc
         env:
