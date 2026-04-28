@@ -52,11 +52,11 @@ const MOBILE_VIEWPORTS = [
 ] as const;
 
 /** Hauteur minimale pour les tests structure (tout serveur) */
-const MIN_MESSAGES_HEIGHT_STRUCTURE_PX = 200;
-/** Hauteur minimale cible v31.2.15 (chrome reduction actif) — grands mobiles ≥ 390px */
-const MIN_MESSAGES_HEIGHT_PX = 300;
-/** Hauteur minimale pour petit mobile (375×667 = iPhone SE) — écran physiquement contraint (mesuré ~195px) */
-const MIN_MESSAGES_HEIGHT_SMALL_PX = 185;
+const MIN_MESSAGES_HEIGHT_STRUCTURE_PX = 230;
+/** Hauteur minimale cible v31.2.17 (padding-bottom réduit 76px→24px) — grands mobiles ≥ 390px */
+const MIN_MESSAGES_HEIGHT_PX = 400;
+/** Hauteur minimale pour petit mobile (375×667 = iPhone SE) — v31.2.17 (mesuré ~247px) */
+const MIN_MESSAGES_HEIGHT_SMALL_PX = 230;
 /** Hauteur maximale acceptable pour le ChatToolbar (1 rangée, boutons 44px touch targets) */
 const MAX_TOOLBAR_HEIGHT_PX = 72;
 /** Hauteur maximale acceptable pour la barre de tabs inline */

@@ -191,7 +191,8 @@
   }
 
   .titane-content--conversation {
-    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+    /* v31.2.17: réduit de 4.75rem→1.5rem — libère ~52px pour la zone messages */
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
   }
 

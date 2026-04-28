@@ -2088,7 +2088,8 @@
   }
 
   .conversation-input {
-    min-height: 72px;
+    /* v31.2.17: réduit de 72px→60px sur mobile — économise 12px */
+    min-height: 60px;
     max-height: 38vh;
     font-size: 16px;
   }
