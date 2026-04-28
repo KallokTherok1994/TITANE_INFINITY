@@ -1,16 +1,22 @@
 /**
- * TITANE∞ — ToolCallerService — Suite de tests complète v31.2.32
+ * TITANE∞ — ToolCallerService — Suite de tests complète v31.2.33
  *
  * Couverture:
- *   1. registerTool()       — enregistrement, validation, overwrite
- *   2. getToolDescriptions() — structure de la sortie
- *   3. parseToolCalls()     — format JSON primaire, XML legacy, edge cases
- *   4. executeToolCall()    — outil existant, inexistant, erreur dans execute
- *   5. executeToolCalls()   — parallélisme
- *   6. web_search intégration — webSearch() appelé correctement
- *   7. calculate            — arithmetic safe, sécurité sandbox
- *   8. get_time             — structure de la réponse
- *   9. getToolCaller()      — singleton
+ *   1.  registerTool()        — enregistrement, validation, overwrite
+ *   2.  getToolDescriptions() — structure de la sortie
+ *   3.  parseToolCalls()      — format JSON primaire, XML legacy, edge cases
+ *   4.  executeToolCall()     — outil existant, inexistant, erreur dans execute
+ *   5.  executeToolCalls()    — parallélisme
+ *   6.  web_search intégration — webSearch() appelé correctement
+ *   7.  calculate             — arithmetic safe, décimaux, parenthèses, sécurité
+ *   8.  get_time              — structure de la réponse
+ *   9.  getToolCaller()       — singleton
+ *   10. getCallHistory()      — historique peuplé après exécution
+ *   11. formatToolResult()    — format succès et erreur
+ *   12. get_weather           — stub structuré
+ *   13. get_stock             — stub structuré
+ *   14. MAX_HISTORY           — enforcement limite mémoire
+ *   15. web_search edge cases — ok:true résultats vides
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -338,6 +344,18 @@ describe('ToolCallerService — calculate', () => {
     expect((result as Record<string, unknown>).result).toBe(21);
   });
 
+  it('calcule des décimaux — 1.5 + 2.5 = 4', async () => {
+    const { result, error } = await service.executeToolCall('calculate', { expression: '1.5+2.5' });
+    expect(error).toBeUndefined();
+    expect((result as Record<string, unknown>).result).toBe(4);
+  });
+
+  it('calcule avec parenthèses — (2+3)*4 = 20', async () => {
+    const { result, error } = await service.executeToolCall('calculate', { expression: '(2+3)*4' });
+    expect(error).toBeUndefined();
+    expect((result as Record<string, unknown>).result).toBe(20);
+  });
+
   it('retourne une erreur sur division par zéro', async () => {
     const { result, error } = await service.executeToolCall('calculate', { expression: '10/0' });
     expect(result).toBeNull();
@@ -400,5 +418,222 @@ describe('getToolCaller() — singleton', () => {
   it('est une instance de ToolCallerService', () => {
     const instance = getToolCaller();
     expect(instance).toBeInstanceOf(ToolCallerService);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// 10. getCallHistory()
+// ═══════════════════════════════════════════════════════════════════
+
+describe('ToolCallerService — getCallHistory()', () => {
+  let service: ToolCallerService;
+
+  beforeEach(() => {
+    service = new ToolCallerService();
+  });
+
+  it('retourne un tableau vide avant toute exécution', () => {
+    expect(service.getCallHistory()).toEqual([]);
+  });
+
+  it('contient une entrée après executeToolCall réussi', async () => {
+    await service.executeToolCall('get_time', {});
+    const history = service.getCallHistory();
+
+    expect(history).toHaveLength(1);
+    expect(history[0].name).toBe('get_time');
+    expect(history[0].result).toBeDefined();
+    expect(history[0].error).toBeUndefined();
+    expect(typeof history[0].timestamp).toBe('number');
+  });
+
+  it('enregistre aussi les erreurs dans l\'historique (outil existant qui throw)', async () => {
+    const failTool: ToolDefinition = {
+      name: 'fail_hist',
+      description: 'Outil qui échoue',
+      execute: async () => { throw new Error('Échec intentionnel'); },
+    };
+    service.registerTool(failTool);
+    await service.executeToolCall('fail_hist', {});
+    const history = service.getCallHistory();
+
+    expect(history).toHaveLength(1);
+    expect(history[0].name).toBe('fail_hist');
+    expect(history[0].error).toBeDefined();
+  });
+
+  it('accumule plusieurs appels dans l\'ordre', async () => {
+    await service.executeToolCall('get_time', {});
+    await service.executeToolCall('calculate', { expression: '1+1' });
+    const history = service.getCallHistory();
+
+    expect(history).toHaveLength(2);
+    expect(history[0].name).toBe('get_time');
+    expect(history[1].name).toBe('calculate');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// 11. formatToolResult()
+// ═══════════════════════════════════════════════════════════════════
+
+describe('ToolCallerService — formatToolResult()', () => {
+  let service: ToolCallerService;
+
+  beforeEach(() => {
+    service = new ToolCallerService();
+  });
+
+  it('formate un résultat réussi avec JSON indenté', () => {
+    const formatted = service.formatToolResult('get_time', { iso: '2026-04-28T10:00:00.000Z' });
+
+    expect(formatted).toContain('**Tool Result (get_time):**');
+    expect(formatted).toContain('```json');
+    expect(formatted).toContain('"iso"');
+    expect(formatted).toContain('2026-04-28T10:00:00.000Z');
+  });
+
+  it('formate une erreur avec le message d\'erreur', () => {
+    const formatted = service.formatToolResult('web_search', null, 'Service indisponible');
+
+    expect(formatted).toContain('**Tool Error (web_search):**');
+    expect(formatted).toContain('Service indisponible');
+  });
+
+  it('retourne une string non vide dans les deux cas', () => {
+    const success = service.formatToolResult('tool', { result: 42 });
+    const error = service.formatToolResult('tool', null, 'Erreur');
+
+    expect(typeof success).toBe('string');
+    expect(success.length).toBeGreaterThan(0);
+    expect(typeof error).toBe('string');
+    expect(error.length).toBeGreaterThan(0);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// 12. get_weather — stub
+// ═══════════════════════════════════════════════════════════════════
+
+describe('ToolCallerService — get_weather', () => {
+  let service: ToolCallerService;
+
+  beforeEach(() => {
+    service = new ToolCallerService();
+  });
+
+  it('retourne un objet avec location, temperature, condition', async () => {
+    const { result, error } = await service.executeToolCall('get_weather', {
+      location: 'Paris',
+      unit: 'C',
+    });
+
+    expect(error).toBeUndefined();
+    const r = result as Record<string, unknown>;
+    expect(r.location).toBe('Paris');
+    expect(typeof r.temperature).toBe('number');
+    expect(typeof r.condition).toBe('string');
+    expect(typeof r.humidity).toBe('number');
+  });
+
+  it('utilise la location transmise telle quelle', async () => {
+    const { result } = await service.executeToolCall('get_weather', {
+      location: 'Tokyo',
+    });
+
+    expect((result as Record<string, unknown>).location).toBe('Tokyo');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// 13. get_stock — stub
+// ═══════════════════════════════════════════════════════════════════
+
+describe('ToolCallerService — get_stock', () => {
+  let service: ToolCallerService;
+
+  beforeEach(() => {
+    service = new ToolCallerService();
+  });
+
+  it('retourne un objet avec ticker, price, change, changePercent', async () => {
+    const { result, error } = await service.executeToolCall('get_stock', { ticker: 'AAPL' });
+
+    expect(error).toBeUndefined();
+    const r = result as Record<string, unknown>;
+    expect(r.ticker).toBe('AAPL');
+    expect(typeof r.price).toBe('number');
+    expect(typeof r.change).toBe('number');
+    expect(typeof r.changePercent).toBe('number');
+  });
+
+  it('répercute le ticker dans la réponse', async () => {
+    const { result } = await service.executeToolCall('get_stock', { ticker: 'TSLA' });
+    expect((result as Record<string, unknown>).ticker).toBe('TSLA');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// 14. MAX_HISTORY — enforcement mémoire
+// ═══════════════════════════════════════════════════════════════════
+
+describe('ToolCallerService — MAX_HISTORY enforcement', () => {
+  it('ne dépasse jamais MAX_HISTORY (1000) entrées', async () => {
+    const service = new ToolCallerService();
+    const LIMIT = 1000;
+
+    // Exécute LIMIT + 5 appels via get_time (rapide, pas de mock nécessaire)
+    for (let i = 0; i < LIMIT + 5; i++) {
+      await service.executeToolCall('get_time', {});
+    }
+
+    const history = service.getCallHistory();
+    expect(history.length).toBeLessThanOrEqual(LIMIT);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// 15. web_search — edge cases
+// ═══════════════════════════════════════════════════════════════════
+
+describe('ToolCallerService — web_search edge cases', () => {
+  let service: ToolCallerService;
+
+  beforeEach(() => {
+    service = new ToolCallerService();
+    webSearchMock.mockReset();
+  });
+
+  it('retourne { results: [], error: "..." } quand ok:true mais content est vide', async () => {
+    // ok:true + content:[] → le check `content.length > 0` est faux → fallback error
+    webSearchMock.mockResolvedValueOnce({
+      ok: true,
+      content: [],
+      error: null,
+    });
+
+    const { result } = await service.executeToolCall('web_search', { query: 'vide', maxResults: 5 });
+    const r = result as Record<string, unknown>;
+
+    expect(r.results).toEqual([]);
+    expect(typeof r.error).toBe('string');
+    expect(r.error).toContain('indisponible');
+  });
+
+  it('utilise maxResults=5 par défaut si non spécifié', async () => {
+    webSearchMock.mockResolvedValueOnce({ ok: true, content: [], error: null });
+
+    await service.executeToolCall('web_search', { query: 'test défaut' });
+
+    // Appel avec maxResults=5 (default dans DEFAULT_TOOLS)
+    expect(webSearchMock).toHaveBeenCalledWith('test défaut', 5);
+  });
+
+  it('query vide passée telle quelle à webSearch', async () => {
+    webSearchMock.mockResolvedValueOnce({ ok: true, content: [], error: null });
+
+    await service.executeToolCall('web_search', { query: '' });
+
+    expect(webSearchMock).toHaveBeenCalledWith('', 5);
   });
 });

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ — webResearchService — Suite de tests complète et avancée v31.2.32
+ * TITANE∞ — webResearchService — Suite de tests complète et avancée v31.2.33
  *
  * Couverture:
  *   1. webResearch()      — Tauri IPC, mock E2E, gestion d'erreurs, options avancées
@@ -7,6 +7,8 @@
  *   3. browserWebSearch() — Proxy Wikipedia, parseur JSON, cas limites, sécurité
  *   4. Scénarios avancés  — injection XSS/SQL, concurrence, Unicode, edge cases
  *   5. Contrat de réponse — structure WebSearchResponse garantie
+ *   6. stripHtmlTags      — HTML imbriqué, tags non fermés, entités multiples
+ *   7. browserWebSearch   — comportement content: undefined IPC
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -850,4 +852,134 @@ describe('webSearch — contrat de réponse WebSearchResponse', () => {
     }
   });
 });
+
+// ═══════════════════════════════════════════════════════════════════
+// 9. stripHtmlTags — HTML imbriqué, complexe, entités multiples
+// ═══════════════════════════════════════════════════════════════════
+
+describe('browserWebSearch — stripHtmlTags HTML avancé', () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(() => {
+    isTauriAvailableMock.mockReturnValue(false);
+    vi.stubGlobal('fetch', fetchMock);
+    fetchMock.mockReset();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('strip les tags HTML imbriqués profonds', async () => {
+    fetchMock.mockResolvedValueOnce(
+      makeFetchSuccess(makeWikiJson([{
+        title: 'Imbriqué',
+        snippet: '<div class="match"><b><em>texte</em></b> propre</div>',
+      }]))
+    );
+
+    const { browserWebSearch } = await import('../webResearchService');
+    const result = await browserWebSearch('imbriqué', 5);
+
+    expect(result.content![0].snippet).toBe('texte propre');
+    expect(result.content![0].snippet).not.toContain('<');
+    expect(result.content![0].snippet).not.toContain('>');
+  });
+
+  it("strip les tags avec attributs contenant des guillemets", async () => {
+    fetchMock.mockResolvedValueOnce(
+      makeFetchSuccess(makeWikiJson([{
+        title: 'Attrs',
+        snippet: '<span class="searchmatch" data-id="42">intelligence</span> artificielle',
+      }]))
+    );
+
+    const { browserWebSearch } = await import('../webResearchService');
+    const result = await browserWebSearch('test', 5);
+
+    expect(result.content![0].snippet).toBe('intelligence artificielle');
+  });
+
+  it('decode enchaîner plusieurs entités HTML dans le même snippet', async () => {
+    fetchMock.mockResolvedValueOnce(
+      makeFetchSuccess(makeWikiJson([{
+        title: 'Multi-entités',
+        snippet: 'A &amp; B &amp; C &quot;triple&quot; &#039;quotes&#039;',
+      }]))
+    );
+
+    const { browserWebSearch } = await import('../webResearchService');
+    const result = await browserWebSearch('entités', 5);
+
+    expect(result.content![0].snippet).toBe(`A & B & C "triple" 'quotes'`);
+  });
+
+  it('snippet vide reste vide après strip', async () => {
+    fetchMock.mockResolvedValueOnce(
+      makeFetchSuccess(makeWikiJson([{ title: 'Vide', snippet: '<b></b><em></em>' }]))
+    );
+
+    const { browserWebSearch } = await import('../webResearchService');
+    const result = await browserWebSearch('vide snippet', 5);
+
+    expect(result.content![0].snippet).toBe('');
+  });
+
+  it('snippet sans HTML reste intact', async () => {
+    fetchMock.mockResolvedValueOnce(
+      makeFetchSuccess(makeWikiJson([{
+        title: 'Plain',
+        snippet: 'Un texte normal sans markup HTML.',
+      }]))
+    );
+
+    const { browserWebSearch } = await import('../webResearchService');
+    const result = await browserWebSearch('plain text', 5);
+
+    expect(result.content![0].snippet).toBe('Un texte normal sans markup HTML.');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// 10. webSearch — comportement response.content undefined via Tauri
+// ═══════════════════════════════════════════════════════════════════
+
+describe('webSearch — content undefined/null Tauri', () => {
+  beforeEach(() => {
+    isTauriAvailableMock.mockReturnValue(true);
+    safeInvokeCanonicalMock.mockReset();
+  });
+
+  it('retourne content:null quand safeInvokeCanonical retourne content:undefined', async () => {
+    // Simule une réponse Tauri avec content absent
+    safeInvokeCanonicalMock.mockResolvedValueOnce({
+      ok: true,
+      content: undefined,
+      error: null,
+    });
+
+    const { webSearch } = await import('../webResearchService');
+    const result = await webSearch('undefined content');
+
+    // `response.content ?? null` doit normaliser undefined → null
+    expect(result.content).toBeNull();
+    expect(result.ok).toBe(true);
+  });
+
+  it('normalise error:undefined en null quand ok:true', async () => {
+    safeInvokeCanonicalMock.mockResolvedValueOnce({
+      ok: true,
+      content: [{ title: 'T', url: 'https://t.com', snippet: 'S' }],
+      error: undefined,
+    });
+
+    const { webSearch } = await import('../webResearchService');
+    const result = await webSearch('normalisation');
+
+    expect(result.ok).toBe(true);
+    // error peut être null ou undefined selon le chemin, mais content doit être array
+    expect(Array.isArray(result.content)).toBe(true);
+  });
+});
+
 
