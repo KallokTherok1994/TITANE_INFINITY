@@ -792,6 +792,53 @@ export class TauriInvokeProtector {
 
     // [RETRAIT v27.0.5-prod] Fallback legacy chat command removed from protector
 
+    // ✅ FIX-WEB-RESEARCH v31.2.29: Return valid ResearchReport when Tauri unavailable
+    // Prevents crash in classifyResearchOutcome where report.trace was undefined
+    if (safeCommand === 'web_research') {
+      const traceId = `fallback-${Date.now()}`;
+      return {
+        answer: {
+          answer:
+            "\u26a0\ufe0f Recherche web non disponible en mode navigateur. Lance l'application TITANE native pour acc\u00e9der \u00e0 la recherche web compl\u00e8te.",
+          citations: [],
+          confidence: 0,
+          limitations: [
+            'Tauri runtime non disponible',
+            'Mode navigateur sans backend natif',
+            "Fonctionnalit\u00e9 r\u00e9serv\u00e9e \u00e0 l'application TITANE install\u00e9e",
+          ],
+          trace_id: traceId,
+          sources_count: 0,
+          retrieved_passages_count: 0,
+        },
+        trace: {
+          trace_id: traceId,
+          markers: ['FALLBACK_BROWSER', 'NO_CONTENT'],
+          timings: null,
+          budgets: null,
+          network_events: null,
+          cache_events: null,
+          robots_events: null,
+          rate_limit_events: null,
+          extract_events: null,
+          index_events: null,
+          errors: [`Tauri unavailable: ${errorMessage}`],
+        },
+      } as T;
+    }
+
+    // ✅ FIX-WEB-SEARCH v31.2.29: Return valid {ok,content,error} envelope for web_search fallback
+    if (safeCommand === 'web_search') {
+      return {
+        ok: false,
+        content: null,
+        error: {
+          code: 'TAURI_UNAVAILABLE',
+          message: 'Recherche web non disponible en mode navigateur (Tauri requis).',
+        },
+      } as T;
+    }
+
     // ✅ FIX-ADMIN-HEALTH-CSV: Return canonical {ok:false} envelope so the
     // useProductionHealthTelemetry hook's envelope check fires correctly and
     // classifies the error as SOURCE_UNAVAILABLE instead of PARSER_ERROR.
