@@ -182,8 +182,8 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOBILE NANO v31.2.24
-   Boutons et icônes encore réduits — dimension minimale
+   MOBILE NANO v31.2.25
+   Layout équilibré — compacité + utilisabilité
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   /* ── Shell ── */
@@ -211,9 +211,9 @@
   }
   .titane-inline-tabs > button,
   .titane-inline-tabs--conversation button {
-    padding: 1px 3px !important;
-    font-size: 0.4rem !important;
-    min-height: 13px !important;
+    padding: 2px 5px !important;
+    font-size: 0.5rem !important;
+    min-height: 16px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     border-radius: 5px !important;
@@ -244,34 +244,37 @@
   /* Couvre aussi la spécificité fullscreen de TitanePage.css */
   .conversation-input,
   .conversation-container[data-fullscreen='true'] .conversation-input {
-    min-height: 22px !important;
-    max-height: min(12vh, 56px) !important;
-    padding: 0.22rem 0.38rem !important;
-    font-size: 0.6rem !important;
+    min-height: 26px !important;
+    max-height: min(14vh, 64px) !important;
+    padding: 0.26rem 0.42rem !important;
+    font-size: 0.62rem !important;
   }
   .conversation-send-btn {
-    min-width: 36px !important;
-    padding: 0.14rem 0.28rem !important;
-    font-size: 0.46rem !important;
-    border-radius: 4px !important;
+    min-width: 42px !important;
+    padding: 0.18rem 0.32rem !important;
+    font-size: 0.5rem !important;
+    border-radius: 5px !important;
   }
 
   /* ── Chat toolbar bottom ── */
   .chat-toolbar-btn {
-    width: 12px !important;
-    height: 12px !important;
-    border-radius: 2px !important;
-    font-size: 0.42rem !important;
-    min-width: 0 !important;
-    padding: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 3px !important;
+    font-size: 0.52rem !important;
+    min-width: 18px !important;
+    padding: 2px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   .chat-toolbar {
-    padding: 0.1rem 0.16rem !important;
-    gap: 0.07rem !important;
-    border-radius: 4px !important;
+    padding: 0.12rem 0.18rem !important;
+    gap: 0.1rem !important;
+    border-radius: 5px !important;
   }
-  .toolbar-section-label { font-size: 0.3rem !important; }
-  .toolbar-buttons { gap: 0.05rem !important; }
+  .toolbar-section-label { font-size: 0.34rem !important; }
+  .toolbar-buttons { gap: 0.07rem !important; }
 
   /* ── Messages ── */
   .conversation-message-text {
@@ -328,10 +331,8 @@
   /* ── Overlays masqués ── */
   #titane-boot-beacon { display: none !important; }
   .fixed.bottom-24.right-4 { display: none !important; }
-  .agent-dashboards-panel {
-    transform: scale(0.45) !important;
-    transform-origin: bottom right !important;
-  }
+  /* Panneau Agents masqué sur mobile — couvre la toolbar */
+  .agent-dashboards-panel { display: none !important; }
 
   /* ── Runtime panel nano ── */
   .conversation-runtime-panel {
