@@ -748,6 +748,9 @@ export const AppRouter: React.FC = () => {
   );
 };
 
+// ✨ GitHub Pages / subdirectory support: use absolute base or fallback to '/'
+const routerBase = import.meta.env.BASE_URL?.startsWith('/') ? import.meta.env.BASE_URL : '/';
+
 /**
  * ═══════════════════════════════════════════════════════════════
  * APP COMPONENT - Point d'entrée principal avec Auto-Heal
@@ -783,7 +786,7 @@ const App: React.FC = () => {
               <LoggingProvider>
                 <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
                   <TitanStateProvider>
-                    <BrowserRouter>
+                    <BrowserRouter basename={routerBase}>
                       <AutoHealErrorBoundary>
                         <AppRouter />
                       </AutoHealErrorBoundary>
@@ -821,7 +824,7 @@ const App: React.FC = () => {
                     {/* ✨ v30.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
                     <AuraConnectedParticles />
 
-                    <BrowserRouter>
+                    <BrowserRouter basename={routerBase}>
                       <AutoHealErrorBoundary>
                         <AppRouter />
                       </AutoHealErrorBoundary>
