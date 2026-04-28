@@ -223,22 +223,31 @@ export default defineConfig(({ command }) => ({
           });
         },
       },
-      // ✅ v31.2.31: Browser-mode web search proxy — routes /api/ddg-search to DDG Lite
+      // ✅ v31.2.31: Browser-mode web search proxy → Wikipedia Search JSON API
       // Used when Tauri IPC is unavailable (browser/network HTTP mode).
+      // Wikipedia Search API: free, JSON, no auth, no bot-challenge, CORS-enabled.
       // One Door compliance: proxy runs server-side, no uncontrolled external fetch from UI.
-      '/api/ddg-search': {
-        target: 'https://lite.duckduckgo.com',
+      // Usage: /api/wiki-search?srsearch=QUERY&srlimit=10 → w/api.php action=query&list=search
+      '/api/wiki-search': {
+        target: 'https://en.wikipedia.org',
         changeOrigin: true,
         secure: true,
-        rewrite: path => path.replace(/^\/api\/ddg-search/, '/lite/'),
+        rewrite: path => {
+          const u = new URL(path, 'http://x');
+          u.pathname = '/w/api.php';
+          u.searchParams.set('action', 'query');
+          u.searchParams.set('list', 'search');
+          u.searchParams.set('format', 'json');
+          u.searchParams.set('origin', '*');
+          if (!u.searchParams.has('srlimit')) u.searchParams.set('srlimit', '10');
+          return u.pathname + u.search;
+        },
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
-            console.error('🔴 DDG Lite proxy error:', err.message);
+            console.error('🔴 Wiki search proxy error:', err.message);
           });
           proxy.on('proxyReq', (proxyReq, _req, _res) => {
-            proxyReq.setHeader('User-Agent', 'Mozilla/5.0 (compatible; TITANE-search/1.0)');
             proxyReq.removeHeader('origin');
-            proxyReq.removeHeader('referer');
           });
         },
       },

@@ -154,37 +154,37 @@ describe('webSearch — browser mode (no Tauri)', () => {
     vi.unstubAllGlobals();
   });
 
-  it('calls /api/ddg-search proxy and returns parsed results', async () => {
-    // Minimal DDG Lite HTML with two results
-    const ddgHtml = `
-      <html><body>
-        <a class="result-link" href="https://example.com/page1">Example Page 1</a>
-        <td class="result-snippet">Snippet about example page one.</td>
-        <a class="result-link" href="https://example.com/page2">Example Page 2</a>
-        <td class="result-snippet">Snippet about example page two.</td>
-      </body></html>
-    `;
+  it('calls /api/wiki-search proxy and returns parsed Wikipedia results', async () => {
+    const wikiJson = {
+      query: {
+        search: [
+          { pageid: 1, title: 'Example Page 1', snippet: 'Snippet about <b>example</b> page one.' },
+          { pageid: 2, title: 'Example Page 2', snippet: 'Snippet about example page two.' },
+        ],
+      },
+    };
     fetchMock.mockResolvedValueOnce({
       ok: true,
-      text: async () => ddgHtml,
+      json: async () => wikiJson,
     });
 
     const { webSearch } = await import('../webResearchService');
     const result = await webSearch('test browser search', 5);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/ddg-search?q=test%20browser%20search',
+      '/api/wiki-search?srsearch=test%20browser%20search&srlimit=5',
       expect.objectContaining({ method: 'GET' })
     );
     expect(result.ok).toBe(true);
     expect(result.content).toBeDefined();
-    expect(result.content!.length).toBeGreaterThanOrEqual(1);
-    expect(result.content![0].url).toBe('https://example.com/page1');
+    expect(result.content!.length).toBe(2);
+    expect(result.content![0].url).toBe('https://en.wikipedia.org/wiki/Example_Page_1');
     expect(result.content![0].title).toBe('Example Page 1');
+    expect(result.content![0].snippet).toBe('Snippet about example page one.');
     expect(safeInvokeCanonicalMock).not.toHaveBeenCalled();
   });
 
-  it('returns ok:false when DDG Lite proxy returns HTTP error', async () => {
+  it('returns ok:false when Wikipedia proxy returns HTTP error', async () => {
     fetchMock.mockResolvedValueOnce({ ok: false, status: 503 });
 
     const { webSearch } = await import('../webResearchService');
@@ -192,7 +192,7 @@ describe('webSearch — browser mode (no Tauri)', () => {
 
     expect(result.ok).toBe(false);
     expect(result.content).toBeNull();
-    expect(result.error?.code).toBe('DDG_HTTP_ERROR');
+    expect(result.error?.code).toBe('WIKI_HTTP_ERROR');
   });
 
   it('returns ok:false when fetch throws a network error', async () => {
@@ -208,10 +208,10 @@ describe('webSearch — browser mode (no Tauri)', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────
-// browserWebSearch — DDG Lite HTML parser edge cases
+// browserWebSearch — Wikipedia JSON parser edge cases
 // ─────────────────────────────────────────────────────────────────
 
-describe('browserWebSearch — HTML parser', () => {
+describe('browserWebSearch — Wikipedia JSON parser', () => {
   const fetchMock = vi.fn();
 
   beforeEach(() => {
@@ -225,10 +225,12 @@ describe('browserWebSearch — HTML parser', () => {
   });
 
   it('respects maxResults limit', async () => {
-    const buildResult = (n: number) =>
-      `<a class="result-link" href="https://ex.com/${n}">Title ${n}</a>`;
-    const html = Array.from({ length: 10 }, (_, i) => buildResult(i + 1)).join('\n');
-    fetchMock.mockResolvedValueOnce({ ok: true, text: async () => html });
+    const search = Array.from({ length: 10 }, (_, i) => ({
+      pageid: i + 1,
+      title: `Result ${i + 1}`,
+      snippet: `Snippet ${i + 1}`,
+    }));
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ query: { search } }) });
 
     const { browserWebSearch } = await import('../webResearchService');
     const result = await browserWebSearch('test', 3);
@@ -237,18 +239,33 @@ describe('browserWebSearch — HTML parser', () => {
     expect(result.content!.length).toBeLessThanOrEqual(3);
   });
 
-  it('returns empty results when HTML has no result-link anchors', async () => {
+  it('returns empty results when Wikipedia has no search results', async () => {
     fetchMock.mockResolvedValueOnce({
       ok: true,
-      text: async () => '<html><body><p>No results found.</p></body></html>',
+      json: async () => ({ query: { search: [] } }),
     });
 
     const { browserWebSearch } = await import('../webResearchService');
     const result = await browserWebSearch('no results', 5);
 
-    // ok:true with empty array (search ran but no results)
     expect(result.ok).toBe(true);
     expect(result.content).toEqual([]);
+  });
+
+  it('strips HTML tags from Wikipedia snippets', async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        query: {
+          search: [{ pageid: 42, title: 'Test', snippet: '<span>clean</span> &amp; simple' }],
+        },
+      }),
+    });
+
+    const { browserWebSearch } = await import('../webResearchService');
+    const result = await browserWebSearch('test', 5);
+
+    expect(result.content![0].snippet).toBe('clean & simple');
   });
 });
 

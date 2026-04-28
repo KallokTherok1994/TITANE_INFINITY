@@ -55,81 +55,39 @@ export interface WebSearchResponse {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Browser-mode DDG Lite HTML parser
-// Mirrors the Rust parse_ddg_lite_html logic.
+// Browser-mode Wikipedia Search JSON parser
+// Maps Wikipedia search results to WebSearchResult[].
 // ─────────────────────────────────────────────────────────────────
 
-function stripTags(s: string): string {
-  return s.replace(/<[^>]*>/g, '');
+interface WikiSearchResult {
+  pageid: number;
+  title: string;
+  snippet: string;
 }
 
-function extractAttr(tag: string, attr: string): string | null {
-  const search = `${attr}="`;
-  const startIdx = tag.indexOf(search);
-  if (startIdx === -1) return null;
-  const valueStart = startIdx + search.length;
-  const valueEnd = tag.indexOf('"', valueStart);
-  if (valueEnd === -1) return null;
-  return tag.slice(valueStart, valueEnd);
+interface WikiSearchResponse {
+  query?: { search?: WikiSearchResult[] };
 }
 
-function parseDDGLiteHtml(html: string, maxResults: number): WebSearchResult[] {
-  const results: WebSearchResult[] = [];
-  let remaining = html;
+function stripHtmlTags(s: string): string {
+  return s.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+}
 
-  while (results.length < maxResults) {
-    const linkStart = remaining.indexOf('class="result-link"');
-    if (linkStart === -1) break;
-
-    const before = remaining.slice(0, linkStart);
-    const aStart = before.lastIndexOf('<');
-    if (aStart === -1) {
-      remaining = remaining.slice(linkStart + 1);
-      continue;
-    }
-
-    const tagSlice = remaining.slice(aStart);
-    const href = extractAttr(tagSlice, 'href') ?? '';
-    const tagEnd = tagSlice.indexOf('>');
-    if (tagEnd === -1) {
-      remaining = remaining.slice(linkStart + 1);
-      continue;
-    }
-
-    const afterTag = tagSlice.slice(tagEnd + 1);
-    const titleEndIdx = afterTag.indexOf('</a>');
-    const titleRaw = titleEndIdx !== -1 ? afterTag.slice(0, titleEndIdx) : afterTag.slice(0, 200);
-    const title = stripTags(titleRaw).trim();
-
-    const snippetMarker = 'result-snippet';
-    let snippet = '';
-    const snipStart = afterTag.indexOf(snippetMarker);
-    if (snipStart !== -1) {
-      const snipSlice = afterTag.slice(snipStart);
-      const snipTagEnd = snipSlice.indexOf('>');
-      if (snipTagEnd !== -1) {
-        const snipContent = snipSlice.slice(snipTagEnd + 1);
-        const snipClose = snipContent.indexOf('<');
-        const snipRaw = snipClose !== -1 ? snipContent.slice(0, snipClose) : snipContent.slice(0, 300);
-        snippet = stripTags(snipRaw).trim();
-      }
-    }
-
-    if (href && title) {
-      results.push({ title, url: href, snippet });
-    }
-
-    remaining = remaining.slice(linkStart + 1);
-  }
-
-  return results;
+function parseWikiSearchJson(data: WikiSearchResponse, maxResults: number): WebSearchResult[] {
+  const items = data?.query?.search ?? [];
+  return items.slice(0, maxResults).map(item => ({
+    title: item.title,
+    url: `https://en.wikipedia.org/wiki/${encodeURIComponent(item.title.replace(/ /g, '_'))}`,
+    snippet: stripHtmlTags(item.snippet),
+  }));
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Browser-mode HTTP fallback (Vite proxy → DDG Lite)
+// Browser-mode HTTP fallback (Vite proxy → Wikipedia Search API)
 // Called only when Tauri IPC is unavailable (browser/network HTTP mode).
-// Route: /api/ddg-search?q=... → Vite proxy → https://lite.duckduckgo.com/lite/
+// Route: /api/wiki-search?srsearch=... → Vite proxy → Wikipedia JSON API
 // One Door compliance: proxy is server-side, governed by vite.config.ts.
+// Wikipedia Search API: free, JSON, no auth, no bot-challenge.
 // ─────────────────────────────────────────────────────────────────
 
 export async function browserWebSearch(
@@ -137,20 +95,20 @@ export async function browserWebSearch(
   maxResults = 10
 ): Promise<WebSearchResponse> {
   try {
-    const url = `/api/ddg-search?q=${encodeURIComponent(query)}`;
+    const url = `/api/wiki-search?srsearch=${encodeURIComponent(query)}&srlimit=${maxResults}`;
     const resp = await fetch(url, {
       method: 'GET',
-      headers: { Accept: 'text/html' },
+      headers: { Accept: 'application/json' },
     });
     if (!resp.ok) {
       return {
         ok: false,
         content: null,
-        error: { code: 'DDG_HTTP_ERROR', message: `DDG Lite HTTP ${resp.status}` },
+        error: { code: 'WIKI_HTTP_ERROR', message: `Wikipedia Search HTTP ${resp.status}` },
       };
     }
-    const html = await resp.text();
-    const results = parseDDGLiteHtml(html, maxResults);
+    const data: WikiSearchResponse = await resp.json();
+    const results = parseWikiSearchJson(data, maxResults);
     return { ok: true, content: results, error: null };
   } catch (err) {
     return {
