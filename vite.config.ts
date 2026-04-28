@@ -223,6 +223,25 @@ export default defineConfig(({ command }) => ({
           });
         },
       },
+      // ✅ v31.2.31: Browser-mode web search proxy — routes /api/ddg-search to DDG Lite
+      // Used when Tauri IPC is unavailable (browser/network HTTP mode).
+      // One Door compliance: proxy runs server-side, no uncontrolled external fetch from UI.
+      '/api/ddg-search': {
+        target: 'https://lite.duckduckgo.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: path => path.replace(/^\/api\/ddg-search/, '/lite/'),
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.error('🔴 DDG Lite proxy error:', err.message);
+          });
+          proxy.on('proxyReq', (proxyReq, _req, _res) => {
+            proxyReq.setHeader('User-Agent', 'Mozilla/5.0 (compatible; TITANE-search/1.0)');
+            proxyReq.removeHeader('origin');
+            proxyReq.removeHeader('referer');
+          });
+        },
+      },
     },
   },
 

@@ -6,6 +6,7 @@
  */
 
 import { createLogger } from '@/utils/logger';
+import { webSearch } from '@/services/webResearchService';
 
 const logger = createLogger('ToolCaller');
 
@@ -121,16 +122,15 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
         query: string;
         maxResults?: number;
       };
-      // Implémentation stub - en production, appeler une API réelle
+      // ✅ v31.2.31: Real search via webResearchService (Tauri IPC or browser DDG proxy)
       logger.info('[ToolCaller] web_search:', { query, maxResults });
+      const response = await webSearch(query, maxResults as number);
+      if (response.ok && response.content && response.content.length > 0) {
+        return { results: response.content };
+      }
       return {
-        results: [
-          {
-            title: `Result for "${query}"`,
-            url: 'result.local/resource',
-            snippet: 'Placeholder result',
-          },
-        ],
+        results: [],
+        error: response.error?.message ?? 'Recherche indisponible',
       };
     },
   },
