@@ -7,12 +7,12 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// ── Mock @tauri-apps/api/core ─────────────────────────────────────
-vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn(),
+// ── Mock canonical invoke (One Door) ─────────────────────────────
+vi.mock('@/utils/invoke', () => ({
+  safeInvokeCanonical: vi.fn(),
 }));
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import {
   createJob,
   startJob,
@@ -30,7 +30,7 @@ import type {
 } from '@/services/operator/jobTypes';
 import { JOB_KINDS, JOB_FORBIDDEN_ACTIONS } from '@/services/operator/jobTypes';
 
-const mockedInvoke = vi.mocked(invoke);
+const mockSafeInvoke = safeInvokeCanonical as ReturnType<typeof vi.fn>;
 
 // ── Helpers ───────────────────────────────────────────────────────
 function makeJob(overrides: Partial<OperatorJob> = {}): OperatorJob {
@@ -60,8 +60,18 @@ function makeCreateResult(overrides: Partial<JobCreateResult> = {}): JobCreateRe
     ok: true,
     job: makeJob(),
     block_reason: null,
+    job_id: 'job-001',
     ...overrides,
   };
+}
+
+/** Wrap a value in canonical safeInvokeCanonical response */
+function ok<T>(content: T) {
+  return { ok: true, content, error: null };
+}
+
+function fail(message: string) {
+  return { ok: false, content: null, error: { message } };
 }
 
 // ── Tests ─────────────────────────────────────────────────────────
@@ -73,14 +83,14 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
   // ── A: Job lifecycle (create → start → status → cancel) ───────
   describe('A — Job lifecycle', () => {
     it('A1: createJob returns ok=true and OperatorJob on success', async () => {
-      mockedInvoke.mockResolvedValueOnce(makeCreateResult());
+      mockSafeInvoke.mockResolvedValueOnce(ok(makeCreateResult()));
       const result = await createJob('file_analysis', 'src/');
       expect(result.ok).toBe(true);
       expect(result.job).not.toBeNull();
       expect(result.job?.job_kind).toBe('file_analysis');
       expect(result.job?.scope).toBe('src/');
       expect(result.block_reason).toBeNull();
-      expect(mockedInvoke).toHaveBeenCalledWith('job_create', {
+      expect(mockSafeInvoke).toHaveBeenCalledWith('job_create', {
         kind: 'file_analysis',
         scope: 'src/',
         params: {},
@@ -89,41 +99,41 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
 
     it('A2: startJob transitions status to RUNNING', async () => {
       const runningJob = makeJob({ status: 'RUNNING', started_at: '2026-04-29T10:00:01Z', stage_label: 'running' });
-      mockedInvoke.mockResolvedValueOnce(runningJob);
+      mockSafeInvoke.mockResolvedValueOnce(ok(runningJob));
       const job = await startJob('job-001');
       expect(job.status).toBe('RUNNING');
       expect(job.started_at).not.toBeNull();
-      expect(mockedInvoke).toHaveBeenCalledWith('job_start', { jobId: 'job-001' });
+      expect(mockSafeInvoke).toHaveBeenCalledWith('job_start', { job_id: 'job-001' });
     });
 
     it('A3: getJobStatus returns current job state', async () => {
       const job = makeJob({ status: 'RUNNING', progress_percent: 42, stage_label: 'processing' });
-      mockedInvoke.mockResolvedValueOnce(job);
+      mockSafeInvoke.mockResolvedValueOnce(ok(job));
       const result = await getJobStatus('job-001');
       expect(result.status).toBe('RUNNING');
       expect(result.progress_percent).toBe(42);
       expect(result.stage_label).toBe('processing');
-      expect(mockedInvoke).toHaveBeenCalledWith('job_status', { jobId: 'job-001' });
+      expect(mockSafeInvoke).toHaveBeenCalledWith('job_status', { job_id: 'job-001' });
     });
 
     it('A4: cancelJob returns true for cancelable job', async () => {
-      mockedInvoke.mockResolvedValueOnce(true);
+      mockSafeInvoke.mockResolvedValueOnce(ok(true));
       const result = await cancelJob('job-001');
       expect(result).toBe(true);
-      expect(mockedInvoke).toHaveBeenCalledWith('job_cancel', { jobId: 'job-001' });
+      expect(mockSafeInvoke).toHaveBeenCalledWith('job_cancel', { job_id: 'job-001' });
     });
 
     it('A5: cancelJob returns false for non-cancelable job', async () => {
-      mockedInvoke.mockResolvedValueOnce(false);
+      mockSafeInvoke.mockResolvedValueOnce(ok(false));
       const result = await cancelJob('job-system-001');
       expect(result).toBe(false);
     });
 
     it('A6: full lifecycle create→start→status(COMPLETED)', async () => {
-      mockedInvoke
-        .mockResolvedValueOnce(makeCreateResult())
-        .mockResolvedValueOnce(makeJob({ status: 'RUNNING', started_at: '2026-04-29T10:00:01Z' }))
-        .mockResolvedValueOnce(makeJob({ status: 'COMPLETED', progress_percent: 100, completed_at: '2026-04-29T10:00:05Z', result_summary: 'Analysis complete: 42 files.' }));
+      mockSafeInvoke
+        .mockResolvedValueOnce(ok(makeCreateResult()))
+        .mockResolvedValueOnce(ok(makeJob({ status: 'RUNNING', started_at: '2026-04-29T10:00:01Z' })))
+        .mockResolvedValueOnce(ok(makeJob({ status: 'COMPLETED', progress_percent: 100, completed_at: '2026-04-29T10:00:05Z', result_summary: 'Analysis complete: 42 files.' })));
 
       const created = await createJob('file_analysis', 'src/');
       expect(created.ok).toBe(true);
@@ -144,11 +154,11 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
         total_count: 1,
         running_count: 1,
       };
-      mockedInvoke.mockResolvedValueOnce(listResult);
+      mockSafeInvoke.mockResolvedValueOnce(ok(listResult));
       const result = await listJobs('sess-abc');
       expect(result.ok).toBe(true);
       expect(result.jobs.every(j => j.session_id === 'sess-abc')).toBe(true);
-      expect(mockedInvoke).toHaveBeenCalledWith('job_list', { sessionId: 'sess-abc' });
+      expect(mockSafeInvoke).toHaveBeenCalledWith('job_list', { session_id: 'sess-abc' });
     });
 
     it('B2: listJobs returns correct counts', async () => {
@@ -156,14 +166,14 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
         makeJob({ status: 'RUNNING', session_id: 'sess-xyz' }),
         makeJob({ job_id: 'job-002', status: 'QUEUED', session_id: 'sess-xyz' }),
       ];
-      mockedInvoke.mockResolvedValueOnce({ ok: true, jobs, total_count: 2, running_count: 1 });
+      mockSafeInvoke.mockResolvedValueOnce(ok({ ok: true, jobs, total_count: 2, running_count: 1 }));
       const result = await listJobs('sess-xyz');
       expect(result.total_count).toBe(2);
       expect(result.running_count).toBe(1);
     });
 
     it('B3: listJobs with different session returns empty list', async () => {
-      mockedInvoke.mockResolvedValueOnce({ ok: true, jobs: [], total_count: 0, running_count: 0 });
+      mockSafeInvoke.mockResolvedValueOnce(ok({ ok: true, jobs: [], total_count: 0, running_count: 0 }));
       const result = await listJobs('sess-other');
       expect(result.jobs).toHaveLength(0);
       expect(result.total_count).toBe(0);
@@ -173,8 +183,8 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
   // ── C: cancelable enforcement ─────────────────────────────────
   describe('C — Cancelable enforcement', () => {
     it('C1: job with cancelable=true can be cancelled', async () => {
-      mockedInvoke.mockResolvedValueOnce(makeCreateResult({ job: makeJob({ cancelable: true }) }));
-      mockedInvoke.mockResolvedValueOnce(true);
+      mockSafeInvoke.mockResolvedValueOnce(ok(makeCreateResult({ job: makeJob({ cancelable: true }) })));
+      mockSafeInvoke.mockResolvedValueOnce(ok(true));
       const { job } = await createJob('file_analysis', 'src/');
       expect(job!.cancelable).toBe(true);
       const cancelled = await cancelJob(job!.job_id);
@@ -182,13 +192,13 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
     });
 
     it('C2: job with cancelable=false returns false on cancel', async () => {
-      mockedInvoke.mockResolvedValueOnce(false);
+      mockSafeInvoke.mockResolvedValueOnce(ok(false));
       const result = await cancelJob('job-system');
       expect(result).toBe(false);
     });
 
     it('C3: COMPLETED job cancel returns false', async () => {
-      mockedInvoke.mockResolvedValueOnce(false);
+      mockSafeInvoke.mockResolvedValueOnce(ok(false));
       const result = await cancelJob('job-completed');
       expect(result).toBe(false);
     });
@@ -197,11 +207,12 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
   // ── D: block_reason classification ───────────────────────────
   describe('D — Block reason classification', () => {
     it('D1: createJob returns ok=false and block_reason for forbidden action', async () => {
-      mockedInvoke.mockResolvedValueOnce({
+      mockSafeInvoke.mockResolvedValueOnce(ok({
         ok: false,
+        job_id: '',
         job: null,
         block_reason: 'Forbidden action: auto_commit',
-      });
+      }));
       const result = await createJob('custom', 'scripts/', { action: 'auto_commit' });
       expect(result.ok).toBe(false);
       expect(result.job).toBeNull();
@@ -209,11 +220,12 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
     });
 
     it('D2: createJob returns ok=false for quota exceeded', async () => {
-      mockedInvoke.mockResolvedValueOnce({
+      mockSafeInvoke.mockResolvedValueOnce(ok({
         ok: false,
+        job_id: '',
         job: null,
         block_reason: 'Max concurrent jobs reached (10)',
-      });
+      }));
       const result = await createJob('test_run', 'tests/');
       expect(result.ok).toBe(false);
       expect(result.block_reason).toContain('10');
@@ -221,7 +233,7 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
 
     it('D3: BLOCKED status job has non-null block_reason', async () => {
       const blocked = makeJob({ status: 'BLOCKED', block_reason: 'Dependency unavailable' });
-      mockedInvoke.mockResolvedValueOnce(blocked);
+      mockSafeInvoke.mockResolvedValueOnce(ok(blocked));
       const job = await getJobStatus('job-blocked');
       expect(job.status).toBe('BLOCKED');
       expect(job.block_reason).not.toBeNull();
@@ -232,7 +244,7 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
   describe('E — Progress tracking truth', () => {
     it('E1: progress_percent is between 0 and 100', async () => {
       const job = makeJob({ progress_percent: 67, status: 'RUNNING' });
-      mockedInvoke.mockResolvedValueOnce(job);
+      mockSafeInvoke.mockResolvedValueOnce(ok(job));
       const result = await getJobStatus('job-001');
       expect(result.progress_percent).toBeGreaterThanOrEqual(0);
       expect(result.progress_percent).toBeLessThanOrEqual(100);
@@ -240,7 +252,7 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
 
     it('E2: COMPLETED job has progress_percent=100', async () => {
       const job = makeJob({ status: 'COMPLETED', progress_percent: 100, completed_at: '2026-04-29T10:00:10Z' });
-      mockedInvoke.mockResolvedValueOnce(job);
+      mockSafeInvoke.mockResolvedValueOnce(ok(job));
       const result = await getJobStatus('job-001');
       expect(result.progress_percent).toBe(100);
       expect(result.completed_at).not.toBeNull();
@@ -248,7 +260,7 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
 
     it('E3: QUEUED job has progress_percent=0', async () => {
       const job = makeJob({ status: 'QUEUED', progress_percent: 0, started_at: null });
-      mockedInvoke.mockResolvedValueOnce(job);
+      mockSafeInvoke.mockResolvedValueOnce(ok(job));
       const result = await getJobStatus('job-new');
       expect(result.progress_percent).toBe(0);
       expect(result.started_at).toBeNull();
@@ -265,13 +277,13 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
         supported_kinds: ['repo_inventory', 'file_analysis', 'grep_analysis', 'test_run', 'build_check', 'browser_extract', 'ide_inspect', 'custom'],
         forbidden_actions: ['auto_commit', 'auto_push', 'auto_merge', 'prod_build', 'prod_deploy', 'rm_rf', 'sudo'],
       };
-      mockedInvoke.mockResolvedValueOnce(config);
+      mockSafeInvoke.mockResolvedValueOnce(ok(config));
       const result = await getJobOperatorConfig();
       expect(result.available).toBe(true);
       expect(result.max_concurrent_jobs).toBe(10);
       expect(result.supported_kinds).toContain('file_analysis');
       expect(result.forbidden_actions).toContain('auto_commit');
-      expect(mockedInvoke).toHaveBeenCalledWith('job_get_config');
+      expect(mockSafeInvoke).toHaveBeenCalledWith('job_get_config', {});
     });
 
     it('F2: JOB_KINDS constant contains all 8 kinds', () => {
@@ -301,10 +313,11 @@ describe('JobOperator — LOCK 4: LONG_TASK_RELAY_V1', () => {
     });
 
     it('G2: jobOperator.createJob delegates to createJob function', async () => {
-      mockedInvoke.mockResolvedValueOnce(makeCreateResult());
+      mockSafeInvoke.mockResolvedValueOnce(ok(makeCreateResult()));
       const result = await jobOperator.createJob('grep_analysis', 'src/services/');
       expect(result.ok).toBe(true);
-      expect(mockedInvoke).toHaveBeenCalledWith('job_create', expect.objectContaining({ kind: 'grep_analysis' }));
+      expect(mockSafeInvoke).toHaveBeenCalledWith('job_create', expect.objectContaining({ kind: 'grep_analysis' }));
     });
   });
 });
+

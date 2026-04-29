@@ -2888,6 +2888,17 @@ fn main() {
             commands::display_list_monitors,
 
             // ═══════════════════════════════════════════════════════════════
+            // DESKTOP PERCEPTION — LOCK 5: DESKTOP_SCOPED_OPERATOR_V1
+            // Governed desktop perception (window discovery, session binding)
+            // ═══════════════════════════════════════════════════════════════
+            commands::desktop_perception::desktop_open_session,
+            commands::desktop_perception::desktop_close_session,
+            commands::desktop_perception::desktop_get_session_status,
+            commands::desktop_perception::desktop_get_active_window,
+            commands::desktop_perception::desktop_list_windows,
+            commands::desktop_perception::desktop_get_config,
+
+            // ═══════════════════════════════════════════════════════════════
             // JOB OPERATOR — LOCK 4: LONG_TASK_RELAY_V1
             // Governed long-task job kernel (6 IPC commands)
             // ═══════════════════════════════════════════════════════════════

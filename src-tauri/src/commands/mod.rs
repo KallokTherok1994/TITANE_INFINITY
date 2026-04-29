@@ -82,6 +82,7 @@ pub use memory_os::*; // ✅ v∞: Export Memory OS commands (SUPER PROMPTs #6-7
 // pub mod persistent_memory_commands; // disabled: duplicates with persistent_memory module
 pub mod capability_commands; // ✅ LOCK 4: Capability registry (get_all_capabilities)
 pub mod dashboard_metrics_commands;
+pub mod desktop_perception; // ✅ LOCK 5: DESKTOP_SCOPED_OPERATOR_V1 — governed desktop perception
 pub mod http_commands;
 pub mod identity_commands;
 pub mod job_operator; // ✅ LOCK 4: LONG_TASK_RELAY_V1 — governed job kernel IPC
