@@ -1,0 +1,108 @@
+{
+  "version": "v31.5.3",
+  "category": "sociologie_economie_politique",
+  "description": "Sociologie classique et contemporaine, économie comportementale et politique : Durkheim anomie/solidarité/suicide, Weber rationalisation/idéaux-types/éthique protestante, Bourdieu capital social/culturel/économique/habitus/champs, Marx aliénation/lutte des classes/infrastructure, Simmel interaction sociale/étranger, Goffman présentation de soi/stigmate, Keynes/économie comportementale Kahneman-Tversky biais cognitifs (heuristiques/prospect theory), Rawls théorie de la justice/voile d'ignorance, Tocqueville démocratie/individualisme, populisme/démocratie libérale, gouvernance coopérative",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "Durkheim anomie solidarité sociale",
+    "solidarité mécanique organique Durkheim",
+    "suicide Durkheim anomique égoïste altruiste",
+    "Weber rationalisation bureaucratie idéaux-types",
+    "éthique protestante esprit capitalisme Weber",
+    "domination légitime charismatique traditionnelle légale",
+    "Bourdieu capital social culturel économique symbolique",
+    "habitus champ Bourdieu reproduction sociale",
+    "distinction Bourdieu goûts classes sociales",
+    "Marx aliénation travail lutte des classes",
+    "infrastructure superstructure Marx idéologie",
+    "matérialisme historique dialectique Marx",
+    "Goffman présentation de soi dramaturgique",
+    "stigmate Goffman identité dégradée",
+    "Simmel étranger sociologie forme interaction",
+    "mobilité sociale ascendante descendante",
+    "stratification sociale inégalités classes",
+    "Keynes demande agrégée interventionnisme",
+    "économie comportementale biais cognitifs",
+    "Kahneman Tversky heuristiques biais",
+    "prospect theory perte gain Kahneman",
+    "heuristique disponibilité représentativité ancrage",
+    "nudge Thaler Sunstein architecture choix",
+    "biais de confirmation optimisme aversion perte",
+    "Rawls justice équité voile ignorance",
+    "différence principe maximin Rawls",
+    "Tocqueville démocratie individualisme tyrannie majorité",
+    "populisme démocratie libérale crise",
+    "Habermas espace public délibération",
+    "Putnam capital social bonding bridging",
+    "réseau social capital confiance réciprocité",
+    "théorie des jeux coopération dilemme prisonnier",
+    "bien commun gouvernance Ostrom",
+    "mondialisation inégalités flux migratoires",
+    "intersectionnalité genre race classe",
+    "féminisme vagues courants genre",
+    "domination symbolique violence symbolique",
+    "champ intellectuel académique pouvoir",
+    "néolibéralisme marché État régulation",
+    "État providence protection sociale redistribution",
+    "coût d'opportunité rationalité économique",
+    "externalités défaillances de marché biens publics",
+    "inégalités Piketty capital XXIe siècle",
+    "mobilisation collective action Olson",
+    "théorie du choix rationnel préférences révélées",
+    "travail précaire ubérisation économie plateformes",
+    "sociologie organisation bureaucratie pouvoir"
+  ],
+  "sections": {
+    "sociologie_classique_fondateurs": {
+      "durkheim": {
+        "anomie": "Émile Durkheim — anomie: état de dérégulation sociale où les normes collectives s'affaiblissent ou disparaissent (crise économique, divorce, transition sociale rapide). L'individu ne sait plus comment orienter ses désirs → malaise, déviance, suicide anomique. Distinguer: anomie (absence de normes) vs aliénation (Marx: rapport au travail).",
+        "solidarite": "Solidarité mécanique (sociétés traditionnelles): ressemblance entre individus, conscience collective forte, droit répressif. Solidarité organique (sociétés modernes): division du travail, complémentarité des différences, droit restitutif. Le passage de l'une à l'autre est la modernité.",
+        "suicide": "Suicide (1897): analyse statistique pionnière — 4 types: égoïste (faible intégration: protestants > catholiques), altruiste (intégration excessive: armée), anomique (dérégulation: crise/divorce), fataliste (régulation excessive: esclaves). Méthode comparative — le social explique l'individuel."
+      },
+      "weber": {
+        "rationalisation": "Max Weber — rationalisation: processus historique par lequel le monde devient calculable, prévisible, dépouillé du 'désenchantement du monde'. Bureaucratie: forme rationnelle-légale d'organisation (hiérarchie, règles formelles, compétences définies, impersonnalité). Cage d'acier: piège de la rationalité instrumentale.",
+        "ideaux_types": "Idéaux-types: constructions conceptuelles abstraites servant d'instruments d'analyse (capitalisme idéal, bureaucratie idéale). Pas de description du réel mais outil comparatif. Verstehen: compréhension du sens subjectif de l'action sociale.",
+        "ethique_protestante": "L'Éthique protestante et l'esprit du capitalisme (1905): l'ascèse intramondaine calviniste (travail comme vocation, austérité, réinvestissement) a créé les conditions mentales du capitalisme. Lien entre valeurs religieuses et formes économiques. Causalité culturelle vs matérielle (Marx).",
+        "domination": "3 types de domination légitime: rationnelle-légale (loi, État moderne), traditionnelle (coutume, héritage), charismatique (qualités extraordinaires du chef). Le charisme se routinise avec le temps."
+      },
+      "bourdieu": {
+        "capitaux": "Pierre Bourdieu — capital économique (biens matériels), capital culturel (diplômes, savoirs, manières — incorporé/objectivé/institutionnalisé), capital social (réseau de relations et d'obligations), capital symbolique (prestige, honneur, reconnaissance). Conversion entre formes de capital.",
+        "habitus": "Habitus: système de dispositions durables et transposables acquises par socialisation — schèmes de perception, d'appréciation et d'action. Ni déterminisme pur, ni liberté pure. L'habitus génère des pratiques cohérentes avec la position sociale sans calcul conscient.",
+        "champs": "Champ: espace de positions et de luttes autour d'un capital spécifique (champ académique, artistique, politique, économique). Chaque champ a ses règles du jeu (illusio), ses formes de capital légitime, ses dominants et dominés. Doxa: ce qui va de soi dans un champ.",
+        "distinction": "La Distinction (1979): les goûts (esthétiques, culinaires, musicaux) sont des marqueurs de classe. Culture légitime vs illégitime = reproduction des hiérarchies sociales. Violence symbolique: domination opérant via le consentement des dominés qui méconnaissent son caractère arbitraire."
+      },
+      "marx_alienation": "Karl Marx — aliénation: l'ouvrier est étranger à son travail (ne contrôle ni le produit, ni le processus), à autrui (concurrence), et à son essence générique (la créativité). Infrastructure (forces + rapports de production) → superstructure (État, droit, culture, religion). L'idéologie de la classe dominante est l'idéologie dominante. Matérialisme historique: les modes de production expliquent l'histoire."
+    },
+    "sociologie_interaction_contemporaine": {
+      "goffman": {
+        "presentation_soi": "Erving Goffman — La Présentation de soi en vie quotidienne (1959): analogie théâtrale. Scène (face visible, gestion des impressions), coulisses (backstage, relâchement). Façade personnelle (apparence, manières) et façade de scène. Performance et rituel d'interaction. Interaction comme co-construction fragile.",
+        "stigmate": "Stigmate (1963): attribut profondément disqualifiant socialement (difformité physique, maladie mentale, appartenance ethnique). Identité virtuelle (attribuée) vs réelle. Stratégies: passing (dissimuler), covering (minimiser), stigmate tribal (par association). La 'normalité' est construction sociale."
+      },
+      "simmel": "Georg Simmel — sociologie des formes: les formes d'interaction sociale persistent au-delà des contenus. L'étranger: posture sociologique — proche et distant, objectif, porteur de liberté et de danger. Dyade vs triade: la triade crée de nouvelles dynamiques (tiers exclu, médiateur, coalitions). La mode: imitation et différenciation simultanées.",
+      "mobilite_inegalites": "Mobilité sociale: intergénérationnelle (entre générations) vs intragénérationnelle (au cours de la vie). Fluidité sociale: force des liens entre origine et destination. Piketty (Capital XXIe s.): rendement du capital (r) > croissance (g) → accumulation des inégalités patrimoniales. Coefficient Gini, indice Palma. Intersectionnalité (Crenshaw): genre × race × classe × handicap = discriminations cumulatives."
+    },
+    "economie_comportementale": {
+      "kahneman_tversky": {
+        "heuristiques": "Daniel Kahneman et Amos Tversky — heuristiques et biais: raccourcis cognitifs efficaces mais sources d'erreurs systématiques. (1) Disponibilité: probabilité estimée par facilité de rappel (accidents d'avion > voiture). (2) Représentativité: ignorer les probabilités de base (base-rate neglect, linda la féministe). (3) Ancrage: estimation influencée par valeur initiale arbitraire.",
+        "prospect_theory": "Théorie des perspectives (1979): alternatives à l'utilité espérée. Courbe de valeur en S: gains → concave (saturation), pertes → convexe (aversion aux pertes). Aversion aux pertes: perdre 100€ ≈ 2× impact émotionnel vs gagner 100€. Effets de cadrage (framing): mêmes données présentées positivement/négativement → choix différents. Point de référence: évaluation relative, pas absolue.",
+        "systeme1_2": "Système 1 (Thinking Fast): automatique, rapide, intuitif, heuristique, émotionnel. Système 2 (Thinking Slow): délibéré, lent, analytique, logique, effort mental. La plupart des erreurs = Système 1 non contrôlé par Système 2. Biais de confirmation: chercher des informations qui confirment ses croyances."
+      },
+      "nudge": "Richard Thaler et Cass Sunstein — nudge (coup de pouce): architecture des choix qui oriente sans contraindre ni inciter financièrement. Exemples: opt-out pour les retraites (adhésion automatique), assiettes plus petites pour réduire portions, position des aliments en cantine. Paternalisme libéral: respecter l'autonomie tout en guidant vers de meilleures décisions."
+    },
+    "philosophie_politique": {
+      "rawls": {
+        "theorie_justice": "John Rawls — Théorie de la justice (1971): contrat social hypothétique. Voile d'ignorance: les principes de justice sont choisis sans savoir sa position dans la société (richesse, talent, classe, genre). Position originelle → deux principes: (1) liberté égale maximale pour tous, (2) principe de différence: inégalités acceptables seulement si elles bénéficient aux plus défavorisés (maximin).",
+        "applications": "Rawls justifie l'État providence et les politiques redistributives. Critique de l'utilitarisme: ne pas sacrifier une minorité pour le plus grand bien. Contre Nozick (libertarianisme): les inégalités issues du talent ou de la chance naturelle ne sont pas 'méritées'. Justice comme équité."
+      },
+      "democratie_populisme": "Tocqueville (De la démocratie en Amérique, 1835-40): démocratie libérale menacée par la tyrannie de la majorité et l'individualisme/retrait du civique. Habermas: espace public comme sphère de délibération rationnelle — crise contemporaine de la délibération (médias, réseaux). Populisme (Mouffe, Laclau): opposition peuple/élite comme logique politique — ni fascisme ni démocratie directe mais construction antagoniste du peuple.",
+      "bien_commun_ostrom": "Elinor Ostrom (Nobel 2009) — gouvernance des communs: réfute la 'tragédie des communs' de Hardin. Les communautés peuvent gérer durablement des ressources partagées sans privatisation ni État central via des règles locales. 8 principes de gouvernance des communs: frontières claires, règles adaptées, participation, surveillance, sanctions graduées, résolution des conflits, reconnaissance institutionnelle, polycentrisme."
+    },
+    "capital_social_reseaux": "Putnam — capital social bonding (liens forts intragroupe) vs bridging (liens faibles intergroupes). Tocqueville: association civique comme école de la démocratie. Granovetter: la force des liens faibles — les opportunités (emploi) viennent des connaissances distantes, pas des amis proches. Coleman: capital social comme ressource facilitant l'action collective (normes, confiance, réseaux). Olson: paradoxe de l'action collective — passager clandestin → incitation à ne pas contribuer aux biens publics.",
+    "economie_travail_plateformes": "Ubérisation: plateformes numériques fragmentant le travail (indépendant/gig economy) — externalisation du risque, perte de protections sociales. Travail précaire: sous-emploi, contrats courts, zéro-heure. Piketty — concentration patrimoniale: r > g → oligarchie patrimoniale. Coût d'opportunité: valeur de la meilleure alternative sacrifiée. Externalités: coûts/bénéfices non inclus dans les prix de marché (pollution, vaccination). Bien public: non-rival, non-excluable.",
+    "epistemologie_genres_intersectionnalite": {
+      "constructivisme_social": "Berger/Luckmann — La construction sociale de la réalité (1966): la réalité quotidienne est construite socialement via l'intersubjectivité et l'institutionnalisation. Interactionnisme symbolique (Mead): le soi se construit dans l'interaction, via le langage et les symboles. Le 'moi' social émerge de la prise de rôle de l'autre généralisé.",
+      "genre_feminisme": "Simone de Beauvoir: 'On ne naît pas femme, on le devient' — le genre est une construction sociale et culturelle, non biologique. Judith Butler (Gender Trouble, 1990): performativité du genre — le genre est produit par répétition d'actes stylisés. Il n'y a pas d'identité de genre prédiscursive. Vagues féministes: 1re (droits civiques, vote), 2e (libération, corps, travail), 3e (intersectionnalité, diversité), 4e (numérique, #MeToo).",
+      "intersectionnalite": "Kimberlé Crenshaw (1989): les systèmes d'oppression (race, genre, classe, sexualité, handicap) s'articulent et se renforcent — impossibilité de les analyser séparément. Patricia Hill Collins: matrice de domination. Inégalités cumulatives: une femme noire pauvre subit des discriminations non réductibles à la somme des parties. Outil analytique et politique pour les politiques d'inclusion."
+    }
+  }
+}

@@ -1577,5 +1577,9 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 | `src/__tests__/services/ai/kb.enfantPsychosomatique.test.ts` | Vitest | 55 PASS (p33) | — | — |
 | `src/__tests__/services/ai/kb.psychiatrieNeuropsycho.test.ts` | Vitest | 66 PASS (p34) | — | — |
 | `src/__tests__/services/ai/kb.philosophieRelations.test.ts` | Vitest | 104 PASS (p35) | — | — |
+| `data/knowledge_base/default/sociologie_economie_politique.json` | KB JSON | v31.5.3 | 7 | 47 |
+| `data/knowledge_base/default/neurosciences_emotions_decision.json` | KB JSON | v31.5.4 | 7 | 47 |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +16 consts +16 SOURCES, baseline >=217 | — | — |
+| `src/__tests__/services/ai/kb.sociologieNeurosciences.test.ts` | Vitest | 96 PASS (p36) | — | — |
 
-Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30) → humaniste/existentiel + psychodynamique (p31) → addiction/EM + intimite/sexualite/EFT (p32) → developpement enfant/parentalite + psychosomatique corps-esprit (p33) → psychiatrie clinique diagnostics + neuropsychologie memoire cerveau (p34) → philosophie ethique existentielle + relations humaines groupes sociaux (p35)
+Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30) → humaniste/existentiel + psychodynamique (p31) → addiction/EM + intimite/sexualite/EFT (p32) → developpement enfant/parentalite + psychosomatique corps-esprit (p33) → psychiatrie clinique diagnostics + neuropsychologie memoire cerveau (p34) → philosophie ethique existentielle + relations humaines groupes sociaux (p35) → sociologie/economie/politique + neurosciences/emotions/decision (p36)

@@ -1,0 +1,96 @@
+{
+  "version": "v31.5.4",
+  "category": "neurosciences_emotions_decision",
+  "description": "Neurosciences affectives et décision : amygdale/peur/conditionnement LeDoux, marqueurs somatiques et Iowa Gambling Task de Damasio, cortex préfrontal ventromédian/latéral et régulation émotionnelle, modèle de régulation émotionnelle de Gross (réévaluation cognitive/suppression), neurobiologie du stress (axe HPA, glucocorticoïdes, hippocampe, McEwen allostasie), circuit de la récompense (dopamine/noyau accumbens/striatum ventral), neurosciences sociales (ocytocine/vasopressine/confiance), plasticité synaptique (LTP/LTD/Hebbian learning), neurofeedback, prise de décision neuroéconomique (cortex orbitofrontal, insula, utilité subjective), mémoire émotionnelle, affect et cognition",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "amygdale peur conditionnement émotionnel",
+    "LeDoux peur amygdale circuit neuronal",
+    "conditionnement peur extinction inhibition",
+    "Damasio marqueurs somatiques décision",
+    "Iowa Gambling Task cortex préfrontal ventromédian",
+    "somatic marker hypothesis Damasio",
+    "cortex préfrontal émotions régulation",
+    "cortex orbitofrontal décision récompense",
+    "insula intéroception émotions sociales",
+    "régulation émotionnelle Gross réévaluation cognitive",
+    "suppression émotionnelle reappraisal",
+    "stratégies régulation émotionnelle neurosciences",
+    "stress axe HPA cortisol glucocorticoïdes",
+    "hippocampe stress mémoire cortisol",
+    "McEwen allostasie charge allostatique",
+    "stress chronique neurotoxicité hippocampe",
+    "PTSD neurobiologie hypervigilance amygdale",
+    "circuit récompense dopamine noyau accumbens",
+    "système mésolimbique dopaminergique motivation",
+    "dopamine signal erreur prédiction",
+    "addiction neurobiologie circuit récompense",
+    "ocytocine confiance lien social attachement",
+    "vasopressine monogamie comportement social",
+    "neurosciences sociales cerveau social",
+    "neurones miroirs empathie imitation",
+    "plasticité synaptique LTP LTD mémoire",
+    "potentialisation long terme Hebb",
+    "neurogénèse hippocampique exercice dépression",
+    "neurofeedback biofeedback EEG régulation",
+    "mémoire émotionnelle consolidation amygdale",
+    "flashbulb memory mémoire traumatique",
+    "prise de décision sous incertitude neurosciences",
+    "neuroéconomie utilité subjective cerveau",
+    "biais émotionnels décision impulsivité",
+    "cortex cingulaire antérieur conflit monitoring",
+    "intéroception état interne corps conscience",
+    "contagion émotionnelle neurones miroirs Rizzolatti",
+    "alexithymie conscience émotionnelle déficit",
+    "émotion théorie James-Lange Cannon-Bard constructiviste",
+    "théorie constructiviste émotions Barrett",
+    "affect core affect valence activation",
+    "émotion expression universelle Ekman",
+    "micro-expressions Ekman recognition",
+    "inflammation cytokines dépression psychiatrie",
+    "axe intestin-cerveau microbiote humeur",
+    "sommeil mémoire consolidation onde lente REM",
+    "exercice physique neurogenèse BDNF cerveau"
+  ],
+  "sections": {
+    "amygdale_peur_conditionnement": {
+      "ledoux": {
+        "circuit_peur": "Joseph LeDoux — deux voies de la peur: voie courte (thalamus → amygdale, rapide, automatique, préconsciente) et voie longue (thalamus → cortex → amygdale, lente, contextualisée). L'amygdale basale reçoit les afférences sensorielles; le noyau central contrôle les réponses d'expression (freezing, réponse végétative, hormones stress). La peur peut être déclenchée avant la conscience.",
+        "conditionnement": "Conditionnement de peur pavlovien: SC (son) + SI (choc) → RC (peur au son). Substrat: amygdale basolatérale, potentialisation synaptique (LTP). Extinction: présentation SC sans SI → inhibition active par le cortex préfrontal ventromédian. L'extinction ne détruit pas la mémoire de peur — elle crée une mémoire d'inhibition concurrente. Récupération spontanée, renouvellement du contexte, réinstanciation.",
+        "ptsd": "PTSD: hyperactivation de l'amygdale, hypofonction du CPF ventromédian (incapacité d'extinction), hippocampe réduit (exposition chronique au stress/cortisol). Traitement: exposition prolongée, EMDR, thérapies basées sur l'extinction. Reconsolidation de la mémoire: fenêtre thérapeutique pour modifier la mémoire de peur lors du rappel."
+      }
+    },
+    "damasio_marqueurs_somatiques": {
+      "hypothese": "Antonio Damasio — hypothèse des marqueurs somatiques: les émotions jouent un rôle de guide dans la prise de décision. Les expériences passées (positives/négatives) laissent des 'marqueurs' physiologiques (sensation corporelle, microémotions) qui orientent les choix, même inconsciemment. Sans ce guidage émotionnel (lésion CPF ventromédian), les décisions deviennent aléatoires, interminables, désastreuses.",
+      "iowa_gambling_task": "Iowa Gambling Task (IGT): 4 jeux de cartes, 2 avantageuses (A/B: gains modérés, pertes rares) vs 2 désavantageuses (C/D: gros gains, grosses pertes nettes). Les personnes normales développent une préférence pour A/B avant même de savoir pourquoi (réponse électrodermale anticipatoire). Patients vmPFC: restent sur C/D malgré les pertes — déconnexion émotion/décision.",
+      "cerveau_decision": "Cortex préfrontal ventromédian (vmPFC): intégration émotion-décision, valeurs sociales, marqueurs somatiques. Cortex orbitofrontal (OFC): valeur subjective des récompenses, mise à jour des attentes, punitions sociales. Insula: intéroception, aversion, douleur sociale, équité (ultimatum game). Cortex cingulaire antérieur (ACC): détection conflit, monitoring erreur."
+    },
+    "regulation_emotionnelle_neurosciences": {
+      "modele_gross": {
+        "strategies": "James Gross — Process Model of Emotion Regulation: (1) Sélection de la situation (éviter/approcher). (2) Modification de la situation (agir sur l'environnement). (3) Déploiement attentionnel (distraction, rumination, concentration). (4) Changement cognitif: réévaluation cognitive (reappraisal) — changer la signification. (5) Modulation de la réponse (suppression, relaxation, exercice).",
+        "reappraisal_vs_suppression": "Réévaluation cognitive: modifier l'interprétation de la situation AVANT que l'émotion soit pleinement générée → réduction de l'expérience subjective ET de la physiologie, sans coût cognitif majeur. Recommandée. Suppression: inhiber l'expression de l'émotion APRÈS son déclenchement → réduit l'expression mais pas l'expérience interne ni la physiologie — coût cognitif, effets négatifs sur mémoire et relations."
+      },
+      "neurosciences_regulation": "Substrat: réévaluation → activation CPF latéral gauche + CPF ventromédian, réduction amygdale. Suppression → activation CPF latéral + amygdale maintenue. Acceptation (ACT/mindfulness): ne pas supprimer ni réévaluer — laisser passer l'émotion → réduction amygdale à long terme. Rumination: rehashing d'événements négatifs → activation amygdale prolongée, depression."
+    },
+    "stress_hpa_neurobiologie": {
+      "axe_hpa": "Axe HPA (hypothalamo-hypophyso-surrénalien): stress → hypothalamus (CRH) → hypophyse (ACTH) → corticosurrénale (cortisol). Cortisol: mobilisation de l'énergie, anti-inflammatoire, modulation de la mémoire (consolidation renforcée des souvenirs émotionnels, mais dégradation de la mémoire de travail en aigu). Rétrocontrôle négatif via hippocampe et CPF.",
+      "stress_chronique": "McEwen — allostasie: adaptation active au stress. Charge allostatique: coût cumulatif sur les organes. Stress chronique → hypercortisolémie → atrophie dendritique hippocampique (réduction de volume, mesurable en IRM), réduction de la neurogenèse. MAIS: le cerveau adulte garde une plasticité — exercice, enrichissement environnemental, antidépresseurs, thérapies restaurent le volume hippocampique.",
+      "memoire_stress": "Effets du cortisol sur la mémoire: consolidation renforcée (souvenirs émotionnels intenses — flashbulb memory), mais perturbation de la récupération sous stress aigu (trou de mémoire à l'examen). PTSD: hypersensibilité mnésique pour le trauma, hyperactivation HPA basale. Thérapie: régulation HPA par exposition graduelle, EMDR."
+    },
+    "circuit_recompense_dopamine": {
+      "mesolimbique": "Système mésolimbique: neurones dopaminergiques de l'aire tegmentale ventrale (ATV) → noyau accumbens (striatum ventral) / cortex préfrontal. Signal de prédiction d'erreur (Schultz): la dopamine code l'écart entre récompense attendue et réelle — signal d'apprentissage. Récompense inattendue → pic dopaminergique. Récompense attendue → pas de pic. Récompense manquée → dip dopaminergique.",
+      "addiction": "L'addiction détourne ce circuit: renforcement positif (plaisir) → renforcement négatif (évitement manque) → sensibilisation (tolérance/dépendance). Craving: anticipation de la récompense, non la récompense elle-même — dominé par le cortex préfrontal et l'insula. Rechute: conditionnement contextuel (lieux, odeurs, personnes associées à la substance).",
+      "motivation": "Dopamine ≠ plaisir pur — code la sailance motivationnelle (wanting, Berridge) distincte du liking (opioïdes/endocannabinoïdes). Anhedonie (dépression): perte du wanting dopaminergique. Motivation intrinsèque vs extrinsèque: effet de surdestination (overjustification) — récompense externe peut réduire la motivation intrinsèque (Deci/Ryan SDT)."
+    },
+    "neurosciences_sociales": {
+      "ocytocine_confiance": "Ocytocine (hypothalamus, libérée par hypophyse postérieure): lien d'attachement mère-enfant, confiance intergroupe (jeu de confiance économique), empathie, contact physique (câlins, orgasme). MAIS nuance: in-group trust peut s'accompagner d'out-group derogation (parochial altruism). Pas une 'hormone de l'amour' universelle — contexte dépendant.",
+      "neurones_miroirs": "Neurones miroirs (Rizzolatti, macaque, 1996): neurones du cortex prémoteur s'activent lors de l'exécution ET de l'observation d'une action. Chez l'humain: système MNS (mirror neuron system) présumé via IRMf et EEG mu. Hypothèse: base neurologique de l'empathie et de la compréhension des intentions d'autrui. Controversé: rôle exact non établi mais le phénomène existe.",
+      "theorie_esprit": "Théorie de l'esprit (ToM/mentalisation): capacité d'attribuer des états mentaux à autrui. Zones impliquées: CPF médian, jonction temporo-pariétale (TPJ), sillon temporal supérieur (STS), amygdale. Déficits: autisme (TSA), schizophrénie. Tâches: false-belief (Sally-Anne), eyes test de Baron-Cohen."
+    },
+    "plasticite_memoire_emotion": {
+      "ltp_hebbian": "LTP (Long-Term Potentiation): augmentation durable de l'efficacité synaptique après stimulation répétée à haute fréquence. Mécanisme: récepteurs NMDA (détecteurs de coïncidence) + AMPA → insertion dans la membrane → renforcement synaptique. Règle de Hebb: 'Les neurones qui s'activent ensemble se connectent ensemble'. Base cellulaire de l'apprentissage et de la mémoire.",
+      "memoire_emotionnelle": "L'amygdale module la consolidation des souvenirs émotionnels en potentialisant la LTP hippocampique via la noradrénaline (locus coeruleus). Pourquoi on se souvient mieux des événements émotionnels. Flashbulb memory: souvenir vivace d'un événement choquant — précis sur le contexte, moins précis sur les détails. Reconsolidation: chaque rappel rend la mémoire malléable — fenêtre thérapeutique.",
+      "theories_emotions": "James-Lange: l'émotion est la perception d'un changement corporel (peur = perception du cœur qui s'emballe). Cannon-Bard: corps et émotion simultanés, indépendants. Schachter-Singer: attribution: arousal + étiquette cognitive = émotion (deux-facteurs). Barrett (théorie constructiviste): le cerveau prédit et construit l'émotion à partir de l'intéroception et des concepts émotionnels culturels — pas d'émotions universelles fixes."
+    }
+  }
+}

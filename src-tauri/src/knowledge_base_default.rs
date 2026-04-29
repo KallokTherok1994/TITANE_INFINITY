@@ -564,6 +564,12 @@ const PHILOSOPHIE_ETHIQUE_EXISTENTIELLE: &str =
 // ── v31.5.2 expansion — phase 35 (relations humaines et groupes sociaux) ──
 const RELATIONS_HUMAINES_GROUPES_SOCIAUX: &str =
     include_str!("../../data/knowledge_base/default/relations_humaines_groupes_sociaux.json");
+// ── v31.5.3 expansion — phase 36 (sociologie, économie et politique) ──
+const SOCIOLOGIE_ECONOMIE_POLITIQUE: &str =
+    include_str!("../../data/knowledge_base/default/sociologie_economie_politique.json");
+// ── v31.5.4 expansion — phase 36 (neurosciences, émotions et décision) ──
+const NEUROSCIENCES_EMOTIONS_DECISION: &str =
+    include_str!("../../data/knowledge_base/default/neurosciences_emotions_decision.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1149,6 +1155,15 @@ impl DefaultKnowledgeBase {
             "relations_humaines_groupes_sociaux",
             RELATIONS_HUMAINES_GROUPES_SOCIAUX,
         ),
+        // v31.5.3+31.5.4 expansion — phase 36 (sociologie/éco/politique + neurosciences/émotions)
+        (
+            "sociologie_economie_politique",
+            SOCIOLOGIE_ECONOMIE_POLITIQUE,
+        ),
+        (
+            "neurosciences_emotions_decision",
+            NEUROSCIENCES_EMOTIONS_DECISION,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1477,7 +1492,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 215,
+            result.entries_loaded >= 217,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1658,6 +1673,8 @@ mod tests {
             "psychosomatique_corps_esprit",
             "psychiatrie_clinique_diagnostics",
             "sante_mentale_prevention_resilience",
+            "sociologie_economie_politique",
+            "neurosciences_emotions_decision",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
             "therapies_humanistes_existentielles",
