@@ -1066,3 +1066,37 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | `verify:registry` | PASS |
 | Remote gateway health | `{"ok":true,"version":"31.2.9"}` |
 | JWT auth smoke | TOKEN 185 chars OK |
+
+---
+
+## Release v31.2.37 — 2026-04-28
+
+### Artifacts
+
+| Artifact | SHA256 | Size |
+|---|---|---|
+| `titane-infinity_31.2.37_amd64.deb` | `e1b9084cf48ac3bbae905dbfd3319467babe3aa3959490f343c114a8cdece282` | 22 MiB |
+| `titane-infinity` (binary) | `0ff40109d7df8ab54027c9734b74d3a89b0b3e880e51ddaefe48f7a8d8194b54` | 47 MiB |
+
+### Changes — v31.2.37
+
+| Surface | Status |
+|---|---|
+| Web search (Wikipedia direct FR+EN) | FIXED — browserWebSearch() calls Wikipedia JSON API directly |
+| Remote Gateway (Axum+JWT port 7420) | NEW — handlers.rs web_search/web_research match arms |
+| remoteTransport.ts + safeInvokeCanonical | NEW — Tauri→Gateway→NO_TRANSPORT routing |
+| UI unification (dead code removal) | DONE — 4 dead layout files deleted, export cleaned |
+| TopNav mobile zoom controls hidden | FIXED — hidden sm:flex |
+| App.tsx maxVisibleItems dynamic | FIXED — isMobile ? 3 : 5 |
+| 13 Vitest test failures | FIXED — 250/250 PASS |
+| Post-build icons/launchers | DONE — local sync OK, sudo reinstall requires user action |
+
+### Gates v31.2.37
+
+| Gate | Result |
+|---|---|
+| `detect_recurrence` | PASS (1410 entries) |
+| Version bump | 31.2.35 → 31.2.37 (6 files) |
+| AutoHeal entry | AH-2026-04-28-BUILD-ALL-v31.2.37-0015 |
+| DEB artifact | titane-infinity_31.2.37_amd64.deb 22MiB |
+| sudo reinstall | BLOCKED_SUDO_REQUIRED — run manually: sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_31.2.37_amd64.deb |

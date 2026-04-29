@@ -1,0 +1,2 @@
+e1b9084cf48ac3bbae905dbfd3319467babe3aa3959490f343c114a8cdece282  src-tauri/target/release/bundle/deb/titane-infinity_31.2.37_amd64.deb
+0ff40109d7df8ab54027c9734b74d3a89b0b3e880e51ddaefe48f7a8d8194b54  src-tauri/target/release/titane-infinity
