@@ -1,0 +1,118 @@
+{
+  "version": "v31.4.7",
+  "category": "developpement_enfant_parentalite",
+  "description": "Développement de l'enfant et parentalité : stades psychosociaux d'Erikson (8 stades), stades cognitifs de Piaget (4 stades), zone proximale de développement Vygotsky, attachement parent-enfant (Bowlby/Ainsworth — sécure/anxieux-ambivalent/évitant/désorganisé), discipline positive Dreikurs/Nelsen, parentalité consciente et mindful parenting, trauma intergénérationnel et transmission transgénérationnelle, développement du langage (Chomsky/Skinner), adolescence et identité, théorie de l'esprit (Baron-Cohen), neurodéveloppement précoce",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "développement enfant",
+    "stades développement Erikson",
+    "stades cognitifs Piaget",
+    "Vygotsky zone proximale développement",
+    "attachement parent enfant",
+    "Bowlby attachement maternel",
+    "Ainsworth strange situation",
+    "attachement sécure insécure",
+    "discipline positive parentalité",
+    "Dreikurs encouragement enfant",
+    "Janet Nelsen discipline positive",
+    "parentalité consciente mindful",
+    "trauma intergénérationnel transmission",
+    "trauma transgénérationnel",
+    "développement langage enfant",
+    "acquisition langage Chomsky",
+    "adolescence identité crise",
+    "identité diffusion Marcia",
+    "théorie de l'esprit Baron-Cohen",
+    "autisme théorie esprit",
+    "neurodéveloppement précoce cerveau",
+    "tempérament enfant Thomas Chess",
+    "parentalité autoritaire permissive Baumrind",
+    "styles parentaux Baumrind",
+    "parentalité autoritaire authoritative",
+    "négligence parentale maltraitance",
+    "résilience enfant facteurs protecteurs",
+    "Boris Cyrulnik résilience enfant",
+    "parentalité positive bienveillante",
+    "communication parent enfant",
+    "limites claires enfant",
+    "punition conséquences naturelles",
+    "renforcement positif enfant",
+    "séparation parents divorce enfant",
+    "deuil enfant mort parent",
+    "rivalité fraternelle jalousie",
+    "adoption parentalité adoptive",
+    "homoparentalité famille recomposée",
+    "grossesse anxiété parentale",
+    "burnout parental épuisement",
+    "enfant haut potentiel HPI parent",
+    "TDAH enfant gestion parentale",
+    "aliénation parentale",
+    "placement familial protection enfance",
+    "développement moral Kohlberg",
+    "attachement désorganisé maltraitance"
+  ],
+  "sections": {
+    "erikson_stades_psychosociaux": {
+      "vue_densemble": "Erik Erikson (1950) — 8 stades lifespan, chacun avec une crise/conflit central à résoudre. La résolution positive nourrit une vertu (force du moi); la résolution négative laisse une vulnérabilité. Stades cumulatifs: chaque résolution s'appuie sur les précédentes",
+      "stades": {
+        "1_confiance_mefiance": "0-18 mois — Confiance de base vs méfiance. Vertu: espoir. Dépend de la consistance et fiabilité des soins primaires. Si soins incohérents: méfiance, anxiété de base",
+        "2_autonomie_honte": "18 mois-3 ans — Autonomie vs honte/doute. Vertu: volonté. L'enfant explore le contrôle de son corps (propreté, locomotion). Trop de contrôle parental: honte. Carence de limites: impulsivité",
+        "3_initiative_culpabilite": "3-6 ans — Initiative vs culpabilité. Vertu: but/intention. Exploration, imagination, jeu symbolique, questions 'pourquoi'. Répression excessive → culpabilité inhibante",
+        "4_travail_inferiorite": "6-12 ans — Travail/compétence vs infériorité. Vertu: compétence. Apprentissage scolaire, comparaison aux pairs. Échecs répétés sans soutien → sentiment d'infériorité durable",
+        "5_identite_diffusion": "12-20 ans — Identité vs confusion de rôles. Vertu: fidélité. Crise adolescente centrale: 'Qui suis-je?' — Marcia: 4 statuts (diffusion, forclusion, moratoire, achèvement)",
+        "6_intimite_isolement": "20-40 ans — Intimité vs isolement. Vertu: amour. Capacité à former des liens profonds sans perdre son identité",
+        "7_generativite_stagnation": "40-65 ans — Généativité vs stagnation. Vertu: soin. Contribuer aux générations suivantes (enfants, société, création)",
+        "8_integrite_desespoir": "65+ — Intégrité du moi vs désespoir. Vertu: sagesse. Bilan de vie: accepter sa vie telle qu'elle fut vs regrets et refus de la mort"
+      }
+    },
+    "piaget_stades_cognitifs": {
+      "vue_densemble": "Jean Piaget (1936) — développement cognitif par construction active (assimilation + accommodation) via 4 stades invariants et universels. L'enfant est 'scientifique naïf' qui construit des schèmes",
+      "stades": {
+        "sensori_moteur": "0-2 ans — Intelligence pratique, pas de représentation mentale initiale. Acquisition de la permanence de l'objet (8-12 mois). Fin: début du symbole",
+        "preoperatoire": "2-7 ans — Pensée symbolique (langage, jeu symbolique) mais égocentrique, pré-logique. Pas de conservation (liquides, nombre). Animisme. Centration",
+        "operatoire_concret": "7-12 ans — Opérations logiques sur objets concrets. Conservation acquise. Décentration. Réversibilité. Classification, sériation",
+        "operatoire_formel": "12 ans+ — Pensée abstraite, hypothético-déductive. Raisonnement contrefactuel. Pensée propositionnelle"
+      },
+      "vygotsky_zone_proximale": "Vygotsky (1978) — Zone Proximale de Développement (ZPD): écart entre ce que l'enfant peut faire seul et avec aide d'un adulte compétent. L'apprentissage tire le développement. Étayage (scaffolding): aide adaptée progressivement retirée au fur et à mesure de la maîtrise"
+    },
+    "attachement_parent_enfant": {
+      "theorie_bowlby": "John Bowlby (1969-1980) — L'attachement est un système comportemental inné (survie) — l'enfant cherche la proximité de la figure d'attachement en cas de détresse. Modèle opérant interne (MOI): représentation mentale de soi et de l'autre formatée par l'expérience précoce",
+      "strange_situation_ainsworth": {
+        "securise": "65% — Figure d'attachement comme base sécure pour explorer. Détresse à la séparation. Réconfort rapide au retour. MOI: 'Je suis digne d'amour, les autres sont fiables'",
+        "anxieux_ambivalent": "15% — Hyperactivation du système d'attachement. Très angoissé à la séparation, ambivalent au retour (colère + recherche). Soins imprévisibles. MOI: 'Je ne suis pas sûr de mériter l'amour'",
+        "evitant": "20% — Désactivation défensive. Peu de détresse apparente, ignore la figure au retour. Soins rejetants/distants. MOI: 'Mieux vaut ne pas compter sur les autres'",
+        "desorganise": "5-15% — Absence de stratégie cohérente. Comportements contradictoires, figements. Associé à la maltraitance/frayeur de la figure d'attachement. MOI: 'Celui dont j'ai besoin est aussi une source de peur'"
+      },
+      "transmission_intergenerationnelle": "Mary Main (AAI — Adult Attachment Interview): la sécurité d'attachement du parent prédit celle de l'enfant (transmission intergénérationnelle). Un parent 'earned secure' (sécure acquis via thérapie) peut briser le cycle même avec un passé insécure"
+    },
+    "styles_parentaux_baumrind": {
+      "autoritaire": "Diana Baumrind (1966) — Fort contrôle + faible chaleur. 'Parce que je l'ai dit'. Obéissance exigée. Conséquences: enfants obéissants mais faible estime de soi, externalisation",
+      "authoritative_democratique": "Fort contrôle + forte chaleur. Limites claires avec explication + chaleur. Conséquences: meilleurs résultats: estime de soi, compétence sociale, réussite scolaire. Modèle optimal validé cross-culturellement",
+      "permissif": "Faible contrôle + forte chaleur. Peu de limites. Conséquences: impulsivité, faible tolérance à la frustration",
+      "negligent": "Faible contrôle + faible chaleur. Désengagement. Conséquences: attachement insécure, difficultés multiples"
+    },
+    "discipline_positive": {
+      "dreikurs": "Rudolf Dreikurs (1950s) — Enfant comme être social cherchant à appartenir. Comportements difficiles = objectifs erronés (attention, pouvoir, vengeance, abandon/incompétence). Encouragement > punition. Conséquences logiques/naturelles > punition arbitraire",
+      "nelsen_discipline_positive": "Jane Nelsen ('Positive Discipline', 1981) — pas de punition ni de récompense externe. 3 critères discipline positive: ferme ET bienveillante simultanément; connexion avant correction; respectueuse et encourageante. Routines, réunions de famille, questions curiosité",
+      "mentalisation_parentale": "Peter Fonagy — capacité du parent à voir l'enfant comme un être avec un mental propre (désirs, intentions, croyances). La mentalisation parentale est le meilleur prédicteur de l'attachement sécure de l'enfant. Programmes: Minding the Baby, Círcle of Security"
+    },
+    "trauma_intergenerationnel": {
+      "transmission_transgenerationnelle": "Le trauma non traité se transmet — via les comportements parentaux, les styles d'attachement, les récits familiaux, la biologie épigénétique. Études: descendants de survivants Shoah (Kellermann), enfants de vétérans PTSS",
+      "epigenetique": "Yehuda (2016) — modifications épigénétiques (méthylation du gène FKBP5/axe HPA) transmises entre générations. Preuve biologique de la transmission du trauma",
+      "cyrulnik_resilience": "Boris Cyrulnik — résilience = reprendre un développement après un trauma, en utilisant un 'tuteur de résilience' (personne, groupe, œuvre d'art). Jamais sans cicatrice mais possible. Facteurs: sécurité initiale même partielle, narration du trauma, lien tuteur",
+      "rupture_cycle": "Éléments qui rompent le cycle: psychothérapie du parent, partenaire stable sécurisant, psychoéducation, groupes de parole, earned secure"
+    },
+    "adolescence_identite": {
+      "crise_identite": "Erikson: l'adolescence est le stade critique de formation de l'identité. James Marcia (1966) — 4 statuts: Diffusion (pas d'exploration ni engagement), Forclusion (engagement sans exploration — identité héritée), Moratoire (exploration active sans engagement encore), Achèvement (exploration + engagement — identité propre)",
+      "neurodeveloppement_adolescent": "Cortex préfrontal en maturation jusqu'à 25 ans. Système limbique mature avant le PFC. Conséquences: prise de risque accrue, impulsivité, influence des pairs, régulation émotionnelle immature. Non un choix délibéré",
+      "enjeux_cliniques": "Séparation-individuation, honte corporelle, orientation sexuelle, pression des pairs, réseaux sociaux, substances. Thérapie: alliance directe avec l'adolescent (pas via les parents), confidentialité, DBT-A pour régulation émotionnelle, motivational interviewing"
+    },
+    "developpement_moral_kohlberg": {
+      "niveaux": {
+        "preconventionnel": "Stade 1: obéir pour éviter la punition. Stade 2: se conformer pour obtenir une récompense. Raisonnement égocentrique",
+        "conventionnel": "Stade 3: satisfaire l'entourage (enfant gentil). Stade 4: respecter les règles et l'ordre social. La majorité des adultes",
+        "postconventionnel": "Stade 5: contrat social (lois peuvent être discutées). Stade 6: principes éthiques universels (Kohlberg: rare). Critique Gilligan: modèle centré sur la justice; le care/soin est un 2e axe moral, souvent plus développé chez les femmes"
+      }
+    }
+  }
+}

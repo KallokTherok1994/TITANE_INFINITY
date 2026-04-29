@@ -1,0 +1,95 @@
+{
+  "version": "v31.4.8",
+  "category": "psychosomatique_corps_esprit",
+  "description": "Psychosomatique et connexion corps-esprit : marqueurs somatiques Damasio (rôle des émotions dans la décision), douleur chronique (modèle biopsychosocial Engel, gate control Melzack/Wall, central sensitization), neuropeptides et psychoneuro-immunologie (Candace Pert), polyvagal Porges (neuroception, régulation autonome, fenêtre de tolérance), médecine psychosomatique (Alexander, maladies psychosomatiques classiques), thérapies somatiques (Somatic Experiencing Levine, thérapie sensorimotrice Ogden, EMDR corps), stress et maladie (Selye SGA, psychoneuro-endocrinologie, cortisol/HPA), mindfulness MBSR Kabat-Zinn, yoga thérapeutique",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "psychosomatique corps esprit",
+    "marqueurs somatiques Damasio",
+    "décision émotion cerveau",
+    "douleur chronique biopsychosociale",
+    "gate control théorie douleur",
+    "Melzack Wall douleur",
+    "central sensitization fibromyalgie",
+    "fibromyalgie douleur centrale",
+    "Candace Pert neuropeptides",
+    "psychoneuro-immunologie",
+    "Peter Levine Somatic Experiencing",
+    "trauma somatique corps",
+    "polyvagal theory Porges",
+    "neuroception sécurité danger",
+    "fenêtre de tolérance Siegel",
+    "thérapie sensorimotrice corps",
+    "EMDR corps trauma somatique",
+    "stress Hans Selye SGA",
+    "syndrome adaptation générale Selye",
+    "cortisol HPA stress chronique",
+    "alexithymie émotions corps",
+    "somatisation conversion hystérie",
+    "trouble somatoforme DSM",
+    "MBSR Kabat-Zinn mindfulness stress",
+    "réduction stress pleine conscience",
+    "yoga thérapeutique corps",
+    "maladie psychosomatique Alexander",
+    "médecine intégrative corps esprit",
+    "biofeedback cohérence cardiaque",
+    "cohérence cardiaque HeartMath",
+    "intestin deuxième cerveau microbiote",
+    "axe intestin-cerveau",
+    "inflammation cytokines dépression",
+    "système immunitaire stress psychologique",
+    "burn out épuisement physique",
+    "burn out somatisation",
+    "tension musculaire stress émotionnel",
+    "respiration diaphragmatique régulation",
+    "système nerveux autonome régulation",
+    "dissociation somatique",
+    "hyper hypo activation somatique",
+    "trauma stocké dans le corps",
+    "Bessel van der Kolk corps",
+    "cancer psychologie oncologie",
+    "douleur émotionnelle somatique",
+    "hypnose Erickson douleur"
+  ],
+  "sections": {
+    "marqueurs_somatiques_damasio": {
+      "theorie": "Antonio Damasio ('Descartes' Error', 1994) — les émotions sont indispensables à la prise de décision rationnelle. Les marqueurs somatiques sont des signaux corporels (viscéraux/cutanés/musculaires) associés aux conséquences passées de certains choix — ils orientent la décision en amont de la réflexion consciente",
+      "base_neurologique": "Patients avec lésion du cortex préfrontal ventro-médian (CPVM) — intelligence et mémoire intactes mais incapacité à décider efficacement dans la vie réelle. Expérience Iowa Gambling Task: personnes sans CPVM ne développent pas de réponse galvanique d'anticipation",
+      "implication_clinique": "Alexithymie (incapacité à identifier/nommer ses émotions) = marqueurs somatiques tronqués → mauvaises décisions relationnelles, somatisations, difficultés thérapeutiques. Thérapie: développer l'interoception, nommer les états corporels, renforcer la connexion soma-affect"
+    },
+    "douleur_chronique": {
+      "modele_biopsychosocial": "George Engel (1977) — critique du modèle biomédical réducteur. La douleur est TOUJOURS biopsychosociale: facteurs biologiques (inflammation, lésion) × psychologiques (catastrophisation, dépression, kinésiophobie) × sociaux (isolement, invalidité, système médical)",
+      "gate_control": "Melzack et Wall (1965) — théorie du portillon: la transmission de la douleur est modulée dans la corne dorsale de la moelle par des 'portillons' ouverts/fermés par les fibres A-beta (vibration, toucher léger — ferment), les émotions négatives et le focus attentionnel (ouvrent). Explique l'effet placebo, la distraction, le TENS",
+      "central_sensitization": "Sensibilisation centrale: amplification des signaux douloureux dans le SNC. Le cerveau traite des stimuli normaux comme douloureux (allodynie, hyperalgésie). Fibromyalgie, syndrome côlon irritable, céphalées de tension — pas de lésion périphérique détectable mais souffrance réelle",
+      "catastrophisation": "Sullivan: la catastrophisation de la douleur (rumination + grossissement + impuissance) est le meilleur prédicteur de chronicisation et d'incapacité. Cible thérapeutique prioritaire",
+      "traitements_psychologiques": "TCC-D (thérapie cognitivo-comportementale spécifique douleur): restructuration catastrophisation, activation graduelle, réduction kinésiophobie. ACT pour douleur: défusion cognitive, flexibilité psychologique, valeurs. EMDR pour douleur d'origine traumatique. MBSR (réduction de 30-40% de la douleur dans essais contrôlés)"
+    },
+    "psychoneuro_immunologie": {
+      "pert_neuropeptides": "Candace Pert ('Molecules of Emotion', 1997) — les neuropeptides (endorphines, sérotonine, dopamine) et leurs récepteurs ne sont pas seulement dans le cerveau mais dans tout le corps (intestin, système immunitaire, peau). Les émotions ont une réalité moléculaire dans tout l'organisme — il n'y a pas de séparation corps/mental",
+      "axe_HPA_stress": "Hans Selye (1950) — Syndrome Général d'Adaptation (SGA): alarme → résistance → épuisement. Corticostéroïdes (cortisol) → adaptation à court terme mais immunosuppression, dommages hippocampiques, dyslipidémie à long terme",
+      "inflammation_depression": "George Slavich, Michael Irwin: le stress social chronique active les cytokines pro-inflammatoires (IL-6, TNF-α, CRP) → comportements de maladie (fatigue, retrait, anhédonie) qui ressemblent cliniquement à la dépression. Antidépresseurs ont des effets anti-inflammatoires partiels. Exercice est anti-inflammatoire",
+      "axe_intestin_cerveau": "Le microbiome intestinal produit 90% de la sérotonine du corps et communique avec le cerveau via le nerf vague. Dysbiose → vulnérabilité à l'anxiété et dépression. Psychobiotiques (probiotiques) en recherche active. Alimentation méditerranéenne: facteur protecteur dépression (Jacka 2017)"
+    },
+    "polyvagal_porges": {
+      "theorie": "Stephen Porges (1994-2011) — La théorie polyvagale réorganise la compréhension du SNA. 3 circuits hiérarchiques (phylogénèse): (1) Ventral vagal (mammifères) — engagement social, co-régulation, sécurité; (2) Sympathique — mobilisation (fight/flight); (3) Dorsal vagal (reptiliens) — immobilité/effondrement/dissociation. Le corps choisit la réponse adaptative selon la neuroception (évaluation inconsciente de sécurité)",
+      "neuroception": "Évaluation inconsciente, infraliminale, de la sécurité/danger dans l'environnement et les relations — distincte de la perception consciente. Un système nerveux traumatisé peut neuroceptionner du danger là où il n'y en a pas",
+      "fenetre_tolerance": "Dan Siegel — Fenêtre de Tolérance: zone d'activation optimale où la régulation émotionnelle est possible. Au-dessus: hyperactivation (anxiété, panique, rage). En-dessous: hypoactivation (dissociation, effondrement, engourdissement). Les traumatismes rétrécissent la fenêtre. La thérapie l'élargit",
+      "applications_therapeutiques": "Respiration diaphragmatique lente (active ventral vagal). Regard et prosodie (voix) du thérapeute comme régulateurs. Exercices d'orientation. Co-régulation avant auto-régulation. Travail somatique doux avant traitement traumatique"
+    },
+    "therapies_somatiques": {
+      "somatic_experiencing": "Peter Levine ('Waking the Tiger', 1997) — le trauma n'est pas dans l'événement mais dans le système nerveux figé. Les animaux complètent naturellement les cycles de mobilisation (tremblement post-prédateur); les humains inhibent cette décharge → trauma stocké. SE: travailler avec les sensations corporelles, les micro-mouvements, compléter les actions défensives avortées",
+      "therapie_sensorimotrice": "Pat Ogden (1994) — intègre travail somatique + théorie de l'attachement + traitement trauma. Travail avec les habitudes posturales, mouvements défensifs, conscience sensorielle. Hiérarchie de traitement: corps → émotions → cognitions",
+      "van_der_kolk": "Bessel van der Kolk ('Le corps n'oublie rien', 2014) — le trauma est stocké dans la mémoire implicite corporelle (zones sous-corticales: amygdale, cerveau reptilien), pas dans le récit narratif. Les thérapies les plus efficaces pour le trauma: EMDR, yoga, théâtre, sports de contact (engagement corps), neurofeedback"
+    },
+    "mbsr_mindfulness_corps": {
+      "mbsr": "Jon Kabat-Zinn (1979, UMass) — MBSR (Mindfulness-Based Stress Reduction): programme 8 semaines, body scan, méditation assise, yoga doux, pleine conscience dans le quotidien. Méta-analyses: réduction douleur, anxiété, dépression, rechutte dépressive. Changements structurels: épaississement cortex insulaire et préfrontal",
+      "body_scan": "Technique centrale MBSR — balayage corporel attentionnel non-jugeant, tête aux pieds, observant les sensations sans chercher à les modifier. Développe l'interoception et le lien corps-mental",
+      "yoga_therapeutique": "Yoga comme thérapie: études sur PTSS (van der Kolk 2014), douleur chronique, dépression. Principe: mobiliser le système nerveux autonome via le corps, développer la conscience sensorielle, créer une expérience de sécurité dans le corps"
+    },
+    "somatisation_alexithymie": {
+      "somatisation": "Transformation de la détresse psychologique en symptômes physiques sans substrat organique identifiable. DSM-5: trouble à symptomatologie somatique (TSS), trouble de conversion (symptômes neurologique fonctionnels). Prévalence: 5-7% population générale, 15-25% en médecine générale",
+      "alexithymie": "Sifneos (1973) — littéralement 'sans mots pour les émotions'. Difficulté à identifier et décrire ses émotions, à les distinguer des sensations corporelles, pensée opératoire (concrète). Prévalence: 10% de la population. Facteur de risque de somatisation, addiction, maladies psychosomatiques. TAS-20 (Toronto Alexithymia Scale)",
+      "approche_therapeutique": "Pour alexithymie: thérapies à médiation corporelle (MBSR, yoga), travail sur les métaphores corporelles, psychoéducation émotionnelle, approche progressive non-intrusive"
+    }
+  }
+}

@@ -546,6 +546,12 @@ const ADDICTION_ENTRETIEN_MOTIVATIONNEL: &str =
 // ── v31.4.6 expansion — phase 32 (intimité, sexualité, couples EFT) ──
 const INTIMITE_SEXUALITE_COUPLES_EFT: &str =
     include_str!("../../data/knowledge_base/default/intimite_sexualite_couples_eft.json");
+// ── v31.4.7 expansion — phase 33 (développement enfant et parentalité) ──
+const DEVELOPPEMENT_ENFANT_PARENTALITE: &str =
+    include_str!("../../data/knowledge_base/default/developpement_enfant_parentalite.json");
+// ── v31.4.8 expansion — phase 33 (psychosomatique corps-esprit) ──
+const PSYCHOSOMATIQUE_CORPS_ESPRIT: &str =
+    include_str!("../../data/knowledge_base/default/psychosomatique_corps_esprit.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1104,6 +1110,15 @@ impl DefaultKnowledgeBase {
             "intimite_sexualite_couples_eft",
             INTIMITE_SEXUALITE_COUPLES_EFT,
         ),
+        // v31.4.7+31.4.8 expansion — phase 33 (développement enfant/parentalité + psychosomatique)
+        (
+            "developpement_enfant_parentalite",
+            DEVELOPPEMENT_ENFANT_PARENTALITE,
+        ),
+        (
+            "psychosomatique_corps_esprit",
+            PSYCHOSOMATIQUE_CORPS_ESPRIT,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1432,7 +1447,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 209,
+            result.entries_loaded >= 211,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1605,8 +1620,10 @@ mod tests {
             "emotion_regulation_dbt_advanced",
             "neurodiversite_adhd_autisme_hpi",
             "addiction_entretien_motivationnel",
+            "developpement_enfant_parentalite",
             "intimite_sexualite_couples_eft",
             "psychodynamique_mecanismes_defense",
+            "psychosomatique_corps_esprit",
             "sante_mentale_prevention_resilience",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
