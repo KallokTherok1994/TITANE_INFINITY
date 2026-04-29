@@ -595,6 +595,12 @@ const PSYCHOLOGIE_POSITIVE_BIEN_ETRE: &str =
 const COGNITION_SOCIALE_BIAIS_COGNITIFS: &str =
     include_str!("../../data/knowledge_base/default/cognition_sociale_biais_cognitifs.json");
 
+// ── v31.6.1+31.6.2 expansion — phase 41 (spiritualite/existentiel + neurosciences cliniques) ──
+const SPIRITUALITE_SENS_EXISTENTIEL: &str =
+    include_str!("../../data/knowledge_base/default/spiritualite_sens_existentiel.json");
+const NEUROSCIENCES_CLINIQUES_AVANCEES: &str =
+    include_str!("../../data/knowledge_base/default/neurosciences_cliniques_avancees.json");
+
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
     include_str!("../../data/knowledge_base/default/htf_module_identity.json");
@@ -1223,6 +1229,14 @@ impl DefaultKnowledgeBase {
             "cognition_sociale_biais_cognitifs",
             COGNITION_SOCIALE_BIAIS_COGNITIFS,
         ),
+        (
+            "spiritualite_sens_existentiel",
+            SPIRITUALITE_SENS_EXISTENTIEL,
+        ),
+        (
+            "neurosciences_cliniques_avancees",
+            NEUROSCIENCES_CLINIQUES_AVANCEES,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1551,7 +1565,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 225,
+            result.entries_loaded >= 227,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1742,6 +1756,8 @@ mod tests {
             "systeme_lymphatique_sanguin",
             "psychologie_positive_bien_etre",
             "cognition_sociale_biais_cognitifs",
+            "spiritualite_sens_existentiel",
+            "neurosciences_cliniques_avancees",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
             "therapies_humanistes_existentielles",

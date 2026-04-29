@@ -1,0 +1,89 @@
+{
+  "version": "v31.6.1",
+  "category": "spiritualite_sens_existentiel",
+  "description": "Spiritualité, sens existentiel, psychologie transpersonnelle, logothérapie, philosophie de vie et états de conscience",
+  "retrieval_triggers": [
+    "spiritualité",
+    "sens de la vie",
+    "existentiel",
+    "logothérapie",
+    "Frankl",
+    "vide existentiel",
+    "quête de sens",
+    "purpose",
+    "valeurs profondes",
+    "Jung",
+    "archétypes",
+    "inconscient collectif",
+    "individuation",
+    "ombre",
+    "anima",
+    "animus",
+    "Maslow",
+    "transcendance",
+    "actualisation de soi",
+    "besoins supérieurs",
+    "peak experience",
+    "psychologie transpersonnelle",
+    "états de conscience",
+    "Grof",
+    "Wilber",
+    "Ken Wilber",
+    "méditation contemplative",
+    "pleine conscience avancée",
+    "non-dualité",
+    "bouddhisme",
+    "stoïcisme",
+    "philosophie pratique",
+    "Viktor Frankl",
+    "mort",
+    "finitude",
+    "angoisse ontologique",
+    "Tillich",
+    "Heidegger",
+    "authenticité",
+    "synchronicité",
+    "croissance spirituelle",
+    "éveil",
+    "conscience",
+    "expérience mystique",
+    "MBSR avancé",
+    "neurosciences contemplatives",
+    "Davidson",
+    "Lutz",
+    "compassion méditée",
+    "résilience existentielle",
+    "sens post-traumatique",
+    "intégration des contraires"
+  ],
+  "sections": {
+    "logotherapie_frankl": {
+      "vide_existentiel": "Logothérapie (Viktor Frankl 1946 — Man's Search for Meaning): fondée sur l'expérience des camps de concentration. Thèse centrale: la pulsion primaire de l'être humain est la volonté de sens (will to meaning), non le plaisir (Freud) ni le pouvoir (Adler). Vide existentiel (existential vacuum): frustration du sens → ennui, dépression, agressivité, conduites addictives. Triade tragique: douleur, culpabilité, mort → transformables par l'attitude. Techniques: déréflexion (détourner l'attention de soi), intention paradoxale (prescriptions du symptôme).",
+      "sources_sens": "3 voies vers le sens selon Frankl: (1) Valeurs créatives — faire, créer, accomplir quelque chose. (2) Valeurs expérientielles — recevoir quelque chose, aimer, vivre une expérience (amour, beauté, vérité). (3) Valeurs d'attitude — position prise devant une situation immuable, dignité devant la souffrance inévitable. Le sens est toujours possible, même dans la souffrance. Noodynamique: tension saine entre soi actuel et sens à atteindre. Logo-test et PIL (Purpose in Life Test) — mesurent la frustration existentielle."
+    },
+    "psychologie_profonde_jung": {
+      "archetyp_inconscient": "Carl Gustav Jung — Psychologie analytique: Inconscient personnel (refoulé individuel) + Inconscient collectif (héritage humanité universel). Archétypes: structures psychiques universelles se manifestant dans mythes, contes, religions, rêves — Anima (féminin chez l'homme), Animus (masculin chez la femme), Ombre (parties refoulées/non intégrées de la psyche), Soi (totalité psychique — Self vs Ego). Grande Mère, Héros, Trickster, Sage, Persona (masque social).",
+      "individuation": "Individuation (Jung): processus de développement de la totalité psychique — intégrer progressivement l'Ombre, Anima/Animus, et réaliser le Soi. Nuit de l'âme: confrontation inévitable avec l'Ombre — projection sur autrui des parties refoulées. Synchronicité: coïncidences signifiantes acausales entre événements psychiques et physiques (Jung & Pauli). Thérapie jungienne: analyse des rêves, amplification mythologique, art-thérapie, travail sur les complexes (noyaux émotionnels autonomes dans l'inconscient)."
+    },
+    "maslow_transcendance": {
+      "hierarchie_8_niveaux": "Abraham Maslow — hiérarchie des besoins révisée (1969): au-delà de l'actualisation de soi (niveau 5), Maslow propose un 8e niveau: Transcendance (soutenir les autres à s'actualiser). Peak experiences (expériences-sommets): moments de joie, extase, révélation profonde, sentiment d'unité cosmique — temporaires mais transformatrices. Plateau experiences (Maslow): états stables de sagesse et émerveillement calme (vs peak temporaires). Distinction être vs manque: besoins de manque (déficit D-needs) → motivés par manque; besoins d'être (B-needs) → croissance intrinsèque.",
+      "metavaleurs": "Métavaleurs (B-values) de Maslow: vérité, bonté, beauté, totalité, vivacité, unicité, justice, simplicité, facilité, humour, complétude, nécessité. Déprivation de métavaleurs → métapathologies: cynisme, alienation, dépression existentielle. Psychologie humaniste (Maslow & Rogers): vision positive de la nature humaine — tendance actualisante, organism wisdom, croissance inhérente."
+    },
+    "philosophie_pratique_stoicisme": {
+      "stoicisme_moderne": "Stoïcisme (Épictète, Marc Aurèle, Sénèque): dichotomie du contrôle — distinguer ce qui dépend de nous (prohairéton: jugements, désirs, aversions, actions) vs ce qui n'en dépend pas (aphrohairéton: corps, réputation, richesse, mort). Amor fati (Nietzsche): aimer son destin, y compris souffrances. Memento mori: conscience de la mort comme aiguillon du sens. Préméditation des maux (premeditatio malorum): visualiser les adversités pour les affronter sereinement. Eudaimonia: floraison humaine, vie vertueuse selon la raison.",
+      "angoisse_ontologique": "Angoisse ontologique (Tillich — The Courage to Be 1952): trois formes universelles — angoisse du non-être (mort), angoisse de la culpabilité/condamnation (responsabilité morale), angoisse du vide/non-sens (perte de sens). Courage d'être: s'affirmer malgré l'angoisse ontologique — non pas la nier mais l'intégrer. Authenticité (Heidegger): être-vers-la-mort (Sein-zum-Tode) → confronter sa finitude → sortir du das Man (impersonnel) → vie authentique, ownmost potentiality-for-being."
+    },
+    "psychologie_transpersonnelle": {
+      "etats_conscience": "Psychologie transpersonnelle (Maslow, Grof, Wilber, Tart): va au-delà de l'ego individuel — expériences de dépassement du soi ordinaire. États non ordinaires de conscience (SNOC — Grof): périnataux (matrices BPM I-IV liées à l'accouchement), transpersonnels (identification cosmique, archétypes, mémoire collective). Holotropic Breathwork (Grof): hyperventilation contrôlée pour accéder à SNOC thérapeutiques. Ken Wilber — Integral Theory: AQAL (All Quadrants All Levels): intérieur-individuel / extérieur-individuel / intérieur-collectif / extérieur-collectif + niveaux de développement (spirale) + lignes + états + types.",
+      "bouddhisme_science": "Neurosciences contemplatives (Davidson, Lutz — Mind & Life Institute): méditation à long terme → épaississement cortex préfrontal, augmentation cohérence gamma, réduction densité amygdale, augmentation compassion mesurable. Pratiques bouddhistes: Samatha (calme mental, concentration), Vipassana (insight, impermanence/non-soi/dukkha), Mettā (bienveillance aimante compassion). Quatre nobles vérités: dukkha (insatisfaction universelle), samudāya (origine désir/attachement), nirodha (cessation possible), magga (voie octuple). Anatta (non-soi): absence d'un soi fixe et permanent — convergence avec neurosciences (Metzinger, Damasio)."
+    },
+    "integrations_existentielles": {
+      "mort_finitude": "Thérapie existentielle (Yalom — Existential Psychotherapy 1980): 4 préoccupations ultimes — mort (inévitabilité), liberté (responsabilité radicale), isolement existentiel (abîme fondamental entre soi et les autres), non-sens (absence de sens inhérent à l'univers). Confrontation à la mort comme catalyseur de vie authentique (post-traumatic growth existentiel). Terror management theory (Greenberg, Solomon, Pyszczynski): mortalité saillante → recours à croyances culturelles immortalisantes (buffers: estime de soi, vision du monde).",
+      "integration_experiences": "Intégration des expériences transpersonnelles et spirituelles: distinguer spiritualité saine (centration, ouverture, sens) vs inflation spirituelle (évitement de l'Ombre via bypass spirituel — Welwood). Travail d'intégration post-expériences peak/SNOC: ancrage somatique, narration, soutien communautaire, thérapie. Psychologie positive transpersonnelle: flow → états unitifs → expériences mystiques → spectre d'états de conscience (Wilber — spectre de conscience). Résilience existentielle: trouver sens, cohérence et appartenance dans les moments de rupture ontologique."
+    },
+    "mort_rituel_deuil_spirituel": {
+      "mort_culturelle": "Anthropologie de la mort: rites funéraires universels (Van Gennep rites de passage: séparation/marge/agrégation). Thanatologie (Kübler-Ross — On Death and Dying 1969): 5 stades (déni, colère, marchandage, dépression, acceptation) — décrits dans le contexte des malades en phase terminale; non linéaires, non universels. Deuil compliqué/prolonged grief disorder: DSM-5-TR 2022 — > 12 mois adultes. Accompagnement psychologique en fin de vie: soins palliatifs psychosociaux, dignothérapie (Chochinov), meaning-centered therapy (Breitbart).",
+      "rituel_sens": "Rites et rituels: fonctions psychologiques — marquage du temps, structuration de la transition, maintien du lien social, expression émotionnelle symbolique. Ritualisation comme soin du grief: créer des rituels personnalisés (objet transitionnel, anniversaire, lettre). Post-death communication beliefs et bien-être psychologique (Stroebe et Schut — Dual Process Model): oscillation entre orientation vers la perte et orientation vers la restauration. Spiritualité et maladie: le sens spirituel prédit meilleure qualité de vie chez patients oncologiques (Pargament — religious coping)."
+    }
+  }
+}

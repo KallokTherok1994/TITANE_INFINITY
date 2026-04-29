@@ -1,0 +1,82 @@
+{
+  "version": "v31.6.2",
+  "category": "neurosciences_cliniques_avancees",
+  "description": "Neurosciences cliniques avancées: sommeil, chronobiologie, céphalées, vertiges, douleur neuropathique, neuromodulation et neurologie fonctionnelle",
+  "retrieval_triggers": [
+    "troubles du sommeil",
+    "insomnie",
+    "hypersomnie",
+    "narcolepsie",
+    "SAS",
+    "apnée du sommeil",
+    "chronobiologie",
+    "rythme circadien",
+    "mélatonine",
+    "SCN",
+    "horloge biologique",
+    "céphalée",
+    "migraine",
+    "cluster",
+    "céphalée de tension",
+    "CGRP",
+    "triptan",
+    "vertige",
+    "VPPB",
+    "Ménière",
+    "névrite vestibulaire",
+    "Dix-Hallpike",
+    "Epley",
+    "douleur neuropathique",
+    "allodynie",
+    "hyperalgésie",
+    "central sensitization",
+    "fibromyalgie",
+    "neuromodulation",
+    "DBS",
+    "TMS",
+    "tDCS",
+    "TENS",
+    "stimulation cérébrale",
+    "neuropathie",
+    "syndrome des jambes sans repos",
+    "RLS",
+    "somnambulisme",
+    "parasomnies",
+    "polysomnographie",
+    "MSLT",
+    "CPAP",
+    "neurologie fonctionnelle",
+    "conversion",
+    "FND"
+  ],
+  "sections": {
+    "troubles_sommeil_insomnies": {
+      "insomnie": "Insomnie chronique (DSM-5/ICSD-3): difficultés d'initiation ou de maintien du sommeil ≥3 nuits/semaine, ≥3 mois, avec retentissement diurne. Prévalence: 10-15% population (insomnie chronique), 30-40% insomnie transitoire. TCC-I (Thérapie Cognitivo-Comportementale pour l'Insomnie): traitement de 1re ligne — restriction du sommeil (compression), contrôle du stimulus, hygiène du sommeil, restructuration cognitive (catastrophisme nocturne), relaxation. Efficacité supérieure aux hypnotiques à long terme (méta-analyses).",
+      "parasomnies_autres": "Narcolepsie type 1: cataplexie + hypersomnie + déficit en hypocrétine-1/orexine (< 110 pg/mL LCR). Narcolepsie type 2: sans cataplexie. Hallucinations hypnagogiques/hypnopompiques, paralysie du sommeil. Traitement: modafinil, pitolisant, oxybate de sodium, antidépresseurs (cataplexie). SAS (Syndrome d'Apnées-Hypopnées du Sommeil): IAH > 5/h. Apnées obstructives (relâchement VAS) vs centrales (SNA déficit). Conséquences: HTA, AVC, arythmies, déclin cognitif. CPAP: traitement de référence. SRS/RLS (syndrome jambes sans repos): urge irrépressible + mouvement soulageant + aggravation repos/soir — dopamine/fer."
+    },
+    "chronobiologie_melatonine": {
+      "rythmes_circadiens": "Chronobiologie: SCN (Noyau suprachiasmatique) = horloge maîtresse — retine→rétino-hypothalamique→SCN→épiphyse→mélatonine. Gènes circadiens: CLOCK, BMAL1 (transcription), PER1-3, CRY1-2 (répression). Période endogène ~24,2h → recalage quotidien par zeitgebers (lumière blanche → suppression mélatonine via mélanopsine ipRGC). Mélatonine: synthèse à partir sérotonine (N-acétyltransférase → HIOMT), pic nocturne 2h-4h, t½ ~45min, action sur récepteurs MT1/MT2. Chronotype: vecteur génétique (PER3 VNTR) + âge (adolescents → retard de phase).",
+      "jet_lag_travail_nuit": "Troubles circadiens: DSWPD (trouble de phase retardée) — couche/lève ≥2h plus tard que norme sociale; ASWPD (avancée de phase — sujets âgés). Traitement: photothérapie (10 000 lux matin), mélatonine exogène faible dose (0,5mg) en avance de phase. Jet lag: décalage entre horloge interne et heure locale — est>ouest plus facile (avance). Travail en équipes rotatoires: risque cardiovasculaire, métabolique (Spiegel → obésité, diabète), immunitaire, cancéreux (IARC classifié 2A). Lumière bleue des écrans: suppression mélatonine → recommandation filtre ou arrêt 1h avant coucher."
+    },
+    "cephalees_migraines": {
+      "migraine_mecanisme": "Migraine (prévalence 15% population, F:H = 3:1): phase prodromes (bâillement, fatigue, soif → hypothalamus) → aura (si migraine avec aura: cortical spreading depression CSD — vague dépolarisation 3-5mm/min, aura visuelle 20-60min, > 1 symptôme de manière successive) → phase céphalalgique (unilatérale, pulsatile, modérée-sévère, aggravée activité) → résolution. Neurobiologie: CGRP (calcitonin gene-related peptide) libéré par fibres trigéminovasculaires → vasodilatation + activation CPM. Traitement de crise: triptans (antagonistes 5-HT1B/1D), CGRP antagonistes (gépants), ditan (lasmiditan 5-HT1F).",
+      "prevention_traitements": "Prophylaxie migraine: propranolol, amitriptyline, topiramate, valproate. Anti-CGRP monoclonaux (eptinézumab, érenumab, fremanezumab, galcanezumab): réduisent fréquence ≥50% dans 30-50% des cas. Botulinum toxin type A (BOTOX): migraine chronique (≥15j/mois). Céphalée en grappe (Cluster): unilatérale péri-orbitaire sévère, signes autonomiques ipsilatéraux (larmoiement, rhino, ptose), attaques 15-180min, 1-8/j. Traitement: sumatriptan SC, oxygène 100%, vérapamil prophylaxie. Céphalée par abus médicamenteux (CAM): > 10-15j/mois depuis > 3 mois."
+    },
+    "vertiges_troubles_vestibulaires": {
+      "vppb": "VPPB (Vertige Positionnel Paroxystique Bénin): cause la plus fréquente des vertiges (20-30% consultations ORL/neurologie). Mécanisme: otoconies (cristaux de carbonate de calcium de l'utricule) se déplacent dans un canal semi-circulaire → cupulo-lithiase (sur la cupule) ou canalolithiase (flottant dans le canal). Canal postérieur le plus touché (90%). Diagnostic: manœuvre de Dix-Hallpike (canal post) ou roll test (canal horizontal). Traitement: manœuvre d'Epley (canal post — efficacité > 90% en 1-3 séances), Semont, Lempert (Barbecue roll pour canal horizontal).",
+      "autres_vertiges": "Névrite vestibulaire: inflammation du nerf vestibulaire (probable virale), vertige rotatoire intense soudain, nausées, déviation posturale. Traitement: acutement antiémétiques + corticoïdes controversés; rééducation vestibulaire (crucial pour compensation centrale). Maladie de Ménière: hydrops endolymphatique (pression excessive dans l'endolymphe) → tétrade: vertiges épisodiques >20min, acouphènes, hypoacousie fluctuante basses fréquences, sensation de plénitude. Traitement: régime hyposodé, diurétiques, injection intratympanique gentamycine/corticoïdes, labyrinthectomie chimique si sévère."
+    },
+    "douleur_neuropathique": {
+      "mecanismes": "Douleur neuropathique (IASP définition 2011): douleur causée par lésion ou maladie du système somato-sensoriel. Mécanismes: sensibilisation périphérique (réduction seuil nocicepteurs, canaux Nav1.7/Nav1.8), sensibilisation centrale (potentialisation à long terme des synapses cornes dorsales, perte d'inhibition descendante), neuroplasticité maladaptative (réorganisation somatotopique). Allodynie: douleur déclenchée par stimulus normalement non douloureux. Hyperalgésie: réponse exagérée à stimulus douloureux. Étiologies: neuropathie diabétique, névralgie post-herpétique (zona), névralgie trijumeau, SDRC (algodystrophie), radiculopathie, traumatisme médullaire.",
+      "traitements": "Pharmacologie douleur neuropathique: 1re ligne — antiépileptiques α2δ (gabapentine, prégabaline — canaux calciques), antidépresseurs (duloxétine ISRSNA, amitriptyline), patch lidocaïne 5% (localisée). 2e ligne — tramadol (faible agoniste opioïde + ISRSNA), topique capsaïcine 8% (désensibilisation TRPV1). 3e ligne — opioïdes forts (association risques). Fibromyalgie: sensibilisation centrale généralisée, douleurs diffuses ≥3 mois, fatigue, troubles du sommeil, troubles cognitifs ('fibro fog'). Critères ACR 2010/2016: WPI (widespread pain index) + SSS (symptom severity scale). Traitement multimodal: duloxétine, prégabaline, milnacipran + exercice physique (base fondamentale)."
+    },
+    "neuromodulation": {
+      "dbs_tms": "Deep Brain Stimulation (DBS): électrodes implantées dans STN (subthalamic nucleus) ou GPi pour maladie de Parkinson avancée → inhibition circuits pathologiques (modèle simplification). Indications élargies: dystonie, TOC réfractaire (capsule interne/striatum), dépression résistante (noyau sous-genual ACC/area 25). TMS (Stimulation Magnétique Transcrânienne): champ magnétique → courant induit dans cortex. TMS répétitive (rTMS) haute fréquence (10-20Hz) → facilitatrice; basse fréquence (1Hz) → inhibitrice. Indication FDA: dépression majeure résistante (CPFDL gauche 10Hz), TOC, anxiété sociale.",
+      "tdcs_tens": "tDCS (stimulation transcrânienne à courant direct): courant continu faible (1-2mA) → anodique (facilitatrice) / cathodique (inhibitrice). Effets sur apprentissage moteur, mémoire de travail, dépression (en développement). TENS (Neurostimulation électrique transcutanée): électrodes cutanées → analgésie par gate control (fibres Aβ inhibent transmission nociceptive dans corne dorsale) et activation endorphines (basse fréquence). Photobiomodulation (PBM/LLLT): lumière rouge/IR proche → cytochrome c oxydase → ATP mitochondrial → effets neuroprotecteurs (en recherche). Neurofeedback: rétroaction en temps réel sur activité cérébrale EEG → régulation ondes cérébrales (theta/beta pour TDAH, alpha pour anxiété)."
+    },
+    "neurologie_fonctionnelle": {
+      "FND_conversion": "Troubles fonctionnels neurologiques (FND — Functional Neurological Disorder, ex-troubles de conversion DSM-IV): symptômes moteurs (paralysie, tremblements, dystonies) ou sensoriels sans lésion structurelle. Diagnostic positif (Hoover sign pour faiblesse fonctionnelle: force accrue en extension controlatérale pendant la flexion). Prévalence: 5-16/100 000. IRM fonctionnelle: hyperactivité amygdale, diminution activation CPF sur mouvements intentionnels. Traitement: psychothérapie (TCC adaptée, EMDR si trauma), physiothérapie spécialisée, psychoéducation, neurofeedback.",
+      "evaluations_outils": "Outils d'évaluation neurologique fonctionnelle: MMSE (sensibilité modérée démences précoces), MoCA (>2 points mieux que MMSE pour MCI), Trail Making Test (fonctions exécutives, attention), Stroop (inhibition cognitive), BADS (Behavioral Assessment of Dysexecutive Syndrome), RBMT (rivermead), Rey-Osterrieth (organisation visuo-constructive, mémoire différée). Neuroimagerie fonctionnelle clinique: IRMf repos (default mode network, salience network, executive control network) → marqueurs de progression Alzheimer/FTD. Biomarqueurs: protéine tau LCR, β-amyloïde PET, neurofilaments légers sang (NfL) → sensibilité ++ lésion axonale."
+    }
+  }
+}
