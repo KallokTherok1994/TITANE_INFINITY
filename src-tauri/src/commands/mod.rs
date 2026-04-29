@@ -80,9 +80,11 @@ pub use memory_os::*; // ✅ v∞: Export Memory OS commands (SUPER PROMPTs #6-7
 // pub mod whisper_commands; // disabled: also include!'d as commands_v21::whisper_commands in main.rs → double __cmd__*
 // audio_config_commands removed - duplicates audio::commands
 // pub mod persistent_memory_commands; // disabled: duplicates with persistent_memory module
+pub mod capability_commands; // ✅ LOCK 4: Capability registry (get_all_capabilities)
 pub mod dashboard_metrics_commands;
 pub mod http_commands;
 pub mod identity_commands;
+pub mod job_operator; // ✅ LOCK 4: LONG_TASK_RELAY_V1 — governed job kernel IPC
 pub mod security;
 // pub mod self_healing_commands; // disabled: also include!'d as commands_v21::self_healing_commands in main.rs → double __cmd__*
 // pub mod singularity_commands; // disabled: also include!'d as commands_v21::singularity_commands in main.rs → double __cmd__*

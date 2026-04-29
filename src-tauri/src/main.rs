@@ -2886,6 +2886,24 @@ fn main() {
             commands::display_get_environment,
             commands::display_set_environment,
             commands::display_list_monitors,
+
+            // ═══════════════════════════════════════════════════════════════
+            // JOB OPERATOR — LOCK 4: LONG_TASK_RELAY_V1
+            // Governed long-task job kernel (6 IPC commands)
+            // ═══════════════════════════════════════════════════════════════
+            commands::job_operator::job_create,
+            commands::job_operator::job_start,
+            commands::job_operator::job_status,
+            commands::job_operator::job_list,
+            commands::job_operator::job_cancel,
+            commands::job_operator::job_get_config,
+
+            // ═══════════════════════════════════════════════════════════════
+            // CAPABILITY REGISTRY — governed capability classification
+            // ═══════════════════════════════════════════════════════════════
+            commands::capability_commands::capability_registry_get_all,
+            commands::capability_commands::capability_registry_get,
+            commands::capability_commands::capability_registry_by_status,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
