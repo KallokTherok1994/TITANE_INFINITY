@@ -10,16 +10,6 @@ applyTo: 'src/**'
 - Zero silence: user always sees success or error.
 - Local-first (marqueur de compatibilité), doctrine active: online-first gouverné avec fallback local obligatoire.
 
-## RÈGLE PERMANENTE — Tests + Agents à chaque modification (Rule 16, NO EXCEPTION)
-
-- **Chaque modification frontend** (CSS, composant, page, hook, service) génère dans le même commit :
-  1. Test Vitest (unit/composant) si logique TS/CSS touchée
-  2. Test E2E Playwright avec `data-testid` stable si surface UI visible
-  3. Entrée `registry/ui-events.jsonl`
-  4. Entrée AutoHeal full-schema + `detect_recurrence.sh` PASS
-- Jamais en rattrapage post-push : tests manquants = BLOCKED immédiatement
-- Pour tout nouvel agent avancé : service dédié + dashboard `data-testid` + E2E + `UI_SURFACE_MAP.md` dans le même patch
-
 ## DO
 
 - Pour chaque dashboard agent avancé (monitoring, diagnostic, explainability, orchestrateur, sécurité), ajouter :
@@ -34,7 +24,7 @@ applyTo: 'src/**'
 - Keep UI changes minimal and register them.
 - Update `UI_SURFACE_MAP.md` for every new page or component (Rule 15).
 - Update `docs/CARTOGRAPHY_COMPLETE.md` for structural UI changes (Rule 15).
-- Create unit (Vitest) + E2E test with `data-testid` for every new UI surface (Rule 16) — generated in the same commit as the source change, not after.
+- Create unit (Vitest) + E2E test with `data-testid` for every new UI surface (Rule 16).
 - Add `registry/ui-events.jsonl` entry for every UI change.
 - For every frontend/UI modification, execute the full UI procedure below before claiming PASS.
 - For advanced-agent UI work, prefer importing the dedicated service status accessor over reading the static catalog directly, so the dashboard reflects current runtime truth and not only a declaration layer.

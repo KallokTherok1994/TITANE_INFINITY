@@ -6,6 +6,8 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { isTauriAvailable } from '@/api/tauriClient';
+import { isRemoteGatewayAvailable, remoteInvoke } from '@/api/remoteTransport';
 
 export interface IpcErrorPayload {
   code: string;
@@ -74,20 +76,45 @@ export async function safeInvokeCanonical<T = unknown>(
   payload: Record<string, unknown> = {},
   timeoutMs = 10000
 ): Promise<CanonicalIpcResult<T>> {
-  try {
-    const raw = await secureInvoke<unknown>(cmd, payload, { timeout: timeoutMs });
-    return normalizeIpcResponse<T>(cmd, raw);
-  } catch (err) {
-    const error = err instanceof Error ? err : new Error(String(err));
+  // 1. Tauri local IPC — highest priority (local desktop runtime)
+  if (isTauriAvailable()) {
+    try {
+      const raw = await secureInvoke<unknown>(cmd, payload, { timeout: timeoutMs });
+      return normalizeIpcResponse<T>(cmd, raw);
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      return {
+        ok: false,
+        content: null,
+        error: {
+          code: error.name || 'IPC_ERROR',
+          message: error.message,
+        },
+      };
+    }
+  }
+
+  // 2. Remote Gateway — PC mère (all other clients: browser, Android, remote desktop)
+  if (isRemoteGatewayAvailable()) {
+    const result = await remoteInvoke<T>(cmd, payload);
     return {
-      ok: false,
-      content: null,
-      error: {
-        code: error.name || 'IPC_ERROR',
-        message: error.message,
-      },
+      ok: result.ok,
+      content: result.content,
+      error: result.error
+        ? { code: result.error.code, message: result.error.message }
+        : null,
     };
   }
+
+  // 3. No transport available
+  return {
+    ok: false,
+    content: null,
+    error: {
+      code: 'NO_TRANSPORT',
+      message: 'Neither Tauri IPC nor Remote Gateway is available. Configure the gateway in TITANE Settings to connect to the PC mère.',
+    },
+  };
 }
 
 /**

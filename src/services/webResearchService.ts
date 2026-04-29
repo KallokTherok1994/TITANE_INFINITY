@@ -73,50 +73,69 @@ function stripHtmlTags(s: string): string {
   return s.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 }
 
-function parseWikiSearchJson(data: WikiSearchResponse, maxResults: number): WebSearchResult[] {
+// lang: 'fr' | 'en' — used to build the Wikipedia article URL
+function parseWikiSearchJson(data: WikiSearchResponse, maxResults: number, lang = 'fr'): WebSearchResult[] {
   const items = data?.query?.search ?? [];
   return items.slice(0, maxResults).map(item => ({
     title: item.title,
-    url: `https://en.wikipedia.org/wiki/${encodeURIComponent(item.title.replace(/ /g, '_'))}`,
+    url: `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(item.title.replace(/ /g, '_'))}`,
     snippet: stripHtmlTags(item.snippet),
   }));
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Browser-mode HTTP fallback (Vite proxy → Wikipedia Search API)
+// Browser-mode HTTP fallback — Wikipedia Search JSON API (direct)
 // Called only when Tauri IPC is unavailable (browser/network HTTP mode).
-// Route: /api/wiki-search?srsearch=... → Vite proxy → Wikipedia JSON API
-// One Door compliance: proxy is server-side, governed by vite.config.ts.
-// Wikipedia Search API: free, JSON, no auth, no bot-challenge.
+// Calls Wikipedia API directly using origin=* (CORS-enabled, no proxy needed).
+// FR primary → EN fallback when FR returns 0 results.
+// Works in production (AppImage, DEB, remote browser) — no Vite proxy required.
+// One Door compliance: no uncontrolled fetch; Wikipedia JSON API is public.
 // ─────────────────────────────────────────────────────────────────
 
 export async function browserWebSearch(
   query: string,
   maxResults = 10
 ): Promise<WebSearchResponse> {
-  try {
-    const url = `/api/wiki-search?srsearch=${encodeURIComponent(query)}&srlimit=${maxResults}`;
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-    });
-    if (!resp.ok) {
-      return {
-        ok: false,
-        content: null,
-        error: { code: 'WIKI_HTTP_ERROR', message: `Wikipedia Search HTTP ${resp.status}` },
-      };
+  // Try FR Wikipedia first; if empty, fall back to EN Wikipedia.
+  for (const lang of ['fr', 'en'] as const) {
+    try {
+      const apiUrl =
+        `https://${lang}.wikipedia.org/w/api.php` +
+        `?action=query&list=search&format=json&origin=*` +
+        `&srsearch=${encodeURIComponent(query)}&srlimit=${maxResults}`;
+      const resp = await fetch(apiUrl, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      });
+      if (!resp.ok) {
+        if (lang === 'en') {
+          return {
+            ok: false,
+            content: null,
+            error: { code: 'WIKI_HTTP_ERROR', message: `Wikipedia Search HTTP ${resp.status}` },
+          };
+        }
+        // FR failed with HTTP error — try EN
+        continue;
+      }
+      const data: WikiSearchResponse = await resp.json();
+      const results = parseWikiSearchJson(data, maxResults, lang);
+      // If FR returned results, use them; if empty, try EN
+      if (results.length > 0 || lang === 'en') {
+        return { ok: true, content: results, error: null };
+      }
+    } catch (err) {
+      if (lang === 'en') {
+        return {
+          ok: false,
+          content: null,
+          error: { code: 'BROWSER_SEARCH_FAILED', message: String(err) },
+        };
+      }
+      // FR threw — try EN
     }
-    const data: WikiSearchResponse = await resp.json();
-    const results = parseWikiSearchJson(data, maxResults);
-    return { ok: true, content: results, error: null };
-  } catch (err) {
-    return {
-      ok: false,
-      content: null,
-      error: { code: 'BROWSER_SEARCH_FAILED', message: String(err) },
-    };
   }
+  return { ok: true, content: [], error: null };
 }
 
 /**

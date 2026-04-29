@@ -361,7 +361,7 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
     vi.unstubAllGlobals();
   });
 
-  it('appelle /api/wiki-search et retourne les résultats Wikipedia parsés', async () => {
+  it('appelle Wikipedia FR directement et retourne les résultats parsés', async () => {
     fetchMock.mockResolvedValueOnce(
       makeFetchSuccess(makeWikiJson([
         { title: 'Intelligence artificielle', snippet: 'Capacité des <b>systèmes</b> computationnels.' },
@@ -373,18 +373,24 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
     const result = await webSearch('intelligence artificielle', 5);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/wiki-search?srsearch=intelligence%20artificielle&srlimit=5',
+      expect.stringContaining('fr.wikipedia.org/w/api.php'),
       expect.objectContaining({ method: 'GET' })
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('srsearch=intelligence%20artificielle'),
+      expect.anything()
     );
     expect(result.ok).toBe(true);
     expect(result.content!.length).toBe(2);
     expect(result.content![0].title).toBe('Intelligence artificielle');
-    expect(result.content![0].url).toBe('https://en.wikipedia.org/wiki/Intelligence_artificielle');
+    expect(result.content![0].url).toBe('https://fr.wikipedia.org/wiki/Intelligence_artificielle');
     expect(result.content![0].snippet).toBe('Capacité des systèmes computationnels.');
     expect(safeInvokeCanonicalMock).not.toHaveBeenCalled();
   });
 
   it('utilise maxResults=10 par défaut', async () => {
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
+    // EN fallback (FR returns empty)
     fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
 
     const { webSearch } = await import('../webResearchService');
@@ -396,6 +402,8 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
 
   it('encode les caractères spéciaux dans la requête', async () => {
     fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
+    // EN fallback (FR empty)
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
 
     const { webSearch } = await import('../webResearchService');
     await webSearch('quantum & AI > 2024', 5);
@@ -405,7 +413,9 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
     expect(calledUrl).not.toContain(' & ');
   });
 
-  it('retourne WIKI_HTTP_ERROR si le proxy renvoie HTTP 503', async () => {
+  it('retourne WIKI_HTTP_ERROR si Wikipedia renvoie HTTP 503', async () => {
+    // Both FR and EN fail with 503
+    fetchMock.mockResolvedValueOnce(makeFetchError(503));
     fetchMock.mockResolvedValueOnce(makeFetchError(503));
 
     const { webSearch } = await import('../webResearchService');
@@ -418,6 +428,8 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
   });
 
   it('retourne BROWSER_SEARCH_FAILED si fetch lève une TypeError', async () => {
+    // Both FR and EN throw
+    fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'));
     fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'));
 
     const { webSearch } = await import('../webResearchService');
@@ -431,6 +443,7 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
 
   it('retourne BROWSER_SEARCH_FAILED si fetch lève une AbortError', async () => {
     fetchMock.mockRejectedValueOnce(new DOMException('Aborted', 'AbortError'));
+    fetchMock.mockRejectedValueOnce(new DOMException('Aborted', 'AbortError'));
 
     const { webSearch } = await import('../webResearchService');
     const result = await webSearch('aborted', 5);
@@ -440,6 +453,8 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
   });
 
   it('retourne ok:true avec content:[] si Wikipedia retourne search:[]', async () => {
+    // FR empty, EN empty → ok:true content:[]
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess({ query: { search: [] } }));
     fetchMock.mockResolvedValueOnce(makeFetchSuccess({ query: { search: [] } }));
 
     const { webSearch } = await import('../webResearchService');
@@ -494,7 +509,7 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
     expect(result.content!.length).toBe(1);
   });
 
-  it('génère les URLs Wikipedia correctement (espaces → underscores)', async () => {
+  it('génère les URLs Wikipedia FR correctement (espaces → underscores)', async () => {
     fetchMock.mockResolvedValueOnce(
       makeFetchSuccess(makeWikiJson([{ title: 'Réseau de neurones', snippet: 'Modèle.' }]))
     );
@@ -502,7 +517,7 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
     const { browserWebSearch } = await import('../webResearchService');
     const result = await browserWebSearch('neurones', 5);
 
-    expect(result.content![0].url).toContain('wikipedia.org/wiki/');
+    expect(result.content![0].url).toContain('fr.wikipedia.org/wiki/');
     expect(result.content![0].url).toContain('neurones');
   });
 
@@ -536,6 +551,8 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
   });
 
   it('retourne [] si query.search est absent dans la réponse', async () => {
+    // FR returns no results → EN fallback also returns no results
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess({ query: {} }));
     fetchMock.mockResolvedValueOnce(makeFetchSuccess({ query: {} }));
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -546,6 +563,8 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
   });
 
   it('retourne [] si query est absent (JSON malformé)', async () => {
+    // FR returns no results → EN fallback also returns no results
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess({}));
     fetchMock.mockResolvedValueOnce(makeFetchSuccess({}));
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -556,6 +575,8 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
   });
 
   it('retourne WIKI_HTTP_ERROR sur HTTP 404', async () => {
+    // Both FR and EN fail
+    fetchMock.mockResolvedValueOnce(makeFetchError(404));
     fetchMock.mockResolvedValueOnce(makeFetchError(404));
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -567,6 +588,7 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
   });
 
   it('retourne WIKI_HTTP_ERROR sur HTTP 429 (rate limit)', async () => {
+    fetchMock.mockResolvedValueOnce(makeFetchError(429));
     fetchMock.mockResolvedValueOnce(makeFetchError(429));
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -592,6 +614,8 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
 
   it('construit l\'URL fetch avec srlimit correct', async () => {
     fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
+    // EN fallback (FR empty)
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
 
     const { browserWebSearch } = await import('../webResearchService');
     await browserWebSearch('test srlimit', 7);
@@ -599,6 +623,7 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
     const calledUrl = (fetchMock.mock.calls[0] as [string, unknown])[0];
     expect(calledUrl).toContain('srlimit=7');
     expect(calledUrl).toContain('srsearch=');
+    expect(calledUrl).toContain('fr.wikipedia.org');
   });
 });
 
@@ -727,13 +752,16 @@ describe('webSearch — concurrence et edge cases', () => {
 
   it('requête très longue (1000 chars) envoyée sans erreur', async () => {
     isTauriAvailableMock.mockReturnValue(false);
+    // FR returns empty → EN fallback also tried (2 calls total)
+    fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
     fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
 
     const { webSearch } = await import('../webResearchService');
     const result = await webSearch('a'.repeat(1000), 5);
 
     expect(result).toBeDefined();
-    expect(fetchMock).toHaveBeenCalledOnce();
+    // FR + EN fallback = 2 calls when results are empty
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it('Unicode japonais est encodé en URL', async () => {
