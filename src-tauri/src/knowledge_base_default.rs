@@ -558,6 +558,12 @@ const PSYCHIATRIE_CLINIQUE_DIAGNOSTICS: &str =
 // ── v31.5.0 expansion — phase 34 (neuropsychologie, mémoire et cerveau) ──
 const NEUROPSYCHOLOGIE_MEMOIRE_CERVEAU: &str =
     include_str!("../../data/knowledge_base/default/neuropsychologie_memoire_cerveau.json");
+// ── v31.5.1 expansion — phase 35 (philosophie, éthique et existentialisme) ──
+const PHILOSOPHIE_ETHIQUE_EXISTENTIELLE: &str =
+    include_str!("../../data/knowledge_base/default/philosophie_ethique_existentielle.json");
+// ── v31.5.2 expansion — phase 35 (relations humaines et groupes sociaux) ──
+const RELATIONS_HUMAINES_GROUPES_SOCIAUX: &str =
+    include_str!("../../data/knowledge_base/default/relations_humaines_groupes_sociaux.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1134,6 +1140,15 @@ impl DefaultKnowledgeBase {
             "neuropsychologie_memoire_cerveau",
             NEUROPSYCHOLOGIE_MEMOIRE_CERVEAU,
         ),
+        // v31.5.1+31.5.2 expansion — phase 35 (philosophie éthique + relations sociales)
+        (
+            "philosophie_ethique_existentielle",
+            PHILOSOPHIE_ETHIQUE_EXISTENTIELLE,
+        ),
+        (
+            "relations_humaines_groupes_sociaux",
+            RELATIONS_HUMAINES_GROUPES_SOCIAUX,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1462,7 +1477,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 213,
+            result.entries_loaded >= 215,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1588,6 +1603,7 @@ mod tests {
             "performance_cognitive",
             "peuples_anciens_mystiques",
             "philosophie_cognitive",
+            "philosophie_ethique_existentielle",
             "photographie_analyse_image",
             "plantes_medicinales_aromatherapie",
             "plein_potentiel_peak_performance",
@@ -1648,6 +1664,7 @@ mod tests {
             "therapies_trauma_avancees",
             "traumatologie_complexe",
             "troubleshooting_faq",
+            "relations_humaines_groupes_sociaux",
             "web_design_ui_ux",
             "yoga_pratique",
         ];

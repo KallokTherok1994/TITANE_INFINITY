@@ -1,0 +1,129 @@
+{
+  "version": "v31.5.1",
+  "category": "philosophie_ethique_existentielle",
+  "description": "Philosophie existentielle et éthique appliquée à la psychologie : existentialisme (Sartre liberté/mauvaise foi/authenticité, Camus absurde/révolte, Heidegger être-dans-le-monde/être-vers-la-mort/authenticité), logothérapie Frankl (sens/volonté de sens/paradoxe intentionnel/vide existentiel), phénoménologie (Husserl intentionnalité, Merleau-Ponty corps-vécu), éthique du care (Noddings/Gilligan), déontologie kantienne (impératif catégorique), conséquentialisme utilitariste (Bentham/Mill/Singer), éthique des vertus aristotélicienne (eudaimonia, phronèse, nicomaque), philosophie stoïcienne appliquée (Épictète/Marc Aurèle/Sénèque, dichotomie contrôle), philosophie bouddhiste (dukkha, impermanence, pleine conscience), sagesse pratique et décision éthique clinique",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "existentialisme liberté authenticité",
+    "Sartre mauvaise foi être-pour-soi",
+    "Camus absurde révolte mythe de Sisyphe",
+    "Heidegger être-dans-le-monde Dasein",
+    "être-vers-la-mort Heidegger authenticité",
+    "angoisse existentielle angst",
+    "Frankl logothérapie sens de la vie",
+    "volonté de sens vide existentiel",
+    "Viktor Frankl Auschwitz Homme en quête de sens",
+    "logothérapie paradoxe intentionnel déréflexion",
+    "phénoménologie Husserl conscience intentionnelle",
+    "Merleau-Ponty corps-vécu schéma corporel",
+    "éthique du care Noddings Gilligan",
+    "relation soignant-soigné éthique",
+    "impératif catégorique Kant déontologie",
+    "devoir moral universel maxime",
+    "utilitarisme Bentham Mill Singer",
+    "conséquentialisme bien-être collectif",
+    "éthique des vertus Aristote",
+    "eudaimonia bonheur floraison humaine",
+    "phronèse sagesse pratique Aristote",
+    "vertu courage tempérance justice Aristote",
+    "stoïcisme philosophie pratique",
+    "Épictète dichotomie contrôle Manuel",
+    "Marc Aurèle pensées philosophie",
+    "Sénèque stoïcisme lettres Lucilius",
+    "amour fati acceptation stoïcien",
+    "philosophie bouddhiste dukkha souffrance",
+    "impermanence anicca bouddhisme",
+    "quatre nobles vérités bouddhisme",
+    "pleine conscience mindfulness bouddhisme",
+    "non-attachement équanimité bouddhiste",
+    "nihilisme Nietzsche mort de Dieu",
+    "volonté de puissance Nietzsche Zarathoustra",
+    "éternel retour Nietzsche surhumain",
+    "liberté responsabilité choix existentiel",
+    "authenticité croissance personnelle philosophie",
+    "identité personnelle continuité conscience",
+    "philosophie de l'identité personnelle Locke Parfit",
+    "sens du travail vie valeurs",
+    "question du sens psychologie existentielle",
+    "mort finitude acceptation philosophique",
+    "deuil mort philosophie stoïque",
+    "éthique clinique dilemme moral",
+    "autonomie bienveillance non-malfaisance justice bioéthique",
+    "principe de Beauchamp et Childress",
+    "decision ethique clinique four principles"
+  ],
+  "sections": {
+    "existentialisme_sartre_camus": {
+      "sartre": {
+        "etre_pour_soi": "Jean-Paul Sartre — 'L'existence précède l'essence' (1945): l'être humain n'a pas de nature fixée préalablement; il se définit par ses choix et ses actes. L'être-pour-soi (conscience) diffère de l'être-en-soi (chose). La conscience est néant — elle n'est pas ce qu'elle est, elle est ce qu'elle n'est pas",
+        "mauvaise_foi": "Fuir sa liberté en se racontant que l'on n'a pas le choix (se comporter comme une chose, comme l'être-en-soi). Exemples: le garçon de café qui joue à être garçon de café, la femme qui laisse sa main dans celle de l'homme sans décider. La mauvaise foi = mentir à soi-même sur sa liberté radicale",
+        "liberte_angoisse": "La liberté est totale et angoissante — 'condamné à être libre' — car elle implique une responsabilité absolue. L'angoisse est le vertige de la liberté (Kierkegaard). Aucune excuse, aucun destin, aucun Dieu ne peut décider à notre place",
+        "regard_autre": "L'enfer c'est les autres (Huis Clos): le regard d'autrui objectifie, me transforme en objet. Conflit fondamental avec autrui: chacun tente d'assimiler la liberté de l'autre. Intersubjectivité comme conflit ou comme reconnaissance (Beauvoir critique le sujet absolu)"
+      },
+      "camus_absurde": {
+        "absurde": "Albert Camus — L'absurde naît de la confrontation entre la soif humaine de clarté/sens et le silence déraisonnable du monde. Le monde n'est pas absurde en soi — l'absurde est la relation entre l'homme et le monde",
+        "mythe_sisyphe": "'Il faut imaginer Sisyphe heureux' (1942) — réponse à l'absurde: ni le suicide (fuite), ni le saut dans la foi (mauvaise foi), mais la révolte lucide. Assumer l'absurde, le vivre pleinement, se révolter sans espoir transcendant",
+        "revolte": "L'Homme Révolté (1951): la révolte affirme une valeur commune (solidarité humaine) même dans l'absurde. 'Je me révolte donc nous sommes.' La révolte solitaire devient solidarité — éthique de la mesure contre le nihilisme et la terreur révolutionnaire"
+      },
+      "heidegger_dasein": {
+        "etre_dans_le_monde": "Martin Heidegger (Être et Temps, 1927) — Dasein ('être-là'): l'humain est toujours déjà dans un monde, en relation avec les choses (Zuhandenheit — sous-la-main) et les autres. L'existence précède toujours l'essence — mais par la facticité, pas par liberté absolue sartréenne",
+        "etre_vers_la_mort": "La mort est la possibilité la plus propre, indépassable et certaine du Dasein. Être-vers-la-mort: assumer la mort comme possibilité ultime individuelle ouvre à l'authenticité. L'angoisse révèle le néant et brise le bavardage quotidien ('On')",
+        "authenticite": "Le Dasein inauthentique vit dans le 'On' (das Man) — la médiocrité, la conformité, le bavardage, la curiosité dispersée. L'authenticité = résolution anticipante, assumer sa facticité (passé), son projet (futur) et son être-dans-le-monde"
+      }
+    },
+    "frankl_logotherapie": {
+      "fondements": {
+        "volonte_de_sens": "Viktor Frankl (L'Homme en quête de sens, 1946) — 3ème école viennoise de psychothérapie après Freud (plaisir) et Adler (pouvoir). La motivation première de l'humain = trouver un sens à son existence. Le sens est unique, personnel, non interchangeable — et toujours trouvable même dans la souffrance",
+        "vide_existentiel": "Frustration existentielle: sentiment de vide et d'absurdité quand la volonté de sens est frustrée. Noögène névrose (névrose existentielle): dépression, agressivité, addiction à la triade contemporaine. Différent des névroses psychogènes",
+        "triade_tragique": "Souffrance, culpabilité, mort — les trois inévitables de l'existence. Frankl: il est toujours possible de trouver un sens malgré la triade tragique. 'Qui a un pourquoi peut supporter n'importe quel comment' (Nietzsche)"
+      },
+      "techniques": {
+        "intention_paradoxale": "Prescrire le symptôme — demander au patient anxieux de vouloir ce qu'il craint. Rompt le cercle vicieux anticipation anxieuse → symptôme → anticipation renforcée. Efficace phobie et TOC (Frankl 1960 → ancêtre de l'exposition avec prévention réponse)",
+        "dereflexion": "Déplacer l'attention du problème vers le sens de l'existence — ignorer le symptôme et orienter vers une tâche, une responsabilité. Contre l'hyperréflexivité (trop s'observer soi-même)",
+        "dialogue_socratique": "Amener le patient à découvrir lui-même ses propres valeurs et sens par questionnement maieutique. Respecter la liberté du patient de choisir son sens"
+      },
+      "application_clinique": "Logothérapie utile: dépression existentielle, deuil de sens (retraite, maladie chronique, deuil), addictions (vide existentiel), cancer/maladies terminales. Complémentaire TCC. Mesure de sens: PIL (Purpose in Life Test, Crumbaugh/Maholick)"
+    },
+    "ethique_classique": {
+      "deontologie_kant": {
+        "imperatif_categorique": "Emmanuel Kant (1724-1804) — Fondements de la métaphysique des mœurs (1785). 3 formulations: (1) 'Agis seulement d'après la maxime par laquelle tu peux vouloir en même temps qu'elle devienne une loi universelle.' (2) 'Agis de façon à traiter l'humanité, dans ta personne et dans celle de tout autre, toujours comme une fin, et jamais simplement comme un moyen.' (3) Législateur universel",
+        "bonne_volonte": "Seule la bonne volonté est bonne sans restriction — non les conséquences. Le devoir pour le devoir. L'autonomie morale: agir selon sa propre loi rationnelle universalisable, pas par inclination ou peur des conséquences",
+        "application": "Bioéthique: respect de l'autonomie du patient = traiter autrui comme fin en soi. Interdit la tromperie, la manipulation même 'bienveillante'. Fondement du consentement éclairé"
+      },
+      "utilitarisme": {
+        "bentham_mill": "Jeremy Bentham (calcul hédonique — maximiser plaisir, minimiser douleur) → John Stuart Mill (plaisirs supérieurs intellectuels > plaisirs inférieurs). 'La plus grande quantité de bonheur pour le plus grand nombre'",
+        "peter_singer": "Éthique des préférences: maximiser la satisfaction des préférences de tous les êtres capables de souffrir (élargissement du cercle moral aux animaux). Efficacité altruiste: donner là où l'impact est maximal",
+        "limites": "Tyranie de la majorité, justice distributive, droits individuels sacrifiés pour le bien commun, calculabilité illusoire des plaisirs"
+      },
+      "ethique_vertus_aristote": {
+        "eudaimonia": "Aristote (Éthique à Nicomaque) — Eudaimonia: floraison humaine, bonheur en acte = exercice des vertus selon l'excellence (arête). Différent du plaisir hédoniste — bonheur comme activité de l'âme selon la vertu",
+        "vertus": "Vertus cardinales: courage (médiocre entre lâcheté et témérité), justice, tempérance, prudence. Vertu comme habitude acquise (hexis): 'c'est en faisant des actes courageux qu'on devient courageux'. Les vertus s'acquièrent par pratique et s'abiment par déssuétude",
+        "phronesis": "Phronèse (sagesse pratique) — vertu dianoétique suprême: capacité de délibérer correctement sur ce qui est bon dans des situations particulières. Non réductible à des règles universelles. Vertu du praticien, du thérapeute, du sage"
+      },
+      "ethique_care": "Carol Gilligan (1982, 'In a Different Voice') — critique Kohlberg: les femmes raisonnent en termes de relations et de responsabilité (éthique du care) plutôt que de droits et de règles abstraites. Nel Noddings: le care comme relation de sollicitude — attention à l'autre, réponse à ses besoins. Applicabilité: soins infirmiers, travail social, psychothérapie — relation thérapeutique comme acte de care"
+    },
+    "stoicisme_applique": {
+      "dichotomie_controle": "Épictète (Manuel, Ier s. apr. J.-C.) — 'Ce qui dépend de nous' (notre jugement, désir, volonté — eph' hèmin) vs 'Ce qui ne dépend pas de nous' (corps, réputation, richesse, mort). La sagesse = ne vouloir que ce qui dépend de soi → imperturbabilité (ataraxie). Base conceptuelle de la TCC (distinguer ce qu'on peut et ne peut pas contrôler)",
+      "marc_aurele": "Marc Aurèle (Pensées pour moi-même, IIe s.) — journalisation quotidienne comme pratique stoïcienne. 'La vie intérieure est le seul lieu de liberté véritable.' Amor fati: aimer ce qui arrive, même la souffrance. 'Ne perds pas de temps à imaginer comment serait le parfait idéal'",
+      "senèque": "Sénèque (Lettres à Lucilius) — 'Dum differtur vita transcurrit' — pendant qu'on diffère, la vie passe. La brièveté de la vie n'est pas un problème objectif mais de mauvais usage du temps. Memento mori comme outil de présence, non de morbidité",
+      "stoicisme_moderne": "Ryan Holiday (The Obstacle is the Way) — vulgarisation stoïcienne. Thérapie d'acceptation et d'engagement (ACT) = stoïcisme + pleine conscience: accepter ce qu'on ne contrôle pas, agir selon ses valeurs. CBT de Beck: restructuration cognitive ← sujétion aux jugements (pas aux faits) = Épictète"
+    },
+    "philosophie_bouddhiste": {
+      "quatre_nobles_verites": "(1) Dukkha: la vie comporte inévitablement souffrance, insatisfaction, imperfection — naissance, vieillesse, maladie, mort, séparation, ne pas obtenir ce qu'on désire. (2) Samudaya: la souffrance a une cause — le désir (tanha), l'attachement, l'ignorance. (3) Nirodha: la souffrance peut cesser — la cessation de l'attachement est possible. (4) Magga: la Voie qui mène à la cessation — Noble Chemin Octuple",
+      "impermanence_non_soi": "Anicca (impermanence): tout phénomène est transitoire — attacher son bonheur à ce qui est impermanent = souffrir. Anatta (non-soi): l'idée d'un soi fixe et permanent est une illusion — le 'moi' est un flux de processus. Outil thérapeutique: déprise de l'identité rigide, des émotions ('je suis ma colère' → 'il y a de la colère')",
+      "pleine_conscience_bouddhiste": "Sati (pleine conscience) — attention intentionnelle, au moment présent, sans jugement. Pratique fondatrice du bouddhisme Theravada. MBSR (Kabat-Zinn) = adaptation sécularisée. Applications: dépression (prévention rechutes MBCT), douleur chronique, anxiété, régulation émotionnelle",
+      "compassion": "Karuna (compassion) = sensibilité à la souffrance + désir de la soulager. Metta (bienveillance aimante). Méditation compassion → activation insula/cingulaire antérieur. Self-compassion (Kristin Neff): appliquer la compassion à soi-même = protection santé mentale"
+    },
+    "nietzsche_volonte": {
+      "mort_dieu": "Friedrich Nietzsche ('Dieu est mort, Dieu reste mort, et c'est nous qui l'avons tué' — Le Gai Savoir, 1882): la mort de Dieu = effondrement des valeurs absolues transcendantes qui fondaient le sens occidental. Nihilisme passif (désespoir) vs nihilisme actif (créer de nouvelles valeurs)",
+      "volonte_puissance": "Wille zur Macht — non pas domination des autres mais auto-dépassement, création, croissance. Tout être vivant cherche à actualiser ses potentialités. Proche de l'actualisation de soi (Maslow) et de la conation (Spinoza)",
+      "surhomme_eternel_retour": "Übermensch: l'humain qui crée ses propres valeurs après la mort de Dieu — non un type biologique mais une figure de l'affirmation. Éternel retour: peux-tu vouloir que chaque moment de ta vie revienne infiniment? Outil de discernement — aimer sa vie telle qu'elle est",
+      "genealogie_morale": "Morale du maître (affirmation: bon/mauvais) vs morale de l'esclave (réaction: bien/mal — ressentiment). La culpabilité, l'ascétisme, l'idéal du sacrifice = mécanismes de domination des forts par les faibles. Importance pour comprendre la honte/culpabilité pathologiques en clinique"
+    },
+    "bioethique_clinique": {
+      "quatre_principes": "Beauchamp & Childress (Principles of Biomedical Ethics, 1979) — cadre dominant bioéthique: (1) Autonomie: respecter la capacité de décision informée du patient; (2) Bienfaisance: agir dans l'intérêt du patient; (3) Non-malfaisance: primum non nocere; (4) Justice: équité dans la distribution des ressources et soins",
+      "dilemmes_cliniques": "Consentement éclairé: valide si informé, libre, compétent. Confidentialité et limites (danger tiers — Tarasoff duty to warn). Fin de vie: autonomie vs bienfaisance (acharnement thérapeutique), euthanasie active/passive/suicide assisté. Double effet: intentionnel vs prévisible",
+      "ethique_psychotherapeutique": "Neutralité bienveillante vs directivité, transfert/contre-transfert, limites du cadre, secret professionnel, compétence. Éthique vertus: le thérapeute vertueux (Meara/Schmidt) vs éthique des principes. Décision éthique partagée en psychiatrie: soins sans consentement justification"
+    }
+  }
+}

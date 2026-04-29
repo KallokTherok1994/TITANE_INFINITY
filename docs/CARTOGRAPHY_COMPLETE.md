@@ -1566,7 +1566,9 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 | `data/knowledge_base/default/psychosomatique_corps_esprit.json` | KB JSON | v31.4.8 | 7 | 46 |
 | `data/knowledge_base/default/psychiatrie_clinique_diagnostics.json` | KB JSON | v31.4.9 | 7 | 46 |
 | `data/knowledge_base/default/neuropsychologie_memoire_cerveau.json` | KB JSON | v31.5.0 | 7 | 46 |
-| `src-tauri/src/knowledge_base_default.rs` | Rust | +12 consts +12 SOURCES, baseline >=213 | — | — |
+| `data/knowledge_base/default/philosophie_ethique_existentielle.json` | KB JSON | v31.5.1 | 7 | 47 |
+| `data/knowledge_base/default/relations_humaines_groupes_sociaux.json` | KB JSON | v31.5.2 | 7 | 47 |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +14 consts +14 SOURCES, baseline >=215 | — | — |
 | `src-tauri/src/commands/ide_operator.rs` | Rust fix | E0505 borrow-after-move | — | — |
 | `src/__tests__/services/ai/kb.tccResilience.test.ts` | Vitest | 53 PASS (p29) | — | — |
 | `src/__tests__/services/ai/kb.neurodiversiteDbt.test.ts` | Vitest | 51 PASS (p30) | — | — |
@@ -1574,5 +1576,6 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 | `src/__tests__/services/ai/kb.addictionCouples.test.ts` | Vitest | 50 PASS (p32) | — | — |
 | `src/__tests__/services/ai/kb.enfantPsychosomatique.test.ts` | Vitest | 55 PASS (p33) | — | — |
 | `src/__tests__/services/ai/kb.psychiatrieNeuropsycho.test.ts` | Vitest | 66 PASS (p34) | — | — |
+| `src/__tests__/services/ai/kb.philosophieRelations.test.ts` | Vitest | 104 PASS (p35) | — | — |
 
-Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30) → humaniste/existentiel + psychodynamique (p31) → addiction/EM + intimite/sexualite/EFT (p32) → developpement enfant/parentalite + psychosomatique corps-esprit (p33) → psychiatrie clinique diagnostics + neuropsychologie memoire cerveau (p34)
+Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30) → humaniste/existentiel + psychodynamique (p31) → addiction/EM + intimite/sexualite/EFT (p32) → developpement enfant/parentalite + psychosomatique corps-esprit (p33) → psychiatrie clinique diagnostics + neuropsychologie memoire cerveau (p34) → philosophie ethique existentielle + relations humaines groupes sociaux (p35)

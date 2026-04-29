@@ -1,0 +1,123 @@
+{
+  "version": "v31.5.2",
+  "category": "relations_humaines_groupes_sociaux",
+  "description": "Psychologie sociale avancée et dynamiques de groupe : influence sociale (conformité Asch, obéissance Milgram, bystander effect Darley/Latané), cognition sociale (dissonance cognitive Festinger, théorie de l'attribution, biais fondamental d'attribution), identité sociale et intergroupes (Tajfel identité sociale, contact intergroupe Allport, stéréotypes/préjugés), dynamiques de groupe (pensée de groupe Janis, facilitation sociale Zajonc, leadership transformationnel/transactionnel), manipulation et influence (Cialdini 6 principes), intelligence émotionnelle (Goleman modèles), communication interpersonnelle (CNV/écoute active/assertivité), attachement adulte en contexte relationnel, réseaux sociaux et solitude",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "conformité sociale Asch expérience lignes",
+    "obéissance autorité Milgram chocs électriques",
+    "bystander effect effet spectateur",
+    "Darley Latané diffusion responsabilité",
+    "dissonance cognitive Festinger",
+    "réduction dissonance justification",
+    "attribution causale erreur fondamentale",
+    "biais fondamental attribution",
+    "théorie attribution Heider Weiner",
+    "identité sociale Tajfel Turner",
+    "catégorisation sociale endogroupe exogroupe",
+    "stéréotypes préjugés discrimination",
+    "contact intergroupe Allport hypothèse",
+    "pensée de groupe groupthink Janis",
+    "facilitation sociale inhibition Zajonc",
+    "leadership transformationnel transactionnel",
+    "dynamiques de groupe cohésion",
+    "influence sociale normative informationnelle",
+    "Cialdini influence persuasion",
+    "réciprocité engagement cohérence preuve sociale",
+    "manipulation psychologique techniques",
+    "pied-dans-la-porte amorçage technique",
+    "intelligence émotionnelle Goleman",
+    "modèle Salovey Mayer intelligence émotionnelle",
+    "empathie affective cognitive",
+    "communication assertive affirmation soi",
+    "CNV communication non-violente Rosenberg",
+    "écoute active Rogers",
+    "attachement adulte style sécurisant anxieux évitant",
+    "relation intime couple communication",
+    "solitude isolement social",
+    "réseaux sociaux comparaison sociale",
+    "soutien social santé mentale",
+    "capital social Putnam réseau",
+    "altruisme prosocialité aide",
+    "agression violence théorie apprentissage social",
+    "Bandura apprentissage social observation",
+    "modeling imitation apprentissage",
+    "norme sociale pression conformité",
+    "déviance sociale marginalité",
+    "pouvoir social French Raven",
+    "négociation conflit résolution",
+    "coopération compétition dilemme prisonnier",
+    "jeux psychologiques Berne analyse transactionnelle",
+    "positions de vie analyse transactionnelle",
+    "triangle dramatique Karpman",
+    "cohésion groupale performance équipe"
+  ],
+  "sections": {
+    "influence_sociale_classique": {
+      "conformite_asch": {
+        "experience": "Solomon Asch (1951) — lignes de longueur comparative: 75% des sujets se conforment au moins une fois à l'unanimité du groupe même quand le groupe a tort. 37% de conformité sur l'ensemble des essais critiques. Conflit entre perception directe et pression sociale",
+        "types_influence": "Influence informationnelle: incertitude → suivre le groupe comme source d'information correcte. Influence normative: conformité pour éviter rejet, maintenir appartenance — même quand on sait que le groupe a tort. Distincter conformité publique (comportement) vs acceptation privée (croyance)",
+        "alliee_conformite": "Un seul allié suffît à briser la conformité quasi-totalement (Asch). Minorité consistante peut influencer la majorité (Moscovici) — influence minoritaire nécessite consistance, certitude, perméabilité au doute"
+      },
+      "obeissance_milgram": {
+        "experience": "Stanley Milgram (1963) — chocs électriques de 15 à 450V administrés à un acteur sur ordre d'un expérimentateur en blouse blanche. 65% des sujets administrent la dose maximale (mortelle). Résultats choquants — 'la banalité du mal' (Hannah Arendt/Milgram)",
+        "facteurs_obeissance": "Légitimité de l'autorité (institution Yale), proximité de la victime (moins visible = plus obéissant), présence physique de l'expérimentateur, absence d'allié rebelle. Distance morale: responsabilité diluée ('j'obéis aux ordres')",
+        "lecons": "L'obéissance destructrice n'est pas réservée aux personnalités autoritaires — elle est situationnelle. Zimbardo (Stanford Prison Experiment 1971, validité controversée): le rôle crée le comportement. Prévention: conscience du processus, allié, responsabilisation individuelle"
+      },
+      "bystander_effect": "Bibb Latané et John Darley (1968) — meurtre Kitty Genovese (38 témoins, personne n'appelle). Expériences: épilepsie feinte en groupe vs seul. 2 mécanismes: (1) diffusion de responsabilité — 'quelqu'un d'autre va aider'; (2) influence pluraliste — 'les autres n'ont pas l'air alarmés donc ça va'. Plus le groupe est grand, moins l'aide est probable. Contre-mesure: désigner nommément une personne"
+    },
+    "cognition_sociale_biais": {
+      "dissonance_cognitive": {
+        "festinger": "Leon Festinger (1957) — cognitions incompatibles créent une tension psychologique inconfortable (dissonance). Motivation à réduire la dissonance par: (1) changer une croyance, (2) ajouter une cognition consonante, (3) minimiser l'importance. Expérience 1$/20$: ceux payés 1$ pour mentir changent davantage leur attitude que ceux payés 20$ (justification insuffisante)",
+        "applications": "Justification post-hoc de comportements (consommation, vote, comportements de santé), initiation difficile → attachement au groupe, escalade de l'engagement (coûts irrécupérables), auto-tromperie, attitudes racistes réduites par comportements pro-sociaux forcés (jeu de rôle de contact)"
+      },
+      "attribution": {
+        "erreur_fondamentale": "Lee Ross (1977) — fundamental attribution error: tendance à attribuer le comportement d'autrui à ses dispositions (caractère, personnalité) plutôt qu'aux facteurs situationnels, tout en faisant l'inverse pour soi (biais acteur-observateur). Exemple: 'Il est en retard parce qu'il est irresponsable' vs 'Je suis en retard parce que la circulation était dense'",
+        "biais_auto_favorable": "Attribuer ses succès à des facteurs internes (capacité, effort) et ses échecs à des facteurs externes (malchance, difficulté). Protège l'estime de soi. Excessif dans la dépression (biais inverse)",
+        "weiner": "Modèle de Weiner: attribution en 3 dimensions — locus (interne/externe), stabilité (stable/instable), contrôlabilité. Prédictions motivationnelles: succès attribué interne stable → fierté, efficacité; échec attribué interne stable → désespoir, learned helplessness"
+      }
+    },
+    "identite_sociale_intergroupe": {
+      "tajfel_turner": {
+        "theorie_identite_sociale": "Henri Tajfel et John Turner (1979) — Social Identity Theory: une partie de l'identité de soi provient de l'appartenance à des groupes. Processus: (1) catégorisation sociale (endogroupe/exogroupe); (2) identification sociale (investissement émotionnel dans l'appartenance); (3) comparaison sociale (favoriser son groupe pour maintenir une identité positive)",
+        "favoritisme_intragroupe": "Paradigme du groupe minimal (Tajfel): même pour des groupes artificiels et insignifiants, les sujets favorisent leurs membres et discriminent les autres. La simple catégorisation suffit pour créer le biais intergroupe. Conséquence: racisme, sexisme, nationalisme comme mécanismes d'identité sociale"
+      },
+      "hypothese_contact_allport": "Gordon Allport (1954) — contact intergroupe réduit les préjugés si: (1) statut égal entre groupes dans la situation; (2) coopération vers un but commun; (3) soutien institutionnel; (4) potentiel de connaissance interpersonnelle. Méta-analyse (Pettigrew/Tropp 2006): 94% des études confirment réduction préjugés par contact. Application: écoles intégrées, équipes de travail mixtes",
+      "stereotypes_prejuges": "Stéréotypes: croyances généralisées sur le groupe (cognitif). Préjugés: attitudes négatives envers le groupe (affectif). Discrimination: traitement différentiel (comportemental). Menace du stéréotype (Claude Steele): les membres d'un groupe stigmatisé performent moins bien quand le stéréotype est saillant (test de QI noir, mathématiques femmes)"
+    },
+    "dynamiques_de_groupe": {
+      "pensee_de_groupe": "Irving Janis (1972) — groupthink: désir de cohésion et conformité du groupe prime sur l'évaluation réaliste. Symptômes: illusion d'invulnérabilité, rationalisation collective, stéréotypage des exogroupe, autocensure, illusion d'unanimité, gardiens de la pensée. Exemples: Baie des Cochons, Challenger. Prévention: avocat du diable, sous-groupes indépendants, leader neutre",
+      "facilitation_sociale": "Robert Zajonc (1965) — présence d'autrui augmente l'arousal → facilite les réponses dominantes (bien apprises) et inhibe les non-dominantes (difficiles). Facilitation si tâche simple/habituée; inhibition si tâche complexe/apprenante. Social loafing (paresse sociale, Latané): diminution d'effort individuel dans un groupe (responsabilité diluée)",
+      "leadership": {
+        "transformationnel": "Burns (1978)/Bass: leadership transformationnel — inspire, motive, vision, challenge intellectuel, attention individualisée. Oppose leadership transactionnel (échange, récompense conditionnelle). Corrèle à la performance et satisfaction d'équipe",
+        "situationnel": "Hersey/Blanchard: adapter le style de leadership au niveau de maturité du collaborateur (directive → persuasive → participative → délégatrice). Pas de style universel",
+        "servant_leadership": "Greenleaf: le leader sert d'abord, commande ensuite. Valeurs: écoute, empathie, soin, croissance des membres, construction communauté"
+      }
+    },
+    "influence_persuasion_manipulation": {
+      "cialdini_6_principes": {
+        "reciprocite": "Donner quelque chose crée une obligation de rendre — cadeaux, échantillons gratuits, concessions. Puissant et universel culturellement",
+        "engagement_coherence": "Une fois engagé (écrit, public, volontaire) → pression à rester cohérent avec soi-même. Pied-dans-la-porte: petite demande → grosse demande. Foot-in-the-door",
+        "preuve_sociale": "Sous incertitude, regarder ce que font les autres. Applaudissements en conserve, témoignages clients, '. 9 personnes sur 10 recommandent'. Puissant si similarité avec le groupe de référence",
+        "autorite": "Obéir aux experts et aux symboles d'autorité (blouse blanche, titre). Base: économie cognitive — déléguer à l'expert. Manipulation: faux experts, symboles d'autorité sans fond",
+        "sympathie": "On se laisse convaincre par ceux qu'on aime: attractivité physique, similarité, compliments sincères, familiarité (simple exposition), association",
+        "rarete": "Ce qui est rare ou en voie de disparition est plus désirable. FOMO (fear of missing out). Offre limitée, date limite, édition exclusive"
+      },
+      "techniques_manipulation": "Amorçage (low-balling): obtenir un accord sur conditions favorables puis changer les conditions. Porte-dans-le-nez: demande excessive refusée → demande raisonnable accordée (réciprocité de concession). Double contrainte: choix illusoire entre deux options favorables à l'autre. Gaslighting: manipulation de la perception de la réalité"
+    },
+    "intelligence_emotionnelle_empathie": {
+      "modeles_IE": {
+        "salovey_mayer": "Peter Salovey et John Mayer (1990) — modèle académique de l'IE: 4 branches hiérarchiques: (1) Percevoir les émotions (visage, voix, images); (2) Utiliser les émotions pour faciliter la pensée; (3) Comprendre les émotions (vocabulaire, complexité, progression); (4) Gérer les émotions (propres et d'autrui). Mesure: MSCEIT (performance)",
+        "goleman": "Daniel Goleman (1995, EQ) — popularisation: 5 domaines: conscience de soi, maîtrise de soi, motivation intrinsèque, empathie, compétences sociales. Claim: IE prédit mieux la réussite que le QI (nuancé par la recherche — dépend du domaine). Mesure: auto-rapport (Bar-On EQ-i)",
+        "empathie": "Composantes: empathie affective (résonance émotionnelle, contagion émotionnelle — neurones miroirs Rizzolatti), empathie cognitive (perspective-taking, ToM — théorie de l'esprit), empathie compassionnelle (désir d'agir). Excès empathie affective → burnout soignant. Nécessité d'auto-régulation émotionnelle + self-compassion"
+      },
+      "communication_assertive": "Affirmer ses besoins, opinions et droits de manière directe, honnête et respectueuse — ni agressive, ni soumise. Technique DESC (Bower): Décrire, Exprimer, Spécifier, Conséquences. CNV (Rosenberg): Observation-Sentiment-Besoin-Demande. Écoute active Rogers: reflet, reformulation, clarification, silence — conditions nécessaires et suffisantes Carl Rogers"
+    },
+    "reseaux_solitude_soutien": {
+      "soutien_social": "Cohen/Wills (1985) — buffer hypothesis: le soutien social atténue l'impact du stress sur la santé. Types: soutien émotionnel, instrumental, informationnel, évaluatif. Berkman/Syme (1979) — étude Alameda: isolement social = facteur de risque mortalité aussi important que tabac. Holt-Lunstad (2015): solitude augmente mortalité de 26%",
+      "solitude": "Cacioppo/Hawkley — solitude (perçue, non objective) = douleur sociale évolutive signalant besoin de reconnexion. Active les mêmes circuits cérébraux que la douleur physique. Hypervigilance aux menaces sociales. Chronique → inflammation, perturbation sommeil, dépression, déclin cognitif",
+      "reseaux_sociaux_numeriques": "Comparaison sociale ascendante (Instagram) → baisse estime de soi chez adolescents (Twenge, Haidt). Paradoxe: connexion numérique ≠ sentiment de connexion (Turkle). FOMO. Curage des émotions négatives. Chambre d'écho et polarisation",
+      "attachement_adulte": "Hazan/Shaver (1987) — styles d'attachement adulte romantique: sécurisant (50%), anxieux-préoccupé (20%), évitant-détaché (25%), désorganisé (5%). ECR (Expériences dans les Relations Proches). Modèles internes opérants (Bowlby) → filtrent les expériences relationnelles. Thérapie attachment-focused: sécuriser la base"
+    }
+  }
+}

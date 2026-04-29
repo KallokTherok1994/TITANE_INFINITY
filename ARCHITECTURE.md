@@ -565,6 +565,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts DEVELOPPEMENT_ENFANT_PARENTALITE + PSYCHOSOMATIQUE_CORPS_ESPRIT, +2 SOURCES entries, baseline >=209 -> >=211, expected list updated (phase 33)
 - Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=211 validated)
 - `knowledge_base_default.rs`: +2 consts PSYCHIATRIE_CLINIQUE_DIAGNOSTICS + NEUROPSYCHOLOGIE_MEMOIRE_CERVEAU, +2 SOURCES entries, baseline >=211 -> >=213, expected list updated (phase 34)
+- `knowledge_base_default.rs`: +2 consts PHILOSOPHIE_ETHIQUE_EXISTENTIELLE + RELATIONS_HUMAINES_GROUPES_SOCIAUX, +2 SOURCES entries, baseline >=213 -> >=215, expected list updated (phase 35)
 - Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=213 validated)
 
 ### Tests Rule 16
