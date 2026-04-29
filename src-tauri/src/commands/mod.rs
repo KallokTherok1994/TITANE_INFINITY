@@ -84,6 +84,7 @@ pub mod capability_commands; // ✅ LOCK 4: Capability registry (get_all_capabil
 pub mod dashboard_metrics_commands;
 pub mod desktop_perception; // ✅ LOCK 5: DESKTOP_SCOPED_OPERATOR_V1 — governed desktop perception
 pub mod http_commands;
+pub mod ide_operator; // ✅ LOCK 6: IDE_OPERATOR_V1 — governed IDE/dev relay (session binding, repo inspection)
 pub mod identity_commands;
 pub mod job_operator; // ✅ LOCK 4: LONG_TASK_RELAY_V1 — governed job kernel IPC
 pub mod security;

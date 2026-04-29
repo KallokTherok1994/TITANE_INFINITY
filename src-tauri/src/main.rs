@@ -2910,6 +2910,21 @@ fn main() {
             commands::job_operator::job_get_config,
 
             // ═══════════════════════════════════════════════════════════════
+            // IDE OPERATOR — LOCK 6: IDE_OPERATOR_V1
+            // Governed IDE/dev relay (repo inspection, file read, git, bounded exec)
+            // ═══════════════════════════════════════════════════════════════
+            commands::ide_operator::ide_open_session,
+            commands::ide_operator::ide_close_session,
+            commands::ide_operator::ide_get_session_status,
+            commands::ide_operator::ide_repo_inventory,
+            commands::ide_operator::ide_file_read,
+            commands::ide_operator::ide_grep_search,
+            commands::ide_operator::ide_git_status,
+            commands::ide_operator::ide_git_diff,
+            commands::ide_operator::ide_safe_command,
+            commands::ide_operator::ide_get_config,
+
+            // ═══════════════════════════════════════════════════════════════
             // CAPABILITY REGISTRY — governed capability classification
             // ═══════════════════════════════════════════════════════════════
             commands::capability_commands::capability_registry_get_all,

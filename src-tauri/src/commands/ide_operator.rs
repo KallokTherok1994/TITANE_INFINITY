@@ -233,7 +233,7 @@ pub async fn ide_open_session(
 ) -> Result<IDESession, String> {
     let session_id = generate_session_id();
     let now = now_iso();
-    let workspace = workspace_dir.unwrap_or_else(workspace_dir);
+    let workspace = workspace_dir.unwrap_or_else(|| ".".to_string());
     let scopes = allowed_scopes.unwrap_or_else(|| {
         vec![
             "repo_read".to_string(),
@@ -830,7 +830,7 @@ pub async fn ide_git_status(
     match output {
         Ok(result) => {
             let stdout = String::from_utf8_lossy(&result.stdout).to_string();
-            let changed_files: Vec<&str> = stdout.lines().collect();
+            let changed_files_count = stdout.lines().count();
 
             Ok(IDERelayResult {
                 ok: true,
@@ -840,7 +840,7 @@ pub async fn ide_git_status(
                 content: Some(stdout),
                 structured_data: Some(serde_json::json!({
                     "workspace": workspace,
-                    "changed_files_count": changed_files.len(),
+                    "changed_files_count": changed_files_count,
                 })),
                 block_reason: None,
                 handoff_required: false,
