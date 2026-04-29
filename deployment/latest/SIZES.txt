@@ -1,3 +1,4 @@
-94571000	deployment/latest/Titan-Stable_31.2.9_amd64.AppImage
-21881996	deployment/latest/Titan-Stable_31.2.9_amd64.deb
-47630384	deployment/latest/titane-infinity
+titane-infinity_31.2.37_amd64.AppImage: 91M (95009272 bytes)
+titane-infinity_31.2.37_amd64.deb: 22M (22334950 bytes)
+titane-infinity-31.2.37-1.x86_64.rpm: 22M (22334764 bytes)
+titane-infinity (binary): 47M (49379208 bytes)
