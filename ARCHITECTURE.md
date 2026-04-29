@@ -568,7 +568,8 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts PHILOSOPHIE_ETHIQUE_EXISTENTIELLE + RELATIONS_HUMAINES_GROUPES_SOCIAUX, +2 SOURCES entries, baseline >=213 -> >=215, expected list updated (phase 35)
 - `knowledge_base_default.rs`: +2 consts SOCIOLOGIE_ECONOMIE_POLITIQUE + NEUROSCIENCES_EMOTIONS_DECISION, +2 SOURCES entries, baseline >=215 -> >=217, expected list updated (phase 36)
 - `knowledge_base_default.rs`: +2 consts COMMUNICATION_LEADERSHIP_MANAGEMENT + PSYCHOLOGIE_SANTE_COMPORTEMENTS, +2 SOURCES entries, baseline >=217 -> >=219, expected list updated (phase 37)
-- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=213 validated)
+- `knowledge_base_default.rs`: +2 consts CREATIVITE_APPRENTISSAGE_CERVEAU + RELATIONS_AMOUREUSES_ATTACHMENT_COUPLES, +2 SOURCES entries, baseline >=219 -> >=221, expected list updated (phase 38)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=221 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
@@ -577,6 +578,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `kb.addictionCouples.test.ts`: 50 PASS (Vitest, phase 32)
 - `kb.enfantPsychosomatique.test.ts`: 55 PASS (Vitest, phase 33)
 - `kb.psychiatrieNeuropsycho.test.ts`: 66 PASS (Vitest, phase 34)
+- `kb.creativiteRelationsAmoureuses.test.ts`: 63 PASS (Vitest, phase 38)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
@@ -585,3 +587,4 @@ Conformité validée par tests 100/100 (avril 2026).
 - `AH-KB-ADDICTION-COUPLES-2026-04-29` (full schema, detect_recurrence PASS, phase 32)
 - `AH-KB-ENFANT-PSYCHOSOMATIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 33)
 - `AH-KB-PSYCHIATRIE-NEUROPSYCHO-2026-04-29` (full schema, detect_recurrence PASS, phase 34)
+- `AH-KB-CREATIVITE-RELATIONS-2026-04-29` (full schema, detect_recurrence PASS, phase 38, entries=1457)

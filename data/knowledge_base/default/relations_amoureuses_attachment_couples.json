@@ -1,0 +1,91 @@
+{
+  "version": "v31.5.8",
+  "category": "relations_amoureuses_attachment_couples",
+  "description": "Théories de l'amour, attachement adulte, science du couple, dépendance affective, jalousie, rupture et communication en couple",
+  "retrieval_triggers": [
+    "amour",
+    "aimer",
+    "couple",
+    "relation amoureuse",
+    "partenaire",
+    "conjoint",
+    "attachement adulte",
+    "styles d'attachement",
+    "sécure",
+    "anxieux",
+    "évitant",
+    "Sternberg",
+    "triangle amour",
+    "passion",
+    "intimité",
+    "engagement",
+    "Gottman",
+    "divorce",
+    "cavaliers de l'apocalypse",
+    "mépris",
+    "critique",
+    "dépendance affective",
+    "codépendance",
+    "jalousie",
+    "infidélité",
+    "trahison",
+    "rupture",
+    "deuil amoureux",
+    "chagrin d'amour",
+    "Fisher",
+    "neuroimagerie amour",
+    "5 langages de l'amour",
+    "Chapman",
+    "Hendrix",
+    "Imago",
+    "communication couple",
+    "thérapie de couple",
+    "EFT couple",
+    "relation toxique",
+    "manipulation affective",
+    "Lee",
+    "styles amoureux",
+    "eros",
+    "ludus",
+    "attachement insécure",
+    "IWM",
+    "AAI",
+    "Adult Attachment Interview",
+    "conflit de couple",
+    "réparation émotionnelle"
+  ],
+  "sections": {
+    "theories_amour": {
+      "sternberg_triangle": "Triangle de l'amour (Sternberg 1986): 3 composantes — Passion (attraction physique, idéalisation, déclin rapide), Intimité (connexion émotionnelle, proximité, confiance) et Engagement (décision consciente de rester). 7 types: non-amour (0/0/0), affection (intimité seule), engouement (passion seule), amour vide (engagement seul), romantique (passion+intimité), compagnonnage (intimité+engagement), fatuous (passion+engagement), consummate/parfait (les 3 — difficile à maintenir longtemps).",
+      "lee_styles_amoureux": "6 styles amoureux (Lee 1973, Hendrick & Hendrick): Eros (amour passionné, attirance physique intense), Ludus (amour ludique, jeu, pas d'attache), Storge (amour amical, complicité, fondé sur l'amitié), Pragma (amour pragmatique, choix rationnel, compatibilité), Mania (amour obsessionnel, jaloux, possessif), Agape (amour altruiste, don de soi, inconditionnel). Mesure: Love Attitudes Scale (LAS)."
+    },
+    "attachement_adulte_couple": {
+      "aam_styles": "Attachement adulte (Hazan & Shaver 1987, Bartholomew & Horowitz): 4 styles — Sécure (confiance, autonomie, disponible pour l'autre), Anxieux-préoccupé (peur d'abandon, hypervigilance, comportements protestataires: textos répétés, scènes), Évitant-détaché (inconfort avec proximité, minimisation des besoins émotionnels, distance), Désorganisé-craintif (désir de proximité + peur — souvent lié à traumatismes relationnels précoces).",
+      "iwm_modeles_internes": "Internal Working Models (IWM — Bowlby): représentations mentales de soi (suis-je aimable?) et de l'autre (est-il fiable?). Se construisent dans la petite enfance et guident les attentes relationnelles à l'âge adulte. Mesure: Adult Attachment Interview (AAI — Main) pour adultes, ECR-R (Experiences in Close Relationships — Revised) pour styles actuels. L'attachement est modifiable: thérapie, relation sécurisante.",
+      "activation_desactivation": "Dynamique couple: personne anxieuse → activation système d'attachement (recherche proximité intense) ↔ personne évitante → désactivation (retire, s'isole). Cercle vicieux: plus l'évitant se retire, plus l'anxieux poursuit. EFT (Johnson): identifier ce cycle destructeur, accéder aux besoins d'attachement sous-jacents, créer des moments de sécurité mutuelle."
+    },
+    "gottman_science_couple": {
+      "quatre_cavaliers": "4 Cavaliers de l'apocalypse (Gottman & Silver): Critique (attaque la personnalité: 'tu es toujours...') vs Plainte (sur comportement spécifique), Mépris (supériorité, sarcasme, roulement des yeux — prédicteur #1 divorce), Défensive (contre-attaque, justification), Fuite/Stonewalling (retrait total, silence, robotisation). Mépris: taux de divorce prédit à 94% dans recherches longitudinales Gottman.",
+      "ratio_bienveillant": "Ratio 5:1 (Gottman): couples stables ont ~5 interactions positives pour 1 négative (Gottman ratio). Cartes amoureuses: connaissance des univers intérieurs du partenaire (rêves, peurs, valeurs). Rêves dans le conflit: chaque position défendue cache souvent un rêve ou une valeur profonde. Réparation émotionnelle: toute tentative de désamorcer la tension (humour, toucher, excuse partielle) = fondamentale. Inondation émotionnelle (flooding): montée en cortisol → incapacité à raisonner.",
+      "buts_interventions_gottman": "Interventions Gottman: calendrier des plaintes pour éviter l'accumulation, retarder la discussion si trop chargé émotionnellement, phrases 'je' vs 'tu', validation des émotions avant solutions, revenir sur les arguments refroidis. Banque de confiance émotionnelle: dépôts (attention, bienveillance, engagement) vs retraits (trahisons, mépris, indisponibilité)."
+    },
+    "dependance_affective_schemas": {
+      "schemas_young": "Schémas précoces inadaptés (Young): abandon/instabilité (peur profonde d'être quitté), dévalorisation/honte (sentiment d'être fondamentalement déficient), méfiance/abus (attente d'être blessé, manipulé). Activation relationnelle: partenaire déclenche le schéma → réactions disproportionnées (flashback émotionnel). Thérapie des schémas: identifier, défier, réparer les modes schématiques.",
+      "dependance_codependance": "Dépendance affective: besoin excessif d'approbation et de présence de l'autre, peur de solitude intolérable, fusion identitaire. Codépendance: s'oublier soi-même dans la relation, sauveteur compulsif (triangle de Karpman: sauveur/victime/persécuteur). Interdépendance saine (vs fusion): autonomie préservée tout en maintenant lien intime. Sécurité interne: régulation émotionnelle sans avoir besoin de l'autre comme régulateur unique."
+    },
+    "jalousie_infidelite": {
+      "jalousie_evolutionnaire": "Jalousie évolutive (Buss): asymétrie sexuelle — hommes: jalousie sexuelle (certitude de paternité), femmes: jalousie émotionnelle (risque de perte de ressources et d'engagement). Jalousie adaptative vs pathologique: signal d'alarme vs obsession qui détruit. Neurobiologie: amygdale + cortex insulaire activés, chevauchement avec douleur physique.",
+      "infidelite": "Infidélité: types — sexuelle (sans lien émotionnel), émotionnelle (connexion intime sans sexualité), mixte (les deux — jugée plus grave par les deux sexes). Facteurs: insatisfaction relationnelle, occasion, facteurs de personnalité (narcissisme, manque conscience). Forgiveness processus (Enright): décision de pardonner → travail émotionnel → empathie → libération. Pardon ≠ réconciliation forcée."
+    },
+    "rupture_deuil_amoureux": {
+      "neurosciences_rupture": "Neuroimagerie de la rupture (Fisher): IRM de personnes en deuil amoureux → activation circuits récompense (nucleus accumbens, VTA) comme retrait de drogue. Amour romantique = système de récompense dopaminergique — d'où les symptômes de manque à la rupture. Amygdale hypersensible aux stimuli liés à l'ex. Temps moyen pour diminuer la saillance: 3-6 mois selon intensité de l'attachement.",
+      "deuil_bowlby": "Deuil de rupture (Bowlby): phases — Protestation (anxiété, colère, rappels compulsifs), Désespoir (tristesse profonde, retrait), Détachement/Réorganisation (acceptation progressive, reconstruction identitaire). Pas linéaire. Deuil non reconnu (disenfranchised grief — Doka): rupture relationnelle minimisée socialement ('c'était juste un copain') — absence de soutien aggrave le deuil.",
+      "resilience_post_rupture": "Résilience post-rupture: croissance post-traumatique possible (Tedeschi) — redécouverte de soi, clarification valeurs, renforcement des amitiés. Stratégies: no-contact temporaire pour réduire activation amygdalienne, écriture expressive (Pennebaker), reconstruction du réseau social, travail d'attachement. Rechutes de contact: augmentent temporairement le manque dopaminergique."
+    },
+    "communication_couples_therapie": {
+      "imago_hendrix": "Imago Relationship Therapy (Hendrix & LaKelly Hunt): nous choisissons nos partenaires pour réparer nos blessures d'enfance (imago = image composite des soignants). Dialogue en miroir: Sender (s'exprimer sans accusation) → Receiver (miroir = répéter, valider: 'ce que tu dis fait sens parce que...', puis empathiser). Processus crée une sécurité d'expression.",
+      "langages_amour": "5 Langages de l'amour (Gary Chapman): Paroles d'affirmation (compliments, encouragements), Temps de qualité (présence pleine et entière), Cadeaux (symboles d'attention), Services rendus (actes pratiques), Contact physique (affection, sexualité). Chacun a un langage primaire — donner et recevoir de l'amour selon son propre langage si partenaire a un autre = dialogue de sourds. Exercice: identifier son top-3.",
+      "assertivite_couple": "Assertivité dans le couple: exprimer ses besoins sans agressivité ni soumission, utiliser le 'je' ressenti + demande concrète. Validation émotionnelle: reconnaître l'émotion de l'autre avant de répondre sur le fond ('je comprends que tu te sentes...', puis 'et de mon côté...'). Demandes vs exigences (NVC/Rosenberg): demandes formulées positivement, pas sous forme d'ultimatum. Réparation après conflit: responsabilité partielle, retour à la chaleur."
+    }
+  }
+}

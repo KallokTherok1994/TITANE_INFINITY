@@ -577,6 +577,12 @@ const COMMUNICATION_LEADERSHIP_MANAGEMENT: &str =
 const PSYCHOLOGIE_SANTE_COMPORTEMENTS: &str =
     include_str!("../../data/knowledge_base/default/psychologie_sante_comportements.json");
 
+// ── v31.5.7+31.5.8 expansion — phase 38 (créativité/apprentissage + relations amoureuses) ──
+const CREATIVITE_APPRENTISSAGE_CERVEAU: &str =
+    include_str!("../../data/knowledge_base/default/creativite_apprentissage_cerveau.json");
+const RELATIONS_AMOUREUSES_ATTACHMENT_COUPLES: &str =
+    include_str!("../../data/knowledge_base/default/relations_amoureuses_attachment_couples.json");
+
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
     include_str!("../../data/knowledge_base/default/htf_module_identity.json");
@@ -1179,6 +1185,15 @@ impl DefaultKnowledgeBase {
             "psychologie_sante_comportements",
             PSYCHOLOGIE_SANTE_COMPORTEMENTS,
         ),
+        // v31.5.7+31.5.8 expansion — phase 38 (créativité/apprentissage + relations amoureuses)
+        (
+            "creativite_apprentissage_cerveau",
+            CREATIVITE_APPRENTISSAGE_CERVEAU,
+        ),
+        (
+            "relations_amoureuses_attachment_couples",
+            RELATIONS_AMOUREUSES_ATTACHMENT_COUPLES,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1507,7 +1522,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 219,
+            result.entries_loaded >= 221,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1692,6 +1707,8 @@ mod tests {
             "neurosciences_emotions_decision",
             "communication_leadership_management",
             "psychologie_sante_comportements",
+            "creativite_apprentissage_cerveau",
+            "relations_amoureuses_attachment_couples",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
             "therapies_humanistes_existentielles",

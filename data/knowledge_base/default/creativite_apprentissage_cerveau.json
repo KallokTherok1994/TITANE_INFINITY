@@ -1,0 +1,94 @@
+{
+  "version": "v31.5.7",
+  "category": "creativite_apprentissage_cerveau",
+  "description": "Créativité, apprentissage, neurosciences cognitives, métacognition, intelligence et plasticité cérébrale",
+  "retrieval_triggers": [
+    "créativité",
+    "créatif",
+    "apprentissage",
+    "apprendre",
+    "cerveau",
+    "intelligence",
+    "flow",
+    "Csikszentmihalyi",
+    "Wallas",
+    "pensée divergente",
+    "pensée latérale",
+    "De Bono",
+    "design thinking",
+    "brainstorming",
+    "innovation",
+    "insight",
+    "Kolb",
+    "cycle expérientiel",
+    "Vygotsky",
+    "zone proximale",
+    "zone de développement proximal",
+    "Bloom",
+    "taxonomie",
+    "mémoire",
+    "mémorisation",
+    "oubli",
+    "Ebbinghaus",
+    "répétition espacée",
+    "spaced repetition",
+    "retrieval practice",
+    "interleaving",
+    "métacognition",
+    "Flavell",
+    "growth mindset",
+    "Dweck",
+    "mindset fixe",
+    "intelligences multiples",
+    "Gardner",
+    "Sternberg",
+    "intelligence émotionnelle",
+    "BDNF",
+    "neuroplasticité",
+    "dopamine apprentissage",
+    "curiosité",
+    "motivation intrinsèque",
+    "méthode apprentissage",
+    "pédagogie",
+    "autodidacte",
+    "apprentissage profond"
+  ],
+  "sections": {
+    "creativite_processus": {
+      "wallas_stades": "Processus créatif (Wallas 1926): 4 stades — Préparation (immersion dans le problème, accumulation d'informations), Incubation (traitement inconscient, abandon volontaire — le cerveau travaille en arrière-plan), Illumination/Insight (moment 'Eurêka': connexion inattendue, souvent en état relâché: réveil, marche, douche), Vérification (mise à l'épreuve critique de l'idée). L'incubation est favorisée par le sommeil, la méditation, les activités automatiques.",
+      "pensee_divergente_convergente": "Guilford (1950): pensée divergente (générer de multiples solutions — fluidité, flexibilité, originalité, élaboration) vs pensée convergente (trouver la bonne réponse unique — logique, analyse). Tests: Alternative Uses Test, Remote Associates Test (RAT), Torrance Tests of Creative Thinking (TTCT). Inhibition latente basse: corrélée à créativité mais aussi vulnérabilité aux idées intrusives.",
+      "flow_creativite": "Flow/état optimal (Csikszentmihalyi): absorption totale dans l'activité — équilibre défi/compétence, perte du sens du temps, sentiment d'efficacité. Conditions: objectif clair, feedback immédiat, défi légèrement supérieur au niveau actuel. Hypofrontalité transitoire: réduction activité cortex préfrontal pendant la créativité — moins de censure. Ondes alpha et gamma associées aux moments d'insight.",
+      "reseau_defaut": "Default Mode Network (DMN): réseau par défaut (précuneus, cortex préfrontal médial, cingulaire postérieur) activé au repos et en daydreaming — rôle dans associations distantes et pensée spontanée créative. Sommeil paradoxal (REM) renforce les associations sémantiques distantes. Créativité = exploration inconsciente (DMN) + évaluation consciente (cortex préfrontal latéral)."
+    },
+    "design_thinking_innovation": {
+      "design_thinking": "Design Thinking (Stanford d.school — IDEO, Tim Brown): 5 étapes non-linéaires — Empathize (comprendre l'utilisateur: entretiens, observation ethnographique), Define (reformuler le problème: 'Comment pourrions-nous...?'), Ideate (brainstorming divergent, SCAMPER, analogies), Prototype (maquette basse fidélité rapide), Test (feedback utilisateur, itération). Double diamant: divergence→convergence×2.",
+      "pensee_laterale": "Pensée latérale (De Bono): aborder les problèmes sous angles inhabituels. 6 chapeaux: blanc=faits, rouge=émotions, noir=risques, jaune=avantages, vert=créativité, bleu=processus. SCAMPER: Substituer/Combiner/Adapter/Modifier/Proposer autres usages/Éliminer/Renverser. Provocations (Po): suspendre le jugement pour générer l'inattendu.",
+      "lean_startup": "Lean Startup (Ries): Build-Measure-Learn loop — MVP (Minimum Viable Product), mesurer métriques d'apprentissage (pas vanity metrics), décider pivot ou persévérer. Jobs-to-be-done (Christensen): comprendre le travail fonctionnel/social/émotionnel que le client engage le produit à accomplir."
+    },
+    "apprentissage_modeles_pedagogiques": {
+      "kolb_cycle": "Cycle d'apprentissage expérientiel (Kolb 1984): Expérience concrète → Observation réflexive → Conceptualisation abstraite → Expérimentation active. 4 styles: divergent (CE+OR: imagination), assimilateur (OR+CA: modèles abstraits), convergent (CA+EA: application pratique), accommodateur (EA+CE: action, risque). Aucun style supérieur aux autres.",
+      "vygotsky_zpd": "Zone de Développement Proximal — ZPD (Vygotsky): espace entre ce que l'apprenant peut faire seul (développement actuel) et avec aide experte (potentiel). Étayage/Scaffolding (Bruner): soutien temporaire ajusté → retrait progressif quand compétence acquise. Pensée formée d'abord dans l'interaction sociale (interpsychique) avant intériorisation (intrapsychique). Langue comme outil cognitif.",
+      "bloom_taxonomie": "Taxonomie de Bloom (révisée Anderson & Krathwohl): Mémoriser → Comprendre → Appliquer → Analyser → Évaluer → Créer. Progression vers apprentissage profond. Charge cognitive (Sweller): mémoire de travail limitée (7±2 items — Miller) → fractionner les apprentissages complexes, automatiser les éléments de base (réduire la charge intrinsèque)."
+    },
+    "memoire_strategies_optimales": {
+      "ebbinghaus_oubli": "Courbe d'oubli (Ebbinghaus 1885): sans révision, ~50% oublié en 1h, ~70% en 24h, ~90% en 1 semaine. Courbe exponentielle puis stabilisation. Effet de testing (Roediger & Karpicke): se tester (retrieval practice) consolide bien mieux que relire — encodage actif vs passif.",
+      "repetition_espacee": "Répétition espacée (Spaced Repetition — Ebbinghaus, Leitner, Anki): réviser juste avant le seuil d'oubli réactive la trace mnésique. Algorithme SM-2 (SuperMemo/Anki): espacement optimal selon difficulté et historique. Interleaving (pratique entremêlée — Bjork): alterner sujets (A-B-C-A-B-C) > blocked practice (A-A-A) pour rétention long terme — crée une désirable difficulté. Dual coding (Paivio): mots + images → double encodage → meilleure récupération.",
+      "memoire_systemes": "Systèmes mnésiques: déclaratif (hippocampe) = épisodique (événements personnels, contexte spatio-temporel) + sémantique (faits généraux). Non-déclaratif = procédurale (striatum/cervelet), conditionnement (amygdale), amorçage (cortex). Consolidation: synaptique (heures) + systémique (jours-années, hippocampe→néocortex). Sommeil lent consolide le déclaratif; REM consolide le procédural et le créatif."
+    },
+    "metacognition_autoregulation": {
+      "flavell_metacognition": "Métacognition (Flavell 1979): 'penser sur sa propre pensée'. Knowledge métacognitive (connaissance de soi comme apprenant, des tâches, des stratégies) + regulation métacognitive (planification, monitoring, évaluation). Self-regulated learning (Zimmermann): Forethought (buts, stratégies) → Performance (autocontrôle, monitoring) → Self-Reflection (autoévaluation, attribution causale). Apprenant expert = métacognitivement actif.",
+      "growth_mindset": "Mindset fixe vs de croissance (Dweck): fixe — intelligence figée, on la prouve; croissance — capacités développables par effort et stratégies. Face à l'échec: fixe abandonne (menace identité), croissance persiste (information pour s'améliorer). Éloge du processus ('tu as travaillé dur') > éloge du talent ('tu es intelligent'). Neuroplasticité comme preuve scientifique du growth mindset.",
+      "apprentissage_profond": "Apprentissage profond vs superficiel (Marton & Säljö): profond = chercher le sens, relier les concepts; superficiel = mémoriser, reproduire. Techniques efficaces (Dunlosky méta-analyse): très efficaces — retrieval practice + spaced repetition; faible efficacité — surlignage, relecture, résumé. Elaborative interrogation: 'pourquoi est-ce vrai?' Self-explanation: s'expliquer les étapes à soi-même."
+    },
+    "intelligences_theories": {
+      "intelligences_multiples": "Intelligences multiples (Gardner): 8 types — linguistique-verbale, logico-mathématique, spatiale, musicale, kinesthésique-corporelle, naturaliste, interpersonnelle, intrapersonnelle. Critique: manque de validation empirique rigoureuse, ressemble à des talents. Théorie triarchique (Sternberg): analytique (académique), créative (nouveauté), pratique (adaptation à l'environnement).",
+      "intelligence_emotionnelle": "Intelligence émotionnelle (Salovey & Mayer 1990): 4 branches — Percevoir, Utiliser, Comprendre, Gérer les émotions. Goleman (1995): ajoute motivation, empathie, compétences sociales. Critique: modèle Goleman trop large. Mesure: MSCEIT (performance) vs auto-rapports (Bar-On EQ-i). EQ prédicteur de réussite relationnelle et managériale.",
+      "effet_flynn": "Effet Flynn: augmentation QI +3 points/décennie au XXe siècle dans pays développés. Causes: nutrition, éducation, réduction infections, stimulation cognitive. Depuis ~2000: stabilisation ou légère baisse (Flynn reversal) dans certains pays nordiques. Héritabilité QI augmente avec l'âge (enfants ~40%, adultes ~80%): l'environnement module l'expression génétique."
+    },
+    "neurosciences_apprentissage": {
+      "dopamine_curiosite": "Dopamine et curiosité (Lisman & Grace): dopamine = neuromodulateur de la récompense ET de la prédiction. Curiosité = état motivationnel d'incertitude informationnelle (Loewenstein — information gap theory) → déclenche dopamine anticipatoire → renforce mémorisation via LTP hippocampique. Curiosité intrinsèque → meilleure rétention même d'informations non sollicitées (Gruber 2014).",
+      "bdnf_plasticite": "BDNF (Brain-Derived Neurotrophic Factor): facteur de croissance neuronal essentiel à la plasticité synaptique, survie neuronale et neurogenèse hippocampique. Stimulé par: exercice physique aérobique (+200% BDNF hippocampe), apprentissage actif, sommeil de qualité, jeûne intermittent. Réduit par: stress chronique (cortisol), sédentarité. 'Engrais du cerveau' (Ratey — Spark).",
+      "sommeil_apprentissage": "Sommeil et consolidation: SLP (sommeil lent profond/ondes lentes): rejeu hippocampe→néocortex = consolidation déclarative (sharp wave ripples + sleep spindles). REM: consolidation procédurale, émotionnelle, créative. Privation de sommeil: réduit plasticité synaptique, efface les gains d'apprentissage. Sleep spindles prédisent performance mnésique. Napping 20-26min améliore vigilance et mémoire déclarative."
+    }
+  }
+}
