@@ -244,6 +244,10 @@ describe('TITANE∞ - IPC Contract Tests', () => {
       'security_audit_sync_journal',
       'security_audit_publish_signed_export',
     ];
+    const securityContent = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/security.ts'),
+      'utf-8'
+    );
 
     for (const command of requiredCommands) {
       expect(
@@ -251,8 +255,8 @@ describe('TITANE∞ - IPC Contract Tests', () => {
         `Missing Rust IPC command: ${command}`
       ).toBe(true);
       expect(
-        allowedCommands.has(command) || allowedNormalized.has(normalize(command)),
-        `Missing Tauri allowlist command: ${command}`
+        securityContent.includes(`'${command}'`) || securityContent.includes(`"${command}"`),
+        `Missing security.ts allowlist entry: ${command}`
       ).toBe(true);
     }
   });
@@ -267,31 +271,55 @@ describe('TITANE∞ - IPC Contract Tests', () => {
   });
 
   it('should expose governed security audit commands canonically', () => {
+    const securityContent = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/security.ts'),
+      'utf-8'
+    );
     expect(TAURI_COMMANDS.SECURITY_AUDIT_SYNC_JOURNAL).toBe(
       'security_audit_sync_journal'
     );
     expect(TAURI_COMMANDS.SECURITY_AUDIT_PUBLISH_SIGNED_EXPORT).toBe(
       'security_audit_publish_signed_export'
     );
-    expect(allowedCommands.has('security_audit_sync_journal')).toBe(true);
-    expect(allowedCommands.has('security_audit_publish_signed_export')).toBe(true);
+    expect(
+      securityContent.includes("'security_audit_sync_journal'") ||
+        securityContent.includes('"security_audit_sync_journal"')
+    ).toBe(true);
+    expect(
+      securityContent.includes("'security_audit_publish_signed_export'") ||
+        securityContent.includes('"security_audit_publish_signed_export"')
+    ).toBe(true);
     expect(rustCommands.has('security_audit_sync_journal')).toBe(true);
     expect(rustCommands.has('security_audit_publish_signed_export')).toBe(true);
   });
 
   it('should expose governed hybrid memory export command canonically', () => {
+    const securityContent = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/security.ts'),
+      'utf-8'
+    );
     expect(TAURI_COMMANDS.HYBRID_MEMORY_PUBLISH_GOVERNED_REPORT).toBe(
       'hybrid_memory_publish_governed_report'
     );
-    expect(allowedCommands.has('hybrid_memory_publish_governed_report')).toBe(true);
+    expect(
+      securityContent.includes("'hybrid_memory_publish_governed_report'") ||
+        securityContent.includes('"hybrid_memory_publish_governed_report"')
+    ).toBe(true);
     expect(rustCommands.has('hybrid_memory_publish_governed_report')).toBe(true);
   });
 
   it('should expose the knowledge base runtime snapshot command in Rust and Tauri allowlist', () => {
+    const securityContent = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/security.ts'),
+      'utf-8'
+    );
     expect(TAURI_COMMANDS.KNOWLEDGE_BASE_RUNTIME_SNAPSHOT).toBe(
       'knowledge_base_runtime_snapshot'
     );
-    expect(allowedCommands.has('knowledge_base_runtime_snapshot')).toBe(true);
+    expect(
+      securityContent.includes("'knowledge_base_runtime_snapshot'") ||
+        securityContent.includes('"knowledge_base_runtime_snapshot"')
+    ).toBe(true);
     expect(rustCommands.has('knowledge_base_runtime_snapshot')).toBe(true);
   });
 

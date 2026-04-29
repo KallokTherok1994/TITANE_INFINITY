@@ -149,10 +149,11 @@ describe('browserWebSearch() — One Door proxy compliance', () => {
     globalThis.fetch = originalFetch;
   });
 
-  it('utilise /api/wiki-search comme chemin proxy (pas Wikipedia directement)', async () => {
+  it('appelle wikipedia.org directement (FR-first, pas de proxy /api/wiki-search)', async () => {
+    // Résultats FR non-vides → un seul appel
     fetchMock.mockResolvedValue({
       ok: true,
-      json: async () => ({ query: { search: [] } }),
+      json: async () => ({ query: { search: [{ title: 'Test', snippet: 'snippet', pageid: 1 }] } }),
     });
 
     const { browserWebSearch } = await import('../services/webResearchService');
@@ -160,22 +161,23 @@ describe('browserWebSearch() — One Door proxy compliance', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const calledUrl = fetchMock.mock.calls[0]?.[0] as string;
-    expect(calledUrl).toContain('/api/wiki-search');
-    expect(calledUrl).not.toContain('wikipedia.org');
+    expect(calledUrl).toContain('wikipedia.org');
+    expect(calledUrl).not.toContain('/api/wiki-search');
   });
 
-  it('ne fait PAS de fetch direct vers wikipedia.org depuis le service', async () => {
+  it('fait bien un fetch direct vers wikipedia.org depuis le service (architecture directe)', async () => {
+    // Résultats FR non-vides → un seul appel vers fr.wikipedia.org
     fetchMock.mockResolvedValue({
       ok: true,
-      json: async () => ({ query: { search: [] } }),
+      json: async () => ({ query: { search: [{ title: 'Test', snippet: 'snippet', pageid: 1 }] } }),
     });
 
     const { browserWebSearch } = await import('../services/webResearchService');
     await browserWebSearch('test query', 5);
 
     const urls = fetchMock.mock.calls.map(c => c[0] as string);
-    const hasDirectWikipedia = urls.some(u => u.startsWith('https://wikipedia.org') || u.startsWith('https://en.wikipedia.org'));
-    expect(hasDirectWikipedia).toBe(false);
+    const hasDirectWikipedia = urls.some(u => u.includes('fr.wikipedia.org') || u.includes('en.wikipedia.org'));
+    expect(hasDirectWikipedia).toBe(true);
   });
 
   it('encode correctement le srsearch dans l\'URL proxy', async () => {

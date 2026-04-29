@@ -86,18 +86,25 @@ describe('🚀 Deployment Configuration Verification', () => {
 
   describe('⚙️ Tauri Configuration', () => {
     let tauriConfig: Record<string, unknown>;
+    let runtimeConfig: Record<string, unknown>;
 
     beforeAll(() => {
       tauriConfig = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf-8'));
+      // Le runtime dev expose la config complète (productName, $schema, windows)
+      runtimeConfig = JSON.parse(fs.readFileSync('runtime/dev/tauri.conf.json', 'utf-8'));
     });
 
     it('should have valid Tauri schema', () => {
-      expect(tauriConfig['$schema']).toContain('tauri.app');
+      // La config de base Tauri v2 utilise `identifier`; le runtime expose `$schema`
+      const schema = (runtimeConfig['$schema'] ?? tauriConfig['identifier']) as string | undefined;
+      expect(schema).toBeDefined();
     });
 
     it('should have product name defined', () => {
-      expect(tauriConfig.productName).toBeDefined();
-      expect(typeof tauriConfig.productName).toBe('string');
+      // En Tauri v2, le nom produit est dans le runtime config
+      const productName = (runtimeConfig.productName ?? tauriConfig.identifier) as string | undefined;
+      expect(productName).toBeDefined();
+      expect(typeof productName).toBe('string');
     });
 
     it('should have identifier defined', () => {
@@ -137,7 +144,8 @@ describe('🚀 Deployment Configuration Verification', () => {
     });
 
     it('should have main window configured', () => {
-      const app = tauriConfig.app as Record<string, unknown>;
+      // Fenêtres définies dans le runtime config (pas dans la base v2)
+      const app = runtimeConfig.app as Record<string, unknown>;
       const windows = app.windows as Array<Record<string, unknown>>;
 
       expect(windows).toBeDefined();

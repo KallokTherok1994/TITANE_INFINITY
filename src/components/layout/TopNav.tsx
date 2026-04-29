@@ -375,9 +375,9 @@ export const TopNav: React.FC<TopNavProps> = ({
 
       {/* Actions secondaires */}
       <div className="flex items-center gap-3 shrink-0">
-        {/* Zoom controls */}
+        {/* Zoom controls — masqués sur mobile (inutile sur tactile) */}
         <div
-          className="flex items-center gap-1 px-1.5 py-1 rounded-lg bg-titanium-bg-elevated border border-titanium-border-default"
+          className="hidden sm:flex items-center gap-1 px-1.5 py-1 rounded-lg bg-titanium-bg-elevated border border-titanium-border-default"
           data-testid="topnav-zoom-controls"
         >
           <button

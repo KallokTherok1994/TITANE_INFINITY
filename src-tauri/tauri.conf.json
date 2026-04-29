@@ -1,5 +1,5 @@
 {
-  "version": "31.2.35",
+  "version": "31.2.36",
   "identifier": "com.titane.infinity.stable",
   "bundle": {
     "icon": [
@@ -1256,6 +1256,42 @@
             },
             {
               "command": "performance_get_metrics"
+            },
+            {
+              "command": "agenda_save_event"
+            },
+            {
+              "command": "agenda_sync"
+            },
+            {
+              "command": "calibrate_titane_voice"
+            },
+            {
+              "command": "chat_mode_change"
+            },
+            {
+              "command": "chat_mode_sync"
+            },
+            {
+              "command": "evolution_save_state"
+            },
+            {
+              "command": "submit_evolution_data"
+            },
+            {
+              "command": "knowledge_ingest"
+            },
+            {
+              "command": "knowledge_save_state"
+            },
+            {
+              "command": "progression_save_state"
+            },
+            {
+              "command": "agenda_save_events"
+            },
+            {
+              "command": "agenda_delete_event"
             }
           ],
           "deny": []
@@ -1265,7 +1301,13 @@
     "trayIcon": {
       "id": "main-tray",
       "iconPath": "icons/icon.png"
-    }
+    },
+    "windows": [
+      {
+        "label": "main",
+        "devtools": false
+      }
+    ]
   },
   "build": {
     "devUrl": "http://localhost:1420",

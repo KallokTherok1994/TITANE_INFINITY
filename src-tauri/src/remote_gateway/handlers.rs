@@ -18,6 +18,7 @@ use crate::conversation_engine::{
     commands::{conversation_generate_inner, ConversationGenerateArgs},
     ConversationEngineState,
 };
+#[cfg(all(not(feature = "mock"), feature = "full"))]
 use crate::commands::web_search_commands::perform_web_search;
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 use crate::remote_gateway::anomaly_detector::AnomalyDetector;
@@ -367,74 +368,84 @@ pub async fn invoke_handler(
         }
         "web_search" => {
             // Deserialize { query: String, max_results: Option<u32> }
-            let (query, max_results): (String, u32) = match &payload.payload {
-                Some(v) => {
-                    let q = v.get("query")
-                        .and_then(|s| s.as_str())
-                        .map(|s| s.to_string())
-                        .unwrap_or_default();
-                    let limit = v.get("max_results")
-                        .and_then(|n| n.as_u64())
-                        .map(|n| n as u32)
-                        .unwrap_or(10);
-                    (q, limit)
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            {
+                let (query, max_results): (String, u32) = match &payload.payload {
+                    Some(v) => {
+                        let q = v.get("query")
+                            .and_then(|s| s.as_str())
+                            .map(|s| s.to_string())
+                            .unwrap_or_default();
+                        let limit = v.get("max_results")
+                            .and_then(|n| n.as_u64())
+                            .map(|n| n as u32)
+                            .unwrap_or(10);
+                        (q, limit)
+                    }
+                    None => return Json(IpcResponse::err("web_search requires a payload with 'query'".to_string())),
+                };
+                if query.is_empty() {
+                    return Json(IpcResponse::err("web_search: 'query' must not be empty".to_string()));
                 }
-                None => return Json(IpcResponse::err("web_search requires a payload with 'query'".to_string())),
-            };
-            if query.is_empty() {
-                return Json(IpcResponse::err("web_search: 'query' must not be empty".to_string()));
-            }
-            match perform_web_search(&query, max_results).await {
-                Ok(results) => {
-                    let serialized = serde_json::to_value(&results)
-                        .unwrap_or_else(|_| Value::Array(vec![]));
-                    Json(IpcResponse::ok(serialized))
+                match perform_web_search(&query, max_results).await {
+                    Ok(results) => {
+                        let serialized = serde_json::to_value::<Vec<_>>(&results)
+                            .unwrap_or_else(|_| Value::Array(vec![]));
+                        Json(IpcResponse::ok(serialized))
+                    }
+                    Err(e) => Json(IpcResponse::err(format!("web_search failed: {e}"))),
                 }
-                Err(e) => Json(IpcResponse::err(format!("web_search failed: {e}"))),
             }
+            #[cfg(not(all(not(feature = "mock"), feature = "full")))]
+            Json(IpcResponse::err("web_search not available in this build configuration".to_string()))
         }
         "web_research" => {
             // web_research proxies to the conversation engine for complex queries.
             // Extract question from payload.query.question or payload.query directly.
-            let question: String = match &payload.payload {
-                Some(v) => v
-                    .pointer("/query/question")
-                    .or_else(|| v.get("question"))
-                    .and_then(|s| s.as_str())
-                    .map(|s| s.to_string())
-                    .unwrap_or_default(),
-                None => String::new(),
-            };
-            if question.is_empty() {
-                return Json(IpcResponse::err("web_research requires payload.query.question".to_string()));
-            }
-            // Route to web_search with higher limit as a research approximation
-            match perform_web_search(&question, 20).await {
-                Ok(results) => {
-                    let serialized = serde_json::to_value(&results)
-                        .unwrap_or_else(|_| Value::Array(vec![]));
-                    Json(IpcResponse::ok(json!({
-                        "answer": {
-                            "answer": results.iter().take(5)
-                                .map(|r| format!("**{}** : {}", r.title, r.snippet))
-                                .collect::<Vec<_>>()
-                                .join("\n\n"),
-                            "citations": serialized,
-                            "confidence": 0.7,
-                            "limitations": [],
-                            "trace_id": format!("remote-{}", uuid::Uuid::new_v4()),
-                            "sources_count": results.len(),
-                            "retrieved_passages_count": results.len()
-                        },
-                        "trace": {
-                            "trace_id": format!("remote-{}", uuid::Uuid::new_v4()),
-                            "markers": ["VERDICT_PASS", "REMOTE_GATEWAY"],
-                            "errors": []
-                        }
-                    })))
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            {
+                let question: String = match &payload.payload {
+                    Some(v) => v
+                        .pointer("/query/question")
+                        .or_else(|| v.get("question"))
+                        .and_then(|s| s.as_str())
+                        .map(|s| s.to_string())
+                        .unwrap_or_default(),
+                    None => String::new(),
+                };
+                if question.is_empty() {
+                    return Json(IpcResponse::err("web_research requires payload.query.question".to_string()));
                 }
-                Err(e) => Json(IpcResponse::err(format!("web_research failed: {e}"))),
+                // Route to web_search with higher limit as a research approximation
+                match perform_web_search(&question, 20).await {
+                    Ok(results) => {
+                        let serialized = serde_json::to_value::<Vec<_>>(&results)
+                            .unwrap_or_else(|_| Value::Array(vec![]));
+                        Json(IpcResponse::ok(json!({
+                            "answer": {
+                                "answer": results.iter().take(5)
+                                    .map(|r| format!("**{}** : {}", r.title, r.snippet))
+                                    .collect::<Vec<_>>()
+                                    .join("\n\n"),
+                                "citations": serialized,
+                                "confidence": 0.7,
+                                "limitations": [],
+                                "trace_id": format!("remote-{}", uuid::Uuid::new_v4()),
+                                "sources_count": results.len(),
+                                "retrieved_passages_count": results.len()
+                            },
+                            "trace": {
+                                "trace_id": format!("remote-{}", uuid::Uuid::new_v4()),
+                                "markers": ["VERDICT_PASS", "REMOTE_GATEWAY"],
+                                "errors": []
+                            }
+                        })))
+                    }
+                    Err(e) => Json(IpcResponse::err(format!("web_research failed: {e}"))),
+                }
             }
+            #[cfg(not(all(not(feature = "mock"), feature = "full")))]
+            Json(IpcResponse::err("web_research not available in this build configuration".to_string()))
         }
         "advanced_agents_get_status" => {
             Json(IpcResponse::ok(json!({

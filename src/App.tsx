@@ -51,6 +51,7 @@ import { useToasts, useToastActions } from './stores/uiStore.selectors'; // ✨ 
 // import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors';
 import { useAppInitialization } from './hooks/useAppInitialization';
 import { useTopNavigation } from './hooks/useTopNavigation';
+import { useIsMobile } from '@/hooks/useResponsive';
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
 // ✨ v30.0.0 - A11Y & performance utilities remain intentionally deferred
@@ -317,6 +318,7 @@ export const AppRouter: React.FC = () => {
 
   // ✨ UI vΩ: TopNav items + navigation (extracted to useTopNavigation hook)
   const { topNavSections, topNavItems, handleNavigate } = useTopNavigation();
+  const isMobile = useIsMobile();
 
   // ✨ UI vΩ - Main app with TopNav (global navigation)
   return (
@@ -327,7 +329,7 @@ export const AppRouter: React.FC = () => {
           items={topNavItems}
           currentRoute={location.pathname}
           onNavigate={handleNavigate}
-          maxVisibleItems={5}
+          maxVisibleItems={isMobile ? 3 : 5}
         />
       }
       footer={

@@ -16,10 +16,6 @@
 
 // Main Layout Components (vΩ migrated)
 export { AppShell, type AppShellProps } from './AppShell';
-export {
-  AppShellWithDevTools,
-  type AppShellWithDevToolsProps,
-} from './AppShellWithDevTools';
 export { TopNav, type TopNavProps, type TopNavItem, createTopNavItems } from './TopNav';
 export { Header, type HeaderProps } from './Header';
 export { MobileNav, type MobileNavProps } from './MobileNav';
