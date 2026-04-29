@@ -164,11 +164,12 @@ export const sharedTestConfig = defineConfig({
         '**/*.spec.tsx',
       ],
       // Quality gate: minimum coverage thresholds enforced in CI
+      // SPRINT 7: elevated to 75% lines / 65% branches
       thresholds: {
-        statements: 70,
-        branches: 60,
-        functions: 65,
-        lines: 70,
+        statements: 72,
+        branches: 65,
+        functions: 68,
+        lines: 75,
       },
     },
   },
