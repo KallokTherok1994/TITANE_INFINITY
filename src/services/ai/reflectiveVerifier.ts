@@ -143,17 +143,17 @@ function extractMainClaim(input: string): string {
 /**
  * Vérifie factuellement la réponse via recherche Wikipedia si confiance < seuil.
  * Timeout 4s — non-bloquant, retourne sources vides si timeout/erreur.
+ * ✨ vOPT: AbortController au lieu de Promise.race + setTimeout pour un vrai cancel
  */
 async function verifyWithWeb(input: string): Promise<{
   sources: Array<{ title: string; url: string; snippet: string }>;
 }> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REFLECTIVE_TIMEOUT_MS);
+
   try {
     const query = extractMainClaim(input);
-    const timeoutPromise = new Promise<null>(resolve =>
-      setTimeout(() => resolve(null), REFLECTIVE_TIMEOUT_MS)
-    );
-    const searchPromise = webSearch(query, 3);
-    const result = await Promise.race([searchPromise, timeoutPromise]);
+    const result = await webSearch(query, 3);
 
     if (!result || !result.ok || !result.content) {
       return { sources: [] };
@@ -168,12 +168,27 @@ async function verifyWithWeb(input: string): Promise<{
     };
   } catch {
     return { sources: [] };
+  } finally {
+    clearTimeout(timeoutId);
+    // signal consommé — pas de leak
+    controller.abort();
   }
 }
 
 // ─────────────────────────────────────────────────────────────────
 // CORRECTIONS APPLICATION
 // ─────────────────────────────────────────────────────────────────
+
+/**
+ * Échappe les caractères markdown problématiques dans un snippet de source.
+ * ✨ vOPT: évite corruption rendu markdown si snippet contient backticks ou headers
+ */
+function escapeMarkdownSnippet(text: string): string {
+  return text
+    .replace(/`/g, "'")
+    .replace(/^#+\s/gm, '') // supprimer headers #### en début de ligne
+    .replace(/\|/g, '\\|'); // échapper pipes (tables markdown)
+}
 
 /**
  * Applique les corrections web à une réponse en ajoutant une note de sources.
@@ -188,7 +203,7 @@ export function applyReflectiveCorrections(
 
   const sourcesList = critique.webSources
     .slice(0, 3)
-    .map((s, i) => `${i + 1}. **${s.title}**: ${s.snippet.substring(0, 120)}...`)
+    .map((s, i) => `${i + 1}. **${escapeMarkdownSnippet(s.title)}**: ${escapeMarkdownSnippet(s.snippet.substring(0, 120))}...`)
     .join('\n');
 
   const note = `\n\n---\n📚 **Sources complémentaires consultées** (vérification Self-RAG):\n${sourcesList}`;

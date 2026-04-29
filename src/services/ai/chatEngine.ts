@@ -1073,17 +1073,20 @@ Format: [Audit complet] + [Réponse utilisateur]
       });
 
       // Timeout adaptatif: selon le mode ET l'effort de raisonnement du kernel
+      // vOPT: Map lookup O(1) au lieu de ternaires imbriqués
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
+      const EFFORT_TIMEOUT_MAP: Record<string, number> = {
+        max: 4.0,  // CERTIFY → 120s for a 30s base
+        high: 3.0, // DEEP_REASONING / ARCHITECT → 90s
+      };
+      const MODE_TIMEOUT_MAP: Record<string, number> = {
+        brainstorming: 1.5,
+        synthesis: 1.3,
+      };
       const effortTimeoutMultiplier =
-        canonicalDecision.provider.reasoningEffort === 'max'
-          ? 4.0 // CERTIFY → 120s for a 30s base
-          : canonicalDecision.provider.reasoningEffort === 'high'
-            ? 3.0 // DEEP_REASONING / ARCHITECT → 90s for a 30s base
-            : finalConfig.mode === 'brainstorming'
-              ? 1.5
-              : finalConfig.mode === 'synthesis'
-                ? 1.3
-                : 1.0;
+        EFFORT_TIMEOUT_MAP[canonicalDecision.provider.reasoningEffort ?? ''] ??
+        MODE_TIMEOUT_MAP[finalConfig.mode ?? ''] ??
+        1.0;
       const timeoutMs = baseTimeout * effortTimeoutMultiplier;
       // v26.0.0: Use kernel's provider preference
       const kernelProvider =

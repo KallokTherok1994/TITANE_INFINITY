@@ -41,6 +41,7 @@ interface CacheStats {
 /**
  * Cache intelligent avec LRU + prédiction
  * ✨ v24.3.6: Optimisation fuzzy matching avec index préfixe O(k) au lieu de O(n)
+ * ✨ vOPT: extractPrefix memoization + isReady guard
  */
 export class ResponseCache {
   private cache = new Map<string, CacheEntry>();
@@ -56,6 +57,13 @@ export class ResponseCache {
   // Pattern de détection pour recommandations
   private commonPatterns: Map<string, string[]> = new Map();
 
+  // ✨ vOPT: Memoization cache pour extractPrefix (normalize NFD coûteux)
+  private prefixCache = new Map<string, string>();
+
+  // ✨ vOPT: isReady — vrai quand loadFromPersistence est terminé
+  private _isReady = false;
+  private readonly _readyPromise: Promise<void>;
+
   // ✨ v24.3.6: Index par préfixe pour fuzzy matching rapide
   // Structure: préfixe (3 premiers mots normalisés) → Set<cacheKey>
   private prefixIndex: Map<string, Set<string>> = new Map();
@@ -64,8 +72,20 @@ export class ResponseCache {
     this.maxSize = options.maxSize ?? 100; // 100 entrées max
     this.ttlMs = options.ttlMs ?? 1000 * 60 * 30; // 30 minutes TTL
 
-    // Charger le cache depuis IndexedDB au démarrage
-    this.loadFromPersistence();
+    // ✨ vOPT: stocker la promesse pour permettre un await optionnel
+    this._readyPromise = this.loadFromPersistence().then(() => {
+      this._isReady = true;
+    });
+  }
+
+  /** Retourne true quand le cache est chargé depuis IndexedDB */
+  get isReady(): boolean {
+    return this._isReady;
+  }
+
+  /** Attend que le cache soit prêt (utile en tests ou init synchrone) */
+  ready(): Promise<void> {
+    return this._readyPromise;
   }
 
   /**
@@ -113,9 +133,13 @@ export class ResponseCache {
 
   /**
    * ✨ v24.3.6: Extract prefix for indexing (3 first words, normalized)
+   * ✨ vOPT: memoized to avoid repeated normalize('NFD') calls
    */
   private extractPrefix(message: string): string {
-    return message
+    const cached = this.prefixCache.get(message);
+    if (cached !== undefined) return cached;
+
+    const result = message
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
@@ -123,6 +147,14 @@ export class ResponseCache {
       .filter(w => w.length > 2)
       .slice(0, 3)
       .join(' ');
+
+    // ✨ Limite: éviter croissance illimitée du cache de préfixes
+    if (this.prefixCache.size >= 500) {
+      const firstKey = this.prefixCache.keys().next().value;
+      if (firstKey) this.prefixCache.delete(firstKey);
+    }
+    this.prefixCache.set(message, result);
+    return result;
   }
 
   /**
