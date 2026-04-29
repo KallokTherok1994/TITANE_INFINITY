@@ -1,0 +1,203 @@
+{
+  "version": "v31.4.3",
+  "category": "therapies_humanistes_existentielles",
+  "description": "Thérapies humanistes et existentielles : Carl Rogers et l'approche centrée sur la personne (ACP) — conditions nécessaires et suffisantes, empathie/congruence/regard positif inconditionnel; Gestalt thérapie (Perls, cycle du contact, zones d'awareness, résistances); thérapie existentielle (Irvin Yalom — 4 données ultimes, Viktor Frankl logothérapie — sens/vide existentiel/Dereflexion); May/Binswanger existentiel; Bugental; techniques, applications cliniques et limites",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "Carl Rogers",
+    "approche centrée sur la personne",
+    "ACP thérapie",
+    "humaniste thérapie",
+    "empathie thérapeutique",
+    "congruence thérapeute",
+    "regard positif inconditionnel",
+    "actualisation de soi Rogers",
+    "personne en devenir Rogers",
+    "Gestalt thérapie",
+    "Fritz Perls",
+    "cycle du contact Gestalt",
+    "awareness conscience Gestalt",
+    "ici et maintenant thérapie",
+    "résistances Gestalt",
+    "chaise vide technique",
+    "contact interruptions Gestalt",
+    "existentielle thérapie",
+    "Irvin Yalom",
+    "données ultimes existence",
+    "mort angoisse existentielle",
+    "liberté responsabilité existentiel",
+    "isolement existentiel",
+    "non-sens absurde",
+    "Viktor Frankl",
+    "logothérapie",
+    "sens de la vie",
+    "vide existentiel",
+    "Dereflexion Frankl",
+    "intention paradoxale Frankl",
+    "Rollo May",
+    "anxiété existentielle normale",
+    "authenticité existentielle",
+    "croissance personnelle thérapie",
+    "relation thérapeutique centrée",
+    "therapie humaniste techniques",
+    "champ organismic Rogers",
+    "autodétermination humaniste",
+    "plein fonctionnement Rogers",
+    "therapie expérientielle",
+    "focusing Gendlin",
+    "soi organisme Rogers",
+    "incongruence soi expérience",
+    "expérience peak Maslow",
+    "besoins hiérarchie Maslow"
+  ],
+  "sections": {
+    "rogers_approche_centree_personne": {
+      "fondements_philosophiques": {
+        "vision_de_lhumain": "Pour Rogers, l'être humain possède une tendance naturelle à la croissance, à l'épanouissement et à l'actualisation de ses potentialités — cette tendance actualisante est la force motrice de tout développement humain, lorsque les conditions sont favorables",
+        "incongruence": "Le problème psychologique central est l'incongruence entre l'expérience organisme (ce que l'on vit réellement) et le concept de soi (l'image que l'on a de soi) — cette incongruence génère anxiété, défenses, et blocage de la croissance",
+        "soi_organisme_conditions_valeur": "L'enfant acquiert des 'conditions de valeur' (conditions imposées pour mériter l'amour) qui créent un soi social désaligné de l'organisme réel — la thérapie ACP vise à lever ces conditions"
+      },
+      "6_conditions_therapeutiques": {
+        "1_contact_psychologique": "Un contact minimal doit exister entre thérapeute et client — ils forment un système relationnel",
+        "2_vulnerabilite_client": "Le client est dans un état d'incongruence, d'anxiété ou de vulnérabilité",
+        "3_congruence_therapeute": "Le thérapeute est congruent — il est authentiquement lui-même dans la relation, sans façade professionnelle artificielle. Congruence ≠ tout dire — mais rien de false ne filtre",
+        "4_regard_positif_inconditionnel": "Le thérapeute offre une acceptation totale de la personne, sans conditions — pas d'approbation sélective, pas de jugement moral — le client est reçu tel qu'il est",
+        "5_empathie_precise": "Le thérapeute comprend de l'intérieur le cadre de référence du client — et communique cette compréhension précisément. Rogers: 'sentir le monde privé du client comme si c'était le vôtre'",
+        "6_perception_client": "Le client perçoit minimalement l'empathie et le regard positif — sans cette perception, les conditions n'ont pas d'effet thérapeutique"
+      },
+      "empathie_rogerienne": {
+        "definition": "L'empathie rogerienne est active, précise, et communiquée — pas seulement ressentie. Elle implique de se mettre à la place de l'autre, de saisir sa réalité subjective unique, et de la refléter sans jugement",
+        "trois_niveaux": {
+          "empathie_primaire": "Reconnaître et refléter l'émotion exprimée explicitement",
+          "empathie_avancee": "Refléter ce qui est implicite, à la périphérie de l'exprimé — ce que le client 'veut presque dire'",
+          "presence_therapeutique": "Gendlin/Thorne — la présence complète et incarnée du thérapeute comme acte thérapeutique en soi"
+        }
+      },
+      "plein_fonctionnement": {
+        "definition": "La personne pleinement fonctionnante (fully functioning person) de Rogers est caractérisée par: ouverture à l'expérience (opposé de défensivité), vie existentielle (chaque moment comme nouveau), confiance organisme (son corps comme boussole), liberté expérientielle (sentiment d'autonomie), et créativité",
+        "processus_vs_etat": "Rogers souligne que le plein fonctionnement est un PROCESSUS continu, pas un état acquis — c'est une direction, pas une destination"
+      },
+      "applications_cliniques": "ACP efficace pour: anxiété, dépression légère à modérée, difficultés relationnelles, problèmes d'estime de soi, trauma non-complexe, croissance personnelle, counseling scolaire/orientation professionnelle"
+    },
+    "gestalt_therapie": {
+      "fondements_et_histoire": {
+        "fondateurs": "Fritz Perls (1893-1970), Laura Perls, Paul Goodman — développée dans les années 1940-50 à New York — synthèse de psychanalyse, phénoménologie, holisme, et théorie du champ",
+        "holisme": "La Gestalt refuse la séparation corps/esprit — l'expérience est un tout indivisible. Le problème n'est pas 'dans' la personne mais dans l'espace contact entre la personne et son environnement",
+        "ici_et_maintenant": "Le moment présent est le seul lieu où le changement est possible — les discussions sur le passé ou le futur sont traitées comme expériences présentes ('comment vous sentez-vous maintenant en pensant à cela?')"
+      },
+      "cycle_du_contact": {
+        "definition": "Le cycle du contact décrit comment un organisme satisfait un besoin — interruptions à chaque étape peuvent créer des symptômes",
+        "etapes": {
+          "sensation": "Emergence d'une sensation physique ou émotionnelle — signal d'un besoin",
+          "awareness_conscience": "Prise de conscience de la sensation et identification du besoin",
+          "mobilisation_energie": "Excitation, énergie disponible pour l'action",
+          "action_contact": "Engagement avec l'environnement pour satisfaire le besoin",
+          "contact_plein": "Satisfaction complète — plein contact avec l'autre ou l'objet",
+          "retrait_assimilation": "Digestion de l'expérience, retrait, intégration — préparation au cycle suivant"
+        }
+      },
+      "resistances_interruptions": {
+        "confluence": "Absence de frontière entre soi et l'autre — fusion, difficulté à distinguer ses propres besoins de ceux des autres",
+        "introjection": "Avaler entier les opinions, valeurs, croyances de l'autre sans les 'mâcher' (assimiler) — 'il faut', 'je dois', croyances non-questionnées",
+        "projection": "Attribuer à l'extérieur ce qui appartient à soi — projeter ses propres émotions sur les autres ('il me rejette' quand c'est soi qui refuse de s'exposer)",
+        "retroflexion": "Faire à soi ce que l'on veut faire à l'autre, ou faire à soi ce que l'on veut recevoir de l'autre — retourner l'émotion/l'action contre soi (automutilation, somatisation, autocritique)",
+        "deflexion": "Éviter le contact direct — humour, généralisations, parler de quelqu'un en dehors, éviter le regard, changer de sujet",
+        "egotisme": "Trop d'autoconscience qui empêche l'abandon au contact — surcontrôle"
+      },
+      "techniques_gestalt": {
+        "chaise_vide": "Dialoguer avec une partie de soi, une personne absente, ou un introjection — placer ces 'entités' sur une chaise vide et alterner les positions — active la conscience et l'émotion in situ",
+        "dialogue_polarites": "Explorer les parties en conflit d'une personne (top dog/under dog, Perls) — le 'top dog' critique exigeant vs le 'under dog' résistant passif",
+        "amplification": "Demander au client d'amplifier un geste, une posture, un son — ce que le corps exprime en miniature contient souvent le thème central",
+        "here_now_experiment": "Expériences in session conçues pour amener l'expérience en présence plutôt que d'en parler — créativité, drama, mouvement, dessin"
+      },
+      "applications_cliniques": "Troubles de la personnalité (sauf psychose active), anxiété, dépression, blocages créatifs, difficultés relationnelles, troubles psychosomatiques, burnout, travail de deuil"
+    },
+    "therapie_existentielle_yalom": {
+      "donnees_ultimes_existence": {
+        "definition": "Irvin Yalom (né 1931) identifie 4 données ultimes (ultimate concerns) — conflits existentiels inévitables qui génèrent l'angoisse fondamentale de l'être humain",
+        "1_mort": {
+          "donnee": "La mort est inévitable — notre certitude la plus absolue",
+          "conflit": "Tension entre le désir d'exister et la conscience de la mort inévitable",
+          "manifestations_cliniques": "Hypercontrôle, évitement risques, hypocondrie, peur des transitions/changements, sur-investissement travail ou plaisirs",
+          "therapeutique": "Confronter la mort libère plutôt qu'elle n'écrase — 'sagesse de la mort' comme catalyseur de la vie authentique"
+        },
+        "2_liberte": {
+          "donnee": "L'être humain est fondamentalement libre — il n'existe pas de structure externe qui donne sens ou direction",
+          "conflit": "Tension entre la liberté/responsabilité totale et le besoin de sol et de direction",
+          "manifestations_cliniques": "Blâmer les autres, passivité, évitement de la décision, attente que quelqu'un 'dise quoi faire', indécision chronique",
+          "therapeutique": "Assumer la responsabilité de ses choix — y compris le choix de ne pas choisir est un choix"
+        },
+        "3_isolement": {
+          "donnee": "Chaque être humain est fondamentalement seul — né seul, mourant seul, personne ne peut entrer entièrement dans notre expérience subjective",
+          "conflit": "Tension entre l'isolement fondamental et le besoin de contact/protection/fusion",
+          "manifestations_cliniques": "Fusions relationnelles anxieuses, dépendance affective, terreur de la solitude, relations comme antidotes à l'isolement",
+          "therapeutique": "Apprendre à être seul avec soi-même, tolérer l'isolement existentiel tout en cultivant la connexion authentique"
+        },
+        "4_non_sens": {
+          "donnee": "Il n'existe pas de sens inhérent à l'univers — chaque individu doit créer son propre sens",
+          "conflit": "Tension entre le besoin de sens et le silence de l'univers",
+          "manifestations_cliniques": "Dépression existentielle, cynisme, nihilisme, 'pourquoi faire?', sentiment de vide, consumérisme compensatoire",
+          "therapeutique": "L'engagement — créer du sens par l'action, les relations, les valeurs incarnées plutôt que trouvé comme un objet"
+        }
+      },
+      "relation_therapeutique_yalom": {
+        "presence": "Yalom accorde une importance primordiale à la relation authentique thérapeute-client — le 'ici et maintenant' de la relation comme microcosme de la vie du patient",
+        "transparence": "Yalom utilise activement le dévoilement de soi du thérapeute — partager ses propres réactions honnêtes comme données thérapeutiques",
+        "hier_and_now": "Travailler le 'ici et maintenant' de la relation comme laboratoire des patterns relationnels du patient"
+      },
+      "groupe_yalom": {
+        "facteurs_curatifs": "Yalom identifie 11 facteurs curatifs des groupes thérapeutiques: universalité, altruisme, instillation d'espoir, impartage d'informations, développement de techniques sociales, comportement imitatif, catharsis, socialisation, cohésion de groupe, factors existentiels, apprentissage interpersonnel",
+        "importance": "Yalom considère le groupe thérapeutique comme un des outils les plus puissants — 'social microcosm'"
+      }
+    },
+    "frankl_logotherapie": {
+      "biographie_fondatrice": "Viktor Frankl (1905-1997) — psychiatre viennois, survivant des camps nazis (Auschwitz, Dachau) — sa théorie est née de l'observation que ceux qui survivaient étaient ceux qui avaient un 'pourquoi' vivre",
+      "triade_tragique": "La logothérapie répond à ce que Frankl appelle la 'triade tragique': souffrance, culpabilité, mort — en proposant que ces inévitables peuvent être transcendés par la recherche de sens",
+      "trois_voies_du_sens": {
+        "valeurs_de_creation": "Créer quelque chose, contribuer — travail, art, action — un sens trouvé dans ce qu'on donne au monde",
+        "valeurs_d_experience": "Vivre quelque chose pleinement — amour, beauté, vérité, nature — un sens trouvé dans ce qu'on reçoit du monde",
+        "valeurs_d_attitude": "Face à une souffrance inévitable qu'on ne peut pas changer — la liberté ultime de CHOISIR son attitude — 'tout peut être ôté à un homme sauf la liberté de choisir sa réponse aux conditions données'"
+      },
+      "vide_existentiel": "La névrose noögène (spirituelle) est causée non par des conflits pulsionnels mais par un sentiment de vide, d'absence de sens — frustration existentielle — fréquente dans les sociétés post-modernes où les traditions ont perdu leur autorité directrice",
+      "techniques_logotherapie": {
+        "dereflexion": "Pour les patients hyper-focalisés sur eux-mêmes (hypréflexion): rediriger l'attention vers quelque chose ou quelqu'un à l'extérieur — souvent efficace dans l'anorgasmie, l'insomnie, les phobies anxieuses",
+        "intention_paradoxale": "Pour les phobies et troubles obsessionnels: demander au patient de vouloir ou de provoquer délibérément ce qu'il craint — brise le cercle vicieux de l'anticipation anxieuse + émotion réelle + confirmation"
+      },
+      "applications": "Dépression existentielle, deuil et perte, maladies chroniques/terminales, transitions de vie majeures, burnout profond, manque de sens post-succès"
+    },
+    "rollo_may_et_existentialisme_americain": {
+      "anxiete_normale_vs_nevrotique": "Rollo May distingue l'anxiété normale (réponse proportionnée à une menace réelle) de l'anxiété névrotique (disproportionnée, paralysante) — et insiste que l'anxiété normale est le signal d'une croissance possible, pas un problème à éliminer",
+      "le_daemon": "May utilise le concept de 'daemon' — la force de vie qui pousse vers l'épanouissement mais qui, si bloquée ou non intégrée, peut devenir destructrice",
+      "amour_et_volonte": "Dans 'Love and Will' (1969), May analyse l'érosion de la volonté et de l'amour dans la modernité — liée à la perte de structures mythiques et religieuses, au technicisme et à l'impuissance apprise",
+      "courage_d_etre": "Tirant de Tillich ('The Courage to Be'), May affirme que la santé psychologique exige du courage — le courage de s'affirmer face à l'anéantissement possible, d'aimer face à la perte possible"
+    },
+    "approches_humanistes_integrees": {
+      "focusing_gendlin": {
+        "definition": "Eugene Gendlin (1926-2017) — le 'felt sense' est une sensation corporelle globale, pré-verbale, d'une situation complexe — plus précis que les émotions nommées, il contient la totalité de la problématique",
+        "6_etapes": {
+          "1_espace_interieur": "Créer un espace calme intérieur — 'comment est-ce que je me sens globalement maintenant?'",
+          "2_felt_sense": "Laisser émerger la sensation corporelle globale liée à un problème — sans l'analyser encore",
+          "3_handle": "Trouver un mot, image, ou phrase qui capture la qualité du felt sense ('lourd', 'coincé', 'comme une boîte fermée')",
+          "4_resonance": "Résonner entre le handle et le felt sense — vérifier si ça correspond exactement",
+          "5_asking": "Demander au felt sense 'qu'est-ce qui te rend si X?' — écouter ce qui vient",
+          "6_receiving": "Accueillir ce qui a émergé avec douceur — pas d'analyse immédiate, juste accueil"
+        }
+      },
+      "Maslow_besoins": {
+        "pyramide_besoins": "Abraham Maslow (1908-1970) — hiérarchie des besoins: physiologiques → sécurité → appartenance et amour → estime → actualisation de soi → transcendance (ajouté plus tard)",
+        "actualisation_de_soi": "Le sommet de la pyramide — réaliser pleinement son potentiel, être pleinement ce qu'on peut être — estimé à seulement 1% de la population en tout temps",
+        "experiences_paroxystiques": "Les 'peak experiences' (expériences paroxystiques) — moments de joie intense, de sentiment d'unité, de clarity — associées aux personnes actualisées",
+        "critique": "La hiérarchie stricte est contestée — on peut avoir des besoins d'actualisation même en situation de survie (Frankl dans les camps)"
+      },
+      "comparaison_approches_humanistes": {
+        "rogers_vs_perls": "Rogers: relation comme agent de changement — chaleur, non-directivité. Perls: confrontation créative, expérience in session, ici-et-maintenant radical, moins de chaleur",
+        "yalom_vs_frankl": "Yalom: 4 données ultimes, importance de la relation thérapeutique et du groupe. Frankl: centrée sur le sens et la responsabilité, moins relationnelle, plus directiviste"
+      }
+    },
+    "limites_et_evidences": {
+      "recherche": "Les thérapies humanistes sont parmi les plus difficiles à 'manuéliser' pour les RCTs — mais la recherche process-outcome est solide: l'empathie, l'alliance thérapeutique, et la congruence prédisent fortement les résultats, toutes thérapies confondues (Wampold 2015)",
+      "limites": "Moins efficaces pour les troubles sévères nécessitant des protocoles structurés (TOC, BPD sévère, PTSD complexe) — souvent combinées avec CBT ou DBT dans la pratique contemporaine",
+      "forces": "Particulièrement efficaces pour: les problèmes existentiels, les deuils, les crises de sens, les burnouts profonds, la croissance personnelle, le développement identitaire"
+    }
+  }
+}

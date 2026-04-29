@@ -534,6 +534,12 @@ const NEURODIVERSITE_ADHD_AUTISME_HPI: &str =
 // ── v31.4.2 expansion — phase 30 (DBT avancé : distress tolerance, colère, honte) ──
 const EMOTION_REGULATION_DBT_ADVANCED: &str =
     include_str!("../../data/knowledge_base/default/emotion_regulation_dbt_advanced.json");
+// ── v31.4.3 expansion — phase 31 (thérapies humanistes et existentielles) ──
+const THERAPIES_HUMANISTES_EXISTENTIELLES: &str =
+    include_str!("../../data/knowledge_base/default/therapies_humanistes_existentielles.json");
+// ── v31.4.4 expansion — phase 31 (psychodynamique : mécanismes de défense) ──
+const PSYCHODYNAMIQUE_MECANISMES_DEFENSE: &str =
+    include_str!("../../data/knowledge_base/default/psychodynamique_mecanismes_defense.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1074,6 +1080,15 @@ impl DefaultKnowledgeBase {
             "emotion_regulation_dbt_advanced",
             EMOTION_REGULATION_DBT_ADVANCED,
         ),
+        // v31.4.3+31.4.4 expansion — phase 31 (humaniste/existentiel + psychodynamique)
+        (
+            "therapies_humanistes_existentielles",
+            THERAPIES_HUMANISTES_EXISTENTIELLES,
+        ),
+        (
+            "psychodynamique_mecanismes_defense",
+            PSYCHODYNAMIQUE_MECANISMES_DEFENSE,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1402,7 +1417,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 205,
+            result.entries_loaded >= 207,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1574,9 +1589,11 @@ mod tests {
             "deuil_rupture_transitions",
             "emotion_regulation_dbt_advanced",
             "neurodiversite_adhd_autisme_hpi",
+            "psychodynamique_mecanismes_defense",
             "sante_mentale_prevention_resilience",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
+            "therapies_humanistes_existentielles",
             "therapies_trauma_avancees",
             "traumatologie_complexe",
             "troubleshooting_faq",

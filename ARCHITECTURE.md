@@ -558,11 +558,15 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts NEURODIVERSITE_ADHD_AUTISME_HPI + EMOTION_REGULATION_DBT_ADVANCED, +2 SOURCES entries, baseline >=203 -> >=205, expected list updated (phase 30)
 - `commands/ide_operator.rs`: fix E0505 borrow-after-move in git_status handler (changed_files Vec<&str> → changed_files_count usize)
 - Tests: 31 PASS (cargo test -- test_knowledge, baseline >=205 validated)
+- `knowledge_base_default.rs`: +2 consts THERAPIES_HUMANISTES_EXISTENTIELLES + PSYCHODYNAMIQUE_MECANISMES_DEFENSE, +2 SOURCES entries, baseline >=205 -> >=207, expected list updated (phase 31)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=207 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
 - `kb.neurodiversiteDbt.test.ts`: 51 PASS (Vitest, phase 30)
+- `kb.humanistePsychodynamique.test.ts`: 52 PASS (Vitest, phase 31)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
 - `AH-KB-NEURODIV-DBT-2026-04-29` (full schema, detect_recurrence PASS, phase 30)
+- `AH-KB-HUMANISTE-PSYCHODYN-2026-04-29` (full schema, detect_recurrence PASS, phase 31)
