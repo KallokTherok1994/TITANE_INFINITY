@@ -1,3 +1,46 @@
+# [31.2.38] - 2026-04-29 (SPRINT 7+8: Test Coverage Elevation + Security Audit + KB Phases 35-37 + R1-R4 Pipeline Fixes)
+
+## Release v31.2.38 — SPRINT 7 + SPRINT 8 + KB Arc clinique phases 35-37
+
+### Résumé des changements (v31.2.14 → v31.2.38)
+
+Sprint 7 (TEST_COVERAGE_ELEVATION), Sprint 8 (Security Audit + Release Prep), fixes pipeline Ollama R1-R4,
+et extension KB clinique phases 35-37 (+6 nouveaux modules cognitifs, 259 entrées totales).
+
+### Sécurité (SPRINT 8)
+
+- **protobufjs RCE CVE-2026-41242 (CVSS 9.8)** : override pnpm `protobufjs@<7.5.5 → >=7.5.5`
+- **uuid buffer overwrite GHSA-w5hq-g745-h8pq** : devDep `^13 → ^14` + override `uuid@<14.0.0 → >=14.0.0`
+- **`pnpm audit --audit-level=moderate`** : `No known vulnerabilities found`
+
+### Fixes Pipeline Ollama R1-R4
+
+- **R1** : `src/core/services/orchestrator.ts` — `LOCAL_PROVIDER_SET` guard ajouté (`Set(['ollama','titane-local','local'])`); cognitiveKernel ne peut plus override le champion local avec confidence > 70
+- **R2** : `reflectiveVerifier.ts` — `webSearch()` Tauri-safe remplace `browserWebSearch` (One Door compliant)
+- **R3** : `userPreferencesEngine.ts` — `DEEP_INTERNET_ANALYSIS_INSTRUCTION` honnête sur limites LLM local (pas d'accès internet en temps réel)
+- **R4** : `responseCache` — entrées `provider=mock` rejetées (exact + fuzzy)
+
+### Test Coverage Elevation (SPRINT 7)
+
+- **9 nouveaux fichiers de test** : `ollamaPipelineFixes.test.ts` (9 tests), `kb.communicationSante.test.ts` (152 tests), `kb.sociologieNeurosciences.test.ts` (96 tests), `kb.philosophie.test.ts`, `kb.psychiatrie.test.ts`, + 4 autres
+- **Thresholds Vitest** : functions 75% / branches 65%
+- **Suite totale** : ~6 770 tests PASS, 0 FAIL
+- **TSC** : 0 erreurs
+
+### KB Arc Clinique Phases 35-37
+
+- **Phase 35** : `philosophie_ethique_existentielle` (v31.5.1) + `relations_humaines_groupes_sociaux` (v31.5.2)
+- **Phase 36** : `sociologie_economie_politique` (v31.5.3) + `neurosciences_emotions_decision` (v31.5.4)
+- **Phase 37** : `communication_leadership_management` (v31.5.5) + `psychologie_sante_comportements` (v31.5.6)
+- **KB count** : 253 → 259 entrées canoniques (264 JSON − 4 kevin_ exclus du Rust)
+- **Rust tests** : `knowledge_base_default::tests` 12/12 PASS
+
+### AutoHeal
+
+- **entries=1455** — entries uniques, detect_recurrence PASS=33 FAIL=0
+
+---
+
 # [31.2.14] - 2026-04-27 (BUILD ALL: Release complète + Tests + Governance)
 
 ## Release v31.2.14 — BUILD ALL Complet (Range consolidé 31.2.9 → 31.2.14)
