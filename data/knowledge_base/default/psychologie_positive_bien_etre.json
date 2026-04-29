@@ -1,0 +1,93 @@
+{
+  "version": "v31.5.11",
+  "category": "psychologie_positive_bien_etre",
+  "description": "Psychologie positive, bien-être, bonheur, forces de caractère, gratitude, résilience, pleine conscience et épanouissement humain",
+  "retrieval_triggers": [
+    "psychologie positive",
+    "bien-être",
+    "bonheur",
+    "épanouissement",
+    "flourishing",
+    "PERMA",
+    "Seligman",
+    "forces de caractère",
+    "VIA",
+    "valeurs en action",
+    "gratitude",
+    "optimisme",
+    "espoir",
+    "Snyder",
+    "théorie des buts",
+    "flow",
+    "Csikszentmihalyi",
+    "engagement",
+    "sens",
+    "signification",
+    "purpose",
+    "résilience",
+    "post-traumatic growth",
+    "croissance post-traumatique",
+    "Tedeschi",
+    "Broaden-and-Build",
+    "Fredrickson",
+    "émotions positives",
+    "élargir-construire",
+    "mindfulness",
+    "pleine conscience",
+    "Kabat-Zinn",
+    "méditation",
+    "MBSR",
+    "savoring",
+    "appréciation",
+    "compassion",
+    "auto-compassion",
+    "Neff",
+    "relations positives",
+    "altruisme",
+    "générosité",
+    "oxytocine",
+    "lien social",
+    "self-determination theory",
+    "Ryan",
+    "Deci",
+    "motivation intrinsèque",
+    "autonomie",
+    "compétence",
+    "appartenance",
+    "Maslow",
+    "hiérarchie besoins",
+    "actualisation de soi",
+    "transcendance"
+  ],
+  "sections": {
+    "modele_perma_seligman": {
+      "perma": "PERMA (Seligman 2011 — Flourish): 5 piliers du bien-être. Positive Emotions (émotions positives — joie, gratitude, sérénité, intérêt, espoir, fierté, amusement, inspiration, admiration, amour — Fredrickson Top 10). Engagement (flux/flow, forces en action). Relationships (liens sociaux profonds — prédicteur de longévité #1 selon Valliant Harvard Study). Meaning (sens, appartenir à quelque chose de plus grand que soi). Accomplishment (réalisation, maîtrise, compétence). PERMA+ ajoute: énergie physique (Health) et état d'esprit de croissance.",
+      "learned_helplessness_optimism": "Seligman: résignation apprise (Learned Helplessness) → 3P: permanence (ça durera toujours), pervasiveness (ça affecte tout), personnalisation (c'est ma faute). Style explicatif pessimiste vs optimiste. Pessimiste: permanent/général/interne pour négatif. Optimiste: temporaire/spécifique/externe pour négatif (inversé pour positif). Thérapie cognitivo-positive: identifier et contester les 3P négatifs. Espoir (Hope Theory — Snyder): voies (pathways) vers les buts + motivation (agency) pour les emprunter."
+    },
+    "forces_caractere_via": {
+      "classification_via": "VIA Classification (Peterson & Seligman 2004): 24 forces de caractère organisées en 6 vertus — Sagesse (créativité, curiosité, ouverture d'esprit, amour de l'apprentissage, perspective), Courage (bravoure, persévérance, honnêteté, vitalité), Humanité (amour, bonté, intelligence sociale), Justice (travail d'équipe, équité, leadership), Tempérance (pardon, humilité, prudence, autorégulation), Transcendance (appréciation du beau, gratitude, espoir, humour, spiritualité). Questionnaire VIA-IS (gratuit en ligne): identifier ses forces signatures (top 5).",
+      "forces_en_action": "Utilisation des forces signatures (Linley & Burns): identifier → appliquer dans nouveaux contextes → intensifier. Intervention 'utilise une de tes forces d'une nouvelle manière chaque jour pendant 1 semaine' → augmente bonheur, réduit dépression à 6 mois (Seligman RCT 2005). Job crafting: remodeler son poste de travail pour y intégrer ses forces. Surexploitation d'une force = aussi problématique (curiosité → distraction, bravoure → imprudence)."
+    },
+    "emotions_positives_broaden_build": {
+      "broaden_build": "Théorie élargir-construire (Broaden-and-Build — Fredrickson 2001): les émotions positives élargissent le répertoire de pensées et d'actions (broadening) → construisent des ressources durables personnelles (psychologiques, sociales, physiques, intellectuelles). Exemple: joie → envie de jouer → développe créativité/liens sociaux. Sérénité → permet de savourer → ressources durables. Contraire des émotions négatives (rétrécissement répertoire). Ratio Losada (contesté): 3+ émotions positives pour 1 négative dans équipes performantes.",
+      "gratitude": "Pratiques de gratitude (Emmons & McCullough): journal de gratitude ('3 bonnes choses' chaque soir pendant 1 semaine) → hausse bien-être, sommeil, relations. Lettre de gratitude: écrire + lire en personne à quelqu'un qui a changé notre vie → effet massif sur bonheur (Seligman 2005 RCT). Neurobiologie: gratitude active CPFm, pCC, thalamus → modulation dopamine/sérotonine. Gratitude vs complaisant: gratitude = reconnaître la bonté reçue (pas nier le négatif).",
+      "savoring": "Savoring (Bryant & Veroff): apprécier et prolonger les expériences positives — passé (gratitude), présent (pleine conscience), futur (anticipation). Techniques: partage social ('good things jar'), congratulation (se féliciter), sharpening (focus sur détails sensoriels), absorption totale. Anti-savoring: self-consciousness, analyser/disséquer les émotions positives, pensées de 'ça pourrait être mieux'."
+    },
+    "flow_engagement_optimal": {
+      "flow_avance": "Flow avancé (Csikszentmihalyi): 8 conditions — défi/compétence équilibrés, but clair, feedback immédiat, concentration profonde, perte de soi (no self-consciousness), altération du temps, sentiment de contrôle, expérience autotélique (valeur en elle-même). Microflow quotidien: trouver le challenge dans les activités routinières. Flow au travail: prédicteur puissant d'engagement (Gallup: 15% d'employés engagés dans le monde). Boredom vs Anxiety → Flow channel.",
+      "self_determination_theory": "Self-Determination Theory (Ryan & Deci 1985): 3 besoins psychologiques universels — Autonomie (sentiment d'être à l'origine de ses actions — not locus of control), Compétence (se sentir capable), Appartenance/Relatedness (lien avec les autres). Satisfaction → motivation intrinsèque (plaisir inhérent) → bien-être, créativité, résilience. Frustration → contrôle externe, récompenses contingentes → motivation extrinsèque → réduction motivation intrinsèque (effet de surjustification — Lepper)."
+    },
+    "resilience_post_traumatique": {
+      "resilience_modeles": "Résilience: capacité à rebondir face à l'adversité (Bonanno). Non = absence de souffrance mais dynamisme adaptatif. Facteurs: sens de la cohérence (Antonovsky), soutien social, flexibilité cognitive, auto-efficacité, régulation émotionnelle, spiritualité. Modèle de Richardson: réintégration résiliente (croissance), homéostatique (retour état initial), avec perte (adaptation réduite), dysfonctionnelle (effondrement). Promouvoir la résilience: renforcer les ressources, pas seulement traiter les déficits.",
+      "croissance_post_traumatique": "Croissance post-traumatique (PTG — Tedeschi & Calhoun 1996): émergence positive après traversée d'une crise existentielle. 5 domaines: nouvelles possibilités (nouvelles routes de vie), relations avec autrui (compassion accrue), force personnelle (je suis plus fort que je ne le croyais), appréciation de la vie (priorités remises en question), changement spirituel (sens profond). Paradoxal: coexiste avec la souffrance. Soutenu par le sens-making, narration, soutien social."
+    },
+    "mindfulness_contemplation": {
+      "mbsr_programmes": "MBSR (Mindfulness-Based Stress Reduction — Kabat-Zinn 1979): programme 8 semaines — body scan, méditation assise, yoga doux, retraite silencieuse. Réduction stress, douleur chronique, anxiété, rechutes dépressives (MBCT — Teasdale/Williams). Mindfulness: attention portée intentionnellement, dans le moment présent, sans jugement. Changements cérébraux: épaississement cortex insulaire/cingulaire antérieur (3 mois), réduction densité amygdale, augmentation substance grise hippocampique.",
+      "auto_compassion": "Auto-compassion (Self-Compassion — Neff 2003): traiter sa propre souffrance avec la même gentillesse que celle qu'on offrirait à un ami. 3 composantes: kindness toward self (vs self-judgment), common humanity (vs isolation), mindfulness (vs over-identification). Mesure: SCS (Self-Compassion Scale). Prédicteur de bien-être, moins d'anxiété/dépression, plus de motivation intrinsèque et résilience. Distinct de l'estime de soi contingente (ne dépend pas des succès)."
+    },
+    "bien_etre_social_altruisme": {
+      "lien_social": "Lien social et bonheur: Harvard Study of Adult Development (Vaillant, 75 ans de suivi) → qualité des relations = prédicteur #1 de santé et bonheur à la vieillesse (> QI, statut social, revenus). Solitude = facteur de risque équivalent à 15 cigarettes/jour (Holt-Lunstad). Ocytocine: hormone du lien social — libérée par câlins, confiance, allaitement, orgasme; réduit cortisol; renforce comportements affiliatifs. Weak ties (liens faibles — Granovetter): ponts vers de nouvelles informations/opportunités.",
+      "altruisme_generosité": "Altruisme et bonheur: dépenser pour les autres (prosocial spending) prédit mieux le bonheur que dépenser pour soi (Dunn, Aknin). 'Helper's high': activation circuits récompense lors du don. Donner de son temps: prédit bonheur chez volontaires (effet causal démontré). Compassion active vs empathie épuisante: compassion (souhait de bonheur à l'autre) → activation circuits reward; empathie pure (ressentir la douleur de l'autre) → risque de fatigue compassionnelle."
+    }
+  }
+}

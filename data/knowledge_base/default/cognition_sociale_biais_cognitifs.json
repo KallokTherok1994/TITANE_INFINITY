@@ -1,0 +1,88 @@
+{
+  "version": "v31.5.12",
+  "category": "cognition_sociale_biais_cognitifs",
+  "description": "Cognition sociale, biais cognitifs, heuristiques, prise de décision, perception sociale, théorie de l'esprit et influence sociale",
+  "retrieval_triggers": [
+    "biais cognitif",
+    "heuristique",
+    "erreur de jugement",
+    "illusion cognitive",
+    "Kahneman",
+    "système 1",
+    "système 2",
+    "pensée rapide",
+    "pensée lente",
+    "biais de confirmation",
+    "biais d'ancrage",
+    "biais de disponibilité",
+    "Dunning-Kruger",
+    "métacognition",
+    "surconfiance",
+    "illusion de savoir",
+    "cognition sociale",
+    "perception sociale",
+    "formation d'impression",
+    "attribution",
+    "erreur fondamentale d'attribution",
+    "acteur-observateur",
+    "théorie de l'esprit",
+    "mentalisation",
+    "ToM",
+    "empathie cognitive",
+    "stéréotypes",
+    "préjugés",
+    "discrimination",
+    "catégorisation sociale",
+    "influence sociale",
+    "conformisme",
+    "Milgram",
+    "Asch",
+    "obéissance autorité",
+    "dissonance cognitive",
+    "Festinger",
+    "attitude",
+    "persuasion",
+    "Cialdini",
+    "groupthink",
+    "pensée de groupe",
+    "polarisation de groupe",
+    "effet Dunning-Kruger",
+    "biais rétrospectif",
+    "hindsight bias",
+    "nudge",
+    "architecture du choix",
+    "Thaler"
+  ],
+  "sections": {
+    "systeme1_systeme2_kahneman": {
+      "dual_process": "Théorie des systèmes duaux (Kahneman — Thinking Fast and Slow 2011): Système 1 = rapide, automatique, intuitif, émotionnel, inconscient, parallèle, heuristique — traitement ~11 millions bits/s; Système 2 = lent, délibératif, logique, conscient, séquentiel, analytique — traitement ~50 bits/s. Système 1 contrôle ~95% des décisions quotidiennes. Système 2 = paresseux, valide souvent les propositions du S1 sans les questionner (rationalisation a posteriori). Kahneman prix Nobel 2002 avec Tversky.",
+      "heuristiques_tversky": "Heuristiques de Tversky & Kahneman: Disponibilité (availability) — évaluer la probabilité selon la facilité de rappel mémoriel → surestimation accidents spectaculaires, sous-estimation maladies communes. Représentativité — juger selon la ressemblance à un prototype → erreur conjonction (fallacy: P(A+B) < P(A)), ignorer fréquences de base. Ancrage/ajustement — partir d'une valeur initiale et ajuster insuffisamment → biais d'ancrage persistant. Affect heuristic: décisions guidées par l'état affectif momentané."
+    },
+    "biais_cognitifs_classiques": {
+      "biais_confirmation": "Biais de confirmation (confirmation bias — Wason 1960): tendance à chercher, interpréter et mémoriser les informations qui confirment ses croyances existantes, en ignorant les informations contraires. Omniprésent dans politique, religion, médecine. Contre-mesure: devil's advocate, pré-mortem (imaginer l'échec), consider the opposite, exposé délibéré à des vues contradictoires. Cas extrême: biais de croyance (croire une conclusion car désirable même si logique défaillante).",
+      "dunning_kruger": "Effet Dunning-Kruger (1999): les individus incompétents dans un domaine surestiment leurs compétences (double malédiction: manque de compétence + manque de métacognition pour reconnaître ce manque). Les experts sous-estiment légèrement leurs compétences (conscience des nuances et exceptions). Courbe en J: très bas en début → surestimation (Pic de Stupidité/Mount Stupid) → apprentissage → réalisme → expertise. Inverse: imposteur syndrome chez experts.",
+      "autres_biais": "Biais rétrospectif (Hindsight bias): après les faits, sentiment que l'événement était prévisible ('j'avais vu ça venir'). Biais d'autocomplaisance (self-serving bias): succès = mérite personnel / échecs = facteurs externes. Biais de statu quo: préférence pour l'état actuel (loss aversion × 2 par rapport aux gains — Kahneman/Tversky). Effet de halo: une caractéristique positive/négative colore le jugement global de la personne (physique attractif → présumé plus intelligent). Biais de surconfiance: intervalles de confiance trop étroits dans les estimations."
+    },
+    "attribution_perception_sociale": {
+      "erreur_fondamentale": "Erreur fondamentale d'attribution (FAE — Ross 1977): surestimer les facteurs dispositionnels (personnalité) et sous-estimer les facteurs situationnels pour expliquer le comportement d'autrui. Exemple: si quelqu'un trébuche, on pense 'maladroit' (disposition) plutôt que 'sol glissant' (situation). Différence acteur-observateur: pour son propre comportement, on invoque la situation. Cultures collectivistes: FAE moins marquée. Attribution de réussite: interne stable = fierté; externe variable = gratitude/chance.",
+      "formation_impression": "Formation d'impression sociale (Asch): effet de primauté (premières informations pèsent plus — 'warm/cold' study); effet de récence (dernière information prégnante si long délai). Halo/horns effect. Warm-cold dimension: dimension centrale structurante de l'impression. Schema social: cadre cognitif pour interpréter les informations sur les individus ou groupes. Impression durable et résistante au changement: si consistent, absorption; si inconsistant, subtyping (sous-catégorie d'exception) ou bookkeeping (révision lente)."
+    },
+    "theorie_esprit_empathie": {
+      "theory_of_mind": "Théorie de l'esprit (Theory of Mind / ToM — Premack & Woodruff 1978): capacité à attribuer des états mentaux (croyances, désirs, intentions) à autrui et à soi-même. False-belief task (Wimmer & Perner): comprendre qu'une personne peut avoir une fausse croyance (absent de TSA sévère, développée chez enfant ~4 ans). Mindblindness (Baron-Cohen): déficit ToM dans TSA — difficulté à lire les intentions/émotions. Mentalisation (Fonagy): capacité réflexive = comprendre ses propres états mentaux et ceux d'autrui = base de l'attachement sécure.",
+      "empathie_miroir": "Neurones miroirs (Rizzolatti): activés lors de l'observation ET de l'exécution d'une action → base possible de l'imitation et de la résonance émotionnelle. Empathie affective (bottom-up, automatique: ressentir l'émotion de l'autre — insula, amygdale) vs empathie cognitive (top-down, délibérative: comprendre le point de vue de l'autre — CPFm, TPJ). Fatigue empathique: sur-activation empathie affective → épuisement (soignants). Solution: basculer vers compassion (motivation à aider sans fusion émotionnelle)."
+    },
+    "stereotypes_prejudices": {
+      "categorisation": "Catégorisation sociale (Tajfel & Turner): processus cognitif automatique de classement des individus en groupes. Minimal group paradigm: même groupes arbitraires (préférence couleur de peinture) → favoritisme ingroup. Stéréotypes: croyances généralisées sur les caractéristiques d'un groupe — descriptifs (ce qu'ils sont) et prescriptifs (ce qu'ils doivent être). Préjugés: évaluations affectives négatives envers un groupe (→ discrimination comportementale).",
+      "menace_stereotype": "Menace du stéréotype (Stereotype Threat — Steele & Aronson 1995): performance diminuée par peur de confirmer un stéréotype négatif lié à son groupe d'appartenance → activation anxiété + inhibition ressources cognitives. Solutions: réaffirmer une valeur personnelle importante (self-affirmation), changer le framing ('ce test mesure la plasticité, non le QI actuel'). Biais implicites: mesurés par IAT (Implicit Association Test) — association automatique groupe/valence."
+    },
+    "influence_sociale_conformisme": {
+      "milgram_asch": "Expérience de Milgram (1961): 65% des sujets administrent les chocs maximaux (450V) sur ordre d'une autorité légitime — démontre l'obéissance à l'autorité bien au-delà de ce que la majorité prédit. Facteurs: proximité expérimentateur, distance victime, légitimité institution, gradation des demandes (foot-in-the-door). Conformisme de Asch (1951): 75% des sujets se conforment à la réponse fausse évidente de la majorité au moins une fois. Conformisme normatif (appartenance) vs informationnel (vérité).",
+      "dissonance_cognitive": "Dissonance cognitive (Festinger 1957): état de tension psychologique lors d'une incohérence entre attitudes/comportements. Résolution: changer l'attitude (plus courant), changer le comportement, ajouter une nouvelle cognition justificatrice (rationalisation). Insufficient justification: quand on fait quelque chose pour une petite récompense, on change son attitude pour se convaincre qu'on le voulait vraiment (moins de dissonance si forte récompense). Cialdini 6 principes de persuasion: réciprocité, engagement/cohérence, preuve sociale, autorité, sympathie, rareté.",
+      "nudge": "Nudges et architecture du choix (Thaler & Sunstein 2008): modification de l'environnement de décision pour orienter les choix sans interdire ni récompenser. Exemples: inscription automatique (default opt-in) pour retraite → hausse participation; positionnement des fruits sains au niveau des yeux. Paternalisme libéral: respecte la liberté tout en guidant vers meilleures décisions. Limites: manipulation si non transparent; équité si population informationnellement désavantagée."
+    },
+    "decision_groupes": {
+      "groupthink": "Pensée de groupe (Groupthink — Janis 1972): dégradation de la qualité décisionnelle dans un groupe très cohésif — recherche d'unanimité > réalisme. Symptômes: illusion d'invulnérabilité, rationalisation collective, stéréotypage des adversaires, autocensure, pression sur dissidents, gardiens de la pensée, illusion d'unanimité. Cas: Baie des Cochons, Challenger. Prévention: devil's advocate attitré, anonymisation des avis, leader retient son opinion en début de réunion.",
+      "polarisation": "Polarisation de groupe (Group Polarization — Moscovici & Zavalloni): discussion en groupe amplifie la position dominante initiale. Mécanismes: persuasive arguments (nouvelles prises en faveur de la position majoritaire), social comparison (se vouloir plus extrême que les autres pour appartenir). Echo chambers et réseaux sociaux: algorithmes de recommandation → exposition sélective → radicalisation progressive. Délibération structurée, diversité cognitive dans les groupes = contremesures."
+    }
+  }
+}
