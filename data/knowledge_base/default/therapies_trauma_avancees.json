@@ -1,0 +1,311 @@
+{
+  "version": "v31.3.6",
+  "category": "therapies_trauma_avancees",
+  "description": "Thérapies trauma-focalisées avancées : EMDR, IFS, Somatic Experiencing, AEDP, schema therapy modes — protocoles, indications, mécanismes et preuve empirique",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "EMDR",
+    "Eye Movement Desensitization Reprocessing",
+    "désensibilisation EMDR",
+    "thérapie EMDR",
+    "protocole EMDR",
+    "IFS",
+    "Internal Family Systems",
+    "parties internes",
+    "exil protecteur pompier",
+    "Self IFS",
+    "Richard Schwartz",
+    "Somatic Experiencing",
+    "Peter Levine",
+    "trauma somatique",
+    "pendulation titration",
+    "réponse orientée somatique",
+    "AEDP",
+    "Diana Fosha",
+    "Accelerated Experiential Dynamic Psychotherapy",
+    "schema therapy",
+    "modes schémas",
+    "Jeffrey Young",
+    "schémas précoces inadaptés",
+    "enfant vulnérable mode",
+    "parent critique mode",
+    "adulte sain mode",
+    "sensorimotor psychotherapy",
+    "Pat Ogden",
+    "thérapie sensorimotrice",
+    "trauma corps",
+    "mémoire somatique",
+    "thérapie pour le trauma",
+    "guérir le trauma",
+    "traitement trauma",
+    "PTSD thérapie",
+    "C-PTSD traitement",
+    "thérapie basée sur preuves trauma",
+    "Phase 1 stabilisation Phase 2 traitement",
+    "reprocessing mémoire traumatique",
+    "intégration trauma",
+    "quelle thérapie pour trauma",
+    "thérapie trauma recommandée",
+    "EMDR vs TCC",
+    "approche corps trauma",
+    "dissociation traitement",
+    "DES dissociation",
+    "parts work",
+    "voices parts therapy"
+  ],
+  "sections": {
+    "cadre_general_therapies_trauma": {
+      "principe_fondateur": "Les thérapies trauma-focalisées partagent un postulat commun: la mémoire traumatique est encodée différemment (implicite, sensorimotrice, fragmentée) et nécessite un traitement spécifique — pas seulement la parole.",
+      "convergences_approches": [
+        "Travail sur l'activation physiologique (système nerveux, pas seulement cognitions)",
+        "Respect de la fenêtre de tolérance (titration, pendulation)",
+        "Phases: stabilisation AVANT reprocessing",
+        "Ressources avant trauma — construction de la capacité de régulation",
+        "Intégration narrative: donner sens et cohérence à l'expérience"
+      ],
+      "niveaux_preuve_scientifique": {
+        "EMDR": "Niveau 1 — Guidelines OMS (2013), APA, NICE (UK) — traitement gold standard PTSD",
+        "TF_CBT": "Niveau 1 — gold standard enfants/adolescents trauma",
+        "schema_therapy": "Niveau 2 — forte évidence TPL et troubles de personnalité",
+        "IFS": "Niveau prometteur — essais cliniques en cours, NREPP listed",
+        "somatic_experiencing": "Niveau 2-3 — études pilote positives, manque de grands RCTs",
+        "AEDP": "Niveau 2 — données cliniques significatives, RCTs en développement"
+      },
+      "selection_approche": "Dépend du profil traumatique (simple/complexe/développemental), des comorbidités, des ressources et de la fenêtre de tolérance du patient — souvent intégration de plusieurs approches"
+    },
+    "EMDR": {
+      "fondatrice": "Francine Shapiro (1987) — découverte accidentelle lors d'une promenade: les mouvements oculaires spontanés atténuaient des pensées anxieuses",
+      "mecanisme_hypotheses": {
+        "working_memory_hypothesis": "Les stimulations bilatérales (SB) occupent la working memory pendant l'activation du souvenir traumatique — réduisant l'intensité émotionnelle (Maxfield & Hyer 2002)",
+        "REM_hypothesis": "Similitude avec le traitement émotionnel en phase REM du sommeil (Stickgold 2002)",
+        "orienting_response": "Les SB déclenchent une réponse d'orientation qui interrompt le freeze et facilite le traitement",
+        "resultat_clinique": "Le souvenir perd son intensité émotionnelle et s'intègre dans la mémoire autobiographique narrative"
+      },
+      "protocole_8_phases": {
+        "1_historique": "Recueil histoire clinique, identification cibles EMDR, évaluation ressources",
+        "2_preparation": "Psychoéducation, lieu sûr, conteneur, outils de régulation — AVANT toute désensibilisation",
+        "3_evaluation": "Image/cognition négative/SUD (0-10)/cognition positive/VOC (1-7)/émotions/localisations corporelles",
+        "4_desensibilisation": "Reprocessing actif: SB + associations libres jusqu'à SUD=0",
+        "5_installation": "Renforcement de la cognition positive: SB + CP jusqu'à VOC=7",
+        "6_body_scan": "Vérification résidus somatiques — complétion corporelle",
+        "7_cloture": "Retour à équilibre si traitement incomplet — conteneur, journal",
+        "8_reevaluation": "Début séance suivante — vérification stabilité du traitement"
+      },
+      "indications": [
+        "PTSD (Niveau 1 — traitement de premier choix)",
+        "C-PTSD (protocoles adaptés — EMDR intégratif EMDR-PRECI)",
+        "Deuil complexe",
+        "Phobies avec origine traumatique",
+        "Attaque panique avec souvenir déclencheur",
+        "Dépendance affective et blessures d'attachement (protocoles spécifiques)",
+        "Trauma développemental / attachement (protocoles EMDR Attachment-Focused)"
+      ],
+      "contre_indications_precautions": [
+        "Dissociation sévère sans stabilisation préalable (DID non stabilisé)",
+        "Psychose active",
+        "Incapacité à tolérer l'activation émotionnelle",
+        "Absence de ressources de régulation — phase 2 incomplète"
+      ],
+      "ressources": [
+        "EMDR France — emdr-france.org",
+        "EMDR Canada — emdrcanada.org",
+        "EMDR Institute (Shapiro) — emdr.com",
+        "Protocole interactif enfants: Robbie Adler-Tapia",
+        "EMDR attachement: Brurit Laub & Elan Shapiro (protocoles F&RL, EMDR-PRECI)"
+      ]
+    },
+    "IFS_internal_family_systems": {
+      "fondateur": "Richard C. Schwartz (1995) — 'Internal Family Systems Model' développé initialement avec des familles puis appliqué à la psyché individuelle",
+      "postulat_fondateur": "L'esprit est naturellement multiple — composé de 'parties' ou sous-personnalités. Aucune partie n'est mauvaise — toutes tentent de protéger le système. Le Self (capital S) est la présence centrale sage et bienveillante.",
+      "topographie_systeme_interne": {
+        "Self": {
+          "definition": "Présence centrale — pas une partie mais l'essence authentique. Caractérisée par les 8C: Calme, Curiosité, Clarté, Compassion, Confiance, Courage, Créativité, Connexion",
+          "role": "Leader naturel du système — quand le Self guide, les parties peuvent se reposer et guérir"
+        },
+        "managers": {
+          "definition": "Parties protectrices proactives — gèrent le quotidien pour éviter que l'exil ne soit activé",
+          "exemples": ["Perfectionniste", "Critique interne", "Contrôlant", "Performeur", "Planificateur compulsif"]
+        },
+        "pompiers": {
+          "definition": "Parties protectrices réactives — interviennent en urgence quand l'exil est activé malgré les managers",
+          "exemples": ["Addiction / comportements compulsifs", "Dissociation", "Rage", "Impulsivité sexuelle", "Auto-mutilation"]
+        },
+        "exiles": {
+          "definition": "Parties blessées, souvent enfantines — portent le poids du trauma, de la honte, de la peur, de la douleur",
+          "isolation": "Bannis par les managers pour protéger le système — mais leur bannissement perpétue la souffrance"
+        }
+      },
+      "processus_therapeutique": [
+        "1. Identifier une partie activée (émotion, comportement, symptôme)",
+        "2. Se focaliser sur elle avec curiosité (pas jugement)",
+        "3. Établir la relation Self-Partie — demander ce qu'elle protège",
+        "4. Obtenir la permission d'accéder aux exils protégés",
+        "5. Témoigner la souffrance des exils (witnessing)",
+        "6. Retirer le fardeau des exils — désensibilisation et transformation",
+        "7. Intégration — les protecteurs changent de rôle (ex: perfectionniste → coach bienveillant)"
+      ],
+      "applications": [
+        "Trauma complexe et C-PTSD",
+        "Trouble de personnalité borderline",
+        "Addictions (parties pompiers)",
+        "Critique interne et honte toxique",
+        "Dépendance affective (parties exils d'abandon)",
+        "Troubles alimentaires"
+      ],
+      "ressources": [
+        "Richard C. Schwartz — No Bad Parts (2021) — introduction grand public",
+        "Frank Anderson — Transcending Trauma (2021) — IFS et trauma",
+        "IFS Institute — ifs-institute.com",
+        "IFS en français: ifs-france.com"
+      ]
+    },
+    "somatic_experiencing_SE": {
+      "fondateur": "Peter A. Levine (1997) — 'Waking the Tiger: Healing Trauma' — observation des réponses animales au trauma",
+      "postulat": "Le trauma n'est pas dans l'événement mais dans le système nerveux. Les animaux sauvages ne développent pas de PTSD car ils complètent les cycles de survie (trembler, secouer après le freeze) — les humains inhibent ces décharges.",
+      "principes_cles": {
+        "pendulation": "Alternance intentionnelle entre ressource (sécurité, ancrage) et activation traumatique — évite la submersion, titration progressive",
+        "titration": "Travailler avec de très petites doses de l'expérience traumatique — 'less is more' — pour ne pas submerger le système",
+        "vortex_ressource": "Attention intentionnelle sur les sensations de bien-être, force et ancrage — contrepoids au vortex traumatique",
+        "decharge_somatique": "Permettre et encourager les tremblements, vibrations, chaleur — signes de décharge du système nerveux",
+        "completion_cycle": "Finaliser les réponses de survie gelées (combat/fuite/immobilité) — retrouver le sentiment de pouvoir d'action"
+      },
+      "techniques_pratiques": [
+        "SIBAM: Sensation-Image-Comportement-Affect-Signification (cartographier l'expérience)",
+        "Felt sense: sens ressenti corporel (Gendlin) — ancrage dans le corps",
+        "Pendulation: aller-retour conscient ressource/activation",
+        "Orienter: reconnexion à l'espace présent via les sens (vision, ouïe)",
+        "Grounding: enracinement physique (pieds sol, poids corps)",
+        "Completion des actions défensives gelées"
+      ],
+      "indications": [
+        "PTSD simple et complexe",
+        "Trauma physique (accidents, procédures médicales, chirurgies)",
+        "Trauma développemental sans mémoire verbale explicite",
+        "Somatisation et symptômes physiques chroniques post-trauma",
+        "Quand la parole seule est insuffisante"
+      ],
+      "ressources": [
+        "Peter Levine — Waking the Tiger (1997) / In an Unspoken Voice (2010)",
+        "Bessel van der Kolk — The Body Keeps the Score (2014)",
+        "SE International — traumahealing.org",
+        "Sensorimotor Psychotherapy Institute (Pat Ogden) — sensorimotorpsychotherapy.org"
+      ]
+    },
+    "AEDP_accelerated_experiential_dynamic": {
+      "fondatrice": "Diana Fosha (2000) — 'The Transforming Power of Affect' — intégration neuroscience affective, théorie de l'attachement et psychodynamique",
+      "innovation_centrale": "AEDP part du principe que la capacité à guérir est naturelle et innée — le thérapeute est un agent actif de co-régulation, pas neutre. La relation thérapeutique est elle-même curative.",
+      "triangle_experience": {
+        "description": "Modèle de McCullough adapté par Fosha",
+        "coin_défenses": "Évitements, dissociations, alexithymie, intellectualisation",
+        "coin_emotions_inhibantes": "Honte, peur, culpabilité — bloquent les émotions catégoriques",
+        "coin_emotions_categoriques": "Émotions de base authentiques (peur, colère, tristesse, joie, dégoût) — leur expression complète = guérison"
+      },
+      "marqueurs_transformation": {
+        "etat_1": "Défense — travail de défense (affirmation de soi, curiosité bienveillante)",
+        "etat_2": "Émotion cathartique — expression émotionnelle complète avec le soutien du thérapeute",
+        "etat_3": "Transformation — émotions de guérison émergentes (fierté, gratitude, émotion esthétique, amour)",
+        "etat_4": "Core state — vérité essentielle, sens profond, présence"
+      },
+      "pratiques_signature": [
+        "Metaprocessing: traiter l'expérience de transformation elle-même",
+        "Affirmation du courage et de l'effort (not praise but recognition)",
+        "Self-disclosure thérapeutique ciblé et éthique",
+        "Travail avec les représentations de la figure d'attachement (Imagined interaction)"
+      ],
+      "ressources": [
+        "Diana Fosha — The Transforming Power of Affect (2000)",
+        "Diana Fosha — Undoing Aloneness (2021)",
+        "AEDP Institute — aedpinstitute.org"
+      ]
+    },
+    "schema_therapy_modes": {
+      "fondateur": "Jeffrey Young (1990, 1994) — développement initial pour les personnalités résistantes à la TCC standard",
+      "schemas_precoces_inadaptes_SPI": {
+        "definition": "Thèmes émotionnels et cognitifs envahissants développés dans l'enfance / l'adolescence, auto-perpétuants, dysfonctionnels dans les relations adultes",
+        "18_schemas": {
+          "domaine_disconnexion_rejet": ["Abandon/Instabilité", "Méfiance/Abus", "Carence affective", "Imperfection/Honte", "Isolement social"],
+          "domaine_autonomie_performances": ["Dépendance/Incompétence", "Vulnérabilité aux dangers", "Enchevêtrement/Soi sous-développé", "Échec"],
+          "domaine_limites_deteriorees": ["Droit/Grandiosité", "Manque de self-control/Self-discipline"],
+          "domaine_orientation_vers_autrui": ["Assujettissement", "Sacrifice de soi", "Recherche d'approbation"],
+          "domaine_hypervigilance_inhibition": ["Négativité/Pessimisme", "Surcontrôle émotionnel", "Normes exigeantes/Hypercriticisme", "Punition"]
+        }
+      },
+      "travail_par_modes": {
+        "definition_mode": "État émotionnel et comportemental actuel — issu de l'activation d'un schéma",
+        "modes_enfant": {
+          "enfant_vulnerable": "Porte la douleur du schéma — peur, tristesse, honte, abandon",
+          "enfant_en_colere": "Colère non résolue des besoins non satisfaits",
+          "enfant_impulsif": "Besoins exprimés immédiatement sans régulation",
+          "enfant_heureux": "État de bien-être fondamental quand les besoins sont satisfaits"
+        },
+        "modes_parentaux": {
+          "parent_critique_punitif": "Voix intériorisée critique, sévère, punitive — souvent parent abusif/critique internalisé",
+          "parent_exigeant": "Voix qui pousse à performer, perfectionner, sans jamais être satisfait"
+        },
+        "modes_coping": {
+          "capitulant": "Se soumet au schéma — accepte la maltraitance, ne se défend pas",
+          "surcompensateur": "Fait l'inverse du schéma (ex: schéma infériorité → comportement arrogant/contrôlant)",
+          "evitant": "Bloque, engourdit, évite toute activation du schéma"
+        },
+        "adulte_sain": "Mode objectif thérapeutique — régule les autres modes avec compassion, sagesse et fermeté"
+      },
+      "techniques": [
+        "Imagery rescripting: réécriture des souvenirs traumatiques via imagination guidée",
+        "Chairwork: dialogue entre modes (chaises vides)",
+        "Lettre des modes: écriture des modes",
+        "Limited reparenting: le thérapeute répond partiellement aux besoins de l'enfant vulnérable",
+        "Flashcard mode: rappel de l'adulte sain dans les situations difficiles"
+      ],
+      "indications_specifiques": [
+        "Trouble de personnalité borderline (TPL) — preuves RCT très solides",
+        "Trouble narcissique",
+        "Trouble évitant",
+        "Dépendance affective et codépendance",
+        "Trouble alimentaire chronique",
+        "Résistance à autres thérapies"
+      ],
+      "ressources": [
+        "Jeffrey Young — Schema Therapy: A Practitioner's Guide (2003)",
+        "Wendy Behary — Disarming the Narcissist (2008)",
+        "Institut Schema Therapy France — schematherapie.fr",
+        "International Society of Schema Therapy — schematherapy.com"
+      ]
+    },
+    "integration_et_recommandations_cliniques": {
+      "choix_approche_par_profil": {
+        "PTSD_simple_evenement_recent": "EMDR Phase 1-8 standard — guérison rapide possible en 8-15 séances",
+        "C_PTSD_trauma_developpement": "Phase stabilisation longue + IFS ou schema therapy + EMDR adapté (EMDR-PRECI)",
+        "blessures_attachement_predominantes": "AEDP ou IFS + travail reparentage + EMDR attachement-focused",
+        "dissociation_severe": "Modèle de dissociation structurelle (Van der Hart) + stabilisation longue AVANT reprocessing",
+        "symptoms_somatiques_predominants": "Somatic Experiencing ou sensorimotor psychotherapy en premier plan",
+        "personnalite_et_schemas": "Schema therapy + chairwork + imagery rescripting — durée 2-3 ans minimum TPL"
+      },
+      "phases_universelles": {
+        "phase_1_securite_stabilisation": "Toujours en premier — ressources, psychoéducation, régulation SN, alliance thérapeutique",
+        "phase_2_reprocessing": "Traitement des mémoires traumatiques — EMDR, SE, IFS exils, imagery rescripting",
+        "phase_3_integration": "Consolidation identitaire, relations, projets de vie — test dans le réel quotidien"
+      },
+      "signaux_readiness_phase_2": [
+        "SUD (détresse) < 5 sur des situations du quotidien",
+        "Capacité à se gronder soi-même avec compassion",
+        "Ressources de régulation actives et utilisées",
+        "Alliance thérapeutique solide",
+        "Dissociation < SUDS 7 pendant l'activation"
+      ],
+      "contre_indications_absolues_reprocessing": [
+        "Psychose active ou déstabilisée",
+        "Trouble dissociatif identitaire (DID) sans cartographie et stabilisation des parties",
+        "Idéation suicidaire active",
+        "Abus de substance actif sans soutien de stabilisation"
+      ],
+      "trouver_therapiste": {
+        "EMDR": "EMDR France (emdr-france.org), EMDR Canada (emdrcanada.org) — annuaires officiels",
+        "IFS": "IFS Institute (ifs-institute.com), IFS France (ifs-france.com)",
+        "SE": "SETSI (traumahealing.org) — praticiens certifiés SE",
+        "schema": "International Society of Schema Therapy (schematherapy.com)",
+        "AEDP": "AEDP Institute (aedpinstitute.org)",
+        "critere_qualite": "Chercher un thérapeute formé et supervisé, pas seulement 'initié' — vérifier la certification officielle dans la méthode"
+      }
+    }
+  }
+}

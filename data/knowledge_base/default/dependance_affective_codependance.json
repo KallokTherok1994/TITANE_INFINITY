@@ -1,0 +1,250 @@
+{
+  "version": "v31.3.5",
+  "category": "dependance_affective_codependance",
+  "description": "Dépendance affective, codépendance, trauma bonding, fawn response, parentification, blessures fondamentales — ressources cliniques et voies de guérison",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "dépendance affective",
+    "codépendance",
+    "trauma bonding",
+    "lien traumatique",
+    "attachment hunger",
+    "fawn response",
+    "people pleasing",
+    "parentification",
+    "enfant parentifié",
+    "blessures fondamentales",
+    "blessures de Bourbeau",
+    "abandon rejet",
+    "trahison injustice",
+    "humiliation",
+    "rejet abandon",
+    "peur de l'abandon",
+    "angoisse de séparation",
+    "relation toxique dépendance",
+    "je ne peux pas me passer de lui",
+    "je ne peux pas m'en aller",
+    "rester dans une relation toxique",
+    "accro à une personne",
+    "obsession amoureuse",
+    "amour compulsif",
+    "amour anxieux",
+    "validation externe",
+    "besoin de validation",
+    "manque de soi",
+    "frontières poreuses",
+    "incapacité à dire non",
+    "sauveteur victime",
+    "triangle de Karpman",
+    "sauveur",
+    "sur-responsabilité",
+    "fusion émotionnelle",
+    "perte d'identité dans la relation",
+    "mécanisme de survie relationnel",
+    "Stockholm relationnel",
+    "cycle de l'abus",
+    "idéalisation dévaluation rupture",
+    "intermittent reinforcement",
+    "renforcement intermittent",
+    "Melody Beattie",
+    "codépendant jamais content",
+    "love addiction",
+    "sex and love addicts",
+    "guérir la dépendance affective",
+    "autonomie émotionnelle",
+    "sécurité intérieure"
+  ],
+  "sections": {
+    "cadre_clinique_dependance_affective": {
+      "definition": "La dépendance affective est un schéma relationnel caractérisé par un besoin excessif de l'autre pour réguler sa propre valeur, son identité et ses émotions. Distincte de l'amour sain, elle s'enracine dans des blessures d'attachement précoces.",
+      "criteres_diagnostiques_fonctionnels": [
+        "Peur intense et persistante de l'abandon ou du rejet",
+        "Identité définie par la relation (sans l'autre = vide existentiel)",
+        "Tolérance élevée aux comportements toxiques pour éviter la rupture",
+        "Alternance obsessionnelle entre euphorie (fusion) et terreur (abandon)",
+        "Incapacité à quitter une relation même destructrice",
+        "Besoin constant de validation et de réassurance",
+        "Effacement des besoins propres au profit de l'autre",
+        "Jalousie, contrôle, surveillance comme réponse à l'anxiété d'abandon"
+      ],
+      "distinction_amour_sain_vs_dependant": {
+        "amour_sain": "Je te veux dans ma vie / je m'aime aussi sans toi",
+        "dependance_affective": "J'ai besoin de toi pour exister / sans toi je n'existe pas",
+        "critere_cle": "L'amour sain survit à la solitude — la dépendance affective la redoute existentiellement"
+      },
+      "prevalence": "Estimée à 15-25% de la population adulte en occident (Norwood 1985, Beattie 1987), fortement corrélée avec trauma développemental, attachement insécure et environnement familial dysfonctionnel"
+    },
+    "codependance": {
+      "definition_melody_beattie": "La codépendance (Melody Beattie, 'Codependent No More', 1986) désigne un pattern où une personne se définit par les besoins, problèmes ou émotions d'une autre — perdant contact avec ses propres désirs, limites et identité.",
+      "caracteristiques_centrales": [
+        "Responsabilité excessive pour les émotions et comportements de l'autre",
+        "Difficulté à identifier ses propres besoins",
+        "Tendance au sauvetage / fixing compulsif",
+        "Ressentiment chronique malgré un sacrifice volontaire apparent",
+        "Tolérance aux comportements inacceptables (addictions, violence, mensonge)",
+        "Autovaleur conditionnelle aux approbations extérieures",
+        "Contrôle excessif masqué en aide",
+        "Peur de l'abandon intensifiée par la co-dépendance elle-même"
+      ],
+      "origine_familiale_systemique": "Fréquemment développée dans des familles avec un parent addictif, abusif, malade chronique ou émotionnellement absent. L'enfant apprend à réguler l'adulte plutôt que d'être régulé par lui.",
+      "triangle_karpman": {
+        "description": "Modèle Stephen Karpman (1968) — 3 rôles dysfonctionnels dans les relations codépendantes",
+        "roles": {
+          "sauveur": "Se sur-responsabilise pour l'autre, prodigue aide non-demandée, évite ses propres problèmes via l'aide compulsive",
+          "victime": "Se perçoit impuissant, attire sauveteurs, refuse la responsabilité personnelle",
+          "persecuteur": "Blâme, critique, contrôle — souvent ancien sauveur épuisé ou victime qui inverse"
+        },
+        "sortie_triangle": "Passer au triangle des Vainqueurs (Acey 1990): Sauveur → Coach, Victime → Créateur, Persécuteur → Mentor"
+      }
+    },
+    "trauma_bonding_lien_traumatique": {
+      "definition": "Le trauma bonding (Dutton & Painter 1993) est un lien affectif paradoxalement renforcé par la maltraitance cyclique. Mécanisme de survie neurobiologique: l'alternance tension-explosion-réconciliation crée une dépendance neurochimique.",
+      "mecanisme_neurobiologique": {
+        "dopamine": "Les phases de réconciliation et d'idéalisation libèrent des pics de dopamine (récompense variable = hyperaddictif)",
+        "cortisol": "Les phases de tension maintiennent l'hypervigilance et l'état de survie chronique",
+        "ocytocine": "Le contact physique post-conflit déclenche l'ocytocine (lien) même avec l'agresseur",
+        "resultat": "Le cerveau associe l'agresseur à la fois danger ET source de soulagement — renforçant le lien"
+      },
+      "cycle_lenore_walker_1979": {
+        "phase_1_tension": "Accumulation des tensions — victime sur-surveillance, marche sur des œufs",
+        "phase_2_explosion": "Explosion abusive (violence, humiliation, menaces) — intensité variable",
+        "phase_3_reconciliation": "Excuses, lune de miel, promesses — retour temporaire de l'idéalisation",
+        "phase_4_accalmie": "Calme relatif avant la prochaine montée — justifications, minimisation",
+        "dynamique": "Le cycle raccourcit avec le temps — les phases d'accalmie disparaissent"
+      },
+      "intermittent_reinforcement": {
+        "principe": "Renforcement intermittent (Skinner) = le schedule de récompense le plus puissant — plus addictif que la récompense constante",
+        "application_relationnelle": "Les relations toxiques alternent chaleur/froideur, amour/rejet créant une hyperactivation du système de récompense",
+        "comparaison": "Identique neurochimiquement à une addiction à substance — même centres limbiques, même sevrage"
+      },
+      "syndrome_stockholm_relationnel": {
+        "definition": "Développement d'un lien affectif positif avec l'oppresseur comme mécanisme de survie (Stenborg 2012)",
+        "conditions_activation": [
+          "Perçoit une menace réelle pour sa survie (physique ou psychologique)",
+          "Isolement de toute autre source de soutien",
+          "Perçoit une bienveillance occasionnelle de l'oppresseur",
+          "Incapacité perçue à s'échapper"
+        ]
+      }
+    },
+    "fawn_response_et_people_pleasing": {
+      "definition_pete_walker": "Le fawn (Pete Walker, CPTSD 2013) est la 4e réponse de survie (avec fight/flight/freeze): apaiser, satisfaire, se soumettre à l'autre pour éviter le danger. Réponse de prédilection dans les environnements avec figure d'attachement dangereuse.",
+      "manifestations": [
+        "Difficulté ou incapacité à dire non sans culpabilité intense",
+        "Ajustement constant de sa personnalité selon l'interlocuteur",
+        "Anticipation compulsive des besoins de l'autre",
+        "Ressenti de danger quand l'autre est mécontent ou distant",
+        "Effacement de ses propres opinions/désirs pour maintenir la paix",
+        "Tendance au mensonge par omission pour éviter les conflits",
+        "Sentiment chronique de ne jamais en faire assez"
+      ],
+      "distinction_people_pleasing_vs_gentillesse": {
+        "gentillesse_saine": "Aider par désir genuine — capacité à refuser sans culpabilité excessive",
+        "people_pleasing_pathologique": "Aider pour éviter le danger/abandon — incapacité à dire non, ressentiment caché"
+      },
+      "lien_avec_honte_toxique": "Le people pleasing chronique est souvent alimenté par la honte toxique internalisée: 'Si je ne suis pas parfaitement utile/agréable, je suis rejetable'",
+      "guerison": [
+        "Identifier les déclencheurs du fawn (qui/quand/quel contexte)",
+        "Pratiquer le 'non' progressif dans des contextes à faible risque",
+        "Distinguer gratitude/culpabilité dans les refus",
+        "Thérapie axée sur l'enfant intérieur (IFS, EMDR)",
+        "Reconstruire l'identité hors du regard de l'autre"
+      ]
+    },
+    "parentification": {
+      "definition": "La parentification est le renversement des rôles parent-enfant: l'enfant assume les responsabilités émotionnelles et/ou pratiques qui incombent aux adultes. Forme de maltraitance émotionnelle souvent invisible.",
+      "types": {
+        "instrumentale": "L'enfant assume des tâches concrètes (soin des fratries, gestion du foyer, finances) — plus visible",
+        "emotionnelle": "L'enfant devient le confident, thérapeute, régulateur émotionnel du parent — plus insidieuse et durable"
+      },
+      "consequences_a_l_age_adulte": [
+        "Hyper-responsabilité chronique envers les autres",
+        "Difficulté à recevoir de l'aide / identifier ses propres besoins",
+        "Culpabilité existentielle si on ne prend pas soin des autres",
+        "Choix de partenaires nécessiteux ou en souffrance",
+        "Épuisement professionnel / burnout relationnel",
+        "Sentiment de ne pas avoir droit à l'enfance / la légèreté"
+      ],
+      "guerison": "Deuil de l'enfance perdue, reconnexion aux besoins propres, reprise des droits émotionnels (thérapie narrative, EMDR, IFS)"
+    },
+    "blessures_fondamentales_bourbeau": {
+      "auteure": "Lise Bourbeau — 'Les 5 blessures qui empêchent d'être soi-même' (2000)",
+      "modele": "5 blessures développementales précoces → masques/mécanismes de défense correspondants → comportements relationnels répétitifs",
+      "blessures": {
+        "rejet": {
+          "blessure": "Sentiment de ne pas avoir le droit d'exister, ne pas être désiré",
+          "masque": "Le fuyant — tend vers l'invisibilité, l'isolement",
+          "pattern_relationnel": "Fuit l'intimité, l'engagement, se rend petit"
+        },
+        "abandon": {
+          "blessure": "Sentiment d'être seul dans sa souffrance, de ne pas être soutenu",
+          "masque": "Le dépendant — accroche-toi, ne me laisse pas seul",
+          "pattern_relationnel": "Dépendance affective marquée, angoisse de séparation, victimisation"
+        },
+        "humiliation": {
+          "blessure": "Honte de ses besoins/désirs corporels ou émotionnels, sentiment d'être un fardeau",
+          "masque": "Le masochiste — sacrifice de soi, surcharge volontaire",
+          "pattern_relationnel": "Se punit avant que les autres le fassent, tolère les humiliations"
+        },
+        "trahison": {
+          "blessure": "Trahison des attentes envers une figure d'attachement, rupture de confiance",
+          "masque": "Le contrôlant — je dois tout maîtriser pour ne plus jamais être trahi",
+          "pattern_relationnel": "Hypercontrôle, difficulté à déléguer, jalousie, méfiance"
+        },
+        "injustice": {
+          "blessure": "Manque de reconnaissance de sa valeur/ses besoins, rigidité parentale",
+          "masque": "Le rigide — perfectionnisme, froideur émotionnelle",
+          "pattern_relationnel": "Exigences élevées envers soi et les autres, difficulté à ressentir"
+        }
+      },
+      "application_therapeutique": "Identification de la blessure dominante → compassion pour le masque → pratiques de guérison spécifiques — complémentaire avec IFS et thérapie des schémas"
+    },
+    "vers_autonomie_emotionnelle": {
+      "definition_autonomie": "L'autonomie émotionnelle ne signifie pas l'autosuffisance totale mais la capacité à réguler ses émotions depuis l'intérieur — pouvoir être seul avec soi-même sans détresse existentielle.",
+      "etapes_guerison": [
+        "1. Reconnaissance — identifier les patterns de dépendance sans honte",
+        "2. Deuil — pleurer les besoins non comblés dans l'enfance",
+        "3. Reparentage intérieur — apporter à l'enfant intérieur ce qu'il n'a pas reçu",
+        "4. Reconstruction identitaire — découvrir qui on est hors des relations",
+        "5. Limites saines — apprendre à dire non depuis l'amour de soi, pas la peur",
+        "6. Relations interdépendantes — choisir l'autre sans en avoir besoin pour survivre"
+      ],
+      "pratiques": {
+        "solo_dates": "Passer du temps intentionnel avec soi-même comme acte de soin",
+        "journal_besoins": "Identifier quotidiennement ses propres besoins avant ceux des autres",
+        "therapie": "TCC schémas, IFS (parties dépendantes), EMDR (blessures attachement), DBT (régulation émotionnelle)",
+        "groupes_de_soutien": "SLAA (Sex and Love Addicts Anonymous), Codependants Anonymes (CoDA)",
+        "lecture": ["Codependent No More (Melody Beattie)", "Women Who Love Too Much (Robin Norwood)", "Attached (Amir Levine)", "Emotional Intelligence (Goleman)"]
+      },
+      "signal_guerison": "Capacité à être seul sans détresse / choisir une relation pour l'enrichissement mutuel, non pour combler un vide / distinguer besoins légitimes et fusion pathologique"
+    },
+    "ressources_dependance_affective": {
+      "livres_fondamentaux": [
+        "Melody Beattie — Codependent No More (1986) — référence fondatrice codépendance",
+        "Robin Norwood — Women Who Love Too Much (1985) — dépendance amoureuse",
+        "Pia Mellody — Facing Codependence (1989) — codépendance et développement",
+        "Lise Bourbeau — Les 5 blessures qui empêchent d'être soi-même (2000)",
+        "Pete Walker — Complex PTSD (2013) — fawn response et trauma développemental",
+        "Susan Forward — Men Who Hate Women and the Women Who Love Them (1986)"
+      ],
+      "groupes_entraide": {
+        "SLAA": "Sex and Love Addicts Anonymous — présent en France, QC, international — slaafrancophone.org",
+        "CoDA": "Codependants Anonymes — coda.org — groupes en ligne disponibles",
+        "Al_Anon": "Support familles de personnes alcooliques — al-anon.asso.fr",
+        "ASNIT": "Association francophone pour les troubles de l'attachement — ressource QC"
+      },
+      "ressources_francophones": {
+        "france": "France Victimes: 116 006 (violences conjugales et psychologiques)",
+        "quebec": "SOS Violence conjugale: 1-800-363-9010 | Ligne Aide Hommes: 1-888-567-9024",
+        "belgique": "0800 30 030 (écoute violences conjugales)",
+        "suisse": "0800 040 040 (aide aux victimes)"
+      },
+      "evaluation_clinique": [
+        "HADS (Hospital Anxiety and Depression Scale) pour comorbidités",
+        "ECR-R (Experiences in Close Relationships) — styles d'attachement adulte",
+        "Relationship Scales Questionnaire (RSQ) — Bartholomew",
+        "DAS (Dyadic Adjustment Scale) — qualité relationnelle"
+      ]
+    }
+  }
+}

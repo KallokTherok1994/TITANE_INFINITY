@@ -510,6 +510,12 @@ const TRAUMATOLOGIE_COMPLEXE: &str =
 // ── v31.3.4 expansion — phase 26 (neuroscience de l'attachement, styles adultes) ──
 const NEUROSCIENCE_ATTACHEMENT: &str =
     include_str!("../../data/knowledge_base/default/neuroscience_attachement.json");
+// ── v31.3.5 expansion — phase 27 (dépendance affective, codépendance, trauma bonding, fawn) ──
+const DEPENDANCE_AFFECTIVE_CODEPENDANCE: &str =
+    include_str!("../../data/knowledge_base/default/dependance_affective_codependance.json");
+// ── v31.3.6 expansion — phase 27 (EMDR, IFS, SE, AEDP, schema therapy modes) ──
+const THERAPIES_TRAUMA_AVANCEES: &str =
+    include_str!("../../data/knowledge_base/default/therapies_trauma_avancees.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1014,6 +1020,15 @@ impl DefaultKnowledgeBase {
             "neuroscience_attachement",
             NEUROSCIENCE_ATTACHEMENT,
         ),
+        // v31.3.5+31.3.6 expansion — phase 27 (dépendance affective + thérapies trauma avancées)
+        (
+            "dependance_affective_codependance",
+            DEPENDANCE_AFFECTIVE_CODEPENDANCE,
+        ),
+        (
+            "therapies_trauma_avancees",
+            THERAPIES_TRAUMA_AVANCEES,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1342,7 +1357,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 197,
+            result.entries_loaded >= 199,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1455,6 +1470,7 @@ mod tests {
             "mindset_financier_wealth",
             "musculation_force",
             "naturopathie_fondamentaux",
+            "dependance_affective_codependance",
             "negociation_avancee",
             "neuroscience_attachement",
             "neurosciences_conscience",
@@ -1510,6 +1526,7 @@ mod tests {
             "synchronisation_orchestration",
             "system_architecture",
             "technologie_innovation_avancee",
+            "therapies_trauma_avancees",
             "traumatologie_complexe",
             "troubleshooting_faq",
             "web_design_ui_ux",

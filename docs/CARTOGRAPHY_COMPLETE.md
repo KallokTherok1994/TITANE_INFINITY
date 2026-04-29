@@ -1527,3 +1527,14 @@ function MyComponent() {
 ### Gates
 - AutoHeal: AH-KB-TRAUMATOLOGIE-ATTACHEMENT-2026-04-29 (full schema)
 - detect_recurrence: PASS
+
+## Phase 27 — KB dépendance affective + thérapies trauma avancées (2026-04-29)
+
+| Fichier | Type | Version | Sections | Triggers |
+|---|---|---|---|---|
+| `data/knowledge_base/default/dependance_affective_codependance.json` | KB JSON | v31.3.5 | 8 | 49 |
+| `data/knowledge_base/default/therapies_trauma_avancees.json` | KB JSON | v31.3.6 | 7 | 47 |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +2 consts +2 SOURCES, baseline >=199 | — | — |
+| `src/__tests__/services/ai/kb.dependanceTherapiesTrauma.test.ts` | Vitest | 58 PASS | — | — |
+
+Corpus clinique étendu: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dépendance affective + thérapies trauma avancées (p27)
