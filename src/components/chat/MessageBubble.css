@@ -947,13 +947,14 @@
 }
 
 /* Desktop large (≥1024px) — reduce lateral margins to maximize text area */
+/* rem-based margins scale with --titane-ui-scale (font-size zoom) */
 @media (min-width: 1024px) {
   .message-bubble-assistant {
-    margin-right: 8px;
+    margin-right: 0.5rem;
   }
 
   .message-bubble-user {
-    margin-left: 8px;
+    margin-left: 0.5rem;
   }
 }
 
