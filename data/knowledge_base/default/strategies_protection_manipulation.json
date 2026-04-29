@@ -1,0 +1,383 @@
+{
+  "version": "v31.3.2",
+  "category": "strategies_protection_manipulation",
+  "retrieval_triggers": [
+    "grey rock",
+    "yellow rock",
+    "no contact",
+    "low contact",
+    "limites saines",
+    "frontières relationnelles",
+    "se protéger manipulation",
+    "sortir relation toxique",
+    "récupération abus",
+    "BIFF method",
+    "protection narcissisme",
+    "réponse manipulateur",
+    "détachement émotionnel",
+    "distancing toxic",
+    "recovery trauma bond",
+    "guérison trauma relationnel",
+    "sortir emprise",
+    "résilience abus",
+    "thérapie survivant",
+    "reconstruire après manipulation",
+    "sécurité émotionnelle",
+    "communication hostile",
+    "coparenting toxique",
+    "safe exit plan",
+    "plan sortie relation",
+    "soutien victime",
+    "validation émotionnelle",
+    "déni abus",
+    "DARVO se défendre",
+    "contre manipulation",
+    "re-victimisation éviter"
+  ],
+  "strategies_protection_manipulation": {
+    "introduction": "Ce module couvre les stratégies cliniquement validées pour se protéger, récupérer et sortir d'une dynamique de manipulation ou d'abus psychologique. Il complète le module psychologie_toxique_profils.",
+
+    "strategies_communication_defensive": {
+      "titre": "Stratégies de communication défensive",
+      "contexte": "Quand le contact avec la personne toxique est inévitable (coparentalité, travail, famille), des techniques de communication protectrices réduisent l'impact émotionnel.",
+
+      "grey_rock": {
+        "nom": "Méthode Grey Rock (Pierre Grise)",
+        "definition": "Devenir aussi intéressant qu'une pierre grise : réponses monosyllabiques, affect plat, zéro information personnelle, zéro réaction émotionnelle. Priver le narcissique/manipulateur de la validation et du drame qu'il cherche.",
+        "indications": ["contact contraint avec pervers narcissique", "coparentalité forcée", "contexte professionnel avec collègue toxique", "période de transition avant no-contact"],
+        "techniques": [
+          "Réponses: 'OK', 'Noté', 'Je verrai', 'Hmm'",
+          "Aucun détail personnel, aucune actualité émotionnelle partagée",
+          "Délai de réponse volontaire (ne pas répondre immédiatement)",
+          "Ton monotone, ni chaleureux ni agressif",
+          "Ne jamais défendre, expliquer, ni justifier (JADE: Justify, Argue, Defend, Explain)"
+        ],
+        "erreurs_courantes": ["continuer à défendre sa position", "montrer de la frustration (réaction = carburant)", "donner des mises à jour sur sa vie"],
+        "duree_recommandee": "Technique temporaire — objectif final: réduire contact ou no-contact"
+      },
+
+      "yellow_rock": {
+        "nom": "Méthode Yellow Rock",
+        "definition": "Variante du Grey Rock pour contextes professionnels ou légaux où la politesse minimale est requise (coparentalité documentée, procédures judiciaires). Communication cordiale mais strictement factuelle, sans affect personnel.",
+        "indications": ["coparentalité sous supervision juridique", "communication documentée légalement", "contexte RH où la froideur serait retournée contre soi"],
+        "techniques": [
+          "Format: 'Je note que [fait neutre]. Je confirme [action concrète].'",
+          "Communications courtes, par écrit (tracé)",
+          "Copie en CCi d'un tiers de confiance",
+          "Template BIFF pour chaque message"
+        ]
+      },
+
+      "methode_BIFF": {
+        "nom": "Méthode BIFF (Bill Eddy)",
+        "acronyme": "Brief — Informative — Friendly — Firm",
+        "definition": "Outil de réponse aux communications hostiles ou conflictuelles. Développé par Bill Eddy (avocat/thérapeute, spécialiste des personnalités à hauts conflits).",
+        "structure": {
+          "B_bref": "Maximum 2-3 phrases. Pas de roman. Pas de défense détaillée.",
+          "I_informatif": "Faits uniquement. Une seule information si possible.",
+          "F_amical": "Ton neutre à légèrement positif. Pas d'accusation.",
+          "F_ferme": "Clôturer la discussion. Ne pas ouvrir de questions rhétoriques."
+        },
+        "exemple": {
+          "message_reçu": "Tu es nul comme parent, tu n'as jamais été là pour les enfants.",
+          "mauvaise_reponse": "C'est totalement faux ! J'ai toujours été là, rappelle-toi du 15 mars quand...",
+          "bonne_reponse_BIFF": "Les enfants seront déposés vendredi à 18h comme prévu. Bonne journée."
+        },
+        "pieges": ["ajouter 'mais...' (ouvre le débat)", "expliquer pourquoi vous avez fait X (JADE)", "poser une question rhétorique"]
+      },
+
+      "regle_JADE": {
+        "nom": "Règle JADE — Ne jamais Justifier, Argumenter, Défendre, Expliquer",
+        "principe": "Avec un manipulateur ou personnalité à hauts conflits, toute justification est utilisée comme munition. Chaque explication crée une nouvelle ouverture d'attaque.",
+        "application": [
+          "Non: 'Je suis arrivé en retard parce que le trafic...'",
+          "Oui: 'Je suis arrivé en retard. Voici comment on procède maintenant.'",
+          "Non: 'Ce n'est pas vrai, j'ai fait X, Y, Z pour prouver que...'",
+          "Oui: Silence, ou changement de sujet."
+        ]
+      }
+    },
+
+    "strategies_distance_contact": {
+      "titre": "Stratégies de distance et de contact",
+
+      "no_contact": {
+        "nom": "No Contact (NC) — Zéro contact",
+        "definition": "Coupure totale de toute communication avec la personne toxique. Standard or de la protection psychologique après abus avéré.",
+        "indications": ["fin de relation romantique avec abuseur", "parent toxique quand contact cause préjudice documenté", "harcèlement/stalking", "épuisement complet des alternatives"],
+        "composantes": [
+          "Blocage sur tous les canaux (téléphone, email, réseaux sociaux, messageries)",
+          "Pas de réponse aux messages relais (proches utilisés comme vecteurs — 'flying monkeys')",
+          "Communication via tiers légal si obligation juridique",
+          "Notification aux proches du changement de statut de contact"
+        ],
+        "rupture_du_nc": {
+          "risque": "Très fréquente dans les trauma bonds — le cycle amour/rejet redémarre instantanément",
+          "prevention": ["journal des raisons du NC", "liste des comportements documentés", "appel à un soutien avant toute réponse", "règle des 72h avant décision de contact"]
+        },
+        "duree": "Indéfinie. Le NC n'est pas une punition temporaire — c'est une décision de protection permanente ou jusqu'à preuve clinique de changement durable (rare)."
+      },
+
+      "low_contact": {
+        "nom": "Low Contact (LC) — Contact limité",
+        "definition": "Réduction maximale du contact quand le NC total est impossible (enfants mineurs, obligations légales, dépendances financières temporaires).",
+        "techniques": [
+          "Communications écrites uniquement (traçabilité)",
+          "Sujets strictement limités à la logistique nécessaire",
+          "Durée des échanges minime",
+          "Pas de sujets émotionnels, passé relationnel, ni récriminations",
+          "Grey Rock systématique"
+        ],
+        "erreurs": ["répondre à des provocations", "tenter de se justifier", "espérer que le LC va changer la personne"]
+      },
+
+      "parallel_parenting": {
+        "nom": "Parallel Parenting — Coparentalité parallèle",
+        "definition": "Alternative à la coparentalité coopérative quand l'autre parent présente des traits de personnalité ou comportements qui rendent la coopération impossiblel. Les parents opèrent en parallèle, avec interactions minimisées, centrées uniquement sur les enfants.",
+        "caracteristiques": [
+          "Chacun prend ses décisions dans sa sphère sans consultation",
+          "Communication par applications de coparentalité documentées (OurFamilyWizard, TalkingParents)",
+          "Pas de médiation émotionnelle pour les enfants",
+          "Plan de parenting très détaillé et légalement contraignant",
+          "Thérapeute pour enfants si nécessaire"
+        ]
+      }
+    },
+
+    "protection_psychologique_personnelle": {
+      "titre": "Protection psychologique personnelle",
+
+      "ancrage_identitaire": {
+        "principe": "La manipulation cible l'identité. La reconnecter régulièrement est le meilleur bouclier.",
+        "exercices": [
+          "Liste de 10 valeurs fondamentales personnelles (à réviser hebdomadairement)",
+          "Journal des succès et accomplissements (contrer le gaslight mémoriel)",
+          "Cercle de confiance de 2-3 personnes extérieures à la relation toxique",
+          "Question de référence: 'Si j'avais pleinement confiance en mon jugement, que ferais-je?'"
+        ]
+      },
+
+      "validation_realite": {
+        "principe": "Le gaslighting crée un doute systématique sur la réalité. La documentation et la validation externe sont des antidotes directs.",
+        "techniques": [
+          "Journal de bord daté — documenter incidents, conversations, réactions",
+          "Screenshots, emails, SMS (preuves physiques vs gaslighting mémoriel)",
+          "Consultation d'au moins 1 tiers de confiance pour vérification de perception",
+          "Règle: si tu te demandes si tu es fou/folle, tu ne l'es probablement pas"
+        ]
+      },
+
+      "gestion_hoovering": {
+        "terme": "Hoovering",
+        "definition": "Tactique de retour: l'abuseur revient quand la victime commence à se reconstruire, aspirant ses progrès comme un aspirateur Hoover.",
+        "formes": [
+          "Love bombing soudain (grand retour romantique, promesses excessives)",
+          "Crise fabriquée nécessitant votre aide",
+          "Contact par intermédiaires",
+          "Triangulation avec rivalité (ex: 'j'ai rencontré quelqu'un qui me comprend mieux que toi')",
+          "Fausse urgence médicale, légale, financière"
+        ],
+        "reponse": ["Reconnaître le pattern sans y répondre", "Règle des 72h minimum avant décision", "Contacter thérapeute ou personne de confiance d'abord", "Se rappeler: le hoovering est motivé par le contrôle, pas par l'amour"]
+      },
+
+      "gestion_emotions_post_abus": {
+        "grief_complexe": "La fin d'une relation avec un manipulateur inclut un deuil complexe: on pleure à la fois la perte de la relation ET la perte du partenaire imaginaire qu'on croyait connaître.",
+        "validation": "Toutes les émotions post-abus sont valides: colère, chagrin, soulagement, honte, culpabilité, nostalgie. Aucune ne doit être supprimée.",
+        "etapes_non_lineaires": [
+          "Choc/déni",
+          "Colère (saine — reconnaître l'injustice)",
+          "Négociation/doute (suis-je excessif?)",
+          "Tristesse profonde",
+          "Acceptation/reconstruction"
+        ],
+        "complications": ["idealization de la relation", "minimisation retrospective des abus", "sentiment de honte et de responsabilité (injecté par l'abuseur)"]
+      }
+    },
+
+    "plan_sortie_securitaire": {
+      "titre": "Plan de sortie sécuritaire",
+      "avertissement": "Les situations de violence conjugale ou de coercition physique nécessitent un plan de sortie avec accompagnement professionnel. Ne jamais annoncer un départ à un abuseur avant d'être en sécurité.",
+
+      "phases": {
+        "phase_1_preparation_discrete": {
+          "actions": [
+            "Documenter abus (photos, journaux, captures d'écran) — stockage cloud privé",
+            "Sécuriser documents importants (passeport, naissance, assurances) — copie hors domicile",
+            "Ouvrir compte bancaire personnel séparé",
+            "Identifier réseau de soutien (famille, amis, ressources communautaires)",
+            "Consulter ressource externe (travailleur social, avocat, ligne d'aide)"
+          ]
+        },
+        "phase_2_execution": {
+          "actions": [
+            "Partir quand la personne est absente",
+            "Ne pas annoncer le départ à l'avance",
+            "Avoir destination sécuritaire planifiée",
+            "Changer mots de passe, codes, accès immédiatement après",
+            "Notifier personnes de confiance"
+          ]
+        },
+        "phase_3_stabilisation": {
+          "actions": [
+            "Thérapie spécialisée trauma relationnel",
+            "Groupe de soutien survivants",
+            "Respect du no-contact",
+            "Patience avec le processus de récupération"
+          ]
+        }
+      }
+    },
+
+    "guérison_recovery": {
+      "titre": "Guérison et reconstruction post-abus",
+
+      "trauma_bond_dissolution": {
+        "processus": "La dissolution d'un trauma bond est neurobiologique — elle prend en moyenne 12 à 18 mois de NC strict. Le cerveau doit littéralement recâbler les circuits de récompense conditionnés.",
+        "phases_cliniques": [
+          "1-3 mois: sevrage intense (craving, retours en arrière, idéalisation)",
+          "3-6 mois: stabilisation émotionnelle, premières fenêtres de clarté",
+          "6-12 mois: reconstruction identitaire, retour des intérêts abandonnés",
+          "12-18 mois+: intégration, capacité relationnelle recalibrée"
+        ],
+        "acceleration": ["NC strict", "thérapie hebdomadaire", "mouvement physique régulier", "reconnexion cercle social sain"]
+      },
+
+      "schemas_a_travailler": {
+        "source_schema_therapy": "Schémas inadaptés précoces souvent activés par des relations toxiques répétées (Jeffrey Young, Schema Therapy)",
+        "schemas_courants": [
+          "Abandon/Instabilité: 'Les gens que j'aime finissent par partir'",
+          "Méfiance/Abus: 'Les gens vont me blesser si je leur fais confiance'",
+          "Manque émotionnel: 'Personne ne peut répondre à mes besoins émotionnels'",
+          "Imperfection/Honte: 'Je suis fondamentalement défectueux(se), indigne d'amour'",
+          "Assujettissement: 'Je dois satisfaire les autres sinon il y aura des conséquences'"
+        ],
+        "travail_therapeutique": "Identifier le schéma actif, remonter à son origine développementale, reconditionner via la relation thérapeutique et des exercices cognitifs/somatiques"
+      },
+
+      "approches_therapeutiques_recommandees": {
+        "EMDR": {
+          "nom": "Eye Movement Desensitization and Reprocessing",
+          "indication": "Trauma complexe relationnel (C-PTSD), memories d'abus persistantes",
+          "mecanisme": "Retraitement des mémoires traumatiques via stimulation bilatérale — réduit la charge émotionnelle des souvenirs sans les effacer"
+        },
+        "schema_therapy": {
+          "nom": "Thérapie des Schémas (Jeffrey Young)",
+          "indication": "Patterns relationnels répétitifs, troubles personnalité sous-jacents",
+          "mecanisme": "Identification et modification des schémas inadaptés précoces via relation thérapeutique corrective"
+        },
+        "IFS": {
+          "nom": "Internal Family Systems (Richard Schwartz)",
+          "indication": "Dissociation légère, conflits internes post-abus, honte profonde",
+          "mecanisme": "Travail avec 'parts' internes (protecteurs, exilés) pour restaurer l'harmonie intérieure"
+        },
+        "ACT": {
+          "nom": "Acceptance and Commitment Therapy",
+          "indication": "Ruminations post-abus, hypervigilance, perte de sens",
+          "mecanisme": "Défusion cognitive, pleine conscience, clarification de valeurs — avancer sans attendre la disparition des symptômes"
+        },
+        "TCC_trauma": {
+          "nom": "TCC focalisée Trauma (TF-CBT)",
+          "indication": "PTSD classique, symptômes intrusifs",
+          "mecanisme": "Restructuration cognitive + exposition graduelle aux triggers traumatiques"
+        },
+        "somatique": {
+          "approches": ["Somatic Experiencing (Peter Levine)", "Sensorimotor Psychotherapy"],
+          "principe": "Le trauma est stocké dans le corps — libération par le travail corporel, régulation du système nerveux autonome"
+        }
+      },
+
+      "reconstruction_identite": {
+        "principe": "L'abus psychologique érode l'identité. La reconstruction passe par la re-découverte de soi hors du regard de l'abuseur.",
+        "exercices": [
+          "Lister 20 choses que tu aimais avant la relation (et abandonner graduellement)",
+          "Un acte de soin personnel quotidien non-négociable",
+          "Dire 'non' à petite échelle — recalibrer le rapport à ses propres limites",
+          "Se demander: 'Qu'est-ce que MOI je veux?', 'Qu'est-ce que MOI je pense?' (contrer la dissolution identitaire)",
+          "Journaling de valeurs: qui suis-je quand je suis en sécurité?"
+        ]
+      }
+    },
+
+    "soutien_entourage": {
+      "titre": "Soutien à une personne victime de manipulation",
+
+      "erreurs_a_eviter": [
+        "Critiquer directement l'abuseur (crée une loyauté défensive vers l'abuseur)",
+        "Ultimatums ('c'est lui ou moi')",
+        "Minimiser ('c'est pas si grave, il a des bons côtés non?')",
+        "Offrir des solutions quand la personne n'est pas prête",
+        "Juger les retours en arrière dans la relation",
+        "Exiger que la victime parte immédiatement"
+      ],
+
+      "posture_efficace": [
+        "Écoute sans jugement — valider les émotions, pas nécessairement les décisions",
+        "Nommer ce qu'on observe sans qualifier la personne abusatrice ('quand il fait X, tu sembles...')",
+        "Rappeler régulièrement ses qualités et forces à la victime",
+        "Maintenir le lien même si elle retourne dans la relation (les retours sont statistiquement fréquents — 7 en moyenne avant sortie définitive)",
+        "Offrir aide concrète (logement, accompagnement, ressources)",
+        "Se protéger soi-même aussi (ne pas porter seul le poids)"
+      ],
+
+      "quand_escalader": [
+        "Violence physique présente ou imminente → ligne de crise immédiate",
+        "Idéations suicidaires → urgence psychiatrique ou crise",
+        "Enfants exposés à l'abus → signalement protection jeunesse si légalement requis"
+      ]
+    },
+
+    "ressources_protection": {
+      "titre": "Ressources pratiques — protection et aide",
+
+      "quebec": [
+        {
+          "nom": "SOS Violence Conjugale",
+          "contact": "1-800-363-9010",
+          "disponibilite": "24/7, gratuit, confidentiel",
+          "services": "Crise, référencement, hébergement d'urgence"
+        },
+        {
+          "nom": "Tel-Aide Québec",
+          "contact": "514-935-1101 ou 1-888-TÉL-AIDE",
+          "services": "Écoute active, soutien émotionnel"
+        },
+        {
+          "nom": "CAVAC (Centre d'aide aux victimes d'actes criminels)",
+          "services": "Si actes criminels impliqués — accompagnement juridique et psychologique"
+        }
+      ],
+
+      "france": [
+        {
+          "nom": "3919 — Violences Femmes Info",
+          "contact": "3919",
+          "disponibilite": "7j/7, gratuit"
+        },
+        {
+          "nom": "Planning Familial",
+          "services": "Soutien psychologique, orientation"
+        }
+      ],
+
+      "ressources_lecture": [
+        "Pete Walker — Complex PTSD: From Surviving to Thriving",
+        "Lundy Bancroft — Why Does He Do That? (Inside the minds of angry and controlling men)",
+        "Patrick Carnes — The Betrayal Bond",
+        "Karyl McBride — Will I Ever Be Good Enough? (filles de mères narcissiques)",
+        "Jackson MacKenzie — Psychopath Free",
+        "Bill Eddy — BIFF: Quick Responses to High-Conflict People"
+      ],
+
+      "outils_digitaux": [
+        {
+          "nom": "OurFamilyWizard",
+          "usage": "Communication documentée coparentalité"
+        },
+        {
+          "nom": "TalkingParents",
+          "usage": "Co-parenting documentation légale"
+        }
+      ]
+    }
+  }
+}

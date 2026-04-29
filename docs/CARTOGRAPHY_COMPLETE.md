@@ -1470,3 +1470,32 @@ function MyComponent() {
 - Rule 18: commit `65fa41478` sur MAIN
 - detect_recurrence: PASS (entries=1425)
 - verify_instructions: PASS=33 FAIL=0
+
+## KB Phase 25 + Mode psychologie_profils (2026-05-01)
+
+### Nouveau module knowledge base
+- **Fichier**: `data/knowledge_base/default/strategies_protection_manipulation.json` (v31.3.2)
+- **Catégorie**: `strategies_protection_manipulation`
+- **Sections (8+)**: grey_rock, yellow_rock, BIFF (Bill Eddy), règle_JADE, no_contact, low_contact, parallel_parenting, trauma_bond_dissolution (phases cliniques 1-18 mois), approches_therapeutiques (EMDR, Schema Therapy, IFS, ACT, TF-CBT, somatique), plan_sortie_securitaire (3 phases), reconstruction_identite, soutien_entourage, ressources_protection (SOS Violence Conjugale, 3919, ouvrages cliniques, apps coparentalité)
+- **Retrieval triggers (31)**: grey rock, BIFF, no contact, trauma bond recovery, plan sortie relation, etc.
+- **Intégration Rust**: const `STRATEGIES_PROTECTION_MANIPULATION` + entrée SOURCES dans `src-tauri/src/knowledge_base_default.rs`
+- **Baseline tests**: `test_knowledge_base_loads_all_categories` ≥194→≥195
+
+### Nouveau mode de chat
+- **ID**: `psychologie_profils` (nouveau dans ChatModeId union)
+- **Label**: Psycho-Profils | **Icône**: 🧠 | **Couleur**: #7c3aed
+- **Catégorie**: personal | **sortOrder**: 6.5 (après coach)
+- **Tone**: empathetic | **Temperature**: 0.65 | **MaxTokens**: 4000
+- **System prompt**: cadre éthique clinique + 8 domaines (DSM-5, Dark Triad, narcissisme, tactiques manipulation, dynamiques négatives, stratégies protection, guérison, ressources) + protocole d'analyse en 7 étapes + limites claires
+- **Tools**: contextAnalysis + synthesisTool uniquement (pas de shell/filesystem/code)
+- **MODES_BY_CATEGORY['personal']**: coach, debug_cognitive, journal, **psychologie_profils** (ajouté)
+
+### Tests
+- **Fichier**: `src/__tests__/services/ai/chatModes.psychologieProfils.test.ts`
+- **Résultat**: 40 Vitest PASS — couvre existence, activation, propriétés, sécurité, system prompt, catégorie, validation schema, getModeConfig, actions suggérées
+
+### Gates
+- Rule 10 AutoHeal: AH-KB-STRATEGIES-PROTECTION-MODE-PSYCHO-2026-05-01
+- Rule 15: ARCHITECTURE.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour
+- Rule 16: 40 tests Vitest PASS
+- detect_recurrence: PASS (à confirmer)

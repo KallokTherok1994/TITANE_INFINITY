@@ -501,6 +501,9 @@ const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str = include_str!(
 // ── v31.3.1 expansion — phase 24 (psychologie toxique, profils, manipulation) ──
 const PSYCHOLOGIE_TOXIQUE_PROFILS: &str =
     include_str!("../../data/knowledge_base/default/psychologie_toxique_profils.json");
+// ── v31.3.2 expansion — phase 25 (stratégies protection, récupération abus) ──
+const STRATEGIES_PROTECTION_MANIPULATION: &str =
+    include_str!("../../data/knowledge_base/default/strategies_protection_manipulation.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -991,6 +994,11 @@ impl DefaultKnowledgeBase {
             "psychologie_toxique_profils",
             PSYCHOLOGIE_TOXIQUE_PROFILS,
         ),
+        // v31.3.2 expansion — phase 25 (stratégies protection, récupération abus)
+        (
+            "strategies_protection_manipulation",
+            STRATEGIES_PROTECTION_MANIPULATION,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1319,7 +1327,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 194,
+            result.entries_loaded >= 195,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1477,6 +1485,7 @@ mod tests {
             "spiritualite_sens_existence",
             "strategie_concurrentielle",
             "strategie_entreprise",
+            "strategies_protection_manipulation",
             "strategies_revenus_monetisation",
             "systeme_nerveux_polyvagal",
             "suite_google_workspace",
