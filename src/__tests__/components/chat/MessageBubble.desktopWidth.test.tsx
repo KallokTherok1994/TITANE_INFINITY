@@ -22,24 +22,24 @@ describe('Chat bubble desktop width — CSS rules (AH-2026-04-28-CHAT-BUBBLE-WID
       expect(css).toContain('@media (min-width: 1024px)');
     });
 
-    it('.message-bubble max-width is 97% on desktop', () => {
-      // Extract the desktop block
-      const desktopBlock = css.match(/@media \(min-width: 1024px\)\s*\{[^}]+\}/s)?.[0] ?? '';
-      expect(desktopBlock).toContain('max-width: 97%');
-    });
-
-    it('.message-assistant max-width is 97% on desktop', () => {
+    it('.message-bubble max-width is 99% on desktop', () => {
       const desktopBlocks = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/g) ?? [];
       const combined = desktopBlocks.join('\n');
-      expect(combined).toContain('.message-assistant');
-      expect(combined).toContain('max-width: 97%');
+      expect(combined).toContain('max-width: 99%');
     });
 
-    it('.message-user max-width is 88% on desktop', () => {
+    it('.message-bubble-assistant max-width is 99% on desktop', () => {
       const desktopBlocks = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/g) ?? [];
       const combined = desktopBlocks.join('\n');
-      expect(combined).toContain('.message-user');
-      expect(combined).toContain('max-width: 88%');
+      expect(combined).toContain('.message-bubble-assistant');
+      expect(combined).toContain('max-width: 99%');
+    });
+
+    it('.message-bubble-user max-width is 96% on desktop', () => {
+      const desktopBlocks = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/g) ?? [];
+      const combined = desktopBlocks.join('\n');
+      expect(combined).toContain('.message-bubble-user');
+      expect(combined).toContain('max-width: 96%');
     });
 
     it('mobile breakpoints (max-width: 479px) still present — no regression', () => {
@@ -59,19 +59,19 @@ describe('Chat bubble desktop width — CSS rules (AH-2026-04-28-CHAT-BUBBLE-WID
       expect(css).toContain('@media (min-width: 1024px)');
     });
 
-    it('.message-bubble-assistant margin-right uses rem on desktop (zoom-safe)', () => {
+    it('.message-bubble-assistant margin-right is 0 on desktop (zoom-safe)', () => {
       const desktopBlocks = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/g) ?? [];
       const combined = desktopBlocks.join('\n');
-      // Should use rem, not px — zoom-safe per zoomScale.ts
+      // Must use rem or 0, not px — zoom-safe per zoomScale.ts
       expect(combined).toContain('.message-bubble-assistant');
-      expect(combined).toMatch(/margin-right:\s*0\.5rem/);
+      expect(combined).toMatch(/margin-right:\s*0rem/);
     });
 
-    it('.message-bubble-user margin-left uses rem on desktop (zoom-safe)', () => {
+    it('.message-bubble-user margin-left is 0 on desktop (zoom-safe)', () => {
       const desktopBlocks = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/g) ?? [];
       const combined = desktopBlocks.join('\n');
       expect(combined).toContain('.message-bubble-user');
-      expect(combined).toMatch(/margin-left:\s*0\.5rem/);
+      expect(combined).toMatch(/margin-left:\s*0rem/);
     });
 
     it('mobile breakpoint (max-width: 479px) still present — no regression', () => {
@@ -90,9 +90,9 @@ describe('Chat bubble desktop width — CSS rules (AH-2026-04-28-CHAT-BUBBLE-WID
       expect(css).toContain('@media (min-width: 1024px)');
     });
 
-    it('overrides legacy max-width:76%/90% to 97% on desktop', () => {
+    it('overrides legacy max-width:76%/90% to 99% on desktop', () => {
       const desktopBlock = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/)?.[0] ?? '';
-      expect(desktopBlock).toContain('max-width: 97%');
+      expect(desktopBlock).toContain('max-width: 99%');
     });
 
     it('mobile breakpoint (max-width: 768px) still present with 90%', () => {
@@ -102,11 +102,10 @@ describe('Chat bubble desktop width — CSS rules (AH-2026-04-28-CHAT-BUBBLE-WID
   });
 
   describe('zoom compatibility invariants', () => {
-    it('desktop margins are in rem (not px) — scales with --titane-ui-scale font-size zoom', () => {
+    it('desktop margins are 0 — no rigid spacing on desktop', () => {
       const css = readCss('src/components/chat/MessageBubble.css');
       const desktopBlocks = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/g) ?? [];
       const combined = desktopBlocks.join('\n');
-      // Must NOT contain plain px margins in the desktop override
       expect(combined).not.toMatch(/margin-right:\s*8px/);
       expect(combined).not.toMatch(/margin-left:\s*8px/);
     });
@@ -115,10 +114,23 @@ describe('Chat bubble desktop width — CSS rules (AH-2026-04-28-CHAT-BUBBLE-WID
       const css = readCss('src/components/chat/MessageList.css');
       const desktopBlocks = css.match(/@media \(min-width: 1024px\)\s*\{[\s\S]*?\n\}/g) ?? [];
       const combined = desktopBlocks.join('\n');
-      // Must be % not px
-      expect(combined).toMatch(/max-width:\s*97%/);
-      expect(combined).toMatch(/max-width:\s*88%/);
+      expect(combined).toMatch(/max-width:\s*99%/);
+      expect(combined).toMatch(/max-width:\s*96%/);
       expect(combined).not.toMatch(/max-width:\s*\d+px/);
+    });
+
+    it('TitanePage.css — base rules remove ch cap on conversation-message-content', () => {
+      const css = readCss('src/pages/TitanePage.css');
+      // Base rules must use plain % — no ch caps that limit to ~700px regardless of viewport
+      expect(css).toContain('.conversation-message-content');
+      // Assistant messages must be at least 99%
+      expect(css).toMatch(/\.conversation-message\.assistant \.conversation-message-content\s*\{[^}]*max-width:\s*99%/);
+      // User messages must be at most 94–99%
+      expect(css).toMatch(/\.conversation-message\.user \.conversation-message-content\s*\{[^}]*max-width:\s*9[0-9]%/);
+      // No ch-unit cap in base conversation-message-content rules
+      const contentBlocks = css.match(/\.conversation-message-content\s*\{[^}]+\}/g) ?? [];
+      const combined = contentBlocks.join('\n');
+      expect(combined).not.toMatch(/max-width:\s*min\([^)]*ch/);
     });
   });
 });

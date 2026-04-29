@@ -1166,19 +1166,19 @@
   display: flex;
   flex-direction: column;
   gap: 0.42rem;
-  max-width: min(92%, 88ch);
+  max-width: 99%;
 }
 
 .conversation-container[data-fullscreen='true'] .conversation-message-content {
-  max-width: min(94%, 96ch);
+  max-width: 99%;
 }
 
 .conversation-message.assistant .conversation-message-content {
-  max-width: min(93%, 92ch);
+  max-width: 99%;
 }
 
 .conversation-message.user .conversation-message-content {
-  max-width: min(80%, 66ch);
+  max-width: 94%;
 }
 
 .conversation-message.user .conversation-message-content {
@@ -1639,7 +1639,7 @@
 
 .conversation-container[data-density='compact'] .conversation-message-content {
   gap: 0.42rem;
-  max-width: min(100%, 82ch);
+  max-width: 99%;
 }
 
 .conversation-container[data-density='compact'] .conversation-message-role {

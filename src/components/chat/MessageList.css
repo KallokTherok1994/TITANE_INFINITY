@@ -321,15 +321,18 @@
 /* Desktop large (≥1024px) — maximize bubble width */
 @media (min-width: 1024px) {
   .message-bubble {
-    max-width: 97%;
+    max-width: 99%;
+    width: 99%;
   }
 
-  .message-user {
-    max-width: 88%;
+  .message-bubble-user {
+    max-width: 96%;
+    width: 96%;
   }
 
-  .message-assistant {
-    max-width: 97%;
+  .message-bubble-assistant {
+    max-width: 99%;
+    width: 99%;
   }
 }
 

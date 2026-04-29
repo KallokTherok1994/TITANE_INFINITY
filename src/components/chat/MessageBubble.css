@@ -950,11 +950,11 @@
 /* rem-based margins scale with --titane-ui-scale (font-size zoom) */
 @media (min-width: 1024px) {
   .message-bubble-assistant {
-    margin-right: 0.5rem;
+    margin-right: 0rem;
   }
 
   .message-bubble-user {
-    margin-left: 0.5rem;
+    margin-left: 0rem;
   }
 }
 

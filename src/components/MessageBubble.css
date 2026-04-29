@@ -247,6 +247,6 @@
 /* Desktop large (≥1024px) — override legacy constraint */
 @media (min-width: 1024px) {
   .message-bubble {
-    max-width: 97%;
+    max-width: 99%;
   }
 }
