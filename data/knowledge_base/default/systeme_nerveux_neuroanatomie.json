@@ -1,0 +1,90 @@
+{
+  "version": "v31.5.9",
+  "category": "systeme_nerveux_neuroanatomie",
+  "description": "Neuroanatomie fonctionnelle, système nerveux central et périphérique, neurotransmetteurs, physiologie neuronale, neuroplasticité et pathologies neurologiques",
+  "retrieval_triggers": [
+    "système nerveux",
+    "neuroanatomie",
+    "cerveau",
+    "neurone",
+    "neurotransmetteur",
+    "cortex",
+    "tronc cérébral",
+    "cervelet",
+    "thalamus",
+    "hypothalamus",
+    "système limbique",
+    "hippocampe",
+    "amygdale",
+    "ganglions de la base",
+    "cortex préfrontal",
+    "système nerveux autonome",
+    "sympathique",
+    "parasympathique",
+    "nerf vague",
+    "dopamine",
+    "sérotonine",
+    "GABA",
+    "glutamate",
+    "acétylcholine",
+    "noradrénaline",
+    "potentiel d'action",
+    "synapse",
+    "myéline",
+    "neurotransmission",
+    "neuroplasticité",
+    "BDNF",
+    "neurogenèse adulte",
+    "plasticité synaptique",
+    "barrière hémato-encéphalique",
+    "LCR",
+    "méninges",
+    "Alzheimer",
+    "Parkinson",
+    "sclérose en plaques",
+    "épilepsie",
+    "AVC",
+    "théorie polyvagale",
+    "Porges",
+    "nerf vague",
+    "axe cerveau-intestin"
+  ],
+  "sections": {
+    "neuroanatomie_centrale": {
+      "tronc_cerebral": "Tronc cérébral: Bulbe rachidien (moelle allongée) — contrôle vital: respiration (centre pneumotaxique/apneustique), fréquence cardiaque, pression artérielle, déglutition, vomissement. Pont (Protubérance) — relais cérébelleux, noyaux NC V à VIII, centre du sommeil paradoxal (locus coeruleus). Mésencéphale — contrôle moteur (substance noire dopaminergique, noyaux rouges), voies visuelles/auditives, NC III et IV. Locus coeruleus: principal noyau noradrénergique — vigilance, attention, réponse au stress.",
+      "cervelet": "Cervelet (10% du volume, 80% des neurones): coordination motrice fine, équilibre (cervelet vestibulaire/archéocervelet), apprentissage moteur procédural (cervelet spinal/paléocervelet). Cortex cérébelleux: cellules de Purkinje (neurones les plus grands, GABA-ergiques inhibiteurs). Voie cortico-ponto-cérébello-thalamo-corticale. Syndrome cérébelleux: ataxie, dysmetrie, dysdiadococinésie, tremblement intentionnel.",
+      "diencephale": "Thalamus: 'porte de la conscience' — relais de toutes les informations sensorielles (sauf olfaction) vers le cortex. Noyaux spécifiques (VPL sensitive/VPM face/LGN visuel/MGN auditif) et non-spécifiques (CM, VA/VL moteur). Hypothalamus: régulation homéostatique (faim/soif/température/veille-sommeil), système neuroendocrinien (axe HPA/HPG/HPT), émotions, mémoire. Noyaux suprachiasmatiques (SCN): horloge circadienne principale.",
+      "telecencephale_cortex": "Télencéphale: 4 lobes. Frontal (planification, raisonnement, langage expressif Broca aire 44/45, cortex moteur primaire aire 4, prémoteur 6, préfrontal dorsolatéral). Pariétal (somatosensation primaire aire 3/1/2, perception spatiale, conscience corporelle). Temporal (audition primaire Heschl, langage réceptif Wernicke 22, mémoire déclarative via hippocampe). Occipital (vision primaire V1/V2, voies dorsale 'où' et ventrale 'quoi'). Ganglions de la base: circuits de sélection de l'action, boucles cortico-striato-thalamo-corticales. Système limbique: hippocampe (mémoire épisodique/spatiale/LTP), amygdale (peur, conditionnement émotionnel, vigilance sociale), cingulaire antérieur (conflit, douleur), fornix, corps mamillaires."
+    },
+    "systeme_nerveux_peripherique": {
+      "snp_somatique": "SNP somatique: Afférences sensitives (neurones pseudo-unipolaires DRG — mécano/thermo/nocicepteurs) → moelle/tronc via fibres Aα (myélinisées rapides), Aδ (intermédiaires — douleur aiguë), C (amyéliniques — douleur diffuse/brûlure). Efférences motrices: motoneurones α (innervation musculaire directe) et γ (fuseau neuromusculaire), voies corticospinales latérale/antérieure, réflexes monosynaptiques et polysynaptiques.",
+      "snp_autonome": "SNP autonome (viscéral): Sympathique (thoraco-lombaire T1-L2): fight-or-flight — tachycardie, mydriase, bronchodilatation, vasoconstriction, arrêt digestion; médiateurs préganglionnaires ACh et postganglionnaires noradrénaline (récepteurs alpha/bêta); médullo-surrénale libère adrénaline. Parasympathique (crânio-sacré — NC III/VII/IX/X + S2-S4): rest-digest — bradycardie, myosis, bronchoconstriction, stimulation GI/GU; médiateur ACh (récepteurs muscariniques). Entérique: 100–500 millions neurones dans les plexus de Meissner (sous-muqueux) et Auerbach (myentérique) — 'deuxième cerveau', régule motilité/sécrétions GI indépendamment.",
+      "nerfs_craniens": "12 paires de nerfs crâniens: I (olfactif — sensitif), II (optique — sensitif), III (oculomoteur — moteur + parasympathique), IV (trochléaire — moteur), V (trijumeau — sensitif face + moteur mastication), VI (abducens — moteur), VII (facial — moteur mimiques + sensitif gustatif + parasympathique glandes), VIII (vestibuloco. — sensitif équilibre/audition), IX (glossopharyngien — mixte + parasympathique), X (vague — mixte + parasympathique viscères), XI (accessoire — moteur trapèze/SCM), XII (hypoglosse — moteur langue)."
+    },
+    "neurotransmetteurs_systemes": {
+      "glutamate_gaba": "Glutamate (principal excitateur, ~60% synapses): récepteurs NMDA (coïncidence, LTP — dépendant Mg2+ et glycine), AMPA (rapide), mGluR (modulateurs). LTP (Potentialisation à long terme) hippocampique: base cellulaire de la mémoire — activation NMDA → entrée Ca2+ → insertion AMPA → renforcement synaptique. GABA (principal inhibiteur, ~30% synapses): GABA-A (ionotrope rapide — cible benzodiazépines, barbituriques, alcool), GABA-B (métabotrope — cible baclofène). Déséquilibre Glu/GABA → épilepsie, anxiété, schizophrénie.",
+      "monoamines": "Dopamine (4 voies): mésolimbique (ATV→nucleus accumbens — récompense, addiction), mésocorticale (ATV→PFC — cognition, working memory, déficit schizophrénie), nigro-striée (substance noire→putamen/caudé — contrôle moteur, dégénère dans Parkinson), tubéro-infundibulaire (hypothalamus→hypophyse — régulation prolactine). Sérotonine: noyaux du Raphé → régulation humeur/anxiété/sommeil/appétit/douleur; IADs bloquent recapture 5-HT. Noradrénaline: locus coeruleus → cortex/hippocampe — vigilance, attention, réponse au stress; modulation par ISRNS.",
+      "acetylcholine": "Acétylcholine (ACh): synthèse par choline acétyltransférase. Jonction neuromusculaire (NMJ): ACh → récepteurs nicotiniques → dépolarisation musculaire → contraction; bloqué par curare/botulinum. SNA: ganglions autonomes (nicotiniques) + organes cibles parasympathiques (muscariniques). SNC: noyaux basaux de Meynert (mémoire, attention — dégénèrent Alzheimer → déficit cholinergique → IACE thérapeutiques), noyaux septaux, pédoncules cérébraux."
+    },
+    "potentiel_action_synapse": {
+      "potentiel_action": "Potentiel de repos: -70mV (gradient K+ via canaux K+ de fuite + pompe Na+/K+ ATPase 3Na+→2K+). Dépolarisation: stimulus supra-liminaire → ouverture canaux Na+ voltage-dépendants → entrée Na+ rapide → pic +40mV. Repolarisation: inactivation canaux Na+ + ouverture canaux K+ → sortie K+. Hyperpolarisation (période réfractaire absolue et relative). Loi du tout-ou-rien: amplitude fixe, fréquence code l'intensité. Conduction saltatoire (fibres myélinisées): courant saltant de nœud de Ranvier en nœud → vitesse 70-120 m/s vs fibre amyélinique 0.5-2 m/s.",
+      "synapse_chimique": "Synapse chimique: potentiel d'action → ouverture canaux Ca2+ (VSCC) présynaptiques → fusion vésicules synaptiques (SNARE proteins) → exocytose neurotransmetteurs → liaison récepteurs postsynaptiques → PPSE (excitateurs) ou PPSI (inhibiteurs) → sommation temporelle et spatiale. Recapture (transporteurs) et/ou dégradation enzymatique (MAO, AChE). LTP/LTD: modifications durables de l'efficacité synaptique — base cellulaire de la mémoire (Hebb: 'fire together, wire together').",
+      "myelinisation": "Myéline: gaine lipidique formée par oligodendrocytes (SNC) et cellules de Schwann (SNP). Augmente résistance membranaire et réduit capacitance → conduction saltatoire entre nœuds de Ranvier. Démyélinisation (SEP): ralentissement ou blocage de la conduction → symptômes variables (sensitifs, moteurs, visuels, cognitifs). Syndrome de Guillain-Barré: démyélinisation SNP post-infectieuse (mimétisme moléculaire) → paralysie ascendante."
+    },
+    "systeme_nerveux_autonome_detail": {
+      "balance_sympatho_parasympathique": "Régulation autonome: tonus vagal dominant au repos (HRV = heart rate variability — marqueur santé cardiovasculaire). Stress aigu: sympathique domine → cascade adrénaline/cortisol (axe HPA). Récupération: parasympathique restaure homéostasie. Cohérence cardiaque: oscillations 0.1 Hz synchronisant SNA, HRV et baroréflexe → effets anti-stress démontré (réduction cortisol, anxiété). Biofeedback HRV: technique de régulation autonome.",
+      "polyvagal_porges": "Théorie polyvagale (Porges 1994, 2011): 3 circuits hiérarchiques. Ventral vagal (NC X branche myélinisée) — sécurité, engagement social, co-régulation, prosociabilité. Sympathique — mobilisation (fight-or-flight, danger). Dorsal vagal (NC X branche amyélinisée, phylogénétiquement ancienne) — immobilisation défensive (freeze, effondrement, shutdown — survie en dernier recours). En sécurité: réseau ventral actif → tons vagal élevé, expression faciale, prosodie, écoute. Neuroception: évaluation inconsciente de sécurité vs danger.",
+      "axe_cerveau_intestin": "Axe cerveau-intestin-microbiome: communication bidirectionnelle via nerf vague (SNE→SNC), voie endocrinienne (sérotonine: 90-95% produite dans intestin), immunologique (cytokines), métabolique (acides gras à chaîne courte). Microbiome intestinal (1000+ espèces, 10^14 bactéries): influence humeur (dépression), cognition, axe HPA. Dysbiose → hyperperméabilité intestinale → neuroinflammation. Probiotiques psychobiotiques: impact sur anxiété/dépression démontré (Dinan & Cryan)."
+    },
+    "barriere_hemato_encephalique": {
+      "bhe_structure": "Barrière hémato-encéphalique (BHE): endothélium cérébral + tight junctions (claudine-5, occludine, ZO-1) + péricytes (régulation tonique) + pieds astrocytaires (astrocytes). Sélectivité: libre passage O2/CO2 (lipophiles), glucose (GLUT1), acides aminés (LAT1); bloqués protéines, hydrophiles, certains médicaments. Zone circumventriculaires (organe subfornical, area postrema 'trigger zone vomissement') = exceptions sans BHE. Transporteurs actifs efflux (P-gp, BCRP) = défi pour pharmacologie SNC.",
+      "lcr_meninges": "LCR (liquide céphalorachidien, 150mL total, renouvelé 3-4x/jour): produit par plexus choroïdes (épithélium spécialisé dans ventricules) → système ventriculaire (V lat→V3→aqueduc Sylvius→V4) → espace sous-arachnoïdien → réabsorbé par granulations arachnoïdiennes. Fonctions: protection mécanique (amortissement), homéostasie ionique et pH, élimination déchets métaboliques (système glymphatique — surtout pendant sommeil). Méninges: dure-mère (externe/résistante), arachnoïde (intermédiaire), pie-mère (accolée cerveau).",
+      "pathologies_bhe": "Pathologies BHE: Alzheimer — accumulation β-amyloïde (plaques séniles) + Tau hyperphosphorylé (dégénérescences neurofibrillaires); progression Braak (0→VI): limbique→néocortex. Dysfonction BHE précoce dans Alzheimer: neuroinflammation, réduction clearance amyloïde via système glymphatique. Drug delivery SNC: nanoparticules lipidiques, conjugaison avec transporteurs endogènes (ex: récepteur transferrine), focused ultrasound pour ouverture transitoire BHE."
+    },
+    "neuroplasticite_pathologies": {
+      "neuroplasticite": "Neuroplasticité: capacité du SNC à se modifier structurellement et fonctionnellement en réponse à l'expérience. Formes: synaptique (LTP/LTD), axonale (bourgeonnement/élagage), représentationnelle (réorganisation cartes corticales — plasticité Merzenich), neurogénèse adulte (hippocampe — zone sous-granulaire, Eriksson 1998; bulbe olfactif — zone sous-ventriculaire). Facteurs stimulants: exercice aérobique (+BDNF+VEGF), apprentissage actif, sommeil, facteurs neurotrophiques. Fenêtres critiques développementales.",
+      "parkinson_alzheimer": "Parkinson: dégénérescence neurones dopaminergiques nigro-striés (> 60-80% perte avant symptômes) + corps de Lewy (α-synucléine). Stades Braak de Parkinson (0-VI): tronc cérébral→limbique→néocortex. Symptômes cardinaux: tremblement repos, rigidité, bradykinésie, instabilité posturale. Traitement: L-DOPA/carbidopa, agonistes dopaminergiques, DBS (stimulation cérébrale profonde noyau sous-thalamique). Alzheimer: β-amyloïde précurseur protéine (APP) → Aβ42 (agrège en plaques), tau hyperphosphorylé (enchevêtrements), inflammation gliale, perte synaptique précoce (cognition), perte neuronale (stades tardifs).",
+      "sep_epilepsie": "Sclérose en plaques (SEP): démyélinisation multifocale (plaques MS) du SNC — formes RR (rémittente-récurrente, 85%), PP (progressive primaire), SP (secondaire progressive). Mécanisme: auto-immunité LT contre myéline (MOG, MBP). Traitement: immunomodulateurs (interféron β, acétate de glatiramère), anticorps monoclonaux (natalizumab, alemtuzumab). Épilepsie: crise = décharge neuronale synchrone et excessive. Types: focale (conscience préservée/altérée) vs généralisée (absence, myoclonique, tonico-clonique). Foyer épileptique: hyperexcitabilité/perte inhibition GABAergique. Traitement: antiépileptiques (valproate, lamotrigine, lévétiracétam), VNS, chirurgie résective."
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "version": "v31.5.10",
+  "category": "systeme_lymphatique_sanguin",
+  "description": "Sang, hémostase, coagulation, groupes sanguins, système lymphatique, immunité innée et adaptative, angiogenèse et pathologies hématologiques",
+  "retrieval_triggers": [
+    "sang",
+    "hémoglobine",
+    "globules rouges",
+    "érythrocytes",
+    "leucocytes",
+    "plaquettes",
+    "système lymphatique",
+    "ganglion lymphatique",
+    "lymphe",
+    "lymphocyte",
+    "immunité",
+    "système immunitaire",
+    "anticorps",
+    "immunoglobulines",
+    "anticorps",
+    "coagulation",
+    "hémostase",
+    "thrombose",
+    "thrombine",
+    "fibrine",
+    "groupes sanguins",
+    "ABO",
+    "Rhésus",
+    "transfusion",
+    "compatibilité sanguine",
+    "anémie",
+    "leucémie",
+    "lymphome",
+    "thrombopénie",
+    "drépanocytose",
+    "inflammation",
+    "cytokines",
+    "interleukines",
+    "TNF",
+    "interféron",
+    "complément",
+    "phagocytose",
+    "macrophage",
+    "neutrophile",
+    "lymphocyte T",
+    "lymphocyte B",
+    "CD4",
+    "CD8",
+    "CMH",
+    "HLA",
+    "thymus",
+    "rate",
+    "moelle osseuse",
+    "organes lymphoïdes",
+    "VEGF",
+    "angiogenèse",
+    "œdème",
+    "lymphœdème",
+    "force de Starling"
+  ],
+  "sections": {
+    "sang_composition_fonctions": {
+      "plasma": "Plasma (55% volume sanguin): 92% eau + protéines (albumine — pression oncotique/transport/tampon, globulines α/β/γ, fibrinogène précurseur fibrine) + électrolytes (Na+/K+/Ca2+/Cl-) + glucose/lipides/hormones/gaz dissous. Volume sanguin: 5L adulte (~70 mL/kg). Hématocrite: 40-54% homme, 36-48% femme. pH sanguin: 7.35-7.45 (acidose/alcalose si hors limites).",
+      "elements_figures": "Érythrocytes (GR): 4-6 millions/μL, durée de vie 120 jours, éliminés par macrophages spléniques. Hémoglobine: 4 sous-unités (α2β2) + hème-Fe2+ → transport O2 (oxyhémoglobine) + CO2 + régulé par 2,3-DPG (baisse affinité O2 en tissu), pH (effet Bohr), température. Production: EPO (érythropoïétine — rein) → érythropoïèse moelle. Leucocytes (GB): polynucléaires neutrophiles (phagocytose, NET, 60-70%), éosinophiles (parasites, allergies, 2-4%), basophiles (histamine, IgE, <1%), monocytes-macrophages (phagocytose, CPA, 5-8%), lymphocytes (immunité adaptative, 20-30%), NK (immunité innée anti-tumorale). Thrombocytes (plaquettes): fragments mégacaryocytes, 150-400K/μL, durée vie 7-10 jours, acteurs hémostase primaire."
+    },
+    "hemostase_coagulation": {
+      "hemostase_primaire": "Hémostase primaire: Vasoconstriction réflexe (endothéline, thromboxane A2) → Adhésion plaquettaire (GPIb — vWF — collagène sous-endothélial) → Activation plaquettaire (libération ADP, thromboxane A2, sérotonine — expression GPIIb/IIIa) → Agrégation (fibrinogène-GPIIb/IIIa) → Plug plaquettaire labile. Clopidogrel et aspirine bloquent l'agrégation (anti-agrégants plaquettaires).",
+      "cascade_coagulation": "Cascade de coagulation: Voie extrinsèque (TF+FVIIa→Xa, déclenchée par lésion vasculaire) + Voie intrinsèque (FXII→XI→IX→Xa, contact) → Voie commune: Xa+FVa (prothrombinase) → Prothrombine→Thrombine (FIIa) → Fibrinogène→Fibrine (réseau insoluble) → FXIII (rétraction). Amplification: thrombine active FV/VIII/XI. Fibrinolyse: tPA/uPA → Plasminogène→Plasmine → Fibrine→FDP/D-dimères. Anticoagulants naturels: antithrombine III (inactivation thrombine/Xa — potentialisée héparine), protéine C+S (inactivation FVa/VIIIa), TFPI.",
+      "anticoagulants": "Anticoagulants thérapeutiques: Héparines (HNF — potentialise ATIII, HBPM — anti-Xa), AVK (anti-vitamines K — warfarine/fluindione — bloquent synthèse FII/VII/IX/X + PC/PS — INR cible 2-3), NACO (dabigatran anti-IIa, rivaroxaban/apixaban anti-Xa — pas d'antidote universel initial, maintenant idarucizumab/andexanet). Indication: ETEV, FA, prothèses valvulaires. TTPa (voie intrinsèque + commune), TP/INR (extrinsèque + commune), fibrinogène, D-dimères, anti-Xa."
+    },
+    "groupes_sanguins_transfusion": {
+      "systeme_abo": "Système ABO: Antigènes glucidiques (oligosaccharides) sur GR. Groupe A: Ag A + Ac anti-B. Groupe B: Ag B + Ac anti-A. Groupe AB: Ag A+B, pas d'Ac (receveur universel pour CGR). Groupe O: pas d'Ag, Ac anti-A+anti-B (donneur universel pour CGR). Allèles: IA (dominant), IB (dominant), i (récessif). Anticorps naturels (IgM): formés par exposition antigènes environnementaux. Incompatibilité → hémolyse intravasculaire aiguë (urgence fatale).",
+      "systeme_rhesus": "Système Rhésus: Antigène D (Rh+: 85% population caucasienne). Allo-immunisation: Rh- exposé au sang Rh+ → anticorps anti-D (IgG). Maladie hémolytique fœtale/néonatale (MHFN): mère Rh- / fœtus Rh+ → IgG anti-D traverse placenta → hémolyse fœtale → anémie/ictère/hydrops fetalis. Prévention: injection anti-D prophylactique (gammaglobulines) à la mère Rh- dans les 72h post-accouchement/saignement. Coombs direct (DAT): détecte IgG fixées sur GR. Coombs indirect: détecte Ac libres sérum."
+    },
+    "systeme_lymphatique_anatomie": {
+      "vaisseaux_lymphatiques": "Vaisseaux lymphatiques: Capillaires lymphatiques (endothélium discontinu — ultra-filtrât interstitiel + chyle intestinal absorbés) → Vaisseaux collecteurs (valvés, contraction péristaltique + pression musculaire) → Ganglions lymphatiques (filtration, réponse immune) → Troncs lymphatiques → Canal thoracique gauche (collecte 75%: membres inférieurs/abdomen/gauche) + Canal lymphatique droit (25%: quadrant sup. droit) → Veines sous-clavières. Chyle intestinal: chylomicrons absorbés par lacteals intestinaux → vaisseau chylifère → canal thoracique.",
+      "organes_lymphoides": "Organes lymphoïdes primaires: Thymus (sélection T centrale: positive=TCR fonctionnel + négative=élimination autoréactifs → clonal deletion) + Moelle osseuse (lymphopoïèse B — sélection central tolérance). Organes lymphoïdes secondaires: Rate (filtration sang — zone rouge=destruction GR vieux, zone blanche=réponse immune), Ganglions lymphatiques (cortex=follicules B primaires et secondaires avec centre germinatif, paracortex=zone T, médullaire=macrophages+plasmocytes), Tissu lymphoïde associé aux muqueuses MALT (plaques de Peyer intestin/BALT pulmonaire/NALT nasal).",
+      "drainage_interstitiel": "Drainage lymphatique: réabsorption du liquide interstitiel en excès (retour ~3-4L/jour au sang). Nœuds axillaires (sein, membre supérieur), inguinaux (membre inférieur, pelvis), cervicaux (tête, cou), médiastinaux (thorax). Curage ganglionnaire (cancer du sein, mélanome) → risque de lymphœdème secondaire par obstruction drainage. Massage lymphatique drainant: mobilise la lymphe stagnante."
+    },
+    "immunite_innee_adaptative": {
+      "immunite_innee": "Immunité innée (non-spécifique, rapide < 4h): Barrières physiques (épiderme, mucus, cils). Cellules: neutrophiles (phagocytose, NET=pièges extracellulaires), macrophages (phagocytose, CPA, cytokines — M1 pro-inflammatoire/M2 résolution), cellules dendritiques (CPA professionnelles → lymph nodes → activation T naive), NK (cytotoxicité naturelle — tuent cellules sans CMH-I). Reconnaissance: Pattern Recognition Receptors (TLR, NOD, RIG-I) détectent PAMP (microbes) et DAMP (danger endogène). Complément: C3b opsonisation, C5b-9 MAC lyse, C3a/C5a anaphylatoxines (inflammation). Cytokines: IL-1/IL-6/TNF-α (inflammation systémique — fièvre), IFN-α/β (antiviraux).",
+      "immunite_adaptative": "Immunité adaptative (spécifique, lente 5-10 jours): Lymphocytes B → plasmocytes (IgG — mémoire/protection, IgA — muqueuses/sécrétoire, IgM — réponse primaire/pentamère, IgE — allergies/parasites, IgD — surface B) + cellules B mémoire. CMH II (CPR) + peptide exogène → activation LT CD4+: TH1 (IFN-γ, macrophages, viral/intracellulaire), TH2 (IL-4/5/13, B, allergies), TH17 (IL-17, bactéries extracellulaires/muqueuses), Treg (IL-10/TGF-β, tolérance périphérique). CMH I (toutes cellules nucléées) + peptide endogène → LT CD8+ CTL (perforine/granzyme, FasL) → cytotoxicité. Mémoire immunologique: LB et LT mémoire → réponse secondaire plus rapide/intense."
+    },
+    "angiogenese_microcirculation": {
+      "angiogenese": "Angiogenèse: formation de nouveaux vaisseaux. Physiologique: développement embryonnaire, cicatrisation, cycle menstruel. Pathologique: tumeurs (néoangiogenèse induite par hypoxie → HIF-1α → VEGF), rétinopathie diabétique. Facteurs pro-angiogéniques: VEGF (vascular endothelial growth factor — cible bevacizumab), FGF, angiopoïétines (Ang-1 stabilisation, Ang-2 déstabilisation). Microcirculation et forces de Starling: Pression hydrostatique capillaire (Pc) et interstitielle (Pi), pression oncotique capillaire (πc) et interstitielle (πi). Filtration = (Pc-Pi) - σ(πc-πi). Œdème si déséquilibre: ↑Pc (IC), ↓πc (hypoprotéinémie), ↑Pi (inflammation), obstruction lymphatique."
+    },
+    "pathologies_hematologiques": {
+      "anemies_coagulopathies": "Anémies: ferriprive (microcytaire hypochrome — carence fer — ↓ferritine/↑TIBC), mégaloblastique (macrocytaire — carence B12 facteur intrinsèque/Biermer ou folates), hémolytique (Coombs+: auto-immune; sphérocytose, drépanocytose HbS-HbS: vasoocclusion/crise drépanocytaire/chimioprophylaxie hydroxyurée; thalassémies: déficit chaînes α ou β), aplasique (pancytopénie). Coagulopathies: hémophilie A (FVIII) et B (FIX) — X-liée, traitement facteurs recombinants; maladie de Willebrand (vWF); facteur V Leiden (résistance PC — thrombophilie); CIVD (coagulation intravasculaire disséminée — consommation facteurs + plaquettes → saignements + thromboses).",
+      "hemopathies_malignes": "Hémopathies malignes: LAM (leucémie aiguë myéloblastique: myéloblastes ≥20%, âge>60, mutations FLT3/NPM1/IDH), LAL (lymphoblastes, enfants, Ph+ chromosome Philadelphie BCR-ABL → imatinib), LLC (LB CD5+ matures, âge>60, évolution indolente, critères traitement — Rai/Binet), LMC (BCR-ABL, syndrome myéloprolifératif chronique, traitement ITK imatinib/dasatinib). Lymphomes: Hodgkin (cellules de Reed-Sternberg CD15+CD30+, jeune adulte, traitabilité ↑) vs Non-Hodgkin (hétérogène: folliculaire/diffus grandes cellules B DLBCL/manteau, traitement R-CHOP). Purpura thrombopénique immunologique (PTI): anti-GpIb ou anti-GpIIb/IIIa → destruction plaquettaire (traitement: corticoïdes, IVIg, splénectomie)."
+    }
+  }
+}

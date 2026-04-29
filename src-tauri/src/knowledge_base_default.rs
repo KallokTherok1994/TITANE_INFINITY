@@ -583,6 +583,12 @@ const CREATIVITE_APPRENTISSAGE_CERVEAU: &str =
 const RELATIONS_AMOUREUSES_ATTACHMENT_COUPLES: &str =
     include_str!("../../data/knowledge_base/default/relations_amoureuses_attachment_couples.json");
 
+// ── v31.5.9+31.5.10 expansion — phase 39 (système nerveux + système lymphatique/sanguin) ──
+const SYSTEME_NERVEUX_NEUROANATOMIE: &str =
+    include_str!("../../data/knowledge_base/default/systeme_nerveux_neuroanatomie.json");
+const SYSTEME_LYMPHATIQUE_SANGUIN: &str =
+    include_str!("../../data/knowledge_base/default/systeme_lymphatique_sanguin.json");
+
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
     include_str!("../../data/knowledge_base/default/htf_module_identity.json");
@@ -1194,6 +1200,15 @@ impl DefaultKnowledgeBase {
             "relations_amoureuses_attachment_couples",
             RELATIONS_AMOUREUSES_ATTACHMENT_COUPLES,
         ),
+        // v31.5.9+31.5.10 expansion — phase 39 (système nerveux + système lymphatique/sanguin)
+        (
+            "systeme_nerveux_neuroanatomie",
+            SYSTEME_NERVEUX_NEUROANATOMIE,
+        ),
+        (
+            "systeme_lymphatique_sanguin",
+            SYSTEME_LYMPHATIQUE_SANGUIN,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1522,7 +1537,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 221,
+            result.entries_loaded >= 223,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1709,6 +1724,8 @@ mod tests {
             "psychologie_sante_comportements",
             "creativite_apprentissage_cerveau",
             "relations_amoureuses_attachment_couples",
+            "systeme_nerveux_neuroanatomie",
+            "systeme_lymphatique_sanguin",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
             "therapies_humanistes_existentielles",

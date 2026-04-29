@@ -569,7 +569,8 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts SOCIOLOGIE_ECONOMIE_POLITIQUE + NEUROSCIENCES_EMOTIONS_DECISION, +2 SOURCES entries, baseline >=215 -> >=217, expected list updated (phase 36)
 - `knowledge_base_default.rs`: +2 consts COMMUNICATION_LEADERSHIP_MANAGEMENT + PSYCHOLOGIE_SANTE_COMPORTEMENTS, +2 SOURCES entries, baseline >=217 -> >=219, expected list updated (phase 37)
 - `knowledge_base_default.rs`: +2 consts CREATIVITE_APPRENTISSAGE_CERVEAU + RELATIONS_AMOUREUSES_ATTACHMENT_COUPLES, +2 SOURCES entries, baseline >=219 -> >=221, expected list updated (phase 38)
-- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=221 validated)
+- `knowledge_base_default.rs`: +2 consts SYSTEME_NERVEUX_NEUROANATOMIE + SYSTEME_LYMPHATIQUE_SANGUIN, +2 SOURCES entries, baseline >=221 -> >=223, expected list updated (phase 39)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=223 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
@@ -579,6 +580,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `kb.enfantPsychosomatique.test.ts`: 55 PASS (Vitest, phase 33)
 - `kb.psychiatrieNeuropsycho.test.ts`: 66 PASS (Vitest, phase 34)
 - `kb.creativiteRelationsAmoureuses.test.ts`: 63 PASS (Vitest, phase 38)
+- `kb.systemeNerveuxLymphatique.test.ts`: 62 PASS (Vitest, phase 39)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
@@ -588,3 +590,4 @@ Conformité validée par tests 100/100 (avril 2026).
 - `AH-KB-ENFANT-PSYCHOSOMATIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 33)
 - `AH-KB-PSYCHIATRIE-NEUROPSYCHO-2026-04-29` (full schema, detect_recurrence PASS, phase 34)
 - `AH-KB-CREATIVITE-RELATIONS-2026-04-29` (full schema, detect_recurrence PASS, phase 38, entries=1457)
+- `AH-KB-SYSTEME-NERVEUX-LYMPHATIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 39, entries=1459)
