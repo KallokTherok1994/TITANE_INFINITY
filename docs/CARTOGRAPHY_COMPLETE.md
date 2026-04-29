@@ -1414,3 +1414,20 @@ function MyComponent() {
 - Rule 15: ARCHITECTURE.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour
 - Rule 16: 188 tests PASS (4 nouveaux suites)
 - detect_recurrence: PASS
+
+## KB Phase 24 — psychologie_toxique_profils (2026-05-01)
+
+### Nouveau module knowledge base
+- **Fichier**: `data/knowledge_base/default/psychologie_toxique_profils.json` (v31.3.1)
+- **Catégorie**: `psychologie_toxique_profils`
+- **Sections (10)**: cadre_conceptuel, troubles_personnalite_dsm5 (DSM-5 groupes A/B/C, 10 troubles), narcissisme_subtypes (5 sous-types: grandiose, covert/vulnérable, communautaire, spirituel, malin), dark_triad_tetrad (Dark Triad + sadisme + Factor D, PCL-R Hare 20 items), tactiques_manipulation (10 tactiques: gaslighting, love bombing, triangulation, future-faking, DARVO, isolement, contrôle coercitif, renforcement intermittent, incompétence weaponisée, negging), dynamiques_negatives (trauma bond, contagion émotionnelle, dette affective, honte toxique, syndrome de Stockholm), profils_contextuels (famille toxique, profil pro, spirituel/coaching), grille_detection (5 questions + 11 red flags + échelle danger 1–4), donnees_epidemiologiques (prévalences, neurosciences), ressources_therapeutiques (DBT, MBT, TFP, EMDR, ACT, schema therapy)
+- **Retrieval triggers (31)**: gaslighting, narcissisme, manipulation, dark triad, psychopathie, borderline, trauma bond, DARVO, etc.
+- **Intégration Rust**: const `PSYCHOLOGIE_TOXIQUE_PROFILS` + entrée SOURCES dans `src-tauri/src/knowledge_base_default.rs`
+- **Baseline tests**: `test_knowledge_base_loads_all_categories` ≥193→≥194; `psychologie_toxique_profils` ajouté à `expected` list (position alphabétique: après `politique_geopolitique`)
+- **Pipeline**: injection automatique via `getDefaultKbPromptContext()` → `conversationEngine.ts` sur requêtes pertinentes
+
+### Gates
+- Rule 10 AutoHeal: AH-KB-PSYCHOLOGIE-TOXIQUE-PROFILS-2026-05-01
+- Rule 15: ARCHITECTURE.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour
+- Rule 16: baseline test count 194 (cargo test knowledge_base PASS attendu)
+- detect_recurrence: PASS (à confirmer)

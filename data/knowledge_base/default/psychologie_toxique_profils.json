@@ -1,0 +1,876 @@
+{
+  "version": "v31.3.1",
+  "category": "psychologie_toxique_profils",
+  "description": "Base de connaissances complète sur les profils psychologiques toxiques, troubles de la personnalité, tactiques de manipulation, dynamiques relationnelles négatives, signaux d'alerte et ressources thérapeutiques — pour reconnaissance, discernement et protection.",
+  "psychologie_toxique_profils": {
+    "introduction": "Cette base de connaissances permet à TITANE∞ de reconnaître, nommer et analyser les profils psychologiques toxiques avec précision clinique, sans stigmatisation, dans un but de discernement, de protection et d'accompagnement éclairé.",
+    "usage_principes": [
+      "Ces connaissances servent le discernement, jamais le diagnostic professionnel.",
+      "La reconnaissance d'un profil ne justifie pas l'étiquetage définitif d'une personne.",
+      "Comprendre la psychologie toxique est un outil de protection et d'émancipation.",
+      "La frontière entre trait normal, trait accentué et trouble clinique est un spectre graduel.",
+      "Chaque profil a des racines développementales — blessures, traumas, attachements — ce qui n'exonère pas des comportements nuisibles."
+    ],
+
+    "cadre_conceptuel": {
+      "distinctions_fondamentales": {
+        "trait_de_personnalite": {
+          "definition": "Manière stable et récurrente de percevoir, penser, ressentir et se comporter.",
+          "note": "Tout trait existe sur un spectre. Tous les humains ont des traits narcissiques, manipulateurs, ou impulsifs à faible dose — c'est la rigidité, l'intensité et l'impact sur autrui qui font la différence."
+        },
+        "trouble_de_personnalite": {
+          "definition": "Configuration durable, rigide et envahissante de traits de personnalité qui dévie notablement des attentes culturelles, cause une détresse significative ou une altération du fonctionnement, et se manifeste dans au moins deux domaines: cognition, affectivité, fonctionnement interpersonnel, contrôle des impulsions.",
+          "criteres_generaux_dsm5": [
+            "Début à l'adolescence ou jeune adulte",
+            "Stable dans le temps et généralisé à diverses situations",
+            "Cause détresse cliniquement significative ou altération du fonctionnement",
+            "Non imputable à une autre condition médicale ou substance"
+          ]
+        },
+        "toxicite": {
+          "definition": "Caractéristique relationnelle — non nécessairement un trouble clinique — où les interactions avec une personne causent régulièrement un préjudice émotionnel, psychologique ou social à autrui.",
+          "note": "Une personne peut être toxique sans répondre aux critères d'un trouble de personnalité."
+        },
+        "abus": {
+          "definition": "Comportement intentionnel ou systématique visant à contrôler, nuire, humilier, ou exploiter autrui, causant un préjudice réel.",
+          "types": ["abus émotionnel", "abus psychologique", "abus verbal", "abus physique", "abus financier", "abus sexuel", "coercition et contrôle"]
+        }
+      },
+      "spectre_dangerosité": {
+        "niveau_1_trait_accentue": "Comportement parfois difficile, blessant occasionnellement, mais relation globalement saine possible.",
+        "niveau_2_pattern_toxique": "Comportements récurrents qui nuisent à la relation et au bien-être. Épuisement progressif. Changement difficile sans aide.",
+        "niveau_3_trouble_clinique": "Diagnostic possible. Impact significatif sur la vie et les relations. Aide professionnelle fortement recommandée.",
+        "niveau_4_danger_actif": "Comportements abusifs, contrôle coercitif, menaces. Sécurité personnelle en jeu. Intervention urgente nécessaire."
+      }
+    },
+
+    "troubles_personnalite_dsm5": {
+      "groupe_a_etrange_excentrique": {
+        "description": "Pensée et comportement bizarres, méfiance, retrait social.",
+        "troubles": {
+          "paranoiaque": {
+            "nom": "Trouble de la personnalité paranoïaque",
+            "prevalence": "2.3–4.4% population générale",
+            "caracteristiques": [
+              "Méfiance et suspicion envahissante envers les autres",
+              "Interprétation des actions d'autrui comme malveillantes",
+              "Rancune persistante, refus de pardonner",
+              "Réaction hostile aux critiques perçues",
+              "Jalousie pathologique récurrente",
+              "Crainte non justifiée de l'exploitation",
+              "Lecture malveillante des remarques bénignes"
+            ],
+            "en_relation": "Épuisant — l'autre est constamment suspecté, accusé, testé. Marche sur des œufs permanent.",
+            "origine": "Souvent attachement insécure anxieux, traumas précoces, humiliation chronique."
+          },
+          "schizoïde": {
+            "nom": "Trouble de la personnalité schizoïde",
+            "prevalence": "3.1–4.9%",
+            "caracteristiques": [
+              "Détachement des relations sociales",
+              "Froideur émotionnelle, peu d'expression affective",
+              "Préférence marquée pour les activités solitaires",
+              "Peu ou pas d'intérêt pour les relations sexuelles ou romantiques",
+              "Indifférence aux éloges comme aux critiques",
+              "Peu de plaisir dans les activités"
+            ],
+            "en_relation": "Distance et froideur. L'autre peut se sentir invisible, non aimé, non désiré.",
+            "distinction_autisme": "La personnalité schizoïde diffère des troubles du spectre autistique — le retrait est délibéré, non lié à des difficultés de communication sociale neurobiologiques."
+          },
+          "schizotypique": {
+            "nom": "Trouble de la personnalité schizotypique",
+            "prevalence": "3–5.9%",
+            "caracteristiques": [
+              "Idées de référence (croire que des événements neutres ont un sens personnel)",
+              "Croyances étranges ou pensée magique",
+              "Perceptions inhabituelles, illusions somatiques",
+              "Discours bizarre ou vague",
+              "Méfiance et idéation paranoïde",
+              "Affect inapproprié ou restreint",
+              "Comportement ou apparence bizarres",
+              "Anxiété sociale intense liée aux peurs paranoïdes"
+            ],
+            "en_relation": "Difficultés de communication, monde interne impénétrable, risque de confusion dans les échanges."
+          }
+        }
+      },
+      "groupe_b_dramatique_emotionnel_erratique": {
+        "description": "Émotions dramatiques, instabilité, impulsivité, violation des droits d'autrui.",
+        "note_clinique": "Le groupe B concentre les profils les plus fréquemment associés à la toxicité relationnelle.",
+        "troubles": {
+          "antisocial": {
+            "nom": "Trouble de la personnalité antisociale (ASPD)",
+            "prevalence": "3.6% population générale, 70% détenus",
+            "criteres_principaux": [
+              "Mépris et violation des droits d'autrui (depuis 15 ans)",
+              "Non-conformité aux normes sociales légales",
+              "Duperie: mensonges répétés, utilisation de pseudonymes, escroquerie",
+              "Impulsivité, échec à planifier",
+              "Irritabilité et agressivité (agressions physiques répétées)",
+              "Irresponsabilité constante (travail, finances)",
+              "Absence de remords",
+              "Antécédents de trouble des conduites avant 15 ans"
+            ],
+            "distinction_psychopathie": "L'ASPD est diagnostiqué sur comportements observables. La psychopathie (PCL-R Hare) inclut des traits interpersonnels et affectifs spécifiques — charme superficiel, absence totale d'empathie. Environ 1/3 des ASPD seraient psychopathes.",
+            "en_relation": "Exploitation, manipulation, mensonge, violence potentielle. Risque élevé."
+          },
+          "borderline": {
+            "nom": "Trouble de la personnalité borderline (TPB/BPD)",
+            "prevalence": "1.6–5.9%",
+            "criteres_dsm5": [
+              "Efforts intenses pour éviter l'abandon réel ou imaginé",
+              "Relations interpersonnelles intenses et instables (idéalisation/dévalorisation)",
+              "Perturbation de l'identité: instabilité marquée de l'image de soi",
+              "Impulsivité dans au moins 2 domaines potentiellement dommageables",
+              "Comportements suicidaires, parasuicidaires ou automutilation récurrents",
+              "Instabilité affective due à une réactivité marquée de l'humeur",
+              "Sentiment chronique de vide",
+              "Colère intense inappropriée, difficultés à la contrôler",
+              "Idéation paranoïde transitoire ou dissociation"
+            ],
+            "dynamique_relationnelle": {
+              "splitting": "Vision dichotomique — l'autre est soit parfait soit monstre. Pas de nuance.",
+              "cycle": "Idéalisation → désillusion → dévalorisation → abandon ou régression vers idéalisation.",
+              "fear_of_abandonment": "Moteur central. Peut provoquer comportements d'accrochage ou d'attaque préventive.",
+              "note_compassion": "Le TPB est souvent issu de traumas d'attachement sévères. Les personnes en souffrent profondément. Avec traitement DBT efficace, amélioration significative possible."
+            },
+            "traitement_efficace": "DBT (Dialectical Behavior Therapy) — Linehan. MBT (Mentalization Based Therapy) — Bateman & Fonagy. Taux de rémission ~85% sur 10 ans."
+          },
+          "histrionique": {
+            "nom": "Trouble de la personnalité histrionique",
+            "prevalence": "1.84%",
+            "caracteristiques": [
+              "Inconfort quand pas au centre de l'attention",
+              "Séduction sexuelle inappropriée dans les interactions",
+              "Expression émotionnelle superficielle et changeante",
+              "Utilise l'apparence physique pour attirer l'attention",
+              "Discours impressionniste, peu détaillé",
+              "Théâtralité, dramatisation exagérée",
+              "Suggestibilité, influencé facilement",
+              "Considère les relations plus intimes qu'elles ne sont"
+            ],
+            "en_relation": "Besoin constant d'attention, jalousie si décentré, récits dramatiques, manipulation émotionnelle par la mise en scène."
+          },
+          "narcissique": {
+            "nom": "Trouble de la personnalité narcissique (TPN/NPD)",
+            "prevalence": "0–6.2% selon critères, 7.7% USA (McGill 2008)",
+            "criteres_dsm5": [
+              "Sentiment grandiose de sa propre importance",
+              "Fantasmes illimités de succès, pouvoir, brillance, beauté ou amour idéal",
+              "Conviction d'être 'spécial' — ne peut être compris que par des pairs d'élite",
+              "Besoin d'admiration excessif",
+              "Sens des droits exagérés — attentes de traitement particulier",
+              "Exploitation interpersonnelle",
+              "Manque d'empathie",
+              "Envie des autres ou conviction d'être envié",
+              "Comportements ou attitudes arrogants"
+            ],
+            "en_relation": "Relation asymétrique — l'autre est un objet de besoin (miroir, validation, servitude). Critique intolérable. Punition si l'admiration n'est pas fournie.",
+            "vulnerabilite_cachee": "Derrière la grandiosité: fragilité narcissique extrême, honte profonde, peur de l'insignifiance."
+          }
+        }
+      },
+      "groupe_c_anxieux_craintif": {
+        "description": "Anxiété, peur, inhibition, dépendance.",
+        "troubles": {
+          "evitant": {
+            "nom": "Trouble de la personnalité évitante",
+            "prevalence": "2.4–5.2%",
+            "caracteristiques": [
+              "Evite les activités sociales impliquant un contact significatif",
+              "Retenu par peur des critiques, désapprobation, rejet",
+              "Ne s'engage dans une relation que si certaine d'être aimé",
+              "Réservé dans les relations intimes par peur de la honte",
+              "Préoccupé par la critique ou le rejet",
+              "Voit son inadéquation, inférieur aux autres",
+              "Réticence inhabituelle à prendre des risques personnels"
+            ],
+            "en_relation": "Passivité, retrait, non-dit. Peut piéger l'autre dans l'hypercare ou la frustration permanente."
+          },
+          "dependant": {
+            "nom": "Trouble de la personnalité dépendante",
+            "prevalence": "0.5–0.6%",
+            "caracteristiques": [
+              "Difficulté à prendre des décisions quotidiennes sans conseil excessif",
+              "Besoin que d'autres assument les responsabilités majeures",
+              "Difficulté à exprimer désaccord par peur de perte de soutien",
+              "Difficulté à initier des projets seul",
+              "Fera des choses désagréables pour obtenir soutien d'autrui",
+              "Inconfort ou détresse quand seul",
+              "Recherche urgente d'une nouvelle relation si une se termine",
+              "Préoccupation irréaliste d'être abandonné"
+            ],
+            "en_relation": "Peut engendrer épuisement du partenaire. Vulnérabilité élevée aux partenaires abusifs."
+          },
+          "obsessionnel_compulsif": {
+            "nom": "Trouble de la personnalité obsessionnelle-compulsive (OCPD)",
+            "note": "Distinct du TOC — il s'agit d'un style de personnalité rigide, pas d'obsessions/compulsions spécifiques.",
+            "prevalence": "2.1–7.9%",
+            "caracteristiques": [
+              "Préoccupation par l'ordre, perfectionnisme, contrôle",
+              "Perfectionnisme qui interfère avec l'achèvement des tâches",
+              "Dévotion excessive au travail au détriment des loisirs",
+              "Scrupulosité, inflexibilité sur l'éthique et les valeurs",
+              "Incapacité à jeter objets usés sans valeur sentimentale",
+              "Réticence à déléguer",
+              "Avarice envers soi et les autres",
+              "Rigidité et entêtement"
+            ],
+            "en_relation": "Contrôle, critique perfectionniste, inflexibilité. Épuisant pour les proches qui ne répondent jamais aux standards."
+          }
+        }
+      }
+    },
+
+    "narcissisme_subtypes": {
+      "introduction": "Le narcissisme pathologique ne se manifeste pas de façon uniforme. La recherche distingue au minimum 5 sous-types avec des signatures comportementales distinctes.",
+      "sous_types": {
+        "grandiose": {
+          "nom": "Narcissisme grandiose (manifeste/overt)",
+          "profil": "Le profil classique du DSM-5. Extraverted, dominant, exhibitionniste.",
+          "signaux": [
+            "Discours centré sur ses accomplissements et sa supériorité",
+            "Besoin d'être reconnu comme exceptionnel",
+            "Manque d'empathie visible — coupe la parole, monopolise",
+            "Rage narcissique face à la critique ou au recalage",
+            "Exploitation explicite des autres",
+            "Fantasmes de succès illimité, beauté, amour parfait"
+          ],
+          "masque": "Confiance absolue en surface — vide profond en dessous.",
+          "detectabilite": "Plus visible et reconnaissable des sous-types."
+        },
+        "covert_vulnerable": {
+          "nom": "Narcissisme covert / vulnérable (caché/masqué)",
+          "profil": "Introversion, hypersensibilité, façade de modestie. Le plus difficile à identifier.",
+          "signaux": [
+            "Martyrologie — sacrifie tout, le fait savoir",
+            "Hypersensibilité aux critiques (blessure immédiate)",
+            "Envie chronique masquée en indifférence",
+            "Grandiosité latente — se croit exceptionnel mais ne le montre pas directement",
+            "Passif-agressivité et bouderie prolongée",
+            "Victimisation systématique — toujours l'incompris",
+            "Ruminations sur ses capacités non reconnues",
+            "Honte profonde et fragilité identitaire"
+          ],
+          "masque": "Fausse modestie, posture de victime. Grandiosité dissimulée derrière la souffrance.",
+          "danger_specifique": "Extrêmement difficile à identifier — peut susciter compassion et soin pendant des années avant que le pattern toxique devienne évident.",
+          "origine": "Souvent honte d'enfance intense, parents critiques ou imprévisibles."
+        },
+        "communautaire": {
+          "nom": "Narcissisme communautaire",
+          "profil": "Se définit comme altruiste, leader bienveillant, sauveur de la communauté.",
+          "signaux": [
+            "Se vante de ses dons, de son aide, de son impact",
+            "Instrumentalise la charité pour nourrir l'image",
+            "Colère si son dévouement n'est pas reconnu",
+            "Aide conditionnelle — en échange de gratitude et loyauté",
+            "Centralise le groupe autour de lui comme indispensable"
+          ],
+          "masque": "Le généreux, le donateur, le leader humain.",
+          "detection": "Vérifier si l'aide est inconditionnelle ou toujours commentée, valorisée, utilisée comme crédit social."
+        },
+        "spirituel": {
+          "nom": "Narcissisme spirituel",
+          "profil": "Utilise la spiritualité, le développement personnel ou l'éveil comme vecteur de supériorité.",
+          "signaux": [
+            "Croit avoir atteint un niveau de conscience supérieur",
+            "Utilise le jargon spirituel pour dominer ou invalider",
+            "Gaslighting spirituel: 'tu n'es pas assez éveillé pour comprendre'",
+            "Manque d'empathie masqué par des discours d'amour universel",
+            "Critique spirituelle: tout problème vient du karma ou de la vibration de l'autre",
+            "Guru auto-proclamé, rejet des cadres de soin traditionnels"
+          ],
+          "masque": "L'éveillé, le sage, le maître spirituel.",
+          "danger_specifique": "Particulièrement présent dans les communautés de développement personnel, yoga, méditation, thérapies alternatives."
+        },
+        "malin": {
+          "nom": "Narcissisme malin",
+          "profil": "Narcissisme + traits antisociaux + agression sadique + grandiose. Décrit par Otto Kernberg.",
+          "caracteristiques": [
+            "Grandiose et sans remords",
+            "Jouissance de la domination et de la souffrance d'autrui",
+            "Antisocialité: mépris des règles et des droits",
+            "Sadisme: plaisir actif à blesser, humilier, détruire",
+            "Paranoïa: interprète tout comme attaque, riposte violemment",
+            "Ego-syntone — ne souffre pas de ses propres comportements"
+          ],
+          "niveau_danger": 4,
+          "note_clinique": "Proche de la psychopathie. Traitement quasi-impossible. Fuite recommandée."
+        }
+      }
+    },
+
+    "dark_triad_tetrad": {
+      "introduction": "La 'Triade Noire' (Paulhus & Williams 2002) désigne trois traits de personnalité subcliniques partageant un core d'exploitation interpersonnelle, de manque d'empathie et de comportements malveillants.",
+      "facteur_d": {
+        "definition": "Le Facteur D ('dark core') est le dénominateur commun sous-jacent à tous les traits sombres: maximisation des gains personnels au détriment des autres, avec confort intérieur face à cette exploitation.",
+        "composantes": ["utilité", "indifférence à la souffrance causée", "non-concordance avec les normes morales"],
+        "implication": "Quelqu'un avec un score D élevé manifestera plusieurs traits sombres simultanément."
+      },
+      "triande_noire": {
+        "narcissisme": {
+          "description_subclinique": "Grandiosité, besoin d'admiration, peu d'empathie — sans atteindre le seuil clinique du TPN.",
+          "detection_rapide": "Monopolise la conversation, ramène tout à lui, réaction disproportionnée à la critique."
+        },
+        "machiavelisme": {
+          "origine": "Christie & Geis, 1960s. Inspiré de Machiavel — 'les fins justifient les moyens'.",
+          "profil": "Planificateur stratégique à long terme, cynique, prêt à mentir et manipuler pour ses objectifs.",
+          "caracteristiques": [
+            "Priorité absolue à ses propres objectifs (pouvoir, statut, argent)",
+            "Volonté de mentir et tromper sans état d'âme",
+            "Cynisme profond sur la nature humaine",
+            "Faible empathie, déconnexion émotionnelle",
+            "Joue le 'long game' — patience stratégique",
+            "Charme social calculé et contrôlé",
+            "Absence d'impulsivité — contrairement au psychopathe"
+          ],
+          "danger_specifique": "Considéré par certains chercheurs comme le trait Dark Triad le plus redoutable — moins visible que le narcissisme, moins impulsif que la psychopathie. 'The long game player.'",
+          "detection_rapide": "Observe les règles non-écrites du pouvoir. Utilise l'information stratégiquement. Semble toujours 'raisonnable' mais avance vers un agenda caché.",
+          "lien_intelligence": "Corrélation faible mais positive avec l'intelligence — les Hauts-Mach utilisent leurs capacités cognitives pour planifier l'exploitation.",
+          "genetique": "Gènes partiellement communs avec la psychopathie."
+        },
+        "psychopathie": {
+          "definition_hare": "Robert Hare, PCL-R (Psychopathy Checklist-Revised) — 20 items, seuil clinique: score ≥ 30/40.",
+          "deux_facteurs": {
+            "facteur_1_interpersonnel_affectif": [
+              "Éloquence/charme superficiel",
+              "Estime grandiose de soi",
+              "Tendance au mensonge pathologique",
+              "Manipulation/escroquerie",
+              "Absence de remords ou de culpabilité",
+              "Affect superficiel",
+              "Absence de compassion/empathie",
+              "Inaptitude à admettre sa responsabilité dans ses propres actes"
+            ],
+            "facteur_2_comportemental_lifestyle": [
+              "Besoin de stimulation, tendance à s'ennuyer",
+              "Mode de vie parasitaire",
+              "Faible contrôle comportemental",
+              "Problèmes de comportement tôt dans l'enfance",
+              "Absence de buts réalistes à long terme",
+              "Impulsivité",
+              "Irresponsabilité",
+              "Délinquance juvénile",
+              "Révocation de libération conditionnelle",
+              "Versatilité criminelle"
+            ]
+          },
+          "prevalence": "~1% hommes, 0.3–0.7% femmes population générale. Plus élevée en prison: 15–25%.",
+          "exemple": "Ted Bundy: PCL-R = 39/40.",
+          "neurobiologie": "Volume réduit de l'amygdale, connectivité réduite préfrontal-amygdale, traitement altéré des signaux émotionnels d'autrui.",
+          "distinction_sociopathie": "Sociopathie souvent attribuée à facteurs environnementaux (traumas, milieu). Psychopathie plus neurobiologique, présente dès l'enfance.",
+          "traitement": "Largement résistant aux thérapies conventionnelles. Certains programmes cognitifs-comportementaux réduisent récidive sans changer les traits.",
+          "detection_rapide": "Charme immédiat inexplicable. Mensonges détectés tardivement. Aucune réaction émotionnelle authentique aux épreuves d'autrui."
+        }
+      },
+      "tetrade_noire": {
+        "ajout_sadisme": {
+          "definition": "Sadisme subclinique — plaisir délibéré à infliger douleur, humiliation ou souffrance à autrui, même sans motif utilitaire.",
+          "distinction_psychopathie": "Le psychopathe est indifférent à la souffrance — le sadique en tire plaisir actif.",
+          "signaux": [
+            "Humour cruellement blessant présenté comme 'déconner'",
+            "Plaisir visible lors des humiliations publiques",
+            "Escalade graduelle des blessures relationnelles",
+            "Jeux de pouvoir finalisés dans la destruction"
+          ]
+        }
+      }
+    },
+
+    "tactiques_manipulation": {
+      "introduction": "Les tactiques de manipulation sont des stratégies comportementales — conscientes ou non — visant à influencer, contrôler ou exploiter autrui en contournant son autonomie rationnelle.",
+      "tactiques": {
+        "gaslighting": {
+          "definition": "Manipulation qui amène la victime à douter de sa propre perception de la réalité, de sa mémoire ou de sa santé mentale.",
+          "exemples": [
+            "'Je n'ai jamais dit ça.'",
+            "'Tu imagines des choses.'",
+            "'Tu es trop sensible.'",
+            "'C'est dans ta tête.'",
+            "'Tout le monde pense que tu exagères.'"
+          ],
+          "phases": ["nier les faits", "questionner la mémoire de la victime", "invalider les émotions", "recruter des tiers (flying monkeys)", "faire douter de la santé mentale"],
+          "impact": "Anxiété, dissociation, perte de confiance en soi, dépendance croissante au manipulateur pour définir la réalité.",
+          "terme_origine": "Film 'Gaslight' (1944) — mari manipule femme pour lui faire croire qu'elle est folle."
+        },
+        "love_bombing": {
+          "definition": "Bombardement d'amour excessif au début d'une relation pour créer une dépendance émotionnelle rapide et installer le contrôle.",
+          "signaux": [
+            "Intensité relationnelle anormalement rapide",
+            "Cadeaux disproportionnés, attention constante",
+            "'Je n'ai jamais ressenti ça pour personne'",
+            "Pression à l'engagement précoce",
+            "Idéalisation totale, flattery extrême",
+            "Contacts multiples quotidiens dès le début"
+          ],
+          "cycle": "Love bombing → attachment → introduction graduelle du contrôle → dévalorisation.",
+          "fonction": "Créer une dette émotionnelle et un standard d'intensité qui rendra l'autre accro à l'approbation."
+        },
+        "triangulation": {
+          "definition": "Introduction d'une tierce personne dans la dynamique relationnelle pour créer jalousie, insécurité, compétition ou pour valider l'opinion du manipulateur.",
+          "formes": [
+            "Comparer l'autre à un ex, un ami, un collègue idéalisé",
+            "Faire intervenir un tiers comme arbitre",
+            "Mentionner l'intérêt romantique d'autres personnes pour déclencher la jalousie",
+            "Utiliser les enfants comme messagers ou instruments de pression"
+          ],
+          "impact": "Insécurité chronique, besoin de regagner constamment l'approbation, destruction des liens avec les tiers."
+        },
+        "future_faking": {
+          "definition": "Promesses de futur jamais tenues, utilisées pour maintenir l'attachement et différer les demandes de réciprocité.",
+          "exemples": [
+            "'Bientôt on va voyager ensemble'",
+            "'Je vais changer, donne-moi encore du temps'",
+            "'On va avoir une vraie vie ensemble quand [condition impossible]'"
+          ],
+          "fonction": "Maintenir l'espoir pour éviter la rupture et continuer l'exploitation."
+        },
+        "darvo": {
+          "definition": "Deny, Attack, Reverse Victim and Offender — nié, attaquer, inverser la position de victime et d'agresseur.",
+          "sequence": [
+            "Déni: nier les faits ou leur gravité",
+            "Attaque: contre-attaquer l'accusateur",
+            "Inversion: se poser en victime de la 'fausse accusation'"
+          ],
+          "exemple": "Face à une confrontation sur un mensonge: 'Je n'ai jamais dit ça (déni) — tu cherches toujours à me détruire (attaque) — c'est toi l'agresseur ici, tu me fais du mal (inversion).'"
+        },
+        "isolement": {
+          "definition": "Couper la cible de ses soutiens naturels (famille, amis, collègues) pour la rendre dépendante et vulnérable.",
+          "tactiques_isolement": [
+            "Critiquer systématiquement les proches ('ils ne te veulent pas du bien')",
+            "Créer des conflits entre la cible et son réseau",
+            "Monopoliser le temps et l'énergie",
+            "Déménagement dans un lieu isolé",
+            "Contrôle des communications (téléphone, réseaux)"
+          ],
+          "impact": "Sans réseau, la cible perd accès aux perspectives extérieures, aux ressources d'aide, et au miroir correcteur que peut offrir un entourage sain."
+        },
+        "controle_coercitif": {
+          "definition": "Pattern de comportements visant à priver une personne de liberté, d'autonomie et d'identité par un contrôle total.",
+          "composantes": [
+            "Surveillance et monitoring constant",
+            "Contrôle financier (allocation, interdiction de travailler)",
+            "Humiliation et dégradation répétées",
+            "Règles et conditions arbitraires",
+            "Punitions et récompenses imprévisibles",
+            "Menaces (directes ou implicites)",
+            "Isolement du soutien social"
+          ],
+          "reconnu_legalement": "Au Royaume-Uni, le contrôle coercitif est reconnu comme crime (Serious Crime Act 2015). Au Canada: article 264.1 Code criminel (menaces).",
+          "impact": "Destruction de l'identité, traumatisation complexe (C-PTSD), peur généralisée."
+        },
+        "renforcement_intermittent": {
+          "definition": "Alternance imprévisible de récompenses (amour, validation, chaleur) et de punitions (froid, colère, retrait) qui crée une dépendance comportementale puissante.",
+          "mecanisme_neurologique": "Même mécanisme que le jeu pathologique — dopamine en pic lors de la récompense imprévisible. Crée l'addiction relationnelle.",
+          "impact": "La victime reste accrochée dans l'espoir de retrouver la phase positive. Quitter devient extrêmement difficile malgré la souffrance évidente.",
+          "lien_trauma_bond": "Mécanisme principal du trauma bond."
+        },
+        "incompetence_weaponisee": {
+          "definition": "Simuler ou exagérer l'incompétence pour éviter des responsabilités tout en forçant l'autre à les assumer.",
+          "exemples": [
+            "Faire si mal une tâche qu'on ne la confie plus",
+            "'Je ne sais pas cuisiner / faire la lessive / gérer les finances'",
+            "Oublier systématiquement les tâches assignées"
+          ],
+          "impact": "Déséquilibre chronique des responsabilités. Épuisement de l'autre. Souvent non-reconnu comme manipulation."
+        },
+        "negging": {
+          "definition": "Compliments backhanded ou critiques légères destinées à saper l'estime de soi et créer une insécurité qui rend plus réceptif à l'approbation du manipulateur.",
+          "exemples": [
+            "'Tu es belle pour quelqu'un de ton type'",
+            "'C'est impressionnant pour toi'",
+            "'Je ne pensais pas que tu réussirais ça'"
+          ],
+          "origine": "Popularisé dans la culture pick-up artist.",
+          "mecanisme": "Crée un état de déséquilibre — la cible cherche à prouver sa valeur et devient dépendante de l'approbation du manipulateur."
+        },
+        "flying_monkeys": {
+          "definition": "Tiers recrutés consciemment ou non par le manipulateur pour relayer son message, harceler la victime, ou valider sa version des faits.",
+          "origine": "Référence aux 'singes volants' dans Le Magicien d'Oz.",
+          "formes": [
+            "Famille qui presse la victime de 'pardonner'",
+            "Amis communs qui transmettent des messages",
+            "Collègues utilisés pour espionner ou répandre des rumeurs",
+            "Enfants utilisés comme messagers ou espions"
+          ]
+        }
+      }
+    },
+
+    "dynamiques_negatives": {
+      "trauma_bond": {
+        "definition": "Lien d'attachement profond et pathologique créé dans une relation abusive par l'alternance de cycles d'abus et de réconciliation.",
+        "mecanisme": "Le renforcement intermittent active le système dopaminergique. La peur et la survie activent l'attachement primitif. La victime ne peut quitter même quand elle voit clairement l'abus.",
+        "signes": [
+          "Défendre l'abuseur malgré les blessures évidentes",
+          "Ressentir une tristesse intense à l'idée de partir",
+          "Revenir après chaque séparation",
+          "Minimiser systématiquement l'abus",
+          "Se sentir responsable de l'abuseur",
+          "Espoir persistant que 'ça va changer'"
+        ],
+        "liens_neurologiques": "Stress chronique → cortisol élevé → altération hippocampe → mémoire émotionnelle altérée. Hypervigilance permanente.",
+        "guerison": "Long processus. EMDR, TCC trauma-focused, soutien communautaire. En moyenne 7 tentatives avant rupture définitive."
+      },
+      "contagion_emotionnelle": {
+        "definition": "Processus par lequel les émotions, humeurs et états affectifs se transmettent d'une personne à l'autre, souvent inconsciemment.",
+        "dans_contexte_toxique": "Être en contact répété avec une personne émotionnellement instable, négative ou cruelle peut contaminer progressivement l'état émotionnel, le rapport au monde, et même la vision de soi.",
+        "signaux": [
+          "Se sentir vidé après chaque interaction",
+          "Adopter les croyances négatives de l'autre",
+          "Perdre progressivement sa joie, sa créativité",
+          "Adopter un ton ou des patterns comportementaux de l'abuseur"
+        ]
+      },
+      "dette_affective": {
+        "definition": "Sentiment d'obligation émotionnelle créé par les faveurs, sacrifices ou amour donnés par le manipulateur — réels ou inventés — pour créer une dette que la victime doit 'rembourser'.",
+        "mecanisme": "L'amour, le soin ou les sacrifices sont présentés comme des créances. Tout refus ou désaccord devient ingratitude.",
+        "exemples": [
+          "'Après tout ce que j'ai fait pour toi'",
+          "'Je t'ai tout donné et tu me traites comme ça'",
+          "'Tu me dois au minimum ça'"
+        ]
+      },
+      "honte_toxique": {
+        "definition": "Sentiment profond et global d'être fondamentalement défectueux, mauvais ou inadéquat en tant que personne (distinct de la culpabilité qui porte sur un acte).",
+        "dans_dynamique_abusive": "Cultivée par l'humiliation répétée, les critiques de l'identité, la dévalorisation — pour maintenir la victime dans la soumission.",
+        "signes_chez_la_victime": [
+          "Sentiment d'être fondamentalement trop peu pour être aimé",
+          "Croire mériter le mauvais traitement",
+          "Se sentir responsable des comportements de l'abuseur",
+          "Difficulté à demander de l'aide (honte de la situation)"
+        ]
+      },
+      "syndrome_stockholm": {
+        "definition": "Développement d'une attitude positive, voire affectueuse, envers son agresseur dans une situation de captivité ou de danger.",
+        "mecanisme": "La dépendance totale envers le ravisseur pour la survie provoque un attachement paradoxal. Identifié originellement dans une prise d'otages en Suède (1973).",
+        "dans_relations": "S'observe dans les relations violentes, les sectes, les familles très contrôlantes."
+      }
+    },
+
+    "profils_contextuels": {
+      "famille_toxique": {
+        "patterns_courants": {
+          "parent_narcissique": {
+            "description": "Utilise l'enfant comme extension narcissique — trophée à exhiber ou bouc-émissaire à punir.",
+            "dynamiques": [
+              "Enfant bouc-émissaire vs enfant golden child",
+              "Triangulation entre fratrie",
+              "Projection des échecs sur l'enfant",
+              "Amour conditionnel à la performance",
+              "Violation permanente des limites",
+              "Gaslighting de l'expérience émotionnelle de l'enfant"
+            ]
+          },
+          "scapegoating": {
+            "definition": "Un membre de la famille est désigné coupable systématique de tous les maux — souvent l'enfant le plus sensible ou le plus conscient des dysfonctions.",
+            "impact_long_terme": "Honte toxique profonde, croyances limitantes sur la valeur propre, PTSD complexe."
+          },
+          "enmeshment": {
+            "definition": "Fusion des frontières émotionnelles entre membres — manque de séparation individuelle saine.",
+            "signes": [
+              "Parent qui vit à travers l'enfant",
+              "Culpabilisation à chaque tentative d'autonomie",
+              "Secrets partagés inappropriés",
+              "Rôles inversés (enfant parentifié)"
+            ]
+          }
+        }
+      },
+      "professionnel_toxique": {
+        "patterns": {
+          "manager_narcissique": {
+            "signes": [
+              "S'attribue tout le mérite",
+              "Punit les initiatives non validées par lui",
+              "Favoritisme explicite (golden child professionnel)",
+              "Rage en public lors d'erreurs"
+            ]
+          },
+          "collegue_saboteur": {
+            "signes": [
+              "Rétention d'information stratégique",
+              "Critique en aparté, louange en public inversé",
+              "Vol d'idées ou de crédit",
+              "Micro-aggressions systématiques"
+            ]
+          },
+          "harcèlement_moral": {
+            "definition": "Agissements répétés ayant pour objet ou effet une dégradation des conditions de travail susceptible de porter atteinte aux droits, dignité, santé physique ou mentale.",
+            "note_legale": "Reconnu légalement en France (loi 2002), au Québec (CNT), en Europe (directive 2000)."
+          }
+        }
+      },
+      "spirituel_coaching_toxique": {
+        "description": "Détournement des pratiques spirituelles, du développement personnel ou du coaching pour exercer un contrôle, un abus ou une exploitation.",
+        "patterns": {
+          "guru_abusif": {
+            "signes": [
+              "Se positionne au-dessus de la critique ('tu n'as pas le niveau pour me comprendre')",
+              "Demande dévotion absolue et coupure avec l'extérieur",
+              "Exploitation financière déguisée en 'investissement dans ta croissance'",
+              "Isolement du groupe des non-croyants"
+            ]
+          },
+          "coach_toxique": {
+            "signes": [
+              "Conflit d'intérêts non déclaré",
+              "Absence de référence à des professionnels de santé quand requis",
+              "Techniques coercitives ('ton problème c'est que tu résistes')",
+              "Relation de dépendance entretenue délibérément"
+            ]
+          },
+          "gaslighting_spirituel": {
+            "definition": "Utilisation du langage spirituel pour invalider l'expérience émotionnelle d'autrui.",
+            "exemples": [
+              "'Tu attires ce que tu vis par ta vibration'",
+              "'C'est ton ego qui réagit'",
+              "'Si tu avais vraiment pardonné tu ne ressentirais pas ça'"
+            ]
+          }
+        }
+      }
+    },
+
+    "grille_detection": {
+      "cinq_questions_discernement": [
+        {
+          "question": "Est-ce que je me sens plus ou moins moi-même après les interactions avec cette personne ?",
+          "note": "Les relations saines amplifient le sens de soi. Les relations toxiques l'érodent."
+        },
+        {
+          "question": "Est-ce que les règles changent sans que j'aie fait quelque chose de différent ?",
+          "note": "Signal de contrôle arbitraire — la cible est mise en état d'incertitude permanente."
+        },
+        {
+          "question": "Est-ce que mes besoins, perceptions et émotions sont régulièrement niés ou ridiculisés ?",
+          "note": "Signal de gaslighting ou d'invalidation systématique."
+        },
+        {
+          "question": "Est-ce que je me sens redevable ou coupable sans comprendre clairement pourquoi ?",
+          "note": "Signal de dette affective ou de manipulation par culpabilisation."
+        },
+        {
+          "question": "Est-ce que mon entourage (amis, famille) s'est réduit depuis que je suis avec cette personne ?",
+          "note": "Signal d'isolement progressif — l'un des marqueurs les plus fiables."
+        }
+      ],
+      "onze_red_flags_universels": [
+        "Besoin de contrôler les communications, déplacements ou finances",
+        "Jalousie et possessivité présentées comme preuves d'amour",
+        "Humiliations en public ou en privé, régulières",
+        "Mémoire sélective ou révisionnisme des faits partagés",
+        "Réaction disproportionnée à la critique ou au désaccord",
+        "Incapacité à s'excuser sincèrement ou à assumer des torts",
+        "Les problèmes dans la relation sont toujours la faute de l'autre",
+        "Sentiment de marcher sur des œufs en permanence",
+        "Promesses jamais tenues mais toujours renouvelées",
+        "Pression à s'isoler des proches",
+        "Sentiments de honte, de nullité ou de dévalorisation progressifs"
+      ],
+      "echelle_danger": {
+        "niveau_1": {
+          "label": "Trait difficile",
+          "description": "Comportements occasionnellement blessants. Relation globalement fonctionnelle. Communication possible.",
+          "action": "Conversation directe sur l'impact. Limites claires."
+        },
+        "niveau_2": {
+          "label": "Pattern toxique",
+          "description": "Comportements récurrents nuisibles. Épuisement progressif. Tentatives de changement échouées.",
+          "action": "Thérapie individuelle. Mise en place de limites fermes. Évaluation sérieuse de la relation."
+        },
+        "niveau_3": {
+          "label": "Trouble clinique actif",
+          "description": "Impact clinique sur le bien-être. Abus émotionnel ou psychologique avéré.",
+          "action": "Soutien thérapeutique urgent. Plan de sécurité. Réseau de soutien activé."
+        },
+        "niveau_4": {
+          "label": "Danger actif",
+          "description": "Violence, menaces, contrôle coercitif total. Sécurité physique ou psychologique en danger immédiat.",
+          "action": "Sortie sécurisée urgente. Ressources d'urgence (SOS, refuges). Intervention professionnelle (policière si nécessaire)."
+        }
+      }
+    },
+
+    "donnees_epidemiologiques": {
+      "prevalences_dsm5": {
+        "troubles_personnalite_population_generale": "9–15% population générale présente au moins un trouble de personnalité.",
+        "detail_par_trouble": {
+          "antisocial": "3–4%",
+          "borderline": "1–5.9%",
+          "narcissique": "0–6.2%",
+          "histrionique": "1.84%",
+          "paranoiaque": "2.3–4.4%",
+          "schizotypique": "3–5.9%",
+          "dependant": "0.5–0.6%",
+          "obsessionnel_compulsif": "2.1–7.9%",
+          "evitant": "2.4–5.2%"
+        },
+        "psychopathie": "~1% hommes, 0.3–0.7% femmes population générale. 15–25% population carcérale."
+      },
+      "neurosciences": {
+        "narcissisme_npd": {
+          "amygdale": "Volume réduit",
+          "insula": "Épaisseur corticale réduite — liée au déficit d'empathie",
+          "cortex_prefrontal_ventromedian": "Régulation émotionnelle altérée"
+        },
+        "psychopathie": {
+          "amygdale": "Volume réduit, réactivité réduite aux signaux de détresse d'autrui",
+          "connectivite_prefrontal_amygdale": "Réduite — explication neurobiologique du déficit émotionnel",
+          "cortex_orbitofrontal": "Traitement de la récompense altéré"
+        },
+        "borderline_tpb": {
+          "amygdale": "Hyperactivité — réactivité émotionnelle extrême",
+          "cortex_prefrontal": "Régulation insuffisante des réponses amygdaliennes"
+        },
+        "trauma_complexe": {
+          "hippocampe": "Volume réduit (stress chronique → cortisol chronique → atrophie)",
+          "cortex_prefrontal": "Altération des fonctions exécutives",
+          "axe_hpa": "Dérégulation de l'axe hypothalamo-hypophyso-surrénalien"
+        }
+      },
+      "pcl_r_hare": {
+        "description": "Psychopathy Checklist-Revised — 20 items, évaluation semi-structurée par professionnel.",
+        "score_interpretation": {
+          "0_19": "Non-psychopathe",
+          "20_29": "Traits psychopathiques significatifs",
+          "30_40": "Psychopathie clinique"
+        },
+        "usage": "Standard gold pour l'évaluation de la psychopathie en contexte forensique."
+      }
+    },
+
+    "ressources_therapeutiques": {
+      "pour_victimes": {
+        "trauma_focused_cbt": {
+          "nom": "TF-CBT (Trauma-Focused Cognitive Behavioral Therapy)",
+          "usage": "Trauma simple et complexe, abus émotionnel",
+          "efficacite": "Bien documentée pour PTSD, anxiété post-abus"
+        },
+        "emdr": {
+          "nom": "EMDR (Eye Movement Desensitization and Reprocessing)",
+          "usage": "Trauma, PTSD, trauma bond",
+          "mecanisme": "Retraitement des souvenirs traumatiques via stimulation bilatérale",
+          "efficacite": "Recommandé WHO et APA pour PTSD"
+        },
+        "act": {
+          "nom": "ACT (Acceptance and Commitment Therapy)",
+          "usage": "Reconstruction de l'identité post-abus, valeurs, flexibilité psychologique",
+          "efficacite": "Efficace pour sortir de l'évitement et reconstruire un sens"
+        },
+        "somatic_experiencing": {
+          "nom": "Somatic Experiencing (Levine)",
+          "usage": "Trauma stocké dans le corps, hypervigilance, dissociation"
+        }
+      },
+      "pour_troubles_personnalite": {
+        "dbt": {
+          "nom": "DBT (Dialectical Behavior Therapy) — Marsha Linehan",
+          "trouble_cible_principal": "Borderline",
+          "modules": ["mindfulness", "tolérance à la détresse", "régulation émotionnelle", "efficacité interpersonnelle"],
+          "efficacite": "Rémission ~85% sur 10 ans pour TPB"
+        },
+        "mbt": {
+          "nom": "MBT (Mentalization Based Therapy) — Bateman & Fonagy",
+          "trouble_cible_principal": "Borderline, troubles d'attachement",
+          "focus": "Développer la capacité à comprendre les états mentaux — siens et d'autrui"
+        },
+        "tfp": {
+          "nom": "TFP (Transference Focused Psychotherapy) — Kernberg",
+          "trouble_cible_principal": "Borderline, narcissique",
+          "focus": "Travail sur les représentations de soi et d'autrui via la relation thérapeutique"
+        },
+        "schema_therapy": {
+          "nom": "Schema Therapy — Young",
+          "trouble_cible": "Tous troubles de personnalité, patterns rigides",
+          "focus": "Identification et modification des schémas précoces inadaptés"
+        }
+      },
+      "ressources_urgence_canada_quebec": {
+        "sos_violence_conjugale": {
+          "tel": "1-800-363-9010",
+          "web": "www.sosviolenceconjugale.ca",
+          "services": "Écoute 24h, hébergement d'urgence, accompagnement"
+        },
+        "aide_aux_victimes": {
+          "info": "Centre d'aide aux victimes d'actes criminels (CAVAC)",
+          "web": "www.cavac.qc.ca"
+        },
+        "tel_aide": {
+          "tel": "514-935-1101",
+          "description": "Service de crise et d'écoute (Montréal)"
+        },
+        "compose_134": {
+          "description": "Ligne d'aide en situation de crise — Québec",
+          "tel": "1-866-APPELLE (277-3553)"
+        }
+      },
+      "ressources_urgence_france": {
+        "numero_national_violences_conjugales": {
+          "tel": "3919",
+          "horaires": "7j/7, 9h-22h"
+        },
+        "fnsf": {
+          "nom": "Fédération Nationale Solidarité Femmes",
+          "web": "www.solidaritefemmes.org"
+        }
+      },
+      "livres_references": [
+        {
+          "titre": "Le pervers narcissique et son mode de communication",
+          "auteur": "Marie-France Hirigoyen",
+          "pertinence": "Référence sur le harcèlement moral et narcissisme"
+        },
+        {
+          "titre": "Psychopathy: Theory and Research",
+          "auteur": "Robert Hare",
+          "pertinence": "Standard académique sur la psychopathie"
+        },
+        {
+          "titre": "Santé des émotions / DBT",
+          "auteur": "Marsha Linehan",
+          "pertinence": "DBT pour borderline et régulation émotionnelle"
+        },
+        {
+          "titre": "Should I Stay or Should I Go",
+          "auteur": "Lundy Bancroft",
+          "pertinence": "Guide pratique pour victimes de relations abusives"
+        }
+      ]
+    },
+
+    "retrieval_triggers": [
+      "gaslighting",
+      "narcissisme",
+      "narcissique",
+      "manipulation",
+      "manipulateur",
+      "pervers",
+      "toxique",
+      "abusif",
+      "abus émotionnel",
+      "dark triad",
+      "psychopathe",
+      "psychopathie",
+      "borderline",
+      "trouble de la personnalité",
+      "machiavélisme",
+      "love bombing",
+      "trauma bond",
+      "contrôle coercitif",
+      "red flags",
+      "signes alerte relation",
+      "profil toxique",
+      "harcèlement moral",
+      "renforcement intermittent",
+      "DARVO",
+      "triangulation",
+      "isolement relationnel",
+      "victime relation abusive",
+      "fuir relation toxique",
+      "discernement relation",
+      "DBT thérapie",
+      "EMDR trauma"
+    ]
+  }
+}

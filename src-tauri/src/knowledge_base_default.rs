@@ -498,6 +498,9 @@ const TCC_TROISIEME_VAGUE: &str =
 const ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE: &str = include_str!(
     "../../data/knowledge_base/default/analyse_transactionnelle_psychogenealogie.json"
 );
+// ── v31.3.1 expansion — phase 24 (psychologie toxique, profils, manipulation) ──
+const PSYCHOLOGIE_TOXIQUE_PROFILS: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_toxique_profils.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -983,6 +986,11 @@ impl DefaultKnowledgeBase {
             "analyse_transactionnelle_psychogenealogie",
             ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE,
         ),
+        // v31.3.1 expansion — phase 24 (psychologie toxique, profils, manipulation)
+        (
+            "psychologie_toxique_profils",
+            PSYCHOLOGIE_TOXIQUE_PROFILS,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1311,7 +1319,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 193,
+            result.entries_loaded >= 194,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1440,6 +1448,7 @@ mod tests {
             "plein_potentiel_peak_performance",
             "poesie_ecriture_avancee",
             "politique_geopolitique",
+            "psychologie_toxique_profils",
             "psychologie_cognitive",
             "psychologie_comportementale",
             "psychologie_emotionnelle",
