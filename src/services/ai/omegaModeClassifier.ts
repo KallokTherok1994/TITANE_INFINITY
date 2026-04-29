@@ -688,6 +688,35 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
     ]);
   }
 
+  // ── RULE 9: Multi-turn history signals ──
+  // Reinforces confidence when recurrent patterns appear in recent turns.
+  // Fully backwards-compatible: does nothing when conversationHistory is absent.
+  if (input.conversationHistory && input.conversationHistory.length >= 3) {
+    const recent3 = input.conversationHistory.slice(-3);
+    // Pattern: 2+ short interrogative messages → strengthen CLARIFY_LIGHT
+    const shortInterrogative = recent3.filter(m => m.length < 60 && /\?/.test(m));
+    if (shortInterrogative.length >= 2) {
+      return buildResult(
+        'CLARIFY_LIGHT',
+        Math.min(0.68 + 0.15, 0.95),
+        'MULTI_TURN_CLARIFY',
+        [...ambiguityHits, 'multi_turn:clarify_pattern']
+      );
+    }
+    // Pattern: 2+ messages with deep reasoning signals → strengthen DEEP_REASONING
+    const deepSignalsRecent = recent3.filter(m =>
+      DEEP_REASONING_SIGNALS.some(s => m.toLowerCase().includes(s))
+    );
+    if (deepSignalsRecent.length >= 2) {
+      return buildResult(
+        'DEEP_REASONING',
+        Math.min(0.65 + 0.12, 0.95),
+        'MULTI_TURN_DEEP',
+        ['multi_turn:deep_pattern']
+      );
+    }
+  }
+
   // Safe default: DIRECT at low confidence (caller may override with user mode)
   return buildResult('DIRECT', 0.55, 'DEFAULT_FALLBACK', []);
 }

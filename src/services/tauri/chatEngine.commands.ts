@@ -120,6 +120,8 @@ export interface ChatRequestArgs {
   enableStreaming?: boolean;
   /** Performance profile override. Default: "balanced". */
   profile?: ChatPerformanceProfile;
+  /** Canonical mode resolved by omegaModeClassifier (e.g. 'REPAIR', 'CERTIFY', 'ARCHITECT'). Passed to the backend for fine-grained routing. */
+  canonicalMode?: string;
 }
 
 interface BackendChatCompletionPayload {
@@ -240,6 +242,7 @@ function toBackendPayload(args: ChatRequestArgs): Record<string, unknown> {
     provider: (args.provider ?? 'auto').toLowerCase(),
     enable_streaming: args.enableStreaming ?? false,
     profile: args.profile ?? DEFAULTS.profile,
+    canonical_mode: args.canonicalMode ?? null,
   };
 }
 

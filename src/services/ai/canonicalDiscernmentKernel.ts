@@ -413,6 +413,53 @@ export class CanonicalDiscernmentKernel {
       }
     }
 
+    // ── STEP 10: OMEGA intent detection ──
+    // Activate the OMEGA profile when the user explicitly requests max cognitive power
+    // OR when both complexity and singularity coherence are at their ceiling.
+    const OMEGA_TRIGGER_SIGNALS = [
+      'godmod',
+      'god mode',
+      'omega',
+      'plein potentiel',
+      'full power',
+      'sans limite',
+      'pleine puissance',
+      'max power',
+      'maximum',
+      'full potential',
+    ] as const;
+    const _msgLowerOmega = input.message.toLowerCase();
+    const hasOmegaIntent = OMEGA_TRIGGER_SIGNALS.some(s => _msgLowerOmega.includes(s));
+    // Explicit OMEGA intent: gate at DEVELOPED (rank 2) — user intentionally requested max power,
+    // so the computed profile need not have reached ARCHITECT on its own.
+    // A DIRECT or BALANCED profile is still excluded (trivial messages mentioning "maximum" etc.)
+    if (hasOmegaIntent && PROFILE_RANK[profileId] >= PROFILE_RANK['DEVELOPED']) {
+      const _prevOmega = profileId;
+      profileId = 'OMEGA';
+      signals.push({
+        source: 'kernel',
+        type: 'omega_intent',
+        value: `${_prevOmega}→OMEGA (explicit signal)`,
+        confidence: 0.9,
+      });
+    }
+    // Double escalation: very high complexity + very high singularity coherence
+    if (
+      messageComplexity > 0.9 &&
+      singularityCoherence > 0.88 &&
+      PROFILE_RANK[profileId] >= PROFILE_RANK['ARCHITECT'] &&
+      profileId !== 'OMEGA'
+    ) {
+      const _prevDouble = profileId;
+      profileId = 'OMEGA';
+      signals.push({
+        source: 'kernel',
+        type: 'omega_double_escalation',
+        value: `${_prevDouble}→OMEGA (complexity=${messageComplexity.toFixed(2)},coherence=${singularityCoherence.toFixed(2)})`,
+        confidence: 0.8,
+      });
+    }
+
     // ── Build reasoning ──
     const reasoning = this.buildReasoning(
       intentResult,
@@ -426,6 +473,30 @@ export class CanonicalDiscernmentKernel {
 
     // ── Compute overall confidence ──
     const confidence = this.computeOverallConfidence(signals);
+
+    // ── STEP 11: Confidence feedback loop ──
+    // The confidence score is the weighted output of all kernel signals. If it is
+    // too low, we cannot safely infer — downgrade inferenceState and optionally
+    // escalate the response profile so a stronger model is used.
+    if (confidence < 0.42 && inferenceState === 'SAFE_TO_INFER') {
+      inferenceState = 'INFER_WITH_DISCLOSURE';
+      signals.push({
+        source: 'kernel',
+        type: 'confidence_downgrade',
+        value: confidence,
+        confidence,
+      });
+    }
+    if (confidence < 0.35 && PROFILE_RANK[profileId] < PROFILE_RANK['DEEP']) {
+      const _prevConf = profileId;
+      profileId = 'DEEP';
+      signals.push({
+        source: 'kernel',
+        type: 'confidence_profile_escalation',
+        value: `${_prevConf}→DEEP (low-confidence=${confidence.toFixed(2)})`,
+        confidence,
+      });
+    }
 
     const processingTimeMs = Date.now() - startTime;
 

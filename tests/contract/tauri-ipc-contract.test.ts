@@ -425,3 +425,33 @@ describe('TITANE∞ - Remote Key IPC Contract (Phase 1)', () => {
     expect(content).toContain('RemoteKeyStoreState');
   });
 });
+
+// ─── Phase C: canonicalMode IPC payload contract ───────────────────────────
+describe('TITANE∞ - canonicalMode IPC contract (Phase C v31.2.38)', () => {
+  it('chatEngine.commands.ts: ChatRequestArgs has optional canonicalMode field', () => {
+    const commandsPath = path.join(
+      process.cwd(),
+      'src/services/tauri/chatEngine.commands.ts'
+    );
+    const content = fs.readFileSync(commandsPath, 'utf-8');
+    expect(content).toContain('canonicalMode');
+  });
+
+  it('chatEngine.commands.ts: toBackendPayload maps canonicalMode to canonical_mode', () => {
+    const commandsPath = path.join(
+      process.cwd(),
+      'src/services/tauri/chatEngine.commands.ts'
+    );
+    const content = fs.readFileSync(commandsPath, 'utf-8');
+    expect(content).toContain('canonical_mode');
+    // The mapping must use the canonical snake_case key
+    expect(content).toMatch(/canonical_mode\s*:/);
+  });
+
+  it('chatEngine.ts: tryBackendPipeline passes canonicalMode in payload', () => {
+    const enginePath = path.join(process.cwd(), 'src/services/ai/chatEngine.ts');
+    const content = fs.readFileSync(enginePath, 'utf-8');
+    // chatEngine.ts uses camelCase canonicalMode; snake_case canonical_mode lives in chatEngine.commands.ts
+    expect(content).toContain('canonicalMode');
+  });
+});

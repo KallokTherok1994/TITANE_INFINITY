@@ -121,6 +121,8 @@ import {
 } from './reflectiveVerifier';
 // v31.2.33: Working Memory Compressor
 import { compress as compressHistory, COMPRESSION_HISTORY_THRESHOLD } from './workingMemoryCompressor';
+// v31.2.38: Quality Verifier — heuristic post-generation quality scoring
+import { evaluateResponseQuality } from './qualityVerifier';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
@@ -228,6 +230,8 @@ export interface ChatEngineResponse extends AIResponse {
     reasoningSummary?: string;
     // v26.0.0: Canonical discernment decision (single decision point)
     canonicalDecision?: CanonicalDecision;
+    // v31.2.38: Heuristic quality score from qualityVerifier (0–1, optional)
+    qualityScore?: number;
   };
 }
 
@@ -343,6 +347,58 @@ const STOP_WORDS = new Set([
   'into',
 ]);
 
+/** Module-level: policy for cognitive context on mode transitions.
+ *  'preserve'  — keep all conversationContext entries unchanged.
+ *  'summarize' — keep the last 3 entries, discard the rest.
+ *  'clear'     — full reset (current default for unrelated transitions).
+ *  The outer key is the *from* mode; inner key is the *to* mode.
+ *  Missing combinations fall back to 'clear'.
+ */
+const MODE_TRANSITION_POLICY: Record<string, Record<string, 'clear' | 'preserve' | 'summarize'>> = {
+  brainstorming: {
+    synthesis: 'preserve',
+    planning: 'summarize',
+    journal: 'clear',
+    debug_cognitive: 'clear',
+    default: 'summarize',
+  },
+  synthesis: {
+    planning: 'preserve',
+    brainstorming: 'summarize',
+    default: 'preserve',
+    journal: 'clear',
+    debug_cognitive: 'summarize',
+  },
+  planning: {
+    default: 'preserve',
+    synthesis: 'preserve',
+    journal: 'summarize',
+    brainstorming: 'clear',
+    debug_cognitive: 'clear',
+  },
+  journal: {
+    default: 'clear',
+    brainstorming: 'clear',
+    synthesis: 'clear',
+    planning: 'clear',
+    debug_cognitive: 'clear',
+  },
+  debug_cognitive: {
+    default: 'summarize',
+    planning: 'preserve',
+    synthesis: 'preserve',
+    brainstorming: 'clear',
+    journal: 'clear',
+  },
+  default: {
+    brainstorming: 'summarize',
+    synthesis: 'summarize',
+    planning: 'preserve',
+    journal: 'clear',
+    debug_cognitive: 'summarize',
+  },
+};
+
 class ChatEngineOmega {
   private config: ChatEngineConfig = { mode: 'default' };
   private lastMode: ChatMode = 'default';
@@ -367,8 +423,21 @@ class ChatEngineOmega {
     try {
       // Reset cognitif si changement de mode
       if (this.lastMode !== mode) {
-        logger.info(`Cognitive reset: ${this.lastMode} → ${mode}`);
-        this.conversationContext.clear();
+        const policy = MODE_TRANSITION_POLICY[this.lastMode]?.[mode] ?? 'clear';
+        if (policy === 'clear') {
+          this.conversationContext.clear();
+          logger.info(`Cognitive reset (clear): ${this.lastMode} → ${mode}`);
+        } else if (policy === 'summarize') {
+          const entries = Array.from(this.conversationContext.entries());
+          const kept = entries.slice(-3);
+          this.conversationContext.clear();
+          kept.forEach(([k, v]) => this.conversationContext.set(k, v));
+          logger.info(
+            `Cognitive reset (summarize, kept=${kept.length}): ${this.lastMode} → ${mode}`
+          );
+        } else {
+          logger.info(`Cognitive context preserved: ${this.lastMode} → ${mode}`);
+        }
         this.lastMode = mode;
 
         // Reset compteurs erreur sur changement mode
@@ -930,6 +999,7 @@ Format: [Audit complet] + [Réponse utilisateur]
               ? this.providerPreference
               : undefined,
         responseProfileId: effectiveResponseProfile.id,
+        canonicalMode: canonicalDecision.modeClassification?.canonicalMode,
       });
 
       if (backendResponse) {
@@ -1457,6 +1527,26 @@ Format: [Audit complet] + [Réponse utilisateur]
         ? `${reasoningSummary}\n\n${processedResponse.content}`
         : processedResponse.content;
 
+      // v31.2.38: Quality Verifier — heuristic post-generation scoring (non-blocking)
+      let qualityScore: number | undefined;
+      try {
+        const qualityCritique = evaluateResponseQuality(
+          validatedMessage,
+          finalContent,
+          canonicalDecision.profileId
+        );
+        qualityScore = qualityCritique.overallScore;
+        pipelineSteps.push(`quality-score:${qualityCritique.overallScore.toFixed(2)}`);
+        if (qualityCritique.shouldEnhance) {
+          logger.debug('Quality verifier: response below threshold', {
+            score: qualityScore.toFixed(2),
+            hint: qualityCritique.enhancementHint,
+          });
+        }
+      } catch {
+        // Non-blocking: quality verification failure must never abort the response
+      }
+
       // v26.0.0: Use kernel's resolved mode as authoritative
       const finalResponse: ChatEngineResponse = {
         ...processedResponse,
@@ -1472,6 +1562,7 @@ Format: [Audit complet] + [Réponse utilisateur]
           processingTime,
           reasoningSummary: reasoningSummary || undefined,
           canonicalDecision,
+          qualityScore,
         },
       };
 
@@ -1660,6 +1751,8 @@ Que souhaites-tu explorer ?`;
     reasoningEffort?: EffortLevel;
     backendProvider?: ProviderPreference;
     responseProfileId: string;
+    /** Canonical mode from omegaModeClassifier (e.g. 'REPAIR', 'CERTIFY'). */
+    canonicalMode?: string;
   }): Promise<ChatEngineResponse | null> {
     const {
       finalConfig,
@@ -1675,6 +1768,7 @@ Que souhaites-tu explorer ?`;
       reasoningEffort,
       backendProvider,
       responseProfileId,
+      canonicalMode,
     } = params;
 
     if (!this.isBackendAvailable()) {
@@ -1695,6 +1789,7 @@ Que souhaites-tu explorer ?`;
         provider: backendProvider,
         enableStreaming: false,
         profile: toBackendPerformanceProfile(responseProfileId),
+        canonicalMode,
       };
 
       const completion: ChatCompletionPayload =
