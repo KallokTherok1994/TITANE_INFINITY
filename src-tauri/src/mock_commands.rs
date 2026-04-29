@@ -1308,9 +1308,10 @@ pub async fn upload_and_process_file(path: String) -> Result<String, String> {
     let summary = match crate::ai::analyze_file(&content).await {
         Ok(s) => s,
         Err(_) => {
-            // Fallback: first 300 chars
+            // Fallback: first 300 chars (char-safe to avoid UTF-8 boundary panic)
             if content.len() > 300 {
-                format!("{}...", &content[..300])
+                let end = content.char_indices().nth(300).map(|(i, _)| i).unwrap_or(content.len());
+                format!("{}...", &content[..end])
             } else {
                 content.clone()
             }

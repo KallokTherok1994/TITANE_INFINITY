@@ -48,13 +48,15 @@ impl Summarizer {
         };
 
         // Création du résumé (premiers 300 caractères + points clés si disponibles)
+        // char-safe: évite le panic UTF-8 boundary sur contenu non-ASCII
+        let preview_end = content.char_indices().nth(300).map(|(i, _)| i).unwrap_or(content.len());
         let summary_text = if content.len() > 300 {
             if key_points.is_empty() {
-                format!("{}...", &content[..300])
+                format!("{}...", &content[..preview_end])
             } else {
                 format!(
                     "{}...\n\nPoints clés:\n- {}",
-                    &content[..300],
+                    &content[..preview_end],
                     key_points.join("\n- ")
                 )
             }

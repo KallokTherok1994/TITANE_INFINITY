@@ -6,7 +6,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Component, PathBuf};
 
 type CommandResult<T> = Result<T, String>;
 
@@ -300,20 +300,45 @@ pub async fn cognitive_ingest_file(
 ) -> CommandResult<KnowledgeEntry> {
     log::info!("[Cognitive] ingest_file: {}", path);
 
-    // Read file
-    let content = fs::read_to_string(&path).map_err(|e| format!("Failed to read file: {}", e))?;
+    // Inline path safety validation (mirrors knowledge::parser logic)
+    let trimmed = path.trim();
+    if trimmed.is_empty() {
+        return Err("Invalid file path: empty path".to_string());
+    }
+    if trimmed.contains('\0') {
+        return Err("Invalid file path: contains NUL byte".to_string());
+    }
+    if trimmed.contains("://") {
+        return Err("Invalid file path: protocol schemes not allowed".to_string());
+    }
+    let check = PathBuf::from(trimmed);
+    for component in check.components() {
+        if matches!(component, Component::ParentDir) {
+            return Err("Invalid file path: path traversal detected".to_string());
+        }
+    }
+    let canonical_path = check
+        .canonicalize()
+        .map_err(|e| format!("Invalid file path: {}", e))?;
+    if !canonical_path.is_file() {
+        return Err("Invalid file path: target is not a file".to_string());
+    }
 
-    let metadata = fs::metadata(&path).map_err(|e| format!("Failed to get metadata: {}", e))?;
+    // Read file
+    let content = fs::read_to_string(&canonical_path).map_err(|e| format!("Failed to read file: {}", e))?;
+
+    let metadata = fs::metadata(&canonical_path).map_err(|e| format!("Failed to get metadata: {}", e))?;
 
     let now = chrono::Utc::now().timestamp_millis() as u64;
-    let file_name = path.rsplit('/').next().unwrap_or(&path);
+    let canonical_str = canonical_path.to_string_lossy();
+    let file_name = canonical_str.rsplit('/').next().unwrap_or(canonical_str.as_ref());
 
     let entry = KnowledgeEntry {
         id: format!("kv_{}", now),
         title: title.unwrap_or_else(|| file_name.to_string()),
-        path: path.clone(),
-        category: detect_category(&path),
-        format: path.rsplit('.').next().unwrap_or("unknown").to_string(),
+        path: canonical_str.to_string(),
+        category: detect_category(canonical_str.as_ref()),
+        format: canonical_str.rsplit('.').next().unwrap_or("unknown").to_string(),
         summary: generate_summary(&content, 200),
         size_bytes: metadata.len(),
         word_count: content.split_whitespace().count() as u32,
