@@ -1556,8 +1556,11 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 |---|---|---|---|---|
 | `data/knowledge_base/default/therapies_cognitives_comportementales.json` | KB JSON | v31.3.9 | 8 | 52 |
 | `data/knowledge_base/default/sante_mentale_prevention_resilience.json` | KB JSON | v31.3.10 | 7 | 51 |
-| `src-tauri/src/knowledge_base_default.rs` | Rust | +2 consts +2 SOURCES, baseline >=203 | — | — |
+| `data/knowledge_base/default/neurodiversite_adhd_autisme_hpi.json` | KB JSON | v31.4.1 | 7 | 45+ |
+| `data/knowledge_base/default/emotion_regulation_dbt_advanced.json` | KB JSON | v31.4.2 | 7 | 45+ |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +4 consts +4 SOURCES, baseline >=205 | — | — |
 | `src-tauri/src/commands/ide_operator.rs` | Rust fix | E0505 borrow-after-move | — | — |
-| `src/__tests__/services/ai/kb.tccResilience.test.ts` | Vitest | 53 PASS | — | — |
+| `src/__tests__/services/ai/kb.tccResilience.test.ts` | Vitest | 53 PASS (p29) | — | — |
+| `src/__tests__/services/ai/kb.neurodiversiteDbt.test.ts` | Vitest | 51 PASS (p30) | — | — |
 
-Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29)
+Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30)

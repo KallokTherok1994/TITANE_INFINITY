@@ -1,0 +1,249 @@
+{
+  "version": "v31.4.2",
+  "category": "emotion_regulation_dbt_advanced",
+  "description": "Régulation émotionnelle avancée : DBT complète de Marsha Linehan (4 modules : mindfulness, distress tolerance, emotion regulation, interpersonal effectiveness), gestion clinique de la colère (modèle ABC, STOPP, assertivité vs agression), honte et culpabilité (distinction, spirale, auto-compassion), protocoles skills complets TIPP/ACCEPTS/DEAR MAN/GIVE/FAST, validation en 6 niveaux",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "DBT",
+    "dialectical behavior therapy",
+    "thérapie comportementale dialectique",
+    "Marsha Linehan",
+    "régulation émotionnelle",
+    "tolérance à la détresse",
+    "distress tolerance",
+    "TIPP technique",
+    "ACCEPTS technique",
+    "IMPROVE technique",
+    "DEAR MAN",
+    "GIVE FAST DBT",
+    "interpersonal effectiveness",
+    "efficacité interpersonnelle",
+    "colère clinique",
+    "gestion de la colère",
+    "colère pathologique",
+    "explosion de colère",
+    "honte toxique",
+    "culpabilité saine",
+    "distinction honte culpabilité",
+    "spirale de la honte",
+    "validation émotionnelle",
+    "6 niveaux validation",
+    "biosocial theory Linehan",
+    "invalidation émotionnelle",
+    "opposite action",
+    "action opposée DBT",
+    "check the facts DBT",
+    "vérification des faits",
+    "PLEASE skills",
+    "vulnerability factors",
+    "facteurs vulnérabilité émotionnelle",
+    "pleine conscience DBT",
+    "mindfulness DBT",
+    "radical acceptance",
+    "acceptation radicale",
+    "half smiling",
+    "demi-sourire bouddhiste",
+    "SOBER technique",
+    "mindful eating",
+    "craving surfing",
+    "émotions intenses",
+    "dysrégulation émotionnelle",
+    "borderline DBT",
+    "BPD thérapie",
+    "trouble personnalité limite DBT"
+  ],
+  "sections": {
+    "fondements_dbt_linehan": {
+      "histoire_et_contexte": "Marsha Linehan a développé la DBT (Dialectical Behavior Therapy) dans les années 1980 pour traiter le trouble de personnalité limite (BPD) — depuis, son efficacité est prouvée pour de nombreux troubles impliquant une dysrégulation émotionnelle : dépression chronique, PTSD, troubles alimentaires, addictions, idéation suicidaire",
+      "dialectique_fondamentale": {
+        "definition": "La dialectique centrale de la DBT est la tension entre ACCEPTATION (vous êtes correct/e tel/le que vous êtes maintenant) et CHANGEMENT (vous devez changer pour une vie vécue pleinement)",
+        "synthese": "DBT refuse de trancher — les deux sont vrais simultanément. Cette tension dialectique génère le mouvement. Refuser l'une ou l'autre bloque le progrès"
+      },
+      "biosocial_theory": {
+        "definition": "Linehan — le BPD (et la dysrégulation émotionnelle sévère) résulte de l'interaction entre une vulnérabilité biologique à l'intensité émotionnelle ET un environnement invalidant chronique",
+        "vulnerabilite_biologique": "Certaines personnes naissent avec une sensibilité émotionnelle plus haute, une réactivité plus intense, et un retour au calme plus lent — c'est neurobiologique, pas un choix",
+        "environnement_invalidant": "Messages répétés que les émotions et perceptions ressenties sont incorrectes, exagérées, ou honteuses ('tu dramatises', 'c'est pas grave', 'arrête de pleurer') — crée une alexithymie apprise et une honte chronique",
+        "cycle": "Vulnérabilité + invalidation → dysrégulation → comportements dysfonctionnels pour gérer la détresse → invalidation renforcée"
+      },
+      "4_modules_dbt": {
+        "mindfulness": "Base de tout — observer sans juger, participer pleinement, efficacité (faire ce qui fonctionne, pas ce qui est 'juste') — les trois 'quoi' (observer, décrire, participer) et les trois 'comment' (sans juger, une chose à la fois, efficacement)",
+        "distress_tolerance": "Survivre aux crises sans aggraver la situation — skills de survie à la crise + acceptation radicale",
+        "emotion_regulation": "Comprendre, identifier, et réduire la vulnérabilité émotionnelle + changer les émotions non voulues",
+        "interpersonal_effectiveness": "Obtenir ce qu'on veut dans les relations tout en maintenant les relations et l'estime de soi"
+      }
+    },
+    "distress_tolerance_survie_crise": {
+      "principe": "Les skills de tolérance à la détresse sont pour les crises — quand les émotions sont si intenses que toute tentative de résolution de problème est impossible. L'objectif: survivre sans aggraver",
+      "ACCEPTS": {
+        "definition": "Distraction via ACCEPTS (technique mnémotechnique) — rediriger l'attention pendant la crise",
+        "A_activities": "Activités qui absorbent l'attention — jardinage, cuisine, jeu vidéo, sport intense",
+        "C_contributing": "Contribuer à quelque chose ou quelqu'un — bénévolat, aider un ami, faire un geste",
+        "C_comparisons": "Comparer sa situation à des moments plus difficiles ou à des personnes dans des situations plus dures — sans minimiser mais pour perspective",
+        "E_emotions_opposees": "Générer délibérément une émotion différente — film drôle si triste, musique joyeuse, photos de souvenirs heureux",
+        "P_pushing_away": "Pousser mentalement la situation hors de l'esprit temporairement — boîte imaginaire, mur mental",
+        "T_thoughts": "Substituer des pensées — compter, réciter, résoudre des problèmes mentaux (sudoku mental, recette à mémoriser)",
+        "S_sensations": "Sensations physiques intenses mais non-dangereuses — cube de glace dans la main, eau froide sur le visage, piment, odeur forte"
+      },
+      "TIPP": {
+        "definition": "TIPP — interventions sur la physiologie pour abaisser rapidement l'activation émotionnelle du système nerveux",
+        "T_temperature": "Eau froide sur le visage, glaçons dans les mains, plonger le visage dans l'eau froide — active le réflexe de plongée (diving reflex) qui ralentit le rythme cardiaque en 30 secondes",
+        "I_intense_exercise": "Exercice intense de 20 minutes — libère les tensions musculaires, régule le cortisol, libère endorphines/dopamine",
+        "P_paced_breathing": "Respiration rythmée : expiration plus longue que inspiration (ex: inspirer 4 sec, expirer 6-8 sec) — active le système parasympathique",
+        "P_progressive_relaxation": "Relaxation musculaire progressive de Jacobson — contracter puis relâcher groupes musculaires successivement"
+      },
+      "IMPROVE": {
+        "I_imagery": "Visualisation d'un lieu sûr, apaisant — mental safe place",
+        "M_meaning": "Trouver un sens à la détresse — croissance post-traumatique, enseignement",
+        "P_prayer": "Prière ou méditation selon ses croyances — connexion à quelque chose de plus grand",
+        "R_relaxation": "Relaxation physique — bain chaud, musique douce, yoga restoratif",
+        "O_one_thing": "Se concentrer sur une seule chose dans le moment présent",
+        "V_vacation": "Mini-vacances — courte pause du stresseur (1 heure, pas une semaine), sans culpabilité",
+        "E_encouragement": "Auto-encouragement — 'je peux traverser ça', 'c'est difficile mais pas permanent'"
+      },
+      "radical_acceptance": {
+        "definition": "Accepter radicalement la réalité telle qu'elle est, sans la combattre — l'acceptation n'est pas l'approbation ni la résignation",
+        "principe": "La souffrance = douleur × résistance — la résistance à la réalité double ou triple la souffrance sans changer la réalité",
+        "pratique": "Répéter 'Cela s'est passé. C'est réel. Je ne peux pas le changer.'; tourner les paumes vers le haut (geste physique d'ouverture); respirer dans l'espace de l'acceptation",
+        "obstacles": "L'acceptation radicale doit souvent être refaite des centaines de fois pour la même réalité — c'est normal"
+      },
+      "half_smiling_willing_hands": {
+        "demi_sourire": "Relâcher délibérément les muscles du visage en demi-sourire (expression neutre légèrement relevée) — active rétroaction corporelle vers les émotions (hypothèse de la rétroaction faciale) — pratiqué en pleine conscience",
+        "mains_volontaires": "Paumes ouvertes, tournées vers le haut — posture d'ouverture et d'acceptation — opposé à la posture de fermeture/combat"
+      }
+    },
+    "emotion_regulation_skills": {
+      "comprendre_les_emotions": {
+        "modele_biosocial_applique": "Les émotions sont des réponses adaptées à l'environnement — elles ont une fonction — l'objectif n'est pas d'éliminer les émotions mais de les réguler",
+        "structure_emotion": "Une émotion = déclencheur → évaluation cognitive → réponse physiologique → impulsion d'action → expression comportementale → conséquences — chaque étape est un point d'intervention"
+      },
+      "check_the_facts": {
+        "definition": "Vérifier si son émotion correspond aux faits réels de la situation — souvent, l'intensité émotionnelle reflète une évaluation cognitive déformée",
+        "questions": [
+          "Quel est l'événement déclencheur exact ?",
+          "Quelles sont mes interprétations et pensées sur l'événement ?",
+          "Est-ce que j'assume des faits ou est-ce une interprétation ?",
+          "Y a-t-il d'autres façons d'interpréter la situation ?",
+          "Mon émotion correspond-elle aux faits ou à mon interprétation ?"
+        ]
+      },
+      "opposite_action": {
+        "definition": "Agir à l'opposé de l'impulsion émotionnelle quand l'émotion ne correspond pas aux faits ou n'est pas justifiée dans son intensité",
+        "exemples": {
+          "peur_non_justifiee": "L'impulsion est d'éviter → action opposée: approcher graduellement, s'exposer",
+          "depression_non_justifiee": "L'impulsion est de se retirer et d'être inactif/ve → action opposée: être actif/ve, engager avec les autres, adopter une posture droite",
+          "colere_non_justifiee": "L'impulsion est d'attaquer → action opposée: faire quelque chose de gentil, s'éloigner doucement, éviter le contact",
+          "honte_non_justifiee": "L'impulsion est de se cacher → action opposée: partager avec une personne de confiance, agir publiquement selon ses valeurs"
+        },
+        "condition": "L'opposite action fonctionne quand l'émotion ne correspond pas aux faits ET quand la changer est souhaitable — ne pas l'utiliser pour supprimer des émotions légitimes"
+      },
+      "PLEASE_skills": {
+        "definition": "Réduire la vulnérabilité émotionnelle via les soins du corps — un corps bien entretenu résiste mieux aux storms émotionnelles",
+        "PL_treating_physical_illness": "Traiter les maladies physiques — la douleur physique amplifie la réactivité émotionnelle",
+        "E_balanced_eating": "Alimentation équilibrée — éviter les extrêmes de faim ou de satiété excessive",
+        "A_avoid_substances": "Éviter les substances psychoactives non-médicamentées — alcool/drogues amplifient dysrégulation",
+        "S_sleep": "Sommeil régulier — 7-9h — le manque de sommeil multiplie la réactivité émotionnelle",
+        "E_exercise": "Exercice physique régulier — 20 min/jour minimum"
+      },
+      "build_mastery_positive_experiences": {
+        "mastery": "Pratiquer des activités dans lesquelles on est compétent/e — renforce le sentiment d'efficacité personnelle et équilibre les émotions négatives",
+        "positive_experiences": "Augmenter délibérément les expériences positives — court terme (activités plaisantes quotidiennes) et long terme (construire une vie qui a du sens selon ses valeurs)"
+      }
+    },
+    "interpersonal_effectiveness": {
+      "trois_objectifs_equilibre": {
+        "DEAR_MAN": "Obtenir ce que je veux ou refuser ce que je ne veux pas (objectif de la relation)",
+        "GIVE": "Maintenir la qualité de la relation (objectif de la relation)",
+        "FAST": "Maintenir l'estime de soi (objectif de soi)"
+      },
+      "DEAR_MAN": {
+        "definition": "Outil pour demander quelque chose ou dire non efficacement",
+        "D_describe": "Décrire la situation avec des FAITS OBSERVABLES — sans interprétation ni jugement",
+        "E_express": "Exprimer ses émotions et opinions en utilisant des messages-JE",
+        "A_assert": "Affirmer clairement ce qu'on demande ou refuse — ne pas supposer que l'autre comprend",
+        "R_reinforce": "Renforcer en expliquant les bénéfices pour l'autre ou pour la relation",
+        "M_mindful": "Rester conscient/e de l'objectif — ne pas se laisser distraire ni contre-attaquer",
+        "A_appear_confident": "Paraître confiant/e — ton de voix, posture, contact visuel",
+        "N_negotiate": "Négocier — être prêt/e à donner et recevoir, proposer des alternatives"
+      },
+      "GIVE": {
+        "G_gentle": "Doux/douce — pas d'attaque, de menace, de jugement moralisant",
+        "I_interested": "Intéressé/e — écouter activement, poser des questions",
+        "V_validate": "Valider — reconnaître les émotions et la logique de l'autre",
+        "E_easy_manner": "Détendu/e — humour adapté, légèreté quand possible"
+      },
+      "FAST": {
+        "F_fair": "Juste — envers soi ET envers l'autre",
+        "A_no_apologies": "Pas d'excuses injustifiées pour exister, pour ses émotions, pour ses besoins",
+        "S_stick_to_values": "Adhérer à ses valeurs — ne pas compromettre l'intégrité pour obtenir l'approbation",
+        "T_truthful": "Honnête — ne pas mentir, ne pas exagérer pour convaincre"
+      },
+      "validation_6_niveaux": {
+        "definition": "La validation est l'acte de communiquer à quelqu'un que ses émotions, pensées, ou comportements sont compréhensibles dans leur contexte — pas nécessairement d'accord, mais compréhensible",
+        "niveaux": {
+          "niveau_1_presence": "Être présent/e — écouter, contact visuel, ne pas regarder le téléphone",
+          "niveau_2_reflexion_precise": "Refléter précisément ce que l'autre dit sans interprétation",
+          "niveau_3_lecture_comportementale": "Articuler ce qui n'a pas été exprimé verbalement — 'On dirait que tu es épuisé/e'",
+          "niveau_4_comprendre_histoire": "Valider selon l'histoire de la personne — 'Vu ce que tu as vécu, je comprends que tu réagisses ainsi'",
+          "niveau_5_valider_situation_actuelle": "Valider selon les faits actuels — 'N'importe qui se sentirait ainsi dans cette situation'",
+          "niveau_6_egalite_radicale": "Traiter l'autre comme un/e égal/e — prendre au sérieux, répondre avec authenticité, non comme un/e patient/e à 'gérer'"
+        }
+      }
+    },
+    "colere_clinique": {
+      "modele_ABC_colere": {
+        "A_antecedent": "Déclencheur — situation perçue comme injuste, menaçante, ou frustrante",
+        "B_beliefs": "Croyances — 'c'est inacceptable', 'il/elle n'aurait pas dû', 'je suis traité/e injustement' — le sens donné à la situation",
+        "C_consequence": "Conséquence émotionnelle et comportementale — colère + impulsion comportementale"
+      },
+      "colere_saine_vs_malsaine": {
+        "saine": "Proportionnée à la situation, mobilise pour défendre des limites ou agir contre une injustice réelle, se dissipe après l'action appropriée",
+        "malsaine": "Disproportionnée, persistante, généralisée, entraîne des comportements qui nuisent à soi ou aux relations"
+      },
+      "STOPP": {
+        "S_stop": "S'arrêter — pause physique et cognitive",
+        "T_take_breath": "Respirer — une expiration lente",
+        "O_observe": "Observer — 'Qu'est-ce qui se passe dans mon esprit et mon corps? Quelle pensée est activée?'",
+        "P_pull_back": "Prendre du recul — perspective globale: 'Est-ce que cela comptera dans 5 ans?', 'Y a-t-il une autre façon de voir ceci?'",
+        "P_proceed": "Procéder — agir selon ses valeurs, pas ses émotions réactives"
+      },
+      "expression_colere_saine": "Exprimer la colère sans agression: message-JE ('je me sens en colère quand…' vs 'tu m'as mis/e en colère'), choisir le bon moment, rester sur l'observable, proposer des solutions, ne pas liste-comptes (grievances historiques)"
+    },
+    "honte_et_culpabilite": {
+      "distinction_fondamentale": {
+        "culpabilite": "'J'ai fait quelque chose de mauvais' — focalisée sur le COMPORTEMENT — adaptée quand réelle violation de valeurs — motivante pour réparer",
+        "honte": "'Je SUIS mauvais/e' — focalisée sur le SOI entier — pas de solution possible (on ne peut pas réparer ce qu'on est) — conduit au retrait et à la dissimulation"
+      },
+      "Brene_Brown_honte": "La honte se développe dans le silence, le secret, et le jugement — elle meurt quand on la partage avec quelqu'un digne de confiance. La honte survit à l'empathie, pas à la connexion.",
+      "spirale_honte": {
+        "declencheur": "Événement ou critique (réelle ou perçue)",
+        "evaluation": "'Je suis déficient/e, inadéquat/e, fondamentalement mauvais/e'",
+        "comportements": "Retrait, perfectionnisme défensif, agression (attaque préemptive), dissimulation, isolation",
+        "renforcement": "Le retrait confirme la honte et coupe de la connexion qui guérirait"
+      },
+      "antidote_honte": {
+        "auto_compassion": "Kristin Neff — traiter sa propre souffrance avec la même gentillesse qu'un ami (voir module sante_mentale_prevention_resilience)",
+        "vulnerability": "Brené Brown — la vulnérabilité est la porte d'entrée de la connexion authentique et de l'antidote à la honte",
+        "exposition_graduelle": "Partager progressivement les parties de soi honteuses avec des personnes de confiance — invalide l'évaluation de rejet total",
+        "distinction_comportement_soi": "Répéter: 'Ce que j'ai fait était inapproprié. Cela ne définit pas ce que je suis.'"
+      }
+    },
+    "ressources_dbt": {
+      "formation_officielle": "DBT est une thérapie structurée qui dure généralement 1 an — groupes de skills + thérapie individuelle — nécessite un thérapeute certifié DBT",
+      "livres_accessibles": [
+        "Marsha Linehan — The DBT Skills Training Manual (manuel clinicien)",
+        "Marsha Linehan — DBT Skills Training Handouts and Worksheets (workbook patient)",
+        "Russ Harris — The Happiness Trap (ACT complémentaire à DBT)",
+        "Matthew McKay — The Dialectical Behavior Therapy Skills Workbook"
+      ],
+      "ressources_francophones": [
+        "DBT France — formation thérapeutes et ressources",
+        "Annuaire AFFORTHECC pour thérapeutes DBT certifiés",
+        "Application DBT Diary Card pour suivi quotidien"
+      ],
+      "urgence": {
+        "france": "3114 — numéro national prévention suicide (24h/7j)",
+        "quebec": "1-866-APPELLE (277-3553) — crise 24h/7j"
+      }
+    }
+  }
+}

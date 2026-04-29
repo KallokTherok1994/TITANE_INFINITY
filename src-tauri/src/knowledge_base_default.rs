@@ -528,6 +528,12 @@ const THERAPIES_COGNITIVES_COMPORTEMENTALES: &str =
 // ── v31.3.10 expansion — phase 29 (santé mentale, résilience, burnout, PERMA) ──
 const SANTE_MENTALE_PREVENTION_RESILIENCE: &str =
     include_str!("../../data/knowledge_base/default/sante_mentale_prevention_resilience.json");
+// ── v31.4.1 expansion — phase 30 (neurodiversité : ADHD, TSA, HPI) ──
+const NEURODIVERSITE_ADHD_AUTISME_HPI: &str =
+    include_str!("../../data/knowledge_base/default/neurodiversite_adhd_autisme_hpi.json");
+// ── v31.4.2 expansion — phase 30 (DBT avancé : distress tolerance, colère, honte) ──
+const EMOTION_REGULATION_DBT_ADVANCED: &str =
+    include_str!("../../data/knowledge_base/default/emotion_regulation_dbt_advanced.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1059,6 +1065,15 @@ impl DefaultKnowledgeBase {
             "sante_mentale_prevention_resilience",
             SANTE_MENTALE_PREVENTION_RESILIENCE,
         ),
+        // v31.4.1+31.4.2 expansion — phase 30 (neurodiversité + DBT avancé)
+        (
+            "neurodiversite_adhd_autisme_hpi",
+            NEURODIVERSITE_ADHD_AUTISME_HPI,
+        ),
+        (
+            "emotion_regulation_dbt_advanced",
+            EMOTION_REGULATION_DBT_ADVANCED,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1387,7 +1402,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 203,
+            result.entries_loaded >= 205,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1557,6 +1572,8 @@ mod tests {
             "system_architecture",
             "communication_non_violente_relations",
             "deuil_rupture_transitions",
+            "emotion_regulation_dbt_advanced",
+            "neurodiversite_adhd_autisme_hpi",
             "sante_mentale_prevention_resilience",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",

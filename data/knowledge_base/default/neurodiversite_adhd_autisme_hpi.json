@@ -1,0 +1,225 @@
+{
+  "version": "v31.4.1",
+  "category": "neurodiversite_adhd_autisme_hpi",
+  "description": "Neurodiversité : TDAH/ADHD (neurobiologie dopamine, exécutif, RSD, hyperfocus), Trouble du Spectre Autistique adulte (stimming, profil sensoriel, masking, burnout autistique), Haut Potentiel Intellectuel/HPI (surexcitabilités Dabrowski, perfectionnisme, pensée arborescente), co-occurrences, stratégies compensatoires et ressources cliniques validées",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "TDAH",
+    "ADHD",
+    "trouble déficit attention hyperactivité",
+    "déficit attention",
+    "hyperactivité impulsivité",
+    "inattention",
+    "fonctions exécutives",
+    "mémoire de travail",
+    "time blindness",
+    "procrastination TDAH",
+    "hyperfocus",
+    "rejection sensitive dysphoria",
+    "RSD dysphorie",
+    "sensibilité rejet",
+    "dopamine TDAH",
+    "neurodiversité",
+    "neurodivergent",
+    "autisme adulte",
+    "TSA trouble spectre autistique",
+    "asperger adulte",
+    "masking autiste",
+    "camouflage autiste",
+    "stimming autostimulation",
+    "sensibilité sensorielle",
+    "interoception autisme",
+    "burnout autistique",
+    "haut potentiel intellectuel",
+    "HPI surdoué",
+    "zèbre adulte",
+    "surexcitabilités Dabrowski",
+    "pensée en arborescence",
+    "hypersensibilité intellectuelle",
+    "perfectionnisme HPI",
+    "dys troubles apprentissage",
+    "dyslexie dyspraxie",
+    "neuroatypique",
+    "executive dysfunction",
+    "body doubling",
+    "DIVA-5 ADHD",
+    "AQ-10 autisme",
+    "diagnostic tardif ADHD femme",
+    "ADHD femmes",
+    "autisme femmes",
+    "double diagnostic ADHD autisme",
+    "stratégies compensatoires neurodivergent"
+  ],
+  "sections": {
+    "adhd_neurobiologie_et_presentation": {
+      "definition_DSM5_TR": "Le TDAH (Trouble du Déficit de l'Attention avec ou sans Hyperactivité) est un trouble neurodéveloppemental caractérisé par un pattern persistant d'inattention et/ou hyperactivité-impulsivité qui interfère significativement avec le fonctionnement — DSM-5-TR (2022)",
+      "trois_presentations": {
+        "predominance_inattentive": "Surtout inattention, désorganisation, oublis — fréquent chez les femmes, souvent non-diagnostiqué — 'TDAH silencieux'",
+        "predominance_hyperactive_impulsive": "Bougeotte, difficulté à rester assis, parle trop, interrompt, impulsivité dans les décisions",
+        "presentation_combinee": "Les deux dimensions présentes — forme la plus fréquente diagnostiquée"
+      },
+      "neurobiologie": {
+        "dopamine_et_noradrenaline": "Le TDAH est fondamentalement un trouble de la régulation dopaminergique et noradrénergique dans les circuits préfrontaux — pas un manque de dopamine globalement mais une dysrégulation du signal dopaminergique dans le cortex préfrontal",
+        "cortex_prefrontal_hypoactif": "Le cortex préfrontal (CPF) régule les fonctions exécutives — dans le TDAH, le CPF est chroniquement sous-activé sauf lors de stimulation intense (intérêt, peur, défi, urgence) — ce n'est pas un problème de volonté",
+        "systeme_de_recompense_different": "Le cerveau TDAH répond au renforcement immédiat, pas différé — délai de récompense = effondrement de la motivation même pour des tâches importantes",
+        "neuroplasticite": "Le développement cérébral est retardé d'environ 3 ans dans le TDAH (Shaw 2007, IRM longitudinale) — le cerveau TDAH adulte continue à maturer jusqu'à 30+ ans"
+      },
+      "fonctions_executives_deficitaires": {
+        "definition": "Russell Barkley — les fonctions exécutives sont les capacités d'autorégulation qui permettent de 'gérer le futur' — dans le TDAH, c'est le déficit primaire",
+        "7_fonctions": {
+          "inhibition_comportementale": "Difficulté à stopper une réponse, à ignorer les distractions, à patienter",
+          "memoire_de_travail": "Capacité à 'garder en tête' plusieurs informations simultanément — fortement déficitaire dans TDAH (Miller : normale = 7±2 éléments; TDAH = 4-5)",
+          "flexibilite_cognitive": "Difficulté à changer de tâche ou de stratégie (task-switching), à s'adapter aux changements",
+          "planification_organisation": "Difficulté à organiser les étapes d'un projet, à anticiper les sous-tâches nécessaires",
+          "gestion_du_temps_time_blindness": "Le cerveau TDAH vit dans un éternel 'maintenant' — le futur n'est pas psychologiquement réel tant qu'il n'est pas immédiat (Barkley) — d'où la procrastination chronique",
+          "regulation_emotionnelle": "Réactivité émotionnelle intense et rapide, difficulté à moduler — les émotions du TDAH sont comme 'sans filtre'",
+          "auto_surveillance": "Difficulté à observer son propre comportement de l'extérieur, à corriger en cours de route"
+        }
+      },
+      "hyperfocus": {
+        "definition": "État d'absorption totale dans une tâche stimulante — contraire paradoxal du déficit d'attention — en réalité: incapacité à RÉGULER l'attention (trop peu ou trop, mais pas à la demande)",
+        "caracteristiques": "Peut durer des heures sans pause, perte de notion du temps, oubli de manger/boire, difficulté à interrompre même si besoin urgent",
+        "domaines_typiques": "Jeux vidéo, projets créatifs, lectures passionnantes, recherches internet (hyperlink rabbit holes), musique, sport",
+        "distinction": "Hyperfocus ≠ flow (Csikszentmihalyi) — l'hyperfocus est souvent non-voulu et difficile à stopper, contrairement au flow qui reste sous contrôle"
+      },
+      "rejection_sensitive_dysphoria": {
+        "definition": "William Dodson — la RSD est une réponse émotionnelle intense et soudaine à la perception réelle ou imaginée d'être rejeté, critiqué, ou avoir échoué aux attentes des autres",
+        "intensite": "Douleur émotionnelle décrite comme 'insupportable' — peut surpasser deuils ordinaires dans l'intensité immédiate — souvent confondue avec trouble bipolaire ou BPD",
+        "manifestations": {
+          "vers_exterieur": "Colère explosive, comportements défensifs, contre-attaque",
+          "vers_interieur": "Effondrement, retrait social, désactivation totale, dépression situationnelle",
+          "prevention": "Hypersensibilité aux signaux sociaux, people pleasing, perfectionnisme défensif ('si je suis parfait(e), on ne peut pas me critiquer')"
+        },
+        "neurobiologie": "Liée à la dysrégulation dopaminergique-noradrénergique du CPF qui régule normalement la réponse émotionnelle à l'évaluation sociale",
+        "gestion": "Psychoéducation (nommer RSD), distanciation cognitive ('c'est mon TDAH, pas la réalité'), médication (guanfacine et clonidine efficaces spécifiquement pour RSD), thérapie axée sur la tolérance à la détresse"
+      },
+      "adhd_femmes": {
+        "sous_diagnostic": "Les femmes sont diagnostiquées 5-10 ans plus tard que les hommes — présentation inattentive plus fréquente, masquage social plus efficace, attentes culturelles de conformité",
+        "specificites": "Fluctuation hormonale (cycle menstruel, grossesse, ménopause impactent les symptômes), impact relation avec corps/image, anxiété comorbide souvent au premier plan",
+        "consequences_retard": "Années de honte, d'incompréhension, de stratégies d'évitement — fréquent: diagnostic à 30-50 ans après épuisement des compensations"
+      }
+    },
+    "strategies_compensatoires_adhd": {
+      "scaffolding_externe": {
+        "body_doubling": "Travailler en présence physique ou virtuelle d'une autre personne (même silencieuse) — active l'implication sociale du cerveau TDAH — Focusmate, virtual co-working",
+        "externaliser_la_memoire": "Ne jamais compter sur la mémoire de travail interne — tout noter immédiatement (apps: Obsidian, Notion, simple voice memo), utiliser alarmes-intentions ('alarme à 14h pour appeler médecin')",
+        "timeboxing_et_body_clock": "Utiliser des minuteurs visuels (Time Timer), décomposer en blocs de 25 min (Pomodoro), créer des transitions ritualisées",
+        "environment_design": "Réduire la charge de la prise de décision — préparer à l'avance (vêtements sortis, sacs préparés), réduire les options, utiliser des listes de contrôle"
+      },
+      "chunking_et_implementation_intentions": {
+        "chunking": "Décomposer les tâches en micro-étapes aussi petites que nécessaire ('envoyer email' → ouvrir application → sélectionner destinataire → écrire objet → écrire 3 lignes minimum)",
+        "implementation_intentions": "Peter Gollwitzer: 'Si X (situation/signal), alors je ferai Y (comportement précis)' — remplace la décision en temps réel qui épuise les FE — ex: 'Si je rentre chez moi, alors je mets directement les clés dans le bol rouge'"
+      },
+      "regulation_emotionnelle_adhd": "Pause obligatoire avant réponse (10 sec rule), nommer l'émotion ad verbatim, technique STOPP (Stop/Take breath/Observe/Pull back/Proceed), éviter les décisions importantes en état émotionnel activé",
+      "prise_en_charge_globale": {
+        "pharmacologique": "Méthylphénidate (Ritaline, Concerta) et amphétamines (Adderall — moins disponible en France) — première ligne selon HAS/NICE — pas un 'calmant' mais un régulateur dopaminergique",
+        "psychotherapeutique": "TCC-TDAH (Safren, Ramsey) — structuration, TDAH coaching — attention: coaching TDAH ≠ coaching ordinaire (doit être adapté)",
+        "psychoeducation": "Comprendre son TDAH est thérapeutique en soi — réattribuer les échecs passés, arrêter la honte internalisée",
+        "style_de_vie": "Exercice physique (premier traitement non-médical, aussi efficace que médicament faible dose), sommeil régularisé, alimentation équilibrée, gestion dopamine saine"
+      }
+    },
+    "autisme_spectre_adulte": {
+      "definition_et_evolution": "Le TSA (Trouble du Spectre Autistique) est un trouble neurodéveloppemental caractérisé par des différences persistantes dans la communication sociale et des patterns de comportements restreints/répétitifs — spectre = immense variabilité, pas une échelle linéaire de 'léger à sévère' (ICD-11/DSM-5-TR)",
+      "caracteristiques_adulte": {
+        "communication_sociale_differente": "Difficultés dans la réciprocité sociale intuitive, interprétation littérale, difficulté à décoder les sous-entendus et l'implicite social — ne signifie pas manque d'empathie (certains autistes ont une empathie intense, mais un traitement différent)",
+        "interets_intensifs": "Domaines d'intérêt spécifiques avec niveau de connaissance expert — ces intérêts sont une force cognitive et une source de bien-être",
+        "besoin_de_predictibilite": "Les changements imprévus génèrent une détresse disproportionnée — le cerveau autiste 'prédit' le monde différemment (théorie du Bayesian brain — van der Hout 2014)"
+      },
+      "profil_sensoriel": {
+        "definition": "Traitement sensoriel atypique — peut être hypersensible, hyposensible, ou les deux (selon la modalité et le contexte) — présent chez 90%+ des autistes mais pas exclusif",
+        "hyper_sensibilite": "Sons forts/inattendus intolérables, lumières fluorescentes douloureuses, certaines textures de vêtements impossibles, odeurs intenses épuisantes",
+        "hypo_sensibilite": "Recherche active de stimulation intense (lumières vives, sons forts, pression forte, mouvements), seuil de douleur élevé (risque: ne pas percevoir blessures)",
+        "integration_sensorielle": "Environnement sensoriel épuisant = charges cumulatives invisibles qui épuisent les ressources cognitives avant même les défis sociaux"
+      },
+      "stimming": {
+        "definition": "Comportements d'autostimulation (stéréotypies) — mouvements répétitifs ou vocalisations auto-générés : se balancer, faire des bruits, flapper les mains, tourner, taper",
+        "fonctions": "Régulation sensorielle (moduler l'input), régulation émotionnelle (calmer ou exprimer), communication d'états internes — fondamentalement adaptatif",
+        "suppression_stims": "Interdire le stimming (thérapies behaviorales ABA historiques) est associé à augmentation de l'anxiété, burnout, PTSD — les stims sont protecteurs"
+      },
+      "interoception": {
+        "definition": "Perception des signaux internes du corps (faim, soif, température, douleur, émotions somatiques) — souvent déficitaire ou non-intégrée dans l'autisme",
+        "consequences": "Difficulté à reconnaître quand on est fatigué/e, faim, douleur, anxieux/se — peut mener à ignorer les signaux d'alarme du corps jusqu'à l'effondrement"
+      },
+      "masking_et_burnout_autistique": {
+        "masking_definition": "Camouflage actif des traits autistiques pour se conformer aux normes neurotypiques — apprendre à 'simuler' les comportements sociaux appropriés, supprimer les stims, performer la normalité",
+        "cout_neurologique": "Le masking est profondément épuisant — utilise des ressources cognitives énormes et génère un stress chronique — associé à anxiété, dépression, dissociation identitaire",
+        "femmes_et_masking": "Les femmes autistes maskent davantage et sont diagnostiquées en moyenne 4-8 ans plus tard — imitent les comportements féminins sociaux avec précision masquant le diagnostic",
+        "burnout_autistique": {
+          "definition": "Devon Price et Dora Raymaker (2020) — état d'épuisement intense consécutif à un masking prolongé et à une surcharge sensorielle/sociale chronique",
+          "caracteristiques": "Perte de capacités fonctionnelles (régression), épuisement extrême, retrait social intense, sensibilité accrue, sentiment de perte de sens",
+          "distinction_burnout_pro": "Le burnout autistique est lié au masking et à la surcharge neurosensorielle — pas uniquement à la charge de travail",
+          "recuperation": "Temps, réduction masking, environnements sécurisants, communauté autiste (identity-first language), accommodations"
+        }
+      },
+      "autisme_adulte_non_diagnostique": "De nombreux autistes adultes arrivent sans diagnostic, avec un historique de dépression chronique, anxiété sociale, difficultés relationnelles inexpliquées — le diagnostic adulte libère souvent une narrative de honte ('il y avait quelque chose qui clochait chez moi') en la réinterprétant"
+    },
+    "haut_potentiel_intellectuel_hpi": {
+      "definition_et_limites": "Le terme 'Haut Potentiel Intellectuel' (HPI) désigne conventionnellement un QI ≥130 (2+ ET au-dessus de la moyenne) — représente environ 2% de la population — mais le QI capture imparfaitement la complexité du fonctionnement HPI",
+      "Joseph_Renzulli": "Le modèle des Trois Anneaux: gifted = intersection de capacités supérieures + créativité + engagement (motivation/persévérance) — le QI seul est insuffisant",
+      "surexcitabilites_Dabrowski": {
+        "definition": "Kazimierz Dabrowski — les personnes à haut potentiel montrent souvent des intensités ('surexcitabilités') amplifiées dans 5 domaines — pas des défauts mais des modes de traitement plus intenses du monde",
+        "5_domaines": {
+          "psychomotrice": "Énergie excessive, besoin de mouvement, parler vite et beaucoup, agitation, enthousiasme intense — souvent confondue avec TDAH",
+          "sensorielle": "Hypersensibilité aux stimuli (esthétiques, tactiles, sonores), plaisir esthétique intense, inconfort avec certains environnements",
+          "intellectuelle": "Curiosité insatiable, questionnement profond constant, amour des idées abstraites, difficulté à se satisfaire d'explications superficielles",
+          "imaginative": "Vie imaginaire riche, pensée métaphorique, créativité débordante, mélange rêverie et réalité",
+          "psychique_emotionnelle": "Empathie intense, réactivité émotionnelle profonde, sentiment de justice fort, attachements intenses, conscience de la mort précoce"
+        }
+      },
+      "pensee_en_arborescence": "La pensée HPI n'est pas linéaire mais arborescente — une idée génère instantanément de nombreuses branches associées — avantage pour la créativité et la résolution de problèmes complexes, défi pour la communication (difficulté à simplifier, tendance à surexpliquer)",
+      "paradoxes_et_defis": {
+        "perfectionnisme": "Standard d'excellence élevé qui peut mener à la procrastination (peur de ne pas atteindre ses propres standards), abandon de projets, critique intérieure sévère",
+        "double_etiquette": "Fréquence élevée de co-occurrence HPI + TDAH (appelé 'twice exceptional' ou 2e) — le HPI peut masquer le TDAH et vice-versa",
+        "ennui_scolaire_et_sous-performance": "L'environnement scolaire standard sous-stimule souvent les esprits HPI — conduit à décrochage, résultats scolaires inégaux (très bons dans les domaines qui les passionnent, mauvais dans les autres)",
+        "difficultes_relationnelles": "Décalage ressenti avec les pairs, difficulté à trouver des interlocuteurs de même niveau, sentiment d'être 'trop' pour les autres, tendance à l'isolement",
+        "depression_existentielle": "Confrontation précoce aux questions existentielles (mort, sens, injustice mondiale), intensité émotionnelle qui déborde les cadres disponibles"
+      },
+      "identification_et_ressources": {
+        "bilan_psychometrique": "Bilan WISC-V (enfant) ou WAIS-IV (adulte) par neuropsychologue — résultat: profil qui révèle la structure de l'intelligence (pas seulement le score global)",
+        "ressources_francophones": "ANPEIP (Association Nationale Pour les Enfants Intellectuellement Précoces), Évoluance, groupes HPI adultes sur réseaux sociaux, livres de Jeanne Siaud-Facchin ('Trop intelligent pour être heureux?')",
+        "accompagnement": "Psychothérapie adaptée (ne pas simplifier, stimuler l'intellect), groupes de pairs, activités à la mesure de l'intensité (débats, projets complexes, engagements)"
+      }
+    },
+    "cooccurrences_et_diagnostic_differentiel": {
+      "profils_complexes": {
+        "ADHD_plus_TSA": "Historiquement considérés mutuellement exclusifs (DSM-IV), le DSM-5 reconnaît le double diagnostic — co-occurrence estimée à 50-70% selon les études récentes",
+        "HPI_plus_ADHD": "'Twice exceptional' (2e) — le HPI peut compenser partiellement le TDAH jusqu'à l'effondrement à l'université ou en vie professionnelle quand les exigences dépassent les compensations",
+        "neurodiversite_plus_trauma": "Les personnes neurodivergentes sont statistiquement plus exposées aux traumas (bullying, rejet social, violence, diagnostic tardif avec honte) — C-PTSD + TDAH ou TSA est fréquent"
+      },
+      "diagnostic_differentiel": {
+        "TDAH_vs_anxiete": "L'anxiété génère de l'inattention par rumination — dans le TDAH, l'inattention est présente même sans anxiété — mais les deux coexistent souvent",
+        "TSA_vs_trouble_personnalite": "Les difficultés relationnelles du TSA sont souvent attribuées à tort à un TP — l'histoire développementale est clé",
+        "HPI_vs_trouble_bipolaire": "La surexcitabilité émotionnelle et les changements d'énergie HPI peuvent être confondus avec une cyclothymie ou trouble bipolaire II"
+      },
+      "outils_evaluation_valides": {
+        "DIVA_5": "Diagnostic Interview for ADHD in Adults — entretien semi-structuré TDAH adulte — disponible en français",
+        "AQ_10": "Autism Spectrum Quotient 10 — dépistage TSA rapide (score ≥6 = investigation recommandée)",
+        "WAIS_IV": "Wechsler Adult Intelligence Scale — bilan cognitif complet — profil différentiel TDAH/HPI/TSA",
+        "Brown_ADD": "Brown ADD Scales — fonctions exécutives — complémentaire au diagnostic"
+      }
+    },
+    "identite_et_communaute_neurodivergente": {
+      "modele_de_la_neurodiversite": "Nick Walker (2021) et Judy Singer (1998) — la neurodiversité est une variation naturelle et normale du cerveau humain — pas une pathologie à guérir mais une différence à accommoder",
+      "identity_first_language": "Beaucoup de personnes autistes préfèrent 'personne autiste' (identity-first) à 'personne avec autisme' (person-first) — l'autisme est perçu comme constitutif de l'identité, pas comme une chose séparée — respecter les préférences individuelles",
+      "communaute_et_pair_aidance": "Les groupes de pairs (TSA, TDAH, HPI) offrent une validation précieuse que les professionnels neurotypiques ne peuvent pas toujours donner — forums Autisme Info Service, groupes TDAH adultes, HPI adultes",
+      "acceptance_vs_cure": "Le mouvement neurodiversité s'oppose aux approches qui cherchent à 'normaliser' les comportements autistiques au détriment du bien-être — ABA controversée, masking forcé contre-indiqué"
+    },
+    "ressources_et_outils_pratiques": {
+      "ressources_TDAH": {
+        "france": "HyperSupers TDAH France (hypersuppers.net), TDA/H Québec (tdaquebec.ca), TDAH Magazine",
+        "livres": "Russell Barkley — Taking Charge of Adult ADHD (traduit), William Dodson (RSD), Ned Hallowell — Driven to Distraction, Ari Tuckman — More Attention Less Deficit",
+        "apps_outils": "Focusmate (body doubling), Forest (gamification focus), Notion/Obsidian (externaliser mémoire), Time Timer (minuteur visuel)"
+      },
+      "ressources_TSA": {
+        "france": "Autisme Info Service: 0800 71 40 40, Autisme France (autisme.fr), Association Asperger Amitié",
+        "quebec": "Fédération Québécoise de l'Autisme (autisme.qc.ca), SPHERE-Québec",
+        "livres": "Devon Price — Unmasking Autism, Naoki Higashida — The Reason I Jump (autisme vue de l'intérieur), Rebekah Taussig"
+      },
+      "ressources_HPI": {
+        "france": "ANPEIP (anpeip.org), Évoluance, Jeanne Siaud-Facchin — Trop intelligent pour être heureux?",
+        "evaluation": "Bilan psychométrique WAIS-IV auprès d'un neuropsychologue agréé"
+      },
+      "profesionnels_specialises": "Chercher des professionnels formés spécifiquement à la neurodiversité — neuropsychologues, psychiatres spécialistes TDAH/TSA adulte, psychologues formés neurodiversité — un généraliste non-formé peut passer à côté ou pathologiser à tort"
+    }
+  }
+}
