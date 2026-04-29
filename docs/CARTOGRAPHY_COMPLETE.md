@@ -1431,3 +1431,42 @@ function MyComponent() {
 - Rule 15: ARCHITECTURE.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour
 - Rule 16: baseline test count 194 (cargo test knowledge_base PASS attendu)
 - detect_recurrence: PASS (à confirmer)
+
+## Intelligence Enhancement Phases A–F (2026-04-29, v31.2.38)
+
+### Modifications engine IA (Ring 3/4)
+- **`src/services/ai/canonicalDiscernmentKernel.ts`**:
+  - STEP 10: `OMEGA_TRIGGER_SIGNALS` — activation automatique profil OMEGA sur "godmod/plein potentiel/sans limite/omega/…" (gate: profileId >= DEVELOPED); double escalade (messageComplexity > 0.9 && singularityCoherence > 0.88 && profileId >= ARCHITECT)
+  - STEP 11: boucle retour confidence — downgrade `SAFE_TO_INFER` → `INFER_WITH_DISCLOSURE` si confidence < 0.42; escalade profileId → DEEP si confidence < 0.35
+- **`src/services/ai/chatEngine.ts`**:
+  - `MODE_TRANSITION_POLICY`: table de dispatch `from→to` mode → preserve/summarize/clear dans `setMode()`
+  - Propagation `canonicalMode` vers `tryBackendPipeline` (depuis `canonicalDecision.modeClassification?.canonicalMode`)
+  - Intégration non-bloquante `evaluateResponseQuality` → `omegaMetadata.qualityScore`
+- **`src/services/ai/omegaModeClassifier.ts`**:
+  - RULE 9: signaux multi-tours — `conversationHistory` ≥ 3: 2+ messages courts interrogatifs → CLARIFY_LIGHT (conf +0.15); 2+ avec `DEEP_REASONING_SIGNALS` → DEEP_REASONING (conf +0.12)
+- **`src/services/tauri/chatEngine.commands.ts`**:
+  - `ChatRequestArgs.canonicalMode?: string` → `toBackendPayload` mappe en `canonical_mode`
+
+### Nouveau module
+- **`src/services/ai/qualityVerifier.ts`** (Ring 4, heuristique synchrone):
+  - `evaluateResponseQuality(question, response, profileId): QualityCritique`
+  - `alignmentScore`: Jaccard coverage des keywords question/réponse
+  - `completenessScore`: couverture des sous-questions (split sur `?`)
+  - `depthMatchScore`: word count vs minimum par profil (DIRECT=40, OMEGA=1200)
+  - `QUALITY_THRESHOLD = 0.65`, `shouldEnhance` flag, `enhancementHint`
+
+### Tests (Rule 16)
+- `src/__tests__/services/ai/kernelConfidenceFeedback.test.ts` (5 tests)
+- `src/__tests__/services/ai/kernelOmegaSelection.test.ts` (6 tests)
+- `src/__tests__/services/ai/chatEngineModeTransition.test.ts` (10 tests)
+- `src/services/ai/__tests__/qualityVerifier.test.ts` (10 tests)
+- `src/services/ai/__tests__/omegaModeClassifierMultiTurn.test.ts` (8 tests)
+- `tests/contract/tauri-ipc-contract.test.ts` enrichi: Phase C suite (3 assertions)
+- Total ciblé: 69 PASS
+
+### Gates
+- Rule 10 AutoHeal: AH-PHASE-A..F-2026-04-29 (6 entrées full-schema)
+- Rule 15: ARCHITECTURE.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour
+- Rule 18: commit `65fa41478` sur MAIN
+- detect_recurrence: PASS (entries=1425)
+- verify_instructions: PASS=33 FAIL=0
