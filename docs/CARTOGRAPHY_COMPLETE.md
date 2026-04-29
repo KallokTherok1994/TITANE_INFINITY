@@ -1549,3 +1549,15 @@ Corpus clinique étendu: profils toxiques (p24) → protection (p25) → traumat
 | `src/__tests__/services/ai/kb.cnvDeuil.test.ts` | Vitest | 35 PASS | — | — |
 
 Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil/rupture/transitions (p28)
+
+## Phase 29 — KB TCC + santé mentale/résilience (2026-04-29)
+
+| Fichier | Type | Version | Sections | Triggers |
+|---|---|---|---|---|
+| `data/knowledge_base/default/therapies_cognitives_comportementales.json` | KB JSON | v31.3.9 | 8 | 52 |
+| `data/knowledge_base/default/sante_mentale_prevention_resilience.json` | KB JSON | v31.3.10 | 7 | 51 |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +2 consts +2 SOURCES, baseline >=203 | — | — |
+| `src-tauri/src/commands/ide_operator.rs` | Rust fix | E0505 borrow-after-move | — | — |
+| `src/__tests__/services/ai/kb.tccResilience.test.ts` | Vitest | 53 PASS | — | — |
+
+Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29)

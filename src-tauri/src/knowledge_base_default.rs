@@ -522,6 +522,12 @@ const COMMUNICATION_NON_VIOLENTE_RELATIONS: &str =
 // ── v31.3.8 expansion — phase 28 (deuil, rupture, transitions majeures) ──
 const DEUIL_RUPTURE_TRANSITIONS: &str =
     include_str!("../../data/knowledge_base/default/deuil_rupture_transitions.json");
+// ── v31.3.9 expansion — phase 29 (TCC, Beck, CBT, ACT, MBCT, protocoles) ──
+const THERAPIES_COGNITIVES_COMPORTEMENTALES: &str =
+    include_str!("../../data/knowledge_base/default/therapies_cognitives_comportementales.json");
+// ── v31.3.10 expansion — phase 29 (santé mentale, résilience, burnout, PERMA) ──
+const SANTE_MENTALE_PREVENTION_RESILIENCE: &str =
+    include_str!("../../data/knowledge_base/default/sante_mentale_prevention_resilience.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1044,6 +1050,15 @@ impl DefaultKnowledgeBase {
             "deuil_rupture_transitions",
             DEUIL_RUPTURE_TRANSITIONS,
         ),
+        // v31.3.9+31.3.10 expansion — phase 29 (TCC + santé mentale/résilience)
+        (
+            "therapies_cognitives_comportementales",
+            THERAPIES_COGNITIVES_COMPORTEMENTALES,
+        ),
+        (
+            "sante_mentale_prevention_resilience",
+            SANTE_MENTALE_PREVENTION_RESILIENCE,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1372,7 +1387,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 201,
+            result.entries_loaded >= 203,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1542,7 +1557,9 @@ mod tests {
             "system_architecture",
             "communication_non_violente_relations",
             "deuil_rupture_transitions",
+            "sante_mentale_prevention_resilience",
             "technologie_innovation_avancee",
+            "therapies_cognitives_comportementales",
             "therapies_trauma_avancees",
             "traumatologie_complexe",
             "troubleshooting_faq",

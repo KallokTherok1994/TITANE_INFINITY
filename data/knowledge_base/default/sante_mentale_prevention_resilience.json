@@ -1,0 +1,278 @@
+{
+  "version": "v31.3.10",
+  "category": "sante_mentale_prevention_resilience",
+  "description": "Santé mentale positive, prévention des troubles psychologiques, résilience (Cyrulnik, Bonanno), psychologie positive (Seligman/PERMA), hygiène psychologique, prévention burnout, facteurs protecteurs, routines de bien-être et interventions basées sur les preuves",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "santé mentale",
+    "bien-être psychologique",
+    "hygiène mentale",
+    "prévention burnout",
+    "burnout épuisement professionnel",
+    "épuisement professionnel",
+    "stress chronique",
+    "gestion du stress",
+    "résilience",
+    "facteurs de résilience",
+    "Cyrulnik résilience",
+    "rebondir après l'adversité",
+    "psychologie positive",
+    "Seligman PERMA",
+    "bonheur et bien-être",
+    "flourishing",
+    "épanouissement",
+    "forces de caractère",
+    "forces et vertus",
+    "VIA Character Strengths",
+    "flow Csikszentmihalyi",
+    "état de flow",
+    "engagement optimal",
+    "gratitude",
+    "pratique de gratitude",
+    "journal de gratitude",
+    "pleine conscience quotidienne",
+    "auto-compassion",
+    "Kristin Neff",
+    "self-compassion",
+    "bienveillance envers soi",
+    "critique intérieure",
+    "juge intérieur",
+    "sommeil et santé mentale",
+    "exercice physique dépression",
+    "sport humeur",
+    "connexion sociale santé mentale",
+    "solitude et isolement",
+    "sens dans la vie",
+    "quête de sens",
+    "Viktor Frankl logothérapie",
+    "sens du travail",
+    "prévention suicide",
+    "facteurs de protection santé mentale",
+    "maslach burnout",
+    "JD-R model",
+    "resources travail",
+    "récupération au travail",
+    "detachment psychologique travail",
+    "literatie en santé mentale",
+    "déstigmatisation troubles mentaux"
+  ],
+  "sections": {
+    "concepts_fondamentaux": {
+      "continuum_sante_mentale": {
+        "modele_Keyes_2002": "La santé mentale n'est pas simplement l'absence de maladie — Corey Keyes (2002): deux dimensions orthogonales — présence/absence de maladie ET présence/absence de bien-être",
+        "quatre_quadrants": {
+          "flourishing_sain": "Bien-être élevé + pas de trouble — état optimal",
+          "struggling_sain": "Bien-être faible + pas de trouble — vulnérable",
+          "flourishing_malade": "Bien-être élevé + trouble diagnostiqué — résilience en action",
+          "languishing_malade": "Bien-être faible + trouble — détresse maximale"
+        },
+        "languishing_Adam_Grant": "Terme popularisé par Adam Grant (2021): état de vague vide et absence d'épanouissement — ni dépression ni fleurissement — souvent non reconnu",
+        "implication_clinique": "Traiter la maladie n'est pas suffisant — construire activement le bien-être est un objectif thérapeutique distinct"
+      },
+      "definition_OMS": "La santé mentale est un état de bien-être dans lequel une personne peut se réaliser, faire face aux pressions normales de la vie, travailler de manière productive et contribuer à sa communauté — OMS 2004",
+      "literatie_sante_mentale": {
+        "definition": "Jorm (1994) — connaissance et croyances sur les troubles mentaux qui aident à les reconnaître, gérer et prévenir",
+        "composantes": ["Reconnaître les troubles", "Connaître les traitements efficaces", "Réduire les barrières à l'aide (stigma)", "Savoir comment aider quelqu'un en détresse"],
+        "importance": "Meilleure littératie = détection précoce + aide plus rapide + réduction stigma"
+      }
+    },
+    "modele_PERMA_psychologie_positive": {
+      "fondateur": "Martin Seligman — Flourish (2011) — évolution de la théorie du bonheur authentique (2002)",
+      "note_theorique": "La psychologie positive n'est pas de la pensée positive naïve — elle est fondée sur des preuves empiriques et reconnaît pleinement la souffrance",
+      "composantes_PERMA": {
+        "P_emotions_positives": {
+          "description": "Cultiver les émotions positives — pas au détriment de la réalité mais en les amplifiant quand elles sont présentes",
+          "ratio_Losada": "Ratio 3:1 émotions positives/négatives associé au flourishing (Fredrickson) — attention: ratio exact contesté, principe général maintenu",
+          "broaden_and_build": "Barbara Fredrickson — les émotions positives élargissent le répertoire de pensée-action et construisent des ressources durables (sociales, cognitives, psychologiques)",
+          "pratiques": ["Savouring — savourer délibérément les moments positifs", "Gratitude quotidienne", "Capitaliser sur les bonnes nouvelles", "Replay de moments positifs", "Appréciation de la beauté/excellence"]
+        },
+        "E_engagement": {
+          "description": "État d'engagement total dans une activité — flow (Csikszentmihalyi)",
+          "flow": {
+            "definition": "État optimal d'absorption totale où le temps disparaît et les capacités sont au maximum — Csikszentmihalyi (1990)",
+            "conditions": ["Équilibre défi/compétence (ni trop facile ni trop difficile)", "Objectifs clairs", "Feedback immédiat", "Concentration sur la tâche"],
+            "domaines": "Sport, art, musique, jeu, travail artisanal, chirurgie, code — tout contexte où les conditions sont réunies"
+          },
+          "forces_de_caractere": "Utiliser ses forces signatures (VIA) génère plus d'engagement"
+        },
+        "R_relations": {
+          "description": "Connexions positives avec les autres — prédicteur le plus fort du bien-être (Harvard Study of Adult Development, 80 ans)",
+          "effet_sante": "L'isolement social = risque de mortalité équivalent à fumer 15 cigarettes/jour (Holt-Lunstad 2015)",
+          "micro_moments_connexion": "Barbara Fredrickson — les micro-moments de connexion (même avec des inconnus) contribuent au bien-être physiologique",
+          "qualite_vs_quantite": "La qualité des relations > quantité — une relation de confiance profonde > nombreuses relations superficielles"
+        },
+        "M_meaning": {
+          "description": "Sentiment que la vie a un sens — appartenir à quelque chose qui dépasse soi",
+          "Viktor_Frankl": "Logothérapie — la recherche de sens est la motivation primaire humaine — même dans la souffrance extrême, le sens peut être trouvé (Man's Search for Meaning, 1946)",
+          "trois_voies_sens": ["Créer une œuvre ou accomplir un acte", "Vivre une expérience ou rencontrer quelqu'un", "Choisir son attitude face à la souffrance inévitable"],
+          "sens_professionnel": "Calling vs career vs job — les gens qui vivent leur travail comme une vocation ont un bien-être nettement supérieur (Wrzesniewski et al., 1997)"
+        },
+        "A_accomplissement": {
+          "description": "Poursuivre la réussite pour elle-même — développement des compétences, maîtrise",
+          "auto_determination_Deci_Ryan": "Théorie de l'autodétermination — autonomie, compétence, appartenance sont les 3 besoins psychologiques de base universels dont la satisfaction prédit le bien-être",
+          "motivation_intrinsèque_vs_extrinsèque": "La motivation intrinsèque (intérêt, plaisir, valeurs) prédit mieux le bien-être et la performance durable que la motivation extrinsèque (récompense, évitement punition)"
+        }
+      },
+      "forces_de_caractere_VIA": {
+        "description": "VIA Classification of Character Strengths (Peterson & Seligman, 2004) — 24 forces regroupées en 6 vertus",
+        "vertus_forces": {
+          "sagesse": ["créativité", "curiosité", "ouverture d'esprit", "amour d'apprendre", "perspective"],
+          "courage": ["authenticité", "bravoure", "persévérance", "enthousiasme"],
+          "humanite": ["gentillesse", "amour", "intelligence sociale"],
+          "justice": ["équité", "leadership", "travail en équipe"],
+          "temperance": ["pardon", "humilité", "prudence", "autorégulation"],
+          "transcendance": ["appréciation beauté", "gratitude", "espoir", "humour", "spiritualité"]
+        },
+        "utilisation_forces": "Identifier ses 5 forces signatures (via.character.org) → utiliser différemment + dans de nouveaux contextes → augmentation bien-être significative (Seligman 2005)"
+      }
+    },
+    "resilience": {
+      "definition": "La résilience n'est pas une caractéristique fixe ou un trait de personnalité mais un processus dynamique d'adaptation positive en contexte d'adversité significative (Luthar, Cicchetti & Becker, 2000)",
+      "Cyrulnik_resilience": {
+        "definition": "Boris Cyrulnik — La résilience est la capacité de se reconstruire malgré une blessure psychologique grave — pas 'rebondir' mais 'se transformer' — métaphore du 'chandail troué'",
+        "tuteurs_resilience": "Figures extérieures (humains, animaux, livres, art) qui offrent un lien affectif sécure après le trauma — permettent la reconstruction narrative",
+        "recit_de_soi": "La résilience passe par la capacité à élaborer une narration cohérente de son histoire — transformer le traumatisme en récit intégré (vs récit dissocié)",
+        "facteurs_environnementaux": "La résilience dépend autant des ressources de l'environnement que de l'individu — elle est co-construite"
+      },
+      "Bonanno_trajectoires": {
+        "auteur": "George Bonanno (2004) — études longitudinales sur deuil et trauma",
+        "4_trajectoires": {
+          "resilient": "50-65% des personnes — maintient fonctionnement stable après adversité majeure — ne signifie pas absence d'émotion",
+          "recovery": "15-25% — perturbation initiale significative puis retour au niveau de base sur 1-2 ans",
+          "delayed_reaction": "5-10% — réaction différée — fonctionnement initial stable puis détérioration secondaire",
+          "chronic_dysfunction": "10-15% — détresse prolongée et dysfonctionnement persistant"
+        },
+        "remise_en_question": "La trajectoire de résilience (50-65%) est bien plus fréquente que ce que le modèle de deuil en stades laissait croire — la résilience est la norme, pas l'exception"
+      },
+      "facteurs_protecteurs_resilience": {
+        "individuels": ["Régulation émotionnelle (capacité à moduler les émotions intenses)", "Style d'attribution optimiste mais réaliste", "Sens de l'humour", "Sentiment d'efficacité personnelle (Bandura)", "Flexibilité cognitive", "Sens et cohérence (Antonovsky — salutogenèse)"],
+        "relationnels": ["Au moins un lien d'attachement sécure dans l'enfance", "Réseau social de soutien actif", "Modèles de rôle positifs", "Appartenance à une communauté"],
+        "environnementaux": ["Accès aux soins de santé mentale", "Ressources économiques", "Sécurité physique", "Institutions stables et justes"]
+      },
+      "post_traumatic_growth": {
+        "auteurs": "Richard Tedeschi & Lawrence Calhoun (1996)",
+        "definition": "Changement psychologique positif expérimenté à la suite de luttes avec des circonstances de vie très difficiles — n'annule pas la souffrance mais coexiste avec elle",
+        "5_domaines": ["Nouvelles possibilités perçues", "Relations avec les autres renforcées", "Force personnelle reconnue", "Changement dans les priorités spirituelles/existentielles", "Appréciation accrue de la vie"],
+        "distinction_resilience": "La résilience = maintenir/retrouver le fonctionnement baseline. Le PTG = développement au-delà du baseline — pas forcément consécutif l'un à l'autre"
+      }
+    },
+    "prevention_burnout": {
+      "definition_Maslach": "Christina Maslach — syndrome d'épuisement professionnel défini par 3 dimensions: épuisement émotionnel + dépersonnalisation/cynisme + réduction du sentiment d'accomplissement",
+      "modele_JD_R": {
+        "auteurs": "Demerouti, Bakker, Nachreiner & Schaufeli (2001) — Job Demands-Resources Model",
+        "principe": "Le burnout résulte d'un déséquilibre entre les demandes de travail (surcharge, conflits, ambiguïté) et les ressources disponibles (autonomie, soutien, feedback, développement)",
+        "voie_deterioration_sante": "Demandes élevées → épuisement → burnout",
+        "voie_motivation": "Ressources élevées → engagement → performance"
+      },
+      "6_domaines_Maslach_Leiter": {
+        "charge_travail": "Volume et intensité du travail",
+        "controle": "Degré d'autonomie et d'influence",
+        "recompense": "Reconnaissance financière, sociale et intrinsèque",
+        "communaute": "Qualité des relations au travail",
+        "equite": "Perception de justice et de traitement juste",
+        "valeurs": "Congruence entre valeurs personnelles et organisationnelles"
+      },
+      "recuperation_au_travail": {
+        "Sonnentag_detachement_psychologique": "Le détachement psychologique du travail (ne plus penser au travail hors travail) est le prédicteur le plus fort de la récupération — Sonnentag & Bayer (2005)",
+        "4_experiences_recuperation": ["Détachement psychologique", "Relaxation (activités de faible effort)", "Maîtrise (activités de défi positif en dehors du travail)", "Contrôle (choisir ce qu'on fait de son temps libre)"],
+        "micro_recesses": "Pauses courtes dans la journée (5-15 min loin du travail) restaurent significativement les ressources cognitives — préférer les activités de plein air"
+      },
+      "signaux_precoces_burnout": [
+        "Cynisme et distance émotionnelle croissante envers le travail ou les clients",
+        "Erreurs inhabituelles et difficultés de concentration",
+        "Fatigue persistante qui ne disparaît pas au repos",
+        "Irritabilité accrue / réactions disproportionnées",
+        "Perte du sentiment de compétence et de satisfaction au travail",
+        "Troubles du sommeil liés aux préoccupations professionnelles",
+        "Somatisations fréquentes (maux de tête, tensions musculaires, troubles digestifs)"
+      ]
+    },
+    "hygiene_psychologique_quotidienne": {
+      "piliers_scientifiquement_valides": {
+        "sommeil": {
+          "impact": "Le manque de sommeil est le facteur de risque de détresse psychologique le plus sous-estimé — 1 nuit de 6h augmente négativité émotionnelle de 60% (Matthew Walker)",
+          "recommendations": "7-9h adulte, horaires réguliers, chambre froide/obscure/calme, pas d'écrans 1h avant, pas d'alcool (perturbe sommeil profond et REM)",
+          "sommeil_REM": "Le sommeil paradoxal re-traite les émotions difficiles — 'overnight therapy' (Walker) — essentiel à la régulation émotionnelle"
+        },
+        "exercice_physique": {
+          "impact_depression": "150 min/semaine d'exercice modéré = efficacité comparable aux antidépresseurs pour dépression légère à modérée (Blumenthal 1999, Kvam 2016) + pas d'effets secondaires",
+          "mecanismes": "BDNF (facteur neurotrophique = 'Miracle-Gro' du cerveau), neurogénèse hippocampique, endorphines, réduction cortisol chronique",
+          "minimum": "10 minutes de marche rapide = amélioration mesurable de l'humeur"
+        },
+        "connexion_sociale": "Qualité des relations > toute autre variable pour prédire la santé mentale à long terme (Harvard Study)",
+        "exposition_nature": "20 minutes dans un espace naturel réduit significativement cortisol (Hunter 2019) — 'green prescription'",
+        "pleine_conscience_quotidienne": "8 semaines de pratique MBSR (Mindfulness-Based Stress Reduction, Kabat-Zinn) = réduction mesurable amygdale (Hölzel 2011), amélioration régulation émotionnelle"
+      },
+      "pratique_gratitude": {
+        "evidence": "Emmons & McCullough (2003) — noter 3 choses pour lesquelles on est reconnaissant/e 3x/semaine améliore bien-être significativement vs groupe contrôle sur 6 semaines",
+        "specificite": "Plus efficace que 'généralement reconnaissant' — spécifier le bénéfice ET la personne/situation source",
+        "lettre_de_gratitude": "Rédiger ET lire à voix haute une lettre de gratitude à quelqu'un — effet le plus puissant dans les études Seligman (one of the most robust positive psychology interventions)"
+      },
+      "auto_compassion_Neff": {
+        "auteure": "Kristin Neff — Self-Compassion (2011) — Self-Compassion Scale validée",
+        "3_composantes": {
+          "bienveillance_vs_jugement": "Se traiter avec la même gentillesse qu'on traiterait un ami en difficulté vs auto-critique sévère",
+          "humanite_commune_vs_isolement": "Reconnaître que souffrir et échouer font partie de l'expérience humaine partagée vs 'je suis le seul'",
+          "pleine_conscience_vs_suridentification": "Observer ses pensées et émotions douloureuses avec équanimité vs s'y noyer"
+        },
+        "distinction_estime_soi": "L'auto-compassion ne dépend pas de l'évaluation de soi ni des succès — plus stable et prédicteur de bien-être supérieur à l'estime de soi dans de nombreuses études",
+        "critique_interieure": "La voix critique intérieure est souvent plus dure avec soi qu'avec n'importe qui d'autre — l'auto-compassion l'adoucit sans perdre la motivation",
+        "exercice_pause_auto_compassion": "1. Nommer: 'C'est un moment difficile' (pleine conscience); 2. 'La souffrance fait partie de l'humanité' (humanité commune); 3. 'Puis-je me traiter avec gentillesse?' + main sur le coeur (bienveillance)"
+      }
+    },
+    "interventions_basees_preuves": {
+      "positive_psychology_interventions_PPI": {
+        "meta_analyse": "Sin & Lyubomirsky (2009): 51 études, 4000+ participants — les PPIs améliorent bien-être (+0.34 ES) et réduisent la dépression (-0.31 ES) significativement",
+        "top_interventions": [
+          "Compter ses bénédictions (3 bonnes choses) — 3x/semaine pendant 6 semaines",
+          "Lettre et visite de gratitude — effet immédiat le plus fort (Seligman 2005)",
+          "Utilisation des forces signatures de nouvelles façons — 1 semaine suffit",
+          "Répondre activement et constructivement aux bonnes nouvelles du partenaire",
+          "Actes de bonté intentionnels — 5 par jour 1x/semaine"
+        ]
+      },
+      "ACE_adverse_childhood_experiences": {
+        "etude_Felitti_1998": "Score ACE (0-10) prédit fortement santé physique et mentale à l'âge adulte — accumulation de facteurs adverses dans l'enfance = risque proportionnel",
+        "implication_prevention": "Investissement en protection de l'enfance = ROI de santé publique le plus élevé connu — prévenir les ACEs prévient les maladies mentales ET physiques"
+      },
+      "mindfulness_based_interventions": {
+        "MBSR": "Mindfulness-Based Stress Reduction (Jon Kabat-Zinn, 1979) — 8 semaines — efficacité prouvée pour stress, douleur chronique, anxiété",
+        "MBCT": "Mindfulness-Based Cognitive Therapy — prévention rechute dépressive (voir KB TCC)",
+        "niveau_evidence": "Plus de 1000 études cliniques depuis 2000 — méta-analyses supportent l'efficacité pour anxiété, dépression, douleur, stress professionnel"
+      },
+      "programme_WBA_bien_etre_au_travail": {
+        "composantes_evidence_based": [
+          "Psychoéducation sur le stress et la récupération",
+          "Entraînement à la pleine conscience (MBSR allégé)",
+          "Identification et utilisation des forces",
+          "Pratiques de gratitude et de connexion positive",
+          "Fixation d'objectifs basée sur les valeurs"
+        ]
+      }
+    },
+    "ressources_sante_mentale": {
+      "crise_et_urgence": {
+        "france": "3114 — numéro national prévention suicide / SOS Amitié 09 72 39 40 50 / Fil Santé Jeunes: 0800 235 236",
+        "quebec": "1-866-APPELLE (277-3553) — crise 24/7 / Suicide.ca — tchat / Tel-Aide: 514-935-1101 (Montréal)",
+        "belgique": "Centre de Prévention Suicide: 0800 32 123",
+        "suisse": "143 — La Main Tendue"
+      },
+      "auto_evaluation_validee": {
+        "PHQ_9": "Patient Health Questionnaire-9 — dépistage dépression — 9 items — score ≥10 = dépression modérée à sévère",
+        "GAD_7": "Generalized Anxiety Disorder-7 — dépistage anxiété — score ≥10 = anxiété modérée à sévère",
+        "MBI": "Maslach Burnout Inventory — 22 items — 3 sous-échelles",
+        "SCS": "Self-Compassion Scale (Neff) — disponible gratuitement sur self-compassion.org",
+        "SWLS": "Satisfaction with Life Scale (Diener) — 5 items — mesure du bien-être subjectif"
+      },
+      "lectures_accessibles": [
+        "Martin Seligman — La force de l'optimisme (2008/fr.) + S'épanouir (2011/fr.)",
+        "Viktor Frankl — Découvrir un sens à sa vie (1946/fr.) — Man's Search for Meaning",
+        "Kristin Neff — S'aimer (2011/fr.) — Self-Compassion",
+        "Mihaly Csikszentmihalyi — Vivre: la psychologie du bonheur (1990/fr.) — Flow",
+        "Boris Cyrulnik — Un merveilleux malheur (1999) — résilience",
+        "Matthew Walker — Pourquoi nous dormons (2017/fr.) — sommeil et santé mentale",
+        "Daniel Goleman — L'intelligence émotionnelle (1995/fr.)"
+      ]
+    }
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "version": "v31.3.9",
+  "category": "therapies_cognitives_comportementales",
+  "description": "Thérapies Cognitives et Comportementales (TCC) — modèle cognitif de Beck, TCC 1re/2e/3e vague, restructuration cognitive, exposition, techniques comportementales, protocoles cliniques (dépression, anxiété, TOC, phobies, TAC, insomnie)",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "TCC",
+    "thérapie cognitive comportementale",
+    "CBT",
+    "Aaron Beck",
+    "Albert Ellis",
+    "distorsions cognitives",
+    "pensées automatiques",
+    "pensées négatives automatiques",
+    "restructuration cognitive",
+    "colonnes de Beck",
+    "registre de pensées",
+    "schémas cognitifs",
+    "croyances irrationnelles",
+    "croyances fondamentales",
+    "croyances intermédiaires",
+    "exposition graduelle",
+    "désensibilisation systématique",
+    "thérapie par exposition",
+    "évitement comportemental",
+    "activation comportementale",
+    "expériences comportementales",
+    "ABC Ellis",
+    "modèle cognitif",
+    "triangle cognition émotion comportement",
+    "pensée dépressive",
+    "triade cognitive dépression",
+    "biais cognitifs",
+    "pensée catastrophiste",
+    "tout ou rien",
+    "lecture de pensée",
+    "surgénéralisation",
+    "mindfulness TCC",
+    "MBCT",
+    "thérapie basée pleine conscience",
+    "ACT acceptance commitment",
+    "flexibilité psychologique",
+    "valeurs ACT",
+    "hexaflex",
+    "défusion cognitive",
+    "protocol TCC dépression",
+    "protocole TCC anxiété",
+    "TCC TOC",
+    "TOC traitement",
+    "thérapie exposition réponse",
+    "TCC phobie",
+    "TCC insomnie",
+    "CBT-I insomnia",
+    "TCC PTSD",
+    "TCC TCA",
+    "TCC trouble panique",
+    "hyperventilation panique",
+    "TCC thérapie courte"
+  ],
+  "sections": {
+    "fondements_et_vagues": {
+      "histoire_tcc": "Les TCC regroupent un ensemble de thérapies structurées, à durée limitée, orientées sur le présent, fondées sur des preuves empiriques et centrées sur les liens entre pensées, émotions et comportements.",
+      "1ere_vague_comportementale": {
+        "periode": "1950-1960",
+        "figures": "Wolpe (désensibilisation systématique), Skinner (conditionnement opérant), Bandura (apprentissage social)",
+        "focus": "Comportements observables — principes d'apprentissage: conditionnement classique (Pavlov), conditionnement opérant (renforcement/punition), extinction",
+        "techniques_cles": ["désensibilisation systématique", "exposition in vivo et en imagination", "techniques d'affirmation de soi", "relaxation progressive Jacobson"]
+      },
+      "2eme_vague_cognitive": {
+        "periode": "1960-1990",
+        "figures": "Aaron Beck (dépression, anxiété), Albert Ellis (REBT), Donald Meichenbaum (inoculation du stress)",
+        "focus": "Cognitions — pensées automatiques, croyances, schémas cognitifs et leur influence sur les émotions et comportements",
+        "contribution_beck": "Modèle cognitif de la dépression (1979) + triade cognitive + distorsions cognitives + protocole TCC dépression",
+        "contribution_ellis": "REBT — Rational Emotive Behavior Therapy — modèle ABC (Adversité → Croyances → Conséquences) + disputation des croyances irrationnelles"
+      },
+      "3eme_vague": {
+        "periode": "1990-présent",
+        "approches": "ACT (Hayes, Wilson, Strosahl), DBT (Linehan), MBCT (Teasdale/Williams/Segal), Schéma-thérapie (Young — couverte en phase 27), FAP (Kohlenberg/Tsai)",
+        "focus": "Relation au contenu mental (plutôt que changement du contenu), flexibilité psychologique, pleine conscience, valeurs, acceptation, contexte fonctionnel",
+        "point_commun": "Complémentent la restructuration cognitive classique par l'acceptation, la défusion et l'action engagée"
+      },
+      "base_evidence": "TCC = thérapies les mieux documentées empiriquement — plus de 600 méta-analyses (Butler et al., 2006) — efficacité démontrée pour dépression, troubles anxieux, TOC, PTSD, TCA, insomnie, douleur chronique, psychose"
+    },
+    "modele_cognitif_beck": {
+      "triangle_fondamental": {
+        "pensees": "Cognitions automatiques — pensées rapides, involontaires, plausibles qui traversent l'esprit dans une situation",
+        "emotions": "Réponses affectives déclenchées par l'interprétation de la situation — colère, tristesse, anxiété, honte, culpabilité",
+        "comportements": "Actions résultantes — évitement, retrait, compulsions, agressivité, passivité",
+        "corps": "Réponses physiologiques — tension, palpitations, fatigue, douleur",
+        "interaction": "Les 4 composantes s'influencent mutuellement dans une boucle — modifier l'une agit sur les autres"
+      },
+      "niveaux_cognitions": {
+        "pensees_automatiques": "Surface — rapides, spécifiques à la situation, accessibles avec attention. Ex: 'Je suis nul' en regardant une erreur",
+        "croyances_intermediaires": "Niveau moyen — règles, attitudes, hypothèses conditionnelles. Ex: 'Si j'échoue, c'est que je suis incapable'",
+        "croyances_fondamentales": "Profond — schémas absolus, rigides, généralisés sur soi/monde/avenir. Ex: 'Je suis fondamentalement défectueux'"
+      },
+      "triade_cognitive_depression": {
+        "vue_negative_soi": "Je suis nul, incapable, sans valeur",
+        "vue_negative_monde": "Le monde est hostile, exigeant, injuste",
+        "vue_negative_avenir": "L'avenir est sans espoir — rien ne changera"
+      },
+      "distorsions_cognitives": {
+        "tout_ou_rien": "Pensée en noir et blanc — 'Si je ne réussis pas parfaitement, c'est un échec total'",
+        "surgeneralisation": "Tirer une conclusion générale d'un événement isolé — 'J'ai raté ça, je rate toujours tout'",
+        "abstraction_selective": "Ne voir que le négatif en filtrant le positif — se concentrer sur la seule critique dans un retour globalement positif",
+        "disqualification_positif": "Rejeter les expériences positives — 'C'était de la chance, ça ne compte pas'",
+        "conclusions_hatives": {
+          "lecture_pensee": "Supposer l'état d'esprit de l'autre sans vérifier — 'Il pense que je suis idiot'",
+          "prediction_negative": "Prédire un résultat défavorable — 'Ça va forcément mal se passer'"
+        },
+        "catastrophisation_minimisation": "Amplifier les problèmes / minimiser ses qualités — 'Cette erreur est catastrophique' / 'Ma réussite ne compte pas vraiment'",
+        "raisonnement_emotionnel": "Prendre ses émotions pour des preuves — 'Je me sens nul donc je suis nul'",
+        "devrait": "Règles rigides sur soi et les autres — 'Je devrais être capable de...', 'Il faudrait que...' — génèrent culpabilité et colère",
+        "etiquetage": "Attribuer une étiquette globale à soi ou l'autre — 'Je suis un raté', 'Il est inutile'",
+        "personnalisation": "Se tenir responsable d'événements externes — 'S'il est de mauvaise humeur c'est à cause de moi'"
+      }
+    },
+    "techniques_cognitives": {
+      "journal_des_pensees": {
+        "description": "Outil central TCC — consigner les situations, émotions, pensées automatiques et réponses alternatives",
+        "colonnes_beck_5": [
+          "1. Situation (quand, où, avec qui)",
+          "2. Émotions (type + intensité 0-100%)",
+          "3. Pensée automatique (texte exact + croyance 0-100%)",
+          "4. Réponse rationnelle (alternative réaliste + arguments)",
+          "5. Résultat (réévaluation émotion + croyance PA)"
+        ],
+        "variante_7_colonnes": "Ajoute: distorsion identifiée + plan d'action"
+      },
+      "restructuration_cognitive": {
+        "etapes": [
+          "1. Identifier la pensée automatique exacte",
+          "2. Évaluer le niveau de croyance (0-100%)",
+          "3. Identifier la distorsion cognitive",
+          "4. Examiner les preuves pour et contre",
+          "5. Générer une perspective alternative équilibrée",
+          "6. Réévaluer émotion et croyance initiale"
+        ],
+        "questions_socratiques": [
+          "Quelles sont les preuves que cette pensée est vraie? Et fausse?",
+          "Y a-t-il une autre façon de voir la situation?",
+          "Que dirais-tu à un ami qui aurait cette pensée?",
+          "Quelle est la pire chose qui pourrait vraiment se passer? La meilleure? La plus probable?",
+          "Quel impact a cette pensée sur toi? Que se passerait-il si tu la croyais moins?"
+        ]
+      },
+      "flèche_descendante": {
+        "description": "Technique pour atteindre les croyances fondamentales à partir d'une pensée automatique",
+        "processus": "Pour chaque pensée: 'Et si c'était vrai, qu'est-ce que cela signifierait pour toi?' — répéter jusqu'à la croyance centrale",
+        "exemple": "'J'ai raté cet examen' → 'Ça veut dire que je suis stupide' → 'Ça veut dire que je suis fondamentalement incapable' → 'Ça veut dire que je ne vaux rien'"
+      },
+      "continuum_cognitif": "Technique pour sortir de la pensée en noir/blanc — noter 0-100% sur un spectre au lieu d'absolu — démontre que la réalité est rarement aux extrêmes"
+    },
+    "techniques_comportementales": {
+      "activation_comportementale": {
+        "indication": "Dépression — le retrait et l'inactivité maintiennent la dépression (spirale descendante)",
+        "principe": "Augmenter progressivement les activités génératrices de plaisir et de maîtrise — l'action précède la motivation en dépression",
+        "planning_activites": "Programmer des activités en avance — noter plaisir anticipé (A), plaisir ressenti (P), maîtrise (M) sur 0-10 après chaque activité",
+        "spirale_ascendante": "Plus d'activité → légère amélioration humeur → plus de motivation → plus d'activité → humeur améliorée"
+      },
+      "exposition": {
+        "principe": "Confrontation progressive et répétée aux stimuli anxiogènes — l'évitement maintient l'anxiété; l'exposition permet l'habituation et l'inhibition d'extinction (inhibition de la réponse conditionnée)",
+        "hierarchie_peurs": "Construire une liste graduelle de situations anxiogènes de 0 à 100 (SUDs — Subjective Units of Distress) — commencer par les moins menaçantes",
+        "types_exposition": {
+          "in_vivo": "Confrontation directe à la situation réelle",
+          "imaginale": "Exposition en imagination (PTSD, traumatisme)",
+          "interoceptive": "Provoquer délibérément les sensations physiques redoutées (trouble panique)",
+          "virtuelle": "VRET — Virtual Reality Exposure Therapy"
+        },
+        "exposition_prolongee_Foa": "Protocole structuré PTSD — psychoéducation + exposition imaginale récit trauma + exposition in vivo",
+        "ERP_TOC": "Exposition avec Prévention de la Réponse — exposer à la pensée obsédante sans effectuer la compulsion — permet extinction"
+      },
+      "experience_comportementale": {
+        "description": "Tester empiriquement une prédiction catastrophiste par l'action — 'Si je dis non, tout le monde m'en voudra'",
+        "etapes": [
+          "1. Formuler la prédiction précise avec % croyance",
+          "2. Concevoir une expérience pour tester la prédiction",
+          "3. Réaliser l'expérience",
+          "4. Observer le résultat réel",
+          "5. Mettre à jour la croyance"
+        ]
+      },
+      "resolution_probleme_D_Zurilla": {
+        "etapes": [
+          "1. Orientation positive vers le problème (l'accepter, le voir comme résolvable)",
+          "2. Définition précise du problème",
+          "3. Génération d'alternatives (brainstorming sans critique)",
+          "4. Prise de décision (évaluer chaque option)",
+          "5. Mise en œuvre et vérification"
+        ]
+      }
+    },
+    "3eme_vague_ACT_MBCT": {
+      "ACT_acceptance_commitment_therapy": {
+        "auteurs": "Steven Hayes, Kirk Strosahl, Kelly Wilson — 'Acceptance and Commitment Therapy' (1999, 2e éd. 2011)",
+        "metaphore_fondatrice": "Le passager dans le bus — le thérapeute n'essaie pas de changer le contenu des pensées mais la relation fonctionnelle à ces pensées",
+        "hexaflex_6_processus": {
+          "acceptation": "Accueillir les expériences internes difficiles sans les combattre — vs. évitement expérientiel",
+          "defusion_cognitive": "Se détacher de ses pensées — les voir comme des mots ou des images plutôt que des vérités — 'J'ai la pensée que je suis nul' vs 'Je suis nul'",
+          "moment_present": "Contact flexible avec le moment présent — pleine conscience",
+          "soi_comme_contexte": "Le 'moi observateur' — l'identité stable qui observe sans être définie par le contenu mental",
+          "valeurs": "Directions choisies de vie — ce qui est vraiment important, non les objectifs-résultats",
+          "action_engagee": "Agir en accord avec ses valeurs même en présence d'obstacles internes (douleur, peur, doute)"
+        },
+        "matrice_ACT": "Outil visuel — axe vers/loin × intérieur/extérieur — distinguer les actions qui s'éloignent de la souffrance des actions qui s'approchent de ce qui compte"
+      },
+      "MBCT_mindfulness_based_cognitive_therapy": {
+        "auteurs": "Teasdale, Williams, Segal (2002) — basé sur MBSR de Jon Kabat-Zinn",
+        "indication_principale": "Prévention rechute dépressive — réduction 50% rechutes chez patients avec 3+ épisodes (Teasdale 2000, meta-analyse Kuyken 2016)",
+        "programme": "8 semaines — 2h/semaine groupe + pratique quotidienne 45 min à domicile",
+        "mecanisme": "Désidentification du mode dépressif 'faire' (rumination) → mode 'être' (présence) — reconnaître les signaux précoces de rechute et répondre avec conscience plutôt qu'automatiquement",
+        "pratiques_cles": ["Body scan", "Méditation assise (respiration, sons, pensées)", "Yoga doux", "Marche consciente", "Espace de respiration 3 minutes (technique signature MBCT)"],
+        "espace_respiration_3min": {
+          "etape_1": "Awareness — Quelle est mon expérience intérieure maintenant? (pensées, sentiments, sensations)",
+          "etape_2": "Rassembler — Porter toute l'attention sur la respiration",
+          "etape_3": "Élargir — Élargir à l'ensemble du corps, à la posture, à l'espace"
+        }
+      }
+    },
+    "protocoles_cliniques_specifiques": {
+      "TCC_depression": {
+        "protocole_beck": "16-20 séances — Phase 1: activation comportementale (briser inertie); Phase 2: restructuration cognitive (triade dépressive); Phase 3: prévention rechute et croyances fondamentales",
+        "activation_comportementale_BA": "Comportement → Humeur (pas l'inverse) — programmer, enregistrer, analyser, renforcer",
+        "prevision_plaisir_mastery": "Anticiper plaisir ET compétence avant d'agir — corriger le biais prédictif négatif de la dépression"
+      },
+      "TCC_anxiete_generalisee": {
+        "modele_Dugas": "Intolérance à l'incertitude + orientation négative vers le problème + évitement cognitif (suppression) + comportements sécurisants",
+        "techniques": ["Exposition aux incertitudes", "Résolution de problèmes", "Questionnement du danger réel des inquiétudes", "Zones de contrôle (Covey)", "Délai d'inquiétude — 'période d'inquiétude' programmée"]
+      },
+      "TCC_panique": {
+        "modele_Clark": "Catastrophisation des sensations corporelles — cercle vicieux: sensation physique → interprétation catastrophiste → anxiété → amplification sensations",
+        "techniques": ["Psychoéducation panique (hyperventilation, adrenaline)", "Restructuration cognitive des interprétations catastrophistes", "Exposition intéroceptive: provoquer délibérément les sensations", "Respiration diaphragmatique contrôlée (pas hyperventilation)", "Abandon des comportements sécurisants"]
+      },
+      "TCC_TOC": {
+        "modele": "Pensées intrusives universelles → évaluation erronée du danger/responsabilité → neutralisation → renforcement négatif → boucle",
+        "ERP": "Exposition + Prévention de la Réponse — gold standard TCC TOC — 13-20 séances",
+        "inference_based_CBT": "iBCT (Aardema) — alternative basée sur la confusion inférentielle — option pour patients résistants ERP standard"
+      },
+      "TCC_insomnie_CBT_I": {
+        "composantes": [
+          "Psychoéducation sommeil (hygiène, horloge biologique, pression homéostatique)",
+          "Restriction du sommeil: réduire le temps au lit au temps de sommeil effectif réel",
+          "Contrôle du stimulus: le lit = UNIQUEMENT pour dormir et sexe",
+          "Relaxation (PMR, respiration 4-7-8)",
+          "Restructuration cognitive: croyances dysfonctionnelles sur le sommeil",
+          "Prévention rechute"
+        ],
+        "efficacite": "CBT-I > hypnotiques à long terme (méta-analyse Morin 2009) — effets maintenus à 1 an"
+      },
+      "TCC_TCA": {
+        "boulimie": "TCC Fairburn — réduire restriction alimentaire (qui déclenche crises) → expositions alimentaires → restructuration cognitive image corporelle",
+        "anorexie": "TCC Garner/Fairburn — composante motivationnelle + réhabilitation nutritionnelle + schémas perfectionnisme/contrôle",
+        "binge_eating": "Activation comportementale + régulation émotionnelle + pleine conscience alimentaire"
+      }
+    },
+    "outils_pratiques_tcc": {
+      "bilan_semaine_TCC": {
+        "description": "Structure hebdomadaire d'auto-observation et d'entraînement TCC",
+        "elements": [
+          "3 événements marquants cette semaine (situation + émotion + pensée)",
+          "Exercices comportementaux réalisés (activités planifiées, expositions)",
+          "Pensée automatique travaillée avec colonnes",
+          "Apprentissages de la semaine"
+        ]
+      },
+      "relaxation_progressive_Jacobson": {
+        "principe": "Contracter puis relâcher successivement les groupes musculaires — 16 groupes → condensé 4 groupes → relaxation mentale seule",
+        "indication": "Anxiété, insomnie, douleur chronique, tension musculaire",
+        "frequence": "2x/jour 20-30 min initialement"
+      },
+      "respiration_diaphragmatique": {
+        "technique": "Inspiration 4 temps (abdomen) — pause 1 temps — expiration 6 temps (plus longue que l'inspiration) — active le système parasympathique (nerf vague)",
+        "4_7_8": "Inspiration 4 temps — rétention 7 temps — expiration 8 temps (Andrew Weil)",
+        "utilisation": "Réponse immédiate au stress — avant expositions — gestion panique (SANS hyperventiler)"
+      },
+      "psychoeducation_emotionnelle": {
+        "modele_4C": "Contexte → Cognition → Corps → Comportement — schéma visuel à co-construire avec le patient pour personnaliser le modèle cognitif",
+        "normalisation": "La détresse est une réponse normale à des situations anormales ou à des apprentissages passés — le cerveau fait ce pour quoi il a été programmé"
+      }
+    },
+    "ressources_tcc": {
+      "livres_auto_aide": [
+        "Aaron Beck & Brad Alford — La thérapie cognitive et les thérapies émotionnelles (1979/fr.2017)",
+        "Christine Mirabel-Sarron — Comprendre et pratiquer la TCC (2013) — référence francophone",
+        "Matthew McKay — Mind and Emotions (2011) — workbook complet",
+        "Robert Leahy — Cognitive Therapy Techniques (2003) — manuel thérapeute",
+        "Steven Hayes — Get Out of Your Mind and Into Your Life (2005) — introduction ACT",
+        "Russ Harris — Le piège du bonheur (2007/fr.) — ACT accessible",
+        "Mark Williams et al. — Méditer pour ne plus déprimer (2007/fr.) — MBCT accessible"
+      ],
+      "formations_certifications": {
+        "france": "AFCC (Association Francophone de Formation et de Recherche en TCC) — aftcc.org",
+        "quebec": "Ordre des psychologues du Québec — formation TCC reconnue dans tous les programmes de psychologie clinique",
+        "international": "EABCT (European Association for Behavioural and Cognitive Therapies), ABCT (Association for Behavioral and Cognitive Therapies)"
+      },
+      "applications_tcc_validees": ["MoodKit (activation comportementale + journal)", "Woebot (TCC conversationnelle, validée)", "CBT Thought Diary (colonnes de Beck)", "Calm Harm (DBT pour impulsions)"]
+    }
+  }
+}

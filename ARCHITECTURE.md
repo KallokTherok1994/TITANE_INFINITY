@@ -543,3 +543,20 @@ Conformité validée par tests 100/100 (avril 2026).
 
 ### Tests Rule 16
 - `kb.cnvDeuil.test.ts`: 35 PASS (Vitest)
+
+## Phase 29 — KB modules TCC + santé mentale/résilience (2026-04-29)
+
+### Nouveaux modules KB
+- **`therapies_cognitives_comportementales.json`** (v31.3.9) — 8 sections: fondements_et_vagues (3 vagues TCC: comportementale/cognitive/3e vague), modele_cognitif_beck (triangle pensées-émotions-comportements, niveaux cognitions, triade cognitive dépression, 12 distorsions cognitives Beck), techniques_cognitives (colonnes_beck_5, restructuration cognitive 6 étapes + questions socratiques, flèche descendante, continuum cognitif), techniques_comportementales (activation comportementale, exposition in vivo/imaginale/intéroceptive/virtuelle, ERP-TOC, expérience comportementale 5 étapes, résolution problème D'Zurilla), 3eme_vague_ACT_MBCT (ACT Hayes hexaflex 6 processus + matrice ACT, MBCT Teasdale/Williams/Segal 8 semaines + espace respiration 3 min 3 étapes + prévention rechute dépressive -50%), protocoles_cliniques_specifiques (dépression 16-20 séances, TAG intolérance incertitude, panique Clark, TOC ERP gold standard, insomnie CBT-I 6 composantes, TCA), outils_pratiques_tcc (relaxation Jacobson, respiration diaphragmatique 4-7-8, psychoéducation 4C), ressources_tcc (AFTCC, EABCT, livres, apps MoodKit/Woebot/CBT Thought Diary)
+- **`sante_mentale_prevention_resilience.json`** (v31.3.10) — 7 sections: concepts_fondamentaux (continuum Keyes 2002 4 quadrants, languishing Grant 2021, OMS def, littératie Jorm), modele_PERMA_psychologie_positive (Seligman Flourish 2011: P broaden-and-build Fredrickson/savouring, E flow Csikszentmihalyi + forces VIA 24/6, R Harvard Study 80 ans, M Frankl logothérapie 3 voies, A autodétermination Deci/Ryan), resilience (Cyrulnik tuteurs résilience, Bonanno 4 trajectoires resilient 50-65%/recovery/delayed/chronic, facteurs protecteurs individuels/relationnels/environnementaux, PTG Tedeschi/Calhoun 5 domaines), prevention_burnout (Maslach 3 dimensions, JD-R Demerouti 2 voies, 6 domaines Maslach-Leiter, récupération Sonnentag détachement psychologique + 4 expériences, 7 signaux précoces), hygiene_psychologique_quotidienne (sommeil Walker REM, exercice physique BDNF, connexion sociale, nature, gratitude Emmons 3x/semaine, auto-compassion Neff 3 composantes + exercice pause auto-compassion), interventions_basees_preuves (PPIs Sin/Lyubomirsky 2009, ACE Felitti 1998, MBSR/MBCT), ressources_sante_mentale (lignes crise QC/France/BE/CH, PHQ-9/GAD-7/MBI/SCS/SWLS, lectures)
+
+### Rust
+- `knowledge_base_default.rs`: +2 consts THERAPIES_COGNITIVES_COMPORTEMENTALES + SANTE_MENTALE_PREVENTION_RESILIENCE, +2 SOURCES entries, baseline >=201 -> >=203, expected list updated
+- `commands/ide_operator.rs`: fix E0505 borrow-after-move in git_status handler (changed_files Vec<&str> → changed_files_count usize)
+- Tests: 29 PASS (cargo test -- test_knowledge, baseline >=203 validated)
+
+### Tests Rule 16
+- `kb.tccResilience.test.ts`: 53 PASS (Vitest)
+
+### AutoHeal
+- `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS)
