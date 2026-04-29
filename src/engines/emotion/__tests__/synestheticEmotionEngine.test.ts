@@ -225,8 +225,9 @@ describe('🎭 SynestheticEmotionEngine', () => {
       const wonderProfile = synestheticEmotionEngine.getCurrentProfile();
 
       // focus_intense cognitive.focus >= wonder (during transition both blend toward target)
+      // Use epsilon tolerance to handle floating point precision (e.g. 0.4 vs 0.40000000185185186)
       expect(focusProfile.cognitive.focus).toBeGreaterThanOrEqual(
-        wonderProfile.cognitive.focus
+        wonderProfile.cognitive.focus - 1e-6
       );
     });
   });

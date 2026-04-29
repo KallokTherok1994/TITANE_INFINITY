@@ -309,7 +309,7 @@ export class CanonicalDiscernmentKernel {
       input.memoryContext.recentDecisions.length > 0 ||
       input.memoryContext.relevantKnowledge.length > 0;
 
-    const inferenceState = evaluateInferenceState(
+    let inferenceState = evaluateInferenceState(
       input.message,
       effectiveProfile,
       hasMemoryContext

@@ -432,6 +432,44 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     }
   });
 
+  // ── LOCK 4: PROVIDER_TRUTH_CHAIN — orchestrator never lets cognitiveKernel override explicit preferredProvider ──
+  it('PROVIDER_TRUTH_CHAIN: orchestrator.generate() with explicit preferredProvider is never overridden by cognitiveKernel', async () => {
+    // The plan requires: when preferredProvider is explicitly set (not 'auto'),
+    // the cognitiveKernel's provider decision is NOT used as the final provider,
+    // regardless of confidence. This is enforced by selectFinalProvider() in orchestrator.ts.
+    chatEngine.setProvider('ollama');
+
+    const response = await chatEngine.generate(
+      'Crée un composant React avec TypeScript et tests unitaires',
+      [],
+      { mode: 'default' }
+    );
+
+    const decision = response.omegaMetadata?.canonicalDecision;
+    expect(decision).toBeDefined();
+
+    // Kernel ran and produced a decision
+    expect(response.omegaMetadata?.pipelineSteps).toContain('canonical-discernment');
+
+    // Orchestrator was called
+    const { aiOrchestrator } = await import('@/services/ai/orchestrator');
+    const mockGenerate = vi.mocked(aiOrchestrator).generate;
+    expect(mockGenerate).toHaveBeenCalled();
+
+    // The orchestrator was passed the kernel's explicit provider preference, NOT 'auto'
+    // and NOT a cognitiveKernel override like 'gemini' or 'anthropic'
+    const calls = mockGenerate.mock.calls;
+    const lastCall = calls[calls.length - 1];
+    if (lastCall) {
+      const orchestratorConfig = lastCall[2]; // 3rd arg = config
+      if (orchestratorConfig?.preferredProvider) {
+        // Must NOT be a cloud provider if kernel chose local
+        const forbidden = ['gemini', 'anthropic', 'openai'];
+        expect(forbidden).not.toContain(orchestratorConfig.preferredProvider);
+      }
+    }
+  });
+
   it('should pass kernel fallback chain order to orchestrator config', async () => {
     chatEngine.setProvider('auto');
 

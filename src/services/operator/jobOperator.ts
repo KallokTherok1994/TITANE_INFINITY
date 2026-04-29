@@ -28,7 +28,7 @@ export async function createJob(
     params: params ?? {},
   });
   if (!result.ok || result.content === null) {
-    return { ok: false, job_id: '', block_reason: result.error?.message ?? 'job_create failed' };
+    return { ok: false, job: null, block_reason: result.error?.message ?? 'job_create failed' };
   }
   return result.content;
 }
