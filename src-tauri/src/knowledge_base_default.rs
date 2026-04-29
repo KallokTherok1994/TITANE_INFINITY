@@ -516,6 +516,12 @@ const DEPENDANCE_AFFECTIVE_CODEPENDANCE: &str =
 // ── v31.3.6 expansion — phase 27 (EMDR, IFS, SE, AEDP, schema therapy modes) ──
 const THERAPIES_TRAUMA_AVANCEES: &str =
     include_str!("../../data/knowledge_base/default/therapies_trauma_avancees.json");
+// ── v31.3.7 expansion — phase 28 (CNV, OSBD, assertivité, Gottman) ──
+const COMMUNICATION_NON_VIOLENTE_RELATIONS: &str =
+    include_str!("../../data/knowledge_base/default/communication_non_violente_relations.json");
+// ── v31.3.8 expansion — phase 28 (deuil, rupture, transitions majeures) ──
+const DEUIL_RUPTURE_TRANSITIONS: &str =
+    include_str!("../../data/knowledge_base/default/deuil_rupture_transitions.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1029,6 +1035,15 @@ impl DefaultKnowledgeBase {
             "therapies_trauma_avancees",
             THERAPIES_TRAUMA_AVANCEES,
         ),
+        // v31.3.7+31.3.8 expansion — phase 28 (CNV + deuil/rupture)
+        (
+            "communication_non_violente_relations",
+            COMMUNICATION_NON_VIOLENTE_RELATIONS,
+        ),
+        (
+            "deuil_rupture_transitions",
+            DEUIL_RUPTURE_TRANSITIONS,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1357,7 +1372,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 199,
+            result.entries_loaded >= 201,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1525,6 +1540,8 @@ mod tests {
             "style_expression_kevin",
             "synchronisation_orchestration",
             "system_architecture",
+            "communication_non_violente_relations",
+            "deuil_rupture_transitions",
             "technologie_innovation_avancee",
             "therapies_trauma_avancees",
             "traumatologie_complexe",

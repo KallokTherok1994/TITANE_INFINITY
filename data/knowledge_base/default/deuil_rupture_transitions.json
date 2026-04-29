@@ -1,0 +1,256 @@
+{
+  "version": "v31.3.8",
+  "category": "deuil_rupture_transitions",
+  "description": "Deuil, rupture amoureuse, transitions de vie majeures — modèles de deuil (Kübler-Ross, Worden, Stroebe), deuil compliqué/complexe, deuil relationnel, transitions Bridges, ressources francophones",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "deuil",
+    "faire son deuil",
+    "traverser le deuil",
+    "étapes du deuil",
+    "deuil compliqué",
+    "deuil complexe",
+    "deuil traumatique",
+    "deuil prolongé",
+    "deuil pathologique",
+    "Kübler-Ross",
+    "Worden",
+    "modèle deuil",
+    "perte d'un être cher",
+    "mort d'un proche",
+    "décès",
+    "rupture amoureuse",
+    "séparation",
+    "divorce",
+    "quitter une relation",
+    "se remettre d'une rupture",
+    "deuil relationnel",
+    "ex-partenaire",
+    "comment oublier quelqu'un",
+    "ne plus penser à son ex",
+    "douleur rupture",
+    "cœur brisé",
+    "broken heart syndrome",
+    "douleur rejet amoureux",
+    "neurobiologie rupture",
+    "transitions de vie",
+    "changement majeur",
+    "William Bridges",
+    "période de transition",
+    "zone neutre",
+    "perte d'emploi deuil",
+    "retraite transition",
+    "déménagement deuil",
+    "perte d'identité",
+    "deuil périnatal",
+    "fausse couche deuil",
+    "deuil d'un animal",
+    "deuil anticipé",
+    "deuil ambivalent",
+    "deuil blanc",
+    "ambiguous loss",
+    "soutenir quelqu'un en deuil",
+    "que dire à quelqu'un en deuil",
+    "accompagnement deuil",
+    "guérir le deuil",
+    "acceptation perte"
+  ],
+  "sections": {
+    "comprendre_le_deuil": {
+      "definition_clinique": "Le deuil (grief) est le processus psychologique, émotionnel, cognitif, comportemental et physiologique qui suit une perte significative. Il inclut non seulement la perte par décès mais toute perte de ce qui était important: une relation, une identité, un projet de vie, une capacité, un lieu.",
+      "types_de_pertes": {
+        "pertes_visibles": ["Décès d'un proche", "Rupture/divorce/séparation", "Perte d'emploi", "Diagnostic de maladie grave", "Fausse couche/mort périnatale", "Déménagement/exil"],
+        "pertes_invisibles": ["Perte d'une identité (retraite, maternité, succès)", "Perte d'une relation sans mort (maladie d'Alzheimer d'un parent)", "Deuil d'un futur imaginé", "Perte d'une croyance ou d'une foi", "Deuil de l'enfance perdue (trauma)"],
+        "pertes_ambigues_Pauline_Boss": {
+          "definition": "Pertes sans clôture claire — Pauline Boss (1999): la personne est là mais psychologiquement absente (démence, addiction) ou absente physiquement mais psychologiquement présente (disparition, adoption)",
+          "impact": "Empêche l'élaboration normale du deuil — ambiguïté non résolue chronique"
+        }
+      },
+      "universalite_individualite": "Le deuil est universel dans son occurrence mais profondément individuel dans son expression et sa durée. Il n'existe pas de 'bonne façon' de faire son deuil.",
+      "facteurs_influençant_deuil": [
+        "Nature de la relation avec le défunt/perdu",
+        "Circonstances de la perte (soudaine vs anticipée, violente vs naturelle)",
+        "Historique de pertes antérieures et de traumas",
+        "Ressources sociales et soutien disponible",
+        "Traits de personnalité et style d'attachement",
+        "Culture, croyances religieuses et rituels de deuil disponibles"
+      ]
+    },
+    "modeles_processus_deuil": {
+      "modele_kubler_ross_5_stades": {
+        "auteure": "Elisabeth Kübler-Ross — 'On Death and Dying' (1969) — initialement décrit pour les patients en phase terminale, généralisé ensuite au deuil",
+        "attention_importante": "Ces stades ne sont pas linéaires ni obligatoires — ils peuvent se chevaucher, s'alterner, certains peuvent ne pas survenir. Le modèle a été souvent mal compris comme prescription.",
+        "stades": {
+          "1_deni": "Choc, incrédulité, engourdissement — protection temporaire contre la douleur insupportable",
+          "2_colere": "Rage, ressentiment, 'pourquoi moi?' — peut se diriger vers le défunt, les médecins, Dieu, soi-même",
+          "3_marchandage": "Négociation — 'si seulement j'avais...', pensées magiques de retour en arrière, culpabilité",
+          "4_depression": "Tristesse profonde, retrait, vague d'impuissance — phase nécessaire d'intégration (distincte de la dépression clinique)",
+          "5_acceptation": "Ne signifie pas 'aller bien' mais intégrer la perte dans sa réalité — trouver un sens à une vie transformée"
+        },
+        "revision_2019": "David Kessler (co-auteur avec Kübler-Ross) a proposé un 6e stade: la Quête de sens — trouver un sens à la perte qui transcende la douleur"
+      },
+      "modele_worden_4_taches": {
+        "auteur": "William Worden — 'Grief Counseling and Grief Therapy' (1982) — modèle orienté tâches (plus actif que les 'stades')",
+        "taches": {
+          "tache_1": "Accepter la réalité de la perte — dépasser le déni au niveau profond",
+          "tache_2": "Travailler la douleur du deuil — traverser les émotions difficiles plutôt que de les éviter",
+          "tache_3": "S'adapter à un monde où le défunt/la relation est absent — ajustements externes, internes, spirituels",
+          "tache_4": "Trouver une connexion durable avec le disparu tout en se réengageant dans la vie — pas 'lâcher prise' mais transformer le lien"
+        },
+        "avantage": "Cadre actif — permet à la personne en deuil de sentir qu'elle peut agir, qu'elle n'est pas passive face à la douleur"
+      },
+      "modele_processus_double_Stroebe_Schut": {
+        "auteurs": "Margaret Stroebe & Henk Schut (1999) — Dual Process Model",
+        "description": "Le deuil sain implique une oscillation naturelle entre deux orientations: vers la perte ET vers la restauration",
+        "orientation_perte": "S'occuper du deuil — pleurer, penser au disparu, éprouver la douleur de la perte",
+        "orientation_restauration": "S'occuper des conséquences de la perte — nouvelle identité, nouvelles relations, nouvelles compétences, projets",
+        "oscillation": "Les personnes en deuil sain alternent naturellement entre ces deux pôles — rester trop longtemps dans l'un ou l'autre est signe de deuil difficile",
+        "application": "Valider à la fois le besoin de pleurer ET le besoin de vivre"
+      },
+      "modele_continuing_bonds": {
+        "auteurs": "Klass, Silverman & Nickman (1996) — remise en question du mythe du 'faire son deuil = détacher'",
+        "principe": "Le deuil sain ne consiste pas à rompre le lien avec le disparu mais à le transformer — maintenir une connexion intérieure vivante tout en se réengageant dans la vie",
+        "exemples": ["Parler intérieurement à la personne disparue", "Lui dédier un projet", "Perpétuer ses valeurs ou son héritage", "Ressentir sa présence dans certains moments"],
+        "importance_clinique": "Libère les personnes en deuil de l'injonction culturelle toxique 'il faut passer à autre chose' / 'il faut l'oublier'"
+      }
+    },
+    "deuil_complique_pathologique": {
+      "definitions": {
+        "deuil_normal": "Intégration progressive sur 1-2 ans (variable selon la perte et la personne) — retour progressif à la fonctionnalité",
+        "deuil_prolonge_CG_disorder": "Diagnostic DSM-5-TR (2022) / ICD-11: Prolonged Grief Disorder — deuil intense persistant > 12 mois (adulte) ou 6 mois (enfant) avec détresse marquée et altération fonctionnelle significative",
+        "prevalence": "Environ 10% des personnes endeuillées développent un deuil prolongé (George Bonanno, 2004)"
+      },
+      "facteurs_risque_deuil_complique": [
+        "Perte soudaine, traumatique ou violente",
+        "Relation d'attachement insécure (anxieux ou désorganisé)",
+        "Ambivalence ou conflit non résolu dans la relation perdue",
+        "Absence de rituel de deuil ou de reconnaissance sociale",
+        "Isolement social important",
+        "Pertes multiples ou cumulées",
+        "Trauma antérieur non traité",
+        "Dépendance affective envers le disparu"
+      ],
+      "signes_deuil_complique": [
+        "Pensées intrusives et intenses sur le disparu > 12 mois après la perte",
+        "Sentiment d'incrédulité persistant face à la perte",
+        "Amertume ou colère intense et persistante liée à la perte",
+        "Difficulté à faire confiance aux autres depuis la perte",
+        "Sentiment que la vie est vide ou sans sens",
+        "Désir de mourir pour rejoindre le disparu",
+        "Difficulté à s'engager dans de nouvelles activités ou relations"
+      ],
+      "traitement": "Complicated Grief Treatment (CGT) de Shear & al. — thérapie spécifique deuil prolongé; EMDR pour composante traumatique; soutien groupe deuil; antidépresseurs si dépression comorbide"
+    },
+    "deuil_rupture_amoureuse": {
+      "specificite": "La rupture amoureuse est l'une des expériences les plus douloureuses de la vie adulte — neurobiologiquement similaire à un deuil par décès ET à un sevrage de substance. Elle peut être invalidée socialement ('c'était juste une relation').",
+      "neurobiologie_douleur_rupture": {
+        "systeme_recompense": "La relation active les mêmes circuits dopaminergiques qu'une addiction — la rupture déclenche un sevrage avec craving intense",
+        "douleur_rejet": "Études IRM (Eisenberger 2003, Fisher 2010): le rejet amoureux active les mêmes zones cérébrales que la douleur physique (dACC, insula antérieure)",
+        "broken_heart_syndrome": "Takotsubo cardiomyopathy — le choc émotionnel d'une perte peut provoquer une réponse physiologique cardiaque réelle (temporary heart dysfunction)",
+        "cortisol_adrénaline": "Élévation des hormones de stress — hypervigilance, troubles du sommeil, trouble de l'appétit — réponse biologique normale à une menace de survie"
+      },
+      "phases_rupture_amoureuse": {
+        "choc_deni": "Incrédulité, anesthésie émotionnelle, espoir de réconciliation, comportements de recherche de l'ex (textos, réseaux sociaux)",
+        "colere_negociation": "Rage, injustice, 'si j'avais fait autrement...', nostalgie intense, idéalisation de la relation",
+        "depression_lacher_prise": "Tristesse profonde, vide, fatigue, remise en question identitaire, 'qui suis-je sans lui/elle?'",
+        "acceptation_reconstruction": "Intégration progressive, reconnexion à soi, nouvelles expériences, transformation de l'identité"
+      },
+      "pieges_post_rupture": {
+        "rumination": "Rejouer mentalement en boucle les scènes de la relation ou de la rupture — renforce la dépendance neurale",
+        "stalking_numerique": "Surveiller les réseaux sociaux de l'ex — maintient l'activation dopaminergique et empêche le sevrage",
+        "saut_direct_nouvelle_relation": "Se mettre en couple pour éviter la douleur — reporte le deuil sans le traverser",
+        "idéalisation": "Transformer l'ex en être parfait dans le souvenir — rend toute perspective de nouveau lien impossible"
+      },
+      "regles_no_contact": {
+        "principe": "Période de non-contact (60-90 jours) après rupture — permet au système nerveux de se déconnecter neuralement et de commencer le sevrage",
+        "pour": "Accélère la régulation du système de récompense, réduit le craving, favorise la reconnexion à soi",
+        "contre": "Enfants communs, contraintes professionnelles — nécessite adaptation (low contact)",
+        "nuance_clinique": "Le no-contact n'est pas une punition ni une manipulation — c'est un soin envers soi"
+      },
+      "reconstruction_identitaire": [
+        "Retrouver ses intérêts propres mis en pause pendant la relation",
+        "Reconstruire son réseau social personnel (vs le réseau partagé de couple)",
+        "Explorer qui on est seul — solo dates, journal intime",
+        "Distinguer le manque de la personne spécifique vs le manque de la relation/connexion",
+        "Thérapie individuelle: identifier les patterns relationnels activés et leur origine"
+      ]
+    },
+    "transitions_majeures_William_Bridges": {
+      "distinction_changement_transition": {
+        "changement": "Événement externe — le déménagement, la retraite, la naissance, la perte d'emploi. Peut être soudain.",
+        "transition": "Processus interne — la transformation psychologique qui se produit lorsqu'on lâche ce qui était et qu'on devient quelqu'un de nouveau. Prend du temps."
+      },
+      "modele_3_phases_Bridges": {
+        "auteur": "William Bridges — 'Transitions: Making Sense of Life's Changes' (1980)",
+        "phase_1_fin": {
+          "description": "Lâcher prise de ce qui était — deuil de l'ancienne identité, des anciens repères, de ce qu'on ne sera plus jamais",
+          "emotions": "Perte, résistance, tristesse, colère, nostalgie",
+          "piege": "Beaucoup de personnes sautent cette phase (refus de reconnaître ce qui est perdu) et se retrouvent bloquées"
+        },
+        "phase_2_zone_neutre": {
+          "description": "Espace intermédiaire — ni l'ancien ni le nouveau. Désorientation, chaos créatif, vide fécond.",
+          "caracteristiques": "Anxiété, confusion, créativité latente, vulnérabilité, potentiel de transformation profond",
+          "metaphore": "Le cocon — la chenille se dissout avant de devenir papillon",
+          "piege": "Précipiter cette phase (fuir vers une fausse nouvelle identité) — ou y rester indéfiniment"
+        },
+        "phase_3_nouveau_depart": {
+          "description": "Émergence d'une nouvelle identité, de nouveaux repères, de nouveaux engagements",
+          "caracteristiques": "Énergie nouvelle, sens retrouvé, engagement renouvelé",
+          "attention": "Arrive seulement APRÈS avoir traversé les phases 1 et 2 — impossible de forcer cette phase"
+        }
+      },
+      "transitions_communes_adulte": {
+        "retraite": "Perte de l'identité professionnelle, du statut, de la structure — deuil souvent sous-estimé",
+        "maternite_paternite": "Perte de l'identité pré-parentale — matrescence/patrescence (Alexandra Sacks)",
+        "divorce": "Perte de l'identité conjugale, du projet de vie partagé, du statut social",
+        "maladie_chronique": "Perte du corps fonctionnel, de l'identité 'en bonne santé', des projets futurs",
+        "succes_professionnel": "Deuil paradoxal — atteindre un objectif longtemps poursuivi peut générer un vide et une perte de sens"
+      }
+    },
+    "accompagnement_soutien_deuil": {
+      "que_ne_pas_dire": [
+        "'Il faut que tu passes à autre chose' — invalide le temps propre du deuil",
+        "'Je sais comment tu te sens' — personne ne peut connaître l'expérience de l'autre",
+        "'Il est dans un endroit meilleur' — peut sembler condescendant si l'autre ne partage pas cette croyance",
+        "'Le temps guérit tout' — minimise la douleur présente",
+        "'Tu es si courageux(se)' — pression à performer la force",
+        "'Il faut te changer les idées' — évitement de la douleur qui est nécessaire"
+      ],
+      "que_dire_et_faire": [
+        "Être présent sans chercher à 'réparer' — 'Je suis là.'",
+        "Nommer — 'Tu traverses quelque chose de vraiment difficile.'",
+        "Valider sans minimiser — 'Ce que tu ressens a complètement du sens.'",
+        "Proposer du concret — cuisiner, accompagner, aide pratique (pas seulement 'je suis là si tu as besoin')",
+        "Être patient sur la durée — le soutien tend à s'estomper après quelques semaines alors que le deuil continue",
+        "Mentionner le nom du disparu — les personnes en deuil ont besoin d'entendre parler de lui/elle"
+      ],
+      "rituels_de_deuil": {
+        "fonction": "Les rituels culturels et religieux de deuil (funérailles, shiva, quarantaine) remplissent un rôle psychologique essentiel: reconnaître publiquement la perte, rassembler la communauté, marquer la transition",
+        "deuils_sans_rituel": "Fausse couche, rupture, mort d'un animal, certaines pertes d'emploi — deuils socialement non reconnus (disenfranchised grief) — créer ses propres rituels est thérapeutique",
+        "rituels_personnels": ["Lettre d'adieu", "Boîte-souvenir", "Arbre planté", "Bougie allumée annuellement", "Date anniversaire honorée"]
+      },
+      "groupes_soutien": "Vivre son deuil (France), Deuil-Connect (ligne d'écoute), Albatros (QC), Alliance Deuil (Canada), GRASP pour deuil par suicide"
+    },
+    "ressources_deuil_rupture": {
+      "livres_fondamentaux": [
+        "Elisabeth Kübler-Ross — Les derniers instants de la vie (1969/fr.1975)",
+        "David Kessler — Trouver le sens — le 6e stade du deuil (2019/fr.2021)",
+        "William Worden — Grief Counseling and Grief Therapy (1982, 5e éd. 2018)",
+        "William Bridges — Transitions (1980/fr. 2006)",
+        "Pauline Boss — Ambiguous Loss (1999)",
+        "C.S. Lewis — A Grief Observed (1961/fr. Le problème de la douleur)",
+        "Joan Didion — L'année de la pensée magique (2005) — récit intime de deuil conjugal"
+      ],
+      "soutien_professionnel": {
+        "quand_consulter": "Deuil qui empêche de fonctionner > 12 mois, idées de mort, isolement total, impossible de travailler ou de prendre soin de soi, deuil traumatique",
+        "approches_recommandees": "CGT (Complicated Grief Treatment), EMDR pour composante traumatique, thérapie individuelle, groupes de soutien spécialisés",
+        "lignes_urgence": {
+          "france": "3114 — numéro national prévention suicide / SOS Amitié: 09 72 39 40 50",
+          "quebec": "1-866-APPELLE (277-3553) — crise et prévention / Suicide.ca — tchat",
+          "belgique": "Centre de Prévention du Suicide: 0800 32 123",
+          "suisse": "Die Dargebotene Hand: 143 / Pro Mente Sana: 0840 00 00 60"
+        }
+      }
+    }
+  }
+}

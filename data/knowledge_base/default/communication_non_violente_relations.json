@@ -1,0 +1,251 @@
+{
+  "version": "v31.3.7",
+  "category": "communication_non_violente_relations",
+  "description": "Communication Non Violente (CNV/NVC), écoute empathique, besoins universels, conflits relationnels, assertivité, langage de girafe vs chacal — Marshall Rosenberg et applications cliniques",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "Communication Non Violente",
+    "CNV",
+    "NVC",
+    "Marshall Rosenberg",
+    "langage de girafe",
+    "langage de chacal",
+    "besoins universels",
+    "observer sans juger",
+    "observations vs évaluations",
+    "sentiments vs pensées",
+    "expression des besoins",
+    "demande vs exigence",
+    "écoute empathique",
+    "empathie active",
+    "écoute sans conseil",
+    "communication assertive",
+    "assertivité",
+    "s'affirmer sans agresser",
+    "dire non",
+    "poser des limites",
+    "frontières relationnelles",
+    "communication conflictuelle",
+    "résolution de conflit",
+    "conflit de couple",
+    "communication dans le couple",
+    "reproches et critiques",
+    "critique constructive",
+    "mécanisme de défense communication",
+    "réaction défensive",
+    "violence verbale",
+    "paroles blessantes",
+    "insultes et dénigrement",
+    "comment parler à quelqu'un de difficile",
+    "communication toxique",
+    "message je",
+    "message tu accusateur",
+    "je me sens vs tu es",
+    "exprimer ses émotions",
+    "exprimer ses besoins sans agressivité",
+    "demande de changement",
+    "4 étapes CNV",
+    "OSBD",
+    "communication bienveillante",
+    "communication consciente",
+    "mieux communiquer en couple",
+    "Gottman communication",
+    "4 cavaliers Gottman",
+    "réparation relationnelle",
+    "validation émotionnelle"
+  ],
+  "sections": {
+    "fondements_cnv": {
+      "auteur": "Marshall B. Rosenberg (1934-2015) — psychologue clinicien, élève de Carl Rogers — 'Les mots sont des fenêtres ou des murs' (1999/2003)",
+      "postulat_fondateur": "Tout être humain a des besoins universels. La violence — verbale ou physique — émerge quand ces besoins ne sont pas satisfaits et que les personnes ne savent pas comment les exprimer. La CNV propose un langage de connexion plutôt que de domination.",
+      "vision_de_la_nature_humaine": "Les humains sont naturellement enclins à la bienveillance et à la coopération quand leurs besoins fondamentaux sont satisfaits et qu'ils se sentent entendus. La CNV repose sur la confiance en cette nature fondamentale.",
+      "distinction_communication": {
+        "langage_chacal": "Communication d'aliénation à la vie — jugements, critiques, comparaisons, exigences, déni de responsabilité. Nomme la réalité en termes de ce qui est tort/juste, bien/mal, normal/anormal.",
+        "langage_girafe": "Communication de connexion à la vie — observations, sentiments, besoins, demandes concrètes. Met en lumière ce qui est vivant en soi et chez l'autre. La girafe a le plus grand coeur des animaux terrestres.",
+        "exemple_chacal": "Tu es toujours en retard — tu ne me respectes pas.",
+        "exemple_girafe": "Quand j'attends depuis 20 minutes sans nouvelle (observation), je me sens inquiet et sous-estimé (sentiments) parce que j'ai besoin de fiabilité et de respect (besoins). Pourrais-tu m'envoyer un message quand tu es retardé? (demande)"
+      },
+      "racines_theoriques": "Carl Rogers (écoute inconditionnelle), Abraham Maslow (hiérarchie des besoins), Gandhi (non-violence active), Krishnamurti (observation sans évaluation)"
+    },
+    "modele_4_composantes_OSBD": {
+      "description": "Le processus CNV repose sur 4 composantes séquentielles: Observation — Sentiments — Besoins — Demande (OSBD)",
+      "O_observation": {
+        "definition": "Décrire factuellement ce qu'on voit ou entend, sans évaluation, interprétation ou jugement — comme une caméra.",
+        "principe_Krishnamurti": "Observer sans évaluer est la plus haute forme d'intelligence humaine",
+        "chacal": "Tu arrives toujours tard / Tu ne fais jamais rien à la maison / C'est nul.",
+        "girafe": "Quand je vois que tu rentres après 20h trois fois cette semaine... / Quand j'entends 'laisse tomber' dans notre conversation...",
+        "pieges": ["Utiliser 'toujours / jamais / souvent' = interprétation", "Inclure une évaluation voilée = 'quand tu es brutal avec moi'", "Inférer l'intention = 'quand tu fais exprès d'oublier'"]
+      },
+      "S_sentiments": {
+        "definition": "Exprimer ce qu'on ressent vraiment — émotions authentiques liées à nos besoins satisfaits ou non — en distinguant sentiments réels et pseudo-sentiments (pensées déguisées).",
+        "sentiments_besoins_satisfaits": ["joyeux", "soulagé", "reconnaissant", "confiant", "enthousiaste", "serein", "touché", "ému", "vivant", "épanoui", "en paix"],
+        "sentiments_besoins_non_satisfaits": ["inquiet", "triste", "frustré", "découragé", "épuisé", "seul", "désorienté", "embarrassé", "effrayé", "en colère", "désespéré", "submergé"],
+        "pseudo_sentiments_chacal": ["je me sens ignoré (= tu m'ignores)", "je me sens manipulé (= tu me manipules)", "je me sens jugé (= tu me juges)", "je me sens abandonné (= tu m'abandonnes)"],
+        "distinction_cle": "Les pseudo-sentiments contiennent une interprétation de l'intention de l'autre — les vrais sentiments sont 100% en moi."
+      },
+      "B_besoins": {
+        "definition": "Nommer le besoin humain universel sous-jacent au sentiment — ce qui est vivant en nous, partagé par tous les humains, sans référence à une personne ou une action spécifique.",
+        "besoins_universels_classification": {
+          "subsistance_securite": ["nourriture", "logement", "sécurité physique", "repos", "santé"],
+          "connexion_appartenance": ["amour", "intimité", "appartenance", "communauté", "contribution", "réciprocité"],
+          "autonomie": ["choix", "liberté", "indépendance", "authenticité", "autodétermination"],
+          "expression_creation": ["créativité", "expression", "sens", "croissance", "apprentissage"],
+          "celebration_jeu": ["joie", "humour", "légèreté", "plaisir", "célébration"],
+          "sens_valeurs": ["intégrité", "clarté", "cohérence", "justice", "beauté", "ordre", "paix"],
+          "consideration": ["respect", "reconnaissance", "validation", "considération", "visibilité"]
+        },
+        "distinction_besoin_strategie": {
+          "besoin": "Connexion (universel)",
+          "strategie": "Que tu m'appelles tous les jours (spécifique, discutable)",
+          "importance": "Plusieurs stratégies peuvent satisfaire un même besoin — distinguer les deux ouvre les solutions possibles"
+        }
+      },
+      "D_demande": {
+        "definition": "Formuler une demande concrète, positive, réalisable et négociable — clairement distincte d'une exigence.",
+        "criteres_bonne_demande": [
+          "Positive: ce qu'on veut (pas ce qu'on ne veut plus)",
+          "Concrète et actuelle: action spécifique dans un temps défini",
+          "Réalisable: dans les capacités de l'autre",
+          "Ouverte: l'autre peut dire non — sinon c'est une exigence"
+        ],
+        "distinction_demande_exigence": {
+          "exigence": "Formulée ou non, l'autre sait qu'il sera puni, critiqué ou culpabilisé en cas de refus",
+          "demande_cnv": "Formulée avec l'intention sincère d'accepter un non — et de continuer le dialogue"
+        },
+        "types_demandes": {
+          "demande_de_connexion": "Vérifier la compréhension / vérifier l'état de l'autre — 'Comment te sens-tu en m'entendant dire ça?'",
+          "demande_d_action": "Demander un comportement concret — 'Accepterais-tu de me prévenir par message quand tu es retardé?'"
+        },
+        "pieges": ["Demander l'absence de quelque chose — 'arrête de...'", "Formuler une demande vague — 'sois plus attentionné'", "Exiger sous forme de demande — sans vraiment accepter un refus"]
+      }
+    },
+    "ecoute_empathique": {
+      "definition": "L'écoute empathique CNV consiste à être présent à ce qui est vivant chez l'autre — ses sentiments et besoins — sans conseiller, réconforter, analyser, minimiser ou raconter sa propre histoire.",
+      "obstacles_ecoute": [
+        "Donner des conseils non demandés",
+        "Rassurer / minimiser ('c'est pas si grave')",
+        "Raconter sa propre histoire ('moi aussi...')",
+        "Interroger / enquêter",
+        "Expliquer / éduquer",
+        "Corriger / critiquer",
+        "Condoler / plaindre"
+      ],
+      "ecoute_pleine_presence": {
+        "etape_1": "Vider sa propre tête — ne pas préparer sa réponse pendant que l'autre parle",
+        "etape_2": "Deviner les sentiments — 'Est-ce que tu te sens frustré?'",
+        "etape_3": "Deviner les besoins — 'Est-ce que tu as besoin d'être entendu? De soutien?'",
+        "etape_4": "Vérifier — 'C'est bien ça?' — laisser l'autre corriger",
+        "etape_5": "Continuer jusqu'à ce que l'autre ait vraiment été entendu"
+      },
+      "auto_empathie": "Avant d'écouter l'autre, s'écouter soi-même — identifier ses propres sentiments et besoins activés pour ne pas les projeter ou les réprimer pendant l'échange",
+      "empathie_vs_sympathie": {
+        "sympathie": "Ressentir avec l'autre — risque de fusion et de surcharge émotionnelle",
+        "empathie": "Être présent à l'expérience de l'autre depuis une présence stable en soi — connexion sans fusion"
+      }
+    },
+    "conflits_et_resolution": {
+      "vision_cnv_conflit": "Le conflit n'est pas un problème entre deux personnes mais un conflit entre deux ensembles de stratégies pour satisfaire des besoins humains universels. Chacun cherche la même chose: être entendu, respecté, avoir ses besoins satisfaits.",
+      "processus_resolution_conflit": [
+        "1. Chaque partie exprime son observation (sans jugement)",
+        "2. Chaque partie exprime ses sentiments (sans attribuer la cause à l'autre)",
+        "3. Chaque partie identifie et nomme ses besoins",
+        "4. Vérifier que chaque partie a entendu les besoins de l'autre",
+        "5. Co-créer des stratégies qui satisfont les besoins des deux parties",
+        "6. Formuler des demandes concrètes et négociables"
+      ],
+      "mediateur_cnv": "Le médiateur CNV aide chaque partie à exprimer son observation/sentiment/besoin et à entendre ceux de l'autre — il ne juge pas, ne tranche pas, ne prend pas parti",
+      "les_4_cavaliers_gottman": {
+        "auteur": "John Gottman — recherches longitudinales 40 ans sur la communication de couple",
+        "cavalier_1_critique": {
+          "definition": "Attaquer le caractère ou la personnalité du partenaire — vs se plaindre d'un comportement spécifique",
+          "exemple_critique": "Tu es vraiment égoïste, tu penses jamais aux autres",
+          "exemple_plainte": "Quand tu rentres sans prévenir, je me sens seule parce que j'ai besoin de coordination",
+          "antidote": "Formuler une plainte (sur le comportement) + 'message je' + besoin"
+        },
+        "cavalier_2_mepris": {
+          "definition": "Traiter le partenaire avec dédain, supériorité — sarcasme, raillerie, mimiques, insultes — le prédicteur le plus fort du divorce",
+          "antidote": "Culture de la gratitude — exprimer régulièrement ce qu'on apprécie chez l'autre"
+        },
+        "cavalier_3_defensivite": {
+          "definition": "Se défendre comme si on était attaqué, contre-attaquer, nier toute responsabilité",
+          "exemple": "Ce n'est pas ma faute, si tu avais...",
+          "antidote": "Prendre sa part de responsabilité même partielle — 'Tu as raison que j'aurais pu...'"
+        },
+        "cavalier_4_mur_de_pierre": {
+          "definition": "Se fermer, ne plus répondre, se désengager émotionnellement — shutdown de protection",
+          "note": "Souvent signe de débordement (flooding) physiologique — heartrate >100bpm",
+          "antidote": "Pause de 20-30 minutes (auto-régulation) puis reprise — 'j'ai besoin d'une pause'"
+        }
+      },
+      "reparation_relationnelle": {
+        "definition": "Gottman — les tentatives de réparation sont des signaux pour désamorcer l'escalade conflictuelle",
+        "exemples": ["'Attends, j'ai besoin d'une pause'", "'Je m'exprime mal — laisse-moi recommencer'", "'Je comprends que tu sois frustré'", "'Je suis désolé, j'aurais dû te prévenir'"],
+        "cle": "Dans les couples solides, les tentatives de réparation sont reconnues et acceptées — dans les couples en détresse, elles sont ignorées ou rejetées"
+      }
+    },
+    "assertivite_et_limites": {
+      "definition": "L'assertivité est la capacité à s'exprimer, à défendre ses droits et ses besoins de façon directe, honnête et respectueuse — sans agressivité ni soumission.",
+      "triangle_comportements": {
+        "passivite": "Réprimer ses besoins pour éviter le conflit — sacrifice de soi, ressentiment, épuisement",
+        "agressivite": "Imposer ses besoins en écrasant ceux de l'autre — domination, destruction du lien",
+        "assertivite": "Exprimer ses besoins tout en respectant ceux de l'autre — connexion authentique"
+      },
+      "message_je": {
+        "structure": "Quand (observation) + je ressens (sentiment) + parce que j'ai besoin de (besoin) + est-ce que tu serais prêt à (demande)?",
+        "vs_message_tu": "Le 'message tu' accuse, attaque, défensive instantanée — le 'message je' ouvre la connexion"
+      },
+      "dire_non_avec_empathie": {
+        "principe": "Tout refus honnête est un oui à quelque chose d'autre (un de ses propres besoins)",
+        "exemple": "Je ne peux pas venir dîner samedi (non à la demande) — j'ai besoin de temps seul ce weekend pour me ressourcer (oui à son besoin)",
+        "accompagnement_cnv": "Entendre le besoin de l'autre derrière sa demande + exprimer le sien + chercher si une autre stratégie est possible"
+      },
+      "droits_assertifs_fondamentaux": [
+        "Le droit de changer d'avis",
+        "Le droit de faire des erreurs",
+        "Le droit de ne pas savoir ou ne pas comprendre",
+        "Le droit de refuser une demande sans se justifier",
+        "Le droit d'exprimer ses sentiments",
+        "Le droit de demander ce dont on a besoin",
+        "Le droit d'être traité avec respect"
+      ]
+    },
+    "applications_cliniques_couples": {
+      "cnv_en_therapie_de_couple": "La CNV est intégrée dans la plupart des thérapies de couple modernes — EFT (Sue Johnson), approche Gottman, systémique — comme outil de traduction des déclencheurs en besoins",
+      "cercle_de_communication": {
+        "description": "Protocole de communication structuré pour les discussions difficiles",
+        "etapes": [
+          "1. L'un parle — l'autre écoute sans interrompre (5 minutes max)",
+          "2. L'écoutant reformule — 'Ce que j'ai entendu c'est...'",
+          "3. Le locuteur confirme ou corrige",
+          "4. L'écoutant valide — 'Je comprends que tu ressentes...' (même sans être d'accord)",
+          "5. Échange des rôles"
+        ]
+      },
+      "triggers_relationnels_cnv": "Quand un comportement déclenche une réaction forte, c'est le signal qu'un besoin profond est touché — pas que l'autre est responsable de notre état",
+      "deuil_cnv": "Le deuil CNV est le processus de s'asseoir avec la douleur d'un besoin non satisfait — sans reprocher à l'autre ni se punir soi-même — simplement sentir",
+      "celebration_cnv": "Exprimer sa gratitude en CNV: nommer le comportement concret + le sentiment + le besoin satisfait (vs 'merci' vague ou compliment sur la personne)"
+    },
+    "ressources_cnv": {
+      "livres_fondamentaux": [
+        "Marshall Rosenberg — Les mots sont des fenêtres ou des murs (2003) — référence fondatrice CNV en français",
+        "Marshall Rosenberg — La Communication NonViolente au quotidien (2003)",
+        "Thomas d'Ansembourg — Cessez d'être gentil, soyez vrai! (2001) — CNV en contexte francophone",
+        "Thich Nhat Hanh — La colère (2002) — dimension contemplative de la CNV",
+        "John Gottman — Les couples heureux ont leurs secrets (1999)",
+        "Sue Johnson — Serre-moi fort (2008) — EFT couples"
+      ],
+      "formations_certifications": {
+        "CNVC": "Centre for Nonviolent Communication — cnvc.org — organisme fondateur",
+        "ACNfrance": "Association pour la CNV en France — acnfrance.org",
+        "CNV_Quebec": "CNV-Quebec.ca — formations et praticiens certifiés",
+        "praticiens_certifies": "Chercher 'CNVC certified trainer' sur cnvc.org — seule certification internationale officielle"
+      },
+      "pratiques_quotidiennes": [
+        "Journal CNV: 5 minutes/jour — nommer observations, sentiments, besoins de la journée",
+        "Pause empathique: avant de répondre à un message difficile — identifier son état interne",
+        "Traduire les critiques reçues: derrière chaque critique se cache un besoin non satisfait",
+        "Gratitude CNV quotidienne: 3 comportements observés + sentiment + besoin satisfait"
+      ]
+    }
+  }
+}

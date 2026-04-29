@@ -1538,3 +1538,14 @@ function MyComponent() {
 | `src/__tests__/services/ai/kb.dependanceTherapiesTrauma.test.ts` | Vitest | 58 PASS | — | — |
 
 Corpus clinique étendu: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dépendance affective + thérapies trauma avancées (p27)
+
+## Phase 28 — KB CNV + deuil/rupture/transitions (2026-04-29)
+
+| Fichier | Type | Version | Sections | Triggers |
+|---|---|---|---|---|
+| `data/knowledge_base/default/communication_non_violente_relations.json` | KB JSON | v31.3.7 | 7 | 46 |
+| `data/knowledge_base/default/deuil_rupture_transitions.json` | KB JSON | v31.3.8 | 7 | 48 |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +2 consts +2 SOURCES, baseline >=201 | — | — |
+| `src/__tests__/services/ai/kb.cnvDeuil.test.ts` | Vitest | 35 PASS | — | — |
+
+Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil/rupture/transitions (p28)

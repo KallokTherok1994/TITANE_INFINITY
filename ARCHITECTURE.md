@@ -530,3 +530,16 @@ Conformité validée par tests 100/100 (avril 2026).
 
 ### Tests Rule 16
 - `kb.dependanceTherapiesTrauma.test.ts`: 58 PASS (Vitest)
+
+## Phase 28 — KB modules CNV + deuil/rupture/transitions (2026-04-29)
+
+### Nouveaux modules KB
+- **`communication_non_violente_relations.json`** (v31.3.7) — 7 sections: fondements_cnv (Rosenberg, langage girafe/chacal, Rogers/Maslow/Gandhi), modele_4_composantes_OSBD (observation, sentiments vs pseudo-sentiments, besoins universels classification, demande vs exigence), ecoute_empathique (7 obstacles, 5 etapes presence pleine, auto-empathie), conflits_et_resolution (vision CNV conflit, processus 6 etapes, 4 cavaliers Gottman + antidotes, reparation relationnelle), assertivite_et_limites (triangle passivite/agressivite/assertivite, message-je, dire non avec empathie, 7 droits assertifs), applications_cliniques_couples (cercle communication, triggers relationnels, deuil CNV, celebration CNV), ressources_cnv (CNVC, ACNfrance, CNV-Quebec, livres)
+- **`deuil_rupture_transitions.json`** (v31.3.8) — 7 sections: comprendre_le_deuil (types pertes, pertes ambigues Pauline Boss, facteurs influencant), modeles_processus_deuil (Kubler-Ross 5 stades + 6e Kessler, Worden 4 taches, Double Process Stroebe/Schut, Continuing Bonds Klass), deuil_complique_pathologique (Prolonged Grief Disorder DSM-5-TR/ICD-11, facteurs risque, signes, CGT/EMDR traitement), deuil_rupture_amoureuse (neurobiologie: dopamine/cortisol/broken heart syndrome, phases rupture, pieges: rumination/stalking/idealisaiton, no contact 60-90j, reconstruction identitaire), transitions_majeures_William_Bridges (distinction changement/transition, 3 phases: fin/zone neutre/nouveau depart, transitions communes adulte), accompagnement_soutien_deuil (que ne pas dire, que faire, rituels), ressources (lignes urgence QC/France/BE/CH, approches recommandees)
+
+### Rust
+- `knowledge_base_default.rs`: +2 consts COMMUNICATION_NON_VIOLENTE_RELATIONS + DEUIL_RUPTURE_TRANSITIONS, +2 SOURCES entries, baseline >=199 -> >=201, expected list updated
+- Tests: 10 PASS (cargo test -- test_knowledge, baseline >=201 validated)
+
+### Tests Rule 16
+- `kb.cnvDeuil.test.ts`: 35 PASS (Vitest)
