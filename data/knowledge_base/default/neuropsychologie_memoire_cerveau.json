@@ -1,0 +1,121 @@
+{
+  "version": "v31.5.0",
+  "category": "neuropsychologie_memoire_cerveau",
+  "description": "Neuropsychologie clinique et mémoire : systèmes mnésiques (mémoire épisodique/sémantique/procédurale/de travail — Tulving, Baddeley), patient H.M. et hippocampe (Milner/Scoville), mémoire autobiographique et identité narrative, troubles mnésiques (amnésie antérograde/rétrograde, syndrome de Korsakoff, confabulation), maladie d'Alzheimer et démences (critères diagnostiques, biomarqueurs, cascade amyloïde, interventions), fonctions exécutives et cortex préfrontal, neuroplasticité (Hebb, LTP, BDNF, enrichissement environnemental), conscience et théories neuronales (Damasio, Dehaene espace de travail global, IIT Tononi), latéralisation hémisphérique, évaluation neuropsychologique clinique",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "mémoire épisodique sémantique",
+    "mémoire procédurale implicite explicite",
+    "Tulving types de mémoire",
+    "mémoire de travail Baddeley",
+    "boucle phonologique calepin visuospatial",
+    "patient HM hippocampe mémoire",
+    "Milner Scoville amnésie",
+    "hippocampe consolidation mémoire",
+    "mémoire autobiographique identité",
+    "amnésie antérograde rétrograde",
+    "syndrome de Korsakoff alcool mémoire",
+    "confabulation mémoire fausse",
+    "maladie Alzheimer démence",
+    "cascade amyloïde tau Alzheimer",
+    "biomarqueurs Alzheimer PET LCR",
+    "démence vasculaire corps de Lewy",
+    "fonctions exécutives cortex préfrontal",
+    "planification inhibition flexibilité cognitive",
+    "mémoire de travail fonctions exécutives",
+    "neuroplasticité Hebb synapses",
+    "LTP potentialisation long terme",
+    "BDNF facteur neurotrophique cerveau",
+    "enrichissement environnemental neurogenèse",
+    "neurogenèse hippocampale adulte",
+    "Donald Hebb règle d apprentissage",
+    "conscience neuroscience",
+    "Damasio conscience soi narratif",
+    "Dehaene espace de travail global",
+    "Tononi théorie information intégrée",
+    "latéralisation hémisphérique langage",
+    "Broca Wernicke aphasie",
+    "hémisphère gauche droit spécialisation",
+    "évaluation neuropsychologique BECS",
+    "MoCA MMSE évaluation cognitive",
+    "bilan neuropsychologique tests",
+    "attention executive Trail Making Test",
+    "mémoire prospective intention future",
+    "faux souvenirs effet misinformation",
+    "Elizabeth Loftus mémoire reconstituée",
+    "source monitoring erreur mémoire",
+    "consolidation mémoire sommeil",
+    "sommeil REM consolidation mnésique",
+    "stress cortisol hippocampe mémoire",
+    "traumatisme mémoire fragmentée",
+    "dissociation et mémoire trauma",
+    "vieillissement cognitif normal pathologique"
+  ],
+  "sections": {
+    "systemes_mnésiques_tulving_baddeley": {
+      "tulving_types": {
+        "memoire_episodique": "Endel Tulving (1972) — mémoire des événements autobiographiques personnels avec contexte temporel/spatial ('voyage mental dans le temps'). Dépend de l'hippocampe et cortex préfrontal. Très sensible au traumatisme et à la dépression. Conscience autonoétique: se voir soi-même dans l'événement remémoré",
+        "memoire_semantique": "Connaissance générale du monde, faits, concepts, langage — sans contexte d'acquisition. Dépend des cortex temporaux latéraux. Résiste mieux à l'amnésie et au vieillissement. Conscience noétique: savoir sans se souvenir d'avoir appris",
+        "memoire_procedurale": "Habiletés motrices et cognitives acquises (vélo, lecture, instrument) — implicite, résistante à l'amnésie. Ganglions de la base (apprentissage stimulus-réponse), cervelet (timing moteur). Pas d'hippocampe nécessaire — préservé patient H.M.",
+        "memoire_perceptive": "Amorçage (priming) — facilitation de traitement d'un stimulus par exposition préalable. Implicite, cortex occipital/temporal",
+        "conditionnement": "Conditionnement classique (amygdale pour composante émotionnelle) et opérant (striatum) — formes les plus primitives de mémoire"
+      },
+      "baddeley_memoire_travail": {
+        "modele_original": "Alan Baddeley (1974) — mémoire de travail: système à capacité limitée maintenant et manipulant l'information en ligne. 3 composantes: administrateur central (attention, contrôle), boucle phonologique (2 sec de répétition subvocale), calepin visuospatial",
+        "buffer_episodique": "Baddeley (2000) — 4ème composante: buffer épisodique — interface entre MLT et MCT, intègre information multimodale, lien avec mémoire épisodique. Siège de la représentation consciente momentanée",
+        "capacite": "George Miller (1956) — 7 ± 2 items en MCT. Nelson Cowan (2001) — révision à 4 chunks. La capacité de working memory prédit l'intelligence fluide et la réussite scolaire mieux que le QI total"
+      }
+    },
+    "patient_HM_hippocampe": {
+      "cas_HM": "Henry Molaison (H.M.) — Brenda Milner et William Scoville (1957). Résection bilatérale hippocampes (épilepsie réfractaire) → amnésie antérograde sévère (incapacité à former nouveaux souvenirs explicites) + amnésie rétrograde partielle (3-11 ans avant opération). Préservation: mémoire procédurale (apprenait tâches motrices), mémoire sémantique ancienne, langage, QI stable",
+      "consolidation_et_oubli": "Consolidation synaptique (heures) → consolidation systémique (semaines-années), rôle du sommeil (réactivation nocturne SWS+REM), courbe d'oubli Ebbinghaus (70% oublié en 24h sans révision), effet d'espacement (spacing effect), interférence proactive/rétroactive. Faux souvenirs: Elizabeth Loftus — misinformation effect: les questions post-événement modifient le souvenir original (expérience du verre à l'accident). Implications juridiques (témoignages oculaires peu fiables). Source monitoring error: confusion sur l'origine d'un souvenir.",
+      "hippocampe_fonctions": "Encodage épisodique, consolidation, navigation spatiale (cellules de lieu — O'Keefe, Nobel 2014; cellules grille — Moser), recombination flexible des souvenirs, imagination du futur (simulation prospective). Très vulnérable: stress chronique (atrophie), dépression sévère, alcool, Alzheimer"
+    },
+    "alzheimer_dementias": {
+      "maladie_alzheimer": {
+        "epidemiologie": "Cause la plus fréquente de démence (60-70%). 50 millions de personnes dans le monde. Âge: après 65 ans (formes sporadiques); avant 65 ans (formes génétiques — mutations APP/PSEN1/PSEN2)",
+        "cascade_amyloide": "Hypothèse dominante (Hardy/Higgins 1992): accumulation Aβ (peptide amyloïde) → plaques séniles → tau phosphorylée → dégénérescence neurofibrillaire → mort neuronale. Progression: entorhinal → hippocampe → néocortex (Braak stages 1-6)",
+        "biomarqueurs": "LCR: ↓Aβ42, ↑tau totale, ↑phospho-tau. PET amyloïde/tau: visible 15-20 ans avant symptômes. IRM: atrophie hippocampique (volumétrie), hypométabolisme temporo-pariétal (TEP-FDG). Sang: Aβ42/Aβ40, p-tau 217",
+        "criteres_diagnostiques": "NIA-AA 2018: continuum biologique (A-T-N framework: amyloïde, tau, neurodégénérescence). Stades: Alzheimer préclinique → MCI dû à Alzheimer → démence Alzheimer"
+      },
+      "autres_dementias": {
+        "vasculaire": "2ème cause: infarctus cérébraux multiples, leucoaraïose. Profil: déficits cognitifs en escalier, prédominance frontale/executive, facteurs CV",
+        "corps_lewy": "3ème cause: hallucinations visuelles précoces (très détaillées), fluctuations cognitives, parkinsonisme, sensibilité aux neuroleptiques (dangereux). Corps de Lewy = agrégats alpha-synucléine",
+        "frontale_FTD": "Dégénérescence fronto-temporale — début précoce (<65 ans), changements personnalité/comportement, déshinibition ou apathie, langage. TDP-43, FUS, tau"
+      },
+      "traitements": "Inhibiteurs cholinestérases (donépézil, rivastigmine, galantamine) — effet symptomatique modeste. Mémantine — NMDA antagoniste, stades modérés-sévères. Anticorps anti-amyloïde (lecanemab 2023, donanemab 2024) — réduisent progression au stade MCI/précoce. Stimulation cognitive, activité physique (neurogenèse), interventions psychosociales"
+    },
+    "fonctions_executives": {
+      "modele_frontal": "Cortex préfrontal dorsolatéral (CPFDL): mémoire de travail, planification, raisonnement abstrait. Cortex orbitofrontal (COF): prise de décision, régulation émotionnelle, récompense. Cortex préfrontal ventro-médian: marqueurs somatiques (Damasio), valeur subjective. Cortex cingulaire antérieur (CCA): détection des conflits, monitoring des erreurs",
+      "composantes": {
+        "inhibition": "Contrôle impulsif, suppression réponses automatiques inappropriées. Tests: Stroop, Stop Signal. Déficit: TDAH, TOC, TP antisociale",
+        "flexibilite_cognitive": "Changement de règle, pensée divergente, adaptation. Tests: Trail Making B, WCST (Wisconsin Card Sorting Test). Déficit: schizophrénie, dépression sévère",
+        "mise_a_jour": "Actualisation du contenu de la mémoire de travail. Tests: N-back. Prédit la performance académique",
+        "planification": "Tour de Londres/Hanoï, fluence verbale catégorielle. Déficit: traumatisme crânien, DFT"
+      },
+      "developpement": "Les fonctions exécutives se développent progressivement: inhibition vers 3-5 ans, mémoire de travail jusqu'à 10-12 ans, planification/flexibilité jusqu'à 20-25 ans. Dernier système à maturer, premier atteint par âge/pathologie"
+    },
+    "neuroplasticite": {
+      "regle_hebb": "Donald Hebb (1949) — 'Neurons that fire together, wire together.' La coactivation répétée de deux neurones renforce leur connexion synaptique. Base théorique de tout apprentissage",
+      "LTP": "Long-Term Potentiation (Bliss/Lømo 1973) — renforcement durable de la transmission synaptique après stimulation répétée à haute fréquence. Implique récepteurs NMDA (détecteurs de coactivité), AMPA (expression), BDNF (consolidation). Mécanisme cellulaire de l'apprentissage et de la mémoire",
+      "BDNF": "Brain-Derived Neurotrophic Factor — facteur de survie neuronale, neurogenèse, plasticité synaptique. Augmenté par: exercice physique (++), apprentissage, omega-3, antidépresseurs. Diminué par: stress chronique, manque de sommeil, alcool, régime riche en sucre",
+      "neurogenese_adulte": "Hippocampe (gyrus denté) et bulbe olfactif — zones de neurogenèse adulte chez l'humain. Exercice physique aérobique = meilleur stimulant connu (augmente volume hippocampique de 2% en 6 mois — Erickson 2011). Stress et dépression: inhibent la neurogenèse",
+      "enrichissement_environnemental": "Rosenzweig/Bennet (1960s) — rats en environnement enrichi: cortex plus épais, plus de synapses, meilleures performances cognitives. Chez l'humain: éducation, bilinguisme, activité physique, engagement social = facteurs de réserve cognitive"
+    },
+    "conscience_theories": {
+      "damasio_soi": "Antonio Damasio ('The Feeling of What Happens', 1999) — niveaux de conscience: proto-self (état du corps en continu) → core consciousness (conscience noyau: sentiment de soi comme objet interagissant avec autre objet) → extended consciousness / autobiographical self (narrative du passé et anticipation du futur). Conscience = sentiment du corps — pas possible sans corps",
+      "espace_travail_global": "Bernard Baars (1988), Stanislas Dehaene (2014) — Global Workspace Theory: la conscience émerge quand l'information est 'broadcast' de manière globale dans un espace de travail partagé par les réseaux corticaux (flamme dans le théâtre). Signature EEG: P300, late cortical potential. Appliqué aux patients en état végétatif (Naccache)",
+      "IIT_tononi": "Giulio Tononi — Integrated Information Theory: la conscience = information intégrée (Φ, phi). Une chose est consciente proportionnellement à la quantité d'information qu'elle génère au-delà de ses parties. Controversé mais mathématiquement précis",
+      "hard_problem": "David Chalmers (1995) — 'Hard problem of consciousness': expliquer pourquoi et comment les processus physiques donnent lieu à l'expérience subjective (qualia). Distinct des 'easy problems' (fonctions cognitives). Non résolu"
+    },
+    "evaluation_neuropsychologique": {
+      "outils_screening": "MMSE (Folstein 1975): 30 points, seuil démence <24, limites: peu sensible MCI, biais éducation. MoCA (Nasreddine 2005): 30 points, seuil <26, plus sensible MCI, domains: attention, fonctions exécutives, mémoire, langage, visuospatial, orientation",
+      "bilan_complet": "WAIS-IV (intelligence), WMS-IV (mémoire), TMT A/B (vitesse/exécutif), Stroop, CVLT/RL/RI 16 (mémoire verbale), Figure de Rey (visuo-constructif/mémoire visuelle), fluences verbales (catégorielle/lettres), D2 (attention), BDI/BAI (humeur). 4-8 heures selon protocole",
+      "profils_cliniques": {
+        "Alzheimer": "Amnésie encodage (faible rappel libre, non amélioré indiçage), atrophie hippocampique, hypométabolisme temporo-pariétal",
+        "DFT": "Préservation mémoire épisodique initiale, dysexécutif, changements personnalité",
+        "depression": "Pseudo-démence: ralentissement, plaintes mémoire >> déficits objectifs, amélioration traitement. Distinguer: symptômes dépressifs, réversibilité"
+      }
+    }
+  }
+}

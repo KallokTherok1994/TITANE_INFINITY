@@ -564,6 +564,8 @@ Conformité validée par tests 100/100 (avril 2026).
 - Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=209 validated)
 - `knowledge_base_default.rs`: +2 consts DEVELOPPEMENT_ENFANT_PARENTALITE + PSYCHOSOMATIQUE_CORPS_ESPRIT, +2 SOURCES entries, baseline >=209 -> >=211, expected list updated (phase 33)
 - Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=211 validated)
+- `knowledge_base_default.rs`: +2 consts PSYCHIATRIE_CLINIQUE_DIAGNOSTICS + NEUROPSYCHOLOGIE_MEMOIRE_CERVEAU, +2 SOURCES entries, baseline >=211 -> >=213, expected list updated (phase 34)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=213 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
@@ -571,6 +573,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `kb.humanistePsychodynamique.test.ts`: 52 PASS (Vitest, phase 31)
 - `kb.addictionCouples.test.ts`: 50 PASS (Vitest, phase 32)
 - `kb.enfantPsychosomatique.test.ts`: 55 PASS (Vitest, phase 33)
+- `kb.psychiatrieNeuropsycho.test.ts`: 66 PASS (Vitest, phase 34)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
@@ -578,3 +581,4 @@ Conformité validée par tests 100/100 (avril 2026).
 - `AH-KB-HUMANISTE-PSYCHODYN-2026-04-29` (full schema, detect_recurrence PASS, phase 31)
 - `AH-KB-ADDICTION-COUPLES-2026-04-29` (full schema, detect_recurrence PASS, phase 32)
 - `AH-KB-ENFANT-PSYCHOSOMATIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 33)
+- `AH-KB-PSYCHIATRIE-NEUROPSYCHO-2026-04-29` (full schema, detect_recurrence PASS, phase 34)

@@ -1,0 +1,150 @@
+{
+  "version": "v31.4.9",
+  "category": "psychiatrie_clinique_diagnostics",
+  "description": "Psychiatrie clinique avancée : schizophrénie et spectre psychotique (critères DSM-5/CIM-11, phases prodomale/aiguë/résiduelle, hypothèse dopaminergique, antipsychotiques typiques/atypiques, remédiation cognitive), trouble bipolaire (type I/II/cyclothymie, stabilisateurs humeur lithium/valproate/lamotrigine, kindling Post), troubles de la personnalité DSM-5 cluster A/B/C (critères, étiologie, psychothérapies adaptées), outils diagnostiques (SCID-5, MINI, PCL-5, PHQ-9, GAD-7, MDQ, PANSS, YMRS), comorbidités psychiatriques, risque suicidaire évaluation et intervention (modèle Columbia, facteurs protecteurs), pharmacologie psychiatrique fondamentale, réhabilitation psychosociale",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "schizophrénie psychose",
+    "symptômes positifs négatifs schizophrénie",
+    "dopamine hypothèse psychose",
+    "antipsychotiques neuroleptiques",
+    "clozapine halopéridol rispéridone",
+    "trouble bipolaire manie dépression",
+    "épisode maniaque hypomanie",
+    "lithium stabilisateur humeur",
+    "valproate lamotrigine bipolaire",
+    "kindling Post sensibilisation bipolaire",
+    "trouble personnalité borderline",
+    "trouble personnalité narcissique",
+    "trouble personnalité antisociale",
+    "cluster A B C personnalité",
+    "personnalité paranoïaque schizoïde",
+    "histrionique obsessionnel compulsif personnalité",
+    "dépendante évitante personnalité",
+    "SCID-5 diagnostic psychiatrique",
+    "MINI entretien neuropsychiatrique",
+    "PHQ-9 dépression questionnaire",
+    "GAD-7 anxiété générale",
+    "PANSS schizophrénie échelle",
+    "MDQ trouble bipolaire dépistage",
+    "risque suicidaire évaluation",
+    "Columbia suicide severity scale",
+    "idéations suicidaires passage acte",
+    "facteurs protecteurs suicide",
+    "intervention crise suicidaire",
+    "réhabilitation psychosociale psychiatrie",
+    "remédiation cognitive schizophrénie",
+    "psychoéducation trouble bipolaire",
+    "insight conscience maladie psychiatrique",
+    "comorbidité psychiatrique",
+    "anxiété trouble panique DSM",
+    "TOC trouble obsessionnel compulsif",
+    "spectre autistique adulte diagnostic",
+    "PTSD trouble stress post-traumatique",
+    "dissociation trouble dissociatif",
+    "troubles alimentaires anorexie boulimie",
+    "anorexie mentale restriction alimentaire",
+    "boulimie hyperphagie binge eating",
+    "MDFT pharmacologie antidépresseurs",
+    "ISRS IRSN antidépresseurs mécanisme",
+    "benzodiazépines anxiolytiques dépendance",
+    "hospitalisation psychiatrique soins sans consentement",
+    "stigmate psychiatrie rétablissement"
+  ],
+  "sections": {
+    "schizophrenie_spectre_psychotique": {
+      "criteres_DSM5": {
+        "symptomes_positifs": "Hallucinations (auditives le plus fréquent, 75% des cas — voix commentant, donnant des ordres; visuelles, cénesthésiques), délires (persécution, grandiosité, référence, influence, érotomanie), désorganisation de la pensée (relâchement associations, pensée tangentielle, néologismes), comportement désorganisé ou catatonique",
+        "symptomes_negatifs": "Affect émoussé/plat, alogie (pauvreté du discours), avolition (manque de motivation), anhédonie, isolement social (alosia). Les symptômes négatifs prédisent le moins bon pronostic fonctionnel et répondent moins aux antipsychotiques",
+        "criteres_A_F": "≥2 symptômes (A) pendant ≥1 mois avec ≥1 de [délire, hallucination, désorganisation]; fonctionnement significativement altéré (B); durée ≥6 mois incluant phases prodomale/résiduelle (C); exclusion troubles schizo-affectifs/humeur (D); exclusion substances/médical (E); si autisme: hallucinations/délires marqués ≥1 mois (F)"
+      },
+      "phases_cliniques": {
+        "prodrome": "2-5 ans avant premier épisode: retrait social progressif, baisse de fonctionnement, idées perceptuelles atypiques, affect émoussé. Détection précoce cruciale — intervention précoce améliore le pronostic (Early Psychosis Intervention)",
+        "premier_episode": "Fenêtre critique: DUP (Duration of Untreated Psychosis) < 3 mois = meilleur pronostic. Critères d'hospitalisation: dangerosité, incapacité à s'auto-protéger, agitation sévère",
+        "evolution": "Règle du tiers: 1/3 rémission stable, 1/3 évolution fluctuante avec séquelles modérées, 1/3 évolution sévère chronique. Facteurs protecteurs: femme, bon fonctionnement prémorbide, réseau social, observance traitement"
+      },
+      "neurobiologie": {
+        "hypothese_dopaminergique": "Excès DA sous-corticale (voie mésolimbique) → symptômes positifs. Déficit DA préfrontale (voie mésocorticale) → symptômes négatifs/cognitifs. Tous les antipsychotiques efficaces bloquent les récepteurs D2",
+        "glutamate_NMDA": "Hypothèse glutamatergique: hypofonctionnement récepteurs NMDA (kétamine → syndrome schizophrénique). Explication des symptômes négatifs et cognitifs non expliqués par la DA seule",
+        "neuroimagerie": "Élargissement ventriculaire, réduction volume hippocampe/cortex préfrontal dorsolatéral, réduction matière grise progressive avec chaque épisode (argument pour traitement maintien)"
+      },
+      "traitements": {
+        "antipsychotiques_typiques": "1ère génération: halopéridol, chlorpromazine — efficaces symptômes positifs mais effets EPS (extrapyramidaux: dystonie, parkinsonisme, akathisie, dyskinésie tardive) et syndrome malin des neuroleptiques",
+        "antipsychotiques_atypiques": "2ème génération: rispéridone, olanzapine, quétiapine, aripiprazole — meilleure tolérance EPS, action symptômes négatifs (partielle), mais syndrome métabolique (prise poids, diabète, dyslipidémie). Clozapine: gold standard schizophrénie résistante, agranulocytose obligatoire suivi NFS",
+        "psychosocial": "Remédiation cognitive (IPT, CRT — améliore fonctions exécutives et mémoire), psychoéducation famille (Falloon, Leff — réduit rechutes de 50%), thérapie cognitivo-comportementale pour psychose (CBTp), FACT/case management, appartements supervisés"
+      }
+    },
+    "trouble_bipolaire": {
+      "spectre_bipolaire": {
+        "type_I": "Au moins un épisode maniaque (≥7 jours, SIGECAPS+ élation/grandiosité/désinhibition/réduction sommeil/logorrhée/fuite idées/distractibilité/agitation/engagement activités risquées). Hospitalisations fréquentes",
+        "type_II": "Au moins un épisode dépressif majeur + au moins un épisode hypomaniaque (4-7 jours, sans hospitalisation ni symptômes psychotiques). Souvent diagnostiqué à tort comme dépression unipolaire",
+        "cyclothymie": "Fluctuations hypomaniaques + dépressives légères pendant ≥2 ans, sans critères épisode complet. Personnalité instable ou pathologie — débat",
+        "spectre_soft": "Akiskal: 6 types de spectre bipolaire incluant le bipolaire III (virage sous antidépresseurs) et IV (tempérament hyperthymique)"
+      },
+      "kindling_post": "Robert Post (1993) — modèle de sensibilisation: les premiers épisodes sont souvent déclenchés par stresseurs; avec le temps, les épisodes deviennent autonomes (kindling). Conséquence: traiter précocement et en continu pour éviter la progression",
+      "traitements_pharmacologiques": {
+        "lithium": "Gold standard stabilisateur de l'humeur — réduit suicide (niveau de preuve le plus fort), efficace manie et prophylaxie. Fenêtre thérapeutique étroite (0.6-1.2 mEq/L). Surveillance: créatinine, thyroïde, lithiémie. Contre-indication: grossesse T1 (Ebstein relative)",
+        "valproate": "Efficace manie aiguë et prophylaxie. Risque tératogène majeur (spina bifida, troubles neurodéveloppement) — contre-indiqué femmes en âge de procréer sans contraception fiable depuis 2018",
+        "lamotrigine": "Meilleure efficacité prévention épisodes dépressifs bipolaires. Titration lente obligatoire (risque syndrome de Stevens-Johnson). Peu efficace manie aiguë",
+        "antipsychotiques_atypiques": "Olanzapine, quétiapine, rispéridone — efficaces manie aiguë et maintenance. Aripiprazole: meilleure tolérance métabolique"
+      },
+      "psychoeducation": "Colom/Vieta (2003) — psychoéducation en groupe (21 séances): connaissance maladie, détection prodromes, hygiène vie (sommeil régulier, alcool, stress), observance. Réduit rechutes de 40-60% à 5 ans. La meilleure intervention psychosociale bipolaire"
+    },
+    "troubles_personnalite_DSM5": {
+      "vue_densemble": "Patterns durables et rigides de perception/relation/pensée significativement déviants des normes culturelles, stables depuis adolescence, à travers multiples contextes, causant détresse/dysfonctionnement. Prevalence: 10-15% population générale",
+      "cluster_A_bizarre_excentrique": {
+        "paranoiaque": "Méfiance pervasive et suspicion — interprète comportements des autres comme malveillants. Pas de psychose. Thérapie: difficile, alliance fragile, TCC (décatastrophisation, tester les hypothèses)",
+        "schizoide": "Détachement des relations sociales, affect restreint — préfère solitude, peu de plaisir activités, émotionnellement froid. Distinct schizophrénie. Thérapie: peu demandent aide, approche non-intrusive",
+        "schizotypique": "Gêne aiguë dans les relations proches, distorsions cognitives/perceptuelles, excentricités comportementales. Pensée magique, idées de référence, expériences perceptuelles inhabituelles. Spectre schizophrénie"
+      },
+      "cluster_B_dramatique_emotionnel": {
+        "borderline": "Instabilité marquée des relations interpersonnelles, image de soi et affects, impulsivité. 9 critères: peur abandon, relations idéalisation/dévaluation, identité instable, impulsivité (2 domaines), comportements suicidaires/automutilation, instabilité affective, sentiment de vide, colère intense inappropriée, idéation paranoïde/dissociation transitoire. Prévalence 1-3%, 10% des consultants psychiatriques. Traitement: DBT (Linehan) — gold standard",
+        "narcissique": "Grandiosité, besoin d'admiration, manque d'empathie. Narcissisme vulnérable (honte, hypersensibilité) vs grandiose (expansif). Kernberg: organisation état limite, splitting, identification projective. Thérapie: transfert intense, blessure narcissique en séance",
+        "histrionique": "Émotivité excessive, quête d'attention, théâtralisme, suggestibilité, relations perçues comme plus intimes qu'elles ne sont",
+        "antisociale": "Depuis 15 ans: mépris et violation droits d'autrui — tromperie, impulsivité, agressivité, irresponsabilité, absence de remords. Adulte avec ATCD trouble des conduites enfance. Psychopathie (Hare PCL-R): sous-type — déficit émotionnel + déviance antisociale"
+      },
+      "cluster_C_anxieux_craintif": {
+        "evitante": "Inhibition sociale, sentiment d'inadéquation, hypersensibilité au rejet — évite relations sociales malgré désir de connexion. Frontière floue avec phobie sociale. TCC, thérapie schémas (Early Maladaptive Schemas)",
+        "dependante": "Besoin excessif d'être pris en charge, comportement soumis/collant, difficulté à prendre décisions seul, peur d'abandon. Renforcement du partenaire, TCC autonomie",
+        "obsessionnelle_compulsive": "OCPD (distinct du TOC): perfectionnisme, ordre, contrôle rigide au détriment de la flexibilité et efficacité. Rigidité morale, incapacité à déléguer, avarice. TCC: perfectionnisme, erreur tolérance"
+      }
+    },
+    "evaluation_risque_suicidaire": {
+      "modele_columbia": "Columbia Suicide Severity Rating Scale (C-SSRS, Posner 2011) — standard international. Idéations: passives (vie sans valeur) → actives sans plan → actives avec plan → avec intention d'agir. Comportements: préparatifs, tentative interrompue, tentative avortée, tentative réelle",
+      "facteurs_risque": {
+        "statiques": "Sexe masculin, antécédents tentatives (×10 risque), trouble psychiatrique sévère, isolement social, chômage, accès aux moyens létaux",
+        "dynamiques": "Impulsivité, intoxication alcool/drogues, douleur aiguë, humiliation récente, rupture, sortie d'hôpital récente (×100 risque 1 semaine post-sortie)",
+        "protecteurs": "Soutien social fort, enfants à charge, croyances religieuses/culturelles, alliance thérapeutique, ambivalence (Shneidman: 'la partie qui veut vivre')"
+      },
+      "intervention": {
+        "evaluation": "Demander directement ('Avez-vous des pensées de vous faire du mal ou de mourir?'). Mythe: poser la question n'augmente pas le risque",
+        "plan_securite": "Stanley-Brown Safety Planning Intervention: 6 étapes — signaux d'alarme, stratégies d'auto-gestion, contacts sociaux distracteurs, contacts soutien, contacts professionnels, réduction accès aux moyens",
+        "hospitalisation": "Indication: plan létal précis, accès aux moyens, intention d'agir, facteurs d'impulsivité, absence soutien. Soins sans consentement: HDT (hospitalisation à la demande d'un tiers) ou HO (hospitalisation d'office)"
+      }
+    },
+    "outils_diagnostiques": {
+      "interviews_structurees": "SCID-5 (Structured Clinical Interview for DSM-5): gold standard diagnostique — modules par catégorie. MINI (Mini International Neuropsychiatric Interview, Sheehan/Lecrubier): plus rapide, utilisable en soins primaires. DIGS, CIDI: recherche",
+      "echelles_symptomes": {
+        "depression": "PHQ-9 (Patient Health Questionnaire): 9 items, seuil ≥10 EDM. BDI-II (Beck): 21 items. HAMD (Hamilton): hétéro-administration, 17 items",
+        "anxiete": "GAD-7 (Generalized Anxiety Disorder): seuil ≥10. STAI (Spielberger): trait vs état. HAM-A (Hamilton Anxiety)",
+        "bipolaire": "MDQ (Mood Disorder Questionnaire): dépistage TB. YMRS (Young Mania Rating Scale): sévérité manie. MADRS: dépression bipolaire",
+        "psychose": "PANSS (Positive and Negative Syndrome Scale): 30 items, 3 sous-échelles. BPRS (Brief Psychiatric Rating Scale)"
+      },
+      "evaluation_personnalite": "PDQ-4 (dépistage), SCID-II (diagnostic TP), PID-5 (modèle alternatif DSM-5), PCL-R Hare (psychopathie)"
+    },
+    "pharmacologie_psychiatrique": {
+      "antidepresseurs": {
+        "ISRS": "Fluoxétine, sertraline, paroxétine, escitalopram — 1ère ligne dépression et anxiété. Délai d'action 2-4 semaines. Effets secondaires: syndrome sérotoninergique (si association), nausées initiales, dysfonction sexuelle, syndrome de sevrage (paroxétine+++)",
+        "IRSN": "Venlafaxine, duloxétine — 1ère ligne anxiété généralisée et dépression. Duloxétine: efficace douleur chronique. Venlafaxine: hypertension à fortes doses",
+        "tricycliques": "Amitriptyline, clomipramine — efficaces mais effets anticholinergiques, toxicité cardiaque en surdosage → 2ème ou 3ème ligne sauf douleur/migraine (amitriptyline)",
+        "IMAO": "Phénelzine, tranylcypromine — très efficaces mais interactions alimentaires (tyramine → crise hypertensive) et médicamenteuses → réservés cas résistants"
+      },
+      "virage_antidepresseurs": "Antidépresseurs peuvent induire un épisode maniaque chez bipolaires non protégés (virage maniaque). Toujours couvrir d'un stabilisateur avant de prescrire un AD chez un bipolaire suspecté"
+    },
+    "retablissement_rehabilitation": {
+      "modele_retablissement": "Recovery model (Anthony 1993) — le rétablissement est possible même avec des symptômes persistants: 'un processus profondément personnel et unique de changement des attitudes, valeurs, sentiments, objectifs, compétences et rôles'. Au-delà de la seule réduction symptomatique",
+      "rehabilitation_psychosociale": "Entraînement compétences sociales (Bellack), appartements supervisés, emploi accompagné (IPS — Individual Placement and Support: supérieur aux approches pré-vocationnelles), WRAP (Wellness Recovery Action Plan)",
+      "stigmate": "Auto-stigmatisation: intériorisation des stéréotypes négatifs → honte, retrait soignant, compliance réduite. Interventions: psychoéducation, contact social, plaidoyer. Programme 'Crazy Like Us' (critique de l'exportation nosologie occidentale)"
+    }
+  }
+}

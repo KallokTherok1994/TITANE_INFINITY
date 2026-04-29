@@ -552,6 +552,12 @@ const DEVELOPPEMENT_ENFANT_PARENTALITE: &str =
 // ── v31.4.8 expansion — phase 33 (psychosomatique corps-esprit) ──
 const PSYCHOSOMATIQUE_CORPS_ESPRIT: &str =
     include_str!("../../data/knowledge_base/default/psychosomatique_corps_esprit.json");
+// ── v31.4.9 expansion — phase 34 (psychiatrie clinique et diagnostics) ──
+const PSYCHIATRIE_CLINIQUE_DIAGNOSTICS: &str =
+    include_str!("../../data/knowledge_base/default/psychiatrie_clinique_diagnostics.json");
+// ── v31.5.0 expansion — phase 34 (neuropsychologie, mémoire et cerveau) ──
+const NEUROPSYCHOLOGIE_MEMOIRE_CERVEAU: &str =
+    include_str!("../../data/knowledge_base/default/neuropsychologie_memoire_cerveau.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1119,6 +1125,15 @@ impl DefaultKnowledgeBase {
             "psychosomatique_corps_esprit",
             PSYCHOSOMATIQUE_CORPS_ESPRIT,
         ),
+        // v31.4.9+31.5.0 expansion — phase 34 (psychiatrie clinique + neuropsychologie)
+        (
+            "psychiatrie_clinique_diagnostics",
+            PSYCHIATRIE_CLINIQUE_DIAGNOSTICS,
+        ),
+        (
+            "neuropsychologie_memoire_cerveau",
+            NEUROPSYCHOLOGIE_MEMOIRE_CERVEAU,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1447,7 +1462,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 211,
+            result.entries_loaded >= 213,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1619,11 +1634,13 @@ mod tests {
             "deuil_rupture_transitions",
             "emotion_regulation_dbt_advanced",
             "neurodiversite_adhd_autisme_hpi",
+            "neuropsychologie_memoire_cerveau",
             "addiction_entretien_motivationnel",
             "developpement_enfant_parentalite",
             "intimite_sexualite_couples_eft",
             "psychodynamique_mecanismes_defense",
             "psychosomatique_corps_esprit",
+            "psychiatrie_clinique_diagnostics",
             "sante_mentale_prevention_resilience",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
