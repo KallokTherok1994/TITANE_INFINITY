@@ -1,62 +1,23 @@
 {
-  "$schema": "https://schema.tauri.app/config/v2.json",
-  "productName": "Titan-Stable",
-  "version": "31.2.34",
+  "version": "31.2.35",
   "identifier": "com.titane.infinity.stable",
   "bundle": {
-    "active": true,
-    "targets": [
-      "appimage",
-      "deb"
-    ],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
-      "icons/256x256.png",
-      "icons/512x512.png"
+      "icons/icon.icns",
+      "icons/icon.ico"
     ],
-    "linux": {
-      "deb": {
-        "depends": [
-          "libayatana-appindicator3-1",
-          "libwebkit2gtk-4.1-0",
-          "libgtk-3-0"
-        ],
-        "conflicts": [
-          "titane-infinity"
-        ],
-        "replaces": [
-          "titane-infinity"
-        ],
-        "provides": [
-          "titane-infinity"
-        ],
-        "postInstallScript": "../scripts/install/stable-postinst.sh"
-      }
-    }
+    "resources": [],
+    "copyright": "© 2025-2026 TITANE∞",
+    "category": "Productivity",
+    "active": true,
+    "targets": "all"
   },
   "app": {
-    "windows": [
-      {
-        "label": "main",
-        "title": "TITANE∞",
-        "url": "index.html",
-        "width": 1280,
-        "height": 800,
-        "minWidth": 800,
-        "minHeight": 600,
-        "resizable": true,
-        "fullscreen": false,
-        "decorations": true,
-        "transparent": false,
-        "center": true,
-        "devtools": false,
-        "visible": true
-      }
-    ],
     "security": {
-      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
@@ -94,18 +55,6 @@
           ],
           "allow": [
             {
-              "command": "get_runtime_config"
-            },
-            {
-              "command": "is_onboarding_complete"
-            },
-            {
-              "command": "complete_onboarding"
-            },
-            {
-              "command": "get_onboarding_preferences"
-            },
-            {
               "command": "get_helios_state"
             },
             {
@@ -113,6 +62,9 @@
             },
             {
               "command": "get_helios_metrics"
+            },
+            {
+              "command": "get_system_info"
             },
             {
               "command": "get_memory_state"
@@ -154,13 +106,616 @@
               "command": "save_chat_interaction"
             },
             {
+              "command": "memory_save_chat_interaction"
+            },
+            {
+              "command": "memory_get_active_projects"
+            },
+            {
+              "command": "memory_get_recent_decisions"
+            },
+            {
+              "command": "memory_get_knowledge"
+            },
+            {
+              "command": "memory_get_active_rituals"
+            },
+            {
+              "command": "memory_get_timeline"
+            },
+            {
               "command": "memory_ingest_file"
+            },
+            {
+              "command": "import_file"
+            },
+            {
+              "command": "get_all_files"
+            },
+            {
+              "command": "get_files_by_category"
+            },
+            {
+              "command": "clear_memory"
+            },
+            {
+              "command": "store_file"
+            },
+            {
+              "command": "memory_init"
+            },
+            {
+              "command": "memory_shutdown"
+            },
+            {
+              "command": "memory_is_running"
+            },
+            {
+              "command": "memory_version"
+            },
+            {
+              "command": "memory_os_store"
+            },
+            {
+              "command": "memory_os_store_batch"
+            },
+            {
+              "command": "memory_recall_by_id"
+            },
+            {
+              "command": "memory_recall_keyword"
+            },
+            {
+              "command": "memory_recall_semantic"
+            },
+            {
+              "command": "memory_recall_recent"
+            },
+            {
+              "command": "memory_recall_by_type"
+            },
+            {
+              "command": "memory_recall_by_tag"
+            },
+            {
+              "command": "memory_os_delete"
+            },
+            {
+              "command": "memory_consolidate"
+            },
+            {
+              "command": "memory_forget"
+            },
+            {
+              "command": "memory_stats"
+            },
+            {
+              "command": "memory_snapshot"
+            },
+            {
+              "command": "memory_stm_snapshot"
+            },
+            {
+              "command": "memory_mtm_snapshot"
+            },
+            {
+              "command": "memory_ltm_snapshot"
+            },
+            {
+              "command": "memory_signal_stats"
+            },
+            {
+              "command": "memory_stm_entries"
+            },
+            {
+              "command": "memory_mtm_entries"
+            },
+            {
+              "command": "memory_all_tags"
+            },
+            {
+              "command": "memory_save_entry"
+            },
+            {
+              "command": "memory_get_entry"
+            },
+            {
+              "command": "memory_delete_entry"
+            },
+            {
+              "command": "memory_clear_all"
+            },
+            {
+              "command": "memory_search"
+            },
+            {
+              "command": "memory_export"
+            },
+            {
+              "command": "memory_store"
+            },
+            {
+              "command": "memory_store_conversation"
+            },
+            {
+              "command": "memory_get_related"
+            },
+            {
+              "command": "memory_get_all_keys"
+            },
+            {
+              "command": "memory_rebuild_index"
+            },
+            {
+              "command": "memory_get_stats"
+            },
+            {
+              "command": "memory_prune"
+            },
+            {
+              "command": "memory_delete"
+            },
+            {
+              "command": "memory_import"
+            },
+            {
+              "command": "check_online_capabilities"
+            },
+            {
+              "command": "read_production_week1_csv"
+            },
+            {
+              "command": "memory_evolution_status"
+            },
+            {
+              "command": "memory_evolve_full"
+            },
+            {
+              "command": "memory_get_clusters"
+            },
+            {
+              "command": "memory_hierarchy_health"
+            },
+            {
+              "command": "memory_retrieve"
+            },
+            {
+              "command": "memory_update"
+            },
+            {
+              "command": "memory_search_semantic"
+            },
+            {
+              "command": "memory_compress"
+            },
+            {
+              "command": "memory_promote"
+            },
+            {
+              "command": "memory_archive"
+            },
+            {
+              "command": "memory_health"
+            },
+            {
+              "command": "memory_maintenance"
+            },
+            {
+              "command": "context_save"
+            },
+            {
+              "command": "context_restore"
+            },
+            {
+              "command": "context_clear"
+            },
+            {
+              "command": "persistent_memory_read"
+            },
+            {
+              "command": "persistent_memory_get_bundles"
+            },
+            {
+              "command": "persistent_memory_get_context"
+            },
+            {
+              "command": "persistent_memory_get_stats"
+            },
+            {
+              "command": "persistent_memory_write_entry"
+            },
+            {
+              "command": "persistent_memory_create_summary"
+            },
+            {
+              "command": "persistent_memory_create_bundle"
+            },
+            {
+              "command": "persistent_memory_add_to_bundle"
+            },
+            {
+              "command": "persistent_memory_promote_entry"
+            },
+            {
+              "command": "persistent_memory_archive_entry"
+            },
+            {
+              "command": "persistent_memory_delete_entry"
+            },
+            {
+              "command": "persistent_memory_export"
+            },
+            {
+              "command": "ai_send_prompt"
+            },
+            {
+              "command": "ai_get_response"
+            },
+            {
+              "command": "ai_set_model"
+            },
+            {
+              "command": "ai_get_available_models"
+            },
+            {
+              "command": "query_ai"
+            },
+            {
+              "command": "get_ai_status"
+            },
+            {
+              "command": "test_gemini"
+            },
+            {
+              "command": "test_ollama"
+            },
+            {
+              "command": "ping_gemini"
+            },
+            {
+              "command": "ping_ollama"
+            },
+            {
+              "command": "chat_generate"
+            },
+            {
+              "command": "upload_and_process_file"
+            },
+            {
+              "command": "chat_get_providers_status"
+            },
+            {
+              "command": "chat_check_providers"
+            },
+            {
+              "command": "chat_create_conversation"
+            },
+            {
+              "command": "chat_get_conversation"
+            },
+            {
+              "command": "chat_delete_conversation"
+            },
+            {
+              "command": "create_conversation"
+            },
+            {
+              "command": "list_conversations"
+            },
+            {
+              "command": "load_conversation"
+            },
+            {
+              "command": "chat_set_gemini_key"
+            },
+            {
+              "command": "chat_stream_message"
+            },
+            {
+              "command": "multi_ai_generate"
+            },
+            {
+              "command": "multi_ai_generate_dual"
+            },
+            {
+              "command": "multi_ai_generate_fused"
+            },
+            {
+              "command": "multi_ai_providers"
+            },
+            {
+              "command": "multi_ai_best_provider"
+            },
+            {
+              "command": "multi_ai_evaluate"
+            },
+            {
+              "command": "multi_ai_set_fallback"
+            },
+            {
+              "command": "multi_ai_configure_keys"
+            },
+            {
+              "command": "multi_ai_cache_stats"
+            },
+            {
+              "command": "multi_ai_clear_cache"
+            },
+            {
+              "command": "generate_response"
+            },
+            {
+              "command": "stream_response"
+            },
+            {
+              "command": "speak_text"
+            },
+            {
+              "command": "save_memory"
+            },
+            {
+              "command": "load_memory"
+            },
+            {
+              "command": "reset_memory"
+            },
+            {
+              "command": "health_check"
+            },
+            {
+              "command": "cp_get_ai_config"
+            },
+            {
+              "command": "cp_set_ai_config"
+            },
+            {
+              "command": "cp_get_design_config"
+            },
+            {
+              "command": "cp_set_design_config"
+            },
+            {
+              "command": "cp_get_modules_status"
+            },
+            {
+              "command": "cp_toggle_module"
+            },
+            {
+              "command": "cp_get_network_config"
+            },
+            {
+              "command": "cp_set_network_config"
+            },
+            {
+              "command": "cp_get_security_config"
+            },
+            {
+              "command": "cp_set_security_config"
+            },
+            {
+              "command": "cp_check_for_updates"
+            },
+            {
+              "command": "cp_install_update"
+            },
+            {
+              "command": "speak"
+            },
+            {
+              "command": "stop_speaking"
+            },
+            {
+              "command": "is_speaking"
+            },
+            {
+              "command": "pause_speaking"
+            },
+            {
+              "command": "resume_speaking"
+            },
+            {
+              "command": "start_recording"
+            },
+            {
+              "command": "stop_recording"
+            },
+            {
+              "command": "cancel_recording"
+            },
+            {
+              "command": "is_recording"
+            },
+            {
+              "command": "get_recording_status"
+            },
+            {
+              "command": "transcribe_audio"
+            },
+            {
+              "command": "tts_speak"
+            },
+            {
+              "command": "tts_stop"
+            },
+            {
+              "command": "test_tts"
+            },
+            {
+              "command": "get_audio_output_devices"
+            },
+            {
+              "command": "get_audio_input_devices"
+            },
+            {
+              "command": "set_audio_output_device"
+            },
+            {
+              "command": "set_audio_input_device"
+            },
+            {
+              "command": "test_microphone"
+            },
+            {
+              "command": "singularity_get_state"
+            },
+            {
+              "command": "singularity_get_full_state"
+            },
+            {
+              "command": "singularity_get_physical"
+            },
+            {
+              "command": "singularity_get_cognitive"
+            },
+            {
+              "command": "singularity_get_symbolic"
+            },
+            {
+              "command": "singularity_get_adaptive"
+            },
+            {
+              "command": "singularity_get_meta"
+            },
+            {
+              "command": "singularity_get_global_coherence"
+            },
+            {
+              "command": "singularity_is_critical"
+            },
+            {
+              "command": "get_singularity_state"
+            },
+            {
+              "command": "sync_singularity"
+            },
+            {
+              "command": "singularity_update_metric"
+            },
+            {
+              "command": "singularity_reset"
+            },
+            {
+              "command": "update_singularity_state"
+            },
+            {
+              "command": "singularity_self_check"
+            },
+            {
+              "command": "singularity_update_physical"
+            },
+            {
+              "command": "singularity_update_cognitive"
+            },
+            {
+              "command": "singularity_update_symbolic"
+            },
+            {
+              "command": "singularity_update_adaptive"
+            },
+            {
+              "command": "singularity_update_meta"
+            },
+            {
+              "command": "singularity_update_full_state"
+            },
+            {
+              "command": "singularity_save_state"
+            },
+            {
+              "command": "singularity_load_state"
+            },
+            {
+              "command": "singularity_get"
+            },
+            {
+              "command": "singularity_set"
+            },
+            {
+              "command": "singularity_diff"
+            },
+            {
+              "command": "singularity_hash"
+            },
+            {
+              "command": "singularity_sync"
+            },
+            {
+              "command": "singularity_meta"
+            },
+            {
+              "command": "singularity_integrity"
+            },
+            {
+              "command": "singularity_repair"
+            },
+            {
+              "command": "singularity_export_json"
+            },
+            {
+              "command": "singularity_snapshot"
+            },
+            {
+              "command": "singularity_selftest_full"
             },
             {
               "command": "validate_nexus"
             },
             {
               "command": "get_nexus_graph"
+            },
+            {
+              "command": "xp_add"
+            },
+            {
+              "command": "xp_get_level"
+            },
+            {
+              "command": "xp_get_total"
+            },
+            {
+              "command": "xp_get_state"
+            },
+            {
+              "command": "experience_get_state"
+            },
+            {
+              "command": "exp_get_global_state"
+            },
+            {
+              "command": "exp_get_categories"
+            },
+            {
+              "command": "exp_get_projects"
+            },
+            {
+              "command": "exp_get_project_stats"
+            },
+            {
+              "command": "exp_get_talents"
+            },
+            {
+              "command": "exp_get_timeline"
+            },
+            {
+              "command": "exp_get_timeline_stats"
+            },
+            {
+              "command": "exp_add_knowledge"
+            },
+            {
+              "command": "experience_update_state"
+            },
+            {
+              "command": "cognitive_analyze"
+            },
+            {
+              "command": "cognitive_get_insights"
+            },
+            {
+              "command": "get_cognitive_state"
+            },
+            {
+              "command": "update_cognitive_mode"
             },
             {
               "command": "orchestration_get_cognitive_state"
@@ -211,183 +766,505 @@
               "command": "one_core_cleanup"
             },
             {
-              "command": "singularity_get_full_state"
-            },
-            {
-              "command": "singularity_get_physical"
-            },
-            {
-              "command": "singularity_get_cognitive"
-            },
-            {
-              "command": "singularity_get_global_coherence"
-            },
-            {
-              "command": "singularity_is_critical"
-            },
-            {
-              "command": "get_singularity_state"
-            },
-            {
-              "command": "sync_singularity"
-            },
-            {
-              "command": "singularity_get_symbolic"
-            },
-            {
-              "command": "singularity_get_adaptive"
-            },
-            {
-              "command": "singularity_get_meta"
-            },
-            {
-              "command": "singularity_get"
-            },
-            {
-              "command": "singularity_set"
-            },
-            {
-              "command": "singularity_diff"
-            },
-            {
-              "command": "singularity_hash"
-            },
-            {
-              "command": "singularity_sync"
-            },
-            {
-              "command": "singularity_meta"
-            },
-            {
-              "command": "singularity_integrity"
-            },
-            {
-              "command": "singularity_repair"
-            },
-            {
-              "command": "singularity_export_json"
-            },
-            {
-              "command": "singularity_snapshot"
-            },
-            {
-              "command": "singularity_selftest_full"
-            },
-            {
-              "command": "experience_get_state"
-            },
-            {
-              "command": "experience_update_state"
-            },
-            {
-              "command": "import_file"
-            },
-            {
-              "command": "file_analyze"
-            },
-            {
-              "command": "upload_and_process_file"
-            },
-            {
               "command": "get_logs"
             },
             {
               "command": "clear_logs"
             },
             {
-              "command": "get_system_info"
+              "command": "devops_run"
             },
             {
-              "command": "cp_get_ai_config"
+              "command": "devops_stats"
             },
             {
-              "command": "cp_set_ai_config"
+              "command": "total_dev_unlock"
             },
             {
-              "command": "chat_generate"
+              "command": "total_dev_session_status"
             },
             {
-              "command": "chat_stream_message"
+              "command": "total_dev_revoke"
             },
             {
-              "command": "fullbody_init"
+              "command": "total_dev_git_op"
             },
             {
-              "command": "fullbody_update_pose"
+              "command": "total_dev_run_command"
             },
             {
-              "command": "fullbody_update_expression"
+              "command": "total_dev_read_file"
             },
             {
-              "command": "fullbody_get_state"
+              "command": "secure_import_file"
             },
             {
-              "command": "avatar_get_expression"
+              "command": "secure_read_file"
             },
             {
-              "command": "tts_speak_parler"
+              "command": "secure_list_files"
             },
             {
-              "command": "tts_stop"
+              "command": "secure_delete_file"
             },
             {
-              "command": "tts_is_speaking"
+              "command": "get_gemini_key_status"
             },
             {
-              "command": "tts_get_status"
+              "command": "get_openai_key_status"
             },
             {
-              "command": "agenda_delete_event"
+              "command": "get_anthropic_key_status"
             },
             {
-              "command": "agenda_save_event"
+              "command": "get_copilot_key_status"
             },
             {
-              "command": "agenda_save_events"
+              "command": "chat_set_openai_key"
             },
             {
-              "command": "agenda_sync"
+              "command": "chat_set_anthropic_key"
             },
             {
-              "command": "calibrate_titane_voice"
+              "command": "get_ia_policies"
             },
             {
-              "command": "chat_mode_change"
+              "command": "get_permission_matrix"
             },
             {
-              "command": "chat_mode_sync"
+              "command": "get_security_log"
             },
             {
-              "command": "evolution_save_state"
+              "command": "secure_store_secret"
             },
             {
-              "command": "submit_evolution_data"
+              "command": "get_secrets_status"
             },
             {
-              "command": "knowledge_ingest"
+              "command": "has_secret"
             },
             {
-              "command": "knowledge_save_state"
+              "command": "delete_secret"
             },
             {
-              "command": "progression_save_state"
+              "command": "get_permission_audit"
             },
             {
-              "command": "security_audit_sync_journal"
+              "command": "validate_chat_message"
             },
             {
-              "command": "hybrid_memory_publish_governed_report"
+              "command": "check_system_integrity"
             },
             {
-              "command": "knowledge_base_runtime_snapshot"
+              "command": "state_get"
             },
             {
-              "command": "security_audit_publish_signed_export"
+              "command": "state_save"
+            },
+            {
+              "command": "get_system_state"
+            },
+            {
+              "command": "get_module_health"
+            },
+            {
+              "command": "session_start"
+            },
+            {
+              "command": "session_end"
+            },
+            {
+              "command": "session_get_current"
+            },
+            {
+              "command": "start_session"
+            },
+            {
+              "command": "end_session"
+            },
+            {
+              "command": "get_session_info"
+            },
+            {
+              "command": "run_hardening_selftest"
+            },
+            {
+              "command": "vad_get_state"
+            },
+            {
+              "command": "vad_process_frame"
+            },
+            {
+              "command": "vad_configure"
+            },
+            {
+              "command": "vad_reset"
+            },
+            {
+              "command": "vad_test"
+            },
+            {
+              "command": "voice_start_listening"
+            },
+            {
+              "command": "voice_stop_listening"
+            },
+            {
+              "command": "voice_transcribe_audio"
+            },
+            {
+              "command": "voice_detect_wake_word"
+            },
+            {
+              "command": "voice_play_audio"
+            },
+            {
+              "command": "voice_stop_speaking"
+            },
+            {
+              "command": "voice_get_config"
+            },
+            {
+              "command": "voice_update_config"
+            },
+            {
+              "command": "voice_get_status"
+            },
+            {
+              "command": "voice_calibrate_microphone"
+            },
+            {
+              "command": "voice_cancel_recording"
+            },
+            {
+              "command": "voice_is_recording"
+            },
+            {
+              "command": "voice_enable_duplex"
+            },
+            {
+              "command": "voice_disable_duplex"
+            },
+            {
+              "command": "voice_check_interruption"
+            },
+            {
+              "command": "voice_test_pipeline"
+            },
+            {
+              "command": "voice_get_available_models"
+            },
+            {
+              "command": "audio_capture_stop"
+            },
+            {
+              "command": "audio_capture_status"
+            },
+            {
+              "command": "audio_capture_get_chunk"
+            },
+            {
+              "command": "audio_capture_export_wav"
+            },
+            {
+              "command": "stop_streaming"
+            },
+            {
+              "command": "get_streaming_state"
+            },
+            {
+              "command": "get_streaming_stats"
+            },
+            {
+              "command": "force_stop_streaming"
+            },
+            {
+              "command": "check_local_tts"
+            },
+            {
+              "command": "titan_persist_event"
+            },
+            {
+              "command": "titan_force_snapshot"
+            },
+            {
+              "command": "titan_force_snapshot_current"
+            },
+            {
+              "command": "titan_load_state"
+            },
+            {
+              "command": "titan_get_events_since"
+            },
+            {
+              "command": "titan_list_snapshots"
+            },
+            {
+              "command": "titan_recover_state"
+            },
+            {
+              "command": "titan_get_persistence_status"
+            },
+            {
+              "command": "titan_verify_integrity"
+            },
+            {
+              "command": "titan_get_last_snapshot"
+            },
+            {
+              "command": "sc_run_quick_diagnostics"
+            },
+            {
+              "command": "sc_run_full_diagnostics"
+            },
+            {
+              "command": "sc_get_diagnostic_status"
+            },
+            {
+              "command": "sc_get_cluster_status"
+            },
+            {
+              "command": "sc_get_cluster_peers"
+            },
+            {
+              "command": "sc_get_logs"
+            },
+            {
+              "command": "sc_get_log_stats"
+            },
+            {
+              "command": "sc_hypervision_get_state"
+            },
+            {
+              "command": "sc_hypervision_get_metrics"
+            },
+            {
+              "command": "sc_hypervision_get_layers"
+            },
+            {
+              "command": "sc_hypervision_get_anomalies"
+            },
+            {
+              "command": "sc_hypervision_start"
+            },
+            {
+              "command": "sc_initialize_cluster"
+            },
+            {
+              "command": "sc_shutdown_cluster"
+            },
+            {
+              "command": "get_runtime_config"
+            },
+            {
+              "command": "engine_init"
+            },
+            {
+              "command": "engine_tick"
+            },
+            {
+              "command": "engine_stop"
+            },
+            {
+              "command": "meta_mode_reset"
+            },
+            {
+              "command": "qa_run_all"
+            },
+            {
+              "command": "qa_run_module"
+            },
+            {
+              "command": "qa_get_last_report"
+            },
+            {
+              "command": "autofix_detect_rust_warnings"
+            },
+            {
+              "command": "autofix_detect_typescript_errors"
+            },
+            {
+              "command": "autofix_detect_react_hook_violations"
+            },
+            {
+              "command": "autofix_detect_invalid_states"
+            },
+            {
+              "command": "autofix_fix_issue"
+            },
+            {
+              "command": "autofix_fix_all"
+            },
+            {
+              "command": "autofix_get_history"
+            },
+            {
+              "command": "autofix_get_stats"
+            },
+            {
+              "command": "autofix_reset"
+            },
+            {
+              "command": "autofix_rust_warning"
+            },
+            {
+              "command": "autofix_typescript_error"
+            },
+            {
+              "command": "autofix_reset_state"
+            },
+            {
+              "command": "autofix_restart_pipeline"
+            },
+            {
+              "command": "autofix_restart_tauri_command"
+            },
+            {
+              "command": "autofix_resync_lipsync"
+            },
+            {
+              "command": "autofix_add_mutex"
+            },
+            {
+              "command": "autoheal_detect_broken"
+            },
+            {
+              "command": "autoheal_detect_broken_modules"
+            },
+            {
+              "command": "autoheal_reset_cognitive"
+            },
+            {
+              "command": "autoheal_init_cognitive"
+            },
+            {
+              "command": "autoheal_reset_adaptive"
+            },
+            {
+              "command": "autoheal_clear_narrative"
+            },
+            {
+              "command": "autoheal_init_narrative"
+            },
+            {
+              "command": "autoheal_clear_tts_queue"
+            },
+            {
+              "command": "autoheal_init_tts"
+            },
+            {
+              "command": "autoheal_resync_lipsync"
+            },
+            {
+              "command": "autoheal_rebuild_memory_index"
+            },
+            {
+              "command": "autoheal_validate_memory"
+            },
+            {
+              "command": "autoheal_stop_pipeline"
+            },
+            {
+              "command": "autoheal_clear_pipeline"
+            },
+            {
+              "command": "autoheal_start_pipeline"
+            },
+            {
+              "command": "autoheal_heal_cognitive_module"
+            },
+            {
+              "command": "autoheal_heal_tts_module"
+            },
+            {
+              "command": "autoheal_heal_lipsync_module"
+            },
+            {
+              "command": "autoheal_heal_memory_module"
+            },
+            {
+              "command": "autoheal_heal_pipeline"
+            },
+            {
+              "command": "autoheal_resync_state"
+            },
+            {
+              "command": "autoheal_get_history"
+            },
+            {
+              "command": "autoheal_reset"
+            },
+            {
+              "command": "persona_initialize"
+            },
+            {
+              "command": "persona_get_state"
+            },
+            {
+              "command": "persona_update"
+            },
+            {
+              "command": "persona_react"
+            },
+            {
+              "command": "persona_reset"
+            },
+            {
+              "command": "persona_get_multipliers"
+            },
+            {
+              "command": "narrative_generate"
+            },
+            {
+              "command": "narrative_get_style"
+            },
+            {
+              "command": "narrative_set_style"
+            },
+            {
+              "command": "narrative_get_identity"
+            },
+            {
+              "command": "narrative_evolve"
+            },
+            {
+              "command": "narrative_get_archetype"
+            },
+            {
+              "command": "narrative_set_archetype"
+            },
+            {
+              "command": "adaptive_get_profile"
+            },
+            {
+              "command": "adaptive_set_mode"
+            },
+            {
+              "command": "adaptive_learn"
+            },
+            {
+              "command": "adaptive_run_optimization"
+            },
+            {
+              "command": "adaptive_get_history"
+            },
+            {
+              "command": "adaptive_capture_sample"
+            },
+            {
+              "command": "adaptive_get_summary"
+            },
+            {
+              "command": "performance_get_metrics"
             }
           ],
           "deny": []
         }
       ]
+    },
+    "trayIcon": {
+      "id": "main-tray",
+      "iconPath": "icons/icon.png"
     }
   },
   "build": {

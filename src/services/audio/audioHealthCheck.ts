@@ -115,8 +115,9 @@ class AudioHealthService {
     const start = performance.now();
     const env = detectEnvironment();
 
-    // ═══ MODE TAURI: Utiliser le backend Rust ═══
-    if (env.isTauri) {
+    // ═══ MODE TAURI ANDROID: Utiliser Web APIs uniquement (pas de backend Rust sur Android) ═══
+    // ═══ MODE TAURI DESKTOP: Utiliser le backend Rust ═══
+    if (env.isTauri && !env.isAndroid) {
       try {
         const result = await audioService.testMicrophone();
 

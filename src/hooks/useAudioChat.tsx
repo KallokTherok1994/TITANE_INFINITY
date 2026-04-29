@@ -8,6 +8,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { safeInvoke } from '@/utils/invoke';
+import { detectEnvironment } from '@/core/tauri/environment';
 import type {
   SpeechRecognition,
   SpeechRecognitionEvent,
@@ -196,23 +197,28 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
 
       setState(prev => ({ ...prev, isSpeaking: true, error: null }));
 
-      try {
-        // Try Tauri TTS first
-        const result = await safeInvoke<{ success: boolean }>('tts_speak', {
-          text,
-          settings: buildTtsSettingsDefaults({
-            voiceId: config.voiceId || 'default',
-            language: config.language || 'fr-FR',
-          }),
-        });
+      const env = detectEnvironment();
 
-        if (result?.success) {
-          console.warn('✅ TTS Tauri réussi');
-          setState(prev => ({ ...prev, isSpeaking: false }));
-          return;
+      // Android: skip Tauri TTS (Linux-only binaries), use Web Speech API directly
+      if (!env.isAndroid) {
+        try {
+          // Try Tauri TTS first
+          const result = await safeInvoke<{ success: boolean }>('tts_speak', {
+            text,
+            settings: buildTtsSettingsDefaults({
+              voiceId: config.voiceId || 'default',
+              language: config.language || 'fr-FR',
+            }),
+          });
+
+          if (result?.success) {
+            console.warn('✅ TTS Tauri réussi');
+            setState(prev => ({ ...prev, isSpeaking: false }));
+            return;
+          }
+        } catch (error) {
+          console.warn('⚠️ TTS Tauri échoué, fallback Web Speech API');
         }
-      } catch (error) {
-        console.warn('⚠️ TTS Tauri échoué, fallback Web Speech API');
       }
 
       // Fallback to Web Speech API

@@ -109,27 +109,38 @@ fn run_tracked_command(mut command: Command, context: &str) -> CommandResult<()>
 }
 
 fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> CommandResult<()> {
-    if let Some(device_id) = output_device_id {
-        if command_exists("pw-play") {
-            let mut command = Command::new("pw-play");
-            command.args(["--target", device_id, output_path]);
-            return run_tracked_command(command, "lecture audio pw-play");
+    // Android: Linux audio binaries not available — Web Speech API fallback handled on frontend
+    #[cfg(target_os = "android")]
+    {
+        let _ = output_path;
+        let _ = output_device_id;
+        return Err("AUDIO_ANDROID_UNSUPPORTED: lecture audio via système non disponible sur Android".to_string());
+    }
+
+    #[cfg(not(target_os = "android"))]
+    {
+        if let Some(device_id) = output_device_id {
+            if command_exists("pw-play") {
+                let mut command = Command::new("pw-play");
+                command.args(["--target", device_id, output_path]);
+                return run_tracked_command(command, "lecture audio pw-play");
+            }
         }
-    }
 
-    if command_exists("paplay") {
-        let mut command = Command::new("paplay");
-        command.arg(output_path);
-        return run_tracked_command(command, "lecture audio paplay");
-    }
+        if command_exists("paplay") {
+            let mut command = Command::new("paplay");
+            command.arg(output_path);
+            return run_tracked_command(command, "lecture audio paplay");
+        }
 
-    if command_exists("aplay") {
-        let mut command = Command::new("aplay");
-        command.arg(output_path);
-        return run_tracked_command(command, "lecture audio aplay");
-    }
+        if command_exists("aplay") {
+            let mut command = Command::new("aplay");
+            command.arg(output_path);
+            return run_tracked_command(command, "lecture audio aplay");
+        }
 
-    Err("Aucun lecteur audio système disponible (pw-play, paplay, aplay)".to_string())
+        Err("Aucun lecteur audio système disponible (pw-play, paplay, aplay)".to_string())
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -197,6 +208,16 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
         settings.engine
     );
 
+    // Android: Linux TTS stack (piper/espeak/pw-play) not available — frontend uses Web Speech API
+    #[cfg(target_os = "android")]
+    {
+        let _ = text;
+        let _ = settings;
+        return Err("TTS_ANDROID_UNSUPPORTED: utiliser Web Speech API sur Android".to_string());
+    }
+
+    #[cfg(not(target_os = "android"))]
+    {
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
 
     IS_SPEAKING.store(true, Ordering::Relaxed);
@@ -305,6 +326,7 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
     IS_TTS_PAUSED.store(false, Ordering::Relaxed);
     IS_SPEAKING.store(false, Ordering::Relaxed);
     result
+    } // end #[cfg(not(target_os = "android"))]
 }
 
 #[cfg(test)]
@@ -355,6 +377,16 @@ mod tests {
 }
 
 async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<()> {
+    // Android: espeak not available — should not be called (tts_speak returns early on Android)
+    #[cfg(target_os = "android")]
+    {
+        let _ = text;
+        let _ = settings;
+        return Err("TTS_ANDROID_UNSUPPORTED: espeak non disponible sur Android".to_string());
+    }
+
+    #[cfg(not(target_os = "android"))]
+    {
     let speed = (settings.rate * 175.0).clamp(80.0, 450.0) as u32;
     let pitch = (settings.pitch * 50.0).clamp(0.0, 99.0) as u32;
     let voice = if settings.language.starts_with("fr") {
@@ -422,6 +454,7 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
     run_tracked_command(command, "lecture espeak/espeak-ng")?;
 
     Ok(())
+    } // end #[cfg(not(target_os = "android"))]
 }
 
 #[tauri::command]

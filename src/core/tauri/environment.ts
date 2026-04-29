@@ -15,6 +15,8 @@ export interface EnvironmentInfo {
   isTauri: boolean;
   /** Exécution dans un navigateur classique */
   isBrowser: boolean;
+  /** Exécution sur Android (Tauri mobile) */
+  isAndroid: boolean;
   /** Protocole utilisé (tauri, http, https) */
   protocol: string;
   /** Origin complète */
@@ -42,6 +44,7 @@ export function detectEnvironment(): EnvironmentInfo {
     return {
       isTauri: false,
       isBrowser: false,
+      isAndroid: false,
       protocol: 'node',
       origin: 'server-side',
       isDev: true,
@@ -92,9 +95,13 @@ export function detectEnvironment(): EnvironmentInfo {
     // Silent fail
   }
 
+  // 🤖 DÉTECTION ANDROID: User-Agent contient 'Android' (Tauri mobile)
+  const isAndroid = userAgent.toLowerCase().includes('android');
+
   return {
     isTauri,
     isBrowser,
+    isAndroid,
     protocol,
     origin,
     tauriVersion,
