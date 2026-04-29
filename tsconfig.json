@@ -29,7 +29,9 @@
       "@services/*": ["./src/services/*"],
       "@stores/*": ["./src/stores/*"],
       "@features/*": ["./src/features/*"],
-      "@cognitive/*": ["./src/cognitive/*"]
+      "@cognitive/*": ["./src/cognitive/*"],
+      "@data/*": ["./data/*"],
+      "@config/*": ["./config/*"]
     },
 
     /* Linting - Enhanced Strict (Progressive) */

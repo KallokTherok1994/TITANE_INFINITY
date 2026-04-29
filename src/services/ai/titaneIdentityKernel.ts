@@ -1,4 +1,4 @@
-import titaneIdentityKernelDocument from '../../../data/knowledge_base/default/titane_identity_kernel_v31.json';
+import titaneIdentityKernelDocument from '@data/knowledge_base/default/titane_identity_kernel_v31.json';
 
 type TitaneIdentityKernelDocument = {
   category: string;

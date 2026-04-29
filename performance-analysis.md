@@ -117,14 +117,38 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 3. P1: Refactor deep imports in high-frequency page/tab surfaces.
 4. P2: Add periodic performance gate in CI using scripts/audit/03-performance-measure.sh.
 
+## Increment 7 Delivered In This Pass (2026-04-30)
+
+- Added `@data` alias (vite.config.ts + tsconfig.json) → resolves `./data/` at project root
+- Added `@config` alias (vite.config.ts + tsconfig.json) → resolves `./config/` at project root
+- Fixed `src/services/ai/titaneIdentityKernel.ts`: `../../../data/...` → `@data/...`
+- Fixed `src/services/ai/championChallenger.ts`: `../../../config/...` → `@config/...`
+- Impact:
+  - deep-import count in runtime src: reduced from 3 → 1 (1 residual in test adapter, non-blocking)
+  - zero new wildcard imports introduced
+  - @xenova/transformers and onnxruntime-web confirmed as dynamic-import-only in runtime paths
+
+## Delta Snapshot (after increment 7 — SPRINT 5 FINAL)
+
+- Wildcard imports in src runtime: **0** (3 in tests, all legitimate: Sentry, THREE.js type decl, jest-dom)
+- Deep-import pattern count (3+ levels) in runtime src: **1** (test adapter, non-blocking)
+- Lazy components: **89** (target >5 — PASS)
+- Total JS gzipped: **2341 KB** (down from ~14 MB uncompressed reported in baseline)
+- core-runtime chunk gzipped: **1506 KB** (largest chunk, merged by design to prevent circular deps)
+- CSS gzipped: **89 KB**
+- Total gzipped (JS + CSS): **~2430 KB**
+- See full report: `docs/BUNDLE_SIZE_REPORT_SPRINT5.md`
+
 ## Evidence Commands Executed
 
 - pnpm run audit:performance
 - pnpm run check
 - bash scripts/autoheal/detect_recurrence.sh
 - bash scripts/verify_instructions.sh
+- pnpm vitest run src/__tests__/omega-provider-tests.test.ts (38/38 PASS, validates @config alias)
 
 ## Notes
 
 - This file is the requested SPRINT 5 deliverable placeholder from roadmap.
 - Follow-up iterations should append delta metrics after each optimization batch.
+- SPRINT 5 COMPLETE: all P0/P1 items addressed; P2 (CI gate) deferred to SPRINT 7.

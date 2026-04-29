@@ -369,6 +369,8 @@ export default defineConfig(({ command }) => ({
       '@types': resolve(ROOT_DIR, './src/types'),
       '@assets': resolve(ROOT_DIR, './src/assets'),
       '@styles': resolve(ROOT_DIR, './src/styles'),
+      '@data': resolve(ROOT_DIR, './data'),
+      '@config': resolve(ROOT_DIR, './config'),
       // ✅ FIX: Removed Tauri API aliases - Let Vite resolve them naturally
       // Tauri v2 provides these modules correctly without manual aliasing
       // Polyfills for Node.js modules in browser

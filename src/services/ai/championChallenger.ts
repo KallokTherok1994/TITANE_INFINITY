@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import championChallengerRegistry from '../../../config/championChallenger.json';
+import championChallengerRegistry from '@config/championChallenger.json';
 import type { CanonicalMode } from './omegaModeClassifier';
 import { createLogger } from '@/utils/logger';
 import { secureInvoke } from '@/lib/security';
