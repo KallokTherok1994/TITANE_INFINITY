@@ -570,6 +570,12 @@ const SOCIOLOGIE_ECONOMIE_POLITIQUE: &str =
 // ── v31.5.4 expansion — phase 36 (neurosciences, émotions et décision) ──
 const NEUROSCIENCES_EMOTIONS_DECISION: &str =
     include_str!("../../data/knowledge_base/default/neurosciences_emotions_decision.json");
+// ── v31.5.5 expansion — phase 37 (communication, leadership et management) ──
+const COMMUNICATION_LEADERSHIP_MANAGEMENT: &str =
+    include_str!("../../data/knowledge_base/default/communication_leadership_management.json");
+// ── v31.5.6 expansion — phase 37 (psychologie de la santé et comportements) ──
+const PSYCHOLOGIE_SANTE_COMPORTEMENTS: &str =
+    include_str!("../../data/knowledge_base/default/psychologie_sante_comportements.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -1164,6 +1170,15 @@ impl DefaultKnowledgeBase {
             "neurosciences_emotions_decision",
             NEUROSCIENCES_EMOTIONS_DECISION,
         ),
+        // v31.5.5+31.5.6 expansion — phase 37 (communication/leadership/management + psychologie santé)
+        (
+            "communication_leadership_management",
+            COMMUNICATION_LEADERSHIP_MANAGEMENT,
+        ),
+        (
+            "psychologie_sante_comportements",
+            PSYCHOLOGIE_SANTE_COMPORTEMENTS,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1492,7 +1507,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 217,
+            result.entries_loaded >= 219,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1675,6 +1690,8 @@ mod tests {
             "sante_mentale_prevention_resilience",
             "sociologie_economie_politique",
             "neurosciences_emotions_decision",
+            "communication_leadership_management",
+            "psychologie_sante_comportements",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
             "therapies_humanistes_existentielles",

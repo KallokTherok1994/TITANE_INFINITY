@@ -567,6 +567,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts PSYCHIATRIE_CLINIQUE_DIAGNOSTICS + NEUROPSYCHOLOGIE_MEMOIRE_CERVEAU, +2 SOURCES entries, baseline >=211 -> >=213, expected list updated (phase 34)
 - `knowledge_base_default.rs`: +2 consts PHILOSOPHIE_ETHIQUE_EXISTENTIELLE + RELATIONS_HUMAINES_GROUPES_SOCIAUX, +2 SOURCES entries, baseline >=213 -> >=215, expected list updated (phase 35)
 - `knowledge_base_default.rs`: +2 consts SOCIOLOGIE_ECONOMIE_POLITIQUE + NEUROSCIENCES_EMOTIONS_DECISION, +2 SOURCES entries, baseline >=215 -> >=217, expected list updated (phase 36)
+- `knowledge_base_default.rs`: +2 consts COMMUNICATION_LEADERSHIP_MANAGEMENT + PSYCHOLOGIE_SANTE_COMPORTEMENTS, +2 SOURCES entries, baseline >=217 -> >=219, expected list updated (phase 37)
 - Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=213 validated)
 
 ### Tests Rule 16

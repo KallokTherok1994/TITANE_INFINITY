@@ -1581,5 +1581,9 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 | `data/knowledge_base/default/neurosciences_emotions_decision.json` | KB JSON | v31.5.4 | 7 | 47 |
 | `src-tauri/src/knowledge_base_default.rs` | Rust | +16 consts +16 SOURCES, baseline >=217 | — | — |
 | `src/__tests__/services/ai/kb.sociologieNeurosciences.test.ts` | Vitest | 96 PASS (p36) | — | — |
+| `data/knowledge_base/default/communication_leadership_management.json` | KB JSON | v31.5.5 | 7 | 44 |
+| `data/knowledge_base/default/psychologie_sante_comportements.json` | KB JSON | v31.5.6 | 7 | 44 |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +18 consts +18 SOURCES, baseline >=219 | — | — |
+| `src/__tests__/services/ai/kb.communicationSante.test.ts` | Vitest | 152 PASS (p37) | — | — |
 
-Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30) → humaniste/existentiel + psychodynamique (p31) → addiction/EM + intimite/sexualite/EFT (p32) → developpement enfant/parentalite + psychosomatique corps-esprit (p33) → psychiatrie clinique diagnostics + neuropsychologie memoire cerveau (p34) → philosophie ethique existentielle + relations humaines groupes sociaux (p35) → sociologie/economie/politique + neurosciences/emotions/decision (p36)
+Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30) → humaniste/existentiel + psychodynamique (p31) → addiction/EM + intimite/sexualite/EFT (p32) → developpement enfant/parentalite + psychosomatique corps-esprit (p33) → psychiatrie clinique diagnostics + neuropsychologie memoire cerveau (p34) → philosophie ethique existentielle + relations humaines groupes sociaux (p35) → sociologie/economie/politique + neurosciences/emotions/decision (p36) → communication/leadership/management + psychologie sante/comportements (p37)
