@@ -3,7 +3,14 @@
   "entryPoints": [
     "./src/services/tauriBridge.ts",
     "./src/services/aiChatClient.ts",
-    "./src/hooks/index.ts"
+    "./src/hooks/index.ts",
+    "./src/engines/index.ts",
+    "./src/stores/index.ts",
+    "./src/types/index.ts",
+    "./src/utils/index.ts",
+    "./src/utils/invoke.ts",
+    "./src/contexts/AnimationContext.tsx",
+    "./src/contexts/LoggingContext.tsx"
   ],
   "exclude": [
     "**/*.test.ts",
@@ -17,7 +24,6 @@
   ],
   "tsconfig": "./tsconfig.json",
   "out": "./docs/api",
-  "plugin": ["typedoc-plugin-markdown"],
   "readme": "./README.md",
   "name": "TITANE∞ API Documentation",
   "includeVersion": true,

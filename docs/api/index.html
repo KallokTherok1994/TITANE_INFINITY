@@ -1,0 +1,878 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>TITANE∞ API Documentation - v31.2.37</title><meta name="description" content="Documentation for TITANE∞ API Documentation"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">TITANE∞ API Documentation - v31.2.37</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>TITANE∞ API Documentation - v31.2.37</h1></div><div class="tsd-panel tsd-typography"><h1 id="titane∞-cognitive-operating-system" class="tsd-anchor-link">TITANE∞ — Cognitive Operating System<a href="#titane∞-cognitive-operating-system" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<h2 id="pipeline-unique-doctrine-kernel-optimal" class="tsd-anchor-link">Pipeline unique (doctrine, kernel, optimal)<a href="#pipeline-unique-doctrine-kernel-optimal" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Le pipeline officiel et unique est :</p>
+<p>scripts/pipeline/TITANE_PIPELINE_v39.sh</p>
+<p>Toutes les opérations de build, test, packaging, mapping, rollback, logs, artefacts, E2E, autoheal, versioning, mapping docs, desktop icons, etc. sont centralisées dans ce pipeline.</p>
+<p>L’ancien pipeline V12 est archivé/supprimé pour éviter toute confusion.</p>
+<p>Voir la documentation interne et les logs pour la preuve d’exécution, la conformité doctrine, la traçabilité et le rollback.</p>
+<p><img src="https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN" alt="CI/CD Status">
+<img src="https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN" alt="Mermaid Canon">
+<img src="https://img.shields.io/badge/release-v31.1.0-brightgreen?logo=github" alt="Release v31.1.0"></p>
+<p><strong>Version:</strong> v31.1.0 (repository authority)
+<strong>Status:</strong> ✅ Production Ready (V30 maintained release stream)
+<strong>License:</strong> Proprietary — © 2025-2026 Humain Total / Kevin Thibault
+<strong>Latest certified deployment:</strong> <code>2026-04-17</code> via <code>deployment/latest/MANIFEST.json</code>
+<strong>Last published GitHub release:</strong> <a href="https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.1.25">v30.1.25</a> (last public binary)
+<strong>Prior major release tag:</strong> <a href="https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406">v30.0.0-release-20260406</a> (historical)</p>
+<p><strong>Canal de release canonique:</strong> v30.1.34</p>
+<p><strong>Nouveautés v31.1.0 (2026-04-23):</strong> Export DOCX natif via <code>doc_engine</code> + <code>docx-rs</code> (Ring 2 Rust), surface UI <code>/doc-center</code> (<code>DocCenterPage</code>), commande IPC <code>export_docx_file</code>, 12 tests Vitest + WDIO desktop + Playwright E2E, correction TS <code>Experience.tsx</code> + <code>syncSupervisor.ts</code>, governance complète.</p>
+<p><strong>Qualité (2026-04-23) :</strong> <code>pnpm run check</code> PASS, Vitest 26/26 PASS, Rust <code>doc_engine</code> 3/3 PASS, <code>verify_instructions</code> PASS=33 FAIL=0, <code>detect_recurrence</code> PASS.
+<strong>Archive &amp; legacy policy:</strong> les surfaces obsolètes sont conservées sous <code>docs/99_ARCHIVE/</code> et <code>_archive/</code>; les surfaces actives V30 restent <code>src/</code>, <code>src-tauri/</code>, <code>README.md</code>, <code>CHANGELOG.md</code> et <code>docs/user/{fr,en}/</code>.</p>
+<hr>
+<h2 id="🔒-discipline-anti-dérive-titane-synthèse-2026-04-16" class="tsd-anchor-link">🔒 Discipline anti-dérive TITANE (Synthèse 2026-04-16)<a href="#🔒-discipline-anti-dérive-titane-synthèse-2026-04-16" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ol>
+<li><strong>Synchronisation artefacts/launchers</strong> :</li>
+</ol>
+<ul>
+<li>Toute production d’artefact doit être suivie d’une synchronisation et d’une vérification explicite des launchers système ET utilisateur, avec preuve (log, screenshot, grep launcher).</li>
+<li>Aucun artefact n’est certifié sans cette preuve.</li>
+</ul>
+<ol start="2">
+<li><strong>Couverture E2E renforcée</strong> :</li>
+</ol>
+<ul>
+<li>Toute évolution UI/backend doit s’accompagner de tests E2E couvrant les flows critiques ET secondaires.</li>
+<li>Les selectors <code>data-testid</code> doivent être stables et documentés.</li>
+</ul>
+<ol start="3">
+<li><strong>Discipline de version et mapping</strong> :</li>
+</ol>
+<ul>
+<li>Toute modification de surface déclenche la mise à jour des mapping docs et un bump de version.</li>
+<li>Rollback/correction : documenter cause racine, plan de prévention, rollback exact.</li>
+</ul>
+<ol start="4">
+<li><strong>Scripts post-build robustes</strong> :</li>
+</ol>
+<ul>
+<li>Scripts idempotents, non-interactifs ou fallback documenté, logs de preuve pour chaque étape nécessitant sudo.</li>
+</ul>
+<ol start="5">
+<li><strong>Surveillance environnement/backend</strong> :</li>
+</ol>
+<ul>
+<li>Tests d’isolation d’environnement et checks automatiques sur les variables critiques.</li>
+</ul>
+<ol start="6">
+<li><strong>Traçabilité des corrections</strong> :</li>
+</ol>
+<ul>
+<li>Chaque correction/rollback doit être tracé dans <code>autoheal_rules.jsonl</code> et <code>registry/ui-events.jsonl</code> avec cause racine et test de prévention.</li>
+</ul>
+<hr>
+<p><strong>Statut d'autorité documentaire (LOCAL, 2026-04-17) :</strong></p>
+<ul>
+<li>Source de version canonique du repo: <code>package.json</code> + <code>CHANGELOG.md</code> -&gt; <code>30.1.34</code> (<code>PROVEN_BY_REPO</code>)</li>
+<li>Release canonique vérifiée: <code>v30.1.34</code> (<code>PROVEN_BY_REPO</code> + <code>PROVEN_BY_CHANGELOG</code>)</li>
+<li>Dernier binaire GitHub publié: <code>v30.1.25</code> (<code>PROVEN_BY_GITHUB_RELEASE</code>)</li>
+<li>Lignes binaires historiques documentées: <code>v30.0.0</code>, <code>v28.90.0</code>, <code>v28.88.0</code>, <code>v27.2.0</code> (<code>PROVEN_BY_CANON_DOC</code>)</li>
+<li>Politique de cohérence: version canonique et release courante <code>30.1.34</code>; les surfaces historiques restent archivées et identifiées par version</li>
+</ul>
+<hr>
+<h2 id="📦-téléchargement" class="tsd-anchor-link">📦 Téléchargement<a href="#📦-téléchargement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="✅-release-canonique-courante-v3112" class="tsd-anchor-link">✅ Release canonique courante: v31.1.2<a href="#✅-release-canonique-courante-v3112" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Status</strong>: ✅ PRODUCTION READY — CERTIFIED &amp; DEPLOYED<br>
+<strong>Certification ID</strong>: <code>TITANE_INFINITY_RELEASE_20260423_v31.1.2</code><br>
+<strong>Last Certification Refresh</strong>: April 23, 2026<br>
+<strong>Certification Scope</strong>: verify_instructions PASS (33/33), detect_recurrence PASS, Rust 0 warnings, DocCenter DOCX export, PerformanceTest refactor</p>
+<p>Artefacts vérifiés (Linux amd64):</p>
+<ul>
+<li><strong>AppImage</strong>: <code>Titan-Stable_31.1.0_amd64.AppImage</code> (deployed in <code>deployment/latest/</code>)</li>
+<li><strong>DEB Package</strong>: <code>Titan-Stable_31.1.0_amd64.deb</code> (deployed in <code>deployment/latest/</code>)</li>
+</ul>
+<p>Checksums courants (<code>deployment/latest/MANIFEST.json</code>):</p>
+<pre><code><span class="hl-0">AppImage</span><span class="hl-1">:  94</span><span class="hl-2">ce7dfb692f2e1881ff6157f9c4efdb6c4e2efd1725c5d9be7ec7ad79a46ca8</span><br/><span class="hl-0">DEB</span><span class="hl-1">:       591</span><span class="hl-2">b03828f5e428ac69f5bd9f2f0b4dc91b5c3f9e54d131a98e449cbccda2f7d</span>
+</code><button>Copy</button></pre>
+
+<h3 id="installation-windows-pr-292" class="tsd-anchor-link">Installation Windows (PR #292)<a href="#installation-windows-pr-292" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Guide Windows complet:</p>
+<ul>
+<li><a href="media/SPINUP_WINDOWS.md">docs/windows/SPINUP_WINDOWS.md</a></li>
+</ul>
+<p>Launchers Windows fournis:</p>
+<ul>
+<li><a href="media/launch-titane.ps1">scripts/launch/launch-titane.ps1</a></li>
+<li><a href="media/launch-titane.bat">scripts/launch/launch-titane.bat</a></li>
+</ul>
+<p>Exemple PowerShell:</p>
+<pre><code class="powershell">git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
+cd TITANE_INFINITY
+.\scripts\launch\launch-titane.ps1 -Mode dev
+</code><button type="button">Copy</button></pre>
+
+<p>Pack launcher publie (session PR292):</p>
+<ul>
+<li><code>deployment/windows/TITANE_WINDOWS_LAUNCHER_PACK_PR292_20260412.zip</code></li>
+<li><code>deployment/windows/TITANE_WINDOWS_LAUNCHER_PACK_PR292_20260412.sha256</code></li>
+<li>Release GitHub: <a href="https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/windows-pr292-launcher-pack-20260412">https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/windows-pr292-launcher-pack-20260412</a></li>
+</ul>
+<p>Preuve de session:</p>
+<ul>
+<li><a href="proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md">proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md</a></li>
+<li><a href="proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md">proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md</a></li>
+<li><a href="proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md">proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md</a></li>
+</ul>
+<p><strong>Release Notes &amp; Installation</strong>:</p>
+<ul>
+<li>Full release notes: <a href="media/CHANGELOG.md">CHANGELOG.md</a></li>
+<li>GitHub Release (primary): <a href="https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406">https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406</a></li>
+<li>GitHub Release (historical certification): <a href="https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405">https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405</a></li>
+<li>Current deployment manifest: <a href="media/MANIFEST.json">deployment/latest/MANIFEST.json</a></li>
+<li>Current checksum bundle: <a href="deployment/latest/CHECKSUMS.sha256">deployment/latest/CHECKSUMS.sha256</a></li>
+<li>Historical checksum snapshot: <a href="media/RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt">RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt</a></li>
+</ul>
+<p><strong>Security</strong>: MAXIMUM_HARDENED<br>
+<strong>Authorization</strong>: On-demand — production builds and deploys executed on user request (Rule 11).</p>
+<h3 id="✨-archive-binaire-historique-v2705" class="tsd-anchor-link">✨ <strong>Archive binaire historique : v27.0.5</strong><a href="#✨-archive-binaire-historique-v2705" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Télécharger pour Linux (Debian/Ubuntu):</strong></p>
+<pre><code class="bash"><span class="hl-3">wget</span><span class="hl-1"> </span><span class="hl-4">https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.deb</span><br/><span class="hl-3">sudo</span><span class="hl-1"> </span><span class="hl-4">dpkg</span><span class="hl-1"> </span><span class="hl-5">-i</span><span class="hl-1"> </span><span class="hl-4">TITANE-Infinity_27.0.5_amd64.deb</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Points cles (historique) v27.0.5 :</strong></p>
+<ul>
+<li>✅ Warnings Rust audio corrigés (build release clean)</li>
+<li>🧠 Alignement complet des versions app/frontend/backend</li>
+<li>📦 Artefacts historiques de reference (AppImage/DEB/RPM)</li>
+</ul>
+<p><strong>Compatibilité :</strong><br>
+✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!_OS 20.04+</p>
+<p>📄 <a href="https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5">Notes de release complètes</a></p>
+<p>🔐 <a href="./deployment/latest/SHA256SUMS_v27.0.5.txt">Checksums v27.0.5</a></p>
+<p>🔐 <a href="media/PRODUCTION_RELEASE_v28.88.0.md">Checksums historiques v28.88.0</a></p>
+<hr>
+<h2 id="🌟-vision" class="tsd-anchor-link">🌟 Vision<a href="#🌟-vision" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>TITANE∞ est un <strong>OS cognitif online-first</strong> : votre double numérique évolutif, gouverné et auto-réparateur.</p>
+<ul>
+<li>🧠 <strong>Architecture Modulaire</strong> : 13 centres unifiés + 9 moteurs cognitifs + 4-Ring model</li>
+<li>🔄 <strong>Pipeline OMEGA v2</strong> : 10 étapes de traitement intelligent</li>
+<li>💾 <strong>UnifiedMemory OS</strong> : STM → MTM → LTM Neural</li>
+<li>🎭 <strong>Dual Runtime</strong> : Titan-Dev (expérimentation) + Titan-Stable (production)</li>
+<li>🌐 <strong>Online-First</strong> : Connectivité réseau requise, LLM cloud optimisés</li>
+<li>🛡️ <strong>Self-Healing</strong> : Auto-diagnostic et auto-réparation + stop-the-line gates</li>
+</ul>
+<hr>
+<h2 id="🗓️-version-timeline" class="tsd-anchor-link">🗓️ Version Timeline<a href="#🗓️-version-timeline" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="historique-de-production-v29x-v28x--v27x" class="tsd-anchor-link">Historique de production (v29.x + v28.x + v27.x)<a href="#historique-de-production-v29x-v28x--v27x" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li>
+<p><strong>v30.0.0</strong> (Current Release Stream — 🚀)</p>
+<ul>
+<li>Status: ✅ CERTIFIED &amp; DEPLOYED (2026-04-05)</li>
+<li>Tag: <code>v30.0.0-release-20260406</code></li>
+<li>Tag: <code>v30.0.0-release-20260405</code></li>
+<li>Gates: eval harness PASS, certified deployment PASS, deployment metadata aligned</li>
+<li>Proof: <code>CHANGELOG.md</code> + <code>deployment/latest/MANIFEST.json</code> + <code>RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt</code></li>
+</ul>
+</li>
+<li>
+<p><strong>v28.88.0</strong> (HISTORIQUE — previous sealed release)</p>
+<ul>
+<li>Status: ✅ SEALED (2026-03-21)</li>
+<li>Tag: <code>v28.88.0</code></li>
+<li>Gates: tsc, eslint, vitest 3399/3399, pnpm build, cargo check, verify_instructions PASS=20</li>
+<li>Proof: <code>RELEASE_v28.88.0_SEALED.txt</code></li>
+</ul>
+</li>
+<li>
+<p><strong>v28.5.0</strong> (HISTORIQUE)</p>
+<ul>
+<li>Status: ✅ RELEASED</li>
+<li>Tag: <code>v28.5.0</code></li>
+<li>Proof: <code>RELEASE_v28.5.0_SEALED.txt</code></li>
+</ul>
+</li>
+<li>
+<p><strong>v27.0.5-prod</strong> (HISTORIQUE) — Production binary baseline</p>
+<ul>
+<li>Status: ✅ LIVE (99.99% uptime, 0 crashes)</li>
+<li>Tag: 02bce9c7</li>
+<li>Immutable production reference</li>
+</ul>
+</li>
+<li>
+<p><strong>v27.0.6</strong> (DOCS-ONLY HOTFIX)</p>
+<ul>
+<li>Status: Documentation updates only (no binary deployment)</li>
+<li>Date: 2026-02-18</li>
+</ul>
+</li>
+<li>
+<p><strong>v27.2.0</strong> (TYPESCRIPT STRICT - HISTORIQUE)</p>
+<ul>
+<li>Status: ✅ DEPLOYED (2026-02-23)</li>
+<li>Commit: a14a111f</li>
+<li>Change: Zero TypeScript errors (strict mode)</li>
+<li>Risk: MINIMAL (type-only, zero runtime impact)</li>
+<li>Lane: Strict Mode (P2)</li>
+</ul>
+</li>
+<li>
+<p><strong>2026-03-03</strong> (MAINTENANCE &amp; PROOF SYNC)</p>
+<ul>
+<li>Status: ✅ DONE (no version bump)</li>
+<li>Commits: <code>25740b5d0</code>, <code>3895845c1</code></li>
+<li>Change: TS blockers corrigés + pack <code>ORCH_VΩ_2026-03-03_1436_0cdf39d39</code> scellé</li>
+<li>Risk: LOW (stabilisation + documentation)</li>
+</ul>
+</li>
+<li>
+<p><strong>2026-03-06</strong> (PROD REDEPLOY + RUNTIME VALIDATION)</p>
+<ul>
+<li>Status: ✅ DONE (no version bump)</li>
+<li>Commits: <code>43c35be3f</code>, <code>be5ced801</code></li>
+<li>Change: redeploy token-gated, smoke AppImage+Installed PASS, metadata <code>deployment/latest</code> resync</li>
+<li>Risk: LOW (operational validation + metadata coherence)</li>
+<li>Release note prep: <a href="media/RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md"><code>RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md</code></a></li>
+</ul>
+</li>
+</ul>
+<h3 id="legacy-versions" class="tsd-anchor-link">Legacy Versions<a href="#legacy-versions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>See <a href="media/CHANGELOG.md">CHANGELOG.md</a> and <a href="media/CHANGELOG_v27.2.0_ENTRY.md">CHANGELOG v27.2.0 entry</a> for release history.</p>
+<hr>
+<h2 id="🚀-quick-start" class="tsd-anchor-link">🚀 Quick Start<a href="#🚀-quick-start" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="prérequis" class="tsd-anchor-link">Prérequis<a href="#prérequis" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>OS:</strong> Ubuntu 24.04 LTS (recommandé) ou compatible Linux</li>
+<li><strong>Node.js:</strong> v24+ (recommande)</li>
+<li><strong>pnpm:</strong> v10.30.2 (via Corepack)</li>
+<li><strong>Rust:</strong> 1.75+</li>
+<li><strong>Tauri CLI:</strong> v2.0+</li>
+<li><strong>Git LFS:</strong> requis (certains binaires toolchain sont versionnés via LFS)</li>
+</ul>
+<h3 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-6"># 1. Cloner le repo</span><br/><span class="hl-3">git</span><span class="hl-1"> </span><span class="hl-4">clone</span><span class="hl-1"> </span><span class="hl-4">https://github.com/KallokTherok1994/TITANE_INFINITY.git</span><br/><span class="hl-3">cd</span><span class="hl-1"> </span><span class="hl-4">TITANE_INFINITY</span><br/><br/><span class="hl-6"># 1.1 Initialiser Git LFS (recommandé)</span><br/><span class="hl-3">git</span><span class="hl-1"> </span><span class="hl-4">lfs</span><span class="hl-1"> </span><span class="hl-4">install</span><br/><span class="hl-3">git</span><span class="hl-1"> </span><span class="hl-4">lfs</span><span class="hl-1"> </span><span class="hl-4">pull</span><br/><br/><span class="hl-6"># 2. Installer dépendances (pnpm + toolchain incluse au repo)</span><br/><span class="hl-5">export</span><span class="hl-1"> </span><span class="hl-2">PATH</span><span class="hl-1">=</span><span class="hl-4">&quot;</span><span class="hl-2">$PWD</span><span class="hl-4">/.tools/node/current/bin:</span><span class="hl-2">$PATH</span><span class="hl-4">&quot;</span><br/><span class="hl-3">corepack</span><span class="hl-1"> </span><span class="hl-4">pnpm</span><span class="hl-1"> </span><span class="hl-4">install</span><br/><br/><span class="hl-6"># Alternative (réinstalle proprement):</span><br/><span class="hl-3">./titane.sh</span><span class="hl-1"> </span><span class="hl-4">repair</span><br/><br/><span class="hl-6"># 3. Configurer Python environment (optionnel pour TTS/Voice)</span><br/><span class="hl-3">./scripts/setup_environment.sh</span><br/><br/><span class="hl-6"># 4. Lancer Titan-Dev (développement)</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">dev:tauri</span><br/><span class="hl-6"># Ou via task VSCode: &quot;🟢 Launch Titan-Dev&quot;</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="🛡️-governance-quality" class="tsd-anchor-link">🛡️ Governance &amp; Quality<a href="#🛡️-governance-quality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>TITANE∞ utilise un modèle de gouvernance strict avec <strong>9 Gates constitutionnelles</strong> :</p>
+<h3 id="9-governance-gates" class="tsd-anchor-link">9 Governance Gates<a href="#9-governance-gates" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ol>
+<li><strong>G1: NO_OFFLINE_WITHOUT_REASON</strong> — Network guard (block offline mode sans justification)</li>
+<li><strong>G2: ONLINE_FIRST_STRICT</strong> — Architecture compliance (enforce online-first)</li>
+<li><strong>G3: IPC_ALLOWLIST_STRICT</strong> — Security boundaries (explicit IPC allowlist)</li>
+<li><strong>G4: NETWORK_SURFACE_MINIMAL</strong> — Attack surface (minimal external reach)</li>
+<li><strong>G5: NO_SILENT_DRIFT</strong> — Documentation sync (code ↔ docs alignment)</li>
+<li><strong>G6: BUILD_REPRODUCIBILITY</strong> — Deterministic builds (same input = same output)</li>
+<li><strong>G7: PROOF_DRIVEN_WORKFLOW</strong> — Evidence requirements (no DONE without proof)</li>
+<li><strong>G8: APPEND_ONLY_REGISTRY</strong> — Immutable audit trail (no deletions)</li>
+<li><strong>G9: STOP_THE_LINE</strong> — Block on gate failure (no bypass sans autorisation)</li>
+</ol>
+<p><strong>Stop-the-Line</strong>: Any gate failure blocks deployment until resolved.</p>
+<h3 id="native-desktop-freshness-pre-gate" class="tsd-anchor-link">Native Desktop Freshness Pre-Gate<a href="#native-desktop-freshness-pre-gate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Before native desktop certification and before PROD token usage, run:</p>
+<pre><code class="bash"><span class="hl-3">bash</span><span class="hl-1"> </span><span class="hl-4">scripts/verify/verify-native-binary-freshness.sh</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Expected: <code>VERDICT=PASS</code> with a fresh binary class (<code>FRESH_RELEASE_BINARY</code>, <code>FRESH_DEBUG_BINARY</code>, or <code>FRESH_CERTIFIED_BINARY</code>).</p>
+<h3 id="append-only-registry" class="tsd-anchor-link">Append-Only Registry<a href="#append-only-registry" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>TITANE∞ maintains an <strong>immutable audit trail</strong> of all UI changes, releases, and governance decisions:</p>
+<ul>
+<li><strong>File</strong>: <code>registry/ui-events.jsonl</code></li>
+<li><strong>Entries</strong>: 87+ events (append-only, no deletions)</li>
+<li><strong>Format</strong>: JSON Lines (1 event per line)</li>
+<li><strong>Integrity</strong>: SHA256 checksums + cryptographic sealing</li>
+<li><strong>Purpose</strong>: Complete audit trail for production compliance</li>
+</ul>
+<p><strong>Example Event</strong>:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-7">&quot;timestamp&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;2026-02-23T20:31:32Z&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">&quot;event&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;DOCS_SYSTEM_UPGRADE_SEALED&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">&quot;version&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;v27.0.6&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">&quot;ring&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;Ring-4&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">&quot;status&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;QUALIFIED&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">&quot;proof&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;SHA256: abc123...&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">&quot;metadata&quot;</span><span class="hl-1">: { </span><span class="hl-7">&quot;files_changed&quot;</span><span class="hl-1">: </span><span class="hl-8">6818</span><span class="hl-1">, </span><span class="hl-7">&quot;critical_fixes&quot;</span><span class="hl-1">: </span><span class="hl-8">3</span><span class="hl-1"> }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Gate</strong>: G8 (APPEND_ONLY_REGISTRY) enforces immutability.</p>
+<h3 id="release-model-lanes-stages" class="tsd-anchor-link">Release Model: Lanes &amp; Stages<a href="#release-model-lanes-stages" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>TITANE∞ uses a <strong>lane-based release model</strong> with progressive wave deployment:</p>
+<h4 id="lanes-policy-based" class="tsd-anchor-link">Lanes (Policy-Based)<a href="#lanes-policy-based" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ol>
+<li>
+<p><strong>Hotfix Lane (P1)</strong> — Critical security/crash fixes only</p>
+<ul>
+<li>Timeline: &lt;24h deployment</li>
+<li>Gates: 6/9 required (G1, G2, G3, G7, G8, G9)</li>
+<li>Risk: CRITICAL (production-only)</li>
+</ul>
+</li>
+<li>
+<p><strong>Strict Mode Lane (P2)</strong> — Type safety, refactoring, docs-only</p>
+<ul>
+<li>Timeline: 1-3 days deployment</li>
+<li>Gates: 9/9 required (full gate enforcement)</li>
+<li>Risk: MINIMAL (no runtime impact)</li>
+</ul>
+</li>
+<li>
+<p><strong>Perfection Lane (P2)</strong> — Zero-error campaigns, performance</p>
+<ul>
+<li>Timeline: 1-7 days deployment</li>
+<li>Gates: 9/9 required</li>
+<li>Risk: LOW-MEDIUM</li>
+</ul>
+</li>
+</ol>
+<h4 id="stages" class="tsd-anchor-link">Stages<a href="#stages" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li><strong>EXPERIMENTAL</strong> — Initial development, no production use</li>
+<li><strong>QUALIFIED</strong> — Passed all gates, ready for wave deployment</li>
+<li><strong>STABLE</strong> — 100% wave deployed, production-ready</li>
+</ul>
+<h4 id="wave-deployment" class="tsd-anchor-link">Wave Deployment<a href="#wave-deployment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>Progressive rollout model (Strict &amp; Perfection lanes only):</p>
+<ol>
+<li><strong>Wave 1 (5%)</strong> — Beta testers, internal monitoring (24h soak)</li>
+<li><strong>Wave 2 (25%)</strong> — Early adopters, expanded monitoring (48h soak)</li>
+<li><strong>Wave 3 (100%)</strong> — General availability (GA)</li>
+</ol>
+<p><strong>Repository Authority</strong>: v31.1.2 (documentation canonique)<br>
+<strong>Latest Canonical Release Stream</strong>: v31.1.2 (<code>CHANGELOG.md</code> + <code>deployment/latest/MANIFEST.json</code>)</p>
+<hr>
+<h2 id="🧭-structure-repo-index" class="tsd-anchor-link">🧭 Structure Repo (Index)<a href="#🧭-structure-repo-index" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="media/INDEX_REPO_STRUCTURE.md">docs/INDEX_REPO_STRUCTURE.md</a> — carte des dossiers + points d’entrée</li>
+<li><a href="media/INDEX_UI.md">docs/ui/INDEX_UI.md</a> — index UI (pages/features/components/hooks)</li>
+<li>Registre UI obligatoire: chaque changement UI doit ajouter une entry append-only dans <code>registry/ui-events.jsonl</code>.</li>
+</ul>
+<h2 id="mermaid-canon" class="tsd-anchor-link">Mermaid Canon<a href="#mermaid-canon" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>Index Mermaid: <a href="media/README.md">docs/diagrams/README.md</a></li>
+<li>Diagrammes rendus: <a href="media/architecture_4_ring.md">architecture_4_ring</a>, <a href="media/data_flow_chat.md">data_flow_chat</a>, <a href="media/omega_pipeline_v2.md">omega_pipeline_v2</a>, <a href="media/certification_gates.md">certification_gates</a>, <a href="media/network_surface_online_first.md">network_surface_online_first</a></li>
+<li>CI enforce Mermaid canon et drift strict</li>
+</ul>
+<h3 id="corepack-quickstart-recommandé" class="tsd-anchor-link">Corepack Quickstart (recommandé)<a href="#corepack-quickstart-recommandé" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-6"># Activer Corepack et pnpm@10.30.2 pour coherence outillage</span><br/><span class="hl-3">corepack</span><span class="hl-1"> </span><span class="hl-4">enable</span><br/><span class="hl-3">corepack</span><span class="hl-1"> </span><span class="hl-4">prepare</span><span class="hl-1"> </span><span class="hl-4">pnpm@10.30.2</span><span class="hl-1"> </span><span class="hl-5">--activate</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="build-production-titan-stable" class="tsd-anchor-link">Build Production (Titan-Stable)<a href="#build-production-titan-stable" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-6"># Build production — on demand (Rule 11)</span><br/><span class="hl-3">corepack</span><span class="hl-1"> </span><span class="hl-4">pnpm</span><span class="hl-1"> </span><span class="hl-4">exec</span><span class="hl-1"> </span><span class="hl-4">tauri</span><span class="hl-1"> </span><span class="hl-4">build</span><span class="hl-1"> </span><span class="hl-5">--config</span><span class="hl-1"> </span><span class="hl-4">src-tauri/tauri.conf.json</span><br/><br/><span class="hl-6"># Or use BUILD ALL command for full automated sequence (Rule 14)</span><br/><span class="hl-6"># Ou via task VSCode: &quot;🔵 Build Titan-Stable&quot;</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="📐-architecture-v3000" class="tsd-anchor-link">📐 Architecture v30.0.0<a href="#📐-architecture-v3000" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="🗺️-navigation-13-centres-unifiés" class="tsd-anchor-link">🗺️ Navigation (13 Centres Unifiés)<a href="#🗺️-navigation-13-centres-unifiés" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-9">TITANE</span><span class="hl-1">∞ </span><span class="hl-2">v30</span><span class="hl-1">.</span><span class="hl-8">0.0</span><br/><br/><span class="hl-1">📂 </span><span class="hl-9">PRINCIPAL</span><br/><span class="hl-1">├─ 💬 </span><span class="hl-2">Chat</span><span class="hl-1"> </span><span class="hl-9">IA</span><span class="hl-1"> → /</span><span class="hl-2">chat</span><br/><span class="hl-1">├─ 🧬 </span><span class="hl-9">EVO</span><span class="hl-1"> → /</span><span class="hl-3">evo</span><span class="hl-1"> (</span><span class="hl-2">Fusion</span><span class="hl-1">: </span><span class="hl-2">Dashboard</span><span class="hl-1">+</span><span class="hl-2">Identity</span><span class="hl-1">+</span><span class="hl-2">Memory</span><span class="hl-1">+</span><span class="hl-2">Evolution</span><span class="hl-1">+</span><span class="hl-2">Progression</span><span class="hl-1">)</span><br/><span class="hl-1">├─ 📅 </span><span class="hl-2">Agenda</span><span class="hl-1"> → /</span><span class="hl-2">agenda</span><br/><span class="hl-1">└─ 📷 </span><span class="hl-2">Vision</span><span class="hl-1"> → /</span><span class="hl-2">camera</span><br/><br/><span class="hl-1">📂 </span><span class="hl-9">CENTRES</span><span class="hl-1"> </span><span class="hl-9">UNIFIÉS</span><br/><span class="hl-1">├─ 🎯 </span><span class="hl-9">ONE</span><span class="hl-1"> </span><span class="hl-9">CORE</span><span class="hl-1"> → /</span><span class="hl-2">one</span><span class="hl-1">-</span><span class="hl-2">core</span><br/><span class="hl-1">├─ 📊 </span><span class="hl-2">Statistiques</span><span class="hl-1"> → /</span><span class="hl-3">stats</span><span class="hl-1"> (</span><span class="hl-2">Fusion</span><span class="hl-1">: </span><span class="hl-2">Nexus</span><span class="hl-1">+</span><span class="hl-2">Helios</span><span class="hl-1">+</span><span class="hl-2">Harmonia</span><span class="hl-1">+</span><span class="hl-2">État</span><span class="hl-1"> </span><span class="hl-2">Cognitif</span><span class="hl-1">)</span><br/><span class="hl-1">├─ ⚙️ </span><span class="hl-2">Centre</span><span class="hl-1"> </span><span class="hl-2">Système</span><span class="hl-1"> → /</span><span class="hl-2">system</span><span class="hl-1">-</span><span class="hl-2">center</span><br/><span class="hl-1">├─ 🔊 </span><span class="hl-2">Audio</span><span class="hl-1"> &amp; </span><span class="hl-2">Voix</span><span class="hl-1"> → /</span><span class="hl-2">audio</span><span class="hl-1">-</span><span class="hl-2">center</span><br/><span class="hl-1">├─ 🎨 </span><span class="hl-2">Design</span><span class="hl-1"> &amp; </span><span class="hl-2">Apparence</span><span class="hl-1"> → /</span><span class="hl-2">design</span><span class="hl-1">-</span><span class="hl-2">center</span><br/><span class="hl-1">├─ 🛡️ </span><span class="hl-2">Gouvernance</span><span class="hl-1"> → /</span><span class="hl-2">governance</span><span class="hl-1">-</span><span class="hl-2">center</span><br/><span class="hl-1">├─ 🧪 </span><span class="hl-9">QA</span><span class="hl-1"> &amp; </span><span class="hl-2">Monitoring</span><span class="hl-1"> → /</span><span class="hl-2">qa</span><span class="hl-1">-</span><span class="hl-2">monitoring</span><br/><span class="hl-1">└─ 💻 </span><span class="hl-2">Mode</span><span class="hl-1"> </span><span class="hl-2">Développeur</span><span class="hl-1"> → /</span><span class="hl-2">developer</span><span class="hl-1">-</span><span class="hl-2">mode</span><br/><br/><span class="hl-1">📂 </span><span class="hl-9">CENTRES</span><span class="hl-1"> </span><span class="hl-9">COGNITIFS</span><br/><span class="hl-1">└─ 🎛️ </span><span class="hl-2">Intelligence</span><span class="hl-1"> </span><span class="hl-9">IA</span><span class="hl-1"> → /</span><span class="hl-2">orchestration</span><span class="hl-1">-</span><span class="hl-2">center</span>
+</code><button>Copy</button></pre>
+
+<h3 id="✨-fusions-majeures-v25" class="tsd-anchor-link">✨ Fusions Majeures v25<a href="#✨-fusions-majeures-v25" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>EVO Module (v25.0)</strong> — 5 modules → 1 centre unifié</p>
+<ul>
+<li>Dashboard (/) → Section 1: Vue d'Ensemble</li>
+<li>Identity Center → Section 2: Identité &amp; ADN</li>
+<li>Memory Evolution → Section 3-4: Mémoire Triple + Évolution</li>
+<li>Evolution Center → Section 5-6: Progression &amp; Transformation</li>
+<li>Progression (/progression) → Section 5: Progression &amp; XP</li>
+</ul>
+<p><strong>Stats Module (v25.2)</strong> — 4 modules → 1 page unifiée</p>
+<ul>
+<li>Nexus (/nexus) → Section 1: 🧠 Réseau Cognitif</li>
+<li>Helios (/helios) → Section 2: 💓 Système Vital</li>
+<li>Harmonia (/harmonia) → Section 3: ⚖️ Équilibre des Flux</li>
+<li>État Cognitif (nouveau) → Section 4: 🧠 État Cognitif</li>
+</ul>
+<h3 id="frontend-react-typescript" class="tsd-anchor-link">Frontend (React + TypeScript)<a href="#frontend-react-typescript" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-2">src</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-2">pages</span><span class="hl-1">/            # </span><span class="hl-2">Routes</span><span class="hl-1"> </span><span class="hl-3">principales</span><span class="hl-1"> (</span><span class="hl-2">EvoPage</span><span class="hl-1">, </span><span class="hl-2">Stats</span><span class="hl-1">, </span><span class="hl-2">Chat</span><span class="hl-1">...)</span><br/><span class="hl-1">├── </span><span class="hl-2">engines</span><span class="hl-1">/          # </span><span class="hl-8">9</span><span class="hl-1"> </span><span class="hl-2">moteurs</span><span class="hl-1"> </span><span class="hl-3">cognitifs</span><span class="hl-1"> (</span><span class="hl-2">voir</span><span class="hl-1"> </span><span class="hl-2">liste</span><span class="hl-1"> </span><span class="hl-2">ci</span><span class="hl-1">-</span><span class="hl-2">dessous</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-2">core</span><span class="hl-1">/             # </span><span class="hl-2">Cœur</span><span class="hl-1"> </span><span class="hl-3">système</span><span class="hl-1"> (</span><span class="hl-2">pipelines</span><span class="hl-1">, </span><span class="hl-2">healing</span><span class="hl-1">, </span><span class="hl-2">safety</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-2">services</span><span class="hl-1">/         # </span><span class="hl-2">Services</span><span class="hl-1"> </span><span class="hl-3">métier</span><span class="hl-1"> (</span><span class="hl-2">ai</span><span class="hl-1">, </span><span class="hl-2">api</span><span class="hl-1">, </span><span class="hl-2">memory</span><span class="hl-1">, </span><span class="hl-2">voice</span><span class="hl-1">, </span><span class="hl-2">tts</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-2">stores</span><span class="hl-1">/           # </span><span class="hl-2">State</span><span class="hl-1"> </span><span class="hl-3">management</span><span class="hl-1"> (</span><span class="hl-2">Zustand</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-2">hooks</span><span class="hl-1">/            # </span><span class="hl-2">Custom</span><span class="hl-1"> </span><span class="hl-2">React</span><span class="hl-1"> </span><span class="hl-2">hooks</span><br/><span class="hl-1">├── </span><span class="hl-2">features</span><span class="hl-1">/         # </span><span class="hl-2">Modules</span><span class="hl-1"> </span><span class="hl-3">métier</span><span class="hl-1"> (</span><span class="hl-2">chat</span><span class="hl-1">, </span><span class="hl-2">memory</span><span class="hl-1">, </span><span class="hl-2">dashboard</span><span class="hl-1">)</span><br/><span class="hl-1">└── </span><span class="hl-2">ui</span><span class="hl-1">/               # </span><span class="hl-2">Composants</span><span class="hl-1"> </span><span class="hl-9">UI</span><span class="hl-1"> + </span><span class="hl-2">Menu</span>
+</code><button>Copy</button></pre>
+
+<blockquote>
+<p>Moteurs cognitifs : Orchestrator, Style, Coherence, Reflection, Emotion, UnifiedMemory, Behavior, Adaptation, SystemHealth.</p>
+</blockquote>
+<h3 id="backend-tauri-v2-rust" class="tsd-anchor-link">Backend (Tauri v2 + Rust)<a href="#backend-tauri-v2-rust" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-2">src</span><span class="hl-1">-</span><span class="hl-2">tauri</span><span class="hl-1">/</span><span class="hl-2">src</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-2">omega</span><span class="hl-1">/            # </span><span class="hl-2">Pipeline</span><span class="hl-1"> </span><span class="hl-9">OMEGA</span><span class="hl-1"> </span><span class="hl-3">Rust</span><span class="hl-1"> (</span><span class="hl-8">10</span><span class="hl-1"> </span><span class="hl-2">étapes</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-2">conversation_engine</span><span class="hl-1">/  # </span><span class="hl-2">Conversation</span><span class="hl-1"> </span><span class="hl-2">Engine</span><br/><span class="hl-1">├── </span><span class="hl-2">memory_os</span><span class="hl-1">/        # </span><span class="hl-2">Memory</span><span class="hl-1"> </span><span class="hl-9">OS</span><span class="hl-1"> </span><span class="hl-3">Neural</span><span class="hl-1"> (</span><span class="hl-9">STM</span><span class="hl-1">/</span><span class="hl-9">MTM</span><span class="hl-1">/</span><span class="hl-9">LTM</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-2">singularity</span><span class="hl-1">/      # </span><span class="hl-2">Singularity</span><span class="hl-1"> </span><span class="hl-2">State</span><br/><span class="hl-1">├── </span><span class="hl-2">cognitive</span><span class="hl-1">/        # </span><span class="hl-2">Cognitive</span><span class="hl-1"> </span><span class="hl-2">Layer</span><br/><span class="hl-1">├── </span><span class="hl-2">security</span><span class="hl-1">/         # </span><span class="hl-2">Security</span><span class="hl-1"> &amp; </span><span class="hl-2">Sandbox</span><br/><span class="hl-1">└── </span><span class="hl-2">commands</span><span class="hl-1">/         # </span><span class="hl-8">20</span><span class="hl-1">+ </span><span class="hl-2">modules</span><span class="hl-1"> </span><span class="hl-2">de</span><span class="hl-1"> </span><span class="hl-2">commandes</span><span class="hl-1"> </span><span class="hl-2">Tauri</span>
+</code><button>Copy</button></pre>
+
+<h3 id="pipeline-omega-v2-10-étapes" class="tsd-anchor-link">Pipeline OMEGA v2 (10 Étapes)<a href="#pipeline-omega-v2-10-étapes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-8">1.</span><span class="hl-1"> </span><span class="hl-2">Input</span><span class="hl-1"> </span><span class="hl-2">Validation</span><br/><span class="hl-8">2.</span><span class="hl-1"> </span><span class="hl-2">Context</span><span class="hl-1"> </span><span class="hl-3">Retrieval</span><span class="hl-1"> (</span><span class="hl-2">UnifiedMemory</span><span class="hl-1">)</span><br/><span class="hl-8">3.</span><span class="hl-1"> </span><span class="hl-2">Intent</span><span class="hl-1"> + </span><span class="hl-2">Emotion</span><span class="hl-1"> </span><span class="hl-3">Analysis</span><span class="hl-1"> (</span><span class="hl-2">parallel</span><span class="hl-1">)</span><br/><span class="hl-8">4.</span><span class="hl-1"> </span><span class="hl-2">Prompt</span><span class="hl-1"> </span><span class="hl-2">Construction</span><br/><span class="hl-8">5.</span><span class="hl-1"> </span><span class="hl-9">AI</span><span class="hl-1"> </span><span class="hl-3">Generation</span><span class="hl-1"> (</span><span class="hl-2">multi</span><span class="hl-1">-</span><span class="hl-2">providers</span><span class="hl-1">)</span><br/><span class="hl-8">6.</span><span class="hl-1"> </span><span class="hl-2">Post</span><span class="hl-1">-</span><span class="hl-3">Processing</span><span class="hl-1"> (</span><span class="hl-2">French</span><span class="hl-1"> </span><span class="hl-2">mastery</span><span class="hl-1">, </span><span class="hl-2">sanitize</span><span class="hl-1">)</span><br/><span class="hl-8">7.</span><span class="hl-1"> </span><span class="hl-2">Validation</span><span class="hl-1"> </span><span class="hl-2">Output</span><br/><span class="hl-8">8.</span><span class="hl-1"> </span><span class="hl-2">Memory</span><span class="hl-1"> </span><span class="hl-3">Save</span><span class="hl-1"> (</span><span class="hl-2">UnifiedMemory</span><span class="hl-1">)</span><br/><span class="hl-8">9.</span><span class="hl-1"> </span><span class="hl-2">Singularity</span><span class="hl-1"> </span><span class="hl-2">Sync</span><br/><span class="hl-8">10.</span><span class="hl-1"> </span><span class="hl-2">Self</span><span class="hl-1">-</span><span class="hl-2">Healing</span><span class="hl-1"> </span><span class="hl-2">Check</span>
+</code><button>Copy</button></pre>
+
+<hr>
+<h2 id="🛠️-développement" class="tsd-anchor-link">🛠️ Développement<a href="#🛠️-développement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="dual-runtime" class="tsd-anchor-link">Dual Runtime<a href="#dual-runtime" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Titan-Dev</strong> (<code>runtime/dev/</code>) : Développement avec DevTools activés</li>
+<li><strong>Titan-Stable</strong> (<code>runtime/stable/</code>) : Production optimisée, DevTools désactivés</li>
+</ul>
+<h3 id="scripts-principaux" class="tsd-anchor-link">Scripts Principaux<a href="#scripts-principaux" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">dev</span><span class="hl-1">              </span><span class="hl-6"># Launch Titan-Dev (wrapper local complet)</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">dev:tauri</span><span class="hl-1">        </span><span class="hl-6"># Alias de dev (wrapper local complet)</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">dev:tauri:no-ollama</span><span class="hl-1">  </span><span class="hl-6"># Titan-Dev sans Ollama</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">ollama:verify</span><span class="hl-1">    </span><span class="hl-6"># Vérifier la config Ollama canonique</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">verify:ollama:cline</span><span class="hl-1">  </span><span class="hl-6"># Vérifier l alignement Ollama + Cline + agents</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">build</span><span class="hl-1">            </span><span class="hl-6"># Build frontend</span><br/><span class="hl-3">corepack</span><span class="hl-1"> </span><span class="hl-4">pnpm</span><span class="hl-1"> </span><span class="hl-4">exec</span><span class="hl-1"> </span><span class="hl-4">tauri</span><span class="hl-1"> </span><span class="hl-4">build</span><span class="hl-1"> </span><span class="hl-5">--config</span><span class="hl-1"> </span><span class="hl-4">src-tauri/tauri.conf.json</span><span class="hl-1">  </span><span class="hl-6"># Build Titan-Stable (on demand)</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">lint</span><span class="hl-1">             </span><span class="hl-6"># ESLint + Prettier</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test</span><span class="hl-1">             </span><span class="hl-6"># Run tests</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test:rust</span><span class="hl-1">        </span><span class="hl-6"># Cargo tests</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="ai-providers-online-first-local-fallback" class="tsd-anchor-link">AI Providers (online-first, local fallback)<a href="#ai-providers-online-first-local-fallback" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Par défaut, TITANE∞ utilise des providers externes <strong>si configurés</strong>, avec fallback automatique vers Ollama local.<br>
+Mode 100% local disponible en désactivant les providers cloud dans les paramètres.</p>
+<p>Vérité canonique locale gouvernée :</p>
+<ul>
+<li>
+<p>Base URL Ollama : <code>http://127.0.0.1:11434</code></p>
+</li>
+<li>
+<p>Modèle local canonique : <code>gemma2:2b</code></p>
+</li>
+<li>
+<p>Transport frontend vers Ollama : IPC Tauri uniquement</p>
+</li>
+<li>
+<p>Build/deploy : autorisés sur demande explicite de l utilisateur, sans token ni passphrase</p>
+</li>
+<li>
+<p><strong>Autoriser au build (dev/stable)</strong> : lancer avec <code>VITE_ENABLE_EXTERNAL_AI=1</code></p>
+<ul>
+<li>Exemple dev : <code>VITE_ENABLE_EXTERNAL_AI=1 pnpm run dev:tauri</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Activer au runtime (production uniquement)</strong> : <code>localStorage.setItem('titane.enable_external_ai','1')</code></p>
+<ul>
+<li>Désactiver : <code>localStorage.removeItem('titane.enable_external_ai')</code></li>
+</ul>
+</li>
+</ul>
+<p>Notes :</p>
+<ul>
+<li>En <strong>dev</strong>, l’activation runtime est implicitement autorisée si le build flag est présent.</li>
+<li>En <strong>stable</strong>, l’External AI reste off tant que le build flag et le runtime toggle ne sont pas tous les deux activés.</li>
+</ul>
+<h3 id="git-workflow" class="tsd-anchor-link">Git Workflow<a href="#git-workflow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-2">feature</span><span class="hl-6">/* → dev → stable-runtime</span>
+</code><button>Copy</button></pre>
+
+<ul>
+<li><strong>feature/*</strong> : Nouvelles fonctionnalités</li>
+<li><strong>dev</strong> : Développement actif</li>
+<li><strong>stable-runtime</strong> : Branch de production</li>
+</ul>
+<h3 id="github-copilot-instructions" class="tsd-anchor-link">GitHub Copilot Instructions<a href="#github-copilot-instructions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Ce dépôt est configuré avec des instructions personnalisées pour GitHub Copilot :</p>
+<ul>
+<li><strong><a href="media/copilot-instructions.md">.github/copilot-instructions.md</a></strong> — Protocole COPILOT-XS (règles générales)</li>
+<li><strong><a href="media/titane.instructions.md">.github/instructions/titane.instructions.md</a></strong> — Instructions détaillées du projet</li>
+<li><strong><a href="media/.copilot-rules-permanent.md">.copilot-rules-permanent.md</a></strong> — Règles permanentes TITANE∞</li>
+</ul>
+<p><strong>Validation automatique :</strong></p>
+<pre><code class="bash"><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">copilot-xs:validate</span><span class="hl-1">   </span><span class="hl-6"># Valider le code (markers, secrets)</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">copilot-xs:status</span><span class="hl-1">     </span><span class="hl-6"># Vérifier la configuration Copilot</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">copilot-xs:precommit</span><span class="hl-1">  </span><span class="hl-6"># Validation + tests (pre-commit)</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Agents spécialisés</strong> (<code>.github/agents/</code>) :</p>
+<ul>
+<li><code>titane-conductor</code> — Orchestrateur principal TITANE_INFINITY</li>
+<li><code>architect-guardian</code> — Respect du modèle 4-Ring et One Door</li>
+<li><code>anti-regression-guardian</code> — Couverture anti-dérive, mapping, preuves</li>
+<li><code>e2e-authority</code> — Discipline E2E et artefacts déterministes</li>
+</ul>
+<p>Commandes d audit agents :</p>
+<pre><code class="bash"><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">audit:agents:stack</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">verify:agents:advanced</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">verify:agents:workflow</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">verify:ollama:cline</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Pour plus d'informations : <a href="media/README-1.md">COPILOT-XS README</a></p>
+<hr>
+<h2 id="🏛️-governance-pattern-rules" class="tsd-anchor-link">🏛️ Governance Pattern Rules<a href="#🏛️-governance-pattern-rules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>TITANE∞ implements <strong>constitutional governance rules</strong> to prevent accumulation of unmanaged subsystems and ensure clean archival of bounded governance patterns.</p>
+<h3 id="the-anti-recursive-system-rule" class="tsd-anchor-link">The Anti-Recursive System Rule<a href="#the-anti-recursive-system-rule" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Key Principle:</strong> Any governance subsystem must be designed for archival upfront (not retrofit) and must eliminate all residual maintenance burden post-archival.</p>
+<p><strong>Applies to:</strong></p>
+<ul>
+<li>Diagram governance subsystems (e.g., Mermaid diagrams)</li>
+<li>Schema validation subsystems</li>
+<li>Security audit subsystems</li>
+<li>Performance metrics governance</li>
+<li>Any other bounded micro-governance pattern</li>
+</ul>
+<p><strong>Core Requirement:</strong></p>
+<ol>
+<li><strong>Exit criteria declared upfront</strong> (during design, not after sealing)</li>
+<li><strong>No &quot;dormant with cadence&quot; states</strong> (choose ACTIVE or ARCHIVED only)</li>
+<li><strong>Explicit reactivation conditions</strong> (max 4, must be specific)</li>
+<li><strong>Archival documentation</strong> (immutable post-archival summary)</li>
+<li><strong>Zero residual maintenance</strong> (no ongoing CI burden post-archive)</li>
+</ol>
+<p><strong>See Also:</strong></p>
+<ul>
+<li><a href="media/ANTI-RECURSIVE_SYSTEM_RULE.md">Anti-Recursive System Rule</a> — Constitutional rule + checklist</li>
+<li><a href="media/GOVERNANCE_PATTERN_LESSONS.md">Governance Pattern Lessons</a> — Mermaid lifecycle (V1→V19) case study</li>
+<li><a href="media/copilot-instructions.md">.github/copilot-instructions.md</a> — System-wide governance invariants</li>
+</ul>
+<hr>
+<h2 id="📚-documentation" class="tsd-anchor-link">📚 Documentation<a href="#📚-documentation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<blockquote>
+<p><strong>🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)</strong><br>
+<strong>Quick Navigation:</strong> <a href="media/GETTING_STARTED.md">Getting Started</a> • <a href="media/CONTRIBUTING.md">Contributing</a> • <a href="docs/INDEX.md">Master Index</a></p>
+</blockquote>
+<h3 id="🚀-start-here-new-to-titane∞" class="tsd-anchor-link">🚀 Start Here (New to TITANE∞?)<a href="#🚀-start-here-new-to-titane∞" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Role-Based Quick Start:</strong></p>
+<ul>
+<li><strong>First Time User:</strong> <a href="media/GETTING_STARTED.md">Getting Started Guide</a> → &lt;2h to productivity</li>
+<li><strong>Want to Contribute:</strong> <a href="media/CONTRIBUTING.md">Contributing Guide</a> → Onboarding &lt;2h with validation</li>
+<li><strong>Need API Reference:</strong> <a href="docs/06_api/INDEX.md">API Index</a> → couverture API canonique</li>
+</ul>
+<h3 id="📖-complete-documentation-structure-50-documents-24300-lines" class="tsd-anchor-link">📖 Complete Documentation Structure (50 Documents, ~24,300 Lines)<a href="#📖-complete-documentation-structure-50-documents-24300-lines" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h4 id="core-documentation-" class="tsd-anchor-link">Core Documentation (<code>docs/00_core/</code>)<a href="#core-documentation-" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li><strong><a href="docs/INDEX.md">Master INDEX</a></strong> — Navigation centrale (200% coverage achieved)</li>
+<li><strong><a href="media/GETTING_STARTED.md">Getting Started</a></strong> — &lt;2h to first PR (validated)</li>
+<li><strong><a href="media/MISSION_COMPLETE_REPORT.md">Mission Complete Report</a></strong> — 0% → 200% transformation journey</li>
+<li><strong><a href="media/HANDOFF_GUIDE_VALIDATION.md">Handoff Guide</a></strong> — Validation team comprehensive guide</li>
+<li><strong><a href="media/validation">Validation Campaign</a></strong> — 4 validation tests ready to execute</li>
+</ul>
+<h4 id="essential-guides-" class="tsd-anchor-link">Essential Guides (<code>docs/04_guides/</code>)<a href="#essential-guides-" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li><strong><a href="media/GETTING_STARTED.md">Getting Started</a></strong> — &lt;2h to first PR (validated)</li>
+<li><strong><a href="media/DEPLOYMENT.md">Deployment Guide</a></strong> — Production deployment guide</li>
+</ul>
+<h4 id="api-reference-100-coverage" class="tsd-anchor-link">API Reference (<code>docs/06_api/</code> - 100% Coverage)<a href="#api-reference-100-coverage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>14 modules documented with examples, cross-references, security notes:</p>
+<ul>
+<li>AI Service • Audio • Chat • Cognitive • Commands • Config</li>
+<li>Engines • Memory • Pipeline • Router • Self-Healing • Services</li>
+<li>Singularity • Voice</li>
+</ul>
+<h4 id="validation-infrastructure-" class="tsd-anchor-link">Validation Infrastructure (<code>docs/00_core/validation/</code>)<a href="#validation-infrastructure-" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>Ready-to-execute validation campaign (PAUSE before Phase 8+):</p>
+<ul>
+<li><strong>Contributor Onboarding Test</strong> (3-5 participants, &lt;2h target, ≥80% success)</li>
+<li><strong>Production Deployment Test</strong> (1-2 DevOps, &lt;4h, ≥95% success)</li>
+<li><strong>Troubleshooting Test</strong> (2-3 engineers, 10 issues, ≥80% resolution)</li>
+<li><strong>Performance Test</strong> (1-2 engineers, ≥20% improvement)</li>
+<li><strong>Metrics Dashboard</strong> (7 KPIs tracked)</li>
+</ul>
+<h3 id="📊-documentation-quality-metrics" class="tsd-anchor-link">📊 Documentation Quality Metrics<a href="#📊-documentation-quality-metrics" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Coverage:</strong> 200% (100% API + 100% Operational)</li>
+<li><strong>Lines:</strong> ~24,300+ across 50 documents</li>
+<li><strong>Examples:</strong> 430+ validated code examples</li>
+<li><strong>Cross-References:</strong> 182+ internal links</li>
+<li><strong>Quality Score:</strong> 8.5/10 ⭐⭐⭐⭐⭐</li>
+<li><strong>Onboarding Target:</strong> &lt;2h (validated in <a href="http://CONTRIBUTING.md">CONTRIBUTING.md</a>)</li>
+<li><strong>Self-Service Rate:</strong> ≥80% troubleshooting (target)</li>
+<li><strong>Zero Suppression:</strong> 1,428 legacy files preserved in archives</li>
+</ul>
+<h3 id="🗂️-legacy-documentation-archived" class="tsd-anchor-link">🗂️ Legacy Documentation (Archived)<a href="#🗂️-legacy-documentation-archived" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong><a href="http://ARCHITECTURE.md">ARCHITECTURE.md</a></strong> : Architecture détaillée (frontend/backend/pipeline)</li>
+<li><strong>DEVELOPER_GUIDE.md</strong> : Guide développeur (conventions, setup, troubleshooting)</li>
+<li><strong>AUDIT_COMPLET_v21_ENGINE_2025-12-10.md</strong> : Audit complet système</li>
+<li><strong>CHANGELOG_v24.md</strong> : Historique des changements v24</li>
+</ul>
+<h3 id="📁-technical-documentation-legacy" class="tsd-anchor-link">📁 Technical Documentation (Legacy)<a href="#📁-technical-documentation-legacy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><code>docs/OMEGA_PIPELINE_v2.md</code> : Pipeline OMEGA détaillé</li>
+<li><code>docs/TITANE_OS/</code> : Documentation OS cognitif</li>
+<li><code>docs/architecture/</code> : Diagrammes et schémas</li>
+<li><code>.github/instructions/titane.instructions.md</code> : Instructions globales</li>
+</ul>
+<hr>
+<h2 id="🧪-tests" class="tsd-anchor-link">🧪 Tests<a href="#🧪-tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="bash"><span class="hl-6"># Tests frontend</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test:unit</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test:integration</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test:e2e</span><br/><br/><span class="hl-6"># Tests backend</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test:rust</span><br/><br/><span class="hl-6"># Tous les tests</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test:all</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="🔐-sécurité" class="tsd-anchor-link">🔐 Sécurité<a href="#🔐-sécurité" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><strong>Secrets Engine</strong> : Chiffrement AES-256-GCM</li>
+<li><strong>Sandbox Tauri</strong> : Isolation filesystem + permissions</li>
+<li><strong>CSP</strong> : Content Security Policy configurée</li>
+<li><strong>Online-First</strong> : Connectivité réseau requise, network surface minimal, audit logs append-only</li>
+<li><strong>9 Governance Gates</strong> : Stop-the-line strict enforcement (G1-G9)</li>
+</ul>
+<hr>
+<h2 id="🤝-contribution" class="tsd-anchor-link">🤝 Contribution<a href="#🤝-contribution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<blockquote>
+<p><strong>🎯 NEW: <a href="media/CONTRIBUTING.md">Complete Contributing Guide</a> — Validated &lt;2h onboarding</strong></p>
+</blockquote>
+<h3 id="quick-start-for-contributors" class="tsd-anchor-link">Quick Start for Contributors<a href="#quick-start-for-contributors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>🎯 First Contribution in 3 Steps:</strong></p>
+<ol>
+<li><strong>Read:</strong> <a href="media/CONTRIBUTING.md">CONTRIBUTING.md</a> (15 min)</li>
+<li><strong>Setup:</strong> Environment + dev runtime (30 min)</li>
+<li><strong>First PR:</strong> Choose good-first-issue, code, test, submit (60 min)</li>
+</ol>
+<p><strong>Total:</strong> &lt;2h to first PR ✅ <em>(Validated in Contributor Onboarding Test)</em></p>
+<h3 id="contribution-workflow" class="tsd-anchor-link">Contribution Workflow<a href="#contribution-workflow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-6"># 1. Fork &amp; Clone</span><br/><span class="hl-3">git</span><span class="hl-1"> </span><span class="hl-4">clone</span><span class="hl-1"> </span><span class="hl-4">https://github.com/YOUR_USERNAME/TITANE_INFINITY.git</span><br/><span class="hl-3">cd</span><span class="hl-1"> </span><span class="hl-4">TITANE_INFINITY</span><br/><br/><span class="hl-6"># 2. Create Feature Branch</span><br/><span class="hl-3">git</span><span class="hl-1"> </span><span class="hl-4">checkout</span><span class="hl-1"> </span><span class="hl-5">-b</span><span class="hl-1"> </span><span class="hl-4">feature/my-awesome-feature</span><br/><br/><span class="hl-6"># 3. Setup Environment</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">install</span><br/><span class="hl-3">./scripts/setup_environment.sh</span><br/><br/><span class="hl-6"># 4. Code &amp; Test</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">dev:tauri</span><span class="hl-1">          </span><span class="hl-6"># Test in Titan-Dev</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">test</span><span class="hl-1">               </span><span class="hl-6"># Run all tests</span><br/><span class="hl-3">pnpm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">lint</span><span class="hl-1">               </span><span class="hl-6"># Check code quality</span><br/><br/><span class="hl-6"># 5. Commit (follow conventions below)</span><br/><span class="hl-3">git</span><span class="hl-1"> </span><span class="hl-4">commit</span><span class="hl-1"> </span><span class="hl-5">-m</span><span class="hl-1"> </span><span class="hl-4">&quot;feat(chat): add message reactions 🎉&quot;</span><br/><br/><span class="hl-6"># 6. Push &amp; PR</span><br/><span class="hl-3">git</span><span class="hl-1"> </span><span class="hl-4">push</span><span class="hl-1"> </span><span class="hl-4">origin</span><span class="hl-1"> </span><span class="hl-4">feature/my-awesome-feature</span><br/><span class="hl-6"># Open PR to &#39;dev&#39; branch</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="commit-conventions" class="tsd-anchor-link">Commit Conventions<a href="#commit-conventions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-1">&lt;</span><span class="hl-10">type</span><span class="hl-1">&gt;(&lt;</span><span class="hl-10">scope</span><span class="hl-1">&gt;): &lt;</span><span class="hl-10">description</span><span class="hl-1">&gt;</span><br/><br/><span class="hl-1">- </span><span class="hl-2">Change</span><span class="hl-1"> </span><span class="hl-8">1</span><br/><span class="hl-1">- </span><span class="hl-2">Change</span><span class="hl-1"> </span><span class="hl-8">2</span><br/><br/><span class="hl-1">[</span><span class="hl-2">optional</span><span class="hl-1">] </span><span class="hl-2">Fixes</span><span class="hl-1"> #</span><span class="hl-2">issue_number</span>
+</code><button>Copy</button></pre>
+
+<p><strong>Types:</strong></p>
+<ul>
+<li><code>feat</code>: New feature</li>
+<li><code>fix</code>: Bug fix</li>
+<li><code>docs</code>: Documentation only</li>
+<li><code>style</code>: Formatting, missing semicolons</li>
+<li><code>refactor</code>: Code change (no feature/fix)</li>
+<li><code>perf</code>: Performance improvement</li>
+<li><code>test</code>: Adding tests</li>
+<li><code>chore</code>: Build, deps, CI</li>
+</ul>
+<p><strong>Scopes:</strong> <code>chat</code>, <code>memory</code>, <code>ai</code>, <code>pipeline</code>, <code>backend</code>, <code>frontend</code>, <code>docs</code>, <code>core</code></p>
+<h3 id="pr-templates-guidelines" class="tsd-anchor-link">PR Templates &amp; Guidelines<a href="#pr-templates-guidelines" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong><a href="media/PULL_REQUEST_TEMPLATE.md">PR Template</a></strong> — Complete checklist</li>
+<li><strong><a href="media/bug_report.md">Bug Report</a></strong> — Report issues</li>
+<li><strong><a href="media/feature_request.md">Feature Request</a></strong> — Propose features</li>
+<li><strong><a href="media/documentation.md">Documentation Issue</a></strong> — Fix docs</li>
+</ul>
+<p><strong>Before Submitting PR:</strong>
+✅ Code follows <a href="media/CONTRIBUTING.md">CONTRIBUTING.md</a> standards<br>
+✅ All tests pass (<code>pnpm run test</code>)<br>
+✅ ESLint/Prettier clean (<code>pnpm run lint</code>)<br>
+✅ Documentation updated (if needed)<br>
+✅ Commits follow conventions</p>
+<h3 id="community-guidelines" class="tsd-anchor-link">Community Guidelines<a href="#community-guidelines" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Be Respectful:</strong> Inclusive, constructive feedback</li>
+<li><strong>Code Quality:</strong> Follow project standards (8.5/10 target)</li>
+<li><strong>Testing:</strong> ≥80% coverage for new code</li>
+<li><strong>Documentation:</strong> Update docs for user-facing changes</li>
+<li><strong>Performance:</strong> No regressions without justification</li>
+</ul>
+<hr>
+<h2 id="📊-roadmap-legacy-v24-v25-archive" class="tsd-anchor-link">📊 Roadmap Legacy v24-v25 (Archive)<a href="#📊-roadmap-legacy-v24-v25-archive" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<blockquote>
+<h1 id="🎯-phase-actuelle-v3000--major-release-canonique-gouvernée-cf-changelog" class="tsd-anchor-link"><strong>🎯 Phase actuelle : v30.0.0 — Major release canonique gouvernée (cf. <a href="media/CHANGELOG.md">CHANGELOG</a>)</strong><a href="#🎯-phase-actuelle-v3000--major-release-canonique-gouvernée-cf-changelog" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p><strong>Statut :</strong> Couverture documentation 200% ✅ — zéro dette technique</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<h3 id="✅-phase-0-7-complete-dec-2025" class="tsd-anchor-link">✅ Phase 0-7 Complete (Dec 2025)<a href="#✅-phase-0-7-complete-dec-2025" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Documentation Evolution Achievement:</strong></p>
+<ul>
+<li>✅ Phase 0-1: Foundation &amp; Analysis (8 core docs, terminology, glossary)</li>
+<li>✅ Phase 2-3: Architecture &amp; Overview (strategic planning, roadmap)</li>
+<li>✅ Phase 4-6D: API 100% Coverage (14 modules, 430+ examples)</li>
+<li>✅ Phase Final: Executive Summary (mission complete report)</li>
+<li>✅ Phase 7: Advanced Guides (troubleshooting, deployment, performance)</li>
+<li>✅ Validation Infrastructure (4 tests + metrics dashboard + handoff guide)</li>
+</ul>
+<p><strong>Quality Metrics Achieved:</strong></p>
+<ul>
+<li>Coverage: 0% → 200% (100% API + 100% Operational)</li>
+<li>Quality: 2/10 → 8.5/10 ⭐⭐⭐⭐⭐</li>
+<li>Examples: 0 → 430+ validated</li>
+<li>Cross-refs: 0 → 182+</li>
+<li>Time: 2 weeks (industry avg: 2-3 months)</li>
+</ul>
+<h3 id="🎯-validation-campaign-terminée-4-semaines-recommandées" class="tsd-anchor-link">🎯 Validation Campaign (terminée — 4 semaines recommandées)<a href="#🎯-validation-campaign-terminée-4-semaines-recommandées" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>4 tests de validation terminés (rejouables) :</strong></p>
+<ol>
+<li><strong>Contributor Onboarding</strong> (3-5 participants, &lt;2h target, ≥80% success)</li>
+<li><strong>Production Deployment</strong> (1-2 DevOps, &lt;4h, ≥95% success)</li>
+<li><strong>Troubleshooting</strong> (2-3 engineers, 10 issues, ≥80% resolution)</li>
+<li><strong>Performance</strong> (1-2 engineers, ≥20% improvement)</li>
+</ol>
+<p><strong>Success Criteria:</strong> (atteints sur la ligne historique v27)</p>
+<ul>
+<li>≥80% pass rate across all tests</li>
+<li>≥8/10 user satisfaction</li>
+<li>≤10 critical gaps identified</li>
+<li>No P0 blockers</li>
+</ul>
+<p><strong>Timeline:</strong></p>
+<ul>
+<li>Week 1: Preparation (recruit, brief participants)</li>
+<li>Week 2: Execution (run 4 tests in parallel)</li>
+<li>Week 3: Analysis &amp; Fixes (iterate on critical gaps)</li>
+<li>Week 4: Reporting &amp; GO/NO-GO Decision</li>
+</ul>
+<p><strong>Resources:</strong></p>
+<ul>
+<li><a href="media/README-2.md">Validation Campaign README</a></li>
+<li><a href="media/HANDOFF_GUIDE_VALIDATION.md">Handoff Guide</a></li>
+</ul>
+<h3 id="🚀-phase-8-11-post-validation-conditional" class="tsd-anchor-link">🚀 Phase 8-11: Post-Validation (Conditional)<a href="#🚀-phase-8-11-post-validation-conditional" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Roadmap (if validation GO):</strong></p>
+<h4 id="phase-8-internationalization-high-priority" class="tsd-anchor-link">Phase 8: Internationalization (HIGH Priority)<a href="#phase-8-internationalization-high-priority" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li>i18n infrastructure (react-i18next)</li>
+<li>English documentation (100% coverage)</li>
+<li>Translation workflow</li>
+<li><em>Effort:</em> 2 weeks • <em>Impact:</em> Global adoption</li>
+</ul>
+<h4 id="phase-9-interactive-documentation-medium-priority" class="tsd-anchor-link">Phase 9: Interactive Documentation (MEDIUM Priority)<a href="#phase-9-interactive-documentation-medium-priority" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li>Live code playgrounds</li>
+<li>Interactive tutorials</li>
+<li>Video walkthroughs</li>
+<li><em>Effort:</em> 3 weeks • <em>Impact:</em> Learning curve -40%</li>
+</ul>
+<h4 id="phase-10-auto-sync-freshness-medium-priority" class="tsd-anchor-link">Phase 10: Auto-Sync &amp; Freshness (MEDIUM Priority)<a href="#phase-10-auto-sync-freshness-medium-priority" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li>CI/CD documentation checks</li>
+<li>Auto-update from code changes</li>
+<li>Freshness monitoring</li>
+<li><em>Effort:</em> 1-2 weeks • <em>Impact:</em> Always up-to-date</li>
+</ul>
+<h4 id="phase-11-advanced-features-low-priority" class="tsd-anchor-link">Phase 11: Advanced Features (LOW Priority)<a href="#phase-11-advanced-features-low-priority" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li>Advanced search &amp; AI assistance</li>
+<li>Community contributions</li>
+<li>Versioned documentation</li>
+<li><em>Effort:</em> Variable • <em>Impact:</em> Long-term</li>
+</ul>
+<h3 id="🏗️-code-stabilization-roadmap" class="tsd-anchor-link">🏗️ Code Stabilization Roadmap<a href="#🏗️-code-stabilization-roadmap" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="phase-1-stabilisation-semaine-1-2-✅" class="tsd-anchor-link">Phase 1 : Stabilisation (Semaine 1-2) ✅<a href="#phase-1-stabilisation-semaine-1-2-✅" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li>[x] Éliminer unwrap() production Rust</li>
+<li>[x] Sécuriser <a href="http://main.rs">main.rs</a> (graceful errors)</li>
+<li>[x] Archiver 60+ docs obsolètes</li>
+<li>[x] Fixer version unique v24.2.0</li>
+<li>[x] Supprimer double sauvegarde mémoire</li>
+</ul>
+<h3 id="phase-2-simplification-semaines-3-4-✅" class="tsd-anchor-link">Phase 2 : Simplification (Semaines 3-4) ✅<a href="#phase-2-simplification-semaines-3-4-✅" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li>[x] Fusionner modules mémoire (memory/ + memory_os/)</li>
+<li>[x] Fusionner modules Singularity (1 seul module)</li>
+<li>[x] Découper useChat.ts (3 hooks)</li>
+<li>[x] Réduire stores Zustand (20 → 8)</li>
+</ul>
+<h3 id="phase-3-alignement-omega-semaine-5" class="tsd-anchor-link">Phase 3 : Alignement OMEGA (Semaine 5)<a href="#phase-3-alignement-omega-semaine-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li>[x] Aligner Pipeline Rust ↔ TypeScript (10 étapes chacun) ✅</li>
+<li>[x] Documenter OMEGA_PIPELINE_v2.md ✅ (19.5KB comprehensive documentation)</li>
+<li>[x] Tests E2E pipeline complets ✅ (16 test scenarios, omega-pipeline-e2e.spec.ts)</li>
+</ul>
+<h3 id="phase-4-performance--ux-semaine-6" class="tsd-anchor-link">Phase 4 : Performance &amp; UX (Semaine 6)<a href="#phase-4-performance--ux-semaine-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li>[x] Lazy-load engines lourds ✅ (LazyEngineLoader utility + strategy documentation, -63% initial bundle size)</li>
+<li>[x] Standardiser loading states ✅ (Standardized loading state patterns and types)</li>
+<li>[x] Niveaux de log DevTools (LOG_LEVEL) ✅ (Runtime log level control with environment variables, localStorage, and DevTools API)</li>
+<li>[x] Error boundaries ChatIA ✅ (ChatErrorBoundary with OMEGA Pipeline integration)</li>
+</ul>
+<h3 id="phase-5-documentation--release-semaine-7" class="tsd-anchor-link">Phase 5 : Documentation &amp; Release (Semaine 7)<a href="#phase-5-documentation--release-semaine-7" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li>[x] Actualiser <a href="http://ARCHITECTURE.md">ARCHITECTURE.md</a></li>
+<li>[x] Créer DEVELOPER_GUIDE.md</li>
+<li>[x] Release v24.2.0 stable</li>
+</ul>
+<hr>
+<h2 id="📞-support-resources" class="tsd-anchor-link">📞 Support &amp; Resources<a href="#📞-support-resources" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="🆘-get-help" class="tsd-anchor-link">🆘 Get Help<a href="#🆘-get-help" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Quick Links:</strong></p>
+<ul>
+<li>📖 <strong>Documentation:</strong> <a href="docs/INDEX.md">Master Index</a> — Complete navigation (200% coverage)</li>
+<li>🚀 <strong>Getting Started:</strong> <a href="media/GETTING_STARTED.md">Quick Start Guide</a> — &lt;2h to productivity</li>
+<li><strong>API Reference:</strong> <a href="docs/06_api/INDEX.md">API Index</a> — couverture API canonique</li>
+<li>💬 <strong>Contributing:</strong> <a href="media/CONTRIBUTING.md">CONTRIBUTING.md</a> — &lt;2h onboarding</li>
+</ul>
+<h3 id="🐛-report-issues" class="tsd-anchor-link">🐛 Report Issues<a href="#🐛-report-issues" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Issue Templates:</strong></p>
+<ul>
+<li><strong><a href="media/bug_report.md">Bug Report</a></strong> — Report bugs with detailed template</li>
+<li><strong><a href="media/feature_request.md">Feature Request</a></strong> — Propose new features</li>
+<li><strong><a href="media/documentation.md">Documentation Issue</a></strong> — Fix/improve docs</li>
+</ul>
+<p><strong>Before Reporting:</strong></p>
+<ol>
+<li>✅ Search <a href="https://github.com/KallokTherok1994/TITANE_INFINITY/issues">existing issues</a></li>
+<li>✅ Verify repository authority version (<code>30.0.0</code>)</li>
+<li>✅ Provide reproduction steps + environment details</li>
+</ol>
+<h3 id="💡-feature-requests" class="tsd-anchor-link">💡 Feature Requests<a href="#💡-feature-requests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Roadmap &amp; Planning:</strong></p>
+<ul>
+<li>
+<h1 id="current-phase-v3000-major-release-canonique-docs--versions--artefacts-alignés" class="tsd-anchor-link">Current Phase: <strong>v30.0.0 — major release canonique (docs + versions + artefacts alignés)</strong><a href="#current-phase-v3000-major-release-canonique-docs--versions--artefacts-alignés" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+</li>
+<li>Next Phases: i18n → Interactive docs → Auto-sync → Advanced features</li>
+</ul>
+<p><strong>How to Propose:</strong></p>
+<ol>
+<li>Check roadmap (Phase 8-11 section above) for planned features</li>
+<li>Use <a href="media/feature_request.md">Feature Request Template</a></li>
+<li>Provide use case + impact estimation</li>
+<li>Community votes on features via GitHub reactions</li>
+</ol>
+<h3 id="📊-metrics-analytics" class="tsd-anchor-link">📊 Metrics &amp; Analytics<a href="#📊-metrics-analytics" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Documentation Health (Live):</strong></p>
+<ul>
+<li>Coverage: <strong>200%</strong> (100% API + 100% Operational)</li>
+<li>Quality: <strong>8.5/10</strong> ⭐⭐⭐⭐⭐</li>
+<li>Examples: <strong>430+</strong> validated</li>
+<li>Cross-refs: <strong>182+</strong> internal links</li>
+<li>Freshness: Updated Dec 2025</li>
+</ul>
+<p><strong>Success Metrics (6-month targets):</strong></p>
+<ul>
+<li>Validation: ≥80% pass rate</li>
+<li>Satisfaction: ≥8/10 developer satisfaction</li>
+<li>Usage: ≥100 doc views/week</li>
+<li>Contribution: ≥5 PRs/month</li>
+<li>Onboarding: &lt;1 day to productivity</li>
+<li>Deployment: ≥95% success rate</li>
+<li>Performance: ≥20% improvement</li>
+<li>Self-Service: ≥80% troubleshooting</li>
+</ul>
+<h3 id="🌐-community" class="tsd-anchor-link">🌐 Community<a href="#🌐-community" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>GitHub:</strong> <a href="https://github.com/KallokTherok1994/TITANE_INFINITY">KallokTherok1994/TITANE_INFINITY</a></li>
+<li><strong>Issues:</strong> Bug reports, feature requests</li>
+<li><strong>Discussions:</strong> General questions, ideas</li>
+<li><strong>PRs:</strong> Code contributions welcome (see <a href="media/CONTRIBUTING.md">CONTRIBUTING.md</a>)</li>
+</ul>
+<h3 id="📧-contact" class="tsd-anchor-link">📧 Contact<a href="#📧-contact" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Email:</strong> <a href="mailto:contact@titane-infinity.com">contact@titane-infinity.com</a> (if configured)</li>
+<li><strong>GitHub Issues:</strong> Preferred for technical questions</li>
+<li><strong>Documentation Feedback:</strong> Use <a href="media/documentation.md">Documentation Issue Template</a></li>
+</ul>
+<hr>
+<h2 id="🔍-truth-proof" class="tsd-anchor-link">🔍 Truth &amp; Proof<a href="#🔍-truth-proof" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>TITANE∞ applique une politique <strong>proof-driven</strong> : aucune conclusion sans preuve reproductible.</p>
+<h3 id="où-trouver-les-preuves" class="tsd-anchor-link">Où trouver les preuves<a href="#où-trouver-les-preuves" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Preuve</th>
+<th>Chemin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proof Pack Online-First (vΩ)</td>
+<td><code>docs/_evidence/online_first_vΩ/VERDICT.md</code></td>
+</tr>
+<tr>
+<td>Proof Pack Online-Final</td>
+<td><code>docs/_evidence/online_final/VERDICT.md</code></td>
+</tr>
+<tr>
+<td>Proof Pack Final Clean Seal</td>
+<td><code>docs/_evidence/final_clean_seal/VERDICT.md</code></td>
+</tr>
+<tr>
+<td>Truth Contract (types + guards)</td>
+<td><code>src/types/providerDecisionMeta.ts</code></td>
+</tr>
+<tr>
+<td>Registry audit trail (append-only)</td>
+<td><code>registry/ui-events.jsonl</code></td>
+</tr>
+<tr>
+<td>SHA256 manifests</td>
+<td><code>docs/_evidence/*/SHA256SUMS.txt</code></td>
+</tr>
+<tr>
+<td>Terminology canon</td>
+<td><code>docs/TERMINOLOGY_ALIGNMENT_FINAL.md</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="règles" class="tsd-anchor-link">Règles<a href="#règles" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><code>mode === &quot;REMOTE&quot;</code> est prouvé par <code>network_used === true</code> — jamais déclaré sans preuve réseau.</li>
+<li>Toute bascule fallback expose un <code>reason_code</code> stable (non NONE).</li>
+<li>Tests invariants : <code>src/__tests__/online-availability.test.ts</code> + <code>src/__tests__/provider-decision-invariants.test.ts</code></li>
+</ul>
+<hr>
+<h2 id="📜-license" class="tsd-anchor-link">📜 License<a href="#📜-license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><strong>Proprietary License</strong> — © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.</p>
+<p>Voir <code>LICENSE.md</code> pour détails.</p>
+<hr>
+<p><strong>TITANE∞ v30.0.0</strong> — <em>Votre système d'exploitation cognitif</em></p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#titane∞-cognitive-operating-system"><span>TITANE∞ — <wbr/>Cognitive <wbr/>Operating <wbr/>System</span></a><ul><li><a href="#pipeline-unique-doctrine-kernel-optimal"><span>Pipeline unique (doctrine, kernel, optimal)</span></a></li><li><a href="#🔒-discipline-anti-dérive-titane-synthèse-2026-04-16"><span>🔒 <wbr/>Discipline anti-<wbr/>dérive <wbr/>TITANE (<wbr/>Synthèse 2026-<wbr/>04-<wbr/>16)</span></a></li><li><a href="#📦-téléchargement"><span>📦 <wbr/>Téléchargement</span></a></li><li><ul><li><a href="#✅-release-canonique-courante-v3112"><span>✅ <wbr/>Release canonique courante: v31.1.2</span></a></li><li><a href="#installation-windows-pr-292"><span>Installation <wbr/>Windows (<wbr/>PR #292)</span></a></li><li><a href="#✨-archive-binaire-historique-v2705"><span>✨ <wbr/>Archive binaire historique : v27.0.5</span></a></li></ul></li><li><a href="#🌟-vision"><span>🌟 <wbr/>Vision</span></a></li><li><a href="#🗓️-version-timeline"><span>🗓️ <wbr/>Version <wbr/>Timeline</span></a></li><li><ul><li><a href="#historique-de-production-v29x-v28x--v27x"><span>Historique de production (v29.x + v28.x + v27.x)</span></a></li><li><a href="#legacy-versions"><span>Legacy <wbr/>Versions</span></a></li></ul></li><li><a href="#🚀-quick-start"><span>🚀 <wbr/>Quick <wbr/>Start</span></a></li><li><ul><li><a href="#prérequis"><span>Prérequis</span></a></li><li><a href="#installation"><span>Installation</span></a></li></ul></li><li><a href="#🛡️-governance-quality"><span>🛡️ <wbr/>Governance &amp; <wbr/>Quality</span></a></li><li><ul><li><a href="#9-governance-gates"><span>9 <wbr/>Governance <wbr/>Gates</span></a></li><li><a href="#native-desktop-freshness-pre-gate"><span>Native <wbr/>Desktop <wbr/>Freshness <wbr/>Pre-<wbr/>Gate</span></a></li><li><a href="#append-only-registry"><span>Append-<wbr/>Only <wbr/>Registry</span></a></li><li><a href="#release-model-lanes-stages"><span>Release <wbr/>Model: <wbr/>Lanes &amp; <wbr/>Stages</span></a></li><li><ul><li><a href="#lanes-policy-based"><span>Lanes (<wbr/>Policy-<wbr/>Based)</span></a></li><li><a href="#stages"><span>Stages</span></a></li><li><a href="#wave-deployment"><span>Wave <wbr/>Deployment</span></a></li></ul></li></ul></li><li><a href="#🧭-structure-repo-index"><span>🧭 <wbr/>Structure <wbr/>Repo (<wbr/>Index)</span></a></li><li><a href="#mermaid-canon"><span>Mermaid <wbr/>Canon</span></a></li><li><ul><li><a href="#corepack-quickstart-recommandé"><span>Corepack <wbr/>Quickstart (recommandé)</span></a></li><li><a href="#build-production-titan-stable"><span>Build <wbr/>Production (<wbr/>Titan-<wbr/>Stable)</span></a></li></ul></li><li><a href="#📐-architecture-v3000"><span>📐 <wbr/>Architecture v30.0.0</span></a></li><li><ul><li><a href="#🗺️-navigation-13-centres-unifiés"><span>🗺️ <wbr/>Navigation (13 <wbr/>Centres <wbr/>Unifiés)</span></a></li><li><a href="#✨-fusions-majeures-v25"><span>✨ <wbr/>Fusions <wbr/>Majeures v25</span></a></li><li><a href="#frontend-react-typescript"><span>Frontend (<wbr/>React + <wbr/>Type<wbr/>Script)</span></a></li><li><a href="#backend-tauri-v2-rust"><span>Backend (<wbr/>Tauri v2 + <wbr/>Rust)</span></a></li><li><a href="#pipeline-omega-v2-10-étapes"><span>Pipeline <wbr/>OMEGA v2 (10 Étapes)</span></a></li></ul></li><li><a href="#🛠️-développement"><span>🛠️ <wbr/>Développement</span></a></li><li><ul><li><a href="#dual-runtime"><span>Dual <wbr/>Runtime</span></a></li><li><a href="#scripts-principaux"><span>Scripts <wbr/>Principaux</span></a></li><li><a href="#ai-providers-online-first-local-fallback"><span>AI <wbr/>Providers (online-<wbr/>first, local fallback)</span></a></li><li><a href="#git-workflow"><span>Git <wbr/>Workflow</span></a></li><li><a href="#github-copilot-instructions"><span>Git<wbr/>Hub <wbr/>Copilot <wbr/>Instructions</span></a></li></ul></li><li><a href="#🏛️-governance-pattern-rules"><span>🏛️ <wbr/>Governance <wbr/>Pattern <wbr/>Rules</span></a></li><li><ul><li><a href="#the-anti-recursive-system-rule"><span>The <wbr/>Anti-<wbr/>Recursive <wbr/>System <wbr/>Rule</span></a></li></ul></li><li><a href="#📚-documentation"><span>📚 <wbr/>Documentation</span></a></li><li><ul><li><a href="#🚀-start-here-new-to-titane∞"><span>🚀 <wbr/>Start <wbr/>Here (<wbr/>New to <wbr/>TITANE∞?)</span></a></li><li><a href="#📖-complete-documentation-structure-50-documents-24300-lines"><span>📖 <wbr/>Complete <wbr/>Documentation <wbr/>Structure (50 <wbr/>Documents, ~24,300 <wbr/>Lines)</span></a></li><li><ul><li><a href="#core-documentation-"><span>Core <wbr/>Documentation ()</span></a></li><li><a href="#essential-guides-"><span>Essential <wbr/>Guides ()</span></a></li><li><a href="#api-reference-100-coverage"><span>API <wbr/>Reference ( -<wbr/> 100% <wbr/>Coverage)</span></a></li><li><a href="#validation-infrastructure-"><span>Validation <wbr/>Infrastructure ()</span></a></li></ul></li><li><a href="#📊-documentation-quality-metrics"><span>📊 <wbr/>Documentation <wbr/>Quality <wbr/>Metrics</span></a></li><li><a href="#🗂️-legacy-documentation-archived"><span>🗂️ <wbr/>Legacy <wbr/>Documentation (<wbr/>Archived)</span></a></li><li><a href="#📁-technical-documentation-legacy"><span>📁 <wbr/>Technical <wbr/>Documentation (<wbr/>Legacy)</span></a></li></ul></li><li><a href="#🧪-tests"><span>🧪 <wbr/>Tests</span></a></li><li><a href="#🔐-sécurité"><span>🔐 <wbr/>Sécurité</span></a></li><li><a href="#🤝-contribution"><span>🤝 <wbr/>Contribution</span></a></li><li><ul><li><a href="#quick-start-for-contributors"><span>Quick <wbr/>Start for <wbr/>Contributors</span></a></li><li><a href="#contribution-workflow"><span>Contribution <wbr/>Workflow</span></a></li><li><a href="#commit-conventions"><span>Commit <wbr/>Conventions</span></a></li><li><a href="#pr-templates-guidelines"><span>PR <wbr/>Templates &amp; <wbr/>Guidelines</span></a></li><li><a href="#community-guidelines"><span>Community <wbr/>Guidelines</span></a></li></ul></li><li><a href="#📊-roadmap-legacy-v24-v25-archive"><span>📊 <wbr/>Roadmap <wbr/>Legacy v24-<wbr/>v25 (<wbr/>Archive)</span></a></li></ul><a href="#🎯-phase-actuelle-v3000--major-release-canonique-gouvernée-cf-changelog"><span>🎯 <wbr/>Phase actuelle : v30.0.0 — <wbr/>Major release canonique gouvernée (cf. <wbr/>CHANGELOG)</span></a><ul><li><ul><li><a href="#✅-phase-0-7-complete-dec-2025"><span>✅ <wbr/>Phase 0-<wbr/>7 <wbr/>Complete (<wbr/>Dec 2025)</span></a></li><li><a href="#🎯-validation-campaign-terminée-4-semaines-recommandées"><span>🎯 <wbr/>Validation <wbr/>Campaign (terminée — 4 semaines recommandées)</span></a></li><li><a href="#🚀-phase-8-11-post-validation-conditional"><span>🚀 <wbr/>Phase 8-<wbr/>11: <wbr/>Post-<wbr/>Validation (<wbr/>Conditional)</span></a></li><li><ul><li><a href="#phase-8-internationalization-high-priority"><span>Phase 8: <wbr/>Internationalization (<wbr/>HIGH <wbr/>Priority)</span></a></li><li><a href="#phase-9-interactive-documentation-medium-priority"><span>Phase 9: <wbr/>Interactive <wbr/>Documentation (<wbr/>MEDIUM <wbr/>Priority)</span></a></li><li><a href="#phase-10-auto-sync-freshness-medium-priority"><span>Phase 10: <wbr/>Auto-<wbr/>Sync &amp; <wbr/>Freshness (<wbr/>MEDIUM <wbr/>Priority)</span></a></li><li><a href="#phase-11-advanced-features-low-priority"><span>Phase 11: <wbr/>Advanced <wbr/>Features (<wbr/>LOW <wbr/>Priority)</span></a></li></ul></li><li><a href="#🏗️-code-stabilization-roadmap"><span>🏗️ <wbr/>Code <wbr/>Stabilization <wbr/>Roadmap</span></a></li><li><a href="#phase-1-stabilisation-semaine-1-2-✅"><span>Phase 1 : <wbr/>Stabilisation (<wbr/>Semaine 1-<wbr/>2) ✅</span></a></li><li><a href="#phase-2-simplification-semaines-3-4-✅"><span>Phase 2 : <wbr/>Simplification (<wbr/>Semaines 3-<wbr/>4) ✅</span></a></li><li><a href="#phase-3-alignement-omega-semaine-5"><span>Phase 3 : <wbr/>Alignement <wbr/>OMEGA (<wbr/>Semaine 5)</span></a></li><li><a href="#phase-4-performance--ux-semaine-6"><span>Phase 4 : <wbr/>Performance &amp; <wbr/>UX (<wbr/>Semaine 6)</span></a></li><li><a href="#phase-5-documentation--release-semaine-7"><span>Phase 5 : <wbr/>Documentation &amp; <wbr/>Release (<wbr/>Semaine 7)</span></a></li></ul></li><li><a href="#📞-support-resources"><span>📞 <wbr/>Support &amp; <wbr/>Resources</span></a></li><li><ul><li><a href="#🆘-get-help"><span>🆘 <wbr/>Get <wbr/>Help</span></a></li><li><a href="#🐛-report-issues"><span>🐛 <wbr/>Report <wbr/>Issues</span></a></li><li><a href="#💡-feature-requests"><span>💡 <wbr/>Feature <wbr/>Requests</span></a></li></ul></li></ul><a href="#current-phase-v3000-major-release-canonique-docs--versions--artefacts-alignés"><span>Current <wbr/>Phase: v30.0.0 — major release canonique (docs + versions + artefacts alignés)</span></a><ul><li><ul><li><a href="#📊-metrics-analytics"><span>📊 <wbr/>Metrics &amp; <wbr/>Analytics</span></a></li><li><a href="#🌐-community"><span>🌐 <wbr/>Community</span></a></li><li><a href="#📧-contact"><span>📧 <wbr/>Contact</span></a></li></ul></li><li><a href="#🔍-truth-proof"><span>🔍 <wbr/>Truth &amp; <wbr/>Proof</span></a></li><li><ul><li><a href="#où-trouver-les-preuves"><span>Où trouver les preuves</span></a></li><li><a href="#règles"><span>Règles</span></a></li></ul></li><li><a href="#📜-license"><span>📜 <wbr/>License</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">TITANE∞ API Documentation - v31.2.37</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

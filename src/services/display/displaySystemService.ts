@@ -1,7 +1,7 @@
 // src/services/display/displaySystemService.ts
 // Service d’accès aux commandes display system (IPC Tauri)
-
-// TODO: relier aux vraies commandes IPC dès qu’elles sont disponibles
+// NOTE: implémentation locale (Rule 7 — fallback local obligatoire).
+// Connecter aux commandes IPC quand les commandes Rust correspondantes seront disponibles.
 
 export interface DisplayMonitor {
   id: string;

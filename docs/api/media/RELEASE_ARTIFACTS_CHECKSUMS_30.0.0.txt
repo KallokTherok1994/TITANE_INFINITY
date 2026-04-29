@@ -1,0 +1,21 @@
+# TITANE∞ v30.0.0 — Release Artifacts Checksums
+# Generated: 2026-04-11
+# Status: CERTIFIED
+# Certification: TITANE_INFINITY_RELEASE_20260411_080731_CERTIFIED
+
+# AppImage (Linux universal)
+Titan-Stable_30.0.0_amd64.AppImage: 8bf170537c3f78e2179e47623f7a89ce6bb44c43304b52bd713054296364fcba
+# Size: 91724280 bytes
+
+# DEB (Debian/Ubuntu)
+Titan-Stable_30.0.0_amd64.deb: 2608165ea3b900d4f7f1f41e6ae12bf3c25201d9b94e58dc0d754204b81c3e30
+# Size: 18921010 bytes
+
+# Binary
+titane-infinity: b7ca413906deee35e516e2fe14f7847210c08b5f86dbd7e1a47fa815219fdb67
+# Size: 43849944 bytes
+
+# Evidence
+AppImage: 8bf170537c3f78e2179e47623f7a89ce6bb44c43304b52bd713054296364fcba
+DEB: 2608165ea3b900d4f7f1f41e6ae12bf3c25201d9b94e58dc0d754204b81c3e30
+Binary: b7ca413906deee35e516e2fe14f7847210c08b5f86dbd7e1a47fa815219fdb67

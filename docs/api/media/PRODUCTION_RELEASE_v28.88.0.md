@@ -1,0 +1,4 @@
+# PRODUCTION RELEASE v28.88.0
+Date: 2026-03-22 | Verdict: SEALED
+Proof: RELEASE_v28.88.0_SEALED.txt
+Gates: documented in RELEASE_v28.88.0_SEALED.txt
