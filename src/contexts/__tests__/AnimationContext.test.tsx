@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import { AnimationProvider, useAnimation } from '@/contexts/AnimationContext';
@@ -10,22 +10,39 @@ vi.mock('@/hooks/usePerformanceMonitor', () => ({
   usePerformanceMonitor: usePerformanceMonitorMock,
 }));
 
+function makePerformanceMock(overrides: Partial<{
+  fps: number;
+  cpuLoad: number;
+  shouldReduceMotion: boolean;
+  shouldThrottle: boolean;
+  duration: number;
+  skipAnimation: boolean;
+}> = {}) {
+  const {
+    fps = 60,
+    cpuLoad = 10,
+    shouldReduceMotion = false,
+    shouldThrottle = false,
+    duration = 0.2,
+    skipAnimation = false,
+  } = overrides;
+  return {
+    metrics: { fps, cpuLoad, shouldReduceMotion, shouldThrottle },
+    shouldReduceMotion,
+    shouldThrottle,
+    animationConfig: { duration, skipAnimation },
+  };
+}
+
 describe('AnimationContext', () => {
-  it('exposes animation runtime values from provider', () => {
-    usePerformanceMonitorMock.mockReturnValue({
-      metrics: {
-        fps: 42,
-        cpuLoad: 18,
-        shouldReduceMotion: false,
-        shouldThrottle: true,
-      },
-      shouldReduceMotion: false,
-      shouldThrottle: true,
-      animationConfig: {
-        duration: 0.15,
-        skipAnimation: false,
-      },
-    });
+  beforeEach(() => {
+    usePerformanceMonitorMock.mockReset();
+  });
+
+  it('exposes animation runtime values from provider (custom thresholds)', () => {
+    usePerformanceMonitorMock.mockReturnValue(
+      makePerformanceMock({ fps: 42, shouldThrottle: true, duration: 0.15 })
+    );
 
     const Probe = () => {
       const { animationConfig, shouldReduceMotion, shouldThrottle, fps } = useAnimation();
@@ -63,21 +80,80 @@ describe('AnimationContext', () => {
     });
   });
 
-  it('throws when useAnimation is called outside provider', () => {
-    usePerformanceMonitorMock.mockReturnValue({
-      metrics: {
-        fps: 60,
-        cpuLoad: 0,
-        shouldReduceMotion: false,
-        shouldThrottle: false,
-      },
-      shouldReduceMotion: false,
-      shouldThrottle: false,
-      animationConfig: {
-        duration: 0.2,
-        skipAnimation: false,
-      },
+  it('uses default fpsThreshold=40 and cpuThreshold=80 when not provided', () => {
+    usePerformanceMonitorMock.mockReturnValue(makePerformanceMock({ fps: 55 }));
+
+    render(
+      <AnimationProvider>
+        <div data-testid="default-thresh">ok</div>
+      </AnimationProvider>
+    );
+
+    expect(screen.getByTestId('default-thresh')).toHaveTextContent('ok');
+    expect(usePerformanceMonitorMock).toHaveBeenCalledWith({
+      fpsThreshold: 40,
+      cpuThreshold: 80,
     });
+  });
+
+  it('exposes shouldReduceMotion=true when performance monitor signals it', () => {
+    usePerformanceMonitorMock.mockReturnValue(
+      makePerformanceMock({ shouldReduceMotion: true, skipAnimation: true, duration: 0 })
+    );
+
+    const Probe = () => {
+      const { shouldReduceMotion, animationConfig } = useAnimation();
+      return (
+        <div
+          data-testid="reduce-probe"
+          data-reduce={String(shouldReduceMotion)}
+          data-skip={String(animationConfig.skipAnimation)}
+        >
+          reduce
+        </div>
+      );
+    };
+
+    render(
+      <AnimationProvider>
+        <Probe />
+      </AnimationProvider>
+    );
+
+    const probe = screen.getByTestId('reduce-probe');
+    expect(probe).toHaveAttribute('data-reduce', 'true');
+    expect(probe).toHaveAttribute('data-skip', 'true');
+  });
+
+  it('exposes shouldThrottle=false when performance is healthy', () => {
+    usePerformanceMonitorMock.mockReturnValue(makePerformanceMock({ fps: 120, shouldThrottle: false }));
+
+    const Probe = () => {
+      const { shouldThrottle, fps } = useAnimation();
+      return (
+        <div
+          data-testid="healthy-probe"
+          data-throttle={String(shouldThrottle)}
+          data-fps={String(fps)}
+        >
+          healthy
+        </div>
+      );
+    };
+
+    render(
+      <AnimationProvider>
+        <Probe />
+      </AnimationProvider>
+    );
+
+    const probe = screen.getByTestId('healthy-probe');
+    expect(probe).toHaveAttribute('data-throttle', 'false');
+    expect(probe).toHaveAttribute('data-fps', '120');
+  });
+
+  it('throws when useAnimation is called outside provider', () => {
+    usePerformanceMonitorMock.mockReturnValue(makePerformanceMock());
 
     const Probe = () => {
       useAnimation();

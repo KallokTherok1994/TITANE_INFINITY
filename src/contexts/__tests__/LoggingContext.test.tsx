@@ -21,7 +21,7 @@ function createStubLogger() {
 }
 
 describe('LoggingContext', () => {
-  it('exposes root logger and module logger from provider', () => {
+  it('exposes root logger and module logger from provider (custom createModuleLogger)', () => {
     const rootLogger = createStubLogger();
     const moduleLogger = createStubLogger();
     const createModuleLogger = vi.fn(() => moduleLogger);
@@ -53,7 +53,34 @@ describe('LoggingContext', () => {
     expect(moduleLogger.warn).toHaveBeenCalledWith('module-message');
   });
 
-  it('throws when used outside provider', () => {
+  it('uses default createLogger fallback when no createModuleLogger is provided', () => {
+    // Covers the ?? branch at LoggingContext.tsx line 29:
+    //   createModuleLogger ?? ((moduleName: string) => createLogger(moduleName))
+    const rootLogger = createStubLogger();
+
+    const Probe = () => {
+      const { createModuleLogger } = useLogging();
+      const moduleLogger = createModuleLogger('DefaultModule');
+      return (
+        <div data-testid="default-module-logger" data-has-info={String(typeof moduleLogger.info === 'function')}>
+          ready
+        </div>
+      );
+    };
+
+    render(
+      <LoggingProvider rootLogger={rootLogger as never}>
+        <Probe />
+      </LoggingProvider>
+    );
+
+    const el = screen.getByTestId('default-module-logger');
+    expect(el).toHaveTextContent('ready');
+    // The default createLogger returns a real logger with an `info` function
+    expect(el).toHaveAttribute('data-has-info', 'true');
+  });
+
+  it('throws when useLogging is used outside provider', () => {
     const Probe = () => {
       useLogging();
       return null;
@@ -62,5 +89,41 @@ describe('LoggingContext', () => {
     expect(() => render(<Probe />)).toThrow(
       'useLogging must be used within LoggingProvider'
     );
+  });
+
+  it('throws when useModuleLogger is used outside provider', () => {
+    const Probe = () => {
+      useModuleLogger('OrphanModule');
+      return null;
+    };
+
+    expect(() => render(<Probe />)).toThrow(
+      'useLogging must be used within LoggingProvider'
+    );
+  });
+
+  it('exposes createModuleLogger callable from useLogging context', () => {
+    const rootLogger = createStubLogger();
+    const moduleLogger = createStubLogger();
+    const createModuleLogger = vi.fn(() => moduleLogger);
+
+    const Probe = () => {
+      const ctx = useLogging();
+      const ml = ctx.createModuleLogger('DirectCall');
+      return (
+        <div data-testid="direct-call-probe" data-has-fn={String(typeof ml.debug === 'function')}>
+          ok
+        </div>
+      );
+    };
+
+    render(
+      <LoggingProvider rootLogger={rootLogger as never} createModuleLogger={createModuleLogger}>
+        <Probe />
+      </LoggingProvider>
+    );
+
+    expect(screen.getByTestId('direct-call-probe')).toHaveAttribute('data-has-fn', 'true');
+    expect(createModuleLogger).toHaveBeenCalledWith('DirectCall');
   });
 });
