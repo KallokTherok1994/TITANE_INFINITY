@@ -19,7 +19,7 @@ import {
 // ─────────────────────────────────────────────────────────────────
 
 vi.mock('@/services/webResearchService', () => ({
-  browserWebSearch: vi.fn().mockResolvedValue({
+  webSearch: vi.fn().mockResolvedValue({
     ok: true,
     content: [
       {
@@ -186,25 +186,25 @@ describe('reflectiveVerifier', () => {
     });
 
     it('does not trigger web search when confidence is high', async () => {
-      const { browserWebSearch } = await import('@/services/webResearchService');
+      const { webSearch } = await import('@/services/webResearchService');
       const critique = await verifyCritique(
         'What year was it?',
         'It was a normal year.',
         { singularityCoherence: 0.9, memoryMatches: 5 }
       );
       expect(critique.verified).toBe(true);
-      expect(browserWebSearch).not.toHaveBeenCalled();
+      expect(webSearch).not.toHaveBeenCalled();
     });
 
     it('triggers web search when confidence is low and has factual claims', async () => {
-      const { browserWebSearch } = await import('@/services/webResearchService');
+      const { webSearch } = await import('@/services/webResearchService');
       // factual claim + low confidence
       const critique = await verifyCritique(
         'What happened in 2023?',
         'En 2023, selon le rapport, le PIB était de 45.3% plus élevé.',
         { singularityCoherence: 0.2, memoryMatches: 0 }
       );
-      expect(browserWebSearch).toHaveBeenCalled();
+      expect(webSearch).toHaveBeenCalled();
       expect(critique.webSources.length).toBeGreaterThan(0);
     });
 
@@ -218,8 +218,8 @@ describe('reflectiveVerifier', () => {
     });
 
     it('handles web search failure gracefully (no throw)', async () => {
-      const { browserWebSearch } = await import('@/services/webResearchService');
-      vi.mocked(browserWebSearch).mockRejectedValueOnce(new Error('Network error'));
+      const { webSearch } = await import('@/services/webResearchService');
+      vi.mocked(webSearch).mockRejectedValueOnce(new Error('Network error'));
 
       const critique = await verifyCritique(
         'Explain 2024',
@@ -231,8 +231,8 @@ describe('reflectiveVerifier', () => {
     });
 
     it('handles web search returning null gracefully', async () => {
-      const { browserWebSearch } = await import('@/services/webResearchService');
-      vi.mocked(browserWebSearch).mockResolvedValueOnce({ ok: false, content: null, error: { code: 'ERR', message: 'fail' } });
+      const { webSearch } = await import('@/services/webResearchService');
+      vi.mocked(webSearch).mockResolvedValueOnce({ ok: false, content: null, error: { code: 'ERR', message: 'fail' } });
 
       const critique = await verifyCritique(
         'What is X?',

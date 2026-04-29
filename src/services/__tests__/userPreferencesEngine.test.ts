@@ -76,13 +76,13 @@ describe('DEEP_INTERNET_ANALYSIS_INSTRUCTION — contenu conforme', () => {
   it('est injecté dans generateContextForAI quand deep_internet_analysis = true', () => {
     userPreferencesEngine.setCustomPreference('deep_internet_analysis', true);
     const ctx = userPreferencesEngine.generateContextForAI();
-    expect(ctx).toContain('ANALYSE INTERNET MAXIMALE');
+    expect(ctx).toContain('ANALYSE APPROFONDIE MAXIMALE');
   });
 
   it('n\'est PAS injecté dans generateContextForAI quand deep_internet_analysis = false', () => {
     userPreferencesEngine.setCustomPreference('deep_internet_analysis', false);
     const ctx = userPreferencesEngine.generateContextForAI();
-    expect(ctx).not.toContain('ANALYSE INTERNET MAXIMALE');
+    expect(ctx).not.toContain('ANALYSE APPROFONDIE MAXIMALE');
   });
 
   it('contient la Phase 1 COLLECTE MAXIMALE', () => {
