@@ -31,8 +31,11 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 - Keep fixes minimal and reversible.
 - Route binary, repeated rules toward validator scripts.
 - If a custom agent, specialist delegation, or exploration-oriented handoff is unavailable because of platform quota or tooling unavailability, continue immediately with canonical local discovery or evidence collection whenever the task remains locally provable; classify the delegation gap honestly instead of blocking on the delegation itself.
+- **PERMANENT — ZERO EXCEPTION**: For every modification or integration (CSS, TS, Rust, script, agent), generate tests in the same commit — never as a later catchup. Missing tests = BLOCKED until coverage exists (Rule 16 hard gate).
 - For every new file in `src/` or `src-tauri/`: confirm corresponding test file exists (Rule 16).
 - For every structural change: confirm relevant mapping doc is updated (Rule 15).
+- For every new integration or capability: generate Vitest unit, E2E Playwright, AutoHeal full-schema entry, and detect_recurrence PASS before commit — this is a hard gate, not a best-effort.
+- For every new agent (monitoring, diagnostic, explainability, orchestrateur, sécurité): create dedicated service `src/services/<agent>/`, dashboard UI with stable `data-testid`, E2E test, and update `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md` in the same patch.
 - For frontend/UI work, enforce the scoped mandatory UI procedure from `frontend.instructions.md` as part of PATH_HEAVY verification whenever runtime truth, fullscreen, zoom, build, or cross-platform proof is involved.
 - For route/page/runtime regressions, enforce the canonical surface anti-drift sequence: identify the real visible surface first, then realign live aliases, deprecated routes, preloading, compatibility exports, and touched tooling references before PASS.
 - In direct-to-main mode explicitly requested by the user, finish each proven phase with a targeted commit on `MAIN` instead of batching multiple completed fixes together.
