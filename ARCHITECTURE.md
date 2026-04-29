@@ -560,13 +560,17 @@ Conformité validée par tests 100/100 (avril 2026).
 - Tests: 31 PASS (cargo test -- test_knowledge, baseline >=205 validated)
 - `knowledge_base_default.rs`: +2 consts THERAPIES_HUMANISTES_EXISTENTIELLES + PSYCHODYNAMIQUE_MECANISMES_DEFENSE, +2 SOURCES entries, baseline >=205 -> >=207, expected list updated (phase 31)
 - Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=207 validated)
+- `knowledge_base_default.rs`: +2 consts ADDICTION_ENTRETIEN_MOTIVATIONNEL + INTIMITE_SEXUALITE_COUPLES_EFT, +2 SOURCES entries, baseline >=207 -> >=209, expected list updated (phase 32)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=209 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
 - `kb.neurodiversiteDbt.test.ts`: 51 PASS (Vitest, phase 30)
 - `kb.humanistePsychodynamique.test.ts`: 52 PASS (Vitest, phase 31)
+- `kb.addictionCouples.test.ts`: 50 PASS (Vitest, phase 32)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
 - `AH-KB-NEURODIV-DBT-2026-04-29` (full schema, detect_recurrence PASS, phase 30)
 - `AH-KB-HUMANISTE-PSYCHODYN-2026-04-29` (full schema, detect_recurrence PASS, phase 31)
+- `AH-KB-ADDICTION-COUPLES-2026-04-29` (full schema, detect_recurrence PASS, phase 32)

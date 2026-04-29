@@ -1560,10 +1560,13 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 | `data/knowledge_base/default/emotion_regulation_dbt_advanced.json` | KB JSON | v31.4.2 | 7 | 45+ |
 | `data/knowledge_base/default/therapies_humanistes_existentielles.json` | KB JSON | v31.4.3 | 7 | 45 |
 | `data/knowledge_base/default/psychodynamique_mecanismes_defense.json` | KB JSON | v31.4.4 | 8 | 44 |
-| `src-tauri/src/knowledge_base_default.rs` | Rust | +6 consts +6 SOURCES, baseline >=207 | — | — |
+| `data/knowledge_base/default/addiction_entretien_motivationnel.json` | KB JSON | v31.4.5 | 7 | 46 |
+| `data/knowledge_base/default/intimite_sexualite_couples_eft.json` | KB JSON | v31.4.6 | 7 | 45 |
+| `src-tauri/src/knowledge_base_default.rs` | Rust | +8 consts +8 SOURCES, baseline >=209 | — | — |
 | `src-tauri/src/commands/ide_operator.rs` | Rust fix | E0505 borrow-after-move | — | — |
 | `src/__tests__/services/ai/kb.tccResilience.test.ts` | Vitest | 53 PASS (p29) | — | — |
 | `src/__tests__/services/ai/kb.neurodiversiteDbt.test.ts` | Vitest | 51 PASS (p30) | — | — |
 | `src/__tests__/services/ai/kb.humanistePsychodynamique.test.ts` | Vitest | 52 PASS (p31) | — | — |
+| `src/__tests__/services/ai/kb.addictionCouples.test.ts` | Vitest | 50 PASS (p32) | — | — |
 
-Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30)
+Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/attachement (p26) → dependance/therapies (p27) → CNV + deuil (p28) → TCC + sante mentale/resilience (p29) → neurodiversite (ADHD/TSA/HPI) + DBT avance (p30) → humaniste/existentiel + psychodynamique (p31) → addiction/EM + intimite/sexualite/EFT (p32)

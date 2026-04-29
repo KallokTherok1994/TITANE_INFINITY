@@ -1,0 +1,145 @@
+{
+  "version": "v31.4.5",
+  "category": "addiction_entretien_motivationnel",
+  "description": "Addictions et entretien motivationnel : neurobiologie de l'addiction (dopamine, circuit récompense, craving, manque), modèle transthéorique de Prochaska/DiClemente (6 stades de changement), entretien motivationnel Miller/Rollnick (esprit EM, techniques OARS/REFLET/résistance/discordance, règle des 20%), réduction des risques, dépendance affective Norwood, codépendance, CRAFT, 12 étapes AA/NA, traitements pharmacologiques (TSO méthadone/buprénorphine, naltrexone, antabuse), addiction comportementale (jeu pathologique, cyberdépendance, sexualité compulsive), rechute comme étape",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "addiction dépendance",
+    "alcoolisme dépendance alcool",
+    "dépendance substances",
+    "entretien motivationnel",
+    "Miller Rollnick EM",
+    "Prochaska DiClemente",
+    "stades du changement",
+    "précontemplation contemplation",
+    "ambivalence motivation",
+    "résistance au changement thérapie",
+    "OARS technique EM",
+    "reflet empathique EM",
+    "discordance développer EM",
+    "rechute prévention addiction",
+    "réduction des risques",
+    "harm reduction",
+    "traitement substitutif opioïdes",
+    "méthadone buprénorphine",
+    "naltrexone naloxone",
+    "sevrage alcool",
+    "craving envie substance",
+    "circuit récompense dopamine",
+    "neurobiologie addiction",
+    "codépendance relation",
+    "dépendance affective",
+    "Norwood femmes qui aiment trop",
+    "CRAFT communauté renforcement",
+    "alcooliques anonymes 12 étapes",
+    "jeu pathologique ludopathie",
+    "cyberdépendance écran addiction",
+    "addiction comportementale",
+    "addiction sexe pornographie",
+    "tabac arrêt sevrage",
+    "cannabis dépendance",
+    "opioïdes héroïne fentanyl",
+    "cocaïne stimulants",
+    "benzodiazépines dépendance",
+    "rechute apprentissage",
+    "coping addictif",
+    "Marlatt modèle rechute",
+    "abstinence totale vs réduction",
+    "groupe soutien addiction",
+    "famille addiction système",
+    "Al-Anon codépendants",
+    "motivation intrinsèque extrinsèque",
+    "auto-efficacité addiction"
+  ],
+  "sections": {
+    "neurobiologie_addiction": {
+      "circuit_recompense": {
+        "anatomie": "Le circuit mésolimbique — aire tegmentale ventrale (ATV) → noyau accumbens → cortex préfrontal — est le substrat neurobiologique de la récompense, du plaisir et de la motivation",
+        "dopamine_et_salience": "La dopamine ne signale pas le plaisir directement — elle signale la salience motivationnelle (importance de l'objet pour la survie). Les substances psychoactives et comportements addictifs libèrent 2 à 10x plus de dopamine que les récompenses naturelles",
+        "adaptation_neuroplastique": "Avec la répétition, le cerveau s'adapte: down-regulation des récepteurs D2 → tolérance (besoin de plus pour le même effet) + sensibilisation des circuits motivationnels → le craving persiste même sans plaisir"
+      },
+      "criteres_diagnostiques_DSM5": {
+        "11_criteres": "DSM-5 : perte de contrôle (1. prise en quantité/durée supérieure, 2. désir persistant sans succès d'arrêt, 3. temps considérable consacré), déficience sociale (4. abandon activités importantes, 5. utilisation continue malgré problèmes relationnels), usage risqué (6. utilisation dans situations dangereuses, 7. poursuite malgré problèmes physiques/psychiques), critères pharmacologiques (8. tolérance, 9. sevrage)",
+        "classification": "Léger: 2-3 critères | Modéré: 4-5 critères | Sévère: 6+ critères",
+        "addiction_comportementale": "DSM-5 reconnaît le jeu pathologique comme addiction sans substance — mécanismes neurobiologiques identiques"
+      },
+      "craving_et_rechute": {
+        "definition_craving": "Envie intense et irrésistible de consommer — déclenché par: cues (stimuli conditionnés liés à la substance), stress, émotions négatives (HALT: Hungry/Angry/Lonely/Tired), états positifs (célébration)",
+        "modele_marlatt": "Marlatt (1985): la rechute n'est pas un échec binaire — c'est un processus. Situation à haut risque → évaluation des ressources de coping → efficacité perçue → probabilité de rechute. Le 'effect of violation de l'abstinence' (AVE) = culpabilité après un écart qui mène à la rechute totale"
+      },
+      "epigenetique_et_vulnerabilite": "Les addictions ont une composante génétique (héritabilité 40-60%) ET environnementale — trauma d'enfance (ACE score) × 4-12 risque addiction. Gabor Maté: 'l'addiction n'est pas un choix, c'est une tentative de résoudre une souffrance insupportable'"
+    },
+    "prochaska_diclemente_stades_changement": {
+      "modele_transtheorique": "James Prochaska et Carlo DiClemente (1983) — le changement n'est pas binaire (vouloir/ne-pas-vouloir) mais un processus en 6 stades spiralaires — développé initialement pour l'arrêt tabac, généralisé à toutes les addictions",
+      "stades": {
+        "1_precontemplation": "La personne ne voit pas de problème — ou ne pense pas pouvoir changer. Approche: psychoéducation douce, empathie sans confrontation, lever les défenses. ERREUR CLINIQUE: tenter de convaincre ou de corriger",
+        "2_contemplation": "Ambivalence — 'Je voudrais arrêter mais...'. Peser le POUR et le CONTRE de la consommation ET du changement. Approche: explorer l'ambivalence, renforcer le côté 'changement'. Durée typique: mois à années",
+        "3_preparation": "Décision prise — planification concrète imminente (dans le mois). Approche: aider à construire un plan réaliste, identifier les ressources, anticiper les obstacles",
+        "4_action": "Changement actif de comportement — visible, intentionnel. Le plus court (3-6 mois). Approche: soutien, renforcement, gestion des situations à haut risque",
+        "5_maintien": "Consolidation du changement — prévention rechute. 6 mois à 5 ans. Approche: vigilance, gestion des cravings, reconstruction d'une identité sans substance",
+        "6_resolution_ou_rechute": "Soit résolution (très rare — l'addiction comme un apprentissage profond), soit rechute (retour à un stade antérieur, non à zéro) — la rechute est une étape normale de l'arc du changement, pas un échec"
+      },
+      "implications_cliniques": "Adapter l'intervention au stade. Confronter un patient en précontemplation = renforcer ses défenses. Pousser à l'action un patient en contemplation = rupture thérapeutique"
+    },
+    "entretien_motivationnel_em": {
+      "definition": "William Miller et Stephen Rollnick (1991, rév. 2012) — 'Une forme de conversation collaborative orientée vers un but et centrée sur le changement, pour renforcer la motivation intrinsèque d'une personne et son engagement vers le changement, en explorant et résolvant l'ambivalence'",
+      "esprit_em": {
+        "partenariat": "Collaboration égale — le thérapeute n'est pas l'expert de la vie du client; le client est expert de lui-même",
+        "acceptation": "Valeur absolue (unconditional positive regard Rogers), autonomie du client respectée, empathie précise, affirmation des forces",
+        "compassion": "Le bien-être du client est la priorité — pas la conformité au traitement",
+        "evocation": "Les ressources pour le changement sont en le client — l'EM les fait émerger, ne les injecte pas"
+      },
+      "techniques_oars": {
+        "O_questions_ouvertes": "Questions qui invitent à l'exploration — 'Qu'est-ce qui vous amène à réfléchir à ça maintenant?' — opposées aux questions fermées qui coupent la réflexion",
+        "A_affirmations": "Reconnaître les forces, efforts, valeurs du client — 'C'est courageux d'avoir fait cette démarche.' — renforce l'auto-efficacité",
+        "R_reflets": "Reflet simple (répéter/reformuler), reflet amplifié (exagérer légèrement pour créer réaction), reflet double (refléter les deux côtés de l'ambivalence), reflet de continue de phrase (compléter implicitement)",
+        "S_sommaires": "Résumés stratégiques: rassembler les éléments de changement entendu, transition entre thèmes, encadrer la conversation"
+      },
+      "discordance_et_talk_du_changement": {
+        "discordance": "Développer une tension entre les valeurs/aspirations du client et son comportement actuel — sans confrontation directe. 'D'un côté vous dites que votre famille compte plus que tout, de l'autre la consommation prend beaucoup de place...'",
+        "change_talk": "Langage du changement (DARN-CAT): Désir ('je voudrais'), Aptitude ('je pourrais'), Raisons ('ça m'aiderait'), Nécessité ('j'ai besoin') — Commitment ('je vais'), Activation ('je suis prêt'), Taking steps ('j'ai commencé')",
+        "resistance": "La résistance n'est pas à combattre mais à accueillir — elle signale que l'EM va trop vite ou dans la mauvaise direction. Rouler avec la résistance: refléter, changer de stratégie, reculer"
+      },
+      "regle_20_pourcent": "Meta-analyse: l'EM en une seule séance améliore les résultats de 20% par rapport au traitement standard — efficace en addictologie, tabac, alcool, cannabis, comportements de santé"
+    },
+    "reduction_des_risques": {
+      "paradigme": "La réduction des risques (harm reduction) reconnaît que l'abstinence totale n'est pas le seul objectif valide — réduire les dommages (santé, social, légal) est un objectif légitime et pragmatique, même sans arrêt complet",
+      "interventions": {
+        "programmes_echange_seringues": "PES — réduction transmission VIH/hépatites chez les UDI sans exiger l'arrêt",
+        "salles_consommation": "Salles de shoot — supervision médicale de la consommation, prévention overdose",
+        "naloxone": "Distribution naloxone (Narcan) — antidote opioïdes — aux usagers et familles",
+        "consommation_controlee": "Pour l'alcool: objectif de réduction (pas zéro) est parfois plus réaliste et plus efficace",
+        "TSO": "Traitements de substitution opioïdes — méthadone (longue durée, oral) et buprénorphine/naloxone (Suboxone) — réduisent mortalité de 50%+ et criminalité"
+      },
+      "pharmacotherapie": {
+        "alcool": "Naltrexone (bloque effets euphorisants alcool), Acamprosate (réduit craving via GABA/glutamate), Disulfiram/Antabuse (réaction aversive si consommation), Baclofen (hors AMM, réduction anxiété consommation)",
+        "opioïdes": "Méthadone (agoniste complet), Buprénorphine-Naloxone (agoniste partiel + antagoniste — moins détournable), Naltrexone (antagoniste — bloque tous les effets)",
+        "tabac": "Varenicline (Champix — agoniste partiel récepteurs nicotine, efficacité supérieure aux autres), TNS (patchs/gommes), Bupropion"
+      }
+    },
+    "codependance_et_systeme_famille": {
+      "definition_codependance": "La codépendance est un pattern relationnel où une personne organise sa vie autour des besoins d'un autre (souvent un dépendant) — au détriment de ses propres besoins. Caractérisée par: contrôle excessif, faibles limites, besoin d'être nécessaire, négation de soi",
+      "norwood_femmes_qui_aiment_trop": "Robin Norwood (1985) — dépendance affective: s'investir dans des relations douloureuses répétées, 'aimer' quelqu'un signifie lui consacrer toute son énergie pour tenter de le 'sauver' ou 'réparer'",
+      "CRAFT": "Community Reinforcement And Family Training (Meyers/Smith) — programme evidence-based pour les familles de dépendants: apprentissage de la communication non-coercitive, renforcement positif des comportements sains, encouragement à la demande d'aide. Efficacité 64-74% pour entrée en traitement vs 12 étapes familles (Al-Anon 13%)",
+      "al_anon": "Al-Anon/Nar-Anon — groupes de soutien pour proches de dépendants — basés sur les 12 étapes adaptées"
+    },
+    "addictions_comportementales": {
+      "jeu_pathologique": "DSM-5 — gambling disorder: préoccupation persistante pour le jeu, mises croissantes (tolérance), tentatives infructueuses d'arrêt, agitation/irritabilité si réduction, jouer pour fuir/humeur négative, 'chasing losses', mensonges, ruptures sociales/professionnelles. Neurobiologie identique aux addictions chimiques (dopamine, impulsivité, récompense variable)",
+      "cyberdependance_ecrans": "Pas encore DSM-5 officiel (Internet Gaming Disorder en Section III études supplémentaires) — critères : jeu internet excessif, préoccupation, perte de contrôle, syndrome de manque, empiètement sur vie réelle. Prévalence ado: 4-8%",
+      "addictions_sexuelles": "Hypersexualité/CSBD (Compulsive Sexual Behaviour Disorder) — CIM-11 (pas DSM-5): comportements sexuels répétitifs non contrôlés malgré détresse et conséquences. À différencier de la libido élevée. Souvent comorbide avec trauma",
+      "addiction_nourriture": "Food addiction — hyperphagie boulimique (BED), Yale Food Addiction Scale. Aliments ultra-transformés activent fortement le circuit récompense"
+    },
+    "approches_therapeutiques_addiction": {
+      "approche_12_etapes": "AA (Alcooliques Anonymes, 1935, Bill Wilson) — modèle spirituel, anonymat, parrain/marraine, 12 étapes (admettre l'impuissance, inventaire moral, réparation des torts, aide aux autres). Efficacité: études récentes Cochrane 2020 montrent AA aussi efficace ou supérieur à TCC pour maintien abstinence alcool à long terme",
+      "TCC_addiction": "TCC: identifier les pensées et croyances sous-jacentes à la consommation, gestion du craving (surfer le craving — Marlatt), prévention de la rechute structurée, gestion des situations à haut risque",
+      "ACT_addiction": "ACT (Acceptance and Commitment Therapy) — accepter les cravings sans y réagir, clarifier les valeurs, defusion cognitive des pensées addictives, agir en direction des valeurs malgré le craving",
+      "pleine_conscience": "MBRP (Mindfulness-Based Relapse Prevention) — Bowen/Marlatt: conscience du craving comme vague, surfing urge, désidentification de l'envie",
+      "therapie_systemique": "Thérapie familiale systémique — l'addiction comme symptôme d'un système dysfonctionnel; travailler les rôles (bouc émissaire, protecteur, aidant), triangulations"
+    },
+    "vignettes_cliniques_cles": {
+      "piege_confrontation": "Le piège classique en addictologie: confronter, argumenter, convaincre → augmente la résistance et diminue l'auto-efficacité. L'EM inverse ce pattern.",
+      "double_lien_famille": "La famille qui protège le dépendant des conséquences (enabling/caretaking codépendant) perpétue l'addiction — distinction protection bienveillante vs enabling",
+      "identite_post_addiction": "La récupération implique un travail d'identité: 'qui suis-je sans l'alcool/la drogue?' — reconstruire un soi cohérent, une communauté, un sens"
+    }
+  }
+}

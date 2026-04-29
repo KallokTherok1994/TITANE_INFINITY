@@ -1,0 +1,151 @@
+{
+  "version": "v31.4.6",
+  "category": "intimite_sexualite_couples_eft",
+  "description": "Intimité, sexualité et thérapie de couple : EFT (Emotionally Focused Therapy, Sue Johnson — cycles d'attachement, 9 étapes, restructuration des liens), Gottman (4 Cavaliers de l'Apocalypse, compte bancaire émotionnel, réparation, fondations 'Sound Relationship House'), sexologie clinique (Masters et Johnson, réponse sexuelle EPOR/EMOR, dysfonctions DSM-5 — trouble désir/intérêt, trouble érection, trouble orgasme, dyspareunie/vaginisme, troubles pararaphiliques), approches cognitivo-comportementales des dysfonctions, therapie sensate focus, modèle PLISSIT, identité de genre et orientation sexuelle, sexualité et trauma, attachement romantique adulte",
+  "last_updated": "2026-04-29",
+  "retrieval_triggers": [
+    "thérapie de couple",
+    "EFT thérapie émotion",
+    "Sue Johnson EFT",
+    "attachement couple",
+    "cycle poursuite retrait couple",
+    "Gottman thérapie couple",
+    "4 cavaliers apocalypse Gottman",
+    "compte bancaire émotionnel",
+    "réparation conflits couple",
+    "communication couple",
+    "intimité émotionnelle",
+    "sexualité dysfonction",
+    "Masters Johnson sexologie",
+    "réponse sexuelle cycle",
+    "trouble du désir sexuel",
+    "trouble érection dysfonction érectile",
+    "trouble orgasme",
+    "dyspareunie vaginisme",
+    "sensate focus thérapie sexuelle",
+    "PLISSIT modèle sexologie",
+    "libido baisse désir",
+    "infidélité trahison couple",
+    "réconciliation après infidélité",
+    "communication non-violente couple",
+    "conflit constructif couple",
+    "bids connection Gottman",
+    "trust confiance couple",
+    "engagement amour Sternberg",
+    "triangule amour Sternberg",
+    "attachement anxieux évitant couple",
+    "identité de genre transidentité",
+    "orientation sexuelle LGBTQ+",
+    "sexualité et trauma",
+    "hyperactivation sexuelle hypoactivation",
+    "pornographie impact couple",
+    "addiction sexe relation",
+    "partenaire aidant couple",
+    "satisfaction conjugale",
+    "rupture séparation divorce",
+    "coparentalité après séparation",
+    "jalousie pathologique",
+    "deuil rupture amoureuse",
+    "thérapie sexuelle TCC",
+    "anxiété de performance sexuelle",
+    "éducation sexuelle affirmative"
+  ],
+  "sections": {
+    "eft_therapie_emotionfocused": {
+      "fondements": {
+        "theorie": "Sue Johnson (1985, développé avec Les Greenberg) — l'EFT repose sur la théorie de l'attachement (Bowlby/Ainsworth) appliquée aux couples adultes: les conflits de couple sont des protestations d'attachement — des signaux de détresse envoyés à la figure d'attachement primaire",
+        "postulat_central": "Les émotions, et non les comportements ou pensées, sont le principal levier de changement — les cycles négatifs s'entretiennent parce que les besoins d'attachement sous-jacents restent inexprimés ou mal exprimés",
+        "evidence_base": "EFT: 70-75% de couples en détresse passent à une relation non-distressée; 90% améliorent significativement (Johnson, 2019). Efficacité maintenue à 2 ans. La plus validée empiriquement pour la thérapie de couple"
+      },
+      "cycles_attachement": {
+        "cycle_poursuite_retrait": "Le cycle négatif prototype: un partenaire (anxieux) poursuit/attaque/critique car son besoin d'attachement n'est pas satisfait → l'autre (évitant) se ferme/se retire pour gérer sa propre détresse → la fermeture déclenche encore plus de poursuite → spirale",
+        "cycle_retrait_retrait": "Deux partenaires évitants — distance émotionnelle croissante, désengagement, vie parallèle",
+        "cycle_poursuite_poursuite": "Moins fréquent — deux partenaires anxieux qui se surenchèrent dans la demande et l'accusation",
+        "sous_jacent": "Sous chaque attaque se cache: 'Où es-tu? Tu comptes pour moi. J'ai peur de perdre le lien.' Sous chaque retrait: 'Je ne sais pas comment te rejoindre. J'ai peur de te décevoir encore.'"
+      },
+      "9_etapes_eft": {
+        "phase_1_desescalade": {
+          "etape_1": "Évaluation — alliance, histoire du couple, cycles, modèles d'attachement",
+          "etape_2": "Identifier le cycle négatif — le nommer comme l'ennemi commun",
+          "etape_3": "Accéder aux émotions primaires sous les comportements secondaires (la peur derrière la colère)",
+          "etape_4": "Recadrer — le problème est le cycle, pas le partenaire"
+        },
+        "phase_2_reconversion": {
+          "etape_5": "Promouvoir identification et expression des besoins et peurs d'attachement",
+          "etape_6": "Faciliter l'acceptation par le partenaire de ces expériences et besoins",
+          "etape_7": "Faciliter l'expression des besoins et l'engagement émotionnel — HOLD ME TIGHT conversations"
+        },
+        "phase_3_consolidation": {
+          "etape_8": "Faciliter de nouvelles solutions pratiques aux anciens problèmes",
+          "etape_9": "Consolider les nouvelles positions et cycles positifs"
+        }
+      },
+      "hold_me_tight_conversations": "Johnson (2008) — 7 conversations pour les couples: 'Montrez-moi que vous êtes là pour moi': Reconnaître le cycle destructeur, Trouver les points sensibles, Retrouver la tendresse, Éviter la dérive, Pardonner les blessures d'attachement, Retrouver l'érotisme et la sexualité, Garder le lien vivant"
+    },
+    "gottman_recherche_couple": {
+      "etudes_longitudinales": "John Gottman (Université de Washington, Love Lab) — 40+ ans de recherche longitudinale sur des milliers de couples, prédiction divorce avec 90%+ de précision après observation de 15 minutes",
+      "4_cavaliers_apocalypse": {
+        "critique": "Attaquer le CHARACTER de la personne, pas le comportement. 'Tu es toujours en retard' vs 'Ce retard m'a mis en colère'. Antidote: plainte douce (soft startup) — décrire le comportement + exprimer le besoin",
+        "mepris": "Le plus destructeur — signaux de dégoût, supériorité, humiliation (sarcasme, yeux levés au ciel, insultes). Antidote: culture d'admiration et d'appréciation — chercher activement les qualités de l'autre",
+        "defensivite": "Se justifier, contre-attaquer, jouer la victime — empêche la réparation. Antidote: prendre responsabilité même partielle",
+        "stonewalling": "Se murer dans le silence, se déconnecter — souvent une réponse à la flooding (débordement émotionnel physiologique: FC >100 bpm). Antidote: pause de 20-30 min + technique physiologique de calme"
+      },
+      "fondations_srh": {
+        "maps_amour": "Niveau 1 — Connaître intimement le monde intérieur de l'autre (rêves, peurs, amis, histoires)",
+        "admiration_respect": "Niveau 2 — Nourrir activement le sentiment que l'autre est quelqu'un de bien",
+        "bids_connection": "Niveau 3 — Petites offres de connexion (bid) — se tourner vers l'autre (turn toward) vs ignorer (turn away) vs se battre contre (turn against). Les couples heureux se tournent vers l'autre 86% du temps (vs 33% en détresse)",
+        "influence_positive": "Niveau 4 — Accepter l'influence de l'autre — surtout pour les hommes dans les couples hétérosexuels",
+        "gerer_conflits": "Niveau 5 — 69% des problèmes de couple sont perpétuels (sans solution) — but: trouver un dialogue viable, comprendre les positions, humour et affection autour des sujets bloquants",
+        "reves_aspirations": "Niveau 6 — Explorer les rêves et aspirations derrière les positions rigides dans les conflits",
+        "sens_partage": "Niveau 7 — Rituels, rôles, symboliques, histoire commune"
+      },
+      "reparation": "Les couples sains font autant d'erreurs que les autres — mais réparent mieux et plus vite. Les tentatives de réparation (humour, toucher, aveu) sont accueillies car le climat est positif"
+    },
+    "sexologie_masters_johnson": {
+      "cycle_reponse_sexuelle": {
+        "masters_johnson_EPOR": "Masters et Johnson (1966) — 4 phases: Excitation (vasodilatation génitale, lubrification/érection), Plateau (maintien, hyperexcitabilité), Orgasme (contractions rythmiques, pic), Résolution (retour au repos). Période réfractaire chez l'homme (variable: min à heures) vs absence chez la femme (orgasmes multiples possibles)",
+        "kaplan_TPOR": "Helen Kaplan Singer (1979) — ajoute le Désir comme phase initiale: TPOR. Désir → Excitation → Plateau → Orgasme → Résolution. Clé: le désir peut être spontané (prédominant chez les hommes) ou réactif/responsive (prédominant chez les femmes — Emily Nagoski)",
+        "nagoski_desir_reactif": "Emily Nagoski ('Come as You Are', 2015) — dual control model: accélérateur sexuel (SES — réponse aux stimuli érotiques) vs frein sexuel (SIS — inhibition face aux risques/stress/distraction). Comprendre son propre équilibre SES/SIS est central"
+      },
+      "dysfonctions_sexuelles_DSM5": {
+        "troubles_desir_interet": "Trouble du désir/intérêt sexuel — faible désir avec détresse subjective. Distinct de l'asexualité (orientation, pas un trouble). Traitement: thérapie de couple, EFT, sensate focus, buspirone/testostérone hors AMM",
+        "trouble_excitation_femme": "Trouble de l'excitation sexuelle féminine — insuffisance de lubrification/gonflement. Souvent lié à anxiété de performance, image corporelle, contexte relationnel",
+        "trouble_erection": "Trouble de l'érection (DSM-5 anciennement DEF) — incapacité à maintenir une érection suffisante pour une activité sexuelle satisfaisante dans 75%+ des occasions. Causes organiques (vasculaire, neurologique, médicamenteuse) à exclure en premier. Traitement: IPDE5 (Viagra/sildénafil, Cialis/tadalafil), pompe à érection, CBT anxiété performance",
+        "ejaculation_prematuree": "Éjaculation prématurée — éjaculation dans 1 min après pénétration, persistante, avec détresse. Traitement: technique stop-start (Semans), squeeze technique, ISRS (paroxétine hors AMM), dapoxétine (approuvé)",
+        "trouble_orgasme": "Trouble de l'orgasme féminin — inhibition ou absence d'orgasme avec excitation normale. Traitement: masturbation dirigée (LoPiccolo), vibrostimulateur, EFT couple si blocage relationnel",
+        "dyspareunie_vaginisme": "Dyspareunie: douleur génito-pelvienne lors de la pénétration — causes organiques à exclure (vulvodynie, endométriose). Vaginisme (trouble pénétration-douleur DSM-5): contraction involontaire muscles pelvi-périnéaux — traitement: dilatateurs progressifs + thérapie pelvienne + psychothérapie"
+      }
+    },
+    "therapie_sexuelle_approches": {
+      "sensate_focus": "Masters et Johnson — exercices progressifs de contact non-sexuel orientés sensation (pas performance): phase 1 (toucher non-génital sans but), phase 2 (incluant génitaux sans pénétration), phase 3 (progression graduelle). Brise le cycle anxiété de performance → évitement",
+      "PLISSIT": "Annon (1976) — modèle gradué pour intervenir en sexologie: Permission (valider et normaliser), Limited Information (information limitée ciblée), Specific Suggestions (conseils spécifiques), Intensive Therapy (psychothérapie approfondie). La plupart des problèmes sexuels se résolvent aux 2-3 premiers niveaux",
+      "TCC_dysfonctions": "Identifier les pensées automatiques catastrophiques pendant l'activité sexuelle ('je dois...', 'je ne suis pas normal.e'), décatastrophisation, exposition progressive, travail sur image corporelle",
+      "psychodynamique_sexualite": "Explorer les messages implicites reçus sur la sexualité dans l'enfance/famille, les inhibitions introjectées, les conflits inconscients autour du plaisir et de l'abandon"
+    },
+    "identite_genre_orientation": {
+      "distinction_fondamentale": {
+        "orientation_sexuelle": "Vers qui on est attiré.e — hétérosexuel.le, homosexuel.le, bisexuel.le, pansexuel.le, asexuel.le (spectre ace), etc. Dimension propre, stable, non-pathologique",
+        "identite_de_genre": "Le sentiment intérieur d'être homme, femme, non-binaire, etc. — distinct du sexe biologique et de l'orientation. La transidentité n'est pas un trouble mental (retirée du DSM, réclassée CIM-11 comme 'incongruence de genre')",
+        "expression_genre": "Comment on exprime son genre vers l'extérieur (vêtements, comportements) — distinct des deux précédents"
+      },
+      "affirmation_genre": "Approche affirmative: accompagner la personne dans son exploration et affirmation d'identité — sans pathologiser, sans presser vers un diagnostic. Chez les adolescents: évaluation holistique, accompagnement famille, pas de rush vers décisions irréversibles",
+      "therapie_affirmative_LGBTQ": "Thérapie affirmative: affirmer l'orientation et l'identité comme normales et valides, travailler l'homophobie/transphobie internalisée, deuil d'une vie anticipée, coming-out comme processus, ressources communautaires"
+    },
+    "sexualite_et_trauma": {
+      "impact_trauma_sexuel": "Abus sexuels dans l'enfance (ASE) → hyperactivation ou hypoactivation sexuelle, dissociation pendant l'intimité, triggers spécifiques, difficultés à poser des limites, confusion plaisir/honte, difficulté à distinguer intimité et danger",
+      "approche_therapeutique": "Séquençage: d'abord stabilisation et sécurité, ensuite travail traumatique (EMDR, thérapie sensorimotrice, somatic experiencing), puis réintégration de la sexualité — ne pas commencer par le travail sexuel explicite avant stabilisation",
+      "consentement_et_limites": "Travailler le consentement actif (enthousiaste), la capacité à dire non sans culpabilité, la communication des besoins et limites — souvent difficile après trauma"
+    },
+    "infidelite_et_reparation": {
+      "types_infidelite": "Infidélité physique, émotionnelle, numérique (sexting/pornographie compulsive), d'action vs de secret. L'infidélité émotionnelle est souvent plus destructrice que physique pour les femmes",
+      "processus_reparation": {
+        "phase_crise": "Impact trauma: le partenaire trahi vit un état de choc/PTSS — compréhension totale des détails (besoin de savoir), hypervigilance, ruminations. Le partenaire infidèle doit tolérer cela sans minimiser",
+        "responsabilite": "Prise de responsabilité totale et sincère — sans 'mais' — condition nécessaire mais pas suffisante",
+        "comprendre_pourquoi": "Exploration collaborative (avec thérapeute) des facteurs dans le couple ET chez l'individu — ne pas justifier mais comprendre",
+        "reconstruction_confiance": "Transparence radicale temporaire (localisation, mots de passe, vérifications), reconstruction progressive sur base de comportements cohérents",
+        "pardon": "Le pardon n'est pas l'oubli ni l'acceptation que c'était OK — c'est un choix de relâcher la rancœur pour soi. Peut prendre 2-5 ans. Pas obligatoire pour continuer"
+      },
+      "EFT_infidelite": "Gottman Institute — traitement en 3 phases: atténuation du choc, exploration des significations, détachement"
+    }
+  }
+}
