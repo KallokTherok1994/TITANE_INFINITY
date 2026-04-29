@@ -504,6 +504,12 @@ const PSYCHOLOGIE_TOXIQUE_PROFILS: &str =
 // ── v31.3.2 expansion — phase 25 (stratégies protection, récupération abus) ──
 const STRATEGIES_PROTECTION_MANIPULATION: &str =
     include_str!("../../data/knowledge_base/default/strategies_protection_manipulation.json");
+// ── v31.3.3 expansion — phase 26 (traumatologie complexe, C-PTSD, polyvagal, 4F) ──
+const TRAUMATOLOGIE_COMPLEXE: &str =
+    include_str!("../../data/knowledge_base/default/traumatologie_complexe.json");
+// ── v31.3.4 expansion — phase 26 (neuroscience de l'attachement, styles adultes) ──
+const NEUROSCIENCE_ATTACHEMENT: &str =
+    include_str!("../../data/knowledge_base/default/neuroscience_attachement.json");
 
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
@@ -999,6 +1005,15 @@ impl DefaultKnowledgeBase {
             "strategies_protection_manipulation",
             STRATEGIES_PROTECTION_MANIPULATION,
         ),
+        // v31.3.3+31.3.4 expansion — phase 26 (traumatologie complexe + neuroscience attachement)
+        (
+            "traumatologie_complexe",
+            TRAUMATOLOGIE_COMPLEXE,
+        ),
+        (
+            "neuroscience_attachement",
+            NEUROSCIENCE_ATTACHEMENT,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1327,7 +1342,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 195,
+            result.entries_loaded >= 197,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1441,6 +1456,7 @@ mod tests {
             "musculation_force",
             "naturopathie_fondamentaux",
             "negociation_avancee",
+            "neuroscience_attachement",
             "neurosciences_conscience",
             "numeric_twin_detail",
             "nutrition_avancee",
@@ -1494,6 +1510,7 @@ mod tests {
             "synchronisation_orchestration",
             "system_architecture",
             "technologie_innovation_avancee",
+            "traumatologie_complexe",
             "troubleshooting_faq",
             "web_design_ui_ux",
             "yoga_pratique",

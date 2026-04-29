@@ -1499,3 +1499,31 @@ function MyComponent() {
 - Rule 15: ARCHITECTURE.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour
 - Rule 16: 40 tests Vitest PASS
 - detect_recurrence: PASS (à confirmer)
+
+## KB Phase 26 — traumatologie_complexe + neuroscience_attachement (2026-04-29)
+
+### Module traumatologie_complexe.json (v31.3.3)
+- **Sections (8)**: cadre_diagnostique (PTSD/C-PTSD ICD-11/traumatisme développemental), theorie_polyvagale (Porges — 3 circuits: ventral vagal/sympathique/dorsal vagal + neuroception + co-régulation), window_of_tolerance (Siegel/Ogden — zones hyper/hypo/optimale + élargissement), reponses_4F_pete_walker (fight/flight/freeze/fawn + combinaisons + guérison), neurobiologie_trauma (mémoire implicite, amygdale, cortisol chronique, corps trauma, dissociation), honte_toxique (Walker/Brown/Bradshaw — distinction culpabilité/honte saine/honte toxique), phases_traitement_trauma (Janet 3 phases — stabilisation/traitement/intégration), outils_stabilisation (grounding 5-4-3-2-1, 4-7-8, lieu sûr, conteneur, pendulation Levine), ressources_traumatologie (ouvrages fondamentaux + ressources QC + France + apps)
+- **Retrieval triggers**: 50 triggers — C-PTSD, polyvagal, window of tolerance, 4F, Pete Walker, Van der Kolk, dissociation, hypervigilance, grounding, etc.
+
+### Module neuroscience_attachement.json (v31.3.4)
+- **Sections (7)**: histoire_theorie (Bowlby/Ainsworth/Main/Bartholomew), styles_attachement_enfant (A/B/C/D — Strange Situation, IWM), styles_attachement_adulte (secure/anxieux-préoccupé/évitant-détaché/fearful-avoidant), neurobiologie_lien (ocytocine, dopamine, cortisol, cerveau social, régulation dyadique Tronick), attachement_relations_adultes (protest behaviors, dynamique anxieux-évitant, triggers relationnels), guerison_attachement (neuroplasticité, earned secure, EFT/AEDP/EMDR/IFS/schema), ressources_attachement (Attached/Hold Me Tight/Wired for Love + évaluation ECR-R)
+- **Retrieval triggers**: 47 triggers — styles d'attachement, anxiété d'abandon, évitement intimité, ocytocine, Bowlby, push-pull, earned secure, co-régulation couple, etc.
+
+### Intégration Rust
+- Consts: `TRAUMATOLOGIE_COMPLEXE` + `NEUROSCIENCE_ATTACHEMENT` (include_str!)
+- SOURCES: 2 nouvelles entrées
+- Baseline test: ≥195 → ≥197
+- Expected list: `neuroscience_attachement` (entre negociation_avancee et neurosciences_conscience) + `traumatologie_complexe` (entre technologie_innovation_avancee et troubleshooting_faq)
+
+### Mode psychologie_profils — Enrichissement
+- systemPrompt: +2 domaines de compétence (traumatologie complexe + styles d'attachement)
+
+### Tests
+- **kb.traumatologieAttachement.test.ts**: 44 Vitest PASS
+- **chatModes.psychologieProfils.test.ts**: 20 Vitest PASS
+- **Rust test_knowledge_base**: 10 PASS — baseline ≥197 validé
+
+### Gates
+- AutoHeal: AH-KB-TRAUMATOLOGIE-ATTACHEMENT-2026-04-29 (full schema)
+- detect_recurrence: PASS
