@@ -571,7 +571,8 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts CREATIVITE_APPRENTISSAGE_CERVEAU + RELATIONS_AMOUREUSES_ATTACHMENT_COUPLES, +2 SOURCES entries, baseline >=219 -> >=221, expected list updated (phase 38)
 - `knowledge_base_default.rs`: +2 consts SYSTEME_NERVEUX_NEUROANATOMIE + SYSTEME_LYMPHATIQUE_SANGUIN, +2 SOURCES entries, baseline >=221 -> >=223, expected list updated (phase 39)
 - `knowledge_base_default.rs`: +2 consts PSYCHOLOGIE_POSITIVE_BIEN_ETRE + COGNITION_SOCIALE_BIAIS_COGNITIFS, +2 SOURCES entries, baseline >=223 -> >=225, expected list updated (phase 40)
-- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=225 validated)
+- `knowledge_base_default.rs`: +2 consts SPIRITUALITE_SENS_EXISTENTIEL + NEUROSCIENCES_CLINIQUES_AVANCEES, +2 SOURCES entries, baseline >=225 -> >=227, expected list updated (phase 41)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=227 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
@@ -583,6 +584,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `kb.creativiteRelationsAmoureuses.test.ts`: 63 PASS (Vitest, phase 38)
 - `kb.systemeNerveuxLymphatique.test.ts`: 62 PASS (Vitest, phase 39)
 - `kb.psychologiePositiveBiais.test.ts`: 97 PASS (Vitest, phase 40)
+- `kb.spiritualiteNeuroClinique.test.ts`: 78 PASS (Vitest, phase 41)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
@@ -594,3 +596,4 @@ Conformité validée par tests 100/100 (avril 2026).
 - `AH-KB-CREATIVITE-RELATIONS-2026-04-29` (full schema, detect_recurrence PASS, phase 38, entries=1457)
 - `AH-KB-SYSTEME-NERVEUX-LYMPHATIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 39, entries=1459)
 - `AH-KB-PSYCHOLOGIE-POSITIVE-BIAIS-2026-04-29` (full schema, detect_recurrence PASS, phase 40, entries=1462)
+- `AH-KB-SPIRITUALITE-NEUROCLINIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 41, entries=1466)
