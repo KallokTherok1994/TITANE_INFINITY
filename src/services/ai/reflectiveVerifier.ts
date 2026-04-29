@@ -7,7 +7,7 @@
  * Non-bloquant: timeout 4s max, fallback gracieux si web indisponible.
  */
 
-import { browserWebSearch } from '@/services/webResearchService';
+import { webSearch } from '@/services/webResearchService';
 
 // ─────────────────────────────────────────────────────────────────
 // CONSTANTS
@@ -152,7 +152,7 @@ async function verifyWithWeb(input: string): Promise<{
     const timeoutPromise = new Promise<null>(resolve =>
       setTimeout(() => resolve(null), REFLECTIVE_TIMEOUT_MS)
     );
-    const searchPromise = browserWebSearch(query, 3);
+    const searchPromise = webSearch(query, 3);
     const result = await Promise.race([searchPromise, timeoutPromise]);
 
     if (!result || !result.ok || !result.content) {

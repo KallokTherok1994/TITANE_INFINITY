@@ -1106,8 +1106,11 @@ Format: [Audit complet] + [Réponse utilisateur]
       };
 
       // Use kernel's provider preference if not 'auto'
+      // vOLLAMA_AUTHORITY: set BOTH provider AND preferredProvider so the orchestrator
+      // (which reads config?.preferredProvider) respects the kernel's canonical decision.
       if (canonicalDecision.provider.name !== 'auto') {
         orchestratorConfig.provider = canonicalDecision.provider.name;
+        orchestratorConfig.preferredProvider = canonicalDecision.provider.name;
       }
 
       // Use kernel's fallback chain

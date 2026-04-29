@@ -1141,12 +1141,15 @@ class AIOrchestrator {
       // vPROVIDER_TRUTH: canonicalDiscernmentKernel is the SOLE authority for provider selection.
       // When preferredProvider is explicitly set (not 'auto'), the canonical kernel chose it.
       // The cognitiveKernel provides health/latency SIGNALS only — never override authority.
+      // vOLLAMA_AUTHORITY: if the scoring system selected a local provider (ollama/titane-local),
+      // the cognitiveKernel MUST NOT override it with a cloud provider, regardless of confidence.
       // In Vitest, force deterministic behavior for test stability.
+      const LOCAL_PROVIDER_SET = new Set(['ollama', 'titane-local', 'local']);
       const finalProvider = IS_VITEST
         ? selection.selectedProvider
         : preferredProvider && preferredProvider !== 'auto'
           ? preferredProvider
-          : cognitiveDecision.confidence > 70
+          : cognitiveDecision.confidence > 70 && !LOCAL_PROVIDER_SET.has(selection.selectedProvider)
             ? cognitiveDecision.provider
             : selection.selectedProvider;
       routerLatencyMs = Date.now() - routerStartTime;

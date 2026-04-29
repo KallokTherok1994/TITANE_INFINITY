@@ -183,7 +183,8 @@ export class ResponseCache {
 
     // 1. Exact match (O(1))
     const exact = this.cache.get(cacheKey);
-    if (exact && now - exact.timestamp < this.ttlMs) {
+    // vOLLAMA_AUTHORITY: never serve mock-sourced entries — they bypass real provider
+    if (exact && now - exact.timestamp < this.ttlMs && exact.provider !== 'mock') {
       exact.hitCount++;
       this.stats.hits++;
       return exact;
@@ -204,7 +205,8 @@ export class ResponseCache {
 
     for (const storedKey of keysToCheck) {
       const entry = this.cache.get(storedKey);
-      if (!entry || now - entry.timestamp > this.ttlMs) continue;
+      // vOLLAMA_AUTHORITY: skip expired and mock-sourced entries
+      if (!entry || now - entry.timestamp > this.ttlMs || entry.provider === 'mock') continue;
 
       const score = this.similarityScore(key.message, entry.originalMessage);
       if (score >= threshold && (!bestMatch || score > bestMatch.score)) {
