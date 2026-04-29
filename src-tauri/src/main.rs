@@ -1244,6 +1244,15 @@ fn main() {
         )
     );
 
+    // LOCK 7: BROWSER_OPERATOR_V1 — governed browser relay (domain allowlist, Playwright)
+    let builder = builder.manage(commands::browser_operator::BrowserOperatorState::default());
+    // LOCK 5: DESKTOP_SCOPED_OPERATOR_V1
+    let builder = builder.manage(commands::desktop_perception::DesktopOperatorState::default());
+    // LOCK 4: LONG_TASK_RELAY_V1
+    let builder = builder.manage(commands::job_operator::JobOperatorState::default());
+    // LOCK 6: IDE_OPERATOR_V1
+    let builder = builder.manage(commands::ide_operator::IDEOperatorState::default());
+
     builder
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
@@ -2886,6 +2895,18 @@ fn main() {
             commands::display_get_environment,
             commands::display_set_environment,
             commands::display_list_monitors,
+
+            // ═══════════════════════════════════════════════════════════════
+            // BROWSER OPERATOR — LOCK 7: BROWSER_OPERATOR_V1
+            // Governed browser relay (domain allowlist, Playwright integration)
+            // ═══════════════════════════════════════════════════════════════
+            commands::browser_operator::browser_open_session,
+            commands::browser_operator::browser_close_session,
+            commands::browser_operator::browser_get_session_status,
+            commands::browser_operator::browser_navigate,
+            commands::browser_operator::browser_read,
+            commands::browser_operator::browser_extract,
+            commands::browser_operator::browser_get_config,
 
             // ═══════════════════════════════════════════════════════════════
             // DESKTOP PERCEPTION — LOCK 5: DESKTOP_SCOPED_OPERATOR_V1

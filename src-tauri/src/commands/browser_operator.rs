@@ -357,41 +357,22 @@ pub async fn browser_navigate(
 ) -> Result<BrowserRelayResult, String> {
     let now = now_iso();
 
-    // Get session
-    let mut sessions = state
-        .sessions
-        .lock()
-        .map_err(|e| format!("Lock error: {}", e))?;
-    let session = sessions
-        .get_mut(&session_id)
-        .ok_or_else(|| format!("Session not found: {}", session_id))?;
+    // Scoped block: all sync work + session mutation. Both `session` and `sessions`
+    // (MutexGuard) drop at `}` — mandatory before .await to satisfy Send bound.
+    let actions_remaining: u32 = {
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+        let session = sessions
+            .get_mut(&session_id)
+            .ok_or_else(|| format!("Session not found: {}", session_id))?;
 
-    // Check session status
-    if matches!(session.status, BrowserSessionStatus::Stopped) {
-        return Err("Session is stopped".to_string());
-    }
+        if matches!(session.status, BrowserSessionStatus::Stopped) {
+            return Err("Session is stopped".to_string());
+        }
 
-    // Check actions limit
-    if session.actions_count >= session.max_actions {
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::BlockedSensitive,
-            url: url.clone(),
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some("Max actions reached for this session".to_string()),
-            handoff_required: false,
-            actions_remaining: 0,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    // Extract and validate domain
-    let domain = match extract_domain(&url) {
-        Ok(d) => d,
-        Err(e) => {
+        if session.actions_count >= session.max_actions {
             return Ok(BrowserRelayResult {
                 ok: false,
                 category: BrowserRelayCategory::BlockedSensitive,
@@ -399,113 +380,134 @@ pub async fn browser_navigate(
                 title: None,
                 content: None,
                 structured_data: None,
-                block_reason: Some(format!("Invalid URL: {}", e)),
+                block_reason: Some("Max actions reached for this session".to_string()),
+                handoff_required: false,
+                actions_remaining: 0,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        let domain = match extract_domain(&url) {
+            Ok(d) => d,
+            Err(e) => {
+                return Ok(BrowserRelayResult {
+                    ok: false,
+                    category: BrowserRelayCategory::BlockedSensitive,
+                    url: url.clone(),
+                    title: None,
+                    content: None,
+                    structured_data: None,
+                    block_reason: Some(format!("Invalid URL: {}", e)),
+                    handoff_required: false,
+                    actions_remaining: session.max_actions - session.actions_count,
+                    session_id: session_id.clone(),
+                    executed_at: now,
+                });
+            }
+        };
+
+        let default_denied: Vec<String> = DEFAULT_DENIED_DOMAINS
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+        if is_domain_denied(
+            &domain,
+            &session.allowed_domains.iter().cloned().collect::<Vec<_>>(),
+        ) || is_domain_denied(&domain, &default_denied)
+        {
+            session.status = BrowserSessionStatus::Blocked;
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::BlockedSensitive,
+                url: url.clone(),
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some(format!("Domain '{}' is in denied list", domain)),
                 handoff_required: false,
                 actions_remaining: session.max_actions - session.actions_count,
                 session_id: session_id.clone(),
                 executed_at: now,
             });
         }
+
+        if !is_domain_allowed(&domain, &session.allowed_domains) {
+            session.status = BrowserSessionStatus::Blocked;
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::BlockedSensitive,
+                url: url.clone(),
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some(format!("Domain '{}' is not in allowed list", domain)),
+                handoff_required: false,
+                actions_remaining: session.max_actions - session.actions_count,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        let default_sensitive: Vec<String> = DEFAULT_SENSITIVE_PATTERNS
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+        if is_sensitive_url(&url, &default_sensitive) {
+            session.handoff_pending = true;
+            session.status = BrowserSessionStatus::Idle;
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::HandoffRequired,
+                url: url.clone(),
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some("URL matches sensitive pattern — handoff required".to_string()),
+                handoff_required: true,
+                actions_remaining: session.max_actions - session.actions_count,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        let (pw_available, _pw_version) = check_playwright_available();
+        if !pw_available {
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::ToolingMissing,
+                url: url.clone(),
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some("Playwright is not installed or not available".to_string()),
+                handoff_required: false,
+                actions_remaining: session.max_actions - session.actions_count,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        session.status = BrowserSessionStatus::Navigating;
+        session.actions_count += 1;
+        session.current_url = Some(url.clone());
+        session.max_actions - session.actions_count
+        // session and sessions (MutexGuard) drop here
     };
 
-    // Check denied domains
-    let default_denied: Vec<String> = DEFAULT_DENIED_DOMAINS
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
-    if is_domain_denied(
-        &domain,
-        &session.allowed_domains.iter().cloned().collect::<Vec<_>>(),
-    ) || is_domain_denied(&domain, &default_denied)
+    // MutexGuard is now out of scope — safe to .await
+    let result = navigate_with_playwright(&url, &session_id, actions_remaining).await;
+
+    // Re-acquire lock to update status
     {
-        session.status = BrowserSessionStatus::Blocked;
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::BlockedSensitive,
-            url: url.clone(),
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some(format!("Domain '{}' is in denied list", domain)),
-            handoff_required: false,
-            actions_remaining: session.max_actions - session.actions_count,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+        if let Some(s) = sessions.get_mut(&session_id) {
+            s.status = BrowserSessionStatus::Idle;
+        }
     }
-
-    // Check allowed domains
-    if !is_domain_allowed(&domain, &session.allowed_domains) {
-        session.status = BrowserSessionStatus::Blocked;
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::BlockedSensitive,
-            url: url.clone(),
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some(format!("Domain '{}' is not in allowed list", domain)),
-            handoff_required: false,
-            actions_remaining: session.max_actions - session.actions_count,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    // Check sensitive patterns
-    let default_sensitive: Vec<String> = DEFAULT_SENSITIVE_PATTERNS
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
-    if is_sensitive_url(&url, &default_sensitive) {
-        session.handoff_pending = true;
-        session.status = BrowserSessionStatus::Idle;
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::HandoffRequired,
-            url: url.clone(),
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some("URL matches sensitive pattern — handoff required".to_string()),
-            handoff_required: true,
-            actions_remaining: session.max_actions - session.actions_count,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    // Check Playwright availability
-    let (pw_available, _pw_version) = check_playwright_available();
-    if !pw_available {
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::ToolingMissing,
-            url: url.clone(),
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some("Playwright is not installed or not available".to_string()),
-            handoff_required: false,
-            actions_remaining: session.max_actions - session.actions_count,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    // Perform navigation via Playwright
-    session.status = BrowserSessionStatus::Navigating;
-    session.actions_count += 1;
-    session.current_url = Some(url.clone());
-
-    let result = navigate_with_playwright(
-        &url,
-        &session_id,
-        session.max_actions - session.actions_count,
-    )
-    .await;
-
-    session.status = BrowserSessionStatus::Idle;
 
     Ok(result)
 }
@@ -518,67 +520,78 @@ pub async fn browser_read(
 ) -> Result<BrowserRelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state
-        .sessions
-        .lock()
-        .map_err(|e| format!("Lock error: {}", e))?;
-    let session = sessions
-        .get_mut(&session_id)
-        .ok_or_else(|| format!("Session not found: {}", session_id))?;
+    // Scoped block: MutexGuard drops at `}` before .await
+    let (current_url, actions_remaining): (String, u32) = {
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+        let session = sessions
+            .get_mut(&session_id)
+            .ok_or_else(|| format!("Session not found: {}", session_id))?;
 
-    if matches!(session.status, BrowserSessionStatus::Stopped) {
-        return Err("Session is stopped".to_string());
+        if matches!(session.status, BrowserSessionStatus::Stopped) {
+            return Err("Session is stopped".to_string());
+        }
+
+        if session.actions_count >= session.max_actions {
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::BlockedSensitive,
+                url: session.current_url.clone().unwrap_or_default(),
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some("Max actions reached".to_string()),
+                handoff_required: false,
+                actions_remaining: 0,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        let current_url = session.current_url.clone().unwrap_or_default();
+        if current_url.is_empty() {
+            return Err("No URL has been navigated to yet".to_string());
+        }
+
+        let (pw_available, _) = check_playwright_available();
+        if !pw_available {
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::ToolingMissing,
+                url: current_url,
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some("Playwright is not installed".to_string()),
+                handoff_required: false,
+                actions_remaining: session.max_actions - session.actions_count,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        session.status = BrowserSessionStatus::Reading;
+        session.actions_count += 1;
+        let actions_remaining = session.max_actions - session.actions_count;
+        (current_url, actions_remaining)
+        // session and sessions (MutexGuard) drop here
+    };
+
+    // MutexGuard is now out of scope — safe to .await
+    let result = read_with_playwright(&current_url, &session_id, actions_remaining).await;
+
+    // Re-acquire lock to update status
+    {
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+        if let Some(s) = sessions.get_mut(&session_id) {
+            s.status = BrowserSessionStatus::Idle;
+        }
     }
-
-    if session.actions_count >= session.max_actions {
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::BlockedSensitive,
-            url: session.current_url.clone().unwrap_or_default(),
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some("Max actions reached".to_string()),
-            handoff_required: false,
-            actions_remaining: 0,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    let current_url = session.current_url.clone().unwrap_or_default();
-    if current_url.is_empty() {
-        return Err("No URL has been navigated to yet".to_string());
-    }
-
-    session.status = BrowserSessionStatus::Reading;
-    session.actions_count += 1;
-
-    let (pw_available, _) = check_playwright_available();
-    if !pw_available {
-        session.status = BrowserSessionStatus::Idle;
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::ToolingMissing,
-            url: current_url,
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some("Playwright is not installed".to_string()),
-            handoff_required: false,
-            actions_remaining: session.max_actions - session.actions_count,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    let result = read_with_playwright(
-        &current_url,
-        &session_id,
-        session.max_actions - session.actions_count,
-    )
-    .await;
-    session.status = BrowserSessionStatus::Idle;
 
     Ok(result)
 }
@@ -592,68 +605,79 @@ pub async fn browser_extract(
 ) -> Result<BrowserRelayResult, String> {
     let now = now_iso();
 
-    let mut sessions = state
-        .sessions
-        .lock()
-        .map_err(|e| format!("Lock error: {}", e))?;
-    let session = sessions
-        .get_mut(&session_id)
-        .ok_or_else(|| format!("Session not found: {}", session_id))?;
+    // Scoped block: MutexGuard drops at `}` before .await
+    let (current_url, actions_remaining): (String, u32) = {
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+        let session = sessions
+            .get_mut(&session_id)
+            .ok_or_else(|| format!("Session not found: {}", session_id))?;
 
-    if matches!(session.status, BrowserSessionStatus::Stopped) {
-        return Err("Session is stopped".to_string());
+        if matches!(session.status, BrowserSessionStatus::Stopped) {
+            return Err("Session is stopped".to_string());
+        }
+
+        if session.actions_count >= session.max_actions {
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::BlockedSensitive,
+                url: session.current_url.clone().unwrap_or_default(),
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some("Max actions reached".to_string()),
+                handoff_required: false,
+                actions_remaining: 0,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        let current_url = session.current_url.clone().unwrap_or_default();
+        if current_url.is_empty() {
+            return Err("No URL has been navigated to yet".to_string());
+        }
+
+        let (pw_available, _) = check_playwright_available();
+        if !pw_available {
+            return Ok(BrowserRelayResult {
+                ok: false,
+                category: BrowserRelayCategory::ToolingMissing,
+                url: current_url,
+                title: None,
+                content: None,
+                structured_data: None,
+                block_reason: Some("Playwright is not installed".to_string()),
+                handoff_required: false,
+                actions_remaining: session.max_actions - session.actions_count,
+                session_id: session_id.clone(),
+                executed_at: now,
+            });
+        }
+
+        session.status = BrowserSessionStatus::Extracting;
+        session.actions_count += 1;
+        let actions_remaining = session.max_actions - session.actions_count;
+        (current_url, actions_remaining)
+        // session and sessions (MutexGuard) drop here
+    };
+
+    // MutexGuard is now out of scope — safe to .await
+    let result =
+        extract_with_playwright(&current_url, &selector, &session_id, actions_remaining).await;
+
+    // Re-acquire lock to update status
+    {
+        let mut sessions = state
+            .sessions
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+        if let Some(s) = sessions.get_mut(&session_id) {
+            s.status = BrowserSessionStatus::Idle;
+        }
     }
-
-    if session.actions_count >= session.max_actions {
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::BlockedSensitive,
-            url: session.current_url.clone().unwrap_or_default(),
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some("Max actions reached".to_string()),
-            handoff_required: false,
-            actions_remaining: 0,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    let current_url = session.current_url.clone().unwrap_or_default();
-    if current_url.is_empty() {
-        return Err("No URL has been navigated to yet".to_string());
-    }
-
-    session.status = BrowserSessionStatus::Extracting;
-    session.actions_count += 1;
-
-    let (pw_available, _) = check_playwright_available();
-    if !pw_available {
-        session.status = BrowserSessionStatus::Idle;
-        return Ok(BrowserRelayResult {
-            ok: false,
-            category: BrowserRelayCategory::ToolingMissing,
-            url: current_url,
-            title: None,
-            content: None,
-            structured_data: None,
-            block_reason: Some("Playwright is not installed".to_string()),
-            handoff_required: false,
-            actions_remaining: session.max_actions - session.actions_count,
-            session_id: session_id.clone(),
-            executed_at: now,
-        });
-    }
-
-    let result = extract_with_playwright(
-        &current_url,
-        &selector,
-        &session_id,
-        session.max_actions - session.actions_count,
-    )
-    .await;
-    session.status = BrowserSessionStatus::Idle;
 
     Ok(result)
 }
