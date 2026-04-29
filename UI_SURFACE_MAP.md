@@ -673,3 +673,13 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Version: 31.2.13
 
 # [2026-04-28] ConversationSection research handoff truth (v31.2.32): les fonctions `shouldHandoffToResearch()`, `buildResearchHandoff()`, `classifyResearchOutcome()` et `buildResearchReply()` sont maintenant exportées depuis `src/components/sections/ConversationSection.tsx`. `shouldHandoffToResearch()` déclenche la recherche web non seulement sur "recherche internet/web" explicite, mais aussi sur les patterns implicites quand `deep_internet_analysis: true` (actualité, analyse, tendances, dernières nouvelles, informations récentes, URLs http://). La préférence `deep_internet_analysis` est lue via `userPreferencesEngine.getPreferences()` injecté dans la surface chat. Tests: `src/components/sections/__tests__/ConversationSection.research.test.ts` (42 tests PASS). AutoHeal: AH-2026-04-28-CHAT-MEMORY-OMEGA-SINGULARITY-0004.
+
+## [2026-04-28] Chat bubble desktop width expansion (v31.2.34+)
+
+- Surface: `message-bubble`, `message-bubble-assistant`, `message-bubble-user`
+- Fichiers CSS touchés: `src/components/chat/MessageList.css`, `src/components/chat/MessageBubble.css`, `src/components/MessageBubble.css`
+- Règle ajoutée: `@media (min-width: 1024px)` — `.message-bubble { max-width: 97% }`, `.message-assistant { max-width: 97% }`, `.message-user { max-width: 88% }`, `.message-bubble-assistant { margin-right: 8px }`, `.message-bubble-user { margin-left: 8px }`
+- Avant: max-width 85% (MessageList.css) + marges 32px → bulles ~55-60% de la colonne
+- Après: max-width 97% desktop → bulles couvrent ~97% de la colonne chat
+- Mobile (≤768px / ≤479px): inchangé
+- AutoHeal: AH-2026-04-28-CHAT-BUBBLE-WIDTH-0012

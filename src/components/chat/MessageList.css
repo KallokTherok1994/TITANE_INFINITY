@@ -318,6 +318,21 @@
   }
 }
 
+/* Desktop large (≥1024px) — maximize bubble width */
+@media (min-width: 1024px) {
+  .message-bubble {
+    max-width: 97%;
+  }
+
+  .message-user {
+    max-width: 88%;
+  }
+
+  .message-assistant {
+    max-width: 97%;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    MESSAGE LIST OPTIMIZED - Additional Styles
    ═══════════════════════════════════════════════════════════════════ */

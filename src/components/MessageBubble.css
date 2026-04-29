@@ -243,3 +243,10 @@
     max-width: 90%;
   }
 }
+
+/* Desktop large (≥1024px) — override legacy constraint */
+@media (min-width: 1024px) {
+  .message-bubble {
+    max-width: 97%;
+  }
+}

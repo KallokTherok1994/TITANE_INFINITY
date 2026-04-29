@@ -946,6 +946,17 @@
   }
 }
 
+/* Desktop large (≥1024px) — reduce lateral margins to maximize text area */
+@media (min-width: 1024px) {
+  .message-bubble-assistant {
+    margin-right: 8px;
+  }
+
+  .message-bubble-user {
+    margin-left: 8px;
+  }
+}
+
 /* ═══════════════════════════════════
    ACCESSIBILITY - Reduced Motion
    ═══════════════════════════════════ */
