@@ -569,9 +569,15 @@ class AIOrchestrator {
       // Sélection neurale standard
       const selection = this.selectOptimalProvider(sanitized, history);
 
+      // ═══ PROVIDER TRUTH CHAIN: Single Canonical Authority ═══
+      // vOLLAMA_AUTHORITY: if the scoring system selected a local provider (ollama/titane-local),
+      // the cognitiveKernel MUST NOT override it with a cloud provider, regardless of confidence.
+      const LOCAL_PROVIDER_SET = new Set(['ollama', 'titane-local', 'local']);
+
       // 🧠 Fusionner décision cognitive et sélection neurale
       const finalProvider =
-        cognitiveDecision.confidence > 70
+        cognitiveDecision.confidence > 70 &&
+        !LOCAL_PROVIDER_SET.has(selection.selectedProvider)
           ? cognitiveDecision.provider
           : selection.selectedProvider;
 
