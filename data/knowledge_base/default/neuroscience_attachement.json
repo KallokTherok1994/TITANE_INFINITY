@@ -1,0 +1,360 @@
+{
+  "version": "v31.3.4",
+  "category": "neuroscience_attachement",
+  "last_updated": "2026-04-29",
+  "description": "Neuroscience de l'attachement, styles d'attachement (Bowlby/Ainsworth/Main/Bartholomew), neurobiologie du lien, attachement adulte dans les relations, guérison de l'attachement insécure",
+  "retrieval_triggers": [
+    "attachement",
+    "style d'attachement",
+    "attachement anxieux",
+    "attachement évitant",
+    "attachement désorganisé",
+    "attachement sécure",
+    "Bowlby",
+    "Ainsworth",
+    "Mary Main",
+    "Bartholomew",
+    "théorie de l'attachement",
+    "anxiété d'abandon",
+    "peur de l'intimité",
+    "hyperactivation attachement",
+    "désactivation attachement",
+    "système d'attachement",
+    "figure d'attachement",
+    "base sécurisante",
+    "port d'attache",
+    "modèles internes opérants",
+    "IWM internal working model",
+    "neurobiologie lien",
+    "ocytocine lien",
+    "dopamine attachement",
+    "couple attachement",
+    "relation anxieuse",
+    "peur de l'abandon",
+    "push pull relation",
+    "hot and cold relation",
+    "protest behavior",
+    "comportement protestation",
+    "désactivation émotionnelle",
+    "évitement intimité",
+    "hypervigilance relation",
+    "besoin de validation",
+    "quête validation",
+    "détachement émotionnel",
+    "gelé émotionnellement",
+    "alexithymie",
+    "guérison attachement",
+    "earned secure attachment",
+    "sécurité gagnée",
+    "co-régulation couple",
+    "fenêtre tolérance relation",
+    "relation de soin",
+    "intersubjectivité",
+    "accordage affectif",
+    "réparation relationnelle"
+  ],
+  "sections": {
+    "histoire_theorie": {
+      "titre": "Histoire et fondements — Théorie de l'Attachement",
+      "contenu": {
+        "john_bowlby": {
+          "biographie": "John Bowlby (1907-1990) — psychiatre et psychanalyste britannique, pionnier de la théorie de l'attachement",
+          "thèse_centrale": "L'être humain a un besoin biologique inné de proximité avec une figure de soin protectrice (caregiving system) — non réductible à la nourriture (contre Harlow/Skinner)",
+          "expérience_singes_harlow": "Harry Harlow 1958 — singes rhésus choisissent mère tissu (confort) plutôt que mère fil (nourriture) → réfute la théorie de la réduction pulsionnelle",
+          "système_attachement": "Système motivationnel primaire biologiquement programmé — activé par menace, fatigue, maladie, séparation → objectif: proximité de la figure d'attachement",
+          "base_sécurisante": "La figure d'attachement sécurisante fonctionne comme base sécurisante depuis laquelle explorer le monde ET port d'attache pour revenir lors de danger",
+          "modèles_internes_IWM": "Internal Working Models — représentations mentales de soi, de l'autre, et de la relation construites dans l'enfance et généralisées aux relations ultérieures",
+          "trilogie": ["Attachment (1969)", "Separation (1973)", "Loss (1980)"]
+        },
+        "mary_ainsworth": {
+          "biographie": "Mary Ainsworth (1913-1999) — psychologue américano-canadienne, opérationnalisa les patterns d'attachement",
+          "strange_situation": "Procédure expérimentale standardisée (1970) — séparation/réunion mère-enfant (12-18 mois), codée en aveugle",
+          "trois_styles_originaux": ["Sécure (B)", "Anxieux-ambivalent (C)", "Évitant (A)"],
+          "contribution": "Démontre que les comportements d'attachement sont mesurables et prédictifs du développement"
+        },
+        "mary_main": {
+          "contribution": "4e style — Désorganisé/désorienté (D) identifié avec Judith Solomon (1986)",
+          "Adult_Attachment_Interview": "AAI — mesure le style d'attachement adulte via narration de l'enfance (cohérence narrative, non contenu)",
+          "transmission_intergénérationnelle": "La sécurité d'attachement du parent (mesurée AAI) prédit le style d'attachement de l'enfant (r=0.75) — discontinuité possible avec travail thérapeutique"
+        },
+        "kim_bartholomew": {
+          "modèle_adulte": "Bartholomew & Horowitz 1991 — 4 styles adultes basés sur 2 dimensions: modèle de soi (positif/négatif) × modèle des autres (positif/négatif)",
+          "quatre_styles": ["Secure (soi+/autres+)", "Preoccupied (soi-/autres+)", "Dismissing (soi+/autres-)", "Fearful (soi-/autres-)"]
+        }
+      }
+    },
+    "styles_attachement_enfant": {
+      "titre": "Styles d'attachement — Enfance (Strange Situation)",
+      "contenu": {
+        "secure_B": {
+          "prévalence": "55-65% population générale",
+          "comportement_enfant": "Explore librement en présence du parent, perturbé par la séparation (normal), accueille le retour du parent avec soulagement et reprend l'exploration",
+          "parent_associé": "Parent disponible, sensible, réactif, régulant — capable de co-réguler l'enfant",
+          "IWM": "Je suis digne d'amour et de soin; les autres sont disponibles et fiables",
+          "conséquences_développement": "Régulation émotionnelle adaptée, relations saines, résilience, tolérance à la frustration"
+        },
+        "anxieux_ambivalent_C": {
+          "prévalence": "10-15%",
+          "aussi_appelé": "Préoccupé chez l'adulte",
+          "comportement_enfant": "Hyperactivé, peu d'exploration, détresse intense à la séparation, difficile à calmer au retour (colère + recherche contact simultanément)",
+          "parent_associé": "Disponibilité imprévisible — parfois présent/attentif, parfois absent/intrusif → l'enfant ne peut prédire la disponibilité",
+          "stratégie_adaptation": "Amplifier les signaux d'attachement (pleurer plus fort, s'accrocher) pour maximiser les chances d'obtenir une réponse",
+          "IWM": "Je dois me battre pour obtenir l'amour; les autres sont imprévisibles/peu fiables; si je me détache, je serai abandonné",
+          "adulte": "Anxiété d'abandon, jalousie, hypervigilance relationnelle, besoin de validation constant, difficulté à tolérer la séparation"
+        },
+        "évitant_A": {
+          "prévalence": "20-25%",
+          "aussi_appelé": "Détaché/Dismissing chez l'adulte",
+          "comportement_enfant": "Peu de détresse visible à la séparation, ignore ou s'éloigne du parent au retour — apparemment non affecté (mais cortisol élevé!)",
+          "parent_associé": "Rejet des signaux d'attachement, inconfort avec les émotions, indisponible émotionnellement, valorise l'autonomie précoce",
+          "stratégie_adaptation": "Désactiver le système d'attachement — ne pas montrer le besoin pour ne pas être rejeté",
+          "IWM": "Je dois être autosuffisant; montrer ses besoins est dangereux; les autres ne répondront pas",
+          "adulte": "Distance émotionnelle, inconfort intimité, minimisation des besoins, valorisation de l'indépendance excessive, difficulté à demander de l'aide"
+        },
+        "désorganisé_D": {
+          "prévalence": "15-20% population générale; jusqu'à 80% chez enfants maltraités",
+          "aussi_appelé": "Fearful-Avoidant chez l'adulte / Craintif",
+          "comportement_enfant": "Comportements contradictoires et désorganisés — approche + fuite simultanées, immobilisation soudaine, mouvements stéréotypés, peur visible du parent",
+          "parent_associé": "Figure d'attachement elle-même source de peur (maltraitance, violence, terreur) — conflit insoluble: la solution est la source du problème",
+          "dilemme": "L'enfant ne peut ni s'approcher (dangereux) ni fuir (besoin biologique) → désorganisation comportementale",
+          "IWM": "Pas de stratégie cohérente — je suis fondamentalement en danger et incompréhensible; les autres sont à la fois source de soin et de terreur",
+          "adulte": "Instabilité relationnelle, push-pull intense, dissociation dans l'intimité, trauma activé par la proximité, difficulté majeure de régulation"
+        }
+      }
+    },
+    "styles_attachement_adulte": {
+      "titre": "Styles d'attachement à l'âge adulte — Relations romantiques (Hazan & Shaver 1987; Bartholomew 1991)",
+      "note": "Le style d'attachement adulte n'est pas une condamnation — il est modifiable (earned secure attachment)",
+      "contenu": {
+        "secure_adulte": {
+          "caractéristiques": [
+            "Confort avec l'intimité ET l'indépendance (paradoxe apparent résolu)",
+            "Communication directe et assertive des besoins",
+            "Régulation émotionnelle flexible — accès au distress sans submersion",
+            "Confiance de base dans la disponibilité du partenaire",
+            "Rupture et réparation des conflits naturelle",
+            "Explorateur de la vie avec le partenaire comme base sécurisante"
+          ],
+          "en_relation": "Disponible sans être fusionnel, soutien sans sacrifice de soi, conflit gérable, récupération rapide",
+          "facteur_protecteur": "Un seul attachement sécurisé dans l'enfance (enseignant, grand-parent, ami adulte) peut buffér un attachement parental insécure"
+        },
+        "anxieux_preoccupied_adulte": {
+          "caractéristiques": [
+            "Préoccupation par la relation — monopolise les ressources cognitives",
+            "Peur de l'abandon intense, hypervigilance aux signaux de rejet",
+            "Besoin de réassurance répétée (qui peut repousser le partenaire)",
+            "Jalousie, comportements de contrôle, protest behaviors (pleurer, accuser, menacer de partir)",
+            "Difficulté à être seul — l'autre régule l'état émotionnel",
+            "Idéalisation initiale puis déception (mise sur piédestal → effondrement)"
+          ],
+          "déclencheurs": "Distance physique ou émotionnelle du partenaire, ambiguïté, silence soudain, changement de routine",
+          "dans_relation_toxique": "Cible fréquente du profil narcissique — le cycle intermittent renforce le trauma bond",
+          "neurobiologie": "Activation prolongée du système d'attachement → cortisol chronique, dopamine craving (incertitude intermittente = renforcement variable le plus puissant)"
+        },
+        "evitant_dismissing_adulte": {
+          "caractéristiques": [
+            "Valorisation de l'autonomie et de l'autosuffisance",
+            "Inconfort avec l'expression émotionnelle et la vulnérabilité",
+            "Distance émotionnelle — difficile à lire, peu expressif",
+            "Retreat (retrait) face à la pression pour plus d'intimité",
+            "Minimisation des souvenirs d'enfance négatifs ('c'était pas si grave')",
+            "Alexithymie fréquente — difficulté à identifier/nommer ses émotions"
+          ],
+          "déclencheurs": "Demandes d'intimité, conflits émotionnels, vulnérabilité forcée, sentiment d'être contrôlé",
+          "dans_relation": "Partenaire perçu comme trop demandeur; fui paradoxalement plus on le poursuit",
+          "neurobiologie": "Désactivation cortex préfrontal médian (empathie) et inhibition active de la mémoire émotionnelle — études IRM fonctionnelle Fraley 2006"
+        },
+        "fearful_avoidant_adulte": {
+          "aussi_appelé": "Désorganisé adulte / Fearful Avoidant / DA",
+          "caractéristiques": [
+            "Désir intense de proximité ET peur intense de l'intimité — conflit permanent",
+            "Push-pull chronique — attirer puis repousser",
+            "Dissociation possible à l'apex d'intimité",
+            "Hyperactivation sympathique dans la relation",
+            "Comportements imprévisibles liés à l'état traumatique activé",
+            "Relation au partenaire contaminée par des figures traumatisantes passées"
+          ],
+          "prévalence_adultes": "5-10% population générale; surreprésenté en clinique (~30-40%)",
+          "lien_trauma": "Style le plus directement lié au C-PTSD et maltraitance/abus dans l'enfance",
+          "en_relation_toxique": "Extrêmement vulnérable — intimité est simultanément désirée et terrifiante, manipulation facile via alternance chaleur/rejet"
+        }
+      }
+    },
+    "neurobiologie_lien": {
+      "titre": "Neurobiologie de l'attachement — Le cerveau amoureux et lié",
+      "contenu": {
+        "ocytocine": {
+          "rôle": "Hormone et neurotransmetteur de l'attachement et de la confiance",
+          "déclenchement": "Contact physique (câlin 20s+), regard partagé, allaitement, orgasme, accouchement",
+          "effets": "Confiance, réduction peur, motivation à la connexion sociale, générosité, réduction cortisol",
+          "paradoxe_ocytocine": "Augmente la confiance DANS le groupe mais peut augmenter la méfiance envers les étrangers (Bartz 2011)",
+          "trauma_et_ocytocine": "L'abus chronique peut dérégler le système ocytocine — expliquer les difficultés de confiance post-trauma"
+        },
+        "dopamine_attachement": {
+          "rôle": "Système de récompense et de motivation",
+          "amour_romantique_début": "Activation striatum ventral, noyau accumbens — même circuits que la cocaïne",
+          "renforcement_variable": "L'incertitude augmente la dopamine plus qu'une récompense prévisible (Wolfram Schultz) — base neurobiologique du trauma bond et de la 'dépendance' aux relations toxiques",
+          "manque": "La séparation du partenaire d'attachement active les mêmes circuits que le sevrage — 'symptômes de sevrage' réels neurobiologiquement"
+        },
+        "cortisol_relation": {
+          "relation_sécure": "Présence du partenaire régule le cortisol à la baisse (Lane 2013) — la co-régulation physiologique est réelle",
+          "relation_insécure_anxieuse": "Cortisol chroniquement élevé — impact à long terme sur santé physique",
+          "relation_toxique": "Hyperactivation axe HPA (hypothalamo-hypophyso-surrénalien) chronique = usure biologique, impacts cardiovasculaires"
+        },
+        "cerveau_social": {
+          "default_mode_network": "Réseau mode par défaut — actif au repos pour traiter l'information sociale et les relations — littéralement: le cerveau au repos pense aux autres",
+          "mentalisation": "Capacité à comprendre son propre état mental et celui des autres — cortex préfrontal médial — dégradée par le trauma et les états de stress extrême",
+          "neurones_miroir": "Circuit empathique — activation vicariante — perturbé dans certains profils narcissiques (déficit empathie affective vs cognitive préservée)"
+        },
+        "régulation_dyadique": {
+          "définition": "La régulation émotionnelle est une fonction dyadic avant d'être une fonction individuelle (Tronick 1989)",
+          "still_face_experiment": "Tronick 1975 — bébé en détresse rapide quand parent présent mais sans affect — prouve la nécessité de l'accordage affectif (affect attunement)",
+          "implications_adultes": "Nous nous co-régulons toujours avec nos partenaires, amis, thérapeutes — le contexte relationnel module l'état SNA",
+          "co-régulation_thérapeutique": "La présence régulée du thérapeute EST un outil thérapeutique en soi (Porges, Schore)"
+        }
+      }
+    },
+    "attachement_relations_adultes": {
+      "titre": "L'attachement dans les relations adultes — Dynamiques et patterns",
+      "contenu": {
+        "activation_système": {
+          "déclencheurs_universels": ["Distance physique prolongée", "Silence et retrait émotionnel", "Indisponibilité perçue", "Conflit non résolu", "Menace de séparation", "Ambiguïté et incertitude"],
+          "protest_behaviors": {
+            "définition": "Comportements de protestation face à l'inaccessibilité de la figure d'attachement",
+            "manifestations": ["Appels/messages répétés", "Pleurs excessifs", "Menaces de rupture (pour obtenir réaction)", "Jalousie agissante", "Colère disproportionnée"],
+            "fonction": "Tenter de rétablir la proximité avec la figure d'attachement",
+            "piège": "Protest behaviors repoussent souvent les partenaires évitants → spirale infernale"
+          }
+        },
+        "dynamique_anxieux_evitant": {
+          "aussi_appelé": "Anxious-Avoidant Trap / Protest-Withdraw cycle",
+          "mécanisme": "Le partenaire anxieux s'approche/proteste → le partenaire évitant se retire → le retrait active encore plus l'anxiété → l'anxieux s'approche encore plus → l'évitant se retire encore plus",
+          "neurobiologie": "Boucle d'amplification mutuelle — les deux ont un SNA activé mais dans des directions opposées",
+          "prévalence_clinique": "Couple le plus fréquemment rencontré en thérapie — attraction initiale forte (l'anxieux ressent l'évitant comme 'mystérieux', l'évitant ressent l'anxieux comme 'passionné')",
+          "résolution": "EFT (Emotion-Focused Therapy, Sue Johnson) — accéder aux émotions primaires derrière les comportements de surface"
+        },
+        "cycle_blâme-retrait": {
+          "définition": "Pattern interactionnel récurrent — blâme/criticism → retrait/defence → distance → blâme augmenté",
+          "gottman": "John Gottman — 4 Cavaliers de l'Apocalypse: critique, mépris, attitude défensive, obstruction (stonewalling)",
+          "mépris": "Prédicteur le plus puissant de divorce dans les études Gottman (r=0.82) — supériorité morale, sarcasme, roulement des yeux",
+          "réparation": "Tentatives de réparation durant le conflit = facteur protecteur le plus important — même maladroites"
+        },
+        "triggers_relationnels": {
+          "définition": "Réponses émotionnelles intenses déclenchées dans la relation présente par des mémoires implicites de relations passées",
+          "exemple": "Partenaire dit 'on peut parler ce soir?' → anxieux paniqué car enfant = 'on va parler' précédait punition",
+          "identification": "Quand la réaction est disproportionnée au stimulus présent, chercher la trace du passé",
+          "outil": "Journal triggers: situation → émotion → SUDS → âge mental ressenti → scène ancienne"
+        }
+      }
+    },
+    "guerison_attachement": {
+      "titre": "Guérison de l'attachement insécure — Earned Secure Attachment",
+      "contenu": {
+        "neuroplasticité": {
+          "preuve": "L'attachement adulte est modifiable — études longitudinales (Roisman 2002, Waters 2000) — 20-40% transition style insécure vers sécure",
+          "mécanismes": "Nouvelles expériences relationnelles correctives (thérapie, relation sécurisante), psychothérapie, travail intégration narrative (AAI cohérence)",
+          "earned_secure": "Sécurité gagnée — adultes ayant vécu attachement insécure ET développé une narrative cohérente et intégrée de leur enfance → style fonctionnellement sécure",
+          "prédicteur": "La cohérence narrative (pas le contenu) prédit la sécurité — pouvoir raconter son enfance difficile de façon organisée et avec perspective"
+        },
+        "approches_thérapeutiques": {
+          "EFT": {
+            "nom_complet": "Emotion-Focused Therapy (Sue Johnson)",
+            "cible": "Cycles interactionnels destructeurs — accéder aux émotions d'attachement sous-jacentes",
+            "efficacité": "Taux de rémission 70-75% couples en détresse (études randomisées)",
+            "format": "Individuel ou couple"
+          },
+          "AEDP": {
+            "nom_complet": "Accelerated Experiential Dynamic Psychotherapy (Diana Fosha)",
+            "cible": "Transformation de l'attachement via relation thérapeutique corrective",
+            "spécificité": "Thérapeute expressif et transparent — utilise la relation comme outil de guérison"
+          },
+          "EMDR_attachement": {
+            "protocole": "EMDR Protocol for Recent Events + Early Trauma — traite les IWM traumatiques",
+            "recherche": "Efficace sur l'anxiété d'attachement et les croyances relationnelles négatives"
+          },
+          "IFS": {
+            "nom_complet": "Internal Family Systems (Richard Schwartz)",
+            "lien_attachement": "Exilés = parties blessées de l'attachement; Pompiers/Managers = stratégies d'adaptation aux blessures d'attachement",
+            "objectif": "Reparenter ses parties exilées via le Self central"
+          },
+          "schema_therapy": {
+            "schémas_attachement": [
+              "Abandon/Instabilité (SA) → anxieux",
+              "Méfiance/Abus (MA) → fearful",
+              "Carence affective (CA) → évitant/anxieux",
+              "Dépendance/Incompétence (DI) → anxieux"
+            ],
+            "mode_parent_aimant_limites": "Activation du mode Parent Aimant Limites = reparentage — objectif central schema therapy"
+          }
+        },
+        "auto-travail_attachement": {
+          "conscience": "Identifier son style d'attachement dominant (sans honte — c'est une adaptation intelligente)",
+          "triggers_journal": "Documenter les réactions disproportionnées pour tracer les IWM actifs",
+          "lettre_à_soi_enfant": "Lettre de compassion à l'enfant qui a développé cette stratégie pour survivre",
+          "relations_correctives": "Chercher activement des relations (thérapeute, amis, partenaire) qui offrent une expérience relationnelle différente",
+          "pause_réponse": "Insérer une pause entre trigger et réponse — fenêtre de traitement — cortex préfrontal peut se réactiver",
+          "communication_besoins": "Progressivement formuler ses besoins en termes de besoins (non en accusations) — NVC (Nonviolent Communication, Rosenberg)"
+        },
+        "en_relation_partenaire": {
+          "communication_attachement": "Partager son style d'attachement avec le partenaire — réduire la confusion mutuelle",
+          "demandes_positives": "Formuler ce dont on a besoin (vs critique de l'autre pour ce qu'il ne fait pas)",
+          "réparation_rapide": "Viser < 24h pour réparer les ruptures — le temps non réparé ancre l'IWM négatif",
+          "validation_émotionnelle": "Valider l'émotion avant la résolution du problème — se sentir entendu d'abord"
+        }
+      }
+    },
+    "ressources_attachement": {
+      "titre": "Ressources — Neuroscience et Attachement",
+      "contenu": {
+        "ouvrages_fondamentaux": [
+          {
+            "titre": "Attached",
+            "auteur": "Amir Levine & Rachel Heller (2010)",
+            "résumé": "Introduction accessible aux styles d'attachement adultes et aux dynamiques relationnelles — bestseller international, exercices pratiques"
+          },
+          {
+            "titre": "Hold Me Tight",
+            "auteur": "Sue Johnson (2008)",
+            "résumé": "EFT pour couples — 7 conversations transformatrices basées sur l'attachement"
+          },
+          {
+            "titre": "Wired for Love",
+            "auteur": "Stan Tatkin (2012)",
+            "résumé": "Neurobiologie du couple — comprendre le cerveau de son partenaire pour une relation sécurisante"
+          },
+          {
+            "titre": "A General Theory of Love",
+            "auteur": "Lewis, Amini & Lannon (2000)",
+            "résumé": "Neurobiologie de l'amour et de l'attachement — limbic regulation, révision"
+          },
+          {
+            "titre": "Becoming Attached",
+            "auteur": "Robert Karen (1998)",
+            "résumé": "Histoire complète de la théorie de l'attachement — accessible grand public"
+          }
+        ],
+        "évaluation_en_ligne": [
+          {
+            "outil": "Experiences in Close Relationships — ECR-R (Fraley 2000)",
+            "accès": "Mesure dimensionnelle anxiété et évitement — version en ligne disponible librement (r-labs.net)",
+            "dimensions": "Score anxiété (0-7) × Score évitement (0-7) — 4 quadrants styles"
+          },
+          {
+            "outil": "AAQ — Attachment Questionnaire",
+            "usage": "Évaluation rapide style dominant — voir versions validées en français"
+          }
+        ],
+        "thérapeutes_spécialisés": [
+          {
+            "approche": "EFT (Emotion-Focused Therapy) — formation Sue Johnson",
+            "trouver": "ICEEFT.com — annuaire mondial thérapeutes certifiés EFT"
+          },
+          {
+            "approche": "Schema Therapy — ISST-Online.com",
+            "trouver": "Annuaire international schema therapists"
+          }
+        ]
+      }
+    }
+  }
+}

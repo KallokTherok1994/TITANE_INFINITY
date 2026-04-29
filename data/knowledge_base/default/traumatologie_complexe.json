@@ -1,0 +1,442 @@
+{
+  "version": "v31.3.3",
+  "category": "traumatologie_complexe",
+  "last_updated": "2026-04-29",
+  "description": "Traumatologie complexe, C-PTSD (ICD-11), Théorie Polyvagale, Window of Tolerance, réponses 4F (Pete Walker), neurobiologie du trauma, approches somatiques et intégratives",
+  "retrieval_triggers": [
+    "trauma complexe",
+    "C-PTSD",
+    "PTSD complexe",
+    "trouble stress post-traumatique complexe",
+    "ICD-11 trauma",
+    "window of tolerance",
+    "fenêtre de tolérance",
+    "théorie polyvagale",
+    "polyvagal",
+    "nerf vague",
+    "système nerveux autonome",
+    "fight flight freeze fawn",
+    "4F Pete Walker",
+    "figer trauma",
+    "fawn réponse",
+    "hypervigilance",
+    "dissociation",
+    "flashback",
+    "déréalisation",
+    "dépersonnalisation",
+    "honte toxique",
+    "critique intérieure",
+    "enfant intérieur trauma",
+    "Pete Walker",
+    "Van der Kolk",
+    "corps garde le score",
+    "Bessel van der Kolk",
+    "trauma somatique",
+    "trauma corporel",
+    "régulation nerveux",
+    "activation autonomique",
+    "activation trauma",
+    "freeze dorsal",
+    "ventral vagal",
+    "co-régulation",
+    "auto-régulation",
+    "stabilisation trauma",
+    "phases traitement trauma",
+    "janet phases trauma",
+    "charge traumatique",
+    "mémoire traumatique",
+    "amygdale hijack",
+    "hypo-activation",
+    "hyper-activation",
+    "zone de résilience",
+    "ancrage somatique",
+    "grounding",
+    "titration trauma",
+    "pendulation",
+    "résilience trauma"
+  ],
+  "sections": {
+    "cadre_diagnostique": {
+      "titre": "Cadre diagnostique — PTSD vs C-PTSD (ICD-11)",
+      "contenu": {
+        "PTSD_classique": {
+          "critères_DSM5": [
+            "Exposition à événement traumatique (mort/menace/agression/catastrophe)",
+            "Reviviscences intrusives (flashbacks, cauchemars, détresse)",
+            "Évitement (pensées, lieux, personnes liés au trauma)",
+            "Altérations cognitives et émotionnelles négatives",
+            "Altérations de l'éveil et réactivité (hypervigilance, sursaut)",
+            "Durée > 1 mois; perturbation fonctionnelle significative"
+          ],
+          "prévalence": "7-8% population générale; 20-30% après événements sévères"
+        },
+        "C-PTSD_ICD11": {
+          "définition": "Traumatisme prolongé, répété, difficile à échapper (abus enfance, violence conjugale chronique, captivité, torture)",
+          "critères_supplémentaires_spécifiques": [
+            "Dérégulation émotionnelle sévère (explosions, engourdissement, honte envahissante)",
+            "Perturbation du concept de soi (honte profonde, sentiment de ne rien valoir, d'être brisé, différent des autres)",
+            "Perturbations relationnelles (méfiance, difficulté à maintenir relations proches, distance paradoxale)",
+            "Conscience altérée (dissociation, dépersonnalisation, déréalisation)"
+          ],
+          "différence_PTSD": "PTSD = réaction à événement unique; C-PTSD = effet de traumatisations cumulatives et chroniques",
+          "co-occurrences_fréquentes": ["Trouble personnalité borderline", "Dépression majeure", "Troubles anxieux", "Addictions", "Troubles alimentaires", "Douleurs chroniques somatiques"],
+          "note_clinique": "C-PTSD souvent mal diagnostiqué comme BPD, bipolarité ou trouble de la personnalité — importance du contexte traumatique"
+        },
+        "traumatisme_développemental": {
+          "définition": "Traumatisme survenu pendant l'enfance (0-18 ans) pendant les périodes critiques du développement neurologique et attachement",
+          "impacts_spécifiques": [
+            "Perturbation des schémas précoces inadaptés (Jeffrey Young)",
+            "Développement d'un MOI fragmenté ou faux soi défensif",
+            "Programmation des circuits de menace (amygdale hypersensible)",
+            "Difficultés de régulation émotionnelle structurelles"
+          ],
+          "ACE_score": "Adverse Childhood Experiences — score 4+ associé à multiplications des risques santé physique/mentale (études Felitti/CDC 1998)"
+        }
+      }
+    },
+    "theorie_polyvagale": {
+      "titre": "Théorie Polyvagale (Stephen Porges, 1994)",
+      "contenu": {
+        "principe": "Le système nerveux autonome (SNA) régit notre réponse de sécurité via trois circuits hiérarchiques phylogénétiques",
+        "trois_circuits": {
+          "ventral_vagal": {
+            "état": "Sécurité et connexion sociale",
+            "caractéristiques": "Engagement social, curiosité, calme, connexion, humour, créativité, empathie, jeu",
+            "physiologie": "Nerf vague ventral myélinisé, régulation cardiaque fine, vocalisation prosodique, contact visuel, muscles faciaux expressifs",
+            "accès_thérapeutique": "Co-régulation relationnelle, EMDR phases stabilisation, respiration vagale, chant/humming"
+          },
+          "sympathique": {
+            "état": "Mobilisation — Fight/Flight (combat ou fuite)",
+            "caractéristiques": "Anxiété, colère, urgence, agitation, panique, tension musculaire, prêt à l'action",
+            "physiologie": "Adrénaline/noradrénaline, accélération cardiaque, cortisol, dilatation pupilles, inhibition digestive",
+            "déclenchement_trauma": "Flashbacks, hypervigilance, crises de panique, rage, comportements compulsifs"
+          },
+          "dorsal_vagal": {
+            "état": "Immobilisation — Freeze/Collapse (effondrement)",
+            "caractéristiques": "Dissociation, engourdissement, effondrement, honte, dépression profonde, vide, s'éteindre",
+            "physiologie": "Nerf vague dorsal non-myélinisé, bradycardie, hypotension, dissociation, tonique immobilité",
+            "déclenchement_trauma": "Quand lutte/fuite impossibles — gel défensif, shutdown, sortie du corps"
+          }
+        },
+        "hiérarchie": "Ventral vagal → Sympathique → Dorsal vagal (ordre d'activation sous menace croissante)",
+        "neuroception": "Processus inconscient de détection de sécurité/danger sans traitement cortical — peut être erroné chez traumatisés (faux positifs dangereux)",
+        "co-régulation": "Besoin primaire — le SNA se régule en présence d'un autre SNA régulé (thérapeute, partenaire sécurisé, animal)",
+        "applications_cliniques": [
+          "Identifier l'état autonomique avant toute intervention",
+          "Prioriser la sécurité ventrale avant le traitement du trauma",
+          "Utiliser la co-régulation comme outil thérapeutique principal",
+          "Mouvements, musique, voix, respiration pour moduler l'état"
+        ]
+      }
+    },
+    "window_of_tolerance": {
+      "titre": "Fenêtre de Tolérance (Dan Siegel, 1999 — élargie par Pat Ogden)",
+      "contenu": {
+        "définition": "Zone d'activation optimale du SNA dans laquelle le traitement de l'information, l'apprentissage et la guérison sont possibles",
+        "zones": {
+          "fenêtre_optimale": {
+            "caractéristiques": "Présent, capable de mentaliser, régulation émotionnelle fonctionnelle, peut accéder aux souvenirs sans être submergé",
+            "cortex_préfrontal": "Actif — pensée, planification, empathie, perspective temporelle opérationnelles",
+            "thérapie": "Zone cible pour tout travail thérapeutique efficace"
+          },
+          "hyperactivation": {
+            "sortie_haute": "Au-dessus de la fenêtre — trop activé",
+            "signes": "Panique, flashbacks intrusifs, rage, agitation, pensées accélérées, incapacité à se calmer",
+            "physiologie": "Mode sympathique dominant",
+            "intervention": "Ancrage, respiration 4-7-8, exercice physique, technique 5-4-3-2-1 sensorielle, contact froid"
+          },
+          "hypoactivation": {
+            "sortie_basse": "En dessous de la fenêtre — trop peu activé",
+            "signes": "Engourdissement, dissociation, honte paralysante, vide, fatigue extrême, 'n'être nulle part'",
+            "physiologie": "Mode dorsal vagal dominant",
+            "intervention": "Activation sensorielle douce (mouvement, température, pression), contact visuel, vocalisation"
+          }
+        },
+        "élargissement_fenêtre": {
+          "objectif_thérapeutique": "Augmenter progressivement la capacité à tolérer des intensités émotionnelles sans sortir de la fenêtre",
+          "mécanismes": ["Titration — petites doses de matériel traumatique", "Pendulation — aller-retour zone ressource/trauma", "Ressourcement — construire ancres de sécurité corporelle", "Co-régulation thérapeute"],
+          "neuroplasticité": "La fenêtre s'élargit par la thérapie — preuve IRM fonctionnelle pré/post EMDR/SE"
+        },
+        "chez_traumatisés_complexes": "Fenêtre extrêmement réduite — oscillations rapides entre hyper et hypo, triggers minimes suffisent à faire sortir de la fenêtre",
+        "outils_auto-évaluation": {
+          "SUDS": "Subjective Units of Distress Scale 0-10 — évaluer activation avant/pendant/après séance",
+          "thermomètre_interne": "Repérer ses propres signaux corporels d'alerte précoce avant de sortir de la fenêtre"
+        }
+      }
+    },
+    "reponses_4F_pete_walker": {
+      "titre": "Les 4F de Pete Walker — Réponses traumatiques de survie",
+      "auteur": "Pete Walker, 2013 — 'Complex PTSD: From Surviving to Thriving'",
+      "contenu": {
+        "principe": "Quatre réponses de survie conditionnées par le trauma d'enfance et généralisées à l'âge adulte — Fight, Flight, Freeze, Fawn",
+        "fight": {
+          "survie_enfant": "Agressivité défensive face à la menace parentale — protestation, résistance",
+          "adulte_non_guéri": "Narcissisme défensif, contrôle, colère disproportionnée, critique des autres, perfectionnisme projectif, difficulté à l'intimité",
+          "critique_intérieure": "Extérojectée — dirige la critique vers les autres ('tu ne vaux rien')",
+          "corps": "Tension mâchoire, poings serrés, posture défensive, hypertonicité"
+        },
+        "flight": {
+          "survie_enfant": "Fuite physique ou mentale face à la menace — s'éloigner, s'occuper, s'agiter",
+          "adulte_non_guéri": "Workaholisme, hyperactivité, anxiété chronique, perfectionnisme de fuite, procrastination par peur, hypervigilance, TOC",
+          "critique_intérieure": "Rumination anxieuse, liste infinie de tâches, 'si je fais tout parfaitement je serai en sécurité'",
+          "corps": "Agitation, jambes impatientes, tension dorsale, sensation de devoir bouger"
+        },
+        "freeze": {
+          "survie_enfant": "Immobilisation totale — si je ne bouge pas, la menace ne me trouvera pas / ne s'aggravera pas",
+          "adulte_non_guéri": "Isolation sociale, procrastination paralysante, dissociation chronique, dépression, réclusion, addictions passives (scroll, jeux, TV)",
+          "critique_intérieure": "Honte profonde, sentiment d'être fondamentalement brisé, 'à quoi ça sert'",
+          "corps": "Hypotonique, effondrement postural, dissociation, anesthésie somatique",
+          "note": "Type le plus fréquemment diagnostiqué comme dépression seule — le contexte traumatique est manqué"
+        },
+        "fawn": {
+          "survie_enfant": "Se fondre dans les désirs du parent dangereux pour prévenir l'abus — anticiper, plaire, ne jamais déranger",
+          "adulte_non_guéri": "Codépendance, effacement de soi, incapacité à dire non, limites nulles, sur-empathie épuisante, peur du conflit, s'oublier pour les autres",
+          "critique_intérieure": "Honte d'exister, 'mes besoins n'ont aucune importance', culpabilité d'avoir des besoins",
+          "corps": "Corps tonique en vigilance de l'autre, tensions chroniques nuque/épaules, fatigue par hyper-attention",
+          "cible_manipulateurs": "TYPE le plus vulnérable aux profils narcissiques et manipulateurs — relation d'instrumentalisation naturelle"
+        },
+        "combinaisons_fréquentes": {
+          "fight_flight": "Alternance agression/fuite — hypomanie, comportements impulsifs",
+          "freeze_fawn": "Combinaison la plus courante du C-PTSD — effacement total + paralysie",
+          "tous_les_quatre": "Flash entre les quatre états — instabilité émotionnelle, BPD possible"
+        },
+        "guérison_4F": {
+          "reconnaissance": "Identifier son pattern dominant sans honte — ce sont des adaptations intelligentes, pas des défauts",
+          "fight": "Apprendre l'assertivité, canaliser vers la protection (pas l'attaque), travail sur la confiance",
+          "flight": "Mindfulness, tolérer l'inaction, distinguer urgence réelle vs conditionnée",
+          "freeze": "Activation corporelle douce, sécurité dans la connexion, petits pas comportementaux",
+          "fawn": "Identifier ses propres besoins, pratiquer le non assertif, reconstruire l'identité autonome"
+        }
+      }
+    },
+    "neurobiologie_trauma": {
+      "titre": "Neurobiologie du trauma — Ce que le corps garde",
+      "auteurs_clés": ["Bessel van der Kolk (The Body Keeps the Score, 2014)", "Peter Levine (Somatic Experiencing)", "Gabor Maté", "Bruce Perry"],
+      "contenu": {
+        "mémoire_traumatique": {
+          "mémoire_implicite": "Encodée sans contexte narrative, sens temporel ou sens du soi — fragments sensoriels, émotions, sensations, images",
+          "mémoire_explicite": "Narrative, contextualisée, accessible consciemment",
+          "problème_trauma": "Le trauma est encodé en mémoire implicite fragmentée SANS intégration narrative — d'où les flashbacks (reviviscences sans contexte)",
+          "thérapie": "Intégration = connecter la mémoire implicite à une narrative explicite cohérente (objectif EMDR/trauma-focused CBT)"
+        },
+        "amygdale_cortex": {
+          "amygdale": "Alarme incendie — détecte la menace, déclenche la réponse de survie AVANT le traitement cortical (200ms vs 500ms)",
+          "cortex_préfrontal": "Annulé sous threat sévère — 'hijack amygdalien' de LeDoux — raisonnement impossible en état de panique réelle",
+          "hippocampe": "Contextualise les souvenirs dans le temps — endommagé par le cortisol chronique → perd la capacité de dire 'c'était avant, c'est fini'",
+          "implication_clinique": "Impossible de 'raisonner' quelqu'un hors d'un état traumatique actif — la régulation d'abord"
+        },
+        "cortisol_impact": {
+          "cortisol_aigu": "Utile — mobilise les ressources de survie",
+          "cortisol_chronique": "Destructeur — atrophie hippocampe (mémoire contextuelle), réduit volume cortex préfrontal, hypersensibilise amygdale, impact système immunitaire",
+          "ACE_disease_burden": "Traumatismes d'enfance × cortisol chronique → maladies cardiovasculaires, auto-immunes, cancers plus fréquents (études ACE)"
+        },
+        "corps_et_trauma": {
+          "van_der_kolk": "Le trauma vit dans le corps, pas seulement dans les pensées — thérapies talk insuffisantes seules",
+          "immobilisation_tonic": "Réponse freeze = immobilisation tonique (tension musculaire extrême) — énergie non déchargée reste stockée dans le corps",
+          "levine_SE": "Somatic Experiencing — permettre la décharge physiologique naturelle de l'énergie traumatique (tremblements, secousses, chaleur)",
+          "yoga_trauma": "Yoga sensible au trauma (Bessel van der Kolk, Trauma Center) — reconnecter à la proprioception et l'intéroception en sécurité"
+        },
+        "dissociation": {
+          "définition": "Déconnexion de la conscience, de la mémoire, de l'identité ou de la perception — mécanisme de survie adaptatif sous trauma extrême",
+          "types": {
+            "péri-traumatique": "Dépersonnalisation/déréalisation pendant le trauma",
+            "chronique": "Détachement, brouillard mental, sentiment d'irréalité quotidien",
+            "structurelle": "Parties dissociées (ANP — Apparently Normal Part / EP — Emotional Part, théorie Nijenhuis/Van der Hart)"
+          },
+          "continuum": "Normal (rêveries, absorption) → Dépersonnalisation-déréalisation → Amnésies dissociatives → DID (Trouble Identité Dissociatif)",
+          "mesure": "DES-II (Dissociative Experiences Scale) — évaluation standardisée",
+          "approche_thérapeutique": "Stabilisation d'abord — jamais traiter le trauma avant que la dissociation soit gérée (risque déstabilisation)"
+        }
+      }
+    },
+    "honte_toxique": {
+      "titre": "Honte toxique — Le cœur du C-PTSD",
+      "auteurs": ["Pete Walker", "Brené Brown", "John Bradshaw"],
+      "contenu": {
+        "distinction": {
+          "culpabilité": "J'ai fait quelque chose de mal — émotion réparable, liée à l'acte",
+          "honte_saine": "Conscience de ses limites et de son humanité — signal ajustement social",
+          "honte_toxique": "Je SUIS fondamentalement mauvais, défectueux, brisé, indigne d'amour — identité contaminée"
+        },
+        "origine_trauma": "Honte toxique = intériorisation du regard critique/abusif du parent/agresseur — 'tu ne vaux rien', 'tu es nul', 'tu es trop/pas assez'",
+        "critique_interne": {
+          "définition": "Voix intérieure qui reproduit les messages traumatiques — attaque identitaire continue",
+          "pete_walker": "L'ennemi intérieur — fragment introjecté du parent traumatisant",
+          "manifestations": ["Auto-sabotage", "Perfectionnisme paralysant", "Incapacité à recevoir des compliments", "Minimisation constante", "Procrastination par peur du jugement", "Honte d'avoir des besoins"],
+          "externalisation": "Étape thérapeutique clé — traiter la critique interne comme externe pour la remettre en question"
+        },
+        "honte_et_trauma": "La honte maintient le secret et empêche la guérison — isolement, secret, conviction d'être 'le seul à vivre ça'",
+        "guérison_honte": {
+          "brene_brown": "La honte grandit dans le silence, les secrets et le jugement — elle meurt dans la connexion et la vulnérabilité partagée",
+          "étapes": [
+            "Nommer la honte sans jugement",
+            "La partager avec un témoin de confiance (thérapeute, groupe)",
+            "Distinguer honte de l'abus (honte de l'auteur ≠ ma honte)",
+            "Compassion envers l'enfant qui a vécu ça",
+            "Deuil de l'enfance qu'on aurait dû avoir"
+          ],
+          "auto-compassion": "Kristin Neff — 3 composantes: pleine conscience, humanité commune, bienveillance envers soi"
+        }
+      }
+    },
+    "phases_traitement_trauma": {
+      "titre": "Phases de traitement du trauma — Protocole de Janet (1889) adapté",
+      "note": "Standard de soin international pour C-PTSD — validé par ISSTD, EMDR Institute, ISTSS",
+      "contenu": {
+        "phase_1_stabilisation": {
+          "titre": "Phase 1 — Sécurité et stabilisation (durée variable: mois à années pour C-PTSD)",
+          "objectifs": [
+            "Établir la sécurité physique et relationnelle",
+            "Réduire les symptômes invalidants (dissociation, flashbacks, crises)",
+            "Élargir la fenêtre de tolérance",
+            "Construire les ressources internes et externes",
+            "Établir l'alliance thérapeutique",
+            "Psychoéducation sur le trauma"
+          ],
+          "outils": ["Techniques de grounding", "Respiration régulante", "Lieu sûr imaginaire", "Conteneur symbolique", "Ressource figure protectrice", "Gestion de crise"],
+          "critère_passage_phase2": "Stabilité suffisante dans vie quotidienne, fenêtre tolérance élargit, pas de mise en danger active"
+        },
+        "phase_2_traitement": {
+          "titre": "Phase 2 — Traitement des mémoires traumatiques",
+          "objectifs": [
+            "Intégration des mémoires traumatiques (implicite → explicite + narrative)",
+            "Réduction de la charge émotionnelle associée (SUDS 0-1 post-EMDR)",
+            "Installation de croyances positives (VoC ≥ 6/7 post-EMDR)",
+            "Désensibilisation des triggers"
+          ],
+          "approches": ["EMDR (Gold standard randomisé)", "Thérapie d'exposition prolongée", "Thérapie de traitement cognitif (CPT)", "Thérapie narrative", "EMDR-PRECI pour trauma récent"],
+          "attention_C-PTSD": "Phase 2 peut nécessiter retours en phase 1 — non linéaire"
+        },
+        "phase_3_integration": {
+          "titre": "Phase 3 — Intégration et développement identitaire",
+          "objectifs": [
+            "Intégration des parties dissociées (si applicable)",
+            "Deuil — pertes liées au trauma (enfance, relations, temps, potentiel)",
+            "Construction d'une identité cohérente post-traumatique",
+            "Reconstruction des relations",
+            "Développement de la vie selon ses valeurs"
+          ],
+          "approches": ["IFS (Internal Family Systems)", "ACT (Acceptance & Commitment Therapy)", "Thérapie narrative identitaire", "Travail de deuil"],
+          "durée_C-PTSD": "Processus long (2-5 ans minimum pour C-PTSD sévère) — mesure sur trajectoire, non sur symptômes ponctuels"
+        }
+      }
+    },
+    "outils_stabilisation": {
+      "titre": "Outils de stabilisation et régulation — Techniques pratiques",
+      "contenu": {
+        "grounding_sensoriel": {
+          "5-4-3-2-1": "5 choses vues, 4 entendues, 3 touchées, 2 odeurs, 1 goût — ancrage dans le présent sensoriel",
+          "ancrage_pieds": "Pression consciente des pieds au sol, sentir le poids du corps, contact avec surface",
+          "objet_ancrage": "Tenir un objet froid, texturé, lourd — activer intéroception",
+          "utilisation": "Hyperactivation, flashback, dissociation, panique"
+        },
+        "respiration_regulatrice": {
+          "4-7-8": "Inspirer 4s, retenir 7s, expirer 8s — active nerf vague ventral",
+          "cohérence_cardiaque": "5s inspir/5s expir × 5 min, 3×/jour — HRV + régulation SNA",
+          "physiological_sigh": "Double inspiration nasale + longue expiration buccale — reset cortisol, découverte Huberman Lab/Stanford",
+          "box_breathing": "4-4-4-4 — utilisée par Navy SEALs pour stress extrême"
+        },
+        "lieu_sûr": {
+          "protocole": "Imaginer un lieu (réel ou imaginaire) où on se sent totalement en sécurité — activer les 5 sens, couleur dominante, mot ressource, geste ancrage",
+          "activation_somatic": "Remarquer la sensation corporelle de sécurité — où dans le corps? Qualité, couleur, forme?",
+          "utilisation": "Avant phase 2 trauma, après déstabilisation, pour dormir"
+        },
+        "conteneur": {
+          "protocole": "Imaginer un contenant solide, sécurisé (coffre-fort, boîte ancienne, cristal) — y déposer le matériel traumatique entre deux séances",
+          "fonction": "Contrôle du timing de traitement — permet de vivre entre les séances sans être submergé"
+        },
+        "orientation": {
+          "protocole": "Lentement scanner l'environnement, nommer ce qu'on voit, localiser les sorties, confirmer la sécurité actuelle — différencier passé/présent",
+          "neuroception": "Réinitialiser la neuroception — infirmer le signal de danger par preuve sensorielle de sécurité actuelle"
+        },
+        "pendulation": {
+          "définition": "Aller-retour conscient entre zone de ressource (sécurité, corps) et zone de tension (trauma) par petites doses",
+          "principe_levine": "Titration — petites doses tolérables plutôt qu'immersion totale (flooding) contre-indiqué en C-PTSD",
+          "auto-pratique": "Toucher tension musculaire → ressource corporelle → tension → ressource (cycle 3-5 min)"
+        }
+      }
+    },
+    "ressources_traumatologie": {
+      "titre": "Ressources en traumatologie complexe",
+      "contenu": {
+        "ouvrages_fondamentaux": [
+          {
+            "titre": "The Body Keeps the Score",
+            "auteur": "Bessel van der Kolk (2014)",
+            "résumé": "LA référence sur le trauma somatique — neurobiologie, effets corporels, approches intégratives"
+          },
+          {
+            "titre": "Complex PTSD: From Surviving to Thriving",
+            "auteur": "Pete Walker (2013)",
+            "résumé": "Livre de référence sur le C-PTSD par quelqu'un qui en a guéri — 4F, critique interne, deuil de l'enfance"
+          },
+          {
+            "titre": "Waking the Tiger",
+            "auteur": "Peter Levine (1997)",
+            "résumé": "Fondements de la Somatic Experiencing — décharge naturelle du trauma par le corps"
+          },
+          {
+            "titre": "The Polyvagal Theory in Therapy",
+            "auteur": "Deb Dana (2018)",
+            "résumé": "Application clinique de la théorie polyvagale — accessible aux non-cliniciens"
+          },
+          {
+            "titre": "Scattered Minds",
+            "auteur": "Gabor Maté (1999/2019)",
+            "résumé": "TDAH et trauma développemental — lien entre attachement précoce et neurologie"
+          }
+        ],
+        "ressources_auto-aide": [
+          {
+            "titre": "The Complex PTSD Workbook",
+            "auteur": "Arielle Schwartz (2016)",
+            "type": "Workbook clinique — exercices concrets phase 1-3"
+          },
+          {
+            "titre": "Trauma and Recovery",
+            "auteur": "Judith Herman (1992)",
+            "type": "Classique fondateur — cadre théorique C-PTSD et justice"
+          }
+        ],
+        "ressources_québec": [
+          {
+            "nom": "RAVAC (Regroupement d'aide aux victimes d'abus et de crimes)",
+            "services": "Counseling, groupe soutien trauma, référencement"
+          },
+          {
+            "nom": "CALACS (Centre d'aide et de lutte contre les agressions à caractère sexuel)",
+            "services": "Trauma sexuel, accompagnement clinique, 0$ ou glissement de tarif",
+            "localisation": "Réseau provincial — 26 centres au Québec"
+          },
+          {
+            "nom": "Centre de crise régionaux",
+            "services": "Crise 24/7 — appel ou accueil en personne",
+            "urgence": "3-1-1 (info-sociale) ou 811 (info-santé)"
+          }
+        ],
+        "ressources_france": [
+          {
+            "nom": "France Victimes",
+            "numero": "116 006",
+            "services": "Accompagnement victimes — trauma, violence, abus — 7j/7"
+          },
+          {
+            "nom": "INAVEM (Institut National d'Aide aux Victimes et de Médiation)",
+            "services": "Réseau national centres aide aux victimes"
+          }
+        ],
+        "apps_outils": [
+          {
+            "nom": "PTSD Coach",
+            "description": "Application VA (Veterans Affairs) — outils de stabilisation, psychoéducation, journal symptômes",
+            "plateforme": "iOS + Android — gratuit"
+          },
+          {
+            "nom": "Insight Timer",
+            "description": "Méditations guidées incluant trauma-sensitive mindfulness et somatic exercises"
+          }
+        ]
+      }
+    }
+  }
+}
