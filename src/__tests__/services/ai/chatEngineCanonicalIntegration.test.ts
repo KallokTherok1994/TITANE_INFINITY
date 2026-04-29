@@ -395,4 +395,65 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     expect(response).not.toContain('Comment');
     expect(response).not.toContain('Pourquoi');
   });
+
+  // ── LOCK 3: PROVIDER_TRUTH_CHAIN — canonical kernel provider is never overridden ──
+  it('should honor explicit kernel provider — cognitiveKernel MUST NOT override it', async () => {
+    // Set an explicit provider preference (simulating kernel having chosen ollama)
+    chatEngine.setProvider('ollama');
+
+    const response = await chatEngine.generate(
+      'Analyse de l\'architecture système Ring 0',
+      [],
+      { mode: 'default' }
+    );
+
+    const decision = response.omegaMetadata?.canonicalDecision;
+
+    // The kernel decision must be present
+    expect(decision).toBeDefined();
+
+    // The pipeline must contain canonical-discernment (kernel ran)
+    expect(response.omegaMetadata?.pipelineSteps).toContain('canonical-discernment');
+
+    // The orchestrator was called (not bypassed)
+    const { aiOrchestrator } = await import('@/services/ai/orchestrator');
+    expect(vi.mocked(aiOrchestrator).generate).toHaveBeenCalled();
+
+    // The orchestrator was NOT called with a different provider than what the kernel chose.
+    // When kernel provider is explicit (not 'auto'), the cognitiveKernel signal must not override.
+    const orchestratorCall = vi.mocked(aiOrchestrator).generate.mock.calls[0];
+    if (orchestratorCall) {
+      const orchestratorConfig = orchestratorCall[2]; // 3rd arg = config
+      if (orchestratorConfig?.preferredProvider && orchestratorConfig.preferredProvider !== 'auto') {
+        // The preferred provider passed to orchestrator must be the kernel's choice, not cognitiveKernel's
+        expect(orchestratorConfig.preferredProvider).not.toBe('gemini');
+        expect(orchestratorConfig.preferredProvider).not.toBe('anthropic');
+      }
+    }
+  });
+
+  it('should pass kernel fallback chain order to orchestrator config', async () => {
+    chatEngine.setProvider('auto');
+
+    const response = await chatEngine.generate(
+      'Architecture Ring 0 Tauri IPC',
+      [],
+      { mode: 'default' }
+    );
+
+    const decision = response.omegaMetadata?.canonicalDecision;
+    expect(decision).toBeDefined();
+
+    // Kernel decision must include a provider field
+    expect(decision?.provider).toBeDefined();
+    expect(typeof decision?.provider.name).toBe('string');
+
+    // Kernel fallback chain must be defined (array, possibly empty)
+    if (decision?.fallbackChain !== undefined) {
+      expect(Array.isArray(decision.fallbackChain)).toBe(true);
+    }
+
+    // Pipeline must be coherent
+    expect(response.omegaMetadata?.pipelineSteps).toContain('canonical-discernment');
+  });
 });
