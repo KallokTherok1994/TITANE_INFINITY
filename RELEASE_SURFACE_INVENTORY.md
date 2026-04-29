@@ -1076,7 +1076,9 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | Artifact | SHA256 | Size |
 |---|---|---|
 | `titane-infinity_31.2.37_amd64.deb` | `e1b9084cf48ac3bbae905dbfd3319467babe3aa3959490f343c114a8cdece282` | 22 MiB |
-| `titane-infinity` (binary) | `0ff40109d7df8ab54027c9734b74d3a89b0b3e880e51ddaefe48f7a8d8194b54` | 47 MiB |
+| `titane-infinity-31.2.37-1.x86_64.rpm` | `96a4cebade0beb10c3965ecbd239b48276cffd2a8124770d0e8cdcca16b9ed3c` | 22 MiB |
+| `titane-infinity_31.2.37_amd64.AppImage` | `22c9b2dc6a6fa3d787fde800eae94d8fe2e93094f07eabac98ede42b38356ee2` | 91 MiB |
+| `titane-infinity` (binary) | `752f03f07c5e2cefc3d80d3d1d8203150ba24ca0906e92bdc0bfd0b70404ef86` | 47 MiB |
 
 ### Changes — v31.2.37
 
