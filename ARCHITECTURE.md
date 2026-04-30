@@ -572,7 +572,8 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts SYSTEME_NERVEUX_NEUROANATOMIE + SYSTEME_LYMPHATIQUE_SANGUIN, +2 SOURCES entries, baseline >=221 -> >=223, expected list updated (phase 39)
 - `knowledge_base_default.rs`: +2 consts PSYCHOLOGIE_POSITIVE_BIEN_ETRE + COGNITION_SOCIALE_BIAIS_COGNITIFS, +2 SOURCES entries, baseline >=223 -> >=225, expected list updated (phase 40)
 - `knowledge_base_default.rs`: +2 consts SPIRITUALITE_SENS_EXISTENTIEL + NEUROSCIENCES_CLINIQUES_AVANCEES, +2 SOURCES entries, baseline >=225 -> >=227, expected list updated (phase 41)
-- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=227 validated)
+- `knowledge_base_default.rs`: +2 consts SYSTEME_CARDIOVASCULAIRE_AVANCE + IMMUNOLOGIE_AUTO_IMMUNITE, +2 SOURCES entries, baseline >=227->>=229, expected list updated (phase 42)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=229 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
@@ -585,6 +586,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `kb.systemeNerveuxLymphatique.test.ts`: 62 PASS (Vitest, phase 39)
 - `kb.psychologiePositiveBiais.test.ts`: 97 PASS (Vitest, phase 40)
 - `kb.spiritualiteNeuroClinique.test.ts`: 78 PASS (Vitest, phase 41)
+- `kb.cardiovasculaireImmunologie.test.ts`: 92 PASS (Vitest, phase 42)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
@@ -597,3 +599,4 @@ Conformité validée par tests 100/100 (avril 2026).
 - `AH-KB-SYSTEME-NERVEUX-LYMPHATIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 39, entries=1459)
 - `AH-KB-PSYCHOLOGIE-POSITIVE-BIAIS-2026-04-29` (full schema, detect_recurrence PASS, phase 40, entries=1462)
 - `AH-KB-SPIRITUALITE-NEUROCLINIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 41, entries=1466)
+- `AH-KB-CARDIO-IMMUNOLOGIE-2026-04-29` (full schema, detect_recurrence PASS, phase 42, entries=1467)

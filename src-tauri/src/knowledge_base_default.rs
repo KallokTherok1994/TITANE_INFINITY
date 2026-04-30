@@ -601,6 +601,12 @@ const SPIRITUALITE_SENS_EXISTENTIEL: &str =
 const NEUROSCIENCES_CLINIQUES_AVANCEES: &str =
     include_str!("../../data/knowledge_base/default/neurosciences_cliniques_avancees.json");
 
+// ── v31.7.1+31.7.2 expansion — phase 42 (cardiovasculaire + immunologie) ──
+const SYSTEME_CARDIOVASCULAIRE_AVANCE: &str =
+    include_str!("../../data/knowledge_base/default/systeme_cardiovasculaire_avance.json");
+const IMMUNOLOGIE_AUTO_IMMUNITE: &str =
+    include_str!("../../data/knowledge_base/default/immunologie_auto_immunite.json");
+
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
     include_str!("../../data/knowledge_base/default/htf_module_identity.json");
@@ -1237,6 +1243,14 @@ impl DefaultKnowledgeBase {
             "neurosciences_cliniques_avancees",
             NEUROSCIENCES_CLINIQUES_AVANCEES,
         ),
+        (
+            "systeme_cardiovasculaire_avance",
+            SYSTEME_CARDIOVASCULAIRE_AVANCE,
+        ),
+        (
+            "immunologie_auto_immunite",
+            IMMUNOLOGIE_AUTO_IMMUNITE,
+        ),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
@@ -1565,7 +1579,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 227,
+            result.entries_loaded >= 229,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1758,6 +1772,8 @@ mod tests {
             "cognition_sociale_biais_cognitifs",
             "spiritualite_sens_existentiel",
             "neurosciences_cliniques_avancees",
+            "systeme_cardiovasculaire_avance",
+            "immunologie_auto_immunite",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
             "therapies_humanistes_existentielles",
