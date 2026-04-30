@@ -573,7 +573,10 @@ Conformité validée par tests 100/100 (avril 2026).
 - `knowledge_base_default.rs`: +2 consts PSYCHOLOGIE_POSITIVE_BIEN_ETRE + COGNITION_SOCIALE_BIAIS_COGNITIFS, +2 SOURCES entries, baseline >=223 -> >=225, expected list updated (phase 40)
 - `knowledge_base_default.rs`: +2 consts SPIRITUALITE_SENS_EXISTENTIEL + NEUROSCIENCES_CLINIQUES_AVANCEES, +2 SOURCES entries, baseline >=225 -> >=227, expected list updated (phase 41)
 - `knowledge_base_default.rs`: +2 consts SYSTEME_CARDIOVASCULAIRE_AVANCE + IMMUNOLOGIE_AUTO_IMMUNITE, +2 SOURCES entries, baseline >=227->>=229, expected list updated (phase 42)
-- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=229 validated)
+- `knowledge_base_default.rs`: +2 consts PHARMACOLOGIE_CLINIQUE_AVANCEE + GASTROENTEROLOGIE_HEPATOLOGIE, +2 SOURCES entries, baseline >=229->>=231, expected list updated (phase 43)
+- New Ring 3 services: `src/services/knowledge_manager/` (knowledgeOrganizer, memoryOptimizer, index) + `src/services/research_enricher/` (chatResearchDetector, kbEnricher, index) — no new IPC
+- `advancedAgentCatalog.ts`: union type extended + 2 new entries (knowledge_manager, research_enricher)
+- Tests: 12 PASS (cargo test --lib -- knowledge_base_default::tests, baseline >=231 validated)
 
 ### Tests Rule 16
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
@@ -587,6 +590,9 @@ Conformité validée par tests 100/100 (avril 2026).
 - `kb.psychologiePositiveBiais.test.ts`: 97 PASS (Vitest, phase 40)
 - `kb.spiritualiteNeuroClinique.test.ts`: 78 PASS (Vitest, phase 41)
 - `kb.cardiovasculaireImmunologie.test.ts`: 92 PASS (Vitest, phase 42)
+- `kb.pharmacologieGastro.test.ts`: 59 PASS (Vitest, phase 43)
+- `knowledgeManager.test.ts`: 32 PASS (Vitest, services/knowledge_manager)
+- `researchEnricher.test.ts`: 30 PASS (Vitest, services/research_enricher)
 
 ### AutoHeal
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
@@ -600,3 +606,4 @@ Conformité validée par tests 100/100 (avril 2026).
 - `AH-KB-PSYCHOLOGIE-POSITIVE-BIAIS-2026-04-29` (full schema, detect_recurrence PASS, phase 40, entries=1462)
 - `AH-KB-SPIRITUALITE-NEUROCLINIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 41, entries=1466)
 - `AH-KB-CARDIO-IMMUNOLOGIE-2026-04-29` (full schema, detect_recurrence PASS, phase 42, entries=1467)
+- `AH-KB-PHARMA-GASTRO-AGENTS-2026-04-29` (full schema, detect_recurrence PASS, phase 43, entries=1470)
