@@ -4,7 +4,41 @@
 - Harmonisation des dossiers d’archive et audits
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.14 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.39 — Historical baseline preserved below)
+
+## Release v31.2.39 — 2026-04-29 (BUILD ALL — Phase 43 KB pharmacologie+gastro + agents knowledge_manager+research_enricher)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.2.39 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.2.39 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.2.39 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 31.2.39 | ✅ PASS |
+| AppImage | titane-infinity_31.2.39_amd64.AppImage (92M) | ✅ PASS |
+| DEB | titane-infinity_31.2.39_amd64.deb (23M) | ✅ PASS |
+| RPM | titane-infinity-31.2.39-1.x86_64.rpm (23M) | ✅ PASS |
+| deployment/latest/VERSION.txt | 31.2.39 | ✅ PASS |
+| deployment/latest/MANIFEST.json | 31.2.39 | ✅ PASS |
+| RELEASE_ARTIFACTS_CHECKSUMS_31.2.39.txt | sha256 3 artifacts | ✅ PASS |
+| detect_recurrence | PASS 1471 entries | ✅ PASS |
+| vitest | PASS 6770 tests | ✅ PASS |
+| cargo_build | PASS release 12m46s | ✅ PASS |
+| AutoHeal | AH-BUILD-31.2.39-2026-04-29 | ✅ PASS |
+| dpkg system install | BLOCKED_APPROVAL (sudo requis) | ⚠️ PENDING |
+
+**Artefacts phase 43 :**
+- KB `pharmacologie_clinique_avancee.json` v31.7.3 (7 sections)
+- KB `gastroenterologie_hepatologie.json` v31.7.4 (7 sections)
+- Agent `knowledge_manager` (src/services/knowledge_manager/)
+- Agent `research_enricher` (src/services/research_enricher/)
+- Lint fix: apostrophe dans research_enricher/index.ts:79
+
+**Checksums (SHA256) :**
+- AppImage: `0be3c40566cb3090b1560dccc2363de604e3534cce9231fd115f146baf1a0407`
+- DEB: `c384104ed501a83312c68666098c09f1d6c4f686beb11edf7f1017ea74c03b13`
+- RPM: `9c950b28f72a85f352a6676cffba144a3c8134269cbaacef2edfb6d143190c51`
+
+---
 
 ## Release v31.2.14 — 2026-04-27 (BUILD ALL — Release complète + Tests + Governance)
 

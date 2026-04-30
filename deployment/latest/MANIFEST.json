@@ -1,34 +1,28 @@
 {
-  "version": "31.2.37",
-  "date": "2026-04-28",
+  "version": "31.2.39",
+  "date": "2026-04-29",
   "artifacts": {
     "appimage": {
-      "filename": "titane-infinity_31.2.37_amd64.AppImage",
-      "sha256": "22c9b2dc6a6fa3d787fde800eae94d8fe2e93094f07eabac98ede42b38356ee2",
-      "size_bytes": 95009272
+      "filename": "titane-infinity_31.2.39_amd64.AppImage",
+      "sha256": "0be3c40566cb3090b1560dccc2363de604e3534cce9231fd115f146baf1a0407",
+      "size_bytes": 95975928
     },
     "deb": {
-      "filename": "titane-infinity_31.2.37_amd64.deb",
-      "sha256": "e1b9084cf48ac3bbae905dbfd3319467babe3aa3959490f343c114a8cdece282",
-      "size_bytes": 22334950
+      "filename": "titane-infinity_31.2.39_amd64.deb",
+      "sha256": "c384104ed501a83312c68666098c09f1d6c4f686beb11edf7f1017ea74c03b13",
+      "size_bytes": 23333466
     },
     "rpm": {
-      "filename": "titane-infinity-31.2.37-1.x86_64.rpm",
-      "sha256": "96a4cebade0beb10c3965ecbd239b48276cffd2a8124770d0e8cdcca16b9ed3c",
-      "size_bytes": 22334764
-    },
-    "binary": {
-      "filename": "titane-infinity",
-      "sha256": "752f03f07c5e2cefc3d80d3d1d8203150ba24ca0906e92bdc0bfd0b70404ef86",
-      "size_bytes": 49379208
+      "filename": "titane-infinity-31.2.39-1.x86_64.rpm",
+      "sha256": "9c950b28f72a85f352a6676cffba144a3c8134269cbaacef2edfb6d143190c51",
+      "size_bytes": 23333728
     }
   },
   "gates": {
-    "detect_recurrence": "PASS 1410 entries",
-    "vitest": "PASS 250/250",
-    "cargo_build": "PASS release",
-    "checksums": "PASS 4 artifacts"
+    "detect_recurrence": "PASS",
+    "vitest": "PASS 6770",
+    "cargo_build": "PASS release 31.2.39",
+    "checksums": "PASS 3 artifacts"
   },
-  "commit": "335ef9ee0",
   "branch": "MAIN"
 }
