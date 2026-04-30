@@ -1,3 +1,15 @@
+## 2026-04-30 : AI Intelligence Unification v32 — Identity Kernel + CoT + BackendConversationMode 6→13
+
+> **Phase 1-3 — Identity Kernel propagation** : `buildTitaneIdentityPromptBlock()` injecté dans `src/core/prompts/profiles.ts` (CORE_SYSTEM_PROMPT fondation), les 5 modes legacy de `src/services/ai/chatModes.ts`, et les 20 modes actifs de `src/services/ai/chatModes.config.ts` (`htf_soumission` et `kalloks_arts` protégés).
+
+> **Phase 4 — Chain-of-Thought analytique** : bloc CoT injecté dans 6 modes analytiques (`reflection`, `debug_cognitive`, `strategy`, `audit`, `dev`, `omega`). Protocole structuré 5 étapes (Analyse → Hypothèses → Raisonnement → Validation → Synthèse).
+
+> **Phase 5-6 — Alignement paramètres** : températures/maxTokens/memoryScope alignés par niveau cognitif. `'quantum'` supprimé de `omega.enginesEnabled` (liste nettoyée : cognitive/memory/analysis/creative/security).
+
+> **Phase 7 — BackendConversationMode 6→13** : étendu avec `strategy`, `dev`, `omega`, `audit`, `reflection`, `decision`, `veille_recherche` dans `src/services/ai/omegaModeClassifier.ts` + `src/services/conversationEngine.ts` (TS) et `src-tauri/src/conversation_engine/types.rs` + `commands.rs` + `pipeline.rs` (Rust). `CANONICAL_MODE_SPECS` remappé : DEEP_REASONING→`reflection`, ARCHITECT→`strategy`, CERTIFY→`audit`. Types alignés : `ChatMode` (`chatTypes.ts`), `CommunicationTone` (`types/chatModes.ts`), `modeImportance` Record (`chatEngine.ts`), `KnowledgeBaseEntry.retrieval_triggers` optionnel.
+
+> AutoHeal : `unify-ai-intelligence-v32-phases-1-8` + `fix-tests-backendmode-6-13-alignment`. pnpm check : PASS | cargo check : PASS | vitest 242 PASS | detect_recurrence : PASS. Commits : `576c9c5aa` + `253d74ddc`.
+
 ## 2026-04-27 : BUILD ALL v31.2.14 — Test fixes + Release complète
 
 > **Phase BUILD ALL (31.2.14)** : Tests Vitest corrigés (`vi.hoisted()` pattern pour `providerLoadMatrix.test.ts` + `threatScore.test.ts`). Playwright fixes (strict mode `.first()` + nextStep runtime truth alignment). Rust `handlers.rs` fixes : `make_gateway_state()` complété avec champ `anomaly: AnomalyDetector::new(PathBuf)` manquant + `invoke_handler` tests corrigés avec 3ème argument `ConnectInfo(SocketAddr)`. Prettier format 48 fichiers. Version bump 31.2.13→31.2.14. AppImage+DEB+Android APK produits. `deployment/latest/` mis à jour. AutoHeal AH-2026-04-27-BUILD-ALL-31.2.14-0001.
