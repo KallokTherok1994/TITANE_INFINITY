@@ -1,0 +1,184 @@
+{
+  "version": "v31.8.0",
+  "category": "chat_config_map",
+  "description": "Cartographie complète de la configuration et des instructions du chat TITANE∞ — sources canoniques, pipeline 10 étapes, modes IA, providers, timeouts, mémoire hybride et classification automatique de mode.",
+  "chat_pipeline": {
+    "flow": "useChat → chatEngine → canonicalDiscernmentKernel → chatEngineCommands (IPC) → OMEGA Pipeline Rust → AIRouter → providers → reflectiveVerifier (Self-RAG) → qualityVerifier → memoryIntegration.save → cognitiveOmega.save",
+    "source_principal": "src/hooks/useChat.ts",
+    "source_engine": "src/services/ai/chatEngine.ts",
+    "etapes_pipeline": [
+      "1. Cache check (responseCache — skip pour: creative, journal, brainstorming, reflection, hybrid)",
+      "2. inputValidator.validate()",
+      "3. memoryIntegration.loadContext() — timeout 5 000 ms",
+      "4. canonicalDiscernmentKernel.discern() — décision unique de routing",
+      "5. buildTitanePrompt() — core/prompts.ts + injection identité kernel",
+      "6. getEffectiveProfile() — responsePolicy.ts (DIRECT/BALANCED/DEEP/ARCHITECT)",
+      "7. chatEngineCommands → secureInvoke → IPC Tauri → OMEGA Pipeline Rust",
+      "8. reflectiveVerifier — Self-RAG correction post-génération",
+      "9. qualityVerifier — score heuristique 0-1",
+      "10. memoryIntegration.saveInteraction() + cognitiveOmega.saveInteraction()"
+    ],
+    "global_timeout_ms": 52000,
+    "streaming_timeout_ms": 58000,
+    "cache_disabled_modes": ["creative", "journal", "brainstorming", "reflection", "hybrid"]
+  },
+  "identity_sources": {
+    "kernel_json": "data/knowledge_base/default/titane_identity_kernel_v31.json",
+    "kernel_ts": "src/services/ai/titaneIdentityKernel.ts",
+    "function_export": "buildTitaneIdentityPromptBlock()",
+    "canonical_signature": "Architecte de cohérence vivante",
+    "core_function": "Rendre cohérent ce qui est fragmenté, flou, dispersé ou désaligné.",
+    "golden_rule": "Toujours réduire le bruit avant d'ajouter de la structure.",
+    "conversation_contract": {
+      "tone": ["lucide", "structurant", "humain", "sobre", "dense", "non-hype"],
+      "default_shape": ["diagnostic", "axe", "protocole", "action simple"],
+      "must_do": ["protéger l'axe", "réduire la confusion", "réduire la charge mentale", "favoriser l'incarnation par micro-actions"],
+      "must_not_do": ["flatter sans clarifier", "complexifier sans gain réel", "répondre longuement quand un recentrage simple suffit"]
+    },
+    "priority_order": ["détecter l'état réel", "réduire la charge", "nommer l'axe", "proposer un protocole", "verrouiller une action"]
+  },
+  "chat_modes": {
+    "source_ui_moderne": "src/services/ai/chatModes.config.ts",
+    "source_legacy": "src/config/chatModes.config.ts",
+    "total_modes": 19,
+    "modes": [
+      {"id": "default",             "label": "Standard",            "temperature": 0.7, "maxTokens": 2048, "category": "general",      "permissionLevel": 1},
+      {"id": "reflection",          "label": "Réflexion Profonde",  "temperature": 0.8, "maxTokens": 4000, "category": "personal",     "permissionLevel": 1},
+      {"id": "brainstorming",       "label": "Brainstorming",       "temperature": 0.9, "maxTokens": 3000, "category": "creative",     "permissionLevel": 1},
+      {"id": "synthesis",           "label": "Synthèse",            "temperature": 0.7, "maxTokens": 2500, "category": "creative",     "permissionLevel": 1},
+      {"id": "planning",            "label": "Planification",       "temperature": 0.6, "maxTokens": 2500, "category": "productivity", "permissionLevel": 2},
+      {"id": "journal",             "label": "Journal",             "temperature": 0.7, "maxTokens": 2000, "category": "personal",     "permissionLevel": 1},
+      {"id": "debug_cognitive",     "label": "Debug Cognitif",      "temperature": 0.6, "maxTokens": 2000, "category": "personal",     "permissionLevel": 1},
+      {"id": "coach",               "label": "Coach",               "temperature": 0.8, "maxTokens": 3500, "category": "personal",     "permissionLevel": 1},
+      {"id": "dev",                 "label": "Dev",                 "temperature": 0.3, "maxTokens": 4000, "category": "technical",    "permissionLevel": 3},
+      {"id": "admin",               "label": "Admin",               "temperature": 0.2, "maxTokens": 4000, "category": "technical",    "permissionLevel": 5},
+      {"id": "audit",               "label": "Audit",               "temperature": 0.3, "maxTokens": 3000, "category": "technical",    "permissionLevel": 3},
+      {"id": "omega",               "label": "Oméga",               "temperature": 0.7, "maxTokens": 6000, "category": "technical",    "permissionLevel": 2},
+      {"id": "quick",               "label": "Rapide",              "temperature": 0.5, "maxTokens": 2000, "category": "general",      "permissionLevel": 1},
+      {"id": "strategy",            "label": "Stratégie",           "temperature": 0.7, "maxTokens": 3500, "category": "strategic",    "permissionLevel": 2},
+      {"id": "emergency",           "label": "Urgence",             "temperature": 0.3, "maxTokens": 2000, "category": "general",      "permissionLevel": 1},
+      {"id": "htf_soumission",      "label": "HTF Soumission",      "temperature": 0.5, "maxTokens": 3000, "category": "technical",    "permissionLevel": 2},
+      {"id": "psychologie_profils", "label": "Psychologie Profils", "temperature": 0.7, "maxTokens": 3500, "category": "personal",     "permissionLevel": 1},
+      {"id": "creation",            "label": "Création",            "temperature": 0.9, "maxTokens": 3000, "category": "creative",     "permissionLevel": 1},
+      {"id": "standard",            "label": "Standard+",           "temperature": 0.7, "maxTokens": 2048, "category": "general",      "permissionLevel": 1}
+    ]
+  },
+  "mode_classifier": {
+    "source": "src/services/ai/omegaModeClassifier.ts",
+    "latency": "<1ms — déterministe, sans appel LLM",
+    "confidence_threshold_apply": 0.7,
+    "rule": "Si confidence < 0.7, le mode manuel de l'utilisateur est préservé",
+    "canonical_modes": {
+      "DIRECT":         {"effort": "low",    "model_class": "SONNET", "backend_mode": "default",       "signals_sample": ["vite", "en bref", "fais court", "question factuelle courte", "tldr"]},
+      "DEEP_REASONING": {"effort": "high",   "model_class": "SONNET", "backend_mode": "synthesis",     "signals_sample": ["approfondi", "analyse en profondeur", "continue", "développe", "exhaustif"]},
+      "ARCHITECT":      {"effort": "high",   "model_class": "OPUS",   "backend_mode": "planning",      "signals_sample": ["architecture", "structure", "roadmap", "omega", "unifie", "long terme"]},
+      "REPAIR":         {"effort": "high",   "model_class": "SONNET", "backend_mode": "debug_cognitive","signals_sample": ["TypeError", "stack trace", "ça bug", "crash", "corrige", "ne compile pas"]},
+      "CERTIFY":        {"effort": "max",    "model_class": "OPUS",   "backend_mode": "debug_cognitive","signals_sample": ["vérifie", "prouve", "gates", "runtime proof", "certifie", "valide en runtime"]},
+      "EXPLORATION":    {"effort": "medium", "model_class": "SONNET", "backend_mode": "brainstorming", "signals_sample": ["brainstorm", "et si", "quelles pistes", "idées", "explore"]},
+      "CLARIFY_LIGHT":  {"effort": "low",    "model_class": "SONNET", "backend_mode": "default",       "signals_sample": ["quelque chose", "fais-le", "ça", "gère ça", "traite ça"]}
+    }
+  },
+  "providers": {
+    "source_timeouts": "src/config/aiTimeouts.config.ts",
+    "source_ollama_model": "src/config/ollamaDefaults.ts",
+    "default_model": "gemma2:2b",
+    "ollama_url": "http://127.0.0.1:11434",
+    "fallback_chain": ["tauri-backend", "ollama", "gemini", "openai", "claude", "titane-local"],
+    "timeouts_ms": {
+      "titane_local": 5000,
+      "ollama": 45000,
+      "gemini": 30000,
+      "openai": 30000,
+      "claude": 30000,
+      "tauri_backend": 50000,
+      "global_budget": 52000,
+      "per_attempt": 50000
+    },
+    "max_attempts": 2,
+    "provider_files": {
+      "ollama": "src/services/ai/providers/ollama.ts",
+      "titane_local": "src/services/ai/providers/titaneLocal.ts",
+      "ia_api": "src/services/ia/ia.api.ts"
+    },
+    "system_prompts": {
+      "ollama_base": "SYSTEM_PROMPT_BASE dans src/services/ai/providers/ollama.ts",
+      "chain_of_thought": "CHAIN_OF_THOUGHT_ADDENDUM — injecté quand Ollama est le seul engine",
+      "titane_local_kb": "TITANE_KNOWLEDGE dans src/services/ai/providers/titaneLocal.ts"
+    }
+  },
+  "memory_integration": {
+    "source": "src/services/ai/memoryIntegration.ts",
+    "tiers": {
+      "STM": "court terme — session active",
+      "MTM": "moyen terme — conversations avec auto-heal",
+      "LTM": "long terme — timeline, compression cognitive anti-corruption"
+    },
+    "hybrid_memory_flags": {
+      "shadow_write": "titane_hybrid_memory_shadow_write_enabled",
+      "shadow_read": "titane_hybrid_memory_shadow_read_enabled",
+      "orchestration": "titane_hybrid_memory_orchestration_enabled",
+      "rollout_config": "titane_hybrid_memory_shadow_read_rollout"
+    },
+    "rollout_presets": {
+      "observe": {"mode": "canary", "percentage": 10, "trendWindow": 12},
+      "balanced": {"mode": "canary", "percentage": 25, "trendWindow": 10},
+      "full": {"mode": "full", "percentage": 100, "trendWindow": 8}
+    },
+    "ltm_enrichment": "memoryWebEnricher (HippoRAG-inspired) — src/services/memory/memoryWebEnricher.ts",
+    "context_load_timeout_ms": 5000,
+    "memory_save_timeout_ms": 4000,
+    "depth_preference_key": "getDepthPreference()",
+    "storage_files": ["memory/cognitive.json", "memory/ltm.json"]
+  },
+  "post_generation": {
+    "reflective_verifier": {
+      "source": "src/services/ai/reflectiveVerifier.ts",
+      "pattern": "Self-RAG — vérifie et corrige la réponse générée",
+      "flag": "REFLECTIVE_VERIFIER_ENABLED"
+    },
+    "quality_verifier": {
+      "source": "src/services/ai/qualityVerifier.ts",
+      "output": "qualityScore — heuristique 0.0 à 1.0",
+      "accessible_via": "omegaMetadata.qualityScore"
+    },
+    "working_memory_compressor": {
+      "source": "src/services/ai/workingMemoryCompressor.ts",
+      "flag": "COMPRESSION_HISTORY_THRESHOLD"
+    }
+  },
+  "ipc_commands_chat": [
+    "chat_stream_message",
+    "conversation_generate",
+    "chat_create_conversation",
+    "chat_get_conversation",
+    "chat_delete_conversation",
+    "chat_check_providers",
+    "chat_get_providers_status",
+    "chat_mode_change",
+    "chat_mode_sync",
+    "chat_get_memory_stats",
+    "chat_memory_backup",
+    "chat_memory_restore",
+    "validate_chat_message",
+    "ai_query",
+    "ai_query_streaming",
+    "ai_status",
+    "ollama_generate",
+    "test_ollama",
+    "ping_ollama"
+  ],
+  "fichiers_cles": {
+    "hook_principal": "src/hooks/useChat.ts",
+    "chat_engine": "src/services/ai/chatEngine.ts",
+    "modes_ui": "src/services/ai/chatModes.config.ts",
+    "modes_legacy": "src/config/chatModes.config.ts",
+    "kernel_identite_ts": "src/services/ai/titaneIdentityKernel.ts",
+    "kernel_identite_json": "data/knowledge_base/default/titane_identity_kernel_v31.json",
+    "classifier_mode": "src/services/ai/omegaModeClassifier.ts",
+    "memory_integration": "src/services/ai/memoryIntegration.ts",
+    "provider_ollama": "src/services/ai/providers/ollama.ts",
+    "provider_local": "src/services/ai/providers/titaneLocal.ts",
+    "timeouts": "src/config/aiTimeouts.config.ts",
+    "ollama_defaults": "src/config/ollamaDefaults.ts"
+  }
+}

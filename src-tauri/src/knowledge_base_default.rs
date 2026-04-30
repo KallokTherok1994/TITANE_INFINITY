@@ -607,6 +607,10 @@ const SYSTEME_CARDIOVASCULAIRE_AVANCE: &str =
 const IMMUNOLOGIE_AUTO_IMMUNITE: &str =
     include_str!("../../data/knowledge_base/default/immunologie_auto_immunite.json");
 
+// ── v31.8.0 — chat_config_map (cartographie config chat TITANE∞) ───────────
+const CHAT_CONFIG_MAP: &str =
+    include_str!("../../data/knowledge_base/default/chat_config_map.json");
+
 // ── HTF module — L'Humain à tout faire ──────────────────────────────────────
 const HTF_MODULE_IDENTITY: &str =
     include_str!("../../data/knowledge_base/default/htf_module_identity.json");
@@ -1251,6 +1255,8 @@ impl DefaultKnowledgeBase {
             "immunologie_auto_immunite",
             IMMUNOLOGIE_AUTO_IMMUNITE,
         ),
+        // v31.8.0 — chat_config_map
+        ("chat_config_map", CHAT_CONFIG_MAP),
         // HTF module — L'Humain à tout faire
         ("htf_module_identity", HTF_MODULE_IDENTITY),
         ("htf_formation_manuel", HTF_FORMATION_MANUEL),
