@@ -20,6 +20,7 @@ export type ChatMode =
   | 'quick'
   | 'omega'
   | 'dev-senior'
+  | 'dev'
   | 'nexus-guide'
   | 'sentinel-guardian'
   | 'artisan-creator'
@@ -29,7 +30,10 @@ export type ChatMode =
   | 'synthesis'
   | 'planning'
   | 'journal'
-  | 'debug_cognitive';
+  | 'debug_cognitive'
+  | 'audit'
+  | 'decision'
+  | 'veille_recherche';
 
 export interface ValidationResult {
   isValid: boolean;

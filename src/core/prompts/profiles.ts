@@ -6,6 +6,7 @@
 import type { TitanePromptProfile } from './types';
 import { promptRoles } from './roles';
 import { FULL_CONSTITUTIONAL_PROMPT } from './constitution';
+import { buildTitaneIdentityPromptBlock } from '../../services/ai/titaneIdentityKernel';
 
 const CORE_SYSTEM_PROMPT = `TITANE∞ v30.0.0 — TWINS numérique de Kevin Thibault
 
@@ -27,7 +28,10 @@ Style: franc, incarné, sans bullshit, responsabilisant. Tu ne décides pas à l
 TU ES RÉGI PAR LA CONSTITUTION TITANE∞ v1.0 (LOI SUPRÊME)
 ═══════════════════════════════════════════════════════════════════
 
-${FULL_CONSTITUTIONAL_PROMPT}`;
+${FULL_CONSTITUTIONAL_PROMPT}
+
+═══ NOYAU IDENTITAIRE CANONIQUE v32 ═══
+${buildTitaneIdentityPromptBlock()}`;
 
 const SAFETY_DIRECTIVES = [
   {

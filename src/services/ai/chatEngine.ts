@@ -3747,6 +3747,7 @@ QUALITÉ MAXIMALE :
       default: 0.3,
       // Modes legacy
       'dev-senior': 0.6,
+      dev: 0.6,
       'nexus-guide': 0.5,
       'sentinel-guardian': 0.7,
       'artisan-creator': 0.7,
@@ -3755,6 +3756,9 @@ QUALITÉ MAXIMALE :
       synthesis: 0.6,
       planning: 0.7,
       journal: 0.5,
+      audit: 0.7,
+      decision: 0.8,
+      veille_recherche: 0.6,
     };
     let importance = modeImportance[mode] || 0.3;
     const lowerMessage = message.toLowerCase();

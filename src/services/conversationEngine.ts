@@ -644,7 +644,14 @@ export type ConversationMode =
   | 'synthesis'
   | 'planning'
   | 'journal'
-  | 'debug_cognitive';
+  | 'debug_cognitive'
+  | 'strategy'
+  | 'dev'
+  | 'omega'
+  | 'audit'
+  | 'reflection'
+  | 'decision'
+  | 'veille_recherche';
 
 export type Intention = 'Question' | 'Action' | 'Emotion' | 'Clarification' | 'Meta';
 

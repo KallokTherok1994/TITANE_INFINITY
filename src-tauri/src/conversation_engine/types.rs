@@ -88,6 +88,27 @@ pub enum ConversationMode {
 
     /// Debug cognitif (analyse charge mentale)
     DebugCognitive,
+
+    /// Stratégie (analyse décisionnelle)
+    Strategy,
+
+    /// Développeur (pair programming)
+    Dev,
+
+    /// Oméga (puissance maximale)
+    Omega,
+
+    /// Audit (revue qualité)
+    Audit,
+
+    /// Réflexion profonde (introspection)
+    Reflection,
+
+    /// Décision (arbitrage éclairé)
+    Decision,
+
+    /// Veille & Recherche (intelligence stratégique)
+    VeilleRecherche,
 }
 
 impl Default for ConversationMode {

@@ -289,6 +289,13 @@ pub async fn conversation_generate_inner(
         Some("synthesis") => ConversationMode::Synthesis,
         Some("journal") => ConversationMode::Journal,
         Some("debug_cognitive") => ConversationMode::DebugCognitive,
+        Some("strategy") => ConversationMode::Strategy,
+        Some("dev") => ConversationMode::Dev,
+        Some("omega") => ConversationMode::Omega,
+        Some("audit") => ConversationMode::Audit,
+        Some("reflection") => ConversationMode::Reflection,
+        Some("decision") => ConversationMode::Decision,
+        Some("veille_recherche") => ConversationMode::VeilleRecherche,
         _ => ConversationMode::Default,
     };
 
@@ -1954,6 +1961,13 @@ pub async fn conversation_process_message(
         Some("planning") => ConversationMode::Planning,
         Some("journal") => ConversationMode::Journal,
         Some("debug_cognitive") => ConversationMode::DebugCognitive,
+        Some("strategy") => ConversationMode::Strategy,
+        Some("dev") => ConversationMode::Dev,
+        Some("omega") => ConversationMode::Omega,
+        Some("audit") => ConversationMode::Audit,
+        Some("reflection") => ConversationMode::Reflection,
+        Some("decision") => ConversationMode::Decision,
+        Some("veille_recherche") => ConversationMode::VeilleRecherche,
         _ => ConversationMode::Default,
     };
 

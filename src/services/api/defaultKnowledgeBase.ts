@@ -36,6 +36,7 @@ export interface KnowledgeBaseEntry {
   version: string;
   description: string;
   content: Record<string, unknown>;
+  retrieval_triggers?: string[];
 }
 
 // ─────────────────────────────────────────────────────────────────

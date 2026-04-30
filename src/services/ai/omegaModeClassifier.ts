@@ -48,7 +48,14 @@ export type BackendConversationMode =
   | 'synthesis'
   | 'planning'
   | 'journal'
-  | 'debug_cognitive';
+  | 'debug_cognitive'
+  | 'strategy'
+  | 'dev'
+  | 'omega'
+  | 'audit'
+  | 'reflection'
+  | 'decision'
+  | 'veille_recherche';
 
 // Effort levels (extends responsePolicy.ts reasoningEffort with 'max')
 export type EffortLevel = 'low' | 'medium' | 'high' | 'max';
@@ -119,13 +126,13 @@ const CANONICAL_MODE_SPECS: Record<CanonicalMode, ModeSpec> = {
   },
   DEEP_REASONING: {
     profileId: 'DEEP',
-    backendMode: 'synthesis',
+    backendMode: 'reflection',
     effortLevel: 'high',
     modelClass: 'SONNET',
   },
   ARCHITECT: {
     profileId: 'ARCHITECT',
-    backendMode: 'planning',
+    backendMode: 'strategy',
     effortLevel: 'high',
     modelClass: 'OPUS',
   },
@@ -137,7 +144,7 @@ const CANONICAL_MODE_SPECS: Record<CanonicalMode, ModeSpec> = {
   },
   CERTIFY: {
     profileId: 'ARCHITECT',
-    backendMode: 'debug_cognitive',
+    backendMode: 'audit',
     effortLevel: 'max',
     modelClass: 'OPUS',
   },

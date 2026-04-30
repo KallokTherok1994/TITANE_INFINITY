@@ -35,7 +35,8 @@ export type CommunicationTone =
   | 'neutral'
   | 'technical'
   | 'motivational'
-  | 'analytical';
+  | 'analytical'
+  | 'artistic';
 
 /** Modèles IA disponibles */
 export type AIModel = 'ollama' | 'gemini' | 'hybrid' | 'local';
