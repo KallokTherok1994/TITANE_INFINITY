@@ -76,7 +76,7 @@ export function getResearchEnricherAgentStatus(): AdvancedAgentStatus {
       : [],
     nextStep:
       enrichments.length === 0
-        ? 'Poser une question de type recherche/analyse dans le chat pour activer l'enrichissement automatique.'
+        ? "Poser une question de type recherche/analyse dans le chat pour activer l'enrichissement automatique."
         : `${enrichments.length} enrichissement(s) prêt(s) — utiliser mergeWithKBContext() pour les injecter dans le contexte LLM.`,
   };
 }
