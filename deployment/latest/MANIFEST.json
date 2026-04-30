@@ -1,28 +1,22 @@
 {
-  "version": "31.2.39",
-  "date": "2026-04-29",
+  "version": "31.2.40",
+  "date": "2026-04-30",
   "artifacts": {
     "appimage": {
-      "filename": "titane-infinity_31.2.39_amd64.AppImage",
-      "sha256": "0be3c40566cb3090b1560dccc2363de604e3534cce9231fd115f146baf1a0407",
-      "size_bytes": 95975928
+      "filename": "titane-infinity_31.2.40_amd64.AppImage",
+      "sha256": "0fe107ce7d8f7708eef08a6f17acdd24a5fe29a14ba4ace8ee82ca3a610bbee5",
+      "size_mb": 92
     },
     "deb": {
-      "filename": "titane-infinity_31.2.39_amd64.deb",
-      "sha256": "c384104ed501a83312c68666098c09f1d6c4f686beb11edf7f1017ea74c03b13",
-      "size_bytes": 23333466
+      "filename": "titane-infinity_31.2.40_amd64.deb",
+      "sha256": "66c55eae7c62d0d24345a0aac80dfd8e154c40452961ff9846f0745e89512c11",
+      "size_mb": 23
     },
     "rpm": {
-      "filename": "titane-infinity-31.2.39-1.x86_64.rpm",
-      "sha256": "9c950b28f72a85f352a6676cffba144a3c8134269cbaacef2edfb6d143190c51",
-      "size_bytes": 23333728
+      "filename": "titane-infinity-31.2.40-1.x86_64.rpm",
+      "sha256": "e453402586eac76e627fa9bf7b5c37b4c0a191b4912da97784ce5b0c84416f3c",
+      "size_mb": 23
     }
   },
-  "gates": {
-    "detect_recurrence": "PASS",
-    "vitest": "PASS 6770",
-    "cargo_build": "PASS release 31.2.39",
-    "checksums": "PASS 3 artifacts"
-  },
-  "branch": "MAIN"
+  "release_notes": "AI Intelligence Unification v32 — Identity Kernel + Chain-of-Thought + BackendConversationMode 6→13"
 }

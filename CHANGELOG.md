@@ -1,3 +1,47 @@
+# [31.2.40] - 2026-04-30 (BUILD ALL — AI Intelligence Unification v32 — Identity Kernel + CoT + BackendConversationMode 6→13)
+
+## Release v31.2.40 — AI Intelligence Unification v32
+
+### Résumé des changements
+
+Unification complète de l'intelligence TITANE∞ v32 : propagation du noyau identitaire, injection Chain-of-Thought analytique, extension BackendConversationMode 6→13 (TS+Rust).
+
+### Identity Kernel v32 (Phases 1–3)
+
+- **`profiles.ts`** : `buildTitaneIdentityPromptBlock()` v32.0.0 injecté dans `CORE_SYSTEM_PROMPT` (fondation de tous les profils)
+- **`chatModes.ts`** : identité injectée dans 5 modes legacy backend (brainstorming, synthesis, planning, journal, debug_cognitive)
+- **`chatModes.config.ts`** : identité injectée dans 20 modes actifs UI (`htf_soumission` et `kalloks_arts` protégés)
+
+### Chain-of-Thought analytique (Phase 4)
+
+- Bloc CoT 5 étapes (Analyse → Hypothèses → Raisonnement → Validation → Synthèse) injecté dans : `reflection`, `debug_cognitive`, `strategy`, `audit`, `dev`, `omega`
+
+### Alignement paramètres (Phases 5–6)
+
+- Températures / maxTokens / memoryScope alignés par niveau cognitif de chaque mode
+- `'quantum'` supprimé de `omega.enginesEnabled` (cognitive/memory/analysis/creative/security)
+
+### BackendConversationMode 6→13 (Phase 7)
+
+- **TS** : `omegaModeClassifier.ts` + `conversationEngine.ts` : +`strategy`, `dev`, `omega`, `audit`, `reflection`, `decision`, `veille_recherche`
+- **Rust** : `types.rs` (enum), `commands.rs` (2 match blocs), `pipeline.rs` (prompts système) — mêmes 7 variants
+- **CANONICAL_MODE_SPECS** : DEEP_REASONING→`reflection`, ARCHITECT→`strategy`, CERTIFY→`audit`
+- **Types alignés** : `ChatMode` (`chatTypes.ts`), `CommunicationTone` (+`artistic`), `modeImportance` Record, `KnowledgeBaseEntry.retrieval_triggers` (optionnel)
+
+### Gates
+
+- `pnpm check` : PASS (0 erreurs TS)
+- `cargo check` : PASS
+- vitest : 242 PASS 0 FAIL
+- `detect_recurrence` : PASS (1477 entrées)
+- AutoHeal : `unify-ai-intelligence-v32-phases-1-8` + `fix-tests-backendmode-6-13-alignment` + `build-all-v31.2.40`
+
+### Artefacts
+
+- AppImage : `titane-infinity_31.2.40_amd64.AppImage` (92M) — sha256: `0fe107ce7d8f7708eef08a6f17acdd24a5fe29a14ba4ace8ee82ca3a610bbee5`
+- DEB : `titane-infinity_31.2.40_amd64.deb` (23M) — sha256: `66c55eae7c62d0d24345a0aac80dfd8e154c40452961ff9846f0745e89512c11`
+- RPM : `titane-infinity-31.2.40-1.x86_64.rpm` (23M) — sha256: `e453402586eac76e627fa9bf7b5c37b4c0a191b4912da97784ce5b0c84416f3c`
+
 # [31.2.38] - 2026-04-29 (SPRINT 7+8: Test Coverage Elevation + Security Audit + KB Phases 35-37 + R1-R4 Pipeline Fixes)
 
 ## Release v31.2.38 — SPRINT 7 + SPRINT 8 + KB Arc clinique phases 35-37

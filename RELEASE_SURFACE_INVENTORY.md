@@ -4,7 +4,38 @@
 - Harmonisation des dossiers d’archive et audits
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.39 — Historical baseline preserved below)
+
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.40 — Historical baseline preserved below)
+
+## Release v31.2.40 — 2026-04-30 (BUILD ALL — AI Intelligence Unification v32 — Identity Kernel + CoT + BackendConversationMode 6→13)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.2.40 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.2.40 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.2.40 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 31.2.40 | ✅ PASS |
+| AppImage | titane-infinity_31.2.40_amd64.AppImage (92M) | ✅ PASS |
+| DEB | titane-infinity_31.2.40_amd64.deb (23M) | ✅ PASS |
+| RPM | titane-infinity-31.2.40-1.x86_64.rpm (23M) | ✅ PASS |
+| deployment/latest/VERSION.txt | 31.2.40 | ✅ PASS |
+| deployment/latest/MANIFEST.json | 31.2.40 | ✅ PASS |
+| RELEASE_ARTIFACTS_CHECKSUMS_31.2.40.txt | sha256 3 artifacts | ✅ PASS |
+| detect_recurrence | PASS 1477 entries | ✅ PASS |
+| pnpm check | PASS (0 TS errors) | ✅ PASS |
+| cargo check | PASS | ✅ PASS |
+| vitest | 242 PASS | ✅ PASS |
+| cargo_build | PASS release 9m47s | ✅ PASS |
+| AutoHeal | unify-ai-intelligence-v32-phases-1-8 + fix-tests-backendmode-6-13-alignment + build-all-v31.2.40 | ✅ PASS |
+| desktop launcher (user) | `~/.local/share/applications/titane-infinity.desktop` `Exec=/usr/bin/titane-infinity` `Icon=titane-infinity` | ✅ PASS |
+| dpkg system install | PENDING — sudo interactif requis (currently v31.2.39) | ⚠️ MANUAL |
+
+**Contenu v31.2.40 :**
+- `buildTitaneIdentityPromptBlock()` v32.0.0 : CORE_SYSTEM_PROMPT + 5 modes legacy + 20 modes actifs (htf_soumission/kalloks_arts protégés)
+- Chain-of-Thought 5 étapes : reflection, debug_cognitive, strategy, audit, dev, omega
+- BackendConversationMode 6→13 (TS+Rust) : +strategy, dev, omega, audit, reflection, decision, veille_recherche
+- CANONICAL_MODE_SPECS : DEEP_REASONING→reflection, ARCHITECT→strategy, CERTIFY→audit
+- Commits : 576c9c5aa (feat) + 253d74ddc (tests) + 9a84bc657 (ARCHITECTURE.md Rule 15)
 
 ## Release v31.2.39 — 2026-04-29 (BUILD ALL — Phase 43 KB pharmacologie+gastro + agents knowledge_manager+research_enricher)
 
