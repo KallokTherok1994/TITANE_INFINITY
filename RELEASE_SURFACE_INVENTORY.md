@@ -24,7 +24,8 @@
 | vitest | PASS 6770 tests | ✅ PASS |
 | cargo_build | PASS release 12m46s | ✅ PASS |
 | AutoHeal | AH-BUILD-31.2.39-2026-04-29 | ✅ PASS |
-| dpkg system install | BLOCKED_APPROVAL (sudo requis) | ⚠️ PENDING |
+| dpkg system install | `/usr/bin/titane-infinity` 49M 2026-04-29 21:06 | ✅ PASS |
+| desktop launcher | `Exec=/usr/bin/titane-infinity` + `Icon=titane-infinity` | ✅ PASS |
 
 **Artefacts phase 43 :**
 - KB `pharmacologie_clinique_avancee.json` v31.7.3 (7 sections)
