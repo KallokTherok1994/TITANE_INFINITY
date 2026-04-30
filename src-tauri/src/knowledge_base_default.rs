@@ -607,6 +607,12 @@ const SYSTEME_CARDIOVASCULAIRE_AVANCE: &str =
 const IMMUNOLOGIE_AUTO_IMMUNITE: &str =
     include_str!("../../data/knowledge_base/default/immunologie_auto_immunite.json");
 
+// ── v31.7.3+31.7.4 expansion — phase 43 (pharmacologie + gastroentérologie) ──
+const PHARMACOLOGIE_CLINIQUE_AVANCEE: &str =
+    include_str!("../../data/knowledge_base/default/pharmacologie_clinique_avancee.json");
+const GASTROENTEROLOGIE_HEPATOLOGIE: &str =
+    include_str!("../../data/knowledge_base/default/gastroenterologie_hepatologie.json");
+
 // ── v31.8.0 — chat_config_map (cartographie config chat TITANE∞) ───────────
 const CHAT_CONFIG_MAP: &str =
     include_str!("../../data/knowledge_base/default/chat_config_map.json");
@@ -1255,6 +1261,15 @@ impl DefaultKnowledgeBase {
             "immunologie_auto_immunite",
             IMMUNOLOGIE_AUTO_IMMUNITE,
         ),
+        // v31.7.3+31.7.4 — pharmacologie + gastroentérologie (phase 43)
+        (
+            "pharmacologie_clinique_avancee",
+            PHARMACOLOGIE_CLINIQUE_AVANCEE,
+        ),
+        (
+            "gastroenterologie_hepatologie",
+            GASTROENTEROLOGIE_HEPATOLOGIE,
+        ),
         // v31.8.0 — chat_config_map
         ("chat_config_map", CHAT_CONFIG_MAP),
         // HTF module — L'Humain à tout faire
@@ -1585,7 +1600,7 @@ mod tests {
             "Initialized knowledge category count must match the canonical category registry"
         );
         assert!(
-            result.entries_loaded >= 229,
+            result.entries_loaded >= 231,
             "Default knowledge base unexpectedly shrank below the governed baseline"
         );
     }
@@ -1780,6 +1795,8 @@ mod tests {
             "neurosciences_cliniques_avancees",
             "systeme_cardiovasculaire_avance",
             "immunologie_auto_immunite",
+            "pharmacologie_clinique_avancee",
+            "gastroenterologie_hepatologie",
             "technologie_innovation_avancee",
             "therapies_cognitives_comportementales",
             "therapies_humanistes_existentielles",

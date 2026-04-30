@@ -16,7 +16,7 @@ export interface AdvancedAgentDetailSection {
 }
 
 export interface AdvancedAgentStatus {
-  id: 'monitoring' | 'diagnostic' | 'explainability' | 'orchestrator' | 'security_active';
+  id: 'monitoring' | 'diagnostic' | 'explainability' | 'orchestrator' | 'security_active' | 'knowledge_manager' | 'research_enricher';
   title: string;
   summary: string;
   testId: string;
@@ -130,6 +130,46 @@ const ADVANCED_AGENT_STATUS: Record<AdvancedAgentStatus['id'], AdvancedAgentStat
     ],
     nextStep:
       'Brancher les événements de sécurité active et publier une preuve de confinement réelle.',
+  },
+  knowledge_manager: {
+    id: 'knowledge_manager',
+    title: 'Knowledge Manager Agent',
+    summary:
+      'Organisation thématique de la base de connaissances, détection de lacunes, optimisation de la mémoire LTM/STM et de la fenêtre de contexte.',
+    testId: 'knowledge-manager-dashboard',
+    readiness: 'partial',
+    readinessLabel: 'PARTIAL',
+    serviceState: 'Service Knowledge Manager actif — en attente de chargement KB',
+    evidence: [
+      'Service d entrée exposant getKnowledgeManagerAgentStatus() avec signaux runtime réels.',
+      'Clustering thématique (clusterByTheme) et détection de lacunes (detectKnowledgeGaps) opérationnels.',
+      'Optimisation mémoire LTM (compactLTMContext, prioritizeForQuery, computeMemoryHealthScore) disponible.',
+    ],
+    blockers: [
+      'Intégration avec le pipeline chatEngine.ts pour injection automatique du contexte enrichi non encore activée.',
+    ],
+    nextStep:
+      'Connecter getOptimalKBContext() au pipeline chatEngine pour enrichissement automatique à chaque requête.',
+  },
+  research_enricher: {
+    id: 'research_enricher',
+    title: 'Research Enricher Agent',
+    summary:
+      'Détection automatique des requêtes de recherche/analyse dans le chat et enrichissement du contexte KB via les résultats web (One Door architecture).',
+    testId: 'research-enricher-dashboard',
+    readiness: 'partial',
+    readinessLabel: 'PARTIAL',
+    serviceState: 'Service Research Enricher actif — détection d intention active',
+    evidence: [
+      'Détection d intention de recherche FR/EN (10 patterns) opérationnelle via chatResearchDetector.',
+      'Stockage des enrichissements KB en sessionStorage (max 10, expiration 1h) via kbEnricher.',
+      'Architecture One Door respectée — aucun accès réseau direct depuis la UI.',
+    ],
+    blockers: [
+      'Déclenchement automatique depuis chatEngine.ts non encore connecté — enrichissement manuel uniquement.',
+    ],
+    nextStep:
+      'Brancher isResearchQuery() dans le flux chatEngine pour enrichissement KB automatique à chaque requête de type recherche.',
   },
 };
 
