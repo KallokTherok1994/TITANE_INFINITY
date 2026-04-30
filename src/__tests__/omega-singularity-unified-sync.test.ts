@@ -75,6 +75,13 @@ const ALL_BACKEND_MODES: BackendConversationMode[] = [
   'planning',
   'journal',
   'debug_cognitive',
+  'strategy',
+  'dev',
+  'omega',
+  'audit',
+  'reflection',
+  'decision',
+  'veille_recherche',
 ];
 const ALL_PROFILE_IDS: ResponseProfileId[] = [
   'DIRECT',
@@ -242,7 +249,7 @@ describe('A — Mode Registry Completeness', () => {
     const certifyClassification: ModeClassification = {
       canonicalMode: 'CERTIFY',
       profileId: 'ARCHITECT',
-      backendMode: 'debug_cognitive',
+      backendMode: 'audit',
       effortLevel: 'max',
       modelClass: 'OPUS',
       confidence: 0.9,
@@ -254,7 +261,7 @@ describe('A — Mode Registry Completeness', () => {
     const invalidCertify: ModeClassification = {
       canonicalMode: 'CERTIFY',
       profileId: 'ARCHITECT',
-      backendMode: 'debug_cognitive',
+      backendMode: 'audit',
       effortLevel: 'low',
       modelClass: 'OPUS',
       confidence: 0.9,
@@ -288,24 +295,31 @@ describe('B — Type Alignment Cross-Module', () => {
     expect(ALL_MODEL_CLASSES).toContain('OPUS');
   });
 
-  it('B3: BackendConversationMode — 6 valeurs (doit correspondre au Rust enum)', () => {
-    // Ces valeurs DOIVENT correspondre exactement au Rust enum BackendConversationMode
-    expect(ALL_BACKEND_MODES).toHaveLength(6);
+  it('B3: BackendConversationMode — 13 valeurs (doit correspondre au Rust enum)', () => {
+    // Ces valeurs DOIVENT correspondre exactement au Rust enum ConversationMode
+    expect(ALL_BACKEND_MODES).toHaveLength(13);
     expect(ALL_BACKEND_MODES).toContain('default');
     expect(ALL_BACKEND_MODES).toContain('brainstorming');
     expect(ALL_BACKEND_MODES).toContain('synthesis');
     expect(ALL_BACKEND_MODES).toContain('planning');
     expect(ALL_BACKEND_MODES).toContain('journal');
     expect(ALL_BACKEND_MODES).toContain('debug_cognitive');
+    expect(ALL_BACKEND_MODES).toContain('strategy');
+    expect(ALL_BACKEND_MODES).toContain('dev');
+    expect(ALL_BACKEND_MODES).toContain('omega');
+    expect(ALL_BACKEND_MODES).toContain('audit');
+    expect(ALL_BACKEND_MODES).toContain('reflection');
+    expect(ALL_BACKEND_MODES).toContain('decision');
+    expect(ALL_BACKEND_MODES).toContain('veille_recherche');
   });
 
-  it('B4: ARCHITECT mode → backendMode=planning (cohérence CanonicalMode→Backend)', () => {
+  it('B4: ARCHITECT mode → backendMode=strategy (cohérence CanonicalMode→Backend)', () => {
     const result = classifyMode({
       message: 'architecture modules système conception intégration',
       history: [],
     });
     if (result.canonicalMode === 'ARCHITECT') {
-      expect(result.backendMode).toBe('planning');
+      expect(result.backendMode).toBe('strategy');
       expect(result.modelClass).toBe('OPUS');
     }
   });
@@ -320,13 +334,13 @@ describe('B — Type Alignment Cross-Module', () => {
     }
   });
 
-  it('B6: DEEP_REASONING mode → backendMode=synthesis', () => {
+  it('B6: DEEP_REASONING mode → backendMode=reflection', () => {
     const result = classifyMode({
       message: 'synthèse profonde analyse raisonnement complexe chaînes longues',
       history: [],
     });
     if (result.canonicalMode === 'DEEP_REASONING') {
-      expect(result.backendMode).toBe('synthesis');
+      expect(result.backendMode).toBe('reflection');
       expect(result.effortLevel).toBe('high');
     }
   });
@@ -916,11 +930,11 @@ describe('J — Knowledge Base Count Synchronization', () => {
     expect(entries.length).toBeGreaterThanOrEqual(100);
   });
 
-  it('J2: getAllEntries() canonical count runtime (valeur exacte 267)', async () => {
+  it('J2: getAllEntries() canonical count runtime (valeur exacte 273)', async () => {
     const { DEFAULT_KB_CANONICAL_ENTRY_COUNT, getAllEntries } =
       await import('../services/api/defaultKnowledgeBase');
     const entries = await getAllEntries();
-    expect(DEFAULT_KB_CANONICAL_ENTRY_COUNT).toBe(267);
+    expect(DEFAULT_KB_CANONICAL_ENTRY_COUNT).toBe(273);
     expect(entries.length).toBe(DEFAULT_KB_CANONICAL_ENTRY_COUNT);
   });
 
@@ -975,7 +989,7 @@ describe('K — Anti-Lie Assertions (OMEGA Honesty Contracts)', () => {
       {
         canonicalMode: 'ARCHITECT',
         profileId: 'ARCHITECT',
-        backendMode: 'planning',
+        backendMode: 'strategy',
         effortLevel: 'high',
         modelClass: 'OPUS',
         confidence: 0.9,
@@ -983,7 +997,7 @@ describe('K — Anti-Lie Assertions (OMEGA Honesty Contracts)', () => {
       {
         canonicalMode: 'CERTIFY',
         profileId: 'ARCHITECT',
-        backendMode: 'debug_cognitive',
+        backendMode: 'audit',
         effortLevel: 'max',
         modelClass: 'OPUS',
         confidence: 0.95,
@@ -1071,13 +1085,13 @@ describe('K — Anti-Lie Assertions (OMEGA Honesty Contracts)', () => {
     const certifyClassification: ModeClassification = {
       canonicalMode: 'CERTIFY',
       profileId: 'ARCHITECT',
-      backendMode: 'debug_cognitive',
+      backendMode: 'audit',
       effortLevel: 'max',
       modelClass: 'OPUS',
       confidence: 0.95,
     };
     const resolved = resolveMode(certifyClassification, 'brainstorming');
-    expect(resolved).toBe('debug_cognitive');
+    expect(resolved).toBe('audit');
   });
 
   it('K7: confidence < 0.7 → resolveMode préserve le mode utilisateur (anti-override)', () => {

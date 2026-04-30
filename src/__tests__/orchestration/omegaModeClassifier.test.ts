@@ -99,7 +99,7 @@ describe('Lane A — Mode Classification', () => {
 
     expect(result.canonicalMode).toBe('ARCHITECT');
     expect(result.profileId).toBe('ARCHITECT');
-    expect(result.backendMode).toBe('planning');
+    expect(result.backendMode).toBe('strategy');
     expect(result.effortLevel).toBe('high');
     expect(result.modelClass).toBe('OPUS');
     expect(result.confidence).toBeGreaterThanOrEqual(0.7);
@@ -135,7 +135,7 @@ describe('Lane A — Mode Classification', () => {
 
     expect(result.canonicalMode).toBe('CERTIFY');
     expect(result.profileId).toBe('ARCHITECT');
-    expect(result.backendMode).toBe('debug_cognitive');
+    expect(result.backendMode).toBe('audit');
     expect(result.effortLevel).toBe('max');
     expect(result.modelClass).toBe('OPUS');
     expect(result.confidence).toBeGreaterThanOrEqual(0.7);
@@ -426,7 +426,7 @@ describe('Lane D — Fallback Honesty', () => {
     expect(certifyResult.canonicalMode).toBe('CERTIFY');
 
     const resolved = resolveMode(certifyResult, 'brainstorming');
-    expect(resolved).toBe('debug_cognitive');
+    expect(resolved).toBe('audit');
   });
 
   it('D5: non-safety mode does NOT override non-default user mode', () => {
@@ -520,7 +520,7 @@ describe('Anti-lie assertions', () => {
     const fakeCertify: ModeClassification = {
       canonicalMode: 'CERTIFY',
       profileId: 'ARCHITECT',
-      backendMode: 'debug_cognitive',
+      backendMode: 'audit',
       effortLevel: 'low', // WRONG — should be max
       modelClass: 'OPUS',
       confidence: 0.8,
