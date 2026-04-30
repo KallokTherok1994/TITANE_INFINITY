@@ -200,6 +200,19 @@ const REPAIR_SIGNALS = [
   'compile error',
   'regression',
   'régressio',
+  // Kevin-specific overload/repair signals
+  'je suis dispersé',
+  'trop de fronts',
+  'surcharge',
+  'confus',
+  'dispersé',
+  'je suis confus',
+  'perdu dans',
+  'trop de choses',
+  'trop de projets',
+  'je ne sais plus où j',
+  'brouillard mental',
+  'charge mentale',
 ];
 
 /** CERTIFY: validation, proof, gate checks, runtime verification */
@@ -267,6 +280,7 @@ const EXPLORATION_SIGNALS = [
   'explorer',
   'explore',
   'quelles pistes',
+  'quelle piste',
   'what if',
   'et si',
   'imaginons',
@@ -280,6 +294,33 @@ const EXPLORATION_SIGNALS = [
   'inspire',
   'créatif',
   'creative',
+  // Kevin-specific exploration signals
+  'nouvelles idées',
+  'piste de réflexion',
+  'pistes possibles',
+  'explorer des options',
+  'quelles seraient les pistes',
+  // Kallok's Arts creative signals
+  'poème',
+  'poésie',
+  'kallok',
+  'vers libres',
+  'haïku',
+  'prose poétique',
+  'canvas',
+  'œuvre',
+  'mon tableau',
+  'collection artistique',
+  'bio artiste',
+  'fiche produit art',
+  'métaphore',
+  'écriture créative',
+  'titre pour',
+  'description de collection',
+  'texte pour ma collection',
+  'storytelling artiste',
+  'flash fiction',
+  'journal d\'artiste',
 ];
 
 /** DEEP_REASONING: complex analysis, synthesis, long reasoning chains */
@@ -350,6 +391,20 @@ const DEEP_REASONING_SIGNALS = [
   'augmente',
   'amplifie',
   'booster',
+  // Kevin-specific deep reasoning signals
+  'humain total',
+  'deuxième vitesse',
+  'mon axe',
+  'ma mission',
+  'mon projet de vie',
+  'ma vision',
+  'quel est mon axe',
+  'quelle est ma mission',
+  'codex vivant',
+  'œuvre vivante',
+  'oeuvre vivante',
+  'retour à soi',
+  'retour au vivant',
 ];
 
 /** ARCHITECT: system design, structure, long-term coherence */
@@ -401,6 +456,18 @@ const ARCHITECT_SIGNALS = [
   'parfaitement configuré',
   'conforme fonctionnel',
   'optimal',
+  // Kevin-specific architect signals
+  'codex vivant',
+  'oeuvre vivante',
+  'œuvre vivante',
+  'système habitable',
+  'vision long terme',
+  'ma vision globale',
+  'cohérence globale',
+  'architecture de vie',
+  'structure de vie',
+  'humain total modules',
+  'modules humain total',
 ];
 
 /** DIRECT: short, simple factual, explicit speed signals */

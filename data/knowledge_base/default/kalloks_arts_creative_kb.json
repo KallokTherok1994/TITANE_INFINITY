@@ -1,0 +1,278 @@
+{
+  "id": "kalloks_arts_creative_kb",
+  "version": "v2.0.0",
+  "category": "kalloks_arts_creative",
+  "description": "Base de connaissances créative Kallok's Arts — techniques poétiques, contraintes formelles, seed images, synesthésie, vocabulaire Kallok, templates bio artiste, Etsy SEO 2025-26, philosophie artistique Kevin/Kallok",
+  "kalloks_arts_creative": {
+
+    "identite_artistique": {
+      "nom_artiste": "Kallok",
+      "nom_legal": "Kevin Thibault",
+      "univers": "Profond, texturé, ancré dans le vivant — la présence, la brûlure, la beauté qui transforme.",
+      "boutique": "Kallok's Arts — impressions canvas, œuvres originales, print-on-demand via Printful/Etsy/Wix",
+      "palette_identitaire": {
+        "terracotta": { "hex": "#C4704A", "emotion": "chaleur, terre, vie organique, peau après effort, argile au soleil" },
+        "charbon": { "hex": "#2D2D2D", "emotion": "profondeur, ancrage, intérieur d'une forêt la nuit, gravité" },
+        "blanc_casse": { "hex": "#F8F5F0", "emotion": "lumière douce, espace de respiration, la lumière juste avant qu'elle disparaisse" }
+      },
+      "vocabulaire_resonant": [
+        "œuvre vivante", "artiste du vivant", "Brûlure", "présence", "retour au vivant",
+        "textures", "ancrage", "feu doux", "ce qui reste", "silences habités",
+        "matière", "organique", "dense", "lumière terracotta", "charbon et clarté",
+        "respiration", "prière de forme", "l'os de l'œuvre", "tension créative"
+      ],
+      "anti_patterns_absolus": [
+        "beauté éternelle", "âme infinie", "moment magique", "lumière éternelle",
+        "transformer votre vie", "rimes évidentes (chaud/beau, cœur/peur, amour/toujours)",
+        "cascade d'adjectifs (beau, lumineux, vibrant, chaleureux)",
+        "métaphores de fleurs/papillons/oiseaux (territoire Pinterest, pas Kallok)",
+        "allitérations forcées", "infini / éternel / absolu",
+        "le sucré facile, le réconfort automatique, la beauté sans tension",
+        "Cette œuvre vous transportera (promesse sans fondation)"
+      ],
+      "regle_identite": "Si le texte pourrait sortir d'un générateur quelconque — ce n'est pas Kallok."
+    },
+
+    "techniques_poetiques": {
+      "styles_disponibles": {
+        "haiku": {
+          "definition": "17 syllabes (5-7-5), une seule image sensorielle, un silence final",
+          "registre_kallok": "Partir du très concret (objet, geste, texture), révéler l'universel sans le nommer",
+          "exemple_cible": "Argile après pluie / une main laisse sa trace / le feu commence"
+        },
+        "vers_libres": {
+          "definition": "Flux naturel, ruptures intentionnelles, rythme organique pas imposé",
+          "registre_kallok": "Laisser le souffle dicter la structure. Pas de ponctuation superflue. Blancs significatifs."
+        },
+        "prose_poetique": {
+          "definition": "La frontière entre récit et poème — texture de prose, densité de vers",
+          "registre_kallok": "Chaque phrase doit peser. Pas de remplissage. L'image d'abord."
+        },
+        "poeme_objet": {
+          "definition": "Le texte comme matière visuelle — disposition sur la page fait partie du sens",
+          "registre_kallok": "Disposition aérée, espaces = silences = temps de regard"
+        },
+        "anaphore": {
+          "definition": "Répétition hypnotique d'un mot/segment en début de vers",
+          "registre_kallok": "Puissant pour les séries et collections — crée l'unité de l'univers"
+        }
+      },
+      "principes_fundamentaux": [
+        "Image concrète → universel (jamais l'abstrait d'abord)",
+        "Chaque mot doit gagner sa place — rien de gratuit",
+        "Le silence est aussi important que les mots — les pauses sont du sens",
+        "La contrainte libère ce que la liberté totale inhibe",
+        "Proposer systématiquement sobre / audacieux / commercial"
+      ]
+    },
+
+    "contraintes_liberatrices": {
+      "principe": "Les Oblique Strategies (Brian Eno) appliquées à l'univers Kallok. Tirer UNE contrainte par création. Elle élimine les clichés et force l'originalité authentique.",
+      "liste": [
+        { "id": 1, "contrainte": "Sans adjectif — juste verbes et noms purs", "effet": "Élimination du descriptif, densité maximale" },
+        { "id": 2, "contrainte": "17 syllabes exactes — une seule image sensorielle", "effet": "Haïku pur, présence immédiate" },
+        { "id": 3, "contrainte": "Écris comme si tu gravais du marbre — chaque mot doit rester", "effet": "Économie radicale, rien de superflu" },
+        { "id": 4, "contrainte": "Une seule métaphore — mais parfaite", "effet": "Profondeur vs. accumulation superficielle" },
+        { "id": 5, "contrainte": "Sans nommer les couleurs — juste températures et textures", "effet": "Synesthésie forcée, originalité garantie" },
+        { "id": 6, "contrainte": "Le texte tient en une seule respiration (12-15 mots)", "effet": "Urgence, impact immédiat" },
+        { "id": 7, "contrainte": "Deux voix ennemies qui parlent de la même chose", "effet": "Tension dramatique, ambivalence" },
+        { "id": 8, "contrainte": "Le contraire de ce que tu ferais normalement", "effet": "Rupture des automatismes créatifs" },
+        { "id": 9, "contrainte": "Commence par la fin — la chute est la première ligne", "effet": "Structure inversée, surprise narrative" },
+        { "id": 10, "contrainte": "Aucun verbe être ou avoir", "effet": "Dynamisme pur, actions et états concrets" },
+        { "id": 11, "contrainte": "Le lecteur doit lire deux fois pour tout comprendre", "effet": "Profondeur stratifiée, œuvre qui dure" },
+        { "id": 12, "contrainte": "Marquer les pauses — le silence est aussi important que les mots", "effet": "Rythme respiratoire, espace de résonance" },
+        { "id": 13, "contrainte": "Tous les mots de deux syllabes maximum", "effet": "Musicalité directe, accessibilité préservant la profondeur" },
+        { "id": 14, "contrainte": "Une question sans réponse — la réponse c'est la question elle-même", "effet": "Ouverture, invitation au spectateur" },
+        { "id": 15, "contrainte": "Décris comme un enfant de 7 ans qui ne connaît pas encore les mots adultes", "effet": "Fraîcheur, regard neuf, vérité non filtrée" }
+      ]
+    },
+
+    "seed_images": {
+      "principe": "Déclencheurs ultra-concrets pour briser le vide créatif. Partir du très spécifique → construire l'universel. Plus l'image est précise, moins le texte sera générique.",
+      "images": [
+        "Une main qui laisse tomber du sable dans un verre d'eau",
+        "La fissure d'une peinture écaillée par le soleil de 14h",
+        "Un trait tremblant d'une main ivre de certitude",
+        "Le bruit d'un couteau posé sur une table vide",
+        "Une cicatrice sur du bois brûlé",
+        "La poussière dans la lumière d'une fenêtre nord",
+        "Ce qui reste dans un verre après que le vin est bu",
+        "L'empreinte d'une main sur une surface froide",
+        "Un mur nu après qu'on y a retiré un tableau",
+        "La respiration de quelqu'un qui dort sans le savoir",
+        "Un pinceau posé à côté du tableau, encore mouillé",
+        "L'ombre d'une branche sur du béton blanc à midi",
+        "La ligne entre la nuit et le jour sur un horizon de forêt",
+        "Un espace vide intentionnel dans une composition"
+      ],
+      "methode": "Présenter l'image → demander : qu'est-ce que tu ressens physiquement ? → partir de cette sensation → construire le texte"
+    },
+
+    "synesthesie_canvas": {
+      "principe": "Croiser au moins 2 sens dans toute description d'œuvre. +35-50% de conversion vs. description purement visuelle.",
+      "patterns": {
+        "couleur_temperature": "Ce terracotta a la chaleur d'un radiateur en fer forgé",
+        "forme_texture_tactile": "Ce trait a la résistance d'une argile un an après la pluie",
+        "abstrait_son": "Ce fond charbon ressemble au silence juste après une porte fermée",
+        "composition_gout": "Ce blanc cassé a l'âcreté douce d'une pluie de printemps",
+        "mouvement_kinesique": "Cette diagonale tire vers le bas comme un poids qu'on tient"
+      },
+      "exemples_complets": [
+        "Un canvas terracotta qui a la chaleur d'un poêle à bois qu'on n'entend pas, mais qu'on sent sur la joue",
+        "Des traits charbons qui ont la résistance d'un bois séché par dix étés",
+        "Un espace blanc cassé qui respire comme une chambre le matin avant que quelqu'un se lève"
+      ]
+    },
+
+    "titres_oeuvres": {
+      "principe": "Un titre est une promesse ET un mystère. Jamais descriptif seul.",
+      "registres": {
+        "sobre": "1-2 mots, littéral ou métaphorique calme",
+        "progressif": "Plus audacieux, plus énigmatiques",
+        "audacieux": "Rompt les attentes, crée tension ou mystère",
+        "commercial": "Revendeur-friendly, vend l'émotion directement"
+      },
+      "exemples_registre_kallok": [
+        "Brûlure douce", "Ce qui reste", "Là où le feu s'arrête",
+        "Cycle", "Ce que la flamme refuse", "Présence brûlée",
+        "Ancrage", "L'os de l'œuvre", "Feu doux",
+        "Silences habités", "Retour", "Matière vivante"
+      ],
+      "methode_generation": "Proposer 8 titres : 1 sobre → 4 progressifs → 2 audacieux → 1 commercial. Classer par impact émotionnel."
+    },
+
+    "templates_etsy_seo": {
+      "keywords_top_roas_2025_26": {
+        "priorite_1_roas_85plus": [
+          "canvas-boho-abstract",
+          "minimalist-canvas-print",
+          "abstract-canvas-terracotta",
+          "textured-canvas-print",
+          "canvas-made-canada",
+          "warm-neutral-canvas",
+          "boho-bedroom-prints",
+          "art-print-set-couple",
+          "modern-neutral-canvas",
+          "abstract-orange-wall-art"
+        ],
+        "complementaires_roas_5_8": [
+          "living-room-canvas-decor",
+          "bedroom-minimalist-print",
+          "canvas-art-affordable",
+          "scandinavian-canvas-art",
+          "contemporary-wall-decor",
+          "office-wall-decor",
+          "housewarming-gift-canvas"
+        ]
+      },
+      "combos_13_tags_prets": {
+        "combo_boho": "canvas-boho-abstract, minimalist-canvas, warm-terracotta-art, living-room-decor, modern-wall-art, boho-art-print, abstract-bedroom-canvas, neutral-home-decor, art-home-decoration, handmade-wall-art, canvas-art-affordable, canvas-made-canada, boho-bedroom-prints",
+        "combo_minimaliste": "minimalist-canvas-art, abstract-wall-print, modern-home-decor, scandinavian-canvas, neutral-tones-art, contemporary-wall-art, geometric-canvas-print, office-wall-decor, modern-art-print, living-room-prints, minimal-abstract, space-saving-wall-art, canvas-made-canada",
+        "combo_emotionnel": "textured-canvas-print, warm-neutral-canvas, boho-art-living-room, bedroom-canvas-print, calm-abstract-art, peaceful-home-decor, art-for-office, housewarming-gift-idea, wellness-inspired-art, color-therapy-canvas, abstract-orange-wall-art, art-print-set-couple, canvas-made-canada"
+      },
+      "structure_fiche_produit": {
+        "titre_seo": {
+          "format": "[Keyword #1] — [Bénéfice émotionnel] — [Dimension]",
+          "max_chars": 100,
+          "exemples_bons": [
+            "Abstract Boho Canvas Terracotta — Transform Your Living Room — 60×80cm",
+            "Minimalist Canvas Print Warm Tones — Bedroom Wall Art — 40×60cm"
+          ],
+          "exemples_mauvais": ["Canvas 60×80", "Boho Wall Art", "Peinture abstraite"]
+        },
+        "description_5_blocs": {
+          "bloc_1": "Avant/Après émotionnel (1 phrase) — 'Ce canvas va transformer l'énergie de ton espace'",
+          "bloc_2": "5 sensations ressenties (3 phrases) — synesthésie obligatoire",
+          "bloc_3": "Technique rassurante (2 phrases) — impression giclée archivale, conservation 100+ ans",
+          "bloc_4": "Profil de l'acheteur (2 phrases) — 'Pour ceux qui refusent la déco générique'",
+          "bloc_5": "CTA spécifique (1 phrase) — 'Transformez cet espace dès demain'"
+        },
+        "bullets_7_max": [
+          "GICLÉE ARCHIVALE — Encres UV, conservation 100+ ans, qualité musée certifiée",
+          "CHASSIS BOIS 3.8cm — Wrap latéral inclus, prêt à accrocher sans cadre",
+          "LIVRAISON CANADA — 3-7 jours depuis Montréal, emballage renforcé artiste",
+          "PALETTE KALLOK'S ARTS — Terracotta, Charbon, Blanc cassé",
+          "IMPRESSION LOCALE — Fabriqué au Québec, artiste indépendant",
+          "SIZES DISPONIBLES — 40×60cm, 60×80cm, 80×100cm",
+          "CUSTOM — Format personnalisé sur demande"
+        ]
+      }
+    },
+
+    "templates_bio_artiste": {
+      "bio_courte_150w": {
+        "format": "Variables: [émotion_cle] [rituel_creatif] [anecdote_personnelle]",
+        "structure": {
+          "phrase_1_40w": "Qui est Kallok + son obsession unique",
+          "phrase_2_60w": "Le pourquoi derrière l'art, la tension créative",
+          "phrase_3_50w": "L'invitation au spectateur/acheteur"
+        },
+        "registre_cible": "Kallok cherche la présence — ce moment où la couleur devient respiration et la forme devient prière.",
+        "mots_cles_integrer": ["artiste peintre québécois", "art abstrait", "Kallok's Arts"]
+      },
+      "bio_longue_400w": {
+        "format": "Variables: [parcours] [philosophie_art] [vision_kalloks_arts] [processus_creatif]",
+        "structure": {
+          "paragraphe_1_100w": "Identité + émotion dominante + univers visuel",
+          "paragraphe_2_150w": "Processus créatif + une anecdote personnelle authentique",
+          "paragraphe_3_100w": "Vision Kallok's Arts, boutique, mission artiste",
+          "paragraphe_4_50w": "L'invitation, le lien avec le spectateur/acheteur"
+        }
+      },
+      "bio_seo_google": {
+        "format": "Même structure que bio longue + keywords intégrés naturellement",
+        "keywords_a_integrer": [
+          "artiste peintre québécois", "art canvas abstrait", "boutique art en ligne Québec",
+          "impression canvas terracotta", "art boho minimaliste Montréal"
+        ]
+      }
+    },
+
+    "protocole_creatif_5_phases": {
+      "principe": "Le protocole Kallok n'impose pas une forme — il guide l'état intérieur avant de créer.",
+      "phases": {
+        "1_etat_ame": {
+          "question": "Qu'est-ce que tu ressens là ? Quelle couleur a cette émotion ?",
+          "but": "Ancrer dans le corps et le présent avant de créer",
+          "output": "Une sensation, une image, une tension"
+        },
+        "2_matiere_brute": {
+          "question": "Pose 10 mots qui te viennent. N'importe lesquels.",
+          "but": "Produire librement, sans filtre — capturer ce qui surgit",
+          "output": "Mots bruts non filtrés, images, rythmes"
+        },
+        "3_forme": {
+          "question": "Quelle contrainte libératrice appliques-tu ?",
+          "but": "Choisir le format et une contrainte de la library",
+          "output": "Structure choisie + contrainte appliquée"
+        },
+        "4_raffinement": {
+          "question": "Qu'est-ce qui est en trop ? Qu'est-ce qui mérite d'être creusé ?",
+          "but": "Supprimer le superflu, amplifier l'essentiel",
+          "output": "2-3 variantes : sobre / expansive / surprenante"
+        },
+        "5_oeuvre": {
+          "question": "Est-ce que ça ressemble à Kallok ? Est-ce vivant ?",
+          "but": "Livrable prêt à l'usage",
+          "output": "Version sobre + version audacieuse + version commerciale"
+        }
+      }
+    },
+
+    "refinement_loop": {
+      "principe": "Après chaque première génération, proposer systématiquement ces 5 quick-actions.",
+      "actions": {
+        "intensifier": "Plus brut, plus direct, plus Kallok pur — aucune concession",
+        "assouplir": "Plus accessible, moins cryptique, sans trahir l'identité",
+        "variation_2": "Approche entièrement différente — même thème, autre angle",
+        "synesthesie": "Ajouter un croisement de sens supplémentaire",
+        "rejeter_ligne": "Proposer alternative pour une strophe/phrase spécifique"
+      },
+      "format_sortie_standard": {
+        "version_sobre": "Texte épuré, 1-2 mots titre si poème",
+        "version_audacieuse": "Brise les attentes, tension/mystère",
+        "version_commerciale": "Etsy-ready, storytelling direct"
+      }
+    }
+  }
+}

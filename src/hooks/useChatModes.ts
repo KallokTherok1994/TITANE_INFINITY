@@ -58,6 +58,13 @@ export const BUILT_IN_MODES: CustomMode[] = [
     description: 'Analyse système',
     custom: false,
   },
+  {
+    id: 'kalloks_arts',
+    name: "Kallok's Arts",
+    icon: '🎨',
+    description: 'Poésie, art, création',
+    custom: false,
+  },
 ];
 
 /**

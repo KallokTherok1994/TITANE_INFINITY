@@ -26,6 +26,10 @@ pub enum ChatModeId {
     Admin,
     Strategy,
     Audit,
+    HumainTotal,
+    VeilleRecherche,
+    Decision,
+    KalloksArts,
 }
 
 impl Default for ChatModeId {
@@ -49,6 +53,10 @@ impl ChatModeId {
             "admin" => Some(ChatModeId::Admin),
             "strategy" => Some(ChatModeId::Strategy),
             "audit" => Some(ChatModeId::Audit),
+            "humain_total" => Some(ChatModeId::HumainTotal),
+            "veille_recherche" => Some(ChatModeId::VeilleRecherche),
+            "decision" => Some(ChatModeId::Decision),
+            "kalloks_arts" => Some(ChatModeId::KalloksArts),
             _ => None,
         }
     }
@@ -67,6 +75,10 @@ impl ChatModeId {
             ChatModeId::Admin => "admin",
             ChatModeId::Strategy => "strategy",
             ChatModeId::Audit => "audit",
+            ChatModeId::HumainTotal => "humain_total",
+            ChatModeId::VeilleRecherche => "veille_recherche",
+            ChatModeId::Decision => "decision",
+            ChatModeId::KalloksArts => "kalloks_arts",
         }
     }
 
@@ -84,6 +96,10 @@ impl ChatModeId {
             ChatModeId::Admin => 5,
             ChatModeId::Strategy => 2,
             ChatModeId::Audit => 4,
+            ChatModeId::HumainTotal => 1,
+            ChatModeId::VeilleRecherche => 2,
+            ChatModeId::Decision => 2,
+            ChatModeId::KalloksArts => 1,
         }
     }
 
@@ -154,6 +170,23 @@ impl ChatModeId {
                 tools.insert("debug_assist");
                 tools.insert("system_analysis");
                 tools.insert("audit_logs");
+            }
+            ChatModeId::HumainTotal => {
+                tools.insert("brainstorm_assist");
+                tools.insert("context_analysis");
+            }
+            ChatModeId::VeilleRecherche => {
+                tools.insert("synthesis_tool");
+                tools.insert("system_analysis");
+            }
+            ChatModeId::Decision => {
+                tools.insert("synthesis_tool");
+                tools.insert("system_analysis");
+                tools.insert("brainstorm_assist");
+            }
+            ChatModeId::KalloksArts => {
+                tools.insert("brainstorm_assist");
+                tools.insert("mind_mapping");
             }
         }
 

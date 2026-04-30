@@ -40,7 +40,7 @@
   "chat_modes": {
     "source_ui_moderne": "src/services/ai/chatModes.config.ts",
     "source_legacy": "src/config/chatModes.config.ts",
-    "total_modes": 19,
+    "total_modes": 23,
     "modes": [
       {"id": "default",             "label": "Standard",            "temperature": 0.7, "maxTokens": 2048, "category": "general",      "permissionLevel": 1},
       {"id": "reflection",          "label": "Réflexion Profonde",  "temperature": 0.8, "maxTokens": 4000, "category": "personal",     "permissionLevel": 1},
@@ -60,7 +60,11 @@
       {"id": "htf_soumission",      "label": "HTF Soumission",      "temperature": 0.5, "maxTokens": 3000, "category": "technical",    "permissionLevel": 2},
       {"id": "psychologie_profils", "label": "Psychologie Profils", "temperature": 0.7, "maxTokens": 3500, "category": "personal",     "permissionLevel": 1},
       {"id": "creation",            "label": "Création",            "temperature": 0.9, "maxTokens": 3000, "category": "creative",     "permissionLevel": 1},
-      {"id": "standard",            "label": "Standard+",           "temperature": 0.7, "maxTokens": 2048, "category": "general",      "permissionLevel": 1}
+      {"id": "standard",            "label": "Standard+",           "temperature": 0.7, "maxTokens": 2048, "category": "general",      "permissionLevel": 1},
+      {"id": "humain_total",         "label": "Humain Total",        "temperature": 0.75,"maxTokens": 3500, "category": "personal",     "permissionLevel": 1},
+      {"id": "veille_recherche",     "label": "Veille & Recherche",  "temperature": 0.6, "maxTokens": 4000, "category": "productivity", "permissionLevel": 2},
+      {"id": "decision",            "label": "Décision",            "temperature": 0.5, "maxTokens": 3000, "category": "strategic",    "permissionLevel": 2},
+      {"id": "kalloks_arts",        "label": "Kallok's Arts",       "temperature": 0.92,"maxTokens": 4000, "category": "creative",     "permissionLevel": 1}
     ]
   },
   "mode_classifier": {
