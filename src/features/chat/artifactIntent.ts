@@ -66,9 +66,17 @@ function inferProfessionalGrade(request: string): ProfessionalGrade {
 }
 
 const CODE_EXTENSIONS_RE =
-  /\.(py|rs|ts|tsx|js|jsx|go|java|cpp|c|rb|sh|sql|css|scss|html|htm|yaml|yml|toml|ini|env|graphql|proto)\b/;
+  /\.(py|rs|ts|tsx|js|jsx|go|java|cpp|c|rb|sh|sql|css|scss|html|htm|yaml|yml|toml|ini|env|graphql|proto|kt|swift|vue|php)\b/;
 const CODE_LANGUAGES_RE =
-  /\b(python|rust|typescript|javascript|golang|react|java|bash|shell|sql|css|html|yaml|toml)\b/;
+  /\b(python|rust|typescript|javascript|golang|react|java|bash|shell|sql|css|html|yaml|toml|kotlin|swift|vue|php)\b/;
+
+// Verbes générateurs (FR + EN étendu)
+const GENERATOR_VERB_RE =
+  /\b(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write|produis|fais|d[eé]veloppe|impl[eé]mente|construis|build|make|pond[sm]?)\b/;
+
+// Noms de types de fichiers et contenus (FR + EN étendu)
+const FILE_NOUN_RE =
+  /\b(fichier|file|document|rapport|script|programme|program|code|csv|html|yaml|json|xml|sql|composant|component|classe|class|interface|module|api|application|app|service|page|fonction|function|template|config(?:uration)?)\b/;
 
 function inferFormat(request: string): ArtifactActionContract['target_format'] {
   const text = request.toLowerCase();
@@ -99,6 +107,11 @@ function inferKind(request: string): ArtifactActionContract['artifact_kind'] {
     text.includes('fonction') ||
     text.includes('function') ||
     text.includes('class') ||
+    text.includes('composant') ||
+    text.includes('component') ||
+    text.includes('module') ||
+    text.includes('service') ||
+    text.includes('api') ||
     CODE_EXTENSIONS_RE.test(text) ||
     CODE_LANGUAGES_RE.test(text)
   )
@@ -119,14 +132,10 @@ function inferKind(request: string): ArtifactActionContract['artifact_kind'] {
 export function classifyArtifactIntent(request: string): ArtifactIntent {
   const text = request.toLowerCase();
   const asksFile =
-    /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write|produis|fais).*(fichier|file|document|rapport|script|programme|code|csv|html|yaml|json|xml|sql)/.test(
-      text
-    ) ||
-    /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write).*(\.py|\.rs|\.ts|\.js|\.go|\.java|\.cpp|\.rb|\.sh|\.css|\.md)/.test(
-      text
-    ) ||
-    (CODE_EXTENSIONS_RE.test(text) &&
-      /(g[eé]n[eèé]re|cr[eé]e|create|produce|[eé]cris|write|produis|fais)/.test(text));
+    (GENERATOR_VERB_RE.test(text) && FILE_NOUN_RE.test(text)) ||
+    (GENERATOR_VERB_RE.test(text) &&
+      /\.(py|rs|ts|tsx|js|jsx|go|java|cpp|rb|sh|css|md|kt|swift|vue|php)/.test(text)) ||
+    (CODE_EXTENSIONS_RE.test(text) && GENERATOR_VERB_RE.test(text));
   const asksOpen = /(ouvre|open).*([eé]diteur|editor|canvas|artifact)/.test(text);
   const asksSave = /(sauve|enregistre|save)/.test(text);
   const mentionsExport = /(exporte|export|exporter)/.test(text);
@@ -257,6 +266,12 @@ const FORMAT_INSTRUCTIONS: Record<string, string> = {
     'GraphQL SDL. Types, queries, mutations avec descriptions entre """, directives si utile.',
   proto:
     'Protocol Buffers 3. syntax = "proto3"; en tête, package, imports si besoin, types scalaires corrects.',
+  kt: 'Kotlin 1.9+. Imports complets, data classes, sealed classes si utile, null safety, coroutines si async, KDoc sur les fonctions publiques.',
+  swift:
+    'Swift 5.9+. Imports nécessaires, types optionnels explicites, guard let/if let, extensions modulaires, documentation ///',
+  vue: "Vue.js 3 (Composition API). <script setup lang='ts'>, defineProps typées avec interface, composables si logique réutilisable, <style scoped>.",
+  php: 'PHP 8.2+. <?php avec declare(strict_types=1); namespaces PSR-4, types de retour explicites, exceptions typées, PHPDoc.',
+  env: "Fichier .env. Variables en SCREAMING_SNAKE_CASE, commentaires # descriptifs, aucune valeur de secret réelle — utiliser des placeholders (CHANGE_ME, <votre-clé>).",
   md: '',
   txt: '',
 };
@@ -317,7 +332,7 @@ export function buildFileGenerationPrompt(
     `3. Réponse = uniquement le contenu du fichier. aucune introduction ("Voici le fichier"), aucune explication après.`,
     `4. Si du code : mettre dans un bloc \`\`\`${ext || ''} … \`\`\`.`,
     `5. Si un document texte/markdown : commencer directement par le contenu (titre H1 ou premier paragraphe).`,
-    `]`,
+    `6. Toute première ligne de ta réponse : "## FILENAME: nom_descriptif${ext ? `.${ext}` : ''}" (snake_case, sans espaces, max 40 caractères).`,
   ].join('\n');
 }
 
@@ -353,7 +368,7 @@ export function extractFileContent(aiResponse: string, _format: string): string 
 
   // 3. Supprimer les lignes narratives d'introduction (étendu à 5 lignes)
   const INTRO_RE =
-    /^(voici|here|ci-dessous|contenu|fichier|output|result|génér|generat|below|above|following|voilà|voila|sure|bien s[uû]r|certainly|absolument|d[''']accord|okay|ok,|of course|bien sûr)/i;
+    /^(voici|here|ci-dessous|contenu|fichier|output|result|génér|generat|below|above|following|voilà|voila|sure|bien s[uû]r|certainly|absolument|d[''']accord|okay|ok[,\s!]|of course|bien sûr|avec plaisir|certainement|bien entendu|parfait[,\s!]|super[,\s!]|tr[eè]s bien|entend[su])/i;
   const lines = trimmed.split('\n');
   let startIdx = 0;
   while (
@@ -367,7 +382,7 @@ export function extractFileContent(aiResponse: string, _format: string): string 
   // 4. Supprimer les lignes conclusives narratives (dernières ≤ 3 lignes courtes)
   let endIdx = lines.length;
   const OUTRO_RE =
-    /^(j['']espère|hope|this should|ce fichier|ce script|n['']hésitez|feel free|let me know|dis-moi|si vous|if you|avez des|have any|any questions)/i;
+    /^(j['']espère|hope|this should|ce fichier|ce script|n['']hésitez|feel free|let me know|dis-moi|si vous|if you|avez des|have any|any questions|bonne continuation|bon courage|est-ce que [çc]a|[çc]a vous convient|n['']hésite pas|[çc]ela vous|voil[àa] tout)/i;
   while (
     endIdx > startIdx + 1 &&
     (lines[endIdx - 1] ?? '').trim().length < 180 &&
@@ -376,7 +391,14 @@ export function extractFileContent(aiResponse: string, _format: string): string 
     endIdx--;
   }
 
-  return lines.slice(startIdx, endIdx).join('\n').trim() || trimmed;
+  // Supprimer la ligne ## FILENAME: (suggestion de nom, ne fait pas partie du contenu)
+  const result = lines
+    .slice(startIdx, endIdx)
+    .filter(line => !/^##\s*FILENAME:\s*/i.test(line.trim()))
+    .join('\n')
+    .trim();
+
+  return result || trimmed;
 }
 
 export function inferFileExtension(
@@ -387,17 +409,33 @@ export function inferFileExtension(
 
   // Extension explicitement mentionnée dans la requête
   const extMatch = text.match(
-    /\.(py|rs|ts|tsx|js|jsx|go|java|cpp|c|rb|sh|sql|css|scss|html|htm|yaml|yml|toml|ini|graphql|proto|csv|xml|json|md|txt)\b/
+    /\.(py|rs|ts|tsx|js|jsx|go|java|cpp|c|rb|sh|sql|css|scss|html|htm|yaml|yml|toml|ini|graphql|proto|csv|xml|json|md|txt|kt|swift|vue|php)\b/
   );
   if (extMatch?.[1]) return extMatch[1];
 
   // Langage mentionné
   if (text.includes('python')) return 'py';
   if (text.includes('rust')) return 'rs';
-  if (text.includes('typescript') && text.includes('react')) return 'tsx';
+  if (text.includes('kotlin')) return 'kt';
+  if (text.includes('swift')) return 'swift';
+  if (text.includes('php')) return 'php';
+  if (
+    text.includes('typescript') &&
+    (text.includes('react') ||
+      text.includes('composant') ||
+      text.includes('component'))
+  )
+    return 'tsx';
   if (text.includes('typescript')) return 'ts';
-  if (text.includes('javascript') && text.includes('react')) return 'jsx';
+  if (
+    text.includes('javascript') &&
+    (text.includes('react') ||
+      text.includes('composant') ||
+      text.includes('component'))
+  )
+    return 'jsx';
   if (text.includes('javascript')) return 'js';
+  if (text.includes('vue') || /\bvuejs?\b/.test(text)) return 'vue';
   if (text.includes('golang') || /\bgo\b/.test(text)) return 'go';
   if (text.includes('java') && !text.includes('javascript')) return 'java';
   if (text.includes('bash') || text.includes('shell') || text.includes('script sh'))
@@ -410,6 +448,12 @@ export function inferFileExtension(
   if (text.includes('toml')) return 'toml';
   if (text.includes('csv')) return 'csv';
   if (text.includes('xml')) return 'xml';
+  // Composant React sans langage explicite → tsx par défaut
+  if (
+    (text.includes('composant') || text.includes('component')) &&
+    text.includes('react')
+  )
+    return 'tsx';
 
   // Fallback sur le contrat
   if (contract.target_format === 'json') return 'json';
@@ -422,13 +466,27 @@ export function buildSafeFilename(title: string): string {
   return (
     title
       .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
+      .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-zA-Z0-9\s_-]/g, '')
       .trim()
       .replace(/\s+/g, '_')
       .toLowerCase()
       .substring(0, 60) || 'titane_generated'
   );
+}
+
+/**
+ * Extrait le nom de fichier suggéré par l'IA depuis sa réponse brute.
+ * L'IA est instruite (règle 6 de buildFileGenerationPrompt) d'écrire
+ * "## FILENAME: nom_descriptif.ext" sur la première ligne.
+ * Retourne le nom complet validé (avec extension) ou null si absent/invalide.
+ */
+export function extractSuggestedFilename(aiResponse: string): string | null {
+  const match = /##\s*FILENAME:\s*([^\s\n\r]+)/i.exec(aiResponse.trim());
+  if (!match?.[1]) return null;
+  const raw = match[1].trim();
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,59}\.[a-zA-Z0-9]{1,10}$/.test(raw)) return null;
+  return raw;
 }
 
 export function validateNoFakeArtifactResponse(

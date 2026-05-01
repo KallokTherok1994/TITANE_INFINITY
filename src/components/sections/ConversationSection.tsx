@@ -67,6 +67,7 @@ import {
   validateNoFakeArtifactResponse,
   buildFileGenerationPrompt,
   extractFileContent,
+  extractSuggestedFilename,
   inferFileExtension,
   buildSafeFilename,
   type ProfessionalDocumentManifest,
@@ -2414,23 +2415,30 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               response.assistant_message,
               contract.target_format
             );
-            const safeName = buildSafeFilename(manifest.title);
-            const result = await generateAndSaveFile(content, ext, safeName);
-            if (result.ok) {
-              toastSuccess(
-                result.status === 'SAVED_TAURI'
-                  ? `Fichier sauvegardé : ${result.path ?? `${safeName}.${ext}`}`
-                  : `Fichier téléchargé : ${safeName}.${ext}`
-              );
-            } else if (result.status === 'SAVE_CANCELLED_HONEST') {
-              toastSuccess(
-                `Génération terminée. Copiez le code depuis le chat pour sauvegarder manuellement.`
-              );
+            if (!content.trim()) {
+              pageLogger.warn('Auto-save ignoré : contenu extrait vide');
             } else {
-              pageLogger.warn('Auto-save fichier généré échoué', result);
-              errorToast(
-                `Fichier généré mais sauvegarde échouée (${result.status})${result.error ? ` : ${result.error}` : ''}. Copiez le code depuis le chat.`
-              );
+              const suggestedFilename = extractSuggestedFilename(response.assistant_message);
+              const safeName = suggestedFilename
+                ? suggestedFilename.replace(/\.[^.]+$/, '')
+                : buildSafeFilename(manifest.title);
+              const result = await generateAndSaveFile(content, ext, safeName);
+              if (result.ok) {
+                toastSuccess(
+                  result.status === 'SAVED_TAURI'
+                    ? `Fichier sauvegardé : ${result.path ?? `${safeName}.${ext}`}`
+                    : `Fichier téléchargé : ${safeName}.${ext}`
+                );
+              } else if (result.status === 'SAVE_CANCELLED_HONEST') {
+                toastSuccess(
+                  `Génération terminée. Copiez le code depuis le chat pour sauvegarder manuellement.`
+                );
+              } else {
+                pageLogger.warn('Auto-save fichier généré échoué', result);
+                errorToast(
+                  `Fichier généré mais sauvegarde échouée (${result.status})${result.error ? ` : ${result.error}` : ''}. Copiez le code depuis le chat.`
+                );
+              }
             }
           } catch (saveErr) {
             pageLogger.warn('Erreur non bloquante sauvegarde fichier généré', saveErr);

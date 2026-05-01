@@ -162,6 +162,9 @@ export async function generateAndSaveFile(
   ext: string,
   defaultName: string
 ): Promise<ExportSaveResult> {
+  if (!content.trim()) {
+    return { ok: false, status: 'WRITE_FAILED', error: 'Empty content — nothing to save.' };
+  }
   const cleanExt = ext.replace(/^\./, '').toLowerCase();
   const mime = FILE_MIME_MAP[cleanExt] ?? 'text/plain';
   const filename = defaultName.endsWith(`.${cleanExt}`)
