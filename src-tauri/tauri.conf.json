@@ -16,6 +16,12 @@
     "targets": "all"
   },
   "app": {
+    "windows": [
+      {
+        "label": "main",
+        "devtools": false
+      }
+    ],
     "security": {
       "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
@@ -1256,7 +1262,19 @@
             },
             {
               "command": "performance_get_metrics"
-            }
+            },
+            { "command": "agenda_save_event" },
+            { "command": "agenda_save_events" },
+            { "command": "agenda_delete_event" },
+            { "command": "agenda_sync" },
+            { "command": "calibrate_titane_voice" },
+            { "command": "chat_mode_change" },
+            { "command": "chat_mode_sync" },
+            { "command": "evolution_save_state" },
+            { "command": "submit_evolution_data" },
+            { "command": "knowledge_ingest" },
+            { "command": "knowledge_save_state" },
+            { "command": "progression_save_state" }
           ],
           "deny": []
         }

@@ -77,16 +77,18 @@ describe('advancedAgentCatalog', () => {
     resetOrchestratorSessionSnapshotsForTests();
   });
 
-  it('returns the five governed advanced agent statuses', () => {
+  it('returns the seven governed advanced agent statuses', () => {
     const statuses = listAdvancedAgentStatuses();
 
-    expect(statuses).toHaveLength(5);
+    expect(statuses).toHaveLength(7);
     expect(statuses.map(status => status.id)).toEqual([
       'monitoring',
       'diagnostic',
       'explainability',
       'orchestrator',
       'security_active',
+      'knowledge_manager',
+      'research_enricher',
     ]);
   });
 

@@ -80,15 +80,25 @@ async function saveTextExport(
         };
       }
 
-      await writeTextFile(selectedPath, content);
-      return {
-        ok: true,
-        status: 'SAVED_TAURI',
-        path: selectedPath,
-      };
+      try {
+        await writeTextFile(selectedPath, content);
+        return {
+          ok: true,
+          status: 'SAVED_TAURI',
+          path: selectedPath,
+        };
+      } catch (writeError) {
+        const message = writeError instanceof Error ? writeError.message : String(writeError);
+        console.warn('[exportImport] Tauri save failed, fallback to browser download:', message);
+        return {
+          ok: false,
+          status: 'WRITE_FAILED',
+          error: message,
+        };
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      console.warn('[exportImport] Tauri save failed, fallback to browser download:', message);
+      console.warn('[exportImport] Tauri dialog failed, fallback to browser download:', message);
       // Fall through to browser download fallback below
     }
   }

@@ -130,7 +130,11 @@ function inferKind(request: string): ArtifactActionContract['artifact_kind'] {
 }
 
 export function classifyArtifactIntent(request: string): ArtifactIntent {
-  const text = request.toLowerCase();
+  // Normalize accented chars (é→e, è→e etc.) so \b word boundaries work correctly
+  const text = request
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
   const asksFile =
     (GENERATOR_VERB_RE.test(text) && FILE_NOUN_RE.test(text)) ||
     (GENERATOR_VERB_RE.test(text) &&

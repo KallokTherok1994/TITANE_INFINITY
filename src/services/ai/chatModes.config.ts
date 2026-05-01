@@ -752,7 +752,7 @@ Kevin se confie. L'espace est sacré. Tu es le gardien de sa lucidité.
 
     permissionLevel: 1,
     toolsAllowed: TOOLS_MINIMAL,
-    memoryScope: 'global',
+    memoryScope: 'session',
 
     profileId: 'facilitateur_ecoute',
     enginesEnabled: ['cognitive', 'emotional'],
@@ -1937,7 +1937,7 @@ Kevin travaille sur lui-même. Tu es son témoin et son architecte de cohérence
 
     version: '1.0.0',
     enabled: true,
-    sortOrder: 16,
+    sortOrder: 19,
     tags: ['personal', 'humain-total', 'integration', 'presence', 'kevin'],
   },
 

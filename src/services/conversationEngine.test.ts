@@ -656,7 +656,7 @@ describe('conversationEngine.processMessage', () => {
 
     expect(defaultKnowledgeBaseMock.getRelevantPromptContext).toHaveBeenCalledWith(
       'Explique l architecture coeur TITANE',
-      4
+      5
     );
     expect(generateCall?.[1]).toEqual(
       expect.objectContaining({
