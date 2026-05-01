@@ -1,22 +1,22 @@
 {
-  "version": "31.2.40",
+  "version": "31.2.41",
   "date": "2026-04-30",
   "artifacts": {
     "appimage": {
-      "filename": "titane-infinity_31.2.40_amd64.AppImage",
-      "sha256": "0fe107ce7d8f7708eef08a6f17acdd24a5fe29a14ba4ace8ee82ca3a610bbee5",
+      "filename": "titane-infinity_31.2.41_amd64.AppImage",
+      "sha256": "53206be9cddb6523e3ec5f117c1ed76d580defa5223a85a8438820059c472f9c",
       "size_mb": 92
     },
     "deb": {
-      "filename": "titane-infinity_31.2.40_amd64.deb",
-      "sha256": "66c55eae7c62d0d24345a0aac80dfd8e154c40452961ff9846f0745e89512c11",
+      "filename": "titane-infinity_31.2.41_amd64.deb",
+      "sha256": "0b7a0607009db0fc08aa7f6e3c4a3c78b06878e68d5ec3ded9c57d3bb484de37",
       "size_mb": 23
     },
     "rpm": {
-      "filename": "titane-infinity-31.2.40-1.x86_64.rpm",
-      "sha256": "e453402586eac76e627fa9bf7b5c37b4c0a191b4912da97784ce5b0c84416f3c",
+      "filename": "titane-infinity-31.2.41-1.x86_64.rpm",
+      "sha256": "a48f5a4f27aced19ae8b53f19da2a09d2dfaa6cc7731ebd70d2914003159d743",
       "size_mb": 23
     }
   },
-  "release_notes": "AI Intelligence Unification v32 — Identity Kernel + Chain-of-Thought + BackendConversationMode 6→13"
+  "release_notes": "TITANE Natural Voice Runtime + Proof Hardening"
 }

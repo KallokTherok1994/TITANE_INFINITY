@@ -5,7 +5,44 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.40 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.41 — Historical baseline preserved below)
+
+## Release v31.2.41 — 2026-04-30 (Build + Release — TITANE Natural Voice Runtime + Proof Hardening)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.2.41 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.2.41 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.2.41 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 31.2.41 | ✅ PASS |
+| AppImage | `titane-infinity_31.2.41_amd64.AppImage` (92M) | ✅ PASS |
+| DEB | `titane-infinity_31.2.41_amd64.deb` (23M) | ✅ PASS |
+| RPM | `titane-infinity-31.2.41-1.x86_64.rpm` (23M) | ✅ PASS |
+| `deployment/latest/VERSION.txt` | 31.2.41 | ✅ PASS |
+| `deployment/latest/MANIFEST.json` | 31.2.41 | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | sha256 3 artifacts | ✅ PASS |
+| `deployment/latest/SIZES.txt` | 4 surfaces (3 artifacts + binary) | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_31.2.41.txt` | generated | ✅ PASS |
+| `detect_recurrence` | PASS 1482 entries | ✅ PASS |
+| `verify_instructions` | PASS 33/33 | ✅ PASS |
+| `verify_* doctrine` | PASS | ✅ PASS |
+| `pnpm check` | PASS (0 TS errors) | ✅ PASS |
+| `vite build` | PASS | ✅ PASS |
+| `tauri build` | PASS release 9m35s + 3 bundles | ✅ PASS |
+| desktop launcher (user) | `~/.local/share/applications/titane-infinity.desktop` refreshed | ✅ PASS |
+| binary sync `/usr/bin/titane-infinity` | blocked, installed binary still 31.2.40 | ⚠️ MANUAL |
+| system desktop/icon sync | `BLOCKED_SUDO_REQUIRED` | ⚠️ MANUAL |
+
+**Contenu v31.2.41 :**
+- Correctif voix TITANE en runtime : suppression du `prompt-theater`, réponse plus naturelle, plus humaine, plus directe
+- Scellement des preuves `reports/` + `proof_packs/`
+- Test d'intégration `chatEngine.generate()` sur sortie créative procédurale naturalisée avant retour
+- Release Linux régénérée après ces corrections conversationnelles
+
+**Checksums (SHA256) :**
+- AppImage: `53206be9cddb6523e3ec5f117c1ed76d580defa5223a85a8438820059c472f9c`
+- DEB: `0b7a0607009db0fc08aa7f6e3c4a3c78b06878e68d5ec3ded9c57d3bb484de37`
+- RPM: `a48f5a4f27aced19ae8b53f19da2a09d2dfaa6cc7731ebd70d2914003159d743`
 
 ## Release v31.2.40 — 2026-04-30 (BUILD ALL — AI Intelligence Unification v32 — Identity Kernel + CoT + BackendConversationMode 6→13)
 

@@ -1,3 +1,36 @@
+# [31.2.41] - 2026-04-30 (Build + Release — TITANE Natural Voice Runtime + Proof Hardening)
+
+## Release v31.2.41 — TITANE Natural Voice Runtime + Proof Hardening
+
+### Résumé des changements
+
+Release Linux régénérée après le lot de correction conversationnelle TITANE : voix plus naturelle, suppression du théâtre de prompt, scellement des preuves, et durcissement de la preuve d'intégration `generate()`.
+
+### Runtime conversationnel TITANE
+
+- prompts actifs réalignés vers une expression plus humaine, vivante et directe
+- garde runtime `anti prompt-theater` dans `chatEngine.postProcess()`
+- suppression des préambules du type `Je me nomme TITANE / COLLECTE MAXIMALE / Voulez-vous que je continue`
+
+### Preuve et gouvernance
+
+- proof-pack `titane-natural-voice-2026-04-30` versionné
+- report dédié versionné
+- test d'intégration `chatEngine.generate()` ajouté pour vérifier le fallback `answer-first` sur sortie créative procédurale
+- validators doctrine verts
+
+### Artefacts
+
+- AppImage : `titane-infinity_31.2.41_amd64.AppImage`
+- DEB : `titane-infinity_31.2.41_amd64.deb`
+- RPM : `titane-infinity-31.2.41-1.x86_64.rpm`
+
+### Notes de release
+
+- build local + packaging Linux : PASS
+- sync launcher utilisateur : PASS
+- sync système `/usr/bin/titane-infinity` et icônes système : `BLOCKED_SUDO_REQUIRED`
+
 # [31.2.40] - 2026-04-30 (BUILD ALL — AI Intelligence Unification v32 — Identity Kernel + CoT + BackendConversationMode 6→13)
 
 ## Release v31.2.40 — AI Intelligence Unification v32
