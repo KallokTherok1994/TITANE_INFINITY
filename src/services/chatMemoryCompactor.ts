@@ -13,6 +13,7 @@
 import type { AIMessage } from './ai/types';
 import type { ChatMode } from './ai/chatEngine';
 import { createLogger } from '@/utils/logger';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
 const logger = createLogger('[MEMORY-COMPACTOR]');
 
@@ -512,8 +513,9 @@ if (typeof window !== 'undefined' && !IS_VITEST) {
   // Phase 5B: Tauri production — WebKitGTK does not reliably fire `beforeunload`
   // on window close. Listen to the Tauri `tauri://close-requested` event
   // (dynamic import to avoid breaking web/dev/Android builds).
-  // We flush synchronously then let the default close proceed.
-  if (typeof window.__TAURI__ !== 'undefined') {
+  // isTauriRuntimeAvailable() covers all 4 detection strategies (v1 __TAURI__,
+  // v2 __TAURI_INTERNALS__, .core.invoke function, __TITANE_TAURI_INITIALIZED flag).
+  if (isTauriRuntimeAvailable()) {
     import('@tauri-apps/api/event')
       .then(({ listen }) => {
         listen('tauri://close-requested', () => {
