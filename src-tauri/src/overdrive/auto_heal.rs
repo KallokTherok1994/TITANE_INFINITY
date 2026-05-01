@@ -49,6 +49,7 @@ pub struct ModuleHealth {
     pub last_check: u64,
 }
 
+#[derive(Clone)]
 pub struct AutoHealState {
     events: Arc<Mutex<Vec<HealEvent>>>,
     actions: Arc<Mutex<Vec<HealAction>>>,
