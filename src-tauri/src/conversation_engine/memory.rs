@@ -1,7 +1,3 @@
-// PLAN v25.x: Migrer vers unified_memory_v2::persistence
-// Warnings supprimés temporairement - migration planifiée
-#![allow(deprecated)]
-
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — CONVERSATION MEMORY ENGINE

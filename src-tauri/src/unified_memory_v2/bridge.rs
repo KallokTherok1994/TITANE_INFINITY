@@ -39,7 +39,7 @@ impl MemoryBridge {
 
     /// Store in STM
     pub async fn store_stm(&mut self, entry: MemoryEntry) -> MemoryResult<()> {
-        self.stm.push(entry)?;
+        self.stm.push_with_archival::<fn(MemoryEntry)>(entry, None)?;
         Ok(())
     }
 

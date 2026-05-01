@@ -1757,6 +1757,7 @@ pub async fn chat_check_providers(
 // ───────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
+#[allow(deprecated)]
 pub async fn ai_chat_stream(
     message: String,
     model: Option<String>,
@@ -1788,6 +1789,7 @@ pub async fn ai_chat_stream(
 }
 
 #[tauri::command]
+#[allow(deprecated)]
 pub async fn ai_chat_send(
     message: String,
     model: Option<String>,
@@ -1811,6 +1813,7 @@ pub async fn ai_chat_send(
 }
 
 #[tauri::command]
+#[allow(deprecated)]
 pub async fn chat_stream_message(
     mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,

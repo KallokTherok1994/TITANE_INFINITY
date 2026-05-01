@@ -3,9 +3,6 @@
 //   SUPER PROMPT #8: Multimodal + Memory Bridge + Adaptive
 // ═══════════════════════════════════════════════════════════════
 
-// PLAN v25.x: Migrer VectorSearchResult vers unified_memory_v2
-#![allow(deprecated)]
-
 use crate::core::modules::unified_memory::MemoryItem;
 use crate::memory_os::types::VectorSearchResult;
 use serde::{Deserialize, Serialize};

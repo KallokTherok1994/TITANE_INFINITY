@@ -31,9 +31,6 @@
 #![allow(clippy::assertions_on_constants)]
 #![allow(dead_code)]
 #![allow(unused_variables)]
-// Suppress deprecation warnings (legacy API still used for backward compat)
-// Note: Migration to unified_memory_v2 in progress
-#![allow(deprecated)]
 
 // ═══════════════════════════════════════════════════════════════
 // CORE MODULES v16 (Always Active)
@@ -116,13 +113,9 @@ pub mod ollama; // ✅ Canonical Ollama runtime bridge for Tauri/library builds 
 mod neural_memory; // ✅ v24.2: Private neural implementation
 pub mod unified_memory_v2; // ✅ v24.2: Unified Memory API (consolidation 5→2 modules)
 
-// Phase 2.4: Partial deprecation - system memory functions moved to unified_memory_v2
-// Conversation types (Conversation, MessageRole) remain active for chat history
-#[deprecated(
-    since = "24.2.0",
-    note = "System memory functions moved to unified_memory_v2. Use unified_memory_v2::get_state() instead of memory::get_system_state(). Chat types (Conversation, MessageRole) remain active."
-)]
-pub mod memory; // ⚠️ Phase 2.4: Partial deprecation (system memory → unified_memory_v2, chat types stay)
+// Chat types (Conversation, MessageRole, MemoryEntry, MemoryStorage) remain active for chat history.
+// System memory state functions available via unified_memory_v2.
+pub mod memory; // ✅ Active — chat types (Conversation, MessageRole, MemoryEntry, MemoryStorage)
 
 // ═══════════════════════════════════════════════════════════════
 // PRODUCTION MODULES (Active)
@@ -131,18 +124,8 @@ pub mod memory; // ⚠️ Phase 2.4: Partial deprecation (system memory → unif
 pub mod control_panel_commands; // ✅ Control Panel
 pub mod harmonia_engine; // ✅ Harmonia CPU monitoring
 
-// Phase 2.4: Deprecated - functionality moved to unified_memory_v2
-#[deprecated(
-    since = "24.2.0",
-    note = "Use unified_memory_v2::consolidate() instead"
-)]
-pub mod memory_compactor; // ⚠️ Phase 2.4: → unified_memory_v2::consolidate()
-
-#[deprecated(
-    since = "24.2.0",
-    note = "Use unified_memory_v2::persistence module instead"
-)]
-pub mod memory_persistence; // ⚠️ Phase 2.4: → unified_memory_v2::persistence
+pub mod memory_compactor; // ✅ Active — used by memory/storage.rs compaction pipeline
+pub mod memory_persistence; // ✅ Active — used by mock_commands.rs file persistence
 pub mod overdrive; // ✅ Chat orchestrator (always active)
 pub mod persistence; // ✅ v∞.MPE - 100% SAVE Persistence Engine (NEW)
 pub mod runtime_config; // ✅ Runtime configuration bridge
@@ -228,12 +211,7 @@ pub mod cloud; // ✅ Cloud Sync Engine v∞ (Vault chiffré, Multi-device, AES-
 // MEMORY EVOLUTION ENGINE++ v∞ (OPUS #14)
 // ═══════════════════════════════════════════════════════════════
 
-// Phase 2.4: Deprecated - functionality moved to neural_memory (via unified_memory_v2)
-#[deprecated(
-    since = "24.2.0",
-    note = "Use unified_memory_v2 API which wraps neural_memory::evolution internally"
-)]
-pub mod memory_evolution; // ⚠️ Phase 2.4: → neural_memory::evolution (via unified_memory_v2)
+pub mod memory_evolution; // ✅ Active — 12 Tauri commands registered in main.rs
 
 // ═══════════════════════════════════════════════════════════════
 // SYSTEM IDENTITY ENGINE v∞ (OPUS #15)
@@ -307,12 +285,7 @@ pub mod services;
 // MEMORY OS vΩ (SUPER PROMPT #12)
 // ═══════════════════════════════════════════════════════════════
 
-// Phase 2.4: Deprecated - use unified_memory_v2 (neural_memory is private)
-#[deprecated(
-    since = "24.2.0",
-    note = "Use unified_memory_v2 API instead. Neural memory implementation is now private."
-)]
-pub mod memory_os; // ⚠️ Phase 2.4: → unified_memory_v2 (neural_memory/ is private)
+pub mod memory_os; // ✅ Active — used by omega pipeline + MemoryOSBridge commands
 
 // ═══════════════════════════════════════════════════════════════
 // MULTIMODAL ENGINE vΩ (SUPER PROMPT #15)
