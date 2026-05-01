@@ -31,6 +31,7 @@ type TitaneIdentityKernelDocument = {
       pace: string;
       expression_style: string;
       signature_phrases: string[];
+      kevin_vocabulary?: string[];
       traits: {
         formality: number;
         empathy: number;
@@ -46,6 +47,25 @@ type TitaneIdentityKernelDocument = {
         response_length: string;
         structure_level: string;
       };
+      cognitive_fingerprint?: {
+        learning_style: string[];
+        processing_mode: string;
+        preferred_formats: string[];
+        validation_mode: string;
+        decision_style: string;
+        energy_rhythm: string;
+        overload_signals: string[];
+        recovery_anchors: string[];
+      };
+    };
+    twins_sync?: {
+      owner: string;
+      born: string;
+      location: string;
+      owner_themes: string[];
+      reflection_axis: string;
+      sync_depth: string;
+      update_policy: string;
     };
   };
 };

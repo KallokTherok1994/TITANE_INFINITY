@@ -93,11 +93,47 @@ function pruneExpired(store: EnrichmentStore): EnrichmentStore {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// KEVIN LTM SEMANTIC ANCHORS
+// ─────────────────────────────────────────────────────────────────
+
+/**
+ * Termes sémantiques prioritaires Kevin Thibault.
+ * Quand l'un de ces termes est détecté dans un texte mémoire, il est
+ * extrait comme concept prioritaire pour l'enrichissement Wikipedia/web.
+ * Cela renforce la rétention LTM sur les axes identitaires Kevin.
+ */
+export const KEVIN_LTM_SEMANTIC_ANCHORS: string[] = [
+  'D.I.S.C.E.R.N.E.R.',
+  'deuxième vitesse',
+  'œuvre vivante',
+  'oeuvre vivante',
+  'Humain Total',
+  'humain total',
+  'Codex Vivant',
+  'codex vivant',
+  'présence',
+  'retour au vivant',
+  'retour à soi',
+  'RAIN',
+  'architecture de cohérence',
+  'système habitable',
+  'brûlure',
+  'Kallok',
+  'TITANE',
+];
+
+// ─────────────────────────────────────────────────────────────────
 // CONCEPT EXTRACTION
 // ─────────────────────────────────────────────────────────────────
 
 /** Extrait le concept principal d'un texte pour la recherche Wikipedia */
 export function extractMainConcept(text: string): string {
+  // Priority: Kevin LTM anchors detected first
+  const textLower = text.toLowerCase();
+  const matchedAnchor = KEVIN_LTM_SEMANTIC_ANCHORS.find(
+    anchor => textLower.includes(anchor.toLowerCase())
+  );
+  if (matchedAnchor) return matchedAnchor.substring(0, 80);
   // Supprimer mots vides et prendre les 5 premiers mots substantiels
   const stopWords = new Set([
     'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'de', 'du', 'au', 'je',

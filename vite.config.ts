@@ -178,7 +178,7 @@ export default defineConfig(({ command }) => ({
     host: '0.0.0.0', // Listen on all network interfaces for WiFi access
     port: 4000,
     strictPort: false,
-    allowedHosts: ['.trycloudflare.com'],
+    allowedHosts: true, // Allow all hosts for local network access (dev only)
     cors: true,
     open: false, // Don't auto-open browser
     headers: {

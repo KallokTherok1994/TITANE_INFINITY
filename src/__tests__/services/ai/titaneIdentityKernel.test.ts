@@ -14,7 +14,7 @@ describe('titaneIdentityKernel', () => {
       'Toujours reduire le bruit avant d ajouter de la structure.'
     );
     expect(TITANE_DEFAULT_PROMPT_BLOCK).toContain(
-      'Source structuree: titane_identity_kernel_v31@v30.1.35'
+      'Source structuree: titane_identity_kernel_v31@v32.0.0'
     );
   });
 
