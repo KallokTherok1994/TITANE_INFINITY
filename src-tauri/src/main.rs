@@ -1225,6 +1225,13 @@ fn main() {
         )
     )));
 
+    // V32 Phase 9: MetaEnergy State (SP#20 Énergie Cognitive)
+    let builder = builder.manage(Arc::new(tokio::sync::RwLock::new(
+        titane_infinity::meta_energy::commands::MetaEnergyState::new(
+            titane_infinity::meta_energy::config::MetaEnergyConfig::default()
+        )
+    )));
+
     // [FIX-016] Runtime real state — memory KV, flags, logs, XP, selfheal, events
     let builder = builder.manage(titane_infinity::runtime_real::MemoryKvState::default());
     let builder = builder.manage(titane_infinity::runtime_real::SystemFlagsState::default());
@@ -2996,6 +3003,18 @@ fn main() {
             titane_infinity::multimodal::commands::fuse_multimodal,
             titane_infinity::multimodal::commands::get_multimodal_stats,
             titane_infinity::multimodal::commands::update_multimodal_config,
+
+            // ═══════════════════════════════════════════════════════════════
+            // META-ENERGY COMMANDS — V32 Phase 9 (SP#20 Énergie Cognitive)
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::meta_energy::commands::meta_energy_get_state,
+            titane_infinity::meta_energy::commands::meta_energy_get_fatigue,
+            titane_infinity::meta_energy::commands::meta_energy_get_recovery_plan,
+            titane_infinity::meta_energy::commands::meta_energy_get_load_balance,
+            titane_infinity::meta_energy::commands::meta_energy_get_homeostasis,
+            titane_infinity::meta_energy::commands::meta_energy_get_forecast,
+            titane_infinity::meta_energy::commands::meta_energy_apply_delta,
+            titane_infinity::meta_energy::commands::meta_energy_get_diagnostics,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

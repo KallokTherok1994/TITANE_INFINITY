@@ -1350,6 +1350,15 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'fuse_multimodal',
   'get_multimodal_stats',
   'update_multimodal_config',
+  // ─── META-ENERGY COMMANDS — V32 Phase 9 ─────────────────────
+  'meta_energy_get_state',
+  'meta_energy_get_fatigue',
+  'meta_energy_get_recovery_plan',
+  'meta_energy_get_load_balance',
+  'meta_energy_get_homeostasis',
+  'meta_energy_get_forecast',
+  'meta_energy_apply_delta',
+  'meta_energy_get_diagnostics',
 ]);
 
 /**

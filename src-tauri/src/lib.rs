@@ -382,7 +382,7 @@ pub mod agent_system; // ✅ Agent System vΩ (Multi-Agents, Roles, Capabilities
 // ═══════════════════════════════════════════════════════════════
 
 // TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
-// pub mod meta_energy; // ✅ Meta-Energy Engine vΩ (Homéostasie, Énergie, Fatigue, Récupération, Load Balancing, Prédiction)
+pub mod meta_energy; // ✅ Meta-Energy Engine vΩ (Homéostasie, Énergie, Fatigue, Récupération, Load Balancing, Prédiction) — V32 Phase 9 created
 
 // ═══════════════════════════════════════════════════════════════
 // RE-EXPORTS v15
