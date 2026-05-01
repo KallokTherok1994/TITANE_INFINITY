@@ -9,7 +9,28 @@ export type IpcCommandName =
   | 'health_check'
   | 'singularity_get_state'
   | 'singularity_get_full_state'
-  | 'get_copilot_key_status';
+  | 'get_copilot_key_status'
+  // ─── V32 Phase 3: Top-20 critical IPC contracts ───
+  | 'create_new_conversation'
+  | 'get_conversation_history'
+  | 'delete_conversation'
+  | 'set_provider_preference'
+  | 'chat_set_gemini_key'
+  | 'chat_set_openai_key'
+  | 'cycle_get_state'
+  | 'cycle_get_rhythm'
+  | 'cycle_predict_events'
+  | 'cycle_suggest_optimal_time'
+  | 'cycle_get_alignment'
+  | 'cycle_get_diagnostics'
+  | 'tts_stop'
+  | 'tts_get_voices'
+  | 'web_research'
+  | 'memory_hybrid_store'
+  | 'memory_hybrid_recall'
+  | 'singularity_set_intent'
+  | 'window_set_zoom'
+  | 'get_ollama_status';
 
 const ConversationGenerateArgsSchema = z.object({
   message: z.string().min(1),
@@ -38,6 +59,67 @@ const TtsSettingsSchema = z.object({
   autoFallback: z.boolean(),
 });
 
+// ─── V32 Phase 3: Top-20 schemas ─────────────────────────────
+
+const CreateNewConversationSchema = z.object({
+  userId: z.string().min(1),
+  title: z.string().optional(),
+  mode: z.string().optional(),
+});
+
+const GetConversationHistorySchema = z.object({
+  conversationId: z.string().min(1),
+  limit: z.number().int().positive().optional(),
+});
+
+const DeleteConversationSchema = z.object({
+  conversationId: z.string().min(1),
+});
+
+const SetProviderPreferenceSchema = z.object({
+  preference: z.enum(['auto', 'ollama', 'gemini', 'openai', 'anthropic', 'local']),
+});
+
+const ChatSetApiKeySchema = z.object({
+  key: z.string().min(1),
+});
+
+const CyclePredictEventsSchema = z.object({
+  hoursAhead: z.number().int().min(1).max(168),
+});
+
+const CycleSuggestOptimalTimeSchema = z.object({
+  taskType: z.string().min(1),
+  durationMinutes: z.number().int().min(1).max(480),
+});
+
+const WebResearchSchema = z.object({
+  query: z.string().min(1).max(512),
+  maxResults: z.number().int().min(1).max(20).optional(),
+});
+
+const MemoryHybridStoreSchema = z.object({
+  key: z.string().min(1),
+  value: z.string(),
+  namespace: z.string().optional(),
+  ttl: z.number().int().positive().optional(),
+});
+
+const MemoryHybridRecallSchema = z.object({
+  query: z.string().min(1),
+  limit: z.number().int().min(1).max(50).optional(),
+  namespace: z.string().optional(),
+});
+
+const SingularitySetIntentSchema = z.object({
+  intent: z.string().min(1),
+  priority: z.number().int().min(0).max(10).optional(),
+});
+
+const WindowSetZoomSchema = z.object({
+  level: z.number().finite().min(0.25).max(5.0),
+});
+
 const TtsSpeakSchema = z.object({
   text: z.string().min(1),
   settings: TtsSettingsSchema,
@@ -53,6 +135,27 @@ const ContractSchemas: Record<IpcCommandName, z.ZodTypeAny> = {
   singularity_get_state: NoArgsSchema,
   singularity_get_full_state: NoArgsSchema,
   get_copilot_key_status: NoArgsSchema,
+  // ─── V32 Phase 3: Top-20 ───────────────────────────────────
+  create_new_conversation: CreateNewConversationSchema,
+  get_conversation_history: GetConversationHistorySchema,
+  delete_conversation: DeleteConversationSchema,
+  set_provider_preference: SetProviderPreferenceSchema,
+  chat_set_gemini_key: ChatSetApiKeySchema,
+  chat_set_openai_key: ChatSetApiKeySchema,
+  cycle_get_state: NoArgsSchema,
+  cycle_get_rhythm: NoArgsSchema,
+  cycle_predict_events: CyclePredictEventsSchema,
+  cycle_suggest_optimal_time: CycleSuggestOptimalTimeSchema,
+  cycle_get_alignment: NoArgsSchema,
+  cycle_get_diagnostics: NoArgsSchema,
+  tts_stop: NoArgsSchema,
+  tts_get_voices: NoArgsSchema,
+  web_research: WebResearchSchema,
+  memory_hybrid_store: MemoryHybridStoreSchema,
+  memory_hybrid_recall: MemoryHybridRecallSchema,
+  singularity_set_intent: SingularitySetIntentSchema,
+  window_set_zoom: WindowSetZoomSchema,
+  get_ollama_status: NoArgsSchema,
 };
 
 const CAMELCASE_ENFORCED = new Set<IpcCommandName>([
