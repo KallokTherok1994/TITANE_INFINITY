@@ -2422,8 +2422,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   ? `Fichier sauvegardé : ${result.path ?? `${safeName}.${ext}`}`
                   : `Fichier téléchargé : ${safeName}.${ext}`
               );
-            } else if (result.status !== 'SAVE_CANCELLED_HONEST') {
-              pageLogger.warn('Auto-save fichier généré échoué', result.error);
+            } else if (result.status === 'SAVE_CANCELLED_HONEST') {
+              toastSuccess(
+                `Génération terminée. Copiez le code depuis le chat pour sauvegarder manuellement.`
+              );
+            } else {
+              pageLogger.warn('Auto-save fichier généré échoué', result);
+              errorToast(
+                `Fichier généré mais sauvegarde échouée (${result.status})${result.error ? ` : ${result.error}` : ''}. Copiez le code depuis le chat.`
+              );
             }
           } catch (saveErr) {
             pageLogger.warn('Erreur non bloquante sauvegarde fichier généré', saveErr);

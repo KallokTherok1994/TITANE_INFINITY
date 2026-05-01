@@ -328,8 +328,8 @@ export function buildFileGenerationPrompt(
 export function extractFileContent(aiResponse: string, _format: string): string {
   const trimmed = aiResponse.trim();
 
-  // Trouver tous les blocs de code, prendre le plus grand
-  const codeBlockRe = /```(?:\w+)?\n?([\s\S]*?)```/g;
+  // 1. Prendre le plus grand bloc de code (``` ... ```), toutes langues
+  const codeBlockRe = /```(?:[a-zA-Z0-9+\-_.]*)\n?([\s\S]*?)```/g;
   let largest = '';
   let match: RegExpExecArray | null;
   while ((match = codeBlockRe.exec(trimmed)) !== null) {
@@ -338,7 +338,7 @@ export function extractFileContent(aiResponse: string, _format: string): string 
   }
   if (largest) return largest;
 
-  // JSON/YAML brut sans bloc de code
+  // 2. JSON/YAML brut valide sans bloc de code
   if (
     (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
     (trimmed.startsWith('[') && trimmed.endsWith(']'))
@@ -351,19 +351,32 @@ export function extractFileContent(aiResponse: string, _format: string): string 
     }
   }
 
-  // Supprimer les lignes d'introduction courtes (≤ 3 lignes, < 120 chars chacune)
+  // 3. Supprimer les lignes narratives d'introduction (étendu à 5 lignes)
+  const INTRO_RE =
+    /^(voici|here|ci-dessous|contenu|fichier|output|result|génér|generat|below|above|following|voilà|voila|sure|bien s[uû]r|certainly|absolument|d[''']accord|okay|ok,|of course|bien sûr)/i;
   const lines = trimmed.split('\n');
   let startIdx = 0;
   while (
-    startIdx < Math.min(3, lines.length - 1) &&
-    (lines[startIdx] ?? '').trim().length < 120 &&
-    /^(voici|here|ci-dessous|contenu|fichier|output|result|génér|generat)/i.test(
-      (lines[startIdx] ?? '').trim()
-    )
+    startIdx < Math.min(5, lines.length - 1) &&
+    (lines[startIdx] ?? '').trim().length < 200 &&
+    INTRO_RE.test((lines[startIdx] ?? '').trim())
   ) {
     startIdx++;
   }
-  return lines.slice(startIdx).join('\n').trim() || trimmed;
+
+  // 4. Supprimer les lignes conclusives narratives (dernières ≤ 3 lignes courtes)
+  let endIdx = lines.length;
+  const OUTRO_RE =
+    /^(j['']espère|hope|this should|ce fichier|ce script|n['']hésitez|feel free|let me know|dis-moi|si vous|if you|avez des|have any|any questions)/i;
+  while (
+    endIdx > startIdx + 1 &&
+    (lines[endIdx - 1] ?? '').trim().length < 180 &&
+    OUTRO_RE.test((lines[endIdx - 1] ?? '').trim())
+  ) {
+    endIdx--;
+  }
+
+  return lines.slice(startIdx, endIdx).join('\n').trim() || trimmed;
 }
 
 export function inferFileExtension(

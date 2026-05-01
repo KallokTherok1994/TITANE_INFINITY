@@ -88,11 +88,8 @@ async function saveTextExport(
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      return {
-        ok: false,
-        status: 'WRITE_FAILED',
-        error: message,
-      };
+      console.warn('[exportImport] Tauri save failed, fallback to browser download:', message);
+      // Fall through to browser download fallback below
     }
   }
 

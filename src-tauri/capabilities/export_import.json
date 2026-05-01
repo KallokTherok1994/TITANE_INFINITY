@@ -1,12 +1,19 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0/capability.json",
   "identifier": "export-import",
-  "description": "Capability for conversation export/import + DOCX export — Tauri file save dialog + write access to document directory",
+  "description": "Capability for conversation export/import + file generation — Tauri file save dialog + write access to full user home",
   "windows": ["main"],
   "permissions": [
     "dialog:allow-save",
-    "fs:allow-write-text-file",
-    "fs:allow-write-file",
+    "dialog:allow-open",
+    {
+      "identifier": "fs:allow-write-text-file",
+      "allow": [{ "path": "$HOME/**" }, { "path": "$DESKTOP/**" }]
+    },
+    {
+      "identifier": "fs:allow-write-file",
+      "allow": [{ "path": "$HOME/**" }, { "path": "$DESKTOP/**" }]
+    },
     "fs:scope-document-recursive",
     "fs:scope-download-recursive"
   ]
