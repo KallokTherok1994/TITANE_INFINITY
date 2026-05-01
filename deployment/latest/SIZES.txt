@@ -1,4 +1,7 @@
-titane-infinity_31.2.41_amd64.AppImage: 92M (96008696 bytes)
-titane-infinity_31.2.41_amd64.deb: 23M (23391786 bytes)
-titane-infinity-31.2.41-1.x86_64.rpm: 23M (23391261 bytes)
-titane-infinity (binary): 49M (51197160 bytes)
+96016888	titane-infinity_31.3.0_amd64.AppImage
+23391060	titane-infinity_31.3.0_amd64.deb
+23390962	titane-infinity-31.3.0-1.x86_64.rpm
+
+92M	titane-infinity_31.3.0_amd64.AppImage
+23M	titane-infinity_31.3.0_amd64.deb
+23M	titane-infinity-31.3.0-1.x86_64.rpm

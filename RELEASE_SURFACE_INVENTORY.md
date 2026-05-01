@@ -5,7 +5,30 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.2.41 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.3.0 — Historical baseline preserved below)
+
+## Release v31.3.0 — 2025-04-30 (Build + Release — Version bump minor + Desktop icon sync)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 31.3.0 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 31.3.0 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 31.3.0 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 31.3.0 | ✅ PASS |
+| AppImage | `titane-infinity_31.3.0_amd64.AppImage` (92M) | ✅ PASS |
+| DEB | `titane-infinity_31.3.0_amd64.deb` (23M) | ✅ PASS |
+| RPM | `titane-infinity-31.3.0-1.x86_64.rpm` (23M) | ✅ PASS |
+| `deployment/latest/VERSION.txt` | 31.3.0 | ✅ PASS |
+| `deployment/latest/MANIFEST.json` | 31.3.0 | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | sha256 3 artifacts | ✅ PASS |
+| `deployment/latest/SIZES.txt` | 3 artifacts sizes | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_31.3.0.txt` | generated | ✅ PASS |
+| `detect_recurrence` | PASS 1484 entries | ✅ PASS |
+| `verify_instructions` | PASS 33/33 | ✅ PASS |
+| `tauri build` | PASS release 9m35s + 3 bundles | ✅ PASS |
+| desktop launcher (user) | `~/.local/share/applications/titane-infinity.desktop` refreshed | ✅ PASS |
+| binary sync `/usr/bin/titane-infinity` | `sudo dpkg -i titane-infinity_31.3.0_amd64.deb` requis | ⚠️ MANUAL |
+| system desktop/icon sync | `BLOCKED_SUDO_REQUIRED` — relancer post-build après install | ⚠️ MANUAL |
 
 ## Release v31.2.41 — 2026-04-30 (Build + Release — TITANE Natural Voice Runtime + Proof Hardening)
 

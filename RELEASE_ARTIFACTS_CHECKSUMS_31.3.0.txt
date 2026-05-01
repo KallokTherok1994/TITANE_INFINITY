@@ -1,0 +1,8 @@
+# TITANE∞ v31.3.0 — Release Artifacts Checksums
+# Date: 2025-04-30
+# Build: Tauri v2 production (opt-level=3, codegen-units=1)
+
+SHA256SUMS:
+3ddcb2d80b089d4f62ee325fedbaaf3c8700b63d059f744fe930a60fed480853  titane-infinity_31.3.0_amd64.AppImage  (92M)
+7bb8a8a23315d26438e41d7ff136edcb8d560af2665229a9643f2b7997132e30  titane-infinity_31.3.0_amd64.deb       (23M)
+5e073f4f694a031ddd66fe0fba5e5b6b91d51cf67e8d9395988249447a12deae  titane-infinity-31.3.0-1.x86_64.rpm   (23M)
