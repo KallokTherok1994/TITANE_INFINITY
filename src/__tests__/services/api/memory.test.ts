@@ -224,4 +224,83 @@ describe('memoryService', () => {
     // Bundled fallback must NOT be called
     expect(getBundledKbEntriesMock).not.toHaveBeenCalled();
   });
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Phase 2B: saveChatInteraction + saveStructuredEntry Tauri guards — Rule 16
+  // ─────────────────────────────────────────────────────────────────────────
+
+  it('saveChatInteraction() skips IPC silently when Tauri is unavailable', async () => {
+    isTauriRuntimeAvailableMock.mockReturnValue(false);
+
+    const { memoryService } = await import('@/services/api/memory');
+    // Must not throw, must not call invokeWithRetry
+    await expect(
+      memoryService.saveChatInteraction({
+        userMessage: 'Test message',
+        aiResponse: 'Test response',
+        mode: 'default',
+        timestamp: new Date().toISOString(),
+      })
+    ).resolves.toBeUndefined();
+
+    expect(invokeWithRetryMock).not.toHaveBeenCalled();
+  });
+
+  it('saveChatInteraction() calls IPC when Tauri is available', async () => {
+    isTauriRuntimeAvailableMock.mockReturnValue(true);
+    invokeWithRetryMock.mockResolvedValue(undefined);
+
+    const { memoryService } = await import('@/services/api/memory');
+    await memoryService.saveChatInteraction({
+      userMessage: 'Important note',
+      aiResponse: 'Noted',
+      mode: 'default',
+      timestamp: new Date().toISOString(),
+    });
+
+    expect(invokeWithRetryMock).toHaveBeenCalledWith(
+      'persistent_memory_write_entry',
+      expect.objectContaining({ level: 'long_term', contentType: 'message' }),
+      expect.objectContaining({ context: 'Memory' })
+    );
+  });
+
+  it('saveStructuredEntry() skips IPC silently when Tauri is unavailable', async () => {
+    isTauriRuntimeAvailableMock.mockReturnValue(false);
+
+    const { memoryService } = await import('@/services/api/memory');
+    await expect(
+      memoryService.saveStructuredEntry({
+        templateId: 'decision',
+        target: 'long',
+        data: { title: 'Test decision', choice: 'A' },
+      })
+    ).resolves.toBeUndefined();
+
+    expect(invokeWithRetryMock).not.toHaveBeenCalled();
+  });
+
+  it('loadContext() returns relevantKnowledge from bundled KB when Tauri is unavailable', async () => {
+    isTauriRuntimeAvailableMock.mockReturnValue(false);
+    getBundledKbEntriesMock.mockResolvedValue([
+      {
+        id: 'system_architecture',
+        category: 'system_architecture',
+        version: 'v30.0.0',
+        description: 'Architecture TITANE∞',
+        content: { rings: 4 },
+      },
+    ]);
+
+    const { memoryService } = await import('@/services/api/memory');
+    const ctx = await memoryService.loadContext({ includeKnowledge: true });
+
+    // relevantKnowledge should be populated from bundled KB (not empty)
+    expect(ctx.relevantKnowledge).toHaveLength(1);
+    expect(ctx.relevantKnowledge[0]?.id).toBe('system_architecture');
+    expect(ctx.relevantKnowledge[0]?.source).toBe('bundled_kb');
+    // Other fields should be empty (no Tauri for projects/decisions/rituals/timeline)
+    expect(ctx.activeProjects).toEqual([]);
+    expect(ctx.recentDecisions).toEqual([]);
+  });
 });

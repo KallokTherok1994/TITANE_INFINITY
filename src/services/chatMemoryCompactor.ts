@@ -508,6 +508,24 @@ if (typeof window !== 'undefined' && !IS_VITEST) {
   window.addEventListener('beforeunload', () => {
     chatMemoryCompactor.flushPendingSaves();
   });
+
+  // Phase 5B: Tauri production — WebKitGTK does not reliably fire `beforeunload`
+  // on window close. Listen to the Tauri `tauri://close-requested` event
+  // (dynamic import to avoid breaking web/dev/Android builds).
+  // We flush synchronously then let the default close proceed.
+  if (typeof window.__TAURI__ !== 'undefined') {
+    import('@tauri-apps/api/event')
+      .then(({ listen }) => {
+        listen('tauri://close-requested', () => {
+          chatMemoryCompactor.flushPendingSaves();
+        }).catch(() => {
+          // Non-critical: if listener registration fails, beforeunload is the fallback
+        });
+      })
+      .catch(() => {
+        // @tauri-apps/api unavailable in this build — ignore
+      });
+  }
 }
 // 🔒 v26.2.1: Export class for testing purposes
 export { ChatMemoryCompactor };

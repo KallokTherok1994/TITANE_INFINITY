@@ -214,17 +214,11 @@ export class MemoryService {
 
   /**
    * Charge contexte complet pour chat
+   * Phase 3 fix: When Tauri unavailable, do NOT return early — delegate to
+   * each sub-method which has its own guard + bundled fallback (getKnowledge).
+   * This ensures relevantKnowledge is populated from bundled KB in all contexts.
    */
   async loadContext(config: MemoryLoadConfig = {}): Promise<MemoryContext> {
-    if (!isTauriRuntimeAvailable()) {
-      return {
-        activeProjects: [],
-        recentDecisions: [],
-        relevantKnowledge: [],
-        activeRituals: [],
-        timeline: [],
-      };
-    }
     const {
       includeProjects = true,
       includeDecisions = true,
@@ -269,8 +263,12 @@ export class MemoryService {
 
   /**
    * Sauvegarde interaction chat
+   * Phase 2B: Guard — when Tauri is unavailable (web/dev), skip IPC silently.
+   * Conversation history is already persisted by chatMemoryCompactor (localStorage)
+   * and by useChat P0 PATCH (SQLite). No data loss, no IPC error noise.
    */
   async saveChatInteraction(interaction: ChatInteraction): Promise<void> {
+    if (!isTauriRuntimeAvailable()) return;
     const tags = Array.from(
       new Set(
         [
@@ -323,8 +321,10 @@ export class MemoryService {
 
   /**
    * Sauvegarde une entrée structurée (medium/long terme)
+   * Guard: skip when Tauri unavailable — no IPC in web/dev mode.
    */
   async saveStructuredEntry(entry: StructuredMemoryEntry | string): Promise<void> {
+    if (!isTauriRuntimeAvailable()) return;
     const normalized: StructuredMemoryEntry =
       typeof entry === 'string'
         ? {
