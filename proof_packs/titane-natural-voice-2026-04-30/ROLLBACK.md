@@ -5,6 +5,7 @@ git restore --source=HEAD -- \
   .github/copilot-instructions.md \
   src/services/userPreferencesEngine.ts \
   src/services/ai/chatEngine.ts \
+  src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts \
   src/services/ai/chatModes.ts \
   src/services/ai/chatModes.config.ts \
   src/config/chatModes.config.ts \

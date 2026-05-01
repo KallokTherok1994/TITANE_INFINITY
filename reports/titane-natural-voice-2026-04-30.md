@@ -49,6 +49,7 @@ pnpm run check
 ## Outputs
 
 - `pnpm vitest run ...` -> `7 passed`, `113 passed`
+- `pnpm vitest run src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts` -> `1 passed`, `18 passed`
 - `bash scripts/autoheal/detect_recurrence.sh` -> `PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX`, `PASS: G_AH_RECURRENCE_GUARD_PASS`
 - `bash scripts/verify_instructions.sh` -> `SUMMARY: PASS=33 FAIL=0`
 - `bash scripts/verify/verify-copilot-instructions.sh` -> `PASS: verify-copilot-instructions`
@@ -69,6 +70,7 @@ pnpm run check
 - `src/services/ai/chatModes.config.ts`
 - `src/config/chatModes.config.ts`
 - `src/ui/pages/ChatIA/InstructionModeManager.ts`
+- `src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts`
 - Tests ciblés associés
 - `ARCHITECTURE.md`
 - `UI_SURFACE_MAP.md`
@@ -80,6 +82,6 @@ pnpm run check
 
 ## Remaining limits
 
-- Pas de replay UI live post-correctif dans cette session
+- La preuve desktop WDIO `e2e:desktop:proof:online-chat` a été tentée mais bloquée avant session WRY: `WebDriverError: The operation was aborted due to timeout when running "http://127.0.0.1:4444/session"`
 - Pas de capture post-correctif
 - Pas d'E2E conversationnel réel sur un prompt "poème Facebook"

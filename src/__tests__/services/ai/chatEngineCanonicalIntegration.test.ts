@@ -362,6 +362,34 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     expect(response.omegaMetadata?.pipelineSteps).not.toContain('clarification-returned');
   });
 
+  it('should naturalize procedural creative outputs before returning generate()', async () => {
+    const { aiOrchestrator } = await import('@/services/ai/orchestrator');
+    vi.mocked(aiOrchestrator).generate.mockResolvedValueOnce({
+      content: `Bonjour ! Je me nomme TITANE∞.
+
+Voici la première phase : COLLECTE MAXIMALE.
+
+La prochaine étape sera le CROISEMENT CRITIQUE.
+
+Voulez-vous que je continue ?`,
+      provider: 'ollama',
+      model: 'test-model',
+      timestamp: Date.now(),
+    });
+
+    const response = await chatEngine.generate(
+      'Écris-moi un poème pour une publication Facebook sur le retour au vivant',
+      [],
+      { mode: 'default' }
+    );
+
+    expect(response.omegaMetadata?.pipelineSteps).toContain('orchestrator-call');
+    expect(response.content).toContain('Je peux te le faire directement');
+    expect(response.content).not.toContain('Je me nomme TITANE');
+    expect(response.content).not.toContain('COLLECTE MAXIMALE');
+    expect(response.content).not.toContain('Voulez-vous que je continue');
+  });
+
   it('should let persisted backend defaults apply when no explicit override is set', async () => {
     Object.defineProperty(window, '__TAURI_INTERNALS__', {
       value: {},

@@ -8,3 +8,5 @@ Le verrou dominant était réel: TITANE décrivait sa méthode au lieu de parler
 Phase 2 scellée: une garde runtime `anti prompt-theater` dans `chatEngine.postProcess()` empêche désormais la plupart des rechutes procédurales même si le modèle produit encore un préambule méta.
 
 Scellement complémentaire: la cohérence du noyau d'instructions a été réalignée sur le validator canonique `verify_local_markers_consistency`, et les artefacts de preuve associés à cette correction sont désormais versionnés malgré leur présence dans des chemins ignorés par défaut.
+
+Durcissement complémentaire: l'intégration `chatEngine.generate()` est maintenant testée explicitement sur un prompt créatif qui reçoit une sortie procédurale simulée; la chaîne complète doit la transformer en réponse `answer-first` avant retour.
