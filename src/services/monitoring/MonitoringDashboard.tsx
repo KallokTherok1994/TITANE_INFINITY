@@ -1,8 +1,16 @@
-import React from 'react';
-import { getMonitoringAgentStatus } from './index';
+import React, { useEffect, useState } from 'react';
+import { getMonitoringAgentStatus, getProjectHealthMetrics } from './index';
+import type { ProjectHealthMetrics } from './index';
 
 const MonitoringDashboard: React.FC = () => {
   const status = getMonitoringAgentStatus();
+  const [health, setHealth] = useState<ProjectHealthMetrics | null>(null);
+
+  useEffect(() => {
+    getProjectHealthMetrics()
+      .then(setHealth)
+      .catch(() => setHealth(null));
+  }, []);
 
   return (
     <section
@@ -61,6 +69,31 @@ const MonitoringDashboard: React.FC = () => {
       <p data-testid="monitoring-dashboard-next-step" style={{ margin: 0, fontSize: 13 }}>
         {status.nextStep}
       </p>
+      {health && (
+        <section
+          data-testid="monitoring-dashboard-health-metrics"
+          style={{ marginTop: 10, borderTop: '1px solid rgba(148,163,184,0.2)', paddingTop: 8 }}
+        >
+          <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.7 }}>Métriques IPC projet</p>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12 }}>
+            <li data-testid="monitoring-dashboard-health-recurrence">
+              {`Récurrence incidents : ${(health.incidentRecurrenceRate * 100).toFixed(1)}%`}
+            </li>
+            <li data-testid="monitoring-dashboard-health-ring">
+              {`Ring le plus impacté : ${health.mostImpactedRing}`}
+            </li>
+            <li data-testid="monitoring-dashboard-health-leadtime">
+              {`Lead time moyen : ${health.avgLeadTimeMinutes.toFixed(1)} min`}
+            </li>
+            <li
+              data-testid="monitoring-dashboard-health-evidence-note"
+              style={{ opacity: 0.7, fontStyle: 'italic' }}
+            >
+              {health.evidenceNote}
+            </li>
+          </ul>
+        </section>
+      )}
     </section>
   );
 };

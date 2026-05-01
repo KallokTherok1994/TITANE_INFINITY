@@ -38,17 +38,18 @@ const ADVANCED_AGENT_STATUS: Record<AdvancedAgentStatus['id'], AdvancedAgentStat
     testId: 'monitoring-dashboard',
     readiness: 'partial',
     readinessLabel: 'PARTIAL',
-    serviceState: 'Monitoring lazy loader disponible',
+    serviceState: 'Monitoring lazy loader disponible · métriques IPC projet activées',
     evidence: [
       'Exports lazy-loader disponibles pour captureClassifiedError, addBreadcrumb et setContext.',
       'Dashboard canonique visible via AgentDashboardsPanel avec selectors stables.',
       'Couverture E2E ciblée sur la présence, le statut et les preuves affichées.',
+      'Métriques IPC projet (autoheal rate, ring impacté, lead time) lues via safeInvoke read_json_file.',
     ],
     blockers: [
-      'Aucun flux temps réel unifié de métriques et alertes n alimente encore ce panneau.',
+      'Flux temps réel unifié de métriques alertes croisées non encore connecté.',
     ],
     nextStep:
-      'Connecter les métriques runtime et les alertes croisées au dashboard monitoring canonique.',
+      'Connecter le flux live des alertes croisées et publier les métriques live dans le dashboard canonique.',
   },
   diagnostic: {
     id: 'diagnostic',
