@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { invokeWithRetry } from '@/lib/serviceInvoker';
 import {
   getAllEntries,
+  getBundledOwnerContext,
   getCompactIndex,
   getRelevantPromptContext,
   resetCache,
@@ -471,5 +472,39 @@ describe('defaultKnowledgeBase', () => {
     );
 
     expect(promptContext).toContain('kevin_public_corpus_v30');
+  });
+
+  // ─────────────────────────────────────────────────────────────────
+  // Phase 2: getBundledOwnerContext() — Rule 16 coverage
+  // ─────────────────────────────────────────────────────────────────
+
+  it('getBundledOwnerContext returns a non-empty owner context string from the bundled Kevin files', () => {
+    // The function is synchronous and reads from import.meta.glob bundled at build/test time.
+    // It must return at least the header line and Kevin profile identity block.
+    const ctx = getBundledOwnerContext();
+    // Header must be present
+    expect(ctx).toContain('Contexte propriétaire TITANE∞');
+    // At least one Kevin file ID must appear
+    expect(
+      ctx.includes('kevin_owner_profile_v30') ||
+        ctx.includes('kevin_public_corpus_v30') ||
+        ctx.includes('kevin_workflow_v30') ||
+        ctx.includes('kevin_book_registry_v30')
+    ).toBe(true);
+  });
+
+  it('getBundledOwnerContext includes Kevin owner identity fields (name, langue, signature, mission)', () => {
+    const ctx = getBundledOwnerContext();
+    // Must contain at least the owner name injected from kevin_owner_profile_v30.json
+    expect(ctx).toContain('Kevin');
+    // Must declare the preferred language
+    expect(ctx).toContain('français');
+  });
+
+  it('getBundledOwnerContext does NOT include excluded non-Kevin bundled entries', () => {
+    const ctx = getBundledOwnerContext();
+    // Should not contain general KB category names that are NOT Kevin-owned
+    expect(ctx).not.toContain('system_architecture');
+    expect(ctx).not.toContain('nutrition');
   });
 });
