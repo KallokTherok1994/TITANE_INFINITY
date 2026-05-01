@@ -1,6 +1,6 @@
 [package]
 name         = "titane-infinity"
-version      = "31.3.2"
+version      = "31.3.3"
 description  = "TITANE∞ v31.2.13 - Multi-Agent Optimization + Remote Gateway"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
