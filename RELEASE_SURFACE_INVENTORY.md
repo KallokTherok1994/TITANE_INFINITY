@@ -5,7 +5,24 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v31.3.0 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.0 — Historical baseline preserved below)
+
+## Release v32.0.0 — 2026-05-30 (BUILD ALL — V32 AI Intelligence Unification Supreme)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 32.0.0 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 32.0.0 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 32.0.0 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 32.0.0 | ✅ PASS |
+| AppImage | `titane-infinity_32.0.0_amd64.AppImage` (96M) | ✅ PASS |
+| DEB | `titane-infinity_32.0.0_amd64.deb` (24M) | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_32.0.0.txt` | generated sha256 2 artifacts | ✅ PASS |
+| `detect_recurrence` | PASS 1500 entries | ✅ PASS |
+| `tauri build` | PASS release bundles AppImage+DEB | ✅ PASS |
+| desktop launcher (user) | synced via update-desktop-icons.sh | ✅ PASS |
+| binary sync `/usr/bin/titane-infinity` | `sudo dpkg -i titane-infinity_32.0.0_amd64.deb` requis | ⚠️ MANUAL |
+| system desktop/icon sync | `BLOCKED_SUDO_REQUIRED` — relancer post-build après install | ⚠️ MANUAL |
 
 ## Release v31.3.0 — 2025-04-30 (Build + Release — Version bump minor + Desktop icon sync)
 
