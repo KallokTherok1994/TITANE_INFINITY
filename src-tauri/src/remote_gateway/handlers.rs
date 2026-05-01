@@ -506,6 +506,7 @@ pub async fn agents_status_handler() -> impl IntoResponse {
 // ── Tests ─────────────────────────────────────────────────────
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)] // V32 Phase 2: test utilities — acceptable in test scope
 mod tests {
     use super::*;
     use crate::remote_gateway::auth::{derive_jwt_secret, hash_shared_secret};
