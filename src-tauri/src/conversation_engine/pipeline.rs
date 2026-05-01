@@ -9,7 +9,8 @@ use std::time::Instant;
 use tokio::sync::RwLock;
 
 use crate::ai::router::AIRouter;
-use crate::ai::{AIRequest, AIResponse};
+use crate::ai::router_intelligent::AiRouter as IntelligentRouter;
+use crate::ai::{AIRequest, AIResponse, AiMode, AiRequest as AiRoutingRequest};
 use crate::singularity::singularity_state::{ChatContext, SingularityState};
 
 use super::api_neutralizer::ApiNeutralizer;
@@ -41,6 +42,8 @@ fn preprocess_message_input(message: &str) -> Result<String, ConversationEngineE
 pub struct ConversationPipeline {
     memory: Arc<ConversationMemoryEngine>,
     ai_router: Arc<RwLock<AIRouter>>,
+    /// V32: Conseiller de routage intelligent (AiMode contextuel, décision avant dispatch)
+    intelligent_router: Arc<IntelligentRouter>,
     self_healing: Arc<RwLock<SelfHealingConversation>>,
     singularity: Arc<RwLock<SingularityState>>,
     french_mastery: Arc<FrenchMasteryProcessor>, // 🇫🇷 POST-PROCESSEUR FRANÇAIS
@@ -61,6 +64,8 @@ impl ConversationPipeline {
         Self {
             memory,
             ai_router,
+            // V32: cost_opt=true (préférer Gemini Flash / Local pour auto) ; latency=false
+            intelligent_router: Arc::new(IntelligentRouter::new(true, false)),
             self_healing,
             singularity,
             french_mastery, // 🇫🇷 STOCKÉ
@@ -447,6 +452,7 @@ impl ConversationPipeline {
     }
 
     /// Générer réponse IA
+    /// V32: Mode Auto utilise IntelligentRouter pour décision de routage contextuelle
     async fn generate_ai_response(
         &self,
         prompt: String,
@@ -458,7 +464,32 @@ impl ConversationPipeline {
             super::types::ProviderPreference::Gemini => Some("gemini".to_string()),
             super::types::ProviderPreference::OpenAI => Some("openai".to_string()),
             super::types::ProviderPreference::Claude => Some("claude".to_string()),
-            super::types::ProviderPreference::Auto => None,
+            super::types::ProviderPreference::Auto => {
+                // V32: Routage intelligent contextuel pour mode Auto
+                let routing_req = AiRoutingRequest {
+                    prompt: prompt.clone(),
+                    mode: AiMode::Quality,
+                    user_id: "conv_engine".to_string(),
+                    session_id: "pipeline".to_string(),
+                    max_tokens: config.max_tokens.map(|t| t as u32),
+                    temperature: Some(config.temperature),
+                    context: None,
+                };
+                let decision = self.intelligent_router.route(&routing_req).await;
+                log::info!(
+                    "[Ω:ROUTE-V32] primary={} secondary={:?} | {}",
+                    decision.primary,
+                    decision.secondary,
+                    decision.rationale
+                );
+                // Mapper RoutingDecision.primary → provider_preference string pour AIRouter
+                match decision.primary.as_str() {
+                    "local_llama3" | "local_mistral" => Some("ollama".to_string()),
+                    "gemini" | "gemini_flash" => Some("gemini".to_string()),
+                    // claude_haiku/sonnet, gpt35/gpt4_mini, titane_engine → cascade UnifiedIA
+                    _ => None,
+                }
+            }
         };
 
         let default_max_tokens = match config.provider_preference {
