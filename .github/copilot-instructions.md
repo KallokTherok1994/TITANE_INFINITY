@@ -10,7 +10,7 @@
 # TITANE_INFINITY - Copilot Kernel (Governed)
 
 Mode: AUTO | Objective: execute with proof-first discipline and zero drift.
-Compatibility marker: Local-first wording remains compatibility-only; active doctrine = Online-first governed with mandatory local fallback; diagnose -> plan -> apply -> verify -> report.
+Compatibility marker: Local-first (compatibility marker; doctrine active = Online-first governed with mandatory local fallback). Workflow: diagnose -> plan -> apply -> verify -> report.
 
 ## Priority
 
