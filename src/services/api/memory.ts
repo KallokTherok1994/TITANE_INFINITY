@@ -19,6 +19,7 @@ import {
   FAST_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
+import { getAllEntries as getBundledKbEntries } from '@/services/api/defaultKnowledgeBase';
 import type { StructuredMemoryEntry } from '@/core/prompts/memoryTemplates';
 import type {
   MemoryContext,
@@ -144,9 +145,28 @@ export class MemoryService {
 
   /**
    * Récupère connaissances pertinentes
+   * Phase 3: When Tauri is unavailable, falls back to bundled KB entries
+   * so TITANE has knowledge access on all platforms (web, dev, Android).
    */
   async getKnowledge(limit: number = 20): Promise<KnowledgeEntry[]> {
-    if (!isTauriRuntimeAvailable()) return [];
+    if (!isTauriRuntimeAvailable()) {
+      // Fallback: map bundled static KB entries to KnowledgeEntry format
+      try {
+        const bundled = await getBundledKbEntries();
+        return bundled.slice(0, limit).map(entry => ({
+          id: entry.id,
+          title: entry.description || entry.category,
+          category: entry.category,
+          content: JSON.stringify(entry.content).substring(0, 500),
+          relevance: 0.8,
+          lastAccessed: new Date().toISOString(),
+          tags: [entry.category],
+          source: 'bundled_kb',
+        }));
+      } catch {
+        return [];
+      }
+    }
     const cached = this.getFromCache('knowledge');
     if (cached) return cached as KnowledgeEntry[];
 
@@ -275,16 +295,19 @@ export class MemoryService {
       .filter((line): line is string => typeof line === 'string' && line.length > 0)
       .join('\n');
 
+    // P1-FIX 2026-04-30: interactions chat sauvegardées en long_term (permanent)
+    // Raison: level:'session' = 24h max + 100 entrées = perte garantie de mémoire.
+    // long_term = permanent chiffré sur disque, survit aux réinstallations.
     await invokeWithRetry<void>(
       'persistent_memory_write_entry',
       {
-        level: 'session',
+        level: 'long_term',
         contentType: 'message',
         content,
         topic: 'general',
-        importance: 3,
+        importance: 4,
         title: deriveChatInteractionTitle(interaction),
-        tags,
+        tags: [...tags, 'chat-permanent'],
         projectId:
           typeof interaction.metadata?.projectId === 'string'
             ? interaction.metadata.projectId

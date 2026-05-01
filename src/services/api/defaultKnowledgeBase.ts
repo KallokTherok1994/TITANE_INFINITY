@@ -1162,3 +1162,65 @@ export function resetCache(): void {
   _allEntriesLoadingPromise = null;
   _compactIndexCache = null;
 }
+
+/**
+ * Build a compact owner context block from Kevin's personal bundled files.
+ * These files are excluded from the Rust binary (RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS)
+ * but ARE available in the frontend bundle via BUNDLED_DEFAULT_KB_MODULES.
+ * Called synchronously — bundled data is available at parse time (eager: true).
+ * This ensures TITANE always knows its owner's identity, projects, and mission
+ * regardless of platform (Tauri production, dev mode, web, Android).
+ */
+export function getBundledOwnerContext(): string {
+  const KEVIN_IDS = new Set([
+    'kevin_owner_profile_v30',
+    'kevin_public_corpus_v30',
+    'kevin_workflow_v30',
+    'kevin_book_registry_v30',
+  ]);
+
+  const entries = Object.entries(BUNDLED_DEFAULT_KB_MODULES)
+    .filter(([path]) => KEVIN_IDS.has(extractBundledFallbackId(path)))
+    .map(([path, rawModule]) => buildKnowledgeEntryFromBundledJson(path, rawModule))
+    .filter((entry): entry is KnowledgeBaseEntry => entry !== null);
+
+  if (entries.length === 0) return '';
+
+  const lines: string[] = ['🧑 Contexte propriétaire TITANE∞ :'];
+
+  for (const entry of entries) {
+    const descTrunc =
+      entry.description.length > 120
+        ? entry.description.substring(0, 120) + '…'
+        : entry.description;
+    lines.push(`• ${entry.category}: ${descTrunc}`);
+
+    // For owner profile: extract compact identity fields for direct injection
+    if (entry.category === 'kevin_owner_profile_v30') {
+      const profile = entry.content.owner_profile as Record<string, unknown> | undefined;
+      if (profile) {
+        const name = typeof profile.full_name === 'string' ? profile.full_name : undefined;
+        const positioning = profile.public_positioning as
+          | Record<string, unknown>
+          | undefined;
+        const sig =
+          typeof positioning?.signature === 'string' ? positioning.signature : undefined;
+        const mission =
+          typeof positioning?.core_mission === 'string'
+            ? positioning.core_mission
+            : undefined;
+        const lang =
+          typeof (profile.working_preferences as Record<string, unknown>)
+            ?.language_default === 'string'
+            ? (profile.working_preferences as Record<string, unknown>).language_default
+            : undefined;
+        if (name) lines.push(`  → Propriétaire: ${name}`);
+        if (lang) lines.push(`  → Langue préférée: ${lang}`);
+        if (sig) lines.push(`  → Signature: ${sig}`);
+        if (mission) lines.push(`  → Mission: ${(mission as string).substring(0, 180)}`);
+      }
+    }
+  }
+
+  return lines.join('\n');
+}

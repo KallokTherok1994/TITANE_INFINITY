@@ -82,6 +82,7 @@ import {
 import {
   getCompactIndex as getDefaultKbIndex,
   getRelevantPromptContext as getDefaultKbPromptContext,
+  getBundledOwnerContext,
 } from '@/services/api/defaultKnowledgeBase';
 
 // Type-safe correction interface
@@ -436,6 +437,8 @@ class ChatEngineOmega {
   private providerPreference: ProviderPreference = 'auto';
   // Default knowledge base: compact index injected into system prompt
   private _defaultKbIndex: string = '';
+  // Owner context block: Kevin's personal files (bundled, platform-agnostic)
+  private _ownerContextBlock: string = '';
   private _defaultKbLoaded: boolean = false;
   // Promise lock: prevents concurrent IPC calls when two requests race at startup
   private _kbLoadPromise: Promise<void> | null = null;
@@ -507,6 +510,12 @@ class ChatEngineOmega {
         this._defaultKbIndex = await getDefaultKbIndex();
       } catch {
         this._defaultKbIndex = '';
+      }
+      // Phase 2: owner context is synchronous (bundled at build time — always available)
+      try {
+        this._ownerContextBlock = getBundledOwnerContext();
+      } catch {
+        this._ownerContextBlock = '';
       }
       this._defaultKbLoaded = true;
     })();
@@ -3193,7 +3202,12 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         ? `\n\n📚 Base de connaissances intégrée TITANE∞ (${kbCategoryCount} catégories) :\n${this._defaultKbIndex}`
         : '';
 
-      const contextualBasePrompt = `${basePrompt}${personaInjection}${preferencesInjection}${kbBlock}`;
+      // Owner context (Kevin's personal profile/corpus/workflow — bundled, platform-agnostic)
+      const ownerBlock = this._ownerContextBlock
+        ? `\n\n${this._ownerContextBlock}`
+        : '';
+
+      const contextualBasePrompt = `${basePrompt}${personaInjection}${preferencesInjection}${kbBlock}${ownerBlock}`;
       const stablePrefix = skillInjection
         ? `${skillInjection}\n\n${contextualBasePrompt}`
         : contextualBasePrompt;

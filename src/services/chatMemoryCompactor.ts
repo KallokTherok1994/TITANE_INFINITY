@@ -502,6 +502,12 @@ class ChatMemoryCompactor {
 
 export const chatMemoryCompactor = new ChatMemoryCompactor();
 export default chatMemoryCompactor;
-
+// Phase 5: Flush pending saves before tab/window closes to prevent data loss.
+// flushPendingSaves() writes to localStorage synchronously — safe in beforeunload.
+if (typeof window !== 'undefined' && !IS_VITEST) {
+  window.addEventListener('beforeunload', () => {
+    chatMemoryCompactor.flushPendingSaves();
+  });
+}
 // 🔒 v26.2.1: Export class for testing purposes
 export { ChatMemoryCompactor };
