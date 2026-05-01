@@ -30,8 +30,8 @@ describe('Chat mode registry boundaries', () => {
 
     expect(accessibleModeIds).toContain('standard');
     expect(accessibleModeIds).toContain('strategy');
-    expect(CHAT_MODES_CONFIG.standard.systemPrompt).toContain("maître d'analyse");
-    expect(CHAT_MODES_CONFIG.strategy.systemPrompt).toContain('rapports décisionnels');
+    expect(CHAT_MODES_CONFIG.standard.systemPrompt).toContain('Conversation équilibrée, naturelle');
+    expect(CHAT_MODES_CONFIG.strategy.systemPrompt).toContain('rédaction décisionnelle claire');
   });
 
   it('extended registry still exposes a legacy adapter instead of replacing the legacy runtime registry', () => {

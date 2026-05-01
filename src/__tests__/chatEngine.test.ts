@@ -136,7 +136,7 @@ describe('ChatEngine — importance boosting keywords', () => {
       expect(instructions).toContain('confirmation');
     });
 
-    test('developed instructions include master-analysis positioning', () => {
+    test('developed instructions keep advanced cognition internal and natural', () => {
       // @ts-expect-error: accessing private method for testing
       const instructions = chatEngine.buildDepthInstructions(
         'DEVELOPED',
@@ -144,11 +144,11 @@ describe('ChatEngine — importance boosting keywords', () => {
         0.8
       );
 
-      expect(instructions).toContain("maître d'analyse");
-      expect(instructions).toContain('rapports');
+      expect(instructions).toContain('langage humain');
+      expect(instructions).toContain('restent internes');
     });
 
-    test('deep instructions require cabinet-grade analysis output', () => {
+    test('deep instructions demand deep output without visible chain-of-thought', () => {
       // @ts-expect-error: accessing private method for testing
       const instructions = chatEngine.buildDepthInstructions(
         'DEEP',
@@ -156,8 +156,66 @@ describe('ChatEngine — importance boosting keywords', () => {
         0.9
       );
 
-      expect(instructions).toContain("cabinet d'analyse");
-      expect(instructions).toContain('rapport');
+      expect(instructions).toContain('restitution naturelle');
+      expect(instructions).toContain('raisonnement détaillée en interne');
+    });
+  });
+
+  describe('ChatEngine — natural response shaping', () => {
+    test('strips prompt-theater preamble when an actual answer follows', () => {
+      const raw = `Bonjour ! Je me nomme TITANE∞, le TWINS numérique de Kevin Thibault.
+
+Voici la première phase : COLLECTE MAXIMALE.
+
+Voici ton poème :
+
+Je marche vers le vivant
+avec le cœur encore ouvert.`;
+
+      // @ts-expect-error: accessing private method for testing
+      const processed = chatEngine.postProcess(
+        { content: raw, provider: 'test-provider' },
+        { mode: 'default' },
+        'Écris-moi un poème pour Facebook'
+      );
+
+      expect(processed.content).toContain('Voici ton poème');
+      expect(processed.content).not.toContain('Je me nomme TITANE');
+      expect(processed.content).not.toContain('COLLECTE MAXIMALE');
+    });
+
+    test('replaces pure procedural creative reply with concise answer-first clarification', () => {
+      const raw = `Bonjour ! Je me nomme TITANE∞.
+
+Voici la première phase : COLLECTE MAXIMALE.
+
+La prochaine étape sera le CROISEMENT CRITIQUE.
+
+Voulez-vous que je continue ?`;
+
+      // @ts-expect-error: accessing private method for testing
+      const processed = chatEngine.postProcess(
+        { content: raw, provider: 'test-provider' },
+        { mode: 'default' },
+        'Écris-moi un poème pour une publication Facebook'
+      );
+
+      expect(processed.content).toContain("Je peux te le faire directement");
+      expect(processed.content).not.toContain('COLLECTE MAXIMALE');
+      expect(processed.content).not.toContain('Voulez-vous que je continue');
+    });
+
+    test('preserves direct natural answers', () => {
+      const raw = "Voici une première version du poème.\n\nTu peux l'adoucir ou le rendre plus brut ensuite.";
+
+      // @ts-expect-error: accessing private method for testing
+      const processed = chatEngine.postProcess(
+        { content: raw, provider: 'test-provider' },
+        { mode: 'default' },
+        'Écris-moi un poème'
+      );
+
+      expect(processed.content).toBe(raw);
     });
   });
 

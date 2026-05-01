@@ -44,13 +44,13 @@ describe('Custom Mode Registry — registerCustomMode + getSystemPrompt', () => 
       expect(SYSTEM_PROMPTS.default.length).toBeGreaterThan(10);
     });
 
-    it('A5: SYSTEM_PROMPTS.default enforces advanced analysis positioning', () => {
-      expect(SYSTEM_PROMPTS.default).toContain("maître d'analyse");
-      expect(SYSTEM_PROMPTS.default).toContain('rapports');
+    it('A5: SYSTEM_PROMPTS.default enforces advanced but natural positioning', () => {
+      expect(SYSTEM_PROMPTS.default).toContain('langage humain');
+      expect(SYSTEM_PROMPTS.default).toContain('pipeline reste interne');
     });
 
     it('A6: specialized registry prompts keep advanced expert framing', () => {
-      expect(SYSTEM_PROMPTS.strategist).toContain("maître d'analyse stratégique");
+      expect(SYSTEM_PROMPTS.strategist).toContain('lucidité stratégique élevée');
       expect(SYSTEM_PROMPTS.auditor).toContain('rapports complets');
       expect(SYSTEM_PROMPTS.creative).toContain('livrables réutilisables');
     });

@@ -2,7 +2,7 @@
  * TITANE∞ — UserPreferencesEngine — Suite de tests complète v31.2.34
  *
  * Couverture:
- *   1. DEEP_INTERNET_ANALYSIS_INSTRUCTION — présence et conformité protocole 5 phases
+ *   1. DEEP_INTERNET_ANALYSIS_INSTRUCTION — présence, rigueur et garde-fous d'expression
  *   2. getPreferences() — valeurs par défaut et merge localStorage
  *   3. setCustomPreference() / deep_internet_analysis toggle
  *   4. generateContextForAI() — injection DEEP_INTERNET_ANALYSIS_INSTRUCTION
@@ -69,14 +69,14 @@ beforeEach(() => {
 });
 
 // ═══════════════════════════════════════════════════════════════════
-// 1. DEEP_INTERNET_ANALYSIS_INSTRUCTION — conformité protocole 5 phases
+// 1. DEEP_INTERNET_ANALYSIS_INSTRUCTION — rigueur + expression naturelle
 // ═══════════════════════════════════════════════════════════════════
 
 describe('DEEP_INTERNET_ANALYSIS_INSTRUCTION — contenu conforme', () => {
   it('est injecté dans generateContextForAI quand deep_internet_analysis = true', () => {
     userPreferencesEngine.setCustomPreference('deep_internet_analysis', true);
     const ctx = userPreferencesEngine.generateContextForAI();
-    expect(ctx).toContain('ANALYSE APPROFONDIE MAXIMALE');
+    expect(ctx).toContain('ANALYSE APPROFONDIE FIABLE ET NATURELLE');
   });
 
   it('n\'est PAS injecté dans generateContextForAI quand deep_internet_analysis = false', () => {
@@ -119,6 +119,18 @@ describe('DEEP_INTERNET_ANALYSIS_INSTRUCTION — contenu conforme', () => {
     userPreferencesEngine.setCustomPreference('deep_internet_analysis', true);
     const ctx = userPreferencesEngine.generateContextForAI();
     expect(ctx).toContain('##');
+  });
+
+  it('interdit d exposer spontanément le raisonnement interne', () => {
+    userPreferencesEngine.setCustomPreference('deep_internet_analysis', true);
+    const ctx = userPreferencesEngine.generateContextForAI();
+    expect(ctx).toContain("n'expose pas spontanément tes phases");
+  });
+
+  it('ne demande plus de penser à voix haute', () => {
+    userPreferencesEngine.setCustomPreference('deep_internet_analysis', true);
+    const ctx = userPreferencesEngine.generateContextForAI();
+    expect(ctx).not.toContain('pense à voix haute');
   });
 });
 

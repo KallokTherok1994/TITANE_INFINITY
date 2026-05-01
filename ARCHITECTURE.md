@@ -2,7 +2,9 @@
 
 > **Phase 1-3 — Identity Kernel propagation** : `buildTitaneIdentityPromptBlock()` injecté dans `src/core/prompts/profiles.ts` (CORE_SYSTEM_PROMPT fondation), les 5 modes legacy de `src/services/ai/chatModes.ts`, et les 20 modes actifs de `src/services/ai/chatModes.config.ts` (`htf_soumission` et `kalloks_arts` protégés).
 
-> **Phase 4 — Chain-of-Thought analytique** : bloc CoT injecté dans 6 modes analytiques (`reflection`, `debug_cognitive`, `strategy`, `audit`, `dev`, `omega`). Protocole structuré 5 étapes (Analyse → Hypothèses → Raisonnement → Validation → Synthèse).
+> **Phase 4 — Discipline cognitive naturelle** : les voies analytiques conservent une profondeur élevée, mais le raisonnement détaillé est désormais gardé en interne par défaut. Les surfaces `src/services/ai/chatEngine.ts`, `src/services/userPreferencesEngine.ts`, `src/services/ai/chatModes.ts`, `src/services/ai/chatModes.config.ts`, `src/config/chatModes.config.ts` et `src/ui/pages/ChatIA/InstructionModeManager.ts` privilégient une restitution plus humaine, vivante et directe au lieu d une narration explicite des phases ou du Chain-of-Thought.
+
+> **Phase 4.1 — Runtime anti prompt-theater** : `src/services/ai/chatEngine.ts::postProcess()` reçoit maintenant le message utilisateur validé et applique une garde comportementale légère après génération. Si une réponse contient un théâtre de prompt manifeste (`je me nomme TITANE`, `COLLECTE MAXIMALE`, `Voulez-vous que je continue ?`) mais pas encore de vraie livraison utile, la surface canonique supprime ce préambule, garde l artefact déjà présent quand il existe, ou rabat les demandes créatives sous-servies vers une clarification courte orientée livrable au lieu d un protocole affiché.
 
 > **Phase 5-6 — Alignement paramètres** : températures/maxTokens/memoryScope alignés par niveau cognitif. `'quantum'` supprimé de `omega.enginesEnabled` (liste nettoyée : cognitive/memory/analysis/creative/security).
 

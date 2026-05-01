@@ -169,6 +169,8 @@ describe('R3 — userPreferencesEngine: honest LLM instruction', () => {
     expect(text).not.toContain('ANALYSE INTERNET MAXIMALE');
     // Must have honest disclaimer (check case-insensitively)
     expect(text.toLowerCase()).toContain('ne prétends pas avoir accès à internet');
+    expect(text.toLowerCase()).toContain('utilise-les en coulisses');
+    expect(text.toLowerCase()).not.toContain('pense à voix haute');
   });
 });
 

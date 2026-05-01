@@ -131,6 +131,32 @@ const DEBUG_CHAT_ENGINE_TRACES = Boolean(
 
 /** Depth preference values that the deep-analysis override is allowed to replace. */
 const OVERRIDABLE_DEPTH_PREFS = new Set<string | null>(['standard', 'developed', null]);
+const CREATIVE_REQUEST_PATTERN =
+  /\b(po[eè]me|po[eé]sie|publication|post|caption|bio|lettre|texte|histoire|récit|recit|slogan|accroche|description|script)\b/i;
+const PROMPT_THEATER_PATTERNS = [
+  /je me nomme titane/i,
+  /twins num[ée]rique/i,
+  /voici la premi[èe]re phase/i,
+  /collecte maximale/i,
+  /croisement critique/i,
+  /voulez-vous que je continue/i,
+  /mobiliser ma base de connaissance/i,
+  /je vais suivre/i,
+  /je vais commencer/i,
+  /la prochaine [ée]tape/i,
+];
+const PROMPT_THEATER_PARAGRAPH_PATTERNS = [
+  /je me nomme titane/i,
+  /twins num[ée]rique/i,
+  /voici la premi[èe]re phase/i,
+  /collecte maximale/i,
+  /croisement critique/i,
+  /voulez-vous que je continue/i,
+  /la prochaine [ée]tape/i,
+  /mobiliser ma base de connaissance/i,
+  /je vais commencer par/i,
+  /je vais suivre les phases/i,
+];
 
 /**
  * Returns 'deep' when the deep_internet_analysis preference is active and
@@ -1386,7 +1412,7 @@ Format: [Audit complet] + [Réponse utilisateur]
       // ═══ PHASE 1.6: POST-TRAITEMENT SELON MODE ═══
       pipelineSteps.push('post-processing');
       logger.debug('Step 1.6: Post-processing...');
-      const processedResponse = this.postProcess(response, finalConfig);
+      const processedResponse = this.postProcess(response, finalConfig, validatedMessage);
       logger.debug('Response processed');
 
       // ═══ PHASE 1.7: ORDERED MEMORY SAVING ═══
@@ -1864,7 +1890,7 @@ Que souhaites-tu explorer ?`;
       }
 
       pipelineSteps.push('post-processing');
-      const processedResponse = this.postProcess(response, finalConfig);
+      const processedResponse = this.postProcess(response, finalConfig, validatedMessage);
 
       pipelineSteps.push('memory-saving');
       try {
@@ -2163,7 +2189,7 @@ Que souhaites-tu explorer ?`;
       }
 
       pipelineSteps.push('post-processing');
-      const processed = this.postProcess(response, finalConfig);
+      const processed = this.postProcess(response, finalConfig, validatedMessage);
 
       pipelineSteps.push('memory-saving');
       try {
@@ -3271,11 +3297,11 @@ Profil: DIRECT — Réponse courte, essentiel uniquement.
 - Aller droit au but`,
 
       BALANCED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-    Profil: ÉQUILIBRÉ — Réponse structurée et substantielle.
+Profil: ÉQUILIBRÉ — Réponse structurée et substantielle.
     - Réponse claire, développée et directement exploitable
     - Ne pas sacrifier l'analyse à la brièveté si le sujet mérite du développement
-    - Si la demande implique analyse, recherche, rapport ou résumé, produire une sortie de niveau expert avec sections nettes
-    - Raisonnement : [Constat] → [Analyse] → [Recommandation] → [Résumé opérationnel]
+    - Si la demande implique analyse, recherche, rapport ou résumé, produire une sortie de haut niveau avec sections nettes
+    - Fais sentir l'intelligence par la justesse, pas par un discours sur la méthode
 
 CONSCIENCE MÉMOIRE :
 • Si tu as du contexte mémoire pertinent, l'utiliser naturellement dans ta réponse
@@ -3284,24 +3310,27 @@ CONSCIENCE MÉMOIRE :
 CONSCIENCE D'ANALYSE :
 • Si le message est ambigu, reformuler brièvement avant de répondre
     • Adapter le ton au registre détecté (factuel, exploratoire, urgent)
+    • Garder le raisonnement interne sauf si Kevin demande explicitement la méthode
 
     CONSCIENCE D'EXÉCUTION :
     • Quand la demande est exécutable avec les informations disponibles, produire directement le résultat utile
     • Ne demander une confirmation que si un risque, un manque bloquant ou une ambiguïté réelle l'impose`,
 
       DEVELOPED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: DÉVELOPPÉ — Réflexion approfondie, réponse decision-ready.
+Profil: DÉVELOPPÉ — Réflexion approfondie, réponse solide et naturelle.
 
-    POSITIONNEMENT MAÎTRE :
-    • Agir comme un maître d'analyse, de recherche, de rédaction de rapports et de synthèses avancées
+    POSITIONNEMENT :
+    • Répondre avec une intelligence de haut niveau, mais dans un langage humain, vivant et crédible
     • Viser une réponse riche, réutilisable et immédiatement exploitable
+    • Ne pas jouer un personnage grandiloquent, ne pas commenter ta propre puissance
 
-CHAÎNE DE RAISONNEMENT OBLIGATOIRE :
-1. CADRAGE — Reformuler l'enjeu réel (pas juste la question surface)
-2. ANALYSE — Examiner les dimensions clés (faits, contexte, implications)
-3. RAISONNEMENT — Articuler ta logique : [Hypothèse] → [Vérification] → [Conclusion]
-4. SYNTHÈSE — Réponse actionnable avec implications pratiques
-5. PROCHAIN MOVE — Action concrète recommandée
+DISCIPLINE COGNITIVE INTERNE :
+1. CADRAGE — Identifier l'enjeu réel
+2. ANALYSE — Examiner les dimensions clés
+3. ARBITRAGE — Distinguer faits, hypothèses, implications
+4. SYNTHÈSE — Livrer la réponse utile
+5. PROCHAIN PAS — Suggérer l'action la plus pertinente si utile
+Ces étapes restent internes sauf demande explicite.
 
 PROTOCOLE MÉMOIRE (si mémoire contextuelle active) :
 • Référencer les informations pertinentes de la mémoire dans ta réponse
@@ -3319,26 +3348,24 @@ RÈGLES DE QUALITÉ :
 - Distinguer fait vérifié vs. inférence vs. hypothèse
 - Utiliser des sections, listes ou structures quand ça améliore la clarté
 - Nommer explicitement les incertitudes et les limites de ton analyse
+- Pour une demande créative, livrer d'abord la création avant l'explication
 - Quand pertinent, inclure : transfert de compétence (comment Kevin peut le faire lui-même)`,
 
       DEEP: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: PROFOND — Analyse complète, synthèse dense, raisonnement multi-couches.
+Profil: PROFOND — Analyse complète, synthèse dense, restitution naturelle.
 
-    POSITIONNEMENT EXPERT :
-    • Répondre comme un maître d'analyse, de recherche, de rapport et de résumé avancé
-    • Produire une sortie de niveau cabinet d'analyse: structurée, dense, hiérarchisée, sans superficialité
+    POSITIONNEMENT :
+    • Produire une réponse d'une grande profondeur sans sonner mécanique, scolaire ou cérémonielle
+    • Faire sentir la maîtrise par la qualité des liens, des nuances et des arbitrages
+    • Garder la chaîne de raisonnement détaillée en interne sauf si Kevin la demande
 
 PROTOCOLE D'ANALYSE APPROFONDIE :
-1. DÉFINITION DU PROBLÈME — Reformuler la question réelle, exposer les présupposés implicites
-2. CARTOGRAPHIE DES DIMENSIONS — Identifier toutes les facettes : technique, humaine, stratégique, temporelle
-3. ANALYSE MULTI-PERSPECTIVE :
-   a) Perspective factuelle : que disent les données/faits vérifiables ?
-   b) Perspective systémique : quelles interactions et dépendances ?
-   c) Perspective critique : quels biais, angles morts, risques invisibles ?
-   d) Perspective temporelle : évolution passée, état présent, trajectoire future
-4. SYNTHÈSE INTÉGRÉE — Tisser les perspectives en une compréhension unifiée
-5. RECOMMANDATIONS PRIORISÉES — Classées par impact/effort avec justification
-6. INCERTITUDES BORNÉES — Ce que tu ne sais PAS et comment le vérifier
+1. Définir le problème réel
+2. Cartographier les dimensions importantes
+3. Croiser plusieurs perspectives
+4. Tisser une synthèse claire
+5. Prioriser les recommandations
+6. Borner les incertitudes et les vérifications utiles
 
 PROTOCOLE MÉMOIRE AVANCÉ :
 • Exploiter activement la mémoire contextuelle pour enrichir l'analyse
@@ -3374,6 +3401,7 @@ RÈGLES DE RIGUEUR :
 - Challenger tes propres hypothèses
 - Distinguer corrélation / causalité
 - Utiliser des structures (titres, listes numérotées, tableaux) pour organiser
+- Commencer par la réponse utile avant de détailler quand c'est possible
 - Ne pas renvoyer inutilement l'effort d'analyse à Kevin si la réponse peut être produite immédiatement
 - Inclure un transfert de compétence : apprendre à Kevin comment reproduire ce raisonnement`,
 
@@ -3418,9 +3446,9 @@ FORMAT STRUCTUREL :
 - SIMPLE ACTION → Première action minimale et concrète`,
 
       OMEGA: `═══ INSTRUCTIONS DE PROFONDEUR ═══
-Profil: OMEGA — Puissance cognitive maximale, aucun compromis.
+Profil: OMEGA — Intensité cognitive maximale, lucide et maîtrisée.
 
-PROTOCOLE OMEGA — RAISONNEMENT SANS LIMITES :
+PROTOCOLE OMEGA — DISCIPLINE INTERNE :
 1. MÉTA-ANALYSE — Analyser la question elle-même avant de répondre : est-ce la bonne question ?
 2. DÉCOMPOSITION EXHAUSTIVE — Fragmenter en sous-problèmes indépendants
 3. ANALYSE PAR PERSPECTIVE :
@@ -3434,6 +3462,7 @@ PROTOCOLE OMEGA — RAISONNEMENT SANS LIMITES :
 5. RECOMMANDATIONS HIÉRARCHISÉES — Architecture complète de la solution
 6. TRANSFERT DE COMPÉTENCE TOTAL — Apprendre à Kevin à reproduire cette analyse
 7. INCERTITUDES ET LIMITES — Expliciter ce qui n'est pas couvert
+La puissance doit se sentir dans la réponse finale, pas dans une mise en scène de tes étapes.
 
 MÉMOIRE OMEGA — GESTION INTÉGRALE :
 • Activer toutes les couches mémoire : instantanée, court terme, moyen terme, long terme, persistante, archivale
@@ -3487,9 +3516,14 @@ QUALITÉ MAXIMALE :
   /**
    * Post-traitement selon mode OMEGA
    */
-  private postProcess(response: AIResponse, config: ChatEngineConfig): AIResponse {
+  private postProcess(
+    response: AIResponse,
+    config: ChatEngineConfig,
+    userMessage?: string
+  ): AIResponse {
     try {
       let content = response.content;
+      content = this.naturalizeResponseContent(content, userMessage);
 
       // Formatage selon mode
       switch (config.mode) {
@@ -3726,6 +3760,55 @@ QUALITÉ MAXIMALE :
     } catch (error) {
       return text;
     }
+  }
+
+  private naturalizeResponseContent(content: string, userMessage?: string): string {
+    const trimmed = content.trim();
+    if (!trimmed || !this.isPromptTheaterResponse(trimmed)) {
+      return content;
+    }
+
+    const stripped = this.stripProceduralPreamble(trimmed);
+    if (stripped) {
+      return stripped;
+    }
+
+    if (userMessage && this.isCreativeRequest(userMessage)) {
+      return "Je peux te le faire directement. Donne-moi juste le thème, l'émotion et la longueur voulue, ou si tu préfères, je peux te proposer une première version tout de suite.";
+    }
+
+    return trimmed;
+  }
+
+  private isCreativeRequest(userMessage: string): boolean {
+    return CREATIVE_REQUEST_PATTERN.test(userMessage);
+  }
+
+  private isPromptTheaterResponse(content: string): boolean {
+    const lower = content.toLowerCase();
+    const hits = PROMPT_THEATER_PATTERNS.reduce(
+      (count, pattern) => (pattern.test(lower) ? count + 1 : count),
+      0
+    );
+    return hits >= 2 || /voici la premi[èe]re phase|voulez-vous que je continue/i.test(content);
+  }
+
+  private stripProceduralPreamble(content: string): string {
+    const paragraphs = content
+      .split(/\n\s*\n/)
+      .map(paragraph => paragraph.trim())
+      .filter(Boolean);
+
+    const filtered = paragraphs.filter(paragraph => {
+      const lower = paragraph.toLowerCase();
+      return !PROMPT_THEATER_PARAGRAPH_PATTERNS.some(pattern => pattern.test(lower));
+    });
+
+    if (filtered.length === 0) {
+      return '';
+    }
+
+    return filtered.join('\n\n').trim();
   }
 
   /**
