@@ -1330,6 +1330,26 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'cycle_suggest_optimal_time',
   'cycle_get_alignment',
   'cycle_get_diagnostics',
+
+  // ═══════════════════════════════════════════════════════════════
+  // MULTIMODAL ENGINE COMMANDS — V32 Phase 7 (SP#21 Vision+Audio)
+  // ═══════════════════════════════════════════════════════════════
+  'analyze_image',
+  'analyze_image_path',
+  'embed_image',
+  'embed_text',
+  'switch_vision_model',
+  'analyze_audio',
+  'store_image',
+  'search_similar_images',
+  'search_images_by_text',
+  'get_all_images',
+  'search_images_by_tags',
+  'remove_image',
+  'clear_image_memory',
+  'fuse_multimodal',
+  'get_multimodal_stats',
+  'update_multimodal_config',
 ]);
 
 /**

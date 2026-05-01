@@ -1218,6 +1218,13 @@ fn main() {
         )
     )));
 
+    // V32 Phase 7: Multimodal Engine State
+    let builder = builder.manage(Arc::new(tokio::sync::RwLock::new(
+        titane_infinity::multimodal::commands::MultimodalState::new(
+            titane_infinity::multimodal::config::MultimodalConfig::default()
+        )
+    )));
+
     // [FIX-016] Runtime real state — memory KV, flags, logs, XP, selfheal, events
     let builder = builder.manage(titane_infinity::runtime_real::MemoryKvState::default());
     let builder = builder.manage(titane_infinity::runtime_real::SystemFlagsState::default());
@@ -2969,6 +2976,26 @@ fn main() {
             titane_infinity::cycle_engine::commands::cycle_suggest_optimal_time,
             titane_infinity::cycle_engine::commands::cycle_get_alignment,
             titane_infinity::cycle_engine::commands::cycle_get_diagnostics,
+
+            // ═══════════════════════════════════════════════════════════════
+            // MULTIMODAL ENGINE COMMANDS — V32 Phase 7 (SP#21 Vision+Audio)
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::multimodal::commands::analyze_image,
+            titane_infinity::multimodal::commands::analyze_image_path,
+            titane_infinity::multimodal::commands::embed_image,
+            titane_infinity::multimodal::commands::embed_text,
+            titane_infinity::multimodal::commands::switch_vision_model,
+            titane_infinity::multimodal::commands::analyze_audio,
+            titane_infinity::multimodal::commands::store_image,
+            titane_infinity::multimodal::commands::search_similar_images,
+            titane_infinity::multimodal::commands::search_images_by_text,
+            titane_infinity::multimodal::commands::get_all_images,
+            titane_infinity::multimodal::commands::search_images_by_tags,
+            titane_infinity::multimodal::commands::remove_image,
+            titane_infinity::multimodal::commands::clear_image_memory,
+            titane_infinity::multimodal::commands::fuse_multimodal,
+            titane_infinity::multimodal::commands::get_multimodal_stats,
+            titane_infinity::multimodal::commands::update_multimodal_config,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

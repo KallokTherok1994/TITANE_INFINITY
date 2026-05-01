@@ -319,7 +319,7 @@ pub mod memory_os; // ⚠️ Phase 2.4: → unified_memory_v2 (neural_memory/ is
 // ═══════════════════════════════════════════════════════════════
 
 // TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
-// pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux)
+pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux) — V32 Phase 7 activated
 pub mod agents; // ✅ Agent System vΩ — Super Prompt #19 (Multi-Agents Cognitifs)
 
 // ═══════════════════════════════════════════════════════════════
@@ -351,7 +351,7 @@ pub mod conversation_os; // ✅ Conversation OS #∞ (Intent, Narrative, Persona
 // ═══════════════════════════════════════════════════════════════
 
 // TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
-// pub mod agi_core; // ✅ AGI Core v30.0.0 (Introspection, Meta-Learning, Self-Model, Strategy, Evolution, Reasoning)
+pub mod agi_core; // ✅ AGI Core v30.0.0 (Introspection, Meta-Learning, Self-Model, Strategy, Evolution, Reasoning) — V32 Phase 6 activated
 
 // ═══════════════════════════════════════════════════════════════
 // CONSTITUTION (SUPER PROMPT #13)

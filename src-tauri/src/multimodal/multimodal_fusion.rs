@@ -111,12 +111,12 @@ impl MultimodalFusionEngine {
 
         // Calculate confidence from each modality
         let text_conf = if context.text.is_some() { 1.0 } else { 0.0 };
-        let vision_conf = if let Some(ref v) = context.vision_analysis {
+        let vision_conf = if let Some(ref v) = context.vision {
             (v.brightness + v.contrast) / 2.0 // Simple quality metric
         } else {
             0.0
         };
-        let audio_conf = if let Some(ref a) = context.audio3d_analysis {
+        let audio_conf = if let Some(ref a) = context.audio3d {
             a.intensity
         } else {
             0.0
@@ -153,7 +153,7 @@ impl MultimodalFusionEngine {
         let mut conflicts = Vec::new();
 
         // Example: Check if text sentiment conflicts with image content
-        if context.text.is_some() && context.vision_analysis.is_some() {
+        if context.text.is_some() && context.vision.is_some() {
             // Placeholder logic - in real implementation, use sentiment analysis
             log::debug!("🔍 Checking text-vision consistency...");
         }

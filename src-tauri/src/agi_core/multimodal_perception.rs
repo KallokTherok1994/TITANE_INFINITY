@@ -243,10 +243,10 @@ impl MultimodalPerceptionEngine {
                 audio.frequency_bands.len()
             ));
 
-            if let Some(ref spatial) = audio.spatial_position {
+            if let Some(ref spatial) = audio.direction {
                 insights.push(format!(
                     "Spatial audio: azimuth={:.1}°, elevation={:.1}°, distance={:.2}m",
-                    spatial.azimuth, spatial.elevation, spatial.distance
+                    spatial.azimuth, spatial.elevation, spatial.distance.unwrap_or(0.0)
                 ));
             }
         }
@@ -316,7 +316,7 @@ impl MultimodalPerceptionEngine {
             enhanced.push_str(&format!(
                 "\n[AUDIO CONTEXT] Intensity={:.2}, spatial position available: {}",
                 audio.intensity,
-                audio.spatial_position.is_some()
+                audio.direction.is_some()
             ));
         }
 

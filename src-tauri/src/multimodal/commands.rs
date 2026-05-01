@@ -81,7 +81,7 @@ pub async fn analyze_image_path(
     let state = state.read().await;
     state
         .vision_engine
-        .analyze_image_path(&path)
+        .analyze_image(&path)
         .await
         .map_err(|e| format!("Vision analysis error: {}", e))
 }
