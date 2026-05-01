@@ -1195,7 +1195,7 @@ export function getBundledOwnerContext(): string {
         : entry.description;
     lines.push(`• ${entry.category}: ${descTrunc}`);
 
-    // For owner profile: extract compact identity fields for direct injection
+    // For owner profile: extract enriched identity fields for direct injection
     if (entry.category === 'kevin_owner_profile_v30') {
       const profile = entry.content.owner_profile as Record<string, unknown> | undefined;
       if (profile) {
@@ -1218,6 +1218,51 @@ export function getBundledOwnerContext(): string {
         if (lang) lines.push(`  → Langue préférée: ${lang}`);
         if (sig) lines.push(`  → Signature: ${sig}`);
         if (mission) lines.push(`  → Mission: ${(mission as string).substring(0, 180)}`);
+        // Roles
+        const roles = Array.isArray(profile.roles) ? profile.roles : [];
+        if (roles.length > 0) {
+          lines.push(`  → Rôles: ${roles.slice(0, 3).join(', ')}`);
+        }
+        // Active projects (top 2)
+        const projects = Array.isArray(profile.project_ecosystem)
+          ? (profile.project_ecosystem as Array<Record<string, unknown>>)
+          : [];
+        const activeProjects = projects
+          .filter(p => p.status !== 'paused')
+          .slice(0, 2);
+        if (activeProjects.length > 0) {
+          lines.push(`  → Projets actifs: ${activeProjects.map(p => `${p.name} (${String(p.focus ?? '').substring(0, 60)})`).join(' | ')}`);
+        }
+        // Alignment targets
+        const alignments = Array.isArray(profile.alignment_targets)
+          ? (profile.alignment_targets as string[])
+          : [];
+        if (alignments.length > 0) {
+          lines.push(`  → Alignements: ${alignments.slice(0, 3).join(' · ')}`);
+        }
+      }
+    }
+
+    // For workflow: extract twin expectations + preferred outputs + learning archetype
+    if (entry.category === 'kevin_workflow_v30') {
+      const workflow = entry.content.workflow as Record<string, unknown> | undefined;
+      if (workflow) {
+        const twinExp = Array.isArray(workflow.twin_expectations)
+          ? (workflow.twin_expectations as string[])
+          : [];
+        if (twinExp.length > 0) {
+          lines.push(`  → Attentes TWINS: ${twinExp.slice(0, 2).join(' · ')}`);
+        }
+        const prefOutputs = Array.isArray(workflow.preferred_outputs)
+          ? (workflow.preferred_outputs as string[])
+          : [];
+        if (prefOutputs.length > 0) {
+          lines.push(`  → Sorties préférées: ${prefOutputs.slice(0, 3).join(', ')}`);
+        }
+        const ls = workflow.learning_style as Record<string, unknown> | undefined;
+        if (ls && typeof ls.archetype === 'string') {
+          lines.push(`  → Style d'apprentissage: ${ls.archetype}`);
+        }
       }
     }
   }

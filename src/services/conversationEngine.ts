@@ -1180,7 +1180,7 @@ export async function processMessage(
       includeTimeline: false,
       maxProjects: 5,
       maxDecisions: 6,
-      maxKnowledge: 6,
+      maxKnowledge: 12,
       timeWindow: '7d',
     });
   } catch (error) {
@@ -1292,7 +1292,7 @@ export async function processMessage(
   let defaultKnowledgeContext = '';
   let defaultKnowledgeStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
   try {
-    const relevantDefaultKnowledge = await getDefaultKbPromptContext(userMessage, 4);
+    const relevantDefaultKnowledge = await getDefaultKbPromptContext(userMessage, 5);
     if (relevantDefaultKnowledge.trim().length > 0) {
       defaultKnowledgeContext = formatDefaultKnowledgeBlock(relevantDefaultKnowledge);
       defaultKnowledgeStatus = 'loaded';
