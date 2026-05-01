@@ -1211,6 +1211,13 @@ fn main() {
     let builder = builder.manage(titane_infinity::overdrive::memory_engine::init());
     let builder = builder.manage(titane_infinity::fusion::FusionEngineState::default());
 
+    // V32 Phase 5: CycleEngine State (SP#16 Rythmes Cognitifs)
+    let builder = builder.manage(Arc::new(tokio::sync::RwLock::new(
+        titane_infinity::cycle_engine::commands::CycleEngineState::new(
+            titane_infinity::cycle_engine::CycleEngineConfig::default()
+        )
+    )));
+
     // [FIX-016] Runtime real state — memory KV, flags, logs, XP, selfheal, events
     let builder = builder.manage(titane_infinity::runtime_real::MemoryKvState::default());
     let builder = builder.manage(titane_infinity::runtime_real::SystemFlagsState::default());
@@ -2951,6 +2958,17 @@ fn main() {
             commands::capability_commands::capability_registry_get_all,
             commands::capability_commands::capability_registry_get,
             commands::capability_commands::capability_registry_by_status,
+
+            // ═══════════════════════════════════════════════════════════════
+            // CYCLE ENGINE COMMANDS — V32 Phase 5 (SP#16 Rythmes Cognitifs)
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::cycle_engine::commands::cycle_get_state,
+            titane_infinity::cycle_engine::commands::cycle_get_rhythm,
+            titane_infinity::cycle_engine::commands::cycle_get_load_params,
+            titane_infinity::cycle_engine::commands::cycle_predict_events,
+            titane_infinity::cycle_engine::commands::cycle_suggest_optimal_time,
+            titane_infinity::cycle_engine::commands::cycle_get_alignment,
+            titane_infinity::cycle_engine::commands::cycle_get_diagnostics,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

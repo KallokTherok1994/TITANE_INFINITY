@@ -38,6 +38,7 @@ pub mod omega_integration;
 // 5. State access: Fix AppState type conflicts, use tauri::State<AppState> correctly
 // 6. Testing: Re-enable after fixes, ensure commands compile and integrate with Tauri runtime
 // pub mod commands; // FUTUR: Fix type issues
+pub mod commands; // V32 Phase 5: Activé
 
 // Re-exports — Components
 pub use alignment::*;
@@ -58,4 +59,4 @@ pub use kernel_integration::{KernelCycleBridge, ResourceLimits, SchedulerAdjustm
 pub use memory_integration::{MemoryAdjustments, MemoryCycleBridge};
 pub use omega_integration::{OmegaAdjustments, OmegaCycleBridge, RouterAdjustments};
 
-// pub use commands::*;
+pub use commands::*;

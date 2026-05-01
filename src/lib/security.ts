@@ -1319,6 +1319,17 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // WEB RESEARCH ENGINE (P1.0 EXPERIMENTAL)
   // ═══════════════════════════════════════════════════════════════
   'web_research',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CYCLE ENGINE COMMANDS — V32 Phase 5 (SP#16 Rythmes Cognitifs)
+  // ═══════════════════════════════════════════════════════════════
+  'cycle_get_state',
+  'cycle_get_rhythm',
+  'cycle_get_load_params',
+  'cycle_predict_events',
+  'cycle_suggest_optimal_time',
+  'cycle_get_alignment',
+  'cycle_get_diagnostics',
 ]);
 
 /**
