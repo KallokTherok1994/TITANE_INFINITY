@@ -685,3 +685,14 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Après: max-width 97% desktop → bulles couvrent ~97% de la colonne chat
 - Mobile (≤768px / ≤479px): inchangé
 - AutoHeal: AH-2026-04-28-CHAT-BUBBLE-WIDTH-0012
+
+## [2026-05-30] MetaEnergy Panel — SingularityMonitor (v32.0.0)
+
+- Surface: `meta-energy-panel`, `meta-energy-title`, `meta-energy-level`, `meta-energy-fatigue`, `meta-energy-homeostasis`, `meta-energy-history`
+- Composant: `src/pages/SingularityMonitor.tsx` (section MetaEnergy injectée)
+- Hook: `src/hooks/useMetaEnergy.ts` — secureInvoke meta_energy_get_state + meta_energy_get_diagnostics (auto-refresh 15s)
+- Backend: `src-tauri/src/meta_energy/` (9 fichiers: config, energy_model, fatigue_engine, recovery_engine, load_balancer, homeostasis, predictor, commands, mod)
+- IPC commands: meta_energy_get_state, meta_energy_get_fatigue, meta_energy_get_recovery_plan, meta_energy_get_load_balance, meta_energy_get_homeostasis, meta_energy_get_forecast, meta_energy_apply_delta, meta_energy_get_diagnostics
+- Tests: 17 Vitest PASS (MetaEnergy.test.ts), E2E (singularity-meta-energy.spec.ts)
+- AutoHeal: AH-2026-05-V32-PHASE9-META-ENERGY-0008, AH-2026-05-V32-PHASE10-SINGULARITY-META-ENERGY-0009
+- Version: 32.0.0

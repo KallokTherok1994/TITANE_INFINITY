@@ -1622,3 +1622,30 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > 2026-04-30 — Memory residual fixes truth (v31.3.2): `src/services/api/memory.ts` — `saveChatInteraction()` et `saveStructuredEntry()` protégées par `if(!isTauriRuntimeAvailable()) return;` : zéro appel IPC en web/dev, zéro exception silencieuse. `loadContext()` : suppression du bloc early-return qui empêchait `getKnowledge()` Phase 3 d'être atteint — chaque sous-méthode gère maintenant son propre guard et le bundled fallback est activé end-to-end. `src/services/chatMemoryCompactor.ts` Phase 5B : listener dynamique `tauri://close-requested` conditionnel à `window.__TAURI__` garantit le flush sur Linux WebKitGTK (production Tauri). Tests Rule 16 : 5 nouveaux tests Vitest, 22 PASS total. AutoHeal : `AH-2026-04-30-MEMORY-RESIDUAL-FIX-0002`, detect_recurrence PASS (1486 entries), version 31.3.1 → 31.3.2.
 
 > 2026-04-30 — Memory permanent fix + owner KB injection truth (v31.3.1): `src/services/api/defaultKnowledgeBase.ts` exporte désormais `getBundledOwnerContext()` qui lit les fichiers Kevin (`kevin_owner_profile_v30`, `kevin_public_corpus_v30`, `kevin_workflow_v30`, `kevin_book_registry_v30`) directement depuis `BUNDLED_DEFAULT_KB_MODULES` en contournant le filtre `RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS` — ces fichiers sont présents dans le bundle frontend mais exclus de la snapshot Rust. `src/services/ai/chatEngine.ts` charge `_ownerContextBlock` au démarrage via `_ensureDefaultKbLoaded()` et injecte ce bloc après `kbBlock` dans `buildSystemPrompt()` — la connaissance personnelle de Kevin est présente dans chaque system prompt sur toutes les plateformes sans nouveau chemin réseau. `src/services/api/memory.ts` `getKnowledge()` utilise `getAllEntries()` bundlé comme fallback quand Tauri est indisponible (web/dev/Android) au lieu de retourner `[]`. `src/services/chatMemoryCompactor.ts` — `window.addEventListener('beforeunload', flushPendingSaves)` empêche la perte des sauvegardes async en attente lors d'une fermeture forcée. `saveChatInteraction` utilise désormais `level:long_term` + `importance:4` + tag `chat-permanent` (Phase 1 commit précédent). Tests Rule 16: 7 nouveaux tests Vitest, 48 PASS total. AutoHeal: `AH-2026-04-30-MEMORY-PERMANENT-FIX-0001`, detect_recurrence PASS, verify_instructions PASS (33/33).
+
+## [2026-05-30] V32.0.0 — MetaEnergy Module + SingularityMonitor MetaEnergy Panel
+
+### Backend (Ring 0 — Tauri/Rust)
+- **src-tauri/src/meta_energy/** (9 fichiers créés from scratch):
+  - `config.rs` — MetaEnergyConfig (target_energy=0.65, tolerance=0.1, regeneration_rate=0.02, forecast_horizon_hours=24)
+  - `energy_model.rs` — EnergyState, EnergySnapshot (normalized(), apply_delta(), chrono_now())
+  - `fatigue_engine.rs` — FatigueLevel (Fresh>0.8, Normal>0.5, Tired>0.2, Exhausted), FatigueEngine.assess()
+  - `recovery_engine.rs` — RecoveryPlan, RecoveryEngine.plan(fatigue, energy) -> RecoveryPlan
+  - `load_balancer.rs` — LoadBalance, LoadBalancer.balance(load, fatigue) -> LoadBalance
+  - `homeostasis.rs` — HomeoBalance, HomeostasisController P-controller (gain=0.3)
+  - `predictor.rs` — EnergyForecast, EnergyPredictor.forecast(current, history) circadian model
+  - `commands.rs` — MetaEnergyState + 8 Tauri IPC commands
+  - `mod.rs` — pub use exports
+- **src-tauri/src/lib.rs** — `pub mod meta_energy;` activé
+- **src-tauri/src/main.rs** — `.manage(Arc::new(RwLock::new(MetaEnergyState::new(...)))) + 8 commands in generate_handler!`
+
+### Frontend (Ring 3-4 — React/TypeScript)
+- **src/hooks/useMetaEnergy.ts** — Hook React, secureInvoke, auto-refresh 15s
+- **src/pages/SingularityMonitor.tsx** — Panel MetaEnergy injecté (data-testid=meta-energy-panel)
+- **src/lib/security.ts** — 8 commandes IPC ajoutées à ALLOWED_COMMANDS
+
+### Tests
+- `src/__tests__/components/meta_energy/MetaEnergy.test.ts` — 17 Vitest PASS
+- `e2e/critical/singularity-meta-energy.spec.ts` — 5 E2E Playwright
+
+### Version: 31.3.4 → 32.0.0

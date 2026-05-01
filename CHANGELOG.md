@@ -1,3 +1,40 @@
+# [32.0.0] - 2026-05-30 (V32 — AI Intelligence Unification Supreme)
+
+## Release v32.0.0 — AI Intelligence Unification Supreme
+
+### Résumé
+
+Release majeure V32 — Unification de l'intelligence artificielle. Activation complète de 5 modules Rust dormants (cycle_engine, agi_core, multimodal), création from scratch du module meta_energy, wiring de métriques réelles dans SingularityMonitor, IPC contracts Zod top-20, et refactoring routing AIRouter→IntelligentRouter.
+
+### Nouvelles fonctionnalités
+
+- **MetaEnergy Module** (SP#20): 9 fichiers Rust (EnergyState, FatigueLevel, HomeostasisController P-controller, EnergyPredictor circadien 24h), 8 IPC commands, state Tauri
+- **CycleEngine IPC** (Phase 5 SP#16): 7 commandes rythmes cognitifs + CycleStateWidget React
+- **Multimodal Engine** (Phase 7 SP#21): 16 commandes Vision+Audio IPC activées
+- **AGI Core** (Phase 6): module agi_core activé avec multimodal_perception
+- **SingularityMonitor MetaEnergy Panel**: hook useMetaEnergy + panel data-testid métriques réelles
+- **Zod IPC Top-20** (Phase 3): 20 nouveaux schémas Zod, contrat IPC 27 entrées
+
+### Corrections techniques
+
+- Anti-panic Rust scoped (#[allow] dans cfg(test) uniquement)
+- AIRouter legacy → IntelligentRouter (Phase 1)
+- Panic handler Overdrive réactivé (Phase 4)
+- borrow checker E0502 fix dans meta_energy apply_delta
+
+### Tests
+
+- 17/17 Vitest PASS (MetaEnergy.test.ts)
+- 25/25 Vitest PASS (ipc-zod-top20.test.ts)
+- 7/7 Vitest PASS (CycleStateWidget.test.tsx)
+- E2E singularity-meta-energy.spec.ts
+- AutoHeal entries: 1500 (detect_recurrence PASS)
+
+### Notes
+
+- Phase 8 BLOCKED: 5 modules deprecated avec refs actives (memory, memory_compactor, memory_persistence, memory_evolution, memory_os) — non supprimés
+- Version bump: 31.3.4 → 32.0.0
+
 # [31.2.41] - 2026-04-30 (Build + Release — TITANE Natural Voice Runtime + Proof Hardening)
 
 ## Release v31.2.41 — TITANE Natural Voice Runtime + Proof Hardening

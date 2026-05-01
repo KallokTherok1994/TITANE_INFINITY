@@ -625,3 +625,21 @@ Conformité validée par tests 100/100 (avril 2026).
 - `AH-KB-SPIRITUALITE-NEUROCLINIQUE-2026-04-29` (full schema, detect_recurrence PASS, phase 41, entries=1466)
 - `AH-KB-CARDIO-IMMUNOLOGIE-2026-04-29` (full schema, detect_recurrence PASS, phase 42, entries=1467)
 - `AH-KB-PHARMA-GASTRO-AGENTS-2026-04-29` (full schema, detect_recurrence PASS, phase 43, entries=1470)
+
+## [2026-05-30] V32.0.0 — Meta-Energy Module (Ring 0 / Ring 3)
+
+### Ring 0 — Rust Backend (`src-tauri/src/meta_energy/`)
+- **MetaEnergyConfig** — Paramètres: target_energy=0.65, tolerance=0.1, regeneration_rate=0.02, forecast_horizon_hours=24
+- **EnergyState** — État énergétique courant: current, max_capacity, regeneration_rate, consumption_rate, timestamp
+- **FatigueEngine** — Évaluation fatigue: Fresh>0.8, Normal>0.5, Tired>0.2, Exhausted; cognitive_multiplier: 1.0/0.85/0.6/0.3
+- **RecoveryEngine** — Plan de récupération basé sur fatigue et niveau d'énergie
+- **LoadBalancer** — Équilibre de charge: throttle_factor via cognitive_multiplier
+- **HomeostasisController** — P-controller (gain=0.3): maintient énergie autour de cible 0.65 ±0.1
+- **EnergyPredictor** — Prévision circadienne 24h: modèle oscillant + détection fenêtres faibles/pics
+- **MetaEnergyState** — Tauri State aggregant tous les moteurs; 8 IPC commands enregistrées
+- AutoHeal: AH-2026-05-V32-PHASE9-META-ENERGY-0008
+
+### Ring 3 — Frontend (`src/hooks/useMetaEnergy.ts`, `src/pages/SingularityMonitor.tsx`)
+- **useMetaEnergy** — Hook React: secureInvoke vers 2 endpoints, auto-refresh 15s, error state
+- **SingularityMonitor** — Panel MetaEnergy: data-testid=meta-energy-panel (level, fatigue badge, homeostasis, history)
+- AutoHeal: AH-2026-05-V32-PHASE10-SINGULARITY-META-ENERGY-0009

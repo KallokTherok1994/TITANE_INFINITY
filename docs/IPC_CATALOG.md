@@ -1592,3 +1592,22 @@
 **Managed state**: `RemoteKeyStoreState` enregistré dans `main.rs` via `.manage()`.  
 **Frontend service**: `src/services/remoteKeyManager/index.ts`  
 **Security**: toutes les 4 commandes présentes dans `ALLOWED_COMMANDS` (`src/lib/security.ts`).
+
+---
+
+## Meta-Energy IPC Commands (V32.0.0 — Phase 9 SP#20)
+
+| # | Commande | Description | Ring | Fichier source |
+|---|----------|-------------|------|----------------|
+| 1 | `meta_energy_get_state` | État énergétique courant: energy_level, normalized, fatigue_level, cognitive_multiplier | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+| 2 | `meta_energy_get_fatigue` | Niveau de fatigue (Fresh/Normal/Tired/Exhausted) | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+| 3 | `meta_energy_get_recovery_plan` | Plan de récupération basé sur fatigue + énergie | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+| 4 | `meta_energy_get_load_balance` | Équilibre de charge (throttle_factor) pour requested_load donné | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+| 5 | `meta_energy_get_homeostasis` | Évaluation homéostatique (deviation, correction, in_balance) | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+| 6 | `meta_energy_get_forecast` | Prévision énergétique 24h (circadienne) | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+| 7 | `meta_energy_apply_delta` | Appliquer delta énergie (-0.5..0.5) avec label activité | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+| 8 | `meta_energy_get_diagnostics` | Diagnostics complets (energy, fatigue, homeostasis, history_entries) | Ring 0 | `src-tauri/src/meta_energy/commands.rs` |
+
+**Managed state**: `Arc<RwLock<MetaEnergyState>>` enregistré dans `main.rs` via `.manage()`.  
+**Frontend hook**: `src/hooks/useMetaEnergy.ts`  
+**Security**: 8 commandes présentes dans `ALLOWED_COMMANDS` (`src/lib/security.ts`).
