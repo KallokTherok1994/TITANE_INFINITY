@@ -1,0 +1,6 @@
+# TITANE_INFINITY v31.3.4 — Release Checksums
+# Date: 2026-05-01
+# Build: cargo release [optimized] 10m09s
+
+c597b7d4a2220c79c9e397332cd8ea4211c549e43ff20effeef3e8bd126dcdda  titane-infinity_31.3.4_amd64.deb
+f2596953000dfeec0f5db37da659d43f06ce3822583b38182c96b06f1866fa07  titane-infinity_31.3.4_amd64.AppImage
