@@ -1228,3 +1228,51 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | AutoHeal entry | AH-2026-04-28-BUILD-ALL-v31.2.37-0015 |
 | DEB artifact | titane-infinity_31.2.37_amd64.deb 22MiB |
 | sudo reinstall | BLOCKED_SUDO_REQUIRED — run manually: sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_31.2.37_amd64.deb |
+
+---
+
+## Release v31.3.2 — 2026-05-01
+
+| Property | Value |
+|---|---|
+| Version | 31.3.2 |
+| Date | 2026-05-01 |
+| Tag | v31.3.2 |
+| Commit | 72cd02ad9 |
+| Build time | 11m29s (Cargo release profile) |
+| Build tool | `TITANE_BUILD_ASSUME_YES=1 bash runtime/stable/build.sh` |
+| Runtime | Tauri v2 (production) |
+
+### Artifacts — v31.3.2
+
+| Artifact | SHA256 | Size |
+|---|---|---|
+| `TITANE-Infinity_31.3.2_amd64.AppImage` | `014a2159b995a50ba55712f6d50cbc786be8684b98023ab73c45e0bbf3b95262` | 92 MiB |
+| `titane-infinity_31.3.2_amd64.deb` | `7f05b440dec0ee0f3a5ee62e62892b362beffb66a1ccab02667726f2598570a4` | 23 MiB |
+| `titane-infinity` (binary) | built from src-tauri/target/release/ | 49 MiB |
+
+### Changes — v31.3.2
+
+| Surface | Status |
+|---|---|
+| TWINS v32 kernel identity | NEW — `data/knowledge_base/default/titane_identity_kernel_v31.json` v32.0.0 |
+| Kevin LTM semantic anchors | NEW — `KEVIN_LTM_SEMANTIC_ANCHORS` in `memoryWebEnricher.ts` |
+| Tauri v2 detection fix | FIXED — `isTauriRuntimeAvailable()` Phase 5B alignment |
+| Dev host allowedHosts | FIXED — `vite.config.ts` allowedHosts: true |
+| TitaneIdentityKernel types | NEW — `src/services/ai/titaneIdentityKernel.ts` |
+| Tests 4/4 PASS | `src/__tests__/services/ai/titaneIdentityKernel.test.ts` |
+| Desktop launcher | VERIFIED — `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity` |
+
+### Gates — v31.3.2
+
+| Gate | Result |
+|---|---|
+| `detect_recurrence` | PASS (1488 entries) |
+| Version bump | 31.3.1 → 31.3.2 (6 files) |
+| AutoHeal entry | AH-2026-05-01-TWINS-KERNEL-V32-0004 |
+| AppImage artifact | TITANE-Infinity_31.3.2_amd64.AppImage 92MiB |
+| DEB artifact | titane-infinity_31.3.2_amd64.deb 23MiB |
+| sudo reinstall | DONE — binary at `/usr/bin/titane-infinity`, desktop icons refreshed |
+| launcher verify | PASS — `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity` |
+| `titane-infinity --version` | PASS — binary starts, all subsystems initialized |
+| git push | DONE — origin/MAIN `72cd02ad9`, tag `v31.3.2` |
