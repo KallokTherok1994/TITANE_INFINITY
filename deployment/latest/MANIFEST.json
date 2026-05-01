@@ -1,28 +1,19 @@
 {
-  "version": "31.3.0",
-  "date": "2025-04-30",
+  "version": "31.3.3",
+  "build_date": "2026-05-01",
   "channel": "stable",
   "artifacts": [
     {
-      "name": "titane-infinity_31.3.0_amd64.AppImage",
-      "type": "appimage",
-      "platform": "linux-x86_64",
-      "size": 96016888,
-      "sha256": "3ddcb2d80b089d4f62ee325fedbaaf3c8700b63d059f744fe930a60fed480853"
-    },
-    {
-      "name": "titane-infinity_31.3.0_amd64.deb",
+      "name": "titane-infinity_31.3.3_amd64.deb",
       "type": "deb",
-      "platform": "linux-x86_64",
-      "size": 23391060,
-      "sha256": "7bb8a8a23315d26438e41d7ff136edcb8d560af2665229a9643f2b7997132e30"
+      "size": 23385114,
+      "sha256": "bbac228fd02db19fbb62b26e1b7b87bdd540962a8106492c17bdec1ace63b400"
     },
     {
-      "name": "titane-infinity-31.3.0-1.x86_64.rpm",
-      "type": "rpm",
-      "platform": "linux-x86_64",
-      "size": 23390962,
-      "sha256": "5e073f4f694a031ddd66fe0fba5e5b6b91d51cf67e8d9395988249447a12deae"
+      "name": "titane-infinity_31.3.3_amd64.AppImage",
+      "type": "appimage",
+      "size": 96004600,
+      "sha256": "adf650f90f03b3cd03c755bd52cd737970d9016d504e3b25d69a65c2cdb60868"
     }
   ]
 }

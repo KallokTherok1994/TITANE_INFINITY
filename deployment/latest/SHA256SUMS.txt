@@ -1,3 +1,2 @@
-3ddcb2d80b089d4f62ee325fedbaaf3c8700b63d059f744fe930a60fed480853  titane-infinity_31.3.0_amd64.AppImage
-7bb8a8a23315d26438e41d7ff136edcb8d560af2665229a9643f2b7997132e30  titane-infinity_31.3.0_amd64.deb
-5e073f4f694a031ddd66fe0fba5e5b6b91d51cf67e8d9395988249447a12deae  titane-infinity-31.3.0-1.x86_64.rpm
+bbac228fd02db19fbb62b26e1b7b87bdd540962a8106492c17bdec1ace63b400  titane-infinity_31.3.3_amd64.deb
+adf650f90f03b3cd03c755bd52cd737970d9016d504e3b25d69a65c2cdb60868  titane-infinity_31.3.3_amd64.AppImage
