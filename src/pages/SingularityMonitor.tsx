@@ -18,6 +18,7 @@ import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
 import { useSingularity } from '../hooks/useSingularity';
+import { useMetaEnergy } from '../hooks/useMetaEnergy';
 import {
   Atom,
   Infinity as InfinityIcon,
@@ -31,6 +32,7 @@ import {
   Eye,
   GitBranch,
   Waves,
+  Battery,
 } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────
@@ -68,6 +70,7 @@ const SingularityMonitor = memo(() => {
   } = useSingularity();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const metaEnergy = useMetaEnergy(15_000);
 
   const connections: ConnectionEdge[] = [
     { from: 'Cognitive', to: 'Memory', strength: 0.95, type: 'sync' },
@@ -279,6 +282,103 @@ const SingularityMonitor = memo(() => {
             )}
           </div>
         )}
+
+        {/* ── MetaEnergy — Métriques réelles (V32 Phase 10) ── */}
+        <Card
+          variant="solid"
+          padding={4}
+          data-testid="meta-energy-panel"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Battery className="w-4 h-4 text-lime-400" />
+              <h2
+                className="text-sm font-semibold text-gray-300"
+                data-testid="meta-energy-title"
+              >
+                Énergie Cognitive — MetaEnergy
+              </h2>
+            </div>
+            {metaEnergy.isLoading && <Spinner size="sm" />}
+          </div>
+
+          {metaEnergy.error ? (
+            <p
+              className="text-xs text-red-400"
+              data-testid="meta-energy-error"
+            >
+              {metaEnergy.error}
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div data-testid="meta-energy-level">
+                <p className="text-xs text-gray-500 mb-1">Énergie normalisée</p>
+                <p className="text-2xl font-bold text-lime-400">
+                  {metaEnergy.state
+                    ? `${(metaEnergy.state.normalized * 100).toFixed(0)}%`
+                    : '—'}
+                </p>
+                {metaEnergy.state && (
+                  <div className="w-full bg-gray-700 rounded-full h-1.5 mt-1">
+                    <div
+                      className="h-1.5 rounded-full bg-lime-500 transition-all"
+                      style={{ width: `${metaEnergy.state.normalized * 100}%` }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div data-testid="meta-energy-fatigue">
+                <p className="text-xs text-gray-500 mb-1">Niveau fatigue</p>
+                <Badge
+                  variant={
+                    metaEnergy.state?.fatigue_level === 'Fresh'
+                      ? 'success'
+                      : metaEnergy.state?.fatigue_level === 'Normal'
+                        ? 'info'
+                        : metaEnergy.state?.fatigue_level === 'Tired'
+                          ? 'warning'
+                          : 'error'
+                  }
+                  size="sm"
+                >
+                  {metaEnergy.state?.fatigue_level ?? '—'}
+                </Badge>
+                <p className="text-xs text-gray-400 mt-1">
+                  ×{metaEnergy.state?.cognitive_multiplier.toFixed(2) ?? '—'} cognitif
+                </p>
+              </div>
+
+              <div data-testid="meta-energy-homeostasis">
+                <p className="text-xs text-gray-500 mb-1">Homéostasie</p>
+                {metaEnergy.diagnostics ? (
+                  <>
+                    <Badge
+                      variant={metaEnergy.diagnostics.homeostasis_in_balance ? 'success' : 'warning'}
+                      size="sm"
+                    >
+                      {metaEnergy.diagnostics.homeostasis_in_balance ? 'Équilibrée' : 'Dérive'}
+                    </Badge>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Δ {metaEnergy.diagnostics.homeostasis_deviation > 0 ? '+' : ''}
+                      {(metaEnergy.diagnostics.homeostasis_deviation * 100).toFixed(1)}%
+                    </p>
+                  </>
+                ) : (
+                  <span className="text-gray-600">—</span>
+                )}
+              </div>
+
+              <div data-testid="meta-energy-history">
+                <p className="text-xs text-gray-500 mb-1">Historique</p>
+                <p className="text-xl font-bold text-teal-400">
+                  {metaEnergy.diagnostics?.history_entries ?? '—'}
+                </p>
+                <p className="text-xs text-gray-400">entrées</p>
+              </div>
+            </div>
+          )}
+        </Card>
 
         {/* ── Connections ── */}
         <Card variant="solid" padding={4}>
