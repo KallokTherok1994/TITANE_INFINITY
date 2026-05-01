@@ -15,7 +15,7 @@
 | `src-tauri/Cargo.toml` version | 32.0.0 | ✅ PASS |
 | `src-tauri/tauri.conf.json` version | 32.0.0 | ✅ PASS |
 | `runtime/stable/manifest.json` version | 32.0.0 | ✅ PASS |
-| AppImage | `titane-infinity_32.0.0_amd64.AppImage` (96M) | ✅ PASS |
+| AppImage | `titane-infinity_32.0.0_amd64.AppImage` (93M) | ✅ PASS |
 | DEB | `titane-infinity_32.0.0_amd64.deb` (24M) | ✅ PASS |
 | `RELEASE_ARTIFACTS_CHECKSUMS_32.0.0.txt` | generated sha256 2 artifacts | ✅ PASS |
 | `detect_recurrence` | PASS 1500 entries | ✅ PASS |

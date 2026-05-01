@@ -1,6 +1,14 @@
-# [32.0.0] - 2026-05-30 (V32 — AI Intelligence Unification Supreme)
+# [32.0.0] - 2026-05-01 (V32/V33 — AI Intelligence Unification Supreme + V33 Sprint)
 
-## Release v32.0.0 — AI Intelligence Unification Supreme
+## Release v32.0.0 — AI Intelligence Unification Supreme + V33 Sprint
+
+### V33 Sprint (2026-05-01)
+
+- **chatModes architectural split** (V33-2): `chatModes.config.ts` 2537L → 3 fichiers (types 239L, data 2212L, config 158L barrel)
+- **MonitoringDashboard IPC async** (V33-1): `getProjectHealthMetrics()` câblé via `useEffect` — métriques recurrence/ring/lead time depuis autoheal+registry
+- **update-deployment-latest.sh** (V33-3): script post-build copie DEB+AppImage vers `deployment/latest/` avec manifeste/checksums
+- **Phase 8 activation**: 5 modules mémoire Rust activés, deprecated usage corrigé (omega/bridge/orchestrator)
+- AutoHeal: 1509 entries (AH-2026-05-V33-AGENTS-RUNTIME-0001)
 
 ### Résumé
 

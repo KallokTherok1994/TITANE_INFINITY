@@ -696,3 +696,28 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Tests: 17 Vitest PASS (MetaEnergy.test.ts), E2E (singularity-meta-energy.spec.ts)
 - AutoHeal: AH-2026-05-V32-PHASE9-META-ENERGY-0008, AH-2026-05-V32-PHASE10-SINGULARITY-META-ENERGY-0009
 - Version: 32.0.0
+
+# [2026-05-01] V33 Sprint — chatModes split + MonitoringDashboard IPC + post-build script
+
+## V33-2: chatModes.config.ts architectural split
+- Fichier source: `src/services/ai/chatModes.config.ts` (barrel public API — 158L)
+- Nouveau: `src/services/ai/chatModes.types.ts` (239L — types, interfaces, tool presets)
+- Nouveau: `src/services/ai/chatModes.data.ts` (2212L — 23 CHAT_MODES_CONFIG avec systemPrompts)
+- Séparation: types/données/utilitaires — consommateurs importent toujours depuis `chatModes.config.ts`
+- Commit: 56fd3bfa6
+
+## V33-1: MonitoringDashboard — métriques IPC projet (health metrics section)
+- Surface: `monitoring-dashboard` (data-testid)
+- Nouvelle section: `monitoring-dashboard-health-metrics` (conditionnelle, si IPC disponible)
+- Nouveaux selectors: `monitoring-dashboard-health-recurrence`, `-health-ring`, `-health-leadtime`, `-health-evidence-note`
+- Source IPC: `getProjectHealthMetrics()` → `read_json_file` autoheal_rules.jsonl + registry/ui-events.jsonl
+- TTL cache: 15 minutes
+- E2E: `e2e/agents/monitoring-dashboard.e2e.ts` — test optionnel health metrics
+- AutoHeal: AH-2026-05-V33-AGENTS-RUNTIME-0001
+- Commit: 07b07bdaa
+
+## V33-3: update-deployment-latest.sh
+- Script: `scripts/post-build/update-deployment-latest.sh`
+- Usage: `bash scripts/post-build/update-deployment-latest.sh [VERSION]`
+- Sortie: `deployment/latest/{DEB,AppImage,VERSION.txt,SHA256SUMS.txt,SIZES.txt,MANIFEST.json}`
+- Commit: d67bcb2ab
