@@ -150,7 +150,7 @@ impl MultimodalFusionEngine {
 
     /// Detect conflicts between modalities
     pub async fn detect_conflicts(&self, context: &MultimodalContext) -> Vec<String> {
-        let mut conflicts = Vec::new();
+        let conflicts = Vec::new();
 
         // Example: Check if text sentiment conflicts with image content
         if context.text.is_some() && context.vision.is_some() {

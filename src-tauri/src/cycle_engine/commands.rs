@@ -5,7 +5,7 @@
 
 use crate::cycle_engine::{
     AlignmentEngine, ClockEngine, CognitiveRhythmParams, CycleEngineConfig, CycleState,
-    LoadRegulator, PredictiveTemporalModel, SeasonalParameters,
+    LoadRegulator, PredictiveEvent, PredictiveTemporalModel, SeasonalParameters,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -36,7 +36,7 @@ impl CycleEngineState {
     }
     
     pub async fn start(&self) -> Result<(), String> {
-        let mut clock = self.clock.write().await;
+        let clock = self.clock.write().await;
         clock.start().await.map_err(|e| format!("{:?}", e))
     }
 }
@@ -140,14 +140,6 @@ pub async fn cycle_get_load_params(
         memory_gc_frequency: load_params.memory_gc_frequency,
         agi_introspection_depth: load_params.agi_introspection_depth,
     })
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PredictiveEvent {
-    pub event_type: String,
-    pub predicted_time: i64,
-    pub confidence: f32,
-    pub suggested_action: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
