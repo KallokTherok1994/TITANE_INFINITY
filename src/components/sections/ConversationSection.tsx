@@ -1538,6 +1538,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const [showSearch, setShowSearch] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [generatedFiles, setGeneratedFiles] = useState<GeneratedFileEntry[]>([]);
+
+    // ─── E2E TEST BRIDGE ─────────────────────────────────────────────────────
+    // Active uniquement quand window.__TITANE_E2E_GENERATED_FILE__ est défini
+    // (injecté par addInitScript dans les specs Playwright)
+    useEffect(() => {
+      const seed = (
+        window as { __TITANE_E2E_GENERATED_FILE__?: GeneratedFileEntry }
+      ).__TITANE_E2E_GENERATED_FILE__;
+      if (seed) {
+        setGeneratedFiles([seed]);
+      }
+    }, []);
+    // ─────────────────────────────────────────────────────────────────────────
     const conversationInputRef = useRef<HTMLTextAreaElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
