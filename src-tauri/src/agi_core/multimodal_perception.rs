@@ -445,7 +445,6 @@ impl Default for MultimodalPerceptionStats {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::multimodal::audio3d::SpatialPosition;
 
     fn create_test_vision() -> VisionAnalysis {
         VisionAnalysis {
