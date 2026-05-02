@@ -21,8 +21,9 @@
 | `detect_recurrence` | PASS 1500 entries | ✅ PASS |
 | `tauri build` | PASS release bundles AppImage+DEB | ✅ PASS |
 | desktop launcher (user) | synced via update-desktop-icons.sh | ✅ PASS |
-| binary sync `/usr/bin/titane-infinity` | `sudo dpkg -i titane-infinity_32.0.0_amd64.deb` requis | ⚠️ MANUAL |
-| system desktop/icon sync | `BLOCKED_SUDO_REQUIRED` — relancer post-build après install | ⚠️ MANUAL |
+| binary sync `/usr/bin/titane-infinity` | `sudo dpkg -i titane-infinity_32.0.0_amd64.deb` — DONE 2026-05-01 | ✅ PASS |
+| system desktop/icon sync | user launchers synced; system icons refresh BLOCKED_SUDO_REQUIRED | ⚠️ PARTIAL |
+| `detect_recurrence` | PASS 1509 entries (V33 AutoHeal AH-2026-05-V33-AGENTS-RUNTIME-0001) | ✅ PASS |
 
 ## Release v31.3.0 — 2025-04-30 (Build + Release — Version bump minor + Desktop icon sync)
 
