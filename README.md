@@ -14,16 +14,16 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
-![Release v31.1.0](https://img.shields.io/badge/release-v31.1.0-brightgreen?logo=github)
+![Release v32.0.0](https://img.shields.io/badge/release-v32.0.0-brightgreen?logo=github)
 
-**Version:** v31.1.0 (repository authority)
-**Status:** ✅ Production Ready (V30 maintained release stream)
+**Version:** v32.0.0 (repository authority)
+**Status:** ✅ Production Ready
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
-**Latest certified deployment:** `2026-04-17` via `deployment/latest/MANIFEST.json`
+**Latest certified deployment:** `2026-05-01` via `deployment/latest/MANIFEST.json`
 **Last published GitHub release:** [v30.1.25](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.1.25) (last public binary)
 **Prior major release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (historical)
 
-**Canal de release canonique:** v30.1.34
+**Canal de release canonique:** v32.0.0
 
 **Nouveautés v31.1.0 (2026-04-23):** Export DOCX natif via `doc_engine` + `docx-rs` (Ring 2 Rust), surface UI `/doc-center` (`DocCenterPage`), commande IPC `export_docx_file`, 12 tests Vitest + WDIO desktop + Playwright E2E, correction TS `Experience.tsx` + `syncSupervisor.ts`, governance complète.
 
@@ -75,23 +75,23 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v31.1.2
+### ✅ Release canonique courante: v32.0.0
 
 **Status**: ✅ PRODUCTION READY — CERTIFIED & DEPLOYED  
-**Certification ID**: `TITANE_INFINITY_RELEASE_20260423_v31.1.2`  
-**Last Certification Refresh**: April 23, 2026  
-**Certification Scope**: verify_instructions PASS (33/33), detect_recurrence PASS, Rust 0 warnings, DocCenter DOCX export, PerformanceTest refactor
+**Certification ID**: `TITANE_INFINITY_RELEASE_20260501_v32.0.0`  
+**Last Certification Refresh**: May 1, 2026  
+**Certification Scope**: detect_recurrence PASS (1509 entries), tauri build PASS, AppImage+DEB produits, binary sync `/usr/bin/titane-infinity` DONE
 
 Artefacts vérifiés (Linux amd64):
 
-- **AppImage**: `Titan-Stable_31.1.0_amd64.AppImage` (deployed in `deployment/latest/`)
-- **DEB Package**: `Titan-Stable_31.1.0_amd64.deb` (deployed in `deployment/latest/`)
+- **AppImage**: `titane-infinity_32.0.0_amd64.AppImage` (deployed in `deployment/latest/`)
+- **DEB Package**: `titane-infinity_32.0.0_amd64.deb` (deployed in `deployment/latest/`)
 
 Checksums courants (`deployment/latest/MANIFEST.json`):
 
 ```
-AppImage:  94ce7dfb692f2e1881ff6157f9c4efdb6c4e2efd1725c5d9be7ec7ad79a46ca8
-DEB:       591b03828f5e428ac69f5bd9f2f0b4dc91b5c3f9e54d131a98e449cbccda2f7d
+AppImage:  e6b75e48b0b94759d0737f83b9515fb69541672315178a945679c24f9bee4b09
+DEB:       9c582bac18a91085f659161821e8c287c3b1635283dde5cb1dd3691c46c920b1
 ```
 
 ### Installation Windows (PR #292)
@@ -363,8 +363,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Repository Authority**: v31.1.2 (documentation canonique)  
-**Latest Canonical Release Stream**: v31.1.2 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
+**Repository Authority**: v32.0.0 (documentation canonique)  
+**Latest Canonical Release Stream**: v32.0.0 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
 
 ---
 
@@ -946,7 +946,7 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Verify repository authority version (`30.0.0`)
+2. ✅ Verify repository authority version (`32.0.0`)
 3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests

@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/snapshot.schema.json",
   "version": "1.0.0",
-  "lastUpdate": "2026-04-17T20:00:23.944Z",
-  "eventCount": 26,
+  "lastUpdate": "2026-05-02T03:27:42.246Z",
+  "eventCount": 27,
   "suites": {
     "vitest-core": {
       "id": "vitest-core",
@@ -163,8 +163,8 @@
     "nextBlocker": "Registry incohérent: snapshot/dashboard obsolètes",
     "priorityActionUnique": "Run pnpm verify:registry",
     "lastEvent": {
-      "id": "GHPAGES_DEPLOY_20260428",
-      "timestamp": "2026-04-28T21:15:00.000Z",
+      "id": "01KNHDHJT7THX84C2F51Y6BTXS",
+      "timestamp": "2026-04-06T12:51:08.231Z",
       "type": "WORKFLOW_CHANGED"
     }
   }

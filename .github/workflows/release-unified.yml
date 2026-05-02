@@ -1,4 +1,4 @@
-name: TITANE∞ Release Pipeline v30.0.0
+name: TITANE∞ Release Pipeline v32.0.0
 
 on:
   push:
@@ -484,4 +484,4 @@ jobs:
           find artifacts/ -type f \( -name "*.deb" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.dmg" -o -name "*.apk" \) 2>/dev/null | wc -l | xargs echo "- Total files:" >> $GITHUB_STEP_SUMMARY || echo "- Files: 0" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "🚀 Built with TITANE∞ v30.0.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Built with TITANE∞ v32.0.0 - Modernized Release Pipeline" >> $GITHUB_STEP_SUMMARY

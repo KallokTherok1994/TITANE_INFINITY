@@ -1,4 +1,4 @@
-name: TITANE∞ CI/CD Unified Pipeline v30.0.0
+name: TITANE∞ CI/CD Unified Pipeline v32.0.0
 
 on:
   push:
@@ -607,7 +607,7 @@ jobs:
     steps:
       - name: 📊 Check job results
         run: |
-          echo "## TITANE∞ v30.0.0 - CI/CD Results" >> $GITHUB_STEP_SUMMARY
+          echo "## TITANE∞ v32.0.0 - CI/CD Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
@@ -629,7 +629,7 @@ jobs:
           echo "- **Platform:** Ubuntu (Linux only for CI speed)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "🚀 Built with TITANE∞ v30.0.0 - Modernized CI/CD Pipeline" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Built with TITANE∞ v32.0.0 - Modernized CI/CD Pipeline" >> $GITHUB_STEP_SUMMARY
 
       - name: ❌ Fail if required jobs failed
         if: |

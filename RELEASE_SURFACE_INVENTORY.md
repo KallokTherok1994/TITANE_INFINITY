@@ -7,7 +7,7 @@
 
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.0 — Historical baseline preserved below)
 
-## Release v32.0.0 — 2026-05-30 (BUILD ALL — V32 AI Intelligence Unification Supreme)
+## Release v32.0.0 — 2026-05-01 (BUILD ALL — V32 AI Intelligence Unification Supreme)
 
 | Surface | Truth | Status |
 |---|---|---|
