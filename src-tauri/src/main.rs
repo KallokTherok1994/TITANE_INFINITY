@@ -1665,10 +1665,29 @@ fn main() {
                     }
                 }
                 None => {
-                    eprintln!("⚠️ CRITICAL WARNING: Main window not found!");
-                    eprintln!("   This means tauri.conf.json app.windows['main'] was not processed");
+                    eprintln!("⚠️ WARNING: Main window not found in config — creating programmatically");
                     eprintln!("   Available windows: {:?}", app.webview_windows().keys().collect::<Vec<_>>());
-                    // Don't fail setup, but log loudly
+                    // Fallback: create the main window programmatically
+                    match tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
+                        .title("TITANE∞")
+                        .inner_size(1440.0, 900.0)
+                        .min_inner_size(1024.0, 600.0)
+                        .resizable(true)
+                        .decorations(true)
+                        .center()
+                        .build()
+                    {
+                        Ok(win) => {
+                            if let Err(e) = win.show() {
+                                eprintln!("❌ Failed to show fallback main window: {e}");
+                            } else {
+                                log::info!("✅ Fallback main window created and shown");
+                            }
+                        }
+                        Err(e) => {
+                            eprintln!("❌ Failed to create fallback main window: {e}");
+                        }
+                    }
                 }
             }
 
