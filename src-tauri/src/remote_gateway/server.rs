@@ -257,7 +257,7 @@ mod tests {
         ));
         let engine = std::sync::Arc::new(
             crate::conversation_engine::ConversationEngineState::new(
-                engine_dir.into_path(),
+                engine_dir.keep().expect("tempdir keep"),
                 "test-password".into(),
                 ai_router,
                 singularity,

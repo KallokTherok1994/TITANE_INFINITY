@@ -87,7 +87,7 @@ const SecurityPanel: React.FC = () => {
   };
 
   return (
-    <div className="security-panel">
+    <div className="security-panel" data-testid="security-panel">
       <div className="security-panel__header">
         <h2>🔐 Gestion des Clés API</h2>
         <p className="security-panel__subtitle">
@@ -115,6 +115,7 @@ const SecurityPanel: React.FC = () => {
           {providers.map(provider => (
             <div
               key={provider.service}
+              data-testid={`provider-card-${provider.service}`}
               className={`provider-card ${provider.active ? 'provider-card--active' : ''} ${
                 provider.valid === false ? 'provider-card--invalid' : ''
               }`}
@@ -158,18 +159,21 @@ const SecurityPanel: React.FC = () => {
                   <>
                     <button
                       className="btn btn--secondary btn--sm"
+                      data-testid={`btn-test-key-${provider.service}`}
                       onClick={() => handleTestKey(provider.service)}
                     >
                       🧪 Tester
                     </button>
                     <button
                       className="btn btn--secondary btn--sm"
+                      data-testid={`btn-edit-key-${provider.service}`}
                       onClick={() => handleAddKey(provider.service)}
                     >
                       ✏️ Modifier
                     </button>
                     <button
                       className="btn btn--danger btn--sm"
+                      data-testid={`btn-delete-key-${provider.service}`}
                       onClick={() => handleDeleteKey(provider.service)}
                     >
                       🗑️ Supprimer
@@ -178,6 +182,7 @@ const SecurityPanel: React.FC = () => {
                 ) : (
                   <button
                     className="btn btn--primary btn--sm"
+                    data-testid={`btn-add-key-${provider.service}`}
                     onClick={() => handleAddKey(provider.service)}
                   >
                     ➕ Ajouter clé

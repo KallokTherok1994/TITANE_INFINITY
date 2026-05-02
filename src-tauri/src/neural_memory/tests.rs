@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 #[cfg(test)]
+#[allow(deprecated)]
 mod stm_tests {
     use super::super::stm::ShortTermMemory;
     use crate::unified_memory_v2::types::{MemoryEntry, MemoryType};
@@ -199,6 +200,7 @@ mod vector_tests {
 }
 
 #[cfg(test)]
+#[allow(deprecated)]
 mod consolidation_tests {
     use super::super::consolidation::{Consolidator, ConsolidatorConfig};
     use super::super::{LongTermMemory, MidTermMemory, ShortTermMemory};

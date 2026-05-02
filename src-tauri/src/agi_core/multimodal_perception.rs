@@ -445,6 +445,7 @@ impl Default for MultimodalPerceptionStats {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::multimodal::audio3d::AudioDirection;
 
     fn create_test_vision() -> VisionAnalysis {
         VisionAnalysis {
@@ -456,7 +457,9 @@ mod tests {
             contrast: 0.6,
             features: vec![0.1; 100],
             dominant_colors: vec![(128, 128, 128), (200, 200, 200)],
-            clusters: vec![],
+            objects_detected: vec![],
+            ocr_text: None,
+            metadata: serde_json::json!({}),
         }
     }
 
@@ -464,12 +467,14 @@ mod tests {
         Audio3DAnalysis {
             intensity: 0.8,
             frequency_bands: vec![0.1, 0.2, 0.3, 0.4, 0.5],
-            spatial_position: Some(SpatialPosition {
+            direction: Some(AudioDirection {
                 azimuth: 45.0,
                 elevation: 15.0,
-                distance: 2.5,
+                distance: Some(2.5),
             }),
-            is_speech: false,
+            background_noise: 0.0,
+            patterns: vec![],
+            timestamp: 0,
         }
     }
 

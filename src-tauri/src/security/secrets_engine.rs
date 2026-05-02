@@ -126,7 +126,10 @@ impl SecureSecretsEngine {
                     }
                     Err(err) => {
                         error!("[SecretsEngine] Failed to decrypt secrets file: {}", err);
-                        initial_secrets = HashMap::new();
+                        return Err(SecretsError::Decryption(format!(
+                            "Secrets file exists but cannot be decrypted — passphrase mismatch or file corrupted: {}",
+                            err
+                        )));
                     }
                 }
             } else {

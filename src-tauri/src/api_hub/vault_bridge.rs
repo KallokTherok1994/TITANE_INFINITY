@@ -72,7 +72,11 @@ impl VaultBridge {
     pub fn new() -> Self {
         Self {
             state: RwLock::new(VaultState::default()),
-            encryption_enabled: true,
+            // NOTE: encryption_enabled is false because the encrypt/decrypt methods
+            // only use ROT13+Base64 (obfuscation, not real encryption). Keys transiting
+            // through VaultBridge are protected by the OS process boundary only.
+            // For durable encrypted storage, use SecureSecretsEngine (AES-256-GCM).
+            encryption_enabled: false,
         }
     }
 
@@ -266,10 +270,10 @@ impl VaultBridge {
         std::env::var(env_var).ok()
     }
 
-    /// Chiffre une clé (simulation - en production utiliser vraie crypto)
+    /// Chiffre une clé (obfuscation uniquement — NON cryptographique)
+    /// VaultBridge utilise encryption_enabled=false ; cette méthode n'est pas appelée en production.
+    #[allow(dead_code)]
     fn encrypt(&self, plaintext: &str) -> Result<String, APIHubError> {
-        // En production: utiliser AES-256-GCM ou similaire
-        // Ici: simple obfuscation pour la démo
         use base64::{engine::general_purpose::STANDARD, Engine as _};
         let rotated: String = plaintext
             .chars()
@@ -286,7 +290,9 @@ impl VaultBridge {
         Ok(STANDARD.encode(rotated.as_bytes()))
     }
 
-    /// Déchiffre une clé
+    /// Déchiffre une clé (obfuscation uniquement — NON cryptographique)
+    /// VaultBridge utilise encryption_enabled=false ; cette méthode n'est pas appelée en production.
+    #[allow(dead_code)]
     fn decrypt(&self, ciphertext: &str) -> Result<String, APIHubError> {
         use base64::{engine::general_purpose::STANDARD, Engine as _};
         let decoded = STANDARD

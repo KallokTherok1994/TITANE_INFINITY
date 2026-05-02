@@ -78,11 +78,11 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" data-testid="add-api-key-modal-overlay" onClick={onClose}>
+      <div className="modal-content" data-testid="add-api-key-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3>🔑 Ajouter/Modifier Clé API</h3>
-          <button className="modal-close" onClick={onClose}>
+          <button className="modal-close" data-testid="btn-modal-close" onClick={onClose}>
             ✕
           </button>
         </div>
@@ -104,6 +104,7 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({
             <div className="input-with-toggle">
               <input
                 id="apiKey"
+                data-testid="input-api-key"
                 type={showKey ? 'text' : 'password'}
                 value={apiKey}
                 onChange={e => setApiKey(e.target.value)}
@@ -114,6 +115,7 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({
               />
               <button
                 type="button"
+                data-testid="btn-toggle-key-visibility"
                 className="toggle-visibility"
                 onClick={() => setShowKey(!showKey)}
               >
@@ -126,11 +128,12 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({
           {error && <div className="form-error">{error}</div>}
 
           <div className="modal-actions">
-            <button type="button" className="btn btn--secondary" onClick={onClose}>
+            <button type="button" data-testid="btn-modal-cancel" className="btn btn--secondary" onClick={onClose}>
               Annuler
             </button>
             <button
               type="submit"
+              data-testid="btn-modal-save"
               className="btn btn--primary"
               disabled={loading || !apiKey.trim()}
             >

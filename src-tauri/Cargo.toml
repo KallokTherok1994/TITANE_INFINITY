@@ -45,7 +45,7 @@ sysinfo                        = "0.37"
 
 # Core dependencies (actively used)
 base64           = "0.22"
-aes-gcm          = "0.10"
+aes-gcm          = { version = "0.10", features = ["aes"] }
 sha2             = "0.10"
 once_cell        = "1.19"
 reqwest          = { version = "0.12", default-features = false, features = ["json", "stream", "rustls-tls"] }
