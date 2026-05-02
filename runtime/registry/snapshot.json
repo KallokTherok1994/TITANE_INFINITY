@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/snapshot.schema.json",
   "version": "1.0.0",
-  "lastUpdate": "2026-05-02T03:27:42.246Z",
-  "eventCount": 27,
+  "lastUpdate": "2026-05-02T03:48:53.586Z",
+  "eventCount": 28,
   "suites": {
     "vitest-core": {
       "id": "vitest-core",
