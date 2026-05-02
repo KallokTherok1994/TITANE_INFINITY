@@ -16,8 +16,8 @@ cline config set \
   yolo-mode-toggled=false \
   strict-plan-mode-enabled=true \
   telemetry-setting=disabled \
-  plan-mode-thinking-budget-tokens=2048 \
-  act-mode-thinking-budget-tokens=2048 \
+  plan-mode-thinking-budget-tokens=4096 \
+  act-mode-thinking-budget-tokens=3072 \
   terminal-output-line-limit=1000 \
   auto-condense-threshold=0.65 \
   shell-integration-timeout=6000 \
@@ -35,7 +35,8 @@ echo "  ✅ Mode: plan (sécurité maximale)"
 echo "  ✅ Yolo mode: désactivé"
 echo "  ✅ Strict plan: activé"
 echo "  ✅ Telemetry: disabled"
-echo "  ✅ Thinking budget: 2048 tokens (×2)"
+echo "  ✅ Plan thinking budget: 4096 tokens"
+echo "  ✅ Act thinking budget: 3072 tokens"
 echo "  ✅ Output limit: 1000 lignes (×2)"
 echo "  ✅ Auto-condense: activé (threshold 0.65)"
 echo "  ✅ Shell timeout: 6000ms (+50%)"
@@ -84,7 +85,7 @@ echo "📋 Résumé des changements critiques :"
 echo "  • Auto-approval: DÉSACTIVÉ (sécurité)"
 echo "  • Max requests: 20 → 5 (contrôle strict)"
 echo "  • Mode: plan (réflexion avant action)"
-echo "  • Thinking budget: 1024 → 2048 tokens (meilleure qualité)"
+echo "  • Thinking budget: plan=4096 / act=3072 (meilleure qualité)"
 echo "  • Output limit: 500 → 1000 lignes"
 echo "  • Auto-condense: activé (gestion mémoire)"
 echo "  • Langue: French"
