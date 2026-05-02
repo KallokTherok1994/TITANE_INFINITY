@@ -1,5 +1,9 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+> 2026-05-02 — Primary instruction truth sealed: la posture primaire de TITANE est maintenant celle d un `Copilote de Cohérence, miroir lucide et architecte de clarté` jusque dans le fallback Ollama. `src/config/chatModes.config.ts`, `src/services/ai/chatModes.data.ts`, `src/services/ai/chatModes.ts` et `src/services/ai/providers/ollama.ts` convergent sur les mêmes garde-fous: analyse profonde avant stratégie, axe avant vitesse, non-exposition des phases internes, aucune génération de fichier sans demande explicite, et suffixe `Mémoire d Évolution` après les échanges importants. La mémoire du mode `default` passe en `global` pour soutenir l apprentissage inter-session gouverné par les faits confirmés.
+
+> 2026-05-02 — Daily conversation truth tightened: `src/services/ai/responsePolicy.ts` route désormais les modes `default` et `standard` vers le profil `BALANCED` au lieu de `DEVELOPED`, et les profils quotidiens `BALANCED`, `DEVELOPED` et `DEEP` gardent `ollama` en tête de `preferredProviders`. `src/services/ai/providers/ollama.ts` et `src/config/chatModes.config.ts` ont été assouplis pour produire une réponse plus conversationnelle, proportionnée et naturelle, sans perdre la gouvernance locale ni la vérité runtime. Preuves: Vitest `responsePolicy.unit`, `chatDefaultInstructions`, `chatModes.phase17`, `chatModes.runtimeDepth`, `useChat-streaming`, `online-availability`, et `verify:ollama:cline` PASS.
+
 > 2026-04-26 — Transport truth tightened: `src/services/ai/transports/ollamaTransport.ts` distingue maintenant trois voies effectives sans ambiguite. `BROWSER_PROXY` reste reserve au vrai navigateur Vite/LAN via `/api/ollama`, `REMOTE_GATEWAY` repasse par la voie distante gouvernee existante au lieu d un fetch same-origin, et le contexte Node/test reste qualifie `IPC` pour conserver le contrat One Door et les tests de transport. Preuve attendue: contrat Vitest transport vert sans `fetch()` en Node/test, proxy navigateur conserve via les gardes statiques et runtime deja qualifies.
 
 > 2026-04-27 — Browser/mobile proxy truth: la voie navigateur/mobile sur `http://<lan>:1420/titane` n est plus bloquee par le fallback local quand Tauri est absent. `src/services/api/chat.ts` tente maintenant Ollama en premier sur la branche web pour `auto|ollama`, `src/services/ai/transports/ollamaTransport.ts` utilise le proxy same-origin `/api/ollama`, et `vite.config.ts` retire le header `Origin` avant forward vers `127.0.0.1:11434`. Preuve: direct Ollama `POST /api/generate` retourne `403` avec `Origin: http://192.168.2.16:1420`, alors que le meme POST via `http://127.0.0.1:1420/api/ollama/generate` retourne `200` apres correctif; la surface `/titane` affiche ensuite `Requested: auto | Provider: ollama` sur un nouveau tour web/mobile.
@@ -136,8 +140,8 @@ Ollama Server
 7. titane-local (eager, fallback) → +0 score
 ```
 
-**Current Mode**: auto (cloud-first)
-**Ollama Role**: Local fallback after cloud providers
+**Current Mode**: auto (daily conversational path = local-first governed)
+**Ollama Role**: Primary provider on default daily conversational profiles; fallback remains available for other paths
 **Local Mode**: Forces Ollama exclusively (+200 boost)
 
 ---

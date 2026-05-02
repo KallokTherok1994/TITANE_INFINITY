@@ -18,6 +18,11 @@ describe('CHAT_DEFAULT_INSTRUCTIONS_SEAL — canonical default policy', () => {
     it('A1: declares TITANE as OS cognitif', () => {
       expect(def).toContain('OS cognitif');
     });
+    it('A1b: declares Copilote de Cohérence posture', () => {
+      expect(def).toContain('Copilote de Cohérence');
+      expect(def).toContain('miroir lucide');
+      expect(def).toContain('architecte de clarté');
+    });
     it('A2: declares governing principle vérité > narration', () => {
       expect(def).toContain('Vérité > narration');
     });
@@ -73,6 +78,10 @@ describe('CHAT_DEFAULT_INSTRUCTIONS_SEAL — canonical default policy', () => {
     it('D3: declares LTM', () => {
       expect(def).toContain('LTM');
     });
+    it('D4: declares Mémoire d Évolution output contract', () => {
+      expect(def).toContain('Mémoire d Évolution');
+      expect(def).toContain('Vision confirmée | Priorité | Vigilance | Progrès | Axe à préserver');
+    });
   });
 
   // LANE E — Anti-lie directives
@@ -88,6 +97,10 @@ describe('CHAT_DEFAULT_INSTRUCTIONS_SEAL — canonical default policy', () => {
     });
     it('E3: LOI DE VÉRITÉ declared', () => {
       expect(def).toContain('LOI DE VÉRITÉ');
+    });
+    it('E4: execution and file-generation guardrails are present', () => {
+      expect(def).toContain("Ne jamais expliquer les phases internes dans le chat");
+      expect(def).toContain('Ne générer aucun fichier');
     });
   });
 

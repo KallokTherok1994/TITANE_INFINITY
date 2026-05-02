@@ -144,6 +144,16 @@ describe('ResponsePolicy — Sélection dynamique du profil', () => {
     expect(result.profileId).toBe('DIRECT');
   });
 
+  it('mode "default" → BALANCED par défaut du mode conversationnel quotidien', () => {
+    const result = selectResponseProfile({
+      message: 'J aimerais ton avis sur ce sujet.',
+      mode: 'default',
+      complexity: 0.28,
+    });
+    expect(result.profileId).toBe('BALANCED');
+    expect(result.reason).toContain('mode_default');
+  });
+
   it('mode "omega" → OMEGA par défaut du mode', () => {
     const result = selectResponseProfile({
       message: 'comment vas-tu?',
@@ -317,6 +327,12 @@ describe('ResponsePolicy — getEffectiveProfile', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('ResponsePolicy — Compatibilité provider', () => {
+  it('BALANCED, DEVELOPED et DEEP gardent Ollama en tete du parcours quotidien', () => {
+    expect(RESPONSE_PROFILES.BALANCED.preferredProviders[0]).toBe('ollama');
+    expect(RESPONSE_PROFILES.DEVELOPED.preferredProviders[0]).toBe('ollama');
+    expect(RESPONSE_PROFILES.DEEP.preferredProviders[0]).toBe('ollama');
+  });
+
   it('ollama a des paramètres non supportés définis', () => {
     expect(PROVIDER_UNSUPPORTED_PARAMS.ollama).toBeDefined();
     expect(PROVIDER_UNSUPPORTED_PARAMS.ollama.length).toBeGreaterThan(0);

@@ -215,7 +215,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
       maxRetries: 2,
       retryStrategy: 'linear',
     },
-    preferredProviders: ['gemini', 'openai', 'claude', 'ollama', 'titane-local'],
+    preferredProviders: ['ollama', 'gemini', 'openai', 'claude', 'titane-local'],
     truthStatus: 'STABLE_PARTIAL',
     runtimeProven: false,
   },
@@ -248,7 +248,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
       maxRetries: 2,
       retryStrategy: 'exponential',
     },
-    preferredProviders: ['gemini', 'openai', 'claude', 'ollama', 'titane-local'],
+    preferredProviders: ['ollama', 'gemini', 'openai', 'claude', 'titane-local'],
     truthStatus: 'WIRED_BUT_UNPROVEN',
     runtimeProven: false,
   },
@@ -327,8 +327,8 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
 
 /** Profil par défaut selon le mode de chat actif */
 const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
-  default: 'DEVELOPED',
-  standard: 'DEVELOPED',
+  default: 'BALANCED',
+  standard: 'BALANCED',
   quick: 'DIRECT',
   reflection: 'DEEP',
   creation: 'DEVELOPED',

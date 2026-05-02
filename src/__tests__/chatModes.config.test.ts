@@ -82,6 +82,10 @@ describe('🟣 Chat Modes Configuration', () => {
       const uniqueSortOrders = new Set(sortOrders);
       expect(sortOrders.length).toBe(uniqueSortOrders.size);
     });
+
+    it('should keep default mode on global memory scope for progressive coherence', () => {
+      expect(CHAT_MODES_CONFIG.default.memoryScope).toBe('global');
+    });
   });
 
   // ═══════════════════════════════════════════════════════════════════════════

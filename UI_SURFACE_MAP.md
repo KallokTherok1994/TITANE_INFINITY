@@ -1,3 +1,17 @@
+# [2026-05-02] Primary coherence-copilot instruction truth
+
+- Surface canonique runtime: [src/config/chatModes.config.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/config/chatModes.config.ts) porte désormais l instruction primaire `Copilote de Cohérence`, y compris l axe, le miroir honnête, la protection de charge mentale, la discipline de non-exposition des phases et l interdiction de générer des fichiers sans demande explicite.
+- Surface étendue: [src/services/ai/chatModes.data.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/chatModes.data.ts) aligne le mode `default` sur la même posture et bascule sa `memoryScope` vers `global` pour soutenir l apprentissage cohérent entre interactions.
+- Surface fallback: [src/services/ai/providers/ollama.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/providers/ollama.ts) garantit la même posture quand Ollama répond sans historique système injecté.
+- Preuves associées: [src/__tests__/config/chatDefaultInstructions.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/config/chatDefaultInstructions.test.ts), [src/__tests__/chatModes.config.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/chatModes.config.test.ts).
+
+# [2026-05-02] Chat daily-mode conversational truth
+
+- Surface canonique runtime: [src/config/chatModes.config.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/config/chatModes.config.ts) garde `getSystemPrompt('default')` comme autorité legacy, mais le texte par défaut vise désormais une réponse conversationnelle équilibrée, naturelle et proportionnée au besoin au lieu de sur-privilégier une sortie DEEP.
+- Surface canonique de décision: [src/services/ai/responsePolicy.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/responsePolicy.ts) route maintenant `default` et `standard` vers `BALANCED`, avec `ollama` en tête des profils quotidiens `BALANCED`, `DEVELOPED` et `DEEP`.
+- Vérité visible attendue: la surface conversationnelle `/titane?tab=conversation` doit continuer à publier `data-conversation-mode=default`, mais la profondeur effective quotidienne n est plus gonflée par défaut et reste pilotée par la complexité réelle.
+- Preuves associées: [src/__tests__/responsePolicy.unit.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/responsePolicy.unit.test.ts), [src/__tests__/config/chatDefaultInstructions.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/config/chatDefaultInstructions.test.ts), [src/__tests__/services/ai/chatModes.runtimeDepth.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatModes.runtimeDepth.test.ts).
+
 ## 2026-04-27 : BUILD ALL v31.2.14 — Test fixes + Release
 
 > Corrections surfaces E2E : `e2e/htf.spec.ts` — `.first()` sur locators `text=L'Humain à tout faire` et `text=Kevin Thibault` (strict mode violation). `e2e/agents/security-dashboard.e2e.ts` — `nextStep` assertion alignée sur runtime réel `'transport'` (sans Tauri IPC = `oneDoorHealthy=false`). Version surface : v31.2.14 dans footer.
