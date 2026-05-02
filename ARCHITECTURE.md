@@ -655,3 +655,26 @@ Conformité validée par tests 100/100 (avril 2026).
 - **useMetaEnergy** — Hook React: secureInvoke vers 2 endpoints, auto-refresh 15s, error state
 - **SingularityMonitor** — Panel MetaEnergy: data-testid=meta-energy-panel (level, fatigue badge, homeostasis, history)
 - AutoHeal: AH-2026-05-V32-PHASE10-SINGULARITY-META-ENERGY-0009
+
+## [2026-05-02] V32.0.1 — BUILD ALL CERTIFIED
+
+- **Version**: 32.0.0 → 32.0.1 (patch: Prettier gate fix)
+- **Build**: `pnpm run build:production` PASS — lint ✅ format:check ✅ ollama:bundle ✅ vite build ✅ tauri build ✅
+- **Artefacts certifiés**:
+  - AppImage: `57cf8b303fc12ea3000092904735d6119ff5294a8236b2cb1002dbd1bc2f2043`
+  - DEB: `18c2efea705d71f1ed7760e958e84ca857f6be7095ce787378e0ede52a77ae6f`
+  - RPM: `952a8d4362b2e1d04b54fe0e545e29fced7e8e97cc8e908d1b94f8c675f86d5c`
+- **Gates**: IPC contract 30/30 ✅ verify:registry ✅ verify_instructions 33/0 ✅ detect_recurrence 1523 entries ✅
+- **Commit**: `a7a8be016` (168 fichiers, branch MAIN)
+- **Agents avancés**: 7 agents classifiés `partial` (Rule 17 — classification honnête, blockers runtime documentés)
+  - monitoring, diagnostic, explainability, orchestrator, security_active — services + dashboards + E2E opérationnels; pipelines runtime live non encore connectés
+  - knowledge_manager, research_enricher — services opérationnels; intégration chatEngine pipeline non encore activée
+- **IPC_CATALOG**: 1217 commandes (header + table alignés v32.0.1)
+- **AutoHeal**: AH-2026-05-02-BUILD-ALL-V32-0-1-0001, AH-2026-05-02-PRETTIER-GATE-FIX-V32-0-1-0001
+
+## Compat Stubs Isolation — Audit 2026-05-02
+
+- **Stubs**: `src-tauri/src/compat/plugin_system.rs`, `meta_mode_engine.rs`, `exp_fusion_v15.rs`, `auto_evolution_v15.rs`
+- **Audit**: aucun `#[tauri::command]` dans aucun de ces fichiers — confirmed via grep
+- **Enregistrement**: aucune référence dans `src-tauri/src/main.rs` ni `lib.rs`
+- **Verdict**: ISOLATED — stubs non exposés via IPC, aucun risque surface IPC non gouvernée

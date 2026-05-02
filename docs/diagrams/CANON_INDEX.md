@@ -4,6 +4,8 @@ Standards: [MERMAID_STANDARDS.md](../standards/MERMAID_STANDARDS.md)
 
 Source of truth = `sources/*.mmd`
 
+> Dernière révision : 2026-05-02 — v32.0.1 — aucun nouveau diagramme ajouté lors du BUILD ALL v32.0.1.
+
 | Diagram | Intention | Source `.mmd` | Render `.md` | Owner | Date |
 |---|---|---|---|---|---|
 | `architecture_4_ring` | 4-Ring Types → Engines → Services → Modules/UI | `docs/diagrams/sources/architecture_4_ring.mmd` | `docs/diagrams/rendered/architecture_4_ring.md` | TITANE∞ Docs | 2026-02-22 |

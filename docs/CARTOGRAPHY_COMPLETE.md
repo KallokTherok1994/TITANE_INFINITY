@@ -1651,3 +1651,17 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 ### Version: 31.3.4 → 32.0.0
 
 > 2026-05-01 — V33 sprint truth: trois changements structurels dans v32.0.0. (1) `src/services/ai/chatModes.config.ts` réduit à 158L barrel d export — les types migrent vers `src/services/ai/chatModes.types.ts` (239L) et les 23 définitions de modes vers `src/services/ai/chatModes.data.ts` (2212L) ; la frontière types/données/utilitaires est désormais séparée sans changer l API publique ni les imports consommateurs. (2) `src/services/monitoring/MonitoringDashboard.tsx` devient un composant async : `getProjectHealthMetrics()` est appelé via `useEffect` au montage, affichant une section métriques IPC conditionnelle (`monitoring-dashboard-health-metrics`) avec taux de récurrence, ring le plus impacté et lead time moyen lus depuis `autoheal_rules.jsonl` et `registry/ui-events.jsonl` via IPC `read_json_file` (TTL 15 min) — Rule 17 advanced agent runtime truth satisfaite. (3) `scripts/post-build/update-deployment-latest.sh` : script idempotent qui copie DEB+AppImage vers `deployment/latest/` avec manifeste, checksums et tailles. AutoHeal: AH-2026-05-V33-AGENTS-RUNTIME-0001 (1509 entries). Commits: 56fd3bfa6 (V33-2), d67bcb2ab (V33-3), 07b07bdaa (V33-1).
+
+## [2026-05-02] V32.0.1 — BUILD ALL CERTIFIED
+
+- **Version bump**: 32.0.0 → 32.0.1 (Prettier gate fix — 158 fichiers reformatés)
+- **Build production**: `pnpm run lint && pnpm run format:check && pnpm run ollama:bundle && pnpm exec vite build && tauri build` — PASS complet en 10m09s
+- **Artefacts certifiés** (`deployment/latest/`):
+  - `titane-infinity_32.0.1_amd64.AppImage` — sha256: `57cf8b303fc12ea3000092904735d6119ff5294a8236b2cb1002dbd1bc2f2043`
+  - `titane-infinity_32.0.1_amd64.deb` — sha256: `18c2efea705d71f1ed7760e958e84ca857f6be7095ce787378e0ede52a77ae6f`
+  - `titane-infinity-32.0.1-1.x86_64.rpm` — sha256: `952a8d4362b2e1d04b54fe0e545e29fced7e8e97cc8e908d1b94f8c675f86d5c`
+- **Gates PASS**: IPC contract 30/30, verify:registry, verify_instructions 33/0, detect_recurrence (1523 entries)
+- **Commit**: `a7a8be016` (168 fichiers, branch MAIN)
+- **DEB installé**: `sudo dpkg -i titane-infinity_32.0.1_amd64.deb` exit 0 ✅
+- **AutoHeal**: AH-2026-05-02-BUILD-ALL-V32-0-1-0001 (entries=1523), AH-2026-05-02-PRETTIER-GATE-FIX-V32-0-1-0001
+- **NEXT_AUTO_PHASES**: Phase 1 audit agents (RUNTIME_CHANGED=false), Phase 2 IPC_CATALOG count 1137→1217, Phase 3 ARCHITECTURE v32 note, Phase 4 CARTOGRAPHY section, Phase 5 CANON_INDEX refresh, Phase 6 tests coverage, Phase 7 compat stubs isolation
