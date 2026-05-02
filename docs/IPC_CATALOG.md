@@ -36,7 +36,7 @@
 
 > 2026-04-19 — Hybrid memory governed export truth: `hybrid_memory_publish_governed_report` publie maintenant un rapport hybride markdown et un sidecar JSON signé localement sous `~/.local/share/com.titane.infinity/hybrid_memory/exports/`, via `src-tauri/src/hybrid_memory_bridge.rs`. La commande conserve le contrat `{ ok, content, error }`, reste Tauri-only, est alignée sur `src/lib/security.ts` et `tests/contract/tauri-ipc-contract.test.ts`, et laisse le fallback Blob navigateur actif quand la voie desktop n existe pas.
 
-> **1137 commandes IPC Tauri** — Générées le 2026-04-11
+> **1217 commandes IPC Tauri** — v32.0.1 (2026-05-02)
 > Toutes les commandes exposées par `main.rs` via `tauri::generate_handler![]`
 
 ## Résumé par domaine
@@ -109,7 +109,7 @@
 | 64 | Training | 15 |
 | 65 | VAD | 7 |
 | 66 | Voice | 19 |
-| | **TOTAL** | **1137** |
+| | **TOTAL** | **1217** |
 
 ---
 
