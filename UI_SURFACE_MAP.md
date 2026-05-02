@@ -1,10 +1,3 @@
-# [2026-05-02] Primary coherence-copilot instruction truth
-
-- Surface canonique runtime: [src/config/chatModes.config.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/config/chatModes.config.ts) porte désormais l instruction primaire `Copilote de Cohérence`, y compris l axe, le miroir honnête, la protection de charge mentale, la discipline de non-exposition des phases et l interdiction de générer des fichiers sans demande explicite.
-- Surface étendue: [src/services/ai/chatModes.data.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/chatModes.data.ts) aligne le mode `default` sur la même posture et bascule sa `memoryScope` vers `global` pour soutenir l apprentissage cohérent entre interactions.
-- Surface fallback: [src/services/ai/providers/ollama.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/providers/ollama.ts) garantit la même posture quand Ollama répond sans historique système injecté.
-- Preuves associées: [src/__tests__/config/chatDefaultInstructions.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/config/chatDefaultInstructions.test.ts), [src/__tests__/chatModes.config.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/chatModes.config.test.ts).
-
 # [2026-05-02] Chat daily-mode conversational truth
 
 - Surface canonique runtime: [src/config/chatModes.config.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/config/chatModes.config.ts) garde `getSystemPrompt('default')` comme autorité legacy, mais le texte par défaut vise désormais une réponse conversationnelle équilibrée, naturelle et proportionnée au besoin au lieu de sur-privilégier une sortie DEEP.
