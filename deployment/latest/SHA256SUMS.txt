@@ -1,3 +1,3 @@
-32.0.0 sha256sum
-9c582bac18a91085f659161821e8c287c3b1635283dde5cb1dd3691c46c920b1  titane-infinity_32.0.0_amd64.deb
-e6b75e48b0b94759d0737f83b9515fb69541672315178a945679c24f9bee4b09  titane-infinity_32.0.0_amd64.AppImage
+# SHA256 — TITANE∞ v32.0.2 — 2026-05-02T14:13:40Z
+d461ffa80141e0a311e2840c9002841403dfb9e1df1139c5ef89b5e852f6a6ed  titane-infinity_32.0.2_amd64.deb
+ba7c6f204728d2a64eeb8ccbd179cdfabcf2de8064451890d2f76ffdd8be06bc  titane-infinity_32.0.2_amd64.AppImage

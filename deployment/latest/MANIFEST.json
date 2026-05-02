@@ -1,25 +1,8 @@
 {
-  "version": "32.0.0",
-  "date": "2026-05-01",
-  "builds": [
-    {
-      "type": "deb",
-      "filename": "titane-infinity_32.0.0_amd64.deb",
-      "size_mb": 24,
-      "sha256": "9c582bac18a91085f659161821e8c287c3b1635283dde5cb1dd3691c46c920b1"
-    },
-    {
-      "type": "appimage",
-      "filename": "titane-infinity_32.0.0_amd64.AppImage",
-      "size_mb": 93,
-      "sha256": "e6b75e48b0b94759d0737f83b9515fb69541672315178a945679c24f9bee4b09"
-    }
-  ],
-  "commit": "5d4efcadc",
-  "changes": [
-    "fix(window): Tauri window config + programmatic fallback",
-    "feat(chat): GeneratedFilesPanel suivi in-session fichiers générés",
-    "feat(chat): click-to-download — fichiers dans le chat sans dialog",
-    "test(e2e): 8 specs Playwright desktop click-to-download PASS"
+  "version": "32.0.2",
+  "timestamp": "2026-05-02T14:13:40Z",
+  "artifacts": [
+    {"name": "titane-infinity_32.0.2_amd64.deb", "sha256": "d461ffa80141e0a311e2840c9002841403dfb9e1df1139c5ef89b5e852f6a6ed", "size": 24311222},
+    {"name": "titane-infinity_32.0.2_amd64.AppImage", "sha256": "ba7c6f204728d2a64eeb8ccbd179cdfabcf2de8064451890d2f76ffdd8be06bc", "size": 96827896}
   ]
 }

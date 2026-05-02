@@ -5,7 +5,34 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.1 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.2 — Historical baseline preserved below)
+
+## Release v32.0.2 — 2026-05-02 (BUILD ALL — Local bundles sealed)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 32.0.2 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 32.0.2 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 32.0.2 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 32.0.2 | ✅ PASS |
+| `pnpm run lint` | PASS | ✅ PASS |
+| `pnpm run format:check` | PASS — targeted prettier normalization applied before build | ✅ PASS |
+| `pnpm run ollama:bundle` | PASS — SHA256 `3d2608ca8af561ab883aff806adc89842437f37df0e996d6a296910d2a6186b6` | ✅ PASS |
+| `pnpm exec vite build` | PASS | ✅ PASS |
+| `pnpm exec tauri build` | PASS — 9m42s release profile | ✅ PASS |
+| AppImage | `titane-infinity_32.0.2_amd64.AppImage` (96827896 bytes) | ✅ PASS |
+| DEB | `titane-infinity_32.0.2_amd64.deb` (24311222 bytes) | ✅ PASS |
+| RPM | `titane-infinity-32.0.2-1.x86_64.rpm` (24311199 bytes) | ✅ PASS |
+| sha256 AppImage | `ba7c6f204728d2a64eeb8ccbd179cdfabcf2de8064451890d2f76ffdd8be06bc` | ✅ PASS |
+| sha256 DEB | `d461ffa80141e0a311e2840c9002841403dfb9e1df1139c5ef89b5e852f6a6ed` | ✅ PASS |
+| sha256 RPM | `d6084d7c08b90246d5272222f8797a2028790c74262d75881004af25c4295a06` | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_32.0.2.txt` | generated sha256 3 artifacts | ✅ PASS |
+| `pnpm run verify:ollama:cline` | PASS — 5/5 checks | ✅ PASS |
+| `bash scripts/verify_instructions.sh` | PASS=33 FAIL=0 | ✅ PASS |
+| `bash scripts/autoheal/detect_recurrence.sh` | PASS 1532 entries | ✅ PASS |
+| deployment latest manifest | `deployment/latest` updated to `32.0.2` | ✅ PASS |
+| binary sync `/usr/bin/titane-infinity` | repo bundles built, system install still requires `sudo dpkg -i titane-infinity_32.0.2_amd64.deb` | ⚠️ PENDING |
+| desktop launcher / icons | user refresh PASS, system sync `BLOCKED_SUDO_REQUIRED` | ⚠️ PARTIAL |
 
 ## Release v32.0.1 — 2026-05-02 (BUILD ALL — GO ALL — CERTIFIED)
 

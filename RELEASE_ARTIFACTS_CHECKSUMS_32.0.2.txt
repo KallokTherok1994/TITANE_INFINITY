@@ -1,0 +1,5 @@
+# TITANE∞ v32.0.2
+# 2026-05-02T14:13:40Z
+d461ffa80141e0a311e2840c9002841403dfb9e1df1139c5ef89b5e852f6a6ed  src-tauri/target/release/bundle/deb/titane-infinity_32.0.2_amd64.deb
+ba7c6f204728d2a64eeb8ccbd179cdfabcf2de8064451890d2f76ffdd8be06bc  src-tauri/target/release/bundle/appimage/titane-infinity_32.0.2_amd64.AppImage
+d6084d7c08b90246d5272222f8797a2028790c74262d75881004af25c4295a06  src-tauri/target/release/bundle/rpm/titane-infinity-32.0.2-1.x86_64.rpm
