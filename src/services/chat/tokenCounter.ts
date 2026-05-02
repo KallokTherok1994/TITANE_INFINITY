@@ -6,6 +6,7 @@
  */
 
 import type { AIMessage } from '../ai/types';
+import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -45,9 +46,29 @@ const MODEL_CONTEXT_LIMITS: Record<string, ModelContextLimits> = {
     warningThreshold: 0.95,
   },
   'gemini-pro': { model: 'gemini-pro', maxTokens: 32768, warningThreshold: 0.85 },
+  [DEFAULT_OLLAMA_MODEL]: {
+    model: DEFAULT_OLLAMA_MODEL,
+    maxTokens: 8192,
+    warningThreshold: 0.75,
+  },
+  gemma2: { model: 'gemma2', maxTokens: 8192, warningThreshold: 0.75 },
   'local-llama': { model: 'local-llama', maxTokens: 4096, warningThreshold: 0.75 },
   'github-models': { model: 'github-models', maxTokens: 128000, warningThreshold: 0.85 },
 };
+
+function resolveModelContextLimits(model: string): ModelContextLimits | undefined {
+  if (MODEL_CONTEXT_LIMITS[model]) {
+    return MODEL_CONTEXT_LIMITS[model];
+  }
+
+  for (const [key, limits] of Object.entries(MODEL_CONTEXT_LIMITS)) {
+    if (model.startsWith(key)) {
+      return limits;
+    }
+  }
+
+  return undefined;
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // TOKEN ESTIMATION
@@ -130,7 +151,7 @@ export class TokenCounterService {
     isNearLimit: boolean;
     isOverLimit: boolean;
   } {
-    const limits = MODEL_CONTEXT_LIMITS[model] || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
+    const limits = resolveModelContextLimits(model) || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
     if (!limits) {
       throw new Error(`Model ${model} not found in context limits`);
     }
@@ -150,7 +171,7 @@ export class TokenCounterService {
    * Obtient les limites pour un modèle
    */
   getModelLimits(model: string): ModelContextLimits {
-    const limits = MODEL_CONTEXT_LIMITS[model] || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
+    const limits = resolveModelContextLimits(model) || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
     if (!limits) {
       throw new Error(`Model ${model} not found in context limits`);
     }

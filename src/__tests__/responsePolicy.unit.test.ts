@@ -284,23 +284,19 @@ describe('ResponsePolicy — Estimation de complexité', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('ResponsePolicy — getEffectiveProfile', () => {
-  it('modeMaxTokens supérieur au profil → retourne modeMaxTokens', () => {
-    // OMEGA mode est actuellement configuré au plafond backend 32768.
-    // Message suffisamment long pour ne pas déclencher Rule 7 (short_message_direct)
+  it('modeMaxTokens explicite cappe le runtime même si le profil est plus grand', () => {
     const { profile } = getEffectiveProfile(
       'omega',
       'donne-moi toutes les options disponibles',
       4000,
       0.6
     );
-    expect(profile.maxTokens).toBe(32768);
+    expect(profile.maxTokens).toBe(4000);
   });
 
-  it('modeMaxTokens inférieur au profil DEEP → profil DEEP gagne', () => {
-    // Si le mode a moins que DEEP (4000), et qu'on est en DEEP, DEEP l'emporte
-    // (getEffectiveProfile prend max(modeMaxTokens, profile.maxTokens))
+  it('respecte le cap explicite d un mode spécialisé même avec un profil DEEP', () => {
     const { profile } = getEffectiveProfile('omega', 'analyse en profondeur', 1024, 0.7);
-    expect(profile.maxTokens).toBeGreaterThanOrEqual(1024);
+    expect(profile.maxTokens).toBe(1024);
   });
 
   it('explicit override respecté par getEffectiveProfile', () => {
@@ -312,13 +308,33 @@ describe('ResponsePolicy — getEffectiveProfile', () => {
       'DIRECT'
     );
     expect(selectionResult.profileId).toBe('DIRECT');
-    // maxTokens: max(DIRECT.maxTokens=512, modeMaxTokens=4000) = 4000
     expect(profile.maxTokens).toBe(4000);
   });
 
   it('modeTemperature est appliquée quand fournie', () => {
     const { profile } = getEffectiveProfile('default', 'test', 2048, 0.42);
     expect(profile.temperature).toBe(0.42);
+  });
+
+  it('les modes planning et synthesis conservent leur budget explicite au runtime', () => {
+    const planning = getEffectiveProfile('planning', 'structure un plan de lancement', 2500);
+    const synthesis = getEffectiveProfile('synthesis', 'relie ces idées entre elles', 2500);
+
+    expect(planning.profile.id).toBe('ARCHITECT');
+    expect(planning.profile.maxTokens).toBe(2500);
+    expect(synthesis.profile.id).toBe('ARCHITECT');
+    expect(synthesis.profile.maxTokens).toBe(2500);
+  });
+
+  it('le mode brainstorming garde son cap créatif sans hériter du plafond DEEP', () => {
+    const { profile } = getEffectiveProfile(
+      'brainstorming',
+      'brainstorm des idées innovantes',
+      3000
+    );
+
+    expect(profile.id).toBe('DEEP');
+    expect(profile.maxTokens).toBe(3000);
   });
 });
 

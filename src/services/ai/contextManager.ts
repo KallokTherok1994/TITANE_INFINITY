@@ -7,6 +7,7 @@
  */
 
 import { createLogger } from '@/utils/logger';
+import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 import type { AIMessage } from './types';
 import { performanceMonitor, MetricCategory } from './performanceMonitor';
 
@@ -56,6 +57,8 @@ export const MODEL_TOKEN_LIMITS: Record<string, number> = {
   'gemini-1.5-flash': 1_000_000,
 
   // Local models (Ollama)
+  [DEFAULT_OLLAMA_MODEL]: 8_192,
+  gemma2: 8_192,
   'qwen2.5': 32_768,
   llama3: 8_192,
   mistral: 8_192,

@@ -149,6 +149,13 @@ vi.mock('@/services/ai/chatModes', () => ({
       maxTokens: 4096,
       temperature: 0.7,
     },
+    planning: {
+      name: 'Planning',
+      icon: '📋',
+      profileId: 'ARCHITECT',
+      maxTokens: 2500,
+      temperature: 0.6,
+    },
   },
 }));
 
@@ -326,6 +333,24 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     expect(['low', 'medium', 'high', 'max']).toContain(
       decision?.provider.reasoningEffort
     );
+  });
+
+  it('should pass the effective mode runtime cap and temperature to orchestrator', async () => {
+    const { aiOrchestrator } = await import('@/services/ai/orchestrator');
+
+    await chatEngine.generate('Structure un plan de lancement détaillé', [], {
+      mode: 'planning',
+    });
+
+    const lastCall = vi.mocked(aiOrchestrator).generate.mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+
+    const orchestratorConfig = lastCall?.[2] as
+      | { maxTokens?: number; temperature?: number }
+      | undefined;
+
+    expect(orchestratorConfig?.maxTokens).toBe(2500);
+    expect(orchestratorConfig?.temperature).toBe(0.6);
   });
 
   // ── LOCK 3: Kernel inferenceState gates LLM call ──

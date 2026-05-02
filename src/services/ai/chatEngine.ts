@@ -1232,9 +1232,10 @@ Format: [Audit complet] + [Réponse utilisateur]
         orchestratorConfig.fallbackProviders = canonicalDecision.fallbackChain;
       }
 
-      // Use kernel's temperature and maxTokens
-      orchestratorConfig.temperature = canonicalDecision.provider.temperature;
-      orchestratorConfig.maxTokens = canonicalDecision.provider.maxTokens;
+      // Use the effective runtime cap/temperature after mode overrides are applied.
+      // The kernel decides profile/provider; the active mode still owns explicit caps.
+      orchestratorConfig.temperature = effectiveResponseProfile.temperature;
+      orchestratorConfig.maxTokens = effectiveResponseProfile.maxTokens;
       // v30: Pass canonicalMode so orchestrator can honor champion scoring (OLLAMA CHAMPION)
       orchestratorConfig.canonicalMode = canonicalDecision.mode;
 

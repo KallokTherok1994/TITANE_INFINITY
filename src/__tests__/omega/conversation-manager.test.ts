@@ -14,6 +14,7 @@ import {
   sendAIMessage,
 } from '../../services/ai/ConversationManager';
 import type { ConversationMessage } from '../../types/conversation';
+import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 
 // Mock secureInvoke with proper isolation
 vi.mock('@/lib/security', async importOriginal => {
@@ -94,6 +95,27 @@ describe('🧠 ConversationManager (OMEGA v2)', () => {
     expect(response.role).toBe('assistant');
     expect(response.content).toBeDefined();
     expect(response.timestamp).toBeGreaterThan(0);
+  });
+
+  it('should expose the governed local model for local provider conversations', async () => {
+    const message: ConversationMessage = {
+      role: 'user',
+      content: 'Hello TITANE∞ local',
+      timestamp: Date.now(),
+      metadata: {
+        preferredProvider: 'local',
+      },
+    };
+
+    const response = await conversationManager.sendMessage(message, {
+      conversationId: 'local-governed-model',
+      metadata: {
+        preferredProvider: 'local',
+      },
+    });
+
+    expect(response.metadata?.provider).toBe('local');
+    expect(response.metadata?.model).toBe(DEFAULT_OLLAMA_MODEL);
   });
 
   /**

@@ -1924,7 +1924,7 @@ ${chatAttempts.map(a => `- ${a.provider}: ${a.success ? '✅' : '❌ ' + (a.erro
 1. **Installer Ollama (local, gratuit, privé)** :
    \`\`\`bash
    curl -fsSL https://ollama.com/install.sh | sh
-   ollama pull llama3.1:latest
+   ollama pull gemma2:2b
    \`\`\`
 
 2. **Ou configurer une clé API cloud** :

@@ -34,6 +34,7 @@ import { createUnifiedMemory } from '@/services/unified';
 import { MemoryTier } from '@/services/mcp/mcp.types';
 import { getToolCaller } from '@/services/chat/toolCaller'; // Sprint 6 Phase 3
 import { getSystemPrompt } from '@/config/chatModes.config';
+import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 
 // Singleton UnifiedMemory instance
 let _unifiedMemoryInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null = null;
@@ -366,7 +367,7 @@ export class ConversationManager {
     string,
     { backendProvider: string; defaultModel: string }
   > = {
-    local: { backendProvider: 'ollama', defaultModel: 'llama3' },
+    local: { backendProvider: 'ollama', defaultModel: DEFAULT_OLLAMA_MODEL },
     openai: { backendProvider: 'openai', defaultModel: 'gpt-4' },
     gemini: { backendProvider: 'gemini', defaultModel: 'gemini-pro' },
     anthropic: { backendProvider: 'anthropic', defaultModel: 'claude-3-opus' },

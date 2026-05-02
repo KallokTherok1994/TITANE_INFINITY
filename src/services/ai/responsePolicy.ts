@@ -326,7 +326,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Profil par défaut selon le mode de chat actif */
-const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
+export const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
   default: 'BALANCED',
   standard: 'BALANCED',
   quick: 'DIRECT',
@@ -345,7 +345,21 @@ const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
   dev: 'DEEP',
   admin: 'OMEGA',
   audit: 'ARCHITECT',
+  htf_soumission: 'ARCHITECT',
+  psychologie_profils: 'DEEP',
+  humain_total: 'DEVELOPED',
+  veille_recherche: 'ARCHITECT',
+  decision: 'ARCHITECT',
+  kalloks_arts: 'DEVELOPED',
 };
+
+export function hasExplicitModeProfile(mode: string): boolean {
+  return Object.prototype.hasOwnProperty.call(MODE_PROFILE_MAP, mode);
+}
+
+export function getModeProfileDefault(mode: string): ResponseProfileId {
+  return MODE_PROFILE_MAP[mode] ?? 'BALANCED';
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DÉTECTEUR D'INTENTION (lexique minimal, déterministe)
@@ -497,7 +511,7 @@ export function selectResponseProfile(
   }
 
   // Règle 5 : Mode actif → profil par défaut du mode
-  const modeDefault = MODE_PROFILE_MAP[input.mode] ?? 'BALANCED';
+  const modeDefault = getModeProfileDefault(input.mode);
 
   // v30.3.0: Graduated complexity-based profile escalation
   // Replaces the single DEVELOPED→DEEP rule with a multi-tier escalation ladder
@@ -706,9 +720,9 @@ export function getEffectiveProfile(
 
   const base = selectionResult.profile;
 
-  // Si le mode a des paramètres spécifiques plus élevés, les respecter
-  const effectiveMaxTokens =
-    modeMaxTokens && modeMaxTokens > base.maxTokens ? modeMaxTokens : base.maxTokens;
+  // Le mode actif est l'autorité de cap runtime quand il déclare explicitement
+  // un budget de sortie. Le profil reste l'autorité de structure/profondeur.
+  const effectiveMaxTokens = modeMaxTokens ?? base.maxTokens;
   const effectiveTemperature =
     modeTemperature !== undefined ? modeTemperature : base.temperature;
 
