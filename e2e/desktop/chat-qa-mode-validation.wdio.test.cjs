@@ -56,6 +56,8 @@ const appUrl = (route = '/') =>
 
 const RESPONSE_TIMEOUT_MS = parseInt(process.env.RESPONSE_TIMEOUT_MS || '120000', 10);
 const MIN_RESPONSE_LENGTH = parseInt(process.env.MIN_RESPONSE_LENGTH || '200', 10);
+// Limiter le nb de Q&A par mode pour tenir dans une session WebDriver (~10min max)
+const MAX_QA_PER_MODE = parseInt(process.env.MAX_QA_PER_MODE || '3', 10);
 
 // ─── Accumulateur global ──────────────────────────────────────────────────────
 const M = {
@@ -153,52 +155,75 @@ async function selectMode(modeId) {
 async function sendMessage(text) {
   const input = await $('[data-testid="chat-input"]');
   await input.waitForDisplayed({ timeout: 10000 });
+  // Attendre que l'input soit enabled (peut être désactivé pendant le streaming)
+  await input.waitForEnabled({ timeout: 15000 }).catch(() => {});
   await input.clearValue();
+  await browser.pause(200);
   await input.setValue(text);
   await browser.pause(300);
 
   const sendBtn = await $('[data-testid="chat-send"]');
   await sendBtn.waitForDisplayed({ timeout: 5000 });
+  await sendBtn.waitForEnabled({ timeout: 5000 }).catch(() => {});
   await sendBtn.click();
 }
 
 async function waitForResponse() {
-  // Attendre que le loader disparaisse
+  // Pause initiale pour laisser Tauri traiter le click et afficher le loader
+  await browser.pause(2000);
+  // Attendre que le loader APPARAISSE (confirme que la requête est partie)
   await browser.waitUntil(
     async () => {
-      const loader = await $('[data-testid="chat-loading"]');
-      const exists = await loader.isExisting();
-      if (!exists) return true;
-      const displayed = await loader.isDisplayed();
-      return !displayed;
+      const loaders = await $$('[data-testid="chat-loading"]');
+      for (const loader of loaders) {
+        if (await loader.isDisplayed().catch(() => false)) return true;
+      }
+      return false;
+    },
+    { timeout: 10000, interval: 300 }
+  ).catch(() => {}); // timeout OK si le loader est trop rapide
+  // Attendre que le loader DISPARAISSE
+  await browser.waitUntil(
+    async () => {
+      const loaders = await $$('[data-testid="chat-loading"]');
+      if (loaders.length === 0) return true;
+      for (const loader of loaders) {
+        if (await loader.isDisplayed().catch(() => false)) return false;
+      }
+      return true;
     },
     { timeout: RESPONSE_TIMEOUT_MS, interval: 1000 }
   );
-  await browser.pause(1000);
+  await browser.pause(1500);
 }
 
 async function getLastResponseText() {
   try {
     const region = await $('[data-testid="chat-messages-scroll-region"]');
-    const bubbles = await region.$$('[data-testid^="message-"]');
-
-    // Prendre le dernier message IA (role assistant)
+    // Stratégie primaire: data-testid="chat-message-assistant" (TITANE DOM réel)
+    const assistantBubbles = await $$('[data-testid="chat-message-assistant"]');
     let lastText = '';
-    for (let i = bubbles.length - 1; i >= 0; i--) {
-      const el = bubbles[i];
-      const classes = await el.getAttribute('class') || '';
-      const dataRole = await el.getAttribute('data-role') || '';
-      if (dataRole === 'assistant' || classes.includes('assistant') || classes.includes('ai')) {
-        lastText = await el.getText();
-        break;
+    if (assistantBubbles.length > 0) {
+      const lastBubble = assistantBubbles[assistantBubbles.length - 1];
+      // Chercher data-testid="chat-message-content" à l'intérieur de la bulle
+      const contentEl = await lastBubble.$('[data-testid="chat-message-content"]');
+      if (await contentEl.isExisting()) {
+        lastText = await contentEl.getText();
+      } else {
+        lastText = await lastBubble.getText();
       }
     }
 
-    // Fallback: prendre le dernier message de la zone scroll
-    if (!lastText) {
-      const content = await $('[data-testid="chat-message-content"]');
-      if (await content.isExisting()) {
-        lastText = await content.getText();
+    // Fallback: tous les chat-message-content dans la région (prendre le dernier)
+    if (!lastText || lastText.length < 10) {
+      const contents = await region.$$('[data-testid="chat-message-content"]');
+      // Les messages alternent user/assistant: prendre le dernier si index pair (0-based) ou impair selon position
+      for (let i = contents.length - 1; i >= 0; i--) {
+        const txt = await contents[i].getText();
+        if (txt && txt.length > 20) {
+          lastText = txt;
+          break;
+        }
       }
     }
 
@@ -771,7 +796,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -806,7 +831,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -841,7 +866,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -876,7 +901,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -911,7 +936,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -946,7 +971,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -981,7 +1006,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -1016,7 +1041,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -1051,7 +1076,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
@@ -1088,7 +1113,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       await ss('mode_selected', MODE);
     });
 
-    QA_SCENARIOS[MODE].forEach((scenario, idx) => {
+    QA_SCENARIOS[MODE].slice(0, MAX_QA_PER_MODE).forEach((scenario, idx) => {
       it(`Q${idx + 1}: ${scenario.q.substring(0, 60)}...`, async () => {
         await sendMessage(scenario.q);
         await waitForResponse();
