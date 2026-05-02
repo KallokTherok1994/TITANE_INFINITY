@@ -2590,28 +2590,41 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     ]);
 
     const handleDownloadGeneratedFile = useCallback(
-      (entry: GeneratedFileEntry) => {
+      async (entry: GeneratedFileEntry) => {
         if (!entry.content || entry.status !== 'PENDING_DOWNLOAD') return;
-        const mime = MIME_MAP[entry.ext] ?? 'text/plain';
-        const blob = new Blob([entry.content], { type: `${mime};charset=utf-8` });
-        const url = URL.createObjectURL(blob);
-        const anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.download = entry.name;
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-        URL.revokeObjectURL(url);
+        // Tauri production: blob URL + anchor.click() is blocked by WebKitGTK.
+        // Use generateAndSaveFile which picks Tauri save-dialog in production
+        // and falls back to browser blob download in dev/browser mode.
+        const result = await generateAndSaveFile(
+          entry.content,
+          entry.ext,
+          entry.name.replace(/\.[^.]+$/, '') // strip ext — generateAndSaveFile reattaches it
+        );
+        if (result.status === 'SAVE_CANCELLED_HONEST') {
+          // User dismissed the dialog — keep card as PENDING
+          return;
+        }
+        const saved = result.ok;
+        const newStatus = result.status === 'SAVED_TAURI'
+          ? ('SAVED_TAURI' as const)
+          : result.status === 'SAVED_BROWSER_DOWNLOAD'
+          ? ('SAVED_BROWSER_DOWNLOAD' as const)
+          : ('WRITE_FAILED' as const);
         setGeneratedFiles(prev =>
           prev.map(f =>
             f.id === entry.id
-              ? { ...f, status: 'SAVED_BROWSER_DOWNLOAD' as const, content: undefined }
+              ? { ...f, status: newStatus, path: result.path, content: undefined }
               : f
           )
         );
-        toastSuccess(`✅ Téléchargé : ${entry.name}`);
+        if (saved) {
+          const label = result.path ? `→ ${result.path}` : entry.name;
+          toastSuccess(`✅ Sauvegardé : ${label}`);
+        } else {
+          errorToast(`❌ Échec sauvegarde : ${result.error ?? 'erreur inconnue'}`);
+        }
       },
-      [toastSuccess]
+      [toastSuccess, errorToast]
     );
 
     const handleKeyPress = useCallback(
