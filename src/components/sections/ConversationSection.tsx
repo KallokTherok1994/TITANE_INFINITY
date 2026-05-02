@@ -100,9 +100,10 @@ interface GeneratedFileEntry {
   id: string;
   name: string;
   path?: string;
-  status: 'SAVED_TAURI' | 'SAVED_BROWSER_DOWNLOAD' | 'WRITE_FAILED';
+  status: 'PENDING_DOWNLOAD' | 'SAVED_BROWSER_DOWNLOAD' | 'SAVED_TAURI' | 'WRITE_FAILED';
   ext: string;
   timestamp: number;
+  content?: string;
 }
 
 interface ConversationMessageItem extends Pick<
@@ -1356,88 +1357,88 @@ const FILE_EXT_ICONS: Record<string, string> = {
   md: '📝', json: '📋', txt: '📄', html: '🌐', css: '🎨', sh: '🖥️',
 };
 
+const MIME_MAP: Record<string, string> = {
+  py: 'text/x-python', ts: 'text/plain', tsx: 'text/plain', js: 'text/javascript',
+  jsx: 'text/javascript', rs: 'text/plain', md: 'text/markdown', json: 'application/json',
+  txt: 'text/plain', html: 'text/html', css: 'text/css', sh: 'text/x-sh',
+};
+
 const GeneratedFilesPanel = memo(
-  ({ files, onClearAll }: { files: GeneratedFileEntry[]; onClearAll: () => void }) => {
-    const [collapsed, setCollapsed] = useState(false);
-
+  ({
+    files,
+    onClearAll,
+    onDownload,
+  }: {
+    files: GeneratedFileEntry[];
+    onClearAll: () => void;
+    onDownload: (entry: GeneratedFileEntry) => void;
+  }) => {
     if (files.length === 0) return null;
-
-    const handleCopyPath = (path: string) => {
-      void navigator.clipboard.writeText(path).catch(() => {});
-    };
 
     const formatRelativeTime = (timestamp: number): string => {
       const diff = Math.floor((Date.now() - timestamp) / 1000);
-      if (diff < 60) return 'à l'instant';
+      if (diff < 60) return "à l'instant";
       if (diff < 3600) return `il y a ${Math.floor(diff / 60)} min`;
       return `il y a ${Math.floor(diff / 3600)} h`;
     };
 
     return (
       <div className="generated-files-panel" data-testid="generated-files-panel">
-        <button
-          type="button"
-          className="generated-files-header"
-          onClick={() => setCollapsed(c => !c)}
-          aria-expanded={!collapsed}
-        >
-          <span>📁 Fichiers générés ({files.length})</span>
-          <span className="generated-files-chevron">{collapsed ? '▸' : '▾'}</span>
-        </button>
-        {!collapsed && (
-          <div className="generated-files-list">
-            {files.map(entry => {
-              const icon = FILE_EXT_ICONS[entry.ext] ?? '📄';
-              const shortName =
-                entry.name.length > 40 ? `${entry.name.slice(0, 37)}…` : entry.name;
-              const shortPath = entry.path
-                ? entry.path.length > 50
-                  ? `…${entry.path.slice(-47)}`
-                  : entry.path
-                : null;
-              return (
-                <div
-                  key={entry.id}
-                  className="generated-file-entry"
-                  data-testid="generated-file-entry"
-                >
-                  <span className="generated-file-icon">{icon}</span>
-                  <div className="generated-file-info">
-                    <span className="generated-file-name" title={entry.name}>{shortName}</span>
-                    {shortPath && (
-                      <span className="generated-file-path" title={entry.path}>{shortPath}</span>
-                    )}
-                    <span className="generated-file-time">{formatRelativeTime(entry.timestamp)}</span>
-                  </div>
-                  <div className="generated-file-actions">
-                    {entry.status === 'SAVED_TAURI' && entry.path && (
-                      <button
-                        type="button"
-                        className="generated-file-btn"
-                        data-testid="generated-file-copy-path"
-                        title="Copier le chemin"
-                        onClick={() => handleCopyPath(entry.path!)}
-                      >
-                        📋
-                      </button>
-                    )}
-                    {entry.status === 'SAVED_BROWSER_DOWNLOAD' && (
-                      <span className="generated-file-badge">⬇️</span>
-                    )}
-                  </div>
+        <div className="generated-files-header">
+          <span>📁 Fichiers prêts ({files.length})</span>
+          <button
+            type="button"
+            className="generated-files-clear"
+            data-testid="generated-files-clear"
+            onClick={onClearAll}
+            title="Effacer la liste"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="generated-files-list">
+          {files.map(entry => {
+            const icon = FILE_EXT_ICONS[entry.ext] ?? '📄';
+            const isPending = entry.status === 'PENDING_DOWNLOAD';
+            const isSaved =
+              entry.status === 'SAVED_BROWSER_DOWNLOAD' || entry.status === 'SAVED_TAURI';
+            return (
+              <div
+                key={entry.id}
+                className={`generated-file-entry${isPending ? ' generated-file-entry--pending' : ''}${isSaved ? ' generated-file-entry--saved' : ''}`}
+                data-testid="generated-file-entry"
+                data-status={entry.status}
+              >
+                <span className="generated-file-icon">{icon}</span>
+                <div className="generated-file-info">
+                  <span className="generated-file-name" title={entry.name}>{entry.name}</span>
+                  <span className="generated-file-time">{formatRelativeTime(entry.timestamp)}</span>
                 </div>
-              );
-            })}
-            <button
-              type="button"
-              className="generated-files-clear"
-              data-testid="generated-files-clear"
-              onClick={onClearAll}
-            >
-              Effacer la liste
-            </button>
-          </div>
-        )}
+                <div className="generated-file-actions">
+                  {isPending && (
+                    <button
+                      type="button"
+                      className="generated-file-download-btn"
+                      data-testid="generated-file-download"
+                      onClick={() => onDownload(entry)}
+                    >
+                      ⬇️ Télécharger
+                    </button>
+                  )}
+                  {isSaved && (
+                    <span
+                      className="generated-file-saved-badge"
+                      data-testid="generated-file-saved"
+                      title={entry.path ?? 'Téléchargé'}
+                    >
+                      ✅ Sauvegardé
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
@@ -2513,49 +2514,32 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
         thinking.stopThinking();
 
-        // Sauvegarde automatique du fichier généré
+        // Fichier généré : stocké en attente de téléchargement par l'utilisateur
         if (pendingFileSave && response?.assistant_message) {
-          try {
-            const { manifest, contract, ext } = pendingFileSave;
-            const content = extractFileContent(
-              response.assistant_message,
-              contract.target_format
-            );
-            if (!content.trim()) {
-              pageLogger.warn('Auto-save ignoré : contenu extrait vide');
-            } else {
-              const suggestedFilename = extractSuggestedFilename(response.assistant_message);
-              const safeName = suggestedFilename
-                ? suggestedFilename.replace(/\.[^.]+$/, '')
-                : buildSafeFilename(manifest.title);
-              const result = await generateAndSaveFile(content, ext, safeName);
-              if (result.ok) {
-                setGeneratedFiles(prev => [{
-                  id: crypto.randomUUID(),
-                  name: `${safeName}.${ext}`,
-                  path: result.path,
-                  status: result.status as GeneratedFileEntry['status'],
-                  ext,
-                  timestamp: Date.now(),
-                }, ...prev]);
-                toastSuccess(
-                  result.status === 'SAVED_TAURI'
-                    ? `Fichier sauvegardé : ${result.path ?? `${safeName}.${ext}`}`
-                    : `Fichier téléchargé : ${safeName}.${ext}`
-                );
-              } else if (result.status === 'SAVE_CANCELLED_HONEST') {
-                toastSuccess(
-                  `Génération terminée. Copiez le code depuis le chat pour sauvegarder manuellement.`
-                );
-              } else {
-                pageLogger.warn('Auto-save fichier généré échoué', result);
-                errorToast(
-                  `Fichier généré mais sauvegarde échouée (${result.status})${result.error ? ` : ${result.error}` : ''}. Copiez le code depuis le chat.`
-                );
-              }
-            }
-          } catch (saveErr) {
-            pageLogger.warn('Erreur non bloquante sauvegarde fichier généré', saveErr);
+          const { manifest, contract, ext } = pendingFileSave;
+          const content = extractFileContent(
+            response.assistant_message,
+            contract.target_format
+          );
+          if (content.trim()) {
+            const suggestedFilename = extractSuggestedFilename(response.assistant_message);
+            const safeName = suggestedFilename
+              ? suggestedFilename.replace(/\.[^.]+$/, '')
+              : buildSafeFilename(manifest.title);
+            setGeneratedFiles(prev => [
+              {
+                id: crypto.randomUUID(),
+                name: `${safeName}.${ext}`,
+                status: 'PENDING_DOWNLOAD',
+                ext,
+                timestamp: Date.now(),
+                content,
+              },
+              ...prev,
+            ]);
+            toastSuccess(`📁 Fichier prêt — cliquez ⬇️ dans le chat pour télécharger`);
+          } else {
+            pageLogger.warn('Fichier généré ignoré : contenu vide après extraction');
           }
         }
 
@@ -2591,6 +2575,31 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       toastSuccess,
       updateInputValue,
     ]);
+
+    const handleDownloadGeneratedFile = useCallback(
+      (entry: GeneratedFileEntry) => {
+        if (!entry.content || entry.status !== 'PENDING_DOWNLOAD') return;
+        const mime = MIME_MAP[entry.ext] ?? 'text/plain';
+        const blob = new Blob([entry.content], { type: `${mime};charset=utf-8` });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = entry.name;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+        URL.revokeObjectURL(url);
+        setGeneratedFiles(prev =>
+          prev.map(f =>
+            f.id === entry.id
+              ? { ...f, status: 'SAVED_BROWSER_DOWNLOAD' as const, content: undefined }
+              : f
+          )
+        );
+        toastSuccess(`✅ Téléchargé : ${entry.name}`);
+      },
+      [toastSuccess]
+    );
 
     const handleKeyPress = useCallback(
       (e: React.KeyboardEvent) => {
@@ -3219,6 +3228,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               </div>
             )}
 
+            {/* ═══ GENERATED FILES PANEL (in-chat) ═══ */}
+            <GeneratedFilesPanel
+              files={generatedFiles}
+              onClearAll={() => setGeneratedFiles([])}
+              onDownload={handleDownloadGeneratedFile}
+            />
+
             <div ref={messagesEndRef} />
           </div>
 
@@ -3289,12 +3305,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               {isLoading ? '⏳' : '📤'} Envoyer
             </button>
           </div>
-
-          {/* ═══ GENERATED FILES PANEL ═══ */}
-          <GeneratedFilesPanel
-            files={generatedFiles}
-            onClearAll={() => setGeneratedFiles([])}
-          />
 
           {/* ═══ MODE BUILDER MODAL ═══ */}
           {showModeBuilder && (
