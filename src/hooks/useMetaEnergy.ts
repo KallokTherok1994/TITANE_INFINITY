@@ -33,7 +33,9 @@ interface MetaEnergyData {
 
 export function useMetaEnergy(autoRefreshMs = 15_000): MetaEnergyData {
   const [state, setState] = useState<MetaEnergyStateResponse | null>(null);
-  const [diagnostics, setDiagnostics] = useState<MetaEnergyDiagnosticsResponse | null>(null);
+  const [diagnostics, setDiagnostics] = useState<MetaEnergyDiagnosticsResponse | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

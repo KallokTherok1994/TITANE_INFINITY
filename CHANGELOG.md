@@ -154,7 +154,7 @@ et extension KB clinique phases 35-37 (+6 nouveaux modules cognitifs, 259 entré
 - **Phase 35** : `philosophie_ethique_existentielle` (v31.5.1) + `relations_humaines_groupes_sociaux` (v31.5.2)
 - **Phase 36** : `sociologie_economie_politique` (v31.5.3) + `neurosciences_emotions_decision` (v31.5.4)
 - **Phase 37** : `communication_leadership_management` (v31.5.5) + `psychologie_sante_comportements` (v31.5.6)
-- **KB count** : 253 → 259 entrées canoniques (264 JSON − 4 kevin_ exclus du Rust)
+- **KB count** : 253 → 259 entrées canoniques (264 JSON − 4 kevin\_ exclus du Rust)
 - **Rust tests** : `knowledge_base_default::tests` 12/12 PASS
 
 ### AutoHeal

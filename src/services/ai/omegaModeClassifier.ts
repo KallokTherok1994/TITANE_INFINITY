@@ -327,7 +327,7 @@ const EXPLORATION_SIGNALS = [
   'texte pour ma collection',
   'storytelling artiste',
   'flash fiction',
-  'journal d\'artiste',
+  "journal d'artiste",
 ];
 
 /** DEEP_REASONING: complex analysis, synthesis, long reasoning chains */

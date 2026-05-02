@@ -21,24 +21,107 @@ export interface ResearchDetectionResult {
 }
 
 // French and English research trigger patterns with associated intent
-const INTENT_PATTERNS: Array<{ pattern: RegExp; intent: ResearchIntent; weight: number }> = [
-  { pattern: /\b(compare[zr]?|comparaison|diff[eé]rence entre|vs\.?|versus)\b/i, intent: 'comparison', weight: 0.9 },
-  { pattern: /\b(analyse[zr]?|analyser?|[eé]tudier?|[eé]tudie[zr]?)\b/i, intent: 'analysis', weight: 0.85 },
-  { pattern: /\b(recherche|rechercher?|cherche[zr]?|trouve[zr]?|trouver)\b/i, intent: 'search', weight: 0.8 },
-  { pattern: /\b(explique[zr]?|expliquer|qu.?est.?ce que|c.?est quoi|d[eé]finis|d[eé]finition)\b/i, intent: 'explanation', weight: 0.85 },
-  { pattern: /\b(liste[zr]?|lister|[eé]num[eè]re|quels? sont|quelles? sont)\b/i, intent: 'list', weight: 0.8 },
-  { pattern: /\b(comment fonctionne|comment [a-z]+.?il|pourquoi|m[eé]canisme|principe)\b/i, intent: 'explanation', weight: 0.8 },
-  { pattern: /\b([eé]tude|[eé]tudier?|recherche scientifique|[eé]vidence|preuve|donn[eé]es)\b/i, intent: 'study', weight: 0.75 },
-  { pattern: /\b(qu.?est.?ce|c.?est quoi|d[eé]cris|d[eé]crire)\b/i, intent: 'explanation', weight: 0.7 },
-  { pattern: /\b(search|find|look up|what is|how does|explain|describe|list)\b/i, intent: 'search', weight: 0.75 },
-  { pattern: /\b(analyze|analyse|compare|study|research)\b/i, intent: 'analysis', weight: 0.75 },
+const INTENT_PATTERNS: Array<{
+  pattern: RegExp;
+  intent: ResearchIntent;
+  weight: number;
+}> = [
+  {
+    pattern: /\b(compare[zr]?|comparaison|diff[eé]rence entre|vs\.?|versus)\b/i,
+    intent: 'comparison',
+    weight: 0.9,
+  },
+  {
+    pattern: /\b(analyse[zr]?|analyser?|[eé]tudier?|[eé]tudie[zr]?)\b/i,
+    intent: 'analysis',
+    weight: 0.85,
+  },
+  {
+    pattern: /\b(recherche|rechercher?|cherche[zr]?|trouve[zr]?|trouver)\b/i,
+    intent: 'search',
+    weight: 0.8,
+  },
+  {
+    pattern:
+      /\b(explique[zr]?|expliquer|qu.?est.?ce que|c.?est quoi|d[eé]finis|d[eé]finition)\b/i,
+    intent: 'explanation',
+    weight: 0.85,
+  },
+  {
+    pattern: /\b(liste[zr]?|lister|[eé]num[eè]re|quels? sont|quelles? sont)\b/i,
+    intent: 'list',
+    weight: 0.8,
+  },
+  {
+    pattern:
+      /\b(comment fonctionne|comment [a-z]+.?il|pourquoi|m[eé]canisme|principe)\b/i,
+    intent: 'explanation',
+    weight: 0.8,
+  },
+  {
+    pattern:
+      /\b([eé]tude|[eé]tudier?|recherche scientifique|[eé]vidence|preuve|donn[eé]es)\b/i,
+    intent: 'study',
+    weight: 0.75,
+  },
+  {
+    pattern: /\b(qu.?est.?ce|c.?est quoi|d[eé]cris|d[eé]crire)\b/i,
+    intent: 'explanation',
+    weight: 0.7,
+  },
+  {
+    pattern: /\b(search|find|look up|what is|how does|explain|describe|list)\b/i,
+    intent: 'search',
+    weight: 0.75,
+  },
+  {
+    pattern: /\b(analyze|analyse|compare|study|research)\b/i,
+    intent: 'analysis',
+    weight: 0.75,
+  },
 ];
 
 const STOP_WORDS_FR = new Set([
-  'le', 'la', 'les', 'de', 'du', 'des', 'un', 'une', 'et', 'ou', 'en',
-  'à', 'au', 'aux', 'ce', 'qui', 'que', 'pour', 'par', 'sur', 'avec',
-  'dans', 'est', 'sont', 'se', 'si', 'ne', 'pas', 'plus', 'moi', 'toi',
-  'il', 'elle', 'ils', 'elles', 'nous', 'vous', 'je', 'tu', 'on',
+  'le',
+  'la',
+  'les',
+  'de',
+  'du',
+  'des',
+  'un',
+  'une',
+  'et',
+  'ou',
+  'en',
+  'à',
+  'au',
+  'aux',
+  'ce',
+  'qui',
+  'que',
+  'pour',
+  'par',
+  'sur',
+  'avec',
+  'dans',
+  'est',
+  'sont',
+  'se',
+  'si',
+  'ne',
+  'pas',
+  'plus',
+  'moi',
+  'toi',
+  'il',
+  'elle',
+  'ils',
+  'elles',
+  'nous',
+  'vous',
+  'je',
+  'tu',
+  'on',
 ]);
 
 /**

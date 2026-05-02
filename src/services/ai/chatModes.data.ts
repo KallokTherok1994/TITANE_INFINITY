@@ -17,12 +17,7 @@ import type {
   ChatModeConfigExtended,
   ToolPermissions,
 } from './chatModes.types';
-import {
-  TOOLS_MINIMAL,
-  TOOLS_STANDARD,
-  TOOLS_DEV,
-  TOOLS_ADMIN,
-} from './chatModes.types';
+import { TOOLS_MINIMAL, TOOLS_STANDARD, TOOLS_DEV, TOOLS_ADMIN } from './chatModes.types';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIGURATION DES MODES ÉTENDUS (SOURCE DE VÉRITÉ UI/SELECTOR)
@@ -1365,8 +1360,7 @@ Tu es TITANE∞ en mode URGENCE — triage cognitif immédiat et action directri
     icon: '💬',
     themeColor: '#3b82f6',
     defaultProvider: 'auto',
-    systemPrompt:
-      `${buildTitaneIdentityPromptBlock()}
+    systemPrompt: `${buildTitaneIdentityPromptBlock()}
 
 Tu es TITANE∞ en mode STANDARD. Conversation équilibrée, naturelle, développée et directement exploitable. Ton intelligence doit se sentir dans la clarté, la profondeur et la qualité du lien, pas dans un cérémonial de prompt. Sauf demande explicite, ne montre ni tes phases ni ton raisonnement interne. 🌍 Réponds TOUJOURS en français.`,
     temperature: 0.7,
@@ -1535,13 +1529,7 @@ Niveau de certitude : VÉRIFIÉ / PROBABLE / PLAUSIBLE / INCERTAIN
     toolsAllowed: TOOLS_ADMIN,
     memoryScope: 'global',
     profileId: 'omega',
-    enginesEnabled: [
-      'cognitive',
-      'memory',
-      'analysis',
-      'creative',
-      'security',
-    ],
+    enginesEnabled: ['cognitive', 'memory', 'analysis', 'creative', 'security'],
     capabilities: ['full-analysis', 'advanced-processing', 'multi-modal'],
     version: '1.0.0',
     enabled: true,
@@ -1555,7 +1543,8 @@ Niveau de certitude : VÉRIFIÉ / PROBABLE / PLAUSIBLE / INCERTAIN
   psychologie_profils: {
     id: 'psychologie_profils',
     label: 'Psycho-Profils',
-    description: 'Analyse clinique des profils toxiques, manipulation et stratégies de protection',
+    description:
+      'Analyse clinique des profils toxiques, manipulation et stratégies de protection',
     category: 'personal',
     icon: '🧠',
     themeColor: '#7c3aed',
@@ -1648,7 +1637,7 @@ Pour une demande d'identification d'une dynamique ou d'un profil :
   humain_total: {
     id: 'humain_total',
     label: 'Humain Total',
-    description: "Mode Humain Total — accompagnement intégral Kevin Thibault",
+    description: 'Mode Humain Total — accompagnement intégral Kevin Thibault',
     category: 'personal',
     icon: '🌿',
     themeColor: '#16a34a',
@@ -1714,7 +1703,7 @@ Kevin travaille sur lui-même. Tu es son témoin et son architecte de cohérence
     responseStyle: 'detailed',
     tone: 'empathetic',
     suggestedActions: [
-      'Quel module Humain Total aujourd\'hui ?',
+      "Quel module Humain Total aujourd'hui ?",
       'Diagnostic intégral rapide',
       'Ancrage deuxième vitesse',
     ],
@@ -1925,7 +1914,8 @@ Kevin doit choisir. Aide-le à voir clairement — la décision lui appartient.
   kalloks_arts: {
     id: 'kalloks_arts',
     label: "Kallok's Arts",
-    description: "Mode artistique de Kevin — poésie, création visuelle, collections, storytelling Kallok",
+    description:
+      'Mode artistique de Kevin — poésie, création visuelle, collections, storytelling Kallok',
     category: 'creative',
     icon: '🎨',
     themeColor: '#C4704A', // terracotta — palette Kallok's Arts
@@ -2178,7 +2168,7 @@ Format de présentation pour chaque création longue :
     tone: 'artistic',
     suggestedActions: [
       'Écris un poème',
-      "Trouve un titre pour mon œuvre",
+      'Trouve un titre pour mon œuvre',
       'Rédige une description de collection',
       'Crée une fiche produit Etsy',
       'Écris ma bio artiste',
@@ -2208,5 +2198,3 @@ Format de présentation pour chaque création longue :
     tags: ['creative', 'art', 'poetry', 'kallok', 'expression', 'canvas', 'creation'],
   },
 };
-
-

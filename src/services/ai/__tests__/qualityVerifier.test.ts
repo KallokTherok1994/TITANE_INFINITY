@@ -12,11 +12,11 @@ import {
 describe('Phase E — evaluateResponseQuality', () => {
   describe('alignmentScore', () => {
     it('scores high when response contains question keywords', () => {
-      const question = 'Explique l\'architecture modulaire de TypeScript';
+      const question = "Explique l'architecture modulaire de TypeScript";
       const response =
-        'L\'architecture de TypeScript repose sur des modules bien définis. ' +
+        "L'architecture de TypeScript repose sur des modules bien définis. " +
         'Chaque module encapsule une fonctionnalité et expose une interface claire. ' +
-        'L\'architecture modulaire permet de réduire le couplage et d\'augmenter la cohésion.';
+        "L'architecture modulaire permet de réduire le couplage et d'augmenter la cohésion.";
       const critique = evaluateResponseQuality(question, response, 'BALANCED');
       expect(critique.alignmentScore).toBeGreaterThan(0.55);
     });
@@ -24,7 +24,7 @@ describe('Phase E — evaluateResponseQuality', () => {
     it('scores low when response is off-topic', () => {
       const question = 'Comment configurer Webpack pour TypeScript ?';
       const response =
-        'La météo est agréable aujourd\'hui. Il fait beau. Je vous recommande une promenade.';
+        "La météo est agréable aujourd'hui. Il fait beau. Je vous recommande une promenade.";
       const critique = evaluateResponseQuality(question, response, 'BALANCED');
       expect(critique.alignmentScore).toBeLessThan(0.35);
     });
@@ -32,8 +32,9 @@ describe('Phase E — evaluateResponseQuality', () => {
 
   describe('completenessScore', () => {
     it('returns 1.0 when message has no sub-questions', () => {
-      const question = 'Qu\'est-ce que TypeScript';
-      const response = 'TypeScript est un langage de programmation fortement typé basé sur JavaScript.';
+      const question = "Qu'est-ce que TypeScript";
+      const response =
+        'TypeScript est un langage de programmation fortement typé basé sur JavaScript.';
       const critique = evaluateResponseQuality(question, response, 'BALANCED');
       expect(critique.completenessScore).toBe(1.0);
     });
@@ -54,7 +55,7 @@ describe('Phase E — evaluateResponseQuality', () => {
   describe('depthMatchScore', () => {
     it('scores 1.0 when response length exceeds profile minimum', () => {
       // DIRECT requires only ~40 words — this response has ~55 words
-      const question = 'Qu\'est-ce que TypeScript ?';
+      const question = "Qu'est-ce que TypeScript ?";
       const response =
         'TypeScript est un surensemble typé de JavaScript développé par Microsoft. ' +
         'Il ajoute un système de types statiques optionnel qui permet de détecter des erreurs à la compilation. ' +
@@ -64,7 +65,7 @@ describe('Phase E — evaluateResponseQuality', () => {
     });
 
     it('scores low when response is far too short for a DEEP profile', () => {
-      const question = 'Analyse en profondeur l\'architecture de TypeScript';
+      const question = "Analyse en profondeur l'architecture de TypeScript";
       const response = 'TypeScript est bien.';
       const critique = evaluateResponseQuality(question, response, 'DEEP');
       expect(critique.depthMatchScore).toBeLessThan(0.15);
@@ -73,7 +74,8 @@ describe('Phase E — evaluateResponseQuality', () => {
 
   describe('overallScore and shouldEnhance', () => {
     it('sets shouldEnhance = true when overall score is below threshold', () => {
-      const question = 'Analyse complète et détaillée des patterns d\'architecture modulaire dans TypeScript';
+      const question =
+        "Analyse complète et détaillée des patterns d'architecture modulaire dans TypeScript";
       const response = 'TypeScript est bien.';
       const critique = evaluateResponseQuality(question, response, 'ARCHITECT');
       expect(critique.overallScore).toBeLessThan(QUALITY_THRESHOLD);
@@ -81,12 +83,12 @@ describe('Phase E — evaluateResponseQuality', () => {
     });
 
     it('sets shouldEnhance = false for a quality response', () => {
-      const question = 'Qu\'est-ce que TypeScript ?';
+      const question = "Qu'est-ce que TypeScript ?";
       const response =
         'TypeScript est un langage de programmation open-source développé par Microsoft. ' +
         'Il est un surensemble syntaxique de JavaScript qui ajoute un typage statique optionnel. ' +
-        'Il est compilé en JavaScript et peut être utilisé dans n\'importe quel environnement JavaScript. ' +
-        'TypeScript améliore la maintenabilité et la détection d\'erreurs au moment de la compilation.';
+        "Il est compilé en JavaScript et peut être utilisé dans n'importe quel environnement JavaScript. " +
+        "TypeScript améliore la maintenabilité et la détection d'erreurs au moment de la compilation.";
       const critique = evaluateResponseQuality(question, response, 'DIRECT');
       expect(critique.shouldEnhance).toBe(false);
     });

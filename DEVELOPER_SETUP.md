@@ -2,14 +2,14 @@
 
 ## Environnement requis
 
-| Outil | Version minimum | Installation |
-|---|---|---|
-| Node.js | 20 LTS | `fnm install 20` ou `nvm install 20` |
-| pnpm | 8+ | `corepack enable pnpm` |
-| Rust | 1.77 stable | `rustup update stable` |
-| Tauri CLI v2 | ^2.0 | `cargo install tauri-cli --version '^2'` |
-| Ollama | 0.4+ | [ollama.ai](https://ollama.ai) |
-| Git | 2.40+ | Gestionnaire de paquets OS |
+| Outil        | Version minimum | Installation                             |
+| ------------ | --------------- | ---------------------------------------- |
+| Node.js      | 20 LTS          | `fnm install 20` ou `nvm install 20`     |
+| pnpm         | 8+              | `corepack enable pnpm`                   |
+| Rust         | 1.77 stable     | `rustup update stable`                   |
+| Tauri CLI v2 | ^2.0            | `cargo install tauri-cli --version '^2'` |
+| Ollama       | 0.4+            | [ollama.ai](https://ollama.ai)           |
+| Git          | 2.40+           | Gestionnaire de paquets OS               |
 
 ### Linux — Dépendances système (Ubuntu/Debian)
 
@@ -123,11 +123,11 @@ TITANE_INFINITY/
 ## Alias d'import configurés
 
 ```ts
-import { Component } from '@/components/MyComponent';      // → src/components/
-import { useHook } from '@/hooks/useHook';                 // → src/hooks/
-import { safeInvokeCanonical } from '@/utils/invoke';      // ONE DOOR obligatoire
-import data from '@data/knowledge_base/entry.json';        // → data/
-import cfg from '@config/championChallenger.json';         // → config/
+import { Component } from '@/components/MyComponent'; // → src/components/
+import { useHook } from '@/hooks/useHook'; // → src/hooks/
+import { safeInvokeCanonical } from '@/utils/invoke'; // ONE DOOR obligatoire
+import data from '@data/knowledge_base/entry.json'; // → data/
+import cfg from '@config/championChallenger.json'; // → config/
 ```
 
 ## Tests
@@ -163,30 +163,34 @@ bash scripts/verify_instructions.sh
 
 ## Variables d'environnement
 
-| Variable | Valeur par défaut | Usage |
-|---|---|---|
-| `VITE_OLLAMA_URL` | `http://127.0.0.1:11434` | URL serveur Ollama |
-| `VITE_OLLAMA_MODEL` | `gemma2:2b` | Modèle Ollama |
-| `VITE_APP_ENV` | `development` | Environnement |
-| `TITANE_E2E_ANDROID_DEVICE` | `0` | Active les tests E2E Android |
+| Variable                    | Valeur par défaut        | Usage                        |
+| --------------------------- | ------------------------ | ---------------------------- |
+| `VITE_OLLAMA_URL`           | `http://127.0.0.1:11434` | URL serveur Ollama           |
+| `VITE_OLLAMA_MODEL`         | `gemma2:2b`              | Modèle Ollama                |
+| `VITE_APP_ENV`              | `development`            | Environnement                |
+| `TITANE_E2E_ANDROID_DEVICE` | `0`                      | Active les tests E2E Android |
 
 ## Erreurs courantes
 
 ### `typedoc: not found`
+
 ```bash
 # Utiliser npx pour la génération des docs
 npx --yes typedoc --options typedoc.json
 ```
 
 ### `cargo check` échoue avec `E0603`
+
 Vérifier que les modules Rust sont correctement déclarés dans `mod.rs` et `lib.rs`.
 
 ### Port 1420 déjà utilisé
+
 ```bash
 lsof -ti :1420 | xargs kill -9
 ```
 
 ### Ollama non accessible
+
 ```bash
 systemctl --user start ollama  # si service systemd
 # ou

@@ -25,6 +25,8 @@ export const WithError: Story = {
 
 export const ModuleScriptError: Story = {
   args: {
-    error: new Error('Importing a module script failed: The server responded with a non-JavaScript MIME type'),
+    error: new Error(
+      'Importing a module script failed: The server responded with a non-JavaScript MIME type'
+    ),
   },
 };

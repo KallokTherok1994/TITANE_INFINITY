@@ -14,11 +14,7 @@ describe('Phase F — Multi-turn history signals', () => {
       // Use message without '?' to avoid Rule 7c (short simple question) firing before Rule 9
       const result = classifyMode({
         message: 'je ne comprends pas ce que tu veux dire là du tout',
-        conversationHistory: [
-          'c\'est quoi ça ?',
-          'et après ?',
-          'ok et donc ?',
-        ],
+        conversationHistory: ["c'est quoi ça ?", 'et après ?', 'ok et donc ?'],
       });
       expect(result.canonicalMode).toBe('CLARIFY_LIGHT');
     });
@@ -27,11 +23,7 @@ describe('Phase F — Multi-turn history signals', () => {
       // REPAIR signal has higher priority (Rule 1 fires before Rule 9)
       const result = classifyMode({
         message: 'erreur TypeScript: Property does not exist tu peux corriger ?',
-        conversationHistory: [
-          'c\'est quoi ça ?',
-          'et là ?',
-          'ok ?',
-        ],
+        conversationHistory: ["c'est quoi ça ?", 'et là ?', 'ok ?'],
       });
       // REPAIR should still win over CLARIFY_LIGHT
       expect(result.canonicalMode).toBe('REPAIR');
@@ -40,11 +32,7 @@ describe('Phase F — Multi-turn history signals', () => {
     it('returns confidence >= 0.6 for multi-turn CLARIFY_LIGHT', () => {
       const result = classifyMode({
         message: 'ça veut dire quoi ?',
-        conversationHistory: [
-          'pourquoi ça ?',
-          'c\'est quoi ?',
-          'et alors ?',
-        ],
+        conversationHistory: ['pourquoi ça ?', "c'est quoi ?", 'et alors ?'],
       });
       if (result.canonicalMode === 'CLARIFY_LIGHT') {
         expect(result.confidence).toBeGreaterThanOrEqual(0.6);
@@ -71,7 +59,7 @@ describe('Phase F — Multi-turn history signals', () => {
       const result = classifyMode({
         message: 'analyse et évalue cette stratégie architecturale',
         conversationHistory: [
-          'analyse profonde de l\'architecture modulaire',
+          "analyse profonde de l'architecture modulaire",
           'raisonnement sur les patterns de singularité',
           'ok',
         ],
@@ -99,7 +87,7 @@ describe('Phase F — Multi-turn history signals', () => {
       const result = classifyMode({
         message: 'ça veut dire quoi ?',
         conversationHistory: [
-          'c\'est quoi ça ?',
+          "c'est quoi ça ?",
           'et là ?',
           // Only 2 — Rule 9 requires >= 3
         ],
@@ -117,7 +105,7 @@ describe('Phase F — Multi-turn history signals', () => {
         conversationHistory: [
           'voici le projet complet avec une architecture modulaire complexe',
           'je travaille sur une base de données distribuée',
-          'c\'est quoi ce pattern ?',
+          "c'est quoi ce pattern ?",
         ],
       });
       // One interrogative is insufficient → CLARIFY_LIGHT should not be forced by Rule 9

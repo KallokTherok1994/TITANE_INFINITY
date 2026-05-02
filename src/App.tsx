@@ -751,7 +751,9 @@ export const AppRouter: React.FC = () => {
 };
 
 // ✨ GitHub Pages / subdirectory support: use absolute base or fallback to '/'
-const routerBase = import.meta.env.BASE_URL?.startsWith('/') ? import.meta.env.BASE_URL : '/';
+const routerBase = import.meta.env.BASE_URL?.startsWith('/')
+  ? import.meta.env.BASE_URL
+  : '/';
 
 /**
  * ═══════════════════════════════════════════════════════════════

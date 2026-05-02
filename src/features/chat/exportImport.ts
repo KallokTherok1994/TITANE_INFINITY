@@ -88,8 +88,12 @@ async function saveTextExport(
           path: selectedPath,
         };
       } catch (writeError) {
-        const message = writeError instanceof Error ? writeError.message : String(writeError);
-        console.warn('[exportImport] Tauri save failed, fallback to browser download:', message);
+        const message =
+          writeError instanceof Error ? writeError.message : String(writeError);
+        console.warn(
+          '[exportImport] Tauri save failed, fallback to browser download:',
+          message
+        );
         return {
           ok: false,
           status: 'WRITE_FAILED',
@@ -98,7 +102,10 @@ async function saveTextExport(
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      console.warn('[exportImport] Tauri dialog failed, fallback to browser download:', message);
+      console.warn(
+        '[exportImport] Tauri dialog failed, fallback to browser download:',
+        message
+      );
       // Fall through to browser download fallback below
     }
   }
@@ -173,7 +180,11 @@ export async function generateAndSaveFile(
   defaultName: string
 ): Promise<ExportSaveResult> {
   if (!content.trim()) {
-    return { ok: false, status: 'WRITE_FAILED', error: 'Empty content — nothing to save.' };
+    return {
+      ok: false,
+      status: 'WRITE_FAILED',
+      error: 'Empty content — nothing to save.',
+    };
   }
   const cleanExt = ext.replace(/^\./, '').toLowerCase();
   const mime = FILE_MIME_MAP[cleanExt] ?? 'text/plain';

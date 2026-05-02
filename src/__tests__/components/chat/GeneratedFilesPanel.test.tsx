@@ -6,13 +6,25 @@ import { render, screen, fireEvent } from '@/test-utils';
 // (avoids pulling in the full ConversationSection and its heavy deps)
 
 const MIME_MAP: Record<string, string> = {
-  py: 'text/x-python', ts: 'text/plain', tsx: 'text/plain', js: 'text/javascript',
-  rs: 'text/plain', md: 'text/markdown', json: 'application/json', txt: 'text/plain',
+  py: 'text/x-python',
+  ts: 'text/plain',
+  tsx: 'text/plain',
+  js: 'text/javascript',
+  rs: 'text/plain',
+  md: 'text/markdown',
+  json: 'application/json',
+  txt: 'text/plain',
 };
 
 const FILE_EXT_ICONS: Record<string, string> = {
-  py: '🐍', ts: '🔷', tsx: '⚛️', js: '📜', rs: '🦀',
-  md: '📝', json: '📋', txt: '📄',
+  py: '🐍',
+  ts: '🔷',
+  tsx: '⚛️',
+  js: '📜',
+  rs: '🦀',
+  md: '📝',
+  json: '📋',
+  txt: '📄',
 };
 
 interface GeneratedFileEntry {
@@ -47,11 +59,7 @@ function TestGeneratedFilesPanel({
     <div data-testid="generated-files-panel">
       <div className="generated-files-header">
         <span>📁 Fichiers prêts ({files.length})</span>
-        <button
-          type="button"
-          data-testid="generated-files-clear"
-          onClick={onClearAll}
-        >
+        <button type="button" data-testid="generated-files-clear" onClick={onClearAll}>
           ✕
         </button>
       </div>
@@ -137,7 +145,11 @@ describe('GeneratedFilesPanel', () => {
       makeEntry({ ext: 'json', name: 'data.json' }),
     ];
     render(
-      <TestGeneratedFilesPanel files={files} onClearAll={() => {}} onDownload={() => {}} />
+      <TestGeneratedFilesPanel
+        files={files}
+        onClearAll={() => {}}
+        onDownload={() => {}}
+      />
     );
     expect(screen.getAllByTestId('generated-file-entry')).toHaveLength(3);
   });
@@ -169,7 +181,13 @@ describe('GeneratedFilesPanel', () => {
   it('shows saved badge for SAVED_TAURI entries', () => {
     render(
       <TestGeneratedFilesPanel
-        files={[makeEntry({ status: 'SAVED_TAURI', path: '/home/user/file.py', content: undefined })]}
+        files={[
+          makeEntry({
+            status: 'SAVED_TAURI',
+            path: '/home/user/file.py',
+            content: undefined,
+          }),
+        ]}
         onClearAll={() => {}}
         onDownload={() => {}}
       />
@@ -208,7 +226,11 @@ describe('GeneratedFilesPanel', () => {
   it('entry data-status reflects the entry status', () => {
     const entry = makeEntry({ status: 'PENDING_DOWNLOAD' });
     render(
-      <TestGeneratedFilesPanel files={[entry]} onClearAll={() => {}} onDownload={() => {}} />
+      <TestGeneratedFilesPanel
+        files={[entry]}
+        onClearAll={() => {}}
+        onDownload={() => {}}
+      />
     );
     const entryEl = screen.getByTestId('generated-file-entry');
     expect(entryEl).toHaveAttribute('data-status', 'PENDING_DOWNLOAD');

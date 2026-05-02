@@ -79,7 +79,14 @@
             "Conscience altérée (dissociation, dépersonnalisation, déréalisation)"
           ],
           "différence_PTSD": "PTSD = réaction à événement unique; C-PTSD = effet de traumatisations cumulatives et chroniques",
-          "co-occurrences_fréquentes": ["Trouble personnalité borderline", "Dépression majeure", "Troubles anxieux", "Addictions", "Troubles alimentaires", "Douleurs chroniques somatiques"],
+          "co-occurrences_fréquentes": [
+            "Trouble personnalité borderline",
+            "Dépression majeure",
+            "Troubles anxieux",
+            "Addictions",
+            "Troubles alimentaires",
+            "Douleurs chroniques somatiques"
+          ],
           "note_clinique": "C-PTSD souvent mal diagnostiqué comme BPD, bipolarité ou trouble de la personnalité — importance du contexte traumatique"
         },
         "traumatisme_développemental": {
@@ -154,7 +161,12 @@
         },
         "élargissement_fenêtre": {
           "objectif_thérapeutique": "Augmenter progressivement la capacité à tolérer des intensités émotionnelles sans sortir de la fenêtre",
-          "mécanismes": ["Titration — petites doses de matériel traumatique", "Pendulation — aller-retour zone ressource/trauma", "Ressourcement — construire ancres de sécurité corporelle", "Co-régulation thérapeute"],
+          "mécanismes": [
+            "Titration — petites doses de matériel traumatique",
+            "Pendulation — aller-retour zone ressource/trauma",
+            "Ressourcement — construire ancres de sécurité corporelle",
+            "Co-régulation thérapeute"
+          ],
           "neuroplasticité": "La fenêtre s'élargit par la thérapie — preuve IRM fonctionnelle pré/post EMDR/SE"
         },
         "chez_traumatisés_complexes": "Fenêtre extrêmement réduite — oscillations rapides entre hyper et hypo, triggers minimes suffisent à faire sortir de la fenêtre",
@@ -211,7 +223,12 @@
     },
     "neurobiologie_trauma": {
       "titre": "Neurobiologie du trauma — Ce que le corps garde",
-      "auteurs_clés": ["Bessel van der Kolk (The Body Keeps the Score, 2014)", "Peter Levine (Somatic Experiencing)", "Gabor Maté", "Bruce Perry"],
+      "auteurs_clés": [
+        "Bessel van der Kolk (The Body Keeps the Score, 2014)",
+        "Peter Levine (Somatic Experiencing)",
+        "Gabor Maté",
+        "Bruce Perry"
+      ],
       "contenu": {
         "mémoire_traumatique": {
           "mémoire_implicite": "Encodée sans contexte narrative, sens temporel ou sens du soi — fragments sensoriels, émotions, sensations, images",
@@ -262,7 +279,14 @@
         "critique_interne": {
           "définition": "Voix intérieure qui reproduit les messages traumatiques — attaque identitaire continue",
           "pete_walker": "L'ennemi intérieur — fragment introjecté du parent traumatisant",
-          "manifestations": ["Auto-sabotage", "Perfectionnisme paralysant", "Incapacité à recevoir des compliments", "Minimisation constante", "Procrastination par peur du jugement", "Honte d'avoir des besoins"],
+          "manifestations": [
+            "Auto-sabotage",
+            "Perfectionnisme paralysant",
+            "Incapacité à recevoir des compliments",
+            "Minimisation constante",
+            "Procrastination par peur du jugement",
+            "Honte d'avoir des besoins"
+          ],
           "externalisation": "Étape thérapeutique clé — traiter la critique interne comme externe pour la remettre en question"
         },
         "honte_et_trauma": "La honte maintient le secret et empêche la guérison — isolement, secret, conviction d'être 'le seul à vivre ça'",
@@ -293,7 +317,14 @@
             "Établir l'alliance thérapeutique",
             "Psychoéducation sur le trauma"
           ],
-          "outils": ["Techniques de grounding", "Respiration régulante", "Lieu sûr imaginaire", "Conteneur symbolique", "Ressource figure protectrice", "Gestion de crise"],
+          "outils": [
+            "Techniques de grounding",
+            "Respiration régulante",
+            "Lieu sûr imaginaire",
+            "Conteneur symbolique",
+            "Ressource figure protectrice",
+            "Gestion de crise"
+          ],
           "critère_passage_phase2": "Stabilité suffisante dans vie quotidienne, fenêtre tolérance élargit, pas de mise en danger active"
         },
         "phase_2_traitement": {
@@ -304,7 +335,13 @@
             "Installation de croyances positives (VoC ≥ 6/7 post-EMDR)",
             "Désensibilisation des triggers"
           ],
-          "approches": ["EMDR (Gold standard randomisé)", "Thérapie d'exposition prolongée", "Thérapie de traitement cognitif (CPT)", "Thérapie narrative", "EMDR-PRECI pour trauma récent"],
+          "approches": [
+            "EMDR (Gold standard randomisé)",
+            "Thérapie d'exposition prolongée",
+            "Thérapie de traitement cognitif (CPT)",
+            "Thérapie narrative",
+            "EMDR-PRECI pour trauma récent"
+          ],
           "attention_C-PTSD": "Phase 2 peut nécessiter retours en phase 1 — non linéaire"
         },
         "phase_3_integration": {
@@ -316,7 +353,12 @@
             "Reconstruction des relations",
             "Développement de la vie selon ses valeurs"
           ],
-          "approches": ["IFS (Internal Family Systems)", "ACT (Acceptance & Commitment Therapy)", "Thérapie narrative identitaire", "Travail de deuil"],
+          "approches": [
+            "IFS (Internal Family Systems)",
+            "ACT (Acceptance & Commitment Therapy)",
+            "Thérapie narrative identitaire",
+            "Travail de deuil"
+          ],
           "durée_C-PTSD": "Processus long (2-5 ans minimum pour C-PTSD sévère) — mesure sur trajectoire, non sur symptômes ponctuels"
         }
       }

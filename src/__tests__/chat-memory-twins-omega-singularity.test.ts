@@ -47,7 +47,10 @@ const mockStartTrace = vi.fn().mockResolvedValue('trace-test-id');
 const mockLogPhase = vi.fn().mockResolvedValue(undefined);
 const mockEndTrace = vi.fn().mockResolvedValue(undefined);
 const mockCheckConsistency = vi.fn().mockResolvedValue({
-  isConsistent: true, violations: [], consistencyScore: 1.0, shouldCorrect: false,
+  isConsistent: true,
+  violations: [],
+  consistencyScore: 1.0,
+  shouldCorrect: false,
 });
 
 vi.mock('@/services/cognitive/cognitiveOmegaIntegration', () => ({
@@ -77,16 +80,38 @@ vi.mock('@/services/userPreferencesEngine', () => ({
   userPreferencesEngine: {
     getPreferences: vi.fn().mockReturnValue({
       language: 'fr-FR',
-      communicationStyle: { formality: 'informal', verbosity: 'balanced', humor: true, emojis: true },
+      communicationStyle: {
+        formality: 'informal',
+        verbosity: 'balanced',
+        humor: true,
+        emojis: true,
+      },
       interests: [],
       topicsHistory: [],
-      technical: { preferredLanguages: [], expertiseLevel: 'intermediate', preferCodeComments: true, preferExamples: true },
-      audio: { voiceEnabled: true, preferredVoice: 'fr_FR-siwis-medium', preferredSpeed: 1.0 },
-      metrics: {
-        totalInteractions: 5, positiveReactions: 3, negativeReactions: 1,
-        averageResponseLength: 250, lastInteraction: Date.now(), createdAt: Date.now(), updatedAt: Date.now(),
+      technical: {
+        preferredLanguages: [],
+        expertiseLevel: 'intermediate',
+        preferCodeComments: true,
+        preferExamples: true,
       },
-      customPreferences: { deep_internet_analysis: true, primary_user_name: 'Kevin Thibault' },
+      audio: {
+        voiceEnabled: true,
+        preferredVoice: 'fr_FR-siwis-medium',
+        preferredSpeed: 1.0,
+      },
+      metrics: {
+        totalInteractions: 5,
+        positiveReactions: 3,
+        negativeReactions: 1,
+        averageResponseLength: 250,
+        lastInteraction: Date.now(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+      customPreferences: {
+        deep_internet_analysis: true,
+        primary_user_name: 'Kevin Thibault',
+      },
     }),
   },
 }));
@@ -132,8 +157,12 @@ vi.mock('@/services/ai/orchestrator', () => ({
 
 vi.mock('@/services/monitoring/logger', () => ({
   logger: {
-    info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
-    group: vi.fn(), groupEnd: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    group: vi.fn(),
+    groupEnd: vi.fn(),
   },
   generateCorrelationId: vi.fn().mockReturnValue('corr-test-id'),
 }));
@@ -231,7 +260,9 @@ describe('chatEngine.generate() — cognitiveOmega OMEGA connexion', () => {
 
   it('continue sans OMEGA quand enrichContext() rejette (autoHeal)', async () => {
     mockEnrichContext.mockRejectedValueOnce(new Error('OMEGA offline'));
-    const result = await chatEngine.generate('Test OMEGA fallback', [], { mode: 'default' });
+    const result = await chatEngine.generate('Test OMEGA fallback', [], {
+      mode: 'default',
+    });
     expect(result.content.trim().length).toBeGreaterThan(0);
   });
 
@@ -275,7 +306,9 @@ describe('chatEngine.generate() — SingularityBridge (Twins) connexion', () => 
 
   it('pipeline ne plante pas quand Singularity retourne coherence minimale (0)', async () => {
     mockGetCachedCoherence.mockReturnValue(0);
-    const result = await chatEngine.generate('Test coherence zéro', [], { mode: 'default' });
+    const result = await chatEngine.generate('Test coherence zéro', [], {
+      mode: 'default',
+    });
     expect(result.content).toBeDefined();
   });
 });
@@ -293,7 +326,9 @@ describe('chatEngine.generate() — userPreferencesEngine connexion', () => {
   });
 
   it('inclut le pipelineStep preference-extraction', async () => {
-    const result = await chatEngine.generate('Analyse approfondie', [], { mode: 'default' });
+    const result = await chatEngine.generate('Analyse approfondie', [], {
+      mode: 'default',
+    });
     expect(result.omegaMetadata?.pipelineSteps).toContain('preference-extraction');
   });
 });
@@ -334,16 +369,28 @@ describe('chatEngine.generate() — structure réponse et pipeline complet', () 
   });
 
   it('retourne le mode passé en config', async () => {
-    const result = await chatEngine.generate('Test mode journal', [], { mode: 'journal' });
+    const result = await chatEngine.generate('Test mode journal', [], {
+      mode: 'journal',
+    });
     expect(result.mode).toBe('journal');
   });
 
   it('gère un historique non vide', async () => {
     const history = [
-      { role: 'user' as const, content: 'Message précédent', timestamp: Date.now() - 1000 },
-      { role: 'assistant' as const, content: 'Réponse précédente', timestamp: Date.now() - 500 },
+      {
+        role: 'user' as const,
+        content: 'Message précédent',
+        timestamp: Date.now() - 1000,
+      },
+      {
+        role: 'assistant' as const,
+        content: 'Réponse précédente',
+        timestamp: Date.now() - 500,
+      },
     ];
-    const result = await chatEngine.generate('Suite conversation', history, { mode: 'default' });
+    const result = await chatEngine.generate('Suite conversation', history, {
+      mode: 'default',
+    });
     expect(result.content).toBeDefined();
   });
 });
@@ -362,12 +409,12 @@ describe('SingularityBridge — browser fallback', () => {
     expect(c).toBeLessThanOrEqual(1);
   });
 
-  it('initialize() ne lève pas d\'erreur en browser mode', async () => {
+  it("initialize() ne lève pas d'erreur en browser mode", async () => {
     const { SingularityBridge } = await import('@/services/singularityBridge');
     await expect(SingularityBridge.initialize()).resolves.not.toThrow();
   });
 
-  it('subscribe() retourne une fonction d\'unsubscribe', async () => {
+  it("subscribe() retourne une fonction d'unsubscribe", async () => {
     const { SingularityBridge } = await import('@/services/singularityBridge');
     const unsub = SingularityBridge.subscribe(() => {});
     expect(typeof unsub).toBe('function');

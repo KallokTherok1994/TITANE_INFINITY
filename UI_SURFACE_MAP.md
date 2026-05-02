@@ -700,6 +700,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 # [2026-05-01] V33 Sprint — chatModes split + MonitoringDashboard IPC + post-build script
 
 ## V33-2: chatModes.config.ts architectural split
+
 - Fichier source: `src/services/ai/chatModes.config.ts` (barrel public API — 158L)
 - Nouveau: `src/services/ai/chatModes.types.ts` (239L — types, interfaces, tool presets)
 - Nouveau: `src/services/ai/chatModes.data.ts` (2212L — 23 CHAT_MODES_CONFIG avec systemPrompts)
@@ -707,6 +708,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Commit: 56fd3bfa6
 
 ## V33-1: MonitoringDashboard — métriques IPC projet (health metrics section)
+
 - Surface: `monitoring-dashboard` (data-testid)
 - Nouvelle section: `monitoring-dashboard-health-metrics` (conditionnelle, si IPC disponible)
 - Nouveaux selectors: `monitoring-dashboard-health-recurrence`, `-health-ring`, `-health-leadtime`, `-health-evidence-note`
@@ -717,6 +719,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Commit: 07b07bdaa
 
 ## V33-3: update-deployment-latest.sh
+
 - Script: `scripts/post-build/update-deployment-latest.sh`
 - Usage: `bash scripts/post-build/update-deployment-latest.sh [VERSION]`
 - Sortie: `deployment/latest/{DEB,AppImage,VERSION.txt,SHA256SUMS.txt,SIZES.txt,MANIFEST.json}`

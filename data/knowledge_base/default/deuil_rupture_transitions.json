@@ -59,8 +59,21 @@
     "comprendre_le_deuil": {
       "definition_clinique": "Le deuil (grief) est le processus psychologique, émotionnel, cognitif, comportemental et physiologique qui suit une perte significative. Il inclut non seulement la perte par décès mais toute perte de ce qui était important: une relation, une identité, un projet de vie, une capacité, un lieu.",
       "types_de_pertes": {
-        "pertes_visibles": ["Décès d'un proche", "Rupture/divorce/séparation", "Perte d'emploi", "Diagnostic de maladie grave", "Fausse couche/mort périnatale", "Déménagement/exil"],
-        "pertes_invisibles": ["Perte d'une identité (retraite, maternité, succès)", "Perte d'une relation sans mort (maladie d'Alzheimer d'un parent)", "Deuil d'un futur imaginé", "Perte d'une croyance ou d'une foi", "Deuil de l'enfance perdue (trauma)"],
+        "pertes_visibles": [
+          "Décès d'un proche",
+          "Rupture/divorce/séparation",
+          "Perte d'emploi",
+          "Diagnostic de maladie grave",
+          "Fausse couche/mort périnatale",
+          "Déménagement/exil"
+        ],
+        "pertes_invisibles": [
+          "Perte d'une identité (retraite, maternité, succès)",
+          "Perte d'une relation sans mort (maladie d'Alzheimer d'un parent)",
+          "Deuil d'un futur imaginé",
+          "Perte d'une croyance ou d'une foi",
+          "Deuil de l'enfance perdue (trauma)"
+        ],
         "pertes_ambigues_Pauline_Boss": {
           "definition": "Pertes sans clôture claire — Pauline Boss (1999): la personne est là mais psychologiquement absente (démence, addiction) ou absente physiquement mais psychologiquement présente (disparition, adoption)",
           "impact": "Empêche l'élaboration normale du deuil — ambiguïté non résolue chronique"
@@ -110,7 +123,12 @@
       "modele_continuing_bonds": {
         "auteurs": "Klass, Silverman & Nickman (1996) — remise en question du mythe du 'faire son deuil = détacher'",
         "principe": "Le deuil sain ne consiste pas à rompre le lien avec le disparu mais à le transformer — maintenir une connexion intérieure vivante tout en se réengageant dans la vie",
-        "exemples": ["Parler intérieurement à la personne disparue", "Lui dédier un projet", "Perpétuer ses valeurs ou son héritage", "Ressentir sa présence dans certains moments"],
+        "exemples": [
+          "Parler intérieurement à la personne disparue",
+          "Lui dédier un projet",
+          "Perpétuer ses valeurs ou son héritage",
+          "Ressentir sa présence dans certains moments"
+        ],
         "importance_clinique": "Libère les personnes en deuil de l'injonction culturelle toxique 'il faut passer à autre chose' / 'il faut l'oublier'"
       }
     },
@@ -227,7 +245,13 @@
       "rituels_de_deuil": {
         "fonction": "Les rituels culturels et religieux de deuil (funérailles, shiva, quarantaine) remplissent un rôle psychologique essentiel: reconnaître publiquement la perte, rassembler la communauté, marquer la transition",
         "deuils_sans_rituel": "Fausse couche, rupture, mort d'un animal, certaines pertes d'emploi — deuils socialement non reconnus (disenfranchised grief) — créer ses propres rituels est thérapeutique",
-        "rituels_personnels": ["Lettre d'adieu", "Boîte-souvenir", "Arbre planté", "Bougie allumée annuellement", "Date anniversaire honorée"]
+        "rituels_personnels": [
+          "Lettre d'adieu",
+          "Boîte-souvenir",
+          "Arbre planté",
+          "Bougie allumée annuellement",
+          "Date anniversaire honorée"
+        ]
       },
       "groupes_soutien": "Vivre son deuil (France), Deuil-Connect (ligne d'écoute), Albatros (QC), Alliance Deuil (Canada), GRASP pour deuil par suicide"
     },

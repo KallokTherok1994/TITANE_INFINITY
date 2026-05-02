@@ -69,7 +69,11 @@
         "mary_ainsworth": {
           "biographie": "Mary Ainsworth (1913-1999) — psychologue américano-canadienne, opérationnalisa les patterns d'attachement",
           "strange_situation": "Procédure expérimentale standardisée (1970) — séparation/réunion mère-enfant (12-18 mois), codée en aveugle",
-          "trois_styles_originaux": ["Sécure (B)", "Anxieux-ambivalent (C)", "Évitant (A)"],
+          "trois_styles_originaux": [
+            "Sécure (B)",
+            "Anxieux-ambivalent (C)",
+            "Évitant (A)"
+          ],
           "contribution": "Démontre que les comportements d'attachement sont mesurables et prédictifs du développement"
         },
         "mary_main": {
@@ -79,7 +83,12 @@
         },
         "kim_bartholomew": {
           "modèle_adulte": "Bartholomew & Horowitz 1991 — 4 styles adultes basés sur 2 dimensions: modèle de soi (positif/négatif) × modèle des autres (positif/négatif)",
-          "quatre_styles": ["Secure (soi+/autres+)", "Preoccupied (soi-/autres+)", "Dismissing (soi+/autres-)", "Fearful (soi-/autres-)"]
+          "quatre_styles": [
+            "Secure (soi+/autres+)",
+            "Preoccupied (soi-/autres+)",
+            "Dismissing (soi+/autres-)",
+            "Fearful (soi-/autres-)"
+          ]
         }
       }
     },
@@ -218,10 +227,23 @@
       "titre": "L'attachement dans les relations adultes — Dynamiques et patterns",
       "contenu": {
         "activation_système": {
-          "déclencheurs_universels": ["Distance physique prolongée", "Silence et retrait émotionnel", "Indisponibilité perçue", "Conflit non résolu", "Menace de séparation", "Ambiguïté et incertitude"],
+          "déclencheurs_universels": [
+            "Distance physique prolongée",
+            "Silence et retrait émotionnel",
+            "Indisponibilité perçue",
+            "Conflit non résolu",
+            "Menace de séparation",
+            "Ambiguïté et incertitude"
+          ],
           "protest_behaviors": {
             "définition": "Comportements de protestation face à l'inaccessibilité de la figure d'attachement",
-            "manifestations": ["Appels/messages répétés", "Pleurs excessifs", "Menaces de rupture (pour obtenir réaction)", "Jalousie agissante", "Colère disproportionnée"],
+            "manifestations": [
+              "Appels/messages répétés",
+              "Pleurs excessifs",
+              "Menaces de rupture (pour obtenir réaction)",
+              "Jalousie agissante",
+              "Colère disproportionnée"
+            ],
             "fonction": "Tenter de rétablir la proximité avec la figure d'attachement",
             "piège": "Protest behaviors repoussent souvent les partenaires évitants → spirale infernale"
           }

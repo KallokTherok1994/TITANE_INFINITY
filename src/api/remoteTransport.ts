@@ -70,7 +70,9 @@ export function setRemoteGatewayUrl(url: string): void {
 export function clearRemoteGatewayUrl(): void {
   try {
     localStorage.removeItem(KEY_REMOTE_URL);
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
   clearStoredTokens();
 }
 
@@ -79,26 +81,44 @@ export function clearRemoteGatewayUrl(): void {
 // ─────────────────────────────────────────────────────────────────
 
 function getStoredAccessToken(): string | null {
-  try { return sessionStorage.getItem(KEY_ACCESS_TOKEN); } catch { return null; }
+  try {
+    return sessionStorage.getItem(KEY_ACCESS_TOKEN);
+  } catch {
+    return null;
+  }
 }
 
 function setStoredAccessToken(token: string): void {
-  try { sessionStorage.setItem(KEY_ACCESS_TOKEN, token); } catch { /* noop */ }
+  try {
+    sessionStorage.setItem(KEY_ACCESS_TOKEN, token);
+  } catch {
+    /* noop */
+  }
 }
 
 function getStoredRefreshToken(): string | null {
-  try { return sessionStorage.getItem(KEY_REFRESH_TOKEN); } catch { return null; }
+  try {
+    return sessionStorage.getItem(KEY_REFRESH_TOKEN);
+  } catch {
+    return null;
+  }
 }
 
 function setStoredRefreshToken(token: string): void {
-  try { sessionStorage.setItem(KEY_REFRESH_TOKEN, token); } catch { /* noop */ }
+  try {
+    sessionStorage.setItem(KEY_REFRESH_TOKEN, token);
+  } catch {
+    /* noop */
+  }
 }
 
 function clearStoredTokens(): void {
   try {
     sessionStorage.removeItem(KEY_ACCESS_TOKEN);
     sessionStorage.removeItem(KEY_REFRESH_TOKEN);
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -124,7 +144,7 @@ export async function remoteAuthenticate(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ secret }),
     });
-    const data = await resp.json() as {
+    const data = (await resp.json()) as {
       ok: boolean;
       access_token?: string;
       refresh_token?: string;
@@ -154,7 +174,7 @@ async function tryRefreshAccessToken(): Promise<boolean> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken }),
     });
-    const data = await resp.json() as { ok: boolean; access_token?: string };
+    const data = (await resp.json()) as { ok: boolean; access_token?: string };
     if (data.ok && data.access_token) {
       setStoredAccessToken(data.access_token);
       return true;
@@ -201,7 +221,10 @@ export async function remoteInvoke<T = unknown>(
     return {
       ok: false,
       content: null,
-      error: { code: 'REMOTE_URL_NOT_CONFIGURED', message: 'Remote Gateway URL not set. Configure it in TITANE Settings.' },
+      error: {
+        code: 'REMOTE_URL_NOT_CONFIGURED',
+        message: 'Remote Gateway URL not set. Configure it in TITANE Settings.',
+      },
     };
   }
 
@@ -210,7 +233,11 @@ export async function remoteInvoke<T = unknown>(
     return {
       ok: false,
       content: null,
-      error: { code: 'REMOTE_NOT_AUTHENTICATED', message: 'Not authenticated. Call remoteAuthenticate() first or configure the gateway in Settings.' },
+      error: {
+        code: 'REMOTE_NOT_AUTHENTICATED',
+        message:
+          'Not authenticated. Call remoteAuthenticate() first or configure the gateway in Settings.',
+      },
     };
   }
 
@@ -228,12 +255,15 @@ export async function remoteInvoke<T = unknown>(
         return {
           ok: false,
           content: null,
-          error: { code: 'REMOTE_SESSION_EXPIRED', message: 'Session expired. Re-authenticate in TITANE Settings.' },
+          error: {
+            code: 'REMOTE_SESSION_EXPIRED',
+            message: 'Session expired. Re-authenticate in TITANE Settings.',
+          },
         };
       }
     }
 
-    const data = await resp.json() as { ok: boolean; content?: T; error?: string };
+    const data = (await resp.json()) as { ok: boolean; content?: T; error?: string };
     return {
       ok: data.ok === true,
       content: data.ok ? (data.content ?? null) : null,
@@ -265,7 +295,7 @@ export async function probeRemoteGateway(url?: string): Promise<boolean> {
   try {
     const resp = await fetch(`${baseUrl}/api/health`, { method: 'GET' });
     if (!resp.ok) return false;
-    const data = await resp.json() as { ok?: boolean; content?: { status?: string } };
+    const data = (await resp.json()) as { ok?: boolean; content?: { status?: string } };
     // Gateway returns { ok: true, content: { service, status: "ok", ... } }
     return data?.ok === true && data?.content?.status === 'ok';
   } catch {

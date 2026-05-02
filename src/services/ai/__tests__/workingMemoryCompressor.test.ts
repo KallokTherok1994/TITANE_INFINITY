@@ -29,11 +29,15 @@ global.fetch = vi.fn().mockResolvedValue({
 // ─────────────────────────────────────────────────────────────────
 
 function makeMessages(count: number): AIMessage[] {
-  return Array.from({ length: count }, (_, i) => ({
-    role: i % 2 === 0 ? 'user' : 'assistant',
-    content: `Message ${i + 1}: content about topic ${i + 1}`,
-    timestamp: Date.now() + i * 1000,
-  } as AIMessage));
+  return Array.from(
+    { length: count },
+    (_, i) =>
+      ({
+        role: i % 2 === 0 ? 'user' : 'assistant',
+        content: `Message ${i + 1}: content about topic ${i + 1}`,
+        timestamp: Date.now() + i * 1000,
+      }) as AIMessage
+  );
 }
 
 function makeMessage(role: AIMessage['role'], content: string): AIMessage {
@@ -62,28 +66,42 @@ describe('workingMemoryCompressor', () => {
 
   describe('isAnchorMessage', () => {
     it('detects "décision:" marker (FR)', () => {
-      expect(isAnchorMessage(makeMessage('user', 'Décision: utiliser Tauri v2'))).toBe(true);
+      expect(isAnchorMessage(makeMessage('user', 'Décision: utiliser Tauri v2'))).toBe(
+        true
+      );
     });
 
     it('detects "fait:" marker', () => {
-      expect(isAnchorMessage(makeMessage('assistant', 'Fait: TITANE utilise gemma2:2b'))).toBe(true);
+      expect(
+        isAnchorMessage(makeMessage('assistant', 'Fait: TITANE utilise gemma2:2b'))
+      ).toBe(true);
     });
 
     it('detects "important:" marker', () => {
-      expect(isAnchorMessage(makeMessage('user', 'Important: ne pas oublier la config'))).toBe(true);
+      expect(
+        isAnchorMessage(makeMessage('user', 'Important: ne pas oublier la config'))
+      ).toBe(true);
     });
 
     it('detects "à retenir:" marker', () => {
-      expect(isAnchorMessage(makeMessage('assistant', 'À retenir: le format IPC est { ok, content, error }'))).toBe(true);
+      expect(
+        isAnchorMessage(
+          makeMessage('assistant', 'À retenir: le format IPC est { ok, content, error }')
+        )
+      ).toBe(true);
     });
 
     it('detects "key point:" marker (EN)', () => {
-      expect(isAnchorMessage(makeMessage('user', 'Key point: use canonical IPC'))).toBe(true);
+      expect(isAnchorMessage(makeMessage('user', 'Key point: use canonical IPC'))).toBe(
+        true
+      );
     });
 
     it('returns false for regular messages', () => {
       expect(isAnchorMessage(makeMessage('user', 'Comment ça va?'))).toBe(false);
-      expect(isAnchorMessage(makeMessage('assistant', 'Je vais bien, merci!'))).toBe(false);
+      expect(isAnchorMessage(makeMessage('assistant', 'Je vais bien, merci!'))).toBe(
+        false
+      );
     });
   });
 

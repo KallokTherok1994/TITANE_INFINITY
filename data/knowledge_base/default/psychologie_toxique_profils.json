@@ -33,7 +33,15 @@
         },
         "abus": {
           "definition": "Comportement intentionnel ou systématique visant à contrôler, nuire, humilier, ou exploiter autrui, causant un préjudice réel.",
-          "types": ["abus émotionnel", "abus psychologique", "abus verbal", "abus physique", "abus financier", "abus sexuel", "coercition et contrôle"]
+          "types": [
+            "abus émotionnel",
+            "abus psychologique",
+            "abus verbal",
+            "abus physique",
+            "abus financier",
+            "abus sexuel",
+            "coercition et contrôle"
+          ]
         }
       },
       "spectre_dangerosité": {
@@ -304,7 +312,11 @@
       "introduction": "La 'Triade Noire' (Paulhus & Williams 2002) désigne trois traits de personnalité subcliniques partageant un core d'exploitation interpersonnelle, de manque d'empathie et de comportements malveillants.",
       "facteur_d": {
         "definition": "Le Facteur D ('dark core') est le dénominateur commun sous-jacent à tous les traits sombres: maximisation des gains personnels au détriment des autres, avec confort intérieur face à cette exploitation.",
-        "composantes": ["utilité", "indifférence à la souffrance causée", "non-concordance avec les normes morales"],
+        "composantes": [
+          "utilité",
+          "indifférence à la souffrance causée",
+          "non-concordance avec les normes morales"
+        ],
         "implication": "Quelqu'un avec un score D élevé manifestera plusieurs traits sombres simultanément."
       },
       "triande_noire": {
@@ -389,7 +401,13 @@
             "'C'est dans ta tête.'",
             "'Tout le monde pense que tu exagères.'"
           ],
-          "phases": ["nier les faits", "questionner la mémoire de la victime", "invalider les émotions", "recruter des tiers (flying monkeys)", "faire douter de la santé mentale"],
+          "phases": [
+            "nier les faits",
+            "questionner la mémoire de la victime",
+            "invalider les émotions",
+            "recruter des tiers (flying monkeys)",
+            "faire douter de la santé mentale"
+          ],
           "impact": "Anxiété, dissociation, perte de confiance en soi, dépendance croissante au manipulateur pour définir la réalité.",
           "terme_origine": "Film 'Gaslight' (1944) — mari manipule femme pour lui faire croire qu'elle est folle."
         },
@@ -767,7 +785,12 @@
         "dbt": {
           "nom": "DBT (Dialectical Behavior Therapy) — Marsha Linehan",
           "trouble_cible_principal": "Borderline",
-          "modules": ["mindfulness", "tolérance à la détresse", "régulation émotionnelle", "efficacité interpersonnelle"],
+          "modules": [
+            "mindfulness",
+            "tolérance à la détresse",
+            "régulation émotionnelle",
+            "efficacité interpersonnelle"
+          ],
           "efficacite": "Rémission ~85% sur 10 ans pour TPB"
         },
         "mbt": {

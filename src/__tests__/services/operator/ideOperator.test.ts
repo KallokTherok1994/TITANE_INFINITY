@@ -5,7 +5,11 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { MockedFunction } from 'vitest';
-import type { IDESession, IDERelayResult, IDEOperatorConfig } from '../../../services/operator/ideTypes';
+import type {
+  IDESession,
+  IDERelayResult,
+  IDEOperatorConfig,
+} from '../../../services/operator/ideTypes';
 
 // ─────────────────────────────────────────────────────────────────
 // MOCK SETUP — One Door canonical IPC
@@ -114,15 +118,23 @@ describe('IDE Operator — Session Lifecycle', () => {
   it('closeIDESession: calls ide_close_session with session_id', async () => {
     mockSafeInvoke.mockResolvedValueOnce(ok(true));
     const result = await closeIDESession('sess-ide-001');
-    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_close_session', { session_id: 'sess-ide-001' });
+    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_close_session', {
+      session_id: 'sess-ide-001',
+    });
     expect(result).toBe(true);
   });
 
   it('getIDESessionStatus: returns current session state', async () => {
-    const inspecting = { ...SESSION_MOCK, status: 'INSPECTING' as const, actions_count: 5 };
+    const inspecting = {
+      ...SESSION_MOCK,
+      status: 'INSPECTING' as const,
+      actions_count: 5,
+    };
     mockSafeInvoke.mockResolvedValueOnce(ok(inspecting));
     const session = await getIDESessionStatus('sess-ide-001');
-    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_get_session_status', { session_id: 'sess-ide-001' });
+    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_get_session_status', {
+      session_id: 'sess-ide-001',
+    });
     expect(session.status).toBe('INSPECTING');
     expect(session.actions_count).toBe(5);
   });
@@ -136,7 +148,9 @@ describe('IDE Operator — Perception Stack (read-only)', () => {
   it('ideRepoInventory: calls ide_repo_inventory with session_id', async () => {
     mockSafeInvoke.mockResolvedValueOnce(ok(RELAY_RESULT_MOCK));
     const result = await ideRepoInventory('sess-ide-001');
-    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_repo_inventory', { session_id: 'sess-ide-001' });
+    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_repo_inventory', {
+      session_id: 'sess-ide-001',
+    });
     expect(result.ok).toBe(true);
     expect(result.category).toBe('repo_inventory');
     expect(result.scope_used).toBe('repo_read');
@@ -179,7 +193,9 @@ describe('IDE Operator — Perception Stack (read-only)', () => {
   });
 
   it('ideGrepSearch: sends null path when not provided', async () => {
-    mockSafeInvoke.mockResolvedValueOnce(ok({ ...RELAY_RESULT_MOCK, category: 'grep_search' }));
+    mockSafeInvoke.mockResolvedValueOnce(
+      ok({ ...RELAY_RESULT_MOCK, category: 'grep_search' })
+    );
     await ideGrepSearch('sess-ide-001', 'safeInvokeCanonical');
     expect(mockSafeInvoke).toHaveBeenCalledWith('ide_grep_search', {
       session_id: 'sess-ide-001',
@@ -198,7 +214,9 @@ describe('IDE Operator — Perception Stack (read-only)', () => {
     };
     mockSafeInvoke.mockResolvedValueOnce(ok(gitResult));
     const result = await ideGitStatus('sess-ide-001');
-    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_git_status', { session_id: 'sess-ide-001' });
+    expect(mockSafeInvoke).toHaveBeenCalledWith('ide_git_status', {
+      session_id: 'sess-ide-001',
+    });
     expect(result.scope_used).toBe('git_read');
   });
 
@@ -220,7 +238,9 @@ describe('IDE Operator — Perception Stack (read-only)', () => {
   });
 
   it('ideGitDiff: sends null target when not provided', async () => {
-    mockSafeInvoke.mockResolvedValueOnce(ok({ ...RELAY_RESULT_MOCK, category: 'git_diff' }));
+    mockSafeInvoke.mockResolvedValueOnce(
+      ok({ ...RELAY_RESULT_MOCK, category: 'git_diff' })
+    );
     await ideGitDiff('sess-ide-001');
     expect(mockSafeInvoke).toHaveBeenCalledWith('ide_git_diff', {
       session_id: 'sess-ide-001',
@@ -312,17 +332,23 @@ describe('IDE Operator — Config & Availability', () => {
 describe('IDE Operator — X3 Critical Paths', () => {
   describe('[x3] Scope enforcement', () => {
     it('[x3-1] scope_used matches expected for repo_inventory', async () => {
-      mockSafeInvoke.mockResolvedValueOnce(ok({ ...RELAY_RESULT_MOCK, scope_used: 'repo_read' }));
+      mockSafeInvoke.mockResolvedValueOnce(
+        ok({ ...RELAY_RESULT_MOCK, scope_used: 'repo_read' })
+      );
       const r = await ideRepoInventory('s1');
       expect(r.scope_used).toBe('repo_read');
     });
     it('[x3-2] scope_used matches expected for file_read', async () => {
-      mockSafeInvoke.mockResolvedValueOnce(ok({ ...RELAY_RESULT_MOCK, category: 'file_read', scope_used: 'file_read' }));
+      mockSafeInvoke.mockResolvedValueOnce(
+        ok({ ...RELAY_RESULT_MOCK, category: 'file_read', scope_used: 'file_read' })
+      );
       const r = await ideFileRead('s1', 'src/a.ts');
       expect(r.scope_used).toBe('file_read');
     });
     it('[x3-3] scope_used matches expected for safe_command', async () => {
-      mockSafeInvoke.mockResolvedValueOnce(ok({ ...RELAY_RESULT_MOCK, category: 'safe_command', scope_used: 'safe_command' }));
+      mockSafeInvoke.mockResolvedValueOnce(
+        ok({ ...RELAY_RESULT_MOCK, category: 'safe_command', scope_used: 'safe_command' })
+      );
       const r = await ideSafeCommand('s1', 'ls');
       expect(r.scope_used).toBe('safe_command');
     });
@@ -330,14 +356,20 @@ describe('IDE Operator — X3 Critical Paths', () => {
 
   describe('[x3] Session binding', () => {
     it('[x3-1] session_id is preserved in relay result', async () => {
-      mockSafeInvoke.mockResolvedValueOnce(ok({ ...RELAY_RESULT_MOCK, session_id: 'sess-bind-001' }));
+      mockSafeInvoke.mockResolvedValueOnce(
+        ok({ ...RELAY_RESULT_MOCK, session_id: 'sess-bind-001' })
+      );
       const r = await ideRepoInventory('sess-bind-001');
       expect(r.session_id).toBe('sess-bind-001');
     });
     it('[x3-2] session_id is passed to all relay commands', async () => {
-      mockSafeInvoke.mockResolvedValueOnce(ok({ ...RELAY_RESULT_MOCK, session_id: 'sess-bind-002' }));
+      mockSafeInvoke.mockResolvedValueOnce(
+        ok({ ...RELAY_RESULT_MOCK, session_id: 'sess-bind-002' })
+      );
       await ideGitStatus('sess-bind-002');
-      expect(mockSafeInvoke).toHaveBeenCalledWith('ide_git_status', { session_id: 'sess-bind-002' });
+      expect(mockSafeInvoke).toHaveBeenCalledWith('ide_git_status', {
+        session_id: 'sess-bind-002',
+      });
     });
     it('[x3-3] wrong session_id causes IPC failure (server enforces)', async () => {
       mockSafeInvoke.mockResolvedValueOnce(fail('session_not_found'));
@@ -348,22 +380,38 @@ describe('IDE Operator — X3 Critical Paths', () => {
   describe('[x3] Forbidden action blocking', () => {
     it('[x3-1] forbidden command returns error from IPC layer', async () => {
       mockSafeInvoke.mockResolvedValueOnce(fail('forbidden_command: sudo'));
-      await expect(ideSafeCommand('s1', 'sudo rm -rf /')).rejects.toThrow('forbidden_command: sudo');
+      await expect(ideSafeCommand('s1', 'sudo rm -rf /')).rejects.toThrow(
+        'forbidden_command: sudo'
+      );
     });
     it('[x3-2] blocked relay result has block_reason set', async () => {
-      mockSafeInvoke.mockResolvedValueOnce(ok({
-        ...RELAY_RESULT_MOCK, ok: false, category: 'forbidden_sensitive', scope_used: 'forbidden',
-        block_reason: 'forbidden_pattern_detected', handoff_required: true, content: null,
-      }));
+      mockSafeInvoke.mockResolvedValueOnce(
+        ok({
+          ...RELAY_RESULT_MOCK,
+          ok: false,
+          category: 'forbidden_sensitive',
+          scope_used: 'forbidden',
+          block_reason: 'forbidden_pattern_detected',
+          handoff_required: true,
+          content: null,
+        })
+      );
       const r = await ideSafeCommand('s1', 'git push');
       expect(r.ok).toBe(false);
       expect(r.block_reason).toBe('forbidden_pattern_detected');
     });
     it('[x3-3] handoff_required is true when sensitive boundary is hit', async () => {
-      mockSafeInvoke.mockResolvedValueOnce(ok({
-        ...RELAY_RESULT_MOCK, ok: false, category: 'handoff_required', scope_used: 'handoff_required',
-        block_reason: 'sensitive_boundary', handoff_required: true, content: null,
-      }));
+      mockSafeInvoke.mockResolvedValueOnce(
+        ok({
+          ...RELAY_RESULT_MOCK,
+          ok: false,
+          category: 'handoff_required',
+          scope_used: 'handoff_required',
+          block_reason: 'sensitive_boundary',
+          handoff_required: true,
+          content: null,
+        })
+      );
       const r = await ideSafeCommand('s1', 'git commit -am "test"');
       expect(r.handoff_required).toBe(true);
     });

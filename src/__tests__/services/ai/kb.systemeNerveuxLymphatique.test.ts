@@ -114,7 +114,7 @@ describe('SNN — contenu core neuroanatomie', () => {
     expect(text(snn)).toMatch(/noradr[eé]naline/);
     expect(text(snn)).toMatch(/Raphe|locus coeruleus/);
   });
-  it('contient potentiel d\'action et myéline', () => {
+  it("contient potentiel d'action et myéline", () => {
     expect(text(snn)).toMatch(/potentiel.*(action|repos)|repolarisation/);
     expect(text(snn)).toMatch(/my[eé]line|Ranvier/);
     expect(text(snn)).toMatch(/saltatoire/);
@@ -309,11 +309,15 @@ describe('SNN — unit core précis', () => {
     expect(s).toMatch(/tronc|[Bb]ulbe/);
   });
   it('SNP autonome dans systeme_nerveux_peripherique', () => {
-    const s = text((snn.sections as Record<string, unknown>)['systeme_nerveux_peripherique']);
+    const s = text(
+      (snn.sections as Record<string, unknown>)['systeme_nerveux_peripherique']
+    );
     expect(s).toMatch(/sympathique|parasympathique/);
   });
   it('GABA et glutamate dans neurotransmetteurs_systemes', () => {
-    const s = text((snn.sections as Record<string, unknown>)['neurotransmetteurs_systemes']);
+    const s = text(
+      (snn.sections as Record<string, unknown>)['neurotransmetteurs_systemes']
+    );
     expect(s).toMatch(/GABA/);
     expect(s).toMatch(/glutamate/);
   });
@@ -322,11 +326,15 @@ describe('SNN — unit core précis', () => {
     expect(s).toMatch(/LTP/);
   });
   it('Porges dans systeme_nerveux_autonome_detail', () => {
-    const s = text((snn.sections as Record<string, unknown>)['systeme_nerveux_autonome_detail']);
+    const s = text(
+      (snn.sections as Record<string, unknown>)['systeme_nerveux_autonome_detail']
+    );
     expect(s).toMatch(/Porges/);
   });
   it('BHE dans barriere_hemato_encephalique', () => {
-    const s = text((snn.sections as Record<string, unknown>)['barriere_hemato_encephalique']);
+    const s = text(
+      (snn.sections as Record<string, unknown>)['barriere_hemato_encephalique']
+    );
     expect(s).toMatch(/BHE|tight junctions/);
   });
 });
@@ -337,7 +345,9 @@ describe('SNN — unit core précis', () => {
 
 describe('SLS — unit core précis', () => {
   it('hémoglobine dans sang_composition_fonctions', () => {
-    const s = text((sls.sections as Record<string, unknown>)['sang_composition_fonctions']);
+    const s = text(
+      (sls.sections as Record<string, unknown>)['sang_composition_fonctions']
+    );
     expect(s).toMatch(/h[eé]moglobine/);
   });
   it('thrombine dans hemostase_coagulation', () => {
@@ -345,19 +355,27 @@ describe('SLS — unit core précis', () => {
     expect(s).toMatch(/thrombine/);
   });
   it('ABO dans groupes_sanguins_transfusion', () => {
-    const s = text((sls.sections as Record<string, unknown>)['groupes_sanguins_transfusion']);
+    const s = text(
+      (sls.sections as Record<string, unknown>)['groupes_sanguins_transfusion']
+    );
     expect(s).toMatch(/ABO/);
   });
   it('canal thoracique dans systeme_lymphatique_anatomie', () => {
-    const s = text((sls.sections as Record<string, unknown>)['systeme_lymphatique_anatomie']);
+    const s = text(
+      (sls.sections as Record<string, unknown>)['systeme_lymphatique_anatomie']
+    );
     expect(s).toMatch(/canal thoracique/);
   });
   it('CMH dans immunite_innee_adaptative', () => {
-    const s = text((sls.sections as Record<string, unknown>)['immunite_innee_adaptative']);
+    const s = text(
+      (sls.sections as Record<string, unknown>)['immunite_innee_adaptative']
+    );
     expect(s).toMatch(/CMH/);
   });
   it('VEGF dans angiogenese_microcirculation', () => {
-    const s = text((sls.sections as Record<string, unknown>)['angiogenese_microcirculation']);
+    const s = text(
+      (sls.sections as Record<string, unknown>)['angiogenese_microcirculation']
+    );
     expect(s).toMatch(/VEGF/);
   });
 });

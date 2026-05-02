@@ -28,7 +28,11 @@ export async function createJob(
     params: params ?? {},
   });
   if (!result.ok || result.content === null) {
-    return { ok: false, job: null, block_reason: result.error?.message ?? 'job_create failed' };
+    return {
+      ok: false,
+      job: null,
+      block_reason: result.error?.message ?? 'job_create failed',
+    };
   }
   return result.content;
 }
@@ -59,7 +63,9 @@ export async function getJobStatus(jobId: string): Promise<OperatorJob> {
  * List all jobs for a session.
  */
 export async function listJobs(sessionId: string): Promise<JobListResult> {
-  const result = await safeInvokeCanonical<JobListResult>('job_list', { session_id: sessionId });
+  const result = await safeInvokeCanonical<JobListResult>('job_list', {
+    session_id: sessionId,
+  });
   if (!result.ok || result.content === null) {
     throw new Error(result.error?.message ?? 'job_list failed');
   }

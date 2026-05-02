@@ -49,9 +49,7 @@ const THEME_PATTERNS: Record<KnowledgeTheme, RegExp> = {
 /**
  * Clusters KB entries by thematic domain.
  */
-export function clusterByTheme(
-  entries: KBEntry[]
-): Record<KnowledgeTheme, KBEntry[]> {
+export function clusterByTheme(entries: KBEntry[]): Record<KnowledgeTheme, KBEntry[]> {
   const result = {} as Record<KnowledgeTheme, KBEntry[]>;
   const themes = Object.keys(THEME_PATTERNS) as KnowledgeTheme[];
   themes.forEach(t => {
@@ -220,8 +218,7 @@ export function getKBStats(entries: KBEntry[]): KBStats {
     totalEntries: entries.length,
     categoriesCount: new Set(entries.map(e => e.category)).size,
     themeCoverage,
-    avgTriggersPerEntry:
-      entries.length > 0 ? allTriggers.length / entries.length : 0,
+    avgTriggersPerEntry: entries.length > 0 ? allTriggers.length / entries.length : 0,
     topTriggers,
   };
 }

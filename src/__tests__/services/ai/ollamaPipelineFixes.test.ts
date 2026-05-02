@@ -33,12 +33,15 @@ describe('R4 — responseCache: mock provider guard', () => {
 
   it('does not return an exact-match entry with provider=mock', () => {
     const cache = new (ResponseCache as any)(50, 60000);
-    const key = { message: "Qu'est-ce que l'intelligence artificielle ?", mode: 'DIRECT' };
+    const key = {
+      message: "Qu'est-ce que l'intelligence artificielle ?",
+      mode: 'DIRECT',
+    };
 
     // Inject a mock entry directly
     const cacheKey = (cache as any).generateKey(key);
     (cache as any).cache.set(cacheKey, {
-      content: "Réponse fictive mock",
+      content: 'Réponse fictive mock',
       provider: 'mock',
       model: 'mock-model',
       timestamp: Date.now(),
@@ -52,11 +55,14 @@ describe('R4 — responseCache: mock provider guard', () => {
 
   it('returns an exact-match entry with provider=ollama', () => {
     const cache = new (ResponseCache as any)(50, 60000);
-    const key = { message: "Qu'est-ce que l'intelligence artificielle ?", mode: 'DIRECT' };
+    const key = {
+      message: "Qu'est-ce que l'intelligence artificielle ?",
+      mode: 'DIRECT',
+    };
 
     const cacheKey = (cache as any).generateKey(key);
     (cache as any).cache.set(cacheKey, {
-      content: "Réponse Ollama réelle",
+      content: 'Réponse Ollama réelle',
       provider: 'ollama',
       model: 'gemma2:2b',
       timestamp: Date.now(),
@@ -144,10 +150,13 @@ describe('R3 — userPreferencesEngine: honest LLM instruction', () => {
     const engine = mod.userPreferencesEngine ?? (mod as any).default;
 
     // Get the instruction string through the public API (buildContextInjection or similar)
-    const prefs = engine?.getPreferences?.() ?? { customPreferences: { deep_internet_analysis: true } };
+    const prefs = engine?.getPreferences?.() ?? {
+      customPreferences: { deep_internet_analysis: true },
+    };
     // Force deep_internet_analysis to true to trigger injection
     if (prefs.customPreferences) prefs.customPreferences['deep_internet_analysis'] = true;
-    const injection = engine?.buildContextInjection?.(prefs) ?? engine?.generateContextForAI?.() ?? '';
+    const injection =
+      engine?.buildContextInjection?.(prefs) ?? engine?.generateContextForAI?.() ?? '';
 
     // The instruction must NOT claim live internet crawling
     expect(injection).not.toMatch(/ANALYSE INTERNET MAXIMALE/);
@@ -187,7 +196,9 @@ describe('R2 — reflectiveVerifier: Tauri-safe webSearch import', async () => {
     const text = (src as any).default as string;
 
     // Must use webSearch import
-    expect(text).toMatch(/import\s*\{[^}]*\bwebSearch\b[^}]*\}\s*from\s*['"]@\/services\/webResearchService['"]/);
+    expect(text).toMatch(
+      /import\s*\{[^}]*\bwebSearch\b[^}]*\}\s*from\s*['"]@\/services\/webResearchService['"]/
+    );
     // Must NOT import browserWebSearch
     expect(text).not.toMatch(/import\s*\{[^}]*\bbrowserWebSearch\b[^}]*\}\s*from/);
     // Must call webSearch( not browserWebSearch(
@@ -215,7 +226,11 @@ describe('R1 — orchestrator: LOCAL_PROVIDER_SET prevents cloud override of loc
     const text = (src as any).default as string;
 
     // Both keys must be set together (vOLLAMA_AUTHORITY fix)
-    expect(text).toContain('orchestratorConfig.preferredProvider = canonicalDecision.provider.name');
-    expect(text).toContain('orchestratorConfig.provider = canonicalDecision.provider.name');
+    expect(text).toContain(
+      'orchestratorConfig.preferredProvider = canonicalDecision.provider.name'
+    );
+    expect(text).toContain(
+      'orchestratorConfig.provider = canonicalDecision.provider.name'
+    );
   });
 });

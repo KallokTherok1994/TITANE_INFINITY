@@ -4,7 +4,11 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { CHAT_MODES_CONFIG, MODES_BY_CATEGORY, ACTIVE_MODE_IDS } from '@/services/ai/chatModes.config';
+import {
+  CHAT_MODES_CONFIG,
+  MODES_BY_CATEGORY,
+  ACTIVE_MODE_IDS,
+} from '@/services/ai/chatModes.config';
 import { BUILT_IN_MODES } from '@/hooks/useChatModes';
 
 describe("Kallok's Arts mode — identity & config", () => {
@@ -163,7 +167,15 @@ describe("Kallok's Arts mode — type safety", () => {
   });
 
   it('tone is a valid CommunicationTone value', () => {
-    const validTones = ['professional', 'empathetic', 'neutral', 'technical', 'motivational', 'analytical', 'artistic'];
+    const validTones = [
+      'professional',
+      'empathetic',
+      'neutral',
+      'technical',
+      'motivational',
+      'analytical',
+      'artistic',
+    ];
     expect(validTones).toContain(mode.tone);
   });
 

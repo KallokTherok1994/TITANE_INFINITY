@@ -201,11 +201,13 @@ describe('ToolCallerService — executeToolCall()', () => {
     const customTool: ToolDefinition = {
       name: 'my_func',
       description: 'Fonction test',
-      execute: async (args) => ({ echoed: args.input }),
+      execute: async args => ({ echoed: args.input }),
     };
     service.registerTool(customTool);
 
-    const { result, error } = await service.executeToolCall('my_func', { input: 'hello' });
+    const { result, error } = await service.executeToolCall('my_func', {
+      input: 'hello',
+    });
 
     expect(error).toBeUndefined();
     expect((result as Record<string, unknown>).echoed).toBe('hello');
@@ -223,7 +225,9 @@ describe('ToolCallerService — executeToolCall()', () => {
     const failingTool: ToolDefinition = {
       name: 'failing_tool',
       description: 'Lève une erreur',
-      execute: async () => { throw new Error('Intentional failure'); },
+      execute: async () => {
+        throw new Error('Intentional failure');
+      },
     };
     service.registerTool(failingTool);
 
@@ -248,11 +252,13 @@ describe('ToolCallerService — executeToolCalls()', () => {
 
   it('exécute deux appels en parallèle et retourne les deux résultats', async () => {
     const toolA: ToolDefinition = {
-      name: 'tool_a', description: 'A',
+      name: 'tool_a',
+      description: 'A',
       execute: async () => ({ from: 'A' }),
     };
     const toolB: ToolDefinition = {
-      name: 'tool_b', description: 'B',
+      name: 'tool_b',
+      description: 'B',
       execute: async () => ({ from: 'B' }),
     };
     service.registerTool(toolA);
@@ -285,7 +291,10 @@ describe('ToolCallerService — web_search intégration', () => {
   it('appelle webSearch() avec query et maxResults', async () => {
     webSearchMock.mockResolvedValueOnce({ ok: true, content: [], error: null });
 
-    await service.executeToolCall('web_search', { query: 'IA générative', maxResults: 3 });
+    await service.executeToolCall('web_search', {
+      query: 'IA générative',
+      maxResults: 3,
+    });
 
     expect(webSearchMock).toHaveBeenCalledWith('IA générative', 3);
   });
@@ -299,11 +308,15 @@ describe('ToolCallerService — web_search intégration', () => {
       error: null,
     });
 
-    const { result } = await service.executeToolCall('web_search', { query: 'IA', maxResults: 5 });
+    const { result } = await service.executeToolCall('web_search', {
+      query: 'IA',
+      maxResults: 5,
+    });
 
     expect((result as Record<string, unknown>).results).toHaveLength(1);
     expect(
-      ((result as Record<string, unknown>).results as Array<Record<string, unknown>>)[0].title
+      ((result as Record<string, unknown>).results as Array<Record<string, unknown>>)[0]
+        .title
     ).toBe('Article IA');
   });
 
@@ -314,7 +327,10 @@ describe('ToolCallerService — web_search intégration', () => {
       error: { code: 'SEARXNG_TIMEOUT', message: 'Connexion expirée' },
     });
 
-    const { result } = await service.executeToolCall('web_search', { query: 'test', maxResults: 5 });
+    const { result } = await service.executeToolCall('web_search', {
+      query: 'test',
+      maxResults: 5,
+    });
 
     expect((result as Record<string, unknown>).results).toEqual([]);
     expect(typeof (result as Record<string, unknown>).error).toBe('string');
@@ -334,7 +350,9 @@ describe('ToolCallerService — calculate', () => {
   });
 
   it('calcule 2+2 = 4', async () => {
-    const { result, error } = await service.executeToolCall('calculate', { expression: '2+2' });
+    const { result, error } = await service.executeToolCall('calculate', {
+      expression: '2+2',
+    });
     expect(error).toBeUndefined();
     expect((result as Record<string, unknown>).result).toBe(4);
   });
@@ -345,19 +363,25 @@ describe('ToolCallerService — calculate', () => {
   });
 
   it('calcule des décimaux — 1.5 + 2.5 = 4', async () => {
-    const { result, error } = await service.executeToolCall('calculate', { expression: '1.5+2.5' });
+    const { result, error } = await service.executeToolCall('calculate', {
+      expression: '1.5+2.5',
+    });
     expect(error).toBeUndefined();
     expect((result as Record<string, unknown>).result).toBe(4);
   });
 
   it('calcule avec parenthèses — (2+3)*4 = 20', async () => {
-    const { result, error } = await service.executeToolCall('calculate', { expression: '(2+3)*4' });
+    const { result, error } = await service.executeToolCall('calculate', {
+      expression: '(2+3)*4',
+    });
     expect(error).toBeUndefined();
     expect((result as Record<string, unknown>).result).toBe(20);
   });
 
   it('retourne une erreur sur division par zéro', async () => {
-    const { result, error } = await service.executeToolCall('calculate', { expression: '10/0' });
+    const { result, error } = await service.executeToolCall('calculate', {
+      expression: '10/0',
+    });
     expect(result).toBeNull();
     expect(error).toContain('zero');
   });
@@ -447,11 +471,13 @@ describe('ToolCallerService — getCallHistory()', () => {
     expect(typeof history[0].timestamp).toBe('number');
   });
 
-  it('enregistre aussi les erreurs dans l\'historique (outil existant qui throw)', async () => {
+  it("enregistre aussi les erreurs dans l'historique (outil existant qui throw)", async () => {
     const failTool: ToolDefinition = {
       name: 'fail_hist',
       description: 'Outil qui échoue',
-      execute: async () => { throw new Error('Échec intentionnel'); },
+      execute: async () => {
+        throw new Error('Échec intentionnel');
+      },
     };
     service.registerTool(failTool);
     await service.executeToolCall('fail_hist', {});
@@ -462,7 +488,7 @@ describe('ToolCallerService — getCallHistory()', () => {
     expect(history[0].error).toBeDefined();
   });
 
-  it('accumule plusieurs appels dans l\'ordre', async () => {
+  it("accumule plusieurs appels dans l'ordre", async () => {
     await service.executeToolCall('get_time', {});
     await service.executeToolCall('calculate', { expression: '1+1' });
     const history = service.getCallHistory();
@@ -485,7 +511,9 @@ describe('ToolCallerService — formatToolResult()', () => {
   });
 
   it('formate un résultat réussi avec JSON indenté', () => {
-    const formatted = service.formatToolResult('get_time', { iso: '2026-04-28T10:00:00.000Z' });
+    const formatted = service.formatToolResult('get_time', {
+      iso: '2026-04-28T10:00:00.000Z',
+    });
 
     expect(formatted).toContain('**Tool Result (get_time):**');
     expect(formatted).toContain('```json');
@@ -493,8 +521,12 @@ describe('ToolCallerService — formatToolResult()', () => {
     expect(formatted).toContain('2026-04-28T10:00:00.000Z');
   });
 
-  it('formate une erreur avec le message d\'erreur', () => {
-    const formatted = service.formatToolResult('web_search', null, 'Service indisponible');
+  it("formate une erreur avec le message d'erreur", () => {
+    const formatted = service.formatToolResult(
+      'web_search',
+      null,
+      'Service indisponible'
+    );
 
     expect(formatted).toContain('**Tool Error (web_search):**');
     expect(formatted).toContain('Service indisponible');
@@ -557,7 +589,9 @@ describe('ToolCallerService — get_stock', () => {
   });
 
   it('retourne un objet avec ticker, price, change, changePercent', async () => {
-    const { result, error } = await service.executeToolCall('get_stock', { ticker: 'AAPL' });
+    const { result, error } = await service.executeToolCall('get_stock', {
+      ticker: 'AAPL',
+    });
 
     expect(error).toBeUndefined();
     const r = result as Record<string, unknown>;
@@ -612,7 +646,10 @@ describe('ToolCallerService — web_search edge cases', () => {
       error: null,
     });
 
-    const { result } = await service.executeToolCall('web_search', { query: 'vide', maxResults: 5 });
+    const { result } = await service.executeToolCall('web_search', {
+      query: 'vide',
+      maxResults: 5,
+    });
     const r = result as Record<string, unknown>;
 
     expect(r.results).toEqual([]);

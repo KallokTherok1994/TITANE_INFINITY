@@ -336,7 +336,9 @@ describe('computeThreatScore', () => {
   });
 
   it('accepte un filtre de sévérité sans throw', () => {
-    const score = computeThreatScore('critical' as Parameters<typeof computeThreatScore>[0]);
+    const score = computeThreatScore(
+      'critical' as Parameters<typeof computeThreatScore>[0]
+    );
     expect(typeof score.score).toBe('number');
   });
 
@@ -356,7 +358,7 @@ describe('acknowledgeSecurityDashboardEvent', () => {
     clearStorage();
   });
 
-  it('persiste l\'acquittement dans localStorage sans throw', () => {
+  it("persiste l'acquittement dans localStorage sans throw", () => {
     expect(() => acknowledgeSecurityDashboardEvent('evt-001')).not.toThrow();
   });
 

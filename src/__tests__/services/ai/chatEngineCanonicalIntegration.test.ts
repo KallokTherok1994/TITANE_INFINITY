@@ -430,7 +430,7 @@ Voulez-vous que je continue ?`,
     chatEngine.setProvider('ollama');
 
     const response = await chatEngine.generate(
-      'Analyse de l\'architecture système Ring 0',
+      "Analyse de l'architecture système Ring 0",
       [],
       { mode: 'default' }
     );
@@ -452,7 +452,10 @@ Voulez-vous que je continue ?`,
     const orchestratorCall = vi.mocked(aiOrchestrator).generate.mock.calls[0];
     if (orchestratorCall) {
       const orchestratorConfig = orchestratorCall[2]; // 3rd arg = config
-      if (orchestratorConfig?.preferredProvider && orchestratorConfig.preferredProvider !== 'auto') {
+      if (
+        orchestratorConfig?.preferredProvider &&
+        orchestratorConfig.preferredProvider !== 'auto'
+      ) {
         // The preferred provider passed to orchestrator must be the kernel's choice, not cognitiveKernel's
         expect(orchestratorConfig.preferredProvider).not.toBe('gemini');
         expect(orchestratorConfig.preferredProvider).not.toBe('anthropic');
@@ -501,11 +504,9 @@ Voulez-vous que je continue ?`,
   it('should pass kernel fallback chain order to orchestrator config', async () => {
     chatEngine.setProvider('auto');
 
-    const response = await chatEngine.generate(
-      'Architecture Ring 0 Tauri IPC',
-      [],
-      { mode: 'default' }
-    );
+    const response = await chatEngine.generate('Architecture Ring 0 Tauri IPC', [], {
+      mode: 'default',
+    });
 
     const decision = response.omegaMetadata?.canonicalDecision;
     expect(decision).toBeDefined();

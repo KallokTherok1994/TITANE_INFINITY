@@ -26,7 +26,11 @@ export async function openDesktopSession(
     allowed_surfaces: allowedSurfaces,
   });
   if (!result.ok || result.content === null) {
-    return { ok: false, session: null, error: result.error?.message ?? 'desktop_open_session failed' };
+    return {
+      ok: false,
+      session: null,
+      error: result.error?.message ?? 'desktop_open_session failed',
+    };
   }
   return result.content;
 }
@@ -34,12 +38,21 @@ export async function openDesktopSession(
 /**
  * Close an existing desktop perception session.
  */
-export async function closeDesktopSession(sessionId: string): Promise<DesktopSessionResult> {
-  const result = await safeInvokeCanonical<DesktopSessionResult>('desktop_close_session', {
-    session_id: sessionId,
-  });
+export async function closeDesktopSession(
+  sessionId: string
+): Promise<DesktopSessionResult> {
+  const result = await safeInvokeCanonical<DesktopSessionResult>(
+    'desktop_close_session',
+    {
+      session_id: sessionId,
+    }
+  );
   if (!result.ok || result.content === null) {
-    return { ok: false, session: null, error: result.error?.message ?? 'desktop_close_session failed' };
+    return {
+      ok: false,
+      session: null,
+      error: result.error?.message ?? 'desktop_close_session failed',
+    };
   }
   return result.content;
 }
@@ -50,11 +63,18 @@ export async function closeDesktopSession(sessionId: string): Promise<DesktopSes
 export async function getDesktopSessionStatus(
   sessionId: string
 ): Promise<DesktopSessionResult> {
-  const result = await safeInvokeCanonical<DesktopSessionResult>('desktop_get_session_status', {
-    session_id: sessionId,
-  });
+  const result = await safeInvokeCanonical<DesktopSessionResult>(
+    'desktop_get_session_status',
+    {
+      session_id: sessionId,
+    }
+  );
   if (!result.ok || result.content === null) {
-    return { ok: false, session: null, error: result.error?.message ?? 'desktop_get_session_status failed' };
+    return {
+      ok: false,
+      session: null,
+      error: result.error?.message ?? 'desktop_get_session_status failed',
+    };
   }
   return result.content;
 }
@@ -95,7 +115,10 @@ export async function desktopListWindows(
  * Get the desktop operator config (platform, availability, forbidden actions).
  */
 export async function getDesktopOperatorConfig(): Promise<DesktopOperatorConfig> {
-  const result = await safeInvokeCanonical<DesktopOperatorConfig>('desktop_get_config', {});
+  const result = await safeInvokeCanonical<DesktopOperatorConfig>(
+    'desktop_get_config',
+    {}
+  );
   if (!result.ok || result.content === null) {
     throw new Error(result.error?.message ?? 'desktop_get_config failed');
   }
@@ -191,6 +214,3 @@ export async function getDesktopControlStatus(
   }
   return result.content;
 }
-
-
-

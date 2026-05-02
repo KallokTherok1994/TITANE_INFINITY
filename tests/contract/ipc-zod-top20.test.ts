@@ -16,18 +16,25 @@ describe('IPC Zod Contract — Top-20 (V32 Phase 3)', () => {
   });
 
   it('create_new_conversation: rejects missing userId', () => {
-    expect(() => validateIpcPayload('create_new_conversation', {})).toThrow(/IPC contract/);
+    expect(() => validateIpcPayload('create_new_conversation', {})).toThrow(
+      /IPC contract/
+    );
   });
 
   // ─── get_conversation_history ───────────────────────────────
   it('get_conversation_history: accepts valid payload', () => {
     expect(() =>
-      validateIpcPayload('get_conversation_history', { conversationId: 'conv-1', limit: 20 })
+      validateIpcPayload('get_conversation_history', {
+        conversationId: 'conv-1',
+        limit: 20,
+      })
     ).not.toThrow();
   });
 
   it('get_conversation_history: rejects missing conversationId', () => {
-    expect(() => validateIpcPayload('get_conversation_history', {})).toThrow(/IPC contract/);
+    expect(() => validateIpcPayload('get_conversation_history', {})).toThrow(
+      /IPC contract/
+    );
   });
 
   // ─── delete_conversation ────────────────────────────────────
@@ -58,9 +65,9 @@ describe('IPC Zod Contract — Top-20 (V32 Phase 3)', () => {
   });
 
   it('chat_set_gemini_key: rejects empty key', () => {
-    expect(() =>
-      validateIpcPayload('chat_set_gemini_key', { key: '' })
-    ).toThrow(/IPC contract/);
+    expect(() => validateIpcPayload('chat_set_gemini_key', { key: '' })).toThrow(
+      /IPC contract/
+    );
   });
 
   // ─── cycle commands (no-args) ────────────────────────────────
@@ -88,15 +95,18 @@ describe('IPC Zod Contract — Top-20 (V32 Phase 3)', () => {
   });
 
   it('cycle_predict_events: rejects hoursAhead > 168', () => {
-    expect(() =>
-      validateIpcPayload('cycle_predict_events', { hoursAhead: 999 })
-    ).toThrow(/IPC contract/);
+    expect(() => validateIpcPayload('cycle_predict_events', { hoursAhead: 999 })).toThrow(
+      /IPC contract/
+    );
   });
 
   // ─── cycle_suggest_optimal_time ──────────────────────────────
   it('cycle_suggest_optimal_time: accepts valid payload', () => {
     expect(() =>
-      validateIpcPayload('cycle_suggest_optimal_time', { taskType: 'deep-work', durationMinutes: 90 })
+      validateIpcPayload('cycle_suggest_optimal_time', {
+        taskType: 'deep-work',
+        durationMinutes: 90,
+      })
     ).not.toThrow();
   });
 
@@ -108,9 +118,9 @@ describe('IPC Zod Contract — Top-20 (V32 Phase 3)', () => {
   });
 
   it('web_research: rejects empty query', () => {
-    expect(() =>
-      validateIpcPayload('web_research', { query: '' })
-    ).toThrow(/IPC contract/);
+    expect(() => validateIpcPayload('web_research', { query: '' })).toThrow(
+      /IPC contract/
+    );
   });
 
   // ─── memory_hybrid_store ─────────────────────────────────────
@@ -142,15 +152,13 @@ describe('IPC Zod Contract — Top-20 (V32 Phase 3)', () => {
 
   // ─── window_set_zoom ─────────────────────────────────────────
   it('window_set_zoom: accepts valid zoom level', () => {
-    expect(() =>
-      validateIpcPayload('window_set_zoom', { level: 1.5 })
-    ).not.toThrow();
+    expect(() => validateIpcPayload('window_set_zoom', { level: 1.5 })).not.toThrow();
   });
 
   it('window_set_zoom: rejects zoom level > 5.0', () => {
-    expect(() =>
-      validateIpcPayload('window_set_zoom', { level: 10 })
-    ).toThrow(/IPC contract/);
+    expect(() => validateIpcPayload('window_set_zoom', { level: 10 })).toThrow(
+      /IPC contract/
+    );
   });
 
   // ─── get_ollama_status (no-args) ─────────────────────────────

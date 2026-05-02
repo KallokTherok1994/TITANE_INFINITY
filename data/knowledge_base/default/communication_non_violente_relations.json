@@ -74,25 +74,98 @@
         "principe_Krishnamurti": "Observer sans évaluer est la plus haute forme d'intelligence humaine",
         "chacal": "Tu arrives toujours tard / Tu ne fais jamais rien à la maison / C'est nul.",
         "girafe": "Quand je vois que tu rentres après 20h trois fois cette semaine... / Quand j'entends 'laisse tomber' dans notre conversation...",
-        "pieges": ["Utiliser 'toujours / jamais / souvent' = interprétation", "Inclure une évaluation voilée = 'quand tu es brutal avec moi'", "Inférer l'intention = 'quand tu fais exprès d'oublier'"]
+        "pieges": [
+          "Utiliser 'toujours / jamais / souvent' = interprétation",
+          "Inclure une évaluation voilée = 'quand tu es brutal avec moi'",
+          "Inférer l'intention = 'quand tu fais exprès d'oublier'"
+        ]
       },
       "S_sentiments": {
         "definition": "Exprimer ce qu'on ressent vraiment — émotions authentiques liées à nos besoins satisfaits ou non — en distinguant sentiments réels et pseudo-sentiments (pensées déguisées).",
-        "sentiments_besoins_satisfaits": ["joyeux", "soulagé", "reconnaissant", "confiant", "enthousiaste", "serein", "touché", "ému", "vivant", "épanoui", "en paix"],
-        "sentiments_besoins_non_satisfaits": ["inquiet", "triste", "frustré", "découragé", "épuisé", "seul", "désorienté", "embarrassé", "effrayé", "en colère", "désespéré", "submergé"],
-        "pseudo_sentiments_chacal": ["je me sens ignoré (= tu m'ignores)", "je me sens manipulé (= tu me manipules)", "je me sens jugé (= tu me juges)", "je me sens abandonné (= tu m'abandonnes)"],
+        "sentiments_besoins_satisfaits": [
+          "joyeux",
+          "soulagé",
+          "reconnaissant",
+          "confiant",
+          "enthousiaste",
+          "serein",
+          "touché",
+          "ému",
+          "vivant",
+          "épanoui",
+          "en paix"
+        ],
+        "sentiments_besoins_non_satisfaits": [
+          "inquiet",
+          "triste",
+          "frustré",
+          "découragé",
+          "épuisé",
+          "seul",
+          "désorienté",
+          "embarrassé",
+          "effrayé",
+          "en colère",
+          "désespéré",
+          "submergé"
+        ],
+        "pseudo_sentiments_chacal": [
+          "je me sens ignoré (= tu m'ignores)",
+          "je me sens manipulé (= tu me manipules)",
+          "je me sens jugé (= tu me juges)",
+          "je me sens abandonné (= tu m'abandonnes)"
+        ],
         "distinction_cle": "Les pseudo-sentiments contiennent une interprétation de l'intention de l'autre — les vrais sentiments sont 100% en moi."
       },
       "B_besoins": {
         "definition": "Nommer le besoin humain universel sous-jacent au sentiment — ce qui est vivant en nous, partagé par tous les humains, sans référence à une personne ou une action spécifique.",
         "besoins_universels_classification": {
-          "subsistance_securite": ["nourriture", "logement", "sécurité physique", "repos", "santé"],
-          "connexion_appartenance": ["amour", "intimité", "appartenance", "communauté", "contribution", "réciprocité"],
-          "autonomie": ["choix", "liberté", "indépendance", "authenticité", "autodétermination"],
-          "expression_creation": ["créativité", "expression", "sens", "croissance", "apprentissage"],
+          "subsistance_securite": [
+            "nourriture",
+            "logement",
+            "sécurité physique",
+            "repos",
+            "santé"
+          ],
+          "connexion_appartenance": [
+            "amour",
+            "intimité",
+            "appartenance",
+            "communauté",
+            "contribution",
+            "réciprocité"
+          ],
+          "autonomie": [
+            "choix",
+            "liberté",
+            "indépendance",
+            "authenticité",
+            "autodétermination"
+          ],
+          "expression_creation": [
+            "créativité",
+            "expression",
+            "sens",
+            "croissance",
+            "apprentissage"
+          ],
           "celebration_jeu": ["joie", "humour", "légèreté", "plaisir", "célébration"],
-          "sens_valeurs": ["intégrité", "clarté", "cohérence", "justice", "beauté", "ordre", "paix"],
-          "consideration": ["respect", "reconnaissance", "validation", "considération", "visibilité"]
+          "sens_valeurs": [
+            "intégrité",
+            "clarté",
+            "cohérence",
+            "justice",
+            "beauté",
+            "ordre",
+            "paix"
+          ],
+          "consideration": [
+            "respect",
+            "reconnaissance",
+            "validation",
+            "considération",
+            "visibilité"
+          ]
         },
         "distinction_besoin_strategie": {
           "besoin": "Connexion (universel)",
@@ -116,7 +189,11 @@
           "demande_de_connexion": "Vérifier la compréhension / vérifier l'état de l'autre — 'Comment te sens-tu en m'entendant dire ça?'",
           "demande_d_action": "Demander un comportement concret — 'Accepterais-tu de me prévenir par message quand tu es retardé?'"
         },
-        "pieges": ["Demander l'absence de quelque chose — 'arrête de...'", "Formuler une demande vague — 'sois plus attentionné'", "Exiger sous forme de demande — sans vraiment accepter un refus"]
+        "pieges": [
+          "Demander l'absence de quelque chose — 'arrête de...'",
+          "Formuler une demande vague — 'sois plus attentionné'",
+          "Exiger sous forme de demande — sans vraiment accepter un refus"
+        ]
       }
     },
     "ecoute_empathique": {
@@ -179,7 +256,12 @@
       },
       "reparation_relationnelle": {
         "definition": "Gottman — les tentatives de réparation sont des signaux pour désamorcer l'escalade conflictuelle",
-        "exemples": ["'Attends, j'ai besoin d'une pause'", "'Je m'exprime mal — laisse-moi recommencer'", "'Je comprends que tu sois frustré'", "'Je suis désolé, j'aurais dû te prévenir'"],
+        "exemples": [
+          "'Attends, j'ai besoin d'une pause'",
+          "'Je m'exprime mal — laisse-moi recommencer'",
+          "'Je comprends que tu sois frustré'",
+          "'Je suis désolé, j'aurais dû te prévenir'"
+        ],
         "cle": "Dans les couples solides, les tentatives de réparation sont reconnues et acceptées — dans les couples en détresse, elles sont ignorées ou rejetées"
       }
     },

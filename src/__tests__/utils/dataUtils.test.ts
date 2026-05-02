@@ -39,11 +39,11 @@ describe('safeDisplay', () => {
     expect(safeDisplay(false)).toBe('false');
   });
 
-  it('devrait extraire la propriété value d\'un objet', () => {
+  it("devrait extraire la propriété value d'un objet", () => {
     expect(safeDisplay({ value: 'inner' })).toBe('inner');
   });
 
-  it('devrait extraire la propriété data d\'un objet (converti en string)', () => {
+  it("devrait extraire la propriété data d'un objet (converti en string)", () => {
     // data=99 → safeDisplay(99) → '99'
     expect(safeDisplay({ data: 99 })).toBe('99');
   });

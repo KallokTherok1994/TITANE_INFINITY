@@ -26,7 +26,9 @@ describe('isResearchQuery', () => {
   });
 
   it('détecte "analyse" comme requête de recherche', () => {
-    expect(isResearchQuery('analyse le mécanisme de la résistance bactérienne')).toBe(true);
+    expect(isResearchQuery('analyse le mécanisme de la résistance bactérienne')).toBe(
+      true
+    );
   });
 
   it('ne détecte pas un message conversationnel simple', () => {
@@ -45,14 +47,18 @@ describe('isResearchQuery', () => {
 
 describe('detectResearchIntent', () => {
   it('retourne isResearch=true avec intent pour comparaison', () => {
-    const result = detectResearchIntent('compare les différences entre oméprazole et pantoprazole');
+    const result = detectResearchIntent(
+      'compare les différences entre oméprazole et pantoprazole'
+    );
     expect(result.isResearch).toBe(true);
     expect(result.intent).toBe('comparison');
     expect(result.confidence).toBeGreaterThanOrEqual(0.7);
   });
 
   it('retourne extractedTerms non vide pour requête de recherche', () => {
-    const result = detectResearchIntent('liste les interactions médicamenteuses de la warfarine');
+    const result = detectResearchIntent(
+      'liste les interactions médicamenteuses de la warfarine'
+    );
     expect(result.isResearch).toBe(true);
     expect(result.extractedTerms.length).toBeGreaterThan(0);
   });

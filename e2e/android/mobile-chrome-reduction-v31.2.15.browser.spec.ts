@@ -112,7 +112,11 @@ async function collectLayoutMetrics(page: Page): Promise<LayoutMetrics> {
       const el = document.querySelector(selector) as HTMLElement | null;
       if (!el) return false;
       const style = window.getComputedStyle(el);
-      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+      if (
+        style.display === 'none' ||
+        style.visibility === 'hidden' ||
+        style.opacity === '0'
+      ) {
         return false;
       }
       const rect = el.getBoundingClientRect();
@@ -158,7 +162,9 @@ async function collectLayoutMetrics(page: Page): Promise<LayoutMetrics> {
 /** Retourne le seuil minimal de hauteur messages pour un device donné */
 function getMinMessagesHeight(deviceName: string): number {
   // SmallMobile (375x667) = iPhone SE — écran physiquement contraint → seuil réduit
-  return deviceName === 'SmallMobile' ? MIN_MESSAGES_HEIGHT_SMALL_PX : MIN_MESSAGES_HEIGHT_PX;
+  return deviceName === 'SmallMobile'
+    ? MIN_MESSAGES_HEIGHT_SMALL_PX
+    : MIN_MESSAGES_HEIGHT_PX;
 }
 
 function assertCriticalZoneVisible(m: LayoutMetrics, deviceName: string): void {
@@ -182,11 +188,15 @@ function assertCriticalZoneVisible(m: LayoutMetrics, deviceName: string): void {
 
 function assertInputAlwaysReachable(m: LayoutMetrics, deviceName: string): void {
   expect(m.inputTop, `[${deviceName}] inputTop ne doit pas être null`).not.toBeNull();
-  expect(m.inputBottom, `[${deviceName}] inputBottom ne doit pas être null`).not.toBeNull();
+  expect(
+    m.inputBottom,
+    `[${deviceName}] inputBottom ne doit pas être null`
+  ).not.toBeNull();
   expect(m.sendBottom, `[${deviceName}] sendBottom ne doit pas être null`).not.toBeNull();
-  expect(m.inputTop!, `[${deviceName}] chat-input doit être dans le viewport`).toBeLessThan(
-    m.viewportH
-  );
+  expect(
+    m.inputTop!,
+    `[${deviceName}] chat-input doit être dans le viewport`
+  ).toBeLessThan(m.viewportH);
   expect(
     m.inputBottom!,
     `[${deviceName}] chat-input ne doit pas déborder sous le viewport`
@@ -273,13 +283,11 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Structure', () => {
     await openConversation(page);
 
     // Ces éléments doivent exister dans le DOM
-    await expect(
-      page.getByTestId('btn-mobile-more')
-    ).toBeAttached({ timeout: 5000 });
+    await expect(page.getByTestId('btn-mobile-more')).toBeAttached({ timeout: 5000 });
 
-    await expect(
-      page.getByTestId('btn-mobile-search-toggle')
-    ).toBeAttached({ timeout: 5000 });
+    await expect(page.getByTestId('btn-mobile-search-toggle')).toBeAttached({
+      timeout: 5000,
+    });
 
     // Les filtres existent mais sont masqués
     const filters = page.locator('.conversation-filters');
@@ -290,13 +298,17 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Structure', () => {
     await expect(page.getByTestId('chat-send')).toBeVisible({ timeout: 10000 });
   });
 
-  test('proof: zone messages visible et suffisamment haute (Pixel 7)', async ({ page }) => {
+  test('proof: zone messages visible et suffisamment haute (Pixel 7)', async ({
+    page,
+  }) => {
     await openConversation(page);
 
     const metrics = await collectLayoutMetrics(page);
     // Seuil minimal de viabilite (> 200px) — seuil cible v31.2.15 = 300px (tests FULL)
     expect(metrics.messagesHeight).not.toBeNull();
-    expect(metrics.messagesHeight!).toBeGreaterThanOrEqual(MIN_MESSAGES_HEIGHT_STRUCTURE_PX);
+    expect(metrics.messagesHeight!).toBeGreaterThanOrEqual(
+      MIN_MESSAGES_HEIGHT_STRUCTURE_PX
+    );
   });
 });
 
@@ -323,7 +335,9 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Full E2E', () => {
         hasTouch: true,
       });
 
-      test('Critère 1 — zone messages ≥ 300px visible dans le viewport', async ({ page }) => {
+      test('Critère 1 — zone messages ≥ 300px visible dans le viewport', async ({
+        page,
+      }) => {
         await openConversation(page);
         const m = await collectLayoutMetrics(page);
         assertCriticalZoneVisible(m, device.name);
@@ -352,7 +366,9 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Full E2E', () => {
         assertSecondaryButtonsHidden(m, device.name);
       });
 
-      test('Critère 7 — boutons mobiles ⋮ et 🔍 visibles sur mobile', async ({ page }) => {
+      test('Critère 7 — boutons mobiles ⋮ et 🔍 visibles sur mobile', async ({
+        page,
+      }) => {
         await openConversation(page);
         const m = await collectLayoutMetrics(page);
         assertMobileButtonsVisible(m, device.name);
@@ -413,7 +429,9 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Full E2E', () => {
       await expect(menu).not.toBeVisible({ timeout: 5000 });
     });
 
-    test('Zone messages reste >= 300px apres ouverture du menu overflow', async ({ page }) => {
+    test('Zone messages reste >= 300px apres ouverture du menu overflow', async ({
+      page,
+    }) => {
       await openConversation(page);
 
       await page.getByTestId('btn-mobile-more').click({ force: true });
@@ -590,12 +608,12 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Full E2E', () => {
         // Log des métriques clés pour le rapport
         console.log(
           `[${device.name}] viewport=${m.viewportW}×${m.viewportH} ` +
-          `messagesH=${m.messagesHeight}px ` +
-          `toolbarH=${m.toolbarHeight}px ` +
-          `tabsH=${m.tabsHeight}px ` +
-          `filtersVisible=${m.filtersVisible} ` +
-          `runtimePanelVisible=${m.runtimePanelVisible} ` +
-          `moreBtn=${m.btnMobileMoreVisible}`
+            `messagesH=${m.messagesHeight}px ` +
+            `toolbarH=${m.toolbarHeight}px ` +
+            `tabsH=${m.tabsHeight}px ` +
+            `filtersVisible=${m.filtersVisible} ` +
+            `runtimePanelVisible=${m.runtimePanelVisible} ` +
+            `moreBtn=${m.btnMobileMoreVisible}`
         );
       });
     });
@@ -604,7 +622,10 @@ test.describe('Mobile Chrome Reduction v31.2.15 — Full E2E', () => {
 
 // ─── Fonction helper interne ──────────────────────────────────────────────────
 
-async function expectCriticalElementsInViewport(page: Page, deviceName: string): Promise<void> {
+async function expectCriticalElementsInViewport(
+  page: Page,
+  deviceName: string
+): Promise<void> {
   await expect(
     page.getByTestId('chat-input'),
     `[${deviceName}] chat-input doit être dans le viewport`

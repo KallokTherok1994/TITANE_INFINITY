@@ -48,7 +48,9 @@ describe('KB dependance_affective_codependance (v31.3.5)', () => {
 
   it('les triggers couvrent les blessures Bourbeau', () => {
     const triggers = dependanceData.retrieval_triggers;
-    const hasBlessures = triggers.some((t: string) => t.includes('blessures') || t.includes('Bourbeau'));
+    const hasBlessures = triggers.some(
+      (t: string) => t.includes('blessures') || t.includes('Bourbeau')
+    );
     expect(hasBlessures).toBe(true);
   });
 
@@ -107,7 +109,8 @@ describe('KB dependance_affective_codependance (v31.3.5)', () => {
   });
 
   it('le cycle de Walker (trauma bonding) est défini', () => {
-    const cycle = dependanceData.sections.trauma_bonding_lien_traumatique.cycle_lenore_walker_1979;
+    const cycle =
+      dependanceData.sections.trauma_bonding_lien_traumatique.cycle_lenore_walker_1979;
     expect(cycle).toBeDefined();
     expect(cycle).toHaveProperty('phase_1_tension');
     expect(cycle).toHaveProperty('phase_2_explosion');
@@ -116,7 +119,8 @@ describe('KB dependance_affective_codependance (v31.3.5)', () => {
   });
 
   it('le mécanisme neurobiologique du trauma bonding est documenté', () => {
-    const neuro = dependanceData.sections.trauma_bonding_lien_traumatique.mecanisme_neurobiologique;
+    const neuro =
+      dependanceData.sections.trauma_bonding_lien_traumatique.mecanisme_neurobiologique;
     expect(neuro).toHaveProperty('dopamine');
     expect(neuro).toHaveProperty('cortisol');
     expect(neuro).toHaveProperty('ocytocine');
@@ -129,20 +133,25 @@ describe('KB dependance_affective_codependance (v31.3.5)', () => {
   });
 
   it('les ressources francophones QC+France sont présentes', () => {
-    const ressources = dependanceData.sections.ressources_dependance_affective.ressources_francophones;
+    const ressources =
+      dependanceData.sections.ressources_dependance_affective.ressources_francophones;
     expect(ressources).toHaveProperty('france');
     expect(ressources).toHaveProperty('quebec');
   });
 
   it('SLAA et CoDA sont référencés', () => {
-    const groupes = dependanceData.sections.ressources_dependance_affective.groupes_entraide;
+    const groupes =
+      dependanceData.sections.ressources_dependance_affective.groupes_entraide;
     expect(groupes).toHaveProperty('SLAA');
     expect(groupes).toHaveProperty('CoDA');
   });
 
   it('Melody Beattie est référencée', () => {
-    const livres = dependanceData.sections.ressources_dependance_affective.livres_fondamentaux;
-    const hasBeattie = livres.some((l: string) => l.includes('Beattie') || l.includes('Codependent'));
+    const livres =
+      dependanceData.sections.ressources_dependance_affective.livres_fondamentaux;
+    const hasBeattie = livres.some(
+      (l: string) => l.includes('Beattie') || l.includes('Codependent')
+    );
     expect(hasBeattie).toBe(true);
   });
 });
@@ -208,7 +217,9 @@ describe('KB therapies_trauma_avancees (v31.3.6)', () => {
   });
 
   it('section AEDP présente', () => {
-    expect(therapiesData.sections).toHaveProperty('AEDP_accelerated_experiential_dynamic');
+    expect(therapiesData.sections).toHaveProperty(
+      'AEDP_accelerated_experiential_dynamic'
+    );
   });
 
   it('section schema therapy modes présente', () => {
@@ -216,7 +227,9 @@ describe('KB therapies_trauma_avancees (v31.3.6)', () => {
   });
 
   it('section intégration et recommandations présente', () => {
-    expect(therapiesData.sections).toHaveProperty('integration_et_recommandations_cliniques');
+    expect(therapiesData.sections).toHaveProperty(
+      'integration_et_recommandations_cliniques'
+    );
   });
 
   it('le protocole EMDR en 8 phases est documenté', () => {
@@ -229,7 +242,8 @@ describe('KB therapies_trauma_avancees (v31.3.6)', () => {
   });
 
   it('la topographie IFS (Self/managers/pompiers/exils) est documentée', () => {
-    const topo = therapiesData.sections.IFS_internal_family_systems.topographie_systeme_interne;
+    const topo =
+      therapiesData.sections.IFS_internal_family_systems.topographie_systeme_interne;
     expect(topo).toHaveProperty('Self');
     expect(topo).toHaveProperty('managers');
     expect(topo).toHaveProperty('pompiers');
@@ -237,7 +251,8 @@ describe('KB therapies_trauma_avancees (v31.3.6)', () => {
   });
 
   it('les 8C du Self IFS sont mentionnés', () => {
-    const self = therapiesData.sections.IFS_internal_family_systems.topographie_systeme_interne.Self;
+    const self =
+      therapiesData.sections.IFS_internal_family_systems.topographie_systeme_interne.Self;
     expect(self.definition).toContain('8C');
   });
 
@@ -248,7 +263,8 @@ describe('KB therapies_trauma_avancees (v31.3.6)', () => {
   });
 
   it('les 5 domaines de schémas précoces sont documentés', () => {
-    const schemas = therapiesData.sections.schema_therapy_modes.schemas_precoces_inadaptes_SPI;
+    const schemas =
+      therapiesData.sections.schema_therapy_modes.schemas_precoces_inadaptes_SPI;
     const domaines = schemas['18_schemas'];
     expect(domaines).toHaveProperty('domaine_disconnexion_rejet');
     expect(domaines).toHaveProperty('domaine_orientation_vers_autrui');
@@ -261,18 +277,22 @@ describe('KB therapies_trauma_avancees (v31.3.6)', () => {
   });
 
   it('le niveau de preuve EMDR (Niveau 1 OMS) est documenté', () => {
-    const niveaux = therapiesData.sections.cadre_general_therapies_trauma.niveaux_preuve_scientifique;
+    const niveaux =
+      therapiesData.sections.cadre_general_therapies_trauma.niveaux_preuve_scientifique;
     expect(niveaux.EMDR).toContain('Niveau 1');
   });
 
   it('les recommandations par profil clinique sont présentes', () => {
-    const choix = therapiesData.sections.integration_et_recommandations_cliniques.choix_approche_par_profil;
+    const choix =
+      therapiesData.sections.integration_et_recommandations_cliniques
+        .choix_approche_par_profil;
     expect(choix).toHaveProperty('PTSD_simple_evenement_recent');
     expect(choix).toHaveProperty('C_PTSD_trauma_developpement');
   });
 
   it('les phases universelles (stabilisation/reprocessing/intégration) sont définies', () => {
-    const phases = therapiesData.sections.integration_et_recommandations_cliniques.phases_universelles;
+    const phases =
+      therapiesData.sections.integration_et_recommandations_cliniques.phases_universelles;
     expect(phases).toHaveProperty('phase_1_securite_stabilisation');
     expect(phases).toHaveProperty('phase_2_reprocessing');
     expect(phases).toHaveProperty('phase_3_integration');
@@ -288,17 +308,17 @@ describe('KB therapies_trauma_avancees (v31.3.6)', () => {
     expect(ifs.fondateur).toContain('Schwartz');
   });
 
-  it("Peter Levine est référencé pour Somatic Experiencing", () => {
+  it('Peter Levine est référencé pour Somatic Experiencing', () => {
     const se = therapiesData.sections.somatic_experiencing_SE;
     expect(se.fondateur).toContain('Levine');
   });
 
-  it("Diana Fosha est référencée pour AEDP", () => {
+  it('Diana Fosha est référencée pour AEDP', () => {
     const aedp = therapiesData.sections.AEDP_accelerated_experiential_dynamic;
     expect(aedp.fondatrice).toContain('Fosha');
   });
 
-  it("Jeffrey Young est référencé pour la schema therapy", () => {
+  it('Jeffrey Young est référencé pour la schema therapy', () => {
     const schema = therapiesData.sections.schema_therapy_modes;
     expect(schema.fondateur).toContain('Young');
   });

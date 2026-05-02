@@ -121,7 +121,10 @@ import {
   REFLECTIVE_VERIFIER_ENABLED,
 } from './reflectiveVerifier';
 // v31.2.33: Working Memory Compressor
-import { compress as compressHistory, COMPRESSION_HISTORY_THRESHOLD } from './workingMemoryCompressor';
+import {
+  compress as compressHistory,
+  COMPRESSION_HISTORY_THRESHOLD,
+} from './workingMemoryCompressor';
 // v31.2.38: Quality Verifier — heuristic post-generation quality scoring
 import { evaluateResponseQuality } from './qualityVerifier';
 
@@ -381,7 +384,10 @@ const STOP_WORDS = new Set([
  *  The outer key is the *from* mode; inner key is the *to* mode.
  *  Missing combinations fall back to 'clear'.
  */
-const MODE_TRANSITION_POLICY: Record<string, Record<string, 'clear' | 'preserve' | 'summarize'>> = {
+const MODE_TRANSITION_POLICY: Record<
+  string,
+  Record<string, 'clear' | 'preserve' | 'summarize'>
+> = {
   brainstorming: {
     synthesis: 'preserve',
     planning: 'summarize',
@@ -1181,7 +1187,7 @@ Format: [Audit complet] + [Réponse utilisateur]
       // vOPT: Map lookup O(1) au lieu de ternaires imbriqués
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
       const EFFORT_TIMEOUT_MAP: Record<string, number> = {
-        max: 4.0,  // CERTIFY → 120s for a 30s base
+        max: 4.0, // CERTIFY → 120s for a 30s base
         high: 3.0, // DEEP_REASONING / ARCHITECT → 90s
       };
       const MODE_TIMEOUT_MAP: Record<string, number> = {
@@ -1389,15 +1395,11 @@ Format: [Audit complet] + [Réponse utilisateur]
       // v31.2.33: Vérifie fiabilité factuelle, enrichit avec sources web si confiance faible
       if (REFLECTIVE_VERIFIER_ENABLED) {
         try {
-          const critique = await verifyCritique(
-            validatedMessage,
-            response.content,
-            {
-              singularityCoherence,
-              memoryMatches: context.sources.length,
-              mode: finalConfig.mode,
-            }
-          );
+          const critique = await verifyCritique(validatedMessage, response.content, {
+            singularityCoherence,
+            memoryMatches: context.sources.length,
+            mode: finalConfig.mode,
+          });
           if (critique.shouldRevise && critique.webSources.length > 0) {
             response.content = applyReflectiveCorrections(response.content, critique);
           }
@@ -3203,9 +3205,7 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         : '';
 
       // Owner context (Kevin's personal profile/corpus/workflow — bundled, platform-agnostic)
-      const ownerBlock = this._ownerContextBlock
-        ? `\n\n${this._ownerContextBlock}`
-        : '';
+      const ownerBlock = this._ownerContextBlock ? `\n\n${this._ownerContextBlock}` : '';
 
       const contextualBasePrompt = `${basePrompt}${personaInjection}${preferencesInjection}${kbBlock}${ownerBlock}`;
       const stablePrefix = skillInjection
@@ -3804,7 +3804,9 @@ QUALITÉ MAXIMALE :
       (count, pattern) => (pattern.test(lower) ? count + 1 : count),
       0
     );
-    return hits >= 2 || /voici la premi[èe]re phase|voulez-vous que je continue/i.test(content);
+    return (
+      hits >= 2 || /voici la premi[èe]re phase|voulez-vous que je continue/i.test(content)
+    );
   }
 
   private stripProceduralPreamble(content: string): string {

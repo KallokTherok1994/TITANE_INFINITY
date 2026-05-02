@@ -59,11 +59,13 @@ describe('reflectiveVerifier', () => {
     });
 
     it('detects URLs', () => {
-      expect(detectFactualClaims('Voir https://example.com pour plus d\'infos.')).toBe(true);
+      expect(detectFactualClaims("Voir https://example.com pour plus d'infos.")).toBe(
+        true
+      );
     });
 
     it('detects superlatives', () => {
-      expect(detectFactualClaims('C\'est le plus grand bâtiment du monde.')).toBe(true);
+      expect(detectFactualClaims("C'est le plus grand bâtiment du monde.")).toBe(true);
     });
 
     it('returns false for purely conversational response', () => {
@@ -71,47 +73,75 @@ describe('reflectiveVerifier', () => {
     });
 
     it('returns false for simple greeting', () => {
-      expect(detectFactualClaims('Bonjour! Comment puis-je t\'aider?')).toBe(false);
+      expect(detectFactualClaims("Bonjour! Comment puis-je t'aider?")).toBe(false);
     });
   });
 
   describe('computeConfidence', () => {
     it('uses singularity coherence as base', () => {
-      const conf = computeConfidence('test response', false, { singularityCoherence: 0.8 });
+      const conf = computeConfidence('test response', false, {
+        singularityCoherence: 0.8,
+      });
       expect(conf).toBeGreaterThanOrEqual(0.8);
     });
 
     it('applies memory match bonus', () => {
-      const confNoMemory = computeConfidence('test', false, { singularityCoherence: 0.5, memoryMatches: 0 });
-      const confWithMemory = computeConfidence('test', false, { singularityCoherence: 0.5, memoryMatches: 3 });
+      const confNoMemory = computeConfidence('test', false, {
+        singularityCoherence: 0.5,
+        memoryMatches: 0,
+      });
+      const confWithMemory = computeConfidence('test', false, {
+        singularityCoherence: 0.5,
+        memoryMatches: 3,
+      });
       expect(confWithMemory).toBeGreaterThan(confNoMemory);
     });
 
     it('applies factual claims penalty without memory', () => {
-      const confNoFact = computeConfidence('test', false, { singularityCoherence: 0.5, memoryMatches: 0 });
-      const confWithFact = computeConfidence('test', true, { singularityCoherence: 0.5, memoryMatches: 0 });
+      const confNoFact = computeConfidence('test', false, {
+        singularityCoherence: 0.5,
+        memoryMatches: 0,
+      });
+      const confWithFact = computeConfidence('test', true, {
+        singularityCoherence: 0.5,
+        memoryMatches: 0,
+      });
       expect(confWithFact).toBeLessThan(confNoFact);
     });
 
     it('applies short response penalty with claims', () => {
       const shortResponse = 'En 2024, le PIB était de 2.5%.'; // < 100 chars, factual
       const longResponse = 'En 2024, ' + 'a'.repeat(200);
-      const confShort = computeConfidence(shortResponse, true, { singularityCoherence: 0.6 });
-      const confLong = computeConfidence(longResponse, true, { singularityCoherence: 0.6 });
+      const confShort = computeConfidence(shortResponse, true, {
+        singularityCoherence: 0.6,
+      });
+      const confLong = computeConfidence(longResponse, true, {
+        singularityCoherence: 0.6,
+      });
       expect(confLong).toBeGreaterThan(confShort);
     });
 
     it('applies long response bonus', () => {
       const shortResponse = 'Test.';
       const longResponse = 'a'.repeat(600);
-      const confShort = computeConfidence(shortResponse, false, { singularityCoherence: 0.5 });
-      const confLong = computeConfidence(longResponse, false, { singularityCoherence: 0.5 });
+      const confShort = computeConfidence(shortResponse, false, {
+        singularityCoherence: 0.5,
+      });
+      const confLong = computeConfidence(longResponse, false, {
+        singularityCoherence: 0.5,
+      });
       expect(confLong).toBeGreaterThan(confShort);
     });
 
     it('clamps confidence to [0, 1]', () => {
-      const confHigh = computeConfidence('test', false, { singularityCoherence: 1.0, memoryMatches: 10 });
-      const confLow = computeConfidence('short', true, { singularityCoherence: 0.0, memoryMatches: 0 });
+      const confHigh = computeConfidence('test', false, {
+        singularityCoherence: 1.0,
+        memoryMatches: 10,
+      });
+      const confLow = computeConfidence('short', true, {
+        singularityCoherence: 0.0,
+        memoryMatches: 0,
+      });
       expect(confHigh).toBeLessThanOrEqual(1);
       expect(confLow).toBeGreaterThanOrEqual(0);
     });
@@ -129,7 +159,11 @@ describe('reflectiveVerifier', () => {
       hasFactualClaims: true,
       corrections: [],
       webSources: [
-        { title: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Test', snippet: 'A test snippet with enough content.' },
+        {
+          title: 'Wikipedia',
+          url: 'https://en.wikipedia.org/wiki/Test',
+          snippet: 'A test snippet with enough content.',
+        },
       ],
       shouldRevise: true,
       processingMs: 10,
@@ -173,7 +207,9 @@ describe('reflectiveVerifier', () => {
     });
 
     it('returns high confidence for conversational mode (journal)', async () => {
-      const critique = await verifyCritique('How are you?', 'I am doing well.', { mode: 'journal' });
+      const critique = await verifyCritique('How are you?', 'I am doing well.', {
+        mode: 'journal',
+      });
       expect(critique.confidence).toBe(1.0);
       expect(critique.verified).toBe(true);
       expect(critique.hasFactualClaims).toBe(false);
@@ -181,7 +217,9 @@ describe('reflectiveVerifier', () => {
     });
 
     it('returns high confidence for creative mode', async () => {
-      const critique = await verifyCritique('Write a poem', 'Once upon a time...', { mode: 'creative' });
+      const critique = await verifyCritique('Write a poem', 'Once upon a time...', {
+        mode: 'creative',
+      });
       expect(critique.verified).toBe(true);
     });
 
@@ -232,7 +270,11 @@ describe('reflectiveVerifier', () => {
 
     it('handles web search returning null gracefully', async () => {
       const { webSearch } = await import('@/services/webResearchService');
-      vi.mocked(webSearch).mockResolvedValueOnce({ ok: false, content: null, error: { code: 'ERR', message: 'fail' } });
+      vi.mocked(webSearch).mockResolvedValueOnce({
+        ok: false,
+        content: null,
+        error: { code: 'ERR', message: 'fail' },
+      });
 
       const critique = await verifyCritique(
         'What is X?',

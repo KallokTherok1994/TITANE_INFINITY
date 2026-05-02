@@ -109,7 +109,7 @@ describe('Performance — TTL mass expiry', () => {
 });
 
 describe('Performance — onEvict callback count', () => {
-  it('onEvict appelé exactement N fois lors d\'overflow', () => {
+  it("onEvict appelé exactement N fois lors d'overflow", () => {
     const onEvict = vi.fn();
     const cache = new LRUCache<number>({ maxSize: 10, onEvict });
     // Insérer 20 entrées → 10 évictions

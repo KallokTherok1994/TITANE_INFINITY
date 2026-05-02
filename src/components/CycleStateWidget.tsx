@@ -96,7 +96,10 @@ export const CycleStateWidget: React.FC<{ refreshInterval?: number }> = ({
 
   if (loading) {
     return (
-      <div data-testid="cycle-state-widget" className="cycle-widget cycle-widget--loading">
+      <div
+        data-testid="cycle-state-widget"
+        className="cycle-widget cycle-widget--loading"
+      >
         <span>Chargement rythmes…</span>
       </div>
     );
@@ -140,7 +143,9 @@ export const CycleStateWidget: React.FC<{ refreshInterval?: number }> = ({
       {/* Diagnostics */}
       {diagnostics && (
         <div className="cycle-widget__diagnostics" data-testid="cycle-diagnostics">
-          <span className={`cycle-widget__clock ${diagnostics.clock_running ? 'active' : 'paused'}`}>
+          <span
+            className={`cycle-widget__clock ${diagnostics.clock_running ? 'active' : 'paused'}`}
+          >
             {diagnostics.clock_running ? '⟳' : '⏸'} {diagnostics.current_hour}h
           </span>
           <span className="cycle-widget__alignment">

@@ -153,7 +153,9 @@ describe('browserWebSearch() — One Door proxy compliance', () => {
     // Résultats FR non-vides → un seul appel
     fetchMock.mockResolvedValue({
       ok: true,
-      json: async () => ({ query: { search: [{ title: 'Test', snippet: 'snippet', pageid: 1 }] } }),
+      json: async () => ({
+        query: { search: [{ title: 'Test', snippet: 'snippet', pageid: 1 }] },
+      }),
     });
 
     const { browserWebSearch } = await import('../services/webResearchService');
@@ -169,18 +171,22 @@ describe('browserWebSearch() — One Door proxy compliance', () => {
     // Résultats FR non-vides → un seul appel vers fr.wikipedia.org
     fetchMock.mockResolvedValue({
       ok: true,
-      json: async () => ({ query: { search: [{ title: 'Test', snippet: 'snippet', pageid: 1 }] } }),
+      json: async () => ({
+        query: { search: [{ title: 'Test', snippet: 'snippet', pageid: 1 }] },
+      }),
     });
 
     const { browserWebSearch } = await import('../services/webResearchService');
     await browserWebSearch('test query', 5);
 
     const urls = fetchMock.mock.calls.map(c => c[0] as string);
-    const hasDirectWikipedia = urls.some(u => u.includes('fr.wikipedia.org') || u.includes('en.wikipedia.org'));
+    const hasDirectWikipedia = urls.some(
+      u => u.includes('fr.wikipedia.org') || u.includes('en.wikipedia.org')
+    );
     expect(hasDirectWikipedia).toBe(true);
   });
 
-  it('encode correctement le srsearch dans l\'URL proxy', async () => {
+  it("encode correctement le srsearch dans l'URL proxy", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: async () => ({ query: { search: [] } }),
@@ -194,7 +200,7 @@ describe('browserWebSearch() — One Door proxy compliance', () => {
     expect(calledUrl).toContain('intelligence');
   });
 
-  it('inclut srlimit dans l\'URL proxy', async () => {
+  it("inclut srlimit dans l'URL proxy", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: async () => ({ query: { search: [] } }),
@@ -220,7 +226,7 @@ describe('Config proxy — sécurité One Door', () => {
     expect(wikiProxyHasChangeOrigin).toBe(true);
   });
 
-  it('ollama proxy utilise changeOrigin pour éviter exposer l\'hôte client', () => {
+  it("ollama proxy utilise changeOrigin pour éviter exposer l'hôte client", () => {
     const ollamaProxyHasChangeOrigin = true; // confirmé ligne 213 vite.config.ts
     expect(ollamaProxyHasChangeOrigin).toBe(true);
   });
@@ -230,7 +236,7 @@ describe('Config proxy — sécurité One Door', () => {
     expect(wikiProxySecure).toBe(true);
   });
 
-  it('les deux proxies suppriment l\'en-tête origin avant transmission', () => {
+  it("les deux proxies suppriment l'en-tête origin avant transmission", () => {
     // Les deux proxies appellent proxyReq.removeHeader('origin')
     // confirmé lignes 221 et 250 vite.config.ts
     const wikiBothRemoveOrigin = true;
@@ -249,7 +255,7 @@ describe('Proxy rewrite — cas limites', () => {
     expect(result).toContain('format=json');
   });
 
-  it('ollama rewrite ne modifie pas d\'autre préfixe /api', () => {
+  it("ollama rewrite ne modifie pas d'autre préfixe /api", () => {
     const result = ollamaRewrite('/api/generate');
     // Ne devrait pas modifier un chemin sans /api/ollama
     expect(result).toBe('/api/generate');

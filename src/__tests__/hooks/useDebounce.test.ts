@@ -23,20 +23,18 @@ describe('useDebounce', () => {
   });
 
   it('devrait ne pas mettre à jour la valeur avant le délai', () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 300),
-      { initialProps: { value: 'a' } }
-    );
+    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 300), {
+      initialProps: { value: 'a' },
+    });
     rerender({ value: 'b' });
     vi.advanceTimersByTime(200);
     expect(result.current).toBe('a');
   });
 
   it('devrait mettre à jour la valeur après le délai', () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 300),
-      { initialProps: { value: 'a' } }
-    );
+    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 300), {
+      initialProps: { value: 'a' },
+    });
     rerender({ value: 'b' });
     act(() => {
       vi.advanceTimersByTime(300);
@@ -45,10 +43,9 @@ describe('useDebounce', () => {
   });
 
   it('devrait annuler le timer précédent si la valeur change à nouveau', () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 300),
-      { initialProps: { value: 'a' } }
-    );
+    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 300), {
+      initialProps: { value: 'a' },
+    });
     rerender({ value: 'b' });
     vi.advanceTimersByTime(150);
     rerender({ value: 'c' });
@@ -62,10 +59,9 @@ describe('useDebounce', () => {
   });
 
   it('devrait utiliser le délai par défaut de 300ms', () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value),
-      { initialProps: { value: 'x' } }
-    );
+    const { result, rerender } = renderHook(({ value }) => useDebounce(value), {
+      initialProps: { value: 'x' },
+    });
     rerender({ value: 'y' });
     act(() => {
       vi.advanceTimersByTime(300);
@@ -74,10 +70,9 @@ describe('useDebounce', () => {
   });
 
   it('devrait fonctionner avec des nombres', () => {
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 200),
-      { initialProps: { value: 0 } }
-    );
+    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 200), {
+      initialProps: { value: 0 },
+    });
     rerender({ value: 42 });
     act(() => {
       vi.advanceTimersByTime(200);

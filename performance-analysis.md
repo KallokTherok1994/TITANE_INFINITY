@@ -145,7 +145,7 @@ Source report: reports/performance-20260424-082807/PERFORMANCE_SUMMARY.md
 - pnpm run check
 - bash scripts/autoheal/detect_recurrence.sh
 - bash scripts/verify_instructions.sh
-- pnpm vitest run src/__tests__/omega-provider-tests.test.ts (38/38 PASS, validates @config alias)
+- pnpm vitest run src/**tests**/omega-provider-tests.test.ts (38/38 PASS, validates @config alias)
 
 ## Notes
 

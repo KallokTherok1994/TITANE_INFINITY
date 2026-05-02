@@ -1199,7 +1199,8 @@ export function getBundledOwnerContext(): string {
     if (entry.category === 'kevin_owner_profile_v30') {
       const profile = entry.content.owner_profile as Record<string, unknown> | undefined;
       if (profile) {
-        const name = typeof profile.full_name === 'string' ? profile.full_name : undefined;
+        const name =
+          typeof profile.full_name === 'string' ? profile.full_name : undefined;
         const positioning = profile.public_positioning as
           | Record<string, unknown>
           | undefined;
@@ -1227,11 +1228,11 @@ export function getBundledOwnerContext(): string {
         const projects = Array.isArray(profile.project_ecosystem)
           ? (profile.project_ecosystem as Array<Record<string, unknown>>)
           : [];
-        const activeProjects = projects
-          .filter(p => p.status !== 'paused')
-          .slice(0, 2);
+        const activeProjects = projects.filter(p => p.status !== 'paused').slice(0, 2);
         if (activeProjects.length > 0) {
-          lines.push(`  → Projets actifs: ${activeProjects.map(p => `${p.name} (${String(p.focus ?? '').substring(0, 60)})`).join(' | ')}`);
+          lines.push(
+            `  → Projets actifs: ${activeProjects.map(p => `${p.name} (${String(p.focus ?? '').substring(0, 60)})`).join(' | ')}`
+          );
         }
         // Alignment targets
         const alignments = Array.isArray(profile.alignment_targets)

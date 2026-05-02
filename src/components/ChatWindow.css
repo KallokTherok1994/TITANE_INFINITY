@@ -1005,7 +1005,10 @@
   color: rgba(239, 68, 68, 0.6);
   font-size: 0.72rem;
   line-height: 1.4;
-  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    color 0.12s;
 }
 
 .generated-files-clear:hover {
@@ -1041,8 +1044,13 @@
 }
 
 @keyframes pending-pulse {
-  0%, 100% { border-left-color: rgba(139, 92, 246, 0.7); }
-  50% { border-left-color: rgba(167, 139, 250, 1); }
+  0%,
+  100% {
+    border-left-color: rgba(139, 92, 246, 0.7);
+  }
+  50% {
+    border-left-color: rgba(167, 139, 250, 1);
+  }
 }
 
 /* Saved: discret */
@@ -1098,7 +1106,9 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  transition: filter 0.14s, transform 0.1s;
+  transition:
+    filter 0.14s,
+    transform 0.1s;
   box-shadow: 0 2px 8px rgba(109, 40, 217, 0.35);
 }
 

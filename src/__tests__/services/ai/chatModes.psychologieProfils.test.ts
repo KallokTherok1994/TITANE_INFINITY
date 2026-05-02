@@ -32,7 +32,7 @@ describe('chatModes — Mode psychologie_profils (Phase 25)', () => {
     expect(CHAT_MODES_CONFIG['psychologie_profils'].enabled).toBe(true);
   });
 
-  it("le mode apparaît dans ACTIVE_MODE_IDS", () => {
+  it('le mode apparaît dans ACTIVE_MODE_IDS', () => {
     expect(ACTIVE_MODE_IDS).toContain('psychologie_profils');
   });
 

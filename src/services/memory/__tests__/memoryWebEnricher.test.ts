@@ -4,7 +4,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { memoryWebEnricher, extractMainConcept, type EnrichableEntry } from '../memoryWebEnricher';
+import {
+  memoryWebEnricher,
+  extractMainConcept,
+  type EnrichableEntry,
+} from '../memoryWebEnricher';
 
 // ─────────────────────────────────────────────────────────────────
 // MOCKS
@@ -14,7 +18,11 @@ vi.mock('@/services/webResearchService', () => ({
   browserWebSearch: vi.fn().mockResolvedValue({
     ok: true,
     content: [
-      { title: 'Test Article', url: 'https://en.wikipedia.org/wiki/Test', snippet: 'A test snippet.' },
+      {
+        title: 'Test Article',
+        url: 'https://en.wikipedia.org/wiki/Test',
+        snippet: 'A test snippet.',
+      },
     ],
     error: null,
   }),
@@ -25,12 +33,21 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: vi.fn((key: string) => store[key] ?? null),
-    setItem: vi.fn((key: string, value: string) => { store[key] = value; }),
-    removeItem: vi.fn((key: string) => { delete store[key]; }),
-    clear: vi.fn(() => { store = {}; }),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value;
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
   };
 })();
-Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock, writable: true });
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+});
 
 // requestIdleCallback mock
 Object.defineProperty(globalThis, 'requestIdleCallback', {
@@ -54,7 +71,9 @@ describe('memoryWebEnricher', () => {
 
   describe('extractMainConcept', () => {
     it('extracts substantive words', () => {
-      const concept = extractMainConcept('Le projet TITANE utilise intelligence artificielle');
+      const concept = extractMainConcept(
+        'Le projet TITANE utilise intelligence artificielle'
+      );
       expect(concept).not.toContain('Le');
       expect(concept).toMatch(/TITANE|projet|utilise|intelligence|artificielle/i);
     });
@@ -76,7 +95,10 @@ describe('memoryWebEnricher', () => {
 
   describe('scheduleEnrichment', () => {
     it('does not throw for valid entry', () => {
-      const entry: EnrichableEntry = { id: 'entry-1', summary: 'TITANE knowledge graph integration' };
+      const entry: EnrichableEntry = {
+        id: 'entry-1',
+        summary: 'TITANE knowledge graph integration',
+      };
       expect(() => memoryWebEnricher.scheduleEnrichment(entry)).not.toThrow();
     });
 
@@ -86,7 +108,10 @@ describe('memoryWebEnricher', () => {
     });
 
     it('deduplicates same entry id', () => {
-      const entry: EnrichableEntry = { id: 'dedup-test', summary: 'Test content for dedup' };
+      const entry: EnrichableEntry = {
+        id: 'dedup-test',
+        summary: 'Test content for dedup',
+      };
       expect(() => {
         memoryWebEnricher.scheduleEnrichment(entry);
         memoryWebEnricher.scheduleEnrichment(entry);
@@ -145,7 +170,14 @@ describe('memoryWebEnricher', () => {
           'valid-id': {
             entryId: 'valid-id',
             concept: 'intelligence artificielle',
-            sources: [{ title: 'AI', url: 'https://en.wikipedia.org/wiki/AI', snippet: 'AI snippet.', fetchedAt: Date.now() }],
+            sources: [
+              {
+                title: 'AI',
+                url: 'https://en.wikipedia.org/wiki/AI',
+                snippet: 'AI snippet.',
+                fetchedAt: Date.now(),
+              },
+            ],
             enrichedAt: Date.now(),
             expiresAt: Date.now() + 6 * 24 * 60 * 60 * 1000, // not expired
           },
@@ -168,14 +200,14 @@ describe('memoryWebEnricher', () => {
     it('returns only non-expired entries', () => {
       const store = {
         entries: {
-          'valid': {
+          valid: {
             entryId: 'valid',
             concept: 'test',
             sources: [],
             enrichedAt: Date.now(),
             expiresAt: Date.now() + 24 * 60 * 60 * 1000,
           },
-          'expired': {
+          expired: {
             entryId: 'expired',
             concept: 'old',
             sources: [],

@@ -44,7 +44,12 @@
       "grey_rock": {
         "nom": "Méthode Grey Rock (Pierre Grise)",
         "definition": "Devenir aussi intéressant qu'une pierre grise : réponses monosyllabiques, affect plat, zéro information personnelle, zéro réaction émotionnelle. Priver le narcissique/manipulateur de la validation et du drame qu'il cherche.",
-        "indications": ["contact contraint avec pervers narcissique", "coparentalité forcée", "contexte professionnel avec collègue toxique", "période de transition avant no-contact"],
+        "indications": [
+          "contact contraint avec pervers narcissique",
+          "coparentalité forcée",
+          "contexte professionnel avec collègue toxique",
+          "période de transition avant no-contact"
+        ],
         "techniques": [
           "Réponses: 'OK', 'Noté', 'Je verrai', 'Hmm'",
           "Aucun détail personnel, aucune actualité émotionnelle partagée",
@@ -52,14 +57,22 @@
           "Ton monotone, ni chaleureux ni agressif",
           "Ne jamais défendre, expliquer, ni justifier (JADE: Justify, Argue, Defend, Explain)"
         ],
-        "erreurs_courantes": ["continuer à défendre sa position", "montrer de la frustration (réaction = carburant)", "donner des mises à jour sur sa vie"],
+        "erreurs_courantes": [
+          "continuer à défendre sa position",
+          "montrer de la frustration (réaction = carburant)",
+          "donner des mises à jour sur sa vie"
+        ],
         "duree_recommandee": "Technique temporaire — objectif final: réduire contact ou no-contact"
       },
 
       "yellow_rock": {
         "nom": "Méthode Yellow Rock",
         "definition": "Variante du Grey Rock pour contextes professionnels ou légaux où la politesse minimale est requise (coparentalité documentée, procédures judiciaires). Communication cordiale mais strictement factuelle, sans affect personnel.",
-        "indications": ["coparentalité sous supervision juridique", "communication documentée légalement", "contexte RH où la froideur serait retournée contre soi"],
+        "indications": [
+          "coparentalité sous supervision juridique",
+          "communication documentée légalement",
+          "contexte RH où la froideur serait retournée contre soi"
+        ],
         "techniques": [
           "Format: 'Je note que [fait neutre]. Je confirme [action concrète].'",
           "Communications courtes, par écrit (tracé)",
@@ -83,7 +96,11 @@
           "mauvaise_reponse": "C'est totalement faux ! J'ai toujours été là, rappelle-toi du 15 mars quand...",
           "bonne_reponse_BIFF": "Les enfants seront déposés vendredi à 18h comme prévu. Bonne journée."
         },
-        "pieges": ["ajouter 'mais...' (ouvre le débat)", "expliquer pourquoi vous avez fait X (JADE)", "poser une question rhétorique"]
+        "pieges": [
+          "ajouter 'mais...' (ouvre le débat)",
+          "expliquer pourquoi vous avez fait X (JADE)",
+          "poser une question rhétorique"
+        ]
       },
 
       "regle_JADE": {
@@ -104,7 +121,12 @@
       "no_contact": {
         "nom": "No Contact (NC) — Zéro contact",
         "definition": "Coupure totale de toute communication avec la personne toxique. Standard or de la protection psychologique après abus avéré.",
-        "indications": ["fin de relation romantique avec abuseur", "parent toxique quand contact cause préjudice documenté", "harcèlement/stalking", "épuisement complet des alternatives"],
+        "indications": [
+          "fin de relation romantique avec abuseur",
+          "parent toxique quand contact cause préjudice documenté",
+          "harcèlement/stalking",
+          "épuisement complet des alternatives"
+        ],
         "composantes": [
           "Blocage sur tous les canaux (téléphone, email, réseaux sociaux, messageries)",
           "Pas de réponse aux messages relais (proches utilisés comme vecteurs — 'flying monkeys')",
@@ -113,7 +135,12 @@
         ],
         "rupture_du_nc": {
           "risque": "Très fréquente dans les trauma bonds — le cycle amour/rejet redémarre instantanément",
-          "prevention": ["journal des raisons du NC", "liste des comportements documentés", "appel à un soutien avant toute réponse", "règle des 72h avant décision de contact"]
+          "prevention": [
+            "journal des raisons du NC",
+            "liste des comportements documentés",
+            "appel à un soutien avant toute réponse",
+            "règle des 72h avant décision de contact"
+          ]
         },
         "duree": "Indéfinie. Le NC n'est pas une punition temporaire — c'est une décision de protection permanente ou jusqu'à preuve clinique de changement durable (rare)."
       },
@@ -128,7 +155,11 @@
           "Pas de sujets émotionnels, passé relationnel, ni récriminations",
           "Grey Rock systématique"
         ],
-        "erreurs": ["répondre à des provocations", "tenter de se justifier", "espérer que le LC va changer la personne"]
+        "erreurs": [
+          "répondre à des provocations",
+          "tenter de se justifier",
+          "espérer que le LC va changer la personne"
+        ]
       },
 
       "parallel_parenting": {
@@ -177,7 +208,12 @@
           "Triangulation avec rivalité (ex: 'j'ai rencontré quelqu'un qui me comprend mieux que toi')",
           "Fausse urgence médicale, légale, financière"
         ],
-        "reponse": ["Reconnaître le pattern sans y répondre", "Règle des 72h minimum avant décision", "Contacter thérapeute ou personne de confiance d'abord", "Se rappeler: le hoovering est motivé par le contrôle, pas par l'amour"]
+        "reponse": [
+          "Reconnaître le pattern sans y répondre",
+          "Règle des 72h minimum avant décision",
+          "Contacter thérapeute ou personne de confiance d'abord",
+          "Se rappeler: le hoovering est motivé par le contrôle, pas par l'amour"
+        ]
       },
 
       "gestion_emotions_post_abus": {
@@ -190,7 +226,11 @@
           "Tristesse profonde",
           "Acceptation/reconstruction"
         ],
-        "complications": ["idealization de la relation", "minimisation retrospective des abus", "sentiment de honte et de responsabilité (injecté par l'abuseur)"]
+        "complications": [
+          "idealization de la relation",
+          "minimisation retrospective des abus",
+          "sentiment de honte et de responsabilité (injecté par l'abuseur)"
+        ]
       }
     },
 
@@ -239,7 +279,12 @@
           "6-12 mois: reconstruction identitaire, retour des intérêts abandonnés",
           "12-18 mois+: intégration, capacité relationnelle recalibrée"
         ],
-        "acceleration": ["NC strict", "thérapie hebdomadaire", "mouvement physique régulier", "reconnexion cercle social sain"]
+        "acceleration": [
+          "NC strict",
+          "thérapie hebdomadaire",
+          "mouvement physique régulier",
+          "reconnexion cercle social sain"
+        ]
       },
 
       "schemas_a_travailler": {
@@ -281,7 +326,10 @@
           "mecanisme": "Restructuration cognitive + exposition graduelle aux triggers traumatiques"
         },
         "somatique": {
-          "approches": ["Somatic Experiencing (Peter Levine)", "Sensorimotor Psychotherapy"],
+          "approches": [
+            "Somatic Experiencing (Peter Levine)",
+            "Sensorimotor Psychotherapy"
+          ],
           "principe": "Le trauma est stocké dans le corps — libération par le travail corporel, régulation du système nerveux autonome"
         }
       },

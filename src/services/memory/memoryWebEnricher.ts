@@ -87,7 +87,13 @@ function pruneExpired(store: EnrichmentStore): EnrichmentStore {
     const toKeep = keys
       .sort((a, b) => (entries[b]?.enrichedAt ?? 0) - (entries[a]?.enrichedAt ?? 0))
       .slice(0, MAX_ENRICHED_ENTRIES);
-      return { entries: Object.fromEntries(toKeep.map(k => [k, entries[k]!])) as Record<string, EnrichedEntry>, lastPruned: now };
+    return {
+      entries: Object.fromEntries(toKeep.map(k => [k, entries[k]!])) as Record<
+        string,
+        EnrichedEntry
+      >,
+      lastPruned: now,
+    };
   }
   return { entries: entries as Record<string, EnrichedEntry>, lastPruned: now };
 }
@@ -130,15 +136,47 @@ export const KEVIN_LTM_SEMANTIC_ANCHORS: string[] = [
 export function extractMainConcept(text: string): string {
   // Priority: Kevin LTM anchors detected first
   const textLower = text.toLowerCase();
-  const matchedAnchor = KEVIN_LTM_SEMANTIC_ANCHORS.find(
-    anchor => textLower.includes(anchor.toLowerCase())
+  const matchedAnchor = KEVIN_LTM_SEMANTIC_ANCHORS.find(anchor =>
+    textLower.includes(anchor.toLowerCase())
   );
   if (matchedAnchor) return matchedAnchor.substring(0, 80);
   // Supprimer mots vides et prendre les 5 premiers mots substantiels
   const stopWords = new Set([
-    'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'de', 'du', 'au', 'je',
-    'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'que', 'qui', 'est', 'sont', 'a',
-    'the', 'is', 'are', 'was', 'and', 'or', 'of', 'to', 'a', 'an', 'in', 'on',
+    'le',
+    'la',
+    'les',
+    'un',
+    'une',
+    'des',
+    'et',
+    'ou',
+    'de',
+    'du',
+    'au',
+    'je',
+    'tu',
+    'il',
+    'elle',
+    'nous',
+    'vous',
+    'ils',
+    'que',
+    'qui',
+    'est',
+    'sont',
+    'a',
+    'the',
+    'is',
+    'are',
+    'was',
+    'and',
+    'or',
+    'of',
+    'to',
+    'a',
+    'an',
+    'in',
+    'on',
   ]);
   const words = text
     .replace(/[^\w\séàùèêâîôûäëïöü'-]/gi, ' ')
@@ -215,11 +253,7 @@ class MemoryWebEnricherService {
 
     try {
       const text =
-        entry.summary ||
-        entry.content ||
-        entry.userMessage ||
-        entry.aiResponse ||
-        '';
+        entry.summary || entry.content || entry.userMessage || entry.aiResponse || '';
       if (!text.trim()) return;
 
       const concept = extractMainConcept(text);
@@ -227,7 +261,9 @@ class MemoryWebEnricherService {
 
       const result = await Promise.race([
         browserWebSearch(concept, 3),
-        new Promise<null>(resolve => setTimeout(() => resolve(null), ENRICHMENT_TIMEOUT_MS)),
+        new Promise<null>(resolve =>
+          setTimeout(() => resolve(null), ENRICHMENT_TIMEOUT_MS)
+        ),
       ]);
 
       if (!result || !result.ok || !result.content?.length) return;

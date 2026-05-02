@@ -56,13 +56,13 @@ Zéro silent failure, zéro fallback mensonger.
 
 ### Imports d'alias
 
-| Alias | Cible |
-|---|---|
-| `@/` | `src/` |
-| `@components/` | `src/components/` |
-| `@data/` | `data/` (racine projet) |
-| `@config/` | `config/` (racine projet) |
-| `@themes/` | `src/styles/themes/` |
+| Alias          | Cible                     |
+| -------------- | ------------------------- |
+| `@/`           | `src/`                    |
+| `@components/` | `src/components/`         |
+| `@data/`       | `data/` (racine projet)   |
+| `@config/`     | `config/` (racine projet) |
+| `@themes/`     | `src/styles/themes/`      |
 
 ### Nommage
 
@@ -101,6 +101,7 @@ feat(kb): phase 34 - nouveau domaine knowledge base
 ## Rapport de bug
 
 Ouvrir une issue GitHub avec :
+
 - Version TITANE∞ (`cat package.json | grep version`)
 - OS + version
 - Logs Tauri (`~/.local/share/titane-infinity/logs/`)

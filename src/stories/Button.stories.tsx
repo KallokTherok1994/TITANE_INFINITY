@@ -22,10 +22,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = { args: { children: 'Action', variant: 'default' } };
 export const Primary: Story = { args: { children: 'Confirmer', variant: 'primary' } };
-export const Destructive: Story = { args: { children: 'Supprimer', variant: 'destructive' } };
+export const Destructive: Story = {
+  args: { children: 'Supprimer', variant: 'destructive' },
+};
 export const Outline: Story = { args: { children: 'Annuler', variant: 'outline' } };
 export const Ghost: Story = { args: { children: 'Ignorer', variant: 'ghost' } };
-export const Small: Story = { args: { children: 'Petit', variant: 'primary', size: 'sm' } };
-export const Large: Story = { args: { children: 'Grand', variant: 'primary', size: 'lg' } };
-export const Loading: Story = { args: { children: 'Chargement...', variant: 'primary', loading: true } };
-export const Disabled: Story = { args: { children: 'Désactivé', variant: 'primary', disabled: true } };
+export const Small: Story = {
+  args: { children: 'Petit', variant: 'primary', size: 'sm' },
+};
+export const Large: Story = {
+  args: { children: 'Grand', variant: 'primary', size: 'lg' },
+};
+export const Loading: Story = {
+  args: { children: 'Chargement...', variant: 'primary', loading: true },
+};
+export const Disabled: Story = {
+  args: { children: 'Désactivé', variant: 'primary', disabled: true },
+};

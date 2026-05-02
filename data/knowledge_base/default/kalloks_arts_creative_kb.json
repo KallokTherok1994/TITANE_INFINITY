@@ -4,29 +4,57 @@
   "category": "kalloks_arts_creative",
   "description": "Base de connaissances créative Kallok's Arts — techniques poétiques, contraintes formelles, seed images, synesthésie, vocabulaire Kallok, templates bio artiste, Etsy SEO 2025-26, philosophie artistique Kevin/Kallok",
   "kalloks_arts_creative": {
-
     "identite_artistique": {
       "nom_artiste": "Kallok",
       "nom_legal": "Kevin Thibault",
       "univers": "Profond, texturé, ancré dans le vivant — la présence, la brûlure, la beauté qui transforme.",
       "boutique": "Kallok's Arts — impressions canvas, œuvres originales, print-on-demand via Printful/Etsy/Wix",
       "palette_identitaire": {
-        "terracotta": { "hex": "#C4704A", "emotion": "chaleur, terre, vie organique, peau après effort, argile au soleil" },
-        "charbon": { "hex": "#2D2D2D", "emotion": "profondeur, ancrage, intérieur d'une forêt la nuit, gravité" },
-        "blanc_casse": { "hex": "#F8F5F0", "emotion": "lumière douce, espace de respiration, la lumière juste avant qu'elle disparaisse" }
+        "terracotta": {
+          "hex": "#C4704A",
+          "emotion": "chaleur, terre, vie organique, peau après effort, argile au soleil"
+        },
+        "charbon": {
+          "hex": "#2D2D2D",
+          "emotion": "profondeur, ancrage, intérieur d'une forêt la nuit, gravité"
+        },
+        "blanc_casse": {
+          "hex": "#F8F5F0",
+          "emotion": "lumière douce, espace de respiration, la lumière juste avant qu'elle disparaisse"
+        }
       },
       "vocabulaire_resonant": [
-        "œuvre vivante", "artiste du vivant", "Brûlure", "présence", "retour au vivant",
-        "textures", "ancrage", "feu doux", "ce qui reste", "silences habités",
-        "matière", "organique", "dense", "lumière terracotta", "charbon et clarté",
-        "respiration", "prière de forme", "l'os de l'œuvre", "tension créative"
+        "œuvre vivante",
+        "artiste du vivant",
+        "Brûlure",
+        "présence",
+        "retour au vivant",
+        "textures",
+        "ancrage",
+        "feu doux",
+        "ce qui reste",
+        "silences habités",
+        "matière",
+        "organique",
+        "dense",
+        "lumière terracotta",
+        "charbon et clarté",
+        "respiration",
+        "prière de forme",
+        "l'os de l'œuvre",
+        "tension créative"
       ],
       "anti_patterns_absolus": [
-        "beauté éternelle", "âme infinie", "moment magique", "lumière éternelle",
-        "transformer votre vie", "rimes évidentes (chaud/beau, cœur/peur, amour/toujours)",
+        "beauté éternelle",
+        "âme infinie",
+        "moment magique",
+        "lumière éternelle",
+        "transformer votre vie",
+        "rimes évidentes (chaud/beau, cœur/peur, amour/toujours)",
         "cascade d'adjectifs (beau, lumineux, vibrant, chaleureux)",
         "métaphores de fleurs/papillons/oiseaux (territoire Pinterest, pas Kallok)",
-        "allitérations forcées", "infini / éternel / absolu",
+        "allitérations forcées",
+        "infini / éternel / absolu",
         "le sucré facile, le réconfort automatique, la beauté sans tension",
         "Cette œuvre vous transportera (promesse sans fondation)"
       ],
@@ -69,21 +97,81 @@
     "contraintes_liberatrices": {
       "principe": "Les Oblique Strategies (Brian Eno) appliquées à l'univers Kallok. Tirer UNE contrainte par création. Elle élimine les clichés et force l'originalité authentique.",
       "liste": [
-        { "id": 1, "contrainte": "Sans adjectif — juste verbes et noms purs", "effet": "Élimination du descriptif, densité maximale" },
-        { "id": 2, "contrainte": "17 syllabes exactes — une seule image sensorielle", "effet": "Haïku pur, présence immédiate" },
-        { "id": 3, "contrainte": "Écris comme si tu gravais du marbre — chaque mot doit rester", "effet": "Économie radicale, rien de superflu" },
-        { "id": 4, "contrainte": "Une seule métaphore — mais parfaite", "effet": "Profondeur vs. accumulation superficielle" },
-        { "id": 5, "contrainte": "Sans nommer les couleurs — juste températures et textures", "effet": "Synesthésie forcée, originalité garantie" },
-        { "id": 6, "contrainte": "Le texte tient en une seule respiration (12-15 mots)", "effet": "Urgence, impact immédiat" },
-        { "id": 7, "contrainte": "Deux voix ennemies qui parlent de la même chose", "effet": "Tension dramatique, ambivalence" },
-        { "id": 8, "contrainte": "Le contraire de ce que tu ferais normalement", "effet": "Rupture des automatismes créatifs" },
-        { "id": 9, "contrainte": "Commence par la fin — la chute est la première ligne", "effet": "Structure inversée, surprise narrative" },
-        { "id": 10, "contrainte": "Aucun verbe être ou avoir", "effet": "Dynamisme pur, actions et états concrets" },
-        { "id": 11, "contrainte": "Le lecteur doit lire deux fois pour tout comprendre", "effet": "Profondeur stratifiée, œuvre qui dure" },
-        { "id": 12, "contrainte": "Marquer les pauses — le silence est aussi important que les mots", "effet": "Rythme respiratoire, espace de résonance" },
-        { "id": 13, "contrainte": "Tous les mots de deux syllabes maximum", "effet": "Musicalité directe, accessibilité préservant la profondeur" },
-        { "id": 14, "contrainte": "Une question sans réponse — la réponse c'est la question elle-même", "effet": "Ouverture, invitation au spectateur" },
-        { "id": 15, "contrainte": "Décris comme un enfant de 7 ans qui ne connaît pas encore les mots adultes", "effet": "Fraîcheur, regard neuf, vérité non filtrée" }
+        {
+          "id": 1,
+          "contrainte": "Sans adjectif — juste verbes et noms purs",
+          "effet": "Élimination du descriptif, densité maximale"
+        },
+        {
+          "id": 2,
+          "contrainte": "17 syllabes exactes — une seule image sensorielle",
+          "effet": "Haïku pur, présence immédiate"
+        },
+        {
+          "id": 3,
+          "contrainte": "Écris comme si tu gravais du marbre — chaque mot doit rester",
+          "effet": "Économie radicale, rien de superflu"
+        },
+        {
+          "id": 4,
+          "contrainte": "Une seule métaphore — mais parfaite",
+          "effet": "Profondeur vs. accumulation superficielle"
+        },
+        {
+          "id": 5,
+          "contrainte": "Sans nommer les couleurs — juste températures et textures",
+          "effet": "Synesthésie forcée, originalité garantie"
+        },
+        {
+          "id": 6,
+          "contrainte": "Le texte tient en une seule respiration (12-15 mots)",
+          "effet": "Urgence, impact immédiat"
+        },
+        {
+          "id": 7,
+          "contrainte": "Deux voix ennemies qui parlent de la même chose",
+          "effet": "Tension dramatique, ambivalence"
+        },
+        {
+          "id": 8,
+          "contrainte": "Le contraire de ce que tu ferais normalement",
+          "effet": "Rupture des automatismes créatifs"
+        },
+        {
+          "id": 9,
+          "contrainte": "Commence par la fin — la chute est la première ligne",
+          "effet": "Structure inversée, surprise narrative"
+        },
+        {
+          "id": 10,
+          "contrainte": "Aucun verbe être ou avoir",
+          "effet": "Dynamisme pur, actions et états concrets"
+        },
+        {
+          "id": 11,
+          "contrainte": "Le lecteur doit lire deux fois pour tout comprendre",
+          "effet": "Profondeur stratifiée, œuvre qui dure"
+        },
+        {
+          "id": 12,
+          "contrainte": "Marquer les pauses — le silence est aussi important que les mots",
+          "effet": "Rythme respiratoire, espace de résonance"
+        },
+        {
+          "id": 13,
+          "contrainte": "Tous les mots de deux syllabes maximum",
+          "effet": "Musicalité directe, accessibilité préservant la profondeur"
+        },
+        {
+          "id": 14,
+          "contrainte": "Une question sans réponse — la réponse c'est la question elle-même",
+          "effet": "Ouverture, invitation au spectateur"
+        },
+        {
+          "id": 15,
+          "contrainte": "Décris comme un enfant de 7 ans qui ne connaît pas encore les mots adultes",
+          "effet": "Fraîcheur, regard neuf, vérité non filtrée"
+        }
       ]
     },
 
@@ -133,10 +221,18 @@
         "commercial": "Revendeur-friendly, vend l'émotion directement"
       },
       "exemples_registre_kallok": [
-        "Brûlure douce", "Ce qui reste", "Là où le feu s'arrête",
-        "Cycle", "Ce que la flamme refuse", "Présence brûlée",
-        "Ancrage", "L'os de l'œuvre", "Feu doux",
-        "Silences habités", "Retour", "Matière vivante"
+        "Brûlure douce",
+        "Ce qui reste",
+        "Là où le feu s'arrête",
+        "Cycle",
+        "Ce que la flamme refuse",
+        "Présence brûlée",
+        "Ancrage",
+        "L'os de l'œuvre",
+        "Feu doux",
+        "Silences habités",
+        "Retour",
+        "Matière vivante"
       ],
       "methode_generation": "Proposer 8 titres : 1 sobre → 4 progressifs → 2 audacieux → 1 commercial. Classer par impact émotionnel."
     },
@@ -208,7 +304,11 @@
           "phrase_3_50w": "L'invitation au spectateur/acheteur"
         },
         "registre_cible": "Kallok cherche la présence — ce moment où la couleur devient respiration et la forme devient prière.",
-        "mots_cles_integrer": ["artiste peintre québécois", "art abstrait", "Kallok's Arts"]
+        "mots_cles_integrer": [
+          "artiste peintre québécois",
+          "art abstrait",
+          "Kallok's Arts"
+        ]
       },
       "bio_longue_400w": {
         "format": "Variables: [parcours] [philosophie_art] [vision_kalloks_arts] [processus_creatif]",
@@ -222,8 +322,11 @@
       "bio_seo_google": {
         "format": "Même structure que bio longue + keywords intégrés naturellement",
         "keywords_a_integrer": [
-          "artiste peintre québécois", "art canvas abstrait", "boutique art en ligne Québec",
-          "impression canvas terracotta", "art boho minimaliste Montréal"
+          "artiste peintre québécois",
+          "art canvas abstrait",
+          "boutique art en ligne Québec",
+          "impression canvas terracotta",
+          "art boho minimaliste Montréal"
         ]
       }
     },

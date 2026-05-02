@@ -117,7 +117,10 @@ async function generateSummary(messages: AIMessage[]): Promise<string | null> {
 /**
  * Sélectionne les messages ancres à préserver obligatoirement.
  */
-export function selectAnchors(messages: AIMessage[]): { anchors: AIMessage[]; body: AIMessage[] } {
+export function selectAnchors(messages: AIMessage[]): {
+  anchors: AIMessage[];
+  body: AIMessage[];
+} {
   if (messages.length === 0) return { anchors: [], body: [] };
 
   const anchorSet = new Set<number>();
@@ -226,6 +229,9 @@ function buildFallbackSummary(messages: AIMessage[]): string {
   if (messages.length === 0) return 'Conversation précédente.';
   return messages
     .slice(0, 5)
-    .map(m => `${m.role === 'user' ? 'Utilisateur' : 'TITANE'}: ${m.content.substring(0, 100)}`)
+    .map(
+      m =>
+        `${m.role === 'user' ? 'Utilisateur' : 'TITANE'}: ${m.content.substring(0, 100)}`
+    )
     .join(' | ');
 }

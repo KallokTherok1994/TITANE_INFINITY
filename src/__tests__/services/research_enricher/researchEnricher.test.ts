@@ -24,18 +24,20 @@ describe('chatResearchDetector — isResearchQuery', () => {
   });
 
   it('detects FR analysis intent (analyse)', () => {
-    expect(isResearchQuery('analyse les interactions médicamenteuses du CYP3A4')).toBe(true);
+    expect(isResearchQuery('analyse les interactions médicamenteuses du CYP3A4')).toBe(
+      true
+    );
   });
 
   it('detects FR explanation intent (explique)', () => {
-    expect(isResearchQuery("explique le syndrome sérotoninergique")).toBe(true);
+    expect(isResearchQuery('explique le syndrome sérotoninergique')).toBe(true);
   });
 
   it('detects FR list intent (liste)', () => {
     expect(isResearchQuery('liste les antibiotiques actifs contre le SARM')).toBe(true);
   });
 
-  it('detects FR question intent (qu\'est-ce que)', () => {
+  it("detects FR question intent (qu'est-ce que)", () => {
     expect(isResearchQuery("qu'est-ce que la cirrhose ?")).toBe(true);
   });
 
@@ -237,11 +239,7 @@ describe('kbEnricher — mergeWithKBContext', () => {
       source: 'web' as const,
     };
 
-    const merged = mergeWithKBContext(
-      'contexte KB original',
-      [enrichment],
-      'cirrhose'
-    );
+    const merged = mergeWithKBContext('contexte KB original', [enrichment], 'cirrhose');
 
     expect(merged).toContain('contexte KB original');
     expect(merged).toContain('Terlipressine');

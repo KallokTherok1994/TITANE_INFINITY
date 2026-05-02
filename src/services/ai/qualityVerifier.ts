@@ -54,12 +54,65 @@ const WEIGHTS = { alignment: 0.45, completeness: 0.3, depth: 0.25 } as const;
 
 /** Shared stop-words (FR + EN) — identical to chatEngine STOP_WORDS for consistency. */
 const STOP_WORDS = new Set([
-  'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'de', 'du', 'au', 'aux', 'ce',
-  'est', 'sont', 'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles',
-  'que', 'qui', 'quoi', 'dont', 'comment', 'pourquoi', 'quand',
-  'the', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had',
-  'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might',
-  'can', 'this', 'that', 'these', 'those', 'with', 'from', 'for', 'into', 'and',
+  'le',
+  'la',
+  'les',
+  'un',
+  'une',
+  'des',
+  'et',
+  'ou',
+  'de',
+  'du',
+  'au',
+  'aux',
+  'ce',
+  'est',
+  'sont',
+  'je',
+  'tu',
+  'il',
+  'elle',
+  'nous',
+  'vous',
+  'ils',
+  'elles',
+  'que',
+  'qui',
+  'quoi',
+  'dont',
+  'comment',
+  'pourquoi',
+  'quand',
+  'the',
+  'is',
+  'are',
+  'was',
+  'were',
+  'be',
+  'been',
+  'have',
+  'has',
+  'had',
+  'do',
+  'does',
+  'did',
+  'will',
+  'would',
+  'could',
+  'should',
+  'may',
+  'might',
+  'can',
+  'this',
+  'that',
+  'these',
+  'those',
+  'with',
+  'from',
+  'for',
+  'into',
+  'and',
 ]);
 
 function tokenize(text: string): string[] {
@@ -107,17 +160,17 @@ function computeCompletenessScore(question: string, response: string): number {
   let covered = 0;
   for (const sub of subQs) {
     const subTokens = tokenize(sub);
-    if (subTokens.length === 0) { covered++; continue; }
+    if (subTokens.length === 0) {
+      covered++;
+      continue;
+    }
     const hits = subTokens.filter(t => rText.includes(t)).length;
     if (hits / subTokens.length >= 0.4) covered++;
   }
   return covered / subQs.length;
 }
 
-function computeDepthMatchScore(
-  response: string,
-  profileId: ResponseProfileId
-): number {
+function computeDepthMatchScore(response: string, profileId: ResponseProfileId): number {
   const words = countWords(response);
   const minWords = PROFILE_MIN_WORDS[profileId] ?? 150;
   if (words >= minWords) return 1.0;
@@ -130,8 +183,10 @@ function buildEnhancementHint(
   depth: number,
   profileId: ResponseProfileId
 ): string {
-  if (alignment < 0.4) return 'La réponse ne couvre pas suffisamment les termes-clés de la question.';
-  if (completeness < 0.5) return 'Certaines sous-questions ne semblent pas traitées dans la réponse.';
+  if (alignment < 0.4)
+    return 'La réponse ne couvre pas suffisamment les termes-clés de la question.';
+  if (completeness < 0.5)
+    return 'Certaines sous-questions ne semblent pas traitées dans la réponse.';
   if (depth < 0.5) {
     const minWords = PROFILE_MIN_WORDS[profileId] ?? 150;
     return `La réponse est trop courte pour le profil ${profileId} (minimum ~${minWords} mots attendus).`;

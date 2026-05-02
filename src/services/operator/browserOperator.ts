@@ -52,7 +52,9 @@ export async function closeBrowserSession(sessionId: string): Promise<boolean> {
 /**
  * Returns current session state.
  */
-export async function getBrowserSessionStatus(sessionId: string): Promise<BrowserSession> {
+export async function getBrowserSessionStatus(
+  sessionId: string
+): Promise<BrowserSession> {
   const result = await safeInvokeCanonical<BrowserSession>('browser_get_session_status', {
     session_id: sessionId,
   });
@@ -123,7 +125,10 @@ export async function browserExtract(
  * Returns the browser operator configuration and Playwright availability.
  */
 export async function getBrowserOperatorConfig(): Promise<BrowserOperatorConfig> {
-  const result = await safeInvokeCanonical<BrowserOperatorConfig>('browser_get_config', {});
+  const result = await safeInvokeCanonical<BrowserOperatorConfig>(
+    'browser_get_config',
+    {}
+  );
   if (!result.ok || result.content === null) {
     throw new Error(result.error?.message ?? 'browser_get_config failed');
   }

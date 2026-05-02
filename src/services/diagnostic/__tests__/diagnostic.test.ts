@@ -16,8 +16,16 @@ const {
   mockGetAdvancedAgentStatus,
 } = vi.hoisted(() => ({
   mockGetActiveAlerts: vi.fn(() => []),
-  mockGetGlobalMetrics: vi.fn(() => ({ totalMessages: 100, totalErrors: 0, successRate: 1 })),
-  mockGetStats: vi.fn(() => ({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } })),
+  mockGetGlobalMetrics: vi.fn(() => ({
+    totalMessages: 100,
+    totalErrors: 0,
+    successRate: 1,
+  })),
+  mockGetStats: vi.fn(() => ({
+    errorCount: 0,
+    endpointHealthy: true,
+    config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+  })),
   mockGetActiveAIProviders: vi.fn(() => ['ollama', 'tauri-backend']),
   mockGetAdvancedAgentStatus: vi.fn(() => ({
     id: 'diagnostic',
@@ -69,7 +77,12 @@ import {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const HEALTHY_METRICS = { totalMessages: 100, totalErrors: 0, successRate: 1, avgResponseTime: 0 };
+const HEALTHY_METRICS = {
+  totalMessages: 100,
+  totalErrors: 0,
+  successRate: 1,
+  avgResponseTime: 0,
+};
 
 function clearStorage() {
   window.localStorage.clear();
@@ -135,10 +148,21 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
 
   it('overallStatus = warn quand alertes warning actives', () => {
     mockGetActiveAlerts.mockReturnValue([
-      { id: 'a1', severity: 'warning', title: 'latence élevée', component: 'ollama', timestamp: Date.now(), resolved: false },
+      {
+        id: 'a1',
+        severity: 'warning',
+        title: 'latence élevée',
+        component: 'ollama',
+        timestamp: Date.now(),
+        resolved: false,
+      },
     ]);
     mockGetGlobalMetrics.mockReturnValue(HEALTHY_METRICS);
-    mockGetStats.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
 
     const result = runActiveDiagnosticScan();
     const alertCheck = result.checks.find(c => c.id === 'alerts');
@@ -148,10 +172,21 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
 
   it('overallStatus = fail quand alertes critiques actives', () => {
     mockGetActiveAlerts.mockReturnValue([
-      { id: 'a2', severity: 'critical', title: 'crash', component: 'tauri', timestamp: Date.now(), resolved: false },
+      {
+        id: 'a2',
+        severity: 'critical',
+        title: 'crash',
+        component: 'tauri',
+        timestamp: Date.now(),
+        resolved: false,
+      },
     ]);
     mockGetGlobalMetrics.mockReturnValue({ ...HEALTHY_METRICS, totalErrors: 10 });
-    mockGetStats.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
 
     const result = runActiveDiagnosticScan();
     expect(result.overallStatus).toBe('fail');
@@ -161,7 +196,11 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
   it('checks.error-rate = warn quand taux erreur entre 0 et 10%', () => {
     mockGetActiveAlerts.mockReturnValue([]);
     mockGetGlobalMetrics.mockReturnValue({ ...HEALTHY_METRICS, totalErrors: 5 });
-    mockGetStats.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
 
     const result = runActiveDiagnosticScan();
     const errorCheck = result.checks.find(c => c.id === 'error-rate');
@@ -172,7 +211,11 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
   it('checks.error-rate = fail quand taux erreur >= 10%', () => {
     mockGetActiveAlerts.mockReturnValue([]);
     mockGetGlobalMetrics.mockReturnValue({ ...HEALTHY_METRICS, totalErrors: 15 });
-    mockGetStats.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
 
     const result = runActiveDiagnosticScan();
     const errorCheck = result.checks.find(c => c.id === 'error-rate');
@@ -183,7 +226,11 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
   it('checks.ollama = fail quand endpoint indisponible', () => {
     mockGetActiveAlerts.mockReturnValue([]);
     mockGetGlobalMetrics.mockReturnValue(HEALTHY_METRICS);
-    mockGetStats.mockReturnValue({ errorCount: 5, endpointHealthy: false, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 5,
+      endpointHealthy: false,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
 
     const result = runActiveDiagnosticScan();
     const ollamaCheck = result.checks.find(c => c.id === 'ollama');
@@ -193,10 +240,25 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
 
   it('rawSignals reflète les données réelles du scan', () => {
     mockGetActiveAlerts.mockReturnValue([
-      { id: 'a1', severity: 'warning', title: 'test', component: 'ollama', timestamp: Date.now(), resolved: false },
+      {
+        id: 'a1',
+        severity: 'warning',
+        title: 'test',
+        component: 'ollama',
+        timestamp: Date.now(),
+        resolved: false,
+      },
     ]);
-    mockGetGlobalMetrics.mockReturnValue({ ...HEALTHY_METRICS, totalMessages: 50, totalErrors: 2 });
-    mockGetStats.mockReturnValue({ errorCount: 1, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetGlobalMetrics.mockReturnValue({
+      ...HEALTHY_METRICS,
+      totalMessages: 50,
+      totalErrors: 2,
+    });
+    mockGetStats.mockReturnValue({
+      errorCount: 1,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
     mockGetActiveAIProviders.mockReturnValue(['ollama', 'tauri-backend']);
 
     const result = runActiveDiagnosticScan();
@@ -212,7 +274,11 @@ describe('getActiveScanHistory — persistance localStorage', () => {
     clearStorage();
     mockGetActiveAlerts.mockReturnValue([]);
     mockGetGlobalMetrics.mockReturnValue(HEALTHY_METRICS);
-    mockGetStats.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
   });
 
@@ -220,14 +286,14 @@ describe('getActiveScanHistory — persistance localStorage', () => {
     expect(getActiveScanHistory()).toEqual([]);
   });
 
-  it('historique s\'enrichit après chaque scan', () => {
+  it("historique s'enrichit après chaque scan", () => {
     runActiveDiagnosticScan();
     expect(getActiveScanHistory()).toHaveLength(1);
     runActiveDiagnosticScan();
     expect(getActiveScanHistory()).toHaveLength(2);
   });
 
-  it('borne l\'historique à 10 entrées maximum', () => {
+  it("borne l'historique à 10 entrées maximum", () => {
     for (let i = 0; i < 15; i++) {
       runActiveDiagnosticScan();
     }
@@ -250,7 +316,11 @@ describe('onDiagnosticScan — listener', () => {
     resetDiagnosticLoopForTests();
     mockGetActiveAlerts.mockReturnValue([]);
     mockGetGlobalMetrics.mockReturnValue(HEALTHY_METRICS);
-    mockGetStats.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
   });
 
@@ -259,7 +329,7 @@ describe('onDiagnosticScan — listener', () => {
     resetDiagnosticLoopForTests();
   });
 
-  it('listener reçoit le résultat du scan lors d\'un déclenchement manuel', () => {
+  it("listener reçoit le résultat du scan lors d'un déclenchement manuel", () => {
     const received: unknown[] = [];
     onDiagnosticScan(result => received.push(result));
     runActiveDiagnosticScan();
@@ -274,7 +344,11 @@ describe('getDiagnosticAgentStatus — surface agent', () => {
     resetDiagnosticReportHistoryForTests();
     mockGetActiveAlerts.mockReturnValue([]);
     mockGetGlobalMetrics.mockReturnValue(HEALTHY_METRICS);
-    mockGetStats.mockReturnValue({ errorCount: 0, endpointHealthy: true, config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' } });
+    mockGetStats.mockReturnValue({
+      errorCount: 0,
+      endpointHealthy: true,
+      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    });
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
   });
 

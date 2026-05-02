@@ -52,7 +52,10 @@ describe('Phase A — Confidence feedback loop', () => {
   });
 
   it('should produce a confidence value between 0 and 1', () => {
-    const decision = kernel.discern({ ...baseInput, message: 'analyse approfondie de ce projet' });
+    const decision = kernel.discern({
+      ...baseInput,
+      message: 'analyse approfondie de ce projet',
+    });
     expect(decision.confidence).toBeGreaterThanOrEqual(0);
     expect(decision.confidence).toBeLessThanOrEqual(1);
   });
@@ -61,13 +64,16 @@ describe('Phase A — Confidence feedback loop', () => {
     // Long, clear, concrete message → should produce higher confidence
     const decision = kernel.discern({
       ...baseInput,
-      message: 'Crée un plan d\'architecture détaillé pour mon projet TITANE avec les décisions structurelles et les axes prioritaires',
+      message:
+        "Crée un plan d'architecture détaillé pour mon projet TITANE avec les décisions structurelles et les axes prioritaires",
       runtimeState: { singularityCoherence: 0.8 },
     });
     // High-confidence decisions should not be downgraded
     if (decision.confidence >= 0.6) {
       // No downgrade should appear in signals
-      const downgradeSignal = decision.signals.find(s => s.type === 'confidence_downgrade');
+      const downgradeSignal = decision.signals.find(
+        s => s.type === 'confidence_downgrade'
+      );
       expect(downgradeSignal).toBeUndefined();
     }
   });
@@ -79,7 +85,10 @@ describe('Phase A — Confidence feedback loop', () => {
       message: 'ok',
       runtimeState: { singularityCoherence: 0.05 },
     });
-    if (decision.confidence < 0.42 && decision.inferenceState === 'INFER_WITH_DISCLOSURE') {
+    if (
+      decision.confidence < 0.42 &&
+      decision.inferenceState === 'INFER_WITH_DISCLOSURE'
+    ) {
       const sig = decision.signals.find(s => s.type === 'confidence_downgrade');
       expect(sig).toBeDefined();
       expect(sig?.source).toBe('kernel');

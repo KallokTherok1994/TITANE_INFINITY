@@ -255,7 +255,8 @@ describe('TITANE∞ - IPC Contract Tests', () => {
         `Missing Rust IPC command: ${command}`
       ).toBe(true);
       expect(
-        securityContent.includes(`'${command}'`) || securityContent.includes(`"${command}"`),
+        securityContent.includes(`'${command}'`) ||
+          securityContent.includes(`"${command}"`),
         `Missing security.ts allowlist entry: ${command}`
       ).toBe(true);
     }

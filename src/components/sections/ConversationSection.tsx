@@ -838,7 +838,10 @@ export function classifyResearchOutcome(report: ResearchReport): ResearchOutcome
   return 'pass';
 }
 
-export function buildResearchReply(report: ResearchReport, outcome: ResearchOutcome): string {
+export function buildResearchReply(
+  report: ResearchReport,
+  outcome: ResearchOutcome
+): string {
   const verdict =
     report.trace.markers.find(m => m.startsWith('VERDICT_')) ?? 'VERDICT_UNKNOWN';
   const verdictLabel = verdict.replace('VERDICT_', '');
@@ -1353,14 +1356,33 @@ ConversationMessage.displayName = 'ConversationMessage';
 // GENERATED FILES PANEL
 // ─────────────────────────────────────────────────────────────────
 const FILE_EXT_ICONS: Record<string, string> = {
-  py: '🐍', ts: '📘', tsx: '⚛️', js: '📜', jsx: '⚛️', rs: '🦀',
-  md: '📝', json: '📋', txt: '📄', html: '🌐', css: '🎨', sh: '🖥️',
+  py: '🐍',
+  ts: '📘',
+  tsx: '⚛️',
+  js: '📜',
+  jsx: '⚛️',
+  rs: '🦀',
+  md: '📝',
+  json: '📋',
+  txt: '📄',
+  html: '🌐',
+  css: '🎨',
+  sh: '🖥️',
 };
 
 const MIME_MAP: Record<string, string> = {
-  py: 'text/x-python', ts: 'text/plain', tsx: 'text/plain', js: 'text/javascript',
-  jsx: 'text/javascript', rs: 'text/plain', md: 'text/markdown', json: 'application/json',
-  txt: 'text/plain', html: 'text/html', css: 'text/css', sh: 'text/x-sh',
+  py: 'text/x-python',
+  ts: 'text/plain',
+  tsx: 'text/plain',
+  js: 'text/javascript',
+  jsx: 'text/javascript',
+  rs: 'text/plain',
+  md: 'text/markdown',
+  json: 'application/json',
+  txt: 'text/plain',
+  html: 'text/html',
+  css: 'text/css',
+  sh: 'text/x-sh',
 };
 
 const GeneratedFilesPanel = memo(
@@ -1411,8 +1433,12 @@ const GeneratedFilesPanel = memo(
               >
                 <span className="generated-file-icon">{icon}</span>
                 <div className="generated-file-info">
-                  <span className="generated-file-name" title={entry.name}>{entry.name}</span>
-                  <span className="generated-file-time">{formatRelativeTime(entry.timestamp)}</span>
+                  <span className="generated-file-name" title={entry.name}>
+                    {entry.name}
+                  </span>
+                  <span className="generated-file-time">
+                    {formatRelativeTime(entry.timestamp)}
+                  </span>
                 </div>
                 <div className="generated-file-actions">
                   {isPending && (
@@ -1543,9 +1569,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     // Active uniquement quand window.__TITANE_E2E_GENERATED_FILE__ est défini
     // (injecté par addInitScript dans les specs Playwright)
     useEffect(() => {
-      const seed = (
-        window as { __TITANE_E2E_GENERATED_FILE__?: GeneratedFileEntry }
-      ).__TITANE_E2E_GENERATED_FILE__;
+      const seed = (window as { __TITANE_E2E_GENERATED_FILE__?: GeneratedFileEntry })
+        .__TITANE_E2E_GENERATED_FILE__;
       if (seed) {
         setGeneratedFiles([seed]);
       }
@@ -2535,7 +2560,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             contract.target_format
           );
           if (content.trim()) {
-            const suggestedFilename = extractSuggestedFilename(response.assistant_message);
+            const suggestedFilename = extractSuggestedFilename(
+              response.assistant_message
+            );
             const safeName = suggestedFilename
               ? suggestedFilename.replace(/\.[^.]+$/, '')
               : buildSafeFilename(manifest.title);
@@ -2605,11 +2632,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           return;
         }
         const saved = result.ok;
-        const newStatus = result.status === 'SAVED_TAURI'
-          ? ('SAVED_TAURI' as const)
-          : result.status === 'SAVED_BROWSER_DOWNLOAD'
-          ? ('SAVED_BROWSER_DOWNLOAD' as const)
-          : ('WRITE_FAILED' as const);
+        const newStatus =
+          result.status === 'SAVED_TAURI'
+            ? ('SAVED_TAURI' as const)
+            : result.status === 'SAVED_BROWSER_DOWNLOAD'
+              ? ('SAVED_BROWSER_DOWNLOAD' as const)
+              : ('WRITE_FAILED' as const);
         setGeneratedFiles(prev =>
           prev.map(f =>
             f.id === entry.id
@@ -2663,14 +2691,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         messages
       );
       if (result.ok) {
-        setGeneratedFiles(prev => [{
-          id: crypto.randomUUID(),
-          name: result.path ? result.path.split('/').pop() ?? 'conversation.json' : 'conversation.json',
-          path: result.path,
-          status: result.status as GeneratedFileEntry['status'],
-          ext: 'json',
-          timestamp: Date.now(),
-        }, ...prev]);
+        setGeneratedFiles(prev => [
+          {
+            id: crypto.randomUUID(),
+            name: result.path
+              ? (result.path.split('/').pop() ?? 'conversation.json')
+              : 'conversation.json',
+            path: result.path,
+            status: result.status as GeneratedFileEntry['status'],
+            ext: 'json',
+            timestamp: Date.now(),
+          },
+          ...prev,
+        ]);
         toastSuccess(
           result.status === 'SAVED_TAURI'
             ? `Conversation enregistrée (${result.path ?? 'chemin sélectionné'})`
@@ -2690,14 +2723,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const handleExportMarkdown = useCallback(async () => {
       const result = await downloadMarkdown('Conversation TITANE', messages);
       if (result.ok) {
-        setGeneratedFiles(prev => [{
-          id: crypto.randomUUID(),
-          name: result.path ? result.path.split('/').pop() ?? 'conversation.md' : 'conversation.md',
-          path: result.path,
-          status: result.status as GeneratedFileEntry['status'],
-          ext: 'md',
-          timestamp: Date.now(),
-        }, ...prev]);
+        setGeneratedFiles(prev => [
+          {
+            id: crypto.randomUUID(),
+            name: result.path
+              ? (result.path.split('/').pop() ?? 'conversation.md')
+              : 'conversation.md',
+            path: result.path,
+            status: result.status as GeneratedFileEntry['status'],
+            ext: 'md',
+            timestamp: Date.now(),
+          },
+          ...prev,
+        ]);
         toastSuccess(
           result.status === 'SAVED_TAURI'
             ? `Markdown enregistré (${result.path ?? 'chemin sélectionné'})`
@@ -3011,40 +3049,58 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                       role="menu"
                     >
                       <button
-                        onClick={() => { handleExportJson(); setShowMoreMenu(false); }}
+                        onClick={() => {
+                          handleExportJson();
+                          setShowMoreMenu(false);
+                        }}
                         disabled={!hasMessages}
                         role="menuitem"
                       >
                         📥 Export JSON
                       </button>
                       <button
-                        onClick={() => { handleExportMarkdown(); setShowMoreMenu(false); }}
+                        onClick={() => {
+                          handleExportMarkdown();
+                          setShowMoreMenu(false);
+                        }}
                         disabled={!hasMessages}
                         role="menuitem"
                       >
                         📄 Export MD
                       </button>
                       <button
-                        onClick={() => { handleCopyAll(); setShowMoreMenu(false); }}
+                        onClick={() => {
+                          handleCopyAll();
+                          setShowMoreMenu(false);
+                        }}
                         disabled={!hasMessages}
                         role="menuitem"
                       >
                         📋 Copier
                       </button>
                       <button
-                        onClick={() => { toggleModeBuilder(); setShowMoreMenu(false); }}
+                        onClick={() => {
+                          toggleModeBuilder();
+                          setShowMoreMenu(false);
+                        }}
                         role="menuitem"
                       >
                         ⚙️ Modes
                       </button>
                       <button
-                        onClick={() => { refreshHealth(); setShowMoreMenu(false); }}
+                        onClick={() => {
+                          refreshHealth();
+                          setShowMoreMenu(false);
+                        }}
                         role="menuitem"
                       >
                         {isHealthy ? '✅' : '⚠️'} Santé
                       </button>
                       <button
-                        onClick={() => { handleClearChat(); setShowMoreMenu(false); }}
+                        onClick={() => {
+                          handleClearChat();
+                          setShowMoreMenu(false);
+                        }}
                         role="menuitem"
                       >
                         🗑️ Effacer

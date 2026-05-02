@@ -214,7 +214,12 @@
         "journal_besoins": "Identifier quotidiennement ses propres besoins avant ceux des autres",
         "therapie": "TCC schémas, IFS (parties dépendantes), EMDR (blessures attachement), DBT (régulation émotionnelle)",
         "groupes_de_soutien": "SLAA (Sex and Love Addicts Anonymous), Codependants Anonymes (CoDA)",
-        "lecture": ["Codependent No More (Melody Beattie)", "Women Who Love Too Much (Robin Norwood)", "Attached (Amir Levine)", "Emotional Intelligence (Goleman)"]
+        "lecture": [
+          "Codependent No More (Melody Beattie)",
+          "Women Who Love Too Much (Robin Norwood)",
+          "Attached (Amir Levine)",
+          "Emotional Intelligence (Goleman)"
+        ]
       },
       "signal_guerison": "Capacité à être seul sans détresse / choisir une relation pour l'enrichissement mutuel, non pour combler un vide / distinguer besoins légitimes et fusion pathologique"
     },

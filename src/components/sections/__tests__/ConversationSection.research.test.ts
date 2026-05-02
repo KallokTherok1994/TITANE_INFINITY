@@ -41,14 +41,33 @@ import {
 function prefsWithDeep(deep: boolean): ReturnType<typeof mockGetPreferences> {
   return {
     language: 'fr-FR',
-    communicationStyle: { formality: 'informal', verbosity: 'balanced', humor: true, emojis: true },
+    communicationStyle: {
+      formality: 'informal',
+      verbosity: 'balanced',
+      humor: true,
+      emojis: true,
+    },
     interests: [],
     topicsHistory: [],
-    technical: { preferredLanguages: [], expertiseLevel: 'intermediate', preferCodeComments: true, preferExamples: true },
-    audio: { voiceEnabled: true, preferredVoice: 'fr_FR-siwis-medium', preferredSpeed: 1.0 },
+    technical: {
+      preferredLanguages: [],
+      expertiseLevel: 'intermediate',
+      preferCodeComments: true,
+      preferExamples: true,
+    },
+    audio: {
+      voiceEnabled: true,
+      preferredVoice: 'fr_FR-siwis-medium',
+      preferredSpeed: 1.0,
+    },
     metrics: {
-      totalInteractions: 0, positiveReactions: 0, negativeReactions: 0,
-      averageResponseLength: 0, lastInteraction: Date.now(), createdAt: Date.now(), updatedAt: Date.now(),
+      totalInteractions: 0,
+      positiveReactions: 0,
+      negativeReactions: 0,
+      averageResponseLength: 0,
+      lastInteraction: Date.now(),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     },
     customPreferences: { deep_internet_analysis: deep },
   };
@@ -95,15 +114,21 @@ describe('shouldHandoffToResearch() — patterns classiques', () => {
   });
 
   it('déclenche pour "recherche sur internet"', () => {
-    expect(shouldHandoffToResearch('Recherche sur internet les actualités IA')).toBe(true);
+    expect(shouldHandoffToResearch('Recherche sur internet les actualités IA')).toBe(
+      true
+    );
   });
 
   it('déclenche pour "chercher sur le web"', () => {
-    expect(shouldHandoffToResearch('Peux-tu chercher sur le web les dernières infos ?')).toBe(true);
+    expect(
+      shouldHandoffToResearch('Peux-tu chercher sur le web les dernières infos ?')
+    ).toBe(true);
   });
 
   it('déclenche pour "search online"', () => {
-    expect(shouldHandoffToResearch('search online for quantum computing news')).toBe(true);
+    expect(shouldHandoffToResearch('search online for quantum computing news')).toBe(
+      true
+    );
   });
 
   it('déclenche pour "look up on the web"', () => {
@@ -111,11 +136,15 @@ describe('shouldHandoffToResearch() — patterns classiques', () => {
   });
 
   it('ne déclenche PAS pour une question générale sans recherche/web', () => {
-    expect(shouldHandoffToResearch('Explique-moi comment fonctionne le machine learning')).toBe(false);
+    expect(
+      shouldHandoffToResearch('Explique-moi comment fonctionne le machine learning')
+    ).toBe(false);
   });
 
   it('ne déclenche PAS pour une phrase avec "recherche" sans cible web', () => {
-    expect(shouldHandoffToResearch('Mes recherches en cours portent sur les algorithmes')).toBe(false);
+    expect(
+      shouldHandoffToResearch('Mes recherches en cours portent sur les algorithmes')
+    ).toBe(false);
   });
 
   it('ne déclenche PAS pour une phrase avec "web" sans verbe recherche', () => {
@@ -137,31 +166,45 @@ describe('shouldHandoffToResearch() — deep_internet_analysis activé', () => {
   });
 
   it('déclenche pour "actualité" avec préf deep active', () => {
-    expect(shouldHandoffToResearch('Quelles sont les actualités sur TITANE ?')).toBe(true);
+    expect(shouldHandoffToResearch('Quelles sont les actualités sur TITANE ?')).toBe(
+      true
+    );
   });
 
   it('déclenche pour "dernières nouvelles" avec préf deep active', () => {
-    expect(shouldHandoffToResearch('Donne-moi les dernières nouvelles sur les LLM')).toBe(true);
+    expect(shouldHandoffToResearch('Donne-moi les dernières nouvelles sur les LLM')).toBe(
+      true
+    );
   });
 
   it('déclenche pour "informations récentes" avec préf deep active', () => {
-    expect(shouldHandoffToResearch('Je veux les informations récentes sur GPT-5')).toBe(true);
+    expect(shouldHandoffToResearch('Je veux les informations récentes sur GPT-5')).toBe(
+      true
+    );
   });
 
   it('déclenche pour "tendances actuelles" avec préf deep active', () => {
-    expect(shouldHandoffToResearch('Quelles sont les tendances actuelles du marché ?')).toBe(true);
+    expect(
+      shouldHandoffToResearch('Quelles sont les tendances actuelles du marché ?')
+    ).toBe(true);
   });
 
   it('déclenche pour URL http dans le message', () => {
-    expect(shouldHandoffToResearch('Analyse ce site https://fr.wikipedia.org/wiki/IA')).toBe(true);
+    expect(
+      shouldHandoffToResearch('Analyse ce site https://fr.wikipedia.org/wiki/IA')
+    ).toBe(true);
   });
 
   it('déclenche pour "cherche ... sur" avec préf deep active', () => {
-    expect(shouldHandoffToResearch('cherche sur les dernières publications académiques')).toBe(true);
+    expect(
+      shouldHandoffToResearch('cherche sur les dernières publications académiques')
+    ).toBe(true);
   });
 
   it('ne déclenche PAS pour question générale même avec préf deep active', () => {
-    expect(shouldHandoffToResearch('Comment s\'appelle le président de la France ?')).toBe(false);
+    expect(shouldHandoffToResearch("Comment s'appelle le président de la France ?")).toBe(
+      false
+    );
   });
 
   it('continue à déclencher pour pattern classique recherche+web', () => {
@@ -185,7 +228,9 @@ describe('buildResearchHandoff() — structure payload', () => {
   });
 
   it('retourne des seed_urls Wikipedia FR', () => {
-    const result = buildResearchHandoff('recherche sur internet l\'intelligence artificielle');
+    const result = buildResearchHandoff(
+      "recherche sur internet l'intelligence artificielle"
+    );
     expect(result.seed_urls.length).toBeGreaterThanOrEqual(1);
     expect(result.seed_urls[0]).toContain('wikipedia.org');
   });
@@ -202,7 +247,7 @@ describe('buildResearchHandoff() — structure payload', () => {
     expect(result.seed_urls).toContain(url);
   });
 
-  it('nettoie les ponctuation en fin d\'URL détectée', () => {
+  it("nettoie les ponctuation en fin d'URL détectée", () => {
     const result = buildResearchHandoff('Regarde https://example.com/article.');
     expect(result.target_url).not.toMatch(/\.$/);
   });
@@ -212,7 +257,7 @@ describe('buildResearchHandoff() — structure payload', () => {
     expect(result.seed_urls.length).toBe(4);
   });
 
-  it('génère un slug valide pour target_url (pas d\'espaces)', () => {
+  it("génère un slug valide pour target_url (pas d'espaces)", () => {
     const result = buildResearchHandoff('recherche sur internet machine learning');
     expect(result.target_url).not.toContain(' ');
   });
@@ -224,13 +269,22 @@ describe('buildResearchHandoff() — structure payload', () => {
 
 describe('classifyResearchOutcome() — blocked', () => {
   it('retourne "blocked" pour marker VERDICT_BLOCKED', () => {
-    const report = makeReport({ trace: { trace_id: 'x', markers: ['VERDICT_BLOCKED'], errors: [] } });
+    const report = makeReport({
+      trace: { trace_id: 'x', markers: ['VERDICT_BLOCKED'], errors: [] },
+    });
     expect(classifyResearchOutcome(report)).toBe('blocked');
   });
 
   it('VERDICT_BLOCKED prime sur les citations présentes', () => {
     const report = makeReport({
-      answer: { answer: 'ok', citations: [makeCitation()], limitations: [], trace_id: 'x', sources_count: 1, retrieved_passages_count: 1 },
+      answer: {
+        answer: 'ok',
+        citations: [makeCitation()],
+        limitations: [],
+        trace_id: 'x',
+        sources_count: 1,
+        retrieved_passages_count: 1,
+      },
       trace: { trace_id: 'x', markers: ['VERDICT_BLOCKED'], errors: [] },
     });
     expect(classifyResearchOutcome(report)).toBe('blocked');
@@ -245,21 +299,42 @@ describe('classifyResearchOutcome() — limited', () => {
 
   it('retourne "limited" quand réponse contient "no generative model used"', () => {
     const report = makeReport({
-      answer: { answer: 'no generative model used', citations: [makeCitation()], limitations: [], trace_id: 'x', sources_count: 1, retrieved_passages_count: 1 },
+      answer: {
+        answer: 'no generative model used',
+        citations: [makeCitation()],
+        limitations: [],
+        trace_id: 'x',
+        sources_count: 1,
+        retrieved_passages_count: 1,
+      },
     });
     expect(classifyResearchOutcome(report)).toBe('limited');
   });
 
   it('retourne "limited" quand réponse contient "robot policy"', () => {
     const report = makeReport({
-      answer: { answer: 'robot policy blocks this', citations: [makeCitation()], limitations: [], trace_id: 'x', sources_count: 1, retrieved_passages_count: 1 },
+      answer: {
+        answer: 'robot policy blocks this',
+        citations: [makeCitation()],
+        limitations: [],
+        trace_id: 'x',
+        sources_count: 1,
+        retrieved_passages_count: 1,
+      },
     });
     expect(classifyResearchOutcome(report)).toBe('limited');
   });
 
   it('retourne "limited" quand sources_count=1 et retrieved_passages_count=1', () => {
     const report = makeReport({
-      answer: { answer: 'Une réponse normale', citations: [makeCitation()], limitations: [], trace_id: 'x', sources_count: 1, retrieved_passages_count: 1 },
+      answer: {
+        answer: 'Une réponse normale',
+        citations: [makeCitation()],
+        limitations: [],
+        trace_id: 'x',
+        sources_count: 1,
+        retrieved_passages_count: 1,
+      },
     });
     expect(classifyResearchOutcome(report)).toBe('limited');
   });
@@ -284,7 +359,10 @@ describe('classifyResearchOutcome() — pass', () => {
     const report = makeReport({
       answer: {
         answer: 'Bonne synthèse',
-        citations: [makeCitation(), makeCitation({ url: 'https://fr.wikipedia.org/wiki/Autre' })],
+        citations: [
+          makeCitation(),
+          makeCitation({ url: 'https://fr.wikipedia.org/wiki/Autre' }),
+        ],
         limitations: [],
         trace_id: 'x',
         sources_count: 2,
@@ -295,9 +373,20 @@ describe('classifyResearchOutcome() — pass', () => {
   });
 
   it('retourne "pass" avec 3 citations et aucune limitation critique', () => {
-    const citations = [makeCitation(), makeCitation({ url: 'https://a.com' }), makeCitation({ url: 'https://b.com' })];
+    const citations = [
+      makeCitation(),
+      makeCitation({ url: 'https://a.com' }),
+      makeCitation({ url: 'https://b.com' }),
+    ];
     const report = makeReport({
-      answer: { answer: 'Excellente synthèse', citations, limitations: ['légère'], trace_id: 'x', sources_count: 3, retrieved_passages_count: 4 },
+      answer: {
+        answer: 'Excellente synthèse',
+        citations,
+        limitations: ['légère'],
+        trace_id: 'x',
+        sources_count: 3,
+        retrieved_passages_count: 4,
+      },
     });
     expect(classifyResearchOutcome(report)).toBe('pass');
   });
@@ -309,19 +398,33 @@ describe('classifyResearchOutcome() — pass', () => {
 
 describe('buildResearchReply() — blocked', () => {
   it('contient un titre avec "bloquée"', () => {
-    const report = makeReport({ trace: { trace_id: 'x', markers: ['VERDICT_BLOCKED', 'ROBOTS_BLOCKED'], errors: [] } });
+    const report = makeReport({
+      trace: {
+        trace_id: 'x',
+        markers: ['VERDICT_BLOCKED', 'ROBOTS_BLOCKED'],
+        errors: [],
+      },
+    });
     const reply = buildResearchReply(report, 'blocked');
     expect(reply).toContain('bloquée');
   });
 
   it('contient la cause de blocage ROBOTS_BLOCKED', () => {
-    const report = makeReport({ trace: { trace_id: 'x', markers: ['VERDICT_BLOCKED', 'ROBOTS_BLOCKED'], errors: [] } });
+    const report = makeReport({
+      trace: {
+        trace_id: 'x',
+        markers: ['VERDICT_BLOCKED', 'ROBOTS_BLOCKED'],
+        errors: [],
+      },
+    });
     const reply = buildResearchReply(report, 'blocked');
     expect(reply).toContain('ROBOTS_BLOCKED');
   });
 
-  it('ne contient pas de citations quand aucune n\'est disponible', () => {
-    const report = makeReport({ trace: { trace_id: 'x', markers: ['VERDICT_BLOCKED'], errors: [] } });
+  it("ne contient pas de citations quand aucune n'est disponible", () => {
+    const report = makeReport({
+      trace: { trace_id: 'x', markers: ['VERDICT_BLOCKED'], errors: [] },
+    });
     const reply = buildResearchReply(report, 'blocked');
     expect(reply).toContain('Aucune source exploitable');
   });
@@ -329,7 +432,9 @@ describe('buildResearchReply() — blocked', () => {
 
 describe('buildResearchReply() — limited', () => {
   it('contient "analyse partielle" dans le titre', () => {
-    const report = makeReport({ trace: { trace_id: 'x', markers: ['VERDICT_UNKNOWN'], errors: [] } });
+    const report = makeReport({
+      trace: { trace_id: 'x', markers: ['VERDICT_UNKNOWN'], errors: [] },
+    });
     const reply = buildResearchReply(report, 'limited');
     expect(reply).toContain('analyse partielle');
   });
@@ -370,12 +475,18 @@ describe('buildResearchReply() — limited', () => {
 describe('buildResearchReply() — pass', () => {
   it('contient le titre de recherche sans "bloquée" ni "partielle"', () => {
     const citations = [
-      makeCitation({ title: 'Intelligence Artificielle', url: 'https://fr.wikipedia.org/wiki/IA' }),
-      makeCitation({ title: 'Machine Learning', url: 'https://fr.wikipedia.org/wiki/ML' }),
+      makeCitation({
+        title: 'Intelligence Artificielle',
+        url: 'https://fr.wikipedia.org/wiki/IA',
+      }),
+      makeCitation({
+        title: 'Machine Learning',
+        url: 'https://fr.wikipedia.org/wiki/ML',
+      }),
     ];
     const report = makeReport({
       answer: {
-        answer: 'L\'intelligence artificielle est un domaine vaste.',
+        answer: "L'intelligence artificielle est un domaine vaste.",
         citations,
         limitations: [],
         trace_id: 'x',

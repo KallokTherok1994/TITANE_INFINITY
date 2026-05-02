@@ -94,7 +94,12 @@ describe('memoryService', () => {
         title: 'Rappelle-toi de ORION-482-LICHEN',
         modeId: 'default',
         projectId: 'orion-project',
-        tags: expect.arrayContaining(['chat-interaction', 'default', 'focus', 'chat-permanent']),
+        tags: expect.arrayContaining([
+          'chat-interaction',
+          'default',
+          'focus',
+          'chat-permanent',
+        ]),
         content: expect.stringContaining('Utilisateur: Rappelle-toi de ORION-482-LICHEN'),
       }),
       expect.objectContaining({ context: 'Memory' })

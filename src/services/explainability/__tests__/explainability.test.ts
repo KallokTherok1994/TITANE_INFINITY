@@ -25,9 +25,7 @@ const {
     evidence: ['mock evidence'],
     blockers: [],
     nextStep: 'mock step',
-    detailSections: [
-      { key: 'inference-history', title: 'Historique', items: [] },
-    ],
+    detailSections: [{ key: 'inference-history', title: 'Historique', items: [] }],
   })),
   mockLoadRegistry: vi.fn(() => ({
     champions: {
@@ -170,7 +168,9 @@ describe('computeExplainabilityScore — dérive registre', () => {
 
   it('grade = F quand score insuffisant', () => {
     mockLoadRegistry.mockReturnValue({
-      champions: { default: { provider: 'gemini', model: 'gemini-pro', mode: 'default' } },
+      champions: {
+        default: { provider: 'gemini', model: 'gemini-pro', mode: 'default' },
+      },
       challengers: {},
       comparison: { enabled: false, sample_rate: 0.1 },
     });
@@ -190,7 +190,7 @@ describe('exportInferenceAuditLog', () => {
     });
   });
 
-  it('retourne un log d\'audit avec champs obligatoires', () => {
+  it("retourne un log d'audit avec champs obligatoires", () => {
     const log = exportInferenceAuditLog();
     expect(typeof log.exportId).toBe('string');
     expect(typeof log.generatedAt).toBe('string');
@@ -272,8 +272,11 @@ describe('resetExplainabilityTraceHistoryForTests', () => {
     expect(() => resetExplainabilityTraceHistoryForTests()).not.toThrow();
   });
 
-  it('vide bien l\'historique localStorage', () => {
-    window.localStorage.setItem('titane_explainability_trace_history', JSON.stringify([{ id: 'x' }]));
+  it("vide bien l'historique localStorage", () => {
+    window.localStorage.setItem(
+      'titane_explainability_trace_history',
+      JSON.stringify([{ id: 'x' }])
+    );
     resetExplainabilityTraceHistoryForTests();
     const raw = window.localStorage.getItem('titane_explainability_trace_history');
     const parsed = raw ? JSON.parse(raw) : null;

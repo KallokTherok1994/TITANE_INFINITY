@@ -211,7 +211,10 @@ describe('memoryOptimizer — compactLTMContext', () => {
     const totalTokens = compacted.reduce((acc, e) => acc + estimateTokens(e.content), 0);
     // Pinned entries can exceed, but unpinned should be bounded
     const unpinned = compacted.filter(e => !e.pinned);
-    const unpinnedTokens = unpinned.reduce((acc, e) => acc + estimateTokens(e.content), 0);
+    const unpinnedTokens = unpinned.reduce(
+      (acc, e) => acc + estimateTokens(e.content),
+      0
+    );
     expect(unpinnedTokens).toBeLessThanOrEqual(1000);
   });
 
@@ -230,9 +233,21 @@ describe('memoryOptimizer — compactLTMContext', () => {
 
 describe('memoryOptimizer — prioritizeForQuery', () => {
   const entries: MemoryEntry[] = [
-    { id: '1', content: 'Pharmacologie ADME CYP450 métabolisme hépatique', importance: 0.5 },
-    { id: '2', content: 'Recette de cuisine végétarienne avec courgettes', importance: 0.3 },
-    { id: '3', content: 'Traitement médicamenteux interactions cliniques pharmacologie', importance: 0.7 },
+    {
+      id: '1',
+      content: 'Pharmacologie ADME CYP450 métabolisme hépatique',
+      importance: 0.5,
+    },
+    {
+      id: '2',
+      content: 'Recette de cuisine végétarienne avec courgettes',
+      importance: 0.3,
+    },
+    {
+      id: '3',
+      content: 'Traitement médicamenteux interactions cliniques pharmacologie',
+      importance: 0.7,
+    },
   ];
 
   it('returns top entries matching query', () => {

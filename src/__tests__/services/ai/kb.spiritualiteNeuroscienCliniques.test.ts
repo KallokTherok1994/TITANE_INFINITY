@@ -92,7 +92,9 @@ describe('KB Phase 41 — spiritualite_sens_existentiel (v31.6.1)', () => {
     expect(kb(ID).retrieval_triggers).toContain('psychologie transpersonnelle');
   });
   it('trigger: stoïcisme ou méditation contemplative', () => {
-    expect(text(kb(ID).retrieval_triggers)).toMatch(/sto.cisme|m.ditation contemplative/i);
+    expect(text(kb(ID).retrieval_triggers)).toMatch(
+      /sto.cisme|m.ditation contemplative/i
+    );
   });
   it('trigger: mort ou finitude', () => {
     expect(text(kb(ID).retrieval_triggers)).toMatch(/mort|finitude/i);

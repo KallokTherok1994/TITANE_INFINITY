@@ -37,9 +37,7 @@ describe('cn', () => {
   });
 
   it('devrait supporter les objets conditionnels', () => {
-    expect(cn({ active: true, disabled: false, visible: true })).toBe(
-      'active visible'
-    );
+    expect(cn({ active: true, disabled: false, visible: true })).toBe('active visible');
   });
 
   it('devrait combiner objets, tableaux et strings', () => {

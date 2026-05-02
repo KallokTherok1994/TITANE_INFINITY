@@ -7,18 +7,18 @@
 // ─── PERCEPTION STACK types ──────────────────────────────────────────────────
 
 export enum DesktopScopeCategory {
-  Allowed = "Allowed",
-  Denied = "Denied",
-  Unknown = "Unknown",
+  Allowed = 'Allowed',
+  Denied = 'Denied',
+  Unknown = 'Unknown',
 }
 
 export enum DesktopSessionStatus {
-  Idle = "idle",
-  Perceiving = "perceiving",
-  Blocked = "blocked",
-  Stopped = "stopped",
-  Paused = "paused",
-  HandoffPending = "handoff_pending",
+  Idle = 'idle',
+  Perceiving = 'perceiving',
+  Blocked = 'blocked',
+  Stopped = 'stopped',
+  Paused = 'paused',
+  HandoffPending = 'handoff_pending',
 }
 
 /** Information about a single desktop window */
@@ -38,7 +38,14 @@ export interface DesktopSession {
   session_id: string;
   authority_level: string;
   allowed_surfaces: string[];
-  status: DesktopSessionStatus | 'idle' | 'perceiving' | 'paused' | 'handoff_pending' | 'blocked' | 'stopped';
+  status:
+    | DesktopSessionStatus
+    | 'idle'
+    | 'perceiving'
+    | 'paused'
+    | 'handoff_pending'
+    | 'blocked'
+    | 'stopped';
   started_at: string;
   expires_at: string;
   actions_count: number;
@@ -107,14 +114,13 @@ export interface DesktopControlStatus {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 export const DESKTOP_FORBIDDEN_ACTIONS = [
-  "screenshot_capture",
-  "raw_input_injection",
-  "keylog",
-  "clipboard_read",
-  "clipboard_write",
-  "screen_record",
-  "auto_click",
+  'screenshot_capture',
+  'raw_input_injection',
+  'keylog',
+  'clipboard_read',
+  'clipboard_write',
+  'screen_record',
+  'auto_click',
 ] as const;
 
 export type DesktopForbiddenAction = (typeof DESKTOP_FORBIDDEN_ACTIONS)[number];
-

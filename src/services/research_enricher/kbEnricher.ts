@@ -27,7 +27,9 @@ function generateEnrichmentId(): string {
 /**
  * Stores a new runtime enrichment in sessionStorage.
  */
-export function addRuntimeEnrichment(enrichment: Omit<RuntimeKBEnrichment, 'id'>): RuntimeKBEnrichment {
+export function addRuntimeEnrichment(
+  enrichment: Omit<RuntimeKBEnrichment, 'id'>
+): RuntimeKBEnrichment {
   const full: RuntimeKBEnrichment = { ...enrichment, id: generateEnrichmentId() };
 
   if (typeof window === 'undefined') {
@@ -160,5 +162,8 @@ export function mergeWithKBContext(
     )
     .join('\n---\n');
 
-  return [kbContext, `\n--- Enrichissements web runtime ---\n${enrichedSection}\n---`].join('\n');
+  return [
+    kbContext,
+    `\n--- Enrichissements web runtime ---\n${enrichedSection}\n---`,
+  ].join('\n');
 }

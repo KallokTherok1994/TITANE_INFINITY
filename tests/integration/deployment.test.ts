@@ -96,13 +96,17 @@ describe('🚀 Deployment Configuration Verification', () => {
 
     it('should have valid Tauri schema', () => {
       // La config de base Tauri v2 utilise `identifier`; le runtime expose `$schema`
-      const schema = (runtimeConfig['$schema'] ?? tauriConfig['identifier']) as string | undefined;
+      const schema = (runtimeConfig['$schema'] ?? tauriConfig['identifier']) as
+        | string
+        | undefined;
       expect(schema).toBeDefined();
     });
 
     it('should have product name defined', () => {
       // En Tauri v2, le nom produit est dans le runtime config
-      const productName = (runtimeConfig.productName ?? tauriConfig.identifier) as string | undefined;
+      const productName = (runtimeConfig.productName ?? tauriConfig.identifier) as
+        | string
+        | undefined;
       expect(productName).toBeDefined();
       expect(typeof productName).toBe('string');
     });

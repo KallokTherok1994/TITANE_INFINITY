@@ -62,7 +62,10 @@ describe('LoggingContext', () => {
       const { createModuleLogger } = useLogging();
       const moduleLogger = createModuleLogger('DefaultModule');
       return (
-        <div data-testid="default-module-logger" data-has-info={String(typeof moduleLogger.info === 'function')}>
+        <div
+          data-testid="default-module-logger"
+          data-has-info={String(typeof moduleLogger.info === 'function')}
+        >
           ready
         </div>
       );
@@ -111,19 +114,28 @@ describe('LoggingContext', () => {
       const ctx = useLogging();
       const ml = ctx.createModuleLogger('DirectCall');
       return (
-        <div data-testid="direct-call-probe" data-has-fn={String(typeof ml.debug === 'function')}>
+        <div
+          data-testid="direct-call-probe"
+          data-has-fn={String(typeof ml.debug === 'function')}
+        >
           ok
         </div>
       );
     };
 
     render(
-      <LoggingProvider rootLogger={rootLogger as never} createModuleLogger={createModuleLogger}>
+      <LoggingProvider
+        rootLogger={rootLogger as never}
+        createModuleLogger={createModuleLogger}
+      >
         <Probe />
       </LoggingProvider>
     );
 
-    expect(screen.getByTestId('direct-call-probe')).toHaveAttribute('data-has-fn', 'true');
+    expect(screen.getByTestId('direct-call-probe')).toHaveAttribute(
+      'data-has-fn',
+      'true'
+    );
     expect(createModuleLogger).toHaveBeenCalledWith('DirectCall');
   });
 });

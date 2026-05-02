@@ -29,7 +29,9 @@ interface E2EGeneratedFileEntry {
   content?: string;
 }
 
-function makeFileEntry(overrides: Partial<E2EGeneratedFileEntry> = {}): E2EGeneratedFileEntry {
+function makeFileEntry(
+  overrides: Partial<E2EGeneratedFileEntry> = {}
+): E2EGeneratedFileEntry {
   return {
     id: 'e2e-test-id-' + Math.random().toString(36).slice(2),
     name: 'rapport.py',
@@ -48,7 +50,9 @@ async function injectPendingFile(
 ): Promise<E2EGeneratedFileEntry> {
   const file = makeFileEntry(entry);
   await page.addInitScript(f => {
-    (window as { __TITANE_E2E_GENERATED_FILE__?: unknown }).__TITANE_E2E_GENERATED_FILE__ = f;
+    (
+      window as { __TITANE_E2E_GENERATED_FILE__?: unknown }
+    ).__TITANE_E2E_GENERATED_FILE__ = f;
   }, file);
   return file;
 }
@@ -113,7 +117,8 @@ test.describe('Generated Files Panel — Click-to-Download', () => {
         if (
           parent.classList.contains('conversation-input-area') ||
           parent.classList.contains('conversation-input')
-        ) return true;
+        )
+          return true;
         parent = parent.parentElement;
       }
       return false;
@@ -124,8 +129,14 @@ test.describe('Generated Files Panel — Click-to-Download', () => {
   /**
    * T3 — Bouton ⬇️ Télécharger visible pour une entrée PENDING_DOWNLOAD
    */
-  test('T3: bouton Télécharger visible pour status PENDING_DOWNLOAD', async ({ page }) => {
-    const file = await injectPendingFile(page, { name: 'analyse.py', status: 'PENDING_DOWNLOAD', content: 'x=1' });
+  test('T3: bouton Télécharger visible pour status PENDING_DOWNLOAD', async ({
+    page,
+  }) => {
+    const file = await injectPendingFile(page, {
+      name: 'analyse.py',
+      status: 'PENDING_DOWNLOAD',
+      content: 'x=1',
+    });
     await navigateToChat(page);
 
     const panel = page.getByTestId('generated-files-panel');
@@ -241,7 +252,9 @@ test.describe('Generated Files Panel — Click-to-Download', () => {
   /**
    * T8 — Aucune erreur JS sur la page (sanity check)
    */
-  test('T8: aucune erreur JS console critique lors de laffichage du panel', async ({ page }) => {
+  test('T8: aucune erreur JS console critique lors de laffichage du panel', async ({
+    page,
+  }) => {
     const errors: string[] = [];
     page.on('pageerror', err => errors.push(err.message));
 

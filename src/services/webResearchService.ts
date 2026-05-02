@@ -70,11 +70,21 @@ interface WikiSearchResponse {
 }
 
 function stripHtmlTags(s: string): string {
-  return s.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  return s
+    .replace(/<[^>]*>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
 }
 
 // lang: 'fr' | 'en' — used to build the Wikipedia article URL
-function parseWikiSearchJson(data: WikiSearchResponse, maxResults: number, lang = 'fr'): WebSearchResult[] {
+function parseWikiSearchJson(
+  data: WikiSearchResponse,
+  maxResults: number,
+  lang = 'fr'
+): WebSearchResult[] {
   const items = data?.query?.search ?? [];
   return items.slice(0, maxResults).map(item => ({
     title: item.title,
@@ -112,7 +122,10 @@ export async function browserWebSearch(
           return {
             ok: false,
             content: null,
-            error: { code: 'WIKI_HTTP_ERROR', message: `Wikipedia Search HTTP ${resp.status}` },
+            error: {
+              code: 'WIKI_HTTP_ERROR',
+              message: `Wikipedia Search HTTP ${resp.status}`,
+            },
           };
         }
         // FR failed with HTTP error — try EN
@@ -207,12 +220,16 @@ async function browserWebResearchFallback(question: string): Promise<ResearchRep
 
   // v31.2.33: Persist web findings for long-term memory enrichment (dynamic import avoids circular dep)
   setTimeout(() => {
-    import('@/services/memory/memoryWebEnricher').then(({ memoryWebEnricher }) => {
-      memoryWebEnricher.scheduleEnrichment({
-        id: `web_research_${Date.now()}`,
-        content: summaryParts,
+    import('@/services/memory/memoryWebEnricher')
+      .then(({ memoryWebEnricher }) => {
+        memoryWebEnricher.scheduleEnrichment({
+          id: `web_research_${Date.now()}`,
+          content: summaryParts,
+        });
+      })
+      .catch(() => {
+        /* non-blocking */
       });
-    }).catch(() => { /* non-blocking */ });
   }, 0);
 
   return {
@@ -257,4 +274,3 @@ export async function webResearch(
 
   return tauri<ResearchReport>('web_research', { query, options });
 }
-

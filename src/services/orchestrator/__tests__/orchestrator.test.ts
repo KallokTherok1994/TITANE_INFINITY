@@ -20,8 +20,24 @@ const {
   mockGetGovernanceConnector,
 } = vi.hoisted(() => {
   const getAllProviders = vi.fn(() => [
-    { id: 'ollama', isActive: true, isHealthy: true, isConfigured: true, failureCount: 0, consecutiveFailures: 0, lastFailure: 0 },
-    { id: 'tauri-backend', isActive: true, isHealthy: true, isConfigured: true, failureCount: 0, consecutiveFailures: 0, lastFailure: 0 },
+    {
+      id: 'ollama',
+      isActive: true,
+      isHealthy: true,
+      isConfigured: true,
+      failureCount: 0,
+      consecutiveFailures: 0,
+      lastFailure: 0,
+    },
+    {
+      id: 'tauri-backend',
+      isActive: true,
+      isHealthy: true,
+      isConfigured: true,
+      failureCount: 0,
+      consecutiveFailures: 0,
+      lastFailure: 0,
+    },
   ]);
   return {
     mockGetAdvancedAgentStatus: vi.fn(() => ({
@@ -51,8 +67,20 @@ const {
       totalFallbacks: 2,
       last24h: { requests: 30 },
       providers: [
-        { provider: 'ollama', totalRequests: 40, successCount: 38, avgLatency: 300, errorCount: 2 },
-        { provider: 'tauri-backend', totalRequests: 10, successCount: 10, avgLatency: 100, errorCount: 0 },
+        {
+          provider: 'ollama',
+          totalRequests: 40,
+          successCount: 38,
+          avgLatency: 300,
+          errorCount: 2,
+        },
+        {
+          provider: 'tauri-backend',
+          totalRequests: 10,
+          successCount: 10,
+          avgLatency: 100,
+          errorCount: 0,
+        },
       ],
     })),
     mockGetHealthStats: vi.fn(() => ({ overall: 'healthy' })),
@@ -113,15 +141,46 @@ describe('getProviderLoadMatrix — état sain', () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
     mockGetAllProviders.mockReturnValue([
-      { id: 'ollama', isActive: true, isHealthy: true, isConfigured: true, failureCount: 0, consecutiveFailures: 0, lastFailure: 0 },
-      { id: 'tauri-backend', isActive: true, isHealthy: true, isConfigured: true, failureCount: 0, consecutiveFailures: 0, lastFailure: 0 },
+      {
+        id: 'ollama',
+        isActive: true,
+        isHealthy: true,
+        isConfigured: true,
+        failureCount: 0,
+        consecutiveFailures: 0,
+        lastFailure: 0,
+      },
+      {
+        id: 'tauri-backend',
+        isActive: true,
+        isHealthy: true,
+        isConfigured: true,
+        failureCount: 0,
+        consecutiveFailures: 0,
+        lastFailure: 0,
+      },
     ]);
     mockGetAggregatedMetrics.mockReturnValue({
-      totalRequests: 50, successRate: 95, avgResponseTime: 350, totalFallbacks: 2,
+      totalRequests: 50,
+      successRate: 95,
+      avgResponseTime: 350,
+      totalFallbacks: 2,
       last24h: { requests: 30 },
       providers: [
-        { provider: 'ollama', totalRequests: 40, successCount: 38, avgLatency: 300, errorCount: 2 },
-        { provider: 'tauri-backend', totalRequests: 10, successCount: 10, avgLatency: 100, errorCount: 0 },
+        {
+          provider: 'ollama',
+          totalRequests: 40,
+          successCount: 38,
+          avgLatency: 300,
+          errorCount: 2,
+        },
+        {
+          provider: 'tauri-backend',
+          totalRequests: 10,
+          successCount: 10,
+          avgLatency: 100,
+          errorCount: 0,
+        },
       ],
     });
   });
@@ -162,7 +221,15 @@ describe('getProviderLoadMatrix — état sain', () => {
 
   it('circuitOpen = true quand consecutiveFailures >= 3', () => {
     mockGetAllProviders.mockReturnValue([
-      { id: 'ollama', isActive: true, isHealthy: false, isConfigured: true, failureCount: 5, consecutiveFailures: 4, lastFailure: Date.now() - 1000 },
+      {
+        id: 'ollama',
+        isActive: true,
+        isHealthy: false,
+        isConfigured: true,
+        failureCount: 5,
+        consecutiveFailures: 4,
+        lastFailure: Date.now() - 1000,
+      },
     ]);
     const matrix = getProviderLoadMatrix();
     const ollamaEntry = matrix.providers.find(p => p.provider === 'ollama');
@@ -175,12 +242,31 @@ describe('computeAdaptiveDispatchPolicy', () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
     mockGetAllProviders.mockReturnValue([
-      { id: 'ollama', isActive: true, isHealthy: true, isConfigured: true, failureCount: 0, consecutiveFailures: 0, lastFailure: 0 },
+      {
+        id: 'ollama',
+        isActive: true,
+        isHealthy: true,
+        isConfigured: true,
+        failureCount: 0,
+        consecutiveFailures: 0,
+        lastFailure: 0,
+      },
     ]);
     mockGetAggregatedMetrics.mockReturnValue({
-      totalRequests: 10, successRate: 100, avgResponseTime: 200, totalFallbacks: 0,
+      totalRequests: 10,
+      successRate: 100,
+      avgResponseTime: 200,
+      totalFallbacks: 0,
       last24h: { requests: 10 },
-      providers: [{ provider: 'ollama', totalRequests: 10, successCount: 10, avgLatency: 200, errorCount: 0 }],
+      providers: [
+        {
+          provider: 'ollama',
+          totalRequests: 10,
+          successCount: 10,
+          avgLatency: 200,
+          errorCount: 0,
+        },
+      ],
     });
     // healthScore < 70 pour éviter la branche LOAD_BALANCED → USE_LOCAL_CHAMPION attendu
     mockGetHealStats.mockReturnValue({ healthScore: 50, totalErrors: 3, totalHeals: 1 });
@@ -197,9 +283,15 @@ describe('computeAdaptiveDispatchPolicy', () => {
     expect(typeof policy.computedAt).toBe('number');
   });
 
-  it('recommandation valide dans l\'ensemble des valeurs autorisées', () => {
+  it("recommandation valide dans l'ensemble des valeurs autorisées", () => {
     const policy = computeAdaptiveDispatchPolicy();
-    const validRecs = ['USE_LOCAL_CHAMPION', 'REDUCE_CLOUD_LOAD', 'FALLBACK_REQUIRED', 'CIRCUIT_OPEN', 'LOAD_BALANCED'];
+    const validRecs = [
+      'USE_LOCAL_CHAMPION',
+      'REDUCE_CLOUD_LOAD',
+      'FALLBACK_REQUIRED',
+      'CIRCUIT_OPEN',
+      'LOAD_BALANCED',
+    ];
     expect(validRecs).toContain(policy.recommendation);
   });
 
@@ -212,7 +304,11 @@ describe('computeAdaptiveDispatchPolicy', () => {
 
 describe('dispatchToAgents — bus événements', () => {
   it('retourne un consensus avec verdicts et aggregated', async () => {
-    const event: AgentEvent = { type: 'HEALTH_CHECK', payload: { source: 'test' }, timestamp: Date.now() };
+    const event: AgentEvent = {
+      type: 'HEALTH_CHECK',
+      payload: { source: 'test' },
+      timestamp: Date.now(),
+    };
     const consensus = await dispatchToAgents(event);
     expect(consensus.verdicts).toBeDefined();
     expect(['PASS', 'FAIL', 'BLOCKED', 'UNKNOWN']).toContain(consensus.aggregated);
@@ -223,13 +319,21 @@ describe('dispatchToAgents — bus événements', () => {
 
 describe('dispatchToAgentsWithTimeout', () => {
   it('retourne BLOCKED après timeout très court', async () => {
-    const event: AgentEvent = { type: 'HEALTH_CHECK', payload: {}, timestamp: Date.now() };
+    const event: AgentEvent = {
+      type: 'HEALTH_CHECK',
+      payload: {},
+      timestamp: Date.now(),
+    };
     const consensus = await dispatchToAgentsWithTimeout(event, 1);
     expect(['PASS', 'FAIL', 'BLOCKED', 'UNKNOWN']).toContain(consensus.aggregated);
   });
 
   it('retourne résultat normal avec timeout suffisant', async () => {
-    const event: AgentEvent = { type: 'HEALTH_CHECK', payload: {}, timestamp: Date.now() };
+    const event: AgentEvent = {
+      type: 'HEALTH_CHECK',
+      payload: {},
+      timestamp: Date.now(),
+    };
     const consensus = await dispatchToAgentsWithTimeout(event, 5000);
     expect(consensus.verdicts).toBeDefined();
   });
@@ -247,12 +351,31 @@ describe('getOrchestratorAgentStatus — surface agent', () => {
     window.sessionStorage.clear();
     resetOrchestratorSessionSnapshotsForTests();
     mockGetAllProviders.mockReturnValue([
-      { id: 'ollama', isActive: true, isHealthy: true, isConfigured: true, failureCount: 0, consecutiveFailures: 0, lastFailure: 0 },
+      {
+        id: 'ollama',
+        isActive: true,
+        isHealthy: true,
+        isConfigured: true,
+        failureCount: 0,
+        consecutiveFailures: 0,
+        lastFailure: 0,
+      },
     ]);
     mockGetAggregatedMetrics.mockReturnValue({
-      totalRequests: 50, successRate: 95, avgResponseTime: 350, totalFallbacks: 2,
+      totalRequests: 50,
+      successRate: 95,
+      avgResponseTime: 350,
+      totalFallbacks: 2,
       last24h: { requests: 30 },
-      providers: [{ provider: 'ollama', totalRequests: 50, successCount: 47, avgLatency: 350, errorCount: 3 }],
+      providers: [
+        {
+          provider: 'ollama',
+          totalRequests: 50,
+          successCount: 47,
+          avgLatency: 350,
+          errorCount: 3,
+        },
+      ],
     });
     mockGetHealStats.mockReturnValue({ healthScore: 90, totalErrors: 3, totalHeals: 1 });
     mockGetHealthStats.mockReturnValue({ overall: 'healthy' });

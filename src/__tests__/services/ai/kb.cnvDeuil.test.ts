@@ -27,13 +27,17 @@ describe('KB: communication_non_violente_relations', () => {
 
   it('triggers include CNV/NVC/Marshall Rosenberg', () => {
     const triggers = cnv.retrieval_triggers as string[];
-    expect(triggers.some(t => t.includes('CNV') || t.includes('Communication Non Violente'))).toBe(true);
+    expect(
+      triggers.some(t => t.includes('CNV') || t.includes('Communication Non Violente'))
+    ).toBe(true);
     expect(triggers.some(t => t.includes('Marshall Rosenberg'))).toBe(true);
   });
 
   it('triggers include NVC keywords', () => {
     const triggers = cnv.retrieval_triggers as string[];
-    expect(triggers.some(t => t.includes('NVC') || t.includes('bienveillant'))).toBe(true);
+    expect(triggers.some(t => t.includes('NVC') || t.includes('bienveillant'))).toBe(
+      true
+    );
   });
 
   it('triggers include assertivité / OSBD', () => {
@@ -108,7 +112,10 @@ describe('KB: communication_non_violente_relations', () => {
     const sections = cnv.sections as Record<string, unknown>;
     const osbd = sections['modele_4_composantes_OSBD'] as Record<string, unknown>;
     const besoins = osbd['B_besoins'] as Record<string, unknown>;
-    const classif = besoins['besoins_universels_classification'] as Record<string, unknown>;
+    const classif = besoins['besoins_universels_classification'] as Record<
+      string,
+      unknown
+    >;
     expect(Object.keys(classif).length).toBeGreaterThanOrEqual(5);
   });
 
@@ -139,7 +146,10 @@ describe('KB: communication_non_violente_relations', () => {
   it('langage girafe et chacal distincts', () => {
     const sections = cnv.sections as Record<string, unknown>;
     const fondements = sections['fondements_cnv'] as Record<string, unknown>;
-    const distinction = fondements['distinction_communication'] as Record<string, unknown>;
+    const distinction = fondements['distinction_communication'] as Record<
+      string,
+      unknown
+    >;
     expect(distinction).toHaveProperty('langage_chacal');
     expect(distinction).toHaveProperty('langage_girafe');
   });
@@ -171,7 +181,9 @@ describe('KB: deuil_rupture_transitions', () => {
 
   it('triggers include transitions', () => {
     const triggers = deuil.retrieval_triggers as string[];
-    expect(triggers.some(t => t.includes('transition') || t.includes('Bridges'))).toBe(true);
+    expect(triggers.some(t => t.includes('transition') || t.includes('Bridges'))).toBe(
+      true
+    );
   });
 
   it('has required sections', () => {
@@ -217,7 +229,10 @@ describe('KB: deuil_rupture_transitions', () => {
 
   it('modèle Bridges 3 phases présent', () => {
     const sections = deuil.sections as Record<string, unknown>;
-    const bridges = sections['transitions_majeures_William_Bridges'] as Record<string, unknown>;
+    const bridges = sections['transitions_majeures_William_Bridges'] as Record<
+      string,
+      unknown
+    >;
     expect(bridges).toHaveProperty('modele_3_phases_Bridges');
     const phases = bridges['modele_3_phases_Bridges'] as Record<string, unknown>;
     expect(phases).toHaveProperty('phase_1_fin');
@@ -249,7 +264,10 @@ describe('KB: deuil_rupture_transitions', () => {
 
   it('soutien deuil: que ne pas dire défini', () => {
     const sections = deuil.sections as Record<string, unknown>;
-    const accompagnement = sections['accompagnement_soutien_deuil'] as Record<string, unknown>;
+    const accompagnement = sections['accompagnement_soutien_deuil'] as Record<
+      string,
+      unknown
+    >;
     const npd = accompagnement['que_ne_pas_dire'] as string[];
     expect(npd.length).toBeGreaterThanOrEqual(3);
   });

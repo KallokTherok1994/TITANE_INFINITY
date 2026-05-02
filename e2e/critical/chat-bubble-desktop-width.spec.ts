@@ -11,8 +11,8 @@ import { test, expect, type Page } from '@playwright/test';
 import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
 
 const DESKTOP_VIEWPORT = { width: 1366, height: 768 };
-const TABLET_VIEWPORT  = { width: 768,  height: 1024 };
-const MOBILE_VIEWPORT  = { width: 390,  height: 844 };
+const TABLET_VIEWPORT = { width: 768, height: 1024 };
+const MOBILE_VIEWPORT = { width: 390, height: 844 };
 
 async function getMessageBubbleMetrics(page: Page): Promise<{
   containerWidth: number | null;
@@ -34,7 +34,14 @@ async function getMessageBubbleMetrics(page: Page): Promise<{
       document.querySelector('.message-user') ??
       document.querySelector('[data-testid="message-bubble"][data-role="user"]');
 
-    if (!container) return { containerWidth: null, assistantBubbleWidth: null, userBubbleWidth: null, assistantMaxWidthPct: null, userMaxWidthPct: null };
+    if (!container)
+      return {
+        containerWidth: null,
+        assistantBubbleWidth: null,
+        userBubbleWidth: null,
+        assistantMaxWidthPct: null,
+        userMaxWidthPct: null,
+      };
 
     const containerWidth = container.getBoundingClientRect().width;
     const assistantWidth = assistantBubble?.getBoundingClientRect().width ?? null;
@@ -44,17 +51,27 @@ async function getMessageBubbleMetrics(page: Page): Promise<{
       containerWidth,
       assistantBubbleWidth: assistantWidth,
       userBubbleWidth: userWidth,
-      assistantMaxWidthPct: assistantWidth && containerWidth ? (assistantWidth / containerWidth) * 100 : null,
-      userMaxWidthPct: userWidth && containerWidth ? (userWidth / containerWidth) * 100 : null,
+      assistantMaxWidthPct:
+        assistantWidth && containerWidth ? (assistantWidth / containerWidth) * 100 : null,
+      userMaxWidthPct:
+        userWidth && containerWidth ? (userWidth / containerWidth) * 100 : null,
     };
   });
 }
 
 async function sendTestMessage(page: Page, text: string): Promise<void> {
-  const input = page.locator('[data-testid="chat-input"], textarea[placeholder*="message"], textarea[placeholder*="Message"]').first();
+  const input = page
+    .locator(
+      '[data-testid="chat-input"], textarea[placeholder*="message"], textarea[placeholder*="Message"]'
+    )
+    .first();
   await expect(input).toBeVisible({ timeout: 10000 });
   await input.fill(text);
-  const sendBtn = page.locator('[data-testid="chat-send"], button[aria-label*="envoyer"], button[aria-label*="send"]').first();
+  const sendBtn = page
+    .locator(
+      '[data-testid="chat-send"], button[aria-label*="envoyer"], button[aria-label*="send"]'
+    )
+    .first();
   await sendBtn.click();
   // Wait for user bubble to appear
   await page.waitForSelector('.message-bubble-user, .message-user', { timeout: 10000 });
@@ -63,13 +80,19 @@ async function sendTestMessage(page: Page, text: string): Promise<void> {
 test.describe('Chat bubble desktop width — E2E visual proof', () => {
   test.describe.configure({ mode: 'serial' });
 
-  test('desktop ≥1024px — assistant bubble uses ≥90% of chat column width', async ({ page }) => {
+  test('desktop ≥1024px — assistant bubble uses ≥90% of chat column width', async ({
+    page,
+  }) => {
     await page.setViewportSize(DESKTOP_VIEWPORT);
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
 
     // Navigate to conversation tab
-    const convTab = page.locator('[data-testid="tab-conversation"], button:has-text("Chat"), button:has-text("Vue")').first();
+    const convTab = page
+      .locator(
+        '[data-testid="tab-conversation"], button:has-text("Chat"), button:has-text("Vue")'
+      )
+      .first();
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Test bulle desktop — largeur maximale attendue');
@@ -92,7 +115,9 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
 
     // Verify CSS computed max-width on desktop
     const computedMaxWidth = await page.evaluate(() => {
-      const bubble = document.querySelector('.message-bubble-user, .message-user, .message-bubble');
+      const bubble = document.querySelector(
+        '.message-bubble-user, .message-user, .message-bubble'
+      );
       if (!bubble) return null;
       return window.getComputedStyle(bubble).maxWidth;
     });
@@ -111,7 +136,11 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
 
-    const convTab = page.locator('[data-testid="tab-conversation"], button:has-text("Chat"), button:has-text("Vue")').first();
+    const convTab = page
+      .locator(
+        '[data-testid="tab-conversation"], button:has-text("Chat"), button:has-text("Vue")'
+      )
+      .first();
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Vérification règle CSS max-width desktop');
@@ -120,14 +149,18 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     // Verify the computed styles reflect desktop rules (97% for assistant, 88% for user)
     const cssCheck = await page.evaluate(() => {
       const msgList = document.querySelector('.message-list-content');
-      const bubbles = document.querySelectorAll('.message-bubble, .message-assistant, .message-user');
+      const bubbles = document.querySelectorAll(
+        '.message-bubble, .message-assistant, .message-user'
+      );
 
-      return Array.from(bubbles).slice(0, 4).map(el => ({
-        className: el.className,
-        computedMaxWidth: window.getComputedStyle(el).maxWidth,
-        offsetWidth: (el as HTMLElement).offsetWidth,
-        parentWidth: ((el as HTMLElement).parentElement?.offsetWidth) ?? 0,
-      }));
+      return Array.from(bubbles)
+        .slice(0, 4)
+        .map(el => ({
+          className: el.className,
+          computedMaxWidth: window.getComputedStyle(el).maxWidth,
+          offsetWidth: (el as HTMLElement).offsetWidth,
+          parentWidth: (el as HTMLElement).parentElement?.offsetWidth ?? 0,
+        }));
     });
 
     // At least one bubble should be present
@@ -149,7 +182,9 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
 
-    const convTab = page.locator('[data-testid="tab-conversation"], button:has-text("Chat")').first();
+    const convTab = page
+      .locator('[data-testid="tab-conversation"], button:has-text("Chat")')
+      .first();
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Test mobile — largeur bulle inchangée');
@@ -174,7 +209,9 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
       document.documentElement.style.fontSize = '24px';
     });
 
-    const convTab = page.locator('[data-testid="tab-conversation"], button:has-text("Chat")').first();
+    const convTab = page
+      .locator('[data-testid="tab-conversation"], button:has-text("Chat")')
+      .first();
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Test zoom in 150% — pas de débordement');
@@ -190,7 +227,9 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     expect(hasOverflow).toBe(false);
   });
 
-  test('zoom out (70%) — bubble stays proportional, no whitespace regression', async ({ page }) => {
+  test('zoom out (70%) — bubble stays proportional, no whitespace regression', async ({
+    page,
+  }) => {
     await page.setViewportSize(DESKTOP_VIEWPORT);
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
@@ -200,7 +239,9 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
       document.documentElement.style.fontSize = '11.2px';
     });
 
-    const convTab = page.locator('[data-testid="tab-conversation"], button:has-text("Chat")').first();
+    const convTab = page
+      .locator('[data-testid="tab-conversation"], button:has-text("Chat")')
+      .first();
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Test zoom out 70% — largeur proportionnelle');

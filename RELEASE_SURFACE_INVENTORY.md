@@ -5,7 +5,31 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.0 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.1 — Historical baseline preserved below)
+
+## Release v32.0.1 — 2026-05-02 (BUILD ALL — GO ALL — CERTIFIED)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 32.0.1 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 32.0.1 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 32.0.1 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 32.0.1 | ✅ PASS |
+| `pnpm run lint` | PASS | ✅ PASS |
+| `pnpm run format:check` | PASS — all files (Prettier fix applied) | ✅ PASS |
+| `pnpm run ollama:bundle` | PASS — SHA256 verified | ✅ PASS |
+| `pnpm exec vite build` | PASS | ✅ PASS |
+| `pnpm exec tauri build` | PASS — 10m09s release profile | ✅ PASS |
+| AppImage | `titane-infinity_32.0.1_amd64.AppImage` (93M) | ✅ PASS |
+| DEB | `titane-infinity_32.0.1_amd64.deb` | ✅ PASS |
+| RPM | `titane-infinity-32.0.1-1.x86_64.rpm` | ✅ PASS |
+| sha256 AppImage | `57cf8b303fc12ea3000092904735d6119ff5294a8236b2cb1002dbd1bc2f2043` | ✅ PASS |
+| sha256 DEB | `18c2efea705d71f1ed7760e958e84ca857f6be7095ce787378e0ede52a77ae6f` | ✅ PASS |
+| sha256 RPM | `952a8d4362b2e1d04b54fe0e545e29fced7e8e97cc8e908d1b94f8c675f86d5c` | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_32.0.1.txt` | generated sha256 3 artifacts (CERTIFIED) | ✅ PASS |
+| `detect_recurrence` | PASS 1522 entries | ✅ PASS |
+| binary sync `/usr/bin/titane-infinity` | `sudo dpkg -i titane-infinity_32.0.1_amd64.deb` — REQUIRES_SUDO | ⚠️ PENDING |
+| desktop launcher / icons | user launcher Name=v32.0.1 — system BLOCKED_SUDO_REQUIRED | ⚠️ PARTIAL |
 
 ## Release v32.0.0 — 2026-05-01 (BUILD ALL — V32 AI Intelligence Unification Supreme)
 

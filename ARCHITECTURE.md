@@ -535,32 +535,39 @@ Conformité validée par tests 100/100 (avril 2026).
 ## Phase 27 — KB modules dépendance affective + thérapies trauma avancées (2026-04-29)
 
 ### Nouveaux modules KB
+
 - **`dependance_affective_codependance.json`** (v31.3.5) — 8 sections: cadre clinique, codépendance (triangle Karpman), trauma bonding (cycle Walker, renforcement intermittent, Stockholm relationnel), fawn response / people pleasing (Pete Walker), parentification, blessures fondamentales (Bourbeau 5 blessures), autonomie émotionnelle, ressources (SLAA, CoDA, QC+France)
 - **`therapies_trauma_avancees.json`** (v31.3.6) — 7 sections: cadre général (niveaux de preuve), EMDR 8 phases (Shapiro), IFS topographie Self/managers/pompiers/exils (Schwartz), Somatic Experiencing pendulation/titration (Levine), AEDP triangle de l'expérience (Fosha), schema therapy modes et 18 SPI (Young), recommandations cliniques par profil
 
 ### Rust
+
 - `knowledge_base_default.rs`: +2 consts + 2 SOURCES entries, baseline >=197 -> >=199
 - Tests: 10 PASS (cargo test -- test_knowledge)
 
 ### Tests Rule 16
+
 - `kb.dependanceTherapiesTrauma.test.ts`: 58 PASS (Vitest)
 
 ## Phase 28 — KB modules CNV + deuil/rupture/transitions (2026-04-29)
 
 ### Nouveaux modules KB
+
 - **`communication_non_violente_relations.json`** (v31.3.7) — 7 sections: fondements_cnv (Rosenberg, langage girafe/chacal, Rogers/Maslow/Gandhi), modele_4_composantes_OSBD (observation, sentiments vs pseudo-sentiments, besoins universels classification, demande vs exigence), ecoute_empathique (7 obstacles, 5 etapes presence pleine, auto-empathie), conflits_et_resolution (vision CNV conflit, processus 6 etapes, 4 cavaliers Gottman + antidotes, reparation relationnelle), assertivite_et_limites (triangle passivite/agressivite/assertivite, message-je, dire non avec empathie, 7 droits assertifs), applications_cliniques_couples (cercle communication, triggers relationnels, deuil CNV, celebration CNV), ressources_cnv (CNVC, ACNfrance, CNV-Quebec, livres)
 - **`deuil_rupture_transitions.json`** (v31.3.8) — 7 sections: comprendre_le_deuil (types pertes, pertes ambigues Pauline Boss, facteurs influencant), modeles_processus_deuil (Kubler-Ross 5 stades + 6e Kessler, Worden 4 taches, Double Process Stroebe/Schut, Continuing Bonds Klass), deuil_complique_pathologique (Prolonged Grief Disorder DSM-5-TR/ICD-11, facteurs risque, signes, CGT/EMDR traitement), deuil_rupture_amoureuse (neurobiologie: dopamine/cortisol/broken heart syndrome, phases rupture, pieges: rumination/stalking/idealisaiton, no contact 60-90j, reconstruction identitaire), transitions_majeures_William_Bridges (distinction changement/transition, 3 phases: fin/zone neutre/nouveau depart, transitions communes adulte), accompagnement_soutien_deuil (que ne pas dire, que faire, rituels), ressources (lignes urgence QC/France/BE/CH, approches recommandees)
 
 ### Rust
+
 - `knowledge_base_default.rs`: +2 consts COMMUNICATION_NON_VIOLENTE_RELATIONS + DEUIL_RUPTURE_TRANSITIONS, +2 SOURCES entries, baseline >=199 -> >=201, expected list updated
 - Tests: 10 PASS (cargo test -- test_knowledge, baseline >=201 validated)
 
 ### Tests Rule 16
+
 - `kb.cnvDeuil.test.ts`: 35 PASS (Vitest)
 
 ## Phase 29 — KB modules TCC + santé mentale/résilience (2026-04-29)
 
 ### Nouveaux modules KB
+
 - **`therapies_cognitives_comportementales.json`** (v31.3.9) — 8 sections: fondements_et_vagues (3 vagues TCC: comportementale/cognitive/3e vague), modele_cognitif_beck (triangle pensées-émotions-comportements, niveaux cognitions, triade cognitive dépression, 12 distorsions cognitives Beck), techniques_cognitives (colonnes_beck_5, restructuration cognitive 6 étapes + questions socratiques, flèche descendante, continuum cognitif), techniques_comportementales (activation comportementale, exposition in vivo/imaginale/intéroceptive/virtuelle, ERP-TOC, expérience comportementale 5 étapes, résolution problème D'Zurilla), 3eme_vague_ACT_MBCT (ACT Hayes hexaflex 6 processus + matrice ACT, MBCT Teasdale/Williams/Segal 8 semaines + espace respiration 3 min 3 étapes + prévention rechute dépressive -50%), protocoles_cliniques_specifiques (dépression 16-20 séances, TAG intolérance incertitude, panique Clark, TOC ERP gold standard, insomnie CBT-I 6 composantes, TCA), outils_pratiques_tcc (relaxation Jacobson, respiration diaphragmatique 4-7-8, psychoéducation 4C), ressources_tcc (AFTCC, EABCT, livres, apps MoodKit/Woebot/CBT Thought Diary)
 - **`sante_mentale_prevention_resilience.json`** (v31.3.10) — 7 sections: concepts_fondamentaux (continuum Keyes 2002 4 quadrants, languishing Grant 2021, OMS def, littératie Jorm), modele_PERMA_psychologie_positive (Seligman Flourish 2011: P broaden-and-build Fredrickson/savouring, E flow Csikszentmihalyi + forces VIA 24/6, R Harvard Study 80 ans, M Frankl logothérapie 3 voies, A autodétermination Deci/Ryan), resilience (Cyrulnik tuteurs résilience, Bonanno 4 trajectoires resilient 50-65%/recovery/delayed/chronic, facteurs protecteurs individuels/relationnels/environnementaux, PTG Tedeschi/Calhoun 5 domaines), prevention_burnout (Maslach 3 dimensions, JD-R Demerouti 2 voies, 6 domaines Maslach-Leiter, récupération Sonnentag détachement psychologique + 4 expériences, 7 signaux précoces), hygiene_psychologique_quotidienne (sommeil Walker REM, exercice physique BDNF, connexion sociale, nature, gratitude Emmons 3x/semaine, auto-compassion Neff 3 composantes + exercice pause auto-compassion), interventions_basees_preuves (PPIs Sin/Lyubomirsky 2009, ACE Felitti 1998, MBSR/MBCT), ressources_sante_mentale (lignes crise QC/France/BE/CH, PHQ-9/GAD-7/MBI/SCS/SWLS, lectures)
 
@@ -568,6 +575,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - **`emotion_regulation_dbt_advanced.json`** (v31.4.2) — 7 sections: fondements_dbt_linehan (dialectique acceptation↔changement, biosocial theory vulnérabilité+invalidation, 4 modules DBT), distress_tolerance_survie_crise (ACCEPTS/TIPP/IMPROVE mnémotechniques, radical acceptance, half-smiling and willing hands), emotion_regulation_skills (check the facts, opposite action 6 émotions, PLEASE skills, build mastery), interpersonal_effectiveness (DEAR MAN/GIVE/FAST, validation 6 niveaux Linehan), colere_clinique (modèle ABC Ellis, colère saine vs malsaine REBT, STOPP technique, expression assertive), honte_et_culpabilite (distinction honte=identité vs culpabilité=comportement Tangney, spirale honte Brené Brown, auto-compassion Neff antidote), ressources_dbt (DBT France, annuaire AFFORTHECC, 3114 crise)
 
 ### Rust
+
 - `knowledge_base_default.rs`: +2 consts THERAPIES_COGNITIVES_COMPORTEMENTALES + SANTE_MENTALE_PREVENTION_RESILIENCE, +2 SOURCES entries, baseline >=201 -> >=203, expected list updated (phase 29)
 - `knowledge_base_default.rs`: +2 consts NEURODIVERSITE_ADHD_AUTISME_HPI + EMOTION_REGULATION_DBT_ADVANCED, +2 SOURCES entries, baseline >=203 -> >=205, expected list updated (phase 30)
 - `commands/ide_operator.rs`: fix E0505 borrow-after-move in git_status handler (changed_files Vec<&str> → changed_files_count usize)
@@ -597,6 +605,7 @@ Conformité validée par tests 100/100 (avril 2026).
 > 2026-04-30 — Memory permanent fix + owner KB injection (v31.3.1): Phase 1 (commit précédent): `src/services/api/memory.ts` `saveChatInteraction` utilise désormais `level:long_term`, `importance:4`, tag `chat-permanent` — les interactions chat sont permanentes et ne sont plus effacées après 24h. Phase 2: `src/services/api/defaultKnowledgeBase.ts` expose `getBundledOwnerContext()` — lit les 4 fichiers Kevin (`kevin_owner_profile_v30`, `kevin_public_corpus_v30`, `kevin_workflow_v30`, `kevin_book_registry_v30`) depuis le glob frontend `BUNDLED_DEFAULT_KB_MODULES` en bypassant `RUST_CANONICAL_EXCLUDED_BUNDLED_KB_IDS`. `src/services/ai/chatEngine.ts` charge `_ownerContextBlock` via `_ensureDefaultKbLoaded()` et l'injecte après `kbBlock` dans `buildSystemPrompt()` — la connaissance personnelle de Kevin est désormais présente dans chaque system prompt sur toutes les plateformes (Tauri production, dev, Android, web). Phase 3: `src/services/api/memory.ts` `getKnowledge()` retourne les entrées KB bundlées mappées en `KnowledgeEntry[]` quand Tauri est indisponible, au lieu de retourner `[]`. Phase 5: `src/services/chatMemoryCompactor.ts` — `window.addEventListener('beforeunload', ...)` ajouté après le singleton pour un flush synchrone des sauvegardes en attente, empêchant la perte de données au crash ou à la fermeture forcée. AutoHeal: `AH-2026-04-30-MEMORY-PERMANENT-FIX-0001` full-schema. Tests Rule 16: 7 nouveaux tests (48 PASS).
 
 ### Tests Rule 16
+
 - `kb.tccResilience.test.ts`: 53 PASS (Vitest, phase 29)
 - `kb.neurodiversiteDbt.test.ts`: 51 PASS (Vitest, phase 30)
 - `kb.humanistePsychodynamique.test.ts`: 52 PASS (Vitest, phase 31)
@@ -613,6 +622,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - `researchEnricher.test.ts`: 30 PASS (Vitest, services/research_enricher)
 
 ### AutoHeal
+
 - `AH-KB-TCC-SANTE-MENTALE-2026-04-29` (full schema, detect_recurrence PASS, phase 29)
 - `AH-KB-NEURODIV-DBT-2026-04-29` (full schema, detect_recurrence PASS, phase 30)
 - `AH-KB-HUMANISTE-PSYCHODYN-2026-04-29` (full schema, detect_recurrence PASS, phase 31)
@@ -629,6 +639,7 @@ Conformité validée par tests 100/100 (avril 2026).
 ## [2026-05-30] V32.0.0 — Meta-Energy Module (Ring 0 / Ring 3)
 
 ### Ring 0 — Rust Backend (`src-tauri/src/meta_energy/`)
+
 - **MetaEnergyConfig** — Paramètres: target_energy=0.65, tolerance=0.1, regeneration_rate=0.02, forecast_horizon_hours=24
 - **EnergyState** — État énergétique courant: current, max_capacity, regeneration_rate, consumption_rate, timestamp
 - **FatigueEngine** — Évaluation fatigue: Fresh>0.8, Normal>0.5, Tired>0.2, Exhausted; cognitive_multiplier: 1.0/0.85/0.6/0.3
@@ -640,6 +651,7 @@ Conformité validée par tests 100/100 (avril 2026).
 - AutoHeal: AH-2026-05-V32-PHASE9-META-ENERGY-0008
 
 ### Ring 3 — Frontend (`src/hooks/useMetaEnergy.ts`, `src/pages/SingularityMonitor.tsx`)
+
 - **useMetaEnergy** — Hook React: secureInvoke vers 2 endpoints, auto-refresh 15s, error state
 - **SingularityMonitor** — Panel MetaEnergy: data-testid=meta-energy-panel (level, fatigue badge, homeostasis, history)
 - AutoHeal: AH-2026-05-V32-PHASE10-SINGULARITY-META-ENERGY-0009

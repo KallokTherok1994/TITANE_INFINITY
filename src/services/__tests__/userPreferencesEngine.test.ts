@@ -21,10 +21,18 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: vi.fn((key: string) => store[key] ?? null),
-    setItem: vi.fn((key: string, value: string) => { store[key] = value; }),
-    removeItem: vi.fn((key: string) => { delete store[key]; }),
-    clear: vi.fn(() => { store = {}; }),
-    get length() { return Object.keys(store).length; },
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value;
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
+    get length() {
+      return Object.keys(store).length;
+    },
     key: vi.fn((i: number) => Object.keys(store)[i] ?? null),
   };
 })();
@@ -40,9 +48,7 @@ Object.defineProperty(globalThis, 'localStorage', {
 
 // Import the module-level singleton after mock is in place
 // We need fresh instances for each test — re-import via dynamic isolation
-import {
-  UserPreferencesEngine as _UserPreferencesEngineType,
-} from '../userPreferencesEngine';
+import { UserPreferencesEngine as _UserPreferencesEngineType } from '../userPreferencesEngine';
 
 type UPE = InstanceType<typeof _UserPreferencesEngineType>;
 
@@ -79,7 +85,7 @@ describe('DEEP_INTERNET_ANALYSIS_INSTRUCTION — contenu conforme', () => {
     expect(ctx).toContain('ANALYSE APPROFONDIE FIABLE ET NATURELLE');
   });
 
-  it('n\'est PAS injecté dans generateContextForAI quand deep_internet_analysis = false', () => {
+  it("n'est PAS injecté dans generateContextForAI quand deep_internet_analysis = false", () => {
     userPreferencesEngine.setCustomPreference('deep_internet_analysis', false);
     const ctx = userPreferencesEngine.generateContextForAI();
     expect(ctx).not.toContain('ANALYSE APPROFONDIE MAXIMALE');
@@ -286,10 +292,12 @@ describe('interests — addInterest / removeInterest', () => {
     expect(userPreferencesEngine.getInterests()).toContain('intelligence artificielle');
   });
 
-  it('n\'ajoute pas deux fois le même intérêt', () => {
+  it("n'ajoute pas deux fois le même intérêt", () => {
     userPreferencesEngine.addInterest('python');
     userPreferencesEngine.addInterest('python');
-    expect(userPreferencesEngine.getInterests().filter(i => i === 'python').length).toBe(1);
+    expect(userPreferencesEngine.getInterests().filter(i => i === 'python').length).toBe(
+      1
+    );
   });
 
   it('supprime un intérêt', () => {
@@ -306,7 +314,9 @@ describe('interests — addInterest / removeInterest', () => {
 describe('updateTechnicalPreferences() — expertiseLevel', () => {
   it('passe en beginner', () => {
     userPreferencesEngine.updateTechnicalPreferences({ expertiseLevel: 'beginner' });
-    expect(userPreferencesEngine.getTechnicalPreferences().expertiseLevel).toBe('beginner');
+    expect(userPreferencesEngine.getTechnicalPreferences().expertiseLevel).toBe(
+      'beginner'
+    );
   });
 
   it('passe en expert', () => {

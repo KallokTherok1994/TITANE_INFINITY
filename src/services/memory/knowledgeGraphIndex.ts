@@ -80,10 +80,51 @@ function saveGraph(graph: KnowledgeGraph): void {
 // ─────────────────────────────────────────────────────────────────
 
 const STOP_WORDS = new Set([
-  'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'de', 'du', 'au', 'je',
-  'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'que', 'qui', 'est', 'sont', 'a',
-  'the', 'is', 'are', 'was', 'and', 'or', 'of', 'to', 'an', 'in', 'on', 'ce',
-  'par', 'sur', 'pour', 'avec', 'pas', 'plus', 'dans', 'this', 'that', 'has',
+  'le',
+  'la',
+  'les',
+  'un',
+  'une',
+  'des',
+  'et',
+  'ou',
+  'de',
+  'du',
+  'au',
+  'je',
+  'tu',
+  'il',
+  'elle',
+  'nous',
+  'vous',
+  'ils',
+  'que',
+  'qui',
+  'est',
+  'sont',
+  'a',
+  'the',
+  'is',
+  'are',
+  'was',
+  'and',
+  'or',
+  'of',
+  'to',
+  'an',
+  'in',
+  'on',
+  'ce',
+  'par',
+  'sur',
+  'pour',
+  'avec',
+  'pas',
+  'plus',
+  'dans',
+  'this',
+  'that',
+  'has',
 ]);
 
 /** Extrait les tokens substantiels d'un texte pour construire les nœuds du graphe */
@@ -122,10 +163,7 @@ class KnowledgeGraphIndexService {
 
     for (const entry of entriesToProcess) {
       const text = entry.summary || entry.content || '';
-      const tokens = [
-        ...extractTokens(text),
-        ...(entry.tags || []),
-      ];
+      const tokens = [...extractTokens(text), ...(entry.tags || [])];
       const primaryToken = tokens[0];
       if (!primaryToken) continue;
 
@@ -223,9 +261,7 @@ class KnowledgeGraphIndexService {
   getRelatedLabels(nId: string, maxHops = 2): string[] {
     const graph = loadGraph();
     const relatedIds = this.getRelatedNodes(nId, maxHops);
-    return relatedIds
-      .map(id => graph.nodes[id]?.label)
-      .filter(Boolean) as string[];
+    return relatedIds.map(id => graph.nodes[id]?.label).filter(Boolean) as string[];
   }
 
   /**
@@ -256,7 +292,12 @@ class KnowledgeGraphIndexService {
     saveGraph({ nodes: {}, edges: {}, version: 1, lastBuilt: 0 });
   }
 
-  private _addOrUpdateEdge(graph: KnowledgeGraph, fromId: string, toId: string, weight: number): void {
+  private _addOrUpdateEdge(
+    graph: KnowledgeGraph,
+    fromId: string,
+    toId: string,
+    weight: number
+  ): void {
     if (!graph.edges[fromId]) graph.edges[fromId] = [];
     const edges = graph.edges[fromId];
     const existing = edges.find(e => e.targetId === toId);
@@ -267,7 +308,10 @@ class KnowledgeGraphIndexService {
       // Limit edges per node
       if (edges.length >= MAX_EDGES_PER_NODE) {
         // Remove weakest edge
-        const minIdx = edges.reduce((minI, e, i, arr) => (e.weight < arr[minI]!.weight ? i : minI), 0);
+        const minIdx = edges.reduce(
+          (minI, e, i, arr) => (e.weight < arr[minI]!.weight ? i : minI),
+          0
+        );
         edges.splice(minIdx, 1);
       }
       edges.push({ targetId: toId, weight, updatedAt: Date.now() });

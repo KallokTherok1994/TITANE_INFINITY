@@ -30,13 +30,21 @@ const sessionStore: Record<string, string> = {};
 function setupStorageMocks() {
   vi.stubGlobal('localStorage', {
     getItem: (k: string) => localStore[k] ?? null,
-    setItem: (k: string, v: string) => { localStore[k] = v; },
-    removeItem: (k: string) => { delete localStore[k]; },
+    setItem: (k: string, v: string) => {
+      localStore[k] = v;
+    },
+    removeItem: (k: string) => {
+      delete localStore[k];
+    },
   });
   vi.stubGlobal('sessionStorage', {
     getItem: (k: string) => sessionStore[k] ?? null,
-    setItem: (k: string, v: string) => { sessionStore[k] = v; },
-    removeItem: (k: string) => { delete sessionStore[k]; },
+    setItem: (k: string, v: string) => {
+      sessionStore[k] = v;
+    },
+    removeItem: (k: string) => {
+      delete sessionStore[k];
+    },
   });
 }
 
@@ -94,9 +102,16 @@ describe('remoteAuthenticate', () => {
 
   it('stores tokens on success', async () => {
     setRemoteGatewayUrl('https://gateway.example.com');
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({
-      json: async () => ({ ok: true, access_token: 'acc_tok', refresh_token: 'ref_tok' }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce({
+        json: async () => ({
+          ok: true,
+          access_token: 'acc_tok',
+          refresh_token: 'ref_tok',
+        }),
+      })
+    );
     const result = await remoteAuthenticate('correct_secret');
     expect(result.ok).toBe(true);
     expect(sessionStore['titane_remote_access_token']).toBe('acc_tok');
@@ -105,9 +120,12 @@ describe('remoteAuthenticate', () => {
 
   it('returns error on wrong secret', async () => {
     setRemoteGatewayUrl('https://gateway.example.com');
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({
-      json: async () => ({ ok: false, error: 'INVALID_SECRET' }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce({
+        json: async () => ({ ok: false, error: 'INVALID_SECRET' }),
+      })
+    );
     const result = await remoteAuthenticate('wrong');
     expect(result.ok).toBe(false);
     expect(result.error).toBe('INVALID_SECRET');
@@ -115,7 +133,10 @@ describe('remoteAuthenticate', () => {
 
   it('returns error on network failure', async () => {
     setRemoteGatewayUrl('https://gateway.example.com');
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValueOnce(new TypeError('Failed to fetch')));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockRejectedValueOnce(new TypeError('Failed to fetch'))
+    );
     const result = await remoteAuthenticate('secret');
     expect(result.ok).toBe(false);
     expect(result.error).toContain('Failed to fetch');
@@ -140,10 +161,13 @@ describe('remoteInvoke', () => {
   it('returns ok result with valid token', async () => {
     setRemoteGatewayUrl('https://gateway.example.com');
     sessionStore['titane_remote_access_token'] = 'valid_token';
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({
-      status: 200,
-      json: async () => ({ ok: true, content: { ping: 'pong' } }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ ok: true, content: { ping: 'pong' } }),
+      })
+    );
     const result = await remoteInvoke<{ ping: string }>('health_check');
     expect(result.ok).toBe(true);
     expect(result.content?.ping).toBe('pong');
@@ -154,13 +178,22 @@ describe('remoteInvoke', () => {
     setRemoteGatewayUrl('https://gateway.example.com');
     sessionStore['titane_remote_access_token'] = 'expired_token';
     sessionStore['titane_remote_refresh_token'] = 'refresh_tok';
-    const fetchMock = vi.fn()
+    const fetchMock = vi
+      .fn()
       // First invoke call → 401
-      .mockResolvedValueOnce({ status: 401, json: async () => ({ ok: false, error: 'Unauthorized' }) })
+      .mockResolvedValueOnce({
+        status: 401,
+        json: async () => ({ ok: false, error: 'Unauthorized' }),
+      })
       // Refresh call → new access token
-      .mockResolvedValueOnce({ json: async () => ({ ok: true, access_token: 'new_access_token' }) })
+      .mockResolvedValueOnce({
+        json: async () => ({ ok: true, access_token: 'new_access_token' }),
+      })
       // Retry invoke → success
-      .mockResolvedValueOnce({ status: 200, json: async () => ({ ok: true, content: { refreshed: true } }) });
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ ok: true, content: { refreshed: true } }),
+      });
     vi.stubGlobal('fetch', fetchMock);
     const result = await remoteInvoke<{ refreshed: boolean }>('health_check');
     expect(result.ok).toBe(true);
@@ -172,9 +205,15 @@ describe('remoteInvoke', () => {
     setRemoteGatewayUrl('https://gateway.example.com');
     sessionStore['titane_remote_access_token'] = 'expired_token';
     sessionStore['titane_remote_refresh_token'] = 'expired_refresh';
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce({ status: 401, json: async () => ({ ok: false, error: 'Unauthorized' }) })
-      .mockResolvedValueOnce({ json: async () => ({ ok: false, error: 'REFRESH_EXPIRED' }) });
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        status: 401,
+        json: async () => ({ ok: false, error: 'Unauthorized' }),
+      })
+      .mockResolvedValueOnce({
+        json: async () => ({ ok: false, error: 'REFRESH_EXPIRED' }),
+      });
     vi.stubGlobal('fetch', fetchMock);
     const result = await remoteInvoke('health_check');
     expect(result.ok).toBe(false);
@@ -214,31 +253,46 @@ describe('probeRemoteGateway', () => {
   });
 
   it('returns true for healthy gateway', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ ok: true, content: { status: 'ok', service: 'titane_remote' } }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          ok: true,
+          content: { status: 'ok', service: 'titane_remote' },
+        }),
+      })
+    );
     expect(await probeRemoteGateway('https://gateway.example.com')).toBe(true);
   });
 
   it('returns false for non-ok HTTP response', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({}),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({}),
+      })
+    );
     expect(await probeRemoteGateway('https://gateway.example.com')).toBe(false);
   });
 
   it('returns false on network error', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValueOnce(new TypeError('Failed to fetch')));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockRejectedValueOnce(new TypeError('Failed to fetch'))
+    );
     expect(await probeRemoteGateway('https://unreachable.example.com')).toBe(false);
   });
 
   it('returns false when content.status is not ok', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ ok: false, content: { status: 'degraded' } }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: false, content: { status: 'degraded' } }),
+      })
+    );
     expect(await probeRemoteGateway('https://gateway.example.com')).toBe(false);
   });
 });

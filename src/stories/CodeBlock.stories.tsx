@@ -49,7 +49,11 @@ export const Python: Story = {
 export const JSON: Story = {
   args: {
     language: 'json',
-    code: JSON.stringify({ version: '31.2.37', engine: 'gemma2:2b', status: 'active' }, null, 2),
+    code: JSON.stringify(
+      { version: '31.2.37', engine: 'gemma2:2b', status: 'active' },
+      null,
+      2
+    ),
   },
 };
 

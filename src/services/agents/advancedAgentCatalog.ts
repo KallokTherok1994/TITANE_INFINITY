@@ -16,7 +16,14 @@ export interface AdvancedAgentDetailSection {
 }
 
 export interface AdvancedAgentStatus {
-  id: 'monitoring' | 'diagnostic' | 'explainability' | 'orchestrator' | 'security_active' | 'knowledge_manager' | 'research_enricher';
+  id:
+    | 'monitoring'
+    | 'diagnostic'
+    | 'explainability'
+    | 'orchestrator'
+    | 'security_active'
+    | 'knowledge_manager'
+    | 'research_enricher';
   title: string;
   summary: string;
   testId: string;

@@ -39,7 +39,9 @@ function loadKBManagerTimeline(): KBManagerTimelinePoint[] {
     if (!Array.isArray(parsed)) {
       return [];
     }
-    return parsed.filter((p: unknown) => p && typeof (p as KBManagerTimelinePoint).timestamp === 'number');
+    return parsed.filter(
+      (p: unknown) => p && typeof (p as KBManagerTimelinePoint).timestamp === 'number'
+    );
   } catch {
     return [];
   }
@@ -72,10 +74,7 @@ export async function getKnowledgeManagerAgentStatus(): Promise<AdvancedAgentSta
   const base = getAdvancedAgentStatus('knowledge_manager');
 
   try {
-    const [categories, entries] = await Promise.all([
-      listCategories(),
-      getAllEntries(),
-    ]);
+    const [categories, entries] = await Promise.all([listCategories(), getAllEntries()]);
 
     const kbEntries: KBEntry[] = entries.map(e => ({
       category: e.category,
@@ -131,7 +130,9 @@ export async function getKnowledgeManagerAgentStatus(): Promise<AdvancedAgentSta
     return {
       ...base,
       serviceState: 'KB non chargée — initialisation en cours',
-      evidence: ['Service Knowledge Manager initialisé — données KB non encore disponibles.'],
+      evidence: [
+        'Service Knowledge Manager initialisé — données KB non encore disponibles.',
+      ],
       blockers: [
         `Données KB non disponibles : ${err instanceof Error ? err.message : 'erreur inconnue'}`,
       ],

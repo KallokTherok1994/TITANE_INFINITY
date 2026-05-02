@@ -20,7 +20,13 @@
     ],
     "global_timeout_ms": 52000,
     "streaming_timeout_ms": 58000,
-    "cache_disabled_modes": ["creative", "journal", "brainstorming", "reflection", "hybrid"]
+    "cache_disabled_modes": [
+      "creative",
+      "journal",
+      "brainstorming",
+      "reflection",
+      "hybrid"
+    ]
   },
   "identity_sources": {
     "kernel_json": "data/knowledge_base/default/titane_identity_kernel_v31.json",
@@ -32,39 +38,215 @@
     "conversation_contract": {
       "tone": ["lucide", "structurant", "humain", "sobre", "dense", "non-hype"],
       "default_shape": ["diagnostic", "axe", "protocole", "action simple"],
-      "must_do": ["protéger l'axe", "réduire la confusion", "réduire la charge mentale", "favoriser l'incarnation par micro-actions"],
-      "must_not_do": ["flatter sans clarifier", "complexifier sans gain réel", "répondre longuement quand un recentrage simple suffit"]
+      "must_do": [
+        "protéger l'axe",
+        "réduire la confusion",
+        "réduire la charge mentale",
+        "favoriser l'incarnation par micro-actions"
+      ],
+      "must_not_do": [
+        "flatter sans clarifier",
+        "complexifier sans gain réel",
+        "répondre longuement quand un recentrage simple suffit"
+      ]
     },
-    "priority_order": ["détecter l'état réel", "réduire la charge", "nommer l'axe", "proposer un protocole", "verrouiller une action"]
+    "priority_order": [
+      "détecter l'état réel",
+      "réduire la charge",
+      "nommer l'axe",
+      "proposer un protocole",
+      "verrouiller une action"
+    ]
   },
   "chat_modes": {
     "source_ui_moderne": "src/services/ai/chatModes.config.ts",
     "source_legacy": "src/config/chatModes.config.ts",
     "total_modes": 23,
     "modes": [
-      {"id": "default",             "label": "Standard",            "temperature": 0.7, "maxTokens": 2048, "category": "general",      "permissionLevel": 1},
-      {"id": "reflection",          "label": "Réflexion Profonde",  "temperature": 0.8, "maxTokens": 4000, "category": "personal",     "permissionLevel": 1},
-      {"id": "brainstorming",       "label": "Brainstorming",       "temperature": 0.9, "maxTokens": 3000, "category": "creative",     "permissionLevel": 1},
-      {"id": "synthesis",           "label": "Synthèse",            "temperature": 0.7, "maxTokens": 2500, "category": "creative",     "permissionLevel": 1},
-      {"id": "planning",            "label": "Planification",       "temperature": 0.6, "maxTokens": 2500, "category": "productivity", "permissionLevel": 2},
-      {"id": "journal",             "label": "Journal",             "temperature": 0.7, "maxTokens": 2000, "category": "personal",     "permissionLevel": 1},
-      {"id": "debug_cognitive",     "label": "Debug Cognitif",      "temperature": 0.6, "maxTokens": 2000, "category": "personal",     "permissionLevel": 1},
-      {"id": "coach",               "label": "Coach",               "temperature": 0.8, "maxTokens": 3500, "category": "personal",     "permissionLevel": 1},
-      {"id": "dev",                 "label": "Dev",                 "temperature": 0.3, "maxTokens": 4000, "category": "technical",    "permissionLevel": 3},
-      {"id": "admin",               "label": "Admin",               "temperature": 0.2, "maxTokens": 4000, "category": "technical",    "permissionLevel": 5},
-      {"id": "audit",               "label": "Audit",               "temperature": 0.3, "maxTokens": 3000, "category": "technical",    "permissionLevel": 3},
-      {"id": "omega",               "label": "Oméga",               "temperature": 0.7, "maxTokens": 6000, "category": "technical",    "permissionLevel": 2},
-      {"id": "quick",               "label": "Rapide",              "temperature": 0.5, "maxTokens": 2000, "category": "general",      "permissionLevel": 1},
-      {"id": "strategy",            "label": "Stratégie",           "temperature": 0.7, "maxTokens": 3500, "category": "strategic",    "permissionLevel": 2},
-      {"id": "emergency",           "label": "Urgence",             "temperature": 0.3, "maxTokens": 2000, "category": "general",      "permissionLevel": 1},
-      {"id": "htf_soumission",      "label": "HTF Soumission",      "temperature": 0.5, "maxTokens": 3000, "category": "technical",    "permissionLevel": 2},
-      {"id": "psychologie_profils", "label": "Psychologie Profils", "temperature": 0.7, "maxTokens": 3500, "category": "personal",     "permissionLevel": 1},
-      {"id": "creation",            "label": "Création",            "temperature": 0.9, "maxTokens": 3000, "category": "creative",     "permissionLevel": 1},
-      {"id": "standard",            "label": "Standard+",           "temperature": 0.7, "maxTokens": 2048, "category": "general",      "permissionLevel": 1},
-      {"id": "humain_total",         "label": "Humain Total",        "temperature": 0.75,"maxTokens": 3500, "category": "personal",     "permissionLevel": 1},
-      {"id": "veille_recherche",     "label": "Veille & Recherche",  "temperature": 0.6, "maxTokens": 4000, "category": "productivity", "permissionLevel": 2},
-      {"id": "decision",            "label": "Décision",            "temperature": 0.5, "maxTokens": 3000, "category": "strategic",    "permissionLevel": 2},
-      {"id": "kalloks_arts",        "label": "Kallok's Arts",       "temperature": 0.92,"maxTokens": 4000, "category": "creative",     "permissionLevel": 1}
+      {
+        "id": "default",
+        "label": "Standard",
+        "temperature": 0.7,
+        "maxTokens": 2048,
+        "category": "general",
+        "permissionLevel": 1
+      },
+      {
+        "id": "reflection",
+        "label": "Réflexion Profonde",
+        "temperature": 0.8,
+        "maxTokens": 4000,
+        "category": "personal",
+        "permissionLevel": 1
+      },
+      {
+        "id": "brainstorming",
+        "label": "Brainstorming",
+        "temperature": 0.9,
+        "maxTokens": 3000,
+        "category": "creative",
+        "permissionLevel": 1
+      },
+      {
+        "id": "synthesis",
+        "label": "Synthèse",
+        "temperature": 0.7,
+        "maxTokens": 2500,
+        "category": "creative",
+        "permissionLevel": 1
+      },
+      {
+        "id": "planning",
+        "label": "Planification",
+        "temperature": 0.6,
+        "maxTokens": 2500,
+        "category": "productivity",
+        "permissionLevel": 2
+      },
+      {
+        "id": "journal",
+        "label": "Journal",
+        "temperature": 0.7,
+        "maxTokens": 2000,
+        "category": "personal",
+        "permissionLevel": 1
+      },
+      {
+        "id": "debug_cognitive",
+        "label": "Debug Cognitif",
+        "temperature": 0.6,
+        "maxTokens": 2000,
+        "category": "personal",
+        "permissionLevel": 1
+      },
+      {
+        "id": "coach",
+        "label": "Coach",
+        "temperature": 0.8,
+        "maxTokens": 3500,
+        "category": "personal",
+        "permissionLevel": 1
+      },
+      {
+        "id": "dev",
+        "label": "Dev",
+        "temperature": 0.3,
+        "maxTokens": 4000,
+        "category": "technical",
+        "permissionLevel": 3
+      },
+      {
+        "id": "admin",
+        "label": "Admin",
+        "temperature": 0.2,
+        "maxTokens": 4000,
+        "category": "technical",
+        "permissionLevel": 5
+      },
+      {
+        "id": "audit",
+        "label": "Audit",
+        "temperature": 0.3,
+        "maxTokens": 3000,
+        "category": "technical",
+        "permissionLevel": 3
+      },
+      {
+        "id": "omega",
+        "label": "Oméga",
+        "temperature": 0.7,
+        "maxTokens": 6000,
+        "category": "technical",
+        "permissionLevel": 2
+      },
+      {
+        "id": "quick",
+        "label": "Rapide",
+        "temperature": 0.5,
+        "maxTokens": 2000,
+        "category": "general",
+        "permissionLevel": 1
+      },
+      {
+        "id": "strategy",
+        "label": "Stratégie",
+        "temperature": 0.7,
+        "maxTokens": 3500,
+        "category": "strategic",
+        "permissionLevel": 2
+      },
+      {
+        "id": "emergency",
+        "label": "Urgence",
+        "temperature": 0.3,
+        "maxTokens": 2000,
+        "category": "general",
+        "permissionLevel": 1
+      },
+      {
+        "id": "htf_soumission",
+        "label": "HTF Soumission",
+        "temperature": 0.5,
+        "maxTokens": 3000,
+        "category": "technical",
+        "permissionLevel": 2
+      },
+      {
+        "id": "psychologie_profils",
+        "label": "Psychologie Profils",
+        "temperature": 0.7,
+        "maxTokens": 3500,
+        "category": "personal",
+        "permissionLevel": 1
+      },
+      {
+        "id": "creation",
+        "label": "Création",
+        "temperature": 0.9,
+        "maxTokens": 3000,
+        "category": "creative",
+        "permissionLevel": 1
+      },
+      {
+        "id": "standard",
+        "label": "Standard+",
+        "temperature": 0.7,
+        "maxTokens": 2048,
+        "category": "general",
+        "permissionLevel": 1
+      },
+      {
+        "id": "humain_total",
+        "label": "Humain Total",
+        "temperature": 0.75,
+        "maxTokens": 3500,
+        "category": "personal",
+        "permissionLevel": 1
+      },
+      {
+        "id": "veille_recherche",
+        "label": "Veille & Recherche",
+        "temperature": 0.6,
+        "maxTokens": 4000,
+        "category": "productivity",
+        "permissionLevel": 2
+      },
+      {
+        "id": "decision",
+        "label": "Décision",
+        "temperature": 0.5,
+        "maxTokens": 3000,
+        "category": "strategic",
+        "permissionLevel": 2
+      },
+      {
+        "id": "kalloks_arts",
+        "label": "Kallok's Arts",
+        "temperature": 0.92,
+        "maxTokens": 4000,
+        "category": "creative",
+        "permissionLevel": 1
+      }
     ]
   },
   "mode_classifier": {
@@ -73,13 +255,81 @@
     "confidence_threshold_apply": 0.7,
     "rule": "Si confidence < 0.7, le mode manuel de l'utilisateur est préservé",
     "canonical_modes": {
-      "DIRECT":         {"effort": "low",    "model_class": "SONNET", "backend_mode": "default",       "signals_sample": ["vite", "en bref", "fais court", "question factuelle courte", "tldr"]},
-      "DEEP_REASONING": {"effort": "high",   "model_class": "SONNET", "backend_mode": "synthesis",     "signals_sample": ["approfondi", "analyse en profondeur", "continue", "développe", "exhaustif"]},
-      "ARCHITECT":      {"effort": "high",   "model_class": "OPUS",   "backend_mode": "planning",      "signals_sample": ["architecture", "structure", "roadmap", "omega", "unifie", "long terme"]},
-      "REPAIR":         {"effort": "high",   "model_class": "SONNET", "backend_mode": "debug_cognitive","signals_sample": ["TypeError", "stack trace", "ça bug", "crash", "corrige", "ne compile pas"]},
-      "CERTIFY":        {"effort": "max",    "model_class": "OPUS",   "backend_mode": "debug_cognitive","signals_sample": ["vérifie", "prouve", "gates", "runtime proof", "certifie", "valide en runtime"]},
-      "EXPLORATION":    {"effort": "medium", "model_class": "SONNET", "backend_mode": "brainstorming", "signals_sample": ["brainstorm", "et si", "quelles pistes", "idées", "explore"]},
-      "CLARIFY_LIGHT":  {"effort": "low",    "model_class": "SONNET", "backend_mode": "default",       "signals_sample": ["quelque chose", "fais-le", "ça", "gère ça", "traite ça"]}
+      "DIRECT": {
+        "effort": "low",
+        "model_class": "SONNET",
+        "backend_mode": "default",
+        "signals_sample": [
+          "vite",
+          "en bref",
+          "fais court",
+          "question factuelle courte",
+          "tldr"
+        ]
+      },
+      "DEEP_REASONING": {
+        "effort": "high",
+        "model_class": "SONNET",
+        "backend_mode": "synthesis",
+        "signals_sample": [
+          "approfondi",
+          "analyse en profondeur",
+          "continue",
+          "développe",
+          "exhaustif"
+        ]
+      },
+      "ARCHITECT": {
+        "effort": "high",
+        "model_class": "OPUS",
+        "backend_mode": "planning",
+        "signals_sample": [
+          "architecture",
+          "structure",
+          "roadmap",
+          "omega",
+          "unifie",
+          "long terme"
+        ]
+      },
+      "REPAIR": {
+        "effort": "high",
+        "model_class": "SONNET",
+        "backend_mode": "debug_cognitive",
+        "signals_sample": [
+          "TypeError",
+          "stack trace",
+          "ça bug",
+          "crash",
+          "corrige",
+          "ne compile pas"
+        ]
+      },
+      "CERTIFY": {
+        "effort": "max",
+        "model_class": "OPUS",
+        "backend_mode": "debug_cognitive",
+        "signals_sample": [
+          "vérifie",
+          "prouve",
+          "gates",
+          "runtime proof",
+          "certifie",
+          "valide en runtime"
+        ]
+      },
+      "EXPLORATION": {
+        "effort": "medium",
+        "model_class": "SONNET",
+        "backend_mode": "brainstorming",
+        "signals_sample": ["brainstorm", "et si", "quelles pistes", "idées", "explore"]
+      },
+      "CLARIFY_LIGHT": {
+        "effort": "low",
+        "model_class": "SONNET",
+        "backend_mode": "default",
+        "signals_sample": ["quelque chose", "fais-le", "ça", "gère ça", "traite ça"]
+      }
     }
   },
   "providers": {
@@ -87,7 +337,14 @@
     "source_ollama_model": "src/config/ollamaDefaults.ts",
     "default_model": "gemma2:2b",
     "ollama_url": "http://127.0.0.1:11434",
-    "fallback_chain": ["tauri-backend", "ollama", "gemini", "openai", "claude", "titane-local"],
+    "fallback_chain": [
+      "tauri-backend",
+      "ollama",
+      "gemini",
+      "openai",
+      "claude",
+      "titane-local"
+    ],
     "timeouts_ms": {
       "titane_local": 5000,
       "ollama": 45000,
@@ -124,9 +381,9 @@
       "rollout_config": "titane_hybrid_memory_shadow_read_rollout"
     },
     "rollout_presets": {
-      "observe": {"mode": "canary", "percentage": 10, "trendWindow": 12},
-      "balanced": {"mode": "canary", "percentage": 25, "trendWindow": 10},
-      "full": {"mode": "full", "percentage": 100, "trendWindow": 8}
+      "observe": { "mode": "canary", "percentage": 10, "trendWindow": 12 },
+      "balanced": { "mode": "canary", "percentage": 25, "trendWindow": 10 },
+      "full": { "mode": "full", "percentage": 100, "trendWindow": 8 }
     },
     "ltm_enrichment": "memoryWebEnricher (HippoRAG-inspired) — src/services/memory/memoryWebEnricher.ts",
     "context_load_timeout_ms": 5000,

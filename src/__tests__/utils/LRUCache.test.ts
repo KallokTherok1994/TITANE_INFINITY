@@ -48,7 +48,7 @@ describe('LRUCache', () => {
       expect(cache.has('a')).toBe(false);
     });
 
-    it('size devrait refléter le nombre d\'entrées', () => {
+    it("size devrait refléter le nombre d'entrées", () => {
       const cache = new LRUCache<number>({ maxSize: 10 });
       expect(cache.size).toBe(0);
       cache.set('a', 1);
@@ -60,7 +60,7 @@ describe('LRUCache', () => {
   });
 
   describe('LRU eviction', () => {
-    it('devrait évincer l\'entrée la moins récemment utilisée', () => {
+    it("devrait évincer l'entrée la moins récemment utilisée", () => {
       const cache = new LRUCache<string>({ maxSize: 3 });
       cache.set('a', 'A');
       cache.set('b', 'B');
@@ -73,7 +73,7 @@ describe('LRUCache', () => {
       expect(cache.has('d')).toBe(true);
     });
 
-    it('get() devrait mettre à jour l\'ordre d\'utilisation', () => {
+    it("get() devrait mettre à jour l'ordre d'utilisation", () => {
       const cache = new LRUCache<string>({ maxSize: 3 });
       cache.set('a', 'A');
       cache.set('b', 'B');
@@ -86,7 +86,7 @@ describe('LRUCache', () => {
       expect(cache.has('b')).toBe(false);
     });
 
-    it('devrait appeler onEvict lors de l\'éviction', () => {
+    it("devrait appeler onEvict lors de l'éviction", () => {
       const onEvict = vi.fn();
       const cache = new LRUCache<string>({ maxSize: 2, onEvict });
       cache.set('a', 'A');
@@ -150,7 +150,7 @@ describe('LRUCache', () => {
   });
 
   describe('keys / values / entries / iteration', () => {
-    it('keys() devrait retourner les clés dans l\'ordre d\'insertion', () => {
+    it("keys() devrait retourner les clés dans l'ordre d'insertion", () => {
       const cache = new LRUCache<number>({ maxSize: 5 });
       cache.set('x', 1);
       cache.set('y', 2);
@@ -206,7 +206,7 @@ describe('LRUCache', () => {
 });
 
 describe('createMemoizedFunction', () => {
-  it('devrait mettre en cache le résultat d\'un appel', () => {
+  it("devrait mettre en cache le résultat d'un appel", () => {
     const fn = vi.fn((a: number, b: number) => a + b);
     const memoized = createMemoizedFunction(fn, { maxSize: 10 });
     expect(memoized(1, 2)).toBe(3);
@@ -226,7 +226,7 @@ describe('createMemoizedFunction', () => {
     const fn = vi.fn((obj: { id: number }) => obj.id * 10);
     const memoized = createMemoizedFunction(fn, {
       maxSize: 5,
-      keyFn: (obj) => String(obj.id),
+      keyFn: obj => String(obj.id),
     });
     expect(memoized({ id: 5 })).toBe(50);
     expect(memoized({ id: 5 })).toBe(50);

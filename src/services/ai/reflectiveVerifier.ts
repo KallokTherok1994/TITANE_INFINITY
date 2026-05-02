@@ -70,13 +70,13 @@ export interface ReflectiveContext {
 
 /** Patterns de claims factuels: dates, pourcentages, noms propres, "selon", chiffres */
 const FACTUAL_PATTERNS = [
-  /\b(en\s+)?\d{4}\b/,                          // dates: 2024, en 2024
-  /\b\d+[.,]\d*\s*%/,                            // pourcentages: 45.3%
+  /\b(en\s+)?\d{4}\b/, // dates: 2024, en 2024
+  /\b\d+[.,]\d*\s*%/, // pourcentages: 45.3%
   /\b(selon|d'après|d'apres|source:|selon)\s+/i, // citations: "selon X"
   /\b[A-Z][a-zéàùèêâîôûäëïöü]{2,}\s+[A-Z][a-zéàùèêâîôûäëïöü]{2,}\b/, // noms propres
-  /\b\d+[\s,]?\d{3}\b/,                          // grands nombres: 45 000
+  /\b\d+[\s,]?\d{3}\b/, // grands nombres: 45 000
   /\b(étude|recherche|rapport|données)\s+(montre|indique|révèle|confirme)/i, // études
-  /https?:\/\/[^\s]+/,                           // URLs
+  /https?:\/\/[^\s]+/, // URLs
   /\b(premier|deuxième|troisième|plus grand|plus petit|record)\b/i, // superlatifs factuels
 ];
 
@@ -203,7 +203,10 @@ export function applyReflectiveCorrections(
 
   const sourcesList = critique.webSources
     .slice(0, 3)
-    .map((s, i) => `${i + 1}. **${escapeMarkdownSnippet(s.title)}**: ${escapeMarkdownSnippet(s.snippet.substring(0, 120))}...`)
+    .map(
+      (s, i) =>
+        `${i + 1}. **${escapeMarkdownSnippet(s.title)}**: ${escapeMarkdownSnippet(s.snippet.substring(0, 120))}...`
+    )
     .join('\n');
 
   const note = `\n\n---\n📚 **Sources complémentaires consultées** (vérification Self-RAG):\n${sourcesList}`;

@@ -56,7 +56,12 @@ export type PermissionLevel = 0 | 1 | 2 | 3 | 4 | 5;
 export type MemoryScope = 'session' | 'project' | 'global';
 
 /** Style de réponse IA */
-export type ResponseStyle = 'concise' | 'moderate' | 'detailed' | 'exhaustive' | 'creative';
+export type ResponseStyle =
+  | 'concise'
+  | 'moderate'
+  | 'detailed'
+  | 'exhaustive'
+  | 'creative';
 
 /** Ton de communication */
 export type CommunicationTone =
@@ -236,4 +241,3 @@ export const TOOLS_ADMIN: ToolPermissions = {
 // La résolution runtime legacy des prompts et les modes personnalisés
 // restent volontairement portés par src/config/chatModes.config.ts.
 // ─────────────────────────────────────────────────────────────────────────────
-

@@ -20,7 +20,13 @@ export const Warning: Story = {
 };
 
 export const Critical: Story = {
-  args: { title: 'Erreurs/min', value: 23, unit: 'err/min', trend: 'up', status: 'critical' },
+  args: {
+    title: 'Erreurs/min',
+    value: 23,
+    unit: 'err/min',
+    trend: 'up',
+    status: 'critical',
+  },
 };
 
 export const Stable: Story = {

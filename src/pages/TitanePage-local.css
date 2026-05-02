@@ -187,7 +187,9 @@
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   /* ── Shell ── */
-  .titane-page-shell--conversation { gap: 0; }
+  .titane-page-shell--conversation {
+    gap: 0;
+  }
 
   /* ── Header nano ── */
   .titane-page-header--conversation {
@@ -196,7 +198,9 @@
   .titane-page-header {
     padding: 0.06rem 0.25rem;
   }
-  .titane-page-header-brand { display: none; }
+  .titane-page-header-brand {
+    display: none;
+  }
 
   /* ── Libère la zone messages ── */
   .titane-content--conversation {
@@ -228,7 +232,9 @@
     line-height: 1 !important;
   }
   .conversation-toolbar-left,
-  .conversation-toolbar-right { gap: 0.04rem !important; }
+  .conversation-toolbar-right {
+    gap: 0.04rem !important;
+  }
   .conversation-mode-select {
     padding: 0.03rem 0.12rem !important;
     font-size: 0.36rem !important;
@@ -281,22 +287,33 @@
     gap: 0.08rem !important;
     border-radius: 4px !important;
   }
-  .toolbar-section-label { font-size: 0.24rem !important; }
-  .toolbar-buttons { gap: 0.06rem !important; }
+  .toolbar-section-label {
+    font-size: 0.24rem !important;
+  }
+  .toolbar-buttons {
+    gap: 0.06rem !important;
+  }
 
   /* ── Messages ── */
   .conversation-message-text {
     font-size: 0.44rem !important;
     line-height: 1.36 !important;
   }
-  .conversation-message-role { font-size: 0.31rem !important; }
+  .conversation-message-role {
+    font-size: 0.31rem !important;
+  }
   .conversation-message-avatar {
     width: 10px !important;
     height: 10px !important;
     font-size: 0.4rem !important;
   }
-  .conversation-message { gap: 0.15rem !important; }
-  .conversation-messages-list { gap: 0.18rem !important; padding: 0.15rem 0.22rem !important; }
+  .conversation-message {
+    gap: 0.15rem !important;
+  }
+  .conversation-messages-list {
+    gap: 0.18rem !important;
+    padding: 0.15rem 0.22rem !important;
+  }
 
   /* ── Thinking panel ── */
   .thinking-panel-compact {
@@ -311,7 +328,9 @@
     font-size: 0.34rem !important;
     border-radius: 3px !important;
   }
-  .conversation-filters-search input { font-size: 0.34rem !important; }
+  .conversation-filters-search input {
+    font-size: 0.34rem !important;
+  }
 
   /* ── Suggestions 2 colonnes compactes ── */
   .conversation-empty-suggestions {
@@ -333,22 +352,38 @@
     gap: 0.08rem !important;
     padding: 0.16rem 0.2rem !important;
   }
-  .conversation-empty-icon { font-size: 0.56rem !important; }
-  .conversation-empty h3 { font-size: 0.37rem !important; margin: 0 !important; }
-  .conversation-empty p { font-size: 0.31rem !important; margin: 0 !important; }
+  .conversation-empty-icon {
+    font-size: 0.56rem !important;
+  }
+  .conversation-empty h3 {
+    font-size: 0.37rem !important;
+    margin: 0 !important;
+  }
+  .conversation-empty p {
+    font-size: 0.31rem !important;
+    margin: 0 !important;
+  }
 
   /* ── Overlays masqués ── */
-  #titane-boot-beacon { display: none !important; }
-  .fixed.bottom-24.right-4 { display: none !important; }
+  #titane-boot-beacon {
+    display: none !important;
+  }
+  .fixed.bottom-24.right-4 {
+    display: none !important;
+  }
   /* Panneau Agents masqué sur mobile — couvre la toolbar */
-  .agent-dashboards-panel { display: none !important; }
+  .agent-dashboards-panel {
+    display: none !important;
+  }
 
   /* ── Runtime panel nano ── */
   .conversation-runtime-panel {
     padding: 0.08rem 0.22rem !important;
     border-radius: 4px !important;
   }
-  .conversation-runtime-summary { font-size: 0.44rem !important; }
+  .conversation-runtime-summary {
+    font-size: 0.44rem !important;
+  }
   .conversation-runtime-badge {
     font-size: 0.4rem !important;
     padding: 0.06rem 0.16rem !important;
@@ -368,12 +403,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
-  svg, img, [class*='icon'] {
+  svg,
+  img,
+  [class*='icon'] {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
   .conversation-message-avatar {
-    border: 0.5px solid rgba(255,255,255,0.08);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
   }
 }
 

@@ -144,6 +144,7 @@
 - [x] Coverage reports + CI gates (vitest thresholds: statements=72, branches=65, functions=68, lines=75)
 
 **Nouveaux fichiers tests (+9)**:
+
 - [x] utils/LRUCache.test.ts (28 tests — get/set/TTL/eviction/memoize/registry)
 - [x] utils/dataUtils.test.ts (toutes les 7 fonctions exportées)
 - [x] utils/cn.test.ts (9 tests — clsx wrapper)

@@ -124,11 +124,23 @@
         },
         "managers": {
           "definition": "Parties protectrices proactives — gèrent le quotidien pour éviter que l'exil ne soit activé",
-          "exemples": ["Perfectionniste", "Critique interne", "Contrôlant", "Performeur", "Planificateur compulsif"]
+          "exemples": [
+            "Perfectionniste",
+            "Critique interne",
+            "Contrôlant",
+            "Performeur",
+            "Planificateur compulsif"
+          ]
         },
         "pompiers": {
           "definition": "Parties protectrices réactives — interviennent en urgence quand l'exil est activé malgré les managers",
-          "exemples": ["Addiction / comportements compulsifs", "Dissociation", "Rage", "Impulsivité sexuelle", "Auto-mutilation"]
+          "exemples": [
+            "Addiction / comportements compulsifs",
+            "Dissociation",
+            "Rage",
+            "Impulsivité sexuelle",
+            "Auto-mutilation"
+          ]
         },
         "exiles": {
           "definition": "Parties blessées, souvent enfantines — portent le poids du trauma, de la honte, de la peur, de la douleur",
@@ -223,11 +235,34 @@
       "schemas_precoces_inadaptes_SPI": {
         "definition": "Thèmes émotionnels et cognitifs envahissants développés dans l'enfance / l'adolescence, auto-perpétuants, dysfonctionnels dans les relations adultes",
         "18_schemas": {
-          "domaine_disconnexion_rejet": ["Abandon/Instabilité", "Méfiance/Abus", "Carence affective", "Imperfection/Honte", "Isolement social"],
-          "domaine_autonomie_performances": ["Dépendance/Incompétence", "Vulnérabilité aux dangers", "Enchevêtrement/Soi sous-développé", "Échec"],
-          "domaine_limites_deteriorees": ["Droit/Grandiosité", "Manque de self-control/Self-discipline"],
-          "domaine_orientation_vers_autrui": ["Assujettissement", "Sacrifice de soi", "Recherche d'approbation"],
-          "domaine_hypervigilance_inhibition": ["Négativité/Pessimisme", "Surcontrôle émotionnel", "Normes exigeantes/Hypercriticisme", "Punition"]
+          "domaine_disconnexion_rejet": [
+            "Abandon/Instabilité",
+            "Méfiance/Abus",
+            "Carence affective",
+            "Imperfection/Honte",
+            "Isolement social"
+          ],
+          "domaine_autonomie_performances": [
+            "Dépendance/Incompétence",
+            "Vulnérabilité aux dangers",
+            "Enchevêtrement/Soi sous-développé",
+            "Échec"
+          ],
+          "domaine_limites_deteriorees": [
+            "Droit/Grandiosité",
+            "Manque de self-control/Self-discipline"
+          ],
+          "domaine_orientation_vers_autrui": [
+            "Assujettissement",
+            "Sacrifice de soi",
+            "Recherche d'approbation"
+          ],
+          "domaine_hypervigilance_inhibition": [
+            "Négativité/Pessimisme",
+            "Surcontrôle émotionnel",
+            "Normes exigeantes/Hypercriticisme",
+            "Punition"
+          ]
         }
       },
       "travail_par_modes": {

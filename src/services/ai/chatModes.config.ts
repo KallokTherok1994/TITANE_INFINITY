@@ -24,18 +24,19 @@ export type {
   ChatModeConfigExtended,
 } from './chatModes.types';
 
-export {
-  TOOLS_MINIMAL,
-  TOOLS_STANDARD,
-  TOOLS_DEV,
-  TOOLS_ADMIN,
-} from './chatModes.types';
+export { TOOLS_MINIMAL, TOOLS_STANDARD, TOOLS_DEV, TOOLS_ADMIN } from './chatModes.types';
 
 // Re-export data
 export { CHAT_MODES_CONFIG } from './chatModes.data';
 
 // Local imports for utilities
-import type { ChatModeId, ChatModeCategory, ToolPermissions, ChatModeConfigExtended, PermissionLevel } from './chatModes.types';
+import type {
+  ChatModeId,
+  ChatModeCategory,
+  ToolPermissions,
+  ChatModeConfigExtended,
+  PermissionLevel,
+} from './chatModes.types';
 import { CHAT_MODES_CONFIG } from './chatModes.data';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -53,7 +54,14 @@ export const MODES_BY_CATEGORY: Record<ChatModeCategory, ChatModeId[]> = {
   general: ['default', 'quick', 'standard', 'emergency'],
   creative: ['brainstorming', 'synthesis', 'creation', 'kalloks_arts'],
   productivity: ['planning', 'htf_soumission', 'veille_recherche'],
-  personal: ['journal', 'debug_cognitive', 'coach', 'psychologie_profils', 'reflection', 'humain_total'],
+  personal: [
+    'journal',
+    'debug_cognitive',
+    'coach',
+    'psychologie_profils',
+    'reflection',
+    'humain_total',
+  ],
   technical: ['dev', 'admin', 'audit', 'omega'],
   strategic: ['strategy', 'decision'],
 };

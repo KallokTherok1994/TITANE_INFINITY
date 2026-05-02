@@ -200,13 +200,14 @@ Voulez-vous que je continue ?`;
         'Écris-moi un poème pour une publication Facebook'
       );
 
-      expect(processed.content).toContain("Je peux te le faire directement");
+      expect(processed.content).toContain('Je peux te le faire directement');
       expect(processed.content).not.toContain('COLLECTE MAXIMALE');
       expect(processed.content).not.toContain('Voulez-vous que je continue');
     });
 
     test('preserves direct natural answers', () => {
-      const raw = "Voici une première version du poème.\n\nTu peux l'adoucir ou le rendre plus brut ensuite.";
+      const raw =
+        "Voici une première version du poème.\n\nTu peux l'adoucir ou le rendre plus brut ensuite.";
 
       // @ts-expect-error: accessing private method for testing
       const processed = chatEngine.postProcess(

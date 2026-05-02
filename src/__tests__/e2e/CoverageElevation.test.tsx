@@ -40,12 +40,12 @@ const NavMenu: React.FC<{
   return (
     <nav role="navigation" aria-label="Navigation principale" data-testid="nav-menu">
       <ul role="list">
-        {routes.map((r) => (
+        {routes.map(r => (
           <li key={r.id} role="listitem">
             <a
               href={r.path}
               data-testid={`nav-${r.id}`}
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault();
                 onNavigate?.(r.path);
               }}
@@ -88,7 +88,7 @@ const SearchBar: React.FC<{ onSearch?: (q: string) => void }> = ({ onSearch }) =
   <form
     role="search"
     data-testid="search-form"
-    onSubmit={(e) => {
+    onSubmit={e => {
       e.preventDefault();
       const input = (e.target as HTMLFormElement).querySelector('input');
       if (input) onSearch?.(input.value);
@@ -113,12 +113,7 @@ const ToastNotification: React.FC<{
   message: string;
   onDismiss?: () => void;
 }> = ({ type, message, onDismiss }) => (
-  <div
-    role="alert"
-    aria-live="assertive"
-    data-testid={`toast-${type}`}
-    data-type={type}
-  >
+  <div role="alert" aria-live="assertive" data-testid={`toast-${type}`} data-type={type}>
     <span>{message}</span>
     {onDismiss && (
       <button type="button" aria-label="Fermer la notification" onClick={onDismiss}>
@@ -139,7 +134,7 @@ const SAMPLE_ROUTES = [
 
 describe('E2E Structurel — App Header', () => {
   // Scénario 1
-  it('S1: le header affiche le titre de l\'application', () => {
+  it("S1: le header affiche le titre de l'application", () => {
     render(<AppHeader title="TITANE∞" />);
     expect(screen.getByTestId('app-title')).toHaveTextContent('TITANE∞');
   });
@@ -161,9 +156,7 @@ describe('E2E Structurel — App Header', () => {
   // Scénario 4
   it('S4: le bouton menu a aria-label accessible', () => {
     render(<AppHeader />);
-    expect(
-      screen.getByRole('button', { name: 'Ouvrir le menu' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Ouvrir le menu' })).toBeInTheDocument();
   });
 });
 
@@ -216,10 +209,7 @@ describe('E2E Structurel — Loading & Error States', () => {
   // Scénario 11
   it('S11: le spinner a aria-busy=true', () => {
     render(<LoadingSpinner />);
-    expect(screen.getByTestId('loading-spinner')).toHaveAttribute(
-      'aria-busy',
-      'true'
-    );
+    expect(screen.getByTestId('loading-spinner')).toHaveAttribute('aria-busy', 'true');
   });
 
   // Scénario 12
@@ -231,17 +221,15 @@ describe('E2E Structurel — Loading & Error States', () => {
   });
 
   // Scénario 13
-  it('S13: le message d\'erreur a role=alert', () => {
+  it("S13: le message d'erreur a role=alert", () => {
     render(<ErrorMessage message="Connexion échouée" />);
     expect(screen.getByRole('alert')).toBeInTheDocument();
   });
 
   // Scénario 14
-  it('S14: le message d\'erreur affiche le texte', () => {
+  it("S14: le message d'erreur affiche le texte", () => {
     render(<ErrorMessage message="Service indisponible" />);
-    expect(screen.getByTestId('error-message')).toHaveTextContent(
-      'Service indisponible'
-    );
+    expect(screen.getByTestId('error-message')).toHaveTextContent('Service indisponible');
   });
 
   // Scénario 15
@@ -302,32 +290,21 @@ describe('E2E Structurel — Toast Notifications', () => {
   // Scénario 22
   it('S22: toast warning a aria-live=assertive', () => {
     render(<ToastNotification type="warning" message="Attention" />);
-    expect(screen.getByTestId('toast-warning')).toHaveAttribute(
-      'aria-live',
-      'assertive'
-    );
+    expect(screen.getByTestId('toast-warning')).toHaveAttribute('aria-live', 'assertive');
   });
 
   // Scénario 23
   it('S23: dismiss appelle onDismiss', () => {
     const onDismiss = vi.fn();
-    render(
-      <ToastNotification
-        type="info"
-        message="Info"
-        onDismiss={onDismiss}
-      />
-    );
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Fermer la notification' })
-    );
+    render(<ToastNotification type="info" message="Info" onDismiss={onDismiss} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Fermer la notification' }));
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
   // Scénario 24
   it('S24: tous les types de toast sont rendus correctement', () => {
     const types = ['success', 'error', 'warning', 'info'] as const;
-    types.forEach((type) => {
+    types.forEach(type => {
       const { unmount } = render(
         <ToastNotification type={type} message={`Message ${type}`} />
       );

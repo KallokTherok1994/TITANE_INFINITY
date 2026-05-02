@@ -64,7 +64,12 @@
         "periode": "1950-1960",
         "figures": "Wolpe (désensibilisation systématique), Skinner (conditionnement opérant), Bandura (apprentissage social)",
         "focus": "Comportements observables — principes d'apprentissage: conditionnement classique (Pavlov), conditionnement opérant (renforcement/punition), extinction",
-        "techniques_cles": ["désensibilisation systématique", "exposition in vivo et en imagination", "techniques d'affirmation de soi", "relaxation progressive Jacobson"]
+        "techniques_cles": [
+          "désensibilisation systématique",
+          "exposition in vivo et en imagination",
+          "techniques d'affirmation de soi",
+          "relaxation progressive Jacobson"
+        ]
       },
       "2eme_vague_cognitive": {
         "periode": "1960-1990",
@@ -209,7 +214,13 @@
         "indication_principale": "Prévention rechute dépressive — réduction 50% rechutes chez patients avec 3+ épisodes (Teasdale 2000, meta-analyse Kuyken 2016)",
         "programme": "8 semaines — 2h/semaine groupe + pratique quotidienne 45 min à domicile",
         "mecanisme": "Désidentification du mode dépressif 'faire' (rumination) → mode 'être' (présence) — reconnaître les signaux précoces de rechute et répondre avec conscience plutôt qu'automatiquement",
-        "pratiques_cles": ["Body scan", "Méditation assise (respiration, sons, pensées)", "Yoga doux", "Marche consciente", "Espace de respiration 3 minutes (technique signature MBCT)"],
+        "pratiques_cles": [
+          "Body scan",
+          "Méditation assise (respiration, sons, pensées)",
+          "Yoga doux",
+          "Marche consciente",
+          "Espace de respiration 3 minutes (technique signature MBCT)"
+        ],
         "espace_respiration_3min": {
           "etape_1": "Awareness — Quelle est mon expérience intérieure maintenant? (pensées, sentiments, sensations)",
           "etape_2": "Rassembler — Porter toute l'attention sur la respiration",
@@ -225,11 +236,23 @@
       },
       "TCC_anxiete_generalisee": {
         "modele_Dugas": "Intolérance à l'incertitude + orientation négative vers le problème + évitement cognitif (suppression) + comportements sécurisants",
-        "techniques": ["Exposition aux incertitudes", "Résolution de problèmes", "Questionnement du danger réel des inquiétudes", "Zones de contrôle (Covey)", "Délai d'inquiétude — 'période d'inquiétude' programmée"]
+        "techniques": [
+          "Exposition aux incertitudes",
+          "Résolution de problèmes",
+          "Questionnement du danger réel des inquiétudes",
+          "Zones de contrôle (Covey)",
+          "Délai d'inquiétude — 'période d'inquiétude' programmée"
+        ]
       },
       "TCC_panique": {
         "modele_Clark": "Catastrophisation des sensations corporelles — cercle vicieux: sensation physique → interprétation catastrophiste → anxiété → amplification sensations",
-        "techniques": ["Psychoéducation panique (hyperventilation, adrenaline)", "Restructuration cognitive des interprétations catastrophistes", "Exposition intéroceptive: provoquer délibérément les sensations", "Respiration diaphragmatique contrôlée (pas hyperventilation)", "Abandon des comportements sécurisants"]
+        "techniques": [
+          "Psychoéducation panique (hyperventilation, adrenaline)",
+          "Restructuration cognitive des interprétations catastrophistes",
+          "Exposition intéroceptive: provoquer délibérément les sensations",
+          "Respiration diaphragmatique contrôlée (pas hyperventilation)",
+          "Abandon des comportements sécurisants"
+        ]
       },
       "TCC_TOC": {
         "modele": "Pensées intrusives universelles → évaluation erronée du danger/responsabilité → neutralisation → renforcement négatif → boucle",
@@ -293,7 +316,12 @@
         "quebec": "Ordre des psychologues du Québec — formation TCC reconnue dans tous les programmes de psychologie clinique",
         "international": "EABCT (European Association for Behavioural and Cognitive Therapies), ABCT (Association for Behavioral and Cognitive Therapies)"
       },
-      "applications_tcc_validees": ["MoodKit (activation comportementale + journal)", "Woebot (TCC conversationnelle, validée)", "CBT Thought Diary (colonnes de Beck)", "Calm Harm (DBT pour impulsions)"]
+      "applications_tcc_validees": [
+        "MoodKit (activation comportementale + journal)",
+        "Woebot (TCC conversationnelle, validée)",
+        "CBT Thought Diary (colonnes de Beck)",
+        "Calm Harm (DBT pour impulsions)"
+      ]
     }
   }
 }

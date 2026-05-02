@@ -22,11 +22,25 @@ export const Warning: Story = {
 };
 
 export const Error: Story = {
-  args: { log: { ...base, level: 'error', message: 'Connexion Ollama échouée', details: { code: 'ECONNREFUSED', port: 11434 } } },
+  args: {
+    log: {
+      ...base,
+      level: 'error',
+      message: 'Connexion Ollama échouée',
+      details: { code: 'ECONNREFUSED', port: 11434 },
+    },
+  },
 };
 
 export const Debug: Story = {
-  args: { log: { ...base, level: 'debug', message: 'invoke: cognitive_get_state', category: 'ipc' } },
+  args: {
+    log: {
+      ...base,
+      level: 'debug',
+      message: 'invoke: cognitive_get_state',
+      category: 'ipc',
+    },
+  },
 };
 
 export const Highlighted: Story = {

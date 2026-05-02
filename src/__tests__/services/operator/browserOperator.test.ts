@@ -5,7 +5,11 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { MockedFunction } from 'vitest';
-import type { BrowserSession, BrowserRelayResult, BrowserOperatorConfig } from '../../../services/operator/browserTypes';
+import type {
+  BrowserSession,
+  BrowserRelayResult,
+  BrowserOperatorConfig,
+} from '../../../services/operator/browserTypes';
 
 // ─────────────────────────────────────────────────────────────────
 // MOCK SETUP — One Door canonical IPC
@@ -153,7 +157,9 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
     it('throws on IPC failure', async () => {
       mockSafeInvoke.mockResolvedValueOnce(fail('State lock error'));
-      await expect(openBrowserSession(['docs.example.com'])).rejects.toThrow('State lock error');
+      await expect(openBrowserSession(['docs.example.com'])).rejects.toThrow(
+        'State lock error'
+      );
     });
 
     it('throws when content is null', async () => {
@@ -188,7 +194,11 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
   describe('getBrowserSessionStatus', () => {
     it('returns session state', async () => {
-      const navigatingSession = { ...SESSION_MOCK, status: 'navigating' as const, actions_count: 1 };
+      const navigatingSession = {
+        ...SESSION_MOCK,
+        status: 'navigating' as const,
+        actions_count: 1,
+      };
       mockSafeInvoke.mockResolvedValueOnce(ok(navigatingSession));
       const session = await getBrowserSessionStatus('brw_1714000000_abc12345');
       expect(session.status).toBe('navigating');
@@ -197,7 +207,9 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
     it('throws on missing session', async () => {
       mockSafeInvoke.mockResolvedValueOnce(fail('Session not found: brw_gone'));
-      await expect(getBrowserSessionStatus('brw_gone')).rejects.toThrow('Session not found: brw_gone');
+      await expect(getBrowserSessionStatus('brw_gone')).rejects.toThrow(
+        'Session not found: brw_gone'
+      );
     });
   });
 
@@ -206,7 +218,10 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
   describe('browserNavigate', () => {
     it('returns relay result on allowed domain', async () => {
       mockSafeInvoke.mockResolvedValueOnce(ok(RELAY_OK_MOCK));
-      const result = await browserNavigate('brw_1714000000_abc12345', 'https://docs.example.com/guide');
+      const result = await browserNavigate(
+        'brw_1714000000_abc12345',
+        'https://docs.example.com/guide'
+      );
       expect(result.ok).toBe(true);
       expect(result.category).toBe('navigation');
       expect(result.url).toBe('https://docs.example.com/guide');
@@ -218,7 +233,10 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
     it('returns blocked relay result for disallowed domain', async () => {
       mockSafeInvoke.mockResolvedValueOnce(ok(RELAY_BLOCKED_MOCK));
-      const result = await browserNavigate('brw_1714000000_abc12345', 'https://evil.com/page');
+      const result = await browserNavigate(
+        'brw_1714000000_abc12345',
+        'https://evil.com/page'
+      );
       expect(result.ok).toBe(false);
       expect(result.category).toBe('blocked_sensitive');
       expect(result.block_reason).toContain('not in allowed list');
@@ -226,7 +244,10 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
     it('returns handoff_required for sensitive URL pattern', async () => {
       mockSafeInvoke.mockResolvedValueOnce(ok(RELAY_HANDOFF_MOCK));
-      const result = await browserNavigate('brw_1714000000_abc12345', 'https://docs.example.com/login');
+      const result = await browserNavigate(
+        'brw_1714000000_abc12345',
+        'https://docs.example.com/login'
+      );
       expect(result.ok).toBe(false);
       expect(result.category).toBe('handoff_required');
       expect(result.handoff_required).toBe(true);
@@ -234,7 +255,10 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
     it('returns tooling_missing when Playwright is unavailable', async () => {
       mockSafeInvoke.mockResolvedValueOnce(ok(RELAY_TOOLING_MISSING_MOCK));
-      const result = await browserNavigate('brw_1714000000_abc12345', 'https://docs.example.com/guide');
+      const result = await browserNavigate(
+        'brw_1714000000_abc12345',
+        'https://docs.example.com/guide'
+      );
       expect(result.ok).toBe(false);
       expect(result.category).toBe('tooling_missing');
     });
@@ -288,7 +312,10 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
     });
 
     it('returns tooling_missing when Playwright unavailable', async () => {
-      const toolingResult = { ...RELAY_TOOLING_MISSING_MOCK, category: 'tooling_missing' as const };
+      const toolingResult = {
+        ...RELAY_TOOLING_MISSING_MOCK,
+        category: 'tooling_missing' as const,
+      };
       mockSafeInvoke.mockResolvedValueOnce(ok(toolingResult));
       const result = await browserExtract('brw_1714000000_abc12345', '.main-content');
       expect(result.ok).toBe(false);
@@ -297,9 +324,9 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
     it('throws on IPC error', async () => {
       mockSafeInvoke.mockResolvedValueOnce(fail('Session not found'));
-      await expect(
-        browserExtract('brw_unknown', '.main-content')
-      ).rejects.toThrow('Session not found');
+      await expect(browserExtract('brw_unknown', '.main-content')).rejects.toThrow(
+        'Session not found'
+      );
     });
   });
 
@@ -318,7 +345,11 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
     });
 
     it('returns config with playwright version when installed', async () => {
-      const configWithPw = { ...CONFIG_MOCK, playwright_available: true, playwright_version: 'Version 1.44.0' };
+      const configWithPw = {
+        ...CONFIG_MOCK,
+        playwright_available: true,
+        playwright_version: 'Version 1.44.0',
+      };
       mockSafeInvoke.mockResolvedValueOnce(ok(configWithPw));
       const config = await getBrowserOperatorConfig();
       expect(config.playwright_available).toBe(true);
@@ -334,7 +365,9 @@ describe('browserOperator — LOCK 7: BROWSER_OPERATOR_V1', () => {
 
     it('throws on IPC failure', async () => {
       mockSafeInvoke.mockResolvedValueOnce(fail('browser_get_config: internal error'));
-      await expect(getBrowserOperatorConfig()).rejects.toThrow('browser_get_config: internal error');
+      await expect(getBrowserOperatorConfig()).rejects.toThrow(
+        'browser_get_config: internal error'
+      );
     });
   });
 

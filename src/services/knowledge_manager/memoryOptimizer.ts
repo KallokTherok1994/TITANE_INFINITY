@@ -34,9 +34,9 @@ export function pinCriticalMemories(
   threshold = 0.5
 ): MemoryEntry[] {
   return entries.map(entry => {
-    const criticalScore = CRITICAL_PATTERNS.filter(pattern =>
-      pattern.test(entry.content)
-    ).length / CRITICAL_PATTERNS.length;
+    const criticalScore =
+      CRITICAL_PATTERNS.filter(pattern => pattern.test(entry.content)).length /
+      CRITICAL_PATTERNS.length;
 
     return {
       ...entry,
@@ -121,7 +121,9 @@ export function prioritizeForQuery(
   });
 
   return scored
-    .sort((a, b) => b.score - a.score || (b.entry.timestamp ?? 0) - (a.entry.timestamp ?? 0))
+    .sort(
+      (a, b) => b.score - a.score || (b.entry.timestamp ?? 0) - (a.entry.timestamp ?? 0)
+    )
     .slice(0, limit)
     .map(({ entry }) => entry);
 }
@@ -137,10 +139,7 @@ export function optimizeContextWindow(
   const systemMessages = history.filter(e => e.role === 'system');
   const conversational = history.filter(e => e.role !== 'system');
 
-  let usedTokens = systemMessages.reduce(
-    (acc, e) => acc + estimateTokens(e.content),
-    0
-  );
+  let usedTokens = systemMessages.reduce((acc, e) => acc + estimateTokens(e.content), 0);
 
   // Keep most recent turns first
   const reversed = [...conversational].reverse();
@@ -175,10 +174,7 @@ export function computeMemoryHealthScore(
 ): MemoryHealth {
   const now = Date.now();
   const pinnedCount = entries.filter(e => e.pinned).length;
-  const estimatedTokens = entries.reduce(
-    (acc, e) => acc + estimateTokens(e.content),
-    0
-  );
+  const estimatedTokens = entries.reduce((acc, e) => acc + estimateTokens(e.content), 0);
   const staleCount = entries.filter(
     e => e.timestamp && now - e.timestamp > stalenessThresholdMs
   ).length;

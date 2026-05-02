@@ -19,12 +19,21 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: (key: string) => store[key] ?? null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; },
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
   };
 })();
-Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock, writable: true });
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+});
 
 // ─────────────────────────────────────────────────────────────────
 // TESTS
@@ -103,7 +112,10 @@ describe('knowledgeGraphIndex', () => {
       knowledgeGraphIndex.buildIndex(entries);
       const graph = knowledgeGraphIndex.getGraph();
       // Both share 'intelligence' token → should have edges
-      const edgeCount = Object.values(graph.edges).reduce((sum, arr) => sum + arr.length, 0);
+      const edgeCount = Object.values(graph.edges).reduce(
+        (sum, arr) => sum + arr.length,
+        0
+      );
       expect(edgeCount).toBeGreaterThan(0);
     });
 
@@ -135,7 +147,9 @@ describe('knowledgeGraphIndex', () => {
     });
 
     it('does not throw for unknown nodes', () => {
-      expect(() => knowledgeGraphIndex.addEdge('unknown_a', 'unknown_b', 0.5)).not.toThrow();
+      expect(() =>
+        knowledgeGraphIndex.addEdge('unknown_a', 'unknown_b', 0.5)
+      ).not.toThrow();
     });
   });
 
@@ -190,7 +204,10 @@ describe('knowledgeGraphIndex', () => {
   describe('getRelatedEntryIds', () => {
     it('returns entry IDs from related nodes', () => {
       const entries: GraphEntry[] = [
-        { id: 'entry-a', summary: 'TITANE intelligence artificielle mémoire contextuelle' },
+        {
+          id: 'entry-a',
+          summary: 'TITANE intelligence artificielle mémoire contextuelle',
+        },
         { id: 'entry-b', summary: 'intelligence machine learning deep réseau' },
       ];
       knowledgeGraphIndex.buildIndex(entries);

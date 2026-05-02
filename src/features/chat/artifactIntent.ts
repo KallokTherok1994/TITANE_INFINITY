@@ -275,7 +275,7 @@ const FORMAT_INSTRUCTIONS: Record<string, string> = {
     'Swift 5.9+. Imports nécessaires, types optionnels explicites, guard let/if let, extensions modulaires, documentation ///',
   vue: "Vue.js 3 (Composition API). <script setup lang='ts'>, defineProps typées avec interface, composables si logique réutilisable, <style scoped>.",
   php: 'PHP 8.2+. <?php avec declare(strict_types=1); namespaces PSR-4, types de retour explicites, exceptions typées, PHPDoc.',
-  env: "Fichier .env. Variables en SCREAMING_SNAKE_CASE, commentaires # descriptifs, aucune valeur de secret réelle — utiliser des placeholders (CHANGE_ME, <votre-clé>).",
+  env: 'Fichier .env. Variables en SCREAMING_SNAKE_CASE, commentaires # descriptifs, aucune valeur de secret réelle — utiliser des placeholders (CHANGE_ME, <votre-clé>).',
   md: '',
   txt: '',
 };
@@ -425,17 +425,13 @@ export function inferFileExtension(
   if (text.includes('php')) return 'php';
   if (
     text.includes('typescript') &&
-    (text.includes('react') ||
-      text.includes('composant') ||
-      text.includes('component'))
+    (text.includes('react') || text.includes('composant') || text.includes('component'))
   )
     return 'tsx';
   if (text.includes('typescript')) return 'ts';
   if (
     text.includes('javascript') &&
-    (text.includes('react') ||
-      text.includes('composant') ||
-      text.includes('component'))
+    (text.includes('react') || text.includes('composant') || text.includes('component'))
   )
     return 'jsx';
   if (text.includes('javascript')) return 'js';

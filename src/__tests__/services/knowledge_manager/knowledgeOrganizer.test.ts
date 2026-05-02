@@ -10,7 +10,11 @@ import {
   type KBEntry,
 } from '@/services/knowledge_manager/knowledgeOrganizer';
 
-const makeEntry = (category: string, description = '', triggers: string[] = []): KBEntry => ({
+const makeEntry = (
+  category: string,
+  description = '',
+  triggers: string[] = []
+): KBEntry => ({
   category,
   description,
   retrieval_triggers: triggers,
@@ -18,20 +22,26 @@ const makeEntry = (category: string, description = '', triggers: string[] = []):
 
 describe('clusterByTheme', () => {
   it('classifie pharmacologie en medicine_clinique', () => {
-    const entries = [makeEntry('pharmacologie_clinique_avancee', 'pharmacocinétique ADME')];
+    const entries = [
+      makeEntry('pharmacologie_clinique_avancee', 'pharmacocinétique ADME'),
+    ];
     const clusters = clusterByTheme(entries);
     expect(clusters.medicine_clinique.length).toBe(1);
     expect(clusters.medicine_clinique[0].category).toBe('pharmacologie_clinique_avancee');
   });
 
   it('classifie gastroenterologie en medicine_clinique', () => {
-    const entries = [makeEntry('gastroenterologie_hepatologie', 'tube digestif et motricité')];
+    const entries = [
+      makeEntry('gastroenterologie_hepatologie', 'tube digestif et motricité'),
+    ];
     const clusters = clusterByTheme(entries);
     expect(clusters.medicine_clinique.length).toBe(1);
   });
 
   it('classifie psychologie_cognitive en psychologie_bien_etre', () => {
-    const entries = [makeEntry('psychologie_cognitive', 'biais cognitifs et comportement')];
+    const entries = [
+      makeEntry('psychologie_cognitive', 'biais cognitifs et comportement'),
+    ];
     const clusters = clusterByTheme(entries);
     expect(clusters.psychologie_bien_etre.length).toBe(1);
   });
@@ -89,7 +99,9 @@ describe('detectKnowledgeGaps', () => {
   });
 
   it('signale les thèmes absents', () => {
-    const entries = [makeEntry('pharmacologie_clinique_avancee', 'pharmacologie clinique')];
+    const entries = [
+      makeEntry('pharmacologie_clinique_avancee', 'pharmacologie clinique'),
+    ];
     const gaps = detectKnowledgeGaps(entries);
     expect(gaps.length).toBeGreaterThan(0);
   });
@@ -124,7 +136,9 @@ describe('getKBStats', () => {
   });
 
   it('expose themeCoverage avec les bons thèmes', () => {
-    const entries = [makeEntry('pharmacologie_clinique_avancee', 'pharmacologie clinique')];
+    const entries = [
+      makeEntry('pharmacologie_clinique_avancee', 'pharmacologie clinique'),
+    ];
     const stats = getKBStats(entries);
     expect(stats.themeCoverage).toBeDefined();
     expect(typeof stats.themeCoverage.medicine_clinique).toBe('number');

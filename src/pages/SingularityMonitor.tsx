@@ -284,11 +284,7 @@ const SingularityMonitor = memo(() => {
         )}
 
         {/* ── MetaEnergy — Métriques réelles (V32 Phase 10) ── */}
-        <Card
-          variant="solid"
-          padding={4}
-          data-testid="meta-energy-panel"
-        >
+        <Card variant="solid" padding={4} data-testid="meta-energy-panel">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Battery className="w-4 h-4 text-lime-400" />
@@ -303,10 +299,7 @@ const SingularityMonitor = memo(() => {
           </div>
 
           {metaEnergy.error ? (
-            <p
-              className="text-xs text-red-400"
-              data-testid="meta-energy-error"
-            >
+            <p className="text-xs text-red-400" data-testid="meta-energy-error">
               {metaEnergy.error}
             </p>
           ) : (
@@ -354,10 +347,16 @@ const SingularityMonitor = memo(() => {
                 {metaEnergy.diagnostics ? (
                   <>
                     <Badge
-                      variant={metaEnergy.diagnostics.homeostasis_in_balance ? 'success' : 'warning'}
+                      variant={
+                        metaEnergy.diagnostics.homeostasis_in_balance
+                          ? 'success'
+                          : 'warning'
+                      }
                       size="sm"
                     >
-                      {metaEnergy.diagnostics.homeostasis_in_balance ? 'Équilibrée' : 'Dérive'}
+                      {metaEnergy.diagnostics.homeostasis_in_balance
+                        ? 'Équilibrée'
+                        : 'Dérive'}
                     </Badge>
                     <p className="text-xs text-gray-400 mt-1">
                       Δ {metaEnergy.diagnostics.homeostasis_deviation > 0 ? '+' : ''}

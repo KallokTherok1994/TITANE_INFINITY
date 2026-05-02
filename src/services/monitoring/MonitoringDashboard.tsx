@@ -72,9 +72,15 @@ const MonitoringDashboard: React.FC = () => {
       {health && (
         <section
           data-testid="monitoring-dashboard-health-metrics"
-          style={{ marginTop: 10, borderTop: '1px solid rgba(148,163,184,0.2)', paddingTop: 8 }}
+          style={{
+            marginTop: 10,
+            borderTop: '1px solid rgba(148,163,184,0.2)',
+            paddingTop: 8,
+          }}
         >
-          <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.7 }}>Métriques IPC projet</p>
+          <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.7 }}>
+            Métriques IPC projet
+          </p>
           <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12 }}>
             <li data-testid="monitoring-dashboard-health-recurrence">
               {`Récurrence incidents : ${(health.incidentRecurrenceRate * 100).toFixed(1)}%`}

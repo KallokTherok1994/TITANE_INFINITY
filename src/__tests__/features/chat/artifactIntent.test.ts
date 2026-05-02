@@ -87,7 +87,9 @@ describe('artifactIntent', () => {
   });
 
   it('classifies "implémente un service TypeScript" as CREATE_FILE', () => {
-    expect(classifyArtifactIntent('implémente un service TypeScript')).toBe('CREATE_FILE');
+    expect(classifyArtifactIntent('implémente un service TypeScript')).toBe(
+      'CREATE_FILE'
+    );
   });
 
   it('classifies "build a python module" as CREATE_FILE', () => {

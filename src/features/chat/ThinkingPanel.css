@@ -340,7 +340,7 @@
   }
 
   /* v31.2.16: ThinkingPanel idle masqué sur mobile — libère espace messages */
-  .thinking-panel-compact[data-state="idle"] {
+  .thinking-panel-compact[data-state='idle'] {
     display: none;
   }
 }

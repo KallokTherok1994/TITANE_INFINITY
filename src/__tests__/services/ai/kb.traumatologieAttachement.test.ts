@@ -9,9 +9,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import {
-  CHAT_MODES_CONFIG,
-} from '@/services/ai/chatModes.config';
+import { CHAT_MODES_CONFIG } from '@/services/ai/chatModes.config';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Importation directe des JSON de knowledge base pour validation structurelle
@@ -21,7 +19,6 @@ import attachementKB from '../../../../data/knowledge_base/default/neuroscience_
 
 // ─────────────────────────────────────────────────────────────────────────────
 describe('KB traumatologie_complexe (Phase 26 — v31.3.3)', () => {
-
   it('le fichier JSON est chargeable et a la bonne version', () => {
     expect(traumatologieKB).toBeDefined();
     expect(traumatologieKB.version).toBe('v31.3.3');
@@ -38,49 +35,90 @@ describe('KB traumatologie_complexe (Phase 26 — v31.3.3)', () => {
 
   it('les triggers couvrent les concepts C-PTSD / trauma complexe', () => {
     const triggers = traumatologieKB.retrieval_triggers as string[];
-    expect(triggers.some(t => t.toLowerCase().includes('c-ptsd') || t.toLowerCase().includes('ptsd complexe'))).toBe(true);
-    expect(triggers.some(t => t.toLowerCase().includes('window of tolerance') || t.toLowerCase().includes('fenêtre de tolérance'))).toBe(true);
-    expect(triggers.some(t => t.toLowerCase().includes('polyvagal') || t.toLowerCase().includes('polyvagale'))).toBe(true);
-    expect(triggers.some(t => t.toLowerCase().includes('4f') || t.toLowerCase().includes('pete walker'))).toBe(true);
+    expect(
+      triggers.some(
+        t =>
+          t.toLowerCase().includes('c-ptsd') || t.toLowerCase().includes('ptsd complexe')
+      )
+    ).toBe(true);
+    expect(
+      triggers.some(
+        t =>
+          t.toLowerCase().includes('window of tolerance') ||
+          t.toLowerCase().includes('fenêtre de tolérance')
+      )
+    ).toBe(true);
+    expect(
+      triggers.some(
+        t =>
+          t.toLowerCase().includes('polyvagal') || t.toLowerCase().includes('polyvagale')
+      )
+    ).toBe(true);
+    expect(
+      triggers.some(
+        t => t.toLowerCase().includes('4f') || t.toLowerCase().includes('pete walker')
+      )
+    ).toBe(true);
     expect(triggers.some(t => t.toLowerCase().includes('dissociation'))).toBe(true);
     expect(triggers.some(t => t.toLowerCase().includes('hypervigilance'))).toBe(true);
-    expect(triggers.some(t => t.toLowerCase().includes('grounding') || t.toLowerCase().includes('ancrage'))).toBe(true);
+    expect(
+      triggers.some(
+        t => t.toLowerCase().includes('grounding') || t.toLowerCase().includes('ancrage')
+      )
+    ).toBe(true);
   });
 
   it('la section cadre_diagnostique est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['cadre_diagnostique']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['cadre_diagnostique']
+    ).toBeDefined();
   });
 
   it('la section theorie_polyvagale est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['theorie_polyvagale']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['theorie_polyvagale']
+    ).toBeDefined();
   });
 
   it('la section window_of_tolerance est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['window_of_tolerance']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['window_of_tolerance']
+    ).toBeDefined();
   });
 
   it('la section reponses_4F_pete_walker est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['reponses_4F_pete_walker']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['reponses_4F_pete_walker']
+    ).toBeDefined();
   });
 
   it('la section neurobiologie_trauma est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['neurobiologie_trauma']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['neurobiologie_trauma']
+    ).toBeDefined();
   });
 
   it('la section honte_toxique est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['honte_toxique']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['honte_toxique']
+    ).toBeDefined();
   });
 
   it('la section phases_traitement_trauma est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['phases_traitement_trauma']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['phases_traitement_trauma']
+    ).toBeDefined();
   });
 
   it('la section outils_stabilisation est présente', () => {
-    expect((traumatologieKB.sections as Record<string, unknown>)['outils_stabilisation']).toBeDefined();
+    expect(
+      (traumatologieKB.sections as Record<string, unknown>)['outils_stabilisation']
+    ).toBeDefined();
   });
 
   it('les 3 circuits polyvagaux sont définis', () => {
-    const pv = (traumatologieKB.sections as any)['theorie_polyvagale']?.contenu?.trois_circuits;
+    const pv = (traumatologieKB.sections as any)['theorie_polyvagale']?.contenu
+      ?.trois_circuits;
     expect(pv?.ventral_vagal).toBeDefined();
     expect(pv?.sympathique).toBeDefined();
     expect(pv?.dorsal_vagal).toBeDefined();
@@ -95,7 +133,8 @@ describe('KB traumatologie_complexe (Phase 26 — v31.3.3)', () => {
   });
 
   it('les zones hyperactivation et hypoactivation de la fenêtre sont définies', () => {
-    const zones = (traumatologieKB.sections as any)['window_of_tolerance']?.contenu?.zones;
+    const zones = (traumatologieKB.sections as any)['window_of_tolerance']?.contenu
+      ?.zones;
     expect(zones?.hyperactivation).toBeDefined();
     expect(zones?.hypoactivation).toBeDefined();
     expect(zones?.fenêtre_optimale).toBeDefined();
@@ -111,7 +150,9 @@ describe('KB traumatologie_complexe (Phase 26 — v31.3.3)', () => {
 
   it('van der kolk est référencé dans les auteurs clés', () => {
     const neuro = (traumatologieKB.sections as any)['neurobiologie_trauma'];
-    const auteursStr = JSON.stringify(neuro?.auteurs_clés ?? neuro?.auteurs_cles ?? neuro).toLowerCase();
+    const auteursStr = JSON.stringify(
+      neuro?.auteurs_clés ?? neuro?.auteurs_cles ?? neuro
+    ).toLowerCase();
     expect(auteursStr).toContain('van der kolk');
   });
 
@@ -124,7 +165,6 @@ describe('KB traumatologie_complexe (Phase 26 — v31.3.3)', () => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 describe('KB neuroscience_attachement (Phase 26 — v31.3.4)', () => {
-
   it('le fichier JSON est chargeable et a la bonne version', () => {
     expect(attachementKB).toBeDefined();
     expect(attachementKB.version).toBe('v31.3.4');
@@ -141,40 +181,76 @@ describe('KB neuroscience_attachement (Phase 26 — v31.3.4)', () => {
 
   it("les triggers couvrent les styles d'attachement", () => {
     const triggers = attachementKB.retrieval_triggers as string[];
-    expect(triggers.some(t => t.toLowerCase().includes('attachement anxieux'))).toBe(true);
-    expect(triggers.some(t => t.toLowerCase().includes('attachement évitant') || t.toLowerCase().includes('attachement evitant'))).toBe(true);
-    expect(triggers.some(t => t.toLowerCase().includes('attachement désorganisé') || t.toLowerCase().includes('attachement desorganise'))).toBe(true);
-    expect(triggers.some(t => t.toLowerCase().includes('attachement sécure') || t.toLowerCase().includes('attachement secure'))).toBe(true);
+    expect(triggers.some(t => t.toLowerCase().includes('attachement anxieux'))).toBe(
+      true
+    );
+    expect(
+      triggers.some(
+        t =>
+          t.toLowerCase().includes('attachement évitant') ||
+          t.toLowerCase().includes('attachement evitant')
+      )
+    ).toBe(true);
+    expect(
+      triggers.some(
+        t =>
+          t.toLowerCase().includes('attachement désorganisé') ||
+          t.toLowerCase().includes('attachement desorganise')
+      )
+    ).toBe(true);
+    expect(
+      triggers.some(
+        t =>
+          t.toLowerCase().includes('attachement sécure') ||
+          t.toLowerCase().includes('attachement secure')
+      )
+    ).toBe(true);
   });
 
   it('les triggers couvrent la neurobiologie du lien', () => {
     const triggers = attachementKB.retrieval_triggers as string[];
-    expect(triggers.some(t => t.toLowerCase().includes('ocytocine') || t.toLowerCase().includes('ocytocin'))).toBe(true);
+    expect(
+      triggers.some(
+        t => t.toLowerCase().includes('ocytocine') || t.toLowerCase().includes('ocytocin')
+      )
+    ).toBe(true);
     expect(triggers.some(t => t.toLowerCase().includes('bowlby'))).toBe(true);
   });
 
   it('la section histoire_theorie est présente', () => {
-    expect((attachementKB.sections as Record<string, unknown>)['histoire_theorie']).toBeDefined();
+    expect(
+      (attachementKB.sections as Record<string, unknown>)['histoire_theorie']
+    ).toBeDefined();
   });
 
   it('la section styles_attachement_enfant est présente', () => {
-    expect((attachementKB.sections as Record<string, unknown>)['styles_attachement_enfant']).toBeDefined();
+    expect(
+      (attachementKB.sections as Record<string, unknown>)['styles_attachement_enfant']
+    ).toBeDefined();
   });
 
   it('la section styles_attachement_adulte est présente', () => {
-    expect((attachementKB.sections as Record<string, unknown>)['styles_attachement_adulte']).toBeDefined();
+    expect(
+      (attachementKB.sections as Record<string, unknown>)['styles_attachement_adulte']
+    ).toBeDefined();
   });
 
   it('la section neurobiologie_lien est présente', () => {
-    expect((attachementKB.sections as Record<string, unknown>)['neurobiologie_lien']).toBeDefined();
+    expect(
+      (attachementKB.sections as Record<string, unknown>)['neurobiologie_lien']
+    ).toBeDefined();
   });
 
   it('la section attachement_relations_adultes est présente', () => {
-    expect((attachementKB.sections as Record<string, unknown>)['attachement_relations_adultes']).toBeDefined();
+    expect(
+      (attachementKB.sections as Record<string, unknown>)['attachement_relations_adultes']
+    ).toBeDefined();
   });
 
   it('la section guerison_attachement est présente', () => {
-    expect((attachementKB.sections as Record<string, unknown>)['guerison_attachement']).toBeDefined();
+    expect(
+      (attachementKB.sections as Record<string, unknown>)['guerison_attachement']
+    ).toBeDefined();
   });
 
   it('les 4 styles enfant sont définis (A, B, C, D)', () => {
@@ -188,8 +264,12 @@ describe('KB neuroscience_attachement (Phase 26 — v31.3.4)', () => {
   it('les 4 styles adultes sont définis', () => {
     const styles = (attachementKB.sections as any)['styles_attachement_adulte']?.contenu;
     expect(styles?.secure_adulte).toBeDefined();
-    expect(styles?.anxieux_preoccupied_adulte ?? styles?.anxieux_préoccupied_adulte).toBeDefined();
-    expect(styles?.evitant_dismissing_adulte ?? styles?.évitant_dismissing_adulte).toBeDefined();
+    expect(
+      styles?.anxieux_preoccupied_adulte ?? styles?.anxieux_préoccupied_adulte
+    ).toBeDefined();
+    expect(
+      styles?.evitant_dismissing_adulte ?? styles?.évitant_dismissing_adulte
+    ).toBeDefined();
     expect(styles?.fearful_avoidant_adulte).toBeDefined();
   });
 
@@ -206,19 +286,23 @@ describe('KB neuroscience_attachement (Phase 26 — v31.3.4)', () => {
   });
 
   it('les approches thérapeutiques EFT et EMDR sont référencées', () => {
-    const app = (attachementKB.sections as any)['guerison_attachement']?.contenu?.approches_thérapeutiques
-      ?? (attachementKB.sections as any)['guerison_attachement']?.contenu?.approches_therapeutiques;
+    const app =
+      (attachementKB.sections as any)['guerison_attachement']?.contenu
+        ?.approches_thérapeutiques ??
+      (attachementKB.sections as any)['guerison_attachement']?.contenu
+        ?.approches_therapeutiques;
     expect(app?.EFT).toBeDefined();
     expect(app?.EMDR_attachement ?? app?.EMDR).toBeDefined();
   });
 
-  it('Bowlby est référencé dans l\'histoire de la théorie', () => {
+  it("Bowlby est référencé dans l'histoire de la théorie", () => {
     const hist = (attachementKB.sections as any)['histoire_theorie']?.contenu;
     expect(hist?.john_bowlby ?? hist?.bowlby).toBeDefined();
   });
 
   it('les ressources bibliographiques sont présentes', () => {
-    const res = (attachementKB.sections as any)['ressources_attachement']?.contenu?.ouvrages_fondamentaux as unknown[];
+    const res = (attachementKB.sections as any)['ressources_attachement']?.contenu
+      ?.ouvrages_fondamentaux as unknown[];
     expect(Array.isArray(res)).toBe(true);
     expect(res.length).toBeGreaterThanOrEqual(3);
   });
@@ -260,17 +344,18 @@ describe('Mode psychologie_profils — Couverture traumatologie + attachement', 
   it('le system prompt mentionne les bases théoriques du trauma (Pete Walker ou Van der Kolk)', () => {
     const mode = CHAT_MODES_CONFIG['psychologie_profils'];
     const prompt = mode.systemPrompt ?? '';
-    const hasPeteWalker = prompt.toLowerCase().includes('pete walker') || prompt.toLowerCase().includes('4f');
-    const hasVanDerKolk = prompt.toLowerCase().includes('van der kolk') || prompt.toLowerCase().includes('corps');
+    const hasPeteWalker =
+      prompt.toLowerCase().includes('pete walker') || prompt.toLowerCase().includes('4f');
+    const hasVanDerKolk =
+      prompt.toLowerCase().includes('van der kolk') ||
+      prompt.toLowerCase().includes('corps');
     const hasTrauma = prompt.toLowerCase().includes('trauma');
     expect(hasTrauma || hasPeteWalker || hasVanDerKolk).toBe(true);
   });
 
-  it('le system prompt mentionne les styles d\'attachement', () => {
+  it("le system prompt mentionne les styles d'attachement", () => {
     const mode = CHAT_MODES_CONFIG['psychologie_profils'];
     const prompt = (mode.systemPrompt ?? '').toLowerCase();
-    expect(
-      prompt.includes('attachement') || prompt.includes('attachment')
-    ).toBe(true);
+    expect(prompt.includes('attachement') || prompt.includes('attachment')).toBe(true);
   });
 });

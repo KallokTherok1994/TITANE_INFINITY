@@ -177,12 +177,27 @@
       "cognitive_fingerprint": {
         "learning_style": ["systemique", "visuel_spatial", "logique_structurel"],
         "processing_mode": "synthese_structuree",
-        "preferred_formats": ["mind_maps", "protocoles_etapes", "matrices_comparatives", "tableaux"],
+        "preferred_formats": [
+          "mind_maps",
+          "protocoles_etapes",
+          "matrices_comparatives",
+          "tableaux"
+        ],
         "validation_mode": "terrain_et_experience",
         "decision_style": "delibere_deliberatif",
         "energy_rhythm": "deuxieme_vitesse_comme_etalon",
-        "overload_signals": ["multiples_fronts", "dispersion", "brouillard_mental", "urgence_permanente"],
-        "recovery_anchors": ["recentrage_axe", "pause_intentionnelle", "retour_vivant", "action_unique"]
+        "overload_signals": [
+          "multiples_fronts",
+          "dispersion",
+          "brouillard_mental",
+          "urgence_permanente"
+        ],
+        "recovery_anchors": [
+          "recentrage_axe",
+          "pause_intentionnelle",
+          "retour_vivant",
+          "action_unique"
+        ]
       }
     },
     "twins_sync": {

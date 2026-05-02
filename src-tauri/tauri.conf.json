@@ -1,5 +1,5 @@
 {
-  "version": "32.0.0",
+  "version": "32.0.1",
   "identifier": "com.titane.infinity",
   "bundle": {
     "icon": [
@@ -38,20 +38,13 @@
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": [
-          "$APPDATA/**",
-          "$RESOURCE/**",
-          "$APPCONFIG/**",
-          "$APPLOCALDATA/**"
-        ]
+        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": [
-            "main"
-          ],
+          "windows": ["main"],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -1274,18 +1267,42 @@
             {
               "command": "performance_get_metrics"
             },
-            { "command": "agenda_save_event" },
-            { "command": "agenda_save_events" },
-            { "command": "agenda_delete_event" },
-            { "command": "agenda_sync" },
-            { "command": "calibrate_titane_voice" },
-            { "command": "chat_mode_change" },
-            { "command": "chat_mode_sync" },
-            { "command": "evolution_save_state" },
-            { "command": "submit_evolution_data" },
-            { "command": "knowledge_ingest" },
-            { "command": "knowledge_save_state" },
-            { "command": "progression_save_state" }
+            {
+              "command": "agenda_save_event"
+            },
+            {
+              "command": "agenda_save_events"
+            },
+            {
+              "command": "agenda_delete_event"
+            },
+            {
+              "command": "agenda_sync"
+            },
+            {
+              "command": "calibrate_titane_voice"
+            },
+            {
+              "command": "chat_mode_change"
+            },
+            {
+              "command": "chat_mode_sync"
+            },
+            {
+              "command": "evolution_save_state"
+            },
+            {
+              "command": "submit_evolution_data"
+            },
+            {
+              "command": "knowledge_ingest"
+            },
+            {
+              "command": "knowledge_save_state"
+            },
+            {
+              "command": "progression_save_state"
+            }
           ],
           "deny": []
         }

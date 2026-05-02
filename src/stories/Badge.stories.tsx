@@ -23,4 +23,6 @@ export const Success: Story = { args: { children: 'Actif', variant: 'success' } 
 export const Error: Story = { args: { children: 'Erreur', variant: 'error' } };
 export const Warning: Story = { args: { children: 'Avertissement', variant: 'warning' } };
 export const Info: Story = { args: { children: 'Info', variant: 'info' } };
-export const Small: Story = { args: { children: 'v31.2', size: 'sm', variant: 'default' } };
+export const Small: Story = {
+  args: { children: 'v31.2', size: 'sm', variant: 'default' },
+};

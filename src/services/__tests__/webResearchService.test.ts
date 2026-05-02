@@ -58,9 +58,7 @@ function makeResearchReport(overrides: Partial<ResearchReport> = {}): ResearchRe
   };
 }
 
-function makeWikiJson(
-  items: Array<{ pageid?: number; title: string; snippet: string }>
-) {
+function makeWikiJson(items: Array<{ pageid?: number; title: string; snippet: string }>) {
   return {
     query: {
       search: items.map((it, i) => ({
@@ -97,10 +95,15 @@ describe('webResearch — E2E mock injection', () => {
     const report = makeResearchReport({
       answer: {
         answer: 'Mock E2E',
-        citations: [{
-          url: 'https://example.com', title: 'Source', excerpt: 'Extrait',
-          accessed_at: '2026-04-28T10:00:00Z', locator_text: 'p=1',
-        }],
+        citations: [
+          {
+            url: 'https://example.com',
+            title: 'Source',
+            excerpt: 'Extrait',
+            accessed_at: '2026-04-28T10:00:00Z',
+            locator_text: 'p=1',
+          },
+        ],
         limitations: [],
         trace_id: 'trace-e2e',
         sources_count: 1,
@@ -188,9 +191,9 @@ describe('webResearch — Tauri IPC', () => {
     tauriMock.mockRejectedValueOnce(new Error('IPC_TIMEOUT'));
 
     const { webResearch } = await import('../webResearchService');
-    await expect(
-      webResearch({ question: 'test' }, { mode: 'WEB_LIVE' })
-    ).rejects.toThrow('IPC_TIMEOUT');
+    await expect(webResearch({ question: 'test' }, { mode: 'WEB_LIVE' })).rejects.toThrow(
+      'IPC_TIMEOUT'
+    );
   });
 
   it("appelle tauri en mode OFFLINE sans lever d'erreur", async () => {
@@ -306,7 +309,11 @@ describe('webSearch — mode Tauri (IPC)', () => {
   });
 
   it('retourne content:null quand IPC retourne null', async () => {
-    safeInvokeCanonicalMock.mockResolvedValueOnce({ ok: true, content: null, error: null });
+    safeInvokeCanonicalMock.mockResolvedValueOnce({
+      ok: true,
+      content: null,
+      error: null,
+    });
 
     const { webSearch } = await import('../webResearchService');
     const result = await webSearch('vide');
@@ -316,13 +323,17 @@ describe('webSearch — mode Tauri (IPC)', () => {
     expect(result.error).toBeNull();
   });
 
-  it('préserve l\'ordre des résultats multiples', async () => {
+  it("préserve l'ordre des résultats multiples", async () => {
     const items = [
       { title: 'A', url: 'https://a.com', snippet: 'Premier' },
       { title: 'B', url: 'https://b.com', snippet: 'Deuxième' },
       { title: 'C', url: 'https://c.com', snippet: 'Troisième' },
     ];
-    safeInvokeCanonicalMock.mockResolvedValueOnce({ ok: true, content: items, error: null });
+    safeInvokeCanonicalMock.mockResolvedValueOnce({
+      ok: true,
+      content: items,
+      error: null,
+    });
 
     const { webSearch } = await import('../webResearchService');
     const result = await webSearch('multi résultats', 10);
@@ -363,10 +374,15 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
 
   it('appelle Wikipedia FR directement et retourne les résultats parsés', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([
-        { title: 'Intelligence artificielle', snippet: 'Capacité des <b>systèmes</b> computationnels.' },
-        { title: 'Machine learning', snippet: "Sous-domaine de l'IA." },
-      ]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'Intelligence artificielle',
+            snippet: 'Capacité des <b>systèmes</b> computationnels.',
+          },
+          { title: 'Machine learning', snippet: "Sous-domaine de l'IA." },
+        ])
+      )
     );
 
     const { webSearch } = await import('../webResearchService');
@@ -383,7 +399,9 @@ describe('webSearch — mode browser (Tauri indisponible)', () => {
     expect(result.ok).toBe(true);
     expect(result.content!.length).toBe(2);
     expect(result.content![0].title).toBe('Intelligence artificielle');
-    expect(result.content![0].url).toBe('https://fr.wikipedia.org/wiki/Intelligence_artificielle');
+    expect(result.content![0].url).toBe(
+      'https://fr.wikipedia.org/wiki/Intelligence_artificielle'
+    );
     expect(result.content![0].snippet).toBe('Capacité des systèmes computationnels.');
     expect(safeInvokeCanonicalMock).not.toHaveBeenCalled();
   });
@@ -485,7 +503,9 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
 
   it('respecte la limite maxResults (3 sur 10 disponibles)', async () => {
     const search = Array.from({ length: 10 }, (_, i) => ({
-      pageid: i + 1, title: `Article ${i + 1}`, snippet: `Contenu ${i + 1}`,
+      pageid: i + 1,
+      title: `Article ${i + 1}`,
+      snippet: `Contenu ${i + 1}`,
     }));
     fetchMock.mockResolvedValueOnce(makeFetchSuccess({ query: { search } }));
 
@@ -511,7 +531,9 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
 
   it('génère les URLs Wikipedia FR correctement (espaces → underscores)', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{ title: 'Réseau de neurones', snippet: 'Modèle.' }]))
+      makeFetchSuccess(
+        makeWikiJson([{ title: 'Réseau de neurones', snippet: 'Modèle.' }])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -523,10 +545,15 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
 
   it('strip les balises HTML des snippets (<b>, <span>, <em>)', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{
-        title: 'Test',
-        snippet: '<b>Important</b> concept in <em>machine</em> <span class="match">learning</span>.',
-      }]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'Test',
+            snippet:
+              '<b>Important</b> concept in <em>machine</em> <span class="match">learning</span>.',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -538,10 +565,14 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
 
   it('decode les entités HTML (&amp; &quot; &#039; &lt; &gt;)', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{
-        title: 'Entités',
-        snippet: 'A &amp; B &quot;cité&quot; &#039;simple&#039; &lt;tag&gt;',
-      }]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'Entités',
+            snippet: 'A &amp; B &quot;cité&quot; &#039;simple&#039; &lt;tag&gt;',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -600,9 +631,15 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
 
   it('encode les parenthèses dans le titre → URL Wikipedia correcte', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([
-        { pageid: 5117, title: 'Python (programming language)', snippet: 'High-level language.' }
-      ]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            pageid: 5117,
+            title: 'Python (programming language)',
+            snippet: 'High-level language.',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -612,7 +649,7 @@ describe('browserWebSearch — parseur Wikipedia JSON', () => {
     expect(result.content![0].url).toContain('wikipedia.org/wiki/');
   });
 
-  it('construit l\'URL fetch avec srlimit correct', async () => {
+  it("construit l'URL fetch avec srlimit correct", async () => {
     fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
     // EN fallback (FR empty)
     fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
@@ -656,7 +693,7 @@ describe('webSearch — scénarios de sécurité', () => {
     expect(calledUrl).toContain('%3C');
   });
 
-  it("encode les tentatives SQL injection dans la requête URL", async () => {
+  it('encode les tentatives SQL injection dans la requête URL', async () => {
     fetchMock.mockResolvedValueOnce(makeFetchSuccess(makeWikiJson([])));
 
     const { webSearch } = await import('../webResearchService');
@@ -670,10 +707,14 @@ describe('webSearch — scénarios de sécurité', () => {
 
   it('strip le markup XSS injecté via snippet Wikipedia', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{
-        title: 'XSS',
-        snippet: '<img src=x onerror="alert(1)"><script>evil()</script>texte propre',
-      }]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'XSS',
+            snippet: '<img src=x onerror="alert(1)"><script>evil()</script>texte propre',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -717,11 +758,22 @@ describe('webSearch — concurrence et edge cases', () => {
   it('deux appels Tauri simultanés sont indépendants', async () => {
     isTauriAvailableMock.mockReturnValue(true);
     safeInvokeCanonicalMock
-      .mockResolvedValueOnce({ ok: true, content: [{ title: 'A', url: 'https://a.com', snippet: 'A' }], error: null })
-      .mockResolvedValueOnce({ ok: true, content: [{ title: 'B', url: 'https://b.com', snippet: 'B' }], error: null });
+      .mockResolvedValueOnce({
+        ok: true,
+        content: [{ title: 'A', url: 'https://a.com', snippet: 'A' }],
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        content: [{ title: 'B', url: 'https://b.com', snippet: 'B' }],
+        error: null,
+      });
 
     const { webSearch } = await import('../webResearchService');
-    const [r1, r2] = await Promise.all([webSearch('requête A', 1), webSearch('requête B', 1)]);
+    const [r1, r2] = await Promise.all([
+      webSearch('requête A', 1),
+      webSearch('requête B', 1),
+    ]);
 
     expect(r1.content![0].title).toBe('A');
     expect(r2.content![0].title).toBe('B');
@@ -735,7 +787,10 @@ describe('webSearch — concurrence et edge cases', () => {
     const { webSearch } = await import('../webResearchService');
     await webSearch('', 5);
 
-    expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('web_search', { query: '', max_results: 5 });
+    expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('web_search', {
+      query: '',
+      max_results: 5,
+    });
   });
 
   it('requête vide en mode browser encode srsearch= sans erreur', async () => {
@@ -790,7 +845,9 @@ describe('webSearch — concurrence et edge cases', () => {
   it('bascule Tauri→browser automatiquement selon isTauriAvailable()', async () => {
     isTauriAvailableMock.mockReturnValueOnce(true);
     safeInvokeCanonicalMock.mockResolvedValueOnce({
-      ok: true, content: [{ title: 'Tauri', url: 'https://t.com', snippet: '' }], error: null,
+      ok: true,
+      content: [{ title: 'Tauri', url: 'https://t.com', snippet: '' }],
+      error: null,
     });
 
     isTauriAvailableMock.mockReturnValueOnce(false);
@@ -854,7 +911,9 @@ describe('webSearch — contrat de réponse WebSearchResponse', () => {
   it('chaque WebSearchResult a title, url, snippet (tous string)', async () => {
     safeInvokeCanonicalMock.mockResolvedValueOnce({
       ok: true,
-      content: [{ title: 'Test Article', url: 'https://example.com', snippet: 'Un snippet.' }],
+      content: [
+        { title: 'Test Article', url: 'https://example.com', snippet: 'Un snippet.' },
+      ],
       error: null,
     });
 
@@ -869,7 +928,9 @@ describe('webSearch — contrat de réponse WebSearchResponse', () => {
 
   it('ok:false implique toujours content:null', async () => {
     safeInvokeCanonicalMock.mockResolvedValueOnce({
-      ok: false, content: null, error: { code: 'ERR', message: 'fail' },
+      ok: false,
+      content: null,
+      error: { code: 'ERR', message: 'fail' },
     });
 
     const { webSearch } = await import('../webResearchService');
@@ -900,10 +961,14 @@ describe('browserWebSearch — stripHtmlTags HTML avancé', () => {
 
   it('strip les tags HTML imbriqués profonds', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{
-        title: 'Imbriqué',
-        snippet: '<div class="match"><b><em>texte</em></b> propre</div>',
-      }]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'Imbriqué',
+            snippet: '<div class="match"><b><em>texte</em></b> propre</div>',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -914,12 +979,17 @@ describe('browserWebSearch — stripHtmlTags HTML avancé', () => {
     expect(result.content![0].snippet).not.toContain('>');
   });
 
-  it("strip les tags avec attributs contenant des guillemets", async () => {
+  it('strip les tags avec attributs contenant des guillemets', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{
-        title: 'Attrs',
-        snippet: '<span class="searchmatch" data-id="42">intelligence</span> artificielle',
-      }]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'Attrs',
+            snippet:
+              '<span class="searchmatch" data-id="42">intelligence</span> artificielle',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -930,10 +1000,14 @@ describe('browserWebSearch — stripHtmlTags HTML avancé', () => {
 
   it('decode enchaîner plusieurs entités HTML dans le même snippet', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{
-        title: 'Multi-entités',
-        snippet: 'A &amp; B &amp; C &quot;triple&quot; &#039;quotes&#039;',
-      }]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'Multi-entités',
+            snippet: 'A &amp; B &amp; C &quot;triple&quot; &#039;quotes&#039;',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -955,10 +1029,14 @@ describe('browserWebSearch — stripHtmlTags HTML avancé', () => {
 
   it('snippet sans HTML reste intact', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([{
-        title: 'Plain',
-        snippet: 'Un texte normal sans markup HTML.',
-      }]))
+      makeFetchSuccess(
+        makeWikiJson([
+          {
+            title: 'Plain',
+            snippet: 'Un texte normal sans markup HTML.',
+          },
+        ])
+      )
     );
 
     const { browserWebSearch } = await import('../webResearchService');
@@ -1032,14 +1110,19 @@ describe('webResearch() — browser mode fallback', () => {
 
   it('retourne un ResearchReport avec citations quand Wikipedia retourne des résultats', async () => {
     fetchMock.mockResolvedValueOnce(
-      makeFetchSuccess(makeWikiJson([
-        { title: 'Intelligence artificielle', snippet: 'Capacité des systèmes.' },
-        { title: 'Machine learning', snippet: "Sous-domaine de l'IA." },
-      ]))
+      makeFetchSuccess(
+        makeWikiJson([
+          { title: 'Intelligence artificielle', snippet: 'Capacité des systèmes.' },
+          { title: 'Machine learning', snippet: "Sous-domaine de l'IA." },
+        ])
+      )
     );
 
     const { webResearch } = await import('../webResearchService');
-    const report = await webResearch({ question: 'intelligence artificielle' }, { mode: 'WEB_LIVE' });
+    const report = await webResearch(
+      { question: 'intelligence artificielle' },
+      { mode: 'WEB_LIVE' }
+    );
 
     expect(report.answer.citations).toHaveLength(2);
     expect(report.answer.citations[0].title).toBe('Intelligence artificielle');
@@ -1094,12 +1177,12 @@ describe('webResearch() — browser mode fallback', () => {
     const { webResearch } = await import('../webResearchService');
     await webResearch({ question: 'test natif' }, { mode: 'WEB_LIVE' });
 
-    expect(tauriMock).toHaveBeenCalledWith('web_research', expect.objectContaining({
-      query: { question: 'test natif' },
-    }));
+    expect(tauriMock).toHaveBeenCalledWith(
+      'web_research',
+      expect.objectContaining({
+        query: { question: 'test natif' },
+      })
+    );
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
-
-
-

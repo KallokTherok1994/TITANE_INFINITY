@@ -137,14 +137,64 @@ export const IDE_DEFAULT_ALLOWED_SCOPES: IDEScopeCategory[] = [
 ];
 
 export const IDE_COMMAND_BOUNDARIES: IDECommandBoundary[] = [
-  { action: 'repo_inventory', boundary: 'READ_ONLY', requires_session: true, requires_unlocked: false },
-  { action: 'file_read', boundary: 'READ_ONLY', requires_session: true, requires_unlocked: false },
-  { action: 'grep_search', boundary: 'READ_ONLY', requires_session: true, requires_unlocked: false },
-  { action: 'git_status', boundary: 'READ_ONLY', requires_session: true, requires_unlocked: false },
-  { action: 'git_diff', boundary: 'READ_ONLY', requires_session: true, requires_unlocked: false },
-  { action: 'safe_command', boundary: 'SAFE_BOUNDED_EXEC', requires_session: true, requires_unlocked: true },
-  { action: 'patch_prepare', boundary: 'WRITE_PREP_ONLY', requires_session: true, requires_unlocked: true },
-  { action: 'git_commit', boundary: 'HUMAN_APPROVAL_REQUIRED', requires_session: true, requires_unlocked: true },
-  { action: 'git_push', boundary: 'FORBIDDEN', requires_session: false, requires_unlocked: false },
-  { action: 'rm_rf', boundary: 'FORBIDDEN', requires_session: false, requires_unlocked: false },
+  {
+    action: 'repo_inventory',
+    boundary: 'READ_ONLY',
+    requires_session: true,
+    requires_unlocked: false,
+  },
+  {
+    action: 'file_read',
+    boundary: 'READ_ONLY',
+    requires_session: true,
+    requires_unlocked: false,
+  },
+  {
+    action: 'grep_search',
+    boundary: 'READ_ONLY',
+    requires_session: true,
+    requires_unlocked: false,
+  },
+  {
+    action: 'git_status',
+    boundary: 'READ_ONLY',
+    requires_session: true,
+    requires_unlocked: false,
+  },
+  {
+    action: 'git_diff',
+    boundary: 'READ_ONLY',
+    requires_session: true,
+    requires_unlocked: false,
+  },
+  {
+    action: 'safe_command',
+    boundary: 'SAFE_BOUNDED_EXEC',
+    requires_session: true,
+    requires_unlocked: true,
+  },
+  {
+    action: 'patch_prepare',
+    boundary: 'WRITE_PREP_ONLY',
+    requires_session: true,
+    requires_unlocked: true,
+  },
+  {
+    action: 'git_commit',
+    boundary: 'HUMAN_APPROVAL_REQUIRED',
+    requires_session: true,
+    requires_unlocked: true,
+  },
+  {
+    action: 'git_push',
+    boundary: 'FORBIDDEN',
+    requires_session: false,
+    requires_unlocked: false,
+  },
+  {
+    action: 'rm_rf',
+    boundary: 'FORBIDDEN',
+    requires_session: false,
+    requires_unlocked: false,
+  },
 ];

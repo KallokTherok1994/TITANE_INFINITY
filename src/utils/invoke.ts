@@ -112,7 +112,8 @@ export async function safeInvokeCanonical<T = unknown>(
     content: null,
     error: {
       code: 'NO_TRANSPORT',
-      message: 'Neither Tauri IPC nor Remote Gateway is available. Configure the gateway in TITANE Settings to connect to the PC mère.',
+      message:
+        'Neither Tauri IPC nor Remote Gateway is available. Configure the gateway in TITANE Settings to connect to the PC mère.',
     },
   };
 }

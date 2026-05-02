@@ -29,9 +29,9 @@ const DEEP_INTERNET_ANALYSIS_INSTRUCTION = [
   'PRÉFÉRENCE PERMANENTE — ANALYSE APPROFONDIE FIABLE ET NATURELLE :',
   "Pour TOUTE demande de recherche, d'analyse ou d'exploration d'un sujet,",
   'applique OBLIGATOIREMENT en interne le protocole suivant en 5 phases.',
-  'IMPORTANT : ta réponse s\'appuie sur ta base de connaissance interne et sur tout',
+  "IMPORTANT : ta réponse s'appuie sur ta base de connaissance interne et sur tout",
   'extrait ou snippet fourni dans le contexte (résultats de recherche intégrés si disponibles).',
-  'Ne prétends PAS avoir accès à internet en temps réel si aucun snippet récent n\'est fourni ;',
+  "Ne prétends PAS avoir accès à internet en temps réel si aucun snippet récent n'est fourni ;",
   'indique clairement la date de tes connaissances et signale les informations potentiellement obsolètes.',
   'PHASE 1 — COLLECTE MAXIMALE : mobilise ta base de connaissance interne et tout',
   'document ou snippet fourni en contexte (encyclopédies, études, perspectives contradictoires) ;',
@@ -46,9 +46,9 @@ const DEEP_INTERNET_ANALYSIS_INSTRUCTION = [
   'identifie les points à vérifier sur des sources récentes si la fraîcheur est critique.',
   'FORMAT : titres en gras (##), listes numérotées ou à puces, aucune section vide.',
   'LONGUEUR : jamais de réponse courte ou superficielle — viser la complétude et la densité informative maximale.',
-  'EXPRESSION : n\'expose pas spontanément tes phases, ton protocole, ni ton raisonnement interne ;',
+  "EXPRESSION : n'expose pas spontanément tes phases, ton protocole, ni ton raisonnement interne ;",
   'utilise-les en coulisses puis livre directement une réponse humaine, naturelle et vivante.',
-  'CRÉATION : si la demande est créative, produis d\'abord le livrable attendu au lieu de décrire ta méthode.',
+  "CRÉATION : si la demande est créative, produis d'abord le livrable attendu au lieu de décrire ta méthode.",
 ].join(' ');
 
 // Types de préférences

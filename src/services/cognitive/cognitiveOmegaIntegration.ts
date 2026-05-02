@@ -44,7 +44,11 @@ import {
 import type { AIMessage as _AIMessage } from '@/services/ai/types';
 import type { ChatMode } from '@/services/ai/chatEngine';
 // v31.2.33: Knowledge graph 2-hop enrichment (HippoRAG-inspired)
-import { knowledgeGraphIndex, extractTokens, nodeId } from '@/services/memory/knowledgeGraphIndex';
+import {
+  knowledgeGraphIndex,
+  extractTokens,
+  nodeId,
+} from '@/services/memory/knowledgeGraphIndex';
 
 /**
  * Memory search result from vector search
@@ -287,7 +291,9 @@ class CognitiveOmegaOrchestrator {
             graphContext = `\n[CONCEPTS RELIÉS (graphe)]\n${relatedLabels.slice(0, 5).join(', ')}`;
           }
         }
-      } catch { /* non-blocking */ }
+      } catch {
+        /* non-blocking */
+      }
       const combined = `${memoriesContext}\n${goalsFactsContext}${graphContext}`.trim();
 
       // Extract goal/fact counts from context

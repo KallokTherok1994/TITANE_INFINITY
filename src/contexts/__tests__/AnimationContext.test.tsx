@@ -10,14 +10,16 @@ vi.mock('@/hooks/usePerformanceMonitor', () => ({
   usePerformanceMonitor: usePerformanceMonitorMock,
 }));
 
-function makePerformanceMock(overrides: Partial<{
-  fps: number;
-  cpuLoad: number;
-  shouldReduceMotion: boolean;
-  shouldThrottle: boolean;
-  duration: number;
-  skipAnimation: boolean;
-}> = {}) {
+function makePerformanceMock(
+  overrides: Partial<{
+    fps: number;
+    cpuLoad: number;
+    shouldReduceMotion: boolean;
+    shouldThrottle: boolean;
+    duration: number;
+    skipAnimation: boolean;
+  }> = {}
+) {
   const {
     fps = 60,
     cpuLoad = 10,
@@ -126,7 +128,9 @@ describe('AnimationContext', () => {
   });
 
   it('exposes shouldThrottle=false when performance is healthy', () => {
-    usePerformanceMonitorMock.mockReturnValue(makePerformanceMock({ fps: 120, shouldThrottle: false }));
+    usePerformanceMonitorMock.mockReturnValue(
+      makePerformanceMock({ fps: 120, shouldThrottle: false })
+    );
 
     const Probe = () => {
       const { shouldThrottle, fps } = useAnimation();

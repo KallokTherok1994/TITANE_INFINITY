@@ -106,7 +106,7 @@ describe('CLB — contenu core créativité et apprentissage', () => {
     expect(text(clb)).toMatch(/Anderson/);
     expect(text(clb)).toMatch(/[Mm]émoriser|[Cc]réer/);
   });
-  it('contient Ebbinghaus et courbe d\'oubli', () => {
+  it("contient Ebbinghaus et courbe d'oubli", () => {
     expect(text(clb)).toMatch(/Ebbinghaus/);
     expect(text(clb)).toMatch(/oubli/);
     expect(text(clb)).toMatch(/répétition espacée|spaced repetition|Anki/);
@@ -188,7 +188,7 @@ describe('RAC — structure JSON', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('RAC — contenu core relations et attachement adulte', () => {
-  it('contient Sternberg triangle de l\'amour', () => {
+  it("contient Sternberg triangle de l'amour", () => {
     expect(text(rac)).toMatch(/Sternberg/);
     expect(text(rac)).toMatch(/triangle/i);
     expect(text(rac)).toMatch(/consummate|parfait/);
@@ -240,7 +240,7 @@ describe('RAC — contenu core relations et attachement adulte', () => {
     expect(text(rac)).toMatch(/[Rr]upture|deuil amoureux/);
     expect(text(rac)).toMatch(/dopaminergique|[Rr]écompense/);
   });
-  it('contient les 5 langages de l\'amour (Chapman)', () => {
+  it("contient les 5 langages de l'amour (Chapman)", () => {
     expect(text(rac)).toMatch(/Chapman/);
     expect(text(rac)).toMatch(/5 langages|cinq langages/i);
     expect(text(rac)).toMatch(/[Tt]emps de qualit[eé]|[Cc]ontact physique/);
@@ -307,15 +307,21 @@ describe('CLB — unit core précis', () => {
     expect(s).toMatch(/Wallas/);
   });
   it('Kolb apparaît dans apprentissage_modeles_pedagogiques', () => {
-    const s = text((clb.sections as Record<string, unknown>)['apprentissage_modeles_pedagogiques']);
+    const s = text(
+      (clb.sections as Record<string, unknown>)['apprentissage_modeles_pedagogiques']
+    );
     expect(s).toMatch(/Kolb/);
   });
   it('Ebbinghaus apparaît dans memoire_strategies_optimales', () => {
-    const s = text((clb.sections as Record<string, unknown>)['memoire_strategies_optimales']);
+    const s = text(
+      (clb.sections as Record<string, unknown>)['memoire_strategies_optimales']
+    );
     expect(s).toMatch(/Ebbinghaus/);
   });
   it('Dweck apparaît dans metacognition_autoregulation', () => {
-    const s = text((clb.sections as Record<string, unknown>)['metacognition_autoregulation']);
+    const s = text(
+      (clb.sections as Record<string, unknown>)['metacognition_autoregulation']
+    );
     expect(s).toMatch(/Dweck/);
   });
   it('Gardner apparaît dans intelligences_theories', () => {
@@ -323,7 +329,9 @@ describe('CLB — unit core précis', () => {
     expect(s).toMatch(/Gardner/);
   });
   it('BDNF apparaît dans neurosciences_apprentissage', () => {
-    const s = text((clb.sections as Record<string, unknown>)['neurosciences_apprentissage']);
+    const s = text(
+      (clb.sections as Record<string, unknown>)['neurosciences_apprentissage']
+    );
     expect(s).toMatch(/BDNF/);
   });
 });
@@ -338,7 +346,9 @@ describe('RAC — unit core précis', () => {
     expect(s).toMatch(/Sternberg/);
   });
   it('ECR-R apparaît dans attachement_adulte_couple', () => {
-    const s = text((rac.sections as Record<string, unknown>)['attachement_adulte_couple']);
+    const s = text(
+      (rac.sections as Record<string, unknown>)['attachement_adulte_couple']
+    );
     expect(s).toMatch(/ECR-R/);
   });
   it('Mépris apparaît dans gottman_science_couple', () => {
@@ -346,7 +356,9 @@ describe('RAC — unit core précis', () => {
     expect(s).toMatch(/[Mm]épris/);
   });
   it('Young apparaît dans dependance_affective_schemas', () => {
-    const s = text((rac.sections as Record<string, unknown>)['dependance_affective_schemas']);
+    const s = text(
+      (rac.sections as Record<string, unknown>)['dependance_affective_schemas']
+    );
     expect(s).toMatch(/Young/);
   });
   it('Fisher apparaît dans rupture_deuil_amoureux', () => {
@@ -354,7 +366,9 @@ describe('RAC — unit core précis', () => {
     expect(s).toMatch(/Fisher/);
   });
   it('Chapman apparaît dans communication_couples_therapie', () => {
-    const s = text((rac.sections as Record<string, unknown>)['communication_couples_therapie']);
+    const s = text(
+      (rac.sections as Record<string, unknown>)['communication_couples_therapie']
+    );
     expect(s).toMatch(/Chapman/);
   });
 });

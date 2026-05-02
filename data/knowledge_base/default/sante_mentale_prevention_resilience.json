@@ -72,7 +72,12 @@
       "definition_OMS": "La santé mentale est un état de bien-être dans lequel une personne peut se réaliser, faire face aux pressions normales de la vie, travailler de manière productive et contribuer à sa communauté — OMS 2004",
       "literatie_sante_mentale": {
         "definition": "Jorm (1994) — connaissance et croyances sur les troubles mentaux qui aident à les reconnaître, gérer et prévenir",
-        "composantes": ["Reconnaître les troubles", "Connaître les traitements efficaces", "Réduire les barrières à l'aide (stigma)", "Savoir comment aider quelqu'un en détresse"],
+        "composantes": [
+          "Reconnaître les troubles",
+          "Connaître les traitements efficaces",
+          "Réduire les barrières à l'aide (stigma)",
+          "Savoir comment aider quelqu'un en détresse"
+        ],
         "importance": "Meilleure littératie = détection précoce + aide plus rapide + réduction stigma"
       }
     },
@@ -84,13 +89,24 @@
           "description": "Cultiver les émotions positives — pas au détriment de la réalité mais en les amplifiant quand elles sont présentes",
           "ratio_Losada": "Ratio 3:1 émotions positives/négatives associé au flourishing (Fredrickson) — attention: ratio exact contesté, principe général maintenu",
           "broaden_and_build": "Barbara Fredrickson — les émotions positives élargissent le répertoire de pensée-action et construisent des ressources durables (sociales, cognitives, psychologiques)",
-          "pratiques": ["Savouring — savourer délibérément les moments positifs", "Gratitude quotidienne", "Capitaliser sur les bonnes nouvelles", "Replay de moments positifs", "Appréciation de la beauté/excellence"]
+          "pratiques": [
+            "Savouring — savourer délibérément les moments positifs",
+            "Gratitude quotidienne",
+            "Capitaliser sur les bonnes nouvelles",
+            "Replay de moments positifs",
+            "Appréciation de la beauté/excellence"
+          ]
         },
         "E_engagement": {
           "description": "État d'engagement total dans une activité — flow (Csikszentmihalyi)",
           "flow": {
             "definition": "État optimal d'absorption totale où le temps disparaît et les capacités sont au maximum — Csikszentmihalyi (1990)",
-            "conditions": ["Équilibre défi/compétence (ni trop facile ni trop difficile)", "Objectifs clairs", "Feedback immédiat", "Concentration sur la tâche"],
+            "conditions": [
+              "Équilibre défi/compétence (ni trop facile ni trop difficile)",
+              "Objectifs clairs",
+              "Feedback immédiat",
+              "Concentration sur la tâche"
+            ],
             "domaines": "Sport, art, musique, jeu, travail artisanal, chirurgie, code — tout contexte où les conditions sont réunies"
           },
           "forces_de_caractere": "Utiliser ses forces signatures (VIA) génère plus d'engagement"
@@ -104,7 +120,11 @@
         "M_meaning": {
           "description": "Sentiment que la vie a un sens — appartenir à quelque chose qui dépasse soi",
           "Viktor_Frankl": "Logothérapie — la recherche de sens est la motivation primaire humaine — même dans la souffrance extrême, le sens peut être trouvé (Man's Search for Meaning, 1946)",
-          "trois_voies_sens": ["Créer une œuvre ou accomplir un acte", "Vivre une expérience ou rencontrer quelqu'un", "Choisir son attitude face à la souffrance inévitable"],
+          "trois_voies_sens": [
+            "Créer une œuvre ou accomplir un acte",
+            "Vivre une expérience ou rencontrer quelqu'un",
+            "Choisir son attitude face à la souffrance inévitable"
+          ],
           "sens_professionnel": "Calling vs career vs job — les gens qui vivent leur travail comme une vocation ont un bien-être nettement supérieur (Wrzesniewski et al., 1997)"
         },
         "A_accomplissement": {
@@ -116,12 +136,24 @@
       "forces_de_caractere_VIA": {
         "description": "VIA Classification of Character Strengths (Peterson & Seligman, 2004) — 24 forces regroupées en 6 vertus",
         "vertus_forces": {
-          "sagesse": ["créativité", "curiosité", "ouverture d'esprit", "amour d'apprendre", "perspective"],
+          "sagesse": [
+            "créativité",
+            "curiosité",
+            "ouverture d'esprit",
+            "amour d'apprendre",
+            "perspective"
+          ],
           "courage": ["authenticité", "bravoure", "persévérance", "enthousiasme"],
           "humanite": ["gentillesse", "amour", "intelligence sociale"],
           "justice": ["équité", "leadership", "travail en équipe"],
           "temperance": ["pardon", "humilité", "prudence", "autorégulation"],
-          "transcendance": ["appréciation beauté", "gratitude", "espoir", "humour", "spiritualité"]
+          "transcendance": [
+            "appréciation beauté",
+            "gratitude",
+            "espoir",
+            "humour",
+            "spiritualité"
+          ]
         },
         "utilisation_forces": "Identifier ses 5 forces signatures (via.character.org) → utiliser différemment + dans de nouveaux contextes → augmentation bien-être significative (Seligman 2005)"
       }
@@ -145,14 +177,37 @@
         "remise_en_question": "La trajectoire de résilience (50-65%) est bien plus fréquente que ce que le modèle de deuil en stades laissait croire — la résilience est la norme, pas l'exception"
       },
       "facteurs_protecteurs_resilience": {
-        "individuels": ["Régulation émotionnelle (capacité à moduler les émotions intenses)", "Style d'attribution optimiste mais réaliste", "Sens de l'humour", "Sentiment d'efficacité personnelle (Bandura)", "Flexibilité cognitive", "Sens et cohérence (Antonovsky — salutogenèse)"],
-        "relationnels": ["Au moins un lien d'attachement sécure dans l'enfance", "Réseau social de soutien actif", "Modèles de rôle positifs", "Appartenance à une communauté"],
-        "environnementaux": ["Accès aux soins de santé mentale", "Ressources économiques", "Sécurité physique", "Institutions stables et justes"]
+        "individuels": [
+          "Régulation émotionnelle (capacité à moduler les émotions intenses)",
+          "Style d'attribution optimiste mais réaliste",
+          "Sens de l'humour",
+          "Sentiment d'efficacité personnelle (Bandura)",
+          "Flexibilité cognitive",
+          "Sens et cohérence (Antonovsky — salutogenèse)"
+        ],
+        "relationnels": [
+          "Au moins un lien d'attachement sécure dans l'enfance",
+          "Réseau social de soutien actif",
+          "Modèles de rôle positifs",
+          "Appartenance à une communauté"
+        ],
+        "environnementaux": [
+          "Accès aux soins de santé mentale",
+          "Ressources économiques",
+          "Sécurité physique",
+          "Institutions stables et justes"
+        ]
       },
       "post_traumatic_growth": {
         "auteurs": "Richard Tedeschi & Lawrence Calhoun (1996)",
         "definition": "Changement psychologique positif expérimenté à la suite de luttes avec des circonstances de vie très difficiles — n'annule pas la souffrance mais coexiste avec elle",
-        "5_domaines": ["Nouvelles possibilités perçues", "Relations avec les autres renforcées", "Force personnelle reconnue", "Changement dans les priorités spirituelles/existentielles", "Appréciation accrue de la vie"],
+        "5_domaines": [
+          "Nouvelles possibilités perçues",
+          "Relations avec les autres renforcées",
+          "Force personnelle reconnue",
+          "Changement dans les priorités spirituelles/existentielles",
+          "Appréciation accrue de la vie"
+        ],
         "distinction_resilience": "La résilience = maintenir/retrouver le fonctionnement baseline. Le PTG = développement au-delà du baseline — pas forcément consécutif l'un à l'autre"
       }
     },
@@ -174,7 +229,12 @@
       },
       "recuperation_au_travail": {
         "Sonnentag_detachement_psychologique": "Le détachement psychologique du travail (ne plus penser au travail hors travail) est le prédicteur le plus fort de la récupération — Sonnentag & Bayer (2005)",
-        "4_experiences_recuperation": ["Détachement psychologique", "Relaxation (activités de faible effort)", "Maîtrise (activités de défi positif en dehors du travail)", "Contrôle (choisir ce qu'on fait de son temps libre)"],
+        "4_experiences_recuperation": [
+          "Détachement psychologique",
+          "Relaxation (activités de faible effort)",
+          "Maîtrise (activités de défi positif en dehors du travail)",
+          "Contrôle (choisir ce qu'on fait de son temps libre)"
+        ],
         "micro_recesses": "Pauses courtes dans la journée (5-15 min loin du travail) restaurent significativement les ressources cognitives — préférer les activités de plein air"
       },
       "signaux_precoces_burnout": [

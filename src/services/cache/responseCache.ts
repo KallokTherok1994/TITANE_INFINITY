@@ -238,7 +238,8 @@ export class ResponseCache {
     for (const storedKey of keysToCheck) {
       const entry = this.cache.get(storedKey);
       // vOLLAMA_AUTHORITY: skip expired and mock-sourced entries
-      if (!entry || now - entry.timestamp > this.ttlMs || entry.provider === 'mock') continue;
+      if (!entry || now - entry.timestamp > this.ttlMs || entry.provider === 'mock')
+        continue;
 
       const score = this.similarityScore(key.message, entry.originalMessage);
       if (score >= threshold && (!bestMatch || score > bestMatch.score)) {

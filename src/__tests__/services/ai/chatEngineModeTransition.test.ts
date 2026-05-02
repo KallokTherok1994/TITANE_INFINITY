@@ -17,7 +17,11 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('@/services/ai/memoryIntegration', () => ({
   memoryIntegration: {
     loadContext: vi.fn().mockResolvedValue({
-      activeProjects: [], recentDecisions: [], relevantKnowledge: [], activeRituals: [], timeline: [],
+      activeProjects: [],
+      recentDecisions: [],
+      relevantKnowledge: [],
+      activeRituals: [],
+      timeline: [],
     }),
     loadPreferences: vi.fn().mockReturnValue([]),
     getDepthPreference: vi.fn().mockReturnValue(null),
@@ -44,7 +48,14 @@ vi.mock('@/services/ai/singularityBridge', () => ({
   SingularityBridge: { getCachedCoherence: vi.fn().mockReturnValue(0.5) },
 }));
 vi.mock('@/utils/logger', () => ({
-  createLogger: () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), group: vi.fn(), groupEnd: vi.fn() }),
+  createLogger: () => ({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    group: vi.fn(),
+    groupEnd: vi.fn(),
+  }),
 }));
 
 // The policy constant is module-level in chatEngine.ts.

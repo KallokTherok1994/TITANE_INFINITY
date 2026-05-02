@@ -115,13 +115,13 @@ describe('MetaEnergy — response shape contracts', () => {
     const target = 0.65;
     const current = 0.75;
     const deviation = current - target;
-    expect(Math.abs(deviation - 0.10)).toBeLessThan(0.001);
+    expect(Math.abs(deviation - 0.1)).toBeLessThan(0.001);
   });
 
   it('HomeoBalance in_balance when deviation <= tolerance (0.1)', () => {
     const target = 0.65;
     const tolerance = 0.1;
-    const current = 0.70;
+    const current = 0.7;
     const deviation = Math.abs(current - target);
     expect(deviation <= tolerance).toBe(true);
   });
@@ -129,7 +129,7 @@ describe('MetaEnergy — response shape contracts', () => {
   it('HomeoBalance NOT in_balance when deviation > tolerance', () => {
     const target = 0.65;
     const tolerance = 0.1;
-    const current = 0.30;
+    const current = 0.3;
     const deviation = Math.abs(current - target);
     expect(deviation <= tolerance).toBe(false);
   });

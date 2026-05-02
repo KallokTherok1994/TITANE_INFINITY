@@ -6,7 +6,11 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useAutoTimeout, useElapsedTime, formatElapsedTime } from '@/hooks/useAutoTimeout';
+import {
+  useAutoTimeout,
+  useElapsedTime,
+  formatElapsedTime,
+} from '@/hooks/useAutoTimeout';
 
 describe('useAutoTimeout', () => {
   beforeEach(() => {
@@ -96,9 +100,7 @@ describe('useAutoTimeout', () => {
     act(() => {
       vi.advanceTimersByTime(100);
     });
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('dev-test')
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('dev-test'));
     consoleSpy.mockRestore();
   });
 });
