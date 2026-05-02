@@ -747,3 +747,36 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Usage: `bash scripts/post-build/update-deployment-latest.sh [VERSION]`
 - Sortie: `deployment/latest/{DEB,AppImage,VERSION.txt,SHA256SUMS.txt,SIZES.txt,MANIFEST.json}`
 - Commit: d67bcb2ab
+
+## Q&A Advanced Simulation Suite — 2026-05-02
+
+### Suite WDIO desktop (Tauri natif) — e2e/desktop/chat-qa-mode-validation.wdio.test.cjs
+- Scope: 10 modes × 10 scénarios = 100 Q&A réels via runtime Tauri
+- Scoring NLP 3 axes: longueur 40% / mots-clés mode-spécifiques 40% / français 20%
+- Seuil: score >= 40/100 (journal: >= 30) — échec automatique < seuil
+- Modes couverts: default, coach, dev, admin, strategy, brainstorming, synthesis, planning, journal, debug_cognitive
+- Génération automatique de `finetune_suggestions.json` pour les modes score < 60
+- data-testid utilisés: `chat-input`, `chat-send`, `chat-loading`, `chat-messages-scroll-region`, `chat-mode-selector-trigger`, `chat-mode-option-{modeId}`, `chat-runtime-state`
+- Output: `reports/chat_qa_mode_validation/<timestamp>/` — rapport JSON + screenshots
+
+### Suite Playwright critique — e2e/critical/chat-qa-all-modes.spec.ts
+- Scope: sélecteur 23 modes, 2 Q&A/mode (TITANE_E2E_FULL=1), mode switching, runtime state coherence
+- Tests: présence sélecteur, data-conversation-mode cohérence, mode switching (default → brainstorming → planning)
+- Min response: 80 chars
+- Compatible TITANE_E2E_TAURI=1
+
+### Tests Vitest — Services IA
+
+#### src/__tests__/services/ai/chatModes-full-coverage.test.ts
+- 62 tests: schema integrity (23 modes), fine-tuning assertions par mode critique, validateModeId/getModeConfig/isModeAllowed/getAccessibleModes, ACTIVE_MODE_IDS, MODES_BY_CATEGORY, cohérence cross-modes
+- Bornes validées: temperature [0.25, 1.0], maxTokens [500, 16000], systemPrompt >= 100 chars
+- Status: 62/62 PASS
+
+#### src/__tests__/services/cognitive/ConversationEvaluationEngine.test.ts
+- 37 tests: construction/config, 9 métriques [0,1], addTestScenario/runTestScenario cycle, runAllTests, generateReport, events EventEmitter, fallback offline
+- API couverte: evaluateConversation, addTestScenario, runTestScenario, runAllTests, generateReport, getStats, createConversationEvaluationEngine, getDefaultEvaluationConfig
+- Status: 37/37 PASS
+
+### Fine-tuning chatModes.data.ts — 2026-05-02
+- Mode default: ajout plancher de profondeur explicite dans systemPrompt ('PLANCHER DE PROFONDEUR : toute réponse non-triviale doit contenir au moins 3 phrases substantielles')
+- Corrige récurrence AH-2026-04-26 (réponses trop courtes/génériques)
