@@ -967,6 +967,154 @@
 }
 
 /* ═══════════════════════════════════
+   GENERATED FILES PANEL
+   ═══════════════════════════════════ */
+.generated-files-panel {
+  margin: 8px 16px 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(20, 30, 48, 0.72) 0%,
+    rgba(15, 24, 40, 0.82) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.generated-files-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(167, 139, 250, 0.9);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.generated-files-header:hover {
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.generated-files-chevron {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.generated-files-list {
+  padding: 2px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.generated-file-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  transition: background 0.12s;
+}
+
+.generated-file-entry:hover {
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.generated-file-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.generated-file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.generated-file-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(220, 220, 240, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.generated-file-path {
+  font-size: 0.7rem;
+  color: rgba(160, 160, 190, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: monospace;
+}
+
+.generated-file-time {
+  font-size: 0.68rem;
+  color: rgba(140, 140, 170, 0.5);
+}
+
+.generated-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.generated-file-btn {
+  padding: 2px 6px;
+  background: transparent;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  color: rgba(167, 139, 250, 0.8);
+  font-size: 0.75rem;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.generated-file-btn:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.generated-file-badge {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.generated-files-clear {
+  margin: 6px 14px 0;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 5px;
+  cursor: pointer;
+  color: rgba(239, 68, 68, 0.65);
+  font-size: 0.7rem;
+  transition: background 0.12s, border-color 0.12s;
+  align-self: flex-start;
+}
+
+.generated-files-clear:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: rgba(239, 68, 68, 0.85);
+}
+
+/* ═══════════════════════════════════
    RESPONSIVE - Tablet
    ═══════════════════════════════════ */
 

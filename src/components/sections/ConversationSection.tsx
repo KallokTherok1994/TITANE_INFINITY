@@ -96,6 +96,15 @@ interface ConversationSectionProps {
   fullscreen?: boolean;
 }
 
+interface GeneratedFileEntry {
+  id: string;
+  name: string;
+  path?: string;
+  status: 'SAVED_TAURI' | 'SAVED_BROWSER_DOWNLOAD' | 'WRITE_FAILED';
+  ext: string;
+  timestamp: number;
+}
+
 interface ConversationMessageItem extends Pick<
   ConversationMessage,
   'id' | 'role' | 'content' | 'metadata'
@@ -1339,6 +1348,102 @@ const ConversationMessage = memo(
 
 ConversationMessage.displayName = 'ConversationMessage';
 
+// ─────────────────────────────────────────────────────────────────
+// GENERATED FILES PANEL
+// ─────────────────────────────────────────────────────────────────
+const FILE_EXT_ICONS: Record<string, string> = {
+  py: '🐍', ts: '📘', tsx: '⚛️', js: '📜', jsx: '⚛️', rs: '🦀',
+  md: '📝', json: '📋', txt: '📄', html: '🌐', css: '🎨', sh: '🖥️',
+};
+
+const GeneratedFilesPanel = memo(
+  ({ files, onClearAll }: { files: GeneratedFileEntry[]; onClearAll: () => void }) => {
+    const [collapsed, setCollapsed] = useState(false);
+
+    if (files.length === 0) return null;
+
+    const handleCopyPath = (path: string) => {
+      void navigator.clipboard.writeText(path).catch(() => {});
+    };
+
+    const formatRelativeTime = (timestamp: number): string => {
+      const diff = Math.floor((Date.now() - timestamp) / 1000);
+      if (diff < 60) return 'à l'instant';
+      if (diff < 3600) return `il y a ${Math.floor(diff / 60)} min`;
+      return `il y a ${Math.floor(diff / 3600)} h`;
+    };
+
+    return (
+      <div className="generated-files-panel" data-testid="generated-files-panel">
+        <button
+          type="button"
+          className="generated-files-header"
+          onClick={() => setCollapsed(c => !c)}
+          aria-expanded={!collapsed}
+        >
+          <span>📁 Fichiers générés ({files.length})</span>
+          <span className="generated-files-chevron">{collapsed ? '▸' : '▾'}</span>
+        </button>
+        {!collapsed && (
+          <div className="generated-files-list">
+            {files.map(entry => {
+              const icon = FILE_EXT_ICONS[entry.ext] ?? '📄';
+              const shortName =
+                entry.name.length > 40 ? `${entry.name.slice(0, 37)}…` : entry.name;
+              const shortPath = entry.path
+                ? entry.path.length > 50
+                  ? `…${entry.path.slice(-47)}`
+                  : entry.path
+                : null;
+              return (
+                <div
+                  key={entry.id}
+                  className="generated-file-entry"
+                  data-testid="generated-file-entry"
+                >
+                  <span className="generated-file-icon">{icon}</span>
+                  <div className="generated-file-info">
+                    <span className="generated-file-name" title={entry.name}>{shortName}</span>
+                    {shortPath && (
+                      <span className="generated-file-path" title={entry.path}>{shortPath}</span>
+                    )}
+                    <span className="generated-file-time">{formatRelativeTime(entry.timestamp)}</span>
+                  </div>
+                  <div className="generated-file-actions">
+                    {entry.status === 'SAVED_TAURI' && entry.path && (
+                      <button
+                        type="button"
+                        className="generated-file-btn"
+                        data-testid="generated-file-copy-path"
+                        title="Copier le chemin"
+                        onClick={() => handleCopyPath(entry.path!)}
+                      >
+                        📋
+                      </button>
+                    )}
+                    {entry.status === 'SAVED_BROWSER_DOWNLOAD' && (
+                      <span className="generated-file-badge">⬇️</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            <button
+              type="button"
+              className="generated-files-clear"
+              data-testid="generated-files-clear"
+              onClick={onClearAll}
+            >
+              Effacer la liste
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+);
+GeneratedFilesPanel.displayName = 'GeneratedFilesPanel';
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1431,6 +1536,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [generatedFiles, setGeneratedFiles] = useState<GeneratedFileEntry[]>([]);
     const conversationInputRef = useRef<HTMLTextAreaElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -2424,6 +2530,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 : buildSafeFilename(manifest.title);
               const result = await generateAndSaveFile(content, ext, safeName);
               if (result.ok) {
+                setGeneratedFiles(prev => [{
+                  id: crypto.randomUUID(),
+                  name: `${safeName}.${ext}`,
+                  path: result.path,
+                  status: result.status as GeneratedFileEntry['status'],
+                  ext,
+                  timestamp: Date.now(),
+                }, ...prev]);
                 toastSuccess(
                   result.status === 'SAVED_TAURI'
                     ? `Fichier sauvegardé : ${result.path ?? `${safeName}.${ext}`}`
@@ -2514,6 +2628,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         messages
       );
       if (result.ok) {
+        setGeneratedFiles(prev => [{
+          id: crypto.randomUUID(),
+          name: result.path ? result.path.split('/').pop() ?? 'conversation.json' : 'conversation.json',
+          path: result.path,
+          status: result.status as GeneratedFileEntry['status'],
+          ext: 'json',
+          timestamp: Date.now(),
+        }, ...prev]);
         toastSuccess(
           result.status === 'SAVED_TAURI'
             ? `Conversation enregistrée (${result.path ?? 'chemin sélectionné'})`
@@ -2528,11 +2650,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       }
 
       errorToast(`Échec export JSON: ${result.error ?? result.status}`);
-    }, [messages, toastSuccess, errorToast]);
+    }, [messages, toastSuccess, errorToast, setGeneratedFiles]);
 
     const handleExportMarkdown = useCallback(async () => {
       const result = await downloadMarkdown('Conversation TITANE', messages);
       if (result.ok) {
+        setGeneratedFiles(prev => [{
+          id: crypto.randomUUID(),
+          name: result.path ? result.path.split('/').pop() ?? 'conversation.md' : 'conversation.md',
+          path: result.path,
+          status: result.status as GeneratedFileEntry['status'],
+          ext: 'md',
+          timestamp: Date.now(),
+        }, ...prev]);
         toastSuccess(
           result.status === 'SAVED_TAURI'
             ? `Markdown enregistré (${result.path ?? 'chemin sélectionné'})`
@@ -2547,7 +2677,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       }
 
       errorToast(`Échec export Markdown: ${result.error ?? result.status}`);
-    }, [messages, toastSuccess, errorToast]);
+    }, [messages, toastSuccess, errorToast, setGeneratedFiles]);
 
     const handleCopyAll = useCallback(async () => {
       const copySuccess = await copyToClipboard('Conversation TITANE', messages);
@@ -3159,6 +3289,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               {isLoading ? '⏳' : '📤'} Envoyer
             </button>
           </div>
+
+          {/* ═══ GENERATED FILES PANEL ═══ */}
+          <GeneratedFilesPanel
+            files={generatedFiles}
+            onClearAll={() => setGeneratedFiles([])}
+          />
 
           {/* ═══ MODE BUILDER MODAL ═══ */}
           {showModeBuilder && (
