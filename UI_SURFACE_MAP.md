@@ -686,7 +686,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Mobile (≤768px / ≤479px): inchangé
 - AutoHeal: AH-2026-04-28-CHAT-BUBBLE-WIDTH-0012
 
-## [2026-05-30] MetaEnergy Panel — SingularityMonitor (v32.0.0)
+## [2026-05-01] MetaEnergy Panel — SingularityMonitor (v32.0.0)
 
 - Surface: `meta-energy-panel`, `meta-energy-title`, `meta-energy-level`, `meta-energy-fatigue`, `meta-energy-homeostasis`, `meta-energy-history`
 - Composant: `src/pages/SingularityMonitor.tsx` (section MetaEnergy injectée)
