@@ -35,6 +35,14 @@ const mcpConfig = fs.readFileSync(
   path.join(rootDir, '.vscode/mcp.json'),
   'utf8'
 );
+const vscodeSettings = fs.readFileSync(
+  path.join(rootDir, '.vscode/settings.json'),
+  'utf8'
+);
+const ollamaDevPrompt = fs.readFileSync(
+  path.join(rootDir, '.github/prompts/ollama-dev-session.prompt.md'),
+  'utf8'
+);
 
 describe('ollama dev/chat boundary doctrine', () => {
   const retiredScriptPrefix = ['c', 'line:'].join('');
@@ -77,5 +85,22 @@ describe('ollama dev/chat boundary doctrine', () => {
     expect(mcpConfig).toContain('ollama-dev');
     expect(mcpConfig).toContain('qwen3.5:9b');
     expect(mcpConfig).toContain('http://127.0.0.1:11434');
+  });
+
+  it('keeps MCP runtime settings aligned with chat.mcp.enabled and stdio transport checks', () => {
+    expect(vscodeSettings).toContain('"chat.mcp.enabled": true');
+    expect(boundaryValidator).toContain('chat\\.mcp\\.enabled');
+    expect(boundaryValidator).toContain('chat.mcp.enabled is not true');
+    expect(boundaryValidator).toContain('OLLAMA_HOST');
+    expect(boundaryValidator).toContain('stdio transport declaration');
+    expect(boundaryValidator).toContain('MCP runtime settings and transport wired correctly');
+  });
+
+  it('keeps a dedicated ollama dev session prompt with boundary-safe preflight checks', () => {
+    expect(ollamaDevPrompt).toContain('Prompt: Ollama Dev Session');
+    expect(ollamaDevPrompt).toContain('Pre-flight check');
+    expect(ollamaDevPrompt).toContain('verify:ollama:boundary');
+    expect(ollamaDevPrompt).toContain('Boundary invariant');
+    expect(ollamaDevPrompt).toContain('gemma2:2b');
   });
 });
