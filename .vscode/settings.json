@@ -1,0 +1,4 @@
+{
+    "chat.agent.maxRequests": 25000,
+    "chat.mcp.enabled": true
+}

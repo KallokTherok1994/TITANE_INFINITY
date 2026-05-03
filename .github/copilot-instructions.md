@@ -30,6 +30,7 @@ Apply the smallest safe change set that solves the task. No gratuitous refactor.
 ## Rule 2 - Proof before verdict
 
 No PASS without executable proof. No DONE/SEALED without relevant checks.
+Proof definition: verbatim real command output with exit code, or real validator stdout. Paraphrasing, inference, or summarizing command output does not constitute proof. A narrative PASS with no real output = NO_PROOF → triggers Rule 8.
 
 ## Rule 3 - 4-Ring architecture
 
@@ -54,6 +55,7 @@ Online-first governed policy is active. Local fallback is mandatory and operatio
 ## Rule 8 - Stop-the-line
 
 Stop-the-line on invariant violation, mandatory gate FAIL, unresolved contradiction, or missing proof. Classify explicitly as FAIL or BLOCKED.
+Narrative PASS (claiming success with no real executable proof) is an invariant violation. Classify as FAIL, rerun the relevant gate, and produce real verbatim output before continuing.
 
 ## Rule 9 - NO_SKIPS policy
 
@@ -107,11 +109,14 @@ Ollama Dev / Ollama Chat boundary truth: keep the governed local development sta
 - Toute évolution UI/backend impose des tests E2E sur flows critiques et secondaires avec `data-testid` stables
 - Toute modification de surface impose mapping à jour, bump de version, rollback documenté, scripts post-build idempotents ou fallback documenté, et logs de preuve pour chaque étape `sudo`
 - Le backend doit être qualifié par des tests d’isolation d’environnement et des checks automatiques sur les variables critiques
-- Chaque correction/rollback doit être tracé dans `autoheal_rules.jsonl` et `registry/ui-events.jsonl`
-
+- Chaque correction/rollback doit être tracé dans `autoheal_rules.jsonl` et `registry/ui-events.jsonl`- Session start checklist: (1) consulter plan.md ou summary de la session précédente; (2) `git status --short` pour connaître l'état du worktree; (3) déclarer MODE (DURABLE ou EXPLORATION) explicitement; (4) identifier les commits en attente (Rule 18 phases not yet committed).
 ## Rule 18 - Direct-to-main phase commits
 
 When direct work on `MAIN` is authorized, every completed correction phase or coherent fix batch must end with a targeted commit on `MAIN` after proofs pass. Do not accumulate unrelated finished fixes in an uncommitted worktree. Each direct-to-main commit must stay scope-limited, mention the corrected surface or subsystem, and wait for AutoHeal plus mandatory validators. If proof is incomplete, do not commit the phase yet.
+
+## Rule 20 - Session continuity
+
+At the start of every session working on this repo: (1) read available session plan or conversation summary to restore context; (2) run `git status --short` to identify pending uncommitted work; (3) declare operating MODE explicitly (DURABLE or EXPLORATION); (4) identify any Rule 18 phase that completed proofs but was not yet committed and commit it before starting new work. Never carry credentials, tokens, or private keys in session notes, plans, or proof files.
 
 ## Rule 19 - Exploration Mode vs Durable Mode
 

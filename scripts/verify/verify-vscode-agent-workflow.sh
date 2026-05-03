@@ -57,6 +57,7 @@ require_file() {
 
 require_file "VSCODE_TASKS_PRESENT" ".vscode/tasks.json"
 require_file "VSCODE_EXTENSIONS_PRESENT" ".vscode/extensions.json"
+require_file "VSCODE_MCP_CONFIG_PRESENT" ".vscode/mcp.json"
 require_file "PACKAGE_JSON_PRESENT" "package.json"
 require_file "DOCS_DEV_FR_PRESENT" "docs/dev/fr/README.md"
 require_file "OLLAMA_BOUNDARY_AGENT_PRESENT" ".github/agents/ollama-dev-chat-boundary.agent.md"
@@ -184,6 +185,38 @@ require_all_patterns \
   "delegated master is unavailable" \
   "canonical local truth collection" \
   "before escalating"
+
+require_pattern "MCP_OLLAMA_DEV_WIRED" 'ollama-dev' .vscode/mcp.json
+require_pattern "MCP_MODEL_QWEN_PRESENT" 'qwen3\.5:9b' .vscode/mcp.json
+require_pattern "MCP_ENABLED_IN_SETTINGS" 'chat\.mcp\.enabled' .vscode/settings.json
+
+require_all_patterns \
+  "RULE20_SESSION_CONTINUITY_PRESENT" \
+  ".github/copilot-instructions.md" \
+  "Rule 20 - Session continuity" \
+  "git status --short" \
+  "Never carry credentials"
+
+require_all_patterns \
+  "RULE2_PROOF_DEFINITION_PRESENT" \
+  ".github/copilot-instructions.md" \
+  "Proof definition:" \
+  "verbatim real command output" \
+  "NO_PROOF"
+
+require_all_patterns \
+  "SESSION_OPENER_IN_TITANE_INSTRUCTIONS" \
+  ".github/instructions/titane.instructions.md" \
+  "Session Opener" \
+  "Declare MODE" \
+  "Commit pending phases"
+
+require_all_patterns \
+  "PATH_DECISION_TABLE_IN_TITANE_INSTRUCTIONS" \
+  ".github/instructions/titane.instructions.md" \
+  "PATH decision table" \
+  "PATH_SIMPLE" \
+  "PATH_HEAVY"
 
 echo "SUMMARY: FAIL=$FAIL"
 if [[ "$FAIL" -ne 0 ]]; then

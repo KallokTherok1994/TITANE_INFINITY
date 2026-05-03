@@ -13,6 +13,25 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 - Local-first wording is compatibility marker only; no local-first-only behavior.
 - Keep this file local: do not restate global kernel doctrine.
 
+## Session Opener (mandatory at session start — Rule 20)
+
+1. **Restore context**: read session plan.md or conversation summary if available.
+2. **Snapshot worktree**: `git status --short` — identify uncommitted files and in-progress Rule 18 phases.
+3. **Declare MODE**: DURABLE (default for MAIN) or EXPLORATION (explicit declaration required). State it in the first agent message.
+4. **Commit pending phases**: if a Rule 18 phase has green proofs but no commit yet, commit it before starting new work.
+
+## PATH decision table
+
+| Criterion | PATH_SIMPLE | PATH_HEAVY |
+|-----------|-------------|------------|
+| Scope | Single file, local rule, doc-only | Cross-ring, IPC, build, E2E, release |
+| Validators | `detect_recurrence.sh` only | Full suite (all gates below) |
+| Tests required | Targeted unit if logic changed | Unit + integration + E2E (Rule 16) |
+| Mapping update | Only if directly touched | Mandatory per Rule 15 trigger table |
+| AutoHeal | Reduced schema (Exploration) or full schema | Full schema always |
+| Proof-pack | Not required | Required |
+| Rollback plan | Implicit `git restore` | Explicit, documented |
+
 ## DO
 
 - Use PATH_SIMPLE for local low-risk tasks:

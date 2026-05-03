@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "ollama-dev": {
+      "type": "stdio",
+      "command": "pnpm",
+      "args": ["dlx", "mcp-server-ollama@latest"],
+      "env": {
+        "OLLAMA_HOST": "http://127.0.0.1:11434",
+        "OLLAMA_MODEL": "qwen3.5:9b"
+      }
+    }
+  }
+}

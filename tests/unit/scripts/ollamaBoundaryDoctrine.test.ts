@@ -31,6 +31,10 @@ const championRegistry = fs.readFileSync(
   path.join(rootDir, 'config/championChallenger.json'),
   'utf8'
 );
+const mcpConfig = fs.readFileSync(
+  path.join(rootDir, '.vscode/mcp.json'),
+  'utf8'
+);
 
 describe('ollama dev/chat boundary doctrine', () => {
   const retiredScriptPrefix = ['c', 'line:'].join('');
@@ -60,5 +64,18 @@ describe('ollama dev/chat boundary doctrine', () => {
     expect(boundaryValidator).toContain("rg -q 'gemma2:2b' src/config/ollamaDefaults.ts");
     expect(boundaryValidator).toContain("rg -q 'qwen3\\.5:9b' .github/copilot-instructions.md");
     expect(boundaryValidator).toContain('active cline workflow references removed');
+  });
+
+  it('has a .vscode/mcp.json config file wiring the ollama-dev MCP server', () => {
+    const mcpConfigPath = path.join(rootDir, '.vscode/mcp.json');
+    expect(fs.existsSync(mcpConfigPath)).toBe(true);
+    const parsed = JSON.parse(mcpConfig) as { servers: Record<string, unknown> };
+    expect(Object.keys(parsed.servers)).toContain('ollama-dev');
+  });
+
+  it('declares qwen3.5:9b and ollama-dev server in .vscode/mcp.json', () => {
+    expect(mcpConfig).toContain('ollama-dev');
+    expect(mcpConfig).toContain('qwen3.5:9b');
+    expect(mcpConfig).toContain('http://127.0.0.1:11434');
   });
 });
