@@ -2,6 +2,48 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1777689809249-ln37mgmw",
+      "timestamp": 1777689809249,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777689440905-7cuad5ox",
+      "timestamp": 1777689440905,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777689090243-332b98h9",
+      "timestamp": 1777689090243,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777689074222-vvkejlxd",
+      "timestamp": 1777689074222,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777689049780-r3gfsnhg",
+      "timestamp": 1777689049780,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1777688845391-3vwwky9n",
+      "timestamp": 1777688845391,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1777597103487-i8880s1t",
       "timestamp": 1777597103487,
       "level": "Info",
@@ -451,7 +493,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1777597103489,
+    "last_validation_ts": 1777689809253,
     "last_compaction_ts": null
   }
 }
