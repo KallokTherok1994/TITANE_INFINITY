@@ -56,6 +56,7 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 - For route/page/runtime regressions, enforce the canonical surface anti-drift sequence: identify the real visible surface first, then realign live aliases, deprecated routes, preloading, compatibility exports, and touched tooling references before PASS.
 - In direct-to-main mode explicitly requested by the user, finish each proven phase with a targeted commit on `MAIN` instead of batching multiple completed fixes together.
 - For Ollama Dev / Ollama Chat boundary work, keep the canonical local AI truth synchronized across frontend defaults, backend loopback, scripts, repo-owned Copilot instructions, `.github/agents/ollama-dev-chat-boundary.agent.md`, docs, and validators in the same patch. Development baseline: `http://127.0.0.1:11434` + `qwen3.5:9b` for GitHub Copilot VS Code conversation. Product baseline: `http://127.0.0.1:11434` + `gemma2:2b` + IPC path + no token gate for TITANE chat runtime. Controlled communication is allowed only through explicit, traced, bounded interfaces; shared default mutation between the two surfaces is forbidden.
+- When the Ollama Dev MCP server is active, prefer qwen3.5:9b in tasks that need long-context analysis (up to 128K tokens), explicit reasoning plans, or structured tool-oriented outputs. Keep this optimization strictly scoped to the VS Code Copilot conversation surface; never propagate qwen defaults to TITANE chat runtime, IPC fallback, or champion registry.
 
 ## DONT
 

@@ -17,6 +17,7 @@ required=(
   .github/prompts/contradiction-resolution.prompt.md
   .github/prompts/simple-fast-session.prompt.md
   .github/prompts/heavy-runtime-session.prompt.md
+  .github/prompts/ollama-dev-session.prompt.md
 )
 
 for f in "${required[@]}"; do

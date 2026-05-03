@@ -61,6 +61,7 @@ require_file "VSCODE_MCP_CONFIG_PRESENT" ".vscode/mcp.json"
 require_file "PACKAGE_JSON_PRESENT" "package.json"
 require_file "DOCS_DEV_FR_PRESENT" "docs/dev/fr/README.md"
 require_file "OLLAMA_BOUNDARY_AGENT_PRESENT" ".github/agents/ollama-dev-chat-boundary.agent.md"
+require_file "OLLAMA_DEV_SESSION_PROMPT_PRESENT" ".github/prompts/ollama-dev-session.prompt.md"
 
 require_pattern "VSCODE_RECOMMENDS_COPILOT_CHAT" 'github\.copilot-chat' .vscode/extensions.json
 require_pattern "VSCODE_RECOMMENDS_GITHUB_PR" 'github\.vscode-pull-request-github' .vscode/extensions.json
@@ -129,6 +130,14 @@ require_all_patterns \
   "qwen3\.5:9b" \
   "gemma2:2b" \
   "communication contrôlée"
+
+require_all_patterns \
+  "OLLAMA_BOUNDARY_AGENT_CAPABILITIES_PRESENT" \
+  ".github/agents/ollama-dev-chat-boundary.agent.md" \
+  "Capacités qwen3.5:9b" \
+  "128K" \
+  "Tool-calling" \
+  "Comportements interdits"
 
 require_all_patterns \
   "HYBRID_MEMORY_DISPATCH_EXPLORE_QUOTA_FALLBACK_PRESENT" \

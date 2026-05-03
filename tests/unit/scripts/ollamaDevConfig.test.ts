@@ -5,9 +5,10 @@
  *  - MCP server (.vscode/mcp.json): structure, command, args, env
  *  - VS Code settings: chat.mcp.enabled, chat.agent.maxRequests
  *  - Isolation produit: qwen3.5:9b absent des defaults runtime TITANE
- *  - Boundary agent: frontmatter, section MCP, checklist de vérification
- *  - Validator scripts: présents, exécutables, contiennent les 5 PASS markers
+ *  - Boundary agent: frontmatter, section MCP, capacités qwen, checklist de vérification
+ *  - Validator scripts: présents, exécutables, contiennent les 6 PASS markers
  *  - OLLAMA_RUNTIME_MAP.md: documente la surface dev
+ *  - Prompt de session Ollama Dev: préflight + invariant de frontière
  *  - No cross-contamination: modèle dev absent des surfaces produit
  *
  * Complète ollamaBoundaryDoctrine.test.ts sans dupliquer ses 5 cas.
@@ -64,6 +65,11 @@ const vscodeWorkflowValidatorRaw = fs.readFileSync(
 
 const ollamaRuntimeMap = fs.readFileSync(
   path.join(rootDir, 'OLLAMA_RUNTIME_MAP.md'),
+  'utf8'
+);
+
+const ollamaDevPromptRaw = fs.readFileSync(
+  path.join(rootDir, '.github/prompts/ollama-dev-session.prompt.md'),
   'utf8'
 );
 
@@ -189,6 +195,10 @@ describe('Ollama Dev — boundary agent (.github/agents/ollama-dev-chat-boundary
     expect(boundaryAgentRaw).toMatch(/^tools:/m);
   });
 
+  it('déclare read_file dans la liste tools du frontmatter', () => {
+    expect(boundaryAgentRaw).toContain('read_file');
+  });
+
   it('contient une section Configuration MCP VS Code', () => {
     expect(boundaryAgentRaw).toContain('Configuration MCP VS Code');
   });
@@ -196,6 +206,18 @@ describe('Ollama Dev — boundary agent (.github/agents/ollama-dev-chat-boundary
   it('contient le bloc JSON du serveur ollama-dev', () => {
     expect(boundaryAgentRaw).toContain('"ollama-dev"');
     expect(boundaryAgentRaw).toContain('"mcp-server-ollama');
+  });
+
+  it('contient une section capacités qwen3.5:9b avec contexte long et tool-calling', () => {
+    expect(boundaryAgentRaw).toContain('Capacités qwen3.5:9b');
+    expect(boundaryAgentRaw).toContain('128K');
+    expect(boundaryAgentRaw).toContain('Tool-calling');
+  });
+
+  it('contient une section Comportements interdits', () => {
+    expect(boundaryAgentRaw).toContain('Comportements interdits');
+    expect(boundaryAgentRaw).toContain('championChallenger.json');
+    expect(boundaryAgentRaw).toContain('runtime produit');
   });
 
   it('documente la checklist de vérification Ollama Dev (6 étapes minimum)', () => {
@@ -247,16 +269,27 @@ describe('Ollama Dev — boundary validator (verify-ollama-copilot-boundary.sh)'
     expect(boundaryValidatorRaw).toContain('qwen3\\.5:9b');
   });
 
+  it('vérifie chat.mcp.enabled=true dans .vscode/settings.json', () => {
+    expect(boundaryValidatorRaw).toContain('chat\\.mcp\\.enabled');
+    expect(boundaryValidatorRaw).toContain('chat.mcp.enabled is not true');
+  });
+
+  it('vérifie OLLAMA_HOST et le transport stdio dans .vscode/mcp.json', () => {
+    expect(boundaryValidatorRaw).toContain('OLLAMA_HOST');
+    expect(boundaryValidatorRaw).toContain('stdio transport declaration');
+  });
+
   it('vérifie gemma2:2b dans les defaults produit', () => {
     expect(boundaryValidatorRaw).toContain('gemma2:2b');
   });
 
-  it('contient les 5 labels de PASS attendus', () => {
+  it('contient les 6 labels de PASS attendus', () => {
     const passLabels = [
       'product ollama runtime baseline aligned',
       'development ollama doctrine aligned',
       'boundary validator wired in package',
       'MCP Ollama Dev config present and aligned',
+      'MCP runtime settings and transport wired correctly',
       'active cline workflow references removed',
     ];
     for (const label of passLabels) {
@@ -282,6 +315,37 @@ describe('Ollama Dev — vscode-agent-workflow validator', () => {
 
   it('vérifie MCP_ENABLED_IN_SETTINGS (chat.mcp.enabled dans settings)', () => {
     expect(vscodeWorkflowValidatorRaw).toContain('MCP_ENABLED_IN_SETTINGS');
+  });
+
+  it('vérifie la présence du prompt Ollama Dev session', () => {
+    expect(vscodeWorkflowValidatorRaw).toContain('OLLAMA_DEV_SESSION_PROMPT_PRESENT');
+    expect(vscodeWorkflowValidatorRaw).toContain('.github/prompts/ollama-dev-session.prompt.md');
+  });
+
+  it('vérifie la section capacités du boundary agent', () => {
+    expect(vscodeWorkflowValidatorRaw).toContain('OLLAMA_BOUNDARY_AGENT_CAPABILITIES_PRESENT');
+    expect(vscodeWorkflowValidatorRaw).toContain('Capacités qwen3.5:9b');
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('Ollama Dev — session prompt', () => {
+  it('contient un préflight check avec version Ollama + modèle qwen', () => {
+    expect(ollamaDevPromptRaw).toContain('Pre-flight check');
+    expect(ollamaDevPromptRaw).toContain('/api/version');
+    expect(ollamaDevPromptRaw).toContain('qwen3.5:9b');
+  });
+
+  it('contient l’invariant de frontière (isolation Dev vs runtime produit)', () => {
+    expect(ollamaDevPromptRaw).toContain('Boundary invariant');
+    expect(ollamaDevPromptRaw).toContain('isolated from the TITANE product runtime');
+    expect(ollamaDevPromptRaw).toContain('gemma2:2b');
+  });
+
+  it('contient un critère de sortie basé sur verify:ollama:boundary', () => {
+    expect(ollamaDevPromptRaw).toContain('Exit criteria');
+    expect(ollamaDevPromptRaw).toContain('verify:ollama:boundary');
   });
 });
 
