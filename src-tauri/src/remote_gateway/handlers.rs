@@ -523,7 +523,7 @@ mod tests {
         ));
         let engine = Arc::new(
             crate::conversation_engine::ConversationEngineState::new(
-                dir.keep().expect("tempdir keep"),
+                dir.keep(),
                 "test-password".into(),
                 ai_router,
                 singularity,

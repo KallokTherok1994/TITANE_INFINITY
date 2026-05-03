@@ -142,6 +142,14 @@ describe('🎯 chatModes — Fine-tuning assertions par mode critique', () => {
     expect(CHAT_MODES_CONFIG.default.systemPrompt.toLowerCase()).toContain('français');
   });
 
+  it('MODE default: systemPrompt contient le recadrage opérationnel anti-réponse générique', () => {
+    const prompt = CHAT_MODES_CONFIG.default.systemPrompt;
+    expect(prompt).toContain('RÈGLES OPÉRATIONNELLES');
+    expect(prompt).toContain('commencer par la réponse utile dès la première phrase');
+    expect(prompt).toContain('je suis toujours en apprentissage');
+    expect(prompt).toContain('Pour une demande de fallback local, commencer par "Fallback local:"');
+  });
+
   it('MODE brainstorming: temperature >= 0.85 (haute créativité)', () => {
     expect(CHAT_MODES_CONFIG.brainstorming.temperature).toBeGreaterThanOrEqual(0.85);
   });

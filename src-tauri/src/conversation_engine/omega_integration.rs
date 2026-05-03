@@ -268,6 +268,14 @@ impl OmegaConversationBridge {
     ) -> Result<ConversationResponse, ConversationEngineError> {
         let start = std::time::Instant::now();
 
+        fn truncate_preview(input: &str, max_chars: usize) -> String {
+            let mut preview: String = input.chars().take(max_chars).collect();
+            if input.chars().count() > max_chars {
+                preview.push('…');
+            }
+            preview
+        }
+
         // ✅ REAL AI CALL: Replace OMEGA mock TextGen with actual provider response
         // The OMEGA DefaultTaskHandler::execute() is a stub — wire real AIRouter here.
         let requested_provider_label = request
@@ -299,7 +307,7 @@ impl OmegaConversationBridge {
                                 .iter()
                                 .map(|line| {
                                     if line.len() > 200 {
-                                        format!("{}…", &line[..200])
+                                        truncate_preview(line, 200)
                                     } else {
                                         line.clone()
                                     }
@@ -823,5 +831,48 @@ mod tests {
             12000
         );
         assert_eq!(resolve_bridge_default_max_tokens(None), 12000);
+    }
+
+    #[tokio::test]
+    async fn test_history_truncation_preserves_utf8_boundaries() {
+        let bridge = OmegaConversationBridge::new(
+            OmegaBridgeConfig::default(),
+            create_test_singularity(),
+            None,
+        );
+        let _ = bridge.initialize().await;
+
+        let long_multibyte = format!("{}{}", "à".repeat(210), " fin");
+        let request = ConversationRequest {
+            user_message: "Test".to_string(),
+            conversation_id: Some("utf8-history".to_string()),
+            mode: ConversationMode::Default,
+            ai_config: None,
+            emotion_context: None,
+            custom_system_prompt: None,
+            history: Some(vec![long_multibyte]),
+        };
+
+        let omega_result = OmegaPipelineResult {
+            processed_text: "Réponse".to_string(),
+            latency_ms: 10,
+            intent: "question".to_string(),
+            confidence: 0.9,
+            safety_score: 0.99,
+            sources: vec!["test".to_string()],
+            model: "test-model".to_string(),
+            tokens: 10,
+            timings: std::collections::HashMap::new(),
+        };
+
+        let result = bridge
+            .convert_to_conversation_response(
+                omega_result,
+                &request,
+                "utf8-history".to_string(),
+            )
+            .await;
+
+        assert!(result.is_ok(), "UTF-8 history truncation should not panic");
     }
 }

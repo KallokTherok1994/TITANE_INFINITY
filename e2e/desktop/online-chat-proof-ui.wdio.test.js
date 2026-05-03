@@ -14,6 +14,14 @@ const runRestoreProof = process.env.TITANE_RESTORE_PROOF === '1';
 const runEventReplayProof = process.env.TITANE_EVENT_REPLAY_PROOF === '1';
 const runMultiReducerProof = process.env.TITANE_MULTI_REDUCER_PROOF === '1';
 const runLtmPathProof = process.env.TITANE_LTM_PATH_PROOF === '1';
+const UI_PROOF_REQUIRED_ANCHORS = ['aliment', 'sommeil', 'stress'];
+const UI_PROOF_GENERIC_PATTERNS = [
+  "qu'est-ce que tu veux savoir",
+  'comment puis-je vous aider',
+  'que souhaitez-vous savoir',
+  'je suis titane',
+  'assistant ia personnel',
+];
 
 function hashJson(value) {
   return crypto
@@ -1313,8 +1321,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
 
     const msg = [
       `[${scenario}/${runId}] preuve UI longue ${new Date().toISOString()}`,
-      'Réponds en français avec 6 sections numérotées et développées.',
-      'Chaque section doit contenir au moins deux phrases complètes et utiles.',
+      'Réponds en français avec 6 sections numérotées et développées sur le trio alimentation, sommeil et stress.',
+      'Chaque section doit contenir au moins deux phrases complètes, utiles et concrètes.',
+      'La réponse doit mentionner explicitement alimentation, sommeil et stress.',
       'N utilise ni tableau ni JSON.',
     ].join(' ');
     const outcome = await sendMessageAndWaitOutcome(selectors, msg);
@@ -1372,6 +1381,21 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       after.length >= 450,
       `[G_LONG_RESPONSE_VISIBLE] Assistant response too short for a strong long-output proof (${after.length} chars)`
     );
+    const lowerAfter = after.toLowerCase();
+    const anchorHits = UI_PROOF_REQUIRED_ANCHORS.filter(anchor =>
+      lowerAfter.includes(anchor)
+    );
+    assert.equal(
+      anchorHits.length,
+      UI_PROOF_REQUIRED_ANCHORS.length,
+      `[G_PROMPT_ADHERENCE] expected anchors=${UI_PROOF_REQUIRED_ANCHORS.join(',')} got=${anchorHits.join(',')} text="${String(after).slice(0, 220)}"`
+    );
+    for (const pattern of UI_PROOF_GENERIC_PATTERNS) {
+      assert.ok(
+        !lowerAfter.includes(pattern),
+        `[G_NO_GENERIC_STUB] response contains generic pattern "${pattern}"`
+      );
+    }
     const truncationProbe = await readMessageTruncationProbe();
     assert.equal(
       truncationProbe.count,

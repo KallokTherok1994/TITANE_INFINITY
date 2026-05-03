@@ -173,6 +173,157 @@ function formatOnlineCapabilityBlock(input: {
   ].join('\n');
 }
 
+function formatRuntimeTruthDirectiveBlock(input: {
+  message: string;
+  contextEnvelope?: ChatContextEnvelope;
+  persistentMemoryStatus: 'loaded' | 'empty' | 'unavailable' | 'skipped';
+  onlineCapabilityStatus: 'available' | 'offline';
+}): string {
+  const normalized = input.message.toLowerCase();
+  const asksCurrentPage =
+    /(quelle page|page ouverte|page actuelle|where am i|what page)/.test(normalized);
+  const asksAvailablePages =
+    /(pages?\/onglets? disponibles|pages? disponibles|onglets? disponibles|liste les pages|liste les onglets)/.test(
+      normalized
+    );
+  const asksAvailableActions =
+    /(actions?(?: sont)? possibles|que puis-je faire|que faire ici|utiliser cette page|naviguer dans l.?app)/.test(
+      normalized
+    );
+  const asksMemory =
+    isExplicitMemoryQuery(input.message) ||
+    /(que mémorises|que memorises|mémoire de session|memoire de session|cette session)/.test(
+      normalized
+    );
+  const asksReformulation =
+    /(reformule ma dernière question|reformule ma derniere question|reformule mon dernier message|résume ma dernière question|resume ma derniere question)/.test(
+      normalized
+    );
+  const asksTransparency =
+    /(dis ce que tu ne sais pas|transparence|ce que tu ne sais pas|ce que tu sais pas)/.test(
+      normalized
+    );
+  const asksOffline =
+    /(offline|hors ligne|provider externe|fallback utile|sans provider externe)/.test(
+      normalized
+    );
+  const asksDiagnostic =
+    /(diagnostic rapide|état de l.?app|etat de l.?app|limites actuelles|provider ia n.?est dispo|provider indisponible)/.test(
+      normalized
+    );
+  const asksResponsePath =
+    /(chemin de réponse|chemin de reponse|ui.?services.?orchestrateur.?engines|ui.?services.?orchestrator.?engines)/.test(
+      normalized
+    );
+
+  if (
+    !asksCurrentPage &&
+    !asksAvailablePages &&
+    !asksAvailableActions &&
+    !asksMemory &&
+    !asksReformulation &&
+    !asksTransparency &&
+    !asksOffline &&
+    !asksDiagnostic &&
+    !asksResponsePath
+  ) {
+    return '';
+  }
+
+  const lines = ['## RUNTIME_TRUTH_RESPONSE_DIRECTIVE'];
+
+  if (asksCurrentPage || asksAvailablePages || asksAvailableActions) {
+    lines.push(
+      'Pour toute question sur la page courante ou les actions possibles, répondre d abord avec les faits de CONTEXT_ENVELOPE_V44.'
+    );
+    lines.push(
+      'Ne pas inventer d autres pages, onglets, actions ou diagnostics si ces éléments ne figurent pas explicitement dans route/module/page_title/capabilities/actions/limits.'
+    );
+    if (!input.contextEnvelope) {
+      lines.push(
+        'Si le contexte de page n est pas disponible, dire explicitement que la page courante n est pas déterminable depuis le contexte runtime reçu.'
+      );
+    }
+  }
+
+  if (asksAvailablePages) {
+    lines.push(
+      'Si l utilisateur demande la liste des pages ou onglets disponibles, ne lister que les surfaces explicitement connues du contexte runtime courant; sinon dire que cette liste complète n est pas disponible dans le contexte reçu.'
+    );
+  }
+
+  if (asksMemory) {
+    lines.push(
+      'Pour toute question mémoire, distinguer strictement mémoire de session récente, mémoire persistante et absence de contexte.'
+    );
+    lines.push(
+      `État mémoire persistante courant: ${input.persistentMemoryStatus}. Si aucune donnée exploitable n est présente, le dire explicitement sans prétendre se souvenir de faits absents.`
+    );
+    lines.push(
+      'S appuyer sur recent_memory et les indicateurs mémoire fournis; ne pas répondre comme un modèle générique sans mémoire si un contexte mémoire existe réellement.'
+    );
+  }
+
+  if (asksReformulation) {
+    lines.push(
+      'Pour toute demande de reformulation du dernier message ou de la dernière question, reformuler uniquement le besoin utilisateur le plus récent au lieu d y répondre sur le fond.'
+    );
+    lines.push(
+      'La reformulation doit être courte, fidèle et concrète. Ne pas dériver vers une analyse stratégique, un plan, ni une auto-présentation.'
+    );
+    lines.push(
+      'Ne pas poser de question de clarification ni de contre-question. Produire une phrase déclarative unique qui commence par "Demande reformulée:" puis reformule directement le besoin précédent.'
+    );
+  }
+
+  if (asksTransparency) {
+    lines.push(
+      'Pour toute demande de transparence, distinguer explicitement trois catégories: ce que tu sais depuis le contexte courant, ce que tu infères, et ce qui manque pour conclure.'
+    );
+    lines.push(
+      'Utiliser explicitement des libellés courts de ce type dans la réponse: "Ce que je sais:", "Ce que j infère:", "Ce que je ne sais pas / ce qui manque:".'
+    );
+    lines.push(
+      'Si une catégorie est vide, le dire brièvement au lieu de la supprimer. La réponse doit rester courte, factuelle et structurée.'
+    );
+    lines.push(
+      'Dans la troisième catégorie, formuler explicitement la limite avec une tournure du type "Je ne sais pas..." ou "Je ne peux pas vérifier..." avant de préciser ce qui manque.'
+    );
+    lines.push(
+      'Interdire les formules vagues ou marketing du type "je suis toujours en apprentissage"; préférer des limites vérifiables et situées.'
+    );
+  }
+
+  if (asksOffline) {
+    lines.push(
+      `État de capacité online courant: ${input.onlineCapabilityStatus}. Ne jamais prétendre être hors ligne si cet état vaut available.`
+    );
+    lines.push(
+      'Si l utilisateur demande une réponse sans provider externe, privilégier la voie locale/gouvernée quand elle existe; sinon expliquer la limite réelle plutôt qu inventer un mode offline.'
+    );
+    lines.push(
+      'Pour toute demande de fallback utile sans IA externe, répondre directement avec un fallback local concret et court, sans poser de question de clarification.'
+    );
+    lines.push(
+      'Le fallback doit mentionner explicitement la voie locale, hors ligne, ou sans provider externe, et proposer 2 à 4 actions utiles immédiatement réalisables.'
+    );
+    lines.push(
+      'Commencer la réponse par "Fallback local:" puis donner immédiatement les actions. Interdire les ouvertures génériques du type "On va commencer", "Dis-moi", "quel est l objectif", ou toute exploration préalable du besoin.'
+    );
+  }
+
+  if (asksDiagnostic || asksResponsePath) {
+    lines.push(
+      'Pour tout diagnostic d état ou chemin de réponse, s appuyer d abord sur les blocs runtime fournis: ONLINE_CAPABILITY_STATUS, GOVERNED_TOOL_LANE_STATUS, ADVANCED_AGENT_RUNTIME_STATUS, CANONICAL_DISCERNMENT_STATUS.'
+    );
+    lines.push(
+      'Ne pas inventer de panne, de page, de provider ou d agent non observé. Si une étape du chemin UI→services→orchestrateur→engines n est pas explicitement disponible dans le contexte, la qualifier comme déduction limitée au lieu d un fait certain.'
+    );
+  }
+
+  return lines.join('\n');
+}
+
 function resolveConversationDepthPref(base: string | null): string | null {
   const deepActive =
     userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] ===
@@ -1358,6 +1509,12 @@ export async function processMessage(
   }
 
   const persistentMemoryStatusContext = `## PERSISTENT_MEMORY_STATUS\nstatus=${persistentMemoryStatus}`;
+  const runtimeTruthDirectiveContext = formatRuntimeTruthDirectiveBlock({
+    message: userMessage,
+    contextEnvelope: options?.contextEnvelope,
+    persistentMemoryStatus,
+    onlineCapabilityStatus,
+  });
 
   // Inject XP + Evolution context (non-blocking, best-effort)
   let progressionContext = '';
@@ -1404,6 +1561,7 @@ export async function processMessage(
     advancedAgentRuntimeStatusContext,
     persistentMemoryContext,
     persistentMemoryStatusContext,
+    runtimeTruthDirectiveContext,
     progressionContext,
     staticPromptContext.cognitiveContext,
   ]

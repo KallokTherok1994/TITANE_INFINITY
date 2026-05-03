@@ -76,6 +76,10 @@ const AI_VERIFY_RESPONSE_TIMEOUT_MS = parsePositiveInt(
   process.env.AI_VERIFY_RESPONSE_TIMEOUT_MS,
   150000
 );
+const AI_VERIFY_STALL_TIMEOUT_MS = parsePositiveInt(
+  process.env.AI_VERIFY_STALL_TIMEOUT_MS,
+  20000
+);
 
 const AI_VERIFY_SEND_READY_TIMEOUT_MS = parsePositiveInt(
   process.env.AI_VERIFY_SEND_READY_TIMEOUT_MS,
@@ -549,6 +553,8 @@ async function sendPrompt(selectors, prompt) {
     }
 
     let response = null;
+    let stalled = false;
+    const responseWaitStartedAt = Date.now();
     try {
       await browser.waitUntil(
         async () => {
@@ -557,6 +563,43 @@ async function sendPrompt(selectors, prompt) {
           const hasChangedText = !!afterSnapshot.text && afterSnapshot.text !== lastText;
 
           if (!hasNewMessage && !hasChangedText) {
+            const elapsedMs = Date.now() - responseWaitStartedAt;
+            if (elapsedMs >= AI_VERIFY_STALL_TIMEOUT_MS) {
+              const uiState = await browser.execute(
+                (inputSelector, errorSelector, loadingSelector) => {
+                  const input = document.querySelector(inputSelector);
+                  const errorNode = errorSelector
+                    ? document.querySelector(errorSelector)
+                    : null;
+                  const loadingNode = loadingSelector
+                    ? document.querySelector(loadingSelector)
+                    : null;
+                  const inputEnabled =
+                    input instanceof HTMLTextAreaElement ||
+                    input instanceof HTMLInputElement
+                      ? !input.disabled && !input.readOnly
+                      : false;
+                  const loadingVisible =
+                    loadingNode instanceof HTMLElement
+                      ? loadingNode.offsetParent !== null
+                      : false;
+                  const errorText =
+                    errorNode instanceof HTMLElement
+                      ? (errorNode.textContent || '').trim()
+                      : '';
+
+                  return { inputEnabled, loadingVisible, errorText };
+                },
+                selectors.input,
+                '[data-testid="chat-error"]',
+                '[data-testid="chat-loading"]'
+              );
+
+              if (uiState?.inputEnabled && !uiState?.loadingVisible) {
+                stalled = true;
+                return true;
+              }
+            }
             return false;
           }
 
@@ -574,6 +617,14 @@ async function sendPrompt(selectors, prompt) {
         prompt,
         response: null,
         error: error?.message || 'timeout waiting for response',
+      };
+    }
+
+    if (stalled) {
+      return {
+        prompt,
+        response: null,
+        error: `UI_RESPONSE_STALLED_AFTER_${AI_VERIFY_STALL_TIMEOUT_MS}MS`,
       };
     }
 

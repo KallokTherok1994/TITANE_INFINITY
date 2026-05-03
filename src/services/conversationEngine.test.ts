@@ -846,6 +846,270 @@ describe('conversationEngine.processMessage', () => {
     );
   });
 
+  it('injects a factual runtime truth directive for page/action questions when context is available', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok page truth',
+          conversationId: 'c10b',
+          messageId: 'm10b',
+          metadata: { timestamp: 1011 },
+        };
+      }
+
+      return null;
+    });
+
+    await processMessage('Quelles actions sont possibles ici ?', {
+      conversationId: 'c10b',
+      providerPreference: 'ollama',
+      contextEnvelope: {
+        routeContext: {
+          route: '/titane',
+          pageState: 'conversation',
+          updatedAt: 1,
+        },
+        moduleContext: {
+          moduleId: 'conversation',
+          moduleName: 'Conversation',
+          moduleType: 'chat',
+          pageTitle: 'Chat',
+          capabilities: ['chat', 'memory'],
+          dataTruthClass: 'runtime',
+          actions: ['send', 'clear'],
+          limits: ['no-external-network'],
+          memoryKeys: ['conversation', 'recent-messages'],
+        },
+        continuity: {
+          sequence: 1,
+          changeType: 'initial',
+          staleGuard: 'steady',
+        },
+        memorySingleDoor: {
+          conversationId: 'c10b',
+          mode: 'default',
+          providerRequested: 'ollama',
+          tags: ['route:/titane'],
+          recentMessages: [],
+          scopeDecision: {
+            kept: 0,
+            purged: 0,
+            recalculated: false,
+          },
+        },
+        runtimeMetadata: {},
+        generatedAt: 1,
+      },
+    });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining('## RUNTIME_TRUTH_RESPONSE_DIRECTIVE'),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining('page_title=Chat'),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'memory_keys=conversation, recent-messages'
+        ),
+      },
+    });
+  });
+
+  it('injects a factual runtime truth directive for memory and offline questions', async () => {
+    const originalOnline = navigator.onLine;
+    Object.defineProperty(window.navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    });
+
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok memory offline truth',
+          conversationId: 'c10c',
+          messageId: 'm10c',
+          metadata: { timestamp: 1012 },
+        };
+      }
+
+      return null;
+    });
+
+    try {
+      await processMessage('Que mémorises-tu dans cette session et que fais-tu offline ?', {
+        conversationId: 'c10c',
+        providerPreference: 'ollama',
+      });
+    } finally {
+      Object.defineProperty(window.navigator, 'onLine', {
+        configurable: true,
+        value: originalOnline,
+      });
+    }
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining('État mémoire persistante courant: skipped'),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining('État de capacité online courant: offline'),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'répondre directement avec un fallback local concret et court, sans poser de question de clarification'
+        ),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'Commencer la réponse par "Fallback local:" puis donner immédiatement les actions'
+        ),
+      },
+    });
+  });
+
+  it('injects a factual runtime truth directive for pages, diagnostics and response path prompts', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok diagnostic truth',
+          conversationId: 'c10d',
+          messageId: 'm10d',
+          metadata: { timestamp: 1013 },
+        };
+      }
+
+      return null;
+    });
+
+    await processMessage(
+      'Liste les pages/onglets disponibles et explique ton chemin de réponse (UI→services→orchestrateur→engines).',
+      {
+        conversationId: 'c10d',
+        providerPreference: 'ollama',
+      }
+    );
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining('## RUNTIME_TRUTH_RESPONSE_DIRECTIVE'),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'Si l utilisateur demande la liste des pages ou onglets disponibles'
+        ),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'ONLINE_CAPABILITY_STATUS, GOVERNED_TOOL_LANE_STATUS, ADVANCED_AGENT_RUNTIME_STATUS, CANONICAL_DISCERNMENT_STATUS'
+        ),
+      },
+    });
+  });
+
+  it('injects a directive for reformulation and transparency prompts', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok reformulation truth',
+          conversationId: 'c10e',
+          messageId: 'm10e',
+          metadata: { timestamp: 1014 },
+        };
+      }
+
+      return null;
+    });
+
+    await processMessage('Reformule ma dernière question puis dis ce que tu ne sais pas.', {
+      conversationId: 'c10e',
+      providerPreference: 'ollama',
+    });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'reformuler uniquement le besoin utilisateur le plus récent'
+        ),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'Ne pas poser de question de clarification ni de contre-question'
+        ),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          'distinguer explicitement trois catégories: ce que tu sais depuis le contexte courant, ce que tu infères, et ce qui manque pour conclure'
+        ),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          '"Ce que je sais:", "Ce que j infère:", "Ce que je ne sais pas / ce qui manque:"'
+        ),
+      },
+    });
+    expect(generateCall?.[1]).toMatchObject({
+      args: {
+        systemPrompt: expect.stringContaining(
+          '"Je ne sais pas..." ou "Je ne peux pas vérifier..."'
+        ),
+      },
+    });
+  });
+
   it('injects the active skill prompt into the active conversation path', async () => {
     skillActivatorMock.getActiveSkillId.mockReturnValue('skill-weather');
     skillActivatorMock.getSystemPromptForSkill.mockReturnValue(
