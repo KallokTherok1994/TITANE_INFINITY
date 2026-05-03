@@ -5,7 +5,7 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.3 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.3 — system install PASS — Historical baseline preserved below)
 
 ## Release v32.0.3 — 2026-05-03 (BUILD + Release + E2E proof + icon refresh)
 
@@ -30,9 +30,9 @@
 | `deployment/latest/SIZES.txt` | updated to 32.0.3 sizes | ✅ PASS |
 | `pnpm run e2e:desktop:proof:online-chat` | PASS (1 passed, 6 skipped) | ✅ PASS |
 | local launcher refresh | `~/.local/share/applications/titane-infinity.desktop` synced (`Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity`) | ✅ PASS |
-| system launcher refresh | `/usr/share/applications/titane-infinity.desktop` unchanged (`Exec=titane-infinity`) because sudo unavailable | ⚠️ BLOCKED |
-| binary sync `/usr/bin/titane-infinity` | blocked: `sudo: il est nécessaire de saisir un mot de passe` | ⚠️ BLOCKED |
-| post-build icon refresh | user cache updated, system cache BLOCKED_SUDO_REQUIRED | ⚠️ PARTIAL |
+| system launcher refresh | `/usr/share/applications/titane-infinity.desktop` — `Name=TITANE∞ v32.0.3`, `Exec=/usr/bin/titane-infinity` | ✅ PASS |
+| binary sync `/usr/bin/titane-infinity` | `dpkg -l` → `ii titane-infinity 32.0.3` — binary 53452144 bytes (2026-05-02 22:33) | ✅ PASS |
+| post-build icon refresh | user + system caches updated via `sudo bash scripts/post-build/update-desktop-icons.sh` | ✅ PASS |
 
 ## Release v32.0.2 — 2026-05-02 (BUILD ALL — Local bundles sealed)
 
