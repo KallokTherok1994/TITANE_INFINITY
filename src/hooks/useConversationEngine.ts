@@ -188,6 +188,50 @@ export function buildConversationFallbackMeta(
   };
 }
 
+function buildProviderRecoveryActions(
+  providerPreference: ConversationProviderPreference | undefined
+): string[] {
+  switch (providerPreference) {
+    case 'ollama':
+    case 'local':
+      return [
+        '- Vérifie qu\'Ollama répond sur http://127.0.0.1:11434/api/tags',
+        '- Vérifie que le modèle local attendu est bien installé (ex: gemma2:2b)',
+        '- Redémarre Ollama local, puis relance la vérification provider',
+      ];
+    case 'gemini':
+    case 'openai':
+    case 'claude':
+      return [
+        '- Vérifie la connexion réseau',
+        '- Vérifie la clé API du provider sélectionné',
+        '- Si besoin, bascule sur Ollama local pour un mode hors cloud',
+      ];
+    default:
+      return [
+        '- Vérifie la connexion réseau',
+        '- Vérifie les clés API cloud (Gemini/OpenAI/Claude)',
+        '- Ou démarre Ollama local si tu veux un mode local',
+      ];
+  }
+}
+
+function buildProviderRecoveryMessage(
+  requestedProvider: ConversationProviderPreference | 'auto',
+  reasonCode: ReasonCode | 'UNKNOWN'
+): string {
+  const actions = buildProviderRecoveryActions(requestedProvider).join('\n');
+  return `🤖 TITANE∞ est en mode récupération provider.
+
+Provider demandé: ${requestedProvider}
+Cause runtime: ${reasonCode}
+
+Je n'ai pas pu joindre le provider demandé pour cette requête. La sélection UI est conservée telle quelle pour éviter un fallback silencieux.
+
+Actions immédiates:
+${actions}`;
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
@@ -640,18 +684,10 @@ export function useConversationEngine(
           response.meta?.reason_code === 'PROVIDER_UNAVAILABLE';
 
         const requestedProvider = options.providerPreference ?? 'auto';
+        const runtimeReasonCode =
+          (response.meta?.reason_code as ReasonCode | undefined) ?? 'UNKNOWN';
         const assistantContent = noProviderPayload
-          ? `🤖 TITANE∞ est en mode récupération provider.
-
-Provider demandé: ${requestedProvider}
-Cause runtime: ${response.meta?.reason_code ?? 'UNKNOWN'}
-
-Je n'ai pas pu joindre le provider demandé pour cette requête. La sélection UI est conservée telle quelle pour éviter un fallback silencieux.
-
-Actions immédiates:
-- Vérifie la connexion réseau
-- Vérifie les clés API cloud (Gemini/OpenAI/Claude)
-- Ou démarre Ollama local si tu veux un mode local`
+          ? buildProviderRecoveryMessage(requestedProvider, runtimeReasonCode)
           : response.assistant_message;
 
         const previousUserMessage = [...messages]

@@ -785,3 +785,10 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 
 - Mode default: ajout plancher de profondeur explicite dans systemPrompt ('PLANCHER DE PROFONDEUR : toute réponse non-triviale doit contenir au moins 3 phrases substantielles')
 - Corrige récurrence AH-2026-04-26 (réponses trop courtes/génériques)
+
+# [2026-05-02] Provider Recovery Message Truth (ollama lane)
+
+- Surface canonique: /titane?tab=conversation via src/hooks/useConversationEngine.ts.
+- Verite runtime visible: quand `reason_code=PROVIDER_UNAVAILABLE` et provider demande `ollama|local`, le message de recuperation priorise maintenant les actions locales (endpoint `127.0.0.1:11434`, modele local attendu, restart Ollama) au lieu de pousser d abord les cles cloud.
+- Contrat conserve: aucune bascule silencieuse de provider; la selection UI reste publiee telle quelle.
+- Preuve associee: src/__tests__/hooks/useConversationEngine.test.ts (assertions sur contenu contextualise ollama).
