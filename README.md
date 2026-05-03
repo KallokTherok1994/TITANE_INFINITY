@@ -504,7 +504,7 @@ pnpm run dev              # Launch Titan-Dev (wrapper local complet)
 pnpm run dev:tauri        # Alias de dev (wrapper local complet)
 pnpm run dev:tauri:no-ollama  # Titan-Dev sans Ollama
 pnpm run ollama:verify    # Vérifier la config Ollama canonique
-pnpm run verify:ollama:cline  # Vérifier l alignement Ollama + Cline + agents
+pnpm run verify:ollama:boundary  # Vérifier la frontière Ollama Dev / Ollama Chat
 pnpm run build            # Build frontend
 corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable (on demand)
 pnpm run lint             # ESLint + Prettier
@@ -520,9 +520,11 @@ Mode 100% local disponible en désactivant les providers cloud dans les paramèt
 Vérité canonique locale gouvernée :
 
 - Base URL Ollama : `http://127.0.0.1:11434`
-- Modèle local canonique : `gemma2:2b`
+- Ollama Chat (runtime produit TITANE) : `gemma2:2b`
+- Ollama Dev (GitHub Copilot VS Code conversation) : `qwen3.5:9b`
 - Transport frontend vers Ollama : IPC Tauri uniquement
 - Build/deploy : autorisés sur demande explicite de l utilisateur, sans token ni passphrase
+- Règle frontière : Ollama Dev et Ollama Chat restent indépendants; communication autorisée seulement via interfaces explicites, tracées et bornées
 
 - **Autoriser au build (dev/stable)** : lancer avec `VITE_ENABLE_EXTERNAL_AI=1`
   - Exemple dev : `VITE_ENABLE_EXTERNAL_AI=1 pnpm run dev:tauri`
@@ -566,6 +568,7 @@ pnpm run copilot-xs:precommit  # Validation + tests (pre-commit)
 - `architect-guardian` — Respect du modèle 4-Ring et One Door
 - `anti-regression-guardian` — Couverture anti-dérive, mapping, preuves
 - `e2e-authority` — Discipline E2E et artefacts déterministes
+- `ollama-dev-chat-boundary` — Garde la séparation gouvernée entre Ollama Dev et Ollama Chat
 
 Commandes d audit agents :
 
@@ -573,7 +576,7 @@ Commandes d audit agents :
 pnpm run audit:agents:stack
 pnpm run verify:agents:advanced
 pnpm run verify:agents:workflow
-pnpm run verify:ollama:cline
+pnpm run verify:ollama:boundary
 ```
 
 Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)

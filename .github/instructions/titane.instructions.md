@@ -36,7 +36,7 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 - For frontend/UI work, enforce the scoped mandatory UI procedure from `frontend.instructions.md` as part of PATH_HEAVY verification whenever runtime truth, fullscreen, zoom, build, or cross-platform proof is involved.
 - For route/page/runtime regressions, enforce the canonical surface anti-drift sequence: identify the real visible surface first, then realign live aliases, deprecated routes, preloading, compatibility exports, and touched tooling references before PASS.
 - In direct-to-main mode explicitly requested by the user, finish each proven phase with a targeted commit on `MAIN` instead of batching multiple completed fixes together.
-- For Ollama/Cline alignment work, keep the canonical local AI truth synchronized across frontend defaults, backend loopback, scripts, local-agent safeguards, docs, and validators in the same patch. Default baseline: `http://127.0.0.1:11434` + `gemma2:2b` + IPC path + no token gate.
+- For Ollama Dev / Ollama Chat boundary work, keep the canonical local AI truth synchronized across frontend defaults, backend loopback, scripts, repo-owned Copilot instructions, `.github/agents/ollama-dev-chat-boundary.agent.md`, docs, and validators in the same patch. Development baseline: `http://127.0.0.1:11434` + `qwen3.5:9b` for GitHub Copilot VS Code conversation. Product baseline: `http://127.0.0.1:11434` + `gemma2:2b` + IPC path + no token gate for TITANE chat runtime. Controlled communication is allowed only through explicit, traced, bounded interfaces; shared default mutation between the two surfaces is forbidden.
 
 ## DONT
 
@@ -60,7 +60,7 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 
 - `bash scripts/verify_instructions.sh`
 - `bash scripts/autoheal/detect_recurrence.sh`
-- `bash scripts/verify/verify-ollama-cline-alignment.sh` when Ollama/Cline defaults, local-agent safeguards, or agent stack access paths change.
+- `bash scripts/verify/verify-ollama-copilot-boundary.sh` when Ollama Dev / Ollama Chat defaults, repo-owned Copilot doctrine, boundary agent, or agent stack access paths change.
 - For governed frontend/UI procedure changes also run targeted UI tests plus the instruction architecture validators below.
 - For instruction architecture changes also run:
   - `bash scripts/verify/verify_instruction_layers.sh`

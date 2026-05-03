@@ -1,3 +1,7 @@
+## 2026-05-02 : Ollama Dev / Chat Boundary Normalization
+
+> Frontière canonique rétablie: les defaults runtime partagés (`src/config/ollamaDefaults.ts`, `config/championChallenger.json`, `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ollama.rs`, `src-tauri/src/ai/ollama.rs`, `src-tauri/src/ollama_provider_refactor.rs`) reviennent au baseline produit `gemma2:2b`, alors que la voie développement GitHub Copilot VS Code + Ollama reste sur `qwen3.5:9b` via la doctrine repo-owned et le nouvel agent `.github/agents/ollama-dev-chat-boundary.agent.md`. La communication entre les deux surfaces est bornée aux validateurs, preuves et interfaces explicites; aucun partage de default backend/frontend n est permis.
+
 ## 2026-04-30 : AI Intelligence Unification v32 — Identity Kernel + CoT + BackendConversationMode 6→13
 
 > **Phase 1-3 — Identity Kernel propagation** : `buildTitaneIdentityPromptBlock()` injecté dans `src/core/prompts/profiles.ts` (CORE_SYSTEM_PROMPT fondation), les 5 modes legacy de `src/services/ai/chatModes.ts`, et les 20 modes actifs de `src/services/ai/chatModes.config.ts` (`htf_soumission` et `kalloks_arts` protégés).

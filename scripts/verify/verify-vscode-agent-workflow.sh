@@ -20,6 +20,17 @@ require_pattern() {
   fi
 }
 
+reject_pattern() {
+  local id="$1"
+  local pattern="$2"
+  shift 2
+  if _rg -n -- "$pattern" "$@" >/dev/null 2>&1; then
+    fail "$id"
+  else
+    pass "$id"
+  fi
+}
+
 require_all_patterns() {
   local id="$1"
   local file="$2"
@@ -48,6 +59,7 @@ require_file "VSCODE_TASKS_PRESENT" ".vscode/tasks.json"
 require_file "VSCODE_EXTENSIONS_PRESENT" ".vscode/extensions.json"
 require_file "PACKAGE_JSON_PRESENT" "package.json"
 require_file "DOCS_DEV_FR_PRESENT" "docs/dev/fr/README.md"
+require_file "OLLAMA_BOUNDARY_AGENT_PRESENT" ".github/agents/ollama-dev-chat-boundary.agent.md"
 
 require_pattern "VSCODE_RECOMMENDS_COPILOT_CHAT" 'github\.copilot-chat' .vscode/extensions.json
 require_pattern "VSCODE_RECOMMENDS_GITHUB_PR" 'github\.vscode-pull-request-github' .vscode/extensions.json
@@ -66,7 +78,11 @@ require_pattern "TASK_AGENT_STACK_PRESENT" '🤖 Audit: Agent Stack' .vscode/tas
 require_pattern "TASK_BUNDLED_PNPM_PRESENT" '\./\.tools/node/current/bin/pnpm' .vscode/tasks.json
 
 require_pattern "PKG_VERIFY_INSTRUCTIONS_PRESENT" '"verify:instructions"' package.json
-require_pattern "PKG_CLINE_VERIFY_PRESENT" '"cline:verify"' package.json
+require_pattern "PKG_VERIFY_OLLAMA_BOUNDARY_PRESENT" '"verify:ollama:boundary"' package.json
+legacy_script_prefix='"c'
+legacy_script_prefix+='line:'
+
+reject_pattern "PKG_CLINE_SCRIPTS_REMOVED" "$legacy_script_prefix" package.json
 require_pattern "PKG_COPILOT_VALIDATE_PRESENT" '"copilot-xs:validate"' package.json
 require_pattern "PKG_SYNC_MAPPING_PRESENT" '"sync:mapping"' package.json
 require_pattern "PKG_TEST_ARCH_PRESENT" '"test:architecture"' package.json
@@ -80,6 +96,38 @@ require_all_patterns \
   "custom agent, specialist delegation, or exploration-oriented handoff" \
   "canonical local discovery or evidence collection" \
   "classify the delegation gap honestly"
+
+require_all_patterns \
+  "COPILOT_KERNEL_OLLAMA_BOUNDARY_PRESENT" \
+  ".github/copilot-instructions.md" \
+  "Ollama Dev / Ollama Chat boundary truth" \
+  "qwen3\.5:9b" \
+  "gemma2:2b" \
+  "Controlled communication"
+
+require_all_patterns \
+  "TITANE_SCOPED_OLLAMA_BOUNDARY_PRESENT" \
+  ".github/instructions/titane.instructions.md" \
+  "Ollama Dev / Ollama Chat boundary work" \
+  "qwen3\.5:9b" \
+  "gemma2:2b" \
+  "shared default mutation"
+
+require_all_patterns \
+  "ROOT_AGENTS_OLLAMA_BOUNDARY_PRESENT" \
+  "AGENTS.md" \
+  "Ollama Boundary Guardian" \
+  "qwen3\.5:9b" \
+  "gemma2:2b" \
+  "verify:ollama:boundary"
+
+require_all_patterns \
+  "OLLAMA_BOUNDARY_AGENT_CONTENT_PRESENT" \
+  ".github/agents/ollama-dev-chat-boundary.agent.md" \
+  "Ollama Dev = GitHub Copilot VS Code conversation" \
+  "qwen3\.5:9b" \
+  "gemma2:2b" \
+  "communication contrôlée"
 
 require_all_patterns \
   "HYBRID_MEMORY_DISPATCH_EXPLORE_QUOTA_FALLBACK_PRESENT" \

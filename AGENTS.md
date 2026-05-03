@@ -125,12 +125,20 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Required: Dashboard de monitoring, logs d'événements, tests E2E de résilience, intégration avec autoheal.
 - Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md` si dashboard UI.
 
+### Ollama Boundary Guardian (.github/agents/ollama-dev-chat-boundary.agent.md, scripts/verify/)
+
+- Scope: Frontière obligatoire entre Ollama Dev via Copilot VS Code et Ollama Chat dans le runtime TITANE.
+- Gate: Zéro contamination croisée des defaults, prompts, registre champion/challenger et fallbacks backend; communication contrôlée seulement via interfaces explicites et traçables.
+- Required: Doctrine repo-owned alignée, validateur `verify:ollama:boundary`, preuve de baseline dev `qwen3.5:9b`, preuve de baseline chat `gemma2:2b`, rollback documenté.
+- Mapping: update `OLLAMA_RUNTIME_MAP.md`, `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`.
+
 ## Runtime Truth Procedure
 
 - Les dashboards agents avancés doivent publier une vérité runtime ou registry réelle quand elle existe déjà dans le repo: métriques, alertes, transport IPC, registre champion/challenger, feature flags, timeouts, état provider.
 - Le catalogue agents avancés reste la base canonique de qualification, mais les services dédiés doivent enrichir ce socle avec les signaux réels au lieu d afficher un stub figé.
-- Toute évolution Ollama/Cline doit rester alignée sur `http://127.0.0.1:11434`, `gemma2:2b`, la voie IPC canonique et l absence de token gate de build/deploy.
-- La commande canonique de vérification d alignement est `pnpm run verify:ollama:cline`.
+- Toute évolution sur la frontière Ollama Dev / Ollama Chat doit garder le développement GitHub Copilot VS Code aligné sur `http://127.0.0.1:11434` + `qwen3.5:9b`, tout en gardant le runtime chat TITANE aligné sur `gemma2:2b`, la voie IPC canonique et l absence de token gate de build/deploy.
+- La communication entre les deux surfaces n est autorisée que via des interfaces explicites, bornées et traçables; aucune mutation partagée de default runtime n est permise.
+- La commande canonique de vérification d alignement est `pnpm run verify:ollama:boundary`.
 
 ## Chain-of-Thought Validation
 

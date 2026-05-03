@@ -17,8 +17,6 @@ const allScripts = Object.keys(scripts).sort((a, b) => a.localeCompare(b));
 const isGuardTestLike = name =>
   name.startsWith('guard:') &&
   /(test|tests|contract|contracts|ipc|compliance|schema|gate|gates)/i.test(name);
-const isClineTestLike = name =>
-  name.startsWith('cline:') && /(test|tests|hook|hooks|verify|check)/i.test(name);
 
 const testLikeScripts = allScripts.filter(name => {
   if (name === 'test' || name.startsWith('test:')) return true;
@@ -26,7 +24,6 @@ const testLikeScripts = allScripts.filter(name => {
   if (name.startsWith('verify:')) return true;
   if (name.startsWith('copilot-xs:')) return true;
   if (isGuardTestLike(name)) return true;
-  if (isClineTestLike(name)) return true;
   return false;
 });
 
