@@ -5,7 +5,37 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.2 — local build + deployment + system install + launcher sync PASS — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.3 — local build + deployment PASS — system install pending sudo — Historical baseline preserved below)
+
+## Release v33.0.3 — 2026-05-03 (Patch release: Ollama /api/chat conversational memory fix)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 33.0.3 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 33.0.3 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 33.0.3 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 33.0.3 | ✅ PASS |
+| `runtime/stable/tauri.conf.json` version | 33.0.3 | ✅ PASS |
+| `tauri.base.json` + `src-tauri/tauri.base.json` | 33.0.3 | ✅ PASS |
+| `pnpm run tauri build` | PASS (15m44s) | ✅ PASS |
+| AppImage | `titane-infinity_33.0.3_amd64.AppImage` (96885240 bytes) | ✅ PASS |
+| DEB | `titane-infinity_33.0.3_amd64.deb` (24339014 bytes) | ✅ PASS |
+| RPM | `titane-infinity-33.0.3-1.x86_64.rpm` (24338230 bytes) | ✅ PASS |
+| sha256 AppImage | `dbafe320d8b98e6ecf33f72abe5058f7ffd682938f90a56ebe5a3a046e2e98cf` | ✅ PASS |
+| sha256 DEB | `c85d73e0a4cc5275289a9c4db006adf02676deff3caa0f6edf724620a1c02f6a` | ✅ PASS |
+| sha256 RPM | `2af53ba5abb64910b8bbdbb1bcd9204ebce559ea2dbbb78624d4aa313a51119e` | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_33.0.3.txt` | generated | ✅ PASS |
+| `deployment/latest/VERSION.txt` | 33.0.3 | ✅ PASS |
+| `deployment/latest/MANIFEST.json` | updated to 33.0.3 | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | updated to 33.0.3 hashes | ✅ PASS |
+| `deployment/latest/SIZES.txt` | updated to 33.0.3 sizes | ✅ PASS |
+| System install (`sudo dpkg -i`) | ⚠️ PENDING — sudo requis | ⚠️ PENDING |
+| Launcher sync | ⚠️ PENDING — dépend dpkg | ⚠️ PENDING |
+
+### Release note — v33.0.3
+
+- `v33.0.3` corrige la régression de mémoire conversationnelle Ollama : `OllamaClient` route désormais vers `POST /api/chat` avec tableau `messages[]` structuré quand l'historique de conversation est présent (marqueurs `STM_RECENT_TURNS`, `CONVERSATION_HISTORY`, `\n\nUser: `). Fallback automatique vers `/api/generate` sur erreur HTTP. 4 tests unitaires Rust ajoutés (PASS).
+- Commit fix: `ab899bb55` — `fix(chat): Ollama /api/chat avec mémoire conversationnelle`
 
 ## Release v33.0.2 — 2026-05-03 (Patch release: IPC chat_orchestrator fix + hooks + diagnostic/explainability tests)
 

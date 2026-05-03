@@ -1,2 +1,3 @@
-24317202 titane-infinity_33.0.2_amd64.deb
-96836088 titane-infinity_33.0.2_amd64.AppImage
+AppImage: 96885240 bytes
+DEB: 24339014 bytes
+RPM: 24338230 bytes

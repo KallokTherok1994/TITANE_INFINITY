@@ -1,8 +1,9 @@
 {
-  "version": "33.0.2",
-  "timestamp": "2026-05-03T18:30:00Z",
-  "artifacts": [
-    {"name": "titane-infinity_33.0.2_amd64.deb", "sha256": "6c8bd196d0f83293d8edf67b324106e62a47932c7225df8fa26020e3706e43c0", "size": 24317202},
-    {"name": "titane-infinity_33.0.2_amd64.AppImage", "sha256": "e3ef64d46b3c141721a732fb3b564ad3831e078df37d9d0b060458732e038b3c", "size": 96836088}
-  ]
+  "version": "33.0.3",
+  "date": "2026-05-03T19:50:20-04:00",
+  "artifacts": {
+    "appimage": {"file": "titane-infinity_33.0.3_amd64.AppImage", "sha256": "dbafe320d8b98e6ecf33f72abe5058f7ffd682938f90a56ebe5a3a046e2e98cf", "size": 96885240},
+    "deb": {"file": "titane-infinity_33.0.3_amd64.deb", "sha256": "c85d73e0a4cc5275289a9c4db006adf02676deff3caa0f6edf724620a1c02f6a", "size": 24339014},
+    "rpm": {"file": "titane-infinity-33.0.3-1.x86_64.rpm", "sha256": "2af53ba5abb64910b8bbdbb1bcd9204ebce559ea2dbbb78624d4aa313a51119e", "size": 24338230}
+  }
 }
