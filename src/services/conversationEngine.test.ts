@@ -954,10 +954,13 @@ describe('conversationEngine.processMessage', () => {
     });
 
     try {
-      await processMessage('Que mémorises-tu dans cette session et que fais-tu offline ?', {
-        conversationId: 'c10c',
-        providerPreference: 'ollama',
-      });
+      await processMessage(
+        'Que mémorises-tu dans cette session et que fais-tu offline ?',
+        {
+          conversationId: 'c10c',
+          providerPreference: 'ollama',
+        }
+      );
     } finally {
       Object.defineProperty(window.navigator, 'onLine', {
         configurable: true,
@@ -971,7 +974,9 @@ describe('conversationEngine.processMessage', () => {
 
     expect(generateCall?.[1]).toMatchObject({
       args: {
-        systemPrompt: expect.stringContaining('État mémoire persistante courant: skipped'),
+        systemPrompt: expect.stringContaining(
+          'État mémoire persistante courant: skipped'
+        ),
       },
     });
     expect(generateCall?.[1]).toMatchObject({
@@ -1064,10 +1069,13 @@ describe('conversationEngine.processMessage', () => {
       return null;
     });
 
-    await processMessage('Reformule ma dernière question puis dis ce que tu ne sais pas.', {
-      conversationId: 'c10e',
-      providerPreference: 'ollama',
-    });
+    await processMessage(
+      'Reformule ma dernière question puis dis ce que tu ne sais pas.',
+      {
+        conversationId: 'c10e',
+        providerPreference: 'ollama',
+      }
+    );
 
     const generateCall = vi
       .mocked(secureInvoke)

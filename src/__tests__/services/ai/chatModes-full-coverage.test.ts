@@ -45,10 +45,15 @@ describe('🗂️ chatModes — Schema integrity (tous les modes)', () => {
     for (const modeId of ACTIVE_MODES) {
       const config = CHAT_MODES_CONFIG[modeId];
       if (!config.systemPrompt || config.systemPrompt.length < 100) {
-        violations.push(`${modeId} systemPrompt: ${config.systemPrompt?.length ?? 0} chars`);
+        violations.push(
+          `${modeId} systemPrompt: ${config.systemPrompt?.length ?? 0} chars`
+        );
       }
     }
-    expect(violations, `Modes avec systemPrompt trop court: ${violations.join(', ')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Modes avec systemPrompt trop court: ${violations.join(', ')}`
+    ).toHaveLength(0);
   });
 
   it('Tous les modes actifs ont temperature ∈ [0.25, 1.0]', () => {
@@ -60,7 +65,10 @@ describe('🗂️ chatModes — Schema integrity (tous les modes)', () => {
         violations.push(`${modeId}: temperature=${config.temperature}`);
       }
     }
-    expect(violations, `Modes hors plage temperature: ${violations.join(', ')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Modes hors plage temperature: ${violations.join(', ')}`
+    ).toHaveLength(0);
   });
 
   it('Tous les modes actifs ont maxTokens ∈ [500, 16000]', () => {
@@ -72,7 +80,10 @@ describe('🗂️ chatModes — Schema integrity (tous les modes)', () => {
         violations.push(`${modeId}: maxTokens=${config.maxTokens}`);
       }
     }
-    expect(violations, `Modes hors plage maxTokens: ${violations.join(', ')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Modes hors plage maxTokens: ${violations.join(', ')}`
+    ).toHaveLength(0);
   });
 
   it('Tous les modes actifs ont id, label, description, category, icon non vides', () => {
@@ -83,7 +94,9 @@ describe('🗂️ chatModes — Schema integrity (tous les modes)', () => {
         violations.push(modeId);
       }
     }
-    expect(violations, `Modes avec champs vides: ${violations.join(', ')}`).toHaveLength(0);
+    expect(violations, `Modes avec champs vides: ${violations.join(', ')}`).toHaveLength(
+      0
+    );
   });
 
   it('Tous les modes actifs ont permissionLevel ∈ [0, 5]', () => {
@@ -104,7 +117,9 @@ describe('🗂️ chatModes — Schema integrity (tous les modes)', () => {
         violations.push(modeId);
       }
     }
-    expect(violations, `Modes sans toolsAllowed: ${violations.join(', ')}`).toHaveLength(0);
+    expect(violations, `Modes sans toolsAllowed: ${violations.join(', ')}`).toHaveLength(
+      0
+    );
   });
 
   it('Tous les modes actifs ont version défini', () => {
@@ -115,7 +130,10 @@ describe('🗂️ chatModes — Schema integrity (tous les modes)', () => {
 
   it('Tous les modes actifs ont sortOrder défini (nombre)', () => {
     for (const modeId of ACTIVE_MODES) {
-      expect(typeof CHAT_MODES_CONFIG[modeId].sortOrder, `${modeId} sortOrder non number`).toBe('number');
+      expect(
+        typeof CHAT_MODES_CONFIG[modeId].sortOrder,
+        `${modeId} sortOrder non number`
+      ).toBe('number');
     }
   });
 });
@@ -123,7 +141,6 @@ describe('🗂️ chatModes — Schema integrity (tous les modes)', () => {
 // ─── FINE-TUNING: MODES CRITIQUES ────────────────────────────────────────────
 
 describe('🎯 chatModes — Fine-tuning assertions par mode critique', () => {
-
   it('MODE default: maxTokens >= 2000 (réponses substantielles)', () => {
     expect(CHAT_MODES_CONFIG.default.maxTokens).toBeGreaterThanOrEqual(2000);
   });
@@ -147,7 +164,9 @@ describe('🎯 chatModes — Fine-tuning assertions par mode critique', () => {
     expect(prompt).toContain('RÈGLES OPÉRATIONNELLES');
     expect(prompt).toContain('commencer par la réponse utile dès la première phrase');
     expect(prompt).toContain('je suis toujours en apprentissage');
-    expect(prompt).toContain('Pour une demande de fallback local, commencer par "Fallback local:"');
+    expect(prompt).toContain(
+      'Pour une demande de fallback local, commencer par "Fallback local:"'
+    );
   });
 
   it('MODE brainstorming: temperature >= 0.85 (haute créativité)', () => {
@@ -175,7 +194,9 @@ describe('🎯 chatModes — Fine-tuning assertions par mode critique', () => {
   it('MODE journal: systemPrompt contient "IFS" ou "FOCUSING" ou "introspect"', () => {
     const prompt = CHAT_MODES_CONFIG.journal.systemPrompt.toLowerCase();
     expect(
-      prompt.includes('ifs') || prompt.includes('focusing') || prompt.includes('introspect')
+      prompt.includes('ifs') ||
+        prompt.includes('focusing') ||
+        prompt.includes('introspect')
     ).toBeTruthy();
   });
 
@@ -195,7 +216,12 @@ describe('🎯 chatModes — Fine-tuning assertions par mode critique', () => {
 
   it('MODE admin: systemPrompt contient "diagnostic" ou "système"', () => {
     const prompt = CHAT_MODES_CONFIG.admin.systemPrompt.toLowerCase();
-    expect(prompt.includes('diagnostic') || prompt.includes('système') || prompt.includes('system') || prompt.includes('infrastructure')).toBeTruthy();
+    expect(
+      prompt.includes('diagnostic') ||
+        prompt.includes('système') ||
+        prompt.includes('system') ||
+        prompt.includes('infrastructure')
+    ).toBeTruthy();
   });
 
   it('MODE strategy: systemPrompt contient "stratégi" ou "SWOT" ou "OKR"', () => {
@@ -214,7 +240,9 @@ describe('🎯 chatModes — Fine-tuning assertions par mode critique', () => {
   it('MODE synthesis: systemPrompt contient "connexion" ou "synthèse" ou "pattern"', () => {
     const prompt = CHAT_MODES_CONFIG.synthesis.systemPrompt.toLowerCase();
     expect(
-      prompt.includes('connexion') || prompt.includes('synthèse') || prompt.includes('pattern')
+      prompt.includes('connexion') ||
+        prompt.includes('synthèse') ||
+        prompt.includes('pattern')
     ).toBeTruthy();
   });
 
@@ -226,7 +254,10 @@ describe('🎯 chatModes — Fine-tuning assertions par mode critique', () => {
         violations.push(modeId);
       }
     }
-    expect(violations, `Modes sans obligation de répondre en français: ${violations.join(', ')}`).toHaveLength(0);
+    expect(
+      violations,
+      `Modes sans obligation de répondre en français: ${violations.join(', ')}`
+    ).toHaveLength(0);
   });
 });
 
@@ -299,7 +330,9 @@ describe('🛠️ chatModes — Utilitaires et helpers', () => {
         id => CHAT_MODES_CONFIG[id].permissionLevel === 2
       );
       for (const modeId of restrictedModes) {
-        expect(isModeAllowed(modeId, 1), `${modeId} devrait être refusé à pl=1`).toBe(false);
+        expect(isModeAllowed(modeId, 1), `${modeId} devrait être refusé à pl=1`).toBe(
+          false
+        );
       }
     });
 
@@ -308,7 +341,9 @@ describe('🛠️ chatModes — Utilitaires et helpers', () => {
         id => CHAT_MODES_CONFIG[id].permissionLevel === 2
       );
       for (const modeId of restrictedModes) {
-        expect(isModeAllowed(modeId, 2), `${modeId} devrait être autorisé à pl=2`).toBe(true);
+        expect(isModeAllowed(modeId, 2), `${modeId} devrait être autorisé à pl=2`).toBe(
+          true
+        );
       }
     });
   });
@@ -417,7 +452,10 @@ describe('🗂️ MODES_BY_CATEGORY', () => {
         }
       }
     }
-    expect(violations, `IDs de catégorie inconnus: ${violations.join(', ')}`).toHaveLength(0);
+    expect(
+      violations,
+      `IDs de catégorie inconnus: ${violations.join(', ')}`
+    ).toHaveLength(0);
   });
 
   it('La catégorie "general" contient "default"', () => {

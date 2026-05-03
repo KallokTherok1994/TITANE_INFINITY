@@ -24,11 +24,7 @@ const { expect } = require('chai');
 
 // ─── Report setup ─────────────────────────────────────────────────────────────
 const REPORT_TS = process.env.REPORT_TS || new Date().toISOString().replace(/[:.]/g, '-');
-const REPORT_DIR = path.join(
-  process.cwd(),
-  'reports/chat_qa_mode_validation',
-  REPORT_TS
-);
+const REPORT_DIR = path.join(process.cwd(), 'reports/chat_qa_mode_validation', REPORT_TS);
 const SCREEN_DIR = path.join(REPORT_DIR, 'screenshots');
 const EXPORTS_DIR = path.join(REPORT_DIR, 'exports');
 const LOGS_DIR = path.join(REPORT_DIR, 'logs');
@@ -99,14 +95,17 @@ function calcQualityScore(response, keywords, modeId) {
     response.toLowerCase().includes(k.toLowerCase())
   ).length;
   const keywordScore = keywords.length > 0 ? (keywordHits / keywords.length) * 40 : 40;
-  const frenchScore = response.includes('é') || response.includes('à') || response.includes('ê') ? 20 : 0;
+  const frenchScore =
+    response.includes('é') || response.includes('à') || response.includes('ê') ? 20 : 0;
   const total = Math.round(lenScore + keywordScore + frenchScore);
   if (total < 60) {
     M.finetuneSuggestions.push({
       modeId,
       score: total,
       issue: `Score qualité insuffisant (${total}/100)`,
-      keywordsMissed: keywords.filter(k => !response.toLowerCase().includes(k.toLowerCase())),
+      keywordsMissed: keywords.filter(
+        k => !response.toLowerCase().includes(k.toLowerCase())
+      ),
       responseLength: len,
     });
   }
@@ -131,8 +130,8 @@ async function selectMode(modeId) {
   if (await select.isExisting()) {
     await select.waitForDisplayed({ timeout: 10000 });
     const availableValues = await browser.execute(element => {
-      return Array.from(element?.querySelectorAll('option') || []).map(option =>
-        option.getAttribute('value') || ''
+      return Array.from(element?.querySelectorAll('option') || []).map(
+        option => option.getAttribute('value') || ''
       );
     }, select);
     if (!availableValues.includes(modeId)) {
@@ -209,16 +208,18 @@ async function waitForResponse() {
   // Pause initiale pour laisser Tauri traiter le click et afficher le loader
   await browser.pause(2000);
   // Attendre que le loader APPARAISSE (confirme que la requête est partie)
-  await browser.waitUntil(
-    async () => {
-      const loaders = await $$('[data-testid="chat-loading"]');
-      for (const loader of loaders) {
-        if (await loader.isDisplayed().catch(() => false)) return true;
-      }
-      return false;
-    },
-    { timeout: 10000, interval: 300 }
-  ).catch(() => {}); // timeout OK si le loader est trop rapide
+  await browser
+    .waitUntil(
+      async () => {
+        const loaders = await $$('[data-testid="chat-loading"]');
+        for (const loader of loaders) {
+          if (await loader.isDisplayed().catch(() => false)) return true;
+        }
+        return false;
+      },
+      { timeout: 10000, interval: 300 }
+    )
+    .catch(() => {}); // timeout OK si le loader est trop rapide
   // Attendre que le loader DISPARAISSE
   await browser.waitUntil(
     async () => {
@@ -275,7 +276,7 @@ async function getActiveConversationMode() {
   try {
     const runtimeState = await $('[data-testid="chat-runtime-state"]');
     if (await runtimeState.isExisting()) {
-      return await runtimeState.getAttribute('data-conversation-mode') || '';
+      return (await runtimeState.getAttribute('data-conversation-mode')) || '';
     }
     const runtimeBadge = await $('[data-testid="chat-runtime-badge"]');
     if (await runtimeBadge.isExisting()) {
@@ -293,7 +294,7 @@ async function resetConversation() {
   try {
     // Chercher un bouton "Nouvelle conversation" ou reset
     const newConvBtn = await $('[data-testid="chat-new-conversation"]');
-    if (await newConvBtn.isExisting() && await newConvBtn.isDisplayed()) {
+    if ((await newConvBtn.isExisting()) && (await newConvBtn.isDisplayed())) {
       await newConvBtn.click();
       await browser.pause(1000);
       return;
@@ -315,7 +316,7 @@ const QA_SCENARIOS = {
       keywords: ['stratégie', 'tactique', 'exemple'],
     },
     {
-      q: 'Analyse les avantages et inconvénients de l\'architecture microservices vs monolithique pour une startup.',
+      q: "Analyse les avantages et inconvénients de l'architecture microservices vs monolithique pour une startup.",
       keywords: ['microservices', 'monolithique', 'avantages'],
     },
     {
@@ -331,11 +332,11 @@ const QA_SCENARIOS = {
       keywords: ['deep work', 'focus', 'concentration'],
     },
     {
-      q: 'Comment évaluer la qualité d\'une base de code que je viens de récupérer ?',
+      q: "Comment évaluer la qualité d'une base de code que je viens de récupérer ?",
       keywords: ['qualité', 'code', 'évaluation'],
     },
     {
-      q: 'Quelles métriques utiliser pour mesurer la performance d\'une équipe de développement ?',
+      q: "Quelles métriques utiliser pour mesurer la performance d'une équipe de développement ?",
       keywords: ['métriques', 'performance', 'équipe'],
     },
     {
@@ -343,7 +344,7 @@ const QA_SCENARIOS = {
       keywords: ['conflit', 'collègue', 'relation'],
     },
     {
-      q: 'Explique la loi de Parkinson et comment elle s\'applique à la productivité personnelle.',
+      q: "Explique la loi de Parkinson et comment elle s'applique à la productivité personnelle.",
       keywords: ['parkinson', 'productivité', 'temps'],
     },
     {
@@ -358,11 +359,11 @@ const QA_SCENARIOS = {
       keywords: ['objectif', 'procrastination', 'action'],
     },
     {
-      q: 'Je veux améliorer ma communication avec mon équipe. Comment mesurer où j\'en suis maintenant ?',
+      q: "Je veux améliorer ma communication avec mon équipe. Comment mesurer où j'en suis maintenant ?",
       keywords: ['communication', 'équipe', 'mesurer'],
     },
     {
-      q: 'J\'ai peur de déléguer parce que je pense que personne ne fera aussi bien que moi. Que faire ?',
+      q: "J'ai peur de déléguer parce que je pense que personne ne fera aussi bien que moi. Que faire ?",
       keywords: ['déléguer', 'peur', 'contrôle'],
     },
     {
@@ -374,7 +375,7 @@ const QA_SCENARIOS = {
       keywords: ['forces', 'objectifs', 'alignement'],
     },
     {
-      q: 'Je veux changer de carrière mais j\'ai peur de recommencer à zéro. Aide-moi à évaluer l\'option.',
+      q: "Je veux changer de carrière mais j'ai peur de recommencer à zéro. Aide-moi à évaluer l'option.",
       keywords: ['carrière', 'changement', 'évaluation'],
     },
     {
@@ -386,11 +387,11 @@ const QA_SCENARIOS = {
       keywords: ['équilibre', 'limites', 'personnel'],
     },
     {
-      q: 'J\'ai du mal à prioriser — je dis oui à tout. Quelle pratique concrète pour apprendre à dire non ?',
+      q: "J'ai du mal à prioriser — je dis oui à tout. Quelle pratique concrète pour apprendre à dire non ?",
       keywords: ['priorité', 'non', 'pratique'],
     },
     {
-      q: 'Quel est le cycle OODA et comment l\'appliquer pour prendre de meilleures décisions rapidement ?',
+      q: "Quel est le cycle OODA et comment l'appliquer pour prendre de meilleures décisions rapidement ?",
       keywords: ['ooda', 'décision', 'cycle'],
     },
   ],
@@ -405,11 +406,11 @@ const QA_SCENARIOS = {
       keywords: ['solid', 'typescript', 'principe'],
     },
     {
-      q: 'Comment architecturer un système de gestion d\'état complexe en React sans Redux ?',
+      q: "Comment architecturer un système de gestion d'état complexe en React sans Redux ?",
       keywords: ['react', 'état', 'architecture'],
     },
     {
-      q: 'Quelle est la différence entre async/await et les Promises en JavaScript ? Montre les cas d\'usage.',
+      q: "Quelle est la différence entre async/await et les Promises en JavaScript ? Montre les cas d'usage.",
       keywords: ['async', 'promise', 'javascript'],
     },
     {
@@ -425,11 +426,11 @@ const QA_SCENARIOS = {
       keywords: ['test', 'composant', 'hooks'],
     },
     {
-      q: 'Qu\'est-ce que le pattern Repository en architecture logicielle et quand l\'utiliser ?',
+      q: "Qu'est-ce que le pattern Repository en architecture logicielle et quand l'utiliser ?",
       keywords: ['repository', 'pattern', 'architecture'],
     },
     {
-      q: 'Comment optimiser les performances d\'une requête SQL qui prend 5 secondes sur 1M de lignes ?',
+      q: "Comment optimiser les performances d'une requête SQL qui prend 5 secondes sur 1M de lignes ?",
       keywords: ['sql', 'performance', 'optimisation'],
     },
     {
@@ -460,7 +461,7 @@ const QA_SCENARIOS = {
       keywords: ['rollback', 'docker', 'déploiement'],
     },
     {
-      q: 'Comment monitorer la consommation CPU/RAM d\'un processus Rust en production ?',
+      q: "Comment monitorer la consommation CPU/RAM d'un processus Rust en production ?",
       keywords: ['monitoring', 'cpu', 'ram'],
     },
     {
@@ -483,7 +484,7 @@ const QA_SCENARIOS = {
 
   strategy: [
     {
-      q: 'Réalise un SWOT complet pour une startup B2B SaaS qui propose un outil d\'IA pour PME.',
+      q: "Réalise un SWOT complet pour une startup B2B SaaS qui propose un outil d'IA pour PME.",
       keywords: ['swot', 'forces', 'opportunités'],
     },
     {
@@ -491,7 +492,7 @@ const QA_SCENARIOS = {
       keywords: ['okr', 'objectifs', 'équipe'],
     },
     {
-      q: 'J\'ai 3 opportunités business devant moi et un seul budget. Comment décider laquelle prioriser ?',
+      q: "J'ai 3 opportunités business devant moi et un seul budget. Comment décider laquelle prioriser ?",
       keywords: ['priorité', 'opportunité', 'budget'],
     },
     {
@@ -511,7 +512,7 @@ const QA_SCENARIOS = {
       keywords: ['décision', 'stratégique', 'incertitude'],
     },
     {
-      q: 'Explique la matrice McKinsey et comment l\'utiliser pour allouer des ressources entre projets.',
+      q: "Explique la matrice McKinsey et comment l'utiliser pour allouer des ressources entre projets.",
       keywords: ['mckinsey', 'ressources', 'matrice'],
     },
     {
@@ -534,11 +535,11 @@ const QA_SCENARIOS = {
       keywords: ['scamper', 'réunion', 'améliorer'],
     },
     {
-      q: 'Brainstorming sur les façons dont l\'IA générative pourrait transformer le secteur de l\'éducation.',
+      q: "Brainstorming sur les façons dont l'IA générative pourrait transformer le secteur de l'éducation.",
       keywords: ['ia', 'éducation', 'transformer'],
     },
     {
-      q: 'Génère 10 concepts d\'application mobile autour de la santé mentale et la pleine conscience.',
+      q: "Génère 10 concepts d'application mobile autour de la santé mentale et la pleine conscience.",
       keywords: ['santé mentale', 'application', 'conscience'],
     },
     {
@@ -546,7 +547,7 @@ const QA_SCENARIOS = {
       keywords: ['inversée', 'produit', 'améliorer'],
     },
     {
-      q: 'Brainstorming: comment combiner la méthode GTD avec l\'IA pour créer un système de productivité next-gen ?',
+      q: "Brainstorming: comment combiner la méthode GTD avec l'IA pour créer un système de productivité next-gen ?",
       keywords: ['gtd', 'ia', 'productivité'],
     },
     {
@@ -558,7 +559,7 @@ const QA_SCENARIOS = {
       keywords: ['connexions', 'permaculture', 'agile'],
     },
     {
-      q: 'Brainstorming sur les futures interfaces homme-machine au-delà de l\'écran tactile.',
+      q: "Brainstorming sur les futures interfaces homme-machine au-delà de l'écran tactile.",
       keywords: ['interface', 'futur', 'humain'],
     },
     {
@@ -589,19 +590,19 @@ const QA_SCENARIOS = {
       keywords: ['architecture', 'microservices', 'hexagonale'],
     },
     {
-      q: 'Connecte la neuroplasticité du cerveau avec les principes d\'apprentissage accéléré (spaced repetition, etc.).',
+      q: "Connecte la neuroplasticité du cerveau avec les principes d'apprentissage accéléré (spaced repetition, etc.).",
       keywords: ['neuroplasticité', 'apprentissage', 'cerveau'],
     },
     {
-      q: 'Quel insight émerge quand on connecte: économie de l\'attention + dopamine + design persuasif + bien-être ?',
+      q: "Quel insight émerge quand on connecte: économie de l'attention + dopamine + design persuasif + bien-être ?",
       keywords: ['attention', 'dopamine', 'bien-être'],
     },
     {
-      q: 'Synthèse des modèles de prise de décision: OODA, DECIDE, Cynefin — qu\'est-ce qu\'ils partagent ?',
+      q: "Synthèse des modèles de prise de décision: OODA, DECIDE, Cynefin — qu'est-ce qu'ils partagent ?",
       keywords: ['ooda', 'cynefin', 'décision'],
     },
     {
-      q: 'Connecte le concept d\'antifragilité (Taleb) avec une stratégie de développement logiciel robuste.',
+      q: "Connecte le concept d'antifragilité (Taleb) avec une stratégie de développement logiciel robuste.",
       keywords: ['antifragilité', 'taleb', 'logiciel'],
     },
     {
@@ -616,7 +617,7 @@ const QA_SCENARIOS = {
       keywords: ['smart', 'rust', 'plan'],
     },
     {
-      q: 'Planifie le lancement d\'un produit SaaS en 6 mois — jalons, risques et critères de succès.',
+      q: "Planifie le lancement d'un produit SaaS en 6 mois — jalons, risques et critères de succès.",
       keywords: ['lancement', 'jalons', 'risques'],
     },
     {
@@ -632,11 +633,11 @@ const QA_SCENARIOS = {
       keywords: ['développement', 'personnel', 'cto'],
     },
     {
-      q: 'Comment planifier une refonte complète d\'un frontend React legacy avec 0 régression ?',
+      q: "Comment planifier une refonte complète d'un frontend React legacy avec 0 régression ?",
       keywords: ['refonte', 'react', 'régression'],
     },
     {
-      q: 'Planifie la mise en place d\'un système de CI/CD de A à Z pour une équipe de 3 développeurs.',
+      q: "Planifie la mise en place d'un système de CI/CD de A à Z pour une équipe de 3 développeurs.",
       keywords: ['ci/cd', 'déploiement', 'équipe'],
     },
     {
@@ -655,35 +656,35 @@ const QA_SCENARIOS = {
 
   journal: [
     {
-      q: 'Je me sens dépassé par le nombre de projets que j\'ai lancés. Je ne sais pas lequel abandonner.',
+      q: "Je me sens dépassé par le nombre de projets que j'ai lancés. Je ne sais pas lequel abandonner.",
       keywords: ['ressens', 'projets', 'espace'],
     },
     {
-      q: 'J\'ai l\'impression de travailler beaucoup mais de n\'avancer nulle part. Ça me pèse énormément.',
+      q: "J'ai l'impression de travailler beaucoup mais de n'avancer nulle part. Ça me pèse énormément.",
       keywords: ['impression', 'avancer', 'corps'],
     },
     {
-      q: 'J\'ai réalisé aujourd\'hui que j\'ai peur de réussir autant que j\'ai peur d\'échouer.',
+      q: "J'ai réalisé aujourd'hui que j'ai peur de réussir autant que j'ai peur d'échouer.",
       keywords: ['peur', 'réussir', 'échouer'],
     },
     {
-      q: 'Je veux explorer mon rapport à la perfection — comment ça me bloque et m\'aide à la fois.',
+      q: "Je veux explorer mon rapport à la perfection — comment ça me bloque et m'aide à la fois.",
       keywords: ['perfection', 'explorer', 'partie'],
     },
     {
-      q: 'Je ressens un manque de sens profond depuis quelques semaines. Je ne sais pas d\'où ça vient.',
+      q: "Je ressens un manque de sens profond depuis quelques semaines. Je ne sais pas d'où ça vient.",
       keywords: ['sens', 'ressens', 'espace'],
     },
     {
-      q: 'Ce matin, j\'ai réalisé que j\'ai du mal à recevoir de l\'aide. Je préfère tout faire seul.',
+      q: "Ce matin, j'ai réalisé que j'ai du mal à recevoir de l'aide. Je préfère tout faire seul.",
       keywords: ['aide', 'seul', 'voix'],
     },
     {
-      q: 'Je suis en colère contre moi-même d\'avoir encore reporté une décision importante. C\'est récurrent.',
+      q: "Je suis en colère contre moi-même d'avoir encore reporté une décision importante. C'est récurrent.",
       keywords: ['colère', 'décision', 'retenir'],
     },
     {
-      q: 'J\'explore la question de mon rythme naturel — je crois que je me force à aller trop vite.',
+      q: "J'explore la question de mon rythme naturel — je crois que je me force à aller trop vite.",
       keywords: ['rythme', 'vitesse', 'corps'],
     },
     {
@@ -691,7 +692,7 @@ const QA_SCENARIOS = {
       keywords: ['deuxième vitesse', 'quotidien', 'micro-action'],
     },
     {
-      q: 'J\'ai besoin de réfléchir à ce qui compte vraiment pour moi dans les 5 prochaines années.',
+      q: "J'ai besoin de réfléchir à ce qui compte vraiment pour moi dans les 5 prochaines années.",
       keywords: ['compte', 'vraiment', 'retenir'],
     },
   ],
@@ -706,15 +707,15 @@ const QA_SCENARIOS = {
       keywords: ['décision', 'fatigue', 'système'],
     },
     {
-      q: 'J\'ai l\'impression de penser tout le temps au travail, même en vacances. C\'est épuisant.',
+      q: "J'ai l'impression de penser tout le temps au travail, même en vacances. C'est épuisant.",
       keywords: ['repos', 'frontières', 'déconnexion'],
     },
     {
-      q: 'J\'ai du mal à rentrer dans le flow depuis 3 semaines. Diagnostic rapide et plan de récupération.',
+      q: "J'ai du mal à rentrer dans le flow depuis 3 semaines. Diagnostic rapide et plan de récupération.",
       keywords: ['flow', 'diagnostic', 'récupération'],
     },
     {
-      q: 'Je suis dans un mode multi-tâche forcé depuis un mois. J\'ai besoin d\'un protocole de simplification.',
+      q: "Je suis dans un mode multi-tâche forcé depuis un mois. J'ai besoin d'un protocole de simplification.",
       keywords: ['multi-tâche', 'simplification', 'protocole'],
     },
     {
@@ -722,7 +723,7 @@ const QA_SCENARIOS = {
       keywords: ['burnout', 'surmenage', 'détecter'],
     },
     {
-      q: 'J\'ai une décision majeure suspendue depuis 2 mois qui bloque toute ma progression. Aide-moi à la traiter.',
+      q: "J'ai une décision majeure suspendue depuis 2 mois qui bloque toute ma progression. Aide-moi à la traiter.",
       keywords: ['décision', 'bloque', 'traiter'],
     },
     {
@@ -730,7 +731,7 @@ const QA_SCENARIOS = {
       keywords: ['detox', 'récupérer', 'protocole'],
     },
     {
-      q: 'Ma concentration est fragmentée: je n\'arrive pas à tenir plus de 15 minutes sur une tâche. Plan ?',
+      q: "Ma concentration est fragmentée: je n'arrive pas à tenir plus de 15 minutes sur une tâche. Plan ?",
       keywords: ['concentration', 'fragmentation', 'plan'],
     },
     {
@@ -743,7 +744,6 @@ const QA_SCENARIOS = {
 // ─── SUITE PRINCIPALE ─────────────────────────────────────────────────────────
 
 describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', () => {
-
   // ═══════════════════════════════════════════════════════════════════════════
   // SETUP
   // ═══════════════════════════════════════════════════════════════════════════
@@ -758,8 +758,10 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
 
     // Naviguer vers le chat si nécessaire
     try {
-      const chatNav = await $('[data-testid="nav-titane"], [href="/titane"], [data-page="titane"]');
-      if (await chatNav.isExisting() && await chatNav.isDisplayed()) {
+      const chatNav = await $(
+        '[data-testid="nav-titane"], [href="/titane"], [data-page="titane"]'
+      );
+      if ((await chatNav.isExisting()) && (await chatNav.isDisplayed())) {
         await chatNav.click();
         await browser.pause(1500);
       }
@@ -781,8 +783,12 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
   });
 
   after(async () => {
-    M.verdict = M.failedTests === 0 ? 'PASS' :
-      M.failedTests <= M.totalTests * 0.2 ? 'PARTIAL' : 'FAIL';
+    M.verdict =
+      M.failedTests === 0
+        ? 'PASS'
+        : M.failedTests <= M.totalTests * 0.2
+          ? 'PARTIAL'
+          : 'FAIL';
 
     // Rapport JSON final
     writeReport('qa_mode_validation_report.json', {
@@ -801,22 +807,30 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
     // Rapport fine-tuning
     if (M.finetuneSuggestions.length > 0) {
       writeReport('finetune_suggestions.json', M.finetuneSuggestions);
-      console.log(`\n[FINETUNE] ${M.finetuneSuggestions.length} suggestion(s) de correction identifiées`);
+      console.log(
+        `\n[FINETUNE] ${M.finetuneSuggestions.length} suggestion(s) de correction identifiées`
+      );
     }
 
     // Log résumé
-    writeLog('summary.txt', [
-      `TITANE∞ Q&A Mode Validation — ${M.runTs}`,
-      `Verdict: ${M.verdict}`,
-      `Tests: ${M.passedTests}/${M.totalTests} passed (${Math.round((M.passedTests / M.totalTests) * 100)}%)`,
-      `Fine-tune suggestions: ${M.finetuneSuggestions.length}`,
-      '',
-      ...Object.entries(M.modes).map(([mode, data]) =>
-        `${mode}: ${data.passed}/${data.passed + data.failed} (${Math.round((data.passed / (data.passed + data.failed)) * 100)}%)`
-      ),
-    ].join('\n'));
+    writeLog(
+      'summary.txt',
+      [
+        `TITANE∞ Q&A Mode Validation — ${M.runTs}`,
+        `Verdict: ${M.verdict}`,
+        `Tests: ${M.passedTests}/${M.totalTests} passed (${Math.round((M.passedTests / M.totalTests) * 100)}%)`,
+        `Fine-tune suggestions: ${M.finetuneSuggestions.length}`,
+        '',
+        ...Object.entries(M.modes).map(
+          ([mode, data]) =>
+            `${mode}: ${data.passed}/${data.passed + data.failed} (${Math.round((data.passed / (data.passed + data.failed)) * 100)}%)`
+        ),
+      ].join('\n')
+    );
 
-    console.log(`\n[TITANE Q&A] Verdict: ${M.verdict} — ${M.passedTests}/${M.totalTests}`);
+    console.log(
+      `\n[TITANE Q&A] Verdict: ${M.verdict} — ${M.passedTests}/${M.totalTests}`
+    );
     console.log(`[TITANE Q&A] Reports: ${REPORT_DIR}`);
   });
 
@@ -844,11 +858,17 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
         M.qualityScores[MODE].push(score);
 
         const passed = response.length >= MIN_RESPONSE_LENGTH && score >= 40;
-        recordTest(MODE, `Q${idx + 1}`, passed, { score, length: response.length, q: scenario.q });
+        recordTest(MODE, `Q${idx + 1}`, passed, {
+          score,
+          length: response.length,
+          q: scenario.q,
+        });
 
         if (idx === 4) await ss(`mid_conversation`, MODE);
 
-        expect(response.length, `Réponse trop courte pour Q${idx + 1}`).to.be.at.least(MIN_RESPONSE_LENGTH);
+        expect(response.length, `Réponse trop courte pour Q${idx + 1}`).to.be.at.least(
+          MIN_RESPONSE_LENGTH
+        );
         expect(score, `Score qualité insuffisant pour Q${idx + 1}`).to.be.at.least(40);
       });
     });
@@ -1040,7 +1060,7 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
   // MODE: SYNTHESIS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  describe('MODE: synthesis — Connexion d\'Idées', () => {
+  describe("MODE: synthesis — Connexion d'Idées", () => {
     const MODE = 'synthesis';
 
     before(async function () {
@@ -1138,7 +1158,10 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
 
         if (idx === 4) await ss('mid_conversation', MODE);
 
-        expect(response.length, `Réponse trop courte pour Q${idx + 1} (mode journal)`).to.be.at.least(minLen);
+        expect(
+          response.length,
+          `Réponse trop courte pour Q${idx + 1} (mode journal)`
+        ).to.be.at.least(minLen);
         expect(score).to.be.at.least(30);
       });
     });
@@ -1192,27 +1215,33 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
 
       // default
       await selectMode('default');
-      await sendMessage('Qu\'est-ce que la méthode Kanban ?');
+      await sendMessage("Qu'est-ce que la méthode Kanban ?");
       await waitForResponse();
       const r1 = await getLastResponseText();
       const modeAfterR1 = await getActiveConversationMode();
-      recordTest('mode_switching', 'default → réponse', r1.length >= 50, { length: r1.length });
+      recordTest('mode_switching', 'default → réponse', r1.length >= 50, {
+        length: r1.length,
+      });
 
       // brainstorming
       await selectMode('brainstorming');
-      await sendMessage('Génère 5 idées pour améliorer Kanban avec l\'IA');
+      await sendMessage("Génère 5 idées pour améliorer Kanban avec l'IA");
       await waitForResponse();
       const r2 = await getLastResponseText();
-      recordTest('mode_switching', 'brainstorming → réponse', r2.length >= 100, { length: r2.length });
+      recordTest('mode_switching', 'brainstorming → réponse', r2.length >= 100, {
+        length: r2.length,
+      });
 
       // planning
       await selectMode('planning');
       await sendMessage(
-        'Planifie l\'implémentation de la meilleure idée en 2 semaines, en 5 étapes courtes et concrètes.'
+        "Planifie l'implémentation de la meilleure idée en 2 semaines, en 5 étapes courtes et concrètes."
       );
       await waitForResponse();
       const r3 = await getLastResponseText();
-      recordTest('mode_switching', 'planning → réponse', r3.length >= 100, { length: r3.length });
+      recordTest('mode_switching', 'planning → réponse', r3.length >= 100, {
+        length: r3.length,
+      });
 
       await ss('mode_switching_complete', 'transversal');
 
@@ -1221,5 +1250,4 @@ describe('TITANE∞ — Chat Q&A Mode Validation (10 modes × 10 scénarios)', (
       expect(r3.length, 'planning: réponse trop courte').to.be.at.least(100);
     });
   });
-
 });

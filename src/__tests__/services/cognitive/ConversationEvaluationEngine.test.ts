@@ -30,7 +30,10 @@ const mockExecutor = async (
 ): Promise<string[]> => {
   return messages
     .filter(m => m.role === 'user')
-    .map(m => `Réponse IA simulée pour : ${m.content}. Voici une analyse complète en français avec des détails pertinents et une structure cohérente.`);
+    .map(
+      m =>
+        `Réponse IA simulée pour : ${m.content}. Voici une analyse complète en français avec des détails pertinents et une structure cohérente.`
+    );
 };
 
 /** Mock executor avec réponses courtes (bas qualité) */
@@ -125,8 +128,9 @@ describe('📊 evaluateConversation — 9 métriques [0..1]', () => {
   it('retourne un objet avec les 9 métriques pour une réponse standard', async () => {
     const engine = new ConversationEvaluationEngine();
     const metrics = await engine.evaluateConversation('conv-1', {
-      user_message: 'Qu\'est-ce que la cohérence conversationnelle ?',
-      assistant_response: 'La cohérence conversationnelle est la capacité à maintenir un fil logique tout au long d\'un échange. Elle implique des références aux points précédents, des transitions fluides et une progression thématique claire.',
+      user_message: "Qu'est-ce que la cohérence conversationnelle ?",
+      assistant_response:
+        "La cohérence conversationnelle est la capacité à maintenir un fil logique tout au long d'un échange. Elle implique des références aux points précédents, des transitions fluides et une progression thématique claire.",
     });
 
     expect(metrics).toBeDefined();
@@ -145,7 +149,8 @@ describe('📊 evaluateConversation — 9 métriques [0..1]', () => {
     const engine = new ConversationEvaluationEngine();
     const metrics = await engine.evaluateConversation('conv-2', {
       user_message: 'Donne-moi des exemples concrets de stratégie produit',
-      assistant_response: 'Voici des exemples de stratégie produit: 1. Focus sur la valeur utilisateur — identifier les besoins réels. 2. Roadmap priorisée par impact/effort. 3. Feedback loops rapides via tests A/B.',
+      assistant_response:
+        'Voici des exemples de stratégie produit: 1. Focus sur la valeur utilisateur — identifier les besoins réels. 2. Roadmap priorisée par impact/effort. 3. Feedback loops rapides via tests A/B.',
     });
 
     for (const [key, val] of Object.entries(metrics)) {
@@ -175,24 +180,29 @@ describe('📊 evaluateConversation — 9 métriques [0..1]', () => {
     const engine = new ConversationEvaluationEngine();
     const metricsWithGoal = await engine.evaluateConversation('conv-goal-1', {
       user_message: 'Comment créer une roadmap produit ?',
-      assistant_response: 'Pour créer une roadmap produit efficace, commencez par définir vos objectifs stratégiques et identifier les priorités.',
+      assistant_response:
+        'Pour créer une roadmap produit efficace, commencez par définir vos objectifs stratégiques et identifier les priorités.',
       context: { goal: 'créer une roadmap produit' },
     });
 
     const metricsNoGoal = await engine.evaluateConversation('conv-goal-2', {
       user_message: 'Comment créer une roadmap produit ?',
-      assistant_response: 'Pour créer une roadmap produit efficace, commencez par définir vos objectifs stratégiques et identifier les priorités.',
+      assistant_response:
+        'Pour créer une roadmap produit efficace, commencez par définir vos objectifs stratégiques et identifier les priorités.',
     });
 
     // Avec goal, le score devrait être >= sans goal
-    expect(metricsWithGoal.goal_completion).toBeGreaterThanOrEqual(metricsNoGoal.goal_completion - 0.1);
+    expect(metricsWithGoal.goal_completion).toBeGreaterThanOrEqual(
+      metricsNoGoal.goal_completion - 0.1
+    );
   });
 
   it('évaluation avec facts cohérents retourne consistency haute', async () => {
     const engine = new ConversationEvaluationEngine();
     const metrics = await engine.evaluateConversation('conv-consistency', {
       user_message: 'Confirme que Python est populaire',
-      assistant_response: 'Oui, Python est extrêmement populaire pour la data science et le machine learning.',
+      assistant_response:
+        'Oui, Python est extrêmement populaire pour la data science et le machine learning.',
       context: { facts: ['Python est populaire', 'Python est utilisé en data science'] },
     });
 
@@ -263,10 +273,10 @@ describe('📝 addTestScenario', () => {
     expect(stats.total_scenarios).toBe(1);
   });
 
-  it('émet l\'événement scenario:added', async () => {
+  it("émet l'événement scenario:added", async () => {
     const engine = new ConversationEvaluationEngine();
     const added: unknown[] = [];
-    engine.on('scenario:added', (data) => added.push(data));
+    engine.on('scenario:added', data => added.push(data));
 
     await engine.addTestScenario(makeScenario('s-event', 'Scénario événement'));
     expect(added.length).toBe(1);
@@ -291,9 +301,11 @@ describe('▶️ runTestScenario', () => {
 
   it('retourne passed=true pour des réponses substantielles et pas de critères stricts', async () => {
     const engine = new ConversationEvaluationEngine();
-    await engine.addTestScenario(makeScenario('r-pass', 'Scénario lâche', {
-      success_criteria: { minQuality: 0.0 }, // critère minimal
-    }));
+    await engine.addTestScenario(
+      makeScenario('r-pass', 'Scénario lâche', {
+        success_criteria: { minQuality: 0.0 }, // critère minimal
+      })
+    );
 
     const result = await engine.runTestScenario('r-pass', mockExecutor);
     expect(result.passed).toBe(true);
@@ -303,8 +315,8 @@ describe('▶️ runTestScenario', () => {
     const engine = new ConversationEvaluationEngine();
     const scenario = makeScenario('r-multiturn', 'Multi-turns', {
       conversation_turns: [
-        { role: 'user', content: 'Question 1 : Qu\'est-ce que l\'IA ?' },
-        { role: 'assistant', content: 'L\'IA est...' },
+        { role: 'user', content: "Question 1 : Qu'est-ce que l'IA ?" },
+        { role: 'assistant', content: "L'IA est..." },
         { role: 'user', content: 'Question 2 : Quels sont ses usages ?' },
       ],
     });
@@ -369,12 +381,12 @@ describe('▶️ runTestScenario', () => {
     expect(stats.total_tests).toBe(2);
   });
 
-  it('émet l\'événement test:completed', async () => {
+  it("émet l'événement test:completed", async () => {
     const engine = new ConversationEvaluationEngine();
     await engine.addTestScenario(makeScenario('r-emit', 'Emit test'));
 
     const emitted: unknown[] = [];
-    engine.on('test:completed', (data) => emitted.push(data));
+    engine.on('test:completed', data => emitted.push(data));
 
     await engine.runTestScenario('r-emit', mockExecutor);
     expect(emitted.length).toBe(1);
@@ -410,7 +422,7 @@ describe('🚀 runAllTests', () => {
     await engine.addTestScenario(makeScenario('ra-e', 'Emit all'));
 
     const events: unknown[] = [];
-    engine.on('tests:all_completed', (data) => events.push(data));
+    engine.on('tests:all_completed', data => events.push(data));
 
     await engine.runAllTests(mockExecutor);
     expect(events.length).toBe(1);
@@ -424,7 +436,8 @@ describe('📋 generateReport', () => {
     const engine = new ConversationEvaluationEngine();
     await engine.evaluateConversation('report-conv', {
       user_message: 'Test pour rapport',
-      assistant_response: 'Voici ma réponse détaillée en français avec une analyse claire.',
+      assistant_response:
+        'Voici ma réponse détaillée en français avec une analyse claire.',
     });
 
     const report = await engine.generateReport('report-conv');
@@ -451,7 +464,8 @@ describe('📋 generateReport', () => {
     const engine = new ConversationEvaluationEngine();
     await engine.evaluateConversation('conv-avg', {
       user_message: 'Analyse complète du contexte',
-      assistant_response: 'Je vais analyser cela en profondeur. Voici les points essentiels.',
+      assistant_response:
+        'Je vais analyser cela en profondeur. Voici les points essentiels.',
     });
 
     const report = await engine.generateReport('conv-avg');
@@ -490,11 +504,11 @@ describe('🔌 Fallback offline — aucune dépendance réseau', () => {
 
 // ─── EVENTS ET EMISSIONS ──────────────────────────────────────────────────────
 
-describe('📡 EventEmitter — émission d\'événements', () => {
+describe("📡 EventEmitter — émission d'événements", () => {
   it('émet evaluation:completed lors de evaluateConversation avec live_evaluation activé', async () => {
     const engine = new ConversationEvaluationEngine({ enable_live_evaluation: true });
     const events: unknown[] = [];
-    engine.on('evaluation:completed', (data) => events.push(data));
+    engine.on('evaluation:completed', data => events.push(data));
 
     await engine.evaluateConversation('event-conv', {
       user_message: 'Test événement',
@@ -504,13 +518,13 @@ describe('📡 EventEmitter — émission d\'événements', () => {
     expect(events.length).toBeGreaterThan(0);
   });
 
-  it('n\'émet pas evaluation:completed avec live_evaluation désactivé', async () => {
+  it("n'émet pas evaluation:completed avec live_evaluation désactivé", async () => {
     const engine = new ConversationEvaluationEngine({
       enable_live_evaluation: false,
       evaluation_sample_rate: 1.0,
     });
     const events: unknown[] = [];
-    engine.on('evaluation:completed', (data) => events.push(data));
+    engine.on('evaluation:completed', data => events.push(data));
 
     await engine.evaluateConversation('no-event-conv', {
       user_message: 'Test sans événement',
@@ -523,7 +537,7 @@ describe('📡 EventEmitter — émission d\'événements', () => {
   it('émet log à chaque évaluation', async () => {
     const engine = new ConversationEvaluationEngine();
     const logs: unknown[] = [];
-    engine.on('log', (data) => logs.push(data));
+    engine.on('log', data => logs.push(data));
 
     await engine.evaluateConversation('log-conv', {
       user_message: 'Test log',

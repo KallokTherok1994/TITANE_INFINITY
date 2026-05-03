@@ -1,5 +1,9 @@
 ## 2026-05-02 : Ollama Dev / Chat Boundary Normalization
 
+> 2026-05-02 — Champion/Challenger runtime hardening: `src/services/ai/championChallenger.ts` applique maintenant un garde explicite de promotion (`require_human_approval`) et un parsing défensif des modèles publiés par `ai_check_ollama_status`, ce qui stabilise la décision provider sans dérive de baseline.
+
+> 2026-05-02 — Tauri probe alignment: `src-tauri/src/lib.rs` aligne la sonde mobile `ollama_generate` sur `gemma2:2b` afin de préserver une preuve runtime cohérente avec l autorité de modèle chat produit.
+
 > Frontière canonique rétablie: les defaults runtime partagés (`src/config/ollamaDefaults.ts`, `config/championChallenger.json`, `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ollama.rs`, `src-tauri/src/ai/ollama.rs`, `src-tauri/src/ollama_provider_refactor.rs`) reviennent au baseline produit `gemma2:2b`, alors que la voie développement GitHub Copilot VS Code + Ollama reste sur `qwen3.5:9b` via la doctrine repo-owned et le nouvel agent `.github/agents/ollama-dev-chat-boundary.agent.md`. La communication entre les deux surfaces est bornée aux validateurs, preuves et interfaces explicites; aucun partage de default backend/frontend n est permis.
 
 ## 2026-04-30 : AI Intelligence Unification v32 — Identity Kernel + CoT + BackendConversationMode 6→13

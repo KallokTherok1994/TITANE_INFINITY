@@ -27,9 +27,9 @@ import {
   shouldPromoteChallenger,
   getPromotionRules,
   resetRegistryCache,
-} from '@/services/ai/championChallenger';
-import type { ComparisonResult } from '@/services/ai/championChallenger';
-import type { CanonicalMode } from '@/services/ai/omegaModeClassifier';
+} from '../../../../src/services/ai/championChallenger';
+import type { ComparisonResult } from '../../../../src/services/ai/championChallenger';
+import type { CanonicalMode } from '../../../../src/services/ai/omegaModeClassifier';
 
 describe('ChampionChallenger', () => {
   beforeEach(() => {
@@ -38,6 +38,7 @@ describe('ChampionChallenger', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     resetRegistryCache();
   });
 
@@ -103,6 +104,28 @@ describe('ChampionChallenger', () => {
     it('retourne un boolean', () => {
       const result = shouldCompare('DIRECT' as CanonicalMode);
       expect(typeof result).toBe('boolean');
+    });
+
+    it('retourne true si random < sample_rate quand la comparaison est active', () => {
+      const registry = loadRegistry();
+      if (!registry.comparison.enabled || registry.comparison.sample_rate <= 0) {
+        expect(shouldCompare('DIRECT' as CanonicalMode)).toBe(false);
+        return;
+      }
+
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+      expect(shouldCompare('DIRECT' as CanonicalMode)).toBe(true);
+    });
+
+    it('retourne false si random >= sample_rate quand la comparaison est active', () => {
+      const registry = loadRegistry();
+      if (!registry.comparison.enabled || registry.comparison.sample_rate <= 0) {
+        expect(shouldCompare('DIRECT' as CanonicalMode)).toBe(false);
+        return;
+      }
+
+      vi.spyOn(Math, 'random').mockReturnValue(1);
+      expect(shouldCompare('DIRECT' as CanonicalMode)).toBe(false);
     });
 
     it('retourne false si comparison.enabled = false (mock config)', () => {
@@ -213,7 +236,7 @@ describe('ChampionChallenger', () => {
       const rules = getPromotionRules();
       if (rules.require_human_approval) {
         // Ajouter beaucoup de comparaisons gagnantes pour challenger
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 60; i++) {
           recordComparison({
             mode: 'DIRECT' as CanonicalMode,
             champion: {
@@ -233,6 +256,98 @@ describe('ChampionChallenger', () => {
         }
         // Même avec données suffisantes, require_human_approval doit bloquer la promotion auto
         expect(shouldPromoteChallenger('DIRECT' as CanonicalMode)).toBe(false);
+      }
+    });
+
+    it('retourne false si les échantillons sont insuffisants', () => {
+      const registry = loadRegistry();
+      const originalRequire = registry.promotion_rules.require_human_approval;
+      const originalMinSamples = registry.promotion_rules.min_samples;
+
+      try {
+        registry.promotion_rules.require_human_approval = false;
+        registry.promotion_rules.min_samples = 5;
+
+        for (let i = 0; i < 4; i++) {
+          recordComparison({
+            mode: 'DIRECT' as CanonicalMode,
+            champion: {
+              provider: 'ollama',
+              model: 'gemma2:2b',
+              latency_ms: 200,
+              token_count: 60,
+            },
+            challenger: {
+              provider: 'claude',
+              model: 'claude-3-haiku',
+              latency_ms: 90,
+              token_count: 40,
+            },
+            divergence: false,
+          });
+        }
+
+        expect(shouldPromoteChallenger('DIRECT' as CanonicalMode)).toBe(false);
+      } finally {
+        registry.promotion_rules.require_human_approval = originalRequire;
+        registry.promotion_rules.min_samples = originalMinSamples;
+      }
+    });
+
+    it('retourne true si min_samples atteint, winRate >= 70% et latence acceptable', () => {
+      const registry = loadRegistry();
+      const originalRequire = registry.promotion_rules.require_human_approval;
+      const originalMinSamples = registry.promotion_rules.min_samples;
+      const originalLatencyPenalty = registry.promotion_rules.latency_penalty_ms;
+
+      try {
+        registry.promotion_rules.require_human_approval = false;
+        registry.promotion_rules.min_samples = 10;
+        registry.promotion_rules.latency_penalty_ms = 2000;
+
+        for (let i = 0; i < 8; i++) {
+          recordComparison({
+            mode: 'DIRECT' as CanonicalMode,
+            champion: {
+              provider: 'ollama',
+              model: 'gemma2:2b',
+              latency_ms: 220,
+              token_count: 60,
+            },
+            challenger: {
+              provider: 'claude',
+              model: 'claude-3-haiku',
+              latency_ms: 100,
+              token_count: 40,
+            },
+            divergence: false,
+          });
+        }
+
+        for (let i = 0; i < 2; i++) {
+          recordComparison({
+            mode: 'DIRECT' as CanonicalMode,
+            champion: {
+              provider: 'ollama',
+              model: 'gemma2:2b',
+              latency_ms: 100,
+              token_count: 50,
+            },
+            challenger: {
+              provider: 'claude',
+              model: 'claude-3-haiku',
+              latency_ms: 140,
+              token_count: 55,
+            },
+            divergence: false,
+          });
+        }
+
+        expect(shouldPromoteChallenger('DIRECT' as CanonicalMode)).toBe(true);
+      } finally {
+        registry.promotion_rules.require_human_approval = originalRequire;
+        registry.promotion_rules.min_samples = originalMinSamples;
+        registry.promotion_rules.latency_penalty_ms = originalLatencyPenalty;
       }
     });
   });

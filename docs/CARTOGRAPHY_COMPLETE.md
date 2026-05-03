@@ -1,5 +1,13 @@
 ## BUILD ALL v31.2.14 — Release complète (2026-04-27)
 
+## 2026-05-02 : Champion/Challenger hardening + lib probe alignment
+
+> Surface service IA renforcée: `src/services/ai/championChallenger.ts` bloque explicitement la promotion challenger quand `require_human_approval=true` et durcit le parsing de `ai_check_ollama_status` (models partiels/non conformes) pour éviter les faux positifs et les erreurs de payload.
+
+> Surface tests unitaires qualifiée: `tests/unit/services/ai/championChallenger.test.ts` et `tests/unit/services/ai/championChallengerValidation.test.ts` couvrent désormais les branches déterministes de sampling, les seuils de promotion et les cas de validation champion insensibles à la casse/payload incomplet.
+
+> Surface runtime Tauri alignée: `src-tauri/src/lib.rs` utilise désormais `gemma2:2b` dans la sonde mobile `ollama_generate`, ce qui maintient la cohérence entre preuve de probe et baseline chat produit.
+
 > 2026-05-02 — Ollama Dev / Chat boundary truth: la cartographie canonique distingue désormais explicitement deux surfaces locales. Le runtime produit TITANE garde `gemma2:2b` sur les defaults partagés (`src/config/ollamaDefaults.ts`, `config/championChallenger.json`, `src-tauri/src/runtime_config.rs`, `src-tauri/src/config/update.rs`, `src-tauri/src/ollama.rs`, `src-tauri/src/ai/ollama.rs`, `src-tauri/src/ollama_provider_refactor.rs`), tandis que la doctrine de développement GitHub Copilot VS Code + Ollama garde `qwen3.5:9b` dans `.github/copilot-instructions.md`, `.github/instructions/titane.instructions.md`, `AGENTS.md`, `.github/agents/ollama-dev-chat-boundary.agent.md` et `scripts/verify/verify-ollama-copilot-boundary.sh`. La communication entre les deux reste bornée aux interfaces explicites et traçables; aucune propagation par mutation de default n est autorisée.
 
 > 2026-05-02 — Chat modes runtime budget truth: `src/services/ai/responsePolicy.ts::getEffectiveProfile()` respecte maintenant `modeMaxTokens` comme cap runtime explicite. Avant correction, de nombreux modes spécialisés (`brainstorming`, `synthesis`, `planning`, `journal`, `debug_cognitive`, `strategy`, `audit`, `omega`) héritaient de plafonds de profils beaucoup plus hauts que leur propre configuration affichée, ce qui rendait la grille des modes partiellement mensongère.

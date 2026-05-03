@@ -31,10 +31,7 @@ const championRegistry = fs.readFileSync(
   path.join(rootDir, 'config/championChallenger.json'),
   'utf8'
 );
-const mcpConfig = fs.readFileSync(
-  path.join(rootDir, '.vscode/mcp.json'),
-  'utf8'
-);
+const mcpConfig = fs.readFileSync(path.join(rootDir, '.vscode/mcp.json'), 'utf8');
 const vscodeSettings = fs.readFileSync(
   path.join(rootDir, '.vscode/settings.json'),
   'utf8'
@@ -53,11 +50,18 @@ describe('ollama dev/chat boundary doctrine', () => {
       'bash scripts/verify/verify-ollama-copilot-boundary.sh'
     );
     expect(packageJson.scripts['audit:agents:stack']).toContain('verify:ollama:boundary');
-    expect(Object.keys(packageJson.scripts).some(key => key.startsWith(retiredScriptPrefix))).toBe(false);
+    expect(
+      Object.keys(packageJson.scripts).some(key => key.startsWith(retiredScriptPrefix))
+    ).toBe(false);
   });
 
   it('documents qwen for Ollama Dev and gemma for Ollama Chat across repo-owned doctrine surfaces', () => {
-    for (const source of [copilotInstructions, titaneInstructions, rootAgents, boundaryAgent]) {
+    for (const source of [
+      copilotInstructions,
+      titaneInstructions,
+      rootAgents,
+      boundaryAgent,
+    ]) {
       expect(source).toContain('qwen3.5:9b');
       expect(source).toContain('gemma2:2b');
       expect(source).toContain('Ollama Dev');
@@ -70,7 +74,9 @@ describe('ollama dev/chat boundary doctrine', () => {
     expect(ollamaDefaults).toContain("DEFAULT_OLLAMA_MODEL = 'gemma2:2b'");
     expect(championRegistry).toContain('"model": "gemma2:2b"');
     expect(boundaryValidator).toContain("rg -q 'gemma2:2b' src/config/ollamaDefaults.ts");
-    expect(boundaryValidator).toContain("rg -q 'qwen3\\.5:9b' .github/copilot-instructions.md");
+    expect(boundaryValidator).toContain(
+      "rg -q 'qwen3\\.5:9b' .github/copilot-instructions.md"
+    );
     expect(boundaryValidator).toContain('active cline workflow references removed');
   });
 
@@ -93,7 +99,9 @@ describe('ollama dev/chat boundary doctrine', () => {
     expect(boundaryValidator).toContain('chat.mcp.enabled is not true');
     expect(boundaryValidator).toContain('OLLAMA_HOST');
     expect(boundaryValidator).toContain('stdio transport declaration');
-    expect(boundaryValidator).toContain('MCP runtime settings and transport wired correctly');
+    expect(boundaryValidator).toContain(
+      'MCP runtime settings and transport wired correctly'
+    );
   });
 
   it('keeps a dedicated ollama dev session prompt with boundary-safe preflight checks', () => {

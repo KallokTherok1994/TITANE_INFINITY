@@ -110,6 +110,7 @@ Ollama Dev / Ollama Chat boundary truth: keep the governed local development sta
 - Toute modification de surface impose mapping à jour, bump de version, rollback documenté, scripts post-build idempotents ou fallback documenté, et logs de preuve pour chaque étape `sudo`
 - Le backend doit être qualifié par des tests d’isolation d’environnement et des checks automatiques sur les variables critiques
 - Chaque correction/rollback doit être tracé dans `autoheal_rules.jsonl` et `registry/ui-events.jsonl`- Session start checklist: (1) consulter plan.md ou summary de la session précédente; (2) `git status --short` pour connaître l'état du worktree; (3) déclarer MODE (DURABLE ou EXPLORATION) explicitement; (4) identifier les commits en attente (Rule 18 phases not yet committed).
+
 ## Rule 18 - Direct-to-main phase commits
 
 When direct work on `MAIN` is authorized, every completed correction phase or coherent fix batch must end with a targeted commit on `MAIN` after proofs pass. Do not accumulate unrelated finished fixes in an uncommitted worktree. Each direct-to-main commit must stay scope-limited, mention the corrected surface or subsystem, and wait for AutoHeal plus mandatory validators. If proof is incomplete, do not commit the phase yet.

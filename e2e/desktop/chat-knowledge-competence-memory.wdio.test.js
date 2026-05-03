@@ -8,7 +8,9 @@ const fs = require('fs');
 const REPORT_DIR = path.join(__dirname, '../artifacts/knowledge-competence-memory');
 
 async function getAssistantMessages() {
-  return $$('[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]');
+  return $$(
+    '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+  );
 }
 
 async function sendAndCheck(question, expectedPattern, timeout = 15000) {

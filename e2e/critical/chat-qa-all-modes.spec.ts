@@ -61,7 +61,7 @@ const MODE_QA: Record<ModeId, [string, string]> = {
   ],
   brainstorming: [
     'Génère 10 idées pour monétiser une app de productivité desktop.',
-    'Applique SCAMPER sur le concept de réunion d\'équipe.',
+    "Applique SCAMPER sur le concept de réunion d'équipe.",
   ],
   synthesis: [
     'Connecte Deep Work, Flow et GTD — quel principe unificateur ?',
@@ -69,15 +69,15 @@ const MODE_QA: Record<ModeId, [string, string]> = {
   ],
   planning: [
     'Crée un plan SMART pour apprendre Rust en 90 jours.',
-    'Planifie le lancement d\'un SaaS en 6 mois avec jalons et risques.',
+    "Planifie le lancement d'un SaaS en 6 mois avec jalons et risques.",
   ],
   journal: [
-    'Je me sens dépassé par le nombre de projets que j\'ai lancés.',
-    'J\'explore mon rapport à la perfection — comment ça me bloque.',
+    "Je me sens dépassé par le nombre de projets que j'ai lancés.",
+    "J'explore mon rapport à la perfection — comment ça me bloque.",
   ],
   debug_cognitive: [
     'Charge mentale: 8/10. Fronts ouverts: 12 projets. Par où commencer ?',
-    'J\'ai du mal à rentrer dans le flow depuis 3 semaines. Diagnostic rapide.',
+    "J'ai du mal à rentrer dans le flow depuis 3 semaines. Diagnostic rapide.",
   ],
 };
 
@@ -114,7 +114,9 @@ async function selectChatMode(page: Page, modeId: string): Promise<boolean> {
       return true;
     } catch {
       // Mode non disponible dans le sélecteur (restriction d'accès ou mode filtré)
-      console.log(`[MODE SELECT] Mode "${modeId}" non disponible dans le sélecteur — test continue en mode actuel`);
+      console.log(
+        `[MODE SELECT] Mode "${modeId}" non disponible dans le sélecteur — test continue en mode actuel`
+      );
       return false;
     }
   }
@@ -148,7 +150,9 @@ async function getActiveMode(page: Page): Promise<string> {
 // ─── TESTS ────────────────────────────────────────────────────────────────────
 
 test.describe('Chat Q&A — Sélecteur de modes disponibles', () => {
-  test('Les 10 modes principaux sont accessibles via chat-mode-selector', async ({ page }) => {
+  test('Les 10 modes principaux sont accessibles via chat-mode-selector', async ({
+    page,
+  }) => {
     await openTitane(page);
     await ensureChatReady(page);
 
@@ -179,13 +183,17 @@ test.describe('Chat Q&A — Sélecteur de modes disponibles', () => {
     }
   });
 
-  test('chat-input et chat-send sont présents avec data-testid stables', async ({ page }) => {
+  test('chat-input et chat-send sont présents avec data-testid stables', async ({
+    page,
+  }) => {
     await openTitane(page);
     await ensureChatReady(page);
 
     await expect(page.getByTestId('chat-input')).toBeVisible();
     await expect(page.getByTestId('chat-send')).toBeVisible();
-    await expect(page.getByTestId('chat-messages-scroll-region')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByTestId('chat-messages-scroll-region')).toBeVisible({
+      timeout: 5000,
+    });
   });
 });
 
@@ -212,7 +220,8 @@ test.describe('Chat Q&A — 2 questions structurelles par mode', () => {
         // Vérifier qu'une réponse est apparue (zone scroll non vide)
         const scrollRegion = page.getByTestId('chat-messages-scroll-region');
         const text = await scrollRegion.textContent();
-        expect(text && text.length > MIN_RESPONSE_LENGTH,
+        expect(
+          text && text.length > MIN_RESPONSE_LENGTH,
           `Réponse trop courte pour ${modeId} Q1 (${text?.length || 0} chars)`
         ).toBeTruthy();
       });
@@ -223,7 +232,8 @@ test.describe('Chat Q&A — 2 questions structurelles par mode', () => {
 
         const scrollRegion = page.getByTestId('chat-messages-scroll-region');
         const text = await scrollRegion.textContent();
-        expect(text && text.length > MIN_RESPONSE_LENGTH,
+        expect(
+          text && text.length > MIN_RESPONSE_LENGTH,
           `Réponse trop courte pour ${modeId} Q2 (${text?.length || 0} chars)`
         ).toBeTruthy();
       });
@@ -237,13 +247,15 @@ test.describe('Chat Q&A — Mode switching mid-conversation', () => {
   test.describe.configure({ timeout: 600000 }); // 10min — 3 Ollama exchanges
   test.skip(!FULL_E2E_ENABLED, 'Nécessite TITANE_E2E_FULL=1');
 
-  test('Switch default → brainstorming → planning sans perte de contexte UI', async ({ page }) => {
+  test('Switch default → brainstorming → planning sans perte de contexte UI', async ({
+    page,
+  }) => {
     await openTitane(page);
     await ensureChatReady(page);
 
     // Étape 1: mode default
     await selectChatMode(page, 'default');
-    await sendChatMessage(page, 'Qu\'est-ce que la méthode Kanban ?');
+    await sendChatMessage(page, "Qu'est-ce que la méthode Kanban ?");
     await waitForChatResponse(page);
 
     const mode1 = await getActiveMode(page);
@@ -255,7 +267,7 @@ test.describe('Chat Q&A — Mode switching mid-conversation', () => {
 
     // Étape 2: switch vers brainstorming
     await selectChatMode(page, 'brainstorming');
-    await sendChatMessage(page, 'Génère 5 idées pour améliorer Kanban avec l\'IA');
+    await sendChatMessage(page, "Génère 5 idées pour améliorer Kanban avec l'IA");
     await waitForChatResponse(page);
 
     const mode2 = await getActiveMode(page);
@@ -266,7 +278,10 @@ test.describe('Chat Q&A — Mode switching mid-conversation', () => {
 
     // Étape 3: switch vers planning
     await selectChatMode(page, 'planning');
-    await sendChatMessage(page, 'Planifie l\'implémentation de la meilleure idée Kanban IA en 2 semaines');
+    await sendChatMessage(
+      page,
+      "Planifie l'implémentation de la meilleure idée Kanban IA en 2 semaines"
+    );
     await waitForChatResponse(page);
 
     const mode3 = await getActiveMode(page);
@@ -283,7 +298,9 @@ test.describe('Chat Q&A — Mode switching mid-conversation', () => {
 // ─── RUNTIME STATE CONSISTENCY ────────────────────────────────────────────────
 
 test.describe('Chat Q&A — Runtime state coherence', () => {
-  test('chat-runtime-state expose data-conversation-mode après sélection', async ({ page }) => {
+  test('chat-runtime-state expose data-conversation-mode après sélection', async ({
+    page,
+  }) => {
     await openTitane(page);
     await ensureChatReady(page);
 
@@ -307,7 +324,9 @@ test.describe('Chat Q&A — Runtime state coherence', () => {
         // Au moins la zone de summary est visible
         expect(summaryText).toBeTruthy();
       } else {
-        console.log('[RUNTIME STATE] Non exposé dans cette version — test passé conditionnellement');
+        console.log(
+          '[RUNTIME STATE] Non exposé dans cette version — test passé conditionnellement'
+        );
       }
     }
   });

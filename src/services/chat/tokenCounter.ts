@@ -151,7 +151,8 @@ export class TokenCounterService {
     isNearLimit: boolean;
     isOverLimit: boolean;
   } {
-    const limits = resolveModelContextLimits(model) || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
+    const limits =
+      resolveModelContextLimits(model) || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
     if (!limits) {
       throw new Error(`Model ${model} not found in context limits`);
     }
@@ -171,7 +172,8 @@ export class TokenCounterService {
    * Obtient les limites pour un modèle
    */
   getModelLimits(model: string): ModelContextLimits {
-    const limits = resolveModelContextLimits(model) || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
+    const limits =
+      resolveModelContextLimits(model) || MODEL_CONTEXT_LIMITS['gpt-4-turbo'];
     if (!limits) {
       throw new Error(`Model ${model} not found in context limits`);
     }

@@ -82,7 +82,6 @@ describe('🟣 Chat Modes Configuration', () => {
       const uniqueSortOrders = new Set(sortOrders);
       expect(sortOrders.length).toBe(uniqueSortOrders.size);
     });
-
   });
 
   // ═══════════════════════════════════════════════════════════════════════════

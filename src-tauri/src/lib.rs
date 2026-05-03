@@ -427,7 +427,7 @@ pub fn run() {
 
                                 const result = await window.__TAURI_INTERNALS__.invoke('ollama_generate', {
                                     req: {
-                                        model: 'llama3.1:latest',
+                                        model: 'gemma2:2b',
                                         prompt: 'Reply with OK only.',
                                         timeout_secs: 20,
                                         temperature: 0,

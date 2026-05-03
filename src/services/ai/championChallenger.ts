@@ -208,6 +208,7 @@ export function shouldPromoteChallenger(mode: CanonicalMode): boolean {
   if (!stats) return false;
 
   const rules = getPromotionRules();
+  if (rules.require_human_approval) return false;
   if (stats.totalComparisons < rules.min_samples) return false;
 
   const winRate = stats.challengerWins / stats.totalComparisons;
@@ -279,9 +280,11 @@ export async function validateChampionAvailability(
       };
     }
 
-    const installedModels: string[] = (status.content.models ?? []).map((m: string) =>
-      m.toLowerCase()
-    );
+    const installedModels: string[] = Array.isArray(status.content.models)
+      ? status.content.models
+          .filter((m): m is string => typeof m === 'string' && m.trim().length > 0)
+          .map(m => m.toLowerCase())
+      : [];
 
     const available =
       installedModels.includes(championModel.toLowerCase()) ||

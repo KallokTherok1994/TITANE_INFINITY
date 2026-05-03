@@ -2,24 +2,24 @@
 
 - Surface canonique de budget par mode: [src/services/ai/chatEngine.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/chatEngine.ts) transmet `modeConfig.maxTokens` à [src/services/ai/responsePolicy.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/responsePolicy.ts), qui le respecte désormais comme cap runtime explicite au lieu de le laisser être gonflé par le profil canonique.
 - Vérité runtime visible attendue: les modes spécialisés comme `brainstorming`, `synthesis`, `planning`, `journal`, `debug_cognitive`, `strategy`, `audit` et `omega` conservent maintenant leur budget de sortie déclaré, ce qui aligne le comportement réel avec la promesse de la grille des modes.
-- Preuves associées: [src/__tests__/responsePolicy.unit.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/responsePolicy.unit.test.ts).
+- Preuves associées: [src/**tests**/responsePolicy.unit.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/responsePolicy.unit.test.ts).
 - Couverture de mapping runtime: [src/services/ai/responsePolicy.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/responsePolicy.ts) porte désormais un mapping explicite pour tous les modes actifs, y compris `htf_soumission`, `psychologie_profils`, `humain_total` et `kalloks_arts`, qui ne retombent plus silencieusement sur `BALANCED`.
-- Preuve de couverture associée: [src/__tests__/services/ai/chatModes.profileCoverage.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatModes.profileCoverage.test.ts).
+- Preuve de couverture associée: [src/**tests**/services/ai/chatModes.profileCoverage.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatModes.profileCoverage.test.ts).
 - Point d’injection runtime scellé: [src/services/ai/chatEngine.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/chatEngine.ts) transmet maintenant à l’orchestrator `effectiveResponseProfile.maxTokens` et `effectiveResponseProfile.temperature`, ce qui empêche la génération non-stream de réintroduire un plafond de profil plus haut que le cap du mode actif.
-- Preuve d’intégration associée: [src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts).
+- Preuve d’intégration associée: [src/**tests**/services/ai/chatEngineCanonicalIntegration.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts).
 
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
 - Surface canonique de gestion de fenêtre: [src/services/ai/contextManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/contextManager.ts) reconnaît maintenant explicitement `DEFAULT_OLLAMA_MODEL` et la famille `gemma2`, ce qui réaligne les calculs d overflow et la surface utilisateur de contexte sur la même vérité locale.
-- Preuves associées: [src/services/chat/__tests__/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/__tests__/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).
+- Preuves associées: [src/services/chat/**tests**/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/**tests**/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).
 
 - Surface canonique de récupération utilisateur: [src/hooks/useChat.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/hooks/useChat.ts) conseille désormais `ollama pull gemma2:2b` dans le message `Configuration IA Requise`, sans dérive résiduelle vers `llama3.1:latest`.
 - Surface canonique de metadata conversationnelle: [src/services/ai/ConversationManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/ConversationManager.ts) publie maintenant `DEFAULT_OLLAMA_MODEL` comme `defaultModel` pour la voie locale, ce qui aligne la metadata assistant avec le modèle gouverné réellement attendu.
-- Preuves associées: [src/__tests__/omega/conversation-manager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/omega/conversation-manager.test.ts), [src/hooks/__tests__/useChat.fallbackMessage.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/hooks/__tests__/useChat.fallbackMessage.test.ts).
+- Preuves associées: [src/**tests**/omega/conversation-manager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/omega/conversation-manager.test.ts), [src/hooks/**tests**/useChat.fallbackMessage.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/hooks/__tests__/useChat.fallbackMessage.test.ts).
 
 - Surface canonique runtime: [src/config/chatModes.config.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/config/chatModes.config.ts) garde `getSystemPrompt('default')` comme autorité legacy, mais le texte par défaut vise désormais une réponse conversationnelle équilibrée, naturelle et proportionnée au besoin au lieu de sur-privilégier une sortie DEEP.
 - Surface canonique de décision: [src/services/ai/responsePolicy.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/responsePolicy.ts) route maintenant `default` et `standard` vers `BALANCED`, avec `ollama` en tête des profils quotidiens `BALANCED`, `DEVELOPED` et `DEEP`.
 - Vérité visible attendue: la surface conversationnelle `/titane?tab=conversation` doit continuer à publier `data-conversation-mode=default`, mais la profondeur effective quotidienne n est plus gonflée par défaut et reste pilotée par la complexité réelle.
-- Preuves associées: [src/__tests__/responsePolicy.unit.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/responsePolicy.unit.test.ts), [src/__tests__/config/chatDefaultInstructions.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/config/chatDefaultInstructions.test.ts), [src/__tests__/services/ai/chatModes.runtimeDepth.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatModes.runtimeDepth.test.ts).
+- Preuves associées: [src/**tests**/responsePolicy.unit.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/responsePolicy.unit.test.ts), [src/**tests**/config/chatDefaultInstructions.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/config/chatDefaultInstructions.test.ts), [src/**tests**/services/ai/chatModes.runtimeDepth.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatModes.runtimeDepth.test.ts).
 
 ## 2026-04-27 : BUILD ALL v31.2.14 — Test fixes + Release
 
@@ -751,6 +751,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 ## Q&A Advanced Simulation Suite — 2026-05-02
 
 ### Suite WDIO desktop (Tauri natif) — e2e/desktop/chat-qa-mode-validation.wdio.test.cjs
+
 - Scope: 10 modes × 10 scénarios = 100 Q&A réels via runtime Tauri
 - Scoring NLP 3 axes: longueur 40% / mots-clés mode-spécifiques 40% / français 20%
 - Seuil: score >= 40/100 (journal: >= 30) — échec automatique < seuil
@@ -760,6 +761,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Output: `reports/chat_qa_mode_validation/<timestamp>/` — rapport JSON + screenshots
 
 ### Suite Playwright critique — e2e/critical/chat-qa-all-modes.spec.ts
+
 - Scope: sélecteur 23 modes, 2 Q&A/mode (TITANE_E2E_FULL=1), mode switching, runtime state coherence
 - Tests: présence sélecteur, data-conversation-mode cohérence, mode switching (default → brainstorming → planning)
 - Min response: 80 chars
@@ -767,16 +769,19 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 
 ### Tests Vitest — Services IA
 
-#### src/__tests__/services/ai/chatModes-full-coverage.test.ts
+#### src/**tests**/services/ai/chatModes-full-coverage.test.ts
+
 - 62 tests: schema integrity (23 modes), fine-tuning assertions par mode critique, validateModeId/getModeConfig/isModeAllowed/getAccessibleModes, ACTIVE_MODE_IDS, MODES_BY_CATEGORY, cohérence cross-modes
 - Bornes validées: temperature [0.25, 1.0], maxTokens [500, 16000], systemPrompt >= 100 chars
 - Status: 62/62 PASS
 
-#### src/__tests__/services/cognitive/ConversationEvaluationEngine.test.ts
+#### src/**tests**/services/cognitive/ConversationEvaluationEngine.test.ts
+
 - 37 tests: construction/config, 9 métriques [0,1], addTestScenario/runTestScenario cycle, runAllTests, generateReport, events EventEmitter, fallback offline
 - API couverte: evaluateConversation, addTestScenario, runTestScenario, runAllTests, generateReport, getStats, createConversationEvaluationEngine, getDefaultEvaluationConfig
 - Status: 37/37 PASS
 
 ### Fine-tuning chatModes.data.ts — 2026-05-02
+
 - Mode default: ajout plancher de profondeur explicite dans systemPrompt ('PLANCHER DE PROFONDEUR : toute réponse non-triviale doit contenir au moins 3 phrases substantielles')
 - Corrige récurrence AH-2026-04-26 (réponses trop courtes/génériques)

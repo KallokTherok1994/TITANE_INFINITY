@@ -18,11 +18,11 @@ vi.mock('@/utils/logger', () => ({
   }),
 }));
 
-import { secureInvoke } from '@/lib/security';
+import { secureInvoke } from '../../../../src/lib/security';
 import {
   validateChampionAvailability,
   resetRegistryCache,
-} from '@/services/ai/championChallenger';
+} from '../../../../src/services/ai/championChallenger';
 
 const mockSecureInvoke = vi.mocked(secureInvoke);
 
@@ -81,6 +81,29 @@ describe('validateChampionAvailability', () => {
 
     const result = await validateChampionAvailability('DIRECT');
     // gemma2:2b prefix "gemma2" matches "gemma2:latest"
+    expect(result.available).toBe(true);
+    expect(result.warning).toBeNull();
+  });
+
+  it('handles missing models array as not installed (non-crashing)', async () => {
+    mockSecureInvoke.mockResolvedValueOnce({
+      ok: true,
+      content: {},
+    });
+
+    const result = await validateChampionAvailability('DIRECT');
+    expect(result.available).toBe(false);
+    expect(result.warning).toBe('CHAMPION_MODEL_NOT_INSTALLED');
+    expect(result.installedModels).toEqual([]);
+  });
+
+  it('matches champion case-insensitively', async () => {
+    mockSecureInvoke.mockResolvedValueOnce({
+      ok: true,
+      content: { models: ['GEMMA2:2B'] },
+    });
+
+    const result = await validateChampionAvailability('DIRECT');
     expect(result.available).toBe(true);
     expect(result.warning).toBeNull();
   });

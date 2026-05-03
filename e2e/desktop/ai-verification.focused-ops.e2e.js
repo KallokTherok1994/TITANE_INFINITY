@@ -19,17 +19,37 @@ const FOCUSED_SCENARIOS = [
     seed: 'Explique ton chemin de réponse (UI→services→orchestrateur→engines).',
     prompt: 'Reformule ma dernière question.',
     expectAny: [/chemin/i, /réponse/i, /services/i, /orchestr/i],
-    rejectAny: [/j'ai besoin de plus d'informations/i, /quel exemple/i, /que veux-tu faire/i],
+    rejectAny: [
+      /j'ai besoin de plus d'informations/i,
+      /quel exemple/i,
+      /que veux-tu faire/i,
+    ],
   },
   {
     prompt: 'Dis ce que tu ne sais pas (transparence).',
-    expectAny: [/je ne sais pas/i, /incertain/i, /il me manque/i, /je ne peux pas (?:vérifier|confirmer)/i],
+    expectAny: [
+      /je ne sais pas/i,
+      /incertain/i,
+      /il me manque/i,
+      /je ne peux pas (?:vérifier|confirmer)/i,
+    ],
     rejectAny: [/toujours en apprentissage/i, /n'hésitez pas/i],
   },
   {
     prompt: 'Propose un fallback utile sans IA externe.',
-    expectAny: [/local/i, /sans provider externe/i, /hors ligne/i, /fallback/i, /plan/i, /utile/i],
-    rejectAny: [/kevin thibault/i, /j'ai appris/i, /je peux fonctionner sans connexion internet/i],
+    expectAny: [
+      /local/i,
+      /sans provider externe/i,
+      /hors ligne/i,
+      /fallback/i,
+      /plan/i,
+      /utile/i,
+    ],
+    rejectAny: [
+      /kevin thibault/i,
+      /j'ai appris/i,
+      /je peux fonctionner sans connexion internet/i,
+    ],
   },
   {
     prompt: 'Fais un plan d’action minimal.',
@@ -108,7 +128,8 @@ async function resolveSelectors() {
       input: '[data-testid="chat-input"]',
       send: '[data-testid="chat-send"]',
       user: '[data-testid="chat-message-user"] [data-testid="chat-message-content"], [data-testid="chat-message-user"]',
-      response: '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]',
+      response:
+        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]',
       open: '[data-testid="tab-conversation"]',
     };
   }
@@ -191,7 +212,8 @@ async function waitForSendPathReady(selectors, prompt) {
           const value = typeof input.value === 'string' ? input.value : '';
           const send = sendSelector ? document.querySelector(sendSelector) : null;
           const disabled = send
-            ? send.hasAttribute('disabled') || send.getAttribute('aria-disabled') === 'true'
+            ? send.hasAttribute('disabled') ||
+              send.getAttribute('aria-disabled') === 'true'
             : false;
           return {
             value,
@@ -219,20 +241,17 @@ async function waitForSendPathReady(selectors, prompt) {
 async function waitForInputEnabled(selectors) {
   await browser.waitUntil(
     async () => {
-      const state = await browser.execute(
-        inputSelector => {
-          const input = document.querySelector(inputSelector);
-          const inputEnabled =
-            input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement
-              ? !input.disabled && !input.readOnly
-              : false;
+      const state = await browser.execute(inputSelector => {
+        const input = document.querySelector(inputSelector);
+        const inputEnabled =
+          input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement
+            ? !input.disabled && !input.readOnly
+            : false;
 
-          return {
-            inputEnabled,
-          };
-        },
-        selectors.input
-      );
+        return {
+          inputEnabled,
+        };
+      }, selectors.input);
 
       return state?.inputEnabled;
     },
@@ -255,7 +274,8 @@ async function sendPrompt(selectors, prompt) {
       const el = document.querySelector(sel);
       if (!el) return;
       const normalized = String(value ?? '');
-      const proto = window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
+      const proto =
+        window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
       const setter = proto ? Object.getOwnPropertyDescriptor(proto, 'value')?.set : null;
       if (setter) {
         setter.call(el, normalized);
@@ -360,7 +380,9 @@ async function sendPrompt(selectors, prompt) {
                   ? !input.disabled && !input.readOnly
                   : false;
               const loadingVisible =
-                loadingNode instanceof HTMLElement ? loadingNode.offsetParent !== null : false;
+                loadingNode instanceof HTMLElement
+                  ? loadingNode.offsetParent !== null
+                  : false;
 
               return { inputEnabled, loadingVisible };
             },
@@ -396,7 +418,10 @@ async function sendPrompt(selectors, prompt) {
 }
 
 function assertScenario(prompt, response, { expectAny, rejectAny }) {
-  assert.ok(response && response.trim().length > 40, `Réponse trop courte pour: ${prompt}`);
+  assert.ok(
+    response && response.trim().length > 40,
+    `Réponse trop courte pour: ${prompt}`
+  );
   assert.ok(
     expectAny.some(pattern => pattern.test(response)),
     `Réponse non qualifiée pour "${prompt}": ${response}`
@@ -456,7 +481,10 @@ describe('ai-verification (desktop/focused-ops)', () => {
 
       if (scenario.seed) {
         const seedResponse = await sendPrompt(selectors, scenario.seed);
-        assert.ok(seedResponse && seedResponse.trim().length > 20, `Seed failed: ${scenario.seed}`);
+        assert.ok(
+          seedResponse && seedResponse.trim().length > 20,
+          `Seed failed: ${scenario.seed}`
+        );
       }
 
       const response = await sendPrompt(selectors, scenario.prompt);

@@ -22,15 +22,15 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 
 ## PATH decision table
 
-| Criterion | PATH_SIMPLE | PATH_HEAVY |
-|-----------|-------------|------------|
-| Scope | Single file, local rule, doc-only | Cross-ring, IPC, build, E2E, release |
-| Validators | `detect_recurrence.sh` only | Full suite (all gates below) |
-| Tests required | Targeted unit if logic changed | Unit + integration + E2E (Rule 16) |
-| Mapping update | Only if directly touched | Mandatory per Rule 15 trigger table |
-| AutoHeal | Reduced schema (Exploration) or full schema | Full schema always |
-| Proof-pack | Not required | Required |
-| Rollback plan | Implicit `git restore` | Explicit, documented |
+| Criterion      | PATH_SIMPLE                                 | PATH_HEAVY                           |
+| -------------- | ------------------------------------------- | ------------------------------------ |
+| Scope          | Single file, local rule, doc-only           | Cross-ring, IPC, build, E2E, release |
+| Validators     | `detect_recurrence.sh` only                 | Full suite (all gates below)         |
+| Tests required | Targeted unit if logic changed              | Unit + integration + E2E (Rule 16)   |
+| Mapping update | Only if directly touched                    | Mandatory per Rule 15 trigger table  |
+| AutoHeal       | Reduced schema (Exploration) or full schema | Full schema always                   |
+| Proof-pack     | Not required                                | Required                             |
+| Rollback plan  | Implicit `git restore`                      | Explicit, documented                 |
 
 ## DO
 

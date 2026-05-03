@@ -9,7 +9,9 @@ import { describe, it, expect, vi } from 'vitest';
 // ── Mock all Tauri IPC dependencies ──────────────────────────────
 vi.mock('@/utils/tauriCommandMapper', () => ({
   mappedInvoke: vi.fn(),
-  scanAvailableCommands: vi.fn().mockResolvedValue({ singularity: [], memory: [], helios: [], integrity: [] }),
+  scanAvailableCommands: vi
+    .fn()
+    .mockResolvedValue({ singularity: [], memory: [], helios: [], integrity: [] }),
   repairSingularityState: vi.fn().mockResolvedValue({}),
   calculateTitaneAlignment: vi.fn().mockResolvedValue(0),
 }));

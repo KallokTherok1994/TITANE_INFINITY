@@ -78,8 +78,16 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay" data-testid="add-api-key-modal-overlay" onClick={onClose}>
-      <div className="modal-content" data-testid="add-api-key-modal" onClick={e => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      data-testid="add-api-key-modal-overlay"
+      onClick={onClose}
+    >
+      <div
+        className="modal-content"
+        data-testid="add-api-key-modal"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="modal-header">
           <h3>🔑 Ajouter/Modifier Clé API</h3>
           <button className="modal-close" data-testid="btn-modal-close" onClick={onClose}>
@@ -128,7 +136,12 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({
           {error && <div className="form-error">{error}</div>}
 
           <div className="modal-actions">
-            <button type="button" data-testid="btn-modal-cancel" className="btn btn--secondary" onClick={onClose}>
+            <button
+              type="button"
+              data-testid="btn-modal-cancel"
+              className="btn btn--secondary"
+              onClick={onClose}
+            >
               Annuler
             </button>
             <button

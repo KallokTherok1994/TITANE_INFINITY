@@ -80,7 +80,7 @@ const rustSourceFiles = [
   'src-tauri/src/ollama.rs',
   'src-tauri/src/ai/ollama.rs',
   'src-tauri/src/ollama_provider_refactor.rs',
-].map((p) => ({
+].map(p => ({
   path: p,
   content: fs.readFileSync(path.join(rootDir, p), 'utf8'),
 }));
@@ -113,9 +113,7 @@ describe('Ollama Dev — MCP server structure', () => {
   });
 
   it('expose OLLAMA_MODEL=qwen3.5:9b dans env', () => {
-    expect(mcpConfig.servers['ollama-dev'].env['OLLAMA_MODEL']).toBe(
-      'qwen3.5:9b'
-    );
+    expect(mcpConfig.servers['ollama-dev'].env['OLLAMA_MODEL']).toBe('qwen3.5:9b');
   });
 
   it("ne contient qu'un seul serveur déclaré (pas de serveurs parasites)", () => {
@@ -144,7 +142,7 @@ describe('Ollama Dev — isolation produit (zéro contamination)', () => {
     // Extraire le code hors blocs de commentaire
     const codeLines = ollamaDefaultsRaw
       .split('\n')
-      .filter((l) => !l.trim().startsWith('//') && !l.trim().startsWith('*'));
+      .filter(l => !l.trim().startsWith('//') && !l.trim().startsWith('*'));
     expect(codeLines.join('\n')).not.toContain('qwen3.5:9b');
   });
 
@@ -160,7 +158,7 @@ describe('Ollama Dev — isolation produit (zéro contamination)', () => {
       // Filtrer les blocs de tests Rust
       const nonTestContent = content
         .split('\n')
-        .filter((l) => !l.trim().startsWith('#[test]') && !l.includes('mod tests'))
+        .filter(l => !l.trim().startsWith('#[test]') && !l.includes('mod tests'))
         .join('\n');
       // Supprimer les blocs #[cfg(test)] (simpliste mais suffisant pour détecter les leaks non-test)
       const withoutTestBlocks = nonTestContent.replace(
@@ -171,7 +169,7 @@ describe('Ollama Dev — isolation produit (zéro contamination)', () => {
     }
   });
 
-  it("gemma2:2b est le modèle par défaut du frontend produit", () => {
+  it('gemma2:2b est le modèle par défaut du frontend produit', () => {
     expect(ollamaDefaultsRaw).toContain("DEFAULT_OLLAMA_MODEL = 'gemma2:2b'");
   });
 
@@ -222,9 +220,7 @@ describe('Ollama Dev — boundary agent (.github/agents/ollama-dev-chat-boundary
 
   it('documente la checklist de vérification Ollama Dev (6 étapes minimum)', () => {
     // Compter les lignes numérotées dans la checklist
-    const checklistItems = (
-      boundaryAgentRaw.match(/^\d+\. /gm) ?? []
-    ).length;
+    const checklistItems = (boundaryAgentRaw.match(/^\d+\. /gm) ?? []).length;
     expect(checklistItems).toBeGreaterThanOrEqual(6);
   });
 
@@ -319,11 +315,15 @@ describe('Ollama Dev — vscode-agent-workflow validator', () => {
 
   it('vérifie la présence du prompt Ollama Dev session', () => {
     expect(vscodeWorkflowValidatorRaw).toContain('OLLAMA_DEV_SESSION_PROMPT_PRESENT');
-    expect(vscodeWorkflowValidatorRaw).toContain('.github/prompts/ollama-dev-session.prompt.md');
+    expect(vscodeWorkflowValidatorRaw).toContain(
+      '.github/prompts/ollama-dev-session.prompt.md'
+    );
   });
 
   it('vérifie la section capacités du boundary agent', () => {
-    expect(vscodeWorkflowValidatorRaw).toContain('OLLAMA_BOUNDARY_AGENT_CAPABILITIES_PRESENT');
+    expect(vscodeWorkflowValidatorRaw).toContain(
+      'OLLAMA_BOUNDARY_AGENT_CAPABILITIES_PRESENT'
+    );
     expect(vscodeWorkflowValidatorRaw).toContain('Capacités qwen3.5:9b');
   });
 });
@@ -379,9 +379,7 @@ describe('Ollama Dev — cohérence package.json', () => {
   });
 
   it("audit:agents:stack inclut le check boundary dans la chaîne d'audit", () => {
-    expect(packageJson.scripts['audit:agents:stack']).toContain(
-      'verify:ollama:boundary'
-    );
+    expect(packageJson.scripts['audit:agents:stack']).toContain('verify:ollama:boundary');
   });
 
   it('verify:agents:workflow pointe vers le script vscode-agent-workflow', () => {

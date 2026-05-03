@@ -317,8 +317,16 @@ describe('ResponsePolicy — getEffectiveProfile', () => {
   });
 
   it('les modes planning et synthesis conservent leur budget explicite au runtime', () => {
-    const planning = getEffectiveProfile('planning', 'structure un plan de lancement', 2500);
-    const synthesis = getEffectiveProfile('synthesis', 'relie ces idées entre elles', 2500);
+    const planning = getEffectiveProfile(
+      'planning',
+      'structure un plan de lancement',
+      2500
+    );
+    const synthesis = getEffectiveProfile(
+      'synthesis',
+      'relie ces idées entre elles',
+      2500
+    );
 
     expect(planning.profile.id).toBe('ARCHITECT');
     expect(planning.profile.maxTokens).toBe(2500);

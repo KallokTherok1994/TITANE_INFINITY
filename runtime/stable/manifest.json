@@ -1,6 +1,6 @@
 {
   "name": "titane-infinity-stable",
-  "version": "32.0.3",
+  "version": "32.0.4",
   "stable_snapshot_note": "Titan-Stable artifacts at 31.3.2 — v32.0.0 production build not yet copied to runtime/stable. deployment/latest/ is canonical for v32.0.0.",
   "build_target": "production",
   "certification_level": "P3_STABLE_BUILD",
@@ -46,10 +46,7 @@
   ],
   "success_criteria": {
     "exit_code": 0,
-    "artifacts_created": [
-      "*.AppImage",
-      "*.deb"
-    ],
+    "artifacts_created": ["*.AppImage", "*.deb"],
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },

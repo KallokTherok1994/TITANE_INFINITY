@@ -1372,3 +1372,41 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | launcher verify | PASS — `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity` |
 | `titane-infinity --version` | PASS — binary starts, all subsystems initialized |
 | git push | DONE — origin/MAIN `72cd02ad9`, tag `v31.3.2` |
+
+---
+
+## v32.0.4 — 2026-05-02
+
+### Release Artifacts — v32.0.4
+
+| Artifact | SHA256 | Size |
+|---|---|---|
+| `titane-infinity_32.0.4_amd64.AppImage` | `77ee3b7a968b267409fb9a1d326a82b4318583b349f3ab019e0ed39faa6db1ae` | 96 MiB |
+| `titane-infinity_32.0.4_amd64.deb` | `782226df6603e0d8c713abd282823cfb79e939b76576232ae70d1783451b9ea7` | 24 MiB |
+| `titane-infinity-32.0.4-1.x86_64.rpm` | `bb1e8a6351ef551bd122bb61f54949fefdb0bbd7ef89d8ee4e7b7e0e3929c6dc` | 24 MiB |
+| `titane-infinity` (binary) | built from src-tauri/target/release/ | — |
+
+### Changes — v32.0.4
+
+| Surface | Status |
+|---|---|
+| Champion/Challenger hardening | PATCHED — `shouldPromoteChallenger()` guard + `validateChampionAvailability()` defensive parsing |
+| Ollama sonde mobile | PATCHED — `ollama_generate` uses `gemma2:2b` (was `llama3.1:latest`) |
+| Tests Champion/Challenger | +6 tests: déterministe, min_samples, winRate/latence, missing models, case-insensitive |
+| tsconfig.test.json | Extended include: `tests/**/*.test.ts`, `tests/**/*.spec.ts` |
+| Prettier normalization | 23 pre-existing files normalized to LF (format:check gate) |
+| deployment/latest | Updated — AppImage+DEB+VERSION.txt+MANIFEST.json+SHA256SUMS.txt |
+
+### Gates — v32.0.4
+
+| Gate | Result |
+|---|---|
+| `detect_recurrence` | PASS (1569 entries) |
+| `verify_instructions` | PASS=33 FAIL=0 |
+| Version bump | 32.0.3 → 32.0.4 (6 files) |
+| AutoHeal entry | AH-2026-05-02-BUILD-32-0-4-0001 |
+| AppImage artifact | titane-infinity_32.0.4_amd64.AppImage 96MiB |
+| DEB artifact | titane-infinity_32.0.4_amd64.deb 24MiB |
+| RPM artifact | titane-infinity-32.0.4-1.x86_64.rpm 24MiB |
+| sudo reinstall | PENDING — requires user action |
+| VERDICT | PASS |
