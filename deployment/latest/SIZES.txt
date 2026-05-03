@@ -1,3 +1,3 @@
-# Tailles — TITANE∞ v32.0.2 — 2026-05-02T14:13:40Z
-24M	titane-infinity_32.0.2_amd64.deb
-93M	titane-infinity_32.0.2_amd64.AppImage
+# Tailles — TITANE∞ v32.0.3 — 2026-05-03T02:27:26Z
+24M	titane-infinity_32.0.3_amd64.deb
+93M	titane-infinity_32.0.3_amd64.AppImage

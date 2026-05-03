@@ -5,7 +5,34 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.2 — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v32.0.3 — Historical baseline preserved below)
+
+## Release v32.0.3 — 2026-05-03 (BUILD + Release + E2E proof + icon refresh)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 32.0.3 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 32.0.3 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 32.0.3 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 32.0.3 | ✅ PASS |
+| `pnpm exec vite build` | PASS | ✅ PASS |
+| `tauri build --config src-tauri/tauri.conf.json` | PASS — bundles DEB/RPM/AppImage | ✅ PASS |
+| AppImage | `titane-infinity_32.0.3_amd64.AppImage` (96840184 bytes) | ✅ PASS |
+| DEB | `titane-infinity_32.0.3_amd64.deb` (24316550 bytes) | ✅ PASS |
+| RPM | `titane-infinity-32.0.3-1.x86_64.rpm` | ✅ PASS |
+| sha256 AppImage | `0ba9dc43be5a1022b57c195c6c535772f8a2cbd80af1f8fd17aff66d11fb9510` | ✅ PASS |
+| sha256 DEB | `7777114bd5df2988c1919be13d9dad463c6f3b2500f2ab692f80802c78e2b2cd` | ✅ PASS |
+| sha256 RPM | `1ecee6842dfdb22f2800771dbb8a0249983d6470e2c563ac73e2f4f50017d4d8` | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_32.0.3.txt` | generated | ✅ PASS |
+| `deployment/latest/VERSION.txt` | 32.0.3 | ✅ PASS |
+| `deployment/latest/MANIFEST.json` | updated to 32.0.3 | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | updated to 32.0.3 hashes | ✅ PASS |
+| `deployment/latest/SIZES.txt` | updated to 32.0.3 sizes | ✅ PASS |
+| `pnpm run e2e:desktop:proof:online-chat` | PASS (1 passed, 6 skipped) | ✅ PASS |
+| local launcher refresh | `~/.local/share/applications/titane-infinity.desktop` synced (`Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity`) | ✅ PASS |
+| system launcher refresh | `/usr/share/applications/titane-infinity.desktop` unchanged (`Exec=titane-infinity`) because sudo unavailable | ⚠️ BLOCKED |
+| binary sync `/usr/bin/titane-infinity` | blocked: `sudo: il est nécessaire de saisir un mot de passe` | ⚠️ BLOCKED |
+| post-build icon refresh | user cache updated, system cache BLOCKED_SUDO_REQUIRED | ⚠️ PARTIAL |
 
 ## Release v32.0.2 — 2026-05-02 (BUILD ALL — Local bundles sealed)
 
