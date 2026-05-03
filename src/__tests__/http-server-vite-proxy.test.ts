@@ -10,6 +10,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
 
 // ─────────────────────────────────────────────────────────────────
 // Lecture de la config proxy depuis vite.config.ts
@@ -117,15 +118,15 @@ describe('Proxy /api/ollama — rewrite URL', () => {
     expect(result).toBe('/api/chat');
   });
 
-  it('target Ollama est sur 127.0.0.1:11434 (loopback — One Door)', () => {
-    // Vérifié depuis vite.config.ts: target = 'http://127.0.0.1:11434'
-    const target = 'http://127.0.0.1:11434';
+  it('target Ollama reste sur le loopback gouverne (One Door)', () => {
+    // Vérifié depuis vite.config.ts via la constante gouvernée de loopback.
+    const target = DEFAULT_OLLAMA_URL;
     expect(target).toContain('127.0.0.1');
     expect(target).toContain('11434');
   });
 
   it('ne route pas vers internet (loopback uniquement)', () => {
-    const target = 'http://127.0.0.1:11434';
+    const target = DEFAULT_OLLAMA_URL;
     expect(target).not.toContain('api.ollama.com');
     expect(target).not.toContain('amazonaws.com');
     expect(target).not.toContain('openai.com');

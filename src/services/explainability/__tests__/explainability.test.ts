@@ -5,6 +5,7 @@
  * Rule 16: nouveau service → tests unitaires obligatoires
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
 
 // ── Mocks (vi.hoisted garantit l'initialisation avant le hoist vi.mock) ──────
 
@@ -38,7 +39,7 @@ const {
   mockGetStats: vi.fn(() => ({
     errorCount: 0,
     endpointHealthy: true,
-    config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
   })),
   mockGetActiveConversationId: vi.fn(() => null),
   mockLoadConversationSync: vi.fn(() => null),
@@ -90,7 +91,7 @@ describe('computeExplainabilityScore — aucune trace active', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
     mockLoadRegistry.mockReturnValue({
       champions: { default: { provider: 'ollama', model: 'gemma2:2b', mode: 'default' } },

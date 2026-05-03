@@ -1,0 +1,11 @@
+# TITANE∞ v33.0.2 - Release Artifacts Checksums
+# Date: 2026-05-03
+# Branch: MAIN
+
+## SHA256
+6c8bd196d0f83293d8edf67b324106e62a47932c7225df8fa26020e3706e43c0  titane-infinity_33.0.2_amd64.deb
+e3ef64d46b3c141721a732fb3b564ad3831e078df37d9d0b060458732e038b3c  titane-infinity_33.0.2_amd64.AppImage
+
+## Sizes (bytes)
+24317202  titane-infinity_33.0.2_amd64.deb
+96836088  titane-infinity_33.0.2_amd64.AppImage

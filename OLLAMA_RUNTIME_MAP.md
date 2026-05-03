@@ -2,6 +2,8 @@
 
 > 2026-05-03 — Tauri chat completion model truth: la voie IPC non-streaming `generate_response` publie désormais aussi `model` en plus de `provider`, et la chaîne `src-tauri/src/ai/{mod,router,gemini,ollama}.rs` -> `src-tauri/src/chat_engine/{types,mod}.rs` -> `src/services/tauri/chatEngine.commands.ts` -> `src/services/ai/chatEngine.ts` cesse d écraser ce modèle réel avec le nom du provider. La vérité `provider + model` survit donc enfin jusqu au chat frontend quand la réponse passe par le backend Tauri gouverné.
 
+> 2026-05-03 — Ollama streaming model truth: la voie streaming Ollama de `src-tauri/src/overdrive/chat_orchestrator.rs` ne republie plus aveuglément le modèle demandé dans `chat:stream:done`, `chat:stream:complete`, `ChatStreamResult` et le message assistant persisté. Le chunk terminal Ollama transporte maintenant `model`, et cette valeur devient l autorité runtime streamée quand elle est fournie.
+
 > 2026-05-02 — Champion/Challenger hardening truth: la validation de disponibilité champion dans `src/services/ai/championChallenger.ts` filtre désormais proprement les payloads partiels (`content.models` absent/non-array/non-string) et la promotion auto est explicitement bloquée quand `require_human_approval=true`. Cette correction supprime les faux positifs de promotion et les risques de parsing fragile, tout en gardant la baseline chat produit `gemma2:2b` inchangée.
 
 > 2026-05-02 — Lib probe model alignment truth: la sonde mobile de `src-tauri/src/lib.rs` aligne désormais son `ollama_generate` de diagnostic sur `gemma2:2b` au lieu d un modèle legacy, afin de garder une preuve runtime cohérente avec la cartographie canonique chat/Ollama.
@@ -176,6 +178,21 @@ Ollama Server
 **Gap**: REQUESTED → USED → SHOWN chain is incomplete.
 
 ---
+
+## 8. 2026-05-03 - E2E ONLINE CHAT TIMEOUT TRUTH
+
+**Problem**: `scripts/e2e/run-online-chat-proof-ui.sh` forced `OLLAMA_REQUEST_TIMEOUT_SECS=15` even though the governed proof prompt asks Ollama for a long six-section answer. The desktop proof could therefore degrade into `provider_used=local-unavailable` / `reason=PROVIDER_UNAVAILABLE` while the same Ollama runtime answered correctly through direct `/api/generate`.
+
+**Runtime evidence**:
+
+- `pnpm run e2e:desktop:proof:online-chat` failed with `PROVIDER_UNAVAILABLE` and Rust logged `error sending request for url (http://127.0.0.1:11434/api/generate)`.
+- The same prompt shape succeeded through direct `curl` to `http://127.0.0.1:11434/api/generate`.
+- `OLLAMA_REQUEST_TIMEOUT_SECS=90 pnpm run e2e:desktop:proof:online-chat` passed and produced a real Ollama assistant response on the desktop lane.
+
+**Authority**:
+
+- For this governed desktop proof, the effective timeout must be long enough to validate the real local generation lane instead of manufacturing a harness-only timeout failure.
+- The harness default is now `90s`, still overrideable by env for narrower experiments.
 
 ## 7. FALLBACK PATH
 

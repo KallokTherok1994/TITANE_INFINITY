@@ -27,9 +27,11 @@ export TITANE_E2E_ENFORCE_SOURCE="${TITANE_E2E_ENFORCE_SOURCE:-0}"
 # to avoid long-running UI hangs that can invalidate the WRY WebDriver session.
 export OLLAMA_DEFAULT_MODEL="${TITANE_E2E_OLLAMA_MODEL:-gemma2:2b}"
 # OLLAMA_REQUEST_TIMEOUT_SECS: governs the Rust HTTP client timeout in ollama.rs.
-# Default 15s here so the governed local fallback stays truthful and the WRY session
-# does not hang long enough to invalidate the desktop proof surface.
-export OLLAMA_REQUEST_TIMEOUT_SECS="${OLLAMA_REQUEST_TIMEOUT_SECS:-15}"
+# The online chat proof explicitly requests a long 6-section answer; 15s can flip a
+# real local generation into a false `PROVIDER_UNAVAILABLE` on otherwise healthy runs.
+# Align this harness default with the governed desktop suite profile unless the caller
+# overrides it explicitly.
+export OLLAMA_REQUEST_TIMEOUT_SECS="${OLLAMA_REQUEST_TIMEOUT_SECS:-90}"
 # TITANE_CONVERSATION_TIMEOUT_SECS: [DEAD — no Rust runtime honors this env var.
 # Kept as a labelled stub only; remove if confusing.]
 

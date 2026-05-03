@@ -5,6 +5,7 @@
  * Rule 16: nouveau service → tests unitaires + integration obligatoires
  */
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
+import { DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
 
 // ── Mocks (vi.hoisted garantit l'initialisation avant le hoist vi.mock) ────────
 
@@ -24,7 +25,7 @@ const {
   mockGetStats: vi.fn(() => ({
     errorCount: 0,
     endpointHealthy: true,
-    config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+    config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
   })),
   mockGetActiveAIProviders: vi.fn(() => ['ollama', 'tauri-backend']),
   mockGetAdvancedAgentStatus: vi.fn(() => ({
@@ -99,7 +100,7 @@ describe('runActiveDiagnosticScan — état sain', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
   });
@@ -161,7 +162,7 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
 
     const result = runActiveDiagnosticScan();
@@ -185,7 +186,7 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
 
     const result = runActiveDiagnosticScan();
@@ -199,7 +200,7 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
 
     const result = runActiveDiagnosticScan();
@@ -214,7 +215,7 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
 
     const result = runActiveDiagnosticScan();
@@ -229,7 +230,7 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
     mockGetStats.mockReturnValue({
       errorCount: 5,
       endpointHealthy: false,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
 
     const result = runActiveDiagnosticScan();
@@ -257,7 +258,7 @@ describe('runActiveDiagnosticScan — état dégradé', () => {
     mockGetStats.mockReturnValue({
       errorCount: 1,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
     mockGetActiveAIProviders.mockReturnValue(['ollama', 'tauri-backend']);
 
@@ -277,7 +278,7 @@ describe('getActiveScanHistory — persistance localStorage', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
   });
@@ -319,7 +320,7 @@ describe('onDiagnosticScan — listener', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
   });
@@ -347,7 +348,7 @@ describe('getDiagnosticAgentStatus — surface agent', () => {
     mockGetStats.mockReturnValue({
       errorCount: 0,
       endpointHealthy: true,
-      config: { model: 'gemma2:2b', endpoint: 'http://127.0.0.1:11434' },
+      config: { model: 'gemma2:2b', endpoint: DEFAULT_OLLAMA_URL },
     });
     mockGetActiveAIProviders.mockReturnValue(['ollama']);
   });

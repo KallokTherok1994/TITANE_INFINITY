@@ -288,9 +288,39 @@ async function installConversationGenerateTraceHook() {
   });
 }
 
+async function installStreamCompleteTraceHook() {
+  await browser.execute(async () => {
+    const w = window;
+    if (w.__TITANE_STREAM_TRACE_INSTALLED__) {
+      return;
+    }
+
+    w.__TITANE_LAST_STREAM_COMPLETE__ = null;
+
+    try {
+      const eventApi = await import('@tauri-apps/api/event');
+      const unlisten = await eventApi.listen('chat:stream:complete', event => {
+        w.__TITANE_LAST_STREAM_COMPLETE__ = event?.payload ?? null;
+      });
+
+      w.__TITANE_STREAM_TRACE_UNLISTEN__ = () => {
+        try {
+          unlisten();
+        } catch {
+          // ignore cleanup failures in proof hook
+        }
+      };
+      w.__TITANE_STREAM_TRACE_INSTALLED__ = true;
+    } catch (_error) {
+      w.__TITANE_STREAM_TRACE_INSTALLED__ = 'failed';
+    }
+  });
+}
+
 async function resetConversationGenerateTrace() {
   await browser.execute(() => {
     window.__TITANE_LAST_CONV_RESPONSE__ = null;
+    window.__TITANE_LAST_STREAM_COMPLETE__ = null;
   });
 }
 
@@ -376,6 +406,21 @@ async function readConversationGenerateTrace() {
           : typeof meta.networkUsed === 'boolean'
             ? String(meta.networkUsed)
             : '',
+    };
+  });
+}
+
+async function readStreamCompleteTrace() {
+  return await browser.execute(() => {
+    const payload = window.__TITANE_LAST_STREAM_COMPLETE__ || {};
+
+    return {
+      hasResponse: Boolean(window.__TITANE_LAST_STREAM_COMPLETE__),
+      content: String(payload.content ?? ''),
+      providerUsed: String(payload.provider ?? ''),
+      modelUsed: String(payload.model ?? ''),
+      conversationId: String(payload.conversation_id ?? payload.conversationId ?? ''),
+      messageId: String(payload.message_id ?? payload.messageId ?? ''),
     };
   });
 }
@@ -1069,6 +1114,7 @@ async function prepareChatSurface() {
   if (selectors) {
     await ensureChatOpen(selectors);
     await installConversationGenerateTraceHook();
+    await installStreamCompleteTraceHook();
     const input = await $(selectors.input);
     await input.waitForExist({ timeout: 15000 });
   }
@@ -1131,6 +1177,7 @@ async function sendMessageAndWaitOutcome(
   let afterAssistantCount = beforeAssistantCount;
   let runtime = await readRuntimeSnapshot(selectors);
   let trace = null;
+  let streamTrace = null;
 
   while (Date.now() - startTime < timeoutMs) {
     runtime = await readRuntimeSnapshot(selectors);
@@ -1161,22 +1208,26 @@ async function sendMessageAndWaitOutcome(
       if (!responseText && !runtime.assistantText) {
         trace = await readConversationGenerateTrace();
       }
+      streamTrace = await readStreamCompleteTrace();
       return {
         kind: 'assistant',
         latencyMs: Date.now() - startTime,
         responseText: responseText || runtime.assistantText || trace?.content || '',
         runtime,
+        streamTrace,
         beforeAssistantCount,
         afterAssistantCount,
       };
     }
 
     if (isRuntimeDegraded(runtime)) {
+      streamTrace = await readStreamCompleteTrace();
       return {
         kind: 'degraded',
         latencyMs: Date.now() - startTime,
         responseText: runtime.assistantText,
         runtime,
+        streamTrace,
         beforeAssistantCount,
         afterAssistantCount,
       };
@@ -1187,11 +1238,13 @@ async function sendMessageAndWaitOutcome(
 
   runtime = await readRuntimeSnapshot(selectors);
   trace = await readConversationGenerateTrace();
+  streamTrace = await readStreamCompleteTrace();
   return {
     kind: 'timeout',
     latencyMs: Date.now() - startTime,
     responseText: responseText || runtime.assistantText || trace?.content || '',
     runtime,
+    streamTrace,
     beforeAssistantCount,
     afterAssistantCount,
   };
@@ -1439,14 +1492,27 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       );
       const last = assistantMsgs[assistantMsgs.length - 1];
       const response = window.__TITANE_LAST_CONV_RESPONSE__ || {};
+      const streamComplete = window.__TITANE_LAST_STREAM_COMPLETE__ || {};
       const meta = response.meta || response.metadata || response.decision || {};
+      const badges = Array.from(
+        document.querySelectorAll('[data-testid="chat-runtime-badge"]')
+      )
+        .map(node => (node.textContent || '').trim())
+        .filter(Boolean);
+
+      const readBadgeValue = prefix => {
+        const match = badges.find(item => item.startsWith(prefix));
+        return match ? match.slice(prefix.length).trim() : '';
+      };
 
       const domProvider = last?.getAttribute('data-provider-used') || '';
       const domNetworkUsed = last?.getAttribute('data-network-used') || '';
       const domReason = last?.getAttribute('data-provider-reason') || '';
+      const domModelUsed = readBadgeValue('model-used:');
 
       const backendProvider = String(meta.provider_used ?? meta.providerSelected ?? '');
       const backendReason = String(meta.reason_code ?? meta.reasonCode ?? '');
+      const backendModelUsed = String(streamComplete.model ?? '');
 
       let backendNetworkUsed = '';
       if (typeof meta.network_used === 'boolean') {
@@ -1459,9 +1525,11 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         domProvider,
         domNetworkUsed,
         domReason,
+        domModelUsed,
         backendProvider,
         backendNetworkUsed,
         backendReason,
+        backendModelUsed,
       };
     });
 
@@ -1483,6 +1551,13 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
           alignment.domReason,
           alignment.backendReason,
           `[G_UI_BACKEND_TRUTH_ALIGNED] reason mismatch DOM=${alignment.domReason} backend=${alignment.backendReason}`
+        );
+      }
+      if (alignment.backendModelUsed.length > 0) {
+        assert.equal(
+          alignment.domModelUsed,
+          alignment.backendModelUsed,
+          `[G_UI_BACKEND_MODEL_TRUTH_ALIGNED] model mismatch DOM=${alignment.domModelUsed} backend=${alignment.backendModelUsed}`
         );
       }
     } else {

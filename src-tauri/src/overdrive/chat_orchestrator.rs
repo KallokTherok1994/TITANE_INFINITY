@@ -178,6 +178,7 @@ struct StreamEventPayload {
 
 #[derive(Debug, Clone, Deserialize)]
 struct OllamaStreamChunk {
+    model: Option<String>,
     response: Option<String>,
     done: Option<bool>,
     error: Option<String>,
@@ -2123,6 +2124,8 @@ async fn stream_with_ollama(
         }
     };
 
+    let model_used = done_info.model.clone().unwrap_or_else(|| model.clone());
+
     if tokens.is_none() {
         tokens = done_info.eval_count;
     }
@@ -2138,7 +2141,7 @@ async fn stream_with_ollama(
     let completion_metadata = serde_json::json!({
         "content": accumulated.clone(),
         "provider": "ollama",
-        "model": model.clone(),
+        "model": model_used.clone(),
         "latency_ms": latency_ms,
         "tokens": tokens,
         "prompt_tokens": prompt_tokens,
@@ -2171,7 +2174,7 @@ async fn stream_with_ollama(
         content: accumulated.clone(),
         timestamp: get_timestamp(),
         provider: "ollama".to_string(),
-        model: model.clone(),
+        model: model_used.clone(),
         tokens,
         multimodal: false,
     };
@@ -2190,7 +2193,7 @@ async fn stream_with_ollama(
         message_id,
         content: accumulated,
         provider: "ollama".to_string(),
-        model,
+        model: model_used,
         latency_ms,
         chunk_count: ordinal,
         tokens,
@@ -2287,6 +2290,18 @@ mod smoke_tests {
             .unwrap_or_else(|| "llama3.1:latest".to_string());
 
         assert_eq!(model, "llama3.1:latest");
+    }
+
+    #[test]
+    fn ollama_stream_chunk_parses_runtime_model_truth() {
+        let chunk: OllamaStreamChunk = serde_json::from_str(
+            r#"{"model":"gemma2:2b","response":"","done":true,"eval_count":7}"#,
+        )
+        .expect("chunk should parse");
+
+        assert_eq!(chunk.model.as_deref(), Some("gemma2:2b"));
+        assert_eq!(chunk.eval_count, Some(7));
+        assert_eq!(chunk.done, Some(true));
     }
 
     #[test]

@@ -1,5 +1,6 @@
 import { act, renderHook, waitFor } from '@/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
 
 const saveResolvers: Array<() => void> = [];
 const saveMessageMock = vi.fn(() => {
@@ -240,7 +241,7 @@ describe('useConversationEngine fallback meta truth', () => {
     });
 
     expect(result.current.messages.at(-1)?.content).toContain(
-      'http://127.0.0.1:11434/api/tags'
+      `${DEFAULT_OLLAMA_URL}/api/tags`
     );
     expect(result.current.messages.at(-1)?.content).toContain('modèle local attendu');
     expect(result.current.messages.at(-1)?.content).not.toContain(

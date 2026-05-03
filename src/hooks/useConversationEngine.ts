@@ -48,6 +48,7 @@ import {
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
 import { readActiveModuleContext } from '@/services/chat/moduleRouteContext';
+import { DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -195,7 +196,7 @@ function buildProviderRecoveryActions(
     case 'ollama':
     case 'local':
       return [
-        "- Vérifie qu'Ollama répond sur http://127.0.0.1:11434/api/tags",
+        `- Vérifie qu'Ollama répond sur ${DEFAULT_OLLAMA_URL}/api/tags`,
         '- Vérifie que le modèle local attendu est bien installé (ex: gemma2:2b)',
         '- Redémarre Ollama local, puis relance la vérification provider',
       ];

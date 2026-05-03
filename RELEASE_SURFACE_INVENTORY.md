@@ -5,41 +5,67 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.0 — local build + deployment + E2E PASS — system install BLOCKED_SUDO_REQUIRED — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.2 — local build + deployment + system install + launcher sync PASS — Historical baseline preserved below)
 
-## Release v33.0.0 — 2026-05-03 (Major release promotion + build + E2E proof)
+## Release v33.0.2 — 2026-05-03 (Patch release: IPC chat_orchestrator fix + hooks + diagnostic/explainability tests)
 
 | Surface | Truth | Status |
 |---|---|---|
-| `package.json` version | 33.0.0 | ✅ PASS |
-| `src-tauri/Cargo.toml` version | 33.0.0 | ✅ PASS |
-| `src-tauri/tauri.conf.json` version | 33.0.0 | ✅ PASS |
-| `runtime/stable/manifest.json` version | 33.0.0 | ✅ PASS |
-| `runtime/stable/tauri.conf.json` version | 33.0.0 | ✅ PASS |
-| `tauri.base.json` + `src-tauri/tauri.base.json` | 33.0.0 | ✅ PASS |
+| `package.json` version | 33.0.2 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 33.0.2 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 33.0.2 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 33.0.2 | ✅ PASS |
+| `runtime/stable/tauri.conf.json` version | 33.0.2 | ✅ PASS |
+| `tauri.base.json` + `src-tauri/tauri.base.json` | 33.0.2 | ✅ PASS |
 | `pnpm run build:production` | PASS | ✅ PASS |
-| AppImage | `titane-infinity_33.0.0_amd64.AppImage` (96836088 bytes) | ✅ PASS |
-| DEB | `titane-infinity_33.0.0_amd64.deb` (24317178 bytes) | ✅ PASS |
-| RPM | `titane-infinity-33.0.0-1.x86_64.rpm` (24316827 bytes) | ✅ PASS |
-| sha256 AppImage | `85441d46e420ffc42720dc80796382693e6b22b64d4dd6464d1d2cfc0423be3f` | ✅ PASS |
-| sha256 DEB | `355002329b87133741ae9ff3cc4b160c59bc6532e0fb429f8c2ca0c7d2d498bb` | ✅ PASS |
-| sha256 RPM | `1f5e9d922ac8839ec0c6230ae7a28986d303761d81b144edc0ac792b1c11563e` | ✅ PASS |
-| `RELEASE_ARTIFACTS_CHECKSUMS_33.0.0.txt` | generated + `sha256sum -c` PASS | ✅ PASS |
-| `deployment/latest/VERSION.txt` | 33.0.0 | ✅ PASS |
-| `deployment/latest/MANIFEST.json` | updated to 33.0.0 | ✅ PASS |
-| `deployment/latest/SHA256SUMS.txt` | updated to 33.0.0 hashes | ✅ PASS |
-| `deployment/latest/SIZES.txt` | updated to 33.0.0 sizes | ✅ PASS |
+| AppImage | `titane-infinity_33.0.2_amd64.AppImage` (96836088 bytes) | ✅ PASS |
+| DEB | `titane-infinity_33.0.2_amd64.deb` (24317202 bytes) | ✅ PASS |
+| sha256 AppImage | `e3ef64d46b3c141721a732fb3b564ad3831e078df37d9d0b060458732e038b3c` | ✅ PASS |
+| sha256 DEB | `6c8bd196d0f83293d8edf67b324106e62a47932c7225df8fa26020e3706e43c0` | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_33.0.2.txt` | generated | ✅ PASS |
+| `deployment/latest/VERSION.txt` | 33.0.2 | ✅ PASS |
+| `deployment/latest/MANIFEST.json` | updated to 33.0.2 | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | updated to 33.0.2 hashes | ✅ PASS |
+| `deployment/latest/SIZES.txt` | updated to 33.0.2 sizes | ✅ PASS |
+
+### Release note — v33.0.2
+
+- `v33.0.2` ships IPC chat_orchestrator fixes, useConversationEngine hook hardening, diagnostic/explainability test coverage, and E2E online-chat proof realignment.
+- System package installed via `sudo dpkg -i`, launchers and dock/menu icons refreshed to `v33.0.2`.
+
+## Release v33.0.1 — 2026-05-03 (Patch release promotion + build + installation + dock/menu sync)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 33.0.1 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 33.0.1 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 33.0.1 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 33.0.1 | ✅ PASS |
+| `runtime/stable/tauri.conf.json` version | 33.0.1 | ✅ PASS |
+| `tauri.base.json` + `src-tauri/tauri.base.json` | 33.0.1 | ✅ PASS |
+| `pnpm run build:production` | PASS | ✅ PASS |
+| AppImage | `titane-infinity_33.0.1_amd64.AppImage` (96823800 bytes) | ✅ PASS |
+| DEB | `titane-infinity_33.0.1_amd64.deb` (24318280 bytes) | ✅ PASS |
+| RPM | `titane-infinity-33.0.1-1.x86_64.rpm` (24318273 bytes) | ✅ PASS |
+| sha256 AppImage | `bc4217270df0dcdadad0ed39a0231297b08dbed50dd52f94ab1b0be720e23430` | ✅ PASS |
+| sha256 DEB | `d092599a49c471580f434eb1f9ce18b9bb735063f7a442787ca2aa1d4841f104` | ✅ PASS |
+| sha256 RPM | `07b7b750a63e00ac724ba2c26c6ebdf82f582b588d418394f8e034783c5f14b0` | ✅ PASS |
+| `RELEASE_ARTIFACTS_CHECKSUMS_33.0.1.txt` | generated + `sha256sum -c` PASS | ✅ PASS |
+| `deployment/latest/VERSION.txt` | 33.0.1 | ✅ PASS |
+| `deployment/latest/MANIFEST.json` | updated to 33.0.1 | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | updated to 33.0.1 hashes | ✅ PASS |
+| `deployment/latest/SIZES.txt` | updated to 33.0.1 sizes | ✅ PASS |
 | `pnpm run e2e:desktop:proof:online-chat` | PASS (`1 passed`, `6 skipped`) | ✅ PASS |
-| local launcher refresh | `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity`, `Name=TITANE∞ v32.0.3` — intentionally aligned to the installed binary selected by `scripts/update-desktop-icon.sh` | ⚠️ PARTIAL |
-| binary sync `/usr/bin/titane-infinity` | `dpkg -l` still reports `32.0.3` | ⚠️ BLOCKED |
-| `sudo -n dpkg -i ...titane-infinity_33.0.0_amd64.deb` | `sudo: a password is required` | ⚠️ BLOCKED |
+| local launcher refresh | `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity`, `Name=TITANE∞ v33.0.1` | ✅ PASS |
+| system launcher refresh | `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity`, `Name=TITANE∞ v33.0.1` | ✅ PASS |
+| binary sync `/usr/bin/titane-infinity` | `dpkg -l` reports `ii titane-infinity 33.0.1` | ✅ PASS |
+| `sudo dpkg -i ...titane-infinity_33.0.1_amd64.deb` | install completed (`exit 0`) | ✅ PASS |
 
-### Release note — v33.0.0
+### Release note — v33.0.1
 
-- `v32.0.4` was the last unsealed lane: the AppImage checksum recorded in inventory/deployment (`77ee3b...`) no longer matched the rebuilt bundle (`f7ff00...`), proving artifact drift.
-- `v33.0.0` closes that lock by rebuilding all Linux artifacts and regenerating the hashes from the real release bundles.
-- The final rebuild also closed a package metadata drift: the generated `.deb` now exposes `Description: TITANE∞ v33.0.0 - AI Intelligence Unification Supreme`.
-- The user-scoped launcher is not independently stale: it intentionally mirrors the selected executable, which remains `/usr/bin/titane-infinity` at `32.0.3` until root installation succeeds.
+- `v33.0.1` updates all canonical release surfaces to the same patch level: package metadata, Linux bundles, `deployment/latest`, and root install.
+- The system package is now installed with sudo (`dpkg -i`) and the launchers are synchronized in both user and system scopes.
+- Dock/menu truth is aligned: both launchers expose `Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity`, and `Name=TITANE∞ v33.0.1`.
 
 ## Release v32.0.3 — 2026-05-03 (BUILD + Release + E2E proof + icon refresh)
 
