@@ -725,6 +725,132 @@ struct OllamaResponse {
     done: bool,
 }
 
+// === CHAT API TYPES (for /api/chat with structured multi-turn messages) ===
+
+#[derive(Debug, Serialize, Clone)]
+struct OllamaChatMessage {
+    role: String,
+    content: String,
+}
+
+#[derive(Debug, Serialize)]
+struct OllamaChatRequest {
+    model: String,
+    messages: Vec<OllamaChatMessage>,
+    stream: bool,
+    options: OllamaOptions,
+}
+
+#[derive(Debug, Deserialize)]
+struct OllamaChatResponse {
+    #[serde(default)]
+    model: Option<String>,
+    message: OllamaChatResponseMessage,
+    #[allow(dead_code)]
+    done: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct OllamaChatResponseMessage {
+    #[allow(dead_code)]
+    role: String,
+    content: String,
+}
+
+/// Parse a combined flat prompt string into structured `/api/chat` messages.
+///
+/// Handles markers injected by `commands.rs` / `omega_integration.rs`:
+///   - `## STM_RECENT_TURNS`       : `[User]: ...` / `[TITANE]: ...` pairs
+///   - `## CONVERSATION_HISTORY`   : `[User]: ...` / `[Assistant]: ...` pairs
+///   - Final user turn             : `\n\nUser: {current_message}` suffix
+fn parse_prompt_to_chat_messages(prompt: &str) -> Vec<OllamaChatMessage> {
+    let mut messages: Vec<OllamaChatMessage> = Vec::new();
+
+    let stm_marker = "\n\n## STM_RECENT_TURNS\n";
+    let hist_marker = "\n\n## CONVERSATION_HISTORY\n";
+    let current_user_suffix = "\n\nUser: ";
+
+    let stm_pos = prompt.find(stm_marker);
+    let hist_pos = prompt.find(hist_marker);
+    // Earliest history section marks end of system prompt
+    let history_section_start = match (stm_pos, hist_pos) {
+        (Some(a), Some(b)) => Some(a.min(b)),
+        (Some(a), None) => Some(a),
+        (None, Some(b)) => Some(b),
+        (None, None) => None,
+    };
+    let current_user_pos = prompt.rfind(current_user_suffix);
+
+    // No markers at all: single-turn prompt — treat full text as user message
+    if history_section_start.is_none() && current_user_pos.is_none() {
+        let full = prompt.trim();
+        if !full.is_empty() {
+            messages.push(OllamaChatMessage {
+                role: "user".to_string(),
+                content: full.to_string(),
+            });
+        }
+        return messages;
+    }
+
+    // System prompt: everything before the first history marker (or before \n\nUser:)
+    let system_end = history_section_start.or(current_user_pos).unwrap_or(prompt.len());
+    let system_text = prompt[..system_end].trim();
+    if !system_text.is_empty() {
+        messages.push(OllamaChatMessage {
+            role: "system".to_string(),
+            content: system_text.to_string(),
+        });
+    }
+
+    // Historical turns
+    if let Some(start) = history_section_start {
+        let end = current_user_pos.unwrap_or(prompt.len());
+        let history_text = &prompt[start..end];
+        for line in history_text.lines() {
+            let line = line.trim();
+            if let Some(c) = line
+                .strip_prefix("[User]: ")
+                .or_else(|| line.strip_prefix("[User]:"))
+            {
+                let c = c.trim();
+                if !c.is_empty() {
+                    messages.push(OllamaChatMessage {
+                        role: "user".to_string(),
+                        content: c.to_string(),
+                    });
+                }
+            } else if let Some(c) = line
+                .strip_prefix("[TITANE]: ")
+                .or_else(|| line.strip_prefix("[TITANE]:"))
+                .or_else(|| line.strip_prefix("[Assistant]: "))
+                .or_else(|| line.strip_prefix("[Assistant]:"))
+            {
+                let c = c.trim();
+                if !c.is_empty() {
+                    messages.push(OllamaChatMessage {
+                        role: "assistant".to_string(),
+                        content: c.to_string(),
+                    });
+                }
+            }
+        }
+    }
+
+    // Current user message (final turn)
+    if let Some(pos) = current_user_pos {
+        let current_msg = prompt[pos + current_user_suffix.len()..].trim();
+        if !current_msg.is_empty() {
+            messages.push(OllamaChatMessage {
+                role: "user".to_string(),
+                content: current_msg.to_string(),
+            });
+        }
+    }
+
+    messages
+}
+
 pub struct OllamaClient {
     model: String,
     client: Client,
@@ -819,6 +945,84 @@ impl OllamaClient {
     }
 
     async fn query_with_model(&self, request: &AIRequest, model: &str) -> AIResult<AIResponse> {
+        // Route to /api/chat when conversation history markers are present
+        let has_history = request.prompt.contains("## STM_RECENT_TURNS")
+            || request.prompt.contains("## CONVERSATION_HISTORY")
+            || request.prompt.contains("\n\nUser: ");
+        if has_history {
+            return self.query_chat_api(request, model).await;
+        }
+        self.query_generate(request, model).await
+    }
+
+    /// Use `/api/chat` with structured messages for proper multi-turn conversation memory.
+    /// Automatically falls back to `/api/generate` on HTTP error.
+    async fn query_chat_api(&self, request: &AIRequest, model: &str) -> AIResult<AIResponse> {
+        let messages = parse_prompt_to_chat_messages(&request.prompt);
+        // Need at least system + 1 history turn + current user (>=3) to benefit from chat API
+        if messages.len() < 3 {
+            return self.query_generate(request, model).await;
+        }
+
+        let chat_request = OllamaChatRequest {
+            model: model.to_string(),
+            messages,
+            stream: false,
+            options: OllamaOptions {
+                temperature: request.temperature,
+                num_predict: request.max_tokens,
+            },
+        };
+
+        let url = format!("{}/api/chat", ollama_base_url());
+        log::debug!(
+            "[OllamaClient] CHAT_API | model={} | turns={} | prompt_len={}",
+            model,
+            chat_request.messages.len(),
+            request.prompt.len()
+        );
+
+        let response = self
+            .client
+            .post(&url)
+            .json(&chat_request)
+            .send()
+            .await
+            .map_err(|e| AIError::NetworkError(e.to_string()))?;
+
+        if !response.status().is_success() {
+            let status = response.status();
+            let body = response
+                .text()
+                .await
+                .unwrap_or_else(|_| String::from("<unreadable_body>"));
+            log::warn!(
+                "[OllamaClient] /api/chat failed ({}) -- falling back to /api/generate: {}",
+                status,
+                truncate_for_log(body.trim(), 120)
+            );
+            return self.query_generate(request, model).await;
+        }
+
+        let chat_response: OllamaChatResponse = response
+            .json()
+            .await
+            .map_err(|e| AIError::InvalidResponse(e.to_string()))?;
+
+        let content = chat_response.message.content;
+        let tokens = content.split_whitespace().count();
+
+        Ok(AIResponse {
+            content,
+            provider: AIProvider::Ollama,
+            model: Some(chat_response.model.unwrap_or_else(|| model.to_string())),
+            timestamp: chrono::Utc::now().timestamp(),
+            tokens,
+        })
+    }
+
+    /// Core `/api/generate` call (single-turn flat prompt).
+    async fn query_generate(&self, request: &AIRequest, model: &str) -> AIResult<AIResponse> {
         let ollama_request = OllamaRequest {
             model: model.to_string(),
             prompt: request.prompt.clone(),
@@ -1073,5 +1277,79 @@ mod tests {
         let t = ollama_request_timeout();
         std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
         assert_eq!(t, Duration::from_secs(300));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // parse_prompt_to_chat_messages unit tests (Rule 16)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_parse_prompt_no_markers_single_user() {
+        let prompt = "Hello, what is 2+2?";
+        let msgs = parse_prompt_to_chat_messages(prompt);
+        assert_eq!(msgs.len(), 1);
+        assert_eq!(msgs[0].role, "user");
+        assert_eq!(msgs[0].content, "Hello, what is 2+2?");
+    }
+
+    #[test]
+    fn test_parse_prompt_with_stm_turns() {
+        let prompt = "You are TITANE.
+
+## STM_RECENT_TURNS
+[User]: bonjour
+[TITANE]: Bonjour ! Comment puis-je vous aider ?
+
+User: tu te souviens de moi ?";
+        let msgs = parse_prompt_to_chat_messages(prompt);
+        // system + user_turn + assistant_turn + current_user
+        assert_eq!(msgs.len(), 4, "expected 4 messages, got: {:?}", msgs.iter().map(|m| &m.role).collect::<Vec<_>>());
+        assert_eq!(msgs[0].role, "system");
+        assert!(msgs[0].content.contains("TITANE"));
+        assert_eq!(msgs[1].role, "user");
+        assert_eq!(msgs[1].content, "bonjour");
+        assert_eq!(msgs[2].role, "assistant");
+        assert!(msgs[2].content.contains("Bonjour"));
+        assert_eq!(msgs[3].role, "user");
+        assert_eq!(msgs[3].content, "tu te souviens de moi ?");
+    }
+
+    #[test]
+    fn test_parse_prompt_with_conversation_history() {
+        let prompt = "System: you are helpful.
+
+## CONVERSATION_HISTORY
+[User]: mon nom est Alice
+[Assistant]: Bonjour Alice !
+
+User: quel est mon nom ?";
+        let msgs = parse_prompt_to_chat_messages(prompt);
+        assert_eq!(msgs.len(), 4);
+        assert_eq!(msgs[0].role, "system");
+        assert_eq!(msgs[1].role, "user");
+        assert_eq!(msgs[1].content, "mon nom est Alice");
+        assert_eq!(msgs[2].role, "assistant");
+        assert_eq!(msgs[2].content, "Bonjour Alice !");
+        assert_eq!(msgs[3].role, "user");
+        assert_eq!(msgs[3].content, "quel est mon nom ?");
+    }
+
+    #[test]
+    fn test_parse_prompt_empty_history_lines_ignored() {
+        let prompt = "System.
+
+## STM_RECENT_TURNS
+
+[User]:   
+[TITANE]:   
+
+User: test";
+        let msgs = parse_prompt_to_chat_messages(prompt);
+        // Empty lines produce no user/assistant turns
+        let roles: Vec<&str> = msgs.iter().map(|m| m.role.as_str()).collect();
+        assert!(!roles.contains(&"assistant"), "empty assistant turn should be skipped");
+        // Only system + current user should be present
+        assert_eq!(msgs.last().unwrap().role, "user");
+        assert_eq!(msgs.last().unwrap().content, "test");
     }
 }
