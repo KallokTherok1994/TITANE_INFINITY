@@ -215,6 +215,7 @@ impl MultiAIOrchestrator {
                         content: response.output.clone(),
                         tokens: response.tokens_out,
                         provider: response.provider.clone(),
+                        model: Some(response.model.clone()),
                     },
                 )
                 .await;

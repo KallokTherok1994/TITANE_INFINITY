@@ -791,4 +791,4 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Surface canonique: /titane?tab=conversation via src/hooks/useConversationEngine.ts.
 - Verite runtime visible: quand `reason_code=PROVIDER_UNAVAILABLE` et provider demande `ollama|local`, le message de recuperation priorise maintenant les actions locales (endpoint `127.0.0.1:11434`, modele local attendu, restart Ollama) au lieu de pousser d abord les cles cloud.
 - Contrat conserve: aucune bascule silencieuse de provider; la selection UI reste publiee telle quelle.
-- Preuve associee: src/__tests__/hooks/useConversationEngine.test.ts (assertions sur contenu contextualise ollama).
+- Preuve associee: src/**tests**/hooks/useConversationEngine.test.ts (assertions sur contenu contextualise ollama).

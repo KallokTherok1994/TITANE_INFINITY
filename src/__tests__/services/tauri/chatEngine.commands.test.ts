@@ -146,4 +146,37 @@ describe('chatEngine.commands request defaults cache', () => {
       }),
     });
   });
+
+  it('normalizes the backend completion model when present', async () => {
+    secureInvokeMock
+      .mockResolvedValueOnce({
+        ok: true,
+        content: {
+          temperature: 0.4,
+          maxOutputTokens: 111,
+          provider: 'ollama',
+          enableStreaming: true,
+        },
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        conversation_id: 'conv-model',
+        message_id: 'msg-model',
+        provider: 'ollama',
+        model: 'gemma2:2b',
+        content: 'modele reel',
+        token_count: 10,
+        latency_ms: 1,
+        timestamp: 4,
+        stop_reason: 'complete',
+        profile: 'balanced',
+      });
+
+    const module = await import('../../../services/tauri/chatEngine.commands');
+
+    const result = await module.generateResponse({ userMessage: 'Quel modele ?' });
+
+    expect(result.provider).toBe('ollama');
+    expect(result.model).toBe('gemma2:2b');
+  });
 });

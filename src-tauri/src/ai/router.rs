@@ -151,6 +151,7 @@ impl AIRouter {
                     content: response.content.clone(),
                     tokens: response.tokens as u32,
                     provider: format!("{:?}", response.provider),
+                    model: response.model.clone(),
                 },
             )
             .await;
@@ -207,8 +208,9 @@ impl AIRouter {
                 },
                 timestamp: std::time::SystemTime::now()
                     .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap_or_else(|_| std::time::Duration::from_secs(0))
-                    .as_secs() as i64,
+                        .unwrap_or_else(|_| std::time::Duration::from_secs(0))
+                        .as_secs() as i64,
+                model: cached.model,
             });
         }
 
@@ -239,6 +241,7 @@ impl AIRouter {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
                         provider: AIProvider::UnifiedIA,
+                        model: Some(unified_response.model),
                         timestamp: std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap_or_else(|_| std::time::Duration::from_secs(0))
@@ -370,6 +373,7 @@ impl AIRouter {
                     content: unified_response.content,
                     tokens: unified_response.tokens_used,
                     provider: AIProvider::UnifiedIA,
+                    model: Some(unified_response.model),
                     timestamp: std::time::SystemTime::now()
                         .duration_since(std::time::UNIX_EPOCH)
                         .unwrap_or_else(|_| std::time::Duration::from_secs(0))

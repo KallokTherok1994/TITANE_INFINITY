@@ -62,6 +62,7 @@ pub struct CachedAIResponse {
     pub content: String,
     pub tokens: u32,
     pub provider: String,
+    pub model: Option<String>,
 }
 
 /// Statut provider caché
@@ -287,6 +288,7 @@ mod tests {
             content: "Test response".to_string(),
             tokens: 10,
             provider: "test".to_string(),
+            model: Some("test-model".to_string()),
         };
 
         cache

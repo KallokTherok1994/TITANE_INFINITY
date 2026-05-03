@@ -718,6 +718,8 @@ struct OllamaOptions {
 
 #[derive(Debug, Deserialize)]
 struct OllamaResponse {
+    #[serde(default)]
+    model: Option<String>,
     response: String,
     #[allow(dead_code)]
     done: bool,
@@ -878,6 +880,7 @@ impl OllamaClient {
         Ok(AIResponse {
             content: ollama_response.response,
             provider: AIProvider::Ollama,
+            model: Some(ollama_response.model.unwrap_or_else(|| model.to_string())),
             timestamp: chrono::Utc::now().timestamp(),
             tokens,
         })

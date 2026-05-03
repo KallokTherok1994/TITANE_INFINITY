@@ -1,4 +1,14 @@
+## 2026-05-03 : Tauri non-streaming model truth
+
+> La surface active de conversation ne dépend plus seulement de `provider_used` pour la route backend desktop. `src-tauri/src/ai/mod.rs`, `src-tauri/src/ai/router.rs`, `src-tauri/src/ai/{gemini,ollama}.rs`, `src-tauri/src/chat_engine/{types,mod}.rs`, `src/services/tauri/chatEngine.commands.ts` et `src/services/ai/chatEngine.ts` propagent maintenant `model` jusqu au frontend, ce qui élimine la dérive où `chatEngine.ts` remplaçait le modèle réel par `completion.provider`.
+
 ## BUILD ALL v31.2.14 — Release complète (2026-04-27)
+
+## 2026-05-03 : Repo housekeeping archive cleanup
+
+> Nettoyage borné de la racine et de `docs/`: les reliquats `.archive_cleanup/`, `super_prompts/` et les trois snapshots `docs/backup_20251218_*` ont été déplacés vers `docs/99_ARCHIVE/obsolete/repo_cleanup_2026-05-03/`. Cette consolidation réduit le bruit visible dans les surfaces actives sans toucher aux archives canoniques `_archive/`, `legacy/` ou `documentation/`, qui restent intentionnelles ou outillées.
+
+> La vérité structurelle du repo est maintenant la suivante pour ce lot de housekeeping: les reliquats de staging/backup obsolètes vivent sous `docs/99_ARCHIVE/obsolete/repo_cleanup_2026-05-03/`, tandis que les surfaces actives restent `src/`, `src-tauri/`, `scripts/`, `docs/`, `proof_packs/`, `deployment/` et `runtime/`.
 
 ## 2026-05-02 : Champion/Challenger hardening + lib probe alignment
 

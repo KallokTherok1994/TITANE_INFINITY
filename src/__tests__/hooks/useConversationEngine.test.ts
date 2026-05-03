@@ -242,9 +242,7 @@ describe('useConversationEngine fallback meta truth', () => {
     expect(result.current.messages.at(-1)?.content).toContain(
       'http://127.0.0.1:11434/api/tags'
     );
-    expect(result.current.messages.at(-1)?.content).toContain(
-      'modèle local attendu'
-    );
+    expect(result.current.messages.at(-1)?.content).toContain('modèle local attendu');
     expect(result.current.messages.at(-1)?.content).not.toContain(
       'clés API cloud (Gemini/OpenAI/Claude)'
     );

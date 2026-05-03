@@ -41,7 +41,15 @@ const cargoPath = path.join(root, 'src-tauri', 'Cargo.toml');
 if (fs.existsSync(cargoPath)) {
   const cargo = fs.readFileSync(cargoPath, 'utf8');
   // Match the version line at the top of [package] section
-  const updated = cargo.replace(/^(version\s*=\s*")[^"]*(")/m, `$1${version}$2`);
+  let updated = cargo.replace(/^(version\s*=\s*")[^"]*(")/m, `$1${version}$2`);
+
+  // Keep the Cargo package description aligned when it embeds a version tag.
+  if (pkg.description && typeof pkg.description === 'string') {
+    updated = updated.replace(
+      /^(description\s*=\s*")[^"]*(")/m,
+      `$1${pkg.description}$2`
+    );
+  }
 
   if (updated !== cargo) {
     if (!dryRun) fs.writeFileSync(cargoPath, updated, 'utf8');

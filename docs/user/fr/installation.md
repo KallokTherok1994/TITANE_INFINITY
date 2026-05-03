@@ -56,7 +56,7 @@ sha256sum -c SHA256SUMS_v27.0.5.txt
 
 ## Option B — Installer depuis les sources (développeurs)
 
-> Pour installer depuis les sources, consultez : [docs/dev/fr/setup-environnement.md](../../../dev/fr/setup-environnement.md)
+> Pour installer depuis les sources, consultez : [docs/dev/fr/setup-environnement.md](../../dev/fr/setup-environnement.md)
 
 ### Prérequis minimaux
 

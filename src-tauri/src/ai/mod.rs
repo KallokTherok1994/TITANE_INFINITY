@@ -105,6 +105,7 @@ pub struct AIRequest {
 pub struct AIResponse {
     pub content: String,
     pub provider: AIProvider,
+    pub model: Option<String>,
     pub timestamp: i64,
     pub tokens: usize,
 }

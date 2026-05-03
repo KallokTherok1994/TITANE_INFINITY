@@ -1,8 +1,8 @@
 # TITANE∞ — Repo Structure (EN)
 
-**Version:** 30.0.0  
-**Status:** PROVEN  
-**Date:** 2026-04-11
+**Version:** 33.0.0  
+**Status:** ACTIVE STRUCTURE WITH ARCHIVED OBSOLETE SURFACES  
+**Date:** 2026-05-03
 
 ---
 
@@ -29,6 +29,7 @@ TITANE_INFINITY/
 │   ├── dev/                # Developer docs (fr/ + en/)
 │   ├── governance/         # Governance docs (fr/ + en/)
 │   ├── reference/          # Reference docs (fr/ + en/)
+│   ├── 99_ARCHIVE/         # Canonical archive vault for obsolete docs/backups
 │   └── ...                 # Many historical files
 ├── tests/                  # Unit and integration tests
 ├── e2e/                    # E2E tests (Playwright + WDIO desktop)
@@ -46,6 +47,7 @@ TITANE_INFINITY/
 ├── orchestration/          # Orchestration and coordination
 ├── runtime/                # Runtime configs
 ├── legacy/                 # Kept legacy code
+├── _archive/               # Historical archive outside active runtime surface
 ├── .github/                # CI workflows, instructions, prompts
 │   ├── workflows/          # CI/CD (ci.yml, rust.yml, etc.)
 │   ├── instructions/       # Copilot instructions
@@ -74,5 +76,11 @@ TITANE_INFINITY/
 | `scripts/autoheal/autoheal_rules.jsonl` | AutoHeal registry | Append-only |
 
 ---
+
+## Housekeeping note
+
+As of `2026-05-03`, obsolete repo-cleanup staging and dated docs backups were consolidated into
+`docs/99_ARCHIVE/obsolete/repo_cleanup_2026-05-03/`. `documentation/`, `legacy/`, and `_archive/`
+remain intentional surfaces and were not removed.
 
 *French documentation: [docs/dev/fr/structure-du-repo.md](../fr/structure-du-repo.md)*

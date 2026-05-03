@@ -65,6 +65,7 @@ pub struct ChatCompletionPayload {
     pub conversation_id: String,
     pub message_id: String,
     pub provider: String,
+    pub model: Option<String>,
     pub content: String,
     pub token_count: usize,
     pub latency_ms: u128,

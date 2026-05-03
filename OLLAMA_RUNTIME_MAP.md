@@ -1,5 +1,7 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+> 2026-05-03 — Tauri chat completion model truth: la voie IPC non-streaming `generate_response` publie désormais aussi `model` en plus de `provider`, et la chaîne `src-tauri/src/ai/{mod,router,gemini,ollama}.rs` -> `src-tauri/src/chat_engine/{types,mod}.rs` -> `src/services/tauri/chatEngine.commands.ts` -> `src/services/ai/chatEngine.ts` cesse d écraser ce modèle réel avec le nom du provider. La vérité `provider + model` survit donc enfin jusqu au chat frontend quand la réponse passe par le backend Tauri gouverné.
+
 > 2026-05-02 — Champion/Challenger hardening truth: la validation de disponibilité champion dans `src/services/ai/championChallenger.ts` filtre désormais proprement les payloads partiels (`content.models` absent/non-array/non-string) et la promotion auto est explicitement bloquée quand `require_human_approval=true`. Cette correction supprime les faux positifs de promotion et les risques de parsing fragile, tout en gardant la baseline chat produit `gemma2:2b` inchangée.
 
 > 2026-05-02 — Lib probe model alignment truth: la sonde mobile de `src-tauri/src/lib.rs` aligne désormais son `ollama_generate` de diagnostic sur `gemma2:2b` au lieu d un modèle legacy, afin de garder une preuve runtime cohérente avec la cartographie canonique chat/Ollama.

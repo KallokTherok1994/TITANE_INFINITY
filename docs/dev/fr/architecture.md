@@ -1,8 +1,8 @@
 # TITANE∞ — Architecture (FR)
 
-**Version :** 30.0.0  
+**Version :** 33.0.0  
 **Statut :** QUALIFIED  
-**Date :** 2026-04-11
+**Date :** 2026-05-03
 
 > Voir aussi : `docs/canon/ARCHITECTURE_TRUTH.md` (canon), `docs/MAP_ARCHITECTURE_4RING.md`, `docs/IPC_CONTRACT.md`
 
@@ -56,7 +56,7 @@ flowchart LR
 
 **Répertoire :** `src/`
 
-### Pages UI (v30.0.0)
+### Pages UI (baseline v33.0.0)
 
 | Page | Route | Onglets |
 |---|---|---|

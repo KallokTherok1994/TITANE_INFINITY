@@ -167,6 +167,7 @@ impl ChatEngine {
             conversation_id,
             message_id,
             provider: format!("{:?}", response.provider),
+            model: response.model,
             content: assistant_content,
             token_count: response.tokens,
             latency_ms,

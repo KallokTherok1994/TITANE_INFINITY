@@ -142,6 +142,7 @@ impl GeminiClient {
         Ok(AIResponse {
             content,
             provider: AIProvider::Gemini,
+            model: Some("gemini-pro".to_string()),
             timestamp: chrono::Utc::now().timestamp(),
             tokens,
         })

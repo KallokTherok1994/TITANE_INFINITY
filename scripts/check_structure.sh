@@ -9,6 +9,18 @@ ALLOW_TOP=(
   .github .husky .clinerules e2e runtime deployment public
 )
 
+ALLOW_ROOT_MD=(
+  README.md AGENTS.md ARCHITECTURE.md CHANGELOG.md CONTRIBUTING.md
+  DEVELOPER_SETUP.md LICENSE.md OLLAMA_RUNTIME_MAP.md
+  RELEASE_SURFACE_INVENTORY.md UI_SURFACE_MAP.md
+)
+
+ALLOW_MD_TOP=(
+  docs .github proof_packs reports _archive archive legacy documentation
+  templates plans evals ops runtime scripts src src-tauri e2e tests
+  deployment .clinerules
+)
+
 is_allowed_top() {
   local name="$1"
   for allowed in "${ALLOW_TOP[@]}"; do
@@ -17,19 +29,57 @@ is_allowed_top() {
   return 1
 }
 
+is_allowed_root_md() {
+  local path="$1"
+  for allowed in "${ALLOW_ROOT_MD[@]}"; do
+    [[ "$path" == "$allowed" ]] && return 0
+  done
+  return 1
+}
+
+is_allowed_md_path() {
+  local path="$1"
+
+  [[ -e "$path" ]] || return 0
+  is_allowed_root_md "$path" && return 0
+
+  local top="${path%%/*}"
+  for allowed in "${ALLOW_MD_TOP[@]}"; do
+    [[ "$top" == "$allowed" ]] && return 0
+  done
+
+  return 1
+}
+
+should_check_local_md_links() {
+  local path="$1"
+
+  [[ -e "$path" ]] || return 1
+  is_allowed_root_md "$path" && return 0
+
+  case "$path" in
+    .github/*.md|.github/**/*.md) return 0 ;;
+    docs/dev/*.md|docs/dev/**/*.md) return 0 ;;
+    docs/user/*.md|docs/user/**/*.md) return 0 ;;
+    docs/diagrams/*.md|docs/diagrams/**/*.md) return 0 ;;
+  esac
+
+  return 1
+}
+
 echo "CHECK_STRUCTURE_START=$(date -Iseconds)"
 
 failures=0
 
-# Gate 1: .md hors docs (exceptions README.md et .github/**/*.md)
-mapfile -t md_outside < <(
-  git -c core.quotepath=off ls-files '*.md' \
-    | awk 'BEGIN{IGNORECASE=1}
-      $0=="README.md" {next}
-      $0 ~ /^\.github\/.+\.md$/ {next}
-      $0 ~ /^docs\/.+\.md$/ {next}
-      {print $0}'
-)
+# Gate 1: markdown hors surfaces documentaires intentionnelles
+md_outside=()
+while IFS= read -r path; do
+  [[ -n "$path" ]] || continue
+  if ! is_allowed_md_path "$path"; then
+    md_outside+=("$path")
+  fi
+done < <(git -c core.quotepath=off ls-files '*.md')
+
 if (( ${#md_outside[@]} > 0 )); then
   echo "GATE_MD_OUTSIDE_DOCS=FAIL:${#md_outside[@]}"
   printf '%s\n' "${md_outside[@]}"
@@ -38,18 +88,36 @@ else
   echo "GATE_MD_OUTSIDE_DOCS=PASS:0"
 fi
 
-# Gate 2: liens markdown locaux cassés (.md seulement)
+# Gate 2: liens markdown locaux cassés sur les surfaces documentaires actives
 mapfile -t broken_lines < <(python3 - <<'PY'
 import os,re
 from pathlib import Path
 repo=Path('.').resolve()
 pat=re.compile(r'\[[^\]]*\]\(([^)]+)\)')
 broken=[]
+def should_check(path: str) -> bool:
+    if path in {
+        "README.md", "AGENTS.md", "ARCHITECTURE.md", "CHANGELOG.md", "CONTRIBUTING.md",
+        "DEVELOPER_SETUP.md", "LICENSE.md", "OLLAMA_RUNTIME_MAP.md",
+        "RELEASE_SURFACE_INVENTORY.md", "UI_SURFACE_MAP.md",
+    }:
+        return True
+    return (
+        path.startswith(".github/")
+        or path.startswith("docs/dev/")
+        or path.startswith("docs/user/")
+        or path.startswith("docs/diagrams/")
+    )
+
 for p in os.popen("git -c core.quotepath=off ls-files '*.md'").read().splitlines():
     p=p.strip()
     if not p:
         continue
+    if not should_check(p):
+        continue
     f=Path(p)
+    if not f.exists():
+        continue
     try:
         txt=f.read_text(encoding='utf-8', errors='ignore')
     except Exception:

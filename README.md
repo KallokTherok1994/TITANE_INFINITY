@@ -14,16 +14,16 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
-![Release v32.0.0](https://img.shields.io/badge/release-v32.0.0-brightgreen?logo=github)
+![Release v33.0.0](https://img.shields.io/badge/release-v33.0.0-brightgreen?logo=github)
 
-**Version:** v32.0.0 (repository authority)
-**Status:** ✅ Production Ready
+**Version:** v33.0.0 (repository authority)
+**Status:** ⚠️ Repo/build/deployment/E2E proven; installed system binary still pending interactive sudo
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
-**Latest certified deployment:** `2026-05-01` via `deployment/latest/MANIFEST.json`
+**Latest certified deployment:** `2026-05-03` via `deployment/latest/MANIFEST.json`
 **Last published GitHub release:** [v30.1.25](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.1.25) (last public binary)
 **Prior major release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (historical)
 
-**Canal de release canonique:** v32.0.0
+**Canal de release canonique:** v33.0.0
 
 **Nouveautés v31.1.0 (2026-04-23):** Export DOCX natif via `doc_engine` + `docx-rs` (Ring 2 Rust), surface UI `/doc-center` (`DocCenterPage`), commande IPC `export_docx_file`, 12 tests Vitest + WDIO desktop + Playwright E2E, correction TS `Experience.tsx` + `syncSupervisor.ts`, governance complète.
 
@@ -65,33 +65,34 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 **Statut d'autorité documentaire (LOCAL, 2026-04-17) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `30.1.34` (`PROVEN_BY_REPO`)
-- Release canonique vérifiée: `v30.1.34` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `33.0.0` (`PROVEN_BY_REPO`)
+- Release canonique vérifiée: `v33.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
 - Dernier binaire GitHub publié: `v30.1.25` (`PROVEN_BY_GITHUB_RELEASE`)
 - Lignes binaires historiques documentées: `v30.0.0`, `v28.90.0`, `v28.88.0`, `v27.2.0` (`PROVEN_BY_CANON_DOC`)
-- Politique de cohérence: version canonique et release courante `30.1.34`; les surfaces historiques restent archivées et identifiées par version
+- Politique de cohérence: version canonique et release courante `33.0.0`; les surfaces historiques restent archivées et identifiées par version
 
 ---
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v32.0.0
+### ⚠️ Release canonique courante: v33.0.0
 
-**Status**: ✅ PRODUCTION READY — CERTIFIED & DEPLOYED  
-**Certification ID**: `TITANE_INFINITY_RELEASE_20260501_v32.0.0`  
-**Last Certification Refresh**: May 1, 2026  
-**Certification Scope**: detect_recurrence PASS (1509 entries), tauri build PASS, AppImage+DEB produits, binary sync `/usr/bin/titane-infinity` DONE
+**Status**: ⚠️ REPO/BUILD/DEPLOYMENT/E2E PROVEN — SYSTEM INSTALL BLOCKED IN THIS SESSION  
+**Certification ID**: `TITANE_INFINITY_RELEASE_20260503_v33.0.0`  
+**Last Certification Refresh**: May 3, 2026  
+**Certification Scope**: `build:production` PASS, `deployment/latest` PASS, `sha256sum -c` PASS, desktop proof PASS, `verify_instructions` PASS, `detect_recurrence` PASS, installed binary `/usr/bin/titane-infinity` still on `32.0.3` pending interactive `sudo`
 
 Artefacts vérifiés (Linux amd64):
 
-- **AppImage**: `titane-infinity_32.0.0_amd64.AppImage` (deployed in `deployment/latest/`)
-- **DEB Package**: `titane-infinity_32.0.0_amd64.deb` (deployed in `deployment/latest/`)
+- **AppImage**: `titane-infinity_33.0.0_amd64.AppImage` (deployed in `deployment/latest/`)
+- **DEB Package**: `titane-infinity_33.0.0_amd64.deb` (deployed in `deployment/latest/`)
+- **RPM Package**: `titane-infinity-33.0.0-1.x86_64.rpm` (built locally; tracked in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.0.txt`)
 
 Checksums courants (`deployment/latest/MANIFEST.json`):
 
 ```
-AppImage:  e6b75e48b0b94759d0737f83b9515fb69541672315178a945679c24f9bee4b09
-DEB:       9c582bac18a91085f659161821e8c287c3b1635283dde5cb1dd3691c46c920b1
+AppImage:  85441d46e420ffc42720dc80796382693e6b22b64d4dd6464d1d2cfc0423be3f
+DEB:       355002329b87133741ae9ff3cc4b160c59bc6532e0fb429f8c2ca0c7d2d498bb
 ```
 
 ### Installation Windows (PR #292)
@@ -121,9 +122,9 @@ Pack launcher publie (session PR292):
 
 Preuve de session:
 
-- [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/REPORT.md)
-- [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/VERDICT.md)
-- [proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md](proof_packs/WINDOWS_PR292_RELEASE_20260412_233708/ROLLBACK.md)
+- [proof_packs/WINDOWS_MSI_RELEASE_2026-04-15_v30.1.25/GATE_REPORT.md](proof_packs/WINDOWS_MSI_RELEASE_2026-04-15_v30.1.25/GATE_REPORT.md)
+- [proof_packs/WINDOWS_MSI_RELEASE_2026-04-15_v30.1.25/VERDICT.md](proof_packs/WINDOWS_MSI_RELEASE_2026-04-15_v30.1.25/VERDICT.md)
+- [proof_packs/WINDOWS_MSI_RELEASE_2026-04-15_v30.1.25/ROLLBACK.md](proof_packs/WINDOWS_MSI_RELEASE_2026-04-15_v30.1.25/ROLLBACK.md)
 
 **Release Notes & Installation**:
 
@@ -131,8 +132,10 @@ Preuve de session:
 - GitHub Release (primary): https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406
 - GitHub Release (historical certification): https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260405
 - Current deployment manifest: [deployment/latest/MANIFEST.json](deployment/latest/MANIFEST.json)
-- Current checksum bundle: [deployment/latest/CHECKSUMS.sha256](deployment/latest/CHECKSUMS.sha256)
-- Historical checksum snapshot: [RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_30.0.0.txt)
+- Current checksum bundle: [deployment/latest/SHA256SUMS.txt](deployment/latest/SHA256SUMS.txt)
+- Historical checksum snapshot: [RELEASE_ARTIFACTS_CHECKSUMS_33.0.0.txt](RELEASE_ARTIFACTS_CHECKSUMS_33.0.0.txt)
+- Developer documentation index: [docs/INDEX_REPO_STRUCTURE.md](docs/INDEX_REPO_STRUCTURE.md)
+- API documentation surface: [docs/06_api](/home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/06_api)
 
 **Security**: MAXIMUM_HARDENED  
 **Authorization**: On-demand — production builds and deploys executed on user request (Rule 11).
@@ -363,8 +366,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Repository Authority**: v32.0.0 (documentation canonique)  
-**Latest Canonical Release Stream**: v32.0.0 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
+**Repository Authority**: v33.0.0 (documentation canonique)  
+**Latest Canonical Release Stream**: v33.0.0 (`CHANGELOG.md` + `deployment/latest/MANIFEST.json`)
 
 ---
 
@@ -618,7 +621,7 @@ TITANE∞ implements **constitutional governance rules** to prevent accumulation
 ## 📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
-> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](docs/00_core/CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
+> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](docs/00_core/CONTRIBUTING.md) • [Master Index](docs/INDEX_REPO_STRUCTURE.md)
 
 ### 🚀 Start Here (New to TITANE∞?)
 
@@ -626,13 +629,13 @@ TITANE∞ implements **constitutional governance rules** to prevent accumulation
 
 - **First Time User:** [Getting Started Guide](docs/GETTING_STARTED.md) → <2h to productivity
 - **Want to Contribute:** [Contributing Guide](docs/00_core/CONTRIBUTING.md) → Onboarding <2h with validation
-- **Need API Reference:** [API Index](docs/06_api/INDEX.md) → couverture API canonique
+- **Need API Reference:** [API Reference](docs/06_api/TAURI_COMMANDS_REFERENCE.md) → couverture API canonique
 
 ### 📖 Complete Documentation Structure (50 Documents, ~24,300 Lines)
 
 #### Core Documentation (`docs/00_core/`)
 
-- **[Master INDEX](docs/INDEX.md)** — Navigation centrale (200% coverage achieved)
+- **[Master INDEX](docs/INDEX_REPO_STRUCTURE.md)** — Navigation centrale (200% coverage achieved)
 - **[Getting Started](docs/GETTING_STARTED.md)** — <2h to first PR (validated)
 - **[Mission Complete Report](docs/00_core/MISSION_COMPLETE_REPORT.md)** — 0% → 200% transformation journey
 - **[Handoff Guide](docs/00_core/HANDOFF_GUIDE_VALIDATION.md)** — Validation team comprehensive guide
@@ -933,9 +936,9 @@ git push origin feature/my-awesome-feature
 
 **Quick Links:**
 
-- 📖 **Documentation:** [Master Index](docs/INDEX.md) — Complete navigation (200% coverage)
+- 📖 **Documentation:** [Master Index](docs/INDEX_REPO_STRUCTURE.md) — Complete navigation (200% coverage)
 - 🚀 **Getting Started:** [Quick Start Guide](docs/GETTING_STARTED.md) — <2h to productivity
-- **API Reference:** [API Index](docs/06_api/INDEX.md) — couverture API canonique
+- **API Reference:** [API Reference](docs/06_api/TAURI_COMMANDS_REFERENCE.md) — couverture API canonique
 - 💬 **Contributing:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) — <2h onboarding
 
 ### 🐛 Report Issues

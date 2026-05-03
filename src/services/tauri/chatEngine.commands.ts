@@ -128,6 +128,7 @@ interface BackendChatCompletionPayload {
   conversation_id: string;
   message_id: string;
   provider: string;
+  model?: string;
   content: string;
   token_count: number;
   latency_ms: number;
@@ -140,6 +141,7 @@ export interface ChatCompletionPayload {
   conversationId: string;
   messageId: string;
   provider: string;
+  model?: string;
   content: string;
   tokenCount: number;
   latencyMs: number;
@@ -198,6 +200,7 @@ function normalizeCompletion(
     conversationId: payload.conversation_id,
     messageId: payload.message_id,
     provider: payload.provider,
+    model: typeof payload.model === 'string' ? payload.model : undefined,
     content: payload.content,
     tokenCount: payload.token_count,
     latencyMs: payload.latency_ms,

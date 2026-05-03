@@ -195,7 +195,7 @@ function buildProviderRecoveryActions(
     case 'ollama':
     case 'local':
       return [
-        '- Vérifie qu\'Ollama répond sur http://127.0.0.1:11434/api/tags',
+        "- Vérifie qu'Ollama répond sur http://127.0.0.1:11434/api/tags",
         '- Vérifie que le modèle local attendu est bien installé (ex: gemma2:2b)',
         '- Redémarre Ollama local, puis relance la vérification provider',
       ];

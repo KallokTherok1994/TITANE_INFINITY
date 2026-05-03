@@ -1,8 +1,8 @@
 # TITANE∞ — Structure du Dépôt (FR)
 
-**Version :** 30.0.0  
-**Statut :** PROVEN  
-**Date :** 2026-04-11
+**Version :** 33.0.0  
+**Statut :** STRUCTURE ACTIVE AVEC SURFACES OBSOLÈTES ARCHIVÉES  
+**Date :** 2026-05-03
 
 ---
 
@@ -29,6 +29,7 @@ TITANE_INFINITY/
 │   ├── dev/                # Docs développeur (fr/ + en/)
 │   ├── governance/         # Docs gouvernance (fr/ + en/)
 │   ├── reference/          # Docs référence (fr/ + en/)
+│   ├── 99_ARCHIVE/         # Coffre d'archives canonique pour docs/backups obsolètes
 │   └── ...                 # Nombreux fichiers historiques
 ├── tests/                  # Tests unitaires et intégration
 ├── e2e/                    # Tests E2E (Playwright + WDIO desktop)
@@ -46,6 +47,7 @@ TITANE_INFINITY/
 ├── orchestration/          # Orchestration et coordination
 ├── runtime/                # Runtime configs
 ├── legacy/                 # Code legacy conservé
+├── _archive/               # Archive historique hors surface runtime active
 ├── .github/                # Workflows CI, instructions, prompts
 │   ├── workflows/          # CI/CD (ci.yml, rust.yml, etc.)
 │   ├── instructions/       # Instructions Copilot
@@ -86,5 +88,11 @@ TITANE_INFINITY/
 | `*.sh` (scripts racine) | LEGACY | Scripts de déploiement anciens |
 
 ---
+
+## Note de housekeeping
+
+Au `2026-05-03`, les reliquats de cleanup obsolètes et les backups datés de `docs/` ont été
+consolidés dans `docs/99_ARCHIVE/obsolete/repo_cleanup_2026-05-03/`. `documentation/`, `legacy/`
+et `_archive/` restent des surfaces intentionnelles et n'ont pas été supprimées.
 
 *Documentation en anglais : [docs/dev/en/repo-structure.md](../en/repo-structure.md)*

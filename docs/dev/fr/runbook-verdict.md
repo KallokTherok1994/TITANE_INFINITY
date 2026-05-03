@@ -1,8 +1,8 @@
 # TITANE∞ — Runbook de Verdict (FR)
 
-**Version :** 30.0.0  
+**Version :** 33.0.0  
 **Statut :** QUALIFIED  
-**Date :** 2026-04-18
+**Date :** 2026-05-03
 
 > Runbook opératoire pour choisir et rédiger le verdict final d une session gouvernée de correction ou de vérification.
 

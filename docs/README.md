@@ -1,6 +1,6 @@
-# TITANE∞ v30.0.0
+# TITANE∞ v33.0.0
 
-![Version](https://img.shields.io/badge/version-30.0.0-blue)
+![Version](https://img.shields.io/badge/version-33.0.0-blue)
 ![Rust](https://img.shields.io/badge/rust-2021-orange)
 ![React](https://img.shields.io/badge/react-18-61dafb)
 ![TypeScript](https://img.shields.io/badge/typescript-5.5-3178c6)
@@ -14,10 +14,12 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 
 ## Statut canonique de version (mode B2)
 
-- Verite version repo: `30.0.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
+- Verite version repo: `33.0.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
 - `README.md` et ce fichier sont les surfaces canoniques de navigation (`PROVEN_BY_CANON_DOC`)
 - Les lignes binaires `v28.90.0`, `v28.88.0` et `v27.0.5` sont conservees comme historique documente
 - `CHANGELOG.md` + `deployment/latest/MANIFEST.json` portent la reference de release canonique courante
+
+> Note de vérité: les sections détaillées ci-dessous décrivent en grande partie le socle documentaire V30 historique. L'autorité de version active du repo et du flux `deployment/latest` est désormais `v33.0.0`.
 
 
 ## Navigation canonique

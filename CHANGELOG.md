@@ -1,3 +1,28 @@
+# [33.0.0] - 2026-05-03 (Major Release Seal — V33 Promotion)
+
+## Release v33.0.0 — Major Release Seal
+
+### Summary
+
+- Promoted the documented `V33` sprint into a real governed release `33.0.0`.
+- Rebuilt Linux production artifacts after re-synchronizing every version surface.
+- Updated `deployment/latest/` and generated `RELEASE_ARTIFACTS_CHECKSUMS_33.0.0.txt` from the real bundles.
+- Desktop Tauri proof passed on the embedded `33.0.0` release binary (`1 passed`, `6 skipped`).
+- System-wide install remains blocked in this session because `sudo -n dpkg -i ...33.0.0...deb` still requires a password, so `/usr/bin/titane-infinity` and the local launcher label remain at `32.0.3`.
+
+### Release Truth
+
+- `package.json`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, `runtime/stable/manifest.json`, `runtime/stable/tauri.conf.json`, `tauri.base.json`, and `src-tauri/tauri.base.json` are aligned on `33.0.0`.
+- `pnpm run build:production` passed with 3 Linux bundles produced: AppImage, DEB, RPM.
+- `bash scripts/post-build/update-deployment-latest.sh 33.0.0` aligned `deployment/latest/` on the new release.
+- `sha256sum -c RELEASE_ARTIFACTS_CHECKSUMS_33.0.0.txt` passed for all 3 bundles.
+- `pnpm run e2e:desktop:proof:online-chat` passed against the fresh release binary.
+
+### Seal Notes
+
+- The previous `32.0.4` lane was not coherently sealed: its AppImage checksum in the bundle no longer matched the older recorded value, proving artifact drift after a later rebuild.
+- `33.0.0` supersedes that drift with a clean rebuild and regenerated hashes from the current release artifacts.
+
 # [32.0.0] - 2026-05-01 (V32/V33 — AI Intelligence Unification Supreme + V33 Sprint)
 
 ## Release v32.0.0 — AI Intelligence Unification Supreme + V33 Sprint
