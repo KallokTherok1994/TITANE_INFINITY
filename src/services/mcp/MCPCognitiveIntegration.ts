@@ -26,6 +26,14 @@ interface Message {
   content: string;
 }
 
+// Minimal shape of CognitiveOmegaOrchestrator.getStats() relevant fields
+interface OmegaStatsShape {
+  semanticMemoryStats?: { total_memories?: number } | null;
+  goalConsistencyStats?: unknown | null;
+  evaluationStats?: unknown | null;
+  observabilityStats?: unknown | null;
+}
+
 // ═════════════════════════════════════════════════════════════════════════════
 // MCP-COGNITIVE INTEGRATION LAYER
 // ═════════════════════════════════════════════════════════════════════════════
@@ -267,13 +275,15 @@ class MCPCognitiveIntegrationClass {
 
       const extracted: Message[] = [];
       for (const entry of entries) {
-        const content = (entry as any).content as unknown;
+        // MemoryEntry.content is typed `unknown` — access directly
+        const content: unknown = entry.content;
         if (typeof content === 'string' && content.trim()) {
           extracted.push({ role: 'assistant', content });
           continue;
         }
         if (content && typeof content === 'object') {
-          const maybeMessages = (content as any).messages;
+          const c = content as Record<string, unknown>;
+          const maybeMessages = c['messages'];
           if (Array.isArray(maybeMessages)) {
             for (const m of maybeMessages) {
               if (
@@ -287,13 +297,13 @@ class MCPCognitiveIntegrationClass {
             continue;
           }
 
-          const response = (content as any).response;
+          const response = c['response'];
           if (typeof response === 'string' && response.trim()) {
             extracted.push({ role: 'assistant', content: response });
             continue;
           }
 
-          const message = (content as any).message;
+          const message = c['message'];
           if (typeof message === 'string' && message.trim()) {
             extracted.push({ role: 'assistant', content: message });
             continue;
@@ -465,9 +475,9 @@ class MCPCognitiveIntegrationClass {
       const result = {
         isConsistent: check.isConsistent,
         violations: check.violations.map(v => ({
-          type: String((v as any).type ?? 'unknown'),
-          severity: String((v as any).severity ?? 'unknown'),
-          description: String((v as any).description ?? ''),
+          type: String(v.type ?? 'unknown'),
+          severity: String(v.severity ?? 'unknown'),
+          description: String(v.description ?? ''),
         })),
         corrections,
       };
@@ -534,22 +544,19 @@ class MCPCognitiveIntegrationClass {
     // Run health check
     const health = await MCPOrchestrator.runHealthCheck();
     const stats = MCPOrchestrator.getStats();
-    const omegaStats = this.cognitiveOrchestrator.getStats();
-    const semanticMemoryStats = (omegaStats as any)?.semanticMemoryStats as
-      | { total_memories?: number }
-      | null
-      | undefined;
+    const omegaStats = this.cognitiveOrchestrator.getStats() as OmegaStatsShape;
+    const semanticMemoryStats = omegaStats?.semanticMemoryStats;
 
     const cognitiveState = {
       semanticMemory: {
         totalMemories: semanticMemoryStats?.total_memories ?? 0,
         lastUpdate: Date.now(),
       },
-      goalConsistency: { isEnabled: Boolean((omegaStats as any)?.goalConsistencyStats) },
+      goalConsistency: { isEnabled: Boolean(omegaStats?.goalConsistencyStats) },
       conversationEvaluation: {
-        isEnabled: Boolean((omegaStats as any)?.evaluationStats),
+        isEnabled: Boolean(omegaStats?.evaluationStats),
       },
-      observability: { isEnabled: Boolean((omegaStats as any)?.observabilityStats) },
+      observability: { isEnabled: Boolean(omegaStats?.observabilityStats) },
     };
 
     return {

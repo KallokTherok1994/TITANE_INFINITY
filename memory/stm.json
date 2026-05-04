@@ -5,8 +5,8 @@
     "type": "preference",
     "importance": 0.2,
     "timestamp": 1742777400000,
-    "lastAccessed": 1742777400000,
-    "accessCount": 1,
+    "lastAccessed": 1777907256091,
+    "accessCount": 7,
     "ttl": 300000,
     "metadata": {
       "source": "initialization",
@@ -43,5 +43,451 @@
       "version": "v20.0Ω",
       "action": "memory_correction"
     }
+  },
+  {
+    "id": "1c4408ba-5d6a-49d8-8eba-df97f62ce39a",
+    "content": "Architecture technique: développement TypeScript, optimisation performance, sécurité réseau.",
+    "type": "conversation",
+    "importance": 0.2705,
+    "timestamp": 1777902323440,
+    "lastAccessed": 1777907256092,
+    "accessCount": 5,
+    "metadata": {
+      "source": "chat_message",
+      "categories": [
+        {
+          "main": "domain",
+          "sub": "technical",
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
+          "confidence": 0.5864286779691755
+        },
+        {
+          "main": "domain",
+          "sub": "learning",
+          "tags": [
+            "technique"
+          ],
+          "confidence": 0.42058646839722
+        },
+        {
+          "main": "theme",
+          "sub": "architecture",
+          "tags": [
+            "architecture"
+          ],
+          "confidence": 0.4983333333333333
+        },
+        {
+          "main": "theme",
+          "sub": "coaching",
+          "tags": [
+            "développement"
+          ],
+          "confidence": 0.47882488614936036
+        }
+      ],
+      "enrichedMetadata": {
+        "domain": "technical",
+        "theme": "architecture",
+        "keywords": [
+          "architecture",
+          "technique",
+          "développement",
+          "typescript",
+          "optimisation",
+          "performance",
+          "sécurité",
+          "réseau"
+        ],
+        "sentiment": "neutral",
+        "urgency": "low",
+        "relatedIds": [],
+        "version": 1,
+        "contentHash": "ysflkj",
+        "lastModified": 1777902323440,
+        "userValidated": false,
+        "preserve": false
+      }
+    },
+    "ttl": 300000
+  },
+  {
+    "id": "b0aa5063-9952-4b36-b5dd-ece335ab02e8",
+    "content": "Architecture technique: développement TypeScript, optimisation performance, sécurité réseau.",
+    "type": "conversation",
+    "importance": 0.2705,
+    "timestamp": 1777902629205,
+    "lastAccessed": 1777907256092,
+    "accessCount": 4,
+    "metadata": {
+      "source": "chat_message",
+      "categories": [
+        {
+          "main": "domain",
+          "sub": "technical",
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
+          "confidence": 0.5864286779691755
+        },
+        {
+          "main": "domain",
+          "sub": "learning",
+          "tags": [
+            "technique"
+          ],
+          "confidence": 0.42058646839722
+        },
+        {
+          "main": "theme",
+          "sub": "architecture",
+          "tags": [
+            "architecture"
+          ],
+          "confidence": 0.4983333333333333
+        },
+        {
+          "main": "theme",
+          "sub": "coaching",
+          "tags": [
+            "développement"
+          ],
+          "confidence": 0.47882488614936036
+        }
+      ],
+      "enrichedMetadata": {
+        "domain": "technical",
+        "theme": "architecture",
+        "keywords": [
+          "architecture",
+          "technique",
+          "développement",
+          "typescript",
+          "optimisation",
+          "performance",
+          "sécurité",
+          "réseau"
+        ],
+        "sentiment": "neutral",
+        "urgency": "low",
+        "relatedIds": [
+          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a"
+        ],
+        "version": 1,
+        "contentHash": "ysflkj",
+        "lastModified": 1777902629205,
+        "userValidated": false,
+        "preserve": false
+      }
+    },
+    "ttl": 300000
+  },
+  {
+    "id": "52f162ab-0679-4c2e-9bf0-828708ed79e9",
+    "content": "Architecture technique: développement TypeScript, optimisation performance, sécurité réseau.",
+    "type": "conversation",
+    "importance": 0.2705,
+    "timestamp": 1777903523620,
+    "lastAccessed": 1777907256092,
+    "accessCount": 3,
+    "metadata": {
+      "source": "chat_message",
+      "categories": [
+        {
+          "main": "domain",
+          "sub": "technical",
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
+          "confidence": 0.5864286779691755
+        },
+        {
+          "main": "domain",
+          "sub": "learning",
+          "tags": [
+            "technique"
+          ],
+          "confidence": 0.42058646839722
+        },
+        {
+          "main": "theme",
+          "sub": "architecture",
+          "tags": [
+            "architecture"
+          ],
+          "confidence": 0.4983333333333333
+        },
+        {
+          "main": "theme",
+          "sub": "coaching",
+          "tags": [
+            "développement"
+          ],
+          "confidence": 0.47882488614936036
+        }
+      ],
+      "enrichedMetadata": {
+        "domain": "technical",
+        "theme": "architecture",
+        "keywords": [
+          "architecture",
+          "technique",
+          "développement",
+          "typescript",
+          "optimisation",
+          "performance",
+          "sécurité",
+          "réseau"
+        ],
+        "sentiment": "neutral",
+        "urgency": "low",
+        "relatedIds": [
+          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a",
+          "b0aa5063-9952-4b36-b5dd-ece335ab02e8"
+        ],
+        "version": 1,
+        "contentHash": "ysflkj",
+        "lastModified": 1777903523620,
+        "userValidated": false,
+        "preserve": false
+      }
+    },
+    "ttl": 300000
+  },
+  {
+    "id": "a1d6e634-1332-44f1-9dc1-21715e693f94",
+    "content": "Architecture technique: développement TypeScript, optimisation performance, sécurité réseau.",
+    "type": "conversation",
+    "importance": 0.2705,
+    "timestamp": 1777903856934,
+    "lastAccessed": 1777907256092,
+    "accessCount": 2,
+    "metadata": {
+      "source": "chat_message",
+      "categories": [
+        {
+          "main": "domain",
+          "sub": "technical",
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
+          "confidence": 0.5864286779691755
+        },
+        {
+          "main": "domain",
+          "sub": "learning",
+          "tags": [
+            "technique"
+          ],
+          "confidence": 0.42058646839722
+        },
+        {
+          "main": "theme",
+          "sub": "architecture",
+          "tags": [
+            "architecture"
+          ],
+          "confidence": 0.4983333333333333
+        },
+        {
+          "main": "theme",
+          "sub": "coaching",
+          "tags": [
+            "développement"
+          ],
+          "confidence": 0.47882488614936036
+        }
+      ],
+      "enrichedMetadata": {
+        "domain": "technical",
+        "theme": "architecture",
+        "keywords": [
+          "architecture",
+          "technique",
+          "développement",
+          "typescript",
+          "optimisation",
+          "performance",
+          "sécurité",
+          "réseau"
+        ],
+        "sentiment": "neutral",
+        "urgency": "low",
+        "relatedIds": [
+          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a",
+          "b0aa5063-9952-4b36-b5dd-ece335ab02e8",
+          "52f162ab-0679-4c2e-9bf0-828708ed79e9"
+        ],
+        "version": 1,
+        "contentHash": "ysflkj",
+        "lastModified": 1777903856934,
+        "userValidated": false,
+        "preserve": false
+      }
+    },
+    "ttl": 300000
+  },
+  {
+    "id": "4e6b1720-2ac8-421d-b2c6-9f94f6a375fc",
+    "content": "Architecture technique: développement TypeScript, optimisation performance, sécurité réseau.",
+    "type": "conversation",
+    "importance": 0.2705,
+    "timestamp": 1777904151825,
+    "lastAccessed": 1777907256092,
+    "accessCount": 1,
+    "metadata": {
+      "source": "chat_message",
+      "categories": [
+        {
+          "main": "domain",
+          "sub": "technical",
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
+          "confidence": 0.5864286779691755
+        },
+        {
+          "main": "domain",
+          "sub": "learning",
+          "tags": [
+            "technique"
+          ],
+          "confidence": 0.42058646839722
+        },
+        {
+          "main": "theme",
+          "sub": "architecture",
+          "tags": [
+            "architecture"
+          ],
+          "confidence": 0.4983333333333333
+        },
+        {
+          "main": "theme",
+          "sub": "coaching",
+          "tags": [
+            "développement"
+          ],
+          "confidence": 0.47882488614936036
+        }
+      ],
+      "enrichedMetadata": {
+        "domain": "technical",
+        "theme": "architecture",
+        "keywords": [
+          "architecture",
+          "technique",
+          "développement",
+          "typescript",
+          "optimisation",
+          "performance",
+          "sécurité",
+          "réseau"
+        ],
+        "sentiment": "neutral",
+        "urgency": "low",
+        "relatedIds": [
+          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a",
+          "b0aa5063-9952-4b36-b5dd-ece335ab02e8",
+          "52f162ab-0679-4c2e-9bf0-828708ed79e9",
+          "a1d6e634-1332-44f1-9dc1-21715e693f94"
+        ],
+        "version": 1,
+        "contentHash": "ysflkj",
+        "lastModified": 1777904151825,
+        "userValidated": false,
+        "preserve": false
+      }
+    },
+    "ttl": 300000
+  },
+  {
+    "id": "20c9a2c8-85a6-4be4-b092-2cf6cf867f51",
+    "content": "Architecture technique: développement TypeScript, optimisation performance, sécurité réseau.",
+    "type": "conversation",
+    "importance": 0.2705,
+    "timestamp": 1777907256092,
+    "lastAccessed": 1777907256092,
+    "accessCount": 0,
+    "metadata": {
+      "source": "chat_message",
+      "categories": [
+        {
+          "main": "domain",
+          "sub": "technical",
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
+          "confidence": 0.5864286779691755
+        },
+        {
+          "main": "domain",
+          "sub": "learning",
+          "tags": [
+            "technique"
+          ],
+          "confidence": 0.42058646839722
+        },
+        {
+          "main": "theme",
+          "sub": "architecture",
+          "tags": [
+            "architecture"
+          ],
+          "confidence": 0.4983333333333333
+        },
+        {
+          "main": "theme",
+          "sub": "coaching",
+          "tags": [
+            "développement"
+          ],
+          "confidence": 0.47882488614936036
+        }
+      ],
+      "enrichedMetadata": {
+        "domain": "technical",
+        "theme": "architecture",
+        "keywords": [
+          "architecture",
+          "technique",
+          "développement",
+          "typescript",
+          "optimisation",
+          "performance",
+          "sécurité",
+          "réseau"
+        ],
+        "sentiment": "neutral",
+        "urgency": "low",
+        "relatedIds": [
+          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a",
+          "b0aa5063-9952-4b36-b5dd-ece335ab02e8",
+          "52f162ab-0679-4c2e-9bf0-828708ed79e9",
+          "a1d6e634-1332-44f1-9dc1-21715e693f94",
+          "4e6b1720-2ac8-421d-b2c6-9f94f6a375fc"
+        ],
+        "version": 1,
+        "contentHash": "ysflkj",
+        "lastModified": 1777907256092,
+        "userValidated": false,
+        "preserve": false
+      }
+    },
+    "ttl": 300000
   }
 ]

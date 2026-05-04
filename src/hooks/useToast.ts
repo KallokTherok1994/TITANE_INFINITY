@@ -106,10 +106,10 @@ export function useToast() {
       return {
         id: toastId,
         resolve: (resultMessage: string) => {
-          toast.success(resultMessage, { id: toastId as any });
+          toast.success(resultMessage, { id: toastId });
         },
         reject: (errorMessage: string) => {
-          toast.error(errorMessage, { id: toastId as any });
+          toast.error(errorMessage, { id: toastId });
         },
         dismiss: () => {
           toast.dismiss(toastId);

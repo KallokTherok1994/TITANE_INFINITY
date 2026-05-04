@@ -79,16 +79,19 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
 
     const startTime = Date.now();
 
+    // Typed params helper — avoids `as any` on unknown params
+    const p = params as Record<string, unknown>;
+
     try {
       let result: unknown;
 
       switch (operation) {
         case 'predictNextState':
-          result = await this.predictNextState((params as any)?.context);
+          result = await this.predictNextState(p?.['context']);
           break;
 
         case 'syncRealtime':
-          result = await this.syncRealtime((params as any)?.fps);
+          result = await this.syncRealtime(p?.['fps'] as number | undefined);
           break;
 
         default:

@@ -406,8 +406,8 @@ export class TauriAutoRepairEngine {
 
     // Snapshots
     try {
-      const persistence = (await tauriClient.titanGetPersistenceStatus()) as any;
-      snapshots_count = persistence?.snapshots_count || 0;
+      const persistence = (await tauriClient.titanGetPersistenceStatus()) as Record<string, unknown>;
+      snapshots_count = (persistence?.['snapshots_count'] as number) || 0;
       if (snapshots_count === 0) {
         warnings_resolved++;
       }
@@ -418,8 +418,8 @@ export class TauriAutoRepairEngine {
 
     // XP state
     try {
-      const xpState = (await tauriClient.xpGetState()) as any;
-      if (xpState && xpState.xp != null && xpState.level != null) {
+      const xpState = (await tauriClient.xpGetState()) as Record<string, unknown>;
+      if (xpState && xpState['xp'] != null && xpState['level'] != null) {
         xp_state = 'complete';
       } else {
         // Réparer

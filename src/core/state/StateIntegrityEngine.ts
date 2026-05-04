@@ -19,6 +19,10 @@
 
 import type { SingularityState } from '@/types/singularityState';
 
+// Type alias for structural layer operations — avoids `as any` when passing
+// specific layer types to methods that only need Record<string,unknown>
+type StateLayer = Record<string, unknown>;
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -72,19 +76,19 @@ export class StateIntegrityEngine {
     const issues: IntegrityIssue[] = [];
 
     // Vérifier physical layer
-    this.checkLayer(state.physical as any, 'physical', issues);
+    this.checkLayer(state.physical as unknown as StateLayer, 'physical', issues);
 
     // Vérifier cognitive layer
-    this.checkLayer(state.cognitive as any, 'cognitive', issues);
+    this.checkLayer(state.cognitive as unknown as StateLayer, 'cognitive', issues);
 
     // Vérifier symbolic layer
-    this.checkLayer(state.symbolic as any, 'symbolic', issues);
+    this.checkLayer(state.symbolic as unknown as StateLayer, 'symbolic', issues);
 
     // Vérifier adaptive layer
-    this.checkLayer(state.adaptive as any, 'adaptive', issues);
+    this.checkLayer(state.adaptive as unknown as StateLayer, 'adaptive', issues);
 
     // Vérifier meta layer
-    this.checkLayer(state.meta as any, 'meta', issues);
+    this.checkLayer(state.meta as unknown as StateLayer, 'meta', issues);
 
     // Calculer score
     const score = Math.max(0, 1 - issues.length * 0.1);
@@ -129,11 +133,11 @@ export class StateIntegrityEngine {
     const fixed = { ...state };
 
     // Fixer les couches
-    fixed.physical = this.fixLayer(fixed.physical as any) as any;
-    fixed.cognitive = this.fixLayer(fixed.cognitive as any) as any;
-    fixed.symbolic = this.fixLayer(fixed.symbolic as any) as any;
-    fixed.adaptive = this.fixLayer(fixed.adaptive as any) as any;
-    fixed.meta = this.fixLayer(fixed.meta as any) as any;
+    fixed.physical = this.fixLayer(fixed.physical as unknown as StateLayer) as unknown as typeof fixed.physical;
+    fixed.cognitive = this.fixLayer(fixed.cognitive as unknown as StateLayer) as unknown as typeof fixed.cognitive;
+    fixed.symbolic = this.fixLayer(fixed.symbolic as unknown as StateLayer) as unknown as typeof fixed.symbolic;
+    fixed.adaptive = this.fixLayer(fixed.adaptive as unknown as StateLayer) as unknown as typeof fixed.adaptive;
+    fixed.meta = this.fixLayer(fixed.meta as unknown as StateLayer) as unknown as typeof fixed.meta;
 
     return fixed;
   }
@@ -204,11 +208,11 @@ export class StateIntegrityEngine {
   private compressState(state: SingularityState): SingularityState {
     return {
       ...state,
-      physical: this.compressLayer(state.physical as any) as any,
-      cognitive: this.compressLayer(state.cognitive as any) as any,
-      symbolic: this.compressLayer(state.symbolic as any) as any,
-      adaptive: this.compressLayer(state.adaptive as any) as any,
-      meta: this.compressLayer(state.meta as any) as any,
+      physical: this.compressLayer(state.physical as unknown as StateLayer) as unknown as typeof state.physical,
+      cognitive: this.compressLayer(state.cognitive as unknown as StateLayer) as unknown as typeof state.cognitive,
+      symbolic: this.compressLayer(state.symbolic as unknown as StateLayer) as unknown as typeof state.symbolic,
+      adaptive: this.compressLayer(state.adaptive as unknown as StateLayer) as unknown as typeof state.adaptive,
+      meta: this.compressLayer(state.meta as unknown as StateLayer) as unknown as typeof state.meta,
     };
   }
 

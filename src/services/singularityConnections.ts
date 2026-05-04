@@ -342,7 +342,7 @@ export class SingularityConnections {
               : true,
         },
         stability: typeof current?.stability === 'number' ? current.stability : 0.9,
-        timestamp: (current as any)?.timestamp ?? nowSeconds,
+        timestamp: (current as Record<string, unknown>)?.['timestamp'] as number ?? nowSeconds,
       };
 
       await SingularityBridge.updateSymbolic(updated);
@@ -395,7 +395,7 @@ export class SingularityConnections {
           typeof current?.evolution_capacity === 'number'
             ? current.evolution_capacity
             : 0.85,
-        timestamp: (current as any)?.timestamp ?? nowSeconds,
+        timestamp: (current as Record<string, unknown>)?.['timestamp'] as number ?? nowSeconds,
       };
 
       await SingularityBridge.updateAdaptive(updated);

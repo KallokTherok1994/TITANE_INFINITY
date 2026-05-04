@@ -197,8 +197,8 @@ export interface ConsistencyViolation {
   /** Type de violation */
   type: ConsistencyViolationType;
 
-  /** Sévérité (0.0 - 1.0) */
-  severity: number;
+  /** Sévérité nominale — correspond aux clés de violation_severity_weights */
+  severity: 'low' | 'medium' | 'high' | 'critical';
 
   /** Description */
   description: string;

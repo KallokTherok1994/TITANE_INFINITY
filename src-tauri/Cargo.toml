@@ -1,7 +1,7 @@
 [package]
 name         = "titane-infinity"
-version      = "33.0.3"
-description  = "TITANE∞ v33.0.3 - AI Intelligence Unification Supreme"
+version      = "33.0.4"
+description  = "TITANE∞ v33.0.4 - AI Intelligence Unification Supreme"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
 repository   = "https://github.com/Les-Industries-Cognitives/TITANE_ENVP"

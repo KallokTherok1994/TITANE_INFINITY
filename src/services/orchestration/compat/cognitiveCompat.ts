@@ -65,10 +65,11 @@ export const cognitiveOmega = {
     metadata?: Record<string, unknown>;
   }): Promise<{ id: string; stored: boolean }> {
     const strategy = await getCognitiveStrategy();
-    const memoryId = (await strategy.execute('storeMemory', params)) as any;
+    const result = await strategy.execute<string>('storeMemory', params);
+    const memoryId = result.data;
 
     return {
-      id: memoryId,
+      id: memoryId ?? '',
       stored: true,
     };
   },
@@ -90,7 +91,8 @@ export const cognitiveOmega = {
     }>
   > {
     const strategy = await getCognitiveStrategy();
-    const memories = ((await strategy.execute('retrieveMemories', params)) as any) || [];
+    const result = await strategy.execute<Array<{ id: string; content: string; relevance: number; metadata?: Record<string, unknown> }>>('retrieveMemories', params);
+    const memories = result.data || [];
 
     return memories;
   },
@@ -110,11 +112,11 @@ export const cognitiveOmega = {
     const query = lastMessage?.content || '';
 
     // Retrieve memories
-    const memories =
-      ((await strategy.execute('retrieveMemories', {
+    const memResult = await strategy.execute<Array<{ content: string; relevance: number }>>('retrieveMemories', {
         query,
         limit: 5,
-      })) as any) || [];
+      });
+    const memories = memResult.data || [];
 
     // Build enriched context
     let context = '';
@@ -162,10 +164,11 @@ export const cognitiveOmega = {
     priority?: number;
   }): Promise<{ id: string; set: boolean }> {
     const strategy = await getCognitiveStrategy();
-    const goalId = (await strategy.execute('setGoal', params)) as any;
+    const result = await strategy.execute<string>('setGoal', params);
+    const goalId = result.data;
 
     return {
-      id: goalId,
+      id: goalId ?? '',
       set: true,
     };
   },
@@ -180,7 +183,8 @@ export const cognitiveOmega = {
     complete: boolean;
   }> {
     const strategy = await getCognitiveStrategy();
-    const progress = (await strategy.execute('checkGoalProgress', params)) as any;
+    const result = await strategy.execute<{ progress: number; complete: boolean }>('checkGoalProgress', params);
+    const progress = result.data;
 
     return {
       goalId: params.goalId,
@@ -199,7 +203,8 @@ export const cognitiveOmega = {
     score: number;
   }> {
     const strategy = await getCognitiveStrategy();
-    const result = (await strategy.execute('validateConsistency', params)) as any;
+    const execResult = await strategy.execute<{ isConsistent: boolean; violations: unknown[]; score: number }>('validateConsistency', params);
+    const result = execResult.data;
 
     return {
       isConsistent: result?.isConsistent ?? true,
