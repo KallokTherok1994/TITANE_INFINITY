@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2.0",
   "$comment": "TITANE∞ Canonical Production Config — this file is the authoritative production configuration. Root tauri.base.json holds shared base settings that are merged into this file at build time.",
   "productName": "TITANE-Infinity",
-  "version": "33.0.5",
+  "version": "33.0.6",
   "identifier": "com.titane.infinity",
   "build": {
     "devUrl": "http://localhost:1420",

@@ -6,7 +6,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { create } from 'zustand';
-import { open } from '@tauri-apps/plugin-opener';
+import { openUrl } from '@tauri-apps/plugin-opener';
 import {
   type OAuthProfile,
   initiateFacebookLogin,
@@ -48,7 +48,7 @@ export const useOAuthStore = create<OAuthState>((set) => ({
     try {
       const { auth_url } = await initiateFacebookLogin();
       // Open in system default browser (not in Tauri WebView — PKCE flow)
-      await open(auth_url);
+      await openUrl(auth_url);
     } catch (err) {
       set({ error: String(err) });
     } finally {

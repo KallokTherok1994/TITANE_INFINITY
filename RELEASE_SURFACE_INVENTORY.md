@@ -1543,3 +1543,24 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | Scope | BUILD ALL v33.0.5 — ToolSelectorPanel + DevConfig fix + full bump 33.0.4→33.0.5 |
 | Gates | tsc PASS, vitest 25/25 PASS, detect_recurrence PASS, verify_instructions 33/33 PASS |
 | VERDICT | PASS |
+
+## v33.0.6 — 2026-05-04
+
+| Surface | Value |
+|---|---|
+| Version | 33.0.6 |
+| Branch | MAIN |
+| Build date | 2026-05-04 |
+| AppImage artifact | titane-infinity_33.0.6_amd64.AppImage 93MiB |
+| DEB artifact | titane-infinity_33.0.6_amd64.deb 24MiB |
+| RPM artifact | titane-infinity-33.0.6-1.x86_64.rpm 24MiB |
+| AppImage sha256 | 4bdf92ba07930e5ac8a59f94db9af9c0a0022dd31e3a903a9248fdb0d873eb87 |
+| DEB sha256 | 6215060ba0cc466f81b3c9209642636b4b2045b4e512f7213b14e0e9c7be6c9e |
+| RPM sha256 | 39ebe7714ff830c59802fb8704772fed9f3819f65b39887c680369b8cf3f0f32 |
+| Launcher Exec | /usr/bin/titane-infinity |
+| Launcher Icon | titane-infinity |
+| sudo reinstall | PENDING — requires interactive sudo (run: sudo dpkg -i deployment/latest/titane-infinity_33.0.6_amd64.deb) |
+| Desktop icons | PENDING — run: bash scripts/post-build/update-desktop-icons.sh |
+| Scope | Facebook OAuth PKCE + MSI WiX fr-FR + deep-link titane:// + unified launcher + plugin-deep-link/opener — 3 commits |
+| Gates | detect_recurrence PASS, verify_instructions 33/33 PASS, build:tauri EXIT=0 |
+| VERDICT | PASS |

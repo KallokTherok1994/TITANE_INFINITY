@@ -19,7 +19,6 @@ pub mod roles;
 // Re-exports publics
 pub use api_keys::ApiKeyManager;
 pub use dev_token::DevTokenManager;
-pub use oauth::OAuthProfile;
 pub use dto::*;
 pub use error::{AuthError, AuthResult};
 pub use keystore::Keystore;

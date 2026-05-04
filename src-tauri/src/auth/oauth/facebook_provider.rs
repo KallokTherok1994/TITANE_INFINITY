@@ -176,7 +176,7 @@ impl FacebookProvider {
     pub fn get_cached_profile() -> Option<OAuthProfile> {
         use crate::security::secrets_engine::SecureSecretsEngine;
 
-        let engine = SecureSecretsEngine::new();
+        let engine = SecureSecretsEngine::new(None).ok()?;
         let token = engine.get_secret("facebook_access_token").ok()??;
         let user_id = engine
             .get_secret("facebook_user_id")
@@ -207,15 +207,16 @@ impl FacebookProvider {
     pub fn logout() {
         use crate::security::secrets_engine::SecureSecretsEngine;
 
-        let engine = SecureSecretsEngine::new();
-        for key in &[
-            "facebook_access_token",
-            "facebook_user_id",
-            "facebook_user_name",
-            "facebook_user_email",
-            "facebook_user_picture",
-        ] {
-            let _ = engine.delete_secret(key);
+        if let Ok(engine) = SecureSecretsEngine::new(None) {
+            for key in &[
+                "facebook_access_token",
+                "facebook_user_id",
+                "facebook_user_name",
+                "facebook_user_email",
+                "facebook_user_picture",
+            ] {
+                let _ = engine.clear_secret(key);
+            }
         }
         OAuthStateManager::clear();
         info!("[FacebookOAuth] Logged out — credentials cleared");
@@ -225,9 +226,9 @@ impl FacebookProvider {
     fn store_token(token: &str, user_id: &str) -> bool {
         use crate::security::secrets_engine::SecureSecretsEngine;
 
-        let engine = SecureSecretsEngine::new();
-        let ok1 = engine.store_secret("facebook_access_token", token).is_ok();
-        let ok2 = engine.store_secret("facebook_user_id", user_id).is_ok();
+        let Ok(engine) = SecureSecretsEngine::new(None) else { return false; };
+        let ok1 = engine.set_secret("facebook_access_token", token.to_string()).is_ok();
+        let ok2 = engine.set_secret("facebook_user_id", user_id.to_string()).is_ok();
         ok1 && ok2
     }
 }
