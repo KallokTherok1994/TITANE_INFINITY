@@ -428,7 +428,7 @@ function truncateImportance(
 
   // Filter by importance (if metadata exists)
   const importantMessages = chatMessages.filter(msg => {
-    const importance = (msg as any).importance;
+    const importance = msg.metadata?.['importance'] as number | undefined;
     return importance === undefined || importance >= threshold;
   });
 

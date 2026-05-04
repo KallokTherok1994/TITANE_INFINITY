@@ -73,12 +73,12 @@ const CONTROL_CHAR_REMOVER = /\p{Cc}+/gu;
 const IS_VITEST =
   // Vitest exposes `import.meta.env.VITEST` and typically runs with MODE === 'test'.
   (typeof import.meta !== 'undefined' &&
-    Boolean((import.meta as any)?.env?.VITEST) &&
+    Boolean((import.meta.env as Record<string, unknown>)['VITEST']) &&
     true) ||
-  (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.MODE === 'test') ||
+  (typeof import.meta !== 'undefined' && import.meta.env?.MODE === 'test') ||
   // Fallbacks for non-Vite contexts.
-  (typeof process !== 'undefined' && Boolean((process as any)?.env?.VITEST)) ||
-  (typeof process !== 'undefined' && (process as any)?.env?.NODE_ENV === 'test');
+  (typeof process !== 'undefined' && Boolean(process.env['VITEST'])) ||
+  (typeof process !== 'undefined' && process.env['NODE_ENV'] === 'test');
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMEGA ORCHESTRATOR
