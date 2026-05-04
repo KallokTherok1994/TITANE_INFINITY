@@ -676,8 +676,9 @@ export class CanonicalDiscernmentKernel {
       };
     }
 
-    // Information request with no knowledge available → skip memory explicitly
-    if (intent.intent === 'information_request' && memoryContext.relevantKnowledge.length === 0) {
+    // Information request with no knowledge AND no other context → skip memory explicitly
+    // If there are projects/decisions, the fallback rule below will handle injection.
+    if (intent.intent === 'information_request' && memoryContext.relevantKnowledge.length === 0 && !hasContext) {
       return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_information_request_no_knowledge' };
     }
 

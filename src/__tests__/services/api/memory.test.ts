@@ -215,12 +215,14 @@ describe('memoryService', () => {
 
   it('getKnowledge() calls Tauri IPC when runtime is available', async () => {
     isTauriRuntimeAvailableMock.mockReturnValue(true);
-    invokeWithRetryMock.mockResolvedValue([{ id: 'k1', title: 'Knowledge 1' }]);
+    // Rust IPC returns { topic } not { title } — mock matches production Rust shape
+    invokeWithRetryMock.mockResolvedValue([{ id: 'k1', topic: 'Knowledge 1' }]);
 
     const { memoryService } = await import('@/services/api/memory');
     const result = await memoryService.getKnowledge(10);
 
-    expect(result).toEqual([{ id: 'k1', title: 'Knowledge 1' }]);
+    // getKnowledge maps { topic } -> { title } plus adds all KnowledgeEntry fields
+    expect(result).toMatchObject([{ id: 'k1', title: 'Knowledge 1' }]);
     expect(invokeWithRetryMock).toHaveBeenCalledWith(
       'memory_get_knowledge',
       { limit: 10 },
@@ -304,8 +306,11 @@ describe('memoryService', () => {
     expect(ctx.relevantKnowledge).toHaveLength(1);
     expect(ctx.relevantKnowledge[0]?.id).toBe('system_architecture');
     expect(ctx.relevantKnowledge[0]?.source).toBe('bundled_kb');
-    // Other fields should be empty (no Tauri for projects/decisions/rituals/timeline)
-    expect(ctx.activeProjects).toEqual([]);
-    expect(ctx.recentDecisions).toEqual([]);
+    // activeProjects: returns bundled TITANE∞ project when Tauri unavailable (Phase 3 fallback)
+    expect(ctx.activeProjects).toHaveLength(1);
+    expect(ctx.activeProjects[0]?.id).toBe('titane-infinity');
+    // recentDecisions: returns synthetic fallback when Tauri unavailable (Ph5-IT3)
+    expect(ctx.recentDecisions).toHaveLength(1);
+    expect(ctx.recentDecisions[0]?.id).toBe('fallback_decision_offline');
   });
 });
