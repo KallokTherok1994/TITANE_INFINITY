@@ -676,6 +676,11 @@ export class CanonicalDiscernmentKernel {
       };
     }
 
+    // Information request with no knowledge available → skip memory explicitly
+    if (intent.intent === 'information_request' && memoryContext.relevantKnowledge.length === 0) {
+      return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_information_request_no_knowledge' };
+    }
+
     // Conversational / very short → skip memory (cost not justified)
     if (intent.intent === 'conversational') {
       return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_conversational' };

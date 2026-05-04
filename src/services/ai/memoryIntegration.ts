@@ -44,6 +44,9 @@ const HYBRID_MEMORY_SHADOW_READ_PRESET_HISTORY_KEY =
   'titane_hybrid_memory_shadow_read_preset_history';
 const HYBRID_MEMORY_SHADOW_READ_PRESET_HISTORY_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 
+/** Seuil empirique: en-dessous de 0.4, deux labels sont considérés sémantiquement non-liés. */
+const SHADOW_READ_SIMILARITY_THRESHOLD = 0.4;
+
 let unifiedMemoryShadowInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null =
   null;
 let recentNearMatchSnapshots: Array<{
@@ -776,7 +779,7 @@ function compareCanonicalAndShadowLabels(
   | 'lastShadowReadMissingLabels'
   | 'lastShadowReadExtraLabels'
 > {
-  const similarityThreshold = 0.4;
+  const similarityThreshold = SHADOW_READ_SIMILARITY_THRESHOLD;
   const getMissingPriority = (
     shadowLabel: string,
     similarity: number
