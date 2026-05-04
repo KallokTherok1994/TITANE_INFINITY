@@ -62,6 +62,8 @@ const baseConfig = stripInvalidProps(baseConfigRaw);
 const envOverrides = {
   development: {
     build: {
+      beforeDevCommand:
+        'corepack pnpm exec vite dev --host 127.0.0.1 --port 1420 --strictPort',
       devUrl: 'http://localhost:1420',
       frontendDist: '../dist',
     },
