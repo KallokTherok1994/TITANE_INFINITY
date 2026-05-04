@@ -220,7 +220,7 @@ export function preloadEngine(engineName: LazyEngineName): void {
     return;
   }
 
-  (window as any).requestIdleCallback(() => {
+  window.requestIdleCallback?.(() => {
     logger.debug(`Preloading engine during idle: ${engineName}`);
     LazyEngines[engineName]().catch(err => {
       logger.warn(`Failed to preload engine: ${engineName}`, err);

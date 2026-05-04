@@ -260,7 +260,6 @@ export class PerformanceProfiler {
    * Take a memory snapshot
    */
   captureMemory(): MemorySnapshot | null {
-    // @ts-expect-error - memory is not standard but available in Chrome/Electron
     const memory = performance.memory;
     if (!memory) return null;
 

@@ -576,7 +576,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
       ? await this.getConversationTraces(conversation_id)
       : Array.from(this.traces.values());
 
-    const phaseFrequencies: Record<PhaseName, number> = {} as any;
+    const phaseFrequencies: Record<PhaseName, number> = {} as Record<PhaseName, number>;
     let totalDuration = 0;
     let traceCount = 0;
     let totalConfidence = 0;

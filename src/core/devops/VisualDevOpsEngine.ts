@@ -21,6 +21,7 @@ import type {
   ScreenAnalysis,
   DevOpsAction,
   ActionType,
+  ContextType,
   Diagnosis,
   DetectedElement,
   TechnicalContent,
@@ -163,7 +164,7 @@ class VisualDevOpsEngine {
         });
 
         analysis.detected_elements = backendAnalysis.detected_elements;
-        analysis.context_type = backendAnalysis.context_type as any;
+        analysis.context_type = backendAnalysis.context_type as ContextType;
         analysis.confidence = backendAnalysis.confidence;
       } catch (error) {
         logger.warn('[VisualDevOpsEngine] Backend analysis failed, using fallback');
@@ -877,7 +878,7 @@ echo "✅ Operation complete"
         pending: pendingActions,
         avg_validation_time_ms: this.calculateAverageValidationTime(), // Calculate from interactions: sum(validation_end - action_start) / count
       },
-      actions_by_type: actionsByType as any,
+      actions_by_type: actionsByType as Record<ActionType, number>,
       errors_fixed: this.actionHistory.filter(
         a => a.action_type === 'fix_error' && a.status === 'executed'
       ).length,

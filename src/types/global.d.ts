@@ -19,6 +19,56 @@ declare global {
     type IntrinsicAttributes = React.JSX.IntrinsicAttributes;
     type IntrinsicClassAttributes<T> = React.JSX.IntrinsicClassAttributes<T>;
   }
+
+  /**
+   * IT7 Type-Safety: Window / Performance / Navigator augmentations
+   * Eliminates `as any` casts for TITANE globals and vendor APIs.
+   */
+  interface TitaneBootState extends Record<string, unknown> {
+    main_tsx?: boolean;
+    main_tsx_timestamp?: number;
+  }
+
+  interface Window {
+    __TITANE_BOOT__?: TitaneBootState;
+    __TAURI_INTERNALS__?: unknown;
+    __TITANE_TAURI_INITIALIZED?: boolean;
+    __TITANE_NOT_TAURI__?: boolean;
+    __TITANE_PERFORMANCE__?: Record<string, unknown>;
+    __TITANE_REACT_ROOT?: unknown;
+    chatLogger?: unknown;
+    clearMenuCache?: () => void;
+    queryClient?: { clear: () => void };
+    gc?: () => void;
+    TITANE_ANALYTICS?: { track: (event: string, data: unknown) => void };
+    // Note: SpeechRecognition / webkitSpeechRecognition declared in web-speech-api.d.ts
+    requestIdleCallback?: (
+      callback: (deadline: { timeRemaining: () => number; didTimeout: boolean }) => void,
+      options?: { timeout?: number }
+    ) => number;
+  }
+
+  interface Performance {
+    memory?: {
+      usedJSHeapSize: number;
+      totalJSHeapSize: number;
+      jsHeapSizeLimit: number;
+    };
+    /** Non-standard React DevTools render counter */
+    reactRenderCount?: number;
+  }
+
+  interface Navigator {
+    connection?: {
+      effectiveType?: string;
+      downlink?: number;
+      rtt?: number;
+      saveData?: boolean;
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  var gc: (() => void) | undefined; // V8 GC via --expose-gc flag
 }
 
 export {};

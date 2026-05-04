@@ -407,9 +407,7 @@ export class TitaneOS {
    * Retourne l'utilisation mémoire estimée
    */
   private getMemoryUsage(): number {
-    // @ts-expect-error Performance memory API
     if (typeof performance !== 'undefined' && performance.memory) {
-      // @ts-expect-error Performance memory API
       return performance.memory.usedJSHeapSize;
     }
     return 0;

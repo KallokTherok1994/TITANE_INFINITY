@@ -98,7 +98,7 @@ export function safeLazyImport<T extends React.ComponentType<any>>(
 
       // Retourner un composant fallback au lieu de throw
       return {
-        default: LazyImportErrorFallback as any as T,
+        default: LazyImportErrorFallback as unknown as T,
       };
     }
   });
@@ -139,7 +139,7 @@ export function safeLazyImportWithRetry<T extends React.ComponentType<any>>(
     );
 
     return {
-      default: LazyImportErrorFallback as any as T,
+      default: LazyImportErrorFallback as unknown as T,
     };
   });
 }

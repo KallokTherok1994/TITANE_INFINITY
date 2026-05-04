@@ -112,9 +112,7 @@ export class PerformanceDetector {
    * Mesure l'utilisation mémoire
    */
   private measureMemory(): number {
-    // @ts-expect-error Performance memory API
     if (typeof performance !== 'undefined' && performance.memory) {
-      // @ts-expect-error Performance memory API
       const memory = performance.memory;
       const usedMB = memory.usedJSHeapSize / (1024 * 1024);
       const totalMB = memory.totalJSHeapSize / (1024 * 1024);

@@ -37,8 +37,9 @@ import {
   type CognitiveTrace as _CognitiveTrace,
   type DecisionLog as _DecisionLog,
   type SubGoal as _SubGoal,
-  type GoalPriority as _GoalPriority,
+  type GoalPriority,
   type SemanticMemoryType,
+  type PhaseName,
 } from '@/services/cognitive';
 
 import type { AIMessage as _AIMessage } from '@/services/ai/types';
@@ -362,9 +363,9 @@ class CognitiveOmegaOrchestrator {
       const consistencyScore =
         await this.goalConsistency.calculateConsistencyScore(conversationId);
 
-      // Should correct if high/critical violations (severity >= 0.7)
+      // Should correct if high/critical violations
       const shouldCorrect = violations.some(
-        (v: ConsistencyViolation) => v.severity >= 0.7
+        (v: ConsistencyViolation) => v.severity === 'high' || v.severity === 'critical'
       );
 
       this.stats.totalViolationsDetected += violations.length;
@@ -584,7 +585,7 @@ class CognitiveOmegaOrchestrator {
     durationMs?: number
   ): Promise<void> {
     await this.ensureInitialized();
-    await this.observability.logPhase(traceId, phaseName as any, data, durationMs);
+    await this.observability.logPhase(traceId, phaseName as PhaseName, data, durationMs);
   }
 
   /**
@@ -602,12 +603,10 @@ class CognitiveOmegaOrchestrator {
   ): Promise<void> {
     await this.ensureInitialized();
     await this.observability.logDecision(traceId, {
-      decision_point: decision.decision_point,
-      chosen_option: decision.chosen_option,
-      alternatives: decision.alternatives || [],
-      rationale: decision.why,
+      type: decision.decision_point,
+      description: `${decision.chosen_option}: ${decision.why}`,
       confidence: decision.confidence,
-    } as any); // Type mismatch with Omit<DecisionLog>
+    }); // Maps wrapper fields to Omit<DecisionLog, 'timestamp'>
   }
 
   /**
@@ -649,7 +648,11 @@ class CognitiveOmegaOrchestrator {
     }
   ): Promise<ConversationGoal> {
     await this.ensureInitialized();
-    return this.goalConsistency.createGoal(conversationId, mainGoal, options as any);
+    return this.goalConsistency.createGoal(conversationId, mainGoal, options ? {
+      description: options.description,
+      constraints: options.constraints,
+      priority: options.priority as GoalPriority | undefined,
+    } : undefined);
   }
 
   /**

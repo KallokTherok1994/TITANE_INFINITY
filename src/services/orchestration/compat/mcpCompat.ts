@@ -25,6 +25,8 @@
 import { unifiedOrchestrator } from '../UnifiedOrchestrator';
 import type { MCPStrategy } from '../strategies/MCPStrategy';
 import {
+  CognitiveCore,
+  AIModelType,
   JobStatus,
   JobPriority,
   JobType,
@@ -86,35 +88,35 @@ export const MCPOrchestrator = {
       },
       health: {
         helios: {
-          core: 'HELIOS' as any,
+          core: CognitiveCore.HELIOS,
           status: 'PASS',
           score: 1.0,
           issues: [],
           timestamp: Date.now(),
         },
         nexus: {
-          core: 'NEXUS' as any,
+          core: CognitiveCore.NEXUS,
           status: 'PASS',
           score: 1.0,
           issues: [],
           timestamp: Date.now(),
         },
         harmonia: {
-          core: 'HARMONIA' as any,
+          core: CognitiveCore.HARMONIA,
           status: 'PASS',
           score: 1.0,
           issues: [],
           timestamp: Date.now(),
         },
         sentinel: {
-          core: 'SENTINEL' as any,
+          core: CognitiveCore.SENTINEL,
           status: 'PASS',
           score: 1.0,
           issues: [],
           timestamp: Date.now(),
         },
         memoryCore: {
-          core: 'MEMORY_CORE' as any,
+          core: CognitiveCore.MEMORY_CORE,
           status: 'PASS',
           score: 1.0,
           issues: [],
@@ -341,7 +343,8 @@ export const MCPOrchestrator = {
     }
 
     // Mark as optimized (simplified)
-    (job as any).metadata = { ...(job as any).metadata, optimized: true };
+    const jobRecord = job as unknown as Record<string, unknown>;
+    jobRecord['metadata'] = { ...(jobRecord['metadata'] as Record<string, unknown> | undefined), optimized: true };
     return job;
   },
 
@@ -355,7 +358,7 @@ export const MCPOrchestrator = {
 
     // Map to SystemHealthCheck format
     const mockCore = {
-      core: 'HELIOS' as any,
+      core: CognitiveCore.HELIOS,
       status: 'PASS' as const,
       score: health.score,
       issues: [],
@@ -386,7 +389,7 @@ export const MCPOrchestrator = {
     return {
       model: {
         id: 'phi-3.5-mini',
-        type: 'LOCAL_SMALL' as any,
+        type: AIModelType.LOCAL_SMALL,
         name: 'Phi-3.5 Mini 3.8B',
         capabilities: {
           maxTokens: 4096,

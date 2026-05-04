@@ -296,23 +296,22 @@ export class TauriInvokeProtector {
       }
 
       // 🔍 Multiple detection strategies (most permissive)
-      const w = window as any;
-
       // Strategy 1: window.__TAURI__ (primary)
-      const hasTauriGlobal = w.__TAURI__ && typeof w.__TAURI__ === 'object';
+      const hasTauriGlobal = window.__TAURI__ && typeof window.__TAURI__ === 'object';
 
       // Strategy 2: window.__TAURI_INTERNALS__ (secondary)
       const hasTauriInternals =
-        w.__TAURI_INTERNALS__ && typeof w.__TAURI_INTERNALS__ === 'object';
+        window.__TAURI_INTERNALS__ && typeof window.__TAURI_INTERNALS__ === 'object';
 
       // Strategy 3: Check for actual invoke function in either location
+      const tauriCore = window.__TAURI__?.core;
+      const tauriInternals = window.__TAURI_INTERNALS__ as Record<string, unknown> | undefined;
       const hasTauriInvoke =
-        (w.__TAURI__?.core?.invoke && typeof w.__TAURI__.core.invoke === 'function') ||
-        (w.__TAURI_INTERNALS__?.invoke &&
-          typeof w.__TAURI_INTERNALS__.invoke === 'function');
+        (tauriCore?.invoke && typeof tauriCore.invoke === 'function') ||
+        (tauriInternals?.['invoke'] && typeof tauriInternals['invoke'] === 'function');
 
       // Strategy 4: Runtime flag (set during initialization)
-      const hasTauriFlag = w.__TITANE_TAURI_INITIALIZED === true;
+      const hasTauriFlag = window.__TITANE_TAURI_INITIALIZED === true;
 
       // ✅ If ANY strategy confirms Tauri, mark as available
       const isAvailable =

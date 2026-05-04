@@ -70,19 +70,19 @@ export const aiOrchestrator = {
     // Select provider if not specified
     let provider = params.provider;
     if (!provider) {
-      const selected = (await strategy.execute('selectProvider', {
+      const selectedResult = await strategy.execute<{ provider: AIProvider }>('selectProvider', {
         criteria: {
           mode: 'standard',
           requiresCode: false,
           requiresVision: false,
           latency: 'medium',
         },
-      })) as any;
-      provider = selected?.provider || 'ollama';
+      });
+      provider = (selectedResult.data?.provider as typeof provider | undefined) ?? provider;
     }
 
     // Execute with provider
-    const result = (await strategy.execute('executeWithProvider', {
+    const execResult = await strategy.execute<string>('executeWithProvider', {
       provider,
       messages: params.messages,
       options: {
@@ -91,9 +91,10 @@ export const aiOrchestrator = {
         maxTokens: params.maxTokens,
         stream: params.stream,
       },
-    })) as any;
+    });
+    const result = execResult.data;
 
-    return result;
+    return result ?? '';
   },
 
   /**
@@ -109,7 +110,8 @@ export const aiOrchestrator = {
     }>
   > {
     const strategy = await getAIStrategy();
-    const providers = (await strategy.execute('getAvailableProviders', {})) as any;
+    const providersResult = await strategy.execute<Array<{ id: AIProvider; name: string; available: boolean; models: string[] }>>('getAvailableProviders', {});
+    const providers = providersResult.data;
 
     return providers || [];
   },
@@ -180,19 +182,19 @@ export const omnisOrchestrator = {
     // Select provider if not specified (cognitive mode)
     let provider = params.provider;
     if (!provider) {
-      const selected = (await strategy.execute('selectProvider', {
+      const selectedResult = await strategy.execute<{ provider: AIProvider }>('selectProvider', {
         criteria: {
           mode: 'cognitive',
           requiresCode: false,
           requiresVision: false,
           latency: 'medium',
         },
-      })) as any;
-      provider = selected?.provider || 'anthropic';
+      });
+      provider = (selectedResult.data?.provider as typeof provider | undefined) ?? provider;
     }
 
     // Execute with provider (cognitive mode)
-    const result = (await strategy.execute('executeWithProvider', {
+    const execResult = await strategy.execute<string>('executeWithProvider', {
       provider,
       messages: params.messages,
       options: {
@@ -202,9 +204,10 @@ export const omnisOrchestrator = {
         stream: params.stream,
         cognitiveMode: true,
       },
-    })) as any;
+    });
+    const result = execResult.data;
 
-    return result;
+    return result ?? '';
   },
 
   /**
@@ -252,11 +255,12 @@ export const omnisOrchestrator = {
     cognitiveInsights: Record<string, unknown>;
   }> {
     const strategy = await getAIStrategy();
-    const response = (await strategy.execute('executeWithProvider', {
+    const responseResult = await strategy.execute<string>('executeWithProvider', {
       provider: 'anthropic',
       messages: params.messages,
       options: { cognitiveMode: true },
-    })) as any;
+    });
+    const response = responseResult.data ?? '';
 
     return {
       response,

@@ -859,7 +859,7 @@ export class SingularityAutonomyEngine {
     const warnings: string[] = [];
 
     // Détecter React re-renders excessifs
-    if ((performance as any).reactRenderCount > 100) {
+    if (performance.reactRenderCount && performance.reactRenderCount > 100) { // Non-standard React DevTools marker
       warnings.push('Excessive React re-renders detected');
     }
 
@@ -909,8 +909,8 @@ export class SingularityAutonomyEngine {
   private clearFrontendCaches(): void {
     // Nettoyer caches React Query, etc.
     try {
-      if ((window as any).queryClient) {
-        (window as any).queryClient.clear();
+      if (window.queryClient) { // Window-attached ReactQuery client
+        window.queryClient.clear();
       }
     } catch (error) {
       logger.warn('[AutonomyEngine] Cache clear failed:', error);
@@ -962,8 +962,8 @@ export class SingularityAutonomyEngine {
   private cleanMemory(): void {
     // Nettoyer mémoire JavaScript
     try {
-      if ((global as any).gc) {
-        (global as any).gc();
+      if (typeof gc !== 'undefined' && gc) { // V8 GC API (Node.js / --expose-gc flag)
+        gc();
       }
     } catch (error) {
       // GC not available

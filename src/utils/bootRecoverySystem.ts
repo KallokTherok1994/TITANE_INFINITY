@@ -113,7 +113,7 @@ class TitaneBootRecovery {
   public async startIntelligentBoot(): Promise<boolean> {
     logger.info('🚀 [BOOT-RECOVERY] Starting intelligent boot process...');
 
-    if (typeof window !== 'undefined' && (window as any).__TITANE_REACT_ROOT) {
+    if (typeof window !== 'undefined' && window.__TITANE_REACT_ROOT) {
       logger.info(
         '✅ [BOOT-RECOVERY] Existing React root detected, skipping recovery boot'
       );
@@ -167,11 +167,11 @@ class TitaneBootRecovery {
     const attempt: BootAttempt = {
       id: `boot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: Date.now(),
-      strategy: strategyName as any,
+      strategy: strategyName as BootAttempt['strategy'],
       success: false,
       duration: 0,
       userAgent: navigator.userAgent,
-      memoryUsage: (performance as any).memory?.usedJSHeapSize || undefined,
+      memoryUsage: performance.memory?.usedJSHeapSize || undefined,
     };
 
     const startTime = Date.now();
@@ -238,13 +238,12 @@ class TitaneBootRecovery {
 
       // Importer App dynamiquement avec bon typage
       const AppModule = await import('../App');
-      const App = (AppModule as any).default || (AppModule as any).App;
+      const App = (AppModule as { default?: unknown; App?: unknown }).default || (AppModule as { default?: unknown; App?: unknown }).App;
 
       // Importer React dynamiquement avec bon typage
       const ReactModule = await import('react');
-      const React = (ReactModule as any).default || ReactModule;
-
-      // Vérifier que les modules sont correctement chargés
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const React = ((ReactModule as any).default || ReactModule) as typeof import('react');
       if (!createRoot || !App || !React) {
         throw new Error('Failed to load core React modules');
       }
@@ -273,7 +272,7 @@ class TitaneBootRecovery {
               'Loading TITANE∞...'
             ),
           },
-          React.createElement(App)
+          React.createElement(App as React.ComponentType)
         );
 
         root.render(AppWithErrorBoundary);
@@ -305,7 +304,8 @@ class TitaneBootRecovery {
 
       // Importer React avec bon typage
       const ReactModule = await import('react');
-      const React = (ReactModule as any).default || ReactModule;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const React = ((ReactModule as any).default || ReactModule) as typeof import('react');
 
       // Créer une app minimaliste
       const SafeApp = React.createElement(
@@ -622,7 +622,7 @@ class TitaneBootRecovery {
       `Boot Recovery System v30.0.0`,
       `Current Time: ${new Date().toISOString()}`,
       `User Agent: ${navigator.userAgent.substring(0, 80)}...`,
-      `Memory Usage: ${(performance as any).memory?.usedJSHeapSize ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024) + 'MB' : 'N/A'}`,
+      `Memory Usage: ${performance.memory?.usedJSHeapSize ? Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) + 'MB' : 'N/A'}`,
       `Total Boot Attempts: ${this.bootAttempts.length}`,
       `Recent Failures: ${this.getRecentBootFailures().length}`,
       `Emergency Mode: ${this.emergencyMode ? 'YES' : 'NO'}`,

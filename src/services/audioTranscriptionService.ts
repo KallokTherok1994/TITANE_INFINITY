@@ -106,7 +106,8 @@ export const audioTranscriptionService = {
       try {
         // Vérifier support
         const SpeechRecognition =
-          (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition; // Vendor WebSpeech API
 
         if (!SpeechRecognition) {
           return resolve({
@@ -115,7 +116,8 @@ export const audioTranscriptionService = {
           });
         }
 
-        const recognition = new SpeechRecognition();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const recognition = new SpeechRecognition() as any;
         const transcript: string[] = [];
         let isListening = false;
         let timeoutHandle: ReturnType<typeof setTimeout> | null = null;

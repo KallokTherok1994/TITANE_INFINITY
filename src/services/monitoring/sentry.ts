@@ -134,8 +134,8 @@ export function initSentry(): void {
       event.contexts = {
         ...event.contexts,
         titane: {
-          memory_usage: (performance as any).memory?.usedJSHeapSize || 0,
-          connection: (navigator as any).connection?.effectiveType || 'unknown',
+          memory_usage: performance.memory?.usedJSHeapSize || 0,
+          connection: navigator.connection?.effectiveType || 'unknown',
           online: navigator.onLine,
         },
       };
@@ -220,7 +220,7 @@ export function captureClassifiedError(
         details: classifiedError.details,
         recovery: classifiedError.recovery,
       },
-      error_context: classifiedError.context as any,
+      error_context: classifiedError.context as Record<string, unknown> | undefined,
     },
     fingerprint: [
       // Grouper les erreurs similaires
@@ -442,7 +442,7 @@ export function testSentry(): void {
     captureClassifiedError(
       {
         type: 'TestError',
-        severity: 'warning' as any,
+        severity: 'warning' as ErrorSeverity,
         message: 'Test Sentry monitoring',
         details: 'Ceci est un test volontaire',
         recovery: 'Aucune action requise',

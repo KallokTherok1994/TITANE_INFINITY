@@ -90,5 +90,5 @@ export const chatLogger = {
 
 // Expose globally for debug
 if (typeof window !== 'undefined') {
-  (window as any).chatLogger = chatLogger;
+  window.chatLogger = chatLogger;
 }

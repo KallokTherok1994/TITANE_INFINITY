@@ -193,8 +193,8 @@ export class WebAssemblyCompute {
 
     // Max memory (conservative estimate)
     const maxMemoryMB =
-      typeof performance !== 'undefined' && (performance as any).memory?.jsHeapSizeLimit
-        ? Math.floor((performance as any).memory.jsHeapSizeLimit / (1024 * 1024))
+      typeof performance !== 'undefined' && performance.memory?.jsHeapSizeLimit
+        ? Math.floor(performance.memory.jsHeapSizeLimit / (1024 * 1024))
         : 2048; // Default 2GB
 
     return {
@@ -334,7 +334,7 @@ export class WebAssemblyCompute {
       throw new Error('WASM not initialized');
     }
 
-    const exports = this.wasmInstance.exports as any;
+    const exports = this.wasmInstance.exports as WebAssembly.Exports;
     const memory = new Float32Array(this.wasmMemory.buffer);
 
     switch (task.type) {
@@ -356,7 +356,8 @@ export class WebAssemblyCompute {
 
           // Call WASM function
           if (exports.vector_add) {
-            exports.vector_add(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (exports.vector_add as any)(
               aPtrOffset * 4, // byte offset
               bPtrOffset * 4,
               outPtrOffset * 4,
@@ -505,7 +506,7 @@ export class WebAssemblyCompute {
             return {
               taskId: task.id,
               success: true,
-              output: result.flat() as any,
+              output: result.flat() as number[],
               executionTime: 0,
               usedWASM: false,
             };

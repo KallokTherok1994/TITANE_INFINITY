@@ -333,7 +333,7 @@ export const PerformanceDashboard: React.FC = () => {
 
 // Make functions available globally for debugging
 if (typeof window !== 'undefined') {
-  (window as any).__TITANE_PERFORMANCE__ = {
+  window.__TITANE_PERFORMANCE__ = {
     getStats: getAllStats,
     getComponentStats,
     getComponentMetrics,

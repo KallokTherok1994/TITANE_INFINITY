@@ -254,7 +254,7 @@ class TitaneAIPredictiveEngine {
   ): PredictionResult {
     // Extraire les features du modèle depuis les métriques
     const features = model.features.map(feature => {
-      const value = (_metrics as any)[feature];
+      const value = (_metrics as Record<string, unknown>)[feature];
       return this.normalizeFeature(feature, value ?? 0);
     }) as number[];
 
@@ -360,7 +360,7 @@ class TitaneAIPredictiveEngine {
 
     const severity = probability > 0.8 ? 'high' : probability > 0.5 ? 'medium' : 'low';
     return (
-      (recommendations as any)[modelId]?.[severity] ||
+      (recommendations as Record<string, Record<string, string>>)[modelId]?.[severity] ||
       'Monitor system closely and be prepared for intervention.'
     );
   }
@@ -397,7 +397,7 @@ class TitaneAIPredictiveEngine {
       user_experience_impact: 420000, // 7 minutes
     };
 
-    const time = (baseTime as any)[modelId] || 300000;
+    const time = (baseTime as Record<string, number>)[modelId] || 300000;
     return Math.max(time * (1 - probability), 30000); // Minimum 30 secondes
   }
 
@@ -513,7 +513,7 @@ class TitaneAIPredictiveEngine {
 
   private getMemoryUsage(): number {
     if (typeof window === 'undefined' || !('performance' in window)) return 0;
-    const memory = (window.performance as any).memory;
+      const memory = window.performance.memory;
     return memory ? memory.usedJSHeapSize / 1024 / 1024 : 0;
   }
 

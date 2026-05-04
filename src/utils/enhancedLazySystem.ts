@@ -247,7 +247,7 @@ export const createEnhancedLazyComponent = <T extends React.ComponentType<any>>(
   }
 
   return {
-    component: lazyComponent as any,
+    component: lazyComponent as React.LazyExoticComponent<T>,
     preloader,
     getCacheInfo,
   };
@@ -367,7 +367,7 @@ function getNetworkCondition(): string {
     return 'unknown';
   }
 
-  const connection = (navigator as any).connection;
+  const connection = navigator.connection;
   if (!connection) return 'unknown';
 
   const effectiveType = connection.effectiveType || 'unknown';
@@ -387,7 +387,7 @@ function getMemoryUsage(): number {
     return 0;
   }
 
-  const memory = (window.performance as any).memory;
+  const memory = window.performance.memory;
   return memory ? memory.usedJSHeapSize / 1024 / 1024 : 0; // MB
 }
 
@@ -408,9 +408,9 @@ function recordDetailedDiagnostic(info: DetailedDiagnosticInfo): void {
   });
 
   // Envoyer à un système d'analytics si configuré
-  if (typeof window !== 'undefined' && (window as any).TITANE_ANALYTICS) {
+  if (typeof window !== 'undefined' && window.TITANE_ANALYTICS) {
     try {
-      (window as any).TITANE_ANALYTICS.track('lazy_load_diagnostic', info);
+      window.TITANE_ANALYTICS.track('lazy_load_diagnostic', info);
     } catch (error) {
       logger.warn('Failed to send analytics:', error);
     }

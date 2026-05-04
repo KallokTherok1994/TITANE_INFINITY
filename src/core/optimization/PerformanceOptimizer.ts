@@ -206,7 +206,7 @@ export class PerformanceOptimizer {
       }
 
       // Métriques frontend
-      const memoryInfo = (performance as any).memory;
+      const memoryInfo = performance.memory; // Chrome non-standard API — typed via global.d.ts
       const frontendMetrics: Partial<PerformanceMetrics> = {
         memory_usage: memoryInfo?.usedJSHeapSize || 0,
         memory_available: memoryInfo?.jsHeapSizeLimit || 0,
@@ -354,8 +354,8 @@ export class PerformanceOptimizer {
       }
 
       // Force GC si disponible
-      if (this.config.gc_optimization && (window as any).gc) {
-        (window as any).gc();
+      if (this.config.gc_optimization && window.gc) {
+        window.gc(); // Chrome DevTools GC API — typed via global.d.ts
       }
 
       return {

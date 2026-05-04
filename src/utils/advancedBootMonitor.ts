@@ -170,8 +170,8 @@ class AdvancedBootHealthMonitor {
             const navEntry = entry as PerformanceNavigationTiming;
             logger.info('🎯 [BOOT-MONITOR] Navigation metrics:', {
               domContentLoaded:
-                navEntry.domContentLoadedEventEnd - (navEntry as any).navigationStart,
-              loadComplete: navEntry.loadEventEnd - (navEntry as any).navigationStart,
+                navEntry.domContentLoadedEventEnd - navEntry.startTime, // navigationStart deprecated → startTime
+              loadComplete: navEntry.loadEventEnd - navEntry.startTime,
               firstPaint: this.getFirstPaint(),
             });
           }
@@ -241,7 +241,7 @@ class AdvancedBootHealthMonitor {
       return;
 
     const checkMemory = () => {
-      const memory = (window.performance as any).memory;
+      const memory = window.performance.memory;
       if (memory) {
         const memoryUsageMB = memory.usedJSHeapSize / 1024 / 1024;
         this.metrics.memoryUsage = memoryUsageMB;

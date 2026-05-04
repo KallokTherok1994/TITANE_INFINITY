@@ -23,5 +23,5 @@ export function clearMenuCache(): void {
 
 // Auto-exécution si appelé directement
 if (typeof window !== 'undefined') {
-  (window as any).clearMenuCache = clearMenuCache;
+  window.clearMenuCache = clearMenuCache;
 }

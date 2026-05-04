@@ -740,10 +740,11 @@ class TitaneQuantumIntelligence {
     this.consciousnessState.intuition_strength += alpha * processingSpeed * 0.03;
 
     // Normaliser les valeurs
-    Object.keys(this.consciousnessState).forEach(key => {
-      const value = (this.consciousnessState as any)[key];
+    const state = this.consciousnessState as Record<string, unknown>;
+    Object.keys(state).forEach(key => {
+      const value = state[key];
       if (typeof value === 'number') {
-        (this.consciousnessState as any)[key] = Math.max(0, Math.min(1, value));
+        state[key] = Math.max(0, Math.min(1, value));
       }
     });
 

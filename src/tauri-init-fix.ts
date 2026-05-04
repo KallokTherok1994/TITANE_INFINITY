@@ -10,22 +10,20 @@
   const startTime = performance.now();
 
   function checkTauri() {
-    const w = window as any;
-
     // Tauri v2 devrait injecter __TAURI__ globalement
-    if (w.__TAURI__ && w.__TAURI__.core && w.__TAURI__.core.invoke) {
+    if (window.__TAURI__?.core && window.__TAURI__.core.invoke) {
       console.warn('✅ [TauriInit] Tauri detected and initialized');
       // ✅ SET INITIALIZATION FLAG for TauriProtector
-      w.__TITANE_TAURI_INITIALIZED = true;
+      window.__TITANE_TAURI_INITIALIZED = true;
       window.dispatchEvent(new Event('tauri-ready'));
       return true;
     }
 
     // Vérifier aussi __TAURI_INTERNALS__
-    if (w.__TAURI_INTERNALS__) {
+    if (window.__TAURI_INTERNALS__) {
       console.warn('✅ [TauriInit] Tauri internals detected');
       // ✅ SET INITIALIZATION FLAG for TauriProtector
-      w.__TITANE_TAURI_INITIALIZED = true;
+      window.__TITANE_TAURI_INITIALIZED = true;
       window.dispatchEvent(new Event('tauri-ready'));
       return true;
     }
@@ -55,9 +53,8 @@
       window.dispatchEvent(new Event('tauri-not-available'));
 
       // Marquer que nous ne sommes probablement pas en Tauri
-      const w = window as any;
-      if (!w.__TITANE_NOT_TAURI__) {
-        w.__TITANE_NOT_TAURI__ = true;
+      if (!window.__TITANE_NOT_TAURI__) {
+        window.__TITANE_NOT_TAURI__ = true;
         console.warn('💡 [TauriInit] Set __TITANE_NOT_TAURI__ flag');
       }
     }

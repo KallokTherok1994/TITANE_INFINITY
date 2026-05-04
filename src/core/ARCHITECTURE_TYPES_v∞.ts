@@ -409,6 +409,10 @@ export interface TauriWindow {
 
 export interface TauriAPI {
   window: TauriWindow;
+  /** Tauri v2 core API (invoke, etc.) */
+  core?: { invoke?: (...args: unknown[]) => unknown };
+  /** Tauri app API */
+  app?: { getVersion?: () => Promise<string> };
 }
 
 // Global window extension for Tauri runtime

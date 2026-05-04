@@ -488,8 +488,8 @@ class TitaneSelfHealingSystem {
       }
 
       // Forcer le garbage collection si disponible
-      if (typeof window !== 'undefined' && (window as any).gc) {
-        (window as any).gc();
+      if (typeof window !== 'undefined' && window.gc) {
+        window.gc();
       }
 
       return {
@@ -538,7 +538,7 @@ class TitaneSelfHealingSystem {
     try {
       // Identifier les modules échoués depuis le boot health monitor
       const healthReport = bootHealthMonitor.generateReport();
-      const failedModules = (healthReport as any).performance?.failedModules || [];
+      const failedModules = (healthReport as Record<string, unknown> & { performance?: { failedModules?: unknown[] } }).performance?.failedModules || [];
 
       let restarted = 0;
 

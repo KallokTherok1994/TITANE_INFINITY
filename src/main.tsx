@@ -8,9 +8,9 @@
 
 // ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER
 logger.info('[BOOT] main.tsx start');
-(window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
-(window as any).__TITANE_BOOT__.main_tsx = true;
-(window as any).__TITANE_BOOT__.main_tsx_timestamp = Date.now();
+window.__TITANE_BOOT__ = window.__TITANE_BOOT__ || {};
+window.__TITANE_BOOT__.main_tsx = true;
+window.__TITANE_BOOT__.main_tsx_timestamp = Date.now();
 if (typeof document !== 'undefined') {
   document.documentElement.dataset.titane = 'main_tsx';
 }
@@ -1179,8 +1179,9 @@ logger.info('>>> MOUNTING REACT ROOT NOW...\n');
 // Evidence: tauri.conf.json:47-63, App.tsx:456, main.rs:952+976, ollama.ts:156-165
 const _titaneCurrentWindowLabel: string = (() => {
   try {
-    const internals = (window as any).__TAURI_INTERNALS__;
-    const label = internals?.metadata?.currentWindow?.label;
+    const internals = window.__TAURI_INTERNALS__;
+    const internalsRecord = internals as { metadata?: { currentWindow?: { label?: unknown } } } | undefined;
+    const label = internalsRecord?.metadata?.currentWindow?.label;
     return typeof label === 'string' && label.length > 0 ? label : 'main';
   } catch {
     return 'main';

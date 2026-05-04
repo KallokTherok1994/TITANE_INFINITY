@@ -132,7 +132,7 @@ export class SessionGuard {
 
     const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
     events.forEach(event => {
-      window.removeEventListener(event, this.handleActivity, { passive: true } as any);
+      window.removeEventListener(event, this.handleActivity);
     });
   }
 

@@ -150,8 +150,8 @@ export class PerformanceGuard {
    */
   private getMemoryUsage(): number {
     if ('memory' in performance) {
-      const memory = (performance as any).memory;
-      return memory.usedJSHeapSize / (1024 * 1024); // Convert to MB
+      const memory = performance.memory;
+      return memory!.usedJSHeapSize / (1024 * 1024); // Convert to MB
     }
     return 0;
   }

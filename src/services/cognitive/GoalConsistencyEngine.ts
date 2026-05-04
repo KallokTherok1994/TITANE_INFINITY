@@ -243,10 +243,10 @@ export class GoalConsistencyEngine extends EventEmitter {
 
           // Mark completion timestamp
           if (
-            (update as any).status === GoalStatus.COMPLETED &&
-            !(subgoal as any).completed_at
+            (update as Partial<SubGoal>).status === GoalStatus.COMPLETED &&
+            !subgoal.completed_at
           ) {
-            (subgoal as any).completed_at = now;
+            subgoal.completed_at = now;
           }
         }
       }
@@ -632,7 +632,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         if (hasContradiction) {
           violations.push({
             type: 'fact-response' as ConsistencyViolationType,
-            severity: 'high' as any,
+            severity: 'high',
             description: `Response contradicts known fact: "${fact.statement}"`,
             fact_id: fact.id,
             response_excerpt: response.substring(0, 200),
@@ -674,7 +674,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     if (seemsOffTopic && !hasGoalMention) {
       violations.push({
         type: 'goal-response' as ConsistencyViolationType,
-        severity: 'medium' as any,
+        severity: 'medium',
         description: `Response diverges from main goal: "${goal.main_goal}"`,
         goal_id: goal.conversation_id,
         response_excerpt: response.substring(0, 200),
@@ -704,7 +704,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         if (responseLower.includes(prohibitedAction)) {
           violations.push({
             type: 'constraint' as ConsistencyViolationType,
-            severity: 'critical' as any,
+            severity: 'critical',
             description: `Response violates constraint: "${constraint}"`,
             constraint,
             response_excerpt: response.substring(0, 200),
@@ -719,7 +719,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         if (!responseLower.includes(requiredAction)) {
           violations.push({
             type: 'constraint' as ConsistencyViolationType,
-            severity: 'high' as any,
+            severity: 'high',
             description: `Response missing required constraint: "${constraint}"`,
             constraint,
             response_excerpt: response.substring(0, 200),
@@ -769,7 +769,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         if (factTime && responseTime && factTime !== responseTime) {
           violations.push({
             type: 'temporal' as ConsistencyViolationType,
-            severity: 'medium' as any,
+            severity: 'medium',
             description: `Temporal inconsistency detected`,
             fact_id: fact.id,
             response_excerpt: response.substring(0, 200),
@@ -800,8 +800,8 @@ export class GoalConsistencyEngine extends EventEmitter {
 
     // Prioritize violations by severity
     const sortedViolations = [...violations].sort((a, b) => {
-      const weights = this.config.violation_severity_weights;
-      return (weights as any)[b.severity] - (weights as any)[a.severity];
+      const weights = this.config.violation_severity_weights as Record<string, number>;
+      return (weights[b.severity] ?? 0) - (weights[a.severity] ?? 0);
     });
 
     const topViolation = sortedViolations[0];
@@ -941,9 +941,9 @@ export class GoalConsistencyEngine extends EventEmitter {
   private calculateCorrectionConfidence(violations: ConsistencyViolation[]): number {
     if (violations.length === 0) return 1.0;
 
-    const weights = this.config.violation_severity_weights;
+    const weights = this.config.violation_severity_weights as Record<string, number>;
     const totalWeight = violations.reduce(
-      (sum, v) => sum + (weights as any)[v.severity],
+      (sum, v) => sum + (weights[v.severity] ?? 0),
       0
     );
     const avgWeight = totalWeight / violations.length;
@@ -1037,9 +1037,9 @@ export class GoalConsistencyEngine extends EventEmitter {
 
     if (recentViolations.length === 0) return 1.0;
 
-    const weights = this.config.violation_severity_weights;
+    const weights = this.config.violation_severity_weights as Record<string, number>;
     const totalPenalty = recentViolations.reduce(
-      (sum, v) => sum + (weights as any)[v.severity],
+      (sum, v) => sum + (weights[v.severity] ?? 0),
       0
     );
 

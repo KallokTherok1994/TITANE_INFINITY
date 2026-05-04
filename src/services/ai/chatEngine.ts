@@ -1461,7 +1461,7 @@ Format: [Audit complet] + [Réponse utilisateur]
       autoHealed ||= memoryAutoHealed;
 
       if (cognitiveStatus === 'fulfilled' && traceId) {
-        await cognitiveOmega.logPhase(traceId, 'memory_saved', {
+        await cognitiveOmega.logPhase(traceId, 'memory_update', { // 'memory_saved' is not in PhaseName union
           conversation_id,
           mode: finalConfig.mode,
         });

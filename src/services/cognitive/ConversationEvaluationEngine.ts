@@ -896,7 +896,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
     const overallMetrics = this.averageMetrics(evaluations.map(e => e.metrics));
 
     // Calculate per-metric trends
-    const metricTrends: Record<MetricName, number[]> = {} as any;
+    const metricTrends: Record<MetricName, number[]> = {} as Record<MetricName, number[]>;
     for (const metric of this.config.metrics_to_track) {
       metricTrends[metric] = evaluations.map(e => e.metrics[metric] ?? 0);
     }

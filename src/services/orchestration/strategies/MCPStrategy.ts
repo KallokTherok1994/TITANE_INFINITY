@@ -87,23 +87,26 @@ export class MCPStrategy
 
     const startTime = Date.now();
 
+    // Typed params helper — avoids `as any` on unknown params
+    const p = params as Record<string, unknown>;
+
     try {
       let result: unknown;
 
       switch (operation) {
         case 'createJob':
           result = await this.createJob(
-            (params as any)?.type || 'generic',
-            (params as any)?.priority || 'medium'
+            (p?.['type'] as string) || 'generic',
+            (((p?.['priority'] as string) || 'medium') as 'low' | 'medium' | 'high' | 'critical')
           );
           break;
 
         case 'evaluateJob':
-          result = await this.evaluateJob((params as any)?.jobId);
+          result = await this.evaluateJob(p?.['jobId'] as string);
           break;
 
         case 'listJobs':
-          result = this.listJobs((params as any)?.filter);
+          result = this.listJobs(p?.['filter'] as { status?: string } | undefined);
           break;
 
         case 'scanStability':

@@ -190,7 +190,7 @@ class AdvancedPerformanceOptimizer {
   }
 
   private async optimizeMemoryUsage(aggressiveness: number): Promise<any> {
-    const before = (window.performance as any).memory?.usedJSHeapSize || 0;
+    const before = window.performance.memory?.usedJSHeapSize || 0;
 
     try {
       logger.info(
@@ -212,11 +212,11 @@ class AdvancedPerformanceOptimizer {
       }
 
       // Force garbage collection si disponible
-      if (aggressiveness > 0.7 && (window as any).gc) {
-        (window as any).gc();
+      if (aggressiveness > 0.7 && window.gc) {
+        window.gc();
       }
 
-      const after = (window.performance as any).memory?.usedJSHeapSize || 0;
+      const after = window.performance.memory?.usedJSHeapSize || 0;
       const improvement = Math.max(
         0,
         before > 0 ? ((before - after) / before) * 100 : 10
@@ -652,7 +652,7 @@ class AdvancedPerformanceOptimizer {
     if (typeof window === 'undefined' || !('navigator' in window)) return;
 
     // Adapter les stratégies selon la connexion
-    const connection = (navigator as any).connection;
+    const connection = navigator.connection;
     if (connection) {
       const adaptToConnection = () => {
         const isSlowConnection =
@@ -915,7 +915,7 @@ class AdvancedPerformanceOptimizer {
         benchmark.duration
       );
       return acc;
-    }, {} as any);
+    }, {} as Record<string, { total: number; count: number; min: number; max: number; average?: number }>);
 
     Object.keys(averages).forEach(op => {
       averages[op].average = averages[op].total / averages[op].count;
@@ -977,10 +977,10 @@ class AdvancedPerformanceOptimizer {
     if (typeof window === 'undefined') return;
 
     try {
-      const criticalEntries = {};
+      const criticalEntries: Record<string, unknown> = {};
       for (const [key, entry] of this.cache.entries()) {
         if (entry.priority === 'critical') {
-          (criticalEntries as any)[key] = entry;
+          criticalEntries[key] = entry;
         }
       }
 

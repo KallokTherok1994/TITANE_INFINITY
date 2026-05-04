@@ -764,8 +764,8 @@ const routerBase = import.meta.env.BASE_URL?.startsWith('/')
 const App: React.FC = () => {
   // ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER
   if (typeof window !== 'undefined') {
-    (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
-    const bootState = (window as any).__TITANE_BOOT__;
+    window.__TITANE_BOOT__ = window.__TITANE_BOOT__ || {};
+    const bootState = window.__TITANE_BOOT__;
 
     if (!bootState.app_render) {
       bootState.app_render = true;
