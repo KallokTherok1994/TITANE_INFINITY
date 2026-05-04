@@ -29,7 +29,7 @@ incremental = false   # REPRODUCIBILITY: disable incremental compilation for det
 tauri-build = { version = "2.0", features = [] }
 
 [dependencies]
-tauri                          = { version = "2.0", features = ["protocol-asset", "tray-icon"] }
+tauri                          = { version = "2.11", features = ["protocol-asset", "tray-icon"] }
 tauri-plugin-dialog            = "2.7"
 tauri-plugin-deep-link         = "2"
 tauri-plugin-fs                = "2"
@@ -40,7 +40,7 @@ env_logger                     = "0.11"
 rand                           = "0.8"
 chrono                         = { version = "0.4", features = ["serde"] }
 uuid                           = { version = "1.23", features = ["v4", "serde"] }
-tokio                          = { version = "1.51", features = ["full"] }
+tokio                          = { version = "1.52", features = ["full"] }
 thiserror                      = "2.0"
 sysinfo                        = "0.37"
 
