@@ -1,3 +1,13 @@
+# [2026-05-04] Tool Selector Panel — Sélecteur d'outils chat TITANE
+
+- Surface canonique: `tool-selector-btn` (bouton ⚡) + `tool-selector-panel` dans [src/components/chat/ToolSelectorPanel.tsx](src/components/chat/ToolSelectorPanel.tsx), inséré dans la zone `conversation-input-container` de [src/components/sections/ConversationSection.tsx](src/components/sections/ConversationSection.tsx).
+- Registre des outils: [src/features/chat/chatToolsRegistry.ts](src/features/chat/chatToolsRegistry.ts) — 10 outils, 4 catégories (generate/research/reflect/config), pure data sans dépendance React.
+- data-testid stables: `tool-selector-btn`, `tool-selector-panel`, `tool-item-{id}` (10 cartes), `tool-status-online`, `tool-status-deep`.
+- Slash detection: inputValue === '/' → panel ouvert + input effacé, via useEffect dans ConversationSection.
+- Préférence save: pattern `/enregistre dans mes préférences : .+/i` → `userPreferencesEngine.setCustomPreference()` + `resetStaticPromptContextCache()` dans handleSend().
+- Preuves: [src/components/chat/__tests__/ToolSelectorPanel.test.tsx](src/components/chat/__tests__/ToolSelectorPanel.test.tsx) (13 tests PASS), [src/features/chat/__tests__/chatToolsRegistry.test.ts](src/features/chat/__tests__/chatToolsRegistry.test.ts) (37 tests PASS). Total: 50/50.
+- AutoHeal: AH-20260504-TOOL-SELECTOR-0001.
+
 # [2026-05-02] Chat daily-mode conversational truth
 
 - Surface canonique de budget par mode: [src/services/ai/chatEngine.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/chatEngine.ts) transmet `modeConfig.maxTokens` à [src/services/ai/responsePolicy.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/responsePolicy.ts), qui le respecte désormais comme cap runtime explicite au lieu de le laisser être gonflé par le profil canonique.

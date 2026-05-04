@@ -1,0 +1,250 @@
+/**
+ * TITANE∞ — Tool Selector Panel Styles
+ * Design cohérent avec ChatToolbar.css — palette dark TITANE.
+ */
+
+/* ─── Wrapper (positionnement relatif) ───────────────────────────────────── */
+.tool-selector-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ─── Panel (s'ouvre vers le haut) ──────────────────────────────────────── */
+.tool-selector-panel {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  z-index: 200;
+  width: 360px;
+  max-height: 480px;
+  overflow-y: auto;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 16, 35, 0.98) 0%,
+    rgba(20, 30, 55, 0.97) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 14px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(59, 130, 246, 0.1) inset;
+  backdrop-filter: blur(16px);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: toolPanelSlideUp 0.18s ease-out;
+}
+
+@keyframes toolPanelSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+.tool-selector-panel::-webkit-scrollbar {
+  width: 4px;
+}
+.tool-selector-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tool-selector-panel::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+}
+
+/* ─── Status bar ─────────────────────────────────────────────────────────── */
+.tool-selector-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tool-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.tool-status-badge.online {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.tool-status-badge.offline {
+  background: rgba(107, 114, 128, 0.15);
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tool-status-badge.deep {
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+}
+
+.tool-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+.tool-selector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.25rem;
+}
+
+.tool-selector-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tool-selector-hint {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.tool-selector-hint kbd {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ─── Catégorie ──────────────────────────────────────────────────────────── */
+.tool-category-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tool-category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.67rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 0.15rem 0.1rem;
+}
+
+/* ─── Grille d'outils ────────────────────────────────────────────────────── */
+.tool-category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+/* ─── Carte outil ────────────────────────────────────────────────────────── */
+.tool-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.55rem 0.6rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.tool-card:hover {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+.tool-card:active {
+  transform: translateY(0);
+}
+
+.tool-card-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.tool-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.tool-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-card-desc {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Badge "envoi auto" */
+.tool-card-auto-badge {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  font-size: 0.6rem;
+  color: rgba(59, 130, 246, 0.7);
+  line-height: 1;
+}
+
+/* ─── Responsive compact ─────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .tool-selector-panel {
+    width: calc(100vw - 2rem);
+    left: 0;
+  }
+
+  .tool-category-grid {
+    grid-template-columns: 1fr;
+  }
+}

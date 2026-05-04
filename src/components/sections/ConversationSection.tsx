@@ -27,6 +27,7 @@ import type {
   ConversationMode,
   ConversationProviderPreference,
 } from '@/services/conversationEngine';
+import { resetStaticPromptContextCache } from '@/services/conversationEngine';
 import {
   buildConversationProviders,
   DEFAULT_CONVERSATION_PROVIDER_READINESS,
@@ -84,6 +85,8 @@ import {
   type ChatModeId as ModernChatModeId,
 } from '@/services/ai/chatModes.config';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
+import { ToolSelectorPanel } from '@/components/chat/ToolSelectorPanel';
+import { type ChatTool } from '@/features/chat/chatToolsRegistry';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -1564,6 +1567,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const [showSearch, setShowSearch] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [generatedFiles, setGeneratedFiles] = useState<GeneratedFileEntry[]>([]);
+    const [showToolSelector, setShowToolSelector] = useState(false);
 
     // ─── E2E TEST BRIDGE ─────────────────────────────────────────────────────
     // Active uniquement quand window.__TITANE_E2E_GENERATED_FILE__ est défini
@@ -1592,6 +1596,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         return nextValue;
       });
     }, []);
+
+    // ─── SLASH DETECTION : "/" seul ouvre le sélecteur d'outils ─────────────
+    useEffect(() => {
+      if (inputValue === '/') {
+        updateInputValue('');
+        setShowToolSelector(true);
+      }
+    }, [inputValue, updateInputValue]);
 
     // ═══ THINKING STEPS ═══
     const thinking = useThinkingSteps();
@@ -2342,6 +2354,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       const messageText = sanitized;
       updateInputValue('');
 
+      // ─── Détection "Enregistre dans mes préférences : <valeur>" ──────────
+      const PREF_SAVE_RE = /^enregistre dans mes pr[eé]f[eé]rences\s*:\s*(.+)$/i;
+      const prefMatch = messageText.match(PREF_SAVE_RE);
+      if (prefMatch && prefMatch[1]) {
+        const prefValue = prefMatch[1].trim();
+        userPreferencesEngine.setCustomPreference(`user_pref_${Date.now()}`, prefValue);
+        resetStaticPromptContextCache(); // invalide le cache pour le prochain message
+        // Continue vers le LLM pour acknowledgment — pas de return anticipé
+      }
+
       const artifactContract = buildArtifactActionContract(messageText);
       let messageToSend = messageText;
       let pendingFileSave: {
@@ -2663,6 +2685,25 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         }
       },
       [handleSend]
+    );
+
+    // ─── TOOL SELECTOR HANDLER ───────────────────────────────────────────────
+    const handleToolSelect = useCallback(
+      async (tool: ChatTool) => {
+        setShowToolSelector(false);
+        if (tool.autoSend) {
+          // Mettre à jour le ref immédiatement avant que handleSend le lise
+          inputValueRef.current = tool.templateText;
+          setInputValue(tool.templateText);
+          // Laisser React flusher l'état avant d'envoyer
+          await new Promise<void>(resolve => setTimeout(resolve, 0));
+          await handleSend();
+        } else {
+          updateInputValue(tool.templateText);
+          conversationInputRef.current?.focus();
+        }
+      },
+      [handleSend, updateInputValue]
     );
 
     const handleClearChat = useCallback(async () => {
@@ -3365,6 +3406,21 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               data-state={isLoading ? 'loading' : 'ready'}
               aria-hidden="true"
               style={{ display: 'none' }}
+            />
+            {/* ═══ TOOL SELECTOR ═══ */}
+            <ToolSelectorPanel
+              isOpen={showToolSelector}
+              onToggle={() => setShowToolSelector(prev => !prev)}
+              onClose={() => setShowToolSelector(false)}
+              onToolSelect={handleToolSelect}
+              isOnline={navigator.onLine}
+              deepAnalysisActive={
+                userPreferencesEngine.getPreferences().customPreferences[
+                  'deep_internet_analysis'
+                ] === true
+              }
+              disabled={isLoading}
+              data-testid="tool-selector-panel-container"
             />
             <textarea
               ref={conversationInputRef}

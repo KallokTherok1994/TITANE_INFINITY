@@ -1,3 +1,15 @@
+## 2026-05-04 — Tool Selector Panel — Sélecteur d'outils chat (Ring 4 UI)
+
+> **Nouveau composant Ring 4** : `src/components/chat/ToolSelectorPanel.tsx` + `ToolSelectorPanel.css` — Panneau de sélection de 10 outils/raccourcis chat organisés en 4 catégories (GÉNÉRER / RECHERCHE & ANALYSE / RÉFLEXION / CONFIGURATION). Le bouton déclencheur ⚡ (`data-testid=tool-selector-btn`) s'insère dans `conversation-input-container` de `ConversationSection`. Chaque outil injecte soit un template dans le textarea (autoSend=false) soit envoie directement le message (autoSend=true).
+
+> **Registre pur** : `src/features/chat/chatToolsRegistry.ts` — 10 `ChatTool` avec id, icon, label, description, category, templateText, autoSend. Aucune dépendance React.
+
+> **Modifications ConversationSection** : (1) import `ToolSelectorPanel` + `ChatTool` + `resetStaticPromptContextCache`; (2) state `showToolSelector`; (3) useEffect slash-detection (`inputValue==='/'` → panel ouvert); (4) `handleToolSelect` (autoSend → setTimeout+handleSend; !autoSend → updateInputValue+focus); (5) pattern détection préférence save dans handleSend (`/enregistre dans mes préférences : .+/i` → `setCustomPreference` + `resetStaticPromptContextCache`).
+
+> **Couverture tests** : `src/components/chat/__tests__/ToolSelectorPanel.test.tsx` (13 tests) + `src/features/chat/__tests__/chatToolsRegistry.test.ts` (37 tests) = **50/50 PASS**.
+
+> **AutoHeal** : AH-20260504-TOOL-SELECTOR-0001.
+
 ## 2026-05-03 — Memory access pipeline hardening (Itération 2) — v33.0.3
 
 > **Pipeline mémoire runtime complet** — 6 corrections appliquées sur le chemin critique `getKnowledge() → loadContext() → canonicalDiscernmentKernel → shouldInjectMemory gate → buildSystemPrompt`.
