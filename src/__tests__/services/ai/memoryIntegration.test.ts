@@ -1052,4 +1052,43 @@ describe('memoryIntegration', () => {
       expect(parsed.percentage).toBe(100);
     });
   });
+
+  // Phase 1 regression — Ph1-IT3: decision.title used instead of (decision as any).summary
+  it('buildShadowReadQuery: decision.title is used — shadow query never contains "undefined"', async () => {
+    // Decision has no "summary" field on DecisionSummary — the old code cast to any
+    // and accessed .summary which returned undefined, then the string "undefined" leaked into the query.
+    memoryServiceMock.getActiveProjects.mockResolvedValue([]);
+    memoryServiceMock.getRecentDecisions.mockResolvedValue([
+      {
+        id: 'd1',
+        title: 'Décision de migration DB',
+        timestamp: '2026-05-01T00:00:00Z',
+        category: 'strategic',
+        impact: 'high',
+        status: 'implemented',
+        rationale: 'Performance et résilience',
+      },
+    ]);
+    memoryServiceMock.getKnowledge.mockResolvedValue([]);
+    memoryServiceMock.getActiveRituals.mockResolvedValue([]);
+    localStorage.setItem('titane_hybrid_memory_shadow_read_enabled', 'true');
+
+    const { memoryIntegration } = await import('@/services/ai/memoryIntegration');
+
+    await memoryIntegration.loadContext({
+      includeProjects: false,
+      includeDecisions: true,
+      includeKnowledge: false,
+      includeRituals: false,
+      includeTimeline: false,
+    });
+
+    const diag = memoryIntegration.getHybridMemoryDiagnostics();
+    // The shadow read query must contain the decision title, not "undefined"
+    expect(diag.lastShadowReadQuery).toContain('Décision de migration DB');
+    expect(diag.lastShadowReadQuery).not.toContain('undefined');
+    // Canonical labels must also use decision.title
+    expect(diag.lastShadowReadCanonicalPreview).toContain('Décision de migration DB');
+    expect(diag.lastShadowReadCanonicalPreview).not.toContain('undefined');
+  });
 });

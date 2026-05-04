@@ -641,7 +641,7 @@ function deriveStructuredEntrySummary(entry: StructuredMemoryEntry): string {
 function buildShadowReadQuery(context: MemoryContext): string {
   const rawSegments = [
     ...context.activeProjects.map(project => project.title),
-    ...context.recentDecisions.map(decision => (decision as any).summary),
+    ...context.recentDecisions.map(decision => decision.title),
     ...context.relevantKnowledge.map(knowledge => knowledge.title),
     ...context.activeRituals.map(ritual => ritual.name),
   ];
@@ -692,7 +692,7 @@ function collectCanonicalContextLabels(context: MemoryContext): string[] {
     new Set(
       [
         ...context.activeProjects.map(project => project.title),
-        ...context.recentDecisions.map(decision => (decision as any).summary),
+        ...context.recentDecisions.map(decision => decision.title),
         ...context.relevantKnowledge.map(knowledge => knowledge.title),
         ...context.activeRituals.map(ritual => ritual.name),
         ...context.timeline.map(entry => entry.title),
