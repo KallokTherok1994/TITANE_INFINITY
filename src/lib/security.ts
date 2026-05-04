@@ -1359,6 +1359,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'meta_energy_get_forecast',
   'meta_energy_apply_delta',
   'meta_energy_get_diagnostics',
+
+  // ═══════════════════════════════════════════════════════════════
+  // OAUTH — Facebook PKCE (v33.0.5)
+  // ═══════════════════════════════════════════════════════════════
+  'oauth_facebook_initiate',
+  'oauth_facebook_callback',
+  'oauth_facebook_get_profile',
+  'oauth_facebook_logout',
 ]);
 
 /**

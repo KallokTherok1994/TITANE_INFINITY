@@ -18,6 +18,8 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { initializeSecurity } from './security'; // ✨ SPRINT 2: Security module initialization
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
+import { useOAuthStore } from '@/core/auth/oauthStore';
 
 import { useLivingEngines } from './hooks/useLivingEngines';
 import { logger } from './lib/logger';
@@ -254,6 +256,27 @@ const emitBootMarker = (marker: string): void => {
  */
 export const AppRouter: React.FC = () => {
   const location = useLocation();
+  const { handleCallback: handleOAuthCallback } = useOAuthStore();
+
+  // Deep-link handler: titane://auth/callback?code=...&state=...
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    onOpenUrl((urls) => {
+      for (const url of urls) {
+        if (url.startsWith('titane://auth/callback')) {
+          void handleOAuthCallback(url);
+        }
+      }
+    })
+      .then((fn) => {
+        unlisten = fn;
+      })
+      .catch((err) => {
+        logger.warn('[DeepLink] onOpenUrl setup failed', { error: err });
+      });
+    return () => unlisten?.();
+  }, [handleOAuthCallback]);
+
   useEffect(() => {
     emitBootMarker('BOOT:AFTER_ROUTER');
     emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
