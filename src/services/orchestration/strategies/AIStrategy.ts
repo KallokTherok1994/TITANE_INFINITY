@@ -24,6 +24,24 @@ import { aiOrchestrator } from '@/services/ai/orchestrator';
 // import { aiOrchestrator } from '@/services/ai/orchestrator_OMNIS_v1'; // Not exported
 import type { AIConfig, AIMessage, ProviderChoice } from '@/services/ai/types';
 
+// ─────────────────────────────────────────────────────────────────────────
+// TYPED PARAMETER INTERFACES (one per execute() operation)
+// ─────────────────────────────────────────────────────────────────────────
+interface SelectProviderParams {
+  criteria?: {
+    preferLocal?: boolean;
+    maxLatency?: number;
+    mode?: string;
+    latency?: string;
+    requiresCode?: boolean;
+    requiresVision?: boolean;
+  };
+}
+interface ExecuteWithProviderParams {
+  providerId: string;
+  prompt: string;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // AI STRATEGY
 // ═══════════════════════════════════════════════════════════════════════════
@@ -88,7 +106,7 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
 
       switch (operation) {
         case 'selectProvider':
-          result = await this.selectProvider((params as any)?.criteria);
+          result = await this.selectProvider((params as SelectProviderParams)?.criteria);
           break;
 
         case 'getAvailableProviders':
@@ -97,8 +115,8 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
 
         case 'executeWithProvider':
           result = await this.executeWithProvider(
-            (params as any)?.providerId,
-            (params as any)?.prompt
+            (params as ExecuteWithProviderParams)?.providerId,
+            (params as ExecuteWithProviderParams)?.prompt
           );
           break;
 

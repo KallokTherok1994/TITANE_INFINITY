@@ -53,7 +53,7 @@ export interface ParlerHealthStatus {
 }
 
 function isVitestEnv(): boolean {
-  return typeof process !== 'undefined' && Boolean((process as any)?.env?.VITEST);
+  return typeof process !== 'undefined' && Boolean(process.env['VITEST']);
 }
 
 /**

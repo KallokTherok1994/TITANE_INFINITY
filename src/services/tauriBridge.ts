@@ -235,14 +235,14 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
   const extractChatContent = (response: unknown): string => {
     if (typeof response === 'string') return response;
     if (response && typeof response === 'object') {
-      const r = response as any;
-      if (typeof r.content === 'string') return r.content;
+      const r = response as Record<string, unknown>;
+      if (typeof r['content'] === 'string') return r['content'];
       if (
-        r.message &&
-        typeof r.message === 'object' &&
-        typeof r.message.content === 'string'
+        r['message'] &&
+        typeof r['message'] === 'object' &&
+        typeof (r['message'] as Record<string, unknown>)['content'] === 'string'
       ) {
-        return r.message.content;
+        return (r['message'] as Record<string, unknown>)['content'] as string;
       }
     }
     return '';
@@ -250,14 +250,14 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
 
   const lastUserMessage = [...messages]
     .reverse()
-    .find(m => (m as any)?.role === 'user')?.content;
+    .find(m => m.role === 'user')?.content;
 
   const lastMessage = messages[messages.length - 1];
   const userMessage = (lastUserMessage ?? lastMessage?.content ?? '').trim();
 
   const history = messages
     .slice(-20)
-    .map(m => `${(m as any)?.role ?? 'unknown'}: ${m.content}`)
+    .map(m => `${m.role}: ${m.content}`)
     .join('\n');
 
   const basePrompt = getSystemPrompt('default');
@@ -270,7 +270,7 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
     message: userMessage,
     conversationId: `chat-${Date.now()}`,
     provider: 'auto',
-    model: (config as any)?.model,
+    model: config?.model,
     streaming: false,
     systemPrompt,
     requestId,
@@ -293,12 +293,14 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
     retryDelay: 1000,
   });
 
-  // conversation_generate retourne directement le contenu généré
-  if ((raw as any)?.success === false) {
+  // conversation_generate retourne un CoreResponse<unknown> canonique
+  if (!raw.success) {
     return raw as CoreResponse<string>;
   }
 
-  const content = (raw as any)?.content ?? (raw as any)?.data ?? extractChatContent(raw);
+  const content = typeof raw.data === 'string'
+    ? raw.data
+    : extractChatContent(raw.data);
 
   return {
     success: true,

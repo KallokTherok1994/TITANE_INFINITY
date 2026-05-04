@@ -19,6 +19,30 @@ import type {
 import { generateSkillId } from '../skillManifest';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// TYPED JSON SHAPE INTERFACES (for parsed manifest content)
+// ─────────────────────────────────────────────────────────────────────────────
+interface ParsedJsonTool {
+  name?: string;
+  description?: string;
+  parameters?: Record<string, unknown>;
+  function?: { name?: string; description?: string; parameters?: Record<string, unknown> };
+}
+interface ParsedJsonAction {
+  name?: string;
+  description?: string;
+  schema?: Record<string, unknown>;
+  authRequired?: boolean;
+  security?: boolean;
+  url?: string;
+  endpoint?: string;
+}
+interface ParsedJsonKnowledgeFile {
+  name?: string;
+  content?: string;
+  type?: string;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN ENTRY POINT
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -131,7 +155,7 @@ function parseManifestSource(
 
   const tools: RawToolDefinition[] = [];
   if (Array.isArray(parsed.tools)) {
-    for (const t of parsed.tools as any[]) {
+    for (const t of parsed.tools as ParsedJsonTool[]) {
       tools.push({
         name: String(t.name || t.function?.name || 'unknown'),
         description: String(t.description || t.function?.description || ''),
@@ -143,7 +167,7 @@ function parseManifestSource(
     }
   }
   if (Array.isArray(parsed.actions)) {
-    for (const a of parsed.actions as any[]) {
+    for (const a of parsed.actions as ParsedJsonAction[]) {
       tools.push({
         name: String(a.name || 'unknown_action'),
         description: String(a.description || ''),
@@ -156,7 +180,7 @@ function parseManifestSource(
 
   const knowledgeFiles: KnowledgeFile[] = [];
   if (Array.isArray(parsed.knowledge_files)) {
-    for (const f of parsed.knowledge_files as any[]) {
+    for (const f of parsed.knowledge_files as ParsedJsonKnowledgeFile[]) {
       knowledgeFiles.push({
         name: String(f.name || 'unknown'),
         content: String(f.content || ''),

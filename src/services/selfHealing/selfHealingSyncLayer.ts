@@ -412,7 +412,7 @@ export class SelfHealingSyncLayer {
    * Met à jour un vital spécifique
    */
   public updateVital(key: keyof VitalsSnapshot, value: number | boolean): void {
-    (this.vitals as any)[key] = value;
+    (this.vitals as Record<keyof VitalsSnapshot, unknown>)[key] = value;
     this.vitals.timestamp = Date.now();
   }
 

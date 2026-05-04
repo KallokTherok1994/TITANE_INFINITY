@@ -32,6 +32,16 @@ import type { MemoryEntry, MemoryLevel } from '@/services/memory/persistentMemor
 // COGNITIVE STRATEGY
 // ═══════════════════════════════════════════════════════════════════════════
 
+// ───────────────────────────────────────────────────────────────────────────
+// TYPED PARAMETER INTERFACES (one per execute() operation)
+// ───────────────────────────────────────────────────────────────────────────
+interface StoreMemoryParams { content: string; importance?: number; }
+interface RetrieveMemoriesParams { query: string; limit?: number; }
+interface ProcessConversationParams { messages: unknown[]; }
+interface SetGoalParams { description: string; context?: string; }
+interface CheckGoalProgressParams { goalId: string; }
+interface ValidateConsistencyParams { text: string; }
+
 export class CognitiveStrategy
   implements IOrchestrationStrategy, CognitiveMemoryOperation, CognitiveGoalOperation
 {
@@ -91,35 +101,35 @@ export class CognitiveStrategy
       switch (operation) {
         case 'storeMemory':
           result = await this.storeMemory(
-            (params as any)?.content,
-            (params as any)?.importance
+            (params as StoreMemoryParams)?.content,
+            (params as StoreMemoryParams)?.importance
           );
           break;
 
         case 'retrieveMemories':
           result = await this.retrieveMemories(
-            (params as any)?.query,
-            (params as any)?.limit
+            (params as RetrieveMemoriesParams)?.query,
+            (params as RetrieveMemoriesParams)?.limit
           );
           break;
 
         case 'processConversation':
-          result = await this.processConversation((params as any)?.messages);
+          result = await this.processConversation((params as ProcessConversationParams)?.messages);
           break;
 
         case 'setGoal':
           result = await this.setGoal(
-            (params as any)?.description,
-            (params as any)?.context
+            (params as SetGoalParams)?.description,
+            (params as SetGoalParams)?.context
           );
           break;
 
         case 'checkGoalProgress':
-          result = await this.checkGoalProgress((params as any)?.goalId);
+          result = await this.checkGoalProgress((params as CheckGoalProgressParams)?.goalId);
           break;
 
         case 'validateConsistency':
-          result = await this.validateConsistency((params as any)?.text);
+          result = await this.validateConsistency((params as ValidateConsistencyParams)?.text);
           break;
 
         default:
