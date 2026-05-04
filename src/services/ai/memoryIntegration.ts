@@ -1600,7 +1600,7 @@ export class MemoryIntegration {
     activePreset: ReturnType<typeof resolveShadowReadActivePreset>,
     shadowReadEnabled: boolean,
     shadowWriteEnabled: boolean,
-    canaryDecision: { eligible: boolean; bucket: string | null; reason: string; operatorHint: string },
+    canaryDecision: { eligible: boolean; bucket: number | null; reason: string; operatorHint: string },
     query: string,
     canonicalContextCount: number,
     canonicalLabels: string[],
