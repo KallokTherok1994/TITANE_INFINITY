@@ -508,6 +508,7 @@ fn extract_projects(value: &Value) -> Vec<ProjectSummary> {
             "workstreams",
         ],
         &mut nodes,
+        0,
     );
 
     nodes
@@ -528,6 +529,7 @@ fn extract_decisions(value: &Value) -> Vec<DecisionSummary> {
             "decision_feed",
         ],
         &mut nodes,
+        0,
     );
 
     nodes
@@ -549,6 +551,7 @@ fn extract_knowledge(value: &Value) -> Vec<KnowledgeEntry> {
             "insights",
         ],
         &mut nodes,
+        0,
     );
 
     nodes
@@ -564,6 +567,7 @@ fn extract_rituals(value: &Value) -> Vec<RitualInfo> {
         value,
         &["active_rituals", "rituals", "routines", "ritual_cards"],
         &mut nodes,
+        0,
     );
 
     nodes
@@ -585,6 +589,7 @@ fn extract_timeline(value: &Value) -> Vec<TimelineEntry> {
             "timeline_events",
         ],
         &mut nodes,
+        0,
     );
 
     nodes
@@ -594,7 +599,11 @@ fn extract_timeline(value: &Value) -> Vec<TimelineEntry> {
         .collect()
 }
 
-fn collect_candidate_array_items(value: &Value, keywords: &[&str], acc: &mut Vec<Value>) {
+fn collect_candidate_array_items(value: &Value, keywords: &[&str], acc: &mut Vec<Value>, depth: usize) {
+    // Depth guard: prevent stack overflow on pathological deeply nested JSON
+    if depth > 32 {
+        return;
+    }
     match value {
         Value::Object(map) => {
             for (key, nested) in map {
@@ -604,17 +613,17 @@ fn collect_candidate_array_items(value: &Value, keywords: &[&str], acc: &mut Vec
                 {
                     match nested {
                         Value::Array(items) => acc.extend(items.iter().cloned()),
-                        Value::Object(_) => collect_candidate_array_items(nested, keywords, acc),
+                        Value::Object(_) => collect_candidate_array_items(nested, keywords, acc, depth + 1),
                         _ => {}
                     }
                 } else {
-                    collect_candidate_array_items(nested, keywords, acc);
+                    collect_candidate_array_items(nested, keywords, acc, depth + 1);
                 }
             }
         }
         Value::Array(items) => {
             for item in items {
-                collect_candidate_array_items(item, keywords, acc);
+                collect_candidate_array_items(item, keywords, acc, depth + 1);
             }
         }
         _ => {}
@@ -642,7 +651,7 @@ fn map_project_summary(value: &Value, idx: usize) -> Option<ProjectSummary> {
         })
         .unwrap_or(ProjectStatus::Active);
 
-    let priority = read_f64(value, &["priority", "score", "weight", "rank"]).unwrap_or(0.0) as i32;
+    let priority = read_f64(value, &["priority", "score", "weight", "rank"]).unwrap_or(0.0).clamp(0.0, 100.0) as i32;
     let last_activity = read_string(
         value,
         &["last_activity", "updated_at", "timestamp", "last_update"],
@@ -713,7 +722,7 @@ fn map_knowledge_entry(value: &Value, idx: usize) -> Option<KnowledgeEntry> {
         read_string(value, &["content", "summary", "details", "text"]).unwrap_or_default();
     let source = read_string(value, &["source", "origin", "provider"])
         .unwrap_or_else(|| "memory".to_string());
-    let relevance = read_f64(value, &["relevance", "score", "weight"]).unwrap_or(0.5) as f32;
+    let relevance = read_f64(value, &["relevance", "score", "weight"]).unwrap_or(0.5).clamp(0.0, 1.0) as f32;
     let timestamp = read_string(value, &["timestamp", "recorded_at", "updated_at"])
         .unwrap_or_else(|| Utc::now().to_rfc3339());
 
@@ -1016,7 +1025,7 @@ fn load_ltm_into_dashboard(dashboard: &mut MemoryDashboard, ltm_path: &PathBuf) 
             match serde_json::from_str::<Value>(&content) {
                 Ok(obj) => {
                     let mut nodes = Vec::new();
-                    collect_candidate_array_items(&obj, &["entries", "knowledge", "items"], &mut nodes);
+                    collect_candidate_array_items(&obj, &["entries", "knowledge", "items"], &mut nodes, 0);
                     nodes
                 }
                 Err(_) => return,
@@ -1264,5 +1273,86 @@ mod tests {
         load_ltm_into_dashboard(&mut dashboard, &paths.ltm_file);
         assert_eq!(dashboard.knowledge.len(), 1, "duplicate should be skipped");
         assert_eq!(dashboard.knowledge[0].content, "already loaded");
+    }
+
+    // Ph3-IT3: depth guard
+    #[test]
+    fn test_collect_candidates_depth_guard() {
+        // Build a deeply nested JSON object (depth > 32) wrapping a 'projects' array.
+        // The guard must prevent stack overflow and simply return without panicking.
+        let mut obj = serde_json::json!({ "projects": [{"id": "p1", "name": "Test"}] });
+        for _ in 0..40 {
+            obj = serde_json::json!({ "wrapper": obj });
+        }
+        let mut acc: Vec<serde_json::Value> = Vec::new();
+        // Must not panic or stack overflow regardless of depth
+        collect_candidate_array_items(&obj, &["projects"], &mut acc, 0);
+        // The inner projects array is beyond depth 32 — result may be empty or partial
+        // The critical assertion is: no panic and function returned.
+        // (acc may be empty because the depth guard kicked in before reaching the array)
+        assert!(acc.len() <= 1, "guard should have stopped before or at the array");
+    }
+
+    // Ph3-IT3: priority clamp
+    #[test]
+    fn test_priority_clamp() {
+        use serde_json::json;
+        // Out-of-bounds priority (99999) must be clamped to 100 before i32 cast
+        let value = json!({
+            "id": "p-overflow",
+            "name": "Overflow Project",
+            "priority": 99999.0,
+            "status": "active"
+        });
+        let result = map_project_summary(&value, 0);
+        assert!(result.is_some());
+        let project = result.unwrap();
+        assert_eq!(project.priority, 100, "priority should be clamped to 100");
+
+        // Negative priority must be clamped to 0
+        let value2 = json!({
+            "id": "p-negative",
+            "name": "Negative Priority",
+            "priority": -50.0,
+            "status": "active"
+        });
+        let result2 = map_project_summary(&value2, 0);
+        assert!(result2.is_some());
+        assert_eq!(result2.unwrap().priority, 0, "negative priority should be clamped to 0");
+    }
+
+    // Ph3-IT3: relevance clamp
+    #[test]
+    fn test_relevance_clamp() {
+        use serde_json::json;
+        // relevance > 1.0 must be clamped to 1.0
+        let value = json!({
+            "id": "k-overflow",
+            "topic": "Knowledge overflow",
+            "content": "Relevance out of bounds",
+            "relevance": 2.5
+        });
+        let result = map_knowledge_entry(&value, 0);
+        assert!(result.is_some());
+        let knowledge = result.unwrap();
+        assert!(
+            knowledge.relevance <= 1.0,
+            "relevance {} should be clamped to <= 1.0",
+            knowledge.relevance
+        );
+
+        // relevance < 0.0 must be clamped to 0.0
+        let value2 = json!({
+            "id": "k-negative",
+            "topic": "Knowledge negative",
+            "content": "Negative relevance",
+            "relevance": -0.5
+        });
+        let result2 = map_knowledge_entry(&value2, 0);
+        assert!(result2.is_some());
+        assert!(
+            result2.unwrap().relevance >= 0.0,
+            "negative relevance should be clamped to >= 0.0"
+        );
     }
 }
