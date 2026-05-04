@@ -142,7 +142,20 @@ export class MemoryService {
     limit: number = 10,
     timeWindow: string = '7d'
   ): Promise<DecisionSummary[]> {
-    if (!isTauriRuntimeAvailable()) return [];
+    if (!isTauriRuntimeAvailable()) {
+      // Fallback hors Tauri : retourne une décision synthétique pour que le pipeline
+      // ne soit pas complètement vide pendant le développement ou sur le web.
+      return [
+        {
+          id: 'fallback_decision_offline',
+          title: 'Développement en cours (fallback hors Tauri)',
+          timestamp: new Date().toISOString(),
+          category: 'operational' as const,
+          impact: 'low' as const,
+          status: 'pending' as const,
+        },
+      ];
+    }
     const cacheKey = `recent_decisions_${timeWindow}`;
     const cached = this.getFromCache(cacheKey);
     if (cached) return cached as DecisionSummary[];
@@ -212,7 +225,22 @@ export class MemoryService {
    * Récupère rituels actifs
    */
   async getActiveRituals(): Promise<RitualInfo[]> {
-    if (!isTauriRuntimeAvailable()) return [];
+    if (!isTauriRuntimeAvailable()) {
+      // Fallback hors Tauri : retourne un rituel synthétique pour maintenir
+      // la cohérence du contexte mémoire pendant le développement ou sur le web.
+      return [
+        {
+          id: 'fallback_ritual_offline',
+          name: 'Session de développement TITANE∞',
+          frequency: 'daily' as const,
+          lastExecution: new Date().toISOString(),
+          nextDue: new Date(Date.now() + 86400000).toISOString(),
+          status: 'active' as const,
+          completionRate: 100,
+          tags: ['offline', 'dev'],
+        },
+      ];
+    }
     const cached = this.getFromCache('active_rituals');
     if (cached) return cached as RitualInfo[];
 
@@ -231,12 +259,17 @@ export class MemoryService {
    */
   async getTimeline(timeWindow: string = '7d'): Promise<TimelineEntry[]> {
     if (!isTauriRuntimeAvailable()) return [];
+    const cacheKey = `timeline_${timeWindow}`;
+    const cached = this.getFromCache(cacheKey);
+    if (cached) return cached as TimelineEntry[];
+
     const timeline = await invokeWithRetry<TimelineEntry[]>(
       'memory_get_timeline',
       { time_window: timeWindow },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
 
+    this.setCache(cacheKey, timeline);
     return timeline;
   }
 
@@ -278,7 +311,12 @@ export class MemoryService {
         timeline,
       };
     } catch (error) {
-      console.error('[MemoryService] Erreur chargement contexte:', error);
+      const correlationId = `ctx_err_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`;
+      console.error('[MemoryService] Erreur chargement contexte', {
+        correlationId,
+        source: 'loadContext',
+        error: error instanceof Error ? error.message : String(error),
+      });
       return {
         activeProjects: [],
         recentDecisions: [],
