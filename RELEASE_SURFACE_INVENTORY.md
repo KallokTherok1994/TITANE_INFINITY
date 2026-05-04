@@ -1522,3 +1522,24 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | IT7 scope | 101+ as any casts eliminated across 40 files, global.d.ts declare global{} vendor augmentations, TauriAPI extended |
 | Gates | tsc PASS, vitest 7768/7768 PASS, detect_recurrence PASS, verify_instructions 33/33 PASS |
 | VERDICT | PASS |
+
+## v33.0.5 — 2026-05-04
+
+| Surface | Value |
+|---|---|
+| Version | 33.0.5 |
+| Branch | MAIN |
+| Build date | 2026-05-04 |
+| AppImage artifact | titane-infinity_33.0.5_amd64.AppImage 93MiB |
+| DEB artifact | titane-infinity_33.0.5_amd64.deb 24MiB |
+| RPM artifact | titane-infinity-33.0.5-1.x86_64.rpm 24MiB |
+| AppImage sha256 | f4a1c887bb125db1351dbf77802147ea61542cdef607458e92ffc39de676e26f |
+| DEB sha256 | 213a5212f6e4805207d623c2429631af3fa1a9c7d4164a84cc7286502364f201 |
+| RPM sha256 | c4c96e9591fa6cc0584c4494a1376b97b01e9d333c46335ee5b92eb360291f88 |
+| Launcher Exec | /usr/bin/titane-infinity |
+| Launcher Icon | titane-infinity |
+| sudo reinstall | DONE — titane-infinity 33.0.5 installed via dpkg |
+| Desktop icons | UPDATED — update-desktop-icons.sh PASS |
+| Scope | BUILD ALL v33.0.5 — ToolSelectorPanel + DevConfig fix + full bump 33.0.4→33.0.5 |
+| Gates | tsc PASS, vitest 25/25 PASS, detect_recurrence PASS, verify_instructions 33/33 PASS |
+| VERDICT | PASS |
