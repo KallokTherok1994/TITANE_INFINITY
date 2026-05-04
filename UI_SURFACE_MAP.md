@@ -5,7 +5,7 @@
 - data-testid stables: `tool-selector-btn`, `tool-selector-panel`, `tool-item-{id}` (10 cartes), `tool-status-online`, `tool-status-deep`.
 - Slash detection: inputValue === '/' → panel ouvert + input effacé, via useEffect dans ConversationSection.
 - Préférence save: pattern `/enregistre dans mes préférences : .+/i` → `userPreferencesEngine.setCustomPreference()` + `resetStaticPromptContextCache()` dans handleSend().
-- Preuves: [src/components/chat/__tests__/ToolSelectorPanel.test.tsx](src/components/chat/__tests__/ToolSelectorPanel.test.tsx) (13 tests PASS), [src/features/chat/__tests__/chatToolsRegistry.test.ts](src/features/chat/__tests__/chatToolsRegistry.test.ts) (37 tests PASS). Total: 50/50.
+- Preuves: [src/__tests__/components/chat/ToolSelectorPanel.test.tsx](src/__tests__/components/chat/ToolSelectorPanel.test.tsx) (12 tests PASS), [src/__tests__/features/chat/chatToolsRegistry.test.ts](src/__tests__/features/chat/chatToolsRegistry.test.ts) (13 tests PASS). Total: 25/25.
 - AutoHeal: AH-20260504-TOOL-SELECTOR-0001.
 
 # [2026-05-02] Chat daily-mode conversational truth

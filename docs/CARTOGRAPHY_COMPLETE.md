@@ -6,7 +6,7 @@
 
 > **Modifications ConversationSection** : (1) import `ToolSelectorPanel` + `ChatTool` + `resetStaticPromptContextCache`; (2) state `showToolSelector`; (3) useEffect slash-detection (`inputValue==='/'` → panel ouvert); (4) `handleToolSelect` (autoSend → setTimeout+handleSend; !autoSend → updateInputValue+focus); (5) pattern détection préférence save dans handleSend (`/enregistre dans mes préférences : .+/i` → `setCustomPreference` + `resetStaticPromptContextCache`).
 
-> **Couverture tests** : `src/components/chat/__tests__/ToolSelectorPanel.test.tsx` (13 tests) + `src/features/chat/__tests__/chatToolsRegistry.test.ts` (37 tests) = **50/50 PASS**.
+> **Couverture tests** : `src/__tests__/components/chat/ToolSelectorPanel.test.tsx` (12 tests) + `src/__tests__/features/chat/chatToolsRegistry.test.ts` (13 tests) = **25/25 PASS**.
 
 > **AutoHeal** : AH-20260504-TOOL-SELECTOR-0001.
 
