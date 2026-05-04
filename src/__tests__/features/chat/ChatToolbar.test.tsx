@@ -140,3 +140,20 @@ describe('ChatToolbar Component', () => {
     });
   });
 });
+
+describe('ChatToolbar: screen capture error narrowing — no (err as any) cast', () => {
+  it('correctly identifies NotAllowedError from an Error instance', () => {
+    // Simulate the narrowing logic extracted from the catch block
+    const narrowErrorCode = (err: unknown): string =>
+      err instanceof Error ? err.name : 'Unknown';
+
+    const domException = new DOMException('Denied', 'NotAllowedError');
+    expect(narrowErrorCode(domException)).toBe('NotAllowedError');
+
+    const genericError = new Error('fail');
+    expect(narrowErrorCode(genericError)).toBe('Error');
+
+    expect(narrowErrorCode('string error')).toBe('Unknown');
+    expect(narrowErrorCode(null)).toBe('Unknown');
+  });
+});

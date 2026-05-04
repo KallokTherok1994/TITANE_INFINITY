@@ -278,7 +278,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
 
         isDev && logger.info('[ChatToolbar] Screenshot captured');
       } catch (err) {
-        const errorCode = (err as any)?.name || 'Unknown';
+        const errorCode = err instanceof Error ? err.name : 'Unknown';
         if (errorCode === 'NotAllowedError') {
           logger.info('[ChatToolbar] Screen capture cancelled by user');
         } else if (errorCode === 'NotFoundError') {

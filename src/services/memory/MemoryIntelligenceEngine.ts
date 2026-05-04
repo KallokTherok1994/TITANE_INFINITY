@@ -669,7 +669,7 @@ export class MemoryIntelligenceEngine {
         );
         // Boost if parent domain was also matched
         const parentDomainMatched = categories.some(
-          c => c.main === 'domain' && c.sub === (theme as any).domain
+          c => c.main === 'domain' && c.sub === theme.domain
         );
         if (parentDomainMatched) confidence = Math.min(1.0, confidence * 1.15); // +15% if domain context aligns
         categories.push({
