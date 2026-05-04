@@ -1,3 +1,9 @@
+## 2026-05-04 : ToolSelectorPanel — Ring 4 Chat Tool Selector + Dev Config Fix
+
+> **ToolSelectorPanel (Ring 4)** : nouveau composant `src/components/chat/ToolSelectorPanel.tsx` + `ToolSelectorPanel.css` — panneau ⚡ de 10 raccourcis chat organisés en 4 catégories (GÉNÉRER / RECHERCHE & ANALYSE / RÉFLEXION / CONFIGURATION). Registre pur : `src/features/chat/chatToolsRegistry.ts` (10 `ChatTool`, aucune dépendance React). Intégré dans `ConversationSection.tsx` : slash-detection (`inputValue==='/'` → panel ouvert + clear natif DOM), `handleToolSelect` (autoSend → setTimeout+handleSend ; !autoSend → updateInputValue+focus), sauvegarde préférence via `setCustomPreference`+`resetStaticPromptContextCache`. data-testid stables : `tool-selector-btn`, `tool-selector-panel`, `tool-item-{id}`, `tool-status-online`, `tool-status-deep`. Tests : 25/25 Vitest PASS + 13/13 E2E PASS (x3). AutoHeal : AH-20260504-TOOL-SELECTOR-0001.
+
+> **Dev config fix** : `src-tauri/tauri.conf.json` + `scripts/generate-tauri-config.mjs` — ajout `devUrl: http://localhost:1420` et `beforeDevCommand: corepack pnpm exec vite dev --host 127.0.0.1 --port 1420 --strictPort`. Le serveur dev doit être lancé avec `nohup pnpm run dev > /tmp/titane-dev.log 2>&1 &` pour rester persistant. AutoHeal : AH-20260504-DEV-CONFIG-0001.
+
 ## 2026-05-02 : Ollama Dev / Chat Boundary Normalization
 
 > 2026-05-02 — Champion/Challenger runtime hardening: `src/services/ai/championChallenger.ts` applique maintenant un garde explicite de promotion (`require_human_approval`) et un parsing défensif des modèles publiés par `ai_check_ollama_status`, ce qui stabilise la décision provider sans dérive de baseline.
