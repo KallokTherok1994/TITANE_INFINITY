@@ -1600,6 +1600,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     // ─── SLASH DETECTION : "/" seul ouvre le sélecteur d'outils ─────────────
     useEffect(() => {
       if (inputValue === '/') {
+        // Force le clear natif du textarea AVANT la mise à jour React state
+        // pour éviter le conflit de réconciliation contrôlée dans les vrais navigateurs
+        if (conversationInputRef.current) {
+          conversationInputRef.current.value = '';
+        }
         updateInputValue('');
         setShowToolSelector(true);
       }
