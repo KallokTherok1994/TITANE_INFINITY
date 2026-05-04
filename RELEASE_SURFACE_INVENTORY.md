@@ -1500,3 +1500,25 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | RPM artifact | titane-infinity-32.0.4-1.x86_64.rpm 24MiB |
 | sudo reinstall | PENDING — requires user action |
 | VERDICT | PASS |
+
+## v33.0.4 — 2026-05-04
+
+| Surface | Value |
+|---|---|
+| Version | 33.0.4 |
+| Branch | MAIN |
+| Commit IT7 | c68ee471c |
+| Commit bump | c4fbfa921 |
+| Build date | 2026-05-04 |
+| AppImage artifact | titane-infinity_33.0.4_amd64.AppImage 93MiB |
+| DEB artifact | titane-infinity_33.0.4_amd64.deb 24MiB |
+| RPM artifact | titane-infinity-33.0.4-1.x86_64.rpm 24MiB |
+| AppImage sha256 | 2b9e2ccf5c8e73cb2a059153d9151df13c6d8a0e7d50ff19372b04c9aec47fbe |
+| DEB sha256 | da2ef86a56265d10906f500bb1537c4d8e3cd3ac97d593db15a3efad33445f22 |
+| RPM sha256 | 6e76d35d409466415a16117a29f6d76bd121c611c550e8631e40e1d11c0a518e |
+| Launcher Exec | /usr/bin/titane-infinity |
+| Launcher Icon | titane-infinity |
+| sudo reinstall | PENDING — requires user action: sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_33.0.4_amd64.deb |
+| IT7 scope | 101+ as any casts eliminated across 40 files, global.d.ts declare global{} vendor augmentations, TauriAPI extended |
+| Gates | tsc PASS, vitest 7768/7768 PASS, detect_recurrence PASS, verify_instructions 33/33 PASS |
+| VERDICT | PASS |
