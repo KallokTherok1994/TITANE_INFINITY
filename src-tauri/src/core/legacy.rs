@@ -33,6 +33,9 @@ const MAX_EVENTS: usize = 512;
 const MAX_TIMELINE_ENTRIES: usize = 256;
 const MAX_CHAT_HISTORY: usize = 2000;
 const MAX_TIMELINE_RESPONSE: usize = 100;
+/// Minimum importance score for an LTM entry to be loaded into the MemoryDashboard.
+/// Entries below this threshold are considered too weak to be worth injecting into context.
+const LTM_MIN_IMPORTANCE: f32 = 0.5;
 
 /// Legacy HeliosCore adapter
 #[derive(Clone)]
@@ -1037,7 +1040,7 @@ fn load_ltm_into_dashboard(dashboard: &mut MemoryDashboard, ltm_path: &PathBuf) 
             continue;
         }
         let importance = read_f64(item, &["importance", "relevance", "score"]).unwrap_or(0.0) as f32;
-        if importance < 0.5 {
+        if importance < LTM_MIN_IMPORTANCE {
             continue;
         }
         let id = read_string(item, &["id", "entry_id"]).filter(|s| !s.is_empty()).unwrap_or_else(|| {

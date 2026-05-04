@@ -1,3 +1,16 @@
+## 2026-05-03 — Memory access pipeline hardening (Itération 2) — v33.0.3
+
+> **Pipeline mémoire runtime complet** — 6 corrections appliquées sur le chemin critique `getKnowledge() → loadContext() → canonicalDiscernmentKernel → shouldInjectMemory gate → buildSystemPrompt`.
+>
+> **Flux canonique mémoire** :
+> `src/main.tsx::initHybridMemoryFlags()` initialise les flags localStorage (`titane_hybrid_memory_{shadow_write,shadow_read,orchestration}_enabled`, `titane_hybrid_memory_shadow_read_rollout`) au démarrage → `src/services/api/memory.ts::getKnowledge()` mappe le champ Rust `topic` vers le champ TypeScript `title` (le serializer Rust n'émet jamais `title`) → `src/services/ai/memoryIntegration.ts::loadContext()` utilise `Promise.all` pour charger les 5 sources en parallèle, puis `shadowReadContextFromUnifiedMemory()` + `applyHybridOrchestration()` → `src/services/ai/canonicalDiscernmentKernel.ts::evaluateMemoryUsefulness()` décide `memoryInjection.{use, reasonCode}` selon l'intent classifié → `src/services/ai/chatEngine.ts` applique la gate `shouldInjectMemory = memoryInjection.use && context.sources.length > 0`, logue le `reasonCode` quand la gate est fermée → `buildSystemPrompt()` injecte ou non le bloc mémoire.
+>
+> **Couche Rust** : `src-tauri/src/core/legacy.rs::MemoryCore::new()` seed automatiquement 10 `KnowledgeEntry` + 1 `ProjectSummary` si `state.knowledge.is_empty()`. `MemoryPaths::dashboard_sources()` inclut `ltm_file` (`ltm.json`). `load_ltm_into_dashboard()` charge les entrées LTM avec `importance >= LTM_MIN_IMPORTANCE` (constante `0.5`, désormais nommée). `maybe_seed_initial_state()` seed 6 `KnowledgeEntry` de base TITANE.
+>
+> **Refactorisations** : `buildDisabledShadowReadDiagnostics()` et `buildErrorShadowReadDiagnostics()` extraits dans `memoryIntegration.ts` pour dédupliquer les deux call sites de reconstruction manuelle du struct diagnostic (−50 lignes). `k['title']` dead code supprimé du bridge `getKnowledge()`. `reasonCode: string` ajouté à `CanonicalDecision['memoryInjection']` et peuplé sur tous les 12 chemins de `evaluateMemoryUsefulness()`.
+>
+> **Couverture E2E** : `e2e/critical/memory-injection.spec.ts` — 3 scénarios (RUN1 memory-recall gate, RUN2 stabilité sur 2 messages successifs, RUN3 intent générique ne crashe pas). Guard `TITANE_E2E_FULL=1`. Mock via `__TITANE_E2E_CHAT_KNOWLEDGE_SEED__` + `__TITANE_E2E_CHAT_MEMORY_LOG__`.
+
 ## 2026-05-03 : Tauri non-streaming model truth
 
 > La surface active de conversation ne dépend plus seulement de `provider_used` pour la route backend desktop. `src-tauri/src/ai/mod.rs`, `src-tauri/src/ai/router.rs`, `src-tauri/src/ai/{gemini,ollama}.rs`, `src-tauri/src/chat_engine/{types,mod}.rs`, `src/services/tauri/chatEngine.commands.ts` et `src/services/ai/chatEngine.ts` propagent maintenant `model` jusqu au frontend, ce qui élimine la dérive où `chatEngine.ts` remplaçait le modèle réel par `completion.provider`.

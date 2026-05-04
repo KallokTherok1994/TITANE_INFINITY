@@ -83,6 +83,8 @@ export interface CanonicalDecision {
     sources: string[];
     maxTokens: number;
     relevance: 'low' | 'medium' | 'high';
+    /** Why the kernel decided to inject (or skip) memory — for debug and observability */
+    reasonCode: string;
   };
 
   // 5. Provider/Model
@@ -568,6 +570,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: profile.memory.maxSources,
         relevance: 'high',
+        reasonCode: 'intent_memory_recall',
       };
     }
 
@@ -578,6 +581,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: Math.min(profile.memory.maxSources, 5),
         relevance: 'high',
+        reasonCode: 'intent_action_request_with_projects',
       };
     }
 
@@ -588,6 +592,7 @@ export class CanonicalDiscernmentKernel {
         sources: ['preferences'],
         maxTokens: 3,
         relevance: 'high',
+        reasonCode: 'intent_preference_signal',
       };
     }
 
@@ -598,6 +603,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: profile.memory.maxSources,
         relevance: 'high',
+        reasonCode: 'intent_memory_management',
       };
     }
 
@@ -608,6 +614,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: Math.min(profile.memory.maxSources, 8),
         relevance: 'high',
+        reasonCode: 'intent_deep_reflection',
       };
     }
 
@@ -618,6 +625,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: Math.min(profile.memory.maxSources, 5),
         relevance: 'medium',
+        reasonCode: 'intent_research_analysis_with_context',
       };
     }
 
@@ -628,6 +636,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: Math.min(profile.memory.maxSources, 4),
         relevance: 'medium',
+        reasonCode: 'intent_message_analysis_with_context',
       };
     }
 
@@ -638,6 +647,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: Math.min(profile.memory.maxSources, 6),
         relevance: 'high',
+        reasonCode: 'intent_data_collection_with_context',
       };
     }
 
@@ -648,6 +658,7 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: Math.min(profile.memory.maxSources, 4),
         relevance: 'medium',
+        reasonCode: 'intent_diagnostic_with_decisions',
       };
     }
 
@@ -661,17 +672,18 @@ export class CanonicalDiscernmentKernel {
         sources: ['knowledge'],
         maxTokens: Math.min(profile.memory.maxSources, 3),
         relevance: 'medium',
+        reasonCode: 'intent_information_request_with_knowledge',
       };
     }
 
     // Conversational / very short → skip memory (cost not justified)
     if (intent.intent === 'conversational') {
-      return { use: false, sources: [], maxTokens: 0, relevance: 'low' };
+      return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_conversational' };
     }
 
     // Creative → minimal memory (creativity needs less anchoring)
     if (intent.intent === 'creative') {
-      return { use: false, sources: [], maxTokens: 0, relevance: 'low' };
+      return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_creative' };
     }
 
     // Fallback: use memory if available and intent relevance is medium+
@@ -681,10 +693,11 @@ export class CanonicalDiscernmentKernel {
         sources: this.extractMemorySources(memoryContext),
         maxTokens: Math.min(profile.memory.maxSources, 3),
         relevance: intent.memoryRelevance,
+        reasonCode: 'fallback_has_context_medium_relevance',
       };
     }
 
-    return { use: false, sources: [], maxTokens: 0, relevance: 'low' };
+    return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_no_context_or_low_relevance' };
   }
 
   /**

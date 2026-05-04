@@ -952,6 +952,14 @@ class ChatEngineOmega {
       const shouldInjectMemory =
         canonicalDecision.memoryInjection.use && context.sources.length > 0;
 
+      if (!shouldInjectMemory) {
+        logger.debug('[ChatEngine] Memory injection skipped', {
+          reasonCode: canonicalDecision.memoryInjection.reasonCode,
+          kernelUse: canonicalDecision.memoryInjection.use,
+          contextSources: context.sources.length,
+        });
+      }
+
       const promptContext: PromptContext = {
         modeName: modeConfig.name,
         modeIcon: modeConfig.icon,

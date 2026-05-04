@@ -1543,6 +1543,125 @@ export class MemoryIntegration {
     return nextConfig;
   }
 
+  // ─── Shadow-read diagnostic helpers ───────────────────────────────────────
+
+  /**
+   * Builds the diagnostics payload for the "shadow read disabled" case.
+   * Extracted to avoid repeating the same 25-field struct in multiple branches.
+   */
+  private buildDisabledShadowReadDiagnostics(
+    reason: string,
+    rolloutConfig: ReturnType<typeof getShadowReadRolloutConfig>,
+    activePreset: ReturnType<typeof resolveShadowReadActivePreset>,
+    shadowReadEnabled: boolean,
+    shadowWriteEnabled: boolean
+  ): Partial<HybridMemoryDiagnostics> {
+    return {
+      shadowWriteEnabled,
+      shadowReadEnabled,
+      hybridOrchestrationEnabled: isHybridMemoryOrchestrationEnabled(),
+      shadowReadRolloutMode: rolloutConfig.mode,
+      shadowReadActivePresetId: activePreset.id,
+      shadowReadActivePresetLabel: activePreset.label,
+      shadowReadCanaryEligible: false,
+      shadowReadCanaryBucket: null,
+      shadowReadCanaryPercentage: rolloutConfig.percentage,
+      shadowReadTrendWindow: rolloutConfig.trendWindow,
+      shadowReadCanaryReason: reason,
+      shadowReadCanaryQueryPreview: null,
+      shadowReadCanaryOperatorHint:
+        'Activer le shadow read pour evaluer le preset courant sur cette surface.',
+      lastShadowReadStatus: 'disabled',
+      lastShadowReadQualification: 'insufficient',
+      lastShadowReadAverageSimilarity: 0,
+      lastShadowReadAverageRetrievalScore: 0,
+      lastShadowReadCompositeScore: 0,
+      lastShadowReadCanonicalPreview: [],
+      lastShadowReadUnifiedPreview: [],
+      lastShadowReadMatchedPairs: [],
+      lastShadowReadNearMatches: [],
+      lastShadowReadNearMatchStability: [],
+      lastShadowReadMissingReasons: [],
+      lastShadowReadTrendSummary: summarizeShadowReadTrend(
+        hybridMemoryDiagnostics.recentShadowReadExtendedTrend,
+        rolloutConfig.trendWindow
+      ),
+      lastShadowReadQuery: null,
+    };
+  }
+
+  /**
+   * Builds the diagnostics payload for the "shadow read error" case.
+   * Extracted to avoid repeating the same ~35-field error struct in the catch branch.
+   */
+  private buildErrorShadowReadDiagnostics(
+    error: unknown,
+    rolloutConfig: ReturnType<typeof getShadowReadRolloutConfig>,
+    activePreset: ReturnType<typeof resolveShadowReadActivePreset>,
+    shadowReadEnabled: boolean,
+    shadowWriteEnabled: boolean,
+    canaryDecision: { eligible: boolean; bucket: string | null; reason: string; operatorHint: string },
+    query: string,
+    canonicalContextCount: number,
+    canonicalLabels: string[],
+    errorTrend: HybridMemoryDiagnostics['recentShadowReadExtendedTrend']
+  ): Partial<HybridMemoryDiagnostics> {
+    return {
+      shadowWriteEnabled,
+      shadowReadEnabled,
+      hybridOrchestrationEnabled: isHybridMemoryOrchestrationEnabled(),
+      shadowReadRolloutMode: rolloutConfig.mode,
+      shadowReadActivePresetId: activePreset.id,
+      shadowReadActivePresetLabel: activePreset.label,
+      shadowReadCanaryEligible: canaryDecision.eligible,
+      shadowReadCanaryBucket: canaryDecision.bucket,
+      shadowReadCanaryPercentage: rolloutConfig.percentage,
+      shadowReadTrendWindow: rolloutConfig.trendWindow,
+      shadowReadCanaryReason: canaryDecision.reason,
+      shadowReadCanaryQueryPreview: query,
+      shadowReadCanaryOperatorHint: canaryDecision.operatorHint,
+      shadowReadCount: hybridMemoryDiagnostics.shadowReadCount + 1,
+      lastShadowReadAt: Date.now(),
+      lastShadowReadStatus: 'error',
+      lastCanonicalContextCount: canonicalContextCount,
+      lastShadowReadQualification: 'insufficient',
+      lastShadowReadCoverageRatio: 0,
+      lastShadowReadAverageSimilarity: 0,
+      lastShadowReadAverageRetrievalScore: 0,
+      lastShadowReadCompositeScore: 0,
+      lastShadowReadMatchedCount: 0,
+      lastShadowReadMissingCount: canonicalLabels.length,
+      lastShadowReadExtraCount: 0,
+      lastShadowReadCanonicalPreview: canonicalLabels.slice(0, 3),
+      lastShadowReadUnifiedPreview: [],
+      lastShadowReadMatchedPairs: [],
+      lastShadowReadNearMatches: [],
+      lastShadowReadNearMatchStability: [],
+      lastShadowReadMissingReasons: canonicalLabels.slice(0, 3).map(canonicalLabel => ({
+        canonicalLabel,
+        bestUnifiedLabel: null,
+        bestSimilarity: 0,
+        gapToThreshold: 0.4,
+        priority: 'critique' as const,
+        reason: 'lecture UnifiedMemory indisponible',
+      })),
+      recentShadowReadQualifications: appendShadowReadQualificationHistory({
+        at: Date.now(),
+        qualification: 'insufficient',
+        compositeScore: 0,
+      }),
+      recentShadowReadExtendedTrend: errorTrend,
+      lastShadowReadTrendSummary: summarizeShadowReadTrend(
+        errorTrend,
+        rolloutConfig.trendWindow
+      ),
+      lastShadowReadMissingLabels: canonicalLabels.slice(0, 5),
+      lastShadowReadExtraLabels: [],
+      lastShadowReadQuery: query,
+      lastError: error instanceof Error ? error.message : String(error),
+    };
+  }
+
   private async shadowReadContextFromUnifiedMemory(
     context: MemoryContext
   ): Promise<HybridShadowReadOutcome> {
@@ -1552,38 +1671,15 @@ export class MemoryIntegration {
     const activePreset = resolveShadowReadActivePreset(rolloutConfig);
 
     if (!shadowReadEnabled) {
-      updateHybridMemoryDiagnostics({
-        shadowWriteEnabled,
-        shadowReadEnabled,
-        hybridOrchestrationEnabled: isHybridMemoryOrchestrationEnabled(),
-        shadowReadRolloutMode: rolloutConfig.mode,
-        shadowReadActivePresetId: activePreset.id,
-        shadowReadActivePresetLabel: activePreset.label,
-        shadowReadCanaryEligible: false,
-        shadowReadCanaryBucket: null,
-        shadowReadCanaryPercentage: rolloutConfig.percentage,
-        shadowReadTrendWindow: rolloutConfig.trendWindow,
-        shadowReadCanaryReason: 'shadow read desactive',
-        shadowReadCanaryQueryPreview: null,
-        shadowReadCanaryOperatorHint:
-          'Activer le shadow read pour evaluer le preset courant sur cette surface.',
-        lastShadowReadStatus: 'disabled',
-        lastShadowReadQualification: 'insufficient',
-        lastShadowReadAverageSimilarity: 0,
-        lastShadowReadAverageRetrievalScore: 0,
-        lastShadowReadCompositeScore: 0,
-        lastShadowReadCanonicalPreview: [],
-        lastShadowReadUnifiedPreview: [],
-        lastShadowReadMatchedPairs: [],
-        lastShadowReadNearMatches: [],
-        lastShadowReadNearMatchStability: [],
-        lastShadowReadMissingReasons: [],
-        lastShadowReadTrendSummary: summarizeShadowReadTrend(
-          hybridMemoryDiagnostics.recentShadowReadExtendedTrend,
-          rolloutConfig.trendWindow
-        ),
-        lastShadowReadQuery: null,
-      });
+      updateHybridMemoryDiagnostics(
+        this.buildDisabledShadowReadDiagnostics(
+          'shadow read desactive',
+          rolloutConfig,
+          activePreset,
+          shadowReadEnabled,
+          shadowWriteEnabled
+        )
+      );
       return {
         status: 'disabled',
         query: null,
@@ -1759,60 +1855,20 @@ export class MemoryIntegration {
         rolloutConfig.trendWindow
       );
 
-      updateHybridMemoryDiagnostics({
-        shadowWriteEnabled,
-        shadowReadEnabled,
-        hybridOrchestrationEnabled: isHybridMemoryOrchestrationEnabled(),
-        shadowReadRolloutMode: rolloutConfig.mode,
-        shadowReadActivePresetId: activePreset.id,
-        shadowReadActivePresetLabel: activePreset.label,
-        shadowReadCanaryEligible: canaryDecision.eligible,
-        shadowReadCanaryBucket: canaryDecision.bucket,
-        shadowReadCanaryPercentage: rolloutConfig.percentage,
-        shadowReadTrendWindow: rolloutConfig.trendWindow,
-        shadowReadCanaryReason: canaryDecision.reason,
-        shadowReadCanaryQueryPreview: query,
-        shadowReadCanaryOperatorHint: canaryDecision.operatorHint,
-        shadowReadCount: hybridMemoryDiagnostics.shadowReadCount + 1,
-        lastShadowReadAt: Date.now(),
-        lastShadowReadStatus: 'error',
-        lastCanonicalContextCount: canonicalContextCount,
-        lastShadowReadQualification: 'insufficient',
-        lastShadowReadCoverageRatio: 0,
-        lastShadowReadAverageSimilarity: 0,
-        lastShadowReadAverageRetrievalScore: 0,
-        lastShadowReadCompositeScore: 0,
-        lastShadowReadMatchedCount: 0,
-        lastShadowReadMissingCount: canonicalLabels.length,
-        lastShadowReadExtraCount: 0,
-        lastShadowReadCanonicalPreview: canonicalLabels.slice(0, 3),
-        lastShadowReadUnifiedPreview: [],
-        lastShadowReadMatchedPairs: [],
-        lastShadowReadNearMatches: [],
-        lastShadowReadNearMatchStability: [],
-        lastShadowReadMissingReasons: canonicalLabels.slice(0, 3).map(canonicalLabel => ({
-          canonicalLabel,
-          bestUnifiedLabel: null,
-          bestSimilarity: 0,
-          gapToThreshold: 0.4,
-          priority: 'critique',
-          reason: 'lecture UnifiedMemory indisponible',
-        })),
-        recentShadowReadQualifications: appendShadowReadQualificationHistory({
-          at: Date.now(),
-          qualification: 'insufficient',
-          compositeScore: 0,
-        }),
-        recentShadowReadExtendedTrend: errorTrend,
-        lastShadowReadTrendSummary: summarizeShadowReadTrend(
-          errorTrend,
-          rolloutConfig.trendWindow
-        ),
-        lastShadowReadMissingLabels: canonicalLabels.slice(0, 5),
-        lastShadowReadExtraLabels: [],
-        lastShadowReadQuery: query,
-        lastError: error instanceof Error ? error.message : String(error),
-      });
+      updateHybridMemoryDiagnostics(
+        this.buildErrorShadowReadDiagnostics(
+          error,
+          rolloutConfig,
+          activePreset,
+          shadowReadEnabled,
+          shadowWriteEnabled,
+          canaryDecision,
+          query,
+          canonicalContextCount,
+          canonicalLabels,
+          errorTrend
+        )
+      );
       logger.warn('UnifiedMemory shadow read unavailable', error);
       return {
         status: 'error',

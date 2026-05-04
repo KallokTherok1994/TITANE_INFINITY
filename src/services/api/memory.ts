@@ -194,7 +194,8 @@ export class MemoryService {
 
     const knowledge: KnowledgeEntry[] = raw.map(k => ({
       id: (k['id'] as string) || '',
-      title: (k['title'] as string) || (k['topic'] as string) || (k['id'] as string) || '',
+      // Rust KnowledgeEntry serializes 'topic', never 'title' — map explicitly
+      title: (k['topic'] as string) || (k['id'] as string) || '',
       category: (k['source'] as string) || 'knowledge',
       content: (k['content'] as string) || '',
       relevance: (k['relevance'] as number) ?? 0.8,
