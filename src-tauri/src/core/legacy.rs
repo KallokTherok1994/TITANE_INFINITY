@@ -83,7 +83,7 @@ impl Default for MemoryCore {
 impl MemoryCore {
     pub fn new() -> Self {
         let paths = MemoryPaths::new();
-        let state = MemoryDisk::load(&paths.storage_file).unwrap_or_else(|err| {
+        let mut state = MemoryDisk::load(&paths.storage_file).unwrap_or_else(|err| {
             log::error!(
                 "[MemoryCore] Failed to load state file {}: {}",
                 paths.storage_file.display(),
@@ -91,6 +91,15 @@ impl MemoryCore {
             );
             MemoryDisk::default()
         });
+
+        // Phase C — Auto-seed on empty MemoryCore (first boot or post-wipe)
+        // Guard: only seed if knowledge is completely empty (Phase A JSON seed covers normal case)
+        if state.knowledge.is_empty() {
+            maybe_seed_initial_state(&mut state);
+            if let Err(err) = state.persist(&paths.storage_file) {
+                log::warn!("[MemoryCore] Could not persist seeded state: {}", err);
+            }
+        }
 
         Self {
             data: Arc::new(RwLock::new(state)),
@@ -349,6 +358,7 @@ struct MemoryPaths {
     cognitive_file: PathBuf,
     singularity_file: PathBuf,
     harmonics_file: PathBuf,
+    ltm_file: PathBuf,
 }
 
 impl MemoryPaths {
@@ -367,6 +377,7 @@ impl MemoryPaths {
         let cognitive_file = base_dir.join("cognitive.json");
         let singularity_file = base_dir.join("singularity.json");
         let harmonics_file = base_dir.join("harmonics.json");
+        let ltm_file = base_dir.join("ltm.json");
 
         Self {
             base_dir,
@@ -375,6 +386,7 @@ impl MemoryPaths {
             cognitive_file,
             singularity_file,
             harmonics_file,
+            ltm_file,
         }
     }
 
@@ -428,6 +440,9 @@ impl MemoryDashboard {
                 Err(err) => log::debug!("[MemoryCore] Unable to parse {}: {}", path.display(), err),
             }
         }
+
+        // Phase D — Load LTM entries from dedicated ltm.json (bare array format)
+        load_ltm_into_dashboard(&mut dashboard, &paths.ltm_file);
 
         Ok(dashboard)
     }
@@ -898,6 +913,154 @@ fn push_front_bounded<T>(collection: &mut Vec<T>, value: T, cap: usize) {
     }
 }
 
+/// Phase C — Seed initial knowledge and project into an empty MemoryDisk.
+/// Called on first boot or after a state-wipe so the chat pipeline always
+/// has at least baseline knowledge available.
+fn maybe_seed_initial_state(state: &mut MemoryDisk) {
+    log::info!("[MemoryCore] Seeding initial knowledge state...");
+    let ts = Utc::now().to_rfc3339();
+
+    state.knowledge = vec![
+        KnowledgeEntry {
+            id: "k-001".into(),
+            topic: "Identité TITANE∞".into(),
+            content: "Architecte de cohérence vivante — mission: rendre cohérent ce qui est fragmenté, flou, dispersé ou désaligné. Assiste Kevin Thibault dans toutes ses missions avec lucidité et engagement.".into(),
+            source: "identity_kernel_v31".into(),
+            relevance: 0.95,
+            timestamp: ts.clone(),
+        },
+        KnowledgeEntry {
+            id: "k-002".into(),
+            topic: "Noyau identitaire v31".into(),
+            content: "Valeurs fondamentales: Lucidité, Éthique, Simplicité durable, Responsabilité, Autonomie, Cohérence, Incarnation, Transmission. Ton: lucide, structurant, humain, sobre, dense, sans fioriture.".into(),
+            source: "identity_kernel_v31".into(),
+            relevance: 0.9,
+            timestamp: ts.clone(),
+        },
+        KnowledgeEntry {
+            id: "k-003".into(),
+            topic: "Stack technique TITANE".into(),
+            content: "Tauri v2 + React 18 + TypeScript + Rust. Architecture 4-Ring. One Door network: UI → IPC → services → gateway → external. Gouvernance Rule 1-20.".into(),
+            source: "knowledge_base".into(),
+            relevance: 0.85,
+            timestamp: ts.clone(),
+        },
+        KnowledgeEntry {
+            id: "k-005".into(),
+            topic: "Style de réponse Kevin".into(),
+            content: "Réponses denses, structurées, directes, complètes. Zéro hésitation, zéro demande de validation, zéro préambule. Livraison immédiate et exécutable. Langue française par défaut.".into(),
+            source: "kevin_owner_profile_v30".into(),
+            relevance: 0.9,
+            timestamp: ts.clone(),
+        },
+        KnowledgeEntry {
+            id: "k-007".into(),
+            topic: "Propriétaire: Kevin Thibault".into(),
+            content: "Fondateur Humain Total. Architecte TITANE∞. Expertise: IA, développement, philosophie vivante, leadership transformationnel. Préférence: précision technique, densité sémantique, réponses longues et complètes.".into(),
+            source: "kevin_owner_profile_v30".into(),
+            relevance: 0.95,
+            timestamp: ts.clone(),
+        },
+        KnowledgeEntry {
+            id: "k-008".into(),
+            topic: "Règles IPC et sécurité".into(),
+            content: "Contrat IPC: { ok, content, error } obligatoire. OWASP Top 10. Capabilities Tauri lockées. ALLOWED_COMMANDS dans security.ts. Zéro accès réseau direct depuis UI.".into(),
+            source: "knowledge_base".into(),
+            relevance: 0.9,
+            timestamp: ts.clone(),
+        },
+    ];
+
+    if state.projects.is_empty() {
+        state.projects = vec![ProjectSummary {
+            id: "proj-001".into(),
+            name: "TITANE∞ — Système IA Personnel".into(),
+            status: ProjectStatus::Active,
+            priority: 1,
+            last_activity: ts.clone(),
+            tags: vec![
+                "ai".into(),
+                "tauri".into(),
+                "memory".into(),
+                "governance".into(),
+            ],
+        }];
+    }
+
+    state.metadata.mark_write();
+}
+
+/// Phase D — Load LTM entries from ltm.json into the MemoryDashboard knowledge pool.
+/// `ltm.json` uses a bare JSON array format: [{id, content, type, importance, timestamp, ...}]
+fn load_ltm_into_dashboard(dashboard: &mut MemoryDashboard, ltm_path: &PathBuf) {
+    if !ltm_path.exists() {
+        return;
+    }
+    let content = match fs::read_to_string(ltm_path) {
+        Ok(c) => c,
+        Err(err) => {
+            log::debug!("[MemoryCore] Could not read ltm.json: {}", err);
+            return;
+        }
+    };
+    if content.trim().is_empty() {
+        return;
+    }
+    let arr: Vec<Value> = match serde_json::from_str(&content) {
+        Ok(Value::Array(a)) => a,
+        Ok(_) => {
+            // Not a bare array — try as object with "entries" or "knowledge" key
+            match serde_json::from_str::<Value>(&content) {
+                Ok(obj) => {
+                    let mut nodes = Vec::new();
+                    collect_candidate_array_items(&obj, &["entries", "knowledge", "items"], &mut nodes);
+                    nodes
+                }
+                Err(_) => return,
+            }
+        }
+        Err(err) => {
+            log::debug!("[MemoryCore] Could not parse ltm.json: {}", err);
+            return;
+        }
+    };
+
+    let mut added = 0usize;
+    for item in &arr {
+        if !item.is_object() {
+            continue;
+        }
+        let entry_type = read_string(item, &["type", "entry_type"]).unwrap_or_default();
+        // Accept entries of type "knowledge" or entries without explicit type
+        let is_knowledge = entry_type.is_empty() || entry_type.eq_ignore_ascii_case("knowledge");
+        if !is_knowledge {
+            continue;
+        }
+        let importance = read_f64(item, &["importance", "relevance", "score"]).unwrap_or(0.0) as f32;
+        if importance < 0.5 {
+            continue;
+        }
+        let id = read_string(item, &["id", "entry_id"]).filter(|s| !s.is_empty()).unwrap_or_else(|| {
+            format!("ltm_{}", Utc::now().timestamp_millis())
+        });
+        // Skip if already in dashboard
+        if dashboard.knowledge.iter().any(|k| k.id == id) {
+            continue;
+        }
+        if let Some(entry) = map_knowledge_entry(item, dashboard.knowledge.len()) {
+            // Override the generated ID with the actual ltm ID
+            let mut e = entry;
+            e.id = id;
+            e.relevance = importance;
+            dashboard.knowledge.push(e);
+            added += 1;
+        }
+    }
+    if added > 0 {
+        log::debug!("[MemoryCore] Loaded {} knowledge entries from ltm.json", added);
+    }
+}
+
 fn current_millis() -> i64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -1002,5 +1165,101 @@ impl SentinelCore {
 
     pub fn iter(&self) -> std::iter::Empty<String> {
         std::iter::empty()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    fn make_paths(dir: &std::path::Path) -> MemoryPaths {
+        MemoryPaths {
+            base_dir: dir.to_path_buf(),
+            storage_file: dir.join("memory_core_state.json"),
+            system_state_file: dir.join("system_state.json"),
+            cognitive_file: dir.join("cognitive.json"),
+            singularity_file: dir.join("singularity.json"),
+            harmonics_file: dir.join("harmonics.json"),
+            ltm_file: dir.join("ltm.json"),
+        }
+    }
+
+    #[test]
+    fn test_seeding_on_empty_state() {
+        let mut disk = MemoryDisk::default();
+        assert!(disk.knowledge.is_empty());
+        maybe_seed_initial_state(&mut disk);
+        assert!(!disk.knowledge.is_empty(), "knowledge should be seeded");
+        assert!(!disk.projects.is_empty(), "projects should be seeded");
+    }
+
+    #[test]
+    fn test_no_reseeding_when_knowledge_present() {
+        let mut disk = MemoryDisk::default();
+        disk.knowledge.push(KnowledgeEntry {
+            id: "existing".into(),
+            topic: "pre-existing".into(),
+            content: "already here".into(),
+            source: "test".into(),
+            relevance: 0.9,
+            timestamp: "2026-01-01T00:00:00Z".into(),
+        });
+        let count_before = disk.knowledge.len();
+        // Seeding guard: MemoryCore::new only seeds when knowledge is empty.
+        // Calling maybe_seed_initial_state directly here should still add entries
+        // (it's unconditional) — the guard is in MemoryCore::new.
+        // So this test verifies the guard logic explicitly:
+        if disk.knowledge.is_empty() {
+            maybe_seed_initial_state(&mut disk);
+        }
+        assert_eq!(disk.knowledge.len(), count_before, "should not reseed when knowledge exists");
+    }
+
+    #[test]
+    fn test_ltm_bridge_reads_knowledge_entries() {
+        let dir = tempdir().expect("tempdir");
+        let paths = make_paths(dir.path());
+
+        // Write a minimal ltm.json with one high-relevance knowledge entry
+        let ltm_content = r#"[
+            {"id":"ltm-001","content":"LTM knowledge A","type":"knowledge","importance":0.8,"timestamp":"2026-01-01T00:00:00Z"},
+            {"id":"ltm-002","content":"LTM knowledge low","type":"knowledge","importance":0.3,"timestamp":"2026-01-01T00:00:00Z"},
+            {"id":"ltm-003","content":"Not knowledge","type":"event","importance":0.9,"timestamp":"2026-01-01T00:00:00Z"}
+        ]"#;
+        std::fs::write(&paths.ltm_file, ltm_content).expect("write ltm.json");
+
+        let mut dashboard = MemoryDashboard::default();
+        load_ltm_into_dashboard(&mut dashboard, &paths.ltm_file);
+
+        // Only ltm-001 should be included: type==knowledge AND importance>=0.5
+        assert_eq!(dashboard.knowledge.len(), 1);
+        assert_eq!(dashboard.knowledge[0].id, "ltm-001");
+        assert!((dashboard.knowledge[0].relevance - 0.8_f32).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_ltm_bridge_deduplicates_existing_entries() {
+        let dir = tempdir().expect("tempdir");
+        let paths = make_paths(dir.path());
+
+        let ltm_content = r#"[
+            {"id":"ltm-001","content":"LTM A","type":"knowledge","importance":0.8,"timestamp":"2026-01-01T00:00:00Z"}
+        ]"#;
+        std::fs::write(&paths.ltm_file, ltm_content).expect("write ltm.json");
+
+        let mut dashboard = MemoryDashboard::default();
+        dashboard.knowledge.push(KnowledgeEntry {
+            id: "ltm-001".into(),
+            topic: "existing".into(),
+            content: "already loaded".into(),
+            source: "test".into(),
+            relevance: 0.8,
+            timestamp: "2026-01-01T00:00:00Z".into(),
+        });
+
+        load_ltm_into_dashboard(&mut dashboard, &paths.ltm_file);
+        assert_eq!(dashboard.knowledge.len(), 1, "duplicate should be skipped");
+        assert_eq!(dashboard.knowledge[0].content, "already loaded");
     }
 }

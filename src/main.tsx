@@ -1128,6 +1128,31 @@ setTimeout(() => {
 }, 5000);
 */
 
+// Phase 7.5: Initialize hybrid memory localStorage flags
+// These flags must be set before React mounts so memoryIntegration.ts can read them
+// on first loadContext() call. Use === null check (not falsy) to preserve user overrides.
+function initHybridMemoryFlags(): void {
+  if (typeof localStorage === 'undefined') return;
+  const defaults: Record<string, string> = {
+    titane_hybrid_memory_shadow_write_enabled: 'true',
+    titane_hybrid_memory_shadow_read_enabled: 'true',
+    titane_hybrid_memory_orchestration_enabled: 'true',
+  };
+  for (const [key, value] of Object.entries(defaults)) {
+    if (localStorage.getItem(key) === null) {
+      localStorage.setItem(key, value);
+    }
+  }
+  if (localStorage.getItem('titane_hybrid_memory_shadow_read_rollout') === null) {
+    localStorage.setItem(
+      'titane_hybrid_memory_shadow_read_rollout',
+      JSON.stringify({ mode: 'full', percentage: 100, canaryPercentage: 100, trendWindow: 10 })
+    );
+  }
+}
+initHybridMemoryFlags();
+logger.info('🧠 Hybrid memory flags initialized');
+
 // Phase 8: Inject accessibility styles
 injectSROnlyStyles();
 logger.info('♿ Accessibility styles injected (WCAG 2.1 AA)');

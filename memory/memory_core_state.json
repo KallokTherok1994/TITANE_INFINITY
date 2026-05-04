@@ -488,12 +488,111 @@
   "events": [],
   "timeline_entries": [],
   "chat_history": [],
-  "projects": [],
+  "projects": [
+    {
+      "id": "proj-001",
+      "name": "TITANE∞ — Système IA Personnel",
+      "status": "active",
+      "priority": 1,
+      "last_activity": "2026-05-03T00:00:00Z",
+      "tags": [
+        "ai",
+        "tauri",
+        "memory",
+        "governance",
+        "rust",
+        "react"
+      ]
+    }
+  ],
   "decisions": [],
-  "knowledge": [],
+  "knowledge": [
+    {
+      "id": "k-001",
+      "topic": "Identité TITANE∞",
+      "content": "Architecte de cohérence vivante — mission: rendre cohérent ce qui est fragmenté, flou, dispersé ou désaligné. Assiste Kevin Thibault dans toutes ses missions avec lucidité et engagement.",
+      "source": "identity_kernel_v31",
+      "relevance": 0.95,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-002",
+      "topic": "Noyau identitaire v31",
+      "content": "Valeurs fondamentales: Lucidité, Éthique, Simplicité durable, Responsabilité, Autonomie, Cohérence, Incarnation, Transmission. Ton: lucide, structurant, humain, sobre, dense, sans fioriture.",
+      "source": "identity_kernel_v31",
+      "relevance": 0.9,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-003",
+      "topic": "Stack technique TITANE",
+      "content": "Tauri v2 + React 18 + TypeScript + Rust. Architecture 4-Ring. One Door network: UI → IPC → services → gateway → external. Gouvernance Rule 1-20.",
+      "source": "knowledge_base",
+      "relevance": 0.85,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-004",
+      "topic": "Capacités système v33",
+      "content": "Chat IA (Ollama/Gemini/Claude/OpenAI), mémoire 3 niveaux (STM/MTM/LTM), digital twin, moteur singularité, monitoring, diagnostic, sécurité active, orchestrateur dynamique.",
+      "source": "knowledge_base",
+      "relevance": 0.85,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-005",
+      "topic": "Style de réponse Kevin",
+      "content": "Réponses denses, structurées, directes, complètes. Zéro hésitation, zéro demande de validation, zéro préambule. Livraison immédiate et exécutable. Langue française par défaut.",
+      "source": "kevin_owner_profile_v30",
+      "relevance": 0.9,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-006",
+      "topic": "Doctrine mémoire et gouvernance",
+      "content": "STM < 0.3 importance, MTM 0.3-0.7, LTM > 0.7. Mémoire hybride avec shadow read/write. AutoHeal JSONL full-schema sur toute modification. Rule 16: tests obligatoires sans exception.",
+      "source": "knowledge_base",
+      "relevance": 0.8,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-007",
+      "topic": "Propriétaire: Kevin Thibault",
+      "content": "Fondateur Humain Total. Architecte TITANE∞. Expertise: IA, développement, philosophie vivante, leadership transformationnel. Préférence: précision technique, densité sémantique, réponses longues et complètes.",
+      "source": "kevin_owner_profile_v30",
+      "relevance": 0.95,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-008",
+      "topic": "Règles IPC et sécurité",
+      "content": "Contrat IPC: { ok, content, error } obligatoire. OWASP Top 10. Capabilities Tauri lockées. ALLOWED_COMMANDS dans security.ts. Zéro accès réseau direct depuis UI.",
+      "source": "knowledge_base",
+      "relevance": 0.9,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-009",
+      "topic": "Modèle Ollama actif",
+      "content": "Dev via Copilot: qwen3.5:9b à http://127.0.0.1:11434. Chat production TITANE: gemma2:2b via IPC canonique. Frontière Ollama Dev / Chat = isolation stricte (Rule 17).",
+      "source": "ollama_runtime_map",
+      "relevance": 0.85,
+      "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-010",
+      "topic": "AutoHeal et anti-régression",
+      "content": "Toute modification src/ src-tauri/ tests/ e2e/ scripts/ .github/ → autoheal_rules.jsonl full-schema + detect_recurrence.sh PASS obligatoire avant commit. Rule 10 bloquante.",
+      "source": "knowledge_base",
+      "relevance": 0.8,
+      "timestamp": "2026-05-03T00:00:00Z"
+    }
+  ],
   "rituals": [],
   "metadata": {
     "last_validation_ts": 1777689809253,
-    "last_compaction_ts": null
+    "last_compaction_ts": null,
+    "seeded_at": "2026-05-03T00:00:00Z",
+    "seed_version": "1.0"
   }
 }

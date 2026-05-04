@@ -107,7 +107,21 @@ export class MemoryService {
    * Récupère projets actifs
    */
   async getActiveProjects(limit: number = 5): Promise<ProjectSummary[]> {
-    if (!isTauriRuntimeAvailable()) return [];
+    if (!isTauriRuntimeAvailable()) {
+      // Fallback: return TITANE∞ project so context.sources includes 'projets' in web mode
+      return [
+        {
+          id: 'titane-infinity',
+          title: 'TITANE∞ — Système IA Personnel',
+          status: 'active' as 'active',
+          progress: 100,
+          priority: 'high' as 'high',
+          lastActivity: new Date().toISOString(),
+          tags: ['ai', 'tauri', 'memory', 'governance'],
+          description: 'Assistant IA local gouverné — v33.0.3',
+        },
+      ].slice(0, limit);
+    }
     const cached = this.getFromCache('active_projects');
     if (cached) return cached as ProjectSummary[];
 
@@ -170,11 +184,24 @@ export class MemoryService {
     const cached = this.getFromCache('knowledge');
     if (cached) return cached as KnowledgeEntry[];
 
-    const knowledge = await invokeWithRetry<KnowledgeEntry[]>(
+    // Rust KnowledgeEntry uses { topic } but TypeScript KnowledgeEntry expects { title }
+    // Map the IPC response to the correct TypeScript shape
+    const raw = await invokeWithRetry<Array<Record<string, unknown>>>(
       'memory_get_knowledge',
       { limit },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
+
+    const knowledge: KnowledgeEntry[] = raw.map(k => ({
+      id: (k['id'] as string) || '',
+      title: (k['title'] as string) || (k['topic'] as string) || (k['id'] as string) || '',
+      category: (k['source'] as string) || 'knowledge',
+      content: (k['content'] as string) || '',
+      relevance: (k['relevance'] as number) ?? 0.8,
+      lastAccessed: (k['timestamp'] as string) || new Date().toISOString(),
+      tags: [(k['source'] as string) || 'knowledge'],
+      source: k['source'] as string | undefined,
+    }));
 
     this.setCache('knowledge', knowledge);
     return knowledge;
