@@ -97,3 +97,54 @@ pub async fn auth_revoke_role(user: String, role: String) -> Result<(), String> 
         e.to_string()
     })
 }
+
+// ═══════════════════════════════════════════════════════════════
+// OAUTH — Facebook PKCE Flow (OWASP-compliant, no client_secret)
+// ═══════════════════════════════════════════════════════════════
+
+use crate::auth::oauth::{FacebookProvider, OAuthProfile};
+
+/// Initiate Facebook OAuth PKCE flow.
+/// Returns { auth_url, state } — frontend must open auth_url in system browser.
+#[tauri::command]
+pub async fn oauth_facebook_initiate() -> Result<serde_json::Value, String> {
+    info!("🔐 OAUTH → oauth_facebook_initiate");
+    FacebookProvider::build_auth_url()
+        .map(|(auth_url, state)| {
+            serde_json::json!({ "auth_url": auth_url, "state": state })
+        })
+        .map_err(|e| {
+            error!("❌ OAUTH → initiate failed: {}", e);
+            e.to_string()
+        })
+}
+
+/// Handle Facebook OAuth callback (called after deep-link titane://auth/callback).
+/// `url` is the full callback URL including code and state params.
+#[tauri::command]
+pub async fn oauth_facebook_callback(url: String) -> Result<OAuthProfile, String> {
+    info!("🔐 OAUTH → oauth_facebook_callback");
+    let (code, state) = crate::auth::oauth::facebook_provider::parse_callback_url(&url)
+        .map_err(|e| e.to_string())?;
+    FacebookProvider::handle_callback(&code, &state)
+        .await
+        .map_err(|e| {
+            error!("❌ OAUTH → callback failed: {}", e);
+            e.to_string()
+        })
+}
+
+/// Get cached Facebook profile (returns null if not logged in).
+#[tauri::command]
+pub async fn oauth_facebook_get_profile() -> Result<Option<OAuthProfile>, String> {
+    info!("🔐 OAUTH → oauth_facebook_get_profile");
+    Ok(FacebookProvider::get_cached_profile())
+}
+
+/// Logout from Facebook — clears all credentials.
+#[tauri::command]
+pub async fn oauth_facebook_logout() -> Result<bool, String> {
+    info!("🔐 OAUTH → oauth_facebook_logout");
+    FacebookProvider::logout();
+    Ok(true)
+}

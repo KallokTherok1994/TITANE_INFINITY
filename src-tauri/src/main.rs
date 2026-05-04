@@ -1277,6 +1277,7 @@ fn main() {
     builder
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_deep_link::init())
         .setup(move |app| {
             app.listen("titane://boot-marker", move |event| {
                 let payload = event.payload().to_string();
@@ -2063,6 +2064,11 @@ fn main() {
             auth::commands::auth_delete_api_key,
             auth::commands::auth_grant_role,
             auth::commands::auth_revoke_role,
+            // OAuth Facebook PKCE Commands (v33.0.5)
+            auth::commands::oauth_facebook_initiate,
+            auth::commands::oauth_facebook_callback,
+            auth::commands::oauth_facebook_get_profile,
+            auth::commands::oauth_facebook_logout,
             // ═══════════════════════════════════════════════════════════════
             // CRITICAL COMMANDS (v21.5 AUTO-FIX) - Audio + Helios + Memory
             // ═══════════════════════════════════════════════════════════════

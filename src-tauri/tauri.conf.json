@@ -13,7 +13,23 @@
     "copyright": "© 2025-2026 TITANE∞",
     "category": "Productivity",
     "active": true,
-    "targets": "all"
+    "targets": "all",
+    "windows": {
+      "digestAlgorithm": null,
+      "certificateThumbprint": null,
+      "timestampUrl": null,
+      "tsp": false,
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper",
+        "silent": true
+      },
+      "allowDowngrades": true,
+      "wix": {
+        "language": "fr-FR"
+      },
+      "nsis": null,
+      "signCommand": null
+    }
   },
   "app": {
     "windows": [
@@ -34,7 +50,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https://graph.facebook.com https://*.fbcdn.net; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com https://www.facebook.com https://graph.facebook.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
@@ -1309,6 +1325,18 @@
             },
             {
               "command": "progression_save_state"
+            },
+            {
+              "command": "oauth_facebook_initiate"
+            },
+            {
+              "command": "oauth_facebook_callback"
+            },
+            {
+              "command": "oauth_facebook_get_profile"
+            },
+            {
+              "command": "oauth_facebook_logout"
             }
           ],
           "deny": []
