@@ -1394,28 +1394,81 @@
 			"label": "📱 MobileView — iPhone X (TITANE∞ dev:1420)",
 			"type": "shell",
 			"command": "echo 'URL: http://127.0.0.1:1420/titane' && echo 'Ouvrez la palette de commandes (Ctrl+Shift+P) > MobileView > entrez http://127.0.0.1:1420/titane'",
-			"options": { "cwd": "${workspaceFolder}" },
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
 			"problemMatcher": [],
-			"presentation": { "reveal": "always", "panel": "shared", "focus": true },
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": true
+			},
 			"detail": "Rappel URL MobileView iPhone X — copier: http://127.0.0.1:1420/titane"
 		},
 		{
 			"label": "📱 MobileView — Pixel (TITANE∞ dev:1420)",
 			"type": "shell",
 			"command": "echo 'URL: http://127.0.0.1:1420/titane' && echo 'Ouvrez la palette de commandes (Ctrl+Shift+P) > startPixel > entrez http://127.0.0.1:1420/titane'",
-			"options": { "cwd": "${workspaceFolder}" },
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
 			"problemMatcher": [],
-			"presentation": { "reveal": "always", "panel": "shared", "focus": true },
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"focus": true
+			},
 			"detail": "Rappel URL MobileView Pixel — copier: http://127.0.0.1:1420/titane"
 		},
 		{
 			"label": "🌐 TITANE∞ — Navigateur mobile devtools (Ctrl+Shift+M)",
 			"type": "shell",
 			"command": "xdg-open 'http://127.0.0.1:1420/titane' 2>/dev/null &",
-			"options": { "cwd": "${workspaceFolder}" },
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
 			"problemMatcher": [],
-			"presentation": { "reveal": "silent", "panel": "shared" },
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			},
 			"detail": "Ouvre TITANE∞ dans Chrome — activer DevTools > Toggle device toolbar (Ctrl+Shift+M) pour vue mobile"
+		},
+		{
+			"label": "cargo test: ai::ollama parse_prompt",
+			"type": "shell",
+			"command": "cd src-tauri && cargo test ai::ollama::tests::test_parse_prompt -- --nocapture 2>&1; echo \"EXIT:$?\"",
+			"isBackground": false
+		},
+		{
+			"label": "cargo test: parse_prompt (round 2)",
+			"type": "shell",
+			"command": "cd src-tauri && cargo test ai::ollama::tests::test_parse_prompt -- --nocapture 2>&1; echo \"EXIT:$?\"",
+			"isBackground": false
+		},
+		{
+			"label": "gates: detect_recurrence + verify_instructions",
+			"type": "shell",
+			"command": "bash scripts/autoheal/detect_recurrence.sh && bash scripts/verify_instructions.sh; echo \"GATES:$?\"",
+			"isBackground": false
+		},
+		{
+			"label": "git: commit+push fix(chat) memory",
+			"type": "shell",
+			"command": "cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && git add src-tauri/src/ai/ollama.rs scripts/autoheal/autoheal_rules.jsonl && git commit -m \"fix(chat): switch OllamaClient from /api/generate to /api/chat for multi-turn memory\\n\\n- Add OllamaChatMessage/OllamaChatRequest/OllamaChatResponse structs\\n- Add parse_prompt_to_chat_messages() to extract system+history+current from\\n  STM (## STM_RECENT_TURNS) and LTM (## CONVERSATION_HISTORY) markers\\n- Add query_chat_api() with auto-fallback to /api/generate on HTTP error\\n- query_with_model() now routes to /api/chat when history markers detected\\n- 4 unit tests: no_markers, stm_turns, conversation_history, empty_lines\\n- All tests PASS (4/4), gates PASS (33/33)\\n- AutoHeal: AH-20260503-CHAT-MEMORY-OLLAMA-API-0001\" && git push origin MAIN 2>&1 && echo \"COMMIT_PUSH:$?\"",
+			"isBackground": false
+		},
+		{
+			"label": "bump: 33.0.2 -> 33.0.3",
+			"type": "shell",
+			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && node scripts/bump-version.mjs && node scripts/sync-versions.mjs && cat package.json | grep '\"version\"' | head -1; echo \"BUMP:$?\"",
+			"isBackground": false
+		},
+		{
+			"label": "build: tauri release v33.0.3",
+			"type": "shell",
+			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && cd /home/titane-os/Documents/GitHub/TITANE_INFINITY && pnpm run tauri build 2>&1 | tail -30; echo \"BUILD:$?\"",
+			"isBackground": false
 		}
 	],
 	"inputs": [

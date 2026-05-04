@@ -2,11 +2,46 @@
   "servers": {
     "ollama-dev": {
       "type": "stdio",
-      "command": "pnpm",
-      "args": ["dlx", "mcp-server-ollama@latest"],
+      "command": "/usr/local/bin/pnpm",
+      "args": ["dlx", "ollama-mcp@latest"],
       "env": {
         "OLLAMA_HOST": "http://127.0.0.1:11434",
         "OLLAMA_MODEL": "qwen3.5:9b"
+      }
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "/usr/local/bin/pnpm",
+      "args": ["dlx", "@modelcontextprotocol/server-memory"]
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "/usr/local/bin/pnpm",
+      "args": ["dlx", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "/usr/local/bin/pnpm",
+      "args": [
+        "dlx",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/titane-os/Documents/GitHub/TITANE_INFINITY"
+      ]
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "/usr/local/bin/pnpm",
+      "args": ["dlx", "@playwright/mcp@latest"],
+      "env": {
+        "PLAYWRIGHT_HEADLESS": "true"
+      }
+    },
+    "github": {
+      "type": "stdio",
+      "command": "/usr/local/bin/pnpm",
+      "args": ["dlx", "@modelcontextprotocol/server-github@latest"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_TOKEN}"
       }
     }
   }

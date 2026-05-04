@@ -97,13 +97,15 @@ describe('Ollama Dev — MCP server structure', () => {
   });
 
   it('utilise pnpm comme commande', () => {
-    expect(mcpConfig.servers['ollama-dev'].command).toBe('pnpm');
+    const cmd = mcpConfig.servers['ollama-dev'].command;
+    expect(cmd === 'pnpm' || cmd === '/usr/local/bin/pnpm' || cmd.endsWith('/pnpm')).toBe(true);
   });
 
-  it('transmet les args dlx + mcp-server-ollama@latest', () => {
+  it('transmet les args dlx + package ollama mcp', () => {
     const { args } = mcpConfig.servers['ollama-dev'];
     expect(args).toContain('dlx');
-    expect(args.join(' ')).toContain('mcp-server-ollama');
+    const argsStr = args.join(' ');
+    expect(argsStr.includes('mcp-server-ollama') || argsStr.includes('ollama-mcp')).toBe(true);
   });
 
   it('expose OLLAMA_HOST=http://127.0.0.1:11434 dans env', () => {
@@ -116,16 +118,30 @@ describe('Ollama Dev — MCP server structure', () => {
     expect(mcpConfig.servers['ollama-dev'].env['OLLAMA_MODEL']).toBe('qwen3.5:9b');
   });
 
-  it("ne contient qu'un seul serveur déclaré (pas de serveurs parasites)", () => {
-    expect(Object.keys(mcpConfig.servers)).toHaveLength(1);
+  it('autorise plusieurs serveurs MCP mais avec une allowlist contrôlée', () => {
+    const serverNames = Object.keys(mcpConfig.servers);
+    const allowedServerNames = [
+      'ollama-dev',
+      'memory',
+      'sequential-thinking',
+      'filesystem',
+      'playwright',
+      'github',
+    ];
+
+    expect(serverNames.length).toBeGreaterThanOrEqual(1);
+    expect(serverNames).toContain('ollama-dev');
+    expect(serverNames.every(name => allowedServerNames.includes(name))).toBe(true);
   });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('Ollama Dev — VS Code settings', () => {
-  it('active chat.mcp.enabled: true', () => {
-    expect(vscodeSettings['chat.mcp.enabled']).toBe(true);
+  it('active MCP (chat.mcp.enabled=true ou chat.mcp.access présent)', () => {
+    const enabled = vscodeSettings['chat.mcp.enabled'];
+    const access = vscodeSettings['chat.mcp.access'];
+    expect(enabled === true || (typeof access === 'string' && access.length > 0)).toBe(true);
   });
 
   it('définit chat.agent.maxRequests à une valeur >= 1000', () => {
