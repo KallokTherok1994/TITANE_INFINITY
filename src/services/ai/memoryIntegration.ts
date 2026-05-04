@@ -1088,6 +1088,8 @@ export class MemoryIntegration {
       });
       await this.shadowWriteInteractionToUnifiedMemory(data);
       this.clearCache();
+      // Reset shadow read near-match history at session boundary to avoid cross-session leakage
+      recentNearMatchSnapshots = [];
       // v31.2.33: Schedule idle web enrichment for the AI response (HippoRAG-inspired)
       memoryWebEnricher.scheduleEnrichment({
         id: `interaction_${Date.now()}`,

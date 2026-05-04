@@ -767,7 +767,7 @@ class ChatEngineOmega {
       // Generate or retrieve conversation ID
       const conversation_id =
         this.getConversationId(finalConfig.mode) ||
-        `conv_${finalConfig.mode}_${Date.now()}`;
+        `conv_${finalConfig.mode}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
       this.setConversationId(finalConfig.mode, conversation_id);
 
       // Start observability trace in background so it overlaps with context loading.
