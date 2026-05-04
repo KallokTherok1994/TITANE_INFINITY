@@ -456,3 +456,83 @@ describe('TITANE∞ - canonicalMode IPC contract (Phase C v31.2.38)', () => {
     expect(content).toContain('canonicalMode');
   });
 });
+
+// ─── Phase OAuth Facebook (v33.0.5) ───────────────────────────────────────
+describe('TITANE∞ - OAuth Facebook IPC contract (v33.0.5)', () => {
+  const OAUTH_COMMANDS = [
+    'oauth_facebook_initiate',
+    'oauth_facebook_callback',
+    'oauth_facebook_get_profile',
+    'oauth_facebook_logout',
+  ];
+
+  it('all 4 oauth commands are present in ALLOWED_COMMANDS (security.ts)', () => {
+    const securityPath = path.join(process.cwd(), 'src/lib/security.ts');
+    const content = fs.readFileSync(securityPath, 'utf-8');
+    for (const cmd of OAUTH_COMMANDS) {
+      expect(content).toContain(`'${cmd}'`);
+    }
+  });
+
+  it('oauth_facebook_initiate command exists in auth/commands.rs', () => {
+    const commandsPath = path.join(process.cwd(), 'src-tauri/src/auth/commands.rs');
+    const content = fs.readFileSync(commandsPath, 'utf-8');
+    expect(content).toContain('oauth_facebook_initiate');
+    expect(content).toContain('oauth_facebook_callback');
+    expect(content).toContain('oauth_facebook_get_profile');
+    expect(content).toContain('oauth_facebook_logout');
+  });
+
+  it('all 4 oauth commands are registered in main.rs invoke_handler', () => {
+    const mainPath = path.join(process.cwd(), 'src-tauri/src/main.rs');
+    const content = fs.readFileSync(mainPath, 'utf-8');
+    for (const cmd of OAUTH_COMMANDS) {
+      expect(content).toContain(cmd);
+    }
+  });
+
+  it('all 4 oauth commands are in tauri.conf.json capabilities allow list', () => {
+    const confPath = path.join(process.cwd(), 'src-tauri/tauri.conf.json');
+    const content = fs.readFileSync(confPath, 'utf-8');
+    for (const cmd of OAUTH_COMMANDS) {
+      expect(content).toContain(`"${cmd}"`);
+    }
+  });
+
+  it('FacebookProvider does not contain hardcoded App ID (OWASP A02)', () => {
+    const providerPath = path.join(
+      process.cwd(),
+      'src-tauri/src/auth/oauth/facebook_provider.rs'
+    );
+    const content = fs.readFileSync(providerPath, 'utf-8');
+    // Must use env var, not hardcoded numeric App ID
+    expect(content).toContain('TITANE_FB_APP_ID');
+    // Should not contain a raw numeric Facebook App ID pattern (15+ digits)
+    expect(content).not.toMatch(/\b\d{15,}\b/);
+  });
+
+  it('pkce.rs uses SHA-256 and base64url (RFC 7636 compliance)', () => {
+    const pkcePath = path.join(process.cwd(), 'src-tauri/src/auth/oauth/pkce.rs');
+    const content = fs.readFileSync(pkcePath, 'utf-8');
+    expect(content).toContain('Sha256');
+    expect(content).toContain('URL_SAFE_NO_PAD');
+    // code_challenge_method=S256 lives in the provider; pkce.rs must implement SHA-256 + base64url
+  });
+
+  it('facebook_provider.rs uses code_challenge_method=S256 (RFC 7636 §4.3)', () => {
+    const providerPath = path.join(
+      process.cwd(),
+      'src-tauri/src/auth/oauth/facebook_provider.rs'
+    );
+    const content = fs.readFileSync(providerPath, 'utf-8');
+    expect(content).toContain('code_challenge_method=S256');
+  });
+
+  it('oauthService.ts calls correct IPC command names', () => {
+    const servicePath = path.join(process.cwd(), 'src/services/auth/oauthService.ts');
+    const content = fs.readFileSync(servicePath, 'utf-8');
+    for (const cmd of OAUTH_COMMANDS) {
+      expect(content).toContain(`'${cmd}'`);
+    }
+  });
+});

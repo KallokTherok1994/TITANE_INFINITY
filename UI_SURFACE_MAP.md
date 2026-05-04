@@ -802,3 +802,30 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Verite runtime visible: quand `reason_code=PROVIDER_UNAVAILABLE` et provider demande `ollama|local`, le message de recuperation priorise maintenant les actions locales (endpoint `127.0.0.1:11434`, modele local attendu, restart Ollama) au lieu de pousser d abord les cles cloud.
 - Contrat conserve: aucune bascule silencieuse de provider; la selection UI reste publiee telle quelle.
 - Preuve associee: src/**tests**/hooks/useConversationEngine.test.ts (assertions sur contenu contextualise ollama).
+
+# [2026-05-04] OAuth Facebook + Unified Launcher (v33.0.5)
+
+## FacebookLoginButton — src/components/auth/FacebookLoginButton.tsx
+- `data-testid="facebook-login-button"` (wrapper div)
+- `data-testid="facebook-login-error"` (error message, conditional)
+- Calls IPC `oauth_facebook_initiate` → opens system browser for PKCE OAuth
+- Hidden when `profile` is non-null (shows OAuthProfileCard instead)
+- Tests: src/__tests__/components/auth/FacebookLoginButton.test.tsx (6 tests PASS)
+
+## OAuthProfileCard — src/components/auth/OAuthProfileCard.tsx
+- `data-testid="oauth-profile-card"` (root)
+- `data-testid="oauth-profile-name"`, `oauth-profile-email"`, `oauth-profile-provider"`
+- `data-testid="oauth-profile-avatar"` or `"oauth-profile-avatar-placeholder"`
+- `data-testid="oauth-logout-button"` → calls IPC `oauth_facebook_logout`
+- Visible only when `profile !== null`
+
+## UnifiedLauncherPanel — src/components/launcher/UnifiedLauncherPanel.tsx
+- `data-testid="unified-launcher-panel"` (root)
+- `data-testid="unified-launcher-platform"`, `"unified-launcher-steps"`
+- `data-testid="unified-launcher-ollama-status"` (Ollama reachability badge)
+- `data-testid="unified-launcher-auth-section"` (Facebook login or profile)
+- `data-testid="unified-launcher-launch-button"` (final launch CTA)
+- `data-testid="unified-launcher-loading"`, `"unified-launcher-error"`
+- Step flow: detecting → ollama → auth → ready
+- Tests: src/__tests__/components/launcher/UnifiedLauncherPanel.test.tsx (5 tests PASS)
+- E2E: e2e/desktop/unified-launcher.spec.ts

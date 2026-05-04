@@ -1617,3 +1617,27 @@
 **Managed state**: `Arc<RwLock<MetaEnergyState>>` enregistré dans `main.rs` via `.manage()`.  
 **Frontend hook**: `src/hooks/useMetaEnergy.ts`  
 **Security**: 8 commandes présentes dans `ALLOWED_COMMANDS` (`src/lib/security.ts`).
+
+---
+
+## OAuth Facebook PKCE — v33.0.5
+
+**Module**: `src-tauri/src/auth/oauth/`  
+**Source commands**: `src-tauri/src/auth/commands.rs` (oauth section)  
+**Registered**: `src-tauri/src/main.rs` invoke_handler  
+**Security**: PKCE-only (no client_secret), App ID via env `TITANE_FB_APP_ID` (OWASP A02 compliant)  
+**Redirect URI**: `titane://auth/callback` (custom protocol — deep-link)  
+**Plugin**: `tauri-plugin-deep-link` v2
+
+| # | Command | Description | Ring | Source |
+|---|---------|-------------|------|--------|
+| 1 | `oauth_facebook_initiate` | Génère PKCE pair + auth URL Facebook → ouvre système browser | Ring 0 | `src-tauri/src/auth/commands.rs` |
+| 2 | `oauth_facebook_callback` | Valide state CSRF, échange code→token PKCE, fetch profil Graph API | Ring 0 | `src-tauri/src/auth/commands.rs` |
+| 3 | `oauth_facebook_get_profile` | Lit profil Facebook chiffré depuis SecretsEngine | Ring 0 | `src-tauri/src/auth/commands.rs` |
+| 4 | `oauth_facebook_logout` | Supprime credentials Facebook du SecretsEngine | Ring 0 | `src-tauri/src/auth/commands.rs` |
+
+**Frontend service**: `src/services/auth/oauthService.ts`  
+**Zustand store**: `src/core/auth/oauthStore.ts`  
+**UI components**: `FacebookLoginButton` (`data-testid="facebook-login-button"`), `OAuthProfileCard` (`data-testid="oauth-profile-card"`)  
+**Tests contract**: `tests/contract/tauri-ipc-contract.test.ts` (7 tests — PASS)  
+**ALLOWED_COMMANDS**: 4 commandes enregistrées dans `src/lib/security.ts`
