@@ -29,7 +29,7 @@ incremental = false   # REPRODUCIBILITY: disable incremental compilation for det
 tauri-build = { version = "2.0", features = [] }
 
 [dependencies]
-tauri                          = { version = "2.0", features = ["protocol-asset", "tray-icon"] }
+tauri                          = { version = "2.11", features = ["protocol-asset", "tray-icon"] }
 tauri-plugin-dialog            = "2.7"
 tauri-plugin-fs                = "2"
 serde                          = { version = "1.0", features = ["derive"] }
