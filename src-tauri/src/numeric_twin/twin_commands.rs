@@ -577,7 +577,7 @@ pub async fn twin_recalculate_fusion(
 // FONCTIONS DE CONVERSION
 // ═══════════════════════════════════════════════════════════════════════════
 
-fn convert_to_response(state: &TwinState) -> TwinStateResponse {
+pub(crate) fn convert_to_response(state: &TwinState) -> TwinStateResponse {
     TwinStateResponse {
         identity_core: TwinIdentityCoreResponse {
             version: state.identity_core.version.clone(),

@@ -1,3 +1,7 @@
+## 2026-05-05 : Remote Gateway — Twins HTTP access (v33.0.8+)
+
+> `src-tauri/src/remote_gateway/handlers.rs` étend l allowlist `POST /api/invoke` avec les commandes `twin_*` (lecture + mutation gouvernée) et route les commandes Twin vers un état partagé `NumericTwinState` injecté dans `GatewayState`. `src-tauri/src/remote_gateway/server.rs` câble désormais `twin: Arc<NumericTwinState>` au build du router. Les réponses read-path réutilisent `convert_to_response()` (`src-tauri/src/numeric_twin/twin_commands.rs`) pour préserver le contrat camelCase côté frontend. Preuves associées: test Rust `test_invoke_twin_identity_command` + Playwright `e2e/remote-gateway.spec.ts` (cas `twin_get_identity|twin_get_evolution_profile|twin_get_fusion_index`).
+
 ## 2026-05-05 : Test Autofix + One Door consolidation (Auth/Launcher)
 
 > One Door renforcé sur les surfaces auth/launcher: `src/services/auth/oauthService.ts` et `src/components/launcher/UnifiedLauncherPanel.tsx` ne consomment plus `@tauri-apps/api/core` directement et passent par `safeInvokeCanonical` avec unwrap explicite du contrat `{ ok, content, error }`.

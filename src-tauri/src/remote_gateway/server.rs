@@ -17,6 +17,7 @@ use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer};
 use tower_http::set_header::SetResponseHeaderLayer;
 
 use crate::security::csp::get_csp_headers;
+use crate::numeric_twin::twin_commands::NumericTwinState;
 
 use crate::{
     conversation_engine::ConversationEngineState,
@@ -123,6 +124,7 @@ fn build_router(config: &RemoteGatewayConfig, engine: Arc<ConversationEngineStat
         auth: auth_state.clone(),
         engine,
         orchestrator,
+        twin: Arc::new(NumericTwinState::default()),
         anomaly: anomaly_detector,
     };
 

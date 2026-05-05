@@ -20,6 +20,19 @@ use crate::conversation_engine::{
 };
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use crate::commands::web_search_commands::perform_web_search;
+use crate::numeric_twin::{
+    EvolutionType,
+    ObservationType,
+    TwinEvolutionRequest,
+    TwinObservation,
+};
+use crate::numeric_twin::twin_commands::{
+    convert_to_response,
+    NumericTwinState,
+    TwinEvolutionRequestPayload,
+    TwinObservationRequest,
+    TwinSyncValidationRequest,
+};
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 use crate::remote_gateway::anomaly_detector::AnomalyDetector;
 use crate::remote_gateway::auth::{
@@ -55,6 +68,7 @@ pub struct GatewayState {
     pub auth: Arc<RemoteAuthState>,
     pub engine: Arc<ConversationEngineState>,
     pub orchestrator: ChatOrchestratorState,
+    pub twin: Arc<NumericTwinState>,
     /// Phase C2 — anomaly detector wired for real-time request monitoring
     pub anomaly: Arc<AnomalyDetector>,
 }
@@ -243,6 +257,14 @@ pub async fn invoke_handler(
         "ai_status",
         "knowledge_base_runtime_snapshot",
         "advanced_agents_get_status",
+        "twin_get_state",
+        "twin_get_identity",
+        "twin_get_evolution_profile",
+        "twin_get_fusion_index",
+        "twin_recalculate_fusion",
+        "twin_submit_observation",
+        "twin_apply_evolution",
+        "twin_validate_sync",
         // Unified TITANE — web search + research available from all clients
         "web_search",
         "web_research",
@@ -459,6 +481,155 @@ pub async fn invoke_handler(
                 "note": "Real agent signals require AppHandle wiring"
             })))
         }
+        "twin_get_state" => {
+            let twin = state.twin.0.lock().await;
+            let snapshot = twin.get_state();
+            let response = convert_to_response(&snapshot);
+            match serde_json::to_value(response) {
+                Ok(v) => Json(IpcResponse::ok(v)),
+                Err(e) => Json(IpcResponse::err(format!("serialization error: {e}"))),
+            }
+        }
+        "twin_get_identity" => {
+            let twin = state.twin.0.lock().await;
+            let snapshot = twin.get_state();
+            let response = convert_to_response(&snapshot);
+            match serde_json::to_value(response.identity_core) {
+                Ok(v) => Json(IpcResponse::ok(v)),
+                Err(e) => Json(IpcResponse::err(format!("serialization error: {e}"))),
+            }
+        }
+        "twin_get_evolution_profile" => {
+            let twin = state.twin.0.lock().await;
+            let snapshot = twin.get_state();
+            let response = convert_to_response(&snapshot);
+            match serde_json::to_value(response.evolution_profile) {
+                Ok(v) => Json(IpcResponse::ok(v)),
+                Err(e) => Json(IpcResponse::err(format!("serialization error: {e}"))),
+            }
+        }
+        "twin_get_fusion_index" => {
+            let twin = state.twin.0.lock().await;
+            let snapshot = twin.get_state();
+            let response = convert_to_response(&snapshot);
+            match serde_json::to_value(response.fusion_index) {
+                Ok(v) => Json(IpcResponse::ok(v)),
+                Err(e) => Json(IpcResponse::err(format!("serialization error: {e}"))),
+            }
+        }
+        "twin_recalculate_fusion" => {
+            let mut twin = state.twin.0.lock().await;
+            twin.calculate_fusion_index();
+            Json(IpcResponse::ok(json!({
+                "success": true,
+                "fusionScore": twin.fusion_index.global_score,
+            })))
+        }
+        "twin_submit_observation" => {
+            let args: TwinObservationRequest = match payload.payload {
+                Some(v) => match serde_json::from_value(v) {
+                    Ok(a) => a,
+                    Err(e) => {
+                        return Json(IpcResponse::err(format!("invalid twin observation args: {e}")));
+                    }
+                },
+                None => {
+                    return Json(IpcResponse::err("twin_submit_observation requires a payload"));
+                }
+            };
+
+            let observation_type = match args.observation_type.as_str() {
+                "value" => ObservationType::Value,
+                "cognitive" => ObservationType::Cognitive,
+                "style" => ObservationType::Style,
+                "emotional" => ObservationType::Emotional,
+                other => {
+                    return Json(IpcResponse::err(format!(
+                        "invalid observation_type: {other}"
+                    )));
+                }
+            };
+
+            let mut twin = state.twin.0.lock().await;
+            match twin.submit_observation(TwinObservation {
+                observation_type,
+                content: args.content,
+                context: args.context,
+                confidence: args.confidence,
+            }) {
+                Ok(packet) => Json(IpcResponse::ok(json!({
+                    "success": true,
+                    "syncId": packet.id,
+                }))),
+                Err(e) => Json(IpcResponse::err(e.to_string())),
+            }
+        }
+        "twin_apply_evolution" => {
+            let args: TwinEvolutionRequestPayload = match payload.payload {
+                Some(v) => match serde_json::from_value(v) {
+                    Ok(a) => a,
+                    Err(e) => {
+                        return Json(IpcResponse::err(format!("invalid twin evolution args: {e}")));
+                    }
+                },
+                None => {
+                    return Json(IpcResponse::err("twin_apply_evolution requires a payload"));
+                }
+            };
+
+            let evolution_type = match args.evolution_type.as_str() {
+                "trait_adjustment" => EvolutionType::TraitAdjustment,
+                "value_reinforcement" => EvolutionType::ValueReinforcement,
+                "pattern_integration" => EvolutionType::PatternIntegration,
+                "phase_transition" => EvolutionType::PhaseTransition,
+                other => {
+                    return Json(IpcResponse::err(format!(
+                        "invalid evolution_type: {other}"
+                    )));
+                }
+            };
+
+            let mut twin = state.twin.0.lock().await;
+            match twin.apply_evolution(TwinEvolutionRequest {
+                evolution_type,
+                target: args.target,
+                delta: args.delta,
+                is_deep_change: args.is_deep_change,
+                validated_by_kevin: args.validated_by_kevin,
+            }) {
+                Ok(result) => Json(IpcResponse::ok(json!({
+                    "success": result.success,
+                    "evolutionId": result.evolution_id,
+                    "newFusionIndex": result.new_fusion_index,
+                    "newPhase": format!("{:?}", result.new_phase),
+                    "timestamp": result.timestamp.to_rfc3339(),
+                }))),
+                Err(e) => Json(IpcResponse::err(e.to_string())),
+            }
+        }
+        "twin_validate_sync" => {
+            let args: TwinSyncValidationRequest = match payload.payload {
+                Some(v) => match serde_json::from_value(v) {
+                    Ok(a) => a,
+                    Err(e) => {
+                        return Json(IpcResponse::err(format!("invalid twin sync validation args: {e}")));
+                    }
+                },
+                None => {
+                    return Json(IpcResponse::err("twin_validate_sync requires a payload"));
+                }
+            };
+
+            let mut twin = state.twin.0.lock().await;
+            match twin.validate_sync(&args.sync_id, args.validated) {
+                Ok(_) => Json(IpcResponse::ok(json!({
+                    "success": true,
+                    "syncId": args.sync_id,
+                    "validated": args.validated,
+                }))),
+                Err(e) => Json(IpcResponse::err(e.to_string())),
+            }
+        }
         _ => {
             Json(IpcResponse::err(format!(
                 "command '{}' not yet wired in remote gateway",
@@ -541,6 +712,7 @@ mod tests {
             )),
             engine,
             orchestrator,
+            twin: Arc::new(NumericTwinState::default()),
             anomaly,
         }
     }
@@ -583,6 +755,22 @@ mod tests {
         let state = make_gateway_state();
         let req = InvokeRequest {
             command: "total_dev_run_command".into(), // not in allowlist
+            payload: None,
+        };
+        let result = invoke_handler(
+            State(state),
+            ConnectInfo("127.0.0.1:0".parse::<std::net::SocketAddr>().unwrap()),
+            Json(req),
+        )
+        .await;
+        let _ = result;
+    }
+
+    #[tokio::test]
+    async fn test_invoke_twin_identity_command() {
+        let state = make_gateway_state();
+        let req = InvokeRequest {
+            command: "twin_get_identity".into(),
             payload: None,
         };
         let result = invoke_handler(
