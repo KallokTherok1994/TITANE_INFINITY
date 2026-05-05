@@ -15,6 +15,12 @@
  */
 
 import { test, expect, type Page } from '@playwright/test';
+import { E2E_TIMEOUTS } from '../config/constants';
+import {
+  sendChatMessage as sendMessageUsingHelper,
+  waitForChatComposerReady,
+  waitForChatLoadingDone,
+} from '../helpers/chat';
 import { openTitane } from '../helpers/navigation';
 
 // ─── Config ────────────────────────────────────────────────────────────────────
@@ -84,7 +90,7 @@ const MODE_QA: Record<ModeId, [string, string]> = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function ensureChatReady(page: Page) {
-  await expect(page.getByTestId('chat-input')).toBeVisible({ timeout: 20000 });
+  await waitForChatComposerReady(page);
 }
 
 async function selectChatMode(page: Page, modeId: string): Promise<boolean> {
@@ -92,17 +98,17 @@ async function selectChatMode(page: Page, modeId: string): Promise<boolean> {
   const trigger = page.getByTestId('chat-mode-selector-trigger');
   if (await trigger.isVisible({ timeout: 3000 }).catch(() => false)) {
     await trigger.click();
-    await page.waitForTimeout(400);
 
     const option = page.getByTestId(`chat-mode-option-${modeId}`);
     if (await option.isVisible({ timeout: 3000 }).catch(() => false)) {
       await option.click();
-      await page.waitForTimeout(500);
+      await expect(page.getByTestId('chat-mode-selector')).toBeVisible({
+        timeout: E2E_TIMEOUTS.ui,
+      });
       return true;
     }
     // Fermer le menu si ouvert
     await page.keyboard.press('Escape');
-    await page.waitForTimeout(200);
   }
 
   // Fallback: select compact — wrap avec try-catch pour modes restreints
@@ -110,7 +116,7 @@ async function selectChatMode(page: Page, modeId: string): Promise<boolean> {
   if (await select.isVisible({ timeout: 2000 }).catch(() => false)) {
     try {
       await select.selectOption(modeId, { timeout: 5000 });
-      await page.waitForTimeout(500);
+      await expect(select).toHaveValue(modeId, { timeout: E2E_TIMEOUTS.ui });
       return true;
     } catch {
       // Mode non disponible dans le sélecteur (restriction d'accès ou mode filtré)
@@ -124,18 +130,14 @@ async function selectChatMode(page: Page, modeId: string): Promise<boolean> {
 }
 
 async function sendChatMessage(page: Page, text: string) {
-  const input = page.getByTestId('chat-input');
-  await input.fill(text);
-  await page.waitForTimeout(200);
-  await page.getByTestId('chat-send').click();
+  await sendMessageUsingHelper(page, text);
 }
 
 async function waitForChatResponse(page: Page) {
-  // Attendre que le loader disparaisse
-  await expect(page.getByTestId('chat-loading')).not.toBeVisible({
+  await waitForChatLoadingDone(page);
+  await expect(page.getByTestId('chat-messages-scroll-region')).toBeVisible({
     timeout: RESPONSE_TIMEOUT,
   });
-  await page.waitForTimeout(500);
 }
 
 async function getActiveMode(page: Page): Promise<string> {
@@ -164,7 +166,6 @@ test.describe('Chat Q&A — Sélecteur de modes disponibles', () => {
     const trigger = page.getByTestId('chat-mode-selector-trigger');
     if (await trigger.isVisible({ timeout: 2000 }).catch(() => false)) {
       await trigger.click();
-      await page.waitForTimeout(400);
 
       // Vérifier au moins les modes de base
       for (const modeId of ['default', 'coach', 'dev', 'brainstorming', 'planning']) {
@@ -306,7 +307,6 @@ test.describe('Chat Q&A — Runtime state coherence', () => {
 
     // Sélectionner le mode brainstorming
     await selectChatMode(page, 'brainstorming');
-    await page.waitForTimeout(1000);
 
     // Vérifier la cohérence runtime si disponible
     const runtimeState = page.getByTestId('chat-runtime-state');
@@ -334,7 +334,6 @@ test.describe('Chat Q&A — Runtime state coherence', () => {
   test('chat-ready est présent après chargement complet', async ({ page }) => {
     await openTitane(page);
     await ensureChatReady(page);
-    await page.waitForTimeout(2000);
 
     const chatReady = page.getByTestId('chat-ready');
     const chatInput = page.getByTestId('chat-input');

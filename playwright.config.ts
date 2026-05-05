@@ -15,6 +15,8 @@ const E2E_WATCH_SCRIPT = resolve(CONFIG_DIR, 'scripts/e2e/vite-e2e-watch.cjs');
 // Set TITANE_E2E_USE_WEBSERVER=0 when using an externally managed server.
 const useWebServer = process.env.TITANE_E2E_USE_WEBSERVER !== '0';
 const includeExperimentalTests = process.env.TITANE_E2E_INCLUDE_EXPERIMENTAL === '1';
+const includeRemoteStrictTests = process.env.TITANE_E2E_REMOTE_STRICT === '1';
+const remoteStrictIgnore = includeRemoteStrictTests ? [] : ['**/remote-*.spec.ts'];
 const testsE2ELegacyIgnore = [
   '**/control_panel.spec.ts',
   '**/accessibility.spec.ts',
@@ -76,8 +78,8 @@ export default defineConfig({
     {
       name: 'chromium',
       testIgnore: includeExperimentalTests
-        ? []
-        : ['**/onboarding.test.ts', ...patch010LegacyIgnore],
+        ? [...remoteStrictIgnore]
+        : ['**/onboarding.test.ts', ...patch010LegacyIgnore, ...remoteStrictIgnore],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },

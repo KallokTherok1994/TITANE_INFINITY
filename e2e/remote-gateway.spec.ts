@@ -11,55 +11,23 @@
  */
 
 import { test, expect } from '@playwright/test';
-import net from 'node:net';
 
-const REMOTE_BASE_URL = process.env.TITANE_REMOTE_E2E_URL ?? 'http://localhost:7420';
-const REMOTE_SECRET = process.env.TITANE_REMOTE_E2E_SECRET ?? 'change-me-in-production';
+import { REMOTE_E2E_DEFAULTS } from './config/constants';
+import {
+  getRemoteAccessToken,
+  requireRemoteGatewayOrFail,
+} from './helpers/remote-auth';
 
-/**
- * Check whether the remote gateway TCP port is reachable.
- * Returns true only when TITANE_REMOTE_ENABLED=1 server is up.
- */
-async function isGatewayReachable(url: string): Promise<boolean> {
-  return new Promise(resolve => {
-    try {
-      const parsed = new URL(url);
-      const port = parseInt(parsed.port || '7420', 10);
-      const host = parsed.hostname;
-      const socket = net.createConnection({ host, port, timeout: 2000 });
-      socket.once('connect', () => {
-        socket.destroy();
-        resolve(true);
-      });
-      socket.once('error', () => {
-        socket.destroy();
-        resolve(false);
-      });
-      socket.once('timeout', () => {
-        socket.destroy();
-        resolve(false);
-      });
-    } catch {
-      resolve(false);
-    }
-  });
-}
+const REMOTE_BASE_URL = REMOTE_E2E_DEFAULTS.baseUrl;
+const REMOTE_SECRET = REMOTE_E2E_DEFAULTS.secret;
 
-// Cache result for the session to avoid redundant TCP probes
-let _gatewayReachable: boolean | null = null;
-async function gatewayReachable(): Promise<boolean> {
-  if (_gatewayReachable === null) {
-    _gatewayReachable = await isGatewayReachable(REMOTE_BASE_URL);
-  }
-  return _gatewayReachable;
-}
-
-const SKIP_MSG = 'Remote gateway not running — start TITANE with TITANE_REMOTE_ENABLED=1';
+test.beforeAll(async () => {
+  await requireRemoteGatewayOrFail('remote-gateway.spec.ts', REMOTE_BASE_URL);
+});
 
 // ── Health endpoint (no auth required) ───────────────────────
 
 test('GET /api/health returns ok:true without auth', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
   const resp = await request.get(`${REMOTE_BASE_URL}/api/health`);
   expect(resp.ok()).toBe(true);
   const data = await resp.json();
@@ -68,7 +36,6 @@ test('GET /api/health returns ok:true without auth', async ({ request }) => {
 });
 
 test('GET /api/system/health returns ok:true without auth', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
   const resp = await request.get(`${REMOTE_BASE_URL}/api/system/health`);
   expect(resp.ok()).toBe(true);
   const data = await resp.json();
@@ -78,7 +45,6 @@ test('GET /api/system/health returns ok:true without auth', async ({ request }) 
 // ── Authentication flow ──────────────────────────────────────
 
 test('POST /api/auth/token returns tokens on valid secret', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
   const resp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
     data: { secret: REMOTE_SECRET },
   });
@@ -90,7 +56,6 @@ test('POST /api/auth/token returns tokens on valid secret', async ({ request }) 
 });
 
 test('POST /api/auth/token returns 401 on invalid secret', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
   const resp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
     data: { secret: 'definitely-wrong-secret-xyz' },
   });
@@ -102,18 +67,15 @@ test('POST /api/auth/token returns 401 on invalid secret', async ({ request }) =
 // ── Protected endpoints ───────────────────────────────────────
 
 test('GET /api/config/runtime returns 401 without token', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
   const resp = await request.get(`${REMOTE_BASE_URL}/api/config/runtime`);
   expect(resp.status()).toBe(401);
 });
 
 test('GET /api/config/runtime returns config with valid token', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
-  // Get token first
-  const authResp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
-    data: { secret: REMOTE_SECRET },
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
   });
-  const { access_token } = await authResp.json();
 
   const resp = await request.get(`${REMOTE_BASE_URL}/api/config/runtime`, {
     headers: { Authorization: `Bearer ${access_token}` },
@@ -127,11 +89,10 @@ test('GET /api/config/runtime returns config with valid token', async ({ request
 // ── Invoke endpoint ──────────────────────────────────────────
 
 test('POST /api/invoke health_check returns ok', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
-  const authResp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
-    data: { secret: REMOTE_SECRET },
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
   });
-  const { access_token } = await authResp.json();
 
   const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
     data: { command: 'health_check' },
@@ -143,11 +104,10 @@ test('POST /api/invoke health_check returns ok', async ({ request }) => {
 });
 
 test('POST /api/invoke blocked command returns error', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
-  const authResp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
-    data: { secret: REMOTE_SECRET },
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
   });
-  const { access_token } = await authResp.json();
 
   const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
     data: { command: 'execute_shell_command', payload: { cmd: 'rm -rf /' } },
@@ -158,10 +118,65 @@ test('POST /api/invoke blocked command returns error', async ({ request }) => {
   expect(data.ok).toBe(false);
 });
 
+test('POST /api/invoke twin_get_identity returns identity payload', async ({ request }) => {
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
+  });
+
+  const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: { command: 'twin_get_identity' },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(resp.ok()).toBe(true);
+  const data = await resp.json();
+  expect(data.ok).toBe(true);
+  expect(data.content).toHaveProperty('twinId');
+  expect(data.content).toHaveProperty('fusionIndex');
+  expect(data.content).toHaveProperty('maturityLevel');
+});
+
+test('POST /api/invoke twin_get_evolution_profile returns profile payload', async ({ request }) => {
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
+  });
+
+  const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: { command: 'twin_get_evolution_profile' },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(resp.ok()).toBe(true);
+  const data = await resp.json();
+  expect(data.ok).toBe(true);
+  expect(data.content).toHaveProperty('currentPhase');
+  expect(data.content).toHaveProperty('stabilityScore');
+  expect(data.content).toHaveProperty('evolutionHistory');
+});
+
+test('POST /api/invoke twin_get_fusion_index returns fusion payload', async ({ request }) => {
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
+  });
+
+  const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: { command: 'twin_get_fusion_index' },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(resp.ok()).toBe(true);
+  const data = await resp.json();
+  expect(data.ok).toBe(true);
+  expect(data.content).toHaveProperty('globalScore');
+  expect(data.content).toHaveProperty('trend');
+});
+
 // ── Refresh token ────────────────────────────────────────────
 
 test('POST /api/auth/refresh returns new access token', async ({ request }) => {
-  test.skip(!(await gatewayReachable()), SKIP_MSG);
   const authResp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
     data: { secret: REMOTE_SECRET },
   });

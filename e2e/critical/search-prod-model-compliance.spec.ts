@@ -174,7 +174,7 @@ test.describe('E2E: Search fallback + PROD model compliance (Tauri runtime)', ()
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForTimeout(1500);
+    await expect(page.locator('body')).toBeVisible({ timeout: 5000 });
   });
 
   // ── C1: web_search IPC never returns CREDENTIALS_MISSING ────────────────

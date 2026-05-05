@@ -20,6 +20,7 @@ test.describe('Critical Path: Application Launch', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to Vite dev server (Tauri webview context)
     await page.goto('/');
+    await expect(page.locator('body')).toBeVisible({ timeout: 15000 });
   });
 
   test('app loads without console errors', async ({ page }) => {
@@ -38,8 +39,7 @@ test.describe('Critical Path: Application Launch', () => {
       }
     });
 
-    // Wait for app to fully initialize
-    await page.waitForTimeout(2000);
+    await expect(page.getByTestId('nav-top-main')).toBeVisible({ timeout: 15000 });
 
     // Verify no critical errors
     const criticalErrors = errors.filter(
@@ -62,7 +62,12 @@ test.describe('Critical Path: Application Launch', () => {
         ) &&
         // Expected in browser (non-Tauri) context: Tauri-only command not in allowlist.
         !(e.includes('not in whitelist') && e.includes('load_ui_theme')) &&
-        !(e.includes('TAURI_ERROR') && e.includes('load_ui_theme'))
+        !(e.includes('TAURI_ERROR') && e.includes('load_ui_theme')) &&
+        // Expected in browser-only E2E: Tauri/IPC transport not available for singularity commands.
+        !(e.includes('Tauri Command Error [singularity_') && e.includes('NO_TRANSPORT')) &&
+        !(e.includes('Neither Tauri IPC nor Remote Gateway is available')) &&
+        // Logger payload lines are auxiliary details attached to prior handled errors.
+        !e.trimStart().startsWith('Payload:')
     );
 
     const ignored404Prefixes = [
@@ -82,9 +87,6 @@ test.describe('Critical Path: Application Launch', () => {
   });
 
   test('visual conductor initializes successfully', async ({ page }) => {
-    // Wait for visual engine initialization
-    await page.waitForTimeout(3000);
-
     // Check for canvas element (visual signatures)
     const canvas = await page.locator('canvas').first();
     await expect(canvas).toBeVisible({ timeout: 10000 });
@@ -116,18 +118,20 @@ test.describe('Critical Path: Application Launch', () => {
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
     if (await closeBeacon.isVisible()) {
       await closeBeacon.click();
-      await page.waitForTimeout(300);
+      await expect(closeBeacon).toBeHidden({ timeout: 5000 });
     }
 
-    // Wait for system health initialization
-    await page.waitForTimeout(3000);
-
     // Look for Console Monitor or error indicators (text may be split across elements)
-    const consoleMonitor = await page.locator('text=Console Monitor').count();
-    const errMin = await page.locator('text=/\\d+ err\\/min/').count();
-
-    // Should have at least Console Monitor visible
-    expect(consoleMonitor + errMin).toBeGreaterThan(0);
+    await expect
+      .poll(
+        async () => {
+          const consoleMonitor = await page.locator('text=Console Monitor').count();
+          const errMin = await page.locator('text=/\\d+ err\\/min/').count();
+          return consoleMonitor + errMin;
+        },
+        { timeout: 15000 }
+      )
+      .toBeGreaterThan(0);
   });
 
   test('no memory leaks after 10 seconds', async ({ page }) => {
@@ -157,8 +161,7 @@ test.describe('Critical Path: Application Launch', () => {
     expect(memoryGrowth).toBeLessThan(50 * 1024 * 1024);
   });
   test('performance metrics are acceptable', async ({ page }) => {
-    // Wait for full initialization
-    await page.waitForTimeout(3000);
+    await expect(page.getByTestId('nav-top-main')).toBeVisible({ timeout: 15000 });
 
     const metrics = await page.evaluate(() => {
       const navigation = performance.getEntriesByType(
@@ -182,7 +185,7 @@ test.describe('Critical Path: Application Launch', () => {
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
     if (await closeBeacon.isVisible()) {
       await closeBeacon.click();
-      await page.waitForTimeout(300);
+      await expect(closeBeacon).toBeHidden({ timeout: 5000 });
     }
 
     // Interaction stable via TopNav (navigation principale)

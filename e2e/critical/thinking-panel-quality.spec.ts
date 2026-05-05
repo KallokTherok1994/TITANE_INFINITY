@@ -104,7 +104,7 @@ test.describe('ThinkingPanel — quality score smoke (sans Tauri)', () => {
     // Si l'app est disponible, vérifier l'absence d'erreur JS critique
     const errors: string[] = [];
     page.on('pageerror', err => errors.push(err.message));
-    await page.waitForTimeout(1000);
+    await expect(page.locator('body')).toBeVisible({ timeout: 5000 });
     const criticalErrors = errors.filter(
       e => e.includes('responseQualityScore') || e.includes('responseQualityTier')
     );

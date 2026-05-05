@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { E2E_TIMEOUTS } from '../config/constants';
 import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
 
 type E2EChatScenario = 'success' | 'rate_limit';
@@ -93,7 +94,7 @@ const getLastAssistantText = async (page: Page): Promise<string> => {
     .getByTestId('chat-message-assistant')
     .getByTestId('chat-message-content')
     .last();
-  await expect(content).toBeVisible({ timeout: 15000 });
+  await expect(content).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
   return (await content.textContent()) ?? '';
 };
 
@@ -136,7 +137,7 @@ const extractSources = (entry: unknown): string[] => {
 
 const sendMessageAndMeasure = async (page: Page, message: string) => {
   const input = getChatInput(page);
-  await expect(input).toBeVisible({ timeout: 15000 });
+  await expect(input).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
   await input.fill(message);
 
   const start = Date.now();
@@ -153,10 +154,10 @@ test.describe('Critical Path: Chat + Memoire + Connaissances Compliance', () => 
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
 
-    await expect(page.getByTestId('chat-input')).toBeVisible({ timeout: 15000 });
-    await expect(page.getByTestId('chat-send')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('chat-input')).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
+    await expect(page.getByTestId('chat-send')).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
     await expect(page.getByTestId('chat-messages-scroll-region')).toBeVisible({
-      timeout: 15000,
+      timeout: E2E_TIMEOUTS.ui,
     });
     await expect(page.getByTestId('chat-mode-selector-select')).toHaveValue('default');
   });
@@ -275,7 +276,7 @@ test.describe('Critical Path: Chat + Memoire + Connaissances Compliance', () => 
     expect(response.elapsedMs).toBeLessThan(MAX_MOCK_RESPONSE_MS);
 
     const citationsContainer = page.locator('[data-testid^="message-citations-"]').last();
-    await expect(citationsContainer).toBeVisible({ timeout: 15000 });
+    await expect(citationsContainer).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
     await expect(citationsContainer).toContainText('Sources en ligne');
     await expect(citationsContainer.getByText('Source A')).toBeVisible();
     await expect(citationsContainer.getByText('Extrait gouverne A')).toBeVisible();

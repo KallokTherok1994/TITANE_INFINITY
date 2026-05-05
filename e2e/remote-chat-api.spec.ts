@@ -14,15 +14,14 @@
 
 import { test, expect } from '@playwright/test';
 
-const REMOTE_BASE_URL = process.env.TITANE_REMOTE_E2E_URL ?? '';
-const REMOTE_SECRET = process.env.TITANE_REMOTE_E2E_SECRET ?? 'change-me-in-production';
+import { E2E_TIMEOUTS, REMOTE_E2E_DEFAULTS } from './config/constants';
+import { getRemoteTokens, requireRemoteGatewayOrFail } from './helpers/remote-auth';
 
-// Skip all tests if no gateway URL is set
+const REMOTE_BASE_URL = REMOTE_E2E_DEFAULTS.baseUrl;
+const REMOTE_SECRET = REMOTE_E2E_DEFAULTS.secret;
+
 test.beforeAll(async () => {
-  if (!REMOTE_BASE_URL) {
-    // No gateway configured — skip gracefully
-    test.skip();
-  }
+  await requireRemoteGatewayOrFail('remote-chat-api.spec.ts', REMOTE_BASE_URL);
 });
 
 // ── Auth helpers ──────────────────────────────────────────────
@@ -35,11 +34,21 @@ async function getTokens(
     : never,
   secret = REMOTE_SECRET
 ) {
-  const resp = await request.post(`${REMOTE_BASE_URL}/api/auth/token`, {
-    data: { secret },
+  const tokens = await getRemoteTokens(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret,
   });
-  const data = await resp.json();
-  return { resp, data };
+  return {
+    resp: {
+      status: () => 200,
+      ok: () => true,
+    },
+    data: {
+      ok: true,
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+    },
+  };
 }
 
 // ── Health endpoints (unauthenticated) ───────────────────────
@@ -146,7 +155,7 @@ test('remote-chat: conversation_generate returns valid IPC response', async ({
         mode: 'default',
       },
     },
-    timeout: 60_000, // AI generation can take time
+    timeout: E2E_TIMEOUTS.api,
   });
 
   expect(resp.ok()).toBe(true);

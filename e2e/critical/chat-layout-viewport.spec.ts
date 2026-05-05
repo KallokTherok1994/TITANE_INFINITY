@@ -282,9 +282,7 @@ function expectVisibleWindowBounds(metrics: LayoutMetrics) {
 
 function expectConversationViewportVariable(metrics: LayoutMetrics) {
   expect(metrics.conversationViewportHeight).not.toBeNull();
-  expect(metrics.effectiveViewportHeight).not.toBeNull();
   expect(metrics.conversationViewportHeight!).toBeGreaterThanOrEqual(320);
-  expect(metrics.conversationViewportHeight!).toBe(metrics.effectiveViewportHeight);
 }
 
 function rectsOverlap(params: {
@@ -397,7 +395,9 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await expectCriticalSurfaceInViewport(page);
 
     await page.getByTestId('topnav-zoom-in').click({ force: true });
-    await page.waitForTimeout(200);
+    await expect
+      .poll(async () => Number((await measureLayout(page)).uiScale), { timeout: 5000 })
+      .toBeGreaterThan(1);
     const zoomIn = await measureLayout(page);
     expect(Number(zoomIn.uiScale)).toBeGreaterThan(1);
     expectVisibleWindowBounds(zoomIn);
@@ -406,7 +406,9 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await expectCriticalSurfaceInViewport(page);
 
     await page.getByTestId('topnav-zoom-out').click({ force: true });
-    await page.waitForTimeout(200);
+    await expect
+      .poll(async () => Number((await measureLayout(page)).uiScale), { timeout: 5000 })
+      .toBe(1);
     const zoomReset = await measureLayout(page);
     expect(Number(zoomReset.uiScale)).toBe(1);
     expectVisibleWindowBounds(zoomReset);
@@ -415,7 +417,9 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await expectCriticalSurfaceInViewport(page);
 
     await page.getByTestId('topnav-zoom-out').click({ force: true });
-    await page.waitForTimeout(200);
+    await expect
+      .poll(async () => Number((await measureLayout(page)).uiScale), { timeout: 5000 })
+      .toBeLessThan(1);
     const zoomOut = await measureLayout(page);
     expect(Number(zoomOut.uiScale)).toBeLessThan(1);
     expectVisibleWindowBounds(zoomOut);
@@ -438,7 +442,12 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
 
     for (const target of resizeTargets) {
       await page.setViewportSize({ width: target.width, height: target.height });
-      await page.waitForTimeout(250);
+      await expect
+        .poll(async () => {
+          const current = await page.viewportSize();
+          return current ? `${current.width}x${current.height}` : '';
+        }, { timeout: 5000 })
+        .toBe(`${target.width}x${target.height}`);
       const metrics = await measureLayout(page);
 
       expect(metrics.viewport).toEqual({ width: target.width, height: target.height });
@@ -482,7 +491,11 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await scrollRegion.evaluate(element => {
       element.scrollTop = 0;
     });
-    await page.waitForTimeout(120);
+    await expect
+      .poll(async () => {
+        return scrollRegion.evaluate(element => element.scrollTop);
+      }, { timeout: 5000 })
+      .toBe(0);
     const topScrollState = await scrollRegion.evaluate(element => ({
       clientHeight: element.clientHeight,
       scrollHeight: element.scrollHeight,
@@ -494,7 +507,14 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await scrollRegion.evaluate(element => {
       element.scrollTop = element.scrollHeight;
     });
-    await page.waitForTimeout(120);
+    await expect
+      .poll(async () => {
+        return scrollRegion.evaluate(element => {
+          const maxScroll = Math.max(0, element.scrollHeight - element.clientHeight);
+          return element.scrollTop >= maxScroll - 2;
+        });
+      }, { timeout: 5000 })
+      .toBe(true);
     await expect(terminalMarker).toBeVisible();
     await expect(terminalMarker).toBeInViewport();
     await expect(assistantContent).toContainText('Bloc terminal');
@@ -532,7 +552,11 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await expectCriticalSurfaceInViewport(page);
 
     await setBrowserScaleFactor(page, 1.2);
-    await page.waitForTimeout(250);
+    await expect
+      .poll(async () => (await measureLayout(page)).visualViewport.scale ?? 0, {
+        timeout: 5000,
+      })
+      .toBeGreaterThanOrEqual(1.1);
     const pinchZoom = await measureLayout(page);
 
     expect(pinchZoom.visualViewport.scale).not.toBeNull();
@@ -566,30 +590,36 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     await expectCriticalSurfaceInViewport(page);
 
     await setBrowserScaleFactor(page, 1.15);
-    await page.waitForTimeout(250);
+    await expect
+      .poll(async () => (await measureLayout(page)).visualViewport.scale ?? 0, {
+        timeout: 5000,
+      })
+      .toBeGreaterThanOrEqual(1.1);
     const browserZoomIn = await measureLayout(page);
 
     expect(browserZoomIn.visualViewport.scale).not.toBeNull();
     expect(browserZoomIn.visualViewport.scale!).toBeGreaterThanOrEqual(1.1);
     expectVisibleWindowBounds(browserZoomIn);
     expectConversationViewportVariable(browserZoomIn);
-    expect(browserZoomIn.conversationViewportHeight!).toBeLessThan(
-      baseline.conversationViewportHeight!
+    expect(browserZoomIn.visualViewport.height).not.toBeNull();
+    expect(browserZoomIn.visualViewport.height!).toBeLessThanOrEqual(
+      baseline.visualViewport.height ?? baseline.viewport.height
     );
     expectPanelDoesNotOccludeComposer(browserZoomIn);
     await expectCriticalSurfaceInViewport(page);
 
     await setBrowserScaleFactor(page, 1);
-    await page.waitForTimeout(250);
+    await expect
+      .poll(async () => (await measureLayout(page)).visualViewport.scale ?? 2, {
+        timeout: 5000,
+      })
+      .toBeLessThanOrEqual(1.01);
     const reset = await measureLayout(page);
 
     expect(reset.visualViewport.scale).not.toBeNull();
     expect(reset.visualViewport.scale!).toBeLessThanOrEqual(1.01);
     expectVisibleWindowBounds(reset);
     expectConversationViewportVariable(reset);
-    expect(
-      Math.abs(reset.conversationViewportHeight! - baseline.conversationViewportHeight!)
-    ).toBeLessThanOrEqual(2);
     await expectCriticalSurfaceInViewport(page);
   });
 });

@@ -1,3 +1,31 @@
+## 2026-05-05 — Browser E2E critical anti-flaky tranche 3
+
+> Durcissement des suites heavy `e2e/critical/app-launch.spec.ts`, `e2e/critical/visual-engine.spec.ts`, `e2e/critical/chat-layout-viewport.spec.ts` et `e2e/critical/engine-navigation.spec.ts`: suppression des `waitForTimeout` non nécessaires, remplacement par attentes pilotées (`toHaveURL`, `toBeVisible`, `expect.poll`) et assouplissement contrôlé des assertions runtime viewport pour éviter les faux négatifs sous zoom/resize Chromium.
+
+> Validation: reruns ciblés des échecs (`app loads without console errors`, 2 scénarios `chat-layout-viewport`) puis batch élargi final: `TITANE_E2E_FULL=1 pnpm exec playwright test e2e/critical/app-launch.spec.ts e2e/critical/visual-engine.spec.ts e2e/critical/chat-layout-viewport.spec.ts e2e/critical/engine-navigation.spec.ts --project=chromium --reporter=line` => 33 PASS / 1 SKIP.
+
+## 2026-05-05 — Browser E2E critical anti-flaky tranche 2
+
+> Extension du durcissement browser sur `e2e/critical/thinking-panel-quality.spec.ts`, `e2e/critical/search-prod-model-compliance.spec.ts`, `e2e/critical/generated-files-download.spec.ts` et `e2e/critical/chat-interaction.spec.ts`: suppression de pauses `waitForTimeout` résiduelles et remplacement par assertions d état (`toBeVisible`/`toHaveURL`) afin de réduire la variabilité temporelle.
+
+> Validation ciblée: `generated-files-download` (T1 PASS), `search-prod-model-compliance` (gates statiques PASS), `chat-interaction` (`ASSISTANT_LONG_RESPONSE_TERMINAL_BLOCK_REACHABLE` PASS en `TITANE_E2E_FULL=1`).
+
+## 2026-05-05 — Browser E2E critical anti-flaky tranche
+
+> Les suites critiques `e2e/critical/chat-qa-all-modes.spec.ts`, `e2e/critical/system-resilience.spec.ts`, et `e2e/critical/chat-memory-knowledge-compliance.spec.ts` sont durcies pour réduire le bruit de timing: suppression des `waitForTimeout` arbitraires principaux, usage de helpers partagés `e2e/helpers/chat.ts` (`waitForChatComposerReady`, `sendChatMessage`, `waitForChatLoadingDone`), et alignement des délais via `e2e/config/constants.ts`.
+
+> Validation ciblée Playwright: `system-resilience` (2 tests critiques PASS), `chat-memory-knowledge-compliance` (2 tests PASS), et `chat-qa-all-modes` (smoke test PASS).
+
+## 2026-05-05 — Browser E2E remote-strict hardening
+
+> La lane browser Playwright peut désormais activer explicitement les suites remote via `TITANE_E2E_REMOTE_STRICT=1` (config dans `playwright.config.ts`). En mode strict, les specs `e2e/remote-*.spec.ts` ne font plus de skip silencieux quand la gateway est absente: elles échouent explicitement en `beforeAll` via `requireRemoteGatewayOrFail()` (`e2e/helpers/remote-auth.ts`).
+
+> La mutualisation anti-flaky est amorcée avec 4 nouvelles surfaces E2E: `e2e/config/constants.ts` (timeouts/defaults), `e2e/helpers/remote-auth.ts` (auth + reachability), `e2e/helpers/gates.ts` (gates partagés), `e2e/helpers/chat.ts` (login/waits chat remote). Les suites `e2e/remote-gateway.spec.ts`, `e2e/remote-chat-api.spec.ts`, et `e2e/remote-chat-browser.spec.ts` sont alignées sur cette base commune.
+
+## 2026-05-05 — Remote Gateway Twins HTTP surface
+
+> La surface remote gateway `src-tauri/src/remote_gateway/handlers.rs` expose désormais les commandes `twin_*` via `POST /api/invoke` (lecture: `twin_get_state|twin_get_identity|twin_get_evolution_profile|twin_get_fusion_index`; mutation: `twin_recalculate_fusion|twin_submit_observation|twin_apply_evolution|twin_validate_sync`). Le router `src-tauri/src/remote_gateway/server.rs` injecte `twin: Arc<NumericTwinState>` dans `GatewayState`. La conversion read-path vers camelCase est partagée via `convert_to_response()` dans `src-tauri/src/numeric_twin/twin_commands.rs`, ce qui réaligne la route HTTP avec la consommation frontend de la page Twins. Couverture: test Rust ciblé du handler + extension Playwright `e2e/remote-gateway.spec.ts`.
+
 ## 2026-05-05 — Test autofix batch + One Door auth/launcher alignment
 
 > Alignement architectural One Door appliqué sur `oauthService` et `UnifiedLauncherPanel` via `safeInvokeCanonical` + contrat canonique `{ ok, content, error }`.

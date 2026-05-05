@@ -23,7 +23,7 @@ test.describe('Critical Path: Visual Engine', () => {
 
   test.beforeEach(async ({ page }) => {
     await openTitane(page);
-    await page.waitForTimeout(2000); // Wait for visual engine init
+    await expect(page.locator('body')).toBeVisible({ timeout: 15000 });
   });
 
   test('visual conductor creates canvas elements', async ({ page }) => {
@@ -35,9 +35,6 @@ test.describe('Critical Path: Visual Engine', () => {
   });
 
   test('identity pulse signature is active', async ({ page }) => {
-    // Wait for signature initialization
-    await page.waitForTimeout(2000);
-
     // Check for canvas with animation
     const canvas = await page.locator('canvas').first();
 
@@ -74,9 +71,9 @@ test.describe('Critical Path: Visual Engine', () => {
     await targetCombo.selectOption({ index: 1 }).catch(async () => {
       await targetCombo.selectOption({ index: 0 });
     });
-    await page.waitForTimeout(750);
 
     // Canvas should still be present (may have updated)
+    await expect.poll(async () => await canvas.count(), { timeout: 10000 }).toBeGreaterThan(0);
     const finalBox = await canvas.boundingBox().catch(() => null);
     expect(initialBox || finalBox).toBeTruthy();
   });
@@ -86,9 +83,7 @@ test.describe('Critical Path: Visual Engine', () => {
     // Simulate user interaction pattern
 
     await page.mouse.move(100, 100);
-    await page.waitForTimeout(500);
     await page.mouse.move(300, 200);
-    await page.waitForTimeout(500);
 
     // Check app still renders
     const canvas = await page.locator('canvas').first();
@@ -147,11 +142,10 @@ test.describe('Critical Path: Visual Engine', () => {
 
     await expect(adminButton).toBeVisible({ timeout: 15000 });
     await adminButton.click({ force: true });
-    await page.waitForTimeout(750);
+    await expect(page).toHaveURL(/\/admin(\?|$)/, { timeout: 15000 });
 
     await expect(titaneButton).toBeVisible({ timeout: 15000 });
     await titaneButton.click({ force: true });
-    await page.waitForTimeout(750);
 
     await expect(page).toHaveURL(/\/titane(\?|$)/, { timeout: 15000 });
 
@@ -172,7 +166,7 @@ test.describe('Critical Path: Visual Engine', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
 
     await page.reload();
-    await page.waitForTimeout(2000);
+    await expect(page.locator('body')).toBeVisible({ timeout: 15000 });
 
     // Visual engine should detect reduced motion preference
     // Check via page.evaluate to access window.matchMedia
@@ -199,7 +193,7 @@ test.describe('Critical Path: Visual Engine', () => {
       }
     });
 
-    await page.waitForTimeout(3000);
+    await expect(page.locator('body')).toBeVisible({ timeout: 15000 });
 
     expect(webglErrors).toHaveLength(0);
   });
@@ -207,14 +201,19 @@ test.describe('Critical Path: Visual Engine', () => {
   test('visual conductor adapts to window resize', async ({ page }) => {
     // Initial size
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.waitForTimeout(1000);
 
     const canvas = await page.locator('canvas').first();
+    await expect(canvas).toBeVisible({ timeout: 15000 });
     const initialBox = await canvas.boundingBox();
 
     // Resize
     await page.setViewportSize({ width: 1920, height: 1080 });
-    await page.waitForTimeout(1000);
+    await expect
+      .poll(async () => {
+        const box = await canvas.boundingBox();
+        return box?.width ?? 0;
+      }, { timeout: 10000 })
+      .toBeGreaterThan(0);
 
     const finalBox = await canvas.boundingBox();
 

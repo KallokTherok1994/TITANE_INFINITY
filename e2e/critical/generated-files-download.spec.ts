@@ -72,7 +72,7 @@ async function navigateToChat(page: Page): Promise<void> {
   await titaneButton.click({ force: true });
 
   await expect(page).toHaveURL(/\/titane(\?|$)/, { timeout: 15_000 });
-  await page.waitForTimeout(400);
+  await expect(page.locator('body')).toBeVisible({ timeout: 5000 });
 }
 
 // ─── Tests ──────────────────────────────────────────────────────────────────

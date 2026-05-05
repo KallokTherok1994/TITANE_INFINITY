@@ -363,7 +363,6 @@ test.describe('Critical Path: Chat Interaction', () => {
     await scrollRegion.evaluate(element => {
       element.scrollTop = element.scrollHeight;
     });
-    await page.waitForTimeout(120);
 
     const terminalMarker = assistantContent
       .getByText('OMEGA-FINAL-BLOCK', {

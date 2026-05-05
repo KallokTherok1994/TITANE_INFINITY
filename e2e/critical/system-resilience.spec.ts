@@ -6,6 +6,8 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { E2E_TIMEOUTS } from '../config/constants';
+import { openTitane, closeBootBeaconIfPresent } from '../helpers/navigation';
 
 const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
 
@@ -18,18 +20,11 @@ test.describe('Critical Path: System Resilience', () => {
   }
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForTimeout(2000);
+    await openTitane(page);
+    await closeBootBeaconIfPresent(page);
   });
 
   test('app handles network errors gracefully', async ({ page, context }) => {
-    // Close boot beacon first and wait for it to disappear
-    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
-    if (await closeBeacon.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await closeBeacon.click();
-      await closeBeacon.waitFor({ state: 'hidden', timeout: 5000 });
-    }
-
     // Simulate offline mode
     await context.setOffline(true);
 
@@ -37,7 +32,6 @@ test.describe('Critical Path: System Resilience', () => {
     const button = await page.locator('button').first();
     if ((await button.count()) > 0) {
       await button.click({ force: true }); // Force click to bypass any overlays
-      await page.waitForTimeout(1000);
     }
 
     // App should not crash
@@ -49,13 +43,6 @@ test.describe('Critical Path: System Resilience', () => {
   });
 
   test('handles rapid user interactions without crashing', async ({ page }) => {
-    // Close boot beacon first
-    const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
-    if (await closeBeacon.isVisible().catch(() => false)) {
-      await closeBeacon.click();
-      await page.waitForTimeout(300);
-    }
-
     // Rapid clicks on the main surface to avoid closing the app via controls
     const body = page.locator('body');
     const box = await body.boundingBox();
@@ -64,12 +51,10 @@ test.describe('Critical Path: System Resilience', () => {
       const centerY = box.y + box.height * 0.4;
       for (let i = 0; i < 5; i++) {
         await page.mouse.click(centerX, centerY, { delay: 10 });
-        await page.waitForTimeout(50);
       }
     }
 
     // App should survive
-    await page.waitForTimeout(1000);
     const bodyVisible = await page.locator('body').isVisible();
     expect(bodyVisible).toBe(true);
   });
@@ -83,8 +68,7 @@ test.describe('Critical Path: System Resilience', () => {
       }
     });
 
-    // Interact normally
-    await page.waitForTimeout(3000);
+    await expect(page.locator('body')).toBeVisible();
 
     // Should not have uncaught React errors
     const reactErrors = errors.filter(e => e.includes('React') && e.includes('uncaught'));
@@ -107,7 +91,6 @@ test.describe('Critical Path: System Resilience', () => {
       for (const input of invalidInputs) {
         await chatInput.fill(input);
         await page.keyboard.press('Enter');
-        await page.waitForTimeout(300);
       }
 
       // App should handle gracefully
@@ -120,7 +103,7 @@ test.describe('Critical Path: System Resilience', () => {
     // This simulates backend unavailability
     // App should show error state but not crash
 
-    await page.waitForTimeout(5000);
+    await expect(page.getByTestId('chat-input')).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
 
     // Check app is still functional
     const bodyVisible = await page.locator('body').isVisible();
@@ -134,12 +117,10 @@ test.describe('Critical Path: System Resilience', () => {
     if ((await chatInput.count()) > 0) {
       for (let i = 0; i < 20; i++) {
         await chatInput.fill(`Stress test message ${i}`);
-        await page.waitForTimeout(50);
       }
     }
 
     // Should not freeze UI
-    await page.waitForTimeout(2000);
     const bodyVisible = await page.locator('body').isVisible();
     expect(bodyVisible).toBe(true);
   });
@@ -148,7 +129,6 @@ test.describe('Critical Path: System Resilience', () => {
     // Create multiple interactions
     for (let i = 0; i < 10; i++) {
       await page.mouse.move(Math.random() * 500, Math.random() * 500);
-      await page.waitForTimeout(100);
     }
 
     // Check responsiveness
@@ -171,8 +151,6 @@ test.describe('Critical Path: System Resilience', () => {
     });
 
     // App should still work
-    await page.waitForTimeout(2000);
-    const bodyVisible = await page.locator('body').isVisible();
-    expect(bodyVisible).toBe(true);
+    await expect(page.locator('body')).toBeVisible();
   });
 });

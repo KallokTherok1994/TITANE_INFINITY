@@ -12,46 +12,15 @@
  */
 
 import { test, expect } from '@playwright/test';
-import net from 'node:net';
+import { REMOTE_E2E_DEFAULTS } from './config/constants';
+import { remoteLogin } from './helpers/chat';
+import { requireRemoteGatewayOrFail } from './helpers/remote-auth';
 
-const REMOTE_BASE_URL = process.env.TITANE_REMOTE_E2E_URL ?? 'http://localhost:7420';
-const REMOTE_SECRET = process.env.TITANE_REMOTE_E2E_SECRET ?? 'change-me-in-production';
-
-async function isGatewayReachable(url: string): Promise<boolean> {
-  return new Promise(resolve => {
-    try {
-      const parsed = new URL(url);
-      const port = parseInt(parsed.port || '7420', 10);
-      const host = parsed.hostname;
-      const socket = net.createConnection({ host, port, timeout: 2000 });
-      socket.once('connect', () => {
-        socket.destroy();
-        resolve(true);
-      });
-      socket.once('error', () => {
-        socket.destroy();
-        resolve(false);
-      });
-      socket.once('timeout', () => {
-        socket.destroy();
-        resolve(false);
-      });
-    } catch {
-      resolve(false);
-    }
-  });
-}
-
-let gatewayReachable: boolean | null = null;
+const REMOTE_BASE_URL = REMOTE_E2E_DEFAULTS.baseUrl;
+const REMOTE_SECRET = REMOTE_E2E_DEFAULTS.secret;
 
 test.beforeAll(async () => {
-  if (gatewayReachable === null) {
-    gatewayReachable = await isGatewayReachable(REMOTE_BASE_URL);
-  }
-  test.skip(
-    !gatewayReachable,
-    'Remote gateway not running — start TITANE with TITANE_REMOTE_ENABLED=1'
-  );
+  await requireRemoteGatewayOrFail('remote-chat-browser.spec.ts', REMOTE_BASE_URL);
 });
 
 // ── RemoteLoginPage ───────────────────────────────────────────
@@ -123,16 +92,7 @@ test.describe('RemoteLoginPage UI', () => {
 test.describe('RemoteGatewayLayout — authenticated session', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => sessionStorage.clear());
-    await page.goto(REMOTE_BASE_URL);
-    await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({
-      timeout: 10_000,
-    });
-    await page.fill('[data-testid="remote-gateway-url-input"]', REMOTE_BASE_URL);
-    await page.fill('[data-testid="remote-api-key-input"]', REMOTE_SECRET);
-    await page.click('[data-testid="remote-login-button"]');
-    await expect(page.locator('[data-testid="remote-chat-view"]')).toBeVisible({
-      timeout: 15_000,
-    });
+    await remoteLogin(page, REMOTE_BASE_URL, REMOTE_SECRET);
   });
 
   test('authenticated user sees RemoteGatewayLayout (not login page)', async ({

@@ -34,7 +34,7 @@ test.describe('Critical Path: Engine Navigation', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForTimeout(2000);
+    await expect(page.locator('body')).toBeVisible({ timeout: 15000 });
   });
 
   test('all 9 engines are represented in UI', async ({ page }) => {
@@ -80,7 +80,7 @@ test.describe('Critical Path: Engine Navigation', () => {
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
     if (await closeBeacon.isVisible()) {
       await closeBeacon.click();
-      await page.waitForTimeout(300);
+      await expect(closeBeacon).toBeHidden({ timeout: 5000 });
     }
 
     const topNav = page.getByTestId('nav-top-main');
@@ -104,7 +104,7 @@ test.describe('Critical Path: Engine Navigation', () => {
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
     if (await closeBeacon.isVisible()) {
       await closeBeacon.click();
-      await page.waitForTimeout(300);
+      await expect(closeBeacon).toBeHidden({ timeout: 5000 });
     }
 
     const topNav = page.getByTestId('nav-top-main');
@@ -148,7 +148,7 @@ test.describe('Critical Path: Engine Navigation', () => {
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
     if (await closeBeacon.isVisible()) {
       await closeBeacon.click();
-      await page.waitForTimeout(300);
+      await expect(closeBeacon).toBeHidden({ timeout: 5000 });
     }
 
     // Type in chat
@@ -162,11 +162,11 @@ test.describe('Critical Path: Engine Navigation', () => {
       const navButton = page.getByTestId('nav-dev');
       if ((await navButton.count()) > 0) {
         await navButton.click({ force: true });
-        await page.waitForTimeout(500);
+        await expect(page).toHaveURL(/\/dev(\?|$)/, { timeout: 15000 });
 
         // Navigate back to TITANE
         await page.getByTestId('nav-titane').click({ force: true });
-        await page.waitForTimeout(500);
+        await expect(page).toHaveURL(/\/titane(\?|$)/, { timeout: 15000 });
 
         // App should not crash
         const bodyVisible = await page.locator('body').isVisible();
@@ -176,8 +176,7 @@ test.describe('Critical Path: Engine Navigation', () => {
   });
 
   test('engine status updates are real-time', async ({ page }) => {
-    // Wait and observe any changing metrics
-    await page.waitForTimeout(3000);
+    await expect(page.getByTestId('nav-top-main')).toBeVisible({ timeout: 15000 });
 
     // Look for any dynamic content (metrics, scores, timestamps)
     const dynamicContent = await page
