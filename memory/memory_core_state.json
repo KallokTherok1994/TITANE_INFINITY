@@ -2,6 +2,13 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1777907499797-a0l9xunu",
+      "timestamp": 1777907499797,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1777689809249-ln37mgmw",
       "timestamp": 1777689809249,
       "level": "Info",
@@ -590,9 +597,7 @@
   ],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1777689809253,
-    "last_compaction_ts": null,
-    "seeded_at": "2026-05-03T00:00:00Z",
-    "seed_version": "1.0"
+    "last_validation_ts": 1777907499799,
+    "last_compaction_ts": null
   }
 }
