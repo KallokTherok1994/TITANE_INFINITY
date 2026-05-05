@@ -27,7 +27,7 @@ export async function initiateFacebookLogin(): Promise<OAuthInitiateResponse> {
     'oauth_facebook_initiate'
   );
   if (!result.ok || !result.content)
-    throw new Error(result.error?.message ?? 'oauth_facebook_initiate failed');
+     throw new Error(typeof result.error === 'string' ? result.error : (result.error?.message ?? 'oauth_facebook_initiate failed'));
   return result.content;
 }
 
@@ -37,7 +37,7 @@ export async function handleFacebookCallback(url: string): Promise<OAuthProfile>
     url,
   });
   if (!result.ok || !result.content)
-    throw new Error(result.error?.message ?? 'oauth_facebook_callback failed');
+     throw new Error(typeof result.error === 'string' ? result.error : (result.error?.message ?? 'oauth_facebook_callback failed'));
   return result.content;
 }
 
