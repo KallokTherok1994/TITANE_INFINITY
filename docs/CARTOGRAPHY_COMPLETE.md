@@ -1,3 +1,11 @@
+## 2026-05-04 — Titane tabs label refresh + legacy page deprecation markers
+
+> Cartographie UI mise à jour sur la surface active [src/pages/TitanePage.tsx](src/pages/TitanePage.tsx): labels onglets modernisés sans changement de structure router/tab ids (`📊 Dashboard`, `⚡ Progression`, `🌱 Évolution`). Les `data-testid` canoniques restent strictement inchangés pour préserver les preuves E2E et la stabilité des selectors.
+
+> Surfaces legacy conservées pour compatibilité mais marquées `@deprecated`: [src/pages/ChatPage.tsx](src/pages/ChatPage.tsx), [src/pages/CameraPage.tsx](src/pages/CameraPage.tsx), [src/pages/EvoPage.tsx](src/pages/EvoPage.tsx). Aucune suppression destructive n'est effectuée dans ce lot.
+
+> Preuves desktop ajoutées: [e2e/desktop/chat-tabs-audit.wdio.test.js](e2e/desktop/chat-tabs-audit.wdio.test.js) étendu (T22-T23) + nouveau [e2e/desktop/titane-tabs-labels.wdio.test.js](e2e/desktop/titane-tabs-labels.wdio.test.js) (L1-L10) pour valider labels runtime visibles et absence des anciens libellés.
+
 ## 2026-05-04 — Tool Selector Panel — Sélecteur d'outils chat (Ring 4 UI)
 
 > **Nouveau composant Ring 4** : `src/components/chat/ToolSelectorPanel.tsx` + `ToolSelectorPanel.css` — Panneau de sélection de 10 outils/raccourcis chat organisés en 4 catégories (GÉNÉRER / RECHERCHE & ANALYSE / RÉFLEXION / CONFIGURATION). Le bouton déclencheur ⚡ (`data-testid=tool-selector-btn`) s'insère dans `conversation-input-container` de `ConversationSection`. Chaque outil injecte soit un template dans le textarea (autoSend=false) soit envoie directement le message (autoSend=true).

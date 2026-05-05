@@ -1,3 +1,18 @@
+# [2026-05-04] Titane Chat Tabs Refresh — labels runtime + desktop proof
+
+- Surface canonique: [src/pages/TitanePage.tsx](src/pages/TitanePage.tsx) conserve les 6 onglets et leurs selectors stables, avec labels mis à jour:
+  - tab-overview: "📊 Dashboard"
+  - tab-progression: "⚡ Progression"
+  - tab-transformation: "🌱 Évolution"
+- Vérité anti-dérive: aucun changement de ids/aria-controls/data-testid, seulement rafraîchissement de libellés UI visibles.
+- Surfaces legacy marquées deprecation (compatibilité maintenue):
+  - [src/pages/ChatPage.tsx](src/pages/ChatPage.tsx)
+  - [src/pages/CameraPage.tsx](src/pages/CameraPage.tsx)
+  - [src/pages/EvoPage.tsx](src/pages/EvoPage.tsx)
+- Preuves desktop WDIO:
+  - [e2e/desktop/chat-tabs-audit.wdio.test.js](e2e/desktop/chat-tabs-audit.wdio.test.js): T22-T23 vérifient labels runtime + absence legacy labels
+  - [e2e/desktop/titane-tabs-labels.wdio.test.js](e2e/desktop/titane-tabs-labels.wdio.test.js): L1-L10 (source + runtime)
+
 # [2026-05-04] Tool Selector Panel — Sélecteur d'outils chat TITANE
 
 - Surface canonique: `tool-selector-btn` (bouton ⚡) + `tool-selector-panel` dans [src/components/chat/ToolSelectorPanel.tsx](src/components/chat/ToolSelectorPanel.tsx), inséré dans la zone `conversation-input-container` de [src/components/sections/ConversationSection.tsx](src/components/sections/ConversationSection.tsx).

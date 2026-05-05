@@ -2,7 +2,7 @@
  * chat-tabs-audit.wdio.test.js — WDIO desktop audit for TitanePage tabs
  *
  * T1-T3: Static (no app launch required)
- * T4-T20: require TITANE_E2E_FULL=1 + desktop app running
+ * T4-T23: require TITANE_E2E_FULL=1 + desktop app running
  *
  * Rule 16 compliance: AH-20260504-CHAT-TABS-AUDIT-0006
  */
@@ -19,9 +19,9 @@ const TIMEOUT = 15000;
 
 describe('chat-tabs-audit (WDIO desktop)', () => {
   // ═══════════════════════════════════════════════════════
-  // T1-T3: Static code compliance (always runs)
+  // T1-T4: Static code compliance (always runs)
   // ═══════════════════════════════════════════════════════
-  describe('T1-T3 — Static compliance', () => {
+  describe('T1-T4 — Static compliance', () => {
     it('T1 — TitanePage.tsx contains all 6 main tab data-testids', () => {
       const src = fs.readFileSync(
         path.resolve(__dirname, '../../src/pages/TitanePage.tsx'),
@@ -66,12 +66,28 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
         throw new Error(`Expected at least 10 tool ids, found ${matches.length}`);
       }
     });
+
+    it('T4 — TitanePage.tsx contains updated tab labels', () => {
+      const src = fs.readFileSync(
+        path.resolve(__dirname, '../../src/pages/TitanePage.tsx'),
+        'utf-8'
+      );
+      if (!src.includes('📊 Dashboard')) {
+        throw new Error('Missing updated label: 📊 Dashboard');
+      }
+      if (!src.includes('⚡ Progression')) {
+        throw new Error('Missing updated label: ⚡ Progression');
+      }
+      if (!src.includes('🌱 Évolution')) {
+        throw new Error('Missing updated label: 🌱 Évolution');
+      }
+    });
   });
 
   // ═══════════════════════════════════════════════════════
-  // T4-T9: Tab presence & a11y (TITANE_E2E_FULL=1)
+  // T5-T10: Tab presence & a11y (TITANE_E2E_FULL=1)
   // ═══════════════════════════════════════════════════════
-  describe('T4-T9 — Tab presence & a11y', () => {
+  describe('T5-T10 — Tab presence & a11y', () => {
     before(function () {
       if (!FULL) this.skip();
     });
@@ -81,7 +97,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
     });
 
-    it('T4 — all 6 main tabs are visible', async () => {
+    it('T5 — all 6 main tabs are visible', async () => {
       for (const id of [
         'tab-conversation',
         'tab-overview',
@@ -95,12 +111,12 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       }
     });
 
-    it('T5 — tablist has role=tablist', async () => {
+    it('T6 — tablist has role=tablist', async () => {
       const tablist = await $('[role="tablist"]');
       expect(await tablist.isDisplayed()).toBe(true);
     });
 
-    it('T6 — each main tab has role=tab', async () => {
+    it('T7 — each main tab has role=tab', async () => {
       for (const id of [
         'tab-conversation',
         'tab-overview',
@@ -115,26 +131,26 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       }
     });
 
-    it('T7 — conversation tab is aria-selected=true by default', async () => {
+    it('T8 — conversation tab is aria-selected=true by default', async () => {
       const el = await $(testId('tab-conversation'));
       expect(await el.getAttribute('aria-selected')).toBe('true');
     });
 
-    it('T8 — page-titane-content has role=tabpanel', async () => {
+    it('T9 — page-titane-content has role=tabpanel', async () => {
       const el = await $(testId('page-titane-content'));
       expect(await el.getAttribute('role')).toBe('tabpanel');
     });
 
-    it('T9 — page-titane has data-layout=chat-fullscreen on conversation tab', async () => {
+    it('T10 — page-titane has data-layout=chat-fullscreen on conversation tab', async () => {
       const el = await $(testId('page-titane'));
       expect(await el.getAttribute('data-layout')).toBe('chat-fullscreen');
     });
   });
 
   // ═══════════════════════════════════════════════════════
-  // T10-T13: Tab navigation (TITANE_E2E_FULL=1)
+  // T11-T14: Tab navigation (TITANE_E2E_FULL=1)
   // ═══════════════════════════════════════════════════════
-  describe('T10-T13 — Tab navigation', () => {
+  describe('T11-T14 — Tab navigation', () => {
     before(function () {
       if (!FULL) this.skip();
     });
@@ -144,26 +160,26 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
     });
 
-    it('T10 — clicking tab-overview → aria-selected=true', async () => {
+    it('T11 — clicking tab-overview → aria-selected=true', async () => {
       await (await $(testId('tab-overview'))).click();
       await browser.pause(400);
       const el = await $(testId('tab-overview'));
       expect(await el.getAttribute('aria-selected')).toBe('true');
     });
 
-    it('T11 — clicking tab-memory → aria-selected=true', async () => {
+    it('T12 — clicking tab-memory → aria-selected=true', async () => {
       await (await $(testId('tab-memory'))).click();
       await browser.pause(400);
       expect(await (await $(testId('tab-memory'))).getAttribute('aria-selected')).toBe('true');
     });
 
-    it('T12 — data-layout=standard after leaving conversation', async () => {
+    it('T13 — data-layout=standard after leaving conversation', async () => {
       await (await $(testId('tab-overview'))).click();
       await browser.pause(300);
       expect(await (await $(testId('page-titane'))).getAttribute('data-layout')).toBe('standard');
     });
 
-    it('T13 — back to conversation tab restores data-layout=chat-fullscreen', async () => {
+    it('T14 — back to conversation tab restores data-layout=chat-fullscreen', async () => {
       await (await $(testId('tab-conversation'))).click();
       await browser.pause(300);
       expect(await (await $(testId('page-titane'))).getAttribute('data-layout')).toBe('chat-fullscreen');
@@ -171,9 +187,9 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
   });
 
   // ═══════════════════════════════════════════════════════
-  // T14-T17: MemorySection sub-tabs (TITANE_E2E_FULL=1)
+  // T15-T18: MemorySection sub-tabs (TITANE_E2E_FULL=1)
   // ═══════════════════════════════════════════════════════
-  describe('T14-T17 — MemorySection sub-tabs', () => {
+  describe('T15-T18 — MemorySection sub-tabs', () => {
     before(function () {
       if (!FULL) this.skip();
     });
@@ -184,13 +200,13 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       await browser.pause(800);
     });
 
-    it('T14 — memory-tab-overview is visible and selected by default', async () => {
+    it('T15 — memory-tab-overview is visible and selected by default', async () => {
       const el = await $(testId('memory-tab-overview'));
       expect(await el.isDisplayed()).toBe(true);
       expect(await el.getAttribute('aria-selected')).toBe('true');
     });
 
-    it('T15 — memory-tab-dashboard is clickable', async () => {
+    it('T16 — memory-tab-dashboard is clickable', async () => {
       const el = await $(testId('memory-tab-dashboard'));
       expect(await el.isDisplayed()).toBe(true);
       await el.click();
@@ -198,7 +214,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       expect(await el.getAttribute('aria-selected')).toBe('true');
     });
 
-    it('T16 — memory-tab-tree is clickable', async () => {
+    it('T17 — memory-tab-tree is clickable', async () => {
       const el = await $(testId('memory-tab-tree'));
       expect(await el.isDisplayed()).toBe(true);
       await el.click();
@@ -206,7 +222,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       expect(await el.getAttribute('aria-selected')).toBe('true');
     });
 
-    it('T17 — memory-tab-search is clickable', async () => {
+    it('T18 — memory-tab-search is clickable', async () => {
       const el = await $(testId('memory-tab-search'));
       expect(await el.isDisplayed()).toBe(true);
       await el.click();
@@ -216,9 +232,9 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
   });
 
   // ═══════════════════════════════════════════════════════
-  // T18-T20: ToolSelectorPanel in conversation tab (TITANE_E2E_FULL=1)
+  // T19-T23: ToolSelectorPanel and labels in conversation tab (TITANE_E2E_FULL=1)
   // ═══════════════════════════════════════════════════════
-  describe('T18-T20 — ToolSelectorPanel in conversation tab', () => {
+  describe('T19-T23 — ToolSelectorPanel and labels in conversation tab', () => {
     before(function () {
       if (!FULL) this.skip();
     });
@@ -228,21 +244,41 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
     });
 
-    it('T18 — tool-selector-btn is visible in conversation tab', async () => {
+    it('T19 — tool-selector-btn is visible in conversation tab', async () => {
       const btn = await $(testId('tool-selector-btn'));
       expect(await btn.isDisplayed()).toBe(true);
     });
 
-    it('T19 — clicking tool-selector-btn opens the panel', async () => {
+    it('T20 — clicking tool-selector-btn opens the panel', async () => {
       await (await $(testId('tool-selector-btn'))).click();
       await browser.pause(400);
       const panel = await $(testId('tool-selector-panel'));
       expect(await panel.isDisplayed()).toBe(true);
     });
 
-    it('T20 — panel contains at least one tool-item', async () => {
+    it('T21 — panel contains at least one tool-item', async () => {
       const toolItem = await $('[data-testid^="tool-item-"]');
       expect(await toolItem.isDisplayed()).toBe(true);
+    });
+
+    it('T22 — updated tab labels are visible in runtime UI', async () => {
+      await browser.url('/titane');
+      await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
+
+      const overview = await $(testId('tab-overview'));
+      const progression = await $(testId('tab-progression'));
+      const evolution = await $(testId('tab-transformation'));
+
+      expect(await overview.getText()).toContain('Dashboard');
+      expect(await progression.getText()).toContain('Progression');
+      expect(await evolution.getText()).toContain('Évolution');
+    });
+
+    it('T23 — legacy tab labels are not visible in runtime UI', async () => {
+      const bodyText = await $('body').getText();
+      expect(bodyText.includes('📊 Vue')).toBe(false);
+      expect(bodyText.includes('⚡ XP')).toBe(false);
+      expect(bodyText.includes('🌱 Transform & Évo')).toBe(false);
     });
   });
 });

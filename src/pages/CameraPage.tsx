@@ -7,6 +7,11 @@
  */
 
 /**
+ * @deprecated Legacy page kept for compatibility.
+ * Active canonical camera/vision experience is /titane?tab=vision.
+ */
+
+/**
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.19.3Ω — CAMERA PAGE
  *   Centre de Vision & Analyse Visuelle

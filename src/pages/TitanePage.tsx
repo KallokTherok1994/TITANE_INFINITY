@@ -343,7 +343,7 @@ export const TitanePage: React.FC = () => {
                 aria-controls={TAB_PANEL_IDS.overview}
                 id={TAB_LABEL_IDS.overview}
               >
-                📊 Vue
+                📊 Dashboard
               </button>
               <button
                 className={`px-4 py-2 text-sm font-medium rounded transition-all ${
@@ -388,7 +388,7 @@ export const TitanePage: React.FC = () => {
                 aria-controls={TAB_PANEL_IDS.progression}
                 id={TAB_LABEL_IDS.progression}
               >
-                ⚡ XP
+                ⚡ Progression
               </button>
               <button
                 className={`px-4 py-2 text-sm font-medium rounded transition-all ${
@@ -403,7 +403,7 @@ export const TitanePage: React.FC = () => {
                 aria-controls={TAB_PANEL_IDS.transformation}
                 id={TAB_LABEL_IDS.transformation}
               >
-                🌱 Transform & Évo
+                🌱 Évolution
               </button>
             </div>
           </div>

@@ -4,6 +4,11 @@
  */
 
 /**
+ * @deprecated Legacy page kept for compatibility.
+ * Active canonical evolution experience is /titane (tabs: overview/progression/transformation).
+ */
+
+/**
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE∞ v30.0.0 — EVO — CENTRE D'ÉVOLUTION TOTALE
  *
