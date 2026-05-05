@@ -51,7 +51,7 @@ test.describe('Facebook OAuth — UI surface', () => {
     page.on('pageerror', err => errors.push(err.message));
 
     await page.goto('/');
-    await page.waitForTimeout(1000);
+    await expect(page.locator('body')).toBeVisible({ timeout: 15000 });
 
     // Filter known non-fatal Tauri environment warnings
     const fatalErrors = errors.filter(

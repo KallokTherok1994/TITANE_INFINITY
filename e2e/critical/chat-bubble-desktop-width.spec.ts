@@ -103,9 +103,12 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
 
     await sendTestMessage(page, 'Test bulle desktop — largeur maximale attendue');
 
-    // Wait for possible assistant response or just measure user bubble
-    await page.waitForTimeout(800);
-
+    // Poll until container width is measurable (layout may not be settled yet)
+    await expect
+      .poll(() => getMessageBubbleMetrics(page).then(m => m.containerWidth ?? 0), {
+        timeout: 8000,
+      })
+      .toBeGreaterThan(0);
     const metrics = await getMessageBubbleMetrics(page);
 
     // Container must be measurable
@@ -150,7 +153,14 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Vérification règle CSS max-width desktop');
-    await page.waitForTimeout(800);
+    // Ensure at least one bubble is visible before measuring CSS
+    await expect(
+      page
+        .locator(
+          '[data-testid="chat-message-assistant"], [data-testid="chat-message-user"], .message-bubble, .message-assistant, .message-user'
+        )
+        .first()
+    ).toBeVisible({ timeout: 10000 });
 
     // Verify the computed styles reflect desktop rules (97% for assistant, 88% for user)
     const cssCheck = await page.evaluate(() => {
@@ -193,8 +203,11 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Test mobile — largeur bulle inchangée');
-    await page.waitForTimeout(600);
-
+    await expect
+      .poll(() => getMessageBubbleMetrics(page).then(m => m.containerWidth ?? 0), {
+        timeout: 8000,
+      })
+      .toBeGreaterThan(0);
     const metrics = await getMessageBubbleMetrics(page);
 
     // On mobile, bubbles should not be wider than the old 95% mobile rule
@@ -220,7 +233,10 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Test zoom in 150% — pas de débordement');
-    await page.waitForTimeout(800);
+    // Ensure user bubble is in view before overflow measurement (sendTestMessage already guarantees DOM presence)
+    await expect(
+      page.locator('.message-bubble-user, .message-user, [data-testid="chat-message-user"]').first()
+    ).toBeVisible({ timeout: 10000 });
 
     // Verify no horizontal overflow in the message container
     const hasOverflow = await page.evaluate(() => {
@@ -250,8 +266,11 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     if (await convTab.isVisible()) await convTab.click();
 
     await sendTestMessage(page, 'Test zoom out 70% — largeur proportionnelle');
-    await page.waitForTimeout(800);
-
+    await expect
+      .poll(() => getMessageBubbleMetrics(page).then(m => m.containerWidth ?? 0), {
+        timeout: 8000,
+      })
+      .toBeGreaterThan(0);
     const metrics = await getMessageBubbleMetrics(page);
 
     if (metrics.userMaxWidthPct !== null) {

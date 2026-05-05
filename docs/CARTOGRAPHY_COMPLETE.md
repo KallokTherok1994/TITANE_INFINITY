@@ -1786,3 +1786,10 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > 2026-05-03 — Desktop online-chat proof timeout truth: `scripts/e2e/run-online-chat-proof-ui.sh` align now its default `OLLAMA_REQUEST_TIMEOUT_SECS` to `90s` for the governed long-response proof. The prior `15s` harness cap could manufacture a false `PROVIDER_UNAVAILABLE` on the embedded desktop lane even while direct `/api/generate` and the same proof with `OLLAMA_REQUEST_TIMEOUT_SECS=90` succeeded against the same local Ollama runtime. Mapping authority updated in `OLLAMA_RUNTIME_MAP.md`; no product UI surface changed.
 
 > 2026-05-05 — ThinkingPanel responseQualityScore wiring: `src/hooks/useConversationEngine.ts` calcule maintenant le score qualityVerifier (0-1) de la réponse TITANE directement après réception IPC, de manière non-bloquante, et le stocke dans `metadata.responseQualityScore` + `metadata.responseQualityTier`. `src/features/chat/ThinkingPanel.tsx` l'affiche sous "Réponse X%" (avec badge ⚠ si < 0.65) au lieu du score XP normalisé, distinguant ainsi la qualité réponse IA du scoring XP utilisateur. Le fallback "Effort X%" sur `qualityScore` (messageQualityScorer normalisé) est conservé pour rétrocompatibilité. data-runtime-quality préfère responseQualityScore. Tests: ThinkingPanel.test.tsx + useConversationEngine.test.ts (responseQualityScore wiring). E2E: e2e/critical/thinking-panel-quality.spec.ts.
+
+## 2026-05-05 — Tranche 4 anti-flaky E2E (chat-bubble + facebook-oauth)
+
+- `e2e/critical/chat-bubble-desktop-width.spec.ts`: suppression 5x `waitForTimeout(600/800)` → `expect.poll(containerWidth>0)` + `toBeVisible({ timeout })` selon contexte (metrics vs CSS check vs overflow). Pattern `sendTestMessage` déjà garantit présence bulle user via `waitForSelector`.
+- `e2e/critical/facebook-oauth.spec.ts`: suppression 1x `waitForTimeout(1000)` post-`page.goto('/')` → `expect(body).toBeVisible({ timeout: 15000 })`. Tests conditionnels OAuth (carte, bouton) inchangés.
+- AutoHeal: `AH-2026-05-05-E2E-CRITICAL-ANTIFLAKY-0004` (entries=1621)
+- Proof: 9 passed exit 0 Playwright chromium ciblé.
