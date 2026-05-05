@@ -24,6 +24,7 @@ rg -q 'gemma2:2b' .github/copilot-instructions.md .github/instructions/titane.in
 rg -q 'verify:ollama:boundary' package.json || fail 'package.json missing verify:ollama:boundary script'
 [ -f .vscode/mcp.json ] || fail '.vscode/mcp.json missing (Ollama Dev MCP config not present)'
 rg -q 'chat\.mcp' .vscode/settings.json || fail '.vscode/settings.json missing chat.mcp configuration'
+rg -q '"chat\.mcp\.enabled":\s*true' .vscode/settings.json || fail '.vscode/settings.json chat.mcp.enabled is not true'
 rg -q '"chat\.mcp\.(enabled|access)"' .vscode/settings.json || fail '.vscode/settings.json chat.mcp config missing'
 rg -q 'ollama-dev' .vscode/mcp.json || fail '.vscode/mcp.json missing ollama-dev server entry'
 rg -q '"type"\s*:\s*"stdio"' .vscode/mcp.json || fail '.vscode/mcp.json missing stdio transport declaration'

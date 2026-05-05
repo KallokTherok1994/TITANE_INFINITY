@@ -1,3 +1,14 @@
+# [2026-05-05] Test Autofix + One Door auth/launcher alignment
+
+- Surface auth OAuth canonique: `src/services/auth/oauthService.ts` passe uniquement par `safeInvokeCanonical` et applique le contrat `{ ok, content, error }` sur `oauth_facebook_initiate`, `oauth_facebook_callback`, `oauth_facebook_get_profile`, `oauth_facebook_logout`.
+- Surface launcher canonique: `src/components/launcher/UnifiedLauncherPanel.tsx` vérifie `ai_check_ollama_status` via `safeInvokeCanonical` et hydrate l'état UI depuis `content` (reachable/model).
+- Surfaces test alignées à la vérité runtime:
+  - `src/__tests__/components/auth/FacebookLoginButton.test.tsx`
+  - `src/__tests__/components/launcher/UnifiedLauncherPanel.test.tsx`
+  - `src/__tests__/services/auth/oauthService.test.ts`
+  - `src/__tests__/ui/app-router-canonical-surfaces.test.tsx` (stabilisation timeout anti-flake)
+- Doctrine MCP boundary: `.vscode/settings.json` expose `chat.mcp.enabled=true`; validation renforcée dans `scripts/verify/verify-ollama-copilot-boundary.sh`.
+
 # [2026-05-04] Titane Chat Tabs Refresh — labels runtime + desktop proof
 
 - Surface canonique: [src/pages/TitanePage.tsx](src/pages/TitanePage.tsx) conserve les 6 onglets et leurs selectors stables, avec labels mis à jour:

@@ -8,7 +8,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { FacebookLoginButton } from '@/components/auth/FacebookLoginButton';
 import { OAuthProfileCard } from '@/components/auth/OAuthProfileCard';
 import { useOAuthStore } from '@/core/auth/oauthStore';
@@ -53,9 +53,10 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
   // Step 2 — Check Ollama
   useEffect(() => {
     if (step !== 'ollama') return;
-    invoke<{ ok: boolean; model?: string }>('ai_check_ollama_status')
+    safeInvokeCanonical<{ ok: boolean; model?: string }>('ai_check_ollama_status')
       .then((res) => {
-        setOllama({ reachable: res.ok, model: res.model });
+        const data = res.ok ? res.content : null;
+        setOllama({ reachable: data?.ok ?? false, model: data?.model });
         setStep('auth');
       })
       .catch(() => {

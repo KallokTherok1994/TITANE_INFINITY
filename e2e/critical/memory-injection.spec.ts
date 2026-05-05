@@ -228,3 +228,5 @@ test.describe('Memory Injection Pipeline', () => {
     );
     expect(hasKnowledgeSource).toBe(true);
   });
+
+});

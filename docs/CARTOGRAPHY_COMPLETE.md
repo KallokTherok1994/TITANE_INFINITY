@@ -1,3 +1,21 @@
+## 2026-05-05 — Test autofix batch + One Door auth/launcher alignment
+
+> Alignement architectural One Door appliqué sur `oauthService` et `UnifiedLauncherPanel` via `safeInvokeCanonical` + contrat canonique `{ ok, content, error }`.
+
+> Correction des surfaces tests associées:
+- `src/__tests__/components/auth/FacebookLoginButton.test.tsx`
+- `src/__tests__/components/launcher/UnifiedLauncherPanel.test.tsx`
+- `src/__tests__/services/auth/oauthService.test.ts`
+- `src/__tests__/ui/app-router-canonical-surfaces.test.tsx` (timeout de stabilisation augmenté pour runs complets)
+
+> Doctrine Ollama Dev boundary remise en cohérence avec les assertions unitaires:
+- `.vscode/settings.json` inclut `chat.mcp.enabled: true`
+- `scripts/verify/verify-ollama-copilot-boundary.sh` vérifie explicitement `chat.mcp.enabled is not true`
+
+> Nouveaux artefacts d'automatisation:
+- `scripts/tests/auto-fix-tests.sh` (runner de classification/fix CAT-MOCK|SETUP|TYPE|ESM|LOGIC|INFRA)
+- `.github/agents/test-autofix.agent.md` (agent dédié de remédiation test)
+
 ## 2026-05-04 — Titane tabs label refresh + legacy page deprecation markers
 
 > Cartographie UI mise à jour sur la surface active [src/pages/TitanePage.tsx](src/pages/TitanePage.tsx): labels onglets modernisés sans changement de structure router/tab ids (`📊 Dashboard`, `⚡ Progression`, `🌱 Évolution`). Les `data-testid` canoniques restent strictement inchangés pour préserver les preuves E2E et la stabilité des selectors.

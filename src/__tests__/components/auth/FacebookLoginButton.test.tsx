@@ -8,18 +8,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-// Mock Tauri invoke
-vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn(),
+// Mock canonical IPC layer (oauthService uses safeInvokeCanonical)
+vi.mock('@/utils/invoke', () => ({
+  safeInvokeCanonical: vi.fn(),
 }));
 
 // Mock Tauri opener
 vi.mock('@tauri-apps/plugin-opener', () => ({
-  open: vi.fn(),
+  openUrl: vi.fn(),
 }));
 
-import { invoke } from '@tauri-apps/api/core';
-import { open } from '@tauri-apps/plugin-opener';
+import { safeInvokeCanonical } from '@/utils/invoke';
+import { openUrl } from '@tauri-apps/plugin-opener';
 import { FacebookLoginButton } from '@/components/auth/FacebookLoginButton';
 import { useOAuthStore } from '@/core/auth/oauthStore';
 
@@ -52,39 +52,43 @@ describe('FacebookLoginButton', () => {
 
   it('calls initiateFacebook and opens auth_url on click', async () => {
     const mockAuthUrl = 'https://www.facebook.com/v21.0/dialog/oauth?client_id=test';
-    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue({
-      auth_url: mockAuthUrl,
-      state: 'random_state_xyz',
+    // safeInvokeCanonical returns canonical { ok, content, error } — oauthService unwraps it
+    (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: true,
+      content: { auth_url: mockAuthUrl, state: 'random_state_xyz' },
+      error: null,
     });
-    (open as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+    (openUrl as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
 
     render(<FacebookLoginButton />);
     const btn = screen.getByRole('button');
     fireEvent.click(btn);
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith('oauth_facebook_initiate');
-      expect(open).toHaveBeenCalledWith(mockAuthUrl);
+      expect(safeInvokeCanonical).toHaveBeenCalledWith('oauth_facebook_initiate');
+      expect(openUrl).toHaveBeenCalledWith(mockAuthUrl);
     });
   });
 
   it('shows loading state while initiating', async () => {
-    let resolveInvoke!: (v: unknown) => void;
-    (invoke as ReturnType<typeof vi.fn>).mockReturnValue(
-      new Promise((r) => { resolveInvoke = r; })
+    let resolveSafe!: (v: unknown) => void;
+    (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockReturnValue(
+      new Promise((r) => { resolveSafe = r; })
     );
 
     render(<FacebookLoginButton />);
     fireEvent.click(screen.getByRole('button'));
 
     expect(screen.getByText('Ouverture…')).toBeTruthy();
-    resolveInvoke({ auth_url: 'https://fb.test', state: 'abc' });
+    resolveSafe({ ok: true, content: { auth_url: 'https://fb.test', state: 'abc' }, error: null });
   });
 
   it('shows error on failure', async () => {
-    (invoke as ReturnType<typeof vi.fn>).mockRejectedValue(
-      new Error('App ID not configured')
-    );
+    (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: false,
+      content: null,
+      error: 'App ID not configured',
+    });
 
     render(<FacebookLoginButton />);
     fireEvent.click(screen.getByRole('button'));

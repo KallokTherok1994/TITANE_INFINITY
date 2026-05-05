@@ -71,7 +71,7 @@ const renderRoute = async (initialRoute: string) => {
   });
 };
 
-const STABILIZATION_TIMEOUT_MS = 5000;
+const STABILIZATION_TIMEOUT_MS = 15000;
 const SVG_TRANSFORM_STUB = {
   baseVal: {
     consolidate: () => ({

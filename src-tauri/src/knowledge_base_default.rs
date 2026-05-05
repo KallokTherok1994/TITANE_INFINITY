@@ -1851,7 +1851,7 @@ mod tests {
         let entry = DefaultKnowledgeBase::get_entry("titane_identity_kernel_v31");
         assert!(entry.is_some(), "titane_identity_kernel_v31 must exist");
         let e = entry.unwrap();
-        assert_eq!(e.version, "v30.1.35");
+        assert_eq!(e.version, "v32.0.0");
         assert!(
             e.content.get("titane_identity_kernel").is_some(),
             "titane_identity_kernel_v31 must expose titane_identity_kernel"

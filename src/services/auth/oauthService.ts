@@ -5,7 +5,7 @@
 //   OAUTH SERVICE — IPC bridge for Facebook PKCE flow
 // ═══════════════════════════════════════════════════════════════
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 
 export interface OAuthInitiateResponse {
   auth_url: string;
@@ -23,20 +23,27 @@ export interface OAuthProfile {
 
 /** Initiate Facebook OAuth PKCE flow — returns auth_url to open in system browser */
 export async function initiateFacebookLogin(): Promise<OAuthInitiateResponse> {
-  return invoke<OAuthInitiateResponse>('oauth_facebook_initiate');
+  const result = await safeInvokeCanonical<OAuthInitiateResponse>('oauth_facebook_initiate');
+  if (!result.ok || !result.content) throw new Error(result.error ?? 'oauth_facebook_initiate failed');
+  return result.content;
 }
 
 /** Handle callback URL from deep-link (titane://auth/callback?code=...&state=...) */
 export async function handleFacebookCallback(url: string): Promise<OAuthProfile> {
-  return invoke<OAuthProfile>('oauth_facebook_callback', { url });
+  const result = await safeInvokeCanonical<OAuthProfile>('oauth_facebook_callback', { url });
+  if (!result.ok || !result.content) throw new Error(result.error ?? 'oauth_facebook_callback failed');
+  return result.content;
 }
 
 /** Get cached Facebook profile (null if not logged in) */
 export async function getFacebookProfile(): Promise<OAuthProfile | null> {
-  return invoke<OAuthProfile | null>('oauth_facebook_get_profile');
+  const result = await safeInvokeCanonical<OAuthProfile | null>('oauth_facebook_get_profile');
+  if (!result.ok) return null;
+  return result.content ?? null;
 }
 
 /** Logout from Facebook — clears all credentials */
 export async function logoutFacebook(): Promise<boolean> {
-  return invoke<boolean>('oauth_facebook_logout');
+  const result = await safeInvokeCanonical<boolean>('oauth_facebook_logout');
+  return result.ok && (result.content ?? false);
 }

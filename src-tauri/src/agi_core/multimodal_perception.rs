@@ -561,8 +561,13 @@ mod tests {
     async fn test_meta_learning_success() {
         let engine = MultimodalPerceptionEngine::new(true, true, 0.7);
         let base = AGIContext::default();
-        let vision = create_test_vision();
-        let audio = create_test_audio();
+        // High-quality vision (brightness=0.9, contrast=0.9) + audio (intensity=0.9)
+        // ensures perceptual_confidence = (0.9 + 0.9) / 2 = 0.9 > 0.8 threshold
+        let mut vision = create_test_vision();
+        vision.brightness = 0.9;
+        vision.contrast = 0.9;
+        let mut audio = create_test_audio();
+        audio.intensity = 0.9;
         let context = MultimodalAGIContext::from_base(base)
             .with_vision(vision)
             .with_audio(audio);

@@ -1,3 +1,11 @@
+## 2026-05-05 : Test Autofix + One Door consolidation (Auth/Launcher)
+
+> One Door renforcé sur les surfaces auth/launcher: `src/services/auth/oauthService.ts` et `src/components/launcher/UnifiedLauncherPanel.tsx` ne consomment plus `@tauri-apps/api/core` directement et passent par `safeInvokeCanonical` avec unwrap explicite du contrat `{ ok, content, error }`.
+
+> Couverture de non-régression alignée: tests vitest auth + launcher + service mis à jour pour mocker `@/utils/invoke` et valider les payloads canoniques.
+
+> Gouvernance boundary MCP consolidée: `chat.mcp.enabled=true` dans `.vscode/settings.json` + assert dédié dans `scripts/verify/verify-ollama-copilot-boundary.sh`.
+
 ## 2026-05-04 : ToolSelectorPanel — Ring 4 Chat Tool Selector + Dev Config Fix
 
 > **ToolSelectorPanel (Ring 4)** : nouveau composant `src/components/chat/ToolSelectorPanel.tsx` + `ToolSelectorPanel.css` — panneau ⚡ de 10 raccourcis chat organisés en 4 catégories (GÉNÉRER / RECHERCHE & ANALYSE / RÉFLEXION / CONFIGURATION). Registre pur : `src/features/chat/chatToolsRegistry.ts` (10 `ChatTool`, aucune dépendance React). Intégré dans `ConversationSection.tsx` : slash-detection (`inputValue==='/'` → panel ouvert + clear natif DOM), `handleToolSelect` (autoSend → setTimeout+handleSend ; !autoSend → updateInputValue+focus), sauvegarde préférence via `setCustomPreference`+`resetStaticPromptContextCache`. data-testid stables : `tool-selector-btn`, `tool-selector-panel`, `tool-item-{id}`, `tool-status-online`, `tool-status-deep`. Tests : 25/25 Vitest PASS + 13/13 E2E PASS (x3). AutoHeal : AH-20260504-TOOL-SELECTOR-0001.

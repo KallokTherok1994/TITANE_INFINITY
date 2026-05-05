@@ -153,7 +153,8 @@ impl ReasoningEngine {
             premises.push("Causal relationship detected".to_string());
         }
 
-        if input.contains("if") || input.contains("si") {
+        let input_lower = input.to_lowercase();
+        if input_lower.contains("if") || input_lower.contains("si") {
             premises.push("Conditional statement detected".to_string());
         }
 

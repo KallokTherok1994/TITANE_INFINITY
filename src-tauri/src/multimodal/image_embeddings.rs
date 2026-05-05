@@ -109,6 +109,21 @@ impl ImageEmbeddingEngine {
 mod tests {
     use super::*;
     use crate::multimodal::vision_models::{VisionModel, VisionModelManager};
+    use image::{ImageBuffer, Rgb};
+
+    fn create_test_image_bytes() -> Vec<u8> {
+        let img: ImageBuffer<Rgb<u8>, Vec<u8>> =
+            ImageBuffer::from_fn(50, 50, |x, y| Rgb([(x * 5) as u8, (y * 5) as u8, 128]));
+        let dynamic_img = image::DynamicImage::ImageRgb8(img);
+        let mut bytes = Vec::new();
+        dynamic_img
+            .write_to(
+                &mut std::io::Cursor::new(&mut bytes),
+                image::ImageFormat::Png,
+            )
+            .expect("Test image should serialize to PNG bytes");
+        bytes
+    }
 
     #[tokio::test]
     async fn test_image_embedding_basic() {
@@ -117,7 +132,8 @@ mod tests {
             true,
         )));
         let engine = ImageEmbeddingEngine::new(manager);
-        let result = engine.embed_image("test".to_string(), &[0u8; 100]).await;
+        let img_bytes = create_test_image_bytes();
+        let result = engine.embed_image("test".to_string(), &img_bytes).await;
         assert!(result.is_ok());
     }
 
@@ -129,8 +145,9 @@ mod tests {
         )));
         let engine = ImageEmbeddingEngine::new(manager);
         let id = "test_cache".to_string();
+        let img_bytes = create_test_image_bytes();
 
-        let _ = engine.embed_image(id.clone(), &[0u8; 100]).await;
+        let _ = engine.embed_image(id.clone(), &img_bytes).await;
         let (size, _) = engine.cache_stats().await;
         assert_eq!(size, 1);
     }
