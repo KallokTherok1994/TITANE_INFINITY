@@ -1,5 +1,6 @@
-AppImage: 96885240 bytes
-DEB: 24339014 bytes
-RPM: 24338230 bytes
-24M	deployment/latest/titane-infinity_33.0.7_amd64.deb
-24M	deployment/latest/titane-infinity-33.0.7-1.x86_64.rpm
+AppImage: 96971256 bytes
+DEB: 24469426 bytes
+RPM: 24468831 bytes
+93M     deployment/latest/titane-infinity_33.0.7_amd64.AppImage
+24M     deployment/latest/titane-infinity_33.0.7_amd64.deb
+24M     deployment/latest/titane-infinity-33.0.7-1.x86_64.rpm

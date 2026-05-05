@@ -1572,14 +1572,16 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | Version | 33.0.7 |
 | Branch | MAIN |
 | Build date | 2026-05-04 |
+| AppImage artifact | titane-infinity_33.0.7_amd64.AppImage 93MiB |
 | DEB artifact | titane-infinity_33.0.7_amd64.deb 24MiB |
 | RPM artifact | titane-infinity-33.0.7-1.x86_64.rpm 24MiB |
+| AppImage sha256 | 36fdb4a7a14480323b1cea8ede51f4eb328ac975f4550f7a41ce38d548a16f90 |
 | DEB sha256 | 17942a673265f4903c627d591dfe3132049faf9d2428b172acb3174449649c70 |
 | RPM sha256 | 098834c85f1d301ea1e47a832e3df779dac3c3abc511d431ed8026c066d7b101 |
 | Launcher Exec | /usr/bin/titane-infinity |
 | Launcher Icon | titane-infinity |
 | sudo reinstall | DONE — dpkg exit 0 (2026-05-04) |
 | Desktop icons | DONE — update-desktop-icons.sh PASS |
-| Scope | Tab labels Dashboard/Progression/Évolution + WDIO desktop coverage expansion (memory-subtabs, dev-tabs, time-tabs, ESM fix, ui-driver helpers) |
+| Scope | TitanePage tab labels (Dashboard/Progression/Évolution) + WDIO desktop coverage expansion: ESM fix titane-tabs-labels, new memory-subtabs (10 tests), dev-page-tabs (13 tests), time-page-tabs (13 tests), ui-driver helpers (waitForTabActive/assertTabPanel), admin-tabs (13 tests / 8 tabs), orchestration-center smoke (5 tests), fusion-page smoke (5 tests), memory-hybrid L11-L17 (7 tests), wdio.desktop.conf.cjs .cjs glob fix (4 files / 166+ tests made visible), registry governance sync — commits 8016133 + bc0f815 |
 | Gates | detect_recurrence PASS, verify_instructions 33/33 PASS |
 | VERDICT | PASS |
