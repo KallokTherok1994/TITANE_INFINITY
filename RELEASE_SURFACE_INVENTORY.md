@@ -1585,3 +1585,23 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | Scope | TitanePage tab labels (Dashboard/Progression/Évolution) + WDIO desktop coverage expansion: ESM fix titane-tabs-labels, new memory-subtabs (10 tests), dev-page-tabs (13 tests), time-page-tabs (13 tests), ui-driver helpers (waitForTabActive/assertTabPanel), admin-tabs (13 tests / 8 tabs), orchestration-center smoke (5 tests), fusion-page smoke (5 tests), memory-hybrid L11-L17 (7 tests), wdio.desktop.conf.cjs .cjs glob fix (4 files / 166+ tests made visible), registry governance sync — commits 8016133 + bc0f815 |
 | Gates | detect_recurrence PASS, verify_instructions 33/33 PASS |
 | VERDICT | PASS |
+
+## v33.0.8 — 2026-05-05
+
+| Surface | Value |
+|---|---|
+| Version | 33.0.8 |
+| Branch | MAIN |
+| Build date | 2026-05-05 |
+| AppImage artifact | titane-infinity_33.0.8_amd64.AppImage 93MiB |
+| DEB artifact | titane-infinity_33.0.8_amd64.deb 24MiB |
+| RPM artifact | titane-infinity-33.0.8-1.x86_64.rpm 24MiB |
+| AppImage sha256 | eaebd0e420c825910a07b4d240b554fb6d251d4d8790fa079d0405fbf00c6503 |
+| DEB sha256 | ade3a39f7d5af9c413a66af01a936b0abc65f5528cc8ebe0e9647f2aef61d8ad |
+| RPM sha256 | 5a1529af3e1f78cb41fc560d05895ad00a548ffd99bd21dcb305a7807fadd638 |
+| Launcher Exec | /usr/bin/titane-infinity |
+| Launcher Icon | titane-infinity |
+| sudo reinstall | DONE — dpkg exit 0 (2026-05-05) |
+| Scope | E2E anti-flaky tranches 3+4 + Remote Gateway Twins HTTP wiring + One Door auth consolidation |
+| Gates | detect_recurrence PASS, verify_instructions 33/33 PASS |
+| VERDICT | PASS |
