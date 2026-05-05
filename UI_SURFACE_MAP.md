@@ -855,3 +855,15 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Step flow: detecting → ollama → auth → ready
 - Tests: src/__tests__/components/launcher/UnifiedLauncherPanel.test.tsx (5 tests PASS)
 - E2E: e2e/desktop/unified-launcher.spec.ts
+
+# [2026-05-05] ThinkingPanel — responseQualityScore (qualityVerifier wiring)
+
+- Surface: `reasoning-progress` dans `src/features/chat/ThinkingPanel.tsx`
+- Nouvelle prop `responseQualityScore` (number 0–1, source: qualityVerifier.ts) affichée sous "Réponse X%" avec badge ⚠ si score < 0.65
+- Nouvelle prop `responseQualityTier` ('low'|'medium'|'high') utilisée dans le tooltip du span score
+- Fallback : si `responseQualityScore` absent, affichage "Effort X%" via `qualityScore` (XP scorer normalisé)
+- `data-runtime-quality` préfère `responseQualityScore` sur `qualityScore` (priorité wiring)
+- `data-testid="reasoning-runtime-quality"` : span du panneau "Qualité réponse" (mode étendu)
+- Wiring: `useConversationEngine.ts` calcule `responseQualityScore` via `evaluateResponseQuality()` non-bloquant, profile_id depuis `omega_trace_meta` avec fallback BALANCED
+- Tests: `src/__tests__/features/chat/ThinkingPanel.test.tsx` (7 tests), `src/__tests__/hooks/useConversationEngine.test.ts` (4 tests responseQualityScore wiring)
+- E2E: `e2e/critical/thinking-panel-quality.spec.ts` (T-QS-01, T-QS-02, T-QS-03, T-QS-SMOKE-01)

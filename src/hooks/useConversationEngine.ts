@@ -44,6 +44,11 @@ import {
   type ConversationContext as QualityConversationContext,
 } from '@/services/xp/messageQualityScorer';
 import {
+  evaluateResponseQuality,
+  QUALITY_THRESHOLD,
+} from '@/services/ai/qualityVerifier';
+import type { ResponseProfileId } from '@/services/ai/responsePolicy';
+import {
   buildChatContextEnvelope,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
@@ -276,6 +281,10 @@ export interface ConversationMessage {
     };
     qualityScore?: number;
     qualityTier?: string;
+    /** Score qualityVerifier de la réponse TITANE (0–1). Indépendant du score XP. */
+    responseQualityScore?: number;
+    /** Tier dérivé de responseQualityScore : 'low' (<0.4) | 'medium' (0.4–0.65) | 'high' (≥0.65) */
+    responseQualityTier?: 'low' | 'medium' | 'high';
     xpAwarded?: number;
     actionsPerformed?: Array<{
       label: string;
@@ -777,6 +786,34 @@ export function useConversationEngine(
           citationsCount
         );
 
+        // Phase 1.8 — Response quality evaluation (qualityVerifier, non-blocking, < 5ms)
+        // Évalue la qualité de la réponse de TITANE, distinct du score XP utilisateur.
+        const VALID_RESPONSE_PROFILE_IDS = new Set<string>([
+          'DIRECT', 'BALANCED', 'DEVELOPED', 'DEEP', 'ARCHITECT', 'OMEGA',
+        ]);
+        let responseQualityScore: number | undefined;
+        let responseQualityTier: 'low' | 'medium' | 'high' | undefined;
+        try {
+          const rawProfileId = response.omega_trace_meta?.profile_id ?? '';
+          const profileId = (
+            VALID_RESPONSE_PROFILE_IDS.has(rawProfileId) ? rawProfileId : 'BALANCED'
+          ) as ResponseProfileId;
+          const qualityCritique = evaluateResponseQuality(
+            content,
+            assistantContent,
+            profileId
+          );
+          responseQualityScore = qualityCritique.overallScore;
+          responseQualityTier =
+            qualityCritique.overallScore >= QUALITY_THRESHOLD
+              ? 'high'
+              : qualityCritique.overallScore >= 0.4
+                ? 'medium'
+                : 'low';
+        } catch {
+          // Non-blocking — failure must never abort message delivery
+        }
+
         // Ajouter réponse assistant
         const assistantMessage: ConversationMessage = {
           id: response.message_id,
@@ -807,6 +844,8 @@ export function useConversationEngine(
             xpTrace,
             qualityScore: qualityReward.score.total / 100,
             qualityTier: qualityReward.tier,
+            responseQualityScore,
+            responseQualityTier,
             xpAwarded: qualityReward.totalXP,
             actionsPerformed,
             contextBinding,

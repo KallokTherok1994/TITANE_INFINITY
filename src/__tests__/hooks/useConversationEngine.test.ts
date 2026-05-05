@@ -776,3 +776,106 @@ describe('useConversationEngine fallback meta truth', () => {
     );
   });
 });
+
+describe('useConversationEngine — responseQualityScore (qualityVerifier wiring)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    saveResolvers.splice(0, saveResolvers.length);
+    awardExperienceMock.mockResolvedValue(null);
+    getExperienceStateMock.mockReturnValue({
+      totalXp: 145,
+      level: 1,
+      domains: { chat: { xp: 120 }, cognitive: { xp: 25 } },
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('attaches responseQualityScore (0–1) to assistant message metadata', async () => {
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('Analyse approfondie du projet TITANE');
+    });
+
+    const assistantMsg = result.current.messages.find(m => m.role === 'assistant');
+    expect(assistantMsg).toBeDefined();
+    const score = assistantMsg?.metadata?.responseQualityScore;
+    expect(typeof score).toBe('number');
+    expect(score).toBeGreaterThanOrEqual(0);
+    expect(score).toBeLessThanOrEqual(1);
+  });
+
+  it('attaches responseQualityTier as low/medium/high', async () => {
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('Test tier');
+    });
+
+    const assistantMsg = result.current.messages.find(m => m.role === 'assistant');
+    const tier = assistantMsg?.metadata?.responseQualityTier;
+    expect(['low', 'medium', 'high']).toContain(tier);
+  });
+
+  it('keeps qualityScore (XP scorer) independent from responseQualityScore', async () => {
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('Message test indépendance scores');
+    });
+
+    const assistantMsg = result.current.messages.find(m => m.role === 'assistant');
+    // Both scores coexist independently
+    expect(typeof assistantMsg?.metadata?.qualityScore).toBe('number');
+    expect(typeof assistantMsg?.metadata?.responseQualityScore).toBe('number');
+    // They measure different things — values are not required to be equal
+  });
+
+  it('remains non-blocking if omega_trace_meta is absent (uses BALANCED profile fallback)', async () => {
+    processMessageMock.mockResolvedValueOnce({
+      assistant_message: 'Réponse sans trace OMEGA',
+      conversation_id: 'conv-no-trace',
+      message_id: 'msg-no-trace',
+      detected_intention: 'Question' as const,
+      detected_emotion: { valence: 0, intensity: 0, energy: 0 },
+      cognitive_tags: [],
+      cognitive_summary: '',
+      metadata: {
+        timestamp: Date.now(),
+        provider_used: 'ollama',
+        latency_ms: 8,
+        tokens_used: 5,
+        memory_effect: 'New' as const,
+        links_to_contexts: [],
+      },
+      meta: undefined,
+      // omega_trace_meta absent
+    });
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('Message sans trace');
+    });
+
+    const assistantMsg = result.current.messages.find(m => m.role === 'assistant');
+    // responseQualityScore should still be computed (using BALANCED fallback)
+    expect(assistantMsg?.metadata?.responseQualityScore).toBeDefined();
+    expect(assistantMsg?.metadata?.responseQualityTier).toBeDefined();
+  });
+});

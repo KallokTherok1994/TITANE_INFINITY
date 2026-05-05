@@ -87,6 +87,10 @@ interface ThinkingPanelProps {
   xpTrace?: OmegaXPTrace | null;
   memoryTrace?: OmegaMemoryTrace | null;
   qualityScore?: number | null;
+  /** Score qualityVerifier de la réponse TITANE (0–1). Affiché sous 'Réponse X%'. */
+  responseQualityScore?: number | null;
+  /** Tier dérivé : 'low' | 'medium' | 'high' */
+  responseQualityTier?: string | null;
   autoHealed?: boolean;
   messageLength?: number;
   responseLength?: number;
@@ -115,6 +119,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   xpTrace,
   memoryTrace,
   qualityScore,
+  responseQualityScore,
+  responseQualityTier,
   autoHealed,
   messageLength,
   responseLength,
@@ -284,9 +290,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           data-runtime-save={resolvedSaveLabel}
           data-runtime-sources={systemPromptSourcesLabel}
           data-runtime-quality={
-            qualityScore !== null && qualityScore !== undefined
-              ? `${(qualityScore * 100).toFixed(0)}%`
-              : ''
+            responseQualityScore !== null && responseQualityScore !== undefined
+              ? `${(responseQualityScore * 100).toFixed(0)}%`
+              : qualityScore !== null && qualityScore !== undefined
+                ? `${(qualityScore * 100).toFixed(0)}%`
+                : ''
           }
           data-runtime-xp-gain={
             totalGainAmount !== undefined ? String(totalGainAmount) : ''
@@ -369,9 +377,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
         data-runtime-save={resolvedSaveLabel}
         data-runtime-sources={systemPromptSourcesLabel}
         data-runtime-quality={
-          qualityScore !== null && qualityScore !== undefined
-            ? `${(qualityScore * 100).toFixed(0)}%`
-            : ''
+          responseQualityScore !== null && responseQualityScore !== undefined
+            ? `${(responseQualityScore * 100).toFixed(0)}%`
+            : qualityScore !== null && qualityScore !== undefined
+              ? `${(qualityScore * 100).toFixed(0)}%`
+              : ''
         }
         data-runtime-xp-gain={
           totalGainAmount !== undefined ? String(totalGainAmount) : ''
@@ -483,7 +493,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <span className="oj-summary-label">Résultat :</span>
               <span className="oj-summary-value">
                 {resolvedState === 'done'
-                  ? `${doneSteps} étape${doneSteps !== 1 ? 's' : ''} complétée${doneSteps !== 1 ? 's' : ''}${qualityScore !== null && qualityScore !== undefined ? ` · Qualité ${(qualityScore * 100).toFixed(0)}%` : ''}${autoHealed ? ' · ✦ Auto-guéri' : ''}`
+                  ? `${doneSteps} étape${doneSteps !== 1 ? 's' : ''} complétée${doneSteps !== 1 ? 's' : ''}${responseQualityScore !== null && responseQualityScore !== undefined ? ` · Réponse ${(responseQualityScore * 100).toFixed(0)}%${responseQualityScore < 0.65 ? ' ⚠' : ''}` : qualityScore !== null && qualityScore !== undefined ? ` · Effort ${(qualityScore * 100).toFixed(0)}%` : ''}${autoHealed ? ' · ✦ Auto-guéri' : ''}`
                   : resolvedState === 'error'
                     ? 'Échec détecté'
                     : resolvedState === 'active'
@@ -748,13 +758,20 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   </div>
                 )}
                 <div className="oj-runtime-item">
-                  <span className="oj-runtime-label">Score qualité</span>
+                  <span className="oj-runtime-label">Qualité réponse</span>
                   <span
                     className="oj-runtime-value"
                     data-testid="reasoning-runtime-quality"
                   >
-                    {qualityScore !== null && qualityScore !== undefined ? (
-                      `${(qualityScore * 100).toFixed(0)}%`
+                    {responseQualityScore !== null && responseQualityScore !== undefined ? (
+                      <span title={`Tier: ${responseQualityTier ?? 'n/a'}`}>
+                        {`${(responseQualityScore * 100).toFixed(0)}%`}
+                        {responseQualityScore < 0.65 ? (
+                          <span className="oj-quality-warn" title="Score en dessous du seuil (65%)"> ⚠</span>
+                        ) : null}
+                      </span>
+                    ) : qualityScore !== null && qualityScore !== undefined ? (
+                      `Effort ${(qualityScore * 100).toFixed(0)}%`
                     ) : (
                       <span className="oj-non-capture">
                         Score qualite non evalue sur ce tour
