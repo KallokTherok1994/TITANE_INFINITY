@@ -91,7 +91,11 @@ exports.config = {
   hostname: '127.0.0.1',
   port: 4444,
   path: '/',
-  specs: ['./e2e/desktop/**/*.e2e.js', './e2e/desktop/**/*.wdio.test.js'],
+  specs: [
+    './e2e/desktop/**/*.e2e.js',
+    './e2e/desktop/**/*.wdio.test.js',
+    './e2e/desktop/**/*.wdio.test.cjs',
+  ],
   // v20/v22/v24/v25/v26 files are historical cert/audit specs tied to specific
   // AppImage builds that no longer exist. They are kept for archaeology but must
   // not execute in the active suite (they would time-out or error on missing binaries).

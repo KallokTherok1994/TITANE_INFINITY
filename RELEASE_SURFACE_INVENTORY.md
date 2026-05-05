@@ -1564,3 +1564,22 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | Scope | Facebook OAuth PKCE + MSI WiX fr-FR + deep-link titane:// + unified launcher + plugin-deep-link/opener — 3 commits |
 | Gates | detect_recurrence PASS, verify_instructions 33/33 PASS, build:tauri EXIT=0 |
 | VERDICT | PASS |
+
+## v33.0.7 — 2026-05-04
+
+| Surface | Value |
+|---|---|
+| Version | 33.0.7 |
+| Branch | MAIN |
+| Build date | 2026-05-04 |
+| DEB artifact | titane-infinity_33.0.7_amd64.deb 24MiB |
+| RPM artifact | titane-infinity-33.0.7-1.x86_64.rpm 24MiB |
+| DEB sha256 | 17942a673265f4903c627d591dfe3132049faf9d2428b172acb3174449649c70 |
+| RPM sha256 | 098834c85f1d301ea1e47a832e3df779dac3c3abc511d431ed8026c066d7b101 |
+| Launcher Exec | /usr/bin/titane-infinity |
+| Launcher Icon | titane-infinity |
+| sudo reinstall | DONE — dpkg exit 0 (2026-05-04) |
+| Desktop icons | DONE — update-desktop-icons.sh PASS |
+| Scope | Tab labels Dashboard/Progression/Évolution + WDIO desktop coverage expansion (memory-subtabs, dev-tabs, time-tabs, ESM fix, ui-driver helpers) |
+| Gates | detect_recurrence PASS, verify_instructions 33/33 PASS |
+| VERDICT | PASS |
