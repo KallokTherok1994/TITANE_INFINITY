@@ -1103,6 +1103,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               key={tab.id}
               type="button"
               role="tab"
+              data-testid={`memory-tab-${tab.id}`}
               aria-selected={activeTab === tab.id}
               onClick={() => setActiveTab(tab.id)}
               onKeyDown={e => {
