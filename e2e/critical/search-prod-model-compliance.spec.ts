@@ -266,8 +266,9 @@ test.describe('E2E: Search fallback + PROD model compliance (Tauri runtime)', ()
       }
     }
 
-    // Verify it's the PROD model or empty (no backend in CI)
-    const isProd = activeModel === '' || activeModel.includes('gemma2');
+    // Verify it's the PROD model or a neutral no-backend marker.
+    const isProd =
+      activeModel === '' || activeModel === 'unknown' || activeModel.includes('gemma2');
     expect(isProd).toBe(true);
   });
 
@@ -299,10 +300,11 @@ test.describe('E2E: Search fallback + PROD model compliance (Tauri runtime)', ()
       ).not.toContain(devPattern);
     }
 
-    const isProd = ollamaModel === '' || ollamaModel.includes('gemma2');
+    const isProd =
+      ollamaModel === '' || ollamaModel === 'unknown' || ollamaModel.includes('gemma2');
     expect(
       isProd,
-      `Runtime panel data-ollama-model="${ollamaModel}" — expected gemma2:2b or empty`
+      `Runtime panel data-ollama-model="${ollamaModel}" — expected gemma2:2b, empty, or unknown`
     ).toBe(true);
   });
 });
