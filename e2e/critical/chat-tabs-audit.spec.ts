@@ -15,8 +15,10 @@
 import { test, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'node:url';
 
 const FULL = process.env.TITANE_E2E_FULL === '1';
+const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
 
 // ═══════════════════════════════════════════════════════════
 // RUN0 — C0: Static smoke (always runs, no Tauri needed)
@@ -24,7 +26,7 @@ const FULL = process.env.TITANE_E2E_FULL === '1';
 test.describe('RUN0 — Static smoke (C0)', () => {
   test('C0 — data-testid constants exist in TitanePage.tsx source', () => {
     const sourcePath = path.resolve(
-      __dirname,
+      CURRENT_DIR,
       '../../src/pages/TitanePage.tsx'
     );
     expect(fs.existsSync(sourcePath), `TitanePage.tsx not found at ${sourcePath}`).toBe(true);
@@ -47,7 +49,7 @@ test.describe('RUN0 — Static smoke (C0)', () => {
 
   test('C0b — MemorySection.tsx has data-testid on sub-tab buttons', () => {
     const sourcePath = path.resolve(
-      __dirname,
+      CURRENT_DIR,
       '../../src/components/sections/MemorySection.tsx'
     );
     expect(fs.existsSync(sourcePath), `MemorySection.tsx not found`).toBe(true);
@@ -59,7 +61,7 @@ test.describe('RUN0 — Static smoke (C0)', () => {
 
   test('C0c — ToolSelectorPanel.tsx exists with 10 tool data-testids pattern', () => {
     const sourcePath = path.resolve(
-      __dirname,
+      CURRENT_DIR,
       '../../src/components/chat/ToolSelectorPanel.tsx'
     );
     expect(fs.existsSync(sourcePath), `ToolSelectorPanel.tsx not found`).toBe(true);

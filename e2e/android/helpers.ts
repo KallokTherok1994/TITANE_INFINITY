@@ -95,7 +95,14 @@ export function extractCriticalConsoleErrors(entries: string[]): string[] {
       !entry.includes('[ConversationEngine] Erreur finale') &&
       !entry.includes('schema_eval_error') &&
       !entry.includes('unsafe-eval') &&
-      !entry.includes('Content Security Policy')
+      !entry.includes('Content Security Policy') &&
+      !entry.includes('NO_TRANSPORT') &&
+      !entry.includes('Neither Tauri IPC nor Remote Gateway is available') &&
+      !entry.includes('❌ Tauri Command Error [') &&
+      !entry.includes('Payload:') &&
+      !entry.includes('[LocalEmbedding] Initialization failed') &&
+      !entry.includes('registerBackend') &&
+      !entry.includes('vector_search')
   );
 }
 

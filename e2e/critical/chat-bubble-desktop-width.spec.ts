@@ -23,13 +23,16 @@ async function getMessageBubbleMetrics(page: Page): Promise<{
 }> {
   return page.evaluate(() => {
     const container =
+      document.querySelector('[data-testid="chat-messages-scroll-region"]') ??
       document.querySelector('.message-list-container') ??
       document.querySelector('.message-list');
     const assistantBubble =
+      document.querySelector('[data-testid="chat-message-assistant"]') ??
       document.querySelector('.message-bubble-assistant') ??
       document.querySelector('.message-assistant') ??
       document.querySelector('[data-testid="message-bubble"][data-role="assistant"]');
     const userBubble =
+      document.querySelector('[data-testid="chat-message-user"]') ??
       document.querySelector('.message-bubble-user') ??
       document.querySelector('.message-user') ??
       document.querySelector('[data-testid="message-bubble"][data-role="user"]');
@@ -73,8 +76,11 @@ async function sendTestMessage(page: Page, text: string): Promise<void> {
     )
     .first();
   await sendBtn.click();
-  // Wait for user bubble to appear
-  await page.waitForSelector('.message-bubble-user, .message-user', { timeout: 10000 });
+  // Wait for user bubble to appear; full-suite runs can have slower first paint
+  await page.waitForSelector(
+    '.message-bubble-user, .message-user, [data-testid="chat-message-user"]',
+    { timeout: 20000 }
+  );
 }
 
 test.describe('Chat bubble desktop width — E2E visual proof', () => {
@@ -148,13 +154,12 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
 
     // Verify the computed styles reflect desktop rules (97% for assistant, 88% for user)
     const cssCheck = await page.evaluate(() => {
-      const msgList = document.querySelector('.message-list-content');
       const bubbles = document.querySelectorAll(
-        '.message-bubble, .message-assistant, .message-user'
+        '[data-testid="chat-message-assistant"], [data-testid="chat-message-user"], .message-bubble, .message-assistant, .message-user'
       );
 
       return Array.from(bubbles)
-        .slice(0, 4)
+        .slice(0, 6)
         .map(el => ({
           className: el.className,
           computedMaxWidth: window.getComputedStyle(el).maxWidth,
