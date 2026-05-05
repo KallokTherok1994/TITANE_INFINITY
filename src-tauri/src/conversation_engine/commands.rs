@@ -227,19 +227,25 @@ async fn run_governed_search(
         .collect())
 }
 
-// TRUTH LABEL [PATCH-009]: Web search is DISABLED in default builds.
+// TRUTH LABEL [PATCH-009-FIX]: Web search delegates to SearXNG/DDG Lite fallback in default builds.
 // Default features = ["custom-protocol","mock","audio-capture"] → mock=true, full=false
-// → this stub is ALWAYS active in default/dev builds regardless of BRAVE_API_KEY.
-// To enable real Brave search: build with --features full --no-default-features (or remove mock).
+// Brave Search (feature=full) is preferred; SearXNG/DDG Lite is always available without API keys.
 #[cfg(not(all(not(feature = "mock"), feature = "full")))]
 async fn run_governed_search(
-    _query: &str,
-    _max_results: usize,
+    query: &str,
+    max_results: usize,
 ) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
-    Err(
-        "CREDENTIALS_MISSING: SearchGatewayService unavailable without full backend features"
-            .to_string(),
-    )
+    let results = crate::gateway::search::perform_search(query, max_results).await?;
+    Ok(results
+        .into_iter()
+        .map(|r| crate::engines::conversation_os::search::RawSearchResult {
+            title: Some(r.title),
+            url: Some(r.url),
+            description: Some(r.snippet.clone()),
+            snippet: Some(r.snippet),
+            source: "ddg_lite_fallback".to_string(),
+        })
+        .collect())
 }
 
 // ═══════════════════════════════════════════════════════════════════

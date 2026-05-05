@@ -153,13 +153,12 @@ impl PolicyEngine {
 
         // Rule 5: ONLINE → check credentials
         if context.net_state == NetState::Online {
-            let allow_search = wants_search && context.has_brave_credentials;
+            // Brave Search preferred (feature=full), but SearXNG/DDG Lite is always available as fallback.
+            let allow_search = wants_search;
             let allow_external = wants_external_ai
                 && (context.has_gemini_credentials || context.has_ollama_credentials);
 
-            let block_reason = if wants_search && !context.has_brave_credentials {
-                Some("Search requested but no Brave API credentials".to_string())
-            } else if wants_external_ai && !allow_external {
+            let block_reason = if wants_external_ai && !allow_external {
                 Some("External AI requested but no credentials".to_string())
             } else {
                 None
@@ -290,13 +289,15 @@ mod tests {
 
     #[test]
     fn test_missing_credentials_search() {
+        // SearXNG/DDG Lite is always available as fallback — no Brave API key required.
+        // Search must be allowed even when has_brave_credentials = false.
         let engine = PolicyEngine::new();
         let mut context = create_online_context();
         context.has_brave_credentials = false;
 
         let verdict = engine.evaluate(&context, true, false);
-        assert!(!verdict.allow_search);
-        assert!(verdict.block_reason.is_some());
+        assert!(verdict.allow_search, "Search must be allowed via SearXNG/DDG Lite fallback even without Brave credentials");
+        assert_eq!(verdict.block_reason, None);
     }
 
     #[test]

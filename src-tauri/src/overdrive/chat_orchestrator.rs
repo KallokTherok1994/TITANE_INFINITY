@@ -880,8 +880,8 @@ async fn send_to_ollama(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    // 🚨 FIX: default to an installed local model
-    let model = request.model.as_deref().unwrap_or("llama3.1:latest");
+    // PROD model: gemma2:2b — never fall back to DEV models (qwen3.5:9b, qwen2.5-coder are DEV-only)
+    let model = request.model.as_deref().unwrap_or("gemma2:2b");
     let url = "http://127.0.0.1:11434/api/generate";
 
     // Adaptive timeout for Ollama (local, typically faster)
