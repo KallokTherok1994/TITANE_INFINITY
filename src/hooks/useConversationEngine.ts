@@ -789,7 +789,12 @@ export function useConversationEngine(
         // Phase 1.8 — Response quality evaluation (qualityVerifier, non-blocking, < 5ms)
         // Évalue la qualité de la réponse de TITANE, distinct du score XP utilisateur.
         const VALID_RESPONSE_PROFILE_IDS = new Set<string>([
-          'DIRECT', 'BALANCED', 'DEVELOPED', 'DEEP', 'ARCHITECT', 'OMEGA',
+          'DIRECT',
+          'BALANCED',
+          'DEVELOPED',
+          'DEEP',
+          'ARCHITECT',
+          'OMEGA',
         ]);
         let responseQualityScore: number | undefined;
         let responseQualityTier: 'low' | 'medium' | 'high' | undefined;

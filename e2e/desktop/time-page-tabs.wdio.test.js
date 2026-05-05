@@ -79,25 +79,33 @@ describe('time-page-tabs (WDIO desktop)', () => {
     it('L8 — tab-time-agenda is clickable and becomes active', async () => {
       await $(testId('tab-time-agenda')).click();
       await waitForTabActive(testId('tab-time-agenda'), TIMEOUT);
-      expect(await $(testId('tab-time-agenda')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-time-agenda')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L9 — tab-time-timeline is clickable and becomes active', async () => {
       await $(testId('tab-time-timeline')).click();
       await waitForTabActive(testId('tab-time-timeline'), TIMEOUT);
-      expect(await $(testId('tab-time-timeline')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-time-timeline')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L10 — tab-time-snapshots is clickable and becomes active', async () => {
       await $(testId('tab-time-snapshots')).click();
       await waitForTabActive(testId('tab-time-snapshots'), TIMEOUT);
-      expect(await $(testId('tab-time-snapshots')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-time-snapshots')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L11 — tab-time-cognitive is clickable and becomes active', async () => {
       await $(testId('tab-time-cognitive')).click();
       await waitForTabActive(testId('tab-time-cognitive'), TIMEOUT);
-      expect(await $(testId('tab-time-cognitive')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-time-cognitive')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L12 — all 5 time tab data-testids are present in DOM', async () => {

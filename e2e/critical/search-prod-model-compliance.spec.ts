@@ -72,13 +72,11 @@ async function getIpcSpyLog(
 ): Promise<{ cmd: string; ok: boolean; err?: string; ts: number }[]> {
   const log = await page.evaluate(() => {
     return (
-      (
-        (window as Record<string, unknown>).__TITANE_IPC_SPY_LOG__ as Array<{
-          cmd: string;
-          ok: boolean;
-          ts: number;
-        }>
-      ) || []
+      ((window as Record<string, unknown>).__TITANE_IPC_SPY_LOG__ as Array<{
+        cmd: string;
+        ok: boolean;
+        ts: number;
+      }>) || []
     );
   });
   return log || [];
@@ -86,7 +84,7 @@ async function getIpcSpyLog(
 
 async function getOllamaModelFromDom(page: Page): Promise<string> {
   const panel = page.locator('[data-testid="chat-runtime-state"]');
-  if (await panel.count() === 0) return '';
+  if ((await panel.count()) === 0) return '';
   return (await panel.getAttribute('data-ollama-model')) ?? '';
 }
 
@@ -103,13 +101,19 @@ async function getRuntimeBadges(page: Page): Promise<string[]> {
 async function openConversationTab(page: Page): Promise<void> {
   await openTitane(page);
   const tabConversation = page.locator('[data-testid="tab-conversation"]');
-  if (await tabConversation.count() > 0) {
+  if ((await tabConversation.count()) > 0) {
     await tabConversation.click({ force: true });
   }
-  await expect(page.locator('[data-testid="chat-input"]')).toBeVisible({ timeout: 20000 });
+  await expect(page.locator('[data-testid="chat-input"]')).toBeVisible({
+    timeout: 20000,
+  });
 }
 
-async function sendChatMessage(page: Page, message: string, timeoutMs = 60000): Promise<void> {
+async function sendChatMessage(
+  page: Page,
+  message: string,
+  timeoutMs = 60000
+): Promise<void> {
   const input = page.locator('[data-testid="chat-input"]');
   await input.fill(message);
   const sendBtn = page.locator('[data-testid="chat-send"]');
@@ -128,7 +132,8 @@ test.describe('Smoke: Search + PROD model — static code compliance', () => {
     const policyFix = {
       file: 'src-tauri/src/engines/conversation_os/policy.rs',
       change: 'allow_search = wants_search (removed has_brave_credentials guard)',
-      proofTest: 'cargo test -- engines::conversation_os::policy::tests::test_missing_credentials_search',
+      proofTest:
+        'cargo test -- engines::conversation_os::policy::tests::test_missing_credentials_search',
       status: 'APPLIED',
     };
     expect(policyFix.status).toBe('APPLIED');
@@ -149,7 +154,8 @@ test.describe('Smoke: Search + PROD model — static code compliance', () => {
   test('C0c — gateway/search.rs must exist (always-compiled SearXNG fallback)', async () => {
     const gatewayFix = {
       file: 'src-tauri/src/gateway/search.rs',
-      change: 'New always-compiled search module — no feature gate, no Brave API key required',
+      change:
+        'New always-compiled search module — no feature gate, no Brave API key required',
       status: 'APPLIED',
     };
     expect(gatewayFix.status).toBe('APPLIED');
@@ -246,7 +252,10 @@ test.describe('E2E: Search fallback + PROD model compliance (Tauri runtime)', ()
     const ollamaModel = await getOllamaModelFromDom(page);
     const badges = await getRuntimeBadges(page);
     const modelFromBadge =
-      badges.find(b => b.startsWith('model-used:'))?.replace('model-used:', '').trim() ?? '';
+      badges
+        .find(b => b.startsWith('model-used:'))
+        ?.replace('model-used:', '')
+        .trim() ?? '';
 
     const activeModel = (ollamaModel || modelFromBadge).toLowerCase();
 
@@ -274,18 +283,26 @@ test.describe('E2E: Search fallback + PROD model compliance (Tauri runtime)', ()
     );
 
     const runtimePanel = page.locator('[data-testid="chat-runtime-state"]');
-    if (await runtimePanel.count() === 0) {
+    if ((await runtimePanel.count()) === 0) {
       // No runtime panel → CI without Tauri backend, test is inconclusive but not failing
       return;
     }
 
-    const ollamaModel = ((await runtimePanel.getAttribute('data-ollama-model')) ?? '').toLowerCase();
+    const ollamaModel = (
+      (await runtimePanel.getAttribute('data-ollama-model')) ?? ''
+    ).toLowerCase();
 
     for (const devPattern of DEV_MODEL_PATTERNS) {
-      expect(ollamaModel, `DEV model "${devPattern}" must not appear as PROD fallback in runtime panel`).not.toContain(devPattern);
+      expect(
+        ollamaModel,
+        `DEV model "${devPattern}" must not appear as PROD fallback in runtime panel`
+      ).not.toContain(devPattern);
     }
 
     const isProd = ollamaModel === '' || ollamaModel.includes('gemma2');
-    expect(isProd, `Runtime panel data-ollama-model="${ollamaModel}" — expected gemma2:2b or empty`).toBe(true);
+    expect(
+      isProd,
+      `Runtime panel data-ollama-model="${ollamaModel}" — expected gemma2:2b or empty`
+    ).toBe(true);
   });
 });

@@ -133,11 +133,21 @@ export class StateIntegrityEngine {
     const fixed = { ...state };
 
     // Fixer les couches
-    fixed.physical = this.fixLayer(fixed.physical as unknown as StateLayer) as unknown as typeof fixed.physical;
-    fixed.cognitive = this.fixLayer(fixed.cognitive as unknown as StateLayer) as unknown as typeof fixed.cognitive;
-    fixed.symbolic = this.fixLayer(fixed.symbolic as unknown as StateLayer) as unknown as typeof fixed.symbolic;
-    fixed.adaptive = this.fixLayer(fixed.adaptive as unknown as StateLayer) as unknown as typeof fixed.adaptive;
-    fixed.meta = this.fixLayer(fixed.meta as unknown as StateLayer) as unknown as typeof fixed.meta;
+    fixed.physical = this.fixLayer(
+      fixed.physical as unknown as StateLayer
+    ) as unknown as typeof fixed.physical;
+    fixed.cognitive = this.fixLayer(
+      fixed.cognitive as unknown as StateLayer
+    ) as unknown as typeof fixed.cognitive;
+    fixed.symbolic = this.fixLayer(
+      fixed.symbolic as unknown as StateLayer
+    ) as unknown as typeof fixed.symbolic;
+    fixed.adaptive = this.fixLayer(
+      fixed.adaptive as unknown as StateLayer
+    ) as unknown as typeof fixed.adaptive;
+    fixed.meta = this.fixLayer(
+      fixed.meta as unknown as StateLayer
+    ) as unknown as typeof fixed.meta;
 
     return fixed;
   }
@@ -208,11 +218,21 @@ export class StateIntegrityEngine {
   private compressState(state: SingularityState): SingularityState {
     return {
       ...state,
-      physical: this.compressLayer(state.physical as unknown as StateLayer) as unknown as typeof state.physical,
-      cognitive: this.compressLayer(state.cognitive as unknown as StateLayer) as unknown as typeof state.cognitive,
-      symbolic: this.compressLayer(state.symbolic as unknown as StateLayer) as unknown as typeof state.symbolic,
-      adaptive: this.compressLayer(state.adaptive as unknown as StateLayer) as unknown as typeof state.adaptive,
-      meta: this.compressLayer(state.meta as unknown as StateLayer) as unknown as typeof state.meta,
+      physical: this.compressLayer(
+        state.physical as unknown as StateLayer
+      ) as unknown as typeof state.physical,
+      cognitive: this.compressLayer(
+        state.cognitive as unknown as StateLayer
+      ) as unknown as typeof state.cognitive,
+      symbolic: this.compressLayer(
+        state.symbolic as unknown as StateLayer
+      ) as unknown as typeof state.symbolic,
+      adaptive: this.compressLayer(
+        state.adaptive as unknown as StateLayer
+      ) as unknown as typeof state.adaptive,
+      meta: this.compressLayer(
+        state.meta as unknown as StateLayer
+      ) as unknown as typeof state.meta,
     };
   }
 

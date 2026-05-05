@@ -1243,7 +1243,11 @@ export async function waitForTabActive(selector, timeout = 10000) {
   await el.waitForDisplayed({ timeout });
   await browser.waitUntil(
     async () => (await el.getAttribute('aria-selected')) === 'true',
-    { timeout, interval: 200, timeoutMsg: `Tab ${selector} did not become active within ${timeout}ms` }
+    {
+      timeout,
+      interval: 200,
+      timeoutMsg: `Tab ${selector} did not become active within ${timeout}ms`,
+    }
   );
 }
 
@@ -1255,8 +1259,9 @@ export async function waitForTabActive(selector, timeout = 10000) {
  */
 export async function assertTabPanel(panelId, timeout = 8000) {
   const container = await $('[data-testid="page-titane-content"]');
-  await browser.waitUntil(
-    async () => (await container.getAttribute('id')) === panelId,
-    { timeout, interval: 200, timeoutMsg: `Panel id did not become "${panelId}" within ${timeout}ms` }
-  );
+  await browser.waitUntil(async () => (await container.getAttribute('id')) === panelId, {
+    timeout,
+    interval: 200,
+    timeoutMsg: `Panel id did not become "${panelId}" within ${timeout}ms`,
+  });
 }

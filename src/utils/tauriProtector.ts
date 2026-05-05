@@ -305,7 +305,9 @@ export class TauriInvokeProtector {
 
       // Strategy 3: Check for actual invoke function in either location
       const tauriCore = window.__TAURI__?.core;
-      const tauriInternals = window.__TAURI_INTERNALS__ as Record<string, unknown> | undefined;
+      const tauriInternals = window.__TAURI_INTERNALS__ as
+        | Record<string, unknown>
+        | undefined;
       const hasTauriInvoke =
         (tauriCore?.invoke && typeof tauriCore.invoke === 'function') ||
         (tauriInternals?.['invoke'] && typeof tauriInternals['invoke'] === 'function');

@@ -763,11 +763,18 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                     className="oj-runtime-value"
                     data-testid="reasoning-runtime-quality"
                   >
-                    {responseQualityScore !== null && responseQualityScore !== undefined ? (
+                    {responseQualityScore !== null &&
+                    responseQualityScore !== undefined ? (
                       <span title={`Tier: ${responseQualityTier ?? 'n/a'}`}>
                         {`${(responseQualityScore * 100).toFixed(0)}%`}
                         {responseQualityScore < 0.65 ? (
-                          <span className="oj-quality-warn" title="Score en dessous du seuil (65%)"> ⚠</span>
+                          <span
+                            className="oj-quality-warn"
+                            title="Score en dessous du seuil (65%)"
+                          >
+                            {' '}
+                            ⚠
+                          </span>
                         ) : null}
                       </span>
                     ) : qualityScore !== null && qualityScore !== undefined ? (

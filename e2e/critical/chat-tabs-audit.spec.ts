@@ -25,11 +25,10 @@ const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
 // ═══════════════════════════════════════════════════════════
 test.describe('RUN0 — Static smoke (C0)', () => {
   test('C0 — data-testid constants exist in TitanePage.tsx source', () => {
-    const sourcePath = path.resolve(
-      CURRENT_DIR,
-      '../../src/pages/TitanePage.tsx'
+    const sourcePath = path.resolve(CURRENT_DIR, '../../src/pages/TitanePage.tsx');
+    expect(fs.existsSync(sourcePath), `TitanePage.tsx not found at ${sourcePath}`).toBe(
+      true
     );
-    expect(fs.existsSync(sourcePath), `TitanePage.tsx not found at ${sourcePath}`).toBe(true);
     const src = fs.readFileSync(sourcePath, 'utf-8');
     // All 6 main tab data-testids
     expect(src).toContain('data-testid="tab-conversation"');
@@ -44,7 +43,9 @@ test.describe('RUN0 — Static smoke (C0)', () => {
     // Tablist role
     expect(src).toContain('role="tablist"');
     // data-layout
-    expect(src).toContain("data-layout={isConversationTab ? 'chat-fullscreen' : 'standard'}");
+    expect(src).toContain(
+      "data-layout={isConversationTab ? 'chat-fullscreen' : 'standard'}"
+    );
   });
 
   test('C0b — MemorySection.tsx has data-testid on sub-tab buttons', () => {
@@ -137,8 +138,14 @@ test.describe('RUN2 — Tab navigation (C5-C10)', () => {
 
   test('C5 — click tab-overview sets aria-selected=true', async ({ page }) => {
     await page.getByTestId('tab-overview').click();
-    await expect(page.getByTestId('tab-overview')).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByTestId('tab-conversation')).toHaveAttribute('aria-selected', 'false');
+    await expect(page.getByTestId('tab-overview')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    await expect(page.getByTestId('tab-conversation')).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
   });
 
   test('C6 — click tab-vision sets aria-selected=true', async ({ page }) => {
@@ -153,12 +160,18 @@ test.describe('RUN2 — Tab navigation (C5-C10)', () => {
 
   test('C8 — click tab-progression sets aria-selected=true', async ({ page }) => {
     await page.getByTestId('tab-progression').click();
-    await expect(page.getByTestId('tab-progression')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('tab-progression')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
   });
 
   test('C9 — click tab-transformation sets aria-selected=true', async ({ page }) => {
     await page.getByTestId('tab-transformation').click();
-    await expect(page.getByTestId('tab-transformation')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('tab-transformation')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
   });
 
   test('C10 — URL updates to ?tab=overview on click', async ({ page }) => {
@@ -211,7 +224,10 @@ test.describe('RUN3 — Tab content (C11-C16)', () => {
 
   test('C16 — data-layout=standard after leaving conversation tab', async ({ page }) => {
     await page.getByTestId('tab-overview').click();
-    await expect(page.getByTestId('page-titane')).toHaveAttribute('data-layout', 'standard');
+    await expect(page.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'standard'
+    );
   });
 });
 
@@ -226,13 +242,17 @@ test.describe('RUN4 — MemorySection sub-tabs (C17-C21)', () => {
     await page.waitForSelector('[data-testid="tab-memory"]', { timeout: 15000 });
   });
 
-  test('C17 — memory-tab-overview is visible and aria-selected by default', async ({ page }) => {
+  test('C17 — memory-tab-overview is visible and aria-selected by default', async ({
+    page,
+  }) => {
     const overviewTab = page.getByTestId('memory-tab-overview');
     await expect(overviewTab).toBeVisible();
     await expect(overviewTab).toHaveAttribute('aria-selected', 'true');
   });
 
-  test('C18 — memory-tab-dashboard is clickable and becomes selected', async ({ page }) => {
+  test('C18 — memory-tab-dashboard is clickable and becomes selected', async ({
+    page,
+  }) => {
     const tab = page.getByTestId('memory-tab-dashboard');
     await expect(tab).toBeVisible();
     await tab.click();
@@ -306,15 +326,25 @@ test.describe('RUN6 — ChatModeSelector in conversation tab (C25-C26)', () => {
     await page.waitForSelector('[data-testid="tab-conversation"]', { timeout: 15000 });
   });
 
-  test('C25 — conversation tab content area is accessible via tabpanel', async ({ page }) => {
+  test('C25 — conversation tab content area is accessible via tabpanel', async ({
+    page,
+  }) => {
     const panel = page.getByRole('tabpanel');
     await expect(panel).toBeVisible();
   });
 
-  test('C26 — navigating from conversation → overview → conversation preserves tab state', async ({ page }) => {
+  test('C26 — navigating from conversation → overview → conversation preserves tab state', async ({
+    page,
+  }) => {
     await page.getByTestId('tab-overview').click();
-    await expect(page.getByTestId('tab-overview')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('tab-overview')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
     await page.getByTestId('tab-conversation').click();
-    await expect(page.getByTestId('tab-conversation')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('tab-conversation')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
   });
 });

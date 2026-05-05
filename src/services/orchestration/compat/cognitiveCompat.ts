@@ -91,7 +91,14 @@ export const cognitiveOmega = {
     }>
   > {
     const strategy = await getCognitiveStrategy();
-    const result = await strategy.execute<Array<{ id: string; content: string; relevance: number; metadata?: Record<string, unknown> }>>('retrieveMemories', params);
+    const result = await strategy.execute<
+      Array<{
+        id: string;
+        content: string;
+        relevance: number;
+        metadata?: Record<string, unknown>;
+      }>
+    >('retrieveMemories', params);
     const memories = result.data || [];
 
     return memories;
@@ -112,10 +119,12 @@ export const cognitiveOmega = {
     const query = lastMessage?.content || '';
 
     // Retrieve memories
-    const memResult = await strategy.execute<Array<{ content: string; relevance: number }>>('retrieveMemories', {
-        query,
-        limit: 5,
-      });
+    const memResult = await strategy.execute<
+      Array<{ content: string; relevance: number }>
+    >('retrieveMemories', {
+      query,
+      limit: 5,
+    });
     const memories = memResult.data || [];
 
     // Build enriched context
@@ -183,7 +192,10 @@ export const cognitiveOmega = {
     complete: boolean;
   }> {
     const strategy = await getCognitiveStrategy();
-    const result = await strategy.execute<{ progress: number; complete: boolean }>('checkGoalProgress', params);
+    const result = await strategy.execute<{ progress: number; complete: boolean }>(
+      'checkGoalProgress',
+      params
+    );
     const progress = result.data;
 
     return {
@@ -203,7 +215,11 @@ export const cognitiveOmega = {
     score: number;
   }> {
     const strategy = await getCognitiveStrategy();
-    const execResult = await strategy.execute<{ isConsistent: boolean; violations: unknown[]; score: number }>('validateConsistency', params);
+    const execResult = await strategy.execute<{
+      isConsistent: boolean;
+      violations: unknown[];
+      score: number;
+    }>('validateConsistency', params);
     const result = execResult.data;
 
     return {

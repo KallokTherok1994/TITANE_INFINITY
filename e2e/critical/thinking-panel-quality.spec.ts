@@ -94,10 +94,12 @@ test.describe('ThinkingPanel — quality score smoke (sans Tauri)', () => {
     page,
   }) => {
     // Test minimal: charge l'app et vérifie qu'elle ne crashe pas
-    await page.goto('http://localhost:1420', { waitUntil: 'domcontentloaded', timeout: 15_000 }).catch(() => {
-      // App might not be running — skip gracefully
-      test.skip();
-    });
+    await page
+      .goto('http://localhost:1420', { waitUntil: 'domcontentloaded', timeout: 15_000 })
+      .catch(() => {
+        // App might not be running — skip gracefully
+        test.skip();
+      });
 
     // Si l'app est disponible, vérifier l'absence d'erreur JS critique
     const errors: string[] = [];

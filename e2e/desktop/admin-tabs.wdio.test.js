@@ -71,49 +71,65 @@ describe('admin-tabs (WDIO desktop)', () => {
     it('L5 — tab-admin-system is clickable and becomes active', async () => {
       await $(testId('tab-admin-system')).click();
       await waitForTabActive(testId('tab-admin-system'), TIMEOUT);
-      expect(await $(testId('tab-admin-system')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-admin-system')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L6 — tab-admin-config is clickable and becomes active', async () => {
       await $(testId('tab-admin-config')).click();
       await waitForTabActive(testId('tab-admin-config'), TIMEOUT);
-      expect(await $(testId('tab-admin-config')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-admin-config')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L7 — tab-admin-audio is clickable and becomes active', async () => {
       await $(testId('tab-admin-audio')).click();
       await waitForTabActive(testId('tab-admin-audio'), TIMEOUT);
-      expect(await $(testId('tab-admin-audio')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-admin-audio')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L8 — tab-admin-design is clickable and becomes active', async () => {
       await $(testId('tab-admin-design')).click();
       await waitForTabActive(testId('tab-admin-design'), TIMEOUT);
-      expect(await $(testId('tab-admin-design')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-admin-design')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L9 — tab-admin-governance is clickable and becomes active', async () => {
       await $(testId('tab-admin-governance')).click();
       await waitForTabActive(testId('tab-admin-governance'), TIMEOUT);
-      expect(await $(testId('tab-admin-governance')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-admin-governance')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L10 — tab-admin-anti-regression is clickable and becomes active', async () => {
       await $(testId('tab-admin-anti-regression')).click();
       await waitForTabActive(testId('tab-admin-anti-regression'), TIMEOUT);
-      expect(await $(testId('tab-admin-anti-regression')).getAttribute('aria-selected')).toBe('true');
+      expect(
+        await $(testId('tab-admin-anti-regression')).getAttribute('aria-selected')
+      ).toBe('true');
     });
 
     it('L11 — tab-admin-production-health is clickable and becomes active', async () => {
       await $(testId('tab-admin-production-health')).click();
       await waitForTabActive(testId('tab-admin-production-health'), TIMEOUT);
-      expect(await $(testId('tab-admin-production-health')).getAttribute('aria-selected')).toBe('true');
+      expect(
+        await $(testId('tab-admin-production-health')).getAttribute('aria-selected')
+      ).toBe('true');
     });
 
     it('L12 — tab-admin-remote-keys is clickable and becomes active', async () => {
       await $(testId('tab-admin-remote-keys')).click();
       await waitForTabActive(testId('tab-admin-remote-keys'), TIMEOUT);
-      expect(await $(testId('tab-admin-remote-keys')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-admin-remote-keys')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L13 — page-admin-content panel is always present after tab navigation', async () => {

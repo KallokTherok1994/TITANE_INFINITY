@@ -169,8 +169,7 @@ class AdvancedBootHealthMonitor {
           if (entry.entryType === 'navigation') {
             const navEntry = entry as PerformanceNavigationTiming;
             logger.info('🎯 [BOOT-MONITOR] Navigation metrics:', {
-              domContentLoaded:
-                navEntry.domContentLoadedEventEnd - navEntry.startTime, // navigationStart deprecated → startTime
+              domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.startTime, // navigationStart deprecated → startTime
               loadComplete: navEntry.loadEventEnd - navEntry.startTime,
               firstPaint: this.getFirstPaint(),
             });

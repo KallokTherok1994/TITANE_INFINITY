@@ -37,7 +37,7 @@ interface OAuthState {
   clearError: () => void;
 }
 
-export const useOAuthStore = create<OAuthState>((set) => ({
+export const useOAuthStore = create<OAuthState>(set => ({
   provider: null,
   profile: null,
   isLoading: false,

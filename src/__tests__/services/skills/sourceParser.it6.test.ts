@@ -12,7 +12,11 @@ describe('sourceParser — manifest JSON parsing (IT6 type-safety)', () => {
       description: 'A test skill',
       instructions: 'Do stuff',
       tools: [
-        { name: 'search_web', description: 'Search the web', parameters: { type: 'object' } },
+        {
+          name: 'search_web',
+          description: 'Search the web',
+          parameters: { type: 'object' },
+        },
       ],
     });
     const { envelope } = ingestManifest(manifest);
@@ -47,7 +51,11 @@ describe('sourceParser — manifest JSON parsing (IT6 type-safety)', () => {
       name: 'Test Skill',
       instructions: 'Do stuff',
       actions: [
-        { name: 'send_email', description: 'Send an email', url: 'https://api.example.com/send' },
+        {
+          name: 'send_email',
+          description: 'Send an email',
+          url: 'https://api.example.com/send',
+        },
       ],
     });
     const { envelope } = ingestManifest(manifest);
@@ -58,9 +66,7 @@ describe('sourceParser — manifest JSON parsing (IT6 type-safety)', () => {
     const manifest = JSON.stringify({
       name: 'Test Skill',
       instructions: 'Do stuff',
-      knowledge_files: [
-        { name: 'readme.md', content: '# Hello', type: 'text/markdown' },
-      ],
+      knowledge_files: [{ name: 'readme.md', content: '# Hello', type: 'text/markdown' }],
     });
     const { envelope } = ingestManifest(manifest);
     expect(envelope.rawKnowledgeFiles).toHaveLength(1);

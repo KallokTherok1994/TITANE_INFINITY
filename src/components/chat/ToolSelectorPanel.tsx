@@ -73,7 +73,9 @@ export function ToolSelectorPanel({
   );
 
   // Regrouper les outils par catégorie dans l'ordre défini
-  const toolsByCategory = TOOL_CATEGORY_ORDER.reduce<Record<ChatToolCategory, ChatTool[]>>(
+  const toolsByCategory = TOOL_CATEGORY_ORDER.reduce<
+    Record<ChatToolCategory, ChatTool[]>
+  >(
     (acc, cat) => {
       acc[cat] = CHAT_TOOLS.filter(t => t.category === cat);
       return acc;
@@ -95,7 +97,9 @@ export function ToolSelectorPanel({
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        <span className="toolbar-btn-icon" aria-hidden="true">⚡</span>
+        <span className="toolbar-btn-icon" aria-hidden="true">
+          ⚡
+        </span>
       </button>
 
       {/* ─── Panel ─── */}
@@ -131,7 +135,9 @@ export function ToolSelectorPanel({
           {/* Header */}
           <div className="tool-selector-header">
             <span className="tool-selector-title">Outils TITANE</span>
-            <span className="tool-selector-hint">Tapez <kbd>/</kbd> pour ouvrir</span>
+            <span className="tool-selector-hint">
+              Tapez <kbd>/</kbd> pour ouvrir
+            </span>
           </div>
 
           {/* Catégories */}
@@ -155,7 +161,9 @@ export function ToolSelectorPanel({
                       onClick={() => handleToolClick(tool)}
                       title={tool.description}
                     >
-                      <span className="tool-card-icon" aria-hidden="true">{tool.icon}</span>
+                      <span className="tool-card-icon" aria-hidden="true">
+                        {tool.icon}
+                      </span>
                       <div className="tool-card-text">
                         <span className="tool-card-label">{tool.label}</span>
                         <span className="tool-card-desc">{tool.description}</span>

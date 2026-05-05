@@ -97,7 +97,11 @@ export class MCPStrategy
         case 'createJob':
           result = await this.createJob(
             (p?.['type'] as string) || 'generic',
-            (((p?.['priority'] as string) || 'medium') as 'low' | 'medium' | 'high' | 'critical')
+            ((p?.['priority'] as string) || 'medium') as
+              | 'low'
+              | 'medium'
+              | 'high'
+              | 'critical'
           );
           break;
 

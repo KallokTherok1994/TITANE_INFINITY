@@ -11,10 +11,23 @@ import { chatEngine } from './chatEngine';
 import type { ChatMode } from './chatTypes';
 
 const VALID_CHAT_MODES = new Set<string>([
-  'default', 'reflection', 'creation', 'strategy', 'emergency',
-  'standard', 'quick', 'omega', 'dev-senior', 'dev', 'nexus-guide',
-  'sentinel-guardian', 'artisan-creator', 'visionary-philosopher',
-  'omega-meta', 'brainstorming', 'synthesis',
+  'default',
+  'reflection',
+  'creation',
+  'strategy',
+  'emergency',
+  'standard',
+  'quick',
+  'omega',
+  'dev-senior',
+  'dev',
+  'nexus-guide',
+  'sentinel-guardian',
+  'artisan-creator',
+  'visionary-philosopher',
+  'omega-meta',
+  'brainstorming',
+  'synthesis',
 ]);
 
 function toChatMode(raw: string): ChatMode {

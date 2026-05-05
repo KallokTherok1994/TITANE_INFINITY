@@ -538,7 +538,12 @@ class TitaneSelfHealingSystem {
     try {
       // Identifier les modules échoués depuis le boot health monitor
       const healthReport = bootHealthMonitor.generateReport();
-      const failedModules = (healthReport as Record<string, unknown> & { performance?: { failedModules?: unknown[] } }).performance?.failedModules || [];
+      const failedModules =
+        (
+          healthReport as Record<string, unknown> & {
+            performance?: { failedModules?: unknown[] };
+          }
+        ).performance?.failedModules || [];
 
       let restarted = 0;
 

@@ -344,7 +344,10 @@ export const MCPOrchestrator = {
 
     // Mark as optimized (simplified)
     const jobRecord = job as unknown as Record<string, unknown>;
-    jobRecord['metadata'] = { ...(jobRecord['metadata'] as Record<string, unknown> | undefined), optimized: true };
+    jobRecord['metadata'] = {
+      ...(jobRecord['metadata'] as Record<string, unknown> | undefined),
+      optimized: true,
+    };
     return job;
   },
 

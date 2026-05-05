@@ -73,14 +73,20 @@ describe('FacebookLoginButton', () => {
   it('shows loading state while initiating', async () => {
     let resolveSafe!: (v: unknown) => void;
     (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockReturnValue(
-      new Promise((r) => { resolveSafe = r; })
+      new Promise(r => {
+        resolveSafe = r;
+      })
     );
 
     render(<FacebookLoginButton />);
     fireEvent.click(screen.getByRole('button'));
 
     expect(screen.getByText('Ouverture…')).toBeTruthy();
-    resolveSafe({ ok: true, content: { auth_url: 'https://fb.test', state: 'abc' }, error: null });
+    resolveSafe({
+      ok: true,
+      content: { auth_url: 'https://fb.test', state: 'abc' },
+      error: null,
+    });
   });
 
   it('shows error on failure', async () => {

@@ -145,7 +145,7 @@ test.describe('Memory Injection Pipeline', () => {
     expect(firstEntry.sources.length).toBeGreaterThan(0);
 
     // Should contain either 'projets', 'knowledge', or 'hybrid_knowledge'
-    const hasMemorySource = firstEntry.sources.some((s) =>
+    const hasMemorySource = firstEntry.sources.some(s =>
       ['projets', 'knowledge', 'hybrid_knowledge', 'rituals', 'decisions'].includes(s)
     );
     expect(hasMemorySource).toBe(true);
@@ -157,7 +157,7 @@ test.describe('Memory Injection Pipeline', () => {
     page,
   }) => {
     // First message
-    await submitMessage(page, 'Qu\'est-ce que TITANE∞ ?');
+    await submitMessage(page, "Qu'est-ce que TITANE∞ ?");
     await waitForAssistantReply(page);
 
     const log1 = await readMemoryLog(page);
@@ -228,5 +228,4 @@ test.describe('Memory Injection Pipeline', () => {
     );
     expect(hasKnowledgeSource).toBe(true);
   });
-
 });

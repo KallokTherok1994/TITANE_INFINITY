@@ -678,18 +678,40 @@ export class CanonicalDiscernmentKernel {
 
     // Information request with no knowledge AND no other context → skip memory explicitly
     // If there are projects/decisions, the fallback rule below will handle injection.
-    if (intent.intent === 'information_request' && memoryContext.relevantKnowledge.length === 0 && !hasContext) {
-      return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_information_request_no_knowledge' };
+    if (
+      intent.intent === 'information_request' &&
+      memoryContext.relevantKnowledge.length === 0 &&
+      !hasContext
+    ) {
+      return {
+        use: false,
+        sources: [],
+        maxTokens: 0,
+        relevance: 'low',
+        reasonCode: 'skip_information_request_no_knowledge',
+      };
     }
 
     // Conversational / very short → skip memory (cost not justified)
     if (intent.intent === 'conversational') {
-      return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_conversational' };
+      return {
+        use: false,
+        sources: [],
+        maxTokens: 0,
+        relevance: 'low',
+        reasonCode: 'skip_conversational',
+      };
     }
 
     // Creative → minimal memory (creativity needs less anchoring)
     if (intent.intent === 'creative') {
-      return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_creative' };
+      return {
+        use: false,
+        sources: [],
+        maxTokens: 0,
+        relevance: 'low',
+        reasonCode: 'skip_creative',
+      };
     }
 
     // Fallback: use memory if available and intent relevance is medium+
@@ -703,7 +725,13 @@ export class CanonicalDiscernmentKernel {
       };
     }
 
-    return { use: false, sources: [], maxTokens: 0, relevance: 'low', reasonCode: 'skip_no_context_or_low_relevance' };
+    return {
+      use: false,
+      sources: [],
+      maxTokens: 0,
+      relevance: 'low',
+      reasonCode: 'skip_no_context_or_low_relevance',
+    };
   }
 
   /**

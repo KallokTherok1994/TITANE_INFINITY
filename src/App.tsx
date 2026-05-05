@@ -261,17 +261,17 @@ export const AppRouter: React.FC = () => {
   // Deep-link handler: titane://auth/callback?code=...&state=...
   useEffect(() => {
     let unlisten: (() => void) | undefined;
-    onOpenUrl((urls) => {
+    onOpenUrl(urls => {
       for (const url of urls) {
         if (url.startsWith('titane://auth/callback')) {
           void handleOAuthCallback(url);
         }
       }
     })
-      .then((fn) => {
+      .then(fn => {
         unlisten = fn;
       })
-      .catch((err) => {
+      .catch(err => {
         logger.warn('[DeepLink] onOpenUrl setup failed', { error: err });
       });
     return () => unlisten?.();

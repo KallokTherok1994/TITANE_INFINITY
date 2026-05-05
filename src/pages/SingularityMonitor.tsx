@@ -338,7 +338,7 @@ const SingularityMonitor = memo(() => {
                   {metaEnergy.state?.fatigue_level ?? '—'}
                 </Badge>
                 <p className="text-xs text-gray-400 mt-1">
-                  ×{metaEnergy.state?.cognitive_multiplier.toFixed(2) ?? '—'} cognitif
+                  ×{metaEnergy.state?.cognitive_multiplier?.toFixed(2) ?? '—'} cognitif
                 </p>
               </div>
 

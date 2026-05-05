@@ -648,11 +648,17 @@ class CognitiveOmegaOrchestrator {
     }
   ): Promise<ConversationGoal> {
     await this.ensureInitialized();
-    return this.goalConsistency.createGoal(conversationId, mainGoal, options ? {
-      description: options.description,
-      constraints: options.constraints,
-      priority: options.priority as GoalPriority | undefined,
-    } : undefined);
+    return this.goalConsistency.createGoal(
+      conversationId,
+      mainGoal,
+      options
+        ? {
+            description: options.description,
+            constraints: options.constraints,
+            priority: options.priority as GoalPriority | undefined,
+          }
+        : undefined
+    );
   }
 
   /**

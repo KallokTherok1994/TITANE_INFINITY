@@ -23,21 +23,29 @@ export interface OAuthProfile {
 
 /** Initiate Facebook OAuth PKCE flow — returns auth_url to open in system browser */
 export async function initiateFacebookLogin(): Promise<OAuthInitiateResponse> {
-  const result = await safeInvokeCanonical<OAuthInitiateResponse>('oauth_facebook_initiate');
-  if (!result.ok || !result.content) throw new Error(result.error ?? 'oauth_facebook_initiate failed');
+  const result = await safeInvokeCanonical<OAuthInitiateResponse>(
+    'oauth_facebook_initiate'
+  );
+  if (!result.ok || !result.content)
+    throw new Error(result.error?.message ?? 'oauth_facebook_initiate failed');
   return result.content;
 }
 
 /** Handle callback URL from deep-link (titane://auth/callback?code=...&state=...) */
 export async function handleFacebookCallback(url: string): Promise<OAuthProfile> {
-  const result = await safeInvokeCanonical<OAuthProfile>('oauth_facebook_callback', { url });
-  if (!result.ok || !result.content) throw new Error(result.error ?? 'oauth_facebook_callback failed');
+  const result = await safeInvokeCanonical<OAuthProfile>('oauth_facebook_callback', {
+    url,
+  });
+  if (!result.ok || !result.content)
+    throw new Error(result.error?.message ?? 'oauth_facebook_callback failed');
   return result.content;
 }
 
 /** Get cached Facebook profile (null if not logged in) */
 export async function getFacebookProfile(): Promise<OAuthProfile | null> {
-  const result = await safeInvokeCanonical<OAuthProfile | null>('oauth_facebook_get_profile');
+  const result = await safeInvokeCanonical<OAuthProfile | null>(
+    'oauth_facebook_get_profile'
+  );
   if (!result.ok) return null;
   return result.content ?? null;
 }

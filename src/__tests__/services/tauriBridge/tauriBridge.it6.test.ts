@@ -3,7 +3,11 @@
  * Proves m.role access without as any, and CoreResponse typed narrowing.
  */
 import { describe, it, expect } from 'vitest';
-import type { ChatMessage, ChatConfig, CoreResponse } from '../../../core/ARCHITECTURE_TYPES_v∞';
+import type {
+  ChatMessage,
+  ChatConfig,
+  CoreResponse,
+} from '../../../core/ARCHITECTURE_TYPES_v∞';
 
 describe('tauriBridge — ChatMessage typed role access (IT6)', () => {
   it('ChatMessage.role is a typed union without needing as any cast', () => {
@@ -47,6 +51,8 @@ describe('tauriBridge — ChatMessage typed role access (IT6)', () => {
       { role: 'assistant', content: 'AI is intelligence demonstrated by machines.' },
     ];
     const history = messages.map(m => `${m.role}: ${m.content}`).join('\n');
-    expect(history).toBe('user: What is AI?\nassistant: AI is intelligence demonstrated by machines.');
+    expect(history).toBe(
+      'user: What is AI?\nassistant: AI is intelligence demonstrated by machines.'
+    );
   });
 });

@@ -35,7 +35,7 @@ vi.mock('@/utils/logger', () => ({
 // isTauriAvailable — contrôlé par les tests
 let mockTauriAvailable = true;
 
-vi.mock('@/api/tauriClient', async (importOriginal) => {
+vi.mock('@/api/tauriClient', async importOriginal => {
   const actual = await importOriginal<typeof import('@/api/tauriClient')>();
   return {
     ...actual,
@@ -191,7 +191,11 @@ describe('M1-M3 — PROD model isolation: gemma2:2b only, no DEV model leaks', (
     // du chat_orchestrator (backend Rust). Cette règle est vérifiée ici sous forme
     // de contrat de configuration.
     const DEV_SURFACES = ['TotalDevPage', 'VS Code MCP Copilot', 'qwen3.5:9b dev prompt'];
-    const PROD_SURFACES = ['ChatPage', 'ConversationSection', 'chat_orchestrator Tauri backend'];
+    const PROD_SURFACES = [
+      'ChatPage',
+      'ConversationSection',
+      'chat_orchestrator Tauri backend',
+    ];
 
     // Tous les modèles DEV sont réservés aux surfaces DEV
     for (const surface of DEV_SURFACES) {

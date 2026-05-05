@@ -113,9 +113,9 @@ export class MemoryService {
         {
           id: 'titane-infinity',
           title: 'TITANE∞ — Système IA Personnel',
-          status: 'active' as 'active',
+          status: 'active' as const,
           progress: 100,
-          priority: 'high' as 'high',
+          priority: 'high' as const,
           lastActivity: new Date().toISOString(),
           tags: ['ai', 'tauri', 'memory', 'governance'],
           description: 'Assistant IA local gouverné — v33.0.3',

@@ -84,7 +84,10 @@ export function detectEnvironment(): EnvironmentInfo {
   try {
     if (hasTauriAPI) {
       const tauriObj = window.__TAURI__ as Record<string, unknown> | undefined;
-      if (tauriObj?.['app'] && (tauriObj['app'] as Record<string, unknown>)?.['getVersion']) {
+      if (
+        tauriObj?.['app'] &&
+        (tauriObj['app'] as Record<string, unknown>)?.['getVersion']
+      ) {
         // Note: getVersion() est async, on ne peut pas l'attendre ici
         // On se contente de signaler sa présence
         tauriVersion = 'v2.x';

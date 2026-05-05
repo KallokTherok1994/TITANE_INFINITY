@@ -47,10 +47,18 @@ vi.mock('@/components/sections', () => ({
   OverviewSection: () => <div data-testid="overview-section" />,
   MemorySection: () => (
     <div data-testid="memory-section">
-      <button data-testid="memory-tab-overview" role="tab" aria-selected={true}>Vue d'ensemble</button>
-      <button data-testid="memory-tab-dashboard" role="tab" aria-selected={false}>Dashboard</button>
-      <button data-testid="memory-tab-tree" role="tab" aria-selected={false}>Arbre</button>
-      <button data-testid="memory-tab-search" role="tab" aria-selected={false}>Recherche</button>
+      <button data-testid="memory-tab-overview" role="tab" aria-selected={true}>
+        Vue d'ensemble
+      </button>
+      <button data-testid="memory-tab-dashboard" role="tab" aria-selected={false}>
+        Dashboard
+      </button>
+      <button data-testid="memory-tab-tree" role="tab" aria-selected={false}>
+        Arbre
+      </button>
+      <button data-testid="memory-tab-search" role="tab" aria-selected={false}>
+        Recherche
+      </button>
     </div>
   ),
   ProgressionSection: () => <div data-testid="progression-section" />,
@@ -63,10 +71,18 @@ vi.mock('@/components/branding/TitaneLogo', () => ({
   TitaneLogo: () => <div data-testid="titane-logo" />,
 }));
 vi.mock('@components/layout', () => ({
-  Container: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { size?: string; centered?: boolean; padding?: number }) => (
-    <div {...props}>{children}</div>
-  ),
-  Stack: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { direction?: string; gap?: number }) => (
+  Container: ({
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLDivElement> & {
+    size?: string;
+    centered?: boolean;
+    padding?: number;
+  }) => <div {...props}>{children}</div>,
+  Stack: ({
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLDivElement> & { direction?: string; gap?: number }) => (
     <div {...props}>{children}</div>
   ),
 }));
@@ -110,8 +126,14 @@ describe('TitanePage — Tab data-testids & a11y', () => {
     const tabs = screen.getAllByRole('tab');
     // 6 TitanePage tabs; MemorySection sub-tabs are rendered via mock too
     const titaneTabs = tabs.filter(t =>
-      ['tab-conversation', 'tab-overview', 'tab-vision', 'tab-memory', 'tab-progression', 'tab-transformation']
-        .includes(t.getAttribute('data-testid') ?? '')
+      [
+        'tab-conversation',
+        'tab-overview',
+        'tab-vision',
+        'tab-memory',
+        'tab-progression',
+        'tab-transformation',
+      ].includes(t.getAttribute('data-testid') ?? '')
     );
     expect(titaneTabs).toHaveLength(6);
   });
@@ -129,8 +151,14 @@ describe('TitanePage — Tab data-testids & a11y', () => {
     expect(screen.getByTestId('tab-overview')).toHaveAttribute('aria-selected', 'false');
     expect(screen.getByTestId('tab-vision')).toHaveAttribute('aria-selected', 'false');
     expect(screen.getByTestId('tab-memory')).toHaveAttribute('aria-selected', 'false');
-    expect(screen.getByTestId('tab-progression')).toHaveAttribute('aria-selected', 'false');
-    expect(screen.getByTestId('tab-transformation')).toHaveAttribute('aria-selected', 'false');
+    expect(screen.getByTestId('tab-progression')).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
+    expect(screen.getByTestId('tab-transformation')).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
   });
 
   // ─── A6: aria-controls points to correct panel id ───
@@ -163,7 +191,10 @@ describe('TitanePage — Tab navigation', () => {
     renderPage();
     fireEvent.click(screen.getByTestId('tab-overview'));
     expect(screen.getByTestId('tab-overview')).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByTestId('tab-conversation')).toHaveAttribute('aria-selected', 'false');
+    expect(screen.getByTestId('tab-conversation')).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
     expect(screen.getByTestId('overview-section')).toBeInTheDocument();
   });
 
@@ -184,7 +215,10 @@ describe('TitanePage — Tab navigation', () => {
   it('N4 — clicking tab-progression shows progression section', () => {
     renderPage();
     fireEvent.click(screen.getByTestId('tab-progression'));
-    expect(screen.getByTestId('tab-progression')).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByTestId('tab-progression')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
     expect(screen.getByTestId('progression-section')).toBeInTheDocument();
   });
 
@@ -216,7 +250,10 @@ describe('TitanePage — URL param routing', () => {
 
   it('U3 — invalid ?tab= falls back to conversation', () => {
     renderPage('/titane?tab=INVALID_TAB');
-    expect(screen.getByTestId('tab-conversation')).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByTestId('tab-conversation')).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
   });
 
   it('U4 — ?tab=identity (legacy) falls back to conversation', () => {

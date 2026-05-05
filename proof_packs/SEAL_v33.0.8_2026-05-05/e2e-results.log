@@ -1,0 +1,673 @@
+
+> titane-infinity@33.0.7 test:e2e /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> playwright test e2e
+
+[2m[WebServer] [22m[E2E_VITE] start: [local:/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm] /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort
+[2m[WebServer] [22m
+[2m[WebServer] [22m  [32m[1mVITE[22m v7.3.2[39m  [2mready in [0m[1m334[22m[2m[0m ms[22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+
+Running 273 tests using 1 worker
+
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    1 [chromium] › e2e/agents/diagnostic-panel.e2e.ts:4:1 › Diagnostic panel visible et selectors présents (4.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    2 [chromium] › e2e/agents/explainability-dashboard.e2e.ts:5:1 › Explainability dashboard visible et selectors présents (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    3 [chromium] › e2e/agents/monitoring-dashboard.e2e.ts:4:1 › Monitoring dashboard visible et selectors présents (1.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    4 [chromium] › e2e/agents/monitoring-dashboard.e2e.ts:30:1 › Monitoring dashboard — health metrics IPC section présente si données disponibles (1.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    5 [chromium] › e2e/agents/orchestrator-dashboard.e2e.ts:5:1 › Orchestrator dashboard visible et selectors présents (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    6 [chromium] › e2e/agents/security-dashboard.e2e.ts:5:1 › Security dashboard visible et selectors présents (1.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓    7 [chromium] › e2e/android/android-build-ui.browser.spec.ts:222:3 › Android Build UI - Browser and Android Emulation › T1 - renders core conversation UI and exports required UI maps (8.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    8 [chromium] › e2e/android/android-build-ui.browser.spec.ts:377:3 › Android Build UI - Browser and Android Emulation › T2 - page-titane renders and initial load completes within 15s (12.4s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓    9 [chromium] › e2e/android/android-build-ui.browser.spec.ts:415:3 › Android Build UI - Browser and Android Emulation › T3 - conversation tab navigates and reveals required chat components (2.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   10 [chromium] › e2e/android/android-build-ui.browser.spec.ts:459:5 › Android Build UI - Browser and Android Emulation › T4 - mobile layout at pixel-7 (412x915) (2.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   11 [chromium] › e2e/android/android-build-ui.browser.spec.ts:459:5 › Android Build UI - Browser and Android Emulation › T4 - mobile layout at galaxy-s25 (360x800) (2.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   12 [chromium] › e2e/android/android-build-ui.browser.spec.ts:459:5 › Android Build UI - Browser and Android Emulation › T4 - mobile layout at iphone-14-pro (390x844) (2.4s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   13 [chromium] › e2e/android/android-build-ui.browser.spec.ts:498:3 › Android Build UI - Browser and Android Emulation › T5 - landscape viewport (823x390) - chat input accessible (2.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   14 [chromium] › e2e/android/android-build-ui.browser.spec.ts:532:3 › Android Build UI - Browser and Android Emulation › T6 - no critical JS or page errors on cold load (2s settle) (4.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   15 [chromium] › e2e/android/android-build-ui.browser.spec.ts:560:3 › Android Build UI - Browser and Android Emulation › T7 - chat runtime state or badge surfaces after conversation load (12.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   16 [chromium] › e2e/android/android-build-ui.browser.spec.ts:608:3 › Android Build UI - Browser and Android Emulation › T8 - chat input accepts text and send dispatches user message (1.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓   17 [chromium] › e2e/android/android-build-ui.browser.spec.ts:648:3 › Android Build UI - Browser and Android Emulation › T9 - non-silence: assistant responds or chat-error shown within 30s (5.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   18 [chromium] › e2e/android/android-build-ui.browser.spec.ts:708:3 › Android Build UI - Browser and Android Emulation › T10 - conversation page has a scrollable overflow container (1.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   19 [chromium] › e2e/android/android-build-ui.browser.spec.ts:772:3 › Android Build UI - Browser and Android Emulation › T11 - chat input receives focus on tap/click (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   20 [chromium] › e2e/android/android-build-ui.browser.spec.ts:806:3 › Android Build UI - Browser and Android Emulation › T12 - page exposes navigation landmark (nav, role=navigation, or tabs) (1.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   21 [chromium] › e2e/android/android-build-ui.browser.spec.ts:848:3 › Android Build UI - Browser and Android Emulation › T13 - performance: page-titane visible within 10s on cold start (2.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   22 [chromium] › e2e/android/android-build-ui.browser.spec.ts:889:3 › Android Build UI - Browser and Android Emulation › T14 - provider state surfaces (warning, fallback, or runtime indicator) (4.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   23 [chromium] › e2e/android/android-build-ui.browser.spec.ts:945:3 › Android Build UI - Browser and Android Emulation › T15 - AR20: all 5 required UI selectors present at conversation page (2.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   24 [chromium] › e2e/android/android-build-ui.browser.spec.ts:986:3 › Android Build UI - Browser and Android Emulation › T16 - btn-clear-chat is present and accessible on conversation page (2.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   25 [chromium] › e2e/android/android-build-ui.browser.spec.ts:1024:3 › Android Build UI - Browser and Android Emulation › T17 - long mobile history stays compact and the return-to-bottom CTA restores the latest view (3.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   26 [chromium] › e2e/android/android-build-ui.browser.spec.ts:1184:3 › Android Build UI - Browser and Android Emulation › T18 - mobile runtime surfaces quota degradation honestly (2.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   27 [chromium] › e2e/android/android-build-ui.browser.spec.ts:1251:3 › Android Build UI - Browser and Android Emulation › T19 - mobile chat renders knowledge and memory runtime proof tags (2.1s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   28 [chromium] › e2e/android/android-build-ui.browser.spec.ts:1362:3 › Android Build UI - Browser and Android Emulation › T20 - mobile chat renders inline web research citations on the canonical surface (1.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   29 [chromium] › e2e/android/android-build-ui.browser.spec.ts:1429:3 › Android Build UI - Browser and Android Emulation › T21 - mobile conversation mode selector keeps page and runtime mode truth aligned (2.0s)
+  ✓   30 [chromium] › e2e/android/android-build-ui.device.spec.ts:71:5 › Android Build UI - Real Device Smoke › android device precondition proof (set TITANE_E2E_ANDROID_DEVICE=1) (0ms)
+  ✓   31 [chromium] › e2e/android/chat-layout-viewport.browser.spec.ts:116:5 › Android Browser: Chat Layout Viewport › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   32 [chromium] › e2e/android/mobile-chrome-reduction-v31.2.15.browser.spec.ts:279:3 › Mobile Chrome Reduction v31.2.15 — Structure › proof: les nouveaux data-testid mobiles sont présents dans le DOM (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   33 [chromium] › e2e/android/mobile-chrome-reduction-v31.2.15.browser.spec.ts:301:3 › Mobile Chrome Reduction v31.2.15 — Structure › proof: zone messages visible et suffisamment haute (Pixel 7) (1.8s)
+  ✓   34 [chromium] › e2e/android/mobile-chrome-reduction-v31.2.15.browser.spec.ts:321:5 › Mobile Chrome Reduction v31.2.15 — Full E2E › gate raccourci (TITANE_E2E_FULL=0) — proof de skip propre (0ms)
+  ✓   35 [chromium] › e2e/audio-truth.spec.ts:78:5 › Audio E2E Truth System › full-mode precondition proof (set TITANE_E2E_FULL=1) (0ms)
+
+[STRUCT-1] Extracted log patterns:
+  [CONV_SEND] patterns: [
+  [32m"logger.info('[CONV_SEND] Provider request'"[39m,
+  [32m"console.warn('[CONV_SEND]'"[39m
+]
+  [CONV_RECV] patterns: [
+  [32m"console.warn('[CONV_RECV]'"[39m,
+  [32m"logger.info('[CONV_RECV] Provider decision'"[39m,
+  [32m"console.warn('[CONV_RECV]'"[39m,
+  [32m"logger.warn('[CONV_RECV] ⚠️ Provider meta missing in response'"[39m
+]
+  ✓   36 [chromium] › e2e/chat-provider-decision-certification-structural.spec.ts:178:3 › P3 Certification: Structural Meta Validation › STRUCT-1: Log patterns [CONV_SEND] and [CONV_RECV] exist in source (4ms)
+
+========================================
+[P3 STRUCT] RUN 1 — Invariant Validation
+========================================
+
+[RUN1] Generated meta: {
+  "buildFlagEnabled": true,
+  "runtimeToggleEnabled": true,
+  "attempts_count": 1,
+  "provider_used": "gemini",
+  "network_used": true,
+  "mode": "REMOTE",
+  "allowed": true
+}
+[RUN1] In-context: allowed=true
+
+[RUN1] Validation Result:
+  ✅ ALL INVARIANTS PASS
+  [UI_SIMULATION] "Réponse: Message reçu via gemini"
+
+[RUN1] ✅ PASSED
+
+  ✓   37 [chromium] › e2e/chat-provider-decision-certification-structural.spec.ts:204:3 › P3 Certification: Structural Meta Validation › STRUCT-2: RUN 1 — Decision meta synthesis + invariant validation (1ms)
+
+========================================
+[P3 STRUCT] RUN 2 — Invariant Validation
+========================================
+
+[RUN2] Generated meta: {
+  "buildFlagEnabled": true,
+  "runtimeToggleEnabled": true,
+  "attempts_count": 2,
+  "reason_code": "PROVIDER_TIMEOUT",
+  "provider_used": "offline",
+  "network_used": false,
+  "mode": "OFFLINE",
+  "allowed": true
+}
+[RUN2] In-context: allowed=true
+
+[RUN2] Validation Result:
+  ✅ ALL INVARIANTS PASS
+  [UI_SIMULATION] "Mode hors ligne: PROVIDER_TIMEOUT"
+
+[RUN2] ✅ PASSED
+
+  ✓   38 [chromium] › e2e/chat-provider-decision-certification-structural.spec.ts:208:3 › P3 Certification: Structural Meta Validation › STRUCT-3: RUN 2 — Decision meta synthesis + invariant validation (1ms)
+
+========================================
+[P3 STRUCT] RUN 3 — Invariant Validation
+========================================
+
+[RUN3] Generated meta: {
+  "buildFlagEnabled": false,
+  "runtimeToggleEnabled": true,
+  "attempts_count": 3,
+  "provider_used": "ollama",
+  "network_used": false,
+  "mode": "LOCAL",
+  "allowed": false
+}
+[RUN3] In-context: allowed=false
+
+[RUN3] Validation Result:
+  ✅ ALL INVARIANTS PASS
+
+[RUN3] ✅ PASSED
+
+  ✓   39 [chromium] › e2e/chat-provider-decision-certification-structural.spec.ts:212:3 › P3 Certification: Structural Meta Validation › STRUCT-4: RUN 3 — Decision meta synthesis + invariant validation (0ms)
+  ✓   40 [chromium] › e2e/chat-provider-decision-certification.spec.ts:191:5 › P3 Certification: Chat Provider Decision › full-mode precondition proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓   41 [chromium] › e2e/critical/app-launch.spec.ts:14:5 › Critical Path: Application Launch › full-mode precondition proof (set TITANE_E2E_FULL=1) (0ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓   42 [chromium] › e2e/critical/chat-bubble-desktop-width.spec.ts:89:3 › Chat bubble desktop width — E2E visual proof › desktop ≥1024px — assistant bubble uses ≥90% of chat column width (2.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓   43 [chromium] › e2e/critical/chat-bubble-desktop-width.spec.ts:140:3 › Chat bubble desktop width — E2E visual proof › desktop ≥1024px — CSS @media rules apply correct max-width (2.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓   44 [chromium] › e2e/critical/chat-bubble-desktop-width.spec.ts:185:3 › Chat bubble desktop width — E2E visual proof › mobile ≤479px — bubble width unchanged (max-width: 95%) (4.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓   45 [chromium] › e2e/critical/chat-bubble-desktop-width.spec.ts:206:3 › Chat bubble desktop width — E2E visual proof › zoom in (150%) — bubble adapts with container, no overflow (3.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓   46 [chromium] › e2e/critical/chat-bubble-desktop-width.spec.ts:235:3 › Chat bubble desktop width — E2E visual proof › zoom out (70%) — bubble stays proportional, no whitespace regression (2.8s)
+  ✓   47 [chromium] › e2e/critical/chat-interaction.spec.ts:176:5 › Critical Path: Chat Interaction › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓   48 [chromium] › e2e/critical/chat-layout-viewport.spec.ts:351:5 › Critical Path: Chat Layout Viewport › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+Mode selector: variante select compact
+  ✓   49 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:153:3 › Chat Q&A — Sélecteur de modes disponibles › Les 10 modes principaux sont accessibles via chat-mode-selector (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   50 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:186:3 › Chat Q&A — Sélecteur de modes disponibles › chat-input et chat-send sont présents avec data-testid stables (1.8s)
+  -   51 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: default › Q1: Quelle est la différence entre stratégie et tactique ?...
+  -   52 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: default › Q2: Comment structurer une prise de décision efficace ?...
+  -   53 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: coach › Q1: Mon objectif est de progresser en leadership mais je ne...
+  -   54 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: coach › Q2: Comment identifier mes forces naturelles et les aligner...
+  -   55 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: dev › Q1: Explique les principes SOLID avec un exemple TypeScript...
+  -   56 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: dev › Q2: Quelle est la différence entre async/await et les Promi...
+  -   57 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: admin › Q1: Un service systemd crashe au démarrage. Donne-moi le pr...
+  -   58 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: admin › Q2: Comment sécuriser un serveur Linux fraîchement installé...
+  -   59 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: strategy › Q1: Réalise un SWOT pour une startup B2B SaaS IA pour PME....
+  -   60 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: strategy › Q2: Comment définir des OKR pertinents pour une équipe de 5...
+  -   61 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: brainstorming › Q1: Génère 10 idées pour monétiser une app de productivité ...
+  -   62 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: brainstorming › Q2: Applique SCAMPER sur le concept de réunion d'équipe....
+  -   63 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: synthesis › Q1: Connecte Deep Work, Flow et GTD — quel principe unifica...
+  -   64 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: synthesis › Q2: Quels patterns communs entre Lean Startup, Design Think...
+  -   65 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: planning › Q1: Crée un plan SMART pour apprendre Rust en 90 jours....
+  -   66 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: planning › Q2: Planifie le lancement d'un SaaS en 6 mois avec jalons e...
+  -   67 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: journal › Q1: Je me sens dépassé par le nombre de projets que j'ai la...
+  -   68 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: journal › Q2: J'explore mon rapport à la perfection — comment ça me b...
+  -   69 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:216:7 › Chat Q&A — 2 questions structurelles par mode › MODE: debug_cognitive › Q1: Charge mentale: 8/10. Fronts ouverts: 12 projets. Par o...
+  -   70 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:229:7 › Chat Q&A — 2 questions structurelles par mode › MODE: debug_cognitive › Q2: J'ai du mal à rentrer dans le flow depuis 3 semaines. D...
+  -   71 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:250:3 › Chat Q&A — Mode switching mid-conversation › Switch default → brainstorming → planning sans perte de contexte UI
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[RUNTIME STATE] Non exposé dans cette version — test passé conditionnellement
+  ✓   72 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:301:3 › Chat Q&A — Runtime state coherence › chat-runtime-state expose data-conversation-mode après sélection (3.4s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓   73 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:334:3 › Chat Q&A — Runtime state coherence › chat-ready est présent après chargement complet (3.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[TESTID] chat-input: ✅
+[TESTID] chat-send: ✅
+[TESTID] chat-messages-scroll-region: ✅
+[TESTID] chat-mode-selector: ✅
+  ✓   74 [chromium] › e2e/critical/chat-qa-all-modes.spec.ts:354:3 › Chat Q&A — Stabilité des data-testids critiques › Tous les data-testids critiques du chat sont présents (1.7s)
+  ✓   75 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:27:3 › RUN0 — Static smoke (C0) › C0 — data-testid constants exist in TitanePage.tsx source (5ms)
+  ✓   76 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:50:3 › RUN0 — Static smoke (C0) › C0b — MemorySection.tsx has data-testid on sub-tab buttons (1ms)
+  ✓   77 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:62:3 › RUN0 — Static smoke (C0) › C0c — ToolSelectorPanel.tsx exists with 10 tool data-testids pattern (1ms)
+  -   78 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:86:3 › RUN1 — Tab presence & a11y (C1-C4) › C1 — all 6 main tabs are visible in DOM
+  -   79 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:99:3 › RUN1 — Tab presence & a11y (C1-C4) › C2 — tablist role and aria-label are present
+  -   80 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:105:3 › RUN1 — Tab presence & a11y (C1-C4) › C3 — each main tab has role=tab
+  -   81 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:119:3 › RUN1 — Tab presence & a11y (C1-C4) › C4 — conversation tab is aria-selected=true by default
+  -   82 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:138:3 › RUN2 — Tab navigation (C5-C10) › C5 — click tab-overview sets aria-selected=true
+  -   83 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:144:3 › RUN2 — Tab navigation (C5-C10) › C6 — click tab-vision sets aria-selected=true
+  -   84 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:149:3 › RUN2 — Tab navigation (C5-C10) › C7 — click tab-memory sets aria-selected=true
+  -   85 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:154:3 › RUN2 — Tab navigation (C5-C10) › C8 — click tab-progression sets aria-selected=true
+  -   86 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:159:3 › RUN2 — Tab navigation (C5-C10) › C9 — click tab-transformation sets aria-selected=true
+  -   87 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:164:3 › RUN2 — Tab navigation (C5-C10) › C10 — URL updates to ?tab=overview on click
+  -   88 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:181:3 › RUN3 — Tab content (C11-C16) › C11 — conversation tab shows chat input
+  -   89 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:187:3 › RUN3 — Tab content (C11-C16) › C12 — data-layout=chat-fullscreen on conversation tab
+  -   90 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:194:3 › RUN3 — Tab content (C11-C16) › C13 — overview tab shows overview content
+  -   91 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:200:3 › RUN3 — Tab content (C11-C16) › C14 — memory tab shows memory section
+  -   92 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:206:3 › RUN3 — Tab content (C11-C16) › C15 — progression tab shows progression section
+  -   93 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:212:3 › RUN3 — Tab content (C11-C16) › C16 — data-layout=standard after leaving conversation tab
+  -   94 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:229:3 › RUN4 — MemorySection sub-tabs (C17-C21) › C17 — memory-tab-overview is visible and aria-selected by default
+  -   95 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:235:3 › RUN4 — MemorySection sub-tabs (C17-C21) › C18 — memory-tab-dashboard is clickable and becomes selected
+  -   96 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:242:3 › RUN4 — MemorySection sub-tabs (C17-C21) › C19 — memory-tab-tree is clickable and becomes selected
+  -   97 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:249:3 › RUN4 — MemorySection sub-tabs (C17-C21) › C20 — memory-tab-search is clickable and becomes selected
+  -   98 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:256:3 › RUN4 — MemorySection sub-tabs (C17-C21) › C21 — all 4 MemorySection sub-tabs have role=tab
+  -   99 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:279:3 › RUN5 — ToolSelectorPanel in conversation tab (C22-C24) › C22 — tool-selector-btn is visible in conversation tab
+  -  100 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:283:3 › RUN5 — ToolSelectorPanel in conversation tab (C22-C24) › C23 — clicking tool-selector-btn opens the panel
+  -  101 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:288:3 › RUN5 — ToolSelectorPanel in conversation tab (C22-C24) › C24 — tool-selector-panel shows at least one tool item
+  -  102 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:309:3 › RUN6 — ChatModeSelector in conversation tab (C25-C26) › C25 — conversation tab content area is accessible via tabpanel
+  -  103 [chromium] › e2e/critical/chat-tabs-audit.spec.ts:314:3 › RUN6 — ChatModeSelector in conversation tab (C25-C26) › C26 — navigating from conversation → overview → conversation preserves tab state
+  ✓  104 [chromium] › e2e/critical/engine-navigation.spec.ts:29:5 › Critical Path: Engine Navigation › full-mode precondition proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  105 [chromium] › e2e/critical/facebook-oauth.spec.ts:10:3 › Facebook OAuth — UI surface › FacebookLoginButton renders with correct testid (179ms)
+  ✓  106 [chromium] › e2e/critical/facebook-oauth.spec.ts:24:3 › Facebook OAuth — UI surface › OAuthProfileCard is hidden when not logged in (165ms)
+  ✓  107 [chromium] › e2e/critical/facebook-oauth.spec.ts:37:3 › Facebook OAuth — UI surface › UnifiedLauncherPanel renders with correct testid when present (191ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  108 [chromium] › e2e/critical/facebook-oauth.spec.ts:48:3 › Facebook OAuth — UI surface › Page does not crash with deep-link handler setup (1.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  109 [chromium] › e2e/critical/generated-files-download.spec.ts:84:3 › Generated Files Panel — Click-to-Download › T1: panel absent quand aucun fichier généré (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  110 [chromium] › e2e/critical/generated-files-download.spec.ts:95:3 › Generated Files Panel — Click-to-Download › T2: panel est dans la zone messages, pas hors du scroll (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  111 [chromium] › e2e/critical/generated-files-download.spec.ts:132:3 › Generated Files Panel — Click-to-Download › T3: bouton Télécharger visible pour status PENDING_DOWNLOAD (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  112 [chromium] › e2e/critical/generated-files-download.spec.ts:164:3 › Generated Files Panel — Click-to-Download › T4: clic Télécharger → download Blob + badge Sauvegardé (2.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  113 [chromium] › e2e/critical/generated-files-download.spec.ts:196:3 › Generated Files Panel — Click-to-Download › T5: SAVED_BROWSER_DOWNLOAD → badge Sauvegardé, pas de bouton Télécharger (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  114 [chromium] › e2e/critical/generated-files-download.spec.ts:216:3 › Generated Files Panel — Click-to-Download › T6: clic ✕ clear → panel disparaît (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  115 [chromium] › e2e/critical/generated-files-download.spec.ts:240:3 › Generated Files Panel — Click-to-Download › T7: compteur de fichiers correct dans le header du panel (1.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  116 [chromium] › e2e/critical/generated-files-download.spec.ts:255:3 › Generated Files Panel — Click-to-Download › T8: aucune erreur JS console critique lors de laffichage du panel (1.8s)
+  ✓  117 [chromium] › e2e/critical/memory-injection.spec.ts:97:5 › Memory Injection Pipeline › gate disabled proof (set TITANE_E2E_FULL=1 to run memory injection E2E) (0ms)
+  ✓  118 [chromium] › e2e/critical/search-prod-model-compliance.spec.ts:124:3 › Smoke: Search + PROD model — static code compliance › C0 — policy.rs search guard must allow search without Brave credentials (static proof) (0ms)
+  ✓  119 [chromium] › e2e/critical/search-prod-model-compliance.spec.ts:137:3 › Smoke: Search + PROD model — static code compliance › C0b — chat_orchestrator PROD fallback must be gemma2:2b (static proof) (0ms)
+  ✓  120 [chromium] › e2e/critical/search-prod-model-compliance.spec.ts:149:3 › Smoke: Search + PROD model — static code compliance › C0c — gateway/search.rs must exist (always-compiled SearXNG fallback) (0ms)
+  ✓  121 [chromium] › e2e/critical/search-prod-model-compliance.spec.ts:163:5 › E2E: Search fallback + PROD model compliance (Tauri runtime) › gate: set TITANE_E2E_FULL=1 to run full Tauri E2E (0ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  122 [chromium] › e2e/critical/singularity-meta-energy.spec.ts:14:3 › SingularityMonitor — MetaEnergy Panel › MetaEnergy panel data-testid is present in DOM (3.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  123 [chromium] › e2e/critical/singularity-meta-energy.spec.ts:28:3 › SingularityMonitor — MetaEnergy Panel › MetaEnergy panel title is visible (3.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  124 [chromium] › e2e/critical/singularity-meta-energy.spec.ts:41:3 › SingularityMonitor — MetaEnergy Panel › MetaEnergy energy level section has data-testid (3.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  125 [chromium] › e2e/critical/singularity-meta-energy.spec.ts:52:3 › SingularityMonitor — MetaEnergy Panel › MetaEnergy fatigue section has data-testid (3.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  126 [chromium] › e2e/critical/singularity-meta-energy.spec.ts:63:3 › SingularityMonitor — MetaEnergy Panel › MetaEnergy homeostasis section has data-testid (3.8s)
+  ✓  127 [chromium] › e2e/critical/system-resilience.spec.ts:14:5 › Critical Path: System Resilience › gate disabled proof (set TITANE_E2E_FULL=1) (1ms)
+  -  128 [chromium] › e2e/critical/thinking-panel-quality.spec.ts:33:3 › ThinkingPanel — quality score display › T-QS-01 — après un message, le ThinkingPanel affiche un score qualité
+  -  129 [chromium] › e2e/critical/thinking-panel-quality.spec.ts:52:3 › ThinkingPanel — quality score display › T-QS-02 — data-runtime-quality contient un pourcentage valide (0–100%)
+  -  130 [chromium] › e2e/critical/thinking-panel-quality.spec.ts:70:3 › ThinkingPanel — quality score display › T-QS-03 — le résumé textuel contient "Réponse X%" ou "Effort X%", pas "Qualité X%"
+  -  131 [chromium] › e2e/critical/thinking-panel-quality.spec.ts:93:3 › ThinkingPanel — quality score smoke (sans Tauri) › T-QS-SMOKE-01 — le composant ThinkingPanel accepte responseQualityScore sans crash UI
+  -  132 [chromium] › e2e/critical/tool-selector.spec.ts:62:3 › RUN1 — Tool selector button & panel toggle › RUN1-T1 — ⚡ Outils button is visible in chat toolbar
+  -  133 [chromium] › e2e/critical/tool-selector.spec.ts:73:3 › RUN1 — Tool selector button & panel toggle › RUN1-T2 — clicking button opens the panel
+  -  134 [chromium] › e2e/critical/tool-selector.spec.ts:85:3 › RUN1 — Tool selector button & panel toggle › RUN1-T3 — clicking button again closes the panel
+  -  135 [chromium] › e2e/critical/tool-selector.spec.ts:104:3 › RUN2 — Panel content (10 tools, categories, status) › RUN2-T1 — all 10 tool cards are rendered
+  -  136 [chromium] › e2e/critical/tool-selector.spec.ts:117:3 › RUN2 — Panel content (10 tools, categories, status) › RUN2-T2 — 4 category labels are present
+  -  137 [chromium] › e2e/critical/tool-selector.spec.ts:132:3 › RUN2 — Panel content (10 tools, categories, status) › RUN2-T3 — status bar elements are present
+  -  138 [chromium] › e2e/critical/tool-selector.spec.ts:153:3 › RUN3 — Tool selection behaviour (template / autoSend) › RUN3-T1 — inject-template tool pre-fills input without sending
+  -  139 [chromium] › e2e/critical/tool-selector.spec.ts:173:3 › RUN3 — Tool selection behaviour (template / autoSend) › RUN3-T2 — analyze_site pre-fills with URL template
+  -  140 [chromium] › e2e/critical/tool-selector.spec.ts:188:3 › RUN3 — Tool selection behaviour (template / autoSend) › RUN3-T3 — autoSend tool (quick_summary) sends message automatically
+  -  141 [chromium] › e2e/critical/tool-selector.spec.ts:213:3 › RUN4 — Slash-detection (typing / opens panel) › RUN4-T1 — typing "/" in input opens the panel and clears input
+  -  142 [chromium] › e2e/critical/tool-selector.spec.ts:235:3 › RUN5 — Panel close behaviours › RUN5-T1 — clicking outside the panel closes it
+  -  143 [chromium] › e2e/critical/tool-selector.spec.ts:249:3 › RUN5 — Panel close behaviours › RUN5-T2 — Escape key closes the panel
+  -  144 [chromium] › e2e/critical/tool-selector.spec.ts:268:3 › RUN6 — Full flow: analyze_site → type URL → send › RUN6-T1 — full analyze_site flow produces user message in chat
+  ✓  145 [chromium] › e2e/critical/visual-engine.spec.ts:18:5 › Critical Path: Visual Engine › full-mode precondition proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  146 [chromium] › e2e/desktop/unified-launcher.spec.ts:9:3 › UnifiedLauncherPanel — desktop surface › Panel renders steps when navigated to launcher route (191ms)
+  ✓  147 [chromium] › e2e/desktop/unified-launcher.spec.ts:20:3 › UnifiedLauncherPanel — desktop surface › Ollama status indicator appears after check (192ms)
+  ✓  148 [chromium] › e2e/desktop/unified-launcher.spec.ts:30:3 › UnifiedLauncherPanel — desktop surface › Launch button appears in ready state (188ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  149 [chromium] › e2e/desktop/webvitals-analytics-proof.e2e.ts:4:1 › WebVitals Analytics IPC — preuve One Door (899ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  150 [chromium] › e2e/desktop/xp-history-stats.e2e.spec.ts:6:3 › Page XP/Expérience › affiche l’historique et les statistiques XP (backend) (1.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  151 [chromium] › e2e/doc-center-export-docx.spec.ts:15:3 › DocCenterPage — Export DOCX natif › la page DocCenter est accessible et affiche les éléments requis (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  152 [chromium] › e2e/doc-center-export-docx.spec.ts:26:3 › DocCenterPage — Export DOCX natif › le bouton export DOCX est actif au chargement (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  153 [chromium] › e2e/doc-center-export-docx.spec.ts:31:3 › DocCenterPage — Export DOCX natif › screenshot preuve — rendu initial DocCenter (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  154 [chromium] › e2e/doc-center-export-docx.spec.ts:38:3 › DocCenterPage — Export DOCX natif › clic sur btn-export-docx déclenche l'IPC (état loading ou status) (1.6s)
+  ✓  155 [chromium] › e2e/features/admin-main-menu-truth.spec.ts:37:5 › Feature: Admin Main Menu Truth › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  156 [chromium] › e2e/features/all-pages-sync.spec.ts:8:5 › Feature: All Pages Sync › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  157 [chromium] › e2e/features/anti-regression-dashboard.spec.ts:11:3 › Feature: Anti-Regression Dashboard › renders the canonical anti-regression surface and summary (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  158 [chromium] › e2e/features/anti-regression-dashboard.spec.ts:20:3 › Feature: Anti-Regression Dashboard › shows a truthful visible runtime mode (1.6s)
+  ✓  159 [chromium] › e2e/features/audio-center.spec.ts:15:5 › Feature: Audio Center › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  160 [chromium] › e2e/features/chat-file-generation.spec.ts:18:5 › Feature: Chat Generated Files Panel › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  161 [chromium] › e2e/features/governance-center.spec.ts:15:5 › Feature: Governance Center › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  162 [chromium] › e2e/features/memory-tree-viewer.spec.ts:42:5 › Feature: Memory Tree Viewer › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  163 [chromium] › e2e/features/production-health.spec.ts:13:5 › Feature: Production Health › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  ✓  164 [chromium] › e2e/feedback-loop.spec.ts:28:3 › feedback-loop precondition proof (set TITANE_E2E_ELECTRON=1) (0ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  165 [chromium] › e2e/htf.spec.ts:11:3 › HTF Module — L'Humain à tout faire › affiche la page HTF avec le header (1.1s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  166 [chromium] › e2e/htf.spec.ts:17:3 › HTF Module — L'Humain à tout faire › les 5 onglets sont présents et navigables (1.1s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  167 [chromium] › e2e/htf.spec.ts:23:3 › HTF Module — L'Humain à tout faire › onglet dashboard affiche les métriques (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  168 [chromium] › e2e/htf.spec.ts:32:3 › HTF Module — L'Humain à tout faire › wizard soumission — étape description (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  169 [chromium] › e2e/htf.spec.ts:44:3 › HTF Module — L'Humain à tout faire › wizard soumission — navigation complète jusqu'à surface (1.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  170 [chromium] › e2e/htf.spec.ts:56:3 › HTF Module — L'Humain à tout faire › CRM — onglet clients visible et formulaire fonctionnel (1.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  171 [chromium] › e2e/htf.spec.ts:69:3 › HTF Module — L'Humain à tout faire › onglet historique visible (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  172 [chromium] › e2e/htf.spec.ts:74:3 › HTF Module — L'Humain à tout faire › onglet base de connaissance visible (1.5s)
+  ✓  173 [chromium] › e2e/omega-pipeline-e2e.spec.ts:64:5 › OMEGA Pipeline v2 E2E Tests › gate disabled proof (set TITANE_E2E_FULL=1) (0ms)
+  -  174 [chromium] › e2e/remote-chat-api.spec.ts:47:1 › remote-chat: GET /api/health — no auth required
+  -  175 [chromium] › e2e/remote-chat-api.spec.ts:56:1 › remote-chat: GET /api/system/health — no auth required
+  -  176 [chromium] › e2e/remote-chat-api.spec.ts:67:1 › remote-chat: POST /api/auth/token — valid secret returns tokens
+  -  177 [chromium] › e2e/remote-chat-api.spec.ts:78:1 › remote-chat: POST /api/auth/token — wrong secret returns 401
+  -  178 [chromium] › e2e/remote-chat-api.spec.ts:92:1 › remote-chat: POST /api/invoke — 401 without Bearer token
+  -  179 [chromium] › e2e/remote-chat-api.spec.ts:103:1 › remote-chat: invoke health_check via Bearer JWT
+  -  180 [chromium] › e2e/remote-chat-api.spec.ts:118:1 › remote-chat: invoke blocked command returns ok:false
+  -  181 [chromium] › e2e/remote-chat-api.spec.ts:133:1 › remote-chat: conversation_generate returns valid IPC response
+  -  182 [chromium] › e2e/remote-chat-api.spec.ts:190:1 › remote-chat: conversation_generate missing payload returns error
+  -  183 [chromium] › e2e/remote-chat-api.spec.ts:208:1 › remote-chat: POST /api/auth/refresh with valid refresh_token
+  -  184 [chromium] › e2e/remote-chat-api.spec.ts:226:1 › remote-chat: GET /api/config/runtime returns config
+  -  185 [chromium] › e2e/remote-chat-api.spec.ts:242:1 › remote-chat: WebSocket /api/stream — ping/pong roundtrip
+  -  186 [chromium] › e2e/remote-chat-browser.spec.ts:66:3 › RemoteLoginPage UI › shows login page when not authenticated
+  -  187 [chromium] › e2e/remote-chat-browser.spec.ts:71:3 › RemoteLoginPage UI › login form has required elements
+  -  188 [chromium] › e2e/remote-chat-browser.spec.ts:81:3 › RemoteLoginPage UI › submit button is disabled with empty input
+  -  189 [chromium] › e2e/remote-chat-browser.spec.ts:89:3 › RemoteLoginPage UI › shows error on wrong secret
+  -  190 [chromium] › e2e/remote-chat-browser.spec.ts:104:3 › RemoteLoginPage UI › successful login reveals remote gateway layout
+  -  191 [chromium] › e2e/remote-chat-browser.spec.ts:138:3 › RemoteGatewayLayout — authenticated session › authenticated user sees RemoteGatewayLayout (not login page)
+  -  192 [chromium] › e2e/remote-chat-browser.spec.ts:146:3 › RemoteGatewayLayout — authenticated session › app content is rendered inside gateway layout
+  -  193 [chromium] › e2e/remote-chat-browser.spec.ts:156:3 › RemoteGatewayLayout — authenticated session › page title contains TITANE branding
+  -  194 [chromium] › e2e/remote-gateway.spec.ts:61:1 › GET /api/health returns ok:true without auth
+  -  195 [chromium] › e2e/remote-gateway.spec.ts:70:1 › GET /api/system/health returns ok:true without auth
+  -  196 [chromium] › e2e/remote-gateway.spec.ts:80:1 › POST /api/auth/token returns tokens on valid secret
+  -  197 [chromium] › e2e/remote-gateway.spec.ts:92:1 › POST /api/auth/token returns 401 on invalid secret
+  -  198 [chromium] › e2e/remote-gateway.spec.ts:104:1 › GET /api/config/runtime returns 401 without token
+  -  199 [chromium] › e2e/remote-gateway.spec.ts:110:1 › GET /api/config/runtime returns config with valid token
+  -  200 [chromium] › e2e/remote-gateway.spec.ts:129:1 › POST /api/invoke health_check returns ok
+  -  201 [chromium] › e2e/remote-gateway.spec.ts:145:1 › POST /api/invoke blocked command returns error
+  -  202 [chromium] › e2e/remote-gateway.spec.ts:163:1 › POST /api/auth/refresh returns new access token
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  203 [chromium] › e2e/remote-key-dashboard.spec.ts:34:3 › RemoteKeyDashboard — Admin tab › dashboard renders with title and tab navigation (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  204 [chromium] › e2e/remote-key-dashboard.spec.ts:44:3 › RemoteKeyDashboard — Admin tab › key count badge is visible (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  205 [chromium] › e2e/remote-key-dashboard.spec.ts:49:3 › RemoteKeyDashboard — Admin tab › create key form is present with stable testids (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  206 [chromium] › e2e/remote-key-dashboard.spec.ts:55:3 › RemoteKeyDashboard — Admin tab › create key button is disabled when label is empty (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  207 [chromium] › e2e/remote-key-dashboard.spec.ts:62:3 › RemoteKeyDashboard — Admin tab › create key button is enabled when label is filled (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  208 [chromium] › e2e/remote-key-dashboard.spec.ts:69:3 › RemoteKeyDashboard — Admin tab › switching to Agent IA tab shows AgentConfigPanel (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  209 [chromium] › e2e/remote-key-dashboard.spec.ts:86:3 › AgentConfigPanel — Agent IA tab › agent training status badge is visible (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  210 [chromium] › e2e/remote-key-dashboard.spec.ts:90:3 › AgentConfigPanel — Agent IA tab › analyze AI button is present (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  211 [chromium] › e2e/remote-key-dashboard.spec.ts:94:3 › AgentConfigPanel — Agent IA tab › label suggestion input and button are present (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  212 [chromium] › e2e/remote-key-dashboard.spec.ts:101:3 › AgentConfigPanel — Agent IA tab › suggest label button disabled when input is empty (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  213 [chromium] › e2e/remote-key-dashboard.spec.ts:107:3 › AgentConfigPanel — Agent IA tab › model selector has correct default value (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  214 [chromium] › e2e/remote-key-dashboard.spec.ts:119:3 › AgentConfigPanel — Agent IA tab › config form inputs are present (prompt, rotation) (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  215 [chromium] › e2e/remote-key-dashboard.spec.ts:129:3 › AgentConfigPanel — Agent IA tab › save and reset buttons are present (1.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  216 [chromium] › e2e/remote-key-dashboard.spec.ts:134:3 › AgentConfigPanel — Agent IA tab › save button updates config and shows confirmation (2.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  217 [chromium] › e2e/remote-key-dashboard.spec.ts:144:3 › AgentConfigPanel — Agent IA tab › switching back to keys tab hides agent panel (1.6s)
+  ✓  218 [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:92:5 › Runtime Validation: Chat AR20 Suite › runtime precondition proof (set TITANE_E2E_TAURI=1) (0ms)
+⚠️ Test skipped: Tauri asset-only mode - no HTTP server
+  ✓  219 [chromium] › e2e/smoke.test.ts:15:3 › Smoke Tests (LEGACY - HTTP mode disabled) › app launches without errors (0ms)
+⚠️ Test skipped: Tauri asset-only mode - no HTTP server
+  ✓  220 [chromium] › e2e/smoke.test.ts:22:3 › Smoke Tests (LEGACY - HTTP mode disabled) › navigation works correctly (0ms)
+⚠️ Test skipped: Tauri asset-only mode - no HTTP server
+  ✓  221 [chromium] › e2e/smoke.test.ts:26:3 › Smoke Tests (LEGACY - HTTP mode disabled) › dark theme is applied by default (0ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  222 [chromium] › e2e/total-dev-smoke.spec.ts:14:3 › TOTAL_DEV GOD DEV Sovereign Space › Route /total-dev RENDERS and NAV shows TOTAL_DEV item (1.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  223 [chromium] › e2e/total-dev-smoke.spec.ts:30:3 › TOTAL_DEV GOD DEV Sovereign Space › LockBadge renders with LOCKED state initially (1.1s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  224 [chromium] › e2e/total-dev-smoke.spec.ts:43:3 › TOTAL_DEV GOD DEV Sovereign Space › UnlockPanel displays and accepts input (2.2s)
+  -  225 [chromium] › e2e/total-dev-smoke.spec.ts:62:3 › TOTAL_DEV GOD DEV Sovereign Space › Tabs (Chat, Console, Git, Files, Actions) render correctly
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  226 [chromium] › e2e/total-dev-smoke.spec.ts:68:3 › TOTAL_DEV GOD DEV Sovereign Space › ChatDevPanel loads with QWEN-Coder context (1.2s)
+  -  227 [chromium] › e2e/total-dev-smoke.spec.ts:82:3 › TOTAL_DEV GOD DEV Sovereign Space › ConsoleDevPanel structure correct
+  -  228 [chromium] › e2e/total-dev-smoke.spec.ts:90:3 › TOTAL_DEV GOD DEV Sovereign Space › DevActionsPanel shows 12 action buttons
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  229 [chromium] › e2e/total-dev-smoke.spec.ts:98:3 › TOTAL_DEV GOD DEV Sovereign Space › No console errors in TOTAL_DEV page (2.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  230 [chromium] › e2e/total-dev-smoke.spec.ts:121:3 › TOTAL_DEV GOD DEV Sovereign Space › Route persists on navigation away and back (1.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  231 [chromium] › e2e/total-dev-unlock.spec.ts:13:3 › TOTAL_DEV Unlock Flow › Browser fallback stays locked even with correct password outside Tauri (1.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  232 [chromium] › e2e/total-dev-unlock.spec.ts:34:3 › TOTAL_DEV Unlock Flow › Unlock with incorrect password stays locked in browser fallback (1.6s)
+⚠️ Test skipped: Tauri asset-only mode - no HTTP server
+  ✓  233 [chromium] › e2e/user-flows.test.ts:15:3 › User Flows (LEGACY - HTTP mode disabled) › chat flow: send message and receive response (0ms)
+⚠️ Test skipped: Tauri asset-only mode - no HTTP server
+  ✓  234 [chromium] › e2e/user-flows.test.ts:19:3 › User Flows (LEGACY - HTTP mode disabled) › engine navigation: visit all engine pages (0ms)
+⚠️ Test skipped: Tauri asset-only mode - no HTTP server
+  ✓  235 [chromium] › e2e/user-flows.test.ts:23:3 › User Flows (LEGACY - HTTP mode disabled) › settings: change theme and verify persistence (0ms)
+  -  236 [chromium] › e2e/windows-ollama-spinup.e2e.spec.ts:6:1 › Spin up Windows : Ollama + modèles installés et actifs
+  ✓  237 [chromium-tests-e2e] › tests/e2e/chat-profile-comparison.spec.ts:1:1 › sanity: Playwright détecte ce test (4ms)
+  -  238 [chromium-tests-e2e] › tests/e2e/chat-profile-comparison.spec.ts:172:3 › Profile Comparison: DIRECT vs DEEP vs ARCHITECT › MEASURE: DIRECT profile (fast, minimal)
+  -  239 [chromium-tests-e2e] › tests/e2e/chat-profile-comparison.spec.ts:186:3 › Profile Comparison: DIRECT vs DEEP vs ARCHITECT › MEASURE: DEEP profile (thorough, developed)
+  -  240 [chromium-tests-e2e] › tests/e2e/chat-profile-comparison.spec.ts:200:3 › Profile Comparison: DIRECT vs DEEP vs ARCHITECT › MEASURE: ARCHITECT profile (strategic, structured)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+📊 PROFILE COMPARISON MATRIX:
+┌─────────────┬───────────────┬───────────────┐
+│ Profile     │ Response Length│ Latency (ms)  │
+├─────────────┼───────────────┼───────────────┤
+│ DIRECT      │          663 │        13071 │
+│ DEEP        │          504 │        10165 │
+│ ARCHITECT   │          591 │        12148 │
+└─────────────┴───────────────┴───────────────┘
+✅ PROFILE COMPARISON: DEEP (504 words) vs DIRECT (663 words)
+  ✓  241 [chromium-tests-e2e] › tests/e2e/chat-profile-comparison.spec.ts:214:3 › Profile Comparison: DIRECT vs DEEP vs ARCHITECT › VERIFY: Profile comparison matrix (45.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓  242 [chromium-tests-e2e] › tests/e2e/chat.spec.ts:4:3 › Chat Interface › should send and receive message (2.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓  243 [chromium-tests-e2e] › tests/e2e/chat.spec.ts:32:3 › Chat Interface › should handle new conversation (2.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  244 [chromium-tests-e2e] › tests/e2e/chat.spec.ts:54:3 › Chat Interface › should validate keyboard shortcuts (2.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓  245 [chromium-tests-e2e] › tests/e2e/chat.spec.ts:81:3 › Chat Interface › should open ModeBuilder for generate-and-open document intent (7.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  246 [chromium-tests-e2e] › tests/e2e/chat.spec.ts:108:3 › Chat Interface › should keep code-intent editor route blocked and not open ModeBuilder (2.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓  247 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:222:3 › Android Build UI - Browser and Android Emulation › T1 - renders core conversation UI and exports required UI maps (7.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  248 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:377:3 › Android Build UI - Browser and Android Emulation › T2 - page-titane renders and initial load completes within 15s (13.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  249 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:415:3 › Android Build UI - Browser and Android Emulation › T3 - conversation tab navigates and reveals required chat components (2.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  250 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:459:5 › Android Build UI - Browser and Android Emulation › T4 - mobile layout at pixel-7 (412x915) (2.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  251 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:459:5 › Android Build UI - Browser and Android Emulation › T4 - mobile layout at galaxy-s25 (360x800) (3.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  252 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:459:5 › Android Build UI - Browser and Android Emulation › T4 - mobile layout at iphone-14-pro (390x844) (3.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  253 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:498:3 › Android Build UI - Browser and Android Emulation › T5 - landscape viewport (823x390) - chat input accessible (2.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  254 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:532:3 › Android Build UI - Browser and Android Emulation › T6 - no critical JS or page errors on cold load (2s settle) (4.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  255 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:560:3 › Android Build UI - Browser and Android Emulation › T7 - chat runtime state or badge surfaces after conversation load (13.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓  256 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:608:3 › Android Build UI - Browser and Android Emulation › T8 - chat input accepts text and send dispatches user message (2.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓  257 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:648:3 › Android Build UI - Browser and Android Emulation › T9 - non-silence: assistant responds or chat-error shown within 30s (6.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  258 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:708:3 › Android Build UI - Browser and Android Emulation › T10 - conversation page has a scrollable overflow container (3.1s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  259 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:772:3 › Android Build UI - Browser and Android Emulation › T11 - chat input receives focus on tap/click (3.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  260 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:806:3 › Android Build UI - Browser and Android Emulation › T12 - page exposes navigation landmark (nav, role=navigation, or tabs) (2.5s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  261 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:848:3 › Android Build UI - Browser and Android Emulation › T13 - performance: page-titane visible within 10s on cold start (3.0s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  262 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:889:3 › Android Build UI - Browser and Android Emulation › T14 - provider state surfaces (warning, fallback, or runtime indicator) (5.7s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  263 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:945:3 › Android Build UI - Browser and Android Emulation › T15 - AR20: all 5 required UI selectors present at conversation page (2.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: POST /api/generate → /api/generate
+  ✓  264 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:986:3 › Android Build UI - Browser and Android Emulation › T16 - btn-clear-chat is present and accessible on conversation page (2.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  265 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:1024:3 › Android Build UI - Browser and Android Emulation › T17 - long mobile history stays compact and the return-to-bottom CTA restores the latest view (4.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  266 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:1184:3 › Android Build UI - Browser and Android Emulation › T18 - mobile runtime surfaces quota degradation honestly (3.3s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  267 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:1251:3 › Android Build UI - Browser and Android Emulation › T19 - mobile chat renders knowledge and memory runtime proof tags (3.8s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  268 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:1362:3 › Android Build UI - Browser and Android Emulation › T20 - mobile chat renders inline web research citations on the canonical surface (3.1s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  269 [chromium-android-ui] › e2e/android/android-build-ui.browser.spec.ts:1429:3 › Android Build UI - Browser and Android Emulation › T21 - mobile conversation mode selector keeps page and runtime mode truth aligned (3.3s)
+  ✓  270 [chromium-android-ui] › e2e/android/chat-layout-viewport.browser.spec.ts:116:5 › Android Browser: Chat Layout Viewport › gate disabled proof (set TITANE_E2E_FULL=1) (1ms)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  271 [chromium-android-ui] › e2e/android/mobile-chrome-reduction-v31.2.15.browser.spec.ts:279:3 › Mobile Chrome Reduction v31.2.15 — Structure › proof: les nouveaux data-testid mobiles sont présents dans le DOM (2.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✓  272 [chromium-android-ui] › e2e/android/mobile-chrome-reduction-v31.2.15.browser.spec.ts:301:3 › Mobile Chrome Reduction v31.2.15 — Structure › proof: zone messages visible et suffisamment haute (Pixel 7) (34.3s)
+  ✓  273 [chromium-android-ui] › e2e/android/mobile-chrome-reduction-v31.2.15.browser.spec.ts:321:5 › Mobile Chrome Reduction v31.2.15 — Full E2E › gate raccourci (TITANE_E2E_FULL=0) — proof de skip propre (0ms)
+
+  100 skipped
+  173 passed (7.2m)
+
+To open last HTML report run:
+[36m[39m
+[36m  pnpm exec playwright show-report[39m
+[36m[39m

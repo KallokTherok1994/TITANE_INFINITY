@@ -513,7 +513,7 @@ class TitaneAIPredictiveEngine {
 
   private getMemoryUsage(): number {
     if (typeof window === 'undefined' || !('performance' in window)) return 0;
-      const memory = window.performance.memory;
+    const memory = window.performance.memory;
     return memory ? memory.usedJSHeapSize / 1024 / 1024 : 0;
   }
 

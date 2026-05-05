@@ -84,7 +84,7 @@ export const CHAT_TOOLS: ChatTool[] = [
     description: 'Analyse et réflexion approfondie sur la conversation',
     category: 'reflect',
     templateText:
-      'RÉFLEXION APPROFONDIE — Analyse les informations de notre conversation et effectue une réflexion approfondie sur le sujet traité, en identifiant les enjeux, les axes d\'amélioration et les prochaines étapes.',
+      "RÉFLEXION APPROFONDIE — Analyse les informations de notre conversation et effectue une réflexion approfondie sur le sujet traité, en identifiant les enjeux, les axes d'amélioration et les prochaines étapes.",
     autoSend: true,
   },
   {
@@ -118,12 +118,13 @@ export const CHAT_TOOLS: ChatTool[] = [
   },
 ];
 
-export const TOOL_CATEGORIES: Record<ChatToolCategory, { label: string; icon: string }> = {
-  generate: { label: 'Générer', icon: '🔧' },
-  research: { label: 'Recherche & Analyse', icon: '🌐' },
-  reflect: { label: 'Réflexion', icon: '🧠' },
-  config: { label: 'Configuration', icon: '⚙️' },
-};
+export const TOOL_CATEGORIES: Record<ChatToolCategory, { label: string; icon: string }> =
+  {
+    generate: { label: 'Générer', icon: '🔧' },
+    research: { label: 'Recherche & Analyse', icon: '🌐' },
+    reflect: { label: 'Réflexion', icon: '🧠' },
+    config: { label: 'Configuration', icon: '⚙️' },
+  };
 
 /** Ordre d'affichage des catégories dans le panel */
 export const TOOL_CATEGORY_ORDER: ChatToolCategory[] = [

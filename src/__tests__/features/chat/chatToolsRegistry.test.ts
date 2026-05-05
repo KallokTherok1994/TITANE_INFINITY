@@ -42,7 +42,12 @@ describe('chatToolsRegistry', () => {
     });
 
     it('toutes les catégories sont valides', () => {
-      const validCategories: ChatToolCategory[] = ['generate', 'research', 'reflect', 'config'];
+      const validCategories: ChatToolCategory[] = [
+        'generate',
+        'research',
+        'reflect',
+        'config',
+      ];
       CHAT_TOOLS.forEach(tool => {
         expect(validCategories).toContain(tool.category);
       });

@@ -54,7 +54,7 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
   useEffect(() => {
     if (step !== 'ollama') return;
     safeInvokeCanonical<{ ok: boolean; model?: string }>('ai_check_ollama_status')
-      .then((res) => {
+      .then(res => {
         const data = res.ok ? res.content : null;
         setOllama({ reachable: data?.ok ?? false, model: data?.model });
         setStep('auth');
@@ -68,7 +68,9 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
   // Step 3 — Load cached OAuth profile
   useEffect(() => {
     if (step !== 'auth') return;
-    loadProfile().then(() => setStep('ready')).catch(() => setStep('ready'));
+    loadProfile()
+      .then(() => setStep('ready'))
+      .catch(() => setStep('ready'));
   }, [step, loadProfile]);
 
   const handleLaunch = () => {
@@ -94,7 +96,9 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
     >
       {/* Header */}
       <div className="flex items-center gap-3">
-        <span className="text-2xl" aria-hidden="true">∞</span>
+        <span className="text-2xl" aria-hidden="true">
+          ∞
+        </span>
         <div>
           <h2 className="font-bold text-lg leading-tight">TITANE∞ Launcher</h2>
           <p className="text-xs text-white/50" data-testid="unified-launcher-platform">
@@ -106,7 +110,11 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
       {/* Step indicators */}
       <div className="flex gap-2 text-xs" data-testid="unified-launcher-steps">
         <StepBadge label="OS" done={step !== 'detecting'} active={step === 'detecting'} />
-        <StepBadge label="Ollama" done={['auth', 'ready', 'error'].includes(step)} active={step === 'ollama'} />
+        <StepBadge
+          label="Ollama"
+          done={['auth', 'ready', 'error'].includes(step)}
+          active={step === 'ollama'}
+        />
         <StepBadge label="Auth" done={step === 'ready'} active={step === 'auth'} />
       </div>
 

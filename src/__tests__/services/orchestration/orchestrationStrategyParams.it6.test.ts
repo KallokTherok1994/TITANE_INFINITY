@@ -19,12 +19,27 @@ interface ExecuteWithProviderParams {
   providerId: string;
   prompt: string;
 }
-interface StoreMemoryParams { content: string; importance?: number; }
-interface RetrieveMemoriesParams { query: string; limit?: number; }
-interface ProcessConversationParams { messages: unknown[]; }
-interface SetGoalParams { description: string; context?: string; }
-interface CheckGoalProgressParams { goalId: string; }
-interface ValidateConsistencyParams { text: string; }
+interface StoreMemoryParams {
+  content: string;
+  importance?: number;
+}
+interface RetrieveMemoriesParams {
+  query: string;
+  limit?: number;
+}
+interface ProcessConversationParams {
+  messages: unknown[];
+}
+interface SetGoalParams {
+  description: string;
+  context?: string;
+}
+interface CheckGoalProgressParams {
+  goalId: string;
+}
+interface ValidateConsistencyParams {
+  text: string;
+}
 
 describe('orchestration strategy typed params (IT6)', () => {
   it('SelectProviderParams criteria carries full selection shape', () => {
@@ -48,7 +63,10 @@ describe('orchestration strategy typed params (IT6)', () => {
   });
 
   it('SetGoalParams context is string | undefined — no unknown type leakage', () => {
-    const params: SetGoalParams = { description: 'Learn TypeScript', context: 'professional' };
+    const params: SetGoalParams = {
+      description: 'Learn TypeScript',
+      context: 'professional',
+    };
     const ctx: string | undefined = params.context;
     expect(ctx).toBe('professional');
   });
@@ -65,7 +83,10 @@ describe('orchestration strategy typed params (IT6)', () => {
 
   it('ProcessConversationParams messages is unknown[]', () => {
     const params: ProcessConversationParams = {
-      messages: [{ role: 'user', content: 'hi' }, { role: 'assistant', content: 'hello' }],
+      messages: [
+        { role: 'user', content: 'hi' },
+        { role: 'assistant', content: 'hello' },
+      ],
     };
     expect(Array.isArray(params.messages)).toBe(true);
     expect(params.messages).toHaveLength(2);

@@ -35,7 +35,9 @@ describe('orchestration-center (WDIO desktop)', () => {
 
     before(async () => {
       await browser.url('/orchestration-center');
-      await $(testId('page-orchestration-meta-center')).waitForDisplayed({ timeout: TIMEOUT });
+      await $(testId('page-orchestration-meta-center')).waitForDisplayed({
+        timeout: TIMEOUT,
+      });
     });
 
     it('L2 — page-orchestration-meta-center root is displayed', async () => {

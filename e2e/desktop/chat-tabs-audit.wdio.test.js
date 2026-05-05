@@ -170,19 +170,25 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
     it('T12 — clicking tab-memory → aria-selected=true', async () => {
       await (await $(testId('tab-memory'))).click();
       await browser.pause(400);
-      expect(await (await $(testId('tab-memory'))).getAttribute('aria-selected')).toBe('true');
+      expect(await (await $(testId('tab-memory'))).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('T13 — data-layout=standard after leaving conversation', async () => {
       await (await $(testId('tab-overview'))).click();
       await browser.pause(300);
-      expect(await (await $(testId('page-titane'))).getAttribute('data-layout')).toBe('standard');
+      expect(await (await $(testId('page-titane'))).getAttribute('data-layout')).toBe(
+        'standard'
+      );
     });
 
     it('T14 — back to conversation tab restores data-layout=chat-fullscreen', async () => {
       await (await $(testId('tab-conversation'))).click();
       await browser.pause(300);
-      expect(await (await $(testId('page-titane'))).getAttribute('data-layout')).toBe('chat-fullscreen');
+      expect(await (await $(testId('page-titane'))).getAttribute('data-layout')).toBe(
+        'chat-fullscreen'
+      );
     });
   });
 

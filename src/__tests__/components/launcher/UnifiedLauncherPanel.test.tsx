@@ -22,7 +22,11 @@ import { useOAuthStore } from '@/core/auth/oauthStore';
 function mockSafeInvokeReady() {
   (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockImplementation((cmd: string) => {
     if (cmd === 'ai_check_ollama_status')
-      return Promise.resolve({ ok: true, content: { ok: true, model: 'gemma2:2b' }, error: null });
+      return Promise.resolve({
+        ok: true,
+        content: { ok: true, model: 'gemma2:2b' },
+        error: null,
+      });
     if (cmd === 'oauth_facebook_get_profile')
       return Promise.resolve({ ok: true, content: null, error: null });
     return Promise.resolve({ ok: true, content: null, error: null });
@@ -41,11 +45,13 @@ beforeEach(() => {
 
 describe('UnifiedLauncherPanel', () => {
   it('renders with data-testid="unified-launcher-panel"', () => {
-    (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockImplementation((cmd: string) => {
-      if (cmd === 'ai_check_ollama_status')
-        return Promise.resolve({ ok: true, content: { ok: false }, error: null });
-      return Promise.resolve({ ok: true, content: null, error: null });
-    });
+    (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockImplementation(
+      (cmd: string) => {
+        if (cmd === 'ai_check_ollama_status')
+          return Promise.resolve({ ok: true, content: { ok: false }, error: null });
+        return Promise.resolve({ ok: true, content: null, error: null });
+      }
+    );
     render(<UnifiedLauncherPanel />);
     expect(screen.getByTestId('unified-launcher-panel')).toBeTruthy();
   });
@@ -55,9 +61,12 @@ describe('UnifiedLauncherPanel', () => {
 
     render(<UnifiedLauncherPanel />);
 
-    await waitFor(() => {
-      expect(screen.getByTestId('unified-launcher-ollama-status')).toBeTruthy();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('unified-launcher-ollama-status')).toBeTruthy();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('shows launch button when ready', async () => {
@@ -65,9 +74,12 @@ describe('UnifiedLauncherPanel', () => {
 
     render(<UnifiedLauncherPanel />);
 
-    await waitFor(() => {
-      expect(screen.getByTestId('unified-launcher-launch-button')).toBeTruthy();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('unified-launcher-launch-button')).toBeTruthy();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('calls onLaunchComplete when launch button is clicked', async () => {
@@ -76,20 +88,25 @@ describe('UnifiedLauncherPanel', () => {
 
     render(<UnifiedLauncherPanel onLaunchComplete={onLaunchComplete} />);
 
-    const btn = await screen.findByTestId('unified-launcher-launch-button', {}, { timeout: 3000 });
+    const btn = await screen.findByTestId(
+      'unified-launcher-launch-button',
+      {},
+      { timeout: 3000 }
+    );
     fireEvent.click(btn);
 
     expect(onLaunchComplete).toHaveBeenCalled();
   });
 
   it('shows step indicators', async () => {
-    (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockImplementation((cmd: string) => {
-      if (cmd === 'ai_check_ollama_status')
-        return Promise.resolve({ ok: true, content: { ok: false }, error: null });
-      return Promise.resolve({ ok: true, content: null, error: null });
-    });
+    (safeInvokeCanonical as ReturnType<typeof vi.fn>).mockImplementation(
+      (cmd: string) => {
+        if (cmd === 'ai_check_ollama_status')
+          return Promise.resolve({ ok: true, content: { ok: false }, error: null });
+        return Promise.resolve({ ok: true, content: null, error: null });
+      }
+    );
     render(<UnifiedLauncherPanel />);
     expect(screen.getByTestId('unified-launcher-steps')).toBeTruthy();
   });
 });
-

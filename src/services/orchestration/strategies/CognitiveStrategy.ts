@@ -35,12 +35,27 @@ import type { MemoryEntry, MemoryLevel } from '@/services/memory/persistentMemor
 // ───────────────────────────────────────────────────────────────────────────
 // TYPED PARAMETER INTERFACES (one per execute() operation)
 // ───────────────────────────────────────────────────────────────────────────
-interface StoreMemoryParams { content: string; importance?: number; }
-interface RetrieveMemoriesParams { query: string; limit?: number; }
-interface ProcessConversationParams { messages: unknown[]; }
-interface SetGoalParams { description: string; context?: string; }
-interface CheckGoalProgressParams { goalId: string; }
-interface ValidateConsistencyParams { text: string; }
+interface StoreMemoryParams {
+  content: string;
+  importance?: number;
+}
+interface RetrieveMemoriesParams {
+  query: string;
+  limit?: number;
+}
+interface ProcessConversationParams {
+  messages: unknown[];
+}
+interface SetGoalParams {
+  description: string;
+  context?: string;
+}
+interface CheckGoalProgressParams {
+  goalId: string;
+}
+interface ValidateConsistencyParams {
+  text: string;
+}
 
 export class CognitiveStrategy
   implements IOrchestrationStrategy, CognitiveMemoryOperation, CognitiveGoalOperation
@@ -114,7 +129,9 @@ export class CognitiveStrategy
           break;
 
         case 'processConversation':
-          result = await this.processConversation((params as ProcessConversationParams)?.messages);
+          result = await this.processConversation(
+            (params as ProcessConversationParams)?.messages
+          );
           break;
 
         case 'setGoal':
@@ -125,11 +142,15 @@ export class CognitiveStrategy
           break;
 
         case 'checkGoalProgress':
-          result = await this.checkGoalProgress((params as CheckGoalProgressParams)?.goalId);
+          result = await this.checkGoalProgress(
+            (params as CheckGoalProgressParams)?.goalId
+          );
           break;
 
         case 'validateConsistency':
-          result = await this.validateConsistency((params as ValidateConsistencyParams)?.text);
+          result = await this.validateConsistency(
+            (params as ValidateConsistencyParams)?.text
+          );
           break;
 
         default:

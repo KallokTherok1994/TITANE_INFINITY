@@ -31,7 +31,7 @@
 - data-testid stables: `tool-selector-btn`, `tool-selector-panel`, `tool-item-{id}` (10 cartes), `tool-status-online`, `tool-status-deep`.
 - Slash detection: inputValue === '/' → panel ouvert + input effacé, via useEffect dans ConversationSection.
 - Préférence save: pattern `/enregistre dans mes préférences : .+/i` → `userPreferencesEngine.setCustomPreference()` + `resetStaticPromptContextCache()` dans handleSend().
-- Preuves: [src/__tests__/components/chat/ToolSelectorPanel.test.tsx](src/__tests__/components/chat/ToolSelectorPanel.test.tsx) (12 tests PASS), [src/__tests__/features/chat/chatToolsRegistry.test.ts](src/__tests__/features/chat/chatToolsRegistry.test.ts) (13 tests PASS). Total: 25/25.
+- Preuves: [src/**tests**/components/chat/ToolSelectorPanel.test.tsx](src/__tests__/components/chat/ToolSelectorPanel.test.tsx) (12 tests PASS), [src/**tests**/features/chat/chatToolsRegistry.test.ts](src/__tests__/features/chat/chatToolsRegistry.test.ts) (13 tests PASS). Total: 25/25.
 - AutoHeal: AH-20260504-TOOL-SELECTOR-0001.
 
 # [2026-05-02] Chat daily-mode conversational truth
@@ -832,13 +832,15 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 # [2026-05-04] OAuth Facebook + Unified Launcher (v33.0.5)
 
 ## FacebookLoginButton — src/components/auth/FacebookLoginButton.tsx
+
 - `data-testid="facebook-login-button"` (wrapper div)
 - `data-testid="facebook-login-error"` (error message, conditional)
 - Calls IPC `oauth_facebook_initiate` → opens system browser for PKCE OAuth
 - Hidden when `profile` is non-null (shows OAuthProfileCard instead)
-- Tests: src/__tests__/components/auth/FacebookLoginButton.test.tsx (6 tests PASS)
+- Tests: src/**tests**/components/auth/FacebookLoginButton.test.tsx (6 tests PASS)
 
 ## OAuthProfileCard — src/components/auth/OAuthProfileCard.tsx
+
 - `data-testid="oauth-profile-card"` (root)
 - `data-testid="oauth-profile-name"`, `oauth-profile-email"`, `oauth-profile-provider"`
 - `data-testid="oauth-profile-avatar"` or `"oauth-profile-avatar-placeholder"`
@@ -846,6 +848,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Visible only when `profile !== null`
 
 ## UnifiedLauncherPanel — src/components/launcher/UnifiedLauncherPanel.tsx
+
 - `data-testid="unified-launcher-panel"` (root)
 - `data-testid="unified-launcher-platform"`, `"unified-launcher-steps"`
 - `data-testid="unified-launcher-ollama-status"` (Ollama reachability badge)
@@ -853,7 +856,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - `data-testid="unified-launcher-launch-button"` (final launch CTA)
 - `data-testid="unified-launcher-loading"`, `"unified-launcher-error"`
 - Step flow: detecting → ollama → auth → ready
-- Tests: src/__tests__/components/launcher/UnifiedLauncherPanel.test.tsx (5 tests PASS)
+- Tests: src/**tests**/components/launcher/UnifiedLauncherPanel.test.tsx (5 tests PASS)
 - E2E: e2e/desktop/unified-launcher.spec.ts
 
 # [2026-05-05] ThinkingPanel — responseQualityScore (qualityVerifier wiring)

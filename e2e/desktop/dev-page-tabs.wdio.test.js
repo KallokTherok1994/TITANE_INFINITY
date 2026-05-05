@@ -74,13 +74,17 @@ describe('dev-page-tabs (WDIO desktop)', () => {
     it('L7 — tab-dev-overview is clickable and becomes active', async () => {
       await $(testId('tab-dev-overview')).click();
       await waitForTabActive(testId('tab-dev-overview'), TIMEOUT);
-      expect(await $(testId('tab-dev-overview')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-dev-overview')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L8 — tab-dev-diagnostics is clickable and becomes active', async () => {
       await $(testId('tab-dev-diagnostics')).click();
       await waitForTabActive(testId('tab-dev-diagnostics'), TIMEOUT);
-      expect(await $(testId('tab-dev-diagnostics')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-dev-diagnostics')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L9 — tab-dev-diagnostics panel is visible after click', async () => {
@@ -91,7 +95,9 @@ describe('dev-page-tabs (WDIO desktop)', () => {
     it('L10 — tab-dev-operations is clickable and becomes active', async () => {
       await $(testId('tab-dev-operations')).click();
       await waitForTabActive(testId('tab-dev-operations'), TIMEOUT);
-      expect(await $(testId('tab-dev-operations')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-dev-operations')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L11 — tab-dev-operations panel is visible after click', async () => {
@@ -102,13 +108,17 @@ describe('dev-page-tabs (WDIO desktop)', () => {
     it('L12 — tab-dev-validation is clickable and becomes active', async () => {
       await $(testId('tab-dev-validation')).click();
       await waitForTabActive(testId('tab-dev-validation'), TIMEOUT);
-      expect(await $(testId('tab-dev-validation')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-dev-validation')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L13 — tab-dev-security is clickable and becomes active', async () => {
       await $(testId('tab-dev-security')).click();
       await waitForTabActive(testId('tab-dev-security'), TIMEOUT);
-      expect(await $(testId('tab-dev-security')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('tab-dev-security')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
   });
 });

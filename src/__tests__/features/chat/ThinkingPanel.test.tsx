@@ -10,12 +10,19 @@ import React from 'react';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }) =>
+    div: ({
+      children,
+      ...props
+    }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }) =>
       React.createElement('div', props, children),
-    span: ({ children, ...props }: React.HTMLAttributes<HTMLSpanElement> & { children?: React.ReactNode }) =>
+    span: ({
+      children,
+      ...props
+    }: React.HTMLAttributes<HTMLSpanElement> & { children?: React.ReactNode }) =>
       React.createElement('span', props, children),
   },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+  AnimatePresence: ({ children }: { children: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children),
   useReducedMotion: () => false,
 }));
 
@@ -37,7 +44,7 @@ const baseStep = {
   type: 'analysis' as const,
   label: 'Analyse',
   status: 'complete' as const,
-  content: 'Étape d\'analyse complète',
+  content: "Étape d'analyse complète",
   timestamp: Date.now(),
 };
 
@@ -70,13 +77,19 @@ describe('ThinkingPanel — responseQualityScore display', () => {
     );
     // Dans le panneau étendu, le résumé "Résultat" contient "Réponse 78%"
     const summaryValues = container.querySelectorAll('.oj-summary-value');
-    const resultatEl = Array.from(summaryValues).find(el => el.textContent?.includes('complétée'));
+    const resultatEl = Array.from(summaryValues).find(el =>
+      el.textContent?.includes('complétée')
+    );
     if (resultatEl) {
       expect(resultatEl.textContent).toContain('Réponse 78%');
       expect(resultatEl.textContent).not.toContain('⚠');
     } else {
       // Mode étendu non rendu — vérification via data attribute
-      expect(container.querySelector('[data-runtime-quality]')?.getAttribute('data-runtime-quality')).toBe('78%');
+      expect(
+        container
+          .querySelector('[data-runtime-quality]')
+          ?.getAttribute('data-runtime-quality')
+      ).toBe('78%');
     }
   });
 
@@ -112,12 +125,18 @@ describe('ThinkingPanel — responseQualityScore display', () => {
       />
     );
     const summaryValues = container.querySelectorAll('.oj-summary-value');
-    const resultatEl = Array.from(summaryValues).find(el => el.textContent?.includes('complétée'));
+    const resultatEl = Array.from(summaryValues).find(el =>
+      el.textContent?.includes('complétée')
+    );
     if (resultatEl) {
       expect(resultatEl.textContent).toContain('Effort 45%');
     } else {
       // Vérification via data-runtime-quality fallback
-      expect(container.querySelector('[data-runtime-quality]')?.getAttribute('data-runtime-quality')).toBe('45%');
+      expect(
+        container
+          .querySelector('[data-runtime-quality]')
+          ?.getAttribute('data-runtime-quality')
+      ).toBe('45%');
     }
   });
 
@@ -131,7 +150,9 @@ describe('ThinkingPanel — responseQualityScore display', () => {
       />
     );
     const summaryValues = container.querySelectorAll('.oj-summary-value');
-    const resultatEl = Array.from(summaryValues).find(el => el.textContent?.includes('complétée'));
+    const resultatEl = Array.from(summaryValues).find(el =>
+      el.textContent?.includes('complétée')
+    );
     if (resultatEl) {
       expect(resultatEl.textContent).not.toMatch(/Réponse \d+%/);
       expect(resultatEl.textContent).not.toMatch(/Effort \d+%/);

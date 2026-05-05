@@ -52,7 +52,9 @@ describe('ToolSelectorPanel', () => {
 
   it('appelle onToolSelect avec le bon outil au clic sur une carte', () => {
     const onToolSelect = vi.fn();
-    render(<ToolSelectorPanel {...defaultProps} isOpen={true} onToolSelect={onToolSelect} />);
+    render(
+      <ToolSelectorPanel {...defaultProps} isOpen={true} onToolSelect={onToolSelect} />
+    );
     const firstTool = CHAT_TOOLS[0];
     fireEvent.click(screen.getByTestId(`tool-item-${firstTool.id}`));
     expect(onToolSelect).toHaveBeenCalledWith(firstTool);
@@ -60,11 +62,15 @@ describe('ToolSelectorPanel', () => {
 
   it('appelle onToolSelect avec un outil autoSend=true', () => {
     const onToolSelect = vi.fn();
-    render(<ToolSelectorPanel {...defaultProps} isOpen={true} onToolSelect={onToolSelect} />);
+    render(
+      <ToolSelectorPanel {...defaultProps} isOpen={true} onToolSelect={onToolSelect} />
+    );
     const autoTool = CHAT_TOOLS.find(t => t.autoSend);
     expect(autoTool).toBeDefined();
     fireEvent.click(screen.getByTestId(`tool-item-${autoTool!.id}`));
-    expect(onToolSelect).toHaveBeenCalledWith(expect.objectContaining({ autoSend: true }));
+    expect(onToolSelect).toHaveBeenCalledWith(
+      expect.objectContaining({ autoSend: true })
+    );
   });
 
   it('affiche le badge online quand isOnline=true', () => {
@@ -97,11 +103,7 @@ describe('ToolSelectorPanel', () => {
     render(
       <div>
         <div data-testid="outside">Extérieur</div>
-        <ToolSelectorPanel
-          {...defaultProps}
-          isOpen={true}
-          onClose={onClose}
-        />
+        <ToolSelectorPanel {...defaultProps} isOpen={true} onClose={onClose} />
       </div>
     );
     fireEvent.mouseDown(screen.getByTestId('outside'));

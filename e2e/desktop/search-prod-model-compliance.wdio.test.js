@@ -41,10 +41,7 @@ async function writeReport(payload) {
 /** Read the DOM-injected IPC call log written by tauriProtector for test introspection. */
 async function getIpcLog() {
   return browser.execute(() => {
-    const raw =
-      window.__TITANE_IPC_AUDIT_LOG__ ||
-      window.__TITANE_TEST_IPC_LOG__ ||
-      [];
+    const raw = window.__TITANE_IPC_AUDIT_LOG__ || window.__TITANE_TEST_IPC_LOG__ || [];
     return Array.isArray(raw) ? raw : [];
   });
 }
@@ -55,7 +52,8 @@ async function injectIpcSpy() {
     if (!window.__TITANE_IPC_SPY_ACTIVE__) {
       window.__TITANE_IPC_SPY_ACTIVE__ = true;
       window.__TITANE_IPC_SPY_LOG__ = [];
-      const originalInvoke = window.__TAURI_INTERNALS__?.invoke || window.__TAURI__?.core?.invoke;
+      const originalInvoke =
+        window.__TAURI_INTERNALS__?.invoke || window.__TAURI__?.core?.invoke;
       if (!originalInvoke) return;
       const target = window.__TAURI_INTERNALS__ || window.__TAURI__?.core;
       const key = window.__TAURI_INTERNALS__ ? 'invoke' : 'invoke';
@@ -66,7 +64,12 @@ async function injectIpcSpy() {
           window.__TITANE_IPC_SPY_LOG__.push({ cmd, ok: true, ts: Date.now() });
           return result;
         } catch (err) {
-          window.__TITANE_IPC_SPY_LOG__.push({ cmd, ok: false, err: String(err), ts: Date.now() });
+          window.__TITANE_IPC_SPY_LOG__.push({
+            cmd,
+            ok: false,
+            err: String(err),
+            ts: Date.now(),
+          });
           throw err;
         }
       };
@@ -143,11 +146,13 @@ describe('Search fallback + PROD model compliance (WDIO/Tauri)', () => {
 
     report.turns[report.turns.length - 1].pass = isProd && !isDevLeak;
 
-    assert.ok(!isDevLeak,
+    assert.ok(
+      !isDevLeak,
       `PROD_MODEL_GUARD FAIL: chat_orchestrator returned DEV model "${usedModelStr}". ` +
-      `Expected gemma2:2b. DEV models (llama3.1, qwen3.5, qwen2.5-coder) must never appear as PROD fallback.`
+        `Expected gemma2:2b. DEV models (llama3.1, qwen3.5, qwen2.5-coder) must never appear as PROD fallback.`
     );
-    assert.ok(isProd,
+    assert.ok(
+      isProd,
       `PROD_MODEL_GUARD FAIL: model "${usedModelStr}" is not the canonical PROD model gemma2:2b.`
     );
   });
@@ -178,7 +183,10 @@ describe('Search fallback + PROD model compliance (WDIO/Tauri)', () => {
     // Verify no CREDENTIALS_MISSING error propagated to DOM
     const credsMissingVisible = await browser.execute(() => {
       const body = document.body?.textContent || '';
-      return body.includes('CREDENTIALS_MISSING') || body.includes('SearchGatewayService unavailable');
+      return (
+        body.includes('CREDENTIALS_MISSING') ||
+        body.includes('SearchGatewayService unavailable')
+      );
     });
 
     const t2Pass = !credsMissingVisible;
@@ -187,7 +195,7 @@ describe('Search fallback + PROD model compliance (WDIO/Tauri)', () => {
     assert.ok(
       !credsMissingVisible,
       'SEARCH_GATE FAIL: "CREDENTIALS_MISSING" / "SearchGatewayService unavailable" visible in DOM. ' +
-      'Search stub must delegate to SearXNG/DDG Lite fallback instead.'
+        'Search stub must delegate to SearXNG/DDG Lite fallback instead.'
     );
   });
 
@@ -263,7 +271,7 @@ describe('Search fallback + PROD model compliance (WDIO/Tauri)', () => {
     assert.ok(
       !isDevLeak,
       `MODEL_TRUTH_CHAIN FAIL: Runtime panel exposes DEV model "${ollamaModel}". ` +
-      `Only gemma2:2b is the PROD canonical model.`
+        `Only gemma2:2b is the PROD canonical model.`
     );
   });
 });

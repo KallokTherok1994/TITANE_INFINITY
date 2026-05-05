@@ -98,14 +98,18 @@ describe('Ollama Dev — MCP server structure', () => {
 
   it('utilise pnpm comme commande', () => {
     const cmd = mcpConfig.servers['ollama-dev'].command;
-    expect(cmd === 'pnpm' || cmd === '/usr/local/bin/pnpm' || cmd.endsWith('/pnpm')).toBe(true);
+    expect(cmd === 'pnpm' || cmd === '/usr/local/bin/pnpm' || cmd.endsWith('/pnpm')).toBe(
+      true
+    );
   });
 
   it('transmet les args dlx + package ollama mcp', () => {
     const { args } = mcpConfig.servers['ollama-dev'];
     expect(args).toContain('dlx');
     const argsStr = args.join(' ');
-    expect(argsStr.includes('mcp-server-ollama') || argsStr.includes('ollama-mcp')).toBe(true);
+    expect(argsStr.includes('mcp-server-ollama') || argsStr.includes('ollama-mcp')).toBe(
+      true
+    );
   });
 
   it('expose OLLAMA_HOST=http://127.0.0.1:11434 dans env', () => {
@@ -141,7 +145,9 @@ describe('Ollama Dev — VS Code settings', () => {
   it('active MCP (chat.mcp.enabled=true ou chat.mcp.access présent)', () => {
     const enabled = vscodeSettings['chat.mcp.enabled'];
     const access = vscodeSettings['chat.mcp.access'];
-    expect(enabled === true || (typeof access === 'string' && access.length > 0)).toBe(true);
+    expect(enabled === true || (typeof access === 'string' && access.length > 0)).toBe(
+      true
+    );
   });
 
   it('définit chat.agent.maxRequests à une valeur >= 1000', () => {

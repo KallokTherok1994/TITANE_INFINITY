@@ -900,22 +900,28 @@ class AdvancedPerformanceOptimizer {
       b => Date.now() - b.timestamp < 60 * 60 * 1000
     );
 
-    const averages = recentBenchmarks.reduce((acc, benchmark) => {
-      if (!acc[benchmark.operation]) {
-        acc[benchmark.operation] = { total: 0, count: 0, min: Infinity, max: 0 };
-      }
-      acc[benchmark.operation].total += benchmark.duration;
-      acc[benchmark.operation].count++;
-      acc[benchmark.operation].min = Math.min(
-        acc[benchmark.operation].min,
-        benchmark.duration
-      );
-      acc[benchmark.operation].max = Math.max(
-        acc[benchmark.operation].max,
-        benchmark.duration
-      );
-      return acc;
-    }, {} as Record<string, { total: number; count: number; min: number; max: number; average?: number }>);
+    const averages = recentBenchmarks.reduce(
+      (acc, benchmark) => {
+        if (!acc[benchmark.operation]) {
+          acc[benchmark.operation] = { total: 0, count: 0, min: Infinity, max: 0 };
+        }
+        acc[benchmark.operation].total += benchmark.duration;
+        acc[benchmark.operation].count++;
+        acc[benchmark.operation].min = Math.min(
+          acc[benchmark.operation].min,
+          benchmark.duration
+        );
+        acc[benchmark.operation].max = Math.max(
+          acc[benchmark.operation].max,
+          benchmark.duration
+        );
+        return acc;
+      },
+      {} as Record<
+        string,
+        { total: number; count: number; min: number; max: number; average?: number }
+      >
+    );
 
     Object.keys(averages).forEach(op => {
       averages[op].average = averages[op].total / averages[op].count;

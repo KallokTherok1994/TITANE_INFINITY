@@ -16,6 +16,7 @@ describe('ThinkingPanel runtime truth', () => {
         searchLabel="2 sources inline capturees"
         saveLabel="Sauvegarde persistante validee"
         qualityScore={0.78}
+        responseQualityScore={0.78}
         xpTrace={{
           chatXP: 120,
           cognitiveXP: 25,

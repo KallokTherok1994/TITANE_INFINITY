@@ -19,11 +19,19 @@ const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
 const enableE2EChatMock = async (page: Page) => {
   await page.addInitScript(() => {
     (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
-    (window as { __TITANE_E2E_CHAT_CONV_SEQ__?: number }).__TITANE_E2E_CHAT_CONV_SEQ__ = 0;
-    (window as { __TITANE_E2E_CHAT_KNOWLEDGE_SEED__?: unknown[] }).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = [];
-    (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }).__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
-    (window as { __TITANE_E2E_CHAT_SCENARIO__?: string }).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
-    (window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }).__TITANE_E2E_WEB_RESEARCH_MOCK__ = false;
+    (window as { __TITANE_E2E_CHAT_CONV_SEQ__?: number }).__TITANE_E2E_CHAT_CONV_SEQ__ =
+      0;
+    (
+      window as { __TITANE_E2E_CHAT_KNOWLEDGE_SEED__?: unknown[] }
+    ).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = [];
+    (
+      window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }
+    ).__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
+    (window as { __TITANE_E2E_CHAT_SCENARIO__?: string }).__TITANE_E2E_CHAT_SCENARIO__ =
+      'success';
+    (
+      window as { __TITANE_E2E_WEB_RESEARCH_MOCK__?: boolean }
+    ).__TITANE_E2E_WEB_RESEARCH_MOCK__ = false;
   });
 };
 
@@ -52,7 +60,12 @@ const ALL_TOOL_IDS = [
 ];
 
 // autoSend=true tools
-const AUTO_SEND_TOOL_IDS = ['generate_summary', 'generate_report', 'deep_reflection', 'quick_summary'];
+const AUTO_SEND_TOOL_IDS = [
+  'generate_summary',
+  'generate_report',
+  'deep_reflection',
+  'quick_summary',
+];
 
 // ── RUN 1 — Button visibility & panel toggle ──────────────────────────────────
 
@@ -150,7 +163,9 @@ test.describe('RUN2 — Panel content (10 tools, categories, status)', () => {
 test.describe('RUN3 — Tool selection behaviour (template / autoSend)', () => {
   test.skip(!FULL_E2E_ENABLED, 'Requires TITANE_E2E_FULL=1');
 
-  test('RUN3-T1 — inject-template tool pre-fills input without sending', async ({ page }) => {
+  test('RUN3-T1 — inject-template tool pre-fills input without sending', async ({
+    page,
+  }) => {
     await enableE2EChatMock(page);
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
@@ -185,7 +200,9 @@ test.describe('RUN3 — Tool selection behaviour (template / autoSend)', () => {
     expect(inputValue).toMatch(/https:\/\//i);
   });
 
-  test('RUN3-T3 — autoSend tool (quick_summary) sends message automatically', async ({ page }) => {
+  test('RUN3-T3 — autoSend tool (quick_summary) sends message automatically', async ({
+    page,
+  }) => {
     await enableE2EChatMock(page);
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
@@ -210,7 +227,9 @@ test.describe('RUN3 — Tool selection behaviour (template / autoSend)', () => {
 test.describe('RUN4 — Slash-detection (typing / opens panel)', () => {
   test.skip(!FULL_E2E_ENABLED, 'Requires TITANE_E2E_FULL=1');
 
-  test('RUN4-T1 — typing "/" in input opens the panel and clears input', async ({ page }) => {
+  test('RUN4-T1 — typing "/" in input opens the panel and clears input', async ({
+    page,
+  }) => {
     await enableE2EChatMock(page);
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
@@ -265,7 +284,9 @@ test.describe('RUN5 — Panel close behaviours', () => {
 test.describe('RUN6 — Full flow: analyze_site → type URL → send', () => {
   test.skip(!FULL_E2E_ENABLED, 'Requires TITANE_E2E_FULL=1');
 
-  test('RUN6-T1 — full analyze_site flow produces user message in chat', async ({ page }) => {
+  test('RUN6-T1 — full analyze_site flow produces user message in chat', async ({
+    page,
+  }) => {
     await enableE2EChatMock(page);
     await openTitane(page);
     await closeBootBeaconIfPresent(page);

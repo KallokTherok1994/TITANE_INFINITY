@@ -52,21 +52,18 @@ export const OAuthProfileCard: React.FC<OAuthProfileCardProps> = ({ className = 
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p
-          className="font-semibold truncate"
-          data-testid="oauth-profile-name"
-        >
+        <p className="font-semibold truncate" data-testid="oauth-profile-name">
           {profile.name}
         </p>
         {profile.email && (
-          <p
-            className="text-xs text-white/60 truncate"
-            data-testid="oauth-profile-email"
-          >
+          <p className="text-xs text-white/60 truncate" data-testid="oauth-profile-email">
             {profile.email}
           </p>
         )}
-        <p className="text-xs text-[#1877F2]/80 mt-0.5" data-testid="oauth-profile-provider">
+        <p
+          className="text-xs text-[#1877F2]/80 mt-0.5"
+          data-testid="oauth-profile-provider"
+        >
           Facebook
         </p>
       </div>
@@ -89,11 +86,7 @@ export const OAuthProfileCard: React.FC<OAuthProfileCardProps> = ({ className = 
       </button>
 
       {error && (
-        <p
-          role="alert"
-          className="sr-only"
-          data-testid="oauth-profile-error"
-        >
+        <p role="alert" className="sr-only" data-testid="oauth-profile-error">
           {error}
         </p>
       )}

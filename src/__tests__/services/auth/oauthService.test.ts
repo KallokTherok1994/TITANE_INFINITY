@@ -34,8 +34,12 @@ describe('oauthService', () => {
 
   it('handleFacebookCallback calls oauth_facebook_callback with url', async () => {
     const mockProfile = {
-      provider: 'facebook', user_id: '123', name: 'Test',
-      email: null, picture_url: null, access_token_stored: true,
+      provider: 'facebook',
+      user_id: '123',
+      name: 'Test',
+      email: null,
+      picture_url: null,
+      access_token_stored: true,
     };
     mockSafe.mockResolvedValue({ ok: true, content: mockProfile, error: null });
 

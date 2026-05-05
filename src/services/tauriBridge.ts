@@ -248,9 +248,7 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
     return '';
   };
 
-  const lastUserMessage = [...messages]
-    .reverse()
-    .find(m => m.role === 'user')?.content;
+  const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')?.content;
 
   const lastMessage = messages[messages.length - 1];
   const userMessage = (lastUserMessage ?? lastMessage?.content ?? '').trim();
@@ -298,9 +296,7 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
     return raw as CoreResponse<string>;
   }
 
-  const content = typeof raw.data === 'string'
-    ? raw.data
-    : extractChatContent(raw.data);
+  const content = typeof raw.data === 'string' ? raw.data : extractChatContent(raw.data);
 
   return {
     success: true,

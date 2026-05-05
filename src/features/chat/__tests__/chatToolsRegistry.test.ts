@@ -11,7 +11,12 @@ import {
   type ChatToolCategory,
 } from '../chatToolsRegistry';
 
-const VALID_CATEGORIES: ChatToolCategory[] = ['generate', 'research', 'reflect', 'config'];
+const VALID_CATEGORIES: ChatToolCategory[] = [
+  'generate',
+  'research',
+  'reflect',
+  'config',
+];
 
 describe('chatToolsRegistry — CHAT_TOOLS', () => {
   it('contient exactement 10 outils', () => {
@@ -65,7 +70,8 @@ describe('chatToolsRegistry — CHAT_TOOLS', () => {
     expect(manualTools.length).toBeGreaterThan(0);
     for (const tool of manualTools) {
       const text = tool.templateText;
-      const endsWithPlaceholder = text.endsWith(' ') || text.endsWith('https://') || text.endsWith(': ');
+      const endsWithPlaceholder =
+        text.endsWith(' ') || text.endsWith('https://') || text.endsWith(': ');
       expect(endsWithPlaceholder).toBe(true);
     }
   });

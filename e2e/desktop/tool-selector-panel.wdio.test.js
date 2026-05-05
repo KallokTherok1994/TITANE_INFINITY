@@ -41,9 +41,11 @@ describe('tool-selector-panel (WDIO desktop)', () => {
         path.resolve(__dirname, '../../src/features/chat/chatToolsRegistry.ts'),
         'utf-8'
       );
-      const idMatches = (src.match(/id:\s*['"`][\w_]+['"`]/g) || []);
+      const idMatches = src.match(/id:\s*['"`][\w_]+['"`]/g) || [];
       if (idMatches.length < 10) {
-        throw new Error(`Expected ≥10 tool IDs in chatToolsRegistry, found ${idMatches.length}`);
+        throw new Error(
+          `Expected ≥10 tool IDs in chatToolsRegistry, found ${idMatches.length}`
+        );
       }
       // Verify specific tool ids exist
       for (const id of [
@@ -227,7 +229,9 @@ describe('tool-selector-panel (WDIO desktop)', () => {
 
     it('T16 — typing "/" in chat input opens the tool panel', async () => {
       // Find chat input
-      const chatInput = await $('[data-testid="chat-input"], textarea[placeholder], .chat-input textarea');
+      const chatInput = await $(
+        '[data-testid="chat-input"], textarea[placeholder], .chat-input textarea'
+      );
       if (await chatInput.isDisplayed().catch(() => false)) {
         await chatInput.click();
         await chatInput.setValue('/');

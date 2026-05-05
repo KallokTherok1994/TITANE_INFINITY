@@ -1033,16 +1033,25 @@ describe('memoryIntegration', () => {
         }
       }
       // User had set 'false' — must be preserved
-      expect(localStorage.getItem('titane_hybrid_memory_shadow_read_enabled')).toBe('false');
+      expect(localStorage.getItem('titane_hybrid_memory_shadow_read_enabled')).toBe(
+        'false'
+      );
       // Other flags not yet set → default to 'true'
-      expect(localStorage.getItem('titane_hybrid_memory_shadow_write_enabled')).toBe('true');
+      expect(localStorage.getItem('titane_hybrid_memory_shadow_write_enabled')).toBe(
+        'true'
+      );
     });
 
     it('sets rollout JSON if not already present', async () => {
       if (localStorage.getItem('titane_hybrid_memory_shadow_read_rollout') === null) {
         localStorage.setItem(
           'titane_hybrid_memory_shadow_read_rollout',
-          JSON.stringify({ mode: 'full', percentage: 100, canaryPercentage: 100, trendWindow: 10 })
+          JSON.stringify({
+            mode: 'full',
+            percentage: 100,
+            canaryPercentage: 100,
+            trendWindow: 10,
+          })
         );
       }
       const raw = localStorage.getItem('titane_hybrid_memory_shadow_read_rollout');

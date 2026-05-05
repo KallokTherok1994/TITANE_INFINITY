@@ -77,8 +77,7 @@ export const APISupport = {
    */
   supportsWebSpeechRecognition(): boolean {
     if (typeof window === 'undefined') return false;
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition; // Both declared in web-speech-api.d.ts
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // Both declared in web-speech-api.d.ts
     return !!SpeechRecognition;
   },
 

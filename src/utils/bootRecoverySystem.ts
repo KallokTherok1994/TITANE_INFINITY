@@ -238,12 +238,15 @@ class TitaneBootRecovery {
 
       // Importer App dynamiquement avec bon typage
       const AppModule = await import('../App');
-      const App = (AppModule as { default?: unknown; App?: unknown }).default || (AppModule as { default?: unknown; App?: unknown }).App;
+      const App =
+        (AppModule as { default?: unknown; App?: unknown }).default ||
+        (AppModule as { default?: unknown; App?: unknown }).App;
 
       // Importer React dynamiquement avec bon typage
       const ReactModule = await import('react');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const React = ((ReactModule as any).default || ReactModule) as typeof import('react');
+      const React = ((ReactModule as any).default ||
+        ReactModule) as typeof import('react');
       if (!createRoot || !App || !React) {
         throw new Error('Failed to load core React modules');
       }
@@ -305,7 +308,8 @@ class TitaneBootRecovery {
       // Importer React avec bon typage
       const ReactModule = await import('react');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const React = ((ReactModule as any).default || ReactModule) as typeof import('react');
+      const React = ((ReactModule as any).default ||
+        ReactModule) as typeof import('react');
 
       // Créer une app minimaliste
       const SafeApp = React.createElement(

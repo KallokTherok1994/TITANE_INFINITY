@@ -214,12 +214,12 @@ const HyperCenterContent: React.FC = () => {
       const recentThoughts = (await tauriClient.hyperGetThoughts({
         limit: 10,
       })) as Thought[];
-      setThoughts(recentThoughts);
+      setThoughts(Array.isArray(recentThoughts) ? recentThoughts : []);
 
       const recentInsights = (await tauriClient.hyperGetInsights({
         limit: 5,
       })) as Insight[];
-      setInsights(recentInsights);
+      setInsights(Array.isArray(recentInsights) ? recentInsights : []);
 
       setError(null);
     } catch (err) {

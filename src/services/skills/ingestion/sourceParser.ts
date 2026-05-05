@@ -25,7 +25,11 @@ interface ParsedJsonTool {
   name?: string;
   description?: string;
   parameters?: Record<string, unknown>;
-  function?: { name?: string; description?: string; parameters?: Record<string, unknown> };
+  function?: {
+    name?: string;
+    description?: string;
+    parameters?: Record<string, unknown>;
+  };
 }
 interface ParsedJsonAction {
   name?: string;

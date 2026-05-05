@@ -1146,7 +1146,12 @@ function initHybridMemoryFlags(): void {
   if (localStorage.getItem('titane_hybrid_memory_shadow_read_rollout') === null) {
     localStorage.setItem(
       'titane_hybrid_memory_shadow_read_rollout',
-      JSON.stringify({ mode: 'full', percentage: 100, canaryPercentage: 100, trendWindow: 10 })
+      JSON.stringify({
+        mode: 'full',
+        percentage: 100,
+        canaryPercentage: 100,
+        trendWindow: 10,
+      })
     );
   }
 }
@@ -1180,7 +1185,9 @@ logger.info('>>> MOUNTING REACT ROOT NOW...\n');
 const _titaneCurrentWindowLabel: string = (() => {
   try {
     const internals = window.__TAURI_INTERNALS__;
-    const internalsRecord = internals as { metadata?: { currentWindow?: { label?: unknown } } } | undefined;
+    const internalsRecord = internals as
+      | { metadata?: { currentWindow?: { label?: unknown } } }
+      | undefined;
     const label = internalsRecord?.metadata?.currentWindow?.label;
     return typeof label === 'string' && label.length > 0 ? label : 'main';
   } catch {

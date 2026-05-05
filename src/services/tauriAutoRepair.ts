@@ -406,7 +406,10 @@ export class TauriAutoRepairEngine {
 
     // Snapshots
     try {
-      const persistence = (await tauriClient.titanGetPersistenceStatus()) as Record<string, unknown>;
+      const persistence = (await tauriClient.titanGetPersistenceStatus()) as Record<
+        string,
+        unknown
+      >;
       snapshots_count = (persistence?.['snapshots_count'] as number) || 0;
       if (snapshots_count === 0) {
         warnings_resolved++;

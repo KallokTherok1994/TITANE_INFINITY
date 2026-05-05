@@ -70,15 +70,19 @@ export const aiOrchestrator = {
     // Select provider if not specified
     let provider = params.provider;
     if (!provider) {
-      const selectedResult = await strategy.execute<{ provider: AIProvider }>('selectProvider', {
-        criteria: {
-          mode: 'standard',
-          requiresCode: false,
-          requiresVision: false,
-          latency: 'medium',
-        },
-      });
-      provider = (selectedResult.data?.provider as typeof provider | undefined) ?? provider;
+      const selectedResult = await strategy.execute<{ provider: AIProvider }>(
+        'selectProvider',
+        {
+          criteria: {
+            mode: 'standard',
+            requiresCode: false,
+            requiresVision: false,
+            latency: 'medium',
+          },
+        }
+      );
+      provider =
+        (selectedResult.data?.provider as typeof provider | undefined) ?? provider;
     }
 
     // Execute with provider
@@ -110,7 +114,9 @@ export const aiOrchestrator = {
     }>
   > {
     const strategy = await getAIStrategy();
-    const providersResult = await strategy.execute<Array<{ id: AIProvider; name: string; available: boolean; models: string[] }>>('getAvailableProviders', {});
+    const providersResult = await strategy.execute<
+      Array<{ id: AIProvider; name: string; available: boolean; models: string[] }>
+    >('getAvailableProviders', {});
     const providers = providersResult.data;
 
     return providers || [];
@@ -182,15 +188,19 @@ export const omnisOrchestrator = {
     // Select provider if not specified (cognitive mode)
     let provider = params.provider;
     if (!provider) {
-      const selectedResult = await strategy.execute<{ provider: AIProvider }>('selectProvider', {
-        criteria: {
-          mode: 'cognitive',
-          requiresCode: false,
-          requiresVision: false,
-          latency: 'medium',
-        },
-      });
-      provider = (selectedResult.data?.provider as typeof provider | undefined) ?? provider;
+      const selectedResult = await strategy.execute<{ provider: AIProvider }>(
+        'selectProvider',
+        {
+          criteria: {
+            mode: 'cognitive',
+            requiresCode: false,
+            requiresVision: false,
+            latency: 'medium',
+          },
+        }
+      );
+      provider =
+        (selectedResult.data?.provider as typeof provider | undefined) ?? provider;
     }
 
     // Execute with provider (cognitive mode)

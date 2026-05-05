@@ -75,25 +75,33 @@ describe('memory-subtabs (WDIO desktop)', () => {
     it('L6 — memory-tab-overview is clickable and becomes active', async () => {
       await $(testId('memory-tab-overview')).click();
       await waitForTabActive(testId('memory-tab-overview'), TIMEOUT);
-      expect(await $(testId('memory-tab-overview')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('memory-tab-overview')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L7 — memory-tab-dashboard is clickable and becomes active', async () => {
       await $(testId('memory-tab-dashboard')).click();
       await waitForTabActive(testId('memory-tab-dashboard'), TIMEOUT);
-      expect(await $(testId('memory-tab-dashboard')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('memory-tab-dashboard')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L8 — memory-tab-tree is clickable and becomes active', async () => {
       await $(testId('memory-tab-tree')).click();
       await waitForTabActive(testId('memory-tab-tree'), TIMEOUT);
-      expect(await $(testId('memory-tab-tree')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('memory-tab-tree')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L9 — memory-tab-search is clickable and becomes active', async () => {
       await $(testId('memory-tab-search')).click();
       await waitForTabActive(testId('memory-tab-search'), TIMEOUT);
-      expect(await $(testId('memory-tab-search')).getAttribute('aria-selected')).toBe('true');
+      expect(await $(testId('memory-tab-search')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
     });
 
     it('L10 — all 4 memory sub-tab data-testids are present in DOM', async () => {
