@@ -1,12 +1,15 @@
 /**
  * titane-tabs-labels.wdio.test.js — Desktop proof for updated Titane tab labels
  *
- * L1-L3: Static checks (always runs)
- * L4-L10: Runtime checks (requires TITANE_E2E_FULL=1)
+ * L1-L3:  Static checks (always runs)
+ * L4-L10: Runtime UI checks (requires TITANE_E2E_FULL=1)
+ * L11-L14: Runtime panel-ID proof (requires TITANE_E2E_FULL=1)
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const FULL = process.env.TITANE_E2E_FULL === '1';
 const TIMEOUT = 15000;
@@ -105,6 +108,36 @@ describe('titane-tabs-labels (WDIO desktop)', () => {
       const transformation = await $(testId('tab-transformation'));
       await transformation.click();
       expect(await transformation.getAttribute('aria-selected')).toBe('true');
+    });
+  });
+
+  describe('L11-L14 — Runtime panel-ID proof', () => {
+    before(function () {
+      if (!FULL) this.skip();
+    });
+
+    it('L11 — tab-overview activates titane-panel-overview', async () => {
+      await $(testId('tab-overview')).click();
+      const id = await $(testId('page-titane-content')).getAttribute('id');
+      expect(id).toBe('titane-panel-overview');
+    });
+
+    it('L12 — tab-progression activates titane-panel-progression', async () => {
+      await $(testId('tab-progression')).click();
+      const id = await $(testId('page-titane-content')).getAttribute('id');
+      expect(id).toBe('titane-panel-progression');
+    });
+
+    it('L13 — tab-transformation activates titane-panel-transformation', async () => {
+      await $(testId('tab-transformation')).click();
+      const id = await $(testId('page-titane-content')).getAttribute('id');
+      expect(id).toBe('titane-panel-transformation');
+    });
+
+    it('L14 — tab-memory activates titane-panel-memory', async () => {
+      await $(testId('tab-memory')).click();
+      const id = await $(testId('page-titane-content')).getAttribute('id');
+      expect(id).toBe('titane-panel-memory');
     });
   });
 });

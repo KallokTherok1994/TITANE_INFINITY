@@ -1232,3 +1232,31 @@ export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000
 export async function getCurrentPathname() {
   return browser.execute(() => window.location.pathname || '');
 }
+
+/**
+ * waitForTabActive — waits until a tab button has aria-selected="true".
+ * @param {string} selector - CSS selector for the tab element
+ * @param {number} timeout  - ms timeout (default 10 000)
+ */
+export async function waitForTabActive(selector, timeout = 10000) {
+  const el = await $(selector);
+  await el.waitForDisplayed({ timeout });
+  await browser.waitUntil(
+    async () => (await el.getAttribute('aria-selected')) === 'true',
+    { timeout, interval: 200, timeoutMsg: `Tab ${selector} did not become active within ${timeout}ms` }
+  );
+}
+
+/**
+ * assertTabPanel — asserts that the canonical titane content panel
+ * has the expected panel id (from TAB_PANEL_IDS in TitanePage.tsx).
+ * @param {string} panelId - expected id value, e.g. 'titane-panel-overview'
+ * @param {number} timeout  - ms timeout (default 8 000)
+ */
+export async function assertTabPanel(panelId, timeout = 8000) {
+  const container = await $('[data-testid="page-titane-content"]');
+  await browser.waitUntil(
+    async () => (await container.getAttribute('id')) === panelId,
+    { timeout, interval: 200, timeoutMsg: `Panel id did not become "${panelId}" within ${timeout}ms` }
+  );
+}

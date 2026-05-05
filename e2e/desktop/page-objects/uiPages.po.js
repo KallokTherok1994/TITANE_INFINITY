@@ -12,6 +12,12 @@ export const uiPages = {
       '[data-testid="tab-progression"]',
       '[data-testid="tab-transformation"]',
     ],
+    memorySubTabs: [
+      '[data-testid="memory-tab-overview"]',
+      '[data-testid="memory-tab-dashboard"]',
+      '[data-testid="memory-tab-tree"]',
+      '[data-testid="memory-tab-search"]',
+    ],
   },
   experience: {
     id: 'experience',
