@@ -11,6 +11,37 @@ vi.mock('@tauri-apps/api/event', () => ({
   listen: vi.fn(async () => () => undefined),
 }));
 
+vi.mock('@tauri-apps/plugin-deep-link', () => ({
+  onOpenUrl: vi.fn(async () => () => undefined),
+}));
+
+vi.mock('@/hooks/useAppInitialization', () => ({
+  useAppInitialization: () => undefined,
+}));
+
+vi.mock('@/hooks/useLivingEngines', () => ({
+  useLivingEngines: () => ({
+    state: {
+      initialized: false,
+      systemState: 'stable',
+      glow: 1,
+      motion: 1,
+      depth: 0.5,
+      sound: 0.5,
+      persona: null,
+      presenceLevel: 0,
+      cognitiveLoad: 0,
+      rhythmScore: 0,
+      activeThreads: 0,
+    },
+    actions: {
+      updateSystemState: vi.fn(async () => undefined),
+      triggerPersonaReaction: vi.fn(async () => undefined),
+      updateCognitiveLoad: vi.fn(async () => undefined),
+    },
+  }),
+}));
+
 vi.mock('@/hooks/useWindowControls', () => ({
   useWindowControls: () => undefined,
 }));
