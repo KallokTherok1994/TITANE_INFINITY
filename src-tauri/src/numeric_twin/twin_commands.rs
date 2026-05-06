@@ -753,3 +753,48 @@ pub fn get_twin_commands() -> Vec<&'static str> {
         "twin_recalculate_fusion",
     ]
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn validate_observation_request_rejects_empty_content_and_out_of_range_confidence() {
+        let empty = TwinObservationRequest {
+            observation_type: "value".to_string(),
+            content: "   ".to_string(),
+            context: None,
+            confidence: 0.7,
+        };
+        assert!(validate_observation_request(&empty).is_err());
+
+        let invalid_confidence = TwinObservationRequest {
+            observation_type: "value".to_string(),
+            content: "alignement".to_string(),
+            context: None,
+            confidence: 1.5,
+        };
+        assert!(validate_observation_request(&invalid_confidence).is_err());
+    }
+
+    #[test]
+    fn validate_evolution_request_rejects_empty_target_and_invalid_delta() {
+        let empty_target = TwinEvolutionRequestPayload {
+            evolution_type: "trait_adjustment".to_string(),
+            target: "".to_string(),
+            delta: Some(0.2),
+            is_deep_change: false,
+            validated_by_kevin: false,
+        };
+        assert!(validate_evolution_request(&empty_target).is_err());
+
+        let invalid_delta = TwinEvolutionRequestPayload {
+            evolution_type: "trait_adjustment".to_string(),
+            target: "sincerity".to_string(),
+            delta: Some(3.0),
+            is_deep_change: false,
+            validated_by_kevin: false,
+        };
+        assert!(validate_evolution_request(&invalid_delta).is_err());
+    }
+}

@@ -820,4 +820,44 @@ mod tests {
         .await;
         let _ = result;
     }
+
+    #[test]
+    fn test_validate_twin_observation_args_rejects_invalid_inputs() {
+        let empty = TwinObservationRequest {
+            observation_type: "value".to_string(),
+            content: " ".to_string(),
+            context: None,
+            confidence: 0.5,
+        };
+        assert!(validate_twin_observation_args(&empty).is_err());
+
+        let invalid_confidence = TwinObservationRequest {
+            observation_type: "value".to_string(),
+            content: "alignement".to_string(),
+            context: None,
+            confidence: -0.1,
+        };
+        assert!(validate_twin_observation_args(&invalid_confidence).is_err());
+    }
+
+    #[test]
+    fn test_validate_twin_evolution_args_rejects_invalid_inputs() {
+        let empty_target = TwinEvolutionRequestPayload {
+            evolution_type: "trait_adjustment".to_string(),
+            target: " ".to_string(),
+            delta: Some(0.2),
+            is_deep_change: false,
+            validated_by_kevin: false,
+        };
+        assert!(validate_twin_evolution_args(&empty_target).is_err());
+
+        let invalid_delta = TwinEvolutionRequestPayload {
+            evolution_type: "trait_adjustment".to_string(),
+            target: "sincerity".to_string(),
+            delta: Some(1.5),
+            is_deep_change: false,
+            validated_by_kevin: false,
+        };
+        assert!(validate_twin_evolution_args(&invalid_delta).is_err());
+    }
 }
