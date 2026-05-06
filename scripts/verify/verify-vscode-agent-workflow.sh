@@ -112,8 +112,7 @@ require_all_patterns \
   ".github/instructions/titane.instructions.md" \
   "Ollama Dev / Ollama Chat boundary work" \
   "qwen3\.5:9b" \
-  "gemma2:2b" \
-  "shared default mutation"
+  "ollama-dev-chat-boundary\.agent\.md"
 
 require_all_patterns \
   "ROOT_AGENTS_OLLAMA_BOUNDARY_PRESENT" \
@@ -226,6 +225,21 @@ require_all_patterns \
   "PATH decision table" \
   "PATH_SIMPLE" \
   "PATH_HEAVY"
+
+# Routing file governance
+if [[ -f ".github/copilot-routing.json" ]]; then
+  pass "COPILOT_ROUTING_PRESENT"
+else
+  fail "COPILOT_ROUTING_MISSING"
+fi
+
+for agent in architect-guardian tauri-safety e2e-authority release-proof docs-registry dependency-guardian memory-root-commander; do
+  if [[ -f ".github/agents/${agent}.agent.md" ]]; then
+    pass "ROUTING_AGENT_PRESENT_${agent}"
+  else
+    fail "ROUTING_AGENT_MISSING_${agent}"
+  fi
+done
 
 echo "SUMMARY: FAIL=$FAIL"
 if [[ "$FAIL" -ne 0 ]]; then

@@ -223,7 +223,7 @@ Required validation commands (run manually by operator):
 
 ## STATUS: CONSTITUTIONAL_MIRROR_ACTIVE
 
-**Authority**: Mirrors `.github/copilot-instructions.md` (ver. 9fd454545)
-**Date**: 2026-03-24
+**Authority**: Mirrors `.github/copilot-instructions.md` (ver. LIVE — SHA not pinned; sync is manual, rerun validators on kernel change)
+**Date**: 2026-05-06
 **Enforcement**: Cline hooks operationalize this kernel  
 **Validation**: scripts/verify_instructions.sh

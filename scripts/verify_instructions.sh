@@ -126,6 +126,9 @@ if bash scripts/autoheal/detect_recurrence.sh >/dev/null; then ok "G_AH_RECURREN
 # prompt frontmatter guard
 if bash scripts/verify/verify_prompt_frontmatter.sh >/dev/null 2>&1; then ok "G_PROMPT_FRONTMATTER_PASS"; else ko "G_PROMPT_FRONTMATTER_PASS"; fi
 
+# vscode agent workflow guard
+if bash scripts/verify/verify-vscode-agent-workflow.sh >/dev/null 2>&1; then ok "G_VSCODE_AGENT_WORKFLOW_PASS"; else ko "G_VSCODE_AGENT_WORKFLOW_PASS"; fi
+
 echo "SUMMARY: PASS=$PASS FAIL=$FAIL"
 if [[ $FAIL -gt 0 ]]; then
   exit 1
