@@ -1,24 +1,56 @@
-# [Unreleased] - 2026-05-06 — Advanced Intelligence Program (C0–E0) + F0 Registry Sync
+# [Unreleased] - 2026-05-06 — Advanced Intelligence Program (A0I–D5 SEALED) + Z0 Post-Seal Integrity Audit
 
-> **Not a final release.** This section documents the governed lock chain for the Advanced Intelligence Program.  
-> seal_state: NOT_SEALED · desktop_e2e_state: PASS_WITH_EXPLICIT_BLOCKERS · D5: NOT_STARTED
+> **Governance Seal Complete:** 17 locks A0I→D5 now SEALED with T4 approval.  
+> **Advanced Intelligence Program State:** seal_state: **SEALED** · desktop_e2e_state: PASS_WITH_EXPLICIT_BLOCKERS · D5: **SEALED** (commit eb2861bac, 2026-05-06)  
+> **Desktop E2E:** 8 PASS · 12 SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL — Governance truth only; full Desktop proof deferred to D6.
 
-## Advanced Intelligence Lock Chain — 2026-05-06
+## Advanced Intelligence Lock Chain — 2026-05-06 (All 17 Locks SEALED)
 
 | Lock | Name | Status | Commit | Proof Pack |
 |------|------|--------|--------|------------|
+| A0I | A0 Ingress Audit | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A0I_*` |
+| A0 | Instruction System Alignment | DRIFT_FOUND_FIXED | f739bc412 | `proof_packs/LOCK_A0_*` |
+| A1 | Version / Release / Proof Authority Alignment | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A1_*` |
+| A2 | External AI Engineering Source Map | CLEAN | (this commit) | `proof_packs/LOCK_A2_*` |
+| B0 | Eval Champion Realignment | DRIFT_FOUND_FIXED | 2026-05-06 | — |
+| B1 | Cognitive Core Truth Matrix | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_B1_*` |
+| B1.5 | Intelligence Cartography & Registry | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_B1_5_*` |
+| B2 | Intelligence Observability Contract | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_B2_*` |
 | C0 | Provider / Model Intelligence Routing | DRIFT_FOUND_FIXED | `44e3f07c4` | `proof_packs/LOCK_C0_*` |
 | C1 | MemoryGraph v2 Shadow Mode | CLEAN | 2026-05-06 | — |
-| C2 | Knowledge Governance | CLEAN | `fd61d6939` | `proof_packs/LOCK_C2_KNOWLEDGE_GOVERNANCE_2026-05-06/` |
-| C3 | Research Truth Engine | CLEAN | `9ef783bd9` | `proof_packs/LOCK_C3_RESEARCH_TRUTH_ENGINE_2026-05-06/` |
-| D0 | Agent Effectiveness System | CLEAN | 2026-05-06 | `proof_packs/LOCK_D0_AGENT_EFFECTIVENESS_2026-05-06/` |
-| D1 | OMEGA Real Handler Upgrade | CLEAN | 2026-05-06 | `proof_packs/LOCK_D1_OMEGA_HANDLER_2026-05-06/` |
-| D2 | Singularity Measured Layer | CLEAN | 2026-05-06 | `proof_packs/LOCK_D2_SINGULARITY_LAYER_2026-05-06/` |
-| D3 | Twin Consent Ledger | CLEAN | 2026-05-06 | `proof_packs/LOCK_D3_TWIN_CONSENT_2026-05-06/` |
-| D4 | Self-Improvement Lab | CLEAN | `5844e7ea3` | `proof_packs/LOCK_D4_SELF_IMPROVEMENT_LAB_2026-05-06/` |
-| E0 | Advanced Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS | `9a8df5507` | `proof_packs/LOCK_E0_DESKTOP_ADVANCED_E2E_2026-05-06/` |
-| F0 | Registry / README / CHANGELOG Sync | IN_PROGRESS | this commit | `proof_packs/LOCK_F0_REGISTRY_README_CHANGELOG_SYNC_2026-05-06/` |
-| D5 | Intelligence Seal | NOT_STARTED | — | T4 approval required |
+| C2 | Knowledge Governance | CLEAN | `fd61d6939` | `proof_packs/LOCK_C2_*` |
+| C3 | Research Truth Engine | CLEAN | `9ef783bd9` | `proof_packs/LOCK_C3_*` |
+| D0 | Agent Effectiveness System | CLEAN | 2026-05-06 | `proof_packs/LOCK_D0_*` |
+| D1 | OMEGA Real Handler Upgrade | CLEAN | 2026-05-06 | `proof_packs/LOCK_D1_*` |
+| D2 | Singularity Measured Layer | CLEAN | 2026-05-06 | `proof_packs/LOCK_D2_*` |
+| D3 | Twin Consent Ledger | CLEAN | 2026-05-06 | `proof_packs/LOCK_D3_*` |
+| D4 | Self-Improvement Lab | CLEAN | `5844e7ea3` | `proof_packs/LOCK_D4_*` |
+| E0 | Advanced Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS | `9a8df5507` | `proof_packs/LOCK_E0_*` |
+| F0 | Registry / README / CHANGELOG Sync | DONE | b54fee78c | `proof_packs/LOCK_F0_*` |
+| D5 | Intelligence Seal | **SEALED** | eb2861bac | `proof_packs/LOCK_D5_INTELLIGENCE_SEAL_2026-05-06/` |
+
+### E0 — Advanced Desktop E2E Matrix (2026-05-06, commit `9a8df5507`)
+
+- **WDIO:** 23 assertions passing (11.7s), EXIT 0
+- **Vitest contracts:** 21/21 PASS
+- **Validator:** `verify_desktop_advanced_intelligence_tests.sh` PASS=25 FAIL=0
+- **Desktop lanes:** 8 PASS · 12 SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL
+- **PASS lanes:** AI-DESKTOP-01 (launch), 02 (chat input), 06 (memory nav), 14 (scorecard), 16 (D4 contract), 17A (autoheal), 17B (detect_recurrence), 18 (offline UI), 20A (smoke)
+- **Blocked lanes:** conversation/Ollama lanes (03, 04, 05, 19, 20B), pipeline injection lanes (11, 12), UI-missing lanes (13), flag-gated lanes (07), research network lanes (10), security lane (15)
+- **Classification:** PASS_WITH_EXPLICIT_BLOCKERS — not a full Desktop proof
+
+### D5 — Intelligence Seal (commit `eb2861bac`) — **NOW SEALED**
+
+- **Verdict:** SEALED (T4 approval granted 2026-05-06)
+- **Proof Pack:** `proof_packs/LOCK_D5_INTELLIGENCE_SEAL_2026-05-06/`
+- **Gates:**
+  - vitest contracts: PASS=108 FAIL=0 ✓
+  - detect_recurrence: PASS entries=1674 ✓
+  - verify_instructions: PASS=51 FAIL=0 ✓
+  - verify_readme_changelog_registry_sync: PASS=10 FAIL=0 ✓
+  - verify_intelligence_seal_prereqs: PASS=10 FAIL=0 ✓
+- **Feature flags:** All default=false (no runtime activation)
+- **Next:** Z0 — Post-Seal Integrity Audit (current session)
 
 ### E0 — Advanced Desktop E2E Matrix (2026-05-06, commit `9a8df5507`)
 
