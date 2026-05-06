@@ -1,3 +1,8 @@
+---
+description: Audit the TITANE_INFINITY instruction system across all layers (L1-L6) and produce a validator-backed drift report.
+mode: agent
+---
+
 # Prompt: Audit Instructions
 
 ## Scope

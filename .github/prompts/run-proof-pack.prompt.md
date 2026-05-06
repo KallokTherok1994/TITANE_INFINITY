@@ -1,3 +1,8 @@
+---
+description: Produce a complete proof pack (VERDICT.md, ROLLBACK.md, VALIDATORS.log, FILES_CHANGED.md, AUTHORITY_MAP.md, DRIFT_MATRIX.md) plus AutoHeal entry for a governed session.
+mode: agent
+---
+
 # Prompt: Run Proof Pack
 
 ## Scope

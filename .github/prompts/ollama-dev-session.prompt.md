@@ -1,3 +1,8 @@
+---
+description: Start a development session with MCP Ollama Dev active (qwen3.5:9b). Enforces Ollama Dev / Ollama Chat boundary invariant.
+mode: agent
+---
+
 # Prompt: Ollama Dev Session
 
 ## Scope

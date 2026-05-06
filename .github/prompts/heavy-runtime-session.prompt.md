@@ -1,3 +1,8 @@
+---
+description: Use PATH_HEAVY for architecture, IPC, E2E, or release work. Full bootstrap, broader validators, proof-pack discipline.
+mode: agent
+---
+
 # Prompt: Heavy Runtime Session
 
 ## Scope

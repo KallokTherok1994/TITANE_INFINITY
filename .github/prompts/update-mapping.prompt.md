@@ -1,3 +1,8 @@
+---
+description: Refresh all mapping docs (UI_SURFACE_MAP.md, ARCHITECTURE.md, IPC_CATALOG.md, etc.) after architecture or surface changes.
+mode: agent
+---
+
 # Prompt: Update Mapping
 
 ## Scope

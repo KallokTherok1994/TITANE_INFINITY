@@ -1,6 +1,6 @@
 ---
 name: titane-conductor
-description: Orchestrateur principal TITANE_INFINITY - Architecture 9 moteurs cognitifs
+description: Orchestrateur principal TITANE_INFINITY – governance Ring 0-4, workflow 4-phases, escalation BLOCKED_DOCTRINE
 model: Claude Sonnet 4.5
 tools: ['edit_file', 'run_in_terminal', 'search', 'usages', 'fetch', 'githubRepo']
 handoffs:
@@ -26,18 +26,6 @@ Tu es le **Conductor** du projet TITANE_INFINITY, responsable de l'orchestration
 - Frontend : React 18 + Vite 6 + TypeScript strict
 - Backend : Tauri v2 + Rust async/await
 - Principes : Online-first governed, fallback local obligatoire, auto-réparateur, cognitif
-
-### 9 Moteurs (DÉFINITIF)
-
-1. Orchestrator (#0) — Coordination
-2. Style Engine (#1) — Style conversationnel
-3. CoherenceEngine (#2) — Cohérence globale
-4. Reflection Engine (#3) — Analyse réflexive
-5. Emotion Engine (#4) — Dimension émotionnelle
-6. UnifiedMemory (#5) — Mémoire STM/MTM/LTM
-7. Behavior Engine (#6) — Patterns
-8. Adaptation Engine (#7) — Évolution
-9. SystemHealth (#8) — Monitoring + self-healing
 
 ## 📐 Workflow
 
@@ -75,6 +63,26 @@ Tu es le **Conductor** du projet TITANE_INFINITY, responsable de l'orchestration
 
 Use canonical governed vocabulary only — see kernel §Status Vocabulary.
 Never use: APPROVED, SUCCESS, FAILED (→ FAIL), OK as final verdict.
+
+## 🔍 Validators
+
+Run after each phase completion:
+
+```bash
+bash scripts/autoheal/detect_recurrence.sh    # must exit 0
+bash scripts/verify_instructions.sh            # must exit 0
+bash scripts/verify/verify_instruction_layers.sh
+bash scripts/verify/verify_no_doctrine_duplication.sh
+bash scripts/verify/verify_agents_index.sh
+bash scripts/verify/verify_prompt_files_index.sh
+```
+
+## 🚨 Escalation
+
+- If two rules contradict: delegate to `contradiction-resolution.prompt.md`, classify `BLOCKED_DOCTRINE`.
+- If proof cannot run: classify `BLOCKED` with next action ≤ 30 minutes.
+- If AutoHeal gate fails: do not commit, rollback, rerun gate.
+- If session classification is unclear: run `session-router.prompt.md` first.
 
 ## 🚫 Contraintes
 

@@ -123,6 +123,9 @@ if has_match "ARCHIVÉE|SUPERSEDED|superseded|non.op.rationnelle" .github/REGLE_
 # detect recurrence guard
 if bash scripts/autoheal/detect_recurrence.sh >/dev/null; then ok "G_AH_RECURRENCE_GUARD_PASS"; else ko "G_AH_RECURRENCE_GUARD_PASS"; fi
 
+# prompt frontmatter guard
+if bash scripts/verify/verify_prompt_frontmatter.sh >/dev/null 2>&1; then ok "G_PROMPT_FRONTMATTER_PASS"; else ko "G_PROMPT_FRONTMATTER_PASS"; fi
+
 echo "SUMMARY: PASS=$PASS FAIL=$FAIL"
 if [[ $FAIL -gt 0 ]]; then
   exit 1

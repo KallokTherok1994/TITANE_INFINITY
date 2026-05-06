@@ -40,3 +40,11 @@ bash scripts/verify_instructions.sh
 bash scripts/verify/verify_agents_index.sh
 bash scripts/verify/verify_prompt_files_index.sh
 ```
+
+## Rollback
+
+```bash
+git restore -- src/engines/ src/services/memory/ src/stores/
+git restore -- src-tauri/src/conversation_engine/ src-tauri/src/memory/
+git restore -- tests/integration/ e2e/memory/
+```

@@ -1,3 +1,8 @@
+---
+description: Launch the hybrid-memory multi-agent dispatch program. Invokes memory-root-commander.
+mode: agent
+---
+
 # Prompt: Start Hybrid Memory Dispatch
 
 > **Agent**: invoke memory-root-commander for this session.

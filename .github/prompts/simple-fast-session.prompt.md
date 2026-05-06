@@ -1,3 +1,8 @@
+---
+description: Use PATH_SIMPLE for local, low-risk changes. Minimal validators (detect_recurrence.sh only). Concise proof.
+mode: agent
+---
+
 # Prompt: Simple Fast Session
 
 ## Scope

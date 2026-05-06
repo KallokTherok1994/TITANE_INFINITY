@@ -1,3 +1,8 @@
+---
+description: Evaluate release readiness (GO/NO-GO) via release-proof specialist agent. No token gate. Evidence-only assessment.
+mode: agent
+---
+
 # Prompt: Release Readiness
 
 > **Agent**: invoke `release-proof` specialist agent for this session.

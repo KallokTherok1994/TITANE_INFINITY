@@ -18,6 +18,8 @@ required=(
   .github/prompts/simple-fast-session.prompt.md
   .github/prompts/heavy-runtime-session.prompt.md
   .github/prompts/ollama-dev-session.prompt.md
+  .github/prompts/session-router.prompt.md
+  .github/prompts/start-hybrid-memory-dispatch.prompt.md
 )
 
 for f in "${required[@]}"; do
@@ -36,6 +38,7 @@ done
 # At 5+ entries or any multi-agent collision, add a human-visible mapping table to .github/prompts/OWNERSHIP.md.
 declare -A AGENT_DRIVEN_PROMPTS=(
   [".github/prompts/release-readiness.prompt.md"]="release-proof"
+  [".github/prompts/start-hybrid-memory-dispatch.prompt.md"]="memory-root-commander"
 )
 for f in "${!AGENT_DRIVEN_PROMPTS[@]}"; do
   if grep -q '> \*\*Agent\*\*:' "$f" 2>/dev/null; then

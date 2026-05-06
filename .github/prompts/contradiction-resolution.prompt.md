@@ -1,3 +1,8 @@
+---
+description: Resolve doctrine conflicts across instruction layers using canonical layer priority. Produces BLOCKED_DOCTRINE or DRIFT_FOUND_FIXED verdict.
+mode: agent
+---
+
 # Prompt: Contradiction Resolution
 
 ## Scope

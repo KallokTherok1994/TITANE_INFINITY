@@ -1,0 +1,68 @@
+PASS: G_DOC_COPILOT_INSTRUCTIONS_PRESENT
+PASS: G_DOC_WORKFLOW_PRESENT
+PASS: G_DOC_CHECKLIST_PRESENT
+PASS: G_DEVSAFE_CANONICAL_LAUNCHER_EXISTS
+PASS: G_DEVSAFE_CHECKLIST_REFERENCES_LAUNCHER
+PASS: G_DEVSAFE_CHECKLIST_NODE_REQUIREMENT_VISIBLE
+PASS: G_FRONTMATTER_docs-registry.instructions.md
+PASS: G_FRONTMATTER_frontend.instructions.md
+PASS: G_FRONTMATTER_hybrid-memory-dispatch.instructions.md
+PASS: G_FRONTMATTER_tauri.instructions.md
+PASS: G_FRONTMATTER_tests-e2e.instructions.md
+PASS: G_FRONTMATTER_titane.instructions.md
+PASS: G_MERMAID_SYNTAX_MIN
+PASS: G_AUTOHEAL_FILE_README.md
+PASS: G_AUTOHEAL_FILE_autoheal_rules.jsonl
+PASS: G_AUTOHEAL_FILE_apply_autoheal.sh
+PASS: G_AUTOHEAL_FILE_detect_recurrence.sh
+INFO: autoheal-jsonl-valid
+PASS: G_AUTOHEAL_JSONL_VALID
+PASS: G_MARKER_VERDICT_UNIQUE
+PASS: G_MARKER_STOPLINE
+PASS: G_MARKER_NO_SKIPS
+PASS: G_MARKER_PROOF_PACK
+PASS: G_MARKER_AUTOHEAL_CANONICAL_PATH
+PASS: G_RULE11_NO_TOKEN_GATE
+PASS: G_RULE14_BUILD_ALL_PRESENT
+PASS: G_RULE15_MAPPING_OBLIGATION_PRESENT
+PASS: G_RULE16_TEST_MATRIX_PRESENT
+PASS: G_RULE15_FAIL_ON_MISSING_MAPPING
+PASS: G_RULE16_BLOCKED_WITHOUT_TESTS
+PASS: G_ADVANCED_AGENTS_AUDIT_SCRIPT_PRESENT
+PASS: G_VSCODE_AGENT_WORKFLOW_SCRIPT_PRESENT
+PASS: G_LOG_ANALYSIS_REPORT_SCRIPT_PRESENT
+PASS: G_LOG_ANALYSIS_REPORT_AUDIT_PASS
+PASS: G_REGLE_CRITIQUE_ARCHIVED
+PASS: G_AH_RECURRENCE_GUARD_PASS
+PASS: G_PROMPT_FRONTMATTER_PASS
+SUMMARY: PASS=36 FAIL=0
+
+=== INSTRUCTION SCORECARD ===
+Score: 100/100  (min pass: 80)
+
+  NOTE: Status vocabulary canonical-only: PASS
+  NOTE: AutoHeal path canonical-only: PASS
+  NOTE: No Rule 11 token-gate contradiction: PASS
+  NOTE: Agent tooling (pnpm-only): PASS
+  NOTE: Legacy copilot-agents isolation: PASS
+  NOTE: Kernel budget OK: 131 lines
+  NOTE: Prompt frontmatter OK
+
+PASS: instruction scorecard (score=100)
+PASS: PROMPT_PRESENT .github/prompts/audit-instructions.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/fix-instructions-drift.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/update-mapping.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/run-proof-pack.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/release-readiness.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/contradiction-resolution.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/simple-fast-session.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/heavy-runtime-session.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/ollama-dev-session.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/session-router.prompt.md
+PASS: PROMPT_PRESENT .github/prompts/start-hybrid-memory-dispatch.prompt.md
+PASS: PROMPT_AGENT_MARKER_PRESENT start-hybrid-memory-dispatch.prompt.md
+PASS: PROMPT_AGENT_MARKER_PRESENT release-readiness.prompt.md
+SUMMARY: FAIL=0
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=1636

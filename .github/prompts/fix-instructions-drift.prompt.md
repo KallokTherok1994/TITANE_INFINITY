@@ -1,3 +1,8 @@
+---
+description: Apply minimal patches to remove instruction drift and reach scorecard 100/100. Runs 11 validators before and after.
+mode: agent
+---
+
 # Prompt: Fix Instructions Drift
 
 ## Scope

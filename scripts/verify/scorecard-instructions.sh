@@ -100,11 +100,21 @@ for f in \
   .github/prompts/run-proof-pack.prompt.md \
   .github/prompts/simple-fast-session.prompt.md \
   .github/prompts/heavy-runtime-session.prompt.md \
-  .github/prompts/update-mapping.prompt.md; do
+  .github/prompts/update-mapping.prompt.md \
+  .github/prompts/session-router.prompt.md \
+  .github/prompts/ollama-dev-session.prompt.md \
+  .github/prompts/start-hybrid-memory-dispatch.prompt.md; do
   if [[ ! -f "$f" ]]; then
     deduct 5 "Required prompt missing: $f"
   fi
 done
+
+# 9. Prompt frontmatter quality (description: + mode:)
+if ! bash scripts/verify/verify_prompt_frontmatter.sh >/dev/null 2>&1; then
+  deduct 10 "Prompt frontmatter drift — run verify_prompt_frontmatter.sh"
+else
+  note "Prompt frontmatter OK"
+fi
 
 # Cap score at 0
 if [[ "$SCORE" -lt 0 ]]; then SCORE=0; fi
