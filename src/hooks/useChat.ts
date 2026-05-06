@@ -835,6 +835,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   const memoryHookResult = useChatMemory({
     mode: coreHookResult.currentMode,
+    conversationId: _conversationId,
     autoCleanup: true,
     autoSave: true,
   }) || {

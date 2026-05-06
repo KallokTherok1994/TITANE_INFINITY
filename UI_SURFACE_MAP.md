@@ -887,3 +887,15 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Couverture de preuve UI: snapshot Vitest mis à jour dans `src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap`
 - Backend connexe: `src-tauri/src/multimodal/vision.rs` nettoie `unused_comparisons` dans `test_dominant_colors` en retirant les assertions RGB supérieures redondantes
 - Vérifications exécutées: `pnpm run check`, `pnpm run test`, `cargo test --manifest-path src-tauri/Cargo.toml --lib`
+
+# [2026-05-06] Chat HTTP dégradé — mémoire conversationnelle isolée
+
+- Surface canonique: `chat-input` / `chat-send` sur la conversation TITANE, via `src/services/api/chat.ts` en mode `isTauriRuntimeAvailable() === false`.
+- Correctif message/runtime: les deux chemins HTTP dégradés (`browser-ollama-proxy` et `browser-chatEngine`) utilisent désormais l'historique réel du mode courant au lieu d'un tableau vide.
+- Correctif mémoire: `chatMemoryCompactor` supporte une persistance conversation-aware avec clé `titane_chat_conversation_<conversationId>_<mode>`.
+- Compatibilité legacy: en absence de clé conversationnelle, lecture de secours sur la clé historique mode-only puis migration douce vers la clé conversationnelle active.
+- Propagation hook: `useChatMemory`, `useChat` et `useConversationEngine` transmettent maintenant `conversationId` à la couche mémoire.
+- Preuves unitaires ciblées:
+  - `src/services/api/chat.test.ts` (fallback HTTP + historique injecté + flush)
+  - `src/__tests__/hooks/useChatMemory.test.ts` (propagation conversationId)
+  - `src/__tests__/memory-consumption-truth.test.ts` (isolation conv-a/conv-b + migration legacy)

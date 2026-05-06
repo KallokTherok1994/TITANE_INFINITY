@@ -15,6 +15,8 @@ import { chatEngine } from '@/services/ai/chatEngine';
 import { ollamaProvider } from '@/services/ai/providers/ollama';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import type { AIMessage } from '@/services/ai/types';
+import type { ChatMode } from '@/services/ai/chatEngine';
+import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('ChatAPI');
@@ -109,6 +111,22 @@ const getChatEngine = async () => chatEngine;
 
 const shouldPreferBrowserOllama = (provider?: string): boolean =>
   provider === undefined || provider === 'auto' || provider === 'ollama';
+
+const CHAT_MODES: ReadonlySet<string> = new Set([
+  'default',
+  'brainstorming',
+  'synthesis',
+  'planning',
+  'journal',
+  'debug_cognitive',
+]);
+
+const normalizeChatMode = (rawMode?: string): ChatMode => {
+  if (typeof rawMode === 'string' && CHAT_MODES.has(rawMode)) {
+    return rawMode as ChatMode;
+  }
+  return 'default';
+};
 
 /**
  * Type pour l'ID de conversation OMEGA
@@ -441,13 +459,19 @@ class ChatService {
     // 🛡️ BROWSER MODE PROTECTION - Backend web (chatEngine) si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
       const startedAt = Date.now();
+      const modeForMemory = normalizeChatMode(config?.mode);
+
+      // Assure que les saves asynchrones précédentes sont visibles avant l'envoi HTTP.
+      chatMemoryCompactor.flushPendingSaves();
+      const history = chatMemoryCompactor.loadForMode(modeForMemory, conversationId);
+
       logger.warn(
         '[ChatService-OMEGA] Tauri unavailable - using chatEngine (web backend)'
       );
 
       if (shouldPreferBrowserOllama(config?.provider)) {
         try {
-          const ollamaResponse = await ollamaProvider.generate(message, [], {
+          const ollamaResponse = await ollamaProvider.generate(message, history, {
             preferredProvider: 'ollama',
             maxTokens: config?.maxTokens,
             temperature: config?.temperature,
@@ -476,6 +500,7 @@ class ChatService {
               reason_code: 'BROWSER_OLLAMA_PROXY',
               fallback_used: false,
               network_used: true,
+              historyCount: history.length,
               ...(ollamaResponse.metadata ?? {}),
             },
           };
@@ -490,8 +515,8 @@ class ChatService {
       try {
         const engineResponse = await (
           await getChatEngine()
-        ).generate(message, [], {
-          mode: 'default',
+        ).generate(message, history, {
+          mode: modeForMemory,
         });
         return {
           content: engineResponse.content,
@@ -508,6 +533,7 @@ class ChatService {
             timestamp: Date.now(),
             conversationId,
             selectedProvider: config?.provider ?? 'auto',
+            historyCount: history.length,
           },
           omegaMetadata:
             typeof engineResponse.omegaMetadata === 'object' &&

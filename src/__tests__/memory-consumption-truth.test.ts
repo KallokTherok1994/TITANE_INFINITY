@@ -15,6 +15,8 @@ import type { AIMessage } from '@/services/ai/types';
 
 const MODE = 'standard' as const;
 const STORAGE_KEY = `titane_chat_mode_${MODE}`;
+const CONVERSATION_KEY = (conversationId: string) =>
+  `titane_chat_conversation_${conversationId}_${MODE}`;
 
 function makeMessage(content: string, role: 'user' | 'assistant' = 'user'): AIMessage {
   return {
@@ -103,5 +105,31 @@ describe('Memory Consumption Truth — chatMemoryCompactor.getStats()', () => {
     expect(stats.sizeMB).toBeGreaterThanOrEqual(0);
     // No cleanup triggered for 1 message (below 5MB threshold)
     expect(cleanupResult.cleaned).toBe(false);
+  });
+
+  test('isolates stored history by conversationId when provided', () => {
+    chatMemoryCompactor.saveForMode(MODE, [makeMessage('conv-a-1')], 'conv-a');
+    chatMemoryCompactor.saveForMode(MODE, [makeMessage('conv-b-1')], 'conv-b');
+
+    expect(chatMemoryCompactor.loadForMode(MODE, 'conv-a')).toHaveLength(1);
+    expect(chatMemoryCompactor.loadForMode(MODE, 'conv-b')).toHaveLength(1);
+    expect(chatMemoryCompactor.loadForMode(MODE, 'conv-a')[0]?.content).toContain(
+      'conv-a'
+    );
+    expect(chatMemoryCompactor.loadForMode(MODE, 'conv-b')[0]?.content).toContain(
+      'conv-b'
+    );
+  });
+
+  test('migrates legacy mode key to conversation key on first scoped read', () => {
+    const legacyMessages = [makeMessage('legacy-to-conversation')];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(legacyMessages));
+
+    const loaded = chatMemoryCompactor.loadForMode(MODE, 'conv-migrate');
+    const migratedPayload = localStorage.getItem(CONVERSATION_KEY('conv-migrate'));
+
+    expect(loaded).toHaveLength(1);
+    expect(loaded[0]?.content).toContain('legacy-to-conversation');
+    expect(migratedPayload).not.toBeNull();
   });
 });

@@ -19,6 +19,7 @@ import { XPSource } from '../types/experience';
 
 export interface UseChatMemoryOptions {
   mode: ChatMode;
+  conversationId?: string;
   autoCleanup?: boolean; // Auto-cleanup si >5MB
   autoSave?: boolean; // Auto-save après chaque message
 }
@@ -62,21 +63,24 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     (history: AIMessage[]) => {
       setMessagesForMode(history);
 
-      const stats = chatMemoryCompactor.getStats(options.mode);
+      const stats = chatMemoryCompactor.getStats(options.mode, options.conversationId);
       setMemoryStats({
         count: history.length,
         sizeMB: stats.sizeMB,
         compressed: stats.compressed,
       });
     },
-    [options.mode]
+    [options.mode, options.conversationId]
   );
 
   /**
    * Load history on mode change
    */
   useEffect(() => {
-    const history = chatMemoryCompactor.loadForMode(options.mode);
+    const history = chatMemoryCompactor.loadForMode(
+      options.mode,
+      options.conversationId
+    );
     syncVisibleState(history);
 
     console.warn(
@@ -92,16 +96,19 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
         );
       }
     }
-  }, [options.mode, options.autoCleanup, syncVisibleState]);
+  }, [options.mode, options.conversationId, options.autoCleanup, syncVisibleState]);
 
   /**
    * Load history manuel
    */
   const loadHistory = useCallback(() => {
-    const history = chatMemoryCompactor.loadForMode(options.mode);
+    const history = chatMemoryCompactor.loadForMode(
+      options.mode,
+      options.conversationId
+    );
     syncVisibleState(history);
     return history;
-  }, [options.mode, syncVisibleState]);
+  }, [options.mode, options.conversationId, syncVisibleState]);
 
   /**
    * Save message
@@ -110,11 +117,15 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
    */
   const saveMessage = useCallback(
     (message: AIMessage) => {
-      const updatedMessages = chatMemoryCompactor.addMessageToMode(options.mode, message);
+      const updatedMessages = chatMemoryCompactor.addMessageToMode(
+        options.mode,
+        message,
+        options.conversationId
+      );
 
       // 🔒 v26.4.0: Force immediate flush to prevent loss on tab switch
       console.warn(
-        `🔒 [useChatMemory] Forcing immediate flush after save (mode: ${options.mode})`
+        `🔒 [useChatMemory] Forcing immediate flush after save (mode: ${options.mode}, conversation: ${options.conversationId ?? 'legacy'})`
       );
       chatMemoryCompactor.flushPendingSaves();
 
@@ -125,7 +136,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
         `💾 USE CHAT MEMORY: Message saved (mode: ${options.mode}, total: ${updatedMessages.length})`
       );
     },
-    [options.mode, syncVisibleState]
+    [options.mode, options.conversationId, syncVisibleState]
   );
 
   /**
@@ -135,28 +146,29 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
     (messages: AIMessage[]) => {
       const updatedMessages = chatMemoryCompactor.replaceMessagesForMode(
         options.mode,
-        messages
+        messages,
+        options.conversationId
       );
 
       console.warn(
-        `🔒 [useChatMemory] Forcing immediate flush after replace (mode: ${options.mode})`
+        `🔒 [useChatMemory] Forcing immediate flush after replace (mode: ${options.mode}, conversation: ${options.conversationId ?? 'legacy'})`
       );
       chatMemoryCompactor.flushPendingSaves();
       syncVisibleState(updatedMessages);
     },
-    [options.mode, syncVisibleState]
+    [options.mode, options.conversationId, syncVisibleState]
   );
 
   /**
    * Clear mode
    */
   const clearMode = useCallback(() => {
-    chatMemoryCompactor.clearMode(options.mode);
+    chatMemoryCompactor.clearMode(options.mode, options.conversationId);
     setMessagesForMode([]);
     setMemoryStats({ count: 0, sizeMB: 0, compressed: false });
 
     console.warn(`🧹 USE CHAT MEMORY: Mode ${options.mode} cleared`);
-  }, [options.mode]);
+  }, [options.mode, options.conversationId]);
 
   /**
    * Compact if needed

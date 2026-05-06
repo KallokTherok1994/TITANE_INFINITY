@@ -62,8 +62,8 @@ describe('useChatMemory', () => {
     const { useChatMemory } = await import('@/hooks/useChatMemory');
     const { result } = renderHook(() => useChatMemory({ mode: 'default' }));
 
-    expect(loadForModeMock).toHaveBeenCalledWith('default');
-    expect(getStatsMock).toHaveBeenCalledWith('default');
+    expect(loadForModeMock).toHaveBeenCalledWith('default', undefined);
+    expect(getStatsMock).toHaveBeenCalledWith('default', undefined);
     expect(result.current.messagesForMode).toHaveLength(2);
     expect(result.current.memoryStats).toEqual({
       count: 2,
@@ -91,7 +91,11 @@ describe('useChatMemory', () => {
       result.current.saveMessage(savedMessage);
     });
 
-    expect(addMessageToModeMock).toHaveBeenCalledWith('default', savedMessage);
+    expect(addMessageToModeMock).toHaveBeenCalledWith(
+      'default',
+      savedMessage,
+      undefined
+    );
     expect(flushPendingSavesMock).toHaveBeenCalled();
     expect(result.current.messagesForMode.at(-1)?.content).toContain('ORION-482-LICHEN');
     expect(result.current.memoryStats.count).toBe(1);
@@ -119,7 +123,8 @@ describe('useChatMemory', () => {
 
     expect(replaceMessagesForModeMock).toHaveBeenCalledWith(
       'default',
-      replacementMessages
+      replacementMessages,
+      undefined
     );
     expect(flushPendingSavesMock).toHaveBeenCalled();
     expect(result.current.messagesForMode).toEqual(replacementMessages);
@@ -144,7 +149,7 @@ describe('useChatMemory', () => {
       result.current.clearMode();
     });
 
-    expect(clearModeMock).toHaveBeenCalledWith('default');
+    expect(clearModeMock).toHaveBeenCalledWith('default', undefined);
     expect(result.current.messagesForMode).toEqual([]);
     expect(result.current.memoryStats).toEqual({
       count: 0,

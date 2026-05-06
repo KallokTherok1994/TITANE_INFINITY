@@ -22,6 +22,7 @@ const logger = createLogger('[MEMORY-COMPACTOR]');
 // ─────────────────────────────────────────────────────────────────
 
 const STORAGE_KEY_PREFIX = 'titane_chat_mode_';
+const STORAGE_CONVERSATION_KEY_PREFIX = 'titane_chat_conversation_';
 const __MAX_MESSAGES_PER_MODE = 50; // Reserved for future use
 const COMPRESSION_THRESHOLD = 70; // Compresser si > 70 messages
 const COMPRESSION_TARGET = 50; // Garder 50 messages après compression
@@ -54,6 +55,12 @@ interface ModeMemory {
   lastCompacted: number;
 }
 
+interface PendingSaveEntry {
+  mode: ChatMode;
+  messages: AIMessage[];
+  conversationId?: string;
+}
+
 // ─────────────────────────────────────────────────────────────────
 // MEMORY COMPACTOR
 // ─────────────────────────────────────────────────────────────────
@@ -62,15 +69,16 @@ class ChatMemoryCompactor {
   /**
    * Charge l'historique d'un mode spécifique
    */
-  loadForMode(mode: ChatMode): AIMessage[] {
+  loadForMode(mode: ChatMode, conversationId?: string): AIMessage[] {
     try {
-      const key = `${STORAGE_KEY_PREFIX}${mode}`;
-      const stored = localStorage.getItem(key);
+      const key = this.resolveStorageKey(mode, conversationId);
+      const stored = this.getStoredPayload(mode, conversationId);
 
       // 🔍 v26.4.0: Debug log pour tracer le problème de persistence
       logger.debug(`Loading messages for ${mode}`, {
         component: 'MemoryCompactor',
         key,
+        conversationId: this.normalizeConversationId(conversationId),
         hasStored: !!stored,
         storedLength: stored?.length || 0,
       });
@@ -99,7 +107,7 @@ class ChatMemoryCompactor {
   }
 
   // ✨ v24.3.7: Pending saves queue to batch writes
-  private pendingSaves = new Map<ChatMode, AIMessage[]>();
+  private pendingSaves = new Map<string, PendingSaveEntry>();
   private saveScheduled = false;
   // 🔒 v26.2.1 - CRITICAL FIX H2: Memory leak protection
   private static readonly MAX_PENDING_SAVES = 100;
@@ -109,7 +117,7 @@ class ChatMemoryCompactor {
    * ✨ v24.3.7: Uses requestIdleCallback to avoid blocking main thread
    * 🔒 v26.2.1: Added MAX_PENDING_SAVES protection against memory leak
    */
-  saveForMode(mode: ChatMode, messages: AIMessage[]): void {
+  saveForMode(mode: ChatMode, messages: AIMessage[], conversationId?: string): void {
     // 🔒 v26.2.1: Force flush if max pending saves reached (memory leak protection)
     if (this.pendingSaves.size >= ChatMemoryCompactor.MAX_PENDING_SAVES) {
       logger.warn('Force flush - max pending saves reached', {
@@ -121,7 +129,12 @@ class ChatMemoryCompactor {
     }
 
     // ✨ v24.3.7: Queue the save instead of executing immediately
-    this.pendingSaves.set(mode, messages);
+    const pendingKey = this.buildPendingKey(mode, conversationId);
+    this.pendingSaves.set(pendingKey, {
+      mode,
+      messages,
+      conversationId: this.normalizeConversationId(conversationId),
+    });
 
     // In Vitest, avoid async idle batching that can leak state across tests.
     if (IS_VITEST) {
@@ -152,10 +165,11 @@ class ChatMemoryCompactor {
       component: 'MemoryCompactor',
     });
 
-    for (const [mode, messages] of this.pendingSaves.entries()) {
+    for (const entry of this.pendingSaves.values()) {
+      const { mode, messages, conversationId } = entry;
       try {
         // Charger mémoire existante
-        let memory = this.loadMemoryObject(mode);
+        let memory = this.loadMemoryObject(mode, conversationId);
 
         // Ajouter nouveaux messages
         memory.messages = messages;
@@ -171,12 +185,13 @@ class ChatMemoryCompactor {
         }
 
         // Sauvegarder
-        const key = `${STORAGE_KEY_PREFIX}${mode}`;
+        const key = this.resolveStorageKey(mode, conversationId);
         localStorage.setItem(key, JSON.stringify(memory));
         logger.info(`💾 Saved ${messages.length} messages to localStorage`, {
           component: 'MemoryCompactor',
           mode,
           key,
+          conversationId,
         });
       } catch (error) {
         logger.error(
@@ -193,32 +208,37 @@ class ChatMemoryCompactor {
   /**
    * Ajoute un message à un mode
    */
-  addMessageToMode(mode: ChatMode, message: AIMessage): AIMessage[] {
-    const messages = [...this.loadForMode(mode), message];
-    this.saveForMode(mode, messages);
+  addMessageToMode(mode: ChatMode, message: AIMessage, conversationId?: string): AIMessage[] {
+    const messages = [...this.loadForMode(mode, conversationId), message];
+    this.saveForMode(mode, messages, conversationId);
     return messages;
   }
 
   /**
    * Remplace l'historique d'un mode par une version filtrée/synchronisée
    */
-  replaceMessagesForMode(mode: ChatMode, messages: AIMessage[]): AIMessage[] {
+  replaceMessagesForMode(
+    mode: ChatMode,
+    messages: AIMessage[],
+    conversationId?: string
+  ): AIMessage[] {
     const normalizedMessages = [...messages];
-    this.saveForMode(mode, normalizedMessages);
+    this.saveForMode(mode, normalizedMessages, conversationId);
     return normalizedMessages;
   }
 
   /**
    * Efface l'historique d'un mode
    */
-  clearMode(mode: ChatMode): void {
+  clearMode(mode: ChatMode, conversationId?: string): void {
     try {
-      this.pendingSaves.delete(mode);
+      const pendingKey = this.buildPendingKey(mode, conversationId);
+      this.pendingSaves.delete(pendingKey);
       if (this.pendingSaves.size === 0) {
         this.saveScheduled = false;
       }
 
-      const key = `${STORAGE_KEY_PREFIX}${mode}`;
+      const key = this.resolveStorageKey(mode, conversationId);
       localStorage.removeItem(key);
       logger.info(`Cleared ${mode}`, { component: 'MemoryCompactor', mode });
     } catch (error) {
@@ -244,6 +264,11 @@ class ChatMemoryCompactor {
     ];
 
     modes.forEach(mode => this.clearMode(mode));
+
+    // Nettoyer toutes les clés conversationnelles si présentes
+    Object.keys(localStorage)
+      .filter(key => key.startsWith(STORAGE_CONVERSATION_KEY_PREFIX))
+      .forEach(key => localStorage.removeItem(key));
 
     // Nettoyer ancienne clé globale si existe
     try {
@@ -290,10 +315,13 @@ class ChatMemoryCompactor {
   /**
    * Retourne stats pour un mode spécifique
    */
-  getStats(mode: ChatMode): { count: number; sizeMB: number; compressed: boolean } {
-    const memory = this.loadMemoryObject(mode);
-    const key = `${STORAGE_KEY_PREFIX}${mode}`;
-    const stored = localStorage.getItem(key);
+  getStats(
+    mode: ChatMode,
+    conversationId?: string
+  ): { count: number; sizeMB: number; compressed: boolean } {
+    const memory = this.loadMemoryObject(mode, conversationId);
+    const key = this.resolveStorageKey(mode, conversationId);
+    const stored = this.getStoredPayload(mode, conversationId);
     const sizeMB = stored ? stored.length / (1024 * 1024) : 0;
 
     return {
@@ -307,10 +335,9 @@ class ChatMemoryCompactor {
   // PRIVATE METHODS
   // ─────────────────────────────────────────────────────────────────
 
-  private loadMemoryObject(mode: ChatMode): ModeMemory {
+  private loadMemoryObject(mode: ChatMode, conversationId?: string): ModeMemory {
     try {
-      const key = `${STORAGE_KEY_PREFIX}${mode}`;
-      const stored = localStorage.getItem(key);
+      const stored = this.getStoredPayload(mode, conversationId);
 
       if (!stored) {
         return this.createEmptyMemory(mode);
@@ -364,6 +391,58 @@ class ChatMemoryCompactor {
       compressed: [],
       lastCompacted: Date.now(),
     };
+  }
+
+  private normalizeConversationId(conversationId?: string): string | undefined {
+    if (typeof conversationId !== 'string') {
+      return undefined;
+    }
+    const trimmed = conversationId.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+  }
+
+  private resolveStorageKey(mode: ChatMode, conversationId?: string): string {
+    const normalizedConversationId = this.normalizeConversationId(conversationId);
+    if (normalizedConversationId) {
+      return `${STORAGE_CONVERSATION_KEY_PREFIX}${normalizedConversationId}_${mode}`;
+    }
+    return `${STORAGE_KEY_PREFIX}${mode}`;
+  }
+
+  private resolveLegacyStorageKey(mode: ChatMode): string {
+    return `${STORAGE_KEY_PREFIX}${mode}`;
+  }
+
+  private getStoredPayload(mode: ChatMode, conversationId?: string): string | null {
+    const normalizedConversationId = this.normalizeConversationId(conversationId);
+    if (!normalizedConversationId) {
+      return localStorage.getItem(this.resolveLegacyStorageKey(mode));
+    }
+
+    const conversationKey = this.resolveStorageKey(mode, normalizedConversationId);
+    const conversationStored = localStorage.getItem(conversationKey);
+    if (conversationStored) {
+      return conversationStored;
+    }
+
+    const legacyKey = this.resolveLegacyStorageKey(mode);
+    const legacyStored = localStorage.getItem(legacyKey);
+    if (legacyStored) {
+      // Migration douce: recopie vers la clé conversationnelle active.
+      try {
+        localStorage.setItem(conversationKey, legacyStored);
+      } catch {
+        // Non bloquant: garder lecture legacy si quota atteint.
+      }
+      return legacyStored;
+    }
+
+    return null;
+  }
+
+  private buildPendingKey(mode: ChatMode, conversationId?: string): string {
+    const normalizedConversationId = this.normalizeConversationId(conversationId);
+    return `${normalizedConversationId ?? 'legacy'}::${mode}`;
   }
 
   /**
@@ -458,11 +537,16 @@ class ChatMemoryCompactor {
       'debug_cognitive',
     ];
 
-    modes.forEach(mode => {
-      const key = `${STORAGE_KEY_PREFIX}${mode}`;
-      const stored = localStorage.getItem(key);
-      if (stored) totalSize += stored.length;
-    });
+    Object.keys(localStorage)
+      .filter(
+        key =>
+          key.startsWith(STORAGE_KEY_PREFIX) ||
+          key.startsWith(STORAGE_CONVERSATION_KEY_PREFIX)
+      )
+      .forEach(key => {
+        const stored = localStorage.getItem(key);
+        if (stored) totalSize += stored.length;
+      });
 
     const sizeMB = totalSize / (1024 * 1024);
 

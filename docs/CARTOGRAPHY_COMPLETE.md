@@ -1825,3 +1825,11 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > Tranche de stabilisation sans nouvelle capacité: corrections minimales des warnings Tailwind et Rust détectés sur les surfaces actives. `src/components/launcher/UnifiedLauncherPanel.tsx` remplace `bg-gradient-to-r` par `bg-linear-to-r`; `src/apps/devtools/sections/OmegaPipeline.tsx` remplace les usages `flex-shrink-0` par `shrink-0` sur les marqueurs visuels; `src-tauri/src/multimodal/vision.rs` retire des assertions RGB supérieures inutiles dans `test_dominant_colors` pour supprimer `unused_comparisons`.
 
 > Preuve associée: snapshot `src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap` régénéré, `pnpm run check` PASS, `pnpm run test` PASS (505/505), `cargo test --manifest-path src-tauri/Cargo.toml --lib` PASS. Objectif: fermer warnings et blocages sans drift fonctionnel ni refactor hors-scope.
+
+## 2026-05-06 — Chat HTTP dégradé + mémoire conversationnelle
+
+> Correctif ciblé du chemin chat non-Tauri: `src/services/api/chat.ts` ne transmet plus un historique vide en mode HTTP dégradé. Les deux branches (`browser-ollama-proxy` et `browser-chatEngine`) utilisent maintenant l'historique chargé depuis `chatMemoryCompactor` après `flushPendingSaves()`.
+
+> Correctif mémoire conversationnelle: `src/services/chatMemoryCompactor.ts` introduit des clés conversationnelles (`titane_chat_conversation_<conversationId>_<mode>`) avec fallback de lecture legacy mode-only et migration douce. `src/hooks/useChatMemory.ts`, `src/hooks/useChat.ts` et `src/hooks/useConversationEngine.ts` propagent `conversationId` pour isoler la persistance par conversation.
+
+> Preuves exécutées: `pnpm vitest run src/services/api/chat.test.ts src/__tests__/hooks/useChatMemory.test.ts src/__tests__/memory-consumption-truth.test.ts` PASS (3 fichiers, 22 tests), `pnpm run check` PASS.

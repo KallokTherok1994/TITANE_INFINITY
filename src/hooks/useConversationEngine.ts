@@ -430,7 +430,7 @@ export function useConversationEngine(
     saveMessage,
     clearMode: clearPersistedMode = () => undefined,
     replaceMessages = () => undefined,
-  } = useChatMemory({ mode: currentMode });
+  } = useChatMemory({ mode: currentMode, conversationId: conversationId ?? undefined });
 
   const patchMessageMetadata = useCallback(
     (messageId: string, patch: Partial<NonNullable<ConversationMessage['metadata']>>) => {

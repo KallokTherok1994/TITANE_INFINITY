@@ -1,5 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
+const loadForModeMock = vi.fn();
+const flushPendingSavesMock = vi.fn();
+
 vi.mock('@/lib/serviceInvoker', () => {
   return {
     LONG_COMMAND_OPTIONS: {},
@@ -34,6 +37,15 @@ vi.mock('@/services/ai/providers/ollama', () => {
   };
 });
 
+vi.mock('@/services/chatMemoryCompactor', () => {
+  return {
+    chatMemoryCompactor: {
+      loadForMode: (...args: unknown[]) => loadForModeMock(...args),
+      flushPendingSaves: (...args: unknown[]) => flushPendingSavesMock(...args),
+    },
+  };
+});
+
 import { invokeWithRetry } from '@/lib/serviceInvoker';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { ollamaProvider } from '@/services/ai/providers/ollama';
@@ -44,6 +56,7 @@ describe('ChatService normalizeResponse', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(isTauriRuntimeAvailable).mockReturnValue(true);
+    loadForModeMock.mockReturnValue([]);
   });
 
   it('falls back provider/latency when backend omits them (OMEGA)', async () => {
@@ -93,6 +106,14 @@ describe('ChatService normalizeResponse', () => {
 
   it('uses Ollama proxy first in browser mode before local fallback', async () => {
     vi.mocked(isTauriRuntimeAvailable).mockReturnValue(false);
+    const history = [
+      {
+        role: 'user' as const,
+        content: 'Mémoire conversationnelle: projet ORION',
+        timestamp: 100,
+      },
+    ];
+    loadForModeMock.mockReturnValueOnce(history);
     vi.mocked(ollamaProvider.generate).mockResolvedValueOnce({
       content: 'bonjour depuis ollama',
       provider: 'ollama',
@@ -105,16 +126,32 @@ describe('ChatService normalizeResponse', () => {
 
     const response = await chatService.sendMessage('hi', 'conv-browser', {
       provider: 'auto',
+      mode: 'planning',
     });
 
     expect(response.provider).toBe('ollama');
     expect(response.metadata?.source).toBe('browser-ollama-proxy');
     expect(response.metadata?.network_used).toBe(true);
+    expect(flushPendingSavesMock).toHaveBeenCalledOnce();
+    expect(loadForModeMock).toHaveBeenCalledWith('planning', 'conv-browser');
+    expect(vi.mocked(ollamaProvider.generate)).toHaveBeenCalledWith(
+      'hi',
+      history,
+      expect.objectContaining({ preferredProvider: 'ollama' })
+    );
     expect(vi.mocked(chatEngine.generate)).not.toHaveBeenCalled();
   });
 
   it('falls back to chatEngine in browser mode when Ollama proxy fails', async () => {
     vi.mocked(isTauriRuntimeAvailable).mockReturnValue(false);
+    const history = [
+      {
+        role: 'assistant' as const,
+        content: 'Contexte précédent',
+        timestamp: 200,
+      },
+    ];
+    loadForModeMock.mockReturnValueOnce(history);
     vi.mocked(ollamaProvider.generate).mockRejectedValueOnce(new Error('proxy down'));
     vi.mocked(chatEngine.generate).mockResolvedValueOnce({
       content: 'fallback local',
@@ -125,10 +162,16 @@ describe('ChatService normalizeResponse', () => {
 
     const response = await chatService.sendMessage('hi', 'conv-browser-fallback', {
       provider: 'auto',
+      mode: 'journal',
     });
 
     expect(response.provider).toBe('titane-local');
     expect(response.metadata?.source).toBe('browser-chatEngine');
+    expect(flushPendingSavesMock).toHaveBeenCalledOnce();
+    expect(loadForModeMock).toHaveBeenCalledWith('journal', 'conv-browser-fallback');
+    expect(vi.mocked(chatEngine.generate)).toHaveBeenCalledWith('hi', history, {
+      mode: 'journal',
+    });
     expect(vi.mocked(chatEngine.generate)).toHaveBeenCalledOnce();
   });
 });
