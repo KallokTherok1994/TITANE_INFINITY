@@ -33,6 +33,26 @@ fn is_ollama_auto_enabled() -> bool {
     !env_flag_true("TITANE_OLLAMA_AUTO_DISABLED")
 }
 
+// ── C0: Provider / Model Intelligence Routing (Lock C0 — T3 feature flag) ─────
+// Canonical PROD Ollama model constant.
+// MUST match ai/ollama.rs:DEFAULT_OLLAMA_MODEL and memory rule titane-prod-model-rule.md
+const TITANE_PROD_OLLAMA_MODEL: &str = "gemma2:2b";
+
+/// Resolve the Ollama model for a request.
+/// When TITANE_C0_PROVIDER_ROUTING_ENABLED=true: canonical PROD model (gemma2:2b).
+/// Legacy (default, flag absent): preserves prior behavior ("llama3.1:latest").
+fn resolve_ollama_model_c0(requested: Option<String>) -> String {
+    if let Some(m) = requested {
+        return m;
+    }
+    if env_flag_true("TITANE_C0_PROVIDER_ROUTING_ENABLED") {
+        TITANE_PROD_OLLAMA_MODEL.to_string()
+    } else {
+        // Legacy fallback — preserved until C0 is activated in production.
+        "llama3.1:latest".to_string()
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ADAPTIVE TIMEOUT CONFIGURATION (R02 - P1 FIX)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1987,10 +2007,7 @@ async fn stream_with_ollama(
         request.model
     );
 
-    let model = request
-        .model
-        .clone()
-        .unwrap_or_else(|| "llama3.1:latest".to_string());
+    let model = resolve_ollama_model_c0(request.model.clone());
     let url = "http://127.0.0.1:11434/api/generate";
 
     let body = serde_json::json!({
@@ -2274,22 +2291,29 @@ mod smoke_tests {
 
     #[test]
     fn streaming_ollama_fallback_model_matches_canonical_local_profile() {
-        let request = ChatRequest {
-            message: "test".to_string(),
-            conversation_id: None,
-            provider: "ollama".to_string(),
-            model: None,
-            streaming: true,
-            images: None,
-            system_prompt: None,
-        };
-
-        let model = request
-            .model
-            .clone()
-            .unwrap_or_else(|| "llama3.1:latest".to_string());
-
+        // C0 flag absent → legacy behavior preserved (llama3.1:latest)
+        std::env::remove_var("TITANE_C0_PROVIDER_ROUTING_ENABLED");
+        let model = resolve_ollama_model_c0(None);
         assert_eq!(model, "llama3.1:latest");
+    }
+
+    #[test]
+    fn resolve_ollama_model_c0_uses_prod_model_when_flag_enabled() {
+        // C0 flag enabled → canonical PROD model
+        std::env::set_var("TITANE_C0_PROVIDER_ROUTING_ENABLED", "true");
+        let model = resolve_ollama_model_c0(None);
+        assert_eq!(model, TITANE_PROD_OLLAMA_MODEL);
+        assert_eq!(model, "gemma2:2b");
+        std::env::remove_var("TITANE_C0_PROVIDER_ROUTING_ENABLED");
+    }
+
+    #[test]
+    fn resolve_ollama_model_c0_respects_explicit_model() {
+        // Explicit model always wins, flag irrelevant
+        std::env::set_var("TITANE_C0_PROVIDER_ROUTING_ENABLED", "true");
+        let model = resolve_ollama_model_c0(Some("mistral:latest".to_string()));
+        assert_eq!(model, "mistral:latest");
+        std::env::remove_var("TITANE_C0_PROVIDER_ROUTING_ENABLED");
     }
 
     #[test]
