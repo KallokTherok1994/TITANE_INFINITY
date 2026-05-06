@@ -25,17 +25,83 @@ export const MEMORYGRAPH_V2_SHADOW_ENABLED =
     ? import.meta.env?.VITE_TITANE_C1_MEMORYGRAPH_V2_SHADOW === 'true'
     : false
 
-// ── Memory Node v2 Schema ───────────────────────────────────────────────────────
-// Extends v1 with: explicit version tag, content_hash, relation_weight
+// ── Memory Node v2 — Extended Schema (v9) ──────────────────────────────────────
+// Extends v1 with: validation_status, type, confidence, contradictions,
+// embeddings_status, source, expires_at, links, and identity-safe guards.
+// All new fields are additive. v1 schema remains the production source of truth.
+
+export const MemoryValidationStatusSchema = z.enum([
+  'confirmed',
+  'hypothesis',
+  'rejected',
+  'expired',
+  'system_observed',
+  'requires_kevin_validation',
+])
+export type MemoryValidationStatus = z.infer<typeof MemoryValidationStatusSchema>
+
+export const MemoryNodeTypeSchema = z.enum([
+  'identity_fact',
+  'project_context',
+  'decision',
+  'constraint',
+  'preference',
+  'risk',
+  'symbolic_axis',
+  'financial_pressure',
+  'technical_state',
+  'contradiction',
+  'evolution_milestone',
+  'instruction_truth',
+  'unknown',
+])
+export type MemoryNodeType = z.infer<typeof MemoryNodeTypeSchema>
+
+export const EmbeddingsStatusSchema = z.enum([
+  'not_indexed',
+  'pending',
+  'indexed',
+  'failed',
+  'unavailable',
+])
+export type EmbeddingsStatus = z.infer<typeof EmbeddingsStatusSchema>
+
+// Identity-sensitive types: these require validation_status=confirmed before
+// they may influence model behavior. Shadow-only until C2 cutover.
+export const IDENTITY_SENSITIVE_TYPES: ReadonlySet<MemoryNodeType> = new Set([
+  'identity_fact',
+  'symbolic_axis',
+  'financial_pressure',
+  'constraint',
+  'instruction_truth',
+])
+
+/**
+ * Returns true if the node is identity-sensitive AND NOT confirmed.
+ * Identity-sensitive nodes must not affect production behavior until confirmed.
+ */
+export function isBlockedByIdentitySafety(node: {
+  type: MemoryNodeType
+  validation_status: MemoryValidationStatus
+}): boolean {
+  return (
+    IDENTITY_SENSITIVE_TYPES.has(node.type) && node.validation_status !== 'confirmed'
+  )
+}
+
 export const MemoryNodeV2Schema = z.object({
   id: z.string().uuid().describe('Unique node ID (UUID)'),
   schema_version: z.literal(2).describe('Must be 2 for v2 nodes'),
   kind: z
     .enum(['stm', 'mtm', 'ltm', 'fact', 'event', 'relation', 'summary'])
     .describe('Memory category'),
+  type: MemoryNodeTypeSchema.describe('Semantic type of this memory node'),
   content: z.string().min(1).describe('Raw content text'),
   content_hash: z.string().describe('SHA-256 of content for dedup/integrity'),
   embedding_id: z.string().nullable().describe('Reference to vector store embedding'),
+  embeddings_status: EmbeddingsStatusSchema.default('not_indexed').describe(
+    'Vector embedding readiness',
+  ),
   session_id: z.string().describe('Originating session ID'),
   created_at: z.string().datetime().describe('ISO-8601 creation timestamp'),
   updated_at: z.string().datetime().describe('ISO-8601 last-update timestamp'),
@@ -44,6 +110,24 @@ export const MemoryNodeV2Schema = z.object({
     .string()
     .nullable()
     .describe('ID of originating v1 node (null if v2-native)'),
+  /** Validation status — identity-sensitive nodes require confirmed before activation */
+  validation_status: MemoryValidationStatusSchema.default('system_observed'),
+  source: z.string().nullable().default(null).describe('Origin signal: chat|upload|api|system'),
+  confidence: z
+    .number()
+    .min(0)
+    .max(1)
+    .default(0.5)
+    .describe('Confidence score 0..1'),
+  expires_at: z.string().datetime().nullable().default(null).describe('Optional expiry timestamp'),
+  links: z
+    .array(z.string().uuid())
+    .default([])
+    .describe('IDs of related nodes (forward links)'),
+  contradictions: z
+    .array(z.string().uuid())
+    .default([])
+    .describe('IDs of nodes this node contradicts'),
 })
 export type MemoryNodeV2 = z.infer<typeof MemoryNodeV2Schema>
 
