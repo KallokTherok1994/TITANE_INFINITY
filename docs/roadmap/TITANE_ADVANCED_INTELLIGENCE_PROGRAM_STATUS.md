@@ -1,5 +1,5 @@
 # TITANE Advanced Intelligence Program — Status
-# Last Updated: 2026-05-06
+# Last Updated: 2026-05-06 (v6 — A0I ingress audit)
 
 ## Program Overview
 
@@ -12,68 +12,62 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 
 ## Lock Status
 
-| lock_id | lock_name | status | commit | proof_pack | validators | research_status | autopilot_boundary_status | remaining_risk | next_lock |
-|---------|-----------|--------|--------|------------|------------|-----------------|--------------------------|----------------|-----------|
-| A0 | Instruction System Alignment + Bounded Research + Autopilot Boundary | SEALED | f739bc412 | `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/` | PASS=51 FAIL=0 | 3 VERIFIED, 3 TO_VERIFY, 0 adopted without verification | PASS — boundary validator wired | regression risk from .vscode settings drift | A1 |
-| A1 | Version / Release / Proof Authority Alignment | NOT_STARTED | — | — | — | — | — | version sync drift | A2 |
-| A2 | External AI Engineering Source Map | NOT_STARTED | — | — | — | — | — | — | B0 |
-| B0 | Eval Champion Realignment | NOT_STARTED | — | — | — | — | — | model drift | B1 |
-| B1 | Cognitive Core Truth Matrix | NOT_STARTED | — | — | — | — | — | stub coverage | B2 |
-| B2 | Intelligence Observability Contract | NOT_STARTED | — | — | — | — | — | Ring 3 risk | C0 |
-| C0 | Provider / Model Intelligence Routing | NOT_STARTED | — | — | — | — | — | CRITICAL — prod routing | C1 |
-| C1 | MemoryGraph v2 Shadow Mode | NOT_STARTED | — | — | — | — | — | persistence risk | C2 |
-| C2 | Knowledge Governance | NOT_STARTED | — | — | — | — | — | — | C3 |
-| C3 | Research Truth Engine | NOT_STARTED | — | — | — | — | — | — | D0 |
-| D0 | Agent Effectiveness System | NOT_STARTED | — | — | — | — | — | — | D1 |
-| D1 | OMEGA Real Handler Upgrade | NOT_STARTED | — | — | — | — | — | CRITICAL — prod pipeline | D2 |
-| D2 | Singularity Measured Layer | NOT_STARTED | — | — | — | — | — | — | D3 |
-| D3 | Twin Consent Ledger | NOT_STARTED | — | — | — | — | — | user data | D4 |
+| lock_id | lock_name | status | commit | proof_pack | validators | evals | research_status | runtime_status | remaining_risk | next_lock | autopilot_suitability |
+|---------|-----------|--------|--------|------------|------------|-------|-----------------|----------------|----------------|-----------|----------------------|
+| A0I | A0 Ingress Audit | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A0I_INGRESS_AUDIT_2026-05-06/` | PASS=51 FAIL=0 | — | — | no runtime changes | vocab drift only | A1 | T0/T1 yes |
+| A0 | Instruction System Alignment + Bounded Research + Autopilot Boundary | DRIFT_FOUND_FIXED | f739bc412 | `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/` | PASS=51 FAIL=0 | — | 3 VERIFIED, 3 TO_VERIFY, 0 adopted without verification | no runtime changes | vocab drift (SEALED→DRIFT_FOUND_FIXED per v6) | A1 | bounded |
+| A1 | Version / Release / Proof Authority Alignment | NOT_STARTED | — | — | — | — | — | — | version sync drift | A2 | T0/T1 yes |
+| A2 | External AI Engineering Source Map | NOT_STARTED | — | — | — | — | — | — | — | B0 | T0 yes |
+| B0 | Eval Champion Realignment | NOT_STARTED | — | — | — | — | — | — | model drift | B1 | T1 yes |
+| B1 | Cognitive Core Truth Matrix | NOT_STARTED | — | — | — | — | — | — | stub coverage | B2 | T0/T1 yes |
+| B2 | Intelligence Observability Contract | NOT_STARTED | — | — | — | — | — | — | Ring 3 risk | C0 | T2 bounded |
+| C0 | Provider / Model Intelligence Routing | NOT_STARTED | — | — | — | — | — | — | CRITICAL — prod routing | C1 | T3 flag required |
+| C1 | MemoryGraph v2 Shadow Mode | NOT_STARTED | — | — | — | — | — | — | persistence risk | C2 | T3 flag required |
+| C2 | Knowledge Governance | NOT_STARTED | — | — | — | — | — | — | — | C3 | T2 bounded |
+| C3 | Research Truth Engine | NOT_STARTED | — | — | — | — | — | — | — | D0 | T2/T3 flag required |
+| D0 | Agent Effectiveness System | NOT_STARTED | — | — | — | — | — | — | — | D1 | T1/T2 yes |
+| D1 | OMEGA Real Handler Upgrade | NOT_STARTED | — | — | — | — | — | — | CRITICAL — prod pipeline | D2 | T3 flag required |
+| D2 | Singularity Measured Layer | NOT_STARTED | — | — | — | — | — | — | — | D3 | T2/T3 bounded |
+| D3 | Twin Consent Ledger | NOT_STARTED | — | — | — | — | — | — | user data | D4 | T4 approval required |
+| D4 | Self-Improvement Lab | NOT_STARTED | — | — | — | — | — | — | — | D5 | T4 scaffold only |
+| D5 | Intelligence Seal | NOT_STARTED | — | — | — | — | — | — | all prior locks must pass | DONE | T4 approval required |
 | D4 | Self-Improvement Lab | NOT_STARTED | — | — | — | — | — | prod isolation | D5 |
-| D5 | Intelligence Seal | NOT_STARTED | — | — | — | — | — | — | DONE |
+| D5 | Intelligence Seal | NOT_STARTED | — | — | — | — | — | — | all prior locks must pass | DONE | T4 approval required |
 
 ---
 
-## A0 Detail
+## Lock Details
 
-### lock_id: A0
-### lock_name: Instruction System Alignment + Bounded Research Validation + Autopilot Boundary
-### status: SEALED (v5 — 2026-05-06)
-### proof_pack: `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/`
+### A0I — Ingress Audit
+- **status**: DRIFT_FOUND_FIXED
+- **classification**: A0_COMPLETE_WITH_VERDICT_VOCAB_DRIFT
+- **validators**: PASS=51, detect_recurrence=1641 entries
+- **vocab_drift**: A0 used SEALED (v5); v6 corrects to DRIFT_FOUND_FIXED (historical, non-blocking)
+- **ingress_audit**: `docs/roadmap/A0_INGRESS_AUDIT.md`
+- **worktree_safe**: yes
 
-Prior seal: phases A–P (b546bcad0), PASS=47
-v5 additions: regression fix + source map + autopilot runner + 4 new gates → PASS=51
-
-### validators:
-- `verify_instructions.sh` — PASS=51 FAIL=0
-- `verify_copilot_instruction_source_map.sh` — NEW, PASS
-- `verify_autopilot_lock_bounds.sh` — NEW, PASS
-- `detect_recurrence.sh` — PASS (1640 entries)
-
-### research_status:
-- S001–S003 VERIFIED (official VS Code docs)
-- S004–S006 TO_VERIFY (candidate only)
-- No unverified source adopted as doctrine
-
-### autopilot_boundary_status: PASS
-- `autopilot-lock-runner.prompt.md` created with full boundary contract
-- Boundary validator wired as gate G_AUTOPILOT_BOUNDS_PASS
-
-### remaining_risk:
-- `.vscode/settings.json` drift risk (not tracked by git if workspace-local)
-- S004–S006 source URLs not verified live
-
-### next_lock: A1 — Version / Release / Proof Authority Alignment
+### A0 — Instruction System Alignment
+- **status**: DRIFT_FOUND_FIXED (v6 normalized; was SEALED in v5 pack)
+- **commits**: f739bc412 + c45222fe8
+- **validators**: PASS=51 FAIL=0
+- **research**: 3 VERIFIED (S001–S003), 3 TO_VERIFY (S004–S006), 0 adopted without verification
+- **runtime_changes**: none (docs/scripts only)
+- **autopilot_boundary**: PASS (verify_autopilot_lock_bounds.sh exit 0)
+- **remaining_risk**: .vscode/settings.json drift risk (tracked, mitigated by gate G_VSCODE_AGENT_WORKFLOW_PASS)
+- **proof_pack**: `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/`
 
 ---
 
 ## How to Continue
 
-Start next lock with explicit reentry:
+Program next lock (A1) starts with version/release authority alignment (T0/T1, safe for autopilot).
 
 ```
 Lock: A1 — Version / Release / Proof Authority Alignment
 Mode: DURABLE
-Prompt: use autopilot-lock-runner.prompt.md as operating contract
+Tier: T0/T1
+Autopilot: yes
 ```
 
 Prior context: see `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/NEXT_LOCKS.md`
+and `docs/roadmap/A0_INGRESS_AUDIT.md`
