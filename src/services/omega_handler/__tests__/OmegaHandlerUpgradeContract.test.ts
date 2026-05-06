@@ -14,6 +14,21 @@ import {
   OmegaHandlerRequestSchema,
   OmegaHandlerResponseSchema,
   OMEGA_D1_HANDLER_FLAG,
+  // v13 sidecar imports
+  D1_SELECTED_HANDLER,
+  D1_MEMORY_HANDLER_DEFAULT_MODE,
+  D1_MEMORY_HANDLER_KNOWN_LIMITS,
+  OMEGA_D1_MEMORY_HANDLER_FLAG,
+  OmegaHandlerModeSchema,
+  OmegaMemoryHandlerInputSchema,
+  OmegaMemoryHandlerOutputSchema,
+  D1SelectedHandlerAdapterSchema,
+  getD1SelectedHandlerAdapter,
+  isMemoryHandlerActive,
+  isIdentitySafe,
+  isMemoryGraphV2Blocked,
+  validateMemoryHandlerOutput,
+  buildShadowMemoryHandlerOutput,
 } from '../OmegaHandlerUpgradeContract'
 
 describe('D1 — OMEGA Handler Upgrade Contract', () => {
@@ -273,6 +288,165 @@ describe('D1 — OMEGA Handler Upgrade Contract', () => {
     it('flag_active reflects env', () => {
       // In test env VITE_TITANE_D1_OMEGA_REAL_HANDLER is not set → false
       expect(getD1OmegaHandlerContract().flag_active).toBe(OMEGA_D1_HANDLER_FLAG)
+    })
+  })
+
+  // ── D1-UNIT-01..10 — v13 Real Memory Handler Declaration ─────────────────
+  describe('D1-UNIT — v13 Real Memory Handler (shadow mode)', () => {
+    it('D1-UNIT-01: selected handler is Memory and default-off by default', () => {
+      expect(D1_SELECTED_HANDLER).toBe('Memory')
+      expect(OMEGA_D1_MEMORY_HANDLER_FLAG).toBe(false)
+    })
+
+    it('D1-UNIT-02: default handler mode is shadow (not active)', () => {
+      expect(D1_MEMORY_HANDLER_DEFAULT_MODE).toBe('shadow')
+      expect(D1_MEMORY_HANDLER_DEFAULT_MODE).not.toBe('active')
+    })
+
+    it('D1-UNIT-03: adapter fallback_handler is DefaultTaskHandler', () => {
+      const adapter = getD1SelectedHandlerAdapter()
+      expect(adapter.fallback_handler).toBe('DefaultTaskHandler')
+      expect(adapter.risk_level).toBe('LOW')
+    })
+
+    it('D1-UNIT-04: handler output includes known_limits (non-empty)', () => {
+      const output = buildShadowMemoryHandlerOutput('req-test-04')
+      expect(output.known_limits.length).toBeGreaterThan(0)
+      expect(D1_MEMORY_HANDLER_KNOWN_LIMITS.length).toBeGreaterThan(0)
+    })
+
+    it('D1-UNIT-05: handler output includes trace metadata (shadow_used + validation_status)', () => {
+      const output = buildShadowMemoryHandlerOutput('req-test-05', 42)
+      expect(output.shadow_used).toBe(true)
+      expect(output.validation_status).toBe('PASS')
+      expect(output.latency_ms).toBe(42)
+      expect(output.handler_type).toBe('Memory')
+      expect(output.mode).toBe('shadow')
+    })
+
+    it('D1-UNIT-06: shadow mode output does not activate forbidden runtime behavior', () => {
+      const output = buildShadowMemoryHandlerOutput('req-test-06')
+      // Must NOT be in active mode
+      expect(output.mode).not.toBe('active')
+      // identity_safe must be true in shadow mode
+      expect(output.identity_safe).toBe(true)
+      // fallback_triggered must be false for normal shadow execution
+      expect(output.fallback_triggered).toBe(false)
+    })
+
+    it('D1-UNIT-07: Memory handler does not make MemoryGraph v2 read path active', () => {
+      const adapter = getD1SelectedHandlerAdapter()
+      expect(adapter.memory_graph_v2_active).toBe(false)
+      expect(isMemoryGraphV2Blocked(adapter)).toBe(true)
+      // Output must not declare MemoryGraphV2 as source
+      const output = buildShadowMemoryHandlerOutput('req-test-07')
+      expect(output.memory_source).not.toBe('MemoryGraphV2')
+    })
+
+    it('D1-UNIT-08: identity_safe=false blocks validation for non-validated identity input', () => {
+      const input = OmegaMemoryHandlerInputSchema.parse({
+        request_id: 'req-test-08',
+        session_id: 'sess-08',
+        context_prompt: 'Analyze identity profile.',
+        mode: 'shadow',
+        flag_active: false,
+        identity_validated: false,
+      })
+      expect(isIdentitySafe(input)).toBe(false)
+      // An output with identity_safe=false should FAIL validation
+      const badOutput = OmegaMemoryHandlerOutputSchema.parse({
+        ...buildShadowMemoryHandlerOutput('req-test-08'),
+        identity_safe: false,
+      })
+      const result = validateMemoryHandlerOutput(badOutput)
+      expect(result.passed).toBe(false)
+      expect(result.violations.some((v) => v.includes('identity_safe'))).toBe(true)
+    })
+
+    it('D1-UNIT-09: D1SelectedHandlerAdapter validates with correct schema', () => {
+      const adapter = getD1SelectedHandlerAdapter()
+      const parsed = D1SelectedHandlerAdapterSchema.safeParse(adapter)
+      expect(parsed.success).toBe(true)
+      expect(adapter.adapter_id).toBe('D1-MEMORY-ADAPTER-v13')
+      expect(adapter.feature_flag).toBe('VITE_TITANE_D1_OMEGA_REAL_MEMORY_HANDLER')
+      expect(adapter.selected_handler).toBe('Memory')
+      expect(adapter.rust_surface).toContain('memory_bridge.rs')
+    })
+
+    it('D1-UNIT-10: isMemoryHandlerActive returns false in test env (flag default off)', () => {
+      // In test env VITE_TITANE_D1_OMEGA_REAL_MEMORY_HANDLER is not set
+      expect(isMemoryHandlerActive()).toBe(false)
+    })
+  })
+
+  // ── D1-UNIT — OmegaHandlerModeSchema ─────────────────────────────────────
+  describe('D1-UNIT — OmegaHandlerModeSchema', () => {
+    it('accepts shadow, passive, active, disabled', () => {
+      expect(OmegaHandlerModeSchema.parse('shadow')).toBe('shadow')
+      expect(OmegaHandlerModeSchema.parse('passive')).toBe('passive')
+      expect(OmegaHandlerModeSchema.parse('active')).toBe('active')
+      expect(OmegaHandlerModeSchema.parse('disabled')).toBe('disabled')
+    })
+    it('rejects unknown modes', () => {
+      expect(() => OmegaHandlerModeSchema.parse('unknown')).toThrow()
+      expect(() => OmegaHandlerModeSchema.parse('')).toThrow()
+    })
+  })
+
+  // ── D1-UNIT — validateMemoryHandlerOutput ────────────────────────────────
+  describe('D1-UNIT — validateMemoryHandlerOutput policy', () => {
+    it('passes for valid shadow mode output', () => {
+      const output = buildShadowMemoryHandlerOutput('req-validate-01')
+      const result = validateMemoryHandlerOutput(output)
+      expect(result.passed).toBe(true)
+      expect(result.violations).toHaveLength(0)
+    })
+    it('fails when shadow mode but shadow_used=false', () => {
+      const bad = { ...buildShadowMemoryHandlerOutput('req-validate-02'), shadow_used: false }
+      const result = validateMemoryHandlerOutput(bad as any)
+      expect(result.passed).toBe(false)
+      expect(result.violations.some((v) => v.includes('shadow_used'))).toBe(true)
+    })
+    it('fails when MemoryGraphV2 is declared as source', () => {
+      const bad = {
+        ...buildShadowMemoryHandlerOutput('req-validate-03'),
+        memory_source: 'MemoryGraphV2' as const,
+      }
+      const result = validateMemoryHandlerOutput(bad as any)
+      expect(result.passed).toBe(false)
+      expect(result.violations.some((v) => v.includes('MemoryGraph'))).toBe(true)
+    })
+    it('fails when known_limits is empty', () => {
+      const bad = { ...buildShadowMemoryHandlerOutput('req-validate-04'), known_limits: [] }
+      const result = validateMemoryHandlerOutput(bad as any)
+      expect(result.passed).toBe(false)
+      expect(result.violations.some((v) => v.includes('known_limits'))).toBe(true)
+    })
+  })
+
+  // ── D1-UNIT — OmegaMemoryHandlerInputSchema ──────────────────────────────
+  describe('D1-UNIT — OmegaMemoryHandlerInputSchema', () => {
+    it('accepts valid shadow input', () => {
+      const parsed = OmegaMemoryHandlerInputSchema.safeParse({
+        request_id: 'req-001',
+        session_id: 'sess-001',
+        context_prompt: 'What do you know about me?',
+        mode: 'shadow',
+        flag_active: false,
+        identity_validated: false,
+      })
+      expect(parsed.success).toBe(true)
+    })
+    it('rejects empty context_prompt', () => {
+      const parsed = OmegaMemoryHandlerInputSchema.safeParse({
+        request_id: 'req-001',
+        session_id: 'sess-001',
+        context_prompt: '',
+        mode: 'shadow',
+        flag_active: false,
+        identity_validated: false,
+      })
+      expect(parsed.success).toBe(false)
     })
   })
 })

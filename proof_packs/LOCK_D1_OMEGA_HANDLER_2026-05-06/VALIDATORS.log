@@ -1,0 +1,85 @@
+# D1 — OMEGA Real Handler Upgrade — VALIDATORS LOG
+
+**Date:** 2026-05-06  
+**Super Prompt:** v13  
+
+## Gate 1: Vitest D1 Contract
+
+```
+pnpm vitest run src/services/omega_handler
+✓ core OmegaHandlerUpgradeContract.test.ts (62 tests) 18ms
+Test Files  1 passed (1)
+Tests       62 passed (62)
+Start at    15:59:06
+Duration    551ms
+EXIT=0 — PASS
+```
+
+## Gate 2: verify_omega_real_handler.sh
+
+```
+bash scripts/verify/verify_omega_real_handler.sh
+── Contract & Test Files ──
+[PASS] OmegaHandlerUpgradeContract.ts exists
+[PASS] OmegaHandlerUpgradeContract.test.ts exists
+── v13 Sidecar Exports ──
+[PASS] D1_SELECTED_HANDLER exported
+[PASS] D1_MEMORY_HANDLER_DEFAULT_MODE exported
+[PASS] D1_MEMORY_HANDLER_KNOWN_LIMITS exported
+[PASS] OMEGA_D1_MEMORY_HANDLER_FLAG exported
+[PASS] OmegaMemoryHandlerInputSchema exported
+[PASS] OmegaMemoryHandlerOutputSchema exported
+[PASS] D1SelectedHandlerAdapterSchema exported
+[PASS] getD1SelectedHandlerAdapter exported
+[PASS] validateMemoryHandlerOutput exported
+[PASS] buildShadowMemoryHandlerOutput exported
+── D1-UNIT Tests ──
+[PASS] D1-UNIT-01..10 present in test file (10/10)
+── Documentation ──
+[PASS] docs/omega/OMEGA_REAL_HANDLER_UPGRADE.md exists
+[PASS] docs/omega/D1_SELECTED_HANDLER.md exists
+[PASS] docs/roadmap/D1_INGRESS_AUDIT.md exists
+── Feature Flag & Registry ──
+[PASS] FF-D1 present in TITANE_RUNTIME_FEATURE_FLAGS
+[PASS] D1 entry in TITANE_ADVANCED_INTELLIGENCE_REGISTRY
+[PASS] AI-DESKTOP-11 SCAFFOLDED in desktop registry
+── AutoHeal ──
+[PASS] D1 AutoHeal entry present
+── Proof Pack ──
+[PASS] D1 proof pack directory exists
+[PASS] D1 proof pack VERDICT.md exists
+RESULT: PASS=31 FAIL=0 TOTAL=31
+VERDICT: PASS
+EXIT=0
+```
+
+## Gate 3: detect_recurrence.sh
+
+```
+bash scripts/autoheal/detect_recurrence.sh
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=1668
+EXIT=0 — PASS
+```
+
+## Gate 4: verify_instructions.sh
+
+```
+bash scripts/verify_instructions.sh
+PASS: G_SOURCE_MAP_SCRIPT_PRESENT
+PASS: G_SOURCE_MAP_PASS
+PASS: G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT
+PASS: G_AUTOPILOT_BOUNDS_PASS
+SUMMARY: PASS=51 FAIL=0
+EXIT=0 — PASS
+```
+
+## Summary
+
+| Gate | Status | Evidence |
+|------|--------|----------|
+| vitest D1 contract | PASS=62 FAIL=0 | 44 base + 18 D1-UNIT tests |
+| verify_omega_real_handler | PASS=31 FAIL=0 | 31 checks |
+| detect_recurrence | PASS (entries=1668) | — |
+| verify_instructions | PASS=51 FAIL=0 | — |
