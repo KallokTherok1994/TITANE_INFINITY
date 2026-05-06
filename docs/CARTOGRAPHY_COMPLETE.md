@@ -218,6 +218,12 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > 2026-04-27 — Desktop online chat UI runtime mode proof: la lane native `e2e/desktop/online-chat-proof-ui.wdio.test.js`, déjà utilisée pour prouver les tours réels, la mémoire et les états runtime du chat online desktop, remonte maintenant aussi la vérité de mode conversationnelle depuis `page-conversation` et `chat-runtime-state`. Le micro-lot verrouille sur chaque tour mémoire `pageConversationMode=default`, `pageChatStoreMode=default`, `runtimeConversationMode=default`, `runtimeChatStoreMode=default`, ainsi que les chaînes `Conversation mode: default` / `Store mode: default`, pour empêcher qu une dérive de mode survive dans cette lane desktop multi-tours distincte des lanes conversation, modèle et orchestrator déjà qualifiées.
 
+## 2026-05-06 — Twin canonical frontend contract alignment
+
+> Le frontend canonique n exposait pas encore explicitement les commandes `twin_*` malgré leur présence côté sécurité et backend. Le lot courant réaligne `src/lib/tauriCommands.ts`, `src/lib/tauriClient.ts` et `src/lib/ipcContract.ts` pour publier les 8 commandes Twin, ajouter les wrappers typés correspondants et imposer la validation contractuelle des payloads de mutation (`twin_submit_observation`, `twin_apply_evolution`, `twin_validate_sync`).
+
+> La couverture associée est scellée par `tests/contract/tauri-ipc-contract.test.ts` (présence TAURI_COMMANDS + wrappers + allowlist + validation snake_case/bounds) et par trois tests Rust moteur ajoutés dans `src-tauri/src/numeric_twin/mod.rs` (`calculate_fusion_index_updates_global_score_and_trend`, `submit_observation_rejects_empty_content_and_invalid_confidence`, `validate_sync_updates_existing_packet_and_rejects_unknown_id`).
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :

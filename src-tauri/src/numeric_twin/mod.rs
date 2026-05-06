@@ -1170,4 +1170,70 @@ mod tests {
         assert!(engine.fusion_index.components.evolution_alignment > baseline_alignment);
         assert!(!engine.sync_history.is_empty());
     }
+
+    #[test]
+    fn calculate_fusion_index_updates_global_score_and_trend() {
+        let mut engine = NumericTwinEngine::new(TwinConfig::default());
+        engine.fusion_index.global_score = 0.1;
+        engine.fusion_index.components.value_alignment = 0.9;
+        engine.fusion_index.components.cognitive_alignment = 0.8;
+        engine.fusion_index.components.style_alignment = 0.7;
+        engine.fusion_index.components.therapeutic_alignment = 0.6;
+        engine.fusion_index.components.creative_alignment = 0.5;
+        engine.fusion_index.components.evolution_alignment = 0.4;
+
+        engine.calculate_fusion_index();
+
+        assert!(engine.fusion_index.global_score > 0.1);
+        assert_eq!(engine.fusion_index.trend, FusionTrend::Improving);
+        assert_eq!(engine.identity_core.fusion_index, engine.fusion_index.global_score);
+    }
+
+    #[test]
+    fn submit_observation_rejects_empty_content_and_invalid_confidence() {
+        let mut engine = NumericTwinEngine::new(TwinConfig::default());
+
+        let empty = engine.submit_observation(TwinObservation {
+            observation_type: ObservationType::Value,
+            content: String::new(),
+            context: None,
+            confidence: 0.7,
+        });
+        assert!(matches!(empty, Err(TwinError::InvalidInput(_))));
+
+        let invalid_confidence = engine.submit_observation(TwinObservation {
+            observation_type: ObservationType::Value,
+            content: "alignment".to_string(),
+            context: None,
+            confidence: 1.2,
+        });
+        assert!(matches!(invalid_confidence, Err(TwinError::InvalidInput(_))));
+    }
+
+    #[test]
+    fn validate_sync_updates_existing_packet_and_rejects_unknown_id() {
+        let mut engine = NumericTwinEngine::new(TwinConfig::default());
+        let packet = engine
+            .submit_observation(TwinObservation {
+                observation_type: ObservationType::Cognitive,
+                content: "systems thinking".to_string(),
+                context: Some("strategy".to_string()),
+                confidence: 0.9,
+            })
+            .expect("observation should create sync packet");
+
+        engine
+            .validate_sync(&packet.id, false)
+            .expect("existing sync id should be updated");
+
+        let updated = engine
+            .sync_history
+            .iter()
+            .find(|entry| entry.id == packet.id)
+            .expect("sync packet should still exist");
+        assert!(!updated.validated);
+
+        let missing = engine.validate_sync("missing-sync", true);
+        assert!(matches!(missing, Err(TwinError::SyncNotFound(_))));
+    }
 }

@@ -646,6 +646,8 @@
 | 39 | `shutdown_all_cores` | Shutdown all cores |
 | 40 | `validate_nexus` | Validate nexus |
 
+> 2026-05-06 — Twin native IPC canonical frontend truth: la surface frontend canonique expose désormais explicitement les 8 commandes `twin_*` dans `src/lib/tauriCommands.ts`, `src/lib/tauriClient.ts` et `src/lib/ipcContract.ts`, en cohérence avec la sécurité `src/lib/security.ts` et les handlers Rust existants. Les payloads mutation `twin_submit_observation`, `twin_apply_evolution` et `twin_validate_sync` sont maintenant validés côté contrat frontend avec rejet explicite des clés snake_case et des bornes invalides. Validation: `pnpm vitest run tests/contract/tauri-ipc-contract.test.ts` PASS.
+
 ## Evolution (40 commandes)
 
 | # | Commande | Description |

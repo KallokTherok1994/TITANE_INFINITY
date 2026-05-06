@@ -30,7 +30,15 @@ export type IpcCommandName =
   | 'memory_hybrid_recall'
   | 'singularity_set_intent'
   | 'window_set_zoom'
-  | 'get_ollama_status';
+  | 'get_ollama_status'
+  | 'twin_get_state'
+  | 'twin_get_fusion_index'
+  | 'twin_submit_observation'
+  | 'twin_apply_evolution'
+  | 'twin_validate_sync'
+  | 'twin_get_evolution_profile'
+  | 'twin_get_identity'
+  | 'twin_recalculate_fusion';
 
 const ConversationGenerateArgsSchema = z.object({
   message: z.string().min(1),
@@ -120,6 +128,41 @@ const WindowSetZoomSchema = z.object({
   level: z.number().finite().min(0.25).max(5.0),
 });
 
+const TwinObservationSchema = z.object({
+  observationType: z.enum(['value', 'cognitive', 'style', 'emotional']),
+  content: z.string().trim().min(1),
+  context: z.string().min(1).optional(),
+  confidence: z.number().finite().min(0).max(1),
+});
+
+const TwinSubmitObservationSchema = z.object({
+  observation: TwinObservationSchema,
+});
+
+const TwinEvolutionSchema = z.object({
+  evolutionType: z.enum([
+    'trait_adjustment',
+    'value_reinforcement',
+    'pattern_integration',
+    'phase_transition',
+  ]),
+  target: z.string().trim().min(1),
+  delta: z.number().finite().min(-1).max(1).optional(),
+  isDeepChange: z.boolean(),
+  validatedByKevin: z.boolean(),
+});
+
+const TwinApplyEvolutionSchema = z.object({
+  evolution: TwinEvolutionSchema,
+});
+
+const TwinValidateSyncSchema = z.object({
+  validation: z.object({
+    syncId: z.string().min(1),
+    validated: z.boolean(),
+  }),
+});
+
 const TtsSpeakSchema = z.object({
   text: z.string().min(1),
   settings: TtsSettingsSchema,
@@ -156,11 +199,22 @@ const ContractSchemas: Record<IpcCommandName, z.ZodTypeAny> = {
   singularity_set_intent: SingularitySetIntentSchema,
   window_set_zoom: WindowSetZoomSchema,
   get_ollama_status: NoArgsSchema,
+  twin_get_state: NoArgsSchema,
+  twin_get_fusion_index: NoArgsSchema,
+  twin_submit_observation: TwinSubmitObservationSchema,
+  twin_apply_evolution: TwinApplyEvolutionSchema,
+  twin_validate_sync: TwinValidateSyncSchema,
+  twin_get_evolution_profile: NoArgsSchema,
+  twin_get_identity: NoArgsSchema,
+  twin_recalculate_fusion: NoArgsSchema,
 };
 
 const CAMELCASE_ENFORCED = new Set<IpcCommandName>([
   'conversation_generate',
   'tts_speak',
+  'twin_submit_observation',
+  'twin_apply_evolution',
+  'twin_validate_sync',
 ]);
 
 function findSnakeCaseKey(value: unknown, path = ''): string | null {

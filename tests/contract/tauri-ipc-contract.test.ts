@@ -239,6 +239,136 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     expect(ok.args.conversationId).toBe('ok');
   });
 
+  it('should expose Twin commands in TAURI_COMMANDS, Rust, wrappers, and security allowlist', () => {
+    const requiredCommands = [
+      'twin_get_state',
+      'twin_get_fusion_index',
+      'twin_submit_observation',
+      'twin_apply_evolution',
+      'twin_validate_sync',
+      'twin_get_evolution_profile',
+      'twin_get_identity',
+      'twin_recalculate_fusion',
+    ] as const;
+    const expectedWrappers = [
+      'twinGetState',
+      'twinGetFusionIndex',
+      'twinSubmitObservation',
+      'twinApplyEvolution',
+      'twinValidateSync',
+      'twinGetEvolutionProfile',
+      'twinGetIdentity',
+      'twinRecalculateFusion',
+    ] as const;
+    const securityContent = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/security.ts'),
+      'utf-8'
+    );
+
+    for (const command of requiredCommands) {
+      expect(canonicalCommands.has(command), `Missing TAURI_COMMANDS entry: ${command}`).toBe(
+        true
+      );
+      expect(
+        rustCommands.has(command) || rustNormalized.has(normalize(command)),
+        `Missing Rust IPC command: ${command}`
+      ).toBe(true);
+      expect(
+        securityContent.includes(`'${command}'`) || securityContent.includes(`"${command}"`),
+        `Missing security.ts allowlist entry: ${command}`
+      ).toBe(true);
+    }
+
+    for (const wrapper of expectedWrappers) {
+      expect(clientWrappers.has(wrapper), `Missing tauriClient wrapper: ${wrapper}`).toBe(true);
+    }
+  });
+
+  it('should validate canonical payloads for Twin mutation commands', () => {
+    const observation = validateIpcPayload('twin_submit_observation', {
+      observation: {
+        observationType: 'style',
+        content: 'structured framework',
+        context: 'ui reasoning',
+        confidence: 0.8,
+      },
+    });
+    expect(observation.observation.observationType).toBe('style');
+
+    const evolution = validateIpcPayload('twin_apply_evolution', {
+      evolution: {
+        evolutionType: 'trait_adjustment',
+        target: 'sincerity',
+        delta: 0.2,
+        isDeepChange: false,
+        validatedByKevin: true,
+      },
+    });
+    expect(evolution.evolution.target).toBe('sincerity');
+
+    const validation = validateIpcPayload('twin_validate_sync', {
+      validation: {
+        syncId: 'sync-1',
+        validated: true,
+      },
+    });
+    expect(validation.validation.syncId).toBe('sync-1');
+  });
+
+  it('should reject snake_case and invalid bounds in Twin mutation payloads', () => {
+    expect(() =>
+      validateIpcPayload('twin_submit_observation', {
+        observation: {
+          observation_type: 'style',
+          content: 'structured framework',
+          confidence: 0.8,
+        },
+      })
+    ).toThrow(/snake_case/i);
+
+    expect(() =>
+      validateIpcPayload('twin_submit_observation', {
+        observation: {
+          observationType: 'style',
+          content: 'structured framework',
+          confidence: 1.2,
+        },
+      })
+    ).toThrow(/Invalid field observation.confidence/i);
+
+    expect(() =>
+      validateIpcPayload('twin_apply_evolution', {
+        evolution: {
+          evolution_type: 'trait_adjustment',
+          target: 'sincerity',
+          isDeepChange: false,
+          validatedByKevin: true,
+        },
+      })
+    ).toThrow(/snake_case/i);
+
+    expect(() =>
+      validateIpcPayload('twin_apply_evolution', {
+        evolution: {
+          evolutionType: 'trait_adjustment',
+          target: 'sincerity',
+          delta: 1.5,
+          isDeepChange: false,
+          validatedByKevin: true,
+        },
+      })
+    ).toThrow(/Invalid field evolution.delta/i);
+
+    expect(() =>
+      validateIpcPayload('twin_validate_sync', {
+        validation: {
+          sync_id: 'sync-1',
+          validated: true,
+        },
+      })
+    ).toThrow(/snake_case/i);
+  });
+
   it('should expose security audit bridge commands in Rust and Tauri allowlist', () => {
     const requiredCommands = [
       'security_audit_sync_journal',

@@ -3570,6 +3570,62 @@ class TauriClient {
     return await this.invoke(TAURI_COMMANDS.READ_PRODUCTION_WEEK1_CSV, {});
   }
 
+  async twinGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async twinGetFusionIndex(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_GET_FUSION_INDEX,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async twinSubmitObservation(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_SUBMIT_OBSERVATION,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async twinApplyEvolution(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_APPLY_EVOLUTION,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async twinValidateSync(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_VALIDATE_SYNC,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async twinGetEvolutionProfile(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_GET_EVOLUTION_PROFILE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async twinGetIdentity(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_GET_IDENTITY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async twinRecalculateFusion(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TWIN_RECALCULATE_FUSION,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
 }
 
