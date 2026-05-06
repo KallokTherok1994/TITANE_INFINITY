@@ -22,7 +22,7 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | B1 | Cognitive Core Truth Matrix | CLEAN | 2026-05-06 | — | — | — | — | — | stub coverage | B2 | T0/T1 yes |
 | B2 | Intelligence Observability Contract | CLEAN | 2026-05-06 | — | — | — | — | — | Ring 3 risk | C0 | T2 bounded |
 | C0 | Provider / Model Intelligence Routing | DRIFT_FOUND_FIXED | 2026-05-06 | — | — | — | — | — | CRITICAL — prod routing | C1 | T3 flag required |
-| C1 | MemoryGraph v2 Shadow Mode | NOT_STARTED | — | — | — | — | — | — | persistence risk | C2 | T3 flag required |
+| C1 | MemoryGraph v2 Shadow Mode | CLEAN | 2026-05-06 | — | — | — | — | — | persistence risk | C2 | T3 flag required |
 | C2 | Knowledge Governance | NOT_STARTED | — | — | — | — | — | — | — | C3 | T2 bounded |
 | C3 | Research Truth Engine | NOT_STARTED | — | — | — | — | — | — | — | D0 | T2/T3 flag required |
 | D0 | Agent Effectiveness System | NOT_STARTED | — | — | — | — | — | — | — | D1 | T1/T2 yes |
