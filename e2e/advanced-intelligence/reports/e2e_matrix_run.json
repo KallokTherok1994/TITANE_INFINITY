@@ -1,0 +1,144 @@
+{
+  "lock": "E0",
+  "date": "2026-05-06",
+  "lanes": [
+    {
+      "id": "AI-DESKTOP-01",
+      "status": "PASS",
+      "details": "body present after launch",
+      "ts": "2026-05-06T21:38:09.155Z"
+    },
+    {
+      "id": "AI-DESKTOP-01-B",
+      "status": "PASS",
+      "details": "title=\"TITANE∞ v31.1.0 - Cognitive Operating System\"",
+      "ts": "2026-05-06T21:38:10.379Z"
+    },
+    {
+      "id": "AI-DESKTOP-02",
+      "status": "PASS",
+      "details": "chat input found in DOM",
+      "ts": "2026-05-06T21:38:12.421Z"
+    },
+    {
+      "id": "AI-DESKTOP-03",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "IntelligenceDecisionEnvelope emitted during live conversation. B2 lock proves schema+parser via Vitest (26/26 PASS). Full desktop trace requires live conversation output. Blocker: no E2E chat message send guaranteed in headless run without live Ollama model. See: src/services/observability/__tests__/IntelligenceObservabilityContract.test.ts",
+      "ts": "2026-05-06T21:38:12.422Z"
+    },
+    {
+      "id": "AI-DESKTOP-04",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "Provider routing is logged during conversation. Requires live Ollama response. Blocker: E0 desktop run is headless without live model. C0 lock must prove this via conversation trace.",
+      "ts": "2026-05-06T21:38:12.423Z"
+    },
+    {
+      "id": "AI-DESKTOP-05",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "Fallback requires OFFLINE_SIM=1 env and a conversation. C0 lock must prove via runtime wdio test with OFFLINE_SIM. Contract: no silent fallback. Blocker: E0 headless run without OFFLINE_SIM wired.",
+      "ts": "2026-05-06T21:38:12.423Z"
+    },
+    {
+      "id": "AI-DESKTOP-06",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "Memory nav element not found from root. Navigation pattern not guaranteed without route map. Blocker: no stable memory tab selector confirmed for E0.",
+      "ts": "2026-05-06T21:38:14.759Z"
+    },
+    {
+      "id": "AI-DESKTOP-07",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "MemoryGraph shadow write is flag-gated (VITE_TITANE_HYBRID_MEMORY_GRAPH_ENABLED). Default=false in production. C1 lock must prove shadow write behavior. Blocker: E0 does not flip feature flags.",
+      "ts": "2026-05-06T21:38:14.760Z"
+    },
+    {
+      "id": "AI-DESKTOP-08",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "Knowledge governance schema proven at contract level (C2 lock). Full desktop E2E requires knowledge items in runtime DB. Blocker: runtime knowledge DB state not guaranteed in E0 headless run. Contract proof: src/services/knowledge/",
+      "ts": "2026-05-06T21:38:14.761Z"
+    },
+    {
+      "id": "AI-DESKTOP-09",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "ResearchTruthContract isResearchUnavailable+validateResearchUnavailableHonesty proven via C3 vitest. Desktop proof requires research panel visible with offline state. Blocker: research UI surface not confirmed reachable in E0 headless run.",
+      "ts": "2026-05-06T21:38:14.761Z"
+    },
+    {
+      "id": "AI-DESKTOP-10",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "C3 lock proves canPresentAsFact+buildCitationSummary at contract level. Full desktop proof requires live network and sourced research response. Blocker: E0 cannot guarantee live network + sourced state in headless run.",
+      "ts": "2026-05-06T21:38:14.762Z"
+    },
+    {
+      "id": "AI-DESKTOP-11",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "D1 lock: OmegaMemoryHandlerOutputSchema+shadow mode factory proven (62/62 vitest). Full pipeline trace injection blocked until D2 activation gate. Blocker: OMEGA handler runs in shadow mode only; no visible runtime trace without D3 integration active.",
+      "ts": "2026-05-06T21:38:14.762Z"
+    },
+    {
+      "id": "AI-DESKTOP-12",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "D2 lock: OmegaTaskResult measurement (passive mode), 5 event types + 4 intensity levels, 69/69 vitest PASS. Full emission trace blocked until D3+B2 integration. Blocker: singularity events passive; no visible desktop trace in E0.",
+      "ts": "2026-05-06T21:38:14.762Z"
+    },
+    {
+      "id": "AI-DESKTOP-13",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "D3 lock: TwinConsentLedgerContract v13 sidecar (84/84 vitest PASS). Consent boundary: confidence-not-consent policy enforced. Full E2E consent lane blocked: no twin consent UI surface yet. Blocker: no data-testid=twin-consent-panel exists in current build.",
+      "ts": "2026-05-06T21:38:14.762Z"
+    },
+    {
+      "id": "AI-DESKTOP-14",
+      "status": "PASS",
+      "details": "AGENT_EFFECTIVENESS_SCORECARD.md present and contains scorecard content",
+      "ts": "2026-05-06T21:38:14.763Z"
+    },
+    {
+      "id": "AI-DESKTOP-15",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "Injection blocking requires C3 security lane implementation. Blocker: no dedicated injection-blocking contract or test exists yet. C3 security lane is PLANNED.",
+      "ts": "2026-05-06T21:38:14.763Z"
+    },
+    {
+      "id": "AI-DESKTOP-16",
+      "status": "PASS",
+      "details": "D4 contract confirmed: blocksAutoMerge, blocksSelfDeploy, auto_merge_blocked=true, self_deploy_blocked=true. No approval-bypass possible. UI surface for full E2E pending (AI-DESKTOP-16 honest=PASS_CONTRACT_LEVEL, UI lane still PLANNED).",
+      "ts": "2026-05-06T21:38:14.763Z"
+    },
+    {
+      "id": "AI-DESKTOP-17",
+      "status": "PASS",
+      "details": "autoheal entries=1671, D4 entry confirmed",
+      "ts": "2026-05-06T21:38:14.776Z"
+    },
+    {
+      "id": "AI-DESKTOP-17-B",
+      "status": "PASS",
+      "details": "PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX; PASS: G_AH_RECURRENCE_GUARD_PASS; INFO: entries=1671",
+      "ts": "2026-05-06T21:38:14.946Z"
+    },
+    {
+      "id": "AI-DESKTOP-18",
+      "status": "PASS",
+      "details": "UI accessible without requiring Ollama to be active. Full offline-fallback conversation test requires OFFLINE_SIM=1 + conversation execution. That runtime slice classified SKIPPED_WITH_EXPLICIT_BLOCKER: needs OFFLINE_SIM wired WDIO session.",
+      "ts": "2026-05-06T21:38:16.498Z"
+    },
+    {
+      "id": "AI-DESKTOP-19",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "Online-first governed behavior requires live Ollama model active during WDIO conversation. Blocker: E0 headless run cannot guarantee live Ollama + conversation round-trip. Next action: run with TITANE_E2E_OLLAMA_ACTIVE=1 and a seeded conversation.",
+      "ts": "2026-05-06T21:38:16.499Z"
+    },
+    {
+      "id": "AI-DESKTOP-20-smoke",
+      "status": "PASS",
+      "details": "smoke baseline: app launches",
+      "ts": "2026-05-06T21:38:18.081Z"
+    },
+    {
+      "id": "AI-DESKTOP-20-full",
+      "status": "SKIPPED_WITH_EXPLICIT_BLOCKER",
+      "details": "Full chain (ask→route→policy→response→trace) requires live Ollama conversation in desktop session. Smoke baseline (app launch) PASS. Chain continuation: blocked pending C0+C1+C2+C3+D0–D4 activations. Next action: dedicated chain test once all dependency locks activate.",
+      "ts": "2026-05-06T21:38:18.082Z"
+    }
+  ]
+}

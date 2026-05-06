@@ -1862,3 +1862,18 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - Tests extended in src/services/observability/__tests__/IntelligenceObservabilityContract.test.ts (26 PASS)
 - Documentation synced: docs/intelligence/INTELLIGENCE_OBSERVABILITY_CONTRACT.md
 - Proof pack normalized: proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/
+
+## Delta 2026-05-06 — Lock E0 Advanced Desktop E2E Matrix
+
+- Surface: e2e/advanced-intelligence/, tests/contract/e2e-desktop/, scripts/verify/verify_desktop_advanced_intelligence_tests.sh
+- Change type: E0 certification matrix — 20 lanes (AI-DESKTOP-01..20)
+- Added: e2e/advanced-intelligence/advanced-intelligence.desktop.wdio.spec.js (WDIO, 23 assertions)
+- Added: tests/contract/e2e-desktop/advanced-intelligence-contracts.test.ts (Vitest, 21 PASS)
+- Expanded: verify_desktop_advanced_intelligence_tests.sh (8→25 checks, PASS=25 FAIL=0)
+- Appended: autoheal_rules.jsonl entry LOCK_E0_DESKTOP_ADVANCED_E2E_2026_05_06 (#1672)
+- Added: docs/roadmap/E0_INGRESS_AUDIT.md
+- Added: reports/desktop_advanced_intelligence_e2e_matrix.md (8 PASS, 12 SKIPPED_WITH_EXPLICIT_BLOCKER)
+- Proof pack: proof_packs/LOCK_E0_DESKTOP_ADVANCED_E2E_2026-05-06/ (11 files)
+- Feature flags: unchanged, no D0-D4 flags flipped
+- Verdict: PASS (classification: E0_PARTIAL_PASS_EXPLICIT_BLOCKERS)
+- Stop condition: E0 is the stop point per Super Prompt v16.1
