@@ -132,9 +132,10 @@ test('POST /api/invoke twin_get_identity returns identity payload', async ({ req
   expect(resp.ok()).toBe(true);
   const data = await resp.json();
   expect(data.ok).toBe(true);
-  expect(data.content).toHaveProperty('twinId');
+  expect(data.content).toHaveProperty('name');
   expect(data.content).toHaveProperty('fusionIndex');
-  expect(data.content).toHaveProperty('maturityLevel');
+  expect(data.content).toHaveProperty('humanStyle');
+  expect(Array.isArray(data.content.coreValues)).toBe(true);
 });
 
 test('POST /api/invoke twin_get_evolution_profile returns profile payload', async ({ request }) => {
@@ -152,8 +153,9 @@ test('POST /api/invoke twin_get_evolution_profile returns profile payload', asyn
   const data = await resp.json();
   expect(data.ok).toBe(true);
   expect(data.content).toHaveProperty('currentPhase');
-  expect(data.content).toHaveProperty('stabilityScore');
-  expect(data.content).toHaveProperty('evolutionHistory');
+  expect(data.content).toHaveProperty('growthTrends');
+  expect(data.content).toHaveProperty('syncScore');
+  expect(data.content).toHaveProperty('milestonesCount');
 });
 
 test('POST /api/invoke twin_get_fusion_index returns fusion payload', async ({ request }) => {
@@ -172,6 +174,133 @@ test('POST /api/invoke twin_get_fusion_index returns fusion payload', async ({ r
   expect(data.ok).toBe(true);
   expect(data.content).toHaveProperty('globalScore');
   expect(data.content).toHaveProperty('trend');
+});
+
+test('POST /api/invoke twin_submit_observation returns syncId and twin_validate_sync confirms it', async ({ request }) => {
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
+  });
+
+  const observeResp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: {
+      command: 'twin_submit_observation',
+      payload: {
+        observationType: 'style',
+        content: 'structured framework',
+        context: 'remote gateway e2e',
+        confidence: 0.8,
+      },
+    },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(observeResp.ok()).toBe(true);
+  const observeData = await observeResp.json();
+  expect(observeData.ok).toBe(true);
+  expect(observeData.content).toHaveProperty('success', true);
+  expect(observeData.content).toHaveProperty('syncId');
+  expect(typeof observeData.content.syncId).toBe('string');
+
+  const validateResp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: {
+      command: 'twin_validate_sync',
+      payload: {
+        syncId: observeData.content.syncId,
+        validated: true,
+      },
+    },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(validateResp.ok()).toBe(true);
+  const validateData = await validateResp.json();
+  expect(validateData.ok).toBe(true);
+  expect(validateData.content).toMatchObject({
+    success: true,
+    syncId: observeData.content.syncId,
+    validated: true,
+  });
+});
+
+test('POST /api/invoke twin_submit_observation rejects invalid confidence payload', async ({ request }) => {
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
+  });
+
+  const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: {
+      command: 'twin_submit_observation',
+      payload: {
+        observationType: 'style',
+        content: 'structured framework',
+        confidence: 1.2,
+      },
+    },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(resp.ok()).toBe(true);
+  const data = await resp.json();
+  expect(data.ok).toBe(false);
+  expect(data.error).toContain('confidence must be between 0.0 and 1.0');
+});
+
+test('POST /api/invoke twin_apply_evolution returns new phase metadata on valid payload', async ({ request }) => {
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
+  });
+
+  const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: {
+      command: 'twin_apply_evolution',
+      payload: {
+        evolutionType: 'trait_adjustment',
+        target: 'sincerity',
+        delta: 0.2,
+        isDeepChange: false,
+        validatedByKevin: true,
+      },
+    },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(resp.ok()).toBe(true);
+  const data = await resp.json();
+  expect(data.ok).toBe(true);
+  expect(data.content).toHaveProperty('success', true);
+  expect(typeof data.content.evolutionId).toBe('string');
+  expect(typeof data.content.newFusionIndex).toBe('number');
+  expect(typeof data.content.newPhase).toBe('string');
+  expect(typeof data.content.timestamp).toBe('string');
+});
+
+test('POST /api/invoke twin_apply_evolution rejects invalid delta payload', async ({ request }) => {
+  const access_token = await getRemoteAccessToken(request, {
+    baseUrl: REMOTE_BASE_URL,
+    secret: REMOTE_SECRET,
+  });
+
+  const resp = await request.post(`${REMOTE_BASE_URL}/api/invoke`, {
+    data: {
+      command: 'twin_apply_evolution',
+      payload: {
+        evolutionType: 'trait_adjustment',
+        target: 'sincerity',
+        delta: 1.5,
+        isDeepChange: false,
+        validatedByKevin: true,
+      },
+    },
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  expect(resp.ok()).toBe(true);
+  const data = await resp.json();
+  expect(data.ok).toBe(false);
+  expect(data.error).toContain('delta must be between -1.0 and 1.0');
 });
 
 // ── Refresh token ────────────────────────────────────────────

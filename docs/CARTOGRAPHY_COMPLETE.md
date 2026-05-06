@@ -230,6 +230,12 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > La preuve est portée par `src/__tests__/hooks/useTwinEvolution.test.tsx`, `src/__tests__/hooks/useTwinBehavior.test.tsx` et la non-régression `src/__tests__/twins/twins-context-chain.test.ts`, montrant que la mutation Twin rafraîchit bien le contexte partagé destiné à l injection chat et qu un échec de refresh reste visible sans perdre l observation locale.
 
+## 2026-05-06 — Remote Gateway Twin mutation proof lane
+
+> La lane Playwright `e2e/remote-gateway.spec.ts` couvre maintenant non seulement les lectures Twin (`twin_get_identity`, `twin_get_evolution_profile`, `twin_get_fusion_index`) mais aussi le chemin mutation distant complet: `twin_submit_observation`, `twin_validate_sync` et `twin_apply_evolution`, avec assertions positives et négatives sur les bornes payload.
+
+> La qualification a aussi réaligné les assertions de lecture sur la vérité runtime réelle exposée par la gateway debug courante (`name/coreValues/humanStyle` pour l identité, `growthTrends/syncScore/milestonesCount` pour le profil). Preuve: `TITANE_E2E_REMOTE_STRICT=1 TITANE_REMOTE_E2E_SECRET=... pnpm exec playwright test e2e/remote-gateway.spec.ts --reporter=line` => 16 PASS.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :
