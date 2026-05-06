@@ -19,7 +19,7 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | A1 | Version / Release / Proof Authority Alignment | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A1_VERSION_RELEASE_AUTHORITY_2026-05-06/` | PASS=51 FAIL=0 | eval champions stale v28.0.0 (B0) | — | no runtime changes | D1-D5 drift noted, CHANGELOG gap, 33.0.9 unbuilt | A2 | T0/T1 yes |
 | A2 | External AI Engineering Source Map | CLEAN | (this commit) | `proof_packs/LOCK_A2_AI_ENGINEERING_SOURCE_MAP_2026-05-06/` | PASS=51 FAIL=0 | — | 12 sources verified | no runtime changes | KEVIN_AXIS has no external source (acceptable) | B0 | T0 yes |
 | B0 | Eval Champion Realignment | DRIFT_FOUND_FIXED | 2026-05-06 | — | — | — | — | — | model drift | B1 | T1 yes |
-| B1 | Cognitive Core Truth Matrix | CLEAN | 2026-05-06 | — | — | — | — | — | stub coverage | B2 | T0/T1 yes |
+| B1 | Cognitive Core Truth Matrix | CLEAN | 7c63eb311 | `proof_packs/LOCK_B1_COGNITIVE_CORE_TRUTH_MATRIX_2026-05-06/` | verify_instructions PASS=51; detect_recurrence PASS=1646 (B1) | COGNITIVE_CORE_TRUTH_SCORECARD baseline | S004,S010 linked | no runtime changes | proof pack normalized in B1I | B2 | T0/T1 yes |
 | B2 | Intelligence Observability Contract | CLEAN | 2026-05-06 | — | — | — | — | — | Ring 3 risk | C0 | T2 bounded |
 | C0 | Provider / Model Intelligence Routing | DRIFT_FOUND_FIXED | 2026-05-06 | — | — | — | — | — | CRITICAL — prod routing | C1 | T3 flag required |
 | C1 | MemoryGraph v2 Shadow Mode | CLEAN | 2026-05-06 | — | — | — | — | — | persistence risk | C2 | T3 flag required |
@@ -78,6 +78,15 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 - **proof_pack**: `proof_packs/LOCK_A2_AI_ENGINEERING_SOURCE_MAP_2026-05-06/`
 - **source_map**: `docs/research/AI_ENGINEERING_SOURCE_MAP.md`
 - **worktree_safe**: yes
+
+### B1I — B1 Ingress / Completion Audit
+- **status**: DRIFT_FOUND_FIXED
+- **classification**: B1_PARTIAL_COMMITTED
+- **finding**: `docs/reports/COGNITIVE_CORE_TRUTH_MATRIX.md` exists and commit `7c63eb311` exists, but proof pack was incomplete (missing `ROLLBACK.md` and `VALIDATORS.log` at minimum)
+- **normalization**: B1 proof pack completed in-place (append-only) with missing governance files
+- **validators_now**: verify_instructions PASS=51 FAIL=0; verify_evals_scaffold PASS=42 FAIL=0; detect_recurrence PASS entries=1657
+- **runtime_changes**: none
+- **next_lock**: B2 (already completed historically in current branch)
 
 ---
 
