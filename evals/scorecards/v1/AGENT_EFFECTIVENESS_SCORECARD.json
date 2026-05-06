@@ -1,0 +1,43 @@
+{
+  "scorecard_id": "AGENT_EFFECTIVENESS_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Measures the reliability and success rate of TITANE's agent tool calls, IPC interactions, and multi-step reasoning chains. Detects silent failures and dead-end reasoning loops.",
+  "source_references": [
+    "S003 ReAct (agent_orchestration)",
+    "S006 ToolLLM (tool_use_reliability)",
+    "S011 Injection Survey (security_prompt_injection)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "AE-01": {
+      "name": "ipc_contract_ok_content_error_honored",
+      "blocking": true
+    },
+    "AE-02": {
+      "name": "no_silent_tool_call_failure",
+      "blocking": true
+    },
+    "AE-03": {
+      "name": "multi_step_chain_completes_or_fails_explicitly",
+      "blocking": true
+    },
+    "AE-04": {
+      "name": "react_trace_available_for_debugging",
+      "blocking": false
+    },
+    "AE-05": {
+      "name": "injection_detection_on_tool_output",
+      "blocking": true
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

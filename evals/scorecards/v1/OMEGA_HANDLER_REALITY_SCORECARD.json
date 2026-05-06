@@ -1,0 +1,42 @@
+{
+  "scorecard_id": "OMEGA_HANDLER_REALITY_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Verifies that the OMEGA conversation pipeline (conversation_generate IPC) handles real requests with provable traces, correct model dispatch, and no fake-PASS responses.",
+  "source_references": [
+    "S003 ReAct (agent_orchestration)",
+    "S006 ToolLLM (tool_use_reliability)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "OH-01": {
+      "name": "omega_produces_real_llm_call_not_stub",
+      "blocking": true
+    },
+    "OH-02": {
+      "name": "model_used_logged_in_ipc_response",
+      "blocking": true
+    },
+    "OH-03": {
+      "name": "omega_fallback_explicitly_labeled_not_silent",
+      "blocking": true
+    },
+    "OH-04": {
+      "name": "react_style_trace_in_debug_mode",
+      "blocking": false
+    },
+    "OH-05": {
+      "name": "omega_latency_within_acceptable_bound",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

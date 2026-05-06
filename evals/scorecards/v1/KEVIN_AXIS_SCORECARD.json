@@ -1,0 +1,41 @@
+{
+  "scorecard_id": "KEVIN_AXIS_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "TITANE-internal personal identity evaluation. Verifies that TITANE's responses to Kevin remain accurate, honest, and personality-aligned. No external source applicable \u2014 evaluated against Kevin's personal corpus.",
+  "source_references": [
+    "TITANE-internal \u2014 see memory/kevin_corpus/ and docs/kevin_profile/"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "KA-01": {
+      "name": "kevin_identity_not_fabricated",
+      "blocking": true
+    },
+    "KA-02": {
+      "name": "kevin_preference_recall_accurate",
+      "blocking": true
+    },
+    "KA-03": {
+      "name": "no_hallucinated_personal_facts",
+      "blocking": true
+    },
+    "KA-04": {
+      "name": "personality_tone_consistent",
+      "blocking": false
+    },
+    "KA-05": {
+      "name": "long_term_memory_recall_verified",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

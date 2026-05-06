@@ -1,0 +1,42 @@
+{
+  "scorecard_id": "MEMORY_RETRIEVAL_QUALITY_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Evaluates the precision, recall, and faithfulness of TITANE's memory retrieval pipeline using RAGAS-inspired metrics. Detects hallucinated memory items and stale recall.",
+  "source_references": [
+    "S002 RAGAS (rag_eval)",
+    "S007 MemGPT (memory_architectures)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "MR-01": {
+      "name": "retrieved_context_faithful_to_stored_memory",
+      "blocking": true
+    },
+    "MR-02": {
+      "name": "no_hallucinated_memory_items_in_response",
+      "blocking": true
+    },
+    "MR-03": {
+      "name": "memory_recall_precision_above_threshold",
+      "blocking": false
+    },
+    "MR-04": {
+      "name": "stm_ltm_paging_contract_honored",
+      "blocking": true
+    },
+    "MR-05": {
+      "name": "memory_round_trip_complete_for_session",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

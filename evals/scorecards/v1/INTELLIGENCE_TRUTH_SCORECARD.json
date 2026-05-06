@@ -1,0 +1,43 @@
+{
+  "scorecard_id": "INTELLIGENCE_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Measures whether TITANE's intelligence claims are grounded in measurable, provable runtime behavior. Detects gaps between stated capabilities and actual execution.",
+  "source_references": [
+    "S001 HELM (llm_eval)",
+    "S004 LangSmith (llm_observability)",
+    "S010 PromptBench (prompt_instruction_governance)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "IT-01": {
+      "name": "response_grounded_in_evidence",
+      "blocking": true
+    },
+    "IT-02": {
+      "name": "capability_claims_verified_by_test",
+      "blocking": true
+    },
+    "IT-03": {
+      "name": "no_intelligence_theater_without_trace",
+      "blocking": true
+    },
+    "IT-04": {
+      "name": "multi_metric_eval_performed",
+      "blocking": false
+    },
+    "IT-05": {
+      "name": "eval_champion_current_within_3_versions",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

@@ -1,0 +1,41 @@
+{
+  "scorecard_id": "RESEARCH_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Verifies that TITANE's research and knowledge retrieval responses cite verifiable sources, acknowledge knowledge cutoffs, and do not present stale facts as current.",
+  "source_references": [
+    "S008 Temporal QA (knowledge_freshness)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "RT-01": {
+      "name": "no_temporal_hallucination",
+      "blocking": true
+    },
+    "RT-02": {
+      "name": "knowledge_cutoff_acknowledged_when_relevant",
+      "blocking": true
+    },
+    "RT-03": {
+      "name": "source_citation_verifiable",
+      "blocking": true
+    },
+    "RT-04": {
+      "name": "freshness_metadata_on_retrieved_facts",
+      "blocking": false
+    },
+    "RT-05": {
+      "name": "confidence_decay_applied_to_stale_knowledge",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

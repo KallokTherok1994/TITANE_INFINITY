@@ -18,7 +18,7 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | A0 | Instruction System Alignment + Bounded Research + Autopilot Boundary | DRIFT_FOUND_FIXED | f739bc412 | `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/` | PASS=51 FAIL=0 | — | 3 VERIFIED, 3 TO_VERIFY, 0 adopted without verification | no runtime changes | vocab drift (SEALED→DRIFT_FOUND_FIXED per v6) | A1 | bounded |
 | A1 | Version / Release / Proof Authority Alignment | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A1_VERSION_RELEASE_AUTHORITY_2026-05-06/` | PASS=51 FAIL=0 | eval champions stale v28.0.0 (B0) | — | no runtime changes | D1-D5 drift noted, CHANGELOG gap, 33.0.9 unbuilt | A2 | T0/T1 yes |
 | A2 | External AI Engineering Source Map | CLEAN | (this commit) | `proof_packs/LOCK_A2_AI_ENGINEERING_SOURCE_MAP_2026-05-06/` | PASS=51 FAIL=0 | — | 12 sources verified | no runtime changes | KEVIN_AXIS has no external source (acceptable) | B0 | T0 yes |
-| B0 | Eval Champion Realignment | NOT_STARTED | — | — | — | — | — | — | model drift | B1 | T1 yes |
+| B0 | Eval Champion Realignment | DRIFT_FOUND_FIXED | 2026-05-06 | — | — | — | — | — | model drift | B1 | T1 yes |
 | B1 | Cognitive Core Truth Matrix | NOT_STARTED | — | — | — | — | — | — | stub coverage | B2 | T0/T1 yes |
 | B2 | Intelligence Observability Contract | NOT_STARTED | — | — | — | — | — | — | Ring 3 risk | C0 | T2 bounded |
 | C0 | Provider / Model Intelligence Routing | NOT_STARTED | — | — | — | — | — | — | CRITICAL — prod routing | C1 | T3 flag required |

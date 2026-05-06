@@ -1,0 +1,42 @@
+{
+  "scorecard_id": "COGNITIVE_CORE_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Verifies that TITANE's reasoning pipeline (prompt assembly, context management, model dispatch) behaves as documented and does not silently degrade.",
+  "source_references": [
+    "S004 LangSmith (llm_observability)",
+    "S010 PromptBench (prompt_instruction_governance)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "CC-01": {
+      "name": "prompt_assembly_matches_config",
+      "blocking": true
+    },
+    "CC-02": {
+      "name": "context_window_not_silently_truncated",
+      "blocking": true
+    },
+    "CC-03": {
+      "name": "instruction_layer_order_enforced",
+      "blocking": true
+    },
+    "CC-04": {
+      "name": "adversarial_prompt_stability_verified",
+      "blocking": false
+    },
+    "CC-05": {
+      "name": "reasoning_trace_available_on_request",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

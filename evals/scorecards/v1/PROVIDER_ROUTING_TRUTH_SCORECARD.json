@@ -1,0 +1,42 @@
+{
+  "scorecard_id": "PROVIDER_ROUTING_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Verifies that TITANE's provider/model routing is deterministic, documented, and correctly dispatches queries to the appropriate provider (local/remote) based on task type and constraints.",
+  "source_references": [
+    "S009 Mixtral MoE (model_routing)",
+    "S004 LangSmith (llm_observability)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "PR-01": {
+      "name": "routing_decision_logged_and_traceable",
+      "blocking": true
+    },
+    "PR-02": {
+      "name": "local_vs_remote_dispatch_verified",
+      "blocking": true
+    },
+    "PR-03": {
+      "name": "fallback_provider_explicitly_labeled",
+      "blocking": true
+    },
+    "PR-04": {
+      "name": "routing_deterministic_for_same_task_type",
+      "blocking": false
+    },
+    "PR-05": {
+      "name": "latency_budget_respected_for_provider_choice",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}

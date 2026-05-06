@@ -1,0 +1,42 @@
+{
+  "scorecard_id": "SINGULARITY_MEASUREMENT_SCORECARD",
+  "version": "v1",
+  "champion": null,
+  "champion_tag": null,
+  "date": "2026-05-06",
+  "scored_date": null,
+  "node_version": null,
+  "status": "STUB_NO_CHAMPION",
+  "description": "Provides observable, measurable metrics for TITANE's evolving intelligence layer. Tracks improvement over time with evidence, not narrative.",
+  "source_references": [
+    "S003 ReAct (agent_orchestration)",
+    "S004 LangSmith (llm_observability)"
+  ],
+  "evidence": {},
+  "dimensions": {
+    "SM-01": {
+      "name": "intelligence_delta_measured_not_claimed",
+      "blocking": true
+    },
+    "SM-02": {
+      "name": "baseline_comparison_available_for_each_release",
+      "blocking": true
+    },
+    "SM-03": {
+      "name": "improvement_trace_tied_to_specific_commit",
+      "blocking": true
+    },
+    "SM-04": {
+      "name": "regression_detected_if_score_drops_5pct",
+      "blocking": false
+    },
+    "SM-05": {
+      "name": "scorecard_champion_updated_at_each_proven_release",
+      "blocking": false
+    }
+  },
+  "scoring": "Each dimension: 0=FAIL, 1=PASS. Blocking dimensions must all be 1 for champion promotion.",
+  "overall_score": null,
+  "promotion_decision": "PENDING_FIRST_EVAL",
+  "note": "Stub created by Lock B0 (2026-05-06). No champion established yet. First eval required to set champion baseline."
+}
