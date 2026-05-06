@@ -177,6 +177,29 @@ export const IntelligenceTraceSchema = z.object({
     .describe('Raw OmegaTraceMeta from IPC — pass-through for eval harness indexing'),
 });
 
+/**
+ * v8 canonical decision envelope used by advanced intelligence lock sequence.
+ * This is a passive contract: no runtime wiring is performed in this lock.
+ */
+export const IntelligenceDecisionEnvelopeSchema = z.object({
+  request_id: z.string().min(1),
+  conversation_id: z.string().min(1),
+  mode: z.string().min(1),
+  intent: z.string().min(1),
+  risk_level: z.string().min(1),
+  memory_used: z.boolean(),
+  knowledge_used: z.boolean(),
+  research_used: z.boolean(),
+  provider_selected: z.string().min(1),
+  model_selected: z.string().min(1),
+  reasoning_depth: z.string().min(1),
+  confidence: z.number().min(0).max(1),
+  known_limits: z.array(z.string()),
+  fallback_used: z.boolean(),
+  proof_required: z.array(z.string()),
+  trace_id: z.string().min(1),
+  desktop_trace_id: z.string().min(1),
+});
 // ═══════════════════════════════════════════════════════════════════════════
 // VALIDATION FUNCTIONS — feature-flag gated
 // ═══════════════════════════════════════════════════════════════════════════
@@ -213,6 +236,14 @@ export function validateIntelligenceTrace(raw: unknown): TraceValidationResult {
   } catch (e) {
     return { ok: false, errors: [`schema_eval_error: ${String(e)}`] };
   }
+}
+
+export type IntelligenceDecisionEnvelope = z.infer<typeof IntelligenceDecisionEnvelopeSchema>;
+
+export function buildIntelligenceDecisionEnvelope(
+  payload: IntelligenceDecisionEnvelope
+): IntelligenceDecisionEnvelope {
+  return IntelligenceDecisionEnvelopeSchema.parse(payload);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

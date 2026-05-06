@@ -18,6 +18,8 @@ import {
   TokenBudgetSchema,
   EvalFeedbackSchema,
   IntelligenceTraceSchema,
+  IntelligenceDecisionEnvelopeSchema,
+  buildIntelligenceDecisionEnvelope,
   validateIntelligenceTrace,
 } from '../IntelligenceObservabilityContract';
 
@@ -242,7 +244,7 @@ describe('IntelligenceTraceSchema', () => {
 
 describe('validateIntelligenceTrace — feature flag behavior', () => {
   it('returns feature_flag_blocked when INTELLIGENCE_OBSERVABILITY_ENABLED is false', () => {
-    // In test environment, VITE_ env vars are not set → flag defaults to false
+    // In test environment, VITE_ env vars are not set -> flag defaults to false
     const result = validateIntelligenceTrace({
       session: {
         session_id: 'sess_001',
@@ -256,7 +258,7 @@ describe('validateIntelligenceTrace — feature flag behavior', () => {
       },
     });
 
-    // In test env flag = false → returns blocked, not a data error
+    // In test env flag = false -> returns blocked, not a data error
     if (!result.ok && result.feature_flag_blocked) {
       expect(result.feature_flag_blocked).toBe(true);
       expect(result.errors[0]).toContain('INTELLIGENCE_OBSERVABILITY_ENABLED=false');
@@ -276,5 +278,53 @@ describe('validateIntelligenceTrace — feature flag behavior', () => {
     if (!result.success) {
       expect(result.error.issues.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe('IntelligenceDecisionEnvelopeSchema', () => {
+  const validEnvelope = {
+    request_id: 'req-1',
+    conversation_id: 'conv-1',
+    mode: 'standard',
+    intent: 'answer',
+    risk_level: 'low',
+    memory_used: true,
+    knowledge_used: true,
+    research_used: false,
+    provider_selected: 'ollama',
+    model_selected: 'gemma2:2b',
+    reasoning_depth: 'medium',
+    confidence: 0.82,
+    known_limits: ['temporal_freshness'],
+    fallback_used: false,
+    proof_required: ['trace_visibility'],
+    trace_id: 'trace-1',
+    desktop_trace_id: 'desktop-trace-1',
+  };
+
+  it('accepts a valid v8 envelope', () => {
+    const result = IntelligenceDecisionEnvelopeSchema.safeParse(validEnvelope);
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects confidence out of range', () => {
+    const result = IntelligenceDecisionEnvelopeSchema.safeParse({
+      ...validEnvelope,
+      confidence: 1.2,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('requires desktop_trace_id', () => {
+    const payload = { ...validEnvelope } as Record<string, unknown>;
+    delete payload.desktop_trace_id;
+    const result = IntelligenceDecisionEnvelopeSchema.safeParse(payload);
+    expect(result.success).toBe(false);
+  });
+
+  it('buildIntelligenceDecisionEnvelope returns parsed payload', () => {
+    const envelope = buildIntelligenceDecisionEnvelope(validEnvelope);
+    expect(envelope.trace_id).toBe('trace-1');
+    expect(envelope.desktop_trace_id).toBe('desktop-trace-1');
   });
 });

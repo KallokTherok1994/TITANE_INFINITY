@@ -18,9 +18,15 @@ feature flag (default=false). Zero behavior activation in scaffold mode.
 
 | Gate | Status |
 |------|--------|
-| vitest (22 tests) | PASS=22 FAIL=0 |
+| vitest (26 tests) | PASS=26 FAIL=0 |
 | verify_instructions.sh | PASS=51 FAIL=0 |
-| detect_recurrence.sh | PASS (entries=1647) |
+| detect_recurrence.sh | PASS (entries=1660) |
 
 ## Drift Addressed
 - CD-05 (COGNITIVE_CORE_TRUTH_MATRIX): OmegaTraceMeta not surfaced to eval harness — ADDRESSED (scaffold)
+
+## v8 Extension
+- Added `IntelligenceDecisionEnvelopeSchema` including `desktop_trace_id`.
+- Added `buildIntelligenceDecisionEnvelope()` parser helper.
+- Added contract documentation in `docs/intelligence/INTELLIGENCE_OBSERVABILITY_CONTRACT.md`.
+- Lock remains passive (feature-flag gated, no silent activation).

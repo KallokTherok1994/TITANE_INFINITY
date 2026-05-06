@@ -1841,3 +1841,13 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > Intégration canonique: `src/components/AgentDashboardsPanel.tsx` importe et rend `LogAnalysisDashboard`; le catalogue agents avancés déclare `log_analysis` dans `src/services/agents/advancedAgentCatalog.ts`.
 
 > Chaîne runtime: commande IPC `analyze_logs_intelligent` (devtools Rust) -> service log_analysis -> rapport intelligent JSON+Markdown -> dashboard log-analysis avec selectors stables.
+
+## Delta 2026-05-06 — Lock B2 Observability Extension
+
+- Surface: src/services/observability/IntelligenceObservabilityContract.ts
+- Change type: T2 schema extension (no runtime activation)
+- Added canonical IntelligenceDecisionEnvelopeSchema including desktop_trace_id
+- Added parser helper buildIntelligenceDecisionEnvelope()
+- Tests extended in src/services/observability/__tests__/IntelligenceObservabilityContract.test.ts (26 PASS)
+- Documentation synced: docs/intelligence/INTELLIGENCE_OBSERVABILITY_CONTRACT.md
+- Proof pack normalized: proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/
