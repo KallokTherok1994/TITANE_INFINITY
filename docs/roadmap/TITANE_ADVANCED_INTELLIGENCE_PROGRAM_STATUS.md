@@ -23,7 +23,7 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | B2 | Intelligence Observability Contract | CLEAN | 2026-05-06 | — | — | — | — | — | Ring 3 risk | C0 | T2 bounded |
 | C0 | Provider / Model Intelligence Routing | DRIFT_FOUND_FIXED | 2026-05-06 | — | — | — | — | — | CRITICAL — prod routing | C1 | T3 flag required |
 | C1 | MemoryGraph v2 Shadow Mode | CLEAN | 2026-05-06 | — | — | — | — | — | persistence risk | C2 | T3 flag required |
-| C2 | Knowledge Governance | NOT_STARTED | — | — | — | — | — | — | — | C3 | T2 bounded |
+| C2 | Knowledge Governance | CLEAN | 2026-05-06 | — | — | — | — | — | CD-04 | C3 | T2 bounded |
 | C3 | Research Truth Engine | NOT_STARTED | — | — | — | — | — | — | — | D0 | T2/T3 flag required |
 | D0 | Agent Effectiveness System | NOT_STARTED | — | — | — | — | — | — | — | D1 | T1/T2 yes |
 | D1 | OMEGA Real Handler Upgrade | NOT_STARTED | — | — | — | — | — | — | CRITICAL — prod pipeline | D2 | T3 flag required |
