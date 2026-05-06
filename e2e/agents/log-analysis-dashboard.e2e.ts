@@ -12,7 +12,9 @@ test('Log analysis dashboard visible avec rapport intelligent', async ({ page })
 
   await expect(dashboard).toBeVisible();
   await expect(dashboard).toHaveAttribute('data-readiness', 'partial');
-  await expect(page.getByTestId('log-analysis-dashboard-status')).toContainText('PARTIAL');
+  await expect(page.getByTestId('log-analysis-dashboard-status')).toContainText(
+    'PARTIAL'
+  );
   await expect(page.getByTestId('log-analysis-dashboard-proof-0')).toBeVisible();
   await expect(page.getByTestId('log-analysis-dashboard-report')).toBeVisible();
   await expect(page.getByTestId('log-analysis-dashboard-markdown-preview')).toBeVisible();

@@ -61,7 +61,9 @@ const LogAnalysisDashboard: React.FC = () => {
           <p style={{ margin: 0, fontSize: 12, opacity: 0.8 }}>Agent avance</p>
           <h2 style={{ margin: '4px 0 0', fontSize: 16 }}>{status.title}</h2>
         </div>
-        <strong data-testid="log-analysis-dashboard-status">{status.readinessLabel}</strong>
+        <strong data-testid="log-analysis-dashboard-status">
+          {status.readinessLabel}
+        </strong>
       </header>
 
       <p data-testid="log-analysis-dashboard-summary" style={{ marginBottom: 10 }}>
@@ -92,7 +94,10 @@ const LogAnalysisDashboard: React.FC = () => {
         {isRefreshing ? 'Analyse en cours...' : 'Analyser maintenant'}
       </button>
 
-      <ul data-testid="log-analysis-dashboard-proof-list" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="log-analysis-dashboard-proof-list"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.evidence.map((item, index) => (
           <li key={item} data-testid={`log-analysis-dashboard-proof-${index}`}>
             {item}
@@ -100,13 +105,19 @@ const LogAnalysisDashboard: React.FC = () => {
         ))}
       </ul>
 
-      <ul data-testid="log-analysis-dashboard-blockers" style={{ margin: '0 0 8px', paddingLeft: 18 }}>
+      <ul
+        data-testid="log-analysis-dashboard-blockers"
+        style={{ margin: '0 0 8px', paddingLeft: 18 }}
+      >
         {status.blockers.map(blocker => (
           <li key={blocker}>{blocker}</li>
         ))}
       </ul>
 
-      <p data-testid="log-analysis-dashboard-next-step" style={{ margin: '0 0 10px', fontSize: 13 }}>
+      <p
+        data-testid="log-analysis-dashboard-next-step"
+        style={{ margin: '0 0 10px', fontSize: 13 }}
+      >
         {status.nextStep}
       </p>
 
@@ -118,13 +129,18 @@ const LogAnalysisDashboard: React.FC = () => {
           paddingTop: 8,
         }}
       >
-        <p data-testid="log-analysis-dashboard-freshness" style={{ margin: '0 0 6px', fontSize: 12 }}>
+        <p
+          data-testid="log-analysis-dashboard-freshness"
+          style={{ margin: '0 0 6px', fontSize: 12 }}
+        >
           {snapshot.report
             ? `Fraicheur du rapport: ${snapshot.freshnessSeconds ?? 0}s (source=${snapshot.source})`
             : 'Rapport non disponible'}
         </p>
 
-        <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.8 }}>Aperçu rapport intelligent</p>
+        <p style={{ margin: '0 0 4px', fontSize: 12, opacity: 0.8 }}>
+          Aperçu rapport intelligent
+        </p>
         <pre
           data-testid="log-analysis-dashboard-markdown-preview"
           style={{
@@ -151,7 +167,9 @@ const LogAnalysisDashboard: React.FC = () => {
                 <li>Aucune anomalie détectée.</li>
               ) : (
                 snapshot.report.anomalies.map(entry => (
-                  <li key={entry.id}>{`[${entry.severity.toUpperCase()}] ${entry.source} · ${entry.message}`}</li>
+                  <li
+                    key={entry.id}
+                  >{`[${entry.severity.toUpperCase()}] ${entry.source} · ${entry.message}`}</li>
                 ))
               )}
             </ul>

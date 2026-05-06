@@ -183,7 +183,9 @@ export function analyzeLogsLocally(logs: RawLogEntry[]): LogAnalysisReport {
   }
 
   const anomalyScoreRaw =
-    totalLogs === 0 ? 0 : (errorLogs.length * 2 + warningLogs.length + anomalies.length) / totalLogs;
+    totalLogs === 0
+      ? 0
+      : (errorLogs.length * 2 + warningLogs.length + anomalies.length) / totalLogs;
 
   const improvementOpportunities: string[] = [
     'Uniformiser correlation_id/session_id sur les erreurs critiques pour accélérer l analyse croisée.',
