@@ -139,6 +139,7 @@ if bash scripts/verify/verify_prompt_files_index.sh >/dev/null 2>&1; then ok "G_
 if bash scripts/verify/verify_local_markers_consistency.sh >/dev/null 2>&1; then ok "G_LOCAL_MARKERS_PASS"; else ko "G_LOCAL_MARKERS_PASS"; fi
 if bash scripts/verify/verify-advanced-agents.sh >/dev/null 2>&1; then ok "G_ADVANCED_AGENTS_PASS"; else ko "G_ADVANCED_AGENTS_PASS"; fi
 if bash scripts/verify/verify-ollama-copilot-boundary.sh >/dev/null 2>&1; then ok "G_OLLAMA_BOUNDARY_PASS"; else ko "G_OLLAMA_BOUNDARY_PASS"; fi
+if bash scripts/verify/verify-agent-tooling.sh >/dev/null 2>&1; then ok "G_AGENT_TOOLING_PASS"; else ko "G_AGENT_TOOLING_PASS"; fi
 
 echo "SUMMARY: PASS=$PASS FAIL=$FAIL"
 if [[ $FAIL -gt 0 ]]; then

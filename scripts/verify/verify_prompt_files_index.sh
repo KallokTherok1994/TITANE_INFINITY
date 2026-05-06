@@ -30,6 +30,21 @@ for f in "${required[@]}"; do
   fi
 done
 
+# Frontmatter field validation: every required prompt must declare mode: and description:
+for f in "${required[@]}"; do
+  if [[ ! -f "$f" ]]; then continue; fi
+  if grep -q '^description:[[:space:]]' "$f" 2>/dev/null; then
+    pass "PROMPT_FRONTMATTER_DESCRIPTION ${f##*/}"
+  else
+    fail "PROMPT_FRONTMATTER_DESCRIPTION_MISSING ${f##*/}"
+  fi
+  if grep -q '^mode:[[:space:]]' "$f" 2>/dev/null; then
+    pass "PROMPT_FRONTMATTER_MODE ${f##*/}"
+  else
+    fail "PROMPT_FRONTMATTER_MODE_MISSING ${f##*/}"
+  fi
+done
+
 # Prompt-agent delegation marker guard.
 # Prompts that drive a specialist agent must declare it explicitly with the
 # canonical marker: > **Agent**: invoke <agent-name> for this session.
