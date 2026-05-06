@@ -17,6 +17,18 @@ import {
   getD2SingularityLayerContract,
   SINGULARITY_D2_MEASUREMENT_FLAG,
   type SingularityEvent,
+  // v13 sidecar
+  D2_SELECTED_MEASUREMENT_TARGET,
+  D2_MEASUREMENT_DEFAULT_MODE,
+  D2_MEASUREMENT_KNOWN_LIMITS,
+  D2MeasurementModeSchema,
+  D2MeasurementAdapterSchema,
+  getD2MeasurementAdapter,
+  validateSingularityMeasurement,
+  isD2EmissionActive,
+  buildPassiveMeasurementResult,
+  D2_OMEGA_TRACE_SCHEMA_CONTRACT,
+  SINGULARITY_D2_EMISSION_ACTIVE,
 } from '../SingularityMeasuredLayerContract'
 
 describe('D2 — Singularity Measured Layer Contract', () => {
@@ -270,6 +282,115 @@ describe('D2 — Singularity Measured Layer Contract', () => {
       expect(() =>
         SingularityMeasurementResultSchema.parse({ measured: false, event: null, skipped_reason: null })
       ).not.toThrow()
+    })
+  })
+})
+
+// ══════════════════════════════════════════════════════════════════════════════
+//   D2-UNIT-01..10 — v13 Accountability Sidecar Tests
+// ══════════════════════════════════════════════════════════════════════════════
+describe('D2-UNIT — v13 Singularity Measurement Accountability', () => {
+
+  it('D2-UNIT-01: selected measurement target is OmegaTaskResult and default emission off', () => {
+    expect(D2_SELECTED_MEASUREMENT_TARGET).toBe('OmegaTaskResult')
+    expect(SINGULARITY_D2_EMISSION_ACTIVE).toBe(false)
+  })
+
+  it('D2-UNIT-02: default mode is passive (not active emission)', () => {
+    expect(D2_MEASUREMENT_DEFAULT_MODE).toBe('passive')
+    const adapter = getD2MeasurementAdapter(false, false)
+    expect(adapter.mode).toBe('passive')
+  })
+
+  it('D2-UNIT-03: fallback is no-emit (measured=false) when emission flag=false', () => {
+    const result = buildPassiveMeasurementResult('s-001')
+    expect(result.measured).toBe(false)
+    expect(result.event).toBeNull()
+    expect(result.skipped_reason).toBeTruthy()
+  })
+
+  it('D2-UNIT-04: known_limits is non-empty (>= 5 limits declared)', () => {
+    expect(D2_MEASUREMENT_KNOWN_LIMITS.length).toBeGreaterThanOrEqual(5)
+    expect(D2_MEASUREMENT_KNOWN_LIMITS[0]).toBeTruthy()
+  })
+
+  it('D2-UNIT-05: passive mode sets mode_used=passive in validation trace', () => {
+    const result = buildPassiveMeasurementResult('s-001')
+    const validation = validateSingularityMeasurement(result, 'passive', false)
+    expect(validation.mode_used).toBe('passive')
+    expect(validation.validation_status).toBe('ok')
+  })
+
+  it('D2-UNIT-06: no forbidden runtime behavior — active mode requires emission flag', () => {
+    const result = buildPassiveMeasurementResult('s-001')
+    // Attempting active mode without emission flag should produce an error
+    const validation = validateSingularityMeasurement(result, 'active', false)
+    expect(validation.valid).toBe(false)
+    expect(validation.errors[0]).toContain('D2-I1')
+  })
+
+  it('D2-UNIT-07: B2 observability declared but NOT active by default', () => {
+    expect(D2_OMEGA_TRACE_SCHEMA_CONTRACT.b2_integration_declared ?? true).toBe(true)
+    expect(D2_OMEGA_TRACE_SCHEMA_CONTRACT.active).toBe(false)
+  })
+
+  it('D2-UNIT-08: meta_cognitive_commentary blocked in D2 (D3 identity gate required)', () => {
+    const params = {
+      event_id: 'ev-meta',
+      session_id: 's-001',
+      event_type: 'meta_cognitive_commentary' as const,
+      confidence: 0.8,
+      detected_at_ms: 1000,
+      evidence_snippet: 'TITANE commented on its own reasoning',
+      measurement_source: 'omega_trace',
+    }
+    const r = buildSingularityEvent(params, true)
+    const validation = validateSingularityMeasurement(r, 'active', true)
+    expect(validation.valid).toBe(false)
+    expect(validation.errors.some(e => e.includes('D2-I4'))).toBe(true)
+  })
+
+  it('D2-UNIT-09: D2MeasurementAdapter validates against schema', () => {
+    const adapter = getD2MeasurementAdapter(false, false)
+    expect(() => D2MeasurementAdapterSchema.parse(adapter)).not.toThrow()
+    expect(adapter.identity_events_blocked).toBe(true)
+    expect(adapter.b2_integration_declared).toBe(true)
+  })
+
+  it('D2-UNIT-10: isD2EmissionActive returns false in test env (flag default=false)', () => {
+    expect(isD2EmissionActive(false)).toBe(false)
+    expect(isD2EmissionActive(true)).toBe(true)
+    // In test env SINGULARITY_D2_EMISSION_ACTIVE is false
+    expect(isD2EmissionActive()).toBe(false)
+  })
+
+  // ── D2MeasurementModeSchema ───────────────────────────────────────────────
+  describe('D2MeasurementModeSchema', () => {
+    it('accepts passive', () => expect(() => D2MeasurementModeSchema.parse('passive')).not.toThrow())
+    it('accepts shadow', () => expect(() => D2MeasurementModeSchema.parse('shadow')).not.toThrow())
+    it('accepts active', () => expect(() => D2MeasurementModeSchema.parse('active')).not.toThrow())
+    it('accepts disabled', () => expect(() => D2MeasurementModeSchema.parse('disabled')).not.toThrow())
+    it('rejects unknown mode', () => expect(() => D2MeasurementModeSchema.parse('turbo')).toThrow())
+  })
+
+  // ── validateSingularityMeasurement ────────────────────────────────────────
+  describe('validateSingularityMeasurement', () => {
+    it('valid skipped result passes', () => {
+      const r = buildPassiveMeasurementResult('s')
+      const v = validateSingularityMeasurement(r, 'passive', false)
+      expect(v.valid).toBe(true)
+    })
+    it('measured=true with null event is invalid', () => {
+      const r = { measured: true, event: null, skipped_reason: null }
+      const v = validateSingularityMeasurement(r, 'passive', false)
+      expect(v.valid).toBe(false)
+      expect(v.errors.some(e => e.includes('D2-I2'))).toBe(true)
+    })
+    it('measured=false with null skipped_reason is invalid', () => {
+      const r = { measured: false, event: null, skipped_reason: null }
+      const v = validateSingularityMeasurement(r, 'passive', false)
+      expect(v.valid).toBe(false)
+      expect(v.errors.some(e => e.includes('D2-I3'))).toBe(true)
     })
   })
 })

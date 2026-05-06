@@ -182,3 +182,135 @@ export function getD2SingularityLayerContract(): D2SingularityLayerContract {
     integrates_b2_observability: true,
   }
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+//   D2 v13 ACCOUNTABILITY SIDECAR
+//   Super Prompt v13 — D2 normalization
+//   Selected measurement target: OmegaTaskResult (Memory/Knowledge/Identity)
+//   Default mode: passive (schema + measurement functions, no active emission)
+//   T3 flag gates active emission to B2 observability layer
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── D2 Selected Measurement Target ─────────────────────────────────────────────
+/** Primary target for D2 singularity measurement: OMEGA task result analysis */
+export const D2_SELECTED_MEASUREMENT_TARGET = 'OmegaTaskResult' as const
+
+/** Default measurement mode (passive = schema available, no active emission) */
+export type D2MeasurementMode = 'passive' | 'shadow' | 'active' | 'disabled'
+export const D2MeasurementModeSchema = z.enum(['passive', 'shadow', 'active', 'disabled'])
+
+/** Default measurement mode — passive, no T3 flag required for schema access */
+export const D2_MEASUREMENT_DEFAULT_MODE: D2MeasurementMode = 'passive'
+
+/** T3 runtime emission flag — must be false in production until D3 is complete */
+export const SINGULARITY_D2_EMISSION_ACTIVE =
+  typeof import.meta !== 'undefined' &&
+  (import.meta as Record<string, unknown>).env !== undefined
+    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE'] ?? 'false') === 'true'
+    : false
+
+/** Known limits for D2 singularity measurement (declared, not blocking) */
+export const D2_MEASUREMENT_KNOWN_LIMITS: string[] = [
+  'passive-mode-only: T3 emission flag default=false — no active B2 push until enabled',
+  'no-rust-integration: singularity detection runs in TypeScript layer only',
+  'b2-observability-declared-not-active: B2 integration contract exists but emission path not live',
+  'no-landmark-auto-escalation: landmark events do not trigger automated actions',
+  'identity-event-blocked: meta_cognitive_commentary requires identity gate (D3) before use',
+]
+
+// ── D2 Measurement Adapter Schema ───────────────────────────────────────────────
+export const D2MeasurementAdapterSchema = z.object({
+  measurement_target: z.literal('OmegaTaskResult'),
+  mode: D2MeasurementModeSchema,
+  flag_active: z.boolean(),
+  emission_active: z.boolean(),
+  known_limits: z.array(z.string()).min(1),
+  b2_integration_declared: z.boolean(),
+  identity_events_blocked: z.boolean(),
+})
+export type D2MeasurementAdapter = z.infer<typeof D2MeasurementAdapterSchema>
+
+export function getD2MeasurementAdapter(
+  flagActive = SINGULARITY_D2_MEASUREMENT_FLAG,
+  emissionActive = SINGULARITY_D2_EMISSION_ACTIVE,
+): D2MeasurementAdapter {
+  return {
+    measurement_target: 'OmegaTaskResult',
+    mode: emissionActive ? 'active' : 'passive',
+    flag_active: flagActive,
+    emission_active: emissionActive,
+    known_limits: D2_MEASUREMENT_KNOWN_LIMITS,
+    b2_integration_declared: true,
+    identity_events_blocked: true,
+  }
+}
+
+// ── Validate Singularity Measurement (D2 invariants) ───────────────────────────
+export interface D2MeasurementValidationResult {
+  valid: boolean
+  errors: string[]
+  mode_used: D2MeasurementMode
+  validation_status: 'ok' | 'error' | 'skipped'
+}
+
+export function validateSingularityMeasurement(
+  result: SingularityMeasurementResult,
+  mode: D2MeasurementMode = D2_MEASUREMENT_DEFAULT_MODE,
+  emissionActive = SINGULARITY_D2_EMISSION_ACTIVE,
+): D2MeasurementValidationResult {
+  const errors: string[] = []
+
+  // D2-I1: active emission requires emission flag
+  if (mode === 'active' && !emissionActive) {
+    errors.push('D2-I1: active mode requires VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE=true')
+  }
+
+  // D2-I2: if measured=true, event must be non-null
+  if (result.measured && result.event === null) {
+    errors.push('D2-I2: measured=true requires non-null event')
+  }
+
+  // D2-I3: if measured=false, skipped_reason must be provided
+  if (!result.measured && result.skipped_reason === null) {
+    errors.push('D2-I3: measured=false requires skipped_reason')
+  }
+
+  // D2-I4: meta_cognitive_commentary requires identity gate (blocked in D2)
+  if (result.event?.event_type === 'meta_cognitive_commentary') {
+    errors.push('D2-I4: meta_cognitive_commentary blocked — requires D3 identity gate')
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    mode_used: mode,
+    validation_status: errors.length === 0 ? 'ok' : 'error',
+  }
+}
+
+/** Is D2 active emission live? Returns false in test env (emission flag default=false) */
+export function isD2EmissionActive(emissionActive = SINGULARITY_D2_EMISSION_ACTIVE): boolean {
+  return emissionActive
+}
+
+/** Build a passive measurement result (schema-only, no emission) — for tests / scaffold */
+export function buildPassiveMeasurementResult(
+  session_id: string,
+  reason = 'D2 passive mode — emission flag=false',
+): SingularityMeasurementResult {
+  return {
+    measured: false,
+    event: null,
+    skipped_reason: reason,
+  }
+}
+
+/** D2 OMEGA trace schema contract — links measurement layer to B2 observability */
+export const D2_OMEGA_TRACE_SCHEMA_VERSION = 'v2.0.0' as const
+export const D2_OMEGA_TRACE_SCHEMA_CONTRACT = {
+  version: D2_OMEGA_TRACE_SCHEMA_VERSION,
+  source_lock: 'D2',
+  target_layer: 'B2_observability',
+  emission_path: 'SingularityEvent → B2 IntelligenceObservabilityTrace',
+  active: SINGULARITY_D2_EMISSION_ACTIVE,
+} as const
