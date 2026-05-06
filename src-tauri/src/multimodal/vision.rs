@@ -513,10 +513,6 @@ mod tests {
             .expect("dominant color extraction should succeed");
 
         assert_eq!(colors.len(), 5);
-        // Colors should be valid RGB values
-        for (r, g, b) in colors {
-            assert!(r <= 255 && g <= 255 && b <= 255);
-        }
     }
 
     #[test]

@@ -158,7 +158,7 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
           data-testid="unified-launcher-launch-button"
           className={[
             'w-full py-2.5 px-4 rounded-xl font-bold text-sm',
-            'bg-gradient-to-r from-violet-600 to-indigo-600',
+            'bg-linear-to-r from-violet-600 to-indigo-600',
             'hover:from-violet-500 hover:to-indigo-500',
             'active:scale-[0.98] transition-all duration-150',
             'shadow-lg shadow-violet-500/20',

@@ -1819,3 +1819,9 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > Contrat d’accès Twin consolidé: `src-tauri/src/numeric_twin/twin_commands.rs` et `src-tauri/src/remote_gateway/handlers.rs` appliquent une validation payload explicite avant exécution (`content/target` non vides, bornes numériques), ce qui évite les rejets implicites et clarifie les erreurs contractuelles.
 
 > Frontend/chat aligné: `src/hooks/useTwinEvolution.ts` persiste un snapshot Twin enrichi dans `titane_twin_fusion_v1`; `src/services/chat/chatMemorySingleDoor.ts` lit et formate ces champs enrichis dans l’enveloppe et le prompt système (identité, valeurs, patterns, thérapeutique, créativité), avec test Vitest dédié `H3` dans `src/__tests__/twins/twins-context-chain.test.ts`.
+
+## 2026-05-06 — Sweep warnings/blocages (UI + Rust)
+
+> Tranche de stabilisation sans nouvelle capacité: corrections minimales des warnings Tailwind et Rust détectés sur les surfaces actives. `src/components/launcher/UnifiedLauncherPanel.tsx` remplace `bg-gradient-to-r` par `bg-linear-to-r`; `src/apps/devtools/sections/OmegaPipeline.tsx` remplace les usages `flex-shrink-0` par `shrink-0` sur les marqueurs visuels; `src-tauri/src/multimodal/vision.rs` retire des assertions RGB supérieures inutiles dans `test_dominant_colors` pour supprimer `unused_comparisons`.
+
+> Preuve associée: snapshot `src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap` régénéré, `pnpm run check` PASS, `pnpm run test` PASS (505/505), `cargo test --manifest-path src-tauri/Cargo.toml --lib` PASS. Objectif: fermer warnings et blocages sans drift fonctionnel ni refactor hors-scope.

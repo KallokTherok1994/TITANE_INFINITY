@@ -289,7 +289,7 @@ function PipelineStepCard({
         <div className="flex items-start gap-4">
           {/* Icon */}
           <div
-            className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl ${isActive ? 'animate-pulse' : ''}`}
+            className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl ${isActive ? 'animate-pulse' : ''}`}
             style={{
               background: 'var(--bg-surface, #181c21)',
               border: `2px solid ${colors.border}`,
@@ -652,7 +652,7 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
           {ts}
         </span>
         <span
-          className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+          className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
           style={{
             background: modeColor.bg,
             color: modeColor.text,
@@ -662,7 +662,7 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
           {entry.mode}
         </span>
         <span
-          className="text-xs flex-shrink-0"
+          className="text-xs shrink-0"
           style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
         >
           {entry.provider}
@@ -674,13 +674,13 @@ function JournalEntryCard({ entry }: { entry: JournalEntry }) {
           {entry.requestPreview}
         </span>
         <span
-          className="text-xs font-mono flex-shrink-0"
+          className="text-xs font-mono shrink-0"
           style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
         >
           {entry.totalDurationMs}ms
         </span>
         <span
-          className="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
+          className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0"
           style={{
             background: entry.success ? 'rgba(147,179,153,0.15)' : 'rgba(139,95,95,0.15)',
             color: entry.success ? '#93b399' : '#8b5f5f',

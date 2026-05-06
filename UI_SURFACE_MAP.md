@@ -877,3 +877,13 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Producteur canonique: `src/hooks/useTwinEvolution.ts` persiste le snapshot enrichi dans `titane_twin_fusion_v1` après `numericTwinService.getState()` + `getEvolutionProfile()` + `getFusionIndex()`.
 - Vérité runtime visible dans le prompt système: nouvelles lignes `twins_identity`, `twins_core_values`, `twins_observed_values`, `twins_reasoning_patterns`, `twins_therapeutic_deep_listening`, `twins_creative_structural`.
 - Preuve unitaire: `src/__tests__/twins/twins-context-chain.test.ts` (H3 — enriched twin components preserved and formatted).
+
+# [2026-05-06] Warning sweep alignment — UnifiedLauncherPanel, OmegaPipeline, multimodal vision
+
+- Surface UI: `unified-launcher-panel` dans `src/components/launcher/UnifiedLauncherPanel.tsx`
+- Correction classes Tailwind: remplacement du token déprécié `bg-gradient-to-r` par `bg-linear-to-r` sur le CTA `data-testid="unified-launcher-launch-button"`
+- Surface UI: `omega-pipeline-section` dans `src/apps/devtools/sections/OmegaPipeline.tsx`
+- Stabilisation classes utilitaires: remplacement de `flex-shrink-0` par `shrink-0` sur les badges/icônes runtime sans changement fonctionnel
+- Couverture de preuve UI: snapshot Vitest mis à jour dans `src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap`
+- Backend connexe: `src-tauri/src/multimodal/vision.rs` nettoie `unused_comparisons` dans `test_dominant_colors` en retirant les assertions RGB supérieures redondantes
+- Vérifications exécutées: `pnpm run check`, `pnpm run test`, `cargo test --manifest-path src-tauri/Cargo.toml --lib`

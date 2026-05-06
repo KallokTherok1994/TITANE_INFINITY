@@ -188,7 +188,7 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
             class="flex items-start gap-4"
           >
             <div
-              class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl "
+              class="shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl "
               style="border: 2px solid; border-width: var(--border-success,#93b399); border-style: var(--border-success,#93b399); border-color: var(--border-success,#93b399);"
             >
               ⚡
@@ -252,7 +252,7 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
             class="flex items-start gap-4"
           >
             <div
-              class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl animate-pulse"
+              class="shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl animate-pulse"
               style="border: 2px solid; border-width: var(--border-info,#727b81); border-style: var(--border-info,#727b81); border-color: var(--border-info,#727b81);"
             >
               ⚡
@@ -312,7 +312,7 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
             class="flex items-start gap-4"
           >
             <div
-              class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl "
+              class="shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl "
             >
               ⚡
             </div>
