@@ -10,6 +10,7 @@ import { numericTwinService } from '../services/api/numericTwin';
 import type {
   TwinEvolutionProfile,
   FusionIndex,
+  TwinState,
   TwinEvolutionResult,
   EvolutionPhase,
   GrowthTrends,
@@ -78,14 +79,16 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
     setIsLoading(true);
     setError(null);
     try {
-      const [profile, fusion] = await Promise.all([
+      const [profile, fusion, state] = await Promise.all([
         numericTwinService.getEvolutionProfile(),
         numericTwinService.getFusionIndex(),
+        numericTwinService.getState(),
       ]);
       setEvolutionProfile(profile);
       setFusionIndex(fusion);
       // Persist fusion index to localStorage for chat pipeline injection
       try {
+        const typedState: TwinState = state;
         window.localStorage.setItem(
           'titane_twin_fusion_v1',
           JSON.stringify({
@@ -93,6 +96,19 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
             trend: fusion.trend,
             currentPhase: profile?.currentPhase ?? null,
             syncScore: profile?.syncScore ?? 0,
+            identityCore: typedState.identityCore,
+            valueMap: typedState.valueMap,
+            cognitivePatterns: typedState.cognitivePatterns,
+            therapeuticModel: typedState.therapeuticModel,
+            creativeSignature: typedState.creativeSignature,
+            fusionComponents: {
+              valueAlignment: fusion.valueAlignment,
+              cognitiveAlignment: fusion.cognitiveAlignment,
+              styleAlignment: fusion.styleAlignment,
+              therapeuticAlignment: fusion.therapeuticAlignment,
+              creativeAlignment: fusion.creativeAlignment,
+              evolutionAlignment: fusion.evolutionAlignment,
+            },
             ownerThemes: [...OWNER_TWIN_RESONANCE.ownerThemes],
             sourceCount: OWNER_TWIN_RESONANCE.sourceCount,
             reflectionAxis: OWNER_TWIN_RESONANCE.reflectionAxis,

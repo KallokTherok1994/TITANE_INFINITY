@@ -706,3 +706,11 @@ Conformité validée par tests 100/100 (avril 2026).
 - **Audit**: aucun `#[tauri::command]` dans aucun de ces fichiers — confirmed via grep
 - **Enregistrement**: aucune référence dans `src-tauri/src/main.rs` ni `lib.rs`
 - **Verdict**: ISOLATED — stubs non exposés via IPC, aucun risque surface IPC non gouvernée
+
+## 2026-05-05 : Twin data completeness — Backend + Chat context alignment
+
+> `src-tauri/src/numeric_twin/mod.rs` enrichit désormais la production runtime des composantes Twin lors des observations/évolutions (`value_map`, `cognitive_patterns`, `therapeutic_model`, `creative_signature`, `evolution_profile`) et applique des garde-fous de validité (`confidence` bornée, historique sync borné, recalcul fusion sur évolutions). `src-tauri/src/numeric_twin/twin_commands.rs` et `src-tauri/src/remote_gateway/handlers.rs` ajoutent une validation explicite des payloads Twin pour fiabiliser l’accès canonique IPC/HTTP sans fallback silencieux.
+
+> Côté Ring 3/4, `src/hooks/useTwinEvolution.ts` persiste un snapshot Twin enrichi (`identityCore`, `valueMap`, `cognitivePatterns`, `therapeuticModel`, `creativeSignature`, composantes fusion) et `src/services/chat/chatMemorySingleDoor.ts` expose ce snapshot dans le `CONTEXT_ENVELOPE_V44` pour que la chaîne chat consomme une vérité Twin plus complète.
+
+> Preuves associées: tests Rust `numeric_twin::tests::{observation_updates_multiple_twin_components, deep_evolution_requires_validation_and_validated_transition_updates_state}` + Vitest `src/__tests__/twins/twins-context-chain.test.ts` (H3).

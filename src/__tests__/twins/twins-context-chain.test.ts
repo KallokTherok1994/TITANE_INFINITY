@@ -537,4 +537,60 @@ describe('TWINS H — Owner resonance metadata sync', () => {
     );
     expect(promptContext).toContain('twins_portrait=configured');
   });
+
+  it('H3. enriched twin components are preserved and formatted for system prompt', () => {
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: 0.89,
+        trend: 'Improving',
+        currentPhase: 'Integration',
+        syncScore: 0.81,
+        identityCore: {
+          name: 'TITANE∞ TWIN',
+          signature: 'Symbiose Kevin ↔ TITANE',
+          coreValues: [{ name: 'Alignement' }, { name: 'Clarté' }],
+        },
+        valueMap: {
+          observedValues: [{ name: 'Alignement' }, { name: 'Authenticité' }],
+          confirmedValues: ['Alignement', 'Cohérence'],
+          alignmentScore: 0.92,
+        },
+        cognitivePatterns: {
+          reasoningPatterns: [{ name: 'simple_to_complex' }],
+        },
+        therapeuticModel: {
+          deepListening: 0.96,
+          rhythmRespect: 0.93,
+          relationalClarity: 0.91,
+        },
+        creativeSignature: {
+          operationalIntuition: 0.88,
+          structuralCreativity: 0.94,
+          frameworksCount: 2,
+        },
+        fusionComponents: {
+          valueAlignment: 0.9,
+          cognitiveAlignment: 0.85,
+          styleAlignment: 0.87,
+          therapeuticAlignment: 0.92,
+          creativeAlignment: 0.89,
+          evolutionAlignment: 0.88,
+        },
+        updatedAt: Date.now(),
+      })
+    );
+
+    const envelope = buildChatContextEnvelope(makeInput());
+    const promptContext = formatContextEnvelopeForSystemPrompt(envelope!);
+
+    expect(envelope?.twinsContext?.identityCore?.name).toBe('TITANE∞ TWIN');
+    expect(envelope?.twinsContext?.valueMap?.observedValues?.length).toBe(2);
+    expect(envelope?.twinsContext?.cognitivePatterns?.reasoningPatterns?.length).toBe(1);
+    expect(promptContext).toContain('twins_identity=TITANE∞ TWIN');
+    expect(promptContext).toContain('twins_core_values=Alignement, Clarté');
+    expect(promptContext).toContain('twins_observed_values=2');
+    expect(promptContext).toContain('twins_reasoning_patterns=1');
+    expect(promptContext).toContain('twins_creative_structural=0.94');
+  });
 });

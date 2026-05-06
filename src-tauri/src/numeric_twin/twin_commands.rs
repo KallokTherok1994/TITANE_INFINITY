@@ -263,6 +263,31 @@ pub struct TwinSyncValidationRequest {
     pub validated: bool,
 }
 
+fn validate_observation_request(observation: &TwinObservationRequest) -> Result<(), String> {
+    if observation.content.trim().is_empty() {
+        return Err("observation content cannot be empty".to_string());
+    }
+    if observation.content.chars().count() > 10_000 {
+        return Err("observation content is too large (max 10000 chars)".to_string());
+    }
+    if !observation.confidence.is_finite() || !(0.0..=1.0).contains(&observation.confidence) {
+        return Err("observation confidence must be between 0.0 and 1.0".to_string());
+    }
+    Ok(())
+}
+
+fn validate_evolution_request(evolution: &TwinEvolutionRequestPayload) -> Result<(), String> {
+    if evolution.target.trim().is_empty() {
+        return Err("evolution target cannot be empty".to_string());
+    }
+    if let Some(delta) = evolution.delta {
+        if !delta.is_finite() || !(-1.0..=1.0).contains(&delta) {
+            return Err("evolution delta must be between -1.0 and 1.0".to_string());
+        }
+    }
+    Ok(())
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // COMMANDES TAURI
 // ═══════════════════════════════════════════════════════════════════════════
@@ -317,6 +342,8 @@ pub async fn twin_submit_observation(
     let observation_content = observation.content.clone();
     let observation_context = observation.context.clone();
     let observation_confidence = observation.confidence;
+
+    validate_observation_request(&observation)?;
 
     let mut engine = state.0.lock().await;
 
@@ -385,6 +412,8 @@ pub async fn twin_apply_evolution(
     let evolution_delta = evolution.delta;
     let evolution_is_deep_change = evolution.is_deep_change;
     let evolution_validated_by_kevin = evolution.validated_by_kevin;
+
+    validate_evolution_request(&evolution)?;
 
     let mut engine = state.0.lock().await;
 

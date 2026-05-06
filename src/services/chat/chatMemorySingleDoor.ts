@@ -85,6 +85,37 @@ export interface ChatContextEnvelope {
     trend: string;
     currentPhase?: string | null;
     syncScore?: number;
+    identityCore?: {
+      name?: string;
+      signature?: string;
+      coreValues?: Array<{ name?: string }>;
+    };
+    valueMap?: {
+      observedValues?: Array<{ name?: string }>;
+      confirmedValues?: string[];
+      alignmentScore?: number;
+    };
+    cognitivePatterns?: {
+      reasoningPatterns?: Array<{ name?: string }>;
+    };
+    therapeuticModel?: {
+      deepListening?: number;
+      rhythmRespect?: number;
+      relationalClarity?: number;
+    };
+    creativeSignature?: {
+      operationalIntuition?: number;
+      structuralCreativity?: number;
+      frameworksCount?: number;
+    };
+    fusionComponents?: {
+      valueAlignment?: number;
+      cognitiveAlignment?: number;
+      styleAlignment?: number;
+      therapeuticAlignment?: number;
+      creativeAlignment?: number;
+      evolutionAlignment?: number;
+    };
     ownerThemes?: string[];
     sourceCount?: number;
     portraitUrl?: string;
@@ -138,6 +169,37 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
     trend: string;
     currentPhase?: string | null;
     syncScore?: number;
+    identityCore?: {
+      name?: string;
+      signature?: string;
+      coreValues?: unknown[];
+    };
+    valueMap?: {
+      observedValues?: unknown[];
+      confirmedValues?: unknown[];
+      alignmentScore?: number;
+    };
+    cognitivePatterns?: {
+      reasoningPatterns?: unknown[];
+    };
+    therapeuticModel?: {
+      deepListening?: number;
+      rhythmRespect?: number;
+      relationalClarity?: number;
+    };
+    creativeSignature?: {
+      operationalIntuition?: number;
+      structuralCreativity?: number;
+      frameworksCount?: number;
+    };
+    fusionComponents?: {
+      valueAlignment?: number;
+      cognitiveAlignment?: number;
+      styleAlignment?: number;
+      therapeuticAlignment?: number;
+      creativeAlignment?: number;
+      evolutionAlignment?: number;
+    };
     ownerThemes?: unknown[];
     sourceCount?: number;
     portraitUrl?: string;
@@ -171,6 +233,96 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
         : 'unknown',
     currentPhase: raw.currentPhase ?? null,
     syncScore: toFiniteNumber(raw.syncScore, 0),
+    identityCore:
+      raw.identityCore && typeof raw.identityCore === 'object'
+        ? {
+            name:
+              typeof raw.identityCore.name === 'string' ? raw.identityCore.name : undefined,
+            signature:
+              typeof raw.identityCore.signature === 'string'
+                ? raw.identityCore.signature
+                : undefined,
+            coreValues: Array.isArray(raw.identityCore.coreValues)
+              ? raw.identityCore.coreValues
+                  .filter(
+                    (value): value is { name?: string } =>
+                      Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+                  )
+                  .map(value => ({
+                    name: typeof value.name === 'string' ? value.name : undefined,
+                  }))
+              : undefined,
+          }
+        : undefined,
+    valueMap:
+      raw.valueMap && typeof raw.valueMap === 'object'
+        ? {
+            observedValues: Array.isArray(raw.valueMap.observedValues)
+              ? raw.valueMap.observedValues
+                  .filter(
+                    (value): value is { name?: string } =>
+                      Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+                  )
+                  .map(value => ({
+                    name: typeof value.name === 'string' ? value.name : undefined,
+                  }))
+              : undefined,
+            confirmedValues: Array.isArray(raw.valueMap.confirmedValues)
+              ? raw.valueMap.confirmedValues.filter(
+                  (value): value is string => typeof value === 'string'
+                )
+              : undefined,
+            alignmentScore: toFiniteNumber(raw.valueMap.alignmentScore, 0),
+          }
+        : undefined,
+    cognitivePatterns:
+      raw.cognitivePatterns && typeof raw.cognitivePatterns === 'object'
+        ? {
+            reasoningPatterns: Array.isArray(raw.cognitivePatterns.reasoningPatterns)
+              ? raw.cognitivePatterns.reasoningPatterns
+                  .filter(
+                    (value): value is { name?: string } =>
+                      Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+                  )
+                  .map(value => ({
+                    name: typeof value.name === 'string' ? value.name : undefined,
+                  }))
+              : undefined,
+          }
+        : undefined,
+    therapeuticModel:
+      raw.therapeuticModel && typeof raw.therapeuticModel === 'object'
+        ? {
+            deepListening: toFiniteNumber(raw.therapeuticModel.deepListening, 0),
+            rhythmRespect: toFiniteNumber(raw.therapeuticModel.rhythmRespect, 0),
+            relationalClarity: toFiniteNumber(raw.therapeuticModel.relationalClarity, 0),
+          }
+        : undefined,
+    creativeSignature:
+      raw.creativeSignature && typeof raw.creativeSignature === 'object'
+        ? {
+            operationalIntuition: toFiniteNumber(
+              raw.creativeSignature.operationalIntuition,
+              0
+            ),
+            structuralCreativity: toFiniteNumber(
+              raw.creativeSignature.structuralCreativity,
+              0
+            ),
+            frameworksCount: toFiniteNumber(raw.creativeSignature.frameworksCount, 0),
+          }
+        : undefined,
+    fusionComponents:
+      raw.fusionComponents && typeof raw.fusionComponents === 'object'
+        ? {
+            valueAlignment: toFiniteNumber(raw.fusionComponents.valueAlignment, 0),
+            cognitiveAlignment: toFiniteNumber(raw.fusionComponents.cognitiveAlignment, 0),
+            styleAlignment: toFiniteNumber(raw.fusionComponents.styleAlignment, 0),
+            therapeuticAlignment: toFiniteNumber(raw.fusionComponents.therapeuticAlignment, 0),
+            creativeAlignment: toFiniteNumber(raw.fusionComponents.creativeAlignment, 0),
+            evolutionAlignment: toFiniteNumber(raw.fusionComponents.evolutionAlignment, 0),
+          }
+        : undefined,
     ownerThemes,
     sourceCount: typeof raw.sourceCount === 'number' ? raw.sourceCount : 0,
     portraitUrl: typeof raw.portraitUrl === 'string' ? raw.portraitUrl : undefined,
@@ -317,6 +469,16 @@ export function formatContextEnvelopeForSystemPrompt(
           `twins_trend=${envelope.twinsContext.trend}`,
           `twins_phase=${envelope.twinsContext.currentPhase ?? 'unknown'}`,
           `twins_sync_score=${twinsSyncScore.toFixed(2)}`,
+          `twins_identity=${envelope.twinsContext.identityCore?.name ?? 'unknown'}`,
+          `twins_core_values=${(envelope.twinsContext.identityCore?.coreValues ?? [])
+            .map(value => value.name)
+            .filter(Boolean)
+            .join(', ') || 'none'}`,
+          `twins_observed_values=${(envelope.twinsContext.valueMap?.observedValues ?? []).length}`,
+          `twins_confirmed_values=${(envelope.twinsContext.valueMap?.confirmedValues ?? []).join(', ') || 'none'}`,
+          `twins_reasoning_patterns=${(envelope.twinsContext.cognitivePatterns?.reasoningPatterns ?? []).length}`,
+          `twins_therapeutic_deep_listening=${toFiniteNumber(envelope.twinsContext.therapeuticModel?.deepListening, 0).toFixed(2)}`,
+          `twins_creative_structural=${toFiniteNumber(envelope.twinsContext.creativeSignature?.structuralCreativity, 0).toFixed(2)}`,
           `twins_owner_themes=${(envelope.twinsContext.ownerThemes ?? []).join(', ') || 'none'}`,
           `twins_source_count=${envelope.twinsContext.sourceCount ?? 0}`,
           `twins_reflection_axis=${envelope.twinsContext.reflectionAxis ?? 'none'}`,

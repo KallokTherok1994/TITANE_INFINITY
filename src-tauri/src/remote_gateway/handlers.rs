@@ -122,6 +122,37 @@ fn sanitize_invoke_request(req: &mut InvokeRequest) -> Result<(), IpcResponse> {
     Ok(())
 }
 
+fn validate_twin_observation_args(args: &TwinObservationRequest) -> Result<(), IpcResponse> {
+    if args.content.trim().is_empty() {
+        return Err(IpcResponse::err("invalid twin observation args: empty content"));
+    }
+    if args.content.chars().count() > 10_000 {
+        return Err(IpcResponse::err(
+            "invalid twin observation args: content too large (max 10000 chars)",
+        ));
+    }
+    if !args.confidence.is_finite() || !(0.0..=1.0).contains(&args.confidence) {
+        return Err(IpcResponse::err(
+            "invalid twin observation args: confidence must be between 0.0 and 1.0",
+        ));
+    }
+    Ok(())
+}
+
+fn validate_twin_evolution_args(args: &TwinEvolutionRequestPayload) -> Result<(), IpcResponse> {
+    if args.target.trim().is_empty() {
+        return Err(IpcResponse::err("invalid twin evolution args: empty target"));
+    }
+    if let Some(delta) = args.delta {
+        if !delta.is_finite() || !(-1.0..=1.0).contains(&delta) {
+            return Err(IpcResponse::err(
+                "invalid twin evolution args: delta must be between -1.0 and 1.0",
+            ));
+        }
+    }
+    Ok(())
+}
+
 // ── POST /api/auth/token ──────────────────────────────────────
 
 #[derive(Deserialize)]
@@ -538,6 +569,10 @@ pub async fn invoke_handler(
                 }
             };
 
+            if let Err(validation_error) = validate_twin_observation_args(&args) {
+                return Json(validation_error);
+            }
+
             let observation_type = match args.observation_type.as_str() {
                 "value" => ObservationType::Value,
                 "cognitive" => ObservationType::Cognitive,
@@ -576,6 +611,10 @@ pub async fn invoke_handler(
                     return Json(IpcResponse::err("twin_apply_evolution requires a payload"));
                 }
             };
+
+            if let Err(validation_error) = validate_twin_evolution_args(&args) {
+                return Json(validation_error);
+            }
 
             let evolution_type = match args.evolution_type.as_str() {
                 "trait_adjustment" => EvolutionType::TraitAdjustment,

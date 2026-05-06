@@ -1793,3 +1793,11 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - `e2e/critical/facebook-oauth.spec.ts`: suppression 1x `waitForTimeout(1000)` post-`page.goto('/')` → `expect(body).toBeVisible({ timeout: 15000 })`. Tests conditionnels OAuth (carte, bouton) inchangés.
 - AutoHeal: `AH-2026-05-05-E2E-CRITICAL-ANTIFLAKY-0004` (entries=1621)
 - Proof: 9 passed exit 0 Playwright chromium ciblé.
+
+## 2026-05-05 — Twin access end-to-end completeness (backend + chat context)
+
+> Backend Twin enrichi sur `src-tauri/src/numeric_twin/mod.rs`: les observations/évolutions alimentent maintenant plus explicitement les composantes cognitives, thérapeutiques, créatives et évolutives, avec validation des entrées (`confidence` bornée) et historique sync borné pour stabilité runtime.
+
+> Contrat d’accès Twin consolidé: `src-tauri/src/numeric_twin/twin_commands.rs` et `src-tauri/src/remote_gateway/handlers.rs` appliquent une validation payload explicite avant exécution (`content/target` non vides, bornes numériques), ce qui évite les rejets implicites et clarifie les erreurs contractuelles.
+
+> Frontend/chat aligné: `src/hooks/useTwinEvolution.ts` persiste un snapshot Twin enrichi dans `titane_twin_fusion_v1`; `src/services/chat/chatMemorySingleDoor.ts` lit et formate ces champs enrichis dans l’enveloppe et le prompt système (identité, valeurs, patterns, thérapeutique, créativité), avec test Vitest dédié `H3` dans `src/__tests__/twins/twins-context-chain.test.ts`.

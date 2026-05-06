@@ -648,6 +648,8 @@ impl Default for TwinConfig {
 }
 
 impl NumericTwinEngine {
+    const MAX_SYNC_HISTORY: usize = 10_000;
+
     /// Crée un nouveau Twin Engine
     pub fn new(config: TwinConfig) -> Self {
         Self {
@@ -716,6 +718,11 @@ impl NumericTwinEngine {
                 "Empty observation content".to_string(),
             ));
         }
+        if !observation.confidence.is_finite() || !(0.0..=1.0).contains(&observation.confidence) {
+            return Err(TwinError::InvalidInput(
+                "Observation confidence must be between 0.0 and 1.0".to_string(),
+            ));
+        }
 
         // Créer paquet de sync
         let packet = TwinSyncPacket {
@@ -736,6 +743,9 @@ impl NumericTwinEngine {
         }
 
         // Historique
+        if self.sync_history.len() >= Self::MAX_SYNC_HISTORY {
+            self.sync_history.remove(0);
+        }
         self.sync_history.push(packet.clone());
 
         // Recalculer fusion index
@@ -768,17 +778,25 @@ impl NumericTwinEngine {
         // Améliorer alignement valeurs
         self.fusion_index.components.value_alignment =
             (self.fusion_index.components.value_alignment + 0.01).min(1.0);
+        self.value_map.alignment_score = (self.value_map.alignment_score + 0.005).min(1.0);
+        self.evolution_profile.sync_score = (self.evolution_profile.sync_score + 0.004).min(1.0);
     }
 
     fn process_cognitive_observation(&mut self, obs: &TwinObservation) {
         // Ajouter pattern si nouveau
-        let pattern_exists = self
+        let pattern_index = self
             .cognitive_patterns
             .reasoning_patterns
             .iter()
-            .any(|p| p.name == obs.content);
+            .position(|p| p.name == obs.content);
 
-        if !pattern_exists && obs.confidence > 0.5 {
+        if let Some(index) = pattern_index {
+            let pattern = &mut self.cognitive_patterns.reasoning_patterns[index];
+            pattern.frequency = (pattern.frequency + 0.03).min(1.0);
+            pattern.effectiveness = (pattern.effectiveness + 0.01).min(1.0);
+        }
+
+        if pattern_index.is_none() && obs.confidence > 0.5 {
             self.cognitive_patterns
                 .reasoning_patterns
                 .push(ReasoningPattern {
@@ -789,18 +807,63 @@ impl NumericTwinEngine {
                 });
         }
 
+        self.cognitive_patterns.structuring_style.simple_to_complex =
+            (self.cognitive_patterns.structuring_style.simple_to_complex
+                + (obs.confidence * 0.01))
+                .min(1.0);
+        self.evolution_profile.growth_trends.cognitive_growth =
+            (self.evolution_profile.growth_trends.cognitive_growth + (obs.confidence * 0.01))
+                .min(1.0);
+
         self.fusion_index.components.cognitive_alignment =
             (self.fusion_index.components.cognitive_alignment + 0.01).min(1.0);
     }
 
-    fn process_style_observation(&mut self, _obs: &TwinObservation) {
+    fn process_style_observation(&mut self, obs: &TwinObservation) {
+        let content = obs.content.to_lowercase();
+        if content.contains("structure") || content.contains("framework") {
+            self.cognitive_patterns.structuring_style.structure_level =
+                (self.cognitive_patterns.structuring_style.structure_level + 0.02).min(1.0);
+            self.creative_signature.structural_creativity =
+                (self.creative_signature.structural_creativity + 0.02).min(1.0);
+        }
+        if content.contains("visual") {
+            self.cognitive_patterns.structuring_style.visual_preference =
+                (self.cognitive_patterns.structuring_style.visual_preference + 0.03).min(1.0);
+        }
+        if content.contains("symbol") {
+            self.creative_signature.symbolic_sense =
+                (self.creative_signature.symbolic_sense + 0.03).min(1.0);
+        }
+        if content.contains("narr") {
+            self.creative_signature.embodied_narration =
+                (self.creative_signature.embodied_narration + 0.02).min(1.0);
+        }
+
         self.fusion_index.components.style_alignment =
             (self.fusion_index.components.style_alignment + 0.01).min(1.0);
+        self.fusion_index.components.creative_alignment =
+            (self.fusion_index.components.creative_alignment + 0.01).min(1.0);
+        self.evolution_profile.growth_trends.entrepreneurial_growth =
+            (self.evolution_profile.growth_trends.entrepreneurial_growth + 0.008).min(1.0);
     }
 
-    fn process_emotional_observation(&mut self, _obs: &TwinObservation) {
+    fn process_emotional_observation(&mut self, obs: &TwinObservation) {
+        self.therapeutic_model.accompaniment_posture.deep_listening =
+            (self.therapeutic_model.accompaniment_posture.deep_listening + 0.01).min(1.0);
+        self.therapeutic_model.accompaniment_posture.rhythm_respect =
+            (self.therapeutic_model.accompaniment_posture.rhythm_respect + 0.01).min(1.0);
+        self.therapeutic_model.guide_qualities.psychological_finesse =
+            (self.therapeutic_model.guide_qualities.psychological_finesse
+                + (obs.confidence * 0.01))
+                .min(1.0);
+        self.evolution_profile.growth_trends.emotional_growth =
+            (self.evolution_profile.growth_trends.emotional_growth + (obs.confidence * 0.01))
+                .min(1.0);
+
         self.fusion_index.components.therapeutic_alignment =
             (self.fusion_index.components.therapeutic_alignment + 0.01).min(1.0);
+        self.evolution_profile.sync_score = (self.evolution_profile.sync_score + 0.006).min(1.0);
     }
 
     /// Applique une évolution (avec validation si nécessaire)
@@ -834,6 +897,21 @@ impl NumericTwinEngine {
             }
         }
 
+        self.calculate_fusion_index();
+
+        let packet = TwinSyncPacket {
+            id: uuid::Uuid::new_v4().to_string(),
+            sync_type: SyncType::TraitEvolution,
+            data: serde_json::to_value(&evolution).unwrap_or_default(),
+            requires_validation: evolution.is_deep_change,
+            validated: evolution.validated_by_kevin || !evolution.is_deep_change,
+            timestamp: Utc::now(),
+        };
+        if self.sync_history.len() >= Self::MAX_SYNC_HISTORY {
+            self.sync_history.remove(0);
+        }
+        self.sync_history.push(packet);
+
         // Créer résultat
         let result = TwinEvolutionResult {
             success: true,
@@ -860,8 +938,26 @@ impl NumericTwinEngine {
                     self.identity_core.human_style.gentle_intensity =
                         (self.identity_core.human_style.gentle_intensity + delta).clamp(0.0, 1.0);
                 }
+                "accessible_depth" => {
+                    self.identity_core.human_style.accessible_depth =
+                        (self.identity_core.human_style.accessible_depth + delta).clamp(0.0, 1.0);
+                }
+                "calm_precision" => {
+                    self.identity_core.human_style.calm_precision =
+                        (self.identity_core.human_style.calm_precision + delta).clamp(0.0, 1.0);
+                }
+                "organic_fluidity" => {
+                    self.identity_core.human_style.organic_fluidity =
+                        (self.identity_core.human_style.organic_fluidity + delta).clamp(0.0, 1.0);
+                }
                 _ => {}
             }
+
+            self.fusion_index.components.style_alignment =
+                (self.fusion_index.components.style_alignment + delta.abs() * 0.01).clamp(0.0, 1.0);
+            self.evolution_profile.growth_trends.spiritual_growth =
+                (self.evolution_profile.growth_trends.spiritual_growth + delta.abs() * 0.01)
+                    .clamp(0.0, 1.0);
         }
         Ok(())
     }
@@ -875,15 +971,30 @@ impl NumericTwinEngine {
                 .confirmed_values
                 .push(evolution.target.clone());
         }
+        self.value_map.alignment_score = (self.value_map.alignment_score + 0.03).min(1.0);
+        self.fusion_index.components.value_alignment =
+            (self.fusion_index.components.value_alignment + 0.03).min(1.0);
         Ok(())
     }
 
     fn apply_pattern_integration(
         &mut self,
-        _evolution: &TwinEvolutionRequest,
+        evolution: &TwinEvolutionRequest,
     ) -> Result<(), TwinError> {
+        if !evolution.target.trim().is_empty() {
+            self.cognitive_patterns
+                .reasoning_patterns
+                .push(ReasoningPattern {
+                    name: evolution.target.clone(),
+                    description: "Integrated by evolution request".to_string(),
+                    frequency: 0.7,
+                    effectiveness: 0.7,
+                });
+        }
         self.fusion_index.components.cognitive_alignment =
             (self.fusion_index.components.cognitive_alignment + 0.05).min(1.0);
+        self.evolution_profile.growth_trends.cognitive_growth =
+            (self.evolution_profile.growth_trends.cognitive_growth + 0.03).min(1.0);
         Ok(())
     }
 
@@ -910,6 +1021,9 @@ impl NumericTwinEngine {
             });
 
         self.evolution_profile.current_phase = next_phase;
+        self.fusion_index.components.evolution_alignment =
+            (self.fusion_index.components.evolution_alignment + 0.05).min(1.0);
+        self.evolution_profile.sync_score = (self.evolution_profile.sync_score + 0.04).min(1.0);
         Ok(())
     }
 
@@ -1004,3 +1118,56 @@ impl std::fmt::Display for TwinError {
 }
 
 impl std::error::Error for TwinError {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn observation_updates_multiple_twin_components() {
+        let mut engine = NumericTwinEngine::new(TwinConfig::default());
+        let baseline_creative = engine.creative_signature.structural_creativity;
+        let baseline_style = engine.fusion_index.components.style_alignment;
+
+        let res = engine.submit_observation(TwinObservation {
+            observation_type: ObservationType::Style,
+            content: "structured framework narrative".to_string(),
+            context: Some("ui reasoning".to_string()),
+            confidence: 0.8,
+        });
+
+        assert!(res.is_ok());
+        assert!(engine.creative_signature.structural_creativity > baseline_creative);
+        assert!(engine.fusion_index.components.style_alignment > baseline_style);
+        assert!(!engine.sync_history.is_empty());
+    }
+
+    #[test]
+    fn deep_evolution_requires_validation_and_validated_transition_updates_state() {
+        let mut engine = NumericTwinEngine::new(TwinConfig::default());
+        let baseline_phase = engine.evolution_profile.current_phase.clone();
+        let baseline_alignment = engine.fusion_index.components.evolution_alignment;
+
+        let blocked = engine.apply_evolution(TwinEvolutionRequest {
+            evolution_type: EvolutionType::PhaseTransition,
+            target: "phase".to_string(),
+            delta: None,
+            is_deep_change: true,
+            validated_by_kevin: false,
+        });
+        assert!(blocked.is_err());
+
+        let allowed = engine.apply_evolution(TwinEvolutionRequest {
+            evolution_type: EvolutionType::PhaseTransition,
+            target: "phase".to_string(),
+            delta: None,
+            is_deep_change: true,
+            validated_by_kevin: true,
+        });
+
+        assert!(allowed.is_ok());
+        assert_ne!(engine.evolution_profile.current_phase, baseline_phase);
+        assert!(engine.fusion_index.components.evolution_alignment > baseline_alignment);
+        assert!(!engine.sync_history.is_empty());
+    }
+}

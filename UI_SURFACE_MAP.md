@@ -870,3 +870,10 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Wiring: `useConversationEngine.ts` calcule `responseQualityScore` via `evaluateResponseQuality()` non-bloquant, profile_id depuis `omega_trace_meta` avec fallback BALANCED
 - Tests: `src/__tests__/features/chat/ThinkingPanel.test.tsx` (7 tests), `src/__tests__/hooks/useConversationEngine.test.ts` (4 tests responseQualityScore wiring)
 - E2E: `e2e/critical/thinking-panel-quality.spec.ts` (T-QS-01, T-QS-02, T-QS-03, T-QS-SMOKE-01)
+
+# [2026-05-05] Twin context enrichment — chat runtime chain
+
+- Surface canonique: `src/services/chat/chatMemorySingleDoor.ts` enrichit `twinsContext` avec snapshot Twin complet (identité, valeurs, patterns, thérapeutique, créativité, composantes fusion) en plus de `globalScore/trend/currentPhase/syncScore`.
+- Producteur canonique: `src/hooks/useTwinEvolution.ts` persiste le snapshot enrichi dans `titane_twin_fusion_v1` après `numericTwinService.getState()` + `getEvolutionProfile()` + `getFusionIndex()`.
+- Vérité runtime visible dans le prompt système: nouvelles lignes `twins_identity`, `twins_core_values`, `twins_observed_values`, `twins_reasoning_patterns`, `twins_therapeutic_deep_listening`, `twins_creative_structural`.
+- Preuve unitaire: `src/__tests__/twins/twins-context-chain.test.ts` (H3 — enriched twin components preserved and formatted).
