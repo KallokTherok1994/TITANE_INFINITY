@@ -18,5 +18,6 @@ Date: 2026-05-06
 | TREG-011 | Agent Effectiveness Contract | D0 | src/services/agent_effectiveness | src/services/agent_effectiveness/__tests__/AgentEffectivenessContract.test.ts | ACTIVE | D0 | vitest PASS=79 (30 base + 49 D0-UNIT-01..10 sidecar) | AI-DESKTOP-14 | low |
 | TREG-012 | OMEGA Real Handler Upgrade Contract | D1 | src/services/omega_handler | src/services/omega_handler/__tests__/OmegaHandlerUpgradeContract.test.ts | ACTIVE | D1 | vitest PASS=62 (44 base + 18 D1-UNIT-01..10 v13 sidecar) | AI-DESKTOP-11 | low |
 | TREG-013 | Singularity Measured Layer Contract | D2 | src/services/singularity_layer | src/services/singularity_layer/__tests__/SingularityMeasuredLayerContract.test.ts | ACTIVE | D2 | vitest PASS=69 (51 base + 18 D2-UNIT-01..10 v13 sidecar) | AI-DESKTOP-12 | low |
+| TREG-015 | Self-Improvement Lab Contract | D4 | src/services/self_improvement_lab | src/services/self_improvement_lab/__tests__/SelfImprovementLabContract.test.ts | ACTIVE | D4 | vitest PASS=122 (45 base + 77 v15 sidecar + D4-UNIT-01..10) | AI-DESKTOP-16 | medium |
 | TREG-014 | Twin Consent Ledger Contract | D3 | src/services/twin_consent | src/services/twin_consent/__tests__/TwinConsentLedgerContract.test.ts | ACTIVE | D3 | vitest PASS=84 (57 base + 27 D3-UNIT-01..10 v13 sidecar) | AI-DESKTOP-13 | medium |
 

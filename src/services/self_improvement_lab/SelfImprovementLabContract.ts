@@ -219,3 +219,243 @@ export function getD4SelfImprovementLabContract(): D4SelfImprovementLabContract 
     total_applied_in_scaffold: 0,
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ── v15 SIDECAR — Approval-Gated Self-Improvement Lab ───────────────────────
+// Doctrine: "Self-improvement proposes; it does not self-authorize."
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── Improvement State (v15) ─────────────────────────────────────────────────────
+export const ImprovementStateSchema = z.enum([
+  'observed', 'hypothesis', 'proposed', 'sandboxed', 'evaluated',
+  'proof_ready', 'approval_required', 'approved', 'rejected', 'expired',
+  'blocked', 'unknown',
+])
+export type ImprovementState = z.infer<typeof ImprovementStateSchema>
+
+// ── Promotion Status ────────────────────────────────────────────────────────────
+export const PromotionStatusSchema = z.enum([
+  'not_promotable', 'approval_required', 'approved_for_promotion', 'rejected', 'blocked',
+])
+export type PromotionStatus = z.infer<typeof PromotionStatusSchema>
+
+// ── Risk Level (v15) ────────────────────────────────────────────────────────────
+export const ImprovementRiskLevelSchema = z.enum([
+  'low', 'medium', 'high', 'identity_sensitive', 'runtime_sensitive',
+  'security_sensitive', 'restricted',
+])
+export type ImprovementRiskLevel = z.infer<typeof ImprovementRiskLevelSchema>
+
+// ── Weakness ────────────────────────────────────────────────────────────────────
+export const SelfImprovementWeaknessSchema = z.object({
+  weakness_id: z.string(),
+  domain: ImprovementDomainSchema,
+  description: z.string().min(1),
+  observed_at: z.string(),
+  severity: z.enum(['low', 'medium', 'high']),
+  evidence: z.string().nullable(),
+})
+export type SelfImprovementWeakness = z.infer<typeof SelfImprovementWeaknessSchema>
+
+// ── Hypothesis ──────────────────────────────────────────────────────────────────
+export const SelfImprovementHypothesisSchema = z.object({
+  hypothesis_id: z.string(),
+  weakness_id: z.string(),
+  hypothesis_text: z.string().min(1),
+  confidence: z.number().min(0).max(1).describe('Signal strength — NOT a promotion proxy'),
+  requires_sandbox: z.boolean(),
+  created_at: z.string(),
+})
+export type SelfImprovementHypothesis = z.infer<typeof SelfImprovementHypothesisSchema>
+
+// ── Patch Proposal ──────────────────────────────────────────────────────────────
+export const SelfImprovementPatchProposalSchema = z.object({
+  patch_id: z.string(),
+  hypothesis_id: z.string(),
+  patch_description: z.string().min(1),
+  affected_paths: z.array(z.string()),
+  is_applied: z.literal(false).describe('Always false — proposals are artifacts, not applied patches'),
+  risk_level: ImprovementRiskLevelSchema,
+  requires_approval: z.boolean(),
+  approval_status: PromotionStatusSchema,
+  created_at: z.string(),
+})
+export type SelfImprovementPatchProposal = z.infer<typeof SelfImprovementPatchProposalSchema>
+
+// ── Sandbox Plan ────────────────────────────────────────────────────────────────
+export const SelfImprovementSandboxPlanSchema = z.object({
+  sandbox_id: z.string(),
+  patch_id: z.string(),
+  environment: z.enum(['unit', 'integration', 'isolated_e2e']),
+  isolation_confirmed: z.boolean(),
+  can_affect_production: z.literal(false).describe('Sandbox must never affect production'),
+  planned_at: z.string(),
+})
+export type SelfImprovementSandboxPlan = z.infer<typeof SelfImprovementSandboxPlanSchema>
+
+// ── Eval Snapshot ───────────────────────────────────────────────────────────────
+export const SelfImprovementEvalSnapshotSchema = z.object({
+  eval_id: z.string(),
+  patch_id: z.string(),
+  timing: z.enum(['before', 'after']),
+  score: z.number().min(0).max(1),
+  metrics: z.record(z.number()),
+  taken_at: z.string(),
+})
+export type SelfImprovementEvalSnapshot = z.infer<typeof SelfImprovementEvalSnapshotSchema>
+
+// ── Comparison ──────────────────────────────────────────────────────────────────
+export interface SelfImprovementComparison {
+  patch_id: string
+  eval_before: SelfImprovementEvalSnapshot | null
+  eval_after: SelfImprovementEvalSnapshot | null
+  improvement_delta: number | null
+  comparison_valid: boolean
+  confidence_alone_approves: false
+}
+
+// ── Approval Gate ───────────────────────────────────────────────────────────────
+export const SelfImprovementApprovalGateSchema = z.object({
+  gate_id: z.string(),
+  patch_id: z.string(),
+  approval_status: PromotionStatusSchema,
+  approved_by: z.string().nullable(),
+  approved_at: z.string().nullable(),
+  rejected_reason: z.string().nullable(),
+  auto_approved: z.literal(false).describe('Auto-approval is always blocked'),
+  proof_pack_required: z.boolean(),
+  has_proof_pack: z.boolean(),
+})
+export type SelfImprovementApprovalGate = z.infer<typeof SelfImprovementApprovalGateSchema>
+
+// ── Lab Record (v15) ────────────────────────────────────────────────────────────
+export const SelfImprovementLabRecordSchema = z.object({
+  record_id: z.string(),
+  weakness: SelfImprovementWeaknessSchema,
+  hypothesis: SelfImprovementHypothesisSchema.nullable(),
+  patch_proposal: SelfImprovementPatchProposalSchema.nullable(),
+  sandbox_plan: SelfImprovementSandboxPlanSchema.nullable(),
+  approval_gate: SelfImprovementApprovalGateSchema.nullable(),
+  state: ImprovementStateSchema,
+  risk_level: ImprovementRiskLevelSchema,
+  created_at: z.string(),
+  updated_at: z.string(),
+})
+export type SelfImprovementLabRecord = z.infer<typeof SelfImprovementLabRecordSchema>
+
+// ── Promotion Decision ──────────────────────────────────────────────────────────
+export interface SelfImprovementPromotionDecision {
+  record_id: string
+  promotion_status: PromotionStatus
+  reason: string
+  confidence_alone: false
+  eval_improvement_alone: false
+  requires_explicit_approval: true
+}
+
+// ── Summary ─────────────────────────────────────────────────────────────────────
+export interface SelfImprovementSummary {
+  total: number
+  observed: number
+  proposed: number
+  approved: number
+  rejected: number
+  blocked: number
+  identity_sensitive: number
+  runtime_sensitive: number
+  auto_merge_blocked: true
+  self_deploy_blocked: true
+  confidence_alone_approves: false
+}
+
+// ── Policy Helpers (v15) ────────────────────────────────────────────────────────
+const _IDENTITY_SENSITIVE_RISK: ImprovementRiskLevel[] = ['identity_sensitive', 'restricted']
+const _RUNTIME_SENSITIVE_RISK: ImprovementRiskLevel[] = ['runtime_sensitive', 'security_sensitive', 'restricted']
+const _BLOCKING_STATES: ImprovementState[] = ['rejected', 'expired', 'blocked', 'unknown']
+
+export function requiresApproval(_record: SelfImprovementLabRecord): true {
+  return true
+}
+
+export function canGenerateProposal(record: SelfImprovementLabRecord): boolean {
+  if (_BLOCKING_STATES.includes(record.state)) return false
+  return record.state === 'observed' || record.state === 'hypothesis'
+}
+
+export function canRunSandbox(record: SelfImprovementLabRecord): boolean {
+  if (_BLOCKING_STATES.includes(record.state)) return false
+  return record.state === 'proposed' || record.state === 'sandboxed'
+}
+
+export function canCompareEvals(record: SelfImprovementLabRecord): boolean {
+  return record.state === 'evaluated' || record.state === 'proof_ready'
+}
+
+export function canPromote(record: SelfImprovementLabRecord): boolean {
+  if (!record.approval_gate) return false
+  if (record.approval_gate.approval_status !== 'approved_for_promotion') return false
+  if (_BLOCKING_STATES.includes(record.state)) return false
+  if (record.approval_gate.auto_approved) return false
+  return true
+}
+
+export function isIdentitySensitiveProposal(record: SelfImprovementLabRecord): boolean {
+  return _IDENTITY_SENSITIVE_RISK.includes(record.risk_level)
+}
+
+export function isRuntimeSensitiveProposal(record: SelfImprovementLabRecord): boolean {
+  return _RUNTIME_SENSITIVE_RISK.includes(record.risk_level)
+}
+
+export function hasRequiredProof(record: SelfImprovementLabRecord): boolean {
+  if (!record.approval_gate) return false
+  return record.approval_gate.has_proof_pack
+}
+
+export function blocksAutoMerge(_record: SelfImprovementLabRecord): true {
+  return true
+}
+
+export function blocksSelfDeploy(_record: SelfImprovementLabRecord): true {
+  return true
+}
+
+export function buildSelfImprovementSummary(records: SelfImprovementLabRecord[]): SelfImprovementSummary {
+  return {
+    total: records.length,
+    observed: records.filter((r) => r.state === 'observed').length,
+    proposed: records.filter((r) => r.state === 'proposed').length,
+    approved: records.filter((r) => r.approval_gate?.approval_status === 'approved_for_promotion').length,
+    rejected: records.filter((r) => r.state === 'rejected' || r.approval_gate?.approval_status === 'rejected').length,
+    blocked: records.filter((r) => r.state === 'blocked').length,
+    identity_sensitive: records.filter((r) => isIdentitySensitiveProposal(r)).length,
+    runtime_sensitive: records.filter((r) => isRuntimeSensitiveProposal(r)).length,
+    auto_merge_blocked: true,
+    self_deploy_blocked: true,
+    confidence_alone_approves: false,
+  }
+}
+
+// ── D4 Known Limits ─────────────────────────────────────────────────────────────
+export const D4_SELF_IMPROVEMENT_KNOWN_LIMITS: string[] = [
+  'no-active-lab-by-default: VITE_TITANE_D4_SELF_IMPROVEMENT_LAB flag=false until T4 activation',
+  'no-auto-merge: apply stage is permanently blocked in scaffold',
+  'no-self-deploy: deployment is never triggered by lab proposals',
+  'confidence-not-approval: confidence or eval improvement alone cannot approve promotion',
+  'identity-sensitive-requires-twin-consent: identity_sensitive proposals must reference Twin Consent Ledger D3',
+  'runtime-sensitive-requires-flag-and-rollback: runtime_sensitive proposals require feature flag + rollback doc',
+]
+
+// ── D4 Lab Contract Metadata ────────────────────────────────────────────────────
+export const D4_SELF_IMPROVEMENT_LAB_CONTRACT = {
+  schema: 'D4_SELF_IMPROVEMENT_LAB_CONTRACT_V15',
+  active: false,
+  approval_required: true as const,
+  auto_merge_blocked: true as const,
+  self_deploy_blocked: true as const,
+  policy: 'self-improvement-proposes; it-does-not-self-authorize',
+  known_limits: D4_SELF_IMPROVEMENT_KNOWN_LIMITS,
+  improvement_states: 12,
+  promotion_statuses: 5,
+  risk_levels: 7,
+} as const

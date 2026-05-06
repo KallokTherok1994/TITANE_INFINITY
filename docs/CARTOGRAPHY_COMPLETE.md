@@ -1842,6 +1842,17 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 
 > Chaîne runtime: commande IPC `analyze_logs_intelligent` (devtools Rust) -> service log_analysis -> rapport intelligent JSON+Markdown -> dashboard log-analysis avec selectors stables.
 
+## Delta 2026-05-06 — Lock D4 Self-Improvement Lab
+
+- Surface: src/services/self_improvement_lab/SelfImprovementLabContract.ts
+- Change type: v15 sidecar (approval-gated lifecycle, schema only, flag-gated, T4)
+- Added: ImprovementStateSchema (12 states), PromotionStatusSchema (5), ImprovementRiskLevelSchema (7), SelfImprovementLabRecordSchema, 11 policy helpers
+- Approval invariants: blocksAutoMerge=true always, blocksSelfDeploy=true always, canPromote requires approved_for_promotion, auto_approved=literal(false)
+- Tests: 122 PASS (45 base + 77 sidecar, D4-UNIT-01..10)
+- Validator: scripts/verify/verify_self_improvement_lab.sh PASS=25 FAIL=0
+- Proof pack: proof_packs/LOCK_D4_SELF_IMPROVEMENT_LAB_2026-05-06/
+- Feature flag: VITE_TITANE_D4_SELF_IMPROVEMENT_LAB=false (PROD SAFE)
+
 ## Delta 2026-05-06 — Lock B2 Observability Extension
 
 - Surface: src/services/observability/IntelligenceObservabilityContract.ts

@@ -17,6 +17,28 @@ import {
   getD4SelfImprovementLabContract,
   SELF_IMPROVEMENT_D4_FLAG,
   type ImprovementProposal,
+  // v15 sidecar
+  SelfImprovementLabRecordSchema,
+  SelfImprovementApprovalGateSchema,
+  SelfImprovementPatchProposalSchema,
+  ImprovementStateSchema,
+  PromotionStatusSchema,
+  ImprovementRiskLevelSchema,
+  canPromote,
+  canGenerateProposal,
+  canRunSandbox,
+  canCompareEvals,
+  blocksAutoMerge,
+  blocksSelfDeploy,
+  requiresApproval,
+  isIdentitySensitiveProposal,
+  isRuntimeSensitiveProposal,
+  hasRequiredProof,
+  buildSelfImprovementSummary,
+  D4_SELF_IMPROVEMENT_LAB_CONTRACT,
+  D4_SELF_IMPROVEMENT_KNOWN_LIMITS,
+  type SelfImprovementLabRecord,
+  type SelfImprovementApprovalGate,
 } from '../SelfImprovementLabContract'
 
 describe('D4 — Self-Improvement Lab Contract', () => {
@@ -275,4 +297,378 @@ describe('D4 — Self-Improvement Lab Contract', () => {
       expect(getD4SelfImprovementLabContract().flag_active).toBe(SELF_IMPROVEMENT_D4_FLAG)
     })
   })
+})
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ── D4-UNIT-01..10 — v15 Sidecar: Approval-Gated Lab ────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── Fixtures ──────────────────────────────────────────────────────────────────
+const makeWeakness = () => ({
+  weakness_id: 'weak-001',
+  domain: 'response_quality' as const,
+  description: 'Response truncated in edge case',
+  observed_at: '2026-05-06T00:00:00Z',
+  severity: 'medium' as const,
+  evidence: null,
+})
+
+const makeRecord = (overrides: Partial<SelfImprovementLabRecord> = {}): SelfImprovementLabRecord => ({
+  record_id: 'rec-001',
+  weakness: makeWeakness(),
+  hypothesis: null,
+  patch_proposal: null,
+  sandbox_plan: null,
+  approval_gate: null,
+  state: 'observed',
+  risk_level: 'low',
+  created_at: '2026-05-06T00:00:00Z',
+  updated_at: '2026-05-06T00:00:00Z',
+  ...overrides,
+})
+
+const makeApprovedGate = (overrides: Partial<SelfImprovementApprovalGate> = {}): SelfImprovementApprovalGate => ({
+  gate_id: 'gate-001',
+  patch_id: 'patch-001',
+  approval_status: 'approved_for_promotion',
+  approved_by: 'kevin',
+  approved_at: '2026-05-06T00:00:00Z',
+  rejected_reason: null,
+  auto_approved: false,
+  proof_pack_required: true,
+  has_proof_pack: true,
+  ...overrides,
+})
+
+const makePatch = () => ({
+  patch_id: 'patch-001',
+  hypothesis_id: 'hyp-001',
+  patch_description: 'Handle edge case truncation',
+  affected_paths: ['src/services/chat/'],
+  is_applied: false as const,
+  risk_level: 'low' as const,
+  requires_approval: true,
+  approval_status: 'not_promotable' as const,
+  created_at: '2026-05-06T00:00:00Z',
+})
+
+// ── D4-UNIT-01: SelfImprovementLabRecord validates a complete proposed improvement
+describe('D4-UNIT-01 — SelfImprovementLabRecord schema validates complete record', () => {
+  const record = makeRecord({
+    hypothesis: {
+      hypothesis_id: 'hyp-001',
+      weakness_id: 'weak-001',
+      hypothesis_text: 'Truncation caused by buffer limit',
+      confidence: 0.85,
+      requires_sandbox: false,
+      created_at: '2026-05-06T00:00:00Z',
+    },
+    patch_proposal: makePatch(),
+    state: 'proposed',
+  })
+  it('parses without error', () => {
+    expect(() => SelfImprovementLabRecordSchema.parse(record)).not.toThrow()
+  })
+  it('has record_id', () => {
+    expect(record.record_id).toBe('rec-001')
+  })
+  it('state=proposed', () => {
+    expect(record.state).toBe('proposed')
+  })
+  it('weakness domain is valid', () => {
+    expect(ImprovementDomainSchema.safeParse(record.weakness.domain).success).toBe(true)
+  })
+  it('patch is_applied=false', () => {
+    expect(record.patch_proposal?.is_applied).toBe(false)
+  })
+})
+
+// ── D4-UNIT-02: canPromote false without explicit approval
+describe('D4-UNIT-02 — canPromote false without explicit approval', () => {
+  it('null gate → false', () => {
+    expect(canPromote(makeRecord())).toBe(false)
+  })
+  it('approval_required gate → false', () => {
+    const r = makeRecord({ approval_gate: makeApprovedGate({ approval_status: 'approval_required' }), state: 'proof_ready' })
+    expect(canPromote(r)).toBe(false)
+  })
+  it('not_promotable gate → false', () => {
+    const r = makeRecord({ approval_gate: makeApprovedGate({ approval_status: 'not_promotable' }), state: 'proof_ready' })
+    expect(canPromote(r)).toBe(false)
+  })
+  it('rejected gate → false', () => {
+    const r = makeRecord({ approval_gate: makeApprovedGate({ approval_status: 'rejected' }), state: 'proof_ready' })
+    expect(canPromote(r)).toBe(false)
+  })
+  it('approved_for_promotion + approved state → true', () => {
+    const r = makeRecord({ approval_gate: makeApprovedGate(), state: 'approved' })
+    expect(canPromote(r)).toBe(true)
+  })
+  it('blocked state blocks even with gate approved', () => {
+    const r = makeRecord({ approval_gate: makeApprovedGate(), state: 'blocked' })
+    expect(canPromote(r)).toBe(false)
+  })
+})
+
+// ── D4-UNIT-03: confidence alone cannot approve promotion
+describe('D4-UNIT-03 — confidence alone cannot approve promotion', () => {
+  it('high confidence 0.99, no gate → canPromote=false', () => {
+    const r = makeRecord({
+      hypothesis: {
+        hypothesis_id: 'hyp-001',
+        weakness_id: 'weak-001',
+        hypothesis_text: 'High confidence test',
+        confidence: 0.99,
+        requires_sandbox: false,
+        created_at: '2026-05-06T00:00:00Z',
+      },
+    })
+    expect(canPromote(r)).toBe(false)
+  })
+  it('D4_SELF_IMPROVEMENT_LAB_CONTRACT.approval_required=true', () => {
+    expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.approval_required).toBe(true)
+  })
+  it('requiresApproval always true', () => {
+    expect(requiresApproval(makeRecord())).toBe(true)
+  })
+})
+
+// ── D4-UNIT-04: eval improvement alone cannot approve promotion
+describe('D4-UNIT-04 — eval improvement alone cannot approve promotion', () => {
+  it('perfect score, no gate → canPromote=false', () => {
+    const r = makeRecord({ state: 'proof_ready' })
+    expect(canPromote(r)).toBe(false)
+  })
+  it('approval_gate with not_promotable status → false even if state=proof_ready', () => {
+    const r = makeRecord({
+      approval_gate: makeApprovedGate({ approval_status: 'not_promotable' }),
+      state: 'proof_ready',
+    })
+    expect(canPromote(r)).toBe(false)
+  })
+  it('canCompareEvals returns true for proof_ready state', () => {
+    expect(canCompareEvals(makeRecord({ state: 'proof_ready' }))).toBe(true)
+  })
+  it('canCompareEvals does not imply canPromote', () => {
+    const r = makeRecord({ state: 'proof_ready' })
+    expect(canCompareEvals(r)).toBe(true)
+    expect(canPromote(r)).toBe(false)
+  })
+})
+
+// ── D4-UNIT-05: generated patch proposal is not an applied patch
+describe('D4-UNIT-05 — generated patch proposal is never an applied patch', () => {
+  it('patch is_applied literal=false parses', () => {
+    expect(() => SelfImprovementPatchProposalSchema.parse(makePatch())).not.toThrow()
+  })
+  it('patch is_applied=false in schema', () => {
+    expect(makePatch().is_applied).toBe(false)
+  })
+  it('patch is_applied=true is rejected by schema', () => {
+    const invalidPatch = { ...makePatch(), is_applied: true }
+    expect(SelfImprovementPatchProposalSchema.safeParse(invalidPatch).success).toBe(false)
+  })
+  it('record with patch has is_applied=false', () => {
+    const r = makeRecord({ patch_proposal: makePatch() })
+    expect(r.patch_proposal?.is_applied).toBe(false)
+  })
+})
+
+// ── D4-UNIT-06: identity-sensitive proposal requires Twin Consent Ledger validation
+describe('D4-UNIT-06 — identity-sensitive proposal requires Twin Consent Ledger', () => {
+  it('identity_sensitive risk is detected', () => {
+    const r = makeRecord({ risk_level: 'identity_sensitive' })
+    expect(isIdentitySensitiveProposal(r)).toBe(true)
+  })
+  it('restricted risk is detected as identity-sensitive', () => {
+    const r = makeRecord({ risk_level: 'restricted' })
+    expect(isIdentitySensitiveProposal(r)).toBe(true)
+  })
+  it('low risk is not identity-sensitive', () => {
+    expect(isIdentitySensitiveProposal(makeRecord({ risk_level: 'low' }))).toBe(false)
+  })
+  it('medium risk is not identity-sensitive', () => {
+    expect(isIdentitySensitiveProposal(makeRecord({ risk_level: 'medium' }))).toBe(false)
+  })
+  it('D4 known limits include twin-consent reference', () => {
+    const limit = D4_SELF_IMPROVEMENT_KNOWN_LIMITS.find((l) => l.includes('twin-consent') || l.includes('Twin Consent'))
+    expect(limit).toBeDefined()
+  })
+})
+
+// ── D4-UNIT-07: runtime-sensitive proposal requires feature flag and rollback
+describe('D4-UNIT-07 — runtime-sensitive proposal requires feature flag and rollback', () => {
+  it('runtime_sensitive risk is detected', () => {
+    const r = makeRecord({ risk_level: 'runtime_sensitive' })
+    expect(isRuntimeSensitiveProposal(r)).toBe(true)
+  })
+  it('security_sensitive risk is detected as runtime-sensitive', () => {
+    const r = makeRecord({ risk_level: 'security_sensitive' })
+    expect(isRuntimeSensitiveProposal(r)).toBe(true)
+  })
+  it('restricted risk is also runtime-sensitive', () => {
+    const r = makeRecord({ risk_level: 'restricted' })
+    expect(isRuntimeSensitiveProposal(r)).toBe(true)
+  })
+  it('low risk is not runtime-sensitive', () => {
+    expect(isRuntimeSensitiveProposal(makeRecord({ risk_level: 'low' }))).toBe(false)
+  })
+  it('D4 known limits include feature-flag reference', () => {
+    const limit = D4_SELF_IMPROVEMENT_KNOWN_LIMITS.find((l) => l.includes('feature flag') || l.includes('flag-and-rollback'))
+    expect(limit).toBeDefined()
+  })
+})
+
+// ── D4-UNIT-08: auto-merge is blocked (blocksAutoMerge always returns true)
+describe('D4-UNIT-08 — auto-merge is always blocked', () => {
+  it('blocksAutoMerge returns true for observed record', () => {
+    expect(blocksAutoMerge(makeRecord())).toBe(true)
+  })
+  it('blocksAutoMerge returns true for approved record', () => {
+    expect(blocksAutoMerge(makeRecord({ approval_gate: makeApprovedGate(), state: 'approved' }))).toBe(true)
+  })
+  it('blocksAutoMerge returns true for blocked record', () => {
+    expect(blocksAutoMerge(makeRecord({ state: 'blocked' }))).toBe(true)
+  })
+  it('D4_SELF_IMPROVEMENT_LAB_CONTRACT.auto_merge_blocked=true', () => {
+    expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.auto_merge_blocked).toBe(true)
+  })
+  it('approval gate auto_approved=true is rejected by schema', () => {
+    const invalidGate = { ...makeApprovedGate(), auto_approved: true }
+    expect(SelfImprovementApprovalGateSchema.safeParse(invalidGate).success).toBe(false)
+  })
+})
+
+// ── D4-UNIT-09: self-deploy is blocked (blocksSelfDeploy always returns true)
+describe('D4-UNIT-09 — self-deploy is always blocked', () => {
+  it('blocksSelfDeploy returns true for observed record', () => {
+    expect(blocksSelfDeploy(makeRecord())).toBe(true)
+  })
+  it('blocksSelfDeploy returns true for approved record', () => {
+    expect(blocksSelfDeploy(makeRecord({ approval_gate: makeApprovedGate(), state: 'approved' }))).toBe(true)
+  })
+  it('blocksSelfDeploy returns true for any risk level', () => {
+    for (const level of ['low', 'high', 'identity_sensitive', 'runtime_sensitive', 'restricted'] as const) {
+      expect(blocksSelfDeploy(makeRecord({ risk_level: level }))).toBe(true)
+    }
+  })
+  it('D4_SELF_IMPROVEMENT_LAB_CONTRACT.self_deploy_blocked=true', () => {
+    expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.self_deploy_blocked).toBe(true)
+  })
+})
+
+// ── D4-UNIT-10: buildSelfImprovementSummary counts proposed/evaluated/approved/rejected/blocked
+describe('D4-UNIT-10 — buildSelfImprovementSummary produces correct counts', () => {
+  const records: SelfImprovementLabRecord[] = [
+    makeRecord({ record_id: 'r1', state: 'observed' }),
+    makeRecord({ record_id: 'r2', state: 'proposed' }),
+    makeRecord({ record_id: 'r3', state: 'proposed' }),
+    makeRecord({
+      record_id: 'r4',
+      state: 'approved',
+      approval_gate: makeApprovedGate({ gate_id: 'g4' }),
+    }),
+    makeRecord({
+      record_id: 'r5',
+      state: 'rejected',
+      approval_gate: makeApprovedGate({ gate_id: 'g5', approval_status: 'rejected', rejected_reason: 'unsafe' }),
+    }),
+    makeRecord({ record_id: 'r6', state: 'blocked' }),
+    makeRecord({ record_id: 'r7', state: 'observed', risk_level: 'identity_sensitive' }),
+    makeRecord({ record_id: 'r8', state: 'observed', risk_level: 'runtime_sensitive' }),
+  ]
+  const summary = buildSelfImprovementSummary(records)
+
+  it('total=8', () => expect(summary.total).toBe(8))
+  it('observed=3 (r1 + r7 + r8)', () => expect(summary.observed).toBe(3))
+  it('proposed=2 (r2 + r3)', () => expect(summary.proposed).toBe(2))
+  it('approved=1 (r4)', () => expect(summary.approved).toBe(1))
+  it('rejected=1 (r5)', () => expect(summary.rejected).toBe(1))
+  it('blocked=1 (r6)', () => expect(summary.blocked).toBe(1))
+  it('identity_sensitive=1 (r7)', () => expect(summary.identity_sensitive).toBe(1))
+  it('runtime_sensitive=1 (r8)', () => expect(summary.runtime_sensitive).toBe(1))
+  it('auto_merge_blocked=true always', () => expect(summary.auto_merge_blocked).toBe(true))
+  it('self_deploy_blocked=true always', () => expect(summary.self_deploy_blocked).toBe(true))
+  it('confidence_alone_approves=false always', () => expect(summary.confidence_alone_approves).toBe(false))
+})
+
+// ── Additional v15 schema tests ──────────────────────────────────────────────
+describe('v15 — ImprovementStateSchema (12 states)', () => {
+  const states = ['observed','hypothesis','proposed','sandboxed','evaluated','proof_ready','approval_required','approved','rejected','expired','blocked','unknown']
+  it(`accepts all ${states.length} states`, () => {
+    for (const s of states) expect(ImprovementStateSchema.safeParse(s).success).toBe(true)
+  })
+  it('rejects unknown state', () => {
+    expect(ImprovementStateSchema.safeParse('unknown_state_xyz').success).toBe(false)
+  })
+})
+
+describe('v15 — PromotionStatusSchema (5 statuses)', () => {
+  const statuses = ['not_promotable','approval_required','approved_for_promotion','rejected','blocked']
+  it(`accepts all ${statuses.length} statuses`, () => {
+    for (const s of statuses) expect(PromotionStatusSchema.safeParse(s).success).toBe(true)
+  })
+  it('rejects invalid status', () => {
+    expect(PromotionStatusSchema.safeParse('auto_approved').success).toBe(false)
+  })
+})
+
+describe('v15 — ImprovementRiskLevelSchema (7 levels)', () => {
+  const levels = ['low','medium','high','identity_sensitive','runtime_sensitive','security_sensitive','restricted']
+  it(`accepts all ${levels.length} levels`, () => {
+    for (const l of levels) expect(ImprovementRiskLevelSchema.safeParse(l).success).toBe(true)
+  })
+  it('rejects unknown level', () => {
+    expect(ImprovementRiskLevelSchema.safeParse('ultra_safe').success).toBe(false)
+  })
+})
+
+describe('v15 — canGenerateProposal / canRunSandbox / canCompareEvals lifecycle', () => {
+  it('observed → canGenerateProposal=true', () => {
+    expect(canGenerateProposal(makeRecord({ state: 'observed' }))).toBe(true)
+  })
+  it('hypothesis → canGenerateProposal=true', () => {
+    expect(canGenerateProposal(makeRecord({ state: 'hypothesis' }))).toBe(true)
+  })
+  it('proposed → canRunSandbox=true', () => {
+    expect(canRunSandbox(makeRecord({ state: 'proposed' }))).toBe(true)
+  })
+  it('rejected → canGenerateProposal=false', () => {
+    expect(canGenerateProposal(makeRecord({ state: 'rejected' }))).toBe(false)
+  })
+  it('rejected → canRunSandbox=false', () => {
+    expect(canRunSandbox(makeRecord({ state: 'rejected' }))).toBe(false)
+  })
+  it('evaluated → canCompareEvals=true', () => {
+    expect(canCompareEvals(makeRecord({ state: 'evaluated' }))).toBe(true)
+  })
+  it('proof_ready → canCompareEvals=true', () => {
+    expect(canCompareEvals(makeRecord({ state: 'proof_ready' }))).toBe(true)
+  })
+  it('observed → canCompareEvals=false', () => {
+    expect(canCompareEvals(makeRecord({ state: 'observed' }))).toBe(false)
+  })
+})
+
+describe('v15 — hasRequiredProof', () => {
+  it('null gate → false', () => {
+    expect(hasRequiredProof(makeRecord())).toBe(false)
+  })
+  it('gate with has_proof_pack=true → true', () => {
+    expect(hasRequiredProof(makeRecord({ approval_gate: makeApprovedGate({ has_proof_pack: true }) }))).toBe(true)
+  })
+  it('gate with has_proof_pack=false → false', () => {
+    expect(hasRequiredProof(makeRecord({ approval_gate: makeApprovedGate({ has_proof_pack: false }) }))).toBe(false)
+  })
+})
+
+describe('v15 — D4_SELF_IMPROVEMENT_LAB_CONTRACT metadata', () => {
+  it('active=false', () => expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.active).toBe(false))
+  it('approval_required=true', () => expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.approval_required).toBe(true))
+  it('auto_merge_blocked=true', () => expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.auto_merge_blocked).toBe(true))
+  it('self_deploy_blocked=true', () => expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.self_deploy_blocked).toBe(true))
+  it('improvement_states=12', () => expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.improvement_states).toBe(12))
+  it('promotion_statuses=5', () => expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.promotion_statuses).toBe(5))
+  it('risk_levels=7', () => expect(D4_SELF_IMPROVEMENT_LAB_CONTRACT.risk_levels).toBe(7))
+  it('has 6 known limits', () => expect(D4_SELF_IMPROVEMENT_KNOWN_LIMITS.length).toBeGreaterThanOrEqual(6))
 })
