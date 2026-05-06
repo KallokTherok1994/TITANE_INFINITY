@@ -14,16 +14,16 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
-![Release v33.0.0](https://img.shields.io/badge/release-v33.0.0-brightgreen?logo=github)
+![Release v33.0.8](https://img.shields.io/badge/release-v33.0.8-brightgreen?logo=github)
 
-**Version:** v33.0.0 (repository authority)
-**Status:** ⚠️ Repo/build/deployment/E2E proven; installed system binary still pending interactive sudo
+**Version:** v33.0.9 (package.json — bumped; latest proven release: v33.0.8)
+**Status:** ⚠️ v33.0.9 bumped in code — no release artifacts yet; last sealed release = v33.0.8 (SEAL proof pack 2026-05-05)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
-**Latest certified deployment:** `2026-05-03` via `deployment/latest/MANIFEST.json`
+**Latest certified deployment:** `2026-05-05` via `deployment/latest/MANIFEST.json` (v33.0.7/v33.0.8)
 **Last published GitHub release:** [v30.1.25](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.1.25) (last public binary)
 **Prior major release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (historical)
 
-**Canal de release canonique:** v33.0.0
+**Canal de release canonique:** v33.0.8 (dernière release prouvée) / v33.0.9 (code bumped, pas encore release)
 
 **Nouveautés v31.1.0 (2026-04-23):** Export DOCX natif via `doc_engine` + `docx-rs` (Ring 2 Rust), surface UI `/doc-center` (`DocCenterPage`), commande IPC `export_docx_file`, 12 tests Vitest + WDIO desktop + Playwright E2E, correction TS `Experience.tsx` + `syncSupervisor.ts`, governance complète.
 
@@ -65,35 +65,38 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 **Statut d'autorité documentaire (LOCAL, 2026-04-17) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `33.0.0` (`PROVEN_BY_REPO`)
-- Release canonique vérifiée: `v33.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Source de version canonique du repo: `package.json` -> `33.0.9` (code version, bumped 2026-05-05, `VERSION_BUMPED_NOT_RELEASED`)
+- Dernière release prouvée: `v33.0.8` (SEAL proof pack `SEAL_v33.0.8_2026-05-05`, checksums `RELEASE_ARTIFACTS_CHECKSUMS_33.0.8.txt`, `PROVEN_BY_SEAL_PACK`)
 - Dernier binaire GitHub publié: `v30.1.25` (`PROVEN_BY_GITHUB_RELEASE`)
 - Lignes binaires historiques documentées: `v30.0.0`, `v28.90.0`, `v28.88.0`, `v27.2.0` (`PROVEN_BY_CANON_DOC`)
-- Politique de cohérence: version canonique et release courante `33.0.0`; les surfaces historiques restent archivées et identifiées par version
+- Politique de cohérence: version canonique = package.json (33.0.9); release publiée = 33.0.8; les surfaces historiques restent archivées et identifiées par version
 
 ---
 
 ## 📦 Téléchargement
 
-### ⚠️ Release canonique courante: v33.0.0
+### ⚠️ Release canonique courante: v33.0.8 (dernière prouvée) / v33.0.9 (code bumped, pas encore release)
 
-**Status**: ⚠️ REPO/BUILD/DEPLOYMENT/E2E PROVEN — SYSTEM INSTALL BLOCKED IN THIS SESSION  
-**Certification ID**: `TITANE_INFINITY_RELEASE_20260503_v33.0.0`  
-**Last Certification Refresh**: May 3, 2026  
-**Certification Scope**: `build:production` PASS, `deployment/latest` PASS, `sha256sum -c` PASS, desktop proof PASS, `verify_instructions` PASS, `detect_recurrence` PASS, installed binary `/usr/bin/titane-infinity` still on `32.0.3` pending interactive `sudo`
+**Status**: ✅ v33.0.8 SEALED (Vitest=7883 PASS, Cargo=4257 PASS, E2E=173 PASS) | ⚠️ v33.0.9 VERSION_BUMPED_NOT_RELEASED  
+**Certification ID**: `SEAL_v33.0.8_2026-05-05`  
+**Last Certification Refresh**: May 5, 2026  
+**Certification Scope**: `build:production` PASS, `deployment/latest` PASS, `sha256sum -c` PASS (33.0.8), Vitest=7883, Cargo=4257, E2E=173
 
-Artefacts vérifiés (Linux amd64):
+Artefacts vérifiés (Linux amd64 — v33.0.8):
 
-- **AppImage**: `titane-infinity_33.0.0_amd64.AppImage` (deployed in `deployment/latest/`)
-- **DEB Package**: `titane-infinity_33.0.0_amd64.deb` (deployed in `deployment/latest/`)
-- **RPM Package**: `titane-infinity-33.0.0-1.x86_64.rpm` (built locally; tracked in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.0.txt`)
+- **AppImage**: `titane-infinity_33.0.8_amd64.AppImage` (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.8.txt`)
+- **DEB Package**: `titane-infinity_33.0.8_amd64.deb`
+- **RPM Package**: `titane-infinity-33.0.8-1.x86_64.rpm`
 
-Checksums courants (`deployment/latest/MANIFEST.json`):
+Checksums courants (`RELEASE_ARTIFACTS_CHECKSUMS_33.0.8.txt`):
 
 ```
-AppImage:  85441d46e420ffc42720dc80796382693e6b22b64d4dd6464d1d2cfc0423be3f
-DEB:       355002329b87133741ae9ff3cc4b160c59bc6532e0fb429f8c2ca0c7d2d498bb
+AppImage:  eaebd0e420c825910a07b4d240b554fb6d251d4d8790fa079d0405fbf00c6503
+DEB:       ade3a39f7d5af9c413a66af01a936b0abc65f5528cc8ebe0e9647f2aef61d8ad
+RPM:       5a1529af3e1f78cb41fc560d05895ad00a548ffd99bd21dcb305a7807fadd638
 ```
+
+Note: `deployment/latest/MANIFEST.json` is at v33.0.7 (build system drift, not yet redeployed).
 
 ### Installation Windows (PR #292)
 

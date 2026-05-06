@@ -7,6 +7,14 @@
 
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.3 — local build + deployment PASS — system install pending sudo — Historical baseline preserved below)
 
+---
+> **A1 VERSION AUTHORITY NOTE (2026-05-06)**
+> Current `package.json` version: **33.0.9** (VERSION_BUMPED_NOT_RELEASED — no release artifacts, checksums, or seal proof for 33.0.9)
+> Latest proven sealed release: **v33.0.8** (`SEAL_v33.0.8_2026-05-05`, Vitest=7883 PASS, Cargo=4257 PASS, E2E=173 PASS, checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.8.txt`)
+> Canonical version claim in this file was last updated through v33.0.3. Historical entries below are preserved as-is (append-only policy).
+> Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
+---
+
 ## Release v33.0.3 — 2026-05-03 (Patch release: Ollama /api/chat conversational memory fix)
 
 | Surface | Truth | Status |

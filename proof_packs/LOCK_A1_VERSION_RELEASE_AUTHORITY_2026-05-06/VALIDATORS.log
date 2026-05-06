@@ -1,0 +1,46 @@
+# VALIDATORS — Lock A1
+
+**Lock**: A1  
+**Date**: 2026-05-06
+
+## verify_instructions.sh
+
+```
+PASS: G_SOURCE_MAP_SCRIPT_PRESENT
+PASS: G_SOURCE_MAP_PASS
+PASS: G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT
+PASS: G_AUTOPILOT_BOUNDS_PASS
+SUMMARY: PASS=51 FAIL=0
+EXIT:0
+```
+
+## detect_recurrence.sh
+
+```
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=1642
+EXIT:0
+```
+
+## verify_evals_scaffold.sh
+
+```
+PASS: scripts/evals/promote_or_block.sh present
+PASS: promote_or_block.sh executable
+PASS: evals/scorecards/v1/CHALLENGER_TEMPLATE.json present
+PASS: evals/scorecards/challengers/ present
+PASS: 42 FAIL: 0
+VERDICT: PASS — evals scaffold valid
+EXIT:0
+```
+
+## pnpm run verify:final100
+
+NOT RUN — command runtime availability unknown (COMMAND_MISSING_STATUS: TO_VERIFY)
+Reason: not blocking; T0 lock touches docs only.
+
+## pnpm run verify:registry
+
+NOT RUN — command runtime availability unknown (COMMAND_MISSING_STATUS: TO_VERIFY)
+Reason: not blocking; no registry events added (docs-only changes).
