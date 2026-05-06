@@ -47,14 +47,14 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 | D3 | Twin Consent Ledger | CLEAN |
 | D4 | Self-Improvement Lab | CLEAN (commit `5844e7ea3`) |
 | E0 | Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS |
-| F0 | Registry/README/Sync | IN_PROGRESS |
-| D5 | Intelligence Seal | NOT_STARTED — T4 approval required |
+| F0 | Registry/README/Sync | DONE |
+| D5 | Intelligence Seal | **SEALED** — T4 approval granted 2026-05-06 |
 
 **Feature flags:** tous par défaut à `false` (production safe — aucune activation IA avancée par défaut)  
-**Seal state:** NOT_SEALED — D5 non démarré  
-**État:** Advanced Intelligence Program implémenté jusqu'à E0 avec preuve Desktop partielle et blockers explicites. Scellement final (D5) en attente de résolution des blockers et validation T4.
+**Seal state:** **SEALED** — 17 locks complets, T4 approval accordé  
+**État:** Advanced Intelligence Program scellé — A0I → D5, 17 locks PASS. Desktop E2E PASS_WITH_EXPLICIT_BLOCKERS (8 PASS · 12 SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL). Aucune activation runtime par défaut.
 
-Détails → `docs/roadmap/D5_READINESS_ASSESSMENT.md` · `proof_packs/LOCK_E0_DESKTOP_ADVANCED_E2E_2026-05-06/` · `reports/desktop_advanced_intelligence_e2e_matrix.md`
+Détails → `proof_packs/LOCK_D5_INTELLIGENCE_SEAL_2026-05-06/` · `proof_packs/LOCK_E0_DESKTOP_ADVANCED_E2E_2026-05-06/` · `reports/desktop_advanced_intelligence_e2e_matrix.md`
 
 ---
 
