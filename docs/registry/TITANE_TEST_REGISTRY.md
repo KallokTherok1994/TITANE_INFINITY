@@ -15,4 +15,5 @@ Date: 2026-05-06
 | TREG-008 | MemoryGraph v2 Shadow Contract | C1 | src/services/memory/v2 | src/services/memory/v2/__tests__/MemoryGraphV2ShadowContract.test.ts | ACTIVE | C1 | vitest PASS=47 | AI-DESKTOP-06/07 | medium |
 | TREG-009 | Knowledge Governance Contract | C2 | src/services/knowledge_governance | src/services/knowledge_governance/__tests__/KnowledgeGovernanceContract.test.ts | ACTIVE | C2 | vitest PASS=77 (41 base + 36 C2-UNIT-01..08) | AI-DESKTOP-08 | medium |
 | TREG-010 | Research Truth Engine Contract | C3 | src/services/research_truth | src/services/research_truth/__tests__/ResearchTruthContract.test.ts | ACTIVE | C3 | vitest PASS=77 (31 base + 46 C3-UNIT-01..10 sidecar) | AI-DESKTOP-09; AI-DESKTOP-10 | medium |
+| TREG-011 | Agent Effectiveness Contract | D0 | src/services/agent_effectiveness | src/services/agent_effectiveness/__tests__/AgentEffectivenessContract.test.ts | ACTIVE | D0 | vitest PASS=79 (30 base + 49 D0-UNIT-01..10 sidecar) | AI-DESKTOP-14 | low |
 

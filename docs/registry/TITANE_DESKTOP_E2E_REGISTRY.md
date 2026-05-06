@@ -19,7 +19,7 @@ Status model: PASS | SKIPPED_WITH_BLOCKER | BLOCKED_DESKTOP_E2E | PLANNED
 | AI-DESKTOP-11 | OMEGA first real handler trace | D1/E0 | DESKTOP_E2E.log | PLANNED | pending D1 runtime lane |
 | AI-DESKTOP-12 | Singularity measured/UNMEASURED | D2/E0 | DESKTOP_E2E.log | PLANNED | pending D2 runtime lane |
 | AI-DESKTOP-13 | Twin consent boundary enforced | D3/E0 | DESKTOP_E2E.log | PLANNED | pending D3 lane |
-| AI-DESKTOP-14 | Agent effectiveness scorecard accessible | D0/E0 | DESKTOP_E2E.log | PLANNED | pending D0 desktop lane |
+| AI-DESKTOP-14 | Agent effectiveness scorecard accessible | D0/E0 | DESKTOP_E2E.log | SCAFFOLDED | D0 delivered: docs/agents/AGENT_EFFECTIVENESS_SCORECARD.md + contract + validator. Full E2E (interactive scorecard UI) blocked until D0 desktop lane activated. Scaffold: e2e/advanced-intelligence/ spec needed when UI exists. |
 | AI-DESKTOP-15 | Injection blocking evidence | C3/E0 | DESKTOP_E2E.log | PLANNED | pending security lane |
 | AI-DESKTOP-16 | Self-improvement requires approval | D4/E0 | DESKTOP_E2E.log | PLANNED | pending D4 desktop lane |
 | AI-DESKTOP-17 | AutoHeal recurrence after mutation | E0 | DESKTOP_E2E.log | PLANNED | pending E0 execution |
