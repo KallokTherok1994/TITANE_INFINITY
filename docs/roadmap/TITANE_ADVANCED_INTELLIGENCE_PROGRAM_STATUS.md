@@ -102,3 +102,13 @@ Autopilot: yes (bounded)
 ```
 
 Prior context: see `docs/roadmap/B1_INGRESS_AUDIT.md` and `proof_packs/LOCK_B1_COGNITIVE_CORE_TRUTH_MATRIX_2026-05-06/NEXT_LOCK.md`
+
+---
+
+## V8 Incremental Control Table (Required Fields)
+
+| lock_id | lock_name | status | commit | proof_pack | validators | evals | research_status | runtime_status | desktop_e2e_status | docs_registry_status | autoheal_status | remaining_risk | next_lock | autopilot_suitability |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| B1I | B1 Ingress / Completion Audit | DRIFT_FOUND_FIXED | fae4ae3b0 | `proof_packs/LOCK_B1_COGNITIVE_CORE_TRUTH_MATRIX_2026-05-06/` | verify_instructions PASS=51; verify_evals_scaffold PASS=42; detect_recurrence PASS | scorecards present (18) | source maps present | no runtime changes | planned in E0 | partial before B1.5 | autoheal entry present | pre-existing duplicated rows in legacy table | B1 | T0/T1 yes |
+| B1 | Cognitive Core Truth Matrix Completion Extension | DRIFT_FOUND_FIXED | f6ef9e555 | `proof_packs/LOCK_B1_COGNITIVE_CORE_TRUTH_MATRIX_2026-05-06/` | verify_instructions PASS=51; verify_evals_scaffold PASS=42; detect_recurrence PASS=1659 | baseline scorecards linked | S004,S010 linkage maintained | no runtime changes | dependencies indexed AI-DESKTOP-01..20 | docs/cognitive created | autoheal entry present | runtime proof deferred to B2+ | B1.5 | T0/T1 yes |
+| B1.5 | Advanced Intelligence Cartography and Registry | CLEAN | (this commit) | `proof_packs/LOCK_B1_5_ADVANCED_INTELLIGENCE_CARTOGRAPHY_REGISTRY_2026-05-06/` | verify_instructions PASS=51; verify_advanced_intelligence_registry PASS; detect_recurrence PASS | registry links to scorecards | no new public source claims | no runtime changes | registry created (planned lanes) | cartography+registry synchronized | autoheal entry present | desktop execution pending E0 | B2 | T0/T1 yes |
