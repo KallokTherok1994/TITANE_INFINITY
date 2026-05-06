@@ -1,5 +1,5 @@
 # TITANE Advanced Intelligence Program — Status
-# Last Updated: 2026-05-06 (v6 — A1 version/release authority alignment)
+# Last Updated: 2026-05-06 (v6 — A2 external AI engineering source map)
 
 ## Program Overview
 
@@ -17,7 +17,7 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | A0I | A0 Ingress Audit | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A0I_INGRESS_AUDIT_2026-05-06/` | PASS=51 FAIL=0 | — | — | no runtime changes | vocab drift only | A1 | T0/T1 yes |
 | A0 | Instruction System Alignment + Bounded Research + Autopilot Boundary | DRIFT_FOUND_FIXED | f739bc412 | `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/` | PASS=51 FAIL=0 | — | 3 VERIFIED, 3 TO_VERIFY, 0 adopted without verification | no runtime changes | vocab drift (SEALED→DRIFT_FOUND_FIXED per v6) | A1 | bounded |
 | A1 | Version / Release / Proof Authority Alignment | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A1_VERSION_RELEASE_AUTHORITY_2026-05-06/` | PASS=51 FAIL=0 | eval champions stale v28.0.0 (B0) | — | no runtime changes | D1-D5 drift noted, CHANGELOG gap, 33.0.9 unbuilt | A2 | T0/T1 yes |
-| A2 | External AI Engineering Source Map | NOT_STARTED | — | — | — | — | — | — | — | B0 | T0 yes |
+| A2 | External AI Engineering Source Map | CLEAN | (this commit) | `proof_packs/LOCK_A2_AI_ENGINEERING_SOURCE_MAP_2026-05-06/` | PASS=51 FAIL=0 | — | 12 sources verified | no runtime changes | KEVIN_AXIS has no external source (acceptable) | B0 | T0 yes |
 | B0 | Eval Champion Realignment | NOT_STARTED | — | — | — | — | — | — | model drift | B1 | T1 yes |
 | B1 | Cognitive Core Truth Matrix | NOT_STARTED | — | — | — | — | — | — | stub coverage | B2 | T0/T1 yes |
 | B2 | Intelligence Observability Contract | NOT_STARTED | — | — | — | — | — | — | Ring 3 risk | C0 | T2 bounded |
@@ -68,17 +68,28 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 - **matrix**: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 - **worktree_safe**: yes
 
+### A2 — External AI Engineering Source Map
+- **status**: CLEAN
+- **verdict**: CLEAN (12 sources created, all 12 categories covered, no fabrication)
+- **tier**: T0 (research/docs only — no runtime code modified)
+- **sources**: 12 verified (S001 HELM, S002 RAGAS, S003 ReAct, S004 LangSmith, S005 NIST AI RMF, S006 ToolLLM, S007 MemGPT, S008 Temporal QA, S009 Mixtral MoE, S010 PromptBench, S011 Injection Survey, S012 Red Teaming)
+- **scorecard_coverage**: all 18 scorecards (6 existing + 12 B0 stubs) have source references except KEVIN_AXIS (personal identity — no external source applicable)
+- **validators**: verify_instructions PASS=51, detect_recurrence entries=1644
+- **proof_pack**: `proof_packs/LOCK_A2_AI_ENGINEERING_SOURCE_MAP_2026-05-06/`
+- **source_map**: `docs/research/AI_ENGINEERING_SOURCE_MAP.md`
+- **worktree_safe**: yes
+
 ---
 
 ## How to Continue
 
-Program next lock (A2) starts with external AI engineering source map (T0, safe for autopilot).
+Program next lock (B0) starts with eval champion realignment (T1, safe for autopilot).
 
 ```
-Lock: A2 — External AI Engineering Source Map
+Lock: B0 — Eval Champion Realignment
 Mode: DURABLE
-Tier: T0
-Autopilot: yes
+Tier: T1
+Autopilot: yes (bounded)
 ```
 
-Prior context: see `proof_packs/LOCK_A1_VERSION_RELEASE_AUTHORITY_2026-05-06/NEXT_LOCK.md`
+Prior context: see `proof_packs/LOCK_A2_AI_ENGINEERING_SOURCE_MAP_2026-05-06/NEXT_LOCK.md`
