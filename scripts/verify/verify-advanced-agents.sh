@@ -130,6 +130,7 @@ declare -a AGENTS=(
   "explainability|src/services/explainability/index.ts|src/services/explainability/ExplainabilityDashboard.tsx|e2e/agents/explainability-dashboard.e2e.ts|explainability-dashboard"
   "orchestrator|src/services/orchestrator/index.ts|src/services/orchestrator/OrchestratorDashboard.tsx|e2e/agents/orchestrator-dashboard.e2e.ts|orchestrator-dashboard"
   "security_active|src/services/security_active/index.ts|src/services/security_active/SecurityDashboard.tsx|e2e/agents/security-dashboard.e2e.ts|security-dashboard"
+  "log_analysis|src/services/log_analysis/index.ts|src/services/log_analysis/LogAnalysisDashboard.tsx|e2e/agents/log-analysis-dashboard.e2e.ts|log-analysis-dashboard"
 )
 
 assert_file "AGENT_PANEL_EXISTS" "src/components/AgentDashboardsPanel.tsx"

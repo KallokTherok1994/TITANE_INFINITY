@@ -1,10 +1,11 @@
-## Exigences agents avancés (Monitoring, Diagnostic, Explainability, Orchestrateur, Sécurité)
+## Exigences agents avancés (Monitoring, Diagnostic, Explainability, Orchestrateur, Sécurité, Log Analysis)
 
 - Dashboard UI avec `data-testid` stable + E2E Playwright
 - Service dédié dans `src/services/<agent>`
 - Mapping à jour dans `UI_SURFACE_MAP.md`, `CARTOGRAPHY_COMPLETE.md`, `ARCHITECTURE.md`
 - Preuve visible: capture, alerte, log ou rapport
 - Rollback documenté
+- Pour l agent `log_analysis`: produire un rapport intelligent attitré (anomalies, erreurs, incohérences, améliorations) et vérifier ce rapport via le gate dédié quand une demande de vérification de rapport agent est faite.
   Tout agent non mappé, non testé ou sans preuve = BLOCKED (Rule 15/16).
 
 # TITANE_INFINITY - Copilot Kernel (Governed)

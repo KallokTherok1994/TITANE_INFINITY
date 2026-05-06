@@ -4,6 +4,7 @@ import DiagnosticDashboard from '../services/diagnostic/DiagnosticDashboard';
 import { ExplainabilityDashboard } from '../services/explainability/ExplainabilityDashboard';
 import OrchestratorDashboard from '../services/orchestrator/OrchestratorDashboard';
 import SecurityDashboard from '../services/security_active/SecurityDashboard';
+import LogAnalysisDashboard from '../services/log_analysis/LogAnalysisDashboard';
 import './AgentDashboardsPanel.css';
 
 type AgentDashboardsPanelMode = 'default' | 'compact';
@@ -230,7 +231,7 @@ const AgentDashboardsPanel: React.FC = () => {
             </span>
           )}
         </span>
-        <span className="agent-dashboards-panel__toggle-meta">5 dashboards</span>
+        <span className="agent-dashboards-panel__toggle-meta">6 dashboards</span>
         {showWhatsNewBadge && (
           <span
             data-testid="agent-dashboards-panel-whats-new-text"
@@ -251,6 +252,7 @@ const AgentDashboardsPanel: React.FC = () => {
         <ExplainabilityDashboard />
         <OrchestratorDashboard />
         <SecurityDashboard />
+        <LogAnalysisDashboard />
       </div>
     </aside>
   );

@@ -899,3 +899,22 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
   - `src/services/api/chat.test.ts` (fallback HTTP + historique injecté + flush)
   - `src/__tests__/hooks/useChatMemory.test.ts` (propagation conversationId)
   - `src/__tests__/memory-consumption-truth.test.ts` (isolation conv-a/conv-b + migration legacy)
+
+## [2026-05-06] Log Analysis Agent — rapport intelligent des anomalies
+
+- Surface canonique: `log-analysis-dashboard` via `src/services/log_analysis/LogAnalysisDashboard.tsx`
+- Service dédié: `src/services/log_analysis/index.ts`
+- Selectors stables:
+  - `log-analysis-dashboard-status`
+  - `log-analysis-dashboard-proof-list`
+  - `log-analysis-dashboard-report`
+  - `log-analysis-dashboard-anomalies`
+  - `log-analysis-dashboard-inconsistencies`
+  - `log-analysis-dashboard-improvements`
+  - `log-analysis-dashboard-markdown-preview`
+  - `log-analysis-dashboard-refresh`
+- Collecte optimisée: scan manuel + auto-refresh 60s, source backend Rust prioritaire avec fallback local.
+- Rapport attitré: `titane_log_analysis_report_latest` + historique borné `titane_log_analysis_report_history`.
+- Preuves associées:
+  - Vitest: `src/services/log_analysis/__tests__/logAnalysisService.test.ts`
+  - Playwright: `e2e/agents/log-analysis-dashboard.e2e.ts`

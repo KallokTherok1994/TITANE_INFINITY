@@ -927,23 +927,24 @@
 | 8 | `literary_engine_process` | Literary engine process |
 | 9 | `literary_engine_update_style` | Literary engine update style |
 
-## Logging (13 commandes)
+## Logging (14 commandes)
 
 | # | Commande | Description |
 |---|----------|-------------|
-| 1 | `boot_marker_log` | Boot marker log |
-| 2 | `clear_event_stream` | Clear event stream |
-| 3 | `clear_logs` | Clear logs |
-| 4 | `clear_system_logs` | Clear system logs |
-| 5 | `get_correlated_logs` | Retrieve correlated logs |
-| 6 | `get_event_stream` | Retrieve event stream |
-| 7 | `get_logs` | Retrieve logs |
-| 8 | `get_system_logs` | Retrieve system logs |
-| 9 | `log_audit_event` | Log audit event |
-| 10 | `log_entries` | Log entries |
-| 11 | `log_to_file` | Log to file |
-| 12 | `read_logs` | Read logs |
-| 13 | `search_logs` | Search logs |
+| 1 | `analyze_logs_intelligent` | Analyze logs and generate intelligent anomaly report |
+| 2 | `boot_marker_log` | Boot marker log |
+| 3 | `clear_event_stream` | Clear event stream |
+| 4 | `clear_logs` | Clear logs |
+| 5 | `clear_system_logs` | Clear system logs |
+| 6 | `get_correlated_logs` | Retrieve correlated logs |
+| 7 | `get_event_stream` | Retrieve event stream |
+| 8 | `get_logs` | Retrieve logs |
+| 9 | `get_system_logs` | Retrieve system logs |
+| 10 | `log_audit_event` | Log audit event |
+| 11 | `log_entries` | Log entries |
+| 12 | `log_to_file` | Log to file |
+| 13 | `read_logs` | Read logs |
+| 14 | `search_logs` | Search logs |
 
 ## Memory (115 commandes)
 

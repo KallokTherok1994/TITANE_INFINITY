@@ -559,6 +559,24 @@ describe('TITANE∞ - Remote Key IPC Contract (Phase 1)', () => {
     const content = fs.readFileSync(mainPath, 'utf-8');
     expect(content).toContain('RemoteKeyStoreState');
   });
+
+  it('analyze_logs_intelligent command is exposed in Rust + main invoke + frontend allowlist', () => {
+    const mainPath = path.join(process.cwd(), 'src-tauri/src/main.rs');
+    const securityPath = path.join(process.cwd(), 'src/lib/security.ts');
+    const mainContent = fs.readFileSync(mainPath, 'utf-8');
+    const securityContent = fs.readFileSync(securityPath, 'utf-8');
+
+    expect(
+      rustCommands.has('analyze_logs_intelligent'),
+      'Missing Rust #[tauri::command] analyze_logs_intelligent'
+    ).toBe(true);
+    expect(mainContent).toContain('analyze_logs_intelligent');
+    expect(
+      securityContent.includes("'analyze_logs_intelligent'") ||
+        securityContent.includes('"analyze_logs_intelligent"'),
+      'Missing ALLOWED_COMMANDS entry in security.ts: analyze_logs_intelligent'
+    ).toBe(true);
+  });
 });
 
 // ─── Phase C: canonicalMode IPC payload contract ───────────────────────────

@@ -75,11 +75,13 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 ## Indexation et mapping agents avancés
 
 - Tout nouvel agent (monitoring, diagnostic, explainability, orchestrateur, sécurité) doit être indexé dans la doc repo (README ou section dédiée), mappé dans tous les fichiers de cartographie, et disposer d’une preuve (log, capture, rapport, rollback).
+- Pour l agent `log_analysis`, le rapport attitré intelligent (anomalies, erreurs, incohérences, axes d amélioration) doit être vérifié explicitement dès qu une demande utilisateur mentionne la vérification d un rapport d agent.
 
 ## Gates specifiques
 
 - `bash scripts/verify_instructions.sh`
 - `bash scripts/autoheal/detect_recurrence.sh`
+- `bash scripts/verify/verify-log-analysis-report.sh` when scope touches `src/services/log_analysis/**`, `e2e/agents/log-analysis-dashboard.e2e.ts`, or when user asks to verify an agent report.
 - `bash scripts/verify/verify-ollama-copilot-boundary.sh` when Ollama Dev / Ollama Chat defaults, repo-owned Copilot doctrine, boundary agent, or agent stack access paths change.
 - For governed frontend/UI procedure changes also run targeted UI tests plus the instruction architecture validators below.
 - For instruction architecture changes also run:

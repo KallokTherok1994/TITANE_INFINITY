@@ -345,6 +345,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     // ═══════════════════════════════════════════════════════════════
     // DEVTOOLS & LOGS
     // ═══════════════════════════════════════════════════════════════
+    commands.insert("analyze_logs_intelligent");
     commands.insert("get_logs");
     commands.insert("clear_logs");
 

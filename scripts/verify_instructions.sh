@@ -109,6 +109,13 @@ if has_match "BLOCKED.*test|test.*BLOCKED|until test exists" .github/copilot-ins
 # Agent audit tooling presence guards
 if [[ -f "scripts/verify/verify-advanced-agents.sh" ]]; then ok "G_ADVANCED_AGENTS_AUDIT_SCRIPT_PRESENT"; else ko "G_ADVANCED_AGENTS_AUDIT_SCRIPT_PRESENT"; fi
 if [[ -f "scripts/verify/verify-vscode-agent-workflow.sh" ]]; then ok "G_VSCODE_AGENT_WORKFLOW_SCRIPT_PRESENT"; else ko "G_VSCODE_AGENT_WORKFLOW_SCRIPT_PRESENT"; fi
+if [[ -f "scripts/verify/verify-log-analysis-report.sh" ]]; then ok "G_LOG_ANALYSIS_REPORT_SCRIPT_PRESENT"; else ko "G_LOG_ANALYSIS_REPORT_SCRIPT_PRESENT"; fi
+
+if bash scripts/verify/verify-log-analysis-report.sh >/dev/null 2>&1; then
+  ok "G_LOG_ANALYSIS_REPORT_AUDIT_PASS"
+else
+  ko "G_LOG_ANALYSIS_REPORT_AUDIT_PASS"
+fi
 
 # Legacy REGLE_CRITIQUE must be archived (not active authority)
 if has_match "ARCHIVÉE|SUPERSEDED|superseded|non.op.rationnelle" .github/REGLE_CRITIQUE_DEPLOIEMENT.md; then ok "G_REGLE_CRITIQUE_ARCHIVED"; else ko "G_REGLE_CRITIQUE_ARCHIVED"; fi

@@ -714,3 +714,11 @@ Conformité validée par tests 100/100 (avril 2026).
 > Côté Ring 3/4, `src/hooks/useTwinEvolution.ts` persiste un snapshot Twin enrichi (`identityCore`, `valueMap`, `cognitivePatterns`, `therapeuticModel`, `creativeSignature`, composantes fusion) et `src/services/chat/chatMemorySingleDoor.ts` expose ce snapshot dans le `CONTEXT_ENVELOPE_V44` pour que la chaîne chat consomme une vérité Twin plus complète.
 
 > Preuves associées: tests Rust `numeric_twin::tests::{observation_updates_multiple_twin_components, deep_evolution_requires_validation_and_validated_transition_updates_state}` + Vitest `src/__tests__/twins/twins-context-chain.test.ts` (H3).
+
+## 2026-05-06 — Log Analysis Agent (hybride Rust + Frontend)
+
+> Nouveau service Ring 3 `src/services/log_analysis/index.ts` branché au dashboard Ring 4 `src/services/log_analysis/LogAnalysisDashboard.tsx` et intégré au panneau global `AgentDashboardsPanel`. Le service produit un rapport intelligent attitré (anomalies, incohérences, améliorations) en JSON + Markdown avec scan manuel et auto-refresh 60s.
+
+> Côté Ring 0/1, la commande IPC `analyze_logs_intelligent` est exposée via `src-tauri/src/commands/devtools.rs` et enregistrée dans `src-tauri/src/main.rs`, avec allowlist sécurité alignée (`src-tauri/src/commands/security.rs` + `src/lib/security.ts`).
+
+> Flux canonique: UI Dashboard -> service log_analysis -> secureInvoke/safeInvokeCanonical -> Tauri devtools logs -> rapport intelligent -> evidence/blockers/nextStep runtime truth.

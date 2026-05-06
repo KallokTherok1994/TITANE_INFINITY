@@ -543,6 +543,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // DEVTOOLS & LOGS
   // ═══════════════════════════════════════════════════════════════
+  'analyze_logs_intelligent',
   'get_logs',
   'clear_logs',
 

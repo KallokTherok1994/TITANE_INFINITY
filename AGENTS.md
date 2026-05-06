@@ -9,8 +9,16 @@
 | Explainability Agent          | Rapport d'explicabilité, log d'inférence, capture UI         | Dashboard UI (`explainability-dashboard`), service `src/services/explainability/`, E2E test, mapping UI_SURFACE_MAP.md |
 | Orchestrateur Dynamique Agent | Log de répartition, métrique de charge, screenshot dashboard | Dashboard UI (`orchestrator-dashboard`), service `src/services/orchestrator/`, E2E test, mapping UI_SURFACE_MAP.md     |
 | Agent de Sécurité Active      | Log de détection, alerte sécurité, preuve de confinement     | Dashboard UI (`security-dashboard`), service `src/services/security_active/`, E2E test, mapping UI_SURFACE_MAP.md      |
+| Log Analysis Agent            | Rapport intelligent anomalies/incohérences + preuve dashboard| Dashboard UI (`log-analysis-dashboard`), service `src/services/log_analysis/`, E2E test, mapping UI_SURFACE_MAP.md     |
 
 Pour chaque nouvel agent, la preuve doit inclure : logs, dashboard visible, mapping à jour, test E2E, rollback documenté.
+
+### Log Analysis Agent (log_analysis/, src/services/log_analysis/)
+
+- Scope: Analyse avancée des logs TITANE, détection d incohérences et priorisation d axes d amélioration.
+- Gate: Rapport attitré intelligent (JSON + Markdown), preuve dashboard, tests Vitest + E2E, intégration autoheal.
+- Required: Dashboard log-analysis, collecte optimisée (manuel + 60s), vérification dédiée `verify-log-analysis-report`.
+- Mapping: update `ARCHITECTURE.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `UI_SURFACE_MAP.md`, `docs/IPC_CATALOG.md` si IPC ajouté.
 
 ### Agent de Sécurité Active (security_active/, src/services/security_active/)
 

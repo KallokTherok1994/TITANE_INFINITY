@@ -22,6 +22,7 @@ export interface AdvancedAgentStatus {
     | 'explainability'
     | 'orchestrator'
     | 'security_active'
+    | 'log_analysis'
     | 'knowledge_manager'
     | 'research_enricher';
   title: string;
@@ -138,6 +139,26 @@ const ADVANCED_AGENT_STATUS: Record<AdvancedAgentStatus['id'], AdvancedAgentStat
     ],
     nextStep:
       'Brancher les événements de sécurité active et publier une preuve de confinement réelle.',
+  },
+  log_analysis: {
+    id: 'log_analysis',
+    title: 'Log Analysis Agent',
+    summary:
+      'Analyse avancée des logs TITANE avec rapport intelligent des anomalies, incohérences et améliorations potentielles.',
+    testId: 'log-analysis-dashboard',
+    readiness: 'partial',
+    readinessLabel: 'PARTIAL',
+    serviceState: 'Analyse logs en attente de premier scan runtime',
+    evidence: [
+      'Service dédié log_analysis avec rapport intelligent JSON + Markdown.',
+      'Dashboard canonique intégré au panneau agents avancés avec selectors stables.',
+      'Analyse hybride disponible: backend Rust prioritaire, fallback local si nécessaire.',
+    ],
+    blockers: [
+      'La persistance append-only cross-session du rapport intelligent reste à brancher côté backend.',
+    ],
+    nextStep:
+      'Publier le rapport log-analysis dans un pipeline gouverné append-only et activer corrélation multi-session.',
   },
   knowledge_manager: {
     id: 'knowledge_manager',

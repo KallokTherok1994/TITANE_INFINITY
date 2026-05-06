@@ -2699,6 +2699,8 @@ fn main() {
             #[cfg(all(not(feature = "mock"), feature = "full"))]
             titane_infinity::commands::devtools::export_logs,
             #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::analyze_logs_intelligent,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
             titane_infinity::commands::devtools::list_all_metrics,
             #[cfg(all(not(feature = "mock"), feature = "full"))]
             titane_infinity::commands::devtools::get_core_metrics,

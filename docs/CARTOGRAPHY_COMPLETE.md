@@ -1833,3 +1833,11 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > Correctif mémoire conversationnelle: `src/services/chatMemoryCompactor.ts` introduit des clés conversationnelles (`titane_chat_conversation_<conversationId>_<mode>`) avec fallback de lecture legacy mode-only et migration douce. `src/hooks/useChatMemory.ts`, `src/hooks/useChat.ts` et `src/hooks/useConversationEngine.ts` propagent `conversationId` pour isoler la persistance par conversation.
 
 > Preuves exécutées: `pnpm vitest run src/services/api/chat.test.ts src/__tests__/hooks/useChatMemory.test.ts src/__tests__/memory-consumption-truth.test.ts` PASS (3 fichiers, 22 tests), `pnpm run check` PASS.
+
+## 2026-05-06 — Cartography: Log Analysis Agent
+
+> Nouvelles surfaces ajoutées: `src/services/log_analysis/index.ts`, `src/services/log_analysis/LogAnalysisDashboard.tsx`, `src/services/log_analysis/__tests__/logAnalysisService.test.ts`, `e2e/agents/log-analysis-dashboard.e2e.ts`.
+
+> Intégration canonique: `src/components/AgentDashboardsPanel.tsx` importe et rend `LogAnalysisDashboard`; le catalogue agents avancés déclare `log_analysis` dans `src/services/agents/advancedAgentCatalog.ts`.
+
+> Chaîne runtime: commande IPC `analyze_logs_intelligent` (devtools Rust) -> service log_analysis -> rapport intelligent JSON+Markdown -> dashboard log-analysis avec selectors stables.
