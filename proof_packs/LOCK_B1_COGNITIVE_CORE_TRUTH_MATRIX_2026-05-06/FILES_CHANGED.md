@@ -8,3 +8,16 @@
 - proof_packs/LOCK_B1_COGNITIVE_CORE_TRUTH_MATRIX_2026-05-06/AUTHORITY_MAP.md
 - proof_packs/LOCK_B1_COGNITIVE_CORE_TRUTH_MATRIX_2026-05-06/RISK_REGISTER.md
 - scripts/autoheal/autoheal_rules.jsonl
+
+## B1 Completion Extension (v8)
+
+- docs/reports/COGNITIVE_CORE_TRUTH_MATRIX.md
+- docs/cognitive/OMEGA_TRUTH_MATRIX.md
+- docs/cognitive/SINGULARITY_REALITY_MATRIX.md
+- docs/cognitive/TWIN_CONSENT_MATRIX.md
+- docs/cognitive/MEMORY_RETRIEVAL_MATRIX.md
+- docs/cognitive/KNOWLEDGE_GOVERNANCE_MATRIX.md
+- docs/cognitive/RESEARCH_TRUTH_MATRIX.md
+- docs/cognitive/PROVIDER_ROUTING_TRUTH_MATRIX.md
+- docs/roadmap/TITANE_ADVANCED_INTELLIGENCE_PROGRAM_STATUS.md
+- proof_packs/LOCK_B1_COGNITIVE_CORE_TRUTH_MATRIX_2026-05-06/NEXT_LOCK.md

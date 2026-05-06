@@ -1,12 +1,11 @@
-# Lock B1 — Next Lock Authorization
+# Lock B1 — Next Lock Authorization (v8 Sequence)
 
-**Next Lock: B2 — Intelligence Observability Contract**
+**Next Lock: B1.5 — Advanced Intelligence Cartography and Registry**
 **Status:** AUTHORIZED
-**Prerequisites:** B1 VERDICT=CLEAN ✓
+**Prerequisites:** B1 completion extension committed and validators green
 
-## B2 Scope
-- Define trace schema: session_id, model, prompt_hash, tokens, latency, feedback
-- Reference: S004 (LangSmith) trace field conventions
-- Creates contract/scaffold behind feature flag (T2 bounded)
-- No behavior activation without feature flag
-- Drift CD-05 to be addressed: OmegaTraceMeta not surfaced in eval harness
+## B1.5 Scope
+- Create/update cartography and registry surfaces for advanced intelligence lifecycle
+- Index lock/proof/validator/desktop dependencies consistently
+- Add registry validator if missing and run recurrence guard
+- Keep runtime behavior unchanged (T0/T1)

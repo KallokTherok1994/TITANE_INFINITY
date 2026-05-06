@@ -21,3 +21,19 @@ were identified and recorded with source references and deferred lock assignment
 
 `docs/reports/COGNITIVE_CORE_TRUTH_MATRIX.md` — 6-dimension matrix with real
 TITANE pipeline signals, 5 known drifts, and actionable requirements for B2–D.
+
+## Completion Extension (v8)
+
+The B1 lock was extended with mandatory subsystem matrices:
+
+- `docs/cognitive/OMEGA_TRUTH_MATRIX.md`
+- `docs/cognitive/SINGULARITY_REALITY_MATRIX.md`
+- `docs/cognitive/TWIN_CONSENT_MATRIX.md`
+- `docs/cognitive/MEMORY_RETRIEVAL_MATRIX.md`
+- `docs/cognitive/KNOWLEDGE_GOVERNANCE_MATRIX.md`
+- `docs/cognitive/RESEARCH_TRUTH_MATRIX.md`
+- `docs/cognitive/PROVIDER_ROUTING_TRUTH_MATRIX.md`
+
+Each row includes: subsystem, inspected files, claimed capability, observed implementation,
+classification, proof signal, risk, next lock dependency, scorecard dependency, and
+Desktop E2E dependency.
