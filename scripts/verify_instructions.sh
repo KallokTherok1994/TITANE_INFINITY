@@ -129,6 +129,17 @@ if bash scripts/verify/verify_prompt_frontmatter.sh >/dev/null 2>&1; then ok "G_
 # vscode agent workflow guard
 if bash scripts/verify/verify-vscode-agent-workflow.sh >/dev/null 2>&1; then ok "G_VSCODE_AGENT_WORKFLOW_PASS"; else ko "G_VSCODE_AGENT_WORKFLOW_PASS"; fi
 
+# Extended execution gates (all offline-safe — static file checks only, no network/build)
+if bash scripts/verify/verify_kernel_budget.sh >/dev/null 2>&1; then ok "G_KERNEL_BUDGET_PASS"; else ko "G_KERNEL_BUDGET_PASS"; fi
+if bash scripts/verify/verify_instruction_layers.sh >/dev/null 2>&1; then ok "G_INSTRUCTION_LAYERS_PASS"; else ko "G_INSTRUCTION_LAYERS_PASS"; fi
+if bash scripts/verify/verify_no_doctrine_duplication.sh >/dev/null 2>&1; then ok "G_NO_DOCTRINE_DUPLICATION_PASS"; else ko "G_NO_DOCTRINE_DUPLICATION_PASS"; fi
+if bash scripts/verify/verify_status_vocabulary.sh >/dev/null 2>&1; then ok "G_STATUS_VOCAB_PASS"; else ko "G_STATUS_VOCAB_PASS"; fi
+if bash scripts/verify/verify_agents_index.sh >/dev/null 2>&1; then ok "G_AGENTS_INDEX_PASS"; else ko "G_AGENTS_INDEX_PASS"; fi
+if bash scripts/verify/verify_prompt_files_index.sh >/dev/null 2>&1; then ok "G_PROMPT_FILES_INDEX_PASS"; else ko "G_PROMPT_FILES_INDEX_PASS"; fi
+if bash scripts/verify/verify_local_markers_consistency.sh >/dev/null 2>&1; then ok "G_LOCAL_MARKERS_PASS"; else ko "G_LOCAL_MARKERS_PASS"; fi
+if bash scripts/verify/verify-advanced-agents.sh >/dev/null 2>&1; then ok "G_ADVANCED_AGENTS_PASS"; else ko "G_ADVANCED_AGENTS_PASS"; fi
+if bash scripts/verify/verify-ollama-copilot-boundary.sh >/dev/null 2>&1; then ok "G_OLLAMA_BOUNDARY_PASS"; else ko "G_OLLAMA_BOUNDARY_PASS"; fi
+
 echo "SUMMARY: PASS=$PASS FAIL=$FAIL"
 if [[ $FAIL -gt 0 ]]; then
   exit 1
