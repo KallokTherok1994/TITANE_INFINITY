@@ -14,7 +14,7 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 
 | lock_id | lock_name | status | commit | proof_pack | validators | research_status | autopilot_boundary_status | remaining_risk | next_lock |
 |---------|-----------|--------|--------|------------|------------|-----------------|--------------------------|----------------|-----------|
-| A0 | Instruction System Alignment + Bounded Research + Autopilot Boundary | SEALED | TBD (post-commit) | `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/` | PASS=51 FAIL=0 | 3 VERIFIED, 3 TO_VERIFY, 0 adopted without verification | PASS — boundary validator wired | regression risk from .vscode settings drift | A1 |
+| A0 | Instruction System Alignment + Bounded Research + Autopilot Boundary | SEALED | f739bc412 | `proof_packs/LOCK_A0_INSTRUCTIONS_SYSTEM_ALIGNMENT_2026-05-06/` | PASS=51 FAIL=0 | 3 VERIFIED, 3 TO_VERIFY, 0 adopted without verification | PASS — boundary validator wired | regression risk from .vscode settings drift | A1 |
 | A1 | Version / Release / Proof Authority Alignment | NOT_STARTED | — | — | — | — | — | version sync drift | A2 |
 | A2 | External AI Engineering Source Map | NOT_STARTED | — | — | — | — | — | — | B0 |
 | B0 | Eval Champion Realignment | NOT_STARTED | — | — | — | — | — | model drift | B1 |
