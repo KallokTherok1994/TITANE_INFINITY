@@ -1613,3 +1613,29 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | Scope | E2E anti-flaky tranches 3+4 + Remote Gateway Twins HTTP wiring + One Door auth consolidation |
 | Gates | detect_recurrence PASS, verify_instructions 33/33 PASS |
 | VERDICT | PASS |
+
+---
+
+## Advanced Intelligence Program — Surface Inventory (2026-05-06)
+
+> This section tracks the Advanced Intelligence Program proof state, separate from product release versioning.
+
+| Dimension | Value |
+|-----------|-------|
+| code_version | 33.0.9 (package.json, VERSION_BUMPED_NOT_RELEASED) |
+| last_proven_release | v33.0.8 (SEALED 2026-05-05) |
+| program_locks_completed | C0, C1, C2, C3, D0, D1, D2, D3, D4, E0, F0 |
+| desktop_e2e_state | PASS_WITH_EXPLICIT_BLOCKERS |
+| desktop_pass_lanes | 8/20 (WDIO headless, EXIT 0) |
+| desktop_skipped_lanes | 12/20 (SKIPPED_WITH_EXPLICIT_BLOCKER) |
+| desktop_fail_lanes | 0/20 |
+| proof_pack_state | C0–E0, F0 present; C1 CLEAN_NO_PACK |
+| seal_state | NOT_SEALED |
+| release_state | NOT_RELEASED (v33.0.9 code only) |
+| deployment_state | v33.0.7/v33.0.8 (deployment/latest/) — unchanged |
+| advanced_intelligence_production_active | false (all flags default-safe) |
+| d5_readiness | D5_READY_FOR_PARTIAL_SEAL |
+| d5_state | NOT_STARTED — T4 approval required |
+| last_lock | E0 (commit 9a8df5507) |
+| f0_lock | F0 (this entry) |
+| autoheal_entries | 1673 |

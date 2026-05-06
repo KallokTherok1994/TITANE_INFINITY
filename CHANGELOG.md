@@ -1,3 +1,73 @@
+# [Unreleased] - 2026-05-06 — Advanced Intelligence Program (C0–E0) + F0 Registry Sync
+
+> **Not a final release.** This section documents the governed lock chain for the Advanced Intelligence Program.  
+> seal_state: NOT_SEALED · desktop_e2e_state: PASS_WITH_EXPLICIT_BLOCKERS · D5: NOT_STARTED
+
+## Advanced Intelligence Lock Chain — 2026-05-06
+
+| Lock | Name | Status | Commit | Proof Pack |
+|------|------|--------|--------|------------|
+| C0 | Provider / Model Intelligence Routing | DRIFT_FOUND_FIXED | `44e3f07c4` | `proof_packs/LOCK_C0_*` |
+| C1 | MemoryGraph v2 Shadow Mode | CLEAN | 2026-05-06 | — |
+| C2 | Knowledge Governance | CLEAN | `fd61d6939` | `proof_packs/LOCK_C2_KNOWLEDGE_GOVERNANCE_2026-05-06/` |
+| C3 | Research Truth Engine | CLEAN | `9ef783bd9` | `proof_packs/LOCK_C3_RESEARCH_TRUTH_ENGINE_2026-05-06/` |
+| D0 | Agent Effectiveness System | CLEAN | 2026-05-06 | `proof_packs/LOCK_D0_AGENT_EFFECTIVENESS_2026-05-06/` |
+| D1 | OMEGA Real Handler Upgrade | CLEAN | 2026-05-06 | `proof_packs/LOCK_D1_OMEGA_HANDLER_2026-05-06/` |
+| D2 | Singularity Measured Layer | CLEAN | 2026-05-06 | `proof_packs/LOCK_D2_SINGULARITY_LAYER_2026-05-06/` |
+| D3 | Twin Consent Ledger | CLEAN | 2026-05-06 | `proof_packs/LOCK_D3_TWIN_CONSENT_2026-05-06/` |
+| D4 | Self-Improvement Lab | CLEAN | `5844e7ea3` | `proof_packs/LOCK_D4_SELF_IMPROVEMENT_LAB_2026-05-06/` |
+| E0 | Advanced Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS | `9a8df5507` | `proof_packs/LOCK_E0_DESKTOP_ADVANCED_E2E_2026-05-06/` |
+| F0 | Registry / README / CHANGELOG Sync | IN_PROGRESS | this commit | `proof_packs/LOCK_F0_REGISTRY_README_CHANGELOG_SYNC_2026-05-06/` |
+| D5 | Intelligence Seal | NOT_STARTED | — | T4 approval required |
+
+### E0 — Advanced Desktop E2E Matrix (2026-05-06, commit `9a8df5507`)
+
+- **WDIO:** 23 assertions passing (11.7s), EXIT 0
+- **Vitest contracts:** 21/21 PASS
+- **Validator:** `verify_desktop_advanced_intelligence_tests.sh` PASS=25 FAIL=0
+- **Desktop lanes:** 8 PASS · 12 SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL
+- **PASS lanes:** AI-DESKTOP-01 (launch), 02 (chat input), 06 (memory nav), 14 (scorecard), 16 (D4 contract), 17A (autoheal), 17B (detect_recurrence), 18 (offline UI), 20A (smoke)
+- **Blocked lanes:** conversation/Ollama lanes (03, 04, 05, 19, 20B), pipeline injection lanes (11, 12), UI-missing lanes (13), flag-gated lanes (07), research network lanes (10), security lane (15)
+- **Classification:** PASS_WITH_EXPLICIT_BLOCKERS — not a full Desktop proof
+
+### D4 — Self-Improvement Lab (commit `5844e7ea3`)
+
+- Vitest: 122/122 PASS (45 base + 77 D4-UNIT-01..10)
+- Validator: `verify_self_improvement_lab.sh` PASS=25 FAIL=0
+- `blocksAutoMerge=true`, `blocksSelfDeploy=true` (approval-gated invariants)
+- Feature flag `VITE_TITANE_D4_SELF_IMPROVEMENT_LAB=false` — no production activation
+
+### D3 — Twin Consent Ledger
+
+- Vitest: 84/84 PASS
+- Validator: `verify_twin_consent_ledger.sh` PASS=25 FAIL=0
+- `confidence_not_consent_enforced`, T4-gated, no identity observation active
+
+### D2 — Singularity Measured Layer
+
+- Vitest: 69/69 PASS
+- Validator: `verify_singularity_measured_layer.sh` PASS=31 FAIL=0
+- Passive mode, 5 event types, 4 intensity levels, no active B2 push
+
+### D1 — OMEGA Real Handler Upgrade
+
+- Vitest: 62/62 PASS
+- Validator: `verify_omega_real_handler.sh` PASS=31 FAIL=0
+- Memory handler selected (shadow mode), OmegaMemoryBridge declared, not injected until D2 activation
+
+### D0 — Agent Effectiveness System
+
+- Vitest: 79/79 PASS
+- `docs/agents/AGENT_EFFECTIVENESS_SCORECARD.md` created
+- Measurement-only, no flag required
+
+### C2 — Knowledge Governance / C3 — Research Truth Engine
+
+- Vitest: 77 PASS each
+- Passive sidecars, flag-gated, no runtime activation
+
+---
+
 # [33.0.0] - 2026-05-03 (Major Release Seal — V33 Promotion)
 
 ## Release v33.0.0 — Major Release Seal

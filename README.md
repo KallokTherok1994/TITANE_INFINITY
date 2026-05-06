@@ -25,6 +25,39 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 **Canal de release canonique:** v33.0.8 (dernière release prouvée) / v33.0.9 (code bumped, pas encore release)
 
+---
+
+## 🤖 Advanced Intelligence Program — État v33 (2026-05-06)
+
+**Programme:** séquence de locks gouvernés C0→C1→C2→C3→D0→D1→D2→D3→D4→E0→[D5 pending]
+
+**Dernier lock complété: E0** (commit `9a8df5507`) — Advanced Desktop E2E Matrix  
+**Preuve E0:** WDIO 23 passing, Vitest 21/21 PASS, validator PASS=25 FAIL=0  
+**Résultat Desktop E2E:** 8 lanes PASS · 12 lanes SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL
+
+| Lock | Nom | État |
+|------|-----|------|
+| C0 | Provider / Model Routing | DRIFT_FOUND_FIXED |
+| C1 | MemoryGraph Shadow | CLEAN |
+| C2 | Knowledge Governance | CLEAN |
+| C3 | Research Truth Engine | CLEAN |
+| D0 | Agent Effectiveness | CLEAN |
+| D1 | OMEGA Handler | CLEAN |
+| D2 | Singularity Layer | CLEAN |
+| D3 | Twin Consent Ledger | CLEAN |
+| D4 | Self-Improvement Lab | CLEAN (commit `5844e7ea3`) |
+| E0 | Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS |
+| F0 | Registry/README/Sync | IN_PROGRESS |
+| D5 | Intelligence Seal | NOT_STARTED — T4 approval required |
+
+**Feature flags:** tous par défaut à `false` (production safe — aucune activation IA avancée par défaut)  
+**Seal state:** NOT_SEALED — D5 non démarré  
+**État:** Advanced Intelligence Program implémenté jusqu'à E0 avec preuve Desktop partielle et blockers explicites. Scellement final (D5) en attente de résolution des blockers et validation T4.
+
+Détails → `docs/roadmap/D5_READINESS_ASSESSMENT.md` · `proof_packs/LOCK_E0_DESKTOP_ADVANCED_E2E_2026-05-06/` · `reports/desktop_advanced_intelligence_e2e_matrix.md`
+
+---
+
 **Nouveautés v31.1.0 (2026-04-23):** Export DOCX natif via `doc_engine` + `docx-rs` (Ring 2 Rust), surface UI `/doc-center` (`DocCenterPage`), commande IPC `export_docx_file`, 12 tests Vitest + WDIO desktop + Playwright E2E, correction TS `Experience.tsx` + `syncSupervisor.ts`, governance complète.
 
 **Qualité (2026-04-23) :** `pnpm run check` PASS, Vitest 26/26 PASS, Rust `doc_engine` 3/3 PASS, `verify_instructions` PASS=33 FAIL=0, `detect_recurrence` PASS.
