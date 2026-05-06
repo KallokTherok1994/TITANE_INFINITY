@@ -20,6 +20,7 @@ required=(
   .github/prompts/ollama-dev-session.prompt.md
   .github/prompts/session-router.prompt.md
   .github/prompts/start-hybrid-memory-dispatch.prompt.md
+  .github/prompts/autopilot-lock-runner.prompt.md
 )
 
 for f in "${required[@]}"; do

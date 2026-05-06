@@ -140,6 +140,10 @@ if bash scripts/verify/verify_local_markers_consistency.sh >/dev/null 2>&1; then
 if bash scripts/verify/verify-advanced-agents.sh >/dev/null 2>&1; then ok "G_ADVANCED_AGENTS_PASS"; else ko "G_ADVANCED_AGENTS_PASS"; fi
 if bash scripts/verify/verify-ollama-copilot-boundary.sh >/dev/null 2>&1; then ok "G_OLLAMA_BOUNDARY_PASS"; else ko "G_OLLAMA_BOUNDARY_PASS"; fi
 if bash scripts/verify/verify-agent-tooling.sh >/dev/null 2>&1; then ok "G_AGENT_TOOLING_PASS"; else ko "G_AGENT_TOOLING_PASS"; fi
+if [[ -f "scripts/verify/verify_copilot_instruction_source_map.sh" ]]; then ok "G_SOURCE_MAP_SCRIPT_PRESENT"; else ko "G_SOURCE_MAP_SCRIPT_PRESENT"; fi
+if bash scripts/verify/verify_copilot_instruction_source_map.sh >/dev/null 2>&1; then ok "G_SOURCE_MAP_PASS"; else ko "G_SOURCE_MAP_PASS"; fi
+if [[ -f "scripts/verify/verify_autopilot_lock_bounds.sh" ]]; then ok "G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT"; else ko "G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT"; fi
+if bash scripts/verify/verify_autopilot_lock_bounds.sh >/dev/null 2>&1; then ok "G_AUTOPILOT_BOUNDS_PASS"; else ko "G_AUTOPILOT_BOUNDS_PASS"; fi
 
 echo "SUMMARY: PASS=$PASS FAIL=$FAIL"
 if [[ $FAIL -gt 0 ]]; then
