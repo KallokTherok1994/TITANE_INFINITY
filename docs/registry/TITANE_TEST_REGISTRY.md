@@ -1,6 +1,6 @@
 # TITANE Test Registry
 
-Lock: C2
+Lock: C3
 Date: 2026-05-06
 
 | id | name | lock | surface | files | status | proof_pack | validators | desktop_e2e_coverage | risk |
@@ -14,4 +14,5 @@ Date: 2026-05-06
 | TREG-007 | Provider Routing Contract | C0 | src/services/routing | src/services/routing/__tests__/ProviderRoutingContract.test.ts | ACTIVE | C0 | vitest PASS=22 | AI-DESKTOP-04/05 | medium |
 | TREG-008 | MemoryGraph v2 Shadow Contract | C1 | src/services/memory/v2 | src/services/memory/v2/__tests__/MemoryGraphV2ShadowContract.test.ts | ACTIVE | C1 | vitest PASS=47 | AI-DESKTOP-06/07 | medium |
 | TREG-009 | Knowledge Governance Contract | C2 | src/services/knowledge_governance | src/services/knowledge_governance/__tests__/KnowledgeGovernanceContract.test.ts | ACTIVE | C2 | vitest PASS=77 (41 base + 36 C2-UNIT-01..08) | AI-DESKTOP-08 | medium |
+| TREG-010 | Research Truth Engine Contract | C3 | src/services/research_truth | src/services/research_truth/__tests__/ResearchTruthContract.test.ts | ACTIVE | C3 | vitest PASS=77 (31 base + 46 C3-UNIT-01..10 sidecar) | AI-DESKTOP-09; AI-DESKTOP-10 | medium |
 

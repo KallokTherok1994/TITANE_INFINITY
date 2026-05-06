@@ -14,8 +14,8 @@ Status model: PASS | SKIPPED_WITH_BLOCKER | BLOCKED_DESKTOP_E2E | PLANNED
 | AI-DESKTOP-06 | Memory write/read baseline | C1/E0 | DESKTOP_E2E.log | PLANNED | pending C1 lock |
 | AI-DESKTOP-07 | MemoryGraph shadow write | C1/E0 | DESKTOP_E2E.log | PLANNED | pending C1 lock |
 | AI-DESKTOP-08 | Knowledge governance metadata used | C2/E0 | DESKTOP_E2E.log | SCAFFOLDED | blocker=E0 desktop execution authority; scaffold: e2e/advanced-intelligence/; run: pnpm run test:e2e:advanced-intelligence |
-| AI-DESKTOP-09 | Research unavailable honesty | C3/E0 | DESKTOP_E2E.log | PLANNED | pending C3 lock |
-| AI-DESKTOP-10 | Research sourced state | C3/E0 | DESKTOP_E2E.log | PLANNED | pending environment + C3 |
+| AI-DESKTOP-09 | Research unavailable honesty | C3/E0 | DESKTOP_E2E.log | SCAFFOLDED | blocker=E0 desktop execution authority; scaffold: src/services/research_truth/; contract: isResearchUnavailable + validateResearchUnavailableHonesty; run: pnpm vitest run src/services/research_truth/__tests__/ResearchTruthContract.test.ts |
+| AI-DESKTOP-10 | Research sourced state when network available | C3/E0 | DESKTOP_E2E.log | SCAFFOLDED | blocker=E0 desktop execution authority + live network; scaffold: canPresentAsFact + buildCitationSummary; run: pnpm vitest run src/services/research_truth/__tests__/ResearchTruthContract.test.ts |
 | AI-DESKTOP-11 | OMEGA first real handler trace | D1/E0 | DESKTOP_E2E.log | PLANNED | pending D1 runtime lane |
 | AI-DESKTOP-12 | Singularity measured/UNMEASURED | D2/E0 | DESKTOP_E2E.log | PLANNED | pending D2 runtime lane |
 | AI-DESKTOP-13 | Twin consent boundary enforced | D3/E0 | DESKTOP_E2E.log | PLANNED | pending D3 lane |

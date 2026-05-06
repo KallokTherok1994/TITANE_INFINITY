@@ -301,3 +301,254 @@ export function getC3ResearchTruthContract(): C3ResearchTruthContract {
     sources_referenced: ['S003', 'S006', 'S012'],
   }
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// C3 v11 SIDECAR — Research Truth Engine Policy Layer
+// Additive extension — original 303 lines untouched
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Research Availability State Machine ────────────────────────────────────────
+export const ResearchAvailabilityStateSchema = z.enum([
+  'RESEARCH_NOT_REQUESTED',
+  'RESEARCH_REQUIRED',
+  'RESEARCH_AVAILABLE',
+  'RESEARCH_UNAVAILABLE',
+  'RESEARCH_PARTIAL',
+  'RESEARCH_FAILED',
+  'RESEARCH_BLOCKED',
+])
+export type ResearchAvailabilityState = z.infer<typeof ResearchAvailabilityStateSchema>
+
+// ── Freshness Classes ───────────────────────────────────────────────────────────
+export const ResearchFreshnessClassSchema = z.enum([
+  'stable',
+  'time_sensitive',
+  'current',
+  'unknown',
+  'expired',
+])
+export type ResearchFreshnessClass = z.infer<typeof ResearchFreshnessClassSchema>
+
+// ── Source Status ───────────────────────────────────────────────────────────────
+export const ResearchSourceStatusSchema = z.enum([
+  'VERIFIED',
+  'TO_VERIFY',
+  'OUTDATED',
+  'REJECTED',
+  'UNAVAILABLE',
+  'UNKNOWN',
+])
+export type ResearchSourceStatus = z.infer<typeof ResearchSourceStatusSchema>
+
+// ── Claim Status ────────────────────────────────────────────────────────────────
+export const ResearchClaimStatusSchema = z.enum([
+  'SUPPORTED',
+  'UNSUPPORTED',
+  'CONTRADICTED',
+  'STALE',
+  'HYPOTHESIS',
+  'INSUFFICIENT_EVIDENCE',
+])
+export type ResearchClaimStatus = z.infer<typeof ResearchClaimStatusSchema>
+
+// ── Source Types ────────────────────────────────────────────────────────────────
+export const ResearchSourceTypeSchema = z.enum([
+  'official',
+  'vendor',
+  'standard',
+  'paper',
+  'article',
+  'internal',
+  'generated',
+  'unknown',
+])
+export type ResearchSourceType = z.infer<typeof ResearchSourceTypeSchema>
+
+// ── Research Source (full provenance) ──────────────────────────────────────────
+export const ResearchSourceSchema = z.object({
+  source_id: z.string().min(1),
+  title: z.string().min(1),
+  url: z.string().url().nullable().describe('Required for VERIFIED non-internal sources'),
+  source_type: ResearchSourceTypeSchema,
+  date_accessed: z.string().datetime().nullable().describe('Required for VERIFIED sources'),
+  published_at: z.string().datetime().nullable(),
+  last_updated: z.string().datetime().nullable(),
+  status: ResearchSourceStatusSchema,
+  relevance: z.number().min(0).max(1).describe('0..1 relevance to the claim'),
+  confidence: z.number().min(0).max(1),
+  notes: z.string().nullable(),
+})
+export type ResearchSource = z.infer<typeof ResearchSourceSchema>
+
+// ── Research Claim ──────────────────────────────────────────────────────────────
+export const ResearchClaimSchema = z.object({
+  claim_id: z.string().min(1),
+  text: z.string().min(1),
+  claim_type: z.enum(['fact', 'hypothesis', 'opinion', 'contested', 'internal']),
+  freshness: ResearchFreshnessClassSchema,
+  status: ResearchClaimStatusSchema,
+  source_ids: z.array(z.string()),
+  requires_source: z.boolean(),
+  risk_level: z.enum(['low', 'medium', 'high', 'restricted']),
+  contradicts: z.array(z.string()).describe('claim_ids that contradict this claim'),
+  notes: z.string().nullable(),
+})
+export type ResearchClaim = z.infer<typeof ResearchClaimSchema>
+
+// ── Research Citation ───────────────────────────────────────────────────────────
+export const ResearchCitationSchema = z.object({
+  citation_id: z.string().min(1),
+  source_id: z.string().min(1),
+  claim_id: z.string().min(1),
+  url: z.string().url().nullable(),
+  date_accessed: z.string().datetime().nullable(),
+  source_type: ResearchSourceTypeSchema,
+  summary: z.string().min(1),
+})
+export type ResearchCitation = z.infer<typeof ResearchCitationSchema>
+
+// ── Research Truth Result ───────────────────────────────────────────────────────
+export const ResearchTruthResultSchema = z.object({
+  request_id: z.string().min(1),
+  query: z.string().min(1),
+  research_state: ResearchAvailabilityStateSchema,
+  sources: z.array(ResearchSourceSchema),
+  claims: z.array(ResearchClaimSchema),
+  citations: z.array(ResearchCitationSchema),
+  unsupported_claims: z.array(z.string()).describe('claim_ids that are UNSUPPORTED/HYPOTHESIS/INSUFFICIENT_EVIDENCE'),
+  contradictions: z.array(z.string()).describe('claim_ids with CONTRADICTED status'),
+  freshness_gate: z.boolean().describe('true if all time_sensitive/current claims have VERIFIED sources'),
+  known_limits: z.array(z.string()).describe('Explicit list of limits when source proof is incomplete'),
+  generated_at: z.string().datetime(),
+})
+export type ResearchTruthResult = z.infer<typeof ResearchTruthResultSchema>
+
+// ── Policy Helpers ──────────────────────────────────────────────────────────────
+
+/** A claim with freshness=current or time_sensitive requires source. */
+export function requiresResearchForClaim(claim: ResearchClaim): boolean {
+  return claim.freshness === 'current' || claim.freshness === 'time_sensitive'
+}
+
+/**
+ * A claim can be presented as fact only if:
+ * - It has at least one VERIFIED source
+ * - Its status is SUPPORTED
+ * - It is not CONTRADICTED
+ * - All current/time_sensitive claims have a verified source with url + date_accessed
+ */
+export function canPresentAsFact(claim: ResearchClaim, sources: ResearchSource[]): boolean {
+  if (claim.status === 'CONTRADICTED') return false
+  if (claim.status !== 'SUPPORTED') return false
+  if (claim.source_ids.length === 0 && claim.requires_source) return false
+
+  const claimSources = sources.filter((s) => claim.source_ids.includes(s.source_id))
+  const hasVerified = claimSources.some((s) => s.status === 'VERIFIED')
+  if (!hasVerified && claim.requires_source) return false
+
+  // time_sensitive / current requires verified source with URL + date_accessed and must be verifiable (not generated/internal)
+  if (claim.freshness === 'current' || claim.freshness === 'time_sensitive') {
+    return claimSources.some(
+      (s) =>
+        s.status === 'VERIFIED' &&
+        s.url !== null &&
+        s.date_accessed !== null &&
+        s.source_type !== 'generated' &&
+        s.source_type !== 'internal',
+    )
+  }
+
+  return true
+}
+
+/** A source is verifiable when it has url + date_accessed + status is not REJECTED/UNAVAILABLE/UNKNOWN. */
+export function isSourceVerifiable(source: ResearchSource): boolean {
+  if (source.status === 'REJECTED' || source.status === 'UNAVAILABLE' || source.status === 'UNKNOWN') return false
+  if (source.source_type === 'generated' || source.source_type === 'internal') return false
+  return source.url !== null && source.date_accessed !== null
+}
+
+/** A claim is a current claim if freshness is 'current' or 'time_sensitive'. */
+export function isCurrentClaim(claim: ResearchClaim): boolean {
+  return claim.freshness === 'current' || claim.freshness === 'time_sensitive'
+}
+
+/** Research is unavailable when state is RESEARCH_UNAVAILABLE or RESEARCH_FAILED. */
+export function isResearchUnavailable(result: ResearchTruthResult): boolean {
+  return (
+    result.research_state === 'RESEARCH_UNAVAILABLE' ||
+    result.research_state === 'RESEARCH_FAILED'
+  )
+}
+
+/** Result has contradictions when any claim has CONTRADICTED status. */
+export function hasContradictions(result: ResearchTruthResult): boolean {
+  return result.contradictions.length > 0
+}
+
+/**
+ * Build a citation summary string from a ResearchTruthResult.
+ * Each citation must include URL, date_accessed, source_type.
+ * Missing URL or date is recorded as UNAVAILABLE in the summary.
+ */
+export function buildCitationSummary(result: ResearchTruthResult): string {
+  if (result.citations.length === 0) {
+    return 'No citations available. Research state: ' + result.research_state
+  }
+  const lines = result.citations.map((c) => {
+    const url = c.url ?? 'URL_UNAVAILABLE'
+    const date = c.date_accessed ?? 'DATE_UNAVAILABLE'
+    return `[${c.citation_id}] ${c.summary} | type=${c.source_type} | url=${url} | accessed=${date}`
+  })
+  return lines.join('\n')
+}
+
+/** RESEARCH_UNAVAILABLE state cannot silently become RESEARCH_AVAILABLE. */
+export const RESEARCH_UNAVAILABLE_IS_TERMINAL = true
+
+/**
+ * Validate that a RESEARCH_UNAVAILABLE result is honest:
+ * - research_state must be RESEARCH_UNAVAILABLE or RESEARCH_FAILED
+ * - sources array must be empty or contain only UNAVAILABLE status sources
+ * - freshness_gate must be false
+ * - known_limits must be non-empty
+ */
+export function validateResearchUnavailableHonesty(result: ResearchTruthResult): {
+  honest: boolean
+  reason: string
+} {
+  if (
+    result.research_state !== 'RESEARCH_UNAVAILABLE' &&
+    result.research_state !== 'RESEARCH_FAILED'
+  ) {
+    return { honest: false, reason: `State is ${result.research_state}, not UNAVAILABLE/FAILED` }
+  }
+  if (result.freshness_gate) {
+    return { honest: false, reason: 'freshness_gate cannot be true when research is unavailable' }
+  }
+  if (result.known_limits.length === 0) {
+    return {
+      honest: false,
+      reason: 'known_limits must be non-empty when research is unavailable',
+    }
+  }
+  const nonUnavailableSources = result.sources.filter((s) => s.status !== 'UNAVAILABLE')
+  if (nonUnavailableSources.length > 0) {
+    return {
+      honest: false,
+      reason: `RESEARCH_UNAVAILABLE result has ${nonUnavailableSources.length} non-UNAVAILABLE source(s)`,
+    }
+  }
+  return { honest: true, reason: 'RESEARCH_UNAVAILABLE state is honest' }
+}
+
+/**
+ * Map a C2 KnowledgeItemMetadata requires_web_validation flag to a ResearchAvailabilityState.
+ * If requires_web_validation=true → RESEARCH_REQUIRED.
+ * Otherwise → RESEARCH_NOT_REQUESTED.
+ */
+export function mapC2RequiresWebValidationToResearchState(
+  requiresWebValidation: boolean,
+): ResearchAvailabilityState {
+  return requiresWebValidation ? 'RESEARCH_REQUIRED' : 'RESEARCH_NOT_REQUESTED'
+}
