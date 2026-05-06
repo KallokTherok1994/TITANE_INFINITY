@@ -40,6 +40,12 @@ ALLOWED_FETCH=(
   "src/lib/ipc.ts"                        # IPC wrapper (not external fetch)
   "src/components/diagnostics/SplashWatchdog.tsx"  # Diagnostic component
   "src/visual-engine/OSIntegrationBridge.ts"       # Local integration
+  "src/lib/remoteTransport.ts"                     # Remote gateway IPC transport (mirrors invoke() contract for localhost gateway)
+  "src/api/remoteTransport.ts"                     # Remote gateway API transport (localhost gateway endpoints only)
+  "src/services/webResearchService.ts"             # Browser degraded mode: Wikipedia public API, Tauri-mode guard at file head
+  "src/services/ai/workingMemoryCompressor.ts"     # Local Ollama proxy (/api/ollama relative — localhost only)
+  "src/stories/CodeBlock.stories.tsx"              # Storybook non-production story
+  "src/lib/transport.ts"                           # Only a JSDoc comment mentioning fetch() — no actual call
 )
 
 # Find all fetch( calls in src/ (excluding tests)

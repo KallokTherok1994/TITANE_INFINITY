@@ -443,10 +443,13 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
     for (const target of resizeTargets) {
       await page.setViewportSize({ width: target.width, height: target.height });
       await expect
-        .poll(async () => {
-          const current = await page.viewportSize();
-          return current ? `${current.width}x${current.height}` : '';
-        }, { timeout: 5000 })
+        .poll(
+          async () => {
+            const current = await page.viewportSize();
+            return current ? `${current.width}x${current.height}` : '';
+          },
+          { timeout: 5000 }
+        )
         .toBe(`${target.width}x${target.height}`);
       const metrics = await measureLayout(page);
 
@@ -492,9 +495,12 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
       element.scrollTop = 0;
     });
     await expect
-      .poll(async () => {
-        return scrollRegion.evaluate(element => element.scrollTop);
-      }, { timeout: 5000 })
+      .poll(
+        async () => {
+          return scrollRegion.evaluate(element => element.scrollTop);
+        },
+        { timeout: 5000 }
+      )
       .toBe(0);
     const topScrollState = await scrollRegion.evaluate(element => ({
       clientHeight: element.clientHeight,
@@ -508,12 +514,15 @@ test.describe('Critical Path: Chat Layout Viewport', () => {
       element.scrollTop = element.scrollHeight;
     });
     await expect
-      .poll(async () => {
-        return scrollRegion.evaluate(element => {
-          const maxScroll = Math.max(0, element.scrollHeight - element.clientHeight);
-          return element.scrollTop >= maxScroll - 2;
-        });
-      }, { timeout: 5000 })
+      .poll(
+        async () => {
+          return scrollRegion.evaluate(element => {
+            const maxScroll = Math.max(0, element.scrollHeight - element.clientHeight);
+            return element.scrollTop >= maxScroll - 2;
+          });
+        },
+        { timeout: 5000 }
+      )
       .toBe(true);
     await expect(terminalMarker).toBeVisible();
     await expect(terminalMarker).toBeInViewport();

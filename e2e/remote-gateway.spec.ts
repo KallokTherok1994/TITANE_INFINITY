@@ -13,10 +13,7 @@
 import { test, expect } from '@playwright/test';
 
 import { REMOTE_E2E_DEFAULTS } from './config/constants';
-import {
-  getRemoteAccessToken,
-  requireRemoteGatewayOrFail,
-} from './helpers/remote-auth';
+import { getRemoteAccessToken, requireRemoteGatewayOrFail } from './helpers/remote-auth';
 
 const REMOTE_BASE_URL = REMOTE_E2E_DEFAULTS.baseUrl;
 const REMOTE_SECRET = REMOTE_E2E_DEFAULTS.secret;
@@ -118,7 +115,9 @@ test('POST /api/invoke blocked command returns error', async ({ request }) => {
   expect(data.ok).toBe(false);
 });
 
-test('POST /api/invoke twin_get_identity returns identity payload', async ({ request }) => {
+test('POST /api/invoke twin_get_identity returns identity payload', async ({
+  request,
+}) => {
   const access_token = await getRemoteAccessToken(request, {
     baseUrl: REMOTE_BASE_URL,
     secret: REMOTE_SECRET,
@@ -138,7 +137,9 @@ test('POST /api/invoke twin_get_identity returns identity payload', async ({ req
   expect(Array.isArray(data.content.coreValues)).toBe(true);
 });
 
-test('POST /api/invoke twin_get_evolution_profile returns profile payload', async ({ request }) => {
+test('POST /api/invoke twin_get_evolution_profile returns profile payload', async ({
+  request,
+}) => {
   const access_token = await getRemoteAccessToken(request, {
     baseUrl: REMOTE_BASE_URL,
     secret: REMOTE_SECRET,
@@ -158,7 +159,9 @@ test('POST /api/invoke twin_get_evolution_profile returns profile payload', asyn
   expect(data.content).toHaveProperty('milestonesCount');
 });
 
-test('POST /api/invoke twin_get_fusion_index returns fusion payload', async ({ request }) => {
+test('POST /api/invoke twin_get_fusion_index returns fusion payload', async ({
+  request,
+}) => {
   const access_token = await getRemoteAccessToken(request, {
     baseUrl: REMOTE_BASE_URL,
     secret: REMOTE_SECRET,
@@ -176,7 +179,9 @@ test('POST /api/invoke twin_get_fusion_index returns fusion payload', async ({ r
   expect(data.content).toHaveProperty('trend');
 });
 
-test('POST /api/invoke twin_submit_observation returns syncId and twin_validate_sync confirms it', async ({ request }) => {
+test('POST /api/invoke twin_submit_observation returns syncId and twin_validate_sync confirms it', async ({
+  request,
+}) => {
   const access_token = await getRemoteAccessToken(request, {
     baseUrl: REMOTE_BASE_URL,
     secret: REMOTE_SECRET,
@@ -223,7 +228,9 @@ test('POST /api/invoke twin_submit_observation returns syncId and twin_validate_
   });
 });
 
-test('POST /api/invoke twin_submit_observation rejects invalid confidence payload', async ({ request }) => {
+test('POST /api/invoke twin_submit_observation rejects invalid confidence payload', async ({
+  request,
+}) => {
   const access_token = await getRemoteAccessToken(request, {
     baseUrl: REMOTE_BASE_URL,
     secret: REMOTE_SECRET,
@@ -247,7 +254,9 @@ test('POST /api/invoke twin_submit_observation rejects invalid confidence payloa
   expect(data.error).toContain('confidence must be between 0.0 and 1.0');
 });
 
-test('POST /api/invoke twin_apply_evolution returns new phase metadata on valid payload', async ({ request }) => {
+test('POST /api/invoke twin_apply_evolution returns new phase metadata on valid payload', async ({
+  request,
+}) => {
   const access_token = await getRemoteAccessToken(request, {
     baseUrl: REMOTE_BASE_URL,
     secret: REMOTE_SECRET,
@@ -277,7 +286,9 @@ test('POST /api/invoke twin_apply_evolution returns new phase metadata on valid 
   expect(typeof data.content.timestamp).toBe('string');
 });
 
-test('POST /api/invoke twin_apply_evolution rejects invalid delta payload', async ({ request }) => {
+test('POST /api/invoke twin_apply_evolution rejects invalid delta payload', async ({
+  request,
+}) => {
   const access_token = await getRemoteAccessToken(request, {
     baseUrl: REMOTE_BASE_URL,
     secret: REMOTE_SECRET,

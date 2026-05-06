@@ -91,11 +91,7 @@ describe('useChatMemory', () => {
       result.current.saveMessage(savedMessage);
     });
 
-    expect(addMessageToModeMock).toHaveBeenCalledWith(
-      'default',
-      savedMessage,
-      undefined
-    );
+    expect(addMessageToModeMock).toHaveBeenCalledWith('default', savedMessage, undefined);
     expect(flushPendingSavesMock).toHaveBeenCalled();
     expect(result.current.messagesForMode.at(-1)?.content).toContain('ORION-482-LICHEN');
     expect(result.current.memoryStats.count).toBe(1);

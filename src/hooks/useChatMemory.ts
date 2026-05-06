@@ -77,10 +77,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
    * Load history on mode change
    */
   useEffect(() => {
-    const history = chatMemoryCompactor.loadForMode(
-      options.mode,
-      options.conversationId
-    );
+    const history = chatMemoryCompactor.loadForMode(options.mode, options.conversationId);
     syncVisibleState(history);
 
     console.warn(
@@ -102,10 +99,7 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
    * Load history manuel
    */
   const loadHistory = useCallback(() => {
-    const history = chatMemoryCompactor.loadForMode(
-      options.mode,
-      options.conversationId
-    );
+    const history = chatMemoryCompactor.loadForMode(options.mode, options.conversationId);
     syncVisibleState(history);
     return history;
   }, [options.mode, options.conversationId, syncVisibleState]);

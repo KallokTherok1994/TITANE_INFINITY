@@ -137,7 +137,10 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
               ? refreshError.message
               : 'actualisation Twin indisponible';
           setError(`Observation enregistrée, actualisation Twin en attente: ${message}`);
-          twinBehaviorLogger.warn('observeCognitive snapshot refresh failed', refreshError);
+          twinBehaviorLogger.warn(
+            'observeCognitive snapshot refresh failed',
+            refreshError
+          );
         }
         return id;
       } catch (err) {
@@ -199,7 +202,10 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
               ? refreshError.message
               : 'actualisation Twin indisponible';
           setError(`Observation enregistrée, actualisation Twin en attente: ${message}`);
-          twinBehaviorLogger.warn('observeEmotional snapshot refresh failed', refreshError);
+          twinBehaviorLogger.warn(
+            'observeEmotional snapshot refresh failed',
+            refreshError
+          );
         }
         return id;
       } catch (err) {

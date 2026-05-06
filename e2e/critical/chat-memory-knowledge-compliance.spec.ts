@@ -56,8 +56,9 @@ const seedKnowledge = async (page: Page, entries: E2EChatKnowledgeSeedEntry[]) =
     (
       window as { __TITANE_E2E_CHAT_KNOWLEDGE_SEED__?: E2EChatKnowledgeSeedEntry[] }
     ).__TITANE_E2E_CHAT_KNOWLEDGE_SEED__ = value;
-    (window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }).__TITANE_E2E_CHAT_MEMORY_LOG__ =
-      [];
+    (
+      window as { __TITANE_E2E_CHAT_MEMORY_LOG__?: unknown[] }
+    ).__TITANE_E2E_CHAT_MEMORY_LOG__ = [];
   }, entries);
 };
 
@@ -117,7 +118,9 @@ const extractSources = (entry: unknown): string[] => {
   };
 
   if (Array.isArray(candidate.sources)) {
-    return candidate.sources.filter((value): value is string => typeof value === 'string');
+    return candidate.sources.filter(
+      (value): value is string => typeof value === 'string'
+    );
   }
 
   if (typeof candidate.sources === 'string') {
@@ -125,7 +128,9 @@ const extractSources = (entry: unknown): string[] => {
   }
 
   if (Array.isArray(candidate.data?.sources)) {
-    return candidate.data.sources.filter((value): value is string => typeof value === 'string');
+    return candidate.data.sources.filter(
+      (value): value is string => typeof value === 'string'
+    );
   }
 
   if (typeof candidate.data?.source === 'string') {
@@ -154,7 +159,9 @@ test.describe('Critical Path: Chat + Memoire + Connaissances Compliance', () => 
     await openTitane(page);
     await closeBootBeaconIfPresent(page);
 
-    await expect(page.getByTestId('chat-input')).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
+    await expect(page.getByTestId('chat-input')).toBeVisible({
+      timeout: E2E_TIMEOUTS.ui,
+    });
     await expect(page.getByTestId('chat-send')).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
     await expect(page.getByTestId('chat-messages-scroll-region')).toBeVisible({
       timeout: E2E_TIMEOUTS.ui,
@@ -172,8 +179,13 @@ test.describe('Critical Path: Chat + Memoire + Connaissances Compliance', () => 
       }
     });
 
-    const first = await sendMessageAndMeasure(page, 'Bonjour TITANE, confirme la liaison chat.');
-    expect(first.assistantText).toContain('[MOCK_OK] Bonjour TITANE, confirme la liaison chat.');
+    const first = await sendMessageAndMeasure(
+      page,
+      'Bonjour TITANE, confirme la liaison chat.'
+    );
+    expect(first.assistantText).toContain(
+      '[MOCK_OK] Bonjour TITANE, confirme la liaison chat.'
+    );
     expect(first.elapsedMs).toBeLessThan(MAX_MOCK_RESPONSE_MS);
 
     await page.getByTestId('chat-mode-selector-select').selectOption('planning');
@@ -217,7 +229,10 @@ test.describe('Critical Path: Chat + Memoire + Connaissances Compliance', () => 
       },
     ]);
 
-    const first = await sendMessageAndMeasure(page, 'Recapitule mes projets actifs et leur etat.');
+    const first = await sendMessageAndMeasure(
+      page,
+      'Recapitule mes projets actifs et leur etat.'
+    );
     expect(first.assistantText.length).toBeGreaterThan(20);
     expect(first.elapsedMs).toBeLessThan(MAX_MOCK_RESPONSE_MS);
 

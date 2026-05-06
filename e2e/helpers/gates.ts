@@ -10,6 +10,8 @@ export async function requireRemoteStrictGate(
   await requireRemoteGatewayOrFail(suiteName, baseUrl);
 }
 
-export function requireFullE2EGateOrSkip(test: { skip: (condition: boolean, description: string) => void }): void {
+export function requireFullE2EGateOrSkip(test: {
+  skip: (condition: boolean, description: string) => void;
+}): void {
   test.skip(!FULL_E2E_ENABLED, 'Requires TITANE_E2E_FULL=1');
 }

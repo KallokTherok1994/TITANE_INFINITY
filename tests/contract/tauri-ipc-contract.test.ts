@@ -266,21 +266,25 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     );
 
     for (const command of requiredCommands) {
-      expect(canonicalCommands.has(command), `Missing TAURI_COMMANDS entry: ${command}`).toBe(
-        true
-      );
+      expect(
+        canonicalCommands.has(command),
+        `Missing TAURI_COMMANDS entry: ${command}`
+      ).toBe(true);
       expect(
         rustCommands.has(command) || rustNormalized.has(normalize(command)),
         `Missing Rust IPC command: ${command}`
       ).toBe(true);
       expect(
-        securityContent.includes(`'${command}'`) || securityContent.includes(`"${command}"`),
+        securityContent.includes(`'${command}'`) ||
+          securityContent.includes(`"${command}"`),
         `Missing security.ts allowlist entry: ${command}`
       ).toBe(true);
     }
 
     for (const wrapper of expectedWrappers) {
-      expect(clientWrappers.has(wrapper), `Missing tauriClient wrapper: ${wrapper}`).toBe(true);
+      expect(clientWrappers.has(wrapper), `Missing tauriClient wrapper: ${wrapper}`).toBe(
+        true
+      );
     }
   });
 

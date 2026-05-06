@@ -64,8 +64,10 @@ test.describe('Critical Path: Application Launch', () => {
         !(e.includes('not in whitelist') && e.includes('load_ui_theme')) &&
         !(e.includes('TAURI_ERROR') && e.includes('load_ui_theme')) &&
         // Expected in browser-only E2E: Tauri/IPC transport not available for singularity commands.
-        !(e.includes('Tauri Command Error [singularity_') && e.includes('NO_TRANSPORT')) &&
-        !(e.includes('Neither Tauri IPC nor Remote Gateway is available')) &&
+        !(
+          e.includes('Tauri Command Error [singularity_') && e.includes('NO_TRANSPORT')
+        ) &&
+        !e.includes('Neither Tauri IPC nor Remote Gateway is available') &&
         // Logger payload lines are auxiliary details attached to prior handled errors.
         !e.trimStart().startsWith('Payload:')
     );

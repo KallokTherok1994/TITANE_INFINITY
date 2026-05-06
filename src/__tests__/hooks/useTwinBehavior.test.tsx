@@ -63,12 +63,16 @@ describe('useTwinBehavior', () => {
       id: 'sync-style-1',
       type: 'style',
     });
-    expect(result.current.error).toContain('Observation enregistrée, actualisation Twin en attente');
+    expect(result.current.error).toContain(
+      'Observation enregistrée, actualisation Twin en attente'
+    );
     expect(result.current.error).toContain('gateway down');
   });
 
   it('returns null and does not refresh the snapshot when the observation fails', async () => {
-    vi.mocked(numericTwinService.observeEmotional).mockRejectedValue(new Error('observe failed'));
+    vi.mocked(numericTwinService.observeEmotional).mockRejectedValue(
+      new Error('observe failed')
+    );
 
     const { result } = renderHook(() => useTwinBehavior());
     let returnedId: string | null = 'placeholder';

@@ -35,7 +35,11 @@ export async function waitForRemoteChatReady(page: Page): Promise<void> {
   });
 }
 
-export async function remoteLogin(page: Page, baseUrl: string, secret: string): Promise<void> {
+export async function remoteLogin(
+  page: Page,
+  baseUrl: string,
+  secret: string
+): Promise<void> {
   await page.goto(baseUrl);
   await expect(page.locator('[data-testid="remote-auth-screen"]')).toBeVisible({
     timeout: E2E_TIMEOUTS.ui,

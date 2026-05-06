@@ -103,7 +103,9 @@ test.describe('Critical Path: System Resilience', () => {
     // This simulates backend unavailability
     // App should show error state but not crash
 
-    await expect(page.getByTestId('chat-input')).toBeVisible({ timeout: E2E_TIMEOUTS.ui });
+    await expect(page.getByTestId('chat-input')).toBeVisible({
+      timeout: E2E_TIMEOUTS.ui,
+    });
 
     // Check app is still functional
     const bodyVisible = await page.locator('body').isVisible();

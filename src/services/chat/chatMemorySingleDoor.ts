@@ -237,7 +237,9 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
       raw.identityCore && typeof raw.identityCore === 'object'
         ? {
             name:
-              typeof raw.identityCore.name === 'string' ? raw.identityCore.name : undefined,
+              typeof raw.identityCore.name === 'string'
+                ? raw.identityCore.name
+                : undefined,
             signature:
               typeof raw.identityCore.signature === 'string'
                 ? raw.identityCore.signature
@@ -316,11 +318,20 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
       raw.fusionComponents && typeof raw.fusionComponents === 'object'
         ? {
             valueAlignment: toFiniteNumber(raw.fusionComponents.valueAlignment, 0),
-            cognitiveAlignment: toFiniteNumber(raw.fusionComponents.cognitiveAlignment, 0),
+            cognitiveAlignment: toFiniteNumber(
+              raw.fusionComponents.cognitiveAlignment,
+              0
+            ),
             styleAlignment: toFiniteNumber(raw.fusionComponents.styleAlignment, 0),
-            therapeuticAlignment: toFiniteNumber(raw.fusionComponents.therapeuticAlignment, 0),
+            therapeuticAlignment: toFiniteNumber(
+              raw.fusionComponents.therapeuticAlignment,
+              0
+            ),
             creativeAlignment: toFiniteNumber(raw.fusionComponents.creativeAlignment, 0),
-            evolutionAlignment: toFiniteNumber(raw.fusionComponents.evolutionAlignment, 0),
+            evolutionAlignment: toFiniteNumber(
+              raw.fusionComponents.evolutionAlignment,
+              0
+            ),
           }
         : undefined,
     ownerThemes,
@@ -470,10 +481,12 @@ export function formatContextEnvelopeForSystemPrompt(
           `twins_phase=${envelope.twinsContext.currentPhase ?? 'unknown'}`,
           `twins_sync_score=${twinsSyncScore.toFixed(2)}`,
           `twins_identity=${envelope.twinsContext.identityCore?.name ?? 'unknown'}`,
-          `twins_core_values=${(envelope.twinsContext.identityCore?.coreValues ?? [])
-            .map(value => value.name)
-            .filter(Boolean)
-            .join(', ') || 'none'}`,
+          `twins_core_values=${
+            (envelope.twinsContext.identityCore?.coreValues ?? [])
+              .map(value => value.name)
+              .filter(Boolean)
+              .join(', ') || 'none'
+          }`,
           `twins_observed_values=${(envelope.twinsContext.valueMap?.observedValues ?? []).length}`,
           `twins_confirmed_values=${(envelope.twinsContext.valueMap?.confirmedValues ?? []).join(', ') || 'none'}`,
           `twins_reasoning_patterns=${(envelope.twinsContext.cognitivePatterns?.reasoningPatterns ?? []).length}`,

@@ -208,7 +208,11 @@ class ChatMemoryCompactor {
   /**
    * Ajoute un message à un mode
    */
-  addMessageToMode(mode: ChatMode, message: AIMessage, conversationId?: string): AIMessage[] {
+  addMessageToMode(
+    mode: ChatMode,
+    message: AIMessage,
+    conversationId?: string
+  ): AIMessage[] {
     const messages = [...this.loadForMode(mode, conversationId), message];
     this.saveForMode(mode, messages, conversationId);
     return messages;

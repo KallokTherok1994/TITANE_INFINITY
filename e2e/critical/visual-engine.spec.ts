@@ -73,7 +73,9 @@ test.describe('Critical Path: Visual Engine', () => {
     });
 
     // Canvas should still be present (may have updated)
-    await expect.poll(async () => await canvas.count(), { timeout: 10000 }).toBeGreaterThan(0);
+    await expect
+      .poll(async () => await canvas.count(), { timeout: 10000 })
+      .toBeGreaterThan(0);
     const finalBox = await canvas.boundingBox().catch(() => null);
     expect(initialBox || finalBox).toBeTruthy();
   });
@@ -209,10 +211,13 @@ test.describe('Critical Path: Visual Engine', () => {
     // Resize
     await page.setViewportSize({ width: 1920, height: 1080 });
     await expect
-      .poll(async () => {
-        const box = await canvas.boundingBox();
-        return box?.width ?? 0;
-      }, { timeout: 10000 })
+      .poll(
+        async () => {
+          const box = await canvas.boundingBox();
+          return box?.width ?? 0;
+        },
+        { timeout: 10000 }
+      )
       .toBeGreaterThan(0);
 
     const finalBox = await canvas.boundingBox();

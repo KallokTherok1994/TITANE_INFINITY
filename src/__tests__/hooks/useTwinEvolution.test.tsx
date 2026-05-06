@@ -52,11 +52,47 @@ describe('useTwinEvolution', () => {
       trend: 'Improving',
     });
     vi.mocked(numericTwinService.getState).mockResolvedValue({
-      identityCore: { name: 'Twin', signature: 'sig', coreValues: [], humanStyle: { sincerity: 0.5, gentleIntensity: 0.5, accessibleDepth: 0.5, calmPrecision: 0.5, organicFluidity: 0.5 }, fusionIndex: 0.71, version: '1', },
+      identityCore: {
+        name: 'Twin',
+        signature: 'sig',
+        coreValues: [],
+        humanStyle: {
+          sincerity: 0.5,
+          gentleIntensity: 0.5,
+          accessibleDepth: 0.5,
+          calmPrecision: 0.5,
+          organicFluidity: 0.5,
+        },
+        fusionIndex: 0.71,
+        version: '1',
+      },
       valueMap: { observedValues: [], confirmedValues: [], alignmentScore: 0.2 },
-      cognitivePatterns: { reasoningPatterns: [], structuringStyle: { simpleToComplex: 0.1, structureLevel: 0.2, hierarchyPreference: 0.3, visualPreference: 0.4 } },
-      therapeuticModel: { deepListening: 0.1, rhythmRespect: 0.2, relationalClarity: 0.3, supportPrecision: 0.4, nonDirectiveGuidance: 0.5, holisticIntegration: 0.6 },
-      creativeSignature: { operationalIntuition: 0.1, artisticSense: 0.2, symbolicSense: 0.3, structuralCreativity: 0.4, methodologicalInnovation: 0.5, embodiedNarration: 0.6, frameworksCount: 3 },
+      cognitivePatterns: {
+        reasoningPatterns: [],
+        structuringStyle: {
+          simpleToComplex: 0.1,
+          structureLevel: 0.2,
+          hierarchyPreference: 0.3,
+          visualPreference: 0.4,
+        },
+      },
+      therapeuticModel: {
+        deepListening: 0.1,
+        rhythmRespect: 0.2,
+        relationalClarity: 0.3,
+        supportPrecision: 0.4,
+        nonDirectiveGuidance: 0.5,
+        holisticIntegration: 0.6,
+      },
+      creativeSignature: {
+        operationalIntuition: 0.1,
+        artisticSense: 0.2,
+        symbolicSense: 0.3,
+        structuralCreativity: 0.4,
+        methodologicalInnovation: 0.5,
+        embodiedNarration: 0.6,
+        frameworksCount: 3,
+      },
       evolutionProfile: {
         currentPhase: 'Observation',
         milestonesCount: 1,
@@ -95,7 +131,10 @@ describe('useTwinEvolution', () => {
     expect(persistTwinChatContextSnapshot).toHaveBeenCalledWith(
       expect.objectContaining({
         fusion: expect.objectContaining({ globalScore: 0.71, trend: 'Improving' }),
-        profile: expect.objectContaining({ currentPhase: 'Observation', syncScore: 0.66 }),
+        profile: expect.objectContaining({
+          currentPhase: 'Observation',
+          syncScore: 0.66,
+        }),
       })
     );
   });

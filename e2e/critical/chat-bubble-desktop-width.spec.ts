@@ -235,7 +235,9 @@ test.describe('Chat bubble desktop width — E2E visual proof', () => {
     await sendTestMessage(page, 'Test zoom in 150% — pas de débordement');
     // Ensure user bubble is in view before overflow measurement (sendTestMessage already guarantees DOM presence)
     await expect(
-      page.locator('.message-bubble-user, .message-user, [data-testid="chat-message-user"]').first()
+      page
+        .locator('.message-bubble-user, .message-user, [data-testid="chat-message-user"]')
+        .first()
     ).toBeVisible({ timeout: 10000 });
 
     // Verify no horizontal overflow in the message container
