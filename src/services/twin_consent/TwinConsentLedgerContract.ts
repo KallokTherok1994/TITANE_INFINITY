@@ -193,3 +193,202 @@ export function getD3TwinConsentLedgerContract(): D3TwinConsentLedgerContract {
     t4_approval_required: true,
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// D3 v13 SIDECAR — Identity Observation Ledger
+// "Twin remains a mirror, not an authority. Confidence is not consent."
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── D3 Emission Flag ──────────────────────────────────────────────────────────
+export const D3_IDENTITY_OBSERVATION_EMISSION_ACTIVE: boolean =
+  typeof import.meta !== 'undefined' &&
+  (import.meta as Record<string, unknown>).env !== undefined
+    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D3_IDENTITY_OBSERVATION_ACTIVE'] ?? 'false') === 'true'
+    : false
+
+// ── Observation Type ──────────────────────────────────────────────────────────
+export const TwinObservationTypeSchema = z.enum([
+  'identity_fact',
+  'preference',
+  'value',
+  'constraint',
+  'symbolic_axis',
+  'emotional_pattern',
+  'project_context',
+  'memory_policy',
+  'behavioral_instruction',
+  'risk_signal',
+  'unknown',
+])
+export type TwinObservationType = z.infer<typeof TwinObservationTypeSchema>
+
+// ── Validation Status ─────────────────────────────────────────────────────────
+export const TwinValidationStatusSchema = z.enum([
+  'hypothesis',
+  'requires_kevin_validation',
+  'confirmed',
+  'rejected',
+  'expired',
+  'system_observed',
+  'blocked',
+  'unknown',
+])
+export type TwinValidationStatus = z.infer<typeof TwinValidationStatusSchema>
+
+// ── Risk Level ────────────────────────────────────────────────────────────────
+export const TwinConsentRiskLevelSchema = z.enum([
+  'low',
+  'medium',
+  'high',
+  'identity_sensitive',
+  'restricted',
+])
+export type TwinConsentRiskLevel = z.infer<typeof TwinConsentRiskLevelSchema>
+
+// ── Identity Observation Entry ────────────────────────────────────────────────
+export const TwinIdentityObservationEntrySchema = z.object({
+  observation_id: z.string(),
+  subject_id: z.string(),
+  observation_type: TwinObservationTypeSchema,
+  content: z.string(),
+  source: z.string(),
+  source_ref: z.string().optional(),
+  confidence: z.number().min(0).max(1),
+  auto_detected: z.boolean(),
+  requires_validation: z.boolean(),
+  validation_status: TwinValidationStatusSchema,
+  validated_by: z.string().nullable(),
+  validated_at: z.string().nullable(),
+  can_affect_behavior: z.boolean(),
+  can_affect_memory: z.boolean(),
+  can_affect_identity: z.boolean(),
+  expires_at: z.string().nullable(),
+  rejected_reason: z.string().nullable(),
+  risk_level: TwinConsentRiskLevelSchema,
+  linked_memory_node_ids: z.array(z.string()),
+  notes: z.string().optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
+})
+export type TwinIdentityObservationEntry = z.infer<typeof TwinIdentityObservationEntrySchema>
+
+// ── Consent Summary ───────────────────────────────────────────────────────────
+export interface TwinConsentSummary {
+  total: number
+  confirmed: number
+  rejected: number
+  pending: number
+  blocked: number
+  identity_active: number
+  confidence_not_consent_enforced: true
+}
+
+// ── Policy Helpers ────────────────────────────────────────────────────────────
+// RULE: confidence alone NEVER grants consent or activation
+
+/** Identity-sensitive types that always require Kevin validation */
+const IDENTITY_SENSITIVE_TYPES: TwinObservationType[] = [
+  'identity_fact', 'symbolic_axis', 'behavioral_instruction', 'emotional_pattern', 'value',
+]
+
+/** Statuses that block all behavioral / memory / identity effect */
+const BLOCKING_STATUSES: TwinValidationStatus[] = [
+  'rejected', 'expired', 'blocked', 'unknown',
+]
+
+export function isIdentitySensitive(entry: TwinIdentityObservationEntry): boolean {
+  return IDENTITY_SENSITIVE_TYPES.includes(entry.observation_type) ||
+    entry.risk_level === 'identity_sensitive' ||
+    entry.risk_level === 'restricted'
+}
+
+export function requiresKevinValidation(entry: TwinIdentityObservationEntry): boolean {
+  return isIdentitySensitive(entry) ||
+    entry.requires_validation === true ||
+    entry.validation_status === 'requires_kevin_validation'
+}
+
+export function isExpiredObservation(entry: TwinIdentityObservationEntry): boolean {
+  if (!entry.expires_at) return false
+  return new Date(entry.expires_at).getTime() < Date.now()
+}
+
+export function isRejectedOrBlocked(entry: TwinIdentityObservationEntry): boolean {
+  return BLOCKING_STATUSES.includes(entry.validation_status)
+}
+
+/** canAffectBehavior: false for rejected/expired/blocked/unknown/requires_kevin_validation */
+export function canAffectBehavior(entry: TwinIdentityObservationEntry): boolean {
+  if (isRejectedOrBlocked(entry)) return false
+  if (isExpiredObservation(entry)) return false
+  if (entry.validation_status === 'requires_kevin_validation') return false
+  // confidence alone is never sufficient — requires confirmed status
+  if (entry.validation_status !== 'confirmed') return false
+  return entry.can_affect_behavior
+}
+
+/** canAffectMemory: requires confirmed validation status */
+export function canAffectMemory(entry: TwinIdentityObservationEntry): boolean {
+  if (isRejectedOrBlocked(entry)) return false
+  if (isExpiredObservation(entry)) return false
+  if (entry.validation_status !== 'confirmed') return false
+  return entry.can_affect_memory
+}
+
+/** canAffectIdentity: strictest gate — requires confirmed + non-restricted risk */
+export function canAffectIdentity(entry: TwinIdentityObservationEntry): boolean {
+  if (isRejectedOrBlocked(entry)) return false
+  if (isExpiredObservation(entry)) return false
+  if (entry.validation_status !== 'confirmed') return false
+  if (entry.risk_level === 'restricted') return false
+  return entry.can_affect_identity
+}
+
+/** Normalize auto-detected identity-sensitive entry: force requires_validation=true */
+export function normalizeAutoDetectedObservation(
+  entry: TwinIdentityObservationEntry,
+): TwinIdentityObservationEntry {
+  if (entry.auto_detected && isIdentitySensitive(entry)) {
+    return {
+      ...entry,
+      requires_validation: true,
+      validation_status: entry.validation_status === 'confirmed' ? 'confirmed' : 'requires_kevin_validation',
+      can_affect_identity: false,
+      can_affect_behavior: false,
+    }
+  }
+  return entry
+}
+
+export function buildTwinConsentSummary(entries: TwinIdentityObservationEntry[]): TwinConsentSummary {
+  let confirmed = 0, rejected = 0, pending = 0, blocked = 0, identity_active = 0
+  for (const e of entries) {
+    if (e.validation_status === 'confirmed') confirmed++
+    else if (e.validation_status === 'rejected') rejected++
+    else if (e.validation_status === 'blocked') blocked++
+    else pending++
+    if (canAffectIdentity(e)) identity_active++
+  }
+  return { total: entries.length, confirmed, rejected, pending, blocked, identity_active, confidence_not_consent_enforced: true }
+}
+
+// ── D3 Known Limits ───────────────────────────────────────────────────────────
+export const D3_IDENTITY_OBSERVATION_KNOWN_LIMITS: string[] = [
+  'no-active-observation-by-default',
+  'no-rust-identity-wiring',
+  'symbolic-axis-always-hypothesis-unless-confirmed',
+  'confidence-not-consent-enforced',
+  'emotional-pattern-blocked-until-kevin-validation',
+]
+
+// ── D3 Twin Observation Contract ──────────────────────────────────────────────
+export const D3_TWIN_IDENTITY_OBSERVATION_CONTRACT = {
+  schema: 'D3_TWIN_IDENTITY_OBSERVATION_CONTRACT_V1',
+  active: D3_IDENTITY_OBSERVATION_EMISSION_ACTIVE,
+  policy: 'confidence-not-consent; validation-required-before-identity-activation',
+  known_limits: D3_IDENTITY_OBSERVATION_KNOWN_LIMITS,
+  observation_types: 11,
+  validation_statuses: 8,
+  risk_levels: 5,
+  twin_rule: 'Twin remains a mirror, not an authority',
+} as const
