@@ -29,9 +29,9 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | D1 | OMEGA Real Handler Upgrade | CLEAN | 2026-05-06 | — | — | — | — | — | CRITICAL — prod pipeline | D2 | T3 flag required |
 | D2 | Singularity Measured Layer | CLEAN | 2026-05-06 | — | — | — | — | — | — | D3 | T2/T3 bounded |
 | D3 | Twin Consent Ledger | CLEAN | 2026-05-06 | — | — | — | — | — | user data | D4 | T4 approval required |
-| D4 | Self-Improvement Lab | NOT_STARTED | — | — | — | — | — | — | — | D5 | T4 scaffold only |
+| D4 | Self-Improvement Lab | CLEAN | 2026-05-06 | — | — | — | — | — | — | D5 | T4 scaffold only |
 | D5 | Intelligence Seal | NOT_STARTED | — | — | — | — | — | — | all prior locks must pass | DONE | T4 approval required |
-| D4 | Self-Improvement Lab | NOT_STARTED | — | — | — | — | — | prod isolation | D5 |
+| D4 | Self-Improvement Lab | CLEAN | 2026-05-06 | — | — | — | — | — | prod isolation | D5 |
 | D5 | Intelligence Seal | NOT_STARTED | — | — | — | — | — | — | all prior locks must pass | DONE | T4 approval required |
 
 ---
