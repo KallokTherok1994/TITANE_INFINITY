@@ -23,7 +23,7 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | B2 | Intelligence Observability Contract | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/` | vitest PASS=26; verify_instructions PASS=51; detect_recurrence PASS=1660 | trace envelope indexed | S004 observability linked | passive schema only, no activation | desktop propagation pending E0 | T0 | T2 bounded |
 | C0 | Provider / Model Intelligence Routing | DRIFT_FOUND_FIXED | 44e3f07c4 | `proof_packs/LOCK_C0_PROVIDER_MODEL_INTELLIGENCE_ROUTING_2026-05-06/` | Rust smoke_tests PASS=5; Vitest PASS=22; verify_instructions PASS=51; detect_recurrence PASS | routing contract indexed | CD-01 fixed | flag-gated routing active | legacy branch still present (bounded) | C1 | T3 bounded |
 | C1 | MemoryGraph v2 Shadow Mode | CLEAN | 2026-05-06 | — | — | — | — | — | persistence risk | C2 | T3 flag required |
-| C2 | Knowledge Governance | CLEAN | 2026-05-06 | — | — | — | — | — | CD-04 | C3 | T2 bounded |
+| C2 | Knowledge Governance | CLEAN | fd61d6939 (base) + C2 normalization | `proof_packs/LOCK_C2_KNOWLEDGE_GOVERNANCE_2026-05-06/` | vitest PASS=77; verify_instructions PASS=51; detect_recurrence PASS; verify_knowledge_governance PASS | AI-DESKTOP-08 SCAFFOLDED | to_verify for high-risk domains | passive sidecar (no runtime change) | governance metadata drift | C3 | T2 bounded |
 | C3 | Research Truth Engine | CLEAN | 2026-05-06 | — | — | — | — | — | — | D0 | T2/T3 flag required |
 | D0 | Agent Effectiveness System | CLEAN | 2026-05-06 | — | — | — | — | — | — | D1 | T1/T2 yes |
 | D1 | OMEGA Real Handler Upgrade | CLEAN | 2026-05-06 | — | — | — | — | — | CRITICAL — prod pipeline | D2 | T3 flag required |

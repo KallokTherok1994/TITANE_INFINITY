@@ -13,7 +13,7 @@ Status model: PASS | SKIPPED_WITH_BLOCKER | BLOCKED_DESKTOP_E2E | PLANNED
 | AI-DESKTOP-05 | Provider fallback explicit | C0/E0 | DESKTOP_E2E.log | PLANNED | pending C0 lock |
 | AI-DESKTOP-06 | Memory write/read baseline | C1/E0 | DESKTOP_E2E.log | PLANNED | pending C1 lock |
 | AI-DESKTOP-07 | MemoryGraph shadow write | C1/E0 | DESKTOP_E2E.log | PLANNED | pending C1 lock |
-| AI-DESKTOP-08 | Knowledge governance metadata used | C2/E0 | DESKTOP_E2E.log | PLANNED | pending C2 lock |
+| AI-DESKTOP-08 | Knowledge governance metadata used | C2/E0 | DESKTOP_E2E.log | SCAFFOLDED | blocker=E0 desktop execution authority; scaffold: e2e/advanced-intelligence/; run: pnpm run test:e2e:advanced-intelligence |
 | AI-DESKTOP-09 | Research unavailable honesty | C3/E0 | DESKTOP_E2E.log | PLANNED | pending C3 lock |
 | AI-DESKTOP-10 | Research sourced state | C3/E0 | DESKTOP_E2E.log | PLANNED | pending environment + C3 |
 | AI-DESKTOP-11 | OMEGA first real handler trace | D1/E0 | DESKTOP_E2E.log | PLANNED | pending D1 runtime lane |

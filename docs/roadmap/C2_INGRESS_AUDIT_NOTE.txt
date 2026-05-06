@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# docs/roadmap/C2_INGRESS_AUDIT.md — generated as shell-readable classification
+# This is NOT a shell script — it is a Markdown document.
+# Moved to Markdown format below.

@@ -12,6 +12,17 @@ import {
   freshnessFromAge,
   applyGovernanceGate,
   getC2KnowledgeGovernanceContract,
+  KnowledgeItemMetadataSchema,
+  KnowledgeGovernanceIndexSchema,
+  requiresWebValidationForTimeSensitive,
+  publicSourceCannotBeVerifiedWithoutEvidence,
+  unknownSourceCannotBeHighConfidence,
+  highRiskDomainRequiresNotAllowedUse,
+  generatedSourceCannotBeVerifiedWithoutReview,
+  spiritualSymbolicIsInterpretive,
+  governanceIndexContainsRequiredDomains,
+  HIGH_RISK_DOMAINS,
+  REQUIRED_GOVERNANCE_DOMAINS,
 } from '../KnowledgeGovernanceContract'
 
 const NOW = '2026-05-06T10:00:00.000Z'
@@ -357,5 +368,319 @@ describe('GovernedKnowledgeItemSchema', () => {
 
   it('rejects governance_threshold > 1', () => {
     expect(GovernedKnowledgeItemSchema.safeParse({ ...validItem, governance_threshold: 1.5 }).success).toBe(false)
+  })
+})
+
+// ── C2-UNIT-01 — Knowledge governance metadata schema validates a valid entry ──
+describe('C2-UNIT-01 — KnowledgeItemMetadataSchema validates a valid entry', () => {
+  const validMeta = {
+    knowledge_id: 'kb-arch-001',
+    title: 'Software Architecture Patterns',
+    domain: 'architecture',
+    version: '1.0',
+    source_type: 'curated',
+    source_ref: 'internal-docs',
+    url: null,
+    last_reviewed: '2026-05-06',
+    confidence: 0.85,
+    freshness: 'stable',
+    requires_web_validation: false,
+    risk_level: 'low',
+    allowed_use: ['design_guidance', 'documentation'],
+    not_allowed_use: [],
+    validation_status: 'curated',
+    notes: null,
+  }
+
+  it('accepts a fully valid metadata entry', () => {
+    expect(KnowledgeItemMetadataSchema.safeParse(validMeta).success).toBe(true)
+  })
+
+  it('rejects missing knowledge_id', () => {
+    const { knowledge_id: _, ...rest } = validMeta
+    expect(KnowledgeItemMetadataSchema.safeParse(rest).success).toBe(false)
+  })
+
+  it('rejects invalid domain', () => {
+    expect(KnowledgeItemMetadataSchema.safeParse({ ...validMeta, domain: 'alien' }).success).toBe(false)
+  })
+
+  it('accepts all validation_status values', () => {
+    const statuses = ['verified', 'curated', 'to_verify', 'outdated', 'rejected', 'unknown']
+    for (const vs of statuses) {
+      expect(KnowledgeItemMetadataSchema.safeParse({ ...validMeta, validation_status: vs }).success).toBe(true)
+    }
+  })
+
+  it('rejects confidence > 1', () => {
+    expect(KnowledgeItemMetadataSchema.safeParse({ ...validMeta, confidence: 1.5 }).success).toBe(false)
+  })
+
+  it('KnowledgeGovernanceIndexSchema validates a complete index', () => {
+    const index = {
+      schema_version: 'C2-v1',
+      generated_at: '2026-05-06T00:00:00.000Z',
+      lock: 'C2',
+      entries: [validMeta],
+    }
+    expect(KnowledgeGovernanceIndexSchema.safeParse(index).success).toBe(true)
+  })
+})
+
+// ── C2-UNIT-02 — time_sensitive knowledge requires web validation ────────────
+describe('C2-UNIT-02 — time_sensitive knowledge requires web_validation', () => {
+  it('time_sensitive + requires_web_validation=true is compliant', () => {
+    expect(requiresWebValidationForTimeSensitive({
+      freshness: 'time_sensitive',
+      requires_web_validation: true,
+    })).toBe(true)
+  })
+
+  it('time_sensitive + requires_web_validation=false is non-compliant', () => {
+    expect(requiresWebValidationForTimeSensitive({
+      freshness: 'time_sensitive',
+      requires_web_validation: false,
+    })).toBe(false)
+  })
+
+  it('stable freshness passes regardless of requires_web_validation', () => {
+    expect(requiresWebValidationForTimeSensitive({
+      freshness: 'stable',
+      requires_web_validation: false,
+    })).toBe(true)
+  })
+
+  it('unknown freshness passes regardless of requires_web_validation', () => {
+    expect(requiresWebValidationForTimeSensitive({
+      freshness: 'unknown',
+      requires_web_validation: false,
+    })).toBe(true)
+  })
+})
+
+// ── C2-UNIT-03 — public knowledge without URL/date cannot be VERIFIED ─────────
+describe('C2-UNIT-03 — public source without evidence cannot be verified', () => {
+  it('public + verified + url present is compliant', () => {
+    expect(publicSourceCannotBeVerifiedWithoutEvidence({
+      source_type: 'public',
+      validation_status: 'verified',
+      url: 'https://example.com',
+      last_reviewed: null,
+    })).toBe(true)
+  })
+
+  it('public + verified + last_reviewed present is compliant', () => {
+    expect(publicSourceCannotBeVerifiedWithoutEvidence({
+      source_type: 'public',
+      validation_status: 'verified',
+      url: null,
+      last_reviewed: '2026-05-06',
+    })).toBe(true)
+  })
+
+  it('public + verified + no URL/date is non-compliant', () => {
+    expect(publicSourceCannotBeVerifiedWithoutEvidence({
+      source_type: 'public',
+      validation_status: 'verified',
+      url: null,
+      last_reviewed: null,
+    })).toBe(false)
+  })
+
+  it('public + to_verify + no URL/date is compliant (not claiming verified)', () => {
+    expect(publicSourceCannotBeVerifiedWithoutEvidence({
+      source_type: 'public',
+      validation_status: 'to_verify',
+      url: null,
+      last_reviewed: null,
+    })).toBe(true)
+  })
+
+  it('curated source with no URL is compliant (not public)', () => {
+    expect(publicSourceCannotBeVerifiedWithoutEvidence({
+      source_type: 'curated',
+      validation_status: 'verified',
+      url: null,
+      last_reviewed: null,
+    })).toBe(true)
+  })
+})
+
+// ── C2-UNIT-04 — unknown source_type cannot have high confidence ───────────────
+describe('C2-UNIT-04 — unknown source_type cannot be high confidence', () => {
+  it('unknown + confidence=0.9 is non-compliant', () => {
+    expect(unknownSourceCannotBeHighConfidence({
+      source_type: 'unknown',
+      confidence: 0.9,
+    })).toBe(false)
+  })
+
+  it('unknown + confidence=0.75 (boundary) is non-compliant', () => {
+    expect(unknownSourceCannotBeHighConfidence({
+      source_type: 'unknown',
+      confidence: 0.75,
+    })).toBe(false)
+  })
+
+  it('unknown + confidence=0.74 is compliant', () => {
+    expect(unknownSourceCannotBeHighConfidence({
+      source_type: 'unknown',
+      confidence: 0.74,
+    })).toBe(true)
+  })
+
+  it('curated + confidence=0.9 is compliant', () => {
+    expect(unknownSourceCannotBeHighConfidence({
+      source_type: 'curated',
+      confidence: 0.9,
+    })).toBe(true)
+  })
+})
+
+// ── C2-UNIT-05 — legal/medical/financial/safety require not_allowed_use ────────
+describe('C2-UNIT-05 — high-risk domains require not_allowed_use boundaries', () => {
+  it('HIGH_RISK_DOMAINS includes legal, medical, financial, safety', () => {
+    expect(HIGH_RISK_DOMAINS.has('legal')).toBe(true)
+    expect(HIGH_RISK_DOMAINS.has('medical')).toBe(true)
+    expect(HIGH_RISK_DOMAINS.has('financial')).toBe(true)
+    expect(HIGH_RISK_DOMAINS.has('safety')).toBe(true)
+  })
+
+  it('legal domain without not_allowed_use is non-compliant', () => {
+    expect(highRiskDomainRequiresNotAllowedUse({
+      domain: 'legal',
+      not_allowed_use: [],
+    })).toBe(false)
+  })
+
+  it('medical domain with not_allowed_use declared is compliant', () => {
+    expect(highRiskDomainRequiresNotAllowedUse({
+      domain: 'medical',
+      not_allowed_use: ['definitive_diagnosis', 'treatment_prescription'],
+    })).toBe(true)
+  })
+
+  it('architecture domain without not_allowed_use is compliant (not high-risk)', () => {
+    expect(highRiskDomainRequiresNotAllowedUse({
+      domain: 'architecture',
+      not_allowed_use: [],
+    })).toBe(true)
+  })
+})
+
+// ── C2-UNIT-06 — generated source cannot be verified without review marker ─────
+describe('C2-UNIT-06 — generated source cannot be verified without review', () => {
+  it('generated + verified + notes includes "review" is compliant', () => {
+    expect(generatedSourceCannotBeVerifiedWithoutReview({
+      source_type: 'generated',
+      validation_status: 'verified',
+      notes: 'human review completed 2026-05-06',
+    })).toBe(true)
+  })
+
+  it('generated + verified + no notes is non-compliant', () => {
+    expect(generatedSourceCannotBeVerifiedWithoutReview({
+      source_type: 'generated',
+      validation_status: 'verified',
+      notes: null,
+    })).toBe(false)
+  })
+
+  it('generated + to_verify + no notes is compliant (not claiming verified)', () => {
+    expect(generatedSourceCannotBeVerifiedWithoutReview({
+      source_type: 'generated',
+      validation_status: 'to_verify',
+      notes: null,
+    })).toBe(true)
+  })
+
+  it('curated + verified + no notes is compliant (not generated)', () => {
+    expect(generatedSourceCannotBeVerifiedWithoutReview({
+      source_type: 'curated',
+      validation_status: 'verified',
+      notes: null,
+    })).toBe(true)
+  })
+})
+
+// ── C2-UNIT-07 — spiritual_symbolic is interpretive, not factual-certainty ──────
+describe('C2-UNIT-07 — spiritual_symbolic domain is interpretive', () => {
+  it('spiritual_symbolic + verified is non-compliant (factual certainty claim)', () => {
+    expect(spiritualSymbolicIsInterpretive({
+      domain: 'spiritual_symbolic',
+      validation_status: 'verified',
+    })).toBe(false)
+  })
+
+  it('spiritual_symbolic + curated is compliant', () => {
+    expect(spiritualSymbolicIsInterpretive({
+      domain: 'spiritual_symbolic',
+      validation_status: 'curated',
+    })).toBe(true)
+  })
+
+  it('spiritual_symbolic + to_verify is compliant', () => {
+    expect(spiritualSymbolicIsInterpretive({
+      domain: 'spiritual_symbolic',
+      validation_status: 'to_verify',
+    })).toBe(true)
+  })
+
+  it('architecture domain can be verified (not spiritual_symbolic)', () => {
+    expect(spiritualSymbolicIsInterpretive({
+      domain: 'architecture',
+      validation_status: 'verified',
+    })).toBe(true)
+  })
+})
+
+// ── C2-UNIT-08 — governance index contains required top-level domains ──────────
+describe('C2-UNIT-08 — governance index covers required domains', () => {
+  const makeDomainEntries = (domains: string[]) =>
+    domains.map((d) => ({ domain: d as never }))
+
+  it('REQUIRED_GOVERNANCE_DOMAINS includes all 8 required domains', () => {
+    const required = [
+      'architecture',
+      'memory',
+      'knowledge',
+      'safety',
+      'legal',
+      'medical',
+      'financial',
+      'spiritual_symbolic',
+    ]
+    for (const d of required) {
+      expect(REQUIRED_GOVERNANCE_DOMAINS.has(d as never)).toBe(true)
+    }
+  })
+
+  it('index with all required domains passes', () => {
+    const entries = makeDomainEntries([
+      'architecture', 'memory', 'knowledge', 'safety',
+      'legal', 'medical', 'financial', 'spiritual_symbolic',
+    ])
+    expect(governanceIndexContainsRequiredDomains(entries)).toBe(true)
+  })
+
+  it('index missing "medical" fails', () => {
+    const entries = makeDomainEntries([
+      'architecture', 'memory', 'knowledge', 'safety',
+      'legal', 'financial', 'spiritual_symbolic',
+    ])
+    expect(governanceIndexContainsRequiredDomains(entries)).toBe(false)
+  })
+
+  it('empty index fails', () => {
+    expect(governanceIndexContainsRequiredDomains([])).toBe(false)
+  })
+
+  it('index with extra domains still passes if required are present', () => {
+    const entries = makeDomainEntries([
+      'architecture', 'memory', 'knowledge', 'safety',
+      'legal', 'medical', 'financial', 'spiritual_symbolic',
+      'unknown', 'agents', 'omega',
+    ])
+    expect(governanceIndexContainsRequiredDomains(entries)).toBe(true)
   })
 })

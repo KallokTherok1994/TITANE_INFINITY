@@ -238,3 +238,170 @@ export function getC2KnowledgeGovernanceContract(): C2KnowledgeGovernanceContrac
     drift_addressed: ['CD-04'],
   }
 }
+
+// ── Knowledge Metadata Sidecar (C2 v10 extension) ──────────────────────────────
+// These types govern the sidecar index (KNOWLEDGE_GOVERNANCE_INDEX.json),
+// not the runtime retrieval path. No runtime activation required (T2 bounded).
+
+export const KNOWLEDGE_DOMAINS = [
+  'architecture',
+  'memory',
+  'knowledge',
+  'research',
+  'provider_routing',
+  'omega',
+  'singularity',
+  'twin',
+  'agents',
+  'instructions',
+  'desktop_e2e',
+  'safety',
+  'legal',
+  'medical',
+  'financial',
+  'spiritual_symbolic',
+  'business_strategy',
+  'unknown',
+] as const
+export type KnowledgeDomain = typeof KNOWLEDGE_DOMAINS[number]
+
+export const KnowledgeDomainSchema = z.enum(KNOWLEDGE_DOMAINS)
+
+export const ITEM_SOURCE_TYPES = [
+  'curated',
+  'generated',
+  'internal',
+  'public',
+  'unknown',
+] as const
+export type KnowledgeItemSourceType = typeof ITEM_SOURCE_TYPES[number]
+
+export const KnowledgeItemSourceTypeSchema = z.enum(ITEM_SOURCE_TYPES)
+
+export const VALIDATION_STATUSES = [
+  'verified',
+  'curated',
+  'to_verify',
+  'outdated',
+  'rejected',
+  'unknown',
+] as const
+export type KnowledgeValidationStatus = typeof VALIDATION_STATUSES[number]
+
+export const KnowledgeValidationStatusSchema = z.enum(VALIDATION_STATUSES)
+
+/**
+ * Sidecar metadata entry for a knowledge surface.
+ * Governs provenance, freshness, confidence, allowed-use, and risk boundaries.
+ * Content is never rewritten — this is governance-only metadata.
+ */
+export const KnowledgeItemMetadataSchema = z.object({
+  knowledge_id: z.string().min(1),
+  title: z.string().min(1),
+  domain: KnowledgeDomainSchema,
+  version: z.string().default('1.0'),
+  source_type: KnowledgeItemSourceTypeSchema,
+  source_ref: z.string().nullable().default(null),
+  url: z.string().nullable().default(null),
+  last_reviewed: z.string().nullable().default(null),
+  confidence: z.number().min(0).max(1).default(0.5),
+  freshness: z.enum(['stable', 'time_sensitive', 'unknown']).default('unknown'),
+  requires_web_validation: z.boolean().default(false),
+  risk_level: z.enum(['low', 'medium', 'high', 'restricted']).default('low'),
+  allowed_use: z.array(z.string()).default([]),
+  not_allowed_use: z.array(z.string()).default([]),
+  validation_status: KnowledgeValidationStatusSchema.default('unknown'),
+  notes: z.string().nullable().default(null),
+})
+export type KnowledgeItemMetadata = z.infer<typeof KnowledgeItemMetadataSchema>
+
+/** Governance sidecar index (top-level wrapper) */
+export const KnowledgeGovernanceIndexSchema = z.object({
+  schema_version: z.literal('C2-v1'),
+  generated_at: z.string().datetime(),
+  lock: z.literal('C2'),
+  entries: z.array(KnowledgeItemMetadataSchema),
+})
+export type KnowledgeGovernanceIndex = z.infer<typeof KnowledgeGovernanceIndexSchema>
+
+// ── Sidecar Policy Functions ────────────────────────────────────────────────────
+/** C2 Policy: time_sensitive freshness requires web validation */
+export function requiresWebValidationForTimeSensitive(
+  metadata: Pick<KnowledgeItemMetadata, 'freshness' | 'requires_web_validation'>,
+): boolean {
+  return metadata.freshness === 'time_sensitive' ? metadata.requires_web_validation : true
+}
+
+/** C2 Policy: public source without URL/date cannot be validation_status=verified */
+export function publicSourceCannotBeVerifiedWithoutEvidence(
+  metadata: Pick<KnowledgeItemMetadata, 'source_type' | 'validation_status' | 'url' | 'last_reviewed'>,
+): boolean {
+  if (metadata.source_type !== 'public') return true
+  if (metadata.validation_status !== 'verified') return true
+  return metadata.url !== null || metadata.last_reviewed !== null
+}
+
+/** C2 Policy: unknown source_type cannot have high confidence (>= 0.75) */
+export function unknownSourceCannotBeHighConfidence(
+  metadata: Pick<KnowledgeItemMetadata, 'source_type' | 'confidence'>,
+): boolean {
+  if (metadata.source_type !== 'unknown') return true
+  return metadata.confidence < 0.75
+}
+
+/** C2 Policy: high-risk domains (legal/medical/financial/safety) must declare not_allowed_use boundaries */
+export const HIGH_RISK_DOMAINS: ReadonlySet<KnowledgeDomain> = new Set([
+  'legal',
+  'medical',
+  'financial',
+  'safety',
+])
+
+export function highRiskDomainRequiresNotAllowedUse(
+  metadata: Pick<KnowledgeItemMetadata, 'domain' | 'not_allowed_use'>,
+): boolean {
+  if (!HIGH_RISK_DOMAINS.has(metadata.domain)) return true
+  return metadata.not_allowed_use.length > 0
+}
+
+/** C2 Policy: generated source_type cannot be validation_status=verified without review marker */
+export function generatedSourceCannotBeVerifiedWithoutReview(
+  metadata: Pick<KnowledgeItemMetadata, 'source_type' | 'validation_status' | 'notes'>,
+): boolean {
+  if (metadata.source_type !== 'generated') return true
+  if (metadata.validation_status !== 'verified') return true
+  return (
+    metadata.notes !== null &&
+    metadata.notes.toLowerCase().includes('review')
+  )
+}
+
+/** C2 Policy: spiritual_symbolic domain content is interpretive, not factual-certainty */
+export function spiritualSymbolicIsInterpretive(
+  metadata: Pick<KnowledgeItemMetadata, 'domain' | 'validation_status'>,
+): boolean {
+  if (metadata.domain !== 'spiritual_symbolic') return true
+  return metadata.validation_status !== 'verified'
+}
+
+/** C2 Policy: governance index must contain at least the required top-level domains */
+export const REQUIRED_GOVERNANCE_DOMAINS: ReadonlySet<KnowledgeDomain> = new Set([
+  'architecture',
+  'memory',
+  'knowledge',
+  'safety',
+  'legal',
+  'medical',
+  'financial',
+  'spiritual_symbolic',
+])
+
+export function governanceIndexContainsRequiredDomains(
+  entries: ReadonlyArray<Pick<KnowledgeItemMetadata, 'domain'>>,
+): boolean {
+  const present = new Set(entries.map((e) => e.domain))
+  for (const domain of REQUIRED_GOVERNANCE_DOMAINS) {
+    if (!present.has(domain)) return false
+  }
+  return true
+}
