@@ -20,6 +20,66 @@ import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('NumericTwin');
 
+export const OWNER_TWIN_RESONANCE = {
+  ownerThemes: [
+    'présence',
+    'authenticité',
+    'retour au vivant',
+    'deuxième vitesse',
+    'clarté',
+    'œuvre vivante',
+  ],
+  sourceCount: 42,
+  reflectionAxis: 'clarté intérieure, structure concrète et transformation humaine douce',
+  portraitUrl:
+    'https://static.wixstatic.com/media/0c58f2_0e50a8a83cac4080848fe97b54f92b8a~mv2.jpg/v1/fill/w_285,h_287,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/465277026_1246722113243921_9112138683944422327_n.jpg',
+  portraitFallbackUrl: '/kevin-owner-portrait.svg',
+} as const;
+
+function canPersistTwinSnapshot(): boolean {
+  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+}
+
+export function persistTwinChatContextSnapshot(params: {
+  state: TwinState;
+  fusion: FusionIndex;
+  profile: TwinEvolutionProfile;
+}): void {
+  if (!canPersistTwinSnapshot()) {
+    return;
+  }
+
+  const { state, fusion, profile } = params;
+  window.localStorage.setItem(
+    'titane_twin_fusion_v1',
+    JSON.stringify({
+      globalScore: fusion.globalScore,
+      trend: fusion.trend,
+      currentPhase: profile.currentPhase ?? null,
+      syncScore: profile.syncScore ?? 0,
+      identityCore: state.identityCore,
+      valueMap: state.valueMap,
+      cognitivePatterns: state.cognitivePatterns,
+      therapeuticModel: state.therapeuticModel,
+      creativeSignature: state.creativeSignature,
+      fusionComponents: {
+        valueAlignment: fusion.valueAlignment,
+        cognitiveAlignment: fusion.cognitiveAlignment,
+        styleAlignment: fusion.styleAlignment,
+        therapeuticAlignment: fusion.therapeuticAlignment,
+        creativeAlignment: fusion.creativeAlignment,
+        evolutionAlignment: fusion.evolutionAlignment,
+      },
+      ownerThemes: [...OWNER_TWIN_RESONANCE.ownerThemes],
+      sourceCount: OWNER_TWIN_RESONANCE.sourceCount,
+      reflectionAxis: OWNER_TWIN_RESONANCE.reflectionAxis,
+      portraitUrl: OWNER_TWIN_RESONANCE.portraitUrl,
+      portraitFallbackUrl: OWNER_TWIN_RESONANCE.portraitFallbackUrl,
+      updatedAt: Date.now(),
+    })
+  );
+}
+
 /**
  * Service centralisé pour le Numeric Twin
  * Gère la communication avec le backend Rust
@@ -143,6 +203,16 @@ class NumericTwinService {
       logger.error(`${this.LOG_PREFIX} recalculateFusion error:`, error);
       throw error;
     }
+  }
+
+  async refreshChatContextSnapshot(): Promise<void> {
+    const [profile, fusion, state] = await Promise.all([
+      this.getEvolutionProfile(),
+      this.getFusionIndex(),
+      this.getState(),
+    ]);
+
+    persistTwinChatContextSnapshot({ state, fusion, profile });
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

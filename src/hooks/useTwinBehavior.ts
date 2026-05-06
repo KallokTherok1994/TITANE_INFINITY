@@ -5,8 +5,11 @@
  */
 
 import { useState, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
 import { numericTwinService } from '../services/api/numericTwin';
 import type { ObservationType } from '../types/numericTwin';
+
+const twinBehaviorLogger = createLogger('useTwinBehavior');
 
 interface Observation {
   id: string;
@@ -89,10 +92,20 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
       try {
         const id = await numericTwinService.observeValue(valueName, context, confidence);
         addObservation(id, 'value', valueName, context, confidence);
+        try {
+          await numericTwinService.refreshChatContextSnapshot();
+        } catch (refreshError) {
+          const message =
+            refreshError instanceof Error
+              ? refreshError.message
+              : 'actualisation Twin indisponible';
+          setError(`Observation enregistrée, actualisation Twin en attente: ${message}`);
+          twinBehaviorLogger.warn('observeValue snapshot refresh failed', refreshError);
+        }
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeValue error:', err);
+        twinBehaviorLogger.error('observeValue error', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -116,10 +129,20 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
           confidence
         );
         addObservation(id, 'cognitive', pattern, context, confidence);
+        try {
+          await numericTwinService.refreshChatContextSnapshot();
+        } catch (refreshError) {
+          const message =
+            refreshError instanceof Error
+              ? refreshError.message
+              : 'actualisation Twin indisponible';
+          setError(`Observation enregistrée, actualisation Twin en attente: ${message}`);
+          twinBehaviorLogger.warn('observeCognitive snapshot refresh failed', refreshError);
+        }
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeCognitive error:', err);
+        twinBehaviorLogger.error('observeCognitive error', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -139,10 +162,20 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
       try {
         const id = await numericTwinService.observeStyle(element, context, confidence);
         addObservation(id, 'style', element, context, confidence);
+        try {
+          await numericTwinService.refreshChatContextSnapshot();
+        } catch (refreshError) {
+          const message =
+            refreshError instanceof Error
+              ? refreshError.message
+              : 'actualisation Twin indisponible';
+          setError(`Observation enregistrée, actualisation Twin en attente: ${message}`);
+          twinBehaviorLogger.warn('observeStyle snapshot refresh failed', refreshError);
+        }
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeStyle error:', err);
+        twinBehaviorLogger.error('observeStyle error', err);
         return null;
       } finally {
         setIsSubmitting(false);
@@ -158,10 +191,20 @@ export function useTwinBehavior(): UseTwinBehaviorReturn {
       try {
         const id = await numericTwinService.observeEmotional(state, context, confidence);
         addObservation(id, 'emotional', state, context, confidence);
+        try {
+          await numericTwinService.refreshChatContextSnapshot();
+        } catch (refreshError) {
+          const message =
+            refreshError instanceof Error
+              ? refreshError.message
+              : 'actualisation Twin indisponible';
+          setError(`Observation enregistrée, actualisation Twin en attente: ${message}`);
+          twinBehaviorLogger.warn('observeEmotional snapshot refresh failed', refreshError);
+        }
         return id;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erreur lors de l'observation");
-        console.error('[useTwinBehavior] observeEmotional error:', err);
+        twinBehaviorLogger.error('observeEmotional error', err);
         return null;
       } finally {
         setIsSubmitting(false);

@@ -224,6 +224,12 @@ La surface roadmap transformation/évolution est désormais harmonisée :
 
 > La couverture associée est scellée par `tests/contract/tauri-ipc-contract.test.ts` (présence TAURI_COMMANDS + wrappers + allowlist + validation snake_case/bounds) et par trois tests Rust moteur ajoutés dans `src-tauri/src/numeric_twin/mod.rs` (`calculate_fusion_index_updates_global_score_and_trend`, `submit_observation_rejects_empty_content_and_invalid_confidence`, `validate_sync_updates_existing_packet_and_rejects_unknown_id`).
 
+## 2026-05-06 — Twin hook propagation to chat context snapshot
+
+> Le snapshot partagé `titane_twin_fusion_v1` n était rafraîchi que par `useTwinEvolution`, ce qui laissait le contexte chat figé après des mutations lancées depuis `useTwinBehavior`. Le lot courant centralise la persistance du snapshot dans `src/services/api/numericTwin.ts` (`persistTwinChatContextSnapshot` + `refreshChatContextSnapshot`) puis fait consommer ce point unique par `src/hooks/useTwinEvolution.ts` et `src/hooks/useTwinBehavior.ts`.
+
+> La preuve est portée par `src/__tests__/hooks/useTwinEvolution.test.tsx`, `src/__tests__/hooks/useTwinBehavior.test.tsx` et la non-régression `src/__tests__/twins/twins-context-chain.test.ts`, montrant que la mutation Twin rafraîchit bien le contexte partagé destiné à l injection chat et qu un échec de refresh reste visible sans perdre l observation locale.
+
 ## Conformité allowlist Tauri/IPC (avril 2026)
 
 Ajout séquentiel des commandes manquantes à la allowlist Tauri/IPC (runtime/stable/tauri.conf.json, src-tauri/tauri.conf.json) :
