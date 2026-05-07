@@ -12,12 +12,12 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
-use std::{net::SocketAddr, sync::Arc, path::PathBuf};
+use std::{net::SocketAddr, path::PathBuf, sync::Arc};
 use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer};
 use tower_http::set_header::SetResponseHeaderLayer;
 
-use crate::security::csp::get_csp_headers;
 use crate::numeric_twin::twin_commands::NumericTwinState;
+use crate::security::csp::get_csp_headers;
 
 use crate::{
     conversation_engine::ConversationEngineState,
@@ -27,8 +27,9 @@ use crate::{
         audit::RemoteAuditLogger,
         auth::{derive_jwt_secret, hash_shared_secret, validate_token, RemoteAuthState},
         handlers::{
-            agents_status_handler, auth_refresh_handler, auth_token_handler, config_runtime_handler,
-            health_handler, invoke_handler, system_health_handler, GatewayState,
+            agents_status_handler, auth_refresh_handler, auth_token_handler,
+            config_runtime_handler, health_handler, invoke_handler, system_health_handler,
+            GatewayState,
         },
         rate_limit::RemoteRateLimiter,
         static_serve::static_router,
@@ -61,8 +62,7 @@ impl RemoteGatewayConfig {
                 .ok()
                 .and_then(|v| v.parse().ok())
                 .unwrap_or(7420),
-            cors_origin: std::env::var("TITANE_REMOTE_ORIGIN")
-                .unwrap_or_else(|_| "*".into()),
+            cors_origin: std::env::var("TITANE_REMOTE_ORIGIN").unwrap_or_else(|_| "*".into()),
             jwt_passphrase: secrets_passphrase.to_string(),
             shared_secret: shared_secret.to_string(),
             dist_remote_path: std::env::var("TITANE_REMOTE_DIST")
@@ -107,7 +107,11 @@ fn extract_bearer<'a>(headers: &'a HeaderMap) -> Option<&'a str> {
 
 // ── Build Router ──────────────────────────────────────────────
 
-fn build_router(config: &RemoteGatewayConfig, engine: Arc<ConversationEngineState>, orchestrator: ChatOrchestratorState) -> Router {
+fn build_router(
+    config: &RemoteGatewayConfig,
+    engine: Arc<ConversationEngineState>,
+    orchestrator: ChatOrchestratorState,
+) -> Router {
     let auth_state = Arc::new(RemoteAuthState::new(
         derive_jwt_secret(&config.jwt_passphrase),
         hash_shared_secret(&config.shared_secret),
@@ -149,7 +153,10 @@ fn build_router(config: &RemoteGatewayConfig, engine: Arc<ConversationEngineStat
         .route("/api/config/runtime", get(config_runtime_handler))
         .route("/api/agents/status", get(agents_status_handler))
         .with_state(gateway_state)
-        .layer(middleware::from_fn_with_state(auth_state.clone(), require_auth));
+        .layer(middleware::from_fn_with_state(
+            auth_state.clone(),
+            require_auth,
+        ));
 
     // WebSocket route (auth via query param)
     let ws_routes = Router::new()
@@ -193,9 +200,8 @@ fn build_cors(origin: &str) -> CorsLayer {
             .allow_methods(AllowMethods::any())
             .allow_headers(AllowHeaders::any())
     } else {
-        let allowed: axum::http::HeaderValue = origin
-            .parse()
-            .unwrap_or_else(|_| "*".parse().unwrap());
+        let allowed: axum::http::HeaderValue =
+            origin.parse().unwrap_or_else(|_| "*".parse().unwrap());
         CorsLayer::new()
             .allow_origin(AllowOrigin::exact(allowed))
             .allow_methods(AllowMethods::any())
@@ -207,7 +213,11 @@ fn build_cors(origin: &str) -> CorsLayer {
 
 /// Start the remote gateway axum server.
 /// Call via: `tauri::async_runtime::spawn(start(config, engine, orchestrator))` from main.rs setup hook.
-pub async fn start(config: RemoteGatewayConfig, engine: Arc<ConversationEngineState>, orchestrator: ChatOrchestratorState) {
+pub async fn start(
+    config: RemoteGatewayConfig,
+    engine: Arc<ConversationEngineState>,
+    orchestrator: ChatOrchestratorState,
+) {
     let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
     let router = build_router(&config, engine, orchestrator);
 
@@ -220,7 +230,10 @@ pub async fn start(config: RemoteGatewayConfig, engine: Arc<ConversationEngineSt
     let listener = match tokio::net::TcpListener::bind(addr).await {
         Ok(l) => l,
         Err(e) => {
-            log::error!("❌ [RemoteGateway] Failed to bind port {}: {e}", config.port);
+            log::error!(
+                "❌ [RemoteGateway] Failed to bind port {}: {e}",
+                config.port
+            );
             return;
         }
     };
@@ -228,7 +241,9 @@ pub async fn start(config: RemoteGatewayConfig, engine: Arc<ConversationEngineSt
     if let Err(e) = axum::serve(
         listener,
         router.into_make_service_with_connect_info::<SocketAddr>(),
-    ).await {
+    )
+    .await
+    {
         log::error!("❌ [RemoteGateway] Server error: {e}");
     }
 }
@@ -274,10 +289,7 @@ mod tests {
     #[test]
     fn test_extract_bearer_valid() {
         let mut headers = axum::http::HeaderMap::new();
-        headers.insert(
-            "authorization",
-            "Bearer mytoken123".parse().unwrap(),
-        );
+        headers.insert("authorization", "Bearer mytoken123".parse().unwrap());
         assert_eq!(extract_bearer(&headers), Some("mytoken123"));
     }
 

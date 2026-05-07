@@ -50,12 +50,7 @@ impl RemoteAuditLogger {
     }
 
     /// Log an authentication attempt
-    pub async fn log_auth(
-        &self,
-        ip: Option<String>,
-        success: bool,
-        reason: &str,
-    ) {
+    pub async fn log_auth(&self, ip: Option<String>, success: bool, reason: &str) {
         let severity = if success {
             AuditSeverity::Info
         } else {
@@ -106,15 +101,22 @@ mod tests {
         let dir = tempdir().unwrap();
         let log = RemoteAuditLogger::new(dir.path().join("remote_audit.log"));
         // Must not panic
-        log.log_request("user1", Some("127.0.0.1".into()), "POST", "/api/invoke", 200)
-            .await;
+        log.log_request(
+            "user1",
+            Some("127.0.0.1".into()),
+            "POST",
+            "/api/invoke",
+            200,
+        )
+        .await;
     }
 
     #[tokio::test]
     async fn test_audit_log_auth_no_panic() {
         let dir = tempdir().unwrap();
         let log = RemoteAuditLogger::new(dir.path().join("remote_audit.log"));
-        log.log_auth(Some("1.2.3.4".into()), false, "bad_secret").await;
+        log.log_auth(Some("1.2.3.4".into()), false, "bad_secret")
+            .await;
     }
 
     #[tokio::test]

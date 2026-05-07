@@ -38,11 +38,10 @@ pub async fn perform_search(
     query: &str,
     max_results: usize,
 ) -> Result<Vec<GatewaySearchResult>, String> {
-    let base_url = std::env::var("TITANE_SEARCH_API_URL")
-        .unwrap_or_else(|_| DEFAULT_SEARCH_API.to_string());
+    let base_url =
+        std::env::var("TITANE_SEARCH_API_URL").unwrap_or_else(|_| DEFAULT_SEARCH_API.to_string());
 
-    let client =
-        network::build_http_client(Duration::from_secs(SEARCH_TIMEOUT_SECS))?;
+    let client = network::build_http_client(Duration::from_secs(SEARCH_TIMEOUT_SECS))?;
 
     let url = reqwest::Url::parse_with_params(&base_url, &[("q", query), ("format", "json")])
         .map_err(|e| format!("Failed to build search URL: {e}"))?;

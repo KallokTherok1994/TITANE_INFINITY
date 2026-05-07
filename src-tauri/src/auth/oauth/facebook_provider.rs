@@ -88,10 +88,7 @@ impl FacebookProvider {
 
     /// Exchange authorization code for access token, then fetch user profile.
     /// `state` is validated against the stored session (CSRF protection).
-    pub async fn handle_callback(
-        code: &str,
-        state: &str,
-    ) -> Result<OAuthProfile, OAuthError> {
+    pub async fn handle_callback(code: &str, state: &str) -> Result<OAuthProfile, OAuthError> {
         // Validate CSRF state and consume PKCE verifier
         let verifier = OAuthStateManager::consume(state)?;
         info!("[FacebookOAuth] PKCE state validated, exchanging code...");
@@ -226,17 +223,22 @@ impl FacebookProvider {
     fn store_token(token: &str, user_id: &str) -> bool {
         use crate::security::secrets_engine::SecureSecretsEngine;
 
-        let Ok(engine) = SecureSecretsEngine::new(None) else { return false; };
-        let ok1 = engine.set_secret("facebook_access_token", token.to_string()).is_ok();
-        let ok2 = engine.set_secret("facebook_user_id", user_id.to_string()).is_ok();
+        let Ok(engine) = SecureSecretsEngine::new(None) else {
+            return false;
+        };
+        let ok1 = engine
+            .set_secret("facebook_access_token", token.to_string())
+            .is_ok();
+        let ok2 = engine
+            .set_secret("facebook_user_id", user_id.to_string())
+            .is_ok();
         ok1 && ok2
     }
 }
 
 /// Parse callback URL from deep-link: titane://auth/callback?code=...&state=...
 pub fn parse_callback_url(url: &str) -> Result<(String, String), OAuthError> {
-    let parsed = url::Url::parse(url)
-        .map_err(|e| OAuthError::InvalidCallbackUrl(e.to_string()))?;
+    let parsed = url::Url::parse(url).map_err(|e| OAuthError::InvalidCallbackUrl(e.to_string()))?;
 
     let mut code = None;
     let mut state = None;

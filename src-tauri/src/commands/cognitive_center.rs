@@ -325,20 +325,29 @@ pub async fn cognitive_ingest_file(
     }
 
     // Read file
-    let content = fs::read_to_string(&canonical_path).map_err(|e| format!("Failed to read file: {}", e))?;
+    let content =
+        fs::read_to_string(&canonical_path).map_err(|e| format!("Failed to read file: {}", e))?;
 
-    let metadata = fs::metadata(&canonical_path).map_err(|e| format!("Failed to get metadata: {}", e))?;
+    let metadata =
+        fs::metadata(&canonical_path).map_err(|e| format!("Failed to get metadata: {}", e))?;
 
     let now = chrono::Utc::now().timestamp_millis() as u64;
     let canonical_str = canonical_path.to_string_lossy();
-    let file_name = canonical_str.rsplit('/').next().unwrap_or(canonical_str.as_ref());
+    let file_name = canonical_str
+        .rsplit('/')
+        .next()
+        .unwrap_or(canonical_str.as_ref());
 
     let entry = KnowledgeEntry {
         id: format!("kv_{}", now),
         title: title.unwrap_or_else(|| file_name.to_string()),
         path: canonical_str.to_string(),
         category: detect_category(canonical_str.as_ref()),
-        format: canonical_str.rsplit('.').next().unwrap_or("unknown").to_string(),
+        format: canonical_str
+            .rsplit('.')
+            .next()
+            .unwrap_or("unknown")
+            .to_string(),
         summary: generate_summary(&content, 200),
         size_bytes: metadata.len(),
         word_count: content.split_whitespace().count() as u32,

@@ -91,7 +91,9 @@ impl AnomalyDetector {
         let stats = guard.ip_stats.entry(ip.to_string()).or_default();
 
         // Prune expired timestamps
-        stats.request_timestamps.retain(|&t| now.saturating_sub(t) < RATE_WINDOW_SECS);
+        stats
+            .request_timestamps
+            .retain(|&t| now.saturating_sub(t) < RATE_WINDOW_SECS);
         stats.request_timestamps.push(now);
 
         let count = stats.request_timestamps.len() as u64;
@@ -247,7 +249,10 @@ mod tests {
         for _ in 0..=KEY_ROTATION_ALERT_THRESHOLD {
             last = detector.record_key_rotation(test_ip());
         }
-        assert!(last.is_some(), "Should emit ALERT when rotation threshold exceeded");
+        assert!(
+            last.is_some(),
+            "Should emit ALERT when rotation threshold exceeded"
+        );
         assert_eq!(last.unwrap().severity, AnomalySeverity::Alert);
     }
 

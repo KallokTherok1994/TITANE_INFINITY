@@ -303,11 +303,7 @@ impl ApiKeyStore {
 
     /// List all keys as masked entries (no hashes).
     pub fn list_masked(&self) -> Vec<ApiKeyMasked> {
-        let mut list: Vec<ApiKeyMasked> = self
-            .entries
-            .values()
-            .map(ApiKeyMasked::from)
-            .collect();
+        let mut list: Vec<ApiKeyMasked> = self.entries.values().map(ApiKeyMasked::from).collect();
         list.sort_by(|a, b| a.created_at.cmp(&b.created_at));
         list
     }

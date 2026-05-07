@@ -100,9 +100,6 @@ mod tests {
         let (state, _) = OAuthStateManager::start();
         let _ = OAuthStateManager::consume(&state);
         let result = OAuthStateManager::consume(&state);
-        assert!(
-            result.is_err(),
-            "second consume of same state should fail"
-        );
+        assert!(result.is_err(), "second consume of same state should fail");
     }
 }

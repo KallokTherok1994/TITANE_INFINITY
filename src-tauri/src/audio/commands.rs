@@ -114,7 +114,10 @@ fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> Command
     {
         let _ = output_path;
         let _ = output_device_id;
-        return Err("AUDIO_ANDROID_UNSUPPORTED: lecture audio via système non disponible sur Android".to_string());
+        return Err(
+            "AUDIO_ANDROID_UNSUPPORTED: lecture audio via système non disponible sur Android"
+                .to_string(),
+        );
     }
 
     #[cfg(not(target_os = "android"))]
@@ -218,114 +221,114 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
     #[cfg(not(target_os = "android"))]
     {
-    let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
+        let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
 
-    IS_SPEAKING.store(true, Ordering::Relaxed);
-    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+        IS_SPEAKING.store(true, Ordering::Relaxed);
+        IS_TTS_PAUSED.store(false, Ordering::Relaxed);
 
-    let result = match settings.engine.as_str() {
-        "piper" => {
-            let piper_bin = format!("{}/.local/bin/piper", home);
-            let voice_id = validate_piper_voice_id(&settings.voice_id)
-                .map_err(|err| format!("Invalid Piper voice id: {}", err))?;
-            let model_path = format!("{}/.local/share/piper/voices/{}.onnx", home, voice_id);
+        let result = match settings.engine.as_str() {
+            "piper" => {
+                let piper_bin = format!("{}/.local/bin/piper", home);
+                let voice_id = validate_piper_voice_id(&settings.voice_id)
+                    .map_err(|err| format!("Invalid Piper voice id: {}", err))?;
+                let model_path = format!("{}/.local/share/piper/voices/{}.onnx", home, voice_id);
 
-            log::info!("[TTS] Piper binary: {}", piper_bin);
-            log::info!("[TTS] Model path: {}", model_path);
+                log::info!("[TTS] Piper binary: {}", piper_bin);
+                log::info!("[TTS] Model path: {}", model_path);
 
-            // Check if piper and model exist
-            if !std::path::Path::new(&piper_bin).exists() {
-                log::warn!("[TTS] Piper not found at {}", piper_bin);
+                // Check if piper and model exist
+                if !std::path::Path::new(&piper_bin).exists() {
+                    log::warn!("[TTS] Piper not found at {}", piper_bin);
+                    if settings.auto_fallback {
+                        return tts_speak_espeak(&text, &settings).await;
+                    }
+                    return Err("Piper non installé".into());
+                }
+
+                if !std::path::Path::new(&model_path).exists() {
+                    log::warn!("[TTS] Model not found at {}", model_path);
+                    if settings.auto_fallback {
+                        return tts_speak_espeak(&text, &settings).await;
+                    }
+                    return Err(format!("Modèle Piper non trouvé: {}", voice_id));
+                }
+
+                let output_path = std::env::temp_dir().join("titane_tts_output.wav");
+                let output_str = output_path.to_string_lossy().to_string();
+
+                log::info!("[TTS] Output path: {}", output_str);
+
+                // ✅ SECURED: Use stdin pipe instead of shell interpolation to prevent injection
+                // This avoids shell interpretation of special characters in text
+                use std::io::Write;
+
+                let mut piper_process = Command::new(&piper_bin)
+                    .arg("--model")
+                    .arg(&model_path)
+                    .arg("--output_file")
+                    .arg(&output_str)
+                    .stdin(std::process::Stdio::piped())
+                    .stdout(std::process::Stdio::piped())
+                    .stderr(std::process::Stdio::piped())
+                    .spawn()
+                    .map_err(|e| format!("Erreur lancement Piper: {}", e))?;
+
+                // Write text to stdin (safe - no shell interpretation)
+                if let Some(mut stdin) = piper_process.stdin.take() {
+                    stdin
+                        .write_all(text.as_bytes())
+                        .map_err(|e| format!("Erreur écriture stdin Piper: {}", e))?;
+                }
+
+                let piper_output = piper_process
+                    .wait_with_output()
+                    .map_err(|e| format!("Erreur attente Piper: {}", e))?;
+
+                if !piper_output.status.success() {
+                    let stderr = String::from_utf8_lossy(&piper_output.stderr);
+                    log::error!("[TTS] Piper failed: {}", stderr);
+                    if settings.auto_fallback {
+                        return tts_speak_espeak(&text, &settings).await;
+                    }
+                    return Err(format!("Piper a échoué: {}", stderr));
+                }
+
+                log::info!("[TTS] Piper synthesis completed, checking output file...");
+
+                // Verify file exists and has content
+                if let Ok(metadata) = std::fs::metadata(&output_str) {
+                    log::info!("[TTS] Output file size: {} bytes", metadata.len());
+                    if metadata.len() == 0 {
+                        log::error!("[TTS] Output file is empty!");
+                        return Err("Piper a généré un fichier audio vide".into());
+                    }
+                } else {
+                    log::error!("[TTS] Output file does not exist!");
+                    return Err("Fichier audio non généré".into());
+                }
+
+                log::info!("[TTS] Playing audio with pw-play/paplay/aplay...");
+
+                play_audio_file(&output_str, settings.output_device_id.as_deref())?;
+
+                log::info!("[TTS] Audio playback completed successfully!");
+
+                Ok(())
+            }
+            "espeak" => tts_speak_espeak(&text, &settings).await,
+            _ => {
                 if settings.auto_fallback {
-                    return tts_speak_espeak(&text, &settings).await;
+                    tts_speak_espeak(&text, &settings).await
+                } else {
+                    Err(format!("Moteur TTS non supporté: {}", settings.engine))
                 }
-                return Err("Piper non installé".into());
             }
+        };
 
-            if !std::path::Path::new(&model_path).exists() {
-                log::warn!("[TTS] Model not found at {}", model_path);
-                if settings.auto_fallback {
-                    return tts_speak_espeak(&text, &settings).await;
-                }
-                return Err(format!("Modèle Piper non trouvé: {}", voice_id));
-            }
-
-            let output_path = std::env::temp_dir().join("titane_tts_output.wav");
-            let output_str = output_path.to_string_lossy().to_string();
-
-            log::info!("[TTS] Output path: {}", output_str);
-
-            // ✅ SECURED: Use stdin pipe instead of shell interpolation to prevent injection
-            // This avoids shell interpretation of special characters in text
-            use std::io::Write;
-
-            let mut piper_process = Command::new(&piper_bin)
-                .arg("--model")
-                .arg(&model_path)
-                .arg("--output_file")
-                .arg(&output_str)
-                .stdin(std::process::Stdio::piped())
-                .stdout(std::process::Stdio::piped())
-                .stderr(std::process::Stdio::piped())
-                .spawn()
-                .map_err(|e| format!("Erreur lancement Piper: {}", e))?;
-
-            // Write text to stdin (safe - no shell interpretation)
-            if let Some(mut stdin) = piper_process.stdin.take() {
-                stdin
-                    .write_all(text.as_bytes())
-                    .map_err(|e| format!("Erreur écriture stdin Piper: {}", e))?;
-            }
-
-            let piper_output = piper_process
-                .wait_with_output()
-                .map_err(|e| format!("Erreur attente Piper: {}", e))?;
-
-            if !piper_output.status.success() {
-                let stderr = String::from_utf8_lossy(&piper_output.stderr);
-                log::error!("[TTS] Piper failed: {}", stderr);
-                if settings.auto_fallback {
-                    return tts_speak_espeak(&text, &settings).await;
-                }
-                return Err(format!("Piper a échoué: {}", stderr));
-            }
-
-            log::info!("[TTS] Piper synthesis completed, checking output file...");
-
-            // Verify file exists and has content
-            if let Ok(metadata) = std::fs::metadata(&output_str) {
-                log::info!("[TTS] Output file size: {} bytes", metadata.len());
-                if metadata.len() == 0 {
-                    log::error!("[TTS] Output file is empty!");
-                    return Err("Piper a généré un fichier audio vide".into());
-                }
-            } else {
-                log::error!("[TTS] Output file does not exist!");
-                return Err("Fichier audio non généré".into());
-            }
-
-            log::info!("[TTS] Playing audio with pw-play/paplay/aplay...");
-
-            play_audio_file(&output_str, settings.output_device_id.as_deref())?;
-
-            log::info!("[TTS] Audio playback completed successfully!");
-
-            Ok(())
-        }
-        "espeak" => tts_speak_espeak(&text, &settings).await,
-        _ => {
-            if settings.auto_fallback {
-                tts_speak_espeak(&text, &settings).await
-            } else {
-                Err(format!("Moteur TTS non supporté: {}", settings.engine))
-            }
-        }
-    };
-
-    set_active_tts_pid(None);
-    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
-    IS_SPEAKING.store(false, Ordering::Relaxed);
-    result
+        set_active_tts_pid(None);
+        IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+        IS_SPEAKING.store(false, Ordering::Relaxed);
+        result
     } // end #[cfg(not(target_os = "android"))]
 }
 
@@ -387,73 +390,73 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
 
     #[cfg(not(target_os = "android"))]
     {
-    let speed = (settings.rate * 175.0).clamp(80.0, 450.0) as u32;
-    let pitch = (settings.pitch * 50.0).clamp(0.0, 99.0) as u32;
-    let voice = if settings.language.starts_with("fr") {
-        "fr"
-    } else {
-        "en"
-    };
+        let speed = (settings.rate * 175.0).clamp(80.0, 450.0) as u32;
+        let pitch = (settings.pitch * 50.0).clamp(0.0, 99.0) as u32;
+        let voice = if settings.language.starts_with("fr") {
+            "fr"
+        } else {
+            "en"
+        };
 
-    // Try espeak-ng first (modern systems), fallback to espeak
-    let espeak_bin = if std::process::Command::new("espeak-ng")
-        .arg("--version")
-        .output()
-        .is_ok()
-    {
-        "espeak-ng"
-    } else {
-        "espeak"
-    };
+        // Try espeak-ng first (modern systems), fallback to espeak
+        let espeak_bin = if std::process::Command::new("espeak-ng")
+            .arg("--version")
+            .output()
+            .is_ok()
+        {
+            "espeak-ng"
+        } else {
+            "espeak"
+        };
 
-    // espeak-ng supports --stdout so we can pipe to pw-play for device targeting
-    if let Some(ref dev_id) = settings.output_device_id {
-        // Generate audio to WAV file using -w flag then play with pw-play --target
-        let output_path = std::env::temp_dir().join("titane_espeak_output.wav");
-        let output_str = output_path.to_string_lossy().to_string();
+        // espeak-ng supports --stdout so we can pipe to pw-play for device targeting
+        if let Some(ref dev_id) = settings.output_device_id {
+            // Generate audio to WAV file using -w flag then play with pw-play --target
+            let output_path = std::env::temp_dir().join("titane_espeak_output.wav");
+            let output_str = output_path.to_string_lossy().to_string();
 
-        let gen = Command::new(espeak_bin)
-            .args([
-                "-v",
-                voice,
-                "-s",
-                &speed.to_string(),
-                "-p",
-                &pitch.to_string(),
-                "-w",
-                &output_str,
-                "--",
-            ])
-            .arg(text)
-            .output();
+            let gen = Command::new(espeak_bin)
+                .args([
+                    "-v",
+                    voice,
+                    "-s",
+                    &speed.to_string(),
+                    "-p",
+                    &pitch.to_string(),
+                    "-w",
+                    &output_str,
+                    "--",
+                ])
+                .arg(text)
+                .output();
 
-        if let Ok(gen_out) = gen {
-            if gen_out.status.success() {
-                if let Ok(meta) = std::fs::metadata(&output_path) {
-                    if meta.len() > 0 {
-                        play_audio_file(&output_str, Some(dev_id.as_str()))?;
-                        return Ok(());
+            if let Ok(gen_out) = gen {
+                if gen_out.status.success() {
+                    if let Ok(meta) = std::fs::metadata(&output_path) {
+                        if meta.len() > 0 {
+                            play_audio_file(&output_str, Some(dev_id.as_str()))?;
+                            return Ok(());
+                        }
                     }
                 }
             }
+            // fall through to default path if file generation failed
         }
-        // fall through to default path if file generation failed
-    }
 
-    // Default: espeak plays directly to system default
-    let mut command = Command::new(espeak_bin);
-    command.args([
-        "-v",
-        voice,
-        "-s",
-        &speed.to_string(),
-        "-p",
-        &pitch.to_string(),
-        text,
-    ]);
-    run_tracked_command(command, "lecture espeak/espeak-ng")?;
+        // Default: espeak plays directly to system default
+        let mut command = Command::new(espeak_bin);
+        command.args([
+            "-v",
+            voice,
+            "-s",
+            &speed.to_string(),
+            "-p",
+            &pitch.to_string(),
+            text,
+        ]);
+        run_tracked_command(command, "lecture espeak/espeak-ng")?;
 
-    Ok(())
+        Ok(())
     } // end #[cfg(not(target_os = "android"))]
 }
 

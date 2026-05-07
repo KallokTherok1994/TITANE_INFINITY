@@ -1214,22 +1214,22 @@ fn main() {
     // V32 Phase 5: CycleEngine State (SP#16 Rythmes Cognitifs)
     let builder = builder.manage(Arc::new(tokio::sync::RwLock::new(
         titane_infinity::cycle_engine::commands::CycleEngineState::new(
-            titane_infinity::cycle_engine::CycleEngineConfig::default()
-        )
+            titane_infinity::cycle_engine::CycleEngineConfig::default(),
+        ),
     )));
 
     // V32 Phase 7: Multimodal Engine State
     let builder = builder.manage(Arc::new(tokio::sync::RwLock::new(
         titane_infinity::multimodal::commands::MultimodalState::new(
-            titane_infinity::multimodal::config::MultimodalConfig::default()
-        )
+            titane_infinity::multimodal::config::MultimodalConfig::default(),
+        ),
     )));
 
     // V32 Phase 9: MetaEnergy State (SP#20 Énergie Cognitive)
     let builder = builder.manage(Arc::new(tokio::sync::RwLock::new(
         titane_infinity::meta_energy::commands::MetaEnergyState::new(
-            titane_infinity::meta_energy::config::MetaEnergyConfig::default()
-        )
+            titane_infinity::meta_energy::config::MetaEnergyConfig::default(),
+        ),
     )));
 
     // [FIX-016] Runtime real state — memory KV, flags, logs, XP, selfheal, events
@@ -1257,13 +1257,13 @@ fn main() {
             .join(".local/share/titane-infinity")
             .join("api_keys.json")
     };
-    let builder = builder.manage(
-        titane_infinity::remote_key_commands::RemoteKeyStoreState(
-            std::sync::Mutex::new(
-                titane_infinity::remote_gateway::api_key_store::ApiKeyStore::load_or_create(key_store_path)
-            )
-        )
-    );
+    let builder = builder.manage(titane_infinity::remote_key_commands::RemoteKeyStoreState(
+        std::sync::Mutex::new(
+            titane_infinity::remote_gateway::api_key_store::ApiKeyStore::load_or_create(
+                key_store_path,
+            ),
+        ),
+    ));
 
     // LOCK 7: BROWSER_OPERATOR_V1 — governed browser relay (domain allowlist, Playwright)
     let builder = builder.manage(commands::browser_operator::BrowserOperatorState::default());

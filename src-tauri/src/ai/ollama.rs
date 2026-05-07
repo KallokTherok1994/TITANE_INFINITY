@@ -608,12 +608,16 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
             .send()
             .await
             .ok()
-            .and_then(|r| if r.status().is_success() { Some(r) } else { None })
+            .and_then(|r| {
+                if r.status().is_success() {
+                    Some(r)
+                } else {
+                    None
+                }
+            })
             .and_then(|r| {
                 let text = tokio::task::block_in_place(|| {
-                    tokio::runtime::Handle::current()
-                        .block_on(r.text())
-                        .ok()
+                    tokio::runtime::Handle::current().block_on(r.text()).ok()
                 });
                 text
             })
@@ -645,7 +649,9 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 
             OllamaStatus {
                 available: true,
-                version: ollama_version.clone().or_else(|| Some("unknown".to_string())),
+                version: ollama_version
+                    .clone()
+                    .or_else(|| Some("unknown".to_string())),
                 models: model_names,
                 url: runtime.base_url.clone(),
                 model: runtime.model.clone(),
@@ -660,7 +666,9 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
             log::warn!("[OLLAMA] Health check failed | status={}", resp.status());
             OllamaStatus {
                 available: false,
-                version: ollama_version.clone().or_else(|| Some("unknown".to_string())),
+                version: ollama_version
+                    .clone()
+                    .or_else(|| Some("unknown".to_string())),
                 models: vec![],
                 url: runtime.base_url.clone(),
                 model: runtime.model.clone(),
@@ -794,7 +802,9 @@ fn parse_prompt_to_chat_messages(prompt: &str) -> Vec<OllamaChatMessage> {
     }
 
     // System prompt: everything before the first history marker (or before \n\nUser:)
-    let system_end = history_section_start.or(current_user_pos).unwrap_or(prompt.len());
+    let system_end = history_section_start
+        .or(current_user_pos)
+        .unwrap_or(prompt.len());
     let system_text = prompt[..system_end].trim();
     if !system_text.is_empty() {
         messages.push(OllamaChatMessage {
@@ -1303,7 +1313,12 @@ mod tests {
 User: tu te souviens de moi ?";
         let msgs = parse_prompt_to_chat_messages(prompt);
         // system + user_turn + assistant_turn + current_user
-        assert_eq!(msgs.len(), 4, "expected 4 messages, got: {:?}", msgs.iter().map(|m| &m.role).collect::<Vec<_>>());
+        assert_eq!(
+            msgs.len(),
+            4,
+            "expected 4 messages, got: {:?}",
+            msgs.iter().map(|m| &m.role).collect::<Vec<_>>()
+        );
         assert_eq!(msgs[0].role, "system");
         assert!(msgs[0].content.contains("TITANE"));
         assert_eq!(msgs[1].role, "user");
@@ -1347,7 +1362,10 @@ User: test";
         let msgs = parse_prompt_to_chat_messages(prompt);
         // Empty lines produce no user/assistant turns
         let roles: Vec<&str> = msgs.iter().map(|m| m.role.as_str()).collect();
-        assert!(!roles.contains(&"assistant"), "empty assistant turn should be skipped");
+        assert!(
+            !roles.contains(&"assistant"),
+            "empty assistant turn should be skipped"
+        );
         // Only system + current user should be present
         assert_eq!(msgs.last().unwrap().role, "user");
         assert_eq!(msgs.last().unwrap().content, "test");

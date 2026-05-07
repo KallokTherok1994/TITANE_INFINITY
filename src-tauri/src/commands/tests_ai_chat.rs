@@ -193,7 +193,9 @@ mod tests {
         let result = ai_query(tauri::State::new(state), "".to_string(), None, None).await;
         match result {
             Ok(_) => {}
-            Err(e) => { assert!(!e.is_empty()); }
+            Err(e) => {
+                assert!(!e.is_empty());
+            }
         }
         Ok(())
     }
@@ -205,7 +207,10 @@ mod tests {
         let state = create_test_state();
         let long_prompt = "A".repeat(50000);
         let result = ai_query(tauri::State::new(state), long_prompt, Some(0.5), Some(500)).await;
-        match result { Ok(_) => {} Err(_) => {} }
+        match result {
+            Ok(_) => {}
+            Err(_) => {}
+        }
         Ok(())
     }
 
@@ -214,8 +219,17 @@ mod tests {
     #[tokio::test]
     async fn test_ai_query_with_parameters() -> Result<(), Box<dyn Error>> {
         let state = create_test_state();
-        let result = ai_query(tauri::State::new(state), "Test with params".to_string(), Some(0.8), Some(1000)).await;
-        match result { Ok(_) => {} Err(_) => {} }
+        let result = ai_query(
+            tauri::State::new(state),
+            "Test with params".to_string(),
+            Some(0.8),
+            Some(1000),
+        )
+        .await;
+        match result {
+            Ok(_) => {}
+            Err(_) => {}
+        }
         Ok(())
     }
 
@@ -228,7 +242,15 @@ mod tests {
     #[tokio::test]
     async fn test_speak_empty_text() -> Result<(), Box<dyn Error>> {
         let state = create_test_state();
-        let result = speak(tauri::State::new(state), "".to_string(), false, None, None, None).await;
+        let result = speak(
+            tauri::State::new(state),
+            "".to_string(),
+            false,
+            None,
+            None,
+            None,
+        )
+        .await;
         assert!(result.is_err());
         Ok(())
     }
@@ -249,8 +271,19 @@ mod tests {
     #[tokio::test]
     async fn test_speak_parameter_clamping() -> Result<(), Box<dyn Error>> {
         let state = create_test_state();
-        let result = speak(tauri::State::new(state), "Test clamping".to_string(), false, Some(10.0), Some(-5.0), None).await;
-        match result { Ok(_) => {} Err(_) => {} }
+        let result = speak(
+            tauri::State::new(state),
+            "Test clamping".to_string(),
+            false,
+            Some(10.0),
+            Some(-5.0),
+            None,
+        )
+        .await;
+        match result {
+            Ok(_) => {}
+            Err(_) => {}
+        }
         Ok(())
     }
 
@@ -332,11 +365,19 @@ mod tests {
         for i in 0..10 {
             let state_clone = state.clone();
             let handle = tokio::spawn(async move {
-                ai_query(tauri::State::new((*state_clone).clone()), format!("Concurrent query {}", i), Some(0.7), Some(500)).await
+                ai_query(
+                    tauri::State::new((*state_clone).clone()),
+                    format!("Concurrent query {}", i),
+                    Some(0.7),
+                    Some(500),
+                )
+                .await
             });
             handles.push(handle);
         }
-        for handle in handles { let _ = handle.await?; }
+        for handle in handles {
+            let _ = handle.await?;
+        }
         Ok(())
     }
 
@@ -346,7 +387,13 @@ mod tests {
     async fn test_memory_leak_prevention() -> Result<(), Box<dyn Error>> {
         let state = create_test_state();
         for i in 0..50 {
-            let result = ai_query(tauri::State::new(state.clone()), format!("Memory test {}", i), None, None).await;
+            let result = ai_query(
+                tauri::State::new(state.clone()),
+                format!("Memory test {}", i),
+                None,
+                None,
+            )
+            .await;
             drop(result);
         }
         Ok(())

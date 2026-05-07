@@ -110,9 +110,7 @@ use crate::auth::oauth::{FacebookProvider, OAuthProfile};
 pub async fn oauth_facebook_initiate() -> Result<serde_json::Value, String> {
     info!("🔐 OAUTH → oauth_facebook_initiate");
     FacebookProvider::build_auth_url()
-        .map(|(auth_url, state)| {
-            serde_json::json!({ "auth_url": auth_url, "state": state })
-        })
+        .map(|(auth_url, state)| serde_json::json!({ "auth_url": auth_url, "state": state }))
         .map_err(|e| {
             error!("❌ OAUTH → initiate failed: {}", e);
             e.to_string()

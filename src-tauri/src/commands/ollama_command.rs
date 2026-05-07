@@ -170,7 +170,10 @@ mod tests {
         assert!(!response.ok, "error path must have ok=false");
         assert!(response.error.is_some(), "error field must be present");
         assert_eq!(response.error.as_deref(), Some("model not found"));
-        assert!(response.content.is_empty(), "content must be empty on error");
+        assert!(
+            response.content.is_empty(),
+            "content must be empty on error"
+        );
         assert_eq!(response.latency_ms, 42);
     }
 

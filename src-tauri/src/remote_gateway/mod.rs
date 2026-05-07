@@ -9,8 +9,8 @@
 
 pub mod anomaly_detector;
 pub mod api_key_store;
-pub mod auth;
 pub mod audit;
+pub mod auth;
 pub mod handlers;
 pub mod rate_limit;
 pub mod server;

@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ — Load Balancer
 // ═══════════════════════════════════════════════════════════════
-use serde::{Deserialize, Serialize};
 use crate::meta_energy::fatigue_engine::FatigueLevel;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LoadBalance {

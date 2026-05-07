@@ -14,32 +14,22 @@ use serde_json::{json, Value};
 use std::net::SocketAddr;
 use std::sync::Arc;
 
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+use crate::commands::web_search_commands::perform_web_search;
 use crate::conversation_engine::{
     commands::{conversation_generate_inner, ConversationGenerateArgs},
     ConversationEngineState,
 };
-#[cfg(all(not(feature = "mock"), feature = "full"))]
-use crate::commands::web_search_commands::perform_web_search;
-use crate::numeric_twin::{
-    EvolutionType,
-    ObservationType,
-    TwinEvolutionRequest,
-    TwinObservation,
-};
 use crate::numeric_twin::twin_commands::{
-    convert_to_response,
-    NumericTwinState,
-    TwinEvolutionRequestPayload,
-    TwinObservationRequest,
+    convert_to_response, NumericTwinState, TwinEvolutionRequestPayload, TwinObservationRequest,
     TwinSyncValidationRequest,
 };
+use crate::numeric_twin::{EvolutionType, ObservationType, TwinEvolutionRequest, TwinObservation};
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 use crate::remote_gateway::anomaly_detector::AnomalyDetector;
 use crate::remote_gateway::auth::{
-    generate_access_token, generate_access_token_with_key,
-    generate_refresh_token_with_key,
-    validate_token, verify_secret_any,
-    RemoteAuthState,
+    generate_access_token, generate_access_token_with_key, generate_refresh_token_with_key,
+    validate_token, verify_secret_any, RemoteAuthState,
 };
 
 // ── IPC Response Contract ─────────────────────────────────────
@@ -54,10 +44,18 @@ pub struct IpcResponse {
 
 impl IpcResponse {
     pub fn ok(content: Value) -> Self {
-        Self { ok: true, content, error: None }
+        Self {
+            ok: true,
+            content,
+            error: None,
+        }
     }
     pub fn err(msg: impl Into<String>) -> Self {
-        Self { ok: false, content: Value::Null, error: Some(msg.into()) }
+        Self {
+            ok: false,
+            content: Value::Null,
+            error: Some(msg.into()),
+        }
     }
 }
 
@@ -103,9 +101,7 @@ fn validate_payload_size(raw_bytes: usize) -> Result<(), IpcResponse> {
 /// Strips ASCII control characters (0x00–0x1F, 0x7F) from a string field
 /// to neutralise injection vectors via command or payload strings.
 fn sanitize_string_field(s: &str) -> String {
-    s.chars()
-        .filter(|c| !c.is_ascii_control())
-        .collect()
+    s.chars().filter(|c| !c.is_ascii_control()).collect()
 }
 
 /// Validate and sanitize an InvokeRequest:
@@ -124,7 +120,9 @@ fn sanitize_invoke_request(req: &mut InvokeRequest) -> Result<(), IpcResponse> {
 
 fn validate_twin_observation_args(args: &TwinObservationRequest) -> Result<(), IpcResponse> {
     if args.content.trim().is_empty() {
-        return Err(IpcResponse::err("invalid twin observation args: empty content"));
+        return Err(IpcResponse::err(
+            "invalid twin observation args: empty content",
+        ));
     }
     if args.content.chars().count() > 10_000 {
         return Err(IpcResponse::err(
@@ -141,7 +139,9 @@ fn validate_twin_observation_args(args: &TwinObservationRequest) -> Result<(), I
 
 fn validate_twin_evolution_args(args: &TwinEvolutionRequestPayload) -> Result<(), IpcResponse> {
     if args.target.trim().is_empty() {
-        return Err(IpcResponse::err("invalid twin evolution args: empty target"));
+        return Err(IpcResponse::err(
+            "invalid twin evolution args: empty target",
+        ));
     }
     if let Some(delta) = args.delta {
         if !delta.is_finite() || !(-1.0..=1.0).contains(&delta) {
@@ -261,7 +261,12 @@ pub async fn invoke_handler(
 ) -> impl IntoResponse {
     // ── Phase C2: anomaly detection — record request per IP ──
     if let Some(event) = state.anomaly.record_request(addr.ip()) {
-        log::warn!("[AnomalyDetector] {:?} from {}: {}", event.severity, event.ip, event.message);
+        log::warn!(
+            "[AnomalyDetector] {:?} from {}: {}",
+            event.severity,
+            event.ip,
+            event.message
+        );
     }
 
     // ── Phase C1: sanitize and size-check before dispatch ────
@@ -310,21 +315,17 @@ pub async fn invoke_handler(
 
     // Route to inline handlers for critical paths
     match payload.command.as_str() {
-        "health_check" | "get_system_health" => {
-            Json(IpcResponse::ok(json!({
-                "status": "ok",
-                "remote": true,
-            })))
-        }
-        "get_runtime_config" => {
-            Json(IpcResponse::ok(json!({
-                "remote": true,
-                "ollamaUrl": std::env::var("OLLAMA_BASE_URL")
-                    .unwrap_or_else(|_| "http://127.0.0.1:11434".into()),
-                "ollamaModel": std::env::var("OLLAMA_DEFAULT_MODEL")
-                    .unwrap_or_else(|_| "gemma2:2b".into()),
-            })))
-        }
+        "health_check" | "get_system_health" => Json(IpcResponse::ok(json!({
+            "status": "ok",
+            "remote": true,
+        }))),
+        "get_runtime_config" => Json(IpcResponse::ok(json!({
+            "remote": true,
+            "ollamaUrl": std::env::var("OLLAMA_BASE_URL")
+                .unwrap_or_else(|_| "http://127.0.0.1:11434".into()),
+            "ollamaModel": std::env::var("OLLAMA_DEFAULT_MODEL")
+                .unwrap_or_else(|_| "gemma2:2b".into()),
+        }))),
         "create_new_conversation" => {
             // Return a new UUID-based conversation id (no engine state required)
             let conv_id = format!("remote-{}", uuid::Uuid::new_v4());
@@ -386,59 +387,60 @@ pub async fn invoke_handler(
                 Err(e) => Json(IpcResponse::err(e)),
             }
         }
-        "get_engine_health" => {
-            Json(IpcResponse::ok(json!({
-                "status": "healthy",
-                "score": 1.0,
-                "note": "remote — SelfhealManaged not wired to gateway yet",
-                "remote": true
-            })))
-        }
-        "get_engines_status" => {
-            Json(IpcResponse::ok(json!({
-                "engines": [
-                    { "name": "conversation", "status": "real" },
-                    { "name": "memory_kv", "status": "remote_partial" },
-                    { "name": "remote_gateway", "status": "real" }
-                ],
-                "remote": true,
-                "note": "SelfhealManaged not wired to gateway yet"
-            })))
-        }
-        "run_system_diagnostic" => {
-            Json(IpcResponse::ok(json!({
-                "passed": true,
-                "score": 1.0,
-                "issues": [],
-                "remote": true,
-                "timestamp_ms": chrono::Utc::now().timestamp_millis()
-            })))
-        }
-        "memory_get_all_keys" | "memory_get_entry" => {
-            Json(IpcResponse::err(
-                "memory commands not yet wired to remote gateway — use local Tauri instance".to_string(),
-            ))
-        }
+        "get_engine_health" => Json(IpcResponse::ok(json!({
+            "status": "healthy",
+            "score": 1.0,
+            "note": "remote — SelfhealManaged not wired to gateway yet",
+            "remote": true
+        }))),
+        "get_engines_status" => Json(IpcResponse::ok(json!({
+            "engines": [
+                { "name": "conversation", "status": "real" },
+                { "name": "memory_kv", "status": "remote_partial" },
+                { "name": "remote_gateway", "status": "real" }
+            ],
+            "remote": true,
+            "note": "SelfhealManaged not wired to gateway yet"
+        }))),
+        "run_system_diagnostic" => Json(IpcResponse::ok(json!({
+            "passed": true,
+            "score": 1.0,
+            "issues": [],
+            "remote": true,
+            "timestamp_ms": chrono::Utc::now().timestamp_millis()
+        }))),
+        "memory_get_all_keys" | "memory_get_entry" => Json(IpcResponse::err(
+            "memory commands not yet wired to remote gateway — use local Tauri instance"
+                .to_string(),
+        )),
         "web_search" => {
             // Deserialize { query: String, max_results: Option<u32> }
             #[cfg(all(not(feature = "mock"), feature = "full"))]
             {
                 let (query, max_results): (String, u32) = match &payload.payload {
                     Some(v) => {
-                        let q = v.get("query")
+                        let q = v
+                            .get("query")
                             .and_then(|s| s.as_str())
                             .map(|s| s.to_string())
                             .unwrap_or_default();
-                        let limit = v.get("max_results")
+                        let limit = v
+                            .get("max_results")
                             .and_then(|n| n.as_u64())
                             .map(|n| n as u32)
                             .unwrap_or(10);
                         (q, limit)
                     }
-                    None => return Json(IpcResponse::err("web_search requires a payload with 'query'".to_string())),
+                    None => {
+                        return Json(IpcResponse::err(
+                            "web_search requires a payload with 'query'".to_string(),
+                        ))
+                    }
                 };
                 if query.is_empty() {
-                    return Json(IpcResponse::err("web_search: 'query' must not be empty".to_string()));
+                    return Json(IpcResponse::err(
+                        "web_search: 'query' must not be empty".to_string(),
+                    ));
                 }
                 match perform_web_search(&query, max_results).await {
                     Ok(results) => {
@@ -450,7 +452,9 @@ pub async fn invoke_handler(
                 }
             }
             #[cfg(not(all(not(feature = "mock"), feature = "full")))]
-            Json(IpcResponse::err("web_search not available in this build configuration".to_string()))
+            Json(IpcResponse::err(
+                "web_search not available in this build configuration".to_string(),
+            ))
         }
         "web_research" => {
             // web_research proxies to the conversation engine for complex queries.
@@ -467,7 +471,9 @@ pub async fn invoke_handler(
                     None => String::new(),
                 };
                 if question.is_empty() {
-                    return Json(IpcResponse::err("web_research requires payload.query.question".to_string()));
+                    return Json(IpcResponse::err(
+                        "web_research requires payload.query.question".to_string(),
+                    ));
                 }
                 // Route to web_search with higher limit as a research approximation
                 match perform_web_search(&question, 20).await {
@@ -498,20 +504,20 @@ pub async fn invoke_handler(
                 }
             }
             #[cfg(not(all(not(feature = "mock"), feature = "full")))]
-            Json(IpcResponse::err("web_research not available in this build configuration".to_string()))
+            Json(IpcResponse::err(
+                "web_research not available in this build configuration".to_string(),
+            ))
         }
-        "advanced_agents_get_status" => {
-            Json(IpcResponse::ok(json!({
-                "agents": [
-                    { "name": "monitoring", "status": "active", "remote": true },
-                    { "name": "diagnostic", "status": "active", "remote": true },
-                    { "name": "explainability", "status": "active", "remote": true },
-                    { "name": "orchestrator", "status": "active", "remote": true },
-                    { "name": "security_active", "status": "active", "remote": true }
-                ],
-                "note": "Real agent signals require AppHandle wiring"
-            })))
-        }
+        "advanced_agents_get_status" => Json(IpcResponse::ok(json!({
+            "agents": [
+                { "name": "monitoring", "status": "active", "remote": true },
+                { "name": "diagnostic", "status": "active", "remote": true },
+                { "name": "explainability", "status": "active", "remote": true },
+                { "name": "orchestrator", "status": "active", "remote": true },
+                { "name": "security_active", "status": "active", "remote": true }
+            ],
+            "note": "Real agent signals require AppHandle wiring"
+        }))),
         "twin_get_state" => {
             let twin = state.twin.0.lock().await;
             let snapshot = twin.get_state();
@@ -561,11 +567,15 @@ pub async fn invoke_handler(
                 Some(v) => match serde_json::from_value(v) {
                     Ok(a) => a,
                     Err(e) => {
-                        return Json(IpcResponse::err(format!("invalid twin observation args: {e}")));
+                        return Json(IpcResponse::err(format!(
+                            "invalid twin observation args: {e}"
+                        )));
                     }
                 },
                 None => {
-                    return Json(IpcResponse::err("twin_submit_observation requires a payload"));
+                    return Json(IpcResponse::err(
+                        "twin_submit_observation requires a payload",
+                    ));
                 }
             };
 
@@ -604,7 +614,9 @@ pub async fn invoke_handler(
                 Some(v) => match serde_json::from_value(v) {
                     Ok(a) => a,
                     Err(e) => {
-                        return Json(IpcResponse::err(format!("invalid twin evolution args: {e}")));
+                        return Json(IpcResponse::err(format!(
+                            "invalid twin evolution args: {e}"
+                        )));
                     }
                 },
                 None => {
@@ -622,9 +634,7 @@ pub async fn invoke_handler(
                 "pattern_integration" => EvolutionType::PatternIntegration,
                 "phase_transition" => EvolutionType::PhaseTransition,
                 other => {
-                    return Json(IpcResponse::err(format!(
-                        "invalid evolution_type: {other}"
-                    )));
+                    return Json(IpcResponse::err(format!("invalid evolution_type: {other}")));
                 }
             };
 
@@ -651,7 +661,9 @@ pub async fn invoke_handler(
                 Some(v) => match serde_json::from_value(v) {
                     Ok(a) => a,
                     Err(e) => {
-                        return Json(IpcResponse::err(format!("invalid twin sync validation args: {e}")));
+                        return Json(IpcResponse::err(format!(
+                            "invalid twin sync validation args: {e}"
+                        )));
                     }
                 },
                 None => {
@@ -669,12 +681,10 @@ pub async fn invoke_handler(
                 Err(e) => Json(IpcResponse::err(e.to_string())),
             }
         }
-        _ => {
-            Json(IpcResponse::err(format!(
-                "command '{}' not yet wired in remote gateway",
-                payload.command
-            )))
-        }
+        _ => Json(IpcResponse::err(format!(
+            "command '{}' not yet wired in remote gateway",
+            payload.command
+        ))),
     }
 }
 
@@ -725,9 +735,10 @@ mod tests {
         use std::sync::Arc;
         use tokio::sync::RwLock;
         let dir = tempfile::tempdir().unwrap();
-        let ai_router = Arc::new(RwLock::new(
-            crate::ai::router::AIRouter::new(None, Some("gemma2:2b".into())),
-        ));
+        let ai_router = Arc::new(RwLock::new(crate::ai::router::AIRouter::new(
+            None,
+            Some("gemma2:2b".into()),
+        )));
         let singularity = Arc::new(RwLock::new(
             crate::singularity::singularity_state::SingularityState::default(),
         ));

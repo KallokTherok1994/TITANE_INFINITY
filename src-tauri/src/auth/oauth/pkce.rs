@@ -29,7 +29,10 @@ impl PkceChallenge {
         let hash = hasher.finalize();
         let challenge = URL_SAFE_NO_PAD.encode(hash);
 
-        Self { verifier, challenge }
+        Self {
+            verifier,
+            challenge,
+        }
     }
 
     /// Verify that a given code_verifier matches this challenge.
@@ -68,10 +71,7 @@ mod tests {
     #[test]
     fn pkce_verify_wrong_verifier() {
         let pkce = PkceChallenge::generate();
-        assert!(
-            !pkce.verify("wrong_verifier"),
-            "wrong verifier should fail"
-        );
+        assert!(!pkce.verify("wrong_verifier"), "wrong verifier should fail");
     }
 
     #[test]

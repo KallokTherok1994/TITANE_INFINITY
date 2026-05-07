@@ -26,7 +26,7 @@ impl CycleEngineState {
         let load_regulator = Arc::new(LoadRegulator::new());
         let predictive_model = Arc::new(PredictiveTemporalModel::new());
         let alignment_engine = Arc::new(AlignmentEngine::new());
-        
+
         Self {
             clock,
             load_regulator,
@@ -34,7 +34,7 @@ impl CycleEngineState {
             alignment_engine,
         }
     }
-    
+
     pub async fn start(&self) -> Result<(), String> {
         let clock = self.clock.write().await;
         clock.start().await.map_err(|e| format!("{:?}", e))
@@ -58,9 +58,9 @@ pub async fn cycle_get_state(
 ) -> Result<CycleStateResponse, String> {
     let state = state.read().await;
     let clock = state.clock.read().await;
-    
+
     let cycle_state = CycleState::current();
-    
+
     Ok(CycleStateResponse {
         daily_phase: format!("{:?}", cycle_state.daily_phase),
         weekly_phase: format!("{:?}", cycle_state.weekly_phase),
@@ -88,10 +88,10 @@ pub async fn cycle_get_rhythm(
 ) -> Result<CognitiveRhythmResponse, String> {
     let state = state.read().await;
     let clock = state.clock.read().await;
-    
+
     let cycle_state = CycleState::current();
     let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
-    
+
     Ok(CognitiveRhythmResponse {
         omega_depth: rhythm.omega_depth,
         analysis_intensity: rhythm.analysis_intensity,
@@ -126,12 +126,12 @@ pub async fn cycle_get_load_params(
 ) -> Result<LoadRegulationResponse, String> {
     let state = state.read().await;
     let clock = state.clock.read().await;
-    
+
     let cycle_state = CycleState::current();
     let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
     // V32: load_regulator est Arc<LoadRegulator> (pas RwLock) — utiliser current_params() immutable
     let load_params = state.load_regulator.current_params().clone();
-    
+
     Ok(LoadRegulationResponse {
         omega_intensity: load_params.omega_intensity,
         self_healing_frequency: load_params.self_healing_frequency,
@@ -154,17 +154,22 @@ pub async fn cycle_predict_events(
 ) -> Result<PredictiveResponse, String> {
     let state = state.read().await;
     let clock = state.clock.read().await;
-    
+
     let cycle_state = CycleState::current();
-    let events = state.predictive_model.predict_next_cycle_change(&cycle_state);
-    
+    let events = state
+        .predictive_model
+        .predict_next_cycle_change(&cycle_state);
+
     Ok(PredictiveResponse {
-        events: events.into_iter().map(|e| PredictiveEvent {
-            event_type: e.event_type,
-            predicted_time: e.predicted_time,
-            confidence: e.confidence,
-            suggested_action: e.suggested_action,
-        }).collect(),
+        events: events
+            .into_iter()
+            .map(|e| PredictiveEvent {
+                event_type: e.event_type,
+                predicted_time: e.predicted_time,
+                confidence: e.confidence,
+                suggested_action: e.suggested_action,
+            })
+            .collect(),
     })
 }
 
@@ -186,9 +191,14 @@ pub async fn cycle_suggest_optimal_time(
     state: State<'_, Arc<RwLock<CycleEngineState>>>,
 ) -> Result<SuggestOptimalTimeResponse, String> {
     let state = state.read().await;
-    
-    let optimal_phase = state.predictive_model.suggest_optimal_time(&request.task_type);
-    let reason = format!("Task '{}' aligns best with {:?} phase", request.task_type, optimal_phase);
+
+    let optimal_phase = state
+        .predictive_model
+        .suggest_optimal_time(&request.task_type);
+    let reason = format!(
+        "Task '{}' aligns best with {:?} phase",
+        request.task_type, optimal_phase
+    );
     Ok(SuggestOptimalTimeResponse {
         optimal_phase: optimal_phase.map(|p| format!("{:?}", p)),
         reason,
@@ -213,13 +223,13 @@ pub async fn cycle_get_alignment(
 ) -> Result<AlignmentResponse, String> {
     let state = state.read().await;
     let clock = state.clock.read().await;
-    
+
     let cycle_state = CycleState::current();
     let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
-    
+
     // V32: alignment_engine Arc<AlignmentEngine> — lire l'alignement courant (immutable)
     let alignment = state.alignment_engine.current_alignment().clone();
-    
+
     Ok(AlignmentResponse {
         kernel_aligned: alignment.kernel_aligned,
         omega_aligned: alignment.omega_aligned,
@@ -249,10 +259,10 @@ pub async fn cycle_get_diagnostics(
 ) -> Result<CycleDiagnosticsResponse, String> {
     let state = state.read().await;
     let clock = state.clock.read().await;
-    
+
     let cycle_state = CycleState::current();
     let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
-    
+
     Ok(CycleDiagnosticsResponse {
         clock_running: clock.is_running().await,
         current_hour: clock.current_hour().await,

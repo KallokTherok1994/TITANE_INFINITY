@@ -21,7 +21,10 @@ pub struct HomeostasisController {
 
 impl HomeostasisController {
     pub fn new(target_energy: f32, tolerance: f32) -> Self {
-        Self { target_energy, tolerance }
+        Self {
+            target_energy,
+            tolerance,
+        }
     }
 
     pub fn assess(&self, current_energy: f32) -> HomeoBalance {

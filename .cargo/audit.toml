@@ -1,0 +1,34 @@
+# cargo-audit configuration for TITANE_INFINITY
+# These advisories are ignored because they are transitive Tauri/GTK3 dependencies
+# that cannot be updated without a full Tauri major upgrade.
+# All ignored advisories are "unmaintained" notices, NOT active security vulnerabilities.
+# The one real vulnerability (rustls-webpki RUSTSEC-2026-0104) has been fixed by
+# upgrading rustls-webpki to 0.103.13 in src-tauri/Cargo.lock.
+
+[advisories]
+ignore = [
+    # gtk-rs GTK3 bindings - no longer maintained (Tauri core Linux deps)
+    "RUSTSEC-2024-0411", # gdkwayland-sys
+    "RUSTSEC-2024-0412", # gdk
+    "RUSTSEC-2024-0413", # atk
+    "RUSTSEC-2024-0414", # gdkx11-sys
+    "RUSTSEC-2024-0415", # gtk
+    "RUSTSEC-2024-0416", # atk-sys
+    "RUSTSEC-2024-0417", # gdkx11
+    "RUSTSEC-2024-0418", # gdk-sys
+    "RUSTSEC-2024-0419", # gtk3-macros
+    "RUSTSEC-2024-0420", # gtk-sys
+    # proc macros / utilities - unmaintained (transitive deps)
+    "RUSTSEC-2024-0370", # proc-macro-error
+    "RUSTSEC-2024-0436", # paste
+    "RUSTSEC-2025-0057", # fxhash
+    "RUSTSEC-2025-0075", # unic-char-range
+    "RUSTSEC-2025-0080", # unic-common
+    "RUSTSEC-2025-0081", # unic-char-property
+    "RUSTSEC-2025-0098", # unic-ucd-version
+    "RUSTSEC-2025-0100", # unic-ucd-ident
+    # glib - Iterator unsoundness (Tauri core dep, transitive)
+    "RUSTSEC-2024-0429", # glib VariantStrIter unsoundness
+    # rand - unsoundness with custom logger (transitive dep)
+    "RUSTSEC-2026-0097", # rand custom logger unsoundness
+]

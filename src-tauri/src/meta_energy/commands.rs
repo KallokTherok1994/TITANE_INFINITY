@@ -8,12 +8,12 @@ use tauri::State;
 use tokio::sync::RwLock;
 
 use crate::meta_energy::config::MetaEnergyConfig;
-use crate::meta_energy::energy_model::{EnergyState, EnergySnapshot};
+use crate::meta_energy::energy_model::{EnergySnapshot, EnergyState};
 use crate::meta_energy::fatigue_engine::FatigueEngine;
-use crate::meta_energy::recovery_engine::RecoveryEngine;
-use crate::meta_energy::load_balancer::{LoadBalance, LoadBalancer};
 use crate::meta_energy::homeostasis::HomeostasisController;
+use crate::meta_energy::load_balancer::{LoadBalance, LoadBalancer};
 use crate::meta_energy::predictor::EnergyPredictor;
+use crate::meta_energy::recovery_engine::RecoveryEngine;
 
 // ─── State ───────────────────────────────────────────────────
 
@@ -32,7 +32,8 @@ impl MetaEnergyState {
     pub fn new(config: MetaEnergyConfig) -> Self {
         let energy = EnergyState::new(1.0, config.regeneration_rate);
         let fatigue_engine = FatigueEngine::new(config.exhaustion_threshold);
-        let recovery_engine = RecoveryEngine::new(config.min_recovery_seconds, config.regeneration_rate);
+        let recovery_engine =
+            RecoveryEngine::new(config.min_recovery_seconds, config.regeneration_rate);
         let load_balancer = LoadBalancer::new(1.0);
         let homeostasis = HomeostasisController::new(config.target_energy, config.tolerance);
         let predictor = EnergyPredictor::new(
@@ -146,7 +147,9 @@ pub async fn meta_energy_get_forecast(
     state: State<'_, Arc<RwLock<MetaEnergyState>>>,
 ) -> Result<crate::meta_energy::predictor::EnergyForecast, String> {
     let state = state.read().await;
-    Ok(state.predictor.forecast(state.energy.normalized(), &state.history))
+    Ok(state
+        .predictor
+        .forecast(state.energy.normalized(), &state.history))
 }
 
 /// Appliquer un delta d'énergie (simulation de consommation ou récupération)

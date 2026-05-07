@@ -64,7 +64,10 @@ fn search_api_url() -> String {
 // ─────────────────────────────────────────────────────────────────
 
 /// Public(crate) so the Remote Gateway can call web search without Tauri command overhead.
-pub(crate) async fn perform_web_search(query: &str, max_results: u32) -> Result<Vec<WebSearchResult>, String> {
+pub(crate) async fn perform_web_search(
+    query: &str,
+    max_results: u32,
+) -> Result<Vec<WebSearchResult>, String> {
     let base_url = search_api_url();
     let client = network::build_http_client(Duration::from_secs(SEARCH_TIMEOUT_SECS))?;
 

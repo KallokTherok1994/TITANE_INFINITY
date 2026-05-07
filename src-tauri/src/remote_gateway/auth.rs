@@ -14,17 +14,17 @@ use tokio::sync::RwLock;
 use crate::remote_gateway::api_key_store::ApiKeyStore;
 
 pub const REMOTE_SECRET_KEY: &str = "remote_gateway_jwt_secret";
-pub const ACCESS_TOKEN_TTL_SECS: i64 = 3600;    // 1 hour
+pub const ACCESS_TOKEN_TTL_SECS: i64 = 3600; // 1 hour
 pub const REFRESH_TOKEN_TTL_SECS: i64 = 604_800; // 7 days
 
 // ── Claims ────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JwtClaims {
-    pub sub: String,             // subject (always "titane_remote_user")
-    pub exp: i64,                // expiry (unix timestamp)
-    pub iat: i64,                // issued at
-    pub kind: String,            // "access" | "refresh"
+    pub sub: String,  // subject (always "titane_remote_user")
+    pub exp: i64,     // expiry (unix timestamp)
+    pub iat: i64,     // issued at
+    pub kind: String, // "access" | "refresh"
     /// Named API key identifier (Phase 1) — None for legacy tokens
     #[serde(skip_serializing_if = "Option::is_none")]
     pub key_id: Option<String>,
@@ -133,12 +133,8 @@ pub async fn validate_token(
     let mut validation = Validation::new(Algorithm::HS256);
     validation.validate_exp = true;
 
-    let token_data = decode::<JwtClaims>(
-        token,
-        &DecodingKey::from_secret(&secret),
-        &validation,
-    )
-    .map_err(|e| format!("JWT validation error: {e}"))?;
+    let token_data = decode::<JwtClaims>(token, &DecodingKey::from_secret(&secret), &validation)
+        .map_err(|e| format!("JWT validation error: {e}"))?;
 
     if token_data.claims.kind != expected_kind {
         return Err(format!(
@@ -179,10 +175,7 @@ pub async fn verify_api_key(
 /// Phase 1 backward compat: verify candidate against any enabled key.
 /// Used when auth payload has `secret` only (no key_id).
 /// Returns the matched key_id, or falls back to legacy SHA-256 check.
-pub async fn verify_secret_any(
-    state: &RemoteAuthState,
-    candidate: &str,
-) -> Option<String> {
+pub async fn verify_secret_any(state: &RemoteAuthState, candidate: &str) -> Option<String> {
     // Try named keys first (argon2id, Phase 1)
     {
         let mut store = state.key_store.write().await;
@@ -223,10 +216,7 @@ mod tests {
     use super::*;
 
     fn make_state(passphrase: &str, secret: &str) -> RemoteAuthState {
-        RemoteAuthState::new(
-            derive_jwt_secret(passphrase),
-            hash_shared_secret(secret),
-        )
+        RemoteAuthState::new(derive_jwt_secret(passphrase), hash_shared_secret(secret))
     }
 
     #[tokio::test]

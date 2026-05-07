@@ -40,7 +40,9 @@ pub async fn ws_stream_handler(
             // Return 401 as a regular HTTP response (upgrade rejected)
             axum::response::Response::builder()
                 .status(401)
-                .body(axum::body::Body::from(format!("{{\"ok\":false,\"error\":\"{e}\"}}")))
+                .body(axum::body::Body::from(format!(
+                    "{{\"ok\":false,\"error\":\"{e}\"}}"
+                )))
                 .unwrap()
                 .into_response()
         }

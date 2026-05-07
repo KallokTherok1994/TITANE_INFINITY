@@ -161,8 +161,7 @@ fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
             .ok()
             .and_then(|v| v.parse().ok())
             .unwrap_or(7420),
-        remote_origin: std::env::var("TITANE_REMOTE_ORIGIN")
-            .unwrap_or_else(|_| "*".into()),
+        remote_origin: std::env::var("TITANE_REMOTE_ORIGIN").unwrap_or_else(|_| "*".into()),
         timestamp: now_ts(),
     }
 }

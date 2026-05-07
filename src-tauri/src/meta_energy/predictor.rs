@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ — Energy Predictor
 // ═══════════════════════════════════════════════════════════════
-use serde::{Deserialize, Serialize};
 use crate::meta_energy::energy_model::EnergySnapshot;
 use crate::meta_energy::fatigue_engine::FatigueLevel;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EnergyForecast {
@@ -42,7 +42,8 @@ impl EnergyPredictor {
         for hour in 0..steps {
             // Simple oscillation model: energy follows daily cycle
             let hour_of_day = (hour % 24) as f32;
-            let circadian_factor = 0.5 + 0.5 * ((hour_of_day - 14.0) * std::f32::consts::PI / 12.0).cos();
+            let circadian_factor =
+                0.5 + 0.5 * ((hour_of_day - 14.0) * std::f32::consts::PI / 12.0).cos();
             let net = self.regeneration_rate * circadian_factor - self.base_consumption;
             energy = (energy + net).clamp(0.0, 1.0);
             levels.push(energy);

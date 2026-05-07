@@ -238,13 +238,15 @@ async fn run_governed_search(
     let results = crate::gateway::search::perform_search(query, max_results).await?;
     Ok(results
         .into_iter()
-        .map(|r| crate::engines::conversation_os::search::RawSearchResult {
-            title: Some(r.title),
-            url: Some(r.url),
-            description: Some(r.snippet.clone()),
-            snippet: Some(r.snippet),
-            source: "ddg_lite_fallback".to_string(),
-        })
+        .map(
+            |r| crate::engines::conversation_os::search::RawSearchResult {
+                title: Some(r.title),
+                url: Some(r.url),
+                description: Some(r.snippet.clone()),
+                snippet: Some(r.snippet),
+                source: "ddg_lite_fallback".to_string(),
+            },
+        )
         .collect())
 }
 

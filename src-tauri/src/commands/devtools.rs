@@ -278,11 +278,13 @@ fn compute_trend_summary(first_half_errors: usize, second_half_errors: usize) ->
     }
 
     if second_half_errors >= first_half_errors + 2 {
-        return "Dégradation: les erreurs augmentent dans la seconde moitié de la fenêtre.".to_string();
+        return "Dégradation: les erreurs augmentent dans la seconde moitié de la fenêtre."
+            .to_string();
     }
 
     if first_half_errors >= second_half_errors + 2 {
-        return "Amélioration: les erreurs diminuent dans la seconde moitié de la fenêtre.".to_string();
+        return "Amélioration: les erreurs diminuent dans la seconde moitié de la fenêtre."
+            .to_string();
     }
 
     "Stable: variation d erreurs faible entre les deux moitiés de la fenêtre.".to_string()
@@ -324,7 +326,10 @@ pub async fn analyze_logs_intelligent(
 
     for entry in &logs {
         *message_counts.entry(entry.message.clone()).or_insert(0) += 1;
-        if matches!(entry.level, LogLevel::Error | LogLevel::Fatal | LogLevel::Warn) {
+        if matches!(
+            entry.level,
+            LogLevel::Error | LogLevel::Fatal | LogLevel::Warn
+        ) {
             *error_source_counts
                 .entry(entry.source_core.clone())
                 .or_insert(0) += 1;
@@ -335,8 +340,10 @@ pub async fn analyze_logs_intelligent(
         .iter()
         .filter(|entry| {
             let msg = entry.message.to_lowercase();
-            matches!(entry.level, LogLevel::Error | LogLevel::Fatal | LogLevel::Warn)
-                || msg.contains("panic")
+            matches!(
+                entry.level,
+                LogLevel::Error | LogLevel::Fatal | LogLevel::Warn
+            ) || msg.contains("panic")
                 || msg.contains("timeout")
                 || msg.contains("violation")
                 || msg.contains("failed")
@@ -360,7 +367,8 @@ pub async fn analyze_logs_intelligent(
 
     if total_logs > 0 && error_count == 0 && warning_count > total_logs / 2 {
         inconsistencies.push(
-            "Warnings majoritaires sans erreurs: possible saturation silencieuse des retries.".to_string(),
+            "Warnings majoritaires sans erreurs: possible saturation silencieuse des retries."
+                .to_string(),
         );
     }
 

@@ -296,7 +296,10 @@ mod tests {
         context.has_brave_credentials = false;
 
         let verdict = engine.evaluate(&context, true, false);
-        assert!(verdict.allow_search, "Search must be allowed via SearXNG/DDG Lite fallback even without Brave credentials");
+        assert!(
+            verdict.allow_search,
+            "Search must be allowed via SearXNG/DDG Lite fallback even without Brave credentials"
+        );
         assert_eq!(verdict.block_reason, None);
     }
 

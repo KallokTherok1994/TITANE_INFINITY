@@ -48,10 +48,10 @@ pub mod error; // ✅ v24 - Unified TitaneError enum (stable, in use)
 pub mod errors;
 pub mod fusion; // ✅ FIX-014: Fusion Engine (fusion_merge/fusion_sync)
 pub mod gateway; // ✅ One Door Network Gateway (Rule 5) — single HTTP client factory
-pub mod remote_gateway; // ✅ Remote Gateway (axum HTTP server, opt-in TITANE_REMOTE_ENABLED=1)
-pub mod remote_key_commands; // ✅ Phase 1 — Named API key CRUD (IPC commands)
 pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
 pub mod qa; // ✅ QA Engine v19.8 (NEW)
+pub mod remote_gateway; // ✅ Remote Gateway (axum HTTP server, opt-in TITANE_REMOTE_ENABLED=1)
+pub mod remote_key_commands; // ✅ Phase 1 — Named API key CRUD (IPC commands)
 pub mod runtime_real; // ✅ FIX-016: Real runtime state commands (memory KV, toggles, logs, selfheal, XP)
 pub mod shared; // ✅ Shared types and utilities
 pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
@@ -292,8 +292,8 @@ pub mod memory_os; // ✅ Active — used by omega pipeline + MemoryOSBridge com
 // ═══════════════════════════════════════════════════════════════
 
 // TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
-pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux) — V32 Phase 7 activated
-pub mod agents; // ✅ Agent System vΩ — Super Prompt #19 (Multi-Agents Cognitifs)
+pub mod agents;
+pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux) — V32 Phase 7 activated // ✅ Agent System vΩ — Super Prompt #19 (Multi-Agents Cognitifs)
 
 // ═══════════════════════════════════════════════════════════════
 // CYCLE & CONTINUITY ENGINE v2 (SUPER PROMPT #16)

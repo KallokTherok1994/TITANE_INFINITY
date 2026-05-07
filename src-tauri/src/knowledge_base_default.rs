@@ -855,10 +855,7 @@ impl DefaultKnowledgeBase {
             "facebook_business_marketing_avance",
             FACEBOOK_BUSINESS_MARKETING_AVANCE,
         ),
-        (
-            "google_ads_marketing_avance",
-            GOOGLE_ADS_MARKETING_AVANCE,
-        ),
+        ("google_ads_marketing_avance", GOOGLE_ADS_MARKETING_AVANCE),
         (
             "boutique_mode_decoration_en_ligne",
             BOUTIQUE_MODE_DECORATION_EN_LIGNE,
@@ -886,10 +883,7 @@ impl DefaultKnowledgeBase {
             "seo_technique_ecommerce_avance",
             SEO_TECHNIQUE_ECOMMERCE_AVANCE,
         ),
-        (
-            "conversion_rate_optimization",
-            CONVERSION_RATE_OPTIMIZATION,
-        ),
+        ("conversion_rate_optimization", CONVERSION_RATE_OPTIMIZATION),
         (
             "analytics_kpis_ecommerce_avance",
             ANALYTICS_KPIS_ECOMMERCE_AVANCE,
@@ -1102,42 +1096,27 @@ impl DefaultKnowledgeBase {
             ANALYSE_TRANSACTIONNELLE_PSYCHOGENEALOGIE,
         ),
         // v31.3.1 expansion — phase 24 (psychologie toxique, profils, manipulation)
-        (
-            "psychologie_toxique_profils",
-            PSYCHOLOGIE_TOXIQUE_PROFILS,
-        ),
+        ("psychologie_toxique_profils", PSYCHOLOGIE_TOXIQUE_PROFILS),
         // v31.3.2 expansion — phase 25 (stratégies protection, récupération abus)
         (
             "strategies_protection_manipulation",
             STRATEGIES_PROTECTION_MANIPULATION,
         ),
         // v31.3.3+31.3.4 expansion — phase 26 (traumatologie complexe + neuroscience attachement)
-        (
-            "traumatologie_complexe",
-            TRAUMATOLOGIE_COMPLEXE,
-        ),
-        (
-            "neuroscience_attachement",
-            NEUROSCIENCE_ATTACHEMENT,
-        ),
+        ("traumatologie_complexe", TRAUMATOLOGIE_COMPLEXE),
+        ("neuroscience_attachement", NEUROSCIENCE_ATTACHEMENT),
         // v31.3.5+31.3.6 expansion — phase 27 (dépendance affective + thérapies trauma avancées)
         (
             "dependance_affective_codependance",
             DEPENDANCE_AFFECTIVE_CODEPENDANCE,
         ),
-        (
-            "therapies_trauma_avancees",
-            THERAPIES_TRAUMA_AVANCEES,
-        ),
+        ("therapies_trauma_avancees", THERAPIES_TRAUMA_AVANCEES),
         // v31.3.7+31.3.8 expansion — phase 28 (CNV + deuil/rupture)
         (
             "communication_non_violente_relations",
             COMMUNICATION_NON_VIOLENTE_RELATIONS,
         ),
-        (
-            "deuil_rupture_transitions",
-            DEUIL_RUPTURE_TRANSITIONS,
-        ),
+        ("deuil_rupture_transitions", DEUIL_RUPTURE_TRANSITIONS),
         // v31.3.9+31.3.10 expansion — phase 29 (TCC + santé mentale/résilience)
         (
             "therapies_cognitives_comportementales",
@@ -1179,10 +1158,7 @@ impl DefaultKnowledgeBase {
             "developpement_enfant_parentalite",
             DEVELOPPEMENT_ENFANT_PARENTALITE,
         ),
-        (
-            "psychosomatique_corps_esprit",
-            PSYCHOSOMATIQUE_CORPS_ESPRIT,
-        ),
+        ("psychosomatique_corps_esprit", PSYCHOSOMATIQUE_CORPS_ESPRIT),
         // v31.4.9+31.5.0 expansion — phase 34 (psychiatrie clinique + neuropsychologie)
         (
             "psychiatrie_clinique_diagnostics",
@@ -1233,10 +1209,7 @@ impl DefaultKnowledgeBase {
             "systeme_nerveux_neuroanatomie",
             SYSTEME_NERVEUX_NEUROANATOMIE,
         ),
-        (
-            "systeme_lymphatique_sanguin",
-            SYSTEME_LYMPHATIQUE_SANGUIN,
-        ),
+        ("systeme_lymphatique_sanguin", SYSTEME_LYMPHATIQUE_SANGUIN),
         (
             "psychologie_positive_bien_etre",
             PSYCHOLOGIE_POSITIVE_BIEN_ETRE,
@@ -1257,10 +1230,7 @@ impl DefaultKnowledgeBase {
             "systeme_cardiovasculaire_avance",
             SYSTEME_CARDIOVASCULAIRE_AVANCE,
         ),
-        (
-            "immunologie_auto_immunite",
-            IMMUNOLOGIE_AUTO_IMMUNITE,
-        ),
+        ("immunologie_auto_immunite", IMMUNOLOGIE_AUTO_IMMUNITE),
         // v31.7.3+31.7.4 — pharmacologie + gastroentérologie (phase 43)
         (
             "pharmacologie_clinique_avancee",

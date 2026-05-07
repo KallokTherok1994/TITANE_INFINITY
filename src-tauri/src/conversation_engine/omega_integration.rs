@@ -866,11 +866,7 @@ mod tests {
         };
 
         let result = bridge
-            .convert_to_conversation_response(
-                omega_result,
-                &request,
-                "utf8-history".to_string(),
-            )
+            .convert_to_conversation_response(omega_result, &request, "utf8-history".to_string())
             .await;
 
         assert!(result.is_ok(), "UTF-8 history truncation should not panic");

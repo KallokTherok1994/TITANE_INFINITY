@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ — Recovery Engine
 // ═══════════════════════════════════════════════════════════════
-use serde::{Deserialize, Serialize};
 use crate::meta_energy::fatigue_engine::FatigueLevel;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RecoveryPlan {
@@ -29,15 +29,9 @@ impl RecoveryEngine {
 
     pub fn plan(&self, fatigue: &FatigueLevel, current_energy: f32) -> RecoveryPlan {
         let (rest_secs, boost, low_activity) = match fatigue {
-            FatigueLevel::Fresh | FatigueLevel::Normal => {
-                (0, 1.0, false)
-            }
-            FatigueLevel::Tired => {
-                (self.min_recovery_seconds * 2, 1.5, false)
-            }
-            FatigueLevel::Exhausted => {
-                (self.min_recovery_seconds * 6, 2.5, true)
-            }
+            FatigueLevel::Fresh | FatigueLevel::Normal => (0, 1.0, false),
+            FatigueLevel::Tired => (self.min_recovery_seconds * 2, 1.5, false),
+            FatigueLevel::Exhausted => (self.min_recovery_seconds * 6, 2.5, true),
         };
 
         let cycles = rest_secs / 30; // 30s per cycle

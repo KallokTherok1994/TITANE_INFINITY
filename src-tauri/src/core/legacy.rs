@@ -599,7 +599,12 @@ fn extract_timeline(value: &Value) -> Vec<TimelineEntry> {
         .collect()
 }
 
-fn collect_candidate_array_items(value: &Value, keywords: &[&str], acc: &mut Vec<Value>, depth: usize) {
+fn collect_candidate_array_items(
+    value: &Value,
+    keywords: &[&str],
+    acc: &mut Vec<Value>,
+    depth: usize,
+) {
     // Depth guard: prevent stack overflow on pathological deeply nested JSON
     if depth > 32 {
         return;
@@ -613,7 +618,9 @@ fn collect_candidate_array_items(value: &Value, keywords: &[&str], acc: &mut Vec
                 {
                     match nested {
                         Value::Array(items) => acc.extend(items.iter().cloned()),
-                        Value::Object(_) => collect_candidate_array_items(nested, keywords, acc, depth + 1),
+                        Value::Object(_) => {
+                            collect_candidate_array_items(nested, keywords, acc, depth + 1)
+                        }
                         _ => {}
                     }
                 } else {
@@ -651,7 +658,9 @@ fn map_project_summary(value: &Value, idx: usize) -> Option<ProjectSummary> {
         })
         .unwrap_or(ProjectStatus::Active);
 
-    let priority = read_f64(value, &["priority", "score", "weight", "rank"]).unwrap_or(0.0).clamp(0.0, 100.0) as i32;
+    let priority = read_f64(value, &["priority", "score", "weight", "rank"])
+        .unwrap_or(0.0)
+        .clamp(0.0, 100.0) as i32;
     let last_activity = read_string(
         value,
         &["last_activity", "updated_at", "timestamp", "last_update"],
@@ -722,7 +731,9 @@ fn map_knowledge_entry(value: &Value, idx: usize) -> Option<KnowledgeEntry> {
         read_string(value, &["content", "summary", "details", "text"]).unwrap_or_default();
     let source = read_string(value, &["source", "origin", "provider"])
         .unwrap_or_else(|| "memory".to_string());
-    let relevance = read_f64(value, &["relevance", "score", "weight"]).unwrap_or(0.5).clamp(0.0, 1.0) as f32;
+    let relevance = read_f64(value, &["relevance", "score", "weight"])
+        .unwrap_or(0.5)
+        .clamp(0.0, 1.0) as f32;
     let timestamp = read_string(value, &["timestamp", "recorded_at", "updated_at"])
         .unwrap_or_else(|| Utc::now().to_rfc3339());
 
@@ -1025,7 +1036,12 @@ fn load_ltm_into_dashboard(dashboard: &mut MemoryDashboard, ltm_path: &PathBuf) 
             match serde_json::from_str::<Value>(&content) {
                 Ok(obj) => {
                     let mut nodes = Vec::new();
-                    collect_candidate_array_items(&obj, &["entries", "knowledge", "items"], &mut nodes, 0);
+                    collect_candidate_array_items(
+                        &obj,
+                        &["entries", "knowledge", "items"],
+                        &mut nodes,
+                        0,
+                    );
                     nodes
                 }
                 Err(_) => return,
@@ -1048,13 +1064,14 @@ fn load_ltm_into_dashboard(dashboard: &mut MemoryDashboard, ltm_path: &PathBuf) 
         if !is_knowledge {
             continue;
         }
-        let importance = read_f64(item, &["importance", "relevance", "score"]).unwrap_or(0.0) as f32;
+        let importance =
+            read_f64(item, &["importance", "relevance", "score"]).unwrap_or(0.0) as f32;
         if importance < LTM_MIN_IMPORTANCE {
             continue;
         }
-        let id = read_string(item, &["id", "entry_id"]).filter(|s| !s.is_empty()).unwrap_or_else(|| {
-            format!("ltm_{}", Utc::now().timestamp_millis())
-        });
+        let id = read_string(item, &["id", "entry_id"])
+            .filter(|s| !s.is_empty())
+            .unwrap_or_else(|| format!("ltm_{}", Utc::now().timestamp_millis()));
         // Skip if already in dashboard
         if dashboard.knowledge.iter().any(|k| k.id == id) {
             continue;
@@ -1069,7 +1086,10 @@ fn load_ltm_into_dashboard(dashboard: &mut MemoryDashboard, ltm_path: &PathBuf) 
         }
     }
     if added > 0 {
-        log::debug!("[MemoryCore] Loaded {} knowledge entries from ltm.json", added);
+        log::debug!(
+            "[MemoryCore] Loaded {} knowledge entries from ltm.json",
+            added
+        );
     }
 }
 
@@ -1225,7 +1245,11 @@ mod tests {
         if disk.knowledge.is_empty() {
             maybe_seed_initial_state(&mut disk);
         }
-        assert_eq!(disk.knowledge.len(), count_before, "should not reseed when knowledge exists");
+        assert_eq!(
+            disk.knowledge.len(),
+            count_before,
+            "should not reseed when knowledge exists"
+        );
     }
 
     #[test]
@@ -1290,7 +1314,10 @@ mod tests {
         // The inner projects array is beyond depth 32 — result may be empty or partial
         // The critical assertion is: no panic and function returned.
         // (acc may be empty because the depth guard kicked in before reaching the array)
-        assert!(acc.len() <= 1, "guard should have stopped before or at the array");
+        assert!(
+            acc.len() <= 1,
+            "guard should have stopped before or at the array"
+        );
     }
 
     // Ph3-IT3: priority clamp
@@ -1318,7 +1345,11 @@ mod tests {
         });
         let result2 = map_project_summary(&value2, 0);
         assert!(result2.is_some());
-        assert_eq!(result2.unwrap().priority, 0, "negative priority should be clamped to 0");
+        assert_eq!(
+            result2.unwrap().priority,
+            0,
+            "negative priority should be clamped to 0"
+        );
     }
 
     // Ph3-IT3: relevance clamp

@@ -11,7 +11,7 @@ vi.mock('@/hooks/useSingularityStateSafe', () => ({
   useSingularityStateSafe: () => ({ state: 'idle' }),
 }));
 
-const tauriMocks = {
+const tauriMocks = vi.hoisted(() => ({
   hyperGetState: vi.fn(),
   hyperInit: vi.fn(),
   hyperGetThoughts: vi.fn(),
@@ -21,7 +21,7 @@ const tauriMocks = {
   hyperReason: vi.fn(),
   hyperImagine: vi.fn(),
   hyperGenerateInsight: vi.fn(),
-};
+}));
 
 vi.mock('@/lib/tauriClient', () => ({
   tauriClient: tauriMocks,

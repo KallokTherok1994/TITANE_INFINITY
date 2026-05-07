@@ -246,7 +246,9 @@ impl MultimodalPerceptionEngine {
             if let Some(ref spatial) = audio.direction {
                 insights.push(format!(
                     "Spatial audio: azimuth={:.1}°, elevation={:.1}°, distance={:.2}m",
-                    spatial.azimuth, spatial.elevation, spatial.distance.unwrap_or(0.0)
+                    spatial.azimuth,
+                    spatial.elevation,
+                    spatial.distance.unwrap_or(0.0)
                 ));
             }
         }

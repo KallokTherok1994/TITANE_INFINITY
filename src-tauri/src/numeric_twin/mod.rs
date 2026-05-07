@@ -808,8 +808,7 @@ impl NumericTwinEngine {
         }
 
         self.cognitive_patterns.structuring_style.simple_to_complex =
-            (self.cognitive_patterns.structuring_style.simple_to_complex
-                + (obs.confidence * 0.01))
+            (self.cognitive_patterns.structuring_style.simple_to_complex + (obs.confidence * 0.01))
                 .min(1.0);
         self.evolution_profile.growth_trends.cognitive_growth =
             (self.evolution_profile.growth_trends.cognitive_growth + (obs.confidence * 0.01))
@@ -1186,7 +1185,10 @@ mod tests {
 
         assert!(engine.fusion_index.global_score > 0.1);
         assert_eq!(engine.fusion_index.trend, FusionTrend::Improving);
-        assert_eq!(engine.identity_core.fusion_index, engine.fusion_index.global_score);
+        assert_eq!(
+            engine.identity_core.fusion_index,
+            engine.fusion_index.global_score
+        );
     }
 
     #[test]
@@ -1207,7 +1209,10 @@ mod tests {
             context: None,
             confidence: 1.2,
         });
-        assert!(matches!(invalid_confidence, Err(TwinError::InvalidInput(_))));
+        assert!(matches!(
+            invalid_confidence,
+            Err(TwinError::InvalidInput(_))
+        ));
     }
 
     #[test]
