@@ -1877,3 +1877,16 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - Feature flags: unchanged, no D0-D4 flags flipped
 - Verdict: PASS (classification: E0_PARTIAL_PASS_EXPLICIT_BLOCKERS)
 - Stop condition: E0 is the stop point per Super Prompt v16.1
+
+## Delta 2026-05-06 — D6 HyperCenter lane 13 desktop hardening
+
+- Surface: `src/components/HyperCenter/HyperCenter.tsx`, `e2e/desktop/`, `e2e/advanced-intelligence/`
+- Change type: canonical UI selectors + desktop proof generation + E0 lane 13 runtime hardening
+- Added selectors: `hyper-center-root`, `hyper-center-mode-selector`, `hyper-center-mode-*`
+- Added tests:
+  - `src/components/HyperCenter/__tests__/HyperCenter.test.tsx`
+  - `e2e/desktop/hyper-center.wdio.test.js`
+  - `e2e/desktop/intelligence-seal-flag-proof.wdio.test.js`
+- Updated: `e2e/advanced-intelligence/advanced-intelligence.desktop.wdio.spec.js`
+  - AI-DESKTOP-13 now executes a runtime route+selector check before classifying blocker/pass.
+- Runtime guard: ModeSelector now supports undefined mode input without crash (`currentMode?: string`).

@@ -34,6 +34,12 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | F0 | Registry / README / CHANGELOG Sync | DONE | b54fee78c | `proof_packs/LOCK_F0_REGISTRY_README_CHANGELOG_SYNC_2026-05-06/` | verify_readme_changelog_registry_sync PASS; verify_intelligence_seal_prereqs PASS; detect_recurrence PASS | README updated; CHANGELOG updated; RELEASE_SURFACE updated; 3 registries synced | documentation drift corrected; D5 readiness classified | registry drift (B1.5→E0 gap) | D5 | docs-only |  
 | D5 | Intelligence Seal | SEALED | b54fee78c+D5 | `proof_packs/LOCK_D5_INTELLIGENCE_SEAL_2026-05-06/` | vitest 108 PASS; detect_recurrence PASS=1673; verify_instructions PASS=51; verify_readme_changelog_registry_sync PASS=19; verify_intelligence_seal_prereqs PASS=10 | D5 SEALED | T4 approval granted 2026-05-06 | TITANE_D5_INTELLIGENCE_SEAL=true (ACTIVATED) | all 17 locks complete; F0 synced | DONE | T4 approval granted |
 
+### E0 follow-up (2026-05-06, D6 preparation)
+
+- HyperCenter canonical surface hardened with stable selectors (`hyper-center-root`, `hyper-center-mode-selector`, `hyper-center-mode-*`) and undefined-mode safety guard.
+- Desktop proofs added: `e2e/desktop/hyper-center.wdio.test.js` and `e2e/desktop/intelligence-seal-flag-proof.wdio.test.js`.
+- E0 lane script update: `AI-DESKTOP-13` now performs runtime route+selector verification before deciding PASS vs explicit blocker.
+
 ---
 
 ## Lock Details

@@ -1,3 +1,17 @@
+# [2026-05-06] D6 HyperCenter Desktop Proof Surface (lane 13 hardening)
+
+- Surface canonique HyperCenter: `src/components/HyperCenter/HyperCenter.tsx`.
+- Nouveaux `data-testid` stables:
+  - `hyper-center-root`
+  - `hyper-center-mode-selector`
+  - `hyper-center-mode-analytical|creative|intuitive|strategic|empathetic|integrative`
+- Correction de robustesse runtime: `ModeSelector` accepte `currentMode?: string` pour éviter un crash quand `hyper_get_state` renvoie un mode absent.
+- Preuves ajoutées:
+  - Vitest: `src/components/HyperCenter/__tests__/HyperCenter.test.tsx`
+  - WDIO desktop: `e2e/desktop/hyper-center.wdio.test.js`
+  - WDIO desktop (flag contract): `e2e/desktop/intelligence-seal-flag-proof.wdio.test.js`
+  - E0 lane update: `e2e/advanced-intelligence/advanced-intelligence.desktop.wdio.spec.js` (AI-DESKTOP-13 runtime-check)
+
 # [2026-05-05] Test Autofix + One Door auth/launcher alignment
 
 - Surface auth OAuth canonique: `src/services/auth/oauthService.ts` passe uniquement par `safeInvokeCanonical` et applique le contrat `{ ok, content, error }` sur `oauth_facebook_initiate`, `oauth_facebook_callback`, `oauth_facebook_get_profile`, `oauth_facebook_logout`.

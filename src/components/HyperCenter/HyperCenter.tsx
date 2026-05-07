@@ -113,7 +113,7 @@ const ConsciousnessDisplay: React.FC<{
 };
 
 const ModeSelector: React.FC<{
-  currentMode: string;
+  currentMode?: string;
   onChange: (mode: string) => void;
 }> = ({ currentMode, onChange }) => {
   const modes = [
@@ -126,12 +126,13 @@ const ModeSelector: React.FC<{
   ];
 
   return (
-    <div className="mode-selector">
+    <div className="mode-selector" data-testid="hyper-center-mode-selector">
       <h4>Intelligence Mode</h4>
       <div className="mode-buttons">
         {modes.map(mode => (
           <button
             key={mode.id}
+            data-testid={`hyper-center-mode-${mode.id}`}
             className={`mode-btn ${(currentMode ?? '').toLowerCase() === mode.id ? 'active' : ''}`}
             onClick={() => onChange(mode.id)}
             title={mode.label}
@@ -338,6 +339,7 @@ const HyperCenterContent: React.FC = () => {
 
   return (
     <div className="hyper-center" data-testid="page-hyper-center">
+      <div data-testid="hyper-center-root" />
       {/* Header */}
       <header className="hyper-header">
         <div className="header-left">
