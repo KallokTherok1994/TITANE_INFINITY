@@ -134,7 +134,9 @@ fn failure_simulation_matrix_complete_engine_level() {
     let mut no_key_ctx = online_context();
     no_key_ctx.has_brave_credentials = false;
     let missing_key = policy.evaluate(&no_key_ctx, true, false);
-    assert!(!missing_key.allow_search);
+    // SearXNG/DDG Lite is always available as fallback — search is still allowed
+    // even when Brave credentials are missing. See policy.rs test_missing_credentials_search.
+    assert!(missing_key.allow_search);
 
     let revoked_meta = decision_meta(
         "remote-provider",
