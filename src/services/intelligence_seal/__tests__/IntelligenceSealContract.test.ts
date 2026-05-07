@@ -90,8 +90,10 @@ describe('D5 — Intelligence Seal Contract', () => {
     })
     it('all verdicts are acceptable (CLEAN or DRIFT_FOUND_FIXED)', () => {
       for (const [lock, verdict] of Object.entries(PROGRAM_LOCK_VERDICTS)) {
-        expect(ACCEPTABLE_VERDICTS as readonly string[]).toContain(verdict),
+        expect(
+          ACCEPTABLE_VERDICTS as readonly string[],
           `Lock ${lock} has unacceptable verdict: ${verdict}`
+        ).toContain(verdict)
       }
     })
     it('A0I=DRIFT_FOUND_FIXED', () => expect(PROGRAM_LOCK_VERDICTS.A0I).toBe('DRIFT_FOUND_FIXED'))
