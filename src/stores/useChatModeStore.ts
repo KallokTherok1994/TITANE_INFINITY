@@ -97,6 +97,21 @@ export const useChatModeStore = create<ChatModeStore>()(
         name: 'titane_chat_mode_default',
         // LOCK5: persist currentModeId only; runtime state is re-derived on init
         partialize: state => ({ currentModeId: state.currentModeId }),
+        // Guard: reject persisted mode IDs that are not in the canonical mode registry
+        // (e.g. stale "standard" from old backend fallback bug). Falls back to 'default'.
+        merge: (persistedState, currentState) => {
+          const persisted = persistedState as { currentModeId?: string };
+          const storedId = persisted?.currentModeId;
+          const validId =
+            storedId && CHAT_MODES[storedId]
+              ? storedId
+              : INITIAL_CHAT_MODE_STATE.current_mode_id;
+          return {
+            ...currentState,
+            currentModeId: validId,
+            currentMode: CHAT_MODES[validId] ?? null,
+          };
+        },
       }
     ),
     {

@@ -325,10 +325,12 @@ pub async fn chat_mode_change(
 #[tauri::command]
 pub async fn chat_mode_sync(state: State<'_, MemoryKvState>) -> Result<Value, String> {
     let map = state.0.lock().map_err(|e| e.to_string())?;
+    // "default" is the canonical fallback — must match INITIAL_CHAT_MODE_STATE.current_mode_id
+    // in src/config/chatModes.config.ts and ChatModeId::Default in commands/chat_modes.rs.
     let mode = map
         .get("chat_mode")
         .cloned()
-        .unwrap_or_else(|| "standard".to_string());
+        .unwrap_or_else(|| "default".to_string());
     Ok(serde_json::json!({ "mode": mode, "synced": true }))
 }
 
