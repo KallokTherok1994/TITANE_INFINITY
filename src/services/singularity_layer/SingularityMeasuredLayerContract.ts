@@ -21,10 +21,7 @@ import { z } from 'zod'
 
 // ── Feature Flag ────────────────────────────────────────────────────────────────
 export const SINGULARITY_D2_MEASUREMENT_FLAG =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D2_SINGULARITY_MEASURED'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_D2_SINGULARITY_MEASURED'] === 'true'
 
 // ── Singularity Event Types ─────────────────────────────────────────────────────
 export const SingularityEventTypeSchema = z.enum([
@@ -204,10 +201,7 @@ export const D2_MEASUREMENT_DEFAULT_MODE: D2MeasurementMode = 'passive'
 
 /** T3 runtime emission flag — must be false in production until D3 is complete */
 export const SINGULARITY_D2_EMISSION_ACTIVE =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE'] === 'true'
 
 /** Known limits for D2 singularity measurement (declared, not blocking) */
 export const D2_MEASUREMENT_KNOWN_LIMITS: string[] = [

@@ -30,10 +30,7 @@ import { z } from 'zod'
 
 // ── T4 Guard ────────────────────────────────────────────────────────────────────
 export const TWIN_CONSENT_D3_FLAG =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D3_TWIN_CONSENT_LEDGER'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_D3_TWIN_CONSENT_LEDGER'] === 'true'
 
 // ── Consent States ──────────────────────────────────────────────────────────────
 export const ConsentStateSchema = z.enum([
@@ -201,10 +198,7 @@ export function getD3TwinConsentLedgerContract(): D3TwinConsentLedgerContract {
 
 // ── D3 Emission Flag ──────────────────────────────────────────────────────────
 export const D3_IDENTITY_OBSERVATION_EMISSION_ACTIVE: boolean =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D3_IDENTITY_OBSERVATION_ACTIVE'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_D3_IDENTITY_OBSERVATION_ACTIVE'] === 'true'
 
 // ── Observation Type ──────────────────────────────────────────────────────────
 export const TwinObservationTypeSchema = z.enum([

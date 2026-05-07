@@ -31,10 +31,7 @@ import { z } from 'zod'
 
 // ── T4 Guard ────────────────────────────────────────────────────────────────────
 export const SELF_IMPROVEMENT_D4_FLAG =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D4_SELF_IMPROVEMENT_LAB'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_D4_SELF_IMPROVEMENT_LAB'] === 'true'
 
 // ── Improvement Domain ──────────────────────────────────────────────────────────
 export const ImprovementDomainSchema = z.enum([
@@ -169,7 +166,7 @@ export function advancePipelineStage(
       blocking_reason: 'T4 approval required — apply stage is blocked in scaffold',
     }
   }
-  return { advanced: true, new_stage: nextStage, blocked: false, blocking_reason: null }
+  return { advanced: true, new_stage: nextStage!, blocked: false, blocking_reason: null }
 }
 
 // ── Build Lab Session ────────────────────────────────────────────────────────────
@@ -299,7 +296,7 @@ export const SelfImprovementEvalSnapshotSchema = z.object({
   patch_id: z.string(),
   timing: z.enum(['before', 'after']),
   score: z.number().min(0).max(1),
-  metrics: z.record(z.number()),
+  metrics: z.record(z.string(), z.number()),
   taken_at: z.string(),
 })
 export type SelfImprovementEvalSnapshot = z.infer<typeof SelfImprovementEvalSnapshotSchema>

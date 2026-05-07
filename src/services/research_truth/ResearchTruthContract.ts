@@ -24,10 +24,7 @@ import { z } from 'zod'
 
 // ── Feature Flag ────────────────────────────────────────────────────────────────
 export const RESEARCH_TRUTH_FLAG =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_C3_RESEARCH_TRUTH'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_C3_RESEARCH_TRUTH'] === 'true'
 
 // ── Query Classification ────────────────────────────────────────────────────────
 export const ResearchQueryClassSchema = z.enum([

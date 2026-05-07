@@ -39,10 +39,7 @@ import { z } from 'zod'
 
 // ── Feature Flag ────────────────────────────────────────────────────────────────
 export const OMEGA_D1_HANDLER_FLAG =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D1_OMEGA_REAL_HANDLER'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_D1_OMEGA_REAL_HANDLER'] === 'true'
 
 // ── D1 Gap Registry ─────────────────────────────────────────────────────────────
 export const D1GapIdSchema = z.enum(['D1-G1', 'D1-G2', 'D1-G3'])

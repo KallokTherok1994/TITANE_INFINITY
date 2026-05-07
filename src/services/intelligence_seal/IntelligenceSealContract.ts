@@ -30,10 +30,7 @@ import { z } from 'zod'
 
 // ── T4 Guard ────────────────────────────────────────────────────────────────────
 export const INTELLIGENCE_SEAL_D5_FLAG =
-  typeof import.meta !== 'undefined' &&
-  (import.meta as Record<string, unknown>).env !== undefined
-    ? String((import.meta as Record<string, Record<string, unknown>>).env['VITE_TITANE_D5_INTELLIGENCE_SEAL'] ?? 'false') === 'true'
-    : false
+  import.meta.env?.['VITE_TITANE_D5_INTELLIGENCE_SEAL'] === 'true'
 
 // ── Lock Registry ───────────────────────────────────────────────────────────────
 export const LockIdSchema = z.enum([
