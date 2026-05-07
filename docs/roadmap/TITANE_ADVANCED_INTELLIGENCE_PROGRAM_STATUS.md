@@ -1,5 +1,5 @@
 # TITANE Advanced Intelligence Program — Status
-# Last Updated: 2026-05-06 (v6 — A2 external AI engineering source map)
+# Last Updated: 2026-05-06 (v9 — D6 HyperCenter hardening + remote sync)
 
 ## Program Overview
 
@@ -33,12 +33,16 @@ Each lock produces: proof pack, validator evidence, AutoHeal entries, rollback p
 | E0 | Advanced Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS | 9a8df5507 | `proof_packs/LOCK_E0_DESKTOP_ADVANCED_E2E_2026-05-06/` | WDIO 23 PASS (11.7s); Vitest 21/21 PASS; verify_desktop_advanced_intelligence_tests PASS=25 FAIL=0 | 8 PASS · 12 SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL | E0 harness: WDIO headless + Vitest contracts; TITANE_ENFORCE_BINARY_FRESHNESS=0 | binary freshness bypass; 12 lanes blocked (live Ollama, flags, pipeline, UI surface) | 12 blocker lanes need F1+activation gates | D5 pending T4 | approved E0 harness pattern |  
 | F0 | Registry / README / CHANGELOG Sync | DONE | b54fee78c | `proof_packs/LOCK_F0_REGISTRY_README_CHANGELOG_SYNC_2026-05-06/` | verify_readme_changelog_registry_sync PASS; verify_intelligence_seal_prereqs PASS; detect_recurrence PASS | README updated; CHANGELOG updated; RELEASE_SURFACE updated; 3 registries synced | documentation drift corrected; D5 readiness classified | registry drift (B1.5→E0 gap) | D5 | docs-only |  
 | D5 | Intelligence Seal | SEALED | b54fee78c+D5 | `proof_packs/LOCK_D5_INTELLIGENCE_SEAL_2026-05-06/` | vitest 108 PASS; detect_recurrence PASS=1673; verify_instructions PASS=51; verify_readme_changelog_registry_sync PASS=19; verify_intelligence_seal_prereqs PASS=10 | D5 SEALED | T4 approval granted 2026-05-06 | TITANE_D5_INTELLIGENCE_SEAL=true (ACTIVATED) | all 17 locks complete; F0 synced | DONE | T4 approval granted |
+| D6 | HyperCenter Lane13 Desktop Surface Hardening | DONE | a313a2f43 + fc31929ef + c2fd93794 | `e2e/desktop/hyper-center.wdio.test.js`, `e2e/desktop/intelligence-seal-flag-proof.wdio.test.js` | vitest 21/21 PASS (contract); detect_recurrence PASS=1685; verify_instructions PASS=51 FAIL=0 | AI-DESKTOP-13 runtime-check upgraded (PASS or explicit blocker) | HyperCenter stable selectors added; undefined-mode guard applied | no flag change; hardened canonical surface only | duplicate vitest spec normalized to canonical path | DONE — remote sync complete (3c68e2a99→c2fd93794) | T2 bounded |
 
-### E0 follow-up (2026-05-06, D6 preparation)
+### D6 — HyperCenter Lane13 Desktop Surface Hardening (2026-05-06, DONE)
 
 - HyperCenter canonical surface hardened with stable selectors (`hyper-center-root`, `hyper-center-mode-selector`, `hyper-center-mode-*`) and undefined-mode safety guard.
 - Desktop proofs added: `e2e/desktop/hyper-center.wdio.test.js` and `e2e/desktop/intelligence-seal-flag-proof.wdio.test.js`.
 - E0 lane script update: `AI-DESKTOP-13` now performs runtime route+selector verification before deciding PASS vs explicit blocker.
+- Z0 post-seal continuity reports generated: `POST_SEAL_INTEGRITY_AUDIT.md`, `POST_SEAL_NEXT_ACTIONS.md`, `POST_SEAL_REMOTE_SYNC_READINESS.md`.
+- Duplicate vitest contract spec (`e2e/advanced-intelligence/advanced-intelligence-contracts.vitest.spec.ts`) removed; canonical suite confirmed under `tests/contract/e2e-desktop/advanced-intelligence-contracts.test.ts` (21 tests PASS).
+- **Remote sync complete** — 3 commits pushed to origin/MAIN (3c68e2a99→c2fd93794).
 
 ---
 
