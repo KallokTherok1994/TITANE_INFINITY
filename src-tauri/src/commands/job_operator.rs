@@ -95,11 +95,9 @@ fn now_iso() -> String {
         .unwrap_or_default();
     format!(
         "{}.{:03}Z",
-        chrono::DateTime::<chrono::Utc>::from(
-            chrono::DateTime::<chrono::Utc>::from_timestamp(d.as_secs() as i64, 0)
-                .unwrap_or_default()
-        )
-        .format("%Y-%m-%dT%H:%M:%S"),
+        chrono::DateTime::<chrono::Utc>::from_timestamp(d.as_secs() as i64, 0)
+            .unwrap_or_default()
+            .format("%Y-%m-%dT%H:%M:%S"),
         d.subsec_millis()
     )
 }

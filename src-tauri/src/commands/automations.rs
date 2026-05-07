@@ -744,7 +744,7 @@ pub fn automation_execute(
             .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
         validate_automation_request(&config, &request, &cooldowns, &running)
-            .map_err(|msg| TAPIError::validation(msg))?;
+            .map_err(TAPIError::validation)?;
     }
 
     // Marquer comme en cours

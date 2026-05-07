@@ -953,12 +953,8 @@ pub async fn desktop_pause_session(
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
 
     match session.status {
-        DesktopSessionStatus::Stopped => {
-            return Err("Cannot pause a stopped session".to_string());
-        }
-        DesktopSessionStatus::Paused => {
-            return Ok(session.clone());
-        }
+        DesktopSessionStatus::Stopped => Err("Cannot pause a stopped session".to_string()),
+        DesktopSessionStatus::Paused => Ok(session.clone()),
         _ => {
             session.status = DesktopSessionStatus::Paused;
             log::info!("[DesktopOperator] Session paused: {}", session_id);
@@ -983,9 +979,7 @@ pub async fn desktop_resume_session(
         .ok_or_else(|| format!("Session not found: {}", session_id))?;
 
     match session.status {
-        DesktopSessionStatus::Stopped => {
-            return Err("Cannot resume a stopped session".to_string());
-        }
+        DesktopSessionStatus::Stopped => Err("Cannot resume a stopped session".to_string()),
         DesktopSessionStatus::Paused => {
             session.status = DesktopSessionStatus::Idle;
             log::info!("[DesktopOperator] Session resumed: {}", session_id);

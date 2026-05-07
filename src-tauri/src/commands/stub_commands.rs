@@ -199,10 +199,7 @@ mod tests {
     #[tokio::test]
     async fn test_fs_exists_accepts_workspace_path() {
         let result = fs_exists("package.json".to_string()).await;
-        assert_eq!(
-            result.expect("workspace file existence should be readable"),
-            true
-        );
+        assert!(result.expect("workspace file existence should be readable"));
     }
 
     #[tokio::test]

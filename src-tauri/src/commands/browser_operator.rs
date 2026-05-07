@@ -197,8 +197,7 @@ fn is_domain_allowed(domain: &str, allowed_domains: &[String]) -> bool {
             return true;
         }
         // Subdomain match: *.example.com matches sub.example.com
-        if allowed.starts_with("*.") {
-            let base = &allowed[2..];
+        if let Some(base) = allowed.strip_prefix("*.") {
             if domain.ends_with(base)
                 && (domain.len() == base.len()
                     || domain[..domain.len() - base.len() - 1].contains('.'))
@@ -411,10 +410,8 @@ pub async fn browser_navigate(
             .iter()
             .map(|s| s.to_string())
             .collect();
-        if is_domain_denied(
-            &domain,
-            &session.allowed_domains.iter().cloned().collect::<Vec<_>>(),
-        ) || is_domain_denied(&domain, &default_denied)
+        if is_domain_denied(&domain, &session.allowed_domains.to_vec())
+            || is_domain_denied(&domain, &default_denied)
         {
             session.status = BrowserSessionStatus::Blocked;
             return Ok(BrowserRelayResult {

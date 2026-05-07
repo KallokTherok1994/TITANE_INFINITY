@@ -14,7 +14,9 @@ use std::collections::HashSet;
 /// Identifiants de modes de chat (synchronisé avec TypeScript)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[derive(Default)]
 pub enum ChatModeId {
+    #[default]
     Default,
     Brainstorming,
     Synthesis,
@@ -30,12 +32,6 @@ pub enum ChatModeId {
     VeilleRecherche,
     Decision,
     KalloksArts,
-}
-
-impl Default for ChatModeId {
-    fn default() -> Self {
-        ChatModeId::Default
-    }
 }
 
 impl ChatModeId {
