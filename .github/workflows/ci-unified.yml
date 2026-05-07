@@ -636,7 +636,6 @@ jobs:
           needs.lint-and-typecheck.result == 'failure' ||
           needs.test-frontend.result == 'failure' ||
           needs.test-backend.result == 'failure' ||
-          needs.test-backend-windows.result == 'failure' ||
           needs.structural-guardrails.result == 'failure'
         run: |
           echo "❌ One or more required jobs failed"

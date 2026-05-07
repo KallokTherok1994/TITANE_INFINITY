@@ -2,7 +2,7 @@
   "$schema": "./schemas/snapshot.schema.json",
   "version": "1.0.0",
   "lastUpdate": "2026-05-07T02:52:45.000Z",
-  "eventCount": 33,
+  "eventCount": 34,
   "suites": {
     "vitest-core": {
       "id": "vitest-core",
@@ -168,6 +168,6 @@
       "type": "WORKFLOW_CHANGED"
     }
   },
-  "lastEvent": "CI_FIX_RUSTDOCFLAGS_2026_05_07",
-  "lastUpdated": "2026-05-07T05:47:09.019880+00:00"
+  "lastEvent": "CI_FIX_WINDOWS_GATE_2026_05_07",
+  "lastUpdated": "2026-05-07T06:38:35.467078+00:00"
 }
