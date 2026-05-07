@@ -673,6 +673,15 @@ mod tests {
     async fn total_dev_read_file_reads_workspace_file() {
         unlock_for_test();
 
+        // Set workspace to the repo root (one level above src-tauri/) so the test
+        // is portable across CI environments where the user documents dir differs.
+        let repo_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .expect("CARGO_MANIFEST_DIR must have a parent")
+            .to_string_lossy()
+            .into_owned();
+        std::env::set_var("TITANE_WORKSPACE_DIR", &repo_root);
+
         let result = total_dev_read_file("package.json".to_string())
             .await
             .expect("package.json should remain readable");
