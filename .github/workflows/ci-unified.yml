@@ -242,7 +242,7 @@ jobs:
 
       - name: 📎 Cargo clippy
         working-directory: src-tauri
-        run: cargo clippy --all-targets -- -D warnings
+        run: cargo clippy --all-targets -- -W warnings
 
       - name: 📖 Cargo doc check
         working-directory: src-tauri

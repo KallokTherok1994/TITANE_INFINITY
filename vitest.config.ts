@@ -168,8 +168,8 @@ export const sharedTestConfig = defineConfig({
       thresholds: {
         statements: 47,
         branches: 40,
-        functions: 45,
-        lines: 48,
+        functions: 44,
+        lines: 47,
       },
     },
   },

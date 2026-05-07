@@ -2,7 +2,7 @@
   "$schema": "./schemas/snapshot.schema.json",
   "version": "1.0.0",
   "lastUpdate": "2026-05-07T02:52:45.000Z",
-  "eventCount": 31,
+  "eventCount": 32,
   "suites": {
     "vitest-core": {
       "id": "vitest-core",
@@ -168,6 +168,6 @@
       "type": "WORKFLOW_CHANGED"
     }
   },
-  "lastEvent": "CI_FIX_CLIPPY_COVERAGE_2026_05_07",
-  "lastUpdated": "2026-05-07T04:53:54.509527Z"
+  "lastEvent": "CI_FIX_CLIPPY_WARNINGS_COVERAGE_V2_2026_05_07",
+  "lastUpdated": "2026-05-07T05:26:07.381023+00:00"
 }

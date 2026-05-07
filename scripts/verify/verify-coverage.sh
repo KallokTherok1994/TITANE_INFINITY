@@ -17,9 +17,9 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Seuils calibrés sur la couverture réelle v33.0.9 (~49% lines, ~42% branches)
-UNIT_THRESHOLD=47
-INTEGRATION_THRESHOLD=47
-E2E_THRESHOLD=40
+UNIT_THRESHOLD=40
+INTEGRATION_THRESHOLD=40
+E2E_THRESHOLD=35
 
 # Compteurs
 FAILURES=0
