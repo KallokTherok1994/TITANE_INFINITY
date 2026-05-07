@@ -58,35 +58,25 @@
         {
           "main": "domain",
           "sub": "technical",
-          "tags": [
-            "développement",
-            "architecture",
-            "typescript"
-          ],
+          "tags": ["développement", "architecture", "typescript"],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": [
-            "technique"
-          ],
+          "tags": ["technique"],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": [
-            "architecture"
-          ],
+          "tags": ["architecture"],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": [
-            "développement"
-          ],
+          "tags": ["développement"],
           "confidence": 0.47882488614936036
         }
       ],
@@ -129,35 +119,25 @@
         {
           "main": "domain",
           "sub": "technical",
-          "tags": [
-            "développement",
-            "architecture",
-            "typescript"
-          ],
+          "tags": ["développement", "architecture", "typescript"],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": [
-            "technique"
-          ],
+          "tags": ["technique"],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": [
-            "architecture"
-          ],
+          "tags": ["architecture"],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": [
-            "développement"
-          ],
+          "tags": ["développement"],
           "confidence": 0.47882488614936036
         }
       ],
@@ -176,9 +156,7 @@
         ],
         "sentiment": "neutral",
         "urgency": "low",
-        "relatedIds": [
-          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a"
-        ],
+        "relatedIds": ["1c4408ba-5d6a-49d8-8eba-df97f62ce39a"],
         "version": 1,
         "contentHash": "ysflkj",
         "lastModified": 1777902629205,
@@ -202,35 +180,25 @@
         {
           "main": "domain",
           "sub": "technical",
-          "tags": [
-            "développement",
-            "architecture",
-            "typescript"
-          ],
+          "tags": ["développement", "architecture", "typescript"],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": [
-            "technique"
-          ],
+          "tags": ["technique"],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": [
-            "architecture"
-          ],
+          "tags": ["architecture"],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": [
-            "développement"
-          ],
+          "tags": ["développement"],
           "confidence": 0.47882488614936036
         }
       ],
@@ -276,35 +244,25 @@
         {
           "main": "domain",
           "sub": "technical",
-          "tags": [
-            "développement",
-            "architecture",
-            "typescript"
-          ],
+          "tags": ["développement", "architecture", "typescript"],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": [
-            "technique"
-          ],
+          "tags": ["technique"],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": [
-            "architecture"
-          ],
+          "tags": ["architecture"],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": [
-            "développement"
-          ],
+          "tags": ["développement"],
           "confidence": 0.47882488614936036
         }
       ],
@@ -351,35 +309,25 @@
         {
           "main": "domain",
           "sub": "technical",
-          "tags": [
-            "développement",
-            "architecture",
-            "typescript"
-          ],
+          "tags": ["développement", "architecture", "typescript"],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": [
-            "technique"
-          ],
+          "tags": ["technique"],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": [
-            "architecture"
-          ],
+          "tags": ["architecture"],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": [
-            "développement"
-          ],
+          "tags": ["développement"],
           "confidence": 0.47882488614936036
         }
       ],
@@ -427,35 +375,25 @@
         {
           "main": "domain",
           "sub": "technical",
-          "tags": [
-            "développement",
-            "architecture",
-            "typescript"
-          ],
+          "tags": ["développement", "architecture", "typescript"],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": [
-            "technique"
-          ],
+          "tags": ["technique"],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": [
-            "architecture"
-          ],
+          "tags": ["architecture"],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": [
-            "développement"
-          ],
+          "tags": ["développement"],
           "confidence": 0.47882488614936036
         }
       ],

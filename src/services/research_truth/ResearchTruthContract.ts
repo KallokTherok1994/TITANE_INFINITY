@@ -20,40 +20,45 @@
  * T3 activation: reading and writing of truth verdicts guarded by flag
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 // ── Feature Flag ────────────────────────────────────────────────────────────────
 export const RESEARCH_TRUTH_FLAG =
-  import.meta.env?.['VITE_TITANE_C3_RESEARCH_TRUTH'] === 'true'
+  import.meta.env?.['VITE_TITANE_C3_RESEARCH_TRUTH'] === 'true';
 
 // ── Query Classification ────────────────────────────────────────────────────────
 export const ResearchQueryClassSchema = z.enum([
-  'factual_static',    // Stable facts unlikely to change (e.g. capital cities)
-  'factual_temporal',  // Facts that change over time (e.g. current leaders)
-  'claims_disputed',   // Contested claims requiring multi-source validation
+  'factual_static', // Stable facts unlikely to change (e.g. capital cities)
+  'factual_temporal', // Facts that change over time (e.g. current leaders)
+  'claims_disputed', // Contested claims requiring multi-source validation
   'technical_precise', // Technical precision matters (code, specs, math)
-  'subjective',        // Opinion or preference — no objective truth
-  'conversational',    // Small-talk, no truth validation needed
-])
-export type ResearchQueryClass = z.infer<typeof ResearchQueryClassSchema>
+  'subjective', // Opinion or preference — no objective truth
+  'conversational', // Small-talk, no truth validation needed
+]);
+export type ResearchQueryClass = z.infer<typeof ResearchQueryClassSchema>;
 
 export const ResearchQueryClassificationSchema = z.object({
   query_id: z.string(),
   query_text: z.string().min(1),
   classification: ResearchQueryClassSchema,
   requires_research_validation: z.boolean(),
-  reasoning: z.string().nullable().describe('One-sentence justification for the classification'),
-})
-export type ResearchQueryClassification = z.infer<typeof ResearchQueryClassificationSchema>
+  reasoning: z
+    .string()
+    .nullable()
+    .describe('One-sentence justification for the classification'),
+});
+export type ResearchQueryClassification = z.infer<
+  typeof ResearchQueryClassificationSchema
+>;
 
 // ── Source Evidence ─────────────────────────────────────────────────────────────
 export const EvidenceStatusSchema = z.enum([
-  'confirmed',    // Multiple sources agree
-  'disputed',     // Sources disagree
-  'unverified',   // Single source only
+  'confirmed', // Multiple sources agree
+  'disputed', // Sources disagree
+  'unverified', // Single source only
   'insufficient', // Not enough evidence to classify
-])
-export type EvidenceStatus = z.infer<typeof EvidenceStatusSchema>
+]);
+export type EvidenceStatus = z.infer<typeof EvidenceStatusSchema>;
 
 export const ResearchSourceEvidenceSchema = z.object({
   evidence_id: z.string(),
@@ -69,8 +74,8 @@ export const ResearchSourceEvidenceSchema = z.object({
   confidence: z.number().min(0).max(1),
   retrieved_at: z.string().datetime(),
   supports_claim: z.boolean().nullable().describe('null if not directly evaluable'),
-})
-export type ResearchSourceEvidence = z.infer<typeof ResearchSourceEvidenceSchema>
+});
+export type ResearchSourceEvidence = z.infer<typeof ResearchSourceEvidenceSchema>;
 
 // ── Multi-source Aggregation ────────────────────────────────────────────────────
 export const TruthAggregationSchema = z.object({
@@ -83,22 +88,28 @@ export const TruthAggregationSchema = z.object({
   conflict_detected: z.boolean(),
   conflict_detail: z.string().nullable(),
   aggregate_confidence: z.number().min(0).max(1),
-})
-export type TruthAggregation = z.infer<typeof TruthAggregationSchema>
+});
+export type TruthAggregation = z.infer<typeof TruthAggregationSchema>;
 
 // ── Truth Verdict ───────────────────────────────────────────────────────────────
 export const ResearchTruthVerdictSchema = z.object({
   verdict_id: z.string().uuid(),
   query_id: z.string(),
   claim: z.string(),
-  verdict: z.enum(['verified', 'partially_verified', 'disputed', 'unverifiable', 'false_claim']),
+  verdict: z.enum([
+    'verified',
+    'partially_verified',
+    'disputed',
+    'unverifiable',
+    'false_claim',
+  ]),
   confidence: z.number().min(0).max(1),
   evidence_summary: z.string(),
   provenance_ids: z.array(z.string()),
   generated_at: z.string().datetime(),
   flag_active: z.boolean(),
-})
-export type ResearchTruthVerdict = z.infer<typeof ResearchTruthVerdictSchema>
+});
+export type ResearchTruthVerdict = z.infer<typeof ResearchTruthVerdictSchema>;
 
 // ── C3 Contract ─────────────────────────────────────────────────────────────────
 export const C3ResearchTruthContractSchema = z.object({
@@ -109,14 +120,26 @@ export const C3ResearchTruthContractSchema = z.object({
   min_sources_for_confirmation: z.number().min(2),
   conflict_threshold: z.number().min(0).max(1),
   sources_referenced: z.array(z.string()),
-})
-export type C3ResearchTruthContract = z.infer<typeof C3ResearchTruthContractSchema>
+});
+export type C3ResearchTruthContract = z.infer<typeof C3ResearchTruthContractSchema>;
 
 // ── Query Classifier ────────────────────────────────────────────────────────────
-const TEMPORAL_KEYWORDS = ['current', 'now', 'today', 'latest', 'recent', 'this year']
-const DISPUTED_KEYWORDS = ['controversial', 'debated', 'some say', 'disputed', 'conflicting']
-const TECHNICAL_KEYWORDS = ['code', 'algorithm', 'specification', 'implementation', 'syntax']
-const CONVERSATIONAL_KEYWORDS = ['hello', 'hi there', 'thanks', 'bye', 'how are you']
+const TEMPORAL_KEYWORDS = ['current', 'now', 'today', 'latest', 'recent', 'this year'];
+const DISPUTED_KEYWORDS = [
+  'controversial',
+  'debated',
+  'some say',
+  'disputed',
+  'conflicting',
+];
+const TECHNICAL_KEYWORDS = [
+  'code',
+  'algorithm',
+  'specification',
+  'implementation',
+  'syntax',
+];
+const CONVERSATIONAL_KEYWORDS = ['hello', 'hi there', 'thanks', 'bye', 'how are you'];
 
 /**
  * Classify a query to determine whether research truth validation is needed.
@@ -124,45 +147,46 @@ const CONVERSATIONAL_KEYWORDS = ['hello', 'hi there', 'thanks', 'bye', 'how are 
  */
 export function classifyResearchQuery(
   queryId: string,
-  queryText: string,
+  queryText: string
 ): ResearchQueryClassification {
-  const lower = queryText.toLowerCase()
+  const lower = queryText.toLowerCase();
 
-  if (CONVERSATIONAL_KEYWORDS.some((k) => lower.includes(k))) {
+  if (CONVERSATIONAL_KEYWORDS.some(k => lower.includes(k))) {
     return {
       query_id: queryId,
       query_text: queryText,
       classification: 'conversational',
       requires_research_validation: false,
       reasoning: 'Conversational query — no truth validation needed',
-    }
+    };
   }
-  if (TEMPORAL_KEYWORDS.some((k) => lower.includes(k))) {
+  if (TEMPORAL_KEYWORDS.some(k => lower.includes(k))) {
     return {
       query_id: queryId,
       query_text: queryText,
       classification: 'factual_temporal',
       requires_research_validation: true,
       reasoning: 'Query references current/temporal information — validation recommended',
-    }
+    };
   }
-  if (DISPUTED_KEYWORDS.some((k) => lower.includes(k))) {
+  if (DISPUTED_KEYWORDS.some(k => lower.includes(k))) {
     return {
       query_id: queryId,
       query_text: queryText,
       classification: 'claims_disputed',
       requires_research_validation: true,
-      reasoning: 'Query contains disputed claim markers — multi-source validation required',
-    }
+      reasoning:
+        'Query contains disputed claim markers — multi-source validation required',
+    };
   }
-  if (TECHNICAL_KEYWORDS.some((k) => lower.includes(k))) {
+  if (TECHNICAL_KEYWORDS.some(k => lower.includes(k))) {
     return {
       query_id: queryId,
       query_text: queryText,
       classification: 'technical_precise',
       requires_research_validation: true,
       reasoning: 'Technical precision query — source-backed validation recommended',
-    }
+    };
   }
   return {
     query_id: queryId,
@@ -170,12 +194,12 @@ export function classifyResearchQuery(
     classification: 'factual_static',
     requires_research_validation: false,
     reasoning: null,
-  }
+  };
 }
 
 // ── Multi-source Aggregation ────────────────────────────────────────────────────
-const MIN_SOURCES_FOR_CONFIRMATION = 2
-const CONFLICT_THRESHOLD = 0.3
+const MIN_SOURCES_FOR_CONFIRMATION = 2;
+const CONFLICT_THRESHOLD = 0.3;
 
 /**
  * Aggregate multiple evidence items for a claim.
@@ -184,38 +208,38 @@ const CONFLICT_THRESHOLD = 0.3
  */
 export function aggregateTruthEvidence(
   claim: string,
-  evidence: ResearchSourceEvidence[],
+  evidence: ResearchSourceEvidence[]
 ): TruthAggregation {
-  const evaluable = evidence.filter((e) => e.supports_claim !== null)
-  const supporting = evaluable.filter((e) => e.supports_claim === true).length
-  const opposing = evaluable.filter((e) => e.supports_claim === false).length
-  const neutral = evidence.length - evaluable.length
+  const evaluable = evidence.filter(e => e.supports_claim !== null);
+  const supporting = evaluable.filter(e => e.supports_claim === true).length;
+  const opposing = evaluable.filter(e => e.supports_claim === false).length;
+  const neutral = evidence.length - evaluable.length;
 
-  const total = evaluable.length || 1
-  const supportRatio = supporting / total
+  const total = evaluable.length || 1;
+  const supportRatio = supporting / total;
 
-  let status: EvidenceStatus
-  let conflictDetected = false
-  let conflictDetail: string | null = null
+  let status: EvidenceStatus;
+  let conflictDetected = false;
+  let conflictDetail: string | null = null;
 
   if (evaluable.length === 0) {
-    status = 'insufficient'
+    status = 'insufficient';
   } else if (evaluable.length < MIN_SOURCES_FOR_CONFIRMATION) {
-    status = 'unverified'
+    status = 'unverified';
   } else if (supportRatio >= 1 - CONFLICT_THRESHOLD) {
-    status = 'confirmed'
+    status = 'confirmed';
   } else if (supportRatio <= CONFLICT_THRESHOLD) {
-    status = 'confirmed' // confirmed as false / all oppose
+    status = 'confirmed'; // confirmed as false / all oppose
   } else {
-    status = 'disputed'
-    conflictDetected = true
-    conflictDetail = `${supporting} supporting vs ${opposing} opposing out of ${evaluable.length} evaluable sources`
+    status = 'disputed';
+    conflictDetected = true;
+    conflictDetail = `${supporting} supporting vs ${opposing} opposing out of ${evaluable.length} evaluable sources`;
   }
 
   const aggregateConfidence =
     evaluable.length === 0
       ? 0
-      : evidence.reduce((sum, e) => sum + e.confidence, 0) / evidence.length
+      : evidence.reduce((sum, e) => sum + e.confidence, 0) / evidence.length;
 
   return {
     claim,
@@ -227,7 +251,7 @@ export function aggregateTruthEvidence(
     conflict_detected: conflictDetected,
     conflict_detail: conflictDetail,
     aggregate_confidence: Math.round(aggregateConfidence * 1000) / 1000,
-  }
+  };
 }
 
 // ── Truth Verdict Builder (T3 flag-gated) ──────────────────────────────────────
@@ -240,9 +264,9 @@ export function buildResearchTruthVerdict(
   verdictId: string,
   queryId: string,
   aggregation: TruthAggregation,
-  flagActive = RESEARCH_TRUTH_FLAG,
+  flagActive = RESEARCH_TRUTH_FLAG
 ): ResearchTruthVerdict {
-  const now = new Date().toISOString()
+  const now = new Date().toISOString();
 
   if (!flagActive) {
     return {
@@ -255,22 +279,29 @@ export function buildResearchTruthVerdict(
       provenance_ids: [],
       generated_at: now,
       flag_active: false,
-    }
+    };
   }
 
-  const { evidence_status, conflict_detected, aggregate_confidence, evidence_items } = aggregation
+  const { evidence_status, conflict_detected, aggregate_confidence, evidence_items } =
+    aggregation;
 
-  let verdict: ResearchTruthVerdict['verdict']
+  let verdict: ResearchTruthVerdict['verdict'];
   if (evidence_status === 'insufficient') {
-    verdict = 'unverifiable'
+    verdict = 'unverifiable';
   } else if (conflict_detected) {
-    verdict = 'disputed'
-  } else if (evidence_status === 'confirmed' && aggregation.supporting_count >= MIN_SOURCES_FOR_CONFIRMATION) {
-    verdict = 'verified'
-  } else if (evidence_status === 'confirmed' && aggregation.opposing_count >= MIN_SOURCES_FOR_CONFIRMATION) {
-    verdict = 'false_claim'
+    verdict = 'disputed';
+  } else if (
+    evidence_status === 'confirmed' &&
+    aggregation.supporting_count >= MIN_SOURCES_FOR_CONFIRMATION
+  ) {
+    verdict = 'verified';
+  } else if (
+    evidence_status === 'confirmed' &&
+    aggregation.opposing_count >= MIN_SOURCES_FOR_CONFIRMATION
+  ) {
+    verdict = 'false_claim';
   } else {
-    verdict = 'partially_verified'
+    verdict = 'partially_verified';
   }
 
   return {
@@ -280,10 +311,10 @@ export function buildResearchTruthVerdict(
     verdict,
     confidence: aggregate_confidence,
     evidence_summary: `${evidence_items.length} sources evaluated. Status: ${evidence_status}. Conflict: ${conflict_detected}.`,
-    provenance_ids: evidence_items.map((e) => e.evidence_id),
+    provenance_ids: evidence_items.map(e => e.evidence_id),
     generated_at: now,
     flag_active: true,
-  }
+  };
 }
 
 // ── Contract Instance ───────────────────────────────────────────────────────────
@@ -296,7 +327,7 @@ export function getC3ResearchTruthContract(): C3ResearchTruthContract {
     min_sources_for_confirmation: MIN_SOURCES_FOR_CONFIRMATION,
     conflict_threshold: CONFLICT_THRESHOLD,
     sources_referenced: ['S003', 'S006', 'S012'],
-  }
+  };
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -313,8 +344,8 @@ export const ResearchAvailabilityStateSchema = z.enum([
   'RESEARCH_PARTIAL',
   'RESEARCH_FAILED',
   'RESEARCH_BLOCKED',
-])
-export type ResearchAvailabilityState = z.infer<typeof ResearchAvailabilityStateSchema>
+]);
+export type ResearchAvailabilityState = z.infer<typeof ResearchAvailabilityStateSchema>;
 
 // ── Freshness Classes ───────────────────────────────────────────────────────────
 export const ResearchFreshnessClassSchema = z.enum([
@@ -323,8 +354,8 @@ export const ResearchFreshnessClassSchema = z.enum([
   'current',
   'unknown',
   'expired',
-])
-export type ResearchFreshnessClass = z.infer<typeof ResearchFreshnessClassSchema>
+]);
+export type ResearchFreshnessClass = z.infer<typeof ResearchFreshnessClassSchema>;
 
 // ── Source Status ───────────────────────────────────────────────────────────────
 export const ResearchSourceStatusSchema = z.enum([
@@ -334,8 +365,8 @@ export const ResearchSourceStatusSchema = z.enum([
   'REJECTED',
   'UNAVAILABLE',
   'UNKNOWN',
-])
-export type ResearchSourceStatus = z.infer<typeof ResearchSourceStatusSchema>
+]);
+export type ResearchSourceStatus = z.infer<typeof ResearchSourceStatusSchema>;
 
 // ── Claim Status ────────────────────────────────────────────────────────────────
 export const ResearchClaimStatusSchema = z.enum([
@@ -345,8 +376,8 @@ export const ResearchClaimStatusSchema = z.enum([
   'STALE',
   'HYPOTHESIS',
   'INSUFFICIENT_EVIDENCE',
-])
-export type ResearchClaimStatus = z.infer<typeof ResearchClaimStatusSchema>
+]);
+export type ResearchClaimStatus = z.infer<typeof ResearchClaimStatusSchema>;
 
 // ── Source Types ────────────────────────────────────────────────────────────────
 export const ResearchSourceTypeSchema = z.enum([
@@ -358,8 +389,8 @@ export const ResearchSourceTypeSchema = z.enum([
   'internal',
   'generated',
   'unknown',
-])
-export type ResearchSourceType = z.infer<typeof ResearchSourceTypeSchema>
+]);
+export type ResearchSourceType = z.infer<typeof ResearchSourceTypeSchema>;
 
 // ── Research Source (full provenance) ──────────────────────────────────────────
 export const ResearchSourceSchema = z.object({
@@ -367,15 +398,19 @@ export const ResearchSourceSchema = z.object({
   title: z.string().min(1),
   url: z.string().url().nullable().describe('Required for VERIFIED non-internal sources'),
   source_type: ResearchSourceTypeSchema,
-  date_accessed: z.string().datetime().nullable().describe('Required for VERIFIED sources'),
+  date_accessed: z
+    .string()
+    .datetime()
+    .nullable()
+    .describe('Required for VERIFIED sources'),
   published_at: z.string().datetime().nullable(),
   last_updated: z.string().datetime().nullable(),
   status: ResearchSourceStatusSchema,
   relevance: z.number().min(0).max(1).describe('0..1 relevance to the claim'),
   confidence: z.number().min(0).max(1),
   notes: z.string().nullable(),
-})
-export type ResearchSource = z.infer<typeof ResearchSourceSchema>
+});
+export type ResearchSource = z.infer<typeof ResearchSourceSchema>;
 
 // ── Research Claim ──────────────────────────────────────────────────────────────
 export const ResearchClaimSchema = z.object({
@@ -389,8 +424,8 @@ export const ResearchClaimSchema = z.object({
   risk_level: z.enum(['low', 'medium', 'high', 'restricted']),
   contradicts: z.array(z.string()).describe('claim_ids that contradict this claim'),
   notes: z.string().nullable(),
-})
-export type ResearchClaim = z.infer<typeof ResearchClaimSchema>
+});
+export type ResearchClaim = z.infer<typeof ResearchClaimSchema>;
 
 // ── Research Citation ───────────────────────────────────────────────────────────
 export const ResearchCitationSchema = z.object({
@@ -401,8 +436,8 @@ export const ResearchCitationSchema = z.object({
   date_accessed: z.string().datetime().nullable(),
   source_type: ResearchSourceTypeSchema,
   summary: z.string().min(1),
-})
-export type ResearchCitation = z.infer<typeof ResearchCitationSchema>
+});
+export type ResearchCitation = z.infer<typeof ResearchCitationSchema>;
 
 // ── Research Truth Result ───────────────────────────────────────────────────────
 export const ResearchTruthResultSchema = z.object({
@@ -412,19 +447,25 @@ export const ResearchTruthResultSchema = z.object({
   sources: z.array(ResearchSourceSchema),
   claims: z.array(ResearchClaimSchema),
   citations: z.array(ResearchCitationSchema),
-  unsupported_claims: z.array(z.string()).describe('claim_ids that are UNSUPPORTED/HYPOTHESIS/INSUFFICIENT_EVIDENCE'),
+  unsupported_claims: z
+    .array(z.string())
+    .describe('claim_ids that are UNSUPPORTED/HYPOTHESIS/INSUFFICIENT_EVIDENCE'),
   contradictions: z.array(z.string()).describe('claim_ids with CONTRADICTED status'),
-  freshness_gate: z.boolean().describe('true if all time_sensitive/current claims have VERIFIED sources'),
-  known_limits: z.array(z.string()).describe('Explicit list of limits when source proof is incomplete'),
+  freshness_gate: z
+    .boolean()
+    .describe('true if all time_sensitive/current claims have VERIFIED sources'),
+  known_limits: z
+    .array(z.string())
+    .describe('Explicit list of limits when source proof is incomplete'),
   generated_at: z.string().datetime(),
-})
-export type ResearchTruthResult = z.infer<typeof ResearchTruthResultSchema>
+});
+export type ResearchTruthResult = z.infer<typeof ResearchTruthResultSchema>;
 
 // ── Policy Helpers ──────────────────────────────────────────────────────────────
 
 /** A claim with freshness=current or time_sensitive requires source. */
 export function requiresResearchForClaim(claim: ResearchClaim): boolean {
-  return claim.freshness === 'current' || claim.freshness === 'time_sensitive'
+  return claim.freshness === 'current' || claim.freshness === 'time_sensitive';
 }
 
 /**
@@ -434,40 +475,49 @@ export function requiresResearchForClaim(claim: ResearchClaim): boolean {
  * - It is not CONTRADICTED
  * - All current/time_sensitive claims have a verified source with url + date_accessed
  */
-export function canPresentAsFact(claim: ResearchClaim, sources: ResearchSource[]): boolean {
-  if (claim.status === 'CONTRADICTED') return false
-  if (claim.status !== 'SUPPORTED') return false
-  if (claim.source_ids.length === 0 && claim.requires_source) return false
+export function canPresentAsFact(
+  claim: ResearchClaim,
+  sources: ResearchSource[]
+): boolean {
+  if (claim.status === 'CONTRADICTED') return false;
+  if (claim.status !== 'SUPPORTED') return false;
+  if (claim.source_ids.length === 0 && claim.requires_source) return false;
 
-  const claimSources = sources.filter((s) => claim.source_ids.includes(s.source_id))
-  const hasVerified = claimSources.some((s) => s.status === 'VERIFIED')
-  if (!hasVerified && claim.requires_source) return false
+  const claimSources = sources.filter(s => claim.source_ids.includes(s.source_id));
+  const hasVerified = claimSources.some(s => s.status === 'VERIFIED');
+  if (!hasVerified && claim.requires_source) return false;
 
   // time_sensitive / current requires verified source with URL + date_accessed and must be verifiable (not generated/internal)
   if (claim.freshness === 'current' || claim.freshness === 'time_sensitive') {
     return claimSources.some(
-      (s) =>
+      s =>
         s.status === 'VERIFIED' &&
         s.url !== null &&
         s.date_accessed !== null &&
         s.source_type !== 'generated' &&
-        s.source_type !== 'internal',
-    )
+        s.source_type !== 'internal'
+    );
   }
 
-  return true
+  return true;
 }
 
 /** A source is verifiable when it has url + date_accessed + status is not REJECTED/UNAVAILABLE/UNKNOWN. */
 export function isSourceVerifiable(source: ResearchSource): boolean {
-  if (source.status === 'REJECTED' || source.status === 'UNAVAILABLE' || source.status === 'UNKNOWN') return false
-  if (source.source_type === 'generated' || source.source_type === 'internal') return false
-  return source.url !== null && source.date_accessed !== null
+  if (
+    source.status === 'REJECTED' ||
+    source.status === 'UNAVAILABLE' ||
+    source.status === 'UNKNOWN'
+  )
+    return false;
+  if (source.source_type === 'generated' || source.source_type === 'internal')
+    return false;
+  return source.url !== null && source.date_accessed !== null;
 }
 
 /** A claim is a current claim if freshness is 'current' or 'time_sensitive'. */
 export function isCurrentClaim(claim: ResearchClaim): boolean {
-  return claim.freshness === 'current' || claim.freshness === 'time_sensitive'
+  return claim.freshness === 'current' || claim.freshness === 'time_sensitive';
 }
 
 /** Research is unavailable when state is RESEARCH_UNAVAILABLE or RESEARCH_FAILED. */
@@ -475,12 +525,12 @@ export function isResearchUnavailable(result: ResearchTruthResult): boolean {
   return (
     result.research_state === 'RESEARCH_UNAVAILABLE' ||
     result.research_state === 'RESEARCH_FAILED'
-  )
+  );
 }
 
 /** Result has contradictions when any claim has CONTRADICTED status. */
 export function hasContradictions(result: ResearchTruthResult): boolean {
-  return result.contradictions.length > 0
+  return result.contradictions.length > 0;
 }
 
 /**
@@ -490,18 +540,18 @@ export function hasContradictions(result: ResearchTruthResult): boolean {
  */
 export function buildCitationSummary(result: ResearchTruthResult): string {
   if (result.citations.length === 0) {
-    return 'No citations available. Research state: ' + result.research_state
+    return 'No citations available. Research state: ' + result.research_state;
   }
-  const lines = result.citations.map((c) => {
-    const url = c.url ?? 'URL_UNAVAILABLE'
-    const date = c.date_accessed ?? 'DATE_UNAVAILABLE'
-    return `[${c.citation_id}] ${c.summary} | type=${c.source_type} | url=${url} | accessed=${date}`
-  })
-  return lines.join('\n')
+  const lines = result.citations.map(c => {
+    const url = c.url ?? 'URL_UNAVAILABLE';
+    const date = c.date_accessed ?? 'DATE_UNAVAILABLE';
+    return `[${c.citation_id}] ${c.summary} | type=${c.source_type} | url=${url} | accessed=${date}`;
+  });
+  return lines.join('\n');
 }
 
 /** RESEARCH_UNAVAILABLE state cannot silently become RESEARCH_AVAILABLE. */
-export const RESEARCH_UNAVAILABLE_IS_TERMINAL = true
+export const RESEARCH_UNAVAILABLE_IS_TERMINAL = true;
 
 /**
  * Validate that a RESEARCH_UNAVAILABLE result is honest:
@@ -511,32 +561,38 @@ export const RESEARCH_UNAVAILABLE_IS_TERMINAL = true
  * - known_limits must be non-empty
  */
 export function validateResearchUnavailableHonesty(result: ResearchTruthResult): {
-  honest: boolean
-  reason: string
+  honest: boolean;
+  reason: string;
 } {
   if (
     result.research_state !== 'RESEARCH_UNAVAILABLE' &&
     result.research_state !== 'RESEARCH_FAILED'
   ) {
-    return { honest: false, reason: `State is ${result.research_state}, not UNAVAILABLE/FAILED` }
+    return {
+      honest: false,
+      reason: `State is ${result.research_state}, not UNAVAILABLE/FAILED`,
+    };
   }
   if (result.freshness_gate) {
-    return { honest: false, reason: 'freshness_gate cannot be true when research is unavailable' }
+    return {
+      honest: false,
+      reason: 'freshness_gate cannot be true when research is unavailable',
+    };
   }
   if (result.known_limits.length === 0) {
     return {
       honest: false,
       reason: 'known_limits must be non-empty when research is unavailable',
-    }
+    };
   }
-  const nonUnavailableSources = result.sources.filter((s) => s.status !== 'UNAVAILABLE')
+  const nonUnavailableSources = result.sources.filter(s => s.status !== 'UNAVAILABLE');
   if (nonUnavailableSources.length > 0) {
     return {
       honest: false,
       reason: `RESEARCH_UNAVAILABLE result has ${nonUnavailableSources.length} non-UNAVAILABLE source(s)`,
-    }
+    };
   }
-  return { honest: true, reason: 'RESEARCH_UNAVAILABLE state is honest' }
+  return { honest: true, reason: 'RESEARCH_UNAVAILABLE state is honest' };
 }
 
 /**
@@ -545,7 +601,7 @@ export function validateResearchUnavailableHonesty(result: ResearchTruthResult):
  * Otherwise → RESEARCH_NOT_REQUESTED.
  */
 export function mapC2RequiresWebValidationToResearchState(
-  requiresWebValidation: boolean,
+  requiresWebValidation: boolean
 ): ResearchAvailabilityState {
-  return requiresWebValidation ? 'RESEARCH_REQUIRED' : 'RESEARCH_NOT_REQUESTED'
+  return requiresWebValidation ? 'RESEARCH_REQUIRED' : 'RESEARCH_NOT_REQUESTED';
 }

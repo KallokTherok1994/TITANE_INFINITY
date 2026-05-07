@@ -9,7 +9,7 @@
  * Reference: titane-prod-model-rule.md, COGNITIVE_CORE_TRUTH_MATRIX drift CD-01
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 // ── Feature Flag ────────────────────────────────────────────────────────────────
 // C0 routing is active only when TITANE_C0_PROVIDER_ROUTING_ENABLED=true.
@@ -17,17 +17,17 @@ import { z } from 'zod'
 export const PROVIDER_ROUTING_ENABLED =
   typeof import.meta?.env !== 'undefined'
     ? import.meta.env?.VITE_TITANE_C0_PROVIDER_ROUTING_ENABLED === 'true'
-    : false
+    : false;
 
 // ── Canonical Constants ─────────────────────────────────────────────────────────
 /** The canonical PROD Ollama model. MUST match src-tauri/src/ai/ollama.rs:DEFAULT_OLLAMA_MODEL */
-export const TITANE_PROD_OLLAMA_MODEL = 'gemma2:2b' as const
+export const TITANE_PROD_OLLAMA_MODEL = 'gemma2:2b' as const;
 
 /** Legacy fallback model preserved for backward-compatibility (C0 flag=false path). */
-export const TITANE_LEGACY_OLLAMA_FALLBACK = 'llama3.1:latest' as const
+export const TITANE_LEGACY_OLLAMA_FALLBACK = 'llama3.1:latest' as const;
 
 /** DEV model used exclusively in TotalDevPage and MCP Copilot (NOT in PROD chat). */
-export const TITANE_DEV_OLLAMA_MODEL = 'qwen2.5-coder' as const
+export const TITANE_DEV_OLLAMA_MODEL = 'qwen2.5-coder' as const;
 
 // ── Routing Resolution Schema ───────────────────────────────────────────────────
 export const OllamaModelResolutionSchema = z.object({
@@ -40,8 +40,8 @@ export const OllamaModelResolutionSchema = z.object({
   resolution_path: z
     .enum(['explicit', 'c0_prod_canonical', 'legacy_fallback'])
     .describe('Which resolution branch was taken'),
-})
-export type OllamaModelResolution = z.infer<typeof OllamaModelResolutionSchema>
+});
+export type OllamaModelResolution = z.infer<typeof OllamaModelResolutionSchema>;
 
 // ── Provider Route Entry ────────────────────────────────────────────────────────
 export const ProviderRouteEntrySchema = z.object({
@@ -50,9 +50,12 @@ export const ProviderRouteEntrySchema = z.object({
   /** Primary model for this route. */
   primary_model: z.string(),
   /** Canonical PROD model invariant (ollama only). */
-  prod_model_invariant: z.string().optional().describe('Required: must equal TITANE_PROD_OLLAMA_MODEL for ollama routes'),
-})
-export type ProviderRouteEntry = z.infer<typeof ProviderRouteEntrySchema>
+  prod_model_invariant: z
+    .string()
+    .optional()
+    .describe('Required: must equal TITANE_PROD_OLLAMA_MODEL for ollama routes'),
+});
+export type ProviderRouteEntry = z.infer<typeof ProviderRouteEntrySchema>;
 
 // ── Routing Invariant Assertion ─────────────────────────────────────────────────
 export const RoutingInvariantSchema = z.object({
@@ -60,8 +63,8 @@ export const RoutingInvariantSchema = z.object({
   description: z.string(),
   verified: z.boolean(),
   evidence: z.string().optional(),
-})
-export type RoutingInvariant = z.infer<typeof RoutingInvariantSchema>
+});
+export type RoutingInvariant = z.infer<typeof RoutingInvariantSchema>;
 
 // ── C0 Runtime Contract ─────────────────────────────────────────────────────────
 export const C0ProviderRoutingContractSchema = z.object({
@@ -73,8 +76,8 @@ export const C0ProviderRoutingContractSchema = z.object({
   legacy_fallback_model: z.literal('llama3.1:latest'),
   routes: z.array(ProviderRouteEntrySchema).optional(),
   invariants: z.array(RoutingInvariantSchema).optional(),
-})
-export type C0ProviderRoutingContract = z.infer<typeof C0ProviderRoutingContractSchema>
+});
+export type C0ProviderRoutingContract = z.infer<typeof C0ProviderRoutingContractSchema>;
 
 // ── Resolution Function ─────────────────────────────────────────────────────────
 /**
@@ -87,7 +90,7 @@ export type C0ProviderRoutingContract = z.infer<typeof C0ProviderRoutingContract
  */
 export function resolveOllamaModelC0(
   requestedModel: string | null | undefined,
-  flagActive = PROVIDER_ROUTING_ENABLED,
+  flagActive = PROVIDER_ROUTING_ENABLED
 ): OllamaModelResolution {
   if (requestedModel) {
     return {
@@ -95,7 +98,7 @@ export function resolveOllamaModelC0(
       resolved_model: requestedModel,
       flag_active: flagActive,
       resolution_path: 'explicit',
-    }
+    };
   }
   if (flagActive) {
     return {
@@ -103,14 +106,14 @@ export function resolveOllamaModelC0(
       resolved_model: TITANE_PROD_OLLAMA_MODEL,
       flag_active: true,
       resolution_path: 'c0_prod_canonical',
-    }
+    };
   }
   return {
     requested_model: null,
     resolved_model: TITANE_LEGACY_OLLAMA_FALLBACK,
     flag_active: false,
     resolution_path: 'legacy_fallback',
-  }
+  };
 }
 
 // ── Current Contract Instance ───────────────────────────────────────────────────
@@ -139,5 +142,5 @@ export function getC0ProviderRoutingContract(): C0ProviderRoutingContract {
         evidence: 'TITANE_DEV_OLLAMA_MODEL constant isolated from resolution path',
       },
     ],
-  }
+  };
 }

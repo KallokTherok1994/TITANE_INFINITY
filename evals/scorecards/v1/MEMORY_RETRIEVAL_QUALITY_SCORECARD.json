@@ -8,10 +8,7 @@
   "node_version": null,
   "status": "STUB_NO_CHAMPION",
   "description": "Evaluates the precision, recall, and faithfulness of TITANE's memory retrieval pipeline using RAGAS-inspired metrics. Detects hallucinated memory items and stale recall.",
-  "source_references": [
-    "S002 RAGAS (rag_eval)",
-    "S007 MemGPT (memory_architectures)"
-  ],
+  "source_references": ["S002 RAGAS (rag_eval)", "S007 MemGPT (memory_architectures)"],
   "evidence": {},
   "dimensions": {
     "MR-01": {

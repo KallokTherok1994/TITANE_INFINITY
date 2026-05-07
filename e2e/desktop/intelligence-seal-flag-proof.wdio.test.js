@@ -8,11 +8,16 @@ describe('Desktop D5 intelligence seal flag proof', () => {
     await browser.pause(1000);
     assert.equal(await $('body').isExisting(), true, 'desktop shell should be reachable');
 
-    const contractPath = path.resolve(process.cwd(), 'src/services/intelligence_seal/IntelligenceSealContract.ts');
+    const contractPath = path.resolve(
+      process.cwd(),
+      'src/services/intelligence_seal/IntelligenceSealContract.ts'
+    );
     const content = fs.readFileSync(contractPath, 'utf8');
 
     assert.equal(
-      content.includes("import.meta.env?.['VITE_TITANE_D5_INTELLIGENCE_SEAL'] === 'true'"),
+      content.includes(
+        "import.meta.env?.['VITE_TITANE_D5_INTELLIGENCE_SEAL'] === 'true'"
+      ),
       true,
       'D5 feature flag contract must keep canonical import.meta.env resolution'
     );

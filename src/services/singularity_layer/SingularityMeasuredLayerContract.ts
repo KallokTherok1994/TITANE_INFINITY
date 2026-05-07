@@ -17,11 +17,11 @@
  * When T3 flag=true: singularity events are measured and emitted to observability layer (B2)
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 // ── Feature Flag ────────────────────────────────────────────────────────────────
 export const SINGULARITY_D2_MEASUREMENT_FLAG =
-  import.meta.env?.['VITE_TITANE_D2_SINGULARITY_MEASURED'] === 'true'
+  import.meta.env?.['VITE_TITANE_D2_SINGULARITY_MEASURED'] === 'true';
 
 // ── Singularity Event Types ─────────────────────────────────────────────────────
 export const SingularityEventTypeSchema = z.enum([
@@ -30,12 +30,17 @@ export const SingularityEventTypeSchema = z.enum([
   'unprompted_self_correction',
   'anticipatory_reasoning',
   'meta_cognitive_commentary',
-])
-export type SingularityEventType = z.infer<typeof SingularityEventTypeSchema>
+]);
+export type SingularityEventType = z.infer<typeof SingularityEventTypeSchema>;
 
 // ── Singularity Intensity ───────────────────────────────────────────────────────
-export const SingularityIntensitySchema = z.enum(['trace', 'notable', 'significant', 'landmark'])
-export type SingularityIntensity = z.infer<typeof SingularityIntensitySchema>
+export const SingularityIntensitySchema = z.enum([
+  'trace',
+  'notable',
+  'significant',
+  'landmark',
+]);
+export type SingularityIntensity = z.infer<typeof SingularityIntensitySchema>;
 
 /** Minimum confidence required to classify each intensity level */
 export const INTENSITY_CONFIDENCE_THRESHOLDS: Record<SingularityIntensity, number> = {
@@ -43,7 +48,7 @@ export const INTENSITY_CONFIDENCE_THRESHOLDS: Record<SingularityIntensity, numbe
   notable: 0.5,
   significant: 0.7,
   landmark: 0.9,
-}
+};
 
 // ── Singularity Event Schema ────────────────────────────────────────────────────
 export const SingularityEventSchema = z.object({
@@ -56,16 +61,18 @@ export const SingularityEventSchema = z.object({
   evidence_snippet: z.string().max(500).describe('Brief excerpt triggering detection'),
   measurement_source: z.string().describe('Component or path that measured this event'),
   flag_active: z.boolean(),
-})
-export type SingularityEvent = z.infer<typeof SingularityEventSchema>
+});
+export type SingularityEvent = z.infer<typeof SingularityEventSchema>;
 
 // ── Singularity Measurement Result ─────────────────────────────────────────────
 export const SingularityMeasurementResultSchema = z.object({
   measured: z.boolean(),
   event: SingularityEventSchema.nullable(),
   skipped_reason: z.string().nullable(),
-})
-export type SingularityMeasurementResult = z.infer<typeof SingularityMeasurementResultSchema>
+});
+export type SingularityMeasurementResult = z.infer<
+  typeof SingularityMeasurementResultSchema
+>;
 
 // ── Session Singularity Ledger ──────────────────────────────────────────────────
 export const SessionSingularityLedgerSchema = z.object({
@@ -76,70 +83,74 @@ export const SessionSingularityLedgerSchema = z.object({
   significant_count: z.number().min(0),
   highest_intensity: SingularityIntensitySchema.nullable(),
   measurement_active: z.boolean(),
-})
-export type SessionSingularityLedger = z.infer<typeof SessionSingularityLedgerSchema>
+});
+export type SessionSingularityLedger = z.infer<typeof SessionSingularityLedgerSchema>;
 
 // ── Classify Intensity from Confidence ─────────────────────────────────────────
 export function classifySingularityIntensity(confidence: number): SingularityIntensity {
-  if (confidence >= INTENSITY_CONFIDENCE_THRESHOLDS.landmark) return 'landmark'
-  if (confidence >= INTENSITY_CONFIDENCE_THRESHOLDS.significant) return 'significant'
-  if (confidence >= INTENSITY_CONFIDENCE_THRESHOLDS.notable) return 'notable'
-  return 'trace'
+  if (confidence >= INTENSITY_CONFIDENCE_THRESHOLDS.landmark) return 'landmark';
+  if (confidence >= INTENSITY_CONFIDENCE_THRESHOLDS.significant) return 'significant';
+  if (confidence >= INTENSITY_CONFIDENCE_THRESHOLDS.notable) return 'notable';
+  return 'trace';
 }
 
 // ── Build Singularity Event (T3 flag-gated emission) ───────────────────────────
 export function buildSingularityEvent(
   params: {
-    event_id: string
-    session_id: string
-    event_type: SingularityEventType
-    confidence: number
-    detected_at_ms: number
-    evidence_snippet: string
-    measurement_source: string
+    event_id: string;
+    session_id: string;
+    event_type: SingularityEventType;
+    confidence: number;
+    detected_at_ms: number;
+    evidence_snippet: string;
+    measurement_source: string;
   },
-  flagActive = SINGULARITY_D2_MEASUREMENT_FLAG,
+  flagActive = SINGULARITY_D2_MEASUREMENT_FLAG
 ): SingularityMeasurementResult {
   if (!flagActive) {
-    return { measured: false, event: null, skipped_reason: 'TITANE_D2_SINGULARITY_MEASURED flag=false' }
+    return {
+      measured: false,
+      event: null,
+      skipped_reason: 'TITANE_D2_SINGULARITY_MEASURED flag=false',
+    };
   }
   if (params.confidence < INTENSITY_CONFIDENCE_THRESHOLDS.trace) {
     return {
       measured: false,
       event: null,
       skipped_reason: `confidence=${params.confidence.toFixed(2)} below trace threshold (${INTENSITY_CONFIDENCE_THRESHOLDS.trace})`,
-    }
+    };
   }
-  const intensity = classifySingularityIntensity(params.confidence)
+  const intensity = classifySingularityIntensity(params.confidence);
   const event: SingularityEvent = {
     ...params,
     intensity,
     flag_active: true,
-  }
-  return { measured: true, event, skipped_reason: null }
+  };
+  return { measured: true, event, skipped_reason: null };
 }
 
 // ── Build Session Ledger ────────────────────────────────────────────────────────
 export function buildSessionSingularityLedger(
   session_id: string,
   events: SingularityEvent[],
-  flagActive = SINGULARITY_D2_MEASUREMENT_FLAG,
+  flagActive = SINGULARITY_D2_MEASUREMENT_FLAG
 ): SessionSingularityLedger {
-  const landmarkCount = events.filter((e) => e.intensity === 'landmark').length
-  const significantCount = events.filter((e) => e.intensity === 'significant').length
+  const landmarkCount = events.filter(e => e.intensity === 'landmark').length;
+  const significantCount = events.filter(e => e.intensity === 'significant').length;
 
   const intensityOrder: Record<SingularityIntensity, number> = {
     trace: 0,
     notable: 1,
     significant: 2,
     landmark: 3,
-  }
+  };
   const highest: SingularityIntensity | null =
     events.length === 0
       ? null
       : events.reduce((best, e) =>
           intensityOrder[e.intensity] > intensityOrder[best.intensity] ? e : best
-        ).intensity
+        ).intensity;
 
   return {
     session_id,
@@ -149,7 +160,7 @@ export function buildSessionSingularityLedger(
     significant_count: significantCount,
     highest_intensity: highest,
     measurement_active: flagActive,
-  }
+  };
 }
 
 // ── D2 Contract ─────────────────────────────────────────────────────────────────
@@ -163,8 +174,8 @@ export const D2SingularityLayerContractSchema = z.object({
   confidence_threshold_trace: z.number(),
   confidence_threshold_landmark: z.number(),
   integrates_b2_observability: z.boolean(),
-})
-export type D2SingularityLayerContract = z.infer<typeof D2SingularityLayerContractSchema>
+});
+export type D2SingularityLayerContract = z.infer<typeof D2SingularityLayerContractSchema>;
 
 export function getD2SingularityLayerContract(): D2SingularityLayerContract {
   return {
@@ -177,7 +188,7 @@ export function getD2SingularityLayerContract(): D2SingularityLayerContract {
     confidence_threshold_trace: INTENSITY_CONFIDENCE_THRESHOLDS.trace,
     confidence_threshold_landmark: INTENSITY_CONFIDENCE_THRESHOLDS.landmark,
     integrates_b2_observability: true,
-  }
+  };
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -190,18 +201,23 @@ export function getD2SingularityLayerContract(): D2SingularityLayerContract {
 
 // ── D2 Selected Measurement Target ─────────────────────────────────────────────
 /** Primary target for D2 singularity measurement: OMEGA task result analysis */
-export const D2_SELECTED_MEASUREMENT_TARGET = 'OmegaTaskResult' as const
+export const D2_SELECTED_MEASUREMENT_TARGET = 'OmegaTaskResult' as const;
 
 /** Default measurement mode (passive = schema available, no active emission) */
-export type D2MeasurementMode = 'passive' | 'shadow' | 'active' | 'disabled'
-export const D2MeasurementModeSchema = z.enum(['passive', 'shadow', 'active', 'disabled'])
+export type D2MeasurementMode = 'passive' | 'shadow' | 'active' | 'disabled';
+export const D2MeasurementModeSchema = z.enum([
+  'passive',
+  'shadow',
+  'active',
+  'disabled',
+]);
 
 /** Default measurement mode — passive, no T3 flag required for schema access */
-export const D2_MEASUREMENT_DEFAULT_MODE: D2MeasurementMode = 'passive'
+export const D2_MEASUREMENT_DEFAULT_MODE: D2MeasurementMode = 'passive';
 
 /** T3 runtime emission flag — must be false in production until D3 is complete */
 export const SINGULARITY_D2_EMISSION_ACTIVE =
-  import.meta.env?.['VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE'] === 'true'
+  import.meta.env?.['VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE'] === 'true';
 
 /** Known limits for D2 singularity measurement (declared, not blocking) */
 export const D2_MEASUREMENT_KNOWN_LIMITS: string[] = [
@@ -210,7 +226,7 @@ export const D2_MEASUREMENT_KNOWN_LIMITS: string[] = [
   'b2-observability-declared-not-active: B2 integration contract exists but emission path not live',
   'no-landmark-auto-escalation: landmark events do not trigger automated actions',
   'identity-event-blocked: meta_cognitive_commentary requires identity gate (D3) before use',
-]
+];
 
 // ── D2 Measurement Adapter Schema ───────────────────────────────────────────────
 export const D2MeasurementAdapterSchema = z.object({
@@ -221,12 +237,12 @@ export const D2MeasurementAdapterSchema = z.object({
   known_limits: z.array(z.string()).min(1),
   b2_integration_declared: z.boolean(),
   identity_events_blocked: z.boolean(),
-})
-export type D2MeasurementAdapter = z.infer<typeof D2MeasurementAdapterSchema>
+});
+export type D2MeasurementAdapter = z.infer<typeof D2MeasurementAdapterSchema>;
 
 export function getD2MeasurementAdapter(
   flagActive = SINGULARITY_D2_MEASUREMENT_FLAG,
-  emissionActive = SINGULARITY_D2_EMISSION_ACTIVE,
+  emissionActive = SINGULARITY_D2_EMISSION_ACTIVE
 ): D2MeasurementAdapter {
   return {
     measurement_target: 'OmegaTaskResult',
@@ -236,42 +252,44 @@ export function getD2MeasurementAdapter(
     known_limits: D2_MEASUREMENT_KNOWN_LIMITS,
     b2_integration_declared: true,
     identity_events_blocked: true,
-  }
+  };
 }
 
 // ── Validate Singularity Measurement (D2 invariants) ───────────────────────────
 export interface D2MeasurementValidationResult {
-  valid: boolean
-  errors: string[]
-  mode_used: D2MeasurementMode
-  validation_status: 'ok' | 'error' | 'skipped'
+  valid: boolean;
+  errors: string[];
+  mode_used: D2MeasurementMode;
+  validation_status: 'ok' | 'error' | 'skipped';
 }
 
 export function validateSingularityMeasurement(
   result: SingularityMeasurementResult,
   mode: D2MeasurementMode = D2_MEASUREMENT_DEFAULT_MODE,
-  emissionActive = SINGULARITY_D2_EMISSION_ACTIVE,
+  emissionActive = SINGULARITY_D2_EMISSION_ACTIVE
 ): D2MeasurementValidationResult {
-  const errors: string[] = []
+  const errors: string[] = [];
 
   // D2-I1: active emission requires emission flag
   if (mode === 'active' && !emissionActive) {
-    errors.push('D2-I1: active mode requires VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE=true')
+    errors.push(
+      'D2-I1: active mode requires VITE_TITANE_D2_SINGULARITY_EMISSION_ACTIVE=true'
+    );
   }
 
   // D2-I2: if measured=true, event must be non-null
   if (result.measured && result.event === null) {
-    errors.push('D2-I2: measured=true requires non-null event')
+    errors.push('D2-I2: measured=true requires non-null event');
   }
 
   // D2-I3: if measured=false, skipped_reason must be provided
   if (!result.measured && result.skipped_reason === null) {
-    errors.push('D2-I3: measured=false requires skipped_reason')
+    errors.push('D2-I3: measured=false requires skipped_reason');
   }
 
   // D2-I4: meta_cognitive_commentary requires identity gate (blocked in D2)
   if (result.event?.event_type === 'meta_cognitive_commentary') {
-    errors.push('D2-I4: meta_cognitive_commentary blocked — requires D3 identity gate')
+    errors.push('D2-I4: meta_cognitive_commentary blocked — requires D3 identity gate');
   }
 
   return {
@@ -279,32 +297,34 @@ export function validateSingularityMeasurement(
     errors,
     mode_used: mode,
     validation_status: errors.length === 0 ? 'ok' : 'error',
-  }
+  };
 }
 
 /** Is D2 active emission live? Returns false in test env (emission flag default=false) */
-export function isD2EmissionActive(emissionActive = SINGULARITY_D2_EMISSION_ACTIVE): boolean {
-  return emissionActive
+export function isD2EmissionActive(
+  emissionActive = SINGULARITY_D2_EMISSION_ACTIVE
+): boolean {
+  return emissionActive;
 }
 
 /** Build a passive measurement result (schema-only, no emission) — for tests / scaffold */
 export function buildPassiveMeasurementResult(
   session_id: string,
-  reason = 'D2 passive mode — emission flag=false',
+  reason = 'D2 passive mode — emission flag=false'
 ): SingularityMeasurementResult {
   return {
     measured: false,
     event: null,
     skipped_reason: reason,
-  }
+  };
 }
 
 /** D2 OMEGA trace schema contract — links measurement layer to B2 observability */
-export const D2_OMEGA_TRACE_SCHEMA_VERSION = 'v2.0.0' as const
+export const D2_OMEGA_TRACE_SCHEMA_VERSION = 'v2.0.0' as const;
 export const D2_OMEGA_TRACE_SCHEMA_CONTRACT = {
   version: D2_OMEGA_TRACE_SCHEMA_VERSION,
   source_lock: 'D2',
   target_layer: 'B2_observability',
   emission_path: 'SingularityEvent → B2 IntelligenceObservabilityTrace',
   active: SINGULARITY_D2_EMISSION_ACTIVE,
-} as const
+} as const;

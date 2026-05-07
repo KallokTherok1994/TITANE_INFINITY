@@ -8,9 +8,7 @@
   "node_version": null,
   "status": "STUB_NO_CHAMPION",
   "description": "Verifies that TITANE's research and knowledge retrieval responses cite verifiable sources, acknowledge knowledge cutoffs, and do not present stale facts as current.",
-  "source_references": [
-    "S008 Temporal QA (knowledge_freshness)"
-  ],
+  "source_references": ["S008 Temporal QA (knowledge_freshness)"],
   "evidence": {},
   "dimensions": {
     "RT-01": {

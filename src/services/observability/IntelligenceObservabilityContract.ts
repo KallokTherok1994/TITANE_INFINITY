@@ -51,11 +51,7 @@ export const INTELLIGENCE_OBSERVABILITY_ENABLED =
  */
 export const TraceSessionSchema = z.object({
   session_id: z.string().min(1).describe('Unique conversation session identifier'),
-  turn_index: z
-    .number()
-    .int()
-    .min(0)
-    .describe('0-based turn number within the session'),
+  turn_index: z.number().int().min(0).describe('0-based turn number within the session'),
   recorded_at: z.string().datetime().describe('ISO-8601 timestamp of trace capture'),
 });
 
@@ -120,12 +116,7 @@ export const TokenBudgetSchema = z.object({
  */
 export const EvalFeedbackSchema = z.object({
   feedback_source: z.enum(['human', 'automated', 'llm_judge']),
-  score: z
-    .number()
-    .min(0)
-    .max(1)
-    .optional()
-    .describe('Normalized quality score 0.0–1.0'),
+  score: z.number().min(0).max(1).optional().describe('Normalized quality score 0.0–1.0'),
   labels: z
     .array(z.string())
     .optional()
@@ -238,7 +229,9 @@ export function validateIntelligenceTrace(raw: unknown): TraceValidationResult {
   }
 }
 
-export type IntelligenceDecisionEnvelope = z.infer<typeof IntelligenceDecisionEnvelopeSchema>;
+export type IntelligenceDecisionEnvelope = z.infer<
+  typeof IntelligenceDecisionEnvelopeSchema
+>;
 
 export function buildIntelligenceDecisionEnvelope(
   payload: IntelligenceDecisionEnvelope

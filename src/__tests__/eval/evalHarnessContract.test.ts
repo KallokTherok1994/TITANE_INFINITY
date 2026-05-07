@@ -70,7 +70,9 @@ describe('SC2: each scorecard has required top-level fields', () => {
         ? 'metrics'
         : Array.isArray(parsed.anti_lie_violations)
           ? 'anti_lie_violations'
-          : typeof parsed.dimensions === 'object' && parsed.dimensions !== null && !Array.isArray(parsed.dimensions)
+          : typeof parsed.dimensions === 'object' &&
+              parsed.dimensions !== null &&
+              !Array.isArray(parsed.dimensions)
             ? 'dimensions'
             : null;
       it('has metrics, anti_lie_violations, or dimensions scoring surface', () => {

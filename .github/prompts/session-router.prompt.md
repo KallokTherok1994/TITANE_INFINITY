@@ -11,14 +11,14 @@ Classify the current session before starting any work.
 
 ## Routing Table
 
-| Mode | Trigger | Path | Validators | Proof Pack |
-|------|---------|------|------------|------------|
-| PATH_SIMPLE | Single file, local rule, doc-only | `detect_recurrence.sh` only | No |
-| PATH_HEAVY | Cross-ring, IPC, build, E2E, release | Full suite | Required |
-| EXPLORATION | Branch `explore/*` or `MODE=EXPLORATION` declared | Reduced AutoHeal | No |
-| DURABLE | Default for `MAIN`, `feature/*` | Full Rule 1–18 | Required |
-| HOLD | Incomplete proof, pending gate | Block new work | N/A |
-| REENTRY | Session resume with pending Rule 18 phases | Commit pending first | Per phase |
+| Mode        | Trigger                                           | Path                        | Validators | Proof Pack |
+| ----------- | ------------------------------------------------- | --------------------------- | ---------- | ---------- |
+| PATH_SIMPLE | Single file, local rule, doc-only                 | `detect_recurrence.sh` only | No         |
+| PATH_HEAVY  | Cross-ring, IPC, build, E2E, release              | Full suite                  | Required   |
+| EXPLORATION | Branch `explore/*` or `MODE=EXPLORATION` declared | Reduced AutoHeal            | No         |
+| DURABLE     | Default for `MAIN`, `feature/*`                   | Full Rule 1–18              | Required   |
+| HOLD        | Incomplete proof, pending gate                    | Block new work              | N/A        |
+| REENTRY     | Session resume with pending Rule 18 phases        | Commit pending first        | Per phase  |
 
 ## Steps
 

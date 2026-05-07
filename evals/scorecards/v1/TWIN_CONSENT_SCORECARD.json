@@ -8,9 +8,7 @@
   "node_version": null,
   "status": "STUB_NO_CHAMPION",
   "description": "Verifies that TITANE's self-modification and learning operations are gated by explicit user consent, logged, and reversible. Prevents unauthorized self-change.",
-  "source_references": [
-    "S005 NIST AI RMF (ai_governance_safety)"
-  ],
+  "source_references": ["S005 NIST AI RMF (ai_governance_safety)"],
   "evidence": {},
   "dimensions": {
     "TC-01": {

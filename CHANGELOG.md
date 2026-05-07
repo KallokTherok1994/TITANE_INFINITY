@@ -6,28 +6,28 @@
 
 ## Advanced Intelligence Lock Chain — 2026-05-06 (All 17 Locks SEALED)
 
-| Lock | Name | Status | Commit | Proof Pack |
-|------|------|--------|--------|------------|
-| A0I | A0 Ingress Audit | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A0I_*` |
-| A0 | Instruction System Alignment | DRIFT_FOUND_FIXED | f739bc412 | `proof_packs/LOCK_A0_*` |
-| A1 | Version / Release / Proof Authority Alignment | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_A1_*` |
-| A2 | External AI Engineering Source Map | CLEAN | (this commit) | `proof_packs/LOCK_A2_*` |
-| B0 | Eval Champion Realignment | DRIFT_FOUND_FIXED | 2026-05-06 | — |
-| B1 | Cognitive Core Truth Matrix | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_B1_*` |
-| B1.5 | Intelligence Cartography & Registry | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_B1_5_*` |
-| B2 | Intelligence Observability Contract | DRIFT_FOUND_FIXED | (this commit) | `proof_packs/LOCK_B2_*` |
-| C0 | Provider / Model Intelligence Routing | DRIFT_FOUND_FIXED | `44e3f07c4` | `proof_packs/LOCK_C0_*` |
-| C1 | MemoryGraph v2 Shadow Mode | CLEAN | 2026-05-06 | — |
-| C2 | Knowledge Governance | CLEAN | `fd61d6939` | `proof_packs/LOCK_C2_*` |
-| C3 | Research Truth Engine | CLEAN | `9ef783bd9` | `proof_packs/LOCK_C3_*` |
-| D0 | Agent Effectiveness System | CLEAN | 2026-05-06 | `proof_packs/LOCK_D0_*` |
-| D1 | OMEGA Real Handler Upgrade | CLEAN | 2026-05-06 | `proof_packs/LOCK_D1_*` |
-| D2 | Singularity Measured Layer | CLEAN | 2026-05-06 | `proof_packs/LOCK_D2_*` |
-| D3 | Twin Consent Ledger | CLEAN | 2026-05-06 | `proof_packs/LOCK_D3_*` |
-| D4 | Self-Improvement Lab | CLEAN | `5844e7ea3` | `proof_packs/LOCK_D4_*` |
-| E0 | Advanced Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS | `9a8df5507` | `proof_packs/LOCK_E0_*` |
-| F0 | Registry / README / CHANGELOG Sync | DONE | b54fee78c | `proof_packs/LOCK_F0_*` |
-| D5 | Intelligence Seal | **SEALED** | eb2861bac | `proof_packs/LOCK_D5_INTELLIGENCE_SEAL_2026-05-06/` |
+| Lock | Name                                          | Status                      | Commit        | Proof Pack                                          |
+| ---- | --------------------------------------------- | --------------------------- | ------------- | --------------------------------------------------- |
+| A0I  | A0 Ingress Audit                              | DRIFT_FOUND_FIXED           | (this commit) | `proof_packs/LOCK_A0I_*`                            |
+| A0   | Instruction System Alignment                  | DRIFT_FOUND_FIXED           | f739bc412     | `proof_packs/LOCK_A0_*`                             |
+| A1   | Version / Release / Proof Authority Alignment | DRIFT_FOUND_FIXED           | (this commit) | `proof_packs/LOCK_A1_*`                             |
+| A2   | External AI Engineering Source Map            | CLEAN                       | (this commit) | `proof_packs/LOCK_A2_*`                             |
+| B0   | Eval Champion Realignment                     | DRIFT_FOUND_FIXED           | 2026-05-06    | —                                                   |
+| B1   | Cognitive Core Truth Matrix                   | DRIFT_FOUND_FIXED           | (this commit) | `proof_packs/LOCK_B1_*`                             |
+| B1.5 | Intelligence Cartography & Registry           | DRIFT_FOUND_FIXED           | (this commit) | `proof_packs/LOCK_B1_5_*`                           |
+| B2   | Intelligence Observability Contract           | DRIFT_FOUND_FIXED           | (this commit) | `proof_packs/LOCK_B2_*`                             |
+| C0   | Provider / Model Intelligence Routing         | DRIFT_FOUND_FIXED           | `44e3f07c4`   | `proof_packs/LOCK_C0_*`                             |
+| C1   | MemoryGraph v2 Shadow Mode                    | CLEAN                       | 2026-05-06    | —                                                   |
+| C2   | Knowledge Governance                          | CLEAN                       | `fd61d6939`   | `proof_packs/LOCK_C2_*`                             |
+| C3   | Research Truth Engine                         | CLEAN                       | `9ef783bd9`   | `proof_packs/LOCK_C3_*`                             |
+| D0   | Agent Effectiveness System                    | CLEAN                       | 2026-05-06    | `proof_packs/LOCK_D0_*`                             |
+| D1   | OMEGA Real Handler Upgrade                    | CLEAN                       | 2026-05-06    | `proof_packs/LOCK_D1_*`                             |
+| D2   | Singularity Measured Layer                    | CLEAN                       | 2026-05-06    | `proof_packs/LOCK_D2_*`                             |
+| D3   | Twin Consent Ledger                           | CLEAN                       | 2026-05-06    | `proof_packs/LOCK_D3_*`                             |
+| D4   | Self-Improvement Lab                          | CLEAN                       | `5844e7ea3`   | `proof_packs/LOCK_D4_*`                             |
+| E0   | Advanced Desktop E2E Matrix                   | PASS_WITH_EXPLICIT_BLOCKERS | `9a8df5507`   | `proof_packs/LOCK_E0_*`                             |
+| F0   | Registry / README / CHANGELOG Sync            | DONE                        | b54fee78c     | `proof_packs/LOCK_F0_*`                             |
+| D5   | Intelligence Seal                             | **SEALED**                  | eb2861bac     | `proof_packs/LOCK_D5_INTELLIGENCE_SEAL_2026-05-06/` |
 
 ### E0 — Advanced Desktop E2E Matrix (2026-05-06, commit `9a8df5507`)
 

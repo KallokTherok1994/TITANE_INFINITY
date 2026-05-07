@@ -12,10 +12,7 @@
       "no_hallucinated_capabilities": null,
       "language_match": null,
       "ambiguity_acknowledged": null,
-      "_blocking": [
-        "factual_accuracy",
-        "no_hallucinated_capabilities"
-      ]
+      "_blocking": ["factual_accuracy", "no_hallucinated_capabilities"]
     },
     "MEMORY_TRUTH_SCORECARD": {
       "memory_save_confirmed_before_state_update": null,
@@ -49,15 +46,7 @@
       "AV-06": null,
       "AV-07": null,
       "AV-08": null,
-      "_blocking": [
-        "AV-01",
-        "AV-02",
-        "AV-03",
-        "AV-04",
-        "AV-05",
-        "AV-06",
-        "AV-07"
-      ]
+      "_blocking": ["AV-01", "AV-02", "AV-03", "AV-04", "AV-05", "AV-06", "AV-07"]
     },
     "AUTOHEAL_TRUTH_SCORECARD": {
       "failure_reproduced_before_heal": null,
@@ -95,11 +84,7 @@
       "IT-03": null,
       "IT-04": null,
       "IT-05": null,
-      "_blocking": [
-        "IT-01",
-        "IT-02",
-        "IT-03"
-      ]
+      "_blocking": ["IT-01", "IT-02", "IT-03"]
     },
     "COGNITIVE_CORE_TRUTH_SCORECARD": {
       "CC-01": null,
@@ -107,11 +92,7 @@
       "CC-03": null,
       "CC-04": null,
       "CC-05": null,
-      "_blocking": [
-        "CC-01",
-        "CC-02",
-        "CC-03"
-      ]
+      "_blocking": ["CC-01", "CC-02", "CC-03"]
     },
     "KEVIN_AXIS_SCORECARD": {
       "KA-01": null,
@@ -119,11 +100,7 @@
       "KA-03": null,
       "KA-04": null,
       "KA-05": null,
-      "_blocking": [
-        "KA-01",
-        "KA-02",
-        "KA-03"
-      ]
+      "_blocking": ["KA-01", "KA-02", "KA-03"]
     },
     "RESEARCH_TRUTH_SCORECARD": {
       "RT-01": null,
@@ -131,11 +108,7 @@
       "RT-03": null,
       "RT-04": null,
       "RT-05": null,
-      "_blocking": [
-        "RT-01",
-        "RT-02",
-        "RT-03"
-      ]
+      "_blocking": ["RT-01", "RT-02", "RT-03"]
     },
     "AGENT_EFFECTIVENESS_SCORECARD": {
       "AE-01": null,
@@ -143,12 +116,7 @@
       "AE-03": null,
       "AE-04": null,
       "AE-05": null,
-      "_blocking": [
-        "AE-01",
-        "AE-02",
-        "AE-03",
-        "AE-05"
-      ]
+      "_blocking": ["AE-01", "AE-02", "AE-03", "AE-05"]
     },
     "PROVIDER_ROUTING_TRUTH_SCORECARD": {
       "PR-01": null,
@@ -156,11 +124,7 @@
       "PR-03": null,
       "PR-04": null,
       "PR-05": null,
-      "_blocking": [
-        "PR-01",
-        "PR-02",
-        "PR-03"
-      ]
+      "_blocking": ["PR-01", "PR-02", "PR-03"]
     },
     "MEMORY_RETRIEVAL_QUALITY_SCORECARD": {
       "MR-01": null,
@@ -168,11 +132,7 @@
       "MR-03": null,
       "MR-04": null,
       "MR-05": null,
-      "_blocking": [
-        "MR-01",
-        "MR-02",
-        "MR-04"
-      ]
+      "_blocking": ["MR-01", "MR-02", "MR-04"]
     },
     "KNOWLEDGE_GOVERNANCE_SCORECARD": {
       "KG-01": null,
@@ -180,11 +140,7 @@
       "KG-03": null,
       "KG-04": null,
       "KG-05": null,
-      "_blocking": [
-        "KG-01",
-        "KG-02",
-        "KG-03"
-      ]
+      "_blocking": ["KG-01", "KG-02", "KG-03"]
     },
     "OMEGA_HANDLER_REALITY_SCORECARD": {
       "OH-01": null,
@@ -192,11 +148,7 @@
       "OH-03": null,
       "OH-04": null,
       "OH-05": null,
-      "_blocking": [
-        "OH-01",
-        "OH-02",
-        "OH-03"
-      ]
+      "_blocking": ["OH-01", "OH-02", "OH-03"]
     },
     "SINGULARITY_MEASUREMENT_SCORECARD": {
       "SM-01": null,
@@ -204,11 +156,7 @@
       "SM-03": null,
       "SM-04": null,
       "SM-05": null,
-      "_blocking": [
-        "SM-01",
-        "SM-02",
-        "SM-03"
-      ]
+      "_blocking": ["SM-01", "SM-02", "SM-03"]
     },
     "TWIN_CONSENT_SCORECARD": {
       "TC-01": null,
@@ -216,12 +164,7 @@
       "TC-03": null,
       "TC-04": null,
       "TC-05": null,
-      "_blocking": [
-        "TC-01",
-        "TC-02",
-        "TC-03",
-        "TC-04"
-      ]
+      "_blocking": ["TC-01", "TC-02", "TC-03", "TC-04"]
     },
     "SELF_IMPROVEMENT_GOVERNANCE_SCORECARD": {
       "SI-01": null,
@@ -229,12 +172,7 @@
       "SI-03": null,
       "SI-04": null,
       "SI-05": null,
-      "_blocking": [
-        "SI-01",
-        "SI-02",
-        "SI-03",
-        "SI-04"
-      ]
+      "_blocking": ["SI-01", "SI-02", "SI-03", "SI-04"]
     }
   },
   "raw_check_results": {}

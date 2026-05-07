@@ -21,8 +21,20 @@ describe('Desktop HyperCenter route truth', () => {
       }
     }
 
-    assert.equal(mounted, true, 'hyper-center surface must mount on at least one canonical route candidate');
-    assert.equal(await $('[data-testid="hyper-center-root"]').isExisting(), true, 'hyper-center-root selector missing');
-    assert.equal(await $('[data-testid="hyper-center-mode-selector"]').isExisting(), true, 'hyper-center-mode-selector selector missing');
+    assert.equal(
+      mounted,
+      true,
+      'hyper-center surface must mount on at least one canonical route candidate'
+    );
+    assert.equal(
+      await $('[data-testid="hyper-center-root"]').isExisting(),
+      true,
+      'hyper-center-root selector missing'
+    );
+    assert.equal(
+      await $('[data-testid="hyper-center-mode-selector"]').isExisting(),
+      true,
+      'hyper-center-mode-selector selector missing'
+    );
   });
 });

@@ -35,20 +35,20 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 **Preuve E0:** WDIO 23 passing, Vitest 21/21 PASS, validator PASS=25 FAIL=0  
 **Résultat Desktop E2E:** 8 lanes PASS · 12 lanes SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL
 
-| Lock | Nom | État |
-|------|-----|------|
-| C0 | Provider / Model Routing | DRIFT_FOUND_FIXED |
-| C1 | MemoryGraph Shadow | CLEAN |
-| C2 | Knowledge Governance | CLEAN |
-| C3 | Research Truth Engine | CLEAN |
-| D0 | Agent Effectiveness | CLEAN |
-| D1 | OMEGA Handler | CLEAN |
-| D2 | Singularity Layer | CLEAN |
-| D3 | Twin Consent Ledger | CLEAN |
-| D4 | Self-Improvement Lab | CLEAN (commit `5844e7ea3`) |
-| E0 | Desktop E2E Matrix | PASS_WITH_EXPLICIT_BLOCKERS |
-| F0 | Registry/README/Sync | DONE |
-| D5 | Intelligence Seal | **SEALED** — T4 approval granted 2026-05-06 |
+| Lock | Nom                      | État                                        |
+| ---- | ------------------------ | ------------------------------------------- |
+| C0   | Provider / Model Routing | DRIFT_FOUND_FIXED                           |
+| C1   | MemoryGraph Shadow       | CLEAN                                       |
+| C2   | Knowledge Governance     | CLEAN                                       |
+| C3   | Research Truth Engine    | CLEAN                                       |
+| D0   | Agent Effectiveness      | CLEAN                                       |
+| D1   | OMEGA Handler            | CLEAN                                       |
+| D2   | Singularity Layer        | CLEAN                                       |
+| D3   | Twin Consent Ledger      | CLEAN                                       |
+| D4   | Self-Improvement Lab     | CLEAN (commit `5844e7ea3`)                  |
+| E0   | Desktop E2E Matrix       | PASS_WITH_EXPLICIT_BLOCKERS                 |
+| F0   | Registry/README/Sync     | DONE                                        |
+| D5   | Intelligence Seal        | **SEALED** — T4 approval granted 2026-05-06 |
 
 **Feature flags:** tous par défaut à `false` (production safe — aucune activation IA avancée par défaut)  
 **Seal state:** **SEALED** — 17 locks complets, T4 approval accordé  

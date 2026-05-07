@@ -26,11 +26,11 @@
  * Feature Flag: TITANE_D3_TWIN_CONSENT_LEDGER (default=false — T4 scaffold only)
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 // ── T4 Guard ────────────────────────────────────────────────────────────────────
 export const TWIN_CONSENT_D3_FLAG =
-  import.meta.env?.['VITE_TITANE_D3_TWIN_CONSENT_LEDGER'] === 'true'
+  import.meta.env?.['VITE_TITANE_D3_TWIN_CONSENT_LEDGER'] === 'true';
 
 // ── Consent States ──────────────────────────────────────────────────────────────
 export const ConsentStateSchema = z.enum([
@@ -39,8 +39,8 @@ export const ConsentStateSchema = z.enum([
   'granted',
   'revoked',
   'expired',
-])
-export type ConsentState = z.infer<typeof ConsentStateSchema>
+]);
+export type ConsentState = z.infer<typeof ConsentStateSchema>;
 
 // ── Consent Action ──────────────────────────────────────────────────────────────
 export const ConsentActionSchema = z.enum([
@@ -51,8 +51,8 @@ export const ConsentActionSchema = z.enum([
   'reconfirm_prompted',
   'reconfirm_granted',
   'purge_executed',
-])
-export type ConsentAction = z.infer<typeof ConsentActionSchema>
+]);
+export type ConsentAction = z.infer<typeof ConsentActionSchema>;
 
 // ── Consent Event Schema ────────────────────────────────────────────────────────
 export const ConsentEventSchema = z.object({
@@ -63,8 +63,8 @@ export const ConsentEventSchema = z.object({
   state_after: ConsentStateSchema,
   timestamp_ms: z.number().min(0),
   flag_active: z.boolean(),
-})
-export type ConsentEvent = z.infer<typeof ConsentEventSchema>
+});
+export type ConsentEvent = z.infer<typeof ConsentEventSchema>;
 
 // ── Consent Ledger Entry ────────────────────────────────────────────────────────
 export const ConsentLedgerEntrySchema = z.object({
@@ -76,19 +76,21 @@ export const ConsentLedgerEntrySchema = z.object({
   revoked_at_ms: z.number().min(0).nullable(),
   retention_days: z.number().min(1).max(90),
   history: z.array(ConsentEventSchema),
-})
-export type ConsentLedgerEntry = z.infer<typeof ConsentLedgerEntrySchema>
+});
+export type ConsentLedgerEntry = z.infer<typeof ConsentLedgerEntrySchema>;
 
 // ── Data Minimization Manifest ──────────────────────────────────────────────────
 export const DataMinimizationManifestSchema = z.object({
-  stores_raw_messages: z.literal(false).describe('MUST be false — raw messages NEVER stored'),
+  stores_raw_messages: z
+    .literal(false)
+    .describe('MUST be false — raw messages NEVER stored'),
   stores_interaction_patterns: z.boolean(),
   retention_limit_days: z.number().max(90),
   purge_path_defined: z.literal(true),
   export_path_defined: z.literal(true),
   gdpr_compliant_scaffold: z.literal(true),
-})
-export type DataMinimizationManifest = z.infer<typeof DataMinimizationManifestSchema>
+});
+export type DataMinimizationManifest = z.infer<typeof DataMinimizationManifestSchema>;
 
 export const D3_DATA_MINIMIZATION_MANIFEST: DataMinimizationManifest = {
   stores_raw_messages: false,
@@ -97,7 +99,7 @@ export const D3_DATA_MINIMIZATION_MANIFEST: DataMinimizationManifest = {
   purge_path_defined: true,
   export_path_defined: true,
   gdpr_compliant_scaffold: true,
-}
+};
 
 // ── Consent State Transitions (valid paths) ─────────────────────────────────────
 export const VALID_TRANSITIONS: Record<ConsentState, ConsentState[]> = {
@@ -106,55 +108,73 @@ export const VALID_TRANSITIONS: Record<ConsentState, ConsentState[]> = {
   granted: ['revoked', 'expired'],
   revoked: ['uninitiated'],
   expired: ['pending', 'revoked'],
-}
+};
 
 export function isValidConsentTransition(from: ConsentState, to: ConsentState): boolean {
-  return VALID_TRANSITIONS[from].includes(to)
+  return VALID_TRANSITIONS[from].includes(to);
 }
 
 // ── Consent Expiry Check ────────────────────────────────────────────────────────
-const RETENTION_MS = 90 * 24 * 60 * 60 * 1000 // 90 days
+const RETENTION_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
 
 export function isConsentExpired(grantedAtMs: number, nowMs: number): boolean {
-  return nowMs - grantedAtMs > RETENTION_MS
+  return nowMs - grantedAtMs > RETENTION_MS;
 }
 
 // ── Ledger Purge (T4 scaffold — no-op until activated) ──────────────────────────
 export interface PurgeResult {
-  purged: boolean
-  reason: string
-  entries_removed: number
+  purged: boolean;
+  reason: string;
+  entries_removed: number;
 }
 
 export function executeLedgerPurge(
   entry: ConsentLedgerEntry,
-  flagActive = TWIN_CONSENT_D3_FLAG,
+  flagActive = TWIN_CONSENT_D3_FLAG
 ): PurgeResult {
   if (!flagActive) {
-    return { purged: false, reason: 'TITANE_D3_TWIN_CONSENT_LEDGER flag=false — T4 scaffold only', entries_removed: 0 }
+    return {
+      purged: false,
+      reason: 'TITANE_D3_TWIN_CONSENT_LEDGER flag=false — T4 scaffold only',
+      entries_removed: 0,
+    };
   }
   if (entry.current_state !== 'revoked') {
-    return { purged: false, reason: `purge requires state=revoked, got=${entry.current_state}`, entries_removed: 0 }
+    return {
+      purged: false,
+      reason: `purge requires state=revoked, got=${entry.current_state}`,
+      entries_removed: 0,
+    };
   }
   // In scaffold: simulate purge (no actual storage)
-  return { purged: true, reason: 'scaffold purge executed', entries_removed: entry.history.length }
+  return {
+    purged: true,
+    reason: 'scaffold purge executed',
+    entries_removed: entry.history.length,
+  };
 }
 
 // ── Ledger Export (T4 scaffold — no-op until activated) ─────────────────────────
 export interface ExportResult {
-  exported: boolean
-  reason: string
-  data: null
+  exported: boolean;
+  reason: string;
+  data: null;
 }
 
-export function exportConsentLedger(
-  flagActive = TWIN_CONSENT_D3_FLAG,
-): ExportResult {
+export function exportConsentLedger(flagActive = TWIN_CONSENT_D3_FLAG): ExportResult {
   if (!flagActive) {
-    return { exported: false, reason: 'TITANE_D3_TWIN_CONSENT_LEDGER flag=false — T4 scaffold only', data: null }
+    return {
+      exported: false,
+      reason: 'TITANE_D3_TWIN_CONSENT_LEDGER flag=false — T4 scaffold only',
+      data: null,
+    };
   }
   // In scaffold: stub export
-  return { exported: true, reason: 'scaffold export executed — no live data', data: null }
+  return {
+    exported: true,
+    reason: 'scaffold export executed — no live data',
+    data: null,
+  };
 }
 
 // ── D3 Contract ─────────────────────────────────────────────────────────────────
@@ -171,8 +191,10 @@ export const D3TwinConsentLedgerContractSchema = z.object({
   export_path_defined: z.literal(true),
   gdpr_compliant_scaffold: z.literal(true),
   t4_approval_required: z.literal(true),
-})
-export type D3TwinConsentLedgerContract = z.infer<typeof D3TwinConsentLedgerContractSchema>
+});
+export type D3TwinConsentLedgerContract = z.infer<
+  typeof D3TwinConsentLedgerContractSchema
+>;
 
 export function getD3TwinConsentLedgerContract(): D3TwinConsentLedgerContract {
   return {
@@ -188,7 +210,7 @@ export function getD3TwinConsentLedgerContract(): D3TwinConsentLedgerContract {
     export_path_defined: true,
     gdpr_compliant_scaffold: true,
     t4_approval_required: true,
-  }
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -198,7 +220,7 @@ export function getD3TwinConsentLedgerContract(): D3TwinConsentLedgerContract {
 
 // ── D3 Emission Flag ──────────────────────────────────────────────────────────
 export const D3_IDENTITY_OBSERVATION_EMISSION_ACTIVE: boolean =
-  import.meta.env?.['VITE_TITANE_D3_IDENTITY_OBSERVATION_ACTIVE'] === 'true'
+  import.meta.env?.['VITE_TITANE_D3_IDENTITY_OBSERVATION_ACTIVE'] === 'true';
 
 // ── Observation Type ──────────────────────────────────────────────────────────
 export const TwinObservationTypeSchema = z.enum([
@@ -213,8 +235,8 @@ export const TwinObservationTypeSchema = z.enum([
   'behavioral_instruction',
   'risk_signal',
   'unknown',
-])
-export type TwinObservationType = z.infer<typeof TwinObservationTypeSchema>
+]);
+export type TwinObservationType = z.infer<typeof TwinObservationTypeSchema>;
 
 // ── Validation Status ─────────────────────────────────────────────────────────
 export const TwinValidationStatusSchema = z.enum([
@@ -226,8 +248,8 @@ export const TwinValidationStatusSchema = z.enum([
   'system_observed',
   'blocked',
   'unknown',
-])
-export type TwinValidationStatus = z.infer<typeof TwinValidationStatusSchema>
+]);
+export type TwinValidationStatus = z.infer<typeof TwinValidationStatusSchema>;
 
 // ── Risk Level ────────────────────────────────────────────────────────────────
 export const TwinConsentRiskLevelSchema = z.enum([
@@ -236,8 +258,8 @@ export const TwinConsentRiskLevelSchema = z.enum([
   'high',
   'identity_sensitive',
   'restricted',
-])
-export type TwinConsentRiskLevel = z.infer<typeof TwinConsentRiskLevelSchema>
+]);
+export type TwinConsentRiskLevel = z.infer<typeof TwinConsentRiskLevelSchema>;
 
 // ── Identity Observation Entry ────────────────────────────────────────────────
 export const TwinIdentityObservationEntrySchema = z.object({
@@ -263,18 +285,20 @@ export const TwinIdentityObservationEntrySchema = z.object({
   notes: z.string().optional(),
   created_at: z.string(),
   updated_at: z.string(),
-})
-export type TwinIdentityObservationEntry = z.infer<typeof TwinIdentityObservationEntrySchema>
+});
+export type TwinIdentityObservationEntry = z.infer<
+  typeof TwinIdentityObservationEntrySchema
+>;
 
 // ── Consent Summary ───────────────────────────────────────────────────────────
 export interface TwinConsentSummary {
-  total: number
-  confirmed: number
-  rejected: number
-  pending: number
-  blocked: number
-  identity_active: number
-  confidence_not_consent_enforced: true
+  total: number;
+  confirmed: number;
+  rejected: number;
+  pending: number;
+  blocked: number;
+  identity_active: number;
+  confidence_not_consent_enforced: true;
 }
 
 // ── Policy Helpers ────────────────────────────────────────────────────────────
@@ -282,88 +306,116 @@ export interface TwinConsentSummary {
 
 /** Identity-sensitive types that always require Kevin validation */
 const IDENTITY_SENSITIVE_TYPES: TwinObservationType[] = [
-  'identity_fact', 'symbolic_axis', 'behavioral_instruction', 'emotional_pattern', 'value',
-]
+  'identity_fact',
+  'symbolic_axis',
+  'behavioral_instruction',
+  'emotional_pattern',
+  'value',
+];
 
 /** Statuses that block all behavioral / memory / identity effect */
 const BLOCKING_STATUSES: TwinValidationStatus[] = [
-  'rejected', 'expired', 'blocked', 'unknown',
-]
+  'rejected',
+  'expired',
+  'blocked',
+  'unknown',
+];
 
 export function isIdentitySensitive(entry: TwinIdentityObservationEntry): boolean {
-  return IDENTITY_SENSITIVE_TYPES.includes(entry.observation_type) ||
+  return (
+    IDENTITY_SENSITIVE_TYPES.includes(entry.observation_type) ||
     entry.risk_level === 'identity_sensitive' ||
     entry.risk_level === 'restricted'
+  );
 }
 
 export function requiresKevinValidation(entry: TwinIdentityObservationEntry): boolean {
-  return isIdentitySensitive(entry) ||
+  return (
+    isIdentitySensitive(entry) ||
     entry.requires_validation === true ||
     entry.validation_status === 'requires_kevin_validation'
+  );
 }
 
 export function isExpiredObservation(entry: TwinIdentityObservationEntry): boolean {
-  if (!entry.expires_at) return false
-  return new Date(entry.expires_at).getTime() < Date.now()
+  if (!entry.expires_at) return false;
+  return new Date(entry.expires_at).getTime() < Date.now();
 }
 
 export function isRejectedOrBlocked(entry: TwinIdentityObservationEntry): boolean {
-  return BLOCKING_STATUSES.includes(entry.validation_status)
+  return BLOCKING_STATUSES.includes(entry.validation_status);
 }
 
 /** canAffectBehavior: false for rejected/expired/blocked/unknown/requires_kevin_validation */
 export function canAffectBehavior(entry: TwinIdentityObservationEntry): boolean {
-  if (isRejectedOrBlocked(entry)) return false
-  if (isExpiredObservation(entry)) return false
-  if (entry.validation_status === 'requires_kevin_validation') return false
+  if (isRejectedOrBlocked(entry)) return false;
+  if (isExpiredObservation(entry)) return false;
+  if (entry.validation_status === 'requires_kevin_validation') return false;
   // confidence alone is never sufficient — requires confirmed status
-  if (entry.validation_status !== 'confirmed') return false
-  return entry.can_affect_behavior
+  if (entry.validation_status !== 'confirmed') return false;
+  return entry.can_affect_behavior;
 }
 
 /** canAffectMemory: requires confirmed validation status */
 export function canAffectMemory(entry: TwinIdentityObservationEntry): boolean {
-  if (isRejectedOrBlocked(entry)) return false
-  if (isExpiredObservation(entry)) return false
-  if (entry.validation_status !== 'confirmed') return false
-  return entry.can_affect_memory
+  if (isRejectedOrBlocked(entry)) return false;
+  if (isExpiredObservation(entry)) return false;
+  if (entry.validation_status !== 'confirmed') return false;
+  return entry.can_affect_memory;
 }
 
 /** canAffectIdentity: strictest gate — requires confirmed + non-restricted risk */
 export function canAffectIdentity(entry: TwinIdentityObservationEntry): boolean {
-  if (isRejectedOrBlocked(entry)) return false
-  if (isExpiredObservation(entry)) return false
-  if (entry.validation_status !== 'confirmed') return false
-  if (entry.risk_level === 'restricted') return false
-  return entry.can_affect_identity
+  if (isRejectedOrBlocked(entry)) return false;
+  if (isExpiredObservation(entry)) return false;
+  if (entry.validation_status !== 'confirmed') return false;
+  if (entry.risk_level === 'restricted') return false;
+  return entry.can_affect_identity;
 }
 
 /** Normalize auto-detected identity-sensitive entry: force requires_validation=true */
 export function normalizeAutoDetectedObservation(
-  entry: TwinIdentityObservationEntry,
+  entry: TwinIdentityObservationEntry
 ): TwinIdentityObservationEntry {
   if (entry.auto_detected && isIdentitySensitive(entry)) {
     return {
       ...entry,
       requires_validation: true,
-      validation_status: entry.validation_status === 'confirmed' ? 'confirmed' : 'requires_kevin_validation',
+      validation_status:
+        entry.validation_status === 'confirmed'
+          ? 'confirmed'
+          : 'requires_kevin_validation',
       can_affect_identity: false,
       can_affect_behavior: false,
-    }
+    };
   }
-  return entry
+  return entry;
 }
 
-export function buildTwinConsentSummary(entries: TwinIdentityObservationEntry[]): TwinConsentSummary {
-  let confirmed = 0, rejected = 0, pending = 0, blocked = 0, identity_active = 0
+export function buildTwinConsentSummary(
+  entries: TwinIdentityObservationEntry[]
+): TwinConsentSummary {
+  let confirmed = 0,
+    rejected = 0,
+    pending = 0,
+    blocked = 0,
+    identity_active = 0;
   for (const e of entries) {
-    if (e.validation_status === 'confirmed') confirmed++
-    else if (e.validation_status === 'rejected') rejected++
-    else if (e.validation_status === 'blocked') blocked++
-    else pending++
-    if (canAffectIdentity(e)) identity_active++
+    if (e.validation_status === 'confirmed') confirmed++;
+    else if (e.validation_status === 'rejected') rejected++;
+    else if (e.validation_status === 'blocked') blocked++;
+    else pending++;
+    if (canAffectIdentity(e)) identity_active++;
   }
-  return { total: entries.length, confirmed, rejected, pending, blocked, identity_active, confidence_not_consent_enforced: true }
+  return {
+    total: entries.length,
+    confirmed,
+    rejected,
+    pending,
+    blocked,
+    identity_active,
+    confidence_not_consent_enforced: true,
+  };
 }
 
 // ── D3 Known Limits ───────────────────────────────────────────────────────────
@@ -373,7 +425,7 @@ export const D3_IDENTITY_OBSERVATION_KNOWN_LIMITS: string[] = [
   'symbolic-axis-always-hypothesis-unless-confirmed',
   'confidence-not-consent-enforced',
   'emotional-pattern-blocked-until-kevin-validation',
-]
+];
 
 // ── D3 Twin Observation Contract ──────────────────────────────────────────────
 export const D3_TWIN_IDENTITY_OBSERVATION_CONTRACT = {
@@ -385,4 +437,4 @@ export const D3_TWIN_IDENTITY_OBSERVATION_CONTRACT = {
   validation_statuses: 8,
   risk_levels: 5,
   twin_rule: 'Twin remains a mirror, not an authority',
-} as const
+} as const;

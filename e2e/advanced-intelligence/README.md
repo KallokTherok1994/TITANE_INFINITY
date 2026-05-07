@@ -9,11 +9,13 @@ Current state: scaffold only.
 Execution lock: E0 (implementation + run).
 
 ## Expected structure
+
 - fixtures/
 - reports/
 - advanced-intelligence.desktop.spec.ts (optional consolidated spec)
 
 ## Required lane IDs
+
 AI-DESKTOP-01
 AI-DESKTOP-02
 AI-DESKTOP-03
