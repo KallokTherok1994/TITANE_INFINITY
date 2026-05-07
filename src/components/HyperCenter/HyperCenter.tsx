@@ -132,7 +132,7 @@ const ModeSelector: React.FC<{
         {modes.map(mode => (
           <button
             key={mode.id}
-            className={`mode-btn ${currentMode.toLowerCase() === mode.id ? 'active' : ''}`}
+            className={`mode-btn ${(currentMode ?? '').toLowerCase() === mode.id ? 'active' : ''}`}
             onClick={() => onChange(mode.id)}
             title={mode.label}
           >

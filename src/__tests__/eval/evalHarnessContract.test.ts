@@ -63,19 +63,31 @@ describe('SC2: each scorecard has required top-level fields', () => {
         });
       }
 
-      // HONESTY_SCORECARD uses 'anti_lie_violations' instead of 'metrics' — both are valid
-      const scoringField = parsed.metrics
+      // HONESTY_SCORECARD uses 'anti_lie_violations' instead of 'metrics'.
+      // Advanced Intelligence scorecards use 'dimensions' (dict keyed by id).
+      // All three are valid scoring surfaces.
+      const scoringField = Array.isArray(parsed.metrics)
         ? 'metrics'
         : Array.isArray(parsed.anti_lie_violations)
           ? 'anti_lie_violations'
-          : null;
-      it('has metrics or anti_lie_violations array', () => {
+          : typeof parsed.dimensions === 'object' && parsed.dimensions !== null && !Array.isArray(parsed.dimensions)
+            ? 'dimensions'
+            : null;
+      it('has metrics, anti_lie_violations, or dimensions scoring surface', () => {
         expect(scoringField).not.toBeNull();
-        expect(Array.isArray(parsed[scoringField!])).toBe(true);
+        if (scoringField === 'dimensions') {
+          expect(typeof parsed[scoringField]).toBe('object');
+        } else {
+          expect(Array.isArray(parsed[scoringField!])).toBe(true);
+        }
       });
 
       it('has at least 1 scoring entry', () => {
-        expect(parsed[scoringField!].length).toBeGreaterThanOrEqual(1);
+        if (scoringField === 'dimensions') {
+          expect(Object.keys(parsed[scoringField]).length).toBeGreaterThanOrEqual(1);
+        } else {
+          expect(parsed[scoringField!].length).toBeGreaterThanOrEqual(1);
+        }
       });
     });
   }

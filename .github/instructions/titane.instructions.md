@@ -56,7 +56,7 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
 - For route/page/runtime regressions, enforce the canonical surface anti-drift sequence: identify the real visible surface first, then realign live aliases, deprecated routes, preloading, compatibility exports, and touched tooling references before PASS.
 - In direct-to-main mode explicitly requested by the user, finish each proven phase with a targeted commit on `MAIN` instead of batching multiple completed fixes together.
 - For Ollama Dev / Ollama Chat boundary work, see `.github/agents/ollama-dev-chat-boundary.agent.md` — that agent is the single canonical boundary authority.
-- When the Ollama Dev MCP server is active, prefer qwen3.5:9b in tasks that need long-context analysis (up to 128K tokens), explicit reasoning plans, or structured tool-oriented outputs. Keep this optimization strictly scoped to the VS Code Copilot conversation surface; never propagate qwen defaults to TITANE chat runtime, IPC fallback, or champion registry.
+- When the Ollama Dev MCP server is active, prefer qwen3.5:9b in tasks that need long-context analysis (up to 128K tokens), explicit reasoning plans, or structured tool-oriented outputs. Keep this optimization strictly scoped to the VS Code Copilot conversation surface; never propagate qwen defaults to TITANE chat runtime, IPC fallback, or champion registry. TITANE Chat (Ollama Chat) runtime must always use gemma2:2b as default — never qwen.
 
 ## DONT
 
