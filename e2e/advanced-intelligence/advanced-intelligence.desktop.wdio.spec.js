@@ -6,7 +6,7 @@
  * Strategy:
  * - Runtime-testable lanes: actual WDIO assertions against running Tauri app
  * - Scaffold/flag-gated lanes: documented SKIPPED_WITH_EXPLICIT_BLOCKER
- *   (underlying contract tested via Vitest — see advanced-intelligence-contracts.vitest.spec.ts)
+ *   (underlying contract tested via Vitest — see tests/contract/e2e-desktop/advanced-intelligence-contracts.test.ts)
  * - No fake PASS. No silent skip. Every lane documented.
  */
 

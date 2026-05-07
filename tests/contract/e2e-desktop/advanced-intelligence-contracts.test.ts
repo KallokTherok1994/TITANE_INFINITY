@@ -7,7 +7,7 @@
  * These tests do NOT fake desktop behavior — they prove the underlying contracts
  * are CLEAN and the desktop claims are not fabricated.
  *
- * Run: pnpm vitest run e2e/advanced-intelligence/advanced-intelligence-contracts.vitest.spec.ts
+ * Run: pnpm vitest run tests/contract/e2e-desktop/advanced-intelligence-contracts.test.ts
  */
 
 import { readFileSync, existsSync } from 'node:fs'
