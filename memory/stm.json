@@ -5,8 +5,8 @@
     "type": "preference",
     "importance": 0.2,
     "timestamp": 1742777400000,
-    "lastAccessed": 1777907256091,
-    "accessCount": 7,
+    "lastAccessed": 1778122685018,
+    "accessCount": 8,
     "ttl": 300000,
     "metadata": {
       "source": "initialization",
@@ -50,33 +50,43 @@
     "type": "conversation",
     "importance": 0.2705,
     "timestamp": 1777902323440,
-    "lastAccessed": 1777907256092,
-    "accessCount": 5,
+    "lastAccessed": 1778122685018,
+    "accessCount": 6,
     "metadata": {
       "source": "chat_message",
       "categories": [
         {
           "main": "domain",
           "sub": "technical",
-          "tags": ["développement", "architecture", "typescript"],
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": ["technique"],
+          "tags": [
+            "technique"
+          ],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": ["architecture"],
+          "tags": [
+            "architecture"
+          ],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": ["développement"],
+          "tags": [
+            "développement"
+          ],
           "confidence": 0.47882488614936036
         }
       ],
@@ -111,33 +121,43 @@
     "type": "conversation",
     "importance": 0.2705,
     "timestamp": 1777902629205,
-    "lastAccessed": 1777907256092,
-    "accessCount": 4,
+    "lastAccessed": 1778122685018,
+    "accessCount": 5,
     "metadata": {
       "source": "chat_message",
       "categories": [
         {
           "main": "domain",
           "sub": "technical",
-          "tags": ["développement", "architecture", "typescript"],
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": ["technique"],
+          "tags": [
+            "technique"
+          ],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": ["architecture"],
+          "tags": [
+            "architecture"
+          ],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": ["développement"],
+          "tags": [
+            "développement"
+          ],
           "confidence": 0.47882488614936036
         }
       ],
@@ -156,7 +176,9 @@
         ],
         "sentiment": "neutral",
         "urgency": "low",
-        "relatedIds": ["1c4408ba-5d6a-49d8-8eba-df97f62ce39a"],
+        "relatedIds": [
+          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a"
+        ],
         "version": 1,
         "contentHash": "ysflkj",
         "lastModified": 1777902629205,
@@ -172,33 +194,43 @@
     "type": "conversation",
     "importance": 0.2705,
     "timestamp": 1777903523620,
-    "lastAccessed": 1777907256092,
-    "accessCount": 3,
+    "lastAccessed": 1778122685018,
+    "accessCount": 4,
     "metadata": {
       "source": "chat_message",
       "categories": [
         {
           "main": "domain",
           "sub": "technical",
-          "tags": ["développement", "architecture", "typescript"],
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": ["technique"],
+          "tags": [
+            "technique"
+          ],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": ["architecture"],
+          "tags": [
+            "architecture"
+          ],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": ["développement"],
+          "tags": [
+            "développement"
+          ],
           "confidence": 0.47882488614936036
         }
       ],
@@ -236,33 +268,43 @@
     "type": "conversation",
     "importance": 0.2705,
     "timestamp": 1777903856934,
-    "lastAccessed": 1777907256092,
-    "accessCount": 2,
+    "lastAccessed": 1778122685018,
+    "accessCount": 3,
     "metadata": {
       "source": "chat_message",
       "categories": [
         {
           "main": "domain",
           "sub": "technical",
-          "tags": ["développement", "architecture", "typescript"],
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": ["technique"],
+          "tags": [
+            "technique"
+          ],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": ["architecture"],
+          "tags": [
+            "architecture"
+          ],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": ["développement"],
+          "tags": [
+            "développement"
+          ],
           "confidence": 0.47882488614936036
         }
       ],
@@ -301,33 +343,43 @@
     "type": "conversation",
     "importance": 0.2705,
     "timestamp": 1777904151825,
-    "lastAccessed": 1777907256092,
-    "accessCount": 1,
+    "lastAccessed": 1778122685018,
+    "accessCount": 2,
     "metadata": {
       "source": "chat_message",
       "categories": [
         {
           "main": "domain",
           "sub": "technical",
-          "tags": ["développement", "architecture", "typescript"],
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": ["technique"],
+          "tags": [
+            "technique"
+          ],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": ["architecture"],
+          "tags": [
+            "architecture"
+          ],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": ["développement"],
+          "tags": [
+            "développement"
+          ],
           "confidence": 0.47882488614936036
         }
       ],
@@ -367,33 +419,43 @@
     "type": "conversation",
     "importance": 0.2705,
     "timestamp": 1777907256092,
-    "lastAccessed": 1777907256092,
-    "accessCount": 0,
+    "lastAccessed": 1778122685018,
+    "accessCount": 1,
     "metadata": {
       "source": "chat_message",
       "categories": [
         {
           "main": "domain",
           "sub": "technical",
-          "tags": ["développement", "architecture", "typescript"],
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
           "confidence": 0.5864286779691755
         },
         {
           "main": "domain",
           "sub": "learning",
-          "tags": ["technique"],
+          "tags": [
+            "technique"
+          ],
           "confidence": 0.42058646839722
         },
         {
           "main": "theme",
           "sub": "architecture",
-          "tags": ["architecture"],
+          "tags": [
+            "architecture"
+          ],
           "confidence": 0.4983333333333333
         },
         {
           "main": "theme",
           "sub": "coaching",
-          "tags": ["développement"],
+          "tags": [
+            "développement"
+          ],
           "confidence": 0.47882488614936036
         }
       ],
@@ -422,6 +484,83 @@
         "version": 1,
         "contentHash": "ysflkj",
         "lastModified": 1777907256092,
+        "userValidated": false,
+        "preserve": false
+      }
+    },
+    "ttl": 300000
+  },
+  {
+    "id": "cd5f8abb-0849-4288-8e00-ea5895c761c1",
+    "content": "Architecture technique: développement TypeScript, optimisation performance, sécurité réseau.",
+    "type": "conversation",
+    "importance": 0.2705,
+    "timestamp": 1778122685019,
+    "lastAccessed": 1778122685019,
+    "accessCount": 0,
+    "metadata": {
+      "source": "chat_message",
+      "categories": [
+        {
+          "main": "domain",
+          "sub": "technical",
+          "tags": [
+            "développement",
+            "architecture",
+            "typescript"
+          ],
+          "confidence": 0.5864286779691755
+        },
+        {
+          "main": "domain",
+          "sub": "learning",
+          "tags": [
+            "technique"
+          ],
+          "confidence": 0.42058646839722
+        },
+        {
+          "main": "theme",
+          "sub": "architecture",
+          "tags": [
+            "architecture"
+          ],
+          "confidence": 0.4983333333333333
+        },
+        {
+          "main": "theme",
+          "sub": "coaching",
+          "tags": [
+            "développement"
+          ],
+          "confidence": 0.47882488614936036
+        }
+      ],
+      "enrichedMetadata": {
+        "domain": "technical",
+        "theme": "architecture",
+        "keywords": [
+          "architecture",
+          "technique",
+          "développement",
+          "typescript",
+          "optimisation",
+          "performance",
+          "sécurité",
+          "réseau"
+        ],
+        "sentiment": "neutral",
+        "urgency": "low",
+        "relatedIds": [
+          "1c4408ba-5d6a-49d8-8eba-df97f62ce39a",
+          "b0aa5063-9952-4b36-b5dd-ece335ab02e8",
+          "52f162ab-0679-4c2e-9bf0-828708ed79e9",
+          "a1d6e634-1332-44f1-9dc1-21715e693f94",
+          "4e6b1720-2ac8-421d-b2c6-9f94f6a375fc"
+        ],
+        "version": 1,
+        "contentHash": "ysflkj",
+        "lastModified": 1778122685019,
         "userValidated": false,
         "preserve": false
       }
