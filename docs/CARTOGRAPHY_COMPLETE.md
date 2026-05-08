@@ -2051,3 +2051,9 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
   - `pnpm run format:check` FAIL (dette de formatting multi-fichiers deja existante et hors patch minimal)
 - **Classification**: `DESKTOP_EXPERT_VISUAL_UNPROVEN` avec stop-the-line actif sur la lane visuelle desktop.
 - **Proof pack canonique**: `proof_packs/FINAL_END_TO_END_COGNITIVE_TRACE_SEAL_2026_05_08/VERDICT.md`
+
+## 2026-05-08 — TIME to chat temporal sync truth
+
+> La surface `/time` publie maintenant une verite temporelle gouvernee pour le chat et le raisonnement via `titane_time_runtime_context_v1`, au lieu de ne fournir qu un etat cognitif partiel. Cette cle est alimentee par `src/pages/TimePage.tsx`, relue par `src/services/chat/chatMemorySingleDoor.ts`, puis injectee dans `titane_chat_context_envelope_v1.timeContext`.
+
+> La verite visible cote UI est exposee par `time-chat-sync-status`; la preuve desktop dediee est `e2e/desktop/time-chat-context-sync.wdio.test.js`, qui verifie la coherence `/time` -> `localStorage` -> `/titane` -> `titane_chat_context_envelope_v1`.

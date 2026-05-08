@@ -769,7 +769,7 @@ describe('conversationEngine.processMessage', () => {
     );
   });
 
-  it('marks twins and cognitive context when the active route passes a context envelope', async () => {
+  it('marks twins, cognitive, and time context when the active route passes a context envelope', async () => {
     vi.mocked(secureInvoke).mockImplementation(async command => {
       if (command === 'persistent_memory_get_context') {
         return null;
@@ -824,6 +824,18 @@ describe('conversationEngine.processMessage', () => {
           },
         },
         runtimeMetadata: {},
+        timeContext: {
+          currentDateTime: '2026-05-08T14:15:00.000Z',
+          timeZone: 'America/Toronto',
+          currentSegment: 'Deep Focus',
+          isWorkHours: true,
+          eventsToday: 3,
+          eventsThisWeek: 9,
+          todayFocusMinutes: 210,
+          currentEnergy: 82,
+          runtimeSource: 'persistence-active',
+          updatedAt: 1,
+        },
         cognitiveContext: {
           flowActive: true,
           energy: 80,
@@ -839,10 +851,18 @@ describe('conversationEngine.processMessage', () => {
     });
 
     expect(response.cognitive_tags).toEqual(
-      expect.arrayContaining(['twins:present', 'cognitive-context:present'])
+      expect.arrayContaining([
+        'twins:present',
+        'cognitive-context:present',
+        'time-context:present',
+      ])
     );
     expect(response.metadata.links_to_contexts).toEqual(
-      expect.arrayContaining(['twins:present', 'cognitive_context:present'])
+      expect.arrayContaining([
+        'twins:present',
+        'cognitive_context:present',
+        'time_context:present',
+      ])
     );
   });
 

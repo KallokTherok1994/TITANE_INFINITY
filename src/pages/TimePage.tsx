@@ -18,6 +18,7 @@ import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { useTimeAgenda } from '@/hooks/useTimeAgenda';
 import type { AgendaEvent } from '@/engines/time';
+import { TIME_RUNTIME_CONTEXT_KEY } from '@/services/chat/chatMemorySingleDoor';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import './TimePage.css';
@@ -408,6 +409,45 @@ export const TimePage: React.FC = () => {
     }
   }, [activeTab, searchParams]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    try {
+      window.localStorage.setItem(
+        TIME_RUNTIME_CONTEXT_KEY,
+        JSON.stringify({
+          currentDateTime: timeState?.currentDateTime ?? currentDate.toISOString(),
+          timeZone: timeState?.timeZone ?? 'Local',
+          currentSegment: agendaStats.currentSegment,
+          isWorkHours: agendaStats.isWorkHours,
+          eventsToday: agendaStats.eventsToday,
+          eventsThisWeek: agendaStats.eventsThisWeek,
+          todayFocusMinutes,
+          currentEnergy,
+          activeTab,
+          runtimeSource: snapshotRuntimeSource,
+          updatedAt: Date.now(),
+        })
+      );
+    } catch {
+      // non-blocking
+    }
+  }, [
+    activeTab,
+    agendaStats.currentSegment,
+    agendaStats.eventsToday,
+    agendaStats.eventsThisWeek,
+    agendaStats.isWorkHours,
+    currentDate,
+    currentEnergy,
+    snapshotRuntimeSource,
+    timeState?.currentDateTime,
+    timeState?.timeZone,
+    todayFocusMinutes,
+  ]);
+
   const loadSnapshots = useCallback(async () => {
     try {
       setLoading(true);
@@ -481,6 +521,14 @@ export const TimePage: React.FC = () => {
             : snapshotRuntimeSource === 'degraded'
               ? 'degraded'
               : 'uninitialized'}
+        </div>
+        <div
+          className="mt-3 block rounded-lg border border-blue-800 bg-blue-950/30 px-3 py-2 text-xs text-blue-100"
+          data-testid="time-chat-sync-status"
+          data-sync-state="active"
+        >
+          Sync chat/raisonnement: {timeState?.timeZone ?? 'Local'} ·{' '}
+          {agendaStats.currentSegment} · {todayFocusMinutes} min focus · onglet {activeTab}
         </div>
       </div>
 

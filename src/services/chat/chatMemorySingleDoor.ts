@@ -11,6 +11,7 @@ import { createLogger } from '@/utils/logger';
 const logger = createLogger('[chatMemorySingleDoor]');
 
 const LAST_ENVELOPE_KEY = 'titane_chat_context_envelope_v1';
+export const TIME_RUNTIME_CONTEXT_KEY = 'titane_time_runtime_context_v1';
 
 interface ChatLikeMessage {
   id?: string;
@@ -72,6 +73,19 @@ export interface ChatContextEnvelope {
     lastProviderUsed?: string;
     lastReasonCode?: string;
     networkUsed?: boolean;
+  };
+  timeContext?: {
+    currentDateTime: string;
+    timeZone: string;
+    currentSegment: string;
+    isWorkHours: boolean;
+    eventsToday: number;
+    eventsThisWeek: number;
+    todayFocusMinutes: number;
+    currentEnergy: number;
+    activeTab?: string;
+    runtimeSource?: 'uninitialized' | 'persistence-active' | 'degraded';
+    updatedAt: number;
   };
   // TIME cognitive state (injected from TimePage localStorage)
   cognitiveContext?: {
@@ -353,6 +367,49 @@ function writeJson(key: string, value: unknown): void {
   }
 }
 
+function readTimeRuntimeContext(): ChatContextEnvelope['timeContext'] | undefined {
+  const raw = readJson<Partial<NonNullable<ChatContextEnvelope['timeContext']>>>(
+    TIME_RUNTIME_CONTEXT_KEY
+  );
+  if (!raw) return undefined;
+
+  const currentDateTime =
+    typeof raw.currentDateTime === 'string' && raw.currentDateTime.trim().length > 0
+      ? raw.currentDateTime
+      : null;
+  const timeZone =
+    typeof raw.timeZone === 'string' && raw.timeZone.trim().length > 0
+      ? raw.timeZone
+      : null;
+  const currentSegment =
+    typeof raw.currentSegment === 'string' && raw.currentSegment.trim().length > 0
+      ? raw.currentSegment
+      : null;
+
+  if (!currentDateTime || !timeZone || !currentSegment) {
+    return undefined;
+  }
+
+  return {
+    currentDateTime,
+    timeZone,
+    currentSegment,
+    isWorkHours: raw.isWorkHours === true,
+    eventsToday: toFiniteNumber(raw.eventsToday, 0),
+    eventsThisWeek: toFiniteNumber(raw.eventsThisWeek, 0),
+    todayFocusMinutes: toFiniteNumber(raw.todayFocusMinutes, 0),
+    currentEnergy: toFiniteNumber(raw.currentEnergy, 0),
+    activeTab: typeof raw.activeTab === 'string' ? raw.activeTab : undefined,
+    runtimeSource:
+      raw.runtimeSource === 'persistence-active' ||
+      raw.runtimeSource === 'degraded' ||
+      raw.runtimeSource === 'uninitialized'
+        ? raw.runtimeSource
+        : undefined,
+    updatedAt: toFiniteNumber(raw.updatedAt, Date.now()),
+  };
+}
+
 function readModeStoredMessages(mode: ConversationMode): ChatLikeMessage[] {
   if (!isBrowser()) return [];
 
@@ -467,6 +524,19 @@ export function formatContextEnvelopeForSystemPrompt(
     `mode=${envelope.memorySingleDoor.mode}`,
     `provider_requested=${envelope.memorySingleDoor.providerRequested}`,
     `tags=${envelope.memorySingleDoor.tags.join(', ')}`,
+    ...(envelope.timeContext
+      ? [
+          `time_now=${envelope.timeContext.currentDateTime}`,
+          `time_zone=${envelope.timeContext.timeZone}`,
+          `time_segment=${envelope.timeContext.currentSegment}`,
+          `time_work_hours=${envelope.timeContext.isWorkHours}`,
+          `time_events_today=${envelope.timeContext.eventsToday}`,
+          `time_events_this_week=${envelope.timeContext.eventsThisWeek}`,
+          `time_focus_minutes_today=${envelope.timeContext.todayFocusMinutes}`,
+          `time_energy_percent=${envelope.timeContext.currentEnergy}`,
+          `time_runtime_source=${envelope.timeContext.runtimeSource ?? 'unknown'}`,
+        ]
+      : []),
     ...(envelope.cognitiveContext
       ? [
           `cognitive_flow_active=${envelope.cognitiveContext.flowActive}`,
@@ -578,6 +648,7 @@ export function buildChatContextEnvelope(
       lastReasonCode: input.lastProviderMeta?.reason_code,
       networkUsed: input.lastProviderMeta?.network_used,
     },
+    timeContext: readTimeRuntimeContext(),
     cognitiveContext:
       readJson<ChatContextEnvelope['cognitiveContext']>('titane_cognitive_state') ??
       undefined,

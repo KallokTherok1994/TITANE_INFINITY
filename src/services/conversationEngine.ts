@@ -543,6 +543,10 @@ function buildContextStatusTags(input: {
     tags.push('cognitive-context:present');
   }
 
+  if (input.contextEnvelope?.timeContext) {
+    tags.push('time-context:present');
+  }
+
   return tags;
 }
 
@@ -2007,6 +2011,7 @@ export async function processMessage(
       ...(options?.contextEnvelope?.cognitiveContext
         ? ['cognitive_context:present']
         : []),
+      ...(options?.contextEnvelope?.timeContext ? ['time_context:present'] : []),
     ])
   );
 

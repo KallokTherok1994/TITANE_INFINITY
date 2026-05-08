@@ -4,6 +4,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { TimePage } from '@/pages/TimePage';
 import type { UseTimeAgendaReturn } from '@/hooks/useTimeAgenda';
+import { TIME_RUNTIME_CONTEXT_KEY } from '@/services/chat/chatMemorySingleDoor';
 
 const mockUseTimeAgenda = vi.fn<() => UseTimeAgendaReturn>();
 const tauriMocks = vi.hoisted(() => ({
@@ -175,7 +176,9 @@ describe('TimePage', () => {
       renderTimePage('/time?tab=now');
     });
 
-    expect(await screen.findByText(/Matin Focus/i)).toBeInTheDocument();
+    expect(await screen.findByTestId('time-current-segment')).toHaveTextContent(
+      /Matin Focus/i
+    );
     expect(await screen.findByText('84%')).toBeInTheDocument();
   });
 
@@ -189,6 +192,31 @@ describe('TimePage', () => {
     });
 
     expect(window.localStorage.getItem('titane_cognitive_state')).toContain('deep-work');
+  });
+
+  it('publishes a TIME runtime context for chat and reasoning synchronization', async () => {
+    await act(async () => {
+      renderTimePage('/time?tab=now');
+    });
+
+    const raw = window.localStorage.getItem(TIME_RUNTIME_CONTEXT_KEY);
+    expect(raw).not.toBeNull();
+
+    const parsed = JSON.parse(raw ?? '{}');
+    expect(parsed).toEqual(
+      expect.objectContaining({
+        timeZone: 'Europe/Paris',
+        currentSegment: 'Matin Focus',
+        eventsToday: 1,
+        eventsThisWeek: 1,
+        todayFocusMinutes: 90,
+        currentEnergy: 84,
+        activeTab: 'now',
+      })
+    );
+    expect(await screen.findByTestId('time-chat-sync-status')).toHaveTextContent(
+      /Sync chat\/raisonnement/i
+    );
   });
 
   it('normalizes snake_case snapshot/stat payloads from backend truth', async () => {

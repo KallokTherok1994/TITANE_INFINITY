@@ -267,6 +267,11 @@
   - Vitest: `src/__tests__/pages/TimePage.test.tsx`
   - Rust: `cargo test --manifest-path src-tauri/Cargo.toml time_commands --lib`
   - Desktop WDIO avance: `e2e/desktop/time-runtime-truth.wdio.test.js`
+  - Desktop WDIO sync TIME -> chat: `e2e/desktop/time-chat-context-sync.wdio.test.js`
+- Sync chat/raisonnement:
+  - la page `/time` publie `time-chat-sync-status` comme verite visible de synchronisation temporelle
+  - la cle gouvernee `titane_time_runtime_context_v1` transporte `currentDateTime`, `timeZone`, `currentSegment`, `eventsToday`, `eventsThisWeek`, `todayFocusMinutes`, `currentEnergy`, `activeTab` et `runtimeSource`
+  - le chat reconstruit `titane_chat_context_envelope_v1.timeContext` a partir de cette cle avant generation
 
 # [2026-04-23] DocCenter — Export DOCX natif (Phase 3)
 
