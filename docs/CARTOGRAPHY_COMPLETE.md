@@ -1971,3 +1971,15 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - **AutoHeal**: entry 1707 — METACOGNITION_GUARD_V2_ACTION_ENFORCEMENT_2026_05_08
 - **Proof pack**: `proof_packs/METACOGNITION_GUARD_V2_ACTION_ENFORCEMENT_2026_05_08/VERDICT.md`
 - **Rollback**: supprimer `metaCognitionActionEnforcer.ts` + tests, retirer 3 champs type, retirer imports + enforcement block useConversationEngine, retirer bloc enforcement ThinkingPanel
+
+---
+
+### Mission 8 — Production omega_trace_meta Smoke Certification (2026-05-08)
+- **Verdict**: QUALIFIED
+- **Scope**: Certify that the production Rust/Tauri `conversation_generate` path populates `omega_trace_meta` fields compatible with the full CognitiveRuntimeTrace TypeScript chain
+- **Key finding**: Rust does NOT emit `omega_trace_meta` — by design. TypeScript `processMessage()` service (`src/services/conversationEngine.ts:2084`) constructs full omega_trace_meta from real TypeScript-side classifiers (modeClassification + canonicalDecision) AFTER the IPC call. All 10 required fields populated from live classifiers. Production cognitive chain fully active.
+- **Files audited** (no code change): `src-tauri/src/conversation_engine/commands.rs`, `src-tauri/src/conversation_engine/types.rs`, `src/services/conversationEngine.ts`, `src/hooks/useConversationEngine.ts`, `src/schemas/ipcTruthContracts.ts`
+- **Tests**: 64/64 unit PASS · 7/7 E2E PASS · TS clean · Ollama live (gemma2:2b)
+- **AutoHeal**: entry 1708 — PRODUCTION_OMEGA_TRACE_META_SMOKE_2026_05_08
+- **Proof pack**: `proof_packs/PRODUCTION_OMEGA_TRACE_META_SMOKE_2026_05_08/VERDICT.md`
+- **Rollback**: no code change; future Rust omega_trace_meta emission documented in ROLLBACK.md
