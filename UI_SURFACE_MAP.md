@@ -238,6 +238,36 @@
   - ADMIN hubs: `tab-admin-config`, `tab-admin-design`, `tab-admin-governance`, `tab-admin-production-health`
 - Durcissement anti-derive E2E: `openAdminTab` privilegie maintenant les testids canoniques `tab-admin-{id}` (avec fallback label) dans `e2e/helpers/navigation.ts`, ce qui supprime la fragilite regex/locale sur la nav admin.
 
+# [2026-05-08] TIME runtime truth completeness
+
+- Surface canonique: `/time` via `src/pages/TimePage.tsx`
+- Verite runtime verrouillee:
+  - les snapshots et statistiques sont normalises cote UI depuis la verite backend et acceptent `camelCase` comme `snake_case`
+  - la creation de snapshot passe par `tauriClient.titanForceSnapshotCurrent()` pour rester alignee sur la commande Tauri canonique
+  - la source runtime visible expose `uninitialized`, `persistence-active` ou `degraded`
+  - `restore_snapshot` et `delete_snapshot` n annoncent plus un faux succes quand le runtime persistence-backed ne les supporte pas
+- Selectors stables:
+  - `page-time`
+  - `nav-time`
+  - `tab-time-now`
+  - `tab-time-agenda`
+  - `tab-time-timeline`
+  - `tab-time-snapshots`
+  - `tab-time-cognitive`
+  - `time-runtime-source`
+  - `time-timeline-section`
+  - `time-timeline-visible-count`
+  - `time-snapshots-section`
+  - `time-snapshot-runtime-note`
+  - `time-snapshot-stats`
+  - `time-snapshot-list`
+  - `time-cognitive-section`
+  - `time-flow-state`
+- Preuves:
+  - Vitest: `src/__tests__/pages/TimePage.test.tsx`
+  - Rust: `cargo test --manifest-path src-tauri/Cargo.toml time_commands --lib`
+  - Desktop WDIO avance: `e2e/desktop/time-runtime-truth.wdio.test.js`
+
 # [2026-04-23] DocCenter — Export DOCX natif (Phase 3)
 
 - Surface canonique: `/doc-center`
@@ -932,3 +962,25 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Preuves associées:
   - Vitest: `src/services/log_analysis/__tests__/logAnalysisService.test.ts`
   - Playwright: `e2e/agents/log-analysis-dashboard.e2e.ts`
+
+# [2026-05-08] CognitiveRuntimeTrace UI Bridge — ThinkingPanel Expert View
+
+- Surface canonique: `reasoning-cognitive-trace` dans `src/features/chat/ThinkingPanel.tsx` (section Expert uniquement)
+- Sélecteurs stables: `data-testid="reasoning-cognitive-trace"`, `reasoning-cognitive-verdict`, `reasoning-cognitive-decision`, `reasoning-cognitive-memory`, `reasoning-cognitive-web`, `reasoning-cognitive-web-policy`, `reasoning-cognitive-reflection`, `reasoning-cognitive-quality`, `reasoning-cognitive-quality-action`
+- Data attributes sur `reasoning-progress`: `data-cognitive-verdict`, `data-cognitive-web`, `data-cognitive-memory`, `data-cognitive-quality`
+- Pipeline: `conversationEngine.ts` remonte désormais `response.cognitive_trace` quand le moteur amont la produit; `useConversationEngine.ts` préfère cette trace native et retombe sinon sur une reconstruction depuis `omega_trace_meta` + `qualityCritique` + signaux `links_to_contexts` → `ConversationMessage.metadata.cognitiveTrace` → `ConversationSection.tsx` (LatestAssistantRuntimeSnapshot) → `ThinkingPanel.cognitiveTrace` prop
+- Seule la trace sanitisée (sanitizeTraceForUi) est exposée — aucun CoT brut
+- Tests: `src/features/chat/__tests__/ThinkingPanel.cognitiveTrace.test.tsx`, `src/services/ai/__tests__/cognitiveRuntimeTrace.test.ts`, `src/__tests__/hooks/useConversationEngine.test.ts`, `e2e/agents/cognitive-trace-panel.e2e.ts`, `e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js`
+
+# [2026-05-08] CognitiveRuntimeTrace v2 — WebTruth + QualityAction Policy
+- Nouveaux sélecteurs stables: `data-testid="reasoning-cognitive-web-policy"`, `data-testid="reasoning-cognitive-quality-action"` dans `src/features/chat/ThinkingPanel.tsx` (section Expert)
+- Modules policy purs: `src/services/ai/webTruthPolicy.ts` (WebTruthNeed/WebTruthStatus, evaluateWebTruthPolicy), `src/services/ai/qualityActionPolicy.ts` (QualityAction, evaluateQualityActionPolicy)
+- CognitiveRuntimeTrace.policy: champ `{ version, webTruth: WebTruthPolicyDecision, qualityAction: QualityActionPolicyDecision }` ajouté au type
+- resolveFinalVerdict applique policy.qualityAction.minimumVerdict comme floor (strictest-wins)
+- Tests ciblés locaux: 4 fichiers vitest = 28 PASS, plus `useConversationEngine` couvre désormais la préférence `cognitive_trace` native et la sanitization du payload remonté
+
+# [2026-05-08] CognitiveRuntimeTrace v2 — Runtime Certification Seal
+- Surface: `reasoning-progress[data-cognitive-verdict]`, `reasoning-cognitive-trace`, `reasoning-cognitive-verdict`, `reasoning-cognitive-web-policy`, `reasoning-cognitive-quality-action`
+- E2E certification: `e2e/critical/thinking-panel-quality.spec.ts::COGNITIVE_TRACE_V2_VISIBLE_IN_THINKING_PANEL` — PASS (5/5 tests)
+- Fix: await [MOCK_OK] in last assistant message before checking ThinkingPanel; test message ne doit pas contenir recherche+web (shouldHandoffToResearch bypass)
+- AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08`

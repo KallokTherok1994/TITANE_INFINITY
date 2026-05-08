@@ -1,3 +1,12 @@
+## 2026-05-08 — Cognitive trace native-first + desktop/agent proof
+
+> La chaîne conversationnelle privilégie désormais une `cognitive_trace` native quand le moteur amont la fournit, puis sanitize systématiquement le payload avant projection UI. Le fallback heuristique dans `useConversationEngine` reste actif, mais s appuie mieux sur `links_to_contexts` pour distinguer besoin web, tentative web et vérification factuelle.
+
+> Couverture ajoutée sur la vérité visible:
+- Vitest: `src/__tests__/hooks/useConversationEngine.test.ts` vérifie la préférence `cognitive_trace` native et la suppression des champs interdits.
+- Playwright agent: `e2e/agents/cognitive-trace-panel.e2e.ts` vérifie `reasoning-progress[data-cognitive-*]` et la vue Expert seedée.
+- WDIO desktop: `e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js` vérifie la même vérité sur la surface Tauri canonique.
+
 ## 2026-05-05 — Browser E2E critical anti-flaky tranche 3
 
 > Durcissement des suites heavy `e2e/critical/app-launch.spec.ts`, `e2e/critical/visual-engine.spec.ts`, `e2e/critical/chat-layout-viewport.spec.ts` et `e2e/critical/engine-navigation.spec.ts`: suppression des `waitForTimeout` non nécessaires, remplacement par attentes pilotées (`toHaveURL`, `toBeVisible`, `expect.poll`) et assouplissement contrôlé des assertions runtime viewport pour éviter les faux négatifs sous zoom/resize Chromium.
@@ -1890,3 +1899,39 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - Updated: `e2e/advanced-intelligence/advanced-intelligence.desktop.wdio.spec.js`
   - AI-DESKTOP-13 now executes a runtime route+selector check before classifying blocker/pass.
 - Runtime guard: ModeSelector now supports undefined mode input without crash (`currentMode?: string`).
+
+## Delta 2026-05-08 — TIME canonical IPC authority alignment
+
+- Surface canonique: `/time` via `src/pages/TimePage.tsx`
+- Lock corrigé: dérive entre commandes TIME/Agenda réellement invoquées côté frontend et allowlists `src/lib/security.ts` + `src-tauri/tauri.conf.json`
+- Commandes réalignées:
+  - `agenda_load_events`
+  - `get_travel_stats`
+  - `list_snapshots`
+  - `restore_snapshot`
+  - `delete_snapshot`
+- Nettoyage structurel:
+  - retrait du callback `exportCalendar` de `AgendaStorageCallbacks`
+  - retrait du chemin frontend `agenda_export_ical` non exposé par le backend canonique
+- Tests de garde étendus: `src/__tests__/security/securityFoundation.test.ts`
+
+> 2026-05-08 — TIME runtime truth completeness: la surface canonique `/time` ne dépend plus de faux payloads snapshots côté backend. `src-tauri/src/time_commands.rs` sérialise désormais `SnapshotMetadata`, `SnapshotContext` et `TravelStats` en `camelCase`, puis sert la liste/statistiques depuis `PERSISTENCE_ENGINE` au lieu d un stub figé. `src/pages/TimePage.tsx` normalise les deux formes (`camelCase` / `snake_case`), publie `time-runtime-source` avec un état visible (`uninitialized`, `persistence-active`, `degraded`), et crée les snapshots via `titanForceSnapshotCurrent()` pour rester aligné sur la commande Tauri canonique. La surface snapshots ne ment plus sur les capacités d action: `restore_snapshot` et `delete_snapshot` retournent maintenant une erreur explicite sur le runtime persistence-backed actuel. La preuve de non-régression est couverte par `src/__tests__/pages/TimePage.test.tsx`, `cargo test --manifest-path src-tauri/Cargo.toml time_commands --lib` et la lane desktop avancée `e2e/desktop/time-runtime-truth.wdio.test.js`.
+
+## [2026-05-08] CognitiveRuntimeTrace est maintenant surfacé dans ThinkingPanel (Expert view) comme vérité runtime UI-safe : verdict, décision canonique (mode/profil/inférence), mémoire (injectée/sources/reasonCode), recherche web (requise/tentée/sources/limitations), vérification (verifierEnabled/verified/claimsDetected), qualité (score/shouldEnhance). Aucun raw chain-of-thought n'est exposé. La trace est construite dans useConversationEngine.ts depuis omega_trace_meta + qualityCritique et circule via ConversationMessage.metadata.cognitiveTrace → LatestAssistantRuntimeSnapshot → ThinkingPanel.cognitiveTrace prop. Sélecteurs stables : reasoning-cognitive-trace, reasoning-cognitive-verdict, reasoning-cognitive-decision, reasoning-cognitive-memory, reasoning-cognitive-web, reasoning-cognitive-reflection, reasoning-cognitive-quality. Data attributes sur reasoning-progress : data-cognitive-verdict, data-cognitive-web, data-cognitive-memory, data-cognitive-quality.
+
+## [2026-05-08] CognitiveRuntimeTrace v2 — WebTruth + QualityAction Policy
+
+- **Scope**: Ring 3 (TS services) + Ring 4 (UI)
+- **Modules créés**: `src/services/ai/webTruthPolicy.ts`, `src/services/ai/qualityActionPolicy.ts`
+- **Modules étendus**: `src/services/ai/cognitiveRuntimeTrace.ts` (policy field + attach helpers + resolveFinalVerdict floor), `src/hooks/useConversationEngine.ts` (intégration policy build), `src/features/chat/ThinkingPanel.tsx` (affichage policy expert)
+- **Types v2 ajoutés**: `WebTruthNeed`, `WebTruthStatus`, `WebTruthPolicyDecision`, `QualityAction`, `QualityActionPolicyDecision`
+- **Verdict**: `resolveFinalVerdict` applique `policy.qualityAction.minimumVerdict` comme floor (strictest-wins). Freshness/web signals détectés depuis le message utilisateur.
+- **Tests**: 28 tests PASS (7+7+6+8)
+- **Gates**: detect_recurrence.sh PASS (entries=1702), verify_instructions.sh PASS (51/0)
+- **Rollback**: supprimer les deux modules policy, retirer le champ `policy` du type CognitiveRuntimeTrace, retirer attach helpers + floor logic dans resolveFinalVerdict, retirer intégration hook + ThinkingPanel policy items
+
+## [2026-05-08] CognitiveRuntimeTrace Runtime Certification Seal
+- Scope: `e2e/critical/thinking-panel-quality.spec.ts` + `src/services/conversationEngine.ts`
+- Verdict: PASS — 5/5 tests E2E pass, including `COGNITIVE_TRACE_V2_VISIBLE_IN_THINKING_PANEL`
+- Key fix: shouldHandoffToResearch bypass detection; stale panel guard via [MOCK_OK] wait
+- AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08`

@@ -21,6 +21,7 @@ import { getDiagnosticAgentStatus } from '@/services/diagnostic';
 import { getExplainabilityAgentStatus } from '@/services/explainability';
 import { getOrchestratorAgentStatus } from '@/services/orchestrator';
 import { getSecurityActiveAgentStatus } from '@/services/security_active';
+import type { CognitiveRuntimeTrace } from '@/services/ai/cognitiveRuntimeTrace';
 import {
   getActiveSkill,
   getActiveSkillId,
@@ -782,6 +783,20 @@ function buildE2EMockConversationResponse(
         .slice(0, 2)
         .map(entry => `knowledge:${entry.title}`),
     },
+    omega_trace_meta: {
+      canonical_mode: 'default',
+      profile_id: 'BALANCED',
+      effort_level: 'standard',
+      model_class: 'conversational',
+      classifier_confidence: 0.85,
+      classifier_reason_code: 'E2E_MOCK',
+      classifier_signals: ['e2e', 'mock'],
+      resolved_backend_mode: 'default',
+      provider_used: 'e2e-mock',
+      fallback_used: false,
+      canonical_truth_status: 'SUFFICIENT',
+      canonical_confidence: 0.8,
+    },
   };
 }
 
@@ -848,6 +863,8 @@ export interface ConversationResponse {
   discernment?: DiscernmentDecision;
   /** OMEGA_AUTO_ORCHESTRATION_CHAIN trace meta — present when auto-classification ran */
   omega_trace_meta?: OmegaTraceMeta;
+  /** Native cognitive runtime trace when the lower engine already produced it */
+  cognitive_trace?: CognitiveRuntimeTrace;
 }
 
 export interface ConversationMetadata {
@@ -2084,6 +2101,14 @@ export async function processMessage(
       canonical_confidence: canonicalDecision.confidence,
       canonical_skill_id: canonicalDecision.skillId ?? undefined,
     },
+    cognitive_trace:
+      typeof (raw as Record<string, unknown>)?.omegaMetadata === 'object' &&
+      (raw as Record<string, unknown>)?.omegaMetadata &&
+      typeof ((raw as Record<string, unknown>).omegaMetadata as Record<string, unknown>)
+        .cognitiveTrace === 'object'
+        ? (((raw as Record<string, unknown>).omegaMetadata as Record<string, unknown>)
+            .cognitiveTrace as CognitiveRuntimeTrace)
+        : undefined,
   };
 
   const convRecvLog = {
