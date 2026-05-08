@@ -127,6 +127,18 @@ import {
 } from './workingMemoryCompressor';
 // v31.2.38: Quality Verifier — heuristic post-generation quality scoring
 import { evaluateResponseQuality } from './qualityVerifier';
+// v33.1.0: CognitiveRuntimeTrace — observable truth object per chat turn
+import {
+  createInitialTrace,
+  attachCanonicalDecision,
+  attachMemoryDecision,
+  attachGenerationResult,
+  attachWebResearchResult,
+  attachReflectiveCritique,
+  attachQualityCritique,
+  resolveFinalVerdict,
+  type CognitiveRuntimeTrace,
+} from './cognitiveRuntimeTrace';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
@@ -262,6 +274,8 @@ export interface ChatEngineResponse extends AIResponse {
     canonicalDecision?: CanonicalDecision;
     // v31.2.38: Heuristic quality score from qualityVerifier (0–1, optional)
     qualityScore?: number;
+    // v33.1.0: CognitiveRuntimeTrace — observable truth object per turn
+    cognitiveTrace?: CognitiveRuntimeTrace;
   };
 }
 
@@ -696,6 +710,16 @@ class ChatEngineOmega {
 
       logger.debug('Validated', { length: validatedMessage.length });
 
+      // v33.1.0: CognitiveRuntimeTrace — initialize per-turn observable truth object
+      const cogTrace = createInitialTrace({
+        messageLength: validatedMessage.length,
+        requiresFreshness: false,
+        requiresWeb: false,
+        requiresMemory: false,
+        taskFamily: 'unknown',
+        conversationId: this.getConversationId(finalConfig.mode),
+      });
+
       // ═══ PHASE 1.1.2: PREFERENCE EXTRACTION + NOISE DETECTION ═══
       // v24.5.0: Extract durable preferences from user message, detect noise
       pipelineSteps.push('preference-extraction');
@@ -907,6 +931,10 @@ class ChatEngineOmega {
         confidence: canonicalDecision.confidence.toFixed(2),
         timeMs: canonicalDecision.processingTimeMs,
       });
+
+      // v33.1.0: Attach canonical decision and memory gate to trace
+      attachCanonicalDecision(cogTrace, canonicalDecision);
+      attachMemoryDecision(cogTrace, canonicalDecision.memoryInjection, context.sources.length);
 
       // v30: Notify DevTools Journal that TITANE is now thinking (fire-and-forget)
       omegaDevToolsBridge
@@ -1247,6 +1275,8 @@ Format: [Audit complet] + [Réponse utilisateur]
       // v30: Pass canonicalMode so orchestrator can honor champion scoring (OLLAMA CHAMPION)
       orchestratorConfig.canonicalMode = canonicalDecision.mode;
 
+      // v33.1.0: Track generation latency for CognitiveRuntimeTrace
+      const _cogTraceGenStart = Date.now();
       const response = await this.withTimeout(
         aiOrchestrator.generate(validatedMessage, enrichedHistory, orchestratorConfig),
         timeoutMs,
@@ -1264,6 +1294,18 @@ Format: [Audit complet] + [Réponse utilisateur]
       }
 
       logger.debug('Orchestrator response received');
+
+      // v33.1.0: Attach generation result (provider, model, latency, fallback)
+      attachGenerationResult(cogTrace, {
+        providerRequested: canonicalDecision.provider.name,
+        providerUsed: response.provider,
+        modelRequested: canonicalDecision.provider.model,
+        modelUsed: response.model ?? undefined,
+        fallbackUsed:
+          canonicalDecision.provider.name !== 'auto' &&
+          canonicalDecision.provider.name !== response.provider,
+        latencyMs: Date.now() - _cogTraceGenStart,
+      });
 
       // ═══ PHASE 1.4.5: CONSTITUTIONAL TRUTH CHECK (LAW #10) ═══
       pipelineSteps.push('truth-check');
@@ -1423,6 +1465,25 @@ Format: [Audit complet] + [Réponse utilisateur]
             shouldRevise: critique.shouldRevise,
             webSourcesCount: critique.webSources.length,
             ms: critique.processingMs,
+          });
+          // v33.1.0: Attach reflective critique and web truth to trace
+          attachReflectiveCritique(cogTrace, critique);
+          attachWebResearchResult(cogTrace, {
+            needed: critique.hasFactualClaims,
+            attempted: critique.webSources.length > 0,
+            available: critique.webSources.length > 0,
+            sourceCount: critique.webSources.length,
+            confidence: critique.confidence,
+            limitations: critique.verified
+              ? []
+              : critique.hasFactualClaims
+                ? ['factual-claim-unverified']
+                : [],
+            reasonCode: !critique.hasFactualClaims
+              ? 'not_needed'
+              : critique.webSources.length > 0
+                ? 'web_success'
+                : 'web_failed',
           });
         } catch (reflectErr) {
           logger.warn('Reflective verification failed (non-blocking)', reflectErr);
@@ -1590,9 +1651,13 @@ Format: [Audit complet] + [Réponse utilisateur]
             hint: qualityCritique.enhancementHint,
           });
         }
+        // v33.1.0: Attach quality critique to trace
+        attachQualityCritique(cogTrace, qualityCritique);
       } catch {
         // Non-blocking: quality verification failure must never abort the response
       }
+      // v33.1.0: Resolve final verdict after all signals are collected
+      resolveFinalVerdict(cogTrace);
 
       // v26.0.0: Use kernel's resolved mode as authoritative
       const finalResponse: ChatEngineResponse = {
@@ -1610,6 +1675,7 @@ Format: [Audit complet] + [Réponse utilisateur]
           reasoningSummary: reasoningSummary || undefined,
           canonicalDecision,
           qualityScore,
+          cognitiveTrace: cogTrace,
         },
       };
 

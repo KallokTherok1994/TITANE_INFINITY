@@ -878,4 +878,147 @@ describe('useConversationEngine — responseQualityScore (qualityVerifier wiring
     expect(assistantMsg?.metadata?.responseQualityScore).toBeDefined();
     expect(assistantMsg?.metadata?.responseQualityTier).toBeDefined();
   });
+
+  it('prefers native cognitive_trace over heuristic reconstruction and sanitizes forbidden fields', async () => {
+    processMessageMock.mockResolvedValueOnce({
+      assistant_message: 'Réponse avec trace cognitive native',
+      conversation_id: 'conv-native-trace',
+      message_id: 'msg-native-trace',
+      detected_intention: 'Question' as const,
+      detected_emotion: { valence: 0, intensity: 0, energy: 0 },
+      cognitive_tags: ['FACTUAL'],
+      cognitive_summary: '',
+      metadata: {
+        timestamp: Date.now(),
+        provider_used: 'ollama',
+        latency_ms: 8,
+        tokens_used: 5,
+        memory_effect: 'New' as const,
+        links_to_contexts: ['memory_action:USE', 'web_action:search'],
+      },
+      omega_trace_meta: {
+        canonical_mode: 'DIRECT',
+        profile_id: 'BALANCED',
+        effort_level: 'medium',
+        model_class: 'local',
+        classifier_confidence: 0.4,
+        classifier_reason_code: 'fallback',
+        classifier_signals: [],
+        resolved_backend_mode: 'default',
+        provider_used: 'ollama',
+        fallback_used: false,
+        canonical_truth_status: 'FRESH_REQUIRED',
+        canonical_confidence: 0.4,
+      },
+      cognitive_trace: {
+        traceId: 'native-trace',
+        timestamp: Date.now(),
+        input: {
+          messageLength: 12,
+          requiresFreshness: true,
+          requiresWeb: true,
+          requiresMemory: true,
+          taskFamily: 'research',
+        },
+        canonical: {
+          attached: true,
+          mode: 'BALANCED',
+          canonicalMode: 'BALANCED',
+          profileId: 'BALANCED',
+          inferenceState: 'SAFE_TO_INFER',
+          truthStatus: 'STABLE_PARTIAL',
+          confidence: 0.82,
+          messageComplexity: 0.5,
+          signalCount: 1,
+        },
+        memory: {
+          injected: true,
+          reasonCode: 'ltm_match',
+          sources: ['memory:present'],
+          sourceCount: 1,
+          relevance: 'medium',
+          risk: 'none',
+        },
+        web: {
+          needed: true,
+          attempted: true,
+          available: true,
+          sourceCount: 2,
+          limitations: [],
+          reasonCode: 'web_success',
+        },
+        generation: {
+          providerRequested: 'ollama',
+          providerUsed: 'ollama',
+          modelRequested: 'gemma2:2b',
+          modelUsed: 'gemma2:2b',
+          fallbackUsed: false,
+          latencyMs: 12,
+        },
+        reflection: {
+          verifierEnabled: true,
+          factualClaimsDetected: true,
+          verified: true,
+          confidence: 0.8,
+          shouldRevise: false,
+          correctionsApplied: false,
+        },
+        quality: {
+          evaluated: true,
+          alignmentScore: 0.78,
+          completenessScore: 0.78,
+          depthMatchScore: 0.78,
+          overallScore: 0.78,
+          shouldEnhance: false,
+          enhancementHint: '',
+        },
+        metaCognition: {
+          evaluated: false,
+          anomalyDetected: false,
+        },
+        policy: {
+          version: 'v2',
+          webTruth: {
+            evaluated: true,
+            need: 'freshness_required',
+            status: 'attempted_success',
+            shouldUseWeb: true,
+            shouldWarnUser: false,
+          },
+          qualityAction: {
+            evaluated: true,
+            action: 'none',
+            minimumVerdict: 'PASS',
+            reasonCode: 'quality_pass',
+            warnUser: false,
+          },
+        },
+        final: {
+          verdict: 'PASS',
+          limitations: [],
+          safeToRemember: true,
+          shouldAskClarification: false,
+        },
+        chainOfThought: 'secret',
+      } as Record<string, unknown>,
+      meta: undefined,
+    });
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('Message avec trace native');
+    });
+
+    const assistantMsg = result.current.messages.find(m => m.role === 'assistant');
+    expect(assistantMsg?.metadata?.cognitiveTrace?.traceId).toBe('native-trace');
+    expect(assistantMsg?.metadata?.cognitiveTrace?.policy.version).toBe('v2');
+    expect(assistantMsg?.metadata?.cognitiveTrace?.final.verdict).toBe('PASS');
+    expect(
+      (assistantMsg?.metadata?.cognitiveTrace as Record<string, unknown>)?.chainOfThought
+    ).toBeUndefined();
+  });
 });

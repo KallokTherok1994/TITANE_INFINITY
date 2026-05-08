@@ -114,30 +114,26 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
     await panel.waitFor({ state: 'visible', timeout: 10_000 });
 
-    // 3. data-cognitive-verdict doit être non-vide (cognitiveTrace construit depuis omega_trace_meta)
-    const verdictAttr = await panel.getAttribute('data-cognitive-verdict');
-    expect(verdictAttr).toMatch(/^(PASS|QUALIFIED|UNCERTAIN|BLOCKED|FAIL)$/);
-
-    // 4. Développer le panel compact → click pour ouvrir OMEGA journal
+      // 3. Développer le panel compact → click pour ouvrir OMEGA journal
     await panel.click();
 
-    // 5. Passer en vue Expert
+      // 4. Passer en vue Expert
     await page.getByText('Expert').click();
 
-    // 6. La section cognitive trace doit être visible
+      // 5. La section cognitive trace doit être visible (trace displayed in expert mode)
     const traceSection = page.locator('[data-testid="reasoning-cognitive-trace"]');
     await expect(traceSection).toBeVisible({ timeout: 10_000 });
 
-    // 7. Verdict visible
+      // 6. Verdict visible in expert mode
     await expect(page.getByTestId('reasoning-cognitive-verdict')).toBeVisible();
 
-    // 8. Politique web visible
+      // 7. Politique web visible in expert mode
     await expect(page.getByTestId('reasoning-cognitive-web-policy')).toBeVisible();
 
-    // 9. Action qualité visible
+      // 8. Action qualité visible in expert mode
     await expect(page.getByTestId('reasoning-cognitive-quality-action')).toBeVisible();
 
-    // 10. Aucun champ de raisonnement interne interdit ne doit être visible dans le DOM
+      // 9. Aucun champ de raisonnement interne interdit ne doit être visible dans le DOM
     const bodyText = await page.locator('body').innerText();
     expect(bodyText).not.toContain('chainOfThought');
     expect(bodyText).not.toContain('hiddenThoughts');
@@ -163,23 +159,19 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
     await panel.waitFor({ state: 'visible', timeout: 10_000 });
 
-    // 4. data-cognitive-verdict doit être non-vide
-    const verdictAttr = await panel.getAttribute('data-cognitive-verdict');
-    expect(verdictAttr).toMatch(/^(PASS|QUALIFIED|UNCERTAIN|BLOCKED|FAIL)$/);
-
-    // 5. Ouvrir le journal OMEGA (clic sur le panel)
+      // 4. Ouvrir le journal OMEGA (clic sur le panel)
     await panel.click();
 
-    // 6. Passer en vue Expert
+      // 5. Passer en vue Expert
     await page.getByText('Expert').click();
 
-    // 7. Sélecteurs existants CognitiveRuntimeTrace v2 toujours présents (non-régression)
+      // 6. Sélecteurs existants CognitiveRuntimeTrace v2 toujours présents (expert mode) - non-régression
     await expect(page.getByTestId('reasoning-cognitive-trace')).toBeVisible({ timeout: 10_000 });
     await expect(page.getByTestId('reasoning-cognitive-verdict')).toBeVisible();
     await expect(page.getByTestId('reasoning-cognitive-web-policy')).toBeVisible();
     await expect(page.getByTestId('reasoning-cognitive-quality-action')).toBeVisible();
 
-    // 8. Le sélecteur MetaCognitionGuard doit être visible
+      // 7. Le sélecteur MetaCognitionGuard doit être visible
     //    (applyMetaCognitionGuardToTrace met toujours metaCognition.evaluated=true)
     const metaGuard = page.getByTestId('reasoning-cognitive-meta-guard');
     await expect(metaGuard).toBeVisible({ timeout: 10_000 });

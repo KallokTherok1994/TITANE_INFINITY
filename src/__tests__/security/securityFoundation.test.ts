@@ -173,8 +173,8 @@ describe('SC5: Tauri command surface is documented', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════
-// SC6: ALLOWED_COMMANDS COMPLETENESS — v30.0.0 fix validation
-// Verifies that the commands added in the IPC whitelist gap fix are
+// SC6: ALLOWED_COMMANDS COMPLETENESS — production TIME/Agenda/runtime commands
+// Verifies that the canonical commands used by runtime surfaces are
 // present in both ALLOWED_COMMANDS and the tauri.conf.json allow list.
 // ═══════════════════════════════════════════════════════════════════
 
@@ -182,12 +182,16 @@ describe('SC6: ALLOWED_COMMANDS includes all production IPC commands', () => {
   const securityPath = join(process.cwd(), 'src/lib/security.ts');
   const configPath = join(process.cwd(), 'src-tauri/tauri.conf.json');
 
-  // Commands added in the v30.0.0 IPC whitelist gap fix (AH-2026-04-06-IPC-WHITELIST-ALLOWLIST-060)
   const requiredCommands = [
+    'agenda_load_events',
     'agenda_save_event',
     'agenda_save_events',
     'agenda_delete_event',
     'agenda_sync',
+    'delete_snapshot',
+    'get_travel_stats',
+    'list_snapshots',
+    'restore_snapshot',
     'calibrate_titane_voice',
     'chat_mode_change',
     'chat_mode_sync',

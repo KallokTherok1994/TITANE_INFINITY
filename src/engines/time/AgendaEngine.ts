@@ -32,7 +32,6 @@ const logger = createLogger('Agenda');
 export type AgendaStorageCallbacks = {
   loadEvents: () => Promise<AgendaEvent[]>;
   saveEvents: (events: AgendaEvent[]) => Promise<void>;
-  exportCalendar: () => Promise<string>;
 };
 
 // ═══════════════════════════════════════════════════════════════════

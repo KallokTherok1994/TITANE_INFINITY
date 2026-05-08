@@ -305,14 +305,6 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           }
           data-model-used={modelUsed ?? ''}
           data-model-requested={modelRequested ?? ''}
-          data-cognitive-verdict={cognitiveTrace?.final.verdict ?? ''}
-          data-cognitive-web={cognitiveTrace != null ? String(cognitiveTrace.web.needed) : ''}
-          data-cognitive-memory={cognitiveTrace != null ? String(cognitiveTrace.memory.injected) : ''}
-          data-cognitive-quality={
-            cognitiveTrace?.quality.overallScore != null
-              ? `${(cognitiveTrace.quality.overallScore * 100).toFixed(0)}%`
-              : ''
-          }
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}

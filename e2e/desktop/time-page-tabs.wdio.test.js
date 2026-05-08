@@ -34,24 +34,25 @@ describe('time-page-tabs (WDIO desktop)', () => {
       );
     });
 
-    it('L1 — TimePage source contains tab-time-now data-testid', () => {
-      expect(src.includes('tab-time-now')).toBe(true);
+    it('L1 — TimePage source builds time tab data-testids from tab ids', () => {
+      expect(src.includes('data-testid={`tab-time-${tab.id}`}')).toBe(true);
     });
 
-    it('L2 — TimePage source contains tab-time-agenda data-testid', () => {
-      expect(src.includes('tab-time-agenda')).toBe(true);
+    it("L2 — TimePage source declares the 'now' tab id", () => {
+      expect(src.includes("{ id: 'now'")).toBe(true);
     });
 
-    it('L3 — TimePage source contains tab-time-timeline data-testid', () => {
-      expect(src.includes('tab-time-timeline')).toBe(true);
+    it("L3 — TimePage source declares the 'agenda' tab id", () => {
+      expect(src.includes("{ id: 'agenda'")).toBe(true);
     });
 
-    it('L4 — TimePage source contains tab-time-snapshots data-testid', () => {
-      expect(src.includes('tab-time-snapshots')).toBe(true);
+    it("L4 — TimePage source declares the 'timeline' and 'snapshots' tab ids", () => {
+      expect(src.includes("{ id: 'timeline'")).toBe(true);
+      expect(src.includes("{ id: 'snapshots'")).toBe(true);
     });
 
-    it('L5 — TimePage source contains tab-time-cognitive data-testid', () => {
-      expect(src.includes('tab-time-cognitive')).toBe(true);
+    it("L5 — TimePage source declares the 'cognitive' tab id", () => {
+      expect(src.includes("{ id: 'cognitive'")).toBe(true);
     });
   });
 

@@ -38,16 +38,6 @@ export async function loadAllEvents(): Promise<AgendaEvent[]> {
   return secureInvoke<AgendaEvent[]>('agenda_load_events');
 }
 
-/**
- * Exporter l'agenda au format iCal
- */
-export async function exportCalendar(): Promise<string> {
-  return secureInvoke<string>('agenda_export_ical');
-}
-
-/**
- * Synchroniser l'agenda
- */
 export async function syncAgenda(): Promise<void> {
   return secureInvoke('agenda_sync');
 }
@@ -73,7 +63,6 @@ export async function deleteEvent(eventId: string): Promise<void> {
 export const agendaService = {
   saveAllEvents,
   loadAllEvents,
-  exportCalendar,
   syncAgenda,
   saveEvent,
   deleteEvent,

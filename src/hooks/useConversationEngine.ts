@@ -48,31 +48,8 @@ import {
   QUALITY_THRESHOLD,
 } from '@/services/ai/qualityVerifier';
 import type { ResponseProfileId } from '@/services/ai/responsePolicy';
-import {
-  createInitialTrace,
-  attachCanonicalDecision,
-  attachMemoryDecision,
-  attachGenerationResult,
-  attachWebResearchResult,
-  attachQualityCritique,
-  attachQualityActionPolicy,
-  attachTracePolicyVersion,
-  attachWebTruthPolicy,
-  resolveFinalVerdict,
-  sanitizeTraceForUi,
-  type CognitiveRuntimeTrace,
-} from '@/services/ai/cognitiveRuntimeTrace';
-import { evaluateQualityActionPolicy } from '@/services/ai/qualityActionPolicy';
-import { evaluateWebTruthPolicy } from '@/services/ai/webTruthPolicy';
-import {
-  evaluateMetaCognitionGuard,
-  applyMetaCognitionGuardToTrace,
-} from '@/services/ai/metaCognitionGuard';
-import {
-  enforceMetaCognitionAction,
-  applyMetaCognitionEnforcementToTrace,
-  applyMetaCognitionEnforcementToResponse,
-} from '@/services/ai/metaCognitionActionEnforcer';
+import type { CognitiveRuntimeTrace } from '@/services/ai/cognitiveRuntimeTrace';
+import { buildCognitiveTraceFromResponse } from '@/services/ai/buildCognitiveTraceFromResponse';
 import {
   buildChatContextEnvelope,
   type ChatContextEnvelope,
@@ -317,6 +294,8 @@ export interface ConversationMessage {
     }>;
     /** CognitiveRuntimeTrace — trace observable pour le ThinkingPanel (sanitisée, sans CoT brut) */
     cognitiveTrace?: CognitiveRuntimeTrace | null;
+    /** Error details if cognitive trace build failed (UI-safe only, no raw output) */
+    cognitiveTraceBuildError?: { stage: string; message: string; name?: string };
     contextBinding?: ConversationContextBinding;
     singleDoorTags?: string[];
   };
@@ -850,144 +829,65 @@ export function useConversationEngine(
 
         // CognitiveRuntimeTrace — construit depuis omega_trace_meta + signaux qualité (non-bloquant)
         let cognitiveTrace: CognitiveRuntimeTrace | null = null;
-        try {
-          if (response.cognitive_trace) {
-            cognitiveTrace = sanitizeTraceForUi(response.cognitive_trace);
-          } else if (response.omega_trace_meta) {
-            const omegaMeta = response.omega_trace_meta;
-            const memoryLinks = response.metadata?.links_to_contexts ?? [];
-            const memoryUsed = memoryLinks.some(
-              l => l.includes('memory_action:USE') || l.includes('memory:present')
-            );
-            const isBlocked = response.cognitive_tags?.some(t => t.includes('BLOCKED')) ?? false;
-            const inferenceState = isBlocked
-              ? 'BLOCKED_BY_MISSING_FACT'
-              : omegaMeta.canonical_truth_status === 'INSUFFICIENT'
-                ? 'INFER_WITH_DISCLOSURE'
-                : 'SAFE_TO_INFER';
-            const factualClaimsDetected =
+        let cognitiveTraceBuildError: { stage: string; message: string; name?: string } | null = null;
+
+        if (response.cognitive_trace) {
+          cognitiveTrace = response.cognitive_trace;
+        } else if (response.omega_trace_meta) {
+          // Use pure builder to construct trace from omega_trace_meta
+          const omegaMeta = response.omega_trace_meta;
+          const memoryLinks = response.metadata?.links_to_contexts ?? [];
+
+          const buildResult = buildCognitiveTraceFromResponse({
+            omegaMeta,
+            userMessage: content,
+            assistantText: assistantContent,
+            conversationId: conversationId || 'unknown',
+            turnId: undefined, // Response doesn't have turn_id field
+            memoryLinks,
+            citationsCount,
+            isBlocked: response.cognitive_tags?.some(t => t.includes('BLOCKED')) ?? false,
+            responseQualityScore,
+            inferenceState:
+              response.cognitive_tags?.some(t => t.includes('BLOCKED'))
+                ? 'BLOCKED_BY_MISSING_FACT'
+                : omegaMeta.canonical_truth_status === 'INSUFFICIENT'
+                  ? 'INFER_WITH_DISCLOSURE'
+                  : 'SAFE_TO_INFER',
+            factualClaimsDetected:
               citationsCount > 0 ||
               memoryLinks.some(
                 link =>
-                  link.includes('web_action:') || link.includes('kernel_truth:fresh_required')
+                  link.includes('web_action:') || link.includes('kernel_truth:fresh_required'),
               ) ||
               (response.cognitive_tags?.some(
                 tag =>
                   tag.toLowerCase().includes('fact') ||
-                  tag.toLowerCase().includes('verify')
+                  tag.toLowerCase().includes('verify'),
               ) ??
-                false);
-            const webAttempted =
+                false),
+            webAttempted:
               citationsCount > 0 ||
               memoryLinks.some(
                 link =>
                   link.includes('web_action:search') ||
                   link.includes('web_action:verify') ||
-                  link.includes('web_action:research')
-              );
-            const webAvailable = citationsCount > 0;
-            const cTrace = createInitialTrace({
-              messageLength: assistantContent.length,
-              requiresFreshness: omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
-              requiresWeb: webAttempted,
-              requiresMemory: memoryUsed,
-              taskFamily: (omegaMeta.canonical_mode ?? 'unknown') as CognitiveRuntimeTrace['input']['taskFamily'],
-            });
-            attachCanonicalDecision(cTrace, {
-              mode: omegaMeta.canonical_mode ?? 'DIRECT',
-              modeClassification: {
-                canonicalMode: omegaMeta.canonical_mode ?? 'DIRECT',
-                confidence: omegaMeta.classifier_confidence ?? 0.5,
-              },
-              profileId: omegaMeta.profile_id ?? 'BALANCED',
-              inferenceState,
-              truthStatus: omegaMeta.canonical_truth_status ?? 'STABLE_PARTIAL',
-              confidence: omegaMeta.canonical_confidence ?? 0.7,
-              messageComplexity: 0.5,
-              signals: [],
-            });
-            attachTracePolicyVersion(cTrace, { version: 'v2' });
-            attachMemoryDecision(cTrace, {
-              use: memoryUsed,
-              sources: memoryLinks.filter(l => l.includes('memory')),
-              reasonCode: memoryUsed ? 'ltm_match' : 'no_context',
-              relevance: memoryUsed ? 'medium' : ('low' as const),
-            });
-            attachGenerationResult(cTrace, {
-              providerRequested: String(requestedProvider),
-              providerUsed: response.metadata?.provider_used,
-              modelRequested: response.metadata?.model_requested,
-              modelUsed: response.metadata?.model_used,
-              fallbackUsed: Boolean(response.metadata?.fallback_used),
-              latencyMs: response.metadata?.latency_ms,
-            });
-            const webPolicy = evaluateWebTruthPolicy({
-              userMessage: content,
-              requiresFreshness: omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
-              citationsCount,
-              factualClaimsDetected,
-              webAttempted,
-              webAvailable,
-              blocked: isBlocked,
-              failureReasonCode:
-                citationsCount > 0 ? 'web_success' : omegaMeta.canonical_truth_status,
-            });
-            attachWebResearchResult(cTrace, {
-              needed: webPolicy.shouldUseWeb,
-              attempted: webAttempted,
-              available: webAvailable,
-              sourceCount: citationsCount,
-              limitations: webPolicy.limitations,
-              reasonCode:
-                citationsCount > 0
-                  ? 'web_success'
-                  : webPolicy.shouldUseWeb
-                    ? 'web_failed'
-                    : 'not_needed',
-            });
-            attachWebTruthPolicy(cTrace, webPolicy);
-            if (responseQualityScore !== undefined) {
-              attachQualityCritique(cTrace, {
-                alignmentScore: responseQualityScore,
-                completenessScore: responseQualityScore,
-                depthMatchScore: responseQualityScore,
-                overallScore: responseQualityScore,
-                shouldEnhance: responseQualityScore < 0.65,
-                enhancementHint: '',
-              });
-            }
-            attachQualityActionPolicy(
-              cTrace,
-              evaluateQualityActionPolicy({
-                score: responseQualityScore,
-                evaluated: responseQualityScore !== undefined,
-                shouldEnhance: responseQualityScore !== undefined
-                  ? responseQualityScore < QUALITY_THRESHOLD
-                  : false,
-                inferenceState,
-              })
+                  link.includes('web_action:research'),
+              ),
+            webAvailable: citationsCount > 0,
+            requestedProvider,
+            providerUsed: response.metadata?.provider_used,
+          });
+
+          if (buildResult.ok) {
+            cognitiveTrace = buildResult.trace;
+          } else {
+            // Safe error capture: no raw output, just stage + message
+            cognitiveTraceBuildError = buildResult.error;
+            logger.debug(
+              `[useConversationEngine] Cognitive trace build failed at stage: ${buildResult.error.stage}`,
             );
-            resolveFinalVerdict(cTrace);
-            try {
-              const guardDecision = evaluateMetaCognitionGuard(cTrace);
-              applyMetaCognitionGuardToTrace(cTrace, guardDecision);
-              const enforcement = enforceMetaCognitionAction({
-                trace: cTrace,
-                guard: guardDecision,
-                assistantText: effectiveContent,
-              });
-              applyMetaCognitionEnforcementToTrace(cTrace, enforcement);
-              effectiveContent = applyMetaCognitionEnforcementToResponse({
-                response: effectiveContent,
-                enforcement,
-              });
-            } catch {
-              // Non-blocking — guard/enforcement failure must never abort message delivery
-            }
-            cognitiveTrace = sanitizeTraceForUi(cTrace);
           }
-        } catch {
-          // Non-blocking — trace failure must never abort message delivery
         }
 
         // Ajouter réponse assistant
@@ -1025,6 +925,7 @@ export function useConversationEngine(
             xpAwarded: qualityReward.totalXP,
             actionsPerformed,
             cognitiveTrace,
+            cognitiveTraceBuildError: cognitiveTraceBuildError || undefined,
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },

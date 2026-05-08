@@ -1027,10 +1027,15 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // AGENDA / TIME CENTER (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
+  'agenda_load_events',
   'agenda_save_event',
   'agenda_save_events',
   'agenda_delete_event',
   'agenda_sync',
+  'delete_snapshot',
+  'get_travel_stats',
+  'list_snapshots',
+  'restore_snapshot',
 
   // ═══════════════════════════════════════════════════════════════
   // PROGRESSION / XP (v30.0.0)

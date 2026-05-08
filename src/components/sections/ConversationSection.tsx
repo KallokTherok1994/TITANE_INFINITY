@@ -27,6 +27,7 @@ import type {
   ConversationMode,
   ConversationProviderPreference,
 } from '@/services/conversationEngine';
+import type { CognitiveRuntimeTrace } from '@/services/ai/cognitiveRuntimeTrace';
 import { resetStaticPromptContextCache } from '@/services/conversationEngine';
 import {
   buildConversationProviders,
@@ -127,6 +128,8 @@ interface LatestAssistantRuntimeSnapshot {
   modelRequested?: string;
   modelUsed?: string;
   fallbackUsed?: boolean;
+  cognitiveTrace?: CognitiveRuntimeTrace | null;
+  cognitiveTraceBuildError?: { stage: string; message: string; name?: string };
 }
 
 const BUILT_IN_CONVERSATION_MODES = [
@@ -1949,6 +1952,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       for (let i = messages.length - 1; i >= 0; i -= 1) {
         const message = messages[i] as ConversationMessageItem;
         if (message.role === 'assistant') {
+          // DEBUG: Always log last assistant message
+          console.log('[useCSection] Last assistant message:', {
+            id: message.id,
+            hasMetadata: !!message.metadata,
+            metadataKeys: message.metadata ? Object.keys(message.metadata) : [],
+          });
           return message;
         }
       }
@@ -1967,16 +1976,24 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       const providerUsed = latestAssistantMetadata?.providerUsed?.trim();
       const modelRequested = latestAssistantMetadata?.modelRequested?.trim();
       const modelUsed = latestAssistantMetadata?.modelUsed?.trim();
+      const cognitiveTrace = latestAssistantMetadata?.cognitiveTrace;
+      const cognitiveTraceBuildError = latestAssistantMetadata?.cognitiveTraceBuildError;
       const hasRuntimeEvidence =
         Boolean(providerMeta) ||
         tags.length > 0 ||
         Boolean(providerUsed) ||
         Boolean(modelRequested) ||
         Boolean(modelUsed) ||
-        latestAssistantMetadata?.fallbackUsed === true;
+        latestAssistantMetadata?.fallbackUsed === true ||
+        Boolean(cognitiveTrace);
 
       if (!hasRuntimeEvidence) {
         return null;
+      }
+
+      // DEBUG: Log when cognitive trace is found
+      if (cognitiveTrace?.final?.verdict) {
+        console.log('[ConversationSection] Cognitive trace found with verdict:', cognitiveTrace.final.verdict);
       }
 
       const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);
@@ -1989,6 +2006,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         modelRequested,
         modelUsed,
         fallbackUsed: latestAssistantMetadata?.fallbackUsed,
+        cognitiveTrace,
+        cognitiveTraceBuildError,
       };
     }, [latestAssistantMessage, latestAssistantMetadata]);
 
@@ -3304,6 +3323,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 ? resolveConversationOllamaModel(selectedProvider, latestAssistantRuntime)
                 : undefined)
             }
+            cognitiveTrace={latestAssistantRuntime?.cognitiveTrace ?? null}
           />
 
           {/* ═══ MESSAGES AREA ═══ */}
