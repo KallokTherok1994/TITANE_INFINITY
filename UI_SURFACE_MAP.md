@@ -992,3 +992,9 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Affiche: Action (guardAction), Cohérence (coherenceScore %), Anomalie (si anomalyDetected), Mémoire gelée (si freezeMemorySave)
 - Module: `src/services/ai/metaCognitionGuard.ts` — 8 règles, `evaluateMetaCognitionGuard()`, `applyMetaCognitionGuardToTrace()`
 - Tests: 12 unitaires (metaCognitionGuard.test.ts) + 4 composant (ThinkingPanel.cognitiveTrace.test.tsx) = 44/44 PASS
+
+# [2026-05-08] MetaCognitionGuard Runtime Certification Seal
+- Sélecteur `reasoning-cognitive-meta-guard` certifié par E2E `METACOGNITION_GUARD_VISIBLE_IN_THINKING_PANEL` (Playwright chromium, PASS)
+- Route runtime: mock chat response → useConversationEngine → evaluateMetaCognitionGuard → applyMetaCognitionGuardToTrace (evaluated=true) → sanitizeTraceForUi → ThinkingPanel Expert view
+- Gates: unit 44/44 PASS · E2E 6/6 PASS · detect_recurrence PASS · verify_instructions PASS (51/0)
+- AutoHeal entry: METACOGNITION_GUARD_RUNTIME_CERTIFICATION_2026_05_08 (1706)

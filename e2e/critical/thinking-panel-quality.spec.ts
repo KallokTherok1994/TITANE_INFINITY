@@ -145,6 +145,62 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     expect(bodyText).not.toContain('privateReasoning');
     expect(bodyText).not.toContain('internalReasoningSteps');
   });
+
+  test('METACOGNITION_GUARD_VISIBLE_IN_THINKING_PANEL', async ({ page }) => {
+    // 1. Envoyer un message déterministe — évite les déclencheurs shouldHandoffToResearch
+    //    (pas de "actualité", "récentes", "web", "internet", "recherche" + "en ligne")
+    const input = page.getByTestId('chat-input');
+    await input.waitFor({ state: 'visible', timeout: 20_000 });
+    await input.fill('Décris le fonctionnement interne de TITANE et ses principales fonctionnalités IA.');
+    await input.press('Enter');
+
+    // 2. Attendre la réponse mock [MOCK_OK] AVANT tout accès au panel
+    //    Évite les panneaux périmés issus du localStorage.
+    await expect(page.locator('[data-testid="chat-message-assistant"]').last())
+      .toContainText('[MOCK_OK]', { timeout: 30_000 });
+
+    // 3. Attendre le panel en état done (lié à ce message précis)
+    const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
+    await panel.waitFor({ state: 'visible', timeout: 10_000 });
+
+    // 4. data-cognitive-verdict doit être non-vide
+    const verdictAttr = await panel.getAttribute('data-cognitive-verdict');
+    expect(verdictAttr).toMatch(/^(PASS|QUALIFIED|UNCERTAIN|BLOCKED|FAIL)$/);
+
+    // 5. Ouvrir le journal OMEGA (clic sur le panel)
+    await panel.click();
+
+    // 6. Passer en vue Expert
+    await page.getByText('Expert').click();
+
+    // 7. Sélecteurs existants CognitiveRuntimeTrace v2 toujours présents (non-régression)
+    await expect(page.getByTestId('reasoning-cognitive-trace')).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId('reasoning-cognitive-verdict')).toBeVisible();
+    await expect(page.getByTestId('reasoning-cognitive-web-policy')).toBeVisible();
+    await expect(page.getByTestId('reasoning-cognitive-quality-action')).toBeVisible();
+
+    // 8. Le sélecteur MetaCognitionGuard doit être visible
+    //    (applyMetaCognitionGuardToTrace met toujours metaCognition.evaluated=true)
+    const metaGuard = page.getByTestId('reasoning-cognitive-meta-guard');
+    await expect(metaGuard).toBeVisible({ timeout: 10_000 });
+
+    // 9. Le contenu du bloc méta-garde doit contenir au moins un label attendu
+    const metaGuardText = await metaGuard.innerText();
+    const hasExpectedLabel =
+      metaGuardText.includes('Action') ||
+      metaGuardText.includes('Cohérence') ||
+      metaGuardText.includes('Anomalie') ||
+      metaGuardText.includes('Mémoire gelée');
+    expect(hasExpectedLabel).toBe(true);
+
+    // 10. Aucun champ de raisonnement brut interdit ne doit apparaître dans le DOM
+    const bodyText = await page.locator('body').innerText();
+    expect(bodyText).not.toContain('chainOfThought');
+    expect(bodyText).not.toContain('hiddenThoughts');
+    expect(bodyText).not.toContain('rawReasoning');
+    expect(bodyText).not.toContain('privateReasoning');
+    expect(bodyText).not.toContain('internalReasoningSteps');
+  });
 });
 
 test.describe('ThinkingPanel — quality score smoke (sans Tauri)', () => {

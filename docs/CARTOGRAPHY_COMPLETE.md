@@ -1947,3 +1947,13 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - **Tests**: 12 cas unitaires dans `src/services/ai/__tests__/metaCognitionGuard.test.ts`, 4 nouveaux cas dans `src/features/chat/__tests__/ThinkingPanel.cognitiveTrace.test.tsx`. Total gates: 44/44 PASS.
 - **AutoHeal**: `METACOGNITION_GUARD_V1_2026_05_08` (entrée 1705).
 - **Rollback**: supprimer `metaCognitionGuard.ts` + `metaCognitionGuard.test.ts`, retirer extension type metaCognition, retirer import + try/catch guard dans le hook, retirer bloc `reasoning-cognitive-meta-guard` ThinkingPanel, retirer 4 tests meta-guard.
+
+## [2026-05-08] MetaCognitionGuard Runtime Certification Seal — Mission 6
+
+- **Certifié par E2E**: `METACOGNITION_GUARD_VISIBLE_IN_THINKING_PANEL` dans `e2e/critical/thinking-panel-quality.spec.ts` — Playwright chromium PASS
+- **Route runtime prouvée**: mock chat response (omega_trace_meta) → `useConversationEngine` builds `cTrace` → `evaluateMetaCognitionGuard(cTrace)` → `applyMetaCognitionGuardToTrace(cTrace, decision)` (sets `evaluated=true`) → `sanitizeTraceForUi(cTrace)` → ThinkingPanel Expert view → `reasoning-cognitive-meta-guard` visible
+- **Message déterministe**: "Décris le fonctionnement interne de TITANE et ses principales fonctionnalités IA." (évite `shouldHandoffToResearch`)
+- **shouldHandoffToResearch guard**: testé — `actualité` + deep_internet_analysis pref triggere la recherche web; message corrigé pour ne pas déclencher
+- **Gates**: unit 44/44 PASS · E2E 6/6 PASS · detect_recurrence PASS · verify_instructions PASS (51/0) · TS no errors
+- **AutoHeal**: entry 1706 — METACOGNITION_GUARD_RUNTIME_CERTIFICATION_2026_05_08
+- **Proof pack**: `proof_packs/METACOGNITION_GUARD_RUNTIME_CERTIFICATION_2026_05_08/VERDICT.md`
