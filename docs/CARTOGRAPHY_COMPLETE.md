@@ -2017,3 +2017,37 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > Réparation minimale des surfaces de preuve desktop: `e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js` est borné au lane IPC direct (vérité transport + contenu non-mock), et `e2e/desktop/tauri-ui-cognitive-trace.wdio.test.js` porte la vérité propagation UI réelle via composeur.
 
 > Résultat de cartographie runtime: lane IPC direct PASS, lane UI propagation FAIL sur absence persistante de `reasoning-cognitive-trace` en runtime Tauri après envoi utilisateur. Ce lot isole explicitement le bypass de test harness d un défaut réel de propagation UI.
+
+---
+
+### [2026-05-08] Desktop UI Cognitive Trace Build Repair — Final Seal
+- **Verdict**: QUALIFIED
+- **Scellement réel**: `buildCognitiveTraceFromResponse` est bien actif dans le hook, `cognitiveTraceBuildError` est propagé, et la chaine metadata vers `ThinkingPanel` est prouvee par gates unitaires + browser lanes.
+- **Preuve desktop gouvernee**: lane WDIO `e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js` PASS avec preuve construction/storage (`hasTrace=true`, `verdict=PASS`, `webNeeded=true`, `memoryInjected=true`, `qualityScore=0.78`).
+- **Frontiere de preuve**: cette lane desktop ne certifie pas visuellement les selecteurs Expert (`reasoning-cognitive-trace`, `reasoning-cognitive-verdict`, `reasoning-cognitive-meta-guard`, `reasoning-cognitive-meta-enforcement`) dans la meme execution.
+- **Anti-fake**: localStorage/storage n est pas requalifie en preuve visuelle desktop Expert.
+- **Classification finale**: CONSTRUCTION_PROVEN + STORAGE_PROVEN + EXPERT_RENDER_PARTIAL.
+- **Proof pack canonique**: `proof_packs/DESKTOP_UI_COGNITIVE_TRACE_BUILD_REPAIR_2026_05_08/VERDICT.md`.
+
+---
+
+### [2026-05-08] Final End-to-End Cognitive Trace Seal (desktop Expert authority)
+- **Verdict**: FAIL
+- **Scope**: lane desktop dediee de certification visuelle Expert via composeur (`e2e/desktop/desktop-expert-cognitive-trace-seal.wdio.test.js`) + rerun matrice complete.
+- **Reparation minimale appliquee**: sanitization native `cognitive_trace` dans `src/hooks/useConversationEngine.ts` avant projection metadata UI.
+- **Preuves PASS**:
+  - vitest cognitif cible 8/8 files PASS
+  - Playwright live non-mock PASS (`TITANE_E2E_FULL=1`)
+  - WDIO desktop storage PASS
+  - WDIO desktop IPC direct PASS
+  - `pnpm run check` PASS
+  - `pnpm run build` PASS
+  - `pnpm run test:100` PASS
+  - `pnpm run test:rust` PASS
+  - `bash scripts/autoheal/detect_recurrence.sh` PASS
+  - `bash scripts/verify_instructions.sh` PASS
+- **Preuves FAIL**:
+  - WDIO desktop Expert visuel FAIL: `reasoning-cognitive-trace` non visible apres bascule Expert
+  - `pnpm run format:check` FAIL (dette de formatting multi-fichiers deja existante et hors patch minimal)
+- **Classification**: `DESKTOP_EXPERT_VISUAL_UNPROVEN` avec stop-the-line actif sur la lane visuelle desktop.
+- **Proof pack canonique**: `proof_packs/FINAL_END_TO_END_COGNITIVE_TRACE_SEAL_2026_05_08/VERDICT.md`

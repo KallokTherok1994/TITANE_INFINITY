@@ -48,7 +48,10 @@ import {
   QUALITY_THRESHOLD,
 } from '@/services/ai/qualityVerifier';
 import type { ResponseProfileId } from '@/services/ai/responsePolicy';
-import type { CognitiveRuntimeTrace } from '@/services/ai/cognitiveRuntimeTrace';
+import {
+  sanitizeTraceForUi,
+  type CognitiveRuntimeTrace,
+} from '@/services/ai/cognitiveRuntimeTrace';
 import { buildCognitiveTraceFromResponse } from '@/services/ai/buildCognitiveTraceFromResponse';
 import {
   buildChatContextEnvelope,
@@ -832,7 +835,9 @@ export function useConversationEngine(
         let cognitiveTraceBuildError: { stage: string; message: string; name?: string } | null = null;
 
         if (response.cognitive_trace) {
-          cognitiveTrace = response.cognitive_trace;
+          cognitiveTrace = sanitizeTraceForUi(
+            response.cognitive_trace as CognitiveRuntimeTrace,
+          );
         } else if (response.omega_trace_meta) {
           // Use pure builder to construct trace from omega_trace_meta
           const omegaMeta = response.omega_trace_meta;

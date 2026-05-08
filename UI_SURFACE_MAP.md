@@ -1035,3 +1035,25 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Surface preuve propagation UI composeur: `e2e/desktop/tauri-ui-cognitive-trace.wdio.test.js`
   - Vérité ciblée: envoi utilisateur (`chat-input` + `chat-send`) puis visibilité ThinkingPanel Expert (`reasoning-cognitive-*`).
   - Statut courant: FAIL runtime desktop (`reasoning-cognitive-trace` absent sous délai).
+
+# [2026-05-08] Desktop Cognitive Trace Build Repair — Final Governance Seal
+- Commit audite: `58a44830c`
+- Surface logicielle certifiee: `src/services/ai/buildCognitiveTraceFromResponse.ts` -> `src/hooks/useConversationEngine.ts` -> `src/components/sections/ConversationSection.tsx` -> `src/features/chat/ThinkingPanel.tsx`
+- Selecteurs Expert cibles (preuve visuelle desktop non totalement certifiee dans la lane seal):
+  - `reasoning-cognitive-trace`
+  - `reasoning-cognitive-verdict`
+  - `reasoning-cognitive-meta-guard`
+  - `reasoning-cognitive-meta-enforcement`
+- Lane desktop seal executee: `e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js` (PASS construction/storage)
+- Classification gouvernee: `CONSTRUCTION_PROVEN`, `STORAGE_PROVEN`, `EXPERT_RENDER_PARTIAL`
+- Verdict de mission: `QUALIFIED`
+
+# [2026-05-08] Final End-to-End Cognitive Trace Seal (desktop Expert lane)
+- Nouvelle lane desktop dediee: `e2e/desktop/desktop-expert-cognitive-trace-seal.wdio.test.js`
+- Parcours impose: vrai composeur (`chat-input` + `chat-send`) -> dernier message assistant -> panneau raisonnement -> mode `Expert`
+- Verites certifiees:
+  - Browser live non-mock: PASS (`e2e/critical/live-cognitive-trace.spec.ts`)
+  - Desktop storage/trace construction: PASS (`e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js`)
+  - Desktop IPC direct non-mock: PASS (`e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js`)
+- Frontiere restante (desktop visuel Expert): FAIL sur `reasoning-cognitive-trace` absent en runtime Tauri dans cette lane (`desktop-expert-cognitive-trace-seal`)
+- Classification de surface: `DESKTOP_EXPERT_VISUAL_BOUNDARY_ACTIVE`

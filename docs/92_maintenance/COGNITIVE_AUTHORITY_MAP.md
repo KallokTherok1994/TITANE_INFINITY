@@ -146,3 +146,26 @@ Expected: 10/10 tests PASS, `pnpm run check` clean or unrelated pre-existing fai
 - `conversation_generate` direct Tauri IPC lane is now validated independently in `e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js` and proves transport/content truth (non-mock).
 - UI cognitive propagation remains validated only through composer runtime lane `e2e/desktop/tauri-ui-cognitive-trace.wdio.test.js`.
 - Current governed truth: IPC response authority = PASS, UI cognitive trace visibility authority (desktop composer path) = FAIL until `reasoning-cognitive-trace` is rendered from assistant metadata in Tauri runtime.
+
+---
+
+## 2026-05-08 — Desktop Cognitive Trace Repair Final Seal (authority qualification)
+
+- Builder authority: `src/services/ai/buildCognitiveTraceFromResponse.ts` is active and unit-proven (19/19).
+- Hook authority: `src/hooks/useConversationEngine.ts` consumes builder output and exposes `cognitiveTraceBuildError` as safe diagnostics.
+- UI bridge authority: `src/components/sections/ConversationSection.tsx` forwards `cognitiveTrace` and `cognitiveTraceBuildError` to `ThinkingPanel`.
+- Browser visual authority: proven by Playwright mock/live lanes.
+- Desktop authority in this seal: construction/storage proof is PASS via `e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js`, but Expert visual rendering remains partially unproven in the same governed lane.
+- Mission classification: `QUALIFIED` (`CONSTRUCTION_PROVEN`, `STORAGE_PROVEN`, `EXPERT_RENDER_PARTIAL`).
+
+---
+
+## 2026-05-08 — Final End-to-End desktop Expert seal (authority status)
+
+- New dedicated lane: `e2e/desktop/desktop-expert-cognitive-trace-seal.wdio.test.js`.
+- Hook authority strengthened: native `cognitive_trace` is now sanitized through `sanitizeTraceForUi()` in `src/hooks/useConversationEngine.ts` before metadata projection.
+- Browser authority: PASS (`e2e/critical/live-cognitive-trace.spec.ts`, non-mock).
+- Desktop storage authority: PASS (`e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js`).
+- Desktop direct IPC authority: PASS (`e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js`).
+- Desktop Expert visual authority: FAIL (`reasoning-cognitive-trace` absent in the dedicated desktop Expert lane).
+- Final authority classification: `DESKTOP_EXPERT_VISUAL_UNPROVEN` (must not be reported as PASS).
