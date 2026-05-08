@@ -49,6 +49,26 @@ import {
 } from '@/services/ai/qualityVerifier';
 import type { ResponseProfileId } from '@/services/ai/responsePolicy';
 import {
+  createInitialTrace,
+  attachCanonicalDecision,
+  attachMemoryDecision,
+  attachGenerationResult,
+  attachWebResearchResult,
+  attachQualityCritique,
+  attachQualityActionPolicy,
+  attachTracePolicyVersion,
+  attachWebTruthPolicy,
+  resolveFinalVerdict,
+  sanitizeTraceForUi,
+  type CognitiveRuntimeTrace,
+} from '@/services/ai/cognitiveRuntimeTrace';
+import { evaluateQualityActionPolicy } from '@/services/ai/qualityActionPolicy';
+import { evaluateWebTruthPolicy } from '@/services/ai/webTruthPolicy';
+import {
+  evaluateMetaCognitionGuard,
+  applyMetaCognitionGuardToTrace,
+} from '@/services/ai/metaCognitionGuard';
+import {
   buildChatContextEnvelope,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
@@ -290,6 +310,8 @@ export interface ConversationMessage {
       label: string;
       status: 'done' | 'skipped' | 'error';
     }>;
+    /** CognitiveRuntimeTrace — trace observable pour le ThinkingPanel (sanitisée, sans CoT brut) */
+    cognitiveTrace?: CognitiveRuntimeTrace | null;
     contextBinding?: ConversationContextBinding;
     singleDoorTags?: string[];
   };
@@ -819,6 +841,138 @@ export function useConversationEngine(
           // Non-blocking — failure must never abort message delivery
         }
 
+        // CognitiveRuntimeTrace — construit depuis omega_trace_meta + signaux qualité (non-bloquant)
+        let cognitiveTrace: CognitiveRuntimeTrace | null = null;
+        try {
+          if (response.cognitive_trace) {
+            cognitiveTrace = sanitizeTraceForUi(response.cognitive_trace);
+          } else if (response.omega_trace_meta) {
+            const omegaMeta = response.omega_trace_meta;
+            const memoryLinks = response.metadata?.links_to_contexts ?? [];
+            const memoryUsed = memoryLinks.some(
+              l => l.includes('memory_action:USE') || l.includes('memory:present')
+            );
+            const isBlocked = response.cognitive_tags?.some(t => t.includes('BLOCKED')) ?? false;
+            const inferenceState = isBlocked
+              ? 'BLOCKED_BY_MISSING_FACT'
+              : omegaMeta.canonical_truth_status === 'INSUFFICIENT'
+                ? 'INFER_WITH_DISCLOSURE'
+                : 'SAFE_TO_INFER';
+            const factualClaimsDetected =
+              citationsCount > 0 ||
+              memoryLinks.some(
+                link =>
+                  link.includes('web_action:') || link.includes('kernel_truth:fresh_required')
+              ) ||
+              (response.cognitive_tags?.some(
+                tag =>
+                  tag.toLowerCase().includes('fact') ||
+                  tag.toLowerCase().includes('verify')
+              ) ??
+                false);
+            const webAttempted =
+              citationsCount > 0 ||
+              memoryLinks.some(
+                link =>
+                  link.includes('web_action:search') ||
+                  link.includes('web_action:verify') ||
+                  link.includes('web_action:research')
+              );
+            const webAvailable = citationsCount > 0;
+            const cTrace = createInitialTrace({
+              messageLength: assistantContent.length,
+              requiresFreshness: omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
+              requiresWeb: webAttempted,
+              requiresMemory: memoryUsed,
+              taskFamily: (omegaMeta.canonical_mode ?? 'unknown') as CognitiveRuntimeTrace['input']['taskFamily'],
+            });
+            attachCanonicalDecision(cTrace, {
+              mode: omegaMeta.canonical_mode ?? 'DIRECT',
+              modeClassification: {
+                canonicalMode: omegaMeta.canonical_mode ?? 'DIRECT',
+                confidence: omegaMeta.classifier_confidence ?? 0.5,
+              },
+              profileId: omegaMeta.profile_id ?? 'BALANCED',
+              inferenceState,
+              truthStatus: omegaMeta.canonical_truth_status ?? 'STABLE_PARTIAL',
+              confidence: omegaMeta.canonical_confidence ?? 0.7,
+              messageComplexity: 0.5,
+              signals: [],
+            });
+            attachTracePolicyVersion(cTrace, { version: 'v2' });
+            attachMemoryDecision(cTrace, {
+              use: memoryUsed,
+              sources: memoryLinks.filter(l => l.includes('memory')),
+              reasonCode: memoryUsed ? 'ltm_match' : 'no_context',
+              relevance: memoryUsed ? 'medium' : ('low' as const),
+            });
+            attachGenerationResult(cTrace, {
+              providerRequested: String(requestedProvider),
+              providerUsed: response.metadata?.provider_used,
+              modelRequested: response.metadata?.model_requested,
+              modelUsed: response.metadata?.model_used,
+              fallbackUsed: Boolean(response.metadata?.fallback_used),
+              latencyMs: response.metadata?.latency_ms,
+            });
+            const webPolicy = evaluateWebTruthPolicy({
+              userMessage: content,
+              requiresFreshness: omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
+              citationsCount,
+              factualClaimsDetected,
+              webAttempted,
+              webAvailable,
+              blocked: isBlocked,
+              failureReasonCode:
+                citationsCount > 0 ? 'web_success' : omegaMeta.canonical_truth_status,
+            });
+            attachWebResearchResult(cTrace, {
+              needed: webPolicy.shouldUseWeb,
+              attempted: webAttempted,
+              available: webAvailable,
+              sourceCount: citationsCount,
+              limitations: webPolicy.limitations,
+              reasonCode:
+                citationsCount > 0
+                  ? 'web_success'
+                  : webPolicy.shouldUseWeb
+                    ? 'web_failed'
+                    : 'not_needed',
+            });
+            attachWebTruthPolicy(cTrace, webPolicy);
+            if (responseQualityScore !== undefined) {
+              attachQualityCritique(cTrace, {
+                alignmentScore: responseQualityScore,
+                completenessScore: responseQualityScore,
+                depthMatchScore: responseQualityScore,
+                overallScore: responseQualityScore,
+                shouldEnhance: responseQualityScore < 0.65,
+                enhancementHint: '',
+              });
+            }
+            attachQualityActionPolicy(
+              cTrace,
+              evaluateQualityActionPolicy({
+                score: responseQualityScore,
+                evaluated: responseQualityScore !== undefined,
+                shouldEnhance: responseQualityScore !== undefined
+                  ? responseQualityScore < QUALITY_THRESHOLD
+                  : false,
+                inferenceState,
+              })
+            );
+            resolveFinalVerdict(cTrace);
+            try {
+              const guardDecision = evaluateMetaCognitionGuard(cTrace);
+              applyMetaCognitionGuardToTrace(cTrace, guardDecision);
+            } catch {
+              // Non-blocking — guard failure must never abort message delivery
+            }
+            cognitiveTrace = sanitizeTraceForUi(cTrace);
+          }
+        } catch {
+          // Non-blocking — trace failure must never abort message delivery
+        }
+
         // Ajouter réponse assistant
         const assistantMessage: ConversationMessage = {
           id: response.message_id,
@@ -853,6 +1007,7 @@ export function useConversationEngine(
             responseQualityTier,
             xpAwarded: qualityReward.totalXP,
             actionsPerformed,
+            cognitiveTrace,
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },

@@ -986,3 +986,9 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Fix: await [MOCK_OK] in last assistant message before checking ThinkingPanel; test message must not contain recherche+web (shouldHandoffToResearch bypass)
 - AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08` (JSONL VALID, unique, full schema)
 - Gates: detect_recurrence PASS · verify_instructions PASS (51/0) · unit 28/28 · E2E 5/5
+
+# [2026-05-08] MetaCognitionGuard v1 — Sélecteur Expert ThinkingPanel
+- Nouveau sélecteur stable: `data-testid="reasoning-cognitive-meta-guard"` dans `src/features/chat/ThinkingPanel.tsx` (section Expert, conditionnel à `metaCognition.evaluated === true`)
+- Affiche: Action (guardAction), Cohérence (coherenceScore %), Anomalie (si anomalyDetected), Mémoire gelée (si freezeMemorySave)
+- Module: `src/services/ai/metaCognitionGuard.ts` — 8 règles, `evaluateMetaCognitionGuard()`, `applyMetaCognitionGuardToTrace()`
+- Tests: 12 unitaires (metaCognitionGuard.test.ts) + 4 composant (ThinkingPanel.cognitiveTrace.test.tsx) = 44/44 PASS

@@ -1937,3 +1937,13 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - Key fix: shouldHandoffToResearch bypass detection; stale panel guard via [MOCK_OK] wait
 - AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08` (entries=1704, JSONL VALID, no duplicates)
 - Gates: detect_recurrence PASS · verify_instructions PASS (51/0) · unit 28/28 · E2E 5/5
+
+## [2026-05-08] MetaCognitionGuard v1 — Garde de cohérence trace-aware
+
+- **Module créé**: `src/services/ai/metaCognitionGuard.ts` — module TypeScript pur, sans effet de bord, sans async, sans IPC. Implémente 8 règles de garde : (1) false PASS web non prouvé, (2) false PASS qualité basse, (3) floor policy ignoré, (4) canonical manquant, (5) état d'inférence bloquant, (6) risque sauvegarde mémoire, (7) conflit contexte mémoire, (8) fuite raisonnement brut.
+- **Type étendu**: `src/services/ai/cognitiveRuntimeTrace.ts` — champ `metaCognition` enrichi de `guardAction?`, `freezeMemorySave?`, `issues?` (types importés depuis `metaCognitionGuard`).
+- **Intégration hook**: `src/hooks/useConversationEngine.ts` — guard évalué et appliqué non-bloquant après `resolveFinalVerdict()` via `evaluateMetaCognitionGuard` + `applyMetaCognitionGuardToTrace`.
+- **UI surfacée**: `src/features/chat/ThinkingPanel.tsx` — bloc `reasoning-cognitive-meta-guard` dans la vue Expert, visible quand `metaCognition.evaluated === true`. Affiche Action/Cohérence/Anomalie/Mémoire gelée. Aucun raw CoT exposé.
+- **Tests**: 12 cas unitaires dans `src/services/ai/__tests__/metaCognitionGuard.test.ts`, 4 nouveaux cas dans `src/features/chat/__tests__/ThinkingPanel.cognitiveTrace.test.tsx`. Total gates: 44/44 PASS.
+- **AutoHeal**: `METACOGNITION_GUARD_V1_2026_05_08` (entrée 1705).
+- **Rollback**: supprimer `metaCognitionGuard.ts` + `metaCognitionGuard.test.ts`, retirer extension type metaCognition, retirer import + try/catch guard dans le hook, retirer bloc `reasoning-cognitive-meta-guard` ThinkingPanel, retirer 4 tests meta-guard.

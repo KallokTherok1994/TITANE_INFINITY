@@ -29,6 +29,7 @@ import {
   Globe,
 } from 'lucide-react';
 import './ThinkingPanel.css';
+import type { CognitiveRuntimeTrace } from '@/services/ai/cognitiveRuntimeTrace';
 
 interface ThinkingStep {
   id: string;
@@ -99,6 +100,8 @@ interface ThinkingPanelProps {
   actionsPerformed?: ThinkingAction[];
   modelUsed?: string;
   modelRequested?: string;
+  /** CognitiveRuntimeTrace sanitized — trace observable runtime (sans CoT brut) */
+  cognitiveTrace?: CognitiveRuntimeTrace | null;
 }
 
 type ViewMode = 'essentiel' | 'detaille' | 'expert';
@@ -128,6 +131,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   actionsPerformed,
   modelUsed,
   modelRequested,
+  cognitiveTrace,
 }) => {
   const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
     state ??
@@ -301,6 +305,14 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           }
           data-model-used={modelUsed ?? ''}
           data-model-requested={modelRequested ?? ''}
+          data-cognitive-verdict={cognitiveTrace?.final.verdict ?? ''}
+          data-cognitive-web={cognitiveTrace != null ? String(cognitiveTrace.web.needed) : ''}
+          data-cognitive-memory={cognitiveTrace != null ? String(cognitiveTrace.memory.injected) : ''}
+          data-cognitive-quality={
+            cognitiveTrace?.quality.overallScore != null
+              ? `${(cognitiveTrace.quality.overallScore * 100).toFixed(0)}%`
+              : ''
+          }
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -388,6 +400,14 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
         }
         data-model-used={modelUsed ?? ''}
         data-model-requested={modelRequested ?? ''}
+        data-cognitive-verdict={cognitiveTrace?.final.verdict ?? ''}
+        data-cognitive-web={cognitiveTrace != null ? String(cognitiveTrace.web.needed) : ''}
+        data-cognitive-memory={cognitiveTrace != null ? String(cognitiveTrace.memory.injected) : ''}
+        data-cognitive-quality={
+          cognitiveTrace?.quality.overallScore != null
+            ? `${(cognitiveTrace.quality.overallScore * 100).toFixed(0)}%`
+            : ''
+        }
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -16 }}
@@ -958,6 +978,118 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                     </div>
                   </div>
                 )}
+            </div>
+          )}
+
+          {/* ── Trace Cognitive (Expert uniquement) ─────────────────── */}
+          {viewMode === 'expert' && cognitiveTrace && (
+            <div
+              className="oj-section oj-section--cognitive-trace"
+              data-testid="reasoning-cognitive-trace"
+            >
+              <div className="oj-section-title">
+                <Brain size={14} /> Trace cognitive
+              </div>
+              <div className="oj-runtime-grid">
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-verdict">
+                  <span className="oj-runtime-label">Verdict</span>
+                  <span className="oj-runtime-value">{cognitiveTrace.final.verdict}</span>
+                </div>
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-decision">
+                  <span className="oj-runtime-label">Décision</span>
+                  <span className="oj-runtime-value">
+                    {cognitiveTrace.canonical.profileId}
+                    {' · '}{cognitiveTrace.canonical.inferenceState}
+                    {cognitiveTrace.canonical.confidence !== undefined
+                      ? ` · ${(cognitiveTrace.canonical.confidence * 100).toFixed(0)}%`
+                      : ''}
+                  </span>
+                </div>
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-memory">
+                  <span className="oj-runtime-label">Mémoire</span>
+                  <span className="oj-runtime-value">
+                    {cognitiveTrace.memory.injected ? '✓ Injectée' : '—'}
+                    {' · '}{cognitiveTrace.memory.reasonCode ?? '—'}
+                    {cognitiveTrace.memory.sourceCount
+                      ? ` · ${cognitiveTrace.memory.sourceCount} sources`
+                      : ''}
+                  </span>
+                </div>
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-web">
+                  <span className="oj-runtime-label">Recherche</span>
+                  <span className="oj-runtime-value">
+                    {cognitiveTrace.web.needed ? 'Requise' : 'Non requise'}
+                    {cognitiveTrace.web.attempted ? ' · Tentée' : ''}
+                    {cognitiveTrace.web.sourceCount
+                      ? ` · ${cognitiveTrace.web.sourceCount} sources`
+                      : ''}
+                    {cognitiveTrace.web.limitations.length > 0
+                      ? ` · ⚠ ${cognitiveTrace.web.limitations[0]}`
+                      : ''}
+                  </span>
+                </div>
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-web-policy">
+                  <span className="oj-runtime-label">Politique web</span>
+                  <span className="oj-runtime-value">
+                    {cognitiveTrace.policy.webTruth.evaluated
+                      ? `${cognitiveTrace.policy.webTruth.need ?? '—'} · ${cognitiveTrace.policy.webTruth.status ?? '—'}`
+                      : '—'}
+                  </span>
+                </div>
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-reflection">
+                  <span className="oj-runtime-label">Vérification</span>
+                  <span className="oj-runtime-value">
+                    {cognitiveTrace.reflection.verifierEnabled
+                      ? cognitiveTrace.reflection.verified
+                        ? '✓ Vérifié'
+                        : '⚠ Non vérifié'
+                      : '—'}
+                    {cognitiveTrace.reflection.factualClaimsDetected
+                      ? ' · Affirmations factuelles'
+                      : ''}
+                  </span>
+                </div>
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-quality">
+                  <span className="oj-runtime-label">Qualité</span>
+                  <span className="oj-runtime-value">
+                    {cognitiveTrace.quality.evaluated
+                      ? `${((cognitiveTrace.quality.overallScore ?? 0) * 100).toFixed(0)}%`
+                        + (cognitiveTrace.quality.shouldEnhance ? ' · Amélioration suggérée' : '')
+                      : '—'}
+                  </span>
+                </div>
+                <div className="oj-runtime-item" data-testid="reasoning-cognitive-quality-action">
+                  <span className="oj-runtime-label">Action qualité</span>
+                  <span className="oj-runtime-value">
+                    {cognitiveTrace.policy.qualityAction.evaluated
+                      ? `${cognitiveTrace.policy.qualityAction.action ?? '—'}`
+                        + (cognitiveTrace.policy.qualityAction.minimumVerdict
+                          ? ` · min ${cognitiveTrace.policy.qualityAction.minimumVerdict}`
+                          : '')
+                      : '—'}
+                  </span>
+                </div>
+                {cognitiveTrace.metaCognition?.evaluated && (
+                  <div className="oj-runtime-item" data-testid="reasoning-cognitive-meta-guard">
+                    <span className="oj-runtime-label">Méta-garde</span>
+                    <span className="oj-runtime-value">
+                      {`Action: ${cognitiveTrace.metaCognition.guardAction ?? '—'}`}
+                      {cognitiveTrace.metaCognition.anomalyDetected
+                        ? ` · Anomalie · Cohérence: ${((cognitiveTrace.metaCognition.coherenceScore ?? 1) * 100).toFixed(0)}%`
+                        : ` · Cohérence: ${((cognitiveTrace.metaCognition.coherenceScore ?? 1) * 100).toFixed(0)}%`}
+                      {cognitiveTrace.metaCognition.freezeMemorySave ? ' · Mémoire gelée' : ''}
+                    </span>
+                  </div>
+                )}
+              </div>
+              {cognitiveTrace.final.limitations.length > 0 && (
+                <div className="oj-runtime-item">
+                  <span className="oj-runtime-label">Limites</span>
+                  <span className="oj-runtime-value oj-quality-warn">
+                    {cognitiveTrace.final.limitations.join(' · ')}
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
