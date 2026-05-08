@@ -1933,5 +1933,7 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 ## [2026-05-08] CognitiveRuntimeTrace Runtime Certification Seal
 - Scope: `e2e/critical/thinking-panel-quality.spec.ts` + `src/services/conversationEngine.ts`
 - Verdict: PASS — 5/5 tests E2E pass, including `COGNITIVE_TRACE_V2_VISIBLE_IN_THINKING_PANEL`
+- E2E proves the active ThinkingPanel can surface CognitiveRuntimeTrace v2 policy state: verdict, web policy, quality action, and no raw chain-of-thought exposure. The E2E waits for the current `[MOCK_OK]` response to avoid stale ThinkingPanel state and avoids `shouldHandoffToResearch` trigger terms.
 - Key fix: shouldHandoffToResearch bypass detection; stale panel guard via [MOCK_OK] wait
-- AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08`
+- AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08` (entries=1704, JSONL VALID, no duplicates)
+- Gates: detect_recurrence PASS · verify_instructions PASS (51/0) · unit 28/28 · E2E 5/5

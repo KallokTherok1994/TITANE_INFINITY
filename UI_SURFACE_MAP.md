@@ -982,5 +982,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 # [2026-05-08] CognitiveRuntimeTrace v2 — Runtime Certification Seal
 - Surface: `reasoning-progress[data-cognitive-verdict]`, `reasoning-cognitive-trace`, `reasoning-cognitive-verdict`, `reasoning-cognitive-web-policy`, `reasoning-cognitive-quality-action`
 - E2E certification: `e2e/critical/thinking-panel-quality.spec.ts::COGNITIVE_TRACE_V2_VISIBLE_IN_THINKING_PANEL` — PASS (5/5 tests)
-- Fix: await [MOCK_OK] in last assistant message before checking ThinkingPanel; test message ne doit pas contenir recherche+web (shouldHandoffToResearch bypass)
-- AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08`
+- E2E proves the active ThinkingPanel can surface CognitiveRuntimeTrace v2 policy state: verdict, web policy, quality action, and no raw chain-of-thought exposure. The E2E waits for the current `[MOCK_OK]` response to avoid stale ThinkingPanel state and avoids `shouldHandoffToResearch` trigger terms.
+- Fix: await [MOCK_OK] in last assistant message before checking ThinkingPanel; test message must not contain recherche+web (shouldHandoffToResearch bypass)
+- AutoHeal: `COGNITIVE_TRACE_RUNTIME_CERTIFICATION_2026_05_08` (JSONL VALID, unique, full schema)
+- Gates: detect_recurrence PASS · verify_instructions PASS (51/0) · unit 28/28 · E2E 5/5
