@@ -1,6 +1,6 @@
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { TimePage } from '@/pages/TimePage';
 import type { UseTimeAgendaReturn } from '@/hooks/useTimeAgenda';
@@ -241,5 +241,24 @@ describe('TimePage', () => {
     });
 
     expect(tauriMocks.titanForceSnapshotCurrentMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps every TIME tab visible through its canonical UI surface', async () => {
+    const cases = [
+      ['/time?tab=now', 'time-current-segment'],
+      ['/time?tab=agenda', 'btn-time-add-manual'],
+      ['/time?tab=timeline', 'time-timeline-section'],
+      ['/time?tab=snapshots', 'time-snapshots-section'],
+      ['/time?tab=cognitive', 'time-cognitive-section'],
+    ] as const;
+
+    for (const [route, testId] of cases) {
+      cleanup();
+      await act(async () => {
+        renderTimePage(route);
+      });
+
+      expect(await screen.findByTestId(testId)).toBeInTheDocument();
+    }
   });
 });

@@ -7,7 +7,12 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { waitForTabActive } from './ui-driver.wdio.js';
+import { uiPages } from './page-objects/uiPages.po.js';
+import {
+  gotoTopNavPage,
+  waitAppReady,
+  waitForTabActive,
+} from './ui-driver.wdio.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -21,6 +26,28 @@ const TIME_TAB_IDS = [
   'tab-time-timeline',
   'tab-time-snapshots',
   'tab-time-cognitive',
+];
+const TIME_TAB_SURFACES = [
+  {
+    tabId: 'tab-time-now',
+    surfaceId: 'time-current-segment',
+  },
+  {
+    tabId: 'tab-time-agenda',
+    surfaceId: 'btn-time-add-manual',
+  },
+  {
+    tabId: 'tab-time-timeline',
+    surfaceId: 'time-timeline-section',
+  },
+  {
+    tabId: 'tab-time-snapshots',
+    surfaceId: 'time-snapshots-section',
+  },
+  {
+    tabId: 'tab-time-cognitive',
+    surfaceId: 'time-cognitive-section',
+  },
 ];
 
 describe('time-page-tabs (WDIO desktop)', () => {
@@ -62,7 +89,8 @@ describe('time-page-tabs (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/time');
+      await waitAppReady();
+      await gotoTopNavPage(uiPages.time);
       await $(testId('page-time')).waitForDisplayed({ timeout: TIMEOUT });
       await $(testId('tab-time-now')).waitForDisplayed({ timeout: TIMEOUT });
     });
@@ -115,10 +143,13 @@ describe('time-page-tabs (WDIO desktop)', () => {
       }
     });
 
-    it('L13 — navigating back to tab-time-now restores active state', async () => {
-      await $(testId('tab-time-now')).click();
-      await waitForTabActive(testId('tab-time-now'), TIMEOUT);
-      expect(await $(testId('tab-time-now')).getAttribute('aria-selected')).toBe('true');
+    it('L13 — each TIME tab exposes its canonical visible surface', async () => {
+      for (const { tabId, surfaceId } of TIME_TAB_SURFACES) {
+        await $(testId(tabId)).click();
+        await waitForTabActive(testId(tabId), TIMEOUT);
+        await $(testId(surfaceId)).waitForDisplayed({ timeout: TIMEOUT });
+        expect(await $(testId(surfaceId)).isDisplayed()).toBe(true);
+      }
     });
   });
 });
