@@ -2823,6 +2823,13 @@ class TauriClient {
     );
   }
 
+  async titanForceSnapshotCurrent(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TITAN_FORCE_SNAPSHOT_CURRENT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async titanPersistenceInit(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.TITAN_PERSISTENCE_INIT,

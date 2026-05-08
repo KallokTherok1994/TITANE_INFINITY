@@ -474,6 +474,7 @@ export const TAURI_COMMANDS = {
   TEST_MICROPHONE: 'test_microphone',
   TEST_TTS: 'test_tts',
   TITAN_FORCE_SNAPSHOT: 'titan_force_snapshot',
+  TITAN_FORCE_SNAPSHOT_CURRENT: 'titan_force_snapshot_current',
   TITAN_PERSISTENCE_INIT: 'titan_persistence_init',
   TITAN_PERSISTENCE_SHUTDOWN: 'titan_persistence_shutdown',
   TITAN_PERSIST_EVENT: 'titan_persist_event',

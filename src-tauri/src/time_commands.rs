@@ -8,10 +8,12 @@
 
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
+use crate::persistence::PERSISTENCE_ENGINE;
 use serde::{Deserialize, Serialize};
 
 /// Métadonnées snapshot pour UI
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SnapshotMetadata {
     pub id: String,
     pub timestamp: u64,
@@ -23,6 +25,7 @@ pub struct SnapshotMetadata {
 
 /// Context snapshot pour UI
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SnapshotContext {
     pub xp: i32,
     pub level: i32,
@@ -33,6 +36,7 @@ pub struct SnapshotContext {
 
 /// Statistiques time-travel
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TravelStats {
     pub total_snapshots: usize,
     pub ram_cache_size: usize,
@@ -50,45 +54,31 @@ pub async fn list_snapshots() -> Result<Vec<SnapshotMetadata>, String> {
         .await
         .map_err(|e| e.to_string())?;
 
-    // INTEGRATION: TravelEngine snapshot management
-    // - Snapshot storage: $HOME/.titane/snapshots/
-    // - Metadata: JSON with XP, level, engines, persona state
-    // - Backend command: travel_engine_list_snapshots()
-    // For v1, returning mock data for UI development
-    Ok(vec![
-        SnapshotMetadata {
-            id: "snap_001".to_string(),
-            timestamp: chrono::Utc::now().timestamp() as u64 - 3600,
-            version: "v∞.1".to_string(),
-            size: 1024 * 512, // 512KB
-            checksum: "abc123def456".to_string(),
+    {
+        let mut engine = PERSISTENCE_ENGINE.write().await;
+        engine.initialize().await.map_err(|e| e.to_string())?;
+    }
+
+    let engine = PERSISTENCE_ENGINE.read().await;
+    let snapshots = engine.list_snapshots().await.map_err(|e| e.to_string())?;
+
+    Ok(snapshots
+        .into_iter()
+        .map(|snapshot| SnapshotMetadata {
+            checksum: snapshot.id.chars().take(12).collect(),
             context: SnapshotContext {
-                xp: 1000,
-                level: 5,
-                active_engines: vec!["Helios".to_string(), "Memory".to_string()],
-                design_system: "v24".to_string(),
-                persona_mood: "Focused".to_string(),
+                xp: 0,
+                level: 0,
+                active_engines: vec!["PersistenceEngine".to_string()],
+                design_system: "persistence-runtime".to_string(),
+                persona_mood: "State snapshot".to_string(),
             },
-        },
-        SnapshotMetadata {
-            id: "snap_002".to_string(),
-            timestamp: chrono::Utc::now().timestamp() as u64,
-            version: "v∞.2".to_string(),
-            size: 1024 * 768,
-            checksum: "def789abc012".to_string(),
-            context: SnapshotContext {
-                xp: 1500,
-                level: 6,
-                active_engines: vec![
-                    "Helios".to_string(),
-                    "Memory".to_string(),
-                    "Nexus".to_string(),
-                ],
-                design_system: "v24".to_string(),
-                persona_mood: "Energized".to_string(),
-            },
-        },
-    ])
+            id: snapshot.id,
+            size: snapshot.size_bytes as usize,
+            timestamp: snapshot.timestamp / 1000,
+            version: format!("schema-{}", snapshot.schema_version),
+        })
+        .collect())
 }
 
 /// Obtenir statistiques time-travel
@@ -100,17 +90,32 @@ pub async fn get_travel_stats() -> Result<TravelStats, String> {
         .await
         .map_err(|e| e.to_string())?;
 
-    // INTEGRATION: TravelEngine statistics aggregation
-    // - Total snapshots count from snapshot directory
-    // - RAM cache: LRU cache of last 3 snapshots (configurable)
-    // - Disk usage: Sum of snapshot JSON + state files
-    // Backend command: travel_engine_get_stats()
+    {
+        let mut engine = PERSISTENCE_ENGINE.write().await;
+        engine.initialize().await.map_err(|e| e.to_string())?;
+    }
+
+    let engine = PERSISTENCE_ENGINE.read().await;
+    let snapshots = engine.list_snapshots().await.map_err(|e| e.to_string())?;
+
+    let disk_usage_bytes = snapshots.iter().map(|snapshot| snapshot.size_bytes).sum::<u64>();
+    let oldest_snapshot = snapshots
+        .iter()
+        .map(|snapshot| snapshot.timestamp / 1000)
+        .min()
+        .unwrap_or(0);
+    let newest_snapshot = snapshots
+        .iter()
+        .map(|snapshot| snapshot.timestamp / 1000)
+        .max()
+        .unwrap_or(0);
+
     Ok(TravelStats {
-        total_snapshots: 2,
-        ram_cache_size: 3,
-        disk_usage_bytes: 1024 * 1280,
-        oldest_snapshot: chrono::Utc::now().timestamp() as u64 - 3600,
-        newest_snapshot: chrono::Utc::now().timestamp() as u64,
+        total_snapshots: snapshots.len(),
+        ram_cache_size: 0,
+        disk_usage_bytes: disk_usage_bytes as usize,
+        oldest_snapshot,
+        newest_snapshot,
     })
 }
 
@@ -125,16 +130,10 @@ pub async fn restore_snapshot(snapshot_id: String) -> Result<(), String> {
 
     log::warn!("🔄 [TIME-TRAVEL] Restore requested: {}", snapshot_id);
 
-    // INTEGRATION: TravelEngine snapshot restore (ROOT ONLY - dangerous operation)
-    // Process:
-    //   1. Validate snapshot_id exists
-    //   2. Shutdown all active engines
-    //   3. Load snapshot state (XP, engines, persona, etc.)
-    //   4. Restart engines with restored state
-    //   5. Emit event: snapshot_restored
-    // Backend command: travel_engine_restore(snapshot_id)
-    // For v1, mock success
-    Ok(())
+    Err(format!(
+        "restore_snapshot non supporte sur le runtime persistence-backed actuel ({})",
+        snapshot_id
+    ))
 }
 
 /// Supprimer un snapshot (SYSTEM)
@@ -148,12 +147,52 @@ pub async fn delete_snapshot(snapshot_id: String) -> Result<(), String> {
 
     log::info!("🗑️  [TIME-TRAVEL] Delete requested: {}", snapshot_id);
 
-    // INTEGRATION: TravelEngine snapshot deletion (SYSTEM level)
-    // Process:
-    //   1. Validate snapshot_id exists and is not active
-    //   2. Remove snapshot directory: $HOME/.titane/snapshots/{snapshot_id}/
-    //   3. Update metadata cache
-    //   4. Emit event: snapshot_deleted
-    // Backend command: travel_engine_delete(snapshot_id)
-    Ok(())
+    Err(format!(
+        "delete_snapshot non supporte sur le runtime persistence-backed actuel ({})",
+        snapshot_id
+    ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn snapshot_metadata_serializes_to_camel_case() {
+        let payload = SnapshotMetadata {
+            id: "snap".to_string(),
+            timestamp: 1,
+            version: "schema-1".to_string(),
+            size: 42,
+            checksum: "abc".to_string(),
+            context: SnapshotContext {
+                xp: 0,
+                level: 0,
+                active_engines: vec!["PersistenceEngine".to_string()],
+                design_system: "persistence-runtime".to_string(),
+                persona_mood: "State snapshot".to_string(),
+            },
+        };
+
+        let value = serde_json::to_value(payload).expect("snapshot metadata should serialize");
+        assert!(value.get("checksum").is_some());
+        assert!(value.get("active_engines").is_none());
+        assert_eq!(value["context"]["activeEngines"][0], "PersistenceEngine");
+    }
+
+    #[test]
+    fn travel_stats_serializes_to_camel_case() {
+        let payload = TravelStats {
+            total_snapshots: 1,
+            ram_cache_size: 0,
+            disk_usage_bytes: 10,
+            oldest_snapshot: 2,
+            newest_snapshot: 3,
+        };
+
+        let value = serde_json::to_value(payload).expect("travel stats should serialize");
+        assert!(value.get("totalSnapshots").is_some());
+        assert!(value.get("total_snapshots").is_none());
+        assert_eq!(value["diskUsageBytes"], 10);
+    }
 }

@@ -78,6 +78,7 @@ pub enum RecurrenceType {
 
 /// Récurrence d'événement
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EventRecurrence {
     /// Type de récurrence
     #[serde(rename = "type")]
@@ -106,6 +107,7 @@ pub enum ReminderType {
 
 /// Rappel d'événement
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EventReminder {
     /// Minutes avant l'événement
     pub minutes_before: u32,
@@ -583,6 +585,7 @@ mod tests {
         let json =
             serde_json::to_string(&recurrence).expect("EventRecurrence should serialize to JSON");
         assert!(json.contains("\"type\":\"monthly\""));
+        assert!(json.contains("\"daysOfWeek\"") || !json.contains("days"));
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -622,7 +625,47 @@ mod tests {
         let json =
             serde_json::to_string(&reminder).expect("EventReminder should serialize to JSON");
         assert!(json.contains("\"type\":\"email\""));
-        assert!(json.contains("\"minutes_before\":60"));
+        assert!(json.contains("\"minutesBefore\":60"));
+    }
+
+    #[test]
+    fn test_agenda_event_deserializes_frontend_camel_case_nested_fields() {
+        let json = r##"{
+            "id": "evt-frontend-1",
+            "title": "Frontend Event",
+            "startDateTime": "2026-05-08T10:00:00Z",
+            "endDateTime": "2026-05-08T11:00:00Z",
+            "allDay": false,
+            "category": "work",
+            "status": "scheduled",
+            "priority": "medium",
+            "tags": [],
+            "reminders": [
+                {
+                    "minutesBefore": 15,
+                    "type": "notification",
+                    "enabled": true
+                }
+            ],
+            "recurrence": {
+                "type": "weekly",
+                "interval": 1,
+                "daysOfWeek": [1, 3, 5]
+            },
+            "createdAt": 1,
+            "updatedAt": 2
+        }"##;
+
+        let event: AgendaEvent =
+            serde_json::from_str(json).expect("AgendaEvent should deserialize frontend payload");
+        assert_eq!(event.reminders[0].minutes_before, 15);
+        assert_eq!(event.reminders[0].reminder_type, ReminderType::Notification);
+        assert_eq!(
+            event.recurrence
+                .as_ref()
+                .and_then(|recurrence| recurrence.days_of_week.clone()),
+            Some(vec![1, 3, 5])
+        );
     }
 
     // ─────────────────────────────────────────────────────────────

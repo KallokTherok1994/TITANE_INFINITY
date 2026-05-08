@@ -1646,3 +1646,19 @@
 **UI components**: `FacebookLoginButton` (`data-testid="facebook-login-button"`), `OAuthProfileCard` (`data-testid="oauth-profile-card"`)  
 **Tests contract**: `tests/contract/tauri-ipc-contract.test.ts` (7 tests — PASS)  
 **ALLOWED_COMMANDS**: 4 commandes enregistrées dans `src/lib/security.ts`
+
+---
+
+## TIME Canonical Command Authority Alignment (2026-05-08)
+
+| Command | Surface canonique | Statut |
+|---|---|---|
+| `agenda_load_events` | `useTimeAgenda` / `/time` agenda sync | allowlist realigned |
+| `get_travel_stats` | `/time` snapshots metrics | allowlist realigned |
+| `list_snapshots` | `/time` snapshots list | allowlist realigned |
+| `restore_snapshot` | `/time` snapshot restore | allowlist realigned |
+| `delete_snapshot` | `/time` snapshot deletion | allowlist realigned |
+
+Note: le callback/frontend path `agenda_export_ical` a été retiré du stockage agenda injecté tant qu'aucune commande backend canonique n'est enregistrée pour cette capacité.
+
+Runtime truth note (2026-05-08): `titan_force_snapshot_current` est la voie frontend canonique pour la création de snapshot depuis `/time`. Les commandes `list_snapshots` et `get_travel_stats` publient désormais des données persistence-backed sérialisées en `camelCase`, et `restore_snapshot` / `delete_snapshot` retournent une erreur explicite tant que cette capacité n'est pas supportée par le runtime persistence-backed actuel.

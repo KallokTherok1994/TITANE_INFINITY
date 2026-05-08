@@ -1006,3 +1006,32 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Route runtime: enforceMetaCognitionAction → applyMetaCognitionEnforcementToTrace → sanitizeTraceForUi → ThinkingPanel Expert view
 - Gates: unit 64/64 PASS · E2E 7/7 PASS · TS clean · detect_recurrence PASS · verify_instructions PASS (51/0)
 - AutoHeal entry: METACOGNITION_GUARD_V2_ACTION_ENFORCEMENT_2026_05_08 (1707)
+
+# [2026-05-08] Production Live Cognitive Trace Certification
+- New live non-mock E2E surface: `e2e/critical/live-cognitive-trace.spec.ts::LIVE_OLLAMA_COGNITIVE_TRACE_VISIBLE_IN_THINKING_PANEL`
+- Certified visible runtime selectors in Expert view:
+  - `reasoning-progress`
+  - `reasoning-cognitive-trace`
+  - `reasoning-cognitive-verdict`
+  - `reasoning-cognitive-web-policy`
+  - `reasoning-cognitive-quality-action`
+  - `reasoning-cognitive-meta-guard`
+  - `reasoning-cognitive-meta-enforcement`
+- Anti-fake checks: mock flag forced off and `[MOCK_OK]` forbidden in assistant response.
+- Safety checks: forbidden raw reasoning markers absent from DOM.
+
+# [2026-05-08] Tauri IPC Direct Cognitive Trace Certification (Mission 9)
+- New desktop certification surface: `e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js`
+- Lane intent: direct Tauri invoke (`conversation_generate`) + runtime Expert selector assertions.
+- Result in current environment: direct IPC non-mock response observed, but `reasoning-cognitive-trace` missing in tested Tauri runtime turn (FAIL lane).
+- Existing browser live non-mock surface remains PASS and unchanged.
+
+# [2026-05-08] Tauri cognitive trace certification lanes (desktop proof surfaces)
+
+- Surface preuve IPC directe: `e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js`
+  - Vérité ciblée: `conversation_generate` via `window.__TAURI*__.invoke` retourne un contenu non-mock.
+  - Ne valide pas la matérialisation UI des sélecteurs cognitifs.
+
+- Surface preuve propagation UI composeur: `e2e/desktop/tauri-ui-cognitive-trace.wdio.test.js`
+  - Vérité ciblée: envoi utilisateur (`chat-input` + `chat-send`) puis visibilité ThinkingPanel Expert (`reasoning-cognitive-*`).
+  - Statut courant: FAIL runtime desktop (`reasoning-cognitive-trace` absent sous délai).

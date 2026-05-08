@@ -1983,3 +1983,37 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - **AutoHeal**: entry 1708 — PRODUCTION_OMEGA_TRACE_META_SMOKE_2026_05_08
 - **Proof pack**: `proof_packs/PRODUCTION_OMEGA_TRACE_META_SMOKE_2026_05_08/VERDICT.md`
 - **Rollback**: no code change; future Rust omega_trace_meta emission documented in ROLLBACK.md
+
+---
+
+### Mission 8.1 — Production Live Cognitive Trace Certification (2026-05-08)
+- **Verdict**: PASS
+- **Scope**: Live non-mock certification of the cognitive trace chain in ThinkingPanel Expert view.
+- **Live path proof**: Browser route `http://127.0.0.1:4000` with mock explicitly disabled in E2E (`delete __TITANE_E2E_CHAT_MOCK__; __TITANE_E2E_CHAT_MOCK__=false`) then message send via chat composer.
+- **Live/non-mock evidence**: response asserted without `[MOCK_OK]`; selectors visible: `reasoning-cognitive-trace`, `reasoning-cognitive-verdict`, `reasoning-cognitive-web-policy`, `reasoning-cognitive-quality-action`, `reasoning-cognitive-meta-guard`, `reasoning-cognitive-meta-enforcement`.
+- **Safety evidence**: forbidden raw CoT markers absent (`chainOfThought`, `hiddenThoughts`, `rawReasoning`, `privateReasoning`, `internalReasoningSteps`).
+- **Files changed (safe, additive)**: `e2e/critical/live-cognitive-trace.spec.ts` + proof/docs/autoheal only; no Rust/provider/memory refactor.
+- **Tests/gates**: unit 48/48 PASS (6 suites) · mock E2E 7/7 PASS · live E2E 1/1 PASS · targeted TS check clean · detect_recurrence PASS · verify_instructions PASS.
+- **AutoHeal**: PRODUCTION_LIVE_COGNITIVE_TRACE_CERTIFICATION_2026_05_08.
+- **Proof pack**: `proof_packs/PRODUCTION_LIVE_COGNITIVE_TRACE_CERTIFICATION_2026_05_08/VERDICT.md`.
+- **Rollback**: revert only mission 8.1 additions (live spec + docs/proof/autoheal entry), preserve locks 1-8.
+
+---
+
+### Mission 9 — Tauri IPC Direct Cognitive Trace Certification (2026-05-08)
+- **Verdict**: FAIL
+- **Scope**: Dedicated direct Tauri IPC lane certification, separate from browser live non-mock lane.
+- **Method**: New desktop WDIO spec invoking `conversation_generate` directly and validating runtime ThinkingPanel Expert selectors.
+- **Direct IPC proof**: `conversation_generate` returns non-mock content (no `[MOCK_OK]`) through Tauri invoke APIs.
+- **Failure evidence**: selector `reasoning-cognitive-trace` not displayed in direct Tauri lane after response (`Spec Files: 0 passed, 1 failed`).
+- **Interpretation**: direct Tauri lane runs, but full cognitive trace propagation to Expert panel is not proven for the tested turn.
+- **Preserved locks**: schema/mock/browser-live proofs remain valid; no Rust/provider/memory refactor applied.
+- **Tests/gates**: unit 48/48 PASS · Playwright mock 7/7 PASS · Playwright browser-live 1/1 PASS · WDIO Tauri direct FAIL · TS targeted clean.
+- **Proof pack**: `proof_packs/TAURI_IPC_COGNITIVE_TRACE_CERTIFICATION_2026_05_08/VERDICT.md`.
+- **Rollback**: revert mission-9 additions only.
+
+## 2026-05-08 — Tauri IPC cognitive trace propagation repair (split-lane certification)
+
+> Réparation minimale des surfaces de preuve desktop: `e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js` est borné au lane IPC direct (vérité transport + contenu non-mock), et `e2e/desktop/tauri-ui-cognitive-trace.wdio.test.js` porte la vérité propagation UI réelle via composeur.
+
+> Résultat de cartographie runtime: lane IPC direct PASS, lane UI propagation FAIL sur absence persistante de `reasoning-cognitive-trace` en runtime Tauri après envoi utilisateur. Ce lot isole explicitement le bypass de test harness d un défaut réel de propagation UI.

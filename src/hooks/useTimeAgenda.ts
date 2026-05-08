@@ -119,7 +119,6 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
     const agendaStorage: AgendaStorageCallbacks = {
       loadEvents: () => agendaService.loadAllEvents(),
       saveEvents: events => agendaService.saveAllEvents(events),
-      exportCalendar: () => agendaService.exportCalendar(),
     };
 
     const init = async () => {
@@ -224,15 +223,15 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
         return events;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentView, currentDate]);
+  }, [currentView, currentDate, events]);
 
   const dayGrid = useMemo(() => {
     return agendaEngine.buildDayGrid(currentDate);
-  }, [currentDate]);
+  }, [currentDate, events]);
 
   const weekGrid = useMemo(() => {
     return agendaEngine.buildWeekGrid(currentDate);
-  }, [currentDate]);
+  }, [currentDate, events]);
 
   // ═══════════════════════════════════════════════════════════════
   // ACTIONS CRUD

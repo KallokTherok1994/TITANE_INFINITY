@@ -6,6 +6,19 @@ import { TimePage } from '@/pages/TimePage';
 import type { UseTimeAgendaReturn } from '@/hooks/useTimeAgenda';
 
 const mockUseTimeAgenda = vi.fn<() => UseTimeAgendaReturn>();
+const tauriMocks = vi.hoisted(() => ({
+  listSnapshotsMock: vi.fn().mockResolvedValue([]),
+  getTravelStatsMock: vi.fn().mockResolvedValue({
+    totalSnapshots: 0,
+    ramCacheSize: 0,
+    diskUsageBytes: 0,
+    oldestSnapshot: 0,
+    newestSnapshot: 0,
+  }),
+  restoreSnapshotMock: vi.fn(),
+  deleteSnapshotMock: vi.fn(),
+  titanForceSnapshotCurrentMock: vi.fn(),
+}));
 
 vi.mock('@/hooks/useTimeAgenda', () => ({
   useTimeAgenda: () => mockUseTimeAgenda(),
@@ -13,17 +26,11 @@ vi.mock('@/hooks/useTimeAgenda', () => ({
 
 vi.mock('@/lib/tauriClient', () => ({
   tauriClient: {
-    listSnapshots: vi.fn().mockResolvedValue([]),
-    getTravelStats: vi.fn().mockResolvedValue({
-      totalSnapshots: 0,
-      ramCacheSize: 0,
-      diskUsageBytes: 0,
-      oldestSnapshot: 0,
-      newestSnapshot: 0,
-    }),
-    restoreSnapshot: vi.fn(),
-    deleteSnapshot: vi.fn(),
-    titanForceSnapshot: vi.fn(),
+    listSnapshots: tauriMocks.listSnapshotsMock,
+    getTravelStats: tauriMocks.getTravelStatsMock,
+    restoreSnapshot: tauriMocks.restoreSnapshotMock,
+    deleteSnapshot: tauriMocks.deleteSnapshotMock,
+    titanForceSnapshotCurrent: tauriMocks.titanForceSnapshotCurrentMock,
   },
 }));
 
@@ -142,6 +149,15 @@ function renderTimePage(initialRoute = '/time?tab=agenda') {
 describe('TimePage', () => {
   beforeEach(() => {
     window.localStorage.clear();
+    vi.clearAllMocks();
+    tauriMocks.listSnapshotsMock.mockResolvedValue([]);
+    tauriMocks.getTravelStatsMock.mockResolvedValue({
+      totalSnapshots: 0,
+      ramCacheSize: 0,
+      diskUsageBytes: 0,
+      oldestSnapshot: 0,
+      newestSnapshot: 0,
+    });
     mockUseTimeAgenda.mockReturnValue(buildHookState());
   });
 
@@ -173,5 +189,57 @@ describe('TimePage', () => {
     });
 
     expect(window.localStorage.getItem('titane_cognitive_state')).toContain('deep-work');
+  });
+
+  it('normalizes snake_case snapshot/stat payloads from backend truth', async () => {
+    tauriMocks.listSnapshotsMock.mockResolvedValueOnce([
+      {
+        id: 'snap-1',
+        timestamp: 1713431040,
+        version: 'schema-2',
+        size: 2048,
+        checksum: 'abc123',
+        context: {
+          xp: 0,
+          level: 0,
+          active_engines: ['PersistenceEngine'],
+          design_system: 'persistence-runtime',
+          persona_mood: 'State snapshot',
+        },
+      },
+    ]);
+    tauriMocks.getTravelStatsMock.mockResolvedValueOnce({
+      total_snapshots: 1,
+      ram_cache_size: 0,
+      disk_usage_bytes: 2048,
+      oldest_snapshot: 1713431040,
+      newest_snapshot: 1713431040,
+    });
+
+    await act(async () => {
+      renderTimePage('/time?tab=snapshots');
+    });
+
+    expect(await screen.findByTestId('time-runtime-source')).toHaveAttribute(
+      'data-runtime-source',
+      'persistence-active'
+    );
+    expect(screen.getByTestId('time-snapshot-runtime-note')).toHaveTextContent(
+      /persistence-active/i
+    );
+    expect(screen.getByTestId('time-snapshot-stats')).toHaveTextContent('1');
+    expect(screen.getByTestId('time-snapshot-list')).toHaveTextContent('schema-2');
+  });
+
+  it('creates snapshots through titanForceSnapshotCurrent', async () => {
+    await act(async () => {
+      renderTimePage('/time?tab=snapshots');
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('btn-time-create-snapshot'));
+    });
+
+    expect(tauriMocks.titanForceSnapshotCurrentMock).toHaveBeenCalledTimes(1);
   });
 });

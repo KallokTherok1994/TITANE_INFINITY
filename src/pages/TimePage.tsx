@@ -78,6 +78,37 @@ interface TravelStats {
   newestSnapshot: number;
 }
 
+interface RawSnapshotPayload {
+  id?: unknown;
+  timestamp?: unknown;
+  version?: unknown;
+  size?: unknown;
+  checksum?: unknown;
+  context?: {
+    xp?: unknown;
+    level?: unknown;
+    activeEngines?: unknown;
+    active_engines?: unknown;
+    designSystem?: unknown;
+    design_system?: unknown;
+    personaMood?: unknown;
+    persona_mood?: unknown;
+  } | null;
+}
+
+interface RawTravelStatsPayload {
+  totalSnapshots?: unknown;
+  total_snapshots?: unknown;
+  ramCacheSize?: unknown;
+  ram_cache_size?: unknown;
+  diskUsageBytes?: unknown;
+  disk_usage_bytes?: unknown;
+  oldestSnapshot?: unknown;
+  oldest_snapshot?: unknown;
+  newestSnapshot?: unknown;
+  newest_snapshot?: unknown;
+}
+
 interface FlowState {
   isInFlow: boolean;
   flowIntensity: number; // 0-100
@@ -220,6 +251,74 @@ const readStoredCognitiveState = (
   }
 };
 
+const toFiniteNumber = (value: unknown, fallback: number): number => {
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+};
+
+const normalizeSnapshot = (raw: unknown): Snapshot | null => {
+  if (!raw || typeof raw !== 'object') return null;
+  const payload = raw as RawSnapshotPayload;
+  const context = payload.context ?? {};
+  const activeEngines = Array.isArray(context.activeEngines)
+    ? context.activeEngines.filter((engine): engine is string => typeof engine === 'string')
+    : Array.isArray(context.active_engines)
+      ? context.active_engines.filter((engine): engine is string => typeof engine === 'string')
+      : ['PersistenceEngine'];
+
+  const id = typeof payload.id === 'string' ? payload.id : '';
+  if (!id) return null;
+
+  return {
+    id,
+    timestamp: toFiniteNumber(payload.timestamp, 0),
+    version: typeof payload.version === 'string' ? payload.version : 'unknown',
+    size: toFiniteNumber(payload.size, 0),
+    checksum: typeof payload.checksum === 'string' ? payload.checksum : 'n/a',
+    context: {
+      xp: toFiniteNumber(context.xp, 0),
+      level: toFiniteNumber(context.level, 0),
+      activeEngines,
+      designSystem:
+        typeof context.designSystem === 'string'
+          ? context.designSystem
+          : typeof context.design_system === 'string'
+            ? context.design_system
+            : 'persistence-runtime',
+      personaMood:
+        typeof context.personaMood === 'string'
+          ? context.personaMood
+          : typeof context.persona_mood === 'string'
+            ? context.persona_mood
+            : 'State snapshot',
+    },
+  };
+};
+
+const normalizeTravelStats = (raw: unknown): TravelStats | null => {
+  if (!raw || typeof raw !== 'object') return null;
+  const payload = raw as RawTravelStatsPayload;
+
+  return {
+    totalSnapshots: toFiniteNumber(
+      payload.totalSnapshots ?? payload.total_snapshots,
+      0
+    ),
+    ramCacheSize: toFiniteNumber(payload.ramCacheSize ?? payload.ram_cache_size, 0),
+    diskUsageBytes: toFiniteNumber(
+      payload.diskUsageBytes ?? payload.disk_usage_bytes,
+      0
+    ),
+    oldestSnapshot: toFiniteNumber(
+      payload.oldestSnapshot ?? payload.oldest_snapshot,
+      0
+    ),
+    newestSnapshot: toFiniteNumber(
+      payload.newestSnapshot ?? payload.newest_snapshot,
+      0
+    ),
+  };
+};
+
 // ═══════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════
@@ -257,6 +356,9 @@ export const TimePage: React.FC = () => {
   const [stats, setStats] = useState<TravelStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
+  const [snapshotRuntimeSource, setSnapshotRuntimeSource] = useState<
+    'uninitialized' | 'persistence-active' | 'degraded'
+  >('uninitialized');
 
   const currentEnergy = useMemo(() => {
     const rawLevel = energyState?.currentEnergyLevel ?? agendaStats.currentEnergy ?? 0.72;
@@ -309,13 +411,19 @@ export const TimePage: React.FC = () => {
   const loadSnapshots = useCallback(async () => {
     try {
       setLoading(true);
-      const response = (await tauriClient.listSnapshots()) as Snapshot[];
-      setSnapshots(response.sort((a, b) => b.timestamp - a.timestamp));
+      const response = (await tauriClient.listSnapshots()) as unknown[];
+      const normalized = response
+        .map(normalizeSnapshot)
+        .filter((snapshot): snapshot is Snapshot => snapshot !== null)
+        .sort((a, b) => b.timestamp - a.timestamp);
+      setSnapshots(normalized);
+      setSnapshotRuntimeSource('persistence-active');
       setSyncError(prev =>
         prev === 'Impossible de charger les snapshots système.' ? null : prev
       );
     } catch (error) {
       console.error('Failed to load snapshots:', error);
+      setSnapshotRuntimeSource('degraded');
       setSyncError('Impossible de charger les snapshots système.');
     } finally {
       setLoading(false);
@@ -324,8 +432,8 @@ export const TimePage: React.FC = () => {
 
   const loadStats = useCallback(async () => {
     try {
-      const response = (await tauriClient.getTravelStats()) as TravelStats;
-      setStats(response);
+      const response = await tauriClient.getTravelStats();
+      setStats(normalizeTravelStats(response));
       setSyncError(prev =>
         prev === 'Impossible de synchroniser les métriques temporelles.' ? null : prev
       );
@@ -362,6 +470,18 @@ export const TimePage: React.FC = () => {
         <p className="text-gray-400">
           Le cœur du temps TITANE∞ — Agenda, Navigation, Snapshots, Intelligence & Flow
         </p>
+        <div
+          className="mt-3 inline-flex rounded-full border border-cyan-700 bg-cyan-950/50 px-3 py-1 text-xs text-cyan-200"
+          data-testid="time-runtime-source"
+          data-runtime-source={snapshotRuntimeSource}
+        >
+          Runtime snapshots:{' '}
+          {snapshotRuntimeSource === 'persistence-active'
+            ? 'persistence-active'
+            : snapshotRuntimeSource === 'degraded'
+              ? 'degraded'
+              : 'uninitialized'}
+        </div>
       </div>
 
       {syncError && (
@@ -456,6 +576,7 @@ export const TimePage: React.FC = () => {
             loading={loading}
             loadSnapshots={loadSnapshots}
             loadStats={loadStats}
+            runtimeSource={snapshotRuntimeSource}
           />
         )}
         {activeTab === 'cognitive' && (
@@ -1074,7 +1195,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
   const futureEvents = allEvents.filter(e => e.date > now).slice(0, 6);
 
   return (
-    <div className="timeline-section space-y-6">
+    <div className="timeline-section space-y-6" data-testid="time-timeline-section">
       <TSectionHeader
         title="🧭 Navigation Temporelle"
         subtitle="Timeline synchronisée — événements live + milestones TITANE"
@@ -1133,6 +1254,12 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
 
       {/* Timeline Visualization */}
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div
+          className="mb-4 text-xs text-gray-400"
+          data-testid="time-timeline-visible-count"
+        >
+          {visibleEvents.length} événement(s) visibles
+        </div>
         <div className="relative">
           <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-blue-500 via-cyan-500 to-purple-500" />
           <div className="space-y-6">
@@ -1247,6 +1374,7 @@ interface SnapshotsSectionProps {
   loading: boolean;
   loadSnapshots: () => Promise<void>;
   loadStats: () => Promise<void>;
+  runtimeSource: 'uninitialized' | 'persistence-active' | 'degraded';
 }
 
 const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
@@ -1257,6 +1385,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
   loading,
   loadSnapshots,
   loadStats,
+  runtimeSource,
 }) => {
   const { success, error: errorToast } = useToast();
   const formatDate = (timestamp: number): string => {
@@ -1304,7 +1433,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 
   const handleCreateSnapshot = async () => {
     try {
-      await tauriClient.titanForceSnapshot({ reason: 'manual_time_page' });
+      await tauriClient.titanForceSnapshotCurrent();
       await Promise.all([loadSnapshots(), loadStats()]);
       success('Snapshot créé avec succès.');
     } catch (error) {
@@ -1313,7 +1442,11 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
   };
 
   return (
-    <div className="snapshots-section space-y-6">
+    <div
+      className="snapshots-section space-y-6"
+      data-testid="time-snapshots-section"
+      data-runtime-source={runtimeSource}
+    >
       <TSectionHeader
         title="⏮️ Snapshots Système"
         subtitle="Voyage temporel TITANE∞ - Restauration & navigation"
@@ -1329,9 +1462,18 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
         </button>
       </div>
 
+      <div
+        className="rounded-lg border border-cyan-800 bg-cyan-950/30 px-4 py-3 text-sm text-cyan-100"
+        data-testid="time-snapshot-runtime-note"
+      >
+        Source active: {runtimeSource}. Création/liste/statistiques utilisent la
+        persistance réelle. Restauration/suppression restent gouvernées par le backend
+        snapshot dédié.
+      </div>
+
       {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4" data-testid="time-snapshot-stats">
           <TMetric
             label="Total Snapshots"
             value={stats.totalSnapshots.toString()}
@@ -1366,7 +1508,10 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
         ) : snapshots.length === 0 ? (
           <div className="text-center py-12 text-gray-400">Aucun snapshot disponible</div>
         ) : (
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div
+            className="space-y-3 max-h-96 overflow-y-auto"
+            data-testid="time-snapshot-list"
+          >
             {snapshots.map(snapshot => (
               <div
                 key={snapshot.id}
@@ -1573,7 +1718,7 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
   }, [energyPercent, currentSegment, todayFocusMinutes, isWorkHours]);
 
   return (
-    <div className="cognitive-engine-section space-y-6">
+    <div className="cognitive-engine-section space-y-6" data-testid="time-cognitive-section">
       <TSectionHeader
         title="🧠 Cognitive Engine"
         subtitle="Flow, Intelligence & Optimisation"
@@ -1608,6 +1753,7 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
       {/* ── FLOW STATE ── */}
       <div
         className={`rounded-lg p-6 border ${flowState.isInFlow ? 'bg-linear-to-r from-green-900 to-emerald-900 border-green-600' : 'bg-gray-800 border-gray-700'}`}
+        data-testid="time-flow-state"
       >
         <h3 className="text-xl font-semibold mb-4 text-green-300">
           {flowState.isInFlow ? '🌊 EN FLOW ACTUELLEMENT' : '⏸️ Pas en Flow'}

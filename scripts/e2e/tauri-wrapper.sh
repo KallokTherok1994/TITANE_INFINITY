@@ -117,12 +117,18 @@ else
 fi
 
 TAURI_BINARY=""
-for path in "${BINARY_PATHS[@]}"; do
-  if [ -f "$path" ] && [ -x "$path" ]; then
-    TAURI_BINARY="$path"
-    break
-  fi
-done
+
+if [[ -n "${TAURI_BINARY_PATH:-}" && -f "${TAURI_BINARY_PATH}" && -x "${TAURI_BINARY_PATH}" ]]; then
+  TAURI_BINARY="${TAURI_BINARY_PATH}"
+  log_line "[E2E_WRAPPER] explicit-binary-win=$TAURI_BINARY"
+else
+  for path in "${BINARY_PATHS[@]}"; do
+    if [ -f "$path" ] && [ -x "$path" ]; then
+      TAURI_BINARY="$path"
+      break
+    fi
+  done
+fi
 
 if [ -z "$TAURI_BINARY" ]; then
   echo "❌ No Tauri binary found in:" >&2
