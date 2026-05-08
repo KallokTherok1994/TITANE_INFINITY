@@ -998,3 +998,11 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Route runtime: mock chat response → useConversationEngine → evaluateMetaCognitionGuard → applyMetaCognitionGuardToTrace (evaluated=true) → sanitizeTraceForUi → ThinkingPanel Expert view
 - Gates: unit 44/44 PASS · E2E 6/6 PASS · detect_recurrence PASS · verify_instructions PASS (51/0)
 - AutoHeal entry: METACOGNITION_GUARD_RUNTIME_CERTIFICATION_2026_05_08 (1706)
+
+# [2026-05-08] MetaCognitionGuard v2 — Bounded Action Enforcement
+- Nouveau sélecteur stable: `data-testid="reasoning-cognitive-meta-enforcement"` dans `src/features/chat/ThinkingPanel.tsx` (section Expert, conditionnel à `metaCognition.enforcementApplied !== undefined`)
+- Affiche: effets (`enforcementEffects`), directive (`responseDirective`), état mémoire sauvegardable (`final.safeToRemember`)
+- Certifié par E2E `METACOGNITION_ENFORCEMENT_VISIBLE_IN_THINKING_PANEL` (Playwright chromium, PASS)
+- Route runtime: enforceMetaCognitionAction → applyMetaCognitionEnforcementToTrace → sanitizeTraceForUi → ThinkingPanel Expert view
+- Gates: unit 64/64 PASS · E2E 7/7 PASS · TS clean · detect_recurrence PASS · verify_instructions PASS (51/0)
+- AutoHeal entry: METACOGNITION_GUARD_V2_ACTION_ENFORCEMENT_2026_05_08 (1707)

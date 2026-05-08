@@ -1957,3 +1957,17 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - **Gates**: unit 44/44 PASS · E2E 6/6 PASS · detect_recurrence PASS · verify_instructions PASS (51/0) · TS no errors
 - **AutoHeal**: entry 1706 — METACOGNITION_GUARD_RUNTIME_CERTIFICATION_2026_05_08
 - **Proof pack**: `proof_packs/METACOGNITION_GUARD_RUNTIME_CERTIFICATION_2026_05_08/VERDICT.md`
+
+## [2026-05-08] MetaCognitionGuard v2 — Bounded Action Enforcement — Mission 7
+
+- **Nouveaux fichiers**:
+  - `src/services/ai/metaCognitionActionEnforcer.ts` — pure enforcement layer (6 rules, 3 functions, 4 static UI-safe messages)
+  - `src/services/ai/__tests__/metaCognitionActionEnforcer.test.ts` — 16 tests
+- **Types étendus**: `src/services/ai/cognitiveRuntimeTrace.ts` — `metaCognition` section enrichie de `enforcementApplied`, `enforcementEffects`, `responseDirective`
+- **Intégration hook**: `src/hooks/useConversationEngine.ts` — enforcer appelé après guard, `effectiveContent` muté, saveMessage gatée sur `safeToRemember`
+- **UI**: `src/features/chat/ThinkingPanel.tsx` — bloc `reasoning-cognitive-meta-enforcement` ajouté après meta-guard
+- **Tests**: 16 enforcer unit + 4 ThinkingPanel component. Total gates: 64/64 PASS · E2E 7/7 PASS
+- **Invariants**: never weakens verdict (FAIL > BLOCKED > UNCERTAIN > QUALIFIED > PASS), no provider calls, no IPC, no raw CoT
+- **AutoHeal**: entry 1707 — METACOGNITION_GUARD_V2_ACTION_ENFORCEMENT_2026_05_08
+- **Proof pack**: `proof_packs/METACOGNITION_GUARD_V2_ACTION_ENFORCEMENT_2026_05_08/VERDICT.md`
+- **Rollback**: supprimer `metaCognitionActionEnforcer.ts` + tests, retirer 3 champs type, retirer imports + enforcement block useConversationEngine, retirer bloc enforcement ThinkingPanel

@@ -247,4 +247,91 @@ describe('ThinkingPanel cognitive trace', () => {
     expect(() => renderExpert(traceNoMeta)).not.toThrow();
     expect(screen.queryByTestId('reasoning-cognitive-meta-guard')).toBeNull();
   });
+
+  // ── MetaCognitionEnforcer v2 component tests ──────────────────────────────
+
+  it('renders reasoning-cognitive-meta-enforcement when enforcementApplied=true', () => {
+    const traceWithEnforcement: CognitiveRuntimeTrace = {
+      ...baseTrace,
+      metaCognition: {
+        evaluated: true,
+        guardAction: 'freeze_memory_save',
+        freezeMemorySave: true,
+        coherenceScore: 0.85,
+        anomalyDetected: false,
+        issues: [],
+        enforcementApplied: true,
+        enforcementEffects: ['memory_save_frozen'],
+        responseDirective: 'leave_response',
+      },
+    };
+    renderExpert(traceWithEnforcement);
+    const el = screen.getByTestId('reasoning-cognitive-meta-enforcement');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveTextContent('Effets');
+    expect(el).toHaveTextContent('Directive');
+    expect(el).toHaveTextContent('Mémoire sauvegardable');
+  });
+
+  it('does not render reasoning-cognitive-meta-enforcement when enforcementApplied=undefined', () => {
+    const traceNoEnforcement: CognitiveRuntimeTrace = {
+      ...baseTrace,
+      metaCognition: {
+        evaluated: true,
+        guardAction: 'none',
+        freezeMemorySave: false,
+        coherenceScore: 0.95,
+        anomalyDetected: false,
+        issues: [],
+        // enforcementApplied: undefined — intentionally absent
+      },
+    };
+    renderExpert(traceNoEnforcement);
+    expect(screen.queryByTestId('reasoning-cognitive-meta-enforcement')).toBeNull();
+  });
+
+  it('prior reasoning-cognitive-meta-guard selector is preserved (regression check)', () => {
+    const traceWithBoth: CognitiveRuntimeTrace = {
+      ...baseTrace,
+      metaCognition: {
+        evaluated: true,
+        guardAction: 'add_limitation',
+        freezeMemorySave: false,
+        coherenceScore: 0.75,
+        anomalyDetected: false,
+        issues: [],
+        enforcementApplied: true,
+        enforcementEffects: ['limitation_added'],
+        responseDirective: 'append_limitation',
+      },
+    };
+    renderExpert(traceWithBoth);
+    // Both selectors must be present
+    expect(screen.getByTestId('reasoning-cognitive-meta-guard')).toBeInTheDocument();
+    expect(screen.getByTestId('reasoning-cognitive-meta-enforcement')).toBeInTheDocument();
+  });
+
+  it('enforcement block does not expose forbidden raw reasoning strings', () => {
+    const FORBIDDEN = ['chainOfThought', 'hiddenThoughts', 'rawReasoning', 'privateReasoning', 'internalReasoningSteps'];
+    const traceWithEnforcement: CognitiveRuntimeTrace = {
+      ...baseTrace,
+      metaCognition: {
+        evaluated: true,
+        guardAction: 'block_response',
+        freezeMemorySave: true,
+        coherenceScore: 0.3,
+        anomalyDetected: true,
+        issues: [],
+        enforcementApplied: true,
+        enforcementEffects: ['response_blocked', 'memory_save_frozen'],
+        responseDirective: 'block_response',
+      },
+    };
+    renderExpert(traceWithEnforcement);
+    const el = screen.getByTestId('reasoning-cognitive-meta-enforcement');
+    const content = el.textContent ?? '';
+    for (const forbidden of FORBIDDEN) {
+      expect(content).not.toContain(forbidden);
+    }
+  });
 });

@@ -201,6 +201,49 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     expect(bodyText).not.toContain('privateReasoning');
     expect(bodyText).not.toContain('internalReasoningSteps');
   });
+
+  test('METACOGNITION_ENFORCEMENT_VISIBLE_IN_THINKING_PANEL', async ({ page }) => {
+    // Same deterministic message — avoids shouldHandoffToResearch triggers
+    const input = page.getByTestId('chat-input');
+    await input.waitFor({ state: 'visible', timeout: 20_000 });
+    await input.fill('Décris le fonctionnement interne de TITANE et ses principales fonctionnalités IA.');
+    await input.press('Enter');
+
+    // Wait for mock response
+    await expect(page.locator('[data-testid="chat-message-assistant"]').last())
+      .toContainText('[MOCK_OK]', { timeout: 30_000 });
+
+    // Open the ThinkingPanel
+    const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
+    await panel.waitFor({ state: 'visible', timeout: 10_000 });
+    await panel.click();
+
+    // Switch to Expert view
+    await page.getByText('Expert').click();
+
+    // Regression: prior selectors must still be present
+    await expect(page.getByTestId('reasoning-cognitive-meta-guard')).toBeVisible({ timeout: 10_000 });
+
+    // Enforcement block: applyMetaCognitionEnforcementToTrace attaches enforcementApplied
+    const metaEnforcement = page.getByTestId('reasoning-cognitive-meta-enforcement');
+    await expect(metaEnforcement).toBeVisible({ timeout: 10_000 });
+
+    // The enforcement block text must contain expected labels
+    const enforcementText = await metaEnforcement.innerText();
+    const hasExpectedLabel =
+      enforcementText.includes('Effets') ||
+      enforcementText.includes('Directive') ||
+      enforcementText.includes('Mémoire sauvegardable');
+    expect(hasExpectedLabel).toBe(true);
+
+    // No forbidden raw CoT strings
+    const bodyText = await page.locator('body').innerText();
+    expect(bodyText).not.toContain('chainOfThought');
+    expect(bodyText).not.toContain('hiddenThoughts');
+    expect(bodyText).not.toContain('rawReasoning');
+    expect(bodyText).not.toContain('privateReasoning');
+    expect(bodyText).not.toContain('internalReasoningSteps');
+  });
 });
 
 test.describe('ThinkingPanel — quality score smoke (sans Tauri)', () => {

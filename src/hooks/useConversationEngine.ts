@@ -69,6 +69,11 @@ import {
   applyMetaCognitionGuardToTrace,
 } from '@/services/ai/metaCognitionGuard';
 import {
+  enforceMetaCognitionAction,
+  applyMetaCognitionEnforcementToTrace,
+  applyMetaCognitionEnforcementToResponse,
+} from '@/services/ai/metaCognitionActionEnforcer';
+import {
   buildChatContextEnvelope,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
@@ -721,6 +726,8 @@ export function useConversationEngine(
         const assistantContent = noProviderPayload
           ? buildProviderRecoveryMessage(requestedProvider, runtimeReasonCode)
           : response.assistant_message;
+        // effectiveContent may be modified by enforcement (add_limitation, block_response, etc.)
+        let effectiveContent: string = assistantContent;
 
         const previousUserMessage = [...messages]
           .reverse()
@@ -964,8 +971,18 @@ export function useConversationEngine(
             try {
               const guardDecision = evaluateMetaCognitionGuard(cTrace);
               applyMetaCognitionGuardToTrace(cTrace, guardDecision);
+              const enforcement = enforceMetaCognitionAction({
+                trace: cTrace,
+                guard: guardDecision,
+                assistantText: effectiveContent,
+              });
+              applyMetaCognitionEnforcementToTrace(cTrace, enforcement);
+              effectiveContent = applyMetaCognitionEnforcementToResponse({
+                response: effectiveContent,
+                enforcement,
+              });
             } catch {
-              // Non-blocking — guard failure must never abort message delivery
+              // Non-blocking — guard/enforcement failure must never abort message delivery
             }
             cognitiveTrace = sanitizeTraceForUi(cTrace);
           }
@@ -977,7 +994,7 @@ export function useConversationEngine(
         const assistantMessage: ConversationMessage = {
           id: response.message_id,
           role: 'assistant',
-          content: assistantContent,
+          content: effectiveContent,
           timestamp: Date.now(),
           metadata: {
             intention: response.detected_intention,
@@ -1066,6 +1083,12 @@ export function useConversationEngine(
         };
         void (async () => {
           try {
+            // MetaCognitionEnforcer v2: if enforcement froze memory (safeToRemember=false),
+            // skip memory persistence for this turn.
+            if (cognitiveTrace?.final.safeToRemember === false) {
+              patchMessageMetadata(assistantMessage.id, { saveStatus: 'failed' });
+              return;
+            }
             await saveMessage(assistantAIMessage);
             chatMemoryCompactor.flushPendingSaves();
             patchMessageMetadata(assistantMessage.id, { saveStatus: 'saved' });

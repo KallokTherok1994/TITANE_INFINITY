@@ -1081,6 +1081,16 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                     </span>
                   </div>
                 )}
+                {cognitiveTrace.metaCognition?.enforcementApplied !== undefined && (
+                  <div className="oj-runtime-item" data-testid="reasoning-cognitive-meta-enforcement">
+                    <span className="oj-runtime-label">Application</span>
+                    <span className="oj-runtime-value">
+                      {`Effets: ${(cognitiveTrace.metaCognition.enforcementEffects ?? []).join(', ') || '—'}`}
+                      {` · Directive: ${cognitiveTrace.metaCognition.responseDirective ?? '—'}`}
+                      {` · Mémoire sauvegardable: ${cognitiveTrace.final.safeToRemember ? 'oui' : 'non'}`}
+                    </span>
+                  </div>
+                )}
               </div>
               {cognitiveTrace.final.limitations.length > 0 && (
                 <div className="oj-runtime-item">

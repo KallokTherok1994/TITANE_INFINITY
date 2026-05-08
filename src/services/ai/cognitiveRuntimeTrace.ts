@@ -162,6 +162,10 @@ export interface CognitiveRuntimeTrace {
     guardAction?: import('./metaCognitionGuard').MetaCognitionGuardAction;
     freezeMemorySave?: boolean;
     issues?: import('./metaCognitionGuard').MetaCognitionIssue[];
+    /** v2 MetaCognitionActionEnforcer fields — set by applyMetaCognitionEnforcementToTrace() */
+    enforcementApplied?: boolean;
+    enforcementEffects?: import('./metaCognitionActionEnforcer').MetaCognitionEnforcementEffect[];
+    responseDirective?: string;
   };
 
   policy: {
