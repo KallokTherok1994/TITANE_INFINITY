@@ -15,6 +15,30 @@
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 ---
 
+## Final Release Seal v33.0.9 — 2026-05-08 (Governed seal, bounded by sudo)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 33.0.9 | ✅ PASS |
+| preferred build path | `pnpm run build:production` failed at `format:check` (pre-existing repo drift) | ⚠️ QUALIFIED |
+| release build fallback | `pnpm run build:tauri` completed and produced bundles | ✅ PASS |
+| AppImage | `titane-infinity_33.0.9_amd64.AppImage` (~95M) | ✅ PASS |
+| DEB | `titane-infinity_33.0.9_amd64.deb` (~24M) | ✅ PASS |
+| RPM | `titane-infinity-33.0.9-1.x86_64.rpm` (~24M) | ✅ PASS |
+| sha256 AppImage | `20777776657265a46287f5f1064c66b2ec2ff5b3a6d73dbe48b0f998a91791fd` | ✅ PASS |
+| sha256 DEB | `6cfe1a906e70696c24fae9331341011202d1eb14731cfafd3f2b9a380bf67824` | ✅ PASS |
+| sha256 RPM | `d70ac7583a168772f60377486ccf22b8a85a670d805ffcd240625b8ed99da1d6` | ✅ PASS |
+| desktop expert visual seal | `e2e/desktop/desktop-expert-cognitive-trace-seal.wdio.test.js` (default lane) | ✅ PASS |
+| mandatory governance gates | recurrence + instructions + agents index + prompt index | ✅ PASS |
+| launcher mapping local/system | `Exec=/usr/bin/titane-infinity` and `Icon=titane-infinity` verified | ✅ PASS |
+| system binary sync | blocked in non-interactive sudo session | ⚠️ BLOCKED_SUDO_REQUIRED |
+
+### Seal note — v33.0.9
+
+- The release seal is proven for artifacts, desktop visual lane, and governance validators.
+- System-level binary replacement remains a privileged step (`sudo dpkg -i ...` then icon sync script).
+- Proof pack: `proof_packs/FINAL_RELEASE_SEAL_2026_05_08/`.
+
 ## Release v33.0.3 — 2026-05-03 (Patch release: Ollama /api/chat conversational memory fix)
 
 | Surface | Truth | Status |
