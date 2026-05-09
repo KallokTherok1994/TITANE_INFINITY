@@ -934,7 +934,11 @@ class ChatEngineOmega {
 
       // v33.1.0: Attach canonical decision and memory gate to trace
       attachCanonicalDecision(cogTrace, canonicalDecision);
-      attachMemoryDecision(cogTrace, canonicalDecision.memoryInjection, context.sources.length);
+      attachMemoryDecision(
+        cogTrace,
+        canonicalDecision.memoryInjection,
+        context.sources.length
+      );
 
       // v30: Notify DevTools Journal that TITANE is now thinking (fire-and-forget)
       omegaDevToolsBridge

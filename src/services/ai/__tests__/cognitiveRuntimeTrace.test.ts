@@ -25,7 +25,9 @@ function makeStableCanonicalDecision(): CanonicalDecisionInput {
     truthStatus: 'STABLE_PARTIAL',
     confidence: 0.85,
     messageComplexity: 0.3,
-    signals: [{ source: 'intent', type: 'intent_classification', value: 'information_request' }],
+    signals: [
+      { source: 'intent', type: 'intent_classification', value: 'information_request' },
+    ],
   };
 }
 

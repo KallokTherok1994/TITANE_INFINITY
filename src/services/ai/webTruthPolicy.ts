@@ -51,7 +51,7 @@ const SOURCE_REQUIRED_PATTERNS = [
 ];
 
 export function evaluateWebTruthPolicy(
-  input: WebTruthPolicyInput,
+  input: WebTruthPolicyInput
 ): WebTruthPolicyDecision {
   const userMessage = input.userMessage ?? '';
   const citationsCount = input.citationsCount ?? 0;
@@ -63,11 +63,13 @@ export function evaluateWebTruthPolicy(
   const normalizedFailure = (input.failureReasonCode ?? '').toLowerCase();
 
   const userRequestedWeb = USER_REQUESTED_WEB_PATTERNS.some(pattern =>
-    pattern.test(userMessage),
+    pattern.test(userMessage)
   );
   const freshnessRequired =
     requiresFreshness || FRESHNESS_PATTERNS.some(pattern => pattern.test(userMessage));
-  const sourceRequired = SOURCE_REQUIRED_PATTERNS.some(pattern => pattern.test(userMessage));
+  const sourceRequired = SOURCE_REQUIRED_PATTERNS.some(pattern =>
+    pattern.test(userMessage)
+  );
 
   let need: WebTruthNeed = 'not_needed';
   if (freshnessRequired) need = 'freshness_required';
@@ -88,10 +90,7 @@ export function evaluateWebTruthPolicy(
     status = 'needed_not_attempted';
     limitations.push('web-required-but-not-attempted');
   } else if (!webAvailable) {
-    if (
-      normalizedFailure.includes('blocked') ||
-      normalizedFailure.includes('policy')
-    ) {
+    if (normalizedFailure.includes('blocked') || normalizedFailure.includes('policy')) {
       status = 'blocked';
       limitations.push('web-blocked');
     } else if (
@@ -115,7 +114,8 @@ export function evaluateWebTruthPolicy(
     need,
     status,
     shouldUseWeb,
-    shouldWarnUser: shouldUseWeb && status !== 'attempted_success' && status !== 'not_needed',
+    shouldWarnUser:
+      shouldUseWeb && status !== 'attempted_success' && status !== 'not_needed',
     limitations,
   };
 }

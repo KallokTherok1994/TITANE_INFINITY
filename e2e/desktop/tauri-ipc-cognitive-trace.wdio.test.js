@@ -26,50 +26,61 @@ async function ensureTauriPageLoaded(appUrl) {
 
 async function invokeConversationGenerateDirect(message) {
   const conversationId = `wdio-tauri-direct-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const generated = await browser.executeAsync((payload, done) => {
-    const run = async () => {
-      const attempts = [];
+  const generated = await browser.executeAsync(
+    (payload, done) => {
+      const run = async () => {
+        const attempts = [];
 
-      if (window.__TAURI_INTERNALS__?.invoke) {
-        attempts.push(payload => window.__TAURI_INTERNALS__.invoke('conversation_generate', payload));
-      }
-      if (window.__TAURI__?.tauri?.invoke) {
-        attempts.push(payload => window.__TAURI__.tauri.invoke('conversation_generate', payload));
-      }
-      if (window.__TAURI__?.core?.invoke) {
-        attempts.push(payload => window.__TAURI__.core.invoke('conversation_generate', payload));
-      }
-      if (window.__TAURI__?.invoke) {
-        attempts.push(payload => window.__TAURI__.invoke('conversation_generate', payload));
-      }
-
-      if (!attempts.length) {
-        throw new Error('Tauri IPC unavailable');
-      }
-
-      let invokeError = 'invoke unavailable';
-      for (const attempt of attempts) {
-        try {
-          return await attempt(payload);
-        } catch (error) {
-          invokeError = String(error?.message || error);
+        if (window.__TAURI_INTERNALS__?.invoke) {
+          attempts.push(payload =>
+            window.__TAURI_INTERNALS__.invoke('conversation_generate', payload)
+          );
         }
-      }
+        if (window.__TAURI__?.tauri?.invoke) {
+          attempts.push(payload =>
+            window.__TAURI__.tauri.invoke('conversation_generate', payload)
+          );
+        }
+        if (window.__TAURI__?.core?.invoke) {
+          attempts.push(payload =>
+            window.__TAURI__.core.invoke('conversation_generate', payload)
+          );
+        }
+        if (window.__TAURI__?.invoke) {
+          attempts.push(payload =>
+            window.__TAURI__.invoke('conversation_generate', payload)
+          );
+        }
 
-      throw new Error(invokeError);
-    };
+        if (!attempts.length) {
+          throw new Error('Tauri IPC unavailable');
+        }
 
-    run()
-      .then(res => done({ ok: true, res }))
-      .catch(err => done({ ok: false, err: String(err?.message || err) }));
-  }, {
-    args: {
-      message,
-      conversationId,
-      provider: 'local',
-      mode: 'synthesis',
+        let invokeError = 'invoke unavailable';
+        for (const attempt of attempts) {
+          try {
+            return await attempt(payload);
+          } catch (error) {
+            invokeError = String(error?.message || error);
+          }
+        }
+
+        throw new Error(invokeError);
+      };
+
+      run()
+        .then(res => done({ ok: true, res }))
+        .catch(err => done({ ok: false, err: String(err?.message || err) }));
     },
-  });
+    {
+      args: {
+        message,
+        conversationId,
+        provider: 'local',
+        mode: 'synthesis',
+      },
+    }
+  );
 
   if (!generated?.ok) {
     throw new Error(generated?.err || 'conversation_generate failed');
@@ -111,13 +122,28 @@ describe('Tauri IPC direct cognitive trace certification', () => {
     });
 
     const directResponse = await invokeConversationGenerateDirect(SAFE_PROMPT);
-    const directContent = String(directResponse?.assistant_message || directResponse?.content || '');
+    const directContent = String(
+      directResponse?.assistant_message || directResponse?.content || ''
+    );
     assert.ok(directContent.length > 10, 'Direct IPC response content missing/too short');
-    assert.equal(directContent.includes('[MOCK_OK]'), false, 'Direct IPC returned mock marker');
+    assert.equal(
+      directContent.includes('[MOCK_OK]'),
+      false,
+      'Direct IPC returned mock marker'
+    );
 
     const secondDirectResponse = await invokeConversationGenerateDirect(SAFE_PROMPT);
-    const secondDirectContent = String(secondDirectResponse?.assistant_message || secondDirectResponse?.content || '');
-    assert.ok(secondDirectContent.length > 10, 'Second direct IPC response content missing/too short');
-    assert.equal(secondDirectContent.includes('[MOCK_OK]'), false, 'Second direct IPC response includes mock marker');
+    const secondDirectContent = String(
+      secondDirectResponse?.assistant_message || secondDirectResponse?.content || ''
+    );
+    assert.ok(
+      secondDirectContent.length > 10,
+      'Second direct IPC response content missing/too short'
+    );
+    assert.equal(
+      secondDirectContent.includes('[MOCK_OK]'),
+      false,
+      'Second direct IPC response includes mock marker'
+    );
   });
 });

@@ -31,7 +31,9 @@ test.describe('ThinkingPanel — live cognitive trace certification', () => {
 
     const input = page.getByTestId('chat-input');
     await input.waitFor({ state: 'visible', timeout: 20_000 });
-    await input.fill('Décris en deux phrases le rôle de TITANE comme assistant local de clarté.');
+    await input.fill(
+      'Décris en deux phrases le rôle de TITANE comme assistant local de clarté.'
+    );
     await input.press('Enter');
 
     await expect(async () => {
@@ -41,7 +43,9 @@ test.describe('ThinkingPanel — live cognitive trace certification', () => {
 
     const lastAssistantMessage = assistantMessages.last();
     await expect(lastAssistantMessage).toBeVisible({ timeout: 20_000 });
-    await expect(lastAssistantMessage).not.toContainText('[MOCK_OK]', { timeout: 20_000 });
+    await expect(lastAssistantMessage).not.toContainText('[MOCK_OK]', {
+      timeout: 20_000,
+    });
 
     const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
     await expect(panel).toBeVisible({ timeout: 30_000 });
@@ -49,11 +53,21 @@ test.describe('ThinkingPanel — live cognitive trace certification', () => {
 
     await page.getByRole('button', { name: /^Expert$/ }).click();
 
-    await expect(page.getByTestId('reasoning-cognitive-trace')).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByTestId('reasoning-cognitive-verdict')).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByTestId('reasoning-cognitive-web-policy')).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByTestId('reasoning-cognitive-quality-action')).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByTestId('reasoning-cognitive-meta-guard')).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByTestId('reasoning-cognitive-trace')).toBeVisible({
+      timeout: 20_000,
+    });
+    await expect(page.getByTestId('reasoning-cognitive-verdict')).toBeVisible({
+      timeout: 20_000,
+    });
+    await expect(page.getByTestId('reasoning-cognitive-web-policy')).toBeVisible({
+      timeout: 20_000,
+    });
+    await expect(page.getByTestId('reasoning-cognitive-quality-action')).toBeVisible({
+      timeout: 20_000,
+    });
+    await expect(page.getByTestId('reasoning-cognitive-meta-guard')).toBeVisible({
+      timeout: 20_000,
+    });
     await expect(page.getByTestId('reasoning-cognitive-meta-enforcement')).toBeVisible({
       timeout: 20_000,
     });

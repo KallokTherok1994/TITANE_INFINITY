@@ -133,10 +133,7 @@ export interface BuildCognitiveTraceInput {
  * Convert error to UI-safe CognitiveTraceBuildError.
  * Strips raw stack, raw output, internal details, and secrets.
  */
-function toSafeBuildError(
-  error: unknown,
-  stage: string,
-): CognitiveTraceBuildError {
+function toSafeBuildError(error: unknown, stage: string): CognitiveTraceBuildError {
   if (error instanceof Error) {
     return {
       stage,
@@ -166,7 +163,7 @@ function toSafeBuildError(
  * @returns Discriminated result: success with trace + diagnostics, or failure with error + diagnostics
  */
 export function buildCognitiveTraceFromResponse(
-  input: BuildCognitiveTraceInput,
+  input: BuildCognitiveTraceInput
 ): CognitiveTraceBuildResult {
   const startTime = new Date().toISOString();
   const diagnostics: CognitiveTraceBuildDiagnostics = {
@@ -181,15 +178,13 @@ export function buildCognitiveTraceFromResponse(
     // Step 1: Create initial trace from response signals
     const cTrace = createInitialTrace({
       messageLength: input.assistantText.length,
-      requiresFreshness:
-        input.omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
+      requiresFreshness: input.omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
       requiresWeb: input.webAttempted,
       requiresMemory: input.memoryLinks.some(
-        l => l.includes('memory_action:USE') || l.includes('memory:present'),
+        l => l.includes('memory_action:USE') || l.includes('memory:present')
       ),
-      taskFamily: (
-        input.omegaMeta.canonical_mode ?? 'unknown'
-      ) as CognitiveRuntimeTrace['input']['taskFamily'],
+      taskFamily: (input.omegaMeta.canonical_mode ??
+        'unknown') as CognitiveRuntimeTrace['input']['taskFamily'],
     });
     diagnostics.stepsCompleted = 1;
 
@@ -198,7 +193,7 @@ export function buildCognitiveTraceFromResponse(
       attachTracePolicyVersion(cTrace, { version: 'v2' });
     } catch (e) {
       throw new Error(
-        `attachTracePolicyVersion: ${e instanceof Error ? e.message : String(e)}`,
+        `attachTracePolicyVersion: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 2;
@@ -206,7 +201,7 @@ export function buildCognitiveTraceFromResponse(
     // Step 3: Attach memory decision
     try {
       const memoryUsed = input.memoryLinks.some(
-        l => l.includes('memory_action:USE') || l.includes('memory:present'),
+        l => l.includes('memory_action:USE') || l.includes('memory:present')
       );
       attachMemoryDecision(cTrace, {
         use: memoryUsed,
@@ -216,7 +211,7 @@ export function buildCognitiveTraceFromResponse(
       });
     } catch (e) {
       throw new Error(
-        `attachMemoryDecision: ${e instanceof Error ? e.message : String(e)}`,
+        `attachMemoryDecision: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 3;
@@ -233,7 +228,7 @@ export function buildCognitiveTraceFromResponse(
       });
     } catch (e) {
       throw new Error(
-        `attachGenerationResult: ${e instanceof Error ? e.message : String(e)}`,
+        `attachGenerationResult: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 4;
@@ -242,8 +237,7 @@ export function buildCognitiveTraceFromResponse(
     try {
       const webPolicy = evaluateWebTruthPolicy({
         userMessage: input.userMessage,
-        requiresFreshness:
-          input.omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
+        requiresFreshness: input.omegaMeta.canonical_truth_status === 'FRESH_REQUIRED',
         citationsCount: input.citationsCount,
         factualClaimsDetected: input.factualClaimsDetected,
         webAttempted: input.webAttempted,
@@ -272,7 +266,7 @@ export function buildCognitiveTraceFromResponse(
       attachWebTruthPolicy(cTrace, webPolicy);
     } catch (e) {
       throw new Error(
-        `attachWebTruthPolicy: ${e instanceof Error ? e.message : String(e)}`,
+        `attachWebTruthPolicy: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 5;
@@ -300,11 +294,11 @@ export function buildCognitiveTraceFromResponse(
               ? input.responseQualityScore < QUALITY_THRESHOLD
               : false,
           inferenceState: input.inferenceState,
-        }),
+        })
       );
     } catch (e) {
       throw new Error(
-        `attachQualityActionPolicy: ${e instanceof Error ? e.message : String(e)}`,
+        `attachQualityActionPolicy: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 6;
@@ -314,7 +308,7 @@ export function buildCognitiveTraceFromResponse(
       resolveFinalVerdict(cTrace);
     } catch (e) {
       throw new Error(
-        `resolveFinalVerdict: ${e instanceof Error ? e.message : String(e)}`,
+        `resolveFinalVerdict: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 7;
@@ -327,7 +321,7 @@ export function buildCognitiveTraceFromResponse(
       applyMetaCognitionGuardToTrace(cTrace, guardDecision);
     } catch (e) {
       throw new Error(
-        `evaluateMetaCognitionGuard: ${e instanceof Error ? e.message : String(e)}`,
+        `evaluateMetaCognitionGuard: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 8;
@@ -353,7 +347,7 @@ export function buildCognitiveTraceFromResponse(
       applyMetaCognitionEnforcementToTrace(cTrace, enforcement);
     } catch (e) {
       throw new Error(
-        `enforceMetaCognitionAction: ${e instanceof Error ? e.message : String(e)}`,
+        `enforceMetaCognitionAction: ${e instanceof Error ? e.message : String(e)}`
       );
     }
     diagnostics.stepsCompleted = 9;
@@ -370,7 +364,7 @@ export function buildCognitiveTraceFromResponse(
       };
     } catch (e) {
       throw new Error(
-        `sanitizeTraceForUi: ${e instanceof Error ? e.message : String(e)}`,
+        `sanitizeTraceForUi: ${e instanceof Error ? e.message : String(e)}`
       );
     }
   } catch (error) {

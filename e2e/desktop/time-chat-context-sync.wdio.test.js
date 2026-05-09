@@ -49,7 +49,9 @@ describe('time-chat-context-sync (WDIO desktop)', () => {
 
     it('S2 — TimePage persists the governed TIME runtime context key', () => {
       expect(timePageSrc.includes('TIME_RUNTIME_CONTEXT_KEY')).toBe(true);
-      expect(timePageSrc.includes('currentSegment: agendaStats.currentSegment')).toBe(true);
+      expect(timePageSrc.includes('currentSegment: agendaStats.currentSegment')).toBe(
+        true
+      );
     });
 
     it('S3 — chatMemorySingleDoor reads the governed TIME runtime context key', () => {
@@ -78,7 +80,9 @@ describe('time-chat-context-sync (WDIO desktop)', () => {
       await browser.waitUntil(
         async () =>
           browser.execute(() => {
-            const marker = document.querySelector('[data-testid="time-chat-sync-status"]');
+            const marker = document.querySelector(
+              '[data-testid="time-chat-sync-status"]'
+            );
             const raw = localStorage.getItem('titane_time_runtime_context_v1');
             if (!marker || !raw) return false;
             const parsed = JSON.parse(raw);
@@ -102,11 +106,14 @@ describe('time-chat-context-sync (WDIO desktop)', () => {
             const raw = localStorage.getItem('titane_time_runtime_context_v1');
             if (!raw) return false;
             const parsed = JSON.parse(raw);
-            return parsed.activeTab === 'cognitive' && typeof parsed.currentEnergy === 'number';
+            return (
+              parsed.activeTab === 'cognitive' && typeof parsed.currentEnergy === 'number'
+            );
           }),
         {
           timeout: TIMEOUT,
-          timeoutMsg: 'TIME runtime context was not updated after cognitive tab activation',
+          timeoutMsg:
+            'TIME runtime context was not updated after cognitive tab activation',
         }
       );
 

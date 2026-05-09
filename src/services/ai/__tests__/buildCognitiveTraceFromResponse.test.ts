@@ -44,7 +44,7 @@ describe('buildCognitiveTraceFromResponse', () => {
 
   // Helper: Create minimal valid input
   function createMinimalInput(
-    overrides?: Partial<BuildCognitiveTraceInput>,
+    overrides?: Partial<BuildCognitiveTraceInput>
   ): BuildCognitiveTraceInput {
     return {
       omegaMeta: createMinimalOmegaMeta(),
@@ -160,8 +160,9 @@ describe('buildCognitiveTraceFromResponse', () => {
       expect(result.trace.metaCognition).toBeDefined();
       expect(result.trace.metaCognition.evaluated).toBe(true);
       // v1 guard data should be present (either guardAction or freezeMemorySave)
-      const hasGuardData = result.trace.metaCognition.guardAction !== undefined || 
-                          result.trace.metaCognition.freezeMemorySave !== undefined;
+      const hasGuardData =
+        result.trace.metaCognition.guardAction !== undefined ||
+        result.trace.metaCognition.freezeMemorySave !== undefined;
       expect(hasGuardData).toBe(true);
       expect(result.diagnostics.guardEvaluated).toBe(true);
     }
@@ -175,7 +176,10 @@ describe('buildCognitiveTraceFromResponse', () => {
     if (result.ok) {
       expect(result.trace.metaCognition).toBeDefined();
       // v2 enforcement data should be present
-      expect(result.trace.metaCognition.enforcementApplied || result.trace.metaCognition.enforcementEffects).toBeDefined();
+      expect(
+        result.trace.metaCognition.enforcementApplied ||
+          result.trace.metaCognition.enforcementEffects
+      ).toBeDefined();
       expect(result.diagnostics.enforcementApplied).toBe(true);
     }
   });
@@ -219,8 +223,8 @@ describe('buildCognitiveTraceFromResponse', () => {
       // Verdict should be one of the valid values
       expect(
         ['PASS', 'QUALIFIED', 'DEFERRED', 'FAIL', 'BLOCKED'].includes(
-          result.trace.final.verdict,
-        ),
+          result.trace.final.verdict
+        )
       ).toBe(true);
     }
   });

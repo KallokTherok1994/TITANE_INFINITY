@@ -283,20 +283,17 @@ function generateTraceId(): string {
   if (
     typeof globalThis !== 'undefined' &&
     typeof (globalThis as Record<string, unknown>).crypto === 'object' &&
-    typeof (
-      (globalThis as Record<string, unknown>).crypto as Record<string, unknown>
-    ).randomUUID === 'function'
+    typeof ((globalThis as Record<string, unknown>).crypto as Record<string, unknown>)
+      .randomUUID === 'function'
   ) {
-    return (
-      globalThis.crypto as unknown as { randomUUID: () => string }
-    ).randomUUID();
+    return (globalThis.crypto as unknown as { randomUUID: () => string }).randomUUID();
   }
   // Fallback: no crypto.randomUUID (test environments)
   return `trace-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 function inferTaskFamily(
-  decision: CanonicalDecisionInput,
+  decision: CanonicalDecisionInput
 ): CognitiveRuntimeTrace['input']['taskFamily'] {
   const mode = decision.mode?.toLowerCase() ?? '';
   const profile = decision.profileId?.toLowerCase() ?? '';
@@ -399,7 +396,7 @@ export function createInitialTrace(input: TraceInputInit): CognitiveRuntimeTrace
  */
 export function attachCanonicalDecision(
   trace: CognitiveRuntimeTrace,
-  decision: CanonicalDecisionInput,
+  decision: CanonicalDecisionInput
 ): void {
   trace.canonical = {
     attached: true,
@@ -423,7 +420,7 @@ export function attachCanonicalDecision(
 export function attachMemoryDecision(
   trace: CognitiveRuntimeTrace,
   memoryDecision: MemoryDecisionInput,
-  contextSourceCount = 0,
+  contextSourceCount = 0
 ): void {
   trace.input.requiresMemory = memoryDecision.use;
   trace.memory = {
@@ -442,7 +439,7 @@ export function attachMemoryDecision(
  */
 export function attachGenerationResult(
   trace: CognitiveRuntimeTrace,
-  meta: GenerationMetaInput,
+  meta: GenerationMetaInput
 ): void {
   trace.generation = {
     providerRequested: meta.providerRequested,
@@ -461,7 +458,7 @@ export function attachGenerationResult(
  */
 export function attachWebResearchResult(
   trace: CognitiveRuntimeTrace,
-  web: WebResearchInput,
+  web: WebResearchInput
 ): void {
   trace.web = {
     needed: web.needed,
@@ -482,7 +479,7 @@ export function attachWebResearchResult(
  */
 export function attachReflectiveCritique(
   trace: CognitiveRuntimeTrace,
-  critique: ReflectiveCritiqueInput,
+  critique: ReflectiveCritiqueInput
 ): void {
   trace.reflection = {
     verifierEnabled: true,
@@ -500,7 +497,7 @@ export function attachReflectiveCritique(
  */
 export function attachQualityCritique(
   trace: CognitiveRuntimeTrace,
-  critique: QualityCritiqueInput,
+  critique: QualityCritiqueInput
 ): void {
   trace.quality = {
     evaluated: true,
@@ -520,7 +517,7 @@ export function attachQualityCritique(
  */
 export function attachMetaCognitiveReport(
   trace: CognitiveRuntimeTrace,
-  report: MetaCognitiveReportInput,
+  report: MetaCognitiveReportInput
 ): void {
   trace.metaCognition = {
     evaluated: true,
@@ -533,14 +530,14 @@ export function attachMetaCognitiveReport(
 
 export function attachTracePolicyVersion(
   trace: CognitiveRuntimeTrace,
-  policy: TracePolicyVersionInput,
+  policy: TracePolicyVersionInput
 ): void {
   trace.policy.version = policy.version ?? 'v2';
 }
 
 export function attachWebTruthPolicy(
   trace: CognitiveRuntimeTrace,
-  decision: WebTruthPolicyDecision,
+  decision: WebTruthPolicyDecision
 ): void {
   trace.policy.webTruth = {
     evaluated: true,
@@ -551,14 +548,14 @@ export function attachWebTruthPolicy(
   };
   if (decision.limitations.length > 0) {
     trace.web.limitations = Array.from(
-      new Set([...trace.web.limitations, ...decision.limitations]),
+      new Set([...trace.web.limitations, ...decision.limitations])
     );
   }
 }
 
 export function attachQualityActionPolicy(
   trace: CognitiveRuntimeTrace,
-  decision: QualityActionPolicyDecision,
+  decision: QualityActionPolicyDecision
 ): void {
   trace.policy.qualityAction = {
     evaluated: true,
@@ -610,7 +607,7 @@ export function resolveFinalVerdict(trace: CognitiveRuntimeTrace): void {
     limitations.push(
       trace.canonical.attached
         ? `inference-blocked:${inferenceState ?? 'unknown'}`
-        : 'canonical-not-attached',
+        : 'canonical-not-attached'
     );
     trace.final = {
       verdict: 'BLOCKED',
@@ -642,7 +639,7 @@ export function resolveFinalVerdict(trace: CognitiveRuntimeTrace): void {
 
   if (trace.quality.evaluated && !qualityOk) {
     limitations.push(
-      `quality-below-threshold:${trace.quality.overallScore?.toFixed(2) ?? 'unknown'}`,
+      `quality-below-threshold:${trace.quality.overallScore?.toFixed(2) ?? 'unknown'}`
     );
   }
 
@@ -666,7 +663,7 @@ export function resolveFinalVerdict(trace: CognitiveRuntimeTrace): void {
 
   if (confidenceLow) {
     limitations.push(
-      `confidence-low:${trace.canonical.confidence?.toFixed(2) ?? 'unknown'}`,
+      `confidence-low:${trace.canonical.confidence?.toFixed(2) ?? 'unknown'}`
     );
   }
 

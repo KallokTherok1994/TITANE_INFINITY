@@ -8,11 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { uiPages } from './page-objects/uiPages.po.js';
-import {
-  gotoTopNavPage,
-  waitAppReady,
-  waitForTabActive,
-} from './ui-driver.wdio.js';
+import { gotoTopNavPage, waitAppReady, waitForTabActive } from './ui-driver.wdio.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 

@@ -83,7 +83,9 @@ describe('time-runtime-truth (WDIO desktop)', () => {
       const runtimeSource = await $(testId('time-runtime-source'));
       await runtimeSource.waitForDisplayed({ timeout: TIMEOUT });
       const attr = await runtimeSource.getAttribute('data-runtime-source');
-      assert.ok(attr === 'persistence-active' || attr === 'degraded' || attr === 'uninitialized');
+      assert.ok(
+        attr === 'persistence-active' || attr === 'degraded' || attr === 'uninitialized'
+      );
     });
 
     it('R3 — agenda controls are active and manual event creation keeps runtime list alive', async () => {
@@ -94,7 +96,9 @@ describe('time-runtime-truth (WDIO desktop)', () => {
       await browser.waitUntil(
         async () =>
           browser.execute(() => {
-            return document.querySelectorAll('[data-testid="time-agenda-event"]').length >= 1;
+            return (
+              document.querySelectorAll('[data-testid="time-agenda-event"]').length >= 1
+            );
           }),
         {
           timeout: TIMEOUT,
@@ -125,7 +129,9 @@ describe('time-runtime-truth (WDIO desktop)', () => {
         async () =>
           browser.execute(() => {
             const root = document.querySelector('[data-testid="time-snapshots-section"]');
-            const note = document.querySelector('[data-testid="time-snapshot-runtime-note"]');
+            const note = document.querySelector(
+              '[data-testid="time-snapshot-runtime-note"]'
+            );
             return Boolean(root && note);
           }),
         {

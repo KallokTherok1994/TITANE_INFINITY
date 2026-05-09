@@ -53,7 +53,9 @@ vi.mock('@/engines/time', () => ({
     getEventsForDay: vi.fn(() => currentEvents),
     getEventsForWeek: vi.fn(() => currentEvents),
     getEventsForMonth: vi.fn(() => currentEvents),
-    buildDayGrid: vi.fn((date: Date) => [{ hour: date.getHours(), events: currentEvents }]),
+    buildDayGrid: vi.fn((date: Date) => [
+      { hour: date.getHours(), events: currentEvents },
+    ]),
     buildWeekGrid: vi.fn((date: Date) => [{ date, events: currentEvents }]),
     createQuickEvent: vi.fn(
       async (

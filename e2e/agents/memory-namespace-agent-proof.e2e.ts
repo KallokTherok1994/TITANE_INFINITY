@@ -62,8 +62,12 @@ test('Agent dashboards keep namespace memory contamination out of visible runtim
 
   await expect(page.getByTestId('monitoring-dashboard-status')).toContainText('PARTIAL');
   await expect(page.getByTestId('diagnostic-panel-status')).toContainText('PARTIAL');
-  await expect(page.getByTestId('orchestrator-dashboard-status')).toContainText('PARTIAL');
-  await expect(page.getByTestId('log-analysis-dashboard-status')).toContainText('PARTIAL');
+  await expect(page.getByTestId('orchestrator-dashboard-status')).toContainText(
+    'PARTIAL'
+  );
+  await expect(page.getByTestId('log-analysis-dashboard-status')).toContainText(
+    'PARTIAL'
+  );
 
   const bodyText = await page.locator('body').innerText();
   expect(bodyText.includes('agent-test-should-not-leak')).toBe(false);

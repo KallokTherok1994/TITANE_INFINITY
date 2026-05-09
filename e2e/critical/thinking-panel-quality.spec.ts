@@ -102,38 +102,41 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     // 1. Envoyer un message — le mock inclut omega_trace_meta → cognitiveTrace est construit
     const input = page.getByTestId('chat-input');
     await input.waitFor({ state: 'visible', timeout: 20_000 });
-    await input.fill('Explique brièvement le fonctionnement de TITANE et ses principales capacités IA.');
+    await input.fill(
+      'Explique brièvement le fonctionnement de TITANE et ses principales capacités IA.'
+    );
     await input.press('Enter');
 
     // 2a. Attendre la réponse mock [MOCK_OK] AVANT de chercher le panel done.
     //     Évite de lire un ancien panel done depuis une conversation restaurée du localStorage.
-    await expect(page.locator('[data-testid="chat-message-assistant"]').last())
-      .toContainText('[MOCK_OK]', { timeout: 30_000 });
+    await expect(
+      page.locator('[data-testid="chat-message-assistant"]').last()
+    ).toContainText('[MOCK_OK]', { timeout: 30_000 });
 
     // 2b. Attendre le panel en état done (pour ce message précis)
     const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
     await panel.waitFor({ state: 'visible', timeout: 10_000 });
 
-      // 3. Développer le panel compact → click pour ouvrir OMEGA journal
+    // 3. Développer le panel compact → click pour ouvrir OMEGA journal
     await panel.click();
 
-      // 4. Passer en vue Expert
+    // 4. Passer en vue Expert
     await page.getByText('Expert').click();
 
-      // 5. La section cognitive trace doit être visible (trace displayed in expert mode)
+    // 5. La section cognitive trace doit être visible (trace displayed in expert mode)
     const traceSection = page.locator('[data-testid="reasoning-cognitive-trace"]');
     await expect(traceSection).toBeVisible({ timeout: 10_000 });
 
-      // 6. Verdict visible in expert mode
+    // 6. Verdict visible in expert mode
     await expect(page.getByTestId('reasoning-cognitive-verdict')).toBeVisible();
 
-      // 7. Politique web visible in expert mode
+    // 7. Politique web visible in expert mode
     await expect(page.getByTestId('reasoning-cognitive-web-policy')).toBeVisible();
 
-      // 8. Action qualité visible in expert mode
+    // 8. Action qualité visible in expert mode
     await expect(page.getByTestId('reasoning-cognitive-quality-action')).toBeVisible();
 
-      // 9. Aucun champ de raisonnement interne interdit ne doit être visible dans le DOM
+    // 9. Aucun champ de raisonnement interne interdit ne doit être visible dans le DOM
     const bodyText = await page.locator('body').innerText();
     expect(bodyText).not.toContain('chainOfThought');
     expect(bodyText).not.toContain('hiddenThoughts');
@@ -147,31 +150,36 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     //    (pas de "actualité", "récentes", "web", "internet", "recherche" + "en ligne")
     const input = page.getByTestId('chat-input');
     await input.waitFor({ state: 'visible', timeout: 20_000 });
-    await input.fill('Décris le fonctionnement interne de TITANE et ses principales fonctionnalités IA.');
+    await input.fill(
+      'Décris le fonctionnement interne de TITANE et ses principales fonctionnalités IA.'
+    );
     await input.press('Enter');
 
     // 2. Attendre la réponse mock [MOCK_OK] AVANT tout accès au panel
     //    Évite les panneaux périmés issus du localStorage.
-    await expect(page.locator('[data-testid="chat-message-assistant"]').last())
-      .toContainText('[MOCK_OK]', { timeout: 30_000 });
+    await expect(
+      page.locator('[data-testid="chat-message-assistant"]').last()
+    ).toContainText('[MOCK_OK]', { timeout: 30_000 });
 
     // 3. Attendre le panel en état done (lié à ce message précis)
     const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
     await panel.waitFor({ state: 'visible', timeout: 10_000 });
 
-      // 4. Ouvrir le journal OMEGA (clic sur le panel)
+    // 4. Ouvrir le journal OMEGA (clic sur le panel)
     await panel.click();
 
-      // 5. Passer en vue Expert
+    // 5. Passer en vue Expert
     await page.getByText('Expert').click();
 
-      // 6. Sélecteurs existants CognitiveRuntimeTrace v2 toujours présents (expert mode) - non-régression
-    await expect(page.getByTestId('reasoning-cognitive-trace')).toBeVisible({ timeout: 10_000 });
+    // 6. Sélecteurs existants CognitiveRuntimeTrace v2 toujours présents (expert mode) - non-régression
+    await expect(page.getByTestId('reasoning-cognitive-trace')).toBeVisible({
+      timeout: 10_000,
+    });
     await expect(page.getByTestId('reasoning-cognitive-verdict')).toBeVisible();
     await expect(page.getByTestId('reasoning-cognitive-web-policy')).toBeVisible();
     await expect(page.getByTestId('reasoning-cognitive-quality-action')).toBeVisible();
 
-      // 7. Le sélecteur MetaCognitionGuard doit être visible
+    // 7. Le sélecteur MetaCognitionGuard doit être visible
     //    (applyMetaCognitionGuardToTrace met toujours metaCognition.evaluated=true)
     const metaGuard = page.getByTestId('reasoning-cognitive-meta-guard');
     await expect(metaGuard).toBeVisible({ timeout: 10_000 });
@@ -198,12 +206,15 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     // Same deterministic message — avoids shouldHandoffToResearch triggers
     const input = page.getByTestId('chat-input');
     await input.waitFor({ state: 'visible', timeout: 20_000 });
-    await input.fill('Décris le fonctionnement interne de TITANE et ses principales fonctionnalités IA.');
+    await input.fill(
+      'Décris le fonctionnement interne de TITANE et ses principales fonctionnalités IA.'
+    );
     await input.press('Enter');
 
     // Wait for mock response
-    await expect(page.locator('[data-testid="chat-message-assistant"]').last())
-      .toContainText('[MOCK_OK]', { timeout: 30_000 });
+    await expect(
+      page.locator('[data-testid="chat-message-assistant"]').last()
+    ).toContainText('[MOCK_OK]', { timeout: 30_000 });
 
     // Open the ThinkingPanel
     const panel = page.locator('[data-testid="reasoning-progress"][data-state="done"]');
@@ -214,7 +225,9 @@ test.describe('ThinkingPanel — CognitiveRuntimeTrace v2 certification', () => 
     await page.getByText('Expert').click();
 
     // Regression: prior selectors must still be present
-    await expect(page.getByTestId('reasoning-cognitive-meta-guard')).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId('reasoning-cognitive-meta-guard')).toBeVisible({
+      timeout: 10_000,
+    });
 
     // Enforcement block: applyMetaCognitionEnforcementToTrace attaches enforcementApplied
     const metaEnforcement = page.getByTestId('reasoning-cognitive-meta-enforcement');

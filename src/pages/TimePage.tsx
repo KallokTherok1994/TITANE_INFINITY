@@ -319,7 +319,10 @@ const persistTimeRuntimeContext = (
       }
     : null;
 
-  if (previousComparable && JSON.stringify(previousComparable) === JSON.stringify(nextContext)) {
+  if (
+    previousComparable &&
+    JSON.stringify(previousComparable) === JSON.stringify(nextContext)
+  ) {
     return;
   }
 
@@ -334,9 +337,13 @@ const normalizeSnapshot = (raw: unknown): Snapshot | null => {
   const payload = raw as RawSnapshotPayload;
   const context = payload.context ?? {};
   const activeEngines = Array.isArray(context.activeEngines)
-    ? context.activeEngines.filter((engine): engine is string => typeof engine === 'string')
+    ? context.activeEngines.filter(
+        (engine): engine is string => typeof engine === 'string'
+      )
     : Array.isArray(context.active_engines)
-      ? context.active_engines.filter((engine): engine is string => typeof engine === 'string')
+      ? context.active_engines.filter(
+          (engine): engine is string => typeof engine === 'string'
+        )
       : ['PersistenceEngine'];
 
   const id = typeof payload.id === 'string' ? payload.id : '';
@@ -373,23 +380,11 @@ const normalizeTravelStats = (raw: unknown): TravelStats | null => {
   const payload = raw as RawTravelStatsPayload;
 
   return {
-    totalSnapshots: toFiniteNumber(
-      payload.totalSnapshots ?? payload.total_snapshots,
-      0
-    ),
+    totalSnapshots: toFiniteNumber(payload.totalSnapshots ?? payload.total_snapshots, 0),
     ramCacheSize: toFiniteNumber(payload.ramCacheSize ?? payload.ram_cache_size, 0),
-    diskUsageBytes: toFiniteNumber(
-      payload.diskUsageBytes ?? payload.disk_usage_bytes,
-      0
-    ),
-    oldestSnapshot: toFiniteNumber(
-      payload.oldestSnapshot ?? payload.oldest_snapshot,
-      0
-    ),
-    newestSnapshot: toFiniteNumber(
-      payload.newestSnapshot ?? payload.newest_snapshot,
-      0
-    ),
+    diskUsageBytes: toFiniteNumber(payload.diskUsageBytes ?? payload.disk_usage_bytes, 0),
+    oldestSnapshot: toFiniteNumber(payload.oldestSnapshot ?? payload.oldest_snapshot, 0),
+    newestSnapshot: toFiniteNumber(payload.newestSnapshot ?? payload.newest_snapshot, 0),
   };
 };
 
@@ -595,7 +590,8 @@ export const TimePage: React.FC = () => {
           data-sync-state="active"
         >
           Sync chat/raisonnement: {timeState?.timeZone ?? 'Local'} ·{' '}
-          {agendaStats.currentSegment} · {todayFocusMinutes} min focus · onglet {activeTab}
+          {agendaStats.currentSegment} · {todayFocusMinutes} min focus · onglet{' '}
+          {activeTab}
         </div>
       </div>
 
@@ -1588,7 +1584,10 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 
       {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4" data-testid="time-snapshot-stats">
+        <div
+          className="grid grid-cols-1 md:grid-cols-5 gap-4"
+          data-testid="time-snapshot-stats"
+        >
           <TMetric
             label="Total Snapshots"
             value={stats.totalSnapshots.toString()}
@@ -1833,7 +1832,10 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
   }, [energyPercent, currentSegment, todayFocusMinutes, isWorkHours]);
 
   return (
-    <div className="cognitive-engine-section space-y-6" data-testid="time-cognitive-section">
+    <div
+      className="cognitive-engine-section space-y-6"
+      data-testid="time-cognitive-section"
+    >
       <TSectionHeader
         title="🧠 Cognitive Engine"
         subtitle="Flow, Intelligence & Optimisation"

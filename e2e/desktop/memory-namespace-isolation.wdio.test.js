@@ -38,7 +38,9 @@ async function loadChatSurface() {
     await browser.url(url).catch(() => {});
     await browser.pause(800);
     const loaded = await browser.execute(() => {
-      return document.readyState !== 'loading' && window.location.href.startsWith('tauri://');
+      return (
+        document.readyState !== 'loading' && window.location.href.startsWith('tauri://')
+      );
     });
     if (loaded) {
       return true;
@@ -67,70 +69,84 @@ describe('memory namespace isolation (WDIO desktop)', () => {
       at: new Date().toISOString(),
     });
 
-    assert.equal(hasResolverImport, true, 'Expected resolveChatMemoryStorageKey import/use');
+    assert.equal(
+      hasResolverImport,
+      true,
+      'Expected resolveChatMemoryStorageKey import/use'
+    );
     assert.equal(hasLegacyLiteral, false, 'Legacy literal storage key still present');
   });
 
-  it('S2 — runtime keeps prod/test payloads isolated and test marker hidden', async function() {
+  it('S2 — runtime keeps prod/test payloads isolated and test marker hidden', async function () {
     this.timeout(120000);
 
     const loaded = await loadChatSurface();
     assert.equal(loaded, true, 'Tauri chat surface should load');
 
-    await browser.execute(({ prodKey, testKey }) => {
-      const now = Date.now();
-      localStorage.clear();
-      localStorage.setItem('onboarding_completed', 'true');
-      localStorage.setItem('titane_onboarding_complete', '1');
+    await browser.execute(
+      ({ prodKey, testKey }) => {
+        const now = Date.now();
+        localStorage.clear();
+        localStorage.setItem('onboarding_completed', 'true');
+        localStorage.setItem('titane_onboarding_complete', '1');
 
-      localStorage.setItem(
-        prodKey,
-        JSON.stringify({
-          mode: 'default',
-          messages: [
-            {
-              id: 'prod-msg-1',
-              role: 'assistant',
-              content: 'namespace-prod-visible',
-              timestamp: now,
-            },
-          ],
-          compressed: [],
-          lastCompacted: now,
-        })
-      );
+        localStorage.setItem(
+          prodKey,
+          JSON.stringify({
+            mode: 'default',
+            messages: [
+              {
+                id: 'prod-msg-1',
+                role: 'assistant',
+                content: 'namespace-prod-visible',
+                timestamp: now,
+              },
+            ],
+            compressed: [],
+            lastCompacted: now,
+          })
+        );
 
-      localStorage.setItem(
-        testKey,
-        JSON.stringify({
-          mode: 'default',
-          messages: [
-            {
-              id: 'test-msg-1',
-              role: 'assistant',
-              content: 'namespace-test-hidden',
-              timestamp: now,
-            },
-          ],
-          compressed: [],
-          lastCompacted: now,
-        })
-      );
-    }, { prodKey: PROD_KEY, testKey: TEST_KEY });
+        localStorage.setItem(
+          testKey,
+          JSON.stringify({
+            mode: 'default',
+            messages: [
+              {
+                id: 'test-msg-1',
+                role: 'assistant',
+                content: 'namespace-test-hidden',
+                timestamp: now,
+              },
+            ],
+            compressed: [],
+            lastCompacted: now,
+          })
+        );
+      },
+      { prodKey: PROD_KEY, testKey: TEST_KEY }
+    );
 
     await browser.refresh();
     await browser.pause(1500);
 
-    const runtimeStorage = await browser.execute(({ prodKey, testKey }) => {
-      const prodPayload = localStorage.getItem(prodKey);
-      const testPayload = localStorage.getItem(testKey);
-      return {
-        prodPresent: Boolean(prodPayload),
-        testPresent: Boolean(testPayload),
-        prodHasProdMarker: typeof prodPayload === 'string' && prodPayload.includes('namespace-prod-visible'),
-        testHasTestMarker: typeof testPayload === 'string' && testPayload.includes('namespace-test-hidden'),
-      };
-    }, { prodKey: PROD_KEY, testKey: TEST_KEY });
+    const runtimeStorage = await browser.execute(
+      ({ prodKey, testKey }) => {
+        const prodPayload = localStorage.getItem(prodKey);
+        const testPayload = localStorage.getItem(testKey);
+        return {
+          prodPresent: Boolean(prodPayload),
+          testPresent: Boolean(testPayload),
+          prodHasProdMarker:
+            typeof prodPayload === 'string' &&
+            prodPayload.includes('namespace-prod-visible'),
+          testHasTestMarker:
+            typeof testPayload === 'string' &&
+            testPayload.includes('namespace-test-hidden'),
+        };
+      },
+      { prodKey: PROD_KEY, testKey: TEST_KEY }
+    );
 
     const bodyText = await $('body').getText();
     const hasTestMarker = bodyText.includes('namespace-test-hidden');

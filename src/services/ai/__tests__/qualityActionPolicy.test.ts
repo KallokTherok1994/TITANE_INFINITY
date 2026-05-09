@@ -7,7 +7,7 @@ describe('evaluateQualityActionPolicy', () => {
     expect(
       evaluateQualityActionPolicy({
         evaluated: false,
-      }),
+      })
     ).toMatchObject({
       action: 'enhance',
       minimumVerdict: 'QUALIFIED',
@@ -21,7 +21,7 @@ describe('evaluateQualityActionPolicy', () => {
         evaluated: true,
         score: 0.2,
         shouldEnhance: true,
-      }),
+      })
     ).toMatchObject({
       action: 'block',
       minimumVerdict: 'UNCERTAIN',
@@ -35,7 +35,7 @@ describe('evaluateQualityActionPolicy', () => {
         evaluated: true,
         score: 0.9,
         shouldEnhance: false,
-      }),
+      })
     ).toMatchObject({
       action: 'none',
       minimumVerdict: 'PASS',
@@ -47,9 +47,9 @@ describe('evaluateQualityActionPolicy', () => {
     expect(
       evaluateQualityActionPolicy({
         evaluated: true,
-        score: 0.60,
+        score: 0.6,
         shouldEnhance: true,
-      }),
+      })
     ).toMatchObject({
       minimumVerdict: 'QUALIFIED',
       reasonCode: 'quality_enhance',
@@ -62,7 +62,7 @@ describe('evaluateQualityActionPolicy', () => {
         evaluated: true,
         score: 0.3,
         inferenceState: 'CLARIFY_REQUIRED',
-      }),
+      })
     ).toMatchObject({
       action: 'clarify',
       minimumVerdict: 'BLOCKED',

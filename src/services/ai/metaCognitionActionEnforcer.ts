@@ -18,8 +18,14 @@
  *   - Never auto-regenerates
  */
 
-import type { CognitiveRuntimeTrace, CognitiveRuntimeVerdict } from './cognitiveRuntimeTrace';
-import type { MetaCognitionGuardAction, MetaCognitionGuardDecision } from './metaCognitionGuard';
+import type {
+  CognitiveRuntimeTrace,
+  CognitiveRuntimeVerdict,
+} from './cognitiveRuntimeTrace';
+import type {
+  MetaCognitionGuardAction,
+  MetaCognitionGuardDecision,
+} from './metaCognitionGuard';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -120,7 +126,8 @@ export function enforceMetaCognitionAction(input: {
   const effects: MetaCognitionEnforcementEffect[] = [];
   const reasonCodes: string[] = [];
   let safeToRemember = traceSafeToRemember;
-  let responseDirective: MetaCognitionEnforcementDecision['responseDirective'] = 'leave_response';
+  let responseDirective: MetaCognitionEnforcementDecision['responseDirective'] =
+    'leave_response';
   let userVisibleLimitation: string | undefined;
 
   // Base verdict = strictest of (trace, guard.recommendedVerdict)
@@ -136,7 +143,10 @@ export function enforceMetaCognitionAction(input: {
     responseDirective = 'append_limitation';
     userVisibleLimitation = LIMITATION_TEXT;
     // Memory: freeze if anomaly detected or web was unproven
-    if (guard.anomalyDetected || guard.issues.some(i => i.code === 'false_pass_web_unproven')) {
+    if (
+      guard.anomalyDetected ||
+      guard.issues.some(i => i.code === 'false_pass_web_unproven')
+    ) {
       safeToRemember = false;
       effects.push('memory_save_frozen');
       reasonCodes.push('anomaly_or_web_unproven');

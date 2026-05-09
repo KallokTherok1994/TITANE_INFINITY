@@ -1,11 +1,6 @@
 import { QUALITY_THRESHOLD } from '@/services/ai/qualityVerifier';
 
-export type QualityAction =
-  | 'none'
-  | 'enhance'
-  | 'clarify'
-  | 'ask_followup'
-  | 'block';
+export type QualityAction = 'none' | 'enhance' | 'clarify' | 'ask_followup' | 'block';
 
 export interface QualityActionPolicyInput {
   score?: number;
@@ -30,7 +25,7 @@ export interface QualityActionPolicyDecision {
 const QUALITY_UNCERTAIN_THRESHOLD = 0.45;
 
 export function evaluateQualityActionPolicy(
-  input: QualityActionPolicyInput,
+  input: QualityActionPolicyInput
 ): QualityActionPolicyDecision {
   const inferenceState = input.inferenceState ?? '';
   const score = input.score;

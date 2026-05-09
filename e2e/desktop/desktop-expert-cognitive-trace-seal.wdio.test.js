@@ -93,7 +93,8 @@ describe('Desktop expert cognitive trace seal', () => {
     await input.waitForDisplayed({ timeout: 30000 });
     await send.waitForDisplayed({ timeout: 30000 });
 
-    const previousAssistantCount = (await $$('[data-testid="chat-message-assistant"]')).length;
+    const previousAssistantCount = (await $$('[data-testid="chat-message-assistant"]'))
+      .length;
 
     await input.setValue(SAFE_PROMPT);
     await send.click();

@@ -14,7 +14,10 @@
  * Never exposes raw chain-of-thought.
  */
 
-import type { CognitiveRuntimeTrace, CognitiveRuntimeVerdict } from './cognitiveRuntimeTrace';
+import type {
+  CognitiveRuntimeTrace,
+  CognitiveRuntimeVerdict,
+} from './cognitiveRuntimeTrace';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -84,11 +87,17 @@ const VERDICT_STRENGTH: Record<CognitiveRuntimeVerdict, number> = {
   FAIL: 4,
 };
 
-function strongerAction(a: MetaCognitionGuardAction, b: MetaCognitionGuardAction): MetaCognitionGuardAction {
+function strongerAction(
+  a: MetaCognitionGuardAction,
+  b: MetaCognitionGuardAction
+): MetaCognitionGuardAction {
   return ACTION_STRENGTH[a] >= ACTION_STRENGTH[b] ? a : b;
 }
 
-function strongerVerdict(a: CognitiveRuntimeVerdict, b: CognitiveRuntimeVerdict): CognitiveRuntimeVerdict {
+function strongerVerdict(
+  a: CognitiveRuntimeVerdict,
+  b: CognitiveRuntimeVerdict
+): CognitiveRuntimeVerdict {
   return VERDICT_STRENGTH[a] >= VERDICT_STRENGTH[b] ? a : b;
 }
 
@@ -105,7 +114,8 @@ function containsForbiddenKey(obj: unknown, depth = 0): boolean {
   if (depth > 10 || obj === null || typeof obj !== 'object') return false;
   for (const key of Object.keys(obj as Record<string, unknown>)) {
     if (FORBIDDEN_RAW_KEYS.includes(key)) return true;
-    if (containsForbiddenKey((obj as Record<string, unknown>)[key], depth + 1)) return true;
+    if (containsForbiddenKey((obj as Record<string, unknown>)[key], depth + 1))
+      return true;
   }
   return false;
 }
@@ -119,7 +129,7 @@ function containsForbiddenKey(obj: unknown, depth = 0): boolean {
  * Pure function — no mutation.
  */
 export function evaluateMetaCognitionGuard(
-  trace: CognitiveRuntimeTrace,
+  trace: CognitiveRuntimeTrace
 ): MetaCognitionGuardDecision {
   const issues: MetaCognitionIssue[] = [];
   let action: MetaCognitionGuardAction = 'none';
@@ -224,10 +234,7 @@ export function evaluateMetaCognitionGuard(
 
   // ── Rule 3: Policy floor ignored ─────────────────────────────────────────
   const qualityFloor = trace.policy.qualityAction?.minimumVerdict;
-  if (
-    qualityFloor &&
-    VERDICT_STRENGTH[qualityFloor] > VERDICT_STRENGTH[currentVerdict]
-  ) {
+  if (qualityFloor && VERDICT_STRENGTH[qualityFloor] > VERDICT_STRENGTH[currentVerdict]) {
     issues.push({
       code: 'false_pass_policy_floor_ignored',
       severity: 'critical',
@@ -251,7 +258,10 @@ export function evaluateMetaCognitionGuard(
     memRisk === 'conflict_with_current_message'
   ) {
     issues.push({
-      code: memRisk === 'conflict_with_current_message' ? 'memory_context_conflict' : 'memory_save_risk',
+      code:
+        memRisk === 'conflict_with_current_message'
+          ? 'memory_context_conflict'
+          : 'memory_save_risk',
       severity: memRisk === 'conflict_with_current_message' ? 'critical' : 'warning',
       message: `Memory save risk: ${memRisk}`,
       evidence: [`memory.risk=${memRisk}`],
@@ -301,7 +311,7 @@ export function evaluateMetaCognitionGuard(
  */
 export function applyMetaCognitionGuardToTrace(
   trace: CognitiveRuntimeTrace,
-  decision: MetaCognitionGuardDecision,
+  decision: MetaCognitionGuardDecision
 ): CognitiveRuntimeTrace {
   trace.metaCognition = {
     ...trace.metaCognition,
@@ -320,7 +330,9 @@ export function applyMetaCognitionGuardToTrace(
   }
 
   // Update final verdict only if guard recommends a strictly stronger one
-  if (VERDICT_STRENGTH[decision.recommendedVerdict] > VERDICT_STRENGTH[trace.final.verdict]) {
+  if (
+    VERDICT_STRENGTH[decision.recommendedVerdict] > VERDICT_STRENGTH[trace.final.verdict]
+  ) {
     trace.final.verdict = decision.recommendedVerdict;
   }
 

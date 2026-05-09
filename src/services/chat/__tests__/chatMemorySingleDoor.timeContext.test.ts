@@ -162,6 +162,10 @@ describe('chatMemorySingleDoor time context', () => {
     );
 
     const envelope = buildChatContextEnvelope(makeInput());
-    expect(envelope?.memorySingleDoor.recentMessages.some(msg => msg.content.includes('namespace-aware-memory'))).toBe(true);
+    expect(
+      envelope?.memorySingleDoor.recentMessages.some(msg =>
+        msg.content.includes('namespace-aware-memory')
+      )
+    ).toBe(true);
   });
 });

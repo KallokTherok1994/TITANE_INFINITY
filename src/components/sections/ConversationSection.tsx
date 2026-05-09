@@ -1952,12 +1952,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       for (let i = messages.length - 1; i >= 0; i -= 1) {
         const message = messages[i] as ConversationMessageItem;
         if (message.role === 'assistant') {
-          // DEBUG: Always log last assistant message
-          console.log('[useCSection] Last assistant message:', {
-            id: message.id,
-            hasMetadata: !!message.metadata,
-            metadataKeys: message.metadata ? Object.keys(message.metadata) : [],
-          });
           return message;
         }
       }
@@ -1989,11 +1983,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
       if (!hasRuntimeEvidence) {
         return null;
-      }
-
-      // DEBUG: Log when cognitive trace is found
-      if (cognitiveTrace?.final?.verdict) {
-        console.log('[ConversationSection] Cognitive trace found with verdict:', cognitiveTrace.final.verdict);
       }
 
       const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);

@@ -308,11 +308,19 @@ describe('ThinkingPanel cognitive trace', () => {
     renderExpert(traceWithBoth);
     // Both selectors must be present
     expect(screen.getByTestId('reasoning-cognitive-meta-guard')).toBeInTheDocument();
-    expect(screen.getByTestId('reasoning-cognitive-meta-enforcement')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('reasoning-cognitive-meta-enforcement')
+    ).toBeInTheDocument();
   });
 
   it('enforcement block does not expose forbidden raw reasoning strings', () => {
-    const FORBIDDEN = ['chainOfThought', 'hiddenThoughts', 'rawReasoning', 'privateReasoning', 'internalReasoningSteps'];
+    const FORBIDDEN = [
+      'chainOfThought',
+      'hiddenThoughts',
+      'rawReasoning',
+      'privateReasoning',
+      'internalReasoningSteps',
+    ];
     const traceWithEnforcement: CognitiveRuntimeTrace = {
       ...baseTrace,
       metaCognition: {

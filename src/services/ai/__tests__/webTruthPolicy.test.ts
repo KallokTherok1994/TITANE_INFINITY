@@ -7,7 +7,7 @@ describe('evaluateWebTruthPolicy', () => {
     expect(
       evaluateWebTruthPolicy({
         userMessage: 'Explique ce concept simplement.',
-      }),
+      })
     ).toMatchObject({
       need: 'not_needed',
       status: 'not_needed',
@@ -20,7 +20,7 @@ describe('evaluateWebTruthPolicy', () => {
       evaluateWebTruthPolicy({
         userMessage: 'What is the latest release today?',
         webAttempted: false,
-      }),
+      })
     ).toMatchObject({
       need: 'freshness_required',
       status: 'needed_not_attempted',
@@ -35,7 +35,7 @@ describe('evaluateWebTruthPolicy', () => {
         citationsCount: 0,
         webAttempted: true,
         webAvailable: true,
-      }),
+      })
     ).toMatchObject({
       need: 'source_required',
       status: 'attempted_no_sources',
@@ -50,7 +50,7 @@ describe('evaluateWebTruthPolicy', () => {
         factualClaimsDetected: true,
         webAttempted: true,
         webAvailable: true,
-      }),
+      })
     ).toMatchObject({
       status: 'attempted_success',
       shouldWarnUser: false,
@@ -62,7 +62,7 @@ describe('evaluateWebTruthPolicy', () => {
       evaluateWebTruthPolicy({
         userMessage: 'Cherche sur internet la réponse à ma question.',
         webAttempted: false,
-      }),
+      })
     ).toMatchObject({
       need: 'user_requested_web',
       shouldUseWeb: true,
@@ -77,7 +77,7 @@ describe('evaluateWebTruthPolicy', () => {
         webAttempted: true,
         webAvailable: false,
         failureReasonCode: 'network_unavailable',
-      }),
+      })
     ).toMatchObject({
       status: 'unavailable',
       shouldWarnUser: true,
@@ -90,7 +90,7 @@ describe('evaluateWebTruthPolicy', () => {
         userMessage: 'Check online for recent data.',
         blocked: true,
         webAttempted: false,
-      }),
+      })
     ).toMatchObject({
       status: 'blocked',
       shouldWarnUser: true,

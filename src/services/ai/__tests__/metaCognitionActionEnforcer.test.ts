@@ -34,14 +34,42 @@ import type { MetaCognitionGuardDecision } from '../metaCognitionGuard';
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 
-function makeTrace(overrides: Partial<CognitiveRuntimeTrace['final']> = {}): CognitiveRuntimeTrace {
+function makeTrace(
+  overrides: Partial<CognitiveRuntimeTrace['final']> = {}
+): CognitiveRuntimeTrace {
   return {
-    input: { messageLength: 10, requiresFreshness: false, requiresWeb: false, requiresMemory: false, taskFamily: 'general' },
+    input: {
+      messageLength: 10,
+      requiresFreshness: false,
+      requiresWeb: false,
+      requiresMemory: false,
+      taskFamily: 'general',
+    },
     canonical: { attached: true },
-    memory: { injected: false, reasonCode: 'no_memory', sources: [], sourceCount: 0, relevance: 0, risk: 'none' },
-    web: { needed: false, attempted: false, available: false, sourceCount: 0, limitations: [], reasonCode: 'web_not_needed' },
+    memory: {
+      injected: false,
+      reasonCode: 'no_memory',
+      sources: [],
+      sourceCount: 0,
+      relevance: 0,
+      risk: 'none',
+    },
+    web: {
+      needed: false,
+      attempted: false,
+      available: false,
+      sourceCount: 0,
+      limitations: [],
+      reasonCode: 'web_not_needed',
+    },
     generation: { fallbackUsed: false },
-    reflection: { verifierEnabled: false, factualClaimsDetected: false, verified: false, shouldRevise: false, correctionsApplied: false },
+    reflection: {
+      verifierEnabled: false,
+      factualClaimsDetected: false,
+      verified: false,
+      shouldRevise: false,
+      correctionsApplied: false,
+    },
     quality: { evaluated: false },
     metaCognition: { evaluated: true, guardAction: 'none', freezeMemorySave: false },
     policy: {
@@ -147,7 +175,9 @@ describe('MetaCognitionActionEnforcer — enforceMetaCognitionAction()', () => {
 
   test('5. regenerate_with_constraints recommends regeneration without provider call', () => {
     const trace = makeTrace({ safeToRemember: true, verdict: 'QUALIFIED' });
-    const guard = makeGuard('regenerate_with_constraints', { recommendedVerdict: 'UNCERTAIN' });
+    const guard = makeGuard('regenerate_with_constraints', {
+      recommendedVerdict: 'UNCERTAIN',
+    });
     const result = enforceMetaCognitionAction({ trace, guard });
 
     expect(result.enforced).toBe(true);
@@ -177,7 +207,9 @@ describe('MetaCognitionActionEnforcer — enforceMetaCognitionAction()', () => {
 
   test('7. existing BLOCKED verdict is not weakened to UNCERTAIN', () => {
     const trace = makeTrace({ safeToRemember: false, verdict: 'BLOCKED' });
-    const guard = makeGuard('regenerate_with_constraints', { recommendedVerdict: 'UNCERTAIN' });
+    const guard = makeGuard('regenerate_with_constraints', {
+      recommendedVerdict: 'UNCERTAIN',
+    });
     const result = enforceMetaCognitionAction({ trace, guard });
 
     // BLOCKED > UNCERTAIN — verdict must remain BLOCKED
@@ -226,7 +258,13 @@ describe('MetaCognitionActionEnforcer — enforceMetaCognitionAction()', () => {
   });
 
   test('11. response directive outputs are UI-safe (no raw reasoning fields)', () => {
-    const FORBIDDEN = ['chainOfThought', 'hiddenThoughts', 'rawReasoning', 'privateReasoning', 'internalReasoningSteps'];
+    const FORBIDDEN = [
+      'chainOfThought',
+      'hiddenThoughts',
+      'rawReasoning',
+      'privateReasoning',
+      'internalReasoningSteps',
+    ];
     const guard = makeGuard('block_response', { recommendedVerdict: 'FAIL' });
     const trace = makeTrace();
     const enforcement = enforceMetaCognitionAction({ trace, guard });
@@ -246,7 +284,10 @@ describe('MetaCognitionActionEnforcer — enforceMetaCognitionAction()', () => {
     const guard = makeGuard('none');
     const enforcement = enforceMetaCognitionAction({ trace, guard });
     const original = 'Ma réponse originale.';
-    const result = applyMetaCognitionEnforcementToResponse({ response: original, enforcement });
+    const result = applyMetaCognitionEnforcementToResponse({
+      response: original,
+      enforcement,
+    });
     expect(result).toBe(original);
   });
 });
@@ -254,7 +295,9 @@ describe('MetaCognitionActionEnforcer — enforceMetaCognitionAction()', () => {
 describe('MetaCognitionActionEnforcer — applyMetaCognitionEnforcementToTrace()', () => {
   test('never weakens existing verdict: BLOCKED stays BLOCKED when enforcement says UNCERTAIN', () => {
     const trace = makeTrace({ safeToRemember: false, verdict: 'BLOCKED' });
-    const guard = makeGuard('regenerate_with_constraints', { recommendedVerdict: 'UNCERTAIN' });
+    const guard = makeGuard('regenerate_with_constraints', {
+      recommendedVerdict: 'UNCERTAIN',
+    });
     const enforcement = enforceMetaCognitionAction({ trace, guard });
     applyMetaCognitionEnforcementToTrace(trace, enforcement);
     expect(trace.final.verdict).toBe('BLOCKED');

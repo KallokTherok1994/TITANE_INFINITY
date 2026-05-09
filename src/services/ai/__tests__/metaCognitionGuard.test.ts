@@ -130,7 +130,6 @@ function buildWebNeededUnavailableTrace() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('MetaCognitionGuard v1', () => {
-
   // Test 1 — healthy trace
   it('1. healthy trace → action none, no anomaly, coherence ≥ 0.9', () => {
     const trace = buildHealthyTrace();
@@ -234,7 +233,9 @@ describe('MetaCognitionGuard v1', () => {
 
     const decision = evaluateMetaCognitionGuard(trace);
 
-    const blockingIssue = decision.issues.find(i => i.code === 'blocking_inference_state');
+    const blockingIssue = decision.issues.find(
+      i => i.code === 'blocking_inference_state'
+    );
     expect(blockingIssue).toBeDefined();
     expect(['request_clarification', 'block_response']).toContain(decision.action);
     expect(['BLOCKED', 'FAIL']).toContain(decision.recommendedVerdict);
@@ -253,10 +254,16 @@ describe('MetaCognitionGuard v1', () => {
     expect(decision.freezeMemorySave).toBe(true);
     // action must be at least freeze_memory_save
     const ACTION_STRENGTH: Record<string, number> = {
-      none: 0, add_limitation: 1, freeze_memory_save: 2, request_clarification: 3,
-      regenerate_with_constraints: 4, block_response: 5,
+      none: 0,
+      add_limitation: 1,
+      freeze_memory_save: 2,
+      request_clarification: 3,
+      regenerate_with_constraints: 4,
+      block_response: 5,
     };
-    expect(ACTION_STRENGTH[decision.action]).toBeGreaterThanOrEqual(ACTION_STRENGTH['freeze_memory_save']);
+    expect(ACTION_STRENGTH[decision.action]).toBeGreaterThanOrEqual(
+      ACTION_STRENGTH['freeze_memory_save']
+    );
   });
 
   // Test 8 — raw reasoning key in trace → block_response, FAIL
@@ -295,8 +302,16 @@ describe('MetaCognitionGuard v1', () => {
     const decision = evaluateMetaCognitionGuard(trace);
 
     // recommendedVerdict must be >= FAIL
-    const STRENGTH: Record<string, number> = { PASS: 0, QUALIFIED: 1, UNCERTAIN: 2, BLOCKED: 3, FAIL: 4 };
-    expect(STRENGTH[decision.recommendedVerdict]).toBeGreaterThanOrEqual(STRENGTH['FAIL']);
+    const STRENGTH: Record<string, number> = {
+      PASS: 0,
+      QUALIFIED: 1,
+      UNCERTAIN: 2,
+      BLOCKED: 3,
+      FAIL: 4,
+    };
+    expect(STRENGTH[decision.recommendedVerdict]).toBeGreaterThanOrEqual(
+      STRENGTH['FAIL']
+    );
   });
 
   // Test 11 — policy floor ignored → strictest floor applied
@@ -307,10 +322,20 @@ describe('MetaCognitionGuard v1', () => {
 
     const decision = evaluateMetaCognitionGuard(trace);
 
-    const floorIssue = decision.issues.find(i => i.code === 'false_pass_policy_floor_ignored');
+    const floorIssue = decision.issues.find(
+      i => i.code === 'false_pass_policy_floor_ignored'
+    );
     expect(floorIssue).toBeDefined();
-    const STRENGTH: Record<string, number> = { PASS: 0, QUALIFIED: 1, UNCERTAIN: 2, BLOCKED: 3, FAIL: 4 };
-    expect(STRENGTH[decision.recommendedVerdict]).toBeGreaterThanOrEqual(STRENGTH['BLOCKED']);
+    const STRENGTH: Record<string, number> = {
+      PASS: 0,
+      QUALIFIED: 1,
+      UNCERTAIN: 2,
+      BLOCKED: 3,
+      FAIL: 4,
+    };
+    expect(STRENGTH[decision.recommendedVerdict]).toBeGreaterThanOrEqual(
+      STRENGTH['BLOCKED']
+    );
   });
 
   // Test 12 — applyMetaCognitionGuardToTrace updates metaCognition and safeToRemember
@@ -325,12 +350,17 @@ describe('MetaCognitionGuard v1', () => {
     expect(updatedTrace.metaCognition.issues).toEqual(decision.issues);
     expect(updatedTrace.metaCognition.coherenceScore).toBe(decision.coherenceScore);
     // Guard must never weaken existing verdict
-    const STRENGTH: Record<string, number> = { PASS: 0, QUALIFIED: 1, UNCERTAIN: 2, BLOCKED: 3, FAIL: 4 };
+    const STRENGTH: Record<string, number> = {
+      PASS: 0,
+      QUALIFIED: 1,
+      UNCERTAIN: 2,
+      BLOCKED: 3,
+      FAIL: 4,
+    };
     expect(STRENGTH[updatedTrace.final.verdict]).toBeGreaterThanOrEqual(
       STRENGTH[decision.recommendedVerdict]
     );
     // For healthy trace, safeToRemember should remain true
     expect(updatedTrace.final.safeToRemember).toBe(true);
   });
-
 });
