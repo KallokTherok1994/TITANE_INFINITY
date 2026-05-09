@@ -5,6 +5,7 @@ import {
   formatContextEnvelopeForSystemPrompt,
   type BuildSingleDoorInput,
 } from '@/services/chat/chatMemorySingleDoor';
+import { resolveChatMemoryStorageKey } from '@/services/chatMemoryCompactor';
 import type { ModuleRouteContext } from '@/services/chat/moduleRouteContext';
 
 function makeModuleContext(): ModuleRouteContext {
@@ -143,5 +144,24 @@ describe('chatMemorySingleDoor time context', () => {
     const envelope = buildChatContextEnvelope(makeInput());
 
     expect(envelope?.timeContext).toBeUndefined();
+  });
+
+  it('reads mode memory from namespace-aware storage key', () => {
+    window.localStorage.setItem(
+      resolveChatMemoryStorageKey('default'),
+      JSON.stringify({
+        messages: [
+          {
+            id: 'msg-ns-1',
+            role: 'assistant',
+            content: 'namespace-aware-memory',
+            timestamp: Date.now(),
+          },
+        ],
+      })
+    );
+
+    const envelope = buildChatContextEnvelope(makeInput());
+    expect(envelope?.memorySingleDoor.recentMessages.some(msg => msg.content.includes('namespace-aware-memory'))).toBe(true);
   });
 });

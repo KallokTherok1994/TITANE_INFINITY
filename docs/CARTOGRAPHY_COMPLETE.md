@@ -2079,3 +2079,9 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > Preuves e2e ajoutées:
 - Desktop WDIO: `e2e/desktop/memory-namespace-isolation.wdio.test.js`
 - Agent Playwright: `e2e/agents/memory-namespace-agent-proof.e2e.ts`
+
+## 2026-05-08 — Chat single-door namespace consistency
+
+> `src/services/chat/chatMemorySingleDoor.ts` ne lit plus la mémoire de mode via une clé littérale `titane_chat_mode_*`; la lecture passe par `resolveChatMemoryStorageKey(mode)` pour aligner la chaîne `buildChatContextEnvelope()` sur la séparation de namespace déjà appliquée au compactor.
+
+> Couverture associée: `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts` ajoute une preuve explicite de lecture d'un payload namespacé dans `memorySingleDoor.recentMessages`.

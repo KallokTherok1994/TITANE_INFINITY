@@ -7,6 +7,7 @@ import type { ModuleRouteContext } from '@/services/chat/moduleRouteContext';
 import type { ConversationMode } from '@/services/conversationEngine';
 import type { ProviderDecisionMeta } from '@/types/providerMeta';
 import { createLogger } from '@/utils/logger';
+import { resolveChatMemoryStorageKey } from '@/services/chatMemoryCompactor';
 
 const logger = createLogger('[chatMemorySingleDoor]');
 
@@ -431,7 +432,7 @@ function readModeStoredMessages(mode: ConversationMode): ChatLikeMessage[] {
   if (!isBrowser()) return [];
 
   try {
-    const raw = window.localStorage.getItem(`titane_chat_mode_${mode}`);
+    const raw = window.localStorage.getItem(resolveChatMemoryStorageKey(mode));
     if (!raw) return [];
     const parsed = JSON.parse(raw) as StoredModeMemory;
     const base = Array.isArray(parsed?.messages) ? parsed.messages : [];

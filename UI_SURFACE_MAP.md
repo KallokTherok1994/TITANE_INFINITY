@@ -1088,3 +1088,8 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Surface runtime chat: `src/hooks/useConversationEngine.ts` lit désormais l'historique via `resolveChatMemoryStorageKey(...)` (namespace gouverné) au lieu d'une clé littérale non namespacée.
 - Preuve desktop WDIO ajoutée: `e2e/desktop/memory-namespace-isolation.wdio.test.js` (restauration prod visible, payload test non exposé).
 - Preuve agent Playwright ajoutée: `e2e/agents/memory-namespace-agent-proof.e2e.ts` (dashboards agents visibles et absence de fuite du marqueur test).
+
+# [2026-05-08] Chat single-door namespace alignment
+
+- Surface context envelope: `src/services/chat/chatMemorySingleDoor.ts` lit désormais la mémoire de mode via `resolveChatMemoryStorageKey(mode)` pour maintenir l'alignement namespace en runtime et en test.
+- Preuve unitaire associée: `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts` (lecture d'un payload mode namespacé dans `memorySingleDoor.recentMessages`).
