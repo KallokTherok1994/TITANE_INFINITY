@@ -236,6 +236,176 @@ describe('conversationEngine.processMessage', () => {
       globalStatus: 'HEALTHY',
     });
   });
+  
+  it('adds temporal_memory_summary:present when temporal summary exists in context envelope', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+  
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Temporal summary metadata check',
+          conversationId: 'ctm1',
+          messageId: 'mtm1',
+          metadata: { timestamp: 2011 },
+        };
+      }
+  
+      return null;
+    });
+  
+    const response = await processMessage('Temporal metadata please.', {
+      conversationId: 'ctm1',
+      providerPreference: 'ollama',
+      contextEnvelope: {
+        routeContext: {
+          route: '/titane',
+          updatedAt: 1,
+        },
+        moduleContext: {
+          moduleId: 'conversation',
+          moduleName: 'Conversation',
+          moduleType: 'chat',
+          pageTitle: 'Chat',
+          capabilities: ['chat'],
+          dataTruthClass: 'runtime',
+          actions: ['send'],
+          limits: [],
+          memoryKeys: ['conversation'],
+        },
+        continuity: {
+          sequence: 1,
+          changeType: 'initial',
+          staleGuard: 'steady',
+        },
+        memorySingleDoor: {
+          conversationId: 'ctm1',
+          mode: 'default',
+          providerRequested: 'ollama',
+          tags: ['route:/titane'],
+          recentMessages: [],
+          scopeDecision: {
+            kept: 0,
+            purged: 0,
+            recalculated: false,
+          },
+        },
+        runtimeMetadata: {},
+        timeContext: {
+          currentDateTime: '2026-05-09T10:22:00.000Z',
+          timeZone: 'Europe/Paris',
+          currentSegment: 'Deep Focus',
+          isWorkHours: true,
+          eventsToday: 2,
+          eventsThisWeek: 7,
+          todayFocusMinutes: 90,
+          currentEnergy: 81,
+          runtimeSource: 'global-publisher',
+          updatedAt: 1,
+        },
+        temporalMemorySummary: {
+          status: 'fresh',
+          runtimeSource: 'global-publisher',
+          updatedAt: 1,
+          ageMs: 100,
+          ttlMs: 900000,
+          freshnessRatio: 0.99,
+          rawMomentsCount: 2,
+          deduplicatedMomentsCount: 1,
+          keyMoments: ['user:plan sprint'],
+          compactTimeline: 'segment=Deep Focus | user:plan sprint',
+          promptSafeSummary: 'time=2026-05-09T10:22:00.000Z segment=Deep Focus',
+          warningCount: 0,
+          warnings: [],
+        },
+        generatedAt: 1,
+      },
+    });
+  
+    expect(response.metadata.links_to_contexts).toEqual(
+      expect.arrayContaining(['time_context:present', 'temporal_memory_summary:present'])
+    );
+  });
+  
+  it('does not inject temporal_memory_summary:present when temporal summary is absent', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+  
+      if (command === 'conversation_generate') {
+        return {
+          content: 'No temporal summary metadata check',
+          conversationId: 'ctm2',
+          messageId: 'mtm2',
+          metadata: { timestamp: 2012 },
+        };
+      }
+  
+      return null;
+    });
+  
+    const response = await processMessage('No temporal summary now.', {
+      conversationId: 'ctm2',
+      providerPreference: 'ollama',
+      contextEnvelope: {
+        routeContext: {
+          route: '/titane',
+          updatedAt: 1,
+        },
+        moduleContext: {
+          moduleId: 'conversation',
+          moduleName: 'Conversation',
+          moduleType: 'chat',
+          pageTitle: 'Chat',
+          capabilities: ['chat'],
+          dataTruthClass: 'runtime',
+          actions: ['send'],
+          limits: [],
+          memoryKeys: ['conversation'],
+        },
+        continuity: {
+          sequence: 1,
+          changeType: 'initial',
+          staleGuard: 'steady',
+        },
+        memorySingleDoor: {
+          conversationId: 'ctm2',
+          mode: 'default',
+          providerRequested: 'ollama',
+          tags: ['route:/titane'],
+          recentMessages: [],
+          scopeDecision: {
+            kept: 0,
+            purged: 0,
+            recalculated: false,
+          },
+        },
+        runtimeMetadata: {},
+        timeContext: {
+          currentDateTime: '2026-05-09T10:22:00.000Z',
+          timeZone: 'Europe/Paris',
+          currentSegment: 'Deep Focus',
+          isWorkHours: true,
+          eventsToday: 2,
+          eventsThisWeek: 7,
+          todayFocusMinutes: 90,
+          currentEnergy: 81,
+          runtimeSource: 'global-publisher',
+          updatedAt: 1,
+        },
+        generatedAt: 1,
+      },
+    });
+  
+    expect(response.metadata.links_to_contexts).toEqual(
+      expect.arrayContaining(['time_context:present'])
+    );
+    expect(response.metadata.links_to_contexts).not.toEqual(
+      expect.arrayContaining(['temporal_memory_summary:present'])
+    );
+  });
 
   it('normalizes missing metadata with safe defaults', async () => {
     vi.mocked(secureInvoke)

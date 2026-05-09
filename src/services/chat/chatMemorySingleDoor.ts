@@ -8,6 +8,10 @@ import type { ConversationMode } from '@/services/conversationEngine';
 import type { ProviderDecisionMeta } from '@/types/providerMeta';
 import { createLogger } from '@/utils/logger';
 import { resolveChatMemoryStorageKey } from '@/services/chatMemoryCompactor';
+import {
+  buildTemporalMemorySummary,
+  type TemporalMemorySummary,
+} from '@/services/chat/temporalMemoryManager';
 
 const logger = createLogger('[chatMemorySingleDoor]');
 
@@ -85,7 +89,11 @@ export interface ChatContextEnvelope {
     todayFocusMinutes: number;
     currentEnergy: number;
     activeTab?: string;
-    runtimeSource?: 'uninitialized' | 'persistence-active' | 'degraded';
+    runtimeSource?:
+      | 'uninitialized'
+      | 'persistence-active'
+      | 'degraded'
+      | 'global-publisher';
     updatedAt: number;
   };
   // TIME cognitive state (injected from TimePage localStorage)
@@ -94,6 +102,7 @@ export interface ChatContextEnvelope {
     energy: number;
     mode: string;
   };
+  temporalMemorySummary?: TemporalMemorySummary;
   // TWINS fusion context (injected from useTwinEvolution localStorage)
   twinsContext?: {
     globalScore: number;
@@ -421,7 +430,8 @@ function readTimeRuntimeContext(): ChatContextEnvelope['timeContext'] | undefine
     runtimeSource:
       raw.runtimeSource === 'persistence-active' ||
       raw.runtimeSource === 'degraded' ||
-      raw.runtimeSource === 'uninitialized'
+      raw.runtimeSource === 'uninitialized' ||
+      raw.runtimeSource === 'global-publisher'
         ? raw.runtimeSource
         : undefined,
     updatedAt: raw.updatedAt,
@@ -515,6 +525,11 @@ export function formatContextEnvelopeForSystemPrompt(
 ): string {
   const twinsFusionScore = toFiniteNumber(envelope.twinsContext?.globalScore, 0);
   const twinsSyncScore = toFiniteNumber(envelope.twinsContext?.syncScore, 0);
+  const temporalSummary = envelope.temporalMemorySummary;
+  const temporalFreshnessRatio = toFiniteNumber(temporalSummary?.freshnessRatio, 0);
+  const temporalKeyMoments = Array.isArray(temporalSummary?.keyMoments)
+    ? temporalSummary.keyMoments.filter(moment => typeof moment === 'string')
+    : [];
 
   const recent = envelope.memorySingleDoor.recentMessages.slice(-6);
   const recentLines = recent.map(msg => {
@@ -560,6 +575,22 @@ export function formatContextEnvelopeForSystemPrompt(
           `cognitive_flow_active=${envelope.cognitiveContext.flowActive}`,
           `cognitive_energy=${envelope.cognitiveContext.energy}`,
           `cognitive_mode=${envelope.cognitiveContext.mode}`,
+        ]
+      : []),
+    ...(temporalSummary
+      ? [
+          `temporal_memory_status=${String(temporalSummary.status || 'unknown')}`,
+          `temporal_memory_runtime_source=${String(temporalSummary.runtimeSource || 'unknown')}`,
+          `temporal_memory_age_ms=${Math.max(0, Math.round(toFiniteNumber(temporalSummary.ageMs, 0)))}`,
+          `temporal_memory_ttl_ms=${Math.max(0, Math.round(toFiniteNumber(temporalSummary.ttlMs, 0)))}`,
+          `temporal_memory_freshness_ratio=${temporalFreshnessRatio.toFixed(2)}`,
+          `temporal_memory_warning_count=${Math.max(
+            0,
+            Math.round(toFiniteNumber(temporalSummary.warningCount, 0))
+          )}`,
+          `temporal_memory_key_moments=${temporalKeyMoments.join(' || ') || 'none'}`,
+          `temporal_memory_compact_timeline=${String(temporalSummary.compactTimeline || '')}`,
+          `temporal_memory_prompt_safe_summary=${String(temporalSummary.promptSafeSummary || '')}`,
         ]
       : []),
     ...(envelope.twinsContext
@@ -621,6 +652,12 @@ export function buildChatContextEnvelope(
   }));
 
   const purged = Math.max(0, merged.length - selected.length);
+  const timeContext = readTimeRuntimeContext();
+  const temporalMemorySummary = buildTemporalMemorySummary({
+    timeContext,
+    recentMessages: selected,
+    ttlMs: TIME_RUNTIME_MAX_AGE_MS,
+  });
 
   const envelope: ChatContextEnvelope = {
     routeContext: {
@@ -666,7 +703,8 @@ export function buildChatContextEnvelope(
       lastReasonCode: input.lastProviderMeta?.reason_code,
       networkUsed: input.lastProviderMeta?.network_used,
     },
-    timeContext: readTimeRuntimeContext(),
+    timeContext,
+    temporalMemorySummary,
     cognitiveContext:
       readJson<ChatContextEnvelope['cognitiveContext']>('titane_cognitive_state') ??
       undefined,

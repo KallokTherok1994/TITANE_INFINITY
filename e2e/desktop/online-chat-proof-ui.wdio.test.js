@@ -1609,6 +1609,198 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     console.log(`[ASSISTANT_TEXT] ${String(after).slice(0, 220)}`);
   });
 
+  it(
+    'should preserve TIME context through native Tauri conversation_generate without /time',
+    async function () {
+      this.timeout(Math.max(210000, assistantTimeoutMs + 90000));
+
+      const { selectors } = await prepareChatSurface();
+      assert.ok(selectors, 'R4 native TIME proof requires visible chat selectors');
+
+      const beforeRuntime = await readRuntimeSnapshot(selectors);
+      assert.ok(
+        !String(beforeRuntime.url || '').includes('/time'),
+        `[R4_NO_TIME_ROUTE] expected direct chat route, got ${beforeRuntime.url}`
+      );
+
+      const mockFlag = await browser.execute(() => {
+        return (window.__TITANE_E2E_CHAT_MOCK__ || false) === true;
+      });
+      assert.equal(mockFlag, false, '[R4_NO_MOCK] __TITANE_E2E_CHAT_MOCK__ must be false/absent');
+
+      await browser.waitUntil(
+        async () => {
+          return await browser.execute(() => {
+            const raw = localStorage.getItem('titane_time_runtime_context_v1');
+            if (!raw) return false;
+            try {
+              const parsed = JSON.parse(raw);
+              return (
+                parsed &&
+                typeof parsed.currentDateTime === 'string' &&
+                typeof parsed.timeZone === 'string' &&
+                typeof parsed.updatedAt === 'number'
+              );
+            } catch {
+              return false;
+            }
+          });
+        },
+        {
+          timeout: 25000,
+          interval: 300,
+          timeoutMsg: 'R4 TIME runtime context key did not hydrate in localStorage',
+        }
+      );
+
+      const timeRuntime = await browser.execute(() => {
+        const raw = localStorage.getItem('titane_time_runtime_context_v1');
+        return raw ? JSON.parse(raw) : null;
+      });
+      assert.ok(timeRuntime, '[R4_TIME_CONTEXT] missing titane_time_runtime_context_v1');
+      assert.equal(
+        timeRuntime.runtimeSource,
+        'global-publisher',
+        `[R4_TIME_SOURCE] unexpected runtimeSource=${timeRuntime.runtimeSource}`
+      );
+      assert.ok(
+        Date.now() - Number(timeRuntime.updatedAt || 0) <= 900000,
+        `[R4_TIME_FRESHNESS] stale TIME context updatedAt=${timeRuntime.updatedAt}`
+      );
+
+      const probeMessage = `[R4/${scenario}/${runId}] native tauri time chain probe ${new Date().toISOString()}`;
+      const outcome = await sendMessageAndWaitOutcome(selectors, probeMessage);
+
+      assert.ok(
+        outcome.kind === 'assistant' || outcome.kind === 'degraded',
+        `[R4_RESPONSE_KIND] unexpected kind=${outcome.kind}`
+      );
+      assert.ok(
+        String(outcome.responseText || '').trim().length > 0,
+        '[R4_RESPONSE_TEXT] native path returned empty response text'
+      );
+      assert.equal(
+        outcome.runtime.ipcReadyState,
+        'READY',
+        `[R4_IPC_READY] expected READY, got ${outcome.runtime.ipcReadyState}`
+      );
+      assert.ok(
+        outcome.runtime.sendTraceState === 'RESPONDED' || outcome.runtime.assistantCount > 0,
+        `[R4_SEND_TRACE] native send trace missing response state (${outcome.runtime.sendTraceState})`
+      );
+
+      const envelope = await browser.execute(() => {
+        const raw = localStorage.getItem('titane_chat_context_envelope_v1');
+        if (!raw) return null;
+        try {
+          return JSON.parse(raw);
+        } catch {
+          return null;
+        }
+      });
+
+      assert.ok(envelope, '[R4_ENVELOPE] missing titane_chat_context_envelope_v1');
+      assert.ok(envelope.timeContext, '[R4_ENVELOPE] missing envelope.timeContext');
+      assert.equal(
+        envelope.timeContext.runtimeSource,
+        'global-publisher',
+        `[R4_ENVELOPE_SOURCE] unexpected envelope runtimeSource=${envelope.timeContext.runtimeSource}`
+      );
+      if (envelope.temporalMemorySummary) {
+        assert.equal(
+          envelope.temporalMemorySummary.runtimeSource,
+          'global-publisher',
+          `[R4_TEMPORAL_SOURCE] unexpected temporal summary runtimeSource=${envelope.temporalMemorySummary.runtimeSource}`
+        );
+        assert.equal(
+          envelope.temporalMemorySummary.status,
+          'fresh',
+          `[R4_TEMPORAL_STATUS] unexpected temporal summary status=${envelope.temporalMemorySummary.status}`
+        );
+        assert.equal(
+          typeof envelope.temporalMemorySummary.warningCount,
+          'number',
+          '[R4_TEMPORAL_WARNINGS] warningCount must be numeric'
+        );
+        assert.ok(
+          envelope.temporalMemorySummary.warningCount >= 0,
+          `[R4_TEMPORAL_WARNINGS] warningCount must be >= 0, got=${envelope.temporalMemorySummary.warningCount}`
+        );
+      }
+      assert.ok(
+        String(envelope.routeContext?.route || '').startsWith('/titane'),
+        `[R4_ROUTE_CONTEXT] unexpected routeContext.route=${envelope.routeContext?.route}`
+      );
+
+      const nativeTrace = await browser.execute(() => {
+        const response = window.__TITANE_LAST_CONV_RESPONSE__ || null;
+        const meta = response?.meta || response?.metadata || response?.decision || {};
+        const binding =
+          meta?.contextBinding ||
+          meta?.context_binding ||
+          response?.contextBinding ||
+          response?.context_binding ||
+          null;
+
+        return {
+          hasResponse: Boolean(response),
+          providerUsed: String(meta?.provider_used ?? meta?.providerSelected ?? ''),
+          mode: String(meta?.mode ?? ''),
+          reasonCode: String(meta?.reason_code ?? meta?.reasonCode ?? ''),
+          binding,
+        };
+      });
+
+      assert.ok(
+        nativeTrace.hasResponse || outcome.runtime.sendTraceState === 'RESPONDED',
+        '[R4_NATIVE_TRACE] conversation_generate native response trace missing'
+      );
+
+      if (nativeTrace.binding && typeof nativeTrace.binding === 'object') {
+        const route =
+          nativeTrace.binding.route || nativeTrace.binding.route_path || nativeTrace.binding.routePath;
+        const runtimeSource =
+          nativeTrace.binding.timeRuntimeSource ||
+          nativeTrace.binding.time_runtime_source ||
+          nativeTrace.binding.timeSource;
+
+        if (typeof route === 'string' && route.length > 0) {
+          assert.ok(route.startsWith('/titane'), `[R4_BINDING_ROUTE] unexpected route=${route}`);
+        }
+
+        if (typeof runtimeSource === 'string' && runtimeSource.length > 0) {
+          assert.equal(
+            runtimeSource,
+            'global-publisher',
+            `[R4_BINDING_SOURCE] unexpected runtimeSource=${runtimeSource}`
+          );
+        }
+      }
+
+      console.log(`[R4_TIME_RUNTIME] ${JSON.stringify(timeRuntime)}`);
+      console.log(
+        `[R4_ENVELOPE_TIME] ${JSON.stringify({
+          route: envelope.routeContext?.route || '',
+          timeRuntimeSource: envelope.timeContext?.runtimeSource || '',
+          timeCurrentDateTime: envelope.timeContext?.currentDateTime || '',
+          timeZone: envelope.timeContext?.timeZone || '',
+        })}`
+      );
+      console.log(`[R4_NATIVE_TRACE] ${JSON.stringify(nativeTrace)}`);
+      console.log(
+        `[R4_OUTCOME] ${JSON.stringify({
+          kind: outcome.kind,
+          ipcReadyState: outcome.runtime.ipcReadyState,
+          sendTraceState: outcome.runtime.sendTraceState,
+          providerUsed: outcome.runtime.providerUsed,
+          providerMode: outcome.runtime.providerMode,
+          providerReason: outcome.runtime.providerReason,
+          responseHead: String(outcome.responseText || '').slice(0, 160),
+        })}`
+      );
+    }
+  );
+
   memoryProofTest(
     'classifies real multi-turn memory on desktop Tauri lane',
     async function () {

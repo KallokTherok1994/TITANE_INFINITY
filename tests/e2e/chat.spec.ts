@@ -1,6 +1,167 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+const enableE2EChatMock = async (page: Page) => {
+  await page.addInitScript(() => {
+    (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
+    (window as { __TITANE_E2E_CHAT_SCENARIO__?: 'success' | 'rate_limit' }).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
+  });
+};
 
 test.describe('Chat Interface', () => {
+  test('should preserve TIME context on direct /titane route through no-mock runtime', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      delete (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__;
+      delete (window as { __TITANE_E2E_CHAT_SCENARIO__?: 'success' | 'rate_limit' }).__TITANE_E2E_CHAT_SCENARIO__;
+    });
+
+    await page.goto('/titane');
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+    await expect(page.url()).not.toContain('/time');
+
+    const mockFlag = await page.evaluate(
+      () => (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ ?? false
+    );
+    expect(mockFlag).toBe(false);
+
+    await expect
+      .poll(async () => {
+        return page.evaluate(() => {
+          const raw = window.localStorage.getItem('titane_time_runtime_context_v1');
+          if (!raw) return null;
+          try {
+            return JSON.parse(raw);
+          } catch {
+            return null;
+          }
+        });
+      })
+      .toEqual(
+        expect.objectContaining({
+          runtimeSource: 'global-publisher',
+          currentDateTime: expect.any(String),
+          timeZone: expect.any(String),
+          currentSegment: expect.any(String),
+          isWorkHours: expect.any(Boolean),
+        })
+      );
+
+    await page.getByTestId('tab-conversation').click();
+    const input = page.getByTestId('chat-input');
+    await expect(input).toBeVisible({ timeout: 60000 });
+
+    const assistantBefore = await page.getByTestId('chat-message-assistant').count();
+    await input.fill('Runtime certification ping. Reply with exactly: TITANE_RUNTIME_OK');
+    await page.getByTestId('chat-send').click();
+
+    await expect
+      .poll(async () => page.getByTestId('chat-message-assistant').count(), {
+        timeout: 120000,
+      })
+      .toBeGreaterThan(assistantBefore);
+
+    const assistantText = (
+      await page
+        .getByTestId('chat-message-assistant')
+        .last()
+        .getByTestId('chat-message-content')
+        .innerText()
+    ).trim();
+    expect(assistantText.length).toBeGreaterThan(0);
+    expect(assistantText).not.toContain('[MOCK_OK]');
+
+    const envelope = await page.evaluate(() => {
+      const raw = window.localStorage.getItem('titane_chat_context_envelope_v1');
+      return raw ? JSON.parse(raw) : null;
+    });
+
+    expect(envelope).toBeTruthy();
+    expect(envelope.routeContext.route).toBe('/titane');
+    expect(envelope.timeContext).toEqual(
+      expect.objectContaining({
+        runtimeSource: 'global-publisher',
+        currentDateTime: expect.any(String),
+        timeZone: expect.any(String),
+        currentSegment: expect.any(String),
+      })
+    );
+    expect(envelope.temporalMemorySummary).toEqual(
+      expect.objectContaining({
+        status: 'fresh',
+        runtimeSource: 'global-publisher',
+      })
+    );
+    expect(typeof envelope.temporalMemorySummary.warningCount).toBe('number');
+    expect(envelope.temporalMemorySummary.warningCount).toBeGreaterThanOrEqual(0);
+
+    const postSendMockFlag = await page.evaluate(
+      () =>
+        (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ ??
+        false
+    );
+    expect(postSendMockFlag).toBe(false);
+  });
+
+  test('should persist TIME runtime envelope on direct /titane route without /time', async ({ page }) => {
+    await enableE2EChatMock(page);
+    await page.goto('/titane');
+
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+    await expect(page.url()).not.toContain('/time');
+
+    await expect.poll(async () => {
+      return page.evaluate(() => Boolean(window.localStorage.getItem('titane_time_runtime_context_v1')));
+    }).toBe(true);
+
+    const timeRuntimeContext = await page.evaluate(() => {
+      const raw = window.localStorage.getItem('titane_time_runtime_context_v1');
+      return raw ? JSON.parse(raw) : null;
+    });
+
+    expect(timeRuntimeContext).toEqual(
+      expect.objectContaining({
+        runtimeSource: 'global-publisher',
+        currentDateTime: expect.any(String),
+        timeZone: expect.any(String),
+        currentSegment: expect.any(String),
+        isWorkHours: expect.any(Boolean),
+      })
+    );
+
+    await page.getByTestId('tab-conversation').click();
+    const input = page.getByTestId('chat-input');
+    await expect(input).toBeVisible({ timeout: 60000 });
+
+    await input.fill('Certify TIME runtime context without visiting /time first.');
+    await page.getByTestId('chat-send').click();
+
+    const envelope = await page.evaluate(() => {
+      const raw = window.localStorage.getItem('titane_chat_context_envelope_v1');
+      return raw ? JSON.parse(raw) : null;
+    });
+
+    expect(envelope).toBeTruthy();
+    expect(envelope.routeContext.route).toBe('/titane');
+    expect(envelope.timeContext).toEqual(
+      expect.objectContaining({
+        runtimeSource: 'global-publisher',
+        currentDateTime: expect.any(String),
+        timeZone: expect.any(String),
+        currentSegment: expect.any(String),
+        isWorkHours: expect.any(Boolean),
+      })
+    );
+    expect(envelope.temporalMemorySummary).toEqual(
+      expect.objectContaining({
+        status: 'fresh',
+        runtimeSource: 'global-publisher',
+      })
+    );
+    expect(typeof envelope.temporalMemorySummary.warningCount).toBe('number');
+    expect(envelope.temporalMemorySummary.warningCount).toBeGreaterThanOrEqual(0);
+  });
+
   test('should send and receive message', async ({ page }) => {
     // Navigate to root — React Router redirects /→/titane client-side
     // (do NOT use /titane: a symlink 'titane' at repo root is served as a static file by Vite)
