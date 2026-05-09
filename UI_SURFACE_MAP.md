@@ -8,7 +8,7 @@
 
 - Surface canonique chat context: src/services/chat/chatMemorySingleDoor.ts sérialise une seule occurrence par marqueur `temporal_memory_*` dans `CONTEXT_ENVELOPE_V44`, et garde l enveloppe stable quand `titane_time_runtime_context_v1` est absent/malformé/stale.
 - Surface manager de sécurité prompt: src/services/chat/temporalMemoryManager.ts publie un résumé temporel borné avec warnings gouvernés (`warningCount`, `warnings`) sans exposer de payload brut.
-- Preuves unitaires: src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts + src/services/chat/__tests__/temporalMemoryManager.test.ts.
+- Preuves unitaires: src/services/chat/**tests**/chatMemorySingleDoor.timeContext.test.ts + src/services/chat/**tests**/temporalMemoryManager.test.ts.
 
 # [2026-05-09] Memory isolation truth — STM cleanup + test namespace hardening
 

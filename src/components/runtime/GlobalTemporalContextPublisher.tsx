@@ -41,7 +41,9 @@ const readStoredContext = (): Partial<TimeRuntimeContextSnapshot> | null => {
   }
 };
 
-const writeContextIfChanged = (next: Omit<TimeRuntimeContextSnapshot, 'updatedAt'>): void => {
+const writeContextIfChanged = (
+  next: Omit<TimeRuntimeContextSnapshot, 'updatedAt'>
+): void => {
   if (typeof window === 'undefined') {
     return;
   }
@@ -88,7 +90,10 @@ const isSameCalendarDay = (left: Date, right: Date): boolean => {
 };
 
 const getEventDurationMinutes = (startIso: string, endIso: string): number => {
-  return Math.max(0, Math.round((new Date(endIso).getTime() - new Date(startIso).getTime()) / 60000));
+  return Math.max(
+    0,
+    Math.round((new Date(endIso).getTime() - new Date(startIso).getTime()) / 60000)
+  );
 };
 
 const resolveTimeZone = (candidate?: string): string => {
@@ -109,7 +114,8 @@ const resolveTimeZone = (candidate?: string): string => {
 };
 
 export function GlobalTemporalContextPublisher(): null {
-  const { timeState, events, energyState, stats, currentDate, initialized } = useTimeAgenda();
+  const { timeState, events, energyState, stats, currentDate, initialized } =
+    useTimeAgenda();
 
   const todayFocusMinutes = useMemo(() => {
     return events
@@ -119,7 +125,8 @@ export function GlobalTemporalContextPublisher(): null {
           FOCUS_CATEGORIES.has(event.category)
       )
       .reduce(
-        (total, event) => total + getEventDurationMinutes(event.startDateTime, event.endDateTime),
+        (total, event) =>
+          total + getEventDurationMinutes(event.startDateTime, event.endDateTime),
         0
       );
   }, [currentDate, events]);

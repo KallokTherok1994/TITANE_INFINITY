@@ -79,12 +79,16 @@ describe('agenda engine', () => {
 
     const dayGrid = agenda.buildDayGrid(new Date(2026, 4, 9, 12, 0, 0));
     expect(dayGrid).toHaveLength(17);
-    expect(dayGrid.some(slot => slot.events.some(event => event.title === 'Review session'))).toBe(true);
+    expect(
+      dayGrid.some(slot => slot.events.some(event => event.title === 'Review session'))
+    ).toBe(true);
 
     const weekGrid = agenda.buildWeekGrid(new Date(2026, 4, 9, 12, 0, 0));
     expect(weekGrid).toHaveLength(7);
     expect(weekGrid[0]?.date.getDay()).toBe(1);
-    expect(weekGrid.some(slot => slot.events.some(event => event.title === 'Focus sprint'))).toBe(true);
+    expect(
+      weekGrid.some(slot => slot.events.some(event => event.title === 'Focus sprint'))
+    ).toBe(true);
 
     const monthGrid = agenda.buildMonthGrid(new Date(2026, 4, 9, 12, 0, 0));
     expect(monthGrid).toHaveLength(42);

@@ -3,17 +3,22 @@ import { test, expect, type Page } from '@playwright/test';
 const enableE2EChatMock = async (page: Page) => {
   await page.addInitScript(() => {
     (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
-    (window as { __TITANE_E2E_CHAT_SCENARIO__?: 'success' | 'rate_limit' }).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
+    (
+      window as { __TITANE_E2E_CHAT_SCENARIO__?: 'success' | 'rate_limit' }
+    ).__TITANE_E2E_CHAT_SCENARIO__ = 'success';
   });
 };
 
 test.describe('Chat Interface', () => {
-  test('should preserve TIME context on direct /titane route through no-mock runtime', async ({ page }) => {
+  test('should preserve TIME context on direct /titane route through no-mock runtime', async ({
+    page,
+  }) => {
     await page.addInitScript(() => {
       window.localStorage.clear();
       window.sessionStorage.clear();
       delete (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__;
-      delete (window as { __TITANE_E2E_CHAT_SCENARIO__?: 'success' | 'rate_limit' }).__TITANE_E2E_CHAT_SCENARIO__;
+      delete (window as { __TITANE_E2E_CHAT_SCENARIO__?: 'success' | 'rate_limit' })
+        .__TITANE_E2E_CHAT_SCENARIO__;
     });
 
     await page.goto('/titane');
@@ -21,7 +26,9 @@ test.describe('Chat Interface', () => {
     await expect(page.url()).not.toContain('/time');
 
     const mockFlag = await page.evaluate(
-      () => (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ ?? false
+      () =>
+        (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ ??
+        false
     );
     expect(mockFlag).toBe(false);
 
@@ -103,16 +110,22 @@ test.describe('Chat Interface', () => {
     expect(postSendMockFlag).toBe(false);
   });
 
-  test('should persist TIME runtime envelope on direct /titane route without /time', async ({ page }) => {
+  test('should persist TIME runtime envelope on direct /titane route without /time', async ({
+    page,
+  }) => {
     await enableE2EChatMock(page);
     await page.goto('/titane');
 
     await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
     await expect(page.url()).not.toContain('/time');
 
-    await expect.poll(async () => {
-      return page.evaluate(() => Boolean(window.localStorage.getItem('titane_time_runtime_context_v1')));
-    }).toBe(true);
+    await expect
+      .poll(async () => {
+        return page.evaluate(() =>
+          Boolean(window.localStorage.getItem('titane_time_runtime_context_v1'))
+        );
+      })
+      .toBe(true);
 
     const timeRuntimeContext = await page.evaluate(() => {
       const raw = window.localStorage.getItem('titane_time_runtime_context_v1');

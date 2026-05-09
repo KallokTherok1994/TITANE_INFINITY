@@ -1154,7 +1154,9 @@ export async function getRelevantPromptContext(
     );
     const verdict = buildKnowledgeSelectionVerdict(reranked, limit);
     const rerankedByCategory = new Map(reranked.map(item => [item.entry.category, item]));
-    const selected = preselected.filter(item => verdict.selected.includes(item.entry.category));
+    const selected = preselected.filter(item =>
+      verdict.selected.includes(item.entry.category)
+    );
 
     const evidencePacket = buildSelectionEvidencePacket(reranked, verdict);
     const deferredPreview = verdict.deferred.slice(0, 2);
@@ -1166,7 +1168,13 @@ export async function getRelevantPromptContext(
         const governed = rerankedByCategory.get(entry.category);
         const relevanceScore = governed ? governed.finalScore * 20 : score;
         const relevance =
-          relevanceScore >= 20 ? '🔴' : relevanceScore >= 10 ? '🟠' : relevanceScore >= 5 ? '🟡' : '⚪';
+          relevanceScore >= 20
+            ? '🔴'
+            : relevanceScore >= 10
+              ? '🟠'
+              : relevanceScore >= 5
+                ? '🟡'
+                : '⚪';
         const excerptBlock = excerpt ? ` | Extrait: ${excerpt}` : '';
         const governanceBlock = governed
           ? `\n   Statut: ${governed.registry.validationStatus} | Fraîcheur: ${governed.registry.freshness} | Risque: ${governed.registry.riskLevel}${governed.requiresResearch ? ' | Recherche requise' : ''}${governed.registry.metadataOrigin === 'synthetic' ? ' | Metadata synthétique' : ''} | Score final: ${governed.finalScore.toFixed(2)}`
@@ -1187,9 +1195,7 @@ export async function getRelevantPromptContext(
       ...(deferredPreview.length > 0
         ? [`ℹ️ Différé: ${deferredPreview.join(', ')}`]
         : []),
-      ...(blockedPreview.length > 0
-        ? [`⛔ Bloqué: ${blockedPreview.join(', ')}`]
-        : []),
+      ...(blockedPreview.length > 0 ? [`⛔ Bloqué: ${blockedPreview.join(', ')}`] : []),
       ...(evidencePacket.warnings.length > 0
         ? ['⚠️ Gouvernance :', ...evidencePacket.warnings.slice(0, 3).map(w => `- ${w}`)]
         : []),

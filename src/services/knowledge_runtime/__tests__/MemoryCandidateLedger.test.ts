@@ -115,7 +115,11 @@ describe('MemoryCandidateLedger', () => {
     });
 
     ledger.ingestSelectionVerdict([item], verdict, '2026-05-09T00:00:00.000Z');
-    const second = ledger.ingestSelectionVerdict([item], verdict, '2026-05-10T00:00:00.000Z');
+    const second = ledger.ingestSelectionVerdict(
+      [item],
+      verdict,
+      '2026-05-10T00:00:00.000Z'
+    );
 
     expect(['probation', 'ready']).toContain(second[0]?.probationStatus ?? '');
   });

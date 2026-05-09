@@ -6,46 +6,54 @@ const schedulerMocks = vi.hoisted(() => {
   const agendaState = new Map<string, AgendaEvent>();
 
   const loadEventsMock = vi.fn(async () => Array.from(agendaState.values()));
-  const createEventMock = vi.fn(async (eventData: Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const event: AgendaEvent = {
-      ...eventData,
-      id: `evt-${agendaState.size + 1}`,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-    agendaState.set(event.id, event);
-    return event;
-  });
-  const updateEventMock = vi.fn(async (eventId: string, updates: Partial<AgendaEvent>) => {
-    const current = agendaState.get(eventId);
-    if (!current) return null;
+  const createEventMock = vi.fn(
+    async (eventData: Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>) => {
+      const event: AgendaEvent = {
+        ...eventData,
+        id: `evt-${agendaState.size + 1}`,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+      agendaState.set(event.id, event);
+      return event;
+    }
+  );
+  const updateEventMock = vi.fn(
+    async (eventId: string, updates: Partial<AgendaEvent>) => {
+      const current = agendaState.get(eventId);
+      if (!current) return null;
 
-    const updated: AgendaEvent = {
-      ...current,
-      ...updates,
-      id: eventId,
-      updatedAt: Date.now(),
-    };
-    agendaState.set(eventId, updated);
-    return updated;
-  });
-  const moveEventMock = vi.fn(async (eventId: string, newStartDateTime: string, newEndDateTime?: string) => {
-    const current = agendaState.get(eventId);
-    if (!current) return null;
+      const updated: AgendaEvent = {
+        ...current,
+        ...updates,
+        id: eventId,
+        updatedAt: Date.now(),
+      };
+      agendaState.set(eventId, updated);
+      return updated;
+    }
+  );
+  const moveEventMock = vi.fn(
+    async (eventId: string, newStartDateTime: string, newEndDateTime?: string) => {
+      const current = agendaState.get(eventId);
+      if (!current) return null;
 
-    const moved: AgendaEvent = {
-      ...current,
-      startDateTime: newStartDateTime,
-      endDateTime: newEndDateTime ?? current.endDateTime,
-      updatedAt: Date.now(),
-    };
-    agendaState.set(eventId, moved);
-    return moved;
-  });
+      const moved: AgendaEvent = {
+        ...current,
+        startDateTime: newStartDateTime,
+        endDateTime: newEndDateTime ?? current.endDateTime,
+        updatedAt: Date.now(),
+      };
+      agendaState.set(eventId, moved);
+      return moved;
+    }
+  );
   const deleteEventMock = vi.fn(async (eventId: string) => agendaState.delete(eventId));
   const getEventsForDayMock = vi.fn((date: Date) => {
     const day = date.toISOString().slice(0, 10);
-    return Array.from(agendaState.values()).filter(event => event.startDateTime.slice(0, 10) === day);
+    return Array.from(agendaState.values()).filter(
+      event => event.startDateTime.slice(0, 10) === day
+    );
   });
   const getEventsInRangeMock = vi.fn((start: Date, end: Date) => {
     const startMs = start.getTime();

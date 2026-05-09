@@ -42,14 +42,16 @@ describe('temporal engine core', () => {
       })
     );
 
-    const customWeekTemplate: Partial<DayProfile>[] = Array.from({ length: 7 }, (_, index) =>
-      index === currentDayOfWeek
-        ? {
-            day: currentDayOfWeek,
-            active: true,
-            customWorkHours: { start: '08:00', end: '12:00' },
-          }
-        : {}
+    const customWeekTemplate: Partial<DayProfile>[] = Array.from(
+      { length: 7 },
+      (_, index) =>
+        index === currentDayOfWeek
+          ? {
+              day: currentDayOfWeek,
+              active: true,
+              customWorkHours: { start: '08:00', end: '12:00' },
+            }
+          : {}
     );
 
     engine.initWeekTemplate(customWeekTemplate);

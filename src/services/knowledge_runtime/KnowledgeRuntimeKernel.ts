@@ -1,7 +1,5 @@
 import type { KnowledgeBaseEntry } from '@/services/api/defaultKnowledgeBase';
-import {
-  getKnowledgeRegistryEntryByCategory,
-} from '@/services/knowledge_runtime/KnowledgeRegistry';
+import { getKnowledgeRegistryEntryByCategory } from '@/services/knowledge_runtime/KnowledgeRegistry';
 import type {
   GovernedKnowledgeMatch,
   KnowledgeEvidencePacket,
@@ -14,7 +12,11 @@ function buildResearchGateDecision(
   requiresWebValidation: boolean
 ): ResearchGateDecision {
   if (!requiresWebValidation) {
-    return { state: 'NOT_NEEDED', reason: 'Stable or low-risk knowledge.', blocking: false };
+    return {
+      state: 'NOT_NEEDED',
+      reason: 'Stable or low-risk knowledge.',
+      blocking: false,
+    };
   }
 
   if (freshness === 'time_sensitive') {
@@ -35,7 +37,8 @@ function buildResearchGateDecision(
 function deriveFreshnessRisk(
   match: Pick<GovernedKnowledgeMatch, 'registry' | 'requiresResearch'>
 ): GovernedKnowledgeMatch['freshnessRisk'] {
-  if (match.requiresResearch && match.registry.riskLevel === 'restricted') return 'critical';
+  if (match.requiresResearch && match.registry.riskLevel === 'restricted')
+    return 'critical';
   if (match.requiresResearch) return 'high';
   if (match.registry.freshness === 'time_sensitive') return 'medium';
   if (match.registry.freshness === 'unknown') return 'low';
@@ -72,7 +75,9 @@ export async function qualifyKnowledgeEntries(
         (await getKnowledgeRegistryEntryByCategory(entry.id));
 
       if (!registry) {
-        throw new Error(`Missing registry entry for knowledge category "${entry.category}"`);
+        throw new Error(
+          `Missing registry entry for knowledge category "${entry.category}"`
+        );
       }
 
       const researchGate = buildResearchGateDecision(
@@ -116,7 +121,9 @@ export function buildKnowledgeEvidencePacket(
     const summary = `${match.entry.category} [${match.registry.validationStatus}/${match.registry.freshness}/${match.registry.riskLevel}]`;
     if (match.requiresResearch) {
       researchRequiredKnowledge.push(summary);
-      blockedClaims.push(`${match.entry.category}: research required before definitive use`);
+      blockedClaims.push(
+        `${match.entry.category}: research required before definitive use`
+      );
     } else {
       stableKnowledge.push(summary);
     }

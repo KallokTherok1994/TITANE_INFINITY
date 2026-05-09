@@ -19,7 +19,12 @@ let registryCache: KnowledgeRegistryEntry[] | null = null;
 let coverageCache: KnowledgeRegistryCoverage | null = null;
 
 function basenameWithoutJson(path: string): string {
-  return path.split('/').pop()?.replace(/\.json$/i, '') ?? 'unknown';
+  return (
+    path
+      .split('/')
+      .pop()
+      ?.replace(/\.json$/i, '') ?? 'unknown'
+  );
 }
 
 function inferDomain(category: string): KnowledgeDomain {
@@ -33,7 +38,11 @@ function inferDomain(category: string): KnowledgeDomain {
   ) {
     return 'medical';
   }
-  if (normalized.includes('droit') || normalized.includes('notarial') || normalized.includes('jurid')) {
+  if (
+    normalized.includes('droit') ||
+    normalized.includes('notarial') ||
+    normalized.includes('jurid')
+  ) {
     return 'legal';
   }
   if (
@@ -83,7 +92,12 @@ function inferRiskLevel(domain: KnowledgeDomain): KnowledgeRegistryEntry['riskLe
 }
 
 function inferRequiresWebValidation(domain: KnowledgeDomain): boolean {
-  return domain === 'medical' || domain === 'legal' || domain === 'financial' || domain === 'safety';
+  return (
+    domain === 'medical' ||
+    domain === 'legal' ||
+    domain === 'financial' ||
+    domain === 'safety'
+  );
 }
 
 function inferValidationStatus(
@@ -116,7 +130,9 @@ function parseGovernanceIndex(): KnowledgeGovernanceIndex {
 function normalizeIndexedEntry(
   entry: KnowledgeGovernanceIndex['entries'][number]
 ): KnowledgeRegistryEntry {
-  const category = entry.source_ref ? basenameWithoutJson(entry.source_ref) : entry.knowledge_id;
+  const category = entry.source_ref
+    ? basenameWithoutJson(entry.source_ref)
+    : entry.knowledge_id;
   return {
     knowledgeId: entry.knowledge_id,
     category,
@@ -158,7 +174,8 @@ function buildSyntheticEntry(category: string): KnowledgeRegistryEntry {
     allowedUse: ['general_information'],
     notAllowedUse: inferNotAllowedUse(domain),
     validationStatus: inferValidationStatus(domain),
-    notes: 'Synthetic governance entry generated at runtime because the KB file is not explicitly indexed.',
+    notes:
+      'Synthetic governance entry generated at runtime because the KB file is not explicitly indexed.',
     metadataOrigin: 'synthetic',
   };
 }
@@ -180,7 +197,9 @@ function buildRegistry(): KnowledgeRegistryEntry[] {
     }
   }
 
-  return Array.from(byCategory.values()).sort((a, b) => a.category.localeCompare(b.category));
+  return Array.from(byCategory.values()).sort((a, b) =>
+    a.category.localeCompare(b.category)
+  );
 }
 
 export async function getKnowledgeRegistryEntries(): Promise<KnowledgeRegistryEntry[]> {
@@ -195,8 +214,9 @@ export async function getKnowledgeRegistryEntryByCategory(
 ): Promise<KnowledgeRegistryEntry | null> {
   const entries = await getKnowledgeRegistryEntries();
   const found =
-    entries.find(entry => entry.category === category || entry.knowledgeId === category) ??
-    null;
+    entries.find(
+      entry => entry.category === category || entry.knowledgeId === category
+    ) ?? null;
   return found ?? buildSyntheticEntry(category);
 }
 
@@ -206,9 +226,13 @@ export async function getKnowledgeRegistryCoverage(): Promise<KnowledgeRegistryC
   const entries = await getKnowledgeRegistryEntries();
   const totalFiles = getBundledCategories().length;
   const indexedCount = entries.filter(entry => entry.metadataOrigin === 'indexed').length;
-  const syntheticCount = entries.filter(entry => entry.metadataOrigin === 'synthetic').length;
+  const syntheticCount = entries.filter(
+    entry => entry.metadataOrigin === 'synthetic'
+  ).length;
   const coveredCategories = new Set(entries.map(entry => entry.category));
-  const missing = getBundledCategories().filter(category => !coveredCategories.has(category));
+  const missing = getBundledCategories().filter(
+    category => !coveredCategories.has(category)
+  );
 
   coverageCache = {
     totalFiles,

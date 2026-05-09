@@ -236,13 +236,13 @@ describe('conversationEngine.processMessage', () => {
       globalStatus: 'HEALTHY',
     });
   });
-  
+
   it('adds temporal_memory_summary:present when temporal summary exists in context envelope', async () => {
     vi.mocked(secureInvoke).mockImplementation(async command => {
       if (command === 'persistent_memory_get_context') {
         return null;
       }
-  
+
       if (command === 'conversation_generate') {
         return {
           content: 'Temporal summary metadata check',
@@ -251,10 +251,10 @@ describe('conversationEngine.processMessage', () => {
           metadata: { timestamp: 2011 },
         };
       }
-  
+
       return null;
     });
-  
+
     const response = await processMessage('Temporal metadata please.', {
       conversationId: 'ctm1',
       providerPreference: 'ollama',
@@ -322,18 +322,18 @@ describe('conversationEngine.processMessage', () => {
         generatedAt: 1,
       },
     });
-  
+
     expect(response.metadata.links_to_contexts).toEqual(
       expect.arrayContaining(['time_context:present', 'temporal_memory_summary:present'])
     );
   });
-  
+
   it('does not inject temporal_memory_summary:present when temporal summary is absent', async () => {
     vi.mocked(secureInvoke).mockImplementation(async command => {
       if (command === 'persistent_memory_get_context') {
         return null;
       }
-  
+
       if (command === 'conversation_generate') {
         return {
           content: 'No temporal summary metadata check',
@@ -342,10 +342,10 @@ describe('conversationEngine.processMessage', () => {
           metadata: { timestamp: 2012 },
         };
       }
-  
+
       return null;
     });
-  
+
     const response = await processMessage('No temporal summary now.', {
       conversationId: 'ctm2',
       providerPreference: 'ollama',
@@ -398,7 +398,7 @@ describe('conversationEngine.processMessage', () => {
         generatedAt: 1,
       },
     });
-  
+
     expect(response.metadata.links_to_contexts).toEqual(
       expect.arrayContaining(['time_context:present'])
     );

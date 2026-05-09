@@ -45,8 +45,7 @@ export function detectKnowledgeConflicts(
           leftKnowledgeId: left.entry.category,
           rightKnowledgeId: right.entry.category,
           severity: 'low',
-          reason:
-            'Validation status diverges within the same knowledge family.',
+          reason: 'Validation status diverges within the same knowledge family.',
           blocking: false,
         });
       }

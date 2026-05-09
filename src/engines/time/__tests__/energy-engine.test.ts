@@ -19,10 +19,12 @@ describe('energy engine', () => {
     );
 
     energy.generateForecast();
-    const bestSlot = energy.getState().forecast.reduce(
-      (best, point) => (point.level > best.level ? point : best),
-      energy.getState().forecast[0] ?? { time: '10:00', level: 0.5, label: '' }
-    );
+    const bestSlot = energy
+      .getState()
+      .forecast.reduce(
+        (best, point) => (point.level > best.level ? point : best),
+        energy.getState().forecast[0] ?? { time: '10:00', level: 0.5, label: '' }
+      );
     expect(energy.recommendHighEnergySlot()).toBe(bestSlot.time);
 
     energy.logManualEnergy(0.42, 'Afternoon slump');

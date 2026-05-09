@@ -13,7 +13,10 @@ export function decideMemoryAging(
   candidate: MemoryCandidate,
   nowIso: string
 ): AgingDecision {
-  if (candidate.expiresAt && new Date(candidate.expiresAt).getTime() <= new Date(nowIso).getTime()) {
+  if (
+    candidate.expiresAt &&
+    new Date(candidate.expiresAt).getTime() <= new Date(nowIso).getTime()
+  ) {
     return {
       status: 'expire_now',
       reason: 'Candidate reached its explicit expiration date.',

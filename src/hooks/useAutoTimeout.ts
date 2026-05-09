@@ -144,4 +144,3 @@ export function formatElapsedTime(seconds: number): string {
   }
   return `${minutes}:${String(secs).padStart(2, '0')}`;
 }
-

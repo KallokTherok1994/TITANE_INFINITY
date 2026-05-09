@@ -78,9 +78,9 @@ describe('KnowledgeRuntimeKernel', () => {
 
     const packet = buildKnowledgeEvidencePacket(await qualifyKnowledgeEntries(entries));
 
-    expect(packet.stableKnowledge.some(item => item.includes('system_architecture'))).toBe(
-      true
-    );
+    expect(
+      packet.stableKnowledge.some(item => item.includes('system_architecture'))
+    ).toBe(true);
     expect(
       packet.researchRequiredKnowledge.some(item => item.includes('bourse_trading'))
     ).toBe(true);

@@ -64,11 +64,19 @@ describe('KnowledgeConflictResolver', () => {
     const conflicts = detectKnowledgeConflicts([
       makeItem('medical_general', {
         requiresResearch: true,
-        registry: { ...makeItem('medical_general').registry, domain: 'medical', riskLevel: 'restricted' },
+        registry: {
+          ...makeItem('medical_general').registry,
+          domain: 'medical',
+          riskLevel: 'restricted',
+        },
       }),
       makeItem('medical_reference', {
         requiresResearch: false,
-        registry: { ...makeItem('medical_reference').registry, domain: 'medical', riskLevel: 'restricted' },
+        registry: {
+          ...makeItem('medical_reference').registry,
+          domain: 'medical',
+          riskLevel: 'restricted',
+        },
       }),
     ]);
 

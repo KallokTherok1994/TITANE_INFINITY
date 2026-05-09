@@ -25,18 +25,12 @@ function makeCandidate(overrides: Partial<MemoryCandidate> = {}): MemoryCandidat
 
 describe('MemoryAgingPolicy', () => {
   it('keeps fresh candidates stable', () => {
-    const decision = decideMemoryAging(
-      makeCandidate(),
-      '2026-05-15T00:00:00.000Z'
-    );
+    const decision = decideMemoryAging(makeCandidate(), '2026-05-15T00:00:00.000Z');
     expect(decision.status).toBe('stable');
   });
 
   it('marks long-inactive candidates as aging', () => {
-    const decision = decideMemoryAging(
-      makeCandidate(),
-      '2026-06-20T00:00:00.000Z'
-    );
+    const decision = decideMemoryAging(makeCandidate(), '2026-06-20T00:00:00.000Z');
     expect(decision.status).toBe('aging');
   });
 

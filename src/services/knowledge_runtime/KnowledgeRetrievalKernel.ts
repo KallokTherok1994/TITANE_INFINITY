@@ -32,7 +32,11 @@ function tokenize(value: string): string[] {
     .filter(token => token.length >= 3);
 }
 
-function computeSemanticScore(query: string, entry: KnowledgeBaseEntry, excerpt: string): number {
+function computeSemanticScore(
+  query: string,
+  entry: KnowledgeBaseEntry,
+  excerpt: string
+): number {
   const queryTokens = new Set(tokenize(query));
   if (queryTokens.size === 0) return 0;
 
@@ -50,7 +54,9 @@ function computeSemanticScore(query: string, entry: KnowledgeBaseEntry, excerpt:
   return union === 0 ? 0 : Number((intersection / union).toFixed(4));
 }
 
-function computeAuthorityScore(item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]): number {
+function computeAuthorityScore(
+  item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]
+): number {
   let score = item.registry.confidence;
   if (item.registry.validationStatus === 'curated') score += 0.1;
   if (item.registry.validationStatus === 'verified') score += 0.15;
@@ -58,7 +64,9 @@ function computeAuthorityScore(item: Awaited<ReturnType<typeof qualifyKnowledgeE
   return Math.max(0, Math.min(1, Number(score.toFixed(4))));
 }
 
-function computeRiskPenalty(item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]): number {
+function computeRiskPenalty(
+  item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]
+): number {
   switch (item.registry.riskLevel) {
     case 'restricted':
       return 0.35;
@@ -71,7 +79,9 @@ function computeRiskPenalty(item: Awaited<ReturnType<typeof qualifyKnowledgeEntr
   }
 }
 
-function computeFreshnessPenalty(item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]): number {
+function computeFreshnessPenalty(
+  item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]
+): number {
   switch (item.registry.freshness) {
     case 'time_sensitive':
       return item.requiresResearch ? 0.2 : 0.08;
@@ -82,7 +92,9 @@ function computeFreshnessPenalty(item: Awaited<ReturnType<typeof qualifyKnowledg
   }
 }
 
-function computeConfusionPenalty(item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]): number {
+function computeConfusionPenalty(
+  item: Awaited<ReturnType<typeof qualifyKnowledgeEntries>>[number]
+): number {
   let penalty = 0;
   if (item.registry.metadataOrigin === 'synthetic') penalty += 0.08;
   if (item.usageWarnings.length >= 3) penalty += 0.06;
@@ -94,17 +106,25 @@ export async function rerankKnowledgeCandidates(
   query: string,
   candidates: RankedKnowledgeInput[]
 ): Promise<GovernedRankedItem[]> {
-  const governed = await qualifyKnowledgeEntries(candidates.map(candidate => candidate.entry));
+  const governed = await qualifyKnowledgeEntries(
+    candidates.map(candidate => candidate.entry)
+  );
   const byCategory = new Map(governed.map(item => [item.entry.category, item]));
 
   const ranked: GovernedRankedItem[] = candidates
     .map(candidate => {
       const governedItem = byCategory.get(candidate.entry.category);
       if (!governedItem) {
-        throw new Error(`Missing governed knowledge item for ${candidate.entry.category}`);
+        throw new Error(
+          `Missing governed knowledge item for ${candidate.entry.category}`
+        );
       }
 
-      const semanticScore = computeSemanticScore(query, candidate.entry, candidate.excerpt);
+      const semanticScore = computeSemanticScore(
+        query,
+        candidate.entry,
+        candidate.excerpt
+      );
       const authorityScore = computeAuthorityScore(governedItem);
       const freshnessPenalty = computeFreshnessPenalty(governedItem);
       const riskPenalty = computeRiskPenalty(governedItem);
@@ -132,7 +152,10 @@ export async function rerankKnowledgeCandidates(
         finalScore,
       };
     })
-    .sort((a, b) => b.finalScore - a.finalScore || a.entry.category.localeCompare(b.entry.category));
+    .sort(
+      (a, b) =>
+        b.finalScore - a.finalScore || a.entry.category.localeCompare(b.entry.category)
+    );
 
   return ranked;
 }
@@ -143,10 +166,9 @@ export function buildKnowledgeSelectionVerdict(
 ): KnowledgeSelectionVerdict {
   const conflicts = detectKnowledgeConflicts(rankedItems);
   const blockedByConflict = new Set(
-    conflicts.filter(conflict => conflict.blocking).flatMap(conflict => [
-      conflict.leftKnowledgeId,
-      conflict.rightKnowledgeId,
-    ])
+    conflicts
+      .filter(conflict => conflict.blocking)
+      .flatMap(conflict => [conflict.leftKnowledgeId, conflict.rightKnowledgeId])
   );
 
   const selected: string[] = [];
@@ -190,7 +212,9 @@ export function buildSelectionEvidencePacket(
   rankedItems: GovernedRankedItem[],
   verdict: KnowledgeSelectionVerdict
 ): KnowledgeEvidencePacket {
-  const selectedMatches = rankedItems.filter(item => verdict.selected.includes(item.entry.category));
+  const selectedMatches = rankedItems.filter(item =>
+    verdict.selected.includes(item.entry.category)
+  );
   const packet = buildKnowledgeEvidencePacket(selectedMatches);
   return {
     ...packet,

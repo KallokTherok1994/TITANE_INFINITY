@@ -6,7 +6,10 @@ import type {
 } from '@/services/knowledge_runtime/KnowledgeRuntimeTypes';
 import { decideMemoryPromotion } from '@/services/knowledge_runtime/MemoryPromotionPolicy';
 
-function makeCandidateId(category: string, structureType: MemoryCandidateStructureType): string {
+function makeCandidateId(
+  category: string,
+  structureType: MemoryCandidateStructureType
+): string {
   return `memcand-${category}-${structureType}`;
 }
 
@@ -16,7 +19,10 @@ function inferStructureType(item: GovernedRankedItem): MemoryCandidateStructureT
   if (item.entry.category.includes('rule') || item.entry.category.includes('guideline')) {
     return 'rule';
   }
-  if (item.entry.category.includes('strategy') || item.entry.category.includes('workflow')) {
+  if (
+    item.entry.category.includes('strategy') ||
+    item.entry.category.includes('workflow')
+  ) {
     return 'heuristic';
   }
   return 'content';
@@ -84,7 +90,10 @@ export class MemoryCandidateLedger {
   ): MemoryCandidate[] {
     const blocked = new Set(verdict.blocked);
     const conflicts = new Set(
-      verdict.conflicts.flatMap(conflict => [conflict.leftKnowledgeId, conflict.rightKnowledgeId])
+      verdict.conflicts.flatMap(conflict => [
+        conflict.leftKnowledgeId,
+        conflict.rightKnowledgeId,
+      ])
     );
 
     return rankedItems
