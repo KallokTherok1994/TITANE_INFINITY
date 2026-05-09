@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/snapshot.schema.json",
   "version": "1.0.0",
-  "lastUpdate": "2026-05-07T02:52:45.000Z",
-  "eventCount": 35,
+  "lastUpdate": "2026-05-09T14:26:13.098Z",
+  "eventCount": 29,
   "suites": {
     "vitest-core": {
       "id": "vitest-core",
@@ -157,14 +157,14 @@
   "registry": {
     "schemaVersion": 2,
     "activeCycleId": "01KFPVBPNG1KB0ZHD8KT6K5D7Y",
-    "currentObjective": "Stabiliser les tests Vitest: \u00e9viter les faux rejets 'Dangerous characters' dans sanitizeMessage, et r\u00e9tablir les suites streaming/UI/chat.",
+    "currentObjective": "Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.",
     "lastDecision": null,
     "lastTestRun": null,
-    "nextBlocker": "Registry incoh\u00e9rent: snapshot/dashboard obsol\u00e8tes",
+    "nextBlocker": "Registry incohérent: snapshot/dashboard obsolètes",
     "priorityActionUnique": "Run pnpm verify:registry",
     "lastEvent": {
-      "id": "CI_AUDIT_FIX_2026_05_07_WORKFLOW",
-      "timestamp": "2026-05-07T02:52:45.000Z",
+      "id": "01KNHDHJT7THX84C2F51Y6BTXS",
+      "timestamp": "2026-04-06T12:51:08.231Z",
       "type": "WORKFLOW_CHANGED"
     }
   },

@@ -1,7 +1,7 @@
 {
-  "version": "v30.1.0",
+  "version": "v30.1.1",
   "category": "chronobiologie_rythmes",
-  "description": "Chronobiologie et rythmes circadiens — horloge SCN, zeitgebers (lumière/alimentation/température/exercice), mélatonine/cortisol, jet lag protocols, chrono-nutrition, rythmes ultradiens, productivité selon chronotype",
+  "description": "Chronobiologie et rythmes circadiens — horloge SCN, zeitgebers (lumiere/alimentation/temperature/exercice), melatonine/cortisol, jet lag protocols, chrono-nutrition, rythmes ultradiens, productivite selon chronotype, architecture d agenda selon energie",
   "chronobiologie_rythmes": {
     "introduction": "La chronobiologie est la science des rythmes biologiques. Votre corps n'est pas un moteur qui tourne à puissance constante — il oscille. Savoir QUAND faire quoi (s'alimenter, s'entraîner, travailler, se coucher) est aussi important que le QUOI. Cette discipline réconcilie neurosciences, endocrinologie et pharmacologie.",
     "horloge_circadienne": {
@@ -69,6 +69,31 @@
       "cycle_90_min_éveil": "Le cerveau oscille en cycles de ~90-120 min même en état de veille (BRAC: Basic Rest Activity Cycle). Après chaque cycle: baisse de vigilance et attention.",
       "exploitation": "Travailler par blocs de 90 min sur des tâches difficiles → pause de 15-20 min. Aligne le travail sur les pics naturels d'élan neurologique.",
       "signaux_fin_de_cycle": "Bâillements, perte de focus, envie de bouger, esprit qui vagabonde — signaux naturels de transition"
+    },
+    "architecture_agenda_selon_energie": {
+      "principe": "L agenda performant ne distribue pas seulement des heures; il aligne les types de travail sur les pics et creux physiologiques.",
+      "matin": {
+        "ideal": "Travail analytique, ecriture exigeante, decisions structurantes, apprentissage difficile, planification a froid.",
+        "a_eviter": "Surconsommation de messages ou reunions non critiques juste apres le demarrage."
+      },
+      "milieu_journee": {
+        "ideal": "Coordination, points d equipe, suivis, taches moderement cognitives, ajustement du plan.",
+        "attention": "Creux post-prandial possible; alleger les taches a haute exigence si la vigilance baisse."
+      },
+      "apres_midi": {
+        "ideal": "Execution soutenue, traitement de lots, feedback, revisions, appels, production de flux.",
+        "selon_chronotype": "Les ours gardent souvent un second pic utile; les lions baissent plus vite; les loups montent plus tard."
+      },
+      "soir": {
+        "ideal": "Cloture, capture, preparation du lendemain, lecture legere, creativite douce selon profil.",
+        "a_eviter": "Travail cognitif lourd si cela detruit le sommeil ou retarde la desactivation."
+      }
+    },
+    "agenda_et_recuperation": {
+      "buffers": "Les marges ne servent pas seulement aux imprevus, elles protegent aussi la recuperation cognitive.",
+      "transitions": "Prevoir quelques minutes entre blocs reduit le cout de bascule et la fatigue attentionnelle.",
+      "pauses": "Une pause reelle est une composante du systeme de performance, pas une faute de discipline.",
+      "dette": "Cumuler plusieurs jours de surcharge degrade la qualite de planification plus vite qu on ne le pense."
     },
     "jet_lag": {
       "stratégie_est": "Vol vers l'Est (décalage difficile — avancer l'horloge). Lumière vive le matin à destination. Mélatonine 0.5mg le soir à l'heure locale. Éviter sieste longue à l'arrivée.",

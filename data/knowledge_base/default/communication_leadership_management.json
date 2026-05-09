@@ -1,7 +1,7 @@
 {
-  "version": "v31.5.5",
+  "version": "v31.5.9",
   "category": "communication_leadership_management",
-  "description": "Leadership, communication organisationnelle, management, négociation, intelligence collective et dynamiques de groupe",
+  "description": "Leadership, communication organisationnelle, management, negociation, intelligence collective, qualite de decision, coordination transverse et dynamiques de groupe",
   "retrieval_triggers": [
     "leadership",
     "leader",
@@ -53,6 +53,16 @@
     "Lencioni"
   ],
   "sections": {
+    "systeme_leadership_operatoire": {
+      "principe": "Le leadership utile ne se mesure pas seulement a l'inspiration produite mais a la clarte, la qualite de decision, la securite relationnelle et la capacite collective a executer sans confusion.",
+      "axes": {
+        "clarte": "Rendre explicites priorites, attentes, criteres de succes, roles et arbitrages.",
+        "cadence": "Installer des rythmes de communication et de decision qui reduisent le bruit et l'improvisation.",
+        "coherence": "Aligner ce qui est dit, ce qui est decide et ce qui est tolere dans la pratique.",
+        "courage": "Traiter les tensions, les ambiguities et les mauvaises nouvelles assez tot pour eviter leur accumulation.",
+        "developpement": "Faire grandir les personnes et l'equipe en augmentant leur autonomie de maniere soutenable."
+      }
+    },
     "leadership_modeles_classiques": {
       "transformationnel_transactionnel": "Leadership transformationnel (Burns 1978, Bass 1985): le leader inspire une vision partagée, stimule intellectuellement, donne de la considération individuelle — 4 I: Influence idéalisée, Inspiration motivationnelle, Stimulation Intellectuelle, Considération Individualisée. Leadership transactionnel: récompenses/punitions selon performance (management by exception). Le transformationnel produit engagement et performance au-delà des attentes vs transactionnel basé sur contrat.",
       "situationnel": "Leadership situationnel (Hersey & Blanchard): adapter son style au niveau de maturité (compétence + engagement) du collaborateur. 4 styles: S1 Directif (faible maturité → consignes claires), S2 Persuasif (compétence faible/motivation forte → explications), S3 Participatif (compétence forte/engagement variable → soutien), S4 Délégatif (haute maturité → autonomie). Diagnostic de maturité individuel par tâche.",
@@ -65,6 +75,58 @@
       "ecoute_active_influence": "Écoute active (Rogers): présence totale, reformulation, reflet émotionnel, questionnement ouvert, silences. Barrières: jugement prématuré, préparation de sa réplique, interprétation. Influence sans manipulation: argumentation transparente sur le fond, pas l'affect. Rhétorique aristotélicienne: ethos (crédibilité), logos (argument), pathos (émotion). Storytelling managérial: rendre la vision concrète et mémorable.",
       "reunions_efficaces": "Réunions efficaces: objectif clair avant la réunion, ordre du jour distribué, durée contrainte (timeboxing), rôles définis (facilitateur, secrétaire). Règle des 2 pieds (Open Space): liberté de contribution. Méthodes de facilitation: divergence-convergence, 6 chapeaux (De Bono), brainwriting, vote à points. Suivi: compte-rendu d'action (qui fait quoi avant quand)."
     },
+    "architecture_de_communication": {
+      "synchronous_vs_async": "Choisir le bon canal selon le besoin: l'asynchrone pour informer, documenter ou preparer; le synchrone pour arbitrer, debloquer ou traiter l'ambiguite forte.",
+      "source_unique": "Les decisions, priorites et informations critiques doivent vivre dans des lieux explicites et consultables, pas uniquement dans la memoire orale.",
+      "fidelite_message": "Plus un message traverse de couches, plus il se deforme. Les points critiques doivent etre ecrits ou reformules.",
+      "boucles_fermees": "Toute demande importante doit avoir un accusé de reception, une reponse, un refus ou une echeance claire.",
+      "niveau_detail": "Communiquer selon le niveau utile: executif, operationnel, individuel. Trop de detail brouille; trop peu de detail desoriente."
+    },
+    "protocoles_de_communication": {
+      "urgence": {
+        "definition": "Canal reserve aux blocages reels, incidents, risques temps ou sujets sensibles qui ne peuvent pas attendre.",
+        "regle": "L urgence doit rester rare, qualifiee et explicitee. Si tout est urgent, le canal ne sert plus."
+      },
+      "asynchrone_structure": {
+        "format": "Contexte, demande, echeance, responsable attendu, piece jointe ou lien source si necessaire.",
+        "benefice": "Reduit les allers-retours, diminue les ambiguities et facilite la trace."
+      },
+      "synchrone_cible": {
+        "quand": "Lever une ambiguite, arbitrer entre options, gerer un conflit, accelerer une coordination bloquee.",
+        "sortie": "Chaque echange synchrone doit produire un next step, une decision ou une question restante clairement formulee."
+      },
+      "presence_et_disponibilite": {
+        "principe": "Le statut de disponibilite doit aider a proteger le travail profond, pas a forcer l acces permanent.",
+        "regle": "Rendre visibles les fenetres d indisponibilite et les canaux de secours reduit les interruptions mal ciblees."
+      }
+    },
+    "feedback_et_clarte_relationnelle": {
+      "feedback_rapide": "Un feedback proche de l action est plus developpemental qu un jugement tardif et global.",
+      "specificite": "Nommer la situation, le comportement observable, l effet produit et l ajustement attendu.",
+      "securite": "Le feedback utile protege la dignite de la personne tout en restant net sur le probleme.",
+      "feedforward": "Quand possible, completer le feedback par une prochaine pratique, un test ou une reformulation actionnable.",
+      "meta_communication": "Quand la conversation elle-meme derape, il faut pouvoir parler du canal, du rythme ou du format sans dramatiser le fond."
+    },
+    "communication_ecrite_structurante": {
+      "objet_clair": "Le lecteur doit comprendre en quelques secondes si le message informe, demande, alerte, arbitre ou transmet une decision.",
+      "structure_minimale": {
+        "contexte": "Pourquoi ce message existe et a quel sujet il se rattache.",
+        "point_clef": "Information, probleme ou decision principale en une phrase.",
+        "attendu": "Ce qui est demande au destinataire: valider, repondre, executer, commenter ou simplement prendre connaissance.",
+        "echeance": "Date ou moment attendu quand une action ou reponse est necessaire.",
+        "source": "Lien, document, ticket, note ou preuve sur lequel se fonde le message."
+      },
+      "lisibilite": "Un message trop dense ou sans hiérarchie semantique augmente le risque de mauvaise interpretation ou d absence de reponse.",
+      "regle_titane": "Ecrire pour reduire le cout de lecture, pas pour deverser le contexte brut."
+    },
+    "typologie_des_reunions": {
+      "information": "Partager un etat ou une annonce. Doit etre remplacee par un message asynchrone si aucune interaction utile n est attendue.",
+      "coordination": "Aligner des dependances, clarifier qui fait quoi et traiter les points bloquants.",
+      "decision": "Comparer options, arbitrer et sortir avec un responsable, un choix et un next step.",
+      "resolution": "Traiter tension, conflit, incident ou deviation de trajectoire.",
+      "creation": "Explorer, ideer, cadrer ou converger sur une solution encore ouverte.",
+      "regle_titane": "Une reunion sans type explicite derive facilement vers la confusion de format."
+    },
     "gestion_conflits_negociation": {
       "modele_harvard": "Négociation raisonnée Harvard (Fisher & Ury — 'Getting to Yes'): séparer les personnes du problème, se concentrer sur les intérêts (pas les positions), inventer des options à gain mutuel, utiliser des critères objectifs. BATNA (Best Alternative To a Negotiated Agreement): alternative de repli — connaître son BATNA renforce la position de négociation. Zone d'accord possible (ZOPA).",
       "thomas_kilmann": "Modèle Thomas-Kilmann: 5 styles de gestion du conflit selon assertivité + coopérativité. Compétition (assertif/non-coopératif): gagne-perd. Accommodation (non-assertif/coopératif): capitulation. Évitement: fuite. Compromis: solution partielle. Collaboration (assertif/coopératif): gagne-gagne, résolution profonde. Choisir le style selon enjeux et relation.",
@@ -75,10 +137,24 @@
       "delegation_responsabilisation": "Délégation efficace: clarifier mission, résultats attendus, ressources allouées, latitude décisionnelle, échéances. Éviter micro-management (contrôle excessif) et abdication (abandon sans soutien). Empowerment: donner pouvoir, informations et compétences pour décider. Responsabilisation: accountability = répondre de ses actes devant les parties prenantes. Subsidiarité: décision au niveau le plus proche de l'action.",
       "culture_securite_psychologique": "Sécurité psychologique (Edmondson): environnement où l'on peut parler sans crainte de punition ou humiliation. Prédicteur 1 de performance d'équipe (Google Project Aristotle). Construire: modéliser la vulnérabilité (leader avoue ses erreurs), valoriser les questions, transformer les échecs en apprentissage, sanctionner le silence pas l'erreur."
     },
+    "qualite_de_decision_collective": {
+      "clarte_decision": "Une bonne decision precise l'objet, le responsable, le perimetre, la date d'effet et les consequences attendues.",
+      "reversible_vs_irreversible": "Les decisions reversibles peuvent etre prises plus vite; les decisions difficiles a renverser demandent plus de preparation et de contre-expertise.",
+      "desaccord_productif": "Chercher un desaccord argumente avant la decision augmente la robustesse. L'absence de contradiction n'est pas forcement un signe d'alignement.",
+      "decision_log": "Tenir un journal de decision reduit l'amnesie organisationnelle et aide a evaluer la qualite des arbitrages a posteriori.",
+      "pre_mortem": "Avant une decision importante, imaginer l'echec futur et identifier ses causes probables permet de de-risquer plus tot."
+    },
     "intelligence_collective": {
       "organisation_apprenante": "Organisation apprenante (Senge — '5e Discipline'): 5 disciplines: maîtrise personnelle, modèles mentaux, vision partagée, apprentissage en équipe, pensée systémique. Loops d'apprentissage: simple loop (corriger l'erreur), double loop (remettre en question les hypothèses — Argyris). Triple loop: transformer les cadres de référence. Deuterolearning: apprendre comment on apprend.",
       "intelligence_collective_methodes": "Intelligence collective: sagesse collective > somme des individus si conditions remplies (Surowiecki: diversité, indépendance, décentralisation, agrégation). World Café: conversations en petits groupes, rotations, émergence de patterns. Forum Ouvert (Harrison Owen): auto-organisation autour de thèmes passionnants. Co-développement professionnel: pairs apprenant de situations réelles. Holacratie: structure de gouvernance distribuée.",
       "culture_organisationnelle_schein": "Culture organisationnelle (Schein): 3 niveaux — artefacts (visibles: rituels, espaces, langage), valeurs déclarées (ce qui est dit), hypothèses fondamentales (inconscient collectif profond). Changer la culture = agir sur les 3 niveaux. Paradoxe du changement culturel: le leader incarne d'abord ce qu'il veut voir. Cultures nationales (Hofstede): distance hiérarchique, individualisme/collectivisme, masculinité/féminité, évitement de l'incertitude, orientation long terme."
+    },
+    "coordination_transverse": {
+      "interfaces": "Les echecs de coordination surviennent souvent aux frontieres entre equipes, roles ou fonctions plus qu'au coeur des expertises.",
+      "responsabilites_partagees": "Quand plusieurs equipes touchent le meme sujet, il faut clarifier proprietaire, contributeurs, dependances et temps de reponse attendus.",
+      "handoffs": "Chaque passage de relais augmente le risque de perte, de retard et d'ambiguite. Standardiser les handoffs critiques.",
+      "escalade_sautee": "Escalader trop tot depolitise mal; escalader trop tard laisse pourrir les tensions. Il faut des seuils explicites.",
+      "alignement_minimal": "Pas besoin de tout aligner partout; il faut aligner ce qui affecte l'execution, la qualite ou le risque."
     },
     "agilite_management_moderne": {
       "scrum_kanban": "Scrum (Schwaber & Sutherland): framework agile — sprints 1-4 semaines, rôles (Product Owner, Scrum Master, Dev Team), cérémonies (Sprint Planning, Daily, Review, Retrospective), artefacts (Product Backlog, Sprint Backlog, Increment). Kanban (Toyota): visualisation du flux, limiter le WIP (Work In Progress), amélioration continue. Vélocité: mesure de débit d'une équipe Scrum.",
@@ -89,6 +165,62 @@
       "modele_grow": "Coaching GROW (Whitmore): Goal (définir l'objectif SMART/SMARTER), Reality (explorer la situation actuelle sans jugement), Options (générer un maximum d'alternatives), Will/Way Forward (décider et planifier l'action). Le coach ne donne pas la solution — questionne pour que le coaché trouve. Distinction coaching/mentoring/conseil: coaching = processus, mentoring = expérience, conseil = expertise.",
       "coaching_systemique": "Coaching systémique: individu dans son système (famille, organisation, culture). Constellations organisationnelles (Hellinger adapté): révéler des dynamiques cachées dans un système. Approche solution-focused: construire sur les ressources existantes plutôt que réparer les déficits. Miracle Question: 'Si demain vous vous réveillez et le problème est résolu, qu'est-ce qui serait différent?'",
       "mentoring_transmission": "Mentoring: relation asymétrique — mentor (expérience) transmet savoirs, réseaux et expériences au mentoré. Différence coaching (compétences processus) vs mentoring (contenu/expertise). Reverse mentoring: jeune mentor des seniors sur digital/technologie. Programme de mentoring organisationnel: pairs + mentors formels + flash mentoring (séances courtes thématiques)."
+    },
+    "anti_patterns_leadership": {
+      "ambiguite_polie": "Eviter le conflit en restant flou peut sembler relationnellement confortable mais detruit l'execution.",
+      "reunion_compensation": "Ajouter des reunions pour compenser un manque de clarte structurelle empire souvent le probleme.",
+      "consensus_obligatoire": "Chercher l'accord total sur tout ralentit les decisions et favorise les oppositions silencieuses.",
+      "feedback_tardif": "Un feedback juste mais trop tardif perd une grande partie de sa valeur de developpement.",
+      "heroisation_du_leader": "Quand tout depend d'une personne centrale, l'equipe apprend moins et l'organisation devient fragile.",
+      "sur-communication_bruyante": "Communiquer partout tout le temps peut reduire la comprehension autant que le silence."
+    },
+    "evidence_web_2026": {
+      "synthese": "Les sources consultees renforcent l idee qu une communication efficace ne consiste pas a multiplier les interactions, mais a reduire les interruptions inutiles, clarifier les canaux et proteger l energie collective.",
+      "sync_async_nuance": {
+        "constat": "La recherche sur IM suggere que les canaux rapides peuvent ameliorer l interactivite et la qualite de communication, et parfois meme se substituer a d autres interruptions plus lourdes.",
+        "implication": "Le probleme n est pas seulement le canal synchrone, mais son usage sans regles de disponibilite, de priorite et de moment opportun.",
+        "regle_titane": "Ne pas opposer dogmatiquement async et sync: utiliser le sync pour accelerer une coordination de valeur, et l async pour absorber l information sans fragmenter toute la journee.",
+        "sources": [
+          "https://www.sciencedirect.com/science/article/abs/pii/S0167923611001126",
+          "https://academic.oup.com/jcmc/article/13/1/23/4583029"
+        ]
+      },
+      "reunions_et_fatigue": {
+        "constat": "Les reunions video peuvent generer de la fatigue et affecter l engagement; l usage de camera peut augmenter cette fatigue chez certains profils.",
+        "implication": "Toutes les reunions n ont pas besoin d etre video-first ni camera-on par defaut.",
+        "regle_titane": "Choisir le format de reunion selon l objectif: audio ou async pour informer, video quand la richesse relationnelle ou l arbitrage le justifie.",
+        "sources": [
+          "https://experts.azregents.edu/en/publications/the-fatiguing-effects-of-camera-use-in-virtual-meetings-a-within-/"
+        ]
+      },
+      "interruptions_de_communication": {
+        "constat": "Les interruptions de communication, notamment via applications et notifications, sont traitees comme des stresseurs et perturbent la performance.",
+        "implication": "Les equipes gagnent a expliciter ce qui est urgent, ce qui peut attendre et sur quel canal.",
+        "regle_titane": "Definir des protocoles simples: urgent, aujourd hui, asynchrone; reduire les sollicitations non classees.",
+        "sources": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10244611/",
+          "https://www.microsoft.com/en-us/research/publication/a-diary-study-of-task-switching-and-interruptions/",
+          "https://aisel.aisnet.org/misq/vol42/iss2/4/"
+        ]
+      },
+      "decision_et_trace": {
+        "constat": "Une partie du cout de communication vient de la perte de contexte apres switch ou reunion.",
+        "implication": "Une decision non tracee force l organisation a refaire la conversation.",
+        "regle_titane": "Clore chaque echange important par une sortie minimale: decision, responsable, echeance, prochain point.",
+        "sources": [
+          "https://ideas.repec.org/a/inm/ororsc/v29y2018i3p380-397.html",
+          "https://www.nature.com/articles/s41598-024-56400-y"
+        ]
+      },
+      "charge_de_lecture": {
+        "constat": "Une partie de la fatigue communicationnelle vient du volume, mais une autre vient de messages mal structures, mal qualifies ou demandant trop d interpretation.",
+        "implication": "La qualite d un canal depend autant de son format d ecriture que de sa frequence.",
+        "regle_titane": "Qualifier chaque message par son intention et reduire l effort de decodage du lecteur.",
+        "sources": [
+          "https://www.microsoft.com/en-us/research/publication/the-cost-of-email-use-in-the-workplace-lower-productivity-and-higher-stress/",
+          "https://www.sciencedirect.com/science/article/abs/pii/S0167923611001126"
+        ]
+      }
     }
   }
 }

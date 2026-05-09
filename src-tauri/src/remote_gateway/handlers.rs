@@ -283,6 +283,7 @@ pub async fn invoke_handler(
         "ai_check_ollama_status",
         "get_runtime_config",
         "memory_get_all_keys",
+        "memory_save_entry",
         "memory_get_entry",
         "singularity_get_state",
         "singularity_get_fusion_state",
@@ -409,7 +410,7 @@ pub async fn invoke_handler(
             "remote": true,
             "timestamp_ms": chrono::Utc::now().timestamp_millis()
         }))),
-        "memory_get_all_keys" | "memory_get_entry" => Json(IpcResponse::err(
+        "memory_get_all_keys" | "memory_get_entry" | "memory_save_entry" => Json(IpcResponse::err(
             "memory commands not yet wired to remote gateway — use local Tauri instance"
                 .to_string(),
         )),
@@ -822,6 +823,22 @@ mod tests {
         let req = InvokeRequest {
             command: "twin_get_identity".into(),
             payload: None,
+        };
+        let result = invoke_handler(
+            State(state),
+            ConnectInfo("127.0.0.1:0".parse::<std::net::SocketAddr>().unwrap()),
+            Json(req),
+        )
+        .await;
+        let _ = result;
+    }
+
+    #[tokio::test]
+    async fn test_invoke_memory_save_entry_allowed_path() {
+        let state = make_gateway_state();
+        let req = InvokeRequest {
+            command: "memory_save_entry".into(),
+            payload: Some(json!({ "entry": "remote-probe" })),
         };
         let result = invoke_handler(
             State(state),

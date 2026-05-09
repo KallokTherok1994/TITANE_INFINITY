@@ -153,8 +153,21 @@ fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serd
     let module_context = context_envelope.and_then(|value| value.get("moduleContext"));
     let route_context = context_envelope.and_then(|value| value.get("routeContext"));
     let continuity = context_envelope.and_then(|value| value.get("continuity"));
+    let time_context = context_envelope.and_then(|value| value.get("timeContext"));
+    let temporal_memory_summary =
+        context_envelope.and_then(|value| value.get("temporalMemorySummary"));
     let cognitive = context_envelope.and_then(|value| value.get("cognitiveContext"));
     let twins = context_envelope.and_then(|value| value.get("twinsContext"));
+    let time_updated_at = time_context
+        .and_then(|value| value.get("updatedAt"))
+        .and_then(serde_json::Value::as_u64)
+        .unwrap_or(0);
+    let time_context_age_ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .ok()
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or(0)
+        .saturating_sub(time_updated_at);
 
     serde_json::json!({
         "moduleId": module_context
@@ -175,6 +188,71 @@ fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serd
             .unwrap_or("unknown"),
         "sequence": continuity
             .and_then(|value| value.get("sequence"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "timeCurrentDateTime": time_context
+            .and_then(|value| value.get("currentDateTime"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "timeZone": time_context
+            .and_then(|value| value.get("timeZone"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "timeSegment": time_context
+            .and_then(|value| value.get("currentSegment"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "timeIsWorkHours": time_context
+            .and_then(|value| value.get("isWorkHours"))
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false),
+        "timeEventsToday": time_context
+            .and_then(|value| value.get("eventsToday"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "timeEventsThisWeek": time_context
+            .and_then(|value| value.get("eventsThisWeek"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "timeFocusMinutesToday": time_context
+            .and_then(|value| value.get("todayFocusMinutes"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "timeEnergyPercent": time_context
+            .and_then(|value| value.get("currentEnergy"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "timeRuntimeSource": time_context
+            .and_then(|value| value.get("runtimeSource"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "timeContextAgeMs": time_context_age_ms,
+        "temporalMemoryStatus": temporal_memory_summary
+            .and_then(|value| value.get("status"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "temporalMemoryAgeMs": temporal_memory_summary
+            .and_then(|value| value.get("ageMs"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "temporalMemoryTtlMs": temporal_memory_summary
+            .and_then(|value| value.get("ttlMs"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "temporalMemoryRuntimeSource": temporal_memory_summary
+            .and_then(|value| value.get("runtimeSource"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "temporalMemoryDeduplicatedMoments": temporal_memory_summary
+            .and_then(|value| value.get("deduplicatedMomentsCount"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+        "temporalMemoryCompactTimeline": temporal_memory_summary
+            .and_then(|value| value.get("compactTimeline"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or(""),
+        "temporalMemoryWarningCount": temporal_memory_summary
+            .and_then(|value| value.get("warningCount"))
             .and_then(serde_json::Value::as_u64)
             .unwrap_or(0),
         // TIME: cognitive flow state
@@ -1777,6 +1855,133 @@ mod tests {
         assert!(trace_json.get("memory").is_some());
 
         let _ = std::fs::remove_file(db_path);
+    }
+
+    #[test]
+    fn extract_context_binding_includes_time_summary_when_present() {
+        let envelope = serde_json::json!({
+            "moduleContext": {
+                "moduleId": "titane_core",
+                "moduleName": "Titane Core"
+            },
+            "routeContext": {
+                "route": "/titane"
+            },
+            "continuity": {
+                "changeType": "initial",
+                "sequence": 42
+            },
+            "timeContext": {
+                "currentDateTime": "2026-05-09T10:22:00.000Z",
+                "timeZone": "Europe/Paris",
+                "currentSegment": "Deep Focus",
+                "isWorkHours": true,
+                "eventsToday": 2,
+                "eventsThisWeek": 7,
+                "todayFocusMinutes": 90,
+                "currentEnergy": 81,
+                "runtimeSource": "global-publisher",
+                "updatedAt": 0
+            },
+            "temporalMemorySummary": {
+                "status": "fresh",
+                "runtimeSource": "global-publisher",
+                "ageMs": 250,
+                "ttlMs": 900000,
+                "deduplicatedMomentsCount": 3,
+                "compactTimeline": "segment=Deep Focus | energy=81 | user:plan sprint",
+                "warningCount": 2
+            },
+            "cognitiveContext": {
+                "flowActive": true,
+                "mode": "normal"
+            },
+            "twinsContext": {
+                "globalScore": 0.0,
+                "trend": "stable",
+                "currentPhase": "sync",
+                "syncScore": 0.0
+            }
+        });
+
+        let binding = extract_context_binding(Some(&envelope));
+
+        assert_eq!(binding["route"], "/titane");
+        assert_eq!(binding["timeCurrentDateTime"], "2026-05-09T10:22:00.000Z");
+        assert_eq!(binding["timeZone"], "Europe/Paris");
+        assert_eq!(binding["timeSegment"], "Deep Focus");
+        assert_eq!(binding["timeIsWorkHours"], true);
+        assert_eq!(binding["timeEventsToday"], 2);
+        assert_eq!(binding["timeEventsThisWeek"], 7);
+        assert_eq!(binding["timeFocusMinutesToday"], 90);
+        assert_eq!(binding["timeEnergyPercent"], 81);
+        assert_eq!(binding["timeRuntimeSource"], "global-publisher");
+        assert!(binding["timeContextAgeMs"].as_u64().unwrap() > 0);
+        assert_eq!(binding["temporalMemoryStatus"], "fresh");
+        assert_eq!(binding["temporalMemoryAgeMs"], 250);
+        assert_eq!(binding["temporalMemoryTtlMs"], 900000);
+        assert_eq!(binding["temporalMemoryRuntimeSource"], "global-publisher");
+        assert_eq!(binding["temporalMemoryDeduplicatedMoments"], 3);
+        assert_eq!(binding["temporalMemoryWarningCount"], 2);
+        assert!(binding["temporalMemoryCompactTimeline"]
+            .as_str()
+            .unwrap_or_default()
+            .contains("Deep Focus"));
+    }
+
+    #[test]
+    fn extract_context_binding_defaults_when_temporal_summary_missing() {
+        let envelope = serde_json::json!({
+            "moduleContext": {
+                "moduleId": "titane_core",
+                "moduleName": "Titane Core"
+            },
+            "routeContext": {
+                "route": "/titane"
+            }
+        });
+
+        let binding = extract_context_binding(Some(&envelope));
+
+        assert_eq!(binding["temporalMemoryStatus"], "unknown");
+        assert_eq!(binding["temporalMemoryAgeMs"], 0);
+        assert_eq!(binding["temporalMemoryTtlMs"], 0);
+        assert_eq!(binding["temporalMemoryRuntimeSource"], "unknown");
+        assert_eq!(binding["temporalMemoryDeduplicatedMoments"], 0);
+        assert_eq!(binding["temporalMemoryCompactTimeline"], "");
+        assert_eq!(binding["temporalMemoryWarningCount"], 0);
+    }
+
+    #[test]
+    fn extract_context_binding_defaults_when_temporal_summary_malformed() {
+        let envelope = serde_json::json!({
+            "moduleContext": {
+                "moduleId": "titane_core",
+                "moduleName": "Titane Core"
+            },
+            "routeContext": {
+                "route": "/titane"
+            },
+            "temporalMemorySummary": {
+                "status": 123,
+                "runtimeSource": ["invalid"],
+                "ageMs": "not-a-number",
+                "ttlMs": "not-a-number",
+                "deduplicatedMomentsCount": "not-a-number",
+                "compactTimeline": ["invalid"],
+                "warningCount": "not-a-number"
+            }
+        });
+
+        let binding = extract_context_binding(Some(&envelope));
+
+        assert_eq!(binding["temporalMemoryStatus"], "unknown");
+        assert_eq!(binding["temporalMemoryAgeMs"], 0);
+        assert_eq!(binding["temporalMemoryTtlMs"], 0);
+        assert_eq!(binding["temporalMemoryRuntimeSource"], "unknown");
+        assert_eq!(binding["temporalMemoryDeduplicatedMoments"], 0);
+        assert_eq!(binding["temporalMemoryCompactTimeline"], "");
+        assert_eq!(binding["temporalMemoryWarningCount"], 0);
     }
 
     #[test]

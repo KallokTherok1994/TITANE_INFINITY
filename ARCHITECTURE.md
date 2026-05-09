@@ -2,15 +2,9 @@
 
 > `src/services/knowledge_runtime/MemoryCandidateLedger.ts` ajoute un ledger de candidats mémoire gouvernés au-dessus du verdict de sélection KB. Les entrées retenues n accèdent pas directement à une mémoire durable: elles deviennent d abord des `MemoryCandidate` avec provenance, score de stabilité, usage count, probation status et éventuelle expiration.
 
-
-
 > `src/services/knowledge_runtime/MemoryPromotionPolicy.ts` impose une admission asymétrique: une connaissance peut aider la réponse courante sans pour autant mériter une consolidation immédiate. Les faits temporels restent en trace/probation plus longtemps, tandis que les structures réutilisables (`rule`, `heuristic`, `preference`) peuvent progresser plus vite vers `ready`.
 
-
-
 > `src/services/knowledge_runtime/MemoryAgingPolicy.ts` pose la première logique d oubli/révision gouvernée: expiration explicite pour le temporel, vieillissement pour l inactif, et stale immédiat pour les candidats contradictoires. La mémoire n est donc plus pensée comme stockage binaire, mais comme cycle `candidate -> probation -> ready -> aging/stale/expire`.
-
-
 
 ## 2026-05-09 — Knowledge selection verdict overlay (Phase 2 minimal)
 
@@ -25,6 +19,34 @@
 > `src/services/knowledge_runtime/KnowledgeRegistry.ts` ajoute une couche canonique de qualification runtime au-dessus de la KB par défaut. Le registre charge `data/knowledge_base/KNOWLEDGE_GOVERNANCE_INDEX.json`, complète les catégories bundle non indexées par des métadonnées synthétiques explicites (`metadataOrigin: indexed|synthetic`) et publie une couverture mesurable au lieu de laisser les trous de gouvernance invisibles.
 
 > `src/services/knowledge_runtime/KnowledgeRuntimeKernel.ts` ne remplace pas le retrieval lexical existant de `src/services/api/defaultKnowledgeBase.ts`; il le requalifie. Chaque entrée retenue reçoit maintenant un statut de validation, une fraîcheur, un risque et un indicateur honnête `Recherche requise` pour les domaines sensibles/time-sensitive.
+
+> La surface conversationnelle conserve donc la même voie One Door de chargement KB (`knowledge_base_runtime_snapshot` puis `knowledge_base_get_all` puis bundle), mais la projection prompt-side ne traite plus toutes les connaissances comme équivalentes. Les catégories non gouvernées explicitement sont dégradées en `Metadata synthétique` au lieu d être promues silencieusement au même niveau que les entrées qualifiées.
+
+## 2026-05-09 — R6 Temporal Memory Manager hardening (chat + backend binding)
+
+> Le Single Door chat ajoute une couche de gestion mémoire temporelle dédiée via `src/services/chat/temporalMemoryManager.ts`: résumé compact, vieillissement (`ageMs/ttlMs`), déduplication des moments récents, validation des champs et borne de taille prompt-safe.
+
+> `src/services/chat/chatMemorySingleDoor.ts` injecte maintenant `temporalMemorySummary` dans `ChatContextEnvelope` et dans le bloc `CONTEXT_ENVELOPE_V44` (status/source/freshness/key_moments/compact_timeline), sans exposer de payload brut.
+
+> `src-tauri/src/conversation_engine/commands.rs` extrait ces champs dans `contextBinding` (`temporalMemoryStatus`, `temporalMemoryAgeMs`, `temporalMemoryTtlMs`, `temporalMemoryRuntimeSource`, `temporalMemoryDeduplicatedMoments`, `temporalMemoryCompactTimeline`) pour tracer la vérité temporelle côté backend.
+
+## 2026-05-09 — R7 Temporal memory seal hardening (warnings + malformed/default guards)
+
+> `src/services/chat/temporalMemoryManager.ts` ajoute une télémétrie de garde bornée (`warningCount`, `warnings`) pour les cas de skew temporel futur, troncature compacte/prompt-safe et messages récents malformés ignorés, tout en conservant une sortie déterministe et non mutante.
+
+> `src/services/chat/__tests__/temporalMemoryManager.test.ts` verrouille les invariants de scellement R7: clamping future clock, warnings de troncature, rejet malformé et non-mutation d entrée.
+
+> `src-tauri/src/conversation_engine/commands.rs` propage `temporalMemoryWarningCount` dans `contextBinding` et couvre les chemins `missing`/`malformed` pour préserver la traçabilité backend sans faux positifs.
+
+## 2026-05-09 — Remote Gateway allowlist hardening (memory_save_entry)
+
+> `src-tauri/src/remote_gateway/handlers.rs` inclut désormais `memory_save_entry` dans l allowlist `POST /api/invoke` afin d unifier la surface mémoire distante avec les commandes déjà exposées (`memory_get_all_keys`, `memory_get_entry`). Le comportement reste explicitement honnête: la commande est acceptée par la gateway puis répond `not yet wired` au lieu d un rejet opaque `not allowed`.
+
+> Preuve Rust associée: `remote_gateway::handlers::tests::test_invoke_memory_save_entry_allowed_path`.
+
+## 2026-05-09 — Temporal Modules Agent + engine hardening
+
+> La pile temporelle canonique `src/engines/time/` est maintenant explicitement reliée au nouvel agent local `temporal-modules`, avec couverture dédiée pour Time, Agenda, Energy, Priority et ChatScheduler. La propagation TIME vers le chat conserve la même vérité runtime sur les surfaces `GlobalTemporalContextPublisher`, `chatMemorySingleDoor` et `TimePage`.
 
 ## 2026-05-05 : Remote Gateway — Twins HTTP access (v33.0.8+)
 
@@ -750,3 +772,29 @@ Conformité validée par tests 100/100 (avril 2026).
 > Côté Ring 0/1, la commande IPC `analyze_logs_intelligent` est exposée via `src-tauri/src/commands/devtools.rs` et enregistrée dans `src-tauri/src/main.rs`, avec allowlist sécurité alignée (`src-tauri/src/commands/security.rs` + `src/lib/security.ts`).
 
 > Flux canonique: UI Dashboard -> service log_analysis -> secureInvoke/safeInvokeCanonical -> Tauri devtools logs -> rapport intelligent -> evidence/blockers/nextStep runtime truth.
+
+## 2026-05-09 — TIME→chat runtime certification R2
+
+> Publisher global: `src/components/runtime/GlobalTemporalContextPublisher.tsx` alimente `titane_time_runtime_context_v1` au niveau app shell sans dépendre de `/time`.
+
+> Flux conversationnel: `src/hooks/useConversationEngine.ts` construit un `ChatContextEnvelope` depuis la route chat directe, puis `src/services/conversationEngine.ts` injecte le bloc TIME dans le prompt gouverné.
+
+> Trace backend: `src-tauri/src/conversation_engine/commands.rs` enrichit `context_binding` avec un summary TIME auditable quand `timeContext` existe.
+
+> Rollback: restaurer la lecture/émission TIME, la preuve Playwright et le test Rust de binding.
+
+## 2026-05-09 — TIME→chat runtime certification R3 (direct /titane no-mock)
+
+> Sur la lane web no-mock, `tests/e2e/chat.spec.ts` certifie la publication TIME globale et l injection dans l enveloppe de conversation depuis `/titane`, sans route `/time` et sans drapeau mock actif.
+
+> Le chemin runtime observé en preuve locale passe par la génération provider locale (trace `POST /api/generate`) avec réponse assistant non mock.
+
+> Le binding backend TIME reste qualifié par la preuve Rust ciblée `extract_context_binding_includes_time_summary_when_present`, gardant une trace auditable côté `context_binding`.
+
+## 2026-05-09 — TIME→chat runtime certification R4 (native Tauri desktop)
+
+> La lane desktop native `wry` confirme la chaîne UI/runtime sur `/titane` sans route `/time`: publication TIME globale, construction d envelope chat, envoi no-mock, et réponse native.
+
+> Signal runtime natif confirmé: IPC `READY`, send trace `RESPONDED`, provider local `Ollama (OMEGA+Singularity)`, réponse assistant effective sur session Tauri.
+
+> La persistance envelope montre `timeContext.runtimeSource=global-publisher` et `routeContext.route=/titane`; la visibilité live de `contextBinding` reste dépendante du trace hook UI, donc la vérité backend TIME summary reste qualifiée par le test Rust ciblé.

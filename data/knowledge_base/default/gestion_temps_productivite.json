@@ -1,9 +1,27 @@
 {
-  "version": "v30.1.0",
+  "version": "v30.1.2",
   "category": "gestion_temps_productivite",
-  "description": "Gestion du temps et productivité — GTD David Allen, Time Blocking, Eisenhower matrix, second brain Tiago Forte (PARA), outils (Notion/Obsidian/Todoist), batching, energy management, loi de Parkinson, 80/20",
+  "description": "Gestion du temps, organisation et productivite operationnelle — GTD David Allen, Time Blocking, Eisenhower matrix, second brain Tiago Forte (PARA), outils (Notion/Obsidian/Todoist), batching, energy management, horizons de planification, gestion de capacite, priorisation, rituels de revue, anti-patterns et pilotage du temps",
   "gestion_temps_productivite": {
     "introduction": "La productivité n'est pas travailler plus longtemps — c'est produire plus de valeur par heure d'énergie focalisée. TITANE distingue la gestion du temps (calendrier) de la gestion de l'énergie (états internes) — les deux sont nécessaires.",
+    "systeme_operatoire": {
+      "principe": "Un bon systeme d'organisation reduit la friction de decision. Il doit rendre visibles les priorites, la capacite reelle, les engagements en cours et le prochain geste utile.",
+      "piliers": {
+        "clarte": "Savoir ce qui compte maintenant et pourquoi. Pas de liste unique fourre-tout sans hierarchie.",
+        "cadence": "Reviser a intervalles fixes pour eviter le pilotage au stress ou a l'urgence.",
+        "limites": "Limiter le nombre de projets et de taches actives pour proteger la concentration.",
+        "visibilite": "Un seul systeme de confiance pour capturer, trier, planifier et suivre.",
+        "boucle_amelioration": "Mesurer legerement, ajuster vite, supprimer ce qui n'apporte pas de valeur."
+      }
+    },
+    "horizons_planification": {
+      "vision": "Direction long terme: qui veut-on devenir, quelles responsabilites veut-on assumer, quelles contraintes veut-on proteger.",
+      "trimestriel": "3 a 5 objectifs maximum par trimestre. Chaque objectif doit avoir un resultat observable et un critere de succes.",
+      "mensuel": "Repartition des objectifs trimestriels en chantiers actifs, decisions a prendre, dependances a lever.",
+      "hebdomadaire": "Selectionner un nombre realiste de priorites a terminer cette semaine, pas seulement a commencer.",
+      "quotidien": "Transformer les priorites hebdomadaires en blocs concrets de calendrier et en prochaines actions definies.",
+      "regle_alignement": "Chaque jour doit servir la semaine, chaque semaine doit servir le mois, chaque mois doit servir le trimestre."
+    },
     "systemes_gestion_taches": {
       "GTD_getting_things_done": {
         "auteur": "David Allen — Getting Things Done (2001)",
@@ -31,12 +49,28 @@
         "conseil": "Passer 60-70% du temps en Q2 est le secret des personnes hautement efficaces (Covey)"
       }
     },
+    "organisation_structure": {
+      "source_unique_de_verite": "Eviter la dispersion entre notes, messageries, memoire mentale et multiples listes. Une inbox principale, un calendrier principal, un gestionnaire de taches principal.",
+      "projets_actifs": "Limiter les projets vraiment actifs a 3-7 selon la charge et la complexite. Tout le reste reste en file d'attente explicite.",
+      "limite_WIP": "WIP = Work In Progress. Plus il y a de chantiers en parallele, plus le temps de cycle explose. Finir avant de recommencer.",
+      "definition_of_done": "Chaque livrable recurrent doit avoir une definition de termine simple: resultat attendu, format, validation, point de livraison.",
+      "checklists": "Les activites repetitives gagnent a etre checklistees: ouverture de journee, cloture de journee, publication, suivi client, preparation reunion.",
+      "nomenclature": "Nommer les projets et taches avec des verbes d'action clairs: 'preparer rapport Q2', pas 'rapport'."
+    },
     "principes_fondamentaux": {
       "loi_parkinson": "Le travail s'étire pour remplir le temps disponible. Solution: se fixer des deadlines courtes (timeboxing).",
       "loi_80_20_pareto": "80% des résultats viennent de 20% des actions. Identifier les 20% à haute valeur et les surpondérer.",
       "single_tasking": "Le multi-tasking n'existe pas pour les tâches cognitives — c'est du task-switching rapide qui coûte 20-40% d'efficacité (American Psychological Association).",
       "no_is_the_default": "Chaque oui est un non à quelque chose d'autre. Filtrer les engagements par rapport aux priorités de Q2.",
       "energy_management": "Aligner les tâches difficiles sur les pics d'énergie (chronotype). Ne pas planifier du deep work quand on est à plat."
+    },
+    "priorisation_et_decision": {
+      "impact_effort": "Classer les actions selon leur valeur attendue et leur cout. Chercher d'abord les gains asymetriques: fort impact, effort modere.",
+      "cout_du_retard": "Une tache peu urgente en apparence peut devenir critique si son retard bloque plusieurs dependances.",
+      "sequencement": "Prioriser ce qui debloque le plus d'autres actions ou reduit l'incertitude majeure.",
+      "regle_des_trois": "Choisir au maximum 3 resultats majeurs sur une journee ou une semaine pour garder un centre de gravite.",
+      "deux_listes": "Distinguer backlog complet et front de travail reel. Tout ce qui est possible n'est pas actif.",
+      "kill_criteria": "Definir a l'avance quand abandonner, deleguer ou repousser une initiative si le retour n'est pas la."
     },
     "second_brain": {
       "auteur": "Tiago Forte — Building a Second Brain (2022)",
@@ -73,6 +107,90 @@
         "Création de contenu en sessions dédiées"
       ],
       "avantage": "Réduit le temps de 'warm-up' cognitif nécessaire à chaque changement de tâche"
+    },
+    "gestion_capacite_et_charge": {
+      "capacite_reelle": "Planifier sur 60-70% de la capacite visible laisse de la place aux aleas, a la fatigue et aux urgences reelles.",
+      "buffers": "Conserver des marges journalieres et hebdomadaires. Un agenda rempli a 100% est deja en retard.",
+      "temps_cache": "Integrer le temps invisible: transitions, relecture, coordination, pauses, suivi, recuperation.",
+      "estimation": "Mieux vaut estimer en fourchettes qu'en precision artificielle. Exemple: 30-45 min plutot que 35 min.",
+      "fractionnement": "Une tache estimee a plus de 2h doit souvent etre decoupee en livrables ou etapes plus visibles.",
+      "surengagement": "Le vrai risque n'est pas de sous-planifier, c'est de promettre plus que la capacite ne permet."
+    },
+    "rituels_de_revue": {
+      "revue_quotidienne": "5-10 min: revoir calendrier, top 3, blocages, premiere action de redemarrage.",
+      "revue_hebdomadaire": "30-60 min: vider inbox, fermer les boucles ouvertes, revoir projets, nettoyer backlog, reserver les deep blocks de la semaine.",
+      "revue_mensuelle": "Verifier l'avancement des objectifs, reallouer la charge, supprimer les projets morts, identifier les frictions recurrentes.",
+      "revue_trimestrielle": "Reevaluer les priorites structurantes, les domaines de responsabilite, les arbitrages temps/energie/impact.",
+      "post_mortem_leger": "Quand une semaine derape, chercher le mecanisme racine: surcharge, flou, interruptions, dependances, mauvais timing."
+    },
+    "execution_quotidienne": {
+      "demarrage": "Commencer la journee par le travail important avant l'entree dans les flux reactifs si possible.",
+      "deep_work": "Reserver 1 a 3 blocs sans interruption pour les travaux a forte charge cognitive.",
+      "shallow_work": "Regrouper messages, emails, administratif et coordination dans des fenetres dediees.",
+      "reset": "Fin de journee: fermer les boucles rapides, capturer l'inacheve, preparer la premiere tache du lendemain.",
+      "regle_reprise": "Toujours quitter une tache en laissant une note de redemarrage pour reduire le cout de reprise."
+    },
+    "reunions_et_coordination": {
+      "ordre_du_jour": "Pas de reunion sans objectif, sans decision attendue ou sans preparation minimale.",
+      "participants": "Inviter uniquement les personnes necessaires a la decision ou a l'execution.",
+      "cadence": "Preferer des points courts et cadences fixes plutot que des reunions longues et improductives.",
+      "sortie": "Chaque reunion doit produire responsables, echeances, prochaines actions et decisions prises.",
+      "asynchrone_d_abord": "Quand l'information peut circuler par note ecrite, privilegier l'asynchrone pour proteger le temps de concentration."
+    },
+    "metriques_pilotage": {
+      "taux_achevement": "Pourcentage des priorites hebdomadaires reellement terminees.",
+      "temps_de_cycle": "Temps entre le debut et la fin d'une tache importante.",
+      "wip_moyen": "Nombre moyen de chantiers actifs en parallele.",
+      "temps_profond": "Heures de travail profond protegees par semaine.",
+      "derives": "Nombre de taches promises puis reportees plus de deux fois.",
+      "energie": "Auto-evaluation simple de l'energie sur la semaine pour ajuster la charge, pas pour se juger."
+    },
+    "anti_patterns": {
+      "agenda_tetris": "Remplir chaque minute de l'agenda donne une illusion de controle mais supprime toute resilence.",
+      "todo_liste_non_hiérarchisée": "Une longue liste plate melange urgent, important, trivial et impossible.",
+      "reaction_continue": "Verifier messages et emails en permanence detruit le travail profond.",
+      "sur_planification": "Passer plus de temps a optimiser l'outil qu'a executer le travail.",
+      "absence_revue": "Sans revue hebdomadaire, le systeme devient un depot de choses non traitees.",
+      "promesses_floues": "Une tache sans verbe d'action, sans echeance ni definition de termine reste mentalement couteuse."
+    },
+    "heuristiques_rapides": {
+      "si_tout_est_prioritaire": "Rien ne l'est. Refaire le tri par impact, risque et dependances.",
+      "si_la_charge_explose": "Retirer des engagements avant d'essayer de compenser par plus d'heures.",
+      "si_la_procrastination_persiste": "Reduire la taille de la prochaine action, clarifier le resultat attendu ou changer le moment de la journee.",
+      "si_les_journees_sont_reactives": "Bloquer d'abord le temps important dans le calendrier, puis laisser le residuel au reactif.",
+      "si_le_systeme_ne_tient_pas": "Le systeme est trop complexe. Simplifier avant d'ajouter un outil ou une methode."
+    },
+    "evidence_web_2026": {
+      "synthese": "Les recherches consultees convergent sur un point: la baisse de performance ne vient pas seulement du volume de travail, mais du cout de reprise apres interruptions, de la fragmentation email/messages et du manque de sommeil.",
+      "interruptions_et_reprise": {
+        "constat": "Le changement de tache laisse un residu attentionnel et rend la reprise plus couteuse, surtout quand la tache interrompue reste mentalement ouverte ou urgente.",
+        "implication": "Avant de quitter une tache, ecrire un plan de reprise tres court reduit le cout de retour.",
+        "regle_titane": "Quand un bloc est interrompu, laisser une note 'ready-to-resume': ou j en suis, prochaine action, point de vigilance.",
+        "sources": [
+          "https://www.microsoft.com/en-us/research/publication/a-diary-study-of-task-switching-and-interruptions/",
+          "https://ideas.repec.org/a/inm/ororsc/v29y2018i3p380-397.html",
+          "https://www.nature.com/articles/s41598-024-56400-y"
+        ]
+      },
+      "email_notifications": {
+        "constat": "Le temps passe dans l email est associe a une productivite percue plus faible et a davantage de stress; les habitudes declenchees par notifications semblent moins favorables que des fenetres choisies.",
+        "implication": "Le traitement email doit etre cadence plutot que pilote par l arrivee.",
+        "regle_titane": "Preferer des fenetres de traitement, notifications reduites, et pas de surveillance continue de la boite.",
+        "nuance": "Le batching peut aider la productivite, mais il n a pas montre un benefice de stress constant dans les etudes consultees.",
+        "sources": [
+          "https://www.microsoft.com/en-us/research/publication/the-cost-of-email-use-in-the-workplace-lower-productivity-and-higher-stress/",
+          "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/06/Email20Duration20Camera20Ready20submission3-1.pdf"
+        ]
+      },
+      "sommeil_et_fonction_cognitive": {
+        "constat": "Le sommeil soutient l attention, la prise de decision, la creativite et la vitesse d execution; le manque de sommeil allonge le temps de tache et augmente les erreurs.",
+        "implication": "Une planification mature traite le sommeil et la recuperation comme des composants du systeme de performance.",
+        "regle_titane": "Ne pas compenser durablement un systeme surcharge par des heures prises sur le sommeil.",
+        "sources": [
+          "https://www.nhlbi.nih.gov/health/sleep-deprivation/health-effects",
+          "https://www.ninds.nih.gov/health-information/public-education/brain-basics/brain-basics-understanding-sleep"
+        ]
+      }
     }
   }
 }

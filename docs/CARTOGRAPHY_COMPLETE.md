@@ -2,11 +2,7 @@
 
 > La cartographie `src/services/knowledge_runtime/` s étend maintenant au devenir de la connaissance après sélection. `MemoryCandidateLedger.ts` transforme un verdict `selected` stable en candidats mémoire gouvernés, mais refuse encore la consolidation directe des éléments `researchRequired` ou bloqués.
 
-
-
 > `MemoryPromotionPolicy.ts` et `MemoryAgingPolicy.ts` introduisent une stratification minimale du futur savoir interne: trace, probation, ready, aging, stale, expire_now. La vérité cartographiée n est donc plus seulement "quoi injecter maintenant", mais aussi "quoi laisser éventuellement devenir structure plus tard, avec quel délai et quelle sévérité".
-
-
 
 ## 2026-05-09 — Knowledge selection verdict overlay (Phase 2 minimal)
 
@@ -17,6 +13,36 @@
 ## 2026-05-09 — Knowledge runtime governance overlay on default KB
 
 > La cartographie conversationnelle ajoute une couche `src/services/knowledge_runtime/` entre la KB brute et le bloc prompt final. `KnowledgeRegistry.ts` charge l index C2 existant puis synthétise explicitement les catégories bundle non indexées, ce qui transforme l absence de métadonnées en état visible (`metadataOrigin: synthetic`) au lieu d un silence structurel.
+
+> `src/services/api/defaultKnowledgeBase.ts::getRelevantPromptContext()` conserve son ranking lexical courant, mais fait maintenant passer les entrées sélectionnées par `KnowledgeRuntimeKernel.ts` pour publier `Statut`, `Fraîcheur`, `Risque` et `Recherche requise` quand nécessaire. La vérité cartographiée n est donc plus seulement "quelle entrée a matché", mais aussi "avec quel niveau de qualification elle entre dans le contexte conversationnel".
+
+## 2026-05-09 — R6 temporal memory summary chain (Single Door -> prompt -> backend)
+
+> Ajout d un manager temporel pur `src/services/chat/temporalMemoryManager.ts` pour gouverner la mémoire temporelle injectée au chat: résumé compact, garde d âge (`ttlMs`), déduplication, compaction bornée et validation.
+
+> Intégration côté Single Door dans `src/services/chat/chatMemorySingleDoor.ts` avec nouvelle section `temporalMemorySummary` dans `ChatContextEnvelope` et projection prompt-safe dans `CONTEXT_ENVELOPE_V44`.
+
+> Alignement backend via `src-tauri/src/conversation_engine/commands.rs` pour publier la même vérité temporelle dans `contextBinding` sans payload brut, plus couverture tests ciblée TS + Rust.
+
+## 2026-05-09 — R7 temporal memory seal (regression firewall closure)
+
+> `src/services/chat/temporalMemoryManager.ts` expose désormais des warnings gouvernés (`future_timestamp_clamped`, `compact_timeline_truncated`, `prompt_summary_truncated`, `malformed_recent_message_skipped`) avec compteur borné pour qualifier explicitement les cas limites sans étendre la surface fonctionnelle.
+
+> `src/services/chat/__tests__/temporalMemoryManager.test.ts` et `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts` verrouillent les invariants manquants: enveloppe stable sans clé TIME, non-duplication des marqueurs `temporal_memory_*`, skew futur clampé, troncature détectée et non-mutation des entrées.
+
+> `src-tauri/src/conversation_engine/commands.rs` ajoute `temporalMemoryWarningCount` et couvre la robustesse `temporalMemorySummary` absent/malformé via tests Rust ciblés.
+
+## 2026-05-09 — Remote Gateway memory_save_entry allowlist alignment
+
+> La gateway `src-tauri/src/remote_gateway/handlers.rs` autorise maintenant explicitement `memory_save_entry` dans `POST /api/invoke`, alignée avec la famille mémoire distante (`memory_get_all_keys`, `memory_get_entry`).
+
+> Le comportement runtime reste gouverné et honnête: route acceptée, réponse `memory commands not yet wired to remote gateway` tant que le wiring Ring 2 n est pas implémenté.
+
+> Couverture Rust: `test_invoke_memory_save_entry_allowed_path` dans `remote_gateway::handlers::tests`.
+
+## 2026-05-09 — Temporal Modules Agent + advanced temporal proof matrix
+
+> Nouveau surface locale `temporal-modules` ajoutée sous `.github/agents/temporal-modules.agent.md`, avec prompt dédié `.github/prompts/temporal-modules.prompt.md` et instructions `.github/instructions/temporal-modules.instructions.md`. La pile temporelle reste gouvernée par `src/engines/time/` et la propagation TIME vers le chat conserve son contrat honnête via les tests existants et la nouvelle matrice Vitest avancée.
 
 ## 2026-05-08 — TOTAL_DEV + Ollama DEV boundary stabilization
 
@@ -2113,3 +2139,53 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > `src/services/chat/chatMemorySingleDoor.ts` ne lit plus la mémoire de mode via une clé littérale `titane_chat_mode_*`; la lecture passe par `resolveChatMemoryStorageKey(mode)` pour aligner la chaîne `buildChatContextEnvelope()` sur la séparation de namespace déjà appliquée au compactor.
 
 > Couverture associée: `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts` ajoute une preuve explicite de lecture d'un payload namespacé dans `memorySingleDoor.recentMessages`.
+
+## 2026-05-09 — TIME runtime context global sync (publisher hors /time)
+
+> Correctif minimal de surface active: la publication du contexte temporel runtime n est plus couplée au montage de `TimePage`.
+
+> Ajouts runtime:
+- Nouveau publisher global: `src/components/runtime/GlobalTemporalContextPublisher.tsx`.
+- Montage shell: `src/App.tsx` monte le publisher au niveau application pour garantir la disponibilité du contexte même si `/time` n est jamais visité.
+- Contrat mémoire chat: `src/services/chat/chatMemorySingleDoor.ts` accepte `runtimeSource: 'global-publisher'` avec garde stale inchangée (`900000ms`).
+
+> Preuves:
+- Vitest: `src/components/runtime/__tests__/GlobalTemporalContextPublisher.test.tsx`
+- Vitest: `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts`
+
+## 2026-05-09 — TIME runtime context R2 certification (direct /titane route)
+
+> La chaîne TIME → chat est maintenant certifiée sur la route chat directe `/titane` sans visite préalable de `/time`.
+
+> Preuves ajoutées:
+- Playwright: `tests/e2e/chat.spec.ts` vérifie `titane_time_runtime_context_v1`, puis `titane_chat_context_envelope_v1`, sur la route directe.
+- Vitest: `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts` confirme les marqueurs TIME du formatter gouverné avec `runtimeSource=global-publisher`.
+- Rust: `src-tauri/src/conversation_engine/commands.rs` expose un summary TIME auditable dans `context_binding`.
+
+> Rollback: restaurer les trois fichiers de preuve ci-dessus et les journaux de gouvernance associés.
+
+## 2026-05-09 — TIME runtime context R3 certification (direct /titane no-mock)
+
+> La chaîne TIME → chat est certifiée en mode no-mock sur la route directe `/titane` sans passage par `/time`.
+
+> Preuves ajoutées:
+- Playwright: `tests/e2e/chat.spec.ts` confirme `__TITANE_E2E_CHAT_MOCK__=false`, présence de `titane_time_runtime_context_v1`, présence de `titane_chat_context_envelope_v1` et réponse assistant non mock.
+- Runtime local observable: trace Vite proxy `POST /api/generate` durant le test no-mock.
+- Backend TIME binding: maintenu par `cargo test --lib extract_context_binding_includes_time_summary_when_present`.
+
+> Rollback: restaurer `tests/e2e/chat.spec.ts` et les journaux/docs de gouvernance R3 associés.
+
+## 2026-05-09 — TIME runtime context R4 certification (native Tauri desktop)
+
+> La chaîne TIME → chat est certifiée sur la lane desktop native Tauri (WDIO/Wry), en route directe `/titane`, sans passage par `/time` et sans mock E2E.
+
+> Preuves ajoutées:
+- WDIO ciblé: `e2e/desktop/online-chat-proof-ui.wdio.test.js` (grep sur `should preserve TIME context through native Tauri conversation_generate without /time`) passe en runtime natif.
+- TIME key: `titane_time_runtime_context_v1` présent/frais avec `runtimeSource=global-publisher`.
+- Envelope: `titane_chat_context_envelope_v1` contient `timeContext` et `routeContext.route=/titane`.
+- Runtime: `ipcReadyState=READY`, `sendTraceState=RESPONDED`, provider local `Ollama (OMEGA+Singularity)`, réponse assistant reçue.
+
+> Limite observabilité backend:
+- Le trace hook natif n a pas exposé `contextBinding` sur ce run; la preuve backend TIME summary reste assurée par `cargo test --manifest-path src-tauri/Cargo.toml --lib extract_context_binding_includes_time_summary_when_present`.
+
+> Rollback: restaurer `e2e/desktop/online-chat-proof-ui.wdio.test.js` et les journaux/docs de gouvernance R4 associés.

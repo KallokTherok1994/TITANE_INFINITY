@@ -2012,6 +2012,9 @@ export async function processMessage(
         ? ['cognitive_context:present']
         : []),
       ...(options?.contextEnvelope?.timeContext ? ['time_context:present'] : []),
+      ...(options?.contextEnvelope?.temporalMemorySummary
+        ? ['temporal_memory_summary:present']
+        : []),
     ])
   );
 

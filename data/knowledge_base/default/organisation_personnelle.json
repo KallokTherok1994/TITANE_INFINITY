@@ -1,9 +1,19 @@
 {
-  "version": "v30.1.0",
+  "version": "v30.1.1",
   "category": "organisation_personnelle",
-  "description": "Organisation personnelle avancée — systèmes de productivité (GTD Getting Things Done/PARA/Zettelkasten/bullet journal/PKM Personal Knowledge Management), gestion de l'attention, inbox zéro, revue hebdomadaire, outils numériques (Notion/Obsidian/Todoist/Things), environnement de travail et espaces mentaux, capture/traitement/organisation/revue/exécution",
+  "description": "Organisation personnelle avancee — systemes de productivite (GTD Getting Things Done/PARA/Zettelkasten/bullet journal/PKM Personal Knowledge Management), gestion de l'attention, inbox zero, revue hebdomadaire, outils numeriques (Notion/Obsidian/Todoist/Things), environnement de travail et espaces mentaux, capture/traitement/organisation/revue/execution, routines, hygiene attentionnelle et reduction de friction",
   "organisation_personnelle": {
     "introduction": "L'organisation personnelle est la science et l'art de structurer son environnement mental et physique pour agir avec efficacité, sans surcharge cognitive. Elle diffère de la simple gestion du temps: elle vise à libérer l'esprit pour se concentrer sur ce qui compte vraiment. TITANE maîtrise les systèmes les plus puissants du domaine.",
+    "systeme_personnel": {
+      "principe": "Un systeme personnel solide doit etre assez simple pour survivre aux semaines chargees et assez structure pour rendre visibles les priorites, engagements et points de reprise.",
+      "composants": {
+        "capture": "Un nombre limite d'entrees de capture fiables. Toute idee, demande, engagement ou rappel doit finir dans une inbox reconnue.",
+        "clarification": "Transformer l'ambigu en action, projet, reference, attente ou abandon. L'ambiguite accumulee est une dette mentale.",
+        "planification": "Distribuer entre calendrier, liste d'actions, projets actifs, domaines et archives.",
+        "execution": "Choisir le travail selon impact, energie, contexte, temps disponible et stade d'avancement.",
+        "maintenance": "Revue, nettoyage, archivage, simplification et reajustement regulier du systeme."
+      }
+    },
     "GTD_getting_things_done": {
       "auteur": "David Allen — 'Getting Things Done' (2001, révision 2015)",
       "principe_fondateur": "L'esprit est fait pour avoir des idées, pas pour les stocker. Tout ce qui est dans la tête génère de l'anxiété latente (open loops). Externaliser = libérer la RAM mentale.",
@@ -59,6 +69,40 @@
       "méthode": "Pour chaque email: Delete / Delegate (forward) / Respond (si <2 min) / Defer (transformer en tâche) / Do.",
       "batch_processing": "Traiter les emails en 2-3 sessions fixes par jour (ex: 9h + 12h30 + 17h). Désactiver les notifications en dehors."
     },
+    "architecture_personnelle": {
+      "source_de_verite": "Un calendrier principal, un gestionnaire de taches principal et un espace de notes principal. Les exceptions doivent rester rares.",
+      "separation_des_couches": "Distinguer les rendez-vous datés, les prochaines actions, les projets multi-etapes, les references et les idees futures.",
+      "projets_actifs": "Limiter le nombre de projets reellement actifs permet de finir davantage et de conserver de la clarte mentale.",
+      "zones_de_responsabilite": "Maintenir quelques domaines stables: sante, travail, finances, relations, apprentissage, habitat. Ils servent de structure de revue.",
+      "archives": "Archiver regulierement pour garder des espaces de travail legers et focalisants."
+    },
+    "routines_quotidiennes": {
+      "ouverture": "Verifier rapidement agenda, priorites du jour, messages critiques et premiere action importante avant d'entrer dans le reactif.",
+      "milieu_de_journee": "Recalibrer si le contexte a change: priorite reste-t-elle la bonne, energie disponible, blocages nouveaux.",
+      "fermeture": "Capturer les boucles ouvertes, noter le prochain point de reprise, remettre l'environnement en etat, preparer le lendemain.",
+      "rituels_courts": "Des routines de 5-10 minutes sont souvent plus durables que des protocoles complexes rarement tenus."
+    },
+    "gestion_attention_energie": {
+      "chronotype": "Placer les travaux a forte intensite cognitive sur les plages d'energie haute.",
+      "attention_residuelle": "Chaque interruption laisse une trace cognitive. Diminuer le multi-contextes ameliore la profondeur.",
+      "fatigue_decisionnelle": "Moins il y a de micro-decisions inutiles, plus il reste de bande passante pour les choix importants.",
+      "recuperation": "Pauses, sommeil, alimentation, mouvement et respiration influencent directement la qualite du pilotage personnel.",
+      "signal_alarme": "Quand tout parait urgent ou confus, le probleme est souvent la surcharge du systeme, pas un manque de volonte."
+    },
+    "environnement_de_travail": {
+      "friction_visible": "Un environnement encombre, des fichiers mal nommes ou des outils disperses augmentent le cout d'entree dans l'action.",
+      "preparation": "Preconfigurer les espaces, documents, templates et materiels critiques reduit le temps de lancement.",
+      "hygiene_numerique": "Notifications, onglets, apps et inbox concurrencent l'intention. Tout ce qui attire sans servir doit etre reconfigure ou retire.",
+      "accessibilite": "Les outils frequents doivent etre faciles d'acces; les distractions frequentes doivent devenir plus couteuses d'acces.",
+      "rituels_reset": "Un reset quotidien ou hebdomadaire de l'espace physique et numerique protege la clarte mentale."
+    },
+    "reduction_de_friction": {
+      "next_action": "Plus la prochaine action est concrete, plus elle est executable. L'abstrait nourrit la procrastination.",
+      "time_to_start": "Mesurer le temps de demarrage d'une tache aide a comprendre les vraies resistances.",
+      "templates": "Checklists, modeles et conventions reduisent la charge de redecider ce qui revient souvent.",
+      "batching": "Regrouper les taches similaires limite le cout de transition.",
+      "seuil_de_simplification": "Si le systeme demande plus d'entretien qu'il ne rend de clarte, il faut le simplifier."
+    },
     "revue_hebdomadaire": {
       "étapes": [
         "Vider toutes les captures (inbox physique, numérique, carnet)",
@@ -68,6 +112,21 @@
         "Définir les 3 priorités de la semaine à venir"
       ],
       "durée_idéale": "45-90 minutes. Idéalement le vendredi après-midi ou dimanche soir. La revue hebdomadaire est l'investissement le plus rentable en organisation."
+    },
+    "anti_patterns": {
+      "collection_outils": "Multiplier les outils cree plus de synchronisation que de clarte.",
+      "liste_unique_infinie": "Une seule liste plate devient vite un melange d'intentions, de projets et de dettes mentales.",
+      "capture_sans_traitement": "Capturer sans clarifier transforme l'inbox en cimetière elegant.",
+      "systeme_trop_complexe": "Un systeme brillant sur le papier mais fragile sous stress n'est pas un bon systeme.",
+      "planifier_pour_eviter": "Organiser peut devenir une forme subtile de procrastination si elle remplace l'execution.",
+      "absence_de_reprise": "Quitter une tache sans note de relance augmente fortement le cout du retour."
+    },
+    "heuristiques_de_sante_du_systeme": {
+      "inbox": "Si une inbox reste pleine plusieurs jours, le probleme vient souvent du traitement, pas de la capture.",
+      "agenda": "Si l'agenda est plein a 100%, il ne pilote plus, il subit.",
+      "projets": "Si trop de projets sont actifs simultanement, la clarte se dilue avant meme que le temps manque.",
+      "outil": "Quand on change d'outil pour resoudre un probleme de discipline ou de clarte, il faut verifier si le vrai probleme est ailleurs.",
+      "revue": "Quand la revue saute, la qualite du systeme se degrade souvent en quelques jours."
     }
   }
 }

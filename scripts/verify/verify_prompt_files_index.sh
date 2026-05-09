@@ -15,6 +15,7 @@ required=(
   .github/prompts/run-proof-pack.prompt.md
   .github/prompts/release-readiness.prompt.md
   .github/prompts/contradiction-resolution.prompt.md
+  .github/prompts/temporal-modules.prompt.md
   .github/prompts/simple-fast-session.prompt.md
   .github/prompts/heavy-runtime-session.prompt.md
   .github/prompts/ollama-dev-session.prompt.md
@@ -54,6 +55,7 @@ done
 # At 5+ entries or any multi-agent collision, add a human-visible mapping table to .github/prompts/OWNERSHIP.md.
 declare -A AGENT_DRIVEN_PROMPTS=(
   [".github/prompts/release-readiness.prompt.md"]="release-proof"
+  [".github/prompts/temporal-modules.prompt.md"]="temporal-modules"
   [".github/prompts/start-hybrid-memory-dispatch.prompt.md"]="memory-root-commander"
 )
 for f in "${!AGENT_DRIVEN_PROMPTS[@]}"; do

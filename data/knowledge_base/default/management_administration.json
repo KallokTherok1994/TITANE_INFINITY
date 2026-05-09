@@ -1,9 +1,19 @@
 {
-  "version": "v30.1.0",
+  "version": "v30.1.1",
   "category": "management_administration",
-  "description": "Management administratif — direction d'une organisation (publique ou privée), délégation, contrôle de gestion, tableaux de bord, pilotage par objectifs (MBO/OKR), conduite du changement, management d'équipe, gestion des conflits internes, réunion efficace, reporting",
+  "description": "Management administratif — direction d'une organisation (publique ou privee), delegation, controle de gestion, tableaux de bord, pilotage par objectifs (MBO/OKR), conduite du changement, management d'equipe, gestion des conflits internes, reunion efficace, reporting, gouvernance, systeme de decision, capacite organisationnelle et rythmes de pilotage",
   "management_administration": {
     "introduction": "Le management administratif est l'art d'organiser, diriger et contrôler une structure pour atteindre ses objectifs. Qu'il s'agisse d'une collectivité, d'une direction d'office notarial, d'un service qualité ou d'une PME, les principes fondamentaux convergent. TITANE maîtrise ce domaine en profondeur.",
+    "systeme_operatoire_organisationnel": {
+      "principe": "Une organisation performante n'est pas seulement une somme de personnes competentes; c'est un systeme de priorites, de decisions, de roles, de rythmes et de boucles de controle coherent.",
+      "piliers": {
+        "orientation": "Les objectifs doivent etre lisibles a tous les niveaux: mission, priorites annuelles, objectifs d'equipe, execution hebdomadaire.",
+        "clarte_structurelle": "Chacun doit comprendre son perimetre, ses interfaces, son niveau d'autonomie et ses zones de responsabilite.",
+        "cadence": "Les rituels de pilotage reduisent l'improvisation permanente: points d'equipe, arbitrages, revues de performance, retrospectives.",
+        "feedback_systemique": "Les tableaux de bord, incidents, retours terrain et signaux faibles doivent nourrir les decisions.",
+        "soutenabilite": "Une organisation mal calibree peut paraitre productive a court terme tout en degradant sa qualite, son engagement et sa capacite future."
+      }
+    },
     "fonctions_management": {
       "POCCC_Fayol": {
         "Planifier": "Définir les objectifs et les moyens pour les atteindre",
@@ -18,6 +28,13 @@
         "rôles_décisionnels": "Entrepreneur (innovation), régulateur des perturbations, répartiteur de ressources, négociateur"
       }
     },
+    "architecture_decisionnelle": {
+      "droits_de_decision": "Precisier qui recommande, qui decide, qui execute et qui doit etre consulte ou informe. Eviter les decisions flottantes.",
+      "subsidiarite": "Decider au niveau le plus proche de l'action quand les competences et les risques le permettent.",
+      "journal_decisions": "Tracer les decisions significatives: contexte, options, arbitrage, date, responsable, impacts attendus.",
+      "escalade": "Definir les seuils qui exigent escalade: budget, risque, delai, conflit inter-equipes, sujet juridique ou reputatif.",
+      "latence_decisionnelle": "Trop d'attente decisionnelle ralentit toute l'organisation. Mieux vaut une decision reversible rapide qu'une paralysie elegante."
+    },
     "délégation": {
       "définition": "Confier une mission à un collaborateur avec les moyens et l'autorité nécessaires. Le délégant conserve la responsabilité globale.",
       "conditions_réussite": [
@@ -27,7 +44,13 @@
         "Contrôler sans sur-contrôler (point d'étape, non micro-management)",
         "Donner du feedback (positif et correctif)"
       ],
-      "délégation_de_signature": "Formelle, écrite, publiée. Délimitée dans son objet et sa durée. En droit public: arrêté de délégation de signature ≠ délégation de pouvoir (en droit public, la délégation de pouvoir dessaisit le délégant)."
+      "délégation_de_signature": "Formelle, écrite, publiée. Délimitée dans son objet et sa durée. En droit public: arrêté de délégation de signature ≠ délégation de pouvoir (en droit public, la délégation de pouvoir dessaisit le délégant).",
+      "niveaux_autonomie": {
+        "niveau_1": "Faire exactement selon instruction. Utile pour apprentissage ou contexte tres reglemente.",
+        "niveau_2": "Proposer avant execution. Le collaborateur formule une option, le manager valide.",
+        "niveau_3": "Decider dans un cadre defini puis informer. Niveau cible sur sujets recurrentes.",
+        "niveau_4": "Piloter integralement un domaine avec reporting periodique sur resultats et risques."
+      }
     },
     "pilotage_par_objectifs": {
       "MBO": "Management By Objectives (Drucker 1954) — fixer des objectifs avec le collaborateur, mesurer les résultats, évaluer l'écart.",
@@ -40,14 +63,29 @@
       },
       "entretien_annuel": "Outil de pilotage: bilan N-1 / objectifs N+1 / besoins formation / ambitions de développement. Ne doit pas être la seule occasion de feedback dans l'année."
     },
+    "gestion_capacite_et_charge": {
+      "capacite_reelle": "La capacite d'une equipe doit integrer production, coordination, administration, support, formation, absences et imprévus.",
+      "priorites_vs_charge": "Si les priorites excedent durablement la capacite, le role du management est d'arbitrer, pas de demander plus d'efforts indefinis.",
+      "wip": "Limiter les sujets simultanes augmente la qualite et le debit. L'empilement des urgences cree des retards caches.",
+      "goulots": "Identifier les postes, validations ou ressources qui ralentissent systematiquement les flux.",
+      "reserve_manageriale": "Conserver une marge de manoeuvre pour les crises reelles evite de desequilibrer tout le systeme au premier alea."
+    },
     "contrôle_de_gestion": {
       "définition": "Processus par lequel les dirigeants influencent les membres de l'organisation pour mettre en œuvre les stratégies de manière efficace et efficiente.",
       "tableau_de_bord": {
         "définition": "Outil de pilotage synthétique rassemblant les indicateurs clés",
         "BSC_Balanced_Scorecard": "4 axes de Kaplan & Norton: Financier (résultats) + Clients (satisfaction) + Processus internes (qualité/délais) + Apprentissage (RH/innovation)",
-        "construction": "1. Définir les axes stratégiques → 2. Choisir les indicateurs pertinents → 3. Fixer les cibles → 4. Mettre en place la collecte → 5. Analyser + décider"
+        "construction": "1. Définir les axes stratégiques → 2. Choisir les indicateurs pertinents → 3. Fixer les cibles → 4. Mettre en place la collecte → 5. Analyser + décider",
+        "qualite_indicateur": "Un bon indicateur est actionnable, compris, peu manipulable, lie a une decision possible et lu a la bonne cadence."
       },
       "budget": "Plan d'action chiffré. Budget par objectifs > budget par reconduction. Analyse des écarts: écart sur volume + écart sur prix + écart sur efficience."
+    },
+    "gouvernance_et_rituels": {
+      "daily_ou_point_court": "Synchronisation operationnelle breve: priorites, blocages, interfaces. Pas un reporting theatre.",
+      "revue_hebdomadaire": "Arbitrer charge, echeances, incidents, dependances et decrochages avant qu'ils ne deviennent critiques.",
+      "revue_mensuelle": "Analyser les tendances, la performance, les ecarts budgetaires, les irritants process et les plans d'action.",
+      "revue_trimestrielle": "Reevaluer objectifs, allocation des ressources, organisation, structure et cap strategique.",
+      "retro": "Transformer les incidents et frictions en apprentissages concrets, pas en accumulation de plaintes."
     },
     "conduite_du_changement": {
       "modèle_Kotter_8_étapes": [
@@ -66,6 +104,13 @@
       },
       "courbe_de_deuil": "Kübler-Ross adaptée au changement organisationnel: déni → colère → marchandage → dépression → acceptation → intégration. Chacun avance à son rythme."
     },
+    "conception_des_processus": {
+      "standardisation_intelligente": "Standardiser les activites repetitives et a risque, laisser de la souplesse sur les cas complexes ou exceptionnels.",
+      "single_source_of_truth": "Une information critique ne doit pas vivre dans des versions concurrentes non synchronisees.",
+      "friction": "Chaque validation, formulaire, transfert ou reunion doit justifier sa valeur. La bureaucratie nait des couches jamais supprimees.",
+      "exceptions": "Un bon processus explicite comment traiter les cas hors norme au lieu de les laisser deriver hors systeme.",
+      "amelioration_continue": "Les processus doivent etre revises a partir de la realite terrain, pas seulement dessines depuis le haut."
+    },
     "gestion_conflits": {
       "thomas_kilmann": {
         "évitement": "Lose/Lose — ni assertivité ni coopération. Utile pour les conflits sans enjeu réel.",
@@ -81,6 +126,14 @@
       "pendant": "Animateur ≠ décideur (idéalement). Cadrage en début: objectifs + règles + timing. Gestion des dérapages (hors sujet, monopolisation). Prise de décisions explicites.",
       "après": "Relevé de décisions transmis sous 24h: décisions prises + actions (qui fait quoi pour quand). PAS de CR verbatim si non nécessaire.",
       "réunion_à_distance": "Caméras allumées pour les réunions décisionnelles. Sondages/chat pour participation. Miro/Mural pour ateliers. Règle du silence = consentement à éviter."
+    },
+    "anti_patterns_manageriaux": {
+      "micro_management": "Controler chaque detail retire l'autonomie, ralentit le debit et bloque l'apprentissage des equipes.",
+      "reporting_pour_reporting": "Multiplier les tableaux sans decisions associees consomme du temps sans augmenter le pilotage reel.",
+      "priorites_instables": "Changer trop souvent de direction epuise les equipes et empeche toute execution profonde.",
+      "heroisme_operationnel": "Recompenser systematiquement ceux qui sauvent les crises plutot que ceux qui les evitent degrade le systeme.",
+      "surcharge_normalisee": "Quand la surcharge devient la norme, les erreurs, la demotivation et la fuite des talents suivent.",
+      "ambiguite_des_roles": "Des zones grises non explicitees produisent frictions, doublons, oublis et conflits politiques."
     }
   }
 }

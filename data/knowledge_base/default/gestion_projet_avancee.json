@@ -1,9 +1,19 @@
 {
-  "version": "v30.1.0",
+  "version": "v30.1.1",
   "category": "gestion_projet_avancee",
-  "description": "Gestion de projet avancée — méthodes (Waterfall/Prince2/Agile Scrum/SAFe/PMI-PMBOK), triangle QCD, charte projet, WBS, GANTT, gestion des risques projet, gestion des parties prenantes, suivi et contrôle (EVM), clôture projet, PMO (Project Management Office), gestion de portefeuille projets",
+  "description": "Gestion de projet avancee — methodes (Waterfall/Prince2/Agile Scrum/SAFe/PMI-PMBOK), triangle QCD, charte projet, WBS, GANTT, gestion des risques projet, gestion des parties prenantes, suivi et controle (EVM), cloture projet, PMO (Project Management Office), gouvernance, gestion de portefeuille, capacite, dependances, estimation, roadmap et pilotage temporel",
   "gestion_projet_avancee": {
     "introduction": "La gestion de projet est une discipline structurée qui permet de mener à bien des réalisations uniques dans des contraintes de temps, de coût et de qualité. Elle est transversale à tous les secteurs: informatique, BTP, industrie, administration, conseil, notariat. TITANE en couvre les aspects fondamentaux et avancés.",
+    "systeme_de_pilotage": {
+      "principe": "Un projet ne se pilote pas uniquement par liste de taches mais par arbitrages explicites entre valeur, capacite, risques, dependances et delais.",
+      "axes": {
+        "clarte_objectif": "Tout projet doit avoir un resultat cible observable, un perimetre explicite et une definition de succes partagee.",
+        "cadence": "Le pilotage doit suivre un rythme fixe: points courts, revues d'avancement, arbitrages, replanification.",
+        "visibilite": "Les engagements, blocages, risques et changements doivent etre visibles sans interpretation heroique.",
+        "responsabilite": "Chaque decision critique, livrable et risque majeur doit avoir un proprietaire clairement identifie.",
+        "adaptation": "Un bon plan n'est pas rigide: il absorbe l'incertitude sans perdre le cap."
+      }
+    },
     "triangle_QCD": {
       "Qualité": "Spécifications, périmètre, conformité aux exigences",
       "Coût": "Budget alloué et consommé",
@@ -35,6 +45,27 @@
       "PERT": "Program Evaluation Review Technique — réseau de tâches avec estimations optimiste/probable/pessimiste. Durée espérée = (O + 4M + P) / 6.",
       "matrice_RACI": "Responsible/Accountable/Consulted/Informed — pour clarifier les responsabilités sur chaque livrable/décision."
     },
+    "structuration_projet": {
+      "roadmap": "Vue macro du parcours: themes, jalons, dependances, fenetres de decision. Une roadmap n'est pas un backlog detaille.",
+      "lots_de_travail": "Decouper en lots coherents, assez petits pour etre suivis, assez gros pour avoir du sens fonctionnel ou metier.",
+      "milestones": "Les jalons marquent des validations, decisions ou livraisons. Un jalon doit etre observable et non cosmetique.",
+      "definition_of_done": "Chaque lot ou increment doit avoir ses criteres d'acceptation, sa preuve de completion et son mode de validation.",
+      "baseline": "Conserver une reference du plan approuve pour mesurer les ecarts plutot que piloter a l'impression."
+    },
+    "gestion_capacite_et_flux": {
+      "capacite_equipe": "Planifier selon la capacite reelle disponible, pas la capacite theorique. Integrer absences, maintenance, support, coordination.",
+      "wip": "Limiter le nombre de sujets simultanes pour accelerer le flux. Trop de travail en cours ralentit tout le monde.",
+      "goulots": "Identifier la ressource ou etape qui borne le debit du projet et la proteger.",
+      "buffer_projet": "Les buffers se gerent au niveau projet et non en multipliant des marges cachees sur chaque tache.",
+      "debit": "Mesurer le nombre d'elements termines par unite de temps est souvent plus utile que mesurer l'activite brute."
+    },
+    "dependances_et_coordination": {
+      "dependances": "Lister les dependances critiques: equipes externes, validations, fournitures, decisions, environnement, budget.",
+      "chemin_critique": "Surveiller la chaine de taches dont tout retard retarde la fin du projet.",
+      "handovers": "Chaque passage de relais ajoute un risque de latence et de perte d'information. Les reduire ou les standardiser.",
+      "interfaces": "Les projets echouent souvent aux frontieres entre equipes plus qu'au coeur de l'execution.",
+      "escalade": "Definir a l'avance quand un blocage doit etre escalade, a qui et avec quel delai maximal."
+    },
     "gestion_risques_projet": {
       "processus": "Identification → Qualification (probabilité × impact) → Traitement → Surveillance",
       "strategies_traitement": {
@@ -44,6 +75,13 @@
         "acceptation": "Prévoir une provision (réserve de contingence) pour gérer si le risque survient"
       },
       "registre_des_risques": "Tableau maintenu à jour: ID + Description + Probabilité + Impact + Score + Responsable + Mesure + Statut"
+    },
+    "estimation_et_incertitude": {
+      "fourchettes": "Preferer les estimations en plage de confiance plutot qu'en date unique prematuree.",
+      "progressive_elaboration": "Plus on apprend, plus l'estimation se resserre. Le plan detaille doit arriver quand l'information existe.",
+      "biais_classiques": "Optimism bias, planning fallacy, pression politique et oubli du temps cache faussent les promesses.",
+      "reference_class_forecasting": "Comparer avec des projets similaires reels pour corriger l'optimisme interne.",
+      "scenario_planning": "Maintenir au moins un scenario nominal, un prudent et un degrade pour les decisions sensibles."
     },
     "earned_value_management": {
       "définition": "EVM — méthode de suivi intégrée coût/délai par rapport au plan",
@@ -56,6 +94,35 @@
         "SPI": "Schedule Performance Index = EV/PV (<1 retard)",
         "CPI": "Cost Performance Index = EV/AC (<1 dépassement)"
       }
+    },
+    "gouvernance_et_decision": {
+      "comite_projet": "Cadence de decision pour arbitrer perimetre, budget, risques, priorites et escalades.",
+      "journal_decisions": "Tracer les decisions structurantes: date, contexte, options, arbitrage, consequence attendue, responsable.",
+      "change_control": "Toute demande de changement importante doit expliciter impact sur delai, cout, qualite et charge.",
+      "seuils_alerte": "Definir des seuils qui imposent une action: retard > x jours, budget > y%, risque rouge non traite, dependance critique bloquee.",
+      "verite_unique": "Les tableaux de bord, comptes rendus et plannings doivent converger vers une meme realite de projet."
+    },
+    "communication_et_reporting": {
+      "reporting_executif": "Court, axe sur decisions, risques, jalons, ecarts, capacite et demandes d'arbitrage.",
+      "reporting_operationnel": "Plus detaille: avancement reel, blocages, prochaines etapes, dependances, charge equipe.",
+      "signal_faible": "Remonter tot les doutes, frictions et micro-retards evite les crises tardives.",
+      "transparence": "Un reporting utile reduit l'incertitude; il ne cherche pas a produire une image rassurante artificielle.",
+      "rituel": "Une cadence de communication stable reduit les relances ad hoc et le bruit."
+    },
+    "pilotage_temporel": {
+      "horizons": "Distinguer vision, roadmap trimestrielle, plan mensuel, sprint ou vague d'execution, puis semaine operationnelle.",
+      "cadences": "Tous les horizons n'ont pas le meme rythme: strategie lente, execution rapide, arbitrage intermediaire.",
+      "replanification": "Quand le contexte change, on replanifie le reste; on ne nie pas l'ecart.",
+      "stabilite": "Proteger des periodes sans changement de priorite augmente la vitesse d'execution.",
+      "tempo": "Le bon rythme est soutenable. Une acceleration permanente degrade qualite, moral et prevision."
+    },
+    "anti_patterns": {
+      "planning_cosmetique": "Un planning joli mais non maintenu devient un decor sans valeur operative.",
+      "multi_projets_non_arbitres": "Lancer trop de projets sans priorite centrale sature la capacite et bloque les livraisons.",
+      "deadline_descendante": "Imposer une date sans reevaluer perimetre ou moyens produit du faux pilotage.",
+      "statuts_verts_artificiels": "Un projet peut paraitre vert jusqu'au jour ou toutes les verites retardees arrivent ensemble.",
+      "reunions_sans_decision": "Coordonner sans arbitrer epuise les equipes et ne de-risque rien.",
+      "scope_creep": "L'ajout progressif de demandes non recadrees detruit delai et focus."
     },
     "PMO": {
       "définition": "Project Management Office — entité organisationnelle centralisant les standards, méthodes, outils de gestion de projets",

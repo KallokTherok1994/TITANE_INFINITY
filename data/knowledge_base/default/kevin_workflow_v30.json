@@ -1,7 +1,7 @@
 {
-  "version": "v30.1.0",
+  "version": "v30.1.2",
   "category": "kevin_workflow_v30",
-  "description": "Workflow canonique de Kevin avec TITANE∞ pour le développement, la mémoire, l’apprentissage et la vérification.",
+  "description": "Workflow canonique de Kevin avec TITANE∞ pour le developpement, la memoire, l apprentissage, la verification, la planification, la communication et l organisation du temps.",
   "workflow": {
     "default_sequence": ["diagnose", "plan", "apply", "verify", "report"],
     "engineering_rules": [
@@ -34,6 +34,65 @@
       "rollback simple",
       "next steps actionnables"
     ],
+    "planning_operatoire": {
+      "principe": "Tout travail important doit pouvoir etre relie a une priorite, un bloc de temps, un niveau d energie et une preuve de fin.",
+      "horizons": {
+        "jour": "Top 1 a 3 resultats du jour, premier bloc critique, points de coordination indispensables.",
+        "semaine": "Priorites terminees plutot que liste de choses commencees. Capacite reelle avant ambition.",
+        "mois": "Themes, chantiers actifs, decisions a obtenir, dettes a resorber.",
+        "trimestre": "Objectifs structurants, arbitrages de charge, apprentissages a consolider."
+      },
+      "regles": [
+        "planifier le travail profond avant le travail reactif",
+        "laisser une marge explicite pour l imprevu",
+        "reduire les engagements avant d augmenter les heures",
+        "sortir chaque tache importante avec une note de reprise",
+        "faire converger agenda, priorites et preuves de fin"
+      ]
+    },
+    "agenda_systeme": {
+      "blocs": {
+        "deep_work": "Blocs proteges pour conception, analyse, ecriture, correction complexe.",
+        "coordination": "Fenêtres reservees aux messages, revues, reunions et validations externes.",
+        "administratif": "Lots courts pour maintenance, tri, suivi, petites actions et fermetures de boucle.",
+        "buffer": "Temps tampon pour retard, incidents, transitions et reprise."
+      },
+      "discipline": {
+        "premier_bloc": "Le premier bloc utile de la journee ne doit pas etre sacrifie aux interruptions evitables.",
+        "cadence_messages": "Les messages ne pilotent pas le jour; ils ont des fenetres dediees.",
+        "limite_reunions": "Une reunion doit justifier le cout de concentration qu elle impose.",
+        "reset_fin_journee": "L agenda du lendemain doit etre visible avant la fin de la journee."
+      }
+    },
+    "communication_cadence": {
+      "async_d_abord": "Informer, documenter et preparer par ecrit quand le synchrone n est pas necessaire.",
+      "sync_pour_arbitrer": "Utiliser le synchrone pour lever une ambiguite, arbitrer vite, traiter un point sensible ou debloquer une dependance.",
+      "boucle_fermee": "Toute demande importante doit produire une reponse, une echeance ou un refus clair.",
+      "niveau_de_detail": "Adapter le message au destinataire: executif, operationnel ou detail d execution."
+    },
+    "signaux_de_derapage": [
+      "agenda plein mais priorites non terminees",
+      "trop de sujets ouverts en parallele",
+      "reunions de compensation pour manque de clarte",
+      "messages traites en continu au lieu d etre cadences",
+      "travail profond reporte plusieurs jours de suite"
+    ],
+    "evidence_web_2026": {
+      "workflow_rules": [
+        "si interruption, laisser une note de reprise avant le switch",
+        "si communication non urgente, preferer l async documente",
+        "si journee surchargee, retirer des engagements avant d ajouter des heures",
+        "si fatigue cognitive montee, proteger le sommeil avant d optimiser davantage l agenda",
+        "si reunion sans arbitrage attendu, contester le format ou la necessity"
+      ],
+      "research_basis": [
+        "https://www.microsoft.com/en-us/research/publication/a-diary-study-of-task-switching-and-interruptions/",
+        "https://www.microsoft.com/en-us/research/publication/the-cost-of-email-use-in-the-workplace-lower-productivity-and-higher-stress/",
+        "https://ideas.repec.org/a/inm/ororsc/v29y2018i3p380-397.html",
+        "https://www.nhlbi.nih.gov/health/sleep-deprivation/health-effects",
+        "https://experts.azregents.edu/en/publications/the-fatiguing-effects-of-camera-use-in-virtual-meetings-a-within-/"
+      ]
+    },
     "twin_expectations": [
       "Symbiose active dans l'onglet TITANE",
       "TWINS_CONTEXT injecté si état frais",

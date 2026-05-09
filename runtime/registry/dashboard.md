@@ -1,6 +1,6 @@
 # TITANE∞ — Registry Dashboard
 
-- Généré: 2026-05-02T04:21:17.773Z
+- Généré: 2026-05-09T14:26:13.395Z
 - Cycle actif: 01KFPVBPNG1KB0ZHD8KT6K5D7Y
 - Objectif: Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.
 - Action prioritaire (unique): Run pnpm verify:registry

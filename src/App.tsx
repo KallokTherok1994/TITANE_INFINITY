@@ -74,6 +74,7 @@ import { useWindowControls } from './hooks/useWindowControls'; // ✨ v30.0.0 - 
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 import { SingularityConnections } from './services/singularityConnections';
+import { GlobalTemporalContextPublisher } from '@/components/runtime/GlobalTemporalContextPublisher';
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - FALLBACK GOUVERNÉ
@@ -375,6 +376,7 @@ export const AppRouter: React.FC = () => {
         aria-hidden="true"
         style={{ display: 'none' }}
       />
+      <GlobalTemporalContextPublisher />
 
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>

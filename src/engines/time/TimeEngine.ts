@@ -315,6 +315,7 @@ export class TimeEngine {
       currentDayOfWeek,
       isWorkDay,
       isWorkHours,
+      workHours,
       lastUpdate: Date.now(),
     };
 

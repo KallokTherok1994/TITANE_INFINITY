@@ -4,6 +4,12 @@
 - Vérité runtime affichée: wording gouverné TOTAL_DEV (plus de GOD DEV/FULL DEV), mode unlock explicite GOVERNED_DEV_UNLOCKED, et modèle DEV aligné qwen3.5:9b.
 - Surface test desktop qualifiée: e2e/desktop/total-dev.wdio.test.js couvre lock/wrong token, valid unlock via token env, Git read-only, console allowlist (safe+unsafe), file inspector (package.json + blocage .env), badge modèle chat, et revoke session.
 
+# [2026-05-09] Temporal memory prompt-seal truth (chat single-door)
+
+- Surface canonique chat context: src/services/chat/chatMemorySingleDoor.ts sérialise une seule occurrence par marqueur `temporal_memory_*` dans `CONTEXT_ENVELOPE_V44`, et garde l enveloppe stable quand `titane_time_runtime_context_v1` est absent/malformé/stale.
+- Surface manager de sécurité prompt: src/services/chat/temporalMemoryManager.ts publie un résumé temporel borné avec warnings gouvernés (`warningCount`, `warnings`) sans exposer de payload brut.
+- Preuves unitaires: src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts + src/services/chat/__tests__/temporalMemoryManager.test.ts.
+
 # [2026-05-09] Memory isolation truth — STM cleanup + test namespace hardening
 
 - Surface mémoire frontend: `src/services/chatMemoryCompactor.ts` résout désormais un namespace gouverné (`prod|dev|test`) et écrit les clés `localStorage` isolées en test (`titane_test_chat_mode_*`, `titane_test_chat_conversation_*`) pour empêcher la contamination des sessions TITANE.
@@ -1099,3 +1105,38 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 
 - Surface context envelope: `src/services/chat/chatMemorySingleDoor.ts` lit désormais la mémoire de mode via `resolveChatMemoryStorageKey(mode)` pour maintenir l'alignement namespace en runtime et en test.
 - Preuve unitaire associée: `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts` (lecture d'un payload mode namespacé dans `memorySingleDoor.recentMessages`).
+
+# [2026-05-09] TIME runtime context global publication truth
+
+- Surface canonique de publication TIME: `src/components/runtime/GlobalTemporalContextPublisher.tsx`, montée au niveau app shell via `src/App.tsx`.
+- Vérité runtime imposée: la clé `titane_time_runtime_context_v1` est publiée globalement sans dépendre du mount de la route `/time`.
+- Contrat Single Door aligné: `src/services/chat/chatMemorySingleDoor.ts` accepte désormais explicitement `runtimeSource: 'global-publisher'` tout en conservant la garde de fraîcheur 15 minutes.
+- Preuves unitaires associées:
+  - `src/components/runtime/__tests__/GlobalTemporalContextPublisher.test.tsx`
+  - `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts`
+
+## [2026-05-09] TIME runtime context R2 certification
+
+- Surface certifiée: route chat directe `/titane` sans visite de `/time`
+- Preuve UI: Playwright vérifie `titane_time_runtime_context_v1` puis `titane_chat_context_envelope_v1` sur route directe
+- Preuve formatter: le bloc TIME émet `time_now`, `time_zone`, `time_segment`, `time_work_hours`, `time_runtime_source=global-publisher`
+- Preuve backend: `conversation_generate` expose un summary TIME auditable dans `context_binding`
+- Rollback: restaurer `tests/e2e/chat.spec.ts`, `src/services/chat/__tests__/chatMemorySingleDoor.timeContext.test.ts`, `src-tauri/src/conversation_engine/commands.rs`
+
+## [2026-05-09] TIME runtime context R3 no-mock runtime certification
+
+- Surface certifiée: route chat directe `/titane` sans visite de `/time` et sans `__TITANE_E2E_CHAT_MOCK__`.
+- Preuve runtime no-mock: Playwright (`tests/e2e/chat.spec.ts`) valide l émission TIME, l enveloppe chat persistée, un tour assistant non-mock et un appel runtime local observable (`POST /api/generate`).
+- Portée provider: en local, les clés cloud sont absentes; la certification R3 repose sur le runtime local no-mock (Ollama reachable).
+- Preuve backend binding: couverte par le test Rust ciblé `extract_context_binding_includes_time_summary_when_present`.
+- Rollback: restaurer `tests/e2e/chat.spec.ts`, `UI_SURFACE_MAP.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `ARCHITECTURE.md`, `registry/ui-events.jsonl`, `scripts/autoheal/autoheal_rules.jsonl`.
+
+## [2026-05-09] TIME runtime context R4 native Tauri certification
+
+- Surface certifiée: lane desktop native Tauri (WDIO/Wry) sur route directe `/titane`, sans visite de `/time`.
+- Preuve no-mock: le test `should preserve TIME context through native Tauri conversation_generate without /time` confirme `__TITANE_E2E_CHAT_MOCK__` false/absent.
+- Preuve TIME runtime: `titane_time_runtime_context_v1` est présent et frais avec `runtimeSource=global-publisher`.
+- Preuve envelope chat: `titane_chat_context_envelope_v1` contient `timeContext` avec `runtimeSource=global-publisher` et `routeContext.route=/titane`.
+- Preuve runtime native: état IPC `READY`, état send trace `RESPONDED`, provider local `Ollama (OMEGA+Singularity)`, réponse assistant retournée sur la lane native.
+- Limite observabilité backend: `contextBinding` non exposé en live via le trace hook WDIO sur ce run; la preuve backend TIME summary reste qualifiée par le test Rust ciblé.
+- Rollback: restaurer `e2e/desktop/online-chat-proof-ui.wdio.test.js`, `UI_SURFACE_MAP.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `ARCHITECTURE.md`, `registry/ui-events.jsonl`, `scripts/autoheal/autoheal_rules.jsonl`.

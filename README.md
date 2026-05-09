@@ -608,6 +608,7 @@ pnpm run copilot-xs:precommit  # Validation + tests (pre-commit)
 - `anti-regression-guardian` — Couverture anti-dérive, mapping, preuves
 - `e2e-authority` — Discipline E2E et artefacts déterministes
 - `ollama-dev-chat-boundary` — Garde la séparation gouvernée entre Ollama Dev et Ollama Chat
+- `temporal-modules` — Gouvernance TIME, agenda, énergie, priorité et ChatScheduler
 
 Commandes d audit agents :
 

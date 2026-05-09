@@ -319,10 +319,19 @@ export class ChatScheduler {
       // Mise à jour via AgendaEngine (qui gère I/O via storage callbacks)
       const event = await agendaEngine.updateEvent(command.fromEventId, updates);
 
+      if (!event) {
+        return {
+          success: false,
+          command,
+          error: 'Événement non trouvé',
+          message: 'Événement non trouvé',
+        };
+      }
+
       return {
         success: true,
         command,
-        event: event || undefined,
+        event,
         message: `✅ Événement mis à jour`,
       };
     } catch (error) {
@@ -357,10 +366,19 @@ export class ChatScheduler {
         command.end
       );
 
+      if (!event) {
+        return {
+          success: false,
+          command,
+          error: 'Événement non trouvé',
+          message: 'Événement non trouvé',
+        };
+      }
+
       return {
         success: true,
         command,
-        event: event || undefined,
+        event,
         message: `✅ Événement déplacé`,
       };
     } catch (error) {
@@ -393,7 +411,16 @@ export class ChatScheduler {
 
     try {
       // Suppression via AgendaEngine (qui gère I/O via storage callbacks)
-      await agendaEngine.deleteEvent(command.fromEventId);
+      const deleted = await agendaEngine.deleteEvent(command.fromEventId);
+
+      if (!deleted) {
+        return {
+          success: false,
+          command,
+          error: 'Événement non trouvé',
+          message: 'Événement non trouvé',
+        };
+      }
 
       return {
         success: true,

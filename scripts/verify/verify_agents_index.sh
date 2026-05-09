@@ -30,6 +30,7 @@ required=(
   .github/agents/memory-root-commander.agent.md
   .github/agents/memory-schema-analyst.agent.md
   .github/agents/ollama-dev-chat-boundary.agent.md
+  .github/agents/temporal-modules.agent.md
   .github/agents/release-proof.agent.md
   .github/agents/review-subagent.agent.md
   .github/agents/tauri-safety.agent.md
