@@ -1000,6 +1000,13 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Seule la trace sanitisée (sanitizeTraceForUi) est exposée — aucun CoT brut
 - Tests: `src/features/chat/__tests__/ThinkingPanel.cognitiveTrace.test.tsx`, `src/services/ai/__tests__/cognitiveRuntimeTrace.test.ts`, `src/__tests__/hooks/useConversationEngine.test.ts`, `e2e/agents/cognitive-trace-panel.e2e.ts`, `e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js`
 
+# [2026-05-09] Chat runtime contract overlays — tool router, reasoning contract, reflection planner
+
+- Surfaces pures associées à la conversation: `src/features/chat/chatToolCapabilities.ts`, `src/features/chat/chatToolRouter.ts`, `src/services/ai/skillRouter.ts`, `src/services/ai/reasoningContract.ts`, `src/services/ai/reflectionPlanner.ts`, `src/services/ai/memoryWritePolicy.ts`
+- Vérité UI des outils de chat: le registre `src/features/chat/chatToolsRegistry.ts` reste template-only et les routes runtime retombent honnêtement sur un prompt gouverné quand aucune action locale réelle n existe
+- Le panneau Expert reste la surface visible de vérité cognitive, mais n expose que la trace sanitisée et des attributs runtime bornés; aucun champ de raisonnement brut n est projeté dans le DOM
+- Preuves ciblées: `src/services/ai/__tests__/chatToolCapabilities.test.ts`, `src/services/ai/__tests__/skillRouter.test.ts`, `src/services/ai/__tests__/reasoningContract.test.ts`, `src/services/ai/__tests__/reflectionPlanner.test.ts`, `src/services/ai/__tests__/memoryWritePolicy.test.ts`, `src/__tests__/features/chat/ThinkingPanel.test.tsx`
+
 # [2026-05-08] CognitiveRuntimeTrace v2 — WebTruth + QualityAction Policy
 
 - Nouveaux sélecteurs stables: `data-testid="reasoning-cognitive-web-policy"`, `data-testid="reasoning-cognitive-quality-action"` dans `src/features/chat/ThinkingPanel.tsx` (section Expert)

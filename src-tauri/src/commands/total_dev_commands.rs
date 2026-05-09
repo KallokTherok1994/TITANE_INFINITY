@@ -695,6 +695,15 @@ mod tests {
     async fn total_dev_read_file_reports_missing_workspace_file() {
         unlock_for_test();
 
+        // Keep workspace deterministic across host environments to avoid
+        // resolving to user document directories during tests.
+        let repo_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .expect("CARGO_MANIFEST_DIR must have a parent")
+            .to_string_lossy()
+            .into_owned();
+        std::env::set_var("TITANE_WORKSPACE_DIR", &repo_root);
+
         let result =
             total_dev_read_file("src/definitely-missing-total-dev-read-file.ts".to_string())
                 .await
@@ -721,6 +730,14 @@ mod tests {
     #[tokio::test]
     async fn total_dev_read_file_rejects_sensitive_extension() {
         unlock_for_test();
+
+        let repo_root = std::env::var("CARGO_MANIFEST_DIR")
+            .ok()
+            .and_then(|m| PathBuf::from(&m).parent().map(|p| p.to_path_buf()))
+            .expect("CARGO_MANIFEST_DIR must have a parent")
+            .to_string_lossy()
+            .into_owned();
+        std::env::set_var("TITANE_WORKSPACE_DIR", &repo_root);
 
         let path = unique_workspace_test_file("env");
         fs::write(&path, "TOKEN=secret\n").expect("test fixture should be created");

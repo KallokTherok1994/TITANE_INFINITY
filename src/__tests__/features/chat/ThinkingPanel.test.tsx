@@ -38,6 +38,7 @@ vi.mock('@/lib/logger', () => ({
 
 // Import après les mocks
 import { ThinkingPanel } from '@/features/chat/ThinkingPanel';
+import { sanitizeTraceForUi } from '@/services/ai/cognitiveRuntimeTrace';
 
 const baseStep = {
   id: 'step-1',
@@ -207,5 +208,120 @@ describe('ThinkingPanel — responseQualityScore display', () => {
       expect(el.textContent).toContain('71%');
     }
     // If not rendered (compact mode), no assertion needed
+  });
+
+  it('vue expert expose une trace cognitive sanitisee sans champs de raisonnement brut', () => {
+    const traceWithForbiddenFields = sanitizeTraceForUi({
+      traceId: 'trace-test',
+      timestamp: Date.now(),
+      input: {
+        messageLength: 12,
+        requiresFreshness: false,
+        requiresWeb: false,
+        requiresMemory: false,
+        taskFamily: 'conversation',
+      },
+      canonical: {
+        attached: true,
+        mode: 'default',
+        canonicalMode: 'DIRECT',
+        profileId: 'BALANCED',
+        inferenceState: 'SAFE_TO_INFER',
+        truthStatus: 'STABLE_PARTIAL',
+        confidence: 0.9,
+        messageComplexity: 0.2,
+        signalCount: 1,
+      },
+      memory: {
+        injected: false,
+        reasonCode: 'no_context',
+        sources: [],
+        sourceCount: 0,
+        relevance: 'low',
+        risk: 'none',
+      },
+      web: {
+        needed: false,
+        attempted: false,
+        available: false,
+        sourceCount: 0,
+        limitations: [],
+        reasonCode: 'not_needed',
+      },
+      generation: {
+        providerRequested: 'ollama',
+        providerUsed: 'ollama',
+        modelRequested: 'gemma2:2b',
+        modelUsed: 'gemma2:2b',
+        fallbackUsed: false,
+      },
+      reflection: {
+        verifierEnabled: false,
+        factualClaimsDetected: false,
+        verified: true,
+        shouldRevise: false,
+        correctionsApplied: false,
+      },
+      quality: {
+        evaluated: true,
+        alignmentScore: 0.9,
+        completenessScore: 0.9,
+        depthMatchScore: 0.9,
+        overallScore: 0.9,
+        shouldEnhance: false,
+      },
+      metaCognition: {
+        evaluated: true,
+        coherenceScore: 0.95,
+        anomalyDetected: false,
+      },
+      policy: {
+        version: 'v2',
+        webTruth: {
+          evaluated: true,
+          need: 'not_needed',
+          status: 'not_needed',
+          shouldUseWeb: false,
+          shouldWarnUser: false,
+        },
+        qualityAction: {
+          evaluated: true,
+          action: 'none',
+          minimumVerdict: 'PASS',
+          reasonCode: 'quality_pass',
+          warnUser: false,
+        },
+      },
+      final: {
+        verdict: 'PASS',
+        limitations: [],
+        safeToRemember: true,
+        shouldAskClarification: false,
+      },
+      chainOfThought: 'secret reasoning',
+    } as unknown as Parameters<typeof sanitizeTraceForUi>[0]);
+
+    expect(
+      (traceWithForbiddenFields as Record<string, unknown>).chainOfThought
+    ).toBeUndefined();
+
+    const { container } = render(
+      <ThinkingPanel
+        isThinking={false}
+        steps={[{ ...baseStep, status: 'complete' }]}
+        state="done"
+        compact={false}
+        cognitiveTrace={traceWithForbiddenFields}
+      />
+    );
+
+    const panel = container.querySelector('[data-testid="reasoning-progress"]');
+    expect(panel).toBeTruthy();
+    expect(panel?.getAttribute('data-cognitive-verdict')).toBe('PASS');
+    expect(panel?.getAttribute('data-cognitive-web')).toBe('false');
+    expect(panel?.getAttribute('data-cognitive-memory')).toBe('false');
+    expect(panel?.getAttribute('data-cognitive-quality')).toBe('90%');
+    expect(container.textContent).not.toContain('chainOfThought');
+    expect(container.textContent).not.toContain('hiddenThoughts');
   });
 });

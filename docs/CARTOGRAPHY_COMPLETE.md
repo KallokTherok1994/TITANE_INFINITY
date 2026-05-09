@@ -1,3 +1,11 @@
+## 2026-05-09 — Chat runtime contract overlays
+
+> La cartographie chat ajoute une couche de contrats purs au-dessus de la surface conversationnelle. `chatToolCapabilities.ts` et `chatToolRouter.ts` décrivent les outils chat comme des capacités template-only, ce qui aligne la vérité runtime de l interface avec le registre de prompts sans introduire d action locale cachée.
+
+> `skillRouter.ts`, `reasoningContract.ts`, `reflectionPlanner.ts` et `memoryWritePolicy.ts` ajoutent des bornes honnêtes pour l injection de skills, la profondeur de raisonnement, la réflexion bornée et l écriture mémoire conservatrice. La cartographie visible côté UI reste la même, mais elle gagne une vérité contractuelle plus fine pour les surfaces d orchestration.
+
+> `ThinkingPanel` continue d exposer la trace cognitive sanitisée et les attributs `data-cognitive-*` visibles dans `reasoning-progress`; aucun champ de raisonnement brut n est projeté au DOM.
+
 ## 2026-05-09 — Knowledge memory metabolism overlay (Phase 3 minimal)
 
 > La cartographie `src/services/knowledge_runtime/` s étend maintenant au devenir de la connaissance après sélection. `MemoryCandidateLedger.ts` transforme un verdict `selected` stable en candidats mémoire gouvernés, mais refuse encore la consolidation directe des éléments `researchRequired` ou bloqués.

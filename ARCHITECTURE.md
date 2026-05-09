@@ -1,3 +1,11 @@
+## 2026-05-09 — Chat runtime contract overlays
+
+- Les nouveaux contrats purs `src/features/chat/chatToolCapabilities.ts` et `src/features/chat/chatToolRouter.ts` qualifient la surface des outils chat comme template-only tant qu aucune action locale réelle n existe. La route runtime reste honnête: pas d autorité cachée, pas de faux exécuteur.
+- `src/services/ai/skillRouter.ts` borne l injection de skills à des états sains, compatibles et raisonnablement courts; les cas unhealthy, archived, mismatched ou trop longs basculent en blocage ou suggestion au lieu d une injection automatique.
+- `src/services/ai/reasoningContract.ts` sépare la profondeur interne de la verbosité visible et interdit les motifs de raisonnement brut dans les sorties observables.
+- `src/services/ai/reflectionPlanner.ts` et `src/services/ai/memoryWritePolicy.ts` gardent la réflexion et l écriture mémoire dans des cadres bornés: type de réflexion, prochaine action, profondeur mémoire, vérification factuelle, confiance et conflit.
+- Le panneau `ThinkingPanel` reste la surface UI de vérité cognitive via `reasoning-progress`, `reasoning-cognitive-trace` et les attributs `data-cognitive-*`, mais uniquement à partir de la trace sanitisée.
+
 ## 2026-05-09 — Knowledge memory metabolism overlay (Phase 3 minimal)
 
 > `src/services/knowledge_runtime/MemoryCandidateLedger.ts` ajoute un ledger de candidats mémoire gouvernés au-dessus du verdict de sélection KB. Les entrées retenues n accèdent pas directement à une mémoire durable: elles deviennent d abord des `MemoryCandidate` avec provenance, score de stabilité, usage count, probation status et éventuelle expiration.
