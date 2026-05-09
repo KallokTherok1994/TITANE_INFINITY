@@ -1,3 +1,13 @@
+## 2026-05-09 — Knowledge selection verdict overlay (Phase 2 minimal)
+
+> La cartographie `src/services/knowledge_runtime/` ne se limite plus à la qualification des entrées KB. `KnowledgeRetrievalKernel.ts` fusionne maintenant un score lexical existant avec un signal sémantique léger et un score d autorité dérivé du registre C2, puis applique des pénalités de risque/fraîcheur/confusion pour dériver un `finalScore` gouverné.
+
+> `KnowledgeConflictResolver.ts` ajoute une couche de conflit minimaliste mais active sur les familles de connaissance: si une même famille mélange un item nécessitant recherche fraîche et un item stable, le runtime publie un conflit visible, et peut bloquer la sélection dans les cas restreints. La vérité cartographiée n est donc plus seulement "item qualifié", mais "item choisi, différé ou bloqué avec raison".
+
+## 2026-05-09 — Knowledge runtime governance overlay on default KB
+
+> La cartographie conversationnelle ajoute une couche `src/services/knowledge_runtime/` entre la KB brute et le bloc prompt final. `KnowledgeRegistry.ts` charge l index C2 existant puis synthétise explicitement les catégories bundle non indexées, ce qui transforme l absence de métadonnées en état visible (`metadataOrigin: synthetic`) au lieu d un silence structurel.
+
 ## 2026-05-08 — TOTAL_DEV + Ollama DEV boundary stabilization
 
 > Alignement minimal de la surface TOTAL_DEV avec la frontière Ollama DEV: `src/pages/TotalDevPage.tsx` passe en wording gouverné (cockpit, allowlist Rust) et modèle chat DEV `qwen3.5:9b` sans mutation des defaults produit (`gemma2:2b`).

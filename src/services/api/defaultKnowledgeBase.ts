@@ -25,6 +25,11 @@
 
 import { invokeWithRetry, FAST_COMMAND_OPTIONS } from '../../lib/serviceInvoker';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
+import {
+  buildKnowledgeSelectionVerdict,
+  buildSelectionEvidencePacket,
+  rerankKnowledgeCandidates,
+} from '@/services/knowledge_runtime/KnowledgeRetrievalKernel';
 
 // ─────────────────────────────────────────────────────────────────
 // Types (mirror of Rust KnowledgeBaseEntry)
@@ -1122,31 +1127,72 @@ export async function getRelevantPromptContext(
       );
 
     // Diversity filter: avoid returning too many entries from the same domain prefix
-    const selected: typeof ranked = [];
+    const preselected: typeof ranked = [];
     const prefixCounts = new Map<string, number>();
     for (const item of ranked) {
-      if (selected.length >= Math.max(1, limit)) break;
+      if (preselected.length >= Math.max(1, limit) * 2) break;
       const prefix = item.entry.category.split('_').slice(0, 2).join('_');
       const count = prefixCounts.get(prefix) || 0;
       // Allow max 2 entries from the same domain prefix
       if (count < 2) {
-        selected.push(item);
+        preselected.push(item);
         prefixCounts.set(prefix, count + 1);
       }
     }
 
-    if (selected.length === 0) {
+    if (preselected.length === 0) {
       return '';
     }
+
+    const reranked = await rerankKnowledgeCandidates(
+      query,
+      preselected.map(item => ({
+        entry: item.entry,
+        lexicalScore: item.score,
+        excerpt: item.excerpt,
+      }))
+    );
+    const verdict = buildKnowledgeSelectionVerdict(reranked, limit);
+    const rerankedByCategory = new Map(reranked.map(item => [item.entry.category, item]));
+    const selected = preselected.filter(item => verdict.selected.includes(item.entry.category));
+
+    const evidencePacket = buildSelectionEvidencePacket(reranked, verdict);
+    const deferredPreview = verdict.deferred.slice(0, 2);
+    const blockedPreview = verdict.blocked.slice(0, 2);
 
     return [
       '📚 Connaissances pertinentes TITANE∞ :',
       ...selected.map(({ entry, score, excerpt }) => {
+        const governed = rerankedByCategory.get(entry.category);
+        const relevanceScore = governed ? governed.finalScore * 20 : score;
         const relevance =
-          score >= 20 ? '🔴' : score >= 10 ? '🟠' : score >= 5 ? '🟡' : '⚪';
+          relevanceScore >= 20 ? '🔴' : relevanceScore >= 10 ? '🟠' : relevanceScore >= 5 ? '🟡' : '⚪';
         const excerptBlock = excerpt ? ` | Extrait: ${excerpt}` : '';
-        return `${relevance} ${entry.category} — ${entry.description}${excerptBlock}`;
+        const governanceBlock = governed
+          ? `\n   Statut: ${governed.registry.validationStatus} | Fraîcheur: ${governed.registry.freshness} | Risque: ${governed.registry.riskLevel}${governed.requiresResearch ? ' | Recherche requise' : ''}${governed.registry.metadataOrigin === 'synthetic' ? ' | Metadata synthétique' : ''} | Score final: ${governed.finalScore.toFixed(2)}`
+          : '';
+        return `${relevance} ${entry.category} — ${entry.description}${excerptBlock}${governanceBlock}`;
       }),
+      ...(verdict.conflicts.length > 0
+        ? [
+            '⚠️ Conflits détectés :',
+            ...verdict.conflicts
+              .slice(0, 2)
+              .map(
+                conflict =>
+                  `- ${conflict.leftKnowledgeId} ↔ ${conflict.rightKnowledgeId} (${conflict.severity})`
+              ),
+          ]
+        : []),
+      ...(deferredPreview.length > 0
+        ? [`ℹ️ Différé: ${deferredPreview.join(', ')}`]
+        : []),
+      ...(blockedPreview.length > 0
+        ? [`⛔ Bloqué: ${blockedPreview.join(', ')}`]
+        : []),
+      ...(evidencePacket.warnings.length > 0
+        ? ['⚠️ Gouvernance :', ...evidencePacket.warnings.slice(0, 3).map(w => `- ${w}`)]
+        : []),
     ].join('\n');
   } catch {
     return '';

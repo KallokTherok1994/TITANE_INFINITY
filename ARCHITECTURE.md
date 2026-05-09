@@ -1,3 +1,17 @@
+## 2026-05-09 — Knowledge selection verdict overlay (Phase 2 minimal)
+
+> `src/services/knowledge_runtime/KnowledgeRetrievalKernel.ts` ajoute une sélection gouvernée au-dessus du retrieval lexical KB existant. Le pipeline reste minimal et local: score lexical hérité, score sémantique léger par recouvrement de tokens, score d autorité dérivé du registre, puis pénalités de fraîcheur, risque et confusion.
+
+> `src/services/knowledge_runtime/KnowledgeConflictResolver.ts` introduit une première surface active de contradiction bornée. Le but n est pas encore de résoudre tous les conflits sémantiques, mais d empêcher qu une famille de connaissance mélange sans signal un item `Recherche requise` et un item stable/curated dans la même sélection.
+
+> `src/services/api/defaultKnowledgeBase.ts::getRelevantPromptContext()` ne se contente plus d afficher des entrées qualifiées; il projette maintenant un verdict de sélection (`selected/deferred/blocked/researchRequired/conflicts`) qui réduit le bruit contextuel et expose les conflits gouvernés avant injection prompt-side.
+
+## 2026-05-09 — Knowledge runtime governance overlay (KB qualification without retrieval rewrite)
+
+> `src/services/knowledge_runtime/KnowledgeRegistry.ts` ajoute une couche canonique de qualification runtime au-dessus de la KB par défaut. Le registre charge `data/knowledge_base/KNOWLEDGE_GOVERNANCE_INDEX.json`, complète les catégories bundle non indexées par des métadonnées synthétiques explicites (`metadataOrigin: indexed|synthetic`) et publie une couverture mesurable au lieu de laisser les trous de gouvernance invisibles.
+
+> `src/services/knowledge_runtime/KnowledgeRuntimeKernel.ts` ne remplace pas le retrieval lexical existant de `src/services/api/defaultKnowledgeBase.ts`; il le requalifie. Chaque entrée retenue reçoit maintenant un statut de validation, une fraîcheur, un risque et un indicateur honnête `Recherche requise` pour les domaines sensibles/time-sensitive.
+
 ## 2026-05-05 : Remote Gateway — Twins HTTP access (v33.0.8+)
 
 > `src-tauri/src/remote_gateway/handlers.rs` étend l allowlist `POST /api/invoke` avec les commandes `twin_*` (lecture + mutation gouvernée) et route les commandes Twin vers un état partagé `NumericTwinState` injecté dans `GatewayState`. `src-tauri/src/remote_gateway/server.rs` câble désormais `twin: Arc<NumericTwinState>` au build du router. Les réponses read-path réutilisent `convert_to_response()` (`src-tauri/src/numeric_twin/twin_commands.rs`) pour préserver le contrat camelCase côté frontend. Preuves associées: test Rust `test_invoke_twin_identity_command` + Playwright `e2e/remote-gateway.spec.ts` (cas `twin_get_identity|twin_get_evolution_profile|twin_get_fusion_index`).
