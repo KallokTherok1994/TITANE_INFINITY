@@ -13,6 +13,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 import {
   chatMemoryCompactor,
   resolveChatMemoryNamespace,
+  resolveChatMemoryStorageKey,
 } from '@/services/chatMemoryCompactor';
 import type { AIMessage } from '@/services/ai/types';
 
@@ -46,6 +47,15 @@ beforeEach(() => {
 describe('Memory Consumption Truth — chatMemoryCompactor.getStats()', () => {
   test('uses isolated test namespace for chat memory keys', () => {
     expect(resolveChatMemoryNamespace({ isVitest: true })).toBe('test');
+  });
+
+  test('builds conversation key with explicit namespace helper', () => {
+    expect(resolveChatMemoryStorageKey(MODE, 'conv-z', 'test')).toBe(
+      `titane_test_chat_conversation_conv-z_${MODE}`
+    );
+    expect(resolveChatMemoryStorageKey(MODE, undefined, 'dev')).toBe(
+      `titane_dev_chat_mode_${MODE}`
+    );
   });
 
   test('returns count=0 and sizeMB=0 when no messages stored', () => {
@@ -147,5 +157,22 @@ describe('Memory Consumption Truth — chatMemoryCompactor.getStats()', () => {
     expect(loaded).toHaveLength(1);
     expect(loaded[0]?.content).toContain('legacy-to-conversation');
     expect(migratedPayload).not.toBeNull();
+  });
+
+  test('clearAll only clears active namespace keys', () => {
+    const clearableMode = 'default';
+    const testNamespaceClearableKey = `titane_test_chat_mode_${clearableMode}`;
+    const prodNamespaceClearableKey = `titane_chat_mode_${clearableMode}`;
+
+    localStorage.setItem(prodNamespaceClearableKey, JSON.stringify({ messages: [] }));
+    localStorage.setItem(
+      testNamespaceClearableKey,
+      JSON.stringify({ messages: [makeMessage('test-only')] })
+    );
+
+    chatMemoryCompactor.clearAll();
+
+    expect(localStorage.getItem(testNamespaceClearableKey)).toBeNull();
+    expect(localStorage.getItem(prodNamespaceClearableKey)).not.toBeNull();
   });
 });

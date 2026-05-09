@@ -1082,3 +1082,9 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
   - Desktop IPC direct non-mock: PASS (`e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js`)
 - Frontiere restante (desktop visuel Expert): FAIL sur `reasoning-cognitive-trace` absent en runtime Tauri dans cette lane (`desktop-expert-cognitive-trace-seal`)
 - Classification de surface: `DESKTOP_EXPERT_VISUAL_BOUNDARY_ACTIVE`
+
+# [2026-05-08] Memory namespace isolation proof surfaces
+
+- Surface runtime chat: `src/hooks/useConversationEngine.ts` lit désormais l'historique via `resolveChatMemoryStorageKey(...)` (namespace gouverné) au lieu d'une clé littérale non namespacée.
+- Preuve desktop WDIO ajoutée: `e2e/desktop/memory-namespace-isolation.wdio.test.js` (restauration prod visible, payload test non exposé).
+- Preuve agent Playwright ajoutée: `e2e/agents/memory-namespace-agent-proof.e2e.ts` (dashboards agents visibles et absence de fuite du marqueur test).

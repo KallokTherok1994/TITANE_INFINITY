@@ -49,6 +49,14 @@ type StoragePrefixes = {
   conversationPrefix: string;
 };
 
+function normalizeConversationId(conversationId?: string): string | undefined {
+  if (typeof conversationId !== 'string') {
+    return undefined;
+  }
+  const trimmed = conversationId.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
 function readProcessEnv(key: string): string | undefined {
   if (typeof process === 'undefined' || typeof process.env === 'undefined') {
     return undefined;
@@ -100,6 +108,21 @@ function getStoragePrefixes(namespace: ChatMemoryNamespace): StoragePrefixes {
     modePrefix: STORAGE_KEY_PREFIX,
     conversationPrefix: STORAGE_CONVERSATION_KEY_PREFIX,
   };
+}
+
+export function resolveChatMemoryStorageKey(
+  mode: string,
+  conversationId?: string,
+  namespace: ChatMemoryNamespace = resolveChatMemoryNamespace({
+    explicitNamespace: readProcessEnv('TITANE_MEMORY_NAMESPACE'),
+  })
+): string {
+  const prefixes = getStoragePrefixes(namespace);
+  const normalizedConversationId = normalizeConversationId(conversationId);
+  if (normalizedConversationId) {
+    return `${prefixes.conversationPrefix}${normalizedConversationId}_${mode}`;
+  }
+  return `${prefixes.modePrefix}${mode}`;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -474,11 +497,7 @@ class ChatMemoryCompactor {
   }
 
   private normalizeConversationId(conversationId?: string): string | undefined {
-    if (typeof conversationId !== 'string') {
-      return undefined;
-    }
-    const trimmed = conversationId.trim();
-    return trimmed.length > 0 ? trimmed : undefined;
+    return normalizeConversationId(conversationId);
   }
 
   private resolveStorageKey(mode: ChatMode, conversationId?: string): string {

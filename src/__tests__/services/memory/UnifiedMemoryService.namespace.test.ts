@@ -15,6 +15,23 @@ describe('UnifiedMemoryService namespace isolation', () => {
     expect(namespace).toBe('prod');
   });
 
+  it('prioritizes explicit TITANE_MEMORY_NAMESPACE when valid', () => {
+    const namespace = resolveUnifiedMemoryNamespace({
+      TITANE_MEMORY_NAMESPACE: 'dev',
+      VITEST: '1',
+      NODE_ENV: 'test',
+    } as NodeJS.ProcessEnv);
+    expect(namespace).toBe('dev');
+  });
+
+  it('ignores invalid TITANE_MEMORY_NAMESPACE values', () => {
+    const namespace = resolveUnifiedMemoryNamespace({
+      TITANE_MEMORY_NAMESPACE: 'sandbox',
+      NODE_ENV: 'production',
+    } as NodeJS.ProcessEnv);
+    expect(namespace).toBe('prod');
+  });
+
   it('resolves namespaced test paths under memory/test', () => {
     const paths = resolveUnifiedMemoryPaths('/workspace', 'test');
     expect(paths.STM).toBe('/workspace/memory/test/stm.json');
@@ -27,5 +44,12 @@ describe('UnifiedMemoryService namespace isolation', () => {
     expect(paths.STM).toBe('/workspace/memory/stm.json');
     expect(paths.MTM).toBe('/workspace/memory/mtm.json');
     expect(paths.LTM).toBe('/workspace/memory/ltm.json');
+  });
+
+  it('resolves dev paths under memory/dev', () => {
+    const paths = resolveUnifiedMemoryPaths('/workspace', 'dev');
+    expect(paths.STM).toBe('/workspace/memory/dev/stm.json');
+    expect(paths.MTM).toBe('/workspace/memory/dev/mtm.json');
+    expect(paths.LTM).toBe('/workspace/memory/dev/ltm.json');
   });
 });

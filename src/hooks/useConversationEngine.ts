@@ -29,7 +29,10 @@ import {
 import { awardExperience, getExperienceState } from '@/services/experienceService';
 import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
-import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
+import {
+  chatMemoryCompactor,
+  resolveChatMemoryStorageKey,
+} from '@/services/chatMemoryCompactor';
 import { XPSource } from '@/types/experience';
 import type {
   Mode,
@@ -464,7 +467,7 @@ export function useConversationEngine(
   useEffect(() => {
     const loadStoredMessages = async () => {
       try {
-        const stored = localStorage.getItem(`titane_chat_mode_${currentMode}`);
+        const stored = localStorage.getItem(resolveChatMemoryStorageKey(currentMode));
         if (stored) {
           const parsed = JSON.parse(stored) as { messages?: unknown[] };
           if (parsed.messages && Array.isArray(parsed.messages)) {
@@ -709,7 +712,7 @@ export function useConversationEngine(
           ? buildProviderRecoveryMessage(requestedProvider, runtimeReasonCode)
           : response.assistant_message;
         // effectiveContent may be modified by enforcement (add_limitation, block_response, etc.)
-        let effectiveContent: string = assistantContent;
+        const effectiveContent: string = assistantContent;
 
         const previousUserMessage = [...messages]
           .reverse()
@@ -832,11 +835,15 @@ export function useConversationEngine(
 
         // CognitiveRuntimeTrace — construit depuis omega_trace_meta + signaux qualité (non-bloquant)
         let cognitiveTrace: CognitiveRuntimeTrace | null = null;
-        let cognitiveTraceBuildError: { stage: string; message: string; name?: string } | null = null;
+        let cognitiveTraceBuildError: {
+          stage: string;
+          message: string;
+          name?: string;
+        } | null = null;
 
         if (response.cognitive_trace) {
           cognitiveTrace = sanitizeTraceForUi(
-            response.cognitive_trace as CognitiveRuntimeTrace,
+            response.cognitive_trace as CognitiveRuntimeTrace
           );
         } else if (response.omega_trace_meta) {
           // Use pure builder to construct trace from omega_trace_meta
@@ -853,22 +860,22 @@ export function useConversationEngine(
             citationsCount,
             isBlocked: response.cognitive_tags?.some(t => t.includes('BLOCKED')) ?? false,
             responseQualityScore,
-            inferenceState:
-              response.cognitive_tags?.some(t => t.includes('BLOCKED'))
-                ? 'BLOCKED_BY_MISSING_FACT'
-                : omegaMeta.canonical_truth_status === 'INSUFFICIENT'
-                  ? 'INFER_WITH_DISCLOSURE'
-                  : 'SAFE_TO_INFER',
+            inferenceState: response.cognitive_tags?.some(t => t.includes('BLOCKED'))
+              ? 'BLOCKED_BY_MISSING_FACT'
+              : omegaMeta.canonical_truth_status === 'INSUFFICIENT'
+                ? 'INFER_WITH_DISCLOSURE'
+                : 'SAFE_TO_INFER',
             factualClaimsDetected:
               citationsCount > 0 ||
               memoryLinks.some(
                 link =>
-                  link.includes('web_action:') || link.includes('kernel_truth:fresh_required'),
+                  link.includes('web_action:') ||
+                  link.includes('kernel_truth:fresh_required')
               ) ||
               (response.cognitive_tags?.some(
                 tag =>
                   tag.toLowerCase().includes('fact') ||
-                  tag.toLowerCase().includes('verify'),
+                  tag.toLowerCase().includes('verify')
               ) ??
                 false),
             webAttempted:
@@ -877,7 +884,7 @@ export function useConversationEngine(
                 link =>
                   link.includes('web_action:search') ||
                   link.includes('web_action:verify') ||
-                  link.includes('web_action:research'),
+                  link.includes('web_action:research')
               ),
             webAvailable: citationsCount > 0,
             requestedProvider,
@@ -890,7 +897,7 @@ export function useConversationEngine(
             // Safe error capture: no raw output, just stage + message
             cognitiveTraceBuildError = buildResult.error;
             logger.debug(
-              `[useConversationEngine] Cognitive trace build failed at stage: ${buildResult.error.stage}`,
+              `[useConversationEngine] Cognitive trace build failed at stage: ${buildResult.error.stage}`
             );
           }
         }

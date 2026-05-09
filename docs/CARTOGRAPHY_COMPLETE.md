@@ -2069,3 +2069,13 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > `src/services/memory/UnifiedMemoryService.ts` ajoute une résolution de namespace/chemins et route les fichiers mémoire test vers `memory/test/{stm,mtm,ltm}.json` tandis que `prod` conserve `memory/{stm,mtm,ltm}.json`.
 
 > Couverture: `src/__tests__/memory-consumption-truth.test.ts` qualifie la clé test isolée; `src/__tests__/services/memory/UnifiedMemoryService.namespace.test.ts` qualifie la résolution de namespace et des chemins.
+
+## 2026-05-08 — Memory namespace runtime hardening + desktop/agent proofs
+
+> Le hook `src/hooks/useConversationEngine.ts` ne lit plus l'historique conversationnel via une clé locale non namespacée; il utilise désormais `resolveChatMemoryStorageKey(...)` depuis `src/services/chatMemoryCompactor.ts`, ce qui aligne la restauration runtime avec la séparation `prod|dev|test`.
+
+> Couverture mémoire renforcée: `src/__tests__/memory-consumption-truth.test.ts`, `src/__tests__/services/memory/UnifiedMemoryService.namespace.test.ts`, `src/__tests__/services/chatMemoryCompactor.namespace.test.ts`.
+
+> Preuves e2e ajoutées:
+- Desktop WDIO: `e2e/desktop/memory-namespace-isolation.wdio.test.js`
+- Agent Playwright: `e2e/agents/memory-namespace-agent-proof.e2e.ts`
