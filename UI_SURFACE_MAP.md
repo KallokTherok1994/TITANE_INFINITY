@@ -1,3 +1,12 @@
+# [2026-05-09] Memory isolation truth — STM cleanup + test namespace hardening
+
+- Surface mémoire frontend: `src/services/chatMemoryCompactor.ts` résout désormais un namespace gouverné (`prod|dev|test`) et écrit les clés `localStorage` isolées en test (`titane_test_chat_mode_*`, `titane_test_chat_conversation_*`) pour empêcher la contamination des sessions TITANE.
+- Surface persistance unifiée: `src/services/memory/UnifiedMemoryService.ts` résout les chemins mémoire par namespace; en test, la persistance est redirigée vers `memory/test/{stm,mtm,ltm}.json`.
+- Dataset runtime local: `memory/stm.json` est nettoyé pour retirer les entrées non qualifiées comme vraie conversation utilisateur/assistant.
+- Preuves unitaires associées:
+  - `src/__tests__/memory-consumption-truth.test.ts`
+  - `src/__tests__/services/memory/UnifiedMemoryService.namespace.test.ts`
+
 # [2026-05-06] D6 HyperCenter Desktop Proof Surface (lane 13 hardening)
 
 - Surface canonique HyperCenter: `src/components/HyperCenter/HyperCenter.tsx`.
@@ -980,6 +989,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Tests: `src/features/chat/__tests__/ThinkingPanel.cognitiveTrace.test.tsx`, `src/services/ai/__tests__/cognitiveRuntimeTrace.test.ts`, `src/__tests__/hooks/useConversationEngine.test.ts`, `e2e/agents/cognitive-trace-panel.e2e.ts`, `e2e/desktop/chat-cognitive-trace-runtime.wdio.test.js`
 
 # [2026-05-08] CognitiveRuntimeTrace v2 — WebTruth + QualityAction Policy
+
 - Nouveaux sélecteurs stables: `data-testid="reasoning-cognitive-web-policy"`, `data-testid="reasoning-cognitive-quality-action"` dans `src/features/chat/ThinkingPanel.tsx` (section Expert)
 - Modules policy purs: `src/services/ai/webTruthPolicy.ts` (WebTruthNeed/WebTruthStatus, evaluateWebTruthPolicy), `src/services/ai/qualityActionPolicy.ts` (QualityAction, evaluateQualityActionPolicy)
 - CognitiveRuntimeTrace.policy: champ `{ version, webTruth: WebTruthPolicyDecision, qualityAction: QualityActionPolicyDecision }` ajouté au type
@@ -987,6 +997,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Tests ciblés locaux: 4 fichiers vitest = 28 PASS, plus `useConversationEngine` couvre désormais la préférence `cognitive_trace` native et la sanitization du payload remonté
 
 # [2026-05-08] CognitiveRuntimeTrace v2 — Runtime Certification Seal
+
 - Surface: `reasoning-progress[data-cognitive-verdict]`, `reasoning-cognitive-trace`, `reasoning-cognitive-verdict`, `reasoning-cognitive-web-policy`, `reasoning-cognitive-quality-action`
 - E2E certification: `e2e/critical/thinking-panel-quality.spec.ts::COGNITIVE_TRACE_V2_VISIBLE_IN_THINKING_PANEL` — PASS (5/5 tests)
 - E2E proves the active ThinkingPanel can surface CognitiveRuntimeTrace v2 policy state: verdict, web policy, quality action, and no raw chain-of-thought exposure. The E2E waits for the current `[MOCK_OK]` response to avoid stale ThinkingPanel state and avoids `shouldHandoffToResearch` trigger terms.
@@ -995,18 +1006,21 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Gates: detect_recurrence PASS · verify_instructions PASS (51/0) · unit 28/28 · E2E 5/5
 
 # [2026-05-08] MetaCognitionGuard v1 — Sélecteur Expert ThinkingPanel
+
 - Nouveau sélecteur stable: `data-testid="reasoning-cognitive-meta-guard"` dans `src/features/chat/ThinkingPanel.tsx` (section Expert, conditionnel à `metaCognition.evaluated === true`)
 - Affiche: Action (guardAction), Cohérence (coherenceScore %), Anomalie (si anomalyDetected), Mémoire gelée (si freezeMemorySave)
 - Module: `src/services/ai/metaCognitionGuard.ts` — 8 règles, `evaluateMetaCognitionGuard()`, `applyMetaCognitionGuardToTrace()`
 - Tests: 12 unitaires (metaCognitionGuard.test.ts) + 4 composant (ThinkingPanel.cognitiveTrace.test.tsx) = 44/44 PASS
 
 # [2026-05-08] MetaCognitionGuard Runtime Certification Seal
+
 - Sélecteur `reasoning-cognitive-meta-guard` certifié par E2E `METACOGNITION_GUARD_VISIBLE_IN_THINKING_PANEL` (Playwright chromium, PASS)
 - Route runtime: mock chat response → useConversationEngine → evaluateMetaCognitionGuard → applyMetaCognitionGuardToTrace (evaluated=true) → sanitizeTraceForUi → ThinkingPanel Expert view
 - Gates: unit 44/44 PASS · E2E 6/6 PASS · detect_recurrence PASS · verify_instructions PASS (51/0)
 - AutoHeal entry: METACOGNITION_GUARD_RUNTIME_CERTIFICATION_2026_05_08 (1706)
 
 # [2026-05-08] MetaCognitionGuard v2 — Bounded Action Enforcement
+
 - Nouveau sélecteur stable: `data-testid="reasoning-cognitive-meta-enforcement"` dans `src/features/chat/ThinkingPanel.tsx` (section Expert, conditionnel à `metaCognition.enforcementApplied !== undefined`)
 - Affiche: effets (`enforcementEffects`), directive (`responseDirective`), état mémoire sauvegardable (`final.safeToRemember`)
 - Certifié par E2E `METACOGNITION_ENFORCEMENT_VISIBLE_IN_THINKING_PANEL` (Playwright chromium, PASS)
@@ -1015,6 +1029,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - AutoHeal entry: METACOGNITION_GUARD_V2_ACTION_ENFORCEMENT_2026_05_08 (1707)
 
 # [2026-05-08] Production Live Cognitive Trace Certification
+
 - New live non-mock E2E surface: `e2e/critical/live-cognitive-trace.spec.ts::LIVE_OLLAMA_COGNITIVE_TRACE_VISIBLE_IN_THINKING_PANEL`
 - Certified visible runtime selectors in Expert view:
   - `reasoning-progress`
@@ -1028,6 +1043,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Safety checks: forbidden raw reasoning markers absent from DOM.
 
 # [2026-05-08] Tauri IPC Direct Cognitive Trace Certification (Mission 9)
+
 - New desktop certification surface: `e2e/desktop/tauri-ipc-cognitive-trace.wdio.test.js`
 - Lane intent: direct Tauri invoke (`conversation_generate`) + runtime Expert selector assertions.
 - Result in current environment: direct IPC non-mock response observed, but `reasoning-cognitive-trace` missing in tested Tauri runtime turn (FAIL lane).
@@ -1044,6 +1060,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
   - Statut courant: FAIL runtime desktop (`reasoning-cognitive-trace` absent sous délai).
 
 # [2026-05-08] Desktop Cognitive Trace Build Repair — Final Governance Seal
+
 - Commit audite: `58a44830c`
 - Surface logicielle certifiee: `src/services/ai/buildCognitiveTraceFromResponse.ts` -> `src/hooks/useConversationEngine.ts` -> `src/components/sections/ConversationSection.tsx` -> `src/features/chat/ThinkingPanel.tsx`
 - Selecteurs Expert cibles (preuve visuelle desktop non totalement certifiee dans la lane seal):
@@ -1056,6 +1073,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Verdict de mission: `QUALIFIED`
 
 # [2026-05-08] Final End-to-End Cognitive Trace Seal (desktop Expert lane)
+
 - Nouvelle lane desktop dediee: `e2e/desktop/desktop-expert-cognitive-trace-seal.wdio.test.js`
 - Parcours impose: vrai composeur (`chat-input` + `chat-send`) -> dernier message assistant -> panneau raisonnement -> mode `Expert`
 - Verites certifiees:

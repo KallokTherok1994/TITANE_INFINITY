@@ -2061,3 +2061,11 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > Optimisation additionnelle: `timeContext` est maintenant freshness-guarded (15 minutes max) et n est plus injecte dans le chat s il est stale. La page `/time` n ecrit aussi la cle gouvernee que si le contexte semantique change, ce qui reduit le churn localStorage et garde `updatedAt` significatif.
 
 > Raffinement complementaire: `currentDateTime` persiste dans cette cle a la precision minute (`HH:MM:00.000Z`) pour eviter des reecritures a la seconde qui n apportaient aucune valeur utile au raisonnement conversationnel.
+
+## 2026-05-09 — Memory namespace isolation (test/prod boundary)
+
+> La persistance mémoire frontend est désormais namespacée pour éviter la contamination des conversations de test dans le runtime TITANE. `src/services/chatMemoryCompactor.ts` résout un namespace gouverné (`prod|dev|test`) et écrit des clés `localStorage` dédiées en test (`titane_test_chat_mode_*`, `titane_test_chat_conversation_*`) avec fallback legacy limité à `prod`.
+
+> `src/services/memory/UnifiedMemoryService.ts` ajoute une résolution de namespace/chemins et route les fichiers mémoire test vers `memory/test/{stm,mtm,ltm}.json` tandis que `prod` conserve `memory/{stm,mtm,ltm}.json`.
+
+> Couverture: `src/__tests__/memory-consumption-truth.test.ts` qualifie la clé test isolée; `src/__tests__/services/memory/UnifiedMemoryService.namespace.test.ts` qualifie la résolution de namespace et des chemins.

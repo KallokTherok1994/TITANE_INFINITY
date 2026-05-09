@@ -66,12 +66,40 @@ export interface UnifiedMemoryConfig {
   };
 }
 
-// Chemins des fichiers mémoire
-const MEMORY_PATHS = {
-  STM: path.join(process.cwd(), 'memory', 'stm.json'),
-  MTM: path.join(process.cwd(), 'memory', 'mtm.json'),
-  LTM: path.join(process.cwd(), 'memory', 'ltm.json'),
-};
+export type UnifiedMemoryNamespace = 'prod' | 'dev' | 'test';
+
+export function resolveUnifiedMemoryNamespace(
+  env: NodeJS.ProcessEnv = process.env
+): UnifiedMemoryNamespace {
+  const configuredNamespace = env.TITANE_MEMORY_NAMESPACE?.trim().toLowerCase();
+  if (
+    configuredNamespace === 'prod' ||
+    configuredNamespace === 'dev' ||
+    configuredNamespace === 'test'
+  ) {
+    return configuredNamespace;
+  }
+
+  if (env.VITEST || env.NODE_ENV === 'test' || env.TITANE_E2E === '1') {
+    return 'test';
+  }
+
+  return 'prod';
+}
+
+export function resolveUnifiedMemoryPaths(
+  cwd: string = process.cwd(),
+  namespace: UnifiedMemoryNamespace = resolveUnifiedMemoryNamespace()
+): Record<'STM' | 'MTM' | 'LTM', string> {
+  const baseDir =
+    namespace === 'prod' ? path.join(cwd, 'memory') : path.join(cwd, 'memory', namespace);
+
+  return {
+    STM: path.join(baseDir, 'stm.json'),
+    MTM: path.join(baseDir, 'mtm.json'),
+    LTM: path.join(baseDir, 'ltm.json'),
+  };
+}
 
 export class UnifiedMemoryService {
   private config: UnifiedMemoryConfig;
@@ -128,9 +156,11 @@ export class UnifiedMemoryService {
 
   private async loadFromFiles(): Promise<void> {
     try {
+      const memoryPaths = resolveUnifiedMemoryPaths();
+
       // Load STM
       try {
-        const stmData = await fs.readFile(MEMORY_PATHS.STM, 'utf-8');
+        const stmData = await fs.readFile(memoryPaths.STM, 'utf-8');
         this.stm = JSON.parse(stmData);
       } catch (e) {
         // File doesn't exist, create empty array
@@ -140,7 +170,7 @@ export class UnifiedMemoryService {
 
       // Load MTM
       try {
-        const mtmData = await fs.readFile(MEMORY_PATHS.MTM, 'utf-8');
+        const mtmData = await fs.readFile(memoryPaths.MTM, 'utf-8');
         this.mtm = JSON.parse(mtmData);
       } catch (e) {
         this.mtm = [];
@@ -149,7 +179,7 @@ export class UnifiedMemoryService {
 
       // Load LTM
       try {
-        const ltmData = await fs.readFile(MEMORY_PATHS.LTM, 'utf-8');
+        const ltmData = await fs.readFile(memoryPaths.LTM, 'utf-8');
         this.ltm = JSON.parse(ltmData);
       } catch (e) {
         this.ltm = [];
@@ -165,7 +195,7 @@ export class UnifiedMemoryService {
 
     try {
       const data = this.getTier(tier);
-      const filePath = MEMORY_PATHS[tier];
+      const filePath = resolveUnifiedMemoryPaths()[tier];
 
       // Ensure directory exists
       await fs.mkdir(path.dirname(filePath), { recursive: true });

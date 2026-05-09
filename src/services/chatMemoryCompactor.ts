@@ -23,6 +23,10 @@ const logger = createLogger('[MEMORY-COMPACTOR]');
 
 const STORAGE_KEY_PREFIX = 'titane_chat_mode_';
 const STORAGE_CONVERSATION_KEY_PREFIX = 'titane_chat_conversation_';
+const DEV_STORAGE_KEY_PREFIX = 'titane_dev_chat_mode_';
+const DEV_STORAGE_CONVERSATION_KEY_PREFIX = 'titane_dev_chat_conversation_';
+const TEST_STORAGE_KEY_PREFIX = 'titane_test_chat_mode_';
+const TEST_STORAGE_CONVERSATION_KEY_PREFIX = 'titane_test_chat_conversation_';
 const __MAX_MESSAGES_PER_MODE = 50; // Reserved for future use
 const COMPRESSION_THRESHOLD = 70; // Compresser si > 70 messages
 const COMPRESSION_TARGET = 50; // Garder 50 messages après compression
@@ -37,6 +41,66 @@ const IS_VITEST =
   typeof process !== 'undefined' &&
   typeof process.env !== 'undefined' &&
   typeof process.env.VITEST !== 'undefined';
+
+export type ChatMemoryNamespace = 'prod' | 'dev' | 'test';
+
+type StoragePrefixes = {
+  modePrefix: string;
+  conversationPrefix: string;
+};
+
+function readProcessEnv(key: string): string | undefined {
+  if (typeof process === 'undefined' || typeof process.env === 'undefined') {
+    return undefined;
+  }
+  return process.env[key];
+}
+
+export function resolveChatMemoryNamespace(
+  options: {
+    explicitNamespace?: string | null;
+    isVitest?: boolean;
+    nodeEnv?: string;
+  } = {}
+): ChatMemoryNamespace {
+  const {
+    explicitNamespace,
+    isVitest = IS_VITEST,
+    nodeEnv = readProcessEnv('NODE_ENV'),
+  } = options;
+  const configured = explicitNamespace?.trim().toLowerCase();
+
+  if (configured === 'prod' || configured === 'dev' || configured === 'test') {
+    return configured;
+  }
+
+  if (isVitest || nodeEnv === 'test') {
+    return 'test';
+  }
+
+  return 'prod';
+}
+
+function getStoragePrefixes(namespace: ChatMemoryNamespace): StoragePrefixes {
+  if (namespace === 'dev') {
+    return {
+      modePrefix: DEV_STORAGE_KEY_PREFIX,
+      conversationPrefix: DEV_STORAGE_CONVERSATION_KEY_PREFIX,
+    };
+  }
+
+  if (namespace === 'test') {
+    return {
+      modePrefix: TEST_STORAGE_KEY_PREFIX,
+      conversationPrefix: TEST_STORAGE_CONVERSATION_KEY_PREFIX,
+    };
+  }
+
+  return {
+    modePrefix: STORAGE_KEY_PREFIX,
+    conversationPrefix: STORAGE_CONVERSATION_KEY_PREFIX,
+  };
+}
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -66,6 +130,18 @@ interface PendingSaveEntry {
 // ─────────────────────────────────────────────────────────────────
 
 class ChatMemoryCompactor {
+  private readonly namespace: ChatMemoryNamespace;
+  private readonly prefixes: StoragePrefixes;
+
+  constructor(namespace?: ChatMemoryNamespace) {
+    this.namespace =
+      namespace ??
+      resolveChatMemoryNamespace({
+        explicitNamespace: readProcessEnv('TITANE_MEMORY_NAMESPACE'),
+      });
+    this.prefixes = getStoragePrefixes(this.namespace);
+  }
+
   /**
    * Charge l'historique d'un mode spécifique
    */
@@ -271,7 +347,7 @@ class ChatMemoryCompactor {
 
     // Nettoyer toutes les clés conversationnelles si présentes
     Object.keys(localStorage)
-      .filter(key => key.startsWith(STORAGE_CONVERSATION_KEY_PREFIX))
+      .filter(key => key.startsWith(this.prefixes.conversationPrefix))
       .forEach(key => localStorage.removeItem(key));
 
     // Nettoyer ancienne clé globale si existe
@@ -302,7 +378,7 @@ class ChatMemoryCompactor {
 
     modes.forEach(mode => {
       const memory = this.loadMemoryObject(mode);
-      const key = `${STORAGE_KEY_PREFIX}${mode}`;
+      const key = this.resolveLegacyStorageKey(mode);
       const stored = localStorage.getItem(key);
       const sizeKB = stored ? (stored.length / 1024).toFixed(2) : '0';
 
@@ -408,13 +484,13 @@ class ChatMemoryCompactor {
   private resolveStorageKey(mode: ChatMode, conversationId?: string): string {
     const normalizedConversationId = this.normalizeConversationId(conversationId);
     if (normalizedConversationId) {
-      return `${STORAGE_CONVERSATION_KEY_PREFIX}${normalizedConversationId}_${mode}`;
+      return `${this.prefixes.conversationPrefix}${normalizedConversationId}_${mode}`;
     }
-    return `${STORAGE_KEY_PREFIX}${mode}`;
+    return `${this.prefixes.modePrefix}${mode}`;
   }
 
   private resolveLegacyStorageKey(mode: ChatMode): string {
-    return `${STORAGE_KEY_PREFIX}${mode}`;
+    return `${this.prefixes.modePrefix}${mode}`;
   }
 
   private getStoredPayload(mode: ChatMode, conversationId?: string): string | null {
@@ -439,6 +515,15 @@ class ChatMemoryCompactor {
         // Non bloquant: garder lecture legacy si quota atteint.
       }
       return legacyStored;
+    }
+
+    // Compatibilité rétroactive limitée à prod: lecture ancienne clé sans namespace.
+    if (this.namespace === 'prod') {
+      const unscopedLegacyKey = `${STORAGE_KEY_PREFIX}${mode}`;
+      const unscopedLegacyStored = localStorage.getItem(unscopedLegacyKey);
+      if (unscopedLegacyStored) {
+        return unscopedLegacyStored;
+      }
     }
 
     return null;
@@ -544,8 +629,8 @@ class ChatMemoryCompactor {
     Object.keys(localStorage)
       .filter(
         key =>
-          key.startsWith(STORAGE_KEY_PREFIX) ||
-          key.startsWith(STORAGE_CONVERSATION_KEY_PREFIX)
+          key.startsWith(this.prefixes.modePrefix) ||
+          key.startsWith(this.prefixes.conversationPrefix)
       )
       .forEach(key => {
         const stored = localStorage.getItem(key);
@@ -567,7 +652,7 @@ class ChatMemoryCompactor {
           // Force compression agressive
           const memory = this.loadMemoryObject(mode);
           memory.messages = messages.slice(-10); // Garde seulement 10 plus récents
-          const key = `${STORAGE_KEY_PREFIX}${mode}`;
+          const key = this.resolveLegacyStorageKey(mode);
           localStorage.setItem(key, JSON.stringify(memory));
           logger.info(`Cleaned ${mode}`, {
             component: 'MemoryCompactor',

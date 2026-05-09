@@ -1,0 +1,31 @@
+import { describe, expect, it } from 'vitest';
+import {
+  resolveUnifiedMemoryNamespace,
+  resolveUnifiedMemoryPaths,
+} from '@/services/memory/UnifiedMemoryService';
+
+describe('UnifiedMemoryService namespace isolation', () => {
+  it('resolves test namespace when vitest is active', () => {
+    const namespace = resolveUnifiedMemoryNamespace({ VITEST: '1' } as NodeJS.ProcessEnv);
+    expect(namespace).toBe('test');
+  });
+
+  it('keeps production namespace as default', () => {
+    const namespace = resolveUnifiedMemoryNamespace({} as NodeJS.ProcessEnv);
+    expect(namespace).toBe('prod');
+  });
+
+  it('resolves namespaced test paths under memory/test', () => {
+    const paths = resolveUnifiedMemoryPaths('/workspace', 'test');
+    expect(paths.STM).toBe('/workspace/memory/test/stm.json');
+    expect(paths.MTM).toBe('/workspace/memory/test/mtm.json');
+    expect(paths.LTM).toBe('/workspace/memory/test/ltm.json');
+  });
+
+  it('keeps production paths under memory root', () => {
+    const paths = resolveUnifiedMemoryPaths('/workspace', 'prod');
+    expect(paths.STM).toBe('/workspace/memory/stm.json');
+    expect(paths.MTM).toBe('/workspace/memory/mtm.json');
+    expect(paths.LTM).toBe('/workspace/memory/ltm.json');
+  });
+});

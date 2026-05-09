@@ -10,13 +10,25 @@
  */
 
 import { describe, test, expect, beforeEach } from 'vitest';
-import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
+import {
+  chatMemoryCompactor,
+  resolveChatMemoryNamespace,
+} from '@/services/chatMemoryCompactor';
 import type { AIMessage } from '@/services/ai/types';
 
 const MODE = 'standard' as const;
-const STORAGE_KEY = `titane_chat_mode_${MODE}`;
+const KEY_PREFIX =
+  resolveChatMemoryNamespace({ isVitest: true }) === 'test'
+    ? 'titane_test_chat_mode_'
+    : 'titane_chat_mode_';
+const CONVERSATION_PREFIX =
+  resolveChatMemoryNamespace({ isVitest: true }) === 'test'
+    ? 'titane_test_chat_conversation_'
+    : 'titane_chat_conversation_';
+
+const STORAGE_KEY = `${KEY_PREFIX}${MODE}`;
 const CONVERSATION_KEY = (conversationId: string) =>
-  `titane_chat_conversation_${conversationId}_${MODE}`;
+  `${CONVERSATION_PREFIX}${conversationId}_${MODE}`;
 
 function makeMessage(content: string, role: 'user' | 'assistant' = 'user'): AIMessage {
   return {
@@ -32,6 +44,10 @@ beforeEach(() => {
 });
 
 describe('Memory Consumption Truth — chatMemoryCompactor.getStats()', () => {
+  test('uses isolated test namespace for chat memory keys', () => {
+    expect(resolveChatMemoryNamespace({ isVitest: true })).toBe('test');
+  });
+
   test('returns count=0 and sizeMB=0 when no messages stored', () => {
     const stats = chatMemoryCompactor.getStats(MODE);
     expect(stats.count).toBe(0);
