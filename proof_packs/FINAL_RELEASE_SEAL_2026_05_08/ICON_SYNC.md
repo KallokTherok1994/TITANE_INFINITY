@@ -37,3 +37,19 @@
   - result: `sudo: il est nécessaire de saisir un mot de passe`
 
 Status remains `BLOCKED_SUDO_REQUIRED` until an interactive privileged run is executed.
+
+## Interactive sudo closure (2026-05-08)
+
+- `sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_33.0.9_amd64.deb`
+  - result: installation completed (`titane-infinity (33.0.9)` configured)
+- `sudo -n bash scripts/post-build/update-desktop-icons.sh`
+  - result: `EXIT:0`
+  - system sync markers: `sync système=UPDATED`, `sync binaire=UPDATED`
+
+Post-closure verification:
+
+- package version: `dpkg -s titane-infinity` -> `Version: 33.0.9`
+- binary hash alignment:
+  - `/usr/bin/titane-infinity` -> `fd16bbd3a9f86e859edb62615fdce6d6cb4bd3428a1440c8896803d560699393`
+  - `src-tauri/target/release/titane-infinity` -> `fd16bbd3a9f86e859edb62615fdce6d6cb4bd3428a1440c8896803d560699393`
+- launcher mapping remains aligned on local and system launchers (`Exec=/usr/bin/titane-infinity`, `Icon=titane-infinity`).

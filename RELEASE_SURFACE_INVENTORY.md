@@ -39,6 +39,15 @@
 - System-level binary replacement remains a privileged step (`sudo dpkg -i ...` then icon sync script).
 - Proof pack: `proof_packs/FINAL_RELEASE_SEAL_2026_05_08/`.
 
+### Follow-up closure — v33.0.9 (2026-05-08)
+
+| Surface | Truth | Status |
+|---|---|---|
+| system install (`sudo dpkg -i`) | completed interactively, package configured to 33.0.9 | ✅ PASS |
+| system icon sync (`sudo ...update-desktop-icons.sh`) | completed (`sync système=UPDATED`, `sync binaire=UPDATED`) | ✅ PASS |
+| installed package version | `dpkg -s titane-infinity` -> `Version: 33.0.9` | ✅ PASS |
+| binary freshness | `/usr/bin/titane-infinity` hash equals release binary hash (`fd16bbd3...`) | ✅ PASS |
+
 ## Release v33.0.3 — 2026-05-03 (Patch release: Ollama /api/chat conversational memory fix)
 
 | Surface | Truth | Status |
