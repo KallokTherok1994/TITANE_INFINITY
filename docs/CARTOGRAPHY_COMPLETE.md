@@ -2059,3 +2059,5 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > La verite visible cote UI est exposee par `time-chat-sync-status`; la preuve desktop dediee est `e2e/desktop/time-chat-context-sync.wdio.test.js`, qui verifie la coherence `/time` -> `localStorage` -> `/titane` -> `titane_chat_context_envelope_v1`.
 
 > Optimisation additionnelle: `timeContext` est maintenant freshness-guarded (15 minutes max) et n est plus injecte dans le chat s il est stale. La page `/time` n ecrit aussi la cle gouvernee que si le contexte semantique change, ce qui reduit le churn localStorage et garde `updatedAt` significatif.
+
+> Raffinement complementaire: `currentDateTime` persiste dans cette cle a la precision minute (`HH:MM:00.000Z`) pour eviter des reecritures a la seconde qui n apportaient aucune valeur utile au raisonnement conversationnel.

@@ -261,6 +261,15 @@ const toFiniteNumber = (value: unknown, fallback: number): number => {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 };
 
+const toMinutePrecisionIso = (value: string): string => {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return value;
+  }
+  parsed.setSeconds(0, 0);
+  return parsed.toISOString();
+};
+
 const writeLocalStorageIfChanged = (key: string, value: unknown): void => {
   if (typeof window === 'undefined') {
     return;
@@ -479,7 +488,9 @@ export const TimePage: React.FC = () => {
     }
 
     persistTimeRuntimeContext({
-      currentDateTime: timeState?.currentDateTime ?? currentDate.toISOString(),
+      currentDateTime: toMinutePrecisionIso(
+        timeState?.currentDateTime ?? currentDate.toISOString()
+      ),
       timeZone: timeState?.timeZone ?? 'Local',
       currentSegment: agendaStats.currentSegment,
       isWorkHours: agendaStats.isWorkHours,

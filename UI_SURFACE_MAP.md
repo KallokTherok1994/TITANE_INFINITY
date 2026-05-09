@@ -271,6 +271,7 @@
 - Sync chat/raisonnement:
   - la page `/time` publie `time-chat-sync-status` comme verite visible de synchronisation temporelle
   - la cle gouvernee `titane_time_runtime_context_v1` transporte `currentDateTime`, `timeZone`, `currentSegment`, `eventsToday`, `eventsThisWeek`, `todayFocusMinutes`, `currentEnergy`, `activeTab` et `runtimeSource`
+  - `currentDateTime` y est normalise a la minute pour limiter le churn tout en gardant une precision utile au chat
   - le chat reconstruit `titane_chat_context_envelope_v1.timeContext` a partir de cette cle avant generation
   - garde anti-derive: `timeContext` est exclu du chat s il date de plus de 15 minutes, pour eviter que TITANE raisonne sur un temps perime
 

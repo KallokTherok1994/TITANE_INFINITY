@@ -205,6 +205,7 @@ describe('TimePage', () => {
     const parsed = JSON.parse(raw ?? '{}');
     expect(parsed).toEqual(
       expect.objectContaining({
+        currentDateTime: '2026-04-04T09:15:00.000Z',
         timeZone: 'Europe/Paris',
         currentSegment: 'Matin Focus',
         eventsToday: 1,
@@ -217,6 +218,26 @@ describe('TimePage', () => {
     expect(await screen.findByTestId('time-chat-sync-status')).toHaveTextContent(
       /Sync chat\/raisonnement/i
     );
+  });
+
+  it('normalizes persisted TIME datetime to minute precision for chat context stability', async () => {
+    mockUseTimeAgenda.mockReturnValue(
+      buildHookState({
+        timeState: {
+          ...buildHookState().timeState,
+          currentDateTime: '2026-04-04T09:15:47.123Z',
+        },
+      })
+    );
+
+    await act(async () => {
+      renderTimePage('/time?tab=now');
+    });
+
+    const raw = window.localStorage.getItem(TIME_RUNTIME_CONTEXT_KEY);
+    expect(raw).not.toBeNull();
+    const parsed = JSON.parse(raw ?? '{}');
+    expect(parsed.currentDateTime).toBe('2026-04-04T09:15:00.000Z');
   });
 
   it('normalizes snake_case snapshot/stat payloads from backend truth', async () => {
