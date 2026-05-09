@@ -10,6 +10,9 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('DevicePermissions');
 import { secureInvoke } from '@/lib/security';
 
 // Simple Tauri detection without external dependencies

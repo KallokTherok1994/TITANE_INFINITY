@@ -12,6 +12,9 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('LTMContext');
 import { chatService } from '@/services/api/chat';
 import type { AIMessage } from '@/services/ai/types';
 

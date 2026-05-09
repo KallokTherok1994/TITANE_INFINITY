@@ -9,6 +9,9 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Debounce');
 
 /**
  * Debounce a value - updates only after delay without changes

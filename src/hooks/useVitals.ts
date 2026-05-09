@@ -12,6 +12,9 @@
  */
 
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Vitals');
 import { tauriClient } from '../services/tauriClient';
 import { createAdaptivePolling } from '@/utils/adaptivePolling';
 

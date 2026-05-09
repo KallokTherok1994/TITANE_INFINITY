@@ -31,6 +31,9 @@
  */
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularityStore');
 import { SingularityBridge } from '@/services/singularityBridge';
 import type { SingularityState } from '@/types/singularityState';
 

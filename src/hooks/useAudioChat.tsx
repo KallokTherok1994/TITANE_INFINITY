@@ -7,6 +7,9 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AudioChat');
 import { safeInvoke } from '@/utils/invoke';
 import { detectEnvironment } from '@/core/tauri/environment';
 import type {

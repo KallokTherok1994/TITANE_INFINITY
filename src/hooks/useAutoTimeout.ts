@@ -6,7 +6,10 @@
  * (enregistrement audio, dictation, mode audio conversation, etc.)
  */
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AutoTimeout');
 
 interface UseAutoTimeoutOptions {
   /** ID pour logging */
@@ -142,5 +145,3 @@ export function formatElapsedTime(seconds: number): string {
   return `${minutes}:${String(secs).padStart(2, '0')}`;
 }
 
-// Import React pour le hook
-import React from 'react';

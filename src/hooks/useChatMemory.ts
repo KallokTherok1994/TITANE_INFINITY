@@ -11,6 +11,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatMemory');
 import { chatMemoryCompactor } from '../services/chatMemoryCompactor';
 import type { ChatMode } from '../services/ai/chatEngine';
 import type { AIMessage } from '../services/ai/types';

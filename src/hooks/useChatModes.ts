@@ -4,6 +4,9 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatModes');
 import type { ChatMode } from '@/services/ai/chatTypes';
 
 export interface CustomMode {

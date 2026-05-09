@@ -2,6 +2,9 @@
 // Zoom (CTRL+Scroll) & Fullscreen (F11) keyboard shortcuts
 
 import { useEffect, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('WindowControls');
 import { tauriClient } from '@/lib/tauriClient';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 

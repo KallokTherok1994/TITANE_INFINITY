@@ -18,6 +18,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('HybridEngine');
 import { hybridEngine } from '../modules/hybrid/HybridEngine';
 import type {
   HybridMode,

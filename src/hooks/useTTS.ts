@@ -11,6 +11,9 @@
  */
 
 import { useState, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('TTS');
 import { audioService } from '@/features/audio-center/services/audioService';
 
 interface UseTTSReturn {

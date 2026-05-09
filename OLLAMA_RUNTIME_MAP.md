@@ -1,5 +1,22 @@
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
+## CURRENT CANONICAL STATE — 2026-05-08
+
+- Product chat runtime: gemma2:2b
+- Ollama DEV MCP VS Code: qwen3.5:9b
+- TOTAL_DEV Chat: qwen3.5:9b if aligned during this task; otherwise qwen2.5-coder explicitly retained as TOTAL_DEV-only.
+- Product runtime boundary: no DEV model may enter product defaults.
+- Authority gates:
+  - pnpm run verify:ollama:boundary
+  - pnpm run test -- tests/unit/scripts/ollamaDevConfig.test.ts
+  - pnpm run audit:agents:stack
+- Runtime proof still required for:
+  - TOTAL_DEV valid unlock
+  - TOTAL_DEV Chat generation
+  - Git panel
+  - Console panel
+  - File Inspector
+
 > 2026-05-03 — Tauri chat completion model truth: la voie IPC non-streaming `generate_response` publie désormais aussi `model` en plus de `provider`, et la chaîne `src-tauri/src/ai/{mod,router,gemini,ollama}.rs` -> `src-tauri/src/chat_engine/{types,mod}.rs` -> `src/services/tauri/chatEngine.commands.ts` -> `src/services/ai/chatEngine.ts` cesse d écraser ce modèle réel avec le nom du provider. La vérité `provider + model` survit donc enfin jusqu au chat frontend quand la réponse passe par le backend Tauri gouverné.
 
 > 2026-05-03 — Ollama streaming model truth: la voie streaming Ollama de `src-tauri/src/overdrive/chat_orchestrator.rs` ne republie plus aveuglément le modèle demandé dans `chat:stream:done`, `chat:stream:complete`, `ChatStreamResult` et le message assistant persisté. Le chunk terminal Ollama transporte maintenant `model`, et cette valeur devient l autorité runtime streamée quand elle est fournie.

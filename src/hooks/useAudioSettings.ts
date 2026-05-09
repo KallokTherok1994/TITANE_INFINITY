@@ -12,6 +12,9 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AudioSettings');
 import { audioService } from '@/features/audio-center/services/audioService';
 import { detectEnvironment } from '@/core/tauri/environment';
 import type {

@@ -4,6 +4,9 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ControlPanelSection');
 import { secureInvoke } from '@/lib/security';
 
 export interface UseControlPanelSectionOptions<T> {

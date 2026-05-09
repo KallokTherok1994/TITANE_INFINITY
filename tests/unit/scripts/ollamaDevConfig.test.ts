@@ -73,6 +73,11 @@ const ollamaDevPromptRaw = fs.readFileSync(
   'utf8'
 );
 
+const totalDevPageRaw = fs.readFileSync(
+  path.join(rootDir, 'src/pages/TotalDevPage.tsx'),
+  'utf8'
+);
+
 // ── Rust runtime source files ────────────────────────────────────────────────
 const rustSourceFiles = [
   'src-tauri/src/runtime_config.rs',
@@ -384,6 +389,25 @@ describe('Ollama Dev — OLLAMA_RUNTIME_MAP.md', () => {
 
   it('référence la baseline produit gemma2:2b dans le contexte de boundary normalization', () => {
     expect(ollamaRuntimeMap).toContain('Boundary normalization');
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('TOTAL_DEV — boundary model and governed language', () => {
+  it('aligne le modèle chat TOTAL_DEV sur qwen3.5:9b', () => {
+    expect(totalDevPageRaw).toContain('qwen3.5:9b');
+    expect(totalDevPageRaw).not.toContain('qwen2.5-coder');
+  });
+
+  it('n’emploie plus le wording non gouverné GOD DEV/FULL DEV', () => {
+    expect(totalDevPageRaw).not.toContain('GOD DEV');
+    expect(totalDevPageRaw).not.toContain('FULL DEV');
+    expect(totalDevPageRaw).toContain('TOTAL_DEV — Cockpit gouverne');
+    expect(totalDevPageRaw).toContain('GOVERNED_DEV_UNLOCKED');
+    expect(totalDevPageRaw).toContain(
+      'actions limitées aux commandes, fichiers et opérations explicitement autorisés par le backend Rust'
+    );
   });
 });
 

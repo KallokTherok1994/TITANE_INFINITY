@@ -13,6 +13,9 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('UnifiedMemory');
 import type {
   UnifiedMemory,
   UnifiedMemoryEntry,

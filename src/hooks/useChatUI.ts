@@ -11,6 +11,9 @@
  */
 
 import { useState, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ChatUI');
 import type { AIMessage } from '../services/ai/types';
 
 export interface UseChatUIOptions {

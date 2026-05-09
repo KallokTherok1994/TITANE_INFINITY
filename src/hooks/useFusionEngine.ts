@@ -14,6 +14,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('FusionEngine');
 import { fusionEngine } from '@/modules/fusion/FusionEngine';
 import { datasetBuilder } from '@/modules/fusion/DatasetBuilder';
 import type {

@@ -11,6 +11,9 @@
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ProviderStatus');
 import { tauriClient } from '../services/tauriClient';
 import type { ProviderStatus } from '../services/tauriClient';
 

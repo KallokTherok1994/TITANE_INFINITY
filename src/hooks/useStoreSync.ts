@@ -11,6 +11,9 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('StoreSync');
 import { useMemoryStore } from '@stores/memoryStore';
 import { useEvolutionStore } from '@stores/evolutionStore';
 

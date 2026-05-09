@@ -1,10 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE∞ v30.0.0 — TOTAL_DEV PAGE
- * GOD DEV TITANE — Espace de développement souverain
+ * TOTAL_DEV — Cockpit gouverne
  *
  * Architecture: Ring 1 → IPC canonique → Rust backends
- * Provider: QWEN-Coder via Ollama (modèle qwen2.5-coder)
+ * Provider: QWEN Dev via Ollama (modele qwen3.5:9b)
  * Unlock: SHA-256 backend only. Jamais de secret brut frontend.
  * Session: 1h expiry, visible, revokable
  *
@@ -103,7 +103,7 @@ interface ConsoleEntry {
 // ARCHITECTURE CONTEXT INJECTION
 // Used as system prompt prefix for QWEN-Coder
 // ─────────────────────────────────────────────────────────────────
-const TOTAL_DEV_SYSTEM_PROMPT = `Tu es GOD DEV TITANE — l'agent de développement souverain de TITANE∞ v30.0.0.
+const TOTAL_DEV_SYSTEM_PROMPT = `Tu es TOTAL_DEV — Cockpit gouverne TITANE∞ v30.0.0.
 
 ARCHITECTURE CANONIQUE:
 - 4-Ring strict: Ring0=Tauri/Rust, Ring1=IPC commands, Ring2=Services TS, Ring3=UI/React
@@ -319,12 +319,12 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
       id: 'init',
       role: 'assistant',
       content:
-        '**GOD DEV TITANE** prêt.\n\nProvider: **QWEN-Coder** (qwen2.5-coder via Ollama)\nMode: ' +
-        (lockState === 'UNLOCKED' ? '🔓 FULL DEV' : '🔒 ANALYZE ONLY') +
+        '**TOTAL_DEV — Cockpit gouverne** pret.\n\nProvider: **QWEN Dev** (qwen3.5:9b via Ollama)\nMode: ' +
+        (lockState === 'UNLOCKED' ? '🔓 GOVERNED DEV' : '🔒 ANALYZE ONLY') +
         '\n\nContexte architecture injecté. Posez votre question ou donnez une mission.',
       timestamp: Date.now(),
       provider: 'ollama',
-      model: 'qwen2.5-coder',
+      model: 'qwen3.5:9b',
     },
   ]);
   const [input, setInput] = useState('');
@@ -350,10 +350,10 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
     setLoading(true);
 
     try {
-      // Construire le contexte pour QWEN-Coder
+      // Construire le contexte pour QWEN Dev
       const modeNote =
         lockState === 'UNLOCKED'
-          ? '[MODE: FULL_DEV_UNLOCKED — toutes les actions sont autorisées]'
+          ? '[MODE: GOVERNED_DEV_UNLOCKED — actions limitées aux commandes, fichiers et opérations explicitement autorisés par le backend Rust]'
           : '[MODE: ANALYZE_ONLY_LOCKED — lecture et analyse uniquement]';
 
       const systemPrompt = TOTAL_DEV_SYSTEM_PROMPT + '\n\n' + modeNote;
@@ -363,7 +363,7 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
         content: m.content,
       }));
 
-      // Utiliser la commande chat canonique avec provider Ollama + modèle qwen
+      // Utiliser la commande chat canonique avec provider Ollama + modele qwen
       const result = await secureInvoke<{
         ok?: boolean;
         content?: string;
@@ -376,7 +376,7 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           system_prompt: systemPrompt,
           history: chatHistory,
           provider: 'ollama',
-          model: 'qwen2.5-coder',
+          model: 'qwen3.5:9b',
           mode: 'total_dev',
         },
       });
@@ -387,7 +387,7 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
         result.response ??
         (result.error
           ? `[Erreur provider: ${result.error}]`
-          : '[Aucune réponse du provider QWEN-Coder. Vérifiez que Ollama est actif avec qwen2.5-coder]');
+          : '[Aucune réponse du provider QWEN Dev. Verifiez que Ollama est actif avec qwen3.5:9b]');
 
       const assistantMsg: ChatMessage = {
         id: `a_${Date.now()}`,
@@ -395,17 +395,17 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
         content: responseText,
         timestamp: Date.now(),
         provider: 'ollama',
-        model: 'qwen2.5-coder',
+        model: 'qwen3.5:9b',
       };
       setMessages(prev => [...prev, assistantMsg]);
     } catch (e) {
       const errMsg: ChatMessage = {
         id: `e_${Date.now()}`,
         role: 'assistant',
-        content: `**ERREUR IPC:** ${String(e)}\n\nVérifiez que Ollama est actif: \`ollama run qwen2.5-coder\``,
+        content: `**ERREUR IPC:** ${String(e)}\n\nVerifiez que Ollama est actif: ollama run qwen3.5:9b`,
         timestamp: Date.now(),
         provider: 'ollama',
-        model: 'qwen2.5-coder',
+        model: 'qwen3.5:9b',
       };
       setMessages(prev => [...prev, errMsg]);
     } finally {
@@ -427,7 +427,7 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
     <div className="total-dev-panel">
       <div className="total-dev-panel-header">
         <span>💬 CHAT DEV</span>
-        <span className="total-dev-provider-badge">QWEN-Coder · ollama</span>
+        <span className="total-dev-provider-badge">QWEN Dev · ollama</span>
       </div>
       <div className="total-dev-chat-messages">
         {messages.map(msg => (
@@ -448,7 +448,7 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
           <div className="total-dev-chat-msg total-dev-chat-msg--assistant">
             <div className="total-dev-chat-msg-meta">
               <span className="total-dev-chat-role">🤖 ASSISTANT</span>
-              <span className="total-dev-chat-model">qwen2.5-coder</span>
+              <span className="total-dev-chat-model">qwen3.5:9b</span>
             </div>
             <div className="total-dev-chat-loading">
               <span className="total-dev-spinner" /> Génération en cours...
@@ -696,7 +696,7 @@ const GitPanel = memo<{ lockState: LockState }>(({ lockState }) => {
   return (
     <div className="total-dev-panel">
       <div className="total-dev-panel-header">
-        <span>🌿 GIT POWER</span>
+        <span>🌿 Git inspection read-only</span>
         {lockState !== 'UNLOCKED' && (
           <span className="total-dev-badge total-dev-badge--locked">LOCKED</span>
         )}
@@ -967,12 +967,12 @@ export const TotalDevPage: React.FC = () => {
         <div className="total-dev-header-left">
           <h1 className="total-dev-title">
             ⚛ <span className="total-dev-title-main">TOTAL_DEV</span>
-            <span className="total-dev-title-sub">GOD DEV TITANE∞</span>
+            <span className="total-dev-title-sub">TOTAL_DEV — Cockpit gouverne</span>
           </h1>
         </div>
         <div className="total-dev-header-meta">
           <LockBadge lockState={lockState} expiresAt={expiresAt} />
-          <span className="total-dev-meta-item">Provider: qwen2.5-coder</span>
+          <span className="total-dev-meta-item">Provider: qwen3.5:9b</span>
           <span className="total-dev-meta-item">v30.0.0</span>
           {expiresLabel && (
             <span className="total-dev-meta-item">Expire: {expiresLabel}</span>
@@ -1040,7 +1040,7 @@ export const TotalDevPage: React.FC = () => {
         <span>TITANE∞ v30.0.0 · TOTAL_DEV · Ring1→IPC→Rust</span>
         <span>
           {lockState === 'UNLOCKED'
-            ? '🔓 Session active — tous les pouvoirs GOD DEV disponibles'
+            ? '🔓 Session active — actions limitees par allowlist Rust'
             : '🔒 Mode ANALYZE ONLY — unlock pour les actions critiques'}
         </span>
       </footer>

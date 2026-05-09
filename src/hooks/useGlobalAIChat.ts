@@ -12,6 +12,9 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('GlobalAIChat');
 import { useChat } from './useChat';
 import { useSingularityState } from '../core/state/SingularityState';
 import { useAIActions } from '../core/state/SingularityState.selectors';

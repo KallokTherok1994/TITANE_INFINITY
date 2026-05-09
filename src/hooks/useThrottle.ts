@@ -9,6 +9,9 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Throttle');
 
 /**
  * Throttle a value - updates at most once per interval

@@ -6,6 +6,9 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Preferences');
 
 interface PreferencesStore {
   // Audio

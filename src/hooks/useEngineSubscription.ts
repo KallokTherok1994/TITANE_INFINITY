@@ -6,6 +6,9 @@
  */
 
 import { useEffect } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('EngineSubscription');
 import {
   useSingularityState,
   type EngineName,

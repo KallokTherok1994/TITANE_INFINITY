@@ -4,6 +4,9 @@
  */
 
 import { useEffect } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('ZoomControl');
 
 import {
   applyZoomScale,

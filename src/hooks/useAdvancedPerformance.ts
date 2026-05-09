@@ -9,7 +9,10 @@
  * @created 2025-12-16
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AdvancedPerformance');
 import {
   advancedPerformanceMonitor,
   type PerformanceSnapshot,
@@ -326,8 +329,3 @@ export function useAdvancedPerformance(
   };
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// HELPER: useMemo import
-// ═══════════════════════════════════════════════════════════════════════════
-
-import { useMemo } from 'react';

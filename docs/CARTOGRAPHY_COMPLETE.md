@@ -1,3 +1,11 @@
+## 2026-05-08 — TOTAL_DEV + Ollama DEV boundary stabilization
+
+> Alignement minimal de la surface TOTAL_DEV avec la frontière Ollama DEV: `src/pages/TotalDevPage.tsx` passe en wording gouverné (cockpit, allowlist Rust) et modèle chat DEV `qwen3.5:9b` sans mutation des defaults produit (`gemma2:2b`).
+
+> Couverture desktop étendue sur `e2e/desktop/total-dev.wdio.test.js`: unlock valide par token env, preuve badge unlocked, panneau Git read-only, console gouvernée (commande safe + rejet unsafe), file inspector (lecture package.json + rejet .env), badge modèle chat et revoke session.
+
+> Autorité locale explicitée via `docs/dev/LOCAL_AI_SURFACES_AUTHORITY.md` et bloc canonique ajouté en tête de `OLLAMA_RUNTIME_MAP.md` pour sceller la séparation Product Chat / Ollama DEV MCP / TOTAL_DEV.
+
 ## 2026-05-08 — Cognitive trace native-first + desktop/agent proof
 
 > La chaîne conversationnelle privilégie désormais une `cognitive_trace` native quand le moteur amont la fournit, puis sanitize systématiquement le payload avant projection UI. Le fallback heuristique dans `useConversationEngine` reste actif, mais s appuie mieux sur `links_to_contexts` pour distinguer besoin web, tentative web et vérification factuelle.

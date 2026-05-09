@@ -1,3 +1,9 @@
+# [2026-05-08] TOTAL_DEV boundary alignment truth
+
+- Surface canonique: src/pages/TotalDevPage.tsx
+- Vérité runtime affichée: wording gouverné TOTAL_DEV (plus de GOD DEV/FULL DEV), mode unlock explicite GOVERNED_DEV_UNLOCKED, et modèle DEV aligné qwen3.5:9b.
+- Surface test desktop qualifiée: e2e/desktop/total-dev.wdio.test.js couvre lock/wrong token, valid unlock via token env, Git read-only, console allowlist (safe+unsafe), file inspector (package.json + blocage .env), badge modèle chat, et revoke session.
+
 # [2026-05-09] Memory isolation truth — STM cleanup + test namespace hardening
 
 - Surface mémoire frontend: `src/services/chatMemoryCompactor.ts` résout désormais un namespace gouverné (`prod|dev|test`) et écrit les clés `localStorage` isolées en test (`titane_test_chat_mode_*`, `titane_test_chat_conversation_*`) pour empêcher la contamination des sessions TITANE.

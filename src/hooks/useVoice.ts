@@ -20,6 +20,9 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('Voice');
 import { hybridTTS, type TTSConfig, type TTSStatus } from '../services/tts/hybridTTS';
 import { warnOncePerSession } from '@/utils/deprecationWarnings';
 

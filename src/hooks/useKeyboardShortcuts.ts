@@ -14,6 +14,9 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('KeyboardShortcuts');
 
 export interface KeyboardShortcut {
   key: string;

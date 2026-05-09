@@ -17,6 +17,9 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('DeviceHealth');
 import {
   deviceHealthService,
   type SystemHealthReport,

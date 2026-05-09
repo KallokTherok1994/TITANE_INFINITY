@@ -14,7 +14,9 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { logger } from '@/lib/logger';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('LivingEngines');
 import type { PersonaState } from '@/types/singularityState';
 import type { MoodType } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 

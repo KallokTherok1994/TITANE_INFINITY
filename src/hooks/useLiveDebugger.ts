@@ -11,6 +11,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('LiveDebugger');
 import {
   liveDebugger,
   type LiveDebuggerState,

@@ -12,6 +12,9 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('SingularitySync');
 import { secureInvoke } from '@/lib/security';
 import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
 import type { SingularityState } from '@/core/ARCHITECTURE_TYPES_v24-v∞';

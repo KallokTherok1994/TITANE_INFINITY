@@ -12,6 +12,9 @@
  */
 
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('MemoryEngine');
 import { tauriClient } from '@/lib/tauriClient';
 import type {
   MemoryContentType as PersistentMemoryContentType,

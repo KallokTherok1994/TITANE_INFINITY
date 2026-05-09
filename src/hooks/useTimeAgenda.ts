@@ -6,6 +6,9 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('TimeAgenda');
 import {
   timeEngine,
   agendaEngine,

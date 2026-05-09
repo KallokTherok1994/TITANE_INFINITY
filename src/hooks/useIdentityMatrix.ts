@@ -10,6 +10,9 @@
  */
 
 import { useEffect, useState, useMemo } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('IdentityMatrix');
 import {
   IdentityMatrix,
   DEFAULT_IDENTITY_MATRIX,

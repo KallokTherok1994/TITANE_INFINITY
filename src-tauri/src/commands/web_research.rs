@@ -66,6 +66,7 @@ const M_INDEX_QUERY_OK: &str = "INDEX_QUERY_OK";
 const M_INDEX_QUERY_EMPTY: &str = "INDEX_QUERY_EMPTY";
 const M_RETRIEVE_START: &str = "RETRIEVE_PASSAGES_START";
 const M_RETRIEVE_OK: &str = "RETRIEVE_PASSAGES_OK";
+const M_RETRIEVE_FALLBACK_CONTEXT: &str = "RETRIEVE_FALLBACK_CONTEXTUAL";
 const M_INDEX_SKIP: &str = "INDEX_SKIPPED_P6";
 const M_RETRIEVE_SKIP: &str = "RETRIEVE_SKIPPED_P6";
 // P6 RAG markers
@@ -892,12 +893,27 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         }
 
         markers.push(M_RAG_START.to_string());
-        let rag_passages = IndexService::retrieve_passages(
+        let mut rag_passages = IndexService::retrieve_passages(
             text,
             &query.question,
             vector_service::VECTOR_RERANK_INPUT_SIZE,
             target_url,
         );
+
+        // Keep evidence-bound behavior while avoiding false "no indexed passages" outcomes
+        // for broad queries that have weak lexical overlap with fetched source text.
+        if rag_passages.is_empty() {
+            let fallback_k = options.max_sources.map(|s| s as usize).unwrap_or(5).max(1);
+            rag_passages = build_contextual_fallback_passages(text, target_url, fallback_k);
+            if !rag_passages.is_empty() {
+                markers.push(M_RETRIEVE_FALLBACK_CONTEXT.to_string());
+                limitations.push(
+                    "Low lexical overlap with query; contextual passages were used as fallback."
+                        .to_string(),
+                );
+            }
+        }
+
         retrieved_passages_count = rag_passages.len();
 
         // P7: vector reranking (if ENABLE_VECTOR_SEARCH env flag set)
@@ -976,6 +992,30 @@ fn opt_vec<T>(v: Vec<T>) -> Option<Vec<T>> {
     } else {
         Some(v)
     }
+}
+
+fn build_contextual_fallback_passages(body: &str, url: &str, top_k: usize) -> Vec<RetrievedPassage> {
+    let mut char_offset: usize = 0;
+    body
+        .split('\n')
+        .enumerate()
+        .filter_map(|(para_idx, para)| {
+            let start = char_offset;
+            char_offset += para.len() + 1;
+            let trimmed = para.trim();
+            if trimmed.is_empty() {
+                return None;
+            }
+            Some(RetrievedPassage {
+                url: url.to_string(),
+                passage: trimmed.to_string(),
+                score: 1,
+                paragraph_index: Some(para_idx as u32),
+                char_start: Some(start.min(u32::MAX as usize) as u32),
+            })
+        })
+        .take(top_k)
+        .collect()
 }
 
 fn push_skip_markers(markers: &mut Vec<String>) {
@@ -1688,6 +1728,67 @@ mod tests {
         assert!(
             report.answer.citations.is_empty(),
             "No citations expected for empty index"
+        );
+    }
+
+    #[tokio::test]
+    async fn g_web_live_contextual_fallback_when_no_lexical_match() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://fallback.example.com/context";
+        let html = b"<html><head><title>Contextual Fallback</title></head><body>\
+            <p>Global market conditions changed this week with significant policy updates.</p>\
+            <p>Analysts reported broad shifts in macro trends and economic sentiment.</p>\
+            </body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        // Use a deliberately non-overlapping lexical query to force contextual fallback.
+        let report = run_research(
+            &make_query("zzqv_non_overlap_token_9981"),
+            &ResearchOptions {
+                mode: ResearchMode::WebLive,
+                target_url: Some(url.to_string()),
+                max_requests: Some(5),
+                max_bytes_total: Some(1024 * 1024),
+                timeout_ms: Some(5_000),
+                cache_enabled: Some(true),
+                respect_robots: Some(false),
+                sandbox_root: Some(sandbox),
+                domain_allowlist: None,
+                domain_denylist: None,
+                max_sources: Some(3),
+                max_pages: None,
+                freshness_days: None,
+                rate_limit_profile: None,
+                seed_urls: None,
+                max_depth: None,
+            },
+        )
+        .await;
+
+        assert!(
+            report
+                .trace
+                .markers
+                .iter()
+                .any(|m| m == "RETRIEVE_FALLBACK_CONTEXTUAL"),
+            "Expected contextual fallback marker, got: {:?}",
+            report.trace.markers
+        );
+        assert!(
+            report.answer.retrieved_passages_count > 0,
+            "Expected fallback passages > 0"
+        );
+        assert!(
+            !report.answer.answer.contains("No indexed passages"),
+            "Fallback should prevent no-indexed-passages answer: {}",
+            report.answer.answer
+        );
+        assert!(
+            !report.answer.citations.is_empty(),
+            "Expected citations when contextual fallback passages are used"
         );
     }
 

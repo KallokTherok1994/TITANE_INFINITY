@@ -11,6 +11,9 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('EngineVitals');
 import { tauriClient } from '../services/tauriClient';
 
 export interface EngineVitals {

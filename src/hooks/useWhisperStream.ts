@@ -24,6 +24,9 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('WhisperStream');
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { tauriClient } from '@/lib/tauriClient';
 
