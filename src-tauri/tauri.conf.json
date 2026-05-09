@@ -1,5 +1,5 @@
 {
-  "version": "33.0.9",
+  "version": "33.0.10",
   "identifier": "com.titane.infinity",
   "bundle": {
     "icon": [
@@ -13,54 +13,28 @@
     "copyright": "© 2025-2026 TITANE∞",
     "category": "Productivity",
     "active": true,
-    "targets": "all",
-    "windows": {
-      "digestAlgorithm": null,
-      "certificateThumbprint": null,
-      "timestampUrl": null,
-      "tsp": false,
-      "webviewInstallMode": {
-        "type": "downloadBootstrapper",
-        "silent": true
-      },
-      "allowDowngrades": true,
-      "wix": {
-        "language": "fr-FR"
-      },
-      "nsis": null,
-      "signCommand": null
-    }
+    "targets": "all"
   },
   "app": {
-    "windows": [
-      {
-        "label": "main",
-        "url": "/",
-        "title": "TITANE∞",
-        "width": 1440,
-        "height": 900,
-        "minWidth": 1024,
-        "minHeight": 600,
-        "resizable": true,
-        "fullscreen": false,
-        "decorations": true,
-        "visible": false,
-        "center": true,
-        "devtools": false
-      }
-    ],
     "security": {
       "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https://graph.facebook.com https://*.fbcdn.net; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com https://www.facebook.com https://graph.facebook.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
+        "scope": [
+          "$APPDATA/**",
+          "$RESOURCE/**",
+          "$APPCONFIG/**",
+          "$APPLOCALDATA/**"
+        ]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -1008,18 +982,6 @@
               "command": "check_local_tts"
             },
             {
-              "command": "get_travel_stats"
-            },
-            {
-              "command": "list_snapshots"
-            },
-            {
-              "command": "restore_snapshot"
-            },
-            {
-              "command": "delete_snapshot"
-            },
-            {
               "command": "titan_persist_event"
             },
             {
@@ -1294,57 +1256,6 @@
             },
             {
               "command": "performance_get_metrics"
-            },
-            {
-              "command": "agenda_load_events"
-            },
-            {
-              "command": "agenda_save_event"
-            },
-            {
-              "command": "agenda_save_events"
-            },
-            {
-              "command": "agenda_delete_event"
-            },
-            {
-              "command": "agenda_sync"
-            },
-            {
-              "command": "calibrate_titane_voice"
-            },
-            {
-              "command": "chat_mode_change"
-            },
-            {
-              "command": "chat_mode_sync"
-            },
-            {
-              "command": "evolution_save_state"
-            },
-            {
-              "command": "submit_evolution_data"
-            },
-            {
-              "command": "knowledge_ingest"
-            },
-            {
-              "command": "knowledge_save_state"
-            },
-            {
-              "command": "progression_save_state"
-            },
-            {
-              "command": "oauth_facebook_initiate"
-            },
-            {
-              "command": "oauth_facebook_callback"
-            },
-            {
-              "command": "oauth_facebook_get_profile"
-            },
-            {
-              "command": "oauth_facebook_logout"
             }
           ],
           "deny": []
@@ -1357,10 +1268,6 @@
     }
   },
   "build": {
-    "devUrl": "http://localhost:1420",
-    "beforeDevCommand": "corepack pnpm exec vite dev --host 127.0.0.1 --port 1420 --strictPort",
-    "frontendDist": "../dist",
-    "removeUnusedCommands": false,
-    "additionalWatchFolders": []
+    "frontendDist": "../dist"
   }
 }
