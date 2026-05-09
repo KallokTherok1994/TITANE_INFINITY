@@ -168,6 +168,10 @@ function toFiniteNumber(value: unknown, fallback = 0): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
 
+/** Maximum age (ms) for titane_time_runtime_context_v1 — 15 minutes.
+ * Values older than this are stale and excluded from chat temporal injection. */
+const TIME_RUNTIME_MAX_AGE_MS = 900_000;
+
 /** Maximum age (ms) for titane_twin_fusion_v1 — 30 minutes.
  *  Values older than this are stale and excluded from context injection. */
 const TWINS_FUSION_MAX_AGE_MS = 1_800_000;
@@ -390,6 +394,19 @@ function readTimeRuntimeContext(): ChatContextEnvelope['timeContext'] | undefine
     return undefined;
   }
 
+  if (typeof raw.updatedAt !== 'number' || !Number.isFinite(raw.updatedAt)) {
+    logger.warn(`${TIME_RUNTIME_CONTEXT_KEY}: missing updatedAt — treating as stale`);
+    return undefined;
+  }
+
+  const ageMs = Date.now() - raw.updatedAt;
+  if (ageMs > TIME_RUNTIME_MAX_AGE_MS) {
+    logger.warn(
+      `${TIME_RUNTIME_CONTEXT_KEY}: stale (age=${Math.round(ageMs / 60_000)}min > 15min) — excluded from context`
+    );
+    return undefined;
+  }
+
   return {
     currentDateTime,
     timeZone,
@@ -406,7 +423,7 @@ function readTimeRuntimeContext(): ChatContextEnvelope['timeContext'] | undefine
       raw.runtimeSource === 'uninitialized'
         ? raw.runtimeSource
         : undefined,
-    updatedAt: toFiniteNumber(raw.updatedAt, Date.now()),
+    updatedAt: raw.updatedAt,
   };
 }
 

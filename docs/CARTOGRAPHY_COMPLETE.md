@@ -2057,3 +2057,5 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 > La surface `/time` publie maintenant une verite temporelle gouvernee pour le chat et le raisonnement via `titane_time_runtime_context_v1`, au lieu de ne fournir qu un etat cognitif partiel. Cette cle est alimentee par `src/pages/TimePage.tsx`, relue par `src/services/chat/chatMemorySingleDoor.ts`, puis injectee dans `titane_chat_context_envelope_v1.timeContext`.
 
 > La verite visible cote UI est exposee par `time-chat-sync-status`; la preuve desktop dediee est `e2e/desktop/time-chat-context-sync.wdio.test.js`, qui verifie la coherence `/time` -> `localStorage` -> `/titane` -> `titane_chat_context_envelope_v1`.
+
+> Optimisation additionnelle: `timeContext` est maintenant freshness-guarded (15 minutes max) et n est plus injecte dans le chat s il est stale. La page `/time` n ecrit aussi la cle gouvernee que si le contexte semantique change, ce qui reduit le churn localStorage et garde `updatedAt` significatif.

@@ -272,6 +272,7 @@
   - la page `/time` publie `time-chat-sync-status` comme verite visible de synchronisation temporelle
   - la cle gouvernee `titane_time_runtime_context_v1` transporte `currentDateTime`, `timeZone`, `currentSegment`, `eventsToday`, `eventsThisWeek`, `todayFocusMinutes`, `currentEnergy`, `activeTab` et `runtimeSource`
   - le chat reconstruit `titane_chat_context_envelope_v1.timeContext` a partir de cette cle avant generation
+  - garde anti-derive: `timeContext` est exclu du chat s il date de plus de 15 minutes, pour eviter que TITANE raisonne sur un temps perime
 
 # [2026-04-23] DocCenter — Export DOCX natif (Phase 3)
 

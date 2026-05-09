@@ -44,6 +44,7 @@ describe('chatMemorySingleDoor time context', () => {
   });
 
   it('reads TIME runtime context from localStorage into the chat envelope', () => {
+    const now = Date.now();
     window.localStorage.setItem(
       TIME_RUNTIME_CONTEXT_KEY,
       JSON.stringify({
@@ -57,7 +58,7 @@ describe('chatMemorySingleDoor time context', () => {
         currentEnergy: 82,
         activeTab: 'cognitive',
         runtimeSource: 'persistence-active',
-        updatedAt: 1715177700000,
+        updatedAt: now,
       })
     );
 
@@ -80,6 +81,7 @@ describe('chatMemorySingleDoor time context', () => {
   });
 
   it('formats the TIME runtime context into the governed system prompt block', () => {
+    const now = Date.now();
     window.localStorage.setItem(
       TIME_RUNTIME_CONTEXT_KEY,
       JSON.stringify({
@@ -92,7 +94,7 @@ describe('chatMemorySingleDoor time context', () => {
         todayFocusMinutes: 210,
         currentEnergy: 82,
         runtimeSource: 'persistence-active',
-        updatedAt: 1715177700000,
+        updatedAt: now,
       })
     );
 
@@ -113,6 +115,28 @@ describe('chatMemorySingleDoor time context', () => {
       JSON.stringify({
         currentDateTime: '',
         eventsToday: 1,
+      })
+    );
+
+    const envelope = buildChatContextEnvelope(makeInput());
+
+    expect(envelope?.timeContext).toBeUndefined();
+  });
+
+  it('excludes stale TIME runtime payloads to avoid temporal drift in chat', () => {
+    window.localStorage.setItem(
+      TIME_RUNTIME_CONTEXT_KEY,
+      JSON.stringify({
+        currentDateTime: '2026-05-08T14:15:00.000Z',
+        timeZone: 'America/Toronto',
+        currentSegment: 'Deep Focus',
+        isWorkHours: true,
+        eventsToday: 3,
+        eventsThisWeek: 9,
+        todayFocusMinutes: 210,
+        currentEnergy: 82,
+        runtimeSource: 'persistence-active',
+        updatedAt: Date.now() - 901_000,
       })
     );
 

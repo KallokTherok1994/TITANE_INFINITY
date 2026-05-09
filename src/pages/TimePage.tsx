@@ -18,7 +18,10 @@ import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { useTimeAgenda } from '@/hooks/useTimeAgenda';
 import type { AgendaEvent } from '@/engines/time';
-import { TIME_RUNTIME_CONTEXT_KEY } from '@/services/chat/chatMemorySingleDoor';
+import {
+  TIME_RUNTIME_CONTEXT_KEY,
+  type ChatContextEnvelope,
+} from '@/services/chat/chatMemorySingleDoor';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import './TimePage.css';
@@ -126,6 +129,8 @@ interface CognitiveStateSnapshot {
   segment?: string;
   todayFocusMinutes?: number;
 }
+
+type TimeRuntimeContextSnapshot = NonNullable<ChatContextEnvelope['timeContext']>;
 
 const isSameCalendarDay = (left: Date, right: Date): boolean => {
   return (
@@ -254,6 +259,65 @@ const readStoredCognitiveState = (
 
 const toFiniteNumber = (value: unknown, fallback: number): number => {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+};
+
+const writeLocalStorageIfChanged = (key: string, value: unknown): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    const nextSerialized = JSON.stringify(value);
+    if (window.localStorage.getItem(key) === nextSerialized) {
+      return;
+    }
+    window.localStorage.setItem(key, nextSerialized);
+  } catch {
+    // non-blocking
+  }
+};
+
+const readStoredTimeRuntimeContext = (): Partial<TimeRuntimeContextSnapshot> | null => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(TIME_RUNTIME_CONTEXT_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as Partial<TimeRuntimeContextSnapshot>;
+  } catch {
+    return null;
+  }
+};
+
+const persistTimeRuntimeContext = (
+  nextContext: Omit<TimeRuntimeContextSnapshot, 'updatedAt'>
+): void => {
+  const previous = readStoredTimeRuntimeContext();
+  const previousComparable = previous
+    ? {
+        currentDateTime: previous.currentDateTime,
+        timeZone: previous.timeZone,
+        currentSegment: previous.currentSegment,
+        isWorkHours: previous.isWorkHours,
+        eventsToday: previous.eventsToday,
+        eventsThisWeek: previous.eventsThisWeek,
+        todayFocusMinutes: previous.todayFocusMinutes,
+        currentEnergy: previous.currentEnergy,
+        activeTab: previous.activeTab,
+        runtimeSource: previous.runtimeSource,
+      }
+    : null;
+
+  if (previousComparable && JSON.stringify(previousComparable) === JSON.stringify(nextContext)) {
+    return;
+  }
+
+  writeLocalStorageIfChanged(TIME_RUNTIME_CONTEXT_KEY, {
+    ...nextContext,
+    updatedAt: Date.now(),
+  } satisfies TimeRuntimeContextSnapshot);
 };
 
 const normalizeSnapshot = (raw: unknown): Snapshot | null => {
@@ -414,26 +478,18 @@ export const TimePage: React.FC = () => {
       return;
     }
 
-    try {
-      window.localStorage.setItem(
-        TIME_RUNTIME_CONTEXT_KEY,
-        JSON.stringify({
-          currentDateTime: timeState?.currentDateTime ?? currentDate.toISOString(),
-          timeZone: timeState?.timeZone ?? 'Local',
-          currentSegment: agendaStats.currentSegment,
-          isWorkHours: agendaStats.isWorkHours,
-          eventsToday: agendaStats.eventsToday,
-          eventsThisWeek: agendaStats.eventsThisWeek,
-          todayFocusMinutes,
-          currentEnergy,
-          activeTab,
-          runtimeSource: snapshotRuntimeSource,
-          updatedAt: Date.now(),
-        })
-      );
-    } catch {
-      // non-blocking
-    }
+    persistTimeRuntimeContext({
+      currentDateTime: timeState?.currentDateTime ?? currentDate.toISOString(),
+      timeZone: timeState?.timeZone ?? 'Local',
+      currentSegment: agendaStats.currentSegment,
+      isWorkHours: agendaStats.isWorkHours,
+      eventsToday: agendaStats.eventsToday,
+      eventsThisWeek: agendaStats.eventsThisWeek,
+      todayFocusMinutes,
+      currentEnergy,
+      activeTab,
+      runtimeSource: snapshotRuntimeSource,
+    });
   }, [
     activeTab,
     agendaStats.currentSegment,
