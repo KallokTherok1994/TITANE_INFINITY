@@ -1,3 +1,13 @@
+## 2026-05-09 — Knowledge memory metabolism overlay (Phase 3 minimal)
+
+> La cartographie `src/services/knowledge_runtime/` s étend maintenant au devenir de la connaissance après sélection. `MemoryCandidateLedger.ts` transforme un verdict `selected` stable en candidats mémoire gouvernés, mais refuse encore la consolidation directe des éléments `researchRequired` ou bloqués.
+
+
+
+> `MemoryPromotionPolicy.ts` et `MemoryAgingPolicy.ts` introduisent une stratification minimale du futur savoir interne: trace, probation, ready, aging, stale, expire_now. La vérité cartographiée n est donc plus seulement "quoi injecter maintenant", mais aussi "quoi laisser éventuellement devenir structure plus tard, avec quel délai et quelle sévérité".
+
+
+
 ## 2026-05-09 — Knowledge selection verdict overlay (Phase 2 minimal)
 
 > La cartographie `src/services/knowledge_runtime/` ne se limite plus à la qualification des entrées KB. `KnowledgeRetrievalKernel.ts` fusionne maintenant un score lexical existant avec un signal sémantique léger et un score d autorité dérivé du registre C2, puis applique des pénalités de risque/fraîcheur/confusion pour dériver un `finalScore` gouverné.

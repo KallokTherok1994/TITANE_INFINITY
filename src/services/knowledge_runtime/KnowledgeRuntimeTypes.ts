@@ -97,3 +97,51 @@ export interface KnowledgeRegistryCoverage {
   covered: number;
   missing: string[];
 }
+
+export type MemoryCandidateOrigin =
+  | 'web_research'
+  | 'conversation'
+  | 'kb_selection'
+  | 'user_fact';
+
+export type MemoryCandidateStructureType =
+  | 'content'
+  | 'heuristic'
+  | 'preference'
+  | 'rule'
+  | 'temporal_fact';
+
+export type MemoryCandidateProbationStatus =
+  | 'candidate'
+  | 'probation'
+  | 'ready'
+  | 'rejected';
+
+export interface MemoryCandidate {
+  id: string;
+  origin: MemoryCandidateOrigin;
+  knowledgeId: string;
+  category: string;
+  content: string;
+  structureType: MemoryCandidateStructureType;
+  confidence: number;
+  createdAt: string;
+  lastSeenAt: string;
+  usageCount: number;
+  stabilityScore: number;
+  contradictionFlag: boolean;
+  probationStatus: MemoryCandidateProbationStatus;
+  expiresAt: string | null;
+  supportingSignals: string[];
+}
+
+export interface PromotionDecision {
+  action: 'keep_trace' | 'enter_probation' | 'promote' | 'defer' | 'reject';
+  reason: string;
+  nextReviewAt?: string;
+}
+
+export interface AgingDecision {
+  status: 'stable' | 'aging' | 'stale' | 'expire_now';
+  reason: string;
+}

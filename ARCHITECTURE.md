@@ -1,3 +1,17 @@
+## 2026-05-09 — Knowledge memory metabolism overlay (Phase 3 minimal)
+
+> `src/services/knowledge_runtime/MemoryCandidateLedger.ts` ajoute un ledger de candidats mémoire gouvernés au-dessus du verdict de sélection KB. Les entrées retenues n accèdent pas directement à une mémoire durable: elles deviennent d abord des `MemoryCandidate` avec provenance, score de stabilité, usage count, probation status et éventuelle expiration.
+
+
+
+> `src/services/knowledge_runtime/MemoryPromotionPolicy.ts` impose une admission asymétrique: une connaissance peut aider la réponse courante sans pour autant mériter une consolidation immédiate. Les faits temporels restent en trace/probation plus longtemps, tandis que les structures réutilisables (`rule`, `heuristic`, `preference`) peuvent progresser plus vite vers `ready`.
+
+
+
+> `src/services/knowledge_runtime/MemoryAgingPolicy.ts` pose la première logique d oubli/révision gouvernée: expiration explicite pour le temporel, vieillissement pour l inactif, et stale immédiat pour les candidats contradictoires. La mémoire n est donc plus pensée comme stockage binaire, mais comme cycle `candidate -> probation -> ready -> aging/stale/expire`.
+
+
+
 ## 2026-05-09 — Knowledge selection verdict overlay (Phase 2 minimal)
 
 > `src/services/knowledge_runtime/KnowledgeRetrievalKernel.ts` ajoute une sélection gouvernée au-dessus du retrieval lexical KB existant. Le pipeline reste minimal et local: score lexical hérité, score sémantique léger par recouvrement de tokens, score d autorité dérivé du registre, puis pénalités de fraîcheur, risque et confusion.
