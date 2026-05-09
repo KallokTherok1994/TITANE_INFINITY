@@ -28,3 +28,12 @@
   - `/usr/bin/titane-infinity` -> `456124bf5a6b592a56593db09d5b8d52c55ed6aa9ea6d363e0f017e07f67a18d`
   - `src-tauri/target/release/titane-infinity` -> `59a629aef26676789358a0cd936877add396bab0c7415bdd36dceba59ccefe05`
 - conclusion: installed system binary is not yet the freshly built 33.0.9 binary
+
+## Privileged execution attempts (GO ALL follow-up)
+
+- `sudo -n dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_33.0.9_amd64.deb`
+  - result: `sudo: il est nécessaire de saisir un mot de passe`
+- `sudo -n bash scripts/post-build/update-desktop-icons.sh`
+  - result: `sudo: il est nécessaire de saisir un mot de passe`
+
+Status remains `BLOCKED_SUDO_REQUIRED` until an interactive privileged run is executed.
