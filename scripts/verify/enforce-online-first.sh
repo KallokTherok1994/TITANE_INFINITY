@@ -55,7 +55,7 @@ echo ""
 
 # Check 4: Network policy documented
 echo "✓ Check 4: Network policy documented..."
-if ! rg -i "online[-\s]?first.*govern" .github/copilot-instructions.md >/dev/null 2>&1; then
+if ! rg -i "online(-|[[:space:]])?first.*govern" .github/copilot-instructions.md >/dev/null 2>&1; then
   echo "❌ FAIL: Online-first governed policy not documented in Copilot instructions"
   FAIL=$((FAIL + 1))
 else

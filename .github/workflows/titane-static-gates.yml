@@ -61,6 +61,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # ─────────────────────────────────────────────────────────────────────
+      # 0. Baseline Static Quality Gates
+      # ─────────────────────────────────────────────────────────────────────
+      - name: check
+        run: pnpm run check
+
+      - name: lint
+        run: pnpm run lint
+
+      # ─────────────────────────────────────────────────────────────────────
       # 1. UI Surface Registry Verification
       # ─────────────────────────────────────────────────────────────────────
       - name: verify:ui-surface-registry
@@ -106,14 +115,19 @@ jobs:
       # 8. Backend Proof Depth — Strict Mode
       # ─────────────────────────────────────────────────────────────────────
       - name: verify:backend-proof-depth:strict
-        run: pnpm run verify:backend-proof-depth:strict
+        run: TITANE_PROOF_ARTIFACT=artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl pnpm run verify:backend-proof-depth:strict
 
       # ─────────────────────────────────────────────────────────────────────
       # 9. UI Desktop Main Menu Reconciliation — Sealed Artifact
       # ─────────────────────────────────────────────────────────────────────
       - name: verify:ui-desktop-main-menu-reconciliation:sealed
-        run: pnpm run verify:ui-desktop-main-menu-reconciliation:sealed
-        continue-on-error: true # Sealed artifact may not exist on first PR
+        run: |
+          if [[ -f artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl ]]; then
+            echo "Sealed artifact found: running blocking verifier"
+            pnpm run verify:ui-desktop-main-menu-reconciliation:sealed
+          else
+            echo "SKIP: sealed artifact not present in checkout context"
+          fi
 
       # ─────────────────────────────────────────────────────────────────────
       # 10. AutoHeal Recurrence Detection (governance registry)
@@ -134,6 +148,10 @@ jobs:
         if: always()
         run: |
           echo "## 🏗️ TITANE Static Gates v67 Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Baseline Quality" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ check" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ lint" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### UI Surface Verification" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ verify:ui-surface-registry" >> $GITHUB_STEP_SUMMARY

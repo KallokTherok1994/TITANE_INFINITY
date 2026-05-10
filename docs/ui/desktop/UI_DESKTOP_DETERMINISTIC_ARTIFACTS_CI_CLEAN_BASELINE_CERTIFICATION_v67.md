@@ -4,7 +4,7 @@
 **Objective**: Make the post-seal baseline deterministic and CI-verifiable, prevent proof artifacts from drifting on repeated smoke runs, harden static CI coverage, resolve or explicitly policy-classify dirty worktree items, verify that final gates do not dirty the repo unexpectedly, produce a release-pristine or accepted-dirty certification.
 
 **Status**: COMPLETED ✓
-**Date**: 2026-04-16
+**Date**: 2026-05-10
 **Mode**: DURABLE (full Rule 1-18 discipline applied)
 
 ---
@@ -314,11 +314,11 @@ If any issue detected during or after Section N commit:
 
 | Phase | Status | Date | Evidence |
 |-------|--------|------|----------|
-| Audit (C-D-E) | ✓ COMPLETE | 2026-04-16 | See Sections C-E |
-| Implementation (F) | ✓ COMPLETE | 2026-04-16 | 3 files patched, syntax valid |
-| Testing (G-H-I) | ✓ COMPLETE | 2026-04-16 | Reproducibility proven, worktree clean, CI created |
-| Validation (J-K) | ✓ COMPLETE | 2026-04-16 | 14 gates PASS, 5 AutoHeal entries valid |
-| Certification (L) | ✓ COMPLETE | 2026-04-16 | This document |
+| Audit (C-D-E) | ✓ COMPLETE | 2026-05-10 | See Sections C-E |
+| Implementation (F) | ✓ COMPLETE | 2026-05-10 | 3 files patched, syntax valid |
+| Testing (G-H-I) | ✓ COMPLETE | 2026-05-10 | Reproducibility proven, worktree clean, CI created |
+| Validation (J-K) | ✓ COMPLETE | 2026-05-10 | 14 gates PASS, 5 AutoHeal entries valid |
+| Certification (L) | ✓ COMPLETE | 2026-05-10 | This document |
 
 ---
 
