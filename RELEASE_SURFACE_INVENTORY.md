@@ -1672,3 +1672,22 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | last_lock | D5 (seal) |
 | f0_lock | F0 (commit b54fee78c) |
 | autoheal_entries | 1674 |
+
+## v33.0.11 — Release Snapshot (2026-05-09)
+
+| Dimension | Value |
+|-----------|-------|
+| code_version | 33.0.11 (package.json, BUILT+RELEASED) |
+| last_proven_release | v33.0.11 (BUILT 2026-05-09) |
+| build_artifacts | DEB + RPM + AppImage produced |
+| deb_artifact | `titane-infinity_33.0.11_amd64.deb` (24M) |
+| appimage_artifact | `titane-infinity_33.0.11_amd64.AppImage` (95M) |
+| checksums_file | `RELEASE_ARTIFACTS_CHECKSUMS_33.0.11.txt` |
+| governance_gates | PASS=52 FAIL=0 |
+| autoheal_entries | 1747 |
+| deployment_state | v33.0.11 deployed to deployment/latest/ |
+| system_install | PENDING_SUDO (user must run: sudo dpkg -i titane-infinity_33.0.11_amd64.deb) |
+| desktop_launcher | ~/.local/share/applications/titane-infinity.desktop UPDATED |
+| icon_caches | GTK + applications cache refreshed |
+| commit_sealed | e7668cfe1 (chore(chat): seal runtime optimization v4) |
+| build_commit | version-bump-33.0.11 + release artifacts |
