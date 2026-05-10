@@ -3,14 +3,14 @@
 - Execution mode: DURABLE / FULL AUTONOMOUS
 - Branch: MAIN
 - HEAD before: 443cafdeca4ff3ca70b54874c1e098dc74d54360
-- HEAD after: 2755cbb5984e6ea8aca2b2ece214410a4a029689
+- HEAD after: seal commit `2755cbb5984e6ea8aca2b2ece214410a4a029689`, metadata sync commit `000b5cfe032bc1bcbcd650eaf14b09d8d1b3a023`
 - Version: 33.0.13
 - Working tree before: DIRTY (pre-existing unrelated modifications + mission files)
 - Working tree after: DIRTY (pre-existing unrelated modifications remain outside v65 commit scope)
 - Remote tracking: origin/MAIN
 - Ahead/behind before: 0/0
-- Ahead/behind after: 0/0
-- Remote sync: SUCCESS (`origin/MAIN` updated to `2755cbb5984e6ea8aca2b2ece214410a4a029689`)
+- Ahead/behind after: 0/0 after seal push and metadata push
+- Remote sync: SUCCESS (`origin/MAIN` synchronized through metadata commit `000b5cfe032bc1bcbcd650eaf14b09d8d1b3a023`)
 - Static gates:
   - check PASS
   - lint PASS
