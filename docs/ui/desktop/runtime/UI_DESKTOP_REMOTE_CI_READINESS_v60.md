@@ -1,8 +1,27 @@
-# UI Desktop Remote CI Readiness — v60
+# UI Desktop Remote CI Readiness — v60 (FINAL SEALED 2026-05-10)
 
 **Date**: 2026-05-10
+**Remote sync status**: `REMOTE_SYNC_PENDING`
+**Local HEAD**: `95cd569d331a62ceb0c7c5438e5a8bb1cac8de87`
+**Remote HEAD (origin/MAIN)**: `c054981500dc9325cf221ffeb81fd1ad3c597802`
+**Commits ahead of origin**: 15
+**Commits behind origin**: 0
+**Push safe (fast-forward)**: YES (local is ahead)
+**Push executed this session**: NO — credentials/workflow required
 
-## Status: READY FOR LOCAL CI
+---
+
+## Remote Sync Details
+
+```
+git branch -vv → MAIN [origin/MAIN: en avance de 15]
+git rev-list --left-right --count @{u}...HEAD → 0 15
+git ls-remote --heads origin MAIN → c054981500dc9325cf221ffeb81fd1ad3c597802
+```
+
+**Classification**: `REMOTE_SYNC_PENDING` — 15 commits ready to push, all fast-forward safe.
+
+---
 
 The v60 strict proof gate is ready for local governed runs. Remote CI integration requires one additional step.
 
