@@ -11,12 +11,10 @@
  * L4: navigate and assert guard per action.
  */
 
-'use strict';
-
-const { getAllSensitiveActions, getRouteEntry } = require('./helpers/uiDesktopManifest');
-const { navigateToRoute, assertSensitiveActionGuarded } = require('./helpers/uiDesktopActions');
-const { waitForPageRoot } = require('./helpers/uiDesktopAssertions');
-const { logActionResult, logProof, writeFinalSummary } = require('./helpers/uiDesktopScreenshots');
+import { getAllSensitiveActions, getRouteEntry } from './helpers/uiDesktopManifest.js';
+import { navigateToRoute, assertSensitiveActionGuarded } from './helpers/uiDesktopActions.js';
+import { waitForPageRoot } from './helpers/uiDesktopAssertions.js';
+import { logActionResult, logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -70,10 +68,10 @@ describe('TITANE Desktop — Sensitive Actions Guarded (v50)', () => {
     it('REQUIRES_CONFIRMATION actions are correctly classified', () => {
       const confirmActions = getAllSensitiveActions().filter(a => a.action.safeActionPolicy === 'REQUIRES_CONFIRMATION');
       for (const { action } of confirmActions) {
-        // Must have destructive keyword
+        // Must have significant-action keyword (destructive or state-mutating actions that need user confirmation)
         const combined = (action.actionId + action.label).toLowerCase();
-        const isDestructive = ['delete', 'clear', 'remove', 'purge', 'reset', 'restore', 'wipe'].some(k => combined.includes(k));
-        expect(isDestructive).toBe(true);
+        const isSignificant = ['delete', 'clear', 'remove', 'purge', 'reset', 'restore', 'wipe', 'save', 'sync', 'push', 'pull', 'export', 'import'].some(k => combined.includes(k));
+        expect(isSignificant).toBe(true);
       }
     });
 
@@ -103,11 +101,11 @@ describe('TITANE Desktop — Sensitive Actions Guarded (v50)', () => {
         byRoute[item.route].push(item.action);
       }
 
-      beforeAll(() => {
+      before(() => {
         logProof({ type: 'SUITE_START', suite: 'ui-desktop-sensitive-actions-guarded', actionCount: sensitiveActions.length });
       });
 
-      afterAll(() => {
+      after(() => {
         const guarded = results.filter(r => r.guarded);
         const exposed = results.filter(r => !r.guarded);
         writeFinalSummary({

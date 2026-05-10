@@ -6,8 +6,6 @@
  * Wraps WDIO interactions with governance-aware guards.
  */
 
-'use strict';
-
 const SAFE_POLICIES = new Set([
   'SAFE_CLICK',
   'READ_ONLY_CLICK',
@@ -202,7 +200,7 @@ async function dismissDialog() {
   return { dismissed: false };
 }
 
-module.exports = {
+export {
   isSafeToClick,
   shouldSkip,
   requiresConfirmation,

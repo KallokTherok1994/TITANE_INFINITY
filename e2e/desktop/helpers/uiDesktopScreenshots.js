@@ -5,10 +5,11 @@
  * Screenshot-on-failure and proof capture helper for desktop E2E tests.
  */
 
-'use strict';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import { resolve, join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const { writeFileSync, mkdirSync, existsSync } = require('fs');
-const { resolve, join } = require('path');
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const SCREENSHOTS_DIR = resolve(__dirname, '../../../artifacts/run1/desktop-screenshots');
 const PROOF_LOG_PATH = resolve(__dirname, '../../../artifacts/run1/ui-desktop-full-coverage-v50.log');
@@ -134,7 +135,7 @@ function resetLog() {
   _startTime = Date.now();
 }
 
-module.exports = {
+export {
   takeProofScreenshot,
   screenshotOnFailure,
   logProof,

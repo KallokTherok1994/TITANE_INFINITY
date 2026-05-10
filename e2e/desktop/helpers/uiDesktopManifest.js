@@ -6,10 +6,11 @@
  * Safe to call from any WDIO test file.
  */
 
-'use strict';
+import { readFileSync, existsSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const { readFileSync, existsSync } = require('fs');
-const { resolve } = require('path');
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const MANIFEST_PATH = resolve(__dirname, '../../../docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json');
 const ACTION_CLASS_PATH = resolve(__dirname, '../../../docs/ui/desktop/generated/UI_DESKTOP_ACTION_CLASSIFICATION_v50.json');
@@ -136,7 +137,7 @@ function getSummary() {
   };
 }
 
-module.exports = {
+export {
   loadManifest,
   getAllRoutes,
   getRouteEntry,

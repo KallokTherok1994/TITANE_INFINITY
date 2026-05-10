@@ -9,12 +9,10 @@
  * L1: static policy validation. L4: click each safe action.
  */
 
-'use strict';
-
-const { getAllSafeActions, getRouteEntry } = require('./helpers/uiDesktopManifest');
-const { navigateToRoute, clickSafeAction, dismissDialog, isSafeToClick } = require('./helpers/uiDesktopActions');
-const { waitForPageRoot } = require('./helpers/uiDesktopAssertions');
-const { logActionResult, logProof, writeFinalSummary } = require('./helpers/uiDesktopScreenshots');
+import { getAllSafeActions, getRouteEntry } from './helpers/uiDesktopManifest.js';
+import { navigateToRoute, clickSafeAction, dismissDialog, isSafeToClick } from './helpers/uiDesktopActions.js';
+import { waitForPageRoot } from './helpers/uiDesktopAssertions.js';
+import { logActionResult, logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -108,11 +106,11 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
         byRoute[item.route].push(item.action);
       }
 
-      beforeAll(() => {
+      before(() => {
         logProof({ type: 'SUITE_START', suite: 'ui-desktop-safe-actions', actionCount: safeActions.length });
       });
 
-      afterAll(() => {
+      after(() => {
         const clicked = results.filter(r => r.result === 'CLICKED');
         const notFound = results.filter(r => r.result === 'NOT_FOUND');
         const skipped = results.filter(r => r.result === 'SKIPPED');

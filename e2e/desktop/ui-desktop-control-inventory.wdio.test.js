@@ -9,15 +9,16 @@
  * L4 desktop: crawl DOM of each route, output live counts to JSON.
  */
 
-'use strict';
+import { writeFileSync, mkdirSync } from 'fs';
+import {resolve, dirname} from 'path';
 
-const { writeFileSync, mkdirSync } = require('fs');
-const { resolve } = require('path');
+import { getAllRoutes, getRouteEntry, getSimulatedRoutes } from './helpers/uiDesktopManifest.js';
+import { scanInteractiveElements, assertPageHasTitle, classifyPageState } from './helpers/uiDesktopAssertions.js';
+import { navigateToRoute } from './helpers/uiDesktopActions.js';
+import { logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
+import { fileURLToPath } from 'url';
 
-const { getAllRoutes, getRouteEntry, getSimulatedRoutes } = require('./helpers/uiDesktopManifest');
-const { scanInteractiveElements, assertPageHasTitle, classifyPageState } = require('./helpers/uiDesktopAssertions');
-const { navigateToRoute } = require('./helpers/uiDesktopActions');
-const { logProof, writeFinalSummary } = require('./helpers/uiDesktopScreenshots');
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -74,12 +75,12 @@ describe('TITANE Desktop — Control Inventory (v50)', () => {
       const routes = getAllRoutes();
       const liveInventory = [];
 
-      beforeAll(() => {
+      before(() => {
         mkdirSync(resolve(__dirname, '../../docs/ui/desktop/generated'), { recursive: true });
         logProof({ type: 'SUITE_START', suite: 'ui-desktop-control-inventory', routeCount: routes.length });
       });
 
-      afterAll(() => {
+      after(() => {
         // Write live inventory JSON
         try {
           writeFileSync(LIVE_INVENTORY_PATH, JSON.stringify({

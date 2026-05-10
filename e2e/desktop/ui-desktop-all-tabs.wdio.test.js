@@ -8,12 +8,10 @@
  * L1 runs always. L4 requires TITANE_E2E_FULL=1.
  */
 
-'use strict';
-
-const { getRoutesWithTabs, getRouteEntry, getAllTabs, getSummary } = require('./helpers/uiDesktopManifest');
-const { assertTabExists } = require('./helpers/uiDesktopAssertions');
-const { clickTab, navigateToRoute } = require('./helpers/uiDesktopActions');
-const { logTabResult, logProof, writeFinalSummary } = require('./helpers/uiDesktopScreenshots');
+import { getRoutesWithTabs, getRouteEntry, getAllTabs, getSummary } from './helpers/uiDesktopManifest.js';
+import { assertTabExists } from './helpers/uiDesktopAssertions.js';
+import { clickTab, navigateToRoute } from './helpers/uiDesktopActions.js';
+import { logTabResult, logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -119,11 +117,11 @@ describe('TITANE Desktop — All Tabs (v50)', () => {
       const routesWithTabs = getRoutesWithTabs();
       const results = [];
 
-      beforeAll(() => {
+      before(() => {
         logProof({ type: 'SUITE_START', suite: 'ui-desktop-all-tabs', tabCount: 22 });
       });
 
-      afterAll(() => {
+      after(() => {
         const clicked = results.filter(r => r.result === 'CLICKED');
         const notFound = results.filter(r => r.result === 'NOT_FOUND');
         writeFinalSummary({ suite: 'ui-desktop-all-tabs', total: results.length, clicked: clicked.length, notFound: notFound.length, results });

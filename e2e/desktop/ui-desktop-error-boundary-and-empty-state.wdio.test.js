@@ -9,11 +9,9 @@
  * L4: navigate each route, scan for ErrorBoundary, classify degraded states.
  */
 
-'use strict';
-
-const { getAllRoutes, getRouteEntry, getSimulatedRoutes } = require('./helpers/uiDesktopManifest');
-const { navigateToRoute } = require('./helpers/uiDesktopActions');
-const {
+import { getAllRoutes, getRouteEntry, getSimulatedRoutes } from './helpers/uiDesktopManifest.js';
+import { navigateToRoute } from './helpers/uiDesktopActions.js';
+import {
   assertNoUnexpectedErrorBoundary,
   waitForPageRoot,
   waitForLoadingComplete,
@@ -21,8 +19,8 @@ const {
   hasAnySelector,
   DEGRADED_SELECTORS,
   ERROR_BOUNDARY_SELECTORS,
-} = require('./helpers/uiDesktopAssertions');
-const { logProof, writeFinalSummary } = require('./helpers/uiDesktopScreenshots');
+} from './helpers/uiDesktopAssertions.js';
+import { logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -93,11 +91,11 @@ describe('TITANE Desktop — Error Boundaries & Empty States (v50)', () => {
       const routes = getAllRoutes();
       const results = [];
 
-      beforeAll(() => {
+      before(() => {
         logProof({ type: 'SUITE_START', suite: 'ui-desktop-error-boundary-and-empty-state', routeCount: routes.length });
       });
 
-      afterAll(() => {
+      after(() => {
         const unexpectedEB = results.filter(r => r.hasUnexpectedErrorBoundary);
         const degraded = results.filter(r => r.pageState === 'DEGRADED');
         const blank = results.filter(r => r.pageState === 'BLANK');

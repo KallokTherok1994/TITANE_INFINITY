@@ -6,9 +6,7 @@
  * Wraps manifest data into runtime-ready selector strings.
  */
 
-'use strict';
-
-const { getRouteEntry } = require('./uiDesktopManifest');
+import { getRouteEntry } from './uiDesktopManifest.js';
 
 /**
  * Build the root page selector for a given route.
@@ -93,7 +91,7 @@ const GLOBAL_SELECTORS = {
   conversationTab: '[data-testid="tab-conversation"], [data-testid*="conversation"]',
 };
 
-module.exports = {
+export {
   pageRootSelector,
   tabSelector,
   actionSelector,

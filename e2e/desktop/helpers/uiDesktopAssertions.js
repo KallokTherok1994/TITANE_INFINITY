@@ -6,9 +6,7 @@
  * Honest classification: LIVE, SIMULATED, DEGRADED, ERROR.
  */
 
-'use strict';
-
-const { GLOBAL_SELECTORS } = require('./uiDesktopSelectors');
+import { GLOBAL_SELECTORS } from './uiDesktopSelectors.js';
 
 const ERROR_BOUNDARY_SELECTORS = [
   '[data-testid="error-boundary"]',
@@ -239,7 +237,7 @@ async function classifyPageState() {
   return 'LIVE';
 }
 
-module.exports = {
+export {
   waitForPageRoot,
   hasAnySelector,
   assertTabExists,
