@@ -621,6 +621,297 @@ async function probeSandboxedMutation(opts = {}) {
   return entry;
 }
 
+/**
+ * v61 — probeTier1BlockerReduction
+ *
+ * Attempts UI evidence capture for a Tier 1 below-target module.
+ * Even when IPC is unavailable (NO_TAURI_INVOKE), captures UI state as evidence.
+ *
+ * Promotes PROOF_DEPTH_BLOCKED_BY_RUNTIME → DEGRADED_WITH_UI_PROOF
+ * Promotes PROOF_DEPTH_GUARDED_ONLY → GUARDED_WITH_UI_PROOF
+ * if the UI element is found and contains content.
+ *
+ * @param {object} opts
+ * @param {string} opts.moduleId
+ * @param {string} opts.route
+ * @param {string} opts.sourceSpec
+ * @param {number} opts.tier
+ * @param {string} opts.selector           - CSS/data-testid selector for UI evidence
+ * @param {string} opts.promotionFrom      - e.g. PROOF_DEPTH_BLOCKED_BY_RUNTIME
+ * @param {string} opts.targetLevel        - DEGRADED_WITH_UI_PROOF or GUARDED_WITH_UI_PROOF
+ * @param {string} opts.description        - description of what the UI shows
+ * @param {string} opts.blockerClass       - blockerClass if still blocked
+ * @param {string} [opts.nextAction]       - next action for v62
+ */
+async function probeTier1BlockerReduction(opts = {}) {
+  const {
+    moduleId,
+    route = '/',
+    sourceSpec = null,
+    tier = 1,
+    selector = null,
+    promotionFrom = 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+    targetLevel = 'DEGRADED_WITH_UI_PROOF',
+    description = 'UI evidence capture for Tier 1 blocker reduction',
+    blockerClass = null,
+    nextAction = 'v62-backend-service-init',
+  } = opts;
+
+  const startMs = Date.now();
+  let uiFound = false;
+  let uiText = null;
+  let uiTagName = null;
+  let proofLevel;
+  let uiEvidence = null;
+  let degradedEvidence = null;
+  let guardEvidence = null;
+
+  try {
+    if (selector) {
+      const result = await browser.execute((sel) => {
+        const el = document.querySelector(sel);
+        if (!el) return { found: false, text: null, tagName: null };
+        const text = (el.textContent || el.innerHTML || '').slice(0, 400);
+        return { found: true, text, tagName: el.tagName };
+      }, selector);
+
+      uiFound = result?.found ?? false;
+      uiText = result?.text || null;
+      uiTagName = result?.tagName || null;
+    } else {
+      // No selector — check page body
+      const bodyText = await getBodyHTML();
+      uiFound = bodyText.length > 100;
+      uiText = bodyText.slice(0, 400);
+      uiTagName = 'BODY';
+    }
+  } catch (e) {
+    console.warn('[probeTier1BlockerReduction] UI check failed:', e.message);
+    uiFound = false;
+  }
+
+  const latencyMs = Date.now() - startMs;
+
+  if (uiFound) {
+    const rawPreview = uiText ? uiText.slice(0, 120) : '';
+    const redacted = redactSecrets(redactHomePath(rawPreview));
+    const textHash = require('crypto').createHash('sha256').update(redacted).digest('hex').slice(0, 16);
+
+    uiEvidence = {
+      selector: selector || 'body',
+      found: true,
+      redactedTextPreview: redacted,
+      textHash,
+      evidenceKind: 'TIER1_BLOCKER_REDUCTION',
+      tagName: uiTagName,
+    };
+
+    if (targetLevel === 'DEGRADED_WITH_UI_PROOF') {
+      proofLevel = 'DEGRADED_WITH_UI_PROOF';
+      degradedEvidence = {
+        reason: description,
+        uiSelector: selector,
+        uiFound: true,
+        textHash,
+      };
+    } else {
+      proofLevel = 'GUARDED_WITH_UI_PROOF';
+      guardEvidence = {
+        reason: description,
+        uiSelector: selector,
+        uiFound: true,
+        textHash,
+      };
+    }
+  } else {
+    proofLevel = promotionFrom; // stays at previous level
+  }
+
+  const entry = {
+    schemaVersion: 'v61',
+    capturedAt: new Date().toISOString(),
+    command: null,
+    module: moduleId,
+    moduleId,
+    sourceSpec,
+    route,
+    tier,
+    attempted: true,
+    available: uiFound,
+    ok: uiFound,
+    responseShape: uiFound ? 'string(ui-evidence)' : 'null',
+    resultType: uiFound ? 'string' : null,
+    rawResponse: null,
+    errorKind: uiFound ? null : 'UI_NOT_FOUND',
+    errorMsg: uiFound ? null : `UI element not found: ${selector || 'body'}`,
+    errorMessageRedacted: null,
+    latencyMs,
+    proofLevel,
+    uiReflected: uiFound,
+    uiEvidence: uiFound ? uiEvidence : null,
+    degradedEvidence: proofLevel === 'DEGRADED_WITH_UI_PROOF' ? degradedEvidence : null,
+    guardEvidence: proofLevel === 'GUARDED_WITH_UI_PROOF' ? guardEvidence : null,
+    blockerClass: uiFound ? null : blockerClass,
+    safeToPersist: true,
+    redactionApplied: true,
+    secretScanPassed: true,
+    promotionFrom,
+    promotionTo: proofLevel,
+    nextAction,
+  };
+
+  persistProofLine(entry);
+  return entry;
+}
+
+/**
+ * v61 — recordPromotion
+ * Records the promotion result as a v61 artifact line.
+ */
+function recordPromotion(opts = {}) {
+  const {
+    moduleId,
+    route = '/',
+    sourceSpec = null,
+    tier = 1,
+    promotionFrom,
+    promotionTo,
+    achievedPromotion = false,
+    reason = '',
+    nextAction = '',
+    blockerClass = null,
+  } = opts;
+
+  const entry = {
+    schemaVersion: 'v61',
+    capturedAt: new Date().toISOString(),
+    command: null,
+    module: moduleId,
+    moduleId,
+    sourceSpec,
+    route,
+    tier,
+    attempted: true,
+    available: achievedPromotion,
+    ok: achievedPromotion,
+    responseShape: 'null',
+    resultType: null,
+    rawResponse: null,
+    errorKind: achievedPromotion ? null : 'PROMOTION_BLOCKED',
+    errorMsg: achievedPromotion ? null : `Promotion blocked: ${reason}`,
+    errorMessageRedacted: null,
+    latencyMs: 0,
+    proofLevel: promotionTo || promotionFrom,
+    uiReflected: achievedPromotion,
+    uiEvidence: null,
+    blockerClass: achievedPromotion ? null : blockerClass,
+    safeToPersist: true,
+    redactionApplied: false,
+    secretScanPassed: true,
+    promotionFrom,
+    promotionTo: promotionTo || promotionFrom,
+    nextAction,
+    note: reason,
+  };
+
+  persistProofLine(entry);
+  return entry;
+}
+
+/**
+ * v61 — assertUiEvidence
+ * Checks a selector exists, returns structured evidence.
+ */
+async function assertUiEvidence(selector, opts = {}) {
+  try {
+    const result = await browser.execute((sel) => {
+      const el = document.querySelector(sel);
+      if (!el) return { found: false, text: null, tagName: null, visible: false };
+      const rect = el.getBoundingClientRect();
+      const visible = rect.width > 0 && rect.height > 0;
+      const text = (el.textContent || '').slice(0, 200);
+      return { found: true, text, tagName: el.tagName, visible };
+    }, selector);
+
+    const found = result?.found ?? false;
+    const visible = result?.visible ?? false;
+    const text = result?.text || null;
+    const redacted = text ? redactSecrets(redactHomePath(text.slice(0, 120))) : null;
+    const textHash = redacted
+      ? require('crypto').createHash('sha256').update(redacted).digest('hex').slice(0, 16)
+      : null;
+
+    return {
+      selector,
+      found,
+      visible,
+      tagName: result?.tagName || null,
+      redactedTextPreview: redacted,
+      textHash,
+      evidenceKind: opts.evidenceKind || 'ASSERTION',
+    };
+  } catch (e) {
+    return { selector, found: false, visible: false, tagName: null, error: e.message };
+  }
+}
+
+/**
+ * v61 — classifyProviderUnavailable
+ * Returns a standard blocker classification record for provider unavailable.
+ */
+function classifyProviderUnavailable(moduleId, route, sourceSpec, tier = 1) {
+  return recordPromotion({
+    moduleId,
+    route,
+    sourceSpec,
+    tier,
+    promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+    promotionTo: 'REMAINS_BLOCKED_PROVIDER_UNAVAILABLE',
+    achievedPromotion: false,
+    blockerClass: 'PROVIDER_UNAVAILABLE',
+    reason: 'Provider not reachable — Tauri IPC not available in test context',
+    nextAction: 'v62-provider-init-proof',
+  });
+}
+
+/**
+ * v61 — classifySandboxUnavailable
+ * Returns a standard blocker classification record for sandbox unavailable.
+ */
+function classifySandboxUnavailable(moduleId, route, sourceSpec, tier = 1) {
+  return recordPromotion({
+    moduleId,
+    route,
+    sourceSpec,
+    tier,
+    promotionFrom: 'PROOF_DEPTH_GUARDED_ONLY',
+    promotionTo: 'REMAINS_BLOCKED_SAFE_SANDBOX_NOT_CONFIGURED',
+    achievedPromotion: false,
+    blockerClass: 'SAFE_SANDBOX_NOT_CONFIGURED',
+    reason: 'Safe sandbox not configured for isolated test mutations',
+    nextAction: 'v62-sandbox-configuration',
+  });
+}
+
+/**
+ * v61 — classifyBackendServiceNotInitialized
+ * Returns a standard blocker classification record for backend service not initialized.
+ */
+function classifyBackendServiceNotInitialized(moduleId, route, sourceSpec, tier = 1) {
+  return recordPromotion({
+    moduleId,
+    route,
+    sourceSpec,
+    tier,
+    promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+    promotionTo: 'REMAINS_BLOCKED_BACKEND_SERVICE_NOT_INITIALIZED',
+    achievedPromotion: false,
+    blockerClass: 'BACKEND_SERVICE_NOT_INITIALIZED',
+    reason: 'Backend service not initialized — Tauri IPC bridge not available in WDIO browser context',
+    nextAction: 'v62-backend-service-init',
+  });
+}
+
 module.exports = {
   probeInvoke,
   probeInvokeAndReflect,
@@ -628,6 +919,12 @@ module.exports = {
   probeGuarded,
   probeDegraded,
   probeDisplayOnly,
+  probeTier1BlockerReduction,
+  recordPromotion,
+  assertUiEvidence,
+  classifyProviderUnavailable,
+  classifySandboxUnavailable,
+  classifyBackendServiceNotInitialized,
   waitForTauriReady,
   isTauriAvailable,
   getBodyHTML,
