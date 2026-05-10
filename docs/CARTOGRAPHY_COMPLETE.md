@@ -1,6 +1,22 @@
+## 2026-05-09 — Runtime callsite integration for chat contracts
+
+> Hardening runtime overlay: `src/services/ai/chatEngine.ts` publie maintenant un marqueur déterministe de décision skill dans `pipelineSteps` (`skill-route-blocked:*`, `skill-route-suggest:*`, `skill-route-active:*`) et couvre explicitement `canonicalMode=REPAIR` via un plan de réflexion `technical` borné.
+
+> Hardening observabilité mémoire: la branche `memory-first` du même runtime publie désormais un `cognitiveTrace.generation` explicite et la voie principale expose toujours un marqueur `memory-write-*` dans `pipelineSteps`, ce qui ferme le trou de diagnostic sur les décisions de persistance.
+
+> Hardening robustesse typage: `resolveSkillRoutingDecision()` borne désormais `skillPrompt` en null-safe explicite (`?? ''`) pour garder la compilation stricte TypeScript alignée avec la vérité runtime des décisions skill.
+
+> `src/components/sections/ConversationSection.tsx` ne branche plus la sélection outil directement sur un template brut: le callsite actif passe par `routeChatToolInvocation()` puis applique la décision gouvernée via `resolveConversationToolTemplate()` avant auto-send ou insertion locale.
+
+> `src/services/ai/chatEngine.ts` consomme désormais les contrats `skillRouter`, `reasoningContract`, `reflectionPlanner` et `memoryWritePolicy` dans la route runtime réelle: décision d injection skill bornée, bloc reflection-plan selon mode canonique, garde anti-patterns de raisonnement, et gate de write mémoire selon score vérité runtime.
+
+> La preuve de callsites runtime est ajoutée dans `src/__tests__/chatEngine.test.ts` et `src/components/sections/__tests__/ConversationSection.toolRouting.test.ts`, en complément des tests unitaires déjà existants sur les modules contractuels purs.
+
 ## 2026-05-09 — Chat runtime contract overlays
 
 > La cartographie chat ajoute une couche de contrats purs au-dessus de la surface conversationnelle. `chatToolCapabilities.ts` et `chatToolRouter.ts` décrivent les outils chat comme des capacités template-only, ce qui aligne la vérité runtime de l interface avec le registre de prompts sans introduire d action locale cachée.
+
+> La preuve de routage template-only est aussi couverte explicitement côté feature par `src/features/chat/__tests__/chatToolRouter.test.ts`, en plus de la couverture de cohérence du registre.
 
 > `skillRouter.ts`, `reasoningContract.ts`, `reflectionPlanner.ts` et `memoryWritePolicy.ts` ajoutent des bornes honnêtes pour l injection de skills, la profondeur de raisonnement, la réflexion bornée et l écriture mémoire conservatrice. La cartographie visible côté UI reste la même, mais elle gagne une vérité contractuelle plus fine pour les surfaces d orchestration.
 

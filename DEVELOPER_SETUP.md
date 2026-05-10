@@ -149,6 +149,58 @@ cargo test --manifest-path src-tauri/Cargo.toml --lib -- knowledge_base_default:
 pnpm run test:e2e
 ```
 
+## Decision de scope (Rule 1)
+
+Avant de commencer, classer la modification dans un des deux chemins:
+
+### PATH_SIMPLE
+
+- Critere: changement local et borne (pas de nouvelle IPC, pas de build/release, pas de changement cross-ring).
+- Exemples: correction de documentation, typo, petite constante, ajustement non fonctionnel.
+- Minimum requis:
+  - verifier la coherence locale,
+  - executer les checks strictement necessaires au scope,
+  - garder un patch minimal.
+
+### PATH_HEAVY
+
+- Critere: changement architecture, IPC, runtime critique, build/release, UI visible, ou cross-ring.
+- Exemples: nouvelle commande Tauri, modification pipeline chat, evolution de surfaces utilisateur.
+- Requis:
+  - tests adaptes au scope (Rule 16),
+  - update des mappings/carto (Rule 15),
+  - AutoHeal complet si code dans `src/`, `src-tauri/`, `tests/`, `e2e/`, `scripts/`, `.github/` (Rule 10),
+  - gates obligatoires PASS avant verdict.
+
+## Session opener (Rule 20)
+
+Au debut de chaque session de travail:
+
+```bash
+# 1) Restaurer le contexte de session si disponible
+cat /memories/session/plan.md 2>/dev/null || echo "Plan session absent"
+
+# 2) Snapshot worktree
+git status --short
+
+# 3) Declarer explicitement le mode
+export MODE=DURABLE
+# ou: export MODE=EXPLORATION
+
+# 4) Identifier les phases finies non committees (Rule 18)
+git log --oneline -10
+```
+
+## Modes de travail (Rule 19)
+
+- DURABLE (defaut sur MAIN/feature/*): discipline complete Rule 1-18.
+- EXPLORATION (branche explore/* ou declaration explicite): discipline allegee pour code jetable.
+- Promotion EXPLORATION -> DURABLE avant merge MAIN:
+  - tests complets,
+  - AutoHeal full-schema,
+  - version bump si build avance,
+  - preuves suffisantes selon le scope.
+
 ## Gouvernance (obligatoire avant tout commit)
 
 ```bash
@@ -158,8 +210,26 @@ bash scripts/autoheal/detect_recurrence.sh
 
 # 2. Vérifier les instructions kernel
 bash scripts/verify_instructions.sh
-# Attendu : SUMMARY: PASS=33 FAIL=0
+# Attendu : SUMMARY avec FAIL=0
 ```
+
+## Mise a jour mapping (Rule 15)
+
+| Scope modifie | Mapping a mettre a jour |
+| --- | --- |
+| `src/components/**`, `src/pages/**` | `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| `src/services/**`, `src/engines/**` | `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| nouvelle commande `src-tauri/src/**` | `docs/IPC_CATALOG.md` + `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| integration Ollama | `OLLAMA_RUNTIME_MAP.md` |
+| build/version/release | `RELEASE_SURFACE_INVENTORY.md` |
+
+## Sortie de phase en direct sur MAIN (Rule 18)
+
+Si le travail direct sur MAIN est autorise:
+
+- chaque lot coherent termine doit etre committe apres preuves vertes,
+- eviter d accumuler plusieurs correctifs sans commit de phase,
+- garder des commits scopes et rollbackables.
 
 ## Variables d'environnement
 

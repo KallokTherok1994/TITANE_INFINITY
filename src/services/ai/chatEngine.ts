@@ -80,10 +80,21 @@ import {
   getActiveSkillId,
 } from '@/services/skills/activation/skillActivator';
 import {
+  routeSkill,
+  type SkillRoutingDecision,
+  type SkillRoutingSource,
+} from './skillRouter';
+import {
   getCompactIndex as getDefaultKbIndex,
   getRelevantPromptContext as getDefaultKbPromptContext,
   getBundledOwnerContext,
 } from '@/services/api/defaultKnowledgeBase';
+import {
+  resolveReasoningContract,
+  hasForbiddenReasoningOutput,
+} from './reasoningContract';
+import { buildReflectionPlan, type ReflectionType } from './reflectionPlanner';
+import { decideMemoryWrite, type MemoryWriteDecision } from './memoryWritePolicy';
 
 // Type-safe correction interface
 interface _CorrectionInfo {
@@ -272,6 +283,12 @@ export interface ChatEngineResponse extends AIResponse {
     reasoningSummary?: string;
     // v26.0.0: Canonical discernment decision (single decision point)
     canonicalDecision?: CanonicalDecision;
+    // Runtime reasoning contract applied to the turn
+    reasoningContract?: {
+      reasonCode: string;
+      maxSections: number;
+      visibleRationale: 'none' | 'brief' | 'decision_trace';
+    };
     // v31.2.38: Heuristic quality score from qualityVerifier (0–1, optional)
     qualityScore?: number;
     // v33.1.0: CognitiveRuntimeTrace — observable truth object per turn
@@ -980,6 +997,28 @@ class ChatEngineOmega {
         canonicalDecision.messageComplexity
       );
 
+      const reflectionPlan = this.resolveReflectionPlanForTurn(
+        finalConfig.mode,
+        canonicalDecision.modeClassification?.canonicalMode,
+        validatedMessage
+      );
+
+      const skillDecision = this.resolveSkillRoutingDecision(
+        canonicalDecision,
+        validatedMessage
+      );
+
+      if (skillDecision.activationMode === 'blocked') {
+        pipelineSteps.push(`skill-route-blocked:${skillDecision.reasonCode}`);
+      } else if (skillDecision.activationMode === 'suggest') {
+        pipelineSteps.push(`skill-route-suggest:${skillDecision.reasonCode}`);
+      } else if (
+        skillDecision.activationMode === 'primary_route' ||
+        skillDecision.activationMode === 'inject_context'
+      ) {
+        pipelineSteps.push(`skill-route-active:${skillDecision.reasonCode}`);
+      }
+
       // v26.0.0: Use kernel's memoryInjection decision to control memory injection
       const shouldInjectMemory =
         canonicalDecision.memoryInjection.use && context.sources.length > 0;
@@ -1007,12 +1046,18 @@ class ChatEngineOmega {
         modeConfig,
         shouldInjectMemory ? context : { sources: [], data: {} },
         promptContext,
-        kbPromptContext
+        kbPromptContext,
+        skillDecision
       );
 
       // Inject depth instructions into system prompt
       if (depthInstructions) {
         systemPrompt = `${systemPrompt}\n\n${depthInstructions}`;
+      }
+
+      if (reflectionPlan) {
+        systemPrompt = `${systemPrompt}\n\n${this.buildReflectionPlanBlock(reflectionPlan)}`;
+        pipelineSteps.push('reflection-plan-attached');
       }
 
       // v30.3.0: Inject complexity awareness signal into system prompt
@@ -1099,7 +1144,21 @@ Format: [Audit complet] + [Réponse utilisateur]
         logger.info('Memory-first: answer found in memory — skipping LLM call');
         pipelineSteps.push('memory-answer-returned');
         const processingTime = Date.now() - pipelineStartTime;
-        return {
+        attachGenerationResult(cogTrace, {
+          providerRequested:
+            canonicalDecision.provider.name !== 'auto'
+              ? canonicalDecision.provider.name
+              : this.providerPreference !== 'auto'
+                ? this.providerPreference
+                : undefined,
+          providerUsed: 'titane-memory',
+          modelUsed: 'memory-first-v1.0',
+          fallbackUsed: false,
+          latencyMs: processingTime,
+        });
+        resolveFinalVerdict(cogTrace);
+
+        const memoryFirstResponse: ChatEngineResponse = {
           content: memoryAnswer.content,
           provider: 'titane-memory' as AIProviderName,
           model: 'memory-first-v1.0',
@@ -1113,8 +1172,21 @@ Format: [Audit complet] + [Réponse utilisateur]
             autoHealed: false,
             failureHandled: false,
             processingTime,
+            cognitiveTrace: cogTrace,
           },
         };
+
+        if (traceId) {
+          try {
+            await cognitiveOmega.endTrace(traceId, memoryFirstResponse.content, 'success');
+          } catch (error) {
+            logger.warn('Failed to end observability trace for memory-first response', {
+              error,
+            });
+          }
+        }
+
+        return memoryFirstResponse;
       }
 
       // ═══ PHASE 1.35: INFERENCE STATE GATING ═══
@@ -1498,6 +1570,21 @@ Format: [Audit complet] + [Réponse utilisateur]
       pipelineSteps.push('post-processing');
       logger.debug('Step 1.6: Post-processing...');
       const processedResponse = this.postProcess(response, finalConfig, validatedMessage);
+
+      const reasoningContract = resolveReasoningContract({
+        profileId: canonicalDecision.profileId,
+        requestStyle: finalConfig.mode,
+        proofMode: canonicalDecision.profileId === 'OMEGA',
+      });
+
+      if (hasForbiddenReasoningOutput(processedResponse.content, reasoningContract)) {
+        processedResponse.content = this.sanitizeForbiddenReasoningOutput(
+          processedResponse.content,
+          reasoningContract.forbiddenOutputPatterns
+        );
+        autoHealed = true;
+        pipelineSteps.push('reasoning-contract-sanitized');
+      }
       logger.debug('Response processed');
 
       // ═══ PHASE 1.7: ORDERED MEMORY SAVING ═══
@@ -1505,6 +1592,20 @@ Format: [Audit complet] + [Réponse utilisateur]
       logger.debug('Step 1.7: Saving to memory engines (ordered)...');
 
       const memorySaveStart = Date.now();
+
+      const memoryWriteDecision = this.resolveMemoryWriteDecision({
+        validationScore: validation.score,
+        hasMemoryConflict: cogTrace.memory.risk === 'conflict_with_current_message',
+        hasDurableProjectSignal:
+          canonicalDecision.modeClassification?.canonicalMode === 'ARCHITECT' ||
+          canonicalDecision.modeClassification?.canonicalMode === 'REPAIR',
+      });
+
+      pipelineSteps.push(
+        memoryWriteDecision.shouldWrite
+          ? `memory-write-allowed:${memoryWriteDecision.reasonCode}`
+          : `memory-write-blocked:${memoryWriteDecision.reasonCode}`
+      );
 
       const {
         persistentStatus,
@@ -1521,6 +1622,7 @@ Format: [Audit complet] + [Réponse utilisateur]
         model: processedResponse.model,
         pipelineStartTime,
         traceId,
+        memoryWriteDecision,
       });
 
       autoHealed ||= memoryAutoHealed;
@@ -1678,6 +1780,11 @@ Format: [Audit complet] + [Réponse utilisateur]
           processingTime,
           reasoningSummary: reasoningSummary || undefined,
           canonicalDecision,
+          reasoningContract: {
+            reasonCode: reasoningContract.reasonCode,
+            maxSections: reasoningContract.maxSections,
+            visibleRationale: reasoningContract.visibleRationale,
+          },
           qualityScore,
           cognitiveTrace: cogTrace,
         },
@@ -1985,18 +2092,28 @@ Que souhaites-tu explorer ?`;
       const processedResponse = this.postProcess(response, finalConfig, validatedMessage);
 
       pipelineSteps.push('memory-saving');
+      const memoryWriteDecision = this.resolveMemoryWriteDecision({
+        validationScore: validation.score,
+      });
+
+      if (!memoryWriteDecision.shouldWrite) {
+        pipelineSteps.push(`memory-write-blocked:${memoryWriteDecision.reasonCode}`);
+      }
+
       try {
-        await this.withTimeout(
-          memoryIntegration.saveInteraction({
-            mode: finalConfig.mode,
-            userMessage: validatedMessage,
-            aiResponse: processedResponse.content,
-            emotionState: this.convertEmotionState(finalConfig.emotionState),
-            context: memoryContext,
-          }),
-          3000,
-          'Memory save timeout'
-        );
+        if (memoryWriteDecision.shouldWrite) {
+          await this.withTimeout(
+            memoryIntegration.saveInteraction({
+              mode: finalConfig.mode,
+              userMessage: validatedMessage,
+              aiResponse: processedResponse.content,
+              emotionState: this.convertEmotionState(finalConfig.emotionState),
+              context: memoryContext,
+            }),
+            3000,
+            'Memory save timeout'
+          );
+        }
       } catch (error) {
         logger.warn('Backend memory save failed (continuing)', { error });
         autoHealed = true;
@@ -2284,18 +2401,28 @@ Que souhaites-tu explorer ?`;
       const processed = this.postProcess(response, finalConfig, validatedMessage);
 
       pipelineSteps.push('memory-saving');
+      const memoryWriteDecision = this.resolveMemoryWriteDecision({
+        validationScore: validation.score,
+      });
+
+      if (!memoryWriteDecision.shouldWrite) {
+        pipelineSteps.push(`memory-write-blocked:${memoryWriteDecision.reasonCode}`);
+      }
+
       try {
-        await this.withTimeout(
-          memoryIntegration.saveInteraction({
-            mode: finalConfig.mode,
-            userMessage: validatedMessage,
-            aiResponse: processed.content,
-            emotionState: this.convertEmotionState(finalConfig.emotionState),
-            context: memoryContext,
-          }),
-          3000,
-          'Memory save timeout'
-        );
+        if (memoryWriteDecision.shouldWrite) {
+          await this.withTimeout(
+            memoryIntegration.saveInteraction({
+              mode: finalConfig.mode,
+              userMessage: validatedMessage,
+              aiResponse: processed.content,
+              emotionState: this.convertEmotionState(finalConfig.emotionState),
+              context: memoryContext,
+            }),
+            3000,
+            'Memory save timeout'
+          );
+        }
       } catch (_memoryError) {
         logger.warn('Memory save failed (streaming)', { error: _memoryError });
         autoHealed = true;
@@ -2966,17 +3093,25 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
       // Sauvegarde (async, non-bloquante pour streaming)
       pipelineSteps.push('stream-save');
-      memoryIntegration
-        .saveInteraction({
-          mode: finalConfig.mode,
-          userMessage: validatedMessage,
-          aiResponse: finalContent,
-          emotionState: this.convertEmotionState(finalConfig.emotionState),
-          context: memoryContext,
-        })
-        .catch(error => {
-          logger.warn('Stream memory save failed', { error });
-        });
+      const streamMemoryWriteDecision = this.resolveMemoryWriteDecision({
+        validationScore: validation.score,
+      });
+
+      if (streamMemoryWriteDecision.shouldWrite) {
+        memoryIntegration
+          .saveInteraction({
+            mode: finalConfig.mode,
+            userMessage: validatedMessage,
+            aiResponse: finalContent,
+            emotionState: this.convertEmotionState(finalConfig.emotionState),
+            context: memoryContext,
+          })
+          .catch(error => {
+            logger.warn('Stream memory save failed', { error });
+          });
+      } else {
+        pipelineSteps.push(`memory-write-blocked:${streamMemoryWriteDecision.reasonCode}`);
+      }
 
       // 🚀 v24.3.1 - Sauvegarder dans le cache pour réponses ultra-rapides
       if (finalConfig.performanceConfig?.enableCache !== false) {
@@ -3199,7 +3334,8 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
     modeConfig: ChatModeConfig,
     context: { sources: string[]; data: Record<string, unknown> },
     promptContext?: PromptContext,
-    semanticContext?: string
+    semanticContext?: string,
+    skillDecision?: SkillRoutingDecision
   ): string {
     try {
       // ═══ STABLE PREFIX (cacheable, rarely changes) ═══
@@ -3261,10 +3397,14 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
 
       // ═══ SKILL OS: Inject active skill system prompt ═══
       let skillInjection = '';
-      const activeSkillId = getActiveSkillId();
+      const activeSkillId = skillDecision?.skillId ?? getActiveSkillId();
       if (activeSkillId) {
         const skillPrompt = getSystemPromptForSkill(activeSkillId);
-        if (skillPrompt) {
+        const activationMode = skillDecision?.activationMode ?? 'primary_route';
+        const shouldInjectSkill =
+          activationMode === 'primary_route' || activationMode === 'inject_context';
+
+        if (skillPrompt && shouldInjectSkill) {
           const activeSkill = getActiveSkill();
           const skillName = activeSkill?.manifest.name || 'Imported Skill';
           skillInjection = `\n\n═══ ACTIVE SKILL: ${skillName} ═══\n${skillPrompt}\n═══ END SKILL ═══`;
@@ -3694,12 +3834,25 @@ QUALITÉ MAXIMALE :
     model?: string;
     pipelineStartTime: number;
     traceId?: string;
+    memoryWriteDecision?: MemoryWriteDecision;
   }): Promise<{
-    persistentStatus: 'fulfilled' | 'rejected';
+    persistentStatus: 'fulfilled' | 'rejected' | 'skipped';
     cognitiveStatus: 'fulfilled' | 'rejected' | 'skipped';
     autoHealed: boolean;
   }> {
     let autoHealed = false;
+
+    if (params.memoryWriteDecision && !params.memoryWriteDecision.shouldWrite) {
+      logger.debug('Memory save skipped by policy', {
+        reasonCode: params.memoryWriteDecision.reasonCode,
+      });
+
+      return {
+        persistentStatus: 'skipped',
+        cognitiveStatus: 'skipped',
+        autoHealed,
+      };
+    }
 
     try {
       await this.withTimeout(
@@ -3755,6 +3908,118 @@ QUALITÉ MAXIMALE :
         autoHealed,
       };
     }
+  }
+
+  private resolveSkillRoutingDecision(
+    canonicalDecision: CanonicalDecision,
+    validatedMessage: string
+  ): SkillRoutingDecision {
+    const activeSkillId = getActiveSkillId();
+    const skillPrompt = activeSkillId ? getSystemPromptForSkill(activeSkillId) ?? '' : '';
+    const activeSkill = activeSkillId ? getActiveSkill() : null;
+
+    const source: SkillRoutingSource = canonicalDecision.skillId
+      ? 'kernel_intent'
+      : 'manual_active';
+
+    return routeSkill({
+      skillId: activeSkillId,
+      source,
+      packageHealthy: Boolean(activeSkillId && skillPrompt && activeSkill),
+      packageState: activeSkillId ? 'ACTIVE' : 'INSTALLED',
+      allowedForIntent:
+        !canonicalDecision.skillId || !activeSkillId
+          ? true
+          : canonicalDecision.skillId === activeSkillId,
+      promptLength: skillPrompt.length,
+      maxPromptLength: Math.max(2048, validatedMessage.length * 3),
+    });
+  }
+
+  private resolveReflectionPlanForTurn(
+    mode: ChatMode,
+    canonicalMode: string | undefined,
+    message: string
+  ) {
+    const normalizedMode = mode.toLowerCase();
+    const normalizedCanonical = (canonicalMode ?? '').toUpperCase();
+
+    let type: ReflectionType | null = null;
+    if (normalizedMode === 'debug_cognitive') {
+      type = 'technical';
+    } else if (normalizedMode === 'planning') {
+      type = 'strategic';
+    } else if (normalizedMode === 'synthesis') {
+      type = 'integration';
+    } else if (normalizedCanonical === 'ARCHITECT') {
+      type = 'architectural';
+    } else if (normalizedCanonical === 'REPAIR') {
+      type = 'technical';
+    } else if (normalizedCanonical === 'CERTIFY') {
+      type = 'decision';
+    }
+
+    if (!type) {
+      return null;
+    }
+
+    return buildReflectionPlan({
+      type,
+      subject: message.slice(0, 120),
+      continuationRequested: /\b(continue|continuer|approfondir|deeper|next)\b/i.test(
+        message
+      ),
+    });
+  }
+
+  private buildReflectionPlanBlock(plan: ReturnType<typeof buildReflectionPlan>): string {
+    const lenses = plan.lenses.join(' | ');
+    const mustAnswer = plan.mustAnswer.map(item => `- ${item}`).join('\n');
+    const stoplines = plan.stoplines.map(item => `- ${item}`).join('\n');
+
+    return `═══ REFLECTION PLAN (${plan.type.toUpperCase()}) ═══
+Reason: ${plan.reasonCode}
+Lenses: ${lenses}
+Must answer:
+${mustAnswer}
+Stoplines:
+${stoplines}`;
+  }
+
+  private sanitizeForbiddenReasoningOutput(
+    content: string,
+    forbiddenPatterns: string[]
+  ): string {
+    let sanitized = content;
+
+    for (const pattern of forbiddenPatterns) {
+      const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(escapedPattern, 'gi');
+      sanitized = sanitized.replace(regex, '[redacted-reasoning]');
+    }
+
+    return sanitized;
+  }
+
+  private resolveMemoryWriteDecision(input: {
+    validationScore: number;
+    hasMemoryConflict?: boolean;
+    hasDurableProjectSignal?: boolean;
+  }): MemoryWriteDecision {
+    const verdict =
+      input.validationScore < 0.45
+        ? 'FAIL'
+        : input.validationScore < 0.65
+          ? 'UNCERTAIN'
+          : 'PASS';
+
+    return decideMemoryWrite({
+      safeToRemember: input.validationScore >= 0.5,
+      verdict,
+      confidence: input.validationScore,
+      memoryConflict: Boolean(input.hasMemoryConflict),
+      durableProjectDecision: Boolean(input.hasDurableProjectSignal),
+    });
   }
 
   /**

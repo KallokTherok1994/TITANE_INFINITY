@@ -16,7 +16,9 @@ import { memoryIntegration } from '@/services/ai/memoryIntegration';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
 import * as defaultKnowledgeBase from '@/services/api/defaultKnowledgeBase';
+import * as skillActivator from '@/services/skills/activation/skillActivator';
 import userPreferencesEngine from '@/services/userPreferencesEngine';
+import { chatValidator } from '@/services/chatValidator';
 
 const EMPTY_MEMORY_CONTEXT = {
   activeProjects: [],
@@ -590,5 +592,168 @@ describe('ChatEngine — default knowledge base integration', () => {
     expect(backendSpy.mock.calls[0]?.[0]?.systemPrompt).toContain(
       "créateur et l'utilisateur principal"
     );
+  });
+
+  test('does not inject active skill prompt when skillRouter blocks long prompt payload', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+    vi.spyOn(skillActivator, 'getActiveSkillId').mockReturnValue('skill.long');
+    vi.spyOn(skillActivator, 'getActiveSkill').mockReturnValue({
+      manifest: { name: 'Skill Long Prompt' },
+    } as ReturnType<typeof skillActivator.getActiveSkill>);
+    vi.spyOn(skillActivator, 'getSystemPromptForSkill').mockReturnValue('X'.repeat(3000));
+
+    const backendSpy = vi
+      .spyOn(chatEngineCommands, 'generateResponse')
+      .mockResolvedValue({
+        content: 'Réponse skill route test',
+        provider: 'ollama',
+        conversationId: 'conv-skill-route',
+        messageId: 'msg-skill-route',
+        timestamp: Date.now(),
+        tokenCount: 14,
+        latencyMs: 6,
+      });
+
+    const response = await chatEngine.generate('Test skill routing', []);
+
+    const systemPrompt = backendSpy.mock.calls[0]?.[0]?.systemPrompt ?? '';
+    expect(systemPrompt).not.toContain('ACTIVE SKILL');
+    expect(response.omegaMetadata?.pipelineSteps).toContain(
+      'skill-route-blocked:prompt_too_long'
+    );
+  });
+
+  test('maps REPAIR canonical mode to technical reflection plan', () => {
+    // @ts-expect-error -- private helper tested for canonical mapping hardening
+    const plan = chatEngine.resolveReflectionPlanForTurn('default', 'REPAIR', 'Répare ce bug');
+
+    expect(plan).not.toBeNull();
+    expect(plan?.type).toBe('technical');
+    expect(plan?.reasonCode).toBe('technical_bounded');
+  });
+
+  test('injects reflection plan block in planning mode runtime prompt', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+
+    const backendSpy = vi
+      .spyOn(chatEngineCommands, 'generateResponse')
+      .mockResolvedValue({
+        content: 'Réponse reflection plan',
+        provider: 'ollama',
+        conversationId: 'conv-reflect-plan',
+        messageId: 'msg-reflect-plan',
+        timestamp: Date.now(),
+        tokenCount: 15,
+        latencyMs: 7,
+      });
+
+    await chatEngine.generate('Planifie la prochaine étape', [], { mode: 'planning' });
+
+    const systemPrompt = backendSpy.mock.calls[0]?.[0]?.systemPrompt ?? '';
+    expect(systemPrompt).toContain('REFLECTION PLAN (STRATEGIC)');
+    expect(systemPrompt).toContain('Reason: strategic_bounded');
+  });
+
+  test('skips backend memory write when memoryWritePolicy blocks low-truth response', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    const saveSpy = vi
+      .spyOn(memoryIntegration, 'saveInteraction')
+      .mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+    vi.spyOn(chatValidator, 'validate').mockReturnValue({
+      isValid: true,
+      cleaned: '',
+      score: 0.4,
+      issues: [],
+      coherenceScore: 0.4,
+      anomalyScore: 0.2,
+    });
+    vi.spyOn(chatEngineCommands, 'generateResponse').mockResolvedValue({
+      content: 'Réponse test mémoire policy',
+      provider: 'ollama',
+      conversationId: 'conv-memory-policy',
+      messageId: 'msg-memory-policy',
+      timestamp: Date.now(),
+      tokenCount: 11,
+      latencyMs: 4,
+    });
+
+    const response = await chatEngine.generate('Test policy mémoire', []);
+
+    expect(saveSpy).not.toHaveBeenCalled();
+    expect(response.omegaMetadata?.pipelineSteps).toContain(
+      'memory-write-blocked:safe_to_remember_false'
+    );
+  });
+
+  test('memory-first answer returns cognitive trace generation metadata and skips backend', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+    const endTraceSpy = vi.spyOn(cognitiveOmega, 'endTrace').mockResolvedValue(undefined);
+    vi.spyOn(cognitiveOmega, 'startTrace').mockResolvedValue('trace-memory-first');
+    vi.spyOn(chatEngine as never, 'tryBackendPipeline').mockResolvedValue(null);
+    vi.spyOn(chatEngine as never, 'checkMemoryForAnswer').mockReturnValue({
+      content: 'Réponse mémoire immédiate',
+    });
+
+    const response = await chatEngine.generate('Rappelle-moi la décision déjà prise', []);
+
+    expect(response.provider).toBe('titane-memory');
+    expect(response.omegaMetadata?.pipelineSteps).toContain('memory-answer-returned');
+    expect(response.omegaMetadata?.cognitiveTrace?.generation.providerUsed).toBe(
+      'titane-memory'
+    );
+    expect(response.omegaMetadata?.cognitiveTrace?.generation.modelUsed).toBe(
+      'memory-first-v1.0'
+    );
+    expect(endTraceSpy).toHaveBeenCalledWith(
+      'trace-memory-first',
+      'Réponse mémoire immédiate',
+      'success'
+    );
+  });
+
+  test('main runtime path adds explicit memory-write marker', async () => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+    vi.spyOn(chatValidator, 'validate').mockReturnValue({
+      isValid: true,
+      cleaned: '',
+      score: 0.92,
+      issues: [],
+      coherenceScore: 0.93,
+      anomalyScore: 0.05,
+    });
+    vi.spyOn(chatEngineCommands, 'generateResponse').mockResolvedValue({
+      content: 'Réponse avec sauvegarde mémoire autorisée',
+      provider: 'ollama',
+      conversationId: 'conv-memory-allowed',
+      messageId: 'msg-memory-allowed',
+      timestamp: Date.now(),
+      tokenCount: 11,
+      latencyMs: 4,
+    });
+
+    const response = await chatEngine.generate('Conserve cette réponse fiable', []);
+
+    expect(
+      response.omegaMetadata?.pipelineSteps.some(step => step.startsWith('memory-write-'))
+    ).toBe(true);
   });
 });

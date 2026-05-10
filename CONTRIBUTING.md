@@ -24,6 +24,21 @@ pnpm run dev              # Vite seul (port 1420)
 pnpm storybook            # Storybook (port 6006)
 ```
 
+## Session start checklist (Rule 20)
+
+Chaque session doit commencer par:
+
+1. Restaurer le contexte (plan de session si disponible).
+2. Snapshot worktree avec `git status --short`.
+3. Declarer explicitement le mode (`MODE=DURABLE` ou `MODE=EXPLORATION`).
+4. Identifier les phases deja prouvees mais non committees (Rule 18).
+
+## Modes d execution (Rule 19)
+
+- DURABLE: mode par defaut sur MAIN/feature/*, discipline complete Rule 1-18.
+- EXPLORATION: mode temporaire (explore/*), discipline allegee, code jetable par defaut.
+- Promotion EXPLORATION vers MAIN: tests complets + AutoHeal full-schema + preuves scopees.
+
 ## Tests
 
 ```bash
@@ -80,8 +95,28 @@ Chaque modification sous `src/`, `src-tauri/`, `tests/`, `e2e/`, `scripts/` **do
 2. Inclure une story Storybook si surface UI
 3. Appender une entrée full-schema dans `scripts/autoheal/autoheal_rules.jsonl`
 4. Passer `bash scripts/autoheal/detect_recurrence.sh` (PASS requis)
-5. Passer `bash scripts/verify_instructions.sh` (PASS=33 FAIL=0)
+5. Passer `bash scripts/verify_instructions.sh` (SUMMARY avec FAIL=0)
 6. Mettre à jour les docs cartographiques si nécessaire
+
+### Trigger table mapping (Rule 15)
+
+| Fichiers modifies | Docs obligatoires |
+| --- | --- |
+| `src/components/**`, `src/pages/**` | `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| `src/services/**`, `src/engines/**` | `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| Nouvelle IPC dans `src-tauri/src/**` | `docs/IPC_CATALOG.md` + `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| Integration Ollama | `OLLAMA_RUNTIME_MAP.md` |
+| Build/version/release | `RELEASE_SURFACE_INVENTORY.md` |
+
+### Verification minimale attendue
+
+```bash
+# Adapter au scope reel
+pnpm vitest run
+cargo test --manifest-path src-tauri/Cargo.toml
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+```
 
 ## Commit message
 
@@ -93,7 +128,7 @@ Types : `feat` | `fix` | `refactor` | `test` | `docs` | `chore`
 feat(kb): phase 34 - nouveau domaine knowledge base
 
 - Description des changements
-- Gates: vitest PASS, detect_recurrence PASS, verify_instructions PASS=33
+- Gates: vitest PASS, detect_recurrence PASS, verify_instructions FAIL=0
 - AutoHeal: AH-KB-NOUVEAU-DOMAINE-YYYY-MM-DD
 - Rule 10/15/16/18 compliance: PASS
 ```
@@ -113,6 +148,31 @@ Ouvrir une issue GitHub avec :
 2. Tous les gates verts (CI + local)
 3. Description incluant le lien vers les preuves (proof_pack ou test output)
 4. Un reviewer minimum
+
+## Proof pack (Rule 12)
+
+Le proof pack est requis pour les changements sensibles (ex: IPC, build/release, correctif critique, changement cross-ring majeur).
+
+Structure minimale recommandee:
+
+```text
+proof_packs/<SESSION>/VERDICT.md
+proof_packs/<SESSION>/ROLLBACK.md
+reports/<SESSION>/
+```
+
+Le verdict final doit utiliser le vocabulaire kernel:
+
+- PASS
+- FAIL
+- BLOCKED
+- BLOCKED_APPROVAL
+- DONE
+- SEALED
+
+## Direct-to-main phase commits (Rule 18)
+
+En mode direct MAIN autorise, chaque phase corrigee avec preuves vertes doit etre committee immediatement en lot scope-limite.
 
 ## Licence
 

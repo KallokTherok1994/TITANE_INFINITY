@@ -1,3 +1,18 @@
+## 2026-05-09 — Conversation runtime contract callsites
+
+- Ring 4 (`ConversationSection`) applique désormais le contrat d invocation outils via `routeChatToolInvocation` avant tout auto-send template.
+- Ring 3 hardening (`chatEngine`): la voie runtime trace maintenant le verdict de routage skill dans `pipelineSteps` (`skill-route-blocked:*`, `skill-route-suggest:*`, `skill-route-active:*`) pour aligner la vérité observable avec la décision contractuelle.
+- Ring 3 hardening (`chatEngine`): `canonicalMode=REPAIR` est mappé explicitement vers une réflexion `technical` bornée, évitant un fallback implicite `strategic` sur les tours de correction.
+- Ring 3 hardening (`chatEngine`): la voie `memory-first` publie désormais aussi un `cognitiveTrace.generation` cohérent (`providerUsed=titane-memory`, `modelUsed=memory-first-v1.0`) et ferme explicitement la trace si elle a été ouverte.
+- Ring 3 hardening (`chatEngine`): la voie principale ajoute un marqueur `memory-write-*` systématique dans `pipelineSteps`, ce qui rend la décision de persistance observable même quand l écriture est refusée par politique.
+- Ring 3 hardening (`chatEngine`): garde strict-null sur `skillPrompt` dans `resolveSkillRoutingDecision` pour conserver une vérité runtime et typage cohérents sous `tsc --strict`.
+- Ring 3 (`chatEngine`) applique les overlays contractuels sur la voie runtime active:
+  - `skillRouter`: décision d injection skill bornée selon santé, intention et longueur prompt.
+  - `reasoningContract`: garde anti-patterns de raisonnement brut sur la sortie visible.
+  - `reflectionPlanner`: plan de réflexion injecté seulement sur modes/canaux pertinents.
+  - `memoryWritePolicy`: blocage d écriture mémoire quand la vérité runtime est insuffisante.
+- Le flux One Door reste inchangé: UI -> hook/service -> orchestrator/backend; les contrats ajoutent des bornes de décision sans créer de deuxième système.
+
 ## 2026-05-09 — Chat runtime contract overlays
 
 - Les nouveaux contrats purs `src/features/chat/chatToolCapabilities.ts` et `src/features/chat/chatToolRouter.ts` qualifient la surface des outils chat comme template-only tant qu aucune action locale réelle n existe. La route runtime reste honnête: pas d autorité cachée, pas de faux exécuteur.

@@ -1,3 +1,14 @@
+# [2026-05-09] Conversation runtime contract callsites (tool/skill/reasoning/reflection/memory)
+
+- Surface runtime inchangée: `src/components/sections/ConversationSection.tsx` garde la même UX, mais la trace backend expose maintenant explicitement le verdict de routage skill (`skill-route-blocked|suggest|active`) dans `omegaMetadata.pipelineSteps`.
+- Surface conversation planning/repair: `src/services/ai/chatEngine.ts` mappe désormais `canonicalMode=REPAIR` vers un bloc de réflexion `technical` borné (même contrat visible que les autres modes sans nouvelle UI).
+
+- Surface canonique conversation: `src/components/sections/ConversationSection.tsx` route maintenant chaque sélection d outil via `routeChatToolInvocation()` avant insertion/envoi template.
+- Vérité de routage outils: `resolveConversationToolTemplate()` publie une décision gouvernée (template/fallback/blocked) utilisée par `handleToolSelect`.
+- Surface test unitaire callsite: `src/components/sections/__tests__/ConversationSection.toolRouting.test.ts` verrouille le flux known/unknown tool sur la surface active.
+- Vérité runtime chat engine: `src/services/ai/chatEngine.ts` consomme maintenant `skillRouter`, `reasoningContract`, `reflectionPlanner` et `memoryWritePolicy` dans le pipeline réel de génération.
+- Preuves ciblées: `src/__tests__/chatEngine.test.ts` couvre blocage skill prompt trop long, injection reflection-plan en mode planning, et blocage mémoire runtime quand la vérité est insuffisante.
+
 # [2026-05-08] TOTAL_DEV boundary alignment truth
 
 - Surface canonique: src/pages/TotalDevPage.tsx
@@ -1005,7 +1016,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Surfaces pures associées à la conversation: `src/features/chat/chatToolCapabilities.ts`, `src/features/chat/chatToolRouter.ts`, `src/services/ai/skillRouter.ts`, `src/services/ai/reasoningContract.ts`, `src/services/ai/reflectionPlanner.ts`, `src/services/ai/memoryWritePolicy.ts`
 - Vérité UI des outils de chat: le registre `src/features/chat/chatToolsRegistry.ts` reste template-only et les routes runtime retombent honnêtement sur un prompt gouverné quand aucune action locale réelle n existe
 - Le panneau Expert reste la surface visible de vérité cognitive, mais n expose que la trace sanitisée et des attributs runtime bornés; aucun champ de raisonnement brut n est projeté dans le DOM
-- Preuves ciblées: `src/services/ai/__tests__/chatToolCapabilities.test.ts`, `src/services/ai/__tests__/skillRouter.test.ts`, `src/services/ai/__tests__/reasoningContract.test.ts`, `src/services/ai/__tests__/reflectionPlanner.test.ts`, `src/services/ai/__tests__/memoryWritePolicy.test.ts`, `src/__tests__/features/chat/ThinkingPanel.test.tsx`
+- Preuves ciblées: `src/services/ai/__tests__/chatToolCapabilities.test.ts`, `src/features/chat/__tests__/chatToolRouter.test.ts`, `src/services/ai/__tests__/skillRouter.test.ts`, `src/services/ai/__tests__/reasoningContract.test.ts`, `src/services/ai/__tests__/reflectionPlanner.test.ts`, `src/services/ai/__tests__/memoryWritePolicy.test.ts`, `src/__tests__/features/chat/ThinkingPanel.test.tsx`
 
 # [2026-05-08] CognitiveRuntimeTrace v2 — WebTruth + QualityAction Policy
 

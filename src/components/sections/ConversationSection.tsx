@@ -88,6 +88,7 @@ import {
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import { ToolSelectorPanel } from '@/components/chat/ToolSelectorPanel';
 import { type ChatTool } from '@/features/chat/chatToolsRegistry';
+import { routeChatToolInvocation } from '@/features/chat/chatToolRouter';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -296,6 +297,23 @@ export function resolveConversationDisplayProvider(
     buildConversationProviders().find(provider => provider.id === selectedProvider)
       ?.name ?? selectedProvider
   );
+}
+
+export function resolveConversationToolTemplate(tool: ChatTool): {
+  templateValue: string;
+  blocked: boolean;
+  reasonCode: string;
+  userVisibleMessage: string;
+} {
+  const routeDecision = routeChatToolInvocation(tool.id);
+  const blocked = !routeDecision.shouldSendAsTemplate && !routeDecision.canDegradeToTemplate;
+
+  return {
+    templateValue: tool.templateText,
+    blocked,
+    reasonCode: routeDecision.reasonCode,
+    userVisibleMessage: routeDecision.userVisibleMessage,
+  };
 }
 
 export function buildConversationRuntimeSummary(
@@ -2704,19 +2722,30 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const handleToolSelect = useCallback(
       async (tool: ChatTool) => {
         setShowToolSelector(false);
+        const toolRoute = resolveConversationToolTemplate(tool);
+
+        if (toolRoute.blocked) {
+          pageLogger.warn('Tool selection blocked by routing contract', {
+            toolId: tool.id,
+            reasonCode: toolRoute.reasonCode,
+          });
+          errorToast(toolRoute.userVisibleMessage);
+          return;
+        }
+
         if (tool.autoSend) {
           // Mettre à jour le ref immédiatement avant que handleSend le lise
-          inputValueRef.current = tool.templateText;
-          setInputValue(tool.templateText);
+          inputValueRef.current = toolRoute.templateValue;
+          setInputValue(toolRoute.templateValue);
           // Laisser React flusher l'état avant d'envoyer
           await new Promise<void>(resolve => setTimeout(resolve, 0));
           await handleSend();
         } else {
-          updateInputValue(tool.templateText);
+          updateInputValue(toolRoute.templateValue);
           conversationInputRef.current?.focus();
         }
       },
-      [handleSend, updateInputValue]
+      [errorToast, handleSend, updateInputValue]
     );
 
     const handleClearChat = useCallback(async () => {
