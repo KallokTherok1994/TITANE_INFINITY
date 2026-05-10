@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { tauriClient } from '../lib/tauriClient';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 interface ExportDocxContent {
   path: string;
@@ -100,6 +101,8 @@ export function DocCenterPage() {
       style={{ padding: '2rem' }}
     >
       <h1 style={{ marginBottom: '1.5rem' }}>📄 Centre Documentaire</h1>
+      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+      <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
       <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>
         Export natif DOCX via <code>doc_engine</code> + docx-rs
       </p>

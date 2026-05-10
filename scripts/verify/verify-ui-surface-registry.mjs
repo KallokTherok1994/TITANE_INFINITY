@@ -2,8 +2,12 @@
 /**
  * TITANE_INFINITY — UI Surface Registry Verifier
  * Verifies parity between uiSurfaceRegistry, App.tsx, uiPages.po.js, moduleRouteContext.ts
- * Mission: UI_BACKEND_TRUTH_CERTIFICATION_v46
+ * Mission: UI_BACKEND_TRUTH_CERTIFICATION_v46 / UI_BACKEND_RUNTIME_PROMOTION_v47
  * Usage: node scripts/verify/verify-ui-surface-registry.mjs
+ *
+ * CHECK 7 upgrade (v47): verifies simulationDisclosureApplied=true AND checks source file
+ *   for PageHealthBanner import. If both confirmed, no warning emitted.
+ * CHECK 9 (v47): verifies generated docs exist and contain GENERATED_FROM marker.
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -132,15 +136,18 @@ function parseSurfaceBlocks(content) {
   return blocks.filter(b => /route:\s*'/.test(b));
 }
 
-/** Extract SIMULATED_UI routes from registry */
+/** Extract SIMULATED_UI routes from registry, with disclosure flag */
 function parseSimulatedRoutes(content) {
-  const simulated = new Set();
+  const simulated = new Map(); // route -> { disclosureApplied: boolean, sourceFile: string|null }
   const blocks = parseSurfaceBlocks(content);
   for (const block of blocks) {
     const routeMatch = block.match(/route:\s*'([^']+)'/);
     if (!routeMatch) continue;
     if (block.includes("'SIMULATED_UI'") || block.includes('"SIMULATED_UI"')) {
-      simulated.add(routeMatch[1]);
+      const disclosureApplied = /simulationDisclosureApplied:\s*true/.test(block);
+      const sourceFileMatch = block.match(/sourceFiles:\s*\[\s*'([^']+)'/);
+      const sourceFile = sourceFileMatch ? sourceFileMatch[1] : null;
+      simulated.set(routeMatch[1], { disclosureApplied, sourceFile });
     }
   }
   return simulated;
@@ -249,13 +256,28 @@ function verify() {
     errors.push(`INVALID_ACTIVE_SYNCED: '${route}' is ACTIVE_SYNCED but canClaimSyncedWithoutRuntime=false — requires runtime proof`);
   }
 
-  // CHECK 7: SIMULATED_UI routes must not be ACTIVE_SYNCED
-  for (const route of simulatedRoutes) {
-    // This is a structural check — simulated routes with ACTIVE_SYNCED would fail CHECK 6 already
-    // But we warn if SIMULATED shows up in unexpected places
-    if (appCanonical.has(route)) {
-      warnings.push(`SIMULATED_ROUTE_INFO: '${route}' is SIMULATED_UI — must display simulation badge visibly`);
+  // CHECK 7: SIMULATED_UI routes must have visible disclosure (banner/badge)
+  for (const [route, info] of simulatedRoutes) {
+    if (!appCanonical.has(route)) continue;
+    // Check 1: simulationDisclosureApplied flag in registry
+    if (!info.disclosureApplied) {
+      warnings.push(`SIMULATED_NO_DISCLOSURE_FLAG: '${route}' is SIMULATED_UI but simulationDisclosureApplied is not set to true in registry`);
+      continue;
     }
+    // Check 2: source file actually imports PageHealthBanner
+    if (info.sourceFile) {
+      const sourceContent = readFile(info.sourceFile);
+      if (!sourceContent) {
+        warnings.push(`SIMULATED_SOURCE_NOT_FOUND: '${route}' sourceFile '${info.sourceFile}' not found — cannot verify banner`);
+        continue;
+      }
+      if (!sourceContent.includes('PageHealthBanner')) {
+        warnings.push(`SIMULATED_BANNER_MISSING: '${route}' sourceFile '${info.sourceFile}' does not import PageHealthBanner — disclosure required`);
+        continue;
+      }
+    }
+    // All checks passed — disclosure confirmed, no warning
+    console.log(`  ✅ SIMULATED_DISCLOSURE_CONFIRMED: '${route}' has banner applied`);
   }
 
   // CHECK 8: App.tsx redirect routes (aliases) should not be orphaned
@@ -264,6 +286,33 @@ function verify() {
     const toRoute = to.split('?')[0];
     if (!appCanonical.has(toRoute) && !regCanonical.has(toRoute)) {
       errors.push(`ORPHANED_ALIAS: '${from}' redirects to '${toRoute}' which is not a known canonical route`);
+    }
+  }
+
+  // CHECK 9: Generated docs must exist and contain GENERATED_FROM marker
+  const REQUIRED_GENERATED_DOCS = [
+    'docs/ui/generated/UI_ROUTE_INVENTORY.md',
+    'docs/ui/generated/UI_TAB_MATRIX.md',
+    'docs/ui/generated/UI_ACTION_BACKEND_MATRIX.md',
+    'docs/ui/generated/UI_PROOF_COVERAGE.md',
+    'docs/ui/generated/UI_LEGACY_ALIAS_MAP.md',
+  ];
+  const GENERATED_FROM_MARKER = 'GENERATED_FROM: src/registry/uiSurfaceRegistry.ts';
+  for (const docPath of REQUIRED_GENERATED_DOCS) {
+    const docContent = readFile(docPath);
+    if (!docContent) {
+      errors.push(`MISSING_GENERATED_DOC: '${docPath}' does not exist — run pnpm run generate:ui-surface-docs`);
+      continue;
+    }
+    if (!docContent.includes(GENERATED_FROM_MARKER)) {
+      warnings.push(`GENERATED_DOC_NO_MARKER: '${docPath}' lacks GENERATED_FROM marker — may be stale or manually edited`);
+    }
+    // Content-based route count check
+    const docRouteCount = (docContent.match(/^\| `\//gm) || []).length;
+    if (docPath.includes('UI_ROUTE_INVENTORY') && docRouteCount > 0) {
+      if (Math.abs(docRouteCount - regCanonical.size) > 2) {
+        warnings.push(`GENERATED_DOC_COUNT_DRIFT: '${docPath}' has ~${docRouteCount} route rows but registry has ${regCanonical.size} routes — regenerate with pnpm run generate:ui-surface-docs`);
+      }
     }
   }
 

@@ -56,6 +56,7 @@ import { TitaneLogo } from '@/components/branding/TitaneLogo';
 
 import './TitanePage.css';
 import './TitanePage-local.css';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 const pageLogger = createLogger('TitanePage');
 
@@ -291,6 +292,8 @@ export const TitanePage: React.FC = () => {
           gap={isConversationTab ? 2 : 4}
           className={`titane-page-shell${isConversationTab ? ' titane-page-shell--conversation' : ''}`}
         >
+          {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+          <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
           {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
           <div
             className={`titane-page-header${isConversationTab ? ' titane-page-header--conversation' : ''}`}

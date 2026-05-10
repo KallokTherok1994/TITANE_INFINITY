@@ -32,6 +32,7 @@ import { StatsSystemPanels } from './Stats';
 // LOCK3 — SYSTEM_HEALTH_POLLING: backend-sourced health truth on DevPage mount
 import { startSystemHealthPolling } from '@/services/systemHealthPoller';
 import { useSystemHealth } from '@/stores/systemStore.selectors';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -847,6 +848,8 @@ function DevPageContent(): JSX.Element {
 
   return (
     <div className="dev-page" data-testid="page-dev" data-dev-state="ready">
+      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+      <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>

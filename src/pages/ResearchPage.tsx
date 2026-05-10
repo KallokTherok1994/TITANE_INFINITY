@@ -23,6 +23,7 @@ import type {
   ResearchReport,
   Citation,
 } from '@/types/research';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 type ResearchHandoffState = {
   q?: string;
@@ -398,6 +399,8 @@ export const ResearchPage: React.FC = () => {
             Evidence-bound · Citations ≤25 words · Offline-capable · P7.0
           </p>
         </header>
+        {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+        <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
 
         {/* ── QUERY FORM ── */}
         <form className="rp-form" onSubmit={handleSubmit} data-testid="research-form">

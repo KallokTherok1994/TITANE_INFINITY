@@ -11,6 +11,7 @@ import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 import { getExperienceState, initExperienceService } from '@/services/experienceService';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 const FALLBACK_STATS: TitaneStats = {
   totalXP: 0,
@@ -96,6 +97,8 @@ export const Memory = () => {
 
   return (
     <div data-testid="page-memory">
+      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+      <SurfaceTruthBadge variant="PARTIAL" className="p-2" />
       <MemorySection stats={stats} conversationId={conversationId} />
     </div>
   );

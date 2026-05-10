@@ -567,6 +567,7 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/modules/OrchestrationIntelligenceCenter.tsx'],
+    simulationDisclosureApplied: true, // PageHealthBanner applied — verified 2026-05-09
     notes: 'SIMULATED_UI: multi-IA/meta visualization. No live backend. Must visibly show SIMULATED_UI status.',
   },
 
@@ -701,6 +702,7 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/components/QuantumCenter/QuantumCenter.tsx'],
+    simulationDisclosureApplied: true, // PageHealthBanner applied — verified 2026-05-09
     notes: 'SIMULATED_UI: mock-driven metrics and cache visualization. No real backend. Must visibly show SIMULATED_UI.',
   },
 

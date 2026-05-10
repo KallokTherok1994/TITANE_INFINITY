@@ -155,4 +155,11 @@ export interface UiSurfaceDefinition {
 
   /** Notes on status, blockers, or classification rationale */
   notes: string;
+
+  /**
+   * For SIMULATED_UI routes: true if a PageHealthBanner or equivalent
+   * disclosure component has been applied to the component source.
+   * Verified by the parity gate via sourceFiles inspection.
+   */
+  simulationDisclosureApplied?: boolean;
 }

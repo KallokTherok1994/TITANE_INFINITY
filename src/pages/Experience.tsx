@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useExperience } from '../hooks/useExperience';
 import { motion } from 'framer-motion';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 export function Experience() {
   const { state, isLoading, totalXp, level, xpForNextLevel, progress, domains } =
@@ -49,6 +50,8 @@ export function Experience() {
 
   return (
     <div className="experience-page" data-testid="page-experience">
+      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+      <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
       <motion.div
         className="exp-header"
         initial={{ opacity: 0, y: -20 }}

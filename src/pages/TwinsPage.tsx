@@ -33,6 +33,7 @@ import {
   CheckCircle,
   TrendingUp,
 } from 'lucide-react';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -77,6 +78,8 @@ export const TwinsPage: React.FC = () => {
       data-testid="page-twins"
     >
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
+        {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+        <SurfaceTruthBadge variant="PARTIAL" />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

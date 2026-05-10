@@ -20,6 +20,7 @@ import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { type AdminTab, ADMIN_TABS } from './types';
 import './AdminPage.css';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 // ══════════════════════════════════════════════════════════════════
 // ANIMATION VARIANTS - Performance Constants
@@ -225,6 +226,8 @@ const AdminPageComponent: React.FC = () => {
 
   return (
     <div className="admin-page" data-testid="page-admin">
+      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+      <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
       {/* Header */}
       <motion.header
         className="admin-header"

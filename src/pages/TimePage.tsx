@@ -25,6 +25,7 @@ import {
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import './TimePage.css';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -561,6 +562,8 @@ export const TimePage: React.FC = () => {
       className="time-page p-6 space-y-6 bg-gray-900 text-gray-100"
       data-testid="page-time"
     >
+      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+      <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
       {/* Header */}
       <div className="header mb-8">
         <div className="flex items-center gap-3 mb-2">

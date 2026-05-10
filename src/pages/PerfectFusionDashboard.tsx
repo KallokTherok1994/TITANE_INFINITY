@@ -30,6 +30,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -178,6 +179,8 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6" data-testid="page-fusion">
       <div className="max-w-7xl mx-auto space-y-6">
+        {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
+        <SurfaceTruthBadge variant="PARTIAL" />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
