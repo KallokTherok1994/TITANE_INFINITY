@@ -25,7 +25,7 @@ echo ""
 
 # Check 1: No "local-first only" doctrine
 echo "✓ Check 1: Doctrine 'local-first only' removed..."
-if rg -i "local[-\s]?first\s+only" .github/ README.md 2>/dev/null; then
+if _rg -i "local[-[:space:]]*first[[:space:]]+only" .github/ README.md >/dev/null 2>&1; then
   echo "❌ FAIL: Old 'local-first only' doctrine still present"
   FAIL=$((FAIL + 1))
 else
@@ -35,7 +35,7 @@ echo ""
 
 # Check 2: No verify:local-first in package.json
 echo "✓ Check 2: Old gate 'verify:local-first' removed..."
-if rg "verify:local-first" package.json 2>/dev/null; then
+if _rg "verify:local-first" package.json >/dev/null 2>&1; then
   echo "❌ FAIL: verify:local-first still referenced in package.json"
   FAIL=$((FAIL + 1))
 else
@@ -45,7 +45,7 @@ echo ""
 
 # Check 3: ensure verify:online-first exists
 echo "✓ Check 3: New gate 'verify:online-first' exists..."
-if ! rg "verify:online-first" package.json >/dev/null 2>&1; then
+if ! _rg "verify:online-first" package.json >/dev/null 2>&1; then
   echo "⚠️  WARN: verify:online-first not found in package.json"
   WARN=$((WARN + 1))
 else
@@ -55,7 +55,7 @@ echo ""
 
 # Check 4: Network policy documented
 echo "✓ Check 4: Network policy documented..."
-if ! rg -i "online(-|[[:space:]])?first.*govern" .github/copilot-instructions.md >/dev/null 2>&1; then
+if ! _rg -i "online[-[:space:]]*first.*govern" .github/copilot-instructions.md >/dev/null 2>&1; then
   echo "❌ FAIL: Online-first governed policy not documented in Copilot instructions"
   FAIL=$((FAIL + 1))
 else
