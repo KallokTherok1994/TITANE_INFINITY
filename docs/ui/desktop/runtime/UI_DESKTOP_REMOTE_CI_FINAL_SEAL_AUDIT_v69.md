@@ -5,6 +5,16 @@
 **Date:** 2026-05-10T22:03 UTC  
 **Audit Timestamp:** 2026-05-10T22:15:00Z
 
+## v70 Correction Note
+
+- This v69 audit is superseded by v70 CI parity repair.
+- Remote CI did not recover after this audit: runs 25641083408, 25641251992, and 25641278346 also failed on Verify Copilot Instructions.
+- Repeated failing gates:
+  - G_VSCODE_AGENT_WORKFLOW_PASS
+  - G_OLLAMA_BOUNDARY_PASS
+- Final closure status remains pending remote green.
+- Active truth verdict: UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_FAILING_VERIFY_INSTRUCTIONS
+
 ---
 
 ## Phase A: Startup Audit Results

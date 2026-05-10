@@ -10,6 +10,8 @@
 
 Post-v69 closure execution revealed a critical **persistent CI environment issue** affecting the verify_instructions gate (runs 25640906760, 25641083408 both failed identically). Applied diagnostic hardening to improve observability. Overall repository health is STRONG with 1818 AutoHeal entries, 122 runtime audit docs, and 102 E2E specs active.
 
+Status correction (v70): Remote CI also failed on runs 25641251992 and 25641278346 at Verify Copilot Instructions. Closure is not sealed until a new remote green run is confirmed.
+
 **Recommended focus areas for v70+:**
 1. **CI environment stabilization** (immediate) — diagnose validator failures
 2. **E2E coverage expansion** (medium) — increase spec count from 102
@@ -22,13 +24,13 @@ Post-v69 closure execution revealed a critical **persistent CI environment issue
 
 ### [1] CI/Pipeline Health
 
-**Status:** ⚠️ UNSTABLE (transient failure pattern)
+**Status:** ❌ FAILING (repeated remote verify_instructions failures)
 
 **Findings:**
 - Runs 25640906760 and 25641083408: Identical failure signature (G_VSCODE_AGENT_WORKFLOW_PASS, G_OLLAMA_BOUNDARY_PASS)
 - All 13 gates 1-17 pass cleanly in CI
 - Both validators pass locally (PASS=52 FAIL=0)
-- Classification: CI_ENVIRONMENT_ONLY transient
+- Classification: CI/local parity gap under repair (not transient)
 - Root cause hypothesis: Shim sourcing failure, tool availability mismatch, or GitHub Actions runner state divergence
 
 **Actions Taken:**
@@ -121,7 +123,7 @@ Post-v69 closure execution revealed a critical **persistent CI environment issue
 
 ### [6] Build & Release Readiness
 
-**Status:** ✅ PRODUCTION-READY
+**Status:** ⚠️ LOCAL_READY_REMOTE_BLOCKED
 
 **Evidence:**
 - Version: 33.0.13 (bump executed post-repairs)
@@ -131,9 +133,9 @@ Post-v69 closure execution revealed a critical **persistent CI environment issue
 - Remote sync: Perfect (0/0 ahead/behind)
 
 **Certification:**
-- UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_v69 SEALED
-- All surfaces audited
-- Proof pack finalized
+- UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_v69 remains LOCAL_PROVEN_REMOTE_BLOCKED
+- All surfaces audited locally
+- Proof pack complete locally; remote CI closure pending
 
 ---
 
@@ -195,10 +197,8 @@ Post-v69 closure execution revealed a critical **persistent CI environment issue
 
 ## Risks & Blockers
 
-### Current Blockers (None)
-- All gates functional
-- No known critical issues
-- CI improvements in progress
+### Current Blockers
+- Remote CI Verify Copilot Instructions gate still failing on repeated runs.
 
 ### Emerging Risks
 
@@ -241,10 +241,10 @@ Post-v69 closure execution revealed a critical **persistent CI environment issue
 
 ## Conclusion
 
-**v69 Closure Status:** ✅ SEALED with proof  
-**v70 Readiness:** ✅ READY (improvement opportunities identified)  
-**Repository Health:** ✅ STRONG (CI improvements in progress)
+**v69 Closure Status:** ⚠️ LOCAL_PROVEN_REMOTE_CI_FAILING_VERIFY_INSTRUCTIONS  
+**v70 Readiness:** ✅ READY_FOR_HARD_REPAIR_EXECUTION  
+**Repository Health:** ✅ STRONG_LOCALLY_REMOTE_PARITY_PENDING
 
 The repository demonstrates strong governance discipline with 1818 validated AutoHeal entries, comprehensive UI coverage (80 critical paths audited), and Tier 1 IPC proof (4/4 modules). The persistent CI validator issue has been diagnosed and addressed with diagnostic hardening. Focus for v70 should shift to E2E expansion and performance instrumentation to maintain release velocity.
 
-**Final Verdict:** UI_DESKTOP_V69_SEALED_WITH_OPPORTUNISTIC_ROADMAP_IDENTIFIED
+**Final Verdict:** UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_FAILING_VERIFY_INSTRUCTIONS

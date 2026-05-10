@@ -1,11 +1,11 @@
 {
   "schemaVersion": "v69",
-  "head": "7f57a4913b7539ea75b9457cd7b68780cd53abb0",
-  "remoteHead": "7f57a4913b7539ea75b9457cd7b68780cd53abb0",
+  "head": "61e197ecc6fefd0d26ba0bd3ff8d6bd91591662e",
+  "remoteHead": "61e197ecc6fefd0d26ba0bd3ff8d6bd91591662e",
   "branch": "MAIN",
   "remoteSync": "0/0",
-  "ciRunId": "25640906760",
-  "ciConclusion": "in_progress",
+  "ciRunId": "25641278346",
+  "ciConclusion": "failure",
   "canonicalRoutesTotal": 29,
   "canonicalRoutesCovered": 29,
   "mainMenuSurfacesTotal": 8,
@@ -18,11 +18,11 @@
   "tier1IpcModulesProven": 4,
   "unknownRemaining": 0,
   "blockers": [
-    "Static-gates run 25640906760 is in progress"
+    "Remote Verify Copilot Instructions is failing repeatedly on G_VSCODE_AGENT_WORKFLOW_PASS and G_OLLAMA_BOUNDARY_PASS"
   ],
   "acceptedDrift": [
     "Main-menu warnings on /dev and /fusion missing controls while verifier remains PASS",
     "Legacy v58/v59 sourceSpec warnings accepted with v63 strict PASS"
   ],
-  "finalVerdict": "UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_PENDING"
+  "finalVerdict": "UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_FAILING_VERIFY_INSTRUCTIONS"
 }

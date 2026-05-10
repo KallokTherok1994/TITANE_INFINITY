@@ -9,9 +9,9 @@ Mode: DURABLE
 - Branch: MAIN
 - Version: 33.0.13
 - Remote sync: 0/0
-- CI run ID (static gates): 25640906760
-- CI status: in_progress
-- Current verdict: UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_PENDING
+- CI run IDs (static gates): 25640906760, 25641083408, 25641251992, 25641278346
+- CI status: failure on Verify Copilot Instructions (repeated)
+- Current verdict: UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_FAILING_VERIFY_INSTRUCTIONS
 
 ## Certification Docs v46-v69
 - docs/ui/UI_BACKEND_TRUTH_CERTIFICATION_v46.md
@@ -104,7 +104,7 @@ Mode: DURABLE
 - Legacy sourceSpec traceability warnings persist in v58/v59 backend artifacts and are accepted because v63 strict remains PASS.
 
 ## Final Blockers
-- Remote blocker only: static gates run 25640906760 is still in progress.
+- Remote blocker active: Verify Copilot Instructions fails repeatedly on G_VSCODE_AGENT_WORKFLOW_PASS and G_OLLAMA_BOUNDARY_PASS.
 
 ## Release Decision
-UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_PENDING
+UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_FAILING_VERIFY_INSTRUCTIONS

@@ -138,6 +138,9 @@ jobs:
       # ─────────────────────────────────────────────────────────────────────
       # 11. Instruction Verification (Copilot agent rules)
       # ─────────────────────────────────────────────────────────────────────
+      - name: CI environment preflight for instruction validators
+        run: bash scripts/verify/ci-env-preflight.sh
+
       - name: Verify Copilot Instructions
         run: bash scripts/verify_instructions.sh
 

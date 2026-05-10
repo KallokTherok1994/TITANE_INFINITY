@@ -20,6 +20,26 @@ has_match() {
   fi
 }
 
+run_subgate() {
+  local gate="$1"
+  local script="$2"
+  local tmp
+  tmp="$(mktemp)"
+
+  if bash "$script" >"$tmp" 2>&1; then
+    ok "$gate"
+  else
+    ko "$gate"
+    if [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
+      echo "---- ${gate} diagnostics ----" >&2
+      sed -n '1,220p' "$tmp" >&2
+      echo "---- end diagnostics ----" >&2
+    fi
+  fi
+
+  rm -f "$tmp"
+}
+
 if [[ -f ".github/copilot-instructions.md" ]]; then ok "G_DOC_COPILOT_INSTRUCTIONS_PRESENT"; else ko "G_DOC_COPILOT_INSTRUCTIONS_PRESENT"; fi
 if [[ -f ".github/copilot-workflow.mermaid" ]]; then ok "G_DOC_WORKFLOW_PRESENT"; else ko "G_DOC_WORKFLOW_PRESENT"; fi
 if [[ -f ".github/copilot-setup-checklist.md" ]]; then ok "G_DOC_CHECKLIST_PRESENT"; else ko "G_DOC_CHECKLIST_PRESENT"; fi
@@ -111,39 +131,35 @@ if [[ -f "scripts/verify/verify-advanced-agents.sh" ]]; then ok "G_ADVANCED_AGEN
 if [[ -f "scripts/verify/verify-vscode-agent-workflow.sh" ]]; then ok "G_VSCODE_AGENT_WORKFLOW_SCRIPT_PRESENT"; else ko "G_VSCODE_AGENT_WORKFLOW_SCRIPT_PRESENT"; fi
 if [[ -f "scripts/verify/verify-log-analysis-report.sh" ]]; then ok "G_LOG_ANALYSIS_REPORT_SCRIPT_PRESENT"; else ko "G_LOG_ANALYSIS_REPORT_SCRIPT_PRESENT"; fi
 
-if bash scripts/verify/verify-log-analysis-report.sh >/dev/null 2>&1; then
-  ok "G_LOG_ANALYSIS_REPORT_AUDIT_PASS"
-else
-  ko "G_LOG_ANALYSIS_REPORT_AUDIT_PASS"
-fi
+run_subgate "G_LOG_ANALYSIS_REPORT_AUDIT_PASS" "scripts/verify/verify-log-analysis-report.sh"
 
 # Legacy REGLE_CRITIQUE must be archived (not active authority)
 if has_match "ARCHIVÉE|SUPERSEDED|superseded|non.op.rationnelle" .github/REGLE_CRITIQUE_DEPLOIEMENT.md; then ok "G_REGLE_CRITIQUE_ARCHIVED"; else ko "G_REGLE_CRITIQUE_ARCHIVED"; fi
 
 # detect recurrence guard
-if bash scripts/autoheal/detect_recurrence.sh >/dev/null; then ok "G_AH_RECURRENCE_GUARD_PASS"; else ko "G_AH_RECURRENCE_GUARD_PASS"; fi
+run_subgate "G_AH_RECURRENCE_GUARD_PASS" "scripts/autoheal/detect_recurrence.sh"
 
 # prompt frontmatter guard
-if bash scripts/verify/verify_prompt_frontmatter.sh >/dev/null 2>&1; then ok "G_PROMPT_FRONTMATTER_PASS"; else ko "G_PROMPT_FRONTMATTER_PASS"; fi
+run_subgate "G_PROMPT_FRONTMATTER_PASS" "scripts/verify/verify_prompt_frontmatter.sh"
 
 # vscode agent workflow guard
-if bash scripts/verify/verify-vscode-agent-workflow.sh >/dev/null 2>&1; then ok "G_VSCODE_AGENT_WORKFLOW_PASS"; else ko "G_VSCODE_AGENT_WORKFLOW_PASS"; fi
+run_subgate "G_VSCODE_AGENT_WORKFLOW_PASS" "scripts/verify/verify-vscode-agent-workflow.sh"
 
 # Extended execution gates (all offline-safe — static file checks only, no network/build)
-if bash scripts/verify/verify_kernel_budget.sh >/dev/null 2>&1; then ok "G_KERNEL_BUDGET_PASS"; else ko "G_KERNEL_BUDGET_PASS"; fi
-if bash scripts/verify/verify_instruction_layers.sh >/dev/null 2>&1; then ok "G_INSTRUCTION_LAYERS_PASS"; else ko "G_INSTRUCTION_LAYERS_PASS"; fi
-if bash scripts/verify/verify_no_doctrine_duplication.sh >/dev/null 2>&1; then ok "G_NO_DOCTRINE_DUPLICATION_PASS"; else ko "G_NO_DOCTRINE_DUPLICATION_PASS"; fi
-if bash scripts/verify/verify_status_vocabulary.sh >/dev/null 2>&1; then ok "G_STATUS_VOCAB_PASS"; else ko "G_STATUS_VOCAB_PASS"; fi
-if bash scripts/verify/verify_agents_index.sh >/dev/null 2>&1; then ok "G_AGENTS_INDEX_PASS"; else ko "G_AGENTS_INDEX_PASS"; fi
-if bash scripts/verify/verify_prompt_files_index.sh >/dev/null 2>&1; then ok "G_PROMPT_FILES_INDEX_PASS"; else ko "G_PROMPT_FILES_INDEX_PASS"; fi
-if bash scripts/verify/verify_local_markers_consistency.sh >/dev/null 2>&1; then ok "G_LOCAL_MARKERS_PASS"; else ko "G_LOCAL_MARKERS_PASS"; fi
-if bash scripts/verify/verify-advanced-agents.sh >/dev/null 2>&1; then ok "G_ADVANCED_AGENTS_PASS"; else ko "G_ADVANCED_AGENTS_PASS"; fi
-if bash scripts/verify/verify-ollama-copilot-boundary.sh >/dev/null 2>&1; then ok "G_OLLAMA_BOUNDARY_PASS"; else ko "G_OLLAMA_BOUNDARY_PASS"; fi
-if bash scripts/verify/verify-agent-tooling.sh >/dev/null 2>&1; then ok "G_AGENT_TOOLING_PASS"; else ko "G_AGENT_TOOLING_PASS"; fi
+run_subgate "G_KERNEL_BUDGET_PASS" "scripts/verify/verify_kernel_budget.sh"
+run_subgate "G_INSTRUCTION_LAYERS_PASS" "scripts/verify/verify_instruction_layers.sh"
+run_subgate "G_NO_DOCTRINE_DUPLICATION_PASS" "scripts/verify/verify_no_doctrine_duplication.sh"
+run_subgate "G_STATUS_VOCAB_PASS" "scripts/verify/verify_status_vocabulary.sh"
+run_subgate "G_AGENTS_INDEX_PASS" "scripts/verify/verify_agents_index.sh"
+run_subgate "G_PROMPT_FILES_INDEX_PASS" "scripts/verify/verify_prompt_files_index.sh"
+run_subgate "G_LOCAL_MARKERS_PASS" "scripts/verify/verify_local_markers_consistency.sh"
+run_subgate "G_ADVANCED_AGENTS_PASS" "scripts/verify/verify-advanced-agents.sh"
+run_subgate "G_OLLAMA_BOUNDARY_PASS" "scripts/verify/verify-ollama-copilot-boundary.sh"
+run_subgate "G_AGENT_TOOLING_PASS" "scripts/verify/verify-agent-tooling.sh"
 if [[ -f "scripts/verify/verify_copilot_instruction_source_map.sh" ]]; then ok "G_SOURCE_MAP_SCRIPT_PRESENT"; else ko "G_SOURCE_MAP_SCRIPT_PRESENT"; fi
-if bash scripts/verify/verify_copilot_instruction_source_map.sh >/dev/null 2>&1; then ok "G_SOURCE_MAP_PASS"; else ko "G_SOURCE_MAP_PASS"; fi
+run_subgate "G_SOURCE_MAP_PASS" "scripts/verify/verify_copilot_instruction_source_map.sh"
 if [[ -f "scripts/verify/verify_autopilot_lock_bounds.sh" ]]; then ok "G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT"; else ko "G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT"; fi
-if bash scripts/verify/verify_autopilot_lock_bounds.sh >/dev/null 2>&1; then ok "G_AUTOPILOT_BOUNDS_PASS"; else ko "G_AUTOPILOT_BOUNDS_PASS"; fi
+run_subgate "G_AUTOPILOT_BOUNDS_PASS" "scripts/verify/verify_autopilot_lock_bounds.sh"
 
 echo "SUMMARY: PASS=$PASS FAIL=$FAIL"
 if [[ $FAIL -gt 0 ]]; then

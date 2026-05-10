@@ -34,12 +34,12 @@ TITANE UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_v69
 - New CI run: 25640906760
 - New CI status: in_progress
 - Accepted drift: v64 main-menu warnings on /dev and /fusion; legacy v58/v59 sourceSpec warnings
-- Remote CI run 25640906760: completed
-- Remote CI conclusion: failure (transient environment-only issue)
+- Remote CI runs: 25640906760, 25641083408, 25641251992, 25641278346
+- Remote CI conclusion: failure persists on Verify Copilot Instructions
 - Remote CI failed step: step 18 "Verify Copilot Instructions" (G_VSCODE_AGENT_WORKFLOW_PASS, G_OLLAMA_BOUNDARY_PASS)
 - Remote CI gates 1-17: ✅ ALL PASS
 - Remote CI gate 18 local verification: ✅ PASS=52 FAIL=0 (gates pass when run locally)
-- Root cause: Transient CI environment issue, not code-based (sub-validators pass locally with exit 0)
-- Repair applied: No code patch required; transient issue resolves on fresh run
-- Blockers: None (transient CI environment-only, all code passes verification locally)
-- Final verdict: UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_100_CONFIRMED_LOCAL_CI_TRANSIENT_RECOVERED
+- Root cause: CI/local parity gap on instruction sub-gates without preflight wiring and without sub-gate diagnostics in CI logs
+- Repair applied: v70 hard-repair in progress (workflow preflight wiring + sub-gate diagnostics + static CI-safe validator path parity)
+- Blockers: Remote CI still failing on Verify Copilot Instructions until a new green run confirms parity
+- Final verdict: UI_DESKTOP_FINAL_E2E_RELEASE_CLOSURE_LOCAL_PROVEN_REMOTE_CI_FAILING_VERIFY_INSTRUCTIONS
