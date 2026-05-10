@@ -1691,3 +1691,29 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | icon_caches | GTK + applications cache refreshed |
 | commit_sealed | e7668cfe1 (chore(chat): seal runtime optimization v4) |
 | build_commit | version-bump-33.0.11 + release artifacts |
+
+## v33.0.14 — Release Snapshot (2026-05-10)
+
+| Dimension | Value |
+|-----------|-------|
+| code_version | 33.0.14 (package.json, BUILT+RELEASED) |
+| last_proven_release | v33.0.14 (BUILT 2026-05-10) |
+| build_artifacts | DEB + RPM + AppImage produced |
+| appimage_artifact | `titane-infinity_33.0.14_amd64.AppImage` (95M) |
+| deb_artifact | `titane-infinity_33.0.14_amd64.deb` (24M) |
+| rpm_artifact | `titane-infinity-33.0.14-1.x86_64.rpm` (24M) |
+| checksums_file | `RELEASE_ARTIFACTS_CHECKSUMS_33.0.14.txt` |
+| appimage_sha256 | `0118128dfacb359166f2d454d008a11f05e6e7097f09140ac01f549138bd4bfc` |
+| deb_sha256 | `f98287ee0f850bad9ba516ec1d98884096f11ee6a6ada0eb0cb8eb94f28d3038` |
+| rpm_sha256 | `23ab3cd5319615da73520038c2d2d15e6eb990ed0fda5eb5a0238a04003a72ae` |
+| governance_gates | PASS=52 FAIL=0 (verify_instructions + detect_recurrence) |
+| autoheal_entries | 1824 (AH-v33.0.14-BUILD-2026 appended) |
+| deployment_state | v33.0.14 deployed to deployment/latest/ |
+| system_install | ⚠️ BLOCKED_SUDO_REQUIRED — user must run: `sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_33.0.14_amd64.deb` |
+| desktop_launcher | ~/.local/share/applications/titane-infinity.desktop UPDATED (user-level) |
+| icon_caches | GTK + applications cache refreshed (user-level) |
+| icon_sync_system | BLOCKED_SUDO_REQUIRED (system binary at v33.0.11 until manual dpkg) |
+| ci_gates | TITANE Static Gates v67 run 25641606396 = SUCCESS (b8ff1b79f) |
+| ci_gates_followup | TITANE Static Gates v67 run 25642013599 = SUCCESS (8dc92afbe) |
+| build_command | `pnpm run build:tauri` (format:check drift accepted since v33.0.9) |
+| previous_release | v33.0.13 (code-only, no build artifacts) → superseded by v33.0.14 |
