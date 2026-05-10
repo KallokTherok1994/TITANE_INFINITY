@@ -17,7 +17,7 @@ TITANE UI_DESKTOP_CI_VERIFY_INSTRUCTIONS_HARD_REPAIR_v70
 - Full local gates: PASS (J1-J13 completed; `verify_instructions` PASS=52 FAIL=0)
 - Docs corrected: v69 closure and strategic docs now explicitly state remote CI failure pending parity closure
 - AutoHeal: 4 entries appended and validated (AH-v70-CI-VERIFY-INSTRUCTIONS-PARITY-HARD-REPAIR-2026, AH-v70-VSCODE-AGENT-WORKFLOW-STATIC-CI-SAFE-2026, AH-v70-OLLAMA-BOUNDARY-STATIC-CI-SAFE-2026, AH-v70-SUBGATE-DIAGNOSTIC-OUTPUT-2026)
-- New CI run: 25641465382
-- New CI status: in_progress
-- Blockers: Remote run not completed yet; final green/fail evidence pending
-- Final verdict: UI_DESKTOP_CI_VERIFY_INSTRUCTIONS_HARD_REPAIR_PUSHED_REMOTE_CI_PENDING
+- New CI run: 25641606396
+- New CI status: success
+- Blockers: None
+- Final verdict: UI_DESKTOP_CI_VERIFY_INSTRUCTIONS_HARD_REPAIR_CI_GREEN
