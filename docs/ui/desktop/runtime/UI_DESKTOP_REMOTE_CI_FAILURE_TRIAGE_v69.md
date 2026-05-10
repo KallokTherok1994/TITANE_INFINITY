@@ -2,48 +2,64 @@
 
 Date: 2026-05-10
 Mode: DURABLE
+Run ID: 25640326339
+Workflow: TITANE Static Gates v67 - UI Desktop Determinism
 
-## mission
-Repair the concrete failing family from run 25640326339 with minimal scope and proof-first validation.
+## Failure Classification
+CI_ONLINE_FIRST_SCRIPT_BUG
 
-## scope
-- Targeted failure family: `verify:online-first`
-- File patched: `scripts/verify/enforce-online-first.sh`
-- No workflow contract weakening, no unrelated gate changes.
+## Failing Command
+pnpm run verify:online-first
 
-## root cause
-The gate script sourced the portable shim `_rg` but called `rg` directly in checks. On CI environments without native ripgrep, this produced false negatives and a hard failure.
+## Failing Log Excerpt
+- WARN: verify:online-first not found in package.json
+- FAIL: Online-first governed policy not documented in Copilot instructions
+- ELIFECYCLE Command failed with exit code 1
 
-## fix
-- Replaced all direct `rg` invocations with `_rg`.
-- Replaced non-portable shorthand regex fragments with POSIX-safe patterns.
-- Preserved the same governance intent and fail conditions.
+## Local Reproduction Result
+- Before fix context: remote failure reproduced from run log and step metadata for 25640326339.
+- After fix on current HEAD: pnpm run verify:online-first -> PASS (0 failures, 0 warnings).
 
-## evidence
-Local mandatory gate chain rerun after patch:
-- G1 `pnpm run check` PASS
-- G2 `pnpm run lint` PASS
-- G3 `pnpm run verify:ui-surface-registry` PASS
-- G4 `pnpm run generate:ui-surface-docs` PASS
-- G5 `pnpm run generate:ui-desktop-manifest` PASS
-- G6 `pnpm run verify:ui-desktop-coverage` PASS
-- G7 `pnpm run verify:tauri-only` PASS
-- G8 `pnpm run verify:online-first` PASS (0 failures, 0 warnings)
-- G9 `pnpm run guard:ipc-contract` PASS
-- G10 `TITANE_PROOF_ARTIFACT=... pnpm run verify:backend-proof-depth:strict` PASS
-- G11 `pnpm run verify:ui-desktop-main-menu-reconciliation:sealed` PASS
-- G12 `bash scripts/autoheal/detect_recurrence.sh` PASS
-- G13 `bash scripts/verify_instructions.sh` PASS
+## Root Cause
+The verifier loaded the portability shim in scripts/verify/_rg_compat.sh but still invoked rg directly in scripts/verify/enforce-online-first.sh. In CI environments where rg behavior differed, this yielded false negatives for checks 3 and 4 and aborted the gate.
 
-## risks
-- Remote run is still required for authoritative closure.
-- Existing unrelated dirty files remain outside this fix scope (`src-tauri/Cargo.lock`, `src-tauri/data/ui_theme.json`).
+## Whether v69 Caused It
+No. The failure existed before v69 closure work and was the trigger condition for this mission.
 
-## verdict
+## Minimal Repair Plan
+1. Keep gate policy strict and unchanged.
+2. Use _rg consistently in all online-first checks.
+3. Normalize regex to POSIX-safe patterns for CI portability.
+4. Re-run full static gate chain G1-G13.
+5. Push minimal repair commit and verify new remote run.
+
+## Repair Applied
+- File updated: scripts/verify/enforce-online-first.sh
+- Changes:
+  - rg -> _rg in checks 1-4
+  - local[-\s]?first\s+only -> local[-[:space:]]*first[[:space:]]+only
+  - online(-|[[:space:]])?first.*govern -> online[-[:space:]]*first.*govern
+
+## Post-Fix Local Gate Evidence
+- G1 check: PASS
+- G2 lint: PASS
+- G3 verify:ui-surface-registry: PASS
+- G4 generate:ui-surface-docs: PASS
+- G5 generate:ui-desktop-manifest: PASS
+- G6 verify:ui-desktop-coverage: PASS
+- G7 verify:tauri-only: PASS
+- G8 verify:online-first: PASS
+- G9 guard:ipc-contract: PASS
+- G10 verify:backend-proof-depth:strict: PASS
+- G11 verify:ui-desktop-main-menu-reconciliation:sealed: PASS
+- G12 detect_recurrence: PASS
+- G13 verify_instructions: PASS
+
+## Verdict
 DONE
 
-## next step
-Push targeted repair commit and inspect the new `titane-static-gates.yml` run for the current HEAD before final certification.
+## Next Step
+Track run for current HEAD and finalize release closure verdict based on remote CI completion state.
 
-## rollback note
-`git restore -- scripts/verify/enforce-online-first.sh`
+## Rollback Note
+git restore -- scripts/verify/enforce-online-first.sh docs/ui/desktop/runtime/UI_DESKTOP_REMOTE_CI_FAILURE_TRIAGE_v69.md

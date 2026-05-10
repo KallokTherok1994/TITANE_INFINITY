@@ -139,7 +139,7 @@ jobs:
       # 11. Instruction Verification (Copilot agent rules)
       # ─────────────────────────────────────────────────────────────────────
       - name: Verify Copilot Instructions
-        run: bash scripts/verify/verify_instructions.sh
+        run: bash scripts/verify_instructions.sh
 
       # ─────────────────────────────────────────────────────────────────────
       # Summary and Status
