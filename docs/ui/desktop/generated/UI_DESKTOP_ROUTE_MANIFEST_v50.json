@@ -1,0 +1,2655 @@
+{
+  "generated": "2026-05-10T04:31:07.051Z",
+  "mission": "UI_DESKTOP_FULL_COVERAGE_v50",
+  "version": "1.0.0",
+  "routeCount": 29,
+  "tabCount": 22,
+  "aliasCount": 65,
+  "routes": [
+    {
+      "route": "/titane",
+      "pageId": "titane_core",
+      "pageComponent": "TitanePage",
+      "rootTestId": "page-titane",
+      "navOwner": "titane",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [
+        {
+          "tabId": "conversation",
+          "label": "Conversation",
+          "testId": "tab-conversation",
+          "selector": "[data-testid=\"tab-conversation\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "MIXED_LIVE_AND_STATIC"
+        },
+        {
+          "tabId": "overview",
+          "label": "Overview",
+          "testId": "tab-overview",
+          "selector": "[data-testid=\"tab-overview\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "MIXED_LIVE_AND_STATIC"
+        },
+        {
+          "tabId": "vision",
+          "label": "Vision",
+          "testId": "tab-vision",
+          "selector": "[data-testid=\"tab-vision\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "memory",
+          "label": "Memory",
+          "testId": "tab-memory",
+          "selector": "[data-testid=\"tab-memory\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_SERVICE_BRIDGE"
+        },
+        {
+          "tabId": "progression",
+          "label": "Progression",
+          "testId": "tab-progression",
+          "selector": "[data-testid=\"tab-progression\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "MIXED_LIVE_AND_STATIC"
+        },
+        {
+          "tabId": "transformation",
+          "label": "Transformation",
+          "testId": "tab-transformation",
+          "selector": "[data-testid=\"tab-transformation\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI"
+        }
+      ],
+      "tabCount": 6,
+      "visibleActions": [
+        {
+          "actionId": "send_message",
+          "label": "Send message",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_get_response",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        },
+        {
+          "actionId": "switch_provider",
+          "label": "Switch AI provider",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_set_model",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        },
+        {
+          "actionId": "analyze_image",
+          "label": "Analyze image",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "analyze_image",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "switch_tab",
+          "label": "Switch tab",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "analyze_image",
+          "label": "Analyze image",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "analyze_image",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "switch_tab",
+          "label": "Switch tab",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [
+        {
+          "actionId": "send_message",
+          "label": "Send message",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_get_response",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        },
+        {
+          "actionId": "switch_provider",
+          "label": "Switch AI provider",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_set_model",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        }
+      ],
+      "backendCommands": [
+        "ai_get_response",
+        "ai_generate_local_stream",
+        "ai_send_prompt"
+      ],
+      "sourceFiles": [
+        "src/pages/TitanePage.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/",
+          "to": "/titane",
+          "notes": "Root redirect"
+        },
+        {
+          "from": "/titane.sh",
+          "to": "/titane",
+          "notes": "Shell alias"
+        },
+        {
+          "from": "/chat",
+          "to": "/titane?tab=conversation",
+          "notes": "Legacy chat alias"
+        },
+        {
+          "from": "/camera",
+          "to": "/titane",
+          "notes": "Legacy camera alias"
+        },
+        {
+          "from": "/evo",
+          "to": "/titane",
+          "notes": "Legacy evo alias"
+        },
+        {
+          "from": "/dashboard",
+          "to": "/titane",
+          "notes": "Legacy dashboard alias"
+        },
+        {
+          "from": "/evolution-center",
+          "to": "/titane",
+          "notes": "Legacy evolution center"
+        },
+        {
+          "from": "/cognitive-evolution",
+          "to": "/titane",
+          "notes": "Legacy cognitive evo"
+        },
+        {
+          "from": "/identity-memory-evolution",
+          "to": "/titane",
+          "notes": "Legacy identity-memory-evo"
+        },
+        {
+          "from": "/progression",
+          "to": "/titane",
+          "notes": "Legacy progression alias"
+        },
+        {
+          "from": "/memory-evo",
+          "to": "/titane?tab=transformation",
+          "notes": "Memory evo → transformation tab"
+        },
+        {
+          "from": "/memory-evolution",
+          "to": "/titane?tab=transformation",
+          "notes": "Memory evolution → transformation tab"
+        }
+      ],
+      "fallbackPolicy": "Provider quality conditional; browser mode shows BackendDownIndicator",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-titane\"]",
+        "tabs": [
+          "[data-testid=\"tab-conversation\"]",
+          "[data-testid=\"tab-overview\"]",
+          "[data-testid=\"tab-vision\"]",
+          "[data-testid=\"tab-memory\"]",
+          "[data-testid=\"tab-progression\"]",
+          "[data-testid=\"tab-transformation\"]"
+        ],
+        "actions": [
+          "[data-testid=\"send_message\"]",
+          "[data-testid=\"switch_provider\"]",
+          "[data-testid=\"analyze_image\"]",
+          "[data-testid=\"switch_tab\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "ui-desktop-all-tabs.wdio.test.js",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "ui-desktop-sensitive-actions-guarded.wdio.test.js",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/experience",
+      "pageId": "experience_page",
+      "pageComponent": "Experience",
+      "rootTestId": "page-experience",
+      "navOwner": "titane",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "read_progression",
+          "label": "Read XP state",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "read_progression",
+          "label": "Read XP state",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/Experience.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/xp",
+          "to": "/experience",
+          "notes": "Legacy XP alias"
+        }
+      ],
+      "fallbackPolicy": "Read-mostly dashboard; no destructive write actions",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-experience\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"read_progression\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/time",
+      "pageId": "time_center",
+      "pageComponent": "TimePage",
+      "rootTestId": "page-time",
+      "navOwner": "time",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [
+        {
+          "tabId": "time-now",
+          "label": "Now",
+          "testId": "tab-time-now",
+          "selector": "[data-testid=\"tab-time-now\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "MIXED_LIVE_AND_STATIC"
+        },
+        {
+          "tabId": "time-agenda",
+          "label": "Agenda",
+          "testId": "tab-time-agenda",
+          "selector": "[data-testid=\"tab-time-agenda\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "time-timeline",
+          "label": "Timeline",
+          "testId": "tab-time-timeline",
+          "selector": "[data-testid=\"tab-time-timeline\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "MIXED_LIVE_AND_STATIC"
+        },
+        {
+          "tabId": "time-snapshots",
+          "label": "Snapshots",
+          "testId": "tab-time-snapshots",
+          "selector": "[data-testid=\"tab-time-snapshots\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "time-cognitive",
+          "label": "Cognitive",
+          "testId": "tab-time-cognitive",
+          "selector": "[data-testid=\"tab-time-cognitive\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "MIXED_LIVE_AND_STATIC"
+        }
+      ],
+      "tabCount": 5,
+      "visibleActions": [
+        {
+          "actionId": "read_time_context",
+          "label": "Read time context",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "agenda_load_events",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "save_event",
+          "label": "Save agenda event",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "agenda_save_event",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "delete_event",
+          "label": "Delete agenda event",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "agenda_delete_event",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "restore_snapshot",
+          "label": "Restore snapshot",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "restore_snapshot",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "force_snapshot",
+          "label": "Force snapshot",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "force_snapshot",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "read_time_context",
+          "label": "Read time context",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "agenda_load_events",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "force_snapshot",
+          "label": "Force snapshot",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "force_snapshot",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [
+        {
+          "actionId": "save_event",
+          "label": "Save agenda event",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "agenda_save_event",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "delete_event",
+          "label": "Delete agenda event",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "agenda_delete_event",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "restore_snapshot",
+          "label": "Restore snapshot",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "restore_snapshot",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        }
+      ],
+      "backendCommands": [
+        "read_time_runtime_context"
+      ],
+      "sourceFiles": [
+        "src/pages/TimePage.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/temporal-center",
+          "to": "/time",
+          "notes": "Legacy temporal center"
+        },
+        {
+          "from": "/agenda",
+          "to": "/time",
+          "notes": "Legacy agenda alias"
+        },
+        {
+          "from": "/time-navigator",
+          "to": "/time",
+          "notes": "Legacy time navigator"
+        }
+      ],
+      "fallbackPolicy": "Timeline shows static history when live data unavailable; snapshots degrade gracefully",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-time\"]",
+        "tabs": [
+          "[data-testid=\"tab-time-now\"]",
+          "[data-testid=\"tab-time-agenda\"]",
+          "[data-testid=\"tab-time-timeline\"]",
+          "[data-testid=\"tab-time-snapshots\"]",
+          "[data-testid=\"tab-time-cognitive\"]"
+        ],
+        "actions": [
+          "[data-testid=\"read_time_context\"]",
+          "[data-testid=\"save_event\"]",
+          "[data-testid=\"delete_event\"]",
+          "[data-testid=\"restore_snapshot\"]",
+          "[data-testid=\"force_snapshot\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "ui-desktop-all-tabs.wdio.test.js",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "ui-desktop-sensitive-actions-guarded.wdio.test.js",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/admin",
+      "pageId": "admin_center",
+      "pageComponent": "AdminPage",
+      "rootTestId": "page-admin",
+      "navOwner": "admin",
+      "truthClass": "LIVE_CONTAINER_WITH_LAZY_FALLBACK_UI",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [
+        {
+          "tabId": "admin-system",
+          "label": "System",
+          "testId": "tab-admin-system",
+          "selector": "[data-testid=\"tab-admin-system\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_CONTAINER_WITH_LAZY_FALLBACK_UI"
+        },
+        {
+          "tabId": "admin-config",
+          "label": "Config",
+          "testId": "tab-admin-config",
+          "selector": "[data-testid=\"tab-admin-config\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_CONTAINER_WITH_LAZY_FALLBACK_UI"
+        },
+        {
+          "tabId": "admin-audio",
+          "label": "Audio",
+          "testId": "tab-admin-audio",
+          "selector": "[data-testid=\"tab-admin-audio\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "admin-design",
+          "label": "Design",
+          "testId": "tab-admin-design",
+          "selector": "[data-testid=\"tab-admin-design\"]",
+          "status": "DISPLAY_ONLY",
+          "truthClass": "STATIC_CURATED"
+        },
+        {
+          "tabId": "admin-governance",
+          "label": "Governance",
+          "testId": "tab-admin-governance",
+          "selector": "[data-testid=\"tab-admin-governance\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "admin-production-health",
+          "label": "Production Health",
+          "testId": "tab-admin-production-health",
+          "selector": "[data-testid=\"tab-admin-production-health\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        }
+      ],
+      "tabCount": 6,
+      "visibleActions": [
+        {
+          "actionId": "load_panels",
+          "label": "Load admin panels",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "audio_devices",
+          "label": "List audio devices",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "audio_list_devices",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "check_ollama",
+          "label": "Check Ollama status",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_check_ollama_status",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "load_panels",
+          "label": "Load admin panels",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "audio_devices",
+          "label": "List audio devices",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "audio_list_devices",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [
+        {
+          "actionId": "check_ollama",
+          "label": "Check Ollama status",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_check_ollama_status",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        }
+      ],
+      "backendCommands": [
+        "audio_list_devices",
+        "analyze_audio"
+      ],
+      "sourceFiles": [
+        "src/pages/AdminPage.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/system-center",
+          "to": "/admin?tab=system",
+          "notes": "System center alias"
+        },
+        {
+          "from": "/diagnostics",
+          "to": "/admin?tab=production-health",
+          "notes": "Diagnostics alias"
+        },
+        {
+          "from": "/devtools",
+          "to": "/admin?tab=system&systemTab=devtools",
+          "notes": "DevTools alias"
+        },
+        {
+          "from": "/cluster",
+          "to": "/admin?tab=production-health",
+          "notes": "Cluster alias"
+        },
+        {
+          "from": "/introspection",
+          "to": "/admin?tab=system",
+          "notes": "Introspection alias"
+        },
+        {
+          "from": "/hypervision",
+          "to": "/admin?tab=system",
+          "notes": "Hypervision alias"
+        },
+        {
+          "from": "/configuration",
+          "to": "/admin?tab=config",
+          "notes": "Configuration alias"
+        },
+        {
+          "from": "/design-center",
+          "to": "/admin?tab=design",
+          "notes": "Design center alias"
+        },
+        {
+          "from": "/design-system",
+          "to": "/admin?tab=design",
+          "notes": "Design system alias"
+        },
+        {
+          "from": "/settings",
+          "to": "/admin?tab=config",
+          "notes": "Settings alias"
+        },
+        {
+          "from": "/governance-center",
+          "to": "/admin?tab=governance",
+          "notes": "Governance center alias"
+        },
+        {
+          "from": "/governance",
+          "to": "/admin?tab=governance",
+          "notes": "Governance alias"
+        },
+        {
+          "from": "/secure",
+          "to": "/admin?tab=governance",
+          "notes": "Secure alias → governance"
+        },
+        {
+          "from": "/audio-center",
+          "to": "/admin?tab=audio",
+          "notes": "Audio center alias"
+        },
+        {
+          "from": "/audio",
+          "to": "/admin?tab=audio",
+          "notes": "Audio alias"
+        },
+        {
+          "from": "/voice",
+          "to": "/admin?tab=audio",
+          "notes": "Voice alias"
+        },
+        {
+          "from": "/tts",
+          "to": "/admin?tab=audio",
+          "notes": "TTS alias"
+        }
+      ],
+      "fallbackPolicy": "Container lazy-loads panels; each panel degrades independently with its own fallback",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-admin\"]",
+        "tabs": [
+          "[data-testid=\"tab-admin-system\"]",
+          "[data-testid=\"tab-admin-config\"]",
+          "[data-testid=\"tab-admin-audio\"]",
+          "[data-testid=\"tab-admin-design\"]",
+          "[data-testid=\"tab-admin-governance\"]",
+          "[data-testid=\"tab-admin-production-health\"]"
+        ],
+        "actions": [
+          "[data-testid=\"load_panels\"]",
+          "[data-testid=\"audio_devices\"]",
+          "[data-testid=\"check_ollama\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "ui-desktop-all-tabs.wdio.test.js",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "ui-desktop-sensitive-actions-guarded.wdio.test.js",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/dev",
+      "pageId": "dev_center",
+      "pageComponent": "DevPage",
+      "rootTestId": "page-dev",
+      "navOwner": "dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [
+        {
+          "tabId": "dev-overview",
+          "label": "Overview",
+          "testId": "tab-dev-overview",
+          "selector": "[data-testid=\"tab-dev-overview\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "dev-diagnostics",
+          "label": "Diagnostics",
+          "testId": "tab-dev-diagnostics",
+          "selector": "[data-testid=\"tab-dev-diagnostics\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "dev-operations",
+          "label": "Operations",
+          "testId": "tab-dev-operations",
+          "selector": "[data-testid=\"tab-dev-operations\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "dev-validation",
+          "label": "Validation",
+          "testId": "tab-dev-validation",
+          "selector": "[data-testid=\"tab-dev-validation\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        },
+        {
+          "tabId": "dev-security",
+          "label": "Security",
+          "testId": "tab-dev-security",
+          "selector": "[data-testid=\"tab-dev-security\"]",
+          "status": "ACTIVE_PARTIAL",
+          "truthClass": "LIVE_TAURI_WITH_FALLBACK"
+        }
+      ],
+      "tabCount": 5,
+      "visibleActions": [
+        {
+          "actionId": "refresh_dev_state",
+          "label": "Refresh dev state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "run_autofix",
+          "label": "Run autofix",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "autofix_fix_all",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "refresh_dev_state",
+          "label": "Refresh dev state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "run_autofix",
+          "label": "Run autofix",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "autofix_fix_all",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "ai_check_ollama_status",
+        "autofix_detect_typescript_errors"
+      ],
+      "sourceFiles": [
+        "src/pages/DevPage.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/cognitive",
+          "to": "/dev?tab=diagnostics",
+          "notes": "Cognitive → diagnostics tab"
+        },
+        {
+          "from": "/stats",
+          "to": "/dev?tab=diagnostics",
+          "notes": "Stats → diagnostics tab"
+        },
+        {
+          "from": "/one-core",
+          "to": "/dev?tab=overview",
+          "notes": "One-core alias"
+        },
+        {
+          "from": "/command-center",
+          "to": "/dev?tab=operations",
+          "notes": "Command center alias"
+        },
+        {
+          "from": "/unified",
+          "to": "/dev?tab=overview",
+          "notes": "Unified alias"
+        },
+        {
+          "from": "/qa-monitoring",
+          "to": "/dev?tab=validation",
+          "notes": "QA monitoring alias"
+        },
+        {
+          "from": "/qa",
+          "to": "/dev?tab=validation",
+          "notes": "QA alias"
+        },
+        {
+          "from": "/monitoring",
+          "to": "/dev?tab=diagnostics",
+          "notes": "Monitoring alias"
+        },
+        {
+          "from": "/tests",
+          "to": "/dev?tab=validation",
+          "notes": "Tests alias"
+        },
+        {
+          "from": "/developer-mode",
+          "to": "/dev?tab=operations",
+          "notes": "Developer mode alias"
+        },
+        {
+          "from": "/dev-mode",
+          "to": "/dev?tab=operations",
+          "notes": "Dev mode alias"
+        },
+        {
+          "from": "/devmode",
+          "to": "/dev?tab=operations",
+          "notes": "Devmode alias"
+        },
+        {
+          "from": "/ia-dev",
+          "to": "/dev?tab=operations",
+          "notes": "IA-dev alias"
+        }
+      ],
+      "fallbackPolicy": "Fallback mock orchestration possible when backend unavailable",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-dev\"]",
+        "tabs": [
+          "[data-testid=\"tab-dev-overview\"]",
+          "[data-testid=\"tab-dev-diagnostics\"]",
+          "[data-testid=\"tab-dev-operations\"]",
+          "[data-testid=\"tab-dev-validation\"]",
+          "[data-testid=\"tab-dev-security\"]"
+        ],
+        "actions": [
+          "[data-testid=\"refresh_dev_state\"]",
+          "[data-testid=\"run_autofix\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "ui-desktop-all-tabs.wdio.test.js",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/fusion",
+      "pageId": "fusion_center",
+      "pageComponent": "PerfectFusionDashboard",
+      "rootTestId": "page-fusion",
+      "navOwner": "fusion",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "refresh_fusion",
+          "label": "Refresh fusion state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "refresh_fusion",
+          "label": "Refresh fusion state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "ai_check_ollama_status"
+      ],
+      "sourceFiles": [
+        "src/pages/PerfectFusionDashboard.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Dashboard health degrades gracefully when backend unavailable",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-fusion\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"refresh_fusion\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/optimization",
+      "pageId": "optimization_center",
+      "pageComponent": "UltimateOptimizationDashboard",
+      "rootTestId": "page-optimization",
+      "navOwner": "optimization",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "refresh_metrics",
+          "label": "Refresh performance metrics",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "refresh_metrics",
+          "label": "Refresh performance metrics",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/UltimateOptimizationDashboard.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Some panels derive from local metrics; no destructive writes",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-optimization\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"refresh_metrics\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/total-dev",
+      "pageId": "total_dev_center",
+      "pageComponent": "TotalDevPage",
+      "rootTestId": "page-total-dev",
+      "navOwner": "total-dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "dev_chat",
+          "label": "Dev AI chat",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_generate_local_stream",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        }
+      ],
+      "safeActions": [],
+      "sensitiveActions": [
+        {
+          "actionId": "dev_chat",
+          "label": "Dev AI chat",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "ai_generate_local_stream",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        }
+      ],
+      "backendCommands": [
+        "ai_get_response",
+        "ai_generate_local_stream"
+      ],
+      "sourceFiles": [
+        "src/pages/TotalDevPage.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Restricted surface; access gated. Fallback when backend unavailable.",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-total-dev\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"dev_chat\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "N/A",
+        "sensitiveActionsTest": "ui-desktop-sensitive-actions-guarded.wdio.test.js",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/orchestration-intelligence",
+      "pageId": "orchestration_intelligence",
+      "pageComponent": "OrchestrationIntelligenceCenter",
+      "rootTestId": "page-orchestration-intelligence",
+      "navOwner": "dev",
+      "truthClass": "SIMULATED_UI",
+      "status": "SIMULATED_UI",
+      "isSimulated": true,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "switch_tab",
+          "label": "Switch tab",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "switch_tab",
+          "label": "Switch tab",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/modules/OrchestrationIntelligenceCenter.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/orchestration",
+          "to": "/orchestration-intelligence",
+          "notes": "Orchestration alias"
+        }
+      ],
+      "fallbackPolicy": "Primarily static representation; no live backend. Must show SIMULATED badge.",
+      "desktopProofRequired": false,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-orchestration-intelligence\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"switch_tab\"]"
+        ]
+      },
+      "knownBlockers": [
+        "SIMULATED_UI — no live backend data"
+      ],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/orchestration-center",
+      "pageId": "orchestration_meta",
+      "pageComponent": "OrchestrationMetaCenter",
+      "rootTestId": "page-orchestration-meta-center",
+      "navOwner": "dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "get_orchestrator_state",
+          "label": "Get orchestrator state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "orchestrator_get_state",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "run_cycle",
+          "label": "Run orchestration cycle",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "orchestrator_run_cycle",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "get_orchestrator_state",
+          "label": "Get orchestrator state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "orchestrator_get_state",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "run_cycle",
+          "label": "Run orchestration cycle",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "orchestrator_run_cycle",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "orchestrator_get_state",
+        "orchestrator_set_mode",
+        "orchestrator_run_cycle"
+      ],
+      "sourceFiles": [
+        "src/pages/OrchestrationMetaCenter.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/meta-center",
+          "to": "/orchestration-center",
+          "notes": "Meta center alias"
+        },
+        {
+          "from": "/meta",
+          "to": "/orchestration-center",
+          "notes": "Meta alias"
+        },
+        {
+          "from": "/multi-ai-dashboard",
+          "to": "/orchestration-center",
+          "notes": "Multi-AI dashboard alias"
+        },
+        {
+          "from": "/nexus-engine",
+          "to": "/orchestration-center",
+          "notes": "Nexus engine alias"
+        },
+        {
+          "from": "/harmonia-engine",
+          "to": "/orchestration-center",
+          "notes": "Harmonia engine alias"
+        },
+        {
+          "from": "/cognitive-state",
+          "to": "/orchestration-center",
+          "notes": "Cognitive state alias"
+        }
+      ],
+      "fallbackPolicy": "Default state shown when backend unavailable; fallback clearly indicated",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-orchestration-meta-center\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"get_orchestrator_state\"]",
+          "[data-testid=\"run_cycle\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/reality-center",
+      "pageId": "reality_center",
+      "pageComponent": "RealityCenter",
+      "rootTestId": "page-reality-center",
+      "navOwner": "fusion",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "render_frame",
+          "label": "Render frame",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "reality_render_frame",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "toggle_physics",
+          "label": "Toggle physics",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "render_frame",
+          "label": "Render frame",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "reality_render_frame",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "toggle_physics",
+          "label": "Toggle physics",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "reality_get_state",
+        "reality_render_frame",
+        "reality_set_config"
+      ],
+      "sourceFiles": [
+        "src/pages/RealityCenter.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/reality",
+          "to": "/reality-center",
+          "notes": "Reality alias"
+        },
+        {
+          "from": "/renderer",
+          "to": "/reality-center",
+          "notes": "Renderer alias"
+        }
+      ],
+      "fallbackPolicy": "Init fallback when state missing; IPC degrades gracefully",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-reality-center\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"render_frame\"]",
+          "[data-testid=\"toggle_physics\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/hyper-center",
+      "pageId": "hyper_center",
+      "pageComponent": "HyperCenter",
+      "rootTestId": "page-hyper-center",
+      "navOwner": "fusion",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "think",
+          "label": "Hyper Think",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "hyper_think",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "reason",
+          "label": "Hyper Reason",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "hyper_reason",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "think",
+          "label": "Hyper Think",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "hyper_think",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "reason",
+          "label": "Hyper Reason",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "hyper_reason",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "hyper_think",
+        "hyper_reason",
+        "hyper_imagine",
+        "hyper_generate_insight"
+      ],
+      "sourceFiles": [
+        "src/components/HyperCenter/HyperCenter.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/hyper",
+          "to": "/hyper-center",
+          "notes": "Hyper alias"
+        },
+        {
+          "from": "/intelligence",
+          "to": "/hyper-center",
+          "notes": "Intelligence alias"
+        }
+      ],
+      "fallbackPolicy": "Init fallback possible; IPC commands degrade gracefully",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-hyper-center\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"think\"]",
+          "[data-testid=\"reason\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/quantum-center",
+      "pageId": "quantum_center",
+      "pageComponent": "QuantumCenter",
+      "rootTestId": "page-quantum-center",
+      "navOwner": "fusion",
+      "truthClass": "SIMULATED_UI",
+      "status": "SIMULATED_UI",
+      "isSimulated": true,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "toggle_runtime",
+          "label": "Toggle quantum runtime UI",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "toggle_runtime",
+          "label": "Toggle quantum runtime UI",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/components/QuantumCenter/QuantumCenter.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/quantum",
+          "to": "/quantum-center",
+          "notes": "Quantum alias"
+        }
+      ],
+      "fallbackPolicy": "All data is mock/simulated. Must show SIMULATED_UI badge clearly.",
+      "desktopProofRequired": false,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-quantum-center\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"toggle_runtime\"]"
+        ]
+      },
+      "knownBlockers": [
+        "SIMULATED_UI — no live backend data"
+      ],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/twins",
+      "pageId": "twins_page",
+      "pageComponent": "TwinsPage",
+      "rootTestId": "page-twins",
+      "navOwner": "twins",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "load_twins",
+          "label": "Load twins page",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "load_twins",
+          "label": "Load twins page",
+          "wiringStatus": "DISPLAY_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "READ_ONLY_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/TwinsPage.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/identity-center",
+          "to": "/twins",
+          "notes": "Identity center alias"
+        },
+        {
+          "from": "/identity",
+          "to": "/twins",
+          "notes": "Identity alias"
+        },
+        {
+          "from": "/persona",
+          "to": "/twins",
+          "notes": "Persona alias"
+        },
+        {
+          "from": "/twin",
+          "to": "/twins",
+          "notes": "Twin singular alias"
+        }
+      ],
+      "fallbackPolicy": "Static/curated twin data with live sync where available",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-twins\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"load_twins\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/cloud",
+      "pageId": "cloud_center",
+      "pageComponent": "CloudCenter",
+      "rootTestId": "page-cloud-center",
+      "navOwner": "fusion",
+      "truthClass": "LIVE_TAURI",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "get_status",
+          "label": "Get cloud status",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_get_status",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        },
+        {
+          "actionId": "sync_push",
+          "label": "Sync push",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_sync_push",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "sync_pull",
+          "label": "Sync pull",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_sync_pull",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "verify_integrity",
+          "label": "Verify integrity",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_verify_integrity",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        }
+      ],
+      "safeActions": [],
+      "sensitiveActions": [
+        {
+          "actionId": "get_status",
+          "label": "Get cloud status",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_get_status",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        },
+        {
+          "actionId": "sync_push",
+          "label": "Sync push",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_sync_push",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "sync_pull",
+          "label": "Sync pull",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_sync_pull",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "verify_integrity",
+          "label": "Verify integrity",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "cloud_verify_integrity",
+          "safeActionPolicy": "EXTERNAL_NETWORK_SKIP_WITH_PROOF",
+          "isSensitive": true
+        }
+      ],
+      "backendCommands": [
+        "cloud_get_status",
+        "cloud_sync_push",
+        "cloud_sync_pull",
+        "cloud_verify_integrity"
+      ],
+      "sourceFiles": [
+        "src/pages/CloudCenter.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/cloud-sync",
+          "to": "/cloud",
+          "notes": "Cloud sync alias"
+        },
+        {
+          "from": "/vault",
+          "to": "/cloud",
+          "notes": "Vault alias"
+        }
+      ],
+      "fallbackPolicy": "Requires initialization and passphrase; shows blocked state when not initialized",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-cloud-center\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"get_status\"]",
+          "[data-testid=\"sync_push\"]",
+          "[data-testid=\"sync_pull\"]",
+          "[data-testid=\"verify_integrity\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "N/A",
+        "sensitiveActionsTest": "ui-desktop-sensitive-actions-guarded.wdio.test.js",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/memory",
+      "pageId": "memory_page",
+      "pageComponent": "Memory",
+      "rootTestId": "page-memory",
+      "navOwner": "titane",
+      "truthClass": "LIVE_TAURI_SERVICE_BRIDGE",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "read_memory",
+          "label": "Read memory entries",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_read",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "write_entry",
+          "label": "Write memory entry",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_write_entry",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "delete_entry",
+          "label": "Delete memory entry",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_delete_entry",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        },
+        {
+          "actionId": "get_stats",
+          "label": "Get memory stats",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_get_stats",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "read_memory",
+          "label": "Read memory entries",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_read",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "write_entry",
+          "label": "Write memory entry",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_write_entry",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "get_stats",
+          "label": "Get memory stats",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_get_stats",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [
+        {
+          "actionId": "delete_entry",
+          "label": "Delete memory entry",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "persistent_memory_delete_entry",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        }
+      ],
+      "backendCommands": [
+        "persistent_memory_read",
+        "persistent_memory_get_stats",
+        "persistent_memory_write_entry",
+        "persistent_memory_delete_entry"
+      ],
+      "sourceFiles": [
+        "src/pages/Memory.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Search disabled when no persistent entries; bootstrap latency visible",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-memory\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"read_memory\"]",
+          "[data-testid=\"write_entry\"]",
+          "[data-testid=\"delete_entry\"]",
+          "[data-testid=\"get_stats\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "ui-desktop-sensitive-actions-guarded.wdio.test.js",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/research",
+      "pageId": "research_page",
+      "pageComponent": "ResearchPage",
+      "rootTestId": "research-page",
+      "navOwner": "titane",
+      "truthClass": "LIVE_TAURI_GOVERNED",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "run_research",
+          "label": "Run web research",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "web_research",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "run_research",
+          "label": "Run web research",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "web_research",
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "web_research"
+      ],
+      "sourceFiles": [
+        "src/pages/ResearchPage.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Web-live can be blocked by policy or credentials; shows explicit block state",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"research-page\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"run_research\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/doc-center",
+      "pageId": "doc_center",
+      "pageComponent": "DocCenterPage",
+      "rootTestId": "doc-center-page",
+      "truthClass": "LIVE_TAURI_GOVERNED",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "export_docx",
+          "label": "Export DOCX",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "export_docx_file",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        }
+      ],
+      "safeActions": [],
+      "sensitiveActions": [
+        {
+          "actionId": "export_docx",
+          "label": "Export DOCX",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": "export_docx_file",
+          "safeActionPolicy": "REQUIRES_CONFIRMATION",
+          "isSensitive": true
+        }
+      ],
+      "backendCommands": [
+        "export_docx_file"
+      ],
+      "sourceFiles": [
+        "src/pages/DocCenterPage.tsx"
+      ],
+      "aliases": [
+        {
+          "from": "/doc",
+          "to": "/doc-center",
+          "notes": "Doc alias"
+        }
+      ],
+      "fallbackPolicy": "Requires Tauri runtime; browser mode shows explicit IPC error (not silent)",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"doc-center-page\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"export_docx\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "N/A",
+        "sensitiveActionsTest": "ui-desktop-sensitive-actions-guarded.wdio.test.js",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/singularity",
+      "pageId": "singularity_monitor",
+      "pageComponent": "SingularityMonitor",
+      "rootTestId": "page-singularity-monitor",
+      "navOwner": "dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "get_state",
+          "label": "Get singularity state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "singularity_get_state",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "get_state",
+          "label": "Get singularity state",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "singularity_get_state",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "singularity_get_state",
+        "singularity_sync_state"
+      ],
+      "sourceFiles": [
+        "src/pages/SingularityMonitor.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Visualization mixes live hooks and derived edges; fallback to empty state",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-singularity-monitor\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"get_state\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/sentinel",
+      "pageId": "sentinel_guard",
+      "pageComponent": "Sentinel",
+      "rootTestId": "page-sentinel",
+      "navOwner": "dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe sentinel events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "sentinel_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe sentinel events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "sentinel_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "sentinel_subscribe"
+      ],
+      "sourceFiles": [
+        "src/pages/Sentinel.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Engine subscription can fallback to empty state",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-sentinel\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"subscribe\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/watchdog",
+      "pageId": "watchdog_monitor",
+      "pageComponent": "Watchdog",
+      "rootTestId": "page-watchdog",
+      "navOwner": "dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe watchdog events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "watchdog_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe watchdog events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "watchdog_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "watchdog_subscribe"
+      ],
+      "sourceFiles": [
+        "src/pages/Watchdog.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Engine subscription can fallback to empty state",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-watchdog\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"subscribe\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/selfheal",
+      "pageId": "selfheal_engine",
+      "pageComponent": "SelfHeal",
+      "rootTestId": "page-selfheal",
+      "navOwner": "dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe selfheal events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "selfheal_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe selfheal events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "selfheal_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "selfheal_subscribe"
+      ],
+      "sourceFiles": [
+        "src/pages/SelfHeal.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Engine subscription can fallback to empty state",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-selfheal\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"subscribe\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/adaptive",
+      "pageId": "adaptive_engine",
+      "pageComponent": "AdaptiveEngine",
+      "rootTestId": "page-adaptive-engine",
+      "navOwner": "dev",
+      "truthClass": "LIVE_TAURI_WITH_FALLBACK",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe adaptive events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "adaptive_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "subscribe",
+          "label": "Subscribe adaptive events",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": "adaptive_subscribe",
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "adaptive_subscribe",
+        "adaptive_get_profile",
+        "adaptive_get_summary"
+      ],
+      "sourceFiles": [
+        "src/pages/AdaptiveEngine.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Engine subscription can fallback to empty state",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-adaptive-engine\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"subscribe\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/skills",
+      "pageId": "skill_os",
+      "pageComponent": "SkillManager",
+      "rootTestId": "page-skills",
+      "navOwner": "titane",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "list_skills",
+          "label": "List skills",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "activate_skill",
+          "label": "Activate skill",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "list_skills",
+          "label": "List skills",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "activate_skill",
+          "label": "Activate skill",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [
+        "list_skills",
+        "activate_skill",
+        "deactivate_skill",
+        "install_skill"
+      ],
+      "sourceFiles": [
+        "src/ui/pages/Skills/SkillManager.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Local skill registry can be empty; degrades gracefully",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-skills\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"list_skills\"]",
+          "[data-testid=\"activate_skill\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/knowledge",
+      "pageId": "knowledge_page",
+      "pageComponent": "KnowledgeFusionPage",
+      "rootTestId": "page-knowledge",
+      "navOwner": "titane",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "knowledge_refresh",
+          "label": "Refresh knowledge",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "knowledge_refresh",
+          "label": "Refresh knowledge",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/ui/pages/KnowledgeFusionPage.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Lazy-loaded page; no destructive writes",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-knowledge\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"knowledge_refresh\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/creation",
+      "pageId": "creation_studio",
+      "pageComponent": "CreationStudio",
+      "rootTestId": "page-creation-studio",
+      "navOwner": "titane",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "creation_refresh",
+          "label": "Refresh creation",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "creation_refresh",
+          "label": "Refresh creation",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/CreationStudio.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Lazy-loaded page; asset generation may use local or backend",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-creation-studio\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"creation_refresh\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/evolution",
+      "pageId": "evolution_monitor",
+      "pageComponent": "EvolutionMonitor",
+      "rootTestId": "page-evolution-monitor",
+      "navOwner": "titane",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "evolution_refresh",
+          "label": "Refresh evolution",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "evolution_refresh",
+          "label": "Refresh evolution",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/EvolutionMonitor.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Lazy-loaded monitoring page; no destructive writes",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-evolution-monitor\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"evolution_refresh\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/performance",
+      "pageId": "performance_test",
+      "pageComponent": "PerformanceTest",
+      "rootTestId": "page-performance-test",
+      "navOwner": "optimization",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "DISPLAY_ONLY",
+      "isSimulated": false,
+      "isDisplayOnly": true,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "run_probe",
+          "label": "Run performance probe",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "run_probe",
+          "label": "Run performance probe",
+          "wiringStatus": "TEMPLATE_ONLY",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/PerformanceTest.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Diagnostic-only page; no backend writes",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-performance-test\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"run_probe\"]"
+        ]
+      },
+      "knownBlockers": [
+        "DISPLAY_ONLY — read-only state, no interactive writes"
+      ],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/htf",
+      "pageId": "htf_page",
+      "pageComponent": "HTFPage",
+      "rootTestId": "page-htf",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [],
+      "safeActions": [],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/HTFPage.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Direct URL surface; no TopNav owner",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"page-htf\"]",
+        "tabs": [],
+        "actions": []
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "N/A",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    }
+  ]
+}

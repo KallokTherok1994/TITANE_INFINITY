@@ -85,6 +85,8 @@
     "op:mermaid:pack": "bash scripts/verify/mermaid-proof-pack.sh",
     "verify:ui-surface-registry": "node scripts/verify/verify-ui-surface-registry.mjs",
     "generate:ui-surface-docs": "node scripts/generate/generate-ui-surface-docs.mjs",
+    "generate:ui-desktop-manifest": "node scripts/generate/generate-ui-desktop-manifest.mjs",
+    "verify:ui-desktop-coverage": "node scripts/verify/verify-ui-desktop-coverage.mjs",
     "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",
     "verify:remediation-permissions": "node scripts/gates/remediation-permissions-widening-gate.js",
     "verify:autopr-v2": "node scripts/gates/autopr-v2-policy-gate.js",
