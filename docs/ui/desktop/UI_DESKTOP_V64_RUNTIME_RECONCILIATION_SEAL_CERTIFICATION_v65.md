@@ -56,3 +56,9 @@
 1. `TEST_LOGIC_BUG`: admin pre-hook switched to classified non-blocking behavior when tab-system unavailable.
 2. `DESKTOP_RUNTIME_BLOCKER`: CSV `WDIO_SPEC` split into multiple `--spec` flags in run-desktop-suite wrapper.
 3. `TEST_SELECTOR_BUG` (artifact contract): capture spec emits `titleFound` and canonical `capturedSurface=TITANE`.
+
+## v66 Post-Seal Hygiene Note
+
+- The v65 snapshot values remain historically correct for the sealing run (`24` records, `PASS=19 WARN=6 FAIL=0`).
+- Current repository truth after additional post-seal runtime append runs is: `32` records and verifier `PASS=22 WARN=8 FAIL=0`.
+- Drift classification remains unchanged and explicitly accepted.

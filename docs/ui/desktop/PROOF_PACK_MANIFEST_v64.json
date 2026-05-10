@@ -21,7 +21,7 @@
     { "id": "v62-tauri-ipc-probe-bridge", "path": "artifacts/backend-proof-depth/v62-tauri-ipc-probe-bridge.jsonl", "records": 3, "strictGate": false, "status": "PASS" },
     { "id": "v62-tauri-ipc-response", "path": "artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl", "records": 4, "strictGate": false, "status": "PASS" },
     { "id": "v63-tier1-real-ipc-completion", "path": "artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl", "records": 8, "strictGate": false, "status": "PASS" },
-    { "id": "v64-main-menu-capture-reconciliation", "path": "artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl", "records": 24, "strictGate": false, "status": "PASS_RUNTIME_VERIFIED", "runtimeTimestamp": "2026-05-10T20:40:32Z/2026-05-10T20:42:19Z" }
+    { "id": "v64-main-menu-capture-reconciliation", "path": "artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl", "records": 32, "strictGate": false, "status": "PASS_RUNTIME_VERIFIED", "runtimeTimestamp": "2026-05-10T20:40:32Z/2026-05-10T20:42:19Z + post-v65 append runs" }
   ],
   "specFamilies": [
     { "family": "core", "specs": ["ui-desktop-all-routes", "ui-desktop-all-tabs", "ui-desktop-control-inventory", "ui-desktop-error-boundary-and-empty-state", "ui-desktop-safe-actions", "ui-desktop-sensitive-actions-guarded"], "status": "PASS" },
@@ -43,7 +43,7 @@
     { "id": "guard:ipc-contract", "command": "pnpm run guard:ipc-contract", "result": "42/42", "status": "PASS" },
     { "id": "verify:backend-proof-depth:strict", "command": "pnpm run verify:backend-proof-depth:strict", "result": "14P|282W|0F", "status": "PASS" },
     { "id": "detect_recurrence", "command": "bash scripts/autoheal/detect_recurrence.sh", "result": "1799 entries", "status": "PASS" },
-    { "id": "verify:ui-desktop-main-menu-reconciliation", "command": "pnpm run verify:ui-desktop-main-menu-reconciliation", "result": "PASS=19 WARN=6 FAIL=0", "status": "PASS_RUNTIME_VERIFIED" }
+    { "id": "verify:ui-desktop-main-menu-reconciliation", "command": "pnpm run verify:ui-desktop-main-menu-reconciliation", "result": "PASS=22 WARN=8 FAIL=0", "status": "PASS_RUNTIME_VERIFIED" }
   ],
   "mainMenuSurfaces": [
     { "surface": "TITANE", "route": "/titane", "topNavItem": "TITANE", "classification": "FUNCTIONAL_LIVE_PROVEN", "backendProof": "Multiple IPC PASS" },
@@ -89,11 +89,18 @@
       "e2e/desktop/ui-desktop-admin-tabs-complete.wdio.test.js",
       "e2e/desktop/ui-desktop-total-dev-locked-contract.wdio.test.js"
     ],
-    "artifactLineCount": 24,
+    "artifactLineCount": 32,
     "artifactVerifier": "PASS",
     "blockers": 0,
     "pendingMarkersBefore": ["gate-o pending marker", "runtime-run pending marker"],
     "pendingMarkersAfter": []
+  },
+  "v66PostSealHygiene": {
+    "date": "2026-05-10",
+    "artifactLineCountCurrent": 32,
+    "artifactVerifierCurrent": "PASS=22 WARN=8 FAIL=0",
+    "fourSpecStatus": "PASS_RUNTIME_VERIFIED",
+    "acceptedDriftUnchanged": true
   },
   "finalVerdict": "PASS",
   "finalClassification": "UI_DESKTOP_MAIN_MENU_RECONCILIATION_CONFIRMED_WITH_ACCEPTED_DRIFT"

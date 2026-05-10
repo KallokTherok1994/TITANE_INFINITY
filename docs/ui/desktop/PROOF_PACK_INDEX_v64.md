@@ -185,3 +185,15 @@ All static gates: PASS.
 	- `gate-o pending marker` => `PASS_RUNTIME_VERIFIED`
 	- `runtime-run pending marker` => `PASS_RUNTIME_VERIFIED`
 - Final v65 verdict for runtime seal: `UI_DESKTOP_V64_RUNTIME_RECONCILIATION_CONFIRMED_WITH_ACCEPTED_DRIFT`
+
+## v66 Post-Seal Hygiene Addendum
+
+- Date: 2026-05-10
+- Current artifact line count (post-v65 additional runtime append): `32`
+- Current verifier result: `pnpm run verify:ui-desktop-main-menu-reconciliation` => `VERDICT: PASS` (PASS=22 WARN=8 FAIL=0)
+- 4 v64 specs status remains: `PASS_RUNTIME_VERIFIED`
+- Accepted drift remains unchanged:
+	- TIME degraded expected
+	- DEV/FUSION display-only warning context
+	- TOTAL_DEV guarded locked contract
+	- OPTIMIZATION guarded performance surface

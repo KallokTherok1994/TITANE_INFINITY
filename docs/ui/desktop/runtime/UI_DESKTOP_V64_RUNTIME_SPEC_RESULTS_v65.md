@@ -38,3 +38,8 @@ From `reports/e2e-desktop/wdio.log` (fresh combined run):
 ## Runtime verdict
 
 `PASS_RUNTIME_VERIFIED`
+
+## v66 Post-Seal Hygiene Continuity Note
+
+- The 4-spec runtime result remains unchanged (`4 passed, 4 total`).
+- Post-seal additional reruns appended extra capture rows; artifact moved from 24 to 32 records without changing verdict.

@@ -38,3 +38,10 @@ No blocker remains for artifact validity.
 ## Artifact validation verdict
 
 `PASS_RUNTIME_VERIFIED`
+
+## v66 Post-Seal Hygiene Addendum
+
+- Current artifact line count: `32`
+- Current verifier summary: `PASS=22 WARN=8 FAIL=0`
+- Current verifier verdict: `PASS`
+- Additional warnings remain DEV/FUSION display-only drift context and are non-blocking.

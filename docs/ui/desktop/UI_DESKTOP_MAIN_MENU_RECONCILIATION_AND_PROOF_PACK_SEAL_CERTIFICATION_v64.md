@@ -148,6 +148,13 @@ All changes are additive (new files + autoheal entries):
 
 `UI_DESKTOP_V64_RUNTIME_RECONCILIATION_CONFIRMED_WITH_ACCEPTED_DRIFT`
 
+### v66 Post-Seal Hygiene Addendum
+
+- Current artifact line count (post-v65 additional append runs): `32`
+- Current verifier result: `VERDICT: PASS` (`PASS=22 WARN=8 FAIL=0`)
+- 4 v64 specs remain runtime verified (`PASS_RUNTIME_VERIFIED`)
+- Accepted drift set remains unchanged (TIME, DEV/FUSION, TOTAL DEV, OPTIMIZATION)
+
 ---
 
 ## Final Verdict
