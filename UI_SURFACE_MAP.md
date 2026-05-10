@@ -1158,3 +1158,14 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Preuve runtime native: état IPC `READY`, état send trace `RESPONDED`, provider local `Ollama (OMEGA+Singularity)`, réponse assistant retournée sur la lane native.
 - Limite observabilité backend: `contextBinding` non exposé en live via le trace hook WDIO sur ce run; la preuve backend TIME summary reste qualifiée par le test Rust ciblé.
 - Rollback: restaurer `e2e/desktop/online-chat-proof-ui.wdio.test.js`, `UI_SURFACE_MAP.md`, `docs/CARTOGRAPHY_COMPLETE.md`, `ARCHITECTURE.md`, `registry/ui-events.jsonl`, `scripts/autoheal/autoheal_rules.jsonl`.
+
+## [2025-07] UI_BACKEND_TRUTH_CERTIFICATION_v46 — Registry + Truth UI
+
+- Nouvelle couche: `src/registry/uiSurfaceRegistry.schema.ts` (types) + `src/registry/uiSurfaceRegistry.ts` (29 surfaces canoniques, ~60 aliases)
+- Composants système: `src/components/system/SurfaceTruthBadge.tsx`, `PageHealthBanner.tsx`, `RuntimeSourceIndicator.tsx`
+- Gate parité: `scripts/verify/verify-ui-surface-registry.mjs` → PASS_WITH_WARNINGS
+- Surfaces SIMULATED_UI: `/orchestration-intelligence` + `/quantum-center` — banners visibles appliqués
+- Docs générés: `docs/ui/generated/` (5 fichiers — route inventory, tab matrix, action matrix, proof coverage, alias map)
+- Certification: `docs/ui/UI_BACKEND_TRUTH_CERTIFICATION_v46.md` — VERDICT: UI_BACKEND_TRUTH_STATIC_COMPLETE_RUNTIME_PENDING
+- Tests: 53 nouveaux tests Vitest (33 registry + 20 composants), tous PASS
+- Rollback: git restore des fichiers touchés + suppression des nouveaux fichiers

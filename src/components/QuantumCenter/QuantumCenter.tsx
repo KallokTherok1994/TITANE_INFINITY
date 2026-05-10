@@ -11,6 +11,7 @@ import React, { useState, useEffect } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
+import { PageHealthBanner } from '@/components/system/PageHealthBanner';
 import './QuantumCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -664,6 +665,13 @@ const QuantumCenterContent: React.FC = () => {
 
   return (
     <div className="quantum-center" data-testid="page-quantum-center">
+      {/* SIMULATED_UI Banner — UI_BACKEND_TRUTH_CERTIFICATION_v46 */}
+      <PageHealthBanner
+        route="/quantum-center"
+        variant="SIMULATED"
+        message="Interface simulée — les métriques Quantum affichées sont des données de démonstration, aucun GPU/renderLayer réel n'est connecté."
+        dismissible
+      />
       <header className="quantum-header">
         <h1>
           <span className="header-icon">⚛️</span>

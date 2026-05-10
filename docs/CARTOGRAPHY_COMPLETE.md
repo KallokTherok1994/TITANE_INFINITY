@@ -2213,3 +2213,36 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - Le trace hook natif n a pas exposé `contextBinding` sur ce run; la preuve backend TIME summary reste assurée par `cargo test --manifest-path src-tauri/Cargo.toml --lib extract_context_binding_includes_time_summary_when_present`.
 
 > Rollback: restaurer `e2e/desktop/online-chat-proof-ui.wdio.test.js` et les journaux/docs de gouvernance R4 associés.
+
+## [2025-07] Cartographie UI_BACKEND_TRUTH_CERTIFICATION_v46
+
+### Nouveaux modules structurels
+
+**src/registry/**
+- `uiSurfaceRegistry.schema.ts` — Types TypeScript pour la classification des surfaces UI (SurfaceStatus, RuntimeTruthClass, ProofLane, ActionWiringStatus, UiSurfaceDefinition)
+- `uiSurfaceRegistry.ts` — Source unique de vérité pour les 29 routes canoniques TITANE (statut, truth class, tabs, actions, aliases)
+- `__tests__/uiSurfaceRegistry.test.ts` — 33 tests de conformité (structurel, truth class, alias, accesseurs)
+
+**src/components/system/** (nouveaux composants)
+- `SurfaceTruthBadge.tsx` — Badge visuel runtime truth class (LIVE/PARTIAL/SIMULATED/DISPLAY_ONLY...)
+- `PageHealthBanner.tsx` — Bannière honnêteté de statut pour surfaces SIMULATED_UI, DISPLAY_ONLY, DEGRADED
+- `RuntimeSourceIndicator.tsx` — Indicateur compact d origine des données (TAURI_IPC/STATIC/SIMULATED...)
+- `__tests__/truth-components.test.tsx` — 20 tests composants
+
+**scripts/verify/**
+- `verify-ui-surface-registry.mjs` — Gate de parité: vérifie cohérence entre registry, App.tsx, uiPages.po.js, moduleRouteContext.ts
+
+**docs/ui/generated/**
+- `UI_ROUTE_INVENTORY.md` — Inventaire complet 29 routes
+- `UI_TAB_MATRIX.md` — Matrice des tabs avec testId et backend commands
+- `UI_ACTION_BACKEND_MATRIX.md` — Matrice actions → wiring IPC
+- `UI_PROOF_COVERAGE.md` — Couverture proof lanes par surface
+- `UI_LEGACY_ALIAS_MAP.md` — ~60 aliases legacy documentés
+
+**docs/ui/**
+- `UI_BACKEND_TRUTH_CERTIFICATION_v46.md` — Certification complète phase 1-9
+
+### Statuts classifiés
+- SIMULATED_UI: `/orchestration-intelligence`, `/quantum-center` → banners visibles
+- DISPLAY_ONLY: `/performance`
+- ACTIVE_PARTIAL: 26 routes (runtime proof requis pour ACTIVE_SYNCED)

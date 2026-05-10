@@ -17,6 +17,7 @@
 import React, { useState } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { PageHealthBanner } from '../components/system/PageHealthBanner';
 
 type Tab =
   | 'overview'
@@ -35,6 +36,13 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
       className="orchestration-intelligence-center p-6 space-y-6"
       data-testid="page-orchestration-intelligence"
     >
+      {/* SIMULATED_UI Banner — UI_BACKEND_TRUTH_CERTIFICATION_v46 */}
+      <PageHealthBanner
+        route="/orchestration-intelligence"
+        variant="SIMULATED"
+        message="Interface simulée — les métriques affichées sont des données de démonstration, aucun wiring backend réel n'est connecté sur cette surface."
+        dismissible
+      />
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
