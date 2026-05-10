@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "v60",
+  "generatedAt": "2026-05-10",
+  "description": "Backend proof tier thresholds for TITANE v60 strict proof gate",
+  "tiers": {
+    "tier1": {
+      "description": "Core user-facing modules — highest proof bar",
+      "modules": [
+        "TITANE_CHAT",
+        "TIME",
+        "MEMORY",
+        "DOC_CENTER",
+        "ADMIN_SYSTEM",
+        "ADMIN_CONFIG",
+        "DEV_COCKPIT",
+        "RESEARCH",
+        "CLOUD",
+        "EXPERIENCE",
+        "AGENT_CHAT",
+        "AGENT_CONTEXT",
+        "CHAT_CONTEXT"
+      ],
+      "allowedProofLevels": [
+        "UI_REFLECTS_BACKEND_RESULT",
+        "IPC_RESPONSE_PROVEN",
+        "PROOF_DEPTH_IPC_RESPONSE_PROVEN",
+        "GUARDED_WITH_UI_PROOF",
+        "DEGRADED_WITH_UI_PROOF",
+        "SANDBOXED_MUTATION_PROVEN",
+        "PROOF_DEPTH_GUARDED_ONLY",
+        "PROOF_DEPTH_DEGRADED_VISIBLE",
+        "PROOF_DEPTH_BLOCKED_BY_RUNTIME"
+      ],
+      "forbiddenProofLevels": [
+        "UI_ONLY",
+        "UNKNOWN",
+        "IMPLIED_LIVE",
+        "BUTTON_EXISTS_AS_PROOF",
+        "PROOF_DEPTH_DISPLAY_ONLY_CONFIRMED"
+      ],
+      "minimumTargetLevel": "UI_REFLECTS_BACKEND_RESULT",
+      "uiEvidenceRequired": true,
+      "sourceSpecRequired": true,
+      "schemaVersionRequired": "v60"
+    },
+    "tier2": {
+      "description": "Secondary experience modules — medium proof bar",
+      "modules": [
+        "EXPERIENCE",
+        "TWINS",
+        "SKILLS",
+        "KNOWLEDGE",
+        "CREATION",
+        "EVOLUTION",
+        "PERFORMANCE",
+        "FUSION"
+      ],
+      "allowedProofLevels": [
+        "IPC_RESPONSE_PROVEN",
+        "PROOF_DEPTH_IPC_RESPONSE_PROVEN",
+        "UI_REFLECTS_BACKEND_RESULT",
+        "GUARDED_WITH_UI_PROOF",
+        "DEGRADED_WITH_UI_PROOF",
+        "PROOF_DEPTH_DISPLAY_ONLY_CONFIRMED",
+        "PROOF_DEPTH_GUARDED_ONLY",
+        "PROOF_DEPTH_DEGRADED_VISIBLE",
+        "PROOF_DEPTH_BLOCKED_BY_RUNTIME"
+      ],
+      "forbiddenProofLevels": [
+        "UI_ONLY",
+        "UNKNOWN",
+        "IMPLIED_LIVE",
+        "BUTTON_EXISTS_AS_PROOF"
+      ],
+      "minimumTargetLevel": "IPC_RESPONSE_PROVEN",
+      "uiEvidenceRequired": false,
+      "sourceSpecRequired": true,
+      "schemaVersionRequired": "v60"
+    },
+    "tier3": {
+      "description": "Advanced infrastructure modules — baseline proof bar",
+      "modules": [
+        "HYPER_CENTER",
+        "REALITY_CENTER",
+        "QUANTUM_CENTER",
+        "ORCHESTRATION_CENTER",
+        "ORCHESTRATION_INTELLIGENCE",
+        "SINGULARITY",
+        "SENTINEL",
+        "WATCHDOG",
+        "SELFHEAL",
+        "ADAPTIVE"
+      ],
+      "allowedProofLevels": [
+        "SIMULATED_CONFIRMED",
+        "PROOF_DEPTH_DISPLAY_ONLY_CONFIRMED",
+        "DEGRADED_WITH_UI_PROOF",
+        "IPC_RESPONSE_PROVEN",
+        "PROOF_DEPTH_IPC_RESPONSE_PROVEN",
+        "UI_REFLECTS_BACKEND_RESULT",
+        "PROOF_DEPTH_GUARDED_ONLY",
+        "PROOF_DEPTH_DEGRADED_VISIBLE",
+        "PROOF_DEPTH_BLOCKED_BY_RUNTIME"
+      ],
+      "forbiddenProofLevels": [
+        "UI_ONLY",
+        "UNKNOWN",
+        "IMPLIED_LIVE",
+        "BUTTON_EXISTS_AS_PROOF"
+      ],
+      "minimumTargetLevel": "PROOF_DEPTH_DISPLAY_ONLY_CONFIRMED",
+      "uiEvidenceRequired": false,
+      "sourceSpecRequired": true,
+      "schemaVersionRequired": "v60"
+    }
+  }
+}

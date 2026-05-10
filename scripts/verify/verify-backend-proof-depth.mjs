@@ -5,7 +5,13 @@
  * Validates structure, proof levels, secret redaction, and tier compliance.
  *
  * Usage: node scripts/verify/verify-backend-proof-depth.mjs
+ *        node scripts/verify/verify-backend-proof-depth.mjs --strict
  * Or via: pnpm run verify:backend-proof-depth
+ *         pnpm run verify:backend-proof-depth:strict
+ *
+ * --strict mode: FAILs on missing sourceSpec, uiEvidence, sandboxEvidence, etc.
+ *                Applied ONLY to v60+ artifacts (filename contains 'v60' or is
+ *                the TITANE_PROOF_ARTIFACT target if it doesn’t match a legacy name).
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -15,12 +21,38 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', '..');
 
+// ─── Strict mode flag ────────────────────────────────────────────────────────
+
+const STRICT_MODE = process.argv.includes('--strict');
+
+// An artifact is considered "v60+" if its path contains 'v60' or
+// if it is the TITANE_PROOF_ARTIFACT override and does not match known legacy names.
+function isV60Artifact(relPath) {
+  return relPath.includes('v60') ||
+    (process.env.TITANE_PROOF_ARTIFACT &&
+     relPath === process.env.TITANE_PROOF_ARTIFACT &&
+     !relPath.includes('v58') && !relPath.includes('v59'));
+}
+
 // ─── Configuration ───────────────────────────────────────────────────────────
 
-const ARTIFACTS = [
+const ARTIFACTS_STATIC = [
   'artifacts/backend-proof-depth/v58-backend-proof-depth.jsonl',
   'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl',
+  'artifacts/backend-proof-depth/v60-strict-backend-proof.jsonl',
 ];
+
+// Build artifact list: static list + TITANE_PROOF_ARTIFACT if set and not already included
+function buildArtifactList() {
+  const list = [...ARTIFACTS_STATIC];
+  const env = process.env.TITANE_PROOF_ARTIFACT;
+  if (env && !list.includes(env)) {
+    list.push(env);
+  }
+  return list;
+}
+
+const ARTIFACTS = buildArtifactList();
 
 const REQUIRED_FIELDS_BASE = [
   'route',
@@ -98,6 +130,15 @@ function fail(msg) { errors.push(`FAIL: ${msg}`); }
 function warn(msg) { warnings.push(`WARN: ${msg}`); }
 function pass(msg) { passes.push(`PASS: ${msg}`); }
 
+// In strict mode for a v60 artifact: emit FAIL instead of WARN
+function strictFail(msg, artifactRelPath, useStrict = false) {
+  if (useStrict && STRICT_MODE) {
+    fail(msg);
+  } else {
+    warn(msg);
+  }
+}
+
 function checkSecrets(str, location) {
   if (typeof str !== 'string') return;
   for (const pattern of SECRET_PATTERNS) {
@@ -117,8 +158,9 @@ function checkHomePath(str, location, fieldName) {
 
 // ─── Validate a single JSONL record ──────────────────────────────────────────
 
-function validateRecord(record, lineNum, artifactName) {
+function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
   const loc = `${artifactName}:L${lineNum}`;
+  const strict = strictArtifact && STRICT_MODE;
 
   // Check for forbidden proof levels
   const pl = record.proofLevel;
@@ -141,6 +183,15 @@ function validateRecord(record, lineNum, artifactName) {
   const moduleId = record.moduleId || record.module;
   if (!moduleId) {
     fail(`${loc}: missing moduleId or module field`);
+  }
+
+  // route check (strict: FAIL, default: WARN)
+  if (!record.route) {
+    if (strict) {
+      fail(`${loc}: [STRICT] missing required field "route"`);
+    } else {
+      warn(`${loc}: missing route field — recommended for traceability`);
+    }
   }
 
   // Check timestamp or capturedAt
@@ -176,15 +227,38 @@ function validateRecord(record, lineNum, artifactName) {
     if (!record.uiSelector && !record.uiEvidence && !record.uiReflected) {
       warn(`${loc}: UI_REFLECTS_BACKEND_RESULT missing UI selector or evidence field`);
     }
+    // strict: require structured uiEvidence
+    if (strict) {
+      if (!record.uiEvidence || typeof record.uiEvidence !== 'object') {
+        fail(`${loc}: [STRICT] UI_REFLECTS_BACKEND_RESULT must include structured uiEvidence object`);
+      } else {
+        if (!('found' in record.uiEvidence)) {
+          fail(`${loc}: [STRICT] uiEvidence must include 'found' boolean`);
+        }
+        if (!record.uiEvidence.selector) {
+          fail(`${loc}: [STRICT] uiEvidence must include 'selector'`);
+        }
+        if (!record.uiEvidence.evidenceKind) {
+          fail(`${loc}: [STRICT] uiEvidence must include 'evidenceKind'`);
+        }
+      }
+    }
   }
 
   // Sandboxed mutation checks
   if (pl === 'SANDBOXED_MUTATION_PROVEN') {
-    if (!record.tempPath && !record.sandboxPath && !record.cleanupStatus) {
-      warn(`${loc}: SANDBOXED_MUTATION_PROVEN should include tempPath/cleanupStatus`);
+    if (!record.tempPath && !record.sandboxPath && !record.cleanupStatus && !record.sandboxEvidence) {
+      if (strict) {
+        fail(`${loc}: [STRICT] SANDBOXED_MUTATION_PROVEN must include sandboxEvidence object`);
+      } else {
+        warn(`${loc}: SANDBOXED_MUTATION_PROVEN should include tempPath/cleanupStatus or sandboxEvidence`);
+      }
     }
-    if (!record.nonProductionMarker) {
-      warn(`${loc}: SANDBOXED_MUTATION_PROVEN should include nonProductionMarker`);
+    if (strict && record.sandboxEvidence && !record.sandboxEvidence.nonProductionMarker) {
+      fail(`${loc}: [STRICT] sandboxEvidence must include nonProductionMarker:true`);
+    }
+    if (!record.nonProductionMarker && !(record.sandboxEvidence && record.sandboxEvidence.nonProductionMarker)) {
+      if (!strict) warn(`${loc}: SANDBOXED_MUTATION_PROVEN should include nonProductionMarker`);
     }
   }
 
@@ -206,9 +280,29 @@ function validateRecord(record, lineNum, artifactName) {
     checkHomePath(String(record.route), loc, 'route');
   }
 
-  // sourceSpec check
+  // sourceSpec check (strict: FAIL, default: WARN)
   if (!record.sourceSpec) {
-    warn(`${loc}: missing sourceSpec — recommended for traceability`);
+    if (strict) {
+      fail(`${loc}: [STRICT] missing required field "sourceSpec" — must be explicit in v60+ artifacts`);
+    } else {
+      warn(`${loc}: missing sourceSpec — recommended for traceability`);
+    }
+  }
+
+  // strict: redactionApplied + secretScanPassed required
+  if (strict) {
+    if (record.redactionApplied === undefined) {
+      fail(`${loc}: [STRICT] missing "redactionApplied" boolean field`);
+    }
+    if (record.secretScanPassed === undefined) {
+      fail(`${loc}: [STRICT] missing "secretScanPassed" boolean field`);
+    }
+    if (record.schemaVersion !== 'v60') {
+      fail(`${loc}: [STRICT] missing or wrong schemaVersion (expected "v60", got "${record.schemaVersion}")`);
+    }
+    if (!record.capturedAt) {
+      fail(`${loc}: [STRICT] missing "capturedAt" ISO timestamp`);
+    }
   }
 }
 
@@ -216,9 +310,19 @@ function validateRecord(record, lineNum, artifactName) {
 
 function validateArtifact(relPath) {
   const absPath = join(ROOT, relPath);
+  const strictArtifact = isV60Artifact(relPath);
+
   if (!existsSync(absPath)) {
     if (relPath.includes('v59')) {
       warn(`Artifact not yet created (expected for v59 pre-run): ${relPath}`);
+      return { exists: false, lineCount: 0, proofLevels: {} };
+    }
+    if (relPath.includes('v60')) {
+      if (STRICT_MODE) {
+        fail(`[STRICT] v60 artifact missing (required in strict mode): ${relPath}`);
+      } else {
+        warn(`v60 artifact not yet created: ${relPath}`);
+      }
       return { exists: false, lineCount: 0, proofLevels: {} };
     }
     fail(`Required artifact missing: ${relPath}`);
@@ -238,11 +342,16 @@ function validateArtifact(relPath) {
   const proofLevels = {};
   let parseErrors = 0;
 
+  // Minimum line count check (strict mode for v60)
+  if (STRICT_MODE && strictArtifact && lines.length < 10) {
+    fail(`[STRICT] v60 artifact has only ${lines.length} records — minimum 10 required for strict proof gate`);
+  }
+
   for (let i = 0; i < lines.length; i++) {
     const lineNum = i + 1;
     try {
       const record = JSON.parse(lines[i]);
-      validateRecord(record, lineNum, relPath);
+      validateRecord(record, lineNum, relPath, strictArtifact);
       const pl = record.proofLevel || 'MISSING';
       proofLevels[pl] = (proofLevels[pl] || 0) + 1;
     } catch (e) {
@@ -267,7 +376,9 @@ function validateArtifact(relPath) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-console.log('\n=== TITANE Backend Proof-Depth Verifier ===\n');
+console.log('\n=== TITANE Backend Proof-Depth Verifier ===');
+if (STRICT_MODE) console.log('MODE: --strict (v60+ schema enforcement active)');
+console.log('');
 
 const results = {};
 for (const artifact of ARTIFACTS) {

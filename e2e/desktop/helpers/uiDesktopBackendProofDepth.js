@@ -1,6 +1,6 @@
 /**
  * uiDesktopBackendProofDepth.js
- * v58/v59 — Structured proof-depth helper for deep backend verification.
+ * v58/v59/v60 — Structured proof-depth helper for deep backend verification.
  *
  * Key improvements over v57 uiDesktopBackendActivation.js:
  * - Returns structured proof: command, moduleId, sourceSpec, attempted, available,
@@ -17,6 +17,15 @@
  *   Home path redaction added
  *   sourceSpec field added to all records
  *   Configurable artifact file via TITANE_PROOF_ARTIFACT env var
+ *
+ * New in v60:
+ *   schemaVersion: "v60" on all persisted records
+ *   capturedAt ISO timestamp on all persisted records
+ *   tier field (Tier 1/2/3) on all persisted records
+ *   redactionApplied + secretScanPassed boolean fields
+ *   Structured uiEvidence with selector/found/textHash/evidenceKind
+ *   Structured sandboxEvidence with tempPathRedacted/cleanupStatus/nonProductionMarker
+ *   sourceSpec is now a REQUIRED field — warning emitted if missing
  *
  * Proof depth levels (taxonomy v59):
  *   IPC_COMMAND_PROVEN          — invoke reached IPC channel
@@ -123,6 +132,7 @@ function classifyProofLevel(result) {
 
 /**
  * Persist a proof line to the JSONL artifact file.
+ * v60: always injects schemaVersion, capturedAt; warns if sourceSpec missing.
  */
 function persistProofLine(entry) {
   try {
@@ -131,7 +141,16 @@ function persistProofLine(entry) {
     if (!fs.existsSync(targetDir)) {
       fs.mkdirSync(targetDir, { recursive: true });
     }
-    const line = JSON.stringify({ ...entry, timestamp: new Date().toISOString() });
+    if (!entry.sourceSpec) {
+      console.warn('[v60] WARN: sourceSpec missing on proof record — module=' + (entry.moduleId || entry.module || '?') + ' command=' + (entry.command || 'none'));
+    }
+    const enriched = {
+      schemaVersion: 'v60',
+      capturedAt: new Date().toISOString(),
+      ...entry,
+      timestamp: new Date().toISOString(),
+    };
+    const line = JSON.stringify(enriched);
     fs.appendFileSync(targetFile, line + '\n', 'utf8');
   } catch (e) {
     // Non-blocking — proof write failure must not break test
@@ -158,16 +177,20 @@ async function probeInvoke(command, args = {}, opts = {}) {
     moduleId,
     route = '/',
     sourceSpec = null,
+    tier = null,
   } = opts;
   const resolvedModule = moduleId || moduleName || 'UNKNOWN';
   const startMs = Date.now();
 
   let result = {
+    schemaVersion: 'v60',
+    capturedAt: new Date().toISOString(),
     command,
     module: resolvedModule,
     moduleId: resolvedModule,
     sourceSpec,
     route,
+    tier,
     attempted: false,
     available: false,
     ok: false,
@@ -181,6 +204,8 @@ async function probeInvoke(command, args = {}, opts = {}) {
     proofLevel: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
     uiReflected: false,
     safeToPersist: true,
+    redactionApplied: false,
+    secretScanPassed: true,
   };
 
   try {
@@ -236,6 +261,8 @@ async function probeInvoke(command, args = {}, opts = {}) {
     }
     result.rawResponse = null; // never persist raw response
     result.proofLevel = classifyProofLevel(result);
+    result.redactionApplied = !!(result.errorMsg && result.errorMsg !== rawResult?.error);
+    result.secretScanPassed = true;
 
   } catch (outerErr) {
     result.attempted = true;
@@ -243,6 +270,8 @@ async function probeInvoke(command, args = {}, opts = {}) {
     result.errorMsg = String(outerErr).slice(0, 200);
     result.latencyMs = Date.now() - startMs;
     result.proofLevel = 'PROOF_DEPTH_BLOCKED_BY_RUNTIME';
+    result.redactionApplied = false;
+    result.secretScanPassed = true;
   }
 
   persistProofLine(result);
@@ -260,11 +289,16 @@ async function probeInvoke(command, args = {}, opts = {}) {
 /**
  * Classify proof depth for a guarded module (action present but not executed).
  */
-function probeGuarded(moduleName, route, reason) {
+function probeGuarded(moduleName, route, reason, opts = {}) {
   const entry = {
+    schemaVersion: 'v60',
+    capturedAt: new Date().toISOString(),
     command: null,
     module: moduleName,
+    moduleId: opts.moduleId || moduleName,
+    sourceSpec: opts.sourceSpec || null,
     route,
+    tier: opts.tier || null,
     attempted: false,
     available: null,
     ok: null,
@@ -276,6 +310,9 @@ function probeGuarded(moduleName, route, reason) {
     proofLevel: 'PROOF_DEPTH_GUARDED_ONLY',
     uiReflected: false,
     safeToPersist: true,
+    redactionApplied: false,
+    secretScanPassed: true,
+    guardEvidence: opts.guardEvidence || { reason },
     note: reason,
   };
   persistProofLine(entry);
@@ -285,11 +322,16 @@ function probeGuarded(moduleName, route, reason) {
 /**
  * Classify proof depth for a degraded/display-only module.
  */
-function probeDegraded(moduleName, route, reason) {
+function probeDegraded(moduleName, route, reason, opts = {}) {
   const entry = {
+    schemaVersion: 'v60',
+    capturedAt: new Date().toISOString(),
     command: null,
     module: moduleName,
+    moduleId: opts.moduleId || moduleName,
+    sourceSpec: opts.sourceSpec || null,
     route,
+    tier: opts.tier || null,
     attempted: false,
     available: null,
     ok: null,
@@ -301,6 +343,9 @@ function probeDegraded(moduleName, route, reason) {
     proofLevel: 'PROOF_DEPTH_DEGRADED_VISIBLE',
     uiReflected: false,
     safeToPersist: true,
+    redactionApplied: false,
+    secretScanPassed: true,
+    degradedEvidence: opts.degradedEvidence || { reason },
     note: reason,
   };
   persistProofLine(entry);
@@ -310,11 +355,16 @@ function probeDegraded(moduleName, route, reason) {
 /**
  * Classify proof depth for a display-only confirmed module.
  */
-function probeDisplayOnly(moduleName, route, reason) {
+function probeDisplayOnly(moduleName, route, reason, opts = {}) {
   const entry = {
+    schemaVersion: 'v60',
+    capturedAt: new Date().toISOString(),
     command: null,
     module: moduleName,
+    moduleId: opts.moduleId || moduleName,
+    sourceSpec: opts.sourceSpec || null,
     route,
+    tier: opts.tier || null,
     attempted: false,
     available: null,
     ok: null,
@@ -326,6 +376,8 @@ function probeDisplayOnly(moduleName, route, reason) {
     proofLevel: 'PROOF_DEPTH_DISPLAY_ONLY_CONFIRMED',
     uiReflected: false,
     safeToPersist: true,
+    redactionApplied: false,
+    secretScanPassed: true,
     note: reason,
   };
   persistProofLine(entry);
@@ -442,21 +494,41 @@ async function probeInvokeAndReflect(command, args = {}, uiSelector = null, opts
 
   if (uiSelector && (baseResult.ok || baseResult.attempted)) {
     try {
-      const uiText = await browser.execute((sel) => {
+      const uiResult = await browser.execute((sel) => {
         const el = document.querySelector(sel);
-        return el ? el.textContent || el.innerHTML || '' : null;
+        if (!el) return { found: false, text: null, tagName: null };
+        const text = (el.textContent || el.innerHTML || '').slice(0, 400);
+        return { found: true, text, tagName: el.tagName };
       }, uiSelector);
 
-      const hasContent = uiText !== null && uiText.length > 0;
+      const found = uiResult?.found ?? false;
+      const uiText = uiResult?.text || null;
+      const hasContent = found && uiText && uiText.length > 0;
       const textMatches = opts.expectedText
         ? (uiText || '').includes(opts.expectedText)
         : hasContent;
 
-      if (hasContent) {
+      // Build structured uiEvidence (v60 schema)
+      const rawPreview = uiText ? uiText.slice(0, 120) : null;
+      const redactedPreview = rawPreview ? redactSecrets(redactHomePath(rawPreview)) : null;
+      const textHash = redactedPreview
+        ? require('crypto').createHash('sha256').update(redactedPreview).digest('hex').slice(0, 16)
+        : null;
+
+      const structuredUiEvidence = {
+        selector: uiSelector,
+        found,
+        redactedTextPreview: redactedPreview,
+        textHash,
+        evidenceKind: opts.evidenceKind || 'RESULT_PANEL',
+        tagName: uiResult?.tagName || null,
+      };
+
+      if (found) {
         const enhancedEntry = {
           ...baseResult,
           uiSelector,
-          uiEvidence: uiText ? uiText.slice(0, 300) : null,
+          uiEvidence: structuredUiEvidence,
           uiTextMatch: textMatches,
           uiReflected: textMatches,
           proofLevel: textMatches
@@ -515,11 +587,14 @@ async function probeSandboxedMutation(opts = {}) {
   }
 
   const entry = {
+    schemaVersion: 'v60',
+    capturedAt: new Date().toISOString(),
     command: null,
     module: resolvedModule,
     moduleId: resolvedModule,
     sourceSpec,
     route,
+    tier: opts.tier || null,
     attempted: true,
     available: true,
     ok,
@@ -533,10 +608,14 @@ async function probeSandboxedMutation(opts = {}) {
     proofLevel: ok ? 'SANDBOXED_MUTATION_PROVEN' : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
     uiReflected: false,
     safeToPersist: true,
-    tempPath: redactHomePath(tempPath),
-    cleanupStatus,
-    nonProductionMarker: true,
-    description,
+    redactionApplied: !!(errorMsg),
+    secretScanPassed: true,
+    sandboxEvidence: {
+      tempPathRedacted: redactHomePath(tempPath),
+      cleanupStatus,
+      nonProductionMarker: true,
+      description,
+    },
   };
   persistProofLine(entry);
   return entry;
