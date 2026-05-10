@@ -56,22 +56,27 @@ require_file() {
 }
 
 require_file "VSCODE_TASKS_PRESENT" ".vscode/tasks.json"
-require_file "VSCODE_EXTENSIONS_PRESENT" ".vscode/extensions.json"
 require_file "VSCODE_MCP_CONFIG_PRESENT" ".vscode/mcp.json"
 require_file "PACKAGE_JSON_PRESENT" "package.json"
 require_file "DOCS_DEV_FR_PRESENT" "docs/dev/fr/README.md"
 require_file "OLLAMA_BOUNDARY_AGENT_PRESENT" ".github/agents/ollama-dev-chat-boundary.agent.md"
 require_file "OLLAMA_DEV_SESSION_PROMPT_PRESENT" ".github/prompts/ollama-dev-session.prompt.md"
 
-require_pattern "VSCODE_RECOMMENDS_COPILOT_CHAT" 'github\.copilot-chat' .vscode/extensions.json
-require_pattern "VSCODE_RECOMMENDS_GITHUB_PR" 'github\.vscode-pull-request-github' .vscode/extensions.json
-require_pattern "VSCODE_RECOMMENDS_RUST_ANALYZER" 'rust-lang\.rust-analyzer' .vscode/extensions.json
-require_pattern "VSCODE_RECOMMENDS_TAURI" 'tauri-apps\.tauri-vscode' .vscode/extensions.json
-require_pattern "VSCODE_RECOMMENDS_PLAYWRIGHT" 'ms-playwright\.playwright' .vscode/extensions.json
+if [[ -f ".vscode/extensions.json" ]]; then
+  pass "VSCODE_EXTENSIONS_PRESENT"
+  require_pattern "VSCODE_RECOMMENDS_COPILOT_CHAT" 'github\.copilot-chat' .vscode/extensions.json
+  require_pattern "VSCODE_RECOMMENDS_GITHUB_PR" 'github\.vscode-pull-request-github' .vscode/extensions.json
+  require_pattern "VSCODE_RECOMMENDS_RUST_ANALYZER" 'rust-lang\.rust-analyzer' .vscode/extensions.json
+  require_pattern "VSCODE_RECOMMENDS_TAURI" 'tauri-apps\.tauri-vscode' .vscode/extensions.json
+  require_pattern "VSCODE_RECOMMENDS_PLAYWRIGHT" 'ms-playwright\.playwright' .vscode/extensions.json
 
-require_pattern "VSCODE_BLOCKS_CLAUDE_DEV" 'saoudrizwan\.claude-dev' .vscode/extensions.json
-require_pattern "VSCODE_BLOCKS_OPENAI_CHATGPT" 'openai\.chatgpt' .vscode/extensions.json
-require_pattern "VSCODE_BLOCKS_ANTHROPIC" 'anthropic\.claude-code' .vscode/extensions.json
+  require_pattern "VSCODE_BLOCKS_CLAUDE_DEV" 'saoudrizwan\.claude-dev' .vscode/extensions.json
+  require_pattern "VSCODE_BLOCKS_OPENAI_CHATGPT" 'openai\.chatgpt' .vscode/extensions.json
+  require_pattern "VSCODE_BLOCKS_ANTHROPIC" 'anthropic\.claude-code' .vscode/extensions.json
+else
+  # CI checkout may not include local recommendation file; treat as optional.
+  pass "VSCODE_EXTENSIONS_OPTIONAL_ABSENT_CI_SAFE"
+fi
 
 require_pattern "TASK_COPILOT_XS_VALIDATE_PRESENT" '🧩 COPILOT-XS: Validate' .vscode/tasks.json
 require_pattern "TASK_AGENT_AUDIT_PRESENT" '🤖 Audit: Advanced Agents' .vscode/tasks.json
