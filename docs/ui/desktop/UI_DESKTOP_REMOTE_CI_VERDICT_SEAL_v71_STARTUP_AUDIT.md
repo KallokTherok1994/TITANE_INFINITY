@@ -3,11 +3,11 @@
 Date: 2026-05-10
 Mission: TITANE UI_DESKTOP_REMOTE_CI_VERDICT_SEAL_v71
 Mode: DURABLE
-Run ID target: 25641476079
+Run ID target: 25642013599
 
 ## Repository Baseline
-- HEAD: 7433a99f191c311056179b60e6dcdfe34368f56d
-- Remote HEAD (origin/MAIN): 7433a99f191c311056179b60e6dcdfe34368f56d
+- HEAD: 8dc92afbeca8f979a58c8b253cbb604554fde351
+- Remote HEAD (origin/MAIN): 8dc92afbeca8f979a58c8b253cbb604554fde351
 - Ahead/behind: 0/0
 - Branch: MAIN
 
@@ -29,3 +29,9 @@ Run ID target: 25641476079
 ## Startup Blockers
 - No hard blocker for remote verdict inspection.
 - Existing dirty files are unrelated to this mission and left untouched.
+
+## Remote CI Final State
+- Run 25642013599 completed with conclusion: success.
+- Workflow: TITANE Static Gates v67 - UI Desktop Determinism.
+- Verify Copilot Instructions step: success.
+- Closure status: sealed on green.
