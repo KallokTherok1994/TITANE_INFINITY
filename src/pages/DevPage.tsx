@@ -816,6 +816,7 @@ function DevPageContent(): JSX.Element {
   if (loading) {
     return (
       <div className="dev-page" data-testid="page-dev" data-dev-state="loading">
+        <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
         <div className="dev-loading">
           <span className="dev-loading-icon">⚙️</span>
           <span className="dev-loading-text">Chargement DEV...</span>
@@ -827,6 +828,7 @@ function DevPageContent(): JSX.Element {
   if (error) {
     return (
       <div className="dev-page" data-testid="page-dev" data-dev-state="error">
+        <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
         <div className="dev-error">
           <span className="dev-error-icon">⚠️</span>
           <span>{error}</span>
