@@ -40,6 +40,10 @@ import './utils/browserModeAdapter';
 // ✨ Phase 4 (Week 6): Initialize runtime log level manager
 import './config/logLevelConfig';
 
+// 🧪 E2E IPC PROBE BRIDGE — v62 (read-only, allowlisted, only when localStorage TITANE_E2E_PROBE=1)
+import { initE2EProbeBridge } from './e2e/desktop/registerE2eProbeBridge';
+initE2EProbeBridge();
+
 // TITANE∞ v30.0.0 - Main Entry Point - Certification P10.4→P11 PASS
 import React from 'react';
 import ReactDOM from 'react-dom/client';

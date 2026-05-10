@@ -1237,6 +1237,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // CLOUD CENTER (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'cloud_get_status', // v62: read-only status — safe for E2E probe allowlist
   'cloud_remove_device',
   'cloud_restore_vault',
   'cloud_update_config',

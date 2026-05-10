@@ -25,10 +25,10 @@ const ROOT = join(__dirname, '..', '..');
 
 const STRICT_MODE = process.argv.includes('--strict');
 
-// An artifact is considered "v60+" (strict schema enforcement) if its path contains 'v60' or 'v61',
+// An artifact is considered "v60+" (strict schema enforcement) if its path contains 'v60', 'v61', or 'v62',
 // or if it is the TITANE_PROOF_ARTIFACT override and does not match known legacy names.
 function isV60Artifact(relPath) {
-  return relPath.includes('v60') || relPath.includes('v61') ||
+  return relPath.includes('v60') || relPath.includes('v61') || relPath.includes('v62') ||
     (process.env.TITANE_PROOF_ARTIFACT &&
      relPath === process.env.TITANE_PROOF_ARTIFACT &&
      !relPath.includes('v58') && !relPath.includes('v59'));
@@ -41,6 +41,8 @@ const ARTIFACTS_STATIC = [
   'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl',
   'artifacts/backend-proof-depth/v60-strict-backend-proof.jsonl',
   'artifacts/backend-proof-depth/v61-tier1-blocker-reduction.jsonl',
+  'artifacts/backend-proof-depth/v62-tauri-ipc-probe-bridge.jsonl', // v62 IPC bridge proof
+  'artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl',    // v62 module IPC response
 ];
 
 // Build artifact list: static list + TITANE_PROOF_ARTIFACT if set and not already included
@@ -298,8 +300,27 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
     if (record.secretScanPassed === undefined) {
       fail(`${loc}: [STRICT] missing "secretScanPassed" boolean field`);
     }
-    if (!['v60', 'v61'].includes(record.schemaVersion)) {
-      fail(`${loc}: [STRICT] missing or wrong schemaVersion (expected "v60" or "v61", got "${record.schemaVersion}")`);
+    if (!['v60', 'v61', 'v62'].includes(record.schemaVersion)) {
+      fail(`${loc}: [STRICT] missing or wrong schemaVersion (expected "v60", "v61", or "v62", got "${record.schemaVersion}")`);
+    }
+    // v62 extra fields required
+    if (record.schemaVersion === 'v62') {
+      if (record.bridgeVersion === undefined) {
+        fail(`${loc}: [STRICT v62] missing "bridgeVersion" field`);
+      }
+      if (record.commandId === undefined) {
+        fail(`${loc}: [STRICT v62] missing "commandId" field`);
+      }
+      // Block: destructive commandId must never appear in artifact
+      const destructivePatterns = ['delete', 'reset', 'write', 'execute', 'exec', 'eval', 'run_shell'];
+      if (record.commandId && typeof record.commandId === 'string') {
+        const lower = record.commandId.toLowerCase();
+        for (const pat of destructivePatterns) {
+          if (lower.includes(pat) && record.errorKind !== 'COMMAND_BLOCKED_DESTRUCTIVE') {
+            fail(`${loc}: [STRICT v62] destructive commandId "${record.commandId}" present in artifact without COMMAND_BLOCKED_DESTRUCTIVE guard`);
+          }
+        }
+      }
     }
     if (!record.capturedAt) {
       fail(`${loc}: [STRICT] missing "capturedAt" ISO timestamp`);
@@ -320,6 +341,10 @@ function validateArtifact(relPath) {
     }
     if (relPath.includes('v61')) {
       warn(`v61 artifact not yet created (expected after v61 suite run): ${relPath}`);
+      return { exists: false, lineCount: 0, proofLevels: {} };
+    }
+    if (relPath.includes('v62')) {
+      warn(`v62 artifact not yet created (expected after v62 suite run): ${relPath}`);
       return { exists: false, lineCount: 0, proofLevels: {} };
     }
     if (relPath.includes('v60')) {
