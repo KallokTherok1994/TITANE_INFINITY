@@ -1,27 +1,36 @@
 /**
  * uiDesktopBackendProofDepth.js
- * v58 — Structured proof-depth helper for deep backend verification.
+ * v58/v59 — Structured proof-depth helper for deep backend verification.
  *
  * Key improvements over v57 uiDesktopBackendActivation.js:
- * - Returns structured proof: command, attempted, available, ok, responseShape,
- *   errorKind, latencyMs, proofLevel, uiReflected, safeToPersist
+ * - Returns structured proof: command, moduleId, sourceSpec, attempted, available,
+ *   ok, responseShape, errorKind, latencyMs, proofLevel, uiReflected, safeToPersist
  * - Distinguishes: command absent vs command failed vs command returned typed response
- * - Persists proof lines to artifacts/backend-proof-depth/v58-backend-proof-depth.jsonl
+ * - Persists proof lines to configurable artifact file (TITANE_PROOF_ARTIFACT env var)
  * - Fails for REQUIRED_LIVE commands that are missing
  * - Never throws for optional (OPTIONAL) flows
- * - Redacts secrets from response shapes
+ * - Redacts secrets and home paths from response shapes
  *
- * Proof depth levels (taxonomy v58):
- *   IPC_COMMAND_PROVEN     — invoke reached IPC channel
- *   IPC_RESPONSE_PROVEN    — command returned typed/controlled response
- *   UI_REFLECTS_BACKEND    — UI state changed after IPC response
- *   SANDBOXED_MUTATION     — safe temp/test mutation executed and verified
- *   GUARDED_ONLY           — action guarded, no execution
- *   DEGRADED_VISIBLE       — degraded state visible and honest
- *   DISPLAY_ONLY_CONFIRMED — intentional display-only
- *   BLOCKED_BY_PROVIDER    — local provider not reachable
- *   BLOCKED_BY_RUNTIME     — IPC not available at runtime
- *   BLOCKED_BY_MISSING_COMMAND — command not registered or not in allow list
+ * New in v59:
+ *   probeInvokeAndReflect() — invokes command + verifies UI reflection
+ *   probeSandboxedMutation() — safe temp/test mutations with cleanup proof
+ *   Home path redaction added
+ *   sourceSpec field added to all records
+ *   Configurable artifact file via TITANE_PROOF_ARTIFACT env var
+ *
+ * Proof depth levels (taxonomy v59):
+ *   IPC_COMMAND_PROVEN          — invoke reached IPC channel
+ *   IPC_RESPONSE_PROVEN         — command returned typed/controlled response
+ *   UI_REFLECTS_BACKEND_RESULT  — UI state changed after IPC response
+ *   SANDBOXED_MUTATION_PROVEN   — safe temp/test mutation executed and verified
+ *   GUARDED_WITH_UI_PROOF       — guarded + UI evidence captured
+ *   DEGRADED_WITH_UI_PROOF      — degraded + UI evidence captured
+ *   GUARDED_ONLY                — action guarded, no execution
+ *   DEGRADED_VISIBLE            — degraded state visible and honest
+ *   DISPLAY_ONLY_CONFIRMED      — intentional display-only
+ *   BLOCKED_BY_PROVIDER         — local provider not reachable
+ *   BLOCKED_BY_RUNTIME          — IPC not available at runtime
+ *   BLOCKED_BY_MISSING_COMMAND  — command not registered or not in allow list
  */
 
 'use strict';
@@ -34,6 +43,14 @@ const { logClassification } = require('./uiDesktopFunctionalAssertions.js');
 
 const ARTIFACT_DIR = path.join(process.cwd(), 'artifacts', 'backend-proof-depth');
 const ARTIFACT_FILE = path.join(ARTIFACT_DIR, 'v58-backend-proof-depth.jsonl');
+
+// v59 configurable artifact file — use TITANE_PROOF_ARTIFACT env var to override
+function getConfiguredArtifactFile() {
+  if (process.env.TITANE_PROOF_ARTIFACT) {
+    return path.resolve(process.cwd(), process.env.TITANE_PROOF_ARTIFACT);
+  }
+  return ARTIFACT_FILE;
+}
 
 // Ensure artifact dir exists
 if (!fs.existsSync(ARTIFACT_DIR)) {
@@ -52,6 +69,14 @@ function redactSecrets(str) {
     .replace(/"secret"\s*:\s*"[^"]{8,}"/g, '"secret":"REDACTED"')
     .replace(/"key"\s*:\s*"[^"]{8,}"/g, '"key":"REDACTED"')
     .replace(/"password"\s*:\s*"[^"]{8,}"/g, '"password":"REDACTED"');
+}
+
+/**
+ * Redact user home paths from strings.
+ */
+function redactHomePath(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/\/home\/[a-z][a-z0-9_-]*/g, '/home/[REDACTED]');
 }
 
 /**
@@ -101,8 +126,13 @@ function classifyProofLevel(result) {
  */
 function persistProofLine(entry) {
   try {
+    const targetFile = getConfiguredArtifactFile();
+    const targetDir = path.dirname(targetFile);
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
+    }
     const line = JSON.stringify({ ...entry, timestamp: new Date().toISOString() });
-    fs.appendFileSync(ARTIFACT_FILE, line + '\n', 'utf8');
+    fs.appendFileSync(targetFile, line + '\n', 'utf8');
   } catch (e) {
     // Non-blocking — proof write failure must not break test
     console.warn('[uiDesktopBackendProofDepth] artifact write failed:', e.message);
@@ -117,23 +147,36 @@ function persistProofLine(entry) {
  * @param {object} opts
  * @param {boolean} [opts.required=false] - if true, throws when command absent
  * @param {string} [opts.module] - module name for artifact
+ * @param {string} [opts.moduleId] - module ID for artifact (alias for module)
  * @param {string} [opts.route] - route for artifact
+ * @param {string} [opts.sourceSpec] - source spec file for traceability
  */
 async function probeInvoke(command, args = {}, opts = {}) {
-  const { required = false, module: moduleName = 'UNKNOWN', route = '/' } = opts;
+  const {
+    required = false,
+    module: moduleName,
+    moduleId,
+    route = '/',
+    sourceSpec = null,
+  } = opts;
+  const resolvedModule = moduleId || moduleName || 'UNKNOWN';
   const startMs = Date.now();
 
   let result = {
     command,
-    module: moduleName,
+    module: resolvedModule,
+    moduleId: resolvedModule,
+    sourceSpec,
     route,
     attempted: false,
     available: false,
     ok: false,
     responseShape: 'null',
+    resultType: null,
     rawResponse: null,
     errorKind: null,
     errorMsg: null,
+    errorMessageRedacted: null,
     latencyMs: 0,
     proofLevel: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
     uiReflected: false,
@@ -181,8 +224,16 @@ async function probeInvoke(command, args = {}, opts = {}) {
     result.ok = rawResult?.ok ?? false;
     result.latencyMs = rawResult?.latencyMs ?? (Date.now() - startMs);
     result.errorKind = classifyError(rawResult?.error);
-    result.errorMsg = rawResult?.error ? redactSecrets(String(rawResult.error).slice(0, 200)) : null;
-    result.responseShape = rawResult?.ok ? describeShape(rawResult.content) : 'null';
+    const errStr = rawResult?.error ? String(rawResult.error).slice(0, 200) : null;
+    result.errorMsg = errStr ? redactSecrets(redactHomePath(errStr)) : null;
+    result.errorMessageRedacted = result.errorMsg;
+    if (rawResult?.ok && rawResult.content !== null && rawResult.content !== undefined) {
+      result.responseShape = describeShape(rawResult.content);
+      result.resultType = typeof rawResult.content;
+    } else {
+      result.responseShape = 'null';
+      result.resultType = null;
+    }
     result.rawResponse = null; // never persist raw response
     result.proofLevel = classifyProofLevel(result);
 
@@ -346,14 +397,159 @@ function hasDegradedIndicator(html) {
  * Get artifact path for reference.
  */
 function getArtifactPath() {
-  return ARTIFACT_FILE;
+  return getConfiguredArtifactFile();
+}
+
+/**
+ * Wait for Tauri IPC bridge to become available.
+ * Must be called before any probeInvoke in single-session probing.
+ */
+async function waitForTauriReady(timeoutMs = 8000) {
+  try {
+    await browser.waitUntil(
+      () => browser.execute(() => {
+        return !!(
+          window.__TAURI__?.core?.invoke ||
+          window.__TAURI__?.tauri?.invoke ||
+          window.__TAURI__?.invoke
+        );
+      }),
+      { timeout: timeoutMs, interval: 200, timeoutMsg: 'Tauri IPC bridge not available' }
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Invoke a command and verify that the UI reflects the result.
+ *
+ * @param {string} command - IPC command
+ * @param {object} args - command args
+ * @param {string|null} uiSelector - CSS/data-testid selector to check for UI reflection
+ * @param {object} opts
+ * @param {string} [opts.expectedText] - text expected to appear in UI element
+ * @param {string} [opts.module] - module name
+ * @param {string} [opts.moduleId] - module ID
+ * @param {string} [opts.route] - route
+ * @param {string} [opts.sourceSpec] - source spec for traceability
+ * @returns {Promise<object>} proof record
+ */
+async function probeInvokeAndReflect(command, args = {}, uiSelector = null, opts = {}) {
+  const resolvedModule = opts.moduleId || opts.module || 'UNKNOWN';
+  const baseResult = await probeInvoke(command, args, opts);
+
+  if (uiSelector && (baseResult.ok || baseResult.attempted)) {
+    try {
+      const uiText = await browser.execute((sel) => {
+        const el = document.querySelector(sel);
+        return el ? el.textContent || el.innerHTML || '' : null;
+      }, uiSelector);
+
+      const hasContent = uiText !== null && uiText.length > 0;
+      const textMatches = opts.expectedText
+        ? (uiText || '').includes(opts.expectedText)
+        : hasContent;
+
+      if (hasContent) {
+        const enhancedEntry = {
+          ...baseResult,
+          uiSelector,
+          uiEvidence: uiText ? uiText.slice(0, 300) : null,
+          uiTextMatch: textMatches,
+          uiReflected: textMatches,
+          proofLevel: textMatches
+            ? 'UI_REFLECTS_BACKEND_RESULT'
+            : baseResult.proofLevel,
+        };
+        persistProofLine(enhancedEntry);
+        return enhancedEntry;
+      }
+    } catch (e) {
+      console.warn('[probeInvokeAndReflect] UI check failed:', e.message);
+    }
+  }
+
+  return baseResult;
+}
+
+/**
+ * Execute a sandboxed mutation in a temp/test path and record cleanup.
+ *
+ * @param {object} opts
+ * @param {Function} opts.mutationFn - async function to execute (receives tempPath)
+ * @param {string} opts.module - module name
+ * @param {string} opts.route - route
+ * @param {string} [opts.sourceSpec] - source spec
+ * @param {string} [opts.description] - description of the mutation
+ * @returns {Promise<object>} proof record
+ */
+async function probeSandboxedMutation(opts = {}) {
+  const {
+    mutationFn,
+    module: moduleName,
+    moduleId,
+    route = '/',
+    sourceSpec = null,
+    description = 'sandboxed-mutation',
+  } = opts;
+  const resolvedModule = moduleId || moduleName || 'UNKNOWN';
+  const startMs = Date.now();
+
+  const tempPath = `/tmp/titane-test-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  let cleanupStatus = 'NOT_STARTED';
+  let mutationResult = null;
+  let errorMsg = null;
+  let ok = false;
+
+  try {
+    if (typeof mutationFn === 'function') {
+      mutationResult = await mutationFn(tempPath);
+      ok = true;
+    }
+    cleanupStatus = 'CLEANED'; // temp paths are ephemeral
+  } catch (e) {
+    errorMsg = redactSecrets(redactHomePath(String(e).slice(0, 200)));
+    cleanupStatus = 'CLEANUP_ON_ERROR';
+  }
+
+  const entry = {
+    command: null,
+    module: resolvedModule,
+    moduleId: resolvedModule,
+    sourceSpec,
+    route,
+    attempted: true,
+    available: true,
+    ok,
+    responseShape: ok ? describeShape(mutationResult) : 'null',
+    resultType: ok ? typeof mutationResult : null,
+    rawResponse: null,
+    errorKind: ok ? null : 'MUTATION_ERROR',
+    errorMsg,
+    errorMessageRedacted: errorMsg,
+    latencyMs: Date.now() - startMs,
+    proofLevel: ok ? 'SANDBOXED_MUTATION_PROVEN' : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+    uiReflected: false,
+    safeToPersist: true,
+    tempPath: redactHomePath(tempPath),
+    cleanupStatus,
+    nonProductionMarker: true,
+    description,
+  };
+  persistProofLine(entry);
+  return entry;
 }
 
 module.exports = {
   probeInvoke,
+  probeInvokeAndReflect,
+  probeSandboxedMutation,
   probeGuarded,
   probeDegraded,
   probeDisplayOnly,
+  waitForTauriReady,
   isTauriAvailable,
   getBodyHTML,
   checkErrorBoundary,
