@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-10T04:31:07.051Z",
+  "generated": "2026-05-10T04:40:10.750Z",
   "mission": "UI_DESKTOP_FULL_COVERAGE_v50",
   "version": "1.0.0",
   "routeCount": 29,
@@ -199,12 +199,12 @@
         {
           "from": "/memory-evo",
           "to": "/titane?tab=transformation",
-          "notes": "Memory evo → transformation tab"
+          "notes": "Memory evo \u2192 transformation tab"
         },
         {
           "from": "/memory-evolution",
           "to": "/titane?tab=transformation",
-          "notes": "Memory evolution → transformation tab"
+          "notes": "Memory evolution \u2192 transformation tab"
         }
       ],
       "fallbackPolicy": "Provider quality conditional; browser mode shows BackendDownIndicator",
@@ -682,7 +682,7 @@
         {
           "from": "/secure",
           "to": "/admin?tab=governance",
-          "notes": "Secure alias → governance"
+          "notes": "Secure alias \u2192 governance"
         },
         {
           "from": "/audio-center",
@@ -836,12 +836,12 @@
         {
           "from": "/cognitive",
           "to": "/dev?tab=diagnostics",
-          "notes": "Cognitive → diagnostics tab"
+          "notes": "Cognitive \u2192 diagnostics tab"
         },
         {
           "from": "/stats",
           "to": "/dev?tab=diagnostics",
-          "notes": "Stats → diagnostics tab"
+          "notes": "Stats \u2192 diagnostics tab"
         },
         {
           "from": "/one-core",
@@ -1164,7 +1164,7 @@
         ]
       },
       "knownBlockers": [
-        "SIMULATED_UI — no live backend data"
+        "SIMULATED_UI \u2014 no live backend data"
       ],
       "testCoverage": {
         "routeTest": "ui-desktop-all-routes.wdio.test.js",
@@ -1525,7 +1525,7 @@
         ]
       },
       "knownBlockers": [
-        "SIMULATED_UI — no live backend data"
+        "SIMULATED_UI \u2014 no live backend data"
       ],
       "testCoverage": {
         "routeTest": "ui-desktop-all-routes.wdio.test.js",
@@ -2601,7 +2601,7 @@
         ]
       },
       "knownBlockers": [
-        "DISPLAY_ONLY — read-only state, no interactive writes"
+        "DISPLAY_ONLY \u2014 read-only state, no interactive writes"
       ],
       "testCoverage": {
         "routeTest": "ui-desktop-all-routes.wdio.test.js",
@@ -2617,7 +2617,7 @@
       "route": "/htf",
       "pageId": "htf_page",
       "pageComponent": "HTFPage",
-      "rootTestId": "page-htf",
+      "rootTestId": "htf-module-page",
       "truthClass": "MIXED_LIVE_AND_STATIC",
       "status": "ACTIVE_PARTIAL",
       "isSimulated": false,
@@ -2636,7 +2636,7 @@
       "desktopProofRequired": true,
       "browserProofStatus": "PASS_v48",
       "selectors": {
-        "root": "[data-testid=\"page-htf\"]",
+        "root": "[data-testid=\"htf-module-page\"]",
         "tabs": [],
         "actions": []
       },

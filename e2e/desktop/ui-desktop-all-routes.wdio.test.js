@@ -174,9 +174,9 @@ describe('TITANE Desktop — All Routes (v50)', () => {
         const label = `${route} (${entry.pageComponent}) [${entry.truthClass}]`;
 
         it(`navigate to ${label}`, async () => {
-          const hash = route.startsWith('/') ? route.slice(1) : route;
-          await browser.url(`tauri://localhost/#/${hash}`);
-          await browser.pause(600);
+          // v52 fix: use path-based navigation (BrowserRouter requires real pathnames, not hash routing)
+          await browser.url(`tauri://localhost${route}`);
+          await browser.pause(800);
           await waitForLoadingComplete(5000);
 
           const rootSelector = `[data-testid="${entry.rootTestId}"]`;
@@ -196,9 +196,8 @@ describe('TITANE Desktop — All Routes (v50)', () => {
             return;
           }
 
-          // For real routes: page must at least exist (may be DEGRADED or missing root testId)
-          // NOT_FOUND_UNEXPECTED = route navigates but root data-testid absent in DOM (known limitation: pages lack rootTestId)
-          expect(['LIVE_LOADED', 'DEGRADED_CLASSIFIED', 'DISPLAY_ONLY_LOADED', 'NOT_FOUND_UNEXPECTED']).toContain(classification.classification);
+          // For real routes: root data-testid MUST be found — NOT_FOUND_UNEXPECTED is a contract violation (v52)
+          expect(['LIVE_LOADED', 'DEGRADED_CLASSIFIED', 'DISPLAY_ONLY_LOADED']).toContain(classification.classification);
         });
       }
     });

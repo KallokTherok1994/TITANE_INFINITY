@@ -1162,7 +1162,7 @@ const SURFACES: UiSurfaceDefinition[] = [
     navOwner: null,
     pageId: 'htf_page',
     pageComponent: 'HTFPage',
-    rootTestId: 'page-htf',
+    rootTestId: 'htf-module-page', // v52 fix: aligns with actual data-testid in HTFPage.tsx
     aliases: [],
     tabs: [],
     truthClass: 'MIXED_LIVE_AND_STATIC',
