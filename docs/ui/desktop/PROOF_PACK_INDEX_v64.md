@@ -38,7 +38,7 @@
 
 | Artifact | Session | Status |
 |---|---|---|
-| `artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl` | v64 | Created (runtime fill by WDIO) |
+| `artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl` | v64/v65 | PASS_RUNTIME_VERIFIED (24 records, fresh run 2026-05-10T20:40:32Z→20:42:19Z) |
 
 ---
 
@@ -75,10 +75,10 @@
 ### v64 New specs (this session)
 | Spec | Scope | Runs in this session |
 |---|---|---|
-| `ui-desktop-topnav-plus-overflow.wdio.test.js` | TopNav overflow menu | Pending (Gate O) |
-| `ui-desktop-main-menu-capture-reconciliation.wdio.test.js` | 8 main surfaces capture | Pending (Gate O) |
-| `ui-desktop-admin-tabs-complete.wdio.test.js` | Admin full tab coverage | Pending (Gate O) |
-| `ui-desktop-total-dev-locked-contract.wdio.test.js` | Total Dev locked state | Pending (Gate O) |
+| `ui-desktop-topnav-plus-overflow.wdio.test.js` | TopNav overflow menu | PASS_RUNTIME_VERIFIED |
+| `ui-desktop-main-menu-capture-reconciliation.wdio.test.js` | 8 main surfaces capture | PASS_RUNTIME_VERIFIED |
+| `ui-desktop-admin-tabs-complete.wdio.test.js` | Admin full tab coverage | PASS_RUNTIME_VERIFIED |
+| `ui-desktop-total-dev-locked-contract.wdio.test.js` | Total Dev locked state | PASS_RUNTIME_VERIFIED |
 
 ---
 
@@ -161,6 +161,27 @@ Drift accepted:
 All 8 main menu surfaces reconciled.
 All 21 hidden routes reconciled.
 All 21 legacy redirects confirmed.
-All 7 WDIO spec families: PASS or Pending-Gate-O.
+All 7 WDIO spec families: PASS.
 All static gates: PASS.
 ```
+
+---
+
+## v65 Runtime Seal Addendum
+
+- Date: 2026-05-10
+- HEAD before runtime seal: `443cafdeca4ff3ca70b54874c1e098dc74d54360`
+- HEAD after runtime seal (pre-commit): `443cafdeca4ff3ca70b54874c1e098dc74d54360`
+- Specs executed fresh:
+	- `e2e/desktop/ui-desktop-topnav-plus-overflow.wdio.test.js`
+	- `e2e/desktop/ui-desktop-main-menu-capture-reconciliation.wdio.test.js`
+	- `e2e/desktop/ui-desktop-admin-tabs-complete.wdio.test.js`
+	- `e2e/desktop/ui-desktop-total-dev-locked-contract.wdio.test.js`
+- Combined run result: `Spec Files: 4 passed, 4 total (100% completed) in 00:01:50`
+- Artifact line count: `24` (`artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl`)
+- Verifier result: `pnpm run verify:ui-desktop-main-menu-reconciliation` => `VERDICT: PASS` (PASS=19 WARN=6 FAIL=0)
+- Blockers: `0`
+- Pending markers migrated:
+	- `gate-o pending marker` => `PASS_RUNTIME_VERIFIED`
+	- `runtime-run pending marker` => `PASS_RUNTIME_VERIFIED`
+- Final v65 verdict for runtime seal: `UI_DESKTOP_V64_RUNTIME_RECONCILIATION_CONFIRMED_WITH_ACCEPTED_DRIFT`

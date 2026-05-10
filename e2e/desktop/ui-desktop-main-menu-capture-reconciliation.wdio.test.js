@@ -47,7 +47,7 @@ const { navigateAndWait, isVisible, getText } = require('./helpers/uiDesktopFunc
 
 const SURFACES = [
   {
-    capturedSurface: 'TITANE_CHAT',
+    capturedSurface: 'TITANE',
     route: '/titane',
     topNavItem: 'TITANE',
     rootTestId: 'page-titane',
@@ -115,6 +115,7 @@ const SURFACES = [
 for (const surface of SURFACES) {
   describe(`[v64:capture] ${surface.capturedSurface} — ${surface.route}`, () => {
     let rootFound = false;
+    let titleFound = false;
     let tabsFound = [];
     let controlsFound = [];
     let missingSelectors = [];
@@ -134,6 +135,16 @@ for (const surface of SURFACES) {
       }
       console.log(`[v64:capture] ${surface.capturedSurface} rootFound=${rootFound}`);
       expect(true).toBe(true); // classified, not hard-fail
+    });
+
+    it('page has title evidence', async () => {
+      titleFound = await browser.execute(() => {
+        const htmlTitle = (document.title || '').trim();
+        const h1 = document.querySelector('h1')?.textContent?.trim() || '';
+        return htmlTitle.length > 0 || h1.length > 0;
+      });
+      console.log(`[v64:capture] ${surface.capturedSurface} titleFound=${titleFound}`);
+      expect(titleFound).toBe(true);
     });
 
     it('no ErrorBoundary visible', async () => {
@@ -202,6 +213,7 @@ for (const surface of SURFACES) {
       persistRecord({
         capturedSurface: surface.capturedSurface,
         route: surface.route,
+        titleFound,
         topNavItem: surface.topNavItem,
         rootFound,
         rootTestId: surface.rootTestId,

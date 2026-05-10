@@ -185,7 +185,14 @@ await waitForPort(4444).catch(() => false);
 
 const wdioArgs = ['exec', 'wdio', 'run', WDIO_CONFIG];
 if (WDIO_SPEC) {
-  wdioArgs.push('--spec', WDIO_SPEC);
+  const specList = WDIO_SPEC.split(',')
+    .map(item => item.trim())
+    .filter(Boolean);
+  if (specList.length > 0) {
+    for (const specItem of specList) {
+      wdioArgs.push('--spec', specItem);
+    }
+  }
 }
 
 await appendDiag(`wdio command: pnpm ${wdioArgs.join(' ')}`);

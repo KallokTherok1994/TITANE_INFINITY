@@ -4,9 +4,9 @@
   "date": "2026-05-10",
   "version": "33.0.13",
   "branch": "MAIN",
-  "head": "f73f493abf9811c6472dcf53166f240629ca3972",
-  "remoteHead": "c054981500dc9325cf221ffeb81df1ad3c597802",
-  "remoteSync": "PENDING_19_COMMITS",
+  "head": "443cafdeca4ff3ca70b54874c1e098dc74d54360",
+  "remoteHead": "443cafdeca4ff3ca70b54874c1e098dc74d54360",
+  "remoteSync": "SYNCED_AT_V65_RUNTIME_START",
   "certifications": [
     { "version": "v61", "artifact": "docs/ui/desktop/UI_DESKTOP_TIER1_BLOCKER_REDUCTION_CERTIFICATION_v61.md", "verdict": "PASS" },
     { "version": "v62", "artifact": "docs/ui/desktop/UI_DESKTOP_TIER1_REAL_IPC_CERTIFICATION_v62.md", "verdict": "PASS" },
@@ -20,8 +20,8 @@
     { "id": "v61-tier1-blocker-reduction", "path": "artifacts/backend-proof-depth/v61-tier1-blocker-reduction.jsonl", "records": 18, "strictGate": false, "status": "PASS" },
     { "id": "v62-tauri-ipc-probe-bridge", "path": "artifacts/backend-proof-depth/v62-tauri-ipc-probe-bridge.jsonl", "records": 3, "strictGate": false, "status": "PASS" },
     { "id": "v62-tauri-ipc-response", "path": "artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl", "records": 4, "strictGate": false, "status": "PASS" },
-    { "id": "v63-tier1-real-ipc-completion", "path": "artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl", "records": 4, "strictGate": false, "status": "PASS" },
-    { "id": "v64-main-menu-capture-reconciliation", "path": "artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl", "records": "runtime-filled", "strictGate": false, "status": "PENDING_WDIO_RUN" }
+    { "id": "v63-tier1-real-ipc-completion", "path": "artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl", "records": 8, "strictGate": false, "status": "PASS" },
+    { "id": "v64-main-menu-capture-reconciliation", "path": "artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl", "records": 24, "strictGate": false, "status": "PASS_RUNTIME_VERIFIED", "runtimeTimestamp": "2026-05-10T20:40:32Z/2026-05-10T20:42:19Z" }
   ],
   "specFamilies": [
     { "family": "core", "specs": ["ui-desktop-all-routes", "ui-desktop-all-tabs", "ui-desktop-control-inventory", "ui-desktop-error-boundary-and-empty-state", "ui-desktop-safe-actions", "ui-desktop-sensitive-actions-guarded"], "status": "PASS" },
@@ -32,7 +32,7 @@
     { "family": "tier1-blocker-reduction", "count": 4, "pattern": "ui-desktop-tier1-blocker-reduction-*.wdio.test.js", "status": "PASS" },
     { "family": "v62-real-ipc", "count": 4, "pattern": "ui-desktop-v62-real-ipc-*.wdio.test.js", "status": "PASS" },
     { "family": "v63-real-ipc", "count": 3, "specs": ["ui-desktop-v63-real-ipc-cloud", "ui-desktop-v63-real-ipc-research", "ui-desktop-v63-tier1-regression"], "status": "PASS" },
-    { "family": "v64-new-specs", "count": 4, "specs": ["ui-desktop-topnav-plus-overflow", "ui-desktop-main-menu-capture-reconciliation", "ui-desktop-admin-tabs-complete", "ui-desktop-total-dev-locked-contract"], "status": "PENDING_GATE_O" }
+    { "family": "v64-new-specs", "count": 4, "specs": ["ui-desktop-topnav-plus-overflow", "ui-desktop-main-menu-capture-reconciliation", "ui-desktop-admin-tabs-complete", "ui-desktop-total-dev-locked-contract"], "status": "PASS_RUNTIME_VERIFIED", "runtimeResult": "4/4 passed" }
   ],
   "verifiers": [
     { "id": "check", "command": "pnpm run check", "status": "PASS" },
@@ -42,10 +42,11 @@
     { "id": "verify:ui-surface-registry", "command": "pnpm run verify:ui-surface-registry", "status": "PASS" },
     { "id": "guard:ipc-contract", "command": "pnpm run guard:ipc-contract", "result": "42/42", "status": "PASS" },
     { "id": "verify:backend-proof-depth:strict", "command": "pnpm run verify:backend-proof-depth:strict", "result": "14P|282W|0F", "status": "PASS" },
-    { "id": "detect_recurrence", "command": "bash scripts/autoheal/detect_recurrence.sh", "result": "1791 entries", "status": "PASS" }
+    { "id": "detect_recurrence", "command": "bash scripts/autoheal/detect_recurrence.sh", "result": "1799 entries", "status": "PASS" },
+    { "id": "verify:ui-desktop-main-menu-reconciliation", "command": "pnpm run verify:ui-desktop-main-menu-reconciliation", "result": "PASS=19 WARN=6 FAIL=0", "status": "PASS_RUNTIME_VERIFIED" }
   ],
   "mainMenuSurfaces": [
-    { "surface": "TITANE_CHAT", "route": "/titane", "topNavItem": "TITANE", "classification": "FUNCTIONAL_LIVE_PROVEN", "backendProof": "Multiple IPC PASS" },
+    { "surface": "TITANE", "route": "/titane", "topNavItem": "TITANE", "classification": "FUNCTIONAL_LIVE_PROVEN", "backendProof": "Multiple IPC PASS" },
     { "surface": "TIME", "route": "/time", "topNavItem": "TIME", "classification": "FUNCTIONAL_DEGRADED_EXPECTED", "backendProof": "N/A — clock-based" },
     { "surface": "ADMIN", "route": "/admin", "topNavItem": "ADMIN", "classification": "FUNCTIONAL_LIVE_PROVEN", "backendProof": "system_get_diagnostic PROVEN" },
     { "surface": "DEV", "route": "/dev", "topNavItem": "DEV", "classification": "FUNCTIONAL_DISPLAY_ONLY", "backendProof": "N/A" },
@@ -77,6 +78,23 @@
     "TOTAL DEV: FUNCTIONAL_GUARDED (intentionally locked, DEV-model surface)",
     "OPTIMIZATION: FUNCTIONAL_GUARDED (performance-only, no IPC gate required)"
   ],
+  "v65RuntimeSealAddendum": {
+    "date": "2026-05-10",
+    "headBefore": "443cafdeca4ff3ca70b54874c1e098dc74d54360",
+    "headAfter": "443cafdeca4ff3ca70b54874c1e098dc74d54360",
+    "combinedSpecResult": "Spec Files: 4 passed, 4 total (100% completed)",
+    "specsExecuted": [
+      "e2e/desktop/ui-desktop-topnav-plus-overflow.wdio.test.js",
+      "e2e/desktop/ui-desktop-main-menu-capture-reconciliation.wdio.test.js",
+      "e2e/desktop/ui-desktop-admin-tabs-complete.wdio.test.js",
+      "e2e/desktop/ui-desktop-total-dev-locked-contract.wdio.test.js"
+    ],
+    "artifactLineCount": 24,
+    "artifactVerifier": "PASS",
+    "blockers": 0,
+    "pendingMarkersBefore": ["gate-o pending marker", "runtime-run pending marker"],
+    "pendingMarkersAfter": []
+  },
   "finalVerdict": "PASS",
   "finalClassification": "UI_DESKTOP_MAIN_MENU_RECONCILIATION_CONFIRMED_WITH_ACCEPTED_DRIFT"
 }

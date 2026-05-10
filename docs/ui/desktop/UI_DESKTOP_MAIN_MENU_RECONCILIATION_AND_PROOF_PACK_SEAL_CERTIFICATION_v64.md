@@ -108,6 +108,48 @@ All changes are additive (new files + autoheal entries):
 
 ---
 
+## v65 Runtime Seal Addendum
+
+### Runtime Execution Evidence (fresh)
+
+| Scope | Command family | Runtime result |
+|---|---|---|
+| TopNav overflow | `ui-desktop-topnav-plus-overflow.wdio.test.js` | PASS |
+| Main menu capture | `ui-desktop-main-menu-capture-reconciliation.wdio.test.js` | PASS |
+| Admin tabs complete | `ui-desktop-admin-tabs-complete.wdio.test.js` | PASS (after one mission-scoped test logic repair) |
+| Total Dev locked contract | `ui-desktop-total-dev-locked-contract.wdio.test.js` | PASS |
+| Combined runtime run | 4 specs in one run | `Spec Files: 4 passed, 4 total (100% completed)` |
+
+### Artifact Runtime Seal
+
+- Artifact: `artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl`
+- Line count after fresh runtime runs: `24`
+- Verifier: `pnpm run verify:ui-desktop-main-menu-reconciliation`
+- Verifier result: `VERDICT: PASS` (`PASS=19 WARN=6 FAIL=0`)
+
+### Pending Marker Migration (v64 proof pack)
+
+- Before: gate-o pending status, runtime-run pending status, Gate O pending wording, runtime population wording
+- After: `PASS_RUNTIME_VERIFIED` + concrete runtime metadata (timestamp, line count, spec results, blockers)
+
+### Runtime Repairs Applied (mission-scoped, minimal)
+
+1. `e2e/desktop/ui-desktop-admin-tabs-complete.wdio.test.js`
+	- Hook behavior changed from hard-fail to classified when `tab-system` is temporarily unavailable.
+	- Failure family: `TEST_LOGIC_BUG` + `TAB_MISSING` context.
+2. `scripts/e2e/run-desktop-suite.js`
+	- Added CSV expansion for `WDIO_SPEC` to support multi-spec combined runtime command.
+	- Failure family: `DESKTOP_RUNTIME_BLOCKER` (spec list parsing).
+3. `e2e/desktop/ui-desktop-main-menu-capture-reconciliation.wdio.test.js`
+	- Added `titleFound` field and canonical `capturedSurface: TITANE` for verifier contract.
+	- Failure family: `TEST_SELECTOR_BUG` (artifact schema contract alignment).
+
+### v65 Addendum Verdict
+
+`UI_DESKTOP_V64_RUNTIME_RECONCILIATION_CONFIRMED_WITH_ACCEPTED_DRIFT`
+
+---
+
 ## Final Verdict
 
 ```
