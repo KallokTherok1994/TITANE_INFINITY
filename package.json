@@ -88,6 +88,8 @@
     "generate:ui-desktop-manifest": "node scripts/generate/generate-ui-desktop-manifest.mjs",
     "verify:ui-desktop-coverage": "node scripts/verify/verify-ui-desktop-coverage.mjs",
     "verify:ui-desktop-main-menu-reconciliation": "node scripts/verify/verify-ui-desktop-main-menu-reconciliation.mjs",
+    "verify:ui-desktop-main-menu-reconciliation:sealed": "node scripts/verify/verify-ui-desktop-main-menu-reconciliation.mjs --sealed",
+    "verify:ui-desktop-main-menu-reconciliation:current": "node scripts/verify/verify-ui-desktop-main-menu-reconciliation.mjs --current",
     "verify:backend-proof-depth": "node scripts/verify/verify-backend-proof-depth.mjs",
     "verify:backend-proof-depth:strict": "node scripts/verify/verify-backend-proof-depth.mjs --strict",
     "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",

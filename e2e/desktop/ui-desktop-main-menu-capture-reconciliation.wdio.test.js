@@ -25,7 +25,27 @@ const fs = require('fs');
 
 const SOURCE_SPEC = 'ui-desktop-main-menu-capture-reconciliation.wdio.test.js';
 const SCHEMA_VERSION = 'v64';
-const ARTIFACT_FILE = path.resolve(process.cwd(), 'artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl');
+
+// v67 Artifact Lifecycle Policy: Support deterministic artifact paths
+// Env vars:
+//   TITANE_UI_DESKTOP_ARTIFACT: Override artifact path (default: current-main-menu-capture-reconciliation.jsonl)
+//   TITANE_ARTIFACT_APPEND: Control append mode (default: 1 = append, 0 = truncate before run)
+//   TITANE_ARTIFACT_RUN_ID: Optional run identifier for tracking (default: empty)
+
+const DEFAULT_ARTIFACT_PATH = 'artifacts/ui-desktop/current-main-menu-capture-reconciliation.jsonl';
+const ARTIFACT_FILE = path.resolve(process.cwd(), process.env.TITANE_UI_DESKTOP_ARTIFACT || DEFAULT_ARTIFACT_PATH);
+const APPEND_MODE = process.env.TITANE_ARTIFACT_APPEND !== '0'; // Default: true (append)
+const RUN_ID = process.env.TITANE_ARTIFACT_RUN_ID || '';
+
+// Truncate artifact if not in append mode (for clean runs / sealed artifact isolation)
+if (fs.existsSync(ARTIFACT_FILE) && !APPEND_MODE) {
+  try {
+    fs.truncateSync(ARTIFACT_FILE, 0);
+    console.log(`[v64:capture] Truncated artifact before run: ${ARTIFACT_FILE}`);
+  } catch (e) {
+    console.warn(`[v64:capture] Could not truncate artifact: ${e.message}`);
+  }
+}
 
 function persistRecord(record) {
   try {
@@ -35,6 +55,7 @@ function persistRecord(record) {
       schemaVersion: SCHEMA_VERSION,
       capturedAt: new Date().toISOString(),
       sourceSpec: SOURCE_SPEC,
+      ...(RUN_ID ? { runId: RUN_ID } : {}),
       ...record,
     });
     fs.appendFileSync(ARTIFACT_FILE, entry + '\n', 'utf8');
