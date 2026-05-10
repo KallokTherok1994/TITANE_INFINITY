@@ -25,10 +25,10 @@ const ROOT = join(__dirname, '..', '..');
 
 const STRICT_MODE = process.argv.includes('--strict');
 
-// An artifact is considered "v60+" (strict schema enforcement) if its path contains 'v60', 'v61', or 'v62',
+// An artifact is considered "v60+" (strict schema enforcement) if its path contains 'v60', 'v61', 'v62', or 'v63',
 // or if it is the TITANE_PROOF_ARTIFACT override and does not match known legacy names.
 function isV60Artifact(relPath) {
-  return relPath.includes('v60') || relPath.includes('v61') || relPath.includes('v62') ||
+  return relPath.includes('v60') || relPath.includes('v61') || relPath.includes('v62') || relPath.includes('v63') ||
     (process.env.TITANE_PROOF_ARTIFACT &&
      relPath === process.env.TITANE_PROOF_ARTIFACT &&
      !relPath.includes('v58') && !relPath.includes('v59'));
@@ -43,6 +43,7 @@ const ARTIFACTS_STATIC = [
   'artifacts/backend-proof-depth/v61-tier1-blocker-reduction.jsonl',
   'artifacts/backend-proof-depth/v62-tauri-ipc-probe-bridge.jsonl', // v62 IPC bridge proof
   'artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl',    // v62 module IPC response
+  'artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl', // v63 research+cloud proven
 ];
 
 // Build artifact list: static list + TITANE_PROOF_ARTIFACT if set and not already included
@@ -300,11 +301,11 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
     if (record.secretScanPassed === undefined) {
       fail(`${loc}: [STRICT] missing "secretScanPassed" boolean field`);
     }
-    if (!['v60', 'v61', 'v62'].includes(record.schemaVersion)) {
-      fail(`${loc}: [STRICT] missing or wrong schemaVersion (expected "v60", "v61", or "v62", got "${record.schemaVersion}")`);
+    if (!['v60', 'v61', 'v62', 'v63'].includes(record.schemaVersion)) {
+      fail(`${loc}: [STRICT] missing or wrong schemaVersion (expected "v60", "v61", "v62", or "v63", got "${record.schemaVersion}")`);
     }
-    // v62 extra fields required
-    if (record.schemaVersion === 'v62') {
+    // v62/v63 extra fields required
+    if (record.schemaVersion === 'v62' || record.schemaVersion === 'v63') {
       if (record.bridgeVersion === undefined) {
         fail(`${loc}: [STRICT v62] missing "bridgeVersion" field`);
       }

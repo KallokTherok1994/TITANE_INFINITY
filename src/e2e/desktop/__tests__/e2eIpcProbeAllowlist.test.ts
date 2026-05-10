@@ -1,6 +1,6 @@
 /**
  * e2eIpcProbeAllowlist.test.ts
- * v62 — Unit tests for E2E IPC probe allowlist
+ * v63 — Unit tests for E2E IPC probe allowlist
  *
  * Tests:
  * - Allowlist contains only read-only commands
@@ -9,7 +9,7 @@
  * - isAllowlistedCommandId works correctly
  * - listAllowedCommandIds returns all keys
  * - getAllowlistEntry returns correct entry or null
- * - RESEARCH has no allowlisted command (blocked by missing safe command)
+ * - RESEARCH has research_status (safe read-only, v63)
  */
 
 import { describe, it, expect } from 'vitest';
@@ -27,7 +27,7 @@ const DESTRUCTIVE_PATTERNS = [
   'execute', 'exec', 'eval', 'run_', 'shell',
 ];
 
-describe('E2E IPC Probe Allowlist (v62)', () => {
+describe('E2E IPC Probe Allowlist (v63)', () => {
   describe('allowlist structure', () => {
     it('should export a non-empty allowlist', () => {
       expect(Object.keys(E2E_IPC_PROBE_ALLOWLIST).length).toBeGreaterThan(0);
@@ -69,11 +69,14 @@ describe('E2E IPC Probe Allowlist (v62)', () => {
       }
     });
 
-    it('RESEARCH module must NOT have an allowlisted command (blocked by missing safe command)', () => {
+    it('RESEARCH module must have research_status entry (v63 — safe read-only command)', () => {
       const researchEntries = Object.values(E2E_IPC_PROBE_ALLOWLIST).filter(
         e => e.module === 'RESEARCH'
       );
-      expect(researchEntries.length).toBe(0);
+      expect(researchEntries.length).toBe(1);
+      expect(researchEntries[0].commandId).toBe('research_status');
+      expect(researchEntries[0].command).toBe('research_get_status');
+      expect(researchEntries[0].readOnly).toBe(true);
     });
 
     it('EXPERIENCE module must have experience_state entry', () => {
@@ -117,6 +120,7 @@ describe('E2E IPC Probe Allowlist (v62)', () => {
       expect(isAllowlistedCommandId('memory_state')).toBe(true);
       expect(isAllowlistedCommandId('health_check')).toBe(true);
       expect(isAllowlistedCommandId('cloud_status')).toBe(true);
+      expect(isAllowlistedCommandId('research_status')).toBe(true);
     });
 
     it('returns false for unknown commandIds', () => {
@@ -141,6 +145,7 @@ describe('E2E IPC Probe Allowlist (v62)', () => {
       expect(ids).toContain('memory_state');
       expect(ids).toContain('cloud_status');
       expect(ids).toContain('health_check');
+      expect(ids).toContain('research_status');
     });
 
     it('does not include raw Tauri command names', () => {

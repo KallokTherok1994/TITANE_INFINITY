@@ -199,6 +199,10 @@ mod diagnostic_commands {
 mod web_research_commands {
     include!("commands/web_research.rs");
 }
+// v63: Research read-only status command (no network, safe for E2E)
+mod research_status_commands {
+    include!("commands/research_status.rs");
+}
 mod audio {
     // Audio types are used directly in audio/*.rs modules via titane_infinity::audio
     #[cfg(feature = "audio-capture")]
@@ -1182,6 +1186,10 @@ fn main() {
         //    get_conversation_history, and memory_* legacy commands
         .manage(legacy_ai_bridge::AIChatState);
 
+    // v63: CloudSyncState — required by cloud_get_status and all cloud_* commands
+    // CloudSyncState::default() initializes engine=None (not connected) — safe read-only default
+    let builder = builder.manage(cloud::commands::CloudSyncState::default());
+
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
     // NUMERIC TWIN ENGINE — TWINS_AUDIT 2026-03-15 (RC-002 fix)
@@ -1939,6 +1947,8 @@ fn main() {
             diagnostic_commands::check_online_capabilities,
             // P1: WebResearch Engine (EXPERIMENTAL — stub, no network)
             web_research_commands::web_research,
+            // v63: Research read-only status (no network, safe E2E probe)
+            research_status_commands::research_get_status,
             // RAG Embeddings Backend (Ollama /api/embeddings)
             commands::rag_commands::rag_generate_embedding,
             commands::rag_commands::rag_generate_embeddings,

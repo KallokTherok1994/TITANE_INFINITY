@@ -1326,6 +1326,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // WEB RESEARCH ENGINE (P1.0 EXPERIMENTAL)
   // ═══════════════════════════════════════════════════════════════
   'web_research',
+  'research_get_status', // v63: read-only status — no network, safe for E2E probe
 
   // ═══════════════════════════════════════════════════════════════
   // CYCLE ENGINE COMMANDS — V32 Phase 5 (SP#16 Rythmes Cognitifs)

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ — E2E IPC Probe Allowlist (v62)
+ * TITANE∞ — E2E IPC Probe Allowlist (v63 — research_get_status added)
  *
  * E2E-ONLY — never imported in production runtime paths.
  * Lists the exhaustive set of allowlisted IPC commands that the E2E probe
@@ -130,10 +130,19 @@ export const E2E_IPC_PROBE_ALLOWLIST: Record<string, AllowlistEntry> = {
     rustImplemented: true,
   },
 
-  // ─── RESEARCH — NO SAFE COMMAND ─────────────────────────────────────────
-  // web_research is FORBIDDEN (uncontrolled external network)
-  // No safe read-only status command exists for RESEARCH module
-  // BLOCKED_BY_MISSING_SAFE_COMMAND for v62
+  // ─── RESEARCH ────────────────────────────────────────────────────────────
+  // web_research is FORBIDDEN (uncontrolled external network — One Door policy)
+  // research_get_status is SAFE: read-only, no network, no secrets (v63)
+  research_status: {
+    commandId: 'research_status',
+    command: 'research_get_status',
+    module: 'RESEARCH',
+    readOnly: true,
+    requiresSandbox: false,
+    description: 'Get research engine status (mode, availability) — no network call',
+    inSecurityAllowlist: true, // added in v63 security.ts patch
+    rustImplemented: true,
+  },
 };
 
 /**
