@@ -1256,6 +1256,18 @@
             },
             {
               "command": "performance_get_metrics"
+            },
+            {
+              "command": "oauth_facebook_initiate"
+            },
+            {
+              "command": "oauth_facebook_callback"
+            },
+            {
+              "command": "oauth_facebook_get_profile"
+            },
+            {
+              "command": "oauth_facebook_logout"
             }
           ],
           "deny": []
