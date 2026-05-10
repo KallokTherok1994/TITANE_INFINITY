@@ -15,8 +15,11 @@ Date: 2026-05-10
 ## Remote sync after v65 runtime changes
 
 - Pre-commit status: local changes present (docs/e2e/scripts/package + artifact outputs)
-- Push status: pending until v65 commit
-- Sync mode: fast-forward expected if behind remains 0
+- Commit created: `2755cbb5984e6ea8aca2b2ece214410a4a029689`
+- Push status: SUCCESS (`MAIN -> origin/MAIN`)
+- Post-push ahead/behind: `0 0`
+- Remote HEAD (`origin MAIN`): `2755cbb5984e6ea8aca2b2ece214410a4a029689`
+- Sync mode: fast-forward completed
 
 ## CI readiness check (.github/workflows)
 
@@ -27,4 +30,4 @@ Date: 2026-05-10
 
 ## Remote sync verdict
 
-`REMOTE_SYNC_READY_PENDING_COMMIT`
+`REMOTE_SYNC_CONFIRMED`
