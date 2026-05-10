@@ -46,8 +46,18 @@ ADVANCED_MODULES.forEach(({ name, route, rootTestId }) => {
         return;
       }
 
-      // ErrorBoundary check
-      if (bodyHTML.includes('Something went wrong') || bodyHTML.includes('ErrorBoundary')) {
+      // ErrorBoundary check — use h2 "Erreur dans" (specific to TITANE ErrorBoundary fallback)
+      // and data-testid="titane-error-boundary"; do NOT use bodyHTML.includes('ErrorBoundary')
+      // which produces false positives on pages with documentation text mentioning components.
+      const hasErrorH2 = await browser.execute(() => {
+        const h2s = Array.from(document.querySelectorAll('h2'));
+        return h2s.some(h => h.textContent != null && h.textContent.includes('Erreur dans'));
+      });
+      const hasErrorTestid = await browser.execute(() =>
+        !!document.querySelector('[data-testid="titane-error-boundary"]')
+      );
+      const hasSomethingWrong = bodyHTML.includes('Something went wrong');
+      if (hasErrorH2 || hasErrorTestid || hasSomethingWrong) {
         logClassification(name, 'FUNCTIONAL_FAIL', 'ErrorBoundary triggered');
         expect(false).toBe(true); // intentional fail
         return;
