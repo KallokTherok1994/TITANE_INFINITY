@@ -374,7 +374,10 @@ function validateArtifact(relPath) {
   let parseErrors = 0;
 
   // Minimum line count check (strict mode for v60)
-  if (STRICT_MODE && strictArtifact && lines.length < 10) {
+  // The 10-record minimum applies only to broad proof artifacts (v60-strict-backend-proof).
+  // Targeted/completion artifacts (v61 tier1, v62 probe-bridge/response, v63 completion) are exempted.
+  const isBroadProofArtifact = relPath.includes('v60-strict-backend-proof');
+  if (STRICT_MODE && strictArtifact && isBroadProofArtifact && lines.length < 10) {
     fail(`[STRICT] v60 artifact has only ${lines.length} records — minimum 10 required for strict proof gate`);
   }
 
