@@ -3,16 +3,16 @@
 - Execution mode: DURABLE
 - Branch: MAIN
 - HEAD before: cf77435ac90998fe8903167704fa74ec43e7cf2e
-- HEAD after: PENDING_COMMIT
+- HEAD after: fbf20a8a9280611ca460f59bb7fc43f51e84a362
 - Version: 33.0.13
 - Working tree before: accepted-dirty inherited baseline (artifacts/generated/Cargo.lock/ui_theme)
 - Working tree after: reduced accepted-dirty; only src-tauri/data/ui_theme.json remains non-mission dirty
 - Remote tracking: origin/MAIN
 - Ahead/behind before: 0/0
-- Ahead/behind after: PENDING_PUSH
-- Remote sync: PENDING_PUSH
+- Ahead/behind after: 0/0
+- Remote sync: synchronized (origin/MAIN = local HEAD)
 - v67 verification: PASS (files present, sealed verifier PASS)
-- GitHub Actions status: FAILED for v67 run 25640040709 (verify:online-first)
+- GitHub Actions status: FAILED for v67 run 25640040709 (verify:online-first), new hardened run 25640308613 is in_progress
 - CI workflow hardening: APPLIED (.github/workflows/titane-static-gates.yml patched)
 - check/lint in CI: EXPLICITLY PRESENT
 - sealed artifact CI gate: BLOCKING WHEN ARTIFACT EXISTS, EXPLICIT SKIP OTHERWISE
@@ -20,5 +20,5 @@
 - accepted-dirty reduction: PERFORMED (generated/artifact/Cargo.lock restored), residual user-state kept
 - Static gates: PASS (13/13 local mission gates)
 - AutoHeal: PASS (entries=1815, v68 entries appended)
-- Blockers: Remote hardened run result pending after push
+- Blockers: Remote hardened run result pending completion (run 25640308613)
 - Final verdict: UI_DESKTOP_REMOTE_CI_CONFIG_HARDENED_PENDING_REMOTE_RUN

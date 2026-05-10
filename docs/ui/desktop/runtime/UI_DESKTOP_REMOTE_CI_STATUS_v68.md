@@ -35,6 +35,13 @@ Classify remote GitHub Actions status for v67 HEAD with direct run evidence.
   - Commit branch is MAIN
   - Trigger mismatch not detected
 
+- Post-hardening run (v68 commit):
+  - Commit: fbf20a8a9280611ca460f59bb7fc43f51e84a362
+  - Run ID: 25640308613
+  - URL: https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/25640308613
+  - Status: in_progress
+  - Conclusion: pending
+
 ## classification
 - GITHUB_ACTIONS_FAILED
 - WORKFLOW_CONFIG_INCOMPLETE
@@ -42,6 +49,7 @@ Classify remote GitHub Actions status for v67 HEAD with direct run evidence.
 ## rationale
 - Remote run exists and executed for the target commit, so status is not UNAVAILABLE and not NOT_TRIGGERED.
 - Run failed before full gate chain completion, and critical steps after verify:online-first were skipped.
+- Workflow hardening is now pushed; final remote certification depends on completion of run 25640308613.
 
 ## risks
 - CI summary step currently prints success-style bullets even when prior critical steps fail.

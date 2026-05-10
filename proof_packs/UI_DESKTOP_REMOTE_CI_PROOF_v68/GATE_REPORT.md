@@ -29,6 +29,12 @@
 - Failing step: verify:online-first
 - Logs captured and classified in docs/ui/desktop/runtime/UI_DESKTOP_REMOTE_CI_STATUS_v68.md
 
+## Remote CI Evidence (v68 hardened commit)
+- Commit: fbf20a8a9280611ca460f59bb7fc43f51e84a362
+- Run ID: 25640308613
+- URL: https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/25640308613
+- Status at certification time: in_progress
+
 ## Hardening Applied
 - Added explicit `check` and `lint` CI steps
 - Enforced strict backend proof artifact path in CI step
