@@ -142,9 +142,21 @@ describe('[v54:core] Memory — /memory', () => {
 
   it('no error boundary on memory page', async () => {
     await navigateAndWait('/memory', 'page-memory', 10000);
-    const bodyHTML = await browser.execute(() => document.body.innerHTML);
-    const hasError = typeof bodyHTML === 'string' && (bodyHTML.includes('Something went wrong') || bodyHTML.includes('ErrorBoundary'));
-    logClassification('MEMORY', hasError ? 'FUNCTIONAL_FAIL' : 'FUNCTIONAL_READ_ONLY_PROVEN', `error_boundary=${hasError}`);
+    // Wait for memory components to settle
+    await browser.pause(1500);
+    // Detect actual ErrorBoundary fallback via its unique h2 title "⚠️ Erreur dans …"
+    // Do NOT use body innerHTML or textContent — the Memory page contains documentation
+    // text that mentions "ErrorBoundary" and "inattendues" as legitimate content.
+    const hasErrorH2 = await browser.execute(() => {
+      const h2s = Array.from(document.querySelectorAll('h2'));
+      return h2s.some(h => h.textContent != null && h.textContent.includes('Erreur dans'));
+    });
+    // Also detect via testid (works after next rebuild with data-testid="titane-error-boundary")
+    const hasErrorUI = await browser.execute(() =>
+      !!document.querySelector('[data-testid="titane-error-boundary"]')
+    );
+    const hasError = hasErrorH2 || hasErrorUI;
+    logClassification('MEMORY', hasError ? 'FUNCTIONAL_FAIL' : 'FUNCTIONAL_READ_ONLY_PROVEN', `error_h2=${hasErrorH2} error_testid=${hasErrorUI}`);
     expect(hasError).toBe(false);
   });
 });

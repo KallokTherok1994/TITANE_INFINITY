@@ -112,11 +112,17 @@ async function classifySurface(rootTestId) {
     if (html.includes('SIMULATED') || html.includes('simulated')) {
       return 'FUNCTIONAL_SIMULATED_CONFIRMED';
     }
-    if (html.includes('ErrorBoundary') || html.includes('Something went wrong')) {
-      return 'FUNCTIONAL_FAIL';
-    }
-    if (html.includes('degraded') || html.includes('DEGRADED') || html.includes('unavailable')) {
-      return 'FUNCTIONAL_DEGRADED_EXPECTED';
+    // Use innerText (not innerHTML) to avoid false positives from documentation text
+    // that mentions "ErrorBoundary" as a component name in descriptions
+    const text = await browser.execute(() => document.documentElement.innerText || '');
+    if (typeof text === 'string') {
+      // TITANE ErrorBoundary fallback renders: "Une erreur inattendue s'est produite"
+      if (text.includes('Une erreur inattendue') || text.includes('Something went wrong')) {
+        return 'FUNCTIONAL_FAIL';
+      }
+      if (text.includes('degraded') || text.includes('DEGRADED') || text.includes('unavailable')) {
+        return 'FUNCTIONAL_DEGRADED_EXPECTED';
+      }
     }
   }
   return 'FUNCTIONAL_READ_ONLY_PROVEN';

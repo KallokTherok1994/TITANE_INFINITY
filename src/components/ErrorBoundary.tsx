@@ -170,6 +170,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       // Fallback par défaut
       return (
         <div
+          data-testid="titane-error-boundary"
           style={{
             padding: '2rem',
             margin: '1rem',
