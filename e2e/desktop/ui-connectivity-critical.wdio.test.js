@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 
 async function ensureMainUi() {
-  await browser.url('tauri://localhost/#/chat');
+  await browser.url('tauri://localhost/titane');
   await browser.execute(() => {
     localStorage.setItem('onboarding_completed', 'true');
     localStorage.setItem(
@@ -12,7 +12,7 @@ async function ensureMainUi() {
       })
     );
   });
-  await browser.url('tauri://localhost/#/chat');
+  await browser.url('tauri://localhost/titane');
 }
 
 async function seedLongConversation(pairCount = 20) {
@@ -199,7 +199,7 @@ async function clickNavItem(navTestId) {
 
   const expectedRoute = routeByNavId[navTestId];
   if (expectedRoute) {
-    await browser.url(`tauri://localhost/#${expectedRoute}`);
+    await browser.url(`tauri://localhost${expectedRoute}`);
     const currentUrl = await browser.getUrl();
     if (currentUrl.includes(expectedRoute)) {
       return;
@@ -328,7 +328,7 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
   });
 
   it('shows a return-to-bottom CTA on long histories and restores the latest message view', async () => {
-    await browser.url('tauri://localhost/#/chat');
+    await browser.url('tauri://localhost/titane');
     await browser.execute(() => {
       localStorage.setItem('onboarding_completed', 'true');
       localStorage.setItem(

@@ -27,10 +27,8 @@ function saveReport(entries) {
 
 async function loadChatSurface() {
   const candidates = [
-    process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat',
-    'tauri://localhost/chat',
-    'tauri://localhost/#/titane?tab=conversation',
-    'tauri://localhost/#/titane',
+    process.env.TITANE_E2E_URL || 'tauri://localhost/titane',
+    'tauri://localhost/titane',
     'tauri://localhost',
   ];
 

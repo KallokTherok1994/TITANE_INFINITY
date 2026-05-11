@@ -6,7 +6,7 @@ const SAFE_PROMPT =
   'Decris en deux phrases le role de TITANE comme assistant local de clarte.';
 
 async function openDesktopChat() {
-  await browser.url('tauri://localhost/#/chat');
+  await browser.url('tauri://localhost/titane');
   await browser.execute(() => {
     localStorage.setItem('onboarding_completed', 'true');
     localStorage.setItem('titane_onboarding_complete', '1');
@@ -16,7 +16,7 @@ async function openDesktopChat() {
     delete window.__TITANE_E2E_CHAT_MOCK__;
     window.__TITANE_E2E_CHAT_MOCK__ = false;
   });
-  await browser.url('tauri://localhost/#/chat');
+  await browser.url('tauri://localhost/titane');
 }
 
 async function waitForNewAssistantMessage(previousCount) {

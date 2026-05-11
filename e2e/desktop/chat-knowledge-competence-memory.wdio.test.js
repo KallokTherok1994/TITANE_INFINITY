@@ -44,7 +44,7 @@ async function sendAndCheck(question, expectedPattern, timeout = 15000) {
 describe('TITANE∞ Chat - Compétences, Connaissances, Mémoire (E2E)', () => {
   before(async () => {
     fs.mkdirSync(REPORT_DIR, { recursive: true });
-    await browser.url('tauri://localhost/#/chat');
+    await browser.url('tauri://localhost/titane');
     await $('[data-testid="chat-input"]').waitForDisplayed({ timeout: 20000 });
   });
 

@@ -40,8 +40,7 @@ const isDevUrl = url => Boolean(url && url.includes(DEV_ORIGIN));
 const TAURI_BASE_URL = 'tauri://localhost';
 const tauriUrl = (route = '/') => {
   const normalized = route.startsWith('/') ? route : `/${route}`;
-  if (normalized === '/') return `${TAURI_BASE_URL}/`;
-  return `${TAURI_BASE_URL}/#${normalized}`;
+  return `${TAURI_BASE_URL}${normalized}`;
 };
 const shouldPreferTauriUrl = () => {
   const explicitDevServer =

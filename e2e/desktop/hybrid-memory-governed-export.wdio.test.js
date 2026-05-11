@@ -34,10 +34,8 @@ function getExpectedAppDataRoot() {
 
 async function ensureTauriPageLoaded() {
   const candidates = [
-    process.env.TITANE_E2E_URL || 'tauri://localhost/#/titane?tab=memory',
+    process.env.TITANE_E2E_URL || 'tauri://localhost/titane?tab=memory',
     'tauri://localhost/titane?tab=memory',
-    'tauri://localhost/#/titane?tab=memory',
-    'tauri://localhost/#/titane',
     'tauri://localhost/titane',
     'tauri://localhost',
   ];

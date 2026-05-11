@@ -48,7 +48,7 @@ async function recoverDiagnosticSession(appUrl) {
 
 describe('Diagnostic: Tauri API Availability', () => {
   before(async function () {
-    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/titane';
 
     await browser.setTimeout({
       script: DIAG_SCRIPT_TIMEOUT_MS,
@@ -107,7 +107,7 @@ describe('Diagnostic: Tauri API Availability', () => {
   });
 
   it('Test direct IPC call with @tauri-apps/api/core pattern', async function () {
-    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/titane';
 
     // Increase per-test timeout because local generation can exceed default Mocha timeout.
     this.timeout(DIAG_TEST_TIMEOUT_MS);

@@ -366,7 +366,7 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
     });
 
     // Navigate to Tauri app root
-    await browser.url('tauri://localhost/#/chat');
+    await browser.url('tauri://localhost/titane');
     await browser.pause(1000);
 
     await browser.waitUntil(

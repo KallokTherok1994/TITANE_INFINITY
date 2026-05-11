@@ -5,7 +5,7 @@ import { captureFailureScreenshot, ensureArtifactsDir } from './ui-driver.wdio.j
 const CONVERSATION_ID = 'wdio-cognitive-trace-runtime';
 
 async function seedConversationWithCognitiveTrace() {
-  await browser.url('tauri://localhost/#/chat');
+  await browser.url('tauri://localhost/titane');
   await browser.execute(
     ({ conversationId }) => {
       const now = Date.now();
@@ -142,7 +142,7 @@ async function seedConversationWithCognitiveTrace() {
     },
     { conversationId: CONVERSATION_ID }
   );
-  await browser.url('tauri://localhost/#/chat');
+  await browser.url('tauri://localhost/titane');
 }
 
 describe('Chat cognitive trace runtime (WDIO/Tauri)', () => {

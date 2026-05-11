@@ -59,7 +59,7 @@ function getDefaultAppUrl() {
     process.env.TITANE_E2E_URL ||
     (expectedSource === 'dev-server' && devServerUrl
       ? `${devServerUrl}/titane?tab=conversation`
-      : 'tauri://localhost/#/titane?tab=conversation')
+      : 'tauri://localhost/titane?tab=conversation')
   );
 }
 

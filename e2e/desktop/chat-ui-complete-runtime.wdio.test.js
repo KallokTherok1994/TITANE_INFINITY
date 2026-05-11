@@ -236,7 +236,7 @@ async function ensureCanonicalChatSurface() {
   await setRuntimeDefaults();
 
   try {
-    await browser.url('tauri://localhost/#/chat');
+    await browser.url('tauri://localhost/titane');
   } catch {
     // Navigation fallback below still uses the canonical top nav.
   }

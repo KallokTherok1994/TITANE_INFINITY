@@ -106,7 +106,7 @@ describe('E2E_TOTAL_LOCK — Memory Conversations Management (P0)', () => {
   let conversationId = null;
 
   before(async function () {
-    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/titane';
+    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/titane';
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
       throw new Error(

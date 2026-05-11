@@ -55,12 +55,12 @@ function requiresConfirmation(safeActionPolicy) {
 
 /**
  * Navigate to a route via the Tauri app's navigation.
- * Uses hash routing: /#/<route>.
+ * Uses BrowserRouter-compatible path routing (no hash).
  * @param {string} route e.g. '/titane'
  */
 async function navigateToRoute(route) {
-  const hash = route.startsWith('/') ? route.slice(1) : route;
-  await browser.url(`tauri://localhost/#/${hash}`);
+  const path = route.startsWith('/') ? route : `/${route}`;
+  await browser.url(`tauri://localhost${path}`);
   await browser.pause(400);
 }
 
