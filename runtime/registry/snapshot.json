@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/snapshot.schema.json",
   "version": "1.0.0",
-  "lastUpdate": "2026-05-11T14:43:53.436Z",
-  "eventCount": 30,
+  "lastUpdate": "2026-05-11T14:45:59.662Z",
+  "eventCount": 31,
   "suites": {
     "vitest-core": {
       "id": "vitest-core",
@@ -161,10 +161,10 @@
     "lastDecision": null,
     "lastTestRun": null,
     "nextBlocker": "Registry incohérent: snapshot/dashboard obsolètes",
-    "priorityActionUnique": "Run registry rebuild and verification",
+    "priorityActionUnique": "Rebuild registry artifacts",
     "lastEvent": {
-      "id": "01KRBQX666CHR7FP6CDXM40YN9",
-      "timestamp": "2026-05-11T14:43:53.159Z",
+      "id": "01KRBR11FEKHMBMNMD5Q4YZWH6",
+      "timestamp": "2026-05-11T14:45:59.406Z",
       "type": "WORKFLOW_CHANGED"
     }
   },

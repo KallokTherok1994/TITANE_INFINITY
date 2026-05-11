@@ -1,9 +1,9 @@
 # TITANE∞ — Registry Dashboard
 
-- Généré: 2026-05-11T14:43:53.680Z
+- Généré: 2026-05-11T14:45:59.909Z
 - Cycle actif: 01KFPVBPNG1KB0ZHD8KT6K5D7Y
 - Objectif: Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.
-- Action prioritaire (unique): Run registry rebuild and verification
+- Action prioritaire (unique): Rebuild registry artifacts
 - Blocage principal: Registry incohérent: snapshot/dashboard obsolètes
 
 ## Dernière décision
@@ -13,6 +13,7 @@
 - Aucun
 
 ## Événements récents
+- 2026-05-11T14:45:59.406Z [01KRBR11FE] WORKFLOW_CHANGED: Repaired Cloudflare workflow definition by moving token skip logic into shell guard inside deploy step to avoid workflow parse failure.
 - 2026-05-11T14:43:53.159Z [01KRBQX666] WORKFLOW_CHANGED: Hardened Cloudflare deploy workflow for missing token and fixed Android SDK platform package id for API 34 setup reliability.
 - 2026-05-02T04:21:17.251Z [01KQKEPPT3] WORKFLOW_CHANGED: ci-unified.yml version references v32.0.0->v32.0.1 (summary echo strings, name field)
 - 2026-05-02T03:48:49.250Z [01KQKCV8F2] WORKFLOW_CHANGED: release-unified.yml: workflow_dispatch input description example tag v30.0.0->v32.0.0 (cosmetic text only, no logic change)
@@ -24,7 +25,6 @@
 - 2026-03-07T21:01:12.984Z [01KK51NCCR] FIX_APPLIED: PR #175 LAST RED: Rust build FAIL - alsa-sys manque libasound2-dev. Fix: ajout libasound2-dev dans rust.yml. AH-0091.
 - 2026-03-07T18:13:10.866Z [01KK4R1PJJ] FIX_APPLIED: PR #175 CI UNBLOCK: Fix Prettier e2e/desktop/ui-driver.wdio.js + Rust missing system deps (glib/gobject). AH-0089 + AH-0090.
 - 2026-03-07T16:18:37.008Z [01KK4HFXTF] FIX_APPLIED: Phase canonique: PR #175 validé (32 fichiers), tous les gates PASS, 103 entrées AutoHeal, prêt pour merge vers MAIN
-- 2026-03-07T16:02:13.863Z [01KK4GHXQ7] FIX_APPLIED: Phase stabilité: 5 failures MAIN analysées et documentées, cascade Prettier AH-0086/0087 ajoutés
 
 ---
 Source: `runtime/registry/events.jsonl` (append-only)
