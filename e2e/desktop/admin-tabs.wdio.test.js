@@ -59,7 +59,7 @@ describe('admin-tabs (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/admin');
+      await browser.url('tauri://localhost/admin');
       await $(testId('page-admin')).waitForDisplayed({ timeout: TIMEOUT });
       await $(testId('tab-admin-system')).waitForDisplayed({ timeout: TIMEOUT });
     });

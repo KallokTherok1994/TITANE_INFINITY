@@ -34,7 +34,7 @@ describe('orchestration-center (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/orchestration-center');
+      await browser.url('tauri://localhost/orchestration-center');
       await $(testId('page-orchestration-meta-center')).waitForDisplayed({
         timeout: TIMEOUT,
       });

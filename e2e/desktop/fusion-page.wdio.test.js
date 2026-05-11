@@ -34,7 +34,7 @@ describe('fusion-page (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/fusion');
+      await browser.url('tauri://localhost/fusion');
       await $(testId('page-fusion')).waitForDisplayed({ timeout: TIMEOUT });
     });
 

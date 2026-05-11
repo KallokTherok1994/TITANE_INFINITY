@@ -62,7 +62,7 @@ describe('titane-tabs-labels (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
     });
 

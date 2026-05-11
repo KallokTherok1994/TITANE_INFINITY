@@ -61,7 +61,7 @@ describe('dev-page-tabs (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/dev');
+      await browser.url('tauri://localhost/dev');
       await $(testId('page-dev')).waitForDisplayed({ timeout: TIMEOUT });
       // Wait for the first tab to appear
       await $(testId('tab-dev-overview')).waitForDisplayed({ timeout: TIMEOUT });

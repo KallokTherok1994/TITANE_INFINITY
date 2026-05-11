@@ -93,7 +93,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
     });
 
@@ -156,7 +156,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
     });
 
@@ -201,7 +201,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane?tab=memory-map');
+      await browser.url('tauri://localhost/titane?tab=memory-map');
       await $(testId('tab-memory')).waitForDisplayed({ timeout: TIMEOUT });
       await browser.pause(800);
     });
@@ -246,7 +246,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
     });
 
@@ -268,7 +268,7 @@ describe('chat-tabs-audit (WDIO desktop)', () => {
     });
 
     it('T22 — updated tab labels are visible in runtime UI', async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
 
       const overview = await $(testId('tab-overview'));

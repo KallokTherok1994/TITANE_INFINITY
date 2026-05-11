@@ -94,7 +94,7 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
   before(async () => {
     // Navigate to root
     try {
-      await browser.url('/');
+      await browser.url('tauri://localhost/');
       await browser.pause(1500);
     } catch (e) {
       console.warn('[bridge-probe] nav error:', e.message);
