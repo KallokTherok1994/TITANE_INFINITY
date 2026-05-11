@@ -1,5 +1,5 @@
 {
-  "version": "33.0.15",
+  "version": "33.0.16",
   "identifier": "com.titane.infinity",
   "bundle": {
     "icon": [
@@ -16,18 +16,42 @@
     "targets": "all"
   },
   "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "TITANE Infinity",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 1200,
+        "minHeight": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false,
+        "center": true,
+        "visible": true,
+        "devtools": false
+      }
+    ],
     "security": {
       "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https://graph.facebook.com https://*.fbcdn.net; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com https://www.facebook.com https://graph.facebook.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
+        "scope": [
+          "$APPDATA/**",
+          "$RESOURCE/**",
+          "$APPCONFIG/**",
+          "$APPLOCALDATA/**"
+        ]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -1261,6 +1285,57 @@
             },
             {
               "command": "oauth_facebook_logout"
+            },
+            {
+              "command": "agenda_load_events"
+            },
+            {
+              "command": "agenda_save_event"
+            },
+            {
+              "command": "agenda_save_events"
+            },
+            {
+              "command": "agenda_delete_event"
+            },
+            {
+              "command": "agenda_sync"
+            },
+            {
+              "command": "delete_snapshot"
+            },
+            {
+              "command": "get_travel_stats"
+            },
+            {
+              "command": "list_snapshots"
+            },
+            {
+              "command": "restore_snapshot"
+            },
+            {
+              "command": "calibrate_titane_voice"
+            },
+            {
+              "command": "chat_mode_change"
+            },
+            {
+              "command": "chat_mode_sync"
+            },
+            {
+              "command": "evolution_save_state"
+            },
+            {
+              "command": "submit_evolution_data"
+            },
+            {
+              "command": "knowledge_ingest"
+            },
+            {
+              "command": "knowledge_save_state"
+            },
+            {
+              "command": "progression_save_state"
             }
           ],
           "deny": []

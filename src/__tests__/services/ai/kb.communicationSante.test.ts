@@ -23,8 +23,8 @@ const psc = psychologieSanteRaw as KbJson;
 // COMMUNICATION_LEADERSHIP_MANAGEMENT — structure & métadonnées
 // ─────────────────────────────────────────────────────────────────────────────
 describe('communication_leadership_management — structure', () => {
-  it('version v31.5.5', () => {
-    expect(clm.version).toBe('v31.5.5');
+  it('version v31.5.9', () => {
+    expect(clm.version).toBe('v31.5.9');
   });
   it('category correct', () => {
     expect(clm.category).toBe('communication_leadership_management');

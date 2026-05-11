@@ -73,9 +73,11 @@ describe('ollama dev/chat boundary doctrine', () => {
   it('keeps the product runtime defaults on gemma2:2b while the validator guards the dev qwen profile', () => {
     expect(ollamaDefaults).toContain("DEFAULT_OLLAMA_MODEL = 'gemma2:2b'");
     expect(championRegistry).toContain('"model": "gemma2:2b"');
-    expect(boundaryValidator).toContain("rg -q 'gemma2:2b' src/config/ollamaDefaults.ts");
     expect(boundaryValidator).toContain(
-      "rg -q 'qwen3\\.5:9b' .github/copilot-instructions.md"
+      "rg_has 'gemma2:2b' src/config/ollamaDefaults.ts"
+    );
+    expect(boundaryValidator).toContain(
+      "rg_has 'qwen3\\.5:9b' .github/copilot-instructions.md"
     );
     expect(boundaryValidator).toContain('active cline workflow references removed');
   });

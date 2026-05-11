@@ -1,3 +1,2 @@
-# Tailles — TITANE∞ v33.0.15 — 2026-05-11T00:00:00Z
-24M	titane-infinity_33.0.15_amd64.deb
-95M	titane-infinity_33.0.15_amd64.AppImage
+95M	deployment/latest/titane-infinity_33.0.16_amd64.AppImage
+24M	deployment/latest/titane-infinity_33.0.16_amd64.deb

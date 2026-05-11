@@ -43,7 +43,7 @@ describe('TotalDevPage', () => {
 
     expect(await screen.findByTestId('lock-badge')).toHaveTextContent('LOCKED');
     expect(screen.getByPlaceholderText(/token unlock/i)).toBeVisible();
-    expect(screen.getAllByText(/QWEN-Coder/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/QWEN.*(Dev|Coder)|qwen3\.5/i).length).toBeGreaterThan(0);
     expect(secureInvokeMock).toHaveBeenNthCalledWith(
       1,
       TAURI_COMMANDS.TOTAL_DEV_SESSION_STATUS,

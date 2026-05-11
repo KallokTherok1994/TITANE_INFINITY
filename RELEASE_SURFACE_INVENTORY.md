@@ -8,12 +8,43 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.3 — local build + deployment PASS — system install pending sudo — Historical baseline preserved below)
 
 ---
-> **A1 VERSION AUTHORITY NOTE (2026-05-06)**
-> Current `package.json` version: **33.0.9** (VERSION_BUMPED_NOT_RELEASED — no release artifacts, checksums, or seal proof for 33.0.9)
-> Latest proven sealed release: **v33.0.8** (`SEAL_v33.0.8_2026-05-05`, Vitest=7883 PASS, Cargo=4257 PASS, E2E=173 PASS, checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.8.txt`)
-> Canonical version claim in this file was last updated through v33.0.3. Historical entries below are preserved as-is (append-only policy).
+> **A1 VERSION AUTHORITY NOTE (2026-05-11)**
+> Current `package.json` version: **33.0.16** — BUILD ALL complete, 9057 Vitest PASS, Tauri release artifacts built, AutoHeal AH-v83
+> Latest proven sealed release: **v33.0.16** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.16.txt`)
+> Canonical version claim in this file was last updated through v33.0.16. Historical entries below are preserved as-is (append-only policy).
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 ---
+
+## Final Release Seal v33.0.16 — 2026-05-11 (BUILD ALL: 8 CI failures resolved, 9057 tests PASS)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 33.0.16 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 33.0.16 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 33.0.16 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 33.0.16 | ✅ PASS |
+| `tauri.base.json` version | 33.0.16 | ✅ PASS |
+| Vitest frontend tests | 9057 PASS / 0 FAIL (560 test files) | ✅ PASS |
+| TypeScript check (`tsc --noEmit`) | PASS | ✅ PASS |
+| ESLint | PASS | ✅ PASS |
+| Prettier format check | PASS | ✅ PASS |
+| detect_recurrence.sh | PASS (entries=1859) | ✅ PASS |
+| verify_instructions.sh | PASS=52 FAIL=0 | ✅ PASS |
+| AppImage | `titane-infinity_33.0.16_amd64.AppImage` (95M) | ✅ PASS |
+| DEB | `titane-infinity_33.0.16_amd64.deb` (24M) | ✅ PASS |
+| RPM | `titane-infinity-33.0.16-1.x86_64.rpm` (24M) | ✅ PASS |
+| sha256 AppImage | `cd8c5596a1b6407ca2f6575631a3ac4cb455f830d3092f6a128f5cba31d5d27f` | ✅ PASS |
+| sha256 DEB | `546629ac06969149f0e4e9201c6717e3c3a83d44787ce3e39a2c9009a31b4c27` | ✅ PASS |
+| sha256 RPM | `d8a8df84ca37f6c56646dd46901669eeacf05dc7b0db6f025e1aca490294803a` | ✅ PASS |
+| AutoHeal | AH-v83-CI-TESTS-FIX-2026-05-11 appended (8 root causes fixed) | ✅ PASS |
+| system binary sync | blocked in non-interactive sudo session (`dpkg -s` = 33.0.15) | ⚠️ BLOCKED_SUDO_REQUIRED |
+| deployment/latest | MANIFEST+SHA256SUMS+SIZES updated to 33.0.16 | ✅ PASS |
+
+### Seal note — v33.0.16
+
+- 8 CI failures from run #25693105841 resolved: `__APP_VERSION__` define, `devtools` config, 17 IPC allow[] additions, One Door probe bridge, TotalDevPage QWEN rename, rg_has boundary, KB v31.5.9 drift, chat.mcp.enabled missing.
+- System-level binary replacement remains a privileged step (`sudo dpkg -i ...` then icon sync script).
+- AutoHeal: `AH-v83-CI-TESTS-FIX-2026-05-11`, checksums: `RELEASE_ARTIFACTS_CHECKSUMS_33.0.16.txt`
 
 ## Final Release Seal v33.0.9 — 2026-05-08 (Governed seal, bounded by sudo)
 

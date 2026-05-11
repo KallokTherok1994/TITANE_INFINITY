@@ -20,6 +20,8 @@ const ALLOWED_DIRECT_IMPORTERS = new Set([
   path.normalize('src/lib/security.ts'),
   path.normalize('src/utils/tauriProtector.ts'),
   path.normalize('src/test/setup.ts'),
+  // E2E IPC probe bridge — test infrastructure that must call Tauri directly
+  path.normalize('src/e2e/desktop/e2eIpcProbeBridge.ts'),
 ]);
 
 const SRC_DIR = path.resolve(__dirname, '../..');
