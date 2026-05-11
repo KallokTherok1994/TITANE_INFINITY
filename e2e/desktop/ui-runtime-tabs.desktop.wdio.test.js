@@ -40,7 +40,7 @@ const TABBED_PAGES = [
   {
     route: '/admin',
     rootTestId: 'page-admin',
-    srcFile: 'src/pages/AdminPage.tsx',
+    srcFile: 'src/features/admin/types.ts',
     tabs: ['system', 'production-health', 'config', 'design', 'audio', 'governance'],
   },
   {

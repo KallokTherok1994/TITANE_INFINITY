@@ -484,21 +484,27 @@ async function installGenerateResponseTraceHook() {
     };
 
     // Primary hook for installed DEB runtimes: secureInvoke emits `IPC:START <command> <id>`.
-    if (!w.__TITANE_ORIG_CONSOLE_INFO__) {
-      w.__TITANE_ORIG_CONSOLE_INFO__ = console.info.bind(console);
-      console.info = (...args) => {
-        try {
-          const first = String(args?.[0] ?? '');
-          const match = first.match(/^IPC:START\s+([^\s]+)\s+/);
-          if (match?.[1]) {
-            setTrace(match[1], null, 'console-ipc-start');
+    // Hook console.info AND console.warn — logger.info() uses console.warn internally.
+    // Logger format() prepends [timestamp][source][level] — IPC:START may be in any arg.
+    const wrapConsole = (method, origKey) => {
+      if (!w[origKey]) {
+        w[origKey] = console[method].bind(console);
+        console[method] = (...args) => {
+          try {
+            const fullText = args.map(a => String(a ?? '')).join(' ');
+            const match = fullText.match(/IPC:START\s+([^\s]+)/);
+            if (match?.[1]) {
+              setTrace(match[1], null, `console-${method}-ipc-start`);
+            }
+          } catch {
+            // Best effort only.
           }
-        } catch {
-          // Best effort only.
-        }
-        return w.__TITANE_ORIG_CONSOLE_INFO__(...args);
-      };
-    }
+          return w[origKey](...args);
+        };
+      }
+    };
+    wrapConsole('info', '__TITANE_ORIG_CONSOLE_INFO__');
+    wrapConsole('warn', '__TITANE_ORIG_CONSOLE_WARN__');
 
     // Secondary fallback: direct invoke wrappers (legacy window invoke paths).
     const wrapInvoke = target => {
@@ -690,8 +696,8 @@ describe('DEB CONFIG HUB RUNTIME TRUTH', () => {
       await waitForMaxTokensReadback(targetMaxTokens);
       metrics.readBackAfterSave = await getDefaults();
 
-      await installGenerateResponseTraceHook();
       await gotoTopNavPage(uiPages.titane);
+      await installGenerateResponseTraceHook();
 
       const selectors = await resolveChatSelectors();
       assert.ok(selectors, 'chat selectors unresolved on installed runtime');
