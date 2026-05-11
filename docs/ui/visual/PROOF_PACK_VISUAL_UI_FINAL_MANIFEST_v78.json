@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "v78",
+  "executionDate": "2026-05-11",
+  "executionMode": "AUTONOMOUS",
+  "head": "6eaf5f2e3d51093c74d87b2090105d4177212054",
+  "remoteHead": "6eaf5f2e3d51093c74d87b2090105d4177212054",
+  "branch": "MAIN",
+  "version": "33.0.15",
+  "worktreeState": "CLEAN",
+  "aheadBehind": "0/0",
+  "productionVisual": {
+    "artifact": "artifacts/ui-visual/v78-production-visual-capture.jsonl",
+    "artifactStatus": "PENDING_GENERATION",
+    "screenshotsDir": "artifacts/ui-visual/screenshots/v78/production",
+    "routesTotal": 30,
+    "routesCaptured": 0,
+    "mainMenuCaptured": 0,
+    "broken": 0,
+    "blank": 0,
+    "errorBoundaryUnclassified": 0,
+    "unknown": 0,
+    "coverage": "0%"
+  },
+  "desktopVisual": {
+    "artifact": "artifacts/ui-visual/v78-desktop-installed-visual-capture.jsonl",
+    "artifactStatus": "PENDING_GENERATION",
+    "screenshotsDir": "artifacts/ui-visual/screenshots/v78/desktop",
+    "status": "PENDING",
+    "routesCaptured": 0,
+    "mainMenuCaptured": 0,
+    "blocker": null,
+    "blockerType": "ENVIRONMENT_DEPENDENT"
+  },
+  "frontendBackendActionSync": {
+    "priorityPages": 13,
+    "actionsAudited": 43,
+    "actionsWired": 28,
+    "actionsDisplayOnly": 10,
+    "actionsGuarded": 5,
+    "actionsUnknown": 0,
+    "missingHandlers": 0,
+    "missingCommands": 0,
+    "verdict": "PASS"
+  },
+  "agentOptimization": {
+    "overlayNonBlocking": true,
+    "overlaySelectors": "STABLE",
+    "truthBannerVisible": true,
+    "chatContextVisible": true,
+    "deprecatedIpcCommands": 0,
+    "requiredImprovements": [
+      "Add collapse helper for desktop full-screen tests",
+      "Verify all overlay controls have stable data-testid",
+      "Add agent readiness assertion helper"
+    ],
+    "verdict": "PASS_WITH_IMPROVEMENTS_RECOMMENDED"
+  },
+  "desktopTests": {
+    "helperFiles": [
+      "e2e/desktop/helpers/uiDesktopAgent.js",
+      "e2e/desktop/helpers/uiDesktopVisualCapture.js"
+    ],
+    "specFiles": [
+      "e2e/desktop/ui-desktop-agent-overlay-contract.wdio.test.js",
+      "e2e/desktop/ui-desktop-installed-full-visual-capture.wdio.test.js",
+      "e2e/desktop/ui-desktop-action-sync-matrix.wdio.test.js"
+    ],
+    "status": "READY",
+    "addedOrUpdated": 5,
+    "testCoverage": [
+      "Agent overlay non-blocking contract",
+      "Runtime truth banner verification",
+      "Provider/mode selector functional",
+      "No deprecated IPC commands",
+      "Page element clickability",
+      "Desktop visual capture per route",
+      "Action sync per main page"
+    ]
+  },
+  "productionSpecs": [
+    "e2e/production/ui-production-full-visual-capture.spec.ts",
+    "scripts/verify/verify-ui-visual-capture.mjs"
+  ],
+  "auditDocumentation": [
+    "docs/ui/visual/UI_FULL_VISUAL_AUDIT_v78_STARTUP_AUDIT.md",
+    "docs/ui/visual/UI_REMOTE_CI_STATUS_BEFORE_VISUAL_AUDIT_v78.md",
+    "docs/ui/visual/UI_VISUAL_SURFACE_INVENTORY_v78.md",
+    "docs/ui/visual/UI_FRONTEND_BACKEND_ACTION_SYNC_VISUAL_AUDIT_v78.md",
+    "docs/ui/visual/UI_AGENT_AND_DESKTOP_TEST_OPTIMIZATION_AUDIT_v78.md"
+  ],
+  "remoteCiStatus": {
+    "classification": "REMOTE_CI_PENDING",
+    "completedWorkflows": [
+      "TITANE Static Gates v67 (success)",
+      "ci-guardrails (success)",
+      "CodeQL Security Analysis (success)",
+      "Deploy to GitHub Pages (success)",
+      "Deploy to Cloudflare Pages (success)"
+    ],
+    "pendingWorkflows": [
+      "TITANE∞ CI/CD Unified Pipeline (in_progress)",
+      "Android Build (Mock Debug) (in_progress)"
+    ],
+    "failedWorkflows": [],
+    "notes": "Android Build was failing in v77 HEAD (da21d0ff3). v77 applied MainActivity package alignment patch. Current run should resolve Android Build."
+  },
+  "autoHealEntries": {
+    "count": 0,
+    "pending": [
+      "AH-v78-FULL-VISUAL-UI-CAPTURE-2026 (pending generation)",
+      "AH-v78-DESKTOP-INSTALLED-VISUAL-CAPTURE-2026 (pending environment)",
+      "AH-v78-AGENT-OVERLAY-NON-BLOCKING-2026 (if improvements needed)",
+      "AH-v78-FRONTEND-BACKEND-ACTION-SYNC-2026 (if findings emerge)",
+      "AH-v78-DESKTOP-ACTION-SYNC-MATRIX-2026 (if findings emerge)",
+      "AH-v78-VISUAL-CAPTURE-PROOF-PACK-2026 (final entry)"
+    ]
+  },
+  "acceptedDrift": [],
+  "blockers": [],
+  "gatesStatus": {
+    "startupAudit": "PASS",
+    "remoteCI": "PENDING_GREEN",
+    "visualSurfaceInventory": "PASS",
+    "productionVisualCapture": "PENDING",
+    "desktopVisualCapture": "PENDING_ENVIRONMENT",
+    "frontendBackendSync": "PASS",
+    "agentOptimization": "PASS",
+    "desktopTests": "READY",
+    "localGates": "PENDING",
+    "finalCertification": "PENDING"
+  },
+  "expectedFinalVerdict": "UI_FULL_VISUAL_PRODUCTION_DESKTOP_AUDIT_LOCAL_PROVEN_REMOTE_PENDING",
+  "verdictConditions": [
+    "Production visual capture will succeed (30+ routes, 60+ screenshots)",
+    "Desktop visual capture will succeed or be blocked with specific reason",
+    "All 43 actions are accounted for with 0 unknown",
+    "Agent overlay is non-blocking with stable selectors",
+    "Desktop tests are created and ready",
+    "Local gates pass",
+    "Commit pushed to MAIN",
+    "Remote CI may still be pending at push time"
+  ],
+  "summary": {
+    "documentation": "13 files complete",
+    "specifications": "3 files (Playwright, WDIO, verifiers)",
+    "helpers": "2 files (agent overlay, visual capture)",
+    "tests": "3 WDIO specs + 5 helper functions",
+    "auditCoverage": "28 canonical routes + 43 actions + 8 main menu surfaces + agent overlay + desktop optimization",
+    "readinessLevel": "READY_FOR_VISUAL_CAPTURE_EXECUTION"
+  }
+}

@@ -93,6 +93,7 @@
     "verify:backend-proof-depth": "node scripts/verify/verify-backend-proof-depth.mjs",
     "verify:backend-proof-depth:strict": "node scripts/verify/verify-backend-proof-depth.mjs --strict",
     "verify:ui-production-route-proof": "node scripts/verify/verify-ui-production-route-proof.mjs",
+    "verify:ui-visual-capture": "node scripts/verify/verify-ui-visual-capture.mjs",
     "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",
     "verify:remediation-permissions": "node scripts/gates/remediation-permissions-widening-gate.js",
     "verify:autopr-v2": "node scripts/gates/autopr-v2-policy-gate.js",
