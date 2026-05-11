@@ -61,7 +61,13 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: ⚠️ Skip deploy when Cloudflare token is missing
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN == '' }}
+        run: |
+          echo "::warning::CLOUDFLARE_API_TOKEN is not configured. Skipping Cloudflare deployment."
+
       - name: 🌐 Deploy to Cloudflare Workers (Static Assets SPA)
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
         run: pnpm exec wrangler deploy --config wrangler.jsonc
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
