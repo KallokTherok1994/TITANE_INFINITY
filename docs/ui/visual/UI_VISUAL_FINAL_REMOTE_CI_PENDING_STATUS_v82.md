@@ -56,3 +56,17 @@ Required workflows are not all completed; therefore final remote green seal cann
 
 ## Verdict
 UI_VISUAL_FINAL_REMOTE_CI_GREEN_SEAL_HOLD_PENDING_REMOTE_RUN
+
+## Follow-up After Docs Push
+- HEAD: 776f7ba08d972d47dbae93293d7071ff2ec9fad3
+- Context: docs-only v82 evidence push retriggered required workflows.
+- Marker: FOLLOW_UP_DOC_ONLY_CI_PENDING
+
+### New Reentry Run IDs
+- 25693070998 (Unified)
+- 25693071032 (Android Mock)
+- 25693070993 (CodeQL)
+- 25693071033 (Static Gates)
+- 25693071013 (ci-guardrails)
+- 25693071001 (GitHub Pages)
+- 25693071043 (Cloudflare)
