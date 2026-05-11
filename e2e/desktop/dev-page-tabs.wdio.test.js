@@ -35,23 +35,29 @@ describe('dev-page-tabs (WDIO desktop)', () => {
     });
 
     it('L1 — DevPage source contains tab-dev-overview data-testid', () => {
-      expect(src.includes('tab-dev-overview')).toBe(true);
+      // DevPage uses template literal `tab-dev-${section.id}` + VALID_SECTIONS includes 'overview'
+      expect(src.includes('tab-dev-')).toBe(true);
+      expect(src.includes("'overview'")).toBe(true);
     });
 
     it('L2 — DevPage source contains tab-dev-diagnostics data-testid', () => {
-      expect(src.includes('tab-dev-diagnostics')).toBe(true);
+      expect(src.includes('tab-dev-')).toBe(true);
+      expect(src.includes("'diagnostics'")).toBe(true);
     });
 
     it('L3 — DevPage source contains tab-dev-operations data-testid', () => {
-      expect(src.includes('tab-dev-operations')).toBe(true);
+      expect(src.includes('tab-dev-')).toBe(true);
+      expect(src.includes("'operations'")).toBe(true);
     });
 
     it('L4 — DevPage source contains tab-dev-validation data-testid', () => {
-      expect(src.includes('tab-dev-validation')).toBe(true);
+      expect(src.includes('tab-dev-')).toBe(true);
+      expect(src.includes("'validation'")).toBe(true);
     });
 
     it('L5 — DevPage source contains tab-dev-security data-testid', () => {
-      expect(src.includes('tab-dev-security')).toBe(true);
+      expect(src.includes('tab-dev-')).toBe(true);
+      expect(src.includes("'security'")).toBe(true);
     });
   });
 
