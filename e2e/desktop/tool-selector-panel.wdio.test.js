@@ -248,19 +248,27 @@ describe('tool-selector-panel (WDIO desktop)', () => {
     });
 
     it('T17 — generate_summary tool item is present', async () => {
-      await (await $(testId('tool-selector-btn'))).click();
-      await browser.pause(400);
+      // Ensure panel is open (toggle only if not already open)
+      const panel = await $(testId('tool-selector-panel'));
+      const alreadyOpen = await panel.isDisplayed().catch(() => false);
+      if (!alreadyOpen) {
+        await (await $(testId('tool-selector-btn'))).click();
+        await browser.pause(600);
+      }
       const tool = await $(testId('tool-item-generate_summary'));
+      await browser.execute(el => { if (el) el.scrollIntoView({ block: 'center' }); }, tool);
       expect(await tool.isDisplayed()).toBe(true);
     });
 
     it('T18 — analyze_site tool item is present', async () => {
       const panel = await $(testId('tool-selector-panel'));
-      if (!(await panel.isDisplayed().catch(() => false))) {
+      const alreadyOpen = await panel.isDisplayed().catch(() => false);
+      if (!alreadyOpen) {
         await (await $(testId('tool-selector-btn'))).click();
-        await browser.pause(400);
+        await browser.pause(600);
       }
       const tool = await $(testId('tool-item-analyze_site'));
+      await browser.execute(el => { if (el) el.scrollIntoView({ block: 'center' }); }, tool);
       expect(await tool.isDisplayed()).toBe(true);
     });
   });

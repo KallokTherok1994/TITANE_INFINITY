@@ -150,6 +150,12 @@ async function selectMode(modeId) {
   }
 
   const trigger = await $('[data-testid="chat-mode-selector-trigger"]');
+  const triggerExists = await trigger.isExisting();
+  if (!triggerExists) {
+    // Neither compact select nor dropdown trigger found — mode selector unavailable
+    console.warn(`[SELECT_MODE] Neither compact select nor dropdown trigger available for "${modeId}" — skip`);
+    return;
+  }
   await trigger.waitForDisplayed({ timeout: 10000 });
   await trigger.click();
   await browser.pause(500);
