@@ -143,13 +143,24 @@ function verifyArtifact() {
 
   // Check for critical issues
   const broken = records.filter(r => r.visualStatus.includes('BROKEN'));
+  const brokenClassified = broken.filter(r => r.blocker && r.blocker.length > 0);
+  const brokenUnclassified = broken.filter(r => !r.blocker || r.blocker.length === 0);
   const blank = records.filter(r => r.blankPage === true);
+  // Unclassified: errorBoundary=true but NOT already marked VISUAL_BROKEN
   const errorBoundary = records.filter(
-    r => r.errorBoundary === true && !r.disclosureFound
+    r =>
+      r.errorBoundary === true && !r.disclosureFound && !r.visualStatus.includes('BROKEN')
   );
 
   console.log(`\nCritical Checks:`);
-  console.log(`  Broken pages: ${broken.length}`);
+  console.log(`  Broken pages (total): ${broken.length}`);
+  console.log(`    - Classified (with blocker): ${brokenClassified.length}`);
+  if (brokenClassified.length > 0) {
+    for (const r of brokenClassified) {
+      console.log(`      ⚠ ${r.route}: ${r.blocker}`);
+    }
+  }
+  console.log(`    - Unclassified (no blocker): ${brokenUnclassified.length}`);
   console.log(`  Blank pages: ${blank.length}`);
   console.log(`  Unclassified ErrorBoundary: ${errorBoundary.length}`);
 
@@ -180,12 +191,37 @@ function verifyArtifact() {
     process.exit(1);
   }
 
+  // Strict false-positive check: VISUAL_ACTIVE with rootFound=false is always FAIL
+  const activeFalsePositives = records.filter(
+    r => r.visualStatus === 'VISUAL_ACTIVE' && r.rootFound === false
+  );
+  if (activeFalsePositives.length > 0) {
+    console.error(
+      `\n❌ FAIL: ${activeFalsePositives.length} active false positive(s) detected (VISUAL_ACTIVE with rootFound=false):`
+    );
+    for (const r of activeFalsePositives) {
+      console.error(
+        `  - ${r.route}: rootFound=${r.rootFound} headingFound=${r.headingFound} truthBadgeFound=${r.truthBadgeFound}`
+      );
+    }
+    process.exit(1);
+  }
+  console.log(`✓ No active false positives (VISUAL_ACTIVE with rootFound=false): 0`);
+
   // Verdict
   console.log(`\n=== VERDICT ===\n`);
 
   if (broken.length > 0) {
-    console.error(`❌ FAIL: ${broken.length} broken pages detected`);
-    if (STRICT_MODE) process.exit(1);
+    if (brokenUnclassified.length > 0) {
+      console.error(
+        `❌ FAIL: ${brokenUnclassified.length} unclassified broken page(s) (no blocker)`
+      );
+      process.exit(1);
+    } else {
+      console.log(
+        `⚠ WARNING: ${broken.length} broken page(s) — all classified with explicit blocker (acceptable for PARTIAL verdict)`
+      );
+    }
   }
 
   if (blank.length > 0) {

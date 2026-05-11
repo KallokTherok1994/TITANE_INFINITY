@@ -5,28 +5,65 @@ import { join } from 'path';
 /**
  * ui-production-full-visual-capture.spec.ts
  *
- * TITANE v78: Full Visual UI Capture in Production Runtime
+ * TITANE v79: Full Visual UI Capture in Production Runtime (strict)
  *
  * Objective:
  * - Navigate all canonical routes in production-like browser
  * - Capture full-page + viewport screenshots
- * - Collect DOM structure evidence (root, heading, controls, tabs)
+ * - Collect DOM structure evidence using per-route rootTestId selectors
  * - Detect errors, blank pages, truth badges, disclosures
+ * - Enforce strict status: rootFound=false → VISUAL_BROKEN
  * - Write JSONL artifact with visual proof
  *
- * Execution:
+ * Execution (v79):
  * pnpm run build
+ * TITANE_UI_VISUAL_ARTIFACT=artifacts/ui-visual/v79-production-visual-capture.jsonl \
+ * TITANE_UI_VISUAL_SCREENSHOT_DIR=artifacts/ui-visual/screenshots/v79/production \
  * pnpm exec playwright test e2e/production/ui-production-full-visual-capture.spec.ts --project chromium --workers=1
- *
- * Artifact Output:
- * artifacts/ui-visual/v78-production-visual-capture.jsonl
- * artifacts/ui-visual/screenshots/v78/production/<page-id>.png
- * artifacts/ui-visual/screenshots/v78/production/<page-id>-viewport.png
  */
 
+const SCHEMA_VERSION = process.env.TITANE_UI_VISUAL_SCHEMA_VERSION || 'v79';
 const ARTIFACT_DIR = process.env.TITANE_UI_VISUAL_ARTIFACT_DIR || 'artifacts/ui-visual';
-const SCREENSHOT_DIR = join(ARTIFACT_DIR, 'screenshots', 'v78', 'production');
-const OUTPUT_ARTIFACT = join(ARTIFACT_DIR, 'v78-production-visual-capture.jsonl');
+const SCREENSHOT_DIR =
+  process.env.TITANE_UI_VISUAL_SCREENSHOT_DIR ||
+  join(ARTIFACT_DIR, 'screenshots', SCHEMA_VERSION, 'production');
+const OUTPUT_ARTIFACT =
+  process.env.TITANE_UI_VISUAL_ARTIFACT ||
+  join(ARTIFACT_DIR, `${SCHEMA_VERSION}-production-visual-capture.jsonl`);
+
+// Per-route rootTestId map (from uiSurfaceRegistry)
+// Routes not in this map fall back to generic [data-testid^="page-"] scan
+const ROOT_TESTID_MAP: Record<string, string> = {
+  '/titane': 'page-titane',
+  '/experience': 'page-experience',
+  '/time': 'page-time',
+  '/admin': 'page-admin',
+  '/dev': 'page-dev',
+  '/fusion': 'page-fusion',
+  '/cloud': 'page-cloud',
+  '/twins': 'page-twins',
+  '/optimization': 'page-optimization',
+  '/total-dev': 'page-total-dev',
+  '/memory': 'page-memory',
+  '/doc-center': 'doc-center-page',
+  '/research': 'research-page',
+  '/orchestration-center': 'page-orchestration-meta-center',
+  '/orchestration-intelligence': 'page-orchestration-intelligence',
+  '/reality-center': 'page-reality-center',
+  '/hyper-center': 'page-hyper-center',
+  '/quantum-center': 'page-quantum-center',
+  '/singularity': 'page-singularity',
+  '/sentinel': 'page-sentinel',
+  '/watchdog': 'page-watchdog',
+  '/selfheal': 'page-selfheal',
+  '/adaptive': 'page-adaptive',
+  '/skills': 'page-skills',
+  '/knowledge': 'page-knowledge',
+  '/creation': 'page-creation',
+  '/evolution': 'page-evolution',
+  '/performance': 'page-performance',
+  '/htf': 'htf-module-page',
+};
 
 // Canonical routes from uiSurfaceRegistry
 const CANONICAL_ROUTES = [
@@ -113,6 +150,7 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
     route.replace(/\//g, '-').replace(/^\-/, '').replace(/\?.*/, '') || 'root';
   const screenshotPath = join(SCREENSHOT_DIR, `${safePageId}.png`);
   const viewportScreenshotPath = join(SCREENSHOT_DIR, `${safePageId}-viewport.png`);
+  const expectedRootTestId = ROOT_TESTID_MAP[route] || null;
 
   try {
     // Navigate to route
@@ -121,8 +159,24 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
       timeout: 15000,
     });
 
-    // Wait for initial hydration
-    await page.waitForTimeout(1500);
+    // Wait for React hydration: wait for expected root or networkidle fallback
+    if (expectedRootTestId) {
+      try {
+        await page.waitForSelector(`[data-testid="${expectedRootTestId}"]`, {
+          timeout: 12000,
+        });
+      } catch {
+        // Not found in 12s — try networkidle then re-check
+        try {
+          await page.waitForLoadState('networkidle', { timeout: 5000 });
+        } catch {
+          // network still busy — continue classification
+        }
+        await page.waitForTimeout(1000);
+      }
+    } else {
+      await page.waitForTimeout(2500);
+    }
 
     // Detect blank page
     const bodyText = await page.evaluate(() => document.body.innerText.trim());
@@ -135,14 +189,22 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
       return errorPatterns.some(p => pageText.includes(p) && pageText.includes('Stack'));
     });
 
-    // Find root element
-    const root = await page.evaluate(() => {
-      const testIdRoot = document.querySelector('[data-testid^="page-"]');
-      return {
-        testId: testIdRoot?.getAttribute('data-testid') || null,
-        found: !!testIdRoot,
-      };
-    });
+    // Find root element using per-route selector, falling back to generic scan
+    const root = await page.evaluate((expectedId: string | null) => {
+      // First try per-route known testId
+      if (expectedId) {
+        const specific = document.querySelector(`[data-testid="${expectedId}"]`);
+        if (specific) {
+          return { testId: expectedId, found: true };
+        }
+      }
+      // Fallback: generic page- prefix scan
+      const generic = document.querySelector('[data-testid^="page-"]');
+      if (generic) {
+        return { testId: generic.getAttribute('data-testid'), found: true };
+      }
+      return { testId: null, found: false };
+    }, expectedRootTestId);
 
     // Find heading
     const heading = await page.evaluate(() => {
@@ -232,14 +294,26 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
     await page.screenshot({ path: screenshotPath, fullPage: true });
     await page.screenshot({ path: viewportScreenshotPath });
 
-    // Determine visual status
+    // Determine visual status (strict)
+    // rootFound=false MUST result in VISUAL_BROKEN or VISUAL_DEGRADED — never VISUAL_ACTIVE
     let visualStatus = 'VISUAL_ACTIVE';
+    let blocker: string | null = null;
     if (truthElements.disclosure) visualStatus = 'VISUAL_GUARDED';
-    if (blankPage) visualStatus = 'VISUAL_BROKEN';
-    if (errorBoundary) visualStatus = 'VISUAL_BROKEN';
+    if (!root.found) {
+      visualStatus = 'VISUAL_BROKEN';
+      blocker = `root selector missing: expected [data-testid="${expectedRootTestId || 'page-*'}"] not found`;
+    }
+    if (blankPage) {
+      visualStatus = 'VISUAL_BROKEN';
+      blocker = blocker || 'blank page — body text < 50 chars';
+    }
+    if (errorBoundary) {
+      visualStatus = 'VISUAL_BROKEN';
+      blocker = blocker || 'ErrorBoundary visible in DOM';
+    }
 
     return {
-      schemaVersion: 'v78',
+      schemaVersion: SCHEMA_VERSION,
       capturedAt: new Date().toISOString(),
       runtime: 'production-preview',
       route,
@@ -260,15 +334,15 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
       selectsFound: controls.selects.map(s => s.label),
       linksFound: controls.links.map(l => l.label),
       agentOverlayState: agentOverlay,
-      screenshot: `screenshots/v78/production/${safePageId}.png`,
-      viewportScreenshot: `screenshots/v78/production/${safePageId}-viewport.png`,
+      screenshot: `screenshots/${SCHEMA_VERSION}/production/${safePageId}.png`,
+      viewportScreenshot: `screenshots/${SCHEMA_VERSION}/production/${safePageId}-viewport.png`,
       visualStatus,
-      blocker: null,
+      blocker,
       sourceSpec: 'ui-production-full-visual-capture.spec.ts',
     };
   } catch (error) {
     return {
-      schemaVersion: 'v78',
+      schemaVersion: SCHEMA_VERSION,
       capturedAt: new Date().toISOString(),
       runtime: 'production-preview',
       route,
@@ -298,7 +372,7 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
   }
 }
 
-test.describe('TITANE UI — Full Visual Capture v78', () => {
+test.describe('TITANE UI — Full Visual Capture v79 (strict)', () => {
   test.beforeAll(async ({ browser }) => {
     mkdirSync(ARTIFACT_DIR, { recursive: true });
     mkdirSync(SCREENSHOT_DIR, { recursive: true });

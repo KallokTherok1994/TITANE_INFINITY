@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "v79",
+  "missionId": "UI_VISUAL_PROOF_STRICTNESS_DESKTOP_RUNTIME_AND_CI_SEAL_v79",
+  "date": "2026-05-11",
+  "packageVersion": "33.0.15",
+  "binaryPath": "/usr/bin/titane-infinity",
+  "gitHead": "169db7b4d2c51803fc2560fcdd28eb90e5c8fc65",
+  "branch": "MAIN",
+
+  "v78ArtifactAudit": {
+    "artifact": "artifacts/ui-visual/v78-production-visual-capture.jsonl",
+    "records": 29,
+    "activeFalsePositiveCandidates": 5,
+    "falsePositives": [
+      { "route": "/titane", "reason": "rootFound=false but VISUAL_ACTIVE — ROOT_TESTID_MAP timing fix" },
+      { "route": "/dev", "reason": "rootFound=false but VISUAL_ACTIVE — now VISUAL_BROKEN in v79" },
+      { "route": "/doc-center", "reason": "rootFound=false but VISUAL_ACTIVE — ROOT_TESTID_MAP: doc-center-page" },
+      { "route": "/research", "reason": "rootFound=false but VISUAL_ACTIVE — ROOT_TESTID_MAP: research-page" },
+      { "route": "/htf", "reason": "rootFound=false but VISUAL_ACTIVE — ROOT_TESTID_MAP: htf-module-page" }
+    ],
+    "anomaliesClassified": 5,
+    "v78Immutable": true
+  },
+
+  "productionVisual": {
+    "artifact": "artifacts/ui-visual/v79-production-visual-capture.jsonl",
+    "screenshots": "artifacts/ui-visual/screenshots/v79/production/",
+    "routesTotal": 29,
+    "routesCaptured": 29,
+    "activeFalsePositives": 0,
+    "active": 27,
+    "broken": 2,
+    "brokenClassified": 2,
+    "brokenUnclassified": 0,
+    "brokenRoutes": [
+      { "route": "/dev", "blocker": "root selector missing: expected [data-testid=\"page-dev\"] not found" },
+      { "route": "/memory", "blocker": "ErrorBoundary visible in DOM" }
+    ],
+    "screenshotFiles": 58,
+    "verifierResult": "PASS",
+    "verifierFalsePositives": 0,
+    "mainMenuCoverage": "8/8"
+  },
+
+  "desktopRuntime": {
+    "wdioRuntime": "wry 0.54.4 linux",
+    "binaryUsed": "/usr/bin/titane-infinity",
+    "binaryVersion": "33.0.15",
+    "installedFullVisualCapture": {
+      "result": "PASS",
+      "passing": 3,
+      "failing": 0
+    },
+    "agentOverlayContract": {
+      "result": "PARTIAL",
+      "passing": 7,
+      "failing": 1,
+      "failureClassification": "AGENT_OVERLAY_ABSENT_IN_PRODUCTION"
+    },
+    "actionSyncMatrix": {
+      "result": "PARTIAL",
+      "passing": 13,
+      "failing": 2,
+      "failureClassification": "CONDITIONAL_ELEMENT_ABSENT_IN_DEFAULT_STATE"
+    },
+    "totalPassing": 23,
+    "totalFailing": 3,
+    "totalTests": 26
+  },
+
+  "actionSync": {
+    "status": "PARTIAL_RUNTIME_PROVEN",
+    "v78Claim": "DOCUMENTED_NOT_RUNTIME_PROVEN",
+    "actionsAuditedV78": 43,
+    "unknown": 0,
+    "runtimeProvenV79": 13,
+    "absentDefaultState": 3,
+    "remainingSourceDocumented": 27
+  },
+
+  "localGates": {
+    "verifyUiVisualCapture": "PASS",
+    "detectRecurrence": "PENDING",
+    "verifyInstructions": "PENDING"
+  },
+
+  "codeChanges": [
+    "e2e/production/ui-production-full-visual-capture.spec.ts",
+    "scripts/verify/verify-ui-visual-capture.mjs"
+  ],
+
+  "finalVerdict": "UI_VISUAL_PROOF_STRICTNESS_LOCAL_PROVEN_REMOTE_PENDING"
+}
