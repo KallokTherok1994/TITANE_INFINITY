@@ -3,9 +3,12 @@ import type { Locator, Page } from '@playwright/test';
 import { appendFileSync, mkdirSync, rmSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
+const DEFAULT_ARTIFACT_RELATIVE_PATH =
+  'artifacts/ui-production/current-production-route-proof.jsonl';
+
 const ARTIFACT_PATH = resolve(
   process.cwd(),
-  'artifacts/ui-production/v73-production-route-proof.jsonl'
+  process.env.TITANE_UI_PRODUCTION_ARTIFACT ?? DEFAULT_ARTIFACT_RELATIVE_PATH
 );
 
 const CANONICAL_ROUTES = [

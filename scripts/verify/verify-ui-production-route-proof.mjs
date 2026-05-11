@@ -1,9 +1,12 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+const DEFAULT_ARTIFACT_RELATIVE_PATH =
+  'artifacts/ui-production/current-production-route-proof.jsonl';
+
 const artifactPath = resolve(
   process.cwd(),
-  'artifacts/ui-production/v73-production-route-proof.jsonl'
+  process.env.TITANE_UI_PRODUCTION_ARTIFACT ?? DEFAULT_ARTIFACT_RELATIVE_PATH
 );
 
 const canonicalRoutes = [

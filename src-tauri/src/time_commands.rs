@@ -6,9 +6,9 @@
 //   Commandes Tauri pour TimePage UI (anciennement TimeNavigator)
 // ═══════════════════════════════════════════════════════════════
 
+use crate::persistence::PERSISTENCE_ENGINE;
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
-use crate::persistence::PERSISTENCE_ENGINE;
 use serde::{Deserialize, Serialize};
 
 /// Métadonnées snapshot pour UI
@@ -98,7 +98,10 @@ pub async fn get_travel_stats() -> Result<TravelStats, String> {
     let engine = PERSISTENCE_ENGINE.read().await;
     let snapshots = engine.list_snapshots().await.map_err(|e| e.to_string())?;
 
-    let disk_usage_bytes = snapshots.iter().map(|snapshot| snapshot.size_bytes).sum::<u64>();
+    let disk_usage_bytes = snapshots
+        .iter()
+        .map(|snapshot| snapshot.size_bytes)
+        .sum::<u64>();
     let oldest_snapshot = snapshots
         .iter()
         .map(|snapshot| snapshot.timestamp / 1000)

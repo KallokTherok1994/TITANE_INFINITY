@@ -661,7 +661,8 @@ mod tests {
         assert_eq!(event.reminders[0].minutes_before, 15);
         assert_eq!(event.reminders[0].reminder_type, ReminderType::Notification);
         assert_eq!(
-            event.recurrence
+            event
+                .recurrence
                 .as_ref()
                 .and_then(|recurrence| recurrence.days_of_week.clone()),
             Some(vec![1, 3, 5])

@@ -1,3 +1,5 @@
+package com.titane.infinity.stable.kotlin
+
 import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
