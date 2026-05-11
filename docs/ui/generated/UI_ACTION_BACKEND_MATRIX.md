@@ -1,7 +1,7 @@
 # UI Action → Backend Matrix
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 <!-- GENERATED_FROM: src/registry/uiSurfaceRegistry.ts -->
-<!-- Generation date: 2026-05-10 -->
+<!-- Generation date: 2026-05-11 -->
 <!-- Mission: UI_BACKEND_RUNTIME_PROMOTION_v47 -->
 
 > Actions classified as NOT_WIRED or DISPLAY_ONLY have no IPC backend connection.

@@ -1,7 +1,7 @@
 # UI Legacy Alias Map
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 <!-- GENERATED_FROM: src/registry/uiSurfaceRegistry.ts -->
-<!-- Generation date: 2026-05-10 -->
+<!-- Generation date: 2026-05-11 -->
 <!-- Mission: UI_BACKEND_RUNTIME_PROMOTION_v47 -->
 
 > All aliases are `<Navigate replace>` redirects in App.tsx.

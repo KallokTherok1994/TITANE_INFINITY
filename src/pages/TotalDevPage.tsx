@@ -99,11 +99,13 @@ interface ConsoleEntry {
   timestamp: number;
 }
 
+const APP_RUNTIME_VERSION = __APP_VERSION__;
+
 // ─────────────────────────────────────────────────────────────────
 // ARCHITECTURE CONTEXT INJECTION
 // Used as system prompt prefix for QWEN-Coder
 // ─────────────────────────────────────────────────────────────────
-const TOTAL_DEV_SYSTEM_PROMPT = `Tu es TOTAL_DEV — Cockpit gouverne TITANE∞ v30.0.0.
+const TOTAL_DEV_SYSTEM_PROMPT = `Tu es TOTAL_DEV — Cockpit gouverne TITANE∞ v${APP_RUNTIME_VERSION}.
 
 ARCHITECTURE CANONIQUE:
 - 4-Ring strict: Ring0=Tauri/Rust, Ring1=IPC commands, Ring2=Services TS, Ring3=UI/React
@@ -973,7 +975,7 @@ export const TotalDevPage: React.FC = () => {
         <div className="total-dev-header-meta">
           <LockBadge lockState={lockState} expiresAt={expiresAt} />
           <span className="total-dev-meta-item">Provider: qwen3.5:9b</span>
-          <span className="total-dev-meta-item">v30.0.0</span>
+          <span className="total-dev-meta-item">v{APP_RUNTIME_VERSION}</span>
           {expiresLabel && (
             <span className="total-dev-meta-item">Expire: {expiresLabel}</span>
           )}
@@ -1037,7 +1039,7 @@ export const TotalDevPage: React.FC = () => {
 
       {/* FOOTER ─────────────────────────────────────────── */}
       <footer className="total-dev-footer">
-        <span>TITANE∞ v30.0.0 · TOTAL_DEV · Ring1→IPC→Rust</span>
+        <span>TITANE∞ v{APP_RUNTIME_VERSION} · TOTAL_DEV · Ring1→IPC→Rust</span>
         <span>
           {lockState === 'UNLOCKED'
             ? '🔓 Session active — actions limitees par allowlist Rust'

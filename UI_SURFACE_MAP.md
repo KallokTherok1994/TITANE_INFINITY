@@ -1169,3 +1169,12 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Certification: `docs/ui/UI_BACKEND_TRUTH_CERTIFICATION_v46.md` — VERDICT: UI_BACKEND_TRUTH_STATIC_COMPLETE_RUNTIME_PENDING
 - Tests: 53 nouveaux tests Vitest (33 registry + 20 composants), tous PASS
 - Rollback: git restore des fichiers touchés + suppression des nouveaux fichiers
+
+## [2026-05-11] UI_PRODUCTION_FRONTEND_BACKEND_SYNC_FINAL_REPAIR_v73
+
+- Surfaces UI synchronisees sur version runtime: `src/ui/Menu.tsx`, `src/pages/DevPage.tsx`, `src/features/admin/AdminPage.tsx`, `src/pages/TotalDevPage.tsx`, `index.html`.
+- Preuve route production-like: `e2e/production/ui-production-route-proof.spec.ts` + artefact `artifacts/ui-production/v73-production-route-proof.jsonl`.
+- Verifier dedie: `scripts/verify/verify-ui-production-route-proof.mjs` (gate `verify:ui-production-route-proof`).
+- Classification finale route proof: 29 `PROD_ROUTE_GUARDED_WITH_UI_PROOF`, 6 `PROD_ROUTE_LEGACY_REDIRECT_CONFIRMED`.
+- Tests ajoutes: `src/__tests__/ui/version-display-sync.v73.test.ts`.
+- Rollback: restaurer les fichiers UI ci-dessus, supprimer spec/verifier v73 et artefacts de preuve associes.

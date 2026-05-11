@@ -138,11 +138,12 @@ export const Menu: React.FC<MenuProps> = ({
   currentRoute,
   onNavigate,
 }) => {
+  const appVersion = __APP_VERSION__;
   const menubarRef = useRef<HTMLDivElement | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
     // v30.0.0: Migration one-time only (not every mount) - FUSION + OPTIMIZE ajoutés
-    const MENU_VERSION = 'v30.0.0';
+    const MENU_VERSION = `v${appVersion}`;
     const storedVersion = localStorage.getItem('titane_menu_version');
 
     // Only clear localStorage on version upgrade (not every mount)
@@ -296,7 +297,7 @@ export const Menu: React.FC<MenuProps> = ({
               />
               <div className="menu-brand-info">
                 <span className="menu-brand-text">TITANE∞</span>
-                <span className="menu-brand-version">v30.0.0</span>
+                <span className="menu-brand-version">v{appVersion}</span>
               </div>
             </div>
           ) : (

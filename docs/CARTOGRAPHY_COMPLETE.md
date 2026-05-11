@@ -2246,3 +2246,30 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - SIMULATED_UI: `/orchestration-intelligence`, `/quantum-center` → banners visibles
 - DISPLAY_ONLY: `/performance`
 - ACTIVE_PARTIAL: 26 routes (runtime proof requis pour ACTIVE_SYNCED)
+
+## [2026-05-11] Cartographie UI production sync final repair v73
+
+### Fichiers modifies (surface runtime)
+- `index.html`
+- `src/ui/Menu.tsx`
+- `src/pages/DevPage.tsx`
+- `src/features/admin/AdminPage.tsx`
+- `src/pages/TotalDevPage.tsx`
+
+### Nouvelles preuves et verification
+- `e2e/production/ui-production-route-proof.spec.ts`
+- `scripts/verify/verify-ui-production-route-proof.mjs`
+- `src/__tests__/ui/version-display-sync.v73.test.ts`
+- `artifacts/ui-production/v73-production-route-proof.jsonl`
+
+### Documentation de gouvernance v73
+- `docs/ui/production/UI_PRODUCTION_SYNC_v73_STARTUP_AUDIT.md`
+- `docs/ui/production/UI_PRODUCTION_DRIFT_DIAGNOSIS_v73.md`
+- `docs/ui/production/UI_BUILD_FRESHNESS_AND_VERSION_SYNC_v73.md`
+- `docs/ui/production/UI_ROUTE_MENU_PARITY_AUDIT_v73.md`
+- `docs/ui/production/UI_FRONTEND_BACKEND_SYNC_AUDIT_v73.md`
+- `docs/ui/production/UI_FINAL_GATES_v73.md`
+- `docs/ui/production/UI_DESKTOP_TAURI_SMOKE_v73.md`
+- `docs/ui/production/PROOF_PACK_PRODUCTION_FINAL_INDEX_v73.md`
+- `docs/ui/production/PROOF_PACK_PRODUCTION_FINAL_MANIFEST_v73.json`
+- `docs/ui/production/UI_PRODUCTION_FRONTEND_BACKEND_SYNC_FINAL_CERTIFICATION_v73.md`

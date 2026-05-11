@@ -1,7 +1,7 @@
 # UI Route Inventory
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 <!-- GENERATED_FROM: src/registry/uiSurfaceRegistry.ts -->
-<!-- Generation date: 2026-05-10 -->
+<!-- Generation date: 2026-05-11 -->
 <!-- Mission: UI_BACKEND_RUNTIME_PROMOTION_v47 -->
 
 > **WARNING**: Runtime status columns reflect static classification only.
@@ -40,7 +40,7 @@
 | `/creation` | CreationStudio | titane | ACTIVE_PARTIAL | MIXED_LIVE_AND_STATIC | `page-creation-studio` | 0 |
 | `/evolution` | EvolutionMonitor | titane | ACTIVE_PARTIAL | MIXED_LIVE_AND_STATIC | `page-evolution-monitor` | 0 |
 | `/performance` | PerformanceTest | optimization | **DISPLAY_ONLY** | MIXED_LIVE_AND_STATIC | `page-performance-test` | 0 |
-| `/htf` | HTFPage | (none) | ACTIVE_PARTIAL | MIXED_LIVE_AND_STATIC | `page-htf` | 0 |
+| `/htf` | HTFPage | (none) | ACTIVE_PARTIAL | MIXED_LIVE_AND_STATIC | `htf-module-page` | 0 |
 
 ## Status Summary
 

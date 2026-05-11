@@ -37,6 +37,8 @@ const headerVariants: Variants = {
   animate: { opacity: 1, y: 0 },
 };
 
+const APP_RUNTIME_VERSION = __APP_VERSION__;
+
 // ══════════════════════════════════════════════════════════════════
 // LAZY IMPORTS - Performance Optimization
 // ══════════════════════════════════════════════════════════════════
@@ -250,7 +252,7 @@ const AdminPageComponent: React.FC = () => {
             </div>
           </div>
           <div className="admin-header-badge">
-            <span className="admin-version">v30.0.0</span>
+            <span className="admin-version">v{APP_RUNTIME_VERSION}</span>
           </div>
         </div>
       </motion.header>
