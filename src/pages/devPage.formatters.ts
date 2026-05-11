@@ -11,9 +11,7 @@ type DevOrchestrationShape = {
   } | null;
 } | null;
 
-export const formatDevBestProvider = (
-  orchestration: DevOrchestrationShape,
-): string => {
+export const formatDevBestProvider = (orchestration: DevOrchestrationShape): string => {
   const value = orchestration?.multiAi?.bestProvider;
   return typeof value === 'string' && value.trim().length > 0 ? value : 'N/A';
 };

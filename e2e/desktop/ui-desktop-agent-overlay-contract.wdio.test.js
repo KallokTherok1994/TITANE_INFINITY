@@ -75,7 +75,7 @@ describe('TITANE Desktop — Agent Overlay Contract v78', () => {
     const routeHash = await browser.execute(() => window.location.hash || '');
     const hasRouteContext = Boolean(
       (context.currentRoute && context.currentRoute !== 'unknown') ||
-        (typeof routeHash === 'string' && routeHash.startsWith('#/')),
+      (typeof routeHash === 'string' && routeHash.startsWith('#/'))
     );
     const hasRuntimeBanner = await $('[data-testid="runtime-truth-banner"]')
       .isDisplayed()
@@ -98,7 +98,9 @@ describe('TITANE Desktop — Agent Overlay Contract v78', () => {
         routeHash,
       }
     );
-    console.log('[Overlay Contract] Overlay absent by default; accepted with runtime truth');
+    console.log(
+      '[Overlay Contract] Overlay absent by default; accepted with runtime truth'
+    );
   });
 
   it('should show runtime truth banner with current route', async () => {
@@ -170,9 +172,14 @@ describe('TITANE Desktop — Agent Overlay Contract v78', () => {
         console.log('[Overlay Contract] Page elements are clickable (not blocked)');
       }
     } catch (error) {
-      recordGap('overlay-click-through', 'CONDITIONAL_ACCEPTED', 'CLICKABILITY_CHECK_SKIPPED', {
-        reason: error.message,
-      });
+      recordGap(
+        'overlay-click-through',
+        'CONDITIONAL_ACCEPTED',
+        'CLICKABILITY_CHECK_SKIPPED',
+        {
+          reason: error.message,
+        }
+      );
       console.warn(
         '[Overlay Contract] Element clickability check skipped:',
         error.message

@@ -146,7 +146,10 @@ async function safePage(page: Page) {
   return page;
 }
 
-async function collectVisualEvidence(page: Page, route: string): Promise<VisualProofRecord> {
+async function collectVisualEvidence(
+  page: Page,
+  route: string
+): Promise<VisualProofRecord> {
   const safePageId =
     route.replace(/\//g, '-').replace(/^\-/, '').replace(/\?.*/, '') || 'root';
   const screenshotPath = join(SCREENSHOT_DIR, `${safePageId}.png`);

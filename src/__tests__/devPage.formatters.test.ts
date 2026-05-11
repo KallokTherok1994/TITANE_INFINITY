@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  formatDevBestProvider,
-  formatDevHealthScore,
-} from '@/pages/devPage.formatters';
+import { formatDevBestProvider, formatDevHealthScore } from '@/pages/devPage.formatters';
 
 describe('formatDevHealthScore', () => {
   it('returns N/A for null', () => {
@@ -24,8 +21,6 @@ describe('formatDevBestProvider', () => {
   });
 
   it('returns provider name when available', () => {
-    expect(formatDevBestProvider({ multiAi: { bestProvider: 'ollama' } })).toBe(
-      'ollama',
-    );
+    expect(formatDevBestProvider({ multiAi: { bestProvider: 'ollama' } })).toBe('ollama');
   });
 });

@@ -308,9 +308,14 @@ describe('TITANE Desktop — Action Sync Matrix v78', () => {
           console.log(`[ActionSync] Page tabs clickable: ${isClickable}`);
         }
       } catch (error) {
-        recordGap('global-overlay-non-blocking', 'CONDITIONAL_ACCEPTED', 'CHECK_SKIPPED', {
-          reason: error.message,
-        });
+        recordGap(
+          'global-overlay-non-blocking',
+          'CONDITIONAL_ACCEPTED',
+          'CHECK_SKIPPED',
+          {
+            reason: error.message,
+          }
+        );
         console.warn('[ActionSync] Global overlay check skipped:', error.message);
       }
     });
