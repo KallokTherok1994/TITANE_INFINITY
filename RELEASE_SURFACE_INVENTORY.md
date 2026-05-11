@@ -1717,3 +1717,26 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | ci_gates_followup | TITANE Static Gates v67 run 25642013599 = SUCCESS (8dc92afbe) |
 | build_command | `pnpm run build:tauri` (format:check drift accepted since v33.0.9) |
 | previous_release | v33.0.13 (code-only, no build artifacts) → superseded by v33.0.14 |
+
+## v33.0.15 — Release Snapshot (2026-05-11)
+
+| Surface | Truth |
+|---|---|
+| code_version | 33.0.15 (package.json, BUILT+RELEASED) |
+| last_proven_release | v33.0.15 (BUILT 2026-05-11) |
+| build_artifacts | DEB + RPM + AppImage produced |
+| appimage_artifact | `titane-infinity_33.0.15_amd64.AppImage` (95M) |
+| deb_artifact | `titane-infinity_33.0.15_amd64.deb` (24M) |
+| rpm_artifact | `titane-infinity-33.0.15-1.x86_64.rpm` (24M) |
+| checksums_file | `RELEASE_ARTIFACTS_CHECKSUMS_33.0.15.txt` |
+| appimage_sha256 | `5ee6be1936d27e3bdf3809f3e74234187d5a8bc78b70856296f9b5e8fe90df21` |
+| deb_sha256 | `c493197340d66af6364dbe82b7f095beac602bfc10a63903db9a263f2150b93c` |
+| rpm_sha256 | `4ba71dbb910f198349ab1813a9ed988cf5be8936c8655647471caead730c7d5b` |
+| governance_gates | PASS=52 FAIL=0 (verify_instructions + detect_recurrence) |
+| autoheal_entries | 1837 (AH-v33.0.15-BUILD appended, duplicate id fixed) |
+| deployment_state | v33.0.15 deployed to deployment/latest/ |
+| smoke_test | smoke.wdio.test.js — 1 passing ✅ |
+| system_install | ⚠️ BLOCKED_SUDO_REQUIRED — user must run: `sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_33.0.15_amd64.deb` |
+| build_command | `pnpm run build:tauri` (format:check drift accepted since v33.0.9) |
+| previous_release | v33.0.14 (BUILT 2026-05-10) → superseded by v33.0.15 |
+| commit | `9128eea9c` (HEAD MAIN, origin/MAIN) |
