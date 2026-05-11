@@ -118,7 +118,7 @@ describe('TITANE Desktop — Full Visual Capture v78', () => {
         // Screenshot
         const safePageId = route.pageId;
         const screenshotPath = path.join(SCREENSHOT_DIR, `${safePageId}.png`);
-        await browser.takeScreenshot(screenshotPath);
+        await browser.saveScreenshot(screenshotPath);
 
         // Build record
         const record = {

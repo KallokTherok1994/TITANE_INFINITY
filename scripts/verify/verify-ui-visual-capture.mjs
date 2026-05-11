@@ -3,7 +3,7 @@
 /**
  * verify-ui-visual-capture.mjs
  *
- * v78: Verify production and desktop visual capture artifacts
+ * Verify production and desktop visual capture artifacts
  *
  * Usage:
  * TITANE_UI_VISUAL_ARTIFACT=artifacts/ui-visual/v78-production-visual-capture.jsonl node scripts/verify/verify-ui-visual-capture.mjs
@@ -67,7 +67,7 @@ const MAIN_MENU_ROUTES = [
 ];
 
 function verifyArtifact() {
-  console.log(`\n=== TITANE v78: Visual Capture Artifact Verification ===\n`);
+  console.log(`\n=== TITANE: Visual Capture Artifact Verification ===\n`);
   console.log(`Artifact: ${ARTIFACT_PATH}`);
   console.log(`Strict Mode: ${STRICT_MODE ? 'ON' : 'OFF'}\n`);
 
@@ -250,7 +250,7 @@ function verifyArtifact() {
   console.log(`  Routes captured: ${totalCount}`);
   console.log(`  Main menu covered: ${8 - mainMenuMissing.length}/8`);
   console.log(`  Coverage: ${coverage}%`);
-  console.log(`  Schema: v${records[0]?.schemaVersion || 'unknown'}`);
+  console.log(`  Schema: ${records[0]?.schemaVersion || 'unknown'}`);
 
   process.exit(0);
 }

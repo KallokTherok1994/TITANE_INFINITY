@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type ConsoleMessage, type Page } from '@playwright/test';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
@@ -136,23 +136,38 @@ interface VisualProofRecord {
   viewportScreenshot: string | null;
   visualStatus: string;
   blocker: string | null;
+  errorBoundaryText?: string | null;
+  pageErrors?: string[];
+  consoleErrors?: string[];
   sourceSpec: string;
 }
 
-async function safePage(page) {
-  // Minimize console noise
-  page.on('console', () => {});
-  page.on('pageerror', () => {});
+async function safePage(page: Page) {
+  return page;
 }
 
-async function collectVisualEvidence(page, route: string): Promise<VisualProofRecord> {
+async function collectVisualEvidence(page: Page, route: string): Promise<VisualProofRecord> {
   const safePageId =
     route.replace(/\//g, '-').replace(/^\-/, '').replace(/\?.*/, '') || 'root';
   const screenshotPath = join(SCREENSHOT_DIR, `${safePageId}.png`);
   const viewportScreenshotPath = join(SCREENSHOT_DIR, `${safePageId}-viewport.png`);
   const expectedRootTestId = ROOT_TESTID_MAP[route] || null;
+  const pageErrors: string[] = [];
+  const consoleErrors: string[] = [];
+  const onConsole = (msg: ConsoleMessage) => {
+    const type = msg.type();
+    if (type === 'error' || type === 'warning') {
+      consoleErrors.push(msg.text().slice(0, 500));
+    }
+  };
+  const onPageError = (err: Error) => {
+    pageErrors.push(String(err?.message || err).slice(0, 500));
+  };
 
   try {
+    page.on('console', onConsole);
+    page.on('pageerror', onPageError);
+
     // Navigate to route
     await page.goto(`http://localhost:5173${route}`, {
       waitUntil: 'domcontentloaded',
@@ -183,11 +198,24 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
     const blankPage = !bodyText || bodyText.length < 50;
 
     // Detect error boundary
-    const errorBoundary = await page.evaluate(() => {
-      const errorPatterns = ['Error', 'error', 'ERROR', 'failed', 'FAILED'];
-      const pageText = document.body.innerText;
-      return errorPatterns.some(p => pageText.includes(p) && pageText.includes('Stack'));
+    const errorBoundaryState = await page.evaluate(() => {
+      const boundary = document.querySelector('[data-testid="titane-error-boundary"]');
+      if (!boundary) {
+        return { visible: false, text: null };
+      }
+      const style = window.getComputedStyle(boundary);
+      const rect = boundary.getBoundingClientRect();
+      const visible =
+        style.display !== 'none' &&
+        style.visibility !== 'hidden' &&
+        rect.width > 0 &&
+        rect.height > 0;
+      return {
+        visible,
+        text: (boundary.textContent || '').trim().slice(0, 500),
+      };
     });
+    const errorBoundary = errorBoundaryState.visible;
 
     // Find root element using per-route selector, falling back to generic scan
     const root = await page.evaluate((expectedId: string | null) => {
@@ -309,8 +337,13 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
     }
     if (errorBoundary) {
       visualStatus = 'VISUAL_BROKEN';
-      blocker = blocker || 'ErrorBoundary visible in DOM';
+      blocker =
+        blocker ||
+        `ErrorBoundary visible in DOM${errorBoundaryState.text ? `: ${errorBoundaryState.text.slice(0, 120)}` : ''}`;
     }
+
+    page.off('console', onConsole);
+    page.off('pageerror', onPageError);
 
     return {
       schemaVersion: SCHEMA_VERSION,
@@ -338,9 +371,14 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
       viewportScreenshot: `screenshots/${SCHEMA_VERSION}/production/${safePageId}-viewport.png`,
       visualStatus,
       blocker,
+      errorBoundaryText: errorBoundaryState.text,
+      pageErrors,
+      consoleErrors,
       sourceSpec: 'ui-production-full-visual-capture.spec.ts',
     };
   } catch (error) {
+    page.off('console', onConsole);
+    page.off('pageerror', onPageError);
     return {
       schemaVersion: SCHEMA_VERSION,
       capturedAt: new Date().toISOString(),
@@ -367,6 +405,9 @@ async function collectVisualEvidence(page, route: string): Promise<VisualProofRe
       viewportScreenshot: null,
       visualStatus: 'VISUAL_BROKEN',
       blocker: `Navigation failed: ${error.message}`,
+      errorBoundaryText: null,
+      pageErrors,
+      consoleErrors,
       sourceSpec: 'ui-production-full-visual-capture.spec.ts',
     };
   }
@@ -393,7 +434,7 @@ test.describe('TITANE UI — Full Visual Capture v79 (strict)', () => {
     ];
 
     for (const route of routesToCapture) {
-      console.log(`[v78] Capturing ${route}...`);
+      console.log(`[v80] Capturing ${route}...`);
       const record = await collectVisualEvidence(page, route);
       records.push(record);
     }
@@ -402,8 +443,8 @@ test.describe('TITANE UI — Full Visual Capture v79 (strict)', () => {
     const jsonlContent = records.map(r => JSON.stringify(r)).join('\n');
     writeFileSync(OUTPUT_ARTIFACT, jsonlContent);
 
-    console.log(`[v78] Artifact written: ${OUTPUT_ARTIFACT}`);
-    console.log(`[v78] Total routes captured: ${records.length}`);
+    console.log(`[v80] Artifact written: ${OUTPUT_ARTIFACT}`);
+    console.log(`[v80] Total routes captured: ${records.length}`);
 
     // Verify artifact
     const saved = readFileSync(OUTPUT_ARTIFACT, 'utf-8');

@@ -1,3 +1,11 @@
+# [2026-05-11] Cartography delta - v80 visual route + desktop conditional gap normalization
+
+- `src/pages/DevPage.tsx` now consumes `formatDevBestProvider()` from `src/pages/devPage.formatters.ts`.
+- `src/__tests__/devPage.formatters.test.ts` expanded to cover null/partial orchestration provider values.
+- `e2e/production/ui-production-full-visual-capture.spec.ts` keeps strict v80 classification with selector-based ErrorBoundary truth.
+- `e2e/desktop/ui-desktop-agent-overlay-contract.wdio.test.js` and `e2e/desktop/ui-desktop-action-sync-matrix.wdio.test.js` now emit explicit conditional JSONL classifications to `artifacts/ui-visual/v80-desktop-test-gap-results.jsonl`.
+- `e2e/desktop/ui-desktop-installed-full-visual-capture.wdio.test.js` updated to WDIO-compatible screenshot API.
+
 ## 2026-05-09 — Runtime callsite integration for chat contracts
 
 > Hardening runtime overlay: `src/services/ai/chatEngine.ts` publie maintenant un marqueur déterministe de décision skill dans `pipelineSteps` (`skill-route-blocked:*`, `skill-route-suggest:*`, `skill-route-active:*`) et couvre explicitement `canonicalMode=REPAIR` via un plan de réflexion `technical` borné.

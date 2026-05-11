@@ -33,6 +33,7 @@ import { StatsSystemPanels } from './Stats';
 import { startSystemHealthPolling } from '@/services/systemHealthPoller';
 import { useSystemHealth } from '@/stores/systemStore.selectors';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { formatDevBestProvider, formatDevHealthScore } from './devPage.formatters';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -125,6 +126,11 @@ const OverviewSection = memo<{
   // LOCK3: backend-sourced health truth (null = not yet fetched)
   backendHealth: import('../services/tauri/backend-v17.2.types').HealthStatus | null;
 }>(({ oneCoreState, qaState, orchestration, backendHealth }) => {
+  const qaHealthScore =
+    typeof qaState?.health_score === 'number' && Number.isFinite(qaState.health_score)
+      ? qaState.health_score
+      : null;
+
   const globalHealth = oneCoreState
     ? Math.round(
         (oneCoreState.global_health * 100 +
@@ -157,19 +163,19 @@ const OverviewSection = memo<{
         />
         <StatCard
           label="QA Score"
-          value={qaState ? `${qaState.health_score.toFixed(1)}%` : 'N/A'}
+          value={formatDevHealthScore(qaHealthScore)}
           icon="🧪"
           variant={
-            qaState && qaState.health_score >= 90
+            qaHealthScore !== null && qaHealthScore >= 90
               ? 'success'
-              : qaState && qaState.health_score >= 70
+              : qaHealthScore !== null && qaHealthScore >= 70
                 ? 'warning'
                 : 'error'
           }
         />
         <StatCard
           label="Orchestration"
-          value={orchestration?.multiAi.bestProvider || 'N/A'}
+          value={formatDevBestProvider(orchestration)}
           icon="🔥"
           variant="info"
         />

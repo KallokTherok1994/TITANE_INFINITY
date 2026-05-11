@@ -1,3 +1,12 @@
+# [2026-05-11] v80 visual route + desktop gap repair truth
+
+- Surface canonique `/dev`: `src/pages/DevPage.tsx` lit maintenant le provider orchestration via `formatDevBestProvider()` pour eviter les crashs runtime quand le payload est partiel.
+- Surface evidence capture: `e2e/production/ui-production-full-visual-capture.spec.ts` classe l ErrorBoundary via selector visible `titane-error-boundary` (plus de faux positif textuel) et publie un artifact v80 strict.
+- Surface desktop gap contract:
+  - `e2e/desktop/ui-desktop-agent-overlay-contract.wdio.test.js` enregistre `CONDITIONAL_ACCEPTED` quand l overlay est absent par defaut.
+  - `e2e/desktop/ui-desktop-action-sync-matrix.wdio.test.js` enregistre explicitement les controles conditionnels indisponibles en etat par defaut.
+  - Artifact de classification: `artifacts/ui-visual/v80-desktop-test-gap-results.jsonl`.
+
 # [2026-05-09] Conversation runtime contract callsites (tool/skill/reasoning/reflection/memory)
 
 - Surface runtime inchangée: `src/components/sections/ConversationSection.tsx` garde la même UX, mais la trace backend expose maintenant explicitement le verdict de routage skill (`skill-route-blocked|suggest|active`) dans `omegaMetadata.pipelineSteps`.
