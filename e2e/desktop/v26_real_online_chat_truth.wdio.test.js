@@ -211,7 +211,7 @@ async function inspect() {
     try {
       await browser.reloadSession();
       await pause(1200);
-      await browser.url('tauri://localhost/#/titane');
+      await browser.url('tauri://localhost/titane');
       await pause(1800);
       return await runInspect();
     } catch (retryError) {
@@ -388,7 +388,7 @@ function classifyFinal() {
 describe('V26 - REAL ONLINE CHAT TRUTH', () => {
   it('V26-SCENARIO - visible real online chat truth', async () => {
     await pause(1500);
-    await browser.url('tauri://localhost/#/titane');
+    await browser.url('tauri://localhost/titane');
     await pause(2400);
 
     await browser.execute(() => {

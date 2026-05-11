@@ -1159,18 +1159,18 @@ Chaque agent est intégré dans la cartographie 4-Ring : UI (dashboard), moteu
 | `/memory-evo` | Redirect -> `/titane?tab=transformation` | ✓ |
 | `/cloud` | CloudCenter | ✓ |
 | `/knowledge` | KnowledgeFusionPage | ✓ |
-| `/creation` | CreationStudio | — |
-| `/evolution` | EvolutionMonitor | — |
+| `/creation` | CreationStudio | ✓ |
+| `/evolution` | EvolutionMonitor | ✓ |
 | `/singularity` | SingularityMonitor | ✓ |
-| `/sentinel` | Sentinel | — |
-| `/watchdog` | Watchdog | — |
-| `/selfheal` | SelfHeal | — |
-| `/adaptive` | AdaptiveEngine | — |
-| `/memory` | Memory | — |
-| `/research` | ResearchPage | — |
-| `/skills` | SkillManager | — |
+| `/sentinel` | Sentinel | ✓ |
+| `/watchdog` | Watchdog | ✓ |
+| `/selfheal` | SelfHeal | ✓ |
+| `/adaptive` | AdaptiveEngine | ✓ |
+| `/memory` | Memory | ✓ |
+| `/research` | ResearchPage | ✓ |
+| `/skills` | SkillManager | ✓ |
 | `/doc-center` | DocCenterPage | ✓ |
-| `/performance` | PerformanceTest | — |
+| `/performance` | PerformanceTest | ✓ |
 
 ### Redirects
 

@@ -1,0 +1,286 @@
+#!/usr/bin/env bash
+# CI-hardened version with diagnostic support
+# Detects and reports CI environment issues transparently
+
+set -euo pipefail
+
+# CI environment detection + diagnostic mode
+export CI_DIAGNOSTIC="${CI_DIAGNOSTIC:-0}"
+if [[ "${CI:-false}" == "true" ]] || [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+  CI_DIAGNOSTIC=1
+  echo "[CI_ENV] Detected CI environment (GitHub Actions)" >&2
+fi
+
+ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+cd "$ROOT_DIR"
+
+# Hardened shim sourcing with fallback recovery
+if ! source "$(dirname "${BASH_SOURCE[0]}")/_rg_compat.sh" 2>/dev/null; then
+  if [[ "$CI_DIAGNOSTIC" == "1" ]]; then
+    echo "[CI_DIAG] ERROR: _rg_compat.sh source failed, attempting fallback" >&2
+    # Try direct _rg definition as fallback
+    if command -v rg >/dev/null 2>&1; then
+      _rg() { rg "$@"; }
+    else
+      _rg() { grep -rn "$@"; }
+    fi
+  else
+    exit 1
+  fi
+fi
+
+# Verify shim function is available
+if ! declare -f _rg >/dev/null 2>&1; then
+  if [[ "$CI_DIAGNOSTIC" == "1" ]]; then
+    echo "[CI_DIAG] WARNING: _rg function not available, falling back to grep" >&2
+    _rg() { grep -rn "$@" || true; }
+  else
+    exit 1
+  fi
+fi
+
+FAIL=0
+pass() { echo "PASS: $1"; [[ "$CI_DIAGNOSTIC" == "1" ]] && echo "[CI_DIAG] PASS: $1" >&2; }
+fail() { echo "FAIL: $1"; FAIL=1; [[ "$CI_DIAGNOSTIC" == "1" ]] && echo "[CI_DIAG] FAIL: $1" >&2; }
+
+require_pattern() {
+  local id="$1"
+  local pattern="$2"
+  shift 2
+  if _rg -n -- "$pattern" "$@" >/dev/null 2>&1; then
+    pass "$id"
+  else
+    fail "$id"
+  fi
+}
+
+reject_pattern() {
+  local id="$1"
+  local pattern="$2"
+  shift 2
+  if _rg -n -- "$pattern" "$@" >/dev/null 2>&1; then
+    fail "$id"
+  else
+    pass "$id"
+  fi
+}
+
+require_all_patterns() {
+  local id="$1"
+  local file="$2"
+  shift 2
+  local pattern
+  for pattern in "$@"; do
+    if ! _rg -n -- "$pattern" "$file" >/dev/null 2>&1; then
+      fail "$id file=$file missing=$pattern"
+      return
+    fi
+  done
+  pass "$id"
+}
+
+require_file() {
+  local id="$1"
+  local file="$2"
+  if [[ -f "$file" ]]; then
+    pass "$id"
+  else
+    fail "$id"
+  fi
+}
+
+# Continue with existing checks
+require_file "VSCODE_TASKS_PRESENT" ".vscode/tasks.json"
+require_file "VSCODE_EXTENSIONS_PRESENT" ".vscode/extensions.json"
+require_file "VSCODE_MCP_CONFIG_PRESENT" ".vscode/mcp.json"
+require_file "PACKAGE_JSON_PRESENT" "package.json"
+require_file "DOCS_DEV_FR_PRESENT" "docs/dev/fr/README.md"
+require_file "OLLAMA_BOUNDARY_AGENT_PRESENT" ".github/agents/ollama-dev-chat-boundary.agent.md"
+require_file "OLLAMA_DEV_SESSION_PROMPT_PRESENT" ".github/prompts/ollama-dev-session.prompt.md"
+
+require_pattern "VSCODE_RECOMMENDS_COPILOT_CHAT" 'github\.copilot-chat' .vscode/extensions.json
+require_pattern "VSCODE_RECOMMENDS_GITHUB_PR" 'github\.vscode-pull-request-github' .vscode/extensions.json
+require_pattern "VSCODE_RECOMMENDS_RUST_ANALYZER" 'rust-lang\.rust-analyzer' .vscode/extensions.json
+require_pattern "VSCODE_RECOMMENDS_TAURI" 'tauri-apps\.tauri-vscode' .vscode/extensions.json
+require_pattern "VSCODE_RECOMMENDS_PLAYWRIGHT" 'ms-playwright\.playwright' .vscode/extensions.json
+
+require_pattern "VSCODE_BLOCKS_CLAUDE_DEV" 'saoudrizwan\.claude-dev' .vscode/extensions.json
+require_pattern "VSCODE_BLOCKS_OPENAI_CHATGPT" 'openai\.chatgpt' .vscode/extensions.json
+require_pattern "VSCODE_BLOCKS_ANTHROPIC" 'anthropic\.claude-code' .vscode/extensions.json
+
+require_pattern "TASK_COPILOT_XS_VALIDATE_PRESENT" '🧩 COPILOT-XS: Validate' .vscode/tasks.json
+require_pattern "TASK_AGENT_AUDIT_PRESENT" '🤖 Audit: Advanced Agents' .vscode/tasks.json
+require_pattern "TASK_AGENT_WORKFLOW_PRESENT" '🤖 Audit: Agent Workflow' .vscode/tasks.json
+require_pattern "TASK_AGENT_STACK_PRESENT" '🤖 Audit: Agent Stack' .vscode/tasks.json
+require_pattern "TASK_BUNDLED_PNPM_PRESENT" '\./\.tools/node/current/bin/pnpm' .vscode/tasks.json
+
+require_pattern "PKG_VERIFY_INSTRUCTIONS_PRESENT" '"verify:instructions"' package.json
+require_pattern "PKG_VERIFY_OLLAMA_BOUNDARY_PRESENT" '"verify:ollama:boundary"' package.json
+legacy_script_prefix='"c'
+legacy_script_prefix+='line:'
+
+reject_pattern "PKG_CLINE_SCRIPTS_REMOVED" "$legacy_script_prefix" package.json
+require_pattern "PKG_COPILOT_VALIDATE_PRESENT" '"copilot-xs:validate"' package.json
+require_pattern "PKG_SYNC_MAPPING_PRESENT" '"sync:mapping"' package.json
+require_pattern "PKG_TEST_ARCH_PRESENT" '"test:architecture"' package.json
+require_pattern "PKG_VERIFY_ADVANCED_AGENTS_PRESENT" '"verify:agents:advanced"' package.json
+require_pattern "PKG_VERIFY_AGENT_WORKFLOW_PRESENT" '"verify:agents:workflow"' package.json
+require_pattern "PKG_AUDIT_AGENT_STACK_PRESENT" '"audit:agents:stack"' package.json
+
+require_all_patterns \
+  "TITANE_SCOPED_DELEGATION_FALLBACK_PRESENT" \
+  ".github/instructions/titane.instructions.md" \
+  "custom agent, specialist delegation, or exploration-oriented handoff" \
+  "canonical local discovery or evidence collection" \
+  "classify the delegation gap honestly"
+
+require_all_patterns \
+  "COPILOT_KERNEL_OLLAMA_BOUNDARY_PRESENT" \
+  ".github/copilot-instructions.md" \
+  "Ollama Dev / Ollama Chat boundary truth" \
+  "qwen3\.5:9b" \
+  "gemma2:2b" \
+  "Controlled communication"
+
+require_all_patterns \
+  "TITANE_SCOPED_OLLAMA_BOUNDARY_PRESENT" \
+  ".github/instructions/titane.instructions.md" \
+  "Ollama Dev / Ollama Chat boundary work" \
+  "qwen3\.5:9b" \
+  "ollama-dev-chat-boundary\.agent\.md"
+
+require_all_patterns \
+  "ROOT_AGENTS_OLLAMA_BOUNDARY_PRESENT" \
+  "AGENTS.md" \
+  "Ollama Boundary Guardian" \
+  "qwen3\.5:9b" \
+  "gemma2:2b" \
+  "verify:ollama:boundary"
+
+require_all_patterns \
+  "OLLAMA_BOUNDARY_AGENT_CONTENT_PRESENT" \
+  ".github/agents/ollama-dev-chat-boundary.agent.md" \
+  "Ollama Dev = GitHub Copilot VS Code conversation" \
+  "qwen3\.5:9b" \
+  "gemma2:2b" \
+  "communication contrôlée"
+
+require_all_patterns \
+  "OLLAMA_BOUNDARY_AGENT_CAPABILITIES_PRESENT" \
+  ".github/agents/ollama-dev-chat-boundary.agent.md" \
+  "Capacités qwen3.5:9b" \
+  "128K" \
+  "Tool-calling" \
+  "Comportements interdits"
+
+require_all_patterns \
+  "HYBRID_MEMORY_DISPATCH_EXPLORE_QUOTA_FALLBACK_PRESENT" \
+  ".github/instructions/hybrid-memory-dispatch.instructions.md" \
+  "Explore weekly quota failures" \
+  "canonical local discovery" \
+  "search_subagent"
+
+require_all_patterns \
+  "SIMPLE_SESSION_EXPLORE_QUOTA_FALLBACK_PRESENT" \
+  ".github/prompts/simple-fast-session.prompt.md" \
+  "Explore is unavailable because of quota" \
+  "canonical local discovery" \
+  "search_subagent"
+
+require_all_patterns \
+  "HEAVY_SESSION_EXPLORE_QUOTA_FALLBACK_PRESENT" \
+  ".github/prompts/heavy-runtime-session.prompt.md" \
+  "Explore is unavailable because of quota" \
+  "external platform limit" \
+  "search_subagent"
+
+require_all_patterns \
+  "HYBRID_MEMORY_PROMPT_EXPLORE_QUOTA_FALLBACK_PRESENT" \
+  ".github/prompts/start-hybrid-memory-dispatch.prompt.md" \
+  "Explore quota" \
+  "canonical local discovery" \
+  "search_subagent"
+
+require_all_patterns \
+  "RELEASE_READINESS_SPECIALIST_FALLBACK_PRESENT" \
+  ".github/prompts/release-readiness.prompt.md" \
+  "release-proof" \
+  "canonical local release evidence checks" \
+  "external truth"
+
+require_all_patterns \
+  "TITANE_CONDUCTOR_EXPLORE_QUOTA_FALLBACK_PRESENT" \
+  ".github/agents/titane-conductor.agent.md" \
+  "quota Explore" \
+  "discovery locale canonique" \
+  "search_subagent"
+
+require_all_patterns \
+  "MEMORY_ROOT_COMMANDER_SPECIALIST_FALLBACK_PRESENT" \
+  ".github/agents/memory-root-commander.agent.md" \
+  "delegated specialist handoff is unavailable" \
+  "canonical local truth collection" \
+  "declaring BLOCKED"
+
+require_all_patterns \
+  "MEMORY_ORCHESTRATOR_SPECIALIST_FALLBACK_PRESENT" \
+  ".github/agents/memory-orchestrator.agent.md" \
+  "delegated master is unavailable" \
+  "canonical local truth collection" \
+  "before escalating"
+
+require_pattern "MCP_OLLAMA_DEV_WIRED" 'ollama-dev' .vscode/mcp.json
+require_pattern "MCP_MODEL_QWEN_PRESENT" 'qwen3\.5:9b' .vscode/mcp.json
+require_pattern "MCP_ENABLED_IN_SETTINGS" 'chat\.mcp\.enabled' .vscode/settings.json
+
+require_all_patterns \
+  "RULE20_SESSION_CONTINUITY_PRESENT" \
+  ".github/copilot-instructions.md" \
+  "Rule 20 - Session continuity" \
+  "git status --short" \
+  "Never carry credentials"
+
+require_all_patterns \
+  "RULE2_PROOF_DEFINITION_PRESENT" \
+  ".github/copilot-instructions.md" \
+  "Proof definition:" \
+  "verbatim real command output" \
+  "NO_PROOF"
+
+require_all_patterns \
+  "SESSION_OPENER_IN_TITANE_INSTRUCTIONS" \
+  ".github/instructions/titane.instructions.md" \
+  "Session Opener" \
+  "Declare MODE" \
+  "Commit pending phases"
+
+require_all_patterns \
+  "PATH_DECISION_TABLE_IN_TITANE_INSTRUCTIONS" \
+  ".github/instructions/titane.instructions.md" \
+  "PATH decision table" \
+  "PATH_SIMPLE" \
+  "PATH_HEAVY"
+
+# Routing file governance
+if [[ -f ".github/copilot-routing.json" ]]; then
+  pass "COPILOT_ROUTING_PRESENT"
+else
+  fail "ROUTING_AGENT_MISSING"
+fi
+
+for agent in architect-guardian tauri-safety e2e-authority release-proof docs-registry dependency-guardian memory-root-commander; do
+  if [[ -f ".github/agents/${agent}.agent.md" ]]; then
+    pass "ROUTING_AGENT_PRESENT_${agent}"
+  else
+    fail "ROUTING_AGENT_MISSING_${agent}"
+  fi
+done
+
+echo "SUMMARY: FAIL=$FAIL"
+if [[ "$CI_DIAGNOSTIC" == "1" ]]; then
+  echo "[CI_DIAG] Final verdict: FAIL=$FAIL" >&2
+fi
+
+if [[ "$FAIL" -ne 0 ]]; then
+  exit 1
+fi

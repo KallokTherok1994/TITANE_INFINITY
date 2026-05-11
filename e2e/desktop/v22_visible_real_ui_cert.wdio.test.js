@@ -105,7 +105,7 @@ async function recoverSessionIfNeeded(step, error) {
 
   try {
     await browser.reloadSession();
-    await browser.url('tauri://localhost/#/titane');
+    await browser.url('tauri://localhost/titane');
     await pause(LONG_PAUSE);
     await ss(`${step.toLowerCase()}_session_recovered`);
     return true;
@@ -355,7 +355,7 @@ describe('V22 — VISIBLE REAL UI CERTIFICATION (AppImage 27.2.0)', () => {
     try {
       const url = await browser.getUrl();
       if (!url.includes('/titane')) {
-        await browser.url('tauri://localhost/#/titane');
+        await browser.url('tauri://localhost/titane');
         await pause(LONG_PAUSE);
         console.log('[V22-S1] navigated to /titane');
       } else {

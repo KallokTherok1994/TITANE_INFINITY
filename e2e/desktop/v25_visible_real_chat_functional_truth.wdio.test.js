@@ -79,7 +79,7 @@ async function recoverSessionIfNeeded(step, error) {
 
   try {
     await browser.reloadSession();
-    await browser.url('tauri://localhost/#/titane');
+    await browser.url('tauri://localhost/titane');
     await pause(1200);
     return true;
   } catch (recoveryError) {
@@ -283,7 +283,7 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
 
     try {
       await pause(1500);
-      await browser.url('tauri://localhost/#/titane');
+      await browser.url('tauri://localhost/titane');
       await pause(2200);
 
       for (let attempt = 0; attempt < 4; attempt += 1) {
