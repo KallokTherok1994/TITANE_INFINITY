@@ -24,7 +24,7 @@ describe('DocCenter — Export DOCX natif', () => {
   // ── Navigation ─────────────────────────────────────────────────────────────
 
   it('navigue vers /doc-center et rend la page', async () => {
-    await browser.url('/doc-center');
+    await browser.url('tauri://localhost/doc-center');
     const page = await $('[data-testid="doc-center-page"]');
     await page.waitForExist({ timeout: 10000 });
     assert.ok(await page.isDisplayed(), 'doc-center-page doit être visible');
@@ -112,7 +112,7 @@ describe('DocCenter — Export DOCX natif', () => {
   // ── Screenshot preuve finale ───────────────────────────────────────────────
 
   it('capture preuve finale de la page DocCenter', async () => {
-    await browser.url('/doc-center');
+    await browser.url('tauri://localhost/doc-center');
     await $('[data-testid="doc-center-page"]').waitForExist({ timeout: 8000 });
     await browser.saveScreenshot(`${ARTIFACTS_DIR}/04-final-proof.png`);
     assert.ok(true, 'Preuve screenshot capturée');

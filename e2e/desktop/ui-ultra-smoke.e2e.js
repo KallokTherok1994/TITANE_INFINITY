@@ -56,17 +56,19 @@ describe('UI Desktop Ultra Smoke (WDIO/Tauri)', () => {
     await clickAllTabs(['[data-testid="tab-admin-audio"]']);
     const toggled = await toggleAllVisibleCheckboxes();
     if (toggled < 1) {
+      // Only fail if there are ENABLED visible checkboxes that could not be toggled.
+      // Disabled checkboxes are expected (read-only settings) and are not a failure.
       const checkboxes = await $$('input[type="checkbox"]');
-      let visibleCheckboxes = 0;
+      let enabledVisibleCheckboxes = 0;
       for (const checkbox of checkboxes) {
-        if (await checkbox.isDisplayed()) {
-          visibleCheckboxes += 1;
+        if ((await checkbox.isDisplayed()) && (await checkbox.isEnabled())) {
+          enabledVisibleCheckboxes += 1;
         }
       }
       assert.equal(
-        visibleCheckboxes,
+        enabledVisibleCheckboxes,
         0,
-        'checkboxes are visible but none could be toggled in smoke flow'
+        'checkboxes are visible and enabled but none could be toggled in smoke flow'
       );
     }
   });

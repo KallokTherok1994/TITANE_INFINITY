@@ -45,9 +45,7 @@ const shouldPreferTauri =
   !process.env.TAURI_DEV_SERVER_URL && !process.env.VITE_DEV_SERVER_URL;
 const appUrl = (route = '/') =>
   shouldPreferTauri
-    ? route === '/'
-      ? `${TAURI_BASE_URL}/`
-      : `${TAURI_BASE_URL}/#${route}`
+    ? `${TAURI_BASE_URL}${route === '/' ? '/' : route}`
     : `${DEV_BASE_URL}${route}`;
 
 const RESPONSE_TIMEOUT_MS = parseInt(process.env.RESPONSE_TIMEOUT_MS || '120000', 10);
@@ -126,6 +124,12 @@ async function ss(label, modeId) {
 
 // ─── Core: sélection de mode + envoi de message ───────────────────────────────
 async function selectMode(modeId) {
+  // Wait for the chat mode selector to appear (compact select variant)
+  try {
+    await $('[data-testid="chat-mode-selector-select"]').waitForExist({ timeout: 12000 });
+  } catch (_) {
+    // Not the compact variant — will try dropdown below
+  }
   const select = await $('[data-testid="chat-mode-selector-select"]');
   if (await select.isExisting()) {
     await select.waitForDisplayed({ timeout: 10000 });

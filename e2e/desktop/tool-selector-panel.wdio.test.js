@@ -89,7 +89,7 @@ describe('tool-selector-panel (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
       await browser.pause(500);
     });
@@ -131,7 +131,7 @@ describe('tool-selector-panel (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tool-selector-btn')).waitForDisplayed({ timeout: TIMEOUT });
     });
 
@@ -186,7 +186,7 @@ describe('tool-selector-panel (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tool-selector-btn')).waitForDisplayed({ timeout: TIMEOUT });
       await (await $(testId('tool-selector-btn'))).click();
       await browser.pause(400);
@@ -222,7 +222,7 @@ describe('tool-selector-panel (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
       await browser.pause(500);
     });

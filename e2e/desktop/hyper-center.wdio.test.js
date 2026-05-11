@@ -12,7 +12,11 @@ describe('Desktop HyperCenter route truth', () => {
 
     for (const route of routeCandidates) {
       await browser.url(route);
-      await browser.pause(1400);
+      // Wait up to 8s for the page to mount (lazy-loaded route)
+      await browser.waitUntil(
+        async () => (await $('[data-testid="page-hyper-center"]').isExisting()),
+        { timeout: 8000, interval: 300, timeoutMsg: 'page-hyper-center not mounted after 8s' }
+      ).catch(() => null);
 
       const page = await $('[data-testid="page-hyper-center"]');
       if (await page.isExisting()) {

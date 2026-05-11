@@ -409,16 +409,17 @@ async function sendMessageViaUI(message, timeoutMs = RESPONSE_TIMEOUT_MS) {
 async function sendMessageViaIPC(message, options = {}) {
   const start = Date.now();
   try {
-    const response = await invokeTauriCommand('chat_complete', {
-      messages: [{ role: 'user', content: message }],
+    const response = await invokeTauriCommand('conversation_generate', {
+      message: typeof message === 'string' ? message : (message?.content || String(message)),
+      conversation_id: options.conversation_id || `e2e-sim-${Date.now()}`,
       mode: options.mode || 'default',
-      model: options.model || undefined,
       provider: options.provider || undefined,
-      ...options,
     });
 
     const latency = Date.now() - start;
-    const content = response?.content || response?.text || response?.message || '';
+    // conversation_generate returns { ok, content: { response, ... } } or similar
+    const raw = response?.content ?? response;
+    const content = raw?.response || raw?.content || raw?.text || raw?.message || response?.content || '';
     return {
       success: true,
       latency,

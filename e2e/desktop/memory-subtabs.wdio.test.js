@@ -58,7 +58,7 @@ describe('memory-subtabs (WDIO desktop)', () => {
     });
 
     before(async () => {
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-conversation')).waitForDisplayed({ timeout: TIMEOUT });
       // Navigate to memory tab first
       await $(testId('tab-memory')).click();
@@ -158,7 +158,7 @@ describe('memory-subtabs (WDIO desktop)', () => {
     it('L16 — hybrid overview testids are present in DOM after navigating memory-tab-overview', async function () {
       if (process.env.TITANE_E2E_FULL !== '1') this.skip();
       // Navigate to memory > overview sub-tab
-      await browser.url('/titane');
+      await browser.url('tauri://localhost/titane');
       await $(testId('tab-memory')).waitForDisplayed({ timeout: TIMEOUT });
       await $(testId('tab-memory')).click();
       await waitForTabActive(testId('tab-memory'), TIMEOUT);

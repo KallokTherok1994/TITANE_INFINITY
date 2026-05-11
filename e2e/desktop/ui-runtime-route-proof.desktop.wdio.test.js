@@ -25,12 +25,12 @@ const ROUTES = [
   { route: '/time',       rootTestId: 'page-time',        srcFile: 'src/pages/TimePage.tsx' },
   { route: '/experience', rootTestId: 'page-experience',  srcFile: 'src/pages/ExperiencePage.tsx' },
   { route: '/memory',     rootTestId: 'page-memory',      srcFile: 'src/pages/MemoryPage.tsx' },
-  { route: '/doc-center', rootTestId: 'page-doc-center',  srcFile: 'src/pages/DocCenterPage.tsx' },
+  { route: '/doc-center', rootTestId: 'doc-center-page',  srcFile: 'src/pages/DocCenterPage.tsx' },
   { route: '/admin',      rootTestId: 'page-admin',       srcFile: 'src/pages/AdminPage.tsx' },
   { route: '/dev',        rootTestId: 'page-dev',         srcFile: 'src/pages/DevPage.tsx' },
   { route: '/fusion',     rootTestId: 'page-fusion',      srcFile: 'src/pages/PerfectFusionDashboard.tsx' },
-  { route: '/cloud',      rootTestId: 'page-cloud',       srcFile: 'src/pages/CloudPage.tsx' },
-  { route: '/research',   rootTestId: 'page-research',    srcFile: 'src/pages/ResearchPage.tsx' },
+  { route: '/cloud',      rootTestId: 'page-cloud-center', srcFile: 'src/pages/CloudCenter/index.tsx' },
+  { route: '/research',   rootTestId: 'research-page',    srcFile: 'src/pages/ResearchPage.tsx' },
   { route: '/twins',      rootTestId: 'page-twins',       srcFile: 'src/pages/TwinsPage.tsx' },
 ];
 

@@ -28,7 +28,7 @@ const testId = id => `[data-testid="${id}"]`;
 const ACTION_SURFACES = [
   {
     route: '/doc-center',
-    rootTestId: 'page-doc-center',
+    rootTestId: 'doc-center-page',
     srcFile: 'src/pages/DocCenterPage.tsx',
     label: 'Doc Center — export IPC surface',
     // The export button should be present but may require Tauri IPC
@@ -50,15 +50,15 @@ const ACTION_SURFACES = [
   },
   {
     route: '/research',
-    rootTestId: 'page-research',
+    rootTestId: 'research-page',
     srcFile: 'src/pages/ResearchPage.tsx',
     label: 'Research — interactive surface',
     actionSelector: null,
   },
   {
     route: '/cloud',
-    rootTestId: 'page-cloud',
-    srcFile: 'src/pages/CloudPage.tsx',
+    rootTestId: 'page-cloud-center',
+    srcFile: 'src/pages/CloudCenter/index.tsx',
     label: 'Cloud — status surface',
     actionSelector: null,
   },
