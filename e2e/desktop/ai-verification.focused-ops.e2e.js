@@ -18,7 +18,14 @@ const FOCUSED_SCENARIOS = [
   {
     seed: 'Explique ton chemin de réponse (UI→services→orchestrateur→engines).',
     prompt: 'Reformule ma dernière question.',
-    expectAny: [/chemin/i, /réponse/i, /services/i, /orchestr/i, /reformul/i, /question/i],
+    expectAny: [
+      /chemin/i,
+      /réponse/i,
+      /services/i,
+      /orchestr/i,
+      /reformul/i,
+      /question/i,
+    ],
     rejectAny: [
       /j'ai besoin de plus d'informations/i,
       /quel exemple/i,

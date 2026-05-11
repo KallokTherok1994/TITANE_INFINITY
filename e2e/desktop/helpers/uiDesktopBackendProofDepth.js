@@ -47,7 +47,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const { navigateAndWait, isVisible, getText, getAttribute, safeClick } = require('./uiDesktopFunctionalFlows.js');
+const {
+  navigateAndWait,
+  isVisible,
+  getText,
+  getAttribute,
+  safeClick,
+} = require('./uiDesktopFunctionalFlows.js');
 const { logClassification } = require('./uiDesktopFunctionalAssertions.js');
 
 const ARTIFACT_DIR = path.join(process.cwd(), 'artifacts', 'backend-proof-depth');
@@ -96,7 +102,11 @@ function describeShape(val) {
   if (typeof val === 'boolean') return `boolean:${val}`;
   if (typeof val === 'number') return `number:${val}`;
   if (typeof val === 'string') return `string(${val.length})`;
-  if (Array.isArray(val)) return `array(${val.length}):[${val.slice(0, 3).map(v => typeof v).join(',')}]`;
+  if (Array.isArray(val))
+    return `array(${val.length}):[${val
+      .slice(0, 3)
+      .map(v => typeof v)
+      .join(',')}]`;
   if (typeof val === 'object') {
     const keys = Object.keys(val).slice(0, 8).join(',');
     return `object{${keys}}`;
@@ -110,10 +120,13 @@ function describeShape(val) {
 function classifyError(errorStr) {
   if (!errorStr) return null;
   if (errorStr.includes('NO_TAURI_INVOKE')) return 'NO_TAURI_INVOKE';
-  if (errorStr.includes('not found') || errorStr.includes('unknown command')) return 'COMMAND_NOT_FOUND';
-  if (errorStr.includes('Permission') || errorStr.includes('not allowed')) return 'PERMISSION_DENIED';
+  if (errorStr.includes('not found') || errorStr.includes('unknown command'))
+    return 'COMMAND_NOT_FOUND';
+  if (errorStr.includes('Permission') || errorStr.includes('not allowed'))
+    return 'PERMISSION_DENIED';
   if (errorStr.includes('timeout') || errorStr.includes('Timeout')) return 'TIMEOUT';
-  if (errorStr.includes('Network') || errorStr.includes('network')) return 'NETWORK_ERROR';
+  if (errorStr.includes('Network') || errorStr.includes('network'))
+    return 'NETWORK_ERROR';
   return 'COMMAND_ERROR';
 }
 
@@ -124,9 +137,12 @@ function classifyProofLevel(result) {
   if (!result.attempted) return 'PROOF_DEPTH_BLOCKED_BY_RUNTIME';
   if (!result.available) return 'PROOF_DEPTH_BLOCKED_BY_RUNTIME';
   if (result.errorKind === 'NO_TAURI_INVOKE') return 'PROOF_DEPTH_BLOCKED_BY_RUNTIME';
-  if (result.errorKind === 'COMMAND_NOT_FOUND') return 'PROOF_DEPTH_BLOCKED_BY_MISSING_COMMAND';
-  if (result.ok && result.responseShape !== 'null') return 'PROOF_DEPTH_IPC_RESPONSE_PROVEN';
-  if (result.attempted && result.available && result.errorKind !== 'NO_TAURI_INVOKE') return 'PROOF_DEPTH_IPC_COMMAND_PROVEN';
+  if (result.errorKind === 'COMMAND_NOT_FOUND')
+    return 'PROOF_DEPTH_BLOCKED_BY_MISSING_COMMAND';
+  if (result.ok && result.responseShape !== 'null')
+    return 'PROOF_DEPTH_IPC_RESPONSE_PROVEN';
+  if (result.attempted && result.available && result.errorKind !== 'NO_TAURI_INVOKE')
+    return 'PROOF_DEPTH_IPC_COMMAND_PROVEN';
   return 'PROOF_DEPTH_BLOCKED_BY_RUNTIME';
 }
 
@@ -142,7 +158,12 @@ function persistProofLine(entry) {
       fs.mkdirSync(targetDir, { recursive: true });
     }
     if (!entry.sourceSpec) {
-      console.warn('[v60] WARN: sourceSpec missing on proof record — module=' + (entry.moduleId || entry.module || '?') + ' command=' + (entry.command || 'none'));
+      console.warn(
+        '[v60] WARN: sourceSpec missing on proof record — module=' +
+          (entry.moduleId || entry.module || '?') +
+          ' command=' +
+          (entry.command || 'none')
+      );
     }
     const enriched = {
       schemaVersion: 'v60',
@@ -209,45 +230,49 @@ async function probeInvoke(command, args = {}, opts = {}) {
   };
 
   try {
-    const rawResult = await browser.execute(async (cmd, cmdArgs) => {
-      const tStart = performance.now();
-      try {
-        const invoker =
-          (window.__TAURI__?.core?.invoke) ||
-          (window.__TAURI__?.tauri?.invoke) ||
-          (window.__TAURI__?.invoke);
-        if (!invoker) {
+    const rawResult = await browser.execute(
+      async (cmd, cmdArgs) => {
+        const tStart = performance.now();
+        try {
+          const invoker =
+            window.__TAURI__?.core?.invoke ||
+            window.__TAURI__?.tauri?.invoke ||
+            window.__TAURI__?.invoke;
+          if (!invoker) {
+            return {
+              ok: false,
+              content: null,
+              error: 'NO_TAURI_INVOKE',
+              available: false,
+              latencyMs: Math.round(performance.now() - tStart),
+            };
+          }
+          const res = await invoker(cmd, cmdArgs);
+          return {
+            ok: true,
+            content: res,
+            error: null,
+            available: true,
+            latencyMs: Math.round(performance.now() - tStart),
+          };
+        } catch (e) {
           return {
             ok: false,
             content: null,
-            error: 'NO_TAURI_INVOKE',
-            available: false,
+            error: String(e),
+            available: true,
             latencyMs: Math.round(performance.now() - tStart),
           };
         }
-        const res = await invoker(cmd, cmdArgs);
-        return {
-          ok: true,
-          content: res,
-          error: null,
-          available: true,
-          latencyMs: Math.round(performance.now() - tStart),
-        };
-      } catch (e) {
-        return {
-          ok: false,
-          content: null,
-          error: String(e),
-          available: true,
-          latencyMs: Math.round(performance.now() - tStart),
-        };
-      }
-    }, command, args);
+      },
+      command,
+      args
+    );
 
     result.attempted = true;
     result.available = rawResult?.available ?? false;
     result.ok = rawResult?.ok ?? false;
-    result.latencyMs = rawResult?.latencyMs ?? (Date.now() - startMs);
+    result.latencyMs = rawResult?.latencyMs ?? Date.now() - startMs;
     result.errorKind = classifyError(rawResult?.error);
     const errStr = rawResult?.error ? String(rawResult.error).slice(0, 200) : null;
     result.errorMsg = errStr ? redactSecrets(redactHomePath(errStr)) : null;
@@ -263,7 +288,6 @@ async function probeInvoke(command, args = {}, opts = {}) {
     result.proofLevel = classifyProofLevel(result);
     result.redactionApplied = !!(result.errorMsg && result.errorMsg !== rawResult?.error);
     result.secretScanPassed = true;
-
   } catch (outerErr) {
     result.attempted = true;
     result.errorKind = 'WDIO_EXECUTE_ERROR';
@@ -277,10 +301,14 @@ async function probeInvoke(command, args = {}, opts = {}) {
   persistProofLine(result);
 
   if (required && result.errorKind === 'NO_TAURI_INVOKE') {
-    throw new Error(`[REQUIRED_LIVE] command="${command}" — IPC not available (BLOCKED_BY_RUNTIME)`);
+    throw new Error(
+      `[REQUIRED_LIVE] command="${command}" — IPC not available (BLOCKED_BY_RUNTIME)`
+    );
   }
   if (required && result.errorKind === 'COMMAND_NOT_FOUND') {
-    throw new Error(`[REQUIRED_LIVE] command="${command}" — command not found (BLOCKED_BY_MISSING_COMMAND)`);
+    throw new Error(
+      `[REQUIRED_LIVE] command="${command}" — command not found (BLOCKED_BY_MISSING_COMMAND)`
+    );
   }
 
   return result;
@@ -419,10 +447,12 @@ async function checkErrorBoundary() {
   try {
     const hasErrorH2 = await browser.execute(() => {
       const h2s = Array.from(document.querySelectorAll('h2'));
-      return h2s.some(h => h.textContent != null && h.textContent.includes('Erreur dans'));
+      return h2s.some(
+        h => h.textContent != null && h.textContent.includes('Erreur dans')
+      );
     });
-    const hasErrorTestid = await browser.execute(() =>
-      !!document.querySelector('[data-testid="titane-error-boundary"]')
+    const hasErrorTestid = await browser.execute(
+      () => !!document.querySelector('[data-testid="titane-error-boundary"]')
     );
     return hasErrorH2 || hasErrorTestid;
   } catch {
@@ -436,12 +466,18 @@ async function checkErrorBoundary() {
 function hasDegradedIndicator(html) {
   if (typeof html !== 'string') return false;
   return (
-    html.includes('degraded') || html.includes('Degraded') ||
-    html.includes('unavailable') || html.includes('Unavailable') ||
-    html.includes('offline') || html.includes('Offline') ||
-    html.includes('simulation') || html.includes('simulé') ||
-    html.includes('⚠') || html.includes('blocked') ||
-    html.includes('indisponible') || html.includes('hors ligne')
+    html.includes('degraded') ||
+    html.includes('Degraded') ||
+    html.includes('unavailable') ||
+    html.includes('Unavailable') ||
+    html.includes('offline') ||
+    html.includes('Offline') ||
+    html.includes('simulation') ||
+    html.includes('simulé') ||
+    html.includes('⚠') ||
+    html.includes('blocked') ||
+    html.includes('indisponible') ||
+    html.includes('hors ligne')
   );
 }
 
@@ -459,13 +495,14 @@ function getArtifactPath() {
 async function waitForTauriReady(timeoutMs = 8000) {
   try {
     await browser.waitUntil(
-      () => browser.execute(() => {
-        return !!(
-          window.__TAURI__?.core?.invoke ||
-          window.__TAURI__?.tauri?.invoke ||
-          window.__TAURI__?.invoke
-        );
-      }),
+      () =>
+        browser.execute(() => {
+          return !!(
+            window.__TAURI__?.core?.invoke ||
+            window.__TAURI__?.tauri?.invoke ||
+            window.__TAURI__?.invoke
+          );
+        }),
       { timeout: timeoutMs, interval: 200, timeoutMsg: 'Tauri IPC bridge not available' }
     );
     return true;
@@ -494,7 +531,7 @@ async function probeInvokeAndReflect(command, args = {}, uiSelector = null, opts
 
   if (uiSelector && (baseResult.ok || baseResult.attempted)) {
     try {
-      const uiResult = await browser.execute((sel) => {
+      const uiResult = await browser.execute(sel => {
         const el = document.querySelector(sel);
         if (!el) return { found: false, text: null, tagName: null };
         const text = (el.textContent || el.innerHTML || '').slice(0, 400);
@@ -510,9 +547,15 @@ async function probeInvokeAndReflect(command, args = {}, uiSelector = null, opts
 
       // Build structured uiEvidence (v60 schema)
       const rawPreview = uiText ? uiText.slice(0, 120) : null;
-      const redactedPreview = rawPreview ? redactSecrets(redactHomePath(rawPreview)) : null;
+      const redactedPreview = rawPreview
+        ? redactSecrets(redactHomePath(rawPreview))
+        : null;
       const textHash = redactedPreview
-        ? require('crypto').createHash('sha256').update(redactedPreview).digest('hex').slice(0, 16)
+        ? require('crypto')
+            .createHash('sha256')
+            .update(redactedPreview)
+            .digest('hex')
+            .slice(0, 16)
         : null;
 
       const structuredUiEvidence = {
@@ -531,9 +574,7 @@ async function probeInvokeAndReflect(command, args = {}, uiSelector = null, opts
           uiEvidence: structuredUiEvidence,
           uiTextMatch: textMatches,
           uiReflected: textMatches,
-          proofLevel: textMatches
-            ? 'UI_REFLECTS_BACKEND_RESULT'
-            : baseResult.proofLevel,
+          proofLevel: textMatches ? 'UI_REFLECTS_BACKEND_RESULT' : baseResult.proofLevel,
         };
         persistProofLine(enhancedEntry);
         return enhancedEntry;
@@ -608,7 +649,7 @@ async function probeSandboxedMutation(opts = {}) {
     proofLevel: ok ? 'SANDBOXED_MUTATION_PROVEN' : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
     uiReflected: false,
     safeToPersist: true,
-    redactionApplied: !!(errorMsg),
+    redactionApplied: !!errorMsg,
     secretScanPassed: true,
     sandboxEvidence: {
       tempPathRedacted: redactHomePath(tempPath),
@@ -668,7 +709,7 @@ async function probeTier1BlockerReduction(opts = {}) {
 
   try {
     if (selector) {
-      const result = await browser.execute((sel) => {
+      const result = await browser.execute(sel => {
         const el = document.querySelector(sel);
         if (!el) return { found: false, text: null, tagName: null };
         const text = (el.textContent || el.innerHTML || '').slice(0, 400);
@@ -695,7 +736,11 @@ async function probeTier1BlockerReduction(opts = {}) {
   if (uiFound) {
     const rawPreview = uiText ? uiText.slice(0, 120) : '';
     const redacted = redactSecrets(redactHomePath(rawPreview));
-    const textHash = require('crypto').createHash('sha256').update(redacted).digest('hex').slice(0, 16);
+    const textHash = require('crypto')
+      .createHash('sha256')
+      .update(redacted)
+      .digest('hex')
+      .slice(0, 16);
 
     uiEvidence = {
       selector: selector || 'body',
@@ -824,7 +869,7 @@ function recordPromotion(opts = {}) {
  */
 async function assertUiEvidence(selector, opts = {}) {
   try {
-    const result = await browser.execute((sel) => {
+    const result = await browser.execute(sel => {
       const el = document.querySelector(sel);
       if (!el) return { found: false, text: null, tagName: null, visible: false };
       const rect = el.getBoundingClientRect();
@@ -907,7 +952,8 @@ function classifyBackendServiceNotInitialized(moduleId, route, sourceSpec, tier 
     promotionTo: 'REMAINS_BLOCKED_BACKEND_SERVICE_NOT_INITIALIZED',
     achievedPromotion: false,
     blockerClass: 'BACKEND_SERVICE_NOT_INITIALIZED',
-    reason: 'Backend service not initialized — Tauri IPC bridge not available in WDIO browser context',
+    reason:
+      'Backend service not initialized — Tauri IPC bridge not available in WDIO browser context',
     nextAction: 'v62-backend-service-init',
   });
 }

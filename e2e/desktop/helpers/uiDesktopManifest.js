@@ -12,8 +12,14 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const MANIFEST_PATH = resolve(__dirname, '../../../docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json');
-const ACTION_CLASS_PATH = resolve(__dirname, '../../../docs/ui/desktop/generated/UI_DESKTOP_ACTION_CLASSIFICATION_v50.json');
+const MANIFEST_PATH = resolve(
+  __dirname,
+  '../../../docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json'
+);
+const ACTION_CLASS_PATH = resolve(
+  __dirname,
+  '../../../docs/ui/desktop/generated/UI_DESKTOP_ACTION_CLASSIFICATION_v50.json'
+);
 
 let _manifest = null;
 
@@ -23,11 +29,13 @@ let _manifest = null;
  */
 function loadManifest() {
   if (_manifest) return _manifest;
-  
+
   if (!existsSync(MANIFEST_PATH)) {
-    throw new Error(`[uiDesktopManifest] Manifest not found at ${MANIFEST_PATH}. Run: node scripts/generate/generate-ui-desktop-manifest.mjs`);
+    throw new Error(
+      `[uiDesktopManifest] Manifest not found at ${MANIFEST_PATH}. Run: node scripts/generate/generate-ui-desktop-manifest.mjs`
+    );
   }
-  
+
   _manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'));
   return _manifest;
 }
@@ -69,11 +77,13 @@ function getAllTabs() {
  * @returns {{ route: string, tabs: object[] }[]}
  */
 function getRoutesWithTabs() {
-  return loadManifest().routes.filter(r => r.tabs.length > 0).map(r => ({
-    route: r.route,
-    tabs: r.tabs,
-    rootTestId: r.rootTestId,
-  }));
+  return loadManifest()
+    .routes.filter(r => r.tabs.length > 0)
+    .map(r => ({
+      route: r.route,
+      tabs: r.tabs,
+      rootTestId: r.rootTestId,
+    }));
 }
 
 /**

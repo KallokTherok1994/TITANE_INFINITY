@@ -21,7 +21,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v60 Strict Backend Proof — Core Modules (TITANE CHAT, TIME, MEMORY, EXPERIENCE, RESEARCH, CLOUD)', () => {
-
   // ─── TITANE CHAT ─────────────────────────────────────────────────────────
 
   describe('TITANE CHAT — Tier 1', () => {
@@ -86,18 +85,13 @@ describe('v60 Strict Backend Proof — Core Modules (TITANE CHAT, TIME, MEMORY, 
     });
 
     it('read_snapshot — UI_REFLECTS_BACKEND_RESULT', async () => {
-      await probeInvokeAndReflect(
-        'read_snapshot',
-        {},
-        '[data-testid="page-time"]',
-        {
-          sourceSpec: SOURCE_SPEC,
-          route: '/time',
-          moduleId: 'TIME',
-          tier: 1,
-          evidenceKind: 'RESULT_PANEL',
-        }
-      );
+      await probeInvokeAndReflect('read_snapshot', {}, '[data-testid="page-time"]', {
+        sourceSpec: SOURCE_SPEC,
+        route: '/time',
+        moduleId: 'TIME',
+        tier: 1,
+        evidenceKind: 'RESULT_PANEL',
+      });
     });
 
     it('get_timeline — IPC probe with full v60 schema', async () => {
@@ -123,18 +117,13 @@ describe('v60 Strict Backend Proof — Core Modules (TITANE CHAT, TIME, MEMORY, 
     });
 
     it('memory_get_state — UI_REFLECTS_BACKEND_RESULT', async () => {
-      await probeInvokeAndReflect(
-        'memory_get_state',
-        {},
-        '[data-testid="page-memory"]',
-        {
-          sourceSpec: SOURCE_SPEC,
-          route: '/memory',
-          moduleId: 'MEMORY',
-          tier: 1,
-          evidenceKind: 'RUNTIME_STATUS',
-        }
-      );
+      await probeInvokeAndReflect('memory_get_state', {}, '[data-testid="page-memory"]', {
+        sourceSpec: SOURCE_SPEC,
+        route: '/memory',
+        moduleId: 'MEMORY',
+        tier: 1,
+        evidenceKind: 'RUNTIME_STATUS',
+      });
     });
   });
 
@@ -195,5 +184,4 @@ describe('v60 Strict Backend Proof — Core Modules (TITANE CHAT, TIME, MEMORY, 
       );
     });
   });
-
 });

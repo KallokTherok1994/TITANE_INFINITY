@@ -27,7 +27,10 @@ mkdirSync(OUT_DIR, { recursive: true });
 // Extract registry data from TypeScript source (no-compile)
 // ─────────────────────────────────────────────────────────
 
-const registrySource = readFileSync(resolve(ROOT, 'src/registry/uiSurfaceRegistry.ts'), 'utf8');
+const registrySource = readFileSync(
+  resolve(ROOT, 'src/registry/uiSurfaceRegistry.ts'),
+  'utf8'
+);
 
 function extractStringField(block, field) {
   const m = block.match(new RegExp(`${field}:\\s*'([^']+)'`));
@@ -37,12 +40,13 @@ function extractStringField(block, field) {
 function extractArrayOfStrings(block, field) {
   const m = block.match(new RegExp(`${field}:\\s*\\[([^\\]]+)\\]`));
   if (!m) return [];
-  return m[1].match(/'([^']+)'/g)?.map(s => s.slice(1,-1)) || [];
+  return m[1].match(/'([^']+)'/g)?.map(s => s.slice(1, -1)) || [];
 }
 
 function extractTabs(block) {
   const tabs = [];
-  const tabReg = /\{\s*tabId:\s*'([^']+)'[^}]*label:\s*'([^']+)'[^}]*testId:\s*'([^']+)'[^}]*selector:\s*'([^']+)'[^}]*status:\s*'([^']+)'[^}]*truthClass:\s*'([^']+)'/gs;
+  const tabReg =
+    /\{\s*tabId:\s*'([^']+)'[^}]*label:\s*'([^']+)'[^}]*testId:\s*'([^']+)'[^}]*selector:\s*'([^']+)'[^}]*status:\s*'([^']+)'[^}]*truthClass:\s*'([^']+)'/gs;
   let m;
   while ((m = tabReg.exec(block)) !== null) {
     tabs.push({
@@ -59,7 +63,8 @@ function extractTabs(block) {
 
 function extractVisibleActions(block) {
   const actions = [];
-  const actReg = /\{\s*actionId:\s*'([^']+)'[^}]*label:\s*'([^']+)'[^}]*wiringStatus:\s*'([^']+)'(?:[^}]*ipcCommand:\s*'([^']+)')?/gs;
+  const actReg =
+    /\{\s*actionId:\s*'([^']+)'[^}]*label:\s*'([^']+)'[^}]*wiringStatus:\s*'([^']+)'(?:[^}]*ipcCommand:\s*'([^']+)')?/gs;
   let m;
   while ((m = actReg.exec(block)) !== null) {
     actions.push({
@@ -84,20 +89,45 @@ function extractAliases(block) {
 
 // Assign safe action policy based on route and action type
 function getSafeActionPolicy(route, action) {
-  const destructiveKeywords = ['delete', 'clear', 'remove', 'purge', 'reset', 'apply', 'save', 'push', 'pull', 'export', 'import', 'restore'];
+  const destructiveKeywords = [
+    'delete',
+    'clear',
+    'remove',
+    'purge',
+    'reset',
+    'apply',
+    'save',
+    'push',
+    'pull',
+    'export',
+    'import',
+    'restore',
+  ];
   const secretKeywords = ['key', 'secret', 'token', 'password', 'credential', 'auth'];
-  const networkKeywords = ['push', 'pull', 'sync', 'fetch', 'external', 'cloud', 'remote'];
+  const networkKeywords = [
+    'push',
+    'pull',
+    'sync',
+    'fetch',
+    'external',
+    'cloud',
+    'remote',
+  ];
   const aiKeywords = ['send', 'generate', 'ai_'];
-  
+
   const lbl = (action.label || '').toLowerCase();
   const id = (action.actionId || '').toLowerCase();
   const ipc = (action.ipcCommand || '').toLowerCase();
-  
+
   if (action.wiringStatus === 'DISPLAY_ONLY') return 'READ_ONLY_CLICK';
-  if (secretKeywords.some(k => lbl.includes(k) || id.includes(k))) return 'REQUIRES_SECRET_SKIP';
-  if (destructiveKeywords.some(k => lbl.includes(k) || id.includes(k))) return 'REQUIRES_CONFIRMATION';
-  if (networkKeywords.some(k => lbl.includes(k) || id.includes(k) || ipc.includes(k))) return 'EXTERNAL_NETWORK_SKIP_WITH_PROOF';
-  if (aiKeywords.some(k => id.includes(k) || ipc.includes(k))) return 'EXTERNAL_NETWORK_SKIP_WITH_PROOF';
+  if (secretKeywords.some(k => lbl.includes(k) || id.includes(k)))
+    return 'REQUIRES_SECRET_SKIP';
+  if (destructiveKeywords.some(k => lbl.includes(k) || id.includes(k)))
+    return 'REQUIRES_CONFIRMATION';
+  if (networkKeywords.some(k => lbl.includes(k) || id.includes(k) || ipc.includes(k)))
+    return 'EXTERNAL_NETWORK_SKIP_WITH_PROOF';
+  if (aiKeywords.some(k => id.includes(k) || ipc.includes(k)))
+    return 'EXTERNAL_NETWORK_SKIP_WITH_PROOF';
   if (action.wiringStatus === 'NOT_WIRED') return 'NOT_WIRED_EXPECTED';
   if (action.wiringStatus === 'WIRED_FALLBACK') return 'FALLBACK_EXPECTED';
   return 'SAFE_CLICK';
@@ -105,86 +135,102 @@ function getSafeActionPolicy(route, action) {
 
 // Split registry source into route blocks
 const routeBlocks = [];
-const routeSplitReg = /(\{[\s\n]*route:\s*'\/[^']+[\s\S]*?)(?=(?:\{[\s\n]*route:\s*'\/)|(?:\/\/\s*──+\s*ALIAS)|$)/g;
+const routeSplitReg =
+  /(\{[\s\n]*route:\s*'\/[^']+[\s\S]*?)(?=(?:\{[\s\n]*route:\s*'\/)|(?:\/\/\s*──+\s*ALIAS)|$)/g;
 let bm;
 while ((bm = routeSplitReg.exec(registrySource)) !== null) {
   routeBlocks.push(bm[1]);
 }
 
 // Parse each block
-const routes = routeBlocks.map(block => {
-  const route = extractStringField(block, 'route');
-  if (!route) return null;
-  
-  const tabs = extractTabs(block);
-  const visibleActions = extractVisibleActions(block);
-  const aliases = extractAliases(block);
-  const backendCommands = extractArrayOfStrings(block, 'backendCommands');
-  const sourceFiles = extractArrayOfStrings(block, 'sourceFiles');
-  
-  const truthClass = extractStringField(block, 'truthClass');
-  const status = extractStringField(block, 'status');
-  const pageId = extractStringField(block, 'pageId');
-  const pageComponent = extractStringField(block, 'pageComponent');
-  const rootTestId = extractStringField(block, 'rootTestId');
-  const navOwner = extractStringField(block, 'navOwner');
-  const fallbackPolicy = block.match(/fallbackPolicy:\s*'([^']+)'/) ? block.match(/fallbackPolicy:\s*'([^']+)'/)[1] : 'unspecified';
-  
-  const isSimulated = truthClass === 'SIMULATED_UI';
-  const isDisplayOnly = status === 'DISPLAY_ONLY';
-  
-  // Classify each action with safe policy
-  const classifiedActions = visibleActions.map(a => ({
-    ...a,
-    safeActionPolicy: getSafeActionPolicy(route, a),
-    isSensitive: ['REQUIRES_CONFIRMATION', 'REQUIRES_SECRET_SKIP', 'DESTRUCTIVE_SKIP_WITH_PROOF', 'EXTERNAL_NETWORK_SKIP_WITH_PROOF'].includes(getSafeActionPolicy(route, a)),
-  }));
-  
-  // Sensitive and destructive actions
-  const sensitiveActions = classifiedActions.filter(a => a.isSensitive);
-  const safeActions = classifiedActions.filter(a => !a.isSensitive);
-  
-  return {
-    route,
-    pageId,
-    pageComponent,
-    rootTestId,
-    navOwner,
-    truthClass,
-    status,
-    isSimulated,
-    isDisplayOnly,
-    tabs,
-    tabCount: tabs.length,
-    visibleActions: classifiedActions,
-    safeActions,
-    sensitiveActions,
-    backendCommands,
-    sourceFiles,
-    aliases,
-    fallbackPolicy,
-    desktopProofRequired: !isSimulated,
-    browserProofStatus: 'PASS_v48',
-    selectors: {
-      root: `[data-testid="${rootTestId}"]`,
-      tabs: tabs.map(t => t.selector),
-      actions: classifiedActions.map(a => `[data-testid="${a.actionId}"]`),
-    },
-    knownBlockers: [
-      ...(isSimulated ? ['SIMULATED_UI — no live backend data'] : []),
-      ...(isDisplayOnly ? ['DISPLAY_ONLY — read-only state, no interactive writes'] : []),
-    ],
-    testCoverage: {
-      routeTest: 'ui-desktop-all-routes.wdio.test.js',
-      tabTest: tabs.length > 0 ? 'ui-desktop-all-tabs.wdio.test.js' : 'N/A',
-      controlInventory: 'ui-desktop-control-inventory.wdio.test.js',
-      safeActionsTest: safeActions.length > 0 ? 'ui-desktop-safe-actions.wdio.test.js' : 'N/A',
-      sensitiveActionsTest: sensitiveActions.length > 0 ? 'ui-desktop-sensitive-actions-guarded.wdio.test.js' : 'N/A',
-      errorBoundaryTest: 'ui-desktop-error-boundary-and-empty-state.wdio.test.js',
-      agentChatTest: 'ui-desktop-agent-chat-context.wdio.test.js',
-    },
-  };
-}).filter(Boolean);
+const routes = routeBlocks
+  .map(block => {
+    const route = extractStringField(block, 'route');
+    if (!route) return null;
+
+    const tabs = extractTabs(block);
+    const visibleActions = extractVisibleActions(block);
+    const aliases = extractAliases(block);
+    const backendCommands = extractArrayOfStrings(block, 'backendCommands');
+    const sourceFiles = extractArrayOfStrings(block, 'sourceFiles');
+
+    const truthClass = extractStringField(block, 'truthClass');
+    const status = extractStringField(block, 'status');
+    const pageId = extractStringField(block, 'pageId');
+    const pageComponent = extractStringField(block, 'pageComponent');
+    const rootTestId = extractStringField(block, 'rootTestId');
+    const navOwner = extractStringField(block, 'navOwner');
+    const fallbackPolicy = block.match(/fallbackPolicy:\s*'([^']+)'/)
+      ? block.match(/fallbackPolicy:\s*'([^']+)'/)[1]
+      : 'unspecified';
+
+    const isSimulated = truthClass === 'SIMULATED_UI';
+    const isDisplayOnly = status === 'DISPLAY_ONLY';
+
+    // Classify each action with safe policy
+    const classifiedActions = visibleActions.map(a => ({
+      ...a,
+      safeActionPolicy: getSafeActionPolicy(route, a),
+      isSensitive: [
+        'REQUIRES_CONFIRMATION',
+        'REQUIRES_SECRET_SKIP',
+        'DESTRUCTIVE_SKIP_WITH_PROOF',
+        'EXTERNAL_NETWORK_SKIP_WITH_PROOF',
+      ].includes(getSafeActionPolicy(route, a)),
+    }));
+
+    // Sensitive and destructive actions
+    const sensitiveActions = classifiedActions.filter(a => a.isSensitive);
+    const safeActions = classifiedActions.filter(a => !a.isSensitive);
+
+    return {
+      route,
+      pageId,
+      pageComponent,
+      rootTestId,
+      navOwner,
+      truthClass,
+      status,
+      isSimulated,
+      isDisplayOnly,
+      tabs,
+      tabCount: tabs.length,
+      visibleActions: classifiedActions,
+      safeActions,
+      sensitiveActions,
+      backendCommands,
+      sourceFiles,
+      aliases,
+      fallbackPolicy,
+      desktopProofRequired: !isSimulated,
+      browserProofStatus: 'PASS_v48',
+      selectors: {
+        root: `[data-testid="${rootTestId}"]`,
+        tabs: tabs.map(t => t.selector),
+        actions: classifiedActions.map(a => `[data-testid="${a.actionId}"]`),
+      },
+      knownBlockers: [
+        ...(isSimulated ? ['SIMULATED_UI — no live backend data'] : []),
+        ...(isDisplayOnly
+          ? ['DISPLAY_ONLY — read-only state, no interactive writes']
+          : []),
+      ],
+      testCoverage: {
+        routeTest: 'ui-desktop-all-routes.wdio.test.js',
+        tabTest: tabs.length > 0 ? 'ui-desktop-all-tabs.wdio.test.js' : 'N/A',
+        controlInventory: 'ui-desktop-control-inventory.wdio.test.js',
+        safeActionsTest:
+          safeActions.length > 0 ? 'ui-desktop-safe-actions.wdio.test.js' : 'N/A',
+        sensitiveActionsTest:
+          sensitiveActions.length > 0
+            ? 'ui-desktop-sensitive-actions-guarded.wdio.test.js'
+            : 'N/A',
+        errorBoundaryTest: 'ui-desktop-error-boundary-and-empty-state.wdio.test.js',
+        agentChatTest: 'ui-desktop-agent-chat-context.wdio.test.js',
+      },
+    };
+  })
+  .filter(Boolean);
 
 console.log(`[manifest] Parsed ${routes.length} routes`);
 
@@ -231,7 +277,7 @@ for (const route of routes) {
     actionClass: 'PAGE_ROOT',
     safeActionPolicy: 'READ_ONLY_CLICK',
   });
-  
+
   // Tab buttons
   for (const tab of route.tabs) {
     controlInventory.controls.push({
@@ -247,7 +293,7 @@ for (const route of routes) {
       safeActionPolicy: 'SAFE_CLICK',
     });
   }
-  
+
   // Visible actions
   for (const action of route.visibleActions) {
     controlInventory.controls.push({
@@ -280,17 +326,17 @@ inventoryMd += `> Static shape from registry. Dynamic DOM inventory from \`ui-de
 inventoryMd += `## Summary\n\n`;
 inventoryMd += `| Metric | Count |\n|---|---|\n`;
 inventoryMd += `| Routes | ${routes.length} |\n`;
-inventoryMd += `| Tab buttons | ${routes.reduce((s,r) => s+r.tabs.length, 0)} |\n`;
-inventoryMd += `| Visible actions (from registry) | ${routes.reduce((s,r) => s+r.visibleActions.length, 0)} |\n`;
-inventoryMd += `| Safe actions | ${routes.reduce((s,r) => s+r.safeActions.length, 0)} |\n`;
-inventoryMd += `| Sensitive/guarded actions | ${routes.reduce((s,r) => s+r.sensitiveActions.length, 0)} |\n\n`;
+inventoryMd += `| Tab buttons | ${routes.reduce((s, r) => s + r.tabs.length, 0)} |\n`;
+inventoryMd += `| Visible actions (from registry) | ${routes.reduce((s, r) => s + r.visibleActions.length, 0)} |\n`;
+inventoryMd += `| Safe actions | ${routes.reduce((s, r) => s + r.safeActions.length, 0)} |\n`;
+inventoryMd += `| Sensitive/guarded actions | ${routes.reduce((s, r) => s + r.sensitiveActions.length, 0)} |\n\n`;
 
 inventoryMd += `## Per-Route Control Inventory\n\n`;
 
 for (const route of routes) {
   inventoryMd += `### ${route.route} (${route.pageComponent})\n\n`;
   inventoryMd += `Root: \`[data-testid="${route.rootTestId}"]\`  \nTruth: ${route.truthClass} | Status: ${route.status}\n\n`;
-  
+
   if (route.tabs.length > 0) {
     inventoryMd += `**Tabs (${route.tabs.length})**:\n`;
     for (const tab of route.tabs) {
@@ -298,7 +344,7 @@ for (const route of routes) {
     }
     inventoryMd += '\n';
   }
-  
+
   if (route.visibleActions.length > 0) {
     inventoryMd += `**Actions (${route.visibleActions.length})**:\n`;
     for (const action of route.visibleActions) {
@@ -307,7 +353,7 @@ for (const route of routes) {
     }
     inventoryMd += '\n';
   }
-  
+
   if (route.knownBlockers.length > 0) {
     inventoryMd += `**Known blockers**: ${route.knownBlockers.join('; ')}\n\n`;
   }
@@ -335,7 +381,10 @@ const policies = [
   ['REQUIRES_CONFIRMATION', 'Destructive — requires confirm dialog before execution'],
   ['REQUIRES_SECRET_SKIP', 'Involves secret/key/token — skip in E2E; classify only'],
   ['DESTRUCTIVE_SKIP_WITH_PROOF', 'Destructive operation — skip + document guard proof'],
-  ['EXTERNAL_NETWORK_SKIP_WITH_PROOF', 'External network call — skip unless mock/local provider'],
+  [
+    'EXTERNAL_NETWORK_SKIP_WITH_PROOF',
+    'External network call — skip unless mock/local provider',
+  ],
   ['NOT_WIRED_EXPECTED', 'Frontend handler not yet wired — expected no-op'],
   ['FALLBACK_EXPECTED', 'Backend may be unavailable — fallback UI expected'],
   ['DEGRADED_EXPECTED', 'Degraded state expected — test degraded banner, not live data'],
@@ -369,7 +418,11 @@ mapMd += `| Route | Tab | Label | data-testid | IPC Command | Wiring | Policy | 
 
 for (const route of routes) {
   for (const action of route.visibleActions) {
-    const ipc = action.ipcCommand || (action.wiringStatus === 'DISPLAY_ONLY' ? 'N/A (display only)' : 'UNMAPPED_HANDLER');
+    const ipc =
+      action.ipcCommand ||
+      (action.wiringStatus === 'DISPLAY_ONLY'
+        ? 'N/A (display only)'
+        : 'UNMAPPED_HANDLER');
     const test = action.isSensitive
       ? 'ui-desktop-sensitive-actions-guarded.wdio.test.js'
       : 'ui-desktop-safe-actions.wdio.test.js';
@@ -417,10 +470,10 @@ for (const route of routes) {
 matrixMd += `\n## Coverage Summary\n\n`;
 matrixMd += `| Category | Count | Desktop Tested | Status |\n|---|---|---|---|\n`;
 matrixMd += `| Routes | ${routes.length} | PENDING | After v50 desktop run |\n`;
-matrixMd += `| Tabs | ${routes.reduce((s,r)=>s+r.tabCount,0)} | PENDING | After v50 desktop run |\n`;
-matrixMd += `| Aliases | ${routes.reduce((s,r)=>s+r.aliases.length,0)} | PENDING | After v50 desktop run |\n`;
-matrixMd += `| Safe actions | ${routes.reduce((s,r)=>s+r.safeActions.length,0)} | PENDING | After v50 desktop run |\n`;
-matrixMd += `| Sensitive actions | ${routes.reduce((s,r)=>s+r.sensitiveActions.length,0)} | PENDING | After v50 desktop run |\n`;
+matrixMd += `| Tabs | ${routes.reduce((s, r) => s + r.tabCount, 0)} | PENDING | After v50 desktop run |\n`;
+matrixMd += `| Aliases | ${routes.reduce((s, r) => s + r.aliases.length, 0)} | PENDING | After v50 desktop run |\n`;
+matrixMd += `| Safe actions | ${routes.reduce((s, r) => s + r.safeActions.length, 0)} | PENDING | After v50 desktop run |\n`;
+matrixMd += `| Sensitive actions | ${routes.reduce((s, r) => s + r.sensitiveActions.length, 0)} | PENDING | After v50 desktop run |\n`;
 
 const matrixMdPath = resolve(OUT_DIR, 'UI_DESKTOP_TEST_COVERAGE_MATRIX_v50.md');
 writeFileSync(matrixMdPath, matrixMd);
@@ -432,9 +485,13 @@ console.log(`[manifest] Written: ${matrixMdPath}`);
 
 console.log('\n[manifest] Generation complete:');
 console.log(`  Routes: ${routes.length}`);
-console.log(`  Tabs: ${routes.reduce((s,r)=>s+r.tabCount,0)}`);
-console.log(`  Aliases: ${routes.reduce((s,r)=>s+r.aliases.length,0)}`);
-console.log(`  Actions total: ${routes.reduce((s,r)=>s+r.visibleActions.length,0)}`);
-console.log(`  Safe actions: ${routes.reduce((s,r)=>s+r.safeActions.length,0)}`);
-console.log(`  Sensitive actions: ${routes.reduce((s,r)=>s+r.sensitiveActions.length,0)}`);
+console.log(`  Tabs: ${routes.reduce((s, r) => s + r.tabCount, 0)}`);
+console.log(`  Aliases: ${routes.reduce((s, r) => s + r.aliases.length, 0)}`);
+console.log(
+  `  Actions total: ${routes.reduce((s, r) => s + r.visibleActions.length, 0)}`
+);
+console.log(`  Safe actions: ${routes.reduce((s, r) => s + r.safeActions.length, 0)}`);
+console.log(
+  `  Sensitive actions: ${routes.reduce((s, r) => s + r.sensitiveActions.length, 0)}`
+);
 console.log('[manifest] PASS');

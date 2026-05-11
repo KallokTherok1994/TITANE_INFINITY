@@ -19,7 +19,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v60 Strict Backend Proof — Agent/Chat Context + Orchestration Modules', () => {
-
   // ─── AGENT_CHAT — Tier 1 ─────────────────────────────────────────────────
 
   describe('AGENT_CHAT — Tier 1', () => {
@@ -93,18 +92,13 @@ describe('v60 Strict Backend Proof — Agent/Chat Context + Orchestration Module
     it('memory_get_state on memory route — v60 full schema', async () => {
       await navigateAndWait('/memory', 'page-memory', 8000);
       await waitForTauriReady(8000);
-      await probeInvokeAndReflect(
-        'memory_get_state',
-        {},
-        '[data-testid="page-memory"]',
-        {
-          sourceSpec: SOURCE_SPEC,
-          route: '/memory',
-          moduleId: 'AGENT_CONTEXT',
-          tier: 1,
-          evidenceKind: 'AGENT_CONTEXT',
-        }
-      );
+      await probeInvokeAndReflect('memory_get_state', {}, '[data-testid="page-memory"]', {
+        sourceSpec: SOURCE_SPEC,
+        route: '/memory',
+        moduleId: 'AGENT_CONTEXT',
+        tier: 1,
+        evidenceKind: 'AGENT_CONTEXT',
+      });
     });
 
     it('chat_get_providers_status on titane route — v60 full schema', async () => {
@@ -129,7 +123,11 @@ describe('v60 Strict Backend Proof — Agent/Chat Context + Orchestration Module
 
   describe('ORCHESTRATION_CENTER — Tier 3', () => {
     before(async () => {
-      await navigateAndWait('/orchestration-center', 'page-orchestration-meta-center', 10000);
+      await navigateAndWait(
+        '/orchestration-center',
+        'page-orchestration-meta-center',
+        10000
+      );
       await waitForTauriReady(8000);
     });
 
@@ -147,7 +145,11 @@ describe('v60 Strict Backend Proof — Agent/Chat Context + Orchestration Module
 
   describe('ORCHESTRATION_INTELLIGENCE — Tier 3', () => {
     before(async () => {
-      await navigateAndWait('/orchestration-intelligence', 'page-orchestration-intelligence', 10000);
+      await navigateAndWait(
+        '/orchestration-intelligence',
+        'page-orchestration-intelligence',
+        10000
+      );
       await waitForTauriReady(8000);
     });
 
@@ -160,5 +162,4 @@ describe('v60 Strict Backend Proof — Agent/Chat Context + Orchestration Module
       );
     });
   });
-
 });

@@ -28,7 +28,9 @@ const OUT_DIR = resolve(ROOT, 'docs/ui/generated');
 // LOAD REGISTRY
 // ─────────────────────────────────────────────────────────────────────────────
 
-const registryUrl = pathToFileURL(resolve(ROOT, 'src/registry/uiSurfaceRegistry.ts')).href;
+const registryUrl = pathToFileURL(
+  resolve(ROOT, 'src/registry/uiSurfaceRegistry.ts')
+).href;
 
 let UI_SURFACE_REGISTRY, UI_ALIAS_REGISTRY, getRegistryStats;
 try {
@@ -66,9 +68,10 @@ function parseRegistryFromSource(content) {
   const surfacesStart = content.indexOf('const SURFACES:');
   if (surfacesStart === -1) return surfaces;
   const exportIdx = content.indexOf('\nexport function', surfacesStart);
-  const body = exportIdx !== -1
-    ? content.substring(surfacesStart, exportIdx)
-    : content.substring(surfacesStart);
+  const body =
+    exportIdx !== -1
+      ? content.substring(surfacesStart, exportIdx)
+      : content.substring(surfacesStart);
 
   const blocks = body.split(/(?=\n\s+\{\s*\n\s*route:)/);
 
@@ -89,20 +92,25 @@ function parseRegistryFromSource(content) {
     // Extract backendCommands array
     const bcMatch = block.match(/backendCommands:\s*\[([^\]]*)\]/s);
     const backendCommands = bcMatch
-      ? [...(bcMatch[1].matchAll(/'([^']+)'/g))].map(m => m[1])
+      ? [...bcMatch[1].matchAll(/'([^']+)'/g)].map(m => m[1])
       : [];
 
     // Extract aliases
-    const aliases = [...(block.matchAll(/from:\s*'([^']+)',\s*to:\s*'([^']+)'/g))].map(m => ({
-      from: m[1], to: m[2],
-    }));
+    const aliases = [...block.matchAll(/from:\s*'([^']+)',\s*to:\s*'([^']+)'/g)].map(
+      m => ({
+        from: m[1],
+        to: m[2],
+      })
+    );
 
     // Extract visibleActions
     const visibleActionsM = block.match(/visibleActions:\s*\[([^\]]*)\]/s);
     const visibleActions = [];
     if (visibleActionsM) {
       const actBlock = visibleActionsM[1];
-      const actMatches = [...actBlock.matchAll(/actionId:\s*'([^']+)'.*?wiringStatus:\s*'([^']+)'/gs)];
+      const actMatches = [
+        ...actBlock.matchAll(/actionId:\s*'([^']+)'.*?wiringStatus:\s*'([^']+)'/gs),
+      ];
       for (const a of actMatches) {
         const labelM = a[0].match(/label:\s*'([^']+)'/);
         visibleActions.push({
@@ -138,14 +146,14 @@ function parseRegistryFromSource(content) {
     // Extract requiredProofLanes
     const planesM = block.match(/requiredProofLanes:\s*\[([^\]]*)\]/s);
     const requiredProofLanes = planesM
-      ? [...(planesM[1].matchAll(/'([^']+)'/g))].map(m => m[1])
+      ? [...planesM[1].matchAll(/'([^']+)'/g)].map(m => m[1])
       : [];
 
     surfaces.push({
       route,
       pageId: pageIdM ? pageIdM[1] : '',
       pageComponent: pageCompM ? pageCompM[1] : '',
-      navOwner: navOwnerM ? (navOwnerM[1] || null) : null,
+      navOwner: navOwnerM ? navOwnerM[1] || null : null,
       rootTestId: testIdM ? testIdM[1] : '',
       status: statusM ? statusM[1] : 'UNKNOWN',
       truthClass: truthClassM ? truthClassM[1] : 'NOT_WIRED',
@@ -300,22 +308,33 @@ function generateActionMatrix(surfaces) {
 
 `;
 
-  const surfacesWithActions = surfaces.filter(s => s.visibleActions && s.visibleActions.length > 0);
+  const surfacesWithActions = surfaces.filter(
+    s => s.visibleActions && s.visibleActions.length > 0
+  );
 
   for (const s of surfacesWithActions) {
     md += `## ${s.route} — ${s.pageComponent}\n\n`;
     md += `| ActionId | Label | Wiring | Backend Commands | Notes |\n`;
     md += `|---|---|---|---|---|\n`;
     for (const a of s.visibleActions) {
-      const cmds = a.ipcCommand ? a.ipcCommand : s.status === 'SIMULATED_UI' ? '*(simulated)*' : '*(none)*';
-      const notes = s.status === 'SIMULATED_UI' ? 'SIMULATED — no real IPC' : (a.notes || '');
+      const cmds = a.ipcCommand
+        ? a.ipcCommand
+        : s.status === 'SIMULATED_UI'
+          ? '*(simulated)*'
+          : '*(none)*';
+      const notes =
+        s.status === 'SIMULATED_UI' ? 'SIMULATED — no real IPC' : a.notes || '';
       md += `| \`${a.actionId}\` | ${a.label} | **${a.wiringStatus}** | ${cmds} | ${notes} |\n`;
     }
     md += '\n';
   }
 
-  const wiredLive = surfaces.flatMap(s => s.visibleActions || []).filter(a => a.wiringStatus === 'WIRED_LIVE').length;
-  const notWired = surfaces.flatMap(s => s.visibleActions || []).filter(a => a.wiringStatus === 'NOT_WIRED').length;
+  const wiredLive = surfaces
+    .flatMap(s => s.visibleActions || [])
+    .filter(a => a.wiringStatus === 'WIRED_LIVE').length;
+  const notWired = surfaces
+    .flatMap(s => s.visibleActions || [])
+    .filter(a => a.wiringStatus === 'NOT_WIRED').length;
   const total = surfaces.flatMap(s => s.visibleActions || []).length;
 
   md += `## Summary\n\n| Metric | Count |\n|---|---|\n| Total actions | ${total} |\n| WIRED_LIVE | ${wiredLive} |\n| NOT_WIRED | ${notWired} |\n| Surfaces with no registered actions | ${surfaces.length - surfacesWithActions.length} |\n`;
@@ -338,8 +357,14 @@ function generateProofCoverage(surfaces) {
   for (const s of surfaces) {
     const hasTestId = s.rootTestId ? '✅' : '❌';
     const hasIpc = s.backendCommands && s.backendCommands.length > 0;
-    const ipcCell = s.status === 'SIMULATED_UI' ? '✅ SIMULATED' : (hasIpc ? '✅' : '⬜ none');
-    const runtimeCell = s.status === 'SIMULATED_UI' ? '✅ SIMULATED' : (s.status === 'DISPLAY_ONLY' ? 'n/a' : '⬜ pending');
+    const ipcCell =
+      s.status === 'SIMULATED_UI' ? '✅ SIMULATED' : hasIpc ? '✅' : '⬜ none';
+    const runtimeCell =
+      s.status === 'SIMULATED_UI'
+        ? '✅ SIMULATED'
+        : s.status === 'DISPLAY_ONLY'
+          ? 'n/a'
+          : '⬜ pending';
     let verdict = 'STATIC_COMPLETE';
     if (s.status === 'SIMULATED_UI') verdict = 'SIMULATED_PROVEN';
     else if (s.status === 'DISPLAY_ONLY') verdict = 'DISPLAY_PROVEN';
@@ -367,7 +392,11 @@ function generateProofCoverage(surfaces) {
 
 function generateAliasMap(surfaces) {
   const allAliases = surfaces.flatMap(s =>
-    (s.aliases || []).map(a => ({ from: a.from, to: a.to || s.route, canonical: s.route }))
+    (s.aliases || []).map(a => ({
+      from: a.from,
+      to: a.to || s.route,
+      canonical: s.route,
+    }))
   );
 
   let md = header('UI Legacy Alias Map');
@@ -407,7 +436,7 @@ function generateAliasMap(surfaces) {
 
 async function main() {
   console.log('\n📄 TITANE UI Surface Docs Generator');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
   console.log(`Source: ${SOURCE_REF}`);
   console.log(`Output: docs/ui/generated/`);
   console.log(`Date: ${TODAY}`);
@@ -420,7 +449,10 @@ async function main() {
   const surfaces = UI_SURFACE_REGISTRY
     ? [...UI_SURFACE_REGISTRY]
     : parseRegistryFromSource(
-        (await import('fs')).readFileSync(resolve(ROOT, 'src/registry/uiSurfaceRegistry.ts'), 'utf-8')
+        (await import('fs')).readFileSync(
+          resolve(ROOT, 'src/registry/uiSurfaceRegistry.ts'),
+          'utf-8'
+        )
       );
 
   const aliasReg = buildAliasRegistry(surfaces);

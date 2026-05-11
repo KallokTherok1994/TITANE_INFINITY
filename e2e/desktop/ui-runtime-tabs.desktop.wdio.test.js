@@ -29,7 +29,14 @@ const TABBED_PAGES = [
     route: '/titane',
     rootTestId: 'page-titane',
     srcFile: 'src/pages/TitanePage.tsx',
-    tabs: ['conversation', 'transformation', 'activation', 'discovery', 'evolution', 'vitals'],
+    tabs: [
+      'conversation',
+      'transformation',
+      'activation',
+      'discovery',
+      'evolution',
+      'vitals',
+    ],
   },
   {
     route: '/time',
@@ -62,7 +69,9 @@ describe('UI Runtime Tabs Proof — Desktop (v49)', () => {
         }
         const src = fs.readFileSync(fullPath, 'utf-8');
         const foundTabs = tabs.filter(tab => src.includes(tab));
-        console.info(`L1 ${route}: ${foundTabs.length}/${tabs.length} tab references found in source`);
+        console.info(
+          `L1 ${route}: ${foundTabs.length}/${tabs.length} tab references found in source`
+        );
         // L1 informational — at least some tabs should be referenced
         expect(foundTabs.length).toBeGreaterThan(0);
       });

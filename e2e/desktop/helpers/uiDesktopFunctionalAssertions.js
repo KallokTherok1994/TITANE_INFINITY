@@ -6,7 +6,12 @@
 
 'use strict';
 
-const { isVisible, getText, count, classifySurface } = require('./uiDesktopFunctionalFlows.js');
+const {
+  isVisible,
+  getText,
+  count,
+  classifySurface,
+} = require('./uiDesktopFunctionalFlows.js');
 
 /**
  * Assert module root is loaded.
@@ -16,7 +21,9 @@ const { isVisible, getText, count, classifySurface } = require('./uiDesktopFunct
 async function assertModuleLoaded(rootTestId, moduleName) {
   const visible = await isVisible(rootTestId, 8000);
   if (!visible) {
-    throw new Error(`[v54:functional] Module ${moduleName} root [data-testid="${rootTestId}"] NOT FOUND`);
+    throw new Error(
+      `[v54:functional] Module ${moduleName} root [data-testid="${rootTestId}"] NOT FOUND`
+    );
   }
 }
 
@@ -28,11 +35,15 @@ async function assertModuleLoaded(rootTestId, moduleName) {
 async function assertNonEmpty(testId, label) {
   const visible = await isVisible(testId, 5000);
   if (!visible) {
-    throw new Error(`[v54:functional] ${label} element [data-testid="${testId}"] not visible`);
+    throw new Error(
+      `[v54:functional] ${label} element [data-testid="${testId}"] not visible`
+    );
   }
   const text = await getText(testId);
   if (!text || text.trim().length === 0) {
-    throw new Error(`[v54:functional] ${label} element [data-testid="${testId}"] is empty`);
+    throw new Error(
+      `[v54:functional] ${label} element [data-testid="${testId}"] is empty`
+    );
   }
 }
 
@@ -42,10 +53,16 @@ async function assertNonEmpty(testId, label) {
  * @param {string[]} allowedClassifications
  * @param {string} moduleName
  */
-async function assertSurfaceClassification(rootTestId, allowedClassifications, moduleName) {
+async function assertSurfaceClassification(
+  rootTestId,
+  allowedClassifications,
+  moduleName
+) {
   const cls = await classifySurface(rootTestId);
   if (!allowedClassifications.includes(cls)) {
-    throw new Error(`[v54:functional] ${moduleName} surface classification=${cls}, expected one of ${allowedClassifications.join('|')}`);
+    throw new Error(
+      `[v54:functional] ${moduleName} surface classification=${cls}, expected one of ${allowedClassifications.join('|')}`
+    );
   }
   return cls;
 }
@@ -57,7 +74,9 @@ async function assertSurfaceClassification(rootTestId, allowedClassifications, m
  * @param {string} [note='']
  */
 function logClassification(module, classification, note = '') {
-  console.log(`[v54:functional] ${module} | ${classification}${note ? ' | ' + note : ''}`);
+  console.log(
+    `[v54:functional] ${module} | ${classification}${note ? ' | ' + note : ''}`
+  );
 }
 
 module.exports = {

@@ -22,9 +22,11 @@ const {
   logClassification,
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
-const SOURCE_SPEC = 'e2e/desktop/ui-desktop-ipc-response-reflection-agent-chat.wdio.test.js';
+const SOURCE_SPEC =
+  'e2e/desktop/ui-desktop-ipc-response-reflection-agent-chat.wdio.test.js';
 
-process.env.TITANE_PROOF_ARTIFACT = 'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
+process.env.TITANE_PROOF_ARTIFACT =
+  'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
 
 describe('v59 IPC Response Reflection — Agent + Chat Context', () => {
   before(async () => {
@@ -75,7 +77,10 @@ describe('v59 IPC Response Reflection — Agent + Chat Context', () => {
 
       expect(typeof result1.proofLevel).toBe('string');
       expect(typeof result2.proofLevel).toBe('string');
-      logClassification('TITANE_CHAT.cross_route_consistency', `r1=${result1.proofLevel} r2=${result2.proofLevel}`);
+      logClassification(
+        'TITANE_CHAT.cross_route_consistency',
+        `r1=${result1.proofLevel} r2=${result2.proofLevel}`
+      );
     });
   });
 
@@ -138,17 +143,28 @@ describe('v59 IPC Response Reflection — Agent + Chat Context', () => {
 
   describe('Orchestration Center (/orchestration-center)', () => {
     before(async () => {
-      await navigateAndWait('/orchestration-center', 'page-orchestration-meta-center', 8000);
+      await navigateAndWait(
+        '/orchestration-center',
+        'page-orchestration-meta-center',
+        8000
+      );
     });
 
     it('should probe orchestration IPC or classify display-only', async () => {
       const result = await probeInvoke(
         'get_orchestration_status',
         {},
-        { moduleId: 'ORCHESTRATION_CENTER', route: '/orchestration-center', sourceSpec: SOURCE_SPEC }
+        {
+          moduleId: 'ORCHESTRATION_CENTER',
+          route: '/orchestration-center',
+          sourceSpec: SOURCE_SPEC,
+        }
       );
       expect(typeof result.proofLevel).toBe('string');
-      logClassification('ORCHESTRATION_CENTER.get_orchestration_status', result.proofLevel);
+      logClassification(
+        'ORCHESTRATION_CENTER.get_orchestration_status',
+        result.proofLevel
+      );
     });
 
     it('should not have ErrorBoundary on /orchestration-center', async () => {

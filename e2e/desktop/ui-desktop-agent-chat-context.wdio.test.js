@@ -25,7 +25,14 @@ const CONTEXT_KEY = 'titane_chat_active_module_context_v1';
 const HISTORY_KEY = 'titane_chat_module_context_history_v1';
 
 // Routes selected for context verification
-const CONTEXT_TEST_ROUTES = ['/titane', '/time', '/admin', '/dev', '/memory', '/research'];
+const CONTEXT_TEST_ROUTES = [
+  '/titane',
+  '/time',
+  '/admin',
+  '/dev',
+  '/memory',
+  '/research',
+];
 
 describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
   // ──────────────────────────────────────────────────────
@@ -89,7 +96,11 @@ describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
       const results = [];
 
       before(() => {
-        logProof({ type: 'SUITE_START', suite: 'ui-desktop-agent-chat-context', routes: CONTEXT_TEST_ROUTES });
+        logProof({
+          type: 'SUITE_START',
+          suite: 'ui-desktop-agent-chat-context',
+          routes: CONTEXT_TEST_ROUTES,
+        });
       });
 
       after(() => {
@@ -102,7 +113,9 @@ describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
           routeMatched: matchedRoute.length,
           results,
         });
-        console.log(`[v50:context] ${withContext.length}/${results.length} routes had context | routeMatch=${matchedRoute.length}`);
+        console.log(
+          `[v50:context] ${withContext.length}/${results.length} routes had context | routeMatch=${matchedRoute.length}`
+        );
       });
 
       for (const route of CONTEXT_TEST_ROUTES) {
@@ -115,7 +128,7 @@ describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
           const root = await waitForPageRoot(`[data-testid="${entry.rootTestId}"]`, 6000);
 
           // Read localStorage context
-          const rawContext = await browser.execute((key) => {
+          const rawContext = await browser.execute(key => {
             return window.localStorage?.getItem(key) ?? null;
           }, CONTEXT_KEY);
 
@@ -130,10 +143,18 @@ describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
               hasContext = true;
               // Check route matches — context may store route with or without leading slash
               const ctxRoute = contextObj.route || contextObj.path || '';
-              routeMatched = ctxRoute === route || ctxRoute === route.slice(1) || ctxRoute.includes(route.slice(1));
-              pageIdMatched = contextObj.pageId === entry.pageId || contextObj.moduleId === entry.pageId;
+              routeMatched =
+                ctxRoute === route ||
+                ctxRoute === route.slice(1) ||
+                ctxRoute.includes(route.slice(1));
+              pageIdMatched =
+                contextObj.pageId === entry.pageId ||
+                contextObj.moduleId === entry.pageId;
             } catch (e) {
-              console.warn(`[v50:context] Failed to parse context for ${route}:`, e.message);
+              console.warn(
+                `[v50:context] Failed to parse context for ${route}:`,
+                e.message
+              );
             }
           }
 
@@ -148,13 +169,21 @@ describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
             pageLoaded: root.found,
           });
 
-          results.push({ route, hasContext, routeMatched, pageIdMatched, pageLoaded: root.found });
+          results.push({
+            route,
+            hasContext,
+            routeMatched,
+            pageIdMatched,
+            pageLoaded: root.found,
+          });
 
           // Soft assertion: page must have loaded (for non-simulated)
           // When root testId is absent in DOM (known: many pages lack rootTestId), log as inconclusive rather than hard fail
           if (!entry.isSimulated) {
             if (!root.found) {
-              console.warn(`[v50:context] Root testId absent for ${route} — classified as ROOT_TESTID_ABSENT_IN_DOM (not a nav failure)`);
+              console.warn(
+                `[v50:context] Root testId absent for ${route} — classified as ROOT_TESTID_ABSENT_IN_DOM (not a nav failure)`
+              );
             }
             // Do not hard-fail: root testId absence is a known runtime classification (NOT_FOUND_UNEXPECTED)
             expect(typeof root.found).toBe('boolean');
@@ -164,7 +193,13 @@ describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
           if (hasContext && contextObj) {
             expect(typeof contextObj).toBe('object');
             // At minimum, context must have some key (route, pageId, path, moduleId, etc.)
-            const hasAnyRouteKey = ['route', 'path', 'pageId', 'moduleId', 'module_id'].some(k => contextObj[k] !== undefined);
+            const hasAnyRouteKey = [
+              'route',
+              'path',
+              'pageId',
+              'moduleId',
+              'module_id',
+            ].some(k => contextObj[k] !== undefined);
             expect(hasAnyRouteKey).toBe(true);
           }
         });
@@ -172,17 +207,23 @@ describe('TITANE Desktop — Agent/Chat Context Bridge (v50)', () => {
 
       it('context history records recent navigation', async () => {
         // After visiting all routes, history should exist
-        const rawHistory = await browser.execute((key) => {
+        const rawHistory = await browser.execute(key => {
           return window.localStorage?.getItem(key) ?? null;
         }, HISTORY_KEY);
 
-        logProof({ type: 'HISTORY_CHECK', hasHistory: !!rawHistory, rawHistory: rawHistory ? rawHistory.slice(0, 200) : null });
+        logProof({
+          type: 'HISTORY_CHECK',
+          hasHistory: !!rawHistory,
+          rawHistory: rawHistory ? rawHistory.slice(0, 200) : null,
+        });
 
         // History may or may not be published (depends on publishActiveModuleContext being wired)
         // Just verify it's either absent or valid JSON
         if (rawHistory) {
           let parsed;
-          expect(() => { parsed = JSON.parse(rawHistory); }).not.toThrow();
+          expect(() => {
+            parsed = JSON.parse(rawHistory);
+          }).not.toThrow();
           if (Array.isArray(parsed)) {
             expect(parsed.length).toBeGreaterThanOrEqual(0);
           }

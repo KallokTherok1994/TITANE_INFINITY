@@ -30,7 +30,8 @@ const {
 
 const SOURCE_SPEC = 'e2e/desktop/ui-desktop-ipc-response-reflection-sandbox.wdio.test.js';
 
-process.env.TITANE_PROOF_ARTIFACT = 'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
+process.env.TITANE_PROOF_ARTIFACT =
+  'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
 
 describe('v59 IPC Response Reflection — Sandbox + Guarded Flows', () => {
   before(async () => {
@@ -61,22 +62,26 @@ describe('v59 IPC Response Reflection — Sandbox + Guarded Flows', () => {
         route: '/doc-center',
         sourceSpec: SOURCE_SPEC,
         description: 'Doc Center export sandboxed to /tmp — no real production write',
-        mutationFn: async (tempPath) => {
+        mutationFn: async tempPath => {
           // Sandbox: verify the IPC for export exists but don't trigger real write
           // Instead probe with a non-production target path argument
-          const probeResult = await browser.execute(async (cmd, args) => {
-            try {
-              const invoker =
-                (window.__TAURI__?.core?.invoke) ||
-                (window.__TAURI__?.tauri?.invoke) ||
-                (window.__TAURI__?.invoke);
-              if (!invoker) return { ok: false, error: 'NO_TAURI_INVOKE' };
-              // Read-only probe — no export_docs command triggered; just verify IPC availability
-              return { ok: true, sandboxed: true, tempPath: args.tempPath };
-            } catch (e) {
-              return { ok: false, error: String(e) };
-            }
-          }, 'probe_export_readiness', { tempPath });
+          const probeResult = await browser.execute(
+            async (cmd, args) => {
+              try {
+                const invoker =
+                  window.__TAURI__?.core?.invoke ||
+                  window.__TAURI__?.tauri?.invoke ||
+                  window.__TAURI__?.invoke;
+                if (!invoker) return { ok: false, error: 'NO_TAURI_INVOKE' };
+                // Read-only probe — no export_docs command triggered; just verify IPC availability
+                return { ok: true, sandboxed: true, tempPath: args.tempPath };
+              } catch (e) {
+                return { ok: false, error: String(e) };
+              }
+            },
+            'probe_export_readiness',
+            { tempPath }
+          );
           return probeResult;
         },
       });

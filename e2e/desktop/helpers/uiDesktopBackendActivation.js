@@ -6,7 +6,13 @@
 
 'use strict';
 
-const { navigateAndWait, isVisible, getText, getAttribute, safeClick } = require('./uiDesktopFunctionalFlows.js');
+const {
+  navigateAndWait,
+  isVisible,
+  getText,
+  getAttribute,
+  safeClick,
+} = require('./uiDesktopFunctionalFlows.js');
 const { logClassification } = require('./uiDesktopFunctionalAssertions.js');
 
 /**
@@ -16,19 +22,29 @@ const { logClassification } = require('./uiDesktopFunctionalAssertions.js');
  */
 async function tryInvoke(command, args = {}) {
   try {
-    const result = await browser.execute(async (cmd, cmdArgs) => {
-      try {
-        const invoker =
-          (window.__TAURI__?.core?.invoke) ||
-          (window.__TAURI__?.tauri?.invoke) ||
-          (window.__TAURI__?.invoke);
-        if (!invoker) return { ok: false, content: null, error: 'NO_TAURI_INVOKE', available: false };
-        const res = await invoker(cmd, cmdArgs);
-        return { ok: true, content: res, error: null, available: true };
-      } catch (e) {
-        return { ok: false, content: null, error: String(e), available: true };
-      }
-    }, command, args);
+    const result = await browser.execute(
+      async (cmd, cmdArgs) => {
+        try {
+          const invoker =
+            window.__TAURI__?.core?.invoke ||
+            window.__TAURI__?.tauri?.invoke ||
+            window.__TAURI__?.invoke;
+          if (!invoker)
+            return {
+              ok: false,
+              content: null,
+              error: 'NO_TAURI_INVOKE',
+              available: false,
+            };
+          const res = await invoker(cmd, cmdArgs);
+          return { ok: true, content: res, error: null, available: true };
+        } catch (e) {
+          return { ok: false, content: null, error: String(e), available: true };
+        }
+      },
+      command,
+      args
+    );
     return result || { ok: false, content: null, error: 'null_result', available: false };
   } catch (e) {
     return { ok: false, content: null, error: String(e), available: false };
@@ -69,13 +85,21 @@ async function getBodyHTML() {
 function hasDegradedIndicator(html) {
   if (typeof html !== 'string') return false;
   return (
-    html.includes('degraded') || html.includes('Degraded') ||
-    html.includes('unavailable') || html.includes('Unavailable') ||
-    html.includes('offline') || html.includes('Offline') ||
-    html.includes('error') || html.includes('Error') ||
-    html.includes('simulation') || html.includes('Simulation') ||
-    html.includes('simulé') || html.includes('indisponible') ||
-    html.includes('⚠') || html.includes('blocked') || html.includes('Blocked')
+    html.includes('degraded') ||
+    html.includes('Degraded') ||
+    html.includes('unavailable') ||
+    html.includes('Unavailable') ||
+    html.includes('offline') ||
+    html.includes('Offline') ||
+    html.includes('error') ||
+    html.includes('Error') ||
+    html.includes('simulation') ||
+    html.includes('Simulation') ||
+    html.includes('simulé') ||
+    html.includes('indisponible') ||
+    html.includes('⚠') ||
+    html.includes('blocked') ||
+    html.includes('Blocked')
   );
 }
 
@@ -85,9 +109,12 @@ function hasDegradedIndicator(html) {
 function hasSimulatedIndicator(html) {
   if (typeof html !== 'string') return false;
   return (
-    html.includes('simulation') || html.includes('Simulation') ||
-    html.includes('simulé') || html.includes('simulated') ||
-    html.includes('mock') || html.includes('fictif') ||
+    html.includes('simulation') ||
+    html.includes('Simulation') ||
+    html.includes('simulé') ||
+    html.includes('simulated') ||
+    html.includes('mock') ||
+    html.includes('fictif') ||
     html.includes('SIMULATED')
   );
 }

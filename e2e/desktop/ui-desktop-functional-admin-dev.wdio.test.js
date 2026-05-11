@@ -11,8 +11,17 @@
 
 'use strict';
 
-const { navigateAndWait, isVisible, getText, getAttribute, safeClick } = require('./helpers/uiDesktopFunctionalFlows.js');
-const { assertModuleLoaded, logClassification } = require('./helpers/uiDesktopFunctionalAssertions.js');
+const {
+  navigateAndWait,
+  isVisible,
+  getText,
+  getAttribute,
+  safeClick,
+} = require('./helpers/uiDesktopFunctionalFlows.js');
+const {
+  assertModuleLoaded,
+  logClassification,
+} = require('./helpers/uiDesktopFunctionalAssertions.js');
 
 describe('[v54:admin] Admin System — /admin', () => {
   it('loads admin page root [data-testid="page-admin"]', async () => {
@@ -23,9 +32,15 @@ describe('[v54:admin] Admin System — /admin', () => {
   it('admin page shows content (system/config/audio/governance tabs)', async () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(800);
-    const html = await browser.execute(() => document.querySelector('[data-testid="page-admin"]')?.innerHTML || '');
+    const html = await browser.execute(
+      () => document.querySelector('[data-testid="page-admin"]')?.innerHTML || ''
+    );
     const hasContent = typeof html === 'string' && html.length > 200;
-    logClassification('ADMIN_SYSTEM', hasContent ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `content_len=${typeof html === 'string' ? html.length : 0}`);
+    logClassification(
+      'ADMIN_SYSTEM',
+      hasContent ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `content_len=${typeof html === 'string' ? html.length : 0}`
+    );
     expect(true).toBe(true);
   });
 
@@ -33,13 +48,21 @@ describe('[v54:admin] Admin System — /admin', () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(600);
     const html = await browser.execute(() => document.body.innerHTML);
-    const hasSysInfo = typeof html === 'string' && (
-      html.includes('system') || html.includes('System') ||
-      html.includes('tauri') || html.includes('Tauri') ||
-      html.includes('memory') || html.includes('Memory') ||
-      html.includes('runtime') || html.includes('Runtime')
+    const hasSysInfo =
+      typeof html === 'string' &&
+      (html.includes('system') ||
+        html.includes('System') ||
+        html.includes('tauri') ||
+        html.includes('Tauri') ||
+        html.includes('memory') ||
+        html.includes('Memory') ||
+        html.includes('runtime') ||
+        html.includes('Runtime'));
+    logClassification(
+      'ADMIN_SYSTEM',
+      hasSysInfo ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `sys_info=${hasSysInfo}`
     );
-    logClassification('ADMIN_SYSTEM', hasSysInfo ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `sys_info=${hasSysInfo}`);
     expect(true).toBe(true);
   });
 
@@ -47,12 +70,19 @@ describe('[v54:admin] Admin System — /admin', () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(600);
     const html = await browser.execute(() => document.body.innerHTML);
-    const hasConfig = typeof html === 'string' && (
-      html.includes('config') || html.includes('Config') ||
-      html.includes('setting') || html.includes('Setting') ||
-      html.includes('theme') || html.includes('Theme')
+    const hasConfig =
+      typeof html === 'string' &&
+      (html.includes('config') ||
+        html.includes('Config') ||
+        html.includes('setting') ||
+        html.includes('Setting') ||
+        html.includes('theme') ||
+        html.includes('Theme'));
+    logClassification(
+      'ADMIN_CONFIG',
+      hasConfig ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `config=${hasConfig}`
     );
-    logClassification('ADMIN_CONFIG', hasConfig ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `config=${hasConfig}`);
     expect(true).toBe(true);
   });
 
@@ -60,12 +90,19 @@ describe('[v54:admin] Admin System — /admin', () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(600);
     const html = await browser.execute(() => document.body.innerHTML);
-    const hasAudio = typeof html === 'string' && (
-      html.includes('audio') || html.includes('Audio') ||
-      html.includes('voice') || html.includes('Voice') ||
-      html.includes('TTS') || html.includes('tts')
+    const hasAudio =
+      typeof html === 'string' &&
+      (html.includes('audio') ||
+        html.includes('Audio') ||
+        html.includes('voice') ||
+        html.includes('Voice') ||
+        html.includes('TTS') ||
+        html.includes('tts'));
+    logClassification(
+      'ADMIN_AUDIO',
+      hasAudio ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `audio=${hasAudio}`
     );
-    logClassification('ADMIN_AUDIO', hasAudio ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `audio=${hasAudio}`);
     expect(true).toBe(true);
   });
 
@@ -75,7 +112,11 @@ describe('[v54:admin] Admin System — /admin', () => {
     const html = await browser.execute(() => document.body.innerHTML);
     // Ensure no raw API keys visible (heuristic: no long alphanumeric 32+ char secrets)
     const hasRawSecret = typeof html === 'string' && /sk-[a-zA-Z0-9]{30,}/.test(html);
-    logClassification('ADMIN_GOVERNANCE', hasRawSecret ? 'FUNCTIONAL_FAIL' : 'FUNCTIONAL_GUARDED', `secrets_masked=${!hasRawSecret}`);
+    logClassification(
+      'ADMIN_GOVERNANCE',
+      hasRawSecret ? 'FUNCTIONAL_FAIL' : 'FUNCTIONAL_GUARDED',
+      `secrets_masked=${!hasRawSecret}`
+    );
     expect(hasRawSecret).toBe(false);
   });
 });
@@ -92,20 +133,35 @@ describe('[v54:control] Dev Cockpit — /dev', () => {
     const devState = await getAttribute('page-dev', 'data-dev-state');
     const hasHealth = await isVisible('system-health-backend', 4000);
     const hasRefresh = await isVisible('btn-dev-refresh', 3000);
-    logClassification('DEV_COCKPIT', hasHealth || hasRefresh ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `dev_state="${devState}" health=${hasHealth}`);
+    logClassification(
+      'DEV_COCKPIT',
+      hasHealth || hasRefresh
+        ? 'FUNCTIONAL_READ_ONLY_PROVEN'
+        : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `dev_state="${devState}" health=${hasHealth}`
+    );
     expect(true).toBe(true);
   });
 
   it('dev backend health card shows honest state', async () => {
     await navigateAndWait('/dev', 'page-dev', 12000);
     await browser.pause(1000);
-    const html = await browser.execute(() => document.querySelector('[data-testid="page-dev"]')?.innerHTML || '');
-    const hasHealthInfo = typeof html === 'string' && (
-      html.includes('health') || html.includes('Health') ||
-      html.includes('online') || html.includes('offline') ||
-      html.includes('backend') || html.includes('Backend')
+    const html = await browser.execute(
+      () => document.querySelector('[data-testid="page-dev"]')?.innerHTML || ''
     );
-    logClassification('DEV_COCKPIT', hasHealthInfo ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `health_visible=${hasHealthInfo}`);
+    const hasHealthInfo =
+      typeof html === 'string' &&
+      (html.includes('health') ||
+        html.includes('Health') ||
+        html.includes('online') ||
+        html.includes('offline') ||
+        html.includes('backend') ||
+        html.includes('Backend'));
+    logClassification(
+      'DEV_COCKPIT',
+      hasHealthInfo ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `health_visible=${hasHealthInfo}`
+    );
     expect(true).toBe(true);
   });
 
@@ -126,9 +182,15 @@ describe('[v54:control] Fusion — /fusion', () => {
   it('fusion content visible (live or degraded)', async () => {
     await navigateAndWait('/fusion', 'page-fusion', 12000);
     await browser.pause(800);
-    const html = await browser.execute(() => document.querySelector('[data-testid="page-fusion"]')?.innerHTML || '');
+    const html = await browser.execute(
+      () => document.querySelector('[data-testid="page-fusion"]')?.innerHTML || ''
+    );
     const hasContent = typeof html === 'string' && html.length > 100;
-    logClassification('FUSION', hasContent ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `len=${typeof html === 'string' ? html.length : 0}`);
+    logClassification(
+      'FUSION',
+      hasContent ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `len=${typeof html === 'string' ? html.length : 0}`
+    );
     expect(true).toBe(true);
   });
 });

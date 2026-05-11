@@ -12,7 +12,10 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const SCREENSHOTS_DIR = resolve(__dirname, '../../../artifacts/run1/desktop-screenshots');
-const PROOF_LOG_PATH = resolve(__dirname, '../../../artifacts/run1/ui-desktop-full-coverage-v50.log');
+const PROOF_LOG_PATH = resolve(
+  __dirname,
+  '../../../artifacts/run1/ui-desktop-full-coverage-v50.log'
+);
 
 let _proofLog = [];
 let _startTime = Date.now();
@@ -34,7 +37,7 @@ async function takeProofScreenshot(name) {
   const ts = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = `${name}_${ts}.png`;
   const filepath = join(SCREENSHOTS_DIR, filename);
-  
+
   try {
     await browser.saveScreenshot(filepath);
     logProof({ type: 'SCREENSHOT', name, filepath, ts });
@@ -68,7 +71,7 @@ function logProof(entry) {
     ...entry,
   };
   _proofLog.push(event);
-  
+
   // Flush to disk immediately
   ensureDir();
   try {

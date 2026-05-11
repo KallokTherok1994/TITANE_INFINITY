@@ -410,7 +410,8 @@ async function sendMessageViaIPC(message, options = {}) {
   const start = Date.now();
   try {
     const response = await invokeTauriCommand('conversation_generate', {
-      message: typeof message === 'string' ? message : (message?.content || String(message)),
+      message:
+        typeof message === 'string' ? message : message?.content || String(message),
       conversation_id: options.conversation_id || `e2e-sim-${Date.now()}`,
       mode: options.mode || 'default',
       provider: options.provider || undefined,
@@ -419,7 +420,13 @@ async function sendMessageViaIPC(message, options = {}) {
     const latency = Date.now() - start;
     // conversation_generate returns { ok, content: { response, ... } } or similar
     const raw = response?.content ?? response;
-    const content = raw?.response || raw?.content || raw?.text || raw?.message || response?.content || '';
+    const content =
+      raw?.response ||
+      raw?.content ||
+      raw?.text ||
+      raw?.message ||
+      response?.content ||
+      '';
     return {
       success: true,
       latency,

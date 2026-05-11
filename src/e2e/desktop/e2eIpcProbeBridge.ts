@@ -40,9 +40,24 @@ const WINDOW_KEY = '__TITANE_E2E_IPC_PROBE__';
 
 /** Patterns that are never allowed even if someone passes them as commandId */
 const DESTRUCTIVE_PATTERNS = [
-  'delete', 'remove', 'reset', 'drop', 'clear', 'purge', 'wipe',
-  'push', 'send', 'upload', 'sync_push', 'write', 'save',
-  'execute', 'exec', 'eval', 'run_', 'shell',
+  'delete',
+  'remove',
+  'reset',
+  'drop',
+  'clear',
+  'purge',
+  'wipe',
+  'push',
+  'send',
+  'upload',
+  'sync_push',
+  'write',
+  'save',
+  'execute',
+  'exec',
+  'eval',
+  'run_',
+  'shell',
 ];
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -69,7 +84,10 @@ export interface E2EIpcProbeBridge {
   version: typeof BRIDGE_VERSION;
   enabled: true;
   listAllowedCommands: () => string[];
-  invoke: (commandId: string, payload?: Record<string, unknown>) => Promise<ProbeResponse>;
+  invoke: (
+    commandId: string,
+    payload?: Record<string, unknown>
+  ) => Promise<ProbeResponse>;
   getLastResult: () => ProbeResponse | null;
   clearLastResult: () => void;
 }
@@ -145,7 +163,10 @@ export function registerE2eIpcProbeBridge(): void {
       return listAllowedCommandIds();
     },
 
-    async invoke(commandId: string, payload?: Record<string, unknown>): Promise<ProbeResponse> {
+    async invoke(
+      commandId: string,
+      payload?: Record<string, unknown>
+    ): Promise<ProbeResponse> {
       const tStart = performance.now();
 
       // Guard: destructive pattern
@@ -225,7 +246,8 @@ export function registerE2eIpcProbeBridge(): void {
         const latencyMs = Math.round(performance.now() - tStart);
         const rawMsg = e instanceof Error ? e.message : String(e);
         const isNotFound = /not found|unknown command|No such command/i.test(rawMsg);
-        const isNoTauri = /TAURI_INTERNALS|__TAURI__|ipc|invoke/i.test(rawMsg) &&
+        const isNoTauri =
+          /TAURI_INTERNALS|__TAURI__|ipc|invoke/i.test(rawMsg) &&
           !/found|command/i.test(rawMsg);
 
         let errorKind = 'COMMAND_ERROR';
@@ -278,7 +300,10 @@ export function registerE2eIpcProbeBridge(): void {
  */
 export function getE2EIpcProbeBridge(): E2EIpcProbeBridge | null {
   if (typeof window === 'undefined') return null;
-  return ((window as unknown as Record<string, unknown>)[WINDOW_KEY] as E2EIpcProbeBridge) ?? null;
+  return (
+    ((window as unknown as Record<string, unknown>)[WINDOW_KEY] as E2EIpcProbeBridge) ??
+    null
+  );
 }
 
 /**

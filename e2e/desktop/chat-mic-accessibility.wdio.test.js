@@ -173,7 +173,12 @@ describe('Chat Mic Accessibility', () => {
 
   it('Stop recording → button returns to idle', async () => {
     const micAvail = METRICS.micAvailableAttribute;
-    if (micAvail === 'false' || micAvail === 'probe-inconclusive' || micAvail === 'unknown' || micAvail === null) {
+    if (
+      micAvail === 'false' ||
+      micAvail === 'probe-inconclusive' ||
+      micAvail === 'unknown' ||
+      micAvail === null
+    ) {
       METRICS.recordingStopped = true;
       METRICS.idleStateRestored = true;
       METRICS.verdict = 'PASS';

@@ -31,7 +31,8 @@ function tabSelector(route, tabId) {
   const entry = getRouteEntry(route);
   if (!entry) throw new Error(`[uiDesktopSelectors] No entry for route: ${route}`);
   const tab = entry.tabs.find(t => t.tabId === tabId);
-  if (!tab) throw new Error(`[uiDesktopSelectors] Tab ${tabId} not found on route ${route}`);
+  if (!tab)
+    throw new Error(`[uiDesktopSelectors] Tab ${tabId} not found on route ${route}`);
   return tab.selector;
 }
 
@@ -87,7 +88,8 @@ const GLOBAL_SELECTORS = {
   errorBoundary: '[data-testid="error-boundary"], .error-boundary, [data-error-boundary]',
   loadingSpinner: '[data-testid="loading-spinner"], .loading-spinner, .titane-loading',
   degradedBanner: '[data-testid="degraded-banner"], .degraded-banner, [data-degraded]',
-  chatComposer: '[data-testid="chat-composer"], textarea[placeholder*="Message"], input[placeholder*="Message"]',
+  chatComposer:
+    '[data-testid="chat-composer"], textarea[placeholder*="Message"], input[placeholder*="Message"]',
   conversationTab: '[data-testid="tab-conversation"], [data-testid*="conversation"]',
 };
 

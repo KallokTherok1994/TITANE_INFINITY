@@ -45,7 +45,11 @@ describe('[v58:depth] KNOWLEDGE — /knowledge — IPC_COMMAND_PROVEN or BLOCKED
   });
   it('knowledge IPC probe', async () => {
     await navigateAndWait('/knowledge', 'page-knowledge', 12000);
-    const r = await probeInvoke('get_knowledge', {}, { module: 'KNOWLEDGE', route: '/knowledge' });
+    const r = await probeInvoke(
+      'get_knowledge',
+      {},
+      { module: 'KNOWLEDGE', route: '/knowledge' }
+    );
     logClassification('KNOWLEDGE', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
@@ -59,7 +63,11 @@ describe('[v58:depth] CREATION — /creation — IPC_COMMAND_PROVEN', () => {
   });
   it('creation page depth probe', async () => {
     await navigateAndWait('/creation', 'page-creation-studio', 12000);
-    const r = await probeInvoke('get_creation_state', {}, { module: 'CREATION', route: '/creation' });
+    const r = await probeInvoke(
+      'get_creation_state',
+      {},
+      { module: 'CREATION', route: '/creation' }
+    );
     logClassification('CREATION', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
@@ -73,7 +81,11 @@ describe('[v58:depth] EVOLUTION — /evolution — IPC_COMMAND_PROVEN', () => {
   });
   it('evolution page depth probe', async () => {
     await navigateAndWait('/evolution', 'page-evolution-monitor', 12000);
-    const r = await probeInvoke('get_evolution_status', {}, { module: 'EVOLUTION', route: '/evolution' });
+    const r = await probeInvoke(
+      'get_evolution_status',
+      {},
+      { module: 'EVOLUTION', route: '/evolution' }
+    );
     logClassification('EVOLUTION', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
@@ -87,7 +99,11 @@ describe('[v58:depth] PERFORMANCE — /performance — IPC_COMMAND_PROVEN or BLO
   });
   it('performance_get_metrics — probe IPC', async () => {
     await navigateAndWait('/performance', 'page-performance-test', 12000);
-    const r = await probeInvoke('performance_get_metrics', {}, { module: 'PERFORMANCE', route: '/performance' });
+    const r = await probeInvoke(
+      'performance_get_metrics',
+      {},
+      { module: 'PERFORMANCE', route: '/performance' }
+    );
     logClassification('PERFORMANCE', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
@@ -101,7 +117,11 @@ describe('[v58:depth] TWINS — /twins — IPC_COMMAND_PROVEN', () => {
   });
   it('twins page depth probe', async () => {
     await navigateAndWait('/twins', 'page-twins', 12000);
-    const r = await probeInvoke('get_twins_status', {}, { module: 'TWINS', route: '/twins' });
+    const r = await probeInvoke(
+      'get_twins_status',
+      {},
+      { module: 'TWINS', route: '/twins' }
+    );
     logClassification('TWINS', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
@@ -118,10 +138,22 @@ async function assertTier3Page(route, testid, moduleName) {
   const isDegraded = hasDegradedIndicator(html);
   if (isDegraded) {
     probeDegraded(moduleName, route, `Degraded state visible: ${moduleName}`);
-    logClassification(moduleName, 'PROOF_DEPTH_DEGRADED_VISIBLE', 'degraded indicator in DOM');
+    logClassification(
+      moduleName,
+      'PROOF_DEPTH_DEGRADED_VISIBLE',
+      'degraded indicator in DOM'
+    );
   } else {
-    probeDisplayOnly(moduleName, route, `No degraded indicator — display-only: ${moduleName}`);
-    logClassification(moduleName, 'PROOF_DEPTH_DISPLAY_ONLY_CONFIRMED', 'no real backend data expected');
+    probeDisplayOnly(
+      moduleName,
+      route,
+      `No degraded indicator — display-only: ${moduleName}`
+    );
+    logClassification(
+      moduleName,
+      'PROOF_DEPTH_DISPLAY_ONLY_CONFIRMED',
+      'no real backend data expected'
+    );
   }
 }
 
@@ -145,13 +177,21 @@ describe('[v58:depth] QUANTUM_CENTER — /quantum-center — DISPLAY_ONLY_CONFIR
 
 describe('[v58:depth] ORCHESTRATION_CENTER — /orchestration-center — DEGRADED_VISIBLE or DISPLAY_ONLY', () => {
   it('orchestration-center depth classification', async () => {
-    await assertTier3Page('/orchestration-center', 'page-orchestration-meta-center', 'ORCHESTRATION_CENTER');
+    await assertTier3Page(
+      '/orchestration-center',
+      'page-orchestration-meta-center',
+      'ORCHESTRATION_CENTER'
+    );
   });
 });
 
 describe('[v58:depth] ORCHESTRATION_INTEL — /orchestration-intelligence — DISPLAY_ONLY_CONFIRMED', () => {
   it('orchestration-intelligence depth classification', async () => {
-    await assertTier3Page('/orchestration-intelligence', 'page-orchestration-intelligence', 'ORCHESTRATION_INTEL');
+    await assertTier3Page(
+      '/orchestration-intelligence',
+      'page-orchestration-intelligence',
+      'ORCHESTRATION_INTEL'
+    );
   });
 });
 

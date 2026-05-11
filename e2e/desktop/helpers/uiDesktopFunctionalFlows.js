@@ -20,7 +20,11 @@ async function navigateAndWait(route, rootTestId, timeout = 10000) {
       const els = await browser.$$(`[data-testid="${rootTestId}"]`);
       return els.length > 0;
     },
-    { timeout, interval: 400, timeoutMsg: `Root selector [data-testid="${rootTestId}"] not found after nav to ${route}` }
+    {
+      timeout,
+      interval: 400,
+      timeoutMsg: `Root selector [data-testid="${rootTestId}"] not found after nav to ${route}`,
+    }
   );
 }
 
@@ -117,10 +121,17 @@ async function classifySurface(rootTestId) {
     const text = await browser.execute(() => document.documentElement.innerText || '');
     if (typeof text === 'string') {
       // TITANE ErrorBoundary fallback renders: "Une erreur inattendue s'est produite"
-      if (text.includes('Une erreur inattendue') || text.includes('Something went wrong')) {
+      if (
+        text.includes('Une erreur inattendue') ||
+        text.includes('Something went wrong')
+      ) {
         return 'FUNCTIONAL_FAIL';
       }
-      if (text.includes('degraded') || text.includes('DEGRADED') || text.includes('unavailable')) {
+      if (
+        text.includes('degraded') ||
+        text.includes('DEGRADED') ||
+        text.includes('unavailable')
+      ) {
         return 'FUNCTIONAL_DEGRADED_EXPECTED';
       }
     }

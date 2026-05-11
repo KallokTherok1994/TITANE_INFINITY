@@ -23,8 +23,8 @@ const ROOT = resolve(__dirname, '../../');
 
 const EXEMPT_FROM_UIPAGES = [
   // Routes that have no uiPages.po.js entry and are explicitly exempt
-  '/htf',           // Direct URL, no E2E matrix entry
-  '/performance',   // Optimization sub-page, tracked via /optimization
+  '/htf', // Direct URL, no E2E matrix entry
+  '/performance', // Optimization sub-page, tracked via /optimization
 ];
 
 const EXEMPT_FROM_MODULECONTEXT = [
@@ -57,7 +57,8 @@ function parseAppRoutes(content) {
 
   // Match full <Route ... /> or <Route ...> blocks
   // Use a tighter pattern: match <Route path="X" element={<Navigate ...}> or <Route path="X" element={<Component}>
-  const routeBlockRe = /<Route\s[^>]*path="([^"]+)"[^>]*(?:element=\{([^}]*?)\})?\s*\/?>(?:[^<]*<\/Route>)?/gs;
+  const routeBlockRe =
+    /<Route\s[^>]*path="([^"]+)"[^>]*(?:element=\{([^}]*?)\})?\s*\/?>(?:[^<]*<\/Route>)?/gs;
   const matches = content.matchAll(routeBlockRe);
   for (const m of matches) {
     const route = m[1];
@@ -130,7 +131,10 @@ function parseSurfaceBlocks(content) {
   if (surfacesStart === -1) return [];
   // Grab from SURFACES definition until export — stop before accessor functions
   const exportIdx = content.indexOf('\nexport function', surfacesStart);
-  const surfacesBody = exportIdx !== -1 ? content.substring(surfacesStart, exportIdx) : content.substring(surfacesStart);
+  const surfacesBody =
+    exportIdx !== -1
+      ? content.substring(surfacesStart, exportIdx)
+      : content.substring(surfacesStart);
   // Split into blocks at each `route:` line
   const blocks = surfacesBody.split(/(?=\n\s+\{\s*\n\s*route:)/);
   return blocks.filter(b => /route:\s*'/.test(b));
@@ -184,9 +188,12 @@ function verify() {
   const moduleContextContent = readFile('src/services/chat/moduleRouteContext.ts');
 
   if (!appContent) errors.push('MISSING_FILE: src/App.tsx not found');
-  if (!registryContent) errors.push('MISSING_FILE: src/registry/uiSurfaceRegistry.ts not found');
-  if (!uiPagesContent) errors.push('MISSING_FILE: e2e/desktop/page-objects/uiPages.po.js not found');
-  if (!moduleContextContent) errors.push('MISSING_FILE: src/services/chat/moduleRouteContext.ts not found');
+  if (!registryContent)
+    errors.push('MISSING_FILE: src/registry/uiSurfaceRegistry.ts not found');
+  if (!uiPagesContent)
+    errors.push('MISSING_FILE: e2e/desktop/page-objects/uiPages.po.js not found');
+  if (!moduleContextContent)
+    errors.push('MISSING_FILE: src/services/chat/moduleRouteContext.ts not found');
 
   if (errors.length > 0) {
     console.error('\n❌ FATAL: Missing required files:');
@@ -194,7 +201,8 @@ function verify() {
     process.exit(1);
   }
 
-  const { canonicalRoutes: appCanonical, redirectRoutes: appRedirects } = parseAppRoutes(appContent);
+  const { canonicalRoutes: appCanonical, redirectRoutes: appRedirects } =
+    parseAppRoutes(appContent);
   const { canonicalRoutes: regCanonical } = parseRegistry(registryContent);
   const uiPagesRoutes = parseUiPages(uiPagesContent);
   const moduleRoutes = parseModuleRegistry(moduleContextContent);
@@ -202,7 +210,7 @@ function verify() {
   const invalidActiveSynced = findInvalidActiveSynced(registryContent);
 
   console.log('\n🔍 TITANE UI Surface Registry Verifier');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
   console.log(`App.tsx canonical routes: ${appCanonical.size}`);
   console.log(`Registry canonical routes: ${regCanonical.size}`);
   console.log(`uiPages.po.js routes: ${uiPagesRoutes.size}`);
@@ -213,14 +221,18 @@ function verify() {
   // CHECK 1: App.tsx routes must exist in registry
   for (const route of appCanonical) {
     if (!regCanonical.has(route)) {
-      errors.push(`APP_ROUTE_NOT_IN_REGISTRY: '${route}' exists in App.tsx but not in registry`);
+      errors.push(
+        `APP_ROUTE_NOT_IN_REGISTRY: '${route}' exists in App.tsx but not in registry`
+      );
     }
   }
 
   // CHECK 2: Registry canonical routes must exist in App.tsx
   for (const route of regCanonical) {
     if (!appCanonical.has(route)) {
-      errors.push(`REGISTRY_ROUTE_NOT_IN_APP: '${route}' in registry but not in App.tsx canonical routes`);
+      errors.push(
+        `REGISTRY_ROUTE_NOT_IN_APP: '${route}' in registry but not in App.tsx canonical routes`
+      );
     }
   }
 
@@ -228,7 +240,9 @@ function verify() {
   for (const route of regCanonical) {
     if (EXEMPT_FROM_UIPAGES.includes(route)) continue;
     if (!uiPagesRoutes.has(route)) {
-      warnings.push(`MISSING_UIPAGES_ENTRY: '${route}' in registry has no uiPages.po.js entry (add or add to EXEMPT_FROM_UIPAGES)`);
+      warnings.push(
+        `MISSING_UIPAGES_ENTRY: '${route}' in registry has no uiPages.po.js entry (add or add to EXEMPT_FROM_UIPAGES)`
+      );
     }
   }
 
@@ -236,9 +250,13 @@ function verify() {
   for (const route of uiPagesRoutes) {
     if (!regCanonical.has(route)) {
       // Check if it's a redirect target
-      const isRedirectTarget = [...appRedirects.values()].some(to => to.startsWith(route));
+      const isRedirectTarget = [...appRedirects.values()].some(to =>
+        to.startsWith(route)
+      );
       if (!isRedirectTarget) {
-        warnings.push(`UIPAGES_ROUTE_NOT_IN_REGISTRY: '${route}' in uiPages.po.js has no registry entry`);
+        warnings.push(
+          `UIPAGES_ROUTE_NOT_IN_REGISTRY: '${route}' in uiPages.po.js has no registry entry`
+        );
       }
     }
   }
@@ -247,13 +265,17 @@ function verify() {
   for (const route of moduleRoutes) {
     if (EXEMPT_FROM_MODULECONTEXT.includes(route)) continue;
     if (!regCanonical.has(route)) {
-      warnings.push(`MODULE_CONTEXT_ROUTE_NOT_IN_REGISTRY: '${route}' in moduleRouteContext has no registry entry`);
+      warnings.push(
+        `MODULE_CONTEXT_ROUTE_NOT_IN_REGISTRY: '${route}' in moduleRouteContext has no registry entry`
+      );
     }
   }
 
   // CHECK 6: ACTIVE_SYNCED + canClaimSyncedWithoutRuntime=false → FAIL
   for (const route of invalidActiveSynced) {
-    errors.push(`INVALID_ACTIVE_SYNCED: '${route}' is ACTIVE_SYNCED but canClaimSyncedWithoutRuntime=false — requires runtime proof`);
+    errors.push(
+      `INVALID_ACTIVE_SYNCED: '${route}' is ACTIVE_SYNCED but canClaimSyncedWithoutRuntime=false — requires runtime proof`
+    );
   }
 
   // CHECK 7: SIMULATED_UI routes must have visible disclosure (banner/badge)
@@ -261,18 +283,24 @@ function verify() {
     if (!appCanonical.has(route)) continue;
     // Check 1: simulationDisclosureApplied flag in registry
     if (!info.disclosureApplied) {
-      warnings.push(`SIMULATED_NO_DISCLOSURE_FLAG: '${route}' is SIMULATED_UI but simulationDisclosureApplied is not set to true in registry`);
+      warnings.push(
+        `SIMULATED_NO_DISCLOSURE_FLAG: '${route}' is SIMULATED_UI but simulationDisclosureApplied is not set to true in registry`
+      );
       continue;
     }
     // Check 2: source file actually imports PageHealthBanner
     if (info.sourceFile) {
       const sourceContent = readFile(info.sourceFile);
       if (!sourceContent) {
-        warnings.push(`SIMULATED_SOURCE_NOT_FOUND: '${route}' sourceFile '${info.sourceFile}' not found — cannot verify banner`);
+        warnings.push(
+          `SIMULATED_SOURCE_NOT_FOUND: '${route}' sourceFile '${info.sourceFile}' not found — cannot verify banner`
+        );
         continue;
       }
       if (!sourceContent.includes('PageHealthBanner')) {
-        warnings.push(`SIMULATED_BANNER_MISSING: '${route}' sourceFile '${info.sourceFile}' does not import PageHealthBanner — disclosure required`);
+        warnings.push(
+          `SIMULATED_BANNER_MISSING: '${route}' sourceFile '${info.sourceFile}' does not import PageHealthBanner — disclosure required`
+        );
         continue;
       }
     }
@@ -285,7 +313,9 @@ function verify() {
     // Strip query params from 'to'
     const toRoute = to.split('?')[0];
     if (!appCanonical.has(toRoute) && !regCanonical.has(toRoute)) {
-      errors.push(`ORPHANED_ALIAS: '${from}' redirects to '${toRoute}' which is not a known canonical route`);
+      errors.push(
+        `ORPHANED_ALIAS: '${from}' redirects to '${toRoute}' which is not a known canonical route`
+      );
     }
   }
 
@@ -301,17 +331,23 @@ function verify() {
   for (const docPath of REQUIRED_GENERATED_DOCS) {
     const docContent = readFile(docPath);
     if (!docContent) {
-      errors.push(`MISSING_GENERATED_DOC: '${docPath}' does not exist — run pnpm run generate:ui-surface-docs`);
+      errors.push(
+        `MISSING_GENERATED_DOC: '${docPath}' does not exist — run pnpm run generate:ui-surface-docs`
+      );
       continue;
     }
     if (!docContent.includes(GENERATED_FROM_MARKER)) {
-      warnings.push(`GENERATED_DOC_NO_MARKER: '${docPath}' lacks GENERATED_FROM marker — may be stale or manually edited`);
+      warnings.push(
+        `GENERATED_DOC_NO_MARKER: '${docPath}' lacks GENERATED_FROM marker — may be stale or manually edited`
+      );
     }
     // Content-based route count check
     const docRouteCount = (docContent.match(/^\| `\//gm) || []).length;
     if (docPath.includes('UI_ROUTE_INVENTORY') && docRouteCount > 0) {
       if (Math.abs(docRouteCount - regCanonical.size) > 2) {
-        warnings.push(`GENERATED_DOC_COUNT_DRIFT: '${docPath}' has ~${docRouteCount} route rows but registry has ${regCanonical.size} routes — regenerate with pnpm run generate:ui-surface-docs`);
+        warnings.push(
+          `GENERATED_DOC_COUNT_DRIFT: '${docPath}' has ~${docRouteCount} route rows but registry has ${regCanonical.size} routes — regenerate with pnpm run generate:ui-surface-docs`
+        );
       }
     }
   }

@@ -29,7 +29,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v61 Tier 1 Blocker Reduction — EXPERIENCE', () => {
-
   describe('EXPERIENCE — promote BLOCKED_BY_RUNTIME → DEGRADED_WITH_UI_PROOF', () => {
     before(async () => {
       await navigateAndWait('/experience', 'page-experience', 10000);
@@ -38,12 +37,7 @@ describe('v61 Tier 1 Blocker Reduction — EXPERIENCE', () => {
     it('experience page renders — no ErrorBoundary', async () => {
       const hasError = await checkErrorBoundary();
       if (hasError) {
-        classifyBackendServiceNotInitialized(
-          'EXPERIENCE',
-          '/experience',
-          SOURCE_SPEC,
-          1
-        );
+        classifyBackendServiceNotInitialized('EXPERIENCE', '/experience', SOURCE_SPEC, 1);
         throw new Error('[EXPERIENCE] ErrorBoundary detected on /experience — blocked');
       }
     });
@@ -58,7 +52,8 @@ describe('v61 Tier 1 Blocker Reduction — EXPERIENCE', () => {
         selector: '[data-testid="page-experience"]',
         promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
         targetLevel: 'DEGRADED_WITH_UI_PROOF',
-        description: 'Experience page root visible — XP progression UI renders from frontend hook (useExperience)',
+        description:
+          'Experience page root visible — XP progression UI renders from frontend hook (useExperience)',
         blockerClass: 'BACKEND_SERVICE_NOT_INITIALIZED',
         nextAction: 'v62-experience-experience-get-state-ipc-proof',
       });
@@ -72,7 +67,8 @@ describe('v61 Tier 1 Blocker Reduction — EXPERIENCE', () => {
         selector: '[data-testid="experience-level"]',
         promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
         targetLevel: 'DEGRADED_WITH_UI_PROOF',
-        description: 'Experience level stat displayed — frontend XP state visible (no IPC required for display)',
+        description:
+          'Experience level stat displayed — frontend XP state visible (no IPC required for display)',
         blockerClass: 'BACKEND_SERVICE_NOT_INITIALIZED',
         nextAction: 'v62-experience-experience-get-state-ipc-proof',
       });
@@ -86,7 +82,8 @@ describe('v61 Tier 1 Blocker Reduction — EXPERIENCE', () => {
         selector: '[data-testid="experience-total-xp"]',
         promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
         targetLevel: 'DEGRADED_WITH_UI_PROOF',
-        description: 'Experience total XP displayed — frontend hook renders XP data without IPC',
+        description:
+          'Experience total XP displayed — frontend hook renders XP data without IPC',
         blockerClass: 'BACKEND_SERVICE_NOT_INITIALIZED',
         nextAction: 'v62-experience-experience-get-state-ipc-proof',
       });
@@ -113,7 +110,9 @@ describe('v61 Tier 1 Blocker Reduction — EXPERIENCE', () => {
         sourceSpec: SOURCE_SPEC,
         tier: 1,
         promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
-        promotionTo: promoted ? 'DEGRADED_WITH_UI_PROOF' : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+        promotionTo: promoted
+          ? 'DEGRADED_WITH_UI_PROOF'
+          : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
         achievedPromotion: promoted,
         blockerClass: promoted ? null : 'BACKEND_SERVICE_NOT_INITIALIZED',
         reason: promoted
@@ -123,5 +122,4 @@ describe('v61 Tier 1 Blocker Reduction — EXPERIENCE', () => {
       });
     });
   });
-
 });

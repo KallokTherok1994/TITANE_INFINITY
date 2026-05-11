@@ -857,7 +857,9 @@ function DevPageContent(): JSX.Element {
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>
-          <span className="dev-version">TITANE∞ v{APP_RUNTIME_VERSION} • 5 tabs fusionnés</span>
+          <span className="dev-version">
+            TITANE∞ v{APP_RUNTIME_VERSION} • 5 tabs fusionnés
+          </span>
         </div>
         <button
           className="dev-btn dev-btn--primary"

@@ -12,8 +12,19 @@
 
 'use strict';
 
-const { navigateAndWait, isVisible, getText, count, getAttribute, safeClick } = require('./helpers/uiDesktopFunctionalFlows.js');
-const { assertModuleLoaded, assertSurfaceClassification, logClassification } = require('./helpers/uiDesktopFunctionalAssertions.js');
+const {
+  navigateAndWait,
+  isVisible,
+  getText,
+  count,
+  getAttribute,
+  safeClick,
+} = require('./helpers/uiDesktopFunctionalFlows.js');
+const {
+  assertModuleLoaded,
+  assertSurfaceClassification,
+  logClassification,
+} = require('./helpers/uiDesktopFunctionalAssertions.js');
 
 const ALLOWED = [
   'FUNCTIONAL_LIVE_PROVEN',
@@ -39,7 +50,11 @@ describe('[v54:core] TITANE Chat — /titane', () => {
     const hasContent = await isVisible('page-titane-content', 3000);
     const surfacePresent = hasInput || hasTabs || hasContent;
     expect(surfacePresent).toBe(true);
-    logClassification('TITANE_CHAT', 'FUNCTIONAL_READ_ONLY_PROVEN', `input=${hasInput} tabs=${hasTabs} content=${hasContent}`);
+    logClassification(
+      'TITANE_CHAT',
+      'FUNCTIONAL_READ_ONLY_PROVEN',
+      `input=${hasInput} tabs=${hasTabs} content=${hasContent}`
+    );
   });
 
   it('conversation tab is clickable and shows composer', async () => {
@@ -49,7 +64,11 @@ describe('[v54:core] TITANE Chat — /titane', () => {
       await safeClick('tab-conversation');
       await browser.pause(600);
       const hasInput = await isVisible('chat-input', 5000);
-      logClassification('TITANE_CHAT', hasInput ? 'FUNCTIONAL_LIVE_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `composer=${hasInput}`);
+      logClassification(
+        'TITANE_CHAT',
+        hasInput ? 'FUNCTIONAL_LIVE_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+        `composer=${hasInput}`
+      );
       // Pass either way — degraded is classified as PASS
       expect(true).toBe(true);
     } else {
@@ -61,13 +80,21 @@ describe('[v54:core] TITANE Chat — /titane', () => {
   it('provider runtime truth is visible or degraded', async () => {
     await navigateAndWait('/titane', 'page-titane', 12000);
     const html = await browser.execute(() => document.body.innerHTML);
-    const hasProviderInfo = typeof html === 'string' && (
-      html.includes('ollama') || html.includes('Ollama') ||
-      html.includes('provider') || html.includes('Provider') ||
-      html.includes('local') || html.includes('Local') ||
-      html.includes('gemma') || html.includes('TITANE')
+    const hasProviderInfo =
+      typeof html === 'string' &&
+      (html.includes('ollama') ||
+        html.includes('Ollama') ||
+        html.includes('provider') ||
+        html.includes('Provider') ||
+        html.includes('local') ||
+        html.includes('Local') ||
+        html.includes('gemma') ||
+        html.includes('TITANE'));
+    logClassification(
+      'TITANE_CHAT',
+      hasProviderInfo ? 'FUNCTIONAL_LIVE_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `provider_visible=${hasProviderInfo}`
     );
-    logClassification('TITANE_CHAT', hasProviderInfo ? 'FUNCTIONAL_LIVE_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `provider_visible=${hasProviderInfo}`);
     expect(true).toBe(true); // classified either way
   });
 });
@@ -85,7 +112,11 @@ describe('[v54:core] TIME — /time', () => {
       const srcText = await getText('time-runtime-source');
       logClassification('TIME', 'FUNCTIONAL_LIVE_PROVEN', `runtime-source="${srcText}"`);
     } else {
-      logClassification('TIME', 'FUNCTIONAL_DEGRADED_EXPECTED', 'time-runtime-source not visible');
+      logClassification(
+        'TIME',
+        'FUNCTIONAL_DEGRADED_EXPECTED',
+        'time-runtime-source not visible'
+      );
     }
     expect(true).toBe(true);
   });
@@ -97,7 +128,11 @@ describe('[v54:core] TIME — /time', () => {
       const syncText = await getText('time-chat-sync-status');
       logClassification('TIME', 'FUNCTIONAL_LIVE_PROVEN', `sync="${syncText}"`);
     } else {
-      logClassification('TIME', 'FUNCTIONAL_DEGRADED_EXPECTED', 'time-chat-sync-status not visible');
+      logClassification(
+        'TIME',
+        'FUNCTIONAL_DEGRADED_EXPECTED',
+        'time-chat-sync-status not visible'
+      );
     }
     expect(true).toBe(true);
   });
@@ -108,7 +143,11 @@ describe('[v54:core] TIME — /time', () => {
     if (tabs.length > 0) {
       await tabs[0].click();
       await browser.pause(400);
-      logClassification('TIME', 'FUNCTIONAL_READ_ONLY_PROVEN', `${tabs.length} tabs found`);
+      logClassification(
+        'TIME',
+        'FUNCTIONAL_READ_ONLY_PROVEN',
+        `${tabs.length} tabs found`
+      );
     } else {
       logClassification('TIME', 'FUNCTIONAL_DEGRADED_EXPECTED', 'no time tabs found');
     }
@@ -120,7 +159,11 @@ describe('[v54:core] TIME — /time', () => {
     const hasSegment = await isVisible('time-current-segment', 3000);
     const hasWeekBtn = await isVisible('btn-time-view-week', 3000);
     const hasCalendar = hasSegment || hasWeekBtn;
-    logClassification('TIME', hasCalendar ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `segment=${hasSegment}`);
+    logClassification(
+      'TIME',
+      hasCalendar ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `segment=${hasSegment}`
+    );
     expect(true).toBe(true);
   });
 });
@@ -134,9 +177,15 @@ describe('[v54:core] Memory — /memory', () => {
   it('memory content is visible (stats/search/tree)', async () => {
     await navigateAndWait('/memory', 'page-memory', 10000);
     await browser.pause(1000);
-    const html = await browser.execute(() => document.querySelector('[data-testid="page-memory"]')?.innerHTML || '');
+    const html = await browser.execute(
+      () => document.querySelector('[data-testid="page-memory"]')?.innerHTML || ''
+    );
     const hasContent = typeof html === 'string' && html.length > 100;
-    logClassification('MEMORY', hasContent ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED', `content_length=${typeof html === 'string' ? html.length : 0}`);
+    logClassification(
+      'MEMORY',
+      hasContent ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DEGRADED_EXPECTED',
+      `content_length=${typeof html === 'string' ? html.length : 0}`
+    );
     expect(true).toBe(true);
   });
 
@@ -149,14 +198,20 @@ describe('[v54:core] Memory — /memory', () => {
     // text that mentions "ErrorBoundary" and "inattendues" as legitimate content.
     const hasErrorH2 = await browser.execute(() => {
       const h2s = Array.from(document.querySelectorAll('h2'));
-      return h2s.some(h => h.textContent != null && h.textContent.includes('Erreur dans'));
+      return h2s.some(
+        h => h.textContent != null && h.textContent.includes('Erreur dans')
+      );
     });
     // Also detect via testid (works after next rebuild with data-testid="titane-error-boundary")
-    const hasErrorUI = await browser.execute(() =>
-      !!document.querySelector('[data-testid="titane-error-boundary"]')
+    const hasErrorUI = await browser.execute(
+      () => !!document.querySelector('[data-testid="titane-error-boundary"]')
     );
     const hasError = hasErrorH2 || hasErrorUI;
-    logClassification('MEMORY', hasError ? 'FUNCTIONAL_FAIL' : 'FUNCTIONAL_READ_ONLY_PROVEN', `error_h2=${hasErrorH2} error_testid=${hasErrorUI}`);
+    logClassification(
+      'MEMORY',
+      hasError ? 'FUNCTIONAL_FAIL' : 'FUNCTIONAL_READ_ONLY_PROVEN',
+      `error_h2=${hasErrorH2} error_testid=${hasErrorUI}`
+    );
     expect(hasError).toBe(false);
   });
 });
@@ -174,9 +229,17 @@ describe('[v54:core] Experience — /experience', () => {
     const hasSource = await isVisible('experience-runtime-source', 4000);
     if (hasLevel && hasXP) {
       const level = await getText('experience-level');
-      logClassification('EXPERIENCE', 'FUNCTIONAL_READ_ONLY_PROVEN', `level="${level}" xp_visible=${hasXP}`);
+      logClassification(
+        'EXPERIENCE',
+        'FUNCTIONAL_READ_ONLY_PROVEN',
+        `level="${level}" xp_visible=${hasXP}`
+      );
     } else {
-      logClassification('EXPERIENCE', 'FUNCTIONAL_DEGRADED_EXPECTED', `level=${hasLevel} xp=${hasXP} source=${hasSource}`);
+      logClassification(
+        'EXPERIENCE',
+        'FUNCTIONAL_DEGRADED_EXPECTED',
+        `level=${hasLevel} xp=${hasXP} source=${hasSource}`
+      );
     }
     expect(true).toBe(true);
   });
@@ -188,7 +251,11 @@ describe('[v54:core] Experience — /experience', () => {
       const src = await getText('experience-runtime-source');
       logClassification('EXPERIENCE', 'FUNCTIONAL_LIVE_PROVEN', `source="${src}"`);
     } else {
-      logClassification('EXPERIENCE', 'FUNCTIONAL_DEGRADED_EXPECTED', 'runtime-source not declared');
+      logClassification(
+        'EXPERIENCE',
+        'FUNCTIONAL_DEGRADED_EXPECTED',
+        'runtime-source not declared'
+      );
     }
     expect(true).toBe(true);
   });
@@ -204,7 +271,11 @@ describe('[v54:core] Doc Center — /doc-center', () => {
     await navigateAndWait('/doc-center', 'doc-center-page', 10000);
     const hasTitle = await isVisible('input-doc-title', 4000);
     const hasExport = await isVisible('btn-export-docx', 4000);
-    logClassification('DOC_CENTER', hasTitle || hasExport ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DISPLAY_ONLY', `title=${hasTitle} export=${hasExport}`);
+    logClassification(
+      'DOC_CENTER',
+      hasTitle || hasExport ? 'FUNCTIONAL_READ_ONLY_PROVEN' : 'FUNCTIONAL_DISPLAY_ONLY',
+      `title=${hasTitle} export=${hasExport}`
+    );
     expect(true).toBe(true);
   });
 
@@ -214,9 +285,17 @@ describe('[v54:core] Doc Center — /doc-center', () => {
     if (hasExport) {
       const disabled = await getAttribute('btn-export-docx', 'disabled');
       const hasStatus = await isVisible('doc-export-status', 3000);
-      logClassification('DOC_CENTER', 'FUNCTIONAL_GUARDED', `disabled="${disabled}" status=${hasStatus}`);
+      logClassification(
+        'DOC_CENTER',
+        'FUNCTIONAL_GUARDED',
+        `disabled="${disabled}" status=${hasStatus}`
+      );
     } else {
-      logClassification('DOC_CENTER', 'FUNCTIONAL_DISPLAY_ONLY', 'export button not found');
+      logClassification(
+        'DOC_CENTER',
+        'FUNCTIONAL_DISPLAY_ONLY',
+        'export button not found'
+      );
     }
     expect(true).toBe(true);
   });

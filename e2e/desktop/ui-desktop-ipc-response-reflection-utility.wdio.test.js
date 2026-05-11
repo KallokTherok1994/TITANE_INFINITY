@@ -24,7 +24,8 @@ const {
 
 const SOURCE_SPEC = 'e2e/desktop/ui-desktop-ipc-response-reflection-utility.wdio.test.js';
 
-process.env.TITANE_PROOF_ARTIFACT = 'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
+process.env.TITANE_PROOF_ARTIFACT =
+  'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
 
 describe('v59 IPC Response Reflection — Utility Modules', () => {
   before(async () => {
@@ -199,7 +200,11 @@ describe('v59 IPC Response Reflection — Utility Modules', () => {
     const tier3Routes = [
       { route: '/selfheal', testid: 'page-selfheal', moduleId: 'SELFHEAL' },
       { route: '/adaptive', testid: 'page-adaptive-engine', moduleId: 'ADAPTIVE_ENGINE' },
-      { route: '/singularity', testid: 'page-singularity-monitor', moduleId: 'SINGULARITY' },
+      {
+        route: '/singularity',
+        testid: 'page-singularity-monitor',
+        moduleId: 'SINGULARITY',
+      },
       { route: '/sentinel', testid: 'page-sentinel', moduleId: 'SENTINEL' },
       { route: '/watchdog', testid: 'page-watchdog', moduleId: 'WATCHDOG' },
     ];
@@ -208,7 +213,11 @@ describe('v59 IPC Response Reflection — Utility Modules', () => {
       it(`should render ${route} without ErrorBoundary`, async () => {
         await navigateAndWait(route, testid, 8000);
         const hasError = await checkErrorBoundary();
-        probeDisplayOnly(moduleId, route, 'Tier 3 route renders without ErrorBoundary — display-only confirmed');
+        probeDisplayOnly(
+          moduleId,
+          route,
+          'Tier 3 route renders without ErrorBoundary — display-only confirmed'
+        );
         expect(hasError).toBe(false);
       });
     }

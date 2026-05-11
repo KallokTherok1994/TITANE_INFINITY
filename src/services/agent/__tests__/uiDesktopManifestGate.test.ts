@@ -12,7 +12,10 @@ import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
 const ROOT = resolve(__dirname, '../../../../');
-const MANIFEST_PATH = resolve(ROOT, 'docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json');
+const MANIFEST_PATH = resolve(
+  ROOT,
+  'docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json'
+);
 
 const VALID_TRUTH_CLASSES = [
   'MIXED_LIVE_AND_STATIC',
@@ -254,13 +257,19 @@ describe('UI Desktop Manifest Gate (v50)', () => {
 
     it('safe actions total = 35', () => {
       const m = loadManifest();
-      const total = m.routes.reduce((s: number, r: any) => s + (r.safeActions?.length || 0), 0);
+      const total = m.routes.reduce(
+        (s: number, r: any) => s + (r.safeActions?.length || 0),
+        0
+      );
       expect(total).toBe(35);
     });
 
     it('sensitive actions total = 13', () => {
       const m = loadManifest();
-      const total = m.routes.reduce((s: number, r: any) => s + (r.sensitiveActions?.length || 0), 0);
+      const total = m.routes.reduce(
+        (s: number, r: any) => s + (r.sensitiveActions?.length || 0),
+        0
+      );
       expect(total).toBe(13);
     });
 

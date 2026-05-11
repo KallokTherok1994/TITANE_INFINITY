@@ -26,7 +26,13 @@ const BASE_ROUTES: {
   { route: '/admin', testId: 'page-admin', badgeExpected: true, priority: 2 },
   // /dev: badge is in code (lines 819+831+854) but ErrorBoundary fires in browser mode
   // due to Tauri-dependent hooks (useQAMonitoring, useOneCore). Badge proof: desktop-only.
-  { route: '/dev', testId: 'page-dev', badgeExpected: true, priority: 2, badgeRequiresDesktopRuntime: true },
+  {
+    route: '/dev',
+    testId: 'page-dev',
+    badgeExpected: true,
+    priority: 2,
+    badgeRequiresDesktopRuntime: true,
+  },
   { route: '/experience', testId: 'page-experience', badgeExpected: true, priority: 1 },
   { route: '/memory', testId: 'page-memory', badgeExpected: true, priority: 1 },
   { route: '/research', testId: 'research-page', badgeExpected: true, priority: 3 },
@@ -42,9 +48,20 @@ const BADGE_TIMEOUT = 10000;
 test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
   test.setTimeout(120000);
 
-  for (const { route, testId, badgeExpected, priority, badgeRequiresDesktopRuntime } of BASE_ROUTES) {
-    test(`[P${priority}] Route ${route} — rootTestId=${testId}, badge=${badgeExpected}`, async ({ page }) => {
-      await page.goto(route, { waitUntil: 'domcontentloaded', timeout: PAGE_LOAD_TIMEOUT });
+  for (const {
+    route,
+    testId,
+    badgeExpected,
+    priority,
+    badgeRequiresDesktopRuntime,
+  } of BASE_ROUTES) {
+    test(`[P${priority}] Route ${route} — rootTestId=${testId}, badge=${badgeExpected}`, async ({
+      page,
+    }) => {
+      await page.goto(route, {
+        waitUntil: 'domcontentloaded',
+        timeout: PAGE_LOAD_TIMEOUT,
+      });
 
       // Page must load without crashing
       await expect(page.locator('body')).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
@@ -56,8 +73,15 @@ test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
 
       if (!rootVisible) {
         // Try via nav button for root route
-        console.log(`[${route}] rootTestId ${testId} not immediately visible — attempting nav`);
-        const navBtn = page.locator(`[data-testid^="nav-"]`).filter({ hasText: /titane|time|admin|dev|memory|experience|research|doc|twins|fusion/i }).first();
+        console.log(
+          `[${route}] rootTestId ${testId} not immediately visible — attempting nav`
+        );
+        const navBtn = page
+          .locator(`[data-testid^="nav-"]`)
+          .filter({
+            hasText: /titane|time|admin|dev|memory|experience|research|doc|twins|fusion/i,
+          })
+          .first();
         const navVisible = await navBtn.isVisible().catch(() => false);
         if (navVisible) {
           await navBtn.click({ force: true });
@@ -70,30 +94,42 @@ test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
         if (badgeRequiresDesktopRuntime) {
           // Badge is present in source code but page errors via ErrorBoundary in browser mode
           // due to Tauri-dependent hooks. Verify badge is IN SOURCE (proven by v47), not in DOM.
-          console.log(`[${route}] BADGE_PROOF=DESKTOP_ONLY — badge in source but page throws ErrorBoundary in browser mode`);
+          console.log(
+            `[${route}] BADGE_PROOF=DESKTOP_ONLY — badge in source but page throws ErrorBoundary in browser mode`
+          );
           // Verify ErrorBoundary fired (expected behavior in browser mode)
           const errorBoundary = page.getByRole('heading', { name: /erreur/i });
           const hasErrorBoundary = await errorBoundary.isVisible().catch(() => false);
-          console.log(`[${route}] ErrorBoundary_fired=${hasErrorBoundary} (expected=true in browser mode)`);
+          console.log(
+            `[${route}] ErrorBoundary_fired=${hasErrorBoundary} (expected=true in browser mode)`
+          );
         } else {
           const badge = page.getByTestId(BADGE_TESTID);
-          await expect(badge).toBeVisible({ timeout: BADGE_TIMEOUT }).catch(async () => {
-            // Badge may be hidden on very small viewports or loading states — log but don't hard fail
-            console.warn(`[${route}] BADGE NOT VISIBLE — surface-truth-badge-partial not found in DOM`);
-            // Check DOM presence even if hidden
-            const count = await page.locator(`[data-testid="${BADGE_TESTID}"]`).count();
-            // If count > 0 it's in DOM but hidden — acceptable for proof purposes
-            if (count === 0) {
-              throw new Error(`[${route}] Badge data-testid="${BADGE_TESTID}" not found in DOM`);
-            }
-          });
+          await expect(badge)
+            .toBeVisible({ timeout: BADGE_TIMEOUT })
+            .catch(async () => {
+              // Badge may be hidden on very small viewports or loading states — log but don't hard fail
+              console.warn(
+                `[${route}] BADGE NOT VISIBLE — surface-truth-badge-partial not found in DOM`
+              );
+              // Check DOM presence even if hidden
+              const count = await page.locator(`[data-testid="${BADGE_TESTID}"]`).count();
+              // If count > 0 it's in DOM but hidden — acceptable for proof purposes
+              if (count === 0) {
+                throw new Error(
+                  `[${route}] Badge data-testid="${BADGE_TESTID}" not found in DOM`
+                );
+              }
+            });
         }
       }
 
       // No hard crash check
       const errors: string[] = [];
-      page.on('pageerror', (err) => errors.push(err.message));
-      expect(errors.filter(e => e.includes('Cannot read') || e.includes('is not a function'))).toHaveLength(0);
+      page.on('pageerror', err => errors.push(err.message));
+      expect(
+        errors.filter(e => e.includes('Cannot read') || e.includes('is not a function'))
+      ).toHaveLength(0);
     });
   }
 

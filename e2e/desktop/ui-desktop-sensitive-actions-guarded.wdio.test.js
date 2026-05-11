@@ -12,9 +12,16 @@
  */
 
 import { getAllSensitiveActions, getRouteEntry } from './helpers/uiDesktopManifest.js';
-import { navigateToRoute, assertSensitiveActionGuarded } from './helpers/uiDesktopActions.js';
+import {
+  navigateToRoute,
+  assertSensitiveActionGuarded,
+} from './helpers/uiDesktopActions.js';
 import { waitForPageRoot } from './helpers/uiDesktopAssertions.js';
-import { logActionResult, logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
+import {
+  logActionResult,
+  logProof,
+  writeFinalSummary,
+} from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -56,30 +63,74 @@ describe('TITANE Desktop — Sensitive Actions Guarded (v50)', () => {
     });
 
     it('REQUIRES_SECRET_SKIP actions should involve secret/key/token in label or id', () => {
-      const secretActions = getAllSensitiveActions().filter(a => a.action.safeActionPolicy === 'REQUIRES_SECRET_SKIP');
+      const secretActions = getAllSensitiveActions().filter(
+        a => a.action.safeActionPolicy === 'REQUIRES_SECRET_SKIP'
+      );
       // If any exist, verify they are indeed about secrets
       for (const { action } of secretActions) {
         const combined = (action.actionId + action.label).toLowerCase();
-        const hasSecretKeyword = ['key', 'secret', 'token', 'password', 'credential', 'auth', 'api'].some(k => combined.includes(k));
+        const hasSecretKeyword = [
+          'key',
+          'secret',
+          'token',
+          'password',
+          'credential',
+          'auth',
+          'api',
+        ].some(k => combined.includes(k));
         expect(hasSecretKeyword).toBe(true);
       }
     });
 
     it('REQUIRES_CONFIRMATION actions are correctly classified', () => {
-      const confirmActions = getAllSensitiveActions().filter(a => a.action.safeActionPolicy === 'REQUIRES_CONFIRMATION');
+      const confirmActions = getAllSensitiveActions().filter(
+        a => a.action.safeActionPolicy === 'REQUIRES_CONFIRMATION'
+      );
       for (const { action } of confirmActions) {
         // Must have significant-action keyword (destructive or state-mutating actions that need user confirmation)
         const combined = (action.actionId + action.label).toLowerCase();
-        const isSignificant = ['delete', 'clear', 'remove', 'purge', 'reset', 'restore', 'wipe', 'save', 'sync', 'push', 'pull', 'export', 'import'].some(k => combined.includes(k));
+        const isSignificant = [
+          'delete',
+          'clear',
+          'remove',
+          'purge',
+          'reset',
+          'restore',
+          'wipe',
+          'save',
+          'sync',
+          'push',
+          'pull',
+          'export',
+          'import',
+        ].some(k => combined.includes(k));
         expect(isSignificant).toBe(true);
       }
     });
 
     it('EXTERNAL_NETWORK_SKIP actions involve network or AI operations', () => {
-      const netActions = getAllSensitiveActions().filter(a => a.action.safeActionPolicy === 'EXTERNAL_NETWORK_SKIP_WITH_PROOF');
+      const netActions = getAllSensitiveActions().filter(
+        a => a.action.safeActionPolicy === 'EXTERNAL_NETWORK_SKIP_WITH_PROOF'
+      );
       for (const { action } of netActions) {
-        const combined = (action.actionId + action.label + (action.ipcCommand || '')).toLowerCase();
-        const isNetwork = ['push', 'pull', 'sync', 'fetch', 'remote', 'cloud', 'send', 'generate', 'ai', 'export', 'import'].some(k => combined.includes(k));
+        const combined = (
+          action.actionId +
+          action.label +
+          (action.ipcCommand || '')
+        ).toLowerCase();
+        const isNetwork = [
+          'push',
+          'pull',
+          'sync',
+          'fetch',
+          'remote',
+          'cloud',
+          'send',
+          'generate',
+          'ai',
+          'export',
+          'import',
+        ].some(k => combined.includes(k));
         expect(isNetwork).toBe(true);
       }
     });
@@ -102,7 +153,11 @@ describe('TITANE Desktop — Sensitive Actions Guarded (v50)', () => {
       }
 
       before(() => {
-        logProof({ type: 'SUITE_START', suite: 'ui-desktop-sensitive-actions-guarded', actionCount: sensitiveActions.length });
+        logProof({
+          type: 'SUITE_START',
+          suite: 'ui-desktop-sensitive-actions-guarded',
+          actionCount: sensitiveActions.length,
+        });
       });
 
       after(() => {
@@ -113,10 +168,16 @@ describe('TITANE Desktop — Sensitive Actions Guarded (v50)', () => {
           total: results.length,
           guarded: guarded.length,
           exposed: exposed.length,
-          exposedActions: exposed.map(r => ({ route: r.route, actionId: r.actionId, method: r.method })),
+          exposedActions: exposed.map(r => ({
+            route: r.route,
+            actionId: r.actionId,
+            method: r.method,
+          })),
           results,
         });
-        console.log(`[v50:sensitive] ${guarded.length}/${results.length} guarded | exposed=${exposed.length}`);
+        console.log(
+          `[v50:sensitive] ${guarded.length}/${results.length} guarded | exposed=${exposed.length}`
+        );
         if (exposed.length > 0) {
           console.warn('[v50:sensitive] EXPOSED unguarded sensitive actions:');
           for (const e of exposed) {
@@ -132,25 +193,46 @@ describe('TITANE Desktop — Sensitive Actions Guarded (v50)', () => {
           before(async () => {
             await navigateToRoute(route);
             await browser.pause(600);
-            await waitForPageRoot(`[data-testid="${entry.rootTestId}"]`, 6000).catch(() => {});
+            await waitForPageRoot(`[data-testid="${entry.rootTestId}"]`, 6000).catch(
+              () => {}
+            );
           });
 
           for (const action of actions) {
             it(`sensitive action "${action.label}" is guarded (${action.safeActionPolicy})`, async () => {
               const selector = `[data-testid="${action.actionId}"]`;
-              const guardResult = await assertSensitiveActionGuarded(selector, action.actionId);
+              const guardResult = await assertSensitiveActionGuarded(
+                selector,
+                action.actionId
+              );
 
-              logActionResult(route, action.actionId, guardResult.guarded ? 'GUARDED' : 'EXPOSED', {
-                safeActionPolicy: action.safeActionPolicy,
+              logActionResult(
+                route,
+                action.actionId,
+                guardResult.guarded ? 'GUARDED' : 'EXPOSED',
+                {
+                  safeActionPolicy: action.safeActionPolicy,
+                  label: action.label,
+                  method: guardResult.method,
+                  ...guardResult,
+                }
+              );
+
+              results.push({
+                route,
+                actionId: action.actionId,
                 label: action.label,
-                method: guardResult.method,
                 ...guardResult,
               });
 
-              results.push({ route, actionId: action.actionId, label: action.label, ...guardResult });
-
               // For REQUIRES_SECRET_SKIP or EXTERNAL_NETWORK_SKIP: always classified as skip (proof = not in DOM expected)
-              if (['REQUIRES_SECRET_SKIP', 'DESTRUCTIVE_SKIP_WITH_PROOF', 'EXTERNAL_NETWORK_SKIP_WITH_PROOF'].includes(action.safeActionPolicy)) {
+              if (
+                [
+                  'REQUIRES_SECRET_SKIP',
+                  'DESTRUCTIVE_SKIP_WITH_PROOF',
+                  'EXTERNAL_NETWORK_SKIP_WITH_PROOF',
+                ].includes(action.safeActionPolicy)
+              ) {
                 // If button is in DOM, verify it's not immediately triggering network calls
                 // (we only check guard existence, not call outcome)
                 expect(typeof guardResult.guarded).toBe('boolean'); // just verify we got a result
@@ -187,7 +269,9 @@ describe('TITANE Desktop — Sensitive Actions Guarded (v50)', () => {
     });
   } else {
     it('L4 sensitive action guard checks skipped (set TITANE_E2E_FULL=1 to enable)', () => {
-      console.log('[ui-desktop-sensitive-actions-guarded] TITANE_E2E_FULL not set — L4 skipped');
+      console.log(
+        '[ui-desktop-sensitive-actions-guarded] TITANE_E2E_FULL not set — L4 skipped'
+      );
       expect(true).toBe(true);
     });
   }

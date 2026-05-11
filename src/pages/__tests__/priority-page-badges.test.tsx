@@ -37,8 +37,13 @@ vi.mock('@/cognitive/progression/xpEngine', () => ({
 
 vi.mock('@/services/memory/persistentMemory.normalize', () => ({
   normalizePersistentMemoryStats: vi.fn().mockReturnValue({
-    totalXP: 0, level: 1, levelProgress: 0, conversations: 0, messages: 0,
-    achievements: [], recentMessages: [],
+    totalXP: 0,
+    level: 1,
+    levelProgress: 0,
+    conversations: 0,
+    messages: 0,
+    achievements: [],
+    recentMessages: [],
   }),
 }));
 
@@ -46,9 +51,13 @@ vi.mock('@/components/sections/MemorySection', () => ({
   MemorySection: () => <div data-testid="memory-section-mock">MemorySection</div>,
 }));
 
-vi.mock('../hooks/useExperience', () => ({
-  useExperience: () => ({ state: null, isLoading: true }),
-}), { server: false });
+vi.mock(
+  '../hooks/useExperience',
+  () => ({
+    useExperience: () => ({ state: null, isLoading: true }),
+  }),
+  { server: false }
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BADGE INTEGRATION — Smoke tests for priority pages
@@ -87,16 +96,36 @@ describe('SurfaceTruthBadge — PARTIAL variant (used by all ACTIVE_PARTIAL prio
 describe('v47 Badge Coverage Manifest', () => {
   /** Pages that received SurfaceTruthBadge variant="PARTIAL" in v47 */
   const badgedPages: { route: string; pageFile: string; rootTestId: string }[] = [
-    { route: '/titane',      pageFile: 'src/pages/TitanePage.tsx',                rootTestId: 'page-titane'    },
-    { route: '/time',        pageFile: 'src/pages/TimePage.tsx',                  rootTestId: 'page-time'      },
-    { route: '/admin',       pageFile: 'src/features/admin/AdminPage.tsx',        rootTestId: 'page-admin'     },
-    { route: '/dev',         pageFile: 'src/pages/DevPage.tsx',                   rootTestId: 'page-dev'       },
-    { route: '/experience',  pageFile: 'src/pages/Experience.tsx',                rootTestId: 'page-experience'},
-    { route: '/memory',      pageFile: 'src/pages/Memory.tsx',                    rootTestId: 'page-memory'    },
-    { route: '/research',    pageFile: 'src/pages/ResearchPage.tsx',              rootTestId: 'research-page'  },
-    { route: '/doc-center',  pageFile: 'src/pages/DocCenterPage.tsx',             rootTestId: 'doc-center-page'},
-    { route: '/twins',       pageFile: 'src/pages/TwinsPage.tsx',                 rootTestId: 'page-twins'     },
-    { route: '/fusion',      pageFile: 'src/pages/PerfectFusionDashboard.tsx',   rootTestId: 'page-fusion'    },
+    { route: '/titane', pageFile: 'src/pages/TitanePage.tsx', rootTestId: 'page-titane' },
+    { route: '/time', pageFile: 'src/pages/TimePage.tsx', rootTestId: 'page-time' },
+    {
+      route: '/admin',
+      pageFile: 'src/features/admin/AdminPage.tsx',
+      rootTestId: 'page-admin',
+    },
+    { route: '/dev', pageFile: 'src/pages/DevPage.tsx', rootTestId: 'page-dev' },
+    {
+      route: '/experience',
+      pageFile: 'src/pages/Experience.tsx',
+      rootTestId: 'page-experience',
+    },
+    { route: '/memory', pageFile: 'src/pages/Memory.tsx', rootTestId: 'page-memory' },
+    {
+      route: '/research',
+      pageFile: 'src/pages/ResearchPage.tsx',
+      rootTestId: 'research-page',
+    },
+    {
+      route: '/doc-center',
+      pageFile: 'src/pages/DocCenterPage.tsx',
+      rootTestId: 'doc-center-page',
+    },
+    { route: '/twins', pageFile: 'src/pages/TwinsPage.tsx', rootTestId: 'page-twins' },
+    {
+      route: '/fusion',
+      pageFile: 'src/pages/PerfectFusionDashboard.tsx',
+      rootTestId: 'page-fusion',
+    },
   ];
 
   it('should have 10 priority pages with badge applied (manifest check)', () => {

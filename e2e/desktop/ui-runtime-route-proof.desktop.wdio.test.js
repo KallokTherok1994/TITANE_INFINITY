@@ -21,17 +21,37 @@ const TIMEOUT = 25000;
 const testId = id => `[data-testid="${id}"]`;
 
 const ROUTES = [
-  { route: '/titane',     rootTestId: 'page-titane',     srcFile: 'src/pages/TitanePage.tsx' },
-  { route: '/time',       rootTestId: 'page-time',        srcFile: 'src/pages/TimePage.tsx' },
-  { route: '/experience', rootTestId: 'page-experience',  srcFile: 'src/pages/ExperiencePage.tsx' },
-  { route: '/memory',     rootTestId: 'page-memory',      srcFile: 'src/pages/MemoryPage.tsx' },
-  { route: '/doc-center', rootTestId: 'doc-center-page',  srcFile: 'src/pages/DocCenterPage.tsx' },
-  { route: '/admin',      rootTestId: 'page-admin',       srcFile: 'src/pages/AdminPage.tsx' },
-  { route: '/dev',        rootTestId: 'page-dev',         srcFile: 'src/pages/DevPage.tsx' },
-  { route: '/fusion',     rootTestId: 'page-fusion',      srcFile: 'src/pages/PerfectFusionDashboard.tsx' },
-  { route: '/cloud',      rootTestId: 'page-cloud-center', srcFile: 'src/pages/CloudCenter/index.tsx' },
-  { route: '/research',   rootTestId: 'research-page',    srcFile: 'src/pages/ResearchPage.tsx' },
-  { route: '/twins',      rootTestId: 'page-twins',       srcFile: 'src/pages/TwinsPage.tsx' },
+  { route: '/titane', rootTestId: 'page-titane', srcFile: 'src/pages/TitanePage.tsx' },
+  { route: '/time', rootTestId: 'page-time', srcFile: 'src/pages/TimePage.tsx' },
+  {
+    route: '/experience',
+    rootTestId: 'page-experience',
+    srcFile: 'src/pages/ExperiencePage.tsx',
+  },
+  { route: '/memory', rootTestId: 'page-memory', srcFile: 'src/pages/MemoryPage.tsx' },
+  {
+    route: '/doc-center',
+    rootTestId: 'doc-center-page',
+    srcFile: 'src/pages/DocCenterPage.tsx',
+  },
+  { route: '/admin', rootTestId: 'page-admin', srcFile: 'src/pages/AdminPage.tsx' },
+  { route: '/dev', rootTestId: 'page-dev', srcFile: 'src/pages/DevPage.tsx' },
+  {
+    route: '/fusion',
+    rootTestId: 'page-fusion',
+    srcFile: 'src/pages/PerfectFusionDashboard.tsx',
+  },
+  {
+    route: '/cloud',
+    rootTestId: 'page-cloud-center',
+    srcFile: 'src/pages/CloudCenter/index.tsx',
+  },
+  {
+    route: '/research',
+    rootTestId: 'research-page',
+    srcFile: 'src/pages/ResearchPage.tsx',
+  },
+  { route: '/twins', rootTestId: 'page-twins', srcFile: 'src/pages/TwinsPage.tsx' },
 ];
 
 describe('UI Runtime Route Proof — Desktop (v49)', () => {
@@ -81,8 +101,8 @@ describe('UI Runtime Route Proof — Desktop (v49)', () => {
         });
 
         it(`L4 — ${route} has headings or content`, async () => {
-          const hasContent = await browser.execute(() =>
-            document.querySelectorAll('h1, h2, [data-testid]').length > 0
+          const hasContent = await browser.execute(
+            () => document.querySelectorAll('h1, h2, [data-testid]').length > 0
           );
           expect(hasContent).toBe(true);
         });

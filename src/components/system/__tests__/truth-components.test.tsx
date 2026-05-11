@@ -98,12 +98,7 @@ describe('PageHealthBanner', () => {
 
   it('shows dismiss button when dismissible=true', () => {
     render(
-      <PageHealthBanner
-        route="/test"
-        variant="SIMULATED"
-        message="Test"
-        dismissible
-      />
+      <PageHealthBanner route="/test" variant="SIMULATED" message="Test" dismissible />
     );
     expect(screen.getByTestId('page-health-banner-dismiss-test')).toBeInTheDocument();
   });
@@ -141,13 +136,13 @@ describe('PageHealthBanner', () => {
     render(
       <PageHealthBanner route="/test" variant="DEGRADED" message="Non dismissible" />
     );
-    expect(screen.queryByTestId('page-health-banner-dismiss-test')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('page-health-banner-dismiss-test')
+    ).not.toBeInTheDocument();
   });
 
   it('has role=status for accessibility', () => {
-    render(
-      <PageHealthBanner route="/test" variant="LIVE" message="Live" />
-    );
+    render(<PageHealthBanner route="/test" variant="LIVE" message="Live" />);
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 });

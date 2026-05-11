@@ -195,8 +195,12 @@ describe('Accessor functions', () => {
   });
 
   it('getSimulatedSurfaces matches getSurfacesByTruthClass SIMULATED_UI', () => {
-    const a = getSimulatedSurfaces().map(s => s.route).sort();
-    const b = getSurfacesByTruthClass('SIMULATED_UI').map(s => s.route).sort();
+    const a = getSimulatedSurfaces()
+      .map(s => s.route)
+      .sort();
+    const b = getSurfacesByTruthClass('SIMULATED_UI')
+      .map(s => s.route)
+      .sort();
     expect(a).toEqual(b);
   });
 

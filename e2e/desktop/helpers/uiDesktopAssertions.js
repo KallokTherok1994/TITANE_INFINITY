@@ -40,19 +40,19 @@ async function waitForPageRoot(rootSelector, timeoutMs = 6000) {
   try {
     const el = await $(rootSelector);
     await el.waitForExist({ timeout: timeoutMs });
-    
+
     // Check for error boundary on page
     const hasErrorBoundary = await hasAnySelector(ERROR_BOUNDARY_SELECTORS);
     if (hasErrorBoundary) {
       return { found: true, state: 'ERROR_BOUNDARY', selector: rootSelector };
     }
-    
+
     // Check for degraded state
     const hasDegraded = await hasAnySelector(DEGRADED_SELECTORS);
     if (hasDegraded) {
       return { found: true, state: 'DEGRADED', selector: rootSelector };
     }
-    
+
     return { found: true, state: 'LOADED', selector: rootSelector };
   } catch (_) {
     return { found: false, state: 'NOT_FOUND', selector: rootSelector };
@@ -86,7 +86,7 @@ async function assertTabExists(selector) {
     const el = await $(selector);
     const exists = await el.isExisting();
     if (!exists) return { exists: false, displayed: false, enabled: false, selector };
-    
+
     const displayed = await el.isDisplayed();
     const enabled = await el.isEnabled();
     return { exists, displayed, enabled, selector };
@@ -104,14 +104,19 @@ async function assertTabExists(selector) {
  */
 async function assertNoUnexpectedErrorBoundary(route, isSimulated = false) {
   const hasEB = await hasAnySelector(ERROR_BOUNDARY_SELECTORS);
-  
+
   if (!hasEB) return { hasErrorBoundary: false, isExpectedForSimulated: false };
-  
+
   if (isSimulated) {
     return { hasErrorBoundary: true, isExpectedForSimulated: true, route };
   }
-  
-  return { hasErrorBoundary: true, isExpectedForSimulated: false, route, unexpected: true };
+
+  return {
+    hasErrorBoundary: true,
+    isExpectedForSimulated: false,
+    route,
+    unexpected: true,
+  };
 }
 
 /**
@@ -122,31 +127,59 @@ async function assertNoUnexpectedErrorBoundary(route, isSimulated = false) {
  * @param {boolean} isDisplayOnly
  * @returns {{ loaded: boolean, classification: string }}
  */
-async function assertPageClassification(rootSelector, isSimulated = false, isDisplayOnly = false) {
+async function assertPageClassification(
+  rootSelector,
+  isSimulated = false,
+  isDisplayOnly = false
+) {
   const result = await waitForPageRoot(rootSelector, isSimulated ? 3000 : 6000);
-  
+
   if (!result.found) {
     if (isSimulated) {
-      return { loaded: false, classification: 'SIMULATED_NOT_FOUND_EXPECTED', selector: rootSelector };
+      return {
+        loaded: false,
+        classification: 'SIMULATED_NOT_FOUND_EXPECTED',
+        selector: rootSelector,
+      };
     }
-    return { loaded: false, classification: 'NOT_FOUND_UNEXPECTED', selector: rootSelector };
+    return {
+      loaded: false,
+      classification: 'NOT_FOUND_UNEXPECTED',
+      selector: rootSelector,
+    };
   }
-  
+
   if (result.state === 'ERROR_BOUNDARY') {
     if (isSimulated) {
-      return { loaded: true, classification: 'SIMULATED_WITH_ERROR_BOUNDARY_EXPECTED', selector: rootSelector };
+      return {
+        loaded: true,
+        classification: 'SIMULATED_WITH_ERROR_BOUNDARY_EXPECTED',
+        selector: rootSelector,
+      };
     }
-    return { loaded: true, classification: 'ERROR_BOUNDARY_UNEXPECTED', selector: rootSelector };
+    return {
+      loaded: true,
+      classification: 'ERROR_BOUNDARY_UNEXPECTED',
+      selector: rootSelector,
+    };
   }
-  
+
   if (result.state === 'DEGRADED') {
-    return { loaded: true, classification: 'DEGRADED_CLASSIFIED', selector: rootSelector };
+    return {
+      loaded: true,
+      classification: 'DEGRADED_CLASSIFIED',
+      selector: rootSelector,
+    };
   }
-  
+
   if (isDisplayOnly) {
-    return { loaded: true, classification: 'DISPLAY_ONLY_LOADED', selector: rootSelector };
+    return {
+      loaded: true,
+      classification: 'DISPLAY_ONLY_LOADED',
+      selector: rootSelector,
+    };
   }
-  
+
   return { loaded: true, classification: 'LIVE_LOADED', selector: rootSelector };
 }
 
@@ -156,7 +189,7 @@ async function assertPageClassification(rootSelector, isSimulated = false, isDis
  */
 async function scanInteractiveElements() {
   const results = {};
-  
+
   const scans = [
     ['buttons', 'button'],
     ['inputs', 'input'],
@@ -165,7 +198,7 @@ async function scanInteractiveElements() {
     ['textareas', 'textarea'],
     ['dataTestIds', '[data-testid]'],
   ];
-  
+
   for (const [key, selector] of scans) {
     try {
       const els = await $$(selector);
@@ -174,7 +207,7 @@ async function scanInteractiveElements() {
       results[key] = 0;
     }
   }
-  
+
   return results;
 }
 
@@ -206,13 +239,13 @@ async function assertPageHasTitle() {
  */
 async function waitForLoadingComplete(maxMs = 5000) {
   const start = Date.now();
-  
+
   while (Date.now() - start < maxMs) {
     const loading = await hasAnySelector(LOADING_SELECTORS);
     if (!loading) return { loadingCleared: true, ms: Date.now() - start };
     await browser.pause(200);
   }
-  
+
   return { loadingCleared: false, ms: maxMs };
 }
 
@@ -223,17 +256,17 @@ async function waitForLoadingComplete(maxMs = 5000) {
 async function classifyPageState() {
   const hasEB = await hasAnySelector(ERROR_BOUNDARY_SELECTORS);
   if (hasEB) return 'ERROR_BOUNDARY';
-  
+
   const hasDegraded = await hasAnySelector(DEGRADED_SELECTORS);
   if (hasDegraded) return 'DEGRADED';
-  
+
   const loading = await hasAnySelector(LOADING_SELECTORS);
   if (loading) return 'LOADING';
-  
+
   const body = await $('body');
   const text = await body.getText();
   if (!text || text.trim().length < 5) return 'BLANK';
-  
+
   return 'LIVE';
 }
 

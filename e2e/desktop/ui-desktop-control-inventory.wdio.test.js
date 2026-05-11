@@ -10,10 +10,18 @@
  */
 
 import { writeFileSync, mkdirSync } from 'fs';
-import {resolve, dirname} from 'path';
+import { resolve, dirname } from 'path';
 
-import { getAllRoutes, getRouteEntry, getSimulatedRoutes } from './helpers/uiDesktopManifest.js';
-import { scanInteractiveElements, assertPageHasTitle, classifyPageState } from './helpers/uiDesktopAssertions.js';
+import {
+  getAllRoutes,
+  getRouteEntry,
+  getSimulatedRoutes,
+} from './helpers/uiDesktopManifest.js';
+import {
+  scanInteractiveElements,
+  assertPageHasTitle,
+  classifyPageState,
+} from './helpers/uiDesktopAssertions.js';
 import { navigateToRoute } from './helpers/uiDesktopActions.js';
 import { logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
 import { fileURLToPath } from 'url';
@@ -22,7 +30,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
-const LIVE_INVENTORY_PATH = resolve(__dirname, '../../docs/ui/desktop/generated/UI_DESKTOP_CONTROL_INVENTORY_LIVE_v50.json');
+const LIVE_INVENTORY_PATH = resolve(
+  __dirname,
+  '../../docs/ui/desktop/generated/UI_DESKTOP_CONTROL_INVENTORY_LIVE_v50.json'
+);
 
 describe('TITANE Desktop — Control Inventory (v50)', () => {
   // ──────────────────────────────────────────────────────
@@ -76,27 +87,51 @@ describe('TITANE Desktop — Control Inventory (v50)', () => {
       const liveInventory = [];
 
       before(() => {
-        mkdirSync(resolve(__dirname, '../../docs/ui/desktop/generated'), { recursive: true });
-        logProof({ type: 'SUITE_START', suite: 'ui-desktop-control-inventory', routeCount: routes.length });
+        mkdirSync(resolve(__dirname, '../../docs/ui/desktop/generated'), {
+          recursive: true,
+        });
+        logProof({
+          type: 'SUITE_START',
+          suite: 'ui-desktop-control-inventory',
+          routeCount: routes.length,
+        });
       });
 
       after(() => {
         // Write live inventory JSON
         try {
-          writeFileSync(LIVE_INVENTORY_PATH, JSON.stringify({
-            generated: new Date().toISOString(),
-            mission: 'UI_DESKTOP_FULL_COVERAGE_v50',
-            source: 'LIVE_DOM_CRAWL',
-            routes: liveInventory,
-          }, null, 2));
-          console.log(`[v50:inventory] Live inventory written to: ${LIVE_INVENTORY_PATH}`);
+          writeFileSync(
+            LIVE_INVENTORY_PATH,
+            JSON.stringify(
+              {
+                generated: new Date().toISOString(),
+                mission: 'UI_DESKTOP_FULL_COVERAGE_v50',
+                source: 'LIVE_DOM_CRAWL',
+                routes: liveInventory,
+              },
+              null,
+              2
+            )
+          );
+          console.log(
+            `[v50:inventory] Live inventory written to: ${LIVE_INVENTORY_PATH}`
+          );
         } catch (e) {
           console.warn('[v50:inventory] Failed to write live inventory:', e.message);
         }
 
-        const total = liveInventory.reduce((s, r) => s + r.counts.buttons + r.counts.inputs, 0);
-        writeFinalSummary({ suite: 'ui-desktop-control-inventory', routes: liveInventory.length, totalInteractiveElements: total });
-        console.log(`[v50:inventory] Scanned ${liveInventory.length} routes, ${total} interactive elements total`);
+        const total = liveInventory.reduce(
+          (s, r) => s + r.counts.buttons + r.counts.inputs,
+          0
+        );
+        writeFinalSummary({
+          suite: 'ui-desktop-control-inventory',
+          routes: liveInventory.length,
+          totalInteractiveElements: total,
+        });
+        console.log(
+          `[v50:inventory] Scanned ${liveInventory.length} routes, ${total} interactive elements total`
+        );
       });
 
       for (const route of routes) {

@@ -22,7 +22,10 @@ const SCHEMA_VERSION = 'v62';
 function getArtifactFile() {
   return (
     process.env.TITANE_PROOF_ARTIFACT ||
-    path.resolve(process.cwd(), 'artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl')
+    path.resolve(
+      process.cwd(),
+      'artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl'
+    )
   );
 }
 
@@ -31,7 +34,16 @@ function persistLine(entry) {
     const file = getArtifactFile();
     const dir = path.dirname(file);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.appendFileSync(file, JSON.stringify({ schemaVersion: SCHEMA_VERSION, capturedAt: new Date().toISOString(), sourceSpec: SOURCE_SPEC, ...entry }) + '\n', 'utf8');
+    fs.appendFileSync(
+      file,
+      JSON.stringify({
+        schemaVersion: SCHEMA_VERSION,
+        capturedAt: new Date().toISOString(),
+        sourceSpec: SOURCE_SPEC,
+        ...entry,
+      }) + '\n',
+      'utf8'
+    );
   } catch (e) {
     console.warn('[v62/research] artifact write failed:', e.message);
   }
@@ -54,7 +66,8 @@ describe('v62 — Research: Blocker Record (BLOCKED_BY_MISSING_SAFE_COMMAND)', (
       responseShape: null,
       contentPreviewRedacted: null,
       errorKind: 'BLOCKED_BY_MISSING_SAFE_COMMAND',
-      errorMessageRedacted: 'RESEARCH has no safe read-only IPC command. web_research is forbidden by One Door policy (uncontrolled external network). A future research_get_status read-only command is required.',
+      errorMessageRedacted:
+        'RESEARCH has no safe read-only IPC command. web_research is forbidden by One Door policy (uncontrolled external network). A future research_get_status read-only command is required.',
       latencyMs: 0,
       proofLevel: 'PROOF_DEPTH_BLOCKED_BY_MISSING_SAFE_COMMAND',
       blockerClass: 'MISSING_SAFE_COMMAND',
@@ -68,8 +81,8 @@ describe('v62 — Research: Blocker Record (BLOCKED_BY_MISSING_SAFE_COMMAND)', (
 
     // Verify bridge allowlist correctly excludes RESEARCH
     const bridge = await browser.execute(() => {
-      if (!(window).__TITANE_E2E_IPC_PROBE__) return null;
-      const cmds = (window).__TITANE_E2E_IPC_PROBE__.listAllowedCommands();
+      if (!window.__TITANE_E2E_IPC_PROBE__) return null;
+      const cmds = window.__TITANE_E2E_IPC_PROBE__.listAllowedCommands();
       return { cmds, hasResearch: cmds.some(c => c.toLowerCase().includes('research')) };
     });
 

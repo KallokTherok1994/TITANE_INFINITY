@@ -17,7 +17,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v60 Strict Backend Proof — Admin/Dev Modules (ADMIN SYSTEM, ADMIN CONFIG, DEV COCKPIT)', () => {
-
   // ─── ADMIN SYSTEM ─────────────────────────────────────────────────────────
 
   describe('ADMIN SYSTEM — Tier 1', () => {
@@ -27,18 +26,13 @@ describe('v60 Strict Backend Proof — Admin/Dev Modules (ADMIN SYSTEM, ADMIN CO
     });
 
     it('get_system_health — UI_REFLECTS_BACKEND_RESULT', async () => {
-      await probeInvokeAndReflect(
-        'get_system_health',
-        {},
-        '[data-testid="page-admin"]',
-        {
-          sourceSpec: SOURCE_SPEC,
-          route: '/admin',
-          moduleId: 'ADMIN_SYSTEM',
-          tier: 1,
-          evidenceKind: 'HEALTH_CARD',
-        }
-      );
+      await probeInvokeAndReflect('get_system_health', {}, '[data-testid="page-admin"]', {
+        sourceSpec: SOURCE_SPEC,
+        route: '/admin',
+        moduleId: 'ADMIN_SYSTEM',
+        tier: 1,
+        evidenceKind: 'HEALTH_CARD',
+      });
     });
 
     it('cp_get_system_info — IPC probe with full v60 schema', async () => {
@@ -101,18 +95,13 @@ describe('v60 Strict Backend Proof — Admin/Dev Modules (ADMIN SYSTEM, ADMIN CO
     });
 
     it('get_system_health on dev route — UI_REFLECTS_BACKEND_RESULT', async () => {
-      await probeInvokeAndReflect(
-        'get_system_health',
-        {},
-        '[data-testid="page-dev"]',
-        {
-          sourceSpec: SOURCE_SPEC,
-          route: '/dev',
-          moduleId: 'DEV_COCKPIT',
-          tier: 1,
-          evidenceKind: 'HEALTH_CARD',
-        }
-      );
+      await probeInvokeAndReflect('get_system_health', {}, '[data-testid="page-dev"]', {
+        sourceSpec: SOURCE_SPEC,
+        route: '/dev',
+        moduleId: 'DEV_COCKPIT',
+        tier: 1,
+        evidenceKind: 'HEALTH_CARD',
+      });
     });
 
     it('cp_get_ai_config on dev route — IPC probe v60', async () => {
@@ -128,5 +117,4 @@ describe('v60 Strict Backend Proof — Admin/Dev Modules (ADMIN SYSTEM, ADMIN CO
       );
     });
   });
-
 });

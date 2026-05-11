@@ -10,9 +10,18 @@
  */
 
 import { getAllSafeActions, getRouteEntry } from './helpers/uiDesktopManifest.js';
-import { navigateToRoute, clickSafeAction, dismissDialog, isSafeToClick } from './helpers/uiDesktopActions.js';
+import {
+  navigateToRoute,
+  clickSafeAction,
+  dismissDialog,
+  isSafeToClick,
+} from './helpers/uiDesktopActions.js';
 import { waitForPageRoot } from './helpers/uiDesktopAssertions.js';
-import { logActionResult, logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
+import {
+  logActionResult,
+  logProof,
+  writeFinalSummary,
+} from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -107,7 +116,11 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
       }
 
       before(() => {
-        logProof({ type: 'SUITE_START', suite: 'ui-desktop-safe-actions', actionCount: safeActions.length });
+        logProof({
+          type: 'SUITE_START',
+          suite: 'ui-desktop-safe-actions',
+          actionCount: safeActions.length,
+        });
       });
 
       after(() => {
@@ -122,7 +135,9 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
           skipped: skipped.length,
           results,
         });
-        console.log(`[v50:safe-actions] ${clicked.length}/${results.length} clicked | notFound=${notFound.length} skipped=${skipped.length}`);
+        console.log(
+          `[v50:safe-actions] ${clicked.length}/${results.length} clicked | notFound=${notFound.length} skipped=${skipped.length}`
+        );
       });
 
       for (const [route, actions] of Object.entries(byRoute)) {
@@ -132,7 +147,10 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
           before(async () => {
             await navigateToRoute(route);
             await browser.pause(600);
-            const root = await waitForPageRoot(`[data-testid="${entry.rootTestId}"]`, 6000);
+            const root = await waitForPageRoot(
+              `[data-testid="${entry.rootTestId}"]`,
+              6000
+            );
             if (!root.found && !entry.isSimulated) {
               console.warn(`[v50:safe-actions] Page not loaded for ${route}`);
             }
@@ -141,7 +159,11 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
           for (const action of actions) {
             it(`action "${action.label}" (${action.safeActionPolicy})`, async () => {
               const selector = `[data-testid="${action.actionId}"]`;
-              const clickResult = await clickSafeAction(selector, action.actionId, action.safeActionPolicy);
+              const clickResult = await clickSafeAction(
+                selector,
+                action.actionId,
+                action.safeActionPolicy
+              );
 
               let result;
               if (clickResult.skipped) {
@@ -162,7 +184,13 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
                 ...clickResult,
               });
 
-              results.push({ route, actionId: action.actionId, label: action.label, result, ...clickResult });
+              results.push({
+                route,
+                actionId: action.actionId,
+                label: action.label,
+                result,
+                ...clickResult,
+              });
 
               // Dismiss any dialog that may have appeared
               await dismissDialog();
@@ -170,12 +198,20 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
 
               // After clicking, no error boundary should appear
               if (result === 'CLICKED') {
-                const hasEB = await $('[data-testid="error-boundary"], .error-boundary').isExisting().catch(() => false);
+                const hasEB = await $('[data-testid="error-boundary"], .error-boundary')
+                  .isExisting()
+                  .catch(() => false);
                 expect(hasEB).toBe(false);
               }
 
               // Test always passes (result is classified, not hard-failed for NOT_FOUND)
-              expect(['CLICKED', 'NOT_FOUND', 'SKIPPED', 'GUARDED_REQUIRES_CONFIRM', 'DISABLED_EXPECTED']).toContain(result);
+              expect([
+                'CLICKED',
+                'NOT_FOUND',
+                'SKIPPED',
+                'GUARDED_REQUIRES_CONFIRM',
+                'DISABLED_EXPECTED',
+              ]).toContain(result);
             });
           }
         });

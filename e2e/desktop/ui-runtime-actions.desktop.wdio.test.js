@@ -68,7 +68,8 @@ const ACTION_SURFACES = [
     srcFile: 'src/pages/TitanePage.tsx',
     label: 'Titane — chat send surface',
     // Chat input: look for send button or textarea
-    actionSelector: '[data-testid="chat-send-button"], [data-testid="chat-input"], textarea',
+    actionSelector:
+      '[data-testid="chat-send-button"], [data-testid="chat-input"], textarea',
   },
 ];
 
@@ -126,7 +127,9 @@ describe('UI Runtime Actions Proof — Desktop (v49)', () => {
             }, actionSelector);
             // L4 is informational — some actions may require state
             if (!el) {
-              console.warn(`L4 WARNING: ${route} action selector not found: ${actionSelector}`);
+              console.warn(
+                `L4 WARNING: ${route} action selector not found: ${actionSelector}`
+              );
             } else {
               expect(el).toBe(true);
             }

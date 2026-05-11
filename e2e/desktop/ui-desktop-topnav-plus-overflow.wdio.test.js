@@ -18,13 +18,27 @@
  * - Degraded/partial navigation classified as PASS (not failure)
  */
 
-const { navigateAndWait, isVisible, safeClick } = require('./helpers/uiDesktopFunctionalFlows.js');
+const {
+  navigateAndWait,
+  isVisible,
+  safeClick,
+} = require('./helpers/uiDesktopFunctionalFlows.js');
 
 const OVERFLOW_ITEMS = [
   { id: 'fusion', label: 'FUSION', route: '/fusion', rootTestId: 'page-fusion' },
   { id: 'twins', label: 'TWINS', route: '/twins', rootTestId: 'page-twins' },
-  { id: 'optimization', label: 'OPTIMIZE', route: '/optimization', rootTestId: 'page-optimization' },
-  { id: 'total-dev', label: 'TOTAL DEV', route: '/total-dev', rootTestId: 'total-dev-header' },
+  {
+    id: 'optimization',
+    label: 'OPTIMIZE',
+    route: '/optimization',
+    rootTestId: 'page-optimization',
+  },
+  {
+    id: 'total-dev',
+    label: 'TOTAL DEV',
+    route: '/total-dev',
+    rootTestId: 'total-dev-header',
+  },
 ];
 
 const PRIMARY_ITEMS = [
@@ -85,7 +99,9 @@ describe('[v64:topnav] Plus menu opens and shows overflow items', () => {
   it('clicking btn-nav-more opens topnav-more-menu', async () => {
     const opened = await openMoreMenu();
     if (!opened) {
-      console.log('[v64:topnav] btn-nav-more not present — overflow may not be needed at current viewport');
+      console.log(
+        '[v64:topnav] btn-nav-more not present — overflow may not be needed at current viewport'
+      );
       expect(true).toBe(true);
       return;
     }
@@ -132,7 +148,7 @@ describe('[v64:topnav] Overflow navigation routes', () => {
 
       if (!clicked) {
         // Navigate directly — may not have overflow menu (viewport)
-        await browser.execute((route) => {
+        await browser.execute(route => {
           window.history.pushState({}, '', route);
           window.dispatchEvent(new PopStateEvent('popstate'));
         }, item.route);
@@ -141,7 +157,9 @@ describe('[v64:topnav] Overflow navigation routes', () => {
 
       const root = await $(`[data-testid="${item.rootTestId}"]`);
       const found = await root.isExisting().catch(() => false);
-      console.log(`[v64:topnav] route=${item.route} root=${item.rootTestId} found=${found}`);
+      console.log(
+        `[v64:topnav] route=${item.route} root=${item.rootTestId} found=${found}`
+      );
       // Pass whether found or classified degraded — route navigation is classified
       expect(true).toBe(true);
     });
@@ -159,9 +177,13 @@ describe('[v64:topnav] Keyboard accessibility', () => {
     if (exists) {
       await navItem.click(); // focus it
       await browser.pause(200);
-      const hasFocus = await browser.execute(() =>
-        document.activeElement === document.querySelector('[data-testid="nav-titane"]') ||
-        document.querySelector('[data-testid="nav-titane"]')?.contains(document.activeElement)
+      const hasFocus = await browser.execute(
+        () =>
+          document.activeElement ===
+            document.querySelector('[data-testid="nav-titane"]') ||
+          document
+            .querySelector('[data-testid="nav-titane"]')
+            ?.contains(document.activeElement)
       );
       console.log(`[v64:topnav] nav-titane keyboard focusable: hasFocus=${hasFocus}`);
     }

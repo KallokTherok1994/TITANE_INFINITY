@@ -38,9 +38,29 @@ const canonicalRoutes = [
   '/htf',
 ];
 
-const mainMenuRoutes = ['/titane', '/time', '/admin', '/dev', '/fusion', '/twins', '/optimization', '/total-dev'];
-const hiddenRoutes = ['/orchestration-intelligence', '/orchestration-center', '/singularity'];
-const legacyRoutes = ['/chat', '/memory-evolution', '/memory-evo', '/doc', '/cloud-sync', '/vault'];
+const mainMenuRoutes = [
+  '/titane',
+  '/time',
+  '/admin',
+  '/dev',
+  '/fusion',
+  '/twins',
+  '/optimization',
+  '/total-dev',
+];
+const hiddenRoutes = [
+  '/orchestration-intelligence',
+  '/orchestration-center',
+  '/singularity',
+];
+const legacyRoutes = [
+  '/chat',
+  '/memory-evolution',
+  '/memory-evo',
+  '/doc',
+  '/cloud-sync',
+  '/vault',
+];
 
 if (!existsSync(artifactPath)) {
   console.error(`FAIL artifact missing: ${artifactPath}`);
@@ -98,22 +118,30 @@ if (missingLegacy.length > 0) {
 }
 
 if (broken.length > 0) {
-  console.error(`FAIL broken routes detected: ${broken.map(row => row.route).join(', ')}`);
+  console.error(
+    `FAIL broken routes detected: ${broken.map(row => row.route).join(', ')}`
+  );
   process.exit(1);
 }
 
 if (stale.length > 0) {
-  console.error(`FAIL stale bundle statuses detected: ${stale.map(row => row.route).join(', ')}`);
+  console.error(
+    `FAIL stale bundle statuses detected: ${stale.map(row => row.route).join(', ')}`
+  );
   process.exit(1);
 }
 
 if (unknown.length > 0) {
-  console.error(`FAIL unknown statuses detected: ${unknown.map(row => row.route).join(', ')}`);
+  console.error(
+    `FAIL unknown statuses detected: ${unknown.map(row => row.route).join(', ')}`
+  );
   process.exit(1);
 }
 
 if (noTruthOnPriority.length > 0) {
-  console.error(`FAIL missing truth badge/disclosure on priority routes: ${noTruthOnPriority.map(row => row.route).join(', ')}`);
+  console.error(
+    `FAIL missing truth badge/disclosure on priority routes: ${noTruthOnPriority.map(row => row.route).join(', ')}`
+  );
   process.exit(1);
 }
 

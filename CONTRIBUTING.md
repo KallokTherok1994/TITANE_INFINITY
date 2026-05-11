@@ -35,8 +35,8 @@ Chaque session doit commencer par:
 
 ## Modes d execution (Rule 19)
 
-- DURABLE: mode par defaut sur MAIN/feature/*, discipline complete Rule 1-18.
-- EXPLORATION: mode temporaire (explore/*), discipline allegee, code jetable par defaut.
+- DURABLE: mode par defaut sur MAIN/feature/\*, discipline complete Rule 1-18.
+- EXPLORATION: mode temporaire (explore/\*), discipline allegee, code jetable par defaut.
 - Promotion EXPLORATION vers MAIN: tests complets + AutoHeal full-schema + preuves scopees.
 
 ## Tests
@@ -100,13 +100,13 @@ Chaque modification sous `src/`, `src-tauri/`, `tests/`, `e2e/`, `scripts/` **do
 
 ### Trigger table mapping (Rule 15)
 
-| Fichiers modifies | Docs obligatoires |
-| --- | --- |
-| `src/components/**`, `src/pages/**` | `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
-| `src/services/**`, `src/engines/**` | `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| Fichiers modifies                    | Docs obligatoires                                                          |
+| ------------------------------------ | -------------------------------------------------------------------------- |
+| `src/components/**`, `src/pages/**`  | `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md`                       |
+| `src/services/**`, `src/engines/**`  | `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md`                         |
 | Nouvelle IPC dans `src-tauri/src/**` | `docs/IPC_CATALOG.md` + `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
-| Integration Ollama | `OLLAMA_RUNTIME_MAP.md` |
-| Build/version/release | `RELEASE_SURFACE_INVENTORY.md` |
+| Integration Ollama                   | `OLLAMA_RUNTIME_MAP.md`                                                    |
+| Build/version/release                | `RELEASE_SURFACE_INVENTORY.md`                                             |
 
 ### Verification minimale attendue
 

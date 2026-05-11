@@ -19,8 +19,16 @@ const ADVANCED_MODULES = [
   { name: 'HYPER_CENTER', route: '/hyper-center', rootTestId: 'page-hyper-center' },
   { name: 'REALITY_CENTER', route: '/reality-center', rootTestId: 'page-reality-center' },
   { name: 'QUANTUM_CENTER', route: '/quantum-center', rootTestId: 'page-quantum-center' },
-  { name: 'ORCHESTRATION_CENTER', route: '/orchestration-center', rootTestId: 'page-orchestration-meta-center' },
-  { name: 'ORCHESTRATION_INTEL', route: '/orchestration-intelligence', rootTestId: 'page-orchestration-intelligence' },
+  {
+    name: 'ORCHESTRATION_CENTER',
+    route: '/orchestration-center',
+    rootTestId: 'page-orchestration-meta-center',
+  },
+  {
+    name: 'ORCHESTRATION_INTEL',
+    route: '/orchestration-intelligence',
+    rootTestId: 'page-orchestration-intelligence',
+  },
   { name: 'SINGULARITY', route: '/singularity', rootTestId: 'page-singularity-monitor' },
   { name: 'SENTINEL', route: '/sentinel', rootTestId: 'page-sentinel' },
   { name: 'WATCHDOG', route: '/watchdog', rootTestId: 'page-watchdog' },
@@ -51,10 +59,12 @@ ADVANCED_MODULES.forEach(({ name, route, rootTestId }) => {
       // which produces false positives on pages with documentation text mentioning components.
       const hasErrorH2 = await browser.execute(() => {
         const h2s = Array.from(document.querySelectorAll('h2'));
-        return h2s.some(h => h.textContent != null && h.textContent.includes('Erreur dans'));
+        return h2s.some(
+          h => h.textContent != null && h.textContent.includes('Erreur dans')
+        );
       });
-      const hasErrorTestid = await browser.execute(() =>
-        !!document.querySelector('[data-testid="titane-error-boundary"]')
+      const hasErrorTestid = await browser.execute(
+        () => !!document.querySelector('[data-testid="titane-error-boundary"]')
       );
       const hasSomethingWrong = bodyHTML.includes('Something went wrong');
       if (hasErrorH2 || hasErrorTestid || hasSomethingWrong) {
@@ -64,17 +74,24 @@ ADVANCED_MODULES.forEach(({ name, route, rootTestId }) => {
       }
 
       // Simulated badge check
-      const isSimulated = bodyHTML.includes('SIMULATED') || bodyHTML.includes('Simulated') ||
-        bodyHTML.includes('[simulation]') || bodyHTML.includes('simulation');
+      const isSimulated =
+        bodyHTML.includes('SIMULATED') ||
+        bodyHTML.includes('Simulated') ||
+        bodyHTML.includes('[simulation]') ||
+        bodyHTML.includes('simulation');
 
       // Degraded check
-      const isDegraded = bodyHTML.includes('degraded') || bodyHTML.includes('DEGRADED') ||
-        bodyHTML.includes('unavailable') || bodyHTML.includes('Unavailable') ||
-        bodyHTML.includes('offline') || bodyHTML.includes('fallback');
+      const isDegraded =
+        bodyHTML.includes('degraded') ||
+        bodyHTML.includes('DEGRADED') ||
+        bodyHTML.includes('unavailable') ||
+        bodyHTML.includes('Unavailable') ||
+        bodyHTML.includes('offline') ||
+        bodyHTML.includes('fallback');
 
       // Content check
       const pageEl = await browser.execute(
-        (tid) => document.querySelector(`[data-testid="${tid}"]`)?.innerHTML || '',
+        tid => document.querySelector(`[data-testid="${tid}"]`)?.innerHTML || '',
         rootTestId
       );
       const hasContent = typeof pageEl === 'string' && pageEl.length > 80;
@@ -85,7 +102,11 @@ ADVANCED_MODULES.forEach(({ name, route, rootTestId }) => {
       else if (hasContent) cls = 'FUNCTIONAL_READ_ONLY_PROVEN';
       else cls = 'FUNCTIONAL_DISPLAY_ONLY';
 
-      logClassification(name, cls, `simulated=${isSimulated} degraded=${isDegraded} content=${hasContent}`);
+      logClassification(
+        name,
+        cls,
+        `simulated=${isSimulated} degraded=${isDegraded} content=${hasContent}`
+      );
       expect(true).toBe(true); // All non-ErrorBoundary states are classified as pass
     });
   });

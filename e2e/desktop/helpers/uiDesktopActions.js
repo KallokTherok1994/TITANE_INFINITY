@@ -22,9 +22,7 @@ const SKIP_POLICIES = new Set([
   'EXTERNAL_NETWORK_SKIP_WITH_PROOF',
 ]);
 
-const REQUIRE_CONFIRM_POLICIES = new Set([
-  'REQUIRES_CONFIRMATION',
-]);
+const REQUIRE_CONFIRM_POLICIES = new Set(['REQUIRES_CONFIRMATION']);
 
 /**
  * Determine if an action is safe to click in desktop E2E.
@@ -77,13 +75,13 @@ async function clickTab(selector, label) {
     // Selector may not exist — that's a test assertion, not action failure
     return { clicked: false, notFound: true, label };
   }
-  
+
   const exists = await el.isExisting();
   if (!exists) return { clicked: false, notFound: true, label };
-  
+
   const displayed = await el.isDisplayed();
   if (!displayed) return { clicked: false, notDisplayed: true, label };
-  
+
   await el.click();
   await browser.pause(200);
   return { clicked: true, label };
@@ -100,25 +98,25 @@ async function clickSafeAction(selector, actionId, safeActionPolicy) {
   if (shouldSkip(safeActionPolicy)) {
     return { skipped: true, reason: safeActionPolicy, actionId };
   }
-  
+
   if (requiresConfirmation(safeActionPolicy)) {
     // Only verify the button exists and is clickable; do not proceed
     const el = await $(selector);
     const exists = await el.isExisting();
     return { requiresConfirm: true, buttonExists: exists, actionId };
   }
-  
+
   if (!isSafeToClick(safeActionPolicy)) {
     return { skipped: true, reason: `Unknown policy: ${safeActionPolicy}`, actionId };
   }
-  
+
   const el = await $(selector);
   const exists = await el.isExisting();
   if (!exists) return { notFound: true, actionId, selector };
-  
+
   const enabled = await el.isEnabled();
   if (!enabled) return { disabled: true, actionId };
-  
+
   await el.click();
   await browser.pause(200);
   return { clicked: true, actionId };
@@ -133,27 +131,27 @@ async function clickSafeAction(selector, actionId, safeActionPolicy) {
 async function assertSensitiveActionGuarded(selector, actionId) {
   const el = await $(selector);
   const exists = await el.isExisting();
-  
+
   if (!exists) {
     // Action not in DOM — classified as "not-exposed" guard
     return { guarded: true, method: 'NOT_EXPOSED_IN_DOM', actionId };
   }
-  
+
   const enabled = await el.isEnabled();
   if (!enabled) {
     return { guarded: true, method: 'DISABLED', actionId };
   }
-  
+
   const ariaDisabled = await el.getAttribute('aria-disabled');
   if (ariaDisabled === 'true') {
     return { guarded: true, method: 'ARIA_DISABLED', actionId };
   }
-  
+
   const tabIndex = await el.getAttribute('tabindex');
   if (tabIndex === '-1') {
     return { guarded: true, method: 'TABINDEX_MINUS_ONE', actionId };
   }
-  
+
   // Button exists and is not disabled — record as unguarded (may be expected)
   return { guarded: false, method: 'EXPOSED_AND_ENABLED', actionId };
 }
@@ -184,11 +182,11 @@ async function dismissDialog() {
     'button[data-dismiss]',
     '.modal-close',
   ];
-  
+
   for (const sel of cancelSelectors) {
     try {
       const el = await $(sel);
-      if (await el.isExisting() && await el.isDisplayed()) {
+      if ((await el.isExisting()) && (await el.isDisplayed())) {
         await el.click();
         await browser.pause(200);
         return { dismissed: true, selector: sel };

@@ -10,7 +10,9 @@ describe('v73 production-visible version sync', () => {
   it('index metadata reflects the current production version marker', () => {
     const html = readRepoFile('index.html');
     expect(html).toContain('meta name="version" content="33.0.15"');
-    expect(html).toContain('<title>TITANE∞ v33.0.15 - Cognitive Operating System</title>');
+    expect(html).toContain(
+      '<title>TITANE∞ v33.0.15 - Cognitive Operating System</title>'
+    );
   });
 
   it('critical visible pages use build-time runtime version in UI labels', () => {

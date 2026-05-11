@@ -153,7 +153,9 @@ async function selectMode(modeId) {
   const triggerExists = await trigger.isExisting();
   if (!triggerExists) {
     // Neither compact select nor dropdown trigger found — mode selector unavailable
-    console.warn(`[SELECT_MODE] Neither compact select nor dropdown trigger available for "${modeId}" — skip`);
+    console.warn(
+      `[SELECT_MODE] Neither compact select nor dropdown trigger available for "${modeId}" — skip`
+    );
     return;
   }
   await trigger.waitForDisplayed({ timeout: 10000 });

@@ -19,7 +19,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v60 Strict Backend Proof — Utility Modules (PERFORMANCE, SKILLS, KNOWLEDGE, CREATION, EVOLUTION, TWINS, FUSION, DOC_CENTER)', () => {
-
   // ─── DOC_CENTER — Tier 1 ─────────────────────────────────────────────────
 
   describe('DOC_CENTER — Tier 1', () => {
@@ -175,5 +174,4 @@ describe('v60 Strict Backend Proof — Utility Modules (PERFORMANCE, SKILLS, KNO
       );
     });
   });
-
 });

@@ -16,7 +16,11 @@
  * Rules: read-only, honest classification
  */
 
-const { navigateAndWait, isVisible, safeClick } = require('./helpers/uiDesktopFunctionalFlows.js');
+const {
+  navigateAndWait,
+  isVisible,
+  safeClick,
+} = require('./helpers/uiDesktopFunctionalFlows.js');
 
 const ADMIN_TABS = [
   { testId: 'tab-system', label: 'Système' },
@@ -48,9 +52,10 @@ describe('[v64:admin] Admin page loads', () => {
   });
 
   it('no ErrorBoundary', async () => {
-    const eb = await browser.execute(() =>
-      !!document.querySelector('[data-testid="error-boundary"]') ||
-      (document.body.innerText || '').toLowerCase().includes('something went wrong')
+    const eb = await browser.execute(
+      () =>
+        !!document.querySelector('[data-testid="error-boundary"]') ||
+        (document.body.innerText || '').toLowerCase().includes('something went wrong')
     );
     expect(eb).toBe(false);
   });
@@ -81,7 +86,9 @@ describe('[v64:admin] System subtabs (Diagnostics family)', () => {
       await safeClick('tab-system');
       systemTabClickable = true;
     } else {
-      console.log('[v64:admin] tab-system not visible in pre-hook, subtabs classified as DISPLAY_ONLY in this run');
+      console.log(
+        '[v64:admin] tab-system not visible in pre-hook, subtabs classified as DISPLAY_ONLY in this run'
+      );
     }
     await browser.pause(500);
   });
@@ -89,7 +96,9 @@ describe('[v64:admin] System subtabs (Diagnostics family)', () => {
   for (const sub of SYSTEM_SUBTABS) {
     it(`system subtab ${sub.label} present or classified`, async () => {
       if (!systemTabClickable) {
-        console.log(`[v64:admin] subtab ${sub.label} classified due to unavailable tab-system`);
+        console.log(
+          `[v64:admin] subtab ${sub.label} classified due to unavailable tab-system`
+        );
         expect(true).toBe(true);
         return;
       }
@@ -108,7 +117,11 @@ describe('[v64:admin] Admin version badge', () => {
   it('version badge present or classified (no VERSION_DRIFT)', async () => {
     // Look for any version badge or text indicating version
     const versionText = await browser.execute(() => {
-      const badges = [...document.querySelectorAll('[data-testid*="version"], [class*="version-badge"], [class*="versionBadge"]')];
+      const badges = [
+        ...document.querySelectorAll(
+          '[data-testid*="version"], [class*="version-badge"], [class*="versionBadge"]'
+        ),
+      ];
       return badges.map(b => b.textContent?.trim()).filter(Boolean);
     });
     console.log(`[v64:admin] version badge texts: ${JSON.stringify(versionText)}`);
@@ -130,7 +143,12 @@ describe('[v64:admin] Admin version badge', () => {
       const page = document.querySelector('[data-testid="page-admin"]');
       if (!page) return false;
       const text = page.textContent || '';
-      return text.includes('Tauri') || text.includes('Mémoire') || text.includes('JSON') || text.includes('Diagnostic');
+      return (
+        text.includes('Tauri') ||
+        text.includes('Mémoire') ||
+        text.includes('JSON') ||
+        text.includes('Diagnostic')
+      );
     });
     console.log(`[v64:admin] diagnostic results visible=${hasResults}`);
     expect(true).toBe(true);

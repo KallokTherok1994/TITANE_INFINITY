@@ -28,7 +28,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
-
   describe('RESEARCH — promote GUARDED_ONLY → GUARDED_WITH_UI_PROOF', () => {
     before(async () => {
       await navigateAndWait('/research', 'research-page', 10000);
@@ -51,7 +50,8 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
         selector: '[data-testid="research-page"]',
         promotionFrom: 'PROOF_DEPTH_GUARDED_ONLY',
         targetLevel: 'GUARDED_WITH_UI_PROOF',
-        description: 'Research page root visible — research surface renders with governed network policy',
+        description:
+          'Research page root visible — research surface renders with governed network policy',
         blockerClass: null,
         nextAction: 'v62-research-governed-search-command-proof',
       });
@@ -65,7 +65,8 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
         selector: '[data-testid="research-form"]',
         promotionFrom: 'PROOF_DEPTH_GUARDED_ONLY',
         targetLevel: 'GUARDED_WITH_UI_PROOF',
-        description: 'Research form visible — query form present, execution guarded by network governance',
+        description:
+          'Research form visible — query form present, execution guarded by network governance',
         blockerClass: null,
         nextAction: 'v62-research-governed-search-command-proof',
       });
@@ -79,7 +80,8 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
         selector: '[data-testid="research-question"]',
         promotionFrom: 'PROOF_DEPTH_GUARDED_ONLY',
         targetLevel: 'GUARDED_WITH_UI_PROOF',
-        description: 'Research question input present — user can formulate query, submission is governed',
+        description:
+          'Research question input present — user can formulate query, submission is governed',
         blockerClass: null,
         nextAction: 'v62-research-governed-search-command-proof',
       });
@@ -93,7 +95,8 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
         selector: '[data-testid="research-submit"]',
         promotionFrom: 'PROOF_DEPTH_GUARDED_ONLY',
         targetLevel: 'GUARDED_WITH_UI_PROOF',
-        description: 'Research submit button present — guarded action (network not called in test scope)',
+        description:
+          'Research submit button present — guarded action (network not called in test scope)',
         blockerClass: null,
         nextAction: 'v62-research-governed-search-command-proof',
       });
@@ -107,7 +110,8 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
         selector: '[data-testid="research-mode"]',
         promotionFrom: 'PROOF_DEPTH_GUARDED_ONLY',
         targetLevel: 'GUARDED_WITH_UI_PROOF',
-        description: 'Research mode selector present — governance control visible (local/web mode selection)',
+        description:
+          'Research mode selector present — governance control visible (local/web mode selection)',
         blockerClass: null,
         nextAction: 'v62-research-governed-search-command-proof',
       });
@@ -122,14 +126,16 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
       // Verify the research page does not perform uncontrolled external network access
       // The test itself does NOT submit the form — governed state is proven by form existence
       // and the absence of uncontrolled fetch in this test scope
-      const networkCheck = await browser.execute(() => {
-        // Check if any pending fetch/XHR is running (no uncontrolled call initiated)
-        const pendingRequests = window.__titane_pending_requests || [];
-        return {
-          hasPendingRequests: pendingRequests.length > 0,
-          networkGoverned: true, // form not submitted, network not called
-        };
-      }).catch(() => ({ hasPendingRequests: false, networkGoverned: true }));
+      const networkCheck = await browser
+        .execute(() => {
+          // Check if any pending fetch/XHR is running (no uncontrolled call initiated)
+          const pendingRequests = window.__titane_pending_requests || [];
+          return {
+            hasPendingRequests: pendingRequests.length > 0,
+            networkGoverned: true, // form not submitted, network not called
+          };
+        })
+        .catch(() => ({ hasPendingRequests: false, networkGoverned: true }));
 
       // Classify research mode badge if present
       const modeEvidence = await assertUiEvidence('[data-testid="research-mode-badge"]', {
@@ -137,8 +143,14 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
       });
 
       // Record the network governance proof
-      const { persistProofLine: _p, ..._ } = require('./helpers/uiDesktopBackendProofDepth.js');
-      const { getConfiguredArtifactFile: __f, ...__ } = require('./helpers/uiDesktopBackendProofDepth.js');
+      const {
+        persistProofLine: _p,
+        ..._
+      } = require('./helpers/uiDesktopBackendProofDepth.js');
+      const {
+        getConfiguredArtifactFile: __f,
+        ...__
+      } = require('./helpers/uiDesktopBackendProofDepth.js');
       // Use probeTier1BlockerReduction for governance documentation
       await probeTier1BlockerReduction({
         moduleId: 'RESEARCH',
@@ -180,5 +192,4 @@ describe('v61 Tier 1 Blocker Reduction — RESEARCH', () => {
       });
     });
   });
-
 });

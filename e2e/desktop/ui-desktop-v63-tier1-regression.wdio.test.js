@@ -18,7 +18,10 @@ const SCHEMA_VERSION = 'v63';
 function getArtifactFile() {
   return (
     process.env.TITANE_PROOF_ARTIFACT ||
-    path.resolve(process.cwd(), 'artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl')
+    path.resolve(
+      process.cwd(),
+      'artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl'
+    )
   );
 }
 
@@ -29,7 +32,12 @@ function persistLine(entry) {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.appendFileSync(
       file,
-      JSON.stringify({ schemaVersion: SCHEMA_VERSION, capturedAt: new Date().toISOString(), sourceSpec: SOURCE_SPEC, ...entry }) + '\n',
+      JSON.stringify({
+        schemaVersion: SCHEMA_VERSION,
+        capturedAt: new Date().toISOString(),
+        sourceSpec: SOURCE_SPEC,
+        ...entry,
+      }) + '\n',
       'utf8'
     );
   } catch (e) {
@@ -38,10 +46,14 @@ function persistLine(entry) {
 }
 
 async function activateBridge() {
-  await browser.execute(() => { localStorage.setItem('TITANE_E2E_PROBE', '1'); });
+  await browser.execute(() => {
+    localStorage.setItem('TITANE_E2E_PROBE', '1');
+  });
   let found = false;
   for (let i = 0; i < 25; i++) {
-    found = await browser.execute(() => typeof window.__TITANE_E2E_IPC_PROBE__ !== 'undefined');
+    found = await browser.execute(
+      () => typeof window.__TITANE_E2E_IPC_PROBE__ !== 'undefined'
+    );
     if (found) break;
     await browser.pause(200);
   }
@@ -50,14 +62,21 @@ async function activateBridge() {
 
 const REGRESSION_TARGETS = [
   { moduleId: 'AGENT_CHAT', commandId: 'health_check', command: 'health_check' },
-  { moduleId: 'EXPERIENCE', commandId: 'experience_state', command: 'experience_get_state' },
+  {
+    moduleId: 'EXPERIENCE',
+    commandId: 'experience_state',
+    command: 'experience_get_state',
+  },
 ];
 
 describe('v63 — Tier 1 Regression: confirm proven modules still PASS after rebuild', () => {
   let bridgeAvailable = false;
 
   before(async () => {
-    try { await browser.url('/'); await browser.pause(1500); } catch {}
+    try {
+      await browser.url('/');
+      await browser.pause(1500);
+    } catch {}
     bridgeAvailable = await activateBridge();
   });
 
@@ -87,7 +106,7 @@ describe('v63 — Tier 1 Regression: confirm proven modules still PASS after reb
         return;
       }
 
-      const result = await browser.execute(async (cmdId) => {
+      const result = await browser.execute(async cmdId => {
         return await window.__TITANE_E2E_IPC_PROBE__?.invoke(cmdId);
       }, target.commandId);
 
@@ -106,7 +125,7 @@ describe('v63 — Tier 1 Regression: confirm proven modules still PASS after reb
         contentPreviewRedacted: result?.contentPreviewRedacted ?? null,
         errorKind: result?.errorKind ?? null,
         errorMessageRedacted: null,
-        latencyMs: result?.latencyMs ?? (Date.now() - t0),
+        latencyMs: result?.latencyMs ?? Date.now() - t0,
         proofLevel: result?.proofLevel ?? 'UNKNOWN',
         blockerClass: result?.ok ? null : 'REGRESSION',
         safeToPersist: true,
@@ -115,7 +134,9 @@ describe('v63 — Tier 1 Regression: confirm proven modules still PASS after reb
         regressionCheck: true,
         promotionFrom: 'IPC_RESPONSE_PROVEN',
         promotionTo: result?.proofLevel ?? 'UNKNOWN',
-        nextAction: result?.ok ? 'v63-regression-pass' : 'v63-regression-FAIL-investigate',
+        nextAction: result?.ok
+          ? 'v63-regression-pass'
+          : 'v63-regression-FAIL-investigate',
       });
 
       expect(result?.commandId).toBe(target.commandId);

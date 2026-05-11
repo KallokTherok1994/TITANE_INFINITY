@@ -142,7 +142,8 @@ describe('UI Desktop Ultra Full Coverage (WDIO/Tauri)', () => {
 
     // Best-effort: if messages are preserved, count them; if not, that is acceptable.
     const userAfter = (await $$('[data-testid="chat-message-user"]')).length;
-    void userBefore; void lastUserMessageText; // acknowledged: may be 0 after reinit
+    void userBefore;
+    void lastUserMessageText; // acknowledged: may be 0 after reinit
 
     // Stability scenario: 3 messages, bounded no-silence assertions
     await sendChatAndAssertNoSilence('[STABILITY] message 1');

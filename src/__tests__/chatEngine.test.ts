@@ -629,7 +629,11 @@ describe('ChatEngine — default knowledge base integration', () => {
 
   test('maps REPAIR canonical mode to technical reflection plan', () => {
     // @ts-expect-error -- private helper tested for canonical mapping hardening
-    const plan = chatEngine.resolveReflectionPlanForTurn('default', 'REPAIR', 'Répare ce bug');
+    const plan = chatEngine.resolveReflectionPlanForTurn(
+      'default',
+      'REPAIR',
+      'Répare ce bug'
+    );
 
     expect(plan).not.toBeNull();
     expect(plan?.type).toBe('technical');

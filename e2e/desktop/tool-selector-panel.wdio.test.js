@@ -256,7 +256,9 @@ describe('tool-selector-panel (WDIO desktop)', () => {
         await browser.pause(600);
       }
       const tool = await $(testId('tool-item-generate_summary'));
-      await browser.execute(el => { if (el) el.scrollIntoView({ block: 'center' }); }, tool);
+      await browser.execute(el => {
+        if (el) el.scrollIntoView({ block: 'center' });
+      }, tool);
       expect(await tool.isDisplayed()).toBe(true);
     });
 
@@ -268,7 +270,9 @@ describe('tool-selector-panel (WDIO desktop)', () => {
         await browser.pause(600);
       }
       const tool = await $(testId('tool-item-analyze_site'));
-      await browser.execute(el => { if (el) el.scrollIntoView({ block: 'center' }); }, tool);
+      await browser.execute(el => {
+        if (el) el.scrollIntoView({ block: 'center' });
+      }, tool);
       expect(await tool.isDisplayed()).toBe(true);
     });
   });

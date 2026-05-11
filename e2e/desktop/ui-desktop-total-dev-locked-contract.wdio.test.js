@@ -18,7 +18,11 @@
  * - Classified as FUNCTIONAL_GUARDED (locked contract)
  */
 
-const { navigateAndWait, isVisible, safeClick } = require('./helpers/uiDesktopFunctionalFlows.js');
+const {
+  navigateAndWait,
+  isVisible,
+  safeClick,
+} = require('./helpers/uiDesktopFunctionalFlows.js');
 
 describe('[v64:total-dev] Page loads in locked state', () => {
   before(async () => {
@@ -41,9 +45,10 @@ describe('[v64:total-dev] Page loads in locked state', () => {
   });
 
   it('no ErrorBoundary', async () => {
-    const eb = await browser.execute(() =>
-      !!document.querySelector('[data-testid="error-boundary"]') ||
-      (document.body.innerText || '').toLowerCase().includes('something went wrong')
+    const eb = await browser.execute(
+      () =>
+        !!document.querySelector('[data-testid="error-boundary"]') ||
+        (document.body.innerText || '').toLowerCase().includes('something went wrong')
     );
     expect(eb).toBe(false);
   });
@@ -64,7 +69,8 @@ describe('[v64:total-dev] Locked contract verification', () => {
     const isLocked = await browser.execute(() => {
       const text = document.body.textContent || '';
       // Look for locked indicators
-      return text.includes('verr') ||
+      return (
+        text.includes('verr') ||
         text.includes('lock') ||
         text.includes('Lock') ||
         text.includes('restreint') ||
@@ -72,7 +78,8 @@ describe('[v64:total-dev] Locked contract verification', () => {
         text.includes('accès restreint') ||
         !!document.querySelector('[class*="lock"]') ||
         !!document.querySelector('[data-testid*="lock"]') ||
-        !!document.querySelector('.total-dev-unlock-panel');
+        !!document.querySelector('.total-dev-unlock-panel')
+      );
     });
     console.log(`[v64:total-dev] locked indicators found=${isLocked}`);
     expect(true).toBe(true); // classified as FUNCTIONAL_GUARDED
@@ -80,14 +87,22 @@ describe('[v64:total-dev] Locked contract verification', () => {
 
   it('unlock input exists but no pre-filled secrets', async () => {
     const inputState = await browser.execute(() => {
-      const inputs = [...document.querySelectorAll('input[type="password"], input[type="text"], input[placeholder*="token" i], input[placeholder*="clé" i]')];
+      const inputs = [
+        ...document.querySelectorAll(
+          'input[type="password"], input[type="text"], input[placeholder*="token" i], input[placeholder*="clé" i]'
+        ),
+      ];
       return inputs.map(i => ({ value: i.value, placeholder: i.placeholder }));
     });
     console.log(`[v64:total-dev] unlock inputs: ${JSON.stringify(inputState)}`);
     // Verify no secrets are pre-filled
-    const hasPrefilledSecret = inputState.some(i => i.value && i.value.length > 0 && i.value !== '');
+    const hasPrefilledSecret = inputState.some(
+      i => i.value && i.value.length > 0 && i.value !== ''
+    );
     if (hasPrefilledSecret) {
-      console.warn('[v64:total-dev] WARNING: unlock input has pre-filled value — should be empty');
+      console.warn(
+        '[v64:total-dev] WARNING: unlock input has pre-filled value — should be empty'
+      );
     }
     expect(hasPrefilledSecret).toBe(false);
   });
@@ -108,22 +123,32 @@ describe('[v64:total-dev] Locked contract verification', () => {
         // Verify still locked or shows error
         const stillLocked = await browser.execute(() => {
           const text = document.body.textContent || '';
-          return !text.includes('accès accordé') && !text.includes('déverrouillé') && !text.includes('unlocked');
+          return (
+            !text.includes('accès accordé') &&
+            !text.includes('déverrouillé') &&
+            !text.includes('unlocked')
+          );
         });
         console.log(`[v64:total-dev] wrong token → stillLocked=${stillLocked}`);
         expect(stillLocked).toBe(true);
       } else {
-        console.log('[v64:total-dev] no unlock button found — page stays locked by default');
+        console.log(
+          '[v64:total-dev] no unlock button found — page stays locked by default'
+        );
         expect(true).toBe(true);
       }
     } else {
-      console.log('[v64:total-dev] no token input found — locked state may be hard-gated');
+      console.log(
+        '[v64:total-dev] no token input found — locked state may be hard-gated'
+      );
       expect(true).toBe(true);
     }
   });
 
   it('classify total-dev as FUNCTIONAL_GUARDED', async () => {
-    console.log('[v64:total-dev] Final classification: FUNCTIONAL_GUARDED (locked contract)');
+    console.log(
+      '[v64:total-dev] Final classification: FUNCTIONAL_GUARDED (locked contract)'
+    );
     console.log('[v64:total-dev] Provider: qwen3.5:9b (dev-only surface, NOT PROD)');
     console.log('[v64:total-dev] Contract: wrong token → rejected, no bypass possible');
     expect(true).toBe(true);

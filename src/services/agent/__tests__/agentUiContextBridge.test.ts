@@ -37,20 +37,22 @@ import {
 const mockedReadActive = vi.mocked(readActiveModuleContext);
 const mockedReadRecent = vi.mocked(readRecentModuleContexts);
 
-function makeMockCtx(overrides: Partial<{
-  route: string;
-  moduleId: string;
-  moduleName: string;
-  moduleType: string;
-  pageTitle: string;
-  dataTruthClass: string;
-  capabilities: string[];
-  actions: string[];
-  limits: string[];
-  memoryKeys: string[];
-  updatedAt: number;
-  continuity: object;
-}> = {}) {
+function makeMockCtx(
+  overrides: Partial<{
+    route: string;
+    moduleId: string;
+    moduleName: string;
+    moduleType: string;
+    pageTitle: string;
+    dataTruthClass: string;
+    capabilities: string[];
+    actions: string[];
+    limits: string[];
+    memoryKeys: string[];
+    updatedAt: number;
+    continuity: object;
+  }> = {}
+) {
   return {
     route: overrides.route ?? '/titane',
     fullRoute: overrides.route ?? '/titane',
@@ -111,7 +113,11 @@ describe('buildUnifiedTitaneContext — fallback', () => {
 
 describe('buildUnifiedTitaneContext — /titane', () => {
   it('returns titane_core for /titane route', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx({ route: '/titane', moduleId: 'titane_core' }) as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx({ route: '/titane', moduleId: 'titane_core' }) as ReturnType<
+        typeof readActiveModuleContext
+      >
+    );
 
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.route).toBe('/titane');
@@ -121,7 +127,11 @@ describe('buildUnifiedTitaneContext — /titane', () => {
   });
 
   it('/titane surfaceStatus is MIXED (MIXED_LIVE_AND_STATIC)', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx({ dataTruthClass: 'MIXED_LIVE_AND_STATIC' }) as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx({ dataTruthClass: 'MIXED_LIVE_AND_STATIC' }) as ReturnType<
+        typeof readActiveModuleContext
+      >
+    );
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.surfaceStatus).toBe('MIXED');
     expect(ctx.isSimulated).toBe(false);
@@ -135,12 +145,14 @@ describe('buildUnifiedTitaneContext — /titane', () => {
 
 describe('buildUnifiedTitaneContext — /time', () => {
   it('returns time_center for /time route', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx({
-      route: '/time',
-      moduleId: 'time_center',
-      moduleName: 'Time Center',
-      dataTruthClass: 'MIXED_LIVE_AND_STATIC',
-    }) as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx({
+        route: '/time',
+        moduleId: 'time_center',
+        moduleName: 'Time Center',
+        dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+      }) as ReturnType<typeof readActiveModuleContext>
+    );
 
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.route).toBe('/time');
@@ -155,11 +167,13 @@ describe('buildUnifiedTitaneContext — /time', () => {
 
 describe('buildUnifiedTitaneContext — SIMULATED_UI', () => {
   it('flags isSimulated=true for SIMULATED_UI truthClass', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx({
-      route: '/orchestration-intelligence',
-      moduleId: 'orchestration_intelligence',
-      dataTruthClass: 'SIMULATED_UI',
-    }) as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx({
+        route: '/orchestration-intelligence',
+        moduleId: 'orchestration_intelligence',
+        dataTruthClass: 'SIMULATED_UI',
+      }) as ReturnType<typeof readActiveModuleContext>
+    );
 
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.isSimulated).toBe(true);
@@ -175,11 +189,13 @@ describe('buildUnifiedTitaneContext — SIMULATED_UI', () => {
 
 describe('buildUnifiedTitaneContext — LIVE_TAURI', () => {
   it('flags isLive=true for LIVE_TAURI truthClass', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx({
-      route: '/memory',
-      moduleId: 'memory_page',
-      dataTruthClass: 'LIVE_TAURI_SERVICE_BRIDGE',
-    }) as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx({
+        route: '/memory',
+        moduleId: 'memory_page',
+        dataTruthClass: 'LIVE_TAURI_SERVICE_BRIDGE',
+      }) as ReturnType<typeof readActiveModuleContext>
+    );
 
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.isLive).toBe(true);
@@ -188,9 +204,11 @@ describe('buildUnifiedTitaneContext — LIVE_TAURI', () => {
   });
 
   it('LIVE_TAURI_GOVERNED → GOVERNED status', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx({
-      dataTruthClass: 'LIVE_TAURI_GOVERNED',
-    }) as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx({
+        dataTruthClass: 'LIVE_TAURI_GOVERNED',
+      }) as ReturnType<typeof readActiveModuleContext>
+    );
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.surfaceStatus).toBe('GOVERNED');
     expect(ctx.isLive).toBe(true);
@@ -243,19 +261,25 @@ describe('buildUnifiedTitaneContext — immutability', () => {
 
 describe('buildUnifiedTitaneContext — recentModules', () => {
   it('trims recentModules to historyLimit', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx() as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx() as ReturnType<typeof readActiveModuleContext>
+    );
 
     const manyContexts = Array.from({ length: 20 }, (_, i) =>
       makeMockCtx({ moduleId: `mod_${i}`, route: `/route-${i}`, updatedAt: i * 1000 })
     );
-    mockedReadRecent.mockReturnValue(manyContexts as ReturnType<typeof readRecentModuleContexts>);
+    mockedReadRecent.mockReturnValue(
+      manyContexts as ReturnType<typeof readRecentModuleContexts>
+    );
 
     const ctx = buildUnifiedTitaneContext(5);
     expect(ctx.recentModules.length).toBeLessThanOrEqual(5);
   });
 
   it('returns empty recentModules when history is empty', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx() as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx() as ReturnType<typeof readActiveModuleContext>
+    );
     mockedReadRecent.mockReturnValue([]);
 
     const ctx = buildUnifiedTitaneContext();
@@ -279,7 +303,9 @@ describe('buildUnifiedTitaneContext — alias', () => {
   });
 
   it('aliasResolvedFrom is undefined when not present', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx() as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx() as ReturnType<typeof readActiveModuleContext>
+    );
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.aliasResolvedFrom).toBeUndefined();
   });
@@ -291,7 +317,9 @@ describe('buildUnifiedTitaneContext — alias', () => {
 
 describe('buildUnifiedTitaneContext — proofState', () => {
   it('always sets contextVersion to v1', () => {
-    mockedReadActive.mockReturnValue(makeMockCtx() as ReturnType<typeof readActiveModuleContext>);
+    mockedReadActive.mockReturnValue(
+      makeMockCtx() as ReturnType<typeof readActiveModuleContext>
+    );
     const ctx = buildUnifiedTitaneContext();
     expect(ctx.proofState.contextVersion).toBe('v1');
   });

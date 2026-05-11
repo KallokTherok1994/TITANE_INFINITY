@@ -10,10 +10,23 @@
  * L4 (desktop WDIO) requires TITANE_E2E_FULL=1.
  */
 
-import { getAllRoutes, getRouteEntry, getSummary, getSimulatedRoutes } from './helpers/uiDesktopManifest.js';
+import {
+  getAllRoutes,
+  getRouteEntry,
+  getSummary,
+  getSimulatedRoutes,
+} from './helpers/uiDesktopManifest.js';
 import { pageRootSelector } from './helpers/uiDesktopSelectors.js';
-import { assertPageClassification, classifyPageState, waitForLoadingComplete } from './helpers/uiDesktopAssertions.js';
-import { logRouteResult, writeFinalSummary, logProof } from './helpers/uiDesktopScreenshots.js';
+import {
+  assertPageClassification,
+  classifyPageState,
+  waitForLoadingComplete,
+} from './helpers/uiDesktopAssertions.js';
+import {
+  logRouteResult,
+  writeFinalSummary,
+  logProof,
+} from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -145,15 +158,23 @@ describe('TITANE Desktop — All Routes (v50)', () => {
       const results = [];
 
       before(() => {
-        logProof({ type: 'SUITE_START', suite: 'ui-desktop-all-routes', routeCount: routes.length });
+        logProof({
+          type: 'SUITE_START',
+          suite: 'ui-desktop-all-routes',
+          routeCount: routes.length,
+        });
       });
 
       after(() => {
         const loaded = results.filter(r => r.loaded);
         const simulated = results.filter(r => r.classification?.includes('SIMULATED'));
         const degraded = results.filter(r => r.classification?.includes('DEGRADED'));
-        const errorBoundary = results.filter(r => r.classification?.includes('ERROR_BOUNDARY'));
-        const notFound = results.filter(r => !r.loaded && !r.classification?.includes('SIMULATED'));
+        const errorBoundary = results.filter(r =>
+          r.classification?.includes('ERROR_BOUNDARY')
+        );
+        const notFound = results.filter(
+          r => !r.loaded && !r.classification?.includes('SIMULATED')
+        );
 
         writeFinalSummary({
           suite: 'ui-desktop-all-routes',
@@ -166,7 +187,9 @@ describe('TITANE Desktop — All Routes (v50)', () => {
           results,
         });
 
-        console.log(`[v50:routes] ${loaded.length}/${routes.length} routes loaded | simulated=${simulated.length} degraded=${degraded.length} err=${errorBoundary.length} notFound=${notFound.length}`);
+        console.log(
+          `[v50:routes] ${loaded.length}/${routes.length} routes loaded | simulated=${simulated.length} degraded=${degraded.length} err=${errorBoundary.length} notFound=${notFound.length}`
+        );
       });
 
       for (const route of routes) {
@@ -180,8 +203,12 @@ describe('TITANE Desktop — All Routes (v50)', () => {
           await waitForLoadingComplete(5000);
 
           const rootSelector = `[data-testid="${entry.rootTestId}"]`;
-          const classification = await assertPageClassification(rootSelector, entry.isSimulated, entry.isDisplayOnly);
-          
+          const classification = await assertPageClassification(
+            rootSelector,
+            entry.isSimulated,
+            entry.isDisplayOnly
+          );
+
           logRouteResult(route, classification.classification, {
             rootTestId: entry.rootTestId,
             truthClass: entry.truthClass,
@@ -192,12 +219,19 @@ describe('TITANE Desktop — All Routes (v50)', () => {
 
           // For simulated routes: accept any state
           if (entry.isSimulated) {
-            expect(['SIMULATED_NOT_FOUND_EXPECTED', 'SIMULATED_WITH_ERROR_BOUNDARY_EXPECTED', 'LIVE_LOADED', 'DEGRADED_CLASSIFIED']).toContain(classification.classification);
+            expect([
+              'SIMULATED_NOT_FOUND_EXPECTED',
+              'SIMULATED_WITH_ERROR_BOUNDARY_EXPECTED',
+              'LIVE_LOADED',
+              'DEGRADED_CLASSIFIED',
+            ]).toContain(classification.classification);
             return;
           }
 
           // For real routes: root data-testid MUST be found — NOT_FOUND_UNEXPECTED is a contract violation (v52)
-          expect(['LIVE_LOADED', 'DEGRADED_CLASSIFIED', 'DISPLAY_ONLY_LOADED']).toContain(classification.classification);
+          expect(['LIVE_LOADED', 'DEGRADED_CLASSIFIED', 'DISPLAY_ONLY_LOADED']).toContain(
+            classification.classification
+          );
         });
       }
     });

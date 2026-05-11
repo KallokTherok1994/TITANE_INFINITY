@@ -30,7 +30,10 @@ const SCHEMA_VERSION = 'v62';
 function getArtifactFile() {
   return (
     process.env.TITANE_PROOF_ARTIFACT ||
-    path.resolve(process.cwd(), 'artifacts/backend-proof-depth/v62-tauri-ipc-probe-bridge.jsonl')
+    path.resolve(
+      process.cwd(),
+      'artifacts/backend-proof-depth/v62-tauri-ipc-probe-bridge.jsonl'
+    )
   );
 }
 
@@ -70,7 +73,7 @@ async function activateBridge() {
     // to trigger a re-registration. The app may not expose a re-register hook,
     // so we try a direct inline fallback using the app's own secureInvoke chain.
     // If __TITANE_E2E_IPC_PROBE__ is already there (from a previous run), done.
-    if ((window).__TITANE_E2E_IPC_PROBE__) return;
+    if (window.__TITANE_E2E_IPC_PROBE__) return;
     // Signal to app — future router navigation may trigger useEffect re-run
     window.dispatchEvent(new CustomEvent('titane-e2e-probe-activate'));
   });
@@ -79,16 +82,18 @@ async function activateBridge() {
   let bridgeAvailable = false;
   for (let i = 0; i < 25; i++) {
     const found = await browser.execute(() => {
-      return typeof (window).__TITANE_E2E_IPC_PROBE__ !== 'undefined';
+      return typeof window.__TITANE_E2E_IPC_PROBE__ !== 'undefined';
     });
-    if (found) { bridgeAvailable = true; break; }
+    if (found) {
+      bridgeAvailable = true;
+      break;
+    }
     await browser.pause(200);
   }
   return bridgeAvailable;
 }
 
 describe('v62 — E2E IPC Probe Bridge Proof', () => {
-
   let bridgeAvailable = false;
 
   before(async () => {
@@ -116,9 +121,13 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
       responseShape: bridgeAvailable ? 'BRIDGE_REGISTERED' : 'BRIDGE_NOT_AVAILABLE',
       contentPreviewRedacted: null,
       errorKind: bridgeAvailable ? null : 'BRIDGE_NOT_AVAILABLE',
-      errorMessageRedacted: bridgeAvailable ? null : 'window.__TITANE_E2E_IPC_PROBE__ did not appear after localStorage flag + activation event',
+      errorMessageRedacted: bridgeAvailable
+        ? null
+        : 'window.__TITANE_E2E_IPC_PROBE__ did not appear after localStorage flag + activation event',
       latencyMs: 0,
-      proofLevel: bridgeAvailable ? 'IPC_BRIDGE_REGISTERED' : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+      proofLevel: bridgeAvailable
+        ? 'IPC_BRIDGE_REGISTERED'
+        : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
       uiEvidence: null,
       guardEvidence: null,
       degradedEvidence: null,
@@ -129,7 +138,9 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
       secretScanPassed: true,
       promotionFrom: null,
       promotionTo: bridgeAvailable ? 'IPC_BRIDGE_REGISTERED' : 'BRIDGE_NOT_AVAILABLE',
-      nextAction: bridgeAvailable ? 'v62-module-ipc-proofs' : 'rebuild-with-e2e-probe-enabled',
+      nextAction: bridgeAvailable
+        ? 'v62-module-ipc-proofs'
+        : 'rebuild-with-e2e-probe-enabled',
     });
   });
 
@@ -152,7 +163,8 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
           responseShape: null,
           contentPreviewRedacted: null,
           errorKind: 'BRIDGE_NOT_AVAILABLE',
-          errorMessageRedacted: 'E2E probe bridge not registered — app may need rebuild with bridge code',
+          errorMessageRedacted:
+            'E2E probe bridge not registered — app may need rebuild with bridge code',
           latencyMs: 0,
           proofLevel: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
           blockerClass: 'BRIDGE_NOT_AVAILABLE',
@@ -167,7 +179,7 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
         return;
       }
       const version = await browser.execute(() => {
-        return (window).__TITANE_E2E_IPC_PROBE__?.version;
+        return window.__TITANE_E2E_IPC_PROBE__?.version;
       });
       expect(version).toBe('v62');
     });
@@ -175,7 +187,7 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
     it('bridge.enabled is true', async () => {
       if (!bridgeAvailable) return;
       const enabled = await browser.execute(() => {
-        return (window).__TITANE_E2E_IPC_PROBE__?.enabled;
+        return window.__TITANE_E2E_IPC_PROBE__?.enabled;
       });
       expect(enabled).toBe(true);
     });
@@ -185,7 +197,7 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
     it('listAllowedCommands returns non-empty array', async () => {
       if (!bridgeAvailable) return;
       const cmds = await browser.execute(() => {
-        return (window).__TITANE_E2E_IPC_PROBE__?.listAllowedCommands();
+        return window.__TITANE_E2E_IPC_PROBE__?.listAllowedCommands();
       });
       expect(Array.isArray(cmds)).toBe(true);
       expect(cmds.length).toBeGreaterThan(0);
@@ -225,7 +237,9 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
     it('unknown commandId → COMMAND_NOT_ALLOWLISTED', async () => {
       if (!bridgeAvailable) return;
       const result = await browser.execute(async () => {
-        return await (window).__TITANE_E2E_IPC_PROBE__?.invoke('arbitrary_unknown_raw_command');
+        return await window.__TITANE_E2E_IPC_PROBE__?.invoke(
+          'arbitrary_unknown_raw_command'
+        );
       });
       expect(result.ok).toBe(false);
       expect(result.errorKind).toBe('COMMAND_NOT_ALLOWLISTED');
@@ -235,7 +249,7 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
     it('destructive commandId → COMMAND_BLOCKED_DESTRUCTIVE', async () => {
       if (!bridgeAvailable) return;
       const result = await browser.execute(async () => {
-        return await (window).__TITANE_E2E_IPC_PROBE__?.invoke('delete_all_memory');
+        return await window.__TITANE_E2E_IPC_PROBE__?.invoke('delete_all_memory');
       });
       expect(result.ok).toBe(false);
       expect(result.errorKind).toBe('COMMAND_BLOCKED_DESTRUCTIVE');
@@ -248,7 +262,7 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
       if (!bridgeAvailable) return;
       const t0 = Date.now();
       const result = await browser.execute(async () => {
-        return await (window).__TITANE_E2E_IPC_PROBE__?.invoke('system_health');
+        return await window.__TITANE_E2E_IPC_PROBE__?.invoke('system_health');
       });
       const latencyMs = Date.now() - t0;
 
@@ -258,7 +272,11 @@ describe('v62 — E2E IPC Probe Bridge Proof', () => {
       expect(result.source).toBe('APP_CONTEXT_TAURI_IPC_PROBE');
       expect(result.safeToPersist).toBe(true);
       expect(result.redactionApplied).toBe(true);
-      expect(['IPC_RESPONSE_PROVEN', 'PROOF_DEPTH_BLOCKED_BY_RUNTIME', 'PROOF_DEPTH_BLOCKED_BY_MISSING_COMMAND']).toContain(result.proofLevel);
+      expect([
+        'IPC_RESPONSE_PROVEN',
+        'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+        'PROOF_DEPTH_BLOCKED_BY_MISSING_COMMAND',
+      ]).toContain(result.proofLevel);
 
       persistLine({
         route: '/',

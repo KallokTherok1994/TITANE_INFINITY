@@ -21,7 +21,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v60 Strict Backend Proof — Sandboxed + Tier 3 Infrastructure Modules', () => {
-
   // ─── SANDBOXED MUTATIONS ───────────────────────────────────────────────────
 
   describe('DOC_CENTER sandboxed query — Tier 1', () => {
@@ -32,13 +31,13 @@ describe('v60 Strict Backend Proof — Sandboxed + Tier 3 Infrastructure Modules
 
     it('sandboxed doc index probe — v60 sandboxEvidence schema', async () => {
       await probeSandboxedMutation({
-        mutationFn: async (tempPath) => {
+        mutationFn: async tempPath => {
           // Safe: read-only IPC call, no FS mutation — sandboxed context
-          const result = await browser.execute(async (cmd) => {
+          const result = await browser.execute(async cmd => {
             const invoker =
-              (window.__TAURI__?.core?.invoke) ||
-              (window.__TAURI__?.tauri?.invoke) ||
-              (window.__TAURI__?.invoke);
+              window.__TAURI__?.core?.invoke ||
+              window.__TAURI__?.tauri?.invoke ||
+              window.__TAURI__?.invoke;
             if (!invoker) return { ok: false, error: 'NO_TAURI_INVOKE' };
             try {
               const res = await invoker(cmd, {});
@@ -67,12 +66,12 @@ describe('v60 Strict Backend Proof — Sandboxed + Tier 3 Infrastructure Modules
 
     it('sandboxed time snapshot — v60 sandboxEvidence schema', async () => {
       await probeSandboxedMutation({
-        mutationFn: async (tempPath) => {
-          const result = await browser.execute(async (cmd) => {
+        mutationFn: async tempPath => {
+          const result = await browser.execute(async cmd => {
             const invoker =
-              (window.__TAURI__?.core?.invoke) ||
-              (window.__TAURI__?.tauri?.invoke) ||
-              (window.__TAURI__?.invoke);
+              window.__TAURI__?.core?.invoke ||
+              window.__TAURI__?.tauri?.invoke ||
+              window.__TAURI__?.invoke;
             if (!invoker) return { ok: false, error: 'NO_TAURI_INVOKE' };
             try {
               const res = await invoker(cmd, {});
@@ -101,12 +100,12 @@ describe('v60 Strict Backend Proof — Sandboxed + Tier 3 Infrastructure Modules
 
     it('sandboxed memory state read — v60 sandboxEvidence schema', async () => {
       await probeSandboxedMutation({
-        mutationFn: async (tempPath) => {
-          const result = await browser.execute(async (cmd) => {
+        mutationFn: async tempPath => {
+          const result = await browser.execute(async cmd => {
             const invoker =
-              (window.__TAURI__?.core?.invoke) ||
-              (window.__TAURI__?.tauri?.invoke) ||
-              (window.__TAURI__?.invoke);
+              window.__TAURI__?.core?.invoke ||
+              window.__TAURI__?.tauri?.invoke ||
+              window.__TAURI__?.invoke;
             if (!invoker) return { ok: false, error: 'NO_TAURI_INVOKE' };
             try {
               const res = await invoker(cmd, {});
@@ -135,7 +134,7 @@ describe('v60 Strict Backend Proof — Sandboxed + Tier 3 Infrastructure Modules
 
     it('sandboxed cloud IPC probe — v60 sandboxEvidence schema', async () => {
       await probeSandboxedMutation({
-        mutationFn: async (tempPath) => {
+        mutationFn: async tempPath => {
           // Guarded: cloud has no confirmed IPC — sandboxed display-only context
           return { ok: true, type: 'GUARDED_DISPLAY_ONLY' };
         },
@@ -157,12 +156,12 @@ describe('v60 Strict Backend Proof — Sandboxed + Tier 3 Infrastructure Modules
 
     it('sandboxed admin health probe — v60 sandboxEvidence schema', async () => {
       await probeSandboxedMutation({
-        mutationFn: async (tempPath) => {
-          const result = await browser.execute(async (cmd) => {
+        mutationFn: async tempPath => {
+          const result = await browser.execute(async cmd => {
             const invoker =
-              (window.__TAURI__?.core?.invoke) ||
-              (window.__TAURI__?.tauri?.invoke) ||
-              (window.__TAURI__?.invoke);
+              window.__TAURI__?.core?.invoke ||
+              window.__TAURI__?.tauri?.invoke ||
+              window.__TAURI__?.invoke;
             if (!invoker) return { ok: false, error: 'NO_TAURI_INVOKE' };
             try {
               const res = await invoker(cmd, {});
@@ -259,5 +258,4 @@ describe('v60 Strict Backend Proof — Sandboxed + Tier 3 Infrastructure Modules
       );
     });
   });
-
 });

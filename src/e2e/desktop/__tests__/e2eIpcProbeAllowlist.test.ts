@@ -22,9 +22,24 @@ import {
 } from '../e2eIpcProbeAllowlist';
 
 const DESTRUCTIVE_PATTERNS = [
-  'delete', 'remove', 'reset', 'drop', 'clear', 'purge', 'wipe',
-  'push', 'send', 'upload', 'sync_push', 'write', 'save',
-  'execute', 'exec', 'eval', 'run_', 'shell',
+  'delete',
+  'remove',
+  'reset',
+  'drop',
+  'clear',
+  'purge',
+  'wipe',
+  'push',
+  'send',
+  'upload',
+  'sync_push',
+  'write',
+  'save',
+  'execute',
+  'exec',
+  'eval',
+  'run_',
+  'shell',
 ];
 
 describe('E2E IPC Probe Allowlist (v63)', () => {
@@ -39,10 +54,17 @@ describe('E2E IPC Probe Allowlist (v63)', () => {
         expect(entry.command, `${commandId}: command`).toBeTruthy();
         expect(entry.module, `${commandId}: module`).toBeTruthy();
         expect(typeof entry.readOnly, `${commandId}: readOnly`).toBe('boolean');
-        expect(typeof entry.requiresSandbox, `${commandId}: requiresSandbox`).toBe('boolean');
+        expect(typeof entry.requiresSandbox, `${commandId}: requiresSandbox`).toBe(
+          'boolean'
+        );
         expect(entry.description, `${commandId}: description`).toBeTruthy();
-        expect(typeof entry.inSecurityAllowlist, `${commandId}: inSecurityAllowlist`).toBe('boolean');
-        expect(typeof entry.rustImplemented, `${commandId}: rustImplemented`).toBe('boolean');
+        expect(
+          typeof entry.inSecurityAllowlist,
+          `${commandId}: inSecurityAllowlist`
+        ).toBe('boolean');
+        expect(typeof entry.rustImplemented, `${commandId}: rustImplemented`).toBe(
+          'boolean'
+        );
       }
     });
 
@@ -81,7 +103,9 @@ describe('E2E IPC Probe Allowlist (v63)', () => {
 
     it('EXPERIENCE module must have experience_state entry', () => {
       expect(E2E_IPC_PROBE_ALLOWLIST['experience_state']).toBeDefined();
-      expect(E2E_IPC_PROBE_ALLOWLIST['experience_state'].command).toBe('experience_get_state');
+      expect(E2E_IPC_PROBE_ALLOWLIST['experience_state'].command).toBe(
+        'experience_get_state'
+      );
     });
 
     it('CLOUD module must have cloud_status entry', () => {
@@ -105,10 +129,9 @@ describe('E2E IPC Probe Allowlist (v63)', () => {
 
     it('all entries must have rustImplemented = true', () => {
       for (const [commandId, entry] of Object.entries(E2E_IPC_PROBE_ALLOWLIST)) {
-        expect(
-          entry.rustImplemented,
-          `${commandId}: must have Rust implementation`
-        ).toBe(true);
+        expect(entry.rustImplemented, `${commandId}: must have Rust implementation`).toBe(
+          true
+        );
       }
     });
   });

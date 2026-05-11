@@ -8,10 +8,19 @@
  * L1 runs always. L4 requires TITANE_E2E_FULL=1.
  */
 
-import { getRoutesWithTabs, getRouteEntry, getAllTabs, getSummary } from './helpers/uiDesktopManifest.js';
+import {
+  getRoutesWithTabs,
+  getRouteEntry,
+  getAllTabs,
+  getSummary,
+} from './helpers/uiDesktopManifest.js';
 import { assertTabExists } from './helpers/uiDesktopAssertions.js';
 import { clickTab, navigateToRoute } from './helpers/uiDesktopActions.js';
-import { logTabResult, logProof, writeFinalSummary } from './helpers/uiDesktopScreenshots.js';
+import {
+  logTabResult,
+  logProof,
+  writeFinalSummary,
+} from './helpers/uiDesktopScreenshots.js';
 
 const IS_FULL = process.env.TITANE_E2E_FULL === '1';
 
@@ -124,8 +133,16 @@ describe('TITANE Desktop — All Tabs (v50)', () => {
       after(() => {
         const clicked = results.filter(r => r.result === 'CLICKED');
         const notFound = results.filter(r => r.result === 'NOT_FOUND');
-        writeFinalSummary({ suite: 'ui-desktop-all-tabs', total: results.length, clicked: clicked.length, notFound: notFound.length, results });
-        console.log(`[v50:tabs] ${clicked.length}/${results.length} tabs clicked | notFound=${notFound.length}`);
+        writeFinalSummary({
+          suite: 'ui-desktop-all-tabs',
+          total: results.length,
+          clicked: clicked.length,
+          notFound: notFound.length,
+          results,
+        });
+        console.log(
+          `[v50:tabs] ${clicked.length}/${results.length} tabs clicked | notFound=${notFound.length}`
+        );
       });
 
       for (const { route, tabs, rootTestId } of routesWithTabs) {
@@ -141,23 +158,46 @@ describe('TITANE Desktop — All Tabs (v50)', () => {
           for (const tab of tabs) {
             it(`click tab "${tab.label}" (${tab.testId})`, async () => {
               const assertion = await assertTabExists(tab.selector);
-              logTabResult(route, tab.tabId, assertion.exists ? 'FOUND' : 'NOT_FOUND', assertion);
+              logTabResult(
+                route,
+                tab.tabId,
+                assertion.exists ? 'FOUND' : 'NOT_FOUND',
+                assertion
+              );
 
               if (!assertion.exists) {
                 // Log but don't hard-fail — tab may require specific precondition
-                results.push({ route, tabId: tab.tabId, label: tab.label, result: 'NOT_FOUND' });
+                results.push({
+                  route,
+                  tabId: tab.tabId,
+                  label: tab.label,
+                  result: 'NOT_FOUND',
+                });
                 console.warn(`[v50:tabs] Tab not found: ${tab.selector} on ${route}`);
                 return;
               }
 
               const clickResult = await clickTab(tab.selector, tab.label);
-              logTabResult(route, tab.tabId, clickResult.clicked ? 'CLICKED' : 'NOT_CLICKED', clickResult);
-              results.push({ route, tabId: tab.tabId, label: tab.label, result: clickResult.clicked ? 'CLICKED' : 'NOT_CLICKED', ...clickResult });
+              logTabResult(
+                route,
+                tab.tabId,
+                clickResult.clicked ? 'CLICKED' : 'NOT_CLICKED',
+                clickResult
+              );
+              results.push({
+                route,
+                tabId: tab.tabId,
+                label: tab.label,
+                result: clickResult.clicked ? 'CLICKED' : 'NOT_CLICKED',
+                ...clickResult,
+              });
               await browser.pause(300);
 
               // Soft assertion: tab click should not produce error boundary
               if (clickResult.clicked) {
-                const hasEB = await $('[data-testid="error-boundary"], .error-boundary').isExisting().catch(() => false);
+                const hasEB = await $('[data-testid="error-boundary"], .error-boundary')
+                  .isExisting()
+                  .catch(() => false);
                 expect(hasEB).toBe(false);
               }
 

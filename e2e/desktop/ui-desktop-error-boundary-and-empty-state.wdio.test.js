@@ -9,7 +9,11 @@
  * L4: navigate each route, scan for ErrorBoundary, classify degraded states.
  */
 
-import { getAllRoutes, getRouteEntry, getSimulatedRoutes } from './helpers/uiDesktopManifest.js';
+import {
+  getAllRoutes,
+  getRouteEntry,
+  getSimulatedRoutes,
+} from './helpers/uiDesktopManifest.js';
 import { navigateToRoute } from './helpers/uiDesktopActions.js';
 import {
   assertNoUnexpectedErrorBoundary,
@@ -92,7 +96,11 @@ describe('TITANE Desktop — Error Boundaries & Empty States (v50)', () => {
       const results = [];
 
       before(() => {
-        logProof({ type: 'SUITE_START', suite: 'ui-desktop-error-boundary-and-empty-state', routeCount: routes.length });
+        logProof({
+          type: 'SUITE_START',
+          suite: 'ui-desktop-error-boundary-and-empty-state',
+          routeCount: routes.length,
+        });
       });
 
       after(() => {
@@ -112,7 +120,9 @@ describe('TITANE Desktop — Error Boundaries & Empty States (v50)', () => {
           results,
         });
 
-        console.log(`[v50:error-boundary] live=${live.length} degraded=${degraded.length} blank=${blank.length} unexpectedEB=${unexpectedEB.length}`);
+        console.log(
+          `[v50:error-boundary] live=${live.length} degraded=${degraded.length} blank=${blank.length} unexpectedEB=${unexpectedEB.length}`
+        );
       });
 
       for (const route of routes) {
@@ -124,7 +134,10 @@ describe('TITANE Desktop — Error Boundaries & Empty States (v50)', () => {
           await waitForLoadingComplete(5000);
 
           const pageState = await classifyPageState();
-          const ebResult = await assertNoUnexpectedErrorBoundary(route, entry.isSimulated);
+          const ebResult = await assertNoUnexpectedErrorBoundary(
+            route,
+            entry.isSimulated
+          );
           const hasDegraded = await hasAnySelector(DEGRADED_SELECTORS);
 
           logProof({
@@ -154,14 +167,18 @@ describe('TITANE Desktop — Error Boundaries & Empty States (v50)', () => {
 
           // Core assertion: no silent blank pages on real routes
           if (!entry.isSimulated) {
-            expect(['LIVE', 'DEGRADED', 'ERROR_BOUNDARY', 'LOADING']).toContain(pageState);
+            expect(['LIVE', 'DEGRADED', 'ERROR_BOUNDARY', 'LOADING']).toContain(
+              pageState
+            );
           }
         });
       }
     });
   } else {
     it('L4 error boundary scan skipped (set TITANE_E2E_FULL=1 to enable)', () => {
-      console.log('[ui-desktop-error-boundary-and-empty-state] TITANE_E2E_FULL not set — L4 skipped');
+      console.log(
+        '[ui-desktop-error-boundary-and-empty-state] TITANE_E2E_FULL not set — L4 skipped'
+      );
       expect(true).toBe(true);
     });
   }

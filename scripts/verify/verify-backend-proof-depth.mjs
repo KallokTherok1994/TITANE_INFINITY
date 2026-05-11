@@ -28,10 +28,16 @@ const STRICT_MODE = process.argv.includes('--strict');
 // An artifact is considered "v60+" (strict schema enforcement) if its path contains 'v60', 'v61', 'v62', or 'v63',
 // or if it is the TITANE_PROOF_ARTIFACT override and does not match known legacy names.
 function isV60Artifact(relPath) {
-  return relPath.includes('v60') || relPath.includes('v61') || relPath.includes('v62') || relPath.includes('v63') ||
+  return (
+    relPath.includes('v60') ||
+    relPath.includes('v61') ||
+    relPath.includes('v62') ||
+    relPath.includes('v63') ||
     (process.env.TITANE_PROOF_ARTIFACT &&
-     relPath === process.env.TITANE_PROOF_ARTIFACT &&
-     !relPath.includes('v58') && !relPath.includes('v59'));
+      relPath === process.env.TITANE_PROOF_ARTIFACT &&
+      !relPath.includes('v58') &&
+      !relPath.includes('v59'))
+  );
 }
 
 // ─── Configuration ───────────────────────────────────────────────────────────
@@ -42,7 +48,7 @@ const ARTIFACTS_STATIC = [
   'artifacts/backend-proof-depth/v60-strict-backend-proof.jsonl',
   'artifacts/backend-proof-depth/v61-tier1-blocker-reduction.jsonl',
   'artifacts/backend-proof-depth/v62-tauri-ipc-probe-bridge.jsonl', // v62 IPC bridge proof
-  'artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl',    // v62 module IPC response
+  'artifacts/backend-proof-depth/v62-tauri-ipc-response.jsonl', // v62 module IPC response
   'artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl', // v63 research+cloud proven
 ];
 
@@ -74,18 +80,11 @@ const REQUIRED_FIELDS_IPC = [
   'latencyMs',
 ];
 
-const REQUIRED_FIELDS_RESPONSE_PROVEN = [
-  ...REQUIRED_FIELDS_IPC,
-  'responseShape',
-];
+const REQUIRED_FIELDS_RESPONSE_PROVEN = [...REQUIRED_FIELDS_IPC, 'responseShape'];
 
-const REQUIRED_FIELDS_UI_REFLECTS = [
-  ...REQUIRED_FIELDS_BASE,
-];
+const REQUIRED_FIELDS_UI_REFLECTS = [...REQUIRED_FIELDS_BASE];
 
-const REQUIRED_FIELDS_SANDBOXED = [
-  ...REQUIRED_FIELDS_BASE,
-];
+const REQUIRED_FIELDS_SANDBOXED = [...REQUIRED_FIELDS_BASE];
 
 // Forbidden proof levels — must never appear
 const FORBIDDEN_PROOF_LEVELS = new Set([
@@ -130,9 +129,15 @@ let errors = [];
 let warnings = [];
 let passes = [];
 
-function fail(msg) { errors.push(`FAIL: ${msg}`); }
-function warn(msg) { warnings.push(`WARN: ${msg}`); }
-function pass(msg) { passes.push(`PASS: ${msg}`); }
+function fail(msg) {
+  errors.push(`FAIL: ${msg}`);
+}
+function warn(msg) {
+  warnings.push(`WARN: ${msg}`);
+}
+function pass(msg) {
+  passes.push(`PASS: ${msg}`);
+}
 
 // In strict mode for a v60 artifact: emit FAIL instead of WARN
 function strictFail(msg, artifactRelPath, useStrict = false) {
@@ -147,7 +152,9 @@ function checkSecrets(str, location) {
   if (typeof str !== 'string') return;
   for (const pattern of SECRET_PATTERNS) {
     if (pattern.test(str)) {
-      fail(`Secret pattern detected in ${location}: pattern=${pattern.source.slice(0, 40)}`);
+      fail(
+        `Secret pattern detected in ${location}: pattern=${pattern.source.slice(0, 40)}`
+      );
       return;
     }
   }
@@ -234,7 +241,9 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
     // strict: require structured uiEvidence
     if (strict) {
       if (!record.uiEvidence || typeof record.uiEvidence !== 'object') {
-        fail(`${loc}: [STRICT] UI_REFLECTS_BACKEND_RESULT must include structured uiEvidence object`);
+        fail(
+          `${loc}: [STRICT] UI_REFLECTS_BACKEND_RESULT must include structured uiEvidence object`
+        );
       } else {
         if (!('found' in record.uiEvidence)) {
           fail(`${loc}: [STRICT] uiEvidence must include 'found' boolean`);
@@ -251,18 +260,31 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
 
   // Sandboxed mutation checks
   if (pl === 'SANDBOXED_MUTATION_PROVEN') {
-    if (!record.tempPath && !record.sandboxPath && !record.cleanupStatus && !record.sandboxEvidence) {
+    if (
+      !record.tempPath &&
+      !record.sandboxPath &&
+      !record.cleanupStatus &&
+      !record.sandboxEvidence
+    ) {
       if (strict) {
-        fail(`${loc}: [STRICT] SANDBOXED_MUTATION_PROVEN must include sandboxEvidence object`);
+        fail(
+          `${loc}: [STRICT] SANDBOXED_MUTATION_PROVEN must include sandboxEvidence object`
+        );
       } else {
-        warn(`${loc}: SANDBOXED_MUTATION_PROVEN should include tempPath/cleanupStatus or sandboxEvidence`);
+        warn(
+          `${loc}: SANDBOXED_MUTATION_PROVEN should include tempPath/cleanupStatus or sandboxEvidence`
+        );
       }
     }
     if (strict && record.sandboxEvidence && !record.sandboxEvidence.nonProductionMarker) {
       fail(`${loc}: [STRICT] sandboxEvidence must include nonProductionMarker:true`);
     }
-    if (!record.nonProductionMarker && !(record.sandboxEvidence && record.sandboxEvidence.nonProductionMarker)) {
-      if (!strict) warn(`${loc}: SANDBOXED_MUTATION_PROVEN should include nonProductionMarker`);
+    if (
+      !record.nonProductionMarker &&
+      !(record.sandboxEvidence && record.sandboxEvidence.nonProductionMarker)
+    ) {
+      if (!strict)
+        warn(`${loc}: SANDBOXED_MUTATION_PROVEN should include nonProductionMarker`);
     }
   }
 
@@ -272,7 +294,13 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
   }
 
   // Secret scanning in string fields
-  const stringFields = ['responseShape', 'errorMsg', 'errorMessageRedacted', 'command', 'route'];
+  const stringFields = [
+    'responseShape',
+    'errorMsg',
+    'errorMessageRedacted',
+    'command',
+    'route',
+  ];
   for (const field of stringFields) {
     if (record[field]) {
       checkSecrets(String(record[field]), `${loc}.${field}`);
@@ -287,7 +315,9 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
   // sourceSpec check (strict: FAIL, default: WARN)
   if (!record.sourceSpec) {
     if (strict) {
-      fail(`${loc}: [STRICT] missing required field "sourceSpec" — must be explicit in v60+ artifacts`);
+      fail(
+        `${loc}: [STRICT] missing required field "sourceSpec" — must be explicit in v60+ artifacts`
+      );
     } else {
       warn(`${loc}: missing sourceSpec — recommended for traceability`);
     }
@@ -302,7 +332,9 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
       fail(`${loc}: [STRICT] missing "secretScanPassed" boolean field`);
     }
     if (!['v60', 'v61', 'v62', 'v63'].includes(record.schemaVersion)) {
-      fail(`${loc}: [STRICT] missing or wrong schemaVersion (expected "v60", "v61", "v62", or "v63", got "${record.schemaVersion}")`);
+      fail(
+        `${loc}: [STRICT] missing or wrong schemaVersion (expected "v60", "v61", "v62", or "v63", got "${record.schemaVersion}")`
+      );
     }
     // v62/v63 extra fields required
     if (record.schemaVersion === 'v62' || record.schemaVersion === 'v63') {
@@ -313,12 +345,22 @@ function validateRecord(record, lineNum, artifactName, strictArtifact = false) {
         fail(`${loc}: [STRICT v62] missing "commandId" field`);
       }
       // Block: destructive commandId must never appear in artifact
-      const destructivePatterns = ['delete', 'reset', 'write', 'execute', 'exec', 'eval', 'run_shell'];
+      const destructivePatterns = [
+        'delete',
+        'reset',
+        'write',
+        'execute',
+        'exec',
+        'eval',
+        'run_shell',
+      ];
       if (record.commandId && typeof record.commandId === 'string') {
         const lower = record.commandId.toLowerCase();
         for (const pat of destructivePatterns) {
           if (lower.includes(pat) && record.errorKind !== 'COMMAND_BLOCKED_DESTRUCTIVE') {
-            fail(`${loc}: [STRICT v62] destructive commandId "${record.commandId}" present in artifact without COMMAND_BLOCKED_DESTRUCTIVE guard`);
+            fail(
+              `${loc}: [STRICT v62] destructive commandId "${record.commandId}" present in artifact without COMMAND_BLOCKED_DESTRUCTIVE guard`
+            );
           }
         }
       }
@@ -378,7 +420,9 @@ function validateArtifact(relPath) {
   // Targeted/completion artifacts (v61 tier1, v62 probe-bridge/response, v63 completion) are exempted.
   const isBroadProofArtifact = relPath.includes('v60-strict-backend-proof');
   if (STRICT_MODE && strictArtifact && isBroadProofArtifact && lines.length < 10) {
-    fail(`[STRICT] v60 artifact has only ${lines.length} records — minimum 10 required for strict proof gate`);
+    fail(
+      `[STRICT] v60 artifact has only ${lines.length} records — minimum 10 required for strict proof gate`
+    );
   }
 
   for (let i = 0; i < lines.length; i++) {
@@ -401,7 +445,9 @@ function validateArtifact(relPath) {
   // Check forbidden proof levels in totals
   for (const forbidden of FORBIDDEN_PROOF_LEVELS) {
     if (proofLevels[forbidden]) {
-      fail(`Forbidden proof level "${forbidden}" found ${proofLevels[forbidden]} times in ${relPath}`);
+      fail(
+        `Forbidden proof level "${forbidden}" found ${proofLevels[forbidden]} times in ${relPath}`
+      );
     }
   }
 
@@ -438,7 +484,9 @@ for (const p of passes) console.log(p);
 for (const w of warnings) console.log(w);
 for (const e of errors) console.log(e);
 
-console.log(`\nPASS: ${passes.length} | WARN: ${warnings.length} | FAIL: ${errors.length}`);
+console.log(
+  `\nPASS: ${passes.length} | WARN: ${warnings.length} | FAIL: ${errors.length}`
+);
 
 if (errors.length > 0) {
   console.log('\n❌ VERDICT: FAIL\n');

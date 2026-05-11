@@ -1178,7 +1178,11 @@ Format: [Audit complet] + [Réponse utilisateur]
 
         if (traceId) {
           try {
-            await cognitiveOmega.endTrace(traceId, memoryFirstResponse.content, 'success');
+            await cognitiveOmega.endTrace(
+              traceId,
+              memoryFirstResponse.content,
+              'success'
+            );
           } catch (error) {
             logger.warn('Failed to end observability trace for memory-first response', {
               error,
@@ -3110,7 +3114,9 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
             logger.warn('Stream memory save failed', { error });
           });
       } else {
-        pipelineSteps.push(`memory-write-blocked:${streamMemoryWriteDecision.reasonCode}`);
+        pipelineSteps.push(
+          `memory-write-blocked:${streamMemoryWriteDecision.reasonCode}`
+        );
       }
 
       // 🚀 v24.3.1 - Sauvegarder dans le cache pour réponses ultra-rapides
@@ -3915,7 +3921,9 @@ QUALITÉ MAXIMALE :
     validatedMessage: string
   ): SkillRoutingDecision {
     const activeSkillId = getActiveSkillId();
-    const skillPrompt = activeSkillId ? getSystemPromptForSkill(activeSkillId) ?? '' : '';
+    const skillPrompt = activeSkillId
+      ? (getSystemPromptForSkill(activeSkillId) ?? '')
+      : '';
     const activeSkill = activeSkillId ? getActiveSkill() : null;
 
     const source: SkillRoutingSource = canonicalDecision.skillId

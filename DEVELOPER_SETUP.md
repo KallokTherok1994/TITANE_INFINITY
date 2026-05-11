@@ -193,8 +193,8 @@ git log --oneline -10
 
 ## Modes de travail (Rule 19)
 
-- DURABLE (defaut sur MAIN/feature/*): discipline complete Rule 1-18.
-- EXPLORATION (branche explore/* ou declaration explicite): discipline allegee pour code jetable.
+- DURABLE (defaut sur MAIN/feature/\*): discipline complete Rule 1-18.
+- EXPLORATION (branche explore/\* ou declaration explicite): discipline allegee pour code jetable.
 - Promotion EXPLORATION -> DURABLE avant merge MAIN:
   - tests complets,
   - AutoHeal full-schema,
@@ -215,13 +215,13 @@ bash scripts/verify_instructions.sh
 
 ## Mise a jour mapping (Rule 15)
 
-| Scope modifie | Mapping a mettre a jour |
-| --- | --- |
-| `src/components/**`, `src/pages/**` | `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
-| `src/services/**`, `src/engines/**` | `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
+| Scope modifie                        | Mapping a mettre a jour                                                    |
+| ------------------------------------ | -------------------------------------------------------------------------- |
+| `src/components/**`, `src/pages/**`  | `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md`                       |
+| `src/services/**`, `src/engines/**`  | `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md`                         |
 | nouvelle commande `src-tauri/src/**` | `docs/IPC_CATALOG.md` + `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
-| integration Ollama | `OLLAMA_RUNTIME_MAP.md` |
-| build/version/release | `RELEASE_SURFACE_INVENTORY.md` |
+| integration Ollama                   | `OLLAMA_RUNTIME_MAP.md`                                                    |
+| build/version/release                | `RELEASE_SURFACE_INVENTORY.md`                                             |
 
 ## Sortie de phase en direct sur MAIN (Rule 18)
 

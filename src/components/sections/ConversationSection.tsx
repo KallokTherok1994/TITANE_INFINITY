@@ -306,7 +306,8 @@ export function resolveConversationToolTemplate(tool: ChatTool): {
   userVisibleMessage: string;
 } {
   const routeDecision = routeChatToolInvocation(tool.id);
-  const blocked = !routeDecision.shouldSendAsTemplate && !routeDecision.canDegradeToTemplate;
+  const blocked =
+    !routeDecision.shouldSendAsTemplate && !routeDecision.canDegradeToTemplate;
 
   return {
     templateValue: tool.templateText,

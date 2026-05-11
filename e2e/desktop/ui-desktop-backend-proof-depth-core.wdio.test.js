@@ -43,16 +43,28 @@ describe('[v58:depth] TITANE Chat — /titane — IPC_RESPONSE_PROVEN or BLOCKED
   it('chat_get_providers_status — probe IPC response shape', async () => {
     await navigateAndWait('/titane', 'page-titane', 12000);
     await browser.pause(500);
-    const r = await probeInvoke('chat_get_providers_status', {}, { module: 'TITANE_CHAT', route: '/titane' });
+    const r = await probeInvoke(
+      'chat_get_providers_status',
+      {},
+      { module: 'TITANE_CHAT', route: '/titane' }
+    );
     // IPC must be attempted (Tauri context)
     expect(r.attempted).toBe(true);
     if (r.ok) {
       // IPC_RESPONSE_PROVEN
       expect(r.responseShape).not.toBe('null');
-      logClassification('TITANE_CHAT', 'PROOF_DEPTH_IPC_RESPONSE_PROVEN', `shape=${r.responseShape} latency=${r.latencyMs}ms`);
+      logClassification(
+        'TITANE_CHAT',
+        'PROOF_DEPTH_IPC_RESPONSE_PROVEN',
+        `shape=${r.responseShape} latency=${r.latencyMs}ms`
+      );
     } else if (r.errorKind === 'COMMAND_ERROR' || r.errorKind === 'TIMEOUT') {
       // Command reached but error returned = IPC_COMMAND_PROVEN (provider blocked)
-      logClassification('TITANE_CHAT', 'PROOF_DEPTH_BLOCKED_BY_PROVIDER', `errorKind=${r.errorKind}`);
+      logClassification(
+        'TITANE_CHAT',
+        'PROOF_DEPTH_BLOCKED_BY_PROVIDER',
+        `errorKind=${r.errorKind}`
+      );
     } else {
       logClassification('TITANE_CHAT', r.proofLevel, `errorKind=${r.errorKind}`);
     }
@@ -62,9 +74,17 @@ describe('[v58:depth] TITANE Chat — /titane — IPC_RESPONSE_PROVEN or BLOCKED
 
   it('chat_get_memory_stats — probe IPC response shape', async () => {
     await navigateAndWait('/titane', 'page-titane', 12000);
-    const r = await probeInvoke('chat_get_memory_stats', {}, { module: 'TITANE_CHAT_MEMORY', route: '/titane' });
+    const r = await probeInvoke(
+      'chat_get_memory_stats',
+      {},
+      { module: 'TITANE_CHAT_MEMORY', route: '/titane' }
+    );
     expect(r.attempted).toBe(true);
-    logClassification('TITANE_CHAT_MEMORY', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
+    logClassification(
+      'TITANE_CHAT_MEMORY',
+      r.proofLevel,
+      `ok=${r.ok} errorKind=${r.errorKind}`
+    );
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
 });
@@ -85,7 +105,11 @@ describe('[v58:depth] TIME — /time — IPC_RESPONSE_PROVEN or UI_REFLECTS_BACK
     expect(r.attempted).toBe(true);
     if (r.ok) {
       expect(r.responseShape).not.toBe('null');
-      logClassification('TIME', 'PROOF_DEPTH_IPC_RESPONSE_PROVEN', `shape=${r.responseShape} latency=${r.latencyMs}ms`);
+      logClassification(
+        'TIME',
+        'PROOF_DEPTH_IPC_RESPONSE_PROVEN',
+        `shape=${r.responseShape} latency=${r.latencyMs}ms`
+      );
     } else {
       logClassification('TIME', r.proofLevel, `errorKind=${r.errorKind}`);
     }
@@ -94,9 +118,17 @@ describe('[v58:depth] TIME — /time — IPC_RESPONSE_PROVEN or UI_REFLECTS_BACK
 
   it('get_timeline — probe IPC response shape', async () => {
     await navigateAndWait('/time', 'page-time', 12000);
-    const r = await probeInvoke('get_timeline', {}, { module: 'TIME_TIMELINE', route: '/time' });
+    const r = await probeInvoke(
+      'get_timeline',
+      {},
+      { module: 'TIME_TIMELINE', route: '/time' }
+    );
     expect(r.attempted).toBe(true);
-    logClassification('TIME_TIMELINE', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
+    logClassification(
+      'TIME_TIMELINE',
+      r.proofLevel,
+      `ok=${r.ok} errorKind=${r.errorKind}`
+    );
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
 
@@ -107,12 +139,22 @@ describe('[v58:depth] TIME — /time — IPC_RESPONSE_PROVEN or UI_REFLECTS_BACK
     const hasTimeContent = await browser.execute(() => {
       const text = document.body.innerText || '';
       // Check for any date/time format or temporal keywords
-      return /\d{2}:\d{2}|\d{4}-\d{2}-\d{2}|aujourd'hui|Aujourd'hui|agenda|Agenda|snapshot|Snapshot/.test(text);
+      return /\d{2}:\d{2}|\d{4}-\d{2}-\d{2}|aujourd'hui|Aujourd'hui|agenda|Agenda|snapshot|Snapshot/.test(
+        text
+      );
     });
     if (hasTimeContent) {
-      logClassification('TIME_UI', 'PROOF_DEPTH_UI_REFLECTS_BACKEND_RESULT', 'temporal content visible');
+      logClassification(
+        'TIME_UI',
+        'PROOF_DEPTH_UI_REFLECTS_BACKEND_RESULT',
+        'temporal content visible'
+      );
     } else {
-      logClassification('TIME_UI', 'PROOF_DEPTH_IPC_COMMAND_PROVEN', 'no explicit temporal content found');
+      logClassification(
+        'TIME_UI',
+        'PROOF_DEPTH_IPC_COMMAND_PROVEN',
+        'no explicit temporal content found'
+      );
     }
     // Not a failure if no explicit time text
   });
@@ -130,11 +172,19 @@ describe('[v58:depth] MEMORY — /memory — IPC_RESPONSE_PROVEN', () => {
   it('memory_get_state — probe IPC response shape', async () => {
     await navigateAndWait('/memory', 'page-memory', 12000);
     await browser.pause(500);
-    const r = await probeInvoke('memory_get_state', {}, { module: 'MEMORY', route: '/memory' });
+    const r = await probeInvoke(
+      'memory_get_state',
+      {},
+      { module: 'MEMORY', route: '/memory' }
+    );
     expect(r.attempted).toBe(true);
     if (r.ok) {
       expect(r.responseShape).not.toBe('null');
-      logClassification('MEMORY', 'PROOF_DEPTH_IPC_RESPONSE_PROVEN', `shape=${r.responseShape}`);
+      logClassification(
+        'MEMORY',
+        'PROOF_DEPTH_IPC_RESPONSE_PROVEN',
+        `shape=${r.responseShape}`
+      );
     } else {
       logClassification('MEMORY', r.proofLevel, `errorKind=${r.errorKind}`);
     }
@@ -143,7 +193,11 @@ describe('[v58:depth] MEMORY — /memory — IPC_RESPONSE_PROVEN', () => {
 
   it('memory_get_state response not empty string (meaningful shape)', async () => {
     await navigateAndWait('/memory', 'page-memory', 12000);
-    const r = await probeInvoke('memory_get_state', {}, { module: 'MEMORY_SHAPE', route: '/memory' });
+    const r = await probeInvoke(
+      'memory_get_state',
+      {},
+      { module: 'MEMORY_SHAPE', route: '/memory' }
+    );
     // Either we got a response or a controlled error — both valid
     const isClassified = r.proofLevel !== 'PROOF_DEPTH_UNKNOWN';
     expect(isClassified).toBe(true);
@@ -162,11 +216,19 @@ describe('[v58:depth] ADMIN SYSTEM — /admin — IPC_RESPONSE_PROVEN', () => {
   it('get_system_health — probe IPC response shape', async () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(500);
-    const r = await probeInvoke('get_system_health', {}, { module: 'ADMIN_SYSTEM', route: '/admin' });
+    const r = await probeInvoke(
+      'get_system_health',
+      {},
+      { module: 'ADMIN_SYSTEM', route: '/admin' }
+    );
     expect(r.attempted).toBe(true);
     if (r.ok) {
       expect(r.responseShape).not.toBe('null');
-      logClassification('ADMIN_SYSTEM', 'PROOF_DEPTH_IPC_RESPONSE_PROVEN', `shape=${r.responseShape}`);
+      logClassification(
+        'ADMIN_SYSTEM',
+        'PROOF_DEPTH_IPC_RESPONSE_PROVEN',
+        `shape=${r.responseShape}`
+      );
     } else {
       logClassification('ADMIN_SYSTEM', r.proofLevel, `errorKind=${r.errorKind}`);
     }
@@ -175,9 +237,17 @@ describe('[v58:depth] ADMIN SYSTEM — /admin — IPC_RESPONSE_PROVEN', () => {
 
   it('cp_get_system_info — probe IPC response shape', async () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
-    const r = await probeInvoke('cp_get_system_info', {}, { module: 'ADMIN_SYSTEM_INFO', route: '/admin' });
+    const r = await probeInvoke(
+      'cp_get_system_info',
+      {},
+      { module: 'ADMIN_SYSTEM_INFO', route: '/admin' }
+    );
     expect(r.attempted).toBe(true);
-    logClassification('ADMIN_SYSTEM_INFO', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
+    logClassification(
+      'ADMIN_SYSTEM_INFO',
+      r.proofLevel,
+      `ok=${r.ok} errorKind=${r.errorKind}`
+    );
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
   });
 });
@@ -188,11 +258,19 @@ describe('[v58:depth] ADMIN CONFIG — /admin — IPC_RESPONSE_PROVEN', () => {
   it('cp_get_ai_config — probe IPC response shape', async () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(400);
-    const r = await probeInvoke('cp_get_ai_config', {}, { module: 'ADMIN_CONFIG', route: '/admin' });
+    const r = await probeInvoke(
+      'cp_get_ai_config',
+      {},
+      { module: 'ADMIN_CONFIG', route: '/admin' }
+    );
     expect(r.attempted).toBe(true);
     if (r.ok) {
       expect(r.responseShape).not.toBe('null');
-      logClassification('ADMIN_CONFIG', 'PROOF_DEPTH_IPC_RESPONSE_PROVEN', `shape=${r.responseShape}`);
+      logClassification(
+        'ADMIN_CONFIG',
+        'PROOF_DEPTH_IPC_RESPONSE_PROVEN',
+        `shape=${r.responseShape}`
+      );
     } else {
       logClassification('ADMIN_CONFIG', r.proofLevel, `errorKind=${r.errorKind}`);
     }
@@ -213,7 +291,11 @@ describe('[v58:depth] EXPERIENCE — /experience — IPC_COMMAND_PROVEN or UI_ON
     await navigateAndWait('/experience', 'page-experience', 12000);
     await browser.pause(400);
     // Try a generic status probe
-    const r = await probeInvoke('get_system_health', {}, { module: 'EXPERIENCE', route: '/experience' });
+    const r = await probeInvoke(
+      'get_system_health',
+      {},
+      { module: 'EXPERIENCE', route: '/experience' }
+    );
     expect(r.attempted).toBe(true);
     logClassification('EXPERIENCE', r.proofLevel, `ok=${r.ok} errorKind=${r.errorKind}`);
     expect(r.proofLevel).not.toBe('PROOF_DEPTH_UNKNOWN');
@@ -232,7 +314,11 @@ describe('[v58:depth] CLOUD — /cloud — GUARDED_ONLY (One Door policy)', () =
   it('cloud guarded — no real push/pull executed', async () => {
     await navigateAndWait('/cloud', 'page-cloud-center', 12000);
     await browser.pause(400);
-    const guard = probeGuarded('CLOUD', '/cloud', 'One Door policy — real cloud push/pull not executed in E2E');
+    const guard = probeGuarded(
+      'CLOUD',
+      '/cloud',
+      'One Door policy — real cloud push/pull not executed in E2E'
+    );
     expect(guard.proofLevel).toBe('PROOF_DEPTH_GUARDED_ONLY');
     logClassification('CLOUD', 'PROOF_DEPTH_GUARDED_ONLY', 'One Door policy enforced');
   });
@@ -253,11 +339,27 @@ describe('[v58:depth] RESEARCH — /research — GUARDED_ONLY or DEGRADED_VISIBL
     const html = await getBodyHTML();
     const isDegraded = hasDegradedIndicator(html);
     if (isDegraded) {
-      probeDegraded('RESEARCH', '/research', 'External research provider unavailable — degraded state visible');
-      logClassification('RESEARCH', 'PROOF_DEPTH_DEGRADED_VISIBLE', 'degraded indicator found in DOM');
+      probeDegraded(
+        'RESEARCH',
+        '/research',
+        'External research provider unavailable — degraded state visible'
+      );
+      logClassification(
+        'RESEARCH',
+        'PROOF_DEPTH_DEGRADED_VISIBLE',
+        'degraded indicator found in DOM'
+      );
     } else {
-      probeGuarded('RESEARCH', '/research', 'No external network call executed — One Door policy');
-      logClassification('RESEARCH', 'PROOF_DEPTH_GUARDED_ONLY', 'no external call executed');
+      probeGuarded(
+        'RESEARCH',
+        '/research',
+        'No external network call executed — One Door policy'
+      );
+      logClassification(
+        'RESEARCH',
+        'PROOF_DEPTH_GUARDED_ONLY',
+        'no external call executed'
+      );
     }
   });
 });

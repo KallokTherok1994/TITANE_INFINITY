@@ -27,7 +27,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v61 Tier 1 Blocker Reduction — AGENT_CHAT', () => {
-
   describe('AGENT_CHAT — promote BLOCKED_BY_RUNTIME → DEGRADED_WITH_UI_PROOF', () => {
     before(async () => {
       await navigateAndWait('/admin', 'page-admin', 10000);
@@ -37,12 +36,7 @@ describe('v61 Tier 1 Blocker Reduction — AGENT_CHAT', () => {
       const hasError = await checkErrorBoundary();
       if (hasError) {
         // Record the blocked state honestly
-        classifyBackendServiceNotInitialized(
-          'AGENT_CHAT',
-          '/admin',
-          SOURCE_SPEC,
-          1
-        );
+        classifyBackendServiceNotInitialized('AGENT_CHAT', '/admin', SOURCE_SPEC, 1);
         throw new Error('[AGENT_CHAT] ErrorBoundary detected on /admin — blocked');
       }
       // Assert no error boundary
@@ -50,12 +44,7 @@ describe('v61 Tier 1 Blocker Reduction — AGENT_CHAT', () => {
         evidenceKind: 'PAGE_ROOT',
       });
       if (!result.found) {
-        classifyBackendServiceNotInitialized(
-          'AGENT_CHAT',
-          '/admin',
-          SOURCE_SPEC,
-          1
-        );
+        classifyBackendServiceNotInitialized('AGENT_CHAT', '/admin', SOURCE_SPEC, 1);
       }
       // Record page-admin visibility regardless of found/not-found
       // The test itself does not throw — classification is honest
@@ -71,7 +60,8 @@ describe('v61 Tier 1 Blocker Reduction — AGENT_CHAT', () => {
         selector: '[data-testid="page-admin"]',
         promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
         targetLevel: 'DEGRADED_WITH_UI_PROOF',
-        description: 'Admin page root visible — system management UI renders despite IPC not available',
+        description:
+          'Admin page root visible — system management UI renders despite IPC not available',
         blockerClass: 'BACKEND_SERVICE_NOT_INITIALIZED',
         nextAction: 'v62-agent-chat-backend-init-with-tauri-binary',
       });
@@ -85,7 +75,8 @@ describe('v61 Tier 1 Blocker Reduction — AGENT_CHAT', () => {
         selector: '[data-testid="page-admin-content"]',
         promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
         targetLevel: 'DEGRADED_WITH_UI_PROOF',
-        description: 'Admin content panel visible — system agent UI renders with degraded state',
+        description:
+          'Admin content panel visible — system agent UI renders with degraded state',
         blockerClass: 'BACKEND_SERVICE_NOT_INITIALIZED',
         nextAction: 'v62-agent-chat-backend-init-with-tauri-binary',
       });
@@ -109,7 +100,9 @@ describe('v61 Tier 1 Blocker Reduction — AGENT_CHAT', () => {
         sourceSpec: SOURCE_SPEC,
         tier: 1,
         promotionFrom: 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
-        promotionTo: evidence.found ? 'DEGRADED_WITH_UI_PROOF' : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+        promotionTo: evidence.found
+          ? 'DEGRADED_WITH_UI_PROOF'
+          : 'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
         achievedPromotion: evidence.found,
         blockerClass: evidence.found ? null : 'BACKEND_SERVICE_NOT_INITIALIZED',
         reason: evidence.found
@@ -119,5 +112,4 @@ describe('v61 Tier 1 Blocker Reduction — AGENT_CHAT', () => {
       });
     });
   });
-
 });

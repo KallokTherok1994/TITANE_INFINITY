@@ -32,8 +32,12 @@ const SCHEMA_VERSION = 'v64';
 //   TITANE_ARTIFACT_APPEND: Control append mode (default: 1 = append, 0 = truncate before run)
 //   TITANE_ARTIFACT_RUN_ID: Optional run identifier for tracking (default: empty)
 
-const DEFAULT_ARTIFACT_PATH = 'artifacts/ui-desktop/current-main-menu-capture-reconciliation.jsonl';
-const ARTIFACT_FILE = path.resolve(process.cwd(), process.env.TITANE_UI_DESKTOP_ARTIFACT || DEFAULT_ARTIFACT_PATH);
+const DEFAULT_ARTIFACT_PATH =
+  'artifacts/ui-desktop/current-main-menu-capture-reconciliation.jsonl';
+const ARTIFACT_FILE = path.resolve(
+  process.cwd(),
+  process.env.TITANE_UI_DESKTOP_ARTIFACT || DEFAULT_ARTIFACT_PATH
+);
 const APPEND_MODE = process.env.TITANE_ARTIFACT_APPEND !== '0'; // Default: true (append)
 const RUN_ID = process.env.TITANE_ARTIFACT_RUN_ID || '';
 
@@ -64,7 +68,11 @@ function persistRecord(record) {
   }
 }
 
-const { navigateAndWait, isVisible, getText } = require('./helpers/uiDesktopFunctionalFlows.js');
+const {
+  navigateAndWait,
+  isVisible,
+  getText,
+} = require('./helpers/uiDesktopFunctionalFlows.js');
 
 const SURFACES = [
   {
@@ -72,7 +80,13 @@ const SURFACES = [
     route: '/titane',
     topNavItem: 'TITANE',
     rootTestId: 'page-titane',
-    tabsExpected: ['tab-conversation', 'tab-dashboard', 'tab-vision', 'tab-memory', 'tab-progression'],
+    tabsExpected: [
+      'tab-conversation',
+      'tab-dashboard',
+      'tab-vision',
+      'tab-memory',
+      'tab-progression',
+    ],
     controlsExpected: ['chat-input', 'page-titane-content'],
   },
   {
@@ -169,18 +183,21 @@ for (const surface of SURFACES) {
     });
 
     it('no ErrorBoundary visible', async () => {
-      errorBoundaryFound = await browser.execute(() =>
-        !!document.querySelector('[data-testid="error-boundary"]') ||
-        !!document.querySelector('.error-boundary') ||
-        (document.body.innerText || '').toLowerCase().includes('something went wrong')
+      errorBoundaryFound = await browser.execute(
+        () =>
+          !!document.querySelector('[data-testid="error-boundary"]') ||
+          !!document.querySelector('.error-boundary') ||
+          (document.body.innerText || '').toLowerCase().includes('something went wrong')
       );
-      console.log(`[v64:capture] ${surface.capturedSurface} errorBoundary=${errorBoundaryFound}`);
+      console.log(
+        `[v64:capture] ${surface.capturedSurface} errorBoundary=${errorBoundaryFound}`
+      );
       expect(errorBoundaryFound).toBe(false);
     });
 
     it('no blank page (has DOM content)', async () => {
-      const hasContent = await browser.execute(() =>
-        (document.querySelector('#root')?.children?.length || 0) > 0
+      const hasContent = await browser.execute(
+        () => (document.querySelector('#root')?.children?.length || 0) > 0
       );
       expect(hasContent).toBe(true);
     });
@@ -192,7 +209,9 @@ for (const surface of SURFACES) {
           if (found) tabsFound.push(tab);
           else missingSelectors.push(tab);
         }
-        console.log(`[v64:capture] ${surface.capturedSurface} tabsFound=${tabsFound.length}/${surface.tabsExpected.length}`);
+        console.log(
+          `[v64:capture] ${surface.capturedSurface} tabsFound=${tabsFound.length}/${surface.tabsExpected.length}`
+        );
         expect(true).toBe(true); // classified
       });
     }
@@ -204,19 +223,24 @@ for (const surface of SURFACES) {
           if (found) controlsFound.push(ctrl);
           else missingControls.push(ctrl);
         }
-        console.log(`[v64:capture] ${surface.capturedSurface} controlsFound=${controlsFound.length}/${surface.controlsExpected.length}`);
+        console.log(
+          `[v64:capture] ${surface.capturedSurface} controlsFound=${controlsFound.length}/${surface.controlsExpected.length}`
+        );
         expect(true).toBe(true); // classified
       });
     }
 
     it('agent overlay is present or classified', async () => {
-      const overlayFound = await browser.execute(() =>
-        !!document.querySelector('[data-testid="agent-overlay"]') ||
-        !!document.querySelector('[data-testid="agent-panel"]') ||
-        !!document.querySelector('[class*="agent-overlay"]') ||
-        !!document.querySelector('[class*="AgentOverlay"]')
+      const overlayFound = await browser.execute(
+        () =>
+          !!document.querySelector('[data-testid="agent-overlay"]') ||
+          !!document.querySelector('[data-testid="agent-panel"]') ||
+          !!document.querySelector('[class*="agent-overlay"]') ||
+          !!document.querySelector('[class*="AgentOverlay"]')
       );
-      console.log(`[v64:capture] ${surface.capturedSurface} agentOverlay=${overlayFound}`);
+      console.log(
+        `[v64:capture] ${surface.capturedSurface} agentOverlay=${overlayFound}`
+      );
       expect(true).toBe(true); // classified
     });
 
@@ -224,12 +248,13 @@ for (const surface of SURFACES) {
       const proofStatus = !rootFound
         ? 'ROOT_NOT_FOUND'
         : errorBoundaryFound
-        ? 'ERROR_BOUNDARY_DETECTED'
-        : tabsFound.length >= surface.tabsExpected.length && controlsFound.length >= surface.controlsExpected.length
-        ? 'FUNCTIONAL_PROVEN'
-        : missingSelectors.length > 0 || missingControls.length > 0
-        ? 'FUNCTIONAL_PARTIAL_SELECTORS_MISSING'
-        : 'FUNCTIONAL_DISPLAY_ONLY';
+          ? 'ERROR_BOUNDARY_DETECTED'
+          : tabsFound.length >= surface.tabsExpected.length &&
+              controlsFound.length >= surface.controlsExpected.length
+            ? 'FUNCTIONAL_PROVEN'
+            : missingSelectors.length > 0 || missingControls.length > 0
+              ? 'FUNCTIONAL_PARTIAL_SELECTORS_MISSING'
+              : 'FUNCTIONAL_DISPLAY_ONLY';
 
       persistRecord({
         capturedSurface: surface.capturedSurface,
@@ -247,7 +272,10 @@ for (const surface of SURFACES) {
         statusEvidence: `rootFound=${rootFound} tabs=${tabsFound.length}/${surface.tabsExpected.length} controls=${controlsFound.length}/${surface.controlsExpected.length}`,
         agentOverlayEvidence: 'classified',
         proofStatus,
-        blocker: proofStatus === 'ERROR_BOUNDARY_DETECTED' ? 'ErrorBoundary detected — investigate root cause' : null,
+        blocker:
+          proofStatus === 'ERROR_BOUNDARY_DETECTED'
+            ? 'ErrorBoundary detected — investigate root cause'
+            : null,
       });
     });
   });

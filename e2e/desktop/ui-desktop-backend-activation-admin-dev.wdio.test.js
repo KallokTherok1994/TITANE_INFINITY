@@ -30,8 +30,8 @@ async function checkErrorBoundary() {
     const h2s = Array.from(document.querySelectorAll('h2'));
     return h2s.some(h => h.textContent != null && h.textContent.includes('Erreur dans'));
   });
-  const hasErrorTestid = await browser.execute(() =>
-    !!document.querySelector('[data-testid="titane-error-boundary"]')
+  const hasErrorTestid = await browser.execute(
+    () => !!document.querySelector('[data-testid="titane-error-boundary"]')
   );
   return hasErrorH2 || hasErrorTestid;
 }
@@ -53,8 +53,11 @@ describe('[v57:admin] Admin Governance — /admin — backend guarded activation
     const hasRawSecret = typeof html === 'string' && /sk-[a-zA-Z0-9]{30,}/.test(html);
     const hasRawBearer = typeof html === 'string' && /Bearer [a-zA-Z0-9]{20,}/.test(html);
     const secretExposed = hasRawSecret || hasRawBearer;
-    logClassification('ADMIN_GOVERNANCE', secretExposed ? 'BACKEND_FAIL' : 'BACKEND_GUARDED_PROVEN',
-      `secrets_masked=${!secretExposed}`);
+    logClassification(
+      'ADMIN_GOVERNANCE',
+      secretExposed ? 'BACKEND_FAIL' : 'BACKEND_GUARDED_PROVEN',
+      `secrets_masked=${!secretExposed}`
+    );
     expect(secretExposed).toBe(false); // HARD ASSERT — secrets must never be in DOM
   });
 
@@ -62,13 +65,22 @@ describe('[v57:admin] Admin Governance — /admin — backend guarded activation
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(600);
     const html = await getBodyHTML();
-    const hasMasked = typeof html === 'string' && (
-      html.includes('*****') || html.includes('••••') || html.includes('●●●') ||
-      html.includes('hidden') || html.includes('masked') || html.includes('secret') ||
-      html.includes('key') || html.includes('Key') || html.includes('API')
+    const hasMasked =
+      typeof html === 'string' &&
+      (html.includes('*****') ||
+        html.includes('••••') ||
+        html.includes('●●●') ||
+        html.includes('hidden') ||
+        html.includes('masked') ||
+        html.includes('secret') ||
+        html.includes('key') ||
+        html.includes('Key') ||
+        html.includes('API'));
+    logClassification(
+      'ADMIN_GOVERNANCE',
+      hasMasked ? 'BACKEND_GUARDED_PROVEN' : 'BACKEND_DISPLAY_ONLY_CONFIRMED',
+      `masked_visible=${hasMasked}`
     );
-    logClassification('ADMIN_GOVERNANCE', hasMasked ? 'BACKEND_GUARDED_PROVEN' : 'BACKEND_DISPLAY_ONLY_CONFIRMED',
-      `masked_visible=${hasMasked}`);
     expect(true).toBe(true);
   });
 });
@@ -86,18 +98,27 @@ describe('[v57:admin] Dev Cockpit — /dev — backend activation', () => {
   it('Tauri IPC available on /dev', async () => {
     await navigateAndWait('/dev', 'page-dev', 10000);
     const available = await isTauriAvailable();
-    logClassification('DEV_COCKPIT', available ? 'BACKEND_FLOW_PROVEN' : 'BACKEND_BLOCKED_BY_RUNTIME',
-      `tauri_available=${available}`);
+    logClassification(
+      'DEV_COCKPIT',
+      available ? 'BACKEND_FLOW_PROVEN' : 'BACKEND_BLOCKED_BY_RUNTIME',
+      `tauri_available=${available}`
+    );
     expect(true).toBe(true);
   });
 
   it('get_system_health IPC call from dev page', async () => {
     await navigateAndWait('/dev', 'page-dev', 10000);
     const result = await tryInvoke('get_system_health', {});
-    const state = result.ok ? 'BACKEND_FLOW_PROVEN' :
-      (result.available ? 'BACKEND_DEGRADED_EXPECTED' : 'BACKEND_BLOCKED_BY_RUNTIME');
-    logClassification('DEV_COCKPIT', state,
-      `health_ok=${result.ok} available=${result.available} err=${result.error || 'none'}`);
+    const state = result.ok
+      ? 'BACKEND_FLOW_PROVEN'
+      : result.available
+        ? 'BACKEND_DEGRADED_EXPECTED'
+        : 'BACKEND_BLOCKED_BY_RUNTIME';
+    logClassification(
+      'DEV_COCKPIT',
+      state,
+      `health_ok=${result.ok} available=${result.available} err=${result.error || 'none'}`
+    );
     expect(true).toBe(true);
   });
 
@@ -108,22 +129,34 @@ describe('[v57:admin] Dev Cockpit — /dev — backend activation', () => {
     const hasHealthCard = await isVisible('system-health-backend', 4000);
     const hasRefreshBtn = await isVisible('btn-dev-refresh', 3000);
     const html = await getBodyHTML();
-    const hasDevContent = typeof html === 'string' && (
-      html.includes('health') || html.includes('Health') ||
-      html.includes('diagnostic') || html.includes('Diagnostic') ||
-      html.includes('backend') || html.includes('Backend')
+    const hasDevContent =
+      typeof html === 'string' &&
+      (html.includes('health') ||
+        html.includes('Health') ||
+        html.includes('diagnostic') ||
+        html.includes('Diagnostic') ||
+        html.includes('backend') ||
+        html.includes('Backend'));
+    const state =
+      hasHealthCard || hasRefreshBtn || hasDevContent
+        ? 'BACKEND_FLOW_PROVEN'
+        : 'BACKEND_DEGRADED_EXPECTED';
+    logClassification(
+      'DEV_COCKPIT',
+      state,
+      `dev_state="${devState}" health_card=${hasHealthCard} refresh=${hasRefreshBtn} content=${hasDevContent}`
     );
-    const state = (hasHealthCard || hasRefreshBtn || hasDevContent) ?
-      'BACKEND_FLOW_PROVEN' : 'BACKEND_DEGRADED_EXPECTED';
-    logClassification('DEV_COCKPIT', state,
-      `dev_state="${devState}" health_card=${hasHealthCard} refresh=${hasRefreshBtn} content=${hasDevContent}`);
     expect(true).toBe(true);
   });
 
   it('no destructive dev command executed — dev page read-only classified', async () => {
     await navigateAndWait('/dev', 'page-dev', 10000);
     // Safety assertion: we only observed — no mutation commands sent
-    logClassification('DEV_COCKPIT', 'BACKEND_GUARDED_PROVEN', 'read-only observation only');
+    logClassification(
+      'DEV_COCKPIT',
+      'BACKEND_GUARDED_PROVEN',
+      'read-only observation only'
+    );
     expect(true).toBe(true);
   });
 });
@@ -142,18 +175,29 @@ describe('[v57:admin] Doc Center — /doc-center — backend activation', () => 
     await navigateAndWait('/doc-center', 'doc-center-page', 10000);
     await browser.pause(800);
     const html = await getBodyHTML();
-    const hasDocControls = typeof html === 'string' && (
-      html.includes('export') || html.includes('Export') ||
-      html.includes('document') || html.includes('Document') ||
-      html.includes('download') || html.includes('Download') ||
-      html.includes('guide') || html.includes('Guide') ||
-      html.includes('rapport') || html.includes('Rapport')
-    );
+    const hasDocControls =
+      typeof html === 'string' &&
+      (html.includes('export') ||
+        html.includes('Export') ||
+        html.includes('document') ||
+        html.includes('Document') ||
+        html.includes('download') ||
+        html.includes('Download') ||
+        html.includes('guide') ||
+        html.includes('Guide') ||
+        html.includes('rapport') ||
+        html.includes('Rapport'));
     const isDegraded = hasDegradedIndicator(html);
-    const state = isDegraded ? 'BACKEND_GUARDED_PROVEN' :
-      (hasDocControls ? 'BACKEND_READ_ONLY_PROVEN' : 'BACKEND_DISPLAY_ONLY_CONFIRMED');
-    logClassification('DOC_CENTER', state,
-      `doc_controls=${hasDocControls} degraded=${isDegraded} content_len=${typeof html === 'string' ? html.length : 0}`);
+    const state = isDegraded
+      ? 'BACKEND_GUARDED_PROVEN'
+      : hasDocControls
+        ? 'BACKEND_READ_ONLY_PROVEN'
+        : 'BACKEND_DISPLAY_ONLY_CONFIRMED';
+    logClassification(
+      'DOC_CENTER',
+      state,
+      `doc_controls=${hasDocControls} degraded=${isDegraded} content_len=${typeof html === 'string' ? html.length : 0}`
+    );
     expect(true).toBe(true);
   });
 
@@ -165,8 +209,13 @@ describe('[v57:admin] Doc Center — /doc-center — backend activation', () => 
       const btns = Array.from(document.querySelectorAll('button'));
       return btns.some(b => (b.textContent || '').toLowerCase().includes('export'));
     });
-    logClassification('DOC_CENTER', (hasExportBtn || hasExportAny) ? 'BACKEND_GUARDED_PROVEN' : 'BACKEND_READ_ONLY_PROVEN',
-      `export_btn=${hasExportBtn} export_any=${hasExportAny} (guarded — not clicked)`);
+    logClassification(
+      'DOC_CENTER',
+      hasExportBtn || hasExportAny
+        ? 'BACKEND_GUARDED_PROVEN'
+        : 'BACKEND_READ_ONLY_PROVEN',
+      `export_btn=${hasExportBtn} export_any=${hasExportAny} (guarded — not clicked)`
+    );
     // Do NOT click export — guarded proof only
     expect(true).toBe(true);
   });
@@ -178,10 +227,16 @@ describe('[v57:admin] Admin Config — /admin — config section', () => {
   it('cp_get_ai_config IPC read-only call', async () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     const result = await tryInvoke('cp_get_ai_config', {});
-    const state = result.ok ? 'BACKEND_READ_ONLY_PROVEN' :
-      (result.available ? 'BACKEND_DEGRADED_EXPECTED' : 'BACKEND_BLOCKED_BY_RUNTIME');
-    logClassification('ADMIN_CONFIG', state,
-      `ai_config_ok=${result.ok} err=${result.error || 'none'}`);
+    const state = result.ok
+      ? 'BACKEND_READ_ONLY_PROVEN'
+      : result.available
+        ? 'BACKEND_DEGRADED_EXPECTED'
+        : 'BACKEND_BLOCKED_BY_RUNTIME';
+    logClassification(
+      'ADMIN_CONFIG',
+      state,
+      `ai_config_ok=${result.ok} err=${result.error || 'none'}`
+    );
     expect(true).toBe(true);
   });
 });
@@ -193,13 +248,19 @@ describe('[v57:admin] Admin Audio — /admin — TTS/voices section', () => {
     await navigateAndWait('/admin', 'page-admin', 12000);
     await browser.pause(600);
     const html = await getBodyHTML();
-    const hasAudio = typeof html === 'string' && (
-      html.includes('audio') || html.includes('Audio') ||
-      html.includes('voice') || html.includes('Voice') ||
-      html.includes('TTS') || html.includes('tts')
+    const hasAudio =
+      typeof html === 'string' &&
+      (html.includes('audio') ||
+        html.includes('Audio') ||
+        html.includes('voice') ||
+        html.includes('Voice') ||
+        html.includes('TTS') ||
+        html.includes('tts'));
+    logClassification(
+      'ADMIN_AUDIO',
+      hasAudio ? 'BACKEND_READ_ONLY_PROVEN' : 'BACKEND_DISPLAY_ONLY_CONFIRMED',
+      `audio_visible=${hasAudio}`
     );
-    logClassification('ADMIN_AUDIO', hasAudio ? 'BACKEND_READ_ONLY_PROVEN' : 'BACKEND_DISPLAY_ONLY_CONFIRMED',
-      `audio_visible=${hasAudio}`);
     expect(true).toBe(true);
   });
 });
@@ -220,10 +281,17 @@ describe('[v57:admin] Fusion — /fusion — backend activation', () => {
     const html = await getBodyHTML();
     const hasContent = typeof html === 'string' && html.length > 200;
     const isDegraded = hasDegradedIndicator(html);
-    const state = hasContent && !isDegraded ? 'BACKEND_READ_ONLY_PROVEN' :
-      (isDegraded ? 'BACKEND_DEGRADED_EXPECTED' : 'BACKEND_DISPLAY_ONLY_CONFIRMED');
-    logClassification('FUSION', state,
-      `content_len=${typeof html === 'string' ? html.length : 0} degraded=${isDegraded}`);
+    const state =
+      hasContent && !isDegraded
+        ? 'BACKEND_READ_ONLY_PROVEN'
+        : isDegraded
+          ? 'BACKEND_DEGRADED_EXPECTED'
+          : 'BACKEND_DISPLAY_ONLY_CONFIRMED';
+    logClassification(
+      'FUSION',
+      state,
+      `content_len=${typeof html === 'string' ? html.length : 0} degraded=${isDegraded}`
+    );
     expect(true).toBe(true);
   });
 });

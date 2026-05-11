@@ -29,9 +29,15 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: (key: string) => store[key] ?? null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; },
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
   };
 })();
 
@@ -135,7 +141,7 @@ describe('E2E IPC Probe Bridge (v62)', () => {
 
     it('listAllowedCommands returns non-empty array of strings', () => {
       const bridge = windowMock['__TITANE_E2E_IPC_PROBE__'] as {
-        listAllowedCommands: () => string[]
+        listAllowedCommands: () => string[];
       };
       const cmds = bridge.listAllowedCommands();
       expect(Array.isArray(cmds)).toBe(true);
@@ -146,7 +152,7 @@ describe('E2E IPC Probe Bridge (v62)', () => {
 
     it('does not expose raw arbitrary Tauri command names', () => {
       const bridge = windowMock['__TITANE_E2E_IPC_PROBE__'] as {
-        listAllowedCommands: () => string[]
+        listAllowedCommands: () => string[];
       };
       const cmds = bridge.listAllowedCommands();
       expect(cmds).not.toContain('experience_get_state');
@@ -163,7 +169,9 @@ describe('E2E IPC Probe Bridge (v62)', () => {
 
     it('refuses unknown commandId with COMMAND_NOT_ALLOWLISTED', async () => {
       const bridge = windowMock['__TITANE_E2E_IPC_PROBE__'] as {
-        invoke: (id: string) => Promise<{ errorKind: string; attempted: boolean; ok: boolean }>;
+        invoke: (
+          id: string
+        ) => Promise<{ errorKind: string; attempted: boolean; ok: boolean }>;
       };
       const result = await bridge.invoke('arbitrary_unknown_command');
       expect(result.ok).toBe(false);
@@ -182,7 +190,9 @@ describe('E2E IPC Probe Bridge (v62)', () => {
 
     it('refuses destructive commandId patterns', async () => {
       const bridge = windowMock['__TITANE_E2E_IPC_PROBE__'] as {
-        invoke: (id: string) => Promise<{ errorKind: string; attempted: boolean; ok: boolean }>;
+        invoke: (
+          id: string
+        ) => Promise<{ errorKind: string; attempted: boolean; ok: boolean }>;
       };
 
       const destructiveIds = [

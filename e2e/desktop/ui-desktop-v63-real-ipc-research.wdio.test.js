@@ -20,7 +20,10 @@ const SCHEMA_VERSION = 'v63';
 function getArtifactFile() {
   return (
     process.env.TITANE_PROOF_ARTIFACT ||
-    path.resolve(process.cwd(), 'artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl')
+    path.resolve(
+      process.cwd(),
+      'artifacts/backend-proof-depth/v63-tier1-real-ipc-completion.jsonl'
+    )
   );
 }
 
@@ -31,7 +34,12 @@ function persistLine(entry) {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.appendFileSync(
       file,
-      JSON.stringify({ schemaVersion: SCHEMA_VERSION, capturedAt: new Date().toISOString(), sourceSpec: SOURCE_SPEC, ...entry }) + '\n',
+      JSON.stringify({
+        schemaVersion: SCHEMA_VERSION,
+        capturedAt: new Date().toISOString(),
+        sourceSpec: SOURCE_SPEC,
+        ...entry,
+      }) + '\n',
       'utf8'
     );
   } catch (e) {
@@ -40,10 +48,14 @@ function persistLine(entry) {
 }
 
 async function activateBridge() {
-  await browser.execute(() => { localStorage.setItem('TITANE_E2E_PROBE', '1'); });
+  await browser.execute(() => {
+    localStorage.setItem('TITANE_E2E_PROBE', '1');
+  });
   let found = false;
   for (let i = 0; i < 25; i++) {
-    found = await browser.execute(() => typeof window.__TITANE_E2E_IPC_PROBE__ !== 'undefined');
+    found = await browser.execute(
+      () => typeof window.__TITANE_E2E_IPC_PROBE__ !== 'undefined'
+    );
     if (found) break;
     await browser.pause(200);
   }
@@ -54,7 +66,10 @@ describe('v63 — Research: Real IPC (research_status → research_get_status)',
   let bridgeAvailable = false;
 
   before(async () => {
-    try { await browser.url('/'); await browser.pause(1500); } catch {}
+    try {
+      await browser.url('/');
+      await browser.pause(1500);
+    } catch {}
     bridgeAvailable = await activateBridge();
   });
 
@@ -82,7 +97,7 @@ describe('v63 — Research: Real IPC (research_status → research_get_status)',
       return;
     }
 
-    const result = await browser.execute(async (cmdId) => {
+    const result = await browser.execute(async cmdId => {
       return await window.__TITANE_E2E_IPC_PROBE__?.invoke(cmdId);
     }, COMMAND_ID);
 
@@ -101,7 +116,7 @@ describe('v63 — Research: Real IPC (research_status → research_get_status)',
       contentPreviewRedacted: result?.contentPreviewRedacted ?? null,
       errorKind: result?.errorKind ?? null,
       errorMessageRedacted: result?.errorMessageRedacted ?? null,
-      latencyMs: result?.latencyMs ?? (Date.now() - t0),
+      latencyMs: result?.latencyMs ?? Date.now() - t0,
       proofLevel: result?.proofLevel ?? 'UNKNOWN',
       blockerClass: result?.ok ? null : 'COMMAND_ERROR',
       safeToPersist: true,
@@ -115,6 +130,10 @@ describe('v63 — Research: Real IPC (research_status → research_get_status)',
     expect(result?.commandId).toBe(COMMAND_ID);
     expect(result?.bridgeVersion).toBe('v62');
     expect(result?.source).toBe('APP_CONTEXT_TAURI_IPC_PROBE');
-    expect(['IPC_RESPONSE_PROVEN', 'PROOF_DEPTH_BLOCKED_BY_RUNTIME', 'PROOF_DEPTH_BLOCKED_BY_MISSING_COMMAND']).toContain(result?.proofLevel);
+    expect([
+      'IPC_RESPONSE_PROVEN',
+      'PROOF_DEPTH_BLOCKED_BY_RUNTIME',
+      'PROOF_DEPTH_BLOCKED_BY_MISSING_COMMAND',
+    ]).toContain(result?.proofLevel);
   });
 });

@@ -29,7 +29,6 @@ const {
 } = require('./helpers/uiDesktopBackendProofDepth.js');
 
 describe('v61 Tier 1 Blocker Reduction — CLOUD', () => {
-
   describe('CLOUD — promote GUARDED_ONLY → GUARDED_WITH_UI_PROOF', () => {
     before(async () => {
       await navigateAndWait('/cloud', 'page-cloud-center', 10000);
@@ -52,7 +51,8 @@ describe('v61 Tier 1 Blocker Reduction — CLOUD', () => {
         selector: '[data-testid="page-cloud-center"]',
         promotionFrom: 'PROOF_DEPTH_GUARDED_ONLY',
         targetLevel: 'GUARDED_WITH_UI_PROOF',
-        description: 'Cloud center page root visible — sync/vault management UI renders (status: not-initialized expected when IPC blocked)',
+        description:
+          'Cloud center page root visible — sync/vault management UI renders (status: not-initialized expected when IPC blocked)',
         blockerClass: null,
         nextAction: 'v62-cloud-vault-status-ipc-proof',
       });
@@ -61,8 +61,15 @@ describe('v61 Tier 1 Blocker Reduction — CLOUD', () => {
       // If cloud_get_status fails, the page shows initialized:false + form
       // This IS UI evidence of the cloud sync status
       const bodyHtml = await getBodyHTML();
-      const showsNotInitialized = bodyHtml.includes('initializ') || bodyHtml.includes('vault') || bodyHtml.includes('sync') || bodyHtml.includes('cloud');
-      const showsError = bodyHtml.includes('error') || bodyHtml.includes('Error') || bodyHtml.includes('erreur');
+      const showsNotInitialized =
+        bodyHtml.includes('initializ') ||
+        bodyHtml.includes('vault') ||
+        bodyHtml.includes('sync') ||
+        bodyHtml.includes('cloud');
+      const showsError =
+        bodyHtml.includes('error') ||
+        bodyHtml.includes('Error') ||
+        bodyHtml.includes('erreur');
 
       await probeTier1BlockerReduction({
         moduleId: 'CLOUD',
@@ -85,7 +92,7 @@ describe('v61 Tier 1 Blocker Reduction — CLOUD', () => {
     it('CLOUD — sandboxed temp vault context (v61 schema)', async () => {
       // Reproduce the sandboxed mutation from v60 with v61 schema
       await probeSandboxedMutation({
-        mutationFn: async (tempPath) => {
+        mutationFn: async tempPath => {
           // Read-only sandbox check — does NOT touch real vault
           return { type: 'cloud-status-check', tempPath, nonProduction: true };
         },
@@ -121,5 +128,4 @@ describe('v61 Tier 1 Blocker Reduction — CLOUD', () => {
       });
     });
   });
-
 });

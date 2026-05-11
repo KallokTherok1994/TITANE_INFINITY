@@ -28,7 +28,8 @@ const {
 const SOURCE_SPEC = 'e2e/desktop/ui-desktop-ipc-response-reflection-core.wdio.test.js';
 
 // Ensure v59 artifact
-process.env.TITANE_PROOF_ARTIFACT = 'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
+process.env.TITANE_PROOF_ARTIFACT =
+  'artifacts/backend-proof-depth/v59-ipc-response-reflection.jsonl';
 
 describe('v59 IPC Response Reflection — Core Modules', () => {
   let tauriAvailable = false;

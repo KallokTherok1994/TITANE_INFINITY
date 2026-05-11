@@ -10,17 +10,13 @@
  * - Every alias must resolve to a known canonical route
  */
 
-import type {
-  UiSurfaceDefinition,
-  UiSurfaceAlias,
-} from './uiSurfaceRegistry.schema';
+import type { UiSurfaceDefinition, UiSurfaceAlias } from './uiSurfaceRegistry.schema';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CANONICAL SURFACE DEFINITIONS
 // ─────────────────────────────────────────────────────────────────────────────
 
 const SURFACES: UiSurfaceDefinition[] = [
-
   // ══════════════════════════════════════════════════════
   // /titane — Core Chat + Vision + EVO
   // ══════════════════════════════════════════════════════
@@ -40,10 +36,22 @@ const SURFACES: UiSurfaceDefinition[] = [
       { from: '/dashboard', to: '/titane', notes: 'Legacy dashboard alias' },
       { from: '/evolution-center', to: '/titane', notes: 'Legacy evolution center' },
       { from: '/cognitive-evolution', to: '/titane', notes: 'Legacy cognitive evo' },
-      { from: '/identity-memory-evolution', to: '/titane', notes: 'Legacy identity-memory-evo' },
+      {
+        from: '/identity-memory-evolution',
+        to: '/titane',
+        notes: 'Legacy identity-memory-evo',
+      },
       { from: '/progression', to: '/titane', notes: 'Legacy progression alias' },
-      { from: '/memory-evo', to: '/titane?tab=transformation', notes: 'Memory evo → transformation tab' },
-      { from: '/memory-evolution', to: '/titane?tab=transformation', notes: 'Memory evolution → transformation tab' },
+      {
+        from: '/memory-evo',
+        to: '/titane?tab=transformation',
+        notes: 'Memory evo → transformation tab',
+      },
+      {
+        from: '/memory-evolution',
+        to: '/titane?tab=transformation',
+        notes: 'Memory evolution → transformation tab',
+      },
     ],
     tabs: [
       {
@@ -53,7 +61,11 @@ const SURFACES: UiSurfaceDefinition[] = [
         selector: '[data-testid="tab-conversation"]',
         status: 'ACTIVE_PARTIAL',
         truthClass: 'MIXED_LIVE_AND_STATIC',
-        backendCommands: ['ai_get_response', 'ai_generate_local_stream', 'ai_send_prompt'],
+        backendCommands: [
+          'ai_get_response',
+          'ai_generate_local_stream',
+          'ai_send_prompt',
+        ],
         notes: 'Live AI chat via OMEGA pipeline; provider quality conditional',
       },
       {
@@ -103,7 +115,11 @@ const SURFACES: UiSurfaceDefinition[] = [
         selector: '[data-testid="tab-transformation"]',
         status: 'ACTIVE_PARTIAL',
         truthClass: 'LIVE_TAURI',
-        backendCommands: ['memory_get_clusters', 'memory_get_status', 'persistent_memory_get_stats'],
+        backendCommands: [
+          'memory_get_clusters',
+          'memory_get_status',
+          'persistent_memory_get_stats',
+        ],
         notes: 'Memory evolution / transform — formerly /memory-evolution',
       },
     ],
@@ -122,19 +138,36 @@ const SURFACES: UiSurfaceDefinition[] = [
       'memory_get_status',
     ],
     visibleActions: [
-      { actionId: 'send_message', label: 'Send message', wiringStatus: 'WIRED_LIVE', ipcCommand: 'ai_get_response' },
-      { actionId: 'switch_provider', label: 'Switch AI provider', wiringStatus: 'WIRED_LIVE', ipcCommand: 'ai_set_model' },
-      { actionId: 'analyze_image', label: 'Analyze image', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'analyze_image' },
+      {
+        actionId: 'send_message',
+        label: 'Send message',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'ai_get_response',
+      },
+      {
+        actionId: 'switch_provider',
+        label: 'Switch AI provider',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'ai_set_model',
+      },
+      {
+        actionId: 'analyze_image',
+        label: 'Analyze image',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'analyze_image',
+      },
       { actionId: 'switch_tab', label: 'Switch tab', wiringStatus: 'DISPLAY_ONLY' },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Provider quality conditional; browser mode shows BackendDownIndicator',
+    fallbackPolicy:
+      'Provider quality conditional; browser mode shows BackendDownIndicator',
     staleAfterMs: 30000,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/TitanePage.tsx'],
-    notes: 'Core page. ACTIVE_PARTIAL: chat live, some tabs partial. Transformation tab receives /memory-evo aliases.',
+    notes:
+      'Core page. ACTIVE_PARTIAL: chat live, some tabs partial. Transformation tab receives /memory-evo aliases.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -147,15 +180,17 @@ const SURFACES: UiSurfaceDefinition[] = [
     pageId: 'experience_page',
     pageComponent: 'Experience',
     rootTestId: 'page-experience',
-    aliases: [
-      { from: '/xp', to: '/experience', notes: 'Legacy XP alias' },
-    ],
+    aliases: [{ from: '/xp', to: '/experience', notes: 'Legacy XP alias' }],
     tabs: [],
     truthClass: 'MIXED_LIVE_AND_STATIC',
     status: 'ACTIVE_PARTIAL',
     backendCommands: [],
     visibleActions: [
-      { actionId: 'read_progression', label: 'Read XP state', wiringStatus: 'DISPLAY_ONLY' },
+      {
+        actionId: 'read_progression',
+        label: 'Read XP state',
+        wiringStatus: 'DISPLAY_ONLY',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Read-mostly dashboard; no destructive write actions',
@@ -164,7 +199,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/Experience.tsx'],
-    notes: 'XP progression page. ACTIVE_PARTIAL: live progression data from store, no direct IPC writes.',
+    notes:
+      'XP progression page. ACTIVE_PARTIAL: live progression data from store, no direct IPC writes.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -199,7 +235,12 @@ const SURFACES: UiSurfaceDefinition[] = [
         selector: '[data-testid="tab-time-agenda"]',
         status: 'ACTIVE_PARTIAL',
         truthClass: 'LIVE_TAURI_WITH_FALLBACK',
-        backendCommands: ['agenda_load_events', 'agenda_save_event', 'agenda_delete_event', 'agenda_sync'],
+        backendCommands: [
+          'agenda_load_events',
+          'agenda_save_event',
+          'agenda_delete_event',
+          'agenda_sync',
+        ],
       },
       {
         tabId: 'time-timeline',
@@ -217,7 +258,12 @@ const SURFACES: UiSurfaceDefinition[] = [
         selector: '[data-testid="tab-time-snapshots"]',
         status: 'ACTIVE_PARTIAL',
         truthClass: 'LIVE_TAURI_WITH_FALLBACK',
-        backendCommands: ['list_snapshots', 'restore_snapshot', 'delete_snapshot', 'force_snapshot'],
+        backendCommands: [
+          'list_snapshots',
+          'restore_snapshot',
+          'delete_snapshot',
+          'force_snapshot',
+        ],
       },
       {
         tabId: 'time-cognitive',
@@ -243,20 +289,47 @@ const SURFACES: UiSurfaceDefinition[] = [
       'add_timeline_event',
     ],
     visibleActions: [
-      { actionId: 'read_time_context', label: 'Read time context', wiringStatus: 'WIRED_LIVE', ipcCommand: 'agenda_load_events' },
-      { actionId: 'save_event', label: 'Save agenda event', wiringStatus: 'WIRED_LIVE', ipcCommand: 'agenda_save_event' },
-      { actionId: 'delete_event', label: 'Delete agenda event', wiringStatus: 'WIRED_LIVE', ipcCommand: 'agenda_delete_event' },
-      { actionId: 'restore_snapshot', label: 'Restore snapshot', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'restore_snapshot' },
-      { actionId: 'force_snapshot', label: 'Force snapshot', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'force_snapshot' },
+      {
+        actionId: 'read_time_context',
+        label: 'Read time context',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'agenda_load_events',
+      },
+      {
+        actionId: 'save_event',
+        label: 'Save agenda event',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'agenda_save_event',
+      },
+      {
+        actionId: 'delete_event',
+        label: 'Delete agenda event',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'agenda_delete_event',
+      },
+      {
+        actionId: 'restore_snapshot',
+        label: 'Restore snapshot',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'restore_snapshot',
+      },
+      {
+        actionId: 'force_snapshot',
+        label: 'Force snapshot',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'force_snapshot',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Timeline shows static history when live data unavailable; snapshots degrade gracefully',
+    fallbackPolicy:
+      'Timeline shows static history when live data unavailable; snapshots degrade gracefully',
     staleAfterMs: 60000,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/TimePage.tsx'],
-    notes: 'Temporal hub. ACTIVE_PARTIAL: live agenda + snapshots IPC; timeline has static fallback.',
+    notes:
+      'Temporal hub. ACTIVE_PARTIAL: live agenda + snapshots IPC; timeline has static fallback.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -271,8 +344,16 @@ const SURFACES: UiSurfaceDefinition[] = [
     rootTestId: 'page-admin',
     aliases: [
       { from: '/system-center', to: '/admin?tab=system', notes: 'System center alias' },
-      { from: '/diagnostics', to: '/admin?tab=production-health', notes: 'Diagnostics alias' },
-      { from: '/devtools', to: '/admin?tab=system&systemTab=devtools', notes: 'DevTools alias' },
+      {
+        from: '/diagnostics',
+        to: '/admin?tab=production-health',
+        notes: 'Diagnostics alias',
+      },
+      {
+        from: '/devtools',
+        to: '/admin?tab=system&systemTab=devtools',
+        notes: 'DevTools alias',
+      },
       { from: '/cluster', to: '/admin?tab=production-health', notes: 'Cluster alias' },
       { from: '/introspection', to: '/admin?tab=system', notes: 'Introspection alias' },
       { from: '/hypervision', to: '/admin?tab=system', notes: 'Hypervision alias' },
@@ -280,9 +361,17 @@ const SURFACES: UiSurfaceDefinition[] = [
       { from: '/design-center', to: '/admin?tab=design', notes: 'Design center alias' },
       { from: '/design-system', to: '/admin?tab=design', notes: 'Design system alias' },
       { from: '/settings', to: '/admin?tab=config', notes: 'Settings alias' },
-      { from: '/governance-center', to: '/admin?tab=governance', notes: 'Governance center alias' },
+      {
+        from: '/governance-center',
+        to: '/admin?tab=governance',
+        notes: 'Governance center alias',
+      },
       { from: '/governance', to: '/admin?tab=governance', notes: 'Governance alias' },
-      { from: '/secure', to: '/admin?tab=governance', notes: 'Secure alias → governance' },
+      {
+        from: '/secure',
+        to: '/admin?tab=governance',
+        notes: 'Secure alias → governance',
+      },
       { from: '/audio-center', to: '/admin?tab=audio', notes: 'Audio center alias' },
       { from: '/audio', to: '/admin?tab=audio', notes: 'Audio alias' },
       { from: '/voice', to: '/admin?tab=audio', notes: 'Voice alias' },
@@ -350,18 +439,34 @@ const SURFACES: UiSurfaceDefinition[] = [
       'ai_check_ollama_status',
     ],
     visibleActions: [
-      { actionId: 'load_panels', label: 'Load admin panels', wiringStatus: 'WIRED_FALLBACK' },
-      { actionId: 'audio_devices', label: 'List audio devices', wiringStatus: 'WIRED_LIVE', ipcCommand: 'audio_list_devices' },
-      { actionId: 'check_ollama', label: 'Check Ollama status', wiringStatus: 'WIRED_LIVE', ipcCommand: 'ai_check_ollama_status' },
+      {
+        actionId: 'load_panels',
+        label: 'Load admin panels',
+        wiringStatus: 'WIRED_FALLBACK',
+      },
+      {
+        actionId: 'audio_devices',
+        label: 'List audio devices',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'audio_list_devices',
+      },
+      {
+        actionId: 'check_ollama',
+        label: 'Check Ollama status',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'ai_check_ollama_status',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Container lazy-loads panels; each panel degrades independently with its own fallback',
+    fallbackPolicy:
+      'Container lazy-loads panels; each panel degrades independently with its own fallback',
     staleAfterMs: 0,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/AdminPage.tsx'],
-    notes: 'ACTIVE_PARTIAL: container page, panels lazy-loaded with independent fallbacks.',
+    notes:
+      'ACTIVE_PARTIAL: container page, panels lazy-loaded with independent fallbacks.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -375,16 +480,28 @@ const SURFACES: UiSurfaceDefinition[] = [
     pageComponent: 'DevPage',
     rootTestId: 'page-dev',
     aliases: [
-      { from: '/cognitive', to: '/dev?tab=diagnostics', notes: 'Cognitive → diagnostics tab' },
+      {
+        from: '/cognitive',
+        to: '/dev?tab=diagnostics',
+        notes: 'Cognitive → diagnostics tab',
+      },
       { from: '/stats', to: '/dev?tab=diagnostics', notes: 'Stats → diagnostics tab' },
       { from: '/one-core', to: '/dev?tab=overview', notes: 'One-core alias' },
-      { from: '/command-center', to: '/dev?tab=operations', notes: 'Command center alias' },
+      {
+        from: '/command-center',
+        to: '/dev?tab=operations',
+        notes: 'Command center alias',
+      },
       { from: '/unified', to: '/dev?tab=overview', notes: 'Unified alias' },
       { from: '/qa-monitoring', to: '/dev?tab=validation', notes: 'QA monitoring alias' },
       { from: '/qa', to: '/dev?tab=validation', notes: 'QA alias' },
       { from: '/monitoring', to: '/dev?tab=diagnostics', notes: 'Monitoring alias' },
       { from: '/tests', to: '/dev?tab=validation', notes: 'Tests alias' },
-      { from: '/developer-mode', to: '/dev?tab=operations', notes: 'Developer mode alias' },
+      {
+        from: '/developer-mode',
+        to: '/dev?tab=operations',
+        notes: 'Developer mode alias',
+      },
       { from: '/dev-mode', to: '/dev?tab=operations', notes: 'Dev mode alias' },
       { from: '/devmode', to: '/dev?tab=operations', notes: 'Devmode alias' },
       { from: '/ia-dev', to: '/dev?tab=operations', notes: 'IA-dev alias' },
@@ -443,8 +560,17 @@ const SURFACES: UiSurfaceDefinition[] = [
       'autofix_get_history',
     ],
     visibleActions: [
-      { actionId: 'refresh_dev_state', label: 'Refresh dev state', wiringStatus: 'WIRED_FALLBACK' },
-      { actionId: 'run_autofix', label: 'Run autofix', wiringStatus: 'WIRED_LIVE', ipcCommand: 'autofix_fix_all' },
+      {
+        actionId: 'refresh_dev_state',
+        label: 'Refresh dev state',
+        wiringStatus: 'WIRED_FALLBACK',
+      },
+      {
+        actionId: 'run_autofix',
+        label: 'Run autofix',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'autofix_fix_all',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Fallback mock orchestration possible when backend unavailable',
@@ -453,7 +579,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/DevPage.tsx'],
-    notes: 'ACTIVE_PARTIAL: live IPC for diagnostics and autofix; orchestration can fallback to mock.',
+    notes:
+      'ACTIVE_PARTIAL: live IPC for diagnostics and autofix; orchestration can fallback to mock.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -472,7 +599,11 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['ai_check_ollama_status'],
     visibleActions: [
-      { actionId: 'refresh_fusion', label: 'Refresh fusion state', wiringStatus: 'WIRED_FALLBACK' },
+      {
+        actionId: 'refresh_fusion',
+        label: 'Refresh fusion state',
+        wiringStatus: 'WIRED_FALLBACK',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Dashboard health degrades gracefully when backend unavailable',
@@ -481,7 +612,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/PerfectFusionDashboard.tsx'],
-    notes: 'ACTIVE_PARTIAL: observability dashboard. Backend/frontend health requires runtime for full truth.',
+    notes:
+      'ACTIVE_PARTIAL: observability dashboard. Backend/frontend health requires runtime for full truth.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -500,7 +632,11 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: [],
     visibleActions: [
-      { actionId: 'refresh_metrics', label: 'Refresh performance metrics', wiringStatus: 'WIRED_FALLBACK' },
+      {
+        actionId: 'refresh_metrics',
+        label: 'Refresh performance metrics',
+        wiringStatus: 'WIRED_FALLBACK',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Some panels derive from local metrics; no destructive writes',
@@ -509,7 +645,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/UltimateOptimizationDashboard.tsx'],
-    notes: 'ACTIVE_PARTIAL: performance dashboard; local metrics primary, some live signals.',
+    notes:
+      'ACTIVE_PARTIAL: performance dashboard; local metrics primary, some live signals.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -528,16 +665,24 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['ai_get_response', 'ai_generate_local_stream'],
     visibleActions: [
-      { actionId: 'dev_chat', label: 'Dev AI chat', wiringStatus: 'WIRED_LIVE', ipcCommand: 'ai_generate_local_stream', notes: 'Uses qwen2.5-coder, not PROD model' },
+      {
+        actionId: 'dev_chat',
+        label: 'Dev AI chat',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'ai_generate_local_stream',
+        notes: 'Uses qwen2.5-coder, not PROD model',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Restricted surface; access gated. Fallback when backend unavailable.',
+    fallbackPolicy:
+      'Restricted surface; access gated. Fallback when backend unavailable.',
     staleAfterMs: 0,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/TotalDevPage.tsx'],
-    notes: 'ACTIVE_PARTIAL: GOD DEV space; unlock-gated. DEV model (qwen2.5-coder), not PROD model.',
+    notes:
+      'ACTIVE_PARTIAL: GOD DEV space; unlock-gated. DEV model (qwen2.5-coder), not PROD model.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -551,7 +696,11 @@ const SURFACES: UiSurfaceDefinition[] = [
     pageComponent: 'OrchestrationIntelligenceCenter',
     rootTestId: 'page-orchestration-intelligence',
     aliases: [
-      { from: '/orchestration', to: '/orchestration-intelligence', notes: 'Orchestration alias' },
+      {
+        from: '/orchestration',
+        to: '/orchestration-intelligence',
+        notes: 'Orchestration alias',
+      },
     ],
     tabs: [],
     truthClass: 'SIMULATED_UI',
@@ -561,14 +710,16 @@ const SURFACES: UiSurfaceDefinition[] = [
       { actionId: 'switch_tab', label: 'Switch tab', wiringStatus: 'DISPLAY_ONLY' },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Primarily static representation; no live backend. Must show SIMULATED badge.',
+    fallbackPolicy:
+      'Primarily static representation; no live backend. Must show SIMULATED badge.',
     staleAfterMs: 0,
     canClaimSyncedWithoutRuntime: true,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/modules/OrchestrationIntelligenceCenter.tsx'],
     simulationDisclosureApplied: true, // PageHealthBanner applied — verified 2026-05-09
-    notes: 'SIMULATED_UI: multi-IA/meta visualization. No live backend. Must visibly show SIMULATED_UI status.',
+    notes:
+      'SIMULATED_UI: multi-IA/meta visualization. No live backend. Must visibly show SIMULATED_UI status.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -584,10 +735,22 @@ const SURFACES: UiSurfaceDefinition[] = [
     aliases: [
       { from: '/meta-center', to: '/orchestration-center', notes: 'Meta center alias' },
       { from: '/meta', to: '/orchestration-center', notes: 'Meta alias' },
-      { from: '/multi-ai-dashboard', to: '/orchestration-center', notes: 'Multi-AI dashboard alias' },
+      {
+        from: '/multi-ai-dashboard',
+        to: '/orchestration-center',
+        notes: 'Multi-AI dashboard alias',
+      },
       { from: '/nexus-engine', to: '/orchestration-center', notes: 'Nexus engine alias' },
-      { from: '/harmonia-engine', to: '/orchestration-center', notes: 'Harmonia engine alias' },
-      { from: '/cognitive-state', to: '/orchestration-center', notes: 'Cognitive state alias' },
+      {
+        from: '/harmonia-engine',
+        to: '/orchestration-center',
+        notes: 'Harmonia engine alias',
+      },
+      {
+        from: '/cognitive-state',
+        to: '/orchestration-center',
+        notes: 'Cognitive state alias',
+      },
     ],
     tabs: [],
     truthClass: 'LIVE_TAURI_WITH_FALLBACK',
@@ -598,17 +761,29 @@ const SURFACES: UiSurfaceDefinition[] = [
       'orchestrator_run_cycle',
     ],
     visibleActions: [
-      { actionId: 'get_orchestrator_state', label: 'Get orchestrator state', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'orchestrator_get_state' },
-      { actionId: 'run_cycle', label: 'Run orchestration cycle', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'orchestrator_run_cycle' },
+      {
+        actionId: 'get_orchestrator_state',
+        label: 'Get orchestrator state',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'orchestrator_get_state',
+      },
+      {
+        actionId: 'run_cycle',
+        label: 'Run orchestration cycle',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'orchestrator_run_cycle',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Default state shown when backend unavailable; fallback clearly indicated',
+    fallbackPolicy:
+      'Default state shown when backend unavailable; fallback clearly indicated',
     staleAfterMs: 30000,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/OrchestrationMetaCenter.tsx'],
-    notes: 'ACTIVE_PARTIAL: live orchestrator IPC with fallback. Fallback-default-state when backend unavailable.',
+    notes:
+      'ACTIVE_PARTIAL: live orchestrator IPC with fallback. Fallback-default-state when backend unavailable.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -630,8 +805,17 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['reality_get_state', 'reality_render_frame', 'reality_set_config'],
     visibleActions: [
-      { actionId: 'render_frame', label: 'Render frame', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'reality_render_frame' },
-      { actionId: 'toggle_physics', label: 'Toggle physics', wiringStatus: 'WIRED_FALLBACK' },
+      {
+        actionId: 'render_frame',
+        label: 'Render frame',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'reality_render_frame',
+      },
+      {
+        actionId: 'toggle_physics',
+        label: 'Toggle physics',
+        wiringStatus: 'WIRED_FALLBACK',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Init fallback when state missing; IPC degrades gracefully',
@@ -660,10 +844,25 @@ const SURFACES: UiSurfaceDefinition[] = [
     tabs: [],
     truthClass: 'LIVE_TAURI_WITH_FALLBACK',
     status: 'ACTIVE_PARTIAL',
-    backendCommands: ['hyper_think', 'hyper_reason', 'hyper_imagine', 'hyper_generate_insight'],
+    backendCommands: [
+      'hyper_think',
+      'hyper_reason',
+      'hyper_imagine',
+      'hyper_generate_insight',
+    ],
     visibleActions: [
-      { actionId: 'think', label: 'Hyper Think', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'hyper_think' },
-      { actionId: 'reason', label: 'Hyper Reason', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'hyper_reason' },
+      {
+        actionId: 'think',
+        label: 'Hyper Think',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'hyper_think',
+      },
+      {
+        actionId: 'reason',
+        label: 'Hyper Reason',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'hyper_reason',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Init fallback possible; IPC commands degrade gracefully',
@@ -672,7 +871,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/components/HyperCenter/HyperCenter.tsx'],
-    notes: 'ACTIVE_PARTIAL: hyper-intelligence IPC with fallback. Commands may not exist in all builds.',
+    notes:
+      'ACTIVE_PARTIAL: hyper-intelligence IPC with fallback. Commands may not exist in all builds.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -685,15 +885,18 @@ const SURFACES: UiSurfaceDefinition[] = [
     pageId: 'quantum_center',
     pageComponent: 'QuantumCenter',
     rootTestId: 'page-quantum-center',
-    aliases: [
-      { from: '/quantum', to: '/quantum-center', notes: 'Quantum alias' },
-    ],
+    aliases: [{ from: '/quantum', to: '/quantum-center', notes: 'Quantum alias' }],
     tabs: [],
     truthClass: 'SIMULATED_UI',
     status: 'SIMULATED_UI',
     backendCommands: [],
     visibleActions: [
-      { actionId: 'toggle_runtime', label: 'Toggle quantum runtime UI', wiringStatus: 'DISPLAY_ONLY', notes: 'UI only toggle, no backend' },
+      {
+        actionId: 'toggle_runtime',
+        label: 'Toggle quantum runtime UI',
+        wiringStatus: 'DISPLAY_ONLY',
+        notes: 'UI only toggle, no backend',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'All data is mock/simulated. Must show SIMULATED_UI badge clearly.',
@@ -703,7 +906,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     deprecated: false,
     sourceFiles: ['src/components/QuantumCenter/QuantumCenter.tsx'],
     simulationDisclosureApplied: true, // PageHealthBanner applied — verified 2026-05-09
-    notes: 'SIMULATED_UI: mock-driven metrics and cache visualization. No real backend. Must visibly show SIMULATED_UI.',
+    notes:
+      'SIMULATED_UI: mock-driven metrics and cache visualization. No real backend. Must visibly show SIMULATED_UI.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -736,7 +940,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/TwinsPage.tsx'],
-    notes: 'ACTIVE_PARTIAL: identity/twin dashboard; mix live identity + static curation.',
+    notes:
+      'ACTIVE_PARTIAL: identity/twin dashboard; mix live identity + static curation.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -763,19 +968,43 @@ const SURFACES: UiSurfaceDefinition[] = [
       'cloud_verify_integrity',
     ],
     visibleActions: [
-      { actionId: 'get_status', label: 'Get cloud status', wiringStatus: 'WIRED_LIVE', ipcCommand: 'cloud_get_status' },
-      { actionId: 'sync_push', label: 'Sync push', wiringStatus: 'WIRED_LIVE', ipcCommand: 'cloud_sync_push', notes: 'Requires passphrase initialization' },
-      { actionId: 'sync_pull', label: 'Sync pull', wiringStatus: 'WIRED_LIVE', ipcCommand: 'cloud_sync_pull', notes: 'Requires passphrase initialization' },
-      { actionId: 'verify_integrity', label: 'Verify integrity', wiringStatus: 'WIRED_LIVE', ipcCommand: 'cloud_verify_integrity' },
+      {
+        actionId: 'get_status',
+        label: 'Get cloud status',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'cloud_get_status',
+      },
+      {
+        actionId: 'sync_push',
+        label: 'Sync push',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'cloud_sync_push',
+        notes: 'Requires passphrase initialization',
+      },
+      {
+        actionId: 'sync_pull',
+        label: 'Sync pull',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'cloud_sync_pull',
+        notes: 'Requires passphrase initialization',
+      },
+      {
+        actionId: 'verify_integrity',
+        label: 'Verify integrity',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'cloud_verify_integrity',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Requires initialization and passphrase; shows blocked state when not initialized',
+    fallbackPolicy:
+      'Requires initialization and passphrase; shows blocked state when not initialized',
     staleAfterMs: 60000,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/CloudCenter.tsx'],
-    notes: 'ACTIVE_PARTIAL: LIVE_TAURI cloud sync; blocked when not initialized or passphrase missing.',
+    notes:
+      'ACTIVE_PARTIAL: LIVE_TAURI cloud sync; blocked when not initialized or passphrase missing.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -799,19 +1028,41 @@ const SURFACES: UiSurfaceDefinition[] = [
       'persistent_memory_delete_entry',
     ],
     visibleActions: [
-      { actionId: 'read_memory', label: 'Read memory entries', wiringStatus: 'WIRED_LIVE', ipcCommand: 'persistent_memory_read' },
-      { actionId: 'write_entry', label: 'Write memory entry', wiringStatus: 'WIRED_LIVE', ipcCommand: 'persistent_memory_write_entry' },
-      { actionId: 'delete_entry', label: 'Delete memory entry', wiringStatus: 'WIRED_LIVE', ipcCommand: 'persistent_memory_delete_entry' },
-      { actionId: 'get_stats', label: 'Get memory stats', wiringStatus: 'WIRED_LIVE', ipcCommand: 'persistent_memory_get_stats' },
+      {
+        actionId: 'read_memory',
+        label: 'Read memory entries',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'persistent_memory_read',
+      },
+      {
+        actionId: 'write_entry',
+        label: 'Write memory entry',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'persistent_memory_write_entry',
+      },
+      {
+        actionId: 'delete_entry',
+        label: 'Delete memory entry',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'persistent_memory_delete_entry',
+      },
+      {
+        actionId: 'get_stats',
+        label: 'Get memory stats',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'persistent_memory_get_stats',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Search disabled when no persistent entries; bootstrap latency visible',
+    fallbackPolicy:
+      'Search disabled when no persistent entries; bootstrap latency visible',
     staleAfterMs: 30000,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/Memory.tsx'],
-    notes: 'ACTIVE_PARTIAL: live persistent memory IPC; bootstrap latency and empty state visible.',
+    notes:
+      'ACTIVE_PARTIAL: live persistent memory IPC; bootstrap latency and empty state visible.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -830,10 +1081,17 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['web_research'],
     visibleActions: [
-      { actionId: 'run_research', label: 'Run web research', wiringStatus: 'WIRED_LIVE', ipcCommand: 'web_research', notes: 'Governed; can be blocked by policy or missing credentials' },
+      {
+        actionId: 'run_research',
+        label: 'Run web research',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'web_research',
+        notes: 'Governed; can be blocked by policy or missing credentials',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Web-live can be blocked by policy or credentials; shows explicit block state',
+    fallbackPolicy:
+      'Web-live can be blocked by policy or credentials; shows explicit block state',
     staleAfterMs: 0,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
@@ -852,24 +1110,30 @@ const SURFACES: UiSurfaceDefinition[] = [
     pageId: 'doc_center',
     pageComponent: 'DocCenterPage',
     rootTestId: 'doc-center-page',
-    aliases: [
-      { from: '/doc', to: '/doc-center', notes: 'Doc alias' },
-    ],
+    aliases: [{ from: '/doc', to: '/doc-center', notes: 'Doc alias' }],
     tabs: [],
     truthClass: 'LIVE_TAURI_GOVERNED',
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['export_docx_file'],
     visibleActions: [
-      { actionId: 'export_docx', label: 'Export DOCX', wiringStatus: 'WIRED_LIVE', ipcCommand: 'export_docx_file', notes: 'Browser mode shows visible IPC error' },
+      {
+        actionId: 'export_docx',
+        label: 'Export DOCX',
+        wiringStatus: 'WIRED_LIVE',
+        ipcCommand: 'export_docx_file',
+        notes: 'Browser mode shows visible IPC error',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Requires Tauri runtime; browser mode shows explicit IPC error (not silent)',
+    fallbackPolicy:
+      'Requires Tauri runtime; browser mode shows explicit IPC error (not silent)',
     staleAfterMs: 0,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: false,
     deprecated: false,
     sourceFiles: ['src/pages/DocCenterPage.tsx'],
-    notes: 'ACTIVE_PARTIAL: direct URL surface (no TopNav owner). DOCX export via Tauri; browser mode fails visibly.',
+    notes:
+      'ACTIVE_PARTIAL: direct URL surface (no TopNav owner). DOCX export via Tauri; browser mode fails visibly.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -888,10 +1152,16 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['singularity_get_state', 'singularity_sync_state'],
     visibleActions: [
-      { actionId: 'get_state', label: 'Get singularity state', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'singularity_get_state' },
+      {
+        actionId: 'get_state',
+        label: 'Get singularity state',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'singularity_get_state',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
-    fallbackPolicy: 'Visualization mixes live hooks and derived edges; fallback to empty state',
+    fallbackPolicy:
+      'Visualization mixes live hooks and derived edges; fallback to empty state',
     staleAfterMs: 30000,
     canClaimSyncedWithoutRuntime: false,
     visibleInNav: true,
@@ -916,7 +1186,12 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['sentinel_subscribe'],
     visibleActions: [
-      { actionId: 'subscribe', label: 'Subscribe sentinel events', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'sentinel_subscribe' },
+      {
+        actionId: 'subscribe',
+        label: 'Subscribe sentinel events',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'sentinel_subscribe',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Engine subscription can fallback to empty state',
@@ -925,7 +1200,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/Sentinel.tsx'],
-    notes: 'ACTIVE_PARTIAL: integrity monitoring via engine subscription; fallback to empty state.',
+    notes:
+      'ACTIVE_PARTIAL: integrity monitoring via engine subscription; fallback to empty state.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -944,7 +1220,12 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['watchdog_subscribe'],
     visibleActions: [
-      { actionId: 'subscribe', label: 'Subscribe watchdog events', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'watchdog_subscribe' },
+      {
+        actionId: 'subscribe',
+        label: 'Subscribe watchdog events',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'watchdog_subscribe',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Engine subscription can fallback to empty state',
@@ -953,7 +1234,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: true,
     deprecated: false,
     sourceFiles: ['src/pages/Watchdog.tsx'],
-    notes: 'ACTIVE_PARTIAL: health monitoring and anomaly detection via engine subscription.',
+    notes:
+      'ACTIVE_PARTIAL: health monitoring and anomaly detection via engine subscription.',
   },
 
   // ══════════════════════════════════════════════════════
@@ -972,7 +1254,12 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: ['selfheal_subscribe'],
     visibleActions: [
-      { actionId: 'subscribe', label: 'Subscribe selfheal events', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'selfheal_subscribe' },
+      {
+        actionId: 'subscribe',
+        label: 'Subscribe selfheal events',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'selfheal_subscribe',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Engine subscription can fallback to empty state',
@@ -998,9 +1285,18 @@ const SURFACES: UiSurfaceDefinition[] = [
     tabs: [],
     truthClass: 'LIVE_TAURI_WITH_FALLBACK',
     status: 'ACTIVE_PARTIAL',
-    backendCommands: ['adaptive_subscribe', 'adaptive_get_profile', 'adaptive_get_summary'],
+    backendCommands: [
+      'adaptive_subscribe',
+      'adaptive_get_profile',
+      'adaptive_get_summary',
+    ],
     visibleActions: [
-      { actionId: 'subscribe', label: 'Subscribe adaptive events', wiringStatus: 'WIRED_FALLBACK', ipcCommand: 'adaptive_subscribe' },
+      {
+        actionId: 'subscribe',
+        label: 'Subscribe adaptive events',
+        wiringStatus: 'WIRED_FALLBACK',
+        ipcCommand: 'adaptive_subscribe',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Engine subscription can fallback to empty state',
@@ -1026,10 +1322,19 @@ const SURFACES: UiSurfaceDefinition[] = [
     tabs: [],
     truthClass: 'MIXED_LIVE_AND_STATIC',
     status: 'ACTIVE_PARTIAL',
-    backendCommands: ['list_skills', 'activate_skill', 'deactivate_skill', 'install_skill'],
+    backendCommands: [
+      'list_skills',
+      'activate_skill',
+      'deactivate_skill',
+      'install_skill',
+    ],
     visibleActions: [
       { actionId: 'list_skills', label: 'List skills', wiringStatus: 'WIRED_FALLBACK' },
-      { actionId: 'activate_skill', label: 'Activate skill', wiringStatus: 'WIRED_FALLBACK' },
+      {
+        actionId: 'activate_skill',
+        label: 'Activate skill',
+        wiringStatus: 'WIRED_FALLBACK',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Local skill registry can be empty; degrades gracefully',
@@ -1057,7 +1362,11 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: [],
     visibleActions: [
-      { actionId: 'knowledge_refresh', label: 'Refresh knowledge', wiringStatus: 'TEMPLATE_ONLY' },
+      {
+        actionId: 'knowledge_refresh',
+        label: 'Refresh knowledge',
+        wiringStatus: 'TEMPLATE_ONLY',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Lazy-loaded page; no destructive writes',
@@ -1085,7 +1394,11 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: [],
     visibleActions: [
-      { actionId: 'creation_refresh', label: 'Refresh creation', wiringStatus: 'TEMPLATE_ONLY' },
+      {
+        actionId: 'creation_refresh',
+        label: 'Refresh creation',
+        wiringStatus: 'TEMPLATE_ONLY',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Lazy-loaded page; asset generation may use local or backend',
@@ -1113,7 +1426,11 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'ACTIVE_PARTIAL',
     backendCommands: [],
     visibleActions: [
-      { actionId: 'evolution_refresh', label: 'Refresh evolution', wiringStatus: 'TEMPLATE_ONLY' },
+      {
+        actionId: 'evolution_refresh',
+        label: 'Refresh evolution',
+        wiringStatus: 'TEMPLATE_ONLY',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Lazy-loaded monitoring page; no destructive writes',
@@ -1141,7 +1458,11 @@ const SURFACES: UiSurfaceDefinition[] = [
     status: 'DISPLAY_ONLY',
     backendCommands: [],
     visibleActions: [
-      { actionId: 'run_probe', label: 'Run performance probe', wiringStatus: 'TEMPLATE_ONLY' },
+      {
+        actionId: 'run_probe',
+        label: 'Run performance probe',
+        wiringStatus: 'TEMPLATE_ONLY',
+      },
     ],
     requiredProofLanes: ['STATIC_TYPESCRIPT', 'E2E_DESKTOP_WDIO'],
     fallbackPolicy: 'Diagnostic-only page; no backend writes',
@@ -1176,7 +1497,8 @@ const SURFACES: UiSurfaceDefinition[] = [
     visibleInNav: false,
     deprecated: false,
     sourceFiles: ['src/pages/HTFPage.tsx'],
-    notes: 'ACTIVE_PARTIAL: HTF module; direct URL only, no TopNav. Not in uiPages.po.js — excluded from E2E matrix.',
+    notes:
+      'ACTIVE_PARTIAL: HTF module; direct URL only, no TopNav. Not in uiPages.po.js — excluded from E2E matrix.',
   },
 ];
 
@@ -1188,8 +1510,9 @@ const SURFACES: UiSurfaceDefinition[] = [
 export const UI_SURFACE_REGISTRY: ReadonlyArray<UiSurfaceDefinition> = SURFACES;
 
 /** All alias definitions (flattened) */
-export const UI_ALIAS_REGISTRY: ReadonlyArray<UiSurfaceAlias & { canonicalRoute: string }> =
-  SURFACES.flatMap(s => s.aliases.map(a => ({ ...a, canonicalRoute: s.route })));
+export const UI_ALIAS_REGISTRY: ReadonlyArray<
+  UiSurfaceAlias & { canonicalRoute: string }
+> = SURFACES.flatMap(s => s.aliases.map(a => ({ ...a, canonicalRoute: s.route })));
 
 /** Look up a surface by route */
 export function getSurface(route: string): UiSurfaceDefinition | undefined {
@@ -1197,18 +1520,24 @@ export function getSurface(route: string): UiSurfaceDefinition | undefined {
 }
 
 /** Look up surfaces by status */
-export function getSurfacesByStatus(status: UiSurfaceDefinition['status']): UiSurfaceDefinition[] {
+export function getSurfacesByStatus(
+  status: UiSurfaceDefinition['status']
+): UiSurfaceDefinition[] {
   return SURFACES.filter(s => s.status === status);
 }
 
 /** Look up surfaces by truth class */
-export function getSurfacesByTruthClass(truthClass: UiSurfaceDefinition['truthClass']): UiSurfaceDefinition[] {
+export function getSurfacesByTruthClass(
+  truthClass: UiSurfaceDefinition['truthClass']
+): UiSurfaceDefinition[] {
   return SURFACES.filter(s => s.truthClass === truthClass);
 }
 
 /** Get all simulated surfaces */
 export function getSimulatedSurfaces(): UiSurfaceDefinition[] {
-  return SURFACES.filter(s => s.truthClass === 'SIMULATED_UI' || s.status === 'SIMULATED_UI');
+  return SURFACES.filter(
+    s => s.truthClass === 'SIMULATED_UI' || s.status === 'SIMULATED_UI'
+  );
 }
 
 /** Get all alias routes */
@@ -1229,9 +1558,18 @@ export function getRegistryStats() {
   const actions = SURFACES.reduce((n, s) => n + s.visibleActions.length, 0);
   const simulated = getSimulatedSurfaces().length;
   const byStatus = Object.fromEntries(
-    ['ACTIVE_SYNCED', 'ACTIVE_PARTIAL', 'ACTIVE_FALLBACK', 'DISPLAY_ONLY', 'SIMULATED_UI',
-     'LEGACY_ALIAS', 'DEPRECATED_KEEP', 'REBUILD_REQUIRED', 'DELETE_CANDIDATE', 'UNKNOWN']
-      .map(s => [s, SURFACES.filter(p => p.status === s).length])
+    [
+      'ACTIVE_SYNCED',
+      'ACTIVE_PARTIAL',
+      'ACTIVE_FALLBACK',
+      'DISPLAY_ONLY',
+      'SIMULATED_UI',
+      'LEGACY_ALIAS',
+      'DEPRECATED_KEEP',
+      'REBUILD_REQUIRED',
+      'DELETE_CANDIDATE',
+      'UNKNOWN',
+    ].map(s => [s, SURFACES.filter(p => p.status === s).length])
   );
   return { canonical, aliases, tabs, actions, simulated, byStatus };
 }

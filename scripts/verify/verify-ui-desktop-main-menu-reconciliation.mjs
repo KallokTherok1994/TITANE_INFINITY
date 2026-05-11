@@ -12,8 +12,10 @@ const ROOT = process.cwd();
 //   --sealed: Force sealed mode
 //   --current: Force current mode
 
-const DEFAULT_SEALED_ARTIFACT = 'artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl';
-const DEFAULT_CURRENT_ARTIFACT = 'artifacts/ui-desktop/current-main-menu-capture-reconciliation.jsonl';
+const DEFAULT_SEALED_ARTIFACT =
+  'artifacts/ui-desktop/v64-main-menu-capture-reconciliation.jsonl';
+const DEFAULT_CURRENT_ARTIFACT =
+  'artifacts/ui-desktop/current-main-menu-capture-reconciliation.jsonl';
 
 let artifactPath = process.env.TITANE_UI_DESKTOP_ARTIFACT || '';
 let mode = process.env.TITANE_UI_DESKTOP_ARTIFACT_MODE || '';
@@ -41,7 +43,9 @@ if (!mode) {
 
   if (sealedExists && currentExists && !artifactPath) {
     console.error('FAIL: Verifier ambiguity — both sealed and current artifacts exist.');
-    console.error('Specify --sealed, --current, or --artifact <path> or env TITANE_UI_DESKTOP_ARTIFACT_MODE');
+    console.error(
+      'Specify --sealed, --current, or --artifact <path> or env TITANE_UI_DESKTOP_ARTIFACT_MODE'
+    );
     process.exit(1);
   }
 
@@ -107,7 +111,9 @@ function fail(msg) {
 }
 
 console.log('=== TITANE v64 Main Menu Reconciliation Artifact Verifier ===');
-console.log(`Artifact: ${ARTIFACT_PATH} (mode=${mode}${explicitMode ? ', explicit' : ', auto-detected'})`);
+console.log(
+  `Artifact: ${ARTIFACT_PATH} (mode=${mode}${explicitMode ? ', explicit' : ', auto-detected'})`
+);
 console.log('');
 
 if (!fs.existsSync(ARTIFACT_PATH)) {
@@ -205,11 +211,19 @@ for (let i = 0; i < records.length; i += 1) {
     ? record.missingControls
     : [];
 
-  if (missingControls.length > 0 && !ACCEPTED_MISSING_CONTROLS.has(record.capturedSurface)) {
-    warn(`${tag} has missingControls not in accepted drift list: ${JSON.stringify(missingControls)}`);
+  if (
+    missingControls.length > 0 &&
+    !ACCEPTED_MISSING_CONTROLS.has(record.capturedSurface)
+  ) {
+    warn(
+      `${tag} has missingControls not in accepted drift list: ${JSON.stringify(missingControls)}`
+    );
   }
 
-  if (missingControls.length > 0 && ACCEPTED_MISSING_CONTROLS.has(record.capturedSurface)) {
+  if (
+    missingControls.length > 0 &&
+    ACCEPTED_MISSING_CONTROLS.has(record.capturedSurface)
+  ) {
     pass(`${tag} missingControls accepted drift for ${record.capturedSurface}`);
   }
 }

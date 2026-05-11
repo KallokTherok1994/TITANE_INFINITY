@@ -23,7 +23,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = resolve(__dirname, '../..');
 
-const MANIFEST_PATH = resolve(ROOT, 'docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json');
+const MANIFEST_PATH = resolve(
+  ROOT,
+  'docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json'
+);
 const REGISTRY_PATH = resolve(ROOT, 'src/registry/uiSurfaceRegistry.ts');
 
 const REQUIRED_DESKTOP_TEST_FILES = [
@@ -132,7 +135,9 @@ console.log('');
 console.log('Gate 4: Manifest Integrity');
 
 if (!existsSync(MANIFEST_PATH)) {
-  console.error('❌ FAIL: Manifest not found. Run: pnpm run generate:ui-desktop-manifest');
+  console.error(
+    '❌ FAIL: Manifest not found. Run: pnpm run generate:ui-desktop-manifest'
+  );
   failures++;
 } else {
   const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'));
@@ -141,7 +146,10 @@ if (!existsSync(MANIFEST_PATH)) {
   check('Manifest routeCount = 29', manifest.routeCount === 29);
   check('Manifest tabCount = 22', manifest.tabCount === 22);
   check('Manifest aliasCount = 65', manifest.aliasCount === 65);
-  check('Manifest mission = UI_DESKTOP_FULL_COVERAGE_v50', manifest.mission === 'UI_DESKTOP_FULL_COVERAGE_v50');
+  check(
+    'Manifest mission = UI_DESKTOP_FULL_COVERAGE_v50',
+    manifest.mission === 'UI_DESKTOP_FULL_COVERAGE_v50'
+  );
   check('Manifest has routes array', Array.isArray(manifest.routes));
   check('Manifest routes.length = 29', manifest.routes.length === 29);
 
@@ -155,7 +163,8 @@ if (!existsSync(MANIFEST_PATH)) {
   for (const route of manifest.routes) {
     if (!route.rootTestId) missingRootTestId++;
     if (!route.truthClass) missingTruthClass++;
-    if (route.truthClass && !VALID_TRUTH_CLASSES.includes(route.truthClass)) invalidTruthClass++;
+    if (route.truthClass && !VALID_TRUTH_CLASSES.includes(route.truthClass))
+      invalidTruthClass++;
     if (!route.pageId) missingPageId++;
     if (!route.pageComponent) missingPageComponent++;
   }
@@ -169,8 +178,14 @@ if (!existsSync(MANIFEST_PATH)) {
   // Simulated route check
   const simulated = manifest.routes.filter(r => r.isSimulated);
   check('Exactly 2 SIMULATED_UI routes', simulated.length === 2);
-  check('/orchestration-intelligence is simulated', simulated.some(r => r.route === '/orchestration-intelligence'));
-  check('/quantum-center is simulated', simulated.some(r => r.route === '/quantum-center'));
+  check(
+    '/orchestration-intelligence is simulated',
+    simulated.some(r => r.route === '/orchestration-intelligence')
+  );
+  check(
+    '/quantum-center is simulated',
+    simulated.some(r => r.route === '/quantum-center')
+  );
 
   // Tab check
   const routesWithTabs = manifest.routes.filter(r => r.tabCount > 0);
@@ -185,7 +200,11 @@ if (!existsSync(MANIFEST_PATH)) {
   for (const route of manifest.routes) {
     for (const action of route.visibleActions || []) {
       if (!action.safeActionPolicy) actionsWithoutPolicy++;
-      if (action.safeActionPolicy && !VALID_SAFE_POLICIES.includes(action.safeActionPolicy)) invalidPolicy++;
+      if (
+        action.safeActionPolicy &&
+        !VALID_SAFE_POLICIES.includes(action.safeActionPolicy)
+      )
+        invalidPolicy++;
     }
   }
 
@@ -194,7 +213,10 @@ if (!existsSync(MANIFEST_PATH)) {
 
   // Safe vs sensitive counts
   const totalSafe = manifest.routes.reduce((s, r) => s + (r.safeActions?.length || 0), 0);
-  const totalSensitive = manifest.routes.reduce((s, r) => s + (r.sensitiveActions?.length || 0), 0);
+  const totalSensitive = manifest.routes.reduce(
+    (s, r) => s + (r.sensitiveActions?.length || 0),
+    0
+  );
   check(`Safe actions = 35 (got ${totalSafe})`, totalSafe === 35);
   check(`Sensitive actions = 13 (got ${totalSensitive})`, totalSensitive === 13);
 
@@ -217,9 +239,12 @@ if (existsSync(REGISTRY_PATH)) {
   const registrySource = readFileSync(REGISTRY_PATH, 'utf8');
   const routes = registrySource.match(/route:\s*'\/[^']+'/g) || [];
   check(`Registry still has 29 routes (got ${routes.length})`, routes.length === 29);
-  
+
   const simRoutes = registrySource.match(/truthClass:\s*'SIMULATED_UI'/g) || [];
-  check(`Registry has 2 SIMULATED_UI routes (got ${simRoutes.length})`, simRoutes.length === 2);
+  check(
+    `Registry has 2 SIMULATED_UI routes (got ${simRoutes.length})`,
+    simRoutes.length === 2
+  );
 }
 console.log('');
 
@@ -234,7 +259,8 @@ for (const f of REQUIRED_DESKTOP_TEST_FILES) {
   if (existsSync(fullPath)) {
     const content = readFileSync(fullPath, 'utf8');
     const hasDescribe = content.includes('describe(');
-    const hasIt = content.includes("it('") || content.includes('it("') || content.includes('it(`');
+    const hasIt =
+      content.includes("it('") || content.includes('it("') || content.includes('it(`');
     const hasL1 = content.includes('L1 Static') || content.includes('L1 —');
     check(`${f}: has describe blocks`, hasDescribe);
     check(`${f}: has test cases (it)`, hasIt);
