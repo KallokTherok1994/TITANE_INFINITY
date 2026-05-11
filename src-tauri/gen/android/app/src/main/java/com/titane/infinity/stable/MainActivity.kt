@@ -1,4 +1,4 @@
-package com.titane.infinity.stable
+package com.titane.infinity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
