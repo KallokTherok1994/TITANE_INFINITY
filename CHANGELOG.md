@@ -9,6 +9,8 @@
 - `.github/workflows/deploy-cloudflare-pages.yml`: STORE_PATH context access invalide → env block corrigé avec déclaration explicite (élimine `CONTEXT_ACCESS_MIGHT_BE_INVALID` L51)
 - `RELEASE_SURFACE_INVENTORY.md`: canonical version drift (v33.0.3 header, v33.0.16 note) → corrigé en v33.0.17 puis v33.0.18
 - `data/knowledge_base/default/facebook_business_marketing_avance.json`: Prettier format fix (format:check FAIL → PASS)
+- **AH-v87**: 5 permissions manquantes (`snapshot_read`, `snapshot_restore`, `snapshot_delete`, `system_read`, `system_write`) dans `build_permission_matrix()`; SurfaceTruthBadge dynamique TimePage (LIVE/DEGRADED/PARTIAL); `snapshotsInterval` ajouté à `setInterval`; 10 tests `TimePage.test.tsx` PASS (commit 7898489a3)
+- **AH-v88**: SurfaceTruthBadge ajouté sur 4 pages (EvolutionMonitor/PARTIAL, SingularityMonitor/LIVE, RealityCenter/PARTIAL, CreationStudio/DISPLAY_ONLY); PerfectFusionDashboard badge PARTIAL→SIMULATED; `Math.random()` supprimé de 2 dashboards; 5 tests Rule-16 (14/14 PASS) (commit a3f689f95)
 
 ### Build
 

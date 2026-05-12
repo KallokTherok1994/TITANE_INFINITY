@@ -1187,3 +1187,43 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Classification finale route proof: 29 `PROD_ROUTE_GUARDED_WITH_UI_PROOF`, 6 `PROD_ROUTE_LEGACY_REDIRECT_CONFIRMED`.
 - Tests ajoutes: `src/__tests__/ui/version-display-sync.v73.test.ts`.
 - Rollback: restaurer les fichiers UI ci-dessus, supprimer spec/verifier v73 et artefacts de preuve associes.
+
+## [2026-05-12] EvolutionMonitor — SurfaceTruthBadge PARTIAL (v33.0.18)
+
+- Surface: `page-evolution-monitor`
+- Composant: `src/pages/EvolutionMonitor.tsx`
+- Badge: SurfaceTruthBadge variant="PARTIAL" (mix store live + timeline hardcodée)
+- Hook: `useEvolutionStore` (IPC live: total_evolutions, last_evolution.health_score)
+- Tests: `src/__tests__/pages/EvolutionMonitor.test.tsx` (AH-v88)
+- AutoHeal: AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
+- Version: 33.0.18
+
+## [2026-05-12] RealityCenter — SurfaceTruthBadge PARTIAL + Math.random() supprimé (v33.0.18)
+
+- Surface: `page-reality-center`
+- Composant: `src/pages/RealityCenter.tsx`
+- Badge: SurfaceTruthBadge variant="PARTIAL" (live: health.conversation, health.memory, health.system via useSystemHealth)
+- Fix: Math.random() supprimé de handleRefresh() (conformance modules)
+- Tests: `src/__tests__/pages/RealityCenter.test.tsx` (AH-v88)
+- AutoHeal: AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
+- Version: 33.0.18
+
+## [2026-05-12] CreationStudio — SurfaceTruthBadge DISPLAY_ONLY (v33.0.18)
+
+- Surface: `page-creation-studio`
+- Composant: `src/pages/CreationStudio.tsx`
+- Badge: SurfaceTruthBadge variant="DISPLAY_ONLY" (100% statique, pas de store ni IPC)
+- Tests: `src/__tests__/pages/CreationStudio.test.tsx` (AH-v88)
+- AutoHeal: AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
+- Version: 33.0.18
+
+## [2026-05-12] PerfectFusionDashboard — SurfaceTruthBadge SIMULATED + Math.random() supprimé (v33.0.18)
+
+- Surface: `page-fusion`
+- Composant: `src/pages/PerfectFusionDashboard.tsx`
+- Badge: SurfaceTruthBadge variant="SIMULATED" (engines layout + globalHarmony via useSingularity)
+- Hook: `useSingularity` (IPC live: consciousness, globalHarmony, globalEntropy, isInitialized, autoCoherence)
+- Fix: Math.random() supprimé de handleRefresh() (syncScore + latencyMs)
+- Tests: `src/__tests__/pages/PerfectFusionDashboard.test.tsx` (AH-v88)
+- AutoHeal: AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
+- Version: 33.0.18
