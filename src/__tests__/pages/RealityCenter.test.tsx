@@ -1,13 +1,21 @@
 /**
  * Tests RealityCenter — Rule 16 coverage
- * Smoke render + SurfaceTruthBadge PARTIAL + pas de Math.random()
- * AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
+ * Smoke render + SurfaceTruthBadge LIVE (IPC live) + pas de Math.random()
+ * AH-v94-LIVE-IPC-PAGES-2026-05-26
  */
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { RealityCenter } from '@/pages/RealityCenter';
+
+// ── Mock @tauri-apps/api/core invoke ─────────────────────────────
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn().mockResolvedValue([
+    { id: 'mod1', name: 'Module A', description: 'test', enabled: true, icon: '⚙️' },
+    { id: 'mod2', name: 'Module B', description: 'test', enabled: false, icon: '🔧' },
+  ]),
+}));
 
 // ── Mock useSystemHealth ─────────────────────────────────────────
 vi.mock('@/hooks/useSystemHealth', () => ({
@@ -81,9 +89,13 @@ describe('RealityCenter', () => {
     expect(screen.getByTestId('page-reality-center')).toBeInTheDocument();
   });
 
-  it('shows SurfaceTruthBadge with PARTIAL variant', () => {
+  it('shows SurfaceTruthBadge (LIVE or DEGRADED)', () => {
     renderPage();
-    expect(screen.getByTestId('surface-truth-badge-partial')).toBeInTheDocument();
+    // Before IPC resolves, badge starts DEGRADED; after resolve becomes LIVE
+    const badge = screen.queryByTestId('surface-truth-badge-live') ||
+                  screen.queryByTestId('surface-truth-badge-partial') ||
+                  screen.queryByTestId('surface-truth-badge-degraded');
+    expect(badge).not.toBeNull();
   });
 
   it('renders page title', () => {

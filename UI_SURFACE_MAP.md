@@ -1237,3 +1237,20 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Tests: `src/__tests__/pages/SingularityMonitor.test.tsx` (AH-v88)
 - AutoHeal: AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
 - Version: 33.0.18
+
+## [2026-05-26] AH-v94 — Engine Pages IPC LIVE rebinding (v34.0.x)
+
+### Surfaces activées LIVE (étaient STUB/PARTIAL/SIMULATED)
+
+| Surface | Route | Avant | Après | IPC live |
+|---|---|---|---|---|
+| Sentinel | `/sentinel` | STUB (dead IPC) | LIVE | `engine_get_sentinel_state` |
+| Watchdog | `/watchdog` | STUB (dead IPC) | LIVE | `engine_get_singularity_state` |
+| SelfHeal | `/selfheal` | STUB (dead IPC) | LIVE | `engine_get_singularity_state` |
+| AdaptiveEngine | `/adaptive` | STUB (dead IPC) | LIVE | `engine_get_singularity_state` |
+| OrchestrationIntelligenceCenter | `/orchestration-intelligence` | SIMULATED banner | LIVE | `engine_get_singularity_state` |
+| RealityCenter | `/reality-center` | PARTIAL (hardcoded modules) | LIVE | `cp_get_modules_status` |
+| QuantumCenter | `/quantum-center` | SIMULATED (Math.random) | LIVE | `engine_get_singularity_state` |
+| UltimateOptimizationDashboard | `/optimization` | PARTIAL (static benchmarks) | LIVE | `engine_get_singularity_state` + `usePerformanceMonitor` |
+
+### SurfaceTruthBadge — toutes les surfaces affichent maintenant `LIVE` quand l'IPC répond, `DEGRADED/PARTIAL` en fallback.

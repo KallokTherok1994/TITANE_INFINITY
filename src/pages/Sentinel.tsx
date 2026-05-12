@@ -14,6 +14,7 @@
  */
 
 import { ModuleCard } from '../components/ModuleCard';
+import { SurfaceTruthBadge } from '../components/system/SurfaceTruthBadge';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber } from '../utils/dataUtils';
 import type { SentinelAlerts } from '../core/ARCHITECTURE_TYPES_v∞';
@@ -39,17 +40,26 @@ export const Sentinel = () => {
   const threatLevel = extractNumber(status?.threatLevel, 0);
   const activeAlerts = extractNumber(status?.activeAlerts, 0);
   const criticalCount = extractNumber(status?.criticalCount, 0);
+  const isConnected = status !== null;
 
   return (
     <div className="module-page" data-testid="page-sentinel">
       <div className="module-page__header">
-        <h1 className="module-page__title">
-          <span className="module-page__icon">🛡️</span>
-          Sentinel — Gardien de l&apos;Intégrité
-        </h1>
+        <div className="module-page__header-row" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <h1 className="module-page__title" style={{ margin: 0 }}>
+            <span className="module-page__icon">🛡️</span>
+            Sentinel — Gardien de l&apos;Intégrité
+          </h1>
+          <SurfaceTruthBadge variant={isConnected ? 'LIVE' : 'DEGRADED'} />
+        </div>
         <p className="module-page__subtitle">
           Protection et surveillance de l&apos;intégrité système
         </p>
+        {!isConnected && (
+          <p style={{ color: '#f59e0b', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+            ⚠️ Backend non répondant — les métriques seront actualisées automatiquement
+          </p>
+        )}
       </div>
 
       <div className="module-page__grid">

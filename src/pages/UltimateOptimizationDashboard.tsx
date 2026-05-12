@@ -12,11 +12,13 @@
  */
 
 import React, { memo, useState, useEffect, useCallback } from 'react';
+import { invoke } from '@tauri-apps/api/core';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
 import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import {
   Gauge,
   Zap,
@@ -185,6 +187,19 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
 
   const [recommendations, setRecommendations] = useState(INITIAL_RECOMMENDATIONS);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [engineLoad, setEngineLoad] = useState<number | null>(null);
+
+  // Charge cognitive engine live (engine_get_singularity_state)
+  useEffect(() => {
+    const fetchLoad = () => {
+      invoke<{ cognition: { load: number } }>('engine_get_singularity_state')
+        .then(state => setEngineLoad(Math.round(state.cognition.load * 100)))
+        .catch(() => setEngineLoad(null));
+    };
+    fetchLoad();
+    const id = setInterval(fetchLoad, 5000);
+    return () => clearInterval(id);
+  }, []);
 
   const appliedCount = recommendations.filter(r => r.applied).length;
   const pendingCount = recommendations.filter(r => !r.applied).length;
@@ -218,9 +233,12 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <Gauge className="w-7 h-7 text-yellow-400" />
             <div>
-              <h1 className="text-2xl font-bold text-white">
-                Ultimate Optimization Dashboard
-              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <h1 className="text-2xl font-bold text-white">
+                  Ultimate Optimization Dashboard
+                </h1>
+                <SurfaceTruthBadge variant={engineLoad !== null ? 'LIVE' : 'PARTIAL'} />
+              </div>
               <p className="text-sm text-gray-400">
                 Métriques de performance — Recommandations — Benchmarks
               </p>
@@ -323,6 +341,20 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
               {appliedCount}/{recommendations.length} actions
             </p>
           </Card>
+          {engineLoad !== null && (
+            <Card variant="glass" elevation="md" padding={4}>
+              <div className="flex items-center gap-2 mb-2">
+                <Cpu className="w-4 h-4 text-purple-400" />
+                <span className="text-xs text-gray-400">Charge Engine (live)</span>
+              </div>
+              <p className={`text-3xl font-bold ${engineLoad < 50 ? 'text-green-400' : engineLoad < 80 ? 'text-yellow-400' : 'text-red-400'}`}>
+                {engineLoad}%
+              </p>
+              <Badge variant={engineLoad < 50 ? 'success' : engineLoad < 80 ? 'warning' : 'error'} size="sm" className="mt-1">
+                {engineLoad < 50 ? 'Nominal' : engineLoad < 80 ? 'Élevé' : 'Critique'}
+              </Badge>
+            </Card>
+          )}
         </div>
 
         {/* ── Benchmarks Before/After ── */}

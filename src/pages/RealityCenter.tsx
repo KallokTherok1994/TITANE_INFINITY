@@ -12,6 +12,7 @@
  */
 
 import React, { memo, useEffect, useState, useCallback } from 'react';
+import { invoke } from '@tauri-apps/api/core';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -45,6 +46,15 @@ interface ModuleStatus {
   conformance: number; // 0-100
   drift: number; // delta
   status: 'nominal' | 'degraded' | 'critical' | 'unknown';
+}
+
+/** Type retourné par cp_get_modules_status (Rust) */
+interface BackendModuleStatus {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  icon: string;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -82,87 +92,69 @@ function statusToHealth(
 export const RealityCenter: React.FC = memo(() => {
   const { health, refreshHealth, isMonitoring } = useSystemHealth();
   const isLoading = isMonitoring && !health;
+  const [liveConnected, setLiveConnected] = useState(false);
 
-  const [modules, setModules] = useState<ModuleStatus[]>([
-    {
-      name: 'Cognitive Engine',
-      expected: 'ACTIVE',
-      actual: 'ACTIVE',
-      conformance: 100,
-      drift: 0,
-      status: 'nominal',
-    },
-    {
-      name: 'Memory Persistence',
-      expected: 'HEALTHY',
-      actual: 'HEALTHY',
-      conformance: 97,
-      drift: 3,
-      status: 'nominal',
-    },
-    {
-      name: 'Singularity Bridge',
-      expected: 'SYNCED',
-      actual: 'SYNCED',
-      conformance: 100,
-      drift: 0,
-      status: 'nominal',
-    },
-    {
-      name: 'IPC Gateway',
-      expected: 'OPEN',
-      actual: 'OPEN',
-      conformance: 100,
-      drift: 0,
-      status: 'nominal',
-    },
-    {
-      name: 'Voice Engine',
-      expected: 'READY',
-      actual: 'STANDBY',
-      conformance: 75,
-      drift: 25,
-      status: 'degraded',
-    },
-    {
-      name: 'Visual Engine v21',
-      expected: 'RUNNING',
-      actual: 'RUNNING',
-      conformance: 98,
-      drift: 2,
-      status: 'nominal',
-    },
-    {
-      name: 'Evolution Monitor',
-      expected: 'TRACKING',
-      actual: 'PAUSED',
-      conformance: 60,
-      drift: 40,
-      status: 'degraded',
-    },
-    {
-      name: 'Security Sandbox',
-      expected: 'ENFORCED',
-      actual: 'ENFORCED',
-      conformance: 100,
-      drift: 0,
-      status: 'nominal',
-    },
-  ]);
+  const FALLBACK_MODULES: ModuleStatus[] = [
+    { name: 'Cognitive Engine', expected: 'ACTIVE', actual: 'ACTIVE', conformance: 100, drift: 0, status: 'nominal' },
+    { name: 'Memory Persistence', expected: 'HEALTHY', actual: 'HEALTHY', conformance: 97, drift: 3, status: 'nominal' },
+    { name: 'Singularity Bridge', expected: 'SYNCED', actual: 'SYNCED', conformance: 100, drift: 0, status: 'nominal' },
+    { name: 'IPC Gateway', expected: 'OPEN', actual: 'OPEN', conformance: 100, drift: 0, status: 'nominal' },
+    { name: 'Voice Engine', expected: 'READY', actual: 'STANDBY', conformance: 75, drift: 25, status: 'degraded' },
+    { name: 'Visual Engine v21', expected: 'RUNNING', actual: 'RUNNING', conformance: 98, drift: 2, status: 'nominal' },
+    { name: 'Evolution Monitor', expected: 'TRACKING', actual: 'PAUSED', conformance: 60, drift: 40, status: 'degraded' },
+    { name: 'Security Sandbox', expected: 'ENFORCED', actual: 'ENFORCED', conformance: 100, drift: 0, status: 'nominal' },
+  ];
+
+  const [modules, setModules] = useState<ModuleStatus[]>(FALLBACK_MODULES);
 
   const [lastRefresh, setLastRefresh] = useState(new Date());
+
+  // Charger les modules depuis le backend IPC (cp_get_modules_status)
+  useEffect(() => {
+    const loadModules = () => {
+      invoke<BackendModuleStatus[]>('cp_get_modules_status')
+        .then(backendModules => {
+          const mapped: ModuleStatus[] = backendModules.map(m => ({
+            name: m.name,
+            expected: 'ACTIVE',
+            actual: m.enabled ? 'ACTIVE' : 'DISABLED',
+            conformance: m.enabled ? 100 : 0,
+            drift: m.enabled ? 0 : 100,
+            status: m.enabled ? 'nominal' : 'degraded',
+          }));
+          setModules(mapped);
+          setLiveConnected(true);
+        })
+        .catch(() => {
+          setModules(FALLBACK_MODULES);
+          setLiveConnected(false);
+        });
+    };
+    loadModules();
+    const id = setInterval(loadModules, 30_000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleRefresh = useCallback(async () => {
     await refreshHealth();
     setLastRefresh(new Date());
-    // Conformance stable — values proviennent des données initiales (pas de simulation aléatoire)
+    // Recharge aussi les modules depuis le backend
+    invoke<BackendModuleStatus[]>('cp_get_modules_status')
+      .then(backendModules => {
+        const mapped: ModuleStatus[] = backendModules.map(m => ({
+          name: m.name,
+          expected: 'ACTIVE',
+          actual: m.enabled ? 'ACTIVE' : 'DISABLED',
+          conformance: m.enabled ? 100 : 0,
+          drift: m.enabled ? 0 : 100,
+          status: m.enabled ? 'nominal' : 'degraded',
+        }));
+        setModules(mapped);
+        setLiveConnected(true);
+      })
+      .catch(() => setLiveConnected(false));
   }, [refreshHealth]);
-
-  // Auto-refresh toutes les 30s
-  useEffect(() => {
-    const id = setInterval(handleRefresh, 30_000);
-    return () => clearInterval(id);
-  }, [handleRefresh]);
 
   const globalConformance =
     modules.reduce((acc, m) => acc + m.conformance, 0) / modules.length;
@@ -179,8 +171,8 @@ export const RealityCenter: React.FC = memo(() => {
       data-testid="page-reality-center"
     >
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Runtime Truth Badge — PARTIAL: health system réel + modules UI hardcodés */}
-        <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
+        {/* Runtime Truth Badge — LIVE si cp_get_modules_status répond, sinon DEGRADED */}
+        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'DEGRADED'} className="mb-2" />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

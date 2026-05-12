@@ -14,6 +14,7 @@
  */
 
 import { ModuleCard } from '../components/ModuleCard';
+import { SurfaceTruthBadge } from '../components/system/SurfaceTruthBadge';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber } from '../utils/dataUtils';
 import type { WatchdogData } from '../core/ARCHITECTURE_TYPES_v∞';
@@ -39,17 +40,26 @@ export const Watchdog = () => {
   const monitored = extractNumber(data?.monitored, 0);
   const healthy = extractNumber(data?.healthy, 0);
   const critical = extractNumber(data?.critical, 0);
+  const isConnected = data !== null;
 
   return (
     <div className="module-page" data-testid="page-watchdog">
       <div className="module-page__header">
-        <h1 className="module-page__title">
-          <span className="module-page__icon">👁️</span>
-          Watchdog — Surveillance Temps Réel
-        </h1>
+        <div className="module-page__header-row" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <h1 className="module-page__title" style={{ margin: 0 }}>
+            <span className="module-page__icon">👁️</span>
+            Watchdog — Surveillance Temps Réel
+          </h1>
+          <SurfaceTruthBadge variant={isConnected ? 'LIVE' : 'DEGRADED'} />
+        </div>
         <p className="module-page__subtitle">
           Monitoring continu et détection d&apos;anomalies
         </p>
+        {!isConnected && (
+          <p style={{ color: '#f59e0b', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+            ⚠️ Backend non répondant — les métriques seront actualisées automatiquement
+          </p>
+        )}
       </div>
 
       <div className="module-page__grid">

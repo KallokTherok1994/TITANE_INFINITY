@@ -28,6 +28,45 @@ import type {
   AdaptiveData,
 } from '../types/system';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Types des réponses IPC réelles (engine_commands.rs)
+// ─────────────────────────────────────────────────────────────────────────────
+interface SentinelStateResponse {
+  health: string;
+  alert_count: number;
+  active_monitors: number;
+  protection_level: number;
+  last_check_ms: number;
+  initialized: boolean;
+}
+
+interface SingularityStateResponse {
+  nexus: {
+    health: string;
+    coordination_count: number;
+    active_connections: number;
+    last_coordination_ms: number;
+    initialized: boolean;
+  };
+  harmonia: {
+    health: string;
+    harmony_index: number;
+    balance_score: number;
+    last_check_ms: number;
+    initialized: boolean;
+  };
+  sentinel: SentinelStateResponse;
+  cognition: {
+    load: number;
+    active_thoughts: number;
+    depth: number;
+    last_update_ms: number;
+  };
+  timeline_events: number;
+  init_timestamp_ms: number;
+  last_sync_ms: number;
+}
+
 export function useTitaneCore(autoRefresh: boolean = true) {
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
   const [loading, setLoading] = useState(false);
@@ -97,33 +136,69 @@ export function useTitaneCore(autoRefresh: boolean = true) {
     return JSON.parse(flowsJson) as HarmoniaFlows;
   }, []);
 
+  // ─── Proxy live: engine_get_sentinel_state ───────────────────────────────
   const getSentinelStatus = useCallback(async (): Promise<SentinelAlerts> => {
-    const statusJson = await tauri<string>('sentinel_get_alerts');
-    return JSON.parse(statusJson) as SentinelAlerts;
+    try {
+      const state = await tauri<SentinelStateResponse>('engine_get_sentinel_state');
+      return {
+        alert_count: state.alert_count,
+        integrity_score: Math.max(0, Math.min(100, state.protection_level)),
+      };
+    } catch (err) {
+      logger.warn('[getSentinelStatus] engine_get_sentinel_state failed', err);
+      return { alert_count: 0, integrity_score: 0 };
+    }
   }, []);
 
+  // ─── Proxy live: engine_get_singularity_state → WatchdogData ─────────────
   const getWatchdogData = useCallback(async (): Promise<{
     data: WatchdogData;
     logs: string[];
   }> => {
-    const [dataJson, logs] = await Promise.all([
-      tauri<string>('watchdog_get_data'),
-      tauri<string[]>('watchdog_get_logs'),
-    ]);
-    return {
-      data: JSON.parse(dataJson) as WatchdogData,
-      logs,
-    };
+    try {
+      const state = await tauri<SingularityStateResponse>('engine_get_singularity_state');
+      return {
+        data: {
+          tick_misses: state.sentinel.alert_count,
+          module_health: Math.max(0, Math.min(100, 100 - state.cognition.load * 100)),
+          last_check: state.last_sync_ms,
+        },
+        logs: [],
+      };
+    } catch (err) {
+      logger.warn('[getWatchdogData] engine_get_singularity_state failed', err);
+      return { data: { tick_misses: 0, module_health: 0, last_check: 0 }, logs: [] };
+    }
   }, []);
 
+  // ─── Proxy live: engine_get_singularity_state → SelfHealData ─────────────
   const getSelfHealData = useCallback(async (): Promise<SelfHealData> => {
-    const dataJson = await tauri<string>('selfheal_get_data');
-    return JSON.parse(dataJson) as SelfHealData;
+    try {
+      const state = await tauri<SingularityStateResponse>('engine_get_singularity_state');
+      return {
+        corrections_applied: Number(state.timeline_events),
+        anomalies_detected: state.sentinel.alert_count,
+        heal_efficiency: Math.round(state.harmonia.balance_score),
+      };
+    } catch (err) {
+      logger.warn('[getSelfHealData] engine_get_singularity_state failed', err);
+      return { corrections_applied: 0, anomalies_detected: 0, heal_efficiency: 0 };
+    }
   }, []);
 
+  // ─── Proxy live: engine_get_singularity_state → AdaptiveData ─────────────
   const getAdaptiveData = useCallback(async (): Promise<AdaptiveData> => {
-    const dataJson = await tauri<string>('adaptive_get_data');
-    return JSON.parse(dataJson) as AdaptiveData;
+    try {
+      const state = await tauri<SingularityStateResponse>('engine_get_singularity_state');
+      return {
+        adaptability: Math.min(1, state.cognition.active_thoughts / 10),
+        stability: Math.max(0, Math.min(100, state.harmonia.balance_score)),
+        trend: state.harmonia.initialized ? 0.5 : -0.5,
+      };
+    } catch (err) {
+      logger.warn('[getAdaptiveData] engine_get_singularity_state failed', err);
+      return { adaptability: 0, stability: 0, trend: 0 };
+    }
   }, []);
 
   useEffect(() => {

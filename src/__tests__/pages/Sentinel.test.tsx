@@ -17,6 +17,9 @@ vi.mock('@/hooks/useEngineSubscription', () => ({
   useEngineSubscription: () => ({ data: null, loading: false }),
 }));
 
+// ── Mock @tauri-apps/api/core ────────────────────────────────────
+vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn().mockResolvedValue(null) }));
+
 // ── Helpers ──────────────────────────────────────────────────────
 function renderPage() {
   return render(

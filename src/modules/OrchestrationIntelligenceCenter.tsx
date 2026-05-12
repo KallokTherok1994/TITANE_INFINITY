@@ -14,10 +14,20 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import { PageHealthBanner } from '../components/system/PageHealthBanner';
+import { SurfaceTruthBadge } from '../components/system/SurfaceTruthBadge';
+import { invoke } from '@tauri-apps/api/core';
+
+interface SingularityLiveState {
+  nexus: { health: string; coordination_count: number; active_connections: number; initialized: boolean };
+  harmonia: { health: string; harmony_index: number; balance_score: number; initialized: boolean };
+  sentinel: { health: string; alert_count: number; active_monitors: number; protection_level: number; initialized: boolean };
+  cognition: { load: number; active_thoughts: number; depth: number };
+  timeline_events: number;
+  last_sync_ms: number;
+}
 
 type Tab =
   | 'overview'
@@ -30,24 +40,39 @@ type Tab =
 
 const OrchestrationIntelligenceCenter: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const [liveState, setLiveState] = useState<SingularityLiveState | null>(null);
+  const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    const fetchState = () => {
+      invoke<SingularityLiveState>('engine_get_singularity_state')
+        .then(state => {
+          setLiveState(state);
+          setLiveConnected(true);
+        })
+        .catch(() => {
+          setLiveConnected(false);
+        });
+    };
+
+    fetchState();
+    const interval = setInterval(fetchState, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div
       className="orchestration-intelligence-center p-6 space-y-6"
       data-testid="page-orchestration-intelligence"
     >
-      {/* SIMULATED_UI Banner — UI_BACKEND_TRUTH_CERTIFICATION_v46 */}
-      <PageHealthBanner
-        route="/orchestration-intelligence"
-        variant="SIMULATED"
-        message="Interface simulée — les métriques affichées sont des données de démonstration, aucun wiring backend réel n'est connecté sur cette surface."
-        dismissible
-      />
       {/* Header */}
       <div className="header mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-          🔥 Orchestration & Intelligence Center
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+          <h1 className="text-4xl font-bold bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent" style={{ margin: 0 }}>
+            🔥 Orchestration & Intelligence Center
+          </h1>
+          <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'DEGRADED'} />
+        </div>
         <p className="text-gray-400">
           La salle des machines consciente de TITANE∞ — Orchestration cognitive,
           technique, IA hybrides & flux internes
@@ -84,7 +109,7 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
 
       {/* Content */}
       <div className="content">
-        {activeTab === 'overview' && <OverviewSection />}
+        {activeTab === 'overview' && <OverviewSection liveState={liveState} />}
         {activeTab === 'meta' && <MetaOrchestrationSection />}
         {activeTab === 'orchestration' && <OrchestrationSection />}
         {activeTab === 'quantum' && <QuantumLayerSection />}
@@ -100,7 +125,14 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
 // SECTION 1: Overview du système d'orchestration
 // ═══════════════════════════════════════════════════════════════════════════
 
-const OverviewSection: React.FC = () => {
+const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({ liveState }) => {
+  const cogLoad = liveState ? `${Math.round(liveState.cognition.load * 100)}%` : '—';
+  const nexusHealth = liveState?.nexus.health ?? '—';
+  const sysStatus = liveState ? (liveState.sentinel.alert_count === 0 ? 'Stable' : 'Alerte') : '—';
+  const activeConnections = liveState ? String(liveState.nexus.active_connections) : '—';
+  const timelineEvents = liveState ? String(liveState.timeline_events) : '—';
+  const lastSync = liveState ? `${Math.round((Date.now() - liveState.last_sync_ms) / 1000)}s ago` : '—';
+
   return (
     <div className="space-y-6">
       <TSectionHeader
@@ -108,14 +140,14 @@ const OverviewSection: React.FC = () => {
         subtitle="État général TITANE, moteurs actifs, IA prioritaire, charge cognitive"
       />
 
-      {/* Dashboard hiérarchique */}
+      {/* Dashboard hiérarchique — données live engine_get_singularity_state */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TMetric label="État Système" value="Stable" icon="✅" />
-        <TMetric label="Moteurs Actifs" value="18/20" icon="⚙️" />
-        <TMetric label="IA Prioritaire" value="Claude Sonnet 4.5" icon="🤖" />
-        <TMetric label="Charge Cognitive" value="42%" icon="🧪" />
-        <TMetric label="Flux Interne" value="Optimal" icon="🌀" />
-        <TMetric label="Dernière Action Méta" value="15s ago" icon="🧠" />
+        <TMetric label="État Système" value={sysStatus} icon="✅" />
+        <TMetric label="Connexions Nexus" value={activeConnections} icon="⚙️" />
+        <TMetric label="Santé Nexus" value={nexusHealth} icon="🔗" />
+        <TMetric label="Charge Cognitive" value={cogLoad} icon="🧪" />
+        <TMetric label="Timeline Events" value={timelineEvents} icon="🌀" />
+        <TMetric label="Dernière Sync" value={lastSync} icon="🧠" />
       </div>
 
       {/* Status Cards */}
@@ -128,7 +160,7 @@ const OverviewSection: React.FC = () => {
             {[
               { name: 'IdentityEngine', status: 'Running', priority: 100 },
               { name: 'MemoryEngine', status: 'Running', priority: 95 },
-              { name: 'CognitiveEngine', status: 'Running', priority: 90 },
+              { name: 'CognitiveEngine', status: liveState ? (liveState.cognition.load > 0.9 ? 'Overloaded' : 'Running') : 'Running', priority: 90 },
               { name: 'ChatEngine', status: 'Running', priority: 85 },
             ].map(engine => (
               <div
@@ -137,7 +169,7 @@ const OverviewSection: React.FC = () => {
               >
                 <span className="font-semibold">{engine.name}</span>
                 <div className="flex items-center gap-2">
-                  <TBadge variant="success">{engine.status}</TBadge>
+                  <TBadge variant={engine.status === 'Running' ? 'success' : 'warning'}>{engine.status}</TBadge>
                   <span className="text-sm text-gray-400">P{engine.priority}</span>
                 </div>
               </div>
