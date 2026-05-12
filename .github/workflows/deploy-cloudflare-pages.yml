@@ -22,6 +22,7 @@ permissions:
 
 env:
   NODE_VERSION: '24'
+  STORE_PATH: '' # Dynamically set via pnpm store path in 'Get pnpm store directory' step
 
 jobs:
   deploy:

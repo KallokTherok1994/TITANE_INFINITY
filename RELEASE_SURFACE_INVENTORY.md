@@ -5,13 +5,14 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.3 — local build + deployment PASS — system install pending sudo — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.17 — build + deployment/latest PASS — system install BLOCKED_SUDO at 33.0.16 → to be resolved in 33.0.18 BUILD ALL — Historical baseline preserved below)
 
 ---
-> **A1 VERSION AUTHORITY NOTE (2026-05-11)**
-> Current `package.json` version: **33.0.16** — BUILD ALL complete, 9057 Vitest PASS, Tauri release artifacts built, AutoHeal AH-v83
-> Latest proven sealed release: **v33.0.16** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.16.txt`)
-> Canonical version claim in this file was last updated through v33.0.16. Historical entries below are preserved as-is (append-only policy).
+> **A1 VERSION AUTHORITY NOTE (2026-05-12)**
+> Current `package.json` version: **33.0.17** — BUILD ALL complete, Tauri release artifacts built (AppImage+DEB+RPM), AutoHeal AH-v84/v85 sealed
+> Latest proven sealed release: **v33.0.17** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.17.txt`)
+> Canonical version claim in this file was last updated through v33.0.17. Historical entries below are preserved as-is (append-only policy).
+> BUILD ALL 33.0.18 in progress — system install + icon sync + full test seal pending this session.
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 ---
 

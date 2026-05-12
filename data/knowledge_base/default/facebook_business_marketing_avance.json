@@ -38,13 +38,13 @@
           "section_a_propos": "Compléter à 100% : description, site web, horaires, téléphone, email, catégorie précise. Google indexe les Pages Facebook.",
           "modele_reponse": "Configurer les réponses automatiques pour les messages fréquents (heures d'ouverture, délai livraison, politique retour). Maintenir un temps de réponse < 1 heure."
         },
-      "contenu_organique": {
-        "regle_80_20": "80% contenu valeur/éducation/divertissement, 20% promotionnel maximum. Algorithme pénalise les pages trop commerciales.",
-        "formats_performants": "Vidéos natives (algorithme favorise) > Reels > Carrousels > Images > Texte seul. Vidéo génère 3× plus d'engagement en moyenne.",
-        "frequence": "3-5 publications par semaine. Cohérence > intensité. Publier aux heures d'audience (souvent 11h-13h et 19h-21h selon le public cible).",
-        "contenu_gagnant": "Derrière les coulisses, process de création, histoire de la marque, témoignages clients avec photos, tutoriels, polls et sondages, annonces de nouveautés.",
-        "originalite": "Meta renforce la portée et la monétisation du contenu original et dépriorise les copies, reposts à faible valeur et contenus trop recyclés."
-      },
+        "contenu_organique": {
+          "regle_80_20": "80% contenu valeur/éducation/divertissement, 20% promotionnel maximum. Algorithme pénalise les pages trop commerciales.",
+          "formats_performants": "Vidéos natives (algorithme favorise) > Reels > Carrousels > Images > Texte seul. Vidéo génère 3× plus d'engagement en moyenne.",
+          "frequence": "3-5 publications par semaine. Cohérence > intensité. Publier aux heures d'audience (souvent 11h-13h et 19h-21h selon le public cible).",
+          "contenu_gagnant": "Derrière les coulisses, process de création, histoire de la marque, témoignages clients avec photos, tutoriels, polls et sondages, annonces de nouveautés.",
+          "originalite": "Meta renforce la portée et la monétisation du contenu original et dépriorise les copies, reposts à faible valeur et contenus trop recyclés."
+        },
         "facebook_shop": {
           "principe": "Boutique native intégrée dans la Page Facebook et Instagram. Permet aux clients d'acheter sans quitter Meta. Réduction de friction = augmentation de conversion.",
           "configuration": "Commerce Manager → Créer une boutique → Choisir méthode de paiement → Créer/importer catalogue → Créer collections → Personnaliser l'apparence → Soumettre pour examen.",
