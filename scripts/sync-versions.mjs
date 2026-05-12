@@ -188,6 +188,45 @@ if (fs.existsSync(runtimeStableManifestPath)) {
   console.warn('  ⚠️  runtime/stable/manifest.json not found, skipping');
 }
 
+// ── 7. Sync index.html (header comment + meta description + meta version + title) ──
+
+const indexHtmlPath = path.join(root, 'index.html');
+if (fs.existsSync(indexHtmlPath)) {
+  let html = fs.readFileSync(indexHtmlPath, 'utf8');
+  const htmlOrig = html;
+
+  // Header comment: <!-- TITANE_INFINITY vX.Y.Z — ...
+  html = html.replace(
+    /(TITANE_INFINITY v)\d+\.\d+\.\d+/,
+    `$1${version}`
+  );
+  // Meta description: TITANE∞ vX.Y.Z
+  html = html.replace(
+    /(TITANE\u221e v)\d+\.\d+\.\d+/,
+    `$1${version}`
+  );
+  // Meta name="version" content="X.Y.Z"
+  html = html.replace(
+    /(<meta\s+name="version"\s+content=")\d+\.\d+\.\d+(")/, 
+    `$1${version}$2`
+  );
+  // <title>TITANE∞ vX.Y.Z
+  html = html.replace(
+    /(<title>TITANE\u221e v)\d+\.\d+\.\d+/,
+    `$1${version}`
+  );
+
+  if (html !== htmlOrig) {
+    if (!dryRun) fs.writeFileSync(indexHtmlPath, html, 'utf8');
+    console.log(`  ✅ index.html → ${version}`);
+    changed++;
+  } else {
+    console.log(`  ✓  index.html already at ${version}`);
+  }
+} else {
+  console.warn('  ⚠️  index.html not found, skipping');
+}
+
 // ── Summary ───────────────────────────────────────────────────────────────────
 
 if (dryRun) {

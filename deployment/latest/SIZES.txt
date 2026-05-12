@@ -1,2 +1,2 @@
-95M	deployment/latest/titane-infinity_33.0.16_amd64.AppImage
-24M	deployment/latest/titane-infinity_33.0.16_amd64.deb
+AppImage: 95M
+DEB:      24M
