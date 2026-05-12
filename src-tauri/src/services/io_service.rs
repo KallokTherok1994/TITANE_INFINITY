@@ -220,8 +220,15 @@ mod tests {
         let dir = tempdir().expect("temp dir");
         let service = IoService::new(dir.path().to_path_buf());
 
+        // Use a platform-specific absolute path that is guaranteed to be outside the temp base.
+        // On Windows, /etc/passwd is not is_absolute() (no drive letter), so use a Windows path.
+        #[cfg(windows)]
+        let outside = Path::new("C:\\Windows\\System32\\drivers\\etc\\hosts");
+        #[cfg(not(windows))]
+        let outside = Path::new("/etc/passwd");
+
         let err = service
-            .read_file(Path::new("/etc/passwd"))
+            .read_file(outside)
             .await
             .expect_err("outside path must be rejected");
 

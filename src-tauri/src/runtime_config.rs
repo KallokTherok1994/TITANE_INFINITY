@@ -207,6 +207,12 @@ mod tests {
 
     #[test]
     fn test_collect_runtime_config_defaults() {
+        // Isolation: remove env vars that parallel tests (e.g. test_embedding_with_unavailable_ollama)
+        // may have leaked into the process-global env before this test runs on Windows CI.
+        std::env::remove_var("OLLAMA_BASE_URL");
+        std::env::remove_var("OLLAMA_URL");
+        std::env::remove_var("OLLAMA_DEFAULT_MODEL");
+        std::env::remove_var("OLLAMA_MODEL");
         let engine = SecureSecretsEngine::default();
         let config = collect_runtime_config(&engine);
         assert_eq!(config.ollama_url, "http://127.0.0.1:11434");

@@ -6,12 +6,18 @@ function readRepoFile(path: string): string {
   return readFileSync(resolve(process.cwd(), path), 'utf8');
 }
 
+function readCurrentVersion(): string {
+  const pkg = JSON.parse(readRepoFile('package.json')) as { version: string };
+  return pkg.version;
+}
+
 describe('v73 production-visible version sync', () => {
   it('index metadata reflects the current production version marker', () => {
     const html = readRepoFile('index.html');
-    expect(html).toContain('meta name="version" content="33.0.15"');
+    const version = readCurrentVersion();
+    expect(html).toContain(`meta name="version" content="${version}"`);
     expect(html).toContain(
-      '<title>TITANE∞ v33.0.15 - Cognitive Operating System</title>'
+      `<title>TITANE∞ v${version} - Cognitive Operating System</title>`
     );
   });
 
