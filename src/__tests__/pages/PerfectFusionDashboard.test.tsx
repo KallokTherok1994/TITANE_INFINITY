@@ -1,13 +1,21 @@
 /**
  * Tests PerfectFusionDashboard — Rule 16 coverage
- * Smoke render + SurfaceTruthBadge SIMULATED + plus de Math.random()
- * AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
+ * Smoke render + SurfaceTruthBadge LIVE/PARTIAL/DEGRADED (AH-v95)
+ * AH-v88-PAGES-BADGE-STABILIZE-2026-05-12 → AH-v95-2026-05-26
  */
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { PerfectFusionDashboard } from '@/pages/PerfectFusionDashboard';
+
+// ── Mock @tauri-apps/api/core ────────────────────────────────────
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn().mockResolvedValue({
+    harmonia: { balance_score: 92, initialized: true },
+    cognition: { load: 0.15 },
+  }),
+}));
 
 // ── Mock useSingularity ──────────────────────────────────────────
 vi.mock('@/hooks/useSingularity', () => ({
@@ -48,9 +56,13 @@ describe('PerfectFusionDashboard', () => {
     expect(screen.getByTestId('page-fusion')).toBeInTheDocument();
   });
 
-  it('shows SurfaceTruthBadge with SIMULATED variant', () => {
+  it('shows SurfaceTruthBadge (LIVE, PARTIAL, or DEGRADED — not SIMULATED)', () => {
     renderPage();
-    expect(screen.getByTestId('surface-truth-badge-simulated')).toBeInTheDocument();
+    const badge =
+      screen.queryByTestId('surface-truth-badge-live') ??
+      screen.queryByTestId('surface-truth-badge-partial') ??
+      screen.queryByTestId('surface-truth-badge-degraded');
+    expect(badge).not.toBeNull();
   });
 
   it('renders page title', () => {

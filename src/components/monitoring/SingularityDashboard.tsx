@@ -21,6 +21,7 @@
 import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useSingularity } from '@/hooks/useSingularity';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -772,18 +773,21 @@ export const SingularityDashboard = memo(function SingularityDashboard({
   const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null);
   const [lastUpdate, setLastUpdate] = useState<number>(Date.now());
   const [engines, setEngines] = useState<EngineMetric[]>([]);
+  const [metricsLive, setMetricsLive] = useState(false);
 
   // Fetch system metrics
   const fetchSystemMetrics = useCallback(async () => {
     try {
       const result = (await tauriClient.getSystemMetrics()) as SystemMetrics;
       setSystemMetrics(result);
+      setMetricsLive(true);
       setLastUpdate(Date.now());
     } catch {
-      // Fallback mock data
-      setSystemMetrics({
-        cpu_usage_percent: Math.random() * 30 + 10,
-        memory_used_mb: 800 + Math.random() * 200,
+      // Fallback with stable values (no Math.random)
+      setMetricsLive(false);
+      setSystemMetrics(prev => prev ?? {
+        cpu_usage_percent: 0,
+        memory_used_mb: 0,
         memory_total_mb: 16384,
         uptime_seconds: Math.floor(Date.now() / 1000) % 86400,
       });
@@ -939,6 +943,9 @@ export const SingularityDashboard = memo(function SingularityDashboard({
       }}
     >
       {/* Header */}
+      <div style={{ marginBottom: '12px' }}>
+        <SurfaceTruthBadge variant={metricsLive ? 'LIVE' : singularity.isInitialized ? 'PARTIAL' : 'DEGRADED'} />
+      </div>
       <div
         style={{
           display: 'flex',
