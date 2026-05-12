@@ -17,6 +17,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { useSingularity } from '../hooks/useSingularity';
 import { useMetaEnergy } from '../hooks/useMetaEnergy';
 import {
@@ -107,7 +108,9 @@ const SingularityMonitor = memo(() => {
       data-testid="page-singularity-monitor"
     >
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* ── Header ── */}
+        {/* Runtime Truth Badge — LIVE: hooks IPC réels + MetaEnergy backend */}
+        <SurfaceTruthBadge variant="LIVE" className="mb-2" />
+        {/* ── Header ── */
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Atom className="w-7 h-7 text-cyan-400" />

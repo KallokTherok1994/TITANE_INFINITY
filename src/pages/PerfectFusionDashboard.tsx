@@ -160,13 +160,8 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await new Promise(r => setTimeout(r, 600));
-    setEngines(prev =>
-      prev.map(e => ({
-        ...e,
-        syncScore: Math.max(0.7, Math.min(1, e.syncScore + (Math.random() - 0.5) * 0.05)),
-        latencyMs: Math.max(2, Math.round(e.latencyMs + (Math.random() - 0.5) * 5)),
-      }))
-    );
+    // syncScore et latencyMs restent stables — source IPC useSingularity() uniquement
+    setEngines(prev => prev);
     setIsRefreshing(false);
   };
 
@@ -179,8 +174,8 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6" data-testid="page-fusion">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-        <SurfaceTruthBadge variant="PARTIAL" />
+        {/* Runtime Truth Badge — SIMULATED: 9 nodes sans source IPC par-engine, pulse stable */}
+        <SurfaceTruthBadge variant="SIMULATED" />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

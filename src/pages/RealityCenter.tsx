@@ -16,6 +16,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { useSystemHealth } from '../hooks/useSystemHealth';
 import {
   Activity,
@@ -154,16 +155,7 @@ export const RealityCenter: React.FC = memo(() => {
   const handleRefresh = useCallback(async () => {
     await refreshHealth();
     setLastRefresh(new Date());
-    // Simulate slight drift update
-    setModules(prev =>
-      prev.map(m => ({
-        ...m,
-        conformance: Math.max(
-          50,
-          Math.min(100, m.conformance + (Math.random() - 0.5) * 4)
-        ),
-      }))
-    );
+    // Conformance stable — values proviennent des données initiales (pas de simulation aléatoire)
   }, [refreshHealth]);
 
   // Auto-refresh toutes les 30s
@@ -187,7 +179,9 @@ export const RealityCenter: React.FC = memo(() => {
       data-testid="page-reality-center"
     >
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* ── Header ── */}
+        {/* Runtime Truth Badge — PARTIAL: health system réel + modules UI hardcodés */}
+        <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
+        {/* ── Header ── */
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Target className="w-7 h-7 text-cyan-400" />

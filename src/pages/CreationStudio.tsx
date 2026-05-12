@@ -15,6 +15,7 @@ import React, { useState, memo } from 'react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import {
   Layers,
   Plus,
@@ -166,6 +167,8 @@ export const CreationStudio: React.FC = memo(() => {
       className="min-h-screen bg-gray-900 text-white"
       data-testid="page-creation-studio"
     >
+      {/* Runtime Truth Badge — DISPLAY_ONLY: UI statique, pas de store projets */}
+      <SurfaceTruthBadge variant="DISPLAY_ONLY" className="px-6 pt-4" />
       {/* ── Header ── */}
       <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
