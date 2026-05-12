@@ -1260,14 +1260,16 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
       };
     });
 
-    const snapshotTimeline: TimelineEvent[] = snapshots.map(snapshot => ({
-      id: `snapshot-${snapshot.id}`,
-      date: new Date(snapshot.timestamp * 1000),
-      title: `Snapshot ${snapshot.version}`,
-      type: 'milestone' as const,
-      description: `Niveau ${snapshot.context.level} · XP ${snapshot.context.xp} · ${snapshot.context.personaMood}`,
-      importance: 'high' as const,
-    }));
+    const snapshotTimeline: TimelineEvent[] = snapshots
+      .filter(snapshot => snapshot.timestamp > 0)
+      .map(snapshot => ({
+        id: `snapshot-${snapshot.id}`,
+        date: new Date(snapshot.timestamp * 1000),
+        title: `Snapshot ${snapshot.version}`,
+        type: 'milestone' as const,
+        description: `Niveau ${snapshot.context.level} · XP ${snapshot.context.xp} · ${snapshot.context.personaMood}`,
+        importance: 'high' as const,
+      }));
 
     return [...agendaTimeline, ...snapshotTimeline];
   }, [agendaEvents, snapshots]);
@@ -1503,6 +1505,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 }) => {
   const { success, error: errorToast } = useToast();
   const formatDate = (timestamp: number): string => {
+    if (!timestamp || timestamp <= 0) return 'N/A';
     return new Date(timestamp * 1000).toLocaleString('fr-FR');
   };
 
@@ -1604,12 +1607,20 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
           />
           <TMetric
             label="Plus Ancien"
-            value={new Date(stats.oldestSnapshot * 1000).toLocaleDateString('fr-FR')}
+            value={
+              stats.oldestSnapshot > 0
+                ? new Date(stats.oldestSnapshot * 1000).toLocaleDateString('fr-FR')
+                : 'N/A'
+            }
             icon="⏪"
           />
           <TMetric
             label="Plus Récent"
-            value={new Date(stats.newestSnapshot * 1000).toLocaleDateString('fr-FR')}
+            value={
+              stats.newestSnapshot > 0
+                ? new Date(stats.newestSnapshot * 1000).toLocaleDateString('fr-FR')
+                : 'N/A'
+            }
             icon="⏩"
           />
         </div>

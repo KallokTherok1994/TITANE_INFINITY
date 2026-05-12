@@ -196,25 +196,16 @@ if (fs.existsSync(indexHtmlPath)) {
   const htmlOrig = html;
 
   // Header comment: <!-- TITANE_INFINITY vX.Y.Z — ...
-  html = html.replace(
-    /(TITANE_INFINITY v)\d+\.\d+\.\d+/,
-    `$1${version}`
-  );
+  html = html.replace(/(TITANE_INFINITY v)\d+\.\d+\.\d+/, `$1${version}`);
   // Meta description: TITANE∞ vX.Y.Z
-  html = html.replace(
-    /(TITANE\u221e v)\d+\.\d+\.\d+/,
-    `$1${version}`
-  );
+  html = html.replace(/(TITANE\u221e v)\d+\.\d+\.\d+/, `$1${version}`);
   // Meta name="version" content="X.Y.Z"
   html = html.replace(
-    /(<meta\s+name="version"\s+content=")\d+\.\d+\.\d+(")/, 
+    /(<meta\s+name="version"\s+content=")\d+\.\d+\.\d+(")/,
     `$1${version}$2`
   );
   // <title>TITANE∞ vX.Y.Z
-  html = html.replace(
-    /(<title>TITANE\u221e v)\d+\.\d+\.\d+/,
-    `$1${version}`
-  );
+  html = html.replace(/(<title>TITANE\u221e v)\d+\.\d+\.\d+/, `$1${version}`);
 
   if (html !== htmlOrig) {
     if (!dryRun) fs.writeFileSync(indexHtmlPath, html, 'utf8');
