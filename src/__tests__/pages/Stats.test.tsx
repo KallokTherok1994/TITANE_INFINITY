@@ -51,9 +51,7 @@ describe('Stats', () => {
 
   it('renders the page container', async () => {
     renderPage();
-    await waitFor(() =>
-      expect(screen.getByTestId('page-stats')).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByTestId('page-stats')).toBeInTheDocument());
   });
 
   it('shows the page title', async () => {

@@ -5,26 +5,26 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.18 — BUILD ALL 2026-05-12 COMPLETE — artifacts PASS — system install PASS (AH-v90) — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v34.0.0 — BUILD ALL 2026-05-12 COMPLETE — MAJOR bump — AH-v92+v93 SEALED)
 
 ---
-> **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 33.0.18 + AH-v90 COMPLETE)**
-> Current `package.json` version: **33.0.18** — BUILD ALL + AH-v87→v90 COMPLETE, Tauri release artifacts rebuilt (AppImage+DEB+RPM), deployed to `deployment/latest/`, system install PASS
-> Latest proven sealed release: **v33.0.18-AH-v90** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt`)
-> BUILD ALL 33.0.18 phases: A(PASS) B(PASS) C(PASS) D(PASS) E(PASS — AH-v90 dpkg exit 0) F(PASS) G(SEALED)
-> Post-BUILD ALL AutoHeal: AH-v87→AH-v90 (display xrandr + gemma2:2b fallback + JSX fixes)
+> **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 34.0.0 MAJOR + AH-v92+v93)**
+> Current `package.json` version: **34.0.0** — MAJOR bump (33.0.18→34.0.0) via `sync-versions.mjs`; AH-v87→v93 cycle complet; Tauri release artifacts rebuilt (AppImage+DEB+RPM v34.0.0); deployed to `deployment/latest/`; system install PASS
+> Latest proven sealed release: **v33.0.18** (SEALED — proof_packs/SEAL_v33.0.18_2026-05-12/VERDICT.md — AH-v87→AH-v92); **v34.0.0** (BUILD ALL in progress — checksums in `RELEASE_ARTIFACTS_CHECKSUMS_34.0.0.txt`)
+> BUILD ALL 34.0.0 phases: A(PASS) B(PASS) C(PASS — sync-versions.mjs) D(in-progress — tauri build) E(pending) F(pending) G(pending)
+> Post-BUILD ALL AutoHeal: AH-v91 (Rule 15 mapping gaps) + AH-v92 (SEAL v33.0.18) + AH-v93 (BUILD ALL v34.0.0 — pending)
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 ---
 
-## Final Release Seal v33.0.18 — 2026-05-12 (BUILD ALL: audit E2E + system install + icon sync + CI fixes)
+## Final Release Seal v34.0.0 — 2026-05-12 (BUILD ALL MAJOR: SEAL v33.0.18 + cycle AH-v87→v93 complet)
 
 | Surface | Truth | Status |
 |---|---|---|
-| `package.json` version | 33.0.18 | ✅ PASS |
-| `src-tauri/Cargo.toml` version | 33.0.18 | ✅ PASS |
-| `src-tauri/tauri.conf.json` version | 33.0.18 | ✅ PASS |
-| `runtime/stable/manifest.json` version | 33.0.18 | ✅ PASS |
-| `tauri.base.json` version | 33.0.18 | ✅ PASS |
+| `package.json` version | 34.0.0 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 34.0.0 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 34.0.0 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 34.0.0 | ✅ PASS |
+| `tauri.base.json` version | 34.0.0 | ✅ PASS |
 | Vitest frontend tests | 9057 PASS / 0 FAIL (560 test files) | ✅ PASS |
 | TypeScript check (`tsc --noEmit`) | PASS | ✅ PASS |
 | ESLint | PASS | ✅ PASS |

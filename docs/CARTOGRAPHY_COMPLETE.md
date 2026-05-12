@@ -1,3 +1,11 @@
+# [2026-05-12] Cartography delta — v34.0.0 MAJOR release + SEAL v33.0.18
+
+- Version bump MAJOR 33.0.18 → 34.0.0 — 8 fichiers synchés via `node scripts/sync-versions.mjs`
+- Prettier fixes post-bump: CHANGELOG.md, runtime/stable/*.json, src-tauri/*.json, src/__tests__/pages/RealityCenter.test.tsx, Stats.test.tsx
+- SEAL v33.0.18 proof pack créé: `proof_packs/SEAL_v33.0.18_2026-05-12/` (gate_report + rollback_plan + VERDICT)
+- AutoHeal AH-v92 (SEAL formel v33.0.18) + AH-v93 (BUILD ALL v34.0.0) appendés
+- Build Tauri v34.0.0 production: AppImage + DEB + RPM
+
 # [2026-05-11] Cartography delta - v80 visual route + desktop conditional gap normalization
 
 - `src/pages/DevPage.tsx` now consumes `formatDevBestProvider()` from `src/pages/devPage.formatters.ts`.

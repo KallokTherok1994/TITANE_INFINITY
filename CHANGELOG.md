@@ -1,5 +1,22 @@
 # [Unreleased] - 2026-05-06 — Advanced Intelligence Program (A0I–D5 SEALED) + Z0 Post-Seal Integrity Audit
 
+## [34.0.0] - 2026-05-12 (BUILD ALL — MAJOR — Cycle AH-v87→v92 SEALED + Rule 15 audit + V34 release)
+
+> **Mode:** DURABLE | **Scope:** BUILD ALL MAJOR | **Rule 13 bump:** 33.0.18 → 34.0.0
+
+### Build
+
+- Version bump MAJOR 33.0.18 → 34.0.0 (`node scripts/sync-versions.mjs` — 8 fichiers: package.json, Cargo.toml, tauri.conf.json, tauri.base.json, src-tauri/tauri.base.json, runtime/stable/tauri.conf.json, runtime/stable/manifest.json, index.html)
+- Prettier format:check: 8 fichiers corrigés post-bump (CHANGELOG.md, runtime/stable/*.json, src-tauri/*.json, src/__tests__/pages/RealityCenter.test.tsx, src/__tests__/pages/Stats.test.tsx)
+- Tauri production build v34.0.0 (AppImage + DEB + RPM)
+
+### Sealed
+
+- **AH-v92**: SEAL formel v33.0.18 — proof_packs/SEAL_v33.0.18_2026-05-12/ (gate_report.md + rollback_plan.md + VERDICT.md `SEALED|v33.0.18|AH-v87→AH-v92`)
+- **Rule 15 audit post-AH-v90**: 6 mapping gaps comblés (AH-v91) — IPC_CATALOG Display System (1220 cmds), ARCHITECTURE+CARTOGRAPHY xrandr notes, security.ts+allowed_commands.json 3 display cmds, UI_SURFACE_MAP SingularityMonitor badge
+
+---
+
 ## [33.0.18] - 2026-05-12 (BUILD ALL — Full Audit E2E + System Install + Icon Sync)
 
 > **Mode:** DURABLE | **Scope:** BUILD ALL | **Rule 13 bump:** 33.0.17 → 33.0.18
@@ -31,7 +48,6 @@
 - System binary `/usr/bin/titane-infinity` mis à jour → v33.0.18 via `sudo dpkg -i`
 - Desktop launcher `/usr/share/applications/titane-infinity.desktop` → v33.0.18 + icônes hicolor synchronisées
 - Proof pack: `proof_packs/BUILD_ALL_33.0.18_2026-05-12/`
-
 
 > **Governance Seal Complete:** 17 locks A0I→D5 now SEALED with T4 approval.  
 > **Advanced Intelligence Program State:** seal_state: **SEALED** · desktop_e2e_state: PASS_WITH_EXPLICIT_BLOCKERS · D5: **SEALED** (commit eb2861bac, 2026-05-06)  
