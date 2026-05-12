@@ -1227,3 +1227,13 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Tests: `src/__tests__/pages/PerfectFusionDashboard.test.tsx` (AH-v88)
 - AutoHeal: AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
 - Version: 33.0.18
+
+## [2026-05-12] SingularityMonitor — SurfaceTruthBadge LIVE (v33.0.18)
+
+- Surface: `page-singularity-monitor`
+- Composant: `src/pages/SingularityMonitor.tsx`
+- Badge: SurfaceTruthBadge variant="LIVE" (singularity state live via useSingularityStateSafe)
+- Hook: `useSingularityStateSafe` (IPC live: consciousness, globalHarmony, globalEntropy, isInitialized)
+- Tests: `src/__tests__/pages/SingularityMonitor.test.tsx` (AH-v88)
+- AutoHeal: AH-v88-PAGES-BADGE-STABILIZE-2026-05-12
+- Version: 33.0.18

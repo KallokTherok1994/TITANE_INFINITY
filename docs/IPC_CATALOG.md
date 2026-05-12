@@ -44,7 +44,7 @@
 
 > 2026-04-19 — Hybrid memory governed export truth: `hybrid_memory_publish_governed_report` publie maintenant un rapport hybride markdown et un sidecar JSON signé localement sous `~/.local/share/com.titane.infinity/hybrid_memory/exports/`, via `src-tauri/src/hybrid_memory_bridge.rs`. La commande conserve le contrat `{ ok, content, error }`, reste Tauri-only, est alignée sur `src/lib/security.ts` et `tests/contract/tauri-ipc-contract.test.ts`, et laisse le fallback Blob navigateur actif quand la voie desktop n existe pas.
 
-> **1217 commandes IPC Tauri** — v32.0.1 (2026-05-02)
+> **1220 commandes IPC Tauri** — v33.0.18 (2026-05-12, AH-v90)
 > Toutes les commandes exposées par `main.rs` via `tauri::generate_handler![]`
 
 ## Résumé par domaine
@@ -73,6 +73,7 @@
 | 20 | Database | 8 |
 | 21 | Desktop Agent | 11 |
 | 22 | DevTools | 24 |
+| 22.5 | Display System | 3 |
 | 23 | Digital Twin | 8 |
 | 24 | Engines | 40 |
 | 25 | Evolution | 40 |
@@ -117,7 +118,7 @@
 | 64 | Training | 15 |
 | 65 | VAD | 7 |
 | 66 | Voice | 19 |
-| | **TOTAL** | **1217** |
+| | **TOTAL** | **1220** |
 
 ---
 
@@ -589,6 +590,14 @@
 | 22 | `total_dev_run_command` | Total dev run command |
 | 23 | `total_dev_session_status` | Total dev session status |
 | 24 | `total_dev_unlock` | Total dev unlock |
+
+## Display System (3 commandes)
+
+| # | Commande | Description |
+|---|----------|-------------|
+| 1 | `display_get_environment` | Récupère l'environnement d'affichage courant via xrandr (résolution, refresh rate, moniteurs, qualité) |
+| 2 | `display_list_monitors` | Liste les moniteurs connectés (xrandr --query) |
+| 3 | `display_set_environment` | Applique des réglages d'affichage (luminosité gamma via xrandr --output --brightness) |
 
 ## Digital Twin (8 commandes)
 

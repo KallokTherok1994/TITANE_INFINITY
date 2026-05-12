@@ -1323,6 +1323,13 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'window_is_fullscreen',
 
   // ═══════════════════════════════════════════════════════════════
+  // DISPLAY SYSTEM COMMANDS (AH-v90 — xrandr impl)
+  // ═══════════════════════════════════════════════════════════════
+  'display_get_environment',
+  'display_list_monitors',
+  'display_set_environment',
+
+  // ═══════════════════════════════════════════════════════════════
   // WEB RESEARCH ENGINE (P1.0 EXPERIMENTAL)
   // ═══════════════════════════════════════════════════════════════
   'web_research',

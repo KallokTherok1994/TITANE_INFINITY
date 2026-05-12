@@ -2190,5 +2190,14 @@
   },
   {
     "command": "web_research"
+  },
+  {
+    "command": "display_get_environment"
+  },
+  {
+    "command": "display_list_monitors"
+  },
+  {
+    "command": "display_set_environment"
   }
 ]

@@ -1,3 +1,7 @@
+## 2026-05-12 — Display xrandr truth
+
+> `src-tauri/src/commands/display_system_commands.rs` remplace les 3 stubs TODO par une implémentation xrandr réelle. `parse_xrandr_environment()` parse `xrandr --query` pour extraire résolution, refresh_rate (trim `*+`), monitor_count et quality (high/medium/low selon pixel-width). `parse_xrandr_monitors()` extrait la liste des moniteurs connectés. `display_set_environment()` applique la luminosité via `xrandr --output <monitor> --brightness <value>`. 9 tests Rust inline PASS : `test_parse_xrandr_environment_basic`, `test_parse_xrandr_environment_no_output`, `test_parse_xrandr_environment_low_res`, `test_parse_xrandr_monitors_basic`, `test_parse_xrandr_monitors_empty`, `test_parse_xrandr_refresh_rate`, `test_parse_xrandr_monitor_count`, `test_display_get_environment_smoke`, `test_display_list_monitors_smoke`. IPC commands câblées dans `main.rs` invoke_handler: `display_get_environment`, `display_list_monitors`, `display_set_environment`. AutoHeal: `AH-v90-DISPLAY-STUBS-XRANDR-2026-05-12`.
+
 ## 2026-05-09 — Conversation runtime contract callsites
 
 - Ring 4 (`ConversationSection`) applique désormais le contrat d invocation outils via `routeChatToolInvocation` avant tout auto-send template.
