@@ -11,6 +11,8 @@
 - `data/knowledge_base/default/facebook_business_marketing_avance.json`: Prettier format fix (format:check FAIL → PASS)
 - **AH-v87**: 5 permissions manquantes (`snapshot_read`, `snapshot_restore`, `snapshot_delete`, `system_read`, `system_write`) dans `build_permission_matrix()`; SurfaceTruthBadge dynamique TimePage (LIVE/DEGRADED/PARTIAL); `snapshotsInterval` ajouté à `setInterval`; 10 tests `TimePage.test.tsx` PASS (commit 7898489a3)
 - **AH-v88**: SurfaceTruthBadge ajouté sur 4 pages (EvolutionMonitor/PARTIAL, SingularityMonitor/LIVE, RealityCenter/PARTIAL, CreationStudio/DISPLAY_ONLY); PerfectFusionDashboard badge PARTIAL→SIMULATED; `Math.random()` supprimé de 2 dashboards; 5 tests Rule-16 (14/14 PASS) (commit a3f689f95)
+- **AH-v89**: 7 tests Rule-16 manquants ajoutés (Stats/Sentinel/Watchdog/SelfHeal/AdaptiveEngine/OrchestrationMetaCenter/TwinsPage — 9 PASS); 4 surfaces AH-v88 mappées dans `UI_SURFACE_MAP.md` (EvolutionMonitor/RealityCenter/CreationStudio/PerfectFusionDashboard); trace explicite AH-v87/AH-v88 dans CHANGELOG (commit a4ba6616b)
+- **AH-v90**: `display_system_commands.rs` — 3 stubs TODO remplacés par impl xrandr réelle (`parse_xrandr_environment`/`parse_xrandr_monitors`, gamma brightness via `xrandr --output --brightness`, 9 tests Rust PASS); `chat_orchestrator.rs` `resolve_ollama_model_c0()` → `gemma2:2b` (`TITANE_PROD_OLLAMA_MODEL`, path legacy via `TITANE_C0_LEGACY_OVERRIDE`); `main.rs` L1318 AIRouter fallback → `gemma2:2b`; `ltm.rs` TantivyLTM annoté (intentionnellement différé); 3 régressions JSX AH-v88 corrigées (SingularityMonitor/EvolutionMonitor/RealityCenter — `{/* ── Header ── */}`) (commit bc3946127)
 
 ### Build
 

@@ -2,7 +2,13 @@
   "version": "33.0.18",
   "build_date": "2026-05-12",
   "build_time": "15:23",
-  "fix": "AH-v87-TIME-PERMISSIONS-FIX: 5 missing permissions in build_permission_matrix (snapshot_read/restore/delete + system_read/write) — TIME module Snapshots tab now functional — SurfaceTruthBadge dynamic LIVE/DEGRADED/PARTIAL",
+  "fix": "AH-v90: display stubs replaced with xrandr impl (parse_xrandr_environment/monitors, 9 Rust tests); gemma2:2b fallback restored in chat_orchestrator + main.rs AIRouter; JSX comment regressions fixed (SingularityMonitor/EvolutionMonitor/RealityCenter)",
+  "commits": [
+    "AH-v87: 5 TIME permissions + TimePage dynamic badge (7898489a3)",
+    "AH-v88: badges + Math.random() removal + 14 tests (a3f689f95)",
+    "AH-v89: UI_SURFACE_MAP 7 pages + CHANGELOG + 9 Rule-16 tests (a4ba6616b)",
+    "AH-v90: xrandr display impl + gemma2:2b fallback + JSX fixes (bc3946127)"
+  ],
   "artifacts": {
     "binary": "titane-infinity",
     "deb": "titane-infinity_33.0.18_amd64.deb",
@@ -10,9 +16,9 @@
     "rpm": "titane-infinity-33.0.18-1.x86_64.rpm"
   },
   "checksums": {
-    "binary_sha256": "277dbf189ec454e1c59300645e7423cabcae6a016220e4566a7f72eb087bea19",
-    "deb_sha256": "a7bb9aae56efdaa9c2a6d1e6a4d447cd05d31caa01d659698ba3f92c81f2eb9c",
-    "appimage_sha256": "6c21b178b8711096254f4f9d9cb22af9c4e2b1253926a5c3c82c2f45ec848acc",
-    "rpm_sha256": "c6c21dc0ee397c43ce06f32c33e4e8450bb716a18d9e4b408217f1979f30d08d"
+    "binary_sha256": "10bfcc5ccd69880e97cb1808550aa7bc55e7eeb2277c8e9814bb3916dc618972",
+    "deb_sha256": "c361dc0a52eedd5ee060e79c1590a167bbab30f91b867ee001854d128bb1214f",
+    "appimage_sha256": "a48a5abb55989a28440491de2acc92963b4afb9bf6fa495a793d8f1827b708d8",
+    "rpm_sha256": "c6160966e7c4354eb3a4110da99681acf98e7d9424deac36879f53b4e15d21dc"
   }
 }

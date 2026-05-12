@@ -5,14 +5,14 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.18 — BUILD ALL 2026-05-12 COMPLETE — artifacts PASS — system install BLOCKED_SUDO — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.18 — BUILD ALL 2026-05-12 COMPLETE — artifacts PASS — system install PASS (AH-v90) — Historical baseline preserved below)
 
 ---
-> **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 33.0.18 COMPLETE)**
-> Current `package.json` version: **33.0.18** — BUILD ALL 2026-05-12 COMPLETE, Tauri release artifacts built (AppImage+DEB+RPM), deployed to `deployment/latest/`, AutoHeal AH-v86 sealed
-> Latest proven sealed release: **v33.0.18** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt`)
-> BUILD ALL 33.0.18 phases: A(PASS) B(PASS) C(PASS) D(PASS) E(BLOCKED_SUDO) F(PASS) G(SEALED)
-> System binary requires interactive sudo to complete install: `sudo dpkg -i deployment/latest/titane-infinity_33.0.18_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`
+> **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 33.0.18 + AH-v90 COMPLETE)**
+> Current `package.json` version: **33.0.18** — BUILD ALL + AH-v87→v90 COMPLETE, Tauri release artifacts rebuilt (AppImage+DEB+RPM), deployed to `deployment/latest/`, system install PASS
+> Latest proven sealed release: **v33.0.18-AH-v90** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt`)
+> BUILD ALL 33.0.18 phases: A(PASS) B(PASS) C(PASS) D(PASS) E(PASS — AH-v90 dpkg exit 0) F(PASS) G(SEALED)
+> Post-BUILD ALL AutoHeal: AH-v87→AH-v90 (display xrandr + gemma2:2b fallback + JSX fixes)
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 ---
 
@@ -38,19 +38,26 @@
 | sha256 DEB | `d5f6bc8b6df2a162b24eb1aab5224e2686763d74d25abdd832b9e869c501149f` | ✅ PASS |
 | sha256 RPM | `76e7e74b51bffd6a0053de77d8125894ca553a6963d792a914e32ba5cfeb7235` | ✅ PASS |
 | sha256 Binary | `2675153c25cc876475a9e337dcf457afce6995fa94e8edfd4dfdf06e85a4135f` | ✅ PASS |
-| AutoHeal | AH-v86-BUILD-ALL-33.0.18-2026-05-12 appended (1868 entries) | ✅ PASS |
-| system binary sync | BLOCKED_SUDO_REQUIRED — run: `sudo dpkg -i deployment/latest/titane-infinity_33.0.18_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` | ⚠️ BLOCKED_SUDO |
+| AutoHeal | AH-v86-BUILD-ALL-33.0.18-2026-05-12 appended + AH-v87→AH-v90 (1872 entries) | ✅ PASS |
+| system binary sync | `sudo dpkg -i deployment/latest/titane-infinity_33.0.18_amd64.deb` — exit 0 (2026-05-12) | ✅ PASS |
 | user-level icons | ~/.local/share/applications/titane-infinity.desktop updated + GTK+icons cache refreshed | ✅ PASS |
-| deployment/latest | MANIFEST+SHA256SUMS+SIZES updated to 33.0.18 | ✅ PASS |
+| deployment/latest | MANIFEST+SHA256SUMS+VERSION updated to 33.0.18-AH-v90 (SHA256: deb=c361dc0a, appimage=a48a5abb, binary=10bfcc5c) | ✅ PASS |
 | .github/workflows/deploy-cloudflare-pages.yml | STORE_PATH env context fixed | ✅ PASS |
 
 ### Seal note — v33.0.18
 
 - Rule 13 BUILD ALL: bump 33.0.17 → 33.0.18; Phase A gates all PASS (vitest 9057, tsc, eslint, prettier, architecture, detect_recurrence, verify_instructions).
 - 3 Phase B fixes committed: workflow STORE_PATH, RELEASE_SURFACE_INVENTORY canonical drift v33.0.3→v33.0.17, KB Prettier violation.
-- Build artifacts PENDING completion (Tauri release compilation ~15-25 min).
 - AutoHeal: `AH-v86-BUILD-ALL-33.0.18-2026-05-12`; checksums: `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt`.
 - Proof pack: `proof_packs/BUILD_ALL_33.0.18_2026-05-12/`.
+
+### Post-BUILD ALL AutoHeal patch series — v33.0.18 (2026-05-12)
+
+- **AH-v87** (7898489a3): TIME permissions + TimePage dynamic badge + 10 tests
+- **AH-v88** (a3f689f95): SurfaceTruthBadge 4 pages + Math.random() removal + 14 tests
+- **AH-v89** (a4ba6616b): 7 Rule-16 tests + UI_SURFACE_MAP 4 entries + CHANGELOG trace
+- **AH-v90** (bc3946127): xrandr display impl (9 Rust tests) + gemma2:2b fallback (chat_orchestrator + main.rs AIRouter) + JSX AH-v88 regressions fixed + system install PASS (exit 0)
+- **Seal**: deployment/latest AH-v90 artifacts + CHANGELOG AH-v89/AH-v90 + RELEASE_SURFACE_INVENTORY updated
 
 ---
 
