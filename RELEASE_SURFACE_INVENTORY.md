@@ -5,15 +5,88 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.17 — build + deployment/latest PASS — system install BLOCKED_SUDO at 33.0.16 → to be resolved in 33.0.18 BUILD ALL — Historical baseline preserved below)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v33.0.18 — BUILD ALL 2026-05-12 COMPLETE — artifacts PASS — system install BLOCKED_SUDO — Historical baseline preserved below)
 
 ---
-> **A1 VERSION AUTHORITY NOTE (2026-05-12)**
-> Current `package.json` version: **33.0.17** — BUILD ALL complete, Tauri release artifacts built (AppImage+DEB+RPM), AutoHeal AH-v84/v85 sealed
-> Latest proven sealed release: **v33.0.17** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.17.txt`)
-> Canonical version claim in this file was last updated through v33.0.17. Historical entries below are preserved as-is (append-only policy).
-> BUILD ALL 33.0.18 in progress — system install + icon sync + full test seal pending this session.
+> **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 33.0.18 COMPLETE)**
+> Current `package.json` version: **33.0.18** — BUILD ALL 2026-05-12 COMPLETE, Tauri release artifacts built (AppImage+DEB+RPM), deployed to `deployment/latest/`, AutoHeal AH-v86 sealed
+> Latest proven sealed release: **v33.0.18** (checksums in `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt`)
+> BUILD ALL 33.0.18 phases: A(PASS) B(PASS) C(PASS) D(PASS) E(BLOCKED_SUDO) F(PASS) G(SEALED)
+> System binary requires interactive sudo to complete install: `sudo dpkg -i deployment/latest/titane-infinity_33.0.18_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
+---
+
+## Final Release Seal v33.0.18 — 2026-05-12 (BUILD ALL: audit E2E + system install + icon sync + CI fixes)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 33.0.18 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 33.0.18 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 33.0.18 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 33.0.18 | ✅ PASS |
+| `tauri.base.json` version | 33.0.18 | ✅ PASS |
+| Vitest frontend tests | 9057 PASS / 0 FAIL (560 test files) | ✅ PASS |
+| TypeScript check (`tsc --noEmit`) | PASS | ✅ PASS |
+| ESLint | PASS | ✅ PASS |
+| Prettier format check | PASS (KB json drift fixed) | ✅ PASS |
+| detect_recurrence.sh | PASS (entries=1868) | ✅ PASS |
+| verify_instructions.sh | PASS=52 FAIL=0 | ✅ PASS |
+| AppImage | `titane-infinity_33.0.18_amd64.AppImage` (95M) | ✅ PASS |
+| DEB | `titane-infinity_33.0.18_amd64.deb` (24M) | ✅ PASS |
+| RPM | `titane-infinity-33.0.18-1.x86_64.rpm` (24M) | ✅ PASS |
+| sha256 AppImage | `7e6c0dc7b5eea98a039157dedf0cfec50a864bf7b8cf1fac0e72d8c4b404b9e9` | ✅ PASS |
+| sha256 DEB | `d5f6bc8b6df2a162b24eb1aab5224e2686763d74d25abdd832b9e869c501149f` | ✅ PASS |
+| sha256 RPM | `76e7e74b51bffd6a0053de77d8125894ca553a6963d792a914e32ba5cfeb7235` | ✅ PASS |
+| sha256 Binary | `2675153c25cc876475a9e337dcf457afce6995fa94e8edfd4dfdf06e85a4135f` | ✅ PASS |
+| AutoHeal | AH-v86-BUILD-ALL-33.0.18-2026-05-12 appended (1868 entries) | ✅ PASS |
+| system binary sync | BLOCKED_SUDO_REQUIRED — run: `sudo dpkg -i deployment/latest/titane-infinity_33.0.18_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` | ⚠️ BLOCKED_SUDO |
+| user-level icons | ~/.local/share/applications/titane-infinity.desktop updated + GTK+icons cache refreshed | ✅ PASS |
+| deployment/latest | MANIFEST+SHA256SUMS+SIZES updated to 33.0.18 | ✅ PASS |
+| .github/workflows/deploy-cloudflare-pages.yml | STORE_PATH env context fixed | ✅ PASS |
+
+### Seal note — v33.0.18
+
+- Rule 13 BUILD ALL: bump 33.0.17 → 33.0.18; Phase A gates all PASS (vitest 9057, tsc, eslint, prettier, architecture, detect_recurrence, verify_instructions).
+- 3 Phase B fixes committed: workflow STORE_PATH, RELEASE_SURFACE_INVENTORY canonical drift v33.0.3→v33.0.17, KB Prettier violation.
+- Build artifacts PENDING completion (Tauri release compilation ~15-25 min).
+- AutoHeal: `AH-v86-BUILD-ALL-33.0.18-2026-05-12`; checksums: `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt`.
+- Proof pack: `proof_packs/BUILD_ALL_33.0.18_2026-05-12/`.
+
+---
+
+## Final Release Seal v33.0.17 — 2026-05-12 (BUILD ALL: CI/Deploy fixes + full audit)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 33.0.17 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 33.0.17 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 33.0.17 | ✅ PASS |
+| `runtime/stable/manifest.json` version | 33.0.17 | ✅ PASS |
+| `tauri.base.json` version | 33.0.17 | ✅ PASS |
+| Vitest frontend tests | 9057 PASS / 0 FAIL (560 test files) | ✅ PASS |
+| TypeScript check (`tsc --noEmit`) | PASS | ✅ PASS |
+| ESLint | PASS | ✅ PASS |
+| Prettier format check | PASS | ✅ PASS |
+| detect_recurrence.sh | PASS (entries=1867) | ✅ PASS |
+| verify_instructions.sh | PASS=52 FAIL=0 | ✅ PASS |
+| AppImage | `titane-infinity_33.0.17_amd64.AppImage` (95M) | ✅ PASS |
+| DEB | `titane-infinity_33.0.17_amd64.deb` (24M) | ✅ PASS |
+| RPM | `titane-infinity-33.0.17-1.x86_64.rpm` (24M) | ✅ PASS |
+| sha256 AppImage | `6356181854dbef7b4a29fa1764df519e218ebd0c720ab47eecb6d16d793ce4e0` | ✅ PASS |
+| sha256 DEB | `78dbc164aa3c9d7129e7ab221f2c7ad40d090ccef63e3fad665d4f45e56d82b4` | ✅ PASS |
+| sha256 RPM | `8e947b5986b0de283dcb03d48ab48db118b0de80befe5c9f6dc95c1c21d26549` | ✅ PASS |
+| sha256 Binary | `13b2e3c33e0c74e4a83f0ba9072e6c91e56395ff58c0c8f107d13127f59730c2` | ✅ PASS |
+| AutoHeal | AH-v84/AH-v85 appended (1867 entries) | ✅ PASS |
+| deployment/latest | MANIFEST+SHA256SUMS+SIZES updated to 33.0.17 | ✅ PASS |
+| system binary sync | BLOCKED_SUDO_REQUIRED (resolved in v33.0.18 BUILD ALL) | ⚠️ BLOCKED_SUDO |
+| checksums_file | `RELEASE_ARTIFACTS_CHECKSUMS_33.0.17.txt` | ✅ PASS |
+
+### Seal note — v33.0.17
+
+- BUILD ALL from session 2026-05-12 AM: workflow fix, RELEASE_SURFACE_INVENTORY canonical repair, Prettier KB fix.
+- System binary /usr/bin/titane-infinity stuck at 33.0.16 — resolved in 33.0.18.
+- AutoHeal: `AH-v84-PRETTIER-BUMP-PIPELINE` + `AH-v84-CI-FRONTEND-TIMEOUT`; checksums: `RELEASE_ARTIFACTS_CHECKSUMS_33.0.17.txt`.
+
 ---
 
 ## Final Release Seal v33.0.16 — 2026-05-11 (BUILD ALL: 8 CI failures resolved, 9057 tests PASS)

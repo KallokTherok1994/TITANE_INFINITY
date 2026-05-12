@@ -1,0 +1,16 @@
+TITANE∞ v33.0.18 — Release Artifacts Checksums
+Generated: 2026-05-12T14:24:00Z
+
+SHA256 CHECKSUMS
+================
+2675153c25cc876475a9e337dcf457afce6995fa94e8edfd4dfdf06e85a4135f  titane-infinity (binary)
+7e6c0dc7b5eea98a039157dedf0cfec50a864bf7b8cf1fac0e72d8c4b404b9e9  titane-infinity_33.0.18_amd64.AppImage
+d5f6bc8b6df2a162b24eb1aab5224e2686763d74d25abdd832b9e869c501149f  titane-infinity_33.0.18_amd64.deb
+76e7e74b51bffd6a0053de77d8125894ca553a6963d792a914e32ba5cfeb7235  titane-infinity-33.0.18-1.x86_64.rpm
+
+SIZES
+=====
+AppImage: 95M
+DEB:      24M
+RPM:      24M
+Binary:   52M

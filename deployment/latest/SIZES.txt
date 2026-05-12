@@ -1,2 +1,3 @@
-AppImage: 95M
-DEB:      24M
+# Tailles — TITANE∞ v33.0.18 — 2026-05-12T18:25:03Z
+24M	titane-infinity_33.0.18_amd64.deb
+95M	titane-infinity_33.0.18_amd64.AppImage

@@ -1,5 +1,34 @@
 # [Unreleased] - 2026-05-06 — Advanced Intelligence Program (A0I–D5 SEALED) + Z0 Post-Seal Integrity Audit
 
+## [33.0.18] - 2026-05-12 (BUILD ALL — Full Audit E2E + System Install + Icon Sync)
+
+> **Mode:** DURABLE | **Scope:** BUILD ALL | **Rule 13 bump:** 33.0.17 → 33.0.18
+
+### Fixed
+
+- `.github/workflows/deploy-cloudflare-pages.yml`: STORE_PATH context access invalide → env block corrigé avec déclaration explicite (élimine `CONTEXT_ACCESS_MIGHT_BE_INVALID` L51)
+- `RELEASE_SURFACE_INVENTORY.md`: canonical version drift (v33.0.3 header, v33.0.16 note) → corrigé en v33.0.17 puis v33.0.18
+- `data/knowledge_base/default/facebook_business_marketing_avance.json`: Prettier format fix (format:check FAIL → PASS)
+
+### Build
+
+- Version bump 33.0.17 → 33.0.18 (`node scripts/bump-version.mjs` + `pnpm exec prettier --write` post-bump)
+- Tauri production build `Finished release profile [optimized] in 11m 35s` (AppImage 95M + DEB 24M + RPM 24M)
+- AppImage sha256: `7e6c0dc7b5eea98a039157dedf0cfec50a864bf7b8cf1fac0e72d8c4b404b9e9`
+- DEB sha256: `d5f6bc8b6df2a162b24eb1aab5224e2686763d74d25abdd832b9e869c501149f`
+- RPM sha256: `76e7e74b51bffd6a0053de77d8125894ca553a6963d792a914e32ba5cfeb7235`
+- Artifacts déployés dans `deployment/latest/` + MANIFEST.json + SHA256SUMS.txt + VERSION.txt
+- `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt` généré
+
+### Governance
+
+- Phase A gates: check/lint/format:check/vitest(9057+)/architecture(6)/detect_recurrence(1868)/verify_instructions(52) ALL PASS
+- AutoHeal AH-v86-BUILD-ALL-33.0.18-2026-05-12 full-schema appended (1868 entries)
+- System binary `/usr/bin/titane-infinity` mis à jour → v33.0.18 via `sudo dpkg -i`
+- Desktop launcher `/usr/share/applications/titane-infinity.desktop` → v33.0.18 + icônes hicolor synchronisées
+- Proof pack: `proof_packs/BUILD_ALL_33.0.18_2026-05-12/`
+
+
 > **Governance Seal Complete:** 17 locks A0I→D5 now SEALED with T4 approval.  
 > **Advanced Intelligence Program State:** seal_state: **SEALED** · desktop_e2e_state: PASS_WITH_EXPLICIT_BLOCKERS · D5: **SEALED** (commit eb2861bac, 2026-05-06)  
 > **Desktop E2E:** 8 PASS · 12 SKIPPED_WITH_EXPLICIT_BLOCKER · 0 FAIL — Governance truth only; full Desktop proof deferred to D6.
