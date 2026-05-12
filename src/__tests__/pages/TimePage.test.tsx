@@ -310,4 +310,22 @@ describe('TimePage', () => {
       expect(await screen.findByTestId(testId)).toBeInTheDocument();
     }
   });
+
+  it('shows LIVE badge when listSnapshots resolves successfully', async () => {
+    tauriMocks.listSnapshotsMock.mockResolvedValue([]);
+    await act(async () => {
+      renderTimePage('/time?tab=snapshots');
+    });
+    // Attendre que le badge passe à LIVE après que loadSnapshots se résout
+    expect(await screen.findByTestId('surface-truth-badge-live')).toBeInTheDocument();
+  });
+
+  it('shows DEGRADED badge when listSnapshots rejects', async () => {
+    tauriMocks.listSnapshotsMock.mockRejectedValue(new Error('Permission denied'));
+    tauriMocks.getTravelStatsMock.mockRejectedValue(new Error('Permission denied'));
+    await act(async () => {
+      renderTimePage('/time?tab=snapshots');
+    });
+    expect(await screen.findByTestId('surface-truth-badge-degraded')).toBeInTheDocument();
+  });
 });

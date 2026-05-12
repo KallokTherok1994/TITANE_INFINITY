@@ -247,6 +247,33 @@ fn build_permission_matrix() -> PermissionMatrix {
     matrix.insert("secret_status".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("secret_write".to_string(), vec![Role::Root]);
 
+    // ═══════════════════════════════════════════════════════════════
+    // SNAPSHOTS (TIME-TRAVEL)
+    // ═══════════════════════════════════════════════════════════════
+    matrix.insert(
+        "snapshot_read".to_string(),
+        vec![Role::Root, Role::System, Role::User],
+    );
+    // restore: Root uniquement (opération destructive)
+    matrix.insert("snapshot_restore".to_string(), vec![Role::Root]);
+    // delete: Root + System (moteurs internes autorisés)
+    matrix.insert(
+        "snapshot_delete".to_string(),
+        vec![Role::Root, Role::System],
+    );
+
+    // ═══════════════════════════════════════════════════════════════
+    // SYSTÈME — LECTURE / ÉCRITURE (temporal_commands)
+    // ═══════════════════════════════════════════════════════════════
+    matrix.insert(
+        "system_read".to_string(),
+        vec![Role::Root, Role::System, Role::User],
+    );
+    matrix.insert(
+        "system_write".to_string(),
+        vec![Role::Root, Role::System, Role::User],
+    );
+
     matrix
 }
 

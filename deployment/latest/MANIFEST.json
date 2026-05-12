@@ -1,8 +1,18 @@
 {
   "version": "33.0.18",
-  "timestamp": "2026-05-12T18:25:03Z",
-  "artifacts": [
-    {"name": "titane-infinity_33.0.18_amd64.deb", "sha256": "d5f6bc8b6df2a162b24eb1aab5224e2686763d74d25abdd832b9e869c501149f", "size": 24673678},
-    {"name": "titane-infinity_33.0.18_amd64.AppImage", "sha256": "7e6c0dc7b5eea98a039157dedf0cfec50a864bf7b8cf1fac0e72d8c4b404b9e9", "size": 98851320}
-  ]
+  "build_date": "2026-05-12",
+  "build_time": "15:23",
+  "fix": "AH-v87-TIME-PERMISSIONS-FIX: 5 missing permissions in build_permission_matrix (snapshot_read/restore/delete + system_read/write) — TIME module Snapshots tab now functional — SurfaceTruthBadge dynamic LIVE/DEGRADED/PARTIAL",
+  "artifacts": {
+    "binary": "titane-infinity",
+    "deb": "titane-infinity_33.0.18_amd64.deb",
+    "appimage": "titane-infinity_33.0.18_amd64.AppImage",
+    "rpm": "titane-infinity-33.0.18-1.x86_64.rpm"
+  },
+  "checksums": {
+    "binary_sha256": "277dbf189ec454e1c59300645e7423cabcae6a016220e4566a7f72eb087bea19",
+    "deb_sha256": "a7bb9aae56efdaa9c2a6d1e6a4d447cd05d31caa01d659698ba3f92c81f2eb9c",
+    "appimage_sha256": "6c21b178b8711096254f4f9d9cb22af9c4e2b1253926a5c3c82c2f45ec848acc",
+    "rpm_sha256": "c6c21dc0ee397c43ce06f32c33e4e8450bb716a18d9e4b408217f1979f30d08d"
+  }
 }

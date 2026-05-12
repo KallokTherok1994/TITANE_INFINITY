@@ -1,3 +1,4 @@
-# SHA256 — TITANE∞ v33.0.18 — 2026-05-12T18:25:03Z
-d5f6bc8b6df2a162b24eb1aab5224e2686763d74d25abdd832b9e869c501149f  titane-infinity_33.0.18_amd64.deb
-7e6c0dc7b5eea98a039157dedf0cfec50a864bf7b8cf1fac0e72d8c4b404b9e9  titane-infinity_33.0.18_amd64.AppImage
+277dbf189ec454e1c59300645e7423cabcae6a016220e4566a7f72eb087bea19  titane-infinity
+a7bb9aae56efdaa9c2a6d1e6a4d447cd05d31caa01d659698ba3f92c81f2eb9c  titane-infinity_33.0.18_amd64.deb
+6c21b178b8711096254f4f9d9cb22af9c4e2b1253926a5c3c82c2f45ec848acc  titane-infinity_33.0.18_amd64.AppImage
+c6c21dc0ee397c43ce06f32c33e4e8450bb716a18d9e4b408217f1979f30d08d  titane-infinity-33.0.18-1.x86_64.rpm

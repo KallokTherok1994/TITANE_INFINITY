@@ -551,10 +551,16 @@ export const TimePage: React.FC = () => {
     void refreshAgenda();
     void loadSnapshots();
     void loadStats();
-    const interval = setInterval(() => {
+    const statsInterval = setInterval(() => {
       void loadStats();
     }, REFRESH_INTERVALS.SLOW);
-    return () => clearInterval(interval);
+    const snapshotsInterval = setInterval(() => {
+      void loadSnapshots();
+    }, REFRESH_INTERVALS.SLOW);
+    return () => {
+      clearInterval(statsInterval);
+      clearInterval(snapshotsInterval);
+    };
   }, [loadSnapshots, loadStats, refreshAgenda]);
 
   return (
@@ -562,8 +568,17 @@ export const TimePage: React.FC = () => {
       className="time-page p-6 space-y-6 bg-gray-900 text-gray-100"
       data-testid="page-time"
     >
-      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-      <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
+      {/* Runtime Truth Badge — dynamique selon snapshotRuntimeSource — v33.0.19 */}
+      <SurfaceTruthBadge
+        variant={
+          snapshotRuntimeSource === 'persistence-active'
+            ? 'LIVE'
+            : snapshotRuntimeSource === 'degraded'
+              ? 'DEGRADED'
+              : 'PARTIAL'
+        }
+        className="mb-2"
+      />
       {/* Header */}
       <div className="header mb-8">
         <div className="flex items-center gap-3 mb-2">
