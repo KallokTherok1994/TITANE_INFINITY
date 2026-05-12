@@ -177,7 +177,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Runtime Truth Badge — PARTIAL: store live + timeline hardcodée */}
         <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
-        {/* ── Header ── */
+        {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <TrendingUp className="w-7 h-7 text-green-400" />

@@ -333,6 +333,12 @@ impl TantivyLTM {
         // QueryParser::for_index(&self.index, vec![content_field])
         //   .parse_query(query)?
         //   .search(&self.reader.searcher(), TopDocs::with_limit(top_k))
+        //
+        // NOTE (AH-v90): TantivyLTM intentionally deferred.
+        // Tantivy crate is already in Cargo.toml (v0.26).
+        // Uncomment this entire TantivyLTM block and enable feature flag
+        // INDEX_MODE=tantivy when BM25 full-text indexing is needed.
+        // Current production path uses LongTermMemory with substring + cosine similarity.
         unimplemented!("Tantivy BM25 search - awaiting production integration")
     }
 }

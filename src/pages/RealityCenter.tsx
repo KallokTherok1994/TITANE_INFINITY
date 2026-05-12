@@ -181,7 +181,7 @@ export const RealityCenter: React.FC = memo(() => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Runtime Truth Badge — PARTIAL: health system réel + modules UI hardcodés */}
         <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
-        {/* ── Header ── */
+        {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Target className="w-7 h-7 text-cyan-400" />

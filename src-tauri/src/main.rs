@@ -1310,12 +1310,11 @@ fn main() {
                 .unwrap_or_else(|_| "default-dev-passphrase-change-in-production".to_string());
 
             // AIRouter initialization (for OMEGA pipeline)
-            // FIX v26.4.1: Initialize with default Ollama model to avoid "No AI provider available"
+            // AH-v90: fallback aligned to PROD model (gemma2:2b); OLLAMA_MODEL var ignored for PROD
             let default_ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
                 .ok()
                 .filter(|s| !s.is_empty())
-                .or_else(|| std::env::var("OLLAMA_MODEL").ok().filter(|s| !s.is_empty()))
-                .unwrap_or_else(|| "llama3.1:latest".to_string());
+                .unwrap_or_else(|| "gemma2:2b".to_string());
             let ai_router = Arc::new(tokio::sync::RwLock::new(
                 titane_infinity::ai::router::AIRouter::new(None, Some(default_ollama_model.clone()))
             ));

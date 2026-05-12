@@ -110,7 +110,7 @@ const SingularityMonitor = memo(() => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Runtime Truth Badge — LIVE: hooks IPC réels + MetaEnergy backend */}
         <SurfaceTruthBadge variant="LIVE" className="mb-2" />
-        {/* ── Header ── */
+        {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Atom className="w-7 h-7 text-cyan-400" />

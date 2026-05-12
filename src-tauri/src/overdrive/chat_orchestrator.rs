@@ -39,17 +39,18 @@ fn is_ollama_auto_enabled() -> bool {
 const TITANE_PROD_OLLAMA_MODEL: &str = "gemma2:2b";
 
 /// Resolve the Ollama model for a request.
-/// When TITANE_C0_PROVIDER_ROUTING_ENABLED=true: canonical PROD model (gemma2:2b).
-/// Legacy (default, flag absent): preserves prior behavior ("llama3.1:latest").
+/// Always resolves to the canonical PROD model (gemma2:2b) unless an explicit
+/// model is passed in the request. The C0 flag is kept for test isolation.
+/// AH-v90: legacy llama3.1:latest fallback replaced with TITANE_PROD_OLLAMA_MODEL.
 fn resolve_ollama_model_c0(requested: Option<String>) -> String {
     if let Some(m) = requested {
         return m;
     }
-    if env_flag_true("TITANE_C0_PROVIDER_ROUTING_ENABLED") {
-        TITANE_PROD_OLLAMA_MODEL.to_string()
-    } else {
-        // Legacy fallback — preserved until C0 is activated in production.
+    // C0 flag allows tests to verify legacy behavior; production always uses PROD model.
+    if env_flag_true("TITANE_C0_LEGACY_OVERRIDE") {
         "llama3.1:latest".to_string()
+    } else {
+        TITANE_PROD_OLLAMA_MODEL.to_string()
     }
 }
 
@@ -2290,30 +2291,39 @@ mod smoke_tests {
     use super::*;
 
     #[test]
-    fn streaming_ollama_fallback_model_matches_canonical_local_profile() {
-        // C0 flag absent → legacy behavior preserved (llama3.1:latest)
+    fn streaming_ollama_fallback_model_matches_canonical_prod() {
+        // AH-v90: default (no flag) now resolves to PROD model, not legacy llama3.1:latest
+        std::env::remove_var("TITANE_C0_LEGACY_OVERRIDE");
         std::env::remove_var("TITANE_C0_PROVIDER_ROUTING_ENABLED");
         let model = resolve_ollama_model_c0(None);
+        assert_eq!(model, TITANE_PROD_OLLAMA_MODEL);
+        assert_eq!(model, "gemma2:2b");
+    }
+
+    #[test]
+    fn resolve_ollama_model_c0_legacy_override_still_works() {
+        // Legacy override flag for test isolation only
+        std::env::set_var("TITANE_C0_LEGACY_OVERRIDE", "true");
+        let model = resolve_ollama_model_c0(None);
         assert_eq!(model, "llama3.1:latest");
+        std::env::remove_var("TITANE_C0_LEGACY_OVERRIDE");
     }
 
     #[test]
     fn resolve_ollama_model_c0_uses_prod_model_when_flag_enabled() {
-        // C0 flag enabled → canonical PROD model
-        std::env::set_var("TITANE_C0_PROVIDER_ROUTING_ENABLED", "true");
+        // C0 prod routing: canonical PROD model (unchanged)
+        std::env::remove_var("TITANE_C0_LEGACY_OVERRIDE");
         let model = resolve_ollama_model_c0(None);
         assert_eq!(model, TITANE_PROD_OLLAMA_MODEL);
         assert_eq!(model, "gemma2:2b");
-        std::env::remove_var("TITANE_C0_PROVIDER_ROUTING_ENABLED");
     }
 
     #[test]
     fn resolve_ollama_model_c0_respects_explicit_model() {
         // Explicit model always wins, flag irrelevant
-        std::env::set_var("TITANE_C0_PROVIDER_ROUTING_ENABLED", "true");
+        std::env::remove_var("TITANE_C0_LEGACY_OVERRIDE");
         let model = resolve_ollama_model_c0(Some("mistral:latest".to_string()));
         assert_eq!(model, "mistral:latest");
-        std::env::remove_var("TITANE_C0_PROVIDER_ROUTING_ENABLED");
     }
 
     #[test]
