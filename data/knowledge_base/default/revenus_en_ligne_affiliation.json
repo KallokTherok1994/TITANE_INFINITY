@@ -4,6 +4,11 @@
   "description": "Revenus en ligne et affiliation — modèles business digitaux, marketing d'affiliation, freelance, création de formations, monétisation de contenu, tunnels de vente et plateformes e-commerce",
   "revenus_en_ligne_affiliation": {
     "introduction": "La génération de revenus en ligne repose sur la maîtrise de plusieurs piliers : un modèle économique viable, une audience qualifiée, un système de conversion optimisé et une capacité de rétention. L'affiliation constitue l'un des leviers les plus accessibles pour démarrer, mais la diversification vers des produits propres et des revenus récurrents est la clé de la pérennité financière en ligne.",
+    "cadre_de_realite": {
+      "principe": "Les revenus en ligne durables viennent de la combinaison offre + audience + conversion + rétention + discipline financière.",
+      "anti_illusion": "Les promesses de richesse rapide, les 'systèmes prouvés' opaques et les coachings business vendus comme raccourcis garantis doivent être traités comme des signaux de risque élevé.",
+      "priorite": "Construire une source de revenu simple, traçable et rentable avant de multiplier les canaux ou les outils."
+    },
     "modeles_business_en_ligne": {
       "e_commerce_classique": {
         "définition": "Vente de produits physiques via une boutique en ligne avec gestion de stock ou logistique externalisée",
@@ -13,7 +18,8 @@
           "Etsy": "Marketplace spécialisée artisanat et créateurs — trafic intégré mais commissions (6.5% + frais). Idéal pour valider un produit."
         },
         "métriques_clés": "CAC (Coût d'Acquisition Client), LTV (Lifetime Value), AOV (Average Order Value), taux de conversion (2-4% = bon), marge nette",
-        "conseil": "Viser un ratio LTV/CAC supérieur à 3:1 pour assurer la rentabilité à long terme"
+        "conseil": "Viser un ratio LTV/CAC supérieur à 3:1 pour assurer la rentabilité à long terme",
+        "discipline": "Ne jamais scaler un produit si la marge nette, les retours, les frais de paiement et le coût publicitaire réel ne sont pas compris."
       },
       "dropshipping": {
         "principe": "Vente sans stock — le fournisseur expédie directement au client final",
@@ -91,7 +97,12 @@
         "email_marketing": "Séquences automatisées recommandant des produits pertinents — meilleur ROI par canal",
         "réseaux_sociaux": "Instagram, TikTok, Pinterest selon la niche — contenu natif, pas publicitaire"
       },
-      "éthique": "Toujours divulguer les liens affiliés (obligation légale et morale). Ne recommander que ce qu'on utilise ou qu'on a testé. La confiance est le capital n°1."
+      "éthique": "Toujours divulguer les liens affiliés (obligation légale et morale). Ne recommander que ce qu'on utilise ou qu'on a testé. La confiance est le capital n°1.",
+      "garde_fous": [
+        "Éviter les produits à promesse irréaliste ou réputation douteuse",
+        "Ne pas promouvoir un programme seulement pour sa commission",
+        "Vérifier les conditions de paiement, d'attribution et de remboursement"
+      ]
     },
     "freelance_en_ligne": {
       "plateformes": {
@@ -180,6 +191,17 @@
         "click_rate": "2-5% = bon (taux de clic dans les emails)",
         "conversion_vente": "1-5% selon le prix et la chaleur du trafic"
       }
+    },
+    "arnaques_et_offres_douteuses": {
+      "business_coaching_scams": "De nombreuses offres promettent qu'il est facile de lancer un business en ligne et de gagner rapidement de l'argent si l'on paie d'abord un programme, une certification ou un mentorat coûteux.",
+      "red_flags": [
+        "Résultats garantis ou presque",
+        "Témoignages impossibles à vérifier",
+        "Pression pour acheter immédiatement",
+        "Upsells successifs avant d'avoir délivré une valeur réelle",
+        "Promesse d'un business automatisé sans travail substantiel"
+      ],
+      "discipline": "Avant de payer un programme, vérifier le modèle économique réel, parler à d'anciens clients quand c'est possible et chercher des critiques indépendantes."
     },
     "principes_transversaux": {
       "audience_first": "Construire l'audience avant le produit. Valider la demande avant de créer. Pré-vendre avant de produire.",

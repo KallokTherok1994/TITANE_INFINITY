@@ -4,6 +4,16 @@
   "description": "Stratégies de revenus et monétisation — modèles économiques (freelance/SaaS/infoproduits/services productisés), revenus passifs (dividendes/royalties/loyers/affiliation), pricing, diversification et scaling des sources de revenus",
   "strategies_revenus_monetisation": {
     "introduction": "Générer des revenus durables exige de comprendre les différents modèles économiques, de diversifier ses sources et de maîtriser les leviers de pricing et de scaling. TITANE structure ce savoir en catégories actionnables pour bâtir un écosystème de revenus résilient et évolutif.",
+    "hierarchie_strategique": {
+      "ordre_recommande": [
+        "Revenu actif ou service simple",
+        "Service productisé",
+        "Produit numérique ou abonnement",
+        "Système d'acquisition stable",
+        "Investissements passifs financés par l'activité"
+      ],
+      "principe": "Utiliser les revenus opérationnels pour financer les revenus semi-passifs, puis utiliser les excédents pour construire le patrimoine."
+    },
     "revenus_actifs": {
       "freelance": {
         "definition": "Vente directe de compétences (développement, design, rédaction, conseil) à des clients en mode projet ou mission.",
@@ -17,7 +27,8 @@
         "definition": "Accompagnement stratégique ou opérationnel d'entreprises sur des problématiques complexes.",
         "positionnement": "Le consultant vend une transformation mesurable, pas du temps. Facturer à la valeur créée plutôt qu'au temps passé.",
         "modeles_facturation": "Forfait projet, régie (TJM), success fee (% des résultats), retainer mensuel (abonnement conseil).",
-        "scaling": "Passer du solo au cabinet en recrutant des consultants juniors. Créer des méthodologies propriétaires réutilisables."
+        "scaling": "Passer du solo au cabinet en recrutant des consultants juniors. Créer des méthodologies propriétaires réutilisables.",
+        "garde_fou": "Ne pas vendre un impact que l'on ne peut pas prouver ou attribuer raisonnablement."
       },
       "coaching_et_formation": {
         "coaching_individuel": "Accompagnement personnalisé à forte valeur perçue. Tarifs de 80€ à 500€/heure selon la niche et l'expertise.",
@@ -59,7 +70,8 @@
         "definition": "Commission sur les ventes générées via un lien de recommandation unique.",
         "commissions_types": "Amazon (1-10%), SaaS (20-40% récurrent), formation en ligne (30-50%), hébergement web (50-200€/vente).",
         "strategie": "Créer du contenu SEO evergreen autour de comparatifs, tutoriels et avis. Le trafic organique alimente les ventes en continu.",
-        "ethique": "Toujours divulguer les liens affiliés. Ne recommander que des produits testés et approuvés."
+        "ethique": "Toujours divulguer les liens affiliés. Ne recommander que des produits testés et approuvés.",
+        "risque": "L'affiliation est fragile si elle dépend d'un seul programme, d'une seule plateforme ou d'une promesse produit douteuse."
       },
       "dividendes": {
         "definition": "Revenus distribués par les entreprises cotées à leurs actionnaires proportionnellement aux actions détenues.",
@@ -84,7 +96,8 @@
         "definition": "Vente en ligne sans stock: le fournisseur expédie directement au client final.",
         "avantages": "Investissement initial très faible, pas de gestion de stock.",
         "inconvenients": "Marges faibles (15-30%), délais de livraison longs, contrôle qualité limité, forte concurrence.",
-        "conseil": "Privilégier des fournisseurs européens pour les délais. Se différencier par le branding et le service client, pas par le prix."
+        "conseil": "Privilégier des fournisseurs européens pour les délais. Se différencier par le branding et le service client, pas par le prix.",
+        "realite": "Sans contrôle précis de la marge, des retours et du support client, le dropshipping devient vite un business à faible qualité et faible résilience."
       },
       "print_on_demand": {
         "definition": "Impression à la demande de designs personnalisés sur t-shirts, mugs, posters, etc.",
@@ -99,6 +112,18 @@
         "avantage": "Revenus récurrents et prévisibles, valorisation élevée (8-15x ARR pour les SaaS performants).",
         "conseil": "Valider le problème avant de coder. MVP en 4-8 semaines. Itérer sur le feedback utilisateur."
       }
+    },
+    "gouvernance_financiere_revenus": {
+      "cash_flow": "Une activité de monétisation doit être pilotée par son cash flow réel, pas par le chiffre d'affaires seul.",
+      "indicateurs_minimum": [
+        "Chiffre d'affaires",
+        "Marge brute",
+        "Marge nette",
+        "Coût d'acquisition",
+        "Taux de remboursement ou retour",
+        "Part de revenu récurrent"
+      ],
+      "discipline": "Ne pas scaler une source de revenu si le coût d'acquisition, la délivrance et la qualité du revenu ne sont pas stables."
     },
     "sponsoring_et_partenariats": {
       "sponsoring_contenu": "Marques payent pour être mentionnées dans du contenu (articles, vidéos, podcasts). Tarif selon audience et engagement.",
@@ -126,7 +151,8 @@
         "levier_3_systemes": "Créer des systèmes reproductibles (SOPs, templates, workflows) qui fonctionnent sans intervention directe.",
         "levier_4_produits": "Transformer son expertise en produits (cours, logiciels, licences) pour découpler revenu et temps."
       },
-      "progression_recommandee": "Freelance → Services productisés → Infoproduits → SaaS/Membership → Investissements passifs. Chaque étape finance la suivante."
+      "progression_recommandee": "Freelance → Services productisés → Infoproduits → SaaS/Membership → Investissements passifs. Chaque étape finance la suivante.",
+      "anti_arnaque": "Toute proposition de revenu 'passif' quasi instantané sans audience, sans système et sans preuve opérationnelle doit être considérée comme suspecte."
     }
   }
 }

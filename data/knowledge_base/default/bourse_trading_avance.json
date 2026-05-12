@@ -138,7 +138,8 @@
         "call": "Droit (pas obligation) d'ACHETER un actif à un prix fixé (strike) avant une date (expiration). Acheteur paye une prime.",
         "put": "Droit de VENDRE à un prix fixé. Protection contre la baisse ou spéculation baissière.",
         "valeur_intrinseque": "Pour un call: max(0, prix du sous-jacent - strike). Pour un put: max(0, strike - prix du sous-jacent).",
-        "valeur_temps": "Prime - valeur intrinsèque. Décroît avec le temps (time decay). Maximum pour les options ATM."
+        "valeur_temps": "Prime - valeur intrinsèque. Décroît avec le temps (time decay). Maximum pour les options ATM.",
+        "cadre_officiel": "Les options sont des dérivés. Leur risque dépend à la fois du sous-jacent, du temps restant, de la volatilité implicite et de la liquidité du contrat. Elles ne conviennent pas à un apprentissage impulsif."
       },
       "greeks": {
         "delta": "Sensibilité du prix de l'option à un mouvement de 1$ du sous-jacent. Call: 0 à +1. Put: 0 à -1. ATM ≈ 0.50.",
@@ -152,7 +153,13 @@
         "bull_call_spread": "Acheter call strike bas + vendre call strike haut. Risque limité, gain limité. Coût réduit vs call seul.",
         "iron_condor": "Vendre un put spread + vendre un call spread simultanément. Profit si le prix reste dans la fourchette. Gain max = primes encaissées. Perte max = écart des strikes - primes.",
         "straddle": "Acheter call + put même strike, même expiration. Profit si mouvement fort dans n'importe quelle direction. Coûteux (double prime)."
-      }
+      },
+      "risques_majeurs": [
+        "Décroissance temporelle rapide à l'approche de l'expiration",
+        "Spreads larges sur contrats peu liquides",
+        "Hausse de volatilité implicite payée trop cher",
+        "Usage de stratégies complexes sans comprendre le payoff réel"
+      ]
     },
     "risk_management": {
       "position_sizing": {
@@ -195,6 +202,37 @@
         "metriques_cles": "Win rate, ratio R:R moyen, profit factor (gains bruts / pertes brutes, viser >1.5), drawdown maximum (perte maximale depuis le pic), ratio de Sharpe (rendement ajusté au risque).",
         "pieges": "Overfitting (optimisation excessive sur données passées), survivorship bias, look-ahead bias, commissions/slippage ignorés. Toujours valider sur données hors-échantillon."
       }
+    },
+    "vehicules_et_execution": {
+      "etf_nuances": {
+        "marche_vs_nav": "Une part d'ETF se négocie au prix de marché, qui peut différer de la valeur liquidative (NAV). Plus le produit est spécialisé ou peu liquide, plus l'écart potentiel augmente.",
+        "lecture_obligatoire": "Lire le prospectus, le rapport actionnaire récent, le type de réplication, les frais totaux et la concentration réelle avant d'acheter un ETF.",
+        "piege": "Un ETF n'est pas automatiquement bien diversifié. Certains suivent un seul titre, un secteur étroit ou un thème très concentré."
+      },
+      "obligations_due_diligence": {
+        "liquidite": "Une obligation peut sembler stable tout en étant difficile à revendre rapidement au bon prix. La liquidité du marché secondaire est un critère majeur.",
+        "sensibilite_taux": "Quand les taux montent, la valeur de marché des obligations existantes tend à baisser. Les maturités longues sont généralement plus sensibles.",
+        "credit": "Le rendement supplémentaire d'une obligation rémunère aussi un risque de défaut, pas seulement une opportunité."
+      },
+      "verification_intermediaires": {
+        "principe": "Toujours vérifier le professionnel, le courtier ou la firme avant de confier du capital.",
+        "controles": [
+          "Statut d'enregistrement",
+          "Historique disciplinaire",
+          "Types de produits proposés",
+          "Compréhension des frais et du mode de rémunération"
+        ]
+      }
+    },
+    "fraudes_et_manipulations": {
+      "reseaux_sociaux": "Les faux groupes d'investissement utilisent souvent la preuve sociale, l'urgence, de faux experts et parfois de prétendues recommandations IA pour pousser vers des plateformes ou offres frauduleuses.",
+      "signaux_alerte": [
+        "Promesse de profits réguliers ou garantis",
+        "Pression pour déposer vite",
+        "Groupe privé WhatsApp/Telegram présenté comme source principale",
+        "Faux relevés de performance ou captures impossibles à auditer"
+      ],
+      "discipline": "Aucune recommandation de trading ou d'investissement ne doit être suivie sans vérification indépendante de l'intermédiaire, du produit et du risque."
     },
     "gestion_portefeuille_avancee": {
       "allocation_tactique": "Ajuster dynamiquement l'allocation sectorielle/géographique en fonction du cycle économique. Surpondérer les secteurs cycliques en expansion, les défensifs en récession.",

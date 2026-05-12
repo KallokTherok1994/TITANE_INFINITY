@@ -4,6 +4,10 @@
   "description": "Growth hacking et marketing avancé — AARRR, funnel TOFU/MOFU/BOFU, publicité payante, SEO, viral loops, referral, PLG, automation, CRM, analytics, CRO, pricing psychology, stratégies de lancement",
   "marketing_affiliation_growth": {
     "introduction": "Le growth marketing combine créativité, données et expérimentation rapide pour acquérir, activer et retenir des utilisateurs de manière scalable. Contrairement au marketing traditionnel, il couvre l'intégralité du cycle de vie client et optimise chaque étape avec des métriques précises. TITANE fournit ici un cadre opérationnel complet pour concevoir et exécuter des stratégies de croissance mesurables.",
+    "cadre_de_rentabilite": {
+      "principe": "La croissance n'est saine que si elle améliore la valeur client, la rétention et la rentabilité, pas seulement le volume.",
+      "erreur_classique": "Accélérer l'acquisition avant d'avoir validé l'activation, la rétention et l'économie unitaire."
+    },
     "growth_hacking_methodology": {
       "definition": "Approche systématique de croissance rapide par expérimentation continue, popularisée par Sean Ellis. Chaque hypothèse est testée, mesurée et itérée en cycles courts (sprints d'1-2 semaines).",
       "framework_AARRR": {
@@ -73,7 +77,8 @@
           "lookalike": "Audiences similaires basées sur vos meilleurs clients (1-10%, commencer par 1%)"
         },
         "retargeting": "Recibler les visiteurs du site (pixel Meta) avec des annonces spécifiques selon l'étape du funnel. Exclure les clients existants pour éviter le gaspillage.",
-        "conseil": "Le créatif est responsable de 60-70% de la performance. Tester 3-5 visuels par ensemble de publicités. Prioriser la vidéo courte (<15s) avec hook dans les 3 premières secondes."
+        "conseil": "Le créatif est responsable de 60-70% de la performance. Tester 3-5 visuels par ensemble de publicités. Prioriser la vidéo courte (<15s) avec hook dans les 3 premières secondes.",
+        "garde_fou": "Mesurer la performance sur la contribution réelle au revenu et à la marge, pas sur les seuls résultats de plateforme."
       },
       "tiktok_ads": {
         "principe": "Contenu natif obligatoire — les publicités qui ressemblent à des pubs échouent. Créer du contenu qui se fond dans le feed (UGC style, storytelling, trends).",
@@ -142,6 +147,16 @@
         "éléments_à_tester": "Titres (impact le plus fort), CTA (texte + couleur + position), images/vidéos, longueur de page, formulaires (nombre de champs), prix et offres, preuve sociale",
         "conseil": "Commencer par les éléments à fort impact et faible effort. Un bon titre peut améliorer les conversions de 20-50%."
       }
+    },
+    "anti_growth_illusion": {
+      "vanity_metrics": [
+        "Impressions",
+        "Likes",
+        "Téléchargements sans activation",
+        "Leads non qualifiés",
+        "Trafic sans revenu"
+      ],
+      "regle": "Une métrique n'a de valeur que si elle améliore une étape du funnel ou une décision économique réelle."
     },
     "psychologie_pricing": {
       "prix_psychologiques": "9,97€ au lieu de 10€ (effet du chiffre gauche). Prix en 7 ou 9 perçus comme des offres. Prix ronds (100€) pour les achats émotionnels/premium.",

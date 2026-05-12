@@ -4,6 +4,15 @@
   "description": "E-commerce fondamentaux — modèles de business (B2C/B2B/C2C/D2C/dropshipping/abonnement), plateformes (Shopify/WooCommerce/PrestaShop/Magento/Amazon/Etsy), UX et optimisation de la conversion (tunnel d'achat, checkout, CRO), logistique et fulfillment (stock propre vs 3PL vs dropshipping), marketing e-commerce (acquisition, rétention, email/SMS marketing, retargeting), marketplace strategy, métriques clés (AOV/LTV/CAC/taux de conversion/panier abandonné)",
   "ecommerce_fondamentaux": {
     "introduction": "L'e-commerce est devenu un pilier incontournable du commerce mondial (>5 000 Mds$ en 2023). Créer une boutique en ligne ne suffit plus: il faut maîtriser l'acquisition, la conversion, la rétention et la logistique pour bâtir un business rentable. TITANE couvre ce domaine avec une approche opérationnelle.",
+    "realite_financiere": {
+      "principe": "Le chiffre d'affaires e-commerce n'est pas la vérité économique. La vérité est la marge nette, la trésorerie et la capacité à répéter les ventes proprement.",
+      "avant_scaling": [
+        "Comprendre la marge brute par produit",
+        "Intégrer frais de paiement, retours, SAV et logistique",
+        "Mesurer le coût d'acquisition réel",
+        "Calculer le seuil de rentabilité"
+      ]
+    },
     "modèles_business": {
       "B2C": "Business to Consumer. La majorité des boutiques en ligne. Volumes importants, marges variables, relation directe avec le client final.",
       "B2B": "Business to Business. Commandes plus importantes, cycles plus longs, relation contractuelle, prix souvent négociés. Plateformes spécialisées (Alibaba, Ankorstore).",
@@ -40,7 +49,8 @@
       "stock_propre": "Meilleure maîtrise qualité, délais et image. Nécessite entrepôt + préparation de commandes + transporteurs. Coûts fixes élevés.",
       "3PL": "Third-Party Logistics. Externaliser stockage + préparation + expédition à un prestataire logistique (ex: Rakuten Super Logistics, Mondial Relay, Colissimo Pro, Shipbob). Coûts variables mais moins de contrôle.",
       "Amazon_FBA": "Fulfilled By Amazon. Stocker ses produits dans les entrepôts Amazon qui gère livraison + SAV. Éligible Prime. Fees significatifs mais conversion améliorée.",
-      "expédition": "Stratégie livraison gratuite (souvent sur commandes >X€) + délais affichés honnêtement + tracking + gestion des retours (légalement 14 jours en UE pour la vente à distance)."
+      "expédition": "Stratégie livraison gratuite (souvent sur commandes >X€) + délais affichés honnêtement + tracking + gestion des retours (légalement 14 jours en UE pour la vente à distance).",
+      "cash_flow": "Le cycle de trésorerie doit être suivi: paiement client, décaissement fournisseur, délais de livraison, remboursements et immobilisation éventuelle du stock."
     },
     "métriques_clés": {
       "taux_de_conversion": "Commandes / Visiteurs uniques. E-commerce moyen: 1-3%. Excellence: >5%. Varie beaucoup par secteur et source de trafic.",
@@ -48,12 +58,23 @@
       "LTV": "Lifetime Value = AOV × Fréquence d'achat annuelle × Durée de vie client (années). Clé pour évaluer le budget d'acquisition acceptable.",
       "CAC": "Customer Acquisition Cost = Budget marketing / Nombre de nouveaux clients. Règle: LTV doit être >3× CAC.",
       "ROAS": "Return On Ad Spend = CA généré / Budget pub. Benchmarks: Google Shopping ROAS 4-8×, Facebook Ads 2-5×.",
-      "taux_de_rétention": "% de clients qui rachètent. Augmenter via loyalty programs, email marketing, recommandations personnalisées."
+      "taux_de_rétention": "% de clients qui rachètent. Augmenter via loyalty programs, email marketing, recommandations personnalisées.",
+      "break_even": "Seuil de rentabilité mensuel = charges fixes / marge brute moyenne. Indispensable avant toute accélération budgétaire."
     },
     "marketing_ecommerce": {
       "acquisition": "SEO (trafic organique) + Google Shopping/Search Ads (intention d'achat forte) + Meta Ads (découverte) + Influenceurs/UGC + Marketplace listing",
       "email_marketing": "ROI moyen email: 42:1. Séquences clés: bienvenue (5 emails), abandon panier (3), post-achat (upsell + avis), réengagement inactifs. Outils: Klaviyo (e-commerce spécialisé), Mailchimp, Brevo.",
-      "BNPL": "Buy Now Pay Later (Alma, Klarna, Scalapay). Augmente le panier moyen de 30-50% mais coûts 2-6% par transaction."
+      "BNPL": "Buy Now Pay Later (Alma, Klarna, Scalapay). Augmente le panier moyen de 30-50% mais coûts 2-6% par transaction.",
+      "discipline": "Une croissance payée par publicité n'est saine que si la rétention, la marge et la trésorerie confirment que chaque cohorte client crée réellement de la valeur."
+    },
+    "arnaques_et_faux_raccourcis": {
+      "signaux": [
+        "Promesse de boutique clé en main rentable immédiatement",
+        "Coaching ou agence vendus comme formule magique",
+        "Témoignages non vérifiables",
+        "Dépendance totale à une plateforme ou un fournisseur opaque"
+      ],
+      "regle": "Traiter toute promesse 'facile' de revenus e-commerce comme un risque jusqu'à preuve contraire sur l'économie unitaire réelle."
     }
   }
 }

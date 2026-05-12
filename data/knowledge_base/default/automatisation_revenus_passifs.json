@@ -4,6 +4,15 @@
   "description": "Automatisation et revenus passifs VISIONNAIRE_2.0 — classification des revenus passifs (actifs numériques/financiers/immobiliers/PI), automatisation business (no-code Zapier/Make/n8n, email automation, chatbots, AI tools, social scheduling), royalties (KDP/musique/photos stock/templates), licensing/PI, cashflow machines physiques, revenus financiers passifs (dividendes/REITs/SCPI/robo-advisors), business en ligne automatisés (niche sites/YouTube/affiliate SEO), micro-SaaS solo founder",
   "automatisation_revenus_passifs": {
     "introduction": "Les revenus passifs ne sont jamais vraiment 'passifs' — ils demandent un investissement initial (temps, argent ou les deux) avant de générer des flux récurrents avec un effort minimal. Au niveau VISIONNAIRE_2.0, TITANE structure les stratégies pour construire un portefeuille de revenus diversifié qui travaille pour vous 24/7.",
+    "realite_economique": {
+      "principe": "Un revenu passif sain est le résultat d'un actif, d'un système ou d'un capital productif. Il ne doit pas être confondu avec une promesse de gain facile.",
+      "test_de_realite": [
+        "Quel actif produit le revenu ?",
+        "Quel risque porte-t-il ?",
+        "Combien de temps faut-il avant les premiers flux ?",
+        "Quelle maintenance résiduelle reste nécessaire ?"
+      ]
+    },
     "classification_revenus_passifs": {
       "actifs_numeriques": "Sites web monétisés, chaînes YouTube, cours en ligne, templates/presets, applications, SaaS. Investissement initial : temps + compétences. Scalabilité : infinie.",
       "actifs_financiers": "Dividendes, intérêts, gains en capital. Investissement initial : capital. Effort : quasi nul après configuration.",
@@ -30,7 +39,8 @@
       "AI_tools_automation": {
         "contenu": "ChatGPT/Claude pour rédaction (articles, emails, scripts). Midjourney/DALL-E pour visuels. ElevenLabs pour voix-off. Descript pour montage vidéo.",
         "workflow": "AI + no-code = puissance. Ex : RSS feed → résumé IA → post LinkedIn automatique → publié via Buffer. Zéro effort après setup.",
-        "social_scheduling": "Buffer, Later, Hootsuite, Publer. Programmer 30 jours de contenu en 2-3h. Recyclage automatique des meilleurs posts."
+        "social_scheduling": "Buffer, Later, Hootsuite, Publer. Programmer 30 jours de contenu en 2-3h. Recyclage automatique des meilleurs posts.",
+        "garde_fou": "L'automatisation ne remplace ni la qualité de l'offre, ni la conformité, ni la vérification humaine des messages sensibles."
       }
     },
     "royalties_et_PI": {
@@ -65,7 +75,8 @@
       },
       "SCPI": "Société Civile de Placement Immobilier. Investir dans l'immobilier sans gestion. Rendement 4-6%/an. Ticket : dès 1000€. Corum, Primovie, Épargne Pierre.",
       "robo_advisors": "Gestion automatisée d'un portefeuille diversifié ETF. Yomoni, Nalo, WeSave (France). Frais 0.5-1.6%/an. Idéal pour investisseur passif.",
-      "crowdfunding_lending": "Prêt participatif : Mintos, October, PeerBerry. Rendement 6-12%/an. Risque de défaut. Diversifier sur 50+ prêts."
+      "crowdfunding_lending": "Prêt participatif : Mintos, October, PeerBerry. Rendement 6-12%/an. Risque de défaut. Diversifier sur 50+ prêts.",
+      "prudence": "Tout rendement passif élevé rémunère un risque élevé de défaut, d'illiquidité, de plateforme ou de perte en capital."
     },
     "business_en_ligne_automatises": {
       "niche_websites": {
@@ -96,7 +107,8 @@
     "indicateurs_passivite": {
       "heures_par_euro": "Mesurer le ratio temps investi / revenu généré. Objectif : < 0.5h/€ de revenu mensuel (2000€/mois pour < 1000h de travail sur la durée de vie).",
       "scalabilite": "Le revenu peut-il 10x sans 10x le temps ? Si oui = vrai actif passif. Si non = emploi déguisé.",
-      "diversification": "Tableau de bord mensuel : source de revenu × montant × heures investies × tendance (↑↗→↘↓). Objectif : 7 lignes, aucune > 40%."
+      "diversification": "Tableau de bord mensuel : source de revenu × montant × heures investies × tendance (↑↗→↘↓). Objectif : 7 lignes, aucune > 40%.",
+      "cash_reel": "Différencier revenu affiché, revenu encaissé, revenu récurrent et revenu réellement conservé après frais et fiscalité."
     }
   }
 }

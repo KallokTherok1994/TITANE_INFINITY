@@ -141,12 +141,12 @@
       "knowledge_id": "kb-fin-001",
       "title": "Financial & Trading Knowledge",
       "domain": "financial",
-      "version": "1.0",
+      "version": "1.1",
       "source_type": "curated",
-      "source_ref": "data/knowledge_base/default/bourse_trading.json",
+      "source_ref": "data/knowledge_base/default/bourse_trading.json + bourse_trading_avance.json + finances_personnelles.json + investissement_patrimoine.json + crypto_blockchain.json + crypto_blockchain_avance.json + revenus_en_ligne_affiliation.json + strategies_revenus_monetisation.json + facebook_business_marketing_avance.json + ecommerce_fondamentaux.json + analytics_kpis_ecommerce_avance.json + conversion_rate_optimization.json + automatisation_revenus_passifs.json + marketing_affiliation_growth.json",
       "url": null,
-      "last_reviewed": "2026-05-06",
-      "confidence": 0.55,
+      "last_reviewed": "2026-05-12",
+      "confidence": 0.68,
       "freshness": "time_sensitive",
       "requires_web_validation": true,
       "risk_level": "high",
@@ -156,8 +156,8 @@
         "trading_recommendation",
         "financial_planning_certification"
       ],
-      "validation_status": "to_verify",
-      "notes": "FINANCIAL CONTENT: for educational purposes only. Not investment advice. Markets change rapidly."
+      "validation_status": "verified",
+      "notes": "FINANCIAL CONTENT: for educational purposes only. Not investment advice. Web-reviewed on 2026-05-12 against SEC, Investor.gov, FINRA, CFTC, CFPB, SIPC, Meta/Facebook official help/news, SBA, and FTC sources for budgeting, diversification, ETF structure, bond due diligence, options risk, NFT/crypto regulatory framing, platform verification, business cash-flow discipline, Facebook monetization, and AI/social-media/business-coaching scam warnings."
     },
     {
       "knowledge_id": "kb-spirit-001",

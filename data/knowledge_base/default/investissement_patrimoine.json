@@ -25,6 +25,22 @@
         "principe": "Ne pas mettre tous ses œufs dans le même panier. Diversifier par: classe d'actifs, géographie, secteur, devise.",
         "correlation": "Combiner des actifs faiblement corrélés réduit la volatilité globale sans sacrifier le rendement.",
         "erreur_commune": "Posséder 10 actions technologiques françaises n'est pas diversifier. Vrai diversification: actions monde + obligations + immobilier + matières premières."
+      },
+      "fructification_durable": {
+        "leviers_reels": [
+          "Temps d'investissement",
+          "Contributions régulières",
+          "Frais faibles",
+          "Diversification disciplinée",
+          "Réduction des erreurs émotionnelles"
+        ],
+        "ce_qui_detruit": [
+          "Trading excessif",
+          "Concentration non maîtrisée",
+          "Frais ignorés",
+          "Promesses de gains rapides",
+          "Sorties paniques en phase de volatilité"
+        ]
       }
     },
     "marches_financiers": {
@@ -39,13 +55,15 @@
         "avantages": "Diversification instantanée, frais faibles (0.1-0.5%/an vs 1.5-2% pour fonds actifs), performance supérieure à 90% des gérants actifs sur 15 ans.",
         "etf_recommandes": "MSCI World (1600 entreprises, 23 pays développés), S&P500 (500 grandes entreprises US), MSCI Emerging Markets.",
         "strategie": "DCA (Dollar Cost Averaging) mensuel sur un ETF World: la stratégie la plus simple et la plus efficace pour 90% des investisseurs.",
-        "frais": "TER (Total Expense Ratio) < 0.3% idéalement. Comparer aussi les spreads et les frais de courtage."
+        "frais": "TER (Total Expense Ratio) < 0.3% idéalement. Comparer aussi les spreads et les frais de courtage.",
+        "nuance_execution": "Le prix de marché d'un ETF peut s'écarter de sa valeur liquidative. Lire prospectus, rapport récent, méthode de réplication et niveau de concentration réelle avant achat."
       },
       "obligations": {
         "definition": "Titres de dette émis par des États ou des entreprises. L'investisseur prête de l'argent contre des intérêts réguliers (coupons).",
         "types": "OAT (État français), obligations d'entreprise (investment grade vs high yield), obligations indexées inflation.",
         "relation_taux_prix": "Quand les taux montent, le prix des obligations existantes baisse (et inversement). Duration = sensibilité aux taux.",
-        "role_portefeuille": "Réduire la volatilité globale, fournir des revenus réguliers, protection en période de récession."
+        "role_portefeuille": "Réduire la volatilité globale, fournir des revenus réguliers, protection en période de récession.",
+        "due_diligence": "Vérifier qualité de crédit, échéance, liquidité du marché secondaire et sensibilité aux taux avant d'acheter une obligation individuelle."
       }
     },
     "enveloppes_fiscales": {
@@ -130,7 +148,9 @@
       "risque_liquidite": "Impossibilité de vendre rapidement sans perte. Concerne l'immobilier physique, le private equity, certaines SCPI.",
       "risque_concentration": "Trop de poids sur un seul actif/secteur/pays. Règle: aucune position individuelle > 5-10% du portefeuille.",
       "fonds_urgence": "Conserver 3-6 mois de dépenses en liquidités avant d'investir. Épargne de précaution sur livret A ou LDDS.",
-      "stop_loss_mental": "Définir à l'avance le seuil de perte acceptable par position. Ne pas laisser les émotions dicter les décisions."
+      "stop_loss_mental": "Définir à l'avance le seuil de perte acceptable par position. Ne pas laisser les émotions dicter les décisions.",
+      "verifier_intermediaire": "Avant d'investir via un professionnel ou une plateforme, vérifier son statut, son historique et sa structure de frais.",
+      "fraude_sociale": "Se méfier des approches via réseaux sociaux, groupes privés ou signaux IA non auditables."
     },
     "independance_financiere_fire": {
       "definition": "Financial Independence, Retire Early — accumuler suffisamment de patrimoine pour vivre de ses revenus passifs.",
@@ -159,7 +179,8 @@
       "etape_4": "Remboursement des dettes à taux élevé (> 4-5%) avant d'investir.",
       "etape_5": "Ouverture des enveloppes fiscales (PEA, assurance-vie) pour faire courir les délais.",
       "etape_6": "Mise en place d'un DCA automatique mensuel selon l'allocation d'actifs choisie.",
-      "etape_7": "Revue annuelle: rééquilibrage, ajustement de l'allocation selon l'évolution de la situation et des objectifs."
+      "etape_7": "Revue annuelle: rééquilibrage, ajustement de l'allocation selon l'évolution de la situation et des objectifs.",
+      "etape_8": "Documenter les décisions importantes: pourquoi j'investis, quel risque j'accepte, quelle erreur je veux éviter."
     }
   }
 }

@@ -4,6 +4,10 @@
   "description": "Optimisation du taux de conversion (CRO) pour boutiques e-commerce — analyse du funnel de conversion complet (acquisition → landing → fiche produit → panier → checkout → confirmation), heat maps et enregistrements de sessions (Hotjar, Microsoft Clarity), tests A/B CRO, optimisation UX checkout (friction reduction, confiance, payment UX), optimisation mobile e-commerce, page de collection, trust signals et badges de confiance, chat en direct et chatbots, popups et gamification, personnalisation, vitesse de chargement comme facteur CRO, benchmarks de conversion par secteur (art, mode, déco), stratégie CRO pour Wix et Etsy, analyse des obstacles à l'achat et solutions",
   "conversion_rate_optimization": {
     "introduction": "Le taux de conversion moyen d'un site e-commerce est de 1-3%. Doubler ce taux sans augmenter le trafic = doubler les revenus. C'est l'opportunité la plus rapide et la moins coûteuse pour une boutique en ligne. Chaque élément de votre boutique influence la décision d'achat — TITANE vous donne les outils pour identifier les freins et les éliminer systématiquement.",
+    "cadre_de_prudence": {
+      "principe": "Optimiser la conversion consiste à réduire les frictions réelles et renforcer la clarté, la confiance et la pertinence.",
+      "limite": "Une hausse de conversion n'est un vrai gain que si elle ne dégrade pas la marge, la satisfaction client ou le taux de remboursement."
+    },
 
     "benchmarks_conversion": {
       "e_commerce_general": "1-3% de taux de conversion moyen. Top performers (top 10%) : 3-5%.",
@@ -75,6 +79,10 @@
       "recovery_checkout": "Sauvegarder automatiquement le panier pour les visiteurs identifiés. Si un client revient 3 jours après, son panier est intact.",
       "upsell_checkout": "Proposer un produit complémentaire à faible coût dans le checkout ('Ajoutez ce mini canvas pour 9$ de plus'). Augmente le panier moyen de 10-15% si bien fait."
     },
+    "impact_sur_marge": {
+      "verification": "Chaque test CRO gagnant doit être relu avec la marge nette, le panier moyen réel, le support client et le taux de remboursement.",
+      "exemple": "Une promo qui augmente la conversion mais détruit la marge ou attire des clients peu rentables n'est pas une amélioration durable."
+    },
 
     "optimisation_mobile": {
       "importance": "55-65% du trafic e-commerce est mobile. Mais seulement 30-40% des achats. Le gap = problème d'UX mobile. Corriger l'UX mobile est le levier CRO #1 pour la plupart des boutiques.",
@@ -113,7 +121,16 @@
       "livechat_intercom": "Chat en direct sur la boutique. Réduire l'anxiété des acheteurs indécis. ROI positif pour les produits > 50 USD.",
       "tidio": "Chat en direct + chatbot. Gratuit avec fonctionnalités de base. Parfait pour les petites boutiques. Intégration Wix native."
     },
-
+    "ethique_et_veracite": {
+      "interdit_en_pratique": [
+        "Fausse rareté",
+        "Faux avis",
+        "Compteurs mensongers",
+        "Promesses produit exagérées",
+        "Popups trompeurs difficiles à fermer"
+      ],
+      "raison": "Ces tactiques peuvent améliorer un KPI court terme tout en détruisant la confiance, les retours clients et la conformité."
+    },
     "personalisation": {
       "par_source_trafic": "Afficher un message différent selon la source : 'Bienvenue de la part de TikTok — voici nos canvas trending' pour le trafic TikTok. Outils : Privy, Klaviyo.",
       "par_comportement": "Afficher 'Vous avez regardé ceci' ou 'D'autres personnes ayant vu ce canvas ont aussi aimé'. Cross-sell et upsell contextuels.",

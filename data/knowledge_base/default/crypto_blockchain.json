@@ -67,6 +67,21 @@
       "escroqueries": "Fausses apps, phishing Discord/Twitter/Telegram, 'doublez vos crypto', faux support, sites minting drainant le wallet.",
       "regle_or": "Jamais partager sa seed phrase. Aucune entité légitime ne la demandera JAMAIS."
     },
+    "plateformes_custody_et_execution": {
+      "principe": "Choisir une plateforme crypto revient à évaluer à la fois une contrepartie, une infrastructure technique et un risque de garde.",
+      "cex_vs_self_custody": {
+        "cex": "Centralized Exchange — simple, liquide, pratique pour convertir et trader, mais risque de contrepartie et de blocage retraits.",
+        "self_custody": "Contrôle direct des clés privées. Plus souverain, mais erreurs irréversibles et responsabilité totale."
+      },
+      "criteres_selection": [
+        "Réputation et identité juridique claires",
+        "Historique d'incidents et gestion des crises",
+        "Frais spot, retrait, spread, funding",
+        "Preuves de sécurité opérationnelle",
+        "Qualité des exports de transactions et de la traçabilité fiscale"
+      ],
+      "regle_allocation": "La crypto reste une poche à risque élevé. Sa taille doit être explicitement bornée dans le patrimoine global."
+    },
     "cycles_marche": {
       "halving_bitcoin": "Tous les ~4 ans, récompense mineurs ÷2. Historiquement précède bull market 12-18 mois après.",
       "indicateurs": "On-chain : MVRV, NUPL, Exchange Flows, Whale Accumulation (Glassnode, CryptoQuant). Sentiment : Fear & Greed Index. Technique : Pi Cycle Top, Rainbow Chart, 200-Week MA.",
@@ -127,6 +142,22 @@
       "patterns": "Continuation : flags, pennants, triangles. Retournement : tête-épaules, double top/bottom. Chandeliers : doji, marteau, englobante.",
       "avertissement": "AT auto-réalisatrice mais pas infaillible. Marchés crypto manipulables. Toujours : stop-loss, position sizing, max 1-2% capital/trade."
     },
+    "bots_ia_copy_trading": {
+      "constat": "Les promesses de bots IA, d'arbitrage automatique et de signaux infaillibles sont un terrain majeur de fraude.",
+      "discipline": [
+        "Ne jamais déposer sur une plateforme seulement promue via réseaux sociaux ou groupe privé",
+        "Toujours tester en paper trading ou avec micro-taille",
+        "Vérifier si les résultats annoncés incluent frais, slippage et périodes de baisse",
+        "Prévoir arrêt automatique si la perte maximale ou les retraits deviennent anormaux"
+      ],
+      "copy_trading": "Copier un trader revient à accepter son risque, ses biais, ses heures d'exécution et parfois une opacité complète sur sa méthode.",
+      "red_flags": [
+        "Garanties de rendement",
+        "Retraits soumis à des taxes ou frais imprévus",
+        "Pseudo-licences gouvernementales",
+        "Groupes Telegram/WhatsApp avec urgence et pression"
+      ]
+    },
     "mining_staking": {
       "pow_mining": {
         "processus": "ASICs (Bitcoin) ou GPUs résolvent puzzles cryptographiques. Premier = bloc validé + récompense + frais.",
@@ -153,7 +184,8 @@
         "sim_swap": "Vol numéro téléphone via ingénierie sociale. Attaquant reçoit SMS 2FA. Solution : clés matérielles YubiKey."
       },
       "red_flags": "Rendements irréalistes, pression temporelle, équipe anonyme, code non audité, allocation équipe massive sans vesting, liquidité non verrouillée.",
-      "protection": "Vérifier contrat (Etherscan, TokenSniffer, RugDoc). Wallet dédié pour nouveaux protocoles. Révoquer approvals. DYOR. Ne pas suivre aveuglément influenceurs crypto (souvent rémunérés)."
+      "protection": "Vérifier contrat (Etherscan, TokenSniffer, RugDoc). Wallet dédié pour nouveaux protocoles. Révoquer approvals. DYOR. Ne pas suivre aveuglément influenceurs crypto (souvent rémunérés).",
+      "arnaques_plateformes": "Méfiez-vous des faux sites de trading qui affichent des soldes fictifs puis exigent des frais, taxes ou dépôts supplémentaires avant retrait."
     },
     "histoire_cycles": {
       "origines": "Cypherpunks : DigiCash (Chaum 1989), Hashcash (Back 1997), b-money (Dai 1998). Genèse BTC : 3 jan. 2009. Bitcoin Pizza Day : 10 000 BTC pour 2 pizzas (22 mai 2010).",

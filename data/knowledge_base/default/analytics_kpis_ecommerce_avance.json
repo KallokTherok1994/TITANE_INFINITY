@@ -4,6 +4,11 @@
   "description": "Analytics e-commerce avancé et KPIs — GA4 e-commerce configuration complète (enhanced measurement, purchase events, funnel exploration, attribution), métriques financières essentielles (CAC, LTV, ROAS, RoAS réel, marge nette), attribution multi-touch (premier clic vs dernier clic vs linéaire vs data-driven), cohort analysis clients, LTV prediction, tableaux de bord opérationnels (journalier, hebdomadaire, mensuel), Pixel Meta avancé (Conversions API CAPI, événements standards et custom), Google Tag Manager pour e-commerce, analyse concurrentielle par les données, reporting automatisé (Google Looker Studio), KPIs spécifiques par canal (Facebook Ads, Google Ads, email, organic), décisions data-driven pour la croissance",
   "analytics_kpis_ecommerce_avance": {
     "introduction": "Les données sont l'avantage compétitif des boutiques qui durent. Décider sans données = jouer à la loterie. Décider avec les bonnes données = investir de façon prévisible. La plupart des boutiques mesurent peu de chose — maîtriser l'analytics vous donne un avantage sur 90% de vos concurrents. TITANE vous donne le système de mesure complet, des KPIs aux tableaux de bord en passant par l'attribution.",
+    "verite_financiere": {
+      "principe": "Le KPI principal n'est pas le chiffre d'affaires attribué, mais la création de marge nette et de trésorerie.",
+      "erreur_commune": "Piloter avec le ROAS plateforme seul conduit souvent à surestimer la rentabilité réelle.",
+      "discipline": "Toujours rapprocher les données analytics des coûts réels, remboursements, retours, frais de paiement et réalité comptable."
+    },
 
     "metriques_financieres_essentielles": {
       "cac": {
@@ -30,7 +35,8 @@
           "marge_30_pourcent": "ROAS minimum 3,3x",
           "canvas_printful": "Marge nette typique 35-45% (après coût Printful + Ads + frais plateforme). ROAS minimum rentable : ~2,5-3x"
         },
-        "roas_reel_vs_platforme": "Le ROAS affiché par Facebook ou Google inclut souvent des ventes qui auraient eu lieu sans l'annonce. GA4 avec attribution multi-touch est plus proche de la réalité. Viser un ROAS 'réel' GA4 2x minimum."
+        "roas_reel_vs_platforme": "Le ROAS affiché par Facebook ou Google inclut souvent des ventes qui auraient eu lieu sans l'annonce. GA4 avec attribution multi-touch est plus proche de la réalité. Viser un ROAS 'réel' GA4 2x minimum.",
+        "garde_fou": "Un bon ROAS n'est pas suffisant si la marge unitaire, le coût de livraison, les retours ou les délais d'encaissement détruisent le cash."
       },
       "aov": {
         "definition": "Average Order Value = panier moyen",
@@ -47,6 +53,11 @@
         "calcul": "Marge nette = Prix de vente - Coût production Printful - Frais plateforme - Frais Ads - Frais fixes (abonnements, outils)",
         "exemple_canvas_60x80": "Prix vente 85$ - Printful 38$ - Etsy 5,5$ (6,5%) - Ads 15$ (17,6% budget) - Frais fixes 3$ = Marge nette 23,5$ (27,6%)",
         "objectif_boutique_canvas": "Marge nette cible : 25-40% après tous les coûts. En dessous de 20% = modèle à revoir (prix trop bas, Ads trop chers, mauvais format)."
+      },
+      "cash_conversion_cycle": {
+        "definition": "Temps entre le moment où l'argent est engagé pour vendre et celui où il est réellement encaissé et disponible.",
+        "importance": "Une boutique peut sembler rentable et pourtant manquer de trésorerie si le cycle de cash est mal piloté.",
+        "surveillance": "Suivre délais de paiement, reversements plateformes, retours, remboursements et immobilisation du stock ou des dépenses pub."
       }
     },
 
@@ -98,7 +109,8 @@
         "position_based": "40% premier clic + 40% dernier clic + 20% distribué. Bon compromis découverte + conversion."
       },
       "parcours_type_client_art": "Découverte via Pinterest → Visite blog (article déco) → Retargeting Facebook → Email (abonné) → Achat via Google Search. Attribution last-click créditant Google Search seul = erreur de pilotage. Le vrai ROI de Pinterest et du blog est sous-estimé.",
-      "google_analytics_paths": "GA4 → Publicité → Attribution → Chemins de conversion. Visualiser les séquences de canaux réelles avant l'achat."
+      "google_analytics_paths": "GA4 → Publicité → Attribution → Chemins de conversion. Visualiser les séquences de canaux réelles avant l'achat.",
+      "prudence": "L'attribution reste un modèle. Elle aide à arbitrer les budgets, mais ne doit jamais être prise comme vérité absolue sans confrontation à la réalité économique."
     },
 
     "tableaux_de_bord_operationnels": {
@@ -135,6 +147,16 @@
         ],
         "decisions": "Réallouer le budget marketing selon le ROI réel par canal. Stopper les canaux sous-performants. Investir dans les gagnants."
       }
+    },
+    "anti_vanity_metrics": {
+      "metriques_trompeuses": [
+        "Portée sans conversion",
+        "Trafic sans marge",
+        "ROAS plateforme isolé",
+        "Likes ou favoris sans ventes",
+        "Croissance de liste email sans revenu"
+      ],
+      "regle": "Tout KPI doit répondre à une décision concrète ou à un effet économique réel. Sinon il distrait."
     },
 
     "kpis_par_canal": {

@@ -76,6 +76,11 @@
         "Blur": "Marketplace pro-traders. Agrégateur, bid pools, pas de royalties forcées. A capturé une part majeure du volume en 2023 grâce aux airdrops.",
         "royalties": "Pourcentage (typiquement 2.5-10%) versé au créateur à chaque revente. Historiquement optionnel sur la blockchain, certains marketplaces les ont rendues optionnelles. EIP-2981 = standard de royalties on-chain mais non contraignant.",
         "utility_NFTs": "NFTs donnant accès à des avantages réels: accès communauté, événements, revenus, governance. Valeur utilitaire > valeur spéculative pure."
+      },
+      "qualification_et_risque_investisseur": {
+        "cadre_prudent": "Un NFT peut être un objet numérique utilitaire, culturel ou spéculatif. Il peut aussi être traité comme une offre d'investissement si la communication vend surtout une attente de profit liée aux efforts d'un émetteur.",
+        "signal_rouge": "Quand un NFT est surtout commercialisé comme investissement, avec promesse d'appréciation ou de revenus, le risque réglementaire et de perte pour l'acheteur monte fortement.",
+        "discipline": "Ne jamais confondre accès, collection ou appartenance communautaire avec thèse d'investissement robuste."
       }
     },
     "layer_2_solutions": {
@@ -167,7 +172,8 @@
         "futures_perpetuels": "Contrats à terme sans date d'expiration. Levier jusqu'à 125x (extrêmement risqué). Funding rate: paiement périodique entre longs et shorts pour ancrer le prix au spot. Funding positif = longs payent shorts (marché haussier). Négatif = inverse.",
         "liquidation": "Si la position perd assez pour que la marge soit insuffisante, la position est fermée automatiquement. À 10x de levier, un mouvement de ~10% contre vous = liquidation totale. Formule: prix de liquidation ≈ prix d'entrée × (1 ± 1/levier).",
         "margin": "Cross margin: tout le compte sert de collatéral. Isolated margin: seule la marge allouée est à risque. Préférer isolated pour limiter les pertes."
-      }
+      },
+      "cadre_reel": "Les dérivés crypto combinent volatilité extrême, levier, frais de financement, risques de plateforme et exécution 24/7. Ils exigent un contrôle du risque supérieur à celui du spot."
     },
     "airdrops_et_farming": {
       "strategies": "Interagir avec des protocoles avant le lancement de leur token (testnet + mainnet). Critères typiques: volume de transactions, ancienneté du wallet, nombre de transactions, interaction avec les contrats clés, bridges entre chaînes.",
@@ -180,6 +186,10 @@
       "challenges": "Faible participation aux votes (<10% typiquement), concentration du pouvoir (whales), gouvernance lente, attaques de gouvernance (acheter des tokens pour forcer un vote)."
     },
     "regulation_fiscalite": {
+      "qualification_crypto_actifs_2026": {
+        "principe": "Dans le cadre fédéral américain récent, certains crypto-actifs peuvent être traités comme digital commodities, d'autres comme titres financiers selon leur structure, leur usage et la manière dont ils sont offerts au public.",
+        "implication": "Un token coté, un service de staking ou une offre NFT ne doivent jamais être supposés 'hors régulation' par défaut."
+      },
       "MiCA": {
         "description": "Markets in Crypto-Assets — réglementation européenne entrée en vigueur en 2024. Cadre unifié pour les 27 pays de l'UE. Licence obligatoire pour les prestataires de services crypto (CASP).",
         "stablecoins": "Les émetteurs de stablecoins significatifs doivent avoir des réserves 1:1, audits réguliers, et une licence spécifique. Impact: USDT potentiellement non-conforme en UE."
@@ -196,6 +206,21 @@
         "criteres_revenu_entreprise": "Fréquence des transactions, durée de détention courte, intention spéculative, connaissance avancée des marchés, levier utilisé. Si plusieurs critères sont remplis = risque de requalification.",
         "declaration": "Déclarer chaque disposition (vente, échange, utilisation comme paiement). Tenir un registre détaillé de chaque transaction (date, montant, coût de base, produit de disposition)."
       }
+    },
+    "arnaques_sociales_et_plateformes": {
+      "schema_typique": "Ads sur réseaux sociaux -> entrée en groupe privé -> faux mentor ou faux analyste -> signaux prétendument générés par IA -> dépôt sur fausse plateforme -> faux solde -> frais de retrait demandés.",
+      "red_flags": [
+        "Licence gouvernementale introuvable",
+        "Plateforme inconnue hors des circuits vérifiables",
+        "Profits affichés sans preuves auditables",
+        "Demande de payer une taxe ou des frais supplémentaires avant retrait"
+      ],
+      "contre_mesures": [
+        "Ne jamais se fier à un chat de groupe pour valider un investissement",
+        "Vérifier indépendamment le domaine, l'entité juridique et l'enregistrement",
+        "Tester les retraits tôt avec un très petit montant",
+        "Traiter toute promesse d'IA magique comme suspecte"
+      ]
     }
   }
 }

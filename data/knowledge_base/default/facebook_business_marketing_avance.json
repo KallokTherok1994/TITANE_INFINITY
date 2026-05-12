@@ -4,6 +4,12 @@
   "description": "Facebook Business Marketing avancé — Meta Business Suite, Business Manager, Pixel Meta + CAPI, Catalogue produits, Facebook Shop, Ads Manager structure (CBO/ABO/Advantage+ Shopping), audiences (Core/Custom/Lookalike), créatifs haute performance, formats publicitaires 2025, stratégies e-commerce/POD/boutique, remarketing avancé, Conversions API, gestion de budget et scaling, politique publicitaire, métriques clés, stratégie Kallok's Arts/décoration",
   "facebook_business_marketing_avance": {
     "introduction": "Meta (Facebook + Instagram + Messenger + WhatsApp) est la plateforme publicitaire la plus puissante pour le B2C, l'e-commerce, le dropshipping et les boutiques en ligne. Avec 3,2 milliards d'utilisateurs actifs quotidiens (2025), elle permet de cibler des audiences ultra-précises et de scaler des campagnes rentables. TITANE maîtrise cet écosystème de la configuration technique à l'optimisation avancée.",
+    "monetisation_createur_2026": {
+      "professional_mode": "Le mode professionnel donne accès aux outils professionnels, aux insights, au Professional Dashboard et, selon l'éligibilité, à la monétisation.",
+      "professional_dashboard": "Le Professional Dashboard centralise portée, clics, audience, outils pro et monétisation. Il doit être considéré comme la surface canonique de pilotage d'un profil créateur.",
+      "content_monetization": "Le programme Facebook Content Monetization rémunère les formats éligibles, mais reste à accès limité et doit être traité comme un bonus d'écosystème, pas comme l'unique modèle économique.",
+      "creator_fast_track": "Meta a annoncé en mars 2026 le programme Creator Fast Track pour certains créateurs éligibles venant d'autres plateformes, avec accès accéléré et rémunération garantie temporaire."
+    },
 
     "meta_business_suite": {
       "business_manager": {
@@ -32,12 +38,13 @@
           "section_a_propos": "Compléter à 100% : description, site web, horaires, téléphone, email, catégorie précise. Google indexe les Pages Facebook.",
           "modele_reponse": "Configurer les réponses automatiques pour les messages fréquents (heures d'ouverture, délai livraison, politique retour). Maintenir un temps de réponse < 1 heure."
         },
-        "contenu_organique": {
-          "regle_80_20": "80% contenu valeur/éducation/divertissement, 20% promotionnel maximum. Algorithme pénalise les pages trop commerciales.",
-          "formats_performants": "Vidéos natives (algorithme favorise) > Reels > Carrousels > Images > Texte seul. Vidéo génère 3× plus d'engagement en moyenne.",
-          "frequence": "3-5 publications par semaine. Cohérence > intensité. Publier aux heures d'audience (souvent 11h-13h et 19h-21h selon le public cible).",
-          "contenu_gagnant": "Derrière les coulisses, process de création, histoire de la marque, témoignages clients avec photos, tutoriels, polls et sondages, annonces de nouveautés."
-        },
+      "contenu_organique": {
+        "regle_80_20": "80% contenu valeur/éducation/divertissement, 20% promotionnel maximum. Algorithme pénalise les pages trop commerciales.",
+        "formats_performants": "Vidéos natives (algorithme favorise) > Reels > Carrousels > Images > Texte seul. Vidéo génère 3× plus d'engagement en moyenne.",
+        "frequence": "3-5 publications par semaine. Cohérence > intensité. Publier aux heures d'audience (souvent 11h-13h et 19h-21h selon le public cible).",
+        "contenu_gagnant": "Derrière les coulisses, process de création, histoire de la marque, témoignages clients avec photos, tutoriels, polls et sondages, annonces de nouveautés.",
+        "originalite": "Meta renforce la portée et la monétisation du contenu original et dépriorise les copies, reposts à faible valeur et contenus trop recyclés."
+      },
         "facebook_shop": {
           "principe": "Boutique native intégrée dans la Page Facebook et Instagram. Permet aux clients d'acheter sans quitter Meta. Réduction de friction = augmentation de conversion.",
           "configuration": "Commerce Manager → Créer une boutique → Choisir méthode de paiement → Créer/importer catalogue → Créer collections → Personnaliser l'apparence → Soumettre pour examen.",
@@ -195,6 +202,16 @@
       },
       "black_friday_strategy": "Commencer à chauffer les audiences en octobre. Créer des custom audiences visiteurs 90j avant le BF. Budget ×3-5 sur la période BF/CM. Créatifs spéciaux promo. Séquence email parallèle."
     },
+    "strategie_profil_facebook_rentable": {
+      "principe": "Le profil ou la page Facebook doit être pensé comme moteur d'attention, de preuve sociale et de conversion, pas seulement comme espace de publication.",
+      "schema": [
+        "Contenu original pour la portée",
+        "Preuves ou cas concrets pour la crédibilité",
+        "CTA vers offre, email, boutique ou prise de contact",
+        "Analyse des résultats dans le Professional Dashboard"
+      ],
+      "erreur_commune": "Dépendre uniquement des programmes de monétisation internes au lieu de relier l'audience à une offre contrôlée."
+    },
 
     "metriques_facebook_ads": {
       "CTR": "Click-Through Rate = Clics / Impressions × 100. Objectif > 2% (bon), > 3% (excellent). Si < 1% : créatif trop faible ou audience saturée.",
@@ -219,6 +236,11 @@
       ],
       "bonnes_pratiques": "Éviter les superlatifs non prouvés. Texte clair et honnête. Landing page cohérente avec la pub. Tester avec petit budget avant de scaler.",
       "compte_bloque": "Avoir toujours 2 comptes publicitaires minimum (compte principal + compte de secours). Demande de réexamen immédiate en cas de restriction. Ne pas créer plusieurs comptes sans raison légitime."
+    },
+    "garde_fous_business": {
+      "rentabilite": "Une campagne Meta n'est saine que si la marge, les remboursements, le cash conversion cycle et la capacité opérationnelle suivent.",
+      "anti_hype": "Ne pas interpréter portée, likes ou CPM faibles comme preuve de business rentable. Le signal final reste la marge nette et le cash encaissé.",
+      "anti_arnaque": "Les promesses d'agence miracle, de creatives secrets ou de scaling automatique sans compréhension de l'économie unitaire doivent être traitées avec prudence."
     },
 
     "facebook_pour_kalloks_arts": {

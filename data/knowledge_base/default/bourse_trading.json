@@ -4,6 +4,16 @@
   "description": "Bourse et trading — fondamentaux marchés, analyse technique, analyse fondamentale, gestion du risque, psychologie du trader, stratégies d'investissement long terme et court terme, ETFs, options, fiscalité",
   "bourse_trading": {
     "introduction": "Les marchés financiers sont un jeu de probabilités, pas de certitudes. TITANE enseigne les mécanismes réels, démasque les mythes, et guide vers une approche disciplinée. 90% des traders actifs perdent à long terme — la discipline et la gestion du risque sont les vrais edges.",
+    "cadre_general": {
+      "distinction_essentielle": "Investir = allouer du capital à long terme selon une thèse patrimoniale. Trader = exploiter un mouvement de prix à court terme avec un risque strictement borné.",
+      "ordre_sain": [
+        "Maîtriser budget et réserve de sécurité",
+        "Comprendre allocation et diversification",
+        "Construire une base d'investissement long terme",
+        "Étudier ensuite le trading en simulation puis en taille réduite"
+      ],
+      "erreur_majeure": "Commencer par le levier, le day trading ou la concentration sur quelques titres sans système écrit."
+    },
     "marches_fondamentaux": {
       "actions": "Parts de propriété d'une entreprise. Valorisation = actualisation des flux futurs (DCF) + sentiment marché",
       "obligations": "Dettes d'États/entreprises. Prix inversement corrélé aux taux d'intérêt.",
@@ -44,7 +54,8 @@
         "Ne jamais risquer plus de 1-2% du capital sur une seule position",
         "Ratio reward/risk minimum 2:1 avant d'entrer",
         "Diversification: max 5-10% par position",
-        "Stop-loss systématique, jamais déplacé contre soi"
+        "Stop-loss systématique, jamais déplacé contre soi",
+        "Pas de levier tant que le journal de trading n'est pas propre sur une longue série"
       ],
       "position_sizing": "Kelly Criterion ou fraction fixe. Position = (Capital × %risque) / (Prix entrée - Stop loss)",
       "drawdown": "Perte maximale depuis un pic. Drawdown 20% nécessite 25% de gain pour revenir. 50% → 100%.",
@@ -58,6 +69,49 @@
       "swing_trading": "Positions 2-14 jours sur mouvements techniques. Temps partiel possible. Risque modéré.",
       "scalping": "Dizaines trades/jour sur micro-mouvements. Stressant, exige discipline de fer, spreads coûteux."
     },
+    "plateformes_et_intermediaires": {
+      "verification": "Toujours vérifier un intermédiaire avant dépôt. Priorité aux bases réglementaires officielles et à l'identité juridique réelle de la plateforme.",
+      "criteres_selection": [
+        "Statut réglementaire vérifiable",
+        "Frais complets: commission, spread, conversion, retrait, financement",
+        "Qualité d'exécution et stabilité technique",
+        "Outils d'export fiscal et d'historique",
+        "Sécurité: 2FA, alertes, limitations d'accès"
+      ],
+      "vigilance": "SIPC ou protections locales ne couvrent pas les pertes de marché. Une plateforme réglementée ne rend pas un actif sûr."
+    },
+    "journal_et_process": {
+      "journal_investissement": [
+        "Date",
+        "Actif",
+        "Prix d'entrée",
+        "Thèse d'achat",
+        "Horizon",
+        "Risque principal",
+        "Condition de sortie"
+      ],
+      "journal_trading": [
+        "Date",
+        "Marché",
+        "Setup",
+        "Entrée",
+        "Stop",
+        "Objectif",
+        "Taille",
+        "Risque en devise",
+        "Résultat",
+        "Respect du plan",
+        "État émotionnel"
+      ],
+      "mesures_a_suivre": [
+        "Win rate",
+        "Gain moyen",
+        "Perte moyenne",
+        "Expectancy",
+        "Max drawdown",
+        "Nombre de trades hors plan"
+      ]
+    },
     "psychologie_trader": {
       "biais": {
         "confirmation": "Chercher uniquement les infos qui confirment la thèse",
@@ -67,6 +121,23 @@
       },
       "discipline": "Journal de trading obligatoire. Review hebdomadaire. Process > résultats court terme.",
       "routine": "Plan avant ouverture, risque défini avant entrée, pas de vengeance trade après perte"
+    },
+    "bots_copy_trading_signaux": {
+      "principe": "Un bot accélère une logique existante; il ne transforme pas une mauvaise stratégie en machine à cash.",
+      "copy_trading": "Le copy trading ne dispense jamais de comprendre le risque, les frais, la liquidité et la possibilité de pertes rapides.",
+      "conditions_minimales": [
+        "Backtest avec hypothèses réalistes",
+        "Forward test ou paper trading",
+        "Frais et slippage intégrés",
+        "Kill switch et limite de perte",
+        "Journal des modifications de stratégie"
+      ],
+      "red_flags": [
+        "Rendement garanti",
+        "Bot IA opaque",
+        "Signaux payants sans traçabilité",
+        "Promesses de succès rapide sur réseaux sociaux ou messageries privées"
+      ]
     },
     "fiscalite_france": {
       "pea": "Plan Épargne Actions — actions EU/EEA. Exonération d'impôt après 5 ans (hors PS 17.2%). Plafond 150K€.",

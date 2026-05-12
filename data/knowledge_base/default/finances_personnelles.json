@@ -5,6 +5,13 @@
   "finances_personnelles": {
     "introduction": "Les finances personnelles sont une compétence que l'école n'enseigne pas. TITANE aborde ce sujet avec pragmatisme: pas de schémas de richesse rapide, mais des principes éprouvés qui fonctionnent à long terme pour la majorité. La liberté financière est un objectif réaliste avec de la rigueur et du temps.",
     "fondations": {
+      "systeme_titane_4_poches": {
+        "principe": "Séparer l'argent en 4 poches: Vie, Sécurité, Investissement, Spéculation.",
+        "vie": "Dépenses courantes et obligations mensuelles. Cette poche ne doit jamais financer du trading ou de la crypto spéculative.",
+        "securite": "Fonds d'urgence liquide pour imprévus. Priorité avant toute prise de risque.",
+        "investissement": "Capital long terme destiné à la croissance disciplinée via allocation diversifiée.",
+        "speculation": "Capital à haut risque que l'on peut perdre sans compromettre sa stabilité."
+      },
       "épargne_urgence": {
         "principe": "Avoir 3-6 mois de dépenses essentielles sur un compte liquide et sécurisé avant d'investir",
         "pourquoi": "Sans filet, tout investissement peut être liquidé au pire moment lors d'une urgence",
@@ -16,7 +23,17 @@
         "adaptation": "En France avec charges élevées: 60% besoins, 20% désirs, 20% épargne est plus réaliste"
       },
       "méthode_enveloppes": "Allouer physiquement (ou numériquement) le budget par catégorie chaque mois. Quand l'enveloppe est vide, on arrête. Excellent pour stopper les dépenses impulsives.",
-      "automatisation": "Le secret de la rigueur financière: automatiser l'épargne et l'investissement le jour du salaire. Ce qui n'arrive pas sur le compte courant n'est pas disponible à dépenser."
+      "automatisation": "Le secret de la rigueur financière: automatiser l'épargne et l'investissement le jour du salaire. Ce qui n'arrive pas sur le compte courant n'est pas disponible à dépenser.",
+      "routine_hebdomadaire": {
+        "cadence": "Revue rapide une fois par semaine, revue complète une fois par mois.",
+        "a_verifier": [
+          "Cash flow réel vs budget prévu",
+          "Progression du fonds d'urgence",
+          "Montant alloué à l'investissement long terme",
+          "Dépenses impulsives ou dérives récurrentes"
+        ],
+        "discipline": "Aucune augmentation du risque tant que le budget reste instable ou que le cash flow est négatif."
+      }
     },
     "gestion_dette": {
       "méthode_avalanche": {
@@ -35,6 +52,14 @@
     },
     "investissement": {
       "principe_fondateur": "Temps dans le marché > timing du marché. L'investisseur moyen sous-performe le marché en essayant de le timer.",
+      "ordre_de_progression": [
+        "Budget et cash flow",
+        "Fonds d'urgence",
+        "Compréhension du couple rendement/risque",
+        "Allocation d'actifs et diversification",
+        "Investissement discipliné",
+        "Poche spéculative bornée seulement ensuite"
+      ],
       "ETF_monde": {
         "définition": "Exchange Traded Fund — fonds indiciel coté. Réplique un indice (MSCI World, S&P 500, CAC 40).",
         "avantage": "Diversification immédiate, frais minimes (0.10-0.20%), liquidité quotidienne",
@@ -52,11 +77,24 @@
       },
       "assurance_vie": "2ème enveloppe fiscale française. Accès à plus d'actifs (fonds €, SCPI, ETF). Succession facilitée.",
       "LMNP": "Loueur Meublé Non Professionnel — statut fiscal avantageux pour l'investissement immobilier locatif",
+      "journal_investissement": {
+        "champ_minimum": [
+          "Actif",
+          "Pourquoi j'achète",
+          "Horizon",
+          "Risque principal",
+          "Taille de position",
+          "Condition de sortie"
+        ],
+        "interet": "Oblige à transformer une intuition en décision traçable. Si la thèse n'est pas écrivable clairement, l'achat n'est pas prêt."
+      },
       "erreurs_investissement": [
         "Vendre lors d'une correction (panique)",
         "Investir dans des actions individuelles sans diversification",
         "Crypto-monnaies comme investissement principal (volatilité extrême)",
-        "Frais élevés (OPCVM gérés activement à 2%+ = sous-performance presque certaine)"
+        "Frais élevés (OPCVM gérés activement à 2%+ = sous-performance presque certaine)",
+        "Utiliser l'argent du quotidien pour spéculer",
+        "Confondre allocation patrimoniale et pari court terme"
       ]
     },
     "FIRE_movement": {
@@ -77,6 +115,12 @@
         "effet_de_dotation": "Surévaluer ce qu'on possède déjà"
       },
       "règle_or": "La richesse est ce qu'on ne voit pas (épargne accumulée). L'apparence de richesse est ce qu'on montre (voiture, vêtements). Confondre les deux est la principale erreur."
+    },
+    "programme_progression_90_jours": {
+      "jours_1_30": "Assainir budget, lister revenus et dépenses, calculer le cash flow, lancer le fonds d'urgence, définir objectifs 1/3/10 ans.",
+      "jours_31_60": "Étudier allocation d'actifs, diversification, ETF, actions, frais, lecture de compte courtier, fondamentaux crypto et sécurité.",
+      "jours_61_90": "Découvrir le trading via paper trading uniquement, journaliser le risque, comparer les plateformes, étudier les bots sans argent réel tant que la logique n'est pas comprise.",
+      "objectif": "Former une base patrimoniale solide avant toute exposition importante aux actifs volatils."
     }
   }
 }
