@@ -114,3 +114,4 @@ OPTIMIZATION_TARGETS_W1.md
 runtime/registry/**
 **/wdio_caps.json
 .seal_bootstrap_capture.md
+memory/test/**
