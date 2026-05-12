@@ -1,24 +1,27 @@
 {
-  "version": "33.0.18",
+  "version": "34.0.0",
   "build_date": "2026-05-12",
-  "build_time": "15:23",
-  "fix": "AH-v90: display stubs replaced with xrandr impl (parse_xrandr_environment/monitors, 9 Rust tests); gemma2:2b fallback restored in chat_orchestrator + main.rs AIRouter; JSX comment regressions fixed (SingularityMonitor/EvolutionMonitor/RealityCenter)",
+  "build_time": "17:30",
+  "fix": "BUILD ALL MAJOR 33.0.18→34.0.0: SEAL v33.0.18 (AH-v92, proof_packs/SEAL_v33.0.18_2026-05-12/), Rule 15 mapping gaps (AH-v91), version bump via sync-versions.mjs 8 fichiers, AH-v93 BUILD ALL v34.0.0 (entries=1875)",
   "commits": [
-    "AH-v87: 5 TIME permissions + TimePage dynamic badge (7898489a3)",
-    "AH-v88: badges + Math.random() removal + 14 tests (a3f689f95)",
-    "AH-v89: UI_SURFACE_MAP 7 pages + CHANGELOG + 9 Rule-16 tests (a4ba6616b)",
-    "AH-v90: xrandr display impl + gemma2:2b fallback + JSX fixes (bc3946127)"
+    "AH-v91: Rule 15 mapping gaps — IPC_CATALOG+ARCHITECTURE+CARTOGRAPHY+security.ts+allowed_commands (80bb2102a)",
+    "AH-v92: SEAL v33.0.18 proof pack VERDICT SEALED (edb00d0a4)",
+    "chore(version): bump 33.0.18→34.0.0 [Rule 13 MAJOR] (aab87f36a)",
+    "chore(34.0.0): CHANGELOG+ARCHITECTURE+CARTOGRAPHY+RSI+prettier fixes (b5ce80eb0)",
+    "chore(34.0.0): Cargo.lock bump (9ff19a1c8)",
+    "AH-v93: BUILD ALL v34.0.0 proof packs skeleton (9b4a671a6)"
   ],
   "artifacts": {
     "binary": "titane-infinity",
-    "deb": "titane-infinity_33.0.18_amd64.deb",
-    "appimage": "titane-infinity_33.0.18_amd64.AppImage",
-    "rpm": "titane-infinity-33.0.18-1.x86_64.rpm"
+    "deb": "titane-infinity_34.0.0_amd64.deb",
+    "appimage": "titane-infinity_34.0.0_amd64.AppImage",
+    "rpm": "titane-infinity-34.0.0-1.x86_64.rpm"
   },
   "checksums": {
-    "binary_sha256": "10bfcc5ccd69880e97cb1808550aa7bc55e7eeb2277c8e9814bb3916dc618972",
-    "deb_sha256": "c361dc0a52eedd5ee060e79c1590a167bbab30f91b867ee001854d128bb1214f",
-    "appimage_sha256": "a48a5abb55989a28440491de2acc92963b4afb9bf6fa495a793d8f1827b708d8",
-    "rpm_sha256": "c6160966e7c4354eb3a4110da99681acf98e7d9424deac36879f53b4e15d21dc"
+    "binary_sha256": "52f7670631c0ff93c7fc6c0eabf69f6a1f45f32ffadf8dcbc9bef84d2d231da5",
+    "deb_sha256": "869bd8cc441b762205b78c747bc01130ab75d5bb8fdcfb6153f7ee36c817dd70",
+    "appimage_sha256": "6a72d669b7bfe48544cae5c2dad5f72e8eb00eaa8b5ad223e61885fa5721eec3",
+    "rpm_sha256": "f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96"
   }
 }
+

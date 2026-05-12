@@ -36,37 +36,50 @@
 
 | Artifact | Status | Size | SHA256 |
 |---|---|---|---|
-| Binary `titane-infinity` | ⏳ PENDING | — | — |
-| AppImage | ⏳ PENDING | — | — |
-| DEB | ⏳ PENDING | — | — |
-| RPM | ⏳ PENDING | — | — |
+| Binary `titane-infinity` | ✅ PASS | 52M | `52f76706...` |
+| AppImage | ✅ PASS | 95M | `6a72d669...` |
+| DEB | ✅ PASS | 24M | `869bd8cc...` |
+| RPM | ✅ PASS | 24M | `f4fd6599...` |
 
 > Build command: `pnpm tauri build 2>&1 | tee /tmp/tauri-build-34.0.0.log`
-> Started: 17:18 EDT 2026-05-12 | PID: 852953 | Expected ~25 min
+> Started: 17:18 EDT | Finished: 17:30 EDT 2026-05-12 | exit 0 | Bundles: 3
+> Output: `Finished 3 bundles at: .../deb/...deb .../rpm/...rpm .../appimage/...AppImage`
+
+```
+52f7670631c0ff93c7fc6c0eabf69f6a1f45f32ffadf8dcbc9bef84d2d231da5  titane-infinity
+6a72d669b7bfe48544cae5c2dad5f72e8eb00eaa8b5ad223e61885fa5721eec3  titane-infinity_34.0.0_amd64.AppImage
+869bd8cc441b762205b78c747bc01130ab75d5bb8fdcfb6153f7ee36c817dd70  titane-infinity_34.0.0_amd64.deb
+f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96  titane-infinity-34.0.0-1.x86_64.rpm
+```
 
 ## Phase E — System install
 
 | Action | Status |
 |---|---|
-| `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` | ⏳ PENDING (after build) |
-| `dpkg -s titane-infinity \| grep Version` | ⏳ PENDING |
-| `bash scripts/post-build/update-desktop-icons.sh` | ⏳ PENDING |
+| `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` | ⚠️ BLOCKED_SUDO — interactive sudo required, run manually |
+| `dpkg -s titane-infinity \| grep Version` | ⚠️ BLOCKED_SUDO — pending manual install |
+| `bash scripts/post-build/update-desktop-icons.sh` | ⚠️ BLOCKED_SUDO — pending manual install |
+
+> **Manual install command**: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`
 
 ## Phase F — AutoHeal + final gates
 
 | Gate | Status |
 |---|---|
-| AH-v93 append (entries=1875) | ⏳ PENDING |
-| `bash scripts/autoheal/detect_recurrence.sh` | ⏳ PENDING |
-| `bash scripts/verify_instructions.sh` | ⏳ PENDING |
+| AH-v93 append (entries=1875) | ✅ PASS |
+| `bash scripts/autoheal/detect_recurrence.sh` | ✅ PASS — entries=1875 |
+| `bash scripts/verify_instructions.sh` | ✅ PASS=52 FAIL=0 |
 
 ## Phase G — SEAL v34.0.0
 
 | Item | Status |
 |---|---|
-| proof_packs/SEAL_v34.0.0_2026-05-12/ | ⏳ PENDING |
-| Final commit + push MAIN | ⏳ PENDING |
+| proof_packs/BUILD_ALL_34.0.0_2026-05-12/ | ✅ PASS |
+| proof_packs/SEAL_v34.0.0_2026-05-12/ | ✅ PASS |
+| RELEASE_ARTIFACTS_CHECKSUMS_34.0.0.txt | ✅ PASS |
+| deployment/latest/ v34.0.0 | ✅ PASS (MANIFEST+SHA256SUMS+VERSION+AppImage+DEB+RPM+binary) |
+| Final commit + push MAIN | ✅ PASS |
 
 ---
 
-> **VERDICT**: PARTIAL — Phases A/B/C PASS; D/E/F/G PENDING (build in progress)
+> **VERDICT**: PASS (BLOCKED_SUDO system install — run manually: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb`)

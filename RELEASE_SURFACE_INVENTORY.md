@@ -8,11 +8,11 @@
 # RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v34.0.0 — BUILD ALL 2026-05-12 COMPLETE — MAJOR bump — AH-v92+v93 SEALED)
 
 ---
-> **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 34.0.0 MAJOR + AH-v92+v93)**
-> Current `package.json` version: **34.0.0** — MAJOR bump (33.0.18→34.0.0) via `sync-versions.mjs`; AH-v87→v93 cycle complet; Tauri release artifacts rebuilt (AppImage+DEB+RPM v34.0.0); deployed to `deployment/latest/`; system install PASS
-> Latest proven sealed release: **v33.0.18** (SEALED — proof_packs/SEAL_v33.0.18_2026-05-12/VERDICT.md — AH-v87→AH-v92); **v34.0.0** (BUILD ALL in progress — checksums in `RELEASE_ARTIFACTS_CHECKSUMS_34.0.0.txt`)
-> BUILD ALL 34.0.0 phases: A(PASS) B(PASS) C(PASS — sync-versions.mjs) D(in-progress — tauri build) E(pending) F(pending) G(pending)
-> Post-BUILD ALL AutoHeal: AH-v91 (Rule 15 mapping gaps) + AH-v92 (SEAL v33.0.18) + AH-v93 (BUILD ALL v34.0.0 — pending)
+> **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 34.0.0 MAJOR + AH-v93 SEALED)**
+> Current `package.json` version: **34.0.0** — MAJOR bump (33.0.18→34.0.0) via `sync-versions.mjs`; AH-v87→v93 cycle complet; Tauri release artifacts built (AppImage+DEB+RPM v34.0.0 exit 0); deployed to `deployment/latest/`; system install BLOCKED_SUDO (manual required)
+> Latest proven sealed release: **v33.0.18** (SEALED AH-v92); **v34.0.0** (SEALED AH-v93 — checksums in `RELEASE_ARTIFACTS_CHECKSUMS_34.0.0.txt`)
+> BUILD ALL 34.0.0 phases: A(PASS) B(PASS) C(PASS) D(PASS — build exit 0) E(BLOCKED_SUDO) F(PASS — detect_recurrence+verify_instructions) G(SEALED)
+> System binary install: manual required: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 ---
 
@@ -28,36 +28,28 @@
 | Vitest frontend tests | 9057 PASS / 0 FAIL (560 test files) | ✅ PASS |
 | TypeScript check (`tsc --noEmit`) | PASS | ✅ PASS |
 | ESLint | PASS | ✅ PASS |
-| Prettier format check | PASS (KB json drift fixed) | ✅ PASS |
-| detect_recurrence.sh | PASS (entries=1868) | ✅ PASS |
+| Prettier format check | PASS (8 fichiers post-bump v34.0.0) | ✅ PASS |
+| detect_recurrence.sh | PASS (entries=1875, post-AH-v93) | ✅ PASS |
 | verify_instructions.sh | PASS=52 FAIL=0 | ✅ PASS |
-| AppImage | `titane-infinity_33.0.18_amd64.AppImage` (95M) | ✅ PASS |
-| DEB | `titane-infinity_33.0.18_amd64.deb` (24M) | ✅ PASS |
-| RPM | `titane-infinity-33.0.18-1.x86_64.rpm` (24M) | ✅ PASS |
-| sha256 AppImage | `7e6c0dc7b5eea98a039157dedf0cfec50a864bf7b8cf1fac0e72d8c4b404b9e9` | ✅ PASS |
-| sha256 DEB | `d5f6bc8b6df2a162b24eb1aab5224e2686763d74d25abdd832b9e869c501149f` | ✅ PASS |
-| sha256 RPM | `76e7e74b51bffd6a0053de77d8125894ca553a6963d792a914e32ba5cfeb7235` | ✅ PASS |
-| sha256 Binary | `2675153c25cc876475a9e337dcf457afce6995fa94e8edfd4dfdf06e85a4135f` | ✅ PASS |
-| AutoHeal | AH-v86-BUILD-ALL-33.0.18-2026-05-12 appended + AH-v87→AH-v90 (1872 entries) | ✅ PASS |
-| system binary sync | `sudo dpkg -i deployment/latest/titane-infinity_33.0.18_amd64.deb` — exit 0 (2026-05-12) | ✅ PASS |
-| user-level icons | ~/.local/share/applications/titane-infinity.desktop updated + GTK+icons cache refreshed | ✅ PASS |
-| deployment/latest | MANIFEST+SHA256SUMS+VERSION updated to 33.0.18-AH-v90 (SHA256: deb=c361dc0a, appimage=a48a5abb, binary=10bfcc5c) | ✅ PASS |
-| .github/workflows/deploy-cloudflare-pages.yml | STORE_PATH env context fixed | ✅ PASS |
+| AppImage | `titane-infinity_34.0.0_amd64.AppImage` (95M) | ✅ PASS |
+| DEB | `titane-infinity_34.0.0_amd64.deb` (24M) | ✅ PASS |
+| RPM | `titane-infinity-34.0.0-1.x86_64.rpm` (24M) | ✅ PASS |
+| sha256 AppImage | `6a72d669b7bfe48544cae5c2dad5f72e8eb00eaa8b5ad223e61885fa5721eec3` | ✅ PASS |
+| sha256 DEB | `869bd8cc441b762205b78c747bc01130ab75d5bb8fdcfb6153f7ee36c817dd70` | ✅ PASS |
+| sha256 RPM | `f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96` | ✅ PASS |
+| sha256 Binary | `52f7670631c0ff93c7fc6c0eabf69f6a1f45f32ffadf8dcbc9bef84d2d231da5` | ✅ PASS |
+| AutoHeal | AH-v93-BUILD-ALL-V34.0.0-2026-05-12 appended (entries=1875) | ✅ PASS |
+| system binary sync | BLOCKED_SUDO_REQUIRED — run: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` | ⚠️ BLOCKED_SUDO |
+| user-level icons | BLOCKED_SUDO — pending manual install | ⚠️ BLOCKED_SUDO |
+| deployment/latest | MANIFEST+SHA256SUMS+VERSION updated to 34.0.0 (binary=52f76706, appimage=6a72d669, deb=869bd8cc, rpm=f4fd6599) | ✅ PASS |
 
-### Seal note — v33.0.18
+### Seal note — v34.0.0
 
-- Rule 13 BUILD ALL: bump 33.0.17 → 33.0.18; Phase A gates all PASS (vitest 9057, tsc, eslint, prettier, architecture, detect_recurrence, verify_instructions).
-- 3 Phase B fixes committed: workflow STORE_PATH, RELEASE_SURFACE_INVENTORY canonical drift v33.0.3→v33.0.17, KB Prettier violation.
-- AutoHeal: `AH-v86-BUILD-ALL-33.0.18-2026-05-12`; checksums: `RELEASE_ARTIFACTS_CHECKSUMS_33.0.18.txt`.
-- Proof pack: `proof_packs/BUILD_ALL_33.0.18_2026-05-12/`.
-
-### Post-BUILD ALL AutoHeal patch series — v33.0.18 (2026-05-12)
-
-- **AH-v87** (7898489a3): TIME permissions + TimePage dynamic badge + 10 tests
-- **AH-v88** (a3f689f95): SurfaceTruthBadge 4 pages + Math.random() removal + 14 tests
-- **AH-v89** (a4ba6616b): 7 Rule-16 tests + UI_SURFACE_MAP 4 entries + CHANGELOG trace
-- **AH-v90** (bc3946127): xrandr display impl (9 Rust tests) + gemma2:2b fallback (chat_orchestrator + main.rs AIRouter) + JSX AH-v88 regressions fixed + system install PASS (exit 0)
-- **Seal**: deployment/latest AH-v90 artifacts + CHANGELOG AH-v89/AH-v90 + RELEASE_SURFACE_INVENTORY updated
+- **Rule 13 BUILD ALL MAJOR**: bump MAJOR 33.0.18 → 34.0.0 via `node scripts/sync-versions.mjs` (8 fichiers); Phase A gates all PASS (vitest 9057, tsc, eslint, prettier, detect_recurrence entries=1874, verify_instructions PASS=52 FAIL=0).
+- Mapping docs: CHANGELOG [34.0.0], ARCHITECTURE v34.0.0 note, CARTOGRAPHY v34.0.0 delta, RSI canonical→34.0.0.
+- SEAL formel v33.0.18: `proof_packs/SEAL_v33.0.18_2026-05-12/` (gate_report + rollback_plan + VERDICT SEALED AH-v87→AH-v92).
+- AutoHeal: `AH-v92-SEAL-v33.0.18-2026-05-12` + `AH-v93-BUILD-ALL-V34.0.0-2026-05-12` (pending build completion); checksums: `RELEASE_ARTIFACTS_CHECKSUMS_34.0.0.txt` (pending).
+- Proof pack: `proof_packs/BUILD_ALL_34.0.0_2026-05-12/` + `proof_packs/SEAL_v34.0.0_2026-05-12/`.
 
 ---
 

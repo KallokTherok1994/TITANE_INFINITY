@@ -19,19 +19,19 @@
 |---|---|
 | `detect_recurrence.sh` (pre-build) | PASS — entries=1874 |
 | `verify_instructions.sh` (pre-build) | PASS=52 FAIL=0 |
-| Tauri build v34.0.0 | ⏳ PENDING |
-| System install DEB v34.0.0 | ⏳ PENDING |
-| `detect_recurrence.sh` (post-AH-v93) | ⏳ PENDING |
-| `verify_instructions.sh` (post-build) | ⏳ PENDING |
+| Tauri build v34.0.0 | ✅ PASS — exit 0, 17:30 EDT 2026-05-12, Finished 3 bundles |
+| System install DEB v34.0.0 | ⚠️ BLOCKED_SUDO — manual: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` |
+| `detect_recurrence.sh` (post-AH-v93) | ✅ PASS — entries=1875 |
+| `verify_instructions.sh` (post-build) | ✅ PASS=52 FAIL=0 |
 
 ## Artifact inventory
 
 | Artifact | Statut | SHA256 |
 |---|---|---|
-| `titane-infinity` binary | ⏳ | — |
-| `titane-infinity_34.0.0_amd64.AppImage` | ⏳ | — |
-| `titane-infinity_34.0.0_amd64.deb` | ⏳ | — |
-| `titane-infinity-34.0.0-1.x86_64.rpm` | ⏳ | — |
+| `titane-infinity` binary | ✅ 52M | `52f7670631c0ff93c7fc6c0eabf69f6a1f45f32ffadf8dcbc9bef84d2d231da5` |
+| `titane-infinity_34.0.0_amd64.AppImage` | ✅ 95M | `6a72d669b7bfe48544cae5c2dad5f72e8eb00eaa8b5ad223e61885fa5721eec3` |
+| `titane-infinity_34.0.0_amd64.deb` | ✅ 24M | `869bd8cc441b762205b78c747bc01130ab75d5bb8fdcfb6153f7ee36c817dd70` |
+| `titane-infinity-34.0.0-1.x86_64.rpm` | ✅ 24M | `f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96` |
 
 ## Mapping docs (Rule 15)
 
@@ -54,4 +54,4 @@
 
 ---
 
-> **VERDICT**: PARTIAL — gates pre-build PASS; build + post-build PENDING
+> **VERDICT**: PASS (BLOCKED_SUDO system install — manual: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`)
