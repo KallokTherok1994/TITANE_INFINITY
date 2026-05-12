@@ -56,11 +56,9 @@ f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96  titane-infinit
 
 | Action | Status |
 |---|---|
-| `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` | ⚠️ BLOCKED_SUDO — interactive sudo required, run manually |
-| `dpkg -s titane-infinity \| grep Version` | ⚠️ BLOCKED_SUDO — pending manual install |
-| `bash scripts/post-build/update-desktop-icons.sh` | ⚠️ BLOCKED_SUDO — pending manual install |
-
-> **Manual install command**: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`
+| `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` | ✅ PASS — exit 0 |
+| `dpkg -s titane-infinity \| grep Version` | ✅ PASS — `Version: 34.0.0` |
+| `bash scripts/post-build/update-desktop-icons.sh` | ✅ PASS — sync système=UPDATED, sync binaire=UPDATED |
 
 ## Phase F — AutoHeal + final gates
 
@@ -82,4 +80,4 @@ f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96  titane-infinit
 
 ---
 
-> **VERDICT**: PASS (BLOCKED_SUDO system install — run manually: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb`)
+> **VERDICT**: PASS (all phases complete — system install v34.0.0 confirmed)

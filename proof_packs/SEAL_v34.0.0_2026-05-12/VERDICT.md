@@ -1,6 +1,6 @@
 # VERDICT — SEAL v34.0.0
 
-**SEALED | v34.0.0 | 2026-05-12 | AH-v91→AH-v93 | Rule 1–18 COMPLET | PASS=52 FAIL=0 | entries=1875**
+**SEALED | v34.0.0 | 2026-05-12 | AH-v91→AH-v93 | Rule 1–18 COMPLET | PASS=52 FAIL=0 | entries=1875 | system-install=PASS**
 
 ---
 
@@ -13,7 +13,7 @@
 | detect_recurrence | PASS — entries=1875 |
 | verify_instructions | PASS=52 FAIL=0 |
 | Tauri build | PASS — exit 0 — AppImage(95M) + DEB(24M) + RPM(24M) + binary(52M) |
-| System install | BLOCKED_SUDO — manual: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` |
+| System install | PASS — `dpkg -s titane-infinity` Version=34.0.0, icons sync=UPDATED, update-desktop-icons.sh exit 0 |
 | deployment/latest | PASS — MANIFEST+SHA256SUMS+VERSION+4 artifacts |
 | RELEASE_ARTIFACTS_CHECKSUMS_34.0.0.txt | PASS — 4 SHA256 (binary+AppImage+DEB+RPM) |
 | Rule 15 mapping | PASS — CHANGELOG [34.0.0] + ARCHITECTURE + CARTOGRAPHY + RSI + IPC_CATALOG (1220) |
@@ -40,10 +40,11 @@
 | `9ff19a1c8` | chore(34.0.0): Cargo.lock version bump |
 | `9b4a671a6` | chore(34.0.0): AH-v93 + proof packs skeleton [entries=1875] |
 
-## Action manuelle requise
+## Preuve system install
 
-```bash
-sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb
-bash scripts/post-build/update-desktop-icons.sh
-dpkg -s titane-infinity | grep Version  # → 34.0.0
+```
+Status: install ok installed
+Version: 34.0.0
+[TITAΞ∞] Binaire installé synchronisé avec la build locale (version canonique: 34.0.0)
+[TITAΞ∞] Post-build: sync système=UPDATED, sync binaire=UPDATED
 ```

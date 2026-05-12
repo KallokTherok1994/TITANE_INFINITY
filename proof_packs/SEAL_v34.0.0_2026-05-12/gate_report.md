@@ -20,7 +20,7 @@
 | `detect_recurrence.sh` (pre-build) | PASS — entries=1874 |
 | `verify_instructions.sh` (pre-build) | PASS=52 FAIL=0 |
 | Tauri build v34.0.0 | ✅ PASS — exit 0, 17:30 EDT 2026-05-12, Finished 3 bundles |
-| System install DEB v34.0.0 | ⚠️ BLOCKED_SUDO — manual: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` |
+| System install DEB v34.0.0 | ✅ PASS — `dpkg -s titane-infinity` Version=34.0.0, icons sync=UPDATED |
 | `detect_recurrence.sh` (post-AH-v93) | ✅ PASS — entries=1875 |
 | `verify_instructions.sh` (post-build) | ✅ PASS=52 FAIL=0 |
 
@@ -54,4 +54,4 @@
 
 ---
 
-> **VERDICT**: PASS (BLOCKED_SUDO system install — manual: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`)
+> **VERDICT**: PASS (all phases complete)

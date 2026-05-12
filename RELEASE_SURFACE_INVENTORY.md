@@ -9,10 +9,9 @@
 
 ---
 > **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 34.0.0 MAJOR + AH-v93 SEALED)**
-> Current `package.json` version: **34.0.0** — MAJOR bump (33.0.18→34.0.0) via `sync-versions.mjs`; AH-v87→v93 cycle complet; Tauri release artifacts built (AppImage+DEB+RPM v34.0.0 exit 0); deployed to `deployment/latest/`; system install BLOCKED_SUDO (manual required)
+> Current `package.json` version: **34.0.0** — MAJOR bump (33.0.18→34.0.0) via `sync-versions.mjs`; AH-v87→v93 cycle complet; Tauri release artifacts built (AppImage+DEB+RPM v34.0.0 exit 0); deployed to `deployment/latest/`; system install PASS — `dpkg -s titane-infinity Version=34.0.0`
 > Latest proven sealed release: **v33.0.18** (SEALED AH-v92); **v34.0.0** (SEALED AH-v93 — checksums in `RELEASE_ARTIFACTS_CHECKSUMS_34.0.0.txt`)
-> BUILD ALL 34.0.0 phases: A(PASS) B(PASS) C(PASS) D(PASS — build exit 0) E(BLOCKED_SUDO) F(PASS — detect_recurrence+verify_instructions) G(SEALED)
-> System binary install: manual required: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`
+> BUILD ALL 34.0.0 phases: A(PASS) B(PASS) C(PASS) D(PASS — build exit 0) E(PASS — dpkg+icons) F(PASS — detect_recurrence+verify_instructions) G(SEALED)
 > Full drift analysis: `docs/reports/VERSION_RELEASE_AUTHORITY_MATRIX.md`
 ---
 
@@ -39,8 +38,8 @@
 | sha256 RPM | `f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96` | ✅ PASS |
 | sha256 Binary | `52f7670631c0ff93c7fc6c0eabf69f6a1f45f32ffadf8dcbc9bef84d2d231da5` | ✅ PASS |
 | AutoHeal | AH-v93-BUILD-ALL-V34.0.0-2026-05-12 appended (entries=1875) | ✅ PASS |
-| system binary sync | BLOCKED_SUDO_REQUIRED — run: `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` | ⚠️ BLOCKED_SUDO |
-| user-level icons | BLOCKED_SUDO — pending manual install | ⚠️ BLOCKED_SUDO |
+| system binary sync | PASS — `sudo dpkg -i deployment/latest/titane-infinity_34.0.0_amd64.deb` exit 0, `dpkg -s titane-infinity` Version=34.0.0 | ✅ PASS |
+| user-level icons | PASS — `bash scripts/post-build/update-desktop-icons.sh` sync système=UPDATED, sync binaire=UPDATED | ✅ PASS |
 | deployment/latest | MANIFEST+SHA256SUMS+VERSION updated to 34.0.0 (binary=52f76706, appimage=6a72d669, deb=869bd8cc, rpm=f4fd6599) | ✅ PASS |
 
 ### Seal note — v34.0.0
