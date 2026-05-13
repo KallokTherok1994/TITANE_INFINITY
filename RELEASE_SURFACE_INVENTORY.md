@@ -1,3 +1,19 @@
+## 2026-05-13 : v34.0.8 BUILD ALL — bundles + Phase R+ live snapshot convergence
+
+- **HEAD MAIN** : `b84ea3de0` (Phase R+ commit) → suivi de ce BUILD ALL commit.
+- **Bundles produits** (BUILD ALL v34.0.8) :
+  - `deployment/latest/titane-infinity_34.0.8_amd64.deb` (24 782 232 bytes)
+    sha256 `e173c01fd16a0345d6d712050cb437dec3db85a9babf9142ac03336ec794c3d3`
+  - `deployment/latest/titane-infinity_34.0.8_amd64.AppImage` (98 945 528 bytes)
+    sha256 `11bf6bd888dbc323f1d8b1e9e0fcfb51a4cb58972f226ce7b45ce969509fa348`
+  - `deployment/latest/titane-infinity` binary (54 396 608 bytes)
+    sha256 `39521c473caa1c3eb88888893867995a3430d353a81f9568866e561b1709c323`
+- **Checksums report** : [RELEASE_ARTIFACTS_CHECKSUMS_34.0.8.txt](RELEASE_ARTIFACTS_CHECKSUMS_34.0.8.txt).
+- **Archive policy H1** : v34.0.7 artifacts déplacés vers `deployment/archive/v34.0.7/`.
+- **Smoke run AppImage v34.0.8** (25s) : PASS — AUTH OS init, OMEGA pipeline init, modèle PROD `gemma2:2b` résolu, BOOT markers `BOOT:ENTRY_START` → `BOOT:BEFORE_ORCHESTRATOR_INIT`. Proof : `proof_packs/v34.0.8-smoke-run/appimage-smoke.log` (89 lignes).
+- **Install système** : différé (mot de passe sudo non fourni en session). Bundles disponibles via `sudo dpkg -i deployment/latest/titane-infinity_34.0.8_amd64.deb` à la prochaine session opérateur.
+- **AutoHeal** : entrée `AH-v118-2026-05-13-BUILD_ALL_v34_0_8`.
+
 ## 2026-05-13 : v34.0.8 — UI Vivante + E2E Expansion + React.memo (100/100 PASS, BUILD pending)
 
 - **Mode** : DURABLE | **Bump Rule 13** : 34.0.7 → 34.0.8

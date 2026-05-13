@@ -1,33 +1,31 @@
 {
-  "version": "34.0.7",
+  "version": "34.0.8",
   "build_date": "2026-05-13",
-  "build_time": "11:37",
-  "fix": "UI 100/100 plan (phases A-E sealed) + BUILD ALL v34.0.7 bundles + RPM + archive policy",
+  "build_time": "post-Phase-R+",
+  "fix": "Phase R+ live snapshot convergence on 6/6 advanced agent dashboards + React.memo non-regression suite + BUILD ALL v34.0.8 bundles",
   "commits": [
-    "Phase A (41ed2291e): +14 surfaces E2E 50-surface UI capture (46->60)",
-    "Phase B (cb41f6384): a11y WCAG 2.1 AA 10 routes (60->75)",
-    "Phase C (a333a203f + hotfix 0e9a0912a): responsive 7x3 matrix (75->82)",
-    "Phase D (2c27dff5d): 6 agent dashboards canonical testid contract (82->92)",
-    "Phase E (de921f1d3): aggregate audit + bump v34.0.7 (92->100 PASS)",
-    "BUILD ALL (4c81f41ad): bundles deb+appimage + checksums + inventory seal"
+    "Phase L+M (v34.0.8 pre-seal): useAgentLiveSnapshot hook + 3 dashboards live (explainability, orchestrator, security)",
+    "Phase N+O+P+Q (v34.0.8 pre-seal): +4 E2E families (keyboard, theme, i18n, web-vitals) - 31/31 PASS",
+    "Phase R (v34.0.8 seal): React.memo on 7 surfaces + aggregator v2 100/100",
+    "Phase R+ (b84ea3de0): live snapshot convergence 6/6 + React.memo non-regression Vitest + E2E uniformity",
+    "BUILD ALL v34.0.8: deb + appimage + checksums + deployment/latest truth alignment"
   ],
   "artifacts": {
     "binary": "titane-infinity",
-    "deb": "titane-infinity_34.0.7_amd64.deb",
-    "appimage": "titane-infinity_34.0.7_amd64.AppImage",
-    "rpm": "titane-infinity-34.0.7-1.x86_64.rpm"
+    "deb": "titane-infinity_34.0.8_amd64.deb",
+    "appimage": "titane-infinity_34.0.8_amd64.AppImage"
   },
   "checksums": {
-    "binary_sha256": "57694e8213eda85fa70c1361b365cdb585553982a1c8546e29e371fa45219985",
-    "deb_sha256": "ffa0c682c0fe120827acaf72889ee8a8670a810123d605b0a43e788f2cb9d399",
-    "appimage_sha256": "4596a24a7356655aed01afc9296ad46532c4960fb011012f9b0dc487c64fca65"
+    "binary_sha256": "39521c473caa1c3eb88888893867995a3430d353a81f9568866e561b1709c323",
+    "deb_sha256": "e173c01fd16a0345d6d712050cb437dec3db85a9babf9142ac03336ec794c3d3",
+    "appimage_sha256": "11bf6bd888dbc323f1d8b1e9e0fcfb51a4cb58972f226ce7b45ce969509fa348"
   },
   "sizes_bytes": {
-    "binary": 54396544,
-    "deb": 24786684,
+    "binary": 54396608,
+    "deb": 24782232,
     "appimage": 98945528
   },
-  "ui_score": "100/100 (4/4 phases PASS)",
-  "tests_e2e_passed": 88,
-  "autoheal_entries": 1893
+  "ui_score": "100/100 (9/9 gates PASS, aggregator v2)",
+  "tests_e2e_passed": 90,
+  "autoheal_entries": 1899
 }
