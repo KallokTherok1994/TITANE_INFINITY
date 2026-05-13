@@ -29,7 +29,7 @@ fn parse_xrandr_environment(output: &str) -> DisplayEnvironment {
         if line.contains(" connected") {
             monitor_count += 1;
             if let Some(res) = line.split_whitespace().find(|s| {
-                s.contains('x') && s.chars().next().map_or(false, |c| c.is_ascii_digit())
+                s.contains('x') && s.chars().next().is_some_and(|c| c.is_ascii_digit())
             }) {
                 let clean = res.split('+').next().unwrap_or(res);
                 if clean.contains('x') {
@@ -42,7 +42,7 @@ fn parse_xrandr_environment(output: &str) -> DisplayEnvironment {
             let parts: Vec<&str> = line.split_whitespace().collect();
             if parts.len() >= 2 {
                 for part in &parts[1..] {
-                    let rate_str = part.trim_end_matches(|c| c == '*' || c == '+');
+                    let rate_str = part.trim_end_matches(['*', '+']);
                     if let Ok(rate) = rate_str.parse::<f32>() {
                         refresh_rate = Some(rate as u16);
                         if resolution.is_none() {
@@ -85,7 +85,7 @@ fn parse_xrandr_monitors(output: &str) -> Vec<String> {
                 .split_whitespace()
                 .find(|s| {
                     s.contains('x')
-                        && s.chars().next().map_or(false, |c| c.is_ascii_digit())
+                        && s.chars().next().is_some_and(|c| c.is_ascii_digit())
                 })
                 .and_then(|s| s.split('+').next())
                 .filter(|s| s.contains('x'))
