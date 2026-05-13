@@ -135,7 +135,7 @@ impl DocumentGenerator {
         params
             .get("objectives")
             .map(|obj| obj.split(';').map(|s| s.trim().to_string()).collect())
-            .unwrap_or_else(Vec::new)
+            .unwrap_or_default()
     }
 
     fn generate_sections(

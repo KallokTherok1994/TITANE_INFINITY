@@ -56,7 +56,7 @@ impl VersioningEngine {
 
         self.versions
             .entry(document_id)
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(version.clone());
 
         Ok(version)

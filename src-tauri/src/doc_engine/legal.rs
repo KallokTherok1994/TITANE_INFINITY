@@ -105,8 +105,8 @@ fn generate_legal_summary(doc_type: &DocumentType, parties: &[Party]) -> String 
             DocumentType::Partnership => "accord de partenariat",
             _ => "document",
         },
-        parties.get(0).map(|p| p.name.as_str()).unwrap_or("Partie 1"),
-        parties.get(0).map(|p| p.role.as_str()).unwrap_or("Partie 1"),
+        parties.first().map(|p| p.name.as_str()).unwrap_or("Partie 1"),
+        parties.first().map(|p| p.role.as_str()).unwrap_or("Partie 1"),
         parties.get(1).map(|p| p.name.as_str()).unwrap_or("Partie 2"),
         parties.get(1).map(|p| p.role.as_str()).unwrap_or("Partie 2")
     )

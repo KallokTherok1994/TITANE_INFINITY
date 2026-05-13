@@ -144,10 +144,10 @@ impl ExportEngine {
 
     fn generate_html(&self, document: &Document) -> Result<String> {
         let mut html = String::from("<!DOCTYPE html>\n<html lang=\"fr\">\n<head>\n");
-        html.push_str(&format!("    <meta charset=\"UTF-8\">\n"));
-        html.push_str(&format!(
-            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-        ));
+        html.push_str("    <meta charset=\"UTF-8\">\n");
+        html.push_str(
+            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n",
+        );
         html.push_str(&format!("    <title>{}</title>\n", document.content.title));
         html.push_str(r#"    <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; }
@@ -166,7 +166,7 @@ impl ExportEngine {
 
         // Contenu
         html.push_str(&format!("    <h1>{}</h1>\n", document.content.title));
-        html.push_str(&format!("    <div class=\"metadata\">\n"));
+        html.push_str("    <div class=\"metadata\">\n");
         html.push_str(&format!(
             "        <strong>Version:</strong> {} | <strong>Date:</strong> {}\n",
             document.metadata.version,
