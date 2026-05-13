@@ -1,28 +1,27 @@
 /**
- * TITANE∞ v34.0.3 — GlobalRuntimePulse tests (Rule 16)
+ * TITANE∞ v34.0.4 — GlobalRuntimePulse tests (Rule 16, AH-v101)
  *
  * Vérifie:
  *   - rendu initial (status=PROBING)
  *   - LIVE quand quick_health_check répond ok + latence faible
- *   - DEGRADED quand IPC échoue
- *   - PARTIAL hors Tauri (NO_TAURI_RUNTIME)
+ *   - DEGRADED quand IPC échoue avec code backend
+ *   - PARTIAL quand transport indisponible (NO_TRANSPORT / IPC_TIMEOUT)
  *   - data-testid stable + attributs runtime
+ *
+ * Note v34.0.4: le composant n'utilise plus isTauriRuntimeAvailable() pour
+ * éviter le verrou du cache singleton; il s'appuie uniquement sur le code
+ * d'erreur retourné par safeInvokeCanonical.
  */
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { GlobalRuntimePulse } from '../GlobalRuntimePulse';
 
-// Mock invoke + tauriProtector
 vi.mock('@/utils/invoke', () => ({
   safeInvokeCanonical: vi.fn(),
 }));
-vi.mock('@/utils/tauriProtector', () => ({
-  isTauriRuntimeAvailable: vi.fn(),
-}));
 
 import { safeInvokeCanonical } from '@/utils/invoke';
-import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
 describe('GlobalRuntimePulse', () => {
   beforeEach(() => {
@@ -30,13 +29,34 @@ describe('GlobalRuntimePulse', () => {
   });
 
   it('renders with stable data-testid', () => {
-    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(false);
+    vi.mocked(safeInvokeCanonical).mockResolvedValue({
+      ok: false,
+      content: null,
+      error: { code: 'NO_TRANSPORT', message: 'no bridge' },
+    });
     render(<GlobalRuntimePulse />);
     expect(screen.getByTestId('global-runtime-pulse')).toBeInTheDocument();
   });
 
-  it('shows PARTIAL when Tauri runtime unavailable', async () => {
-    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(false);
+  it('shows PARTIAL when transport unavailable (NO_TRANSPORT)', async () => {
+    vi.mocked(safeInvokeCanonical).mockResolvedValue({
+      ok: false,
+      content: null,
+      error: { code: 'NO_TRANSPORT', message: 'no bridge' },
+    });
+    render(<GlobalRuntimePulse />);
+    await waitFor(() => {
+      const el = screen.getByTestId('global-runtime-pulse');
+      expect(el.getAttribute('data-status')).toBe('PARTIAL');
+    });
+  });
+
+  it('shows PARTIAL on IPC_TIMEOUT', async () => {
+    vi.mocked(safeInvokeCanonical).mockResolvedValue({
+      ok: false,
+      content: null,
+      error: { code: 'IPC_TIMEOUT', message: 'timeout' },
+    });
     render(<GlobalRuntimePulse />);
     await waitFor(() => {
       const el = screen.getByTestId('global-runtime-pulse');
@@ -45,7 +65,6 @@ describe('GlobalRuntimePulse', () => {
   });
 
   it('shows LIVE when quick_health_check returns ok', async () => {
-    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(true);
     vi.mocked(safeInvokeCanonical).mockResolvedValue({
       ok: true,
       content: { status: 'ok' },
@@ -58,12 +77,11 @@ describe('GlobalRuntimePulse', () => {
     });
   });
 
-  it('shows DEGRADED when IPC fails', async () => {
-    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(true);
+  it('shows DEGRADED when IPC returns backend error code', async () => {
     vi.mocked(safeInvokeCanonical).mockResolvedValue({
       ok: false,
       content: null,
-      error: { code: 'IPC_FAIL', message: 'backend down' },
+      error: { code: 'BACKEND_ERROR', message: 'backend down' },
     });
     render(<GlobalRuntimePulse />);
     await waitFor(() => {
@@ -73,7 +91,6 @@ describe('GlobalRuntimePulse', () => {
   });
 
   it('exposes latency in data attribute', async () => {
-    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(true);
     vi.mocked(safeInvokeCanonical).mockResolvedValue({
       ok: true,
       content: { status: 'ok' },
@@ -89,7 +106,11 @@ describe('GlobalRuntimePulse', () => {
   });
 
   it('has aria-live polite for screen readers', () => {
-    vi.mocked(isTauriRuntimeAvailable).mockReturnValue(false);
+    vi.mocked(safeInvokeCanonical).mockResolvedValue({
+      ok: false,
+      content: null,
+      error: { code: 'NO_TRANSPORT', message: 'no bridge' },
+    });
     render(<GlobalRuntimePulse />);
     const el = screen.getByTestId('global-runtime-pulse');
     expect(el.getAttribute('aria-live')).toBe('polite');

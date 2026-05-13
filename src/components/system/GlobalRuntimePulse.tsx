@@ -15,7 +15,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { safeInvokeCanonical } from '@/utils/invoke';
-import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
 type PulseStatus = 'LIVE' | 'PARTIAL' | 'DEGRADED' | 'PROBING';
 
@@ -26,9 +25,19 @@ interface PulseState {
   lastProbeAt: number;
 }
 
+// v34.0.4 fix (AH-v101): do NOT gate on isTauriRuntimeAvailable() — its singleton
+// cache may lock to `false` when React mounts before window.__TAURI_INTERNALS__
+// is injected, leaving the pulse permanently PARTIAL even when IPC works.
+// Always attempt the IPC probe; safeInvokeCanonical reports NO_TRANSPORT
+// honestly when the bridge is truly missing.
 const PROBE_INTERVAL_MS = 5_000;
-const PROBE_TIMEOUT_MS = 2_000;
-const LATENCY_DEGRADED_THRESHOLD_MS = 1_000;
+const PROBE_TIMEOUT_MS = 4_000; // tolerate cold-start of auto_evolution engine
+const LATENCY_DEGRADED_THRESHOLD_MS = 2_500;
+const TRANSPORT_PARTIAL_CODES = new Set<string>([
+  'NO_TRANSPORT',
+  'IPC_TIMEOUT',
+  'IPC_MALFORMED_RESPONSE',
+]);
 
 const STATUS_META: Record<
   PulseStatus,
@@ -79,19 +88,6 @@ export function GlobalRuntimePulse(): React.ReactElement {
     cancelRef.current = false;
 
     const probe = async () => {
-      // Pas de runtime Tauri = on signale honnêtement PARTIAL (UI seule, pas de backend).
-      if (!isTauriRuntimeAvailable()) {
-        if (!cancelRef.current) {
-          setState({
-            status: 'PARTIAL',
-            latencyMs: null,
-            lastError: 'NO_TAURI_RUNTIME',
-            lastProbeAt: Date.now(),
-          });
-        }
-        return;
-      }
-
       const t0 = performance.now();
       const result = await safeInvokeCanonical<unknown>(
         'quick_health_check',
@@ -108,14 +104,21 @@ export function GlobalRuntimePulse(): React.ReactElement {
           latencyMs: dt,
           lastProbeAt: Date.now(),
         });
-      } else {
-        setState({
-          status: 'DEGRADED',
-          latencyMs: dt,
-          lastError: result.error?.code ?? 'IPC_FAIL',
-          lastProbeAt: Date.now(),
-        });
+        return;
       }
+
+      const code = result.error?.code ?? 'IPC_FAIL';
+      // Transport not ready (no Tauri bridge yet, timeout, malformed) → PARTIAL
+      // Backend error returned (handler failed) → DEGRADED
+      const status: PulseStatus = TRANSPORT_PARTIAL_CODES.has(code)
+        ? 'PARTIAL'
+        : 'DEGRADED';
+      setState({
+        status,
+        latencyMs: status === 'PARTIAL' ? null : dt,
+        lastError: code,
+        lastProbeAt: Date.now(),
+      });
     };
 
     void probe();
@@ -139,7 +142,7 @@ export function GlobalRuntimePulse(): React.ReactElement {
       data-latency={state.latencyMs ?? -1}
       role="status"
       aria-live="polite"
-      aria-label={`TITANE runtime ${state.label} v${version} latency ${formatLatency(state)}`}
+      aria-label={`TITANE runtime ${meta.label} v${version} latency ${formatLatency(state)}`}
       className={`fixed top-2 right-3 z-50 pointer-events-none inline-flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold tracking-wide select-none shadow-lg backdrop-blur-sm ${meta.colorClass} ${meta.pulse ? 'animate-pulse' : ''}`}
     >
       <span aria-hidden="true" className="text-base leading-none">

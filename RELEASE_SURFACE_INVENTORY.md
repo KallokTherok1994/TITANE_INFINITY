@@ -1894,3 +1894,22 @@ Checksums : `RELEASE_ARTIFACTS_CHECKSUMS_34.0.3.txt`
 
 - Vitest : `src/components/system/__tests__/GlobalRuntimePulse.test.tsx` (16/16 PASS)
 - E2E : `e2e/critical/global-runtime-pulse.spec.ts` (4 cas)
+
+## v34.0.4 — Living Pulse fix (PARTIAL stuck → real LIVE)
+
+**Date** : 2026-05-13
+**AutoHeal** : AH-v101-2026-05-13-PULSE_STUCK_PARTIAL_CACHE_LOCK
+
+### Artefacts publiés (`deployment/latest/`)
+
+| Fichier | Taille | SHA-256 |
+|---|---|---|
+| `titane-infinity_34.0.4_amd64.deb` | 24M | `6532cd5b8097cce0958fa564af1e6fcf9f09344adef44224d1d4a0ad8a676c2b` |
+| `titane-infinity_34.0.4_amd64.AppImage` | 95M | `9a4b58aa593f9fa35977536a8d959776448da77885a58325b6dc2fb7b41484cb` |
+| `titane-infinity-34.0.4-1.x86_64.rpm` | 24M | `3a7ca3ff4a1da80d2074e3bfd455e87b16c2266bbf5950fd94eceafb460b826a` |
+
+### Fix racine
+
+GlobalRuntimePulse bypass `isTauriRuntimeAvailable()` (cache singleton verrouillé `false`) — appel IPC direct, statut PARTIAL réservé aux codes transport (`NO_TRANSPORT`/`IPC_TIMEOUT`), DEGRADED pour erreurs backend, LIVE quand `quick_health_check` répond OK. Seuil latence relaxé 1000ms→2500ms, timeout 2000ms→4000ms pour absorber cold-start.
+
+Tests : 54/54 PASS (17 nouveaux GlobalRuntimePulse).
