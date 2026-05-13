@@ -2329,3 +2329,29 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 ### Tests créés (Rule 16)
 12 nouveaux fichiers: `src/__tests__/pages/{Helios,Harmonia,Nexus,EvoPage,ConfigurationHub,CognitivePage,AgendaPage,Settings,HTFPage,CloudCenter,MultiProjectDashboard,SecureSettings}.test.tsx`
 24 tests au total — tous PASS.
+
+## Phase 7 — 100% DYNAMIC SurfaceTruthBadge (AH-v99, 2026-05-14)
+
+État final: **44/44 surfaces SurfaceTruthBadge DYNAMIC** (0 hardcoded LIVE en production).
+
+### Couverture par surface
+
+- `SingularityMonitor` → dérivé `useSingularity.isInitialized + useMetaEnergy`
+- `CognitivePage` / `TemporalFlowCenter` / `IdentityMemoryEvolutionCenter` → probes IPC engine/temporal/memory (30s)
+- `Settings` / `AdminPage` → probe `quick_health_check` (60s)
+- `ProgressionPage` → dérivé `useExperience.level`
+- Toutes autres surfaces (38) déjà DYNAMIC (Phase 4/5/6)
+
+### Gouvernance anti-régression
+
+- Validator `scripts/verify/verify-no-hardcoded-live-badge.sh` — exit 1 si `variant="LIVE"` hardcodé détecté dans `src/**` (hors exceptions documentées).
+- E2E `e2e/critical/badge-runtime-flip.spec.ts` — vérifie que ≥3 surfaces critiques affichent un badge non-hardcodé.
+- 5 nouveaux tests Vitest Rule-16 dans `src/__tests__/pages/` et `src/__tests__/modules/`.
+
+### Preuves runtime
+
+- `pnpm vitest run` Phase 7 — 22/22 PASS
+- `pnpm run check` — 0 TS errors
+- `bash scripts/verify/verify-no-hardcoded-live-badge.sh` — PASS
+- `bash scripts/autoheal/detect_recurrence.sh` — PASS (entries=1881)
+- `bash scripts/verify_instructions.sh` — PASS=52 / FAIL=0

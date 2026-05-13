@@ -11,6 +11,7 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
@@ -880,6 +881,15 @@ const OrchestrationMetaCenterContent: React.FC = () => {
 
   return (
     <div className="omc-container" data-testid="page-orchestration-meta-center">
+      <SurfaceTruthBadge
+        variant={
+          unifiedState?.systemStatus === 'optimal'
+            ? 'LIVE'
+            : unifiedState?.systemStatus === 'stable'
+              ? 'PARTIAL'
+              : 'DEGRADED'
+        }
+      />
       {/* Header */}
       <div className="omc-header">
         <div className="omc-header-title">

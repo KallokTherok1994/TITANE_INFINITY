@@ -13,9 +13,11 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { useEffect, useState } from 'react';
 import { Container, Grid, Stack } from '@components/layout';
 import { Card } from '../ui';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import {
   HeliosVisualization,
   NexusGraph,
@@ -24,7 +26,45 @@ import {
 } from '@features/cognitive';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 
+interface CognitionProbe {
+  load?: number;
+  active_thoughts?: number;
+  depth?: number;
+  last_update_ms?: number;
+}
+
 export const CognitivePage = (): JSX.Element => {
+  const [cognitionProbe, setCognitionProbe] = useState<CognitionProbe | null>(null);
+  const [probeError, setProbeError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<CognitionProbe>('engine_get_cognition_state');
+      if (cancelled) return;
+      if (r.ok && r.content) {
+        setCognitionProbe(r.content);
+        setProbeError(false);
+      } else {
+        setCognitionProbe(null);
+        setProbeError(true);
+      }
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const badgeVariant: 'LIVE' | 'PARTIAL' | 'DEGRADED' =
+    cognitionProbe != null && cognitionProbe.load != null
+      ? 'LIVE'
+      : probeError
+        ? 'DEGRADED'
+        : 'PARTIAL';
+
   const heliosMetrics = {
     stress_level: 0.2,
     clarity_level: 0.85,
@@ -169,7 +209,7 @@ export const CognitivePage = (): JSX.Element => {
 
   return (
     <div data-testid="page-cognitive">
-      <SurfaceTruthBadge variant="PARTIAL" />
+      <SurfaceTruthBadge variant={badgeVariant} />
       <Container size="xl">
       <Stack direction="vertical" gap={6}>
         {/* Header */}

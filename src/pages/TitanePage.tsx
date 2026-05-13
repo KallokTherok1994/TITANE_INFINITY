@@ -292,8 +292,8 @@ export const TitanePage: React.FC = () => {
           gap={isConversationTab ? 2 : 4}
           className={`titane-page-shell${isConversationTab ? ' titane-page-shell--conversation' : ''}`}
         >
-          {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-          <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
+          {/* Runtime Truth Badge — ACTIVE — v97 */}
+          <SurfaceTruthBadge variant={memoryStats != null ? 'LIVE' : 'PARTIAL'} className="mb-2" />
           {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
           <div
             className={`titane-page-header${isConversationTab ? ' titane-page-header--conversation' : ''}`}

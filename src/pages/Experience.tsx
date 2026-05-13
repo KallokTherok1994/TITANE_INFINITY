@@ -50,8 +50,8 @@ export function Experience() {
 
   return (
     <div className="experience-page" data-testid="page-experience">
-      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-      <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
+      {/* Runtime Truth Badge — ACTIVE — v97 */}
+      <SurfaceTruthBadge variant={!isLoading && level > 0 ? 'LIVE' : 'PARTIAL'} className="mb-2" />
       <motion.div
         className="exp-header"
         initial={{ opacity: 0, y: -20 }}

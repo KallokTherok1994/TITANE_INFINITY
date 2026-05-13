@@ -13,19 +13,54 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
+
+interface MemoryStateProbe {
+  initialized?: boolean;
+  total_memories?: number;
+}
 
 type Tab = 'twins' | 'memory-map' | 'memory-evolution' | 'cognitive-evolution';
 
 const IdentityMemoryEvolutionCenter: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('twins');
+  const [memoryProbe, setMemoryProbe] = useState<MemoryStateProbe | null>(null);
+  const [probeError, setProbeError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<MemoryStateProbe>('memory_get_state');
+      if (cancelled) return;
+      if (r.ok && r.content) {
+        setMemoryProbe(r.content);
+        setProbeError(false);
+      } else {
+        setMemoryProbe(null);
+        setProbeError(true);
+      }
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const badgeVariant: 'LIVE' | 'PARTIAL' | 'DEGRADED' = memoryProbe?.initialized
+    ? 'LIVE'
+    : probeError
+      ? 'DEGRADED'
+      : 'PARTIAL';
 
   return (
     <div data-testid="module-identity-memory-evolution-center" className="identity-memory-evolution-center p-6 space-y-6">
-      <SurfaceTruthBadge variant="PARTIAL" />
+      <SurfaceTruthBadge variant={badgeVariant} />
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">

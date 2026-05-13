@@ -97,8 +97,8 @@ export const Memory = () => {
 
   return (
     <div data-testid="page-memory">
-      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-      <SurfaceTruthBadge variant="PARTIAL" className="p-2" />
+      {/* Runtime Truth Badge — ACTIVE — v97 */}
+      <SurfaceTruthBadge variant={memoryStats != null ? 'LIVE' : 'PARTIAL'} className="p-2" />
       <span data-testid="memory-runtime-status" style={{ display: 'none' }}>
         memory-live
       </span>

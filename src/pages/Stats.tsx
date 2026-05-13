@@ -21,6 +21,7 @@ import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { useResponsive } from '@/hooks/useResponsive';
 import { extractNumber } from '../utils/dataUtils';
 import '../pages/ModulePages.css';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 import AgentDashboardsPanel from '../components/AgentDashboardsPanel';
 
@@ -430,6 +431,11 @@ export const Stats: React.FC = () => {
 
   return (
     <div className="module-page" data-testid="page-stats">
+      <SurfaceTruthBadge
+        variant={
+          !cognitiveLoading && cognitiveMetrics != null ? 'LIVE' : !isLoading ? 'PARTIAL' : 'DEGRADED'
+        }
+      />
       {/* ═══ HEADER ═══ */}
       <div className="module-header">
         <div className="module-title-group">

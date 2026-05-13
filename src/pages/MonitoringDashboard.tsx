@@ -24,6 +24,8 @@ import {
   type ProjectHealthMetrics,
 } from '../services/monitoring';
 import { dispatchToAgents, type AgentConsensus } from '../services/orchestrator';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 
 // ── Project Health Metrics Card (Phase B2 + B1 — 2026-04-27) ─
 const PROJECT_HEALTH_TTL_MS = 15 * 60 * 1000; // 15 min — matches service TTL
@@ -161,6 +163,18 @@ const ProjectHealthCard: React.FC = () => {
 
 export const MonitoringDashboard: React.FC = memo(() => {
   const [isExporting, setIsExporting] = React.useState(false);
+  const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<{ modules?: unknown[] }>('cp_get_modules_status');
+      if (!cancelled) setLiveConnected(r.ok && Array.isArray(r.content?.modules) && r.content.modules.length > 0);
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   // Export métriques JSON
   const handleExportJSON = useCallback(() => {
@@ -239,6 +253,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
 
   return (
     <div data-testid="monitoring-dashboard-page" className="bg-gray-900 p-6">
+      <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} />
       <div className="max-w-450 mx-auto space-y-6">
         {/* Project Health Metrics — Phase B2/B1 surface */}
         <ProjectHealthCard />

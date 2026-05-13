@@ -1278,3 +1278,32 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 data-testid ajoutés: `page-cognitive`, `page-agenda`, `page-settings` (existait), `htf-module-page`, `page-cloud-center`, `multiproject-dashboard`, `page-secure-settings`, `module-temporal-flow-center`, `module-identity-memory-evolution-center`.
 TotalDevPage regression fixed (import sans render dans Phase 5).
 12 tests Rule-16 créés: Helios, Harmonia, Nexus, EvoPage, ConfigurationHub, CognitivePage, AgendaPage, Settings, HTFPage, CloudCenter, MultiProjectDashboard, SecureSettings.
+
+## Phase 7 — 100% DYNAMIC SurfaceTruthBadge (AH-v99, 2026-05-14)
+
+Objectif: éliminer le dernier badge `variant="LIVE"` hardcodé et dynamiser les 6 surfaces statiques restantes via probes IPC réelles.
+
+### Migrations STATIC → DYNAMIC
+
+| Surface | Avant | Après (probe runtime) |
+|---|---|---|
+| `src/pages/SingularityMonitor.tsx` | `variant="LIVE"` hardcodé (masquait backend down) | `isInitialized + metaEnergy` → LIVE/PARTIAL/DEGRADED |
+| `src/pages/CognitivePage.tsx` | PARTIAL fixe | probe `engine_get_cognition_state` (30s) |
+| `src/pages/Settings.tsx` | PARTIAL fixe | probe `quick_health_check` (60s) |
+| `src/features/admin/AdminPage.tsx` | PARTIAL fixe | probe `quick_health_check` (60s) |
+| `src/modules/TemporalFlowCenter.tsx` | PARTIAL fixe | probe `temporal_get_today_state` (30s) |
+| `src/modules/IdentityMemoryEvolutionCenter.tsx` | PARTIAL fixe | probe `memory_get_state` (30s) |
+| `src/pages/ProgressionPage.tsx` | aucun badge | badge ajouté (`useExperience`-dérivé) |
+
+### Tests Rule-16 ajoutés
+
+- `src/__tests__/pages/SingularityMonitor.test.tsx`
+- `src/__tests__/pages/ProgressionPage.test.tsx`
+- `src/__tests__/pages/AdminPage.test.tsx`
+- `src/__tests__/modules/TemporalFlowCenter.test.tsx`
+- `src/__tests__/modules/IdentityMemoryEvolutionCenter.test.tsx`
+- `e2e/critical/badge-runtime-flip.spec.ts` (E2E flip LIVE→DEGRADED sur 3 surfaces)
+
+### Validator anti-régression
+
+`scripts/verify/verify-no-hardcoded-live-badge.sh` — interdit `<SurfaceTruthBadge variant="LIVE">` hardcodé en `src/**` (hors `__tests__`, `priority-page-badges`, définition source).

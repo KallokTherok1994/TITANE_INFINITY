@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -34,6 +34,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -63,6 +64,18 @@ export const TwinsPage: React.FC = () => {
   } = useTwinEvolution();
 
   const isLoading = identityLoading || evolutionLoading;
+  const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<{ harmonia?: unknown }>('engine_get_singularity_state');
+      if (!cancelled) setLiveConnected(r.ok && r.content?.harmonia != null);
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   const handleRefresh = async () => {
     await Promise.all([refreshIdentity(), refreshEvolution()]);
@@ -78,8 +91,8 @@ export const TwinsPage: React.FC = () => {
       data-testid="page-twins"
     >
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
-        {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-        <SurfaceTruthBadge variant="PARTIAL" />
+        {/* Runtime Truth Badge — ACTIVE — v97 */}
+        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

@@ -108,8 +108,17 @@ const SingularityMonitor = memo(() => {
       data-testid="page-singularity-monitor"
     >
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Runtime Truth Badge — LIVE: hooks IPC réels + MetaEnergy backend */}
-        <SurfaceTruthBadge variant="LIVE" className="mb-2" />
+        {/* Runtime Truth Badge — DYNAMIC: dérivé de useSingularity + useMetaEnergy */}
+        <SurfaceTruthBadge
+          variant={
+            isInitialized && metaEnergy != null
+              ? 'LIVE'
+              : isInitialized
+                ? 'PARTIAL'
+                : 'DEGRADED'
+          }
+          className="mb-2"
+        />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

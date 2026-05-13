@@ -11,12 +11,19 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 
 type Tab = 'now' | 'agenda' | 'timeline' | 'intelligence';
+
+interface TemporalProbe {
+  current_energy?: number;
+  today_blocks?: unknown[];
+  current_block_id?: string | null;
+}
 
 interface TimeBlock {
   id: string;
@@ -41,6 +48,36 @@ const TemporalFlowCenter: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('now');
   const [currentDate] = useState<Date>(new Date());
   const [currentEnergy] = useState<number>(72); // Mock - à connecter avec Helios/Harmonia
+  const [temporalProbe, setTemporalProbe] = useState<TemporalProbe | null>(null);
+  const [probeError, setProbeError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<TemporalProbe>('temporal_get_today_state');
+      if (cancelled) return;
+      if (r.ok && r.content) {
+        setTemporalProbe(r.content);
+        setProbeError(false);
+      } else {
+        setTemporalProbe(null);
+        setProbeError(true);
+      }
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const badgeVariant: 'LIVE' | 'PARTIAL' | 'DEGRADED' =
+    temporalProbe && temporalProbe.current_energy != null
+      ? 'LIVE'
+      : probeError
+        ? 'DEGRADED'
+        : 'PARTIAL';
 
   // Mock data - à remplacer par vrais hooks
   const todayBlocks: TimeBlock[] = [
@@ -84,7 +121,7 @@ const TemporalFlowCenter: React.FC = () => {
 
   return (
     <div data-testid="module-temporal-flow-center" className="temporal-flow-center p-6 space-y-6 bg-gray-900 text-gray-100">
-      <SurfaceTruthBadge variant="PARTIAL" />
+      <SurfaceTruthBadge variant={badgeVariant} />
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">

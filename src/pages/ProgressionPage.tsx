@@ -18,6 +18,7 @@ import { XPProgressBar } from '@features/progression';
 import { KnowledgeDomains } from '../components/progression/KnowledgeDomains';
 import { useExperience } from '../hooks/useExperience';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 import AgentDashboardsPanel from '../components/AgentDashboardsPanel';
 
@@ -44,8 +45,16 @@ export const ProgressionPage = (): JSX.Element => {
   const xpInCurrentLevel = totalXp - xpForCurrentLevel;
   const xpNeededForNextLevel = xpForNextLevel - xpForCurrentLevel;
 
+  const badgeVariant: 'LIVE' | 'PARTIAL' | 'DEGRADED' =
+    !isLoading && level > 0
+      ? 'LIVE'
+      : !isLoading
+        ? 'PARTIAL'
+        : 'DEGRADED';
+
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}>
+    <div data-testid="page-progression" style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}>
+      <SurfaceTruthBadge variant={badgeVariant} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[6] }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: spacing[4] }}>

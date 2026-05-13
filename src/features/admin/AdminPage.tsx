@@ -21,6 +21,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { type AdminTab, ADMIN_TABS } from './types';
 import './AdminPage.css';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 
 // ══════════════════════════════════════════════════════════════════
 // ANIMATION VARIANTS - Performance Constants
@@ -226,10 +227,42 @@ const AdminPageComponent: React.FC = () => {
     }
   }, [activeTab, searchParams]);
 
+  // Runtime truth probe — quick_health_check (60s)
+  const [healthStatus, setHealthStatus] = useState<string | null>(null);
+  const [healthError, setHealthError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<string>('quick_health_check');
+      if (cancelled) return;
+      if (r.ok && r.content) {
+        setHealthStatus(r.content);
+        setHealthError(false);
+      } else {
+        setHealthStatus(null);
+        setHealthError(true);
+      }
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 60_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const adminBadgeVariant: 'LIVE' | 'PARTIAL' | 'DEGRADED' =
+    healthStatus === 'Healthy'
+      ? 'LIVE'
+      : healthError || healthStatus === 'Critical' || healthStatus === 'Offline'
+        ? 'DEGRADED'
+        : 'PARTIAL';
+
   return (
     <div className="admin-page" data-testid="page-admin">
-      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-      <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
+      {/* Runtime Truth Badge — DYNAMIC via quick_health_check */}
+      <SurfaceTruthBadge variant={adminBadgeVariant} className="mb-4" />
       {/* Header */}
       <motion.header
         className="admin-header"

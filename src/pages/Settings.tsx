@@ -13,11 +13,12 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ModuleCard } from '../components/ModuleCard';
 import { AudioSettings } from '../components/AudioSettings';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import './ModulePages.css';
 
 type SettingsTab = 'general' | 'audio' | 'system';
@@ -27,6 +28,36 @@ export const Settings = () => {
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [refreshInterval, setRefreshInterval] = useState('3000');
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
+  const [healthStatus, setHealthStatus] = useState<string | null>(null);
+  const [healthError, setHealthError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<string>('quick_health_check');
+      if (cancelled) return;
+      if (r.ok && r.content) {
+        setHealthStatus(r.content);
+        setHealthError(false);
+      } else {
+        setHealthStatus(null);
+        setHealthError(true);
+      }
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 60_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const badgeVariant: 'LIVE' | 'PARTIAL' | 'DEGRADED' =
+    healthStatus === 'Healthy'
+      ? 'LIVE'
+      : healthError || healthStatus === 'Critical' || healthStatus === 'Offline'
+        ? 'DEGRADED'
+        : 'PARTIAL';
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -51,7 +82,7 @@ export const Settings = () => {
   return (
     <ErrorBoundary>
       <div className="module-page" data-testid="page-settings">
-        <SurfaceTruthBadge variant="PARTIAL" />
+        <SurfaceTruthBadge variant={badgeVariant} />
         <div className="module-page__header">
           <h1 className="module-page__title">
             <span className="module-page__icon">⚙️</span>

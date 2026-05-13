@@ -824,7 +824,7 @@ function DevPageContent(): JSX.Element {
   if (loading) {
     return (
       <div className="dev-page" data-testid="page-dev" data-dev-state="loading">
-        <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
+        <SurfaceTruthBadge variant={backendHealth === 'Healthy' ? 'LIVE' : backendHealth ? 'PARTIAL' : 'DEGRADED'} className="mb-4" />
         <div className="dev-loading">
           <span className="dev-loading-icon">⚙️</span>
           <span className="dev-loading-text">Chargement DEV...</span>
@@ -836,7 +836,7 @@ function DevPageContent(): JSX.Element {
   if (error) {
     return (
       <div className="dev-page" data-testid="page-dev" data-dev-state="error">
-        <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
+        <SurfaceTruthBadge variant={backendHealth === 'Healthy' ? 'LIVE' : backendHealth ? 'PARTIAL' : 'DEGRADED'} className="mb-4" />
         <div className="dev-error">
           <span className="dev-error-icon">⚠️</span>
           <span>{error}</span>
@@ -858,8 +858,8 @@ function DevPageContent(): JSX.Element {
 
   return (
     <div className="dev-page" data-testid="page-dev" data-dev-state="ready">
-      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-      <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
+      {/* Runtime Truth Badge — ACTIVE — v97 */}
+      <SurfaceTruthBadge variant={backendHealth === 'Healthy' ? 'LIVE' : backendHealth ? 'PARTIAL' : 'DEGRADED'} className="mb-4" />
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>

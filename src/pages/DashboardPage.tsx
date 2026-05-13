@@ -1,4 +1,6 @@
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 /**
  * TITANE∞ v30.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
@@ -43,6 +45,18 @@ export const DashboardPage = (): JSX.Element => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [widgets, setWidgets] = useState<DashboardWidget[]>([]);
+  const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<{ modules?: unknown[] }>('cp_get_modules_status');
+      if (!cancelled) setLiveConnected(r.ok && Array.isArray(r.content?.modules) && r.content.modules.length > 0);
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   // XP réel depuis le moteur d'expérience
   const { totalXp, level, xpForNextLevel } = useExperience();
@@ -70,6 +84,7 @@ export const DashboardPage = (): JSX.Element => {
       <Container data-testid="page-dashboard" size="xl">
         <div className="dashboard-fadein">
           <Stack direction="vertical" gap={6}>
+            <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} />
             {/* Header modernisé */}
             <header className="dashboard-header">
               <div className="dashboard-header__left">

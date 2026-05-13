@@ -4,9 +4,10 @@
  * data-testid stables: doc-center-page, btn-export-docx, doc-export-status
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { tauriClient } from '../lib/tauriClient';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 
 interface ExportDocxContent {
   path: string;
@@ -71,6 +72,18 @@ export function DocCenterPage() {
   const [outputDir, setOutputDir] = useState('/tmp');
   const [status, setStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<{ modules?: unknown[] }>('cp_get_modules_status');
+      if (!cancelled) setLiveConnected(r.ok && Array.isArray(r.content?.modules) && r.content.modules.length > 0);
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   async function handleExportDocx() {
     setIsLoading(true);
@@ -101,8 +114,8 @@ export function DocCenterPage() {
       style={{ padding: '2rem' }}
     >
       <h1 style={{ marginBottom: '1.5rem' }}>📄 Centre Documentaire</h1>
-      {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-      <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
+      {/* Runtime Truth Badge — ACTIVE — v97 */}
+      <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} className="mb-4" />
       <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>
         Export natif DOCX via <code>doc_engine</code> + docx-rs
       </p>

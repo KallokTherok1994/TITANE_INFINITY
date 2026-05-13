@@ -13,6 +13,7 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { useLocation } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { webResearch } from '@/services/webResearchService';
@@ -289,6 +290,18 @@ export const ResearchPage: React.FC = () => {
   const [state, setState] = useState<ResearchState>('idle');
   const [report, setReport] = useState<ResearchReport | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<{ harmonia?: unknown }>('engine_get_singularity_state');
+      if (!cancelled) setLiveConnected(r.ok && r.content?.harmonia != null);
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   useEffect(() => {
     const navState = (location.state as ResearchHandoffState | null) ?? null;
@@ -399,8 +412,8 @@ export const ResearchPage: React.FC = () => {
             Evidence-bound · Citations ≤25 words · Offline-capable · P7.0
           </p>
         </header>
-        {/* Runtime Truth Badge — ACTIVE_PARTIAL — v47 */}
-        <SurfaceTruthBadge variant="PARTIAL" className="mb-4" />
+        {/* Runtime Truth Badge — ACTIVE — v97 */}
+        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} className="mb-4" />
 
         {/* ── QUERY FORM ── */}
         <form className="rp-form" onSubmit={handleSubmit} data-testid="research-form">

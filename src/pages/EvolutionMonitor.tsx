@@ -11,12 +11,13 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { memo, useEffect, useCallback } from 'react';
+import React, { memo, useEffect, useCallback, useState } from 'react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { useEvolutionStore } from '../stores/evolutionStore';
 import {
   TrendingUp,
@@ -152,6 +153,18 @@ function MetricDelta({ value, label }: { value: number; label: string }) {
 export const EvolutionMonitor: React.FC = memo(() => {
   const { state, lastReport, loading, fetchState, runEvolution, quickHealthCheck } =
     useEvolutionStore();
+  const [liveConnected, setLiveConnected] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const probe = async () => {
+      const r = await safeInvokeCanonical<{ active?: boolean }>('evolution_get_state');
+      if (!cancelled) setLiveConnected(r.ok && r.content?.active === true);
+    };
+    void probe();
+    const id = setInterval(() => void probe(), 30_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   const totalPerformanceDelta = TIMELINE.reduce(
     (acc, e) => acc + e.metrics.performance,
@@ -175,8 +188,8 @@ export const EvolutionMonitor: React.FC = memo(() => {
       data-testid="page-evolution-monitor"
     >
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Runtime Truth Badge — PARTIAL: store live + timeline hardcodée */}
-        <SurfaceTruthBadge variant="PARTIAL" className="mb-2" />
+        {/* Runtime Truth Badge — ACTIVE — v97 */}
+        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} className="mb-2" />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
