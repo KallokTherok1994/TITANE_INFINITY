@@ -1,3 +1,31 @@
+# [2026-05-13] UI Vivante + E2E Expansion v34.0.8 — 100/100 PASS
+
+- Audit aggregator v2 : [scripts/audit/ui-100-score-v34.0.8.sh](scripts/audit/ui-100-score-v34.0.8.sh) — 9 gates pondérés.
+- Rapport canonique : [reports/UI_100_SCORE_v34.0.8.md](reports/UI_100_SCORE_v34.0.8.md) — **PASS 100/100**.
+- Rapport bundle : [reports/BUNDLE_ANALYSIS_v34.0.8.md](reports/BUNDLE_ANALYSIS_v34.0.8.md).
+- Version : **v34.0.8** (bump depuis 34.0.7, Rule 13).
+
+## UI vivante (Phase L+M)
+
+- Hook canonique : [src/hooks/useAgentLiveSnapshot.ts](src/hooks/useAgentLiveSnapshot.ts) — refresh agent générique, plancher 1000 ms, SSR-safe.
+- Test hook : [src/__tests__/hooks/useAgentLiveSnapshot.test.tsx](src/__tests__/hooks/useAgentLiveSnapshot.test.tsx) — 6 tests Vitest PASS.
+- Dashboards vivants équipés (testids stables) :
+  - `explainability-dashboard-live`, `explainability-dashboard-live-dot`, `explainability-dashboard-live-label`, `explainability-dashboard-refresh-now`.
+  - `orchestrator-dashboard-live`, `orchestrator-dashboard-live-dot`, `orchestrator-dashboard-live-label`, `orchestrator-dashboard-refresh-now`.
+  - `security-dashboard-live`, `security-dashboard-live-dot`, `security-dashboard-live-label`, `security-dashboard-refresh-now`.
+
+## Nouvelles familles E2E (Phase N+O+P+Q)
+
+- [e2e/a11y/keyboard-navigation.spec.ts](e2e/a11y/keyboard-navigation.spec.ts) — 7 routes × Tab×6 + Shift+Tab + Escape.
+- [e2e/a11y/theme-switching.spec.ts](e2e/a11y/theme-switching.spec.ts) — 5 routes × dark/light + axe-core.
+- [e2e/a11y/i18n-coverage.spec.ts](e2e/a11y/i18n-coverage.spec.ts) — 5 routes × fr/en + détection clés brutes (cap ≤ 8).
+- [e2e/performance/web-vitals.spec.ts](e2e/performance/web-vitals.spec.ts) — 4 routes, FCP ≤ 4000 ms, LCP ≤ 6000 ms.
+
+## Perf (Phase R)
+
+- `React.memo()` appliqué à 7 surfaces : `AgentDashboardsPanel`, 6 dashboards agents avancés. Voir [reports/BUNDLE_ANALYSIS_v34.0.8.md](reports/BUNDLE_ANALYSIS_v34.0.8.md).
+- Script npm `analyze:bundle` (vite build + `dist/stats.html`).
+
 # [2026-05-13] UI 100/100 plan phase E — audit aggregator + v34.0.7 bump (100/100)
 
 - Audit canonique : [scripts/audit/ui-100-score.sh](scripts/audit/ui-100-score.sh).

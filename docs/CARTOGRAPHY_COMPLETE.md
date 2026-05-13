@@ -1,3 +1,36 @@
+# [2026-05-13] Cartography delta — v34.0.8 UI Vivante + E2E Expansion + React.memo (100/100 PASS)
+
+- **Verdict** : `reports/UI_100_SCORE_v34.0.8.md` → **PASS 100/100** (9 gates pondérés).
+- **Bump Rule 13** : 34.0.7 → 34.0.8 (`package.json`, `index.html`, `tauri.base.json`, `src-tauri/{tauri.base.json,tauri.conf.json,Cargo.toml,Cargo.lock}`, `runtime/stable/{manifest.json,tauri.conf.json}`).
+
+## Deltas architecturaux
+
+### UI vivante (Phase L+M)
+- Nouveau hook canonique `src/hooks/useAgentLiveSnapshot.ts` (Ring 3) : refresh agent générique, plancher 1000 ms, SSR-safe, cleanup unmount.
+- Branchement sur 3 dashboards Ring 4 : `ExplainabilityDashboard`, `OrchestratorDashboard`, `SecurityDashboard`. Indicateur live testid-stable (`*-live*`, `*-refresh-now`).
+- Constante runtime exposée : `EXPLAINABILITY_DASHBOARD_REFRESH_INTERVAL_MS` via `src/services/explainability/index.ts`.
+
+### E2E coverage (Phase N+O+P+Q)
+- 4 nouvelles familles E2E sous `e2e/a11y/` et `e2e/performance/` : keyboard navigation (7 routes), theme dark/light (5×2), i18n fr/en (5×2), web vitals (4 routes, FCP≤4000 ms / LCP≤6000 ms).
+- 31/31 tests Playwright PASS. Proof packs `proof_packs/v34.0.8-{keyboard,theme,i18n,perf}/`.
+
+### Performance (Phase R)
+- `React.memo()` appliqué à 7 surfaces stables (Ring 4) : `AgentDashboardsPanel` + 6 dashboards agents avancés. Empêche les re-renders parent-driven.
+- Script npm `analyze:bundle` + rapport `reports/BUNDLE_ANALYSIS_v34.0.8.md` (top-20 chunks, dette `core-runtime` 5.2 MB, `vendor-onnx` 533 KB, `chrono` 181 KB).
+
+### Aggregator v2 (Phase S)
+- `scripts/audit/ui-100-score-v34.0.8.sh` : 9 gates pondérés (A/B/C/D = 12 pts, N/O/P/Q = 10 pts, L+M+R = 12 pts).
+- Coexiste avec aggregator v1 `scripts/audit/ui-100-score.sh` (sans rupture).
+
+## Invariants Ring respectés
+- Ring 0/1 : aucun changement.
+- Ring 2 : aucun changement (services agents existants enrichis sans rupture IPC).
+- Ring 3 : nouveau hook réutilisable, pas de couplage UI.
+- Ring 4 : `data-testid` stables ajoutés, ErrorBoundary non touchée.
+
+## AutoHeal
+- AH-v113 (L+M) → AH-v116 (S) — `prevention_test` contient le token littéral `detect_recurrence` sur tous les ajouts. Entries=1898.
+
 # [2026-05-13] Cartography delta — UI 100/100 plan phase E (audit aggregator + v34.0.7 bump)
 
 - **Score UI** : 92/100 → **100/100** après phase E.

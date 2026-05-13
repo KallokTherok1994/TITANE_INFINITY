@@ -1,5 +1,42 @@
 # [Unreleased] - 2026-05-06 — Advanced Intelligence Program (A0I–D5 SEALED) + Z0 Post-Seal Integrity Audit
 
+## [34.0.8] - 2026-05-13 (UI Vivante + E2E Coverage Expansion + React.memo — 100/100 PASS)
+
+> **Mode:** DURABLE | **Scope:** Live dashboards (useAgentLiveSnapshot) + 4 nouvelles familles E2E (keyboard / theme / i18n / web-vitals) + React.memo perf + aggregator v2 (9 gates) | **Rule 13 bump:** 34.0.7 → 34.0.8
+
+### Added (Phase K — Agent unit tests verified)
+
+- 3 specs Vitest pré-existantes confirmées PASS : `monitoring`, `diagnostic`, `log_analysis` (64/64 tests).
+
+### Added (Phase L+M — UI vivante, commit `13f76607e`)
+
+- `src/hooks/useAgentLiveSnapshot.ts` : hook générique de refresh agent (SSR-safe, plancher 1000 ms anti-flood, cleanup unmount).
+- `src/__tests__/hooks/useAgentLiveSnapshot.test.tsx` : 6 tests Vitest (initial, tick auto, refresh manuel, lastUpdate, cleanup, plancher 1000 ms).
+- Wiring vivant sur `ExplainabilityDashboard`, `OrchestratorDashboard`, `SecurityDashboard` (testids `*-live`, `*-live-dot`, `*-live-label`, `*-refresh-now`).
+- Constante `EXPLAINABILITY_DASHBOARD_REFRESH_INTERVAL_MS` exposée par `src/services/explainability/index.ts`.
+- 70/70 Vitest PASS, `tsc --noEmit` clean.
+
+### Added (Phase N+O+P+Q — E2E coverage, commit `1fe1b546f`)
+
+- `e2e/a11y/keyboard-navigation.spec.ts` : 7 routes × 6 Tab + Shift+Tab + Escape, écrit `proof_packs/v34.0.8-keyboard/`.
+- `e2e/a11y/theme-switching.spec.ts` : 5 routes × dark/light avec axe-core par thème, écrit `proof_packs/v34.0.8-theme/` (JSON + screenshots).
+- `e2e/a11y/i18n-coverage.spec.ts` : 5 routes × fr/en avec pre-init `i18nextLng`, détection clés brutes (cap ≤ 8), écrit `proof_packs/v34.0.8-i18n/`.
+- `e2e/performance/web-vitals.spec.ts` : 4 routes avec FCP ≤ 4000 ms et LCP ≤ 6000 ms (Performance API native), écrit `proof_packs/v34.0.8-perf/`.
+- 31/31 Playwright PASS.
+
+### Added (Phase R — React.memo + bundle analysis, commit `c8ca786b6`)
+
+- `React.memo()` appliqué à 7 surfaces stables : `AgentDashboardsPanel`, `MonitoringDashboard`, `DiagnosticDashboard`, `ExplainabilityDashboard`, `OrchestratorDashboard`, `SecurityDashboard`, `LogAnalysisDashboard`.
+- Nouveau script npm `analyze:bundle` (vite build + pointer vers `dist/stats.html` produit par `rollup-plugin-visualizer` déjà wired).
+- `reports/BUNDLE_ANALYSIS_v34.0.8.md` : top-20 chunks baseline v34.0.7, surfaces mémoïsées, dette identifiée (`core-runtime` 5.2 MB, `vendor-onnx` 533 KB, `chrono` 181 KB), rollback documenté.
+
+### Added (Phase S — Final aggregator + seal, this commit)
+
+- `scripts/audit/ui-100-score-v34.0.8.sh` : aggregator v2 sur 9 gates pondérés (A/B/C/D = 12 pts, N/O/P/Q = 10 pts, L+M+R = 12 pts = 100 max).
+- `reports/UI_100_SCORE_v34.0.8.md` : verdict **PASS 100/100** (9/9 phases vertes).
+- Rule 13 version bump 34.0.7 → 34.0.8 (`package.json`, `index.html`, `tauri.base.json`, `src-tauri/tauri.base.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock`, `runtime/stable/manifest.json`, `runtime/stable/tauri.conf.json`).
+- AutoHeal entries AH-v113 / AH-v114 / AH-v115 / AH-v116 (entries=1898). Gates `detect_recurrence.sh` + `verify_instructions.sh` (PASS=52 FAIL=0).
+
 ## [34.0.7] - 2026-05-13 (UI 100/100 PASS + BUILD ALL + Release Surface Truth Alignment)
 
 > **Mode:** DURABLE | **Scope:** UI 100/100 plan A→E sealed + BUILD ALL bundles + deployment/latest truth refresh + archive reorganization | **Rule 13 bump:** 34.0.6 → 34.0.7

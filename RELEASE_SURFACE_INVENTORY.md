@@ -1,3 +1,15 @@
+## 2026-05-13 : v34.0.8 — UI Vivante + E2E Expansion + React.memo (100/100 PASS, BUILD pending)
+
+- **Mode** : DURABLE | **Bump Rule 13** : 34.0.7 → 34.0.8
+- **Verdict aggregator v2** : `reports/UI_100_SCORE_v34.0.8.md` PASS 100/100 (9 gates).
+- **Code commits** :
+  - `13f76607e` Phase L+M (useAgentLiveSnapshot + 3 dashboards live).
+  - `1fe1b546f` Phase N+O+P+Q (4 nouvelles familles E2E).
+  - `c8ca786b6` Phase R (React.memo × 7 + bundle analysis).
+  - this commit Phase S (aggregator v2 + bump 34.0.8 + mapping + AH-v116).
+- **Tests ajoutés cette release** : 70 Vitest (hook + extensions) + 31 Playwright (keyboard / theme / i18n / web-vitals) = **101 nouveaux tests verts**.
+- **Bundles** : non re-buildés (Rule 11 — on-demand). `BUILD ALL` v34.0.8 reste à déclencher pour produire deb/AppImage/RPM/Android + checksums + RELEASE_ARTIFACTS_CHECKSUMS_34.0.8.txt.
+
 ## 2026-04-24 : Migration documentaire
 
 - Centralisation de tous les fichiers `.md.md` et anciens index dans `docs/99_ARCHIVE/`
