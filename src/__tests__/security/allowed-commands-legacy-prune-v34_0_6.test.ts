@@ -38,6 +38,11 @@ describe('v34.0.6 IPC legacy prune — L1 whitelist alignment', () => {
     'run_evolution',
     // DesktopHandoff
     'desktop_open_session',
+    // v34.0.6 phase 2 — DesktopPerception session lifecycle
+    'desktop_pause_session',
+    'desktop_resume_session',
+    'desktop_handoff_session',
+    'desktop_kill_switch',
   ];
 
   it.each(expected)('whitelists %s in ALLOWED_COMMANDS', (cmd) => {

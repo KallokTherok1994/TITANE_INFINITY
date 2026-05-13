@@ -1,3 +1,19 @@
+## 2026-05-13 — v34.0.6 IPC LEGACY PRUNE (phases 1 + 2)
+
+> Patch bump 34.0.5 → 34.0.6. IPC coverage truth alignment across L1 (`src/lib/security.ts` ALLOWED_COMMANDS), L2 (`src-tauri/tauri.conf.json` main-capability allow[]), L3 (`src-tauri/src/main.rs` invoke_handler!), L4 (`#[tauri::command]` handlers).
+>
+> **Phase 1** (commit af7d2010c): 33 active surfaces aligned (auth_* x9, security_log x3, ia_policy x4, memory_debug_scan, engine_get_*_state x3, evolution x2, desktop_open_session, ai_check_ollama_status, analyze_logs_intelligent, conversation_generate, read_json_file, remote_key_* x4, singularity_get_state real). Baseline `scripts/verify/ipc-coverage-baseline.txt` reduced 48 → 15.
+>
+> **Phase 2** (this commit): 4 `desktop_*_session` lifecycle commands aligned (pause/resume/handoff/kill_switch). L4 already existed in `src-tauri/src/commands/desktop_perception.rs`; L1/L2/L3 added. Baseline reduced 15 → 11.
+>
+> **Tolerated baseline (11)**: 3 dead-code (`ai_chat` — caller `ragService.ts` should migrate to `ai_chat_send`; `autonomy_scan_ia/tts` — L4 absent, caller `SingularityAutonomyEngine.ts` falls back via `safeInvoke`). 8 mock-only (`singularity_get_*` x7 + `singularity_is_critical` — L4 in `mock_commands.rs` under `#[cfg(feature="mock")]`; validator improvement to classify `MOCK_GATED` deferred).
+>
+> **Gates** : `verify-ipc-end-to-end-coverage.sh` PASS (109 audited, 11 tolerated). `pnpm vitest run src/__tests__/security/allowed-commands-legacy-prune-v34_0_6.test.ts` 29/29 PASS. `e2e/critical/ui-prod-capture-v34_0_6.spec.ts` 36/36 PASS.
+>
+> **AutoHeal** : `AH-v103-2026-05-13-IPC_LEGACY_PRUNE` (phase 1) + `AH-v104-2026-05-13-IPC_LEGACY_PRUNE_PHASE2` (phase 2).
+
+---
+
 ## 2026-05-12 — v34.0.0 MAJOR release
 
 > Version bump MAJOR 33.0.18 → 34.0.0 via `node scripts/sync-versions.mjs` (8 fichiers synchés: package.json, Cargo.toml, tauri.conf.json, tauri.base.json, src-tauri/tauri.base.json, runtime/stable/tauri.conf.json, runtime/stable/manifest.json, index.html). Build Tauri v34.0.0 production (AppImage+DEB+RPM). SEAL v33.0.18 formel complété (AH-v92, proof_packs/SEAL_v33.0.18_2026-05-12/ VERDICT SEALED). Rule 15 audit 6 gaps comblés (AH-v91). AutoHeal entries=1874. verify_instructions PASS=52 FAIL=0.

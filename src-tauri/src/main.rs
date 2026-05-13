@@ -2989,6 +2989,11 @@ fn main() {
             commands::desktop_perception::desktop_get_active_window,
             commands::desktop_perception::desktop_list_windows,
             commands::desktop_perception::desktop_get_config,
+            // v34.0.6 phase 2 — session lifecycle (handoff/pause/resume/kill_switch)
+            commands::desktop_perception::desktop_pause_session,
+            commands::desktop_perception::desktop_resume_session,
+            commands::desktop_perception::desktop_handoff_session,
+            commands::desktop_perception::desktop_kill_switch,
 
             // ═══════════════════════════════════════════════════════════════
             // JOB OPERATOR — LOCK 4: LONG_TASK_RELAY_V1

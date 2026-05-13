@@ -1062,6 +1062,11 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'run_evolution',
   // DesktopHandoff
   'desktop_open_session',
+  // v34.0.6 phase 2 — DesktopPerception session lifecycle (L4 exists, aligning L1)
+  'desktop_pause_session',
+  'desktop_resume_session',
+  'desktop_handoff_session',
+  'desktop_kill_switch',
 
   // ═══════════════════════════════════════════════════════════════
   // KNOWLEDGE VAULT (v30.0.0)

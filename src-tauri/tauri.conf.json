@@ -582,6 +582,18 @@
               "command": "desktop_open_session"
             },
             {
+              "command": "desktop_pause_session"
+            },
+            {
+              "command": "desktop_resume_session"
+            },
+            {
+              "command": "desktop_handoff_session"
+            },
+            {
+              "command": "desktop_kill_switch"
+            },
+            {
               "command": "ai_check_ollama_status"
             },
             {

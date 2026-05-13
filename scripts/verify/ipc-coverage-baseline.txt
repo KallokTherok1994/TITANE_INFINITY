@@ -1,10 +1,6 @@
 ai_chat
 autonomy_scan_ia
 autonomy_scan_tts
-desktop_handoff_session
-desktop_kill_switch
-desktop_pause_session
-desktop_resume_session
 singularity_get_adaptive
 singularity_get_cognitive
 singularity_get_full_state

@@ -5,7 +5,51 @@
 - README.md = surface documentaire canonique
 - Inventaires et logs : `docs/92_maintenance/`
 
-# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v34.0.0 — BUILD ALL 2026-05-12 COMPLETE — MAJOR bump — AH-v92+v93 SEALED)
+# RELEASE SURFACE INVENTORY — TITANE∞ (Current canonical: v34.0.6 — IPC LEGACY PRUNE + bundles + UI capture 36/36 — 2026-05-13)
+
+---
+> **A1 VERSION AUTHORITY NOTE (2026-05-13 — v34.0.6 IPC LEGACY PRUNE phase 1+2)**
+> Current `package.json` version: **34.0.6** — patch bump (34.0.5→34.0.6); IPC L1/L2/L3 alignment for 33 active surfaces (phase 1) + 4 desktop_*_session lifecycle commands (phase 2); baseline tolerated entries: 48 → 15 → **11**.
+> Tauri release artifacts built (AppImage+DEB+RPM v34.0.6, exit 0); deployed to `deployment/latest/`; system install **PENDING USER SUDO** (binary `/usr/bin/titane-infinity` still at v34.0.5 until `sudo dpkg -i deployment/latest/titane-infinity_34.0.6_amd64.deb`).
+> Commits MAIN: af7d2010c (IPC prune phase 1), 9c6e2e597 (bump+bundles), 73c5e37ac (E2E capture 36/36 PASS).
+
+## Final Release Seal v34.0.6 — 2026-05-13 (IPC LEGACY PRUNE)
+
+| Surface | Truth | Status |
+|---|---|---|
+| `package.json` version | 34.0.6 | ✅ PASS |
+| `src-tauri/Cargo.toml` version | 34.0.6 | ✅ PASS |
+| `src-tauri/tauri.conf.json` version | 34.0.6 | ✅ PASS |
+| AppImage | `titane-infinity_34.0.6_amd64.AppImage` (95M) | ✅ PASS |
+| DEB | `titane-infinity_34.0.6_amd64.deb` (24M) | ✅ PASS |
+| RPM | `titane-infinity-34.0.6-1.x86_64.rpm` (24M) | ✅ PASS |
+| sha256 AppImage | `c5606248dcf97f59d4ad6ead625663ab9bdc8aaa273de6e112caa051378a2cba` | ✅ PASS |
+| sha256 DEB | `4c377b1a165f9e554c0a61909d023a71bef3c6fb89c18cf332ed3dc661d4d905` | ✅ PASS |
+| sha256 RPM | `309242265f0ac254476508789f4be703768058b5754a0f6b26639060001970b1` | ✅ PASS |
+| IPC L1/L2/L3 alignment (phase 1) | 33 commands aligned (auth_* x9, security_log x3, ia_policy x4, memory_debug_scan, engine_get_*_state x3, evolution x2, desktop_open_session, ai_check_ollama_status, analyze_logs_intelligent, conversation_generate, read_json_file, remote_key_* x4, singularity_get_state real) | ✅ PASS |
+| IPC L1/L2/L3 alignment (phase 2) | 4 desktop session lifecycle (pause/resume/handoff/kill_switch) | ✅ PASS |
+| Baseline tolerated entries | 11 (3 dead-code TBD: ai_chat + autonomy_scan_ia/tts; 8 mock-only: singularity_get_*) | ✅ PASS |
+| ipc-end-to-end-coverage gate | PASS (109 audited, 11 tolerated) | ✅ PASS |
+| Vitest legacy-prune spec | 29/29 PASS | ✅ PASS |
+| E2E UI capture spec | 36/36 PASS (1m42, 6.5M screenshots) | ✅ PASS |
+| AutoHeal | AH-v103 phase 1 + AH-v104 phase 2 | ✅ PASS |
+| system binary sync | PENDING — sudo non interactive blocked; user must run `sudo dpkg -i deployment/latest/titane-infinity_34.0.6_amd64.deb` | ⏳ PENDING |
+
+### Seal note — v34.0.6
+
+- **Phase 1** (commit af7d2010c): Aligned L1 + L2 for 33 active surfaces and added L3 for `singularity_get_state` real handler. Baseline reduced 48 → 15.
+- **Phase 2** (this commit): Aligned L1 + L2 + L3 for 4 `desktop_*_session` lifecycle commands (handlers existed in `src-tauri/src/commands/desktop_perception.rs` but were not wired). Baseline reduced 15 → 11.
+- **Deferred** (need backend handler work, future patch):
+  - `ai_chat` (L4 absent — only `ai_chat_send` / `ai_chat_stream` exist in `chat_orchestrator.rs`); caller `ragService.ts` must migrate to `ai_chat_send`.
+  - `autonomy_scan_ia`, `autonomy_scan_tts` (L4 absent); caller `SingularityAutonomyEngine.ts` falls back gracefully via `safeInvoke` failures.
+  - `singularity_get_*` x8 (L4 mock-only, `#[cfg(feature="mock")]`); validator could classify as `MOCK_GATED` instead of `LEGACY_BASELINE`.
+- Mapping docs updated: ARCHITECTURE.md, docs/CARTOGRAPHY_COMPLETE.md, RELEASE_SURFACE_INVENTORY.md.
+- AutoHeal: `AH-v103-2026-05-13-IPC_LEGACY_PRUNE` (phase 1) + `AH-v104-2026-05-13-IPC_LEGACY_PRUNE_PHASE2` (phase 2).
+- Proof packs: `proof_packs/v34.0.6-ui-prod-capture/` (36 screenshots + README).
+
+---
+
+# RELEASE SURFACE INVENTORY — TITANE∞ (Previous canonical: v34.0.0 — BUILD ALL 2026-05-12 COMPLETE — MAJOR bump — AH-v92+v93 SEALED)
 
 ---
 > **A1 VERSION AUTHORITY NOTE (2026-05-12 — BUILD ALL 34.0.0 MAJOR + AH-v93 SEALED)**
