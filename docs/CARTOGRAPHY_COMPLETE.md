@@ -1,3 +1,12 @@
+# [2026-05-13] Cartography delta — v34.0.9 TIME module v3 Ω (5 phases sealed)
+
+- **Phase 1 (Rust IPC v3)** : `src-tauri/src/commands/temporal_commands.rs` expose 18 commandes Single Door alignées sur `TemporalIntelligenceEngine` (TimeModel, TemporalMemory Ebbinghaus, RoutineEngine, TemporalPlanner, Anticipator, LongTermAligner, TemporalMetrics). `TemporalEngineHandle = Arc<RwLock<TemporalIntelligenceEngine>>` managé dans `main.rs`. Allowlist Rust (`security.rs`) + capability allowlist TS (`src/lib/security.ts`) mises à jour.
+- **Phase 2 (TS bridge + hook)** : `src/services/temporal/` (types + temporalIntelligenceService) + `src/hooks/useTemporalIntelligence.ts` + tests Vitest contract `tests/contract/temporal-ipc-v3-contract.test.ts` (19 tests).
+- **Phase 3 (TOOL_CALL + Twin)** : `src/services/temporal/temporalChatTools.ts` (5 ToolDefinitions) + `src/services/temporal/timeToTwinObserver.ts` (cognitive observation push à 60s vers `twin_submit_observation`).
+- **Phase 4 (UI 7 onglets)** : `src/pages/TimePage.tsx` étendu à 7 onglets canoniques (now / agenda / memory / timeline / cognitive / snapshots / twin), 14 nouveaux `data-testid`, hook câblé Single Door.
+- **Phase 5 (Sealing)** : version bump 34.0.8 → 34.0.9, proof_pack `proof_packs/time-module-v3/`, mapping mis à jour (UI_SURFACE_MAP, ARCHITECTURE, CARTOGRAPHY_COMPLETE, IPC_CATALOG).
+- **Preuves** : Vitest 35/35 PASS (10 service + 19 contract + 8 chat tools + 4 observer + 3 Phase 4 UI + 10 non-regression). cargo tests_v3 7/7 PASS. AutoHeal id × 5 (PHASE1..PHASE5). detect_recurrence PASS (1905), verify_instructions PASS=52 FAIL=0.
+
 # [2026-05-13] Cartography delta — v34.0.8 Phase R+ Live snapshot convergence 6/6 + memo non-regression
 
 - **Convergence Live** : les 3 dashboards restants (`MonitoringDashboard`, `DiagnosticDashboard`, `LogAnalysisDashboard`) consomment désormais le contrat Live canonique. Les 6/6 dashboards agents avancés exposent uniformément la quadruple testid `*-live`, `*-live-dot`, `*-live-label`, `*-refresh-now` avec label normalisé `Live - maj HH:MM:SS - refresh Ns`.
