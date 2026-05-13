@@ -510,6 +510,102 @@
               "command": "web_search"
             },
             {
+              "command": "append_security_log"
+            },
+            {
+              "command": "clear_security_log"
+            },
+            {
+              "command": "export_security_log"
+            },
+            {
+              "command": "clear_permission_audit"
+            },
+            {
+              "command": "create_ia_policy"
+            },
+            {
+              "command": "delete_ia_policy"
+            },
+            {
+              "command": "toggle_ia_policy"
+            },
+            {
+              "command": "save_ia_policies"
+            },
+            {
+              "command": "memory_debug_scan"
+            },
+            {
+              "command": "auth_delete_api_key"
+            },
+            {
+              "command": "auth_generate_dev_token"
+            },
+            {
+              "command": "auth_get_api_keys"
+            },
+            {
+              "command": "auth_get_status"
+            },
+            {
+              "command": "auth_grant_role"
+            },
+            {
+              "command": "auth_revoke_dev_token"
+            },
+            {
+              "command": "auth_revoke_role"
+            },
+            {
+              "command": "auth_save_api_keys"
+            },
+            {
+              "command": "auth_validate_dev_token"
+            },
+            {
+              "command": "engine_get_harmonia_state"
+            },
+            {
+              "command": "engine_get_nexus_state"
+            },
+            {
+              "command": "engine_get_sentinel_state"
+            },
+            {
+              "command": "get_evolution_state"
+            },
+            {
+              "command": "run_evolution"
+            },
+            {
+              "command": "desktop_open_session"
+            },
+            {
+              "command": "ai_check_ollama_status"
+            },
+            {
+              "command": "analyze_logs_intelligent"
+            },
+            {
+              "command": "conversation_generate"
+            },
+            {
+              "command": "read_json_file"
+            },
+            {
+              "command": "remote_key_create"
+            },
+            {
+              "command": "remote_key_list"
+            },
+            {
+              "command": "remote_key_revoke"
+            },
+            {
+              "command": "remote_key_rotate"
+            },
+            {
               "command": "cp_get_ai_config"
             },
             {

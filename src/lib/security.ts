@@ -1028,6 +1028,42 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'submit_evolution_data',
 
   // ═══════════════════════════════════════════════════════════════
+  // v34.0.6 IPC LEGACY PRUNE — L1 alignment for active UI surfaces
+  // (AdminPage, AuthCenter, GovernanceCenter, CognitivePage extended,
+  //  LogAnalysisAgent, RemoteKeyManager, DesktopHandoff)
+  // Couvert par scripts/verify/verify-ipc-end-to-end-coverage.sh
+  // ═══════════════════════════════════════════════════════════════
+  // AdminPage / GovernanceCenter
+  'append_security_log',
+  'clear_security_log',
+  'export_security_log',
+  'clear_permission_audit',
+  'create_ia_policy',
+  'delete_ia_policy',
+  'toggle_ia_policy',
+  'save_ia_policies',
+  'memory_debug_scan',
+  // AuthCenter (8 commands)
+  'auth_delete_api_key',
+  'auth_generate_dev_token',
+  'auth_get_api_keys',
+  'auth_get_status',
+  'auth_grant_role',
+  'auth_revoke_dev_token',
+  'auth_revoke_role',
+  'auth_save_api_keys',
+  'auth_validate_dev_token',
+  // CognitivePage extended probes
+  'engine_get_harmonia_state',
+  'engine_get_nexus_state',
+  'engine_get_sentinel_state',
+  // Evolution
+  'get_evolution_state',
+  'run_evolution',
+  // DesktopHandoff
+  'desktop_open_session',
+
+  // ═══════════════════════════════════════════════════════════════
   // KNOWLEDGE VAULT (v30.0.0)
   // ═══════════════════════════════════════════════════════════════
   'knowledge_ingest',

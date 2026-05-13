@@ -2423,6 +2423,8 @@ fn main() {
             titane_infinity::evolution::evolution_commands::evolution_start,
             titane_infinity::evolution::evolution_commands::evolution_stop,
             commands::temporal_commands::temporal_get_today_state,
+            // v34.0.6 IPC LEGACY PRUNE — singularity_get_state (real, non-mock)
+            titane_infinity::singularity::singularity_state::singularity_get_state,
             legacy_ai_bridge::engine_metrics,  // FIX-009
             legacy_ai_bridge::engine_health,   // FIX-009
             legacy_ai_bridge::engine_modules,  // FIX-009
