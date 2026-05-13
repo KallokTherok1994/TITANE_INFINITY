@@ -1,3 +1,27 @@
+## 2026-05-13 : v34.0.11 BUILD ALL FINAL — Audit clean + Rust fix + Tauri bundles + System install
+
+- **Mode** : DURABLE | **Bump Rule 13** : 34.0.10 → 34.0.11 | **BUILD ALL** (Rule 14)
+- **Audit pré-build (zéro tolérance)** :
+  - `pnpm tsc --noEmit` → exit 0, 0 erreur
+  - `pnpm exec eslint src --max-warnings=0` → exit 0
+  - `pnpm vitest run` → **9247/9247 PASS** sur 602 fichiers (303s)
+  - `cargo check` → 0 warning / 0 error
+  - `cargo test --bin titane-infinity` → **806/806 PASS** après fix
+- **Correction Rust appliquée** : `src-tauri/src/commands/web_search_commands.rs` — ajout `static ENV_LOCK: Mutex<()>` pour sérialiser les tests `test_search_url_construction` (remove env) et `test_search_with_unavailable_searxng` (set env). Élimine race condition flaky sur `TITANE_SEARCH_API_URL`.
+- **Bundles produits** (Tauri release v34.0.11, cargo 10m 03s) :
+  - `src-tauri/target/release/bundle/deb/titane-infinity_34.0.11_amd64.deb` (24 989 612 bytes)
+    sha256 `85d2814a6ff2bd2f006b3c06056e1a3323b674a340a641f06236ac75e7cb36d8`
+  - `src-tauri/target/release/bundle/rpm/titane-infinity-34.0.11-1.x86_64.rpm` (24 989 022 bytes)
+    sha256 `87a2c8221da61fc80dbc28667001fdb97a865628bc803ee9e246800bdd64cf96`
+  - `src-tauri/target/release/bundle/appimage/titane-infinity_34.0.11_amd64.AppImage` (99 125 752 bytes)
+    sha256 `97bd4458e3329b01cb1e2b6adf189b80c39afeb10521cb733cf1e9ed0a9e9558`
+  - Binaire : `src-tauri/target/release/titane-infinity` (54 916 008 bytes)
+    sha256 `7344490212e5cf69e7ad1ea46aae70eb7929806e854275e9fecf193b397860f3`
+- **Checksums report** : [RELEASE_ARTIFACTS_CHECKSUMS_34.0.11.txt](RELEASE_ARTIFACTS_CHECKSUMS_34.0.11.txt).
+- **Frontend rebuild** : clean (`dist/` + `.vite` purgés) puis `vite build` fresh, version `34.0.11` visible dans `dist/index.html`.
+- **AutoHeal** : entrées `WEB-SEARCH-TEST-RACE-FIX-2026-05-13` + `BUILD-ALL-FINAL-v34_0_11-2026-05-13`.
+- **Proof pack** : `proof_packs/v34.0.11-final/` (tsc.log, eslint.log, vitest.log, cargo-check.log, cargo-test.log, vite-build.log, tauri-build.log, detect-recurrence.log, verify-instructions.log + smoke + install logs).
+
 ## 2026-05-13 : v34.0.10 — TIME v3 Phase 7 Observability + Robustness Hardening
 
 - **Mode** : DURABLE | **Bump Rule 13** : 34.0.9 → 34.0.10

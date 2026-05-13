@@ -300,6 +300,14 @@ fn strip_tags(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Mutex;
+
+    /// Serialize tests that mutate process-wide environment variables to
+    /// avoid races between `test_search_url_construction` (which removes
+    /// `TITANE_SEARCH_API_URL`) and `test_search_with_unavailable_searxng`
+    /// (which sets it). Without this lock the two tests can interleave when
+    /// cargo runs them concurrently and the URL assertion flakes.
+    static ENV_LOCK: Mutex<()> = Mutex::new(());
 
     /// WebSearchResult must serialize to the canonical IPC shape.
     #[test]
@@ -320,6 +328,7 @@ mod tests {
     /// search_api_url must produce a well-formed URL with the query encoded.
     #[test]
     fn test_search_url_construction() {
+        let _guard = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         // Reset env var to default
         std::env::remove_var("TITANE_SEARCH_API_URL");
         std::env::remove_var("SEARXNG_URL");
@@ -349,6 +358,7 @@ mod tests {
     /// meaningful error — never a panic or empty error.
     #[tokio::test]
     async fn test_search_with_unavailable_searxng() {
+        let _guard = ENV_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         std::env::set_var("TITANE_SEARCH_API_URL", "http://127.0.0.1:19998/search");
 
         let result = web_search("test query".to_string(), Some(5)).await;
