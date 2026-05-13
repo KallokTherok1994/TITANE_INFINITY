@@ -357,6 +357,40 @@
   - ADMIN hubs: `tab-admin-config`, `tab-admin-design`, `tab-admin-governance`, `tab-admin-production-health`
 - Durcissement anti-derive E2E: `openAdminTab` privilegie maintenant les testids canoniques `tab-admin-{id}` (avec fallback label) dans `e2e/helpers/navigation.ts`, ce qui supprime la fragilite regex/locale sur la nav admin.
 
+# [2026-05-13] TIME Phase 4 — 7 onglets v3 (memory + twin)
+
+- Surface canonique: `/time` via `src/pages/TimePage.tsx`
+- 7 onglets canoniques (Phase 4): `now`, `agenda`, `memory`, `timeline`, `cognitive`, `snapshots`, `twin`
+- Nouveaux selectors stables (memory):
+  - `tab-time-memory`
+  - `time-section-memory`
+  - `time-memory-refresh`
+  - `time-memory-consolidate`
+  - `time-memory-stats`
+  - `time-metric-memory-total`
+  - `time-metric-memory-active`
+  - `time-metric-memory-consolidated`
+  - `time-metric-memory-strength`
+- Nouveaux selectors stables (twin):
+  - `tab-time-twin`
+  - `time-section-twin`
+  - `time-twin-refresh`
+  - `time-twin-tick`
+  - `time-twin-health`
+  - `time-twin-alignment`
+  - `time-metric-twin-overall`
+  - `time-metric-twin-energy`
+  - `time-metric-twin-alignment`
+  - `time-metric-twin-consistency`
+  - `time-metric-twin-recovery`
+  - `time-metric-twin-align-score`
+  - `time-metric-twin-active-goals`
+  - `time-metric-twin-completed-goals`
+- Donnees consommees via hook `useTemporalIntelligence` (Single Door safeInvokeCanonical, 18 commandes v3)
+- Preuves Phase 4:
+  - Vitest: `src/__tests__/pages/TimePagePhase4.test.tsx` (3 tests PASS)
+  - Vitest existing: `src/__tests__/pages/TimePage.test.tsx` (10 tests PASS — non-regression)
+
 # [2026-05-08] TIME runtime truth completeness
 
 - Surface canonique: `/time` via `src/pages/TimePage.tsx`

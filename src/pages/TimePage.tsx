@@ -17,6 +17,7 @@ import { useSearchParams } from 'react-router-dom';
 import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { useTimeAgenda } from '@/hooks/useTimeAgenda';
+import { useTemporalIntelligence } from '@/hooks/useTemporalIntelligence';
 import type { AgendaEvent } from '@/engines/time';
 import {
   TIME_RUNTIME_CONTEXT_KEY,
@@ -31,9 +32,24 @@ import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
 
-type TabId = 'now' | 'agenda' | 'timeline' | 'snapshots' | 'cognitive';
+type TabId =
+  | 'now'
+  | 'agenda'
+  | 'memory'
+  | 'timeline'
+  | 'cognitive'
+  | 'snapshots'
+  | 'twin';
 
-const VALID_TABS: TabId[] = ['now', 'agenda', 'timeline', 'snapshots', 'cognitive'];
+const VALID_TABS: TabId[] = [
+  'now',
+  'agenda',
+  'memory',
+  'timeline',
+  'cognitive',
+  'snapshots',
+  'twin',
+];
 
 const isTabId = (value: string | null): value is TabId => {
   return value !== null && VALID_TABS.includes(value as TabId);
@@ -631,9 +647,11 @@ export const TimePage: React.FC = () => {
         {[
           { id: 'now', label: '⚡ Maintenant', desc: "Aujourd'hui" },
           { id: 'agenda', label: '📅 Agenda', desc: 'Planning' },
+          { id: 'memory', label: '🧬 Mémoire', desc: 'Ebbinghaus' },
           { id: 'timeline', label: '🧭 Timeline', desc: 'Navigation' },
-          { id: 'snapshots', label: '⏮️ Snapshots', desc: 'Voyage' },
           { id: 'cognitive', label: '🧠 Cognitive Engine', desc: 'Flow & Intelligence' },
+          { id: 'snapshots', label: '⏮️ Snapshots', desc: 'Voyage' },
+          { id: 'twin', label: '🪞 Twin/Health', desc: 'Vie active' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -716,10 +734,204 @@ export const TimePage: React.FC = () => {
             isWorkHours={agendaStats.isWorkHours}
           />
         )}
+        {activeTab === 'memory' && <TemporalMemorySection />}
+        {activeTab === 'twin' && <TemporalTwinSection />}
       </div>
     </div>
   );
 };
+
+// ═══════════════════════════════════════════════════════════════════
+// SECTION: TEMPORAL MEMORY (Ebbinghaus) — Phase 4
+// ═══════════════════════════════════════════════════════════════════
+
+const TemporalMemorySection: React.FC = () => {
+  const { state, loading, error, refresh, consolidateMemory } =
+    useTemporalIntelligence({ autoStart: true });
+  const memory = state?.memory_stats;
+  return (
+    <section
+      data-testid="time-section-memory"
+      className="space-y-4 rounded-lg border border-gray-800 bg-gray-900/40 p-4"
+    >
+      <header className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-white">🧬 Mémoire temporelle</h2>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            data-testid="time-memory-refresh"
+            onClick={() => void refresh()}
+            className="rounded bg-gray-700 px-3 py-1 text-xs text-white hover:bg-gray-600"
+          >
+            Refresh
+          </button>
+          <button
+            type="button"
+            data-testid="time-memory-consolidate"
+            onClick={() => void consolidateMemory()}
+            className="rounded bg-blue-600 px-3 py-1 text-xs text-white hover:bg-blue-500"
+          >
+            Consolider
+          </button>
+        </div>
+      </header>
+      {loading && (
+        <div className="text-xs text-gray-400" data-testid="time-memory-loading">
+          Chargement…
+        </div>
+      )}
+      {error && (
+        <div
+          className="rounded border border-amber-600 bg-amber-900/30 px-3 py-2 text-xs text-amber-100"
+          data-testid="time-memory-error"
+        >
+          ⚠️ {error}
+        </div>
+      )}
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-200"
+        data-testid="time-memory-stats"
+      >
+        <Metric
+          label="Total"
+          value={memory?.total_traces ?? 0}
+          testid="memory-total"
+        />
+        <Metric
+          label="Actifs"
+          value={memory?.active_traces ?? 0}
+          testid="memory-active"
+        />
+        <Metric
+          label="Consolidés"
+          value={memory?.consolidated_traces ?? 0}
+          testid="memory-consolidated"
+        />
+        <Metric
+          label="Force moyenne"
+          value={(memory?.average_strength ?? 0).toFixed(3)}
+          testid="memory-strength"
+        />
+      </div>
+    </section>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// SECTION: TWIN / HEALTH — Phase 4
+// ═══════════════════════════════════════════════════════════════════
+
+const TemporalTwinSection: React.FC = () => {
+  const { health, alignment, loading, error, refresh, tick } =
+    useTemporalIntelligence({ autoStart: true });
+  return (
+    <section
+      data-testid="time-section-twin"
+      className="space-y-4 rounded-lg border border-gray-800 bg-gray-900/40 p-4"
+    >
+      <header className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-white">🪞 Twin & Health</h2>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            data-testid="time-twin-refresh"
+            onClick={() => void refresh()}
+            className="rounded bg-gray-700 px-3 py-1 text-xs text-white hover:bg-gray-600"
+          >
+            Refresh
+          </button>
+          <button
+            type="button"
+            data-testid="time-twin-tick"
+            onClick={() => void tick()}
+            className="rounded bg-emerald-600 px-3 py-1 text-xs text-white hover:bg-emerald-500"
+          >
+            Tick
+          </button>
+        </div>
+      </header>
+      {loading && (
+        <div className="text-xs text-gray-400" data-testid="time-twin-loading">
+          Chargement…
+        </div>
+      )}
+      {error && (
+        <div
+          className="rounded border border-amber-600 bg-amber-900/30 px-3 py-2 text-xs text-amber-100"
+          data-testid="time-twin-error"
+        >
+          ⚠️ {error}
+        </div>
+      )}
+      <div
+        className="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs text-gray-200"
+        data-testid="time-twin-health"
+      >
+        <Metric
+          label="Overall"
+          value={(health?.overall ?? 0).toFixed(2)}
+          testid="twin-overall"
+        />
+        <Metric
+          label="Énergie"
+          value={(health?.energy ?? 0).toFixed(2)}
+          testid="twin-energy"
+        />
+        <Metric
+          label="Alignement"
+          value={(health?.alignment ?? 0).toFixed(2)}
+          testid="twin-alignment"
+        />
+        <Metric
+          label="Cohérence"
+          value={(health?.consistency ?? 0).toFixed(2)}
+          testid="twin-consistency"
+        />
+        <Metric
+          label="Récup."
+          value={(health?.recovery ?? 0).toFixed(2)}
+          testid="twin-recovery"
+        />
+      </div>
+      <div
+        className="grid grid-cols-3 gap-3 text-xs text-gray-200"
+        data-testid="time-twin-alignment"
+      >
+        <Metric
+          label="Score"
+          value={(alignment?.score ?? 0).toFixed(2)}
+          testid="twin-align-score"
+        />
+        <Metric
+          label="Goals actifs"
+          value={alignment?.active_goals ?? 0}
+          testid="twin-active-goals"
+        />
+        <Metric
+          label="Goals complétés"
+          value={alignment?.completed_goals ?? 0}
+          testid="twin-completed-goals"
+        />
+      </div>
+    </section>
+  );
+};
+
+const Metric: React.FC<{
+  label: string;
+  value: number | string;
+  testid: string;
+}> = ({ label, value, testid }) => (
+  <div
+    className="rounded-md border border-gray-700 bg-gray-900/60 px-3 py-2"
+    data-testid={`time-metric-${testid}`}
+  >
+    <div className="text-[10px] uppercase tracking-wider text-gray-400">
+      {label}
+    </div>
+    <div className="mt-1 text-base font-semibold text-white">{value}</div>
+  </div>
+);
 
 // ═══════════════════════════════════════════════════════════════════
 // SECTION 1: NOW (Aujourd'hui)
