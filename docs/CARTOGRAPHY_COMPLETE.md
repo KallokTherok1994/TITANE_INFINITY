@@ -1,3 +1,19 @@
+# [2026-05-13] Cartography delta — UI 100/100 plan phase E (audit aggregator + v34.0.7 bump)
+
+- **Score UI** : 92/100 → **100/100** après phase E.
+- **Script audit** : `scripts/audit/ui-100-score.sh` exécute les 4 gates A–D et agrège le score.
+- **Rapport** : `reports/UI_100_SCORE_v34.0.7.md` (verdict PASS 100/100, 4/4 phases PASS).
+- **Version** : bump 34.0.6 → **34.0.7** (Rule 13) via `node scripts/bump-version.mjs patch` + `sync-versions.mjs`.
+- **Modèle de score** :
+  - Phase A (50 surfaces E2E)         : 20 pts
+  - Phase B (a11y WCAG 2.1 AA)        : 18 pts
+  - Phase C (responsive 7×3)          : 16 pts
+  - Phase D (6 dashboards canonical)  : 18 pts
+  - Phase E (audit + bump + report)   : 28 pts
+- **BUILD ALL v34.0.7** : laissé à la commande utilisateur (Rule 11 — no token gate, on demand).
+
+---
+
 # [2026-05-13] Cartography delta — UI 100/100 plan phase D (+6 agent dashboards canonical E2E)
 
 - **Score UI** : 82/100 → **92/100** après phase D.
