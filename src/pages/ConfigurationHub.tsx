@@ -16,6 +16,7 @@ import { invalidateRequestDefaultsCache } from '@/services/tauri/chatEngine.comm
 import { useToast } from '@/hooks/useToast';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import './ModulePages.css';
 
 import { createLogger } from '@/utils/logger';
@@ -1131,6 +1132,7 @@ export const ConfigurationHub: React.FC = () => {
 
   return (
     <div className="module-page" data-testid="page-configuration-hub">
+      <SurfaceTruthBadge variant={config != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
       {/* Header */}
       <div className="module-page__header">
         <div>

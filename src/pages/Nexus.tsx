@@ -17,6 +17,7 @@ import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber } from '../utils/dataUtils';
 import type { NexusGraph } from '../core/ARCHITECTURE_TYPES_v∞';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import './ModulePages.css';
 
 export const Nexus = () => {
@@ -40,7 +41,8 @@ export const Nexus = () => {
   const connections = extractNumber(graph?.edgeCount, 0);
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-nexus">
+      <SurfaceTruthBadge variant={!loading && graph != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">🧠</span>

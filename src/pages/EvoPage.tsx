@@ -46,6 +46,7 @@ import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -125,6 +126,7 @@ export const EvoPage: React.FC = () => {
     <ErrorBoundary context="EvoPage">
       <Container size="xl">
         <Stack direction="vertical" gap={6}>
+          <SurfaceTruthBadge variant={memoryStats != null ? 'LIVE' : 'PARTIAL'} />
           {/* ═══ HEADER ═══ */}
           <div
             style={{

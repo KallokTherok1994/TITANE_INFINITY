@@ -16,6 +16,7 @@
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber, extractString } from '../utils/dataUtils';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import './ModulePages.css';
 
 interface HeliosMetrics {
@@ -53,7 +54,8 @@ export const Helios = () => {
   const status = extractString(metrics?.status, 'Unknown');
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-helios">
+      <SurfaceTruthBadge variant={!loading && metrics != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">💓</span>

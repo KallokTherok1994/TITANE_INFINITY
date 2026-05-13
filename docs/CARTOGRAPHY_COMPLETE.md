@@ -2291,3 +2291,21 @@ Corpus clinique: profils toxiques (p24) → protection (p25) → traumatologie/a
 - `docs/ui/production/PROOF_PACK_PRODUCTION_FINAL_INDEX_v73.md`
 - `docs/ui/production/PROOF_PACK_PRODUCTION_FINAL_MANIFEST_v73.json`
 - `docs/ui/production/UI_PRODUCTION_FRONTEND_BACKEND_SYNC_FINAL_CERTIFICATION_v73.md`
+
+## [AH-v97 — 2026-05-28] SurfaceTruthBadge — Phase 4+5 completion (18 pages fully dynamic)
+
+Phase 4 (Helios, Harmonia, Nexus) + Phase 5 (EvoPage, TotalDevPage, ConfigurationHub) completed.
+All 18 pages now carry a dynamic `SurfaceTruthBadge` derived from real backend/IPC state.
+
+### Nouvelles surfaces instrumentées (AH-v97)
+| Page | data-testid | Badge logic |
+|---|---|---|
+| `src/pages/Helios.tsx` | `page-helios` (NEW) | `useEngineSubscription('helios')` → LIVE/PARTIAL/DEGRADED |
+| `src/pages/Harmonia.tsx` | `page-harmonia` (NEW) | `useEngineSubscription('harmonia')` → LIVE/PARTIAL/DEGRADED |
+| `src/pages/Nexus.tsx` | `page-nexus` (NEW) | `useEngineSubscription('nexus')` → LIVE/PARTIAL/DEGRADED |
+| `src/pages/EvoPage.tsx` | existing | `persistentMemoryGetStats()` != null → LIVE/PARTIAL |
+| `src/pages/TotalDevPage.tsx` | `page-total-dev` | `lockState !== 'CHECKING'` → LIVE/PARTIAL |
+| `src/pages/ConfigurationHub.tsx` | `page-configuration-hub` | `config` (ConfigSnapshot) != null → LIVE/PARTIAL/DEGRADED |
+
+Zero static `variant="PARTIAL"` badges in `src/pages/` or `src/modules/`.
+Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS + verify_instructions PASS=52.

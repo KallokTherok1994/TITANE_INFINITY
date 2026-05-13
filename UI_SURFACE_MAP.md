@@ -1252,5 +1252,11 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 | RealityCenter | `/reality-center` | PARTIAL (hardcoded modules) | LIVE | `cp_get_modules_status` |
 | QuantumCenter | `/quantum-center` | SIMULATED (Math.random) | LIVE | `engine_get_singularity_state` |
 | UltimateOptimizationDashboard | `/optimization` | PARTIAL (static benchmarks) | LIVE | `engine_get_singularity_state` + `usePerformanceMonitor` |
+| Helios | `/helios` | no badge | LIVE | `useEngineSubscription('helios')` data != null |
+| Harmonia | `/harmonia` | no badge | LIVE | `useEngineSubscription('harmonia')` flows != null |
+| Nexus | `/nexus` | no badge | LIVE | `useEngineSubscription('nexus')` graph != null |
+| EvoPage | `/evo` | no badge | LIVE | `tauriClient.persistentMemoryGetStats()` != null |
+| TotalDevPage | `/total-dev` | no badge | LIVE | `lockState !== 'CHECKING'` |
+| ConfigurationHub | `/configuration` | no badge | LIVE | `config` (ConfigSnapshot) != null |
 
-### SurfaceTruthBadge — toutes les surfaces affichent maintenant `LIVE` quand l'IPC répond, `DEGRADED/PARTIAL` en fallback.
+### SurfaceTruthBadge — toutes les surfaces affichent maintenant `LIVE` quand l'IPC répond, `DEGRADED/PARTIAL` en fallback. 18 pages couvertes (AH-v97, 2026-05-28). data-testid ajoutés: `page-helios`, `page-harmonia`, `page-nexus`.

@@ -17,6 +17,7 @@ import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber } from '../utils/dataUtils';
 import type { HarmoniaFlows } from '../core/ARCHITECTURE_TYPES_v∞';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import './ModulePages.css';
 
 export const Harmonia = () => {
@@ -41,7 +42,8 @@ export const Harmonia = () => {
   const coherence = extractNumber(flows?.coherence, 0);
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-harmonia">
+      <SurfaceTruthBadge variant={!loading && flows != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">⚖️</span>

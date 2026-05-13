@@ -13,6 +13,7 @@
 
 import React, { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 import { logger } from '@/lib/logger';
 import './TotalDevPage.css';
