@@ -1,8 +1,22 @@
 import React from 'react';
+import { useAgentLiveSnapshot } from '@/hooks/useAgentLiveSnapshot';
 import { getDiagnosticAgentStatus } from './index';
 
+export const DIAGNOSTIC_DASHBOARD_REFRESH_INTERVAL_MS = 60_000;
+
+function formatDiagnosticClock(ts: number): string {
+  return new Date(ts).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
 const DiagnosticDashboard: React.FC = () => {
-  const status = getDiagnosticAgentStatus();
+  const { data: status, lastUpdate, refresh } = useAgentLiveSnapshot(
+    getDiagnosticAgentStatus,
+    DIAGNOSTIC_DASHBOARD_REFRESH_INTERVAL_MS,
+  );
   const detailSections = status.detailSections ?? [];
 
   return (
@@ -28,6 +42,42 @@ const DiagnosticDashboard: React.FC = () => {
       <p data-testid="diagnostic-panel-summary" style={{ marginBottom: 10 }}>
         {status.summary}
       </p>
+      <div
+        data-testid="diagnostic-panel-live"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          margin: '0 0 8px',
+          fontSize: 12,
+          opacity: 0.85,
+        }}
+      >
+        <span
+          aria-hidden="true"
+          data-testid="diagnostic-panel-live-dot"
+          style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: '#34d399',
+            boxShadow: '0 0 6px rgba(52, 211, 153, 0.6)',
+          }}
+        />
+        <span data-testid="diagnostic-panel-live-label">
+          Live - maj {formatDiagnosticClock(lastUpdate)} - refresh{' '}
+          {Math.round(DIAGNOSTIC_DASHBOARD_REFRESH_INTERVAL_MS / 1000)}s
+        </span>
+        <button
+          type="button"
+          data-testid="diagnostic-panel-refresh-now"
+          onClick={refresh}
+          style={{ fontSize: 11, padding: '1px 6px', marginLeft: 6 }}
+        >
+          Rafraichir
+        </button>
+      </div>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
       <ul
         data-testid="diagnostic-panel-proof-list"

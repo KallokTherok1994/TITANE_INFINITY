@@ -1,3 +1,14 @@
+# [2026-05-13] UI Vivante — Live snapshot convergence 6/6 + memo non-regression (Phase R+ v34.0.8)
+
+- Convergence du hook `useAgentLiveSnapshot` étendue aux 3 dashboards restants. Tous les 6 dashboards agents avancés exposent désormais la quadruple testid canonique `*-live`, `*-live-dot`, `*-live-label`, `*-refresh-now` :
+  - `monitoring-dashboard-{live,live-dot,live-label,refresh-now}` (snapshot sync via hook + métrique async séparée).
+  - `diagnostic-panel-{live,live-dot,live-label,refresh-now}` (snapshot sync via hook, préfixe legacy conservé).
+  - `log-analysis-dashboard-{live,live-dot,live-label,refresh-now}` (scan async + state `lastUpdate` en parité).
+  - `explainability-dashboard-*`, `orchestrator-dashboard-*`, `security-dashboard-*` (déjà via hook, label harmonisé `Live - maj HH:MM:SS - refresh Ns`).
+- Test E2E uniformité : [e2e/critical/agent-live-uniformity.spec.ts](e2e/critical/agent-live-uniformity.spec.ts) — 2 tests PASS, screenshot `proof_packs/v34.0.8-live-uniformity/agent-live-indicators.png`.
+- Test Vitest non-régression `React.memo` : [src/__tests__/perf/react-memo-non-regression.test.tsx](src/__tests__/perf/react-memo-non-regression.test.tsx) — 2 tests PASS (mock module + fake timers, prouve `renderCount=1` après 5 rerenders parent et `renderCount>1` après 65 s).
+- AutoHeal : entrée `AH-v117-2026-05-13-LIVE_SNAPSHOT_CONVERGENCE_MEMO_REGRESSION_v34_0_8`.
+
 # [2026-05-13] UI Vivante + E2E Expansion v34.0.8 — 100/100 PASS
 
 - Audit aggregator v2 : [scripts/audit/ui-100-score-v34.0.8.sh](scripts/audit/ui-100-score-v34.0.8.sh) — 9 gates pondérés.

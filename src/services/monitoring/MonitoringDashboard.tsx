@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { useAgentLiveSnapshot } from '@/hooks/useAgentLiveSnapshot';
 import { getMonitoringAgentStatus, getProjectHealthMetrics } from './index';
 import type { ProjectHealthMetrics } from './index';
 
+export const MONITORING_DASHBOARD_REFRESH_INTERVAL_MS = 60_000;
+
+function formatMonitoringClock(ts: number): string {
+  return new Date(ts).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
 const MonitoringDashboard: React.FC = () => {
-  const status = getMonitoringAgentStatus();
+  const { data: status, lastUpdate, refresh } = useAgentLiveSnapshot(
+    getMonitoringAgentStatus,
+    MONITORING_DASHBOARD_REFRESH_INTERVAL_MS,
+  );
   const [health, setHealth] = useState<ProjectHealthMetrics | null>(null);
 
   useEffect(() => {
@@ -35,6 +49,42 @@ const MonitoringDashboard: React.FC = () => {
       <p data-testid="monitoring-dashboard-summary" style={{ marginBottom: 10 }}>
         {status.summary}
       </p>
+      <div
+        data-testid="monitoring-dashboard-live"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          margin: '0 0 8px',
+          fontSize: 12,
+          opacity: 0.85,
+        }}
+      >
+        <span
+          aria-hidden="true"
+          data-testid="monitoring-dashboard-live-dot"
+          style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: '#34d399',
+            boxShadow: '0 0 6px rgba(52, 211, 153, 0.6)',
+          }}
+        />
+        <span data-testid="monitoring-dashboard-live-label">
+          Live - maj {formatMonitoringClock(lastUpdate)} - refresh{' '}
+          {Math.round(MONITORING_DASHBOARD_REFRESH_INTERVAL_MS / 1000)}s
+        </span>
+        <button
+          type="button"
+          data-testid="monitoring-dashboard-refresh-now"
+          onClick={refresh}
+          style={{ fontSize: 11, padding: '1px 6px', marginLeft: 6 }}
+        >
+          Rafraichir
+        </button>
+      </div>
       <p
         data-testid="monitoring-dashboard-sync-state"
         style={{ margin: '0 0 6px', fontSize: 13 }}

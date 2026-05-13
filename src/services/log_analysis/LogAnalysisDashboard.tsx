@@ -8,10 +8,19 @@ import {
 
 const REFRESH_INTERVAL_MS = 60_000;
 
+function formatLogAnalysisClock(ts: number): string {
+  return new Date(ts).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
 const LogAnalysisDashboard: React.FC = () => {
   const [status, setStatus] = useState(() => getLogAnalysisAgentStatus());
   const [snapshot, setSnapshot] = useState(() => getLogAnalysisSnapshot());
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState<number>(() => Date.now());
 
   const refresh = async () => {
     setIsRefreshing(true);
@@ -20,6 +29,7 @@ const LogAnalysisDashboard: React.FC = () => {
     } finally {
       setSnapshot(getLogAnalysisSnapshot());
       setStatus(getLogAnalysisAgentStatus());
+      setLastUpdate(Date.now());
       setIsRefreshing(false);
     }
   };
@@ -73,6 +83,46 @@ const LogAnalysisDashboard: React.FC = () => {
       <p data-testid="log-analysis-dashboard-service-state" style={{ margin: '0 0 8px' }}>
         {status.serviceState}
       </p>
+
+      <div
+        data-testid="log-analysis-dashboard-live"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          margin: '0 0 8px',
+          fontSize: 12,
+          opacity: 0.85,
+        }}
+      >
+        <span
+          aria-hidden="true"
+          data-testid="log-analysis-dashboard-live-dot"
+          style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: isRefreshing ? '#fbbf24' : '#34d399',
+            boxShadow: '0 0 6px rgba(52, 211, 153, 0.6)',
+          }}
+        />
+        <span data-testid="log-analysis-dashboard-live-label">
+          Live - maj {formatLogAnalysisClock(lastUpdate)} - refresh{' '}
+          {Math.round(REFRESH_INTERVAL_MS / 1000)}s
+        </span>
+        <button
+          type="button"
+          data-testid="log-analysis-dashboard-refresh-now"
+          onClick={() => {
+            void refresh();
+          }}
+          disabled={isRefreshing}
+          style={{ fontSize: 11, padding: '1px 6px', marginLeft: 6 }}
+        >
+          Rafraichir
+        </button>
+      </div>
 
       <button
         type="button"

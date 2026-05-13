@@ -130,7 +130,7 @@ const SecurityDashboard: React.FC = () => {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-          })}
+          })}{' '}- refresh {Math.round(getSecurityDashboardRefreshIntervalMs() / 1000)}s
         </span>
         <button
           type="button"

@@ -1,3 +1,12 @@
+# [2026-05-13] Cartography delta — v34.0.8 Phase R+ Live snapshot convergence 6/6 + memo non-regression
+
+- **Convergence Live** : les 3 dashboards restants (`MonitoringDashboard`, `DiagnosticDashboard`, `LogAnalysisDashboard`) consomment désormais le contrat Live canonique. Les 6/6 dashboards agents avancés exposent uniformément la quadruple testid `*-live`, `*-live-dot`, `*-live-label`, `*-refresh-now` avec label normalisé `Live - maj HH:MM:SS - refresh Ns`.
+- **Stratégies adaptées** : Monitoring + Diagnostic = `useAgentLiveSnapshot` (sync 60 s). LogAnalysis garde son scan async existant et expose un `lastUpdate` state pour parité. Orchestrator + Security label harmonisé avec suffixe `refresh Ns`.
+- **Test Vitest non-régression `React.memo`** : `src/__tests__/perf/react-memo-non-regression.test.tsx` — mock module + compteur global, prouve `renderCount=1` après 5 rerenders du parent et `renderCount>1` après 65 s simulés (fake timers).
+- **E2E uniformité** : `e2e/critical/agent-live-uniformity.spec.ts` — 2 tests PASS, screenshot proof `proof_packs/v34.0.8-live-uniformity/agent-live-indicators.png`.
+- **Score** : 100/100 conservé (aggregator v2 PASS post-refactor).
+- **AutoHeal** : entrée `AH-v117-2026-05-13-LIVE_SNAPSHOT_CONVERGENCE_MEMO_REGRESSION_v34_0_8`, total 1899.
+
 # [2026-05-13] Cartography delta — v34.0.8 UI Vivante + E2E Expansion + React.memo (100/100 PASS)
 
 - **Verdict** : `reports/UI_100_SCORE_v34.0.8.md` → **PASS 100/100** (9 gates pondérés).
