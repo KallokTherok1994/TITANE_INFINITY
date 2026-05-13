@@ -27,6 +27,7 @@ import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import './TimePage.css';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { TimeBridgeStatusCard } from '@/components/time/TimeBridgeStatusCard';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -813,6 +814,7 @@ const TemporalMemorySection: React.FC = () => {
           testid="memory-strength"
         />
       </div>
+      <TimeBridgeStatusCard />
     </section>
   );
 };
@@ -913,6 +915,7 @@ const TemporalTwinSection: React.FC = () => {
           testid="twin-completed-goals"
         />
       </div>
+      <TimeBridgeStatusCard />
     </section>
   );
 };

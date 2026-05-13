@@ -357,6 +357,27 @@
   - ADMIN hubs: `tab-admin-config`, `tab-admin-design`, `tab-admin-governance`, `tab-admin-production-health`
 - Durcissement anti-derive E2E: `openAdminTab` privilegie maintenant les testids canoniques `tab-admin-{id}` (avec fallback label) dans `e2e/helpers/navigation.ts`, ce qui supprime la fragilite regex/locale sur la nav admin.
 
+# [2026-05-13] TIME Phase 7 — Pont observable + résilient (v34.0.10)
+
+- Surface canonique étendue: `/time` consume désormais `TimeBridgeStatusCard` dans les sections `memory` + `twin`.
+- Composant runtime: `src/components/runtime/TimeToTwinBridge.tsx` (Phase 6, mount global App) démarre + arrête `getRuntimeTimeToTwinObserver` Phase 7.
+- Composant UI: `src/components/time/TimeBridgeStatusCard.tsx` polling 5s sur `getStatus()` du singleton observer.
+- Nouveaux selectors stables (bridge):
+  - `time-bridge-status`
+  - `time-bridge-running` (running | paused | offline)
+  - `time-bridge-last-pulse`
+  - `time-bridge-pushed-count`
+  - `time-bridge-last-error`
+- Hardening Phase 7 (observer):
+  - Backoff exponentiel 60→120→240→300s (cap 5 min) après 3 échecs consécutifs IPC
+  - Visibility-aware pause: arrêt timer si onglet caché, reprise automatique au retour (SSR-safe)
+  - Singleton `intervalMs` drift: warn + ignore (lock au 1er appel, prévisible)
+  - `getStatus()` immutable snapshot pour preuve runtime
+- Preuves Phase 7:
+  - Vitest: `src/__tests__/services/temporal/timeToTwinObserver.test.ts` (9 tests PASS — 4 base + 5 hardening)
+  - Vitest: `src/__tests__/components/time/TimeBridgeStatusCard.test.tsx` (5 tests PASS)
+  - Vitest agrégé TIME v3: 69/69 PASS
+
 # [2026-05-13] TIME Phase 4 — 7 onglets v3 (memory + twin)
 
 - Surface canonique: `/time` via `src/pages/TimePage.tsx`

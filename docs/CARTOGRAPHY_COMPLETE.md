@@ -1,3 +1,12 @@
+# [2026-05-13] Cartography delta — v34.0.10 TIME Phase 7 Observability & Robustness
+
+- **Hardening observer** (`src/services/temporal/timeToTwinObserver.ts`): exponential backoff 60→120→240→300s cap après 3 échecs IPC consécutifs (`FAILURE_THRESHOLD=3`, `BACKOFF_LADDER_MS=[60,120,240,300]s`), reset au 1er succès; `getStatus()` retourne snapshot immuable `{running, paused, lastPulseAt, lastError, totalPushed, totalFailed, consecutiveFailures, currentBackoffMs, intervalMs}`; visibility-aware pause SSR-safe (default ON, désactivable via `pauseOnHidden:false`); singleton `intervalMs` drift = warn + ignore (lock au 1er `getRuntimeTimeToTwinObserver()`).
+- **Surface UI** (`src/components/time/TimeBridgeStatusCard.tsx`): polling 5s sur `getRuntimeTimeToTwinObserver().getStatus()`, 5 `data-testid` stables (`time-bridge-status` / `running` / `last-pulse` / `pushed-count` / `last-error`), 3 états canoniques (`running` / `paused` / `offline`), affichage compteur d'erreurs cumulées.
+- **Intégration TimePage** (`src/pages/TimePage.tsx`): `<TimeBridgeStatusCard />` monté en pied des sections `TemporalMemorySection` et `TemporalTwinSection` (2 surfaces visibles).
+- **Tests étendus** : `src/__tests__/services/temporal/timeToTwinObserver.test.ts` 9/9 PASS (4 base + 5 hardening: backoff trigger, backoff reset, getStatus immutable, visibility pause/resume, intervalMs drift warn); `src/__tests__/components/time/TimeBridgeStatusCard.test.tsx` 5/5 PASS (rendu testids, running, paused, offline, error compteur).
+- **Bump** : 34.0.9 → 34.0.10 via `scripts/bump-version.mjs` + `scripts/sync-versions.mjs`.
+- **Preuves** : Vitest agrégé TIME v3 = 69/69 PASS (10 service + 19 contract + 8 chat tools + 9 observer + 3 Phase 4 UI + 10 non-regression TimePage + 5 TimeToTwinBridge + 5 TimeBridgeStatusCard). cargo tests_v3 7/7 PASS. AutoHeal id `TIME-V3-PHASE7-OBSERVABILITY-2026-05-13`. detect_recurrence PASS, verify_instructions PASS=52 FAIL=0.
+
 # [2026-05-13] Cartography delta — v34.0.9 TIME module v3 Ω (5 phases sealed)
 
 - **Phase 1 (Rust IPC v3)** : `src-tauri/src/commands/temporal_commands.rs` expose 18 commandes Single Door alignées sur `TemporalIntelligenceEngine` (TimeModel, TemporalMemory Ebbinghaus, RoutineEngine, TemporalPlanner, Anticipator, LongTermAligner, TemporalMetrics). `TemporalEngineHandle = Arc<RwLock<TemporalIntelligenceEngine>>` managé dans `main.rs`. Allowlist Rust (`security.rs`) + capability allowlist TS (`src/lib/security.ts`) mises à jour.

@@ -107,3 +107,168 @@ describe('TimeToTwinObserver', () => {
     expect(res.reason).toMatch(/engine_offline/);
   });
 });
+
+describe('TimeToTwinObserver — Phase 7 hardening', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  const healthOk = {
+    overall: 0.8,
+    energy: 0.7,
+    alignment: 0.6,
+    consistency: 0.5,
+    recovery: 0.4,
+  };
+  const alignOk = { score: 0.5, active_goals: 2, completed_goals: 0 };
+
+  it('déclenche backoff exponentiel après 3 échecs consécutifs', async () => {
+    const observer = createTimeToTwinObserver({
+      fetchHealth: vi.fn().mockResolvedValue(healthOk),
+      fetchAlignment: vi.fn().mockResolvedValue(alignOk),
+      submit: vi.fn().mockResolvedValue({ ok: false, error: 'NET_DOWN' }),
+      pauseOnHidden: false,
+    });
+
+    await observer.pulseOnce();
+    await observer.pulseOnce();
+    let st = observer.getStatus();
+    expect(st.consecutiveFailures).toBe(2);
+    expect(st.currentBackoffMs).toBe(60_000); // base, pas encore backoff
+
+    await observer.pulseOnce();
+    st = observer.getStatus();
+    expect(st.consecutiveFailures).toBe(3);
+    expect(st.currentBackoffMs).toBe(60_000); // 1er palier ladder = 60s
+
+    await observer.pulseOnce();
+    st = observer.getStatus();
+    expect(st.consecutiveFailures).toBe(4);
+    expect(st.currentBackoffMs).toBe(120_000); // 2e palier
+
+    await observer.pulseOnce();
+    expect(observer.getStatus().currentBackoffMs).toBe(240_000);
+
+    await observer.pulseOnce();
+    expect(observer.getStatus().currentBackoffMs).toBe(300_000); // cap
+
+    await observer.pulseOnce();
+    expect(observer.getStatus().currentBackoffMs).toBe(300_000); // reste capé
+  });
+
+  it('reset backoff au premier succès', async () => {
+    const submit = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, error: 'X' })
+      .mockResolvedValueOnce({ ok: false, error: 'X' })
+      .mockResolvedValueOnce({ ok: false, error: 'X' })
+      .mockResolvedValueOnce({ ok: true });
+    const observer = createTimeToTwinObserver({
+      fetchHealth: vi.fn().mockResolvedValue(healthOk),
+      fetchAlignment: vi.fn().mockResolvedValue(alignOk),
+      submit,
+      pauseOnHidden: false,
+    });
+
+    await observer.pulseOnce();
+    await observer.pulseOnce();
+    await observer.pulseOnce();
+    expect(observer.getStatus().consecutiveFailures).toBe(3);
+
+    await observer.pulseOnce();
+    const st = observer.getStatus();
+    expect(st.consecutiveFailures).toBe(0);
+    expect(st.lastError).toBeNull();
+    expect(st.currentBackoffMs).toBe(60_000);
+    expect(st.totalPushed).toBe(1);
+    expect(st.totalFailed).toBe(3);
+  });
+
+  it('expose un getStatus complet et stable', async () => {
+    const observer = createTimeToTwinObserver({
+      fetchHealth: vi.fn().mockResolvedValue(healthOk),
+      fetchAlignment: vi.fn().mockResolvedValue(alignOk),
+      submit: vi.fn().mockResolvedValue({ ok: true }),
+      pauseOnHidden: false,
+    });
+    const initial = observer.getStatus();
+    expect(initial.running).toBe(false);
+    expect(initial.paused).toBe(false);
+    expect(initial.lastPulseAt).toBeNull();
+    expect(initial.totalPushed).toBe(0);
+    expect(initial.totalFailed).toBe(0);
+    expect(initial.intervalMs).toBe(60_000);
+
+    await observer.pulseOnce();
+    const after = observer.getStatus();
+    expect(after.totalPushed).toBe(1);
+    expect(after.lastPulseAt).not.toBeNull();
+    // Immutabilité: muter la copie ne change pas l'interne
+    after.totalPushed = 999;
+    expect(observer.getStatus().totalPushed).toBe(1);
+  });
+
+  it('pause sur visibilitychange hidden et reprend visible', async () => {
+    const originalDoc = globalThis.document;
+    let state: 'visible' | 'hidden' = 'visible';
+    const listeners: Array<() => void> = [];
+    const docMock = {
+      get visibilityState() {
+        return state;
+      },
+      addEventListener: (_evt: string, cb: () => void) => listeners.push(cb),
+      removeEventListener: (_evt: string, cb: () => void) => {
+        const idx = listeners.indexOf(cb);
+        if (idx >= 0) listeners.splice(idx, 1);
+      },
+    };
+    // @ts-expect-error inject mock
+    globalThis.document = docMock;
+
+    try {
+      const observer = createTimeToTwinObserver({
+        intervalMs: 1000,
+        fetchHealth: vi.fn().mockResolvedValue(healthOk),
+        fetchAlignment: vi.fn().mockResolvedValue(alignOk),
+        submit: vi.fn().mockResolvedValue({ ok: true }),
+        pauseOnHidden: true,
+      });
+      observer.start();
+      expect(observer.getStatus().running).toBe(true);
+      expect(observer.getStatus().paused).toBe(false);
+
+      // simulate hidden
+      state = 'hidden';
+      listeners.forEach((cb) => cb());
+      expect(observer.getStatus().paused).toBe(true);
+
+      // simulate visible
+      state = 'visible';
+      listeners.forEach((cb) => cb());
+      expect(observer.getStatus().paused).toBe(false);
+
+      observer.stop();
+      expect(listeners.length).toBe(0);
+    } finally {
+      // @ts-expect-error restore
+      globalThis.document = originalDoc;
+    }
+  });
+
+  it('singleton ignore et avertit en cas de dérive intervalMs', async () => {
+    const mod = await import('@/services/temporal/timeToTwinObserver');
+    mod.resetRuntimeTimeToTwinObserverForTests();
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+    const a = mod.getRuntimeTimeToTwinObserver({ intervalMs: 5000 });
+    const b = mod.getRuntimeTimeToTwinObserver({ intervalMs: 9999 });
+    expect(a).toBe(b);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(/intervalMs drift ignored/);
+
+    mod.resetRuntimeTimeToTwinObserverForTests();
+    warnSpy.mockRestore();
+  });
+});
