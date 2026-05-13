@@ -1,31 +1,42 @@
 {
-  "version": "34.0.8",
+  "version": "34.0.11",
   "build_date": "2026-05-13",
-  "build_time": "post-Phase-R+",
-  "fix": "Phase R+ live snapshot convergence on 6/6 advanced agent dashboards + React.memo non-regression suite + BUILD ALL v34.0.8 bundles",
-  "commits": [
-    "Phase L+M (v34.0.8 pre-seal): useAgentLiveSnapshot hook + 3 dashboards live (explainability, orchestrator, security)",
-    "Phase N+O+P+Q (v34.0.8 pre-seal): +4 E2E families (keyboard, theme, i18n, web-vitals) - 31/31 PASS",
-    "Phase R (v34.0.8 seal): React.memo on 7 surfaces + aggregator v2 100/100",
-    "Phase R+ (b84ea3de0): live snapshot convergence 6/6 + React.memo non-regression Vitest + E2E uniformity",
-    "BUILD ALL v34.0.8: deb + appimage + checksums + deployment/latest truth alignment"
-  ],
+  "scope": "BUILD ALL FINAL — clean rebuild + Rust race fix + 3 bundles",
+  "git_commit": "3fb77639a",
   "artifacts": {
-    "binary": "titane-infinity",
-    "deb": "titane-infinity_34.0.8_amd64.deb",
-    "appimage": "titane-infinity_34.0.8_amd64.AppImage"
+    "binary": {
+      "path": "titane-infinity",
+      "size": 54916008,
+      "sha256": "7344490212e5cf69e7ad1ea46aae70eb7929806e854275e9fecf193b397860f3"
+    },
+    "deb": {
+      "path": "titane-infinity_34.0.11_amd64.deb",
+      "size": 24989612,
+      "sha256": "85d2814a6ff2bd2f006b3c06056e1a3323b674a340a641f06236ac75e7cb36d8"
+    },
+    "rpm": {
+      "path": "titane-infinity-34.0.11-1.x86_64.rpm",
+      "size": 24989022,
+      "sha256": "87a2c8221da61fc80dbc28667001fdb97a865628bc803ee9e246800bdd64cf96"
+    },
+    "appimage": {
+      "path": "titane-infinity_34.0.11_amd64.AppImage",
+      "size": 99125752,
+      "sha256": "97bd4458e3329b01cb1e2b6adf189b80c39afeb10521cb733cf1e9ed0a9e9558"
+    }
   },
-  "checksums": {
-    "binary_sha256": "39521c473caa1c3eb88888893867995a3430d353a81f9568866e561b1709c323",
-    "deb_sha256": "e173c01fd16a0345d6d712050cb437dec3db85a9babf9142ac03336ec794c3d3",
-    "appimage_sha256": "11bf6bd888dbc323f1d8b1e9e0fcfb51a4cb58972f226ce7b45ce969509fa348"
+  "smoke": {
+    "binary": "PASS — BOOT:ENTRY_START + OMEGA + gemma2:2b",
+    "appimage": "PASS — OMEGA + gemma2:2b + BOOT:AFTER_ROUTER"
   },
-  "sizes_bytes": {
-    "binary": 54396608,
-    "deb": 24782232,
-    "appimage": 98945528
+  "gates": {
+    "tsc": "PASS",
+    "eslint": "PASS",
+    "vitest": "9247/9247 PASS",
+    "cargo_check": "0 warning",
+    "cargo_test": "806/806 PASS",
+    "detect_recurrence": "PASS (entries=1909)",
+    "verify_instructions": "PASS=52 FAIL=0"
   },
-  "ui_score": "100/100 (9/9 gates PASS, aggregator v2)",
-  "tests_e2e_passed": 90,
-  "autoheal_entries": 1899
+  "previous_version_archived": "deployment/archive/v34.0.8/"
 }
