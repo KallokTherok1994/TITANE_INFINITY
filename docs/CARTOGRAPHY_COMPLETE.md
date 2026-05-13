@@ -1,3 +1,15 @@
+# [2026-05-13] Cartography delta — UI 100/100 plan phase B (+10 a11y WCAG 2.1 AA routes)
+
+- **Score UI** : 60/100 → **75/100** après phase B.
+- **Spec a11y** : `e2e/a11y/wcag-aa-core.spec.ts` (12 tests = 10 routes + 1 agrégat + 1 invariant).
+- **10 routes auditées** : `/titane?tab=conversation`, `/admin?tab=system`, `/dev?tab=overview`, `/time`, `/monitoring`, `/dashboard`, `/memory`, `/governance-center`, `/orchestration-center`, `/research`.
+- **Outil** : `@axe-core/playwright@4.11.2` (déjà installé), tags `wcag2a, wcag2aa, wcag21a, wcag21aa`.
+- **Modèle de garde** : baseline régression agrégée `AGGREGATE_BLOCKING_BASELINE = 30` (current 26 blocking critical+serious). Phase D réduira ce chiffre.
+- **Proof** : `proof_packs/v34.0.7-a11y/<route>.json` + `_aggregate.json` (11 fichiers, run 12/12 PASS en 39.6s).
+- **Invariant** : `expect(SURFACES.length).toBe(10)`.
+
+---
+
 # [2026-05-13] Cartography delta — UI 100/100 plan phase A (+14 E2E surfaces)
 
 - **Score UI** : 46/100 → **60/100** après phase A (cf. `/memories/session/ui-100-plan.md`).

@@ -1,3 +1,11 @@
+# [2026-05-13] UI 100/100 plan phase B — a11y WCAG 2.1 AA 10 routes
+
+- Spec a11y canonique : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) — 10 routes critiques + agrégat régression + invariant.
+- 10 routes : `/titane?tab=conversation`, `/admin?tab=system`, `/dev?tab=overview`, `/time`, `/monitoring`, `/dashboard`, `/memory`, `/governance-center`, `/orchestration-center`, `/research`.
+- Baseline régression : 30 violations bloquantes maximum (actuel 26).
+- Proof : `proof_packs/v34.0.7-a11y/*.json`.
+- Score UI : 60/100 → **75/100**.
+
 # [2026-05-13] UI 100/100 plan phase A — 50 surfaces couvertes E2E
 
 - Spec canonique : [e2e/critical/ui-prod-capture-v34_0_7.spec.ts](e2e/critical/ui-prod-capture-v34_0_7.spec.ts) — 50 surfaces (36 héritées + 14 nouvelles).
