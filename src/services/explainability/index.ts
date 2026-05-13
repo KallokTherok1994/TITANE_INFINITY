@@ -127,6 +127,17 @@ export function resetExplainabilityTraceHistoryForTests(): void {
   window.localStorage.removeItem(EXPLAINABILITY_TRACE_HISTORY_KEY);
 }
 
+const EXPLAINABILITY_DASHBOARD_REFRESH_INTERVAL_MS = 60_000;
+
+/**
+ * Intervalle de rafraichissement borne du dashboard Explicabilite.
+ * Phase L v34.0.8: aligne le dashboard sur une vue vivante (60s) tout en
+ * gardant la coherence avec les autres dashboards agents avances.
+ */
+export function getExplainabilityDashboardRefreshIntervalMs(): number {
+  return EXPLAINABILITY_DASHBOARD_REFRESH_INTERVAL_MS;
+}
+
 function getLatestExplainabilityTrace(): {
   activeConversationId: string | null;
   requestedProvider: string;

@@ -1,8 +1,23 @@
 import React from 'react';
-import { getExplainabilityAgentStatus } from './index';
+import { useAgentLiveSnapshot } from '@/hooks/useAgentLiveSnapshot';
+import {
+  getExplainabilityAgentStatus,
+  getExplainabilityDashboardRefreshIntervalMs,
+} from './index';
+
+function formatExplainabilityClock(ts: number): string {
+  return new Date(ts).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
 
 export const ExplainabilityDashboard: React.FC = () => {
-  const status = getExplainabilityAgentStatus();
+  const { data: status, lastUpdate, refresh } = useAgentLiveSnapshot(
+    getExplainabilityAgentStatus,
+    getExplainabilityDashboardRefreshIntervalMs(),
+  );
   const detailSections = status.detailSections ?? [];
 
   return (
@@ -31,6 +46,42 @@ export const ExplainabilityDashboard: React.FC = () => {
         {status.summary}
       </p>
       <p style={{ margin: '0 0 8px', fontSize: 13 }}>{status.serviceState}</p>
+      <div
+        data-testid="explainability-dashboard-live"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          margin: '0 0 8px',
+          fontSize: 12,
+          opacity: 0.85,
+        }}
+      >
+        <span
+          aria-hidden="true"
+          data-testid="explainability-dashboard-live-dot"
+          style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: '#34d399',
+            boxShadow: '0 0 6px rgba(52, 211, 153, 0.6)',
+          }}
+        />
+        <span data-testid="explainability-dashboard-live-label">
+          Live - maj {formatExplainabilityClock(lastUpdate)} - refresh{' '}
+          {Math.round(getExplainabilityDashboardRefreshIntervalMs() / 1000)}s
+        </span>
+        <button
+          type="button"
+          data-testid="explainability-dashboard-refresh-now"
+          onClick={refresh}
+          style={{ fontSize: 11, padding: '1px 6px', marginLeft: 6 }}
+        >
+          Rafraichir
+        </button>
+      </div>
       <ul
         data-testid="explainability-dashboard-proof-list"
         style={{ margin: '0 0 8px', paddingLeft: 18 }}

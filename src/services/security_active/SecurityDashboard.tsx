@@ -16,6 +16,7 @@ const SecurityDashboard: React.FC = () => {
   const [exportPayload, setExportPayload] = useState(() =>
     getLastSecurityContainmentCorrelationExport()
   );
+  const [lastUpdate, setLastUpdate] = useState<number>(() => Date.now());
   const detailSections = status.detailSections ?? [];
 
   useEffect(() => {
@@ -23,6 +24,7 @@ const SecurityDashboard: React.FC = () => {
       const snapshot = await getGovernedSecurityAuditSnapshot(severityFilter);
       setStatus(snapshot.status);
       setExportPayload(snapshot.exportPayload);
+      setLastUpdate(Date.now());
     };
 
     void refresh();
@@ -35,6 +37,14 @@ const SecurityDashboard: React.FC = () => {
       window.clearInterval(intervalId);
     };
   }, [severityFilter]);
+
+  const refreshNow = () => {
+    void getGovernedSecurityAuditSnapshot(severityFilter).then(snapshot => {
+      setStatus(snapshot.status);
+      setExportPayload(snapshot.exportPayload);
+      setLastUpdate(Date.now());
+    });
+  };
 
   const acknowledgeEvent = (eventId: string) => {
     acknowledgeSecurityDashboardEvent(eventId);
@@ -91,6 +101,46 @@ const SecurityDashboard: React.FC = () => {
       >
         Refresh borne: {Math.round(getSecurityDashboardRefreshIntervalMs() / 1000)}s
       </p>
+      <div
+        data-testid="security-dashboard-live"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          margin: '0 0 8px',
+          fontSize: 12,
+          opacity: 0.85,
+        }}
+      >
+        <span
+          aria-hidden="true"
+          data-testid="security-dashboard-live-dot"
+          style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: '#f87171',
+            boxShadow: '0 0 6px rgba(248, 113, 113, 0.6)',
+          }}
+        />
+        <span data-testid="security-dashboard-live-label">
+          Live - maj{' '}
+          {new Date(lastUpdate).toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          })}
+        </span>
+        <button
+          type="button"
+          data-testid="security-dashboard-refresh-now"
+          onClick={refreshNow}
+          style={{ fontSize: 11, padding: '1px 6px', marginLeft: 6 }}
+        >
+          Rafraichir
+        </button>
+      </div>
       <div
         data-testid="security-dashboard-severity-filters"
         style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '0 0 8px' }}

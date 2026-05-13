@@ -6,17 +6,24 @@ import {
 
 const OrchestratorDashboard: React.FC = () => {
   const [status, setStatus] = useState(() => getOrchestratorAgentStatus());
+  const [lastUpdate, setLastUpdate] = useState<number>(() => Date.now());
   const detailSections = status.detailSections ?? [];
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setStatus(getOrchestratorAgentStatus());
+      setLastUpdate(Date.now());
     }, getOrchestratorDashboardRefreshIntervalMs());
 
     return () => {
       window.clearInterval(intervalId);
     };
   }, []);
+
+  const refreshNow = () => {
+    setStatus(getOrchestratorAgentStatus());
+    setLastUpdate(Date.now());
+  };
 
   return (
     <section
@@ -50,6 +57,46 @@ const OrchestratorDashboard: React.FC = () => {
       >
         Refresh borne: {Math.round(getOrchestratorDashboardRefreshIntervalMs() / 1000)}s
       </p>
+      <div
+        data-testid="orchestrator-dashboard-live"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          margin: '0 0 8px',
+          fontSize: 12,
+          opacity: 0.85,
+        }}
+      >
+        <span
+          aria-hidden="true"
+          data-testid="orchestrator-dashboard-live-dot"
+          style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: '#2dd4bf',
+            boxShadow: '0 0 6px rgba(45, 212, 191, 0.6)',
+          }}
+        />
+        <span data-testid="orchestrator-dashboard-live-label">
+          Live - maj{' '}
+          {new Date(lastUpdate).toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          })}
+        </span>
+        <button
+          type="button"
+          data-testid="orchestrator-dashboard-refresh-now"
+          onClick={refreshNow}
+          style={{ fontSize: 11, padding: '1px 6px', marginLeft: 6 }}
+        >
+          Rafraichir
+        </button>
+      </div>
       <ul
         data-testid="orchestrator-dashboard-proof-list"
         style={{ margin: '0 0 8px', paddingLeft: 18 }}
