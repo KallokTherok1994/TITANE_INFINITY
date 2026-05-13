@@ -1,15 +1,16 @@
-# [2026-05-13] Cartography delta — v34.0.6 IPC LEGACY PRUNE (phases 1 + 2)
+# [2026-05-13] Cartography delta — v34.0.6 IPC LEGACY PRUNE (phases 1 + 2 + 3)
 
 - Patch bump 34.0.5 → 34.0.6 (8 fichiers synchés via `node scripts/sync-versions.mjs`).
-- **L1** `src/lib/security.ts` ALLOWED_COMMANDS : +24 (phase 1) + 4 (phase 2) = 28 commandes ajoutées.
-- **L2** `src-tauri/tauri.conf.json` main-capability allow[] : +32 (phase 1) + 4 (phase 2) = 36 entrées ajoutées.
-- **L3** `src-tauri/src/main.rs` invoke_handler! : +1 (phase 1: `singularity::singularity_state::singularity_get_state`) + 4 (phase 2: `desktop_perception::desktop_{pause,resume,handoff,kill_switch}`) = 5 enregistrements ajoutés.
+- **L1** `src/lib/security.ts` ALLOWED_COMMANDS : +24 (phase 1) + 4 (phase 2) + 1 (phase 3: `ai_chat_send`) = 29 commandes ajoutées.
+- **L2** `src-tauri/tauri.conf.json` main-capability allow[] : +32 (phase 1) + 4 (phase 2) + 1 (phase 3) = 37 entrées ajoutées.
+- **L3** `src-tauri/src/main.rs` invoke_handler! : +1 (phase 1: `singularity::singularity_state::singularity_get_state`) + 4 (phase 2: `desktop_perception::desktop_{pause,resume,handoff,kill_switch}`) + 1 (phase 3: `overdrive::chat_orchestrator::ai_chat_send`) = 6 enregistrements ajoutés.
 - **L4** : aucune nouvelle commande Rust ; alignements seulement.
-- **Baseline** `scripts/verify/ipc-coverage-baseline.txt` : 48 → 15 (phase 1) → 11 (phase 2).
-- **Bundles v34.0.6** : `deployment/latest/titane-infinity_34.0.6_amd64.{deb,AppImage}` + `titane-infinity-34.0.6-1.x86_64.rpm`; checksums dans `RELEASE_ARTIFACTS_CHECKSUMS_34.0.6.txt`.
-- **Tests** : `src/__tests__/security/allowed-commands-legacy-prune-v34_0_6.test.ts` (29 cas), `e2e/critical/ui-prod-capture-v34_0_6.spec.ts` (36 surfaces).
-- **Surfaces UI couvertes** : AdminPage (6 onglets), AuthCenter, GovernanceCenter, CognitivePage extended probes, LogAnalysisAgent, RemoteKeyManager, DesktopHandoff (5 commandes), Monitoring, Singularity bridge.
-- **Différé** : refactor `ragService.ts` (`ai_chat` → `ai_chat_send`) + implémentation Rust de `autonomy_scan_ia/tts` + validator `MOCK_GATED` classification pour les 8 `singularity_get_*` mock-only.
+- **Phase 3 caller migration** : `src/services/ragService.ts:242` `ai_chat` → `ai_chat_send` (signature compatible, payload `{message, system_prompt}` inchangé).
+- **Baseline** `scripts/verify/ipc-coverage-baseline.txt` : 48 → 15 (phase 1) → 11 (phase 2) → **10** (phase 3).
+- **Bundles v34.0.6** : `deployment/latest/titane-infinity_34.0.6_amd64.{deb,AppImage}` + `titane-infinity-34.0.6-1.x86_64.rpm`; checksums dans `RELEASE_ARTIFACTS_CHECKSUMS_34.0.6.txt`. Installé système : `dpkg -s titane-infinity` → `Version: 34.0.6`.
+- **Tests** : `src/__tests__/security/allowed-commands-legacy-prune-v34_0_6.test.ts` (30 cas), `e2e/critical/ui-prod-capture-v34_0_6.spec.ts` (36 surfaces).
+- **Surfaces UI couvertes** : AdminPage (6 onglets), AuthCenter, GovernanceCenter, CognitivePage extended probes, LogAnalysisAgent, RemoteKeyManager, DesktopHandoff (5 commandes), Monitoring, Singularity bridge, RAG/ai_chat_send.
+- **Différé** : implémentation Rust de `autonomy_scan_ia/tts` + validator `MOCK_GATED` classification pour les 8 `singularity_get_*` mock-only.
 
 ---
 

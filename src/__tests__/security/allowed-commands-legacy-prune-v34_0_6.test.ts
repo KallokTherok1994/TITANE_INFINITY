@@ -43,6 +43,8 @@ describe('v34.0.6 IPC legacy prune — L1 whitelist alignment', () => {
     'desktop_resume_session',
     'desktop_handoff_session',
     'desktop_kill_switch',
+    // v34.0.6 phase 3 — RAG service caller migration (ai_chat -> ai_chat_send)
+    'ai_chat_send',
   ];
 
   it.each(expected)('whitelists %s in ALLOWED_COMMANDS', (cmd) => {

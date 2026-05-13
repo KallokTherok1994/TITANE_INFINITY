@@ -239,7 +239,8 @@ class RAGService {
     const prompt = `Context:\n${context}\n\nQuestion: ${question}\n\nAnswer based on the context above:`;
 
     // Call AI chat service (assumes aiChatClient is available)
-    const response = await safeInvokeCanonical<string>('ai_chat', {
+    // v34.0.6 phase 3: migrated from legacy `ai_chat` to canonical `ai_chat_send`
+    const response = await safeInvokeCanonical<string>('ai_chat_send', {
       message: prompt,
       system_prompt:
         'You are a helpful assistant that answers questions based on provided context.',

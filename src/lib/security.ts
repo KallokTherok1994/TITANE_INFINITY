@@ -1267,6 +1267,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // AI EXTENDED (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'ai_check_ollama_status',
+  'ai_chat_send', // v34.0.6 phase 3 — RAG service caller (replaces legacy ai_chat)
   'ai_generate_local_stream',
   'cognitive_get_map',
 

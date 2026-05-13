@@ -1,4 +1,3 @@
-ai_chat
 autonomy_scan_ia
 autonomy_scan_tts
 singularity_get_adaptive

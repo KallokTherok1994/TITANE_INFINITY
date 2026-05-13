@@ -2063,6 +2063,8 @@ fn main() {
             meta_mode_commands::meta_mode_get_kevin_state,
             // Ollama AI Provider Status Check
             titane_infinity::ai::ollama::ai_check_ollama_status,
+            // v34.0.6 phase 3 — RAG service caller (replaces legacy ai_chat)
+            titane_infinity::overdrive::chat_orchestrator::ai_chat_send,
             // Auth OS Commands v∞ (Unified Authentication System)
             auth::commands::auth_get_status,
             auth::commands::auth_generate_dev_token,

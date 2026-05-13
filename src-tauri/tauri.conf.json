@@ -597,6 +597,9 @@
               "command": "ai_check_ollama_status"
             },
             {
+              "command": "ai_chat_send"
+            },
+            {
               "command": "analyze_logs_intelligent"
             },
             {
