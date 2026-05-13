@@ -23,3 +23,21 @@ export {
   alignmentScore,
   upsertGoal,
 } from './temporalIntelligenceService';
+export {
+  TEMPORAL_CHAT_TOOLS,
+  TEMPORAL_CHAT_TOOL_NAMES,
+  TEMPORAL_TOOL_ADD_TASK,
+  TEMPORAL_TOOL_UPSERT_ROUTINE,
+  TEMPORAL_TOOL_UPSERT_GOAL,
+  TEMPORAL_TOOL_RECORD_MEMORY,
+  TEMPORAL_TOOL_GET_PLAN,
+  registerTemporalChatTools,
+} from './temporalChatTools';
+export {
+  createTimeToTwinObserver,
+  getRuntimeTimeToTwinObserver,
+  resetRuntimeTimeToTwinObserverForTests,
+  type TimeToTwinObserverHandle,
+  type TimeToTwinObserverOptions,
+  type TwinObservationPayload,
+} from './timeToTwinObserver';
