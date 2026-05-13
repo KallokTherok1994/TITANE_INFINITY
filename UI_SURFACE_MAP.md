@@ -1,3 +1,11 @@
+# [2026-05-13] UI 100/100 plan phase A — 50 surfaces couvertes E2E
+
+- Spec canonique : [e2e/critical/ui-prod-capture-v34_0_7.spec.ts](e2e/critical/ui-prod-capture-v34_0_7.spec.ts) — 50 surfaces (36 héritées + 14 nouvelles).
+- Nouvelles 14 surfaces : `/cognitive`, `/singularity`, `/governance-center`, `/quantum-center`, `/cognitive-evolution`, `/memory-evolution`, `/system-center`, `/skills`, `/introspection`, `/nexus-engine`, `/harmonia-engine`, `/htf`, `/hyper-center`, `/command-center`.
+- Invariant compteur : `expect(SURFACES.length).toBe(50)` empêche régression.
+- Proof : `proof_packs/v34.0.7-ui-prod-capture/*.png` (50 screenshots, 51/51 PASS).
+- Score UI : 46/100 → **60/100** (cible 100/100 via phases B–E).
+
 # [2026-05-11] v80 visual route + desktop gap repair truth
 
 - Surface canonique `/dev`: `src/pages/DevPage.tsx` lit maintenant le provider orchestration via `formatDevBestProvider()` pour eviter les crashs runtime quand le payload est partiel.

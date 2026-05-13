@@ -1,3 +1,15 @@
+# [2026-05-13] Cartography delta — UI 100/100 plan phase A (+14 E2E surfaces)
+
+- **Score UI** : 46/100 → **60/100** après phase A (cf. `/memories/session/ui-100-plan.md`).
+- **Spec étendu** : `e2e/critical/ui-prod-capture-v34_0_7.spec.ts` couvre **50 surfaces** (36 héritées v34.0.6 + 14 nouvelles).
+- **14 nouvelles surfaces capturées** : `/cognitive`, `/singularity`, `/governance-center`, `/quantum-center`, `/cognitive-evolution`, `/memory-evolution`, `/system-center`, `/skills`, `/introspection`, `/nexus-engine`, `/harmonia-engine`, `/htf`, `/hyper-center`, `/command-center`.
+- **Routes redirect non incluses** : `/stats`, `/settings`, `/quantum`, `/identity-center` (Navigate vers cibles déjà couvertes — comptage évite double-couverture).
+- **Proof** : `proof_packs/v34.0.7-ui-prod-capture/<name>.png` (50 screenshots, 51/51 tests PASS en 2.3 min).
+- **Invariant** : assertion `expect(SURFACES.length).toBe(50)` empêche toute régression silencieuse.
+- **Note IPC dev mode** : erreurs console `singularity_get_*` NO_TRANSPORT attendues (browser sans Tauri IPC), non bloquantes.
+
+---
+
 # [2026-05-13] Cartography delta — v34.0.6 IPC LEGACY PRUNE (phases 1 + 2 + 3)
 
 - Patch bump 34.0.5 → 34.0.6 (8 fichiers synchés via `node scripts/sync-versions.mjs`).
