@@ -1,3 +1,15 @@
+# [2026-05-13] Cartography delta — UI 100/100 plan phase D (+6 agent dashboards canonical E2E)
+
+- **Score UI** : 82/100 → **92/100** après phase D.
+- **Spec dashboards** : `e2e/critical/advanced-agent-dashboards.spec.ts` (3 tests: panel global + log-analysis contract + invariant).
+- **6 dashboards canoniques vérifiés** : `monitoring-dashboard`, `diagnostic-panel`, `explainability-dashboard`, `orchestrator-dashboard`, `security-dashboard`, `log-analysis-dashboard`.
+- **Route racine** : `/dashboard` (AppShell rend `AgentDashboardsPanel` partout, panneau déplié via toggle).
+- **Note testid** : diagnostic agent expose `diagnostic-panel` (contrat légendaire AGENTS.md), tous les autres `<agent>-dashboard`.
+- **Proof** : `proof_packs/v34.0.7-agent-dashboards/*.png` (panel + log-analysis), 3/3 PASS en 13s.
+- **Invariant** : `DASHBOARD_TESTIDS.length === 6`.
+
+---
+
 # [2026-05-13] Cartography delta — UI 100/100 plan phase C (+7 responsive viewports)
 
 - **Score UI** : 75/100 → **82/100** après phase C.

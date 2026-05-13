@@ -1,3 +1,11 @@
+# [2026-05-13] UI 100/100 plan phase D — 6 dashboards agents avancés couverts E2E
+
+- Spec canonique : [e2e/critical/advanced-agent-dashboards.spec.ts](e2e/critical/advanced-agent-dashboards.spec.ts).
+- 6 dashboards vérifiés : `monitoring-dashboard`, `diagnostic-panel`, `explainability-dashboard`, `orchestrator-dashboard`, `security-dashboard`, `log-analysis-dashboard`.
+- Route racine : `/dashboard` (AppShell rend `AgentDashboardsPanel`).
+- Proof : `proof_packs/v34.0.7-agent-dashboards/*.png`.
+- Score UI : 82/100 → **92/100**.
+
 # [2026-05-13] UI 100/100 plan phase C — responsive matrix 7×3
 
 - Spec responsive canonique : [e2e/responsive/viewport-matrix.spec.ts](e2e/responsive/viewport-matrix.spec.ts).
