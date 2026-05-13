@@ -1001,6 +1001,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'evolution_get_state',
   'evolution_start',
   'evolution_stop',
+  // ═══════════════════════════════════════════════════════════════
+  // ENGINE PROBES — UI runtime pulse / dashboards (v34.0.5 IPC L1 fix)
+  // Couvert par scripts/verify/verify-ipc-end-to-end-coverage.sh
+  // ═══════════════════════════════════════════════════════════════
+  'quick_health_check',
+  'engine_get_cognition_state',
+  'engine_get_singularity_state',
+  'temporal_get_today_state',
+  'identity_get_matrix',
+  'web_search',
   'evolution_get_scores',
   'evolution_update_score',
   'evolution_generate_report',

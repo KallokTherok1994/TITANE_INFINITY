@@ -92,12 +92,12 @@ mod commands_v21 {
         }
 
         // Auto-Evolution Engine API — run_evolution, get_evolution_state, quick_health_check
-        mod engine_evolution_commands {
+        pub mod engine_evolution_commands {
             include!("commands/engine_evolution_commands.rs");
         }
 
         // Evolution Engine v∞ commands (evolution_get_state, evolution_start/stop, etc.)
-        mod evolution_engine_commands {
+        pub mod evolution_engine_commands {
             include!("evolution/evolution_commands.rs");
         }
     } // <-- ferme persistent_memory_v30
@@ -2411,6 +2411,18 @@ fn main() {
             legacy_ai_bridge::engine_get_singularity_state,
             legacy_ai_bridge::engine_get_evolution_state,
             legacy_ai_bridge::engine_tick,
+
+            // ═══════════════════════════════════════════════════════════════
+            // v34.0.5 IPC L3 FIX — engine probes wired to invoke_handler
+            // GlobalRuntimePulse + Settings + AdminPage probes
+            // ═══════════════════════════════════════════════════════════════
+            commands_v21::persistent_memory_v30::engine_evolution_commands::quick_health_check,
+            commands_v21::persistent_memory_v30::engine_evolution_commands::run_evolution,
+            commands_v21::persistent_memory_v30::engine_evolution_commands::get_evolution_state,
+            titane_infinity::evolution::evolution_commands::evolution_get_state,
+            titane_infinity::evolution::evolution_commands::evolution_start,
+            titane_infinity::evolution::evolution_commands::evolution_stop,
+            commands::temporal_commands::temporal_get_today_state,
             legacy_ai_bridge::engine_metrics,  // FIX-009
             legacy_ai_bridge::engine_health,   // FIX-009
             legacy_ai_bridge::engine_modules,  // FIX-009

@@ -1913,3 +1913,14 @@ Checksums : `RELEASE_ARTIFACTS_CHECKSUMS_34.0.3.txt`
 GlobalRuntimePulse bypass `isTauriRuntimeAvailable()` (cache singleton verrouillé `false`) — appel IPC direct, statut PARTIAL réservé aux codes transport (`NO_TRANSPORT`/`IPC_TIMEOUT`), DEGRADED pour erreurs backend, LIVE quand `quick_health_check` répond OK. Seuil latence relaxé 1000ms→2500ms, timeout 2000ms→4000ms pour absorber cold-start.
 
 Tests : 54/54 PASS (17 nouveaux GlobalRuntimePulse).
+
+## v34.0.5 (2026-05-13) — IPC quadruple-layer fix (AH-v102)
+
+- Surfaces affected: GlobalRuntimePulse, Settings, AdminPage, CognitivePage, TwinsPage, TemporalFlowCenter, IdentityCenter
+- Root cause: 4-layer IPC chain misalignment (TS whitelist + Tauri capability + invoke_handler! + backend)
+- Fix: 6 commands added to ALLOWED_COMMANDS, 10 to tauri.conf.json allow[], 7 wired into invoke_handler!
+- New validator: `scripts/verify/verify-ipc-end-to-end-coverage.sh` with baseline `scripts/verify/ipc-coverage-baseline.txt`
+- Pulse enriched: `data-error` attribute + tooltip + L1_WHITELIST_REJECT classification
+- Artifacts: deployment/latest/titane-infinity_34.0.5_{amd64.deb,amd64.AppImage,1.x86_64.rpm}
+- Checksums: RELEASE_ARTIFACTS_CHECKSUMS_34.0.5.txt
+- Rollback: `sudo dpkg -i deployment/latest/titane-infinity_34.0.4_amd64.deb`

@@ -108,15 +108,21 @@ export function GlobalRuntimePulse(): React.ReactElement {
       }
 
       const code = result.error?.code ?? 'IPC_FAIL';
+      const message = result.error?.message ?? '';
       // Transport not ready (no Tauri bridge yet, timeout, malformed) → PARTIAL
       // Backend error returned (handler failed) → DEGRADED
-      const status: PulseStatus = TRANSPORT_PARTIAL_CODES.has(code)
+      // v34.0.5 fix (AH-v102): security whitelist rejection surfaces as Error/IPC_ERROR
+      // with a `Security:` prefixed message — classify as DEGRADED with explicit code
+      // so operators see the broken layer (L1 TS whitelist) instead of silent partial.
+      const isWhitelistRejection = /^Security:/i.test(message);
+      const effectiveCode = isWhitelistRejection ? 'L1_WHITELIST_REJECT' : code;
+      const status: PulseStatus = TRANSPORT_PARTIAL_CODES.has(effectiveCode)
         ? 'PARTIAL'
         : 'DEGRADED';
       setState({
         status,
         latencyMs: status === 'PARTIAL' ? null : dt,
-        lastError: code,
+        lastError: `${effectiveCode}${message ? ' :: ' + message.slice(0, 120) : ''}`,
         lastProbeAt: Date.now(),
       });
     };
@@ -140,10 +146,12 @@ export function GlobalRuntimePulse(): React.ReactElement {
       data-testid="global-runtime-pulse"
       data-status={state.status}
       data-latency={state.latencyMs ?? -1}
+      data-error={state.lastError ?? ''}
       role="status"
       aria-live="polite"
       aria-label={`TITANE runtime ${meta.label} v${version} latency ${formatLatency(state)}`}
-      className={`fixed top-2 right-3 z-50 pointer-events-none inline-flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold tracking-wide select-none shadow-lg backdrop-blur-sm ${meta.colorClass} ${meta.pulse ? 'animate-pulse' : ''}`}
+      title={`TITANE ${meta.label} v${version} · ${formatLatency(state)}${state.lastError ? '\n' + state.lastError : ''}`}
+      className={`fixed top-2 right-3 z-50 inline-flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold tracking-wide select-none shadow-lg backdrop-blur-sm ${meta.colorClass} ${meta.pulse ? 'animate-pulse' : ''}`}
     >
       <span aria-hidden="true" className="text-base leading-none">
         {meta.icon}

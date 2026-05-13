@@ -1,5 +1,5 @@
 {
-  "version": "34.0.4",
+  "version": "34.0.5",
   "identifier": "com.titane.infinity",
   "bundle": {
     "icon": [
@@ -478,6 +478,36 @@
             },
             {
               "command": "health_check"
+            },
+            {
+              "command": "quick_health_check"
+            },
+            {
+              "command": "engine_get_cognition_state"
+            },
+            {
+              "command": "engine_get_singularity_state"
+            },
+            {
+              "command": "engine_get_evolution_state"
+            },
+            {
+              "command": "evolution_get_state"
+            },
+            {
+              "command": "evolution_start"
+            },
+            {
+              "command": "evolution_stop"
+            },
+            {
+              "command": "temporal_get_today_state"
+            },
+            {
+              "command": "identity_get_matrix"
+            },
+            {
+              "command": "web_search"
             },
             {
               "command": "cp_get_ai_config"
