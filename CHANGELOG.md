@@ -1,5 +1,50 @@
 # [Unreleased] - 2026-05-06 — Advanced Intelligence Program (A0I–D5 SEALED) + Z0 Post-Seal Integrity Audit
 
+## [34.0.7] - 2026-05-13 (UI 100/100 PASS + BUILD ALL + Release Surface Truth Alignment)
+
+> **Mode:** DURABLE | **Scope:** UI 100/100 plan A→E sealed + BUILD ALL bundles + deployment/latest truth refresh + archive reorganization | **Rule 13 bump:** 34.0.6 → 34.0.7
+
+### Added (UI 100/100 plan A→E)
+
+- **Phase A** (`41ed2291e`) — `e2e/critical/ui-prod-capture-v34_0_7.spec.ts`: 50-surface UI capture (36 inherited + 14 new routes including cognitive, singularity, governance-center, quantum-center, system-center, skills, introspection, nexus-engine, harmonia-engine, htf, hyper-center, command-center). 51/51 PASS in 2m18s. Score 46→60.
+- **Phase B** (`cb41f6384`) — `e2e/a11y/wcag-aa-core.spec.ts`: WCAG 2.1 AA axe-core gate on 10 critical routes with aggregate baseline regression guard (baseline 30 ceiling vs actual 26 critical+serious blocking). 12/12 PASS in 39.6s. Score 60→75.
+- **Phase C** (`a333a203f` + hotfix `0e9a0912a`) — `e2e/responsive/viewport-matrix.spec.ts`: 7 routes × 3 viewports (mobile 375×812 / tablet 768×1024 / desktop 1920×1080) = 21 tests with overflow ≤ 20px tolerance. 22/22 PASS in 60s. Hotfix: AH-v108 `prevention_test` token compliance restoration. Score 75→82.
+- **Phase D** (`2c27dff5d`) — `e2e/critical/advanced-agent-dashboards.spec.ts`: 6 dashboards canonical testid contract enforced (`monitoring-dashboard`, `diagnostic-panel`, `explainability-dashboard`, `orchestrator-dashboard`, `security-dashboard`, `log-analysis-dashboard`) via `/dashboard` route + AgentDashboardsPanel toggle. 3/3 PASS in 13s. Score 82→92.
+- **Phase E** (`de921f1d3`) — `scripts/audit/ui-100-score.sh`: aggregator running phases A-D, computing weighted score 20+18+16+18+28=100, writing `reports/UI_100_SCORE_v34.0.7.md` (PASS 100/100). Rule 13 version bump 34.0.6→34.0.7. Score 92→**100**.
+
+### Build (BUILD ALL v34.0.7 — `4c81f41ad`)
+
+- Frontend build (vite) exit 0
+- Tauri release build `--bundles deb,appimage` exit 0 in 10m09s
+- Artifacts: `titane-infinity_34.0.7_amd64.deb` (24M, sha256 ffa0c682…d399), `titane-infinity_34.0.7_amd64.AppImage` (95M, sha256 4596a24a…ca65)
+- New: `RELEASE_ARTIFACTS_CHECKSUMS_34.0.7.txt` + `RELEASE_SURFACE_INVENTORY.md` v34.0.7 seal section
+- System install: PASS (`dpkg -s titane-infinity Version: 34.0.7`)
+
+### Release Surface Truth Alignment (this commit)
+
+- `deployment/latest/VERSION.txt`: 34.0.1 → **34.0.7**
+- `deployment/latest/MANIFEST.json`: 34.0.0 (2026-05-12) → **34.0.7** (2026-05-13) with full A→E commit chain + UI score + tests count
+- `deployment/latest/SHA256SUMS.txt`: hashes v34.0.1 → **hashes v34.0.7** (binary + deb + appimage), `sha256sum -c` PASS
+- `deployment/latest/SIZES.txt`: refreshed for v34.0.7
+- `deployment/latest/titane-infinity`: binary refresh from `src-tauri/target/release/titane-infinity` (54M, sha256 57694e82…9985)
+- Archive policy H1 applied: 91 historical artifacts (43 git-tracked + 48 untracked, 31.2.37 → 34.0.6, ~4.7G) reorganized into `deployment/archive/v<version>/` directories (38 version dirs). `deployment/latest/` now contains only v34.0.7 + manifest truth files (7 files).
+- Smoke-run AppImage v34.0.7 PASS: 25s alive, AUTH OS init, OMEGA pipeline init, KB 266 categories, modèle PROD `gemma2:2b` resolved, IPC `get_runtime_config` CMD:END ok, UI boot markers BOOT:ENTRY_START → BOOT:ENTRY_MAIN_IMPORTED. Log: `proof_packs/v34.0.7-smoke-run/appimage-smoke.log`.
+
+### Gates
+
+- AutoHeal: AH-v106..v110 (UI 100/100 phases) + AH-v111 (BUILD ALL bundles) + AH-v112 (release surface truth alignment). Entries 1894.
+- detect_recurrence PASS
+- verify_instructions PASS=52 FAIL=0
+- tsc --noEmit PASS
+- 88 Playwright E2E tests PASS (51+12+22+3)
+- sha256sum -c deployment/latest/SHA256SUMS.txt PASS
+
+### Deferred
+
+- RPM v34.0.7: `rpmbuild` non installé sur la machine; install via `sudo apt install rpm` puis `pnpm tauri build --bundles rpm` à la prochaine occasion.
+
+---
+
 ## [34.0.0] - 2026-05-12 (BUILD ALL — MAJOR — Cycle AH-v87→v92 SEALED + Rule 15 audit + V34 release)
 
 > **Mode:** DURABLE | **Scope:** BUILD ALL MAJOR | **Rule 13 bump:** 33.0.18 → 34.0.0

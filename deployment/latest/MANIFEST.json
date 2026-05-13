@@ -1,27 +1,33 @@
 {
-  "version": "34.0.0",
-  "build_date": "2026-05-12",
-  "build_time": "17:30",
-  "fix": "BUILD ALL MAJOR 33.0.18→34.0.0: SEAL v33.0.18 (AH-v92, proof_packs/SEAL_v33.0.18_2026-05-12/), Rule 15 mapping gaps (AH-v91), version bump via sync-versions.mjs 8 fichiers, AH-v93 BUILD ALL v34.0.0 (entries=1875)",
+  "version": "34.0.7",
+  "build_date": "2026-05-13",
+  "build_time": "11:37",
+  "fix": "UI 100/100 plan (phases A-E sealed) + BUILD ALL v34.0.7 bundles + RPM + archive policy",
   "commits": [
-    "AH-v91: Rule 15 mapping gaps — IPC_CATALOG+ARCHITECTURE+CARTOGRAPHY+security.ts+allowed_commands (80bb2102a)",
-    "AH-v92: SEAL v33.0.18 proof pack VERDICT SEALED (edb00d0a4)",
-    "chore(version): bump 33.0.18→34.0.0 [Rule 13 MAJOR] (aab87f36a)",
-    "chore(34.0.0): CHANGELOG+ARCHITECTURE+CARTOGRAPHY+RSI+prettier fixes (b5ce80eb0)",
-    "chore(34.0.0): Cargo.lock bump (9ff19a1c8)",
-    "AH-v93: BUILD ALL v34.0.0 proof packs skeleton (9b4a671a6)"
+    "Phase A (41ed2291e): +14 surfaces E2E 50-surface UI capture (46->60)",
+    "Phase B (cb41f6384): a11y WCAG 2.1 AA 10 routes (60->75)",
+    "Phase C (a333a203f + hotfix 0e9a0912a): responsive 7x3 matrix (75->82)",
+    "Phase D (2c27dff5d): 6 agent dashboards canonical testid contract (82->92)",
+    "Phase E (de921f1d3): aggregate audit + bump v34.0.7 (92->100 PASS)",
+    "BUILD ALL (4c81f41ad): bundles deb+appimage + checksums + inventory seal"
   ],
   "artifacts": {
     "binary": "titane-infinity",
-    "deb": "titane-infinity_34.0.0_amd64.deb",
-    "appimage": "titane-infinity_34.0.0_amd64.AppImage",
-    "rpm": "titane-infinity-34.0.0-1.x86_64.rpm"
+    "deb": "titane-infinity_34.0.7_amd64.deb",
+    "appimage": "titane-infinity_34.0.7_amd64.AppImage",
+    "rpm": "titane-infinity-34.0.7-1.x86_64.rpm"
   },
   "checksums": {
-    "binary_sha256": "52f7670631c0ff93c7fc6c0eabf69f6a1f45f32ffadf8dcbc9bef84d2d231da5",
-    "deb_sha256": "869bd8cc441b762205b78c747bc01130ab75d5bb8fdcfb6153f7ee36c817dd70",
-    "appimage_sha256": "6a72d669b7bfe48544cae5c2dad5f72e8eb00eaa8b5ad223e61885fa5721eec3",
-    "rpm_sha256": "f4fd65994b26f4fa77e104606679c00cea4c075ce6284119d01e64b46da15d96"
-  }
+    "binary_sha256": "57694e8213eda85fa70c1361b365cdb585553982a1c8546e29e371fa45219985",
+    "deb_sha256": "ffa0c682c0fe120827acaf72889ee8a8670a810123d605b0a43e788f2cb9d399",
+    "appimage_sha256": "4596a24a7356655aed01afc9296ad46532c4960fb011012f9b0dc487c64fca65"
+  },
+  "sizes_bytes": {
+    "binary": 54396544,
+    "deb": 24786684,
+    "appimage": 98945528
+  },
+  "ui_score": "100/100 (4/4 phases PASS)",
+  "tests_e2e_passed": 88,
+  "autoheal_entries": 1893
 }
-

@@ -30,10 +30,18 @@
 | Phase C — responsive 7×3 | 22/22 PASS (60s) | ✅ PASS |
 | Phase D — 6 agent dashboards | 3/3 PASS (13s) | ✅ PASS |
 | Phase E — audit aggregator | `reports/UI_100_SCORE_v34.0.7.md` verdict PASS | ✅ PASS |
-| AutoHeal | AH-v106..v110 + hotfix v108 (entries 1892) | ✅ PASS |
+| AutoHeal | AH-v106..v110 + hotfix v108 + AH-v111 (BUILD ALL) + AH-v112 (release surface truth) (entries 1894) | ✅ PASS |
 | detect_recurrence gate | PASS | ✅ PASS |
 | verify_instructions gate | PASS=52 FAIL=0 | ✅ PASS |
-| system binary sync | PENDING — sudo non interactive blocked; user must run `sudo dpkg -i deployment/latest/titane-infinity_34.0.7_amd64.deb` | ⏳ PENDING |
+| system binary sync | `dpkg -s titane-infinity Version: 34.0.7` | ✅ PASS |
+| `deployment/latest/VERSION.txt` | `34.0.7` | ✅ PASS |
+| `deployment/latest/MANIFEST.json` `.version` | `34.0.7` | ✅ PASS |
+| `deployment/latest/SHA256SUMS.txt` | all v34.0.7 (binary + deb + appimage), `sha256sum -c` PASS | ✅ PASS |
+| `deployment/latest/titane-infinity` binary | sha256 `57694e8213eda85fa70c1361b365cdb585553982a1c8546e29e371fa45219985` (54M) | ✅ PASS |
+| `deployment/latest/` atomic | only v34.0.7 + manifest files (7 entries) | ✅ PASS |
+| `deployment/archive/` historical | 38 version dirs (31.2.37 → 34.0.6), 91 artifacts archived via `git mv` (43) + `mv` (48) | ✅ PASS |
+| Smoke-run AppImage v34.0.7 | 25s alive, AUTH OS + OMEGA + KB 266 + `gemma2:2b` PROD + UI boot markers | ✅ PASS |
+| RPM v34.0.7 | DEFERRED — `rpmbuild` non installé (sudo apt install rpm requis) | ⏳ DEFERRED |
 
 ### Seal note — v34.0.7
 
