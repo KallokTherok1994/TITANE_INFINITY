@@ -10,6 +10,8 @@ export type { BackendDownIndicatorProps } from './BackendDownIndicator';
 export { SurfaceTruthBadge } from './SurfaceTruthBadge';
 export type { BadgeVariant } from './SurfaceTruthBadge';
 
+export { GlobalRuntimePulse } from './GlobalRuntimePulse';
+
 export { PageHealthBanner } from './PageHealthBanner';
 export type { PageHealthBannerProps } from './PageHealthBanner';
 

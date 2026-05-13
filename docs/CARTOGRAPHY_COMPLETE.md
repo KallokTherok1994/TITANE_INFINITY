@@ -2355,3 +2355,10 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 - `bash scripts/verify/verify-no-hardcoded-live-badge.sh` — PASS
 - `bash scripts/autoheal/detect_recurrence.sh` — PASS (entries=1881)
 - `bash scripts/verify_instructions.sh` — PASS=52 / FAIL=0
+
+## v34.0.3 — Living Pulse
+
+- Nouveau composant `GlobalRuntimePulse` (`src/components/system/GlobalRuntimePulse.tsx`) monté dans `App.tsx` AppShell.
+- Probe canonique `quick_health_check` (5s polling, timeout 2s) via `safeInvokeCanonical`.
+- Visibilité runtime instantanée : pulse animé sur états non-LIVE pour faire émerger toute dérive backend.
+- AutoHeal : AH-v100.

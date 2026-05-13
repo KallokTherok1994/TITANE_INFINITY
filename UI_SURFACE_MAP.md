@@ -1307,3 +1307,28 @@ Objectif: éliminer le dernier badge `variant="LIVE"` hardcodé et dynamiser les
 ### Validator anti-régression
 
 `scripts/verify/verify-no-hardcoded-live-badge.sh` — interdit `<SurfaceTruthBadge variant="LIVE">` hardcodé en `src/**` (hors `__tests__`, `priority-page-badges`, définition source).
+
+## v34.0.3 — Living Pulse (Global Runtime Indicator)
+
+Nouveau composant global monté dans le shell d'application :
+
+| Composant | Fichier | data-testid | Position | Probe IPC |
+|---|---|---|---|---|
+| GlobalRuntimePulse | `src/components/system/GlobalRuntimePulse.tsx` | `global-runtime-pulse` | `fixed top-2 right-3 z-50` | `quick_health_check` (5s) |
+
+**Comportement visuel** :
+- LIVE (vert calme) si `quick_health_check` répond OK et latence ≤ 1000ms
+- PARTIAL (ambre pulsé) si latence > 1000ms ou Tauri runtime absent
+- DEGRADED (rouge pulsé) si IPC échoue
+- PROBING (slate pulsé) état initial
+
+**SurfaceTruthBadge v34.0.3** :
+- Variants non-calmes (PARTIAL/DEGRADED/ERROR/FALLBACK/SIMULATED/NOT_WIRED/UNKNOWN) ont désormais `animate-pulse`
+- Variants calmes (LIVE/DISPLAY_ONLY/LEGACY) stables sans pulse
+- Taille bumpée : `text-sm px-3 py-1 shadow-sm` (était `text-xs px-2 py-0.5`)
+- Nouveau attribut `data-pulsing="true|false"` exposé
+
+**Footer enrichi** : version + suffixe `Living Pulse` en `font-mono`.
+
+Tests : `src/components/system/__tests__/GlobalRuntimePulse.test.tsx` (16) + `e2e/critical/global-runtime-pulse.spec.ts` (4).
+AutoHeal : AH-v100-2026-05-13-LIVING_PULSE_UI_VISIBLE.

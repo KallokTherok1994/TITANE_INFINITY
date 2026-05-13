@@ -1866,3 +1866,31 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | previous_release | v34.0.1 (superseded) |
 | system_install | ⚠️ BLOCKED_SUDO_REQUIRED — user must run: `sudo dpkg -i deployment/latest/titane-infinity_34.0.2_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` |
 | build_command | `pnpm tauri build` |
+
+## v34.0.3 — Living Pulse (BUILD ALL)
+
+**Date** : 2026-05-13
+**Theme** : Visibilité runtime instantanée — GlobalRuntimePulse + SurfaceTruthBadge animé
+**AutoHeal** : AH-v100-2026-05-13-LIVING_PULSE_UI_VISIBLE
+
+### Artefacts publiés (`deployment/latest/`)
+
+| Fichier | Taille | SHA-256 |
+|---|---|---|
+| `titane-infinity_34.0.3_amd64.deb` | 24M | `afe7eac8d4891074db3f38e57ed64a17688e60d0feeaa8c512344d1e933e3589` |
+| `titane-infinity_34.0.3_amd64.AppImage` | 95M | `ad80ea2e8188678e8525e8c0871bedf75fa6b008c71c3ac9ca9b7d520b14b0e6` |
+| `titane-infinity-34.0.3-1.x86_64.rpm` | 24M | `d5d6347f7bbff39a1c77140d0c6e7b5dc3d5688c1ecb966c877d22c009610666` |
+
+Checksums : `RELEASE_ARTIFACTS_CHECKSUMS_34.0.3.txt`
+
+### Surfaces touchées
+
+- `src/components/system/SurfaceTruthBadge.tsx` — `animate-pulse` non-calm + size bump `text-sm px-3 py-1 shadow-sm` + `data-pulsing`
+- `src/components/system/GlobalRuntimePulse.tsx` (nouveau) — overlay top-right global, probe `quick_health_check` 5s
+- `src/components/system/index.ts` — export GlobalRuntimePulse
+- `src/App.tsx` — mount + footer enrichi "TITANE∞ V34.0.3 · Living Pulse"
+
+### Tests
+
+- Vitest : `src/components/system/__tests__/GlobalRuntimePulse.test.tsx` (16/16 PASS)
+- E2E : `e2e/critical/global-runtime-pulse.spec.ts` (4 cas)

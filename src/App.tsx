@@ -30,6 +30,7 @@ import { LoggingProvider } from './contexts/LoggingContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
 import { AppShell, TopNav } from '@components/layout';
 import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
+import { GlobalRuntimePulse } from '@/components/system/GlobalRuntimePulse'; // ✨ v34.0.3 - Living Pulse runtime visible
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
 const XPBar = lazy(() =>
@@ -357,11 +358,14 @@ export const AppRouter: React.FC = () => {
         />
       }
       footer={
-        <span className="select-none opacity-60 text-xs tracking-widest">
-          TITANE∞ V{__APP_VERSION__}
+        <span className="select-none opacity-70 text-xs tracking-widest font-mono">
+          TITANE∞ <span className="text-emerald-400/80">V{__APP_VERSION__}</span>{' '}
+          <span className="opacity-60">· Living Pulse</span>
         </span>
       }
     >
+      {/* ✨ v34.0.3 - Global Runtime Pulse (top-right overlay, probe quick_health_check 5s) */}
+      <GlobalRuntimePulse />
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
       <BackendDownIndicator position="top" dismissible />
       <div

@@ -94,6 +94,18 @@ const BADGE_META: Record<
   },
 };
 
+/**
+ * v34.0.3 Living Pulse: variants non-LIVE pulsent visiblement (animate-pulse)
+ * pour que toute dérive runtime soit immédiatement perceptible par l'utilisateur.
+ * LIVE = calme (vert stable). DISPLAY_ONLY/LEGACY = calmes (intentionnels statiques).
+ * Tout autre état (PARTIAL/DEGRADED/ERROR/FALLBACK/SIMULATED/NOT_WIRED/UNKNOWN) = pulse.
+ */
+const CALM_VARIANTS: ReadonlySet<BadgeVariant> = new Set<BadgeVariant>([
+  'LIVE',
+  'DISPLAY_ONLY',
+  'LEGACY',
+]);
+
 export function SurfaceTruthBadge({
   variant,
   label,
@@ -102,15 +114,20 @@ export function SurfaceTruthBadge({
 }: SurfaceTruthBadgeProps) {
   const meta = BADGE_META[variant] ?? BADGE_META.UNKNOWN;
   const displayLabel = label ?? (verbose ? meta.verbose : meta.label);
+  const isPulsing = !CALM_VARIANTS.has(variant);
 
   return (
     <span
       data-testid={`surface-truth-badge-${variant.toLowerCase()}`}
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-semibold tracking-wide select-none ${meta.colorClass} ${className}`}
+      data-pulsing={isPulsing ? 'true' : 'false'}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-mono font-semibold tracking-wide select-none shadow-sm ${
+        isPulsing ? 'animate-pulse' : ''
+      } ${meta.colorClass} ${className}`}
       title={meta.verbose}
       aria-label={`Surface truth status: ${meta.verbose}`}
+      aria-live={isPulsing ? 'polite' : 'off'}
     >
-      <span aria-hidden="true" className="opacity-80">
+      <span aria-hidden="true" className="opacity-90">
         {meta.icon}
       </span>
       {displayLabel}
