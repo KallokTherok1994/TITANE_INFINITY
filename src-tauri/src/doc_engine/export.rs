@@ -65,7 +65,7 @@ impl ExportEngine {
             for obj in &document.content.objectives {
                 md.push_str(&format!("- {}\n", obj));
             }
-            md.push_str("\n");
+            md.push('\n');
         }
 
         // Sections
@@ -103,7 +103,7 @@ impl ExportEngine {
                 if let Some(url) = &reference.url {
                     md.push_str(&format!(" - [{}]({})", url, url));
                 }
-                md.push_str("\n");
+                md.push('\n');
             }
         }
 

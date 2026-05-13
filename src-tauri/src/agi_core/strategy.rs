@@ -263,10 +263,9 @@ impl StrategyOptimizer {
         if concepts
             .iter()
             .any(|c| c.level == super::abstraction::AbstractionLevel::High)
+            && strategy.approach == "analogical"
         {
-            if strategy.approach == "analogical" {
-                score += 0.1;
-            }
+            score += 0.1;
         }
 
         // Ajuster selon l'historique

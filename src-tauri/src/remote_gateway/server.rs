@@ -98,7 +98,7 @@ async fn require_auth(
     }
 }
 
-fn extract_bearer<'a>(headers: &'a HeaderMap) -> Option<&'a str> {
+fn extract_bearer(headers: &HeaderMap) -> Option<&str> {
     headers
         .get("authorization")
         .and_then(|v| v.to_str().ok())

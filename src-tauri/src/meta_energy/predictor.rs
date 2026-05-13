@@ -65,7 +65,7 @@ impl EnergyPredictor {
             predicted_levels: levels,
             predicted_fatigue: fatigue_labels,
             low_energy_windows: low_windows,
-            peak_windows: peak_windows,
+            peak_windows,
             confidence: if data_points > 0 { 0.72 } else { 0.0 },
         }
     }

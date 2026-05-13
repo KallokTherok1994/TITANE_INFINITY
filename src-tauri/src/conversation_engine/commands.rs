@@ -732,13 +732,11 @@ pub async fn conversation_generate_inner(
                     let truncated = if content.chars().count() > MAX_CONTENT_CHARS {
                         // Trouver la frontière de caractère UTF-8
                         let mut end = 0;
-                        let mut char_count = 0;
-                        for (i, _) in content.char_indices() {
+                        for (char_count, (i, _)) in content.char_indices().enumerate() {
                             if char_count == MAX_CONTENT_CHARS {
                                 end = i;
                                 break;
                             }
-                            char_count += 1;
                         }
                         if end == 0 {
                             end = content.len();
@@ -1050,7 +1048,7 @@ pub async fn conversation_generate(
     orchestrator: State<'_, ChatOrchestratorState>,
     args: ConversationGenerateArgs,
 ) -> CommandResult<serde_json::Value> {
-    conversation_generate_inner(&*engine, &*orchestrator, args).await
+    conversation_generate_inner(&engine, &orchestrator, args).await
 }
 
 fn ensure_provider_meta(

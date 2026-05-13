@@ -291,15 +291,17 @@ impl AbstractionEngine {
 
     /// Vérifie si deux niveaux sont adjacents
     fn adjacent_levels(&self, a: &AbstractionLevel, b: &AbstractionLevel) -> bool {
-        let level_value = |l: &AbstractionLevel| match l {
-            AbstractionLevel::VeryLow => 0,
-            AbstractionLevel::Low => 1,
-            AbstractionLevel::Medium => 2,
-            AbstractionLevel::High => 3,
-            AbstractionLevel::VeryHigh => 4,
+        let level_value = |l: &AbstractionLevel| -> i32 {
+            match l {
+                AbstractionLevel::VeryLow => 0,
+                AbstractionLevel::Low => 1,
+                AbstractionLevel::Medium => 2,
+                AbstractionLevel::High => 3,
+                AbstractionLevel::VeryHigh => 4,
+            }
         };
 
-        (level_value(a) as i32 - level_value(b) as i32).abs() <= 1
+        (level_value(a) - level_value(b)).abs() <= 1
     }
 }
 
