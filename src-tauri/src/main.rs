@@ -1195,6 +1195,10 @@ fn main() {
     // NUMERIC TWIN ENGINE — TWINS_AUDIT 2026-03-15 (RC-002 fix)
     let builder =
         builder.manage(titane_infinity::numeric_twin::twin_commands::NumericTwinState::default());
+    // TIME-IPC v3 — TemporalIntelligenceEngine handle exposé en Single Door
+    let builder = builder.manage::<commands::temporal_commands::TemporalEngineHandle>(Arc::new(
+        tokio::sync::RwLock::new(titane_infinity::temporal_engine::TemporalIntelligenceEngine::default()),
+    ));
     // META-MODE ENGINE — R7 fix: register state so meta_mode_* commands can resolve
     let builder = builder.manage(meta_mode_commands::MetaModeState::new());
     // AUTO-EVOLUTION ENGINE — R8 unlock: needed by run_evolution/quick_health_check
@@ -2425,6 +2429,25 @@ fn main() {
             titane_infinity::evolution::evolution_commands::evolution_start,
             titane_infinity::evolution::evolution_commands::evolution_stop,
             commands::temporal_commands::temporal_get_today_state,
+            // TIME-IPC v3 — 17 commandes exposant le TemporalIntelligenceEngine
+            commands::temporal_commands::temporal_get_full_context,
+            commands::temporal_commands::temporal_get_state_v3,
+            commands::temporal_commands::temporal_tick,
+            commands::temporal_commands::temporal_memory_record,
+            commands::temporal_commands::temporal_memory_recall,
+            commands::temporal_commands::temporal_memory_metrics,
+            commands::temporal_commands::temporal_memory_consolidate,
+            commands::temporal_commands::temporal_routine_list,
+            commands::temporal_commands::temporal_routine_upsert,
+            commands::temporal_commands::temporal_routine_check_triggers,
+            commands::temporal_commands::temporal_planner_get_plan,
+            commands::temporal_commands::temporal_planner_add_task,
+            commands::temporal_commands::temporal_planner_optimize,
+            commands::temporal_commands::temporal_planner_stats,
+            commands::temporal_commands::temporal_anticipator_predict,
+            commands::temporal_commands::temporal_alignment_score,
+            commands::temporal_commands::temporal_alignment_goal_upsert,
+            commands::temporal_commands::temporal_metrics_health,
             // v34.0.6 IPC LEGACY PRUNE — singularity_get_state (real, non-mock)
             titane_infinity::singularity::singularity_state::singularity_get_state,
             legacy_ai_bridge::engine_metrics,  // FIX-009

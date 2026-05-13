@@ -1548,6 +1548,35 @@
 | 6 | `temporal_save_today_blocks` | Temporal save today blocks |
 | 7 | `temporal_update_energy` | Temporal update energy |
 
+## Temporal Intelligence Engine v3 (17 commandes)
+
+Single Door IPC vers `TemporalIntelligenceEngine` (Ring 0). Toutes les commandes passent par `PERMISSION_GUARD` et retournent un payload `Result<T, String>` conforme au contrat canonique `{ ok, content, error }`.
+
+| # | Commande | Permission | Description |
+|---|----------|------------|-------------|
+| 1 | `temporal_get_full_context` | system_read | Récupère le `TemporalContext` complet (now/time_of_day/season/saisonnalité) |
+| 2 | `temporal_get_state_v3` | system_read | Snapshot `TemporalState` du moteur (init/tick_count/last_tick) |
+| 3 | `temporal_tick` | system_write | Avance le moteur (sync time + routines + planner + métriques) |
+| 4 | `temporal_memory_record` | system_write | Enregistre une trace temporelle (event_type, context, data, significance?) |
+| 5 | `temporal_memory_recall` | system_read | Recherche traces (event_type? / since_ms? / context_tag? / min_strength? / limit) |
+| 6 | `temporal_memory_metrics` | system_read | Statistiques mémoire (counts, strength avg, recall rate) |
+| 7 | `temporal_memory_consolidate` | system_write | Force consolidation Ebbinghaus → renvoie stats post-consolidation |
+| 8 | `temporal_routine_list` | system_read | Liste les routines connues |
+| 9 | `temporal_routine_upsert` | system_write | Upsert routine (pattern: daily / weekly:1,2 / monthly:1,15 / interval:2h / event:NAME) |
+| 10 | `temporal_routine_check_triggers` | system_read | Retourne les routines déclenchables selon le contexte courant |
+| 11 | `temporal_planner_get_plan` | system_read | Tâches par horizon (today / week / month / quarter / year / long_term) |
+| 12 | `temporal_planner_add_task` | system_write | Ajoute une tâche (title, priority?, horizon?, due_at?, energy_required?, tags?) |
+| 13 | `temporal_planner_optimize` | system_write | Re-prioritise selon le contexte courant — `UpdateResult` |
+| 14 | `temporal_planner_stats` | system_read | Statistiques planner (pending/in_progress/completed/total_plans) |
+| 15 | `temporal_anticipator_predict` | system_read | Prédictions (`horizon?` optionnel pour focus) |
+| 16 | `temporal_alignment_score` | system_read | `AlignmentScore` (score global + breakdown long terme) |
+| 17 | `temporal_alignment_goal_upsert` | system_write | Upsert objectif (category, milestones, target_date) |
+| 18 | `temporal_metrics_health` | system_read | `TemporalHealth` (stability, alignment, momentum, balance) |
+
+> NB: la commande #18 `temporal_metrics_health` est exposée en bonus diagnostics (compte dans le pack v3 = 17 + 1 health).
+
+Source: `src-tauri/src/commands/temporal_commands.rs` (section `TIME-IPC v3`). Allowlist: `src-tauri/src/commands/security.rs` + `src/lib/security.ts`. Tests unitaires inline: `tests_v3` (7 tests cargo).
+
 ## Training (15 commandes)
 
 | # | Commande | Description |

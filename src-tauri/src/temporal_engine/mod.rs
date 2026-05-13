@@ -233,6 +233,31 @@ impl TemporalIntelligenceEngine {
         self.planner.due_tasks().await
     }
 
+    // ═══════════════════════════════════════════════════════════
+    // Accessors (TIME-IPC v3 — exposés pour les commandes Tauri)
+    // ═══════════════════════════════════════════════════════════
+    pub fn time_model(&self) -> &TimeModel {
+        &self.time_model
+    }
+    pub fn temporal_memory(&self) -> &TemporalMemory {
+        &self.temporal_memory
+    }
+    pub fn routine_engine(&self) -> &RoutineEngine {
+        &self.routine_engine
+    }
+    pub fn planner(&self) -> &TemporalPlanner {
+        &self.planner
+    }
+    pub fn anticipator(&self) -> &Anticipator {
+        &self.anticipator
+    }
+    pub fn aligner(&self) -> &LongTermAligner {
+        &self.long_term_aligner
+    }
+    pub fn metrics(&self) -> &TemporalMetrics {
+        &self.metrics
+    }
+
     /// Détecte la phase du rythme cognitif
     fn detect_rhythm_phase(&self, context: &TemporalContext) -> String {
         let hour = context.now.hour;
@@ -256,7 +281,7 @@ impl Default for TemporalIntelligenceEngine {
 }
 
 /// Résultat d'un tick
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct TickResult {
     pub triggered_routines: Vec<Routine>,
     pub tasks_due: Vec<Task>,

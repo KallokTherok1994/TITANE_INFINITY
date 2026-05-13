@@ -246,7 +246,7 @@ impl Default for PlannerConfig {
 }
 
 /// Résultat de mise à jour du planificateur
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct UpdateResult {
     pub pending: usize,
     pub due: Vec<Task>,

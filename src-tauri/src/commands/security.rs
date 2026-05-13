@@ -524,6 +524,26 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("temporal_add_timeline_event");
     commands.insert("temporal_update_energy");
 
+    // TIME-IPC v3 — TemporalIntelligenceEngine (17 commandes)
+    commands.insert("temporal_get_full_context");
+    commands.insert("temporal_get_state_v3");
+    commands.insert("temporal_tick");
+    commands.insert("temporal_memory_record");
+    commands.insert("temporal_memory_recall");
+    commands.insert("temporal_memory_metrics");
+    commands.insert("temporal_memory_consolidate");
+    commands.insert("temporal_routine_list");
+    commands.insert("temporal_routine_upsert");
+    commands.insert("temporal_routine_check_triggers");
+    commands.insert("temporal_planner_get_plan");
+    commands.insert("temporal_planner_add_task");
+    commands.insert("temporal_planner_optimize");
+    commands.insert("temporal_planner_stats");
+    commands.insert("temporal_anticipator_predict");
+    commands.insert("temporal_alignment_score");
+    commands.insert("temporal_alignment_goal_upsert");
+    commands.insert("temporal_metrics_health");
+
     // ═══════════════════════════════════════════════════════════════
     // DASHBOARD METRICS COMMANDS (v30.0.0+)
     // ═══════════════════════════════════════════════════════════════
