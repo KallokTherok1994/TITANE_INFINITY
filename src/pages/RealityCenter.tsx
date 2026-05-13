@@ -12,7 +12,7 @@
  */
 
 import React, { memo, useEffect, useState, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -112,8 +112,10 @@ export const RealityCenter: React.FC = memo(() => {
   // Charger les modules depuis le backend IPC (cp_get_modules_status)
   useEffect(() => {
     const loadModules = () => {
-      invoke<BackendModuleStatus[]>('cp_get_modules_status')
-        .then(backendModules => {
+      safeInvokeCanonical<BackendModuleStatus[]>('cp_get_modules_status')
+        .then(result => {
+          if (!result.ok || !Array.isArray(result.content)) throw new Error('IPC unavailable');
+          const backendModules = result.content;
           const mapped: ModuleStatus[] = backendModules.map(m => ({
             name: m.name,
             expected: 'ACTIVE',
@@ -140,8 +142,10 @@ export const RealityCenter: React.FC = memo(() => {
     await refreshHealth();
     setLastRefresh(new Date());
     // Recharge aussi les modules depuis le backend
-    invoke<BackendModuleStatus[]>('cp_get_modules_status')
-      .then(backendModules => {
+    safeInvokeCanonical<BackendModuleStatus[]>('cp_get_modules_status')
+      .then(result => {
+        if (!result.ok || !Array.isArray(result.content)) throw new Error('IPC unavailable');
+        const backendModules = result.content;
         const mapped: ModuleStatus[] = backendModules.map(m => ({
           name: m.name,
           expected: 'ACTIVE',

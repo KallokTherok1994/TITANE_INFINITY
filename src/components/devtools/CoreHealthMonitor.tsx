@@ -70,10 +70,11 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
           const memMetric = info.metrics.find(m => m.name.includes('memory'));
           const opsMetric = info.metrics.find(m => m.name.includes('operations'));
 
+          const uptimeMetric = info.metrics.find(m => m.name.includes('uptime'));
           const health: CoreHealth = {
             name: coreName,
             status: info.status as CoreHealth['status'],
-            uptime: Math.random() * 86400, // Mock uptime for now
+            uptime: uptimeMetric?.value ?? 0, // Live metric from backend
             metrics: {
               cpu_percent: cpuMetric?.value ?? 0,
               memory_mb: memMetric?.value ?? 0,

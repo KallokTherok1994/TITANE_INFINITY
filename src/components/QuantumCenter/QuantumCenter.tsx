@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -96,8 +96,10 @@ const QuantumCenterContent: React.FC = () => {
 
     const fetchLive = () => {
       const now = Date.now();
-      invoke<SingularityForQuantum>('engine_get_singularity_state')
-        .then(state => {
+      safeInvokeCanonical<SingularityForQuantum>('engine_get_singularity_state')
+        .then(result => {
+          if (!result.ok || !result.content?.harmonia || !result.content?.cognition) throw new Error('IPC unavailable');
+          const state = result.content;
           const frameTime = 8 + state.cognition.load * 8; // 8-16ms based on load
           const fps = Math.round(1000 / frameTime);
           setMetrics(prev => ({

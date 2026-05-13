@@ -12,7 +12,7 @@
  */
 
 import React, { memo, useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -192,8 +192,10 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
   // Charge cognitive engine live (engine_get_singularity_state)
   useEffect(() => {
     const fetchLoad = () => {
-      invoke<{ cognition: { load: number } }>('engine_get_singularity_state')
-        .then(state => setEngineLoad(Math.round(state.cognition.load * 100)))
+      safeInvokeCanonical<{ cognition: { load: number } }>('engine_get_singularity_state')
+        .then(result => result.ok && result.content?.cognition != null
+          ? setEngineLoad(Math.round(result.content.cognition.load * 100))
+          : setEngineLoad(null))
         .catch(() => setEngineLoad(null));
     };
     fetchLoad();

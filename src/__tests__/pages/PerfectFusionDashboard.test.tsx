@@ -9,7 +9,19 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { PerfectFusionDashboard } from '@/pages/PerfectFusionDashboard';
 
-// ── Mock @tauri-apps/api/core ────────────────────────────────────
+// ── Mock @/utils/invoke (safeInvokeCanonical) ────────────────────
+vi.mock('@/utils/invoke', () => ({
+  safeInvokeCanonical: vi.fn().mockResolvedValue({
+    ok: true,
+    content: {
+      harmonia: { balance_score: 92, initialized: true },
+      cognition: { load: 0.15 },
+    },
+    error: null,
+  }),
+}));
+
+// ── Legacy mock (kept for transitional coverage) ─────────────────
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn().mockResolvedValue({
     harmonia: { balance_score: 92, initialized: true },

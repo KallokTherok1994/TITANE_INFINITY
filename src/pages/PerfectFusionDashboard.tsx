@@ -12,7 +12,7 @@
  */
 
 import React, { memo, useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -161,7 +161,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
     const probe = async () => {
       try {
         type SingularityProbe = { harmonia: { balance_score: number; initialized: boolean }; cognition: { load: number } };
-        const s = await invoke<SingularityProbe>('engine_get_singularity_state');
+        const _r = await safeInvokeCanonical<SingularityProbe>('engine_get_singularity_state');
+        if (!_r.ok || !_r.content?.harmonia) throw new Error('IPC unavailable');
+        const s = _r.content;
         if (cancelled) return;
         setLiveConnected(true);
         // Update engine syncScores from live signal

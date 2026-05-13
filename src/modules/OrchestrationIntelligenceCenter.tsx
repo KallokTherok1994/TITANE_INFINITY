@@ -18,7 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { SurfaceTruthBadge } from '../components/system/SurfaceTruthBadge';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvokeCanonical } from '@/utils/invoke';
 
 interface SingularityLiveState {
   nexus: { health: string; coordination_count: number; active_connections: number; initialized: boolean };
@@ -45,8 +45,10 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
 
   useEffect(() => {
     const fetchState = () => {
-      invoke<SingularityLiveState>('engine_get_singularity_state')
-        .then(state => {
+      safeInvokeCanonical<SingularityLiveState>('engine_get_singularity_state')
+        .then(result => {
+          if (!result.ok || !result.content?.nexus) throw new Error('IPC unavailable');
+          const state = result.content;
           setLiveState(state);
           setLiveConnected(true);
         })
