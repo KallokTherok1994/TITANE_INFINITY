@@ -1,0 +1,3 @@
+54396608	titane-infinity
+24782232	titane-infinity_34.0.8_amd64.deb
+98945528	titane-infinity_34.0.8_amd64.AppImage

@@ -1,0 +1,31 @@
+{
+  "version": "34.0.8",
+  "build_date": "2026-05-13",
+  "build_time": "post-Phase-R+",
+  "fix": "Phase R+ live snapshot convergence on 6/6 advanced agent dashboards + React.memo non-regression suite + BUILD ALL v34.0.8 bundles",
+  "commits": [
+    "Phase L+M (v34.0.8 pre-seal): useAgentLiveSnapshot hook + 3 dashboards live (explainability, orchestrator, security)",
+    "Phase N+O+P+Q (v34.0.8 pre-seal): +4 E2E families (keyboard, theme, i18n, web-vitals) - 31/31 PASS",
+    "Phase R (v34.0.8 seal): React.memo on 7 surfaces + aggregator v2 100/100",
+    "Phase R+ (b84ea3de0): live snapshot convergence 6/6 + React.memo non-regression Vitest + E2E uniformity",
+    "BUILD ALL v34.0.8: deb + appimage + checksums + deployment/latest truth alignment"
+  ],
+  "artifacts": {
+    "binary": "titane-infinity",
+    "deb": "titane-infinity_34.0.8_amd64.deb",
+    "appimage": "titane-infinity_34.0.8_amd64.AppImage"
+  },
+  "checksums": {
+    "binary_sha256": "39521c473caa1c3eb88888893867995a3430d353a81f9568866e561b1709c323",
+    "deb_sha256": "e173c01fd16a0345d6d712050cb437dec3db85a9babf9142ac03336ec794c3d3",
+    "appimage_sha256": "11bf6bd888dbc323f1d8b1e9e0fcfb51a4cb58972f226ce7b45ce969509fa348"
+  },
+  "sizes_bytes": {
+    "binary": 54396608,
+    "deb": 24782232,
+    "appimage": 98945528
+  },
+  "ui_score": "100/100 (9/9 gates PASS, aggregator v2)",
+  "tests_e2e_passed": 90,
+  "autoheal_entries": 1899
+}
