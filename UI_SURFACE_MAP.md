@@ -1,3 +1,10 @@
+# [2026-05-13] UI 100/100 plan phase C — responsive matrix 7×3
+
+- Spec responsive canonique : [e2e/responsive/viewport-matrix.spec.ts](e2e/responsive/viewport-matrix.spec.ts).
+- 21 combinaisons : 7 routes × 3 viewports (mobile/tablet/desktop) + invariant.
+- Proof : `proof_packs/v34.0.7-responsive/*.png` (21 screenshots).
+- Score UI : 75/100 → **82/100**.
+
 # [2026-05-13] UI 100/100 plan phase B — a11y WCAG 2.1 AA 10 routes
 
 - Spec a11y canonique : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) — 10 routes critiques + agrégat régression + invariant.

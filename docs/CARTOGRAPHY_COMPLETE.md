@@ -1,3 +1,15 @@
+# [2026-05-13] Cartography delta — UI 100/100 plan phase C (+7 responsive viewports)
+
+- **Score UI** : 75/100 → **82/100** après phase C.
+- **Spec responsive** : `e2e/responsive/viewport-matrix.spec.ts` (22 tests = 7 routes × 3 viewports + 1 invariant).
+- **3 viewports** : mobile 375×812 (iPhone X), tablet 768×1024 (iPad), desktop 1920×1080 (FHD).
+- **7 routes** : `/titane?tab=conversation`, `/admin?tab=system`, `/dev?tab=overview`, `/monitoring`, `/dashboard`, `/memory`, `/governance-center`.
+- **Gardes** : HTTP < 500, body non vide, overflow horizontal ≤ 20px (tolérance baseline, durcir en phase D).
+- **Proof** : 21 screenshots `proof_packs/v34.0.7-responsive/<route>__<viewport>.png` (22/22 PASS en 60s).
+- **Invariant** : `SURFACES.length * VIEWPORTS.length === 21`.
+
+---
+
 # [2026-05-13] Cartography delta — UI 100/100 plan phase B (+10 a11y WCAG 2.1 AA routes)
 
 - **Score UI** : 60/100 → **75/100** après phase B.
