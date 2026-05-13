@@ -19,9 +19,11 @@ const testId = id => `[data-testid="${id}"]`;
 const TIME_TAB_IDS = [
   'tab-time-now',
   'tab-time-agenda',
+  'tab-time-memory',
   'tab-time-timeline',
-  'tab-time-snapshots',
   'tab-time-cognitive',
+  'tab-time-snapshots',
+  'tab-time-twin',
 ];
 const TIME_TAB_SURFACES = [
   {
@@ -33,16 +35,24 @@ const TIME_TAB_SURFACES = [
     surfaceId: 'btn-time-add-manual',
   },
   {
+    tabId: 'tab-time-memory',
+    surfaceId: 'time-section-memory',
+  },
+  {
     tabId: 'tab-time-timeline',
     surfaceId: 'time-timeline-section',
+  },
+  {
+    tabId: 'tab-time-cognitive',
+    surfaceId: 'time-cognitive-section',
   },
   {
     tabId: 'tab-time-snapshots',
     surfaceId: 'time-snapshots-section',
   },
   {
-    tabId: 'tab-time-cognitive',
-    surfaceId: 'time-cognitive-section',
+    tabId: 'tab-time-twin',
+    surfaceId: 'time-section-twin',
   },
 ];
 
@@ -76,6 +86,11 @@ describe('time-page-tabs (WDIO desktop)', () => {
 
     it("L5 — TimePage source declares the 'cognitive' tab id", () => {
       expect(src.includes("{ id: 'cognitive'")).toBe(true);
+    });
+
+    it("L5b — TimePage source declares the 'memory' and 'twin' v3 tab ids", () => {
+      expect(src.includes("{ id: 'memory'")).toBe(true);
+      expect(src.includes("{ id: 'twin'")).toBe(true);
     });
   });
 
@@ -133,7 +148,23 @@ describe('time-page-tabs (WDIO desktop)', () => {
       );
     });
 
-    it('L12 — all 5 time tab data-testids are present in DOM', async () => {
+    it('L11b — tab-time-memory is clickable and becomes active', async () => {
+      await $(testId('tab-time-memory')).click();
+      await waitForTabActive(testId('tab-time-memory'), TIMEOUT);
+      expect(await $(testId('tab-time-memory')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
+    });
+
+    it('L11c — tab-time-twin is clickable and becomes active', async () => {
+      await $(testId('tab-time-twin')).click();
+      await waitForTabActive(testId('tab-time-twin'), TIMEOUT);
+      expect(await $(testId('tab-time-twin')).getAttribute('aria-selected')).toBe(
+        'true'
+      );
+    });
+
+    it('L12 — all 7 time tab data-testids are present in DOM', async () => {
       for (const id of TIME_TAB_IDS) {
         expect(await $(testId(id)).isExisting()).toBe(true);
       }

@@ -76,6 +76,7 @@ import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 import { SingularityConnections } from './services/singularityConnections';
 import { GlobalTemporalContextPublisher } from '@/components/runtime/GlobalTemporalContextPublisher';
+import { TimeToTwinBridge } from '@/components/runtime/TimeToTwinBridge';
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - FALLBACK GOUVERNÉ
@@ -381,6 +382,7 @@ export const AppRouter: React.FC = () => {
         style={{ display: 'none' }}
       />
       <GlobalTemporalContextPublisher />
+      <TimeToTwinBridge />
 
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>

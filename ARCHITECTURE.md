@@ -1,3 +1,19 @@
+## 2026-05-13 — v34.0.9 TIME module v3 Ω — Ring 0 ↔ Ring 4 bridge complet (Phase 1-6)
+
+> Patch bump 34.0.8 → 34.0.9. Pipeline TIME entièrement câblé: Rust `TemporalIntelligenceEngine` (Ring 0) exposé via 18 commandes Tauri Single Door, consommé par Ring 3 (`temporalIntelligenceService` + `useTemporalIntelligence`), Ring 4 (`TimePage` 7 onglets) et bridges runtime (`TimeToTwinBridge` au bootstrap App).
+>
+> **Ring 0 (Rust kernel)** — `src-tauri/src/temporal_engine/` (TimeModel, TemporalMemory Ebbinghaus, RoutineEngine, TemporalPlanner, Anticipator, LongTermAligner, TemporalMetrics). État managé `TemporalEngineHandle = Arc<RwLock<TemporalIntelligenceEngine>>` via `.manage()` dans `main.rs`. Handler crate-split-safe (préfixe `titane_infinity::temporal_engine::...`).
+>
+> **Ring 1 (Tauri IPC)** — `src-tauri/src/commands/temporal_commands.rs` expose 18 commandes `#[tauri::command]` couvertes par `tests_v3` (7/7 cargo PASS). Allowlist Rust `security.rs` ALLOWED_COMMANDS + capability TS `src/lib/security.ts` alignés. PERMISSION_GUARD `system_read`/`system_write` Role::User.
+>
+> **Ring 3 (Services + hooks)** — `src/services/temporal/` (types DTO miroir serde, `temporalIntelligenceService` envelope `{ok,content,error}` via `safeInvokeCanonical`, `temporalChatTools` 5 ToolDefinitions, `timeToTwinObserver` push cognitif 60s). Hook `useTemporalIntelligence` polling 30s.
+>
+> **Ring 4 (UI)** — `src/pages/TimePage.tsx` 7 onglets canoniques (`now / agenda / memory / timeline / cognitive / snapshots / twin`), 14 `data-testid` Phase 4. Composant runtime `src/components/runtime/TimeToTwinBridge.tsx` (mount au shell App) démarre observer + enregistre chat tools idempotent.
+>
+> **Preuves consolidées Phase 1-6 (59 tests verts)** : Vitest 59/59 PASS (10 service + 19 contract IPC + 8 chat tools + 4 observer + 3 Phase 4 UI + 10 non-regression TimePage + 5 TimeToTwinBridge); cargo `tests_v3` 7/7 PASS; Playwright `time-module-v3-tabs.spec.ts` precondition PASS; WDIO `time-page-tabs.wdio.test.js` étendu 7 tabs. AutoHeal 6 entrées id `TIME-IPC-V3-PHASE[1-3]-2026-05-13`, `TIME-UI-V3-PHASE4-2026-05-13`, `TIME-V3-PHASE5-SEAL-2026-05-13`, `TIME-V3-PHASE6-WIRING-2026-05-13`.
+>
+> **Garde-fous architecture**: Single Door uniquement (zero direct Rust↔UI), payload contrat `{ok,content,error}`, 4-Ring boundary respecté (Ring 4 → Ring 3 → Ring 1 → Ring 0), zero silent fallback (`unwrap()` helper throw scoped). Rollback indépendant par phase via `git revert <phase-commit>`.
+
 ## 2026-05-13 — v34.0.6 IPC LEGACY PRUNE (phases 1 + 2)
 
 > Patch bump 34.0.5 → 34.0.6. IPC coverage truth alignment across L1 (`src/lib/security.ts` ALLOWED_COMMANDS), L2 (`src-tauri/tauri.conf.json` main-capability allow[]), L3 (`src-tauri/src/main.rs` invoke_handler!), L4 (`#[tauri::command]` handlers).
