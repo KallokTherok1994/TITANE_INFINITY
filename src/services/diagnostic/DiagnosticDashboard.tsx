@@ -72,4 +72,4 @@ const DiagnosticDashboard: React.FC = () => {
     </section>
   );
 };
-export default DiagnosticDashboard;
+export default React.memo(DiagnosticDashboard);

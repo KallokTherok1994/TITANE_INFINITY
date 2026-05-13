@@ -200,4 +200,4 @@ const LogAnalysisDashboard: React.FC = () => {
   );
 };
 
-export default LogAnalysisDashboard;
+export default React.memo(LogAnalysisDashboard);

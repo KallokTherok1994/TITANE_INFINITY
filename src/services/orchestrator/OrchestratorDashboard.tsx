@@ -143,4 +143,4 @@ const OrchestratorDashboard: React.FC = () => {
     </section>
   );
 };
-export default OrchestratorDashboard;
+export default React.memo(OrchestratorDashboard);

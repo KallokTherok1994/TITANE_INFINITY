@@ -103,4 +103,4 @@ const MonitoringDashboard: React.FC = () => {
     </section>
   );
 };
-export default MonitoringDashboard;
+export default React.memo(MonitoringDashboard);

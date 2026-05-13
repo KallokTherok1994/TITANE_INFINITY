@@ -129,4 +129,4 @@ export const ExplainabilityDashboard: React.FC = () => {
   );
 };
 
-export default ExplainabilityDashboard;
+export default React.memo(ExplainabilityDashboard);

@@ -245,4 +245,4 @@ const SecurityDashboard: React.FC = () => {
     </section>
   );
 };
-export default SecurityDashboard;
+export default React.memo(SecurityDashboard);

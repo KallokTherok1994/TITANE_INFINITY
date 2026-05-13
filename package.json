@@ -28,6 +28,7 @@
     "ollama:verify": "bash verify-ollama.sh",
     "ollama:bundle": "bash scripts/prepare-ollama-bundle.sh",
     "build": "pnpm exec vite build",
+    "analyze:bundle": "pnpm exec vite build && node -e \"console.log('Bundle analyzer report: dist/stats.html (open in browser)');\"",
     "postbuild": "bash scripts/post-build.sh",
     "deploy:cloudflare": "pnpm exec wrangler deploy --config wrangler.jsonc",
     "preview:cloudflare": "pnpm exec wrangler dev --config wrangler.jsonc",

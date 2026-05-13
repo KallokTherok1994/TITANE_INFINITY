@@ -258,4 +258,4 @@ const AgentDashboardsPanel: React.FC = () => {
   );
 };
 
-export default AgentDashboardsPanel;
+export default React.memo(AgentDashboardsPanel);
