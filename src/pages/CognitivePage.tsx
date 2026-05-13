@@ -15,6 +15,7 @@
 
 import { Container, Grid, Stack } from '@components/layout';
 import { Card } from '../ui';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import {
   HeliosVisualization,
   NexusGraph,
@@ -167,7 +168,9 @@ export const CognitivePage = (): JSX.Element => {
   ];
 
   return (
-    <Container size="xl">
+    <div data-testid="page-cognitive">
+      <SurfaceTruthBadge variant="PARTIAL" />
+      <Container size="xl">
       <Stack direction="vertical" gap={6}>
         {/* Header */}
         <div>
@@ -259,6 +262,7 @@ export const CognitivePage = (): JSX.Element => {
         </Card>
       </Stack>
     </Container>
+    </div>
   );
 };
 

@@ -14,6 +14,7 @@
 import React, { useState } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 type Tab = 'now' | 'agenda' | 'timeline' | 'intelligence';
 
@@ -82,7 +83,8 @@ const TemporalFlowCenter: React.FC = () => {
   ];
 
   return (
-    <div className="temporal-flow-center p-6 space-y-6 bg-gray-900 text-gray-100">
+    <div data-testid="module-temporal-flow-center" className="temporal-flow-center p-6 space-y-6 bg-gray-900 text-gray-100">
+      <SurfaceTruthBadge variant="PARTIAL" />
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">

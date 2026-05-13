@@ -16,6 +16,7 @@
 import React, { useState } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 type Tab = 'twins' | 'memory-map' | 'memory-evolution' | 'cognitive-evolution';
 
@@ -23,7 +24,8 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('twins');
 
   return (
-    <div className="identity-memory-evolution-center p-6 space-y-6">
+    <div data-testid="module-identity-memory-evolution-center" className="identity-memory-evolution-center p-6 space-y-6">
+      <SurfaceTruthBadge variant="PARTIAL" />
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">

@@ -4,6 +4,7 @@
  */
 
 import React, { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 import { Card, Button, Input, Spinner } from '../ui';
 import {
@@ -281,7 +282,8 @@ export const SecureSettings: React.FC = () => {
   const maskedExample = useMemo(() => maskSecret('FAKE-KEY-1234-ABCDE'), []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div data-testid="page-secure-settings" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <SurfaceTruthBadge variant={tauriAvailable && status != null ? 'LIVE' : 'PARTIAL'} />
       <Card>
         <header style={{ marginBottom: '16px' }}>
           <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600 }}>

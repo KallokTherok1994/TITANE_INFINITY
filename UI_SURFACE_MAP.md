@@ -1260,3 +1260,21 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 | ConfigurationHub | `/configuration` | no badge | LIVE | `config` (ConfigSnapshot) != null |
 
 ### SurfaceTruthBadge — toutes les surfaces affichent maintenant `LIVE` quand l'IPC répond, `DEGRADED/PARTIAL` en fallback. 18 pages couvertes (AH-v97, 2026-05-28). data-testid ajoutés: `page-helios`, `page-harmonia`, `page-nexus`.
+
+### Phase 6+ Badge Rollout (AH-v98, 2026-05-13)
+
+| Surface | Route/Location | Badge variant | Signal |
+|---|---|---|---|
+| CognitivePage | `/cognitive` | PARTIAL | static |
+| AgendaPage | `/agenda` | LIVE/PARTIAL | `!loading && initialized` |
+| Settings | `/settings` | PARTIAL | static |
+| HTFPage | `/htf` | LIVE/PARTIAL | `submissions.length > 0` |
+| CloudCenter | `/cloud` | LIVE/PARTIAL | `status != null` |
+| MultiProjectDashboard | `/multiproject` | LIVE/PARTIAL | `rollup != null` |
+| SecureSettings | `/secure-settings` | LIVE/PARTIAL | `tauriAvailable && status != null` |
+| TemporalFlowCenter | `modules/TemporalFlowCenter` | PARTIAL | static (mock data) |
+| IdentityMemoryEvolutionCenter | `modules/IdentityMemoryEvolutionCenter` | PARTIAL | static |
+
+data-testid ajoutés: `page-cognitive`, `page-agenda`, `page-settings` (existait), `htf-module-page`, `page-cloud-center`, `multiproject-dashboard`, `page-secure-settings`, `module-temporal-flow-center`, `module-identity-memory-evolution-center`.
+TotalDevPage regression fixed (import sans render dans Phase 5).
+12 tests Rule-16 créés: Helios, Harmonia, Nexus, EvoPage, ConfigurationHub, CognitivePage, AgendaPage, Settings, HTFPage, CloudCenter, MultiProjectDashboard, SecureSettings.

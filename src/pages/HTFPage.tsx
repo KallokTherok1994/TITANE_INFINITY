@@ -2,6 +2,7 @@
 // Page principale /htf — 5 onglets
 
 import React, { useEffect } from 'react';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { HTFDashboard } from '../components/htf/HTFDashboard';
 import { HTFSubmissionWizard } from '../components/htf/HTFSubmissionWizard';
 import { HTFClientPanel } from '../components/htf/HTFClientPanel';
@@ -30,6 +31,7 @@ export function HTFPage() {
 
   return (
     <div data-testid="htf-module-page" className="htf-page min-h-screen bg-white">
+      <SurfaceTruthBadge variant={submissions.length > 0 ? 'LIVE' : 'PARTIAL'} />
       {/* Header */}
       <div className="htf-page__header bg-green-700 text-white px-6 py-4">
         <h1 className="text-2xl font-bold">🏡 L'Humain à tout faire</h1>

@@ -9,6 +9,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useTimeAgenda } from '@/hooks/useTimeAgenda';
 import type { AgendaEvent, EventCategory, AgendaView } from '@/engines/time';
@@ -637,6 +638,7 @@ export const AgendaPage: React.FC = React.memo(() => {
   if (loading || !initialized) {
     return (
       <div className="agenda-page agenda-loading" data-testid="page-agenda">
+        <SurfaceTruthBadge variant="PARTIAL" />
         <div className="loading-spinner">⏳</div>
         <span>Chargement de l&apos;agenda...</span>
       </div>
@@ -645,6 +647,7 @@ export const AgendaPage: React.FC = React.memo(() => {
 
   return (
     <div className="agenda-page" data-testid="page-agenda">
+      <SurfaceTruthBadge variant={!loading && initialized ? 'LIVE' : 'PARTIAL'} />
       {/* Header */}
       <header className="agenda-header">
         <h1 className="agenda-title">

@@ -14,6 +14,7 @@
  */
 
 import { useState } from 'react';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ModuleCard } from '../components/ModuleCard';
 import { AudioSettings } from '../components/AudioSettings';
@@ -50,6 +51,7 @@ export const Settings = () => {
   return (
     <ErrorBoundary>
       <div className="module-page" data-testid="page-settings">
+        <SurfaceTruthBadge variant="PARTIAL" />
         <div className="module-page__header">
           <h1 className="module-page__title">
             <span className="module-page__icon">⚙️</span>

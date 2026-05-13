@@ -2309,3 +2309,23 @@ All 18 pages now carry a dynamic `SurfaceTruthBadge` derived from real backend/I
 
 Zero static `variant="PARTIAL"` badges in `src/pages/` or `src/modules/`.
 Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS + verify_instructions PASS=52.
+
+## Phase 6+ SurfaceTruthBadge Rollout (AH-v98, 2026-05-13)
+
+### Pages badged
+- `src/pages/TotalDevPage.tsx` — badge fix (regression: import sans render)
+- `src/pages/CognitivePage.tsx` — wrapper `page-cognitive` + badge PARTIAL
+- `src/pages/AgendaPage.tsx` — badge LIVE/PARTIAL (`!loading && initialized`)
+- `src/pages/Settings.tsx` — badge PARTIAL
+- `src/pages/HTFPage.tsx` — badge LIVE/PARTIAL (`submissions.length > 0`)
+- `src/pages/CloudCenter/index.tsx` — badge LIVE/PARTIAL (`status != null`)
+- `src/pages/MultiProjectDashboard.tsx` — badge LIVE/PARTIAL (`rollup != null`)
+- `src/pages/SecureSettings.tsx` — badge LIVE/PARTIAL, root div `page-secure-settings`
+
+### Modules badged
+- `src/modules/TemporalFlowCenter.tsx` — `module-temporal-flow-center` + badge PARTIAL
+- `src/modules/IdentityMemoryEvolutionCenter.tsx` — `module-identity-memory-evolution-center` + badge PARTIAL
+
+### Tests créés (Rule 16)
+12 nouveaux fichiers: `src/__tests__/pages/{Helios,Harmonia,Nexus,EvoPage,ConfigurationHub,CognitivePage,AgendaPage,Settings,HTFPage,CloudCenter,MultiProjectDashboard,SecureSettings}.test.tsx`
+24 tests au total — tous PASS.

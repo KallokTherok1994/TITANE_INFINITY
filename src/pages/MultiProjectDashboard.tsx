@@ -16,6 +16,7 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import {
   createProject,
   listProjects,
@@ -477,6 +478,7 @@ const MultiProjectDashboard: React.FC = () => {
       data-testid="multiproject-dashboard"
       className="min-h-screen bg-slate-900 text-slate-100 p-4 sm:p-6"
     >
+      <SurfaceTruthBadge variant={rollup != null ? 'LIVE' : 'PARTIAL'} />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
