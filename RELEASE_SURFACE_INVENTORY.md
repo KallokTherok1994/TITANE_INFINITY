@@ -1843,3 +1843,26 @@ New capability: **Accès Internet à TITANE** via serveur axum HTTP/WS embarqué
 | build_command | `pnpm run build:tauri` (format:check drift accepted since v33.0.9) |
 | previous_release | v33.0.14 (BUILT 2026-05-10) → superseded by v33.0.15 |
 | commit | `9128eea9c` (HEAD MAIN, origin/MAIN) |
+
+## Release v34.0.2 — Phase 7 SurfaceTruthBadge 100% DYNAMIC (BUILD ALL, 2026-05-12)
+
+| key | value |
+|---|---|
+| version | 34.0.2 |
+| build_date | 2026-05-12 |
+| commit | `af2f958a3` (Phase 7 source) + version bump 34.0.2 |
+| artifacts | deb + rpm + AppImage (3 bundles) |
+| appimage_size | 98875896 bytes (~94 MB) |
+| deb_size | 24684898 bytes (~24 MB) |
+| rpm_size | 24684445 bytes (~24 MB) |
+| appimage_sha256 | `9d0c9029a7fbddc1577c7f351af34727d8d9d19c2a180195cf6c7b420ccead7b` |
+| deb_sha256 | `8d2d82dea94f42952f5e6e82a4da6f792d73f9be866476ea445ae61c6e93675a` |
+| rpm_sha256 | `a82e9ba902d17754045f576b19dd1fc1de364b42c85ecd99ccac94478b9132a3` |
+| governance_gates | PASS=52 FAIL=0 (verify_instructions + detect_recurrence) |
+| autoheal_entries | 1881 (AH-v99 appended) |
+| deployment_state | v34.0.2 deployed to deployment/latest/ |
+| anti_regression | scripts/verify/verify-no-hardcoded-live-badge.sh PASS |
+| ui_dynamic_coverage | 44/44 surfaces SurfaceTruthBadge DYNAMIC (100%) |
+| previous_release | v34.0.1 (superseded) |
+| system_install | ⚠️ BLOCKED_SUDO_REQUIRED — user must run: `sudo dpkg -i deployment/latest/titane-infinity_34.0.2_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` |
+| build_command | `pnpm tauri build` |
