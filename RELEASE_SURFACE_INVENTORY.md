@@ -1,3 +1,21 @@
+## 2026-05-13 : v34.0.10 — TIME v3 Phase 7 Observability + Robustness Hardening
+
+- **Mode** : DURABLE | **Bump Rule 13** : 34.0.9 → 34.0.10
+- **HEAD MAIN** : `0842b0b2d` (Phase 7 commit) pushed to origin.
+- **Bundles produits** (Tauri release v34.0.10) :
+  - `src-tauri/target/release/bundle/deb/titane-infinity_34.0.10_amd64.deb` (24 MB)
+    sha256 `d7ea03c5cece2d6701c64b42cad36dcce7f68cb52c6c6f983c9d3d0974dc84e0`
+  - `src-tauri/target/release/bundle/rpm/titane-infinity-34.0.10-1.x86_64.rpm` (24 MB)
+    sha256 `2ccfa81c185abada6e2ba0d038e061f7bbd82000c73fdf179e3d94e67dab3564`
+  - `src-tauri/target/release/bundle/appimage/titane-infinity_34.0.10_amd64.AppImage` (95 MB)
+    sha256 `b7d9705098ae94770483c4f0bade72e90a8773b90eb4a09e15aea0fdaf236e7b`
+- **Checksums report** : [RELEASE_ARTIFACTS_CHECKSUMS_34.0.10.txt](RELEASE_ARTIFACTS_CHECKSUMS_34.0.10.txt).
+- **Cargo build** : 7m 17s release profile, 3 bundles emitted (deb + rpm + appimage).
+- **Surfaces nouvelles** : `TimeBridgeStatusCard` (5 data-testid) montée dans `TimePage` memory + twin sections.
+- **Observer hardening** : backoff exponentiel 60→120→240→300s cap, visibility-aware pause, singleton drift warn+ignore.
+- **Tests** : Vitest TIME suite 69/69 PASS, `tsc --noEmit` clean.
+- **AutoHeal** : entrée `TIME-V3-PHASE7-OBSERVABILITY-2026-05-13`.
+
 ## 2026-05-13 : v34.0.8 BUILD ALL — bundles + Phase R+ live snapshot convergence
 
 - **HEAD MAIN** : `b84ea3de0` (Phase R+ commit) → suivi de ce BUILD ALL commit.
