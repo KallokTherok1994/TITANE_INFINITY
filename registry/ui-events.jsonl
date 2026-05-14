@@ -342,3 +342,7 @@
 
 {"event":"palette.open","ts":"2026-05-15T02:15:00Z","component":"CommandPalette","trigger":"global-shortcut|keydown","payload":{"shortcut":"CmdOrCtrl+K"},"version":"34.3.0"}
 {"event":"palette.execute","ts":"2026-05-15T02:15:00Z","component":"CommandPalette","trigger":"onSelect","payload":{"groups":["routes","agents","actions"]},"version":"34.3.0"}
+{"event":"chat.providers.health.fetch","ts":"2026-05-15","scope":"hooks/queries","version":"34.4.0","ipc":"chat_check_providers","note":"useChatProvidersHealthQuery — 15s staleTime"}
+{"event":"chat.conversation.fetch","ts":"2026-05-15","scope":"hooks/queries","version":"34.4.0","ipc":"chat_get_conversation","note":"useChatConversationQuery — disabled when id empty"}
+{"event":"chat.send.mutation","ts":"2026-05-15","scope":"hooks/queries","version":"34.4.0","ipc":"chat_generate","note":"useChatSendMutation — invalidates conversation cache on success"}
+{"event":"chat.delete.conversation.mutation","ts":"2026-05-15","scope":"hooks/queries","version":"34.4.0","ipc":"chat_delete_conversation","note":"useChatDeleteConversationMutation — invalidates conversation+root on success"}

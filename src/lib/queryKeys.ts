@@ -31,6 +31,12 @@ export const queryKeys = {
     all: ['conversation'] as const,
     health: () => ['conversation', 'health'] as const,
   },
+  chat: {
+    all: ['chat'] as const,
+    providersHealth: () => ['chat', 'providers-health'] as const,
+    conversation: (conversationId: string) => ['chat', 'conversation', conversationId] as const,
+    suggestions: (prompt: string) => ['chat', 'suggestions', prompt] as const,
+  },
   devtools: {
     all: ['devtools'] as const,
     memoryHealth: () => ['devtools', 'memory-health'] as const,

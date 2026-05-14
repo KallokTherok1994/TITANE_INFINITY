@@ -1537,3 +1537,15 @@ Ajout d'un **couloir additif shadcn/ui** (sans toucher au design Titanium Dark d
 - E2E : `e2e/critical/command-palette.spec.ts` (ouverture ⌘K, filtre, navigation vers `/sentinel`).
 
 AutoHeal : `SHADCN-CMDK-PALETTE-v34_3_0-2026-05-15`.
+
+## 2026-05-15 — v34.4.0 — Additive TanStack Query chat hooks (providersHealth / conversation / send / deleteConversation)
+
+| Hook | IPC command | Type | Cache key | staleTime / invalidation |
+|---|---|---|---|---|
+| `useChatProvidersHealthQuery` | `chat_check_providers` | useQuery | `['chat','providers-health']` | 15s |
+| `useChatConversationQuery(conversationId)` | `chat_get_conversation` | useQuery (disabled when id empty) | `['chat','conversation',<id>]` | 5s |
+| `useChatSendMutation` | `chat_generate` | useMutation | invalidates `['chat','conversation',<id>]` | on success |
+| `useChatDeleteConversationMutation` | `chat_delete_conversation` | useMutation | invalidates `['chat','conversation',<id>]` + `['chat']` root | on success |
+
+Tests: `src/__tests__/hooks/queries/chat.test.tsx` (5/5 PASS — IPC contract + invalidation spy on `QueryClient.prototype.invalidateQueries`).
+Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 minimal patch. Migration of consumers will land in later paliers under the same direct-to-main discipline (Rule 18).
