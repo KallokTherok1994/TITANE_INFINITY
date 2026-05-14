@@ -69,11 +69,11 @@ export async function openAdminTab(
       tabButton = tabsNav.getByTestId(`tab-admin-${normalizedTarget}`).first();
     } else {
       tabButton = tabsNav
-        .getByRole('button', { name: new RegExp(normalizedTarget, 'i') })
+        .getByRole('tab', { name: new RegExp(normalizedTarget, 'i') })
         .first();
     }
   } else {
-    tabButton = tabsNav.getByRole('button', { name: tabTarget }).first();
+    tabButton = tabsNav.getByRole('tab', { name: tabTarget }).first();
   }
 
   await expect(tabButton).toBeVisible({ timeout: 15000 });

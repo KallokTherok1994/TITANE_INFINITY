@@ -6,7 +6,7 @@
  * in the chat UI after a file generation event.
  *
  * NOTE: Full end-to-end flow (actual file generation) requires
- * TITANE_E2E_FULL=1 and a running dev server on port 1420.
+ * TITANE_E2E_FULL=1 and the Playwright baseURL runtime.
  */
 
 import { test, expect } from '@playwright/test';
@@ -22,7 +22,7 @@ test.describe('Feature: Chat Generated Files Panel', () => {
   }
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:1420/', { waitUntil: 'networkidle' });
+    await page.goto('/', { waitUntil: 'networkidle' });
     // Navigate to chat section
     const chatNav = page
       .locator('[data-testid="nav-chat"], [data-section="chat"], a[href*="chat"]')
