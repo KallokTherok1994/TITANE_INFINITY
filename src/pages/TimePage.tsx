@@ -393,6 +393,31 @@ const normalizeSnapshot = (raw: unknown): Snapshot | null => {
   };
 };
 
+const normalizeSnapshotListResponse = (value: unknown): unknown[] => {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (!value || typeof value !== 'object') {
+    return [];
+  }
+
+  const raw = value as {
+    content?: unknown;
+    snapshots?: unknown;
+  };
+
+  if (Array.isArray(raw.content)) {
+    return raw.content;
+  }
+
+  if (Array.isArray(raw.snapshots)) {
+    return raw.snapshots;
+  }
+
+  return [];
+};
+
 const normalizeTravelStats = (raw: unknown): TravelStats | null => {
   if (!raw || typeof raw !== 'object') return null;
   const payload = raw as RawTravelStatsPayload;
@@ -531,7 +556,7 @@ export const TimePage: React.FC = () => {
   const loadSnapshots = useCallback(async () => {
     try {
       setLoading(true);
-      const response = (await tauriClient.listSnapshots()) as unknown[];
+      const response = normalizeSnapshotListResponse(await tauriClient.listSnapshots());
       const normalized = response
         .map(normalizeSnapshot)
         .filter((snapshot): snapshot is Snapshot => snapshot !== null)

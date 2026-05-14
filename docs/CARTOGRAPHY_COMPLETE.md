@@ -2645,3 +2645,9 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > `src/pages/DevPage.tsx` consommait encore le retour de `qa.listTestSuites()` comme un tableau certain. En mode browser partiel, ce contrat pouvait dériver vers une enveloppe, un objet `suites`, ou un fallback générique, ce qui faisait planter `QATestsSection` sur `suites.map is not a function` quand l onglet `/dev?tab=validation` devenait actif.
 
 > La correction est volontairement locale au point de mutation: `DevPage` normalise le payload `suites` avant `setSuites(...)` et retombe sur `[]` si le backend/browser ne fournit pas de tableau exploitable. La surface validation reste donc visible et honnête, sans faux ready state ni crash React.
+
+## v35.1.5 (2026-05-14) — TimePage normalise les snapshots browser degradés
+
+> `src/pages/TimePage.tsx` supposait encore que `tauriClient.listSnapshots()` renvoyait toujours un `Snapshot[]` brut. En mode browser degrade, ce chemin peut pourtant livrer un fallback generique, une enveloppe `content` ou un objet `snapshots`, ce qui faisait tomber la surface `/time` sur `response.map is not a function` pendant le chargement des snapshots.
+
+> La correction reste locale au point de consommation: `TimePage` passe d abord la reponse `listSnapshots()` dans un normaliseur qui accepte le tableau brut, `content` et `snapshots`, puis retombe sur `[]` pour toute autre forme. Le rendu snapshots reste donc visible, le badge runtime peut rester coherent, et la capture browser ciblee sur `/time` repasse sans le crash React precedent.

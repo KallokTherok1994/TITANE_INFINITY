@@ -1637,3 +1637,9 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **`/dev?tab=validation`** : `src/pages/DevPage.tsx` normalise maintenant le payload `listTestSuites()` avant de peupler l état `suites`, ce qui absorbe les réponses browser partielles (`content`, `suites` ou fallback non-tableau) au lieu de laisser `QATestsSection` tomber sur `suites.map is not a function`.
 - **Preuve unitaire ciblée** : `src/__tests__/pages/DevPage.test.tsx` couvre explicitement l onglet validation avec un payload QA suites fallback/non-tableau et verrouille que `page-dev` reste en état `ready` sans `Erreur dans DevPage`.
 - **Preuve browser ciblée** : la capture Playwright `e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture dev-validation'` repasse sans le crash React précédent sur la surface validation.
+
+## v35.1.5 (2026-05-14) — Time snapshots tolerent les payloads browser non-tableau
+
+- **`/time?tab=snapshots`** : `src/pages/TimePage.tsx` normalise maintenant la reponse de `listSnapshots()` avant `map`, en acceptant le tableau brut legacy, `content` et `snapshots`, puis en retombant sur `[]` pour tout fallback browser non-tableau.
+- **Preuve unitaire ciblee** : `src/__tests__/pages/TimePage.test.tsx` couvre explicitement un payload `{ success:false, fallback:true, error }` et verrouille que `page-time` reste rendue sur l onglet snapshots.
+- **Preuve browser ciblee** : `pnpm exec playwright test e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture time' --reporter=line` repasse sans le bruit `response.map is not a function` precedemment vu sur la surface Time.

@@ -328,4 +328,19 @@ describe('TimePage', () => {
     });
     expect(await screen.findByTestId('surface-truth-badge-degraded')).toBeInTheDocument();
   });
+
+  it('keeps the snapshots tab renderable when listSnapshots returns a non-array fallback payload', async () => {
+    tauriMocks.listSnapshotsMock.mockResolvedValueOnce({
+      success: false,
+      fallback: true,
+      error: 'No Tauri transport available',
+    });
+
+    await act(async () => {
+      renderTimePage('/time?tab=snapshots');
+    });
+
+    expect(await screen.findByTestId('page-time')).toBeInTheDocument();
+    expect(screen.queryByText(/Failed to load snapshots/i)).not.toBeInTheDocument();
+  });
 });
