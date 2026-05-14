@@ -1,5 +1,7 @@
 import { getAdvancedAgentStatus } from '@/services/agents/advancedAgentCatalog';
 import { safeInvoke, safeInvokeCanonical } from '@/utils/invoke';
+import { isRemoteGatewayAvailable } from '@/api/remoteTransport';
+import { isTauriAvailable } from '@/api/tauriClient';
 
 const LOG_ANALYSIS_REPORT_KEY = 'titane_log_analysis_report_latest';
 const LOG_ANALYSIS_HISTORY_KEY = 'titane_log_analysis_report_history';
@@ -233,6 +235,16 @@ export async function runLogAnalysisScan(params?: {
       report: normalized,
       freshnessSeconds: 0,
       source: 'backend',
+    };
+  }
+
+  if (!isTauriAvailable() && !isRemoteGatewayAvailable()) {
+    const fallbackReport = analyzeLogsLocally([]);
+    saveStoredReport(fallbackReport);
+    return {
+      report: fallbackReport,
+      freshnessSeconds: 0,
+      source: 'fallback',
     };
   }
 

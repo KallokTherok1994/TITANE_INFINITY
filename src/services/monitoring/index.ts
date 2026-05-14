@@ -30,6 +30,8 @@ import {
 } from './monitoringLazyLoader';
 
 import { getAdvancedAgentStatus } from '@/services/agents/advancedAgentCatalog';
+import { isRemoteGatewayAvailable } from '@/api/remoteTransport';
+import { isTauriAvailable } from '@/api/tauriClient';
 import { safeInvoke } from '@/utils/invoke';
 import { chatMetrics } from './chatMetrics';
 import { alerting } from './alerting';
@@ -162,6 +164,17 @@ export async function getProjectHealthMetrics(): Promise<ProjectHealthMetrics> {
   const now = Date.now();
   if (_projectHealthCache && now - _projectHealthComputedAt < PROJECT_HEALTH_TTL_MS) {
     return _projectHealthCache;
+  }
+
+  if (!isTauriAvailable() && !isRemoteGatewayAvailable()) {
+    return {
+      incidentRecurrenceRate: 0,
+      mostImpactedRing: 'unavailable',
+      avgLeadTimeMinutes: 0,
+      computedAt: new Date().toISOString(),
+      evidenceNote:
+        'IPC unavailable — running outside Tauri runtime or registries not found.',
+    };
   }
 
   try {
