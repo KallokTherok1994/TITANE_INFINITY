@@ -201,7 +201,7 @@ require_all_patterns \
 
 require_pattern "MCP_OLLAMA_DEV_WIRED" 'ollama-dev' .vscode/mcp.json
 require_pattern "MCP_MODEL_QWEN_PRESENT" 'qwen3\.5:9b' .vscode/mcp.json
-require_pattern "MCP_ENABLED_IN_SETTINGS" 'chat\.mcp\.enabled' .vscode/settings.json
+require_pattern "MCP_ENABLED_IN_SETTINGS" 'chat\.mcp\.(enabled|access)' .vscode/settings.json
 
 require_all_patterns \
   "RULE20_SESSION_CONTINUITY_PRESENT" \
