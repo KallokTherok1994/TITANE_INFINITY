@@ -727,7 +727,7 @@ function DevPageContent(): JSX.Element {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [orchestration, setOrchestration] = useState<OrchestrationState | null>(null);
   const [orchestrationDegraded, setOrchestrationDegraded] = useState(false);
-  const surfaceTruthVariant = getDevSurfaceTruthVariant(backendHealth as unknown);
+  const surfaceTruthVariant = getDevSurfaceTruthVariant(backendHealth);
 
   // Load data
   const loadData = useCallback(async () => {

@@ -249,7 +249,10 @@ const TotalDevPage = lazyWithRetry(
   'TotalDevPage'
 );
 
-const AdminPage = lazyWithRetry(() => import('./pages/AdminPage'), 'AdminPage');
+const AdminPage = lazyWithRetry(
+  () => import('./pages/AdminPage').then(m => ({ default: m.default as React.ComponentType<any> })),
+  'AdminPage'
+);
 const PerfectFusionDashboard = lazy(() => import('./pages/PerfectFusionDashboard'));
 const UltimateOptimizationDashboard = lazy(
   () => import('./pages/UltimateOptimizationDashboard')

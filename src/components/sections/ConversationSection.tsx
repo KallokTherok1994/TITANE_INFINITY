@@ -483,7 +483,11 @@ export function buildConversationMessageOmegaStages(
   if (cognitiveTrace.generation.providerUsed || cognitiveTrace.generation.modelUsed) {
     stages.push('generation');
   }
-  if (cognitiveTrace.reflection.evaluated || cognitiveTrace.reflection.verifierEnabled) {
+  if (
+    cognitiveTrace.reflection.verifierEnabled ||
+    cognitiveTrace.reflection.factualClaimsDetected ||
+    cognitiveTrace.reflection.verified
+  ) {
     stages.push('reflection');
   }
   if (cognitiveTrace.quality.evaluated) {

@@ -26,13 +26,13 @@ import type { ComponentType } from 'react';
 const DEFAULT_RETRIES = 3;
 const DEFAULT_BACKOFF_MS = [200, 500, 1500] as const;
 
-type Factory<T extends ComponentType<unknown>> = () => Promise<{ default: T }>;
+type Factory<T extends ComponentType<any>> = () => Promise<{ default: T }>;
 
-interface CacheEntry<T extends ComponentType<unknown>> {
+interface CacheEntry<T extends ComponentType<any>> {
   module: { default: T };
 }
 
-const resolvedCache = new Map<string, CacheEntry<ComponentType<unknown>>>();
+const resolvedCache = new Map<string, CacheEntry<ComponentType<any>>>();
 
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -43,7 +43,7 @@ function sleep(ms: number): Promise<void> {
  * Exported so unit tests can assert retry semantics without Suspense
  * (happy-dom + React Suspense scheduling can be flaky under vitest).
  */
-export async function loadWithRetry<T extends ComponentType<unknown>>(
+export async function loadWithRetry<T extends ComponentType<any>>(
   factory: Factory<T>,
   cacheKey?: string,
   retries: number = DEFAULT_RETRIES,
@@ -62,7 +62,7 @@ export async function loadWithRetry<T extends ComponentType<unknown>>(
       const mod = await factory();
       if (cacheKey) {
         resolvedCache.set(cacheKey, {
-          module: mod as { default: ComponentType<unknown> },
+          module: mod as { default: ComponentType<any> },
         });
       }
       return mod;
@@ -86,7 +86,7 @@ export async function loadWithRetry<T extends ComponentType<unknown>>(
  * @param retries - Maximum attempts (default 3).
  * @param backoffMs - Backoff schedule (default [200,500,1500]).
  */
-export function lazyWithRetry<T extends ComponentType<unknown>>(
+export function lazyWithRetry<T extends ComponentType<any>>(
   factory: Factory<T>,
   cacheKey?: string,
   retries: number = DEFAULT_RETRIES,
