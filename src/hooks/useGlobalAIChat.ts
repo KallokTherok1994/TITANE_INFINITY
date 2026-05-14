@@ -15,6 +15,10 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('GlobalAIChat');
+// @deprecated v35.1.0 — Hook has no live consumer under `src/**` (audit Sprint C.1).
+// Retained only for the historical surface. Scheduled removal: v35.3.0.
+// Migration target: `useChatSendMutation` + `useChatConversationQuery` (v34.4.0).
+// See `docs/migration/chat-legacy-to-tanstack.md`.
 import { useChat } from './useChat';
 import { useSingularityState } from '../core/state/SingularityState';
 import { useAIActions } from '../core/state/SingularityState.selectors';

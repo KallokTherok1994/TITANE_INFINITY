@@ -8,6 +8,13 @@
 
 // TITANE∞ v30.0.0 - ChatWindow Component
 // Main chat interface with messages, input, and status
+//
+// @deprecated v35.1.0 — Replaced by `src/components/sections/ConversationSection.tsx`
+// (canonical production chat surface). This component is no longer imported by any
+// page under `src/pages/**` and is retained only for legacy test fixtures.
+// Scheduled removal: v35.3.0. Migration target: ConversationSection + TanStack hooks
+// (`useChatProvidersHealthQuery`, `useChatConversationQuery`, `useChatSendMutation`,
+// `useChatDeleteConversationMutation`). See `docs/migration/chat-legacy-to-tanstack.md`.
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '@/lib/logger';

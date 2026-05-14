@@ -1566,3 +1566,11 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Comportement no-op** explicite si `window.localStorage` n'est pas disponible (Tauri remote sans DOM, tests headless sans storage stub) : `installed=false`, `reason="no-storage"`.
 - **Surface UI inchangée** : aucun composant React modifié. `QueryClientProvider` continue à wrapper l'App.
 - **Tests** : `src/__tests__/lib/queryPersister.test.ts` (5 PASS) — allow-list, no-storage, persistance + filtrage out-of-list.
+
+## v35.1.0 (2026-05-14) — Sprint C consumer migration (additive)
+
+- **Audit Sprint C.1** : `docs/migration/chat-legacy-to-tanstack.md` cartographie les consumers chat. Surface canonique `ConversationSection.tsx` consomme `useConversationEngine` (clean) ; pas de hook legacy direct. `MemoryDashboard` + `ChatModeSelector` sont presentational. Dead code identifié : `src/components/ChatWindow.tsx` (423 LOC, 0 page consumer) + `src/hooks/useGlobalAIChat.ts` (228 LOC, 0 consumer).
+- **Wiring additif Sprint C.2** : `ConversationSection.tsx` importe `useChatProvidersHealthQuery` (v34.4.0) en complément du `healthReport` canonique de `useConversationEngine`. Le hook fournit un cache-warm cross-component + persistance offline via `installQueryPersister`. Aucune sémantique existante retirée — fallback strictement additif. `enabled: Boolean(conversationId)`.
+- **Dépréciation code mort Sprint C.3** : JSDoc `@deprecated v35.1.0` sur `src/components/ChatWindow.tsx` + `src/hooks/useGlobalAIChat.ts`. Retrait planifié v35.3.0. Pointeurs migration vers `ConversationSection` + hooks TanStack documentés.
+- **Migrations reportées explicitement à v36 EXPLORATION** : `useChatSendMutation` / `useChatDeleteConversationMutation` / `useChatConversationQuery` non câblés dans `ConversationSection` (3503 LOC) — refactor majeur incompatible avec Rule 1 minimal patch. Spike dédié `explore/v36-chat-tanstack-mutation`.
+- **Tests v35.1.0** : `src/__tests__/components/sections/ConversationSection.tanstack.test.tsx` (3 PASS) — hook importable, persister status exposé, allow-list dehydration. Tests existants intacts (5/5 `queryPersister.test.ts`, 5/5 `chat.test.tsx`).

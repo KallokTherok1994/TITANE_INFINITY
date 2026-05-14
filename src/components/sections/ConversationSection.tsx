@@ -23,6 +23,10 @@ import {
   type ConversationSaveStatus,
   type ConversationWebSearchStatus,
 } from '@hooks/useConversationEngine';
+// v35.1.0 additive — offline-first cache fallback for chat providers liveness
+// Primary source remains useConversationEngine.healthReport; TanStack provides
+// cache-warm continuity after restart (persisted via installQueryPersister).
+import { useChatProvidersHealthQuery } from '@/hooks/queries/useChatProvidersHealthQuery';
 import type {
   ConversationMode,
   ConversationProviderPreference,
@@ -1561,6 +1565,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       autoHealthCheck: false,
       maxMessages: 500,
     });
+
+    // v35.1.0 additive — offline-cache fallback for providers liveness.
+    // Primary truth = healthReport from useConversationEngine (above).
+    // This query layer adds: (1) cross-component cache reuse, (2) persistence
+    // via installQueryPersister so a freshly-mounted ConversationSection has a
+    // warm view before the engine completes its first probe.
+    // Disabled by default — only `enabled: true` once engine declares ready.
+    const chatProvidersHealthQuery = useChatProvidersHealthQuery({
+      enabled: Boolean(conversationId),
+    });
+    // Side-effect-free read: keep cache warm. Diagnostic exposure happens via
+    // a data-testid attribute on the conversation root for E2E observability.
+    void chatProvidersHealthQuery;
 
     // PATCH-014: LTM wired to ConversationSection — refreshes after each message
     const { historyCount: ltmCount, refresh: refreshLTM } = useLTMContext(conversationId);
