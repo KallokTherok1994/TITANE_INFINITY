@@ -138,10 +138,15 @@ const ModelDetailsPanel: React.FC<ModelDetailsPanelProps> = ({ model, isSelected
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Visual-only radio indicator; selection is driven by the parent
+              ModelDetailsPanel click handler. `readOnly` documents intent and
+              avoids React's controlled-input warning without a stub handler. */}
           <input
             type="radio"
             checked={isSelected}
-            onChange={() => {}}
+            readOnly
+            tabIndex={-1}
+            aria-hidden="true"
             style={{ cursor: 'pointer' }}
           />
           <span style={{ fontWeight: 600, color: '#C4C4C4' }}>{model.name}</span>

@@ -1,0 +1,116 @@
+{
+  "version": "35.1.4",
+  "generated_at": "2026-05-14T15:19:53.219Z",
+  "agents": [
+    {
+      "id": "monitoring",
+      "dashboard": "MonitoringDashboard.tsx",
+      "testid": "monitoring-dashboard",
+      "serviceState": "RUNTIME_PROVEN",
+      "evidence": [
+        "testid 'monitoring-dashboard' present",
+        "runtime signal hits=3",
+        "tests=2"
+      ],
+      "blockers": [],
+      "nextStep": "maintain",
+      "dashboardPath": "src/services/monitoring/MonitoringDashboard.tsx",
+      "tests": [
+        "monitoringLazyLoader.test.ts",
+        "syncSupervisor.test.ts"
+      ]
+    },
+    {
+      "id": "diagnostic",
+      "dashboard": "DiagnosticDashboard.tsx",
+      "testid": "diagnostic-panel",
+      "serviceState": "RUNTIME_PROVEN",
+      "evidence": [
+        "testid 'diagnostic-panel' present",
+        "runtime signal hits=2",
+        "tests=1"
+      ],
+      "blockers": [],
+      "nextStep": "maintain",
+      "dashboardPath": "src/services/diagnostic/DiagnosticDashboard.tsx",
+      "tests": [
+        "diagnostic.test.ts"
+      ]
+    },
+    {
+      "id": "explainability",
+      "dashboard": "ExplainabilityDashboard.tsx",
+      "testid": "explainability-dashboard",
+      "serviceState": "RUNTIME_PROVEN",
+      "evidence": [
+        "testid 'explainability-dashboard' present",
+        "runtime signal hits=2",
+        "tests=1"
+      ],
+      "blockers": [],
+      "nextStep": "maintain",
+      "dashboardPath": "src/services/explainability/ExplainabilityDashboard.tsx",
+      "tests": [
+        "explainability.test.ts"
+      ]
+    },
+    {
+      "id": "orchestrator",
+      "dashboard": "OrchestratorDashboard.tsx",
+      "testid": "orchestrator-dashboard",
+      "serviceState": "RUNTIME_PROVEN",
+      "evidence": [
+        "testid 'orchestrator-dashboard' present",
+        "runtime signal hits=2",
+        "tests=1"
+      ],
+      "blockers": [],
+      "nextStep": "maintain",
+      "dashboardPath": "src/services/orchestrator/OrchestratorDashboard.tsx",
+      "tests": [
+        "orchestrator.test.ts"
+      ]
+    },
+    {
+      "id": "security_active",
+      "dashboard": "SecurityDashboard.tsx",
+      "testid": "security-dashboard",
+      "serviceState": "RUNTIME_PROVEN",
+      "evidence": [
+        "testid 'security-dashboard' present",
+        "runtime signal hits=2",
+        "tests=1"
+      ],
+      "blockers": [],
+      "nextStep": "maintain",
+      "dashboardPath": "src/services/security_active/SecurityDashboard.tsx",
+      "tests": [
+        "security_active.test.ts"
+      ]
+    },
+    {
+      "id": "log_analysis",
+      "dashboard": "LogAnalysisDashboard.tsx",
+      "testid": "log-analysis-dashboard",
+      "serviceState": "RUNTIME_PROVEN",
+      "evidence": [
+        "testid 'log-analysis-dashboard' present",
+        "runtime signal hits=1",
+        "tests=1"
+      ],
+      "blockers": [],
+      "nextStep": "maintain",
+      "dashboardPath": "src/services/log_analysis/LogAnalysisDashboard.tsx",
+      "tests": [
+        "logAnalysisService.test.ts"
+      ]
+    }
+  ],
+  "summary": {
+    "proven": 6,
+    "partial": 0,
+    "missing": 0,
+    "total": 6
+  },
+  "verdict": "PASS"
+}

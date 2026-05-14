@@ -1,0 +1,458 @@
+{
+  "version": "35.1.4",
+  "generated_at": "2026-05-14T15:20:47.178Z",
+  "files_scanned": 43,
+  "files_with_signal": 24,
+  "total_testids": 67,
+  "total_handlers": 128,
+  "total_stub_handlers": 0,
+  "stub_handlers": [],
+  "verdict": "PASS",
+  "files": [
+    {
+      "file": "src/components/sections/ConversationSection.tsx",
+      "testids": [
+        {
+          "testid": "chat-runtime-tag",
+          "line": 1150
+        },
+        {
+          "testid": "chat-runtime-tag",
+          "line": 1155
+        },
+        {
+          "testid": "chat-runtime-tag",
+          "line": 1160
+        },
+        {
+          "testid": "chat-runtime-tag",
+          "line": 1165
+        },
+        {
+          "testid": "chat-runtime-tag",
+          "line": 1170
+        },
+        {
+          "testid": "chat-runtime-tag",
+          "line": 1182
+        },
+        {
+          "testid": "chat-message-content",
+          "line": 1190
+        },
+        {
+          "testid": "message-tts-controls",
+          "line": 1257
+        },
+        {
+          "testid": "message-tts-status",
+          "line": 1262
+        },
+        {
+          "testid": "message-tts-read",
+          "line": 1281
+        },
+        {
+          "testid": "message-tts-loading",
+          "line": 1295
+        },
+        {
+          "testid": "message-tts-pause",
+          "line": 1308
+        },
+        {
+          "testid": "message-tts-resume",
+          "line": 1321
+        },
+        {
+          "testid": "message-tts-stop",
+          "line": 1336
+        },
+        {
+          "testid": "generated-files-panel",
+          "line": 1437
+        },
+        {
+          "testid": "generated-files-clear",
+          "line": 1443
+        },
+        {
+          "testid": "generated-file-entry",
+          "line": 1460
+        },
+        {
+          "testid": "generated-file-download",
+          "line": 1477
+        },
+        {
+          "testid": "generated-file-saved",
+          "line": 1486
+        },
+        {
+          "testid": "page-conversation",
+          "line": 2986
+        },
+        {
+          "testid": "btn-mobile-search-toggle",
+          "line": 3028
+        },
+        {
+          "testid": "btn-export-json",
+          "line": 3040
+        },
+        {
+          "testid": "btn-export-markdown",
+          "line": 3051
+        },
+        {
+          "testid": "btn-copy-chat",
+          "line": 3062
+        },
+        {
+          "testid": "toggle-audio-tts",
+          "line": 3073
+        },
+        {
+          "testid": "toggle-voice-input",
+          "line": 3088
+        },
+        {
+          "testid": "btn-mode-builder",
+          "line": 3104
+        },
+        {
+          "testid": "btn-health-check",
+          "line": 3115
+        },
+        {
+          "testid": "btn-clear-chat",
+          "line": 3126
+        },
+        {
+          "testid": "btn-mobile-more",
+          "line": 3138
+        },
+        {
+          "testid": "mobile-more-menu",
+          "line": 3149
+        },
+        {
+          "testid": "input-conversation-search",
+          "line": 3221
+        },
+        {
+          "testid": "select-conversation-role",
+          "line": 3231
+        },
+        {
+          "testid": "chat-provider-warning",
+          "line": 3252
+        },
+        {
+          "testid": "chat-runtime-state",
+          "line": 3266
+        },
+        {
+          "testid": "chat-runtime-summary",
+          "line": 3299
+        },
+        {
+          "testid": "chat-artifact-manifest",
+          "line": 3305
+        },
+        {
+          "testid": "chat-runtime-badge",
+          "line": 3315
+        },
+        {
+          "testid": "chat-messages-scroll-region",
+          "line": 3369
+        },
+        {
+          "testid": "chat-loading",
+          "line": 3389
+        },
+        {
+          "testid": "chat-loading-summary",
+          "line": 3403
+        },
+        {
+          "testid": "chat-error",
+          "line": 3412
+        },
+        {
+          "testid": "chat-scroll-to-bottom",
+          "line": 3431
+        },
+        {
+          "testid": "chat-send-trace",
+          "line": 3461
+        },
+        {
+          "testid": "chat-ready",
+          "line": 3468
+        },
+        {
+          "testid": "tool-selector-panel-container",
+          "line": 3486
+        },
+        {
+          "testid": "chat-input",
+          "line": 3491
+        },
+        {
+          "testid": "chat-send",
+          "line": 3501
+        }
+      ],
+      "testid_count": 48,
+      "handler_count": 32,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ChatModeSelector.tsx",
+      "testids": [
+        {
+          "testid": "chat-mode-selector",
+          "line": 150
+        },
+        {
+          "testid": "chat-mode-selector-trigger",
+          "line": 156
+        },
+        {
+          "testid": "chat-mode-selector-menu",
+          "line": 178
+        },
+        {
+          "testid": "chat-mode-selector",
+          "line": 249
+        },
+        {
+          "testid": "chat-mode-selector-select",
+          "line": 256
+        }
+      ],
+      "testid_count": 5,
+      "handler_count": 5,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/MemoryDashboard.tsx",
+      "testids": [
+        {
+          "testid": "memory-dashboard-hybrid-summary",
+          "line": 592
+        },
+        {
+          "testid": "memory-dashboard-hybrid-active-preset",
+          "line": 601
+        },
+        {
+          "testid": "memory-dashboard-hybrid-status",
+          "line": 608
+        },
+        {
+          "testid": "memory-dashboard-hybrid-operator-hint",
+          "line": 617
+        },
+        {
+          "testid": "memory-dashboard-hybrid-preset-history",
+          "line": 623
+        }
+      ],
+      "testid_count": 5,
+      "handler_count": 10,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ToolSelectorPanel.tsx",
+      "testids": [
+        {
+          "testid": "tool-selector-btn",
+          "line": 93
+        },
+        {
+          "testid": "tool-selector-panel",
+          "line": 110
+        },
+        {
+          "testid": "tool-status-online",
+          "line": 118
+        },
+        {
+          "testid": "tool-status-deep",
+          "line": 127
+        }
+      ],
+      "testid_count": 4,
+      "handler_count": 2,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/AutomationPanel.tsx",
+      "testids": [
+        {
+          "testid": "btn-automation-result-dismiss",
+          "line": 372
+        }
+      ],
+      "testid_count": 1,
+      "handler_count": 7,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ChatInput.tsx",
+      "testids": [
+        {
+          "testid": "chat-input-textarea",
+          "line": 716
+        }
+      ],
+      "testid_count": 1,
+      "handler_count": 6,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/DictationButton.tsx",
+      "testids": [
+        {
+          "testid": "chat-dictation-button",
+          "line": 81
+        }
+      ],
+      "testid_count": 1,
+      "handler_count": 1,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/__tests__/ToolSelectorPanel.test.tsx",
+      "testids": [
+        {
+          "testid": "outside",
+          "line": 105
+        }
+      ],
+      "testid_count": 1,
+      "handler_count": 0,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/__tests__/VirtualizedMessageList.test.tsx",
+      "testids": [
+        {
+          "testid": "fixed-size-list",
+          "line": 9
+        }
+      ],
+      "testid_count": 1,
+      "handler_count": 0,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ChatFallback.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 3,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ChatFileImport.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 2,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ChatToolbar.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 14,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/CodeBlock.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 1,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ConversationControls.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 4,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ConversationsButton.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 1,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ConversationsSidebar.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 9,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/EvolutionTracker.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 1,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/FileUploadButton.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 4,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/MemoryViewer.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 11,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/MessageBubble.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 4,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/MessageListOptimized.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 2,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/MessageReactions.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 3,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ModeBadge.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 2,
+      "stub_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ModelSelector.tsx",
+      "testids": [],
+      "testid_count": 0,
+      "handler_count": 4,
+      "stub_handler_count": 0
+    }
+  ]
+}

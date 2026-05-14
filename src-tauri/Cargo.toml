@@ -1,6 +1,6 @@
 [package]
 name         = "titane-infinity"
-version      = "35.1.3"
+version      = "35.1.4"
 description  = "TITANE∞ v34.0.13 - AI Intelligence Unification Supreme"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"

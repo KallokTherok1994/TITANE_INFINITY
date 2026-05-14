@@ -1,0 +1,492 @@
+{
+  "version": "35.1.4",
+  "generated_at": "2026-05-14T15:19:53.331Z",
+  "files_scanned": 282,
+  "files_with_buttons": 154,
+  "total_buttons": 614,
+  "stub_buttons": 0,
+  "stubs": [],
+  "verdict": "PASS",
+  "per_file": [
+    {
+      "file": "src/components/sections/ConversationSection.tsx",
+      "button_count": 29,
+      "stub_count": 0,
+      "missing_handler_count": 15
+    },
+    {
+      "file": "src/pages/ConfigurationHub.tsx",
+      "button_count": 22,
+      "stub_count": 0,
+      "missing_handler_count": 12
+    },
+    {
+      "file": "src/pages/TimePage.tsx",
+      "button_count": 21,
+      "stub_count": 0,
+      "missing_handler_count": 14
+    },
+    {
+      "file": "src/components/audio/AudioDiagnosticsPanel.tsx",
+      "button_count": 17,
+      "stub_count": 0,
+      "missing_handler_count": 7
+    },
+    {
+      "file": "src/components/cognitive/CognitiveLayoutControl.tsx",
+      "button_count": 15,
+      "stub_count": 0,
+      "missing_handler_count": 10
+    },
+    {
+      "file": "src/pages/TotalDevPage.tsx",
+      "button_count": 14,
+      "stub_count": 0,
+      "missing_handler_count": 9
+    },
+    {
+      "file": "src/pages/DesignSystemShowcase.tsx",
+      "button_count": 13,
+      "stub_count": 0,
+      "missing_handler_count": 13
+    },
+    {
+      "file": "src/pages/DesignSystemPage.tsx",
+      "button_count": 12,
+      "stub_count": 0,
+      "missing_handler_count": 12
+    },
+    {
+      "file": "src/components/physiological/PhysiologicalPanel.tsx",
+      "button_count": 12,
+      "stub_count": 0,
+      "missing_handler_count": 11
+    },
+    {
+      "file": "src/components/psyche/DeepPsychePanel.tsx",
+      "button_count": 11,
+      "stub_count": 0,
+      "missing_handler_count": 10
+    },
+    {
+      "file": "src/components/MemoryEvolution/MemoryEvolutionCenter.tsx",
+      "button_count": 10,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/chat/MemoryViewer.tsx",
+      "button_count": 10,
+      "stub_count": 0,
+      "missing_handler_count": 2
+    },
+    {
+      "file": "src/pages/CloudCenter/index.tsx",
+      "button_count": 9,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/components/HyperCenter/HyperCenter.tsx",
+      "button_count": 9,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/components/conversation/ModeBuilder.tsx",
+      "button_count": 9,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/pages/DevPage.tsx",
+      "button_count": 8,
+      "stub_count": 0,
+      "missing_handler_count": 6
+    },
+    {
+      "file": "src/components/RemoteKeyDashboard/index.tsx",
+      "button_count": 8,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/components/VocalDevConsole.tsx",
+      "button_count": 8,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/agents/AgentManager.tsx",
+      "button_count": 8,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/evolution/EvolutionDashboard.tsx",
+      "button_count": 8,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/performance/PerformanceIssues.tsx",
+      "button_count": 8,
+      "stub_count": 0,
+      "missing_handler_count": 7
+    },
+    {
+      "file": "src/components/performance/RecommendationsPanel.tsx",
+      "button_count": 8,
+      "stub_count": 0,
+      "missing_handler_count": 7
+    },
+    {
+      "file": "src/pages/MultiProjectDashboard.tsx",
+      "button_count": 7,
+      "stub_count": 0,
+      "missing_handler_count": 6
+    },
+    {
+      "file": "src/components/RealityCenter/RealityCenter.tsx",
+      "button_count": 7,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/components/sections/MemorySection.tsx",
+      "button_count": 7,
+      "stub_count": 0,
+      "missing_handler_count": 7
+    },
+    {
+      "file": "src/components/twin/TwinEvolutionPanel.tsx",
+      "button_count": 7,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/pages/CloudCenter/SyncLogs.tsx",
+      "button_count": 6,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/pages/OrchestrationMetaCenter.tsx",
+      "button_count": 6,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/pages/TitanePage.tsx",
+      "button_count": 6,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/components/IdentityCenter/IdentityCenter.tsx",
+      "button_count": 6,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/components/admin/AdminTimeline.tsx",
+      "button_count": 6,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/components/htf/HTFSubmissionWizard.tsx",
+      "button_count": 6,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/pages/AgendaPage.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/pages/CloudCenter/VaultStatus.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 2
+    },
+    {
+      "file": "src/pages/Settings.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/components/ChatDiagnostic.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/ChatWindow.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/SystemIntegrationHub.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/aura/AuraControlPanel.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/components/chat/ConversationsSidebar.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/chat/MessageBubble.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/components/evolution/EvolutionHistory.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 5
+    },
+    {
+      "file": "src/components/layout/TopNav.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/optimization/UltimateOptimizationDashboard.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/performance/MetricsGraph.tsx",
+      "button_count": 5,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/pages/CreationStudio.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/pages/EvolutionCenterPage.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/pages/MonitoringDashboard.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/pages/SecureSettings.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/components/AudioSettings.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 2
+    },
+    {
+      "file": "src/components/ChatErrorBoundary.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/HybridBubble.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/MetaCenter/MetaCenter.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/RemoteKeyDashboard/AgentConfigPanel.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/AutomationPanel.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/chat/ChatInput.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/performance/AdvancedPerformanceDashboard.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/performance/PerformanceDashboard.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/security/AddAPIKeyModal.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 2
+    },
+    {
+      "file": "src/components/security/SecurityPanel.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 4
+    },
+    {
+      "file": "src/components/voice/VoiceControlPanelWithWakeWord.tsx",
+      "button_count": 4,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/pages/CloudCenter/DevicesView.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 2
+    },
+    {
+      "file": "src/pages/ResearchPage.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 2
+    },
+    {
+      "file": "src/components/BootErrorFallback.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/BootHealthDashboard.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 2
+    },
+    {
+      "file": "src/components/ConsciousnessDashboard.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/VoiceControlPanel.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/components/admin/AdminActions.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/chat/ChatFallback.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/ConversationControls.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/components/chat/MemoryDashboard.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/chat/MessageReactions.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/debug/ChatDebugPanel.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/components/dev/ConsoleMonitorDashboard.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/devtools/LogViewer.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/htf/HTFClientPanel.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 3
+    },
+    {
+      "file": "src/components/vision/CameraPreview.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    },
+    {
+      "file": "src/components/vision/VisionToggleButton.tsx",
+      "button_count": 3,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/pages/CameraPage.tsx",
+      "button_count": 2,
+      "stub_count": 0,
+      "missing_handler_count": 0
+    },
+    {
+      "file": "src/pages/DevTools.tsx",
+      "button_count": 2,
+      "stub_count": 0,
+      "missing_handler_count": 1
+    }
+  ]
+}
