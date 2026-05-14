@@ -67,6 +67,14 @@ interface SingularityStateResponse {
   last_sync_ms: number;
 }
 
+function parseTauriPayload<T>(payload: T | string): T {
+  if (typeof payload === 'string') {
+    return JSON.parse(payload) as T;
+  }
+
+  return payload;
+}
+
 export function useTitaneCore(autoRefresh: boolean = true) {
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
   const [loading, setLoading] = useState(false);
@@ -122,18 +130,18 @@ export function useTitaneCore(autoRefresh: boolean = true) {
   }, []);
 
   const getHeliosMetrics = useCallback(async (): Promise<HeliosMetrics> => {
-    const metricsJson = await tauri<string>('helios_get_metrics');
-    return JSON.parse(metricsJson) as HeliosMetrics;
+    const metrics = await tauri<HeliosMetrics | string>('get_helios_metrics');
+    return parseTauriPayload(metrics);
   }, []);
 
   const getNexusGraph = useCallback(async (): Promise<NexusGraph> => {
-    const graphJson = await tauri<string>('nexus_get_graph');
-    return JSON.parse(graphJson) as NexusGraph;
+    const graph = await tauri<NexusGraph | string>('nexus_get_graph');
+    return parseTauriPayload(graph);
   }, []);
 
   const getHarmoniaFlows = useCallback(async (): Promise<HarmoniaFlows> => {
-    const flowsJson = await tauri<string>('harmonia_get_flows');
-    return JSON.parse(flowsJson) as HarmoniaFlows;
+    const flows = await tauri<HarmoniaFlows | string>('harmonia_get_flows');
+    return parseTauriPayload(flows);
   }, []);
 
   // ─── Proxy live: engine_get_sentinel_state ───────────────────────────────

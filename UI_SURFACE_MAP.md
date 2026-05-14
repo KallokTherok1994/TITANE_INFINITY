@@ -121,6 +121,7 @@
 
 - Surface canonique `/dev`: `src/pages/DevPage.tsx` lit maintenant le provider orchestration via `formatDevBestProvider()` pour eviter les crashs runtime quand le payload est partiel.
 - Surface canonique `/dev`: `src/pages/DevPage.tsx` normalise maintenant aussi la sante backend enveloppee, les pourcentages non numeriques et les centres absents afin que `dev-overview`, `dev-diagnostics` et `dev-operations` restent renderables quand le runtime renvoie des payloads partiels.
+- Surface canonique `/dev?tab=diagnostics`: `src/hooks/useTitaneCore.ts` consomme maintenant `get_helios_metrics` et accepte les payloads IPC objet ou JSON string pour `helios`, `nexus` et `harmonia`, supprimant les erreurs de whitelist et de `JSON.parse` qui polluaient la capture diagnostics browser.
 - Surface evidence capture: `e2e/production/ui-production-full-visual-capture.spec.ts` classe l ErrorBoundary via selector visible `titane-error-boundary` (plus de faux positif textuel) et publie un artifact v80 strict.
 - Surface desktop gap contract:
   - `e2e/desktop/ui-desktop-agent-overlay-contract.wdio.test.js` enregistre `CONDITIONAL_ACCEPTED` quand l overlay est absent par defaut.

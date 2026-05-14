@@ -61,4 +61,18 @@ describe('useTitaneCore', () => {
 
     unmount();
   });
+
+  it('uses the allowlisted helios metrics command', async () => {
+    mockedTauri.mockResolvedValueOnce({ cpu: 12 });
+
+    const { result } = renderHook(() => useTitaneCore(false));
+
+    await expect(result.current.getHeliosMetrics()).resolves.toEqual({ cpu: 12 });
+
+    await act(async () => {
+      await result.current.getHeliosMetrics();
+    });
+
+    expect(mockedTauri).toHaveBeenCalledWith('get_helios_metrics');
+  });
 });
