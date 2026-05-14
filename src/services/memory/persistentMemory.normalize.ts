@@ -111,7 +111,29 @@ function normalizePersistentMemoryHealth(value: unknown): MemoryHealth {
 }
 
 export function normalizePersistentMemoryBundles(value: unknown): MemoryBundle[] {
-  return normalizePersistentMemoryPayload(value) as MemoryBundle[];
+  const normalized = normalizePersistentMemoryPayload(value);
+
+  if (Array.isArray(normalized)) {
+    return normalized as MemoryBundle[];
+  }
+
+  if (!isPlainObject(normalized)) {
+    return [];
+  }
+
+  if (Array.isArray(normalized.bundles)) {
+    return normalized.bundles as MemoryBundle[];
+  }
+
+  if (Array.isArray(normalized.content)) {
+    return normalized.content as MemoryBundle[];
+  }
+
+  if (isPlainObject(normalized.content) && Array.isArray(normalized.content.bundles)) {
+    return normalized.content.bundles as MemoryBundle[];
+  }
+
+  return [];
 }
 
 export function normalizePersistentMemorySummaries(value: unknown): MemorySummary[] {

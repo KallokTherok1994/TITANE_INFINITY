@@ -293,6 +293,72 @@ describe('usePersistentMemory persistence truth', () => {
     });
   });
 
+  it('accepts wrapped bundle payloads without crashing the cache refresh', async () => {
+    vi.mocked(tauriClient.persistentMemoryGetBundles).mockResolvedValue({
+      ok: true,
+      content: {
+        bundles: [
+          {
+            id: 'bundle-wrapped-1',
+            name: 'Bundle enveloppe',
+            topic: 'general',
+            entry_ids: ['entry-1'],
+            tags: ['memoire'],
+            created_at: 10,
+            updated_at: 20,
+            created_by: 'system',
+          },
+        ],
+      },
+      error: null,
+    });
+    vi.mocked(tauriClient.persistentMemoryGetStats).mockResolvedValue({
+      countByLevel: { session: 1, intermediate: 0, long_term: 0 },
+      sizeByLevel: { session: 128, intermediate: 0, long_term: 0 },
+    });
+    vi.mocked(tauriClient.persistentMemoryRead).mockResolvedValue({
+      entries: [
+        {
+          id: 'entry-1',
+          level: 'session',
+          topic: 'general',
+          importance: 3,
+          contentType: 'message',
+          content: 'Memoire enveloppee',
+          tags: [],
+          metadata: {
+            createdAt: 100,
+            accessCount: 0,
+            updatedAt: 100,
+            source: 'chat_user',
+            schemaVersion: '1.0.0',
+          },
+        },
+      ],
+      summaries: [],
+    });
+
+    const { result } = renderHook(() =>
+      usePersistentMemory({
+        modeId: 'admin',
+        enableCache: true,
+        projectId: 'test-wrapped-bundles',
+      })
+    );
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.error).toBeNull();
+    expect(result.current.bundles).toHaveLength(1);
+    expect(result.current.bundles[0]).toMatchObject({
+      id: 'bundle-wrapped-1',
+      entryIds: ['entry-1'],
+      createdAt: 10,
+    });
+  });
+
   it('does not reuse a cached snapshot from another memory scope', async () => {
     vi.mocked(tauriClient.persistentMemoryRead)
       .mockResolvedValueOnce({
