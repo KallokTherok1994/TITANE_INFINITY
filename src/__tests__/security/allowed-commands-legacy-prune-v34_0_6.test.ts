@@ -47,12 +47,19 @@ describe('v34.0.6 IPC legacy prune — L1 whitelist alignment', () => {
     'ai_chat_send',
   ];
 
-  it.each(expected)('whitelists %s in ALLOWED_COMMANDS', (cmd) => {
+  it.each(expected)('whitelists %s in ALLOWED_COMMANDS', cmd => {
     expect(ALLOWED_COMMANDS.has(cmd)).toBe(true);
   });
 
   it('keeps the v34.0.5 engine probes intact (no regression)', () => {
-    ['quick_health_check', 'engine_get_cognition_state', 'engine_get_singularity_state', 'temporal_get_today_state', 'identity_get_matrix', 'web_search'].forEach((cmd) => {
+    [
+      'quick_health_check',
+      'engine_get_cognition_state',
+      'engine_get_singularity_state',
+      'temporal_get_today_state',
+      'identity_get_matrix',
+      'web_search',
+    ].forEach(cmd => {
       expect(ALLOWED_COMMANDS.has(cmd)).toBe(true);
     });
   });

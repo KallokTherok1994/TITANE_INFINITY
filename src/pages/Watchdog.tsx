@@ -45,7 +45,15 @@ export const Watchdog = () => {
   return (
     <div className="module-page" data-testid="page-watchdog">
       <div className="module-page__header">
-        <div className="module-page__header-row" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div
+          className="module-page__header-row"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            flexWrap: 'wrap',
+          }}
+        >
           <h1 className="module-page__title" style={{ margin: 0 }}>
             <span className="module-page__icon">👁️</span>
             Watchdog — Surveillance Temps Réel

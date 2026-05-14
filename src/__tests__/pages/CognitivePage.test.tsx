@@ -10,7 +10,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { CognitivePage } from '@/pages/CognitivePage';
 
 vi.mock('@/utils/invoke', () => ({
-  safeInvokeCanonical: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
+  safeInvokeCanonical: vi
+    .fn()
+    .mockResolvedValue({ ok: false, content: null, error: null }),
   safeInvoke: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
 }));
 
@@ -30,7 +32,9 @@ function renderPage() {
 }
 
 describe('CognitivePage', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders the page container', () => {
     renderPage();

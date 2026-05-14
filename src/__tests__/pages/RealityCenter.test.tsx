@@ -92,9 +92,10 @@ describe('RealityCenter', () => {
   it('shows SurfaceTruthBadge (LIVE or DEGRADED)', () => {
     renderPage();
     // Before IPC resolves, badge starts DEGRADED; after resolve becomes LIVE
-    const badge = screen.queryByTestId('surface-truth-badge-live') ||
-                  screen.queryByTestId('surface-truth-badge-partial') ||
-                  screen.queryByTestId('surface-truth-badge-degraded');
+    const badge =
+      screen.queryByTestId('surface-truth-badge-live') ||
+      screen.queryByTestId('surface-truth-badge-partial') ||
+      screen.queryByTestId('surface-truth-badge-degraded');
     expect(badge).not.toBeNull();
   });
 

@@ -95,14 +95,70 @@ export const RealityCenter: React.FC = memo(() => {
   const [liveConnected, setLiveConnected] = useState(false);
 
   const FALLBACK_MODULES: ModuleStatus[] = [
-    { name: 'Cognitive Engine', expected: 'ACTIVE', actual: 'ACTIVE', conformance: 100, drift: 0, status: 'nominal' },
-    { name: 'Memory Persistence', expected: 'HEALTHY', actual: 'HEALTHY', conformance: 97, drift: 3, status: 'nominal' },
-    { name: 'Singularity Bridge', expected: 'SYNCED', actual: 'SYNCED', conformance: 100, drift: 0, status: 'nominal' },
-    { name: 'IPC Gateway', expected: 'OPEN', actual: 'OPEN', conformance: 100, drift: 0, status: 'nominal' },
-    { name: 'Voice Engine', expected: 'READY', actual: 'STANDBY', conformance: 75, drift: 25, status: 'degraded' },
-    { name: 'Visual Engine v21', expected: 'RUNNING', actual: 'RUNNING', conformance: 98, drift: 2, status: 'nominal' },
-    { name: 'Evolution Monitor', expected: 'TRACKING', actual: 'PAUSED', conformance: 60, drift: 40, status: 'degraded' },
-    { name: 'Security Sandbox', expected: 'ENFORCED', actual: 'ENFORCED', conformance: 100, drift: 0, status: 'nominal' },
+    {
+      name: 'Cognitive Engine',
+      expected: 'ACTIVE',
+      actual: 'ACTIVE',
+      conformance: 100,
+      drift: 0,
+      status: 'nominal',
+    },
+    {
+      name: 'Memory Persistence',
+      expected: 'HEALTHY',
+      actual: 'HEALTHY',
+      conformance: 97,
+      drift: 3,
+      status: 'nominal',
+    },
+    {
+      name: 'Singularity Bridge',
+      expected: 'SYNCED',
+      actual: 'SYNCED',
+      conformance: 100,
+      drift: 0,
+      status: 'nominal',
+    },
+    {
+      name: 'IPC Gateway',
+      expected: 'OPEN',
+      actual: 'OPEN',
+      conformance: 100,
+      drift: 0,
+      status: 'nominal',
+    },
+    {
+      name: 'Voice Engine',
+      expected: 'READY',
+      actual: 'STANDBY',
+      conformance: 75,
+      drift: 25,
+      status: 'degraded',
+    },
+    {
+      name: 'Visual Engine v21',
+      expected: 'RUNNING',
+      actual: 'RUNNING',
+      conformance: 98,
+      drift: 2,
+      status: 'nominal',
+    },
+    {
+      name: 'Evolution Monitor',
+      expected: 'TRACKING',
+      actual: 'PAUSED',
+      conformance: 60,
+      drift: 40,
+      status: 'degraded',
+    },
+    {
+      name: 'Security Sandbox',
+      expected: 'ENFORCED',
+      actual: 'ENFORCED',
+      conformance: 100,
+      drift: 0,
+      status: 'nominal',
+    },
   ];
 
   const [modules, setModules] = useState<ModuleStatus[]>(FALLBACK_MODULES);
@@ -114,7 +170,8 @@ export const RealityCenter: React.FC = memo(() => {
     const loadModules = () => {
       safeInvokeCanonical<BackendModuleStatus[]>('cp_get_modules_status')
         .then(result => {
-          if (!result.ok || !Array.isArray(result.content)) throw new Error('IPC unavailable');
+          if (!result.ok || !Array.isArray(result.content))
+            throw new Error('IPC unavailable');
           const backendModules = result.content;
           const mapped: ModuleStatus[] = backendModules.map(m => ({
             name: m.name,
@@ -144,7 +201,8 @@ export const RealityCenter: React.FC = memo(() => {
     // Recharge aussi les modules depuis le backend
     safeInvokeCanonical<BackendModuleStatus[]>('cp_get_modules_status')
       .then(result => {
-        if (!result.ok || !Array.isArray(result.content)) throw new Error('IPC unavailable');
+        if (!result.ok || !Array.isArray(result.content))
+          throw new Error('IPC unavailable');
         const backendModules = result.content;
         const mapped: ModuleStatus[] = backendModules.map(m => ({
           name: m.name,
@@ -176,7 +234,10 @@ export const RealityCenter: React.FC = memo(() => {
     >
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Runtime Truth Badge — LIVE si cp_get_modules_status répond, sinon DEGRADED */}
-        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'DEGRADED'} className="mb-2" />
+        <SurfaceTruthBadge
+          variant={liveConnected ? 'LIVE' : 'DEGRADED'}
+          className="mb-2"
+        />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

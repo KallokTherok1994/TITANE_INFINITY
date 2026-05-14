@@ -46,14 +46,13 @@ export const ProgressionPage = (): JSX.Element => {
   const xpNeededForNextLevel = xpForNextLevel - xpForCurrentLevel;
 
   const badgeVariant: 'LIVE' | 'PARTIAL' | 'DEGRADED' =
-    !isLoading && level > 0
-      ? 'LIVE'
-      : !isLoading
-        ? 'PARTIAL'
-        : 'DEGRADED';
+    !isLoading && level > 0 ? 'LIVE' : !isLoading ? 'PARTIAL' : 'DEGRADED';
 
   return (
-    <div data-testid="page-progression" style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}>
+    <div
+      data-testid="page-progression"
+      style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}
+    >
       <SurfaceTruthBadge variant={badgeVariant} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[6] }}>
         {/* Header */}

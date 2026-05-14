@@ -43,7 +43,9 @@ export const Harmonia = () => {
 
   return (
     <div className="module-page" data-testid="page-harmonia">
-      <SurfaceTruthBadge variant={!loading && flows != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
+      <SurfaceTruthBadge
+        variant={!loading && flows != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'}
+      />
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">⚖️</span>

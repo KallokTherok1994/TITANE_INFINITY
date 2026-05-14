@@ -98,7 +98,8 @@ const QuantumCenterContent: React.FC = () => {
       const now = Date.now();
       safeInvokeCanonical<SingularityForQuantum>('engine_get_singularity_state')
         .then(result => {
-          if (!result.ok || !result.content?.harmonia || !result.content?.cognition) throw new Error('IPC unavailable');
+          if (!result.ok || !result.content?.harmonia || !result.content?.cognition)
+            throw new Error('IPC unavailable');
           const state = result.content;
           const frameTime = 8 + state.cognition.load * 8; // 8-16ms based on load
           const fps = Math.round(1000 / frameTime);
@@ -107,7 +108,10 @@ const QuantumCenterContent: React.FC = () => {
             fps,
             frameTime,
             renderCycles: prev.renderCycles + 1,
-            cacheHitRate: Math.min(0.99, Math.max(0.5, state.harmonia.balance_score / 100)),
+            cacheHitRate: Math.min(
+              0.99,
+              Math.max(0.5, state.harmonia.balance_score / 100)
+            ),
             jitterScore: Math.min(1, Math.max(0.8, 1 - state.cognition.load * 0.2)),
             motionFluidity: Math.min(1, Math.max(0.85, state.harmonia.harmony_index)),
             overallScore: Math.min(1, Math.max(0.8, state.harmonia.balance_score / 100)),

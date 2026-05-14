@@ -747,8 +747,9 @@ export const TimePage: React.FC = () => {
 // ═══════════════════════════════════════════════════════════════════
 
 const TemporalMemorySection: React.FC = () => {
-  const { state, loading, error, refresh, consolidateMemory } =
-    useTemporalIntelligence({ autoStart: true });
+  const { state, loading, error, refresh, consolidateMemory } = useTemporalIntelligence({
+    autoStart: true,
+  });
   const memory = state?.memory_stats;
   return (
     <section
@@ -793,11 +794,7 @@ const TemporalMemorySection: React.FC = () => {
         className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-200"
         data-testid="time-memory-stats"
       >
-        <Metric
-          label="Total"
-          value={memory?.total_traces ?? 0}
-          testid="memory-total"
-        />
+        <Metric label="Total" value={memory?.total_traces ?? 0} testid="memory-total" />
         <Metric
           label="Actifs"
           value={memory?.active_traces ?? 0}
@@ -824,8 +821,9 @@ const TemporalMemorySection: React.FC = () => {
 // ═══════════════════════════════════════════════════════════════════
 
 const TemporalTwinSection: React.FC = () => {
-  const { health, alignment, loading, error, refresh, tick } =
-    useTemporalIntelligence({ autoStart: true });
+  const { health, alignment, loading, error, refresh, tick } = useTemporalIntelligence({
+    autoStart: true,
+  });
   return (
     <section
       data-testid="time-section-twin"
@@ -929,9 +927,7 @@ const Metric: React.FC<{
     className="rounded-md border border-gray-700 bg-gray-900/60 px-3 py-2"
     data-testid={`time-metric-${testid}`}
   >
-    <div className="text-[10px] uppercase tracking-wider text-gray-400">
-      {label}
-    </div>
+    <div className="text-[10px] uppercase tracking-wider text-gray-400">{label}</div>
     <div className="mt-1 text-base font-semibold text-white">{value}</div>
   </div>
 );

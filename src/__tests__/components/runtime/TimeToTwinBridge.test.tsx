@@ -58,9 +58,7 @@ describe('TimeToTwinBridge (runtime bootstrap)', () => {
   it('démarre observer + enregistre chat tools au mount', () => {
     render(<TimeToTwinBridge />);
     expect(temporalMocks.registerTemporalChatTools).toHaveBeenCalledTimes(1);
-    expect(temporalMocks.registerTemporalChatTools).toHaveBeenCalledWith(
-      toolCallerStub
-    );
+    expect(temporalMocks.registerTemporalChatTools).toHaveBeenCalledWith(toolCallerStub);
     expect(temporalMocks.getRuntimeTimeToTwinObserver).toHaveBeenCalledWith({
       intervalMs: 60000,
     });

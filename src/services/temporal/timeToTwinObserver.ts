@@ -76,7 +76,7 @@ async function defaultSubmit(
 }
 
 function buildContent(health: TemporalHealthDTO, alignment: AlignmentScoreDTO): string {
-  const h = (v: number) => Number.isFinite(v) ? v.toFixed(2) : '—';
+  const h = (v: number) => (Number.isFinite(v) ? v.toFixed(2) : '—');
   return [
     `temporal.health.overall=${h(health.overall)}`,
     `temporal.health.energy=${h(health.energy)}`,
@@ -86,7 +86,10 @@ function buildContent(health: TemporalHealthDTO, alignment: AlignmentScoreDTO): 
   ].join(' | ');
 }
 
-function clampConfidence(health: TemporalHealthDTO, alignment: AlignmentScoreDTO): number {
+function clampConfidence(
+  health: TemporalHealthDTO,
+  alignment: AlignmentScoreDTO
+): number {
   const candidate = (health.overall + alignment.score) / 2;
   if (!Number.isFinite(candidate)) return 0.5;
   return Math.max(0, Math.min(1, candidate));
@@ -102,7 +105,8 @@ export function createTimeToTwinObserver(
   const baseIntervalMs = options.intervalMs ?? 60_000;
   const log = options.log ?? noop;
   const fetchHealth = options.fetchHealth ?? temporalIntelligenceService.getHealth;
-  const fetchAlignment = options.fetchAlignment ?? temporalIntelligenceService.alignmentScore;
+  const fetchAlignment =
+    options.fetchAlignment ?? temporalIntelligenceService.alignmentScore;
   const submit = options.submit ?? defaultSubmit;
   const pauseOnHidden = options.pauseOnHidden ?? true;
 
@@ -128,7 +132,11 @@ export function createTimeToTwinObserver(
       status.consecutiveFailures - FAILURE_THRESHOLD,
       BACKOFF_LADDER_MS.length - 1
     );
-    return BACKOFF_LADDER_MS[idx] ?? BACKOFF_LADDER_MS[BACKOFF_LADDER_MS.length - 1] ?? baseIntervalMs;
+    return (
+      BACKOFF_LADDER_MS[idx] ??
+      BACKOFF_LADDER_MS[BACKOFF_LADDER_MS.length - 1] ??
+      baseIntervalMs
+    );
   }
 
   async function pulseOnce(): Promise<{ pushed: boolean; reason?: string }> {

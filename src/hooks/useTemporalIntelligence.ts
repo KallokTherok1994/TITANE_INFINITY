@@ -86,7 +86,7 @@ export function useTemporalIntelligence(
     };
   }, []);
 
-  const safeSet = useCallback(<T,>(setter: (v: T) => void, value: T) => {
+  const safeSet = useCallback(<T>(setter: (v: T) => void, value: T) => {
     if (mountedRef.current) setter(value);
   }, []);
 
@@ -104,7 +104,7 @@ export function useTemporalIntelligence(
       if (st.status === 'fulfilled') safeSet(setState, st.value);
       if (hl.status === 'fulfilled') safeSet(setHealth, hl.value);
       if (al.status === 'fulfilled') safeSet(setAlignment, al.value);
-      const firstReject = [ctx, st, hl, al].find((r) => r.status === 'rejected');
+      const firstReject = [ctx, st, hl, al].find(r => r.status === 'rejected');
       if (firstReject && firstReject.status === 'rejected') {
         safeSet(setError, String(firstReject.reason?.message ?? firstReject.reason));
       }
@@ -137,8 +137,8 @@ export function useTemporalIntelligence(
   }, [safeSet]);
 
   const wrap = useCallback(
-    <T,>(fn: () => Promise<T>): Promise<T | null> =>
-      fn().catch((e) => {
+    <T>(fn: () => Promise<T>): Promise<T | null> =>
+      fn().catch(e => {
         safeSet(setError, e instanceof Error ? e.message : String(e));
         return null as T | null;
       }),
@@ -146,8 +146,8 @@ export function useTemporalIntelligence(
   );
 
   const wrapList = useCallback(
-    <T,>(fn: () => Promise<T[]>): Promise<T[]> =>
-      fn().catch((e) => {
+    <T>(fn: () => Promise<T[]>): Promise<T[]> =>
+      fn().catch(e => {
         safeSet(setError, e instanceof Error ? e.message : String(e));
         return [] as T[];
       }),
@@ -164,20 +164,21 @@ export function useTemporalIntelligence(
     error,
     refresh,
     tick,
-    recordMemory: (p) => wrap(() => temporalIntelligenceService.recordMemory(p)),
-    recallMemory: (p) => wrapList(() => temporalIntelligenceService.recallMemory(p)),
+    recordMemory: p => wrap(() => temporalIntelligenceService.recordMemory(p)),
+    recallMemory: p => wrapList(() => temporalIntelligenceService.recallMemory(p)),
     memoryMetrics: () => wrap(() => temporalIntelligenceService.memoryMetrics()),
     consolidateMemory: () => wrap(() => temporalIntelligenceService.consolidateMemory()),
     listRoutines: () => wrapList(() => temporalIntelligenceService.listRoutines()),
-    upsertRoutine: (p) => wrap(() => temporalIntelligenceService.upsertRoutine(p)),
-    checkRoutineTriggers: () => wrapList(() => temporalIntelligenceService.checkRoutineTriggers()),
-    getPlan: (h) => wrapList(() => temporalIntelligenceService.getPlan(h)),
-    addTask: (p) => wrap(() => temporalIntelligenceService.addTask(p)),
+    upsertRoutine: p => wrap(() => temporalIntelligenceService.upsertRoutine(p)),
+    checkRoutineTriggers: () =>
+      wrapList(() => temporalIntelligenceService.checkRoutineTriggers()),
+    getPlan: h => wrapList(() => temporalIntelligenceService.getPlan(h)),
+    addTask: p => wrap(() => temporalIntelligenceService.addTask(p)),
     optimizePlan: () => wrap(() => temporalIntelligenceService.optimizePlan()),
     plannerStats: () => wrap(() => temporalIntelligenceService.plannerStats()),
-    predict: (h) => wrapList(() => temporalIntelligenceService.predict(h)),
+    predict: h => wrapList(() => temporalIntelligenceService.predict(h)),
     alignmentScore: () => wrap(() => temporalIntelligenceService.alignmentScore()),
-    upsertGoal: (p) => wrap(() => temporalIntelligenceService.upsertGoal(p)),
+    upsertGoal: p => wrap(() => temporalIntelligenceService.upsertGoal(p)),
   };
 }
 

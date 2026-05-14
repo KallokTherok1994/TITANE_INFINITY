@@ -120,7 +120,10 @@ const TemporalFlowCenter: React.FC = () => {
   ];
 
   return (
-    <div data-testid="module-temporal-flow-center" className="temporal-flow-center p-6 space-y-6 bg-gray-900 text-gray-100">
+    <div
+      data-testid="module-temporal-flow-center"
+      className="temporal-flow-center p-6 space-y-6 bg-gray-900 text-gray-100"
+    >
       <SurfaceTruthBadge variant={badgeVariant} />
       {/* Header */}
       <div className="header mb-8">

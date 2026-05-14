@@ -55,7 +55,9 @@ export const Helios = () => {
 
   return (
     <div className="module-page" data-testid="page-helios">
-      <SurfaceTruthBadge variant={!loading && metrics != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
+      <SurfaceTruthBadge
+        variant={!loading && metrics != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'}
+      />
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">💓</span>

@@ -50,11 +50,7 @@ describe('TimeBridgeStatusCard', () => {
   });
 
   it('affiche "paused" quand status.paused=true', () => {
-    render(
-      <TimeBridgeStatusCard
-        statusOverride={{ ...baseStatus, paused: true }}
-      />
-    );
+    render(<TimeBridgeStatusCard statusOverride={{ ...baseStatus, paused: true }} />);
     expect(screen.getByTestId('time-bridge-running').textContent).toBe('paused');
   });
 
@@ -77,9 +73,7 @@ describe('TimeBridgeStatusCard', () => {
         }}
       />
     );
-    expect(screen.getByTestId('time-bridge-last-error').textContent).toBe(
-      'IPC_DOWN'
-    );
+    expect(screen.getByTestId('time-bridge-last-error').textContent).toBe('IPC_DOWN');
     expect(screen.getByTestId('time-bridge-pushed-count').textContent).toMatch(
       /erreurs: 3/
     );

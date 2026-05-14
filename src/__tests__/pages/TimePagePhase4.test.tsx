@@ -240,9 +240,7 @@ describe('TimePage Phase 4 — onglets memory & twin', () => {
     expect(screen.getByTestId('time-memory-stats')).toBeInTheDocument();
     expect(screen.getByTestId('time-metric-memory-total')).toHaveTextContent('42');
     expect(screen.getByTestId('time-metric-memory-active')).toHaveTextContent('20');
-    expect(screen.getByTestId('time-metric-memory-strength')).toHaveTextContent(
-      '0.612'
-    );
+    expect(screen.getByTestId('time-metric-memory-strength')).toHaveTextContent('0.612');
   });
 
   it('rend la section twin avec health + alignment', async () => {
@@ -252,9 +250,7 @@ describe('TimePage Phase 4 — onglets memory & twin', () => {
     expect(screen.getByTestId('time-section-twin')).toBeInTheDocument();
     expect(screen.getByTestId('time-metric-twin-overall')).toHaveTextContent('0.81');
     expect(screen.getByTestId('time-metric-twin-energy')).toHaveTextContent('0.73');
-    expect(screen.getByTestId('time-metric-twin-align-score')).toHaveTextContent(
-      '0.70'
-    );
+    expect(screen.getByTestId('time-metric-twin-align-score')).toHaveTextContent('0.70');
     expect(screen.getByTestId('time-metric-twin-active-goals')).toHaveTextContent('4');
   });
 });

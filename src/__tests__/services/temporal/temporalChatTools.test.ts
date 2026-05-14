@@ -130,13 +130,18 @@ describe('temporalChatTools — TOOL_CALL bridge', () => {
     expect(out).toMatchObject({ id: 'mem-1', event_type: 'decision' });
 
     await expect(
-      TEMPORAL_CHAT_TOOLS.temporal_record_memory.execute({ event_type: '', context: 'chat' })
+      TEMPORAL_CHAT_TOOLS.temporal_record_memory.execute({
+        event_type: '',
+        context: 'chat',
+      })
     ).rejects.toThrow(/event_type required/);
   });
 
   it('temporal_get_plan retourne tasks + count', async () => {
     getPlanMock.mockResolvedValue([{ id: 't1' }, { id: 't2' }]);
-    const out = await TEMPORAL_CHAT_TOOLS.temporal_get_plan.execute({ horizon: 'this_week' });
+    const out = await TEMPORAL_CHAT_TOOLS.temporal_get_plan.execute({
+      horizon: 'this_week',
+    });
     expect(getPlanMock).toHaveBeenCalledWith('this_week');
     expect(out).toMatchObject({ horizon: 'this_week', count: 2 });
   });
@@ -144,7 +149,7 @@ describe('temporalChatTools — TOOL_CALL bridge', () => {
   it('registerTemporalChatTools enregistre 5 outils', () => {
     const registered: string[] = [];
     registerTemporalChatTools({
-      registerTool: (t) => registered.push(t.name),
+      registerTool: t => registered.push(t.name),
     });
     expect(registered.sort()).toEqual(TEMPORAL_CHAT_TOOL_NAMES.slice().sort());
   });

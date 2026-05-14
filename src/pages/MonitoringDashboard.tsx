@@ -168,12 +168,20 @@ export const MonitoringDashboard: React.FC = memo(() => {
   useEffect(() => {
     let cancelled = false;
     const probe = async () => {
-      const r = await safeInvokeCanonical<{ modules?: unknown[] }>('cp_get_modules_status');
-      if (!cancelled) setLiveConnected(r.ok && Array.isArray(r.content?.modules) && r.content.modules.length > 0);
+      const r = await safeInvokeCanonical<{ modules?: unknown[] }>(
+        'cp_get_modules_status'
+      );
+      if (!cancelled)
+        setLiveConnected(
+          r.ok && Array.isArray(r.content?.modules) && r.content.modules.length > 0
+        );
     };
     void probe();
     const id = setInterval(() => void probe(), 30_000);
-    return () => { cancelled = true; clearInterval(id); };
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, []);
 
   // Export métriques JSON

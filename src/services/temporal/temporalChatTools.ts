@@ -23,7 +23,9 @@ function asNumber(v: unknown): number | undefined {
   return typeof v === 'number' && Number.isFinite(v) ? v : undefined;
 }
 function asStringArr(v: unknown): string[] | undefined {
-  return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : undefined;
+  return Array.isArray(v)
+    ? v.filter((x): x is string => typeof x === 'string')
+    : undefined;
 }
 
 /** TIME tool: add task to planner. */
@@ -41,7 +43,7 @@ export const TEMPORAL_TOOL_ADD_TASK: ToolDefinition = {
     energy_required: { type: 'number' },
     tags: { type: 'array' },
   },
-  execute: async (args) => {
+  execute: async args => {
     const title = asString(args.title).trim();
     if (!title) throw new Error('temporal_add_task: title required');
     const id = await temporalIntelligenceService.addTask({
@@ -75,7 +77,7 @@ export const TEMPORAL_TOOL_UPSERT_ROUTINE: ToolDefinition = {
     priority: { type: 'number' },
     cooldown_ms: { type: 'number' },
   },
-  execute: async (args) => {
+  execute: async args => {
     const name = asString(args.name).trim();
     const pattern = asString(args.pattern).trim();
     if (!name) throw new Error('temporal_upsert_routine: name required');
@@ -87,7 +89,9 @@ export const TEMPORAL_TOOL_UPSERT_ROUTINE: ToolDefinition = {
       trigger: {
         pattern,
         time_of_day:
-          typeof args.time_of_day === 'string' ? (args.time_of_day as TimeOfDayKey) : undefined,
+          typeof args.time_of_day === 'string'
+            ? (args.time_of_day as TimeOfDayKey)
+            : undefined,
         hour: asNumber(args.hour),
         minute: asNumber(args.minute),
       },
@@ -103,7 +107,7 @@ export const TEMPORAL_TOOL_UPSERT_ROUTINE: ToolDefinition = {
 export const TEMPORAL_TOOL_UPSERT_GOAL: ToolDefinition = {
   name: 'temporal_upsert_goal',
   description:
-    "Ajoute ou met à jour un objectif long-terme (TITANE∞ TIME). category: personal|professional|health|learning|financial|relationships|creative|contribution. milestones: liste optionnelle {title, due_date?, order?}.",
+    'Ajoute ou met à jour un objectif long-terme (TITANE∞ TIME). category: personal|professional|health|learning|financial|relationships|creative|contribution. milestones: liste optionnelle {title, due_date?, order?}.',
   parameters: {
     id: { type: 'string' },
     title: { type: 'string', required: true },
@@ -113,7 +117,7 @@ export const TEMPORAL_TOOL_UPSERT_GOAL: ToolDefinition = {
     target_date: { type: 'number' },
     milestones: { type: 'array' },
   },
-  execute: async (args) => {
+  execute: async args => {
     const title = asString(args.title).trim();
     if (!title) throw new Error('temporal_upsert_goal: title required');
     const category = asString(args.category).trim() || 'personal';
@@ -150,7 +154,7 @@ export const TEMPORAL_TOOL_RECORD_MEMORY: ToolDefinition = {
     data: { type: 'object' },
     significance: { type: 'number' },
   },
-  execute: async (args) => {
+  execute: async args => {
     const event_type = asString(args.event_type).trim();
     const context = asString(args.context).trim();
     if (!event_type) throw new Error('temporal_record_memory: event_type required');
@@ -173,7 +177,7 @@ export const TEMPORAL_TOOL_GET_PLAN: ToolDefinition = {
   parameters: {
     horizon: { type: 'string' },
   },
-  execute: async (args) => {
+  execute: async args => {
     const horizon =
       typeof args.horizon === 'string' ? (args.horizon as PlanningHorizonKey) : undefined;
     const tasks = await temporalIntelligenceService.getPlan(horizon);

@@ -13,9 +13,13 @@ function formatDiagnosticClock(ts: number): string {
 }
 
 const DiagnosticDashboard: React.FC = () => {
-  const { data: status, lastUpdate, refresh } = useAgentLiveSnapshot(
+  const {
+    data: status,
+    lastUpdate,
+    refresh,
+  } = useAgentLiveSnapshot(
     getDiagnosticAgentStatus,
-    DIAGNOSTIC_DASHBOARD_REFRESH_INTERVAL_MS,
+    DIAGNOSTIC_DASHBOARD_REFRESH_INTERVAL_MS
   );
   const detailSections = status.detailSections ?? [];
 

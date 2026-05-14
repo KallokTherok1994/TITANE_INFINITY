@@ -211,33 +211,65 @@ export const CognitivePage = (): JSX.Element => {
     <div data-testid="page-cognitive">
       <SurfaceTruthBadge variant={badgeVariant} />
       <Container size="xl">
-      <Stack direction="vertical" gap={6}>
-        {/* Header */}
-        <div>
-          <h1
-            style={{
-              margin: 0,
-              fontSize: '2.5rem',
-              fontWeight: fontWeights.bold,
-              color: colors.neutral[100],
-              marginBottom: spacing[2],
-            }}
-          >
-            État Cognitif
-          </h1>
-          <p
-            style={{
-              margin: 0,
-              fontSize: fontSizes.lg,
-              color: colors.neutral[400],
-            }}
-          >
-            Analyse approfondie de vos capacités et patterns mentaux
-          </p>
-        </div>
+        <Stack direction="vertical" gap={6}>
+          {/* Header */}
+          <div>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: '2.5rem',
+                fontWeight: fontWeights.bold,
+                color: colors.neutral[100],
+                marginBottom: spacing[2],
+              }}
+            >
+              État Cognitif
+            </h1>
+            <p
+              style={{
+                margin: 0,
+                fontSize: fontSizes.lg,
+                color: colors.neutral[400],
+              }}
+            >
+              Analyse approfondie de vos capacités et patterns mentaux
+            </p>
+          </div>
 
-        {/* Top Row: Helios + Nexus */}
-        <Grid columns={2} gap={4}>
+          {/* Top Row: Helios + Nexus */}
+          <Grid columns={2} gap={4}>
+            <Card variant="glass" elevation="lg">
+              <h2
+                style={{
+                  margin: 0,
+                  marginBottom: spacing[4],
+                  fontSize: fontSizes.xl,
+                  fontWeight: fontWeights.semibold,
+                  color: colors.neutral[100],
+                }}
+              >
+                Métriques Cognitives
+              </h2>
+              <HeliosVisualization metrics={heliosMetrics} />
+            </Card>
+
+            <Card variant="glass" elevation="lg">
+              <h2
+                style={{
+                  margin: 0,
+                  marginBottom: spacing[4],
+                  fontSize: fontSizes.xl,
+                  fontWeight: fontWeights.semibold,
+                  color: colors.neutral[100],
+                }}
+              >
+                Graphe de Connaissances
+              </h2>
+              <NexusGraph nodes={nexusNodes} edges={nexusEdges} />
+            </Card>
+          </Grid>
+
+          {/* Middle Row: Harmonia */}
           <Card variant="glass" elevation="lg">
             <h2
               style={{
@@ -248,11 +280,12 @@ export const CognitivePage = (): JSX.Element => {
                 color: colors.neutral[100],
               }}
             >
-              Métriques Cognitives
+              Patterns Comportementaux
             </h2>
-            <HeliosVisualization metrics={heliosMetrics} />
+            <HarmoniaPatterns patterns={harmoniaPatterns} />
           </Card>
 
+          {/* Bottom Row: Memory Timeline */}
           <Card variant="glass" elevation="lg">
             <h2
               style={{
@@ -263,45 +296,12 @@ export const CognitivePage = (): JSX.Element => {
                 color: colors.neutral[100],
               }}
             >
-              Graphe de Connaissances
+              Timeline des Mémoires
             </h2>
-            <NexusGraph nodes={nexusNodes} edges={nexusEdges} />
+            <MemoryTimeline entries={memoryEntries} />
           </Card>
-        </Grid>
-
-        {/* Middle Row: Harmonia */}
-        <Card variant="glass" elevation="lg">
-          <h2
-            style={{
-              margin: 0,
-              marginBottom: spacing[4],
-              fontSize: fontSizes.xl,
-              fontWeight: fontWeights.semibold,
-              color: colors.neutral[100],
-            }}
-          >
-            Patterns Comportementaux
-          </h2>
-          <HarmoniaPatterns patterns={harmoniaPatterns} />
-        </Card>
-
-        {/* Bottom Row: Memory Timeline */}
-        <Card variant="glass" elevation="lg">
-          <h2
-            style={{
-              margin: 0,
-              marginBottom: spacing[4],
-              fontSize: fontSizes.xl,
-              fontWeight: fontWeights.semibold,
-              color: colors.neutral[100],
-            }}
-          >
-            Timeline des Mémoires
-          </h2>
-          <MemoryTimeline entries={memoryEntries} />
-        </Card>
-      </Stack>
-    </Container>
+        </Stack>
+      </Container>
     </div>
   );
 };

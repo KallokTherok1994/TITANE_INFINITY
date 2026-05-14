@@ -116,9 +116,7 @@ export const TimeBridgeStatusCard: React.FC<TimeBridgeStatusCardProps> = ({
         <span data-testid="time-bridge-pushed-count" className="mt-1 text-gray-100">
           {status?.totalPushed ?? 0}
           {status && status.totalFailed > 0 ? (
-            <span className="ml-1 text-amber-300">
-              (erreurs: {status.totalFailed})
-            </span>
+            <span className="ml-1 text-amber-300">(erreurs: {status.totalFailed})</span>
           ) : null}
         </span>
       </div>

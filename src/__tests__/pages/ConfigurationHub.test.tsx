@@ -15,7 +15,12 @@ vi.mock('@/lib/tauriClient', () => ({
       ok: true,
       content: {
         runtime: {},
-        chat_engine: { timeout_ms: 30000, chunk_size: 1024, max_tokens: 2048, temperature: 0.7 },
+        chat_engine: {
+          timeout_ms: 30000,
+          chunk_size: 1024,
+          max_tokens: 2048,
+          temperature: 0.7,
+        },
         timestamp: 0,
         version: 'test',
       },
@@ -36,7 +41,12 @@ vi.mock('@/lib/tauriClient', () => ({
     }),
     getChatRequestDefaults: vi.fn().mockResolvedValue({
       ok: true,
-      content: { temperature: 0.7, max_output_tokens: 2048, enable_streaming: true, provider: null },
+      content: {
+        temperature: 0.7,
+        max_output_tokens: 2048,
+        enable_streaming: true,
+        provider: null,
+      },
       error: null,
     }),
     getAudioDeviceConfig: vi.fn().mockResolvedValue(null),
@@ -47,7 +57,9 @@ vi.mock('@/lib/tauriClient', () => ({
 }));
 
 vi.mock('@/utils/invoke', () => ({
-  safeInvokeCanonical: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
+  safeInvokeCanonical: vi
+    .fn()
+    .mockResolvedValue({ ok: false, content: null, error: null }),
 }));
 
 vi.mock('@/services/tauri/chatEngine.commands', () => ({
@@ -87,7 +99,9 @@ function renderPage() {
 }
 
 describe('ConfigurationHub', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders the page container', async () => {
     renderPage();

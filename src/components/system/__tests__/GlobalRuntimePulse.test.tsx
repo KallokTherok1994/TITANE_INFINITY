@@ -119,16 +119,21 @@ describe('GlobalRuntimePulse', () => {
 });
 
 describe('SurfaceTruthBadge — Living Pulse (v34.0.3)', () => {
-  it.each(['PARTIAL', 'DEGRADED', 'ERROR', 'FALLBACK', 'SIMULATED', 'NOT_WIRED', 'UNKNOWN'] as const)(
-    'pulses on non-calm variant: %s',
-    async variant => {
-      const { SurfaceTruthBadge } = await import('../SurfaceTruthBadge');
-      render(<SurfaceTruthBadge variant={variant} />);
-      const el = screen.getByTestId(`surface-truth-badge-${variant.toLowerCase()}`);
-      expect(el.getAttribute('data-pulsing')).toBe('true');
-      expect(el.className).toContain('animate-pulse');
-    },
-  );
+  it.each([
+    'PARTIAL',
+    'DEGRADED',
+    'ERROR',
+    'FALLBACK',
+    'SIMULATED',
+    'NOT_WIRED',
+    'UNKNOWN',
+  ] as const)('pulses on non-calm variant: %s', async variant => {
+    const { SurfaceTruthBadge } = await import('../SurfaceTruthBadge');
+    render(<SurfaceTruthBadge variant={variant} />);
+    const el = screen.getByTestId(`surface-truth-badge-${variant.toLowerCase()}`);
+    expect(el.getAttribute('data-pulsing')).toBe('true');
+    expect(el.className).toContain('animate-pulse');
+  });
 
   it.each(['LIVE', 'DISPLAY_ONLY', 'LEGACY'] as const)(
     'stays calm (no pulse) on variant: %s',
@@ -138,6 +143,6 @@ describe('SurfaceTruthBadge — Living Pulse (v34.0.3)', () => {
       const el = screen.getByTestId(`surface-truth-badge-${variant.toLowerCase()}`);
       expect(el.getAttribute('data-pulsing')).toBe('false');
       expect(el.className).not.toContain('animate-pulse');
-    },
+    }
   );
 });

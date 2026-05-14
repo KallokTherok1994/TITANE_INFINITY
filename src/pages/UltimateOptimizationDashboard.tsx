@@ -193,9 +193,11 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
   useEffect(() => {
     const fetchLoad = () => {
       safeInvokeCanonical<{ cognition: { load: number } }>('engine_get_singularity_state')
-        .then(result => result.ok && result.content?.cognition != null
-          ? setEngineLoad(Math.round(result.content.cognition.load * 100))
-          : setEngineLoad(null))
+        .then(result =>
+          result.ok && result.content?.cognition != null
+            ? setEngineLoad(Math.round(result.content.cognition.load * 100))
+            : setEngineLoad(null)
+        )
         .catch(() => setEngineLoad(null));
     };
     fetchLoad();
@@ -349,10 +351,18 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                 <Cpu className="w-4 h-4 text-purple-400" />
                 <span className="text-xs text-gray-400">Charge Engine (live)</span>
               </div>
-              <p className={`text-3xl font-bold ${engineLoad < 50 ? 'text-green-400' : engineLoad < 80 ? 'text-yellow-400' : 'text-red-400'}`}>
+              <p
+                className={`text-3xl font-bold ${engineLoad < 50 ? 'text-green-400' : engineLoad < 80 ? 'text-yellow-400' : 'text-red-400'}`}
+              >
                 {engineLoad}%
               </p>
-              <Badge variant={engineLoad < 50 ? 'success' : engineLoad < 80 ? 'warning' : 'error'} size="sm" className="mt-1">
+              <Badge
+                variant={
+                  engineLoad < 50 ? 'success' : engineLoad < 80 ? 'warning' : 'error'
+                }
+                size="sm"
+                className="mt-1"
+              >
                 {engineLoad < 50 ? 'Nominal' : engineLoad < 80 ? 'Élevé' : 'Critique'}
               </Badge>
             </Card>

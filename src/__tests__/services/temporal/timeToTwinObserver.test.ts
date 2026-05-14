@@ -241,12 +241,12 @@ describe('TimeToTwinObserver — Phase 7 hardening', () => {
 
       // simulate hidden
       state = 'hidden';
-      listeners.forEach((cb) => cb());
+      listeners.forEach(cb => cb());
       expect(observer.getStatus().paused).toBe(true);
 
       // simulate visible
       state = 'visible';
-      listeners.forEach((cb) => cb());
+      listeners.forEach(cb => cb());
       expect(observer.getStatus().paused).toBe(false);
 
       observer.stop();

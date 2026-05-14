@@ -35,7 +35,9 @@ vi.mock('@/hooks/useTimeAgenda', () => ({
 }));
 
 vi.mock('@/utils/invoke', () => ({
-  safeInvokeCanonical: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
+  safeInvokeCanonical: vi
+    .fn()
+    .mockResolvedValue({ ok: false, content: null, error: null }),
   safeInvoke: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
 }));
 
@@ -48,7 +50,9 @@ function renderPage() {
 }
 
 describe('AgendaPage', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders the page container', () => {
     renderPage();

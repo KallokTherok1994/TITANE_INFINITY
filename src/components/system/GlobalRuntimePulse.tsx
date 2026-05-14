@@ -46,7 +46,8 @@ const STATUS_META: Record<
   LIVE: {
     icon: '●',
     label: 'LIVE',
-    colorClass: 'bg-emerald-900/80 text-emerald-200 border-emerald-500/60 shadow-emerald-500/20',
+    colorClass:
+      'bg-emerald-900/80 text-emerald-200 border-emerald-500/60 shadow-emerald-500/20',
     pulse: false,
   },
   PARTIAL: {
@@ -92,7 +93,7 @@ export function GlobalRuntimePulse(): React.ReactElement {
       const result = await safeInvokeCanonical<unknown>(
         'quick_health_check',
         {},
-        PROBE_TIMEOUT_MS,
+        PROBE_TIMEOUT_MS
       );
       const dt = Math.round(performance.now() - t0);
 
@@ -137,9 +138,7 @@ export function GlobalRuntimePulse(): React.ReactElement {
 
   const meta = STATUS_META[state.status];
   const version =
-    typeof __APP_VERSION__ !== 'undefined' && __APP_VERSION__
-      ? __APP_VERSION__
-      : 'dev';
+    typeof __APP_VERSION__ !== 'undefined' && __APP_VERSION__ ? __APP_VERSION__ : 'dev';
 
   return (
     <div

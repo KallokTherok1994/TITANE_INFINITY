@@ -14,9 +14,13 @@ function formatExplainabilityClock(ts: number): string {
 }
 
 export const ExplainabilityDashboard: React.FC = () => {
-  const { data: status, lastUpdate, refresh } = useAgentLiveSnapshot(
+  const {
+    data: status,
+    lastUpdate,
+    refresh,
+  } = useAgentLiveSnapshot(
     getExplainabilityAgentStatus,
-    getExplainabilityDashboardRefreshIntervalMs(),
+    getExplainabilityDashboardRefreshIntervalMs()
   );
   const detailSections = status.detailSections ?? [];
 

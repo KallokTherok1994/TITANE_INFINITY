@@ -42,7 +42,9 @@ export const Nexus = () => {
 
   return (
     <div className="module-page" data-testid="page-nexus">
-      <SurfaceTruthBadge variant={!loading && graph != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
+      <SurfaceTruthBadge
+        variant={!loading && graph != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'}
+      />
       <div className="module-page__header">
         <h1 className="module-page__title">
           <span className="module-page__icon">🧠</span>

@@ -17,13 +17,21 @@ vi.mock('@/stores/useHTFStore', () => {
   return { useHTFStore: fn };
 });
 
-vi.mock('@/components/htf/HTFDashboard', () => ({ HTFDashboard: () => <div data-testid="htf-dashboard-mock" /> }));
-vi.mock('@/components/htf/HTFSubmissionWizard', () => ({ HTFSubmissionWizard: () => <div /> }));
+vi.mock('@/components/htf/HTFDashboard', () => ({
+  HTFDashboard: () => <div data-testid="htf-dashboard-mock" />,
+}));
+vi.mock('@/components/htf/HTFSubmissionWizard', () => ({
+  HTFSubmissionWizard: () => <div />,
+}));
 vi.mock('@/components/htf/HTFClientPanel', () => ({ HTFClientPanel: () => <div /> }));
-vi.mock('@/components/htf/HTFEstimationResult', () => ({ HTFEstimationResult: () => <div /> }));
+vi.mock('@/components/htf/HTFEstimationResult', () => ({
+  HTFEstimationResult: () => <div />,
+}));
 
 vi.mock('@/utils/invoke', () => ({
-  safeInvokeCanonical: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
+  safeInvokeCanonical: vi
+    .fn()
+    .mockResolvedValue({ ok: false, content: null, error: null }),
   safeInvoke: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
 }));
 
@@ -40,7 +48,9 @@ function renderPage() {
 }
 
 describe('HTFPage', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders the page container', () => {
     renderPage();

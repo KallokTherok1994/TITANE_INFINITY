@@ -293,7 +293,10 @@ export const TitanePage: React.FC = () => {
           className={`titane-page-shell${isConversationTab ? ' titane-page-shell--conversation' : ''}`}
         >
           {/* Runtime Truth Badge — ACTIVE — v97 */}
-          <SurfaceTruthBadge variant={memoryStats != null ? 'LIVE' : 'PARTIAL'} className="mb-2" />
+          <SurfaceTruthBadge
+            variant={memoryStats != null ? 'LIVE' : 'PARTIAL'}
+            className="mb-2"
+          />
           {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
           <div
             className={`titane-page-header${isConversationTab ? ' titane-page-header--conversation' : ''}`}

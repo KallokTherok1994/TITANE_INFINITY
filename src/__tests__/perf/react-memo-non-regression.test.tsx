@@ -29,7 +29,7 @@ let renderCount = 0;
 
 vi.mock('@/services/explainability/index', async () => {
   const actual = await vi.importActual<typeof import('@/services/explainability/index')>(
-    '@/services/explainability/index',
+    '@/services/explainability/index'
   );
   return {
     ...actual,

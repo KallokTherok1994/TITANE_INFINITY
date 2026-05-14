@@ -27,7 +27,9 @@ describe('IdentityMemoryEvolutionCenter (Phase 7.B — DYNAMIC badge)', () => {
   it('renders the module container', () => {
     mockInvoke.mockResolvedValue({ ok: false, content: null, error: null });
     render(<IdentityMemoryEvolutionCenter />);
-    expect(screen.getByTestId('module-identity-memory-evolution-center')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('module-identity-memory-evolution-center')
+    ).toBeInTheDocument();
   });
 
   it('shows LIVE badge when memory_get_state returns initialized=true', async () => {

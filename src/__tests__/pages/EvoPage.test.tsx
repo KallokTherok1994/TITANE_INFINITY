@@ -16,7 +16,9 @@ vi.mock('@/lib/tauriClient', () => ({
 }));
 
 vi.mock('@/utils/invoke', () => ({
-  safeInvokeCanonical: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
+  safeInvokeCanonical: vi
+    .fn()
+    .mockResolvedValue({ ok: false, content: null, error: null }),
   safeInvoke: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
 }));
 
@@ -50,7 +52,9 @@ function renderPage() {
 }
 
 describe('EvoPage', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('shows SurfaceTruthBadge with PARTIAL variant when no memory stats', () => {
     renderPage();

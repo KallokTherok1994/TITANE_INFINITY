@@ -18,7 +18,7 @@ export interface AgentLiveSnapshot<T> {
 
 export function useAgentLiveSnapshot<T>(
   snapshotFn: () => T,
-  intervalMs: number,
+  intervalMs: number
 ): AgentLiveSnapshot<T> {
   const [data, setData] = useState<T>(() => snapshotFn());
   const [lastUpdate, setLastUpdate] = useState<number>(() => Date.now());
@@ -36,10 +36,13 @@ export function useAgentLiveSnapshot<T>(
     if (typeof window === 'undefined') {
       return;
     }
-    const id = window.setInterval(() => {
-      setData(fnRef.current());
-      setLastUpdate(Date.now());
-    }, Math.max(1000, intervalMs));
+    const id = window.setInterval(
+      () => {
+        setData(fnRef.current());
+        setLastUpdate(Date.now());
+      },
+      Math.max(1000, intervalMs)
+    );
     return () => {
       window.clearInterval(id);
     };

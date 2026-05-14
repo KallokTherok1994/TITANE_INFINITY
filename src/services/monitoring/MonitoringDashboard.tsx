@@ -14,9 +14,13 @@ function formatMonitoringClock(ts: number): string {
 }
 
 const MonitoringDashboard: React.FC = () => {
-  const { data: status, lastUpdate, refresh } = useAgentLiveSnapshot(
+  const {
+    data: status,
+    lastUpdate,
+    refresh,
+  } = useAgentLiveSnapshot(
     getMonitoringAgentStatus,
-    MONITORING_DASHBOARD_REFRESH_INTERVAL_MS,
+    MONITORING_DASHBOARD_REFRESH_INTERVAL_MS
   );
   const [health, setHealth] = useState<ProjectHealthMetrics | null>(null);
 

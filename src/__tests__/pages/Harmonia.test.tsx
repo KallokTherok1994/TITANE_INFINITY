@@ -14,7 +14,9 @@ vi.mock('@/hooks/useEngineSubscription', () => ({
 }));
 
 vi.mock('@/utils/invoke', () => ({
-  safeInvokeCanonical: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
+  safeInvokeCanonical: vi
+    .fn()
+    .mockResolvedValue({ ok: false, content: null, error: null }),
   safeInvoke: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
 }));
 
@@ -27,7 +29,9 @@ function renderPage() {
 }
 
 describe('Harmonia', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders the page container', () => {
     renderPage();

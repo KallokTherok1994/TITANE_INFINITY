@@ -785,12 +785,15 @@ export const SingularityDashboard = memo(function SingularityDashboard({
     } catch {
       // Fallback with stable values (no Math.random)
       setMetricsLive(false);
-      setSystemMetrics(prev => prev ?? {
-        cpu_usage_percent: 0,
-        memory_used_mb: 0,
-        memory_total_mb: 16384,
-        uptime_seconds: Math.floor(Date.now() / 1000) % 86400,
-      });
+      setSystemMetrics(
+        prev =>
+          prev ?? {
+            cpu_usage_percent: 0,
+            memory_used_mb: 0,
+            memory_total_mb: 16384,
+            uptime_seconds: Math.floor(Date.now() / 1000) % 86400,
+          }
+      );
       setLastUpdate(Date.now());
     }
   }, []);
@@ -944,7 +947,11 @@ export const SingularityDashboard = memo(function SingularityDashboard({
     >
       {/* Header */}
       <div style={{ marginBottom: '12px' }}>
-        <SurfaceTruthBadge variant={metricsLive ? 'LIVE' : singularity.isInitialized ? 'PARTIAL' : 'DEGRADED'} />
+        <SurfaceTruthBadge
+          variant={
+            metricsLive ? 'LIVE' : singularity.isInitialized ? 'PARTIAL' : 'DEGRADED'
+          }
+        />
       </div>
       <div
         style={{

@@ -21,9 +21,25 @@ import { SurfaceTruthBadge } from '../components/system/SurfaceTruthBadge';
 import { safeInvokeCanonical } from '@/utils/invoke';
 
 interface SingularityLiveState {
-  nexus: { health: string; coordination_count: number; active_connections: number; initialized: boolean };
-  harmonia: { health: string; harmony_index: number; balance_score: number; initialized: boolean };
-  sentinel: { health: string; alert_count: number; active_monitors: number; protection_level: number; initialized: boolean };
+  nexus: {
+    health: string;
+    coordination_count: number;
+    active_connections: number;
+    initialized: boolean;
+  };
+  harmonia: {
+    health: string;
+    harmony_index: number;
+    balance_score: number;
+    initialized: boolean;
+  };
+  sentinel: {
+    health: string;
+    alert_count: number;
+    active_monitors: number;
+    protection_level: number;
+    initialized: boolean;
+  };
   cognition: { load: number; active_thoughts: number; depth: number };
   timeline_events: number;
   last_sync_ms: number;
@@ -69,8 +85,19 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
     >
       {/* Header */}
       <div className="header mb-8">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
-          <h1 className="text-4xl font-bold bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent" style={{ margin: 0 }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            flexWrap: 'wrap',
+            marginBottom: '0.5rem',
+          }}
+        >
+          <h1
+            className="text-4xl font-bold bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent"
+            style={{ margin: 0 }}
+          >
             🔥 Orchestration & Intelligence Center
           </h1>
           <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'DEGRADED'} />
@@ -127,13 +154,21 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
 // SECTION 1: Overview du système d'orchestration
 // ═══════════════════════════════════════════════════════════════════════════
 
-const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({ liveState }) => {
+const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({
+  liveState,
+}) => {
   const cogLoad = liveState ? `${Math.round(liveState.cognition.load * 100)}%` : '—';
   const nexusHealth = liveState?.nexus.health ?? '—';
-  const sysStatus = liveState ? (liveState.sentinel.alert_count === 0 ? 'Stable' : 'Alerte') : '—';
+  const sysStatus = liveState
+    ? liveState.sentinel.alert_count === 0
+      ? 'Stable'
+      : 'Alerte'
+    : '—';
   const activeConnections = liveState ? String(liveState.nexus.active_connections) : '—';
   const timelineEvents = liveState ? String(liveState.timeline_events) : '—';
-  const lastSync = liveState ? `${Math.round((Date.now() - liveState.last_sync_ms) / 1000)}s ago` : '—';
+  const lastSync = liveState
+    ? `${Math.round((Date.now() - liveState.last_sync_ms) / 1000)}s ago`
+    : '—';
 
   return (
     <div className="space-y-6">
@@ -162,7 +197,15 @@ const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({
             {[
               { name: 'IdentityEngine', status: 'Running', priority: 100 },
               { name: 'MemoryEngine', status: 'Running', priority: 95 },
-              { name: 'CognitiveEngine', status: liveState ? (liveState.cognition.load > 0.9 ? 'Overloaded' : 'Running') : 'Running', priority: 90 },
+              {
+                name: 'CognitiveEngine',
+                status: liveState
+                  ? liveState.cognition.load > 0.9
+                    ? 'Overloaded'
+                    : 'Running'
+                  : 'Running',
+                priority: 90,
+              },
               { name: 'ChatEngine', status: 'Running', priority: 85 },
             ].map(engine => (
               <div
@@ -171,7 +214,9 @@ const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({
               >
                 <span className="font-semibold">{engine.name}</span>
                 <div className="flex items-center gap-2">
-                  <TBadge variant={engine.status === 'Running' ? 'success' : 'warning'}>{engine.status}</TBadge>
+                  <TBadge variant={engine.status === 'Running' ? 'success' : 'warning'}>
+                    {engine.status}
+                  </TBadge>
                   <span className="text-sm text-gray-400">P{engine.priority}</span>
                 </div>
               </div>

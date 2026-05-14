@@ -61,7 +61,12 @@ describe('temporalIntelligenceService — TIME-IPC v3 bridge', () => {
       significance: 0.42,
     });
     expect(invokeMock).toHaveBeenCalledWith('temporal_memory_record', {
-      payload: { event_type: 'user_msg', context: 'chat', data: { a: 1 }, significance: 0.42 },
+      payload: {
+        event_type: 'user_msg',
+        context: 'chat',
+        data: { a: 1 },
+        significance: 0.42,
+      },
     });
     expect(id).toBe('mem-id-1');
   });
@@ -101,7 +106,10 @@ describe('temporalIntelligenceService — TIME-IPC v3 bridge', () => {
       enabled: true,
       priority: 5,
     });
-    expect(invokeMock).toHaveBeenCalledWith('temporal_routine_upsert', expect.any(Object));
+    expect(invokeMock).toHaveBeenCalledWith(
+      'temporal_routine_upsert',
+      expect.any(Object)
+    );
     expect(id).toBe('routine-1');
   });
 

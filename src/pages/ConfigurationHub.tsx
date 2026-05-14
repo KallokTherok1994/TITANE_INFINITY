@@ -1132,7 +1132,9 @@ export const ConfigurationHub: React.FC = () => {
 
   return (
     <div className="module-page" data-testid="page-configuration-hub">
-      <SurfaceTruthBadge variant={config != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'} />
+      <SurfaceTruthBadge
+        variant={config != null ? 'LIVE' : !loading ? 'PARTIAL' : 'DEGRADED'}
+      />
       {/* Header */}
       <div className="module-page__header">
         <div>

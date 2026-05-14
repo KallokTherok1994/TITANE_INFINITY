@@ -15,7 +15,10 @@ vi.mock('@/utils/invoke', () => ({
 }));
 
 vi.mock('framer-motion', () => ({
-  motion: new Proxy({}, { get: () => (props: any) => <div {...props}>{props.children}</div> }),
+  motion: new Proxy(
+    {},
+    { get: () => (props: any) => <div {...props}>{props.children}</div> }
+  ),
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 

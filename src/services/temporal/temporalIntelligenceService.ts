@@ -67,8 +67,12 @@ export async function recordMemory(payload: MemoryRecordPayload): Promise<string
   return unwrap(r, 'temporal_memory_record');
 }
 
-export async function recallMemory(payload: MemoryRecallPayload = {}): Promise<TemporalTraceDTO[]> {
-  const r = await safeInvokeCanonical<TemporalTraceDTO[]>('temporal_memory_recall', { payload });
+export async function recallMemory(
+  payload: MemoryRecallPayload = {}
+): Promise<TemporalTraceDTO[]> {
+  const r = await safeInvokeCanonical<TemporalTraceDTO[]>('temporal_memory_recall', {
+    payload,
+  });
   return unwrap(r, 'temporal_memory_recall');
 }
 
@@ -102,7 +106,9 @@ export async function checkRoutineTriggers(): Promise<RoutineDTO[]> {
 // ── Planner ─────────────────────────────────────────────────────────
 
 export async function getPlan(horizon?: PlanningHorizonKey): Promise<TaskDTO[]> {
-  const r = await safeInvokeCanonical<TaskDTO[]>('temporal_planner_get_plan', { horizon });
+  const r = await safeInvokeCanonical<TaskDTO[]>('temporal_planner_get_plan', {
+    horizon,
+  });
   return unwrap(r, 'temporal_planner_get_plan');
 }
 
@@ -124,7 +130,9 @@ export async function plannerStats(): Promise<PlannerStatsDTO> {
 // ── Anticipation & alignement ──────────────────────────────────────
 
 export async function predict(horizon?: PlanningHorizonKey): Promise<PredictionDTO[]> {
-  const r = await safeInvokeCanonical<PredictionDTO[]>('temporal_anticipator_predict', { horizon });
+  const r = await safeInvokeCanonical<PredictionDTO[]>('temporal_anticipator_predict', {
+    horizon,
+  });
   return unwrap(r, 'temporal_anticipator_predict');
 }
 
@@ -134,7 +142,9 @@ export async function alignmentScore(): Promise<AlignmentScoreDTO> {
 }
 
 export async function upsertGoal(payload: GoalUpsertPayload): Promise<string> {
-  const r = await safeInvokeCanonical<string>('temporal_alignment_goal_upsert', { payload });
+  const r = await safeInvokeCanonical<string>('temporal_alignment_goal_upsert', {
+    payload,
+  });
   return unwrap(r, 'temporal_alignment_goal_upsert');
 }
 

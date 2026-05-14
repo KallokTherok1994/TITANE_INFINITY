@@ -433,7 +433,11 @@ export const Stats: React.FC = () => {
     <div className="module-page" data-testid="page-stats">
       <SurfaceTruthBadge
         variant={
-          !cognitiveLoading && cognitiveMetrics != null ? 'LIVE' : !isLoading ? 'PARTIAL' : 'DEGRADED'
+          !cognitiveLoading && cognitiveMetrics != null
+            ? 'LIVE'
+            : !isLoading
+              ? 'PARTIAL'
+              : 'DEGRADED'
         }
       />
       {/* ═══ HEADER ═══ */}

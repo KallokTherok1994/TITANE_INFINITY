@@ -86,7 +86,8 @@ const OrchestratorDashboard: React.FC = () => {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-          })}{' '}- refresh {Math.round(getOrchestratorDashboardRefreshIntervalMs() / 1000)}s
+          })}{' '}
+          - refresh {Math.round(getOrchestratorDashboardRefreshIntervalMs() / 1000)}s
         </span>
         <button
           type="button"

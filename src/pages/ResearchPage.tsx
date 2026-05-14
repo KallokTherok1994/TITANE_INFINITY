@@ -295,12 +295,17 @@ export const ResearchPage: React.FC = () => {
   useEffect(() => {
     let cancelled = false;
     const probe = async () => {
-      const r = await safeInvokeCanonical<{ harmonia?: unknown }>('engine_get_singularity_state');
+      const r = await safeInvokeCanonical<{ harmonia?: unknown }>(
+        'engine_get_singularity_state'
+      );
       if (!cancelled) setLiveConnected(r.ok && r.content?.harmonia != null);
     };
     void probe();
     const id = setInterval(() => void probe(), 30_000);
-    return () => { cancelled = true; clearInterval(id); };
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, []);
 
   useEffect(() => {
@@ -413,7 +418,10 @@ export const ResearchPage: React.FC = () => {
           </p>
         </header>
         {/* Runtime Truth Badge — ACTIVE — v97 */}
-        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} className="mb-4" />
+        <SurfaceTruthBadge
+          variant={liveConnected ? 'LIVE' : 'PARTIAL'}
+          className="mb-4"
+        />
 
         {/* ── QUERY FORM ── */}
         <form className="rp-form" onSubmit={handleSubmit} data-testid="research-form">

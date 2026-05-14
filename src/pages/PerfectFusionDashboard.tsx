@@ -160,8 +160,13 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
     let cancelled = false;
     const probe = async () => {
       try {
-        type SingularityProbe = { harmonia: { balance_score: number; initialized: boolean }; cognition: { load: number } };
-        const _r = await safeInvokeCanonical<SingularityProbe>('engine_get_singularity_state');
+        type SingularityProbe = {
+          harmonia: { balance_score: number; initialized: boolean };
+          cognition: { load: number };
+        };
+        const _r = await safeInvokeCanonical<SingularityProbe>(
+          'engine_get_singularity_state'
+        );
         if (!_r.ok || !_r.content?.harmonia) throw new Error('IPC unavailable');
         const s = _r.content;
         if (cancelled) return;
@@ -170,7 +175,10 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
         setEngines(prev =>
           prev.map(e => ({
             ...e,
-            syncScore: Math.max(0.5, Math.min(1, s.harmonia.balance_score / 100 + (e.syncScore - 0.9))),
+            syncScore: Math.max(
+              0.5,
+              Math.min(1, s.harmonia.balance_score / 100 + (e.syncScore - 0.9))
+            ),
             latencyMs: Math.round(5 + s.cognition.load * 20),
             active: s.harmonia.initialized,
           }))
@@ -181,7 +189,10 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
     };
     probe();
     const id = setInterval(probe, 15_000);
-    return () => { cancelled = true; clearInterval(id); };
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, []);
 
   const avgSync = engines.reduce((s, e) => s + e.syncScore, 0) / engines.length;
@@ -205,7 +216,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6" data-testid="page-fusion">
       <div className="max-w-7xl mx-auto space-y-6">
-        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : isInitialized ? 'PARTIAL' : 'DEGRADED'} />
+        <SurfaceTruthBadge
+          variant={liveConnected ? 'LIVE' : isInitialized ? 'PARTIAL' : 'DEGRADED'}
+        />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

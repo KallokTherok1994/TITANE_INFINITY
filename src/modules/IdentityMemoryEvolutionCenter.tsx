@@ -59,7 +59,10 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
       : 'PARTIAL';
 
   return (
-    <div data-testid="module-identity-memory-evolution-center" className="identity-memory-evolution-center p-6 space-y-6">
+    <div
+      data-testid="module-identity-memory-evolution-center"
+      className="identity-memory-evolution-center p-6 space-y-6"
+    >
       <SurfaceTruthBadge variant={badgeVariant} />
       {/* Header */}
       <div className="header mb-8">

@@ -163,7 +163,10 @@ export const EvolutionMonitor: React.FC = memo(() => {
     };
     void probe();
     const id = setInterval(() => void probe(), 30_000);
-    return () => { cancelled = true; clearInterval(id); };
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, []);
 
   const totalPerformanceDelta = TIMELINE.reduce(
@@ -189,7 +192,10 @@ export const EvolutionMonitor: React.FC = memo(() => {
     >
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Runtime Truth Badge — ACTIVE — v97 */}
-        <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} className="mb-2" />
+        <SurfaceTruthBadge
+          variant={liveConnected ? 'LIVE' : 'PARTIAL'}
+          className="mb-2"
+        />
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
