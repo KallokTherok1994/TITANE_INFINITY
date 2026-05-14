@@ -1,0 +1,15 @@
+# TITANE∞ v35.0.0 — Release Artifacts Checksums
+# Generated: 2026-05-14 (Sprint B.2 — Rule 14 BUILD ALL)
+# Scope: AppImage + DEB + RPM (Linux x86_64). Android APK / Windows MSI hors scope ce build.
+
+## SHA256
+
+b1a430c2e6420ec0cfcfc2532d33be5857149b848e8dfbd11940b8f5fbc59de4  src-tauri/target/release/bundle/deb/titane-infinity_35.0.0_amd64.deb
+9a49dd4df4737c710019e969ab533e2dd5f7b4399015e1fcdd5aca17774110cc  src-tauri/target/release/bundle/rpm/titane-infinity-35.0.0-1.x86_64.rpm
+2c6941682e86e64eb84dce33466fadeb6f881e0a3063e1c5c32bee4422611e65  src-tauri/target/release/bundle/appimage/titane-infinity_35.0.0_amd64.AppImage
+
+## Sizes
+
+25M	src-tauri/target/release/bundle/deb/titane-infinity_35.0.0_amd64.deb
+25M	src-tauri/target/release/bundle/rpm/titane-infinity-35.0.0-1.x86_64.rpm
+95M	src-tauri/target/release/bundle/appimage/titane-infinity_35.0.0_amd64.AppImage

@@ -1,3 +1,28 @@
+## v35.0.0 — 2026-05-14 — BUILD ALL (Rule 14) — TanStack Query offline-first persistence
+
+- **Mode** : DURABLE | **Bump Rule 13** : 34.5.0 → 35.0.0 (minor) | **BUILD ALL** Linux (AppImage + DEB + RPM)
+- **Sprint B.1 surface** : `src/lib/queryPersister.ts` (NEW, 100 lignes) — `installQueryPersister(queryClient)` + allow-list `[system|engines|providers|conversation|chat]` + `buster=titane-${__APP_VERSION__}` + maxAge 24h + no-op gracieux sans `window.localStorage`. Branchement additif `src/lib/queryClient.ts` (5 lignes, defaults inchangés).
+- **Dépendances additives** : `@tanstack/query-sync-storage-persister@5.100.10`, `@tanstack/react-query-persist-client@5.100.10`.
+- **Tests** : 5/5 PASS sur `src/__tests__/lib/queryPersister.test.ts` ; scope global v35 (queryPersister + chat hooks + pilots/orphan/coverage) = **27/27 PASS**. `tsc --noEmit` exit=0. `detect_recurrence` PASS entries=1927. `verify_instructions` PASS=50 / FAIL=2 tolérés préexistants (G_VSCODE_AGENT_WORKFLOW + G_OLLAMA_BOUNDARY, non causés par v35).
+- **Proof pack Sprint B.1** : `proof_packs/2026-05-14_v35_0_0_seal/REPORT.md` (VERDICT PASS, commit `0ae3d4259`).
+- **Bundles produits** (Tauri release v35.0.0, cargo 11m 49s) :
+  - `src-tauri/target/release/bundle/deb/titane-infinity_35.0.0_amd64.deb` (25M)
+    sha256 `b1a430c2e6420ec0cfcfc2532d33be5857149b848e8dfbd11940b8f5fbc59de4`
+  - `src-tauri/target/release/bundle/rpm/titane-infinity-35.0.0-1.x86_64.rpm` (25M)
+    sha256 `9a49dd4df4737c710019e969ab533e2dd5f7b4399015e1fcdd5aca17774110cc`
+  - `src-tauri/target/release/bundle/appimage/titane-infinity_35.0.0_amd64.AppImage` (95M)
+    sha256 `2c6941682e86e64eb84dce33466fadeb6f881e0a3063e1c5c32bee4422611e65`
+- **Checksums fichier canonique** : `RELEASE_ARTIFACTS_CHECKSUMS_35.0.0.txt`.
+- **Post-build desktop** : `scripts/post-build.sh` exécuté ; `Exec=/usr/bin/titane-infinity` et icône alignés ; sync système BLOCKED_SUDO_REQUIRED (non interactif) — install manuel `sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_35.0.0_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` à la demande utilisateur.
+- **Scope hors build** : Android APK (toolchain non vérifié ce run), Windows MSI (cross-compile non supporté ce poste).
+- **AutoHeal** : `AH-2026-05-14-QUERY-PERSISTER-OFFLINE-CACHE-v35_0_0` + entry build `AH-2026-05-14-BUILD-ALL-v35_0_0`.
+- **Rollback** :
+  - Partiel deps : `pnpm remove @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client`
+  - Code : `git revert 0ae3d4259 a798d61be`
+  - Bundle précédent : `sudo dpkg -i deployment/latest/titane-infinity_34.0.12_amd64.deb`
+
+---
+
 ## v34.1.0 — 2026-05-14 — SURCHARGÉ — Hierarchical transport + Gateway whitelist + WebView cache
 
 - **Bump** : 34.0.13 → 34.1.0 (`node scripts/bump-version.mjs && node scripts/sync-versions.mjs`).
