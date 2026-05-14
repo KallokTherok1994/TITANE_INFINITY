@@ -400,7 +400,7 @@
 
 .total-dev-unlock-hint {
   font-size: 11px;
-  color: #4a5568;
+  color: #a9b6c9;
   margin-top: 12px;
 }
 
@@ -430,6 +430,11 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.total-dev-chat-messages:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 2px;
 }
 
 .total-dev-chat-msg {
@@ -463,14 +468,14 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #6e7f96;
+  color: #91a7c5;
 }
 
 .total-dev-chat-model {
   font-size: 10px;
-  color: #2d5fa8;
+  color: #8fbbff;
   padding: 1px 6px;
-  background: #0d1a2e;
+  background: #13263d;
   border-radius: 3px;
 }
 
@@ -809,7 +814,7 @@
   background: #080a10;
   border-top: 1px solid #1e2a3a;
   font-size: 10px;
-  color: #3a5070;
+  color: #9fb2ca;
   flex-shrink: 0;
 }
 

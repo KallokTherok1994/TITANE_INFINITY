@@ -432,7 +432,12 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
         <span>💬 CHAT DEV</span>
         <span className="total-dev-provider-badge">QWEN Dev · ollama</span>
       </div>
-      <div className="total-dev-chat-messages">
+      <div
+        className="total-dev-chat-messages"
+        data-testid="total-dev-chat-messages"
+        tabIndex={0}
+        aria-label="Historique des messages TOTAL_DEV"
+      >
         {messages.map(msg => (
           <div
             key={msg.id}

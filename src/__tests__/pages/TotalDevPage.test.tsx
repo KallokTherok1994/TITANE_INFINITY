@@ -44,6 +44,14 @@ describe('TotalDevPage', () => {
     expect(await screen.findByTestId('lock-badge')).toHaveTextContent('LOCKED');
     expect(screen.getByPlaceholderText(/token unlock/i)).toBeVisible();
     expect(screen.getAllByText(/QWEN.*(Dev|Coder)|qwen3\.5/i).length).toBeGreaterThan(0);
+    expect(screen.getByTestId('total-dev-chat-messages')).toHaveAttribute(
+      'aria-label',
+      'Historique des messages TOTAL_DEV'
+    );
+    expect(screen.getByTestId('total-dev-chat-messages')).toHaveAttribute(
+      'tabindex',
+      '0'
+    );
     expect(secureInvokeMock).toHaveBeenNthCalledWith(
       1,
       TAURI_COMMANDS.TOTAL_DEV_SESSION_STATUS,

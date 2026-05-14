@@ -49,6 +49,17 @@ La voie canonique reste inchangee: `data/knowledge_base/default/* -> knowledge_b
 
 Le delta est minimal: un seul texte secondaire de `/experience` monte en contraste pour fermer une violation Axe `color-contrast`, puis la route est intégrée au gate WCAG canonique afin que le zéro ne dépende plus d un probe manuel. La preuve courante publie `experience=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `10` à `11` routes critiques auditées.
 
+## 2026-05-14 — TotalDev focus/contrast hardening + WCAG inventory 12/12 (delta cartographie)
+
+| Couche | Surface modifiée | Fichier |
+|---|---|---|
+| Ring 4 | Historique chat TOTAL_DEV focusable + libellé clavier stable | src/pages/TotalDevPage.tsx |
+| Ring 4 | Tokens contraste relevés sur hint, métadonnées chat et footer | src/pages/TotalDevPage.css |
+| Tests | Garde unitaire scroll-region focusable | src/__tests__/pages/TotalDevPage.test.tsx |
+| E2E | Gate Axe canonique étendu à `/total-dev` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta ferme deux violations sérieuses sur `/total-dev` sans modifier la logique gouvernée de la page: quelques couleurs secondaires sont remontées au-dessus du seuil Axe et la région scrollable chat devient focusable au clavier. La preuve courante publie `total-dev=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `11` à `12` routes critiques auditées.
+
 
 
 | Couche | Surface ajoutée | Fichier |

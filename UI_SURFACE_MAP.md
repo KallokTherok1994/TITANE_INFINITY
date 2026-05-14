@@ -246,6 +246,14 @@
 - Garde locale: [src/pages/__tests__/Experience.test.tsx](src/pages/__tests__/Experience.test.tsx) verrouille le texte runtime et la couleur attendue.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 11 routes critiques avec ajout de `experience`, et publie `experience=0` puis `aggregate blocking=0 baseline=30`.
 
+# [2026-05-14] TotalDev contrast cluster + WCAG gate expansion
+
+- Surface canonique: `/total-dev`.
+- Vérité runtime: la route visible gardait un cluster local de 2 violations Axe, limité à quelques textes secondaires trop faibles (`unlock-hint`, métadonnées chat, footer) et à la région scrollable `total-dev-chat-messages` non focusable.
+- Point de contrôle canonique: [src/pages/TotalDevPage.tsx](src/pages/TotalDevPage.tsx) rend désormais l historique chat focusable et nommé via `data-testid="total-dev-chat-messages"`, `tabIndex=0` et `aria-label`, tandis que [src/pages/TotalDevPage.css](src/pages/TotalDevPage.css) relève uniquement les couleurs des tokens contrastés concernés.
+- Garde locale: [src/__tests__/pages/TotalDevPage.test.tsx](src/__tests__/pages/TotalDevPage.test.tsx) verrouille l accessibilité clavier du conteneur scrollable en mode LOCKED.
+- Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 12 routes critiques avec ajout de `total-dev`, et publie `total-dev=0` puis `aggregate blocking=0 baseline=30`.
+
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
 - Surface canonique de gestion de fenêtre: [src/services/ai/contextManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/contextManager.ts) reconnaît maintenant explicitement `DEFAULT_OLLAMA_MODEL` et la famille `gemma2`, ce qui réaligne les calculs d overflow et la surface utilisateur de contexte sur la même vérité locale.
 - Preuves associées: [src/services/chat/**tests**/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/**tests**/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).

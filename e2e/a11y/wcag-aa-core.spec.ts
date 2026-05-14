@@ -1,7 +1,7 @@
 /**
  * A11y WCAG 2.1 AA — UI 100/100 plan phase B
  *
- * Runs @axe-core/playwright on 11 critical routes and writes a per-route
+ * Runs @axe-core/playwright on 12 critical routes and writes a per-route
  * JSON report. The aggregate test enforces a regression baseline: total
  * serious + critical violations across all 10 routes must not exceed
  * AGGREGATE_BLOCKING_BASELINE. New a11y debt thus fails the gate, while
@@ -23,8 +23,8 @@ interface A11ySurface {
   url: string;
 }
 
-// 11 critical routes — covers chat, experience, admin, dev, time,
-// monitoring, dashboard, memory, governance, orchestration, research.
+// 12 critical routes — covers chat, experience, admin, dev, time,
+// monitoring, dashboard, total-dev, memory, governance, orchestration, research.
 const SURFACES: A11ySurface[] = [
   { name: 'titane-conversation', url: '/titane?tab=conversation' },
   { name: 'experience', url: '/experience' },
@@ -33,6 +33,7 @@ const SURFACES: A11ySurface[] = [
   { name: 'time', url: '/time' },
   { name: 'monitoring', url: '/monitoring' },
   { name: 'dashboard', url: '/dashboard' },
+  { name: 'total-dev', url: '/total-dev' },
   { name: 'memory', url: '/memory' },
   { name: 'governance-center', url: '/governance-center' },
   { name: 'orchestration-center', url: '/orchestration-center' },
@@ -44,7 +45,7 @@ const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 
 /**
  * Regression baseline — total blocking violations (critical+serious) summed
- * across all 11 routes. Initial measurement on 2026-05-13: 25 blocking.
+ * across all 12 routes. Initial measurement on 2026-05-13: 25 blocking.
  * Locked at 30 to allow tiny flake margin; phase D will lower it as fixes
  * land. Never increase without an explicit AutoHeal governance entry.
  */
@@ -52,7 +53,7 @@ const AGGREGATE_BLOCKING_BASELINE = 30;
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('v34.0.7 A11y WCAG 2.1 AA (11 critical routes)', () => {
+test.describe('v34.0.7 A11y WCAG 2.1 AA (12 critical routes)', () => {
   for (const surface of SURFACES) {
     test(`a11y ${surface.name}`, async ({ page }) => {
       await page.goto(surface.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
@@ -104,7 +105,7 @@ test.describe('v34.0.7 A11y WCAG 2.1 AA (11 critical routes)', () => {
 });
 
 test('v34.0.7 a11y aggregate baseline regression guard', () => {
-  // Sum blocking violations across all 11 routes; assert <= baseline.
+  // Sum blocking violations across all 12 routes; assert <= baseline.
   let aggregate = 0;
   const breakdown: Record<string, number> = {};
   for (const surface of SURFACES) {
@@ -141,5 +142,5 @@ test('v34.0.7 a11y aggregate baseline regression guard', () => {
 });
 
 test('v34.0.7 a11y inventory invariant', () => {
-  expect(SURFACES.length).toBe(11);
+  expect(SURFACES.length).toBe(12);
 });
