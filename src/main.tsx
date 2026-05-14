@@ -1066,6 +1066,11 @@ const getSingularityPollingIntervalMs = (): number => {
 
 SingularityBridge.initialize()
   .then(() => {
+    if (!SingularityBridge.hasBackendSyncAvailable()) {
+      logger.info('✅ SingularityBridge initialized (browser fallback, no backend transport)');
+      return;
+    }
+
     logger.info('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
     void SingularityBridge.getGlobalCoherence().then(coherence => {

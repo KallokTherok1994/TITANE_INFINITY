@@ -7,6 +7,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { isRemoteGatewayAvailable } from '@/api/remoteTransport';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('SingularityBridge');
@@ -62,6 +63,18 @@ export class SingularityBridge {
   private static lastStateHash = '';
   private static updateCount = 0;
 
+  private static hasBackendTransport(): boolean {
+    return isTauriRuntimeAvailable() || isRemoteGatewayAvailable();
+  }
+
+  static hasBackendSyncAvailable(): boolean {
+    return this.hasBackendTransport();
+  }
+
+  private static getFallbackState(): SingularityState {
+    return this.state ?? createFallbackSingularityState();
+  }
+
   /**
    * Initialiser le bridge (appelé au startup)
    */
@@ -74,6 +87,14 @@ export class SingularityBridge {
     logger.info('Initializing...');
 
     try {
+      if (!this.hasBackendTransport()) {
+        this.state = createFallbackSingularityState();
+        this.syncXPToState();
+        this.initialized = true;
+        logger.info('Browser fallback active — skipping backend sync');
+        return;
+      }
+
       // 1. Sync initial state (Rust → React)
       this.state = await this.getFullState();
 
@@ -293,21 +314,37 @@ export class SingularityBridge {
   // ═══════════════════════════════════════════════════════════════════
 
   static async getFullState(): Promise<SingularityState> {
+    if (!this.hasBackendTransport()) {
+      return this.getFallbackState();
+    }
+
     const state = await safeInvoke<SingularityState>('singularity_get_full_state');
     return getResultOrDefault(state, createFallbackSingularityState());
   }
 
   static async getPhysical(): Promise<PhysicalLayer> {
+    if (!this.hasBackendTransport()) {
+      return this.getFallbackState().physical ?? createFallbackPhysical();
+    }
+
     const result = await safeInvoke<PhysicalLayer>('singularity_get_physical');
     return getResultOrDefault(result, createFallbackPhysical());
   }
 
   static async getCognitive(): Promise<CognitiveLayer> {
+    if (!this.hasBackendTransport()) {
+      return this.getFallbackState().cognitive ?? createFallbackCognitive();
+    }
+
     const result = await safeInvoke<CognitiveLayer>('singularity_get_cognitive');
     return getResultOrDefault(result, createFallbackCognitive());
   }
 
   static async getSymbolic(): Promise<SymbolicLayer> {
+    if (!this.hasBackendTransport()) {
+      return this.getFallbackState().symbolic ?? createFallbackSymbolic();
+    }
+
     const result = await safeInvoke<SymbolicLayer>('singularity_get_symbolic');
     if (result) {
       return result;
@@ -318,6 +355,10 @@ export class SingularityBridge {
   }
 
   static async getAdaptive(): Promise<AdaptiveLayer> {
+    if (!this.hasBackendTransport()) {
+      return this.getFallbackState().adaptive ?? createFallbackAdaptive();
+    }
+
     const result = await safeInvoke<AdaptiveLayer>('singularity_get_adaptive');
     if (result) {
       return result;
@@ -328,6 +369,10 @@ export class SingularityBridge {
   }
 
   static async getMeta(): Promise<MetaLayer> {
+    if (!this.hasBackendTransport()) {
+      return this.getFallbackState().meta ?? createFallbackMeta();
+    }
+
     const result = await safeInvoke<MetaLayer>('singularity_get_meta');
     if (result) {
       return result;
@@ -338,6 +383,10 @@ export class SingularityBridge {
   }
 
   static async getGlobalCoherence(): Promise<number> {
+    if (!this.hasBackendTransport()) {
+      return this.getCachedCoherence();
+    }
+
     const result = await safeInvoke<number>('singularity_get_global_coherence');
     return getResultOrDefault(result, 0.5);
   }
@@ -352,6 +401,10 @@ export class SingularityBridge {
   }
 
   static async isCritical(): Promise<boolean> {
+    if (!this.hasBackendTransport()) {
+      return false;
+    }
+
     return (await safeInvoke<boolean>('singularity_is_critical')) || false;
   }
 
@@ -360,22 +413,52 @@ export class SingularityBridge {
   // ═══════════════════════════════════════════════════════════════════
 
   static async updatePhysical(physical: PhysicalLayer): Promise<void> {
+    if (!this.hasBackendTransport()) {
+      this.state = { ...this.getFallbackState(), physical };
+      this.notifySubscribers();
+      return;
+    }
+
     await safeInvoke('singularity_update_physical', { physical });
   }
 
   static async updateCognitive(cognitive: CognitiveLayer): Promise<void> {
+    if (!this.hasBackendTransport()) {
+      this.state = { ...this.getFallbackState(), cognitive };
+      this.notifySubscribers();
+      return;
+    }
+
     await safeInvoke('singularity_update_cognitive', { cognitive });
   }
 
   static async updateSymbolic(symbolic: SymbolicLayer): Promise<void> {
+    if (!this.hasBackendTransport()) {
+      this.state = { ...this.getFallbackState(), symbolic };
+      this.notifySubscribers();
+      return;
+    }
+
     await safeInvoke('singularity_update_symbolic', { symbolic });
   }
 
   static async updateAdaptive(adaptive: AdaptiveLayer): Promise<void> {
+    if (!this.hasBackendTransport()) {
+      this.state = { ...this.getFallbackState(), adaptive };
+      this.notifySubscribers();
+      return;
+    }
+
     await safeInvoke('singularity_update_adaptive', { adaptive });
   }
 
   static async updateMeta(meta: MetaLayer): Promise<void> {
+    if (!this.hasBackendTransport()) {
+      this.state = { ...this.getFallbackState(), meta };
+      this.notifySubscribers();
+      return;
+    }
+
     await safeInvoke('singularity_update_meta', { meta });
   }
 
