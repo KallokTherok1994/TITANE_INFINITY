@@ -254,6 +254,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_all_files',
   'get_files_by_category',
   'clear_memory',
+  'clear_webview_cache',
   'store_file',
   // Memory OS (init/shutdown/management)
   'memory_init',

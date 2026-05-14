@@ -1,3 +1,23 @@
+## 2026-05-14 — v34.1.0 SURCHARGÉ — Hierarchical transport (Tauri/Remote/Degraded) + Gateway whitelist expansion + WebView cache flush
+
+> Patch bump 34.0.13 → 34.1.0. Architecture "UN SEUL TITANE VIVANT" — un seul code, un seul service, transport négocié à runtime.
+>
+> **Ring 3 (Transport)** — [src/api/tauriClient.ts](src/api/tauriClient.ts) expose `getActiveTransport({force?, remoteUrl?, fetchImpl?})` qui résout dans l'ordre: (1) Tauri direct si `window.__TAURI_INTERNALS__` présent; (2) Remote Gateway HTTP signé si probe `GET ${remoteUrl}/api/health` répond < 2 s (AbortController); (3) `'degraded'` sinon. Cache 30 s. Source URL: `VITE_TITANE_REMOTE_URL` ou `localStorage.titane_remote_url`. Publie l'état sur `useTransportState` (Zustand volatile).
+>
+> **Ring 3 (RemoteTransport)** — [src/api/transports/RemoteTransport.ts](src/api/transports/RemoteTransport.ts) — classe `RemoteTransport` avec `ensureToken()` (JWT 4 h, sessionStorage `titane_remote_jwt_v1`, refresh T-5 min via `POST /api/auth/token`), `invoke<T>(cmd, payload)` `POST /api/invoke` Bearer + parse envelope `{ok, content, error}`. `guardLocalMemoryPersistence()` enveloppe `localStorage.setItem` (try/catch + `Object.defineProperty` fallback) et lève `RemoteMemoryLocalPersistenceError` pour toute clé préfixée `memory_*` afin de garantir l'invariant "mémoire backend-only en mode remote".
+>
+> **Ring 3 (TanStack Query)** — [src/lib/queryClient.ts](src/lib/queryClient.ts) — singleton `QueryClient` (staleTime 30 s, gcTime 5 min, `refetchOnWindowFocus:false`, `retry:1`, mutations `retry:0`). Wrap `<QueryClientProvider>` à la racine dans [src/App.tsx](src/App.tsx) + probe transport initial via `useEffect` `getActiveTransport({force:true})`.
+>
+> **Ring 4 (Surface Truth)** — [src/hooks/useSurfaceTruth.ts](src/hooks/useSurfaceTruth.ts) — `transport` élargi à `ActiveTransport ('tauri' | 'remote' | 'degraded')`, alimenté en live par `useTransportState`. SurfaceTruthBadge affiche désormais l'état transport observable en temps réel.
+>
+> **Ring 1 (Remote Gateway)** — [src-tauri/src/remote_gateway/handlers.rs](src-tauri/src/remote_gateway/handlers.rs) — `ALLOWED_COMMANDS` extrait au niveau module (`pub const`) et étendu à 34 commandes : ajouts `memory_list_entries`, `memory_delete_entry`, `chat_omega_send`, `chat_omega_stream`, `engines_status_snapshot`, `agent_log_analysis_report` (et 6 autres alignements). Test inline `test_allowed_commands_contains_v34_1_0_expansion` PASS.
+>
+> **Ring 1 (WebView cache)** — [src-tauri/src/commands/webview_cache.rs](src-tauri/src/commands/webview_cache.rs) — nouvelle commande `clear_webview_cache` qui purge `~/.cache/com.titane.infinity/{Cache, Code Cache, GPUCache}`. Retourne `WebviewCacheReport{cleared, skipped, errors}`. Enregistrée dans [src-tauri/src/main.rs](src-tauri/src/main.rs) `generate_handler!`, allowlist [src-tauri/capabilities/developer_mode.json](src-tauri/capabilities/developer_mode.json) + [src/lib/security.ts](src/lib/security.ts) `ALLOWED_COMMANDS`. Bouton Admin Config Hub `data-testid="admin-clear-webview-cache"`. 3 cargo tests + 1 contract Vitest PASS.
+>
+> **Tests** : 24/24 Vitest PASS (3 useTransportState + 6 getActiveTransport + 4 RemoteTransport + 1 queryClient + 3 button wiring + 7 préexistants useSurfaceTruth). cargo `--bin titane-infinity` 4 PASS (3 webview_cache + 1 handlers contract). tsc --noEmit clean.
+>
+> **AutoHeal** : `REMOTE-TRANSPORT-HIERARCHICAL-v34_1_0-2026-05-14` (full schema). Rollback : `git revert <commit-sha>` + restauration scripts détaillée.
+
 ## 2026-05-13 — v34.0.9 TIME module v3 Ω — Ring 0 ↔ Ring 4 bridge complet (Phase 1-6)
 
 > Patch bump 34.0.8 → 34.0.9. Pipeline TIME entièrement câblé: Rust `TemporalIntelligenceEngine` (Ring 0) exposé via 18 commandes Tauri Single Door, consommé par Ring 3 (`temporalIntelligenceService` + `useTemporalIntelligence`), Ring 4 (`TimePage` 7 onglets) et bridges runtime (`TimeToTwinBridge` au bootstrap App).

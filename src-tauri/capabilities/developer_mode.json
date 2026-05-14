@@ -17,7 +17,8 @@
       "engines_devmode_create_backup",
       "engines_devmode_restore_backup",
       "engines_devmode_analyze_file",
-      "engines_devmode_changelog"
+      "engines_devmode_changelog",
+      "clear_webview_cache"
     ],
     "deny": []
   }

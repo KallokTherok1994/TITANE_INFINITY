@@ -261,6 +261,7 @@ export const TAURI_COMMANDS = {
   HEALTH_CHECK: 'health_check',
   GET_TRAVEL_STATS: 'get_travel_stats',
   EXPORT_CONFIG: 'export_config',
+  CLEAR_WEBVIEW_CACHE: 'clear_webview_cache', // ✨ v34.1.0 — Admin > Maintenance
   EXPORT_DOCX_FILE: 'export_docx_file',
   EXP_GET_GLOBAL_STATE: 'exp_get_global_state',
   EXP_GET_CATEGORIES: 'exp_get_categories',

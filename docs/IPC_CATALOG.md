@@ -1,3 +1,24 @@
+## 2026-05-14 — v34.1.0 — `clear_webview_cache` IPC + Remote Gateway whitelist +12
+
+### Nouvelle commande IPC
+
+| Command | L1 (security.ts) | L2 (capability) | L3 (main.rs invoke_handler!) | L4 (Rust handler) |
+|---|---|---|---|---|
+| `clear_webview_cache` | ✅ `ALLOWED_COMMANDS` | ✅ `developer_mode.json` | ✅ `generate_handler![commands::webview_cache::clear_webview_cache, …]` | ✅ [src-tauri/src/commands/webview_cache.rs](../src-tauri/src/commands/webview_cache.rs) |
+
+**Contrat** : `clear_webview_cache(): Promise<{ cleared: string[]; skipped: string[]; errors: string[] }>` — purge `~/.cache/com.titane.infinity/{Cache, Code Cache, GPUCache}`. Envelope `{ok, content, error}` respectée.
+
+### Remote Gateway `ALLOWED_COMMANDS` étendu (22 → 34)
+
+`src-tauri/src/remote_gateway/handlers.rs` — `pub const ALLOWED_COMMANDS: &[&str]` ajoute notamment :
+- `memory_list_entries`, `memory_delete_entry`
+- `chat_omega_send`, `chat_omega_stream`
+- `engines_status_snapshot`
+- `agent_log_analysis_report`
+- (+ 6 alignements de surfaces déjà exposées localement)
+
+Test inline `handlers::tests::test_allowed_commands_contains_v34_1_0_expansion` PASS via `cargo test --bin titane-infinity`.
+
 > 2026-05-13 — v34.0.6 IPC LEGACY PRUNE truth: aligned L1 (`src/lib/security.ts` ALLOWED_COMMANDS) + L2 (`src-tauri/tauri.conf.json` main-capability.allow[]) for 30 previously legacy commands (auth_* x9, append/clear/export_security_log, clear_permission_audit, create/delete/toggle_ia_policy, save_ia_policies, memory_debug_scan, engine_get_harmonia/nexus/sentinel_state, get_evolution_state, run_evolution, desktop_open_session) and added L2 for 8 L1-only commands (ai_check_ollama_status, analyze_logs_intelligent, conversation_generate, read_json_file, remote_key_create/list/revoke/rotate). Added L3 registration `titane_infinity::singularity::singularity_state::singularity_get_state` in `src-tauri/src/main.rs` invoke_handler. `scripts/verify/ipc-coverage-baseline.txt` reduced 48 → 15 (remaining: ai_chat, autonomy_scan_ia/tts, desktop_handoff/kill_switch/pause/resume_session, singularity_get_{adaptive,cognitive,full_state,global_coherence,meta,physical,symbolic}, singularity_is_critical — all mock-only `#[cfg(feature="mock")]` or true dead-code). Validation: Vitest `src/__tests__/security/allowed-commands-legacy-prune-v34_0_6.test.ts` (25/25), `pnpm run check` PASS, `cargo check --bin titane-infinity` PASS, `scripts/verify/verify-ipc-end-to-end-coverage.sh` PASS (109 audited, 15 tolerated), `detect_recurrence.sh` PASS, `verify_instructions.sh` PASS=52 FAIL=0. AutoHeal: AH-v103-2026-05-13-IPC_LEGACY_PRUNE.
 
 > 2026-05-09 — Remote Gateway memory allowlist truth: `POST /api/invoke` autorise désormais `memory_save_entry` en plus de `memory_get_all_keys` et `memory_get_entry` dans `src-tauri/src/remote_gateway/handlers.rs`. La réponse reste volontairement explicite `memory commands not yet wired to remote gateway` tant que la commande n est pas câblée Ring 2 côté gateway, ce qui supprime les rejets opaques `not allowed`.

@@ -1883,6 +1883,8 @@ fn main() {
                                         }
         })
         .invoke_handler(tauri::generate_handler![
+            // ✨ v34.1.0 — WebView cache flush (Admin > Config)
+            commands::webview_cache::clear_webview_cache,
             // Frontend OS bridge compatibility
             state_bridge_commands::ping,
             state_bridge_commands::get_system_state,

@@ -71,6 +71,52 @@ pub struct GatewayState {
     pub anomaly: Arc<AnomalyDetector>,
 }
 
+// ── Allowlist of commands reachable via remote gateway ─────────
+// v34.1.0 — UN SEUL TITANE VIVANT: expanded whitelist for memory CRUD,
+// chat OMEGA send/stream, agent status snapshots, log analysis report.
+// Exposed as pub const for contract testability (see tests below).
+pub const ALLOWED_COMMANDS: &[&str] = &[
+    "health_check",
+    "get_system_health",
+    "conversation_generate",
+    "create_new_conversation",
+    "ai_check_ollama_status",
+    "get_runtime_config",
+    // Memory CRUD (centralized on PC mère — clients never persist locally when remote)
+    "memory_get_all_keys",
+    "memory_save_entry",
+    "memory_get_entry",
+    "memory_list_entries",
+    "memory_delete_entry",
+    // Singularity / engines
+    "singularity_get_state",
+    "singularity_get_fusion_state",
+    "get_engine_health",
+    "get_engines_status",
+    "engines_status_snapshot",
+    "run_system_diagnostic",
+    "multi_ai_get_state",
+    "ai_status",
+    "knowledge_base_runtime_snapshot",
+    "advanced_agents_get_status",
+    "agent_log_analysis_report",
+    // Chat OMEGA — unified send + stream
+    "chat_omega_send",
+    "chat_omega_stream",
+    // Digital twin
+    "twin_get_state",
+    "twin_get_identity",
+    "twin_get_evolution_profile",
+    "twin_get_fusion_index",
+    "twin_recalculate_fusion",
+    "twin_submit_observation",
+    "twin_apply_evolution",
+    "twin_validate_sync",
+    // Unified TITANE — web search + research available from all clients
+    "web_search",
+    "web_research",
+];
+
 // ── GET /api/health ─────────────────────────────────────────
 
 pub async fn health_handler() -> impl IntoResponse {
@@ -273,39 +319,6 @@ pub async fn invoke_handler(
     if let Err(rejection) = sanitize_invoke_request(&mut payload) {
         return Json(rejection);
     }
-
-    // Allowlist of commands reachable via remote gateway
-    const ALLOWED_COMMANDS: &[&str] = &[
-        "health_check",
-        "get_system_health",
-        "conversation_generate",
-        "create_new_conversation",
-        "ai_check_ollama_status",
-        "get_runtime_config",
-        "memory_get_all_keys",
-        "memory_save_entry",
-        "memory_get_entry",
-        "singularity_get_state",
-        "singularity_get_fusion_state",
-        "get_engine_health",
-        "get_engines_status",
-        "run_system_diagnostic",
-        "multi_ai_get_state",
-        "ai_status",
-        "knowledge_base_runtime_snapshot",
-        "advanced_agents_get_status",
-        "twin_get_state",
-        "twin_get_identity",
-        "twin_get_evolution_profile",
-        "twin_get_fusion_index",
-        "twin_recalculate_fusion",
-        "twin_submit_observation",
-        "twin_apply_evolution",
-        "twin_validate_sync",
-        // Unified TITANE — web search + research available from all clients
-        "web_search",
-        "web_research",
-    ];
 
     if !ALLOWED_COMMANDS.contains(&payload.command.as_str()) {
         return Json(IpcResponse::err(format!(
@@ -847,6 +860,41 @@ mod tests {
         )
         .await;
         let _ = result;
+    }
+
+    #[test]
+    fn test_allowed_commands_contains_v34_1_0_expansion() {
+        // v34.1.0 — UN SEUL TITANE VIVANT contract test
+        let required = [
+            "memory_list_entries",
+            "memory_delete_entry",
+            "chat_omega_send",
+            "chat_omega_stream",
+            "engines_status_snapshot",
+            "agent_log_analysis_report",
+        ];
+        for cmd in required {
+            assert!(
+                ALLOWED_COMMANDS.contains(&cmd),
+                "ALLOWED_COMMANDS must include `{}` (v34.1.0 hierarchical transport)",
+                cmd
+            );
+        }
+        assert!(
+            ALLOWED_COMMANDS.len() >= 34,
+            "ALLOWED_COMMANDS must contain >=34 entries, got {}",
+            ALLOWED_COMMANDS.len()
+        );
+        // No duplicates
+        let mut sorted: Vec<&&str> = ALLOWED_COMMANDS.iter().collect();
+        sorted.sort();
+        let len_before = sorted.len();
+        sorted.dedup();
+        assert_eq!(
+            sorted.len(),
+            len_before,
+            "ALLOWED_COMMANDS must not contain duplicates"
+        );
     }
 
     #[test]

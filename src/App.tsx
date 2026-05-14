@@ -127,6 +127,9 @@ import './components/psyche/DeepPsychePanel.css';
 // ✨ P0.Ω∞ - Splash Watchdog (Anti-freeze diagnostic)
 import { SplashWatchdog } from './components/diagnostics/SplashWatchdog';
 import { isRemoteContext } from './lib/transport';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/queryClient';
+import { getActiveTransport } from './api/tauriClient';
 import { RemoteGatewayLayout } from './pages/RemoteGatewayLayout';
 
 type LazyModule<T> = { default: T };
@@ -799,6 +802,13 @@ const routerBase = import.meta.env.BASE_URL?.startsWith('/')
  * ═══════════════════════════════════════════════════════════════
  */
 const App: React.FC = () => {
+  // ✨ v34.1.0 — hierarchical transport probe (tauri | remote | degraded)
+  //   Result is pushed into useTransportState and consumed by SurfaceTruthBadge,
+  //   RemoteGatewayLayout and any future debugging surface.
+  useEffect(() => {
+    void getActiveTransport({ force: true });
+  }, []);
+
   // ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER
   if (typeof window !== 'undefined') {
     window.__TITANE_BOOT__ = window.__TITANE_BOOT__ || {};
@@ -818,6 +828,7 @@ const App: React.FC = () => {
   }
 
   return (
+    <QueryClientProvider client={queryClient}>
     <ToastProvider>
       {/* ✨ Remote browser mode — wrap entire app in auth guard */}
       {isRemoteContext() ? (
@@ -878,6 +889,7 @@ const App: React.FC = () => {
         </>
       )}
     </ToastProvider>
+    </QueryClientProvider>
   );
 };
 

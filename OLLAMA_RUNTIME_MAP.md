@@ -1,3 +1,7 @@
+## 2026-05-14 — v34.1.0 — Frontière Ollama Dev / Ollama Chat intacte
+
+> v34.1.0 ne touche **AUCUN** runtime Ollama. Dev `qwen3.5:9b` (Copilot/MCP, `http://127.0.0.1:11434`) et Chat PROD `gemma2:2b` (Tauri OMEGA pipeline) restent strictement séparés. Aucun default partagé, aucun fallback contaminé, aucun champion registry muté. Validateur `pnpm run verify:ollama:boundary` reste autorité d'alignement.
+
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
 ## CURRENT CANONICAL STATE — 2026-05-08

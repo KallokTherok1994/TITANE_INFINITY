@@ -1,3 +1,19 @@
+## 2026-05-14 — v34.1.0 SURCHARGÉ — Hierarchical transport + Gateway whitelist + WebView cache (delta cartographie)
+
+| Couche | Surface ajoutée | Fichier |
+|---|---|---|
+| Ring 3 | `getActiveTransport()` résolveur hiérarchique Tauri/Remote/Degraded | src/api/tauriClient.ts |
+| Ring 3 | `RemoteTransport` (JWT + memory guard) | src/api/transports/RemoteTransport.ts |
+| Ring 3 | `useTransportState` Zustand volatile | src/state/useTransportState.ts |
+| Ring 3 | `queryClient` (TanStack Query) | src/lib/queryClient.ts |
+| Ring 3 | `useSurfaceTruth.transport` élargi `ActiveTransport` (live) | src/hooks/useSurfaceTruth.ts |
+| Ring 4 | `<QueryClientProvider>` wrap racine + probe initial | src/App.tsx |
+| Ring 4 | Bouton Admin Config Hub `admin-clear-webview-cache` | src/pages/ConfigurationHub.tsx |
+| Ring 1 | `clear_webview_cache` IPC command (+ capability + allowlist) | src-tauri/src/commands/webview_cache.rs + main.rs + developer_mode.json |
+| Ring 1 | Remote Gateway `ALLOWED_COMMANDS` 22 → 34 | src-tauri/src/remote_gateway/handlers.rs |
+
+Tests v34.1.0 : 24 Vitest + 4 cargo PASS. AutoHeal `REMOTE-TRANSPORT-HIERARCHICAL-v34_1_0-2026-05-14`.
+
 # [2026-04-16] Cartography delta — v34.0.13 stale-pages hotfix (Phase 5 du plan v35)
 
 - **Service Worker (`public/sw-source.js`)** : ajout Strategy 0 `NetworkFirst` pour la navigation / `document` / `index.html` (cacheName `titane-index-v1`, network timeout 3 s, expiration 7 j / 4 entrées). `precacheAndRoute(self.__WB_MANIFEST)` est désormais filtré pour exclure `index.html` et les entrées racine `'/'` → garantit un shell HTML toujours frais après chaque rebuild. `currentCaches` étendu à `['titane-index-v1', 'titane-assets-v1', 'titane-static-v1', 'titane-api-v1', 'titane-onnx-models-v1']` pour conserver le cache index entre activations.

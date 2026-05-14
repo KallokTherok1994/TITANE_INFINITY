@@ -1,3 +1,10 @@
+## v34.1.0 — 2026-05-14 — SURCHARGÉ — Hierarchical transport + Gateway whitelist + WebView cache
+
+- **Bump** : 34.0.13 → 34.1.0 (`node scripts/bump-version.mjs && node scripts/sync-versions.mjs`).
+- **Artifacts** : AppImage (build à la demande utilisateur, pas de BUILD ALL).
+- **Surfaces release** : RemoteTransport, getActiveTransport, queryClient, clear_webview_cache, Remote Gateway whitelist expanded.
+- **AutoHeal** : `REMOTE-TRANSPORT-HIERARCHICAL-v34_1_0-2026-05-14`.
+
 ## 2026-05-13 : v34.0.12 BUILD ALL — Clippy idiom modernization + Prettier normalisation + Audit clean + AppImage smoke
 
 - **Mode** : DURABLE | **Bump Rule 13** : 34.0.11 → 34.0.12 | **BUILD ALL** (Rule 14)

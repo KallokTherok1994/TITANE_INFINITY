@@ -768,6 +768,22 @@ class TauriClient {
     );
   }
 
+  /**
+   * ✨ v34.1.0 — Vide les répertoires de cache WebKitGTK (Cache, Code Cache, GPUCache)
+   * pour `com.titane.infinity`. Force le rechargement des assets après deploy.
+   */
+  async clearWebviewCache(): Promise<{
+    cleared: string[];
+    skipped: string[];
+    errors: string[];
+  }> {
+    return (await this.invoke(TAURI_COMMANDS.CLEAR_WEBVIEW_CACHE, {})) as {
+      cleared: string[];
+      skipped: string[];
+      errors: string[];
+    };
+  }
+
   async exportDocxFile(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.EXPORT_DOCX_FILE,

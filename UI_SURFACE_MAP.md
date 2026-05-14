@@ -1,3 +1,11 @@
+## 2026-05-14 — v34.1.0 — Admin Clear WebView Cache + Transport state live
+
+- **Surface** : Configuration Hub → toolbar action `Maintenance avancée`.
+- **Bouton** : `data-testid="admin-clear-webview-cache"` — handler `handleClearWebviewCache` (confirm() + `tauriClient.clearWebviewCache()`) — toast succès/erreur.
+- **Surface Truth Badge** : `data-testid="surface-truth-badge"` — affiche désormais `transport` en live (`tauri | remote | degraded`) alimenté par `useTransportState` (Zustand volatile).
+- **Wiring frontend** : [src/lib/tauriCommands.ts](src/lib/tauriCommands.ts) `CLEAR_WEBVIEW_CACHE: 'clear_webview_cache'` + [src/lib/tauriClient.ts](src/lib/tauriClient.ts) `clearWebviewCache()` + [src/lib/security.ts](src/lib/security.ts) allowlist + [src/pages/ConfigurationHub.tsx](src/pages/ConfigurationHub.tsx) bouton.
+- **Tests** : [src/__tests__/pages/AdminClearWebviewCacheButton.test.tsx](src/__tests__/pages/AdminClearWebviewCacheButton.test.tsx) 3 wiring contract PASS.
+
 # [2026-04-16] Stale-pages hotfix v34.0.13 — SW NetworkFirst + Surface Truth canonique
 
 - Symptôme corrigé : "plusieurs pages UI ne se mettent pas à jour malgré modifications" — cache multi-couches (SW + Zustand persist + absence de canary visuel runtime).

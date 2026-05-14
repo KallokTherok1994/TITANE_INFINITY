@@ -838,6 +838,28 @@ export const ConfigurationHub: React.FC = () => {
     }
   };
 
+  // ✨ v34.1.0 — Clear WebView cache (Admin maintenance)
+  const handleClearWebviewCache = async () => {
+    const ok = window.confirm(
+      "Vider le cache WebView (WebKitGTK) ?\nLes assets seront rechargés au prochain démarrage. L'app reste fonctionnelle."
+    );
+    if (!ok) return;
+    try {
+      logger.info('🧹 [ConfigHub] Clearing WebView cache...');
+      const report = await tauriClient.clearWebviewCache();
+      logger.info('✅ [ConfigHub] WebView cache cleared:', report);
+      const summary = `Cache WebView vidé.\nCleared: ${report.cleared.length}\nSkipped: ${report.skipped.length}\nErrors: ${report.errors.length}`;
+      if (report.errors.length > 0) {
+        errorToast(`${summary}\n\n${report.errors.join('\n')}`);
+      } else {
+        success(summary);
+      }
+    } catch (err) {
+      logger.error('❌ [ConfigHub] Failed to clear WebView cache:', err);
+      errorToast(`Échec du vidage du cache: ${err}`);
+    }
+  };
+
   const handleImport = async () => {
     // For now, we&apos;ll use a prompt to get the file path
     // In a real app, you&apos;d use a file picker dialog
@@ -1349,6 +1371,23 @@ export const ConfigurationHub: React.FC = () => {
                 }}
               >
                 💾 Sauver Preset
+              </button>
+              <button
+                data-testid="admin-clear-webview-cache"
+                onClick={handleClearWebviewCache}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'rgba(244, 114, 182, 0.15)',
+                  border: '1px solid rgba(244, 114, 182, 0.35)',
+                  borderRadius: '8px',
+                  color: '#f472b6',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                }}
+                title="Vide les répertoires WebKitGTK Cache, Code Cache, GPUCache (v34.1.0)"
+              >
+                🧹 Vider Cache WebView
               </button>
               {presets.length > 0 && (
                 <select

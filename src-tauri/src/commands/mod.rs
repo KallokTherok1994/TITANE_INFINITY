@@ -7,6 +7,8 @@ pub mod db_commands;
 pub use db_commands::*;
 pub mod display_system_commands; // EXP: Contrôle des paramètres d'affichage (expérimental)
 pub use display_system_commands::*; // EXP: Expose toutes les commandes display_system
+pub mod webview_cache; // ✨ v34.1.0 — clear_webview_cache for Admin config tab
+pub use webview_cache::clear_webview_cache;
                                     // ╔══════════════════════════════════════════════════════════════════════════════╗
                                     // ║ TITANE∞ v30.0.0 - Tauri Commands Central Hub (Phase 2 Fusion #1)             ║
                                     // ║ Unified command handlers for frontend-backend communication                 ║

@@ -20,6 +20,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTransportState, type ActiveTransport } from '@/state/useTransportState';
 
 export interface SurfaceTruth {
   appVersion: string;
@@ -27,7 +28,7 @@ export interface SurfaceTruth {
   storeVersion: number | null;
   swScope: string | null;
   swController: boolean;
-  transport: 'tauri' | 'web';
+  transport: ActiveTransport;
   chunkHash: string;
   dataSurfaceTruth: string | null;
 }
@@ -54,7 +55,7 @@ function readDataSurfaceTruth(): string | null {
   }
 }
 
-function readTransport(): 'tauri' | 'web' {
+function readTransport(): ActiveTransport {
   try {
     if (
       typeof window !== 'undefined' &&
@@ -68,7 +69,14 @@ function readTransport(): 'tauri' | 'web' {
   } catch {
     /* noop */
   }
-  return 'web';
+  // Browser / remote / degraded resolution is performed by getActiveTransport
+  // and pushed into useTransportState. We read that store as the canonical
+  // truth and fall back to 'degraded' before the first probe completes.
+  try {
+    return useTransportState.getState().transport;
+  } catch {
+    return 'degraded';
+  }
 }
 
 const CHUNK_HASH: string = (() => {
@@ -80,6 +88,10 @@ const CHUNK_HASH: string = (() => {
 })();
 
 export function useSurfaceTruth(): SurfaceTruth {
+  // Subscribe to the volatile transport store so the badge re-renders when
+  // getActiveTransport publishes a fresh probe result.
+  const liveTransport = useTransportState(s => s.transport);
+
   const [truth, setTruth] = useState<SurfaceTruth>(() => ({
     appVersion: typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev',
     buildTimestamp:
@@ -114,7 +126,7 @@ export function useSurfaceTruth(): SurfaceTruth {
     };
   }, []);
 
-  return truth;
+  return { ...truth, transport: liveTransport === 'degraded' && truth.transport === 'tauri' ? 'tauri' : liveTransport ?? truth.transport };
 }
 
 export default useSurfaceTruth;
