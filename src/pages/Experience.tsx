@@ -65,7 +65,7 @@ export function Experience() {
         <p
           className="exp-source-label"
           data-testid="experience-runtime-source"
-          style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: 4 }}
+          style={{ fontSize: '0.75rem', color: 'rgb(191, 199, 210)', marginTop: 4 }}
         >
           Source: service XP canonique (Tauri IPC + localStorage fallback)
         </p>

@@ -39,6 +39,16 @@ Strictement additif. Aucune mutation de Zustand sélecteur ni de surface IPC. Ro
 
 La voie canonique reste inchangee: `data/knowledge_base/default/* -> knowledge_base_default.rs -> knowledge_base_runtime_snapshot / knowledge_base_get_all -> defaultKnowledgeBase.ts`. Le delta ajoute de nouveaux domaines Quebec-centriques sans nouvelle surface UI, renforce l analyse photo naturaliste, puis ajoute quatre couches medicales/nutritionnelles gouvernees et une couche securite wilderness: biodiversite/usages Quebec, therapies naturelles et nutrition holistique, plantes medicinales/aromatherapie/interactions, adaptogenes/champignons marketing/psilocybine, puis survie/camping en foret/autosuffisance temporaire avec priorite a l eau, au froid, au feu, a la legalite et aux animaux.
 
+## 2026-05-14 — Experience contrast hardening + WCAG inventory 11/11 (delta cartographie)
+
+| Couche | Surface modifiée | Fichier |
+|---|---|---|
+| Ring 4 | Libellé runtime XP à contraste conforme | src/pages/Experience.tsx |
+| Tests | Garde unitaire couleur/runtime source | src/pages/__tests__/Experience.test.tsx |
+| E2E | Gate Axe canonique étendu à `/experience` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta est minimal: un seul texte secondaire de `/experience` monte en contraste pour fermer une violation Axe `color-contrast`, puis la route est intégrée au gate WCAG canonique afin que le zéro ne dépende plus d un probe manuel. La preuve courante publie `experience=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `10` à `11` routes critiques auditées.
+
 
 
 | Couche | Surface ajoutée | Fichier |

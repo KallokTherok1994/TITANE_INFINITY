@@ -101,6 +101,9 @@ describe('Experience', () => {
     expect(screen.getByTestId('experience-runtime-source')).toHaveTextContent(
       /Tauri IPC \+ localStorage fallback/i
     );
+    expect(screen.getByTestId('experience-runtime-source')).toHaveStyle({
+      color: 'rgb(191, 199, 210)',
+    });
     expect(screen.getByTestId('experience-total-xp')).toHaveTextContent('245');
     expect(screen.getByTestId('experience-level')).toHaveTextContent('1');
     expect(screen.getByTestId('experience-chat-sync-summary')).toBeInTheDocument();

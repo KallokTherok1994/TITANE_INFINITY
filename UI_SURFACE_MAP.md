@@ -238,6 +238,14 @@
 - Preuve browser: `e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture twins'` repasse sans la violation CSP `Loading the image 'https://static.wixstatic.com/...`.
 - Preuve d’intégration associée: [src/**tests**/services/ai/chatEngineCanonicalIntegration.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts).
 
+# [2026-05-14] Experience runtime source contrast + WCAG gate expansion
+
+- Surface canonique: `/experience`.
+- Vérité runtime: la seule dette Axe bloquante hors gate courant venait de `experience-runtime-source`, rendu par `.exp-source-label` avec `opacity: 0.6` sur fond `#0a0a0a`, soit un contraste 3.43:1 insuffisant.
+- Point de contrôle canonique: [src/pages/Experience.tsx](src/pages/Experience.tsx) remplace cette opacité faible par une couleur explicite `rgb(191, 199, 210)` sur le libellé runtime existant, sans changer la structure de la page.
+- Garde locale: [src/pages/__tests__/Experience.test.tsx](src/pages/__tests__/Experience.test.tsx) verrouille le texte runtime et la couleur attendue.
+- Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 11 routes critiques avec ajout de `experience`, et publie `experience=0` puis `aggregate blocking=0 baseline=30`.
+
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
 - Surface canonique de gestion de fenêtre: [src/services/ai/contextManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/contextManager.ts) reconnaît maintenant explicitement `DEFAULT_OLLAMA_MODEL` et la famille `gemma2`, ce qui réaligne les calculs d overflow et la surface utilisateur de contexte sur la même vérité locale.
 - Preuves associées: [src/services/chat/**tests**/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/**tests**/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).
