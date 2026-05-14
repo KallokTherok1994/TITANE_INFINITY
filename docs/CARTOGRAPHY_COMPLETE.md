@@ -70,6 +70,17 @@ Le delta ferme deux violations sérieuses sur `/total-dev` sans modifier la logi
 
 Le delta ferme une unique violation sérieuse sur `/quantum-center` sans changer la logique métier: le conteneur principal scrollable devient focusable au clavier. La preuve courante publie `quantum-center=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `12` à `13` routes critiques auditées.
 
+## 2026-05-14 — MultiProject + Optimization contrast hardening + WCAG inventory 15/15 (delta cartographie)
+
+| Couche | Surface modifiée | Fichier |
+|---|---|---|
+| Ring 4 | Contraste relevé sur empty/evidence/archive summary | src/pages/MultiProjectDashboard.tsx |
+| Ring 4 | Contraste relevé sur labels KPI, benchmark et recommandations | src/pages/UltimateOptimizationDashboard.tsx |
+| Tests | Gardes unitaires contraste multiproject + optimization | src/__tests__/pages/MultiProjectDashboard.test.tsx, src/__tests__/pages/UltimateOptimizationDashboard.test.tsx |
+| E2E | Gate Axe canonique étendu à `/multiproject` et `/optimization` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta ferme un cluster contraste partagé sur deux surfaces visibles sans toucher à la logique métier ni aux composants de base: seuls les textes secondaires réellement signalés par Axe sont relevés. La preuve courante publie `multiproject=0`, `optimization=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `13` à `15` routes critiques auditées.
+
 
 
 | Couche | Surface ajoutée | Fichier |

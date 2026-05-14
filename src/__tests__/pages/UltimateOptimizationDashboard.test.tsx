@@ -58,4 +58,15 @@ describe('UltimateOptimizationDashboard', () => {
     renderPage();
     expect(screen.getByText('60')).toBeInTheDocument();
   });
+
+  it('raises secondary labels above the low-contrast gray token', () => {
+    renderPage();
+    expect(screen.getByText(/Métriques de performance — Recommandations — Benchmarks/i)).toHaveClass(
+      'text-gray-300'
+    );
+    expect(screen.getByText(/Score optimisation/i)).toHaveClass('text-gray-300');
+    expect(screen.getByText('Avant', { selector: 'th' }).closest('tr')).toHaveClass(
+      'text-gray-300'
+    );
+  });
 });

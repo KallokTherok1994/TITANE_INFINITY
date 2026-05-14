@@ -262,6 +262,14 @@
 - Garde locale: [src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx](src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx) verrouille la présence de cette région focusable.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 13 routes critiques avec ajout de `quantum-center`, et publie `quantum-center=0` puis `aggregate blocking=0 baseline=30`.
 
+# [2026-05-14] MultiProject + Optimization contrast cluster hardening
+
+- Surfaces canoniques: `/multiproject` et `/optimization`.
+- Vérité runtime: ces deux routes visibles partageaient un reliquat contraste porté par des textes secondaires et méta-informations trop faibles, sans dette structurelle ou clavier supplémentaire après les tranches précédentes.
+- Points de contrôle canoniques: [src/pages/MultiProjectDashboard.tsx](src/pages/MultiProjectDashboard.tsx) relève le contraste de l état vide, de la liste d evidence et du sommaire d archivage; [src/pages/UltimateOptimizationDashboard.tsx](src/pages/UltimateOptimizationDashboard.tsx) relève les labels et méta-textes gris faibles dans les KPI, benchmarks, recommandations et barres de profil.
+- Gardes locales: [src/__tests__/pages/MultiProjectDashboard.test.tsx](src/__tests__/pages/MultiProjectDashboard.test.tsx) et [src/__tests__/pages/UltimateOptimizationDashboard.test.tsx](src/__tests__/pages/UltimateOptimizationDashboard.test.tsx) verrouillent les tokens relevés.
+- Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 15 routes critiques avec ajout de `multiproject` et `optimization`, et publie `multiproject=0`, `optimization=0` puis `aggregate blocking=0 baseline=30`.
+
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
 - Surface canonique de gestion de fenêtre: [src/services/ai/contextManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/contextManager.ts) reconnaît maintenant explicitement `DEFAULT_OLLAMA_MODEL` et la famille `gemma2`, ce qui réaligne les calculs d overflow et la surface utilisateur de contexte sur la même vérité locale.
 - Preuves associées: [src/services/chat/**tests**/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/**tests**/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).

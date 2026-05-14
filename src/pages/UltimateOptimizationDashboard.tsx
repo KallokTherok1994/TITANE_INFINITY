@@ -155,7 +155,7 @@ function BenchmarkRow({ entry }: { entry: BenchmarkEntry }) {
   return (
     <tr className="border-b border-gray-800 hover:bg-gray-800/40">
       <td className="p-3 text-sm text-white">{entry.name}</td>
-      <td className="p-3 text-sm font-mono text-gray-400 text-right">
+      <td className="p-3 text-sm font-mono text-gray-300 text-right">
         {entry.before} {entry.unit}
       </td>
       <td className="p-3 text-sm font-mono text-right">
@@ -243,7 +243,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                 </h1>
                 <SurfaceTruthBadge variant={engineLoad !== null ? 'LIVE' : 'PARTIAL'} />
               </div>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-300">
                 Métriques de performance — Recommandations — Benchmarks
               </p>
             </div>
@@ -274,7 +274,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <BarChart3 className="w-4 h-4 text-blue-400" />
-              <span className="text-xs text-gray-400">FPS live</span>
+              <span className="text-xs text-gray-300">FPS live</span>
             </div>
             <p
               className={`text-3xl font-bold ${
@@ -305,7 +305,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Cpu className="w-4 h-4 text-orange-400" />
-              <span className="text-xs text-gray-400">CPU load</span>
+              <span className="text-xs text-gray-300">CPU load</span>
             </div>
             <p
               className={`text-3xl font-bold ${
@@ -323,7 +323,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-gray-400">Animation durée</span>
+              <span className="text-xs text-gray-300">Animation durée</span>
             </div>
             <p className="text-3xl font-bold text-cyan-400">
               {animationConfig.duration}ms
@@ -338,10 +338,10 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Award className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs text-gray-400">Score optimisation</span>
+              <span className="text-xs text-gray-300">Score optimisation</span>
             </div>
             <p className="text-3xl font-bold text-yellow-400">{score}%</p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-300 mt-1">
               {appliedCount}/{recommendations.length} actions
             </p>
           </Card>
@@ -349,7 +349,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
             <Card variant="glass" elevation="md" padding={4}>
               <div className="flex items-center gap-2 mb-2">
                 <Cpu className="w-4 h-4 text-purple-400" />
-                <span className="text-xs text-gray-400">Charge Engine (live)</span>
+                <span className="text-xs text-gray-300">Charge Engine (live)</span>
               </div>
               <p
                 className={`text-3xl font-bold ${engineLoad < 50 ? 'text-green-400' : engineLoad < 80 ? 'text-yellow-400' : 'text-red-400'}`}
@@ -380,7 +380,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-700 text-xs text-gray-500 uppercase">
+                <tr className="border-b border-gray-700 text-xs text-gray-300 uppercase">
                   <th className="text-left p-3">Métrique</th>
                   <th className="text-right p-3">Avant</th>
                   <th className="text-right p-3">Après</th>
@@ -451,8 +451,8 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs text-gray-400 mb-2">{rec.description}</p>
-                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                      <p className="text-xs text-gray-300 mb-2">{rec.description}</p>
+                      <div className="flex items-center gap-4 text-xs text-gray-300">
                         <span className="flex items-center gap-1">
                           <TrendingUp className="w-3 h-3 text-green-400" />
                           {rec.estimatedGain}
@@ -508,7 +508,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
             </div>
             <div className="space-y-3">
               <div>
-                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-300 mb-1">
                   <span>Rendering</span>
                   <span className="text-green-400">Optimal</span>
                 </div>
@@ -520,7 +520,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-300 mb-1">
                   <span>IPC throughput</span>
                   <span className="text-green-400">Optimal</span>
                 </div>
@@ -532,7 +532,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-300 mb-1">
                   <span>Bundle size</span>
                   <span className="text-yellow-400">Moyen</span>
                 </div>
@@ -544,7 +544,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-300 mb-1">
                   <span>Memory usage</span>
                   <span className="text-green-400">Bon</span>
                 </div>

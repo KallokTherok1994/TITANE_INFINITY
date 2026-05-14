@@ -8,6 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MultiProjectDashboard from '@/pages/MultiProjectDashboard';
+import * as multiprojectService from '@/services/multiproject';
 
 vi.mock('@/services/multiproject', () => ({
   getMultiProjectRollup: vi.fn().mockReturnValue(null),
@@ -60,5 +61,27 @@ describe('MultiProjectDashboard', () => {
   it('shows SurfaceTruthBadge with PARTIAL variant when rollup is null', () => {
     renderPage();
     expect(screen.getByTestId('surface-truth-badge-partial')).toBeInTheDocument();
+  });
+
+  it('keeps empty state and evidence text above the low-contrast slate token', () => {
+    vi.mocked(multiprojectService.getMultiProjectAgentStatus).mockReturnValueOnce({
+      id: 'multiproject',
+      title: 'Multi-Project Management Agent',
+      summary: 'Test summary',
+      testId: 'multiproject-dashboard',
+      readiness: 'planned',
+      readinessLabel: 'PLANNED',
+      serviceState: 'Registry empty',
+      evidence: ['Synchronisation registry ready'],
+      blockers: [],
+      nextStep: 'Create a project.',
+    });
+
+    renderPage();
+
+    expect(screen.getByText(/Aucun projet actif/i)).toHaveClass('text-slate-300');
+    expect(screen.getByText(/Synchronisation registry ready/i).closest('ul')).toHaveClass(
+      'text-slate-300'
+    );
   });
 });

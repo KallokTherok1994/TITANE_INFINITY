@@ -118,7 +118,7 @@ const AgentStatusCard: React.FC<AgentStatusCardProps> = ({ status }) => (
     </div>
     <p className="text-xs text-slate-400 mb-2">{status.serviceState}</p>
     {status.evidence.length > 0 && (
-      <ul className="text-xs text-slate-500 space-y-0.5 list-disc list-inside">
+      <ul className="text-xs text-slate-300 space-y-0.5 list-disc list-inside">
         {status.evidence.map((e, i) => (
           <li key={i}>{e}</li>
         ))}
@@ -511,7 +511,7 @@ const MultiProjectDashboard: React.FC = () => {
       {/* Project list */}
       <div data-testid="multiproject-project-list">
         {nonArchivedProjects.length === 0 ? (
-          <div className="text-center text-slate-500 text-sm py-12">
+          <div className="text-center text-slate-300 text-sm py-12">
             Aucun projet actif. Créez votre premier projet pour commencer.
           </div>
         ) : (
@@ -533,7 +533,7 @@ const MultiProjectDashboard: React.FC = () => {
       {/* Archived section */}
       {archivedProjects.length > 0 && (
         <details className="mt-6">
-          <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-400 transition-colors">
+          <summary className="text-xs text-slate-300 cursor-pointer hover:text-slate-200 transition-colors">
             {archivedProjects.length} projet(s) archivé(s)
           </summary>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mt-3">
