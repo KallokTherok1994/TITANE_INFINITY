@@ -31,8 +31,7 @@ export const OWNER_TWIN_RESONANCE = {
   ],
   sourceCount: 42,
   reflectionAxis: 'clarté intérieure, structure concrète et transformation humaine douce',
-  portraitUrl:
-    'https://static.wixstatic.com/media/0c58f2_0e50a8a83cac4080848fe97b54f92b8a~mv2.jpg/v1/fill/w_285,h_287,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/465277026_1246722113243921_9112138683944422327_n.jpg',
+  portraitUrl: '/kevin-owner-portrait.svg',
   portraitFallbackUrl: '/kevin-owner-portrait.svg',
 } as const;
 

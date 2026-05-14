@@ -227,6 +227,15 @@
 - Bootstrap actif: [src/main.tsx](src/main.tsx) installe le garde avant le rendu React pour que la surface transformation reste sur des polices locales/system sans bruit CSP.
 - Preuve unitaire: [src/__tests__/utils/googleFontStylesheetGuard.test.ts](src/__tests__/utils/googleFontStylesheetGuard.test.ts) verrouille la purge des liens existants, l interdiction pre-insertion et la suppression des `@import` Google Fonts.
 - Preuve browser: `e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture titane-transformation'` repasse sans l erreur CSP `Loading the stylesheet 'https://fonts.googleapis.com/...`.
+
+# [2026-05-14] Twins owner portrait — local asset only
+
+- Surface canonique: `/twins`.
+- Vérité runtime: la carte portrait du Numeric Twin référençait encore une image distante Wix, immédiatement bloquée par `img-src 'self' data: blob:` et visible comme bruit CSP dans la capture browser.
+- Point de vérité canonique: [src/services/api/numericTwin.ts](src/services/api/numericTwin.ts) publie désormais `OWNER_TWIN_RESONANCE.portraitUrl` sur l asset local `/kevin-owner-portrait.svg`, aligné avec `portraitFallbackUrl`.
+- Persistance alignée: `persistTwinChatContextSnapshot()` diffuse maintenant aussi le portrait local dans le snapshot `titane_twin_fusion_v1`, ce qui évite toute réinjection d URL externe par la surface chat/twins.
+- Preuve unitaire: [src/__tests__/services/api/numericTwin.test.ts](src/__tests__/services/api/numericTwin.test.ts) verrouille le contrat du portrait local et du snapshot persisté.
+- Preuve browser: `e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture twins'` repasse sans la violation CSP `Loading the image 'https://static.wixstatic.com/...`.
 - Preuve d’intégration associée: [src/**tests**/services/ai/chatEngineCanonicalIntegration.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts).
 
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.

@@ -157,6 +157,15 @@ Tests v34.1.0 : 24 Vitest + 4 cargo PASS. AutoHeal `REMOTE-TRANSPORT-HIERARCHICA
 
 Le delta reste strictement local au bootstrap web. Aucune ouverture CSP, aucun changement d IPC, aucune mutation de surface utilisateur active hors suppression du bruit console sur `/titane?tab=transformation`. Rollback = retirer l import/install dans `src/main.tsx`, supprimer `src/utils/googleFontStylesheetGuard.ts`, puis retirer son test cible.
 
+# [2026-05-14] Cartography delta — Twins local portrait alignment
+
+| Couche | Surface ajoutée | Fichier |
+|---|---|---|
+| Ring 3 | Contrat `OWNER_TWIN_RESONANCE` réaligné sur l asset local `/kevin-owner-portrait.svg` | src/services/api/numericTwin.ts |
+| Tests | Contrat du portrait local + snapshot chat persistant | src/__tests__/services/api/numericTwin.test.ts |
+
+Le delta reste local a la verite portrait du Numeric Twin. Aucune ouverture CSP et aucune evolution backend: la surface `/twins` cesse simplement de pointer vers une image externe bloquee par politique. Rollback = restaurer l ancienne URL distante dans `src/services/api/numericTwin.ts` puis retirer le test cible.
+
 ---
 
 # [2026-05-13] Cartography delta — UI 100/100 plan phase D (+6 agent dashboards canonical E2E)
