@@ -165,13 +165,9 @@ const PerformanceTest = lazy(() =>
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
 
 // ✨ v24.3.0 - Core pages
-const TitanePage = lazyWithTimeout(
+const TitanePage = lazyWithRetry(
   () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),
-  {
-    // Dev startup can be slower while Vite compiles large page chunks.
-    timeoutMs: import.meta.env.DEV ? 120000 : 20000,
-    label: 'TitanePage',
-  }
+  'TitanePage'
 );
 const OrchestrationMetaCenter = lazy(() =>
   import('./pages/OrchestrationMetaCenter').then(m => ({
@@ -852,9 +848,13 @@ const App: React.FC = () => {
     }
   }
 
+    const isAutomatedBrowser =
+      typeof navigator !== 'undefined' &&
+      (navigator.webdriver || /HeadlessChrome|Playwright/i.test(navigator.userAgent || ''));
+
   return (
     <QueryClientProvider client={queryClient}>
-    {import.meta.env.DEV && ReactQueryDevtools && (
+      {import.meta.env.DEV && !isAutomatedBrowser && ReactQueryDevtools && (
       <Suspense fallback={null}>
         <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
       </Suspense>
