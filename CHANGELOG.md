@@ -57,10 +57,15 @@
 
 - `BUILD-ALL-v34_0_12-2026-05-13` (entries=1915)
 - `CLEANUP-REPO-v34_0_12-2026-05-13` (entries=1916, post-cleanup)
+- `INSTALL-SYS-v34_0_12-2026-05-13` (entries=1917, system install verified)
 
-### System install
+### System install (DONE — 2026-05-13 23:09)
 
-- `BLOCKED_APPROVAL` for `sudo dpkg -i` (operator offline). Artefacts ready in [`deployment/latest/`](deployment/latest/) for next session. Procedure : `sudo dpkg -i deployment/latest/titane-infinity_34.0.12_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`.
+- `sudo dpkg -i deployment/latest/titane-infinity_34.0.12_amd64.deb` → exit 0, `dpkg -s titane-infinity` → `Version: 34.0.12`, `Status: install ok installed`.
+- `bash scripts/post-build/update-desktop-icons.sh` → launcher `/usr/share/applications/titane-infinity.desktop` synchronisé (680B, root), caches GTK/desktop refresh.
+- **Binary sha256 MATCH** : `/usr/bin/titane-infinity` == `deployment/latest/titane-infinity-34.0.12` == `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2`.
+- Smoke système : SecretsEngine + Chat orchestrator init OK.
+- AutoHeal : `INSTALL-SYS-v34_0_12-2026-05-13` (entries=1917).
 
 ### Rollback
 
