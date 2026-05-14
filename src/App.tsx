@@ -378,9 +378,9 @@ export const AppRouter: React.FC = () => {
         />
       }
       footer={
-        <span className="select-none opacity-70 text-xs tracking-widest font-mono">
-          TITANE∞ <span className="text-emerald-400/80">V{__APP_VERSION__}</span>{' '}
-          <span className="opacity-60">· Living Pulse</span>
+        <span className="select-none text-xs tracking-widest font-mono text-slate-200">
+          TITANE∞ <span className="text-emerald-200">V{__APP_VERSION__}</span>{' '}
+          <span className="text-slate-300">· Living Pulse</span>
         </span>
       }
     >

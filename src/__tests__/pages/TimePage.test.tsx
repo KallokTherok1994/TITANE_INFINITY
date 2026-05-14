@@ -182,6 +182,18 @@ describe('TimePage', () => {
     expect(await screen.findByText('84%')).toBeInTheDocument();
   });
 
+  it('renders accessible contrast classes for tab descriptions and stat helper text', async () => {
+    await act(async () => {
+      renderTimePage('/time?tab=now');
+    });
+
+    expect(await screen.findByText("Aujourd'hui")).toHaveClass('text-blue-50');
+    expect(screen.getByText('Planning')).toHaveClass('text-gray-300');
+    expect(screen.getByText(/1 événement\(s\) synchronisé\(s\) aujourd'hui/i)).toHaveClass(
+      'text-gray-400'
+    );
+  });
+
   it('persists the cognitive state through the flow toggle', async () => {
     await act(async () => {
       renderTimePage('/time?tab=cognitive');

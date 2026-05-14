@@ -222,4 +222,26 @@ describe('DevPage', () => {
     expect(screen.getByTestId('tab-dev-validation')).toBeVisible();
     expect(screen.queryByText(/Erreur dans DevPage/i)).not.toBeInTheDocument();
   });
+
+  it('keeps the scrollable main region keyboard-focusable', async () => {
+    qaGetStateMock.mockResolvedValue({
+      health_score: 92,
+      test_coverage: 88,
+      active_monitors: 1,
+      hardening_level: 'standard',
+    });
+    qaGetSystemMetricsMock.mockResolvedValue({});
+    qaListTestSuitesMock.mockResolvedValue([]);
+    qaListAlertsMock.mockResolvedValue([]);
+
+    const { container } = renderDevPage();
+
+    expect(await screen.findByTestId('page-dev')).toHaveAttribute(
+      'data-dev-state',
+      'ready'
+    );
+    const main = container.querySelector('.dev-main');
+    expect(main).toHaveAttribute('tabindex', '0');
+    expect(main).toHaveAttribute('aria-label', 'Contenu principal DEV');
+  });
 });

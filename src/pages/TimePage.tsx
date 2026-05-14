@@ -690,11 +690,13 @@ export const TimePage: React.FC = () => {
             className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white'
             }`}
           >
             <div className="font-medium">{tab.label}</div>
-            <div className="text-xs opacity-75">{tab.desc}</div>
+            <div className={activeTab === tab.id ? 'text-xs text-blue-50' : 'text-xs text-gray-300'}>
+              {tab.desc}
+            </div>
           </button>
         ))}
       </div>
@@ -1039,14 +1041,14 @@ const NowSection: React.FC<NowSectionProps> = ({
           <div className="bg-gray-900 p-4 rounded" data-testid="time-current-segment">
             <div className="text-sm text-gray-400 mb-1">Segment</div>
             <div className="text-lg font-medium">{currentSegment}</div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-xs text-gray-400 mt-1">
               {isWorkHours ? 'Heures productives actives' : 'Hors plage de travail'}
             </div>
           </div>
           <div className="bg-gray-900 p-4 rounded">
             <div className="text-sm text-gray-400 mb-1">Fuseau & charge</div>
             <div className="text-lg font-medium">{timeZone}</div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-xs text-gray-400 mt-1">
               {eventsToday} événement(s) synchronisé(s) aujourd&apos;hui
             </div>
           </div>

@@ -2702,3 +2702,11 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > La correction reste locale aux composants qui controlent directement ce rendu partage: `src/features/chat/ChatProviderSelector.tsx` et `src/components/chat/ChatModeSelector.tsx` publient maintenant un nom accessible stable, `src/components/sections/ConversationSection.tsx` aligne le bouton audio sur le vrai contrat `role="switch"` + `aria-checked`, et `src/ui/components/Toast.tsx` convertit le conteneur en region live etiquetable valide. Quatre gardes Vitest ciblent exactement ces contrats a11y sur la surface active.
 
 > Effet mesure: le rerun canonique `e2e/a11y/wcag-aa-core.spec.ts` repasse vert avec `titane-conversation` et `dashboard` a `blocking=0`, tandis que l aggregate blocking chute de `28` a `12`. Le batch retire donc une dette WCAG AA reelle sur des controles partages, sans elargir le scope a une refonte a11y generale du repo.
+
+## v35.1.5 (2026-05-14) — Footer shell, DevPage et TimePage absorbent le reliquat a11y systeme
+
+> Le rerun canonique apres le premier batch a11y laissait un reliquat de `12` violations bloquees, dont `admin-system=1`, `dev-overview=2` et `time=1`. Un diagnostic Axe cible avec les nœuds DOM exacts a montre une decomposition locale nette: deux fautes de contraste dans le footer shell global `TITANE∞ V… · Living Pulse`, un `main.dev-main` scrollable non focusable, puis neuf nœuds de faible contraste dans `TimePage` (descriptions d onglets et aides secondaires).
+
+> La correction est volontairement minimale et ancree sur les composants proprietaires des nœuds fautifs. `src/App.tsx` remonte le contraste du footer runtime partage, ce qui nettoie la meme faute sur plusieurs routes sans toucher a leur logique. `src/pages/DevPage.tsx` rend `main.dev-main` focusable et nomme la region pour satisfaire `scrollable-region-focusable`. `src/pages/TimePage.tsx` releve les couleurs des descriptions d onglets et de deux aides statistiques qui restaient sous le seuil WCAG.
+
+> Effet mesure: le diagnostic Axe cible passe a `admin-system=0`, `dev-overview=0`, `time=0`; le rerun complet `e2e/a11y/wcag-aa-core.spec.ts` ramene l aggregate blocking de `12` a `3`. Ce batch n est donc pas une retouche cosmetique isolee, mais l absorption du reliquat systeme le plus proche de zero via un composant shell partage et deux surfaces locales.

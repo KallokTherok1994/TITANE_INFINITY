@@ -1693,3 +1693,10 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Contrat switch aligne sur ARIA** : `src/components/sections/ConversationSection.tsx` publie `toggle-audio-tts` avec `role="switch"` et `aria-checked`, au lieu du melange invalide `aria-pressed`/switch qui declenchait `aria-required-attr` et `aria-allowed-attr`.
 - **Toast runtime rendu legitime** : `src/ui/components/Toast.tsx` expose maintenant une region live avec role/label valides pour `.toast-container`, ce qui supprime la violation `aria-prohibited-attr` partagee par les surfaces de chat.
 - **Preuves cibles** : Vitest cible sur `ChatProviderSelector`, `ChatModeSelector.runtimePromptBridge`, `ConversationSection.render` et `Toast.legacyA11y`; `pnpm exec playwright test e2e/a11y/wcag-aa-core.spec.ts --reporter=line` avec `titane-conversation=0`, `dashboard=0` et un aggregate blocking ramene de `28` a `12`.
+
+## v35.1.5 (2026-05-14) — Footer shell + DEV/TIME referment la dette a11y restante du trio systeme
+
+- **Contraste partage du shell releve** : `src/App.tsx` remonte la lisibilite du footer runtime `TITANE∞ V… · Living Pulse`, ce qui supprime la meme violation `color-contrast` sur `admin-system`, `dev-overview`, `time` mais aussi sur les autres surfaces qui reutilisent ce footer global.
+- **Region scrollable DEV focusable** : `src/pages/DevPage.tsx` rend `main.dev-main` explicitement focusable au clavier via `tabIndex={0}` et un `aria-label`, ce qui ferme `scrollable-region-focusable` sur `/dev?tab=overview` sans changer la navigation existante.
+- **Sous-libelles TIME rehausses** : `src/pages/TimePage.tsx` releve le contraste des descriptions d onglets et des aides `time-current-segment` / `Fuseau & charge`, ce qui supprime les 9 noeuds `color-contrast` restants de `/time`.
+- **Preuves cibles** : `src/__tests__/pages/DevPage.test.tsx` et `src/__tests__/pages/TimePage.test.tsx` passent avec les nouvelles assertions locales; le diagnostic Axe cible passe a `admin-system=0`, `dev-overview=0`, `time=0`; la spec canonique `e2e/a11y/wcag-aa-core.spec.ts` ramene l aggregate blocking de `12` a `3`.

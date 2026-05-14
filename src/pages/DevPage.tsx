@@ -938,7 +938,7 @@ function DevPageContent(): JSX.Element {
         ))}
       </nav>
 
-      <main className="dev-main">
+      <main className="dev-main" tabIndex={0} aria-label="Contenu principal DEV">
         {activeSection === 'overview' && (
           <OverviewSection
             oneCoreState={oneCoreState}
