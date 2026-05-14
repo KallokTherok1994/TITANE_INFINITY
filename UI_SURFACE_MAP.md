@@ -1616,3 +1616,9 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Browser lane global** : `e2e/ui-runtime-route-proof.spec.ts` inclut maintenant `/multiproject` avec `rootTestId="multiproject-dashboard"`, ce qui évite que la route visible reste couverte uniquement par une spec dédiée.
 - **Production lane globale** : `e2e/production/ui-production-route-proof.spec.ts` ajoute la même route canonique dans l inventaire `CANONICAL_ROUTES`, avec `pageId='multiproject'`.
 - **Anti-drift** : la chaîne de preuve est désormais complète entre shell navigation, inventaire desktop, spec dédiée et suites globales browser/production pour la même surface `/multiproject`.
+
+## v35.1.5 (2026-05-14) — Dev browser proof réaligné sur la vérité guardée
+
+- **Route browser /dev** : `e2e/ui-runtime-route-proof.spec.ts` cesse de forcer un faux contrat `surface-truth-badge-*` en mode browser pour `/dev`.
+- **Vérité réellement prouvée** : la lane browser valide maintenant la surface guardée via le heading `Erreur dans DevPage` ou le statut runtime `TITANE runtime ...`, ce qui correspond au snapshot Playwright réel quand `DevPage` est isolée par `ErrorBoundary` hors runtime desktop.
+- **Stabilisation root** : la spec attend aussi explicitement la visibilité du root testid avant de tenter un fallback de navigation, ce qui réduit les faux diagnostics `not immediately visible` sur les surfaces lentes à hydrater.

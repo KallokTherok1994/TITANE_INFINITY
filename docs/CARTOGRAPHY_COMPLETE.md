@@ -2622,3 +2622,9 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > La correction précédente rendait `/multiproject` visible et prouvée par deux specs ciblées, mais les deux suites d inventaire global `e2e/ui-runtime-route-proof.spec.ts` et `e2e/production/ui-production-route-proof.spec.ts` n incluaient pas encore cette route. Cela laissait une asymétrie entre la preuve locale dédiée et les audits globaux browser/production.
 
 > Cette asymétrie est supprimée en ajoutant `/multiproject` dans les deux inventaires de routes canoniques avec le même ancrage `multiproject-dashboard`. La route visible, la page inventory desktop, la preuve dédiée et les scans globaux partagent maintenant une seule vérité runtime.
+
+## v35.1.5 (2026-05-14) — DevPage browser guard proof au lieu d un faux badge proof
+
+> `e2e/ui-runtime-route-proof.spec.ts` transportait encore une hypothèse obsolète: `/dev` y était manipulée comme une route devant forcément exposer `surface-truth-badge-*` en browser. Le snapshot Playwright réel montre autre chose: en mode browser, `DevPage` peut être isolée par `ErrorBoundary`, avec un heading `Erreur dans DevPage` et un statut runtime global, sans badge de surface dans le DOM.
+
+> La suite browser est réalignée sur cette vérité observable. `/dev` reste couverte dans l inventaire global, mais sa preuve passe maintenant par un marqueur de garde honnête au lieu d un badge inexistant. En parallèle, le check du root testid attend quelques secondes avant de déclarer la surface non visible, ce qui réduit les faux positifs de timing sur les routes lentes à hydrater.

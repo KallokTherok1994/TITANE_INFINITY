@@ -16,22 +16,18 @@ const BASE_ROUTES: {
   testId: string;
   badgeExpected: boolean;
   priority: number;
-  // If badgeRequiresDesktopRuntime is true: badge exists in code but ErrorBoundary fires
-  // in browser mode due to Tauri hooks — badge is PRESENT_IN_CODE, NOT_REACHABLE_IN_BROWSER
-  badgeRequiresDesktopRuntime?: boolean;
+  browserGuardExpected?: boolean;
 }[] = [
   { route: '/', testId: 'page-titane', badgeExpected: true, priority: 1 },
   { route: '/titane', testId: 'page-titane', badgeExpected: true, priority: 1 },
   { route: '/time', testId: 'page-time', badgeExpected: true, priority: 1 },
   { route: '/admin', testId: 'page-admin', badgeExpected: true, priority: 2 },
-  // /dev: badge is in code (lines 819+831+854) but ErrorBoundary fires in browser mode
-  // due to Tauri-dependent hooks (useQAMonitoring, useOneCore). Badge proof: desktop-only.
   {
     route: '/dev',
     testId: 'page-dev',
     badgeExpected: true,
     priority: 2,
-    badgeRequiresDesktopRuntime: true,
+    browserGuardExpected: true,
   },
   { route: '/experience', testId: 'page-experience', badgeExpected: true, priority: 1 },
   { route: '/memory', testId: 'page-memory', badgeExpected: true, priority: 1 },
@@ -71,16 +67,19 @@ async function waitForAnySelector(
   return false;
 }
 
+async function waitForVisible(locator: ReturnType<import('@playwright/test').Page['getByTestId']>, timeout = 3500) {
+  try {
+    await locator.first().waitFor({ state: 'visible', timeout });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
   test.setTimeout(120000);
 
-  for (const {
-    route,
-    testId,
-    badgeExpected,
-    priority,
-    badgeRequiresDesktopRuntime,
-  } of BASE_ROUTES) {
+  for (const { route, testId, badgeExpected, priority, browserGuardExpected } of BASE_ROUTES) {
     test(`[P${priority}] Route ${route} — rootTestId=${testId}, badge=${badgeExpected}`, async ({
       page,
     }) => {
@@ -95,7 +94,7 @@ test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
       // Navigate via nav if on /
       // Root testId check — soft: some pages may redirect
       const rootEl = page.getByTestId(testId);
-      const rootVisible = await rootEl.isVisible().catch(() => false);
+      const rootVisible = await waitForVisible(rootEl, 3500);
 
       if (!rootVisible) {
         // Try via nav button for root route
@@ -118,29 +117,23 @@ test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
 
       // Truth badge check
       if (badgeExpected) {
-        if (badgeRequiresDesktopRuntime) {
-          // Badge is present in source code but page errors via ErrorBoundary in browser mode
-          // due to Tauri-dependent hooks. Verify badge is IN SOURCE (proven by v47), not in DOM.
-          console.log(
-            `[${route}] BADGE_PROOF=DESKTOP_ONLY — badge in source but page throws ErrorBoundary in browser mode`
-          );
-          // Verify ErrorBoundary fired (expected behavior in browser mode)
-          const errorBoundary = page.getByRole('heading', { name: /erreur/i });
-          const hasErrorBoundary = await errorBoundary.isVisible().catch(() => false);
-          console.log(
-            `[${route}] ErrorBoundary_fired=${hasErrorBoundary} (expected=true in browser mode)`
-          );
-        } else {
-          const badgeFound = await waitForAnySelector(page, [BADGE_SELECTOR], BADGE_TIMEOUT);
+        if (browserGuardExpected) {
+          const guardHeading = page.getByRole('heading', { name: /erreur dans devpage/i });
+          const guardStatus = page.getByRole('status').filter({ hasText: /TITANE runtime/i });
 
-          if (!badgeFound) {
-            console.warn(
-              `[${route}] BADGE NOT VISIBLE — no surface-truth-badge-* selector found in DOM`
-            );
-            const count = await page.locator(BADGE_SELECTOR).count();
-            if (count === 0) {
-              throw new Error(`[${route}] No surface-truth-badge-* selector found in DOM`);
-            }
+          await expect(guardHeading.or(guardStatus).first()).toBeVisible({ timeout: BADGE_TIMEOUT });
+          return;
+        }
+
+        const badgeFound = await waitForAnySelector(page, [BADGE_SELECTOR], BADGE_TIMEOUT);
+
+        if (!badgeFound) {
+          console.warn(
+            `[${route}] BADGE NOT VISIBLE — no surface-truth-badge-* selector found in DOM`
+          );
+          const count = await page.locator(BADGE_SELECTOR).count();
+          if (count === 0) {
+            throw new Error(`[${route}] No surface-truth-badge-* selector found in DOM`);
           }
         }
       }
