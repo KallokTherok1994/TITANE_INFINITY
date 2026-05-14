@@ -110,7 +110,7 @@ export const ToastContainer = ({
   const classes = ['toast-container', `toast-container--${position}`].join(' ');
 
   return (
-    <div className={classes} aria-label="Notifications">
+    <div className={classes} role="region" aria-label="Notifications">
       {toasts.map(toast => (
         <Toast key={toast.id} {...toast} onClose={onRemove} />
       ))}

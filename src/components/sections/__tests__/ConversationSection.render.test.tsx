@@ -229,4 +229,14 @@ describe('ConversationSection rendering truth', () => {
       'memory, web'
     );
   });
+
+  it('renders the audio TTS toggle with a valid switch contract', () => {
+    renderConversationSection();
+
+    const toggle = screen.getByTestId('toggle-audio-tts');
+
+    expect(toggle).toHaveAttribute('role', 'switch');
+    expect(toggle).toHaveAttribute('aria-checked', 'false');
+    expect(toggle).not.toHaveAttribute('aria-pressed');
+  });
 });

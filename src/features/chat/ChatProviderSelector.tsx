@@ -48,6 +48,7 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
         <Bot className="h-4 w-4 text-gray-400" />
         <select
           data-testid="select-chat-provider"
+          aria-label="Selection du provider IA"
           value={selectedProvider}
           onChange={e => onChange(e.target.value)}
           className="rounded-lg border border-gray-600 bg-gray-700 px-3 py-1.5 text-sm text-white outline-none transition-colors focus:border-blue-500"

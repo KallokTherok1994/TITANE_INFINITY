@@ -249,6 +249,7 @@ export const ChatModeSelector: React.FC<ChatModeSelectorProps> = ({
       data-testid="chat-mode-selector"
     >
       <select
+        aria-label="Selection du mode de conversation"
         value={currentMode}
         onChange={e => handleModeSelect(e.target.value as ChatModeId)}
         disabled={disabled}

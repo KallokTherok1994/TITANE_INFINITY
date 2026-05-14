@@ -60,6 +60,9 @@ describe('ChatModeSelector -> runtime prompt bridge', () => {
 
     const select = screen.getByTestId('chat-mode-selector-select');
     expect(select).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: 'Selection du mode de conversation' })
+    ).toBe(select);
 
     fireEvent.change(select, { target: { value: 'planning' } });
 

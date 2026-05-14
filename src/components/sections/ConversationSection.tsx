@@ -3157,12 +3157,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 <button
                   className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
                   data-testid="toggle-audio-tts"
+                  type="button"
                   onClick={toggleAudioEnabled}
                   title="Audio (TTS)"
                   aria-label={
                     audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'
                   }
-                  aria-pressed={audioEnabled}
+                  aria-checked={audioEnabled}
                   role="switch"
                 >
                   {audioEnabled ? '🔊' : '🔇'}
