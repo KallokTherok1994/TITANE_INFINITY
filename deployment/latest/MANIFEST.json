@@ -1,28 +1,18 @@
 {
-  "version": "34.0.12",
-  "build_date": "2026-05-13",
+  "version": "35.1.1",
+  "build_date": "2026-05-14",
   "artifacts": {
-    "deb": "titane-infinity_34.0.12_amd64.deb",
-    "rpm": "titane-infinity-34.0.12-1.x86_64.rpm",
-    "appimage": "titane-infinity_34.0.12_amd64.AppImage",
-    "binary": "titane-infinity-34.0.12",
-    "msi": {
-      "filename": "titane-infinity_34.0.12_x64_en-US.msi",
-      "size_bytes": 21639168,
-      "size_human": "20.6 MB",
-      "sha256": "3197383127849031a0c9ac58b326367b2e788c3a0d8565877a18e00602a8979c",
-      "platform": "windows-x64",
-      "installer_type": "wix-3.14",
-      "built_via": ".github/workflows/windows-msi-on-demand.yml run 25839922852",
-      "built_at": "2026-05-14T04:04Z"
-    }
+    "deb": "titane-infinity_35.1.1_amd64.deb",
+    "rpm": "titane-infinity-35.1.1-1.x86_64.rpm",
+    "appimage": "titane-infinity_35.1.1_amd64.AppImage",
+    "binary": "titane-infinity-35.1.1"
   },
   "sha256": {
-    "deb": "539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4",
-    "rpm": "2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169",
-    "appimage": "35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2",
-    "binary": "2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2"
+    "deb": "c38d2c2cabaac35633d2437f885c6c2a9ea71aee038c41936c7671b5cfb52a90",
+    "appimage": "7e3df1431ec2fcecefb46e6ca385cc53316dfe3e8f4074b9ee2608c7dd35c811",
+    "rpm": "5387f363d5ea00096cd07ccc3e37c4a145fbf4992b20a76873e643569fa8b153",
+    "binary": "5a275abc54e8648ab50ad2c0015bd5b6672a5d158af19c5587097eee65c6439d"
   },
-  "supersedes": "34.0.11",
-  "notes": "BUILD ALL v34.0.12 \u2014 clippy idiom modernization (-17 warnings) + prettier normalisation 68 files + audit clean (TSC/ESLint/Prettier/Vitest 9247 PASS/Rust 806 PASS)"
+  "supersedes": "34.0.12",
+  "notes": "v35.1.1 — Playwright critical-fixes + WDIO desktop helper hardening (navigateAndWait floor 15s + 1.5s re-nav retry) + deployment/latest publish"
 }

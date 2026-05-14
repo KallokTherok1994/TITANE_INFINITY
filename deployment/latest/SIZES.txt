@@ -1,5 +1,4 @@
-24982632	titane-infinity_34.0.12_amd64.deb
-24981482	titane-infinity-34.0.12-1.x86_64.rpm
-99125752	titane-infinity_34.0.12_amd64.AppImage
-54916000	titane-infinity-34.0.12
-21639168	titane-infinity_34.0.12_x64_en-US.msi
+titane-infinity_35.1.1_amd64.deb 25251614
+titane-infinity_35.1.1_amd64.AppImage 99375608
+titane-infinity-35.1.1-1.x86_64.rpm 25253298
+titane-infinity-35.1.1 55344080

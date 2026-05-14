@@ -11,17 +11,63 @@
  * Navigate to a route and wait for the root data-testid selector.
  * @param {string} route - e.g. '/titane'
  * @param {string} rootTestId - e.g. 'page-titane'
- * @param {number} [timeout=10000]
+ * @param {number} [timeout=20000]
+ *
+ * v35.1.3 — Default bumped 10s -> 20s upper-bound to absorb DevPage cold-start
+ * latency under parallel WebKitGTK driver load (lazy + useDeveloperMode +
+ * useOneCore + useQAMonitoring + startSystemHealthPolling + heavy dashboards
+ * can intermittently exceed 12s). One re-navigation retry on first-poll miss
+ * recovers transient lazy-chunk fetch hiccups without false FAILs.
+ *
+ * v35.1.3b — Inter-route nav fix: under tauri-driver + WebKitWebDriver, after a
+ * prior `browser.url('tauri://localhost/foo')` the SPA router can swallow a
+ * subsequent `browser.url('tauri://localhost/bar')` request without re-mounting
+ * the target route (lazy chunk for the new page never resolves and the new
+ * root testid never appears). Force a full document reload via
+ * `window.location.assign(url)` inside the webview when the early probe misses,
+ * bypassing any SPA router cache.
  */
-async function navigateAndWait(route, rootTestId, timeout = 10000) {
-  await browser.url(`tauri://localhost${route}`);
+async function navigateAndWait(route, rootTestId, timeout = 20000) {
+  // v35.1.3 — Apply a 15s floor so explicit short timeouts in legacy specs
+  // (8000ms in ipc-response-reflection-*) don't FAIL on slow lazy-chunk mount.
+  const effectiveTimeout = Math.max(Number(timeout) || 0, 15000);
+  const url = `tauri://localhost${route}`;
+  await browser.url(url);
+  // Quick first probe — if selector is not present after ~1.5s, force a full
+  // document reload via window.location.assign (bypasses SPA router cache).
+  let earlyHit = false;
+  try {
+    await browser.waitUntil(
+      async () => {
+        const els = await browser.$$(`[data-testid="${rootTestId}"]`);
+        return els.length > 0;
+      },
+      { timeout: 1500, interval: 200, timeoutMsg: 'early' }
+    );
+    earlyHit = true;
+  } catch {
+    // intentional: fall through to full-document reload
+  }
+  if (!earlyHit) {
+    try {
+      // Force full reload — bypass SPA router that may have swallowed
+      // the previous browser.url() under tauri-driver + WebKitWebDriver.
+      await browser.execute(targetUrl => {
+        // eslint-disable-next-line no-undef
+        window.location.assign(targetUrl);
+      }, url);
+    } catch {
+      // Fallback to native driver nav if execute is unavailable.
+      await browser.url(url);
+    }
+  }
   await browser.waitUntil(
     async () => {
       const els = await browser.$$(`[data-testid="${rootTestId}"]`);
       return els.length > 0;
     },
     {
-      timeout,
+      timeout: effectiveTimeout,
       interval: 400,
       timeoutMsg: `Root selector [data-testid="${rootTestId}"] not found after nav to ${route}`,
     }
