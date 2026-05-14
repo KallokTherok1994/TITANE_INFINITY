@@ -164,3 +164,65 @@ proof_packs/2026-05-14_v35_0_0_seal/
 ## VERDICT
 
 **PASS — Sprint B.1 v35.0.0 validé. Phase B.2 (BUILD ALL) déblocable sur ordre utilisateur.**
+
+---
+
+## 9. Addendum Sprint B.2 (BUILD ALL Linux) — VERDICT PASS
+
+Exécution Rule 14 sur ce poste Linux, post-validation B.1.
+
+### 9.1 Artefacts produits
+
+| Format | Taille | SHA256 | Chemin |
+|---|---|---|---|
+| `.deb` | 25M | `b1a430c2e6420ec0cfcfc2532d33be5857149b848e8dfbd11940b8f5fbc59de4` | `src-tauri/target/release/bundle/deb/titane-infinity_35.0.0_amd64.deb` |
+| `.rpm` | 25M | `9a49dd4df4737c710019e969ab533e2dd5f7b4399015e1fcdd5aca17774110cc` | `src-tauri/target/release/bundle/rpm/titane-infinity-35.0.0-1.x86_64.rpm` |
+| `.AppImage` | 95M | `2c6941682e86e64eb84dce33466fadeb6f881e0a3063e1c5c32bee4422611e65` | `src-tauri/target/release/bundle/appimage/titane-infinity_35.0.0_amd64.AppImage` |
+
+Fichier canonique : `RELEASE_ARTIFACTS_CHECKSUMS_35.0.0.txt`. Inventaire : `RELEASE_SURFACE_INVENTORY.md` (entrée v35.0.0 ajoutée).
+
+### 9.2 Gates post-build
+
+- `detect_recurrence` → PASS entries=1927 (`raw/11_detect_recurrence_post_build.txt`)
+- `verify_instructions` → PASS=50 / FAIL=2 (baseline tolérée préexistante, non causée par v35) — `raw/12_verify_instructions_post_build.txt`
+- Cargo release build : 11m 49s. Bundling Tauri (`deb`,`rpm`,`appimage`) propre — preuve `raw/08_tauri_build.txt`
+
+### 9.3 Périmètre / hors scope
+
+- **Inclus** : Linux x86_64 (AppImage + DEB + RPM).
+- **Exclus** : Android APK (toolchain non vérifié sur ce poste), Windows MSI (cross-compile non supporté).
+- **Install système** : `BLOCKED_SUDO_REQUIRED` (post-build.sh non interactif). Commande à la demande utilisateur :
+  ```
+  sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_35.0.0_amd64.deb
+  bash scripts/post-build/update-desktop-icons.sh
+  ```
+
+### 9.4 AutoHeal
+
+Entrée full-schema `AH-2026-05-14-BUILD-ALL-v35_0_0` ajoutée. `wc -l = 1931` lignes, entries comptées = 1927.
+
+### 9.5 Commit & tag
+
+- Commit Sprint B.2 : `922572362` — `build(release): v35.0.0 BUILD ALL Linux — AppImage+DEB+RPM — VERDICT PASS`
+- Push `origin MAIN` : `0ae3d4259..922572362`
+
+### 9.6 Collision tag `v35.0.0` (incident traçable)
+
+Le tag git annoté `v35.0.0` était déjà publié sur `origin` (commit `4a9b2add6e52`, daté 2026-01-30, release "Web Vitals" orpheline ne suivant pas la trajectoire trunk 33.x→34.x→35.x). Operational safety interdit l'écrasement d'un tag publié (Rule 8 stop-the-line).
+
+**Décision** : tag annoté hors namespace semver pour préserver à la fois l'historique publié et l'identité binaire v35.0.0 réellement bundlée ce build.
+
+| Tag | Cible | État |
+|---|---|---|
+| `v35.0.0` (semver) | `4a9b2add6e52` (release Jan 2026 Web Vitals) | **CONSERVÉ INTACT** |
+| `release/v35.0.0-tanstack-persist-2026-05-14` (custom) | `922572362` (trunk TITANE∞ Sprint B.2) | **NOUVEAU** — poussé `origin` |
+
+Aucun rebuild requis (Rule 1) — les SHA256 v35.0.0 du bundle restent l'identité release authentique. Convention future : tout futur `vX.Y.Z` doit vérifier `git ls-remote --tags origin | grep "X.Y.Z"` avant tag pour prévenir une rechute.
+
+### 9.7 Rollback étendu B.1 + B.2
+
+- **Bundle précédent** : `sudo dpkg -i deployment/latest/titane-infinity_34.0.12_amd64.deb`
+- **Code persistance** : `git revert 922572362 0ae3d4259 a798d61be`
+- **Dépendances** : `pnpm remove @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client`
+- **Tag** : `git tag -d release/v35.0.0-tanstack-persist-2026-05-14 && git push --delete origin release/v35.0.0-tanstack-persist-2026-05-14`
+
