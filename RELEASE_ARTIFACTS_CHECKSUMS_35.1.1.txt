@@ -1,0 +1,42 @@
+# TITANE∞ — Release Artifacts Checksums v35.1.1
+
+Build date: 2026-05-14
+Build host: TITANE-OS (Linux x86_64)
+Trunk HEAD pre-build: 1823fba7f
+Scope: BUILD ALL Phase E.5 — Linux consolidation of Sprints C + D + E.1-3
+
+## Artefacts Linux (3/3)
+
+| Artifact | SHA-256 | Size |
+|---|---|---|
+| `titane-infinity_35.1.1_amd64.AppImage` | `7e3df1431ec2fcecefb46e6ca385cc53316dfe3e8f4074b9ee2608c7dd35c811` | 95M |
+| `titane-infinity_35.1.1_amd64.deb` | `c38d2c2cabaac35633d2437f885c6c2a9ea71aee038c41936c7671b5cfb52a90` | 25M |
+| `titane-infinity-35.1.1-1.x86_64.rpm` | `5387f363d5ea00096cd07ccc3e37c4a145fbf4992b20a76873e643569fa8b153` | 25M |
+
+## Bundle paths
+
+- AppImage: `src-tauri/target/release/bundle/appimage/titane-infinity_35.1.1_amd64.AppImage`
+- DEB:      `src-tauri/target/release/bundle/deb/titane-infinity_35.1.1_amd64.deb`
+- RPM:      `src-tauri/target/release/bundle/rpm/titane-infinity-35.1.1-1.x86_64.rpm`
+
+## Build manifest
+
+- Vite: `pnpm run build` → dist/ with brotli-compressed assets
+- Tauri: `pnpm run tauri build` → Rust release profile (cargo: 10m 28s compile)
+- Auto-install: `/usr/bin/titane-infinity` patched + `~/.local/share/applications/titane-infinity.desktop`
+- Sync système: BLOCKED_SUDO_REQUIRED (post-build sudo non-interactive denied — manual sudo step required to refresh system-wide hicolor cache)
+
+## Scope of v35.1.1 release
+
+Consolidated commits:
+- `5aafa4dea` — Sprint C (v35.1.0): ConversationSection additive TanStack wiring + ChatWindow + useGlobalAIChat @deprecated annotations
+- `af9d2b613` — Phase D (audit-driven): ResearchPage Vitest 3/3 PASS (21 testid contract)
+- `82eecb8c6` — Phase E.1+E.2+E.4: verify_instructions PASS=52 FAIL=0 (1st time ever, no bypass)
+- `1823fba7f` — Phase E.3: opt-in pre-push tag convention guard (4/4 dry-run PASS)
+
+## Tag convention
+
+Per `scripts/git-hooks/pre-push` enforcement, this release tag follows:
+`release/v35.1.1-build-all-2026-05-14`
+
+Plain semver tag `v35.1.1` would be **refused** by the hook (collision risk vs legacy `v36.0.0` + `v37.1.0` on origin).

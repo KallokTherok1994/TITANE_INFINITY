@@ -1,3 +1,31 @@
+## v35.1.1 — 2026-05-14 — BUILD ALL (Rule 14) — Sprint C+D+E consolidation
+
+- **Mode** : DURABLE | **Bump Rule 13** : 35.1.0 → 35.1.1 (patch) | **BUILD ALL** Linux (AppImage + DEB + RPM)
+- **Scope consolidé** (4 commits depuis v35.0.0 seal):
+  - `5aafa4dea` — Sprint C (v35.1.0): `ConversationSection` additive TanStack wiring via `useChatProvidersHealthQuery` + `ChatWindow.tsx` + `useGlobalAIChat.ts` annotés `@deprecated v35.1.0` (suppression v35.3.0).
+  - `af9d2b613` — Phase D (audit-driven): `src/__tests__/pages/ResearchPage.test.tsx` (3/3 PASS) couvrant le contrat 21 data-testid. Audit a révélé `e2e/critical/advanced-agent-dashboards.spec.ts` déjà FULL pour les 6 agents → Sprint D.3 reclassifié déjà-couvert sans nouveau spec.
+  - `82eecb8c6` — Phase E.1+E.2+E.4: gates `verify_instructions.sh` patterns élargis `chat\.mcp\.(enabled|access)` → **PASS=52 FAIL=0 atteint pour la 1ère fois** (sans bypass, baseline historique brisée honnêtement).
+  - `1823fba7f` — Phase E.3: `scripts/git-hooks/pre-push` opt-in tag convention guard (refuse `v[0-9]*` plat, accepte `release/vX.Y.Z-scope-YYYY-MM-DD`, bypass via `TITANE_ALLOW_LEGACY_TAG=1`). 4/4 dry-run PASS.
+- **Tests scope** : Vitest 6/6 PASS (`ResearchPage.test.tsx` + `ConversationSection.tanstack.test.tsx`). `detect_recurrence` PASS entries=1931. `verify_instructions` PASS=52 FAIL=0.
+- **Bundles produits** (Tauri release v35.1.1, cargo 10m 28s):
+  - `src-tauri/target/release/bundle/appimage/titane-infinity_35.1.1_amd64.AppImage` (95M)
+    sha256 `7e3df1431ec2fcecefb46e6ca385cc53316dfe3e8f4074b9ee2608c7dd35c811`
+  - `src-tauri/target/release/bundle/deb/titane-infinity_35.1.1_amd64.deb` (25M)
+    sha256 `c38d2c2cabaac35633d2437f885c6c2a9ea71aee038c41936c7671b5cfb52a90`
+  - `src-tauri/target/release/bundle/rpm/titane-infinity-35.1.1-1.x86_64.rpm` (25M)
+    sha256 `5387f363d5ea00096cd07ccc3e37c4a145fbf4992b20a76873e643569fa8b153`
+- **Checksums fichier canonique** : `RELEASE_ARTIFACTS_CHECKSUMS_35.1.1.txt`.
+- **Post-build desktop** : `scripts/post-build.sh` exécuté ; `Exec=/usr/bin/titane-infinity` et icône alignés ; sync système BLOCKED_SUDO_REQUIRED (post-build non interactif) — install manuel `sudo dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_35.1.1_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` à la demande utilisateur.
+- **Scope hors build** : Android APK (toolchain non vérifié ce run), Windows MSI (cross-compile non supporté ce poste).
+- **Tag attendu** : `release/v35.1.1-build-all-2026-05-14` (convention v35.1.x, hook `pre-push` exige le préfixe `release/`).
+- **AutoHeal entries** : `AH-2026-05-14-CHAT-SURFACE-TANSTACK-WIRING-v35_1_0`, `AH-2026-05-14-PHASE-D-RESEARCHPAGE-VITEST-v35_1_x`, `AH-2026-05-14-PHASE-E-VERIFY-INSTRUCTIONS-PASS52`, `AH-2026-05-14-PHASE-E3-PRE-PUSH-TAG-GUARD`.
+- **Rollback** :
+  - Code : `git revert 1823fba7f 82eecb8c6 af9d2b613 5aafa4dea` (4 commits, ordre inverse)
+  - Bundle précédent : `sudo dpkg -i deployment/latest/titane-infinity_34.0.12_amd64.deb` (v35.0.0 deb non archivé en deployment/latest)
+  - Gates : pour revenir au baseline PASS=50 FAIL=2 : `git revert 82eecb8c6`
+
+---
+
 ## v35.0.0 — 2026-05-14 — BUILD ALL (Rule 14) — TanStack Query offline-first persistence
 
 - **Mode** : DURABLE | **Bump Rule 13** : 34.5.0 → 35.0.0 (minor) | **BUILD ALL** Linux (AppImage + DEB + RPM)
