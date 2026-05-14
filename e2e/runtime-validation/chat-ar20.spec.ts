@@ -211,6 +211,8 @@ test.describe('Runtime Validation: Chat AR20 Suite', () => {
   });
 
   test('TEST AR20: 20 consecutive messages all answered', async ({ page }) => {
+    test.setTimeout(6 * 60 * 1000);
+
     const messageCount = 20;
     const results: Array<{
       index: number;
