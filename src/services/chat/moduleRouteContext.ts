@@ -335,6 +335,28 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     limits: ['web-live-can-be-blocked-by-policy-or-credentials'],
     memoryKeys: ['research_last_query', 'research_last_trace'],
   },
+  '/multiproject': {
+    moduleId: 'multiproject_dashboard',
+    moduleName: 'Multi-Project Dashboard',
+    moduleType: 'project-orchestration',
+    pageTitle: 'MultiProject',
+    capabilities: [
+      'project-crud',
+      'agent-assignment',
+      'priority-queue',
+      'health-consensus',
+    ],
+    dataTruthClass: 'MIXED_LIVE_AND_STATIC',
+    actions: [
+      'create_project',
+      'archive_project',
+      'delete_project',
+      'assign_agent',
+      'refresh_project_health',
+    ],
+    limits: ['local-registry-can-be-empty', 'health-rollup-may-stay-partial-without-agent-data'],
+    memoryKeys: ['titane_multiproject_registry', 'multiproject_rollup_cache'],
+  },
   '/cloud': {
     moduleId: 'cloud_center',
     moduleName: 'Cloud Center',

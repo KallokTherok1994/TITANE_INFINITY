@@ -1,0 +1,191 @@
+{
+  "version": "v34.2.5",
+  "category": "adaptogenes_champignons_psychedeliques_gouvernee",
+  "description": "Base gouvernee sur adaptogenes, produits dits champignons medicinaux et champignons psychedeliques: preuves limitees, statut legal, interactions et risques hepatiques/auto-immuns/psychiatriques.",
+  "retrieval_triggers": [
+    "adaptogene evidence",
+    "adaptogenes securite",
+    "ashwagandha stress sommeil",
+    "ashwagandha foie thyroid",
+    "rhodiola fatigue evidence",
+    "kava anxiete foie",
+    "cat's claw evidence",
+    "goldenseal evidence",
+    "champignon medicinal evidence",
+    "lion's mane evidence",
+    "reishi evidence",
+    "cordyceps evidence",
+    "psilocybin therapeutique canada",
+    "champignons magiques legal canada",
+    "psilocybine sante canada",
+    "psychedelique depression preuve",
+    "plante adaptogene interactions",
+    "immunosuppresseurs plantes",
+    "thyroide ashwagandha",
+    "liver injury natural health products",
+    "champignons psychedeliques risque",
+    "mushroom supplement evidence",
+    "natural doesn't mean safer",
+    "supplement naturel danger foie",
+    "analyse photo champignon medicinal prudence"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Canada / NIH",
+    "confidence": "medium_high",
+    "medical_safety_gate": true,
+    "sources": [
+      {
+        "label": "Ashwagandha - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/ashwagandha"
+      },
+      {
+        "label": "Rhodiola - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/rhodiola?_pos=360&_sid=30ccfaf76&_ss=r"
+      },
+      {
+        "label": "Kava - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/kava"
+      },
+      {
+        "label": "Cat's Claw - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/cats-claw"
+      },
+      {
+        "label": "Goldenseal - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/goldenseal?nav=govd"
+      },
+      {
+        "label": "Natural Doesnt Necessarily Mean Safer - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/know-science/natural-doesnt-mean-better?nav=tw"
+      },
+      {
+        "label": "Safe Use of Complementary Health Products and Practices - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/safety"
+      },
+      {
+        "label": "Psilocybin - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/psilocybin-for-mental-health-and-addiction-what-you-need-to-know"
+      },
+      {
+        "label": "Magic Mushrooms - Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/magic-mushrooms.html"
+      },
+      {
+        "label": "Natural health products - Canada.ca",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-health-products-canada.html"
+      }
+    ]
+  },
+  "adaptogenes_champignons_psychedeliques_gouvernee": {
+    "doctrine_usage": {
+      "verite_canonique": "Les adaptogenes et produits a base de champignons sont souvent commercialises avec un langage large sur energie, stress, immunite ou cerveau, mais les preuves cliniques utiles sont tres inegales. TITANE doit privilegier la prudence, le contexte et le statut legal reel.",
+      "regles": [
+        "Ne pas transformer le mot adaptogene en categorie medicale validee universelle.",
+        "Distinguer produit de bien-etre commercial, supplement standardise, champignon sauvage, substance controlee et protocole de recherche.",
+        "Si le produit touche foie, thyroide, systeme immunitaire, grossesse, chirurgie, troubles psychiatriques ou substances controlees, elever la prudence.",
+        "Ne jamais inferer qu un champignon visible sur photo est medicinal, comestible ou legalement utilisable.",
+        "Pour la psilocybine, rappeler le statut legal et l absence actuelle de produit therapeutique approuve au Canada."
+      ],
+      "niveaux_de_preuve": {
+        "limited_targeted_signal": "Quelques signaux utiles dans des conditions bornees ou a court terme.",
+        "insufficient_or_mixed": "Preuves trop faibles, heterogenes ou contradictoires.",
+        "high_risk_or_controlled": "Risque important, toxicite potentielle, interactions lourdes ou statut legal controle."
+      }
+    },
+    "dossiers": {
+      "ashwagandha": {
+        "nom_scientifique": "Withania somnifera",
+        "niveau_preuve": "limited_targeted_signal",
+        "usages_avec_signal": [
+          "certaines preparations peuvent aider le stress ou l insomnie a court terme",
+          "signal limite sur testosterone et qualite spermatique pendant 2 a 4 mois dans certains travaux"
+        ],
+        "garde_fous": [
+          "pas assez d information pour conclure sur la securite a long terme",
+          "cas rapportes de lesion hepatique associee a des supplements",
+          "eviter pendant grossesse et allaitement",
+          "deconseille en cas de maladie auto-immune ou trouble thyroidien",
+          "interactions possibles avec medicaments du diabete, de la tension, immunosuppresseurs, sedatifs, anti-convulsivants et hormones thyroidiennes"
+        ]
+      },
+      "rhodiola": {
+        "nom_scientifique": "Rhodiola spp.",
+        "niveau_preuve": "insufficient_or_mixed",
+        "usages_avec_signal": [
+          "promotion frequente pour fatigue, stress et performance mentale"
+        ],
+        "garde_fous": [
+          "NCCIH indique qu il n y a pas assez de preuves fiables pour une utilisation de sante precise",
+          "si prise medicamenteuse en cours, validation professionnelle necessaire"
+        ]
+      },
+      "kava": {
+        "niveau_preuve": "high_risk_or_controlled",
+        "usages_avec_signal": [
+          "usage populaire pour anxiete"
+        ],
+        "garde_fous": [
+          "associee a des lesions hepatiques severes dans des cas rapportes",
+          "interactions herb-medicament possibles",
+          "ne pas banaliser comme anxiolytique naturel"
+        ]
+      },
+      "cats_claw": {
+        "nom_scientifique": "Uncaria tomentosa / U. guianensis",
+        "niveau_preuve": "insufficient_or_mixed",
+        "usages_avec_signal": [
+          "promue pour inflammation, immunite ou infections"
+        ],
+        "garde_fous": [
+          "pas de preuve scientifique concluante pour un usage de sante chez l humain",
+          "peut ralentir la coagulation et augmenter le risque de saignement pendant chirurgie"
+        ]
+      },
+      "goldenseal": {
+        "niveau_preuve": "insufficient_or_mixed",
+        "usages_avec_signal": [
+          "promotion commerciale frequente pour rhume et infections ORL"
+        ],
+        "garde_fous": [
+          "pas assez de preuves pour determiner une utilite pour les conditions revendiquees",
+          "ne pas presenter comme substitut a une evaluation infectieuse"
+        ]
+      },
+      "champignons_medicinaux_commerciaux": {
+        "niveau_preuve": "insufficient_or_mixed",
+        "resume": "Les familles marketing type lion's mane, reishi ou cordyceps sont souvent promues largement, mais ce module ne doit pas leur attribuer d efficacite clinique solide sans source officielle specifique de haut niveau.",
+        "garde_fous": [
+          "ne pas extrapoler d etudes precliniques a des effets cliniques etablis",
+          "ne pas confondre supplement standardise et champignon sauvage observe en photo",
+          "attention aux problemes de qualite, de contamination ou d adulteration des produits"
+        ]
+      },
+      "psilocybine_et_champignons_magiques": {
+        "niveau_preuve": "high_risk_or_controlled",
+        "resume": "Il existe un interet therapeutique de recherche, mais les produits contenant de la psilocybine ne sont pas approuves comme therapeutiques au Canada.",
+        "garde_fous": [
+          "vente, possession et production de champignons magiques sont illegales au Canada sauf autorisation specifique de Sante Canada",
+          "aucun produit therapeutique approuve contenant psilocybine au Canada",
+          "les donnees cliniques restent limitees malgre des signaux prometteurs en recherche",
+          "risques de bad trips, anxiete, hausse du rythme cardiaque et confusion",
+          "ne jamais recommander l auto-traitement psychiatrique avec psilocybine"
+        ]
+      }
+    },
+    "heuristiques_runtime_pour_titane": {
+      "si_adaptogene": [
+        "demander implicitement l objectif reel: stress, sommeil, energie, cognition, fertilite, immunite",
+        "donner priorite aux preuves courtes, aux effets indeterminés et aux interactions"
+      ],
+      "si_champignon_marketing": [
+        "ne pas valider des promesses cognitives ou immunitaires faute de source federale solide",
+        "signaler que naturel/commercial ne vaut pas preuve clinique"
+      ],
+      "si_psychedelique": [
+        "rappeler le statut legal canadien et le cadre de recherche",
+        "rediriger vers prise en charge pro si detresse psychique ou demande d auto-traitement"
+      ]
+    }
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "version": "v34.2.1",
+  "category": "quebec_champignons_fonge",
+  "description": "Champignons et fonge du Quebec pour reconnaissance naturaliste et analyse photo : morphologie utile, habitats, groupes pratiques, especes frequentes, sosies toxiques et protocole de prudence strict.",
+  "retrieval_triggers": [
+    "champignon quebec",
+    "fonge quebec",
+    "mycologie quebec",
+    "identifier champignon photo",
+    "reconnaissance champignon",
+    "mycoquebec",
+    "morille quebec",
+    "chanterelle quebec",
+    "bolet quebec",
+    "amanite quebec",
+    "galerine margee",
+    "cortinaire",
+    "polypore",
+    "hydne",
+    "champignon a lames",
+    "champignon a pores",
+    "champignon a aiguillons",
+    "champignon gelatineux",
+    "champignon sur bois",
+    "champignon sur sol",
+    "champignon sur mousse",
+    "spore print",
+    "photo dessous champignon",
+    "photo base du pied",
+    "photo volve",
+    "photo anneau champignon",
+    "photo habitat champignon",
+    "consommation champignon sauvage",
+    "champignon toxique quebec",
+    "centre antipoison quebec",
+    "guide identification champignon quebec",
+    "groupes pratiques mycoquebec",
+    "analyse photo champignon quebec"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Quebec",
+    "confidence": "high",
+    "sources": [
+      {
+        "label": "Mycoquebec - Accueil",
+        "url": "https://mycoquebec.org/"
+      },
+      {
+        "label": "Mycoquebec - Guide d identification",
+        "url": "https://www.mycoquebec.org/appID/noviceApp.html"
+      },
+      {
+        "label": "Champignons sauvages et de culture domestique",
+        "url": "https://www.quebec.ca/sante/alimentation/salubrite-aliments-prevention-risques/salubrite-aliments-domicile/preparation-aliments-cuisson-securitaires/precautions-manipule-aliments/champignons-sauvages-culture-domestique"
+      },
+      {
+        "label": "Pour une consommation securitaire des champignons sauvages",
+        "url": "https://www.cisss-at.gouv.qc.ca/pour-une-consommation-securitaire-des-champignons-sauvages/"
+      }
+    ]
+  },
+  "quebec_champignons_fonge": {
+    "cadre_quebecois": {
+      "base_de_reference": "Mycoquebec maintient une base de donnees sur la biodiversite fongique du Quebec avec milliers de photos, descriptions detaillees, taxonomie, cles et outils d identification.",
+      "volume_reference": "Lors de la revue du 2026-05-14, Mycoquebec annonçait 3 875 especes repertoriees et plus de 27 000 photographies prises dans toutes les regions du Quebec.",
+      "regle_maitresse": "Une identification photographique de champignon reste insuffisante pour declarer un specimen comestible avec certitude."
+    },
+    "alerte_securite": {
+      "interdits": [
+        "Ne jamais recommander la consommation d un champignon si la certitude n est pas exceptionnelle et verifiee.",
+        "Ne jamais conclure a la comestibilite avec une photo unique du chapeau.",
+        "Ne jamais ignorer la base du pied, l hymenium, le substrat et l odeur lorsque disponibles."
+      ],
+      "quand_bloquer": [
+        "presence possible d amanite blanche, amanite phalloide, galerine margee ou cortinaire toxique",
+        "champignon brun ou blanc banal a lames sans details complets",
+        "specimen vieux, altere, ver-moulu, gele, detrempe ou endommage"
+      ],
+      "conduite": "En cas d ingestion ou de doute, orienter vers le Centre antipoison du Quebec et conserver des specimens frais."
+    },
+    "protocole_reconnaissance_photo": {
+      "morphologie_photo": [
+        "vue du dessus du chapeau",
+        "vue du dessous pour voir lames, pores, plis ou aiguillons",
+        "pied complet avec base degagee",
+        "section coupee si possible",
+        "photo du groupe entier et du sujet isole",
+        "substrat : sol, bois, mousse, feuillus, coniferes, souche, litiere"
+      ],
+      "caracteres_cles": [
+        "type d hymenium : lames, pores, aiguillons, plis, coupe, gelatineux",
+        "presence d anneau",
+        "presence de volve",
+        "couleur des spores si disponible",
+        "bleuissement, rougissement ou suintement au toucher/coupe",
+        "odeur et latex pour certains genres"
+      ],
+      "limites": [
+        "de nombreux genres demandent microscopie, reaction chimique ou sporée",
+        "les jeunes specimens peuvent masquer les traits discriminants",
+        "plusieurs sosies mortels existent dans les groupes a lames"
+      ]
+    },
+    "groupes_pratiques": {
+      "a_lames": "Groupe le plus vaste et le plus piégeux. Il faut regarder fixation des lames, couleur, volve, anneau et sporée.",
+      "a_pores": "Bolets et polypores. Regarder couleur des pores, bleuissement, texture du pied et habitat.",
+      "a_aiguillons": "Hydnes. Aiguillons sous le chapeau au lieu de lames ou pores.",
+      "a_plis": "Chanterelles vraies et proches. Les plis sont epais et decurrents, pas de vraies lames fines.",
+      "gelatineux_ou_coupes": "Caracteres macroscopiques souvent nets mais identification parfois subtile au niveau espece."
+    },
+    "especes_reperes": {
+      "chanterelle_vraie": {
+        "nom_scientifique": "Cantharellus spp.",
+        "indices_photo": [
+          "plis epais et decurrents sous le chapeau, non de vraies lames",
+          "couleur jaune a jaune-or",
+          "chapeau en entonnoir ou ondule",
+          "croissance au sol, souvent dispersee"
+        ],
+        "confusions": [
+          "fausse chanterelle : lames plus fines et vraies",
+          "omphalotus hors contexte principal mais a surveiller ailleurs"
+        ],
+        "statut_runtime": "Rester prudent au niveau genre si le dessous est mal visible."
+      },
+      "morille": {
+        "nom_scientifique": "Morchella spp.",
+        "indices_photo": [
+          "chapeau alveole comme un nid d abeilles",
+          "silhouette conique ou ovoide",
+          "interieur creux de la pointe a la base quand coupe"
+        ],
+        "confusions": [
+          "gyromitres : plis cerebriformes plutot qu alveoles regulières",
+          "morilles vieillies deformees"
+        ],
+        "statut_runtime": "Demander une coupe longitudinale avant toute conclusion."
+      },
+      "hydne": {
+        "nom_scientifique": "Hydnum spp.",
+        "indices_photo": [
+          "aiguillons souples sous le chapeau",
+          "teinte creme a orange clair",
+          "forme souvent irréguliere"
+        ],
+        "confusions": [
+          "chanterelles pale si le dessous n est pas net",
+          "autres champignons a dessous rugueux mais non a aiguillons"
+        ]
+      },
+      "bolet_du_groupe_cepe": {
+        "nom_scientifique": "Boletus / Butyriboletus / genres proches",
+        "indices_photo": [
+          "dessous a pores et non a lames",
+          "pied charnu",
+          "chapeau convexe",
+          "habitat forestier"
+        ],
+        "confusions": [
+          "bolets bleuisseurs",
+          "bolets a pores rouges a traiter avec forte prudence"
+        ],
+        "statut_runtime": "Utiliser le genre ou groupe pratique si le bleuissement et le reticulum ne sont pas documentes."
+      },
+      "polypore_sur_bois": {
+        "nom_scientifique": "Polyporales divers",
+        "indices_photo": [
+          "fructification attachee au bois",
+          "dessous a pores",
+          "forme en console, sabot ou eventail"
+        ],
+        "confusions": [
+          "amadouviers et autres consoles proches",
+          "jeunes bolets lignicoles peu typiques"
+        ]
+      },
+      "amanites_blanche_ou_verdatre": {
+        "nom_scientifique": "Amanita spp.",
+        "indices_photo": [
+          "lames claires",
+          "presence possible d anneau",
+          "base bulbeuse avec volve ou restes de voile",
+          "silhouette souvent tres 'classique' de champignon a lames"
+        ],
+        "confusions": [
+          "avec trop d especes comestibles apparentes pour accepter une certitude photo",
+          "danger mortel si confusion"
+        ],
+        "statut_runtime": "Classification securite prioritaire. Ne jamais valider comestibilite."
+      },
+      "galerine_margee": {
+        "nom_scientifique": "Galerina marginata",
+        "indices_photo": [
+          "petit a moyen champignon brun a lames",
+          "souvent sur bois",
+          "anneau parfois discret",
+          "aspect banal tres trompeur"
+        ],
+        "confusions": [
+          "petites pholiotes ou hypholomes",
+          "autres petits champignons bruns"
+        ],
+        "statut_runtime": "Toujours escalader en danger eleve si un petit brun lignicole ressemble vaguement a cette espece."
+      }
+    },
+    "heuristiques_runtime_pour_titane": {
+      "prioriser_espece": [
+        "Si dessous a plis epais et non vraies lames + jaune d or -> groupe chanterelles prioritaire.",
+        "Si dessous a aiguillons -> groupe hydnes prioritaire.",
+        "Si chapeau alveole et coupe creuse -> groupe morilles prioritaire.",
+        "Si lames claires + anneau/volve possible -> groupe amanites prioritaire et mode prudence maximal."
+      ],
+      "quand_rester_au_niveau_du_groupe": [
+        "petit champignon brun ou blanc",
+        "photo sans dessous ni base",
+        "specimen trop jeune ou trop vieux",
+        "desaccord entre habitat et morphologie attendue"
+      ],
+      "outils_externes_recommandes": [
+        "Mycoquebec pour comparaison taxonomique et photographique",
+        "guide d identification Mycoquebec pour filtrer par caracteres",
+        "antipoison si ingestion ou doute de toxicite"
+      ]
+    }
+  }
+}

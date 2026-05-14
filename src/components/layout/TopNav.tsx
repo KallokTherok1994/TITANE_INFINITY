@@ -20,6 +20,7 @@ import {
   TrendingUp,
   Settings,
   Wrench,
+  FolderKanban,
   MoreHorizontal,
   ChevronDown,
   Zap,
@@ -461,6 +462,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   stats: <TrendingUp size={18} />,
   admin: <Settings size={18} />,
   dev: <Wrench size={18} />,
+  projects: <FolderKanban size={18} />,
 };
 
 export const createTopNavItems = (

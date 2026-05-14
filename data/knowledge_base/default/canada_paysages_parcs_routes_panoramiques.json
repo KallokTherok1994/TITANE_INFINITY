@@ -1,0 +1,89 @@
+{
+  "version": "v34.2.7",
+  "category": "canada_paysages_parcs_routes_panoramiques",
+  "description": "Base Canada-centrique sur grands paysages, parcs, routes panoramiques, regions naturelles et lieux remarquables a visiter pour leur valeur visuelle et de plein air.",
+  "retrieval_triggers": [
+    "plus beaux paysages canada",
+    "plus beaux endroits nature canada",
+    "parcs canada incontournables",
+    "routes panoramiques canada",
+    "icefields parkway",
+    "meilleures randonnees quebec canada",
+    "parcs canada quebec nature",
+    "ou aller nature canada",
+    "road trip nature canada",
+    "beaux endroits publics canada",
+    "banff jasper scenic drive",
+    "saint laurent marine park whale watching",
+    "waterfall hikes canada",
+    "bucket list nature canada",
+    "lieux a visiter canada nature"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Canada",
+    "confidence": "medium_high",
+    "sources": [
+      {
+        "label": "Scenic drives at Parks Canada",
+        "url": "https://www.parks.canada.ca/voyage-travel/experiences/panoramique-scenic"
+      },
+      {
+        "label": "Icefields Parkway",
+        "url": "https://parks.canada.ca/pn-np/ab/banff/visit/les10-top10/glaciers-icefields.aspx"
+      },
+      {
+        "label": "Most beautiful waterfall hikes",
+        "url": "https://parks.canada.ca/voyage-travel/experiences/sports/randonnee-hiking/chutes-waterfalls"
+      },
+      {
+        "label": "Best hiking in Quebec",
+        "url": "https://parks.canada.ca/voyage-travel/region/quebec/randonnee-hike"
+      },
+      {
+        "label": "La Mauricie National Park",
+        "url": "https://parks.canada.ca/pn-np/qc/mauricie?wbdisable=true"
+      }
+    ]
+  },
+  "canada_paysages_parcs_routes_panoramiques": {
+    "doctrine_canonique": {
+      "verite_canonique": "Pour le Canada, TITANE doit raisonner par grands ensembles de paysages et experiences: routes panoramiques, parcs de montagne, littoraux, fleuve et archipels, puis ajuster selon acces et saison.",
+      "regles": [
+        "Ne pas reduire le Canada naturel a Banff seulement; garder une lecture multiregionale.",
+        "Distinguer route panoramique, parc, randonnee, observation de faune et destination maritime.",
+        "Conserver un ton de curation et d orientation, pas une promesse de disponibilite ou de service en temps reel."
+      ]
+    },
+    "ensembles_majeurs": {
+      "rocheuses_et_glaciers": {
+        "exemple_canonique": "Icefields Parkway entre Lake Louise et Jasper",
+        "ambiance": "Grande route de montagne entre glaciers, lacs turquoise, vallons et sommets massifs.",
+        "faits_cles": [
+          "Parks Canada la presente comme l une des routes panoramiques les plus spectaculaires au monde",
+          "prevoir une journee complete pour un trajet aller simple"
+        ],
+        "garde_fous": [
+          "pas de couverture cellulaire sur de longs segments",
+          "services saisonniers selon la periode"
+        ]
+      },
+      "quebec_fleuve_mer_archipels": {
+        "ambiance": "Saint-Laurent, parcs marins, peninsules, falaises, archipels et rivages boreaux.",
+        "usage_runtime": "Si l usager veut un Canada naturel plus maritime, rehausser Quebec et Atlantique plutot que montagne seulement."
+      },
+      "waterfalls_and_trail_beauty": {
+        "ambiance": "Le Canada se lit aussi par des randonnees vers cascades, vallons humides et forets anciennes.",
+        "preuve_source": "Parks Canada met de l avant une selection nationale de randos menant a certaines des plus belles chutes du pays."
+      }
+    },
+    "heuristiques_runtime_pour_titane": {
+      "si_demande_incontournables_canada": [
+        "proposer une repartition par type de grandeur naturelle: Rocheuses, fleuve et mer, forets et lacs, routes panoramiques, chutes et sentiers"
+      ],
+      "si_demande_quebec_dans_le_canada": [
+        "montrer que le Quebec n est pas seulement urbain: peninsules, archipels, forets, lacs, montagnes et fleuve"
+      ]
+    }
+  }
+}

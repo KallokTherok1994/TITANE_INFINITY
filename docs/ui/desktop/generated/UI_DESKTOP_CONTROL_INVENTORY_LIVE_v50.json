@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-11T00:23:29.193Z",
+  "generated": "2026-05-14T16:21:38.019Z",
   "mission": "UI_DESKTOP_FULL_COVERAGE_v50",
   "source": "LIVE_DOM_CRAWL",
   "routes": [
@@ -15,12 +15,12 @@
       "title": "",
       "hasTitle": false,
       "counts": {
-        "buttons": 182,
+        "buttons": 60,
         "inputs": 4,
         "links": 1,
         "selects": 3,
         "textareas": 1,
-        "dataTestIds": 436
+        "dataTestIds": 278
       },
       "tabsFromRegistry": 6,
       "actionsFromRegistry": 4
@@ -34,15 +34,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "⚡ PROGRESSION TITANE∞",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 32,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 350
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -54,17 +54,17 @@
       "rootTestId": "page-time",
       "truthClass": "MIXED_LIVE_AND_STATIC",
       "isSimulated": false,
-      "rootExists": false,
+      "rootExists": true,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "TIME — Centre Temporel Unifié",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 35,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 245
       },
       "tabsFromRegistry": 5,
       "actionsFromRegistry": 5
@@ -78,15 +78,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "ADMIN",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 43,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 245
       },
       "tabsFromRegistry": 6,
       "actionsFromRegistry": 3
@@ -100,15 +100,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "⚠️ Erreur dans DevPage",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 234
       },
       "tabsFromRegistry": 5,
       "actionsFromRegistry": 2
@@ -122,15 +122,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Perfect Fusion Dashboard",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -144,15 +144,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Ultimate Optimization Dashboard",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 31,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -166,15 +166,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "⚛ TOTAL_DEVTOTAL_DEV — COCKPIT GOUVERNE",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 31,
+        "inputs": 1,
         "links": 1,
-        "selects": 3,
+        "selects": 0,
         "textareas": 1,
-        "dataTestIds": 436
+        "dataTestIds": 238
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -187,16 +187,16 @@
       "truthClass": "SIMULATED_UI",
       "isSimulated": true,
       "rootExists": false,
-      "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "pageState": "DEGRADED",
+      "title": "🔥 Orchestration & Intelligence Center",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 35,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -209,16 +209,16 @@
       "truthClass": "LIVE_TAURI_WITH_FALLBACK",
       "isSimulated": false,
       "rootExists": false,
-      "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "pageState": "DEGRADED",
+      "title": "🌌 Orchestration Meta Center",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 35,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 2
@@ -232,15 +232,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Reality Center",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 2
@@ -254,15 +254,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Monitoring Agent",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 234
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 2
@@ -275,16 +275,16 @@
       "truthClass": "SIMULATED_UI",
       "isSimulated": true,
       "rootExists": false,
-      "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "pageState": "DEGRADED",
+      "title": "⚛️Quantum Rendering Layer▽DEGRADED",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 36,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -298,15 +298,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Twins — Digital Twins",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 33,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 242
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -320,15 +320,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "☁️ TITANE∞ Cloud Center",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 4
@@ -342,15 +342,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "💾 Mémoire Triple",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
+        "buttons": 84,
         "inputs": 4,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 11,
+        "textareas": 0,
+        "dataTestIds": 1719
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 4
@@ -364,15 +364,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "🔍 TITANE Research Engine",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 1,
         "links": 1,
-        "selects": 3,
+        "selects": 1,
         "textareas": 1,
-        "dataTestIds": 436
+        "dataTestIds": 240
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -386,15 +386,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "📄 Centre Documentaire",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 2,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 238
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -408,15 +408,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Singularity Monitor",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 241
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -430,15 +430,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "🛡️Sentinel — Gardien de l'Intégrité",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 28,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -450,17 +450,17 @@
       "rootTestId": "page-watchdog",
       "truthClass": "LIVE_TAURI_WITH_FALLBACK",
       "isSimulated": false,
-      "rootExists": false,
+      "rootExists": true,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "👁️Watchdog — Surveillance Temps Réel",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 28,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -474,15 +474,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "🛡️SelfHeal — Auto-Réparation",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 28,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -496,15 +496,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "🎯Adaptive Engine — Optimisation",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 28,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -516,17 +516,17 @@
       "rootTestId": "page-skills",
       "truthClass": "MIXED_LIVE_AND_STATIC",
       "isSimulated": false,
-      "rootExists": false,
+      "rootExists": true,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "🧩 Skill OS",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 32,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 234
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 2
@@ -538,17 +538,17 @@
       "rootTestId": "page-knowledge",
       "truthClass": "MIXED_LIVE_AND_STATIC",
       "isSimulated": false,
-      "rootExists": false,
+      "rootExists": true,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Fusion des Connaissances",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 30,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 234
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -562,15 +562,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Creation Studio",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 35,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -584,15 +584,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Evolution Monitor",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 30,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 235
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -604,17 +604,17 @@
       "rootTestId": "page-performance-test",
       "truthClass": "MIXED_LIVE_AND_STATIC",
       "isSimulated": false,
-      "rootExists": false,
+      "rootExists": true,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "Monitoring Agent",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 29,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 234
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 1
@@ -628,15 +628,15 @@
       "isSimulated": false,
       "rootExists": false,
       "pageState": "LIVE",
-      "title": "",
-      "hasTitle": false,
+      "title": "🏡 L'Humain à tout faire",
+      "hasTitle": true,
       "counts": {
-        "buttons": 182,
-        "inputs": 4,
+        "buttons": 33,
+        "inputs": 0,
         "links": 1,
-        "selects": 3,
-        "textareas": 1,
-        "dataTestIds": 436
+        "selects": 0,
+        "textareas": 0,
+        "dataTestIds": 246
       },
       "tabsFromRegistry": 0,
       "actionsFromRegistry": 0

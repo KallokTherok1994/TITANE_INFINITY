@@ -1,0 +1,257 @@
+{
+  "version": "v34.2.1",
+  "category": "quebec_flore_arbres_plantes",
+  "description": "Flore, arbres et plantes du Quebec pour reconnaissance naturaliste et analyse photo : emblemes, habitats, saisons, criteres morphologiques, especes communes, especes confondantes et vigilance terrain.",
+  "retrieval_triggers": [
+    "plante quebec",
+    "arbre quebec",
+    "fleur quebec",
+    "flore quebec",
+    "botanique quebec",
+    "identifier arbre photo",
+    "identifier plante photo",
+    "identifier fleur photo",
+    "reconnaissance feuille",
+    "reconnaissance ecorce",
+    "reconnaissance bourgeon",
+    "reconnaissance samares",
+    "reconnaissance aiguilles",
+    "bouleau jaune",
+    "iris versicolore",
+    "erable a sucre",
+    "sapin baumier",
+    "epinette noire",
+    "epinette blanche",
+    "pin blanc",
+    "bouleau a papier",
+    "peuplier faux-tremble",
+    "thuya occidental",
+    "plante humide quebec",
+    "milieu humide quebec",
+    "photo feuille alterne opposee",
+    "photo arbre hiver",
+    "photo arbre ete",
+    "plante invasive quebec",
+    "sentinelle espece exotique envahissante",
+    "herbier du quebec",
+    "arborescence ccdmd",
+    "petite flore forestiere du quebec",
+    "analyse photo plante quebec",
+    "reconnaissance vegetation quebec"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Quebec",
+    "confidence": "high",
+    "sources": [
+      {
+        "label": "Emblemes du Quebec",
+        "url": "https://www.quebec.ca/gouvernement/portrait-quebec/drapeau-symboles-nationaux/emblemes"
+      },
+      {
+        "label": "Arborescence - cles d identification des vegetaux du Quebec",
+        "url": "https://campus-ressources.gouv.qc.ca/item/3071"
+      },
+      {
+        "label": "Petite flore forestiere du Quebec",
+        "url": "https://mrnf.gouv.qc.ca/nos-publications/petite-flore-forestiere-quebec/"
+      },
+      {
+        "label": "Sentinelle - especes exotiques envahissantes",
+        "url": "https://www.environnement.gouv.qc.ca/biodiversite/especes-exotiques-envahissantes/sentinelle.htm"
+      }
+    ]
+  },
+  "quebec_flore_arbres_plantes": {
+    "cadre_quebecois": {
+      "emblemes_officiels": {
+        "arbre": "Bouleau jaune (Betula alleghaniensis), arbre emblematique du Quebec.",
+        "fleur": "Iris versicolore (Iris versicolor), fleur emblematique du Quebec.",
+        "usage_runtime": "Si une photo montre un arbre forestier feuillu a ecorce jaune-bronze qui s exfolie en rubans fins, tester en priorite le bouleau jaune. Si une fleur de milieu humide montre des tepales bleu-violet avec motifs jaunes et blancs, tester en priorite l iris versicolore."
+      },
+      "cles_officielles_d_identification": {
+        "arborescence": "Le Quebec dispose d un outil de cles pour identifier les plantes vasculaires avec trois entrees majeures : coniferes, feuillus, preles-lycopodes-fougeres.",
+        "petite_flore": "La Petite flore forestiere du Quebec couvre arbres, arbustes, plantes vasculaires, fougeres et mousses les plus courants."
+      }
+    },
+    "protocole_reconnaissance_photo": {
+      "priorite_1_silhouette": "Commencer par la forme generale : arbre, arbuste, plante herbacee, plante aquatique, conifere ou fougere.",
+      "priorite_2_feuilles": "Verifier disposition opposee/alterne/verticillee, feuille simple ou composee, lobes, dents, nervation, couleur du revers.",
+      "priorite_3_organes_reproducteurs": "Chercher fleurs, fruits, samares, cones, chatons, capsules ou graines. Une identification plante sans organe reproducteur doit rester plus prudente.",
+      "priorite_4_ecorce_bourgeons": "Pour les arbres en hiver ou a distance, utiliser ecorce, bourgeons, ramification et port de cime.",
+      "priorite_5_contexte": "Toujours croiser avec habitat, region, type de sol, humidite, exposition, saison et altitude relative.",
+      "photos_a_demander": [
+        "vue d ensemble du port",
+        "gros plan de la feuille complete",
+        "dessous de feuille",
+        "ecorce ou tige",
+        "fleur ou fruit",
+        "bourgeon si hors saison",
+        "contexte habitat"
+      ],
+      "limites": [
+        "une photo unique ne suffit pas toujours pour une espece",
+        "plusieurs saules, carex, asters, verge d or et fougeres exigent des details fins",
+        "une photo de feuille seule peut mener a une confusion entre erables, peupliers, bouleaux ou cerisiers"
+      ]
+    },
+    "marqueurs_morphologiques_cles": {
+      "feuillus": {
+        "feuille_opposee": "Au Quebec, penser vite aux erables, frenes ou cornouillers si les feuilles sont opposees.",
+        "feuille_alternee": "La majorite des feuillus communs sont alternes : bouleaux, peupliers, chenes, ormes, cerisiers.",
+        "lobes_palmes": "Lobes palmes nets suggerent souvent un erable. Profondeur des sinus, forme des pointes et presence de laitance au petiole aident ensuite."
+      },
+      "coniferes": {
+        "aiguilles_isolees": "Aiguilles seules inserees tout autour du rameau : epinettes ou sapins.",
+        "aiguilles_en_faisceaux": "Aiguilles regroupees en faisceaux : pins.",
+        "ecailles": "Feuillage ecailleux aplati : thuya occidental."
+      },
+      "milieux_humides": {
+        "indicateurs": "Iris, carex, quenouilles, salicaires et saules signalent souvent fosses, rives ou plaines inondables.",
+        "prudence_invasives": "Les especes exotiques envahissantes doivent etre comparees aux ressources Sentinelle si couleur, densite de colonie et habitat semblent anormaux."
+      }
+    },
+    "especes_reperes": {
+      "bouleau_jaune": {
+        "nom_scientifique": "Betula alleghaniensis",
+        "indices_photo": [
+          "ecorce brun-jaune a bronzee",
+          "ecorce qui s exfolie en fines lanières ou rubans",
+          "feuilles alternees ovales a bord dente",
+          "allure de grand feuillu de foret mesique"
+        ],
+        "habitat": "Forets melangees et feuillues, sols frais et bien draines.",
+        "confusions": [
+          "bouleau a papier : ecorce nettement blanche",
+          "merisier tardif : ecorce plus sombre, sans longs rubans jaunes"
+        ]
+      },
+      "iris_versicolore": {
+        "nom_scientifique": "Iris versicolor",
+        "indices_photo": [
+          "grande fleur bleu-violet",
+          "motifs jaunes et blancs sur les tepales",
+          "feuilles en glaive",
+          "croissance en milieu humide"
+        ],
+        "habitat": "Mares, fosses, rives, marais et milieux humides.",
+        "confusions": [
+          "iris de jardin echappes de culture",
+          "glayeul ou autres monocotyledones sans fleur visible"
+        ]
+      },
+      "erable_a_sucre": {
+        "nom_scientifique": "Acer saccharum",
+        "indices_photo": [
+          "feuille opposee a cinq lobes principaux",
+          "sinus arrondis plus doux que chez l erable rouge",
+          "couleurs automnales jaune-orange-rouge",
+          "grande cime arrondie"
+        ],
+        "habitat": "Erablieres et forets riches du sud et du centre du Quebec.",
+        "confusions": [
+          "erable rouge : sinus plus en V et dents plus irregulieres",
+          "erable de Norvege : petiole qui exsude un latex blanc a la cassure"
+        ]
+      },
+      "bouleau_a_papier": {
+        "nom_scientifique": "Betula papyrifera",
+        "indices_photo": [
+          "ecorce blanche papyracee",
+          "tronc clair tres visible de loin",
+          "feuilles dentées triangulaires a ovées"
+        ],
+        "habitat": "Lisières, coupes, peuplements pionniers.",
+        "confusions": [
+          "peuplier faux-tremble a ecorce claire mais moins papyracee",
+          "jeunes bouleaux jaunes avant exfoliation marquee"
+        ]
+      },
+      "sapin_baumier": {
+        "nom_scientifique": "Abies balsamea",
+        "indices_photo": [
+          "aiguilles plates souples",
+          "dessous des aiguilles avec deux bandes pales",
+          "cones dressés en hauteur",
+          "rameaux plus ordonnes que chez les epinettes"
+        ],
+        "habitat": "Forets boreales et mixtes fraiches.",
+        "confusions": [
+          "epinette blanche ou noire : aiguilles plus piquantes, section plus carree",
+          "if du Canada : aiguilles plates mais port differents"
+        ]
+      },
+      "epinette_noire": {
+        "nom_scientifique": "Picea mariana",
+        "indices_photo": [
+          "petites aiguilles raides",
+          "port etroit et souvent sommet effile",
+          "petits cones persistants",
+          "frequente en milieux humides et tourbeux"
+        ],
+        "habitat": "Tourbieres, pessieres noires, sols acides.",
+        "confusions": [
+          "epinette blanche : rameaux et aiguilles souvent plus pales et plus robustes",
+          "sapin baumier : aiguilles plus plates"
+        ]
+      },
+      "pin_blanc": {
+        "nom_scientifique": "Pinus strobus",
+        "indices_photo": [
+          "aiguilles souples en faisceaux de cinq",
+          "longs cones pendants",
+          "cime a etages chez les vieux sujets"
+        ],
+        "habitat": "Sols bien draines, parfois sablonneux, foret mixte.",
+        "confusions": [
+          "autres pins a deux ou trois aiguilles par faisceau",
+          "pin rouge si la photo ne montre pas la base du faisceau"
+        ]
+      },
+      "thuya_occidental": {
+        "nom_scientifique": "Thuja occidentalis",
+        "indices_photo": [
+          "ramules aplatis en ecailles",
+          "odeur aromatique si froisse",
+          "petits cones oblongs"
+        ],
+        "habitat": "Cedrieres, escarpements calcaires, haies, secteurs humides.",
+        "confusions": [
+          "genévriers ornementaux",
+          "cyprés horticoles hors contexte naturel"
+        ]
+      },
+      "peuplier_faux_tremble": {
+        "nom_scientifique": "Populus tremuloides",
+        "indices_photo": [
+          "feuilles presque rondes",
+          "petiole aplati qui fait trembler les feuilles au vent",
+          "ecorce lisse claire sur jeunes troncs"
+        ],
+        "habitat": "Milieux pionniers, lisières, regenerations.",
+        "confusions": [
+          "autres peupliers a feuilles plus triangulaires",
+          "bouleau a papier vu de loin"
+        ]
+      }
+    },
+    "confusions_et_alertes": {
+      "erable_de_norvege_vs_erable_a_sucre": "Comparer les dents des lobes, l angle des sinus et la presence d un latex blanc au petiole casse chez l erable de Norvege.",
+      "salicaire_pourpre": "Comparer avec la source Sentinelle si une fleur pourpre forme de fortes colonies en milieu humide; espece exotique envahissante frequente.",
+      "berce_du_caucase": "Toute grande ombellifere geante doit etre traitee avec prudence; espece invasive pouvant causer des lesions cutanees."
+    },
+    "heuristiques_runtime_pour_titane": {
+      "prioriser_espece": [
+        "Si ecorce jaune bronze + rubans exfolies -> bouleau jaune prioritaire.",
+        "Si fleur bleu-violet de marais + motifs jaunes/blancs -> iris versicolore prioritaire.",
+        "Si feuille palmee opposee + foret sud du Quebec -> erables a comparer avant autres feuillus.",
+        "Si aiguilles en faisceaux de cinq + long cone pendant -> pin blanc prioritaire."
+      ],
+      "quand_rester_au_niveau_du_genre": [
+        "photo floue sans feuille complete ni fruit",
+        "rameau de conifere trop eloigne",
+        "milieu humide avec carex/joncs sans organes reproducteurs visibles"
+      ]
+    }
+  }
+}

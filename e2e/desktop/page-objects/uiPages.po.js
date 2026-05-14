@@ -199,6 +199,13 @@ export const uiPages = {
     root: '[data-testid="research-page"]',
     tabs: [],
   },
+  multiproject: {
+    id: 'multiproject',
+    route: '/multiproject',
+    navTestId: 'nav-projects',
+    root: '[data-testid="multiproject-dashboard"]',
+    tabs: [],
+  },
   skills: {
     id: 'skills',
     route: '/skills',
@@ -279,6 +286,7 @@ export const fusionOwnedRoutePages = [
 ];
 
 export const moreMenuRoutePages = [
+  uiPages.multiproject,
   uiPages.twins,
   uiPages.optimization,
   uiPages.totalDev,

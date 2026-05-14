@@ -1,0 +1,155 @@
+{
+  "version": "v34.2.7",
+  "category": "quebec_paysages_randonnee_tourisme_nature",
+  "description": "Base Quebec-centrique sur paysages, territoires publics, randonnee, parcs, sentiers et lieux naturels a visiter: regions, types de milieux, ambiance visuelle, activites et garde-fous terrain.",
+  "retrieval_triggers": [
+    "plus beaux endroits nature quebec",
+    "beaux paysages quebec",
+    "randonnee quebec",
+    "sentiers quebec",
+    "parcs nationaux quebec",
+    "ou aller nature quebec",
+    "quoi visiter nature quebec",
+    "road trip nature quebec",
+    "forillon randonnee",
+    "mauricie randonnee",
+    "mingan randonnee",
+    "sentier national quebec",
+    "gaspesie nature sentiers",
+    "charlevoix paysages",
+    "laurentides nature",
+    "cote nord nature",
+    "iles de la madeleine paysages",
+    "whale watching saint laurent nature",
+    "sepaq nature quebec",
+    "territoire public quebec plein air",
+    "randonnee panoramique quebec",
+    "cascade quebec randonnee",
+    "sentier facile quebec",
+    "voyage nature quebec"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Quebec",
+    "confidence": "medium_high",
+    "sources": [
+      {
+        "label": "La nature au Quebec - Bonjour Quebec",
+        "url": "https://www.bonjourquebec.com/fr-ca/decouvrir/experiences/aventures-en-nature"
+      },
+      {
+        "label": "Sentier national au Quebec",
+        "url": "https://www.quebec.ca/nouvelles/actualites/details/27-m-pour-le-developpement-et-lamelioration-du-sentier-national-au-quebec-49587"
+      },
+      {
+        "label": "Using public land legally - Quebec",
+        "url": "https://www.quebec.ca/en/tourism-recreation-sport/sporting-and-outdoor-activities/activities-permitted-public-land"
+      },
+      {
+        "label": "Forillon hiking",
+        "url": "https://parks.canada.ca/pn-np/qc/forillon/activ/randonnee-hiking"
+      },
+      {
+        "label": "Forillon activities",
+        "url": "https://parks.canada.ca/pn-np/qc/forillon/activ"
+      },
+      {
+        "label": "La Mauricie hiking",
+        "url": "https://parks.canada.ca/pn-np/qc/mauricie/activ/rando-hiking"
+      },
+      {
+        "label": "La Mauricie overview",
+        "url": "https://parks.canada.ca/pn-np/qc/mauricie?wbdisable=true"
+      },
+      {
+        "label": "Mingan hiking",
+        "url": "https://parks.canada.ca/pn-np/qc/mingan/activ/randonnee_hiking"
+      },
+      {
+        "label": "Best hiking in Quebec - Parks Canada",
+        "url": "https://parks.canada.ca/voyage-travel/region/quebec/randonnee-hike"
+      }
+    ]
+  },
+  "quebec_paysages_randonnee_tourisme_nature": {
+    "doctrine_canonique": {
+      "verite_canonique": "Le Quebec naturel doit etre decrit par types de paysages, regions, saisons, accessibilite et garde-fous terrain plutot que par slogans vagues.",
+      "regles": [
+        "Toujours distinguer parc national, territoire public libre, reserve, archipel, route panoramique et sentier longue distance.",
+        "Decrire les lieux d abord par milieu naturel: littoral, foret laurentienne, montagnes, monolithes marins, lacs, marais, falaises, tundra alpine.",
+        "Ne pas confondre inspiration voyage avec conditions d acces, fragilite des sites ou besoins de reservation.",
+        "Si le site est sensible, insister sur respect des sentiers et du milieu."
+      ]
+    },
+    "grands_tableaux": {
+      "gaspesie_et_forillon": {
+        "ambiance": "Peninsule montagneuse plongeant vers la mer, caps rocheux, falaises, marais cotiers et ambiance de fin du continent.",
+        "atouts_visuels": [
+          "mer et relief au meme cadre",
+          "falaises, caps et pointes",
+          "observation d oiseaux et d habitats cotiers"
+        ],
+        "preuves_source": [
+          "Forillon met en avant la beaute et la richesse naturelle de son territoire protege",
+          "le parc combine randonnee, camping, observation de la faune, kayak et sites patrimoniaux"
+        ],
+        "usage_runtime": "Si l usager cherche une nature dramatique, maritime et photogenique au Quebec, prioriser Gaspesie / Forillon."
+      },
+      "mauricie_et_foret_laurentienne": {
+        "ambiance": "Grandes forets, lacs, falaises, cascades et ambiance de wilderness accessible.",
+        "atouts_visuels": [
+          "plus de 110 km de sentiers a La Mauricie",
+          "points de vue sur lacs et foret",
+          "combinaison route panoramique + randonnee + canoe"
+        ],
+        "usage_runtime": "Si l usager veut un Quebec forestier, lacustre et polyvalent, La Mauricie devient un point d entree fort."
+      },
+      "archipel_de_mingan_et_cote_nord": {
+        "ambiance": "Iles, monolithes, estran, falaises calcaires, oiseaux marins et impression de bout du monde.",
+        "atouts_visuels": [
+          "pres de 80 km de randonnee sur 9 iles",
+          "monolithes et rivages remarquables",
+          "fleurs, tourbieres, battures et forets insulaires"
+        ],
+        "garde_fous": [
+          "milieux fragiles, respecter strictement les sentiers ou le rivage selon les consignes",
+          "pour certaines visites, la logistique bateau est un facteur majeur"
+        ]
+      },
+      "sentier_national_au_quebec": {
+        "ambiance": "Grande colonne verte traversant des paysages varies du Quebec en randonnee pedestre, raquette et ski nordique.",
+        "faits_cles": [
+          "environ 1 650 km",
+          "plus long sentier en milieu naturel de la province pour ces usages"
+        ],
+        "usage_runtime": "Si l usager cherche une vision longue duree du Quebec par la marche, mentionner le Sentier national."
+      },
+      "charlevoix_laurentides_madeleine": {
+        "ambiance": "Charlevoix pour le dialogue fleuve-montagnes; Laurentides pour la foret et les lacs accessibles; Iles-de-la-Madeleine pour l esthetique marine et eolienne.",
+        "usage_runtime": "Si l usager cherche la beaute sans isolement extreme, orienter par ambiance: Charlevoix panoramique, Laurentides plein-air accessible, Madeleines littoral poetique."
+      }
+    },
+    "randonnee_et_lecture_du_terrain": {
+      "facile_et_panoramique": [
+        "Les Cascades a La Mauricie est mise en avant comme boucle facile menant a des chutes",
+        "Forillon offre des sentiers courts a plus longs avec boardwalks et observation de milieux humides"
+      ],
+      "plus_engagee": [
+        "Forillon comporte aussi des longues randonnees de montagne et de lacs boreaux",
+        "Mingan implique parfois une logistique bateau et un milieu plus fragile"
+      ]
+    },
+    "heuristiques_runtime_pour_titane": {
+      "si_usager_cherche_beaute_naturelle": [
+        "classer d abord par ambiance visuelle: mer et falaises, foret et lacs, archipels et monolithes, montagnes et cascades",
+        "puis filtrer par accessibilite, saison, longueur de marche et logistique"
+      ],
+      "si_usager_cherche_sentier": [
+        "distinguer marche familiale, boucle facile, panorama, longue randonnee et territoire sensible"
+      ],
+      "si_usager_cherche_endroit_public": [
+        "rappeler la difference entre parc gere, territoire public libre et site soumis a regles specifiques"
+      ]
+    }
+  }
+}

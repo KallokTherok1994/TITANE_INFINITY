@@ -1101,6 +1101,50 @@ const SURFACES: UiSurfaceDefinition[] = [
   },
 
   // ══════════════════════════════════════════════════════
+  // /multiproject — Multi-Project Dashboard
+  // ══════════════════════════════════════════════════════
+  {
+    route: '/multiproject',
+    canonical: true,
+    navOwner: 'projects',
+    pageId: 'multiproject_dashboard',
+    pageComponent: 'MultiProjectDashboard',
+    rootTestId: 'multiproject-dashboard',
+    aliases: [],
+    tabs: [],
+    truthClass: 'MIXED_LIVE_AND_STATIC',
+    status: 'ACTIVE_PARTIAL',
+    backendCommands: [],
+    visibleActions: [
+      {
+        actionId: 'create_project',
+        label: 'Create project',
+        wiringStatus: 'WIRED_LIVE',
+      },
+      {
+        actionId: 'refresh_health',
+        label: 'Refresh project health',
+        wiringStatus: 'WIRED_FALLBACK',
+      },
+      {
+        actionId: 'assign_agent',
+        label: 'Assign agent to project',
+        wiringStatus: 'WIRED_LIVE',
+      },
+    ],
+    requiredProofLanes: ['STATIC_TYPESCRIPT', 'VITEST_UNIT', 'E2E_DESKTOP_WDIO'],
+    fallbackPolicy:
+      'Local registry can be empty; health rollup and agent readiness degrade visibly',
+    staleAfterMs: 30000,
+    canClaimSyncedWithoutRuntime: false,
+    visibleInNav: true,
+    deprecated: false,
+    sourceFiles: ['src/pages/MultiProjectDashboard.tsx'],
+    notes:
+      'ACTIVE_PARTIAL: direct URL surface backed by local registry + agent-health consensus wiring.',
+  },
+
+  // ══════════════════════════════════════════════════════
   // /doc-center — Document Center
   // ══════════════════════════════════════════════════════
   {

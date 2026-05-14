@@ -45,6 +45,12 @@ const TOP_NAV_SECTIONS = [
     matchRoutes: ['/reality-center', '/hyper-center', '/quantum-center', '/cloud'],
   },
   {
+    id: 'projects',
+    label: 'PROJECTS',
+    route: '/multiproject',
+    description: 'Pilotage multi-projets',
+  },
+  {
     id: 'twins',
     label: 'TWINS',
     route: '/twins',

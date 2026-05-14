@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 const conversationRenderFixtures = vi.hoisted(() => ({
@@ -33,7 +34,20 @@ vi.mock('@hooks/useConversationEngine', () => ({
         content: conversationRenderFixtures.assistantContent,
         timestamp: Date.now(),
         metadata: {
-          tags: ['long-answer'],
+          tags: ['long-answer', 'omega:memory', 'omega:web'],
+          providerMeta: {
+            provider_used: 'Ollama (OMEGA+Singularity)',
+            provider_class: 'local',
+            mode: 'LOCAL',
+            reason_code: 'OK',
+            latency_ms_total: 142,
+            timeout_ms: 30000,
+            retries: 0,
+            attempts: [],
+            network_used: false,
+            cache_hit: false,
+            policy: 'default',
+          },
         },
       },
     ],
@@ -166,6 +180,22 @@ vi.mock('@/services/tts/messageSpeechController', () => ({
 
 import { ConversationSection } from '../ConversationSection';
 
+function renderConversationSection() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <ConversationSection fullscreen />
+    </QueryClientProvider>
+  );
+}
+
 describe('ConversationSection rendering truth', () => {
   beforeAll(() => {
     if (typeof ResizeObserver === 'undefined') {
@@ -180,11 +210,23 @@ describe('ConversationSection rendering truth', () => {
   });
 
   it('renders the full terminal block for a long assistant response on the canonical surface', () => {
-    render(<ConversationSection fullscreen />);
+    renderConversationSection();
 
     const contentNode = screen.getByTestId('chat-message-content');
 
     expect(contentNode.textContent).toContain('Bloc terminal');
     expect(contentNode.textContent).toContain('OMEGA-CONVERSATION-TERMINAL-MARKER');
+  });
+
+  it('publishes stable assistant runtime selectors for provider, latency and omega stages', () => {
+    renderConversationSection();
+
+    expect(screen.getByTestId('chat-message-meta-provider').textContent).toContain(
+      'Ollama (OMEGA+Singularity)'
+    );
+    expect(screen.getByTestId('chat-message-meta-latency')).toHaveTextContent('142ms');
+    expect(screen.getByTestId('chat-message-meta-omega-stages')).toHaveTextContent(
+      'memory, web'
+    );
   });
 });

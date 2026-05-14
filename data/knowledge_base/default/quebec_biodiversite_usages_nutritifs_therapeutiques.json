@@ -1,0 +1,381 @@
+{
+  "version": "v34.2.2",
+  "category": "quebec_biodiversite_usages_nutritifs_therapeutiques",
+  "description": "Usages nutritifs, medicinaux et therapeutiques de la biodiversite du Quebec sous gouvernance stricte : especes alimentaires, usages traditionnels, niveau de preuve, interactions, toxicites, conservation et salubrite.",
+  "retrieval_triggers": [
+    "plantes medicinales quebec",
+    "plantes therapeutiques quebec",
+    "plantes nutritives quebec",
+    "biodiversite quebec usages",
+    "vertus medicinales quebec",
+    "vertus therapeutiques quebec",
+    "vertus nutritives quebec",
+    "ail des bois medicinale",
+    "ail des bois comestible",
+    "ginseng a cinq folioles",
+    "american ginseng quebec",
+    "bleuet sauvage antioxydants",
+    "canneberge infection urinaire",
+    "cranberry warfarin",
+    "pissenlit therapeutique",
+    "dandelion safety",
+    "podophylle toxique",
+    "aubepine quebec coeur",
+    "hawthorn evidence",
+    "noyer cendre amande",
+    "caryer ovale amande",
+    "champignons nutritifs quebec",
+    "gibier sauvage salubrite quebec",
+    "orignal viande securite",
+    "cerf cadmium foie reins",
+    "ours cuisson 74",
+    "lievre tularémie",
+    "warfarin ginseng cranberry",
+    "usage traditionnel autochtone plante quebec",
+    "niveau de preuve herboristerie",
+    "analyse photo plante comestible quebec",
+    "analyse photo plante toxique quebec",
+    "analyse photo plante medicinale quebec",
+    "faune flore nutritive quebec"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Quebec",
+    "confidence": "medium_high",
+    "medical_safety_gate": true,
+    "sources": [
+      {
+        "label": "Flore du Quebec",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/flore"
+      },
+      {
+        "label": "Ail des bois",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/flore/fiches-especes-floristiques/ail-bois"
+      },
+      {
+        "label": "Ginseng a cinq folioles",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/flore/fiches-especes-floristiques/ginseng-cinq-folioles"
+      },
+      {
+        "label": "Podophylle pelte",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/flore/fiches-especes-floristiques/podophylle-pelte"
+      },
+      {
+        "label": "Culture du bleuet",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/agriculture/industrie-agricole-au-quebec/productions-agricoles/culture-bleuet"
+      },
+      {
+        "label": "Caryer ovale",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/flore/fiches-especes-floristiques/caryer-ovale"
+      },
+      {
+        "label": "Noyer cendre",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/flore/fiches-especes-floristiques/noyer-cendre"
+      },
+      {
+        "label": "Cranberry - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/cranberry"
+      },
+      {
+        "label": "Dandelion - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/dandelion"
+      },
+      {
+        "label": "Hawthorn - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/hawthorn"
+      },
+      {
+        "label": "Colds and Flu - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/colds-flu-and-complementary-health-approaches"
+      },
+      {
+        "label": "Willow bark evidence - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/providers/digest/nutritional-approaches-for-musculoskeletal-pain-and-inflammation-science"
+      },
+      {
+        "label": "Warfarin interactions - Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-medical-devices/warfarin.html"
+      },
+      {
+        "label": "Champignons sauvages et de culture domestique",
+        "url": "https://www.quebec.ca/sante/alimentation/salubrite-aliments-prevention-risques/salubrite-aliments-domicile/preparation-aliments-cuisson-securitaires/precautions-manipule-aliments/champignons-sauvages-culture-domestique"
+      },
+      {
+        "label": "Viande de gibier sauvage",
+        "url": "https://www.quebec.ca/sante/alimentation/salubrite-aliments-prevention-risques/salubrite-aliments-domicile/preparation-aliments-cuisson-securitaires/precautions-manipule-aliments/viande-gibier-sauvage-chasseurs"
+      }
+    ]
+  },
+  "quebec_biodiversite_usages_nutritifs_therapeutiques": {
+    "doctrine_usage": {
+      "verite_canonique": "Cette base ne doit jamais transformer une plante, un champignon ou un animal du Quebec en recommandation medicale automatique.",
+      "regles": [
+        "Toujours distinguer usage alimentaire, usage traditionnel, preuve humaine limitee, preuve conflictuelle ou toxicite connue.",
+        "Ne jamais presenter un aliment, une plante ou un champignon comme traitement etabli sans preuve clinique solide.",
+        "Si une espece est protegee, menacee ou vulnerable au Quebec, interdire toute suggestion de recolte opportuniste.",
+        "Si un element interagit avec warfarine, immunosuppresseurs, antidiabetiques ou grossesse/allaitement, le signaler comme drapeau rouge.",
+        "Pour les champignons, rester au niveau de l aliment ou de la salubrite; aucune promesse therapeutique ne doit contourner l identification certaine."
+      ],
+      "niveaux_de_preuve": {
+        "food_use": "Usage alimentaire courant ou historiquement documente.",
+        "traditional_use": "Usage traditionnel rapporte, sans validation clinique suffisante.",
+        "limited_human_evidence": "Quelques essais humains ou syntheses preliminaires, utilite possible mais non etablie.",
+        "conflicting_or_insufficient": "Donnees contradictoires ou insuffisantes pour soutenir un usage therapeutique.",
+        "toxic_or_protected": "Usage libre a decourager pour raison de toxicite, interaction, statut legal ou conservation."
+      }
+    },
+    "contexte_biodiversite": {
+      "flore_quebec": "La flore indigene du Quebec compte environ 6 300 especes.",
+      "faune_vertebree_quebec": "Le Quebec compte 850 especes de vertebres reconnues dans la faune sauvage.",
+      "implication_runtime": "Une approche exhaustive espece par espece demande une expansion progressive; ce module ajoute une couche avancee a haute valeur pratique et a haut niveau de prudence."
+    },
+    "dossiers_plantes": {
+      "ail_des_bois": {
+        "nom_scientifique": "Allium tricoccum",
+        "statut_quebec": "Espece vulnerable et protegee au Quebec.",
+        "reconnaissance": [
+          "feuilles de printemps rappelant un peu le muguet",
+          "odeur et gout d ail sur toute la plante",
+          "1 a 3 feuilles lanceolees"
+        ],
+        "usage_nutritif": {
+          "niveau_preuve": "food_use",
+          "resume": "Plante historiquement consommee cuite; saveur agreable et role alimentaire traditionnel.",
+          "points_cles": [
+            "aliment sauvage historique",
+            "aromatique de type ail/oignon",
+            "usage culinaire prioritaire plutot que medicinal"
+          ]
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "traditional_use",
+          "resume": "Le dossier public consulte documente surtout la valeur alimentaire et la conservation, pas un usage clinique valide."
+        },
+        "garde_fous": [
+          "ne pas encourager la cueillette libre d une espece protegee",
+          "risque de confusion visuelle avec d autres plantes de sous-bois si l odeur n est pas verifiee",
+          "si la photo ne permet pas de confirmer l odeur, garder un niveau de certitude inferieur"
+        ]
+      },
+      "ginseng_a_cinq_folioles": {
+        "nom_scientifique": "Panax quinquefolius",
+        "statut_quebec": "Espece menacee et protegee au Quebec.",
+        "reconnaissance": [
+          "feuilles composees comme les doigts d une main",
+          "3 a 5 folioles finement dentees",
+          "fruits rouge vif en fin d ete"
+        ],
+        "usage_nutritif": {
+          "niveau_preuve": "traditional_use",
+          "resume": "Pas un aliment de consommation courante; la racine a surtout un historique medicinal et commercial."
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "conflicting_or_insufficient",
+          "resume": "Usage medicinal historique rapporte au Quebec et en Amerique du Nord, mais NCCIH juge l evidence insuffisante pour prevenir les rhumes.",
+          "evidence_moderne": [
+            "plusieurs etudes sur la prevention des rhumes",
+            "insuffisant pour soutenir l usage preventif",
+            "peut raccourcir la duree du rhume dans certains travaux mais sans base suffisante pour recommandation"
+          ]
+        },
+        "interactions_et_risques": [
+          "interaction possible avec la warfarine",
+          "long terme mal documente",
+          "recolte sauvage a proscrire car espece menacee"
+        ]
+      },
+      "bleuet_sauvage_et_bleuet_en_corymbe": {
+        "nom_scientifique": "Vaccinium angustifolium / Vaccinium corymbosum",
+        "statut_quebec": "Especes valorisees en alimentation au Quebec.",
+        "reconnaissance": [
+          "bleuet sauvage proche du sol",
+          "bleuet en corymbe sur arbuste",
+          "petits fruits bleus apparentes aux myrtilles et a la canneberge"
+        ],
+        "usage_nutritif": {
+          "niveau_preuve": "food_use",
+          "resume": "Fruit du Quebec riche en antioxydants naturels et largement valorise en alimentation.",
+          "points_cles": [
+            "aliment fruitier a haute valeur culinaire",
+            "antioxydants naturels cites par la source gouvernementale",
+            "usage alimentaire clairement etabli"
+          ]
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "traditional_use",
+          "resume": "La source publique mentionne des benefices de sante de facon large; ne pas transformer cela en prevention ou traitement personnalise."
+        },
+        "garde_fous": [
+          "ne pas presenter le bleuet comme traitement anticancer ou cardiologique",
+          "rester sur alimentation, polyphenols et role nutritionnel general"
+        ]
+      },
+      "canneberge": {
+        "nom_scientifique": "Vaccinium macrocarpon",
+        "statut_quebec": "Petit fruit nord-americain voisin des bleuets.",
+        "usage_nutritif": {
+          "niveau_preuve": "food_use",
+          "resume": "Fruit alimentaire et boisson fonctionnelle largement connus."
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "limited_human_evidence",
+          "resume": "NCCIH indique que les produits a la canneberge peuvent diminuer le risque global de cystites recurrents symptomatiques chez certaines femmes, mais avec resultats inconsistants.",
+          "interdits_d_interpretation": [
+            "pas un traitement d une infection urinaire deja presente",
+            "pas une garantie de prevention",
+            "la concentration de PACs varie selon la transformation"
+          ]
+        },
+        "interactions_et_risques": [
+          "interaction possible avec la warfarine",
+          "garder un suivi medical si anticoagulant",
+          "preuve limitee et inconsistante selon les produits"
+        ]
+      },
+      "pissenlit": {
+        "nom_scientifique": "Taraxacum officinale",
+        "statut_quebec": "Plante tres commune.",
+        "usage_nutritif": {
+          "niveau_preuve": "food_use",
+          "resume": "L usage alimentaire en petites quantites est generalement considere comme sur."
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "conflicting_or_insufficient",
+          "resume": "NCCIH conclut qu il n existe pas de preuve scientifique convaincante pour une quelconque condition de sante.",
+          "commentaire": "Des travaux de laboratoire existent, mais ils ne suffisent pas a soutenir une recommandation clinique."
+        },
+        "interactions_et_risques": [
+          "risque allergique chez certaines personnes sensibles aux asteracees",
+          "interactions theoriques avec anticoagulants, antiplaquettaires, antidiabetiques et diuretiques",
+          "prudence grossesse/allaitement au-dela des quantites alimentaires"
+        ]
+      },
+      "podophylle_pelte": {
+        "nom_scientifique": "Podophyllum peltatum",
+        "statut_quebec": "Espece menacee au Quebec selon la fiche consultee.",
+        "usage_nutritif": {
+          "niveau_preuve": "toxic_or_protected",
+          "resume": "Le fruit est comestible, mais toutes les autres parties sont toxiques."
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "toxic_or_protected",
+          "resume": "Aucune auto-utilisation ne doit etre suggeree; les rhizomes peuvent causer des lesions cutanees."
+        },
+        "garde_fous": [
+          "aucune recommandation de recolte libre",
+          "ne jamais inferer qu une plante medicinalement connue est securitaire parce que son fruit est comestible",
+          "si photo de feuille parapluie et baie unique, ajouter un drapeau toxicite"
+        ]
+      },
+      "aubepine_du_canada_et_groupe_aubepines": {
+        "nom_scientifique": "Crataegus canadensis / Crataegus spp.",
+        "statut_quebec": "Aubepine du Canada espece susceptible; groupe d arbustes/arbres epineux.",
+        "usage_nutritif": {
+          "niveau_preuve": "traditional_use",
+          "resume": "Les fruits d aubepine ont un historique alimentaire et medicinal, mais ce module traite surtout les limites de preuve."
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "conflicting_or_insufficient",
+          "resume": "NCCIH indique peu ou pas de preuves de qualite pour la plupart des conditions; l aubepine a surtout ete etudiee en insuffisance cardiaque avec resultats non concluants."
+        },
+        "interactions_et_risques": [
+          "prudence avec maladies cardiaques et traitements associes",
+          "securite long terme mal documentee au-dela de 16 semaines",
+          "ne jamais suggerer une substitution a un traitement cardiovasculaire"
+        ]
+      },
+      "noyer_cendre_et_caryer_ovale": {
+        "nom_scientifique": "Juglans cinerea / Carya ovata",
+        "statut_quebec": "Especes indigene en situation precaire ou susceptible selon les fiches consultees.",
+        "usage_nutritif": {
+          "niveau_preuve": "food_use",
+          "resume": "Les fruits renferment une amande, donc une valeur alimentaire potentielle de type noix.",
+          "points_cles": [
+            "caryer ovale : enveloppe s ouvre en quatre et libere un noyau contenant une amande",
+            "noyer cendre : fruit en drupe avec noyau dur contenant une amande"
+          ]
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "traditional_use",
+          "resume": "Le dossier public consulte documente surtout l identification, la repartition et la conservation; il n appuie pas d usage clinique moderne."
+        },
+        "garde_fous": [
+          "ne pas encourager la recolte opportuniste sur populations rares",
+          "tenir compte de la conservation locale avant toute suggestion d usage"
+        ]
+      },
+      "saules_du_quebec_cadre_de_transposition": {
+        "nom_scientifique": "Salix spp. (avec preuve moderne surtout sur Salix alba)",
+        "usage_nutritif": {
+          "niveau_preuve": "traditional_use",
+          "resume": "Pas d usage nutritif majeur pour le grand public."
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "limited_human_evidence",
+          "resume": "NCCIH rapporte une evidence humaine moderee a court terme pour l extrait d ecorce de saule blanc dans certaines douleurs lombaires, mais cette preuve ne doit pas etre transposee automatiquement a toutes les especes de saules du Quebec."
+        },
+        "interactions_et_risques": [
+          "profil de risque de type salicylates",
+          "prudence saignement, allergie a l aspirine, grossesse, allaitement et enfants",
+          "toujours distinguer extrait standardise et plante sauvage locale"
+        ]
+      }
+    },
+    "dossiers_fonge": {
+      "champignons_comestibles_quebec": {
+        "usage_nutritif": {
+          "niveau_preuve": "food_use",
+          "resume": "La valeur principale des champignons quebecois est alimentaire, a condition d une identification certaine et d une cuisson adequate."
+        },
+        "usage_therapeutique": {
+          "niveau_preuve": "toxic_or_protected",
+          "resume": "Ce module ne doit pas promouvoir de vertu therapeutique des champignons sauvages recoltes localement sans expertise mycologique specialisee."
+        },
+        "garde_fous": [
+          "ne jamais consommer cru",
+          "ne cueillir que des especes exactement connues",
+          "rejeter les specimens vieux, sales, abimes ou trop jeunes",
+          "eviter les sites pollues, bords de route, fosses septiques et zones traitees"
+        ]
+      }
+    },
+    "dossiers_faune": {
+      "gibier_sauvage_quebec": {
+        "usage_nutritif": {
+          "niveau_preuve": "food_use",
+          "resume": "La viande de gibier est un aliment perissable qui exige une chaine de salubrite stricte plutot qu un discours de vertu therapeutique."
+        },
+        "points_salubrite": [
+          "evisceration immediate apres la mort",
+          "refroidissement rapide",
+          "entreposage entre 0 C et 4 C pour la viande fraiche",
+          "congelation a -18 C ou moins"
+        ],
+        "cas_particuliers": [
+          "ours : cuisson a 74 C a cause du risque de trichinellose",
+          "lievre : gants jetables recommandes a cause du risque de tularémie",
+          "cervides : ne pas consommer foie ni reins a cause du cadmium eleve"
+        ],
+        "usage_therapeutique": {
+          "niveau_preuve": "toxic_or_protected",
+          "resume": "Aucune vertu therapeutique ne doit etre avancee pour la faune sauvage consommee; l enjeu prioritaire est la securite alimentaire."
+        }
+      }
+    },
+    "heuristiques_runtime_pour_titane": {
+      "reponse_attendue": [
+        "Si la question porte sur photo + comestibilite, separer identification visuelle, statut legal, toxicite et preparation.",
+        "Si la question porte sur vertu medicinale, annoncer le niveau de preuve avant toute autre phrase.",
+        "Si espece protegee ou menacee, prioriser conservation et non usage.",
+        "Si anticoagulant, grossesse, allaitement, enfant, immunosuppression ou maladie chronique, elev er le niveau de prudence."
+      ],
+      "phrases_a_privilegier": [
+        "usage traditionnel rapporte",
+        "preuves humaines limitees",
+        "preuves insuffisantes ou contradictoires",
+        "aliment etabli, pas traitement etabli",
+        "toxicite ou interaction a signaler"
+      ]
+    }
+  }
+}

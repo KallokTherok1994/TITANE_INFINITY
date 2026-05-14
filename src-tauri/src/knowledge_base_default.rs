@@ -226,6 +226,33 @@ const ARBRES_PLANTES_FLEURS: &str =
     include_str!("../../data/knowledge_base/default/arbres_plantes_fleurs.json");
 const ANIMAUX_OISEAUX_FAUNE: &str =
     include_str!("../../data/knowledge_base/default/animaux_oiseaux_faune.json");
+const QUEBEC_FLORE_ARBRES_PLANTES: &str =
+    include_str!("../../data/knowledge_base/default/quebec_flore_arbres_plantes.json");
+const QUEBEC_FAUNE_ANIMAUX_OISEAUX: &str =
+    include_str!("../../data/knowledge_base/default/quebec_faune_animaux_oiseaux.json");
+const QUEBEC_CHAMPIGNONS_FONGE: &str =
+    include_str!("../../data/knowledge_base/default/quebec_champignons_fonge.json");
+const QUEBEC_BIODIVERSITE_USAGES_NUTRITIFS_THERAPEUTIQUES: &str = include_str!(
+    "../../data/knowledge_base/default/quebec_biodiversite_usages_nutritifs_therapeutiques.json"
+);
+const MEDECINES_NATURELLES_NUTRITION_HOLISTIQUE_GOUVERNEE: &str = include_str!(
+    "../../data/knowledge_base/default/medecines_naturelles_nutrition_holistique_gouvernee.json"
+);
+const PLANTES_AROMATHERAPIE_INTERACTIONS_GOUVERNEE: &str = include_str!(
+    "../../data/knowledge_base/default/plantes_aromatherapie_interactions_gouvernee.json"
+);
+const ADAPTOGENES_CHAMPIGNONS_PSYCHEDELIQUES_GOUVERNEE: &str = include_str!(
+    "../../data/knowledge_base/default/adaptogenes_champignons_psychedeliques_gouvernee.json"
+);
+const SURVIE_CAMPING_FORET_AUTOSUFFISANCE_GOUVERNEE: &str = include_str!(
+    "../../data/knowledge_base/default/survie_camping_foret_autosuffisance_gouvernee.json"
+);
+const QUEBEC_PAYSAGES_RANDONNEE_TOURISME_NATURE: &str = include_str!(
+    "../../data/knowledge_base/default/quebec_paysages_randonnee_tourisme_nature.json"
+);
+const CANADA_PAYSAGES_PARCS_ROUTES_PANORAMIQUES: &str = include_str!(
+    "../../data/knowledge_base/default/canada_paysages_parcs_routes_panoramiques.json"
+);
 const CHAKRAS_ENERGIE_SPIRITUELLE: &str =
     include_str!("../../data/knowledge_base/default/chakras_energie_spirituelle.json");
 const ASTROLOGIE_NUMEROLOGIE: &str =
@@ -972,6 +999,37 @@ impl DefaultKnowledgeBase {
         ("photographie_analyse_image", PHOTOGRAPHIE_ANALYSE_IMAGE),
         ("arbres_plantes_fleurs", ARBRES_PLANTES_FLEURS),
         ("animaux_oiseaux_faune", ANIMAUX_OISEAUX_FAUNE),
+        ("quebec_flore_arbres_plantes", QUEBEC_FLORE_ARBRES_PLANTES),
+        ("quebec_faune_animaux_oiseaux", QUEBEC_FAUNE_ANIMAUX_OISEAUX),
+        ("quebec_champignons_fonge", QUEBEC_CHAMPIGNONS_FONGE),
+        (
+            "quebec_biodiversite_usages_nutritifs_therapeutiques",
+            QUEBEC_BIODIVERSITE_USAGES_NUTRITIFS_THERAPEUTIQUES,
+        ),
+        (
+            "medecines_naturelles_nutrition_holistique_gouvernee",
+            MEDECINES_NATURELLES_NUTRITION_HOLISTIQUE_GOUVERNEE,
+        ),
+        (
+            "plantes_aromatherapie_interactions_gouvernee",
+            PLANTES_AROMATHERAPIE_INTERACTIONS_GOUVERNEE,
+        ),
+        (
+            "adaptogenes_champignons_psychedeliques_gouvernee",
+            ADAPTOGENES_CHAMPIGNONS_PSYCHEDELIQUES_GOUVERNEE,
+        ),
+        (
+            "survie_camping_foret_autosuffisance_gouvernee",
+            SURVIE_CAMPING_FORET_AUTOSUFFISANCE_GOUVERNEE,
+        ),
+        (
+            "quebec_paysages_randonnee_tourisme_nature",
+            QUEBEC_PAYSAGES_RANDONNEE_TOURISME_NATURE,
+        ),
+        (
+            "canada_paysages_parcs_routes_panoramiques",
+            CANADA_PAYSAGES_PARCS_ROUTES_PANORAMIQUES,
+        ),
         ("chakras_energie_spirituelle", CHAKRAS_ENERGIE_SPIRITUELLE),
         ("astrologie_numerologie", ASTROLOGIE_NUMEROLOGIE),
         // phase 15
@@ -1698,6 +1756,16 @@ mod tests {
             "philosophie_cognitive",
             "philosophie_ethique_existentielle",
             "photographie_analyse_image",
+            "quebec_champignons_fonge",
+            "quebec_faune_animaux_oiseaux",
+            "quebec_flore_arbres_plantes",
+            "quebec_biodiversite_usages_nutritifs_therapeutiques",
+            "medecines_naturelles_nutrition_holistique_gouvernee",
+            "plantes_aromatherapie_interactions_gouvernee",
+            "adaptogenes_champignons_psychedeliques_gouvernee",
+            "survie_camping_foret_autosuffisance_gouvernee",
+            "quebec_paysages_randonnee_tourisme_nature",
+            "canada_paysages_parcs_routes_panoramiques",
             "plantes_medicinales_aromatherapie",
             "plein_potentiel_peak_performance",
             "poesie_ecriture_avancee",

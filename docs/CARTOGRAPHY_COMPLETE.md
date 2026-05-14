@@ -16,6 +16,29 @@
 
 Strictement additif. Aucune mutation de Zustand sélecteur ni de surface IPC. Rollback = retrait du mount widget + suppression `src/hooks/queries/**` + `src/lib/queryKeys.ts` + import DevTools dans `App.tsx`.
 
+## 2026-05-14 — Quebec naturalist knowledge modules (delta cartographie)
+
+| Couche | Surface ajoutée | Fichier |
+|---|---|---|
+| KB publique | Reconnaissance flore/arbres/plantes du Quebec orientee photo | data/knowledge_base/default/quebec_flore_arbres_plantes.json |
+| KB publique | Reconnaissance faune/mammiferes/oiseaux du Quebec orientee photo | data/knowledge_base/default/quebec_faune_animaux_oiseaux.json |
+| KB publique | Reconnaissance champignons du Quebec + gate de prudence | data/knowledge_base/default/quebec_champignons_fonge.json |
+| KB publique | Usages nutritifs / therapeutiques / toxicologiques gouvernes | data/knowledge_base/default/quebec_biodiversite_usages_nutritifs_therapeutiques.json |
+| KB publique | Therapies naturelles / nutrition / holistique sous gouvernance medicale | data/knowledge_base/default/medecines_naturelles_nutrition_holistique_gouvernee.json |
+| KB publique | Plantes medicinales / aromatherapie / interactions sous gouvernance | data/knowledge_base/default/plantes_aromatherapie_interactions_gouvernee.json |
+| KB publique | Adaptogenes / champignons marketing / psilocybine sous gouvernance | data/knowledge_base/default/adaptogenes_champignons_psychedeliques_gouvernee.json |
+| KB publique | Survie / camping en foret / autosuffisance temporaire sous gouvernance | data/knowledge_base/default/survie_camping_foret_autosuffisance_gouvernee.json |
+| Ring 1 | Embarquement runtime Rust des 3 categories Quebec | src-tauri/src/knowledge_base_default.rs |
+| Gouvernance C2 | Indexation publique verifiee des 3 modules | data/knowledge_base/KNOWLEDGE_GOVERNANCE_INDEX.json |
+| Tests | Contrat minimal flore/faune/fonge Quebec | src/__tests__/services/ai/kb.quebecNature.test.ts |
+| Tests | Contrat usages nutritifs / therapeutiques Quebec | src/__tests__/services/ai/kb.quebecBiodiversityUses.test.ts |
+| Tests | Contrat therapies naturelles / nutrition holistique gouvernee | src/__tests__/services/ai/kb.naturalHealthHolistic.test.ts |
+| Tests | Contrat plantes medicinales / aromatherapie / interactions | src/__tests__/services/ai/kb.plantsAromatherapyInteractions.test.ts |
+| Tests | Contrat adaptogenes / champignons / psilocybine | src/__tests__/services/ai/kb.adaptogensPsychedelics.test.ts |
+| Tests | Contrat survie / camping / foret / autosuffisance | src/__tests__/services/ai/kb.forestSurvivalCamping.test.ts |
+
+La voie canonique reste inchangee: `data/knowledge_base/default/* -> knowledge_base_default.rs -> knowledge_base_runtime_snapshot / knowledge_base_get_all -> defaultKnowledgeBase.ts`. Le delta ajoute de nouveaux domaines Quebec-centriques sans nouvelle surface UI, renforce l analyse photo naturaliste, puis ajoute quatre couches medicales/nutritionnelles gouvernees et une couche securite wilderness: biodiversite/usages Quebec, therapies naturelles et nutrition holistique, plantes medicinales/aromatherapie/interactions, adaptogenes/champignons marketing/psilocybine, puis survie/camping en foret/autosuffisance temporaire avec priorite a l eau, au froid, au feu, a la legalite et aux animaux.
+
 
 
 | Couche | Surface ajoutée | Fichier |
@@ -2569,3 +2592,27 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 - **Buster** : `titane-${__APP_VERSION__}` → toute bump invalide la snapshot disque (cohérent avec `vite.config.ts` define + `scripts/bump-version.mjs`).
 - **Tests** : `src/__tests__/lib/queryPersister.test.ts` (5/5 PASS) — couvre allow-list, mode no-storage, persistance d'une query allow-listée, exclusion d'une query hors allow-list.
 - **Rule 1 (additif)** : `QueryClientProvider` inchangé, hooks de domaine v34.4.0 (`useChatSendMutation`, `useChatConversationQuery`, etc.) inchangés. Aucun consommateur impacté.
+
+## v35.1.5 (2026-05-14) — Conversation message runtime proof + orphan-pages audit hardening
+
+> Ring 4 / surface canonique conversation: `src/components/sections/ConversationSection.tsx` publie maintenant une preuve assistant directement au niveau du message rendu, au lieu de concentrer toute la vérité runtime dans le panneau global. La bande `chat-message-meta-strip` expose `chat-message-meta-provider`, `chat-message-meta-latency` et `chat-message-meta-omega-stages` quand la metadata assistant contient `providerMeta`, les tags `omega:*` ou une `cognitiveTrace` exploitable.
+
+> La couverture ciblée reste locale et déterministe: `src/components/sections/__tests__/ConversationSection.render.test.tsx` verrouille le rendu des trois sélecteurs et `src/components/sections/__tests__/ConversationSection.test.ts` verrouille les helpers de formatage latence/étapes. Le harness de rendu monte explicitement `QueryClientProvider` pour rester aligné avec `useChatProvidersHealthQuery` déjà consommé par la surface active.
+
+> Ring 3 / outillage de qualification legacy: `scripts/audit/orphan-pages.mjs` ne se contente plus d un regex naïf sur `lazy(() => import())`. Le script reconnaît `lazyWithRetry(...)` et `lazyWithTimeout(...)`, scanne les blocs complets `<Route ... />`, suit les bindings lazy/import de `src/App.tsx`, retrouve les wrappers `App` non routés directement, puis filtre les faux positifs `src/pages/**` qui ne sont pas de vrais entrypoints.
+
+> Effet cartographique mesuré: la baseline écrite dans `reports/ui-orphan-pages.{json,md}` passe d un inventaire bruité `pages=72 / ORPHAN_DEAD=52 / MOUNTED_HIDDEN=10` à une vérité exploitable `pages=48 / MOUNTED_VISIBLE=24 / REUSED_EMBEDDED=21 / LEGACY_REDIRECT=1 / ORPHAN_DEAD=2`. Ce delta ferme la dérive de Phase 1, isole les wrappers App et surfaces de compatibilité des vraies pages mortes, et rend la future triage legacy/canonical/archive défendable.
+
+> Correction suivante appliquée: `src/pages/MultiProjectDashboard.tsx` cesse d être une surface documentée mais non routée. `src/App.tsx` monte maintenant `/multiproject`, `src/registry/uiSurfaceRegistry.ts` et `src/services/chat/moduleRouteContext.ts` exposent la même vérité canonique `multiproject_dashboard`, et `e2e/desktop/page-objects/uiPages.po.js` l ajoute à l inventaire direct-route. En parallèle, `src/pages/DesignSystemShowcase.tsx` est retiré du runtime source car la vérité design active reste `/admin?tab=design` via `DesignCenterPage`.
+
+> Effet final mesuré par le rerun `node scripts/audit/orphan-pages.mjs`: `routes=97`, `element=30`, `redirect=67`, `pages=47`, breakdown `MOUNTED_VISIBLE=25 / REUSED_EMBEDDED=21 / LEGACY_REDIRECT=1`, et surtout `ORPHAN_DEAD=0`. La triage legacy du couple design-showcase/multiproject est donc close au niveau route/page truth.
+
+## v35.1.5 (2026-05-14) — Multiproject visible dans TopNav + route proof dédiée
+
+> Ring 4 / shell navigation: `src/hooks/useTopNavigation.ts` ajoute l entrée `PROJECTS` sur `/multiproject`. Le shell conserve cinq entrées visibles et relaie cette nouvelle surface via le menu `Plus`, ce qui évite de déstabiliser la hiérarchie primaire de navigation tout en rendant la route canonique atteignable sans saisie directe d URL.
+
+> `src/components/layout/TopNav.tsx` et `src/registry/uiSurfaceRegistry.ts` publient maintenant la même vérité runtime: `nav-projects` dans `topnav-more-menu`, `btn-nav-more` comme owner actif pour `/multiproject`, et `multiproject_dashboard` marqué `visibleInNav=true` avec `navOwner='projects'`.
+
+> L inventaire desktop `e2e/desktop/page-objects/uiPages.po.js` suit la même reclassification en déplaçant `uiPages.multiproject` de `directRoutePages` vers `moreMenuRoutePages`. Ce changement protège la chaîne canonical surface -> route inventory -> desktop navigation proof au lieu de laisser l inventaire E2E prétendre que `/multiproject` est une route directe sans affordance utilisateur visible.
+
+> Couverture ajoutée: `src/hooks/__tests__/useTopNavigation.test.tsx`, `src/components/layout/__tests__/TopNav.test.tsx` et `src/__tests__/ui/app-router-canonical-surfaces.test.tsx` verrouillent la vérité shell côté Vitest. Deux specs Playwright dédiées prolongent cette preuve: `e2e/features/multiproject-navigation.spec.ts` pour le flow menu `Plus` -> `/multiproject`, et `e2e/desktop/multiproject-route.e2e.spec.ts` pour le rendu desktop canonique de la surface multiproject.

@@ -31,6 +31,28 @@ describe('useTopNavigation', () => {
     );
   });
 
+  it('exposes the dedicated PROJECTS entry on the canonical /multiproject route', () => {
+    const { result } = renderHook(() => useTopNavigation(), { wrapper });
+
+    expect(result.current.topNavSections).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'projects',
+          route: '/multiproject',
+        }),
+      ])
+    );
+
+    expect(result.current.topNavItems).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'projects',
+          route: '/multiproject',
+        }),
+      ])
+    );
+  });
+
   it('keeps knowledge, creation and evolution routes synchronized with the TITANE top-level entry', () => {
     const { result } = renderHook(() => useTopNavigation(), { wrapper });
 

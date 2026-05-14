@@ -160,6 +160,7 @@ describe('AppRouter canonical active surfaces', () => {
     ['/memory', 'page-memory', 'memory_page'],
     ['/performance', 'page-performance-test', 'performance_test'],
     ['/research', 'research-page', 'research_page'],
+    ['/multiproject', 'multiproject-dashboard', 'multiproject_dashboard'],
     ['/skills', 'page-skills', 'skill_os'],
     ['/doc-center', 'doc-center-page', 'doc_center'],
   ])(
@@ -218,6 +219,7 @@ describe('AppRouter canonical active surfaces', () => {
     ['/watchdog', 'nav-dev'],
     ['/selfheal', 'nav-dev'],
     ['/adaptive', 'nav-dev'],
+    ['/multiproject', 'btn-nav-more'],
     ['/optimization', 'btn-nav-more'],
     ['/twins', 'btn-nav-more'],
   ])(

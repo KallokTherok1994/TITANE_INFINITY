@@ -1585,3 +1585,28 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
   - IPC `diagnostic_run` + `orchestrator_state` : référencés en commentaires uniquement, non implémentés comme commandes Tauri réelles ⇒ ajout incompatible Rule 4 (capacités lockées) sans justification métier ⇒ reporté.
 - **Nouveau spec Vitest** : `src/__tests__/pages/ResearchPage.test.tsx` (3 PASS) — contrat testid root `research-page`, contrat formulaire (`research-form`/`research-question`/`research-mode`/`research-submit`), surface idle (absence `research-results`/`research-error`).
 - **Doctrine** : Plan optimiste recalibré contre vérité runtime. Sprints D.4 (coverage gate strict) + D.5 (BUILD ALL + tag v35.2.0) reportés à consolidation post-phase E.
+
+## v35.1.5 (2026-05-14) — Conversation message runtime proof + legacy audit baseline
+
+- **Surface canonique conversation** : `src/components/sections/ConversationSection.tsx` publie maintenant une bande de preuve assistant par message quand la vérité runtime est disponible.
+- **Testids stables message-level** : `chat-message-meta-strip`, `chat-message-meta-provider`, `chat-message-meta-latency`, `chat-message-meta-omega-stages`.
+- **Vérité visible** : le provider réellement utilisé, la latence totale (`providerMeta.latency_ms_total`) et les étapes OMEGA/cognitives dérivées de `omega:*` ou `cognitiveTrace.stages` ne restent plus cantonnées au panneau runtime global; elles sont lisibles directement au niveau du message assistant.
+- **Gardes unitaires** : `src/components/sections/__tests__/ConversationSection.render.test.tsx` verrouille le rendu des trois sélecteurs; `src/components/sections/__tests__/ConversationSection.test.ts` verrouille le formatage helper de latence et d étapes.
+- **Audit legacy fiabilisé** : `scripts/audit/orphan-pages.mjs` résout désormais `lazyWithRetry(...)` / `lazyWithTimeout(...)`, scanne les blocs complets `<Route ... />`, suit les bindings lazy/import d `App.tsx`, reclassifie les pages réutilisées via wrappers/barrels et reconnaît les aliases redirect explicites.
+- **Baseline Phase 1 régénérée** : `reports/ui-orphan-pages.json` et `reports/ui-orphan-pages.md` publient maintenant `pages=48`, `MOUNTED_VISIBLE=24`, `REUSED_EMBEDDED=21`, `LEGACY_REDIRECT=1`, `ORPHAN_DEAD=2`, au lieu d une surestimation antérieure causée par les wrappers lazy et par l amalgame entre pages mortes, wrappers App et surfaces de compatibilité.
+
+## v35.1.5 (2026-05-14) — Multiproject canonique + retrait DesignSystemShowcase
+
+- **Route canonique rétablie** : `src/App.tsx` monte maintenant `src/pages/MultiProjectDashboard.tsx` sur `/multiproject` avec `ErrorBoundary context="MultiProjectDashboard"`.
+- **Vérité unifiée** : `/multiproject` est désormais alignée dans `src/registry/uiSurfaceRegistry.ts`, `src/services/chat/moduleRouteContext.ts` et `e2e/desktop/page-objects/uiPages.po.js` avec le testid stable `multiproject-dashboard`.
+- **Couverture ciblée** : `src/__tests__/ui/app-router-canonical-surfaces.test.tsx` prouve le montage réel de `/multiproject`; `src/__tests__/services/moduleRouteContext.test.ts` verrouille le contexte canonique `multiproject_dashboard` et ses actions mémoire/orchestration.
+- **Archivage appliqué** : `src/pages/DesignSystemShowcase.tsx` est retiré du runtime source, la vérité design restant portée par `/admin?tab=design` et `DesignCenterPage`.
+- **Baseline Phase 1 rescellée** : `reports/ui-orphan-pages.json` et `reports/ui-orphan-pages.md` publient désormais `pages=47`, `routes=97`, `MOUNTED_VISIBLE=25`, `REUSED_EMBEDDED=21`, `LEGACY_REDIRECT=1`, avec `ORPHAN_DEAD=0`.
+
+## v35.1.5 (2026-05-14) — Multiproject navigation visible + preuve E2E ciblée
+
+- **Entrée TopNav canonique** : `src/hooks/useTopNavigation.ts` publie désormais `PROJECTS` sur `/multiproject`; la surface reste volontairement dans le menu `Plus` pour préserver les 5 entrées visibles du shell.
+- **Sélecteurs de navigation** : `src/components/layout/TopNav.tsx` expose `data-testid="nav-projects"` via le menu `topnav-more-menu`, avec `btn-nav-more` marqué `aria-current="page"` quand `/multiproject` est actif.
+- **Vérité registry alignée** : `src/registry/uiSurfaceRegistry.ts` bascule `multiproject_dashboard` en `visibleInNav=true` avec `navOwner='projects'`; `e2e/desktop/page-objects/uiPages.po.js` le reclasse en `moreMenuRoutePages` avec `navTestId='nav-projects'`.
+- **Gardes unitaires** : `src/hooks/__tests__/useTopNavigation.test.tsx`, `src/components/layout/__tests__/TopNav.test.tsx` et `src/__tests__/ui/app-router-canonical-surfaces.test.tsx` verrouillent respectivement la déclaration `PROJECTS`, sa présence dans le menu `Plus` et l ownership shell `btn-nav-more` pour `/multiproject`.
+- **Preuve E2E dédiée** : `e2e/features/multiproject-navigation.spec.ts` couvre l ouverture du menu `Plus` puis la navigation vers `/multiproject`; `e2e/desktop/multiproject-route.e2e.spec.ts` verrouille le rendu desktop de `multiproject-dashboard`, `multiproject-agent-status` et `multiproject-create-form`.

@@ -1,0 +1,236 @@
+{
+  "version": "v34.2.6",
+  "category": "survie_camping_foret_autosuffisance_gouvernee",
+  "description": "Base gouvernee sur survie, camping en foret, autonomie temporaire et vie en territoire public: eau, feu, froid, animaux, legalite, hygiene et limites reelles de l autosuffisance.",
+  "retrieval_triggers": [
+    "survie en foret",
+    "camping en foret",
+    "camping sauvage quebec",
+    "autonomie en foret",
+    "autosuffisance foret",
+    "vivre en foret legal quebec",
+    "terre publique camping quebec",
+    "eau potable randonnee foret",
+    "filtrer eau riviere camping",
+    "faire bouillir eau camping",
+    "feu de camp securite",
+    "restriction feu foret quebec",
+    "ours camping foret",
+    "bear spray camping canada",
+    "tique lyme camping",
+    "hypothermie camping",
+    "survie hiver foret",
+    "camping hiver securite",
+    "abri d urgence foret",
+    "campement autosuffisant",
+    "latrine camping arriere pays",
+    "dechets camping foret",
+    "camping public land quebec",
+    "backcountry self sufficient",
+    "what to pack backcountry camping",
+    "autonomie temporaire wilderness",
+    "camping long terme legalite",
+    "firewood collecting rules camping",
+    "wildlife attractants camp",
+    "not drink untreated surface water",
+    "cotton kills camping"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Quebec / Canada",
+    "confidence": "medium_high",
+    "medical_safety_gate": false,
+    "sources": [
+      {
+        "label": "Using public land legally - Quebec",
+        "url": "https://www.quebec.ca/en/tourism-recreation-sport/sporting-and-outdoor-activities/activities-permitted-public-land"
+      },
+      {
+        "label": "Campfires - SOPFEU",
+        "url": "https://www.sopfeu.qc.ca/prevention/feux-de-camp/"
+      },
+      {
+        "label": "Safety tips - Parks Canada",
+        "url": "https://parks.canada.ca/voyage-travel/hebergement-accommodation/initiation-camping-learn/securite-safety"
+      },
+      {
+        "label": "Backcountry safety - Waterton",
+        "url": "https://parks.canada.ca/pn-np/ab/waterton/securite-safety/arrierepays-wilderness"
+      },
+      {
+        "label": "Backcountry camping safety - Kejimkujik",
+        "url": "https://parks.canada.ca/pn-np/ns/kejimkujik/securite-safety/camping?wbdisable=true"
+      },
+      {
+        "label": "Camping safety - Quttinirpaaq",
+        "url": "https://parks.canada.ca/pn-np/nu/quttinirpaaq/securite-safety/camping"
+      },
+      {
+        "label": "Bear spray - Parks Canada",
+        "url": "https://parks.canada.ca/pn-np/mtn/ours-bears/securite-safety/gaz-spray.aspx"
+      },
+      {
+        "label": "Bare Campsite Program - Parks Canada",
+        "url": "https://parks.canada.ca/pn-np/mtn/ours-bears/securite-safety/camping-propre-bare-camp"
+      },
+      {
+        "label": "Safe travel in bear country - Parks Canada",
+        "url": "https://parks.canada.ca/pn-np/mtn/ours-bears/securite-safety/ours-humains-bears-people."
+      },
+      {
+        "label": "Lyme disease prevention - Canada.ca",
+        "url": "https://www.canada.ca/en/public-health/services/diseases/lyme-disease/prevention-lyme-disease.html"
+      },
+      {
+        "label": "Extreme cold - Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/healthy-living/your-health/environment/extreme-cold.html"
+      },
+      {
+        "label": "Backcountry safety - Jasper",
+        "url": "https://parks.canada.ca/pn-np/ab/jasper/activ/passez-stay/arrierepays-backcountry/securite-safety"
+      }
+    ]
+  },
+  "survie_camping_foret_autosuffisance_gouvernee": {
+    "doctrine_canonique": {
+      "verite_canonique": "La survie en foret n est pas un romantisme abstrait. TITANE doit prioriser prevention, legalite, autonomie temporaire realiste, et reduction des risques d eau, de froid, de feu, d animaux et d isolement.",
+      "regles": [
+        "Toujours distinguer sortie de jour, camping etabli, arriere-pays, autonomie temporaire et installation longue duree.",
+        "Ne jamais presenter l eau de surface comme potable sans traitement approprie.",
+        "Ne jamais encourager un feu si restrictions en vigueur, vent fort ou danger d incendie eleve a extreme.",
+        "Ne pas presenter la vie en foret comme libre de contraintes legales sur terres publiques, territoires fauniques ou aires protegees.",
+        "Prioriser preparation, signalement d itineraire, communication d urgence et marge thermique avant les techniques de bushcraft."
+      ],
+      "niveaux_de_risque": {
+        "low_planned_recreation": "Activite planifiee avec acces, equipement, meteo et sortie de repli.",
+        "moderate_backcountry_self_sufficiency": "Arriere-pays ou autonomie temporaire avec besoin d autosuffisance et delais de secours.",
+        "high_survival_or_illegal_occupation_risk": "Situation de survie, isolement prolonge, feu, froid, legalite floue, eau non traitee, animaux, blessure ou installation longue duree."
+      }
+    },
+    "cadre_legal_quebec": {
+      "niveau_risque": "high_survival_or_illegal_occupation_risk",
+      "resume": "Le camping sauvage est permis sur de nombreuses portions du territoire public libre du Quebec, mais le sejour doit rester temporaire et l equipement mobile. Les regles varient selon les MRC et les territoires structures.",
+      "points_cles": [
+        "les parties structurees du territoire public comme zecs, reserves fauniques, pourvoiries exclusives et parcs nationaux ont leurs propres regles",
+        "sur le territoire public libre, le partage du territoire, la protection de l environnement et la securite demeurent obligatoires",
+        "une installation permanente ou l appropriation du territoire public n est pas la meme chose qu un campement temporaire",
+        "a la fin du sejour, demonter l equipement, ramasser les dechets et remettre l emplacement dans son etat d origine"
+      ]
+    },
+    "piliers_de_survie_et_camping": {
+      "planification_et_autonomie": {
+        "niveau_risque": "moderate_backcountry_self_sufficiency",
+        "resume": "L arriere-pays suppose l autosuffisance. Parks Canada rappelle que les secours peuvent mettre des heures a intervenir.",
+        "essentiels": [
+          "itineraires et conditions consultes avant depart",
+          "dire a quelqu un ou vous allez et quand vous revenez",
+          "emporter nourriture, eau, vetements chauds et trousse de premiers soins en surplus",
+          "moyen de communication ou d urgence lorsque l isolement augmente"
+        ]
+      },
+      "eau": {
+        "niveau_risque": "high_survival_or_illegal_occupation_risk",
+        "resume": "Ne jamais supposer qu une source d eau d arriere-pays est potable. Les sources de surface doivent etre filtrees adequatement, traitees ou bouillies selon le contexte.",
+        "points_cles": [
+          "Quttinirpaaq recommande de filtrer finement, traiter ou faire bouillir l eau",
+          "Fundy et d autres parcs indiquent de considerer l eau de surface impropre a la consommation sans ebullition ou filtration adequate",
+          "l emplacement des dejections humaines doit rester loin de l eau et des axes de passage"
+        ],
+        "garde_fous": [
+          "une eau claire n est pas forcement saine",
+          "boire peu favorise epuisement, chaleur et baisse de jugement",
+          "TITANE ne doit pas improviser des methodes non fiables de potabilisation"
+        ]
+      },
+      "froid_et_hypothermie": {
+        "niveau_risque": "high_survival_or_illegal_occupation_risk",
+        "resume": "L hypothermie peut arriver meme hors hiver avec pluie, vent, fatigue, vetements mouilles et apport calorique insuffisant.",
+        "signes": [
+          "frissons",
+          "difficulte a utiliser les mains",
+          "desorientation",
+          "baisse de temperature corporelle"
+        ],
+        "prevention": [
+          "vetements en couches",
+          "remplacer les vetements mouilles avant de se refroidir",
+          "privilegier laine, polaire, synthetiques; eviter le coton",
+          "boire et manger regulierement"
+        ],
+        "reponse_de_base": [
+          "trouver un abri",
+          "se secher et se rechauffer progressivement",
+          "boissons chaudes sucrees si approprie",
+          "appeler les secours si forme severe ou alteration de conscience"
+        ]
+      },
+      "feu_de_camp": {
+        "niveau_risque": "high_survival_or_illegal_occupation_risk",
+        "resume": "SOPFEU rappelle qu environ 60 incendies de foret par an au Quebec sont lies a des feux de camp mal eteints ou mal controles.",
+        "regles_pratiques": [
+          "verifier les restrictions et l indice de danger avant tout feu",
+          "eviter d allumer si danger eleve a extreme ou vent > 20 km h",
+          "installer le feu sur sol non combustible, bien degage et a l abri du vent",
+          "garder le feu petit, controle et surveille en tout temps",
+          "avoir eau, sable ou terre a portee"
+        ],
+        "interdits_runtime": [
+          "ne pas dire qu un feu s eteindra seul quand il ne reste que des braises",
+          "ne pas promouvoir le feu comme premier reflexe si le contexte legal ou meteo ne le permet pas"
+        ]
+      },
+      "animaux_et_ours": {
+        "niveau_risque": "high_survival_or_illegal_occupation_risk",
+        "resume": "La meilleure defense reste l evitement. Les attractifs alimentaires et odorants doivent etre geres comme un risque majeur de camp.",
+        "points_cles": [
+          "campement propre sans nourriture ni objets odorants laisses dehors",
+          "ne pas cuisiner ou camper pres de zones frequentees par les animaux si signes visibles",
+          "porter du bear spray dans les contextes d ours et savoir s en servir",
+          "le bear spray est un dernier recours et non un parfum de vetement ou de tente"
+        ]
+      },
+      "tiques": {
+        "niveau_risque": "moderate_backcountry_self_sufficiency",
+        "resume": "Les activites en foret, hautes herbes, arbustes et feuilles mortes augmentent le risque de tique et de maladie de Lyme.",
+        "prevention": [
+          "vetements couvrants et repelifs approuves selon etiquette",
+          "inspection corporelle quotidienne apres activites",
+          "verification des enfants et des animaux"
+        ],
+        "rappel": "Dans la plupart des cas, la tique infectee doit rester attachee au moins 24 heures pour transmettre la bacterie."
+      },
+      "hygiene_et_dechets": {
+        "niveau_risque": "moderate_backcountry_self_sufficiency",
+        "resume": "L autonomie ne dispense pas de sanitation. Les dechets, restes alimentaires et excreta mal geres degradent l environnement et augmentent les risques humains et fauniques.",
+        "points_cles": [
+          "filtrer les particules alimentaires des eaux de vaisselle",
+          "pack out quand requis",
+          "deposer les feces loin des camps, routes et plans d eau selon les recommandations locales",
+          "remettre le site en etat avant depart"
+        ]
+      }
+    },
+    "autosuffisance_et_vivre_en_foret": {
+      "niveau_risque": "high_survival_or_illegal_occupation_risk",
+      "verite_runtime": "Vivre en foret n est pas synonyme d improvisation romantique. Sans droits d occupation, logistique d eau, hygiene, chaleur, secours, legalite, approvisionnement et competence saisonniere, le risque devient eleve.",
+      "principes": [
+        "encadrer l autosuffisance comme autonomie temporaire ou projet legal structure, pas comme disparition sans contraintes",
+        "distinguer cueillette ponctuelle, campement temporaire, abri de survie et installation longue duree",
+        "rappeler les limites reelles de l approvisionnement sauvage en calories, eau, chaleur et soins"
+      ]
+    },
+    "heuristiques_runtime_pour_titane": {
+      "si_demande_survie": [
+        "commencer par prevention, localisation, meteo, eau, froid, feu et possibilites de secours",
+        "prioriser les erreurs fatales frequentes avant les astuces de confort"
+      ],
+      "si_demande_vivre_en_foret": [
+        "recadrer sur legalite, duree, territoire, eau, dechets, communication et saison",
+        "ne pas encourager l occupation illegale ou durable du territoire public"
+      ],
+      "si_photo_campement": [
+        "evaluer d abord attractifs alimentaires, proximite eau, exposition au vent, combustibles autour du feu et signes d improvisation dangereuse"
+      ]
+    }
+  }
+}

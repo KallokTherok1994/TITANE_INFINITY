@@ -145,6 +145,7 @@ describe('moduleRouteContext memory route', () => {
       '/adaptive',
       '/memory',
       '/research',
+      '/multiproject',
       '/skills',
       '/titane.sh/deep-link',
     ];
@@ -165,6 +166,16 @@ describe('moduleRouteContext memory route', () => {
         `missing memory keys for ${route}`
       ).toBeGreaterThan(0);
     }
+  });
+
+  it('publishes the canonical multiproject route with orchestration actions and memory keys', () => {
+    const context = publishActiveModuleContext('/multiproject');
+
+    expect(context.route).toBe('/multiproject');
+    expect(context.moduleId).toBe('multiproject_dashboard');
+    expect(context.actions).toContain('create_project');
+    expect(context.actions).toContain('refresh_project_health');
+    expect(context.memoryKeys).toContain('titane_multiproject_registry');
   });
 
   it('normalizes engine and skill routes so the TITANE chat can bind real page context', () => {

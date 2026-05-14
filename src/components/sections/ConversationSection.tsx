@@ -438,6 +438,67 @@ export function resolveConversationOllamaModel(
   return DEFAULT_OLLAMA_MODEL;
 }
 
+export function buildConversationMessageMetaLatency(
+  providerMeta?: ProviderDecisionMeta | null
+): string | null {
+  if (!providerMeta || !Number.isFinite(providerMeta.latency_ms_total)) {
+    return null;
+  }
+
+  return `${Math.max(0, Math.round(providerMeta.latency_ms_total))}ms`;
+}
+
+export function buildConversationMessageOmegaStages(
+  cognitiveTrace?: CognitiveRuntimeTrace | null,
+  tags: string[] = []
+): string | null {
+  const omegaTags = Array.from(
+    new Set(
+      tags
+        .filter(tag => tag.toLowerCase().startsWith('omega:'))
+        .map(tag => tag.split(':').slice(1).join(':').trim())
+        .filter(Boolean)
+    )
+  );
+
+  if (omegaTags.length > 0) {
+    return omegaTags.join(', ');
+  }
+
+  if (!cognitiveTrace) {
+    return null;
+  }
+
+  const stages: string[] = [];
+
+  if (cognitiveTrace.canonical.attached) {
+    stages.push('canonical');
+  }
+  if (cognitiveTrace.memory.injected) {
+    stages.push('memory');
+  }
+  if (cognitiveTrace.web.attempted || cognitiveTrace.web.sourceCount > 0) {
+    stages.push('web');
+  }
+  if (cognitiveTrace.generation.providerUsed || cognitiveTrace.generation.modelUsed) {
+    stages.push('generation');
+  }
+  if (cognitiveTrace.reflection.evaluated || cognitiveTrace.reflection.verifierEnabled) {
+    stages.push('reflection');
+  }
+  if (cognitiveTrace.quality.evaluated) {
+    stages.push('quality');
+  }
+  if (cognitiveTrace.metaCognition.evaluated) {
+    stages.push('meta');
+  }
+  if (cognitiveTrace.final.verdict) {
+    stages.push('final');
+  }
+
+  return stages.length > 0 ? stages.join(', ') : null;
+}
+
 function normalizeTransparencyPrompt(input: string): string {
   return input
     .toLowerCase()
@@ -1085,6 +1146,11 @@ const ConversationMessage = memo(
     const reasonLabel = providerMeta?.reason_code;
     const cacheHit = providerMeta?.cache_hit === true;
     const citations = resolveConversationCitations(message.metadata?.citations);
+    const latencyLabel = buildConversationMessageMetaLatency(providerMeta);
+    const omegaStagesLabel = buildConversationMessageOmegaStages(
+      message.metadata?.cognitiveTrace ?? null,
+      message.metadata?.tags ?? []
+    );
 
     const handleCopy = useCallback(
       () => onCopy(message.content),
@@ -1197,6 +1263,22 @@ const ConversationMessage = memo(
               message.content
             )}
           </div>
+          {message.role === 'assistant' &&
+            (providerLabel || latencyLabel || omegaStagesLabel) && (
+              <div className="conversation-message-meta" data-testid="chat-message-meta-strip">
+                {providerLabel && (
+                  <span data-testid="chat-message-meta-provider">{providerLabel}</span>
+                )}
+                {latencyLabel && (
+                  <span data-testid="chat-message-meta-latency">{latencyLabel}</span>
+                )}
+                {omegaStagesLabel && (
+                  <span data-testid="chat-message-meta-omega-stages">
+                    {omegaStagesLabel}
+                  </span>
+                )}
+              </div>
+            )}
           {message.role === 'assistant' && citations.length > 0 && (
             <div
               className="conversation-message-citations"

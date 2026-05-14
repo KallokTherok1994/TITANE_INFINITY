@@ -1,0 +1,351 @@
+{
+  "version": "v34.2.3",
+  "category": "medecines_naturelles_nutrition_holistique_gouvernee",
+  "description": "Base gouvernee sur les medecines naturelles, la nutrition et certaines approches holistiques: priorisation des habitudes de vie, niveau de preuve, limites, interactions et drapeaux rouges medicaux.",
+  "retrieval_triggers": [
+    "medecines naturelles",
+    "therapies naturelles",
+    "medecine integrative",
+    "medecine holistique",
+    "approche holistique sante",
+    "nutrition holistique",
+    "produits de sante naturels canada",
+    "supplements naturels securite",
+    "probiotiques utilite",
+    "probiotiques diarrhee antibiotique",
+    "homeopathie preuve",
+    "turmeric curcumin evidence",
+    "curcuma osteoarthrite",
+    "melatonine insomnie",
+    "cbt-i melatonine",
+    "omega 3 coeur",
+    "omega 3 warfarine",
+    "vitamine d os",
+    "magnesium interactions",
+    "fer carence anemie",
+    "vitamine b12 vegan",
+    "meditation pleine conscience stress",
+    "yoga stress sommeil",
+    "tai chi equilibre",
+    "acupuncture douleur chronique",
+    "saint john wort interactions",
+    "st johns wort warfarine",
+    "ginkgo interactions",
+    "ginkgo warfarine",
+    "produit naturel licence canada",
+    "sante integrative habitudes de vie",
+    "alimentation saine quebec",
+    "activite physique quebec 150 minutes",
+    "supplement naturel danger",
+    "theorie evidence naturelle",
+    "holistique sans pseudo science",
+    "complementaire et integrative safety"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Canada / Quebec / NIH",
+    "confidence": "medium_high",
+    "medical_safety_gate": true,
+    "sources": [
+      {
+        "label": "Mind and Body Practices - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/mind-and-body-practices"
+      },
+      {
+        "label": "Probiotics - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/probiotics-usefulness-and-safety"
+      },
+      {
+        "label": "Homeopathy - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/homeopathy"
+      },
+      {
+        "label": "Turmeric - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/turmeric"
+      },
+      {
+        "label": "Melatonin - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/melatonin-what-you-need-to-know/"
+      },
+      {
+        "label": "St. John's Wort - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/st-johns-wort"
+      },
+      {
+        "label": "Ginkgo - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/ginkgo"
+      },
+      {
+        "label": "Natural health products - Canada.ca",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-health-products-canada.html"
+      },
+      {
+        "label": "Natural health product regulation in Canada - Canada.ca",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-non-prescription/regulation.html"
+      },
+      {
+        "label": "Warfarin interactions - Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-medical-devices/warfarin.html"
+      },
+      {
+        "label": "Alimentation saine - Quebec",
+        "url": "https://www.quebec.ca/sante/alimentation/saines-habitudes-alimentaires/alimentation-saine"
+      },
+      {
+        "label": "Physical activity recommendations - Quebec",
+        "url": "https://www.quebec.ca/en/health/advice-and-prevention/healthy-lifestyle-habits/physical-activity/physical-activity-recommendations"
+      },
+      {
+        "label": "Omega-3 - NIH ODS",
+        "url": "https://ods.od.nih.gov/factsheets/Omega3FattyAcids-Consumer/"
+      },
+      {
+        "label": "Vitamin D - NIH ODS",
+        "url": "https://ods.od.nih.gov/factsheets/VitaminD-Consumer/"
+      },
+      {
+        "label": "Magnesium - NIH ODS",
+        "url": "https://ods.od.nih.gov/factsheets/Magnesium-Consumer/"
+      },
+      {
+        "label": "Iron - NIH ODS",
+        "url": "https://ods.od.nih.gov/factsheets/Iron-Consumer/"
+      },
+      {
+        "label": "Vitamin B12 - NIH ODS",
+        "url": "https://ods.od.nih.gov/factsheets/VitaminB12-Consumer/"
+      }
+    ]
+  },
+  "medecines_naturelles_nutrition_holistique_gouvernee": {
+    "doctrine_canonique": {
+      "verite_canonique": "Cette base doit soutenir une education prudente, pas transformer une approche naturelle en traitement etabli ni remplacer un professionnel de sante.",
+      "regles": [
+        "Prioriser d abord les habitudes de vie a faible risque et a large benefice: alimentation, activite physique, sommeil, gestion du stress, adherence aux soins etablis.",
+        "Toujours distinguer preuve clinique utilisable, benefice probable comme adjuvant, preuve insuffisante, absence de preuve utile, et risque d interaction.",
+        "Ne jamais presenter homeopathie, supplements ou plantes comme substituts a un diagnostic, une urgence, un traitement du cancer, une antibiotherapie ou une anticoagulation.",
+        "Si anticoagulants, grossesse, allaitement, epilepsie, greffe, immunodepression, nourrisson ou maladie chronique complexe sont presents, elever le niveau de prudence.",
+        "Quand une prise en charge de premiere ligne plus solide existe, la nommer explicitement avant la therapie naturelle."
+      ],
+      "niveaux_de_preuve": {
+        "lifestyle_foundation": "Habitude de vie ou pilier general de sante appuye par des recommandations publiques stables.",
+        "supported_adjunct": "Approche complementaire pouvant aider certains symptomes ou fonctions comme adjuvant, sans remplacer les soins etablis.",
+        "context_specific_or_deficiency": "Utilite surtout si deficit, contexte clinique precis ou indication tres ciblee.",
+        "conflicting_or_insufficient": "Donnees insuffisantes, heterogenes ou trop faibles pour une recommandation solide.",
+        "not_supported_or_high_interaction_risk": "Approche non soutenue pour l indication revendiquee ou chargee d interactions / risques qui limitent son usage."
+      }
+    },
+    "cadre_reglementaire_canada": {
+      "resume": "Au Canada, les produits de sante naturels comprennent notamment probiotiques, remedes a base de plantes, vitamines, mineraux, homeopathie et acides gras essentiels. Leur vente est regulee, mais ils ne sont pas sans risque.",
+      "points_cles": [
+        "Health Canada evalue les PSN avant autorisation de vente et surveille fabrication, qualite et ingredients.",
+        "Le consommateur devrait privilegier les produits presents dans la base des produits de sante naturels homologues.",
+        "La surveillance canadienne a renforce etiquetage, inspection et enforcement car le marche des PSN comporte encore des risques."
+      ]
+    },
+    "piliers_holistiques_prioritaires": {
+      "alimentation_saine": {
+        "niveau_preuve": "lifestyle_foundation",
+        "resume": "Le Quebec presente l alimentation saine comme un des meilleurs moyens d ameliorer l etat de sante et de se proteger contre plusieurs problemes de sante.",
+        "recommandations_cles": [
+          "variete d aliments nutritifs tous les jours",
+          "grande place aux legumes et fruits",
+          "grains entiers et aliments proteines, souvent d origine vegetale",
+          "eau comme boisson de premier choix",
+          "limiter aliments transformes riches en sodium, sucres et gras satures",
+          "manger lentement, cuisiner plus souvent, partager les repas"
+        ]
+      },
+      "activite_physique": {
+        "niveau_preuve": "lifestyle_foundation",
+        "resume": "Le Quebec recommande chez les adultes au moins 150 minutes par semaine d activite moderee a vigoureuse, plus renforcement musculaire deux fois par semaine et reduction du temps sedentaires.",
+        "recommandations_cles": [
+          "150 minutes ou plus par semaine chez l adulte",
+          "muscle strengthening au moins 2 fois par semaine",
+          "fractionner les longues periodes assises",
+          "approche adaptee a l age, la grossesse et les maladies chroniques"
+        ]
+      },
+      "hierarchie_runtime": [
+        "Si l usager cherche une solution globale bien-etre, commencer par habitudes de vie, sommeil, activite, stress et nutrition.",
+        "N introduire les supplements ou therapies complementaires qu apres cadrage des limites et interactions."
+      ]
+    },
+    "pratiques_complementaires": {
+      "meditation_pleine_conscience": {
+        "niveau_preuve": "supported_adjunct",
+        "resume": "NCCIH rapporte un benefice possible sur anxiete, depression, PTSD, insomnie et certains troubles lies a l usage de substances.",
+        "forces": [
+          "faible cout et faible risque general",
+          "utile en adjuvant pour regulation du stress et attention au corps"
+        ],
+        "limites": [
+          "ne remplace pas une prise en charge psychiatrique ou psychologique si tableau severes",
+          "les effets peuvent varier selon l encadrement et la regularite"
+        ]
+      },
+      "yoga": {
+        "niveau_preuve": "supported_adjunct",
+        "resume": "Le yoga peut soutenir le bien-etre general, le sommeil, l equilibre, le stress et certains tableaux de douleur comme lombalgie ou cervicalgie.",
+        "forces": [
+          "peut favoriser de meilleures habitudes de vie",
+          "benefice global plausible sur stress, sommeil, equilibre et qualite de vie"
+        ],
+        "limites_et_risques": [
+          "entorses et foulures possibles, surtout sans encadrement",
+          "prudence personnes agees, grossesse, glaucome, problemes d equilibre, hypertension severe et blessures preexistantes",
+          "hot yoga: risque de surchauffe et dehydration"
+        ]
+      },
+      "tai_chi": {
+        "niveau_preuve": "supported_adjunct",
+        "resume": "Le tai chi apparait utile pour l equilibre, la stabilite, certaines douleurs et la qualite de vie dans plusieurs contextes chroniques.",
+        "forces": [
+          "approche douce utile chez personnes cherchant mouvement + regulation",
+          "interet particulier pour equilibre et maintien fonctionnel"
+        ],
+        "limites": [
+          "ne remplace pas la reeducation ou la prise en charge d une chute ou d une douleur grave"
+        ]
+      },
+      "acupuncture": {
+        "niveau_preuve": "supported_adjunct",
+        "resume": "NCCIH indique une utilite possible pour certaines douleurs chroniques, la migraine et les cephalees de tension, surtout comme option complementaire.",
+        "garde_fous": [
+          "doit etre realisee correctement par praticien forme",
+          "mauvaise pratique: risque d infection, ponction d organe ou lesion neurologique",
+          "ne pas repousser une evaluation medicale d un symptome serieux"
+        ]
+      },
+      "homeopathie": {
+        "niveau_preuve": "not_supported_or_high_interaction_risk",
+        "resume": "NCCIH rapporte peu de preuves soutenant l homeopathie pour une condition de sante precise.",
+        "garde_fous": [
+          "certains produits etiquetes homeopathiques peuvent contenir assez d ingredients actifs pour causer effets indesirables et interactions",
+          "aucune substitution a un traitement prouve, a la vaccination ou a une prise en charge d urgence"
+        ]
+      }
+    },
+    "supplements_et_therapies_naturelles": {
+      "probiotiques": {
+        "niveau_preuve": "context_specific_or_deficiency",
+        "resume": "Les probiotiques montrent un potentiel pour quelques usages cibles, notamment la prevention de diarrhee associee aux antibiotiques, mais tous les produits ne se valent pas et les souches utiles restent incompletement definies.",
+        "indices_favorables": [
+          "potentiel dans diarrhee associee aux antibiotiques",
+          "autres usages etudies: coliques du nourrisson, parodontie, remission de colite ulcerative"
+        ],
+        "garde_fous": [
+          "on ne sait pas toujours quelle souche, dose ou duree conviennent",
+          "prudence majeure chez nourrissons prematures, personnes fragiles ou immunodeprimees"
+        ]
+      },
+      "curcuma_curcumine": {
+        "niveau_preuve": "conflicting_or_insufficient",
+        "resume": "NCCIH indique beaucoup d etudes sur osteoarthrite, NAFLD et troubles lipidiques, mais pas assez pour conclure clairement a un benefice definitif.",
+        "garde_fous": [
+          "certaines formulations de curcumine hautement biodisponibles peuvent nuire au foie",
+          "ne pas presenter le curcuma comme traitement etabli d inflammation systemique ou de depression"
+        ]
+      },
+      "melatonine": {
+        "niveau_preuve": "conflicting_or_insufficient",
+        "resume": "Pour l insomnie chronique, NCCIH rapporte qu il n y a pas assez de preuves fortes pour recommander la melatonine; la CBT-I reste la premiere ligne citee.",
+        "garde_fous": [
+          "sous supervision si epilepsie ou prise d anticoagulants",
+          "prudence grossesse et allaitement",
+          "ne pas presenter comme solution unique du sommeil chronique"
+        ]
+      },
+      "omega_3": {
+        "niveau_preuve": "context_specific_or_deficiency",
+        "resume": "Le socle le plus solide passe par l alimentation. NIH ODS indique que les poissons gras dans une alimentation saine aident la sante cardiovasculaire; les supplements ont des roles plus cibles.",
+        "points_cles": [
+          "preferer 1 a 2 portions de fruits de mer / poissons par semaine quand approprie",
+          "les supplements peuvent etre discutes pour hypertriglyceridemie ou cardiopathie sous supervision"
+        ],
+        "garde_fous": [
+          "les fortes doses peuvent majorer le risque de saignement avec warfarine ou autres anticoagulants",
+          "ne pas recommander de supplement a tout le monde par defaut"
+        ]
+      },
+      "vitamine_d": {
+        "niveau_preuve": "context_specific_or_deficiency",
+        "resume": "La vitamine D soutient l absorption du calcium, la sante osseuse, les muscles et la fonction nerveuse. L utilite est forte en prevention/correction d insuffisance ou pour les besoins nutritionnels.",
+        "points_cles": [
+          "600 UI par jour chez la plupart des 19 a 70 ans selon la fiche NIH ODS",
+          "800 UI par jour a 71 ans et plus"
+        ],
+        "garde_fous": [
+          "toute supplementation a forte dose doit etre justifiee",
+          "ne pas promettre prevention generalisee de toutes infections ou maladies chroniques"
+        ]
+      },
+      "magnesium": {
+        "niveau_preuve": "context_specific_or_deficiency",
+        "resume": "Le magnesium est un nutriment utile, mais la valeur d un supplement depend surtout du contexte nutritionnel ou clinique.",
+        "garde_fous": [
+          "interactions possibles avec bisphosphonates et certains antibiotiques",
+          "signaler les supplements en cours au medecin ou pharmacien",
+          "eviter d en faire une solution universelle au stress, au sommeil ou a la douleur sans contexte"
+        ]
+      },
+      "fer": {
+        "niveau_preuve": "context_specific_or_deficiency",
+        "resume": "Le fer a un interet majeur quand il existe une carence ou un risque eleve de carence, pas comme tonique universel.",
+        "points_cles": [
+          "role central dans la prevention de l anemie ferriprive",
+          "importance particuliere pendant grossesse si recommande par un professionnel",
+          "surveiller les groupes a risque: jeunes enfants, femmes enceintes, pertes sanguines, malabsorption, faible apport animal"
+        ],
+        "garde_fous": [
+          "ne pas supplementer a l aveugle si anemie non evaluee",
+          "symptomes de fatigue ne signifient pas automatiquement carence en fer"
+        ]
+      },
+      "vitamine_b12": {
+        "niveau_preuve": "context_specific_or_deficiency",
+        "resume": "La vitamine B12 est surtout strategique pour les personnes a risque de deficit ou de malabsorption, notamment personnes agees, vegetariens/vegans stricts et certaines pathologies digestives.",
+        "points_cles": [
+          "les personnes de plus de 50 ans absorbent souvent mieux la B12 de produits enrichis ou supplements",
+          "vegans stricts et nourrissons allaites par une mere carencee sont a risque"
+        ],
+        "garde_fous": [
+          "la B12 n augmente pas l energie chez quelqu un qui n est pas deficient",
+          "un deficit durable peut endommager le systeme nerveux"
+        ]
+      },
+      "saint_johns_wort_et_ginkgo": {
+        "niveau_preuve": "not_supported_or_high_interaction_risk",
+        "resume": "Ces produits sont emblematiques des risques d interactions. Ils ne doivent pas etre banalises en mode naturel donc sans danger.",
+        "points_cles": [
+          "Health Canada cite ginseng, ginkgo, St. John's Wort et green tea parmi les produits a surveiller avec warfarine",
+          "NCCIH indique que St. John's wort peut affaiblir l effet de nombreux medicaments",
+          "NCCIH indique que le ginkgo n a pas montre d efficacite solide pour les usages souvent revendiques"
+        ],
+        "garde_fous": [
+          "drapeau rouge si anticoagulants, contraception hormonale, anti-epileptiques, greffe, polypharmacie",
+          "ne pas recommander sans verification professionnelle"
+        ]
+      }
+    },
+    "heuristiques_runtime_pour_titane": {
+      "si_demande_generale_bien_etre": [
+        "commencer par alimentation saine, mouvement, sommeil, gestion du stress et adherence au plan de soins existant",
+        "ensuite seulement proposer options complementaires a faible risque avec niveau de preuve explicite"
+      ],
+      "si_demande_traitement_direct": [
+        "refuser tout ton de prescription",
+        "indiquer le niveau de preuve et la place eventuelle en adjuvant seulement",
+        "rediriger vers professionnel si drapeaux rouges, symptomes severes ou interactions"
+      ],
+      "si_supplement_ou_plante": [
+        "verifier interactions medicamenteuses, grossesse/allaitement, age, maladie chronique, chirurgie, anticoagulants",
+        "encourager verification dans la base canadienne des produits homologues"
+      ],
+      "si_question_photo_de_produit": [
+        "ne pas deduire l efficacite a partir d un emballage ou d une mention marketing",
+        "chercher plutot ingredient, licence, dose, indication, contre-indications et statut reglementaire"
+      ]
+    }
+  }
+}

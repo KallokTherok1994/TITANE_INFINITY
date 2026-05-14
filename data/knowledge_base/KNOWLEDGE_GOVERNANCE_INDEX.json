@@ -176,6 +176,260 @@
       "not_allowed_use": ["factual_certainty_claims", "scientific_proof"],
       "validation_status": "curated",
       "notes": "INTERPRETIVE CONTENT: spiritual and symbolic knowledge is framed as interpretive, not factual certainty. See C2 policy."
+    },
+    {
+      "knowledge_id": "kb-qc-flore-001",
+      "title": "Quebec Flora, Trees and Plants Photo Recognition",
+      "domain": "biodiversity",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/quebec_flore_arbres_plantes.json",
+      "url": "https://www.quebec.ca/gouvernement/portrait-quebec/drapeau-symboles-nationaux/emblemes",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.88,
+      "freshness": "stable",
+      "requires_web_validation": false,
+      "risk_level": "medium",
+      "allowed_use": ["photo_recognition_guidance", "education", "habitat_reasoning"],
+      "not_allowed_use": ["definitive_botanical_certification_without_key_traits"],
+      "validation_status": "verified",
+      "notes": "Synthese publique Quebec-centrique croisant Emblemes du Quebec, Arborescence, Petite flore forestiere du Quebec et Sentinelle pour produire des heuristiques photo, habitats et confusions frequentes."
+    },
+    {
+      "knowledge_id": "kb-qc-faune-001",
+      "title": "Quebec Wildlife, Mammals and Birds Photo Recognition",
+      "domain": "biodiversity",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/quebec_faune_animaux_oiseaux.json",
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.89,
+      "freshness": "stable",
+      "requires_web_validation": false,
+      "risk_level": "medium",
+      "allowed_use": ["photo_recognition_guidance", "education", "habitat_reasoning"],
+      "not_allowed_use": ["definitive_species_certification_from_single_low_quality_photo"],
+      "validation_status": "verified",
+      "notes": "Synthese publique fondee sur les chiffres officiels de la faune vertebree du Quebec, les guides jeunesse MFFP et les emblemes officiels pour prioriser les especes les plus plausibles en analyse photo."
+    },
+    {
+      "knowledge_id": "kb-qc-fonge-001",
+      "title": "Quebec Fungi Photo Recognition and Safety Gate",
+      "domain": "biodiversity",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/quebec_champignons_fonge.json",
+      "url": "https://mycoquebec.org/",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.9,
+      "freshness": "stable",
+      "requires_web_validation": false,
+      "risk_level": "high",
+      "allowed_use": ["photo_recognition_guidance", "education", "safety_triage"],
+      "not_allowed_use": [
+        "declare_wild_mushroom_edible_from_photo_only",
+        "replace_expert_mycologist_or_antipoison_guidance"
+      ],
+      "validation_status": "verified",
+      "notes": "Synthese publique appuyee sur Mycoquebec et les recommandations de securite du Quebec. Le runtime doit privilegier le groupe pratique ou le niveau de prudence maximal si la base du pied, le dessous ou le substrat manquent."
+    },
+    {
+      "knowledge_id": "kb-qc-bio-uses-001",
+      "title": "Quebec Biodiversity Nutritional and Therapeutic Uses",
+      "domain": "medical",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/quebec_biodiversite_usages_nutritifs_therapeutiques.json",
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/flore",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.74,
+      "freshness": "time_sensitive",
+      "requires_web_validation": true,
+      "risk_level": "restricted",
+      "allowed_use": [
+        "educational_overview",
+        "safety_triage",
+        "evidence_tiering",
+        "photo_analysis_context"
+      ],
+      "not_allowed_use": [
+        "diagnosis",
+        "treatment_prescription",
+        "replace_doctor",
+        "replace_poison_control",
+        "declare_protected_species_safe_to_harvest"
+      ],
+      "validation_status": "verified",
+      "notes": "Synthese Quebec-centrique a haut risque informationnel combinant alimentation, usages traditionnels, preuves humaines limitees, interactions, toxicites, statuts de protection et salubrite. Revue web datee 2026-05-14 requise avant tout usage sensible."
+    },
+    {
+      "knowledge_id": "kb-natural-health-001",
+      "title": "Natural Therapies, Nutrition, and Holistic Guidance",
+      "domain": "medical",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/medecines_naturelles_nutrition_holistique_gouvernee.json",
+      "url": "https://www.nccih.nih.gov/health/mind-and-body-practices",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.75,
+      "freshness": "time_sensitive",
+      "requires_web_validation": true,
+      "risk_level": "restricted",
+      "allowed_use": [
+        "educational_overview",
+        "evidence_tiering",
+        "safety_triage",
+        "healthy_lifestyle_prioritization"
+      ],
+      "not_allowed_use": [
+        "diagnosis",
+        "treatment_prescription",
+        "replace_doctor",
+        "replace_mental_health_care",
+        "replace_sleep_medicine",
+        "override_drug_interaction_review"
+      ],
+      "validation_status": "verified",
+      "notes": "Couche gouvernee sur medecines naturelles, nutrition et approche holistique. Elle privilegie hygiene de vie, preuves officielles NCCIH/ODS/Quebec/Canada, et drapeaux rouges d interactions ou de pseudo-certitude. Revue web datee 2026-05-14 obligatoire avant usage medical sensible."
+    },
+    {
+      "knowledge_id": "kb-plants-aroma-001",
+      "title": "Medicinal Plants, Aromatherapy, and Interaction Guardrails",
+      "domain": "medical",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/plantes_aromatherapie_interactions_gouvernee.json",
+      "url": "https://www.nccih.nih.gov/health/peppermint-oil",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.75,
+      "freshness": "time_sensitive",
+      "requires_web_validation": true,
+      "risk_level": "restricted",
+      "allowed_use": [
+        "educational_overview",
+        "safety_triage",
+        "route_of_use_distinction",
+        "interaction_awareness"
+      ],
+      "not_allowed_use": [
+        "diagnosis",
+        "prescribe_essential_oil_ingestion",
+        "replace_pharmacist_review",
+        "replace_liver_or_poison_assessment",
+        "declare_photo_identification_sufficient_for_use"
+      ],
+      "validation_status": "verified",
+      "notes": "Couche gouvernee sur plantes medicinales, huiles essentielles et interactions. Elle separe oral/topique/inhalation, encode toxicites et allergies, et impose une prudence elevee en cas d anticoagulants, enfants, grossesse, atteinte hepatique ou polypharmacie. Revue web datee 2026-05-14 requise avant usage sensible."
+    },
+    {
+      "knowledge_id": "kb-adaptogens-psychedelics-001",
+      "title": "Adaptogens, Medicinal-Mushroom Marketing, and Psychedelic Guardrails",
+      "domain": "medical",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/adaptogenes_champignons_psychedeliques_gouvernee.json",
+      "url": "https://www.nccih.nih.gov/health/ashwagandha",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.75,
+      "freshness": "time_sensitive",
+      "requires_web_validation": true,
+      "risk_level": "restricted",
+      "allowed_use": [
+        "educational_overview",
+        "safety_triage",
+        "legal_status_clarification",
+        "interaction_awareness"
+      ],
+      "not_allowed_use": [
+        "diagnosis",
+        "self_treatment_psychiatric_guidance",
+        "replace_hepatology_or_psychiatry_care",
+        "declare_marketed_mushroom_products_clinically_proven",
+        "declare_photo_identification_sufficient_for_use"
+      ],
+      "validation_status": "verified",
+      "notes": "Couche gouvernee sur adaptogenes, kava, ashwagandha, rhodiola, produits dits champignons medicinaux et psilocybine. Elle distingue signaux limites, preuves insuffisantes et statut legal controle, avec prudence elevee sur foie, thyroide, immunite, grossesse, troubles psychiatriques et auto-traitement. Revue web datee 2026-05-14 requise avant usage sensible."
+    },
+    {
+      "knowledge_id": "kb-forest-survival-001",
+      "title": "Forest Survival, Camping, and Temporary Self-Sufficiency Guardrails",
+      "domain": "safety",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/survie_camping_foret_autosuffisance_gouvernee.json",
+      "url": "https://www.quebec.ca/en/tourism-recreation-sport/sporting-and-outdoor-activities/activities-permitted-public-land",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.78,
+      "freshness": "time_sensitive",
+      "requires_web_validation": true,
+      "risk_level": "high",
+      "allowed_use": [
+        "educational_overview",
+        "safety_triage",
+        "camp_setup_risk_review",
+        "legality_awareness"
+      ],
+      "not_allowed_use": [
+        "replace_wilderness_training",
+        "encourage_illegal_long_term_occupation",
+        "declare_surface_water_safe_without_treatment",
+        "ignore_fire_bans_or_wildlife_protocols"
+      ],
+      "validation_status": "verified",
+      "notes": "Couche gouvernee sur camping en foret, survie, autonomie temporaire et legalite des terres publiques. Elle priorise prevention, eau, froid, feu, animaux, hygiene et limites de la vie en foret. Revue web datee 2026-05-14 requise avant usage sensible ou saisonnier."
+    },
+    {
+      "knowledge_id": "kb-qc-nature-tourism-001",
+      "title": "Quebec Natural Landscapes, Hiking, and Tourism Orientation",
+      "domain": "knowledge",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/quebec_paysages_randonnee_tourisme_nature.json",
+      "url": "https://www.bonjourquebec.com/fr-ca/decouvrir/experiences/aventures-en-nature",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.8,
+      "freshness": "time_sensitive",
+      "requires_web_validation": true,
+      "risk_level": "medium",
+      "allowed_use": [
+        "destination_orientation",
+        "landscape_education",
+        "trail_context",
+        "photo_analysis_context"
+      ],
+      "not_allowed_use": [
+        "real_time_booking_claims",
+        "real_time_access_claims_without_checking",
+        "invent_local_regulations"
+      ],
+      "validation_status": "verified",
+      "notes": "Couche d orientation sur paysages, randonnee et lieux naturels du Quebec. Elle doit rester descriptive, regionale et saison-aware, sans promettre disponibilite ou conditions temps reel."
+    },
+    {
+      "knowledge_id": "kb-canada-scenic-001",
+      "title": "Canada Scenic Landscapes, Parks, and Panorama Routes",
+      "domain": "knowledge",
+      "version": "1.0",
+      "source_type": "public",
+      "source_ref": "data/knowledge_base/default/canada_paysages_parcs_routes_panoramiques.json",
+      "url": "https://www.parks.canada.ca/voyage-travel/experiences/panoramique-scenic",
+      "last_reviewed": "2026-05-14",
+      "confidence": 0.79,
+      "freshness": "time_sensitive",
+      "requires_web_validation": true,
+      "risk_level": "medium",
+      "allowed_use": [
+        "destination_orientation",
+        "landscape_curation",
+        "travel_context"
+      ],
+      "not_allowed_use": [
+        "real_time_conditions_claims",
+        "invent_accessibility_or_service_details"
+      ],
+      "validation_status": "verified",
+      "notes": "Couche Canada-centrique sur routes panoramiques, ensembles naturels et grands paysages. Elle doit garder une lecture multiregionale et descriptive, sans confondre inspiration et information temps reel."
     }
   ]
 }

@@ -5,6 +5,8 @@ import {
   buildConversationJournalSearchLabel,
   buildConversationTransparencyReply,
   buildConversationLoadingLabel,
+  buildConversationMessageMetaLatency,
+  buildConversationMessageOmegaStages,
   getEffectiveViewportHeight,
   mapReasonCodeToNodeStatus,
   resolveConversationPendingInput,
@@ -202,6 +204,94 @@ describe('ConversationSection runtime provider label', () => {
 
     expect(resolveConversationOllamaModel('ollama', null)).toBe('gemma2:2b');
     expect(resolveConversationOllamaModel('openai', null)).toBe('unknown');
+  });
+
+  it('formats assistant latency evidence from provider runtime metadata', () => {
+    expect(
+      buildConversationMessageMetaLatency({
+        provider_used: 'Ollama',
+        provider_class: 'local',
+        mode: 'LOCAL',
+        reason_code: 'OK',
+        latency_ms_total: 142.4,
+        timeout_ms: 30000,
+        retries: 0,
+        attempts: [],
+        network_used: false,
+        cache_hit: false,
+        policy: 'default',
+      })
+    ).toBe('142ms');
+
+    expect(buildConversationMessageMetaLatency(null)).toBeNull();
+  });
+
+  it('prefers omega tag truth and falls back to cognitive trace stages for assistant evidence', () => {
+    expect(buildConversationMessageOmegaStages(null, ['omega:memory', 'omega:web'])).toBe(
+      'memory, web'
+    );
+
+    expect(
+      buildConversationMessageOmegaStages(
+        {
+          traceId: 'trace-1',
+          timestamp: Date.now(),
+          input: {
+            messageLength: 10,
+            requiresFreshness: false,
+            requiresWeb: false,
+            requiresMemory: true,
+            taskFamily: 'conversation',
+          },
+          canonical: { attached: true },
+          memory: {
+            injected: true,
+            reasonCode: 'OK',
+            sources: ['memory'],
+            sourceCount: 1,
+            relevance: 'high',
+            risk: 'none',
+          },
+          web: {
+            needed: false,
+            attempted: false,
+            available: false,
+            sourceCount: 0,
+            limitations: [],
+            reasonCode: 'not_needed',
+          },
+          generation: {
+            providerUsed: 'ollama',
+            fallbackUsed: false,
+          },
+          reflection: {
+            verifierEnabled: true,
+            factualClaimsDetected: false,
+            verified: true,
+            shouldRevise: false,
+            correctionsApplied: false,
+          },
+          quality: {
+            evaluated: true,
+          },
+          metaCognition: {
+            evaluated: false,
+          },
+          policy: {
+            version: 'v2',
+            webTruth: { evaluated: false },
+            qualityAction: { evaluated: false },
+          },
+          final: {
+            verdict: 'PASS',
+            limitations: [],
+            safeToRemember: true,
+            shouldAskClarification: false,
+          },
+        },
+        []
+      )
+    ).toBe('canonical, memory, generation, reflection, quality, final');
   });
 
   it('publishes explicit journal labels for save and search states', () => {

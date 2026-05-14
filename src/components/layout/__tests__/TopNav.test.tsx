@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { deriveAiStatus, TopNav, type TopNavItem } from '../TopNav';
 import * as zoomScale from '@/hooks/zoomScale';
@@ -107,5 +107,28 @@ describe('TopNav zoom display', () => {
 
     expect(zoomIndicator).toHaveClass('min-w-12');
     expect(zoomIndicator).not.toHaveClass('min-w-[3rem]');
+  });
+
+  it('surfaces the dedicated PROJECTS entry inside the More menu for /multiproject', () => {
+    const items: TopNavItem[] = [
+      { id: 'titane', label: 'Titane', icon: null, route: '/titane' },
+      { id: 'time', label: 'Time', icon: null, route: '/time' },
+      { id: 'admin', label: 'Admin', icon: null, route: '/admin' },
+      { id: 'dev', label: 'Dev', icon: null, route: '/dev' },
+      { id: 'fusion', label: 'Fusion', icon: null, route: '/fusion' },
+      { id: 'projects', label: 'Projects', icon: null, route: '/multiproject' },
+    ];
+
+    render(<TopNav items={items} currentRoute="/multiproject" onNavigate={vi.fn()} />);
+
+    const moreButton = screen.getByTestId('btn-nav-more');
+    expect(moreButton).toHaveAttribute('aria-current', 'page');
+
+    fireEvent.click(moreButton);
+
+    const projectsEntry = screen.getByTestId('nav-projects');
+
+    expect(projectsEntry).toBeInTheDocument();
+    expect(projectsEntry).toHaveAttribute('aria-current', 'page');
   });
 });

@@ -1,0 +1,275 @@
+{
+  "version": "v34.2.1",
+  "category": "quebec_faune_animaux_oiseaux",
+  "description": "Faune, mammiferes et oiseaux du Quebec pour reconnaissance naturaliste et analyse photo : chiffres officiels, habitats, silhouettes, indices visuels, comportements, traces, confusions et vigilance terrain.",
+  "retrieval_triggers": [
+    "animal quebec",
+    "faune quebec",
+    "oiseau quebec",
+    "mammifere quebec",
+    "identifier oiseau photo",
+    "identifier animal photo",
+    "reconnaissance oiseau",
+    "reconnaissance mammifere",
+    "analyse photo faune quebec",
+    "empreinte animal quebec",
+    "trace animal quebec",
+    "harfang des neiges",
+    "orignal",
+    "cerf de virginie",
+    "lynx du canada",
+    "castor du canada",
+    "raton laveur",
+    "geai bleu",
+    "plongeon huard",
+    "bernache du canada",
+    "grand heron",
+    "mouette goeland quebec",
+    "oiseau proie quebec",
+    "oiseau migrateur quebec",
+    "ebird quebec",
+    "inaturalist quebec",
+    "animaux sauvages du quebec",
+    "oiseaux par la couleur",
+    "dindon sauvage quebec",
+    "cygne tubercule quebec",
+    "faune vertebree quebec",
+    "photo bec queue ailes",
+    "photo silhouette oiseau",
+    "photo oreilles lynx",
+    "photo bois orignal",
+    "photo masque raton laveur"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Quebec",
+    "confidence": "high",
+    "sources": [
+      {
+        "label": "Animaux sauvages du Quebec",
+        "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec"
+      },
+      {
+        "label": "Sur les traces de la faune",
+        "url": "https://mffp.gouv.qc.ca/jeunesse/traces-faune/"
+      },
+      {
+        "label": "Emblemes du Quebec",
+        "url": "https://www.quebec.ca/gouvernement/portrait-quebec/drapeau-symboles-nationaux/emblemes"
+      }
+    ]
+  },
+  "quebec_faune_animaux_oiseaux": {
+    "cadre_quebecois": {
+      "diversite_vertebres": {
+        "total": "850 especes de vertebres recensees au Quebec.",
+        "mammiferes": "95 especes.",
+        "oiseaux": "468 especes.",
+        "amphibiens": "21 especes.",
+        "reptiles": "17 especes.",
+        "poissons": "249 especes."
+      },
+      "regle_presence": "Une espece faunique du Quebec doit avoir une presence sauvage habituelle et des preuves verifiables comme des photos en couleurs ou des specimens de collection.",
+      "embleme_aviaire": "Le harfang des neiges est l embleme aviaire du Quebec."
+    },
+    "protocole_reconnaissance_photo": {
+      "animaux": [
+        "taille relative par rapport au decor",
+        "silhouette generale du corps",
+        "forme de la tete, du museau et des oreilles",
+        "queue courte, longue, annelée, en palette ou en panache",
+        "patrons de couleur et marques faciales",
+        "milieu : foret, marais, rive, urbain, champ, falaise, tundra"
+      ],
+      "oiseaux": [
+        "taille relative",
+        "forme du bec",
+        "longueur de la queue",
+        "forme des ailes",
+        "posture et comportement",
+        "pattern de poitrine, ailes et tete",
+        "type d habitat"
+      ],
+      "preuves_complementaires_utiles": [
+        "photo de profil et de face",
+        "video du deplacement",
+        "photo des empreintes ou des feces",
+        "chant ou cri pour les oiseaux",
+        "photo du contexte de perchoir ou du plan d eau"
+      ],
+      "limites": [
+        "juvéniles et femelles peuvent contredire l image mentale du male adulte",
+        "mue, plumage d eclipse, contre-jour et distance degradent fortement la certitude",
+        "plusieurs canards, goelands, parulines et rapaces necessitent des details fins"
+      ]
+    },
+    "mammiferes_reperes": {
+      "orignal": {
+        "nom_scientifique": "Alces alces",
+        "indices_photo": [
+          "tres grande taille",
+          "longues pattes",
+          "museau allonge et bombé",
+          "fanon sous la gorge",
+          "bois larges chez le male"
+        ],
+        "habitat": "Forets boreales, coupes en regeneration, milieux humides et zones riches en broussailles.",
+        "confusions": [
+          "cerf de Virginie : bien plus petit, queue blanche marquee",
+          "wapiti hors contexte : silhouette differente et presence non comparable au Quebec sauvage"
+        ]
+      },
+      "cerf_de_virginie": {
+        "nom_scientifique": "Odocoileus virginianus",
+        "indices_photo": [
+          "taille moyenne",
+          "queue blanche tres visible lorsqu elle est relevee",
+          "corps plus fin que l orignal",
+          "oreilles relativement grandes"
+        ],
+        "habitat": "Sud du Quebec, lisières, champs, forets mixtes et periurbain.",
+        "confusions": [
+          "faon tachete vs autres jeunes cervides",
+          "orignal juvénile de loin si l echelle manque"
+        ]
+      },
+      "castor_du_canada": {
+        "nom_scientifique": "Castor canadensis",
+        "indices_photo": [
+          "corps trapu",
+          "grande queue aplatie en palette",
+          "pelage brun",
+          "milieu aquatique ou barrage"
+        ],
+        "habitat": "Etangs, lacs, ruisseaux lents, marais forestiers.",
+        "confusions": [
+          "rat musque : beaucoup plus petit, queue laterale fine",
+          "loutre : silhouette allongee et queue non aplatie"
+        ]
+      },
+      "lynx_du_canada": {
+        "nom_scientifique": "Lynx canadensis",
+        "indices_photo": [
+          "oreilles triangulaires avec pinceaux noirs",
+          "pattes larges",
+          "queue courte a bout noir",
+          "barbe faciale marquee"
+        ],
+        "habitat": "Forets boreales et secteurs enneiges.",
+        "confusions": [
+          "lynx roux : pattes souvent moins massives, pelage plus chaud, contexte plus meridional",
+          "chat domestique si la distance ecrase les proportions"
+        ]
+      },
+      "raton_laveur": {
+        "nom_scientifique": "Procyon lotor",
+        "indices_photo": [
+          "masque noir borde de blanc",
+          "queue a anneaux noirs",
+          "corps trapu",
+          "museau pointu"
+        ],
+        "habitat": "Milieux forestiers, agricoles, riverains et urbains.",
+        "confusions": [
+          "chat a robe tabby de loin",
+          "jeune ours noir si la photo est tres sombre et mal cadree"
+        ]
+      }
+    },
+    "oiseaux_reperes": {
+      "harfang_des_neiges": {
+        "nom_scientifique": "Bubo scandiacus",
+        "indices_photo": [
+          "grand rapace blanc",
+          "yeux jaunes",
+          "plumage plus tachete chez femelles et juvéniles",
+          "posture souvent au sol ou sur poteau en milieu ouvert"
+        ],
+        "habitat": "Toundra pour la nidification, champs et littoraux ouverts en hiver dans le sud.",
+        "confusions": [
+          "aucun grand oiseau blanc n a exactement la meme silhouette de chouette",
+          "les jeunes peuvent sembler plus bruns qu attendu"
+        ]
+      },
+      "plongeon_huard": {
+        "nom_scientifique": "Gavia immer",
+        "indices_photo": [
+          "long bec en poignard",
+          "silhouette basse sur l eau",
+          "motif damier noir et blanc en plumage nuptial",
+          "tete sombre et collier strie"
+        ],
+        "habitat": "Lacs nordiques et boreaux calmes.",
+        "confusions": [
+          "grèbes : bec, cou et front differents",
+          "canards plongeurs de loin"
+        ]
+      },
+      "grand_heron": {
+        "nom_scientifique": "Ardea herodias",
+        "indices_photo": [
+          "grand echassier gris-bleu",
+          "long cou en S",
+          "long bec jaune",
+          "grandes pattes"
+        ],
+        "habitat": "Rives, marais, estuaires, plans d eau calmes.",
+        "confusions": [
+          "grande aigrette : beaucoup plus blanche",
+          "grue du Canada : posture plus droite, front rouge, vol cou tendu"
+        ]
+      },
+      "bernache_du_canada": {
+        "nom_scientifique": "Branta canadensis",
+        "indices_photo": [
+          "cou noir",
+          "joues blanches",
+          "corps brun",
+          "vol en V frequent"
+        ],
+        "habitat": "Plans d eau, rivages, parcs urbains, champs.",
+        "confusions": [
+          "oies grises ou blanches selon luminosite",
+          "bernaches domestiques echappees"
+        ]
+      },
+      "geai_bleu": {
+        "nom_scientifique": "Cyanocitta cristata",
+        "indices_photo": [
+          "plumage bleu vif",
+          "huppe marquee",
+          "bavette noire",
+          "ailes et queue barrees de noir et blanc"
+        ],
+        "habitat": "Boises, quartiers residentiels, lisières.",
+        "confusions": [
+          "geais ou corvides exotiques echappes",
+          "mésanges bleues impossible au Quebec sauvage"
+        ]
+      }
+    },
+    "confusions_et_alertes": {
+      "cygne_tubercule": "Au Quebec, le cygne tubercule est une espece exotique envahissante ponctuelle; ne pas le traiter comme espece indigene reguliere.",
+      "perdrix": "Le terme perdrix est souvent mal employe pour plusieurs galliformes; si la photo montre une 'perdrix', comparer aussi gelinotte huppée, lagopedes et tétras.",
+      "oiseaux_deau": "Le miroir, la forme du bec et la ligne de front sont essentiels pour separer plusieurs canards."
+    },
+    "heuristiques_runtime_pour_titane": {
+      "prioriser_espece": [
+        "Si tres grand cervide a longues pattes et museau busqué -> orignal prioritaire.",
+        "Si mammifere gris avec masque noir et queue annelée -> raton laveur prioritaire.",
+        "Si grand oiseau entierement blanc de type chouette en milieu ouvert hivernal -> harfang des neiges prioritaire.",
+        "Si oiseau aquatique noir et blanc au bec en dague sur grand lac -> plongeon huard prioritaire."
+      ],
+      "quand_rester_au_niveau_du_groupe": [
+        "paruline, goeland, canard ou rapace lointain sans patron net",
+        "mammifere nocturne capte seulement par reflet des yeux",
+        "oiseau en vol silhouette seule sans bec ni queue lisibles"
+      ],
+      "outils_externes_recommandes": [
+        "iNaturalist pour toutes les especes",
+        "eBird pour les oiseaux",
+        "fiches d especes du Quebec pour valider habitat et statut"
+      ]
+    }
+  }
+}

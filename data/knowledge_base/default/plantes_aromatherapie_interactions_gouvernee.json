@@ -1,0 +1,254 @@
+{
+  "version": "v34.2.4",
+  "category": "plantes_aromatherapie_interactions_gouvernee",
+  "description": "Base gouvernee sur quelques plantes medicinales, huiles essentielles et interactions: distinction oral/topique/inhalation, niveau de preuve, toxicite, allergies et medicaments a haut risque.",
+  "retrieval_triggers": [
+    "plantes medicinales interactions",
+    "aromatherapie securite",
+    "huiles essentielles danger",
+    "huiles essentielles canada securite",
+    "peppermint oil ibs",
+    "huile de menthe poivree syndrome intestin irritable",
+    "lavande anxiete evidence",
+    "camomille anxiete sommeil",
+    "tea tree oil acne securite",
+    "melaleuca ingestion danger",
+    "echinacea interaction immunosuppresseur",
+    "green tea extract foie",
+    "extrait de the vert foie canada",
+    "warfarine plantes interactions",
+    "saint john wort interactions",
+    "ginkgo warfarine",
+    "eucalyptus camphor safety",
+    "huiles essentielles enfants danger",
+    "diffuseur huiles essentielles prudence",
+    "aromatherapie grossesse prudence",
+    "plante topique oral difference",
+    "capsules gastroresistantes menthe poivree",
+    "camomille allergie asteracees",
+    "lavender oral anxiety",
+    "herb drug interactions warfarin digoxin",
+    "tea tree oil should not be swallowed",
+    "green tea extract liver injury",
+    "echinacea cold evidence",
+    "plantes medicinales evidence niveau",
+    "analyse photo plante medicinale prudence"
+  ],
+  "source_curation": {
+    "reviewed_on": "2026-05-14",
+    "region": "Canada / NIH",
+    "confidence": "medium_high",
+    "medical_safety_gate": true,
+    "sources": [
+      {
+        "label": "Peppermint Oil - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/peppermint-oil"
+      },
+      {
+        "label": "Lavender - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/lavender"
+      },
+      {
+        "label": "Echinacea - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/echinacea/?ada=1"
+      },
+      {
+        "label": "Tea Tree Oil - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/tea-tree-oil"
+      },
+      {
+        "label": "Anxiety and Complementary Health Approaches - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/anxiety-and-complementary-health-approaches"
+      },
+      {
+        "label": "Sleep Disorders and Complementary Health Approaches - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/sleep-disorders-and-complementary-health-approaches"
+      },
+      {
+        "label": "Herb-Drug Interactions - NCCIH",
+        "url": "https://www.nccih.nih.gov/health/providers/digest/herb-drug-interactions?nav=tw"
+      },
+      {
+        "label": "Essential oils and botanical extracts - Canada.ca",
+        "url": "https://www.canada.ca/en/health-canada/services/chemicals-product-safety/essential-oils-botanical-extracts.html"
+      },
+      {
+        "label": "Camphor and eucalyptus oils safety - Canada.ca",
+        "url": "https://www.canada.ca/en/health-canada/services/healthy-living/your-health/lifestyles/safe-use-health-products-containing-camphor-eucalyptus-oils.html"
+      },
+      {
+        "label": "Green tea extract liver injury - Canada.ca",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/medeffect-canada/safety-reviews/green-tea-extract-containing-natural-health-products-assessing-potential-risk-liver-injury.html"
+      },
+      {
+        "label": "Warfarin - Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-medical-devices/warfarin.html"
+      }
+    ]
+  },
+  "plantes_aromatherapie_interactions_gouvernee": {
+    "doctrine_usage": {
+      "verite_canonique": "Une meme plante peut avoir des profils tres differents selon qu elle est prise en tisane, capsule, extrait concentre, huile essentielle topique ou ingestion orale. TITANE doit separer ces voies avant toute reponse.",
+      "regles": [
+        "Toujours distinguer usage oral, topique, inhalation et ingestion d huile essentielle concentree.",
+        "Ne jamais banaliser une huile essentielle sous pretexte qu elle est naturelle ou diffusee.",
+        "Les anticoagulants, immunosuppresseurs, enfants, grossesse/allaitement, maladie hepatique et polypharmacie doivent relever la prudence.",
+        "Si l evidence est preliminaire, dire adjuvant possible ou donnee non concluante plutot que traitement.",
+        "Aucune plante ou huile essentielle ne doit etre recommandee pour remplacer une evaluation de symptomes graves ou persistants."
+      ],
+      "niveaux_de_preuve": {
+        "topical_or_targeted_supported_adjunct": "Benefice plausible ou modere pour un usage cible et borne, souvent topique ou symptomatique.",
+        "limited_or_preliminary": "Petites etudes ou signaux positifs non definitifs.",
+        "insufficient_or_conflicting": "Absence de conclusion fiable ou donnees contradictoires.",
+        "high_toxicity_or_interaction_risk": "Risque important de toxicite, allergie, atteinte d organe ou interaction medicamenteuse."
+      }
+    },
+    "dossiers": {
+      "menthe_poivree_huile_essentielle": {
+        "nom_scientifique": "Mentha x piperita",
+        "formes": [
+          "feuille",
+          "capsule gastroresistante",
+          "huile essentielle concentree",
+          "usage topique"
+        ],
+        "niveau_preuve": "topical_or_targeted_supported_adjunct",
+        "usages_avec_signal": [
+          "capsules gastroresistantes pour certains symptomes de syndrome de l intestin irritable chez l adulte",
+          "signal limite sur nausees et certaines applications topiques"
+        ],
+        "garde_fous": [
+          "l huile de menthe poivree seule peut aggraver l indigestion chez certaines personnes",
+          "effets indesirables possibles: reflux acide et dyspepsie",
+          "le menthol ne doit pas etre inhale ni applique au visage d un nourrisson ou petit enfant"
+        ]
+      },
+      "lavande": {
+        "nom_scientifique": "Lavandula angustifolia",
+        "formes": [
+          "aromatherapie",
+          "usage topique",
+          "produit oral standardise"
+        ],
+        "niveau_preuve": "limited_or_preliminary",
+        "usages_avec_signal": [
+          "un produit oral de lavande pourrait aider l anxiete",
+          "usage aromatique surtout oriente detente et confort"
+        ],
+        "garde_fous": [
+          "aucune conclusion definitive sur l efficacite a cause des limites de la recherche",
+          "des cas de gonflement du tissu mammaire ont ete rapportes chez certains enfants avec produits topiques contenant lavande"
+        ]
+      },
+      "camomille": {
+        "nom_scientifique": "Matricaria chamomilla / Chamaemelum nobile selon produit",
+        "formes": [
+          "tisane",
+          "supplement oral",
+          "usage topique ou bain de bouche selon produit"
+        ],
+        "niveau_preuve": "limited_or_preliminary",
+        "usages_avec_signal": [
+          "quelques etudes preliminaires pour trouble anxieux generalise",
+          "usage traditionnel pour sommeil et apaisement"
+        ],
+        "garde_fous": [
+          "pas de preuve clinique concluante pour l insomnie",
+          "risque allergique chez personnes allergiques a l herbe a poux ou plantes apparentees"
+        ]
+      },
+      "tea_tree_melaleuca": {
+        "nom_scientifique": "Melaleuca alternifolia",
+        "formes": [
+          "usage topique",
+          "rince-bouche a faible concentration",
+          "huile essentielle concentree"
+        ],
+        "niveau_preuve": "high_toxicity_or_interaction_risk",
+        "usages_avec_signal": [
+          "signal limite pour acne et pied d athlete en usage topique"
+        ],
+        "garde_fous": [
+          "ne jamais avaler l huile essentielle de tea tree",
+          "ingestion orale peut causer confusion, instabilite, incapacite a marcher et coma",
+          "irritation ou rougeur cutanee possibles, surtout si produit vieux ou mal conserve",
+          "les bains de bouche au tea tree ne doivent pas etre avales"
+        ]
+      },
+      "echinacee": {
+        "nom_scientifique": "Echinacea spp.",
+        "formes": [
+          "tisane",
+          "capsule",
+          "extrait"
+        ],
+        "niveau_preuve": "insufficient_or_conflicting",
+        "usages_avec_signal": [
+          "usage populaire pour rhume et soutien immunitaire"
+        ],
+        "garde_fous": [
+          "donnees contradictoires selon preparation et indication",
+          "interactions possibles avec medicaments metabolises par le foie",
+          "prudence theorique avec immunosuppresseurs et cafeine"
+        ]
+      },
+      "extrait_de_the_vert": {
+        "nom_scientifique": "Camellia sinensis extract",
+        "formes": [
+          "supplement oral concentre",
+          "produit de gestion du poids",
+          "source d antioxydants"
+        ],
+        "niveau_preuve": "high_toxicity_or_interaction_risk",
+        "usages_avec_signal": [
+          "utilise dans certains produits de gestion du poids ou antioxydants"
+        ],
+        "garde_fous": [
+          "Health Canada conclut a un lien possible avec des atteintes hepatiques rares et imprevisibles",
+          "adulte seulement selon la monographie renforcee citee",
+          "arreter et consulter en cas de jaunisse, douleur abdominale, urine foncee, nausee, fatigue inhabituelle ou perte d appetit",
+          "prendre avec nourriture selon les precautions canadiennes citees"
+        ]
+      },
+      "eucalyptus_camphre_et_huiles_essentielles_diy": {
+        "niveau_preuve": "high_toxicity_or_interaction_risk",
+        "resume": "Le cadre canadien rappelle que naturel ne veut pas dire sur et que Health Canada ne recommande ni n approuve les usages DIY des huiles essentielles et extraits botaniques.",
+        "garde_fous": [
+          "limiter les usages DIY inhales, ingeres ou appliques sur la peau",
+          "garder hors de portee des jeunes enfants et animaux",
+          "verifier etiquettes, ingredients et numeros NPN/DIN/DIN-HM",
+          "les produits contenant camphre/eucalyptus justifient une vigilance particuliere"
+        ]
+      },
+      "interactions_transversales": {
+        "niveau_preuve": "high_toxicity_or_interaction_risk",
+        "resume": "Les etudes cliniques solides sur interactions herbe-medicament restent limitees, mais l attention doit etre forte avec medicaments a marge therapeutique etroite.",
+        "drapeaux_rouges": [
+          "warfarine",
+          "digoxine",
+          "chimiotherapie",
+          "immunosuppresseurs",
+          "anti-epileptiques"
+        ],
+        "rappels": [
+          "Health Canada cite notamment ginseng, American ginseng, ginkgo, green tea et St. John's Wort dans la vigilance warfarine",
+          "NCCIH note que beaucoup d interactions restent incompletement etablies mais suffisantes pour imposer prudence"
+        ]
+      }
+    },
+    "heuristiques_runtime_pour_titane": {
+      "si_photo_de_plante": [
+        "ne pas deduire d emblee qu une plante reconnaissable en photo peut etre ingeree ou appliquee medicalement",
+        "separer identification botanique, partie utilisee, forme galenique et securite"
+      ],
+      "si_huile_essentielle": [
+        "demander implicitement si usage vise est diffusion, peau, bouche ou ingestion",
+        "si ingestion d huile essentielle concentree est suggeree, elever la prudence au maximum"
+      ],
+      "si_anticoagulants_ou_polypharmacie": [
+        "refuser toute recommandation affirmative non verifiee",
+        "encourager validation pharmacienne ou medicale"
+      ]
+    }
+  }
+}

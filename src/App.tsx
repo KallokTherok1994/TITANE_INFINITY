@@ -245,6 +245,7 @@ const ResearchPage = lazy(() =>
 const SkillManager = lazy(() =>
   import('./ui/pages/Skills/SkillManager').then(m => ({ default: m.default }))
 );
+const MultiProjectDashboard = lazy(() => import('./pages/MultiProjectDashboard'));
 
 // ✨ TOTAL_DEV v30.0.0 — GOD DEV sovereign space (unlock-gated)
 const TotalDevPage = lazyWithRetry(
@@ -735,6 +736,14 @@ export const AppRouter: React.FC = () => {
           <Route path="/research" element={<ResearchPage />} />
           {/* ✨ Skill OS — Import/manage external skills */}
           <Route path="/skills" element={<SkillManager />} />
+          <Route
+            path="/multiproject"
+            element={
+              <ErrorBoundary context="MultiProjectDashboard">
+                <MultiProjectDashboard />
+              </ErrorBoundary>
+            }
+          />
           {/* ✨ v31.1.0 — DOC CENTER — Export DOCX natif */}
           <Route
             path="/doc-center"
