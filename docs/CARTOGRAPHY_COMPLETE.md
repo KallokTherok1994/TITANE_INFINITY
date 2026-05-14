@@ -60,6 +60,16 @@ Le delta est minimal: un seul texte secondaire de `/experience` monte en contras
 
 Le delta ferme deux violations sérieuses sur `/total-dev` sans modifier la logique gouvernée de la page: quelques couleurs secondaires sont remontées au-dessus du seuil Axe et la région scrollable chat devient focusable au clavier. La preuve courante publie `total-dev=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `11` à `12` routes critiques auditées.
 
+## 2026-05-14 — Quantum Center scroll focus + WCAG inventory 13/13 (delta cartographie)
+
+| Couche | Surface modifiée | Fichier |
+|---|---|---|
+| Ring 4 | Région scrollable Quantum Center focusable + nommée | src/components/QuantumCenter/QuantumCenter.tsx |
+| Tests | Garde unitaire scroll-region Quantum | src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx |
+| E2E | Gate Axe canonique étendu à `/quantum-center` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta ferme une unique violation sérieuse sur `/quantum-center` sans changer la logique métier: le conteneur principal scrollable devient focusable au clavier. La preuve courante publie `quantum-center=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `12` à `13` routes critiques auditées.
+
 
 
 | Couche | Surface ajoutée | Fichier |

@@ -723,7 +723,11 @@ const QuantumCenterContent: React.FC = () => {
         ))}
       </nav>
 
-      <main className="quantum-content">
+      <main
+        className="quantum-content"
+        tabIndex={0}
+        aria-label="Contenu Quantum Center"
+      >
         {activeTab === 'overview' && renderOverview()}
         {activeTab === 'frames' && renderFrameMetrics()}
         {activeTab === 'cache' && renderCache()}

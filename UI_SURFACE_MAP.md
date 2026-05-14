@@ -254,6 +254,14 @@
 - Garde locale: [src/__tests__/pages/TotalDevPage.test.tsx](src/__tests__/pages/TotalDevPage.test.tsx) verrouille l accessibilité clavier du conteneur scrollable en mode LOCKED.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 12 routes critiques avec ajout de `total-dev`, et publie `total-dev=0` puis `aggregate blocking=0 baseline=30`.
 
+# [2026-05-14] Quantum Center scroll focus + WCAG gate expansion
+
+- Surface canonique: `/quantum-center`.
+- Vérité runtime: le reliquat local était purement clavier, avec `.quantum-content` signalé comme région scrollable non focusable.
+- Point de contrôle canonique: [src/components/QuantumCenter/QuantumCenter.tsx](src/components/QuantumCenter/QuantumCenter.tsx) rend désormais `main.quantum-content` focusable et nommé via `tabIndex=0` et `aria-label="Contenu Quantum Center"`, sans modifier le contenu des onglets.
+- Garde locale: [src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx](src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx) verrouille la présence de cette région focusable.
+- Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 13 routes critiques avec ajout de `quantum-center`, et publie `quantum-center=0` puis `aggregate blocking=0 baseline=30`.
+
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
 - Surface canonique de gestion de fenêtre: [src/services/ai/contextManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/contextManager.ts) reconnaît maintenant explicitement `DEFAULT_OLLAMA_MODEL` et la famille `gemma2`, ce qui réaligne les calculs d overflow et la surface utilisateur de contexte sur la même vérité locale.
 - Preuves associées: [src/services/chat/**tests**/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/**tests**/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).

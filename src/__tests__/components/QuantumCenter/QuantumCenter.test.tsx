@@ -52,4 +52,12 @@ describe('QuantumCenter', () => {
     renderComponent();
     expect(screen.getByText(/Quantum Rendering Layer/i)).toBeInTheDocument();
   });
+
+  it('exposes a focusable scroll region for keyboard navigation', () => {
+    renderComponent();
+    expect(screen.getByRole('main', { name: /contenu quantum center/i })).toHaveAttribute(
+      'tabindex',
+      '0'
+    );
+  });
 });
