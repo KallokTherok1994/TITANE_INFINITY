@@ -49,6 +49,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { isTauriAvailable } from '@/api/tauriClient';
 import { createDevtoolsShortcutHandler } from '@/utils/devtoolsShortcuts';
+import { installGoogleFontStylesheetGuard } from '@/utils/googleFontStylesheetGuard';
 import { logger } from './lib/logger';
 import { setErrorToastDispatcher } from './lib/errorHandler';
 import { useUIStore } from './stores/uiStore';
@@ -72,6 +73,8 @@ import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (g
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles (unique)
 import './styles/exp-fusion.css'; // 🎯 XP Advanced Features (unique)
 import './pages/styles.css'; // 📄 Pages styles (minimal)
+
+installGoogleFontStylesheetGuard();
 
 setErrorToastDispatcher(payload => {
   useUIStore.getState().addToast(payload);

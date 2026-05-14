@@ -147,6 +147,16 @@ Tests v34.1.0 : 24 Vitest + 4 cargo PASS. AutoHeal `REMOTE-TRANSPORT-HIERARCHICA
   - Phase E (audit + bump + report)   : 28 pts
 - **BUILD ALL v34.0.7** : laissé à la commande utilisateur (Rule 11 — no token gate, on demand).
 
+# [2026-05-14] Cartography delta — Titane transformation CSP Google Fonts guard
+
+| Couche | Surface ajoutée | Fichier |
+|---|---|---|
+| Ring 3 | Garde runtime des stylesheets Google Fonts injectées par dépendance (`link` + `style @import`) | src/utils/googleFontStylesheetGuard.ts |
+| Ring 4 | Installation du garde au bootstrap avant le rendu React | src/main.tsx |
+| Tests | Contrat DOM du garde: purge existante, blocage pre-insertion, suppression `@import` | src/__tests__/utils/googleFontStylesheetGuard.test.ts |
+
+Le delta reste strictement local au bootstrap web. Aucune ouverture CSP, aucun changement d IPC, aucune mutation de surface utilisateur active hors suppression du bruit console sur `/titane?tab=transformation`. Rollback = retirer l import/install dans `src/main.tsx`, supprimer `src/utils/googleFontStylesheetGuard.ts`, puis retirer son test cible.
+
 ---
 
 # [2026-05-13] Cartography delta — UI 100/100 plan phase D (+6 agent dashboards canonical E2E)

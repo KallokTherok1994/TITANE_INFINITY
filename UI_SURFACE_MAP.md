@@ -218,6 +218,15 @@
 - Couverture de mapping runtime: [src/services/ai/responsePolicy.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/responsePolicy.ts) porte désormais un mapping explicite pour tous les modes actifs, y compris `htf_soumission`, `psychologie_profils`, `humain_total` et `kalloks_arts`, qui ne retombent plus silencieusement sur `BALANCED`.
 - Preuve de couverture associée: [src/**tests**/services/ai/chatModes.profileCoverage.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatModes.profileCoverage.test.ts).
 - Point d’injection runtime scellé: [src/services/ai/chatEngine.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/chatEngine.ts) transmet maintenant à l’orchestrator `effectiveResponseProfile.maxTokens` et `effectiveResponseProfile.temperature`, ce qui empêche la génération non-stream de réintroduire un plafond de profil plus haut que le cap du mode actif.
+
+# [2026-05-14] Titane transformation CSP guard — Google Fonts blocked at bootstrap
+
+- Surface canonique: `/titane?tab=transformation`.
+- Vérité runtime: des dépendances runtime injectaient encore une feuille externe `fonts.googleapis.com`, bloquée par CSP et visible dans la capture browser de la surface transformation.
+- Point de contrôle canonique: [src/utils/googleFontStylesheetGuard.ts](src/utils/googleFontStylesheetGuard.ts) bloque et purge toute feuille Google Fonts injectée (`link[rel="stylesheet"]` et `style @import`) avant insertion DOM, puis surveille les mutations pour empêcher toute réinjection.
+- Bootstrap actif: [src/main.tsx](src/main.tsx) installe le garde avant le rendu React pour que la surface transformation reste sur des polices locales/system sans bruit CSP.
+- Preuve unitaire: [src/__tests__/utils/googleFontStylesheetGuard.test.ts](src/__tests__/utils/googleFontStylesheetGuard.test.ts) verrouille la purge des liens existants, l interdiction pre-insertion et la suppression des `@import` Google Fonts.
+- Preuve browser: `e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture titane-transformation'` repasse sans l erreur CSP `Loading the stylesheet 'https://fonts.googleapis.com/...`.
 - Preuve d’intégration associée: [src/**tests**/services/ai/chatEngineCanonicalIntegration.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts).
 
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
