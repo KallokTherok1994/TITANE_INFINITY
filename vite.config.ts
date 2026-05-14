@@ -166,8 +166,10 @@ export default defineConfig(({ command }) => ({
   base: command === 'build' ? './' : '/',
 
   // ✨ Rule 13 - Expose version as build-time constant (no runtime JSON bundle)
+  // ✨ v34.0.13 - Expose build timestamp for SurfaceTruthBadge (stale-pages diagnostic)
   define: {
     __APP_VERSION__: JSON.stringify(_appVersion),
+    __BUILD_TIMESTAMP__: JSON.stringify(new Date().toISOString()),
   },
 
   // ✅ v27: Exclure les fichiers shell et scripts du traitement Vite

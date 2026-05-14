@@ -1,3 +1,23 @@
+# [2026-04-16] Stale-pages hotfix v34.0.13 — SW NetworkFirst + Surface Truth canonique
+
+- Symptôme corrigé : "plusieurs pages UI ne se mettent pas à jour malgré modifications" — cache multi-couches (SW + Zustand persist + absence de canary visuel runtime).
+- SW : [public/sw-source.js](public/sw-source.js) — Strategy 0 `NetworkFirst` ajoutée pour `request.mode === 'navigate'` / `document` / `index.html`, cacheName `titane-index-v1`, timeout 3 s, maxEntries 4, 7 j. `precacheAndRoute` filtre désormais `index.html` du précachage.
+- Update prompt : [src/components/system/UpdateAvailableToast.tsx](src/components/system/UpdateAvailableToast.tsx) — écoute `window.addEventListener('sw-update-available', …)` émis par `ServiceWorkerManager.notifyUpdateAvailable()`, déclenche sonner `toast.info` avec action `Recharger` qui post `SKIP_WAITING` au waiting worker. `data-testid="update-available-toast"`, `data-testid="update-available-reload"`.
+- Surface Truth Badge : [src/components/dev/SurfaceTruthBadge.tsx](src/components/dev/SurfaceTruthBadge.tsx) + hook [src/hooks/useSurfaceTruth.ts](src/hooks/useSurfaceTruth.ts) — overlay Ctrl+Alt+T (auto-activé en DEV ou via `localStorage.titane_surface_truth='1'`) exposant `appVersion` (`__APP_VERSION__`), `buildTimestamp` (`__BUILD_TIMESTAMP__`), `storeVersion` Zustand, `swScope`, `swController`, `transport`, `chunkHash`, `data-surface-truth`. `data-testid="surface-truth-toggle"` / `data-testid="surface-truth-badge"`.
+- Build timestamp : [vite.config.ts](vite.config.ts) `define.__BUILD_TIMESTAMP__` + typage [src/vite-env.d.ts](src/vite-env.d.ts).
+- Zustand persist : [src/core/state/SingularityState.ts](src/core/state/SingularityState.ts) — bump `name: 'titane-singularity-state-v19'` → `'titane-singularity-state-v34'`, ajout `version: 34` + `migrate(persistedState, fromVersion)` défensif droppant `ai/engines/enginesData/globalHealth` pour les snapshots pré-v34.
+- Wiring : [src/App.tsx](src/App.tsx) — `<UpdateAvailableToast />` + `<SurfaceTruthBadge />` montés à côté de `<GlobalRuntimePulse />` et `<BackendDownIndicator />`.
+- Tests Vitest PASS (9/9) :
+  - [src/__tests__/components/system/UpdateAvailableToast.test.tsx](src/__tests__/components/system/UpdateAvailableToast.test.tsx) — 4 tests.
+  - [src/__tests__/components/dev/SurfaceTruthBadge.test.tsx](src/__tests__/components/dev/SurfaceTruthBadge.test.tsx) — 3 tests.
+  - [src/__tests__/core/state/SingularityState.migrate.test.ts](src/__tests__/core/state/SingularityState.migrate.test.ts) — 2 tests.
+- Scripts d'audit déterministes :
+  - [scripts/audit/orphan-pages.mjs](scripts/audit/orphan-pages.mjs) — parse `<Route>` + `<Navigate>` + `src/pages/**`, catégorise `MOUNTED_VISIBLE / MOUNTED_HIDDEN / ORPHAN_DEAD`, écrit `reports/ui-orphan-pages.{json,md}`. Premier run : 96 routes (29 element, 67 redirect = 69.8% legacy), 72 fichiers `src/pages/**`, breakdown 10/13/49.
+  - [scripts/audit/sync-allowed-commands.mjs](scripts/audit/sync-allowed-commands.mjs) — diff `generate_handler!` Rust ↔ `ALLOWED_COMMANDS` Frontend ↔ Remote Gateway, écrit `reports/ipc-allowed-commands.{json,md}`. Premier run : drift confirmé.
+  - npm scripts `audit:orphan-pages`, `audit:orphan-pages:strict`, `audit:allowed-commands`, `audit:allowed-commands:strict`.
+- AutoHeal : entrée `UI-STALE-PAGES-NETWORKFIRST-v34_0_13-2026-04-16` (schéma complet, `prevention_test` inclut `detect_recurrence`).
+- Gates : `bash scripts/autoheal/detect_recurrence.sh` → `PASS: G_AH_RECURRENCE_GUARD_PASS`; `bash scripts/verify/verify-copilot-instructions.sh` → `PASS`.
+
 # [2026-05-13] UI Vivante — Live snapshot convergence 6/6 + memo non-regression (Phase R+ v34.0.8)
 
 - Convergence du hook `useAgentLiveSnapshot` étendue aux 3 dashboards restants. Tous les 6 dashboards agents avancés exposent désormais la quadruple testid canonique `*-live`, `*-live-dot`, `*-live-label`, `*-refresh-now` :

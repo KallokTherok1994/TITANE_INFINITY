@@ -319,7 +319,12 @@ export const useSingularityState = create<SingularityFrontendState>()(
       setGlobalHealth: globalHealth => set({ globalHealth }),
     }),
     {
-      name: 'titane-singularity-state-v19',
+      // v34.0.13: bump persist key v19 → v34 to invalidate stale snapshots that
+      // can survive across rebuilds and keep the UI showing pre-refactor state.
+      // The `migrate` function preserves user-visible UI prefs but drops dynamic
+      // server-state fields that will be re-fetched fresh on mount.
+      name: 'titane-singularity-state-v34',
+      version: 34,
       storage: createJSONStorage(() => localStorage),
       partialize: state => ({
         ui: state.ui,
@@ -327,6 +332,30 @@ export const useSingularityState = create<SingularityFrontendState>()(
         metaMode: state.metaMode,
         // Don't persist: ai (dynamic), engines (dynamic), enginesData (dynamic), globalHealth (dynamic)
       }),
+      migrate: (persistedState: unknown, fromVersion: number) => {
+        // Defensive migration: keep only the UI prefs known to be safe.
+        // Anything else gets dropped — Zustand will rehydrate defaults.
+        try {
+          if (!persistedState || typeof persistedState !== 'object') {
+            return persistedState as Partial<SingularityFrontendState>;
+          }
+          const src = persistedState as Record<string, unknown>;
+          if (fromVersion < 34) {
+            return {
+              ui: src.ui,
+              context:
+                src.context && typeof src.context === 'object'
+                  ? { ...(src.context as Record<string, unknown>), page: 'dashboard' }
+                  : undefined,
+              metaMode: src.metaMode,
+            } as Partial<SingularityFrontendState>;
+          }
+          return persistedState as Partial<SingularityFrontendState>;
+        } catch {
+          // Fail-soft: drop persisted state entirely if migration throws.
+          return undefined as unknown as Partial<SingularityFrontendState>;
+        }
+      },
     }
   )
 );

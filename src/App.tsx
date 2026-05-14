@@ -30,6 +30,8 @@ import { LoggingProvider } from './contexts/LoggingContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
 import { AppShell, TopNav } from '@components/layout';
 import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
+import { UpdateAvailableToast } from '@/components/system/UpdateAvailableToast'; // ✨ v34.0.13 - SW update prompt (stale-pages hotfix)
+import { SurfaceTruthBadge } from '@/components/dev/SurfaceTruthBadge'; // ✨ v34.0.13 - Canonical surface truth overlay (Ctrl+Alt+T)
 import { GlobalRuntimePulse } from '@/components/system/GlobalRuntimePulse'; // ✨ v34.0.3 - Living Pulse runtime visible
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
@@ -369,6 +371,10 @@ export const AppRouter: React.FC = () => {
       <GlobalRuntimePulse />
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
       <BackendDownIndicator position="top" dismissible />
+      {/* ✨ v34.0.13: SW update available toast (stale-pages hotfix, pairs with index.html NetworkFirst) */}
+      <UpdateAvailableToast />
+      {/* ✨ v34.0.13: Canonical surface truth overlay (Ctrl+Alt+T to toggle, dev/diagnostic only) */}
+      <SurfaceTruthBadge />
       <div
         data-testid="app-ready"
         data-state="ready"

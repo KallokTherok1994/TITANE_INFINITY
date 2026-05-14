@@ -1,5 +1,5 @@
-// TITANE∞ Service Worker — Phase 4 P2-B
-// v25.7.5 — Offline-first caching for -400ms repeat visit TTI
+// TITANE∞ Service Worker — Phase 4 P2-B + v34.0.13 stale-pages hotfix
+// v34.0.13 — index.html NetworkFirst to prevent stale UI after rebuild
 
 import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
@@ -7,9 +7,37 @@ import { StaleWhileRevalidate, CacheFirst, NetworkFirst } from 'workbox-strategi
 import { ExpirationPlugin } from 'workbox-expiration';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
-// Pre-cache critical chunks built by Vite
-// This array is populated by workbox-build in vite.config.ts
-precacheAndRoute(self.__WB_MANIFEST);
+// Pre-cache critical chunks built by Vite (assets/*.{js,css,woff2})
+// This array is populated by workbox-build in vite.config.ts.
+// index.html is intentionally EXCLUDED from precache and handled by NetworkFirst below
+// to guarantee fresh shell after each rebuild (fixes "pages not updating" symptom).
+precacheAndRoute(
+  (self.__WB_MANIFEST || []).filter(entry => {
+    const url = typeof entry === 'string' ? entry : entry?.url || '';
+    return !/(^|\/)index\.html$/i.test(url) && !url.endsWith('/');
+  })
+);
+
+// Strategy 0 (v34.0.13): NetworkFirst for navigation/index.html
+// → Always try fresh shell from network first (3s timeout), fallback to cache
+// → Eliminates the multi-week class of "page edits not visible after rebuild" bugs
+registerRoute(
+  ({ request, url }) =>
+    request.mode === 'navigate' ||
+    request.destination === 'document' ||
+    /(^|\/)index\.html$/i.test(url.pathname),
+  new NetworkFirst({
+    cacheName: 'titane-index-v1',
+    networkTimeoutSeconds: 3,
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({
+        maxEntries: 4,
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+      }),
+    ],
+  })
+);
 
 // Strategy 1: Stale-While-Revalidate for CSS/JS assets
 // → Serve from cache, update in background
@@ -96,6 +124,7 @@ self.addEventListener('message', event => {
 // Clean up old caches on activation
 self.addEventListener('activate', event => {
   const currentCaches = [
+    'titane-index-v1',
     'titane-assets-v1',
     'titane-static-v1',
     'titane-api-v1',
@@ -116,4 +145,4 @@ self.addEventListener('activate', event => {
   );
 });
 
-console.log('✅ TITANE∞ Service Worker v25.7.5 activated');
+console.log('✅ TITANE∞ Service Worker v34.0.13 activated (index.html NetworkFirst)');
