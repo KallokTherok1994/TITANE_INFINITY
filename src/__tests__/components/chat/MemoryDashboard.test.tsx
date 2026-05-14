@@ -123,4 +123,23 @@ describe('MemoryDashboard hybrid summary', () => {
       screen.getByTestId('memory-dashboard-hybrid-preset-history')
     ).toHaveTextContent('Observation -> Equilibre (preset)');
   });
+
+  it('exposes accessible names for dashboard filter selects', () => {
+    render(<MemoryDashboard modeId="admin" hybridDiagnostics={null} />);
+
+    expect(
+      screen.getByRole('combobox', { name: /filtrer le dashboard mémoire par niveau/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: /filtrer le dashboard mémoire par sujet/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', {
+        name: /filtrer le dashboard mémoire par importance minimale/i,
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('combobox', { name: /trier le dashboard mémoire/i })
+    ).toBeInTheDocument();
+  });
 });

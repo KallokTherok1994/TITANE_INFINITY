@@ -333,7 +333,7 @@ function GovernanceCenterPageContent(): JSX.Element {
           style={{
             background: 'none',
             border: 'none',
-            color: 'var(--color-primary, #727b81)',
+            color: '#93b399',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',

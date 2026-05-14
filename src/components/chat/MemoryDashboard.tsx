@@ -300,6 +300,7 @@ const FilterBar: React.FC<{
           onChange={e => onLevelChange(e.target.value as MemoryLevel | 'all')}
           disabled={disabled}
           aria-disabled={disabled}
+          aria-label="Filtrer le dashboard mémoire par niveau"
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les niveaux</option>
@@ -314,6 +315,7 @@ const FilterBar: React.FC<{
           onChange={e => onTopicChange(e.target.value as MemoryTopic | 'all')}
           disabled={disabled}
           aria-disabled={disabled}
+          aria-label="Filtrer le dashboard mémoire par sujet"
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les sujets</option>
@@ -330,6 +332,7 @@ const FilterBar: React.FC<{
           onChange={e => onImportanceChange(Number(e.target.value))}
           disabled={disabled}
           aria-disabled={disabled}
+          aria-label="Filtrer le dashboard mémoire par importance minimale"
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value={0}>Toute importance</option>
@@ -346,6 +349,7 @@ const FilterBar: React.FC<{
           onChange={e => onSortChange(e.target.value as SortBy)}
           disabled={disabled}
           aria-disabled={disabled}
+          aria-label="Trier le dashboard mémoire"
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="date">📅 Date</option>

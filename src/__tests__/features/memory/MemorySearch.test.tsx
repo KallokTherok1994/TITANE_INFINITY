@@ -51,6 +51,21 @@ describe('MemorySearchPanel Component', () => {
       expect(selects.length).toBeGreaterThanOrEqual(2);
     });
 
+    it('should expose accessible names for filters and focusable results region', () => {
+      render(<MemorySearchPanel entries={entries} />);
+
+      expect(
+        screen.getByRole('combobox', { name: /filtrer la recherche mémoire par type/i })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('combobox', { name: /filtrer la recherche mémoire par période/i })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(/résultats de recherche mémoire/i)).toHaveAttribute(
+        'tabindex',
+        '0'
+      );
+    });
+
     it('should render an honest empty state without illustrative fallback', () => {
       render(<MemorySearchPanel entries={[]} />);
       expect(screen.getByText(/aucune entrée mémoire indexée/i)).toBeInTheDocument();

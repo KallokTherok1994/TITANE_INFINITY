@@ -767,6 +767,7 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
             className="memory-tree-filter"
             value={selectedType}
             onChange={e => setSelectedType(e.target.value)}
+            aria-label="Filtrer l'arbre mémoire par type"
           >
             <option value="all">Tous types</option>
             <option value="short">Court terme</option>

@@ -42,6 +42,7 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
   >
     <select
       aria-disabled="false"
+      aria-label="Filtrer la recherche mémoire par type"
       class="filter-select"
     >
       <option
@@ -67,6 +68,7 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
     </select>
     <select
       aria-disabled="false"
+      aria-label="Filtrer la recherche mémoire par période"
       class="filter-select"
     >
       <option
@@ -176,7 +178,9 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
     </button>
   </div>
   <div
+    aria-label="Résultats de recherche mémoire"
     class="memory-results"
+    tabindex="0"
   >
     <div
       class="memory-entry "

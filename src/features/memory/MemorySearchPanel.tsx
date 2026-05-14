@@ -171,6 +171,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
           onChange={e => setSelectedType(e.target.value)}
           disabled={isEmptyPersistentMemory || isBootstrappingMemory}
           aria-disabled={isEmptyPersistentMemory || isBootstrappingMemory}
+          aria-label="Filtrer la recherche mémoire par type"
         >
           <option value="all">Tous types</option>
           <option value="short">Court terme</option>
@@ -185,6 +186,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
           onChange={e => setDateRange(e.target.value)}
           disabled={isEmptyPersistentMemory || isBootstrappingMemory}
           aria-disabled={isEmptyPersistentMemory || isBootstrappingMemory}
+          aria-label="Filtrer la recherche mémoire par période"
         >
           <option value="all">Toutes dates</option>
           <option value="today">Aujourd&apos;hui</option>
@@ -235,7 +237,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
       )}
 
       {/* Results */}
-      <div className="memory-results">
+      <div className="memory-results" tabIndex={0} aria-label="Résultats de recherche mémoire">
         {isMockData && (
           <div
             className="memory-mock-notice"

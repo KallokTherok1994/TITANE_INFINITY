@@ -1588,6 +1588,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     setKnowledgeTopicFilter(e.target.value as MemoryTopic | 'all')
                   }
                   data-testid="knowledge-topic-filter"
+                  aria-label="Filtrer les connaissances par sujet"
                   style={{
                     padding: `${spacing[2]} ${spacing[3]}`,
                     borderRadius: '8px',

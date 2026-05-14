@@ -1380,4 +1380,38 @@ describe('MemorySection', () => {
       'entries:1:selected:ltm-1'
     );
   });
+
+  it('exposes an accessible name on the knowledge topic filter', async () => {
+    mockGetKnowledge.mockResolvedValue([
+      {
+        id: 'kb-a11y-1',
+        title: 'Guide accessibilite',
+        category: 'system',
+        content: 'Les surfaces memoire doivent exposer des filtres nommes.',
+        relevance: 0.95,
+        lastAccessed: '2026-05-14T00:00:00.000Z',
+        tags: ['a11y', 'memoire'],
+      },
+    ]);
+
+    render(
+      <MemorySection
+        stats={{
+          totalXP: 0,
+          level: 1,
+          memoryShortTerm: 0,
+          memoryMidTerm: 0,
+          memoryLongTerm: 0,
+          evolutionScore: 0,
+        }}
+        conversationId="conv-a11y"
+      />
+    );
+
+    expect(
+      await screen.findByRole('combobox', {
+        name: /filtrer les connaissances par sujet/i,
+      })
+    ).toBeInTheDocument();
+  });
 });

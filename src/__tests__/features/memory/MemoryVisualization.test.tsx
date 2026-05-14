@@ -73,6 +73,9 @@ describe('MemoryTreeViewer Component', () => {
       expect(
         screen.getByPlaceholderText(/rechercher dans la mémoire/i)
       ).toBeInTheDocument();
+      expect(
+        screen.getByRole('combobox', { name: /filtrer l'arbre mémoire par type/i })
+      ).toBeInTheDocument();
       expect(screen.getByTitle(/zoom avant/i)).toBeInTheDocument();
       expect(screen.getByTitle(/zoom arrière/i)).toBeInTheDocument();
     });
