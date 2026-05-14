@@ -160,7 +160,10 @@ export class WebAssemblyCompute {
       console.warn('[WebAssemblyCompute] Initialized successfully');
       return true;
     } catch (error) {
-      console.error('[WebAssemblyCompute] Initialization failed:', error);
+      console.warn(
+        '[WebAssemblyCompute] WASM initialization failed, using JS fallback:',
+        error
+      );
       this.metrics.isWASMActive = false;
       return false;
     }

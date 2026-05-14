@@ -7,6 +7,7 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { tauriClient } from '@/lib/tauriClient';
 import { ConfigurationHub } from '@/pages/ConfigurationHub';
 
 vi.mock('@/lib/tauriClient', () => ({
@@ -99,6 +100,8 @@ function renderPage() {
 }
 
 describe('ConfigurationHub', () => {
+  const mockedTauriClient = vi.mocked(tauriClient);
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -114,6 +117,73 @@ describe('ConfigurationHub', () => {
     renderPage();
     await waitFor(() => {
       expect(screen.getByTestId('surface-truth-badge-live')).toBeInTheDocument();
+    });
+  });
+
+  it('stays operational when the runtime snapshot is null', async () => {
+    mockedTauriClient.getAllConfigs.mockResolvedValueOnce({
+      ok: true,
+      content: {
+        runtime: null,
+        chat_engine: {
+          timeout_ms: 30000,
+          chunk_size: 1024,
+          max_tokens: 2048,
+          temperature: 0.7,
+        },
+        timestamp: 0,
+        version: 'test',
+      },
+    } as never);
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('page-configuration-hub')).toBeInTheDocument();
+    });
+  });
+
+  it('stays operational when snapshot chat_engine bootstrap data is missing', async () => {
+    mockedTauriClient.getAllConfigs.mockResolvedValueOnce({
+      ok: true,
+      content: {
+        runtime: {},
+        timestamp: 0,
+        version: 'test',
+      },
+    } as never);
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('page-configuration-hub')).toBeInTheDocument();
+    });
+  });
+
+  it('stays operational when chat engine calls return browser fallback shapes', async () => {
+    mockedTauriClient.getAllConfigs.mockResolvedValueOnce({
+      ok: true,
+      content: {
+        runtime: {},
+        timestamp: 0,
+        version: 'test',
+      },
+    } as never);
+    mockedTauriClient.getChatEngineConfig.mockResolvedValueOnce({
+      success: false,
+      fallback: true,
+      error: 'No Tauri transport available',
+    } as never);
+    mockedTauriClient.getChatRequestDefaults.mockResolvedValueOnce({
+      success: false,
+      fallback: true,
+      error: 'No Tauri transport available',
+    } as never);
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('page-configuration-hub')).toBeInTheDocument();
     });
   });
 });

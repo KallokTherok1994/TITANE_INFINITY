@@ -2631,3 +2631,11 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > `e2e/ui-runtime-route-proof.spec.ts` transportait encore une hypothèse obsolète: `/dev` y était manipulée comme une route devant forcément exposer `surface-truth-badge-*` en browser. Le snapshot Playwright réel montre autre chose: en mode browser, `DevPage` peut être isolée par `ErrorBoundary`, avec un heading `Erreur dans DevPage` et un statut runtime global, sans badge de surface dans le DOM.
 
 > La suite browser est réalignée sur cette vérité observable. `/dev` reste couverte dans l inventaire global, mais sa preuve passe maintenant par un marqueur de garde honnête au lieu d un badge inexistant. En parallèle, le check du root testid attend quelques secondes avant de déclarer la surface non visible, ce qui réduit les faux positifs de timing sur les routes lentes à hydrater.
+
+## v35.1.5 (2026-05-14) — Normalisation des surfaces browser dégradées Dev / Config / Optimization
+
+> `src/features/system-center/hooks/useSystemDiagnostics.ts` absorbe maintenant explicitement le fallback browser générique de `tauriProtector` pour les diagnostics rapides et le statut global. Au lieu de traiter cette forme comme un contrat cassé, le hook publie une vérité `Degraded` avec un résultat `Warning` visible, ce qui aligne la surface `/dev?tab=diagnostics` avec le mode navigateur sans backend natif.
+
+> `src/pages/ConfigurationHub.tsx` n utilise plus le snapshot `getAllConfigs()` comme source bloquante complète. La normalisation runtime accepte `runtime: null`; la branche snapshot accepte un `chat_engine` absent ou partiel avec defaults canoniques; et les appels secondaires `getChatEngineConfig` / `getChatRequestDefaults` tolèrent à la fois une enveloppe IPC canonique, un payload direct et un fallback browser `{ success:false, fallback:true }`. La surface `page-configuration-hub` reste donc prouvable en browser même hors transport Tauri.
+
+> `src/modules/optimization/WebAssemblyCompute.ts` conserve le même fallback JS mais reclasse l échec de compilation WASM en avertissement attendu. La correction protège les surfaces `/optimization` et `dev-operations` contre un faux signal `console.error` tout en gardant la preuve technique du fallback dans le log et dans le test unitaire du module.

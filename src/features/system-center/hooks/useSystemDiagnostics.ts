@@ -16,14 +16,57 @@ type IpcEnvelope<T> = {
   error?: string | null;
 };
 
+type TauriFallbackResponse = {
+  success?: boolean;
+  fallback?: boolean;
+  error?: unknown;
+  timestamp?: unknown;
+};
+
 const isDiagnosticsShape = (value: unknown): value is SystemDiagnostics => {
   if (!value || typeof value !== 'object') return false;
   const v = value as Partial<SystemDiagnostics>;
   return Array.isArray(v.results) && typeof v.timestamp === 'number';
 };
 
+const isTauriFallbackResponse = (value: unknown): value is TauriFallbackResponse => {
+  if (!value || typeof value !== 'object') return false;
+  const fallback = value as TauriFallbackResponse;
+  return fallback.fallback === true && fallback.success === false;
+};
+
+const getFallbackErrorMessage = (value: TauriFallbackResponse): string => {
+  return typeof value.error === 'string' && value.error.trim().length > 0
+    ? value.error
+    : 'Transport Tauri indisponible';
+};
+
+const createFallbackDiagnostics = (value: TauriFallbackResponse): SystemDiagnostics => {
+  return {
+    timestamp: typeof value.timestamp === 'number' ? value.timestamp : Date.now(),
+    overall_status: 'Degraded',
+    total_duration_ms: 0,
+    results: [
+      {
+        id: 'tauri-transport-fallback',
+        title: 'Transport Tauri indisponible',
+        status: 'Warning',
+        message: getFallbackErrorMessage(value),
+        duration_ms: 0,
+        data: {
+          fallback: true,
+        },
+      },
+    ],
+  };
+};
+
 const unwrapDiagnostics = (value: unknown): SystemDiagnostics => {
   if (isDiagnosticsShape(value)) return value;
+
+  if (isTauriFallbackResponse(value)) {
+    return createFallbackDiagnostics(value);
+  }
 
   const envelope = value as IpcEnvelope<SystemDiagnostics>;
   if (envelope?.ok === true && isDiagnosticsShape(envelope.content)) {
@@ -36,6 +79,10 @@ const unwrapDiagnostics = (value: unknown): SystemDiagnostics => {
 const unwrapStatus = (value: unknown): OverallStatus => {
   if (value === 'Healthy' || value === 'Degraded' || value === 'Critical') {
     return value;
+  }
+
+  if (isTauriFallbackResponse(value)) {
+    return 'Degraded';
   }
 
   const envelope = value as IpcEnvelope<OverallStatus>;

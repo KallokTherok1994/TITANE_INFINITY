@@ -74,6 +74,12 @@ interface IpcEnvelope<T> {
   error: { code: string; message: string } | null;
 }
 
+interface TauriFallbackResponse {
+  success?: boolean;
+  fallback?: boolean;
+  error?: unknown;
+}
+
 interface ConfigSnapshot {
   runtime: RuntimeConfig;
   chat_engine: {
@@ -148,11 +154,17 @@ const normalizeProvider = (value: unknown): ChatRequestDefaults['provider'] => {
   return 'auto';
 };
 
-export const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
-  const raw = toRecord(value);
-  if (!raw) {
-    throw new Error('Runtime config invalide');
+const isTauriFallbackResponse = (value: unknown): value is TauriFallbackResponse => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return false;
   }
+
+  const raw = value as TauriFallbackResponse;
+  return raw.fallback === true && raw.success === false;
+};
+
+export const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
+  const raw = toRecord(value) ?? {};
 
   // Keep the page operational even when a partial runtime payload is returned.
   const ollama_url =
@@ -256,6 +268,30 @@ export const mergeRuntimeConfigWithOllamaStatus = (
   };
 };
 
+const DEFAULT_SNAPSHOT_CHAT_ENGINE = {
+  timeout_ms: 30000,
+  chunk_size: 1024,
+  max_tokens: 2048,
+  temperature: 0.7,
+} satisfies ConfigSnapshot['chat_engine'];
+
+const DEFAULT_CHAT_ENGINE_CONFIG = {
+  response_timeout_ms: 30000,
+  stream_chunk_size: 1024,
+  memory_context_tokens: 2048,
+  memory_retention_tokens: 1024,
+  memory_flush_interval_ms: 5000,
+  auto_tts_enabled: false,
+  stream_channel_buffer: 100,
+} satisfies ChatEngineConfig;
+
+const DEFAULT_CHAT_REQUEST_DEFAULTS = {
+  temperature: 0.7,
+  max_output_tokens: 2048,
+  provider: 'auto',
+  enable_streaming: true,
+} satisfies ChatRequestDefaults;
+
 const normalizeChatEngineConfig = (value: unknown): ChatEngineConfig => {
   const raw = toRecord(value);
   if (!raw) {
@@ -353,33 +389,21 @@ const normalizeConfigSnapshot = (value: unknown): ConfigSnapshot => {
   }
 
   const runtime = normalizeRuntimeConfig(raw.runtime);
-  const rawChatEngine = pickDefined(toRecord(raw.chat_engine), toRecord(raw.chatEngine));
-  if (!rawChatEngine) {
-    throw new Error('Snapshot chat_engine manquant');
-  }
+  const rawChatEngine = pickDefined(toRecord(raw.chat_engine), toRecord(raw.chatEngine)) ?? {};
 
   const timeout_ms = pickDefined(
     asNumber(rawChatEngine.timeout_ms),
     asNumber(rawChatEngine.timeoutMs)
-  );
+  ) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.timeout_ms;
   const chunk_size = pickDefined(
     asNumber(rawChatEngine.chunk_size),
     asNumber(rawChatEngine.chunkSize)
-  );
+  ) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.chunk_size;
   const max_tokens = pickDefined(
     asNumber(rawChatEngine.max_tokens),
     asNumber(rawChatEngine.maxTokens)
-  );
-  const temperature = asNumber(rawChatEngine.temperature);
-
-  if (
-    timeout_ms === undefined ||
-    chunk_size === undefined ||
-    max_tokens === undefined ||
-    temperature === undefined
-  ) {
-    throw new Error('Snapshot chat_engine incomplet');
-  }
+  ) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.max_tokens;
+  const temperature = asNumber(rawChatEngine.temperature) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.temperature;
 
   return {
     runtime,
@@ -429,6 +453,31 @@ const normalizeEnvelope = <T,>(
     content: contentParser(raw.content),
     error: null,
   };
+};
+
+const normalizeFallbackAwareEnvelope = <T,>(
+  value: unknown,
+  contentParser: (content: unknown) => T,
+  fallbackContent: T
+): IpcEnvelope<T> => {
+  if (isTauriFallbackResponse(value)) {
+    return {
+      ok: true,
+      content: fallbackContent,
+      error: null,
+    };
+  }
+
+  const raw = toRecord(value);
+  if (raw && typeof raw.ok !== 'boolean') {
+    return {
+      ok: true,
+      content: contentParser(raw),
+      error: null,
+    };
+  }
+
+  return normalizeEnvelope(value, contentParser);
 };
 
 const normalizeSnapshotResponse = (value: unknown): ConfigSnapshot => {
@@ -571,13 +620,15 @@ export const ConfigurationHub: React.FC = () => {
         snapshot.runtime,
         normalizeOllamaRuntimeStatus(ollamaStatusRaw)
       );
-      const engineEnvelope = normalizeEnvelope(
+      const engineEnvelope = normalizeFallbackAwareEnvelope(
         await tauriClient.getChatEngineConfig(),
-        normalizeChatEngineConfig
+        normalizeChatEngineConfig,
+        DEFAULT_CHAT_ENGINE_CONFIG
       );
-      const defaultsEnvelope = normalizeEnvelope(
+      const defaultsEnvelope = normalizeFallbackAwareEnvelope(
         await tauriClient.getChatRequestDefaults(),
-        normalizeChatRequestDefaults
+        normalizeChatRequestDefaults,
+        DEFAULT_CHAT_REQUEST_DEFAULTS
       );
 
       if (!engineEnvelope.ok || !engineEnvelope.content) {

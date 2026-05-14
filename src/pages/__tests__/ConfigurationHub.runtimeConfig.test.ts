@@ -7,6 +7,23 @@ import {
 } from '../ConfigurationHub';
 
 describe('ConfigurationHub runtime config helpers', () => {
+  it('falls back to defaults when runtime config is null', () => {
+    const config = normalizeRuntimeConfig(null);
+
+    expect(config).toMatchObject({
+      ollama_url: DEFAULT_OLLAMA_URL,
+      ollama_model: DEFAULT_OLLAMA_MODEL,
+      ollama_endpoint_kind: 'not_checked',
+      ollama_endpoint_source: 'not_checked',
+      ollama_model_source: 'not_checked',
+      ollama_network_used: false,
+      ollama_health: 'not_checked',
+      secrets_mode: 'encrypted',
+      gemini_configured: false,
+    });
+    expect(config.timestamp).toEqual(expect.any(Number));
+  });
+
   it('normalizes runtime config with explicit ollama truth fields', () => {
     const config = normalizeRuntimeConfig({
       ollamaUrl: 'https://titane.example.com',
