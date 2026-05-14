@@ -132,6 +132,13 @@ import { queryClient } from './lib/queryClient';
 import { getActiveTransport } from './api/tauriClient';
 import { RemoteGatewayLayout } from './pages/RemoteGatewayLayout';
 
+// ✨ v34.2.0 — TanStack Query DevTools (DEV-only, lazy-loaded so it is tree-shaken in prod)
+const ReactQueryDevtools = import.meta.env.DEV
+  ? React.lazy(() =>
+      import('@tanstack/react-query-devtools').then((m) => ({ default: m.ReactQueryDevtools }))
+    )
+  : null;
+
 type LazyModule<T> = { default: T };
 
 const lazyWithTimeout = <T extends React.ComponentType>(
@@ -829,6 +836,11 @@ const App: React.FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
+    {import.meta.env.DEV && ReactQueryDevtools && (
+      <Suspense fallback={null}>
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      </Suspense>
+    )}
     <ToastProvider>
       {/* ✨ Remote browser mode — wrap entire app in auth guard */}
       {isRemoteContext() ? (

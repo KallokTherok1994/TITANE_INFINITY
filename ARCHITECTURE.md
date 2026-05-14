@@ -1,4 +1,22 @@
-## 2026-05-14 — v34.1.0 SURCHARGÉ — Hierarchical transport (Tauri/Remote/Degraded) + Gateway whitelist expansion + WebView cache flush
+## 2026-05-14 — v34.2.0 — TanStack Query migration (palier 1/3) : queryKeys factory + 5 hooks pilotes IPC + DevTools
+
+> Patch bump 34.1.0 → 34.2.0. Premier palier de la MAJ MAJEUR UI v35.0.0 ; mise en place de la fondation TanStack Query côté client sans toucher aux surfaces Zustand existantes (additif uniquement).
+>
+> **Ring 3 (Data layer)** — [src/lib/queryKeys.ts](src/lib/queryKeys.ts) expose une factory hiérarchique typée `queryKeys.<cluster>.<leaf>()` (clusters : `system`, `engines`, `providers`, `conversation`, `devtools`). Chaque cluster expose `all` (préfixe d'invalidation bulk) et des feuilles tuples `as const` JSON-stables.
+>
+> **Ring 3 (Query hooks)** — 5 hooks pilotes dans `src/hooks/queries/` : `useSystemHealthQuery`, `useEnginesStatusQuery`, `useProvidersStatusQuery`, `useConversationHealthQuery`, `useDevtoolsMemoryHealthQuery`. Tous appellent `secureInvoke(TAURI_COMMANDS.<NAME>, {})` (envelope Rule 6 préservée) avec `staleTime` adapté à la volatilité (10–60 s) et un `refetchInterval` opt-in (engines = 30 s). Re-exportés via `src/hooks/queries/index.ts`.
+>
+> **Ring 4 (UI)** — [src/components/runtime/QueryPilotsLiveStatus.tsx](src/components/runtime/QueryPilotsLiveStatus.tsx) widget read-only monté dans [src/pages/MonitoringDashboard.tsx](src/pages/MonitoringDashboard.tsx). 5 tuiles `data-testid="query-pilot-<id>"` avec attribut `data-state` ∈ { idle | loading | success | error } pour E2E.
+>
+> **DevTools** — `@tanstack/react-query-devtools@^5.100.10` ajouté en devDependency. Mount conditionnel `import.meta.env.DEV` + `React.lazy()` dans [src/App.tsx](src/App.tsx) sous `<QueryClientProvider>`. Tree-shaken en bundle production.
+>
+> **Tests Vitest** : 15 nouveaux cas (6 queryKeys + 6 hooks pilots + 3 widget). 100 % wiring contract — pas de dépendance IPC réelle.
+>
+> **Discipline anti-drift** : aucun hook Zustand sélecteur existant (`useSystemHealth`, `useChat*`) n'a été modifié. Adoption strictement additive. Migration progressive prévue en v34.3.0 (chat 9→3) et v35.0.0 (cluster Singularity).
+>
+> **Rollback** : retrait du mount `<QueryPilotsLiveStatus />` + suppression `src/hooks/queries/**` + `src/lib/queryKeys.ts` + import DevTools dans App.tsx. `QueryClientProvider` racine reste de v34.1.0.
+
+
 
 > Patch bump 34.0.13 → 34.1.0. Architecture "UN SEUL TITANE VIVANT" — un seul code, un seul service, transport négocié à runtime.
 >

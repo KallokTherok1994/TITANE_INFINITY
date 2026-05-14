@@ -1,4 +1,22 @@
-## 2026-05-14 — v34.1.0 SURCHARGÉ — Hierarchical transport + Gateway whitelist + WebView cache (delta cartographie)
+## 2026-05-14 — v34.2.0 — TanStack Query pilots (palier 1/3) (delta cartographie)
+
+| Couche | Surface ajoutée | Fichier |
+|---|---|---|
+| Ring 3 | `queryKeys` factory hiérarchique typée (system/engines/providers/conversation/devtools) | src/lib/queryKeys.ts |
+| Ring 3 | `useSystemHealthQuery` hook IPC | src/hooks/queries/useSystemHealthQuery.ts |
+| Ring 3 | `useEnginesStatusQuery` hook IPC (refetchInterval 30 s) | src/hooks/queries/useEnginesStatusQuery.ts |
+| Ring 3 | `useProvidersStatusQuery` hook IPC | src/hooks/queries/useProvidersStatusQuery.ts |
+| Ring 3 | `useConversationHealthQuery` hook IPC | src/hooks/queries/useConversationHealthQuery.ts |
+| Ring 3 | `useDevtoolsMemoryHealthQuery` hook IPC | src/hooks/queries/useDevtoolsMemoryHealthQuery.ts |
+| Ring 3 | Barrel `src/hooks/queries/index.ts` | src/hooks/queries/index.ts |
+| Ring 4 | `<QueryPilotsLiveStatus />` widget runtime (5 tuiles `data-state`) | src/components/runtime/QueryPilotsLiveStatus.tsx |
+| Ring 4 | Mount additif dans Monitoring dashboard | src/pages/MonitoringDashboard.tsx |
+| Ring 4 | `ReactQueryDevtools` DEV-only `React.lazy()` sous `<QueryClientProvider>` | src/App.tsx |
+| Tests | 6 cas queryKeys + 6 cas pilots wiring + 3 cas widget | src/__tests__/lib/queryKeys.test.ts, src/__tests__/hooks/queries/pilots.test.tsx, src/__tests__/components/runtime/QueryPilotsLiveStatus.test.tsx |
+
+Strictement additif. Aucune mutation de Zustand sélecteur ni de surface IPC. Rollback = retrait du mount widget + suppression `src/hooks/queries/**` + `src/lib/queryKeys.ts` + import DevTools dans `App.tsx`.
+
+
 
 | Couche | Surface ajoutée | Fichier |
 |---|---|---|

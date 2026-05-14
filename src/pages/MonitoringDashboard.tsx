@@ -26,6 +26,7 @@ import {
 import { dispatchToAgents, type AgentConsensus } from '../services/orchestrator';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { safeInvokeCanonical } from '@/utils/invoke';
+import { QueryPilotsLiveStatus } from '@/components/runtime/QueryPilotsLiveStatus';
 
 // ── Project Health Metrics Card (Phase B2 + B1 — 2026-04-27) ─
 const PROJECT_HEALTH_TTL_MS = 15 * 60 * 1000; // 15 min — matches service TTL
@@ -265,6 +266,9 @@ export const MonitoringDashboard: React.FC = memo(() => {
       <div className="max-w-450 mx-auto space-y-6">
         {/* Project Health Metrics — Phase B2/B1 surface */}
         <ProjectHealthCard />
+
+        {/* TanStack Query pilots (v34.2.0) — additive, read-only */}
+        <QueryPilotsLiveStatus />
 
         {/* Header */}
         <div className="flex items-center justify-between">

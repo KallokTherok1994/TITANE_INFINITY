@@ -1,4 +1,17 @@
-## 2026-05-14 — v34.1.0 — Admin Clear WebView Cache + Transport state live
+## 2026-05-14 — v34.2.0 — TanStack Query pilots (system / engines / providers / conversation / devtools)
+
+- **Surface ajoutée** : [src/pages/MonitoringDashboard.tsx](src/pages/MonitoringDashboard.tsx) reçoit un strip additif `<QueryPilotsLiveStatus />` au-dessus du header.
+- **Composant** : [src/components/runtime/QueryPilotsLiveStatus.tsx](src/components/runtime/QueryPilotsLiveStatus.tsx) — 5 tuiles `data-testid` : `query-pilot-system-health`, `query-pilot-engines-status`, `query-pilot-providers-status`, `query-pilot-conversation-health`, `query-pilot-devtools-memory-health`. Conteneur `data-testid="query-pilots-live-status"`. Chaque tuile expose `data-state` ∈ { idle | loading | success | error } pour assertion E2E.
+- **Hooks** : nouveaux `src/hooks/queries/use*Query.ts` (5 fichiers) — chaque hook appelle `secureInvoke(<command>, {})` via `TAURI_COMMANDS.<NAME>` et utilise `queryKeys.<cluster>.<leaf>()` issus de [src/lib/queryKeys.ts](src/lib/queryKeys.ts).
+- **DevTools** : `@tanstack/react-query-devtools` monté DEV-only (lazy via `React.lazy`, `import.meta.env.DEV`) dans [src/App.tsx](src/App.tsx#L130), bouton position `bottom-left`. Tree-shaken en production.
+- **Tests Vitest** :
+  - [src/__tests__/lib/queryKeys.test.ts](src/__tests__/lib/queryKeys.test.ts) — 6 cas.
+  - [src/__tests__/hooks/queries/pilots.test.tsx](src/__tests__/hooks/queries/pilots.test.tsx) — 6 cas (un par hook + override `enabled:false`).
+  - [src/__tests__/components/runtime/QueryPilotsLiveStatus.test.tsx](src/__tests__/components/runtime/QueryPilotsLiveStatus.test.tsx) — 3 cas (5 tuiles + 5 IPC + convergence success).
+- **Discipline** : strictement additif (`src/components/ui/*` custom intacts, dashboards existants non modifiés en logique métier — seul ajout d'un import + d'un mount).
+- **Rollback** : retirer le mount `<QueryPilotsLiveStatus />` dans MonitoringDashboard ; les 5 hooks et `queryKeys` restent isolés.
+
+
 
 - **Surface** : Configuration Hub → toolbar action `Maintenance avancée`.
 - **Bouton** : `data-testid="admin-clear-webview-cache"` — handler `handleClearWebviewCache` (confirm() + `tauriClient.clearWebviewCache()`) — toast succès/erreur.
