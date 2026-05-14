@@ -1,0 +1,22 @@
+
+> titane-infinity@35.1.5 e2e:desktop:ui-full /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> TITANE_ENFORCE_BINARY_FRESHNESS=0 TITANE_E2E_FULL=1 WDIO_SPEC="e2e/desktop/ui-desktop-*.wdio.test.js" node scripts/e2e/run-desktop-suite.js
+
+2026-05-14T16:08:47.373Z Artifacts dir: /home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop
+2026-05-14T16:08:47.376Z WDIO config: /home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs
+2026-05-14T16:08:47.376Z TAURI_BINARY_PATH: <unset>
+2026-05-14T16:08:47.376Z FORCE_LOCAL_PROVIDER for desktop E2E: enabled
+2026-05-14T16:08:47.376Z E2E Ollama profile: model=gemma2:2b requestTimeout=90s responseTimeout=150000ms
+2026-05-14T16:08:47.376Z tauri-driver args: tauri-driver --port 4444 --native-port 4445 --native-host 127.0.0.1 --native-driver /usr/bin/WebKitWebDriver
+2026-05-14T16:08:47.448Z [NATIVE_BINARY_POLICY] class=FRESH_RELEASE_BINARY | mode=release | reason=RELEASE_PREFERRED_POLICY | selected=/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity | selectedKind=release | selectedMtimeMs=1778773612032.511 | basis=tauri_conf:/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/tauri.conf.json | basisMtimeMs=1778772650415.7832 | workspaceAhead=false
+2026-05-14T16:08:47.450Z [NATIVE_BINARY_POLICY] precedence=release>appimage(newest)>installed>local>debug candidates=[{"kind":"debug","filePath":"/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity","mtimeMs":1778771143819.736},{"kind":"release","filePath":"/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity","mtimeMs":1778773612032.511},{"kind":"appimage","filePath":"/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/appimage/titane-infinity_35.1.5_amd64.AppImage","mtimeMs":1778773611995.5112},{"kind":"appimage","filePath":"/home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/titane-infinity_35.1.1_amd64.AppImage","mtimeMs":1778765682305.6665},{"kind":"appimage","filePath":"/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_31.3.2_amd64.AppImage","mtimeMs":1777642529553.1528},{"kind":"installed","filePath":"/usr/bin/titane-infinity","mtimeMs":1778728177733.2122}]
+2026-05-14T16:08:47.764Z wdio command: pnpm exec wdio run /home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs --spec e2e/desktop/ui-desktop-*.wdio.test.js
+2026-05-14T16:41:53.160Z wdio close: code=1 signal=null
+2026-05-14T16:41:53.160Z FAILURE SUMMARY
+2026-05-14T16:41:53.160Z exit_code=1
+2026-05-14T16:41:53.161Z wdio_log=/home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop/wdio.log
+2026-05-14T16:41:53.161Z tauri_driver_log=/home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop/tauri_driver.log
+2026-05-14T16:41:53.161Z webkit_log=/home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop/webkit_driver.log
+2026-05-14T16:41:53.161Z shutdown sent to child processes
+2026-05-14T16:41:53.163Z tauri-driver close: code=0 signal=null
+ ELIFECYCLE  Command failed with exit code 1.
