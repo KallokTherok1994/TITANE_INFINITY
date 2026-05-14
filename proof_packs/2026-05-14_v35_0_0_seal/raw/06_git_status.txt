@@ -1,0 +1,5 @@
+ M .vscode/settings.json
+?? deployment/archive/v34.0.11/
+?? deployment/latest/titane-infinity-34.0.12
+?? deployment/latest/titane-infinity_34.0.12_x64_en-US.msi
+?? deployment/windows/v34.0.12/titane-infinity_34.0.12_x64_en-US.msi

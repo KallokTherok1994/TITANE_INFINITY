@@ -1,0 +1,3 @@
+a798d61be feat(persist): v35.0.0 Sprint B.1 — TanStack Query offline-first localStorage cache
+36848a3b0 feat(audit): v34.5.0 Phase A — chat_generate→conversation_generate rewire + ui-audit scripts
+6eed5d7d4 feat(chat): v34.4.0 additive TanStack Query chat hooks (providersHealth/conversation/send/deleteConversation)
