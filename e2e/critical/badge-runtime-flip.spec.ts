@@ -14,10 +14,18 @@ import { test, expect } from '@playwright/test';
 
 const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
 
-const SURFACES: Array<{ route: string; testId: string }> = [
-  { route: '/admin', testId: 'page-admin' },
-  { route: '/cognitive', testId: 'page-cognitive' },
-  { route: '/settings', testId: 'page-settings' },
+const SURFACES: Array<{
+  route: string;
+  testId?: string;
+  expectedUrl: RegExp;
+}> = [
+  { route: '/admin', testId: 'page-admin', expectedUrl: /\/admin$/ },
+  {
+    route: '/experience',
+    testId: 'page-experience',
+    expectedUrl: /\/experience$/,
+  },
+  { route: '/time', testId: 'page-time', expectedUrl: /\/time$/ },
 ];
 
 const NON_HARDCODED_VARIANTS = [
@@ -35,10 +43,14 @@ test.describe('SurfaceTruthBadge — runtime flip (Phase 7.E)', () => {
     return;
   }
 
-  for (const { route, testId } of SURFACES) {
+  for (const { route, testId, expectedUrl } of SURFACES) {
     test(`badge on ${route} reflects runtime truth (not hardcoded LIVE)`, async ({ page }) => {
       await page.goto(route);
-      await expect(page.getByTestId(testId)).toBeVisible({ timeout: 15000 });
+      await expect(page).toHaveURL(expectedUrl);
+
+      if (testId) {
+        await expect(page.getByTestId(testId)).toBeVisible({ timeout: 15000 });
+      }
 
       // Au moins une variante non-hardcodée doit être visible
       let visibleVariant: string | null = null;
