@@ -1649,3 +1649,9 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **`/admin?tab=governance`** : `src/features/governance-center/services/governanceService.ts` route maintenant les lectures de bootstrap `get_*_status`, `ai_check_ollama_status`, `get_ia_policies`, `get_permission_matrix`, `get_permission_audit` et `get_security_log` via `safeInvokeCanonical`, ce qui conserve les surfaces de gouvernance vivantes sans bruit console `NO_TRANSPORT` en browser.
 - **Preuve unitaire ciblee** : `src/features/governance-center/services/__tests__/governanceService.transportGuard.test.ts` verrouille que ces lectures utilisent la voie canonique silencieuse et non `safeInvoke`, y compris sur le cas `NO_TRANSPORT`.
 - **Preuve browser ciblee** : `pnpm exec playwright test e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture admin-governance' --reporter=line` repasse sans les erreurs console precedentes sur les statuts secrets, Ollama, policies et permissions.
+
+## v35.1.5 (2026-05-14) — Orchestration Center realigne son contrat allowlist frontend
+
+- **`/orchestration-center`** : `src/lib/security.ts` allowliste maintenant `orchestrator_get_state`, `orchestrator_init`, `multi_ai_get_state` et `cognitive_get_state`, ce qui supprime les rejets L1 visibles sur la surface Meta Orchestrator browser.
+- **Preuve unitaire ciblee** : `src/__tests__/security/allowed-commands-legacy-prune-v34_0_6.test.ts` verrouille ces commandes dans `ALLOWED_COMMANDS` pour eviter un retour du drift whitelist.
+- **Preuve browser ciblee** : `pnpm exec playwright test e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture orchestration-center' --reporter=line` repasse sans les erreurs console de commande non allowlistee qui polluaient la surface orchestration.

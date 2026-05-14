@@ -2657,3 +2657,9 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > `src/features/governance-center/services/governanceService.ts` faisait encore plusieurs lectures de bootstrap via `safeInvoke`, alors que le mode browser sans transport retourne canoniquement `NO_TRANSPORT`. Cela laissait `normalizeResponse()` gerer la valeur retour, mais le bruit console etait deja produit par `safeInvoke` pour `get_secrets_status`, les statuts providers, `ai_check_ollama_status`, `get_ia_policies`, `get_permission_matrix`, `get_permission_audit` et `get_security_log`.
 
 > La correction reste confinee au service de gouvernance: les lectures de bootstrap passent maintenant par `safeInvokeCanonical`, qui preserve la verite `NO_TRANSPORT` sans emission de `console.error`. Le nouvel essai `governanceService.transportGuard.test.ts` verrouille cette frontiere, et la capture browser `admin-governance` repasse proprement sur la surface active `/admin?tab=governance`.
+
+## v35.1.5 (2026-05-14) — OrchestrationCenter ferme un drift allowlist de surface active
+
+> `src/pages/OrchestrationMetaCenter.tsx` appelait deja les commandes runtime correctes via `tauriClient`, mais `src/lib/security.ts` ne whitelistaient pas encore plusieurs commandes effectivement consommees par la surface active: `orchestrator_get_state`, `orchestrator_init`, `multi_ai_get_state` et `cognitive_get_state`. En browser, ce drift faisait remonter des erreurs L1 `Command ... is not in whitelist` avant meme toute degradation runtime legitime.
+
+> La correction reste contractuelle et locale a la frontiere One Door: les commandes manquantes sont ajoutees dans `ALLOWED_COMMANDS` et verrouillees par le test anti-regression `allowed-commands-legacy-prune-v34_0_6.test.ts`. La capture browser `orchestration-center` redevient alors une preuve de surface runtime reelle, sans bruit de whitelist frontend parasite.

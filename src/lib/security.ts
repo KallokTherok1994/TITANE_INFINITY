@@ -516,6 +516,10 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // ORCHESTRATION CENTER (Stats/Dev)
   // ═══════════════════════════════════════════════════════════════
+  'orchestrator_get_state',
+  'orchestrator_init',
+  'multi_ai_get_state',
+  'cognitive_get_state',
   'orchestration_get_cognitive_state',
   'orchestration_get_unified_state',
 

@@ -19,6 +19,10 @@ describe('v34.0.6 IPC legacy prune — L1 whitelist alignment', () => {
     'toggle_ia_policy',
     'save_ia_policies',
     'memory_debug_scan',
+    'orchestrator_get_state',
+    'orchestrator_init',
+    'multi_ai_get_state',
+    'cognitive_get_state',
     // AuthCenter
     'auth_delete_api_key',
     'auth_generate_dev_token',
