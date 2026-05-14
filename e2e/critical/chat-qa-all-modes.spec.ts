@@ -5,8 +5,8 @@
  * Runtime: Vite + mock IPC (défaut) ou Tauri (TITANE_E2E_TAURI=1)
  *
  * Couverture:
- *   - Les 10 modes principaux sont sélectionnables via chat-mode-selector
- *   - 2 Q&A structurels par mode (mock ou réels)
+ *   - Les 6 modes actifs de la conversation moderne sont sélectionnables via chat-mode-selector
+ *   - 2 Q&A structurels par mode actif (mock ou réels)
  *   - Mode switching mid-conversation: default → brainstorming → planning
  *   - chat-runtime-state expose data-conversation-mode cohérent
  *   - data-testids stables tout au long du test
@@ -30,10 +30,6 @@ const MIN_RESPONSE_LENGTH = 80;
 
 const MODES_TO_TEST = [
   'default',
-  'coach',
-  'dev',
-  'admin',
-  'strategy',
   'brainstorming',
   'synthesis',
   'planning',
@@ -48,22 +44,6 @@ const MODE_QA: Record<ModeId, [string, string]> = {
   default: [
     'Quelle est la différence entre stratégie et tactique ?',
     'Comment structurer une prise de décision efficace ?',
-  ],
-  coach: [
-    'Mon objectif est de progresser en leadership mais je ne sais pas par où commencer.',
-    'Comment identifier mes forces naturelles et les aligner avec mes objectifs ?',
-  ],
-  dev: [
-    'Explique les principes SOLID avec un exemple TypeScript.',
-    'Quelle est la différence entre async/await et les Promises en JavaScript ?',
-  ],
-  admin: [
-    'Un service systemd crashe au démarrage. Donne-moi le protocole de diagnostic.',
-    'Comment sécuriser un serveur Linux fraîchement installé ?',
-  ],
-  strategy: [
-    'Réalise un SWOT pour une startup B2B SaaS IA pour PME.',
-    'Comment définir des OKR pertinents pour une équipe de 5 personnes ?',
   ],
   brainstorming: [
     'Génère 10 idées pour monétiser une app de productivité desktop.',
@@ -152,7 +132,7 @@ async function getActiveMode(page: Page): Promise<string> {
 // ─── TESTS ────────────────────────────────────────────────────────────────────
 
 test.describe('Chat Q&A — Sélecteur de modes disponibles', () => {
-  test('Les 10 modes principaux sont accessibles via chat-mode-selector', async ({
+  test('Les 6 modes actifs sont accessibles via chat-mode-selector', async ({
     page,
   }) => {
     await openTitane(page);
@@ -167,12 +147,11 @@ test.describe('Chat Q&A — Sélecteur de modes disponibles', () => {
     if (await trigger.isVisible({ timeout: 2000 }).catch(() => false)) {
       await trigger.click();
 
-      // Vérifier au moins les modes de base
-      for (const modeId of ['default', 'coach', 'dev', 'brainstorming', 'planning']) {
+      for (const modeId of MODES_TO_TEST) {
         const option = page.getByTestId(`chat-mode-option-${modeId}`);
-        // Ne pas échouer si un mode n'est pas visible (permission level peut filtrer)
         const visible = await option.isVisible({ timeout: 2000 }).catch(() => false);
         console.log(`Mode option [${modeId}]: ${visible ? 'visible' : 'non visible'}`);
+        expect(visible, `Mode option ${modeId} should be visible`).toBeTruthy();
       }
 
       await page.keyboard.press('Escape');
@@ -198,7 +177,7 @@ test.describe('Chat Q&A — Sélecteur de modes disponibles', () => {
   });
 });
 
-// ─── Q&A STRUCTUREL PAR MODE (2 questions × 10 modes) ────────────────────────
+// ─── Q&A STRUCTUREL PAR MODE (2 questions × 6 modes actifs) ──────────────────
 
 test.describe('Chat Q&A — 2 questions structurelles par mode', () => {
   test.describe.configure({ timeout: 300000 }); // 5min/test — Ollama real responses (complex system prompts)
