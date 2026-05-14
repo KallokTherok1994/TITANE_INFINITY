@@ -1,3 +1,32 @@
+## 2026-05-13 : v34.0.12 BUILD ALL — Clippy idiom modernization + Prettier normalisation + Audit clean + AppImage smoke
+
+- **Mode** : DURABLE | **Bump Rule 13** : 34.0.11 → 34.0.12 | **BUILD ALL** (Rule 14)
+- **Audit pré-build (zéro tolérance)** :
+  - `pnpm tsc --noEmit` → exit 0
+  - `pnpm exec eslint src` → exit 0
+  - `pnpm exec prettier --check 'src/**'` → ALL CLEAN
+  - `pnpm vitest run --reporter=default` → **9247/9247 PASS** sur 602 fichiers (303s)
+  - `cargo test --bin titane-infinity` → **806/806 PASS**
+  - `cargo clippy --no-deps` → 13 warnings (préservées Rule 1 : Sobel symétrie, ollama champion/challenger, Auto* prefix domaine)
+- **Travaux antérieurs intégrés (commits 6ef397d2d → fc509b6f9)** :
+  - Clippy idiom modernization (Phase H+I+J) : 30 → 13 warnings (-17), 11 fixes mécaniques sûrs sur 8 fichiers Rust (`display_system_commands.rs`, `doc_engine/{export,legal,generator,versioning}.rs`, `meta_energy/predictor.rs`, `remote_gateway/server.rs`, `conversation_engine/commands.rs`, `agi_core/{abstraction,strategy}.rs`)
+  - Prettier drift cleanup (Phase K) : 68 fichiers normalisés `src/**/*.{ts,tsx,json,css,md}`
+- **Bundles produits** (Tauri release v34.0.12, cargo 10m 02s) :
+  - `deployment/latest/titane-infinity_34.0.12_amd64.deb` (24 982 632 bytes)
+    sha256 `539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4`
+  - `deployment/latest/titane-infinity-34.0.12-1.x86_64.rpm` (24 981 482 bytes)
+    sha256 `2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169`
+  - `deployment/latest/titane-infinity_34.0.12_amd64.AppImage` (99 125 752 bytes)
+    sha256 `35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2`
+  - `deployment/latest/titane-infinity-34.0.12` (54 916 000 bytes, binaire brut)
+    sha256 `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2`
+- **AppImage smoke** : PID 1965856 ALIVE 20s, BOOT:READY atteint, persistence init OK, audio test SUCCESS, 0 erreur fatale (proof : `proof_packs/v34.0.12-final/appimage-smoke.log`)
+- **Install système** : BLOCKED_APPROVAL (sudo cache expiré, utilisateur indisponible) — artefacts `deployment/latest/` prêts pour `sudo dpkg -i deployment/latest/titane-infinity_34.0.12_amd64.deb && bash scripts/post-build/update-desktop-icons.sh` au prochain disponibilité
+- **AutoHeal** : `BUILD-ALL-v34_0_12-2026-05-13` (entries=1915)
+- **Rollback** : `sudo dpkg -i deployment/archive/v34.0.11/titane-infinity_34.0.11_amd64.deb` ; `git revert <commit>`
+
+---
+
 ## 2026-05-13 : v34.0.11 BUILD ALL FINAL — Audit clean + Rust fix + Tauri bundles + System install
 
 - **Mode** : DURABLE | **Bump Rule 13** : 34.0.10 → 34.0.11 | **BUILD ALL** (Rule 14)

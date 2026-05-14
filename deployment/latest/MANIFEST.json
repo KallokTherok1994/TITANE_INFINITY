@@ -1,42 +1,18 @@
 {
-  "version": "34.0.11",
+  "version": "34.0.12",
   "build_date": "2026-05-13",
-  "scope": "BUILD ALL FINAL — clean rebuild + Rust race fix + 3 bundles",
-  "git_commit": "3fb77639a",
   "artifacts": {
-    "binary": {
-      "path": "titane-infinity",
-      "size": 54916008,
-      "sha256": "7344490212e5cf69e7ad1ea46aae70eb7929806e854275e9fecf193b397860f3"
-    },
-    "deb": {
-      "path": "titane-infinity_34.0.11_amd64.deb",
-      "size": 24989612,
-      "sha256": "85d2814a6ff2bd2f006b3c06056e1a3323b674a340a641f06236ac75e7cb36d8"
-    },
-    "rpm": {
-      "path": "titane-infinity-34.0.11-1.x86_64.rpm",
-      "size": 24989022,
-      "sha256": "87a2c8221da61fc80dbc28667001fdb97a865628bc803ee9e246800bdd64cf96"
-    },
-    "appimage": {
-      "path": "titane-infinity_34.0.11_amd64.AppImage",
-      "size": 99125752,
-      "sha256": "97bd4458e3329b01cb1e2b6adf189b80c39afeb10521cb733cf1e9ed0a9e9558"
-    }
+    "deb": "titane-infinity_34.0.12_amd64.deb",
+    "rpm": "titane-infinity-34.0.12-1.x86_64.rpm",
+    "appimage": "titane-infinity_34.0.12_amd64.AppImage",
+    "binary": "titane-infinity-34.0.12"
   },
-  "smoke": {
-    "binary": "PASS — BOOT:ENTRY_START + OMEGA + gemma2:2b",
-    "appimage": "PASS — OMEGA + gemma2:2b + BOOT:AFTER_ROUTER"
+  "sha256": {
+    "deb": "539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4",
+    "rpm": "2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169",
+    "appimage": "35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2",
+    "binary": "2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2"
   },
-  "gates": {
-    "tsc": "PASS",
-    "eslint": "PASS",
-    "vitest": "9247/9247 PASS",
-    "cargo_check": "0 warning",
-    "cargo_test": "806/806 PASS",
-    "detect_recurrence": "PASS (entries=1909)",
-    "verify_instructions": "PASS=52 FAIL=0"
-  },
-  "previous_version_archived": "deployment/archive/v34.0.8/"
+  "supersedes": "34.0.11",
+  "notes": "BUILD ALL v34.0.12 — clippy idiom modernization (-17 warnings) + prettier normalisation 68 files + audit clean (TSC/ESLint/Prettier/Vitest 9247 PASS/Rust 806 PASS)"
 }
