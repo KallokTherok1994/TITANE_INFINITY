@@ -1290,6 +1290,7 @@ fn main() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_deep_link::init())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(move |app| {
             app.listen("titane://boot-marker", move |event| {
                 let payload = event.payload().to_string();

@@ -78,6 +78,7 @@ import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 import { SingularityConnections } from './services/singularityConnections';
 import { GlobalTemporalContextPublisher } from '@/components/runtime/GlobalTemporalContextPublisher';
+import { CommandPalette } from '@/components/palette/CommandPalette';
 import { TimeToTwinBridge } from '@/components/runtime/TimeToTwinBridge';
 
 /**
@@ -399,6 +400,8 @@ export const AppRouter: React.FC = () => {
       />
       <GlobalTemporalContextPublisher />
       <TimeToTwinBridge />
+      {/* ✨ v34.3.0 — Command Palette (⌘K / Ctrl+K) — keyboard-first navigation. */}
+      <CommandPalette />
 
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>

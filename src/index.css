@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 @import './styles/local-fonts.css';
 @import './styles/titanium-dark-tokens.css' layer(tokens);
 @import './styles/css-vars.css' layer(tokens);

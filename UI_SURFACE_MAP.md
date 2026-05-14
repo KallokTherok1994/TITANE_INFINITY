@@ -1506,3 +1506,34 @@ Nouveau composant global monté dans le shell d'application :
 
 Tests : `src/components/system/__tests__/GlobalRuntimePulse.test.tsx` (16) + `e2e/critical/global-runtime-pulse.spec.ts` (4).
 AutoHeal : AH-v100-2026-05-13-LIVING_PULSE_UI_VISIBLE.
+
+## v34.3.0 — shadcn additive + Command Palette ⌘K
+
+Ajout d'un **couloir additif shadcn/ui** (sans toucher au design Titanium Dark de `src/components/ui/*`) et d'une **Command Palette globale** keyboard-first (⌘K / Ctrl+K).
+
+### Couloir shadcn (additif, isolé)
+
+- `components.json` configure le CLI shadcn pour aliaser `components` et `ui` vers `@/components/shadcn` (zéro collision avec le couloir custom).
+- Nouvelle base utilitaire `cn()` (`src/lib/utils.ts`) basée sur `clsx` + `tailwind-merge`.
+- Import `tw-animate-css` ajouté dans `src/index.css` (successeur v4 de `tailwindcss-animate`).
+- 12 composants installés dans `src/components/shadcn/` : `button`, `card`, `input`, `dialog`, `badge`, `select`, `tabs`, `tooltip`, `dropdown-menu`, `skeleton`, `command`, `popover`.
+- **Invariant** : `src/components/ui/*` reste intouché (preuve `git diff --stat src/components/ui/` = vide post-install).
+
+### Command Palette globale
+
+| Composant | Fichier | data-testid | Trigger |
+|---|---|---|---|
+| CommandPalette | `src/components/palette/CommandPalette.tsx` | `command-palette-root`, `command-palette-input`, `command-group-routes`, `command-group-agents`, `command-group-actions`, `command-item-<id>` | ⌘K / Ctrl+K |
+
+- Trois groupes : **Routes** (12), **Agents avancés** (6, mapping AGENTS.md), **Actions IPC** (allowlist `ALLOWED_COMMANDS`).
+- Store Zustand UI-only : `src/stores/useCommandPaletteStore.ts`.
+- Raccourci global Tauri : `@tauri-apps/plugin-global-shortcut` + capability `src-tauri/capabilities/global_shortcut.json` (`global-shortcut-palette` → main, register/unregister/is-registered).
+- Fallback DOM `keydown` (Vite dev / E2E navigateur sans runtime Tauri).
+- Monté dans `AppRouter` (inside `BrowserRouter`) — overlay global toutes pages.
+
+### Tests
+
+- Vitest : `src/__tests__/stores/useCommandPaletteStore.test.ts` (3) + `src/__tests__/components/palette/catalog.test.ts` (3) — 6/6 PASS.
+- E2E : `e2e/critical/command-palette.spec.ts` (ouverture ⌘K, filtre, navigation vers `/sentinel`).
+
+AutoHeal : `SHADCN-CMDK-PALETTE-v34_3_0-2026-05-15`.

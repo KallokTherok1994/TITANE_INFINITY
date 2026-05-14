@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "global-shortcut-palette",
+  "description": "Capability for the Command Palette ⌘K global shortcut (v34.3.0).",
+  "windows": ["main"],
+  "permissions": [
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister",
+    "global-shortcut:allow-is-registered"
+  ]
+}
