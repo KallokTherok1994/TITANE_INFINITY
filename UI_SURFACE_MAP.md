@@ -1574,3 +1574,14 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Dépréciation code mort Sprint C.3** : JSDoc `@deprecated v35.1.0` sur `src/components/ChatWindow.tsx` + `src/hooks/useGlobalAIChat.ts`. Retrait planifié v35.3.0. Pointeurs migration vers `ConversationSection` + hooks TanStack documentés.
 - **Migrations reportées explicitement à v36 EXPLORATION** : `useChatSendMutation` / `useChatDeleteConversationMutation` / `useChatConversationQuery` non câblés dans `ConversationSection` (3503 LOC) — refactor majeur incompatible avec Rule 1 minimal patch. Spike dédié `explore/v36-chat-tanstack-mutation`.
 - **Tests v35.1.0** : `src/__tests__/components/sections/ConversationSection.tanstack.test.tsx` (3 PASS) — hook importable, persister status exposé, allow-list dehydration. Tests existants intacts (5/5 `queryPersister.test.ts`, 5/5 `chat.test.tsx`).
+
+## v35.1.x (2026-05-14) — Sprint D audit-driven test hardening (réflexion approfondie)
+
+- **Audit Phase D vs plan** : Vérification runtime des 5 pages dashboards ciblées + 6 agents avancés + IPC supposés.
+  - Pages ciblées état Vitest existant : `RealityCenter.test.tsx`, `MultiProjectDashboard.test.tsx`, `DocCenterPage.test.tsx` ✓ déjà couverts.
+  - `ResearchPage.tsx` : **21 data-testid stables mais 0 Vitest dédié** ⇒ gap réel comblé.
+  - `DesignSystemPage.tsx` + `RealityCenter.tsx` : 1 testid chacun (surface trop fine pour ROI Vitest) ⇒ couverture E2E existante suffit, pas de nouveau spec.
+  - 6 agents avancés : **déjà FULL** via `e2e/critical/advanced-agent-dashboards.spec.ts` (91 LOC, 3 tests, contrat testid canonique 6/6 vérifié).
+  - IPC `diagnostic_run` + `orchestrator_state` : référencés en commentaires uniquement, non implémentés comme commandes Tauri réelles ⇒ ajout incompatible Rule 4 (capacités lockées) sans justification métier ⇒ reporté.
+- **Nouveau spec Vitest** : `src/__tests__/pages/ResearchPage.test.tsx` (3 PASS) — contrat testid root `research-page`, contrat formulaire (`research-form`/`research-question`/`research-mode`/`research-submit`), surface idle (absence `research-results`/`research-error`).
+- **Doctrine** : Plan optimiste recalibré contre vérité runtime. Sprints D.4 (coverage gate strict) + D.5 (BUILD ALL + tag v35.2.0) reportés à consolidation post-phase E.
