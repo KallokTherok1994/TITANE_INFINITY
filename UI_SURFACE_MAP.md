@@ -1609,4 +1609,10 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Sélecteurs de navigation** : `src/components/layout/TopNav.tsx` expose `data-testid="nav-projects"` via le menu `topnav-more-menu`, avec `btn-nav-more` marqué `aria-current="page"` quand `/multiproject` est actif.
 - **Vérité registry alignée** : `src/registry/uiSurfaceRegistry.ts` bascule `multiproject_dashboard` en `visibleInNav=true` avec `navOwner='projects'`; `e2e/desktop/page-objects/uiPages.po.js` le reclasse en `moreMenuRoutePages` avec `navTestId='nav-projects'`.
 - **Gardes unitaires** : `src/hooks/__tests__/useTopNavigation.test.tsx`, `src/components/layout/__tests__/TopNav.test.tsx` et `src/__tests__/ui/app-router-canonical-surfaces.test.tsx` verrouillent respectivement la déclaration `PROJECTS`, sa présence dans le menu `Plus` et l ownership shell `btn-nav-more` pour `/multiproject`.
-- **Preuve E2E dédiée** : `e2e/features/multiproject-navigation.spec.ts` couvre l ouverture du menu `Plus` puis la navigation vers `/multiproject`; `e2e/desktop/multiproject-route.e2e.spec.ts` verrouille le rendu desktop de `multiproject-dashboard`, `multiproject-agent-status` et `multiproject-create-form`.
+- **Preuve E2E dédiée** : `e2e/features/multiproject-navigation.spec.ts` couvre l ouverture du menu `Plus` puis la navigation vers `/multiproject`; `e2e/desktop/multiproject-route.e2e.spec.ts` verrouille le rendu desktop de `multiproject-dashboard`, `multiproject-agent-status` et `multiproject-project-list`.
+
+## v35.1.5 (2026-05-14) — Multiproject promu dans les suites globales de route proof
+
+- **Browser lane global** : `e2e/ui-runtime-route-proof.spec.ts` inclut maintenant `/multiproject` avec `rootTestId="multiproject-dashboard"`, ce qui évite que la route visible reste couverte uniquement par une spec dédiée.
+- **Production lane globale** : `e2e/production/ui-production-route-proof.spec.ts` ajoute la même route canonique dans l inventaire `CANONICAL_ROUTES`, avec `pageId='multiproject'`.
+- **Anti-drift** : la chaîne de preuve est désormais complète entre shell navigation, inventaire desktop, spec dédiée et suites globales browser/production pour la même surface `/multiproject`.

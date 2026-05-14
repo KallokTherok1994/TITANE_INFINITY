@@ -65,6 +65,12 @@ const CANONICAL_ROUTES = [
     mainMenuSurface: false,
   },
   {
+    route: '/multiproject',
+    pageId: 'multiproject',
+    rootTestId: 'multiproject-dashboard',
+    mainMenuSurface: false,
+  },
+  {
     route: '/optimization',
     pageId: 'optimization',
     rootTestId: 'page-optimization',

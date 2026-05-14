@@ -2616,3 +2616,9 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > L inventaire desktop `e2e/desktop/page-objects/uiPages.po.js` suit la même reclassification en déplaçant `uiPages.multiproject` de `directRoutePages` vers `moreMenuRoutePages`. Ce changement protège la chaîne canonical surface -> route inventory -> desktop navigation proof au lieu de laisser l inventaire E2E prétendre que `/multiproject` est une route directe sans affordance utilisateur visible.
 
 > Couverture ajoutée: `src/hooks/__tests__/useTopNavigation.test.tsx`, `src/components/layout/__tests__/TopNav.test.tsx` et `src/__tests__/ui/app-router-canonical-surfaces.test.tsx` verrouillent la vérité shell côté Vitest. Deux specs Playwright dédiées prolongent cette preuve: `e2e/features/multiproject-navigation.spec.ts` pour le flow menu `Plus` -> `/multiproject`, et `e2e/desktop/multiproject-route.e2e.spec.ts` pour le rendu desktop canonique de la surface multiproject.
+
+## v35.1.5 (2026-05-14) — Multiproject absorbé par les audits E2E globaux
+
+> La correction précédente rendait `/multiproject` visible et prouvée par deux specs ciblées, mais les deux suites d inventaire global `e2e/ui-runtime-route-proof.spec.ts` et `e2e/production/ui-production-route-proof.spec.ts` n incluaient pas encore cette route. Cela laissait une asymétrie entre la preuve locale dédiée et les audits globaux browser/production.
+
+> Cette asymétrie est supprimée en ajoutant `/multiproject` dans les deux inventaires de routes canoniques avec le même ancrage `multiproject-dashboard`. La route visible, la page inventory desktop, la preuve dédiée et les scans globaux partagent maintenant une seule vérité runtime.

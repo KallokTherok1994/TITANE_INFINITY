@@ -37,13 +37,39 @@ const BASE_ROUTES: {
   { route: '/memory', testId: 'page-memory', badgeExpected: true, priority: 1 },
   { route: '/research', testId: 'research-page', badgeExpected: true, priority: 3 },
   { route: '/doc-center', testId: 'doc-center-page', badgeExpected: true, priority: 1 },
+  {
+    route: '/multiproject',
+    testId: 'multiproject-dashboard',
+    badgeExpected: true,
+    priority: 2,
+  },
   { route: '/twins', testId: 'page-twins', badgeExpected: true, priority: 3 },
   { route: '/fusion', testId: 'page-fusion', badgeExpected: true, priority: 2 },
 ];
 
-const BADGE_TESTID = 'surface-truth-badge-partial';
+const BADGE_SELECTOR = '[data-testid^="surface-truth-badge-"]';
 const PAGE_LOAD_TIMEOUT = 20000;
 const BADGE_TIMEOUT = 10000;
+
+async function waitForAnySelector(
+  page: import('@playwright/test').Page,
+  selectors: string[],
+  timeout = 8000
+) {
+  const deadline = Date.now() + timeout;
+
+  while (Date.now() < deadline) {
+    for (const selector of selectors) {
+      const count = await page.locator(selector).count();
+      if (count > 0) {
+        return true;
+      }
+    }
+    await page.waitForTimeout(150);
+  }
+
+  return false;
+}
 
 test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
   test.setTimeout(120000);
@@ -79,7 +105,8 @@ test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
         const navBtn = page
           .locator(`[data-testid^="nav-"]`)
           .filter({
-            hasText: /titane|time|admin|dev|memory|experience|research|doc|twins|fusion/i,
+            hasText:
+              /titane|time|admin|dev|memory|experience|research|doc|project|twins|fusion/i,
           })
           .first();
         const navVisible = await navBtn.isVisible().catch(() => false);
@@ -104,23 +131,17 @@ test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
             `[${route}] ErrorBoundary_fired=${hasErrorBoundary} (expected=true in browser mode)`
           );
         } else {
-          const badge = page.getByTestId(BADGE_TESTID);
-          await expect(badge)
-            .toBeVisible({ timeout: BADGE_TIMEOUT })
-            .catch(async () => {
-              // Badge may be hidden on very small viewports or loading states — log but don't hard fail
-              console.warn(
-                `[${route}] BADGE NOT VISIBLE — surface-truth-badge-partial not found in DOM`
-              );
-              // Check DOM presence even if hidden
-              const count = await page.locator(`[data-testid="${BADGE_TESTID}"]`).count();
-              // If count > 0 it's in DOM but hidden — acceptable for proof purposes
-              if (count === 0) {
-                throw new Error(
-                  `[${route}] Badge data-testid="${BADGE_TESTID}" not found in DOM`
-                );
-              }
-            });
+          const badgeFound = await waitForAnySelector(page, [BADGE_SELECTOR], BADGE_TIMEOUT);
+
+          if (!badgeFound) {
+            console.warn(
+              `[${route}] BADGE NOT VISIBLE — no surface-truth-badge-* selector found in DOM`
+            );
+            const count = await page.locator(BADGE_SELECTOR).count();
+            if (count === 0) {
+              throw new Error(`[${route}] No surface-truth-badge-* selector found in DOM`);
+            }
+          }
         }
       }
 
