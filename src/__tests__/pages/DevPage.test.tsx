@@ -10,32 +10,20 @@ const {
   qaListTestSuitesMock,
   qaListAlertsMock,
   orchestrationGetUnifiedStateMock,
+  useOneCoreMock,
+  useSystemHealthMock,
 } = vi.hoisted(() => ({
   qaGetStateMock: vi.fn(),
   qaGetSystemMetricsMock: vi.fn(),
   qaListTestSuitesMock: vi.fn(),
   qaListAlertsMock: vi.fn(),
   orchestrationGetUnifiedStateMock: vi.fn(),
+  useOneCoreMock: vi.fn(),
+  useSystemHealthMock: vi.fn(),
 }));
 
 vi.mock('@/features/one-core/useOneCore', () => ({
-  useOneCore: () => ({
-    state: null,
-    metrics: null,
-    diagnostic: null,
-    commands: [],
-    eventHistory: [],
-    loading: false,
-    error: null,
-    refresh: vi.fn(),
-    executeCommand: vi.fn(),
-    runDiagnostic: vi.fn(),
-    forceSync: vi.fn(),
-    cleanup: vi.fn(),
-    setMode: vi.fn(),
-    verifyIntegrity: vi.fn(),
-    getEngineStatus: vi.fn(),
-  }),
+  useOneCore: () => useOneCoreMock(),
 }));
 
 vi.mock('@/features/qa-monitoring/useQAMonitoring', () => ({
@@ -56,7 +44,7 @@ vi.mock('@/services/systemHealthPoller', () => ({
 }));
 
 vi.mock('@/stores/systemStore.selectors', () => ({
-  useSystemHealth: () => 'Healthy',
+  useSystemHealth: () => useSystemHealthMock(),
 }));
 
 vi.mock('@/lib/tauriClient', () => ({
@@ -82,6 +70,27 @@ describe('DevPage', () => {
     qaListTestSuitesMock.mockReset();
     qaListAlertsMock.mockReset();
     orchestrationGetUnifiedStateMock.mockReset();
+    useSystemHealthMock.mockReset();
+    useOneCoreMock.mockReset();
+
+    useSystemHealthMock.mockReturnValue('Healthy');
+    useOneCoreMock.mockReturnValue({
+      state: null,
+      metrics: null,
+      diagnostic: null,
+      commands: [],
+      eventHistory: [],
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
+      executeCommand: vi.fn(),
+      runDiagnostic: vi.fn(),
+      forceSync: vi.fn(),
+      cleanup: vi.fn(),
+      setMode: vi.fn(),
+      verifyIntegrity: vi.fn(),
+      getEngineStatus: vi.fn(),
+    });
   });
 
   it('keeps the page shell marker visible while data is loading', () => {
@@ -110,5 +119,76 @@ describe('DevPage', () => {
       'error'
     );
     expect(screen.getByTestId('page-dev')).toHaveTextContent('Erreur de chargement DEV');
+  });
+
+  it('renders wrapped backend health payloads without React child crashes', async () => {
+    useSystemHealthMock.mockReturnValue({
+      status: 'Healthy',
+      available: true,
+      error: null,
+      fallback: false,
+      health: 'Healthy',
+    });
+    qaGetStateMock.mockResolvedValue({
+      health_score: 98,
+      active_alerts: 0,
+    });
+    qaGetSystemMetricsMock.mockResolvedValue({});
+    qaListTestSuitesMock.mockResolvedValue([]);
+    qaListAlertsMock.mockResolvedValue([]);
+
+    renderDevPage();
+
+    expect(await screen.findByTestId('page-dev')).toHaveAttribute(
+      'data-dev-state',
+      'ready'
+    );
+    expect(screen.getByText('Healthy')).toBeVisible();
+  });
+
+  it('keeps diagnostics and operations tabs renderable with partial runtime data', async () => {
+    useOneCoreMock.mockReturnValue({
+      state: {
+        version: '1.0.0',
+        codename: 'OMEGA',
+        centers: undefined,
+      },
+      metrics: null,
+      diagnostic: null,
+      commands: [],
+      eventHistory: [],
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
+      executeCommand: vi.fn(),
+      runDiagnostic: vi.fn(),
+      forceSync: vi.fn(),
+      cleanup: vi.fn(),
+      setMode: vi.fn(),
+      verifyIntegrity: vi.fn(),
+      getEngineStatus: vi.fn(),
+    });
+    qaGetStateMock.mockResolvedValue({
+      active_monitors: 0,
+      active_alerts: 0,
+      hardening_level: 'standard',
+    });
+    qaGetSystemMetricsMock.mockResolvedValue({});
+    qaListTestSuitesMock.mockResolvedValue([]);
+    qaListAlertsMock.mockResolvedValue([]);
+
+    render(
+      <MemoryRouter initialEntries={['/dev?tab=operations']}>
+        <Routes>
+          <Route path="/dev" element={<DevPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByTestId('page-dev')).toHaveAttribute(
+      'data-dev-state',
+      'ready'
+    );
+    expect(screen.getByText('Aucun centre disponible')).toBeVisible();
   });
 });

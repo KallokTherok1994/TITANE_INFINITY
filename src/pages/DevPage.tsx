@@ -33,7 +33,14 @@ import { StatsSystemPanels } from './Stats';
 import { startSystemHealthPolling } from '@/services/systemHealthPoller';
 import { useSystemHealth } from '@/stores/systemStore.selectors';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
-import { formatDevBestProvider, formatDevHealthScore } from './devPage.formatters';
+import {
+  formatDevBackendHealth,
+  formatDevBestProvider,
+  formatDevHealthScore,
+  getDevHealthVariant,
+  getDevSurfaceTruthVariant,
+  toDevFiniteNumber,
+} from './devPage.formatters';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -100,14 +107,18 @@ const HealthBar = memo<{ value: number; label: string }>(({ value, label }) => (
   <div className="dev-health-bar">
     <div className="dev-health-bar-header">
       <span className="dev-health-bar-label">{label}</span>
-      <span className="dev-health-bar-value">{value.toFixed(1)}%</span>
+      <span className="dev-health-bar-value">{toDevFiniteNumber(value).toFixed(1)}%</span>
     </div>
     <div className="dev-health-bar-track">
       <div
         className={`dev-health-bar-fill dev-health-bar-fill--${
-          value >= 80 ? 'success' : value >= 50 ? 'warning' : 'error'
+          toDevFiniteNumber(value) >= 80
+            ? 'success'
+            : toDevFiniteNumber(value) >= 50
+              ? 'warning'
+              : 'error'
         }`}
-        style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+        style={{ width: `${Math.min(100, Math.max(0, toDevFiniteNumber(value)))}%` }}
       />
     </div>
   </div>
@@ -126,6 +137,8 @@ const OverviewSection = memo<{
   // LOCK3: backend-sourced health truth (null = not yet fetched)
   backendHealth: import('../services/tauri/backend-v17.2.types').HealthStatus | null;
 }>(({ oneCoreState, qaState, orchestration, backendHealth }) => {
+  const backendHealthLabel = formatDevBackendHealth(backendHealth);
+  const backendHealthVariant = getDevHealthVariant(backendHealth);
   const qaHealthScore =
     typeof qaState?.health_score === 'number' && Number.isFinite(qaState.health_score)
       ? qaState.health_score
@@ -194,25 +207,17 @@ const OverviewSection = memo<{
         {/* LOCK3: backend-sourced health truth badge */}
         <StatCard
           label="Santé Backend"
-          value={backendHealth ?? '…'}
+          value={backendHealthLabel}
           icon={
-            backendHealth === 'Healthy'
+            backendHealthVariant === 'success'
               ? '✅'
-              : backendHealth === 'Warning'
+              : backendHealthVariant === 'warning'
                 ? '⚠️'
-                : backendHealth === 'Critical'
+                : backendHealthVariant === 'error'
                   ? '🔴'
                   : '⏳'
           }
-          variant={
-            backendHealth === 'Healthy'
-              ? 'success'
-              : backendHealth === 'Warning'
-                ? 'warning'
-                : backendHealth === 'Critical'
-                  ? 'error'
-                  : 'info'
-          }
+          variant={backendHealthVariant}
           data-testid="system-health-backend"
         />
       </div>
@@ -230,7 +235,7 @@ const OverviewSection = memo<{
             <div className="dev-consciousness-card">
               <span className="dev-consciousness-label">Cohérence</span>
               <span className="dev-consciousness-value">
-                {(oneCoreState.coherence_score * 100).toFixed(1)}%
+                {(toDevFiniteNumber(oneCoreState.coherence_score) * 100).toFixed(1)}%
               </span>
             </div>
             <div className="dev-consciousness-card">
@@ -306,6 +311,8 @@ const CommandCenterSection = memo<{
 }>(({ state }) => {
   if (!state) return <div className="dev-section">Chargement...</div>;
 
+  const centers = Array.isArray(state.centers) ? state.centers : [];
+
   return (
     <div className="dev-section">
       <header className="dev-section-header">
@@ -314,7 +321,7 @@ const CommandCenterSection = memo<{
       </header>
 
       <div className="dev-centers-grid">
-        {state.centers.map((center, i) => (
+        {centers.map((center, i) => (
           <div key={i} className="dev-center-card">
             <div className="dev-center-header">
               <span className="dev-center-name">{center.name}</span>
@@ -331,6 +338,7 @@ const CommandCenterSection = memo<{
             </div>
           </div>
         ))}
+        {centers.length === 0 && <div className="dev-empty">Aucun centre disponible</div>}
       </div>
     </div>
   );
@@ -409,12 +417,14 @@ const QATestsSection = memo<{
         <div className="dev-qa-stats">
           <StatCard
             label="Couverture Tests"
-            value={`${state.test_coverage.toFixed(1)}%`}
+            value={formatDevHealthScore(
+              typeof state.test_coverage === 'number' ? state.test_coverage : null
+            )}
             icon="📊"
             variant={
-              state.test_coverage >= 80
+              toDevFiniteNumber(state.test_coverage) >= 80
                 ? 'success'
-                : state.test_coverage >= 60
+                : toDevFiniteNumber(state.test_coverage) >= 60
                   ? 'warning'
                   : 'error'
             }
@@ -484,16 +494,18 @@ const OrchestrationSection = memo<{
           <h3>🤖 Multi-AI</h3>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Best Provider</span>
-            <span className="dev-orch-value">{state.multiAi.bestProvider}</span>
+            <span className="dev-orch-value">{formatDevBestProvider(state)}</span>
           </div>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Score Global</span>
-            <span className="dev-orch-value">{state.multiAi.globalScore}%</span>
+            <span className="dev-orch-value">
+              {toDevFiniteNumber(state.multiAi?.globalScore)}%
+            </span>
           </div>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Mode Auto</span>
             <span className="dev-orch-value">
-              {state.multiAi.autoMode ? '✓ Activé' : '✗ Désactivé'}
+              {state.multiAi?.autoMode ? '✓ Activé' : '✗ Désactivé'}
             </span>
           </div>
         </div>
@@ -502,11 +514,13 @@ const OrchestrationSection = memo<{
           <h3>🧠 Nexus</h3>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Cohérence</span>
-            <span className="dev-orch-value">{state.nexus.coherenceScore}%</span>
+            <span className="dev-orch-value">
+              {toDevFiniteNumber(state.nexus?.coherenceScore)}%
+            </span>
           </div>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Nœuds Actifs</span>
-            <span className="dev-orch-value">{state.nexus.activeNodes}</span>
+            <span className="dev-orch-value">{toDevFiniteNumber(state.nexus?.activeNodes)}</span>
           </div>
         </div>
 
@@ -514,7 +528,9 @@ const OrchestrationSection = memo<{
           <h3>⚖️ Harmonia</h3>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Harmonie</span>
-            <span className="dev-orch-value">{state.harmonia.harmonyScore}%</span>
+            <span className="dev-orch-value">
+              {toDevFiniteNumber(state.harmonia?.harmonyScore)}%
+            </span>
           </div>
         </div>
 
@@ -528,7 +544,9 @@ const OrchestrationSection = memo<{
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Health</span>
             <span className="dev-orch-value">
-              {((state.meta?.system_health?.overall_score ?? 0) * 100).toFixed(1)}%
+              {(toDevFiniteNumber(state.meta?.system_health?.overall_score) * 100).toFixed(
+                1
+              )}%
             </span>
           </div>
         </div>
@@ -683,6 +701,7 @@ function DevPageContent(): JSX.Element {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [orchestration, setOrchestration] = useState<OrchestrationState | null>(null);
   const [orchestrationDegraded, setOrchestrationDegraded] = useState(false);
+  const surfaceTruthVariant = getDevSurfaceTruthVariant(backendHealth as unknown);
 
   // Load data
   const loadData = useCallback(async () => {
@@ -824,12 +843,7 @@ function DevPageContent(): JSX.Element {
   if (loading) {
     return (
       <div className="dev-page" data-testid="page-dev" data-dev-state="loading">
-        <SurfaceTruthBadge
-          variant={
-            backendHealth === 'Healthy' ? 'LIVE' : backendHealth ? 'PARTIAL' : 'DEGRADED'
-          }
-          className="mb-4"
-        />
+        <SurfaceTruthBadge variant={surfaceTruthVariant} className="mb-4" />
         <div className="dev-loading">
           <span className="dev-loading-icon">⚙️</span>
           <span className="dev-loading-text">Chargement DEV...</span>
@@ -841,12 +855,7 @@ function DevPageContent(): JSX.Element {
   if (error) {
     return (
       <div className="dev-page" data-testid="page-dev" data-dev-state="error">
-        <SurfaceTruthBadge
-          variant={
-            backendHealth === 'Healthy' ? 'LIVE' : backendHealth ? 'PARTIAL' : 'DEGRADED'
-          }
-          className="mb-4"
-        />
+        <SurfaceTruthBadge variant={surfaceTruthVariant} className="mb-4" />
         <div className="dev-error">
           <span className="dev-error-icon">⚠️</span>
           <span>{error}</span>
@@ -870,9 +879,7 @@ function DevPageContent(): JSX.Element {
     <div className="dev-page" data-testid="page-dev" data-dev-state="ready">
       {/* Runtime Truth Badge — ACTIVE — v97 */}
       <SurfaceTruthBadge
-        variant={
-          backendHealth === 'Healthy' ? 'LIVE' : backendHealth ? 'PARTIAL' : 'DEGRADED'
-        }
+        variant={surfaceTruthVariant}
         className="mb-4"
       />
       <header className="dev-header">

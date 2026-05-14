@@ -120,6 +120,7 @@
 # [2026-05-11] v80 visual route + desktop gap repair truth
 
 - Surface canonique `/dev`: `src/pages/DevPage.tsx` lit maintenant le provider orchestration via `formatDevBestProvider()` pour eviter les crashs runtime quand le payload est partiel.
+- Surface canonique `/dev`: `src/pages/DevPage.tsx` normalise maintenant aussi la sante backend enveloppee, les pourcentages non numeriques et les centres absents afin que `dev-overview`, `dev-diagnostics` et `dev-operations` restent renderables quand le runtime renvoie des payloads partiels.
 - Surface evidence capture: `e2e/production/ui-production-full-visual-capture.spec.ts` classe l ErrorBoundary via selector visible `titane-error-boundary` (plus de faux positif textuel) et publie un artifact v80 strict.
 - Surface desktop gap contract:
   - `e2e/desktop/ui-desktop-agent-overlay-contract.wdio.test.js` enregistre `CONDITIONAL_ACCEPTED` quand l overlay est absent par defaut.

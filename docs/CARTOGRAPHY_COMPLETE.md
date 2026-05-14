@@ -224,7 +224,9 @@ Tests v34.1.0 : 24 Vitest + 4 cargo PASS. AutoHeal `REMOTE-TRANSPORT-HIERARCHICA
 # [2026-05-11] Cartography delta - v80 visual route + desktop conditional gap normalization
 
 - `src/pages/DevPage.tsx` now consumes `formatDevBestProvider()` from `src/pages/devPage.formatters.ts`.
+- `src/pages/DevPage.tsx` now also unwraps backend health runtime objects, clamps partial numeric inputs, and tolerates missing `centers` arrays so `/dev?tab=overview`, `/dev?tab=diagnostics`, and `/dev?tab=operations` stay renderable under partial runtime truth.
 - `src/__tests__/devPage.formatters.test.ts` expanded to cover null/partial orchestration provider values.
+- `src/__tests__/pages/DevPage.test.tsx` now covers wrapped backend health payloads and operations rendering with partial runtime data.
 - `e2e/production/ui-production-full-visual-capture.spec.ts` keeps strict v80 classification with selector-based ErrorBoundary truth.
 - `e2e/desktop/ui-desktop-agent-overlay-contract.wdio.test.js` and `e2e/desktop/ui-desktop-action-sync-matrix.wdio.test.js` now emit explicit conditional JSONL classifications to `artifacts/ui-visual/v80-desktop-test-gap-results.jsonl`.
 - `e2e/desktop/ui-desktop-installed-full-visual-capture.wdio.test.js` updated to WDIO-compatible screenshot API.

@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { formatDevBestProvider, formatDevHealthScore } from '@/pages/devPage.formatters';
+import {
+  formatDevBackendHealth,
+  formatDevBestProvider,
+  formatDevHealthScore,
+  getDevHealthVariant,
+  getDevSurfaceTruthVariant,
+  toDevFiniteNumber,
+} from '@/pages/devPage.formatters';
 
 describe('formatDevHealthScore', () => {
   it('returns N/A for null', () => {
@@ -22,5 +29,36 @@ describe('formatDevBestProvider', () => {
 
   it('returns provider name when available', () => {
     expect(formatDevBestProvider({ multiAi: { bestProvider: 'ollama' } })).toBe('ollama');
+  });
+});
+
+describe('formatDevBackendHealth', () => {
+  it('extracts a display label from wrapped health objects', () => {
+    expect(
+      formatDevBackendHealth({
+        status: 'Healthy',
+        available: true,
+        error: null,
+        fallback: false,
+        health: 'Healthy',
+      })
+    ).toBe('Healthy');
+    expect(formatDevBackendHealth({ available: false })).toBe('Offline');
+    expect(formatDevBackendHealth({ fallback: true })).toBe('Fallback');
+  });
+});
+
+describe('devPage helpers', () => {
+  it('classifies backend health variants safely', () => {
+    expect(getDevHealthVariant('Healthy')).toBe('success');
+    expect(getDevHealthVariant({ status: 'Warning' })).toBe('warning');
+    expect(getDevHealthVariant({ available: false })).toBe('error');
+    expect(getDevSurfaceTruthVariant({ fallback: true })).toBe('PARTIAL');
+  });
+
+  it('falls back to finite numbers for invalid inputs', () => {
+    expect(toDevFiniteNumber(undefined)).toBe(0);
+    expect(toDevFiniteNumber(Number.NaN, 7)).toBe(7);
+    expect(toDevFiniteNumber(42)).toBe(42);
   });
 });
