@@ -17,6 +17,7 @@
 
 import React, { useEffect, Suspense, lazy } from 'react';
 import { initializeSecurity } from './security'; // ✨ SPRINT 2: Security module initialization
+import { lazyWithRetry } from './utils/lazyWithRetry'; // ✨ v35.1.2 - retry on rejected dynamic-import promise
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
 import { useOAuthStore } from '@/core/auth/oauthStore';
@@ -177,7 +178,11 @@ const OrchestrationMetaCenter = lazy(() =>
     default: m.OrchestrationMetaCenter,
   }))
 );
-const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
+// ✨ v35.1.2 — lazyWithRetry: DevPage chunk fetch retry on transient failure (root cause /admin → /dev FAIL)
+const DevPage = lazyWithRetry(
+  () => import('./pages/DevPage').then(m => ({ default: m.DevPage })),
+  'DevPage'
+);
 
 // ✨ v30.0.0 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
 const ConsoleMonitorDashboard = lazy(() =>
@@ -242,11 +247,12 @@ const SkillManager = lazy(() =>
 );
 
 // ✨ TOTAL_DEV v30.0.0 — GOD DEV sovereign space (unlock-gated)
-const TotalDevPage = lazy(() =>
-  import('./pages/TotalDevPage').then(m => ({ default: m.TotalDevPage }))
+const TotalDevPage = lazyWithRetry(
+  () => import('./pages/TotalDevPage').then(m => ({ default: m.TotalDevPage })),
+  'TotalDevPage'
 );
 
-const AdminPage = lazy(() => import('./pages/AdminPage'));
+const AdminPage = lazyWithRetry(() => import('./pages/AdminPage'), 'AdminPage');
 const PerfectFusionDashboard = lazy(() => import('./pages/PerfectFusionDashboard'));
 const UltimateOptimizationDashboard = lazy(
   () => import('./pages/UltimateOptimizationDashboard')

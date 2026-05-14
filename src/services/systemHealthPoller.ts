@@ -22,7 +22,9 @@ interface PollerHandle {
 
 let activePoller: ReturnType<typeof setInterval> | null = null;
 let activeFetchPromise: Promise<void> | null = null;
-let refCount = 0;
+// v35.1.2 — Set of live handles (replaces fragile refCount).
+// Iterates handle.stop() to release; cleared automatically when last stop runs.
+const liveHandles = new Set<PollerHandle>();
 
 function runFetchAll(failureMessage: string): Promise<void> {
   if (activeFetchPromise) {
@@ -30,29 +32,57 @@ function runFetchAll(failureMessage: string): Promise<void> {
   }
 
   let request: Promise<void> | null = null;
-  request = Promise.resolve(useSystemStore.getState().fetchAll())
-    .catch(err => logger.warn(failureMessage, err))
-    .finally(() => {
-      if (activeFetchPromise === request) {
-        activeFetchPromise = null;
-      }
-    });
+  try {
+    request = Promise.resolve(useSystemStore.getState().fetchAll())
+      .catch(err => logger.warn(failureMessage, err))
+      .finally(() => {
+        if (activeFetchPromise === request) {
+          activeFetchPromise = null;
+        }
+      });
+  } catch (err) {
+    // Synchronous throw in fetchAll() — never let it corrupt the polling loop
+    logger.warn(failureMessage, err);
+    activeFetchPromise = null;
+    return Promise.resolve();
+  }
 
   activeFetchPromise = request;
   return request;
+}
+
+function teardownIfIdle(): void {
+  if (liveHandles.size === 0 && activePoller !== null) {
+    clearInterval(activePoller);
+    activePoller = null;
+    activeFetchPromise = null;
+    logger.info('[LOCK3] System health polling stopped');
+  }
 }
 
 /**
  * Start polling system health from the backend.
  * Returns a handle with a `stop()` method.
  *
- * Multiple callers share one underlying interval (ref-counted).
- * The interval stops only when all callers have called `stop()`.
+ * Multiple callers share one underlying interval (live-handle Set).
+ * The interval stops only when the last live handle calls `stop()`.
+ * Calling `stop()` multiple times on the same handle is idempotent.
  */
 export function startSystemHealthPolling(
   intervalMs: number = DEFAULT_INTERVAL_MS
 ): PollerHandle {
-  refCount += 1;
+  let stopped = false;
+
+  const handle: PollerHandle = {
+    stop: () => {
+      if (stopped) return;
+      stopped = true;
+      liveHandles.delete(handle);
+      teardownIfIdle();
+    },
+  };
+
+  liveHandles.add(handle);
 
   if (!activePoller) {
     // Immediate first fetch
@@ -65,15 +95,30 @@ export function startSystemHealthPolling(
     logger.info(`[LOCK3] System health polling started (interval=${intervalMs}ms)`);
   }
 
+  return handle;
+}
+
+/**
+ * Test-only helper: reset all internal state.
+ */
+export function __resetSystemHealthPollerForTests(): void {
+  if (activePoller !== null) {
+    clearInterval(activePoller);
+    activePoller = null;
+  }
+  activeFetchPromise = null;
+  liveHandles.clear();
+}
+
+/**
+ * Test-only helper: inspect internal state.
+ */
+export function __getSystemHealthPollerStateForTests(): {
+  active: boolean;
+  liveHandleCount: number;
+} {
   return {
-    stop: () => {
-      refCount = Math.max(0, refCount - 1);
-      if (refCount === 0 && activePoller !== null) {
-        clearInterval(activePoller);
-        activePoller = null;
-        activeFetchPromise = null;
-        logger.info('[LOCK3] System health polling stopped');
-      }
-    },
+    active: activePoller !== null,
+    liveHandleCount: liveHandles.size,
   };
 }

@@ -87,7 +87,14 @@ export const PageLoadingFallback = ({
     .join(' ');
 
   return (
-    <div className={classes} role="progressbar" aria-label="Chargement de la page">
+    <div
+      className={classes}
+      role="progressbar"
+      aria-label="Chargement de la page"
+      data-testid="page-loading-fallback"
+      data-state={isLongLoading ? 'long' : 'loading'}
+      data-variant={variant}
+    >
       {variant === 'chat' && <ChatLoadingSkeleton />}
       {variant === 'dashboard' && <DashboardLoadingSkeleton />}
       {variant === 'settings' && <SettingsLoadingSkeleton />}
