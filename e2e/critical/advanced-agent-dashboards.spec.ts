@@ -16,6 +16,23 @@ import { resolve } from 'node:path';
 const OUTPUT_DIR = resolve(process.cwd(), 'proof_packs/v34.0.7-agent-dashboards');
 mkdirSync(OUTPUT_DIR, { recursive: true });
 
+const CANONICAL_APP_SHELL_ROUTE = '/experience';
+
+test.use({ viewport: { width: 1440, height: 960 } });
+
+async function ensureAgentDashboardsPanelExpanded(
+  page: Parameters<Parameters<typeof test>[1]>[0]['page']
+) {
+  const toggle = page.locator('[data-testid="agent-dashboards-panel-toggle"]');
+  await expect(toggle).toBeVisible();
+
+  if ((await toggle.getAttribute('aria-expanded')) !== 'true') {
+    await toggle.click({ force: true });
+  }
+
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+}
+
 // Canonical dashboard testids per AGENTS.md.
 // Note: diagnostic dashboard exposes the `diagnostic-panel` testid (legacy
 // canonical contract), all others use `<agent>-dashboard`.
@@ -29,7 +46,10 @@ const DASHBOARD_TESTIDS = [
 ];
 
 test('v34.0.7 advanced agent dashboards are reachable and expose canonical testids', async ({ page }) => {
-  await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 30_000 });
+  await page.goto(CANONICAL_APP_SHELL_ROUTE, {
+    waitUntil: 'domcontentloaded',
+    timeout: 30_000,
+  });
   await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
   await page.waitForTimeout(300);
 
@@ -37,10 +57,7 @@ test('v34.0.7 advanced agent dashboards are reachable and expose canonical testi
   const panel = page.locator('[data-testid="agent-dashboards-panel"]');
   await expect(panel).toBeVisible({ timeout: 10_000 });
 
-  // Expand via toggle (panel is collapsed by default).
-  const toggle = page.locator('[data-testid="agent-dashboards-panel-toggle"]');
-  await expect(toggle).toBeVisible();
-  await toggle.click();
+  await ensureAgentDashboardsPanelExpanded(page);
 
   // The collapsible content becomes visible.
   const content = page.locator('[data-testid="agent-dashboards-panel-content"]');
@@ -59,10 +76,13 @@ test('v34.0.7 advanced agent dashboards are reachable and expose canonical testi
 });
 
 test('v34.0.7 log-analysis dashboard exposes canonical testid contract', async ({ page }) => {
-  await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 30_000 });
+  await page.goto(CANONICAL_APP_SHELL_ROUTE, {
+    waitUntil: 'domcontentloaded',
+    timeout: 30_000,
+  });
   await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
 
-  await page.locator('[data-testid="agent-dashboards-panel-toggle"]').click();
+  await ensureAgentDashboardsPanelExpanded(page);
 
   const required = [
     'log-analysis-dashboard',
