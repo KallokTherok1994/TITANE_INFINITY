@@ -39,6 +39,45 @@ function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Pure async retry helper. Independent of React for deterministic testing.
+ * Exported so unit tests can assert retry semantics without Suspense
+ * (happy-dom + React Suspense scheduling can be flaky under vitest).
+ */
+export async function loadWithRetry<T extends ComponentType<unknown>>(
+  factory: Factory<T>,
+  cacheKey?: string,
+  retries: number = DEFAULT_RETRIES,
+  backoffMs: readonly number[] = DEFAULT_BACKOFF_MS,
+): Promise<{ default: T }> {
+  if (cacheKey) {
+    const cached = resolvedCache.get(cacheKey);
+    if (cached) {
+      return cached.module as { default: T };
+    }
+  }
+
+  let lastError: unknown;
+  for (let attempt = 0; attempt < retries; attempt += 1) {
+    try {
+      const mod = await factory();
+      if (cacheKey) {
+        resolvedCache.set(cacheKey, {
+          module: mod as { default: ComponentType<unknown> },
+        });
+      }
+      return mod;
+    } catch (err) {
+      lastError = err;
+      const delay = backoffMs[attempt] ?? backoffMs[backoffMs.length - 1] ?? 1000;
+      if (attempt < retries - 1) {
+        await sleep(delay);
+      }
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Wraps a dynamic import factory with retry-on-rejection semantics.
  *
  * @param factory - Same shape as `lazy()` accepts (returns `Promise<{ default }>`).
@@ -53,34 +92,7 @@ export function lazyWithRetry<T extends ComponentType<unknown>>(
   retries: number = DEFAULT_RETRIES,
   backoffMs: readonly number[] = DEFAULT_BACKOFF_MS,
 ): ReturnType<typeof lazy<T>> {
-  return lazy<T>(async () => {
-    if (cacheKey) {
-      const cached = resolvedCache.get(cacheKey);
-      if (cached) {
-        return cached.module as { default: T };
-      }
-    }
-
-    let lastError: unknown;
-    for (let attempt = 0; attempt < retries; attempt += 1) {
-      try {
-        const mod = await factory();
-        if (cacheKey) {
-          resolvedCache.set(cacheKey, {
-            module: mod as { default: ComponentType<unknown> },
-          });
-        }
-        return mod;
-      } catch (err) {
-        lastError = err;
-        const delay = backoffMs[attempt] ?? backoffMs[backoffMs.length - 1] ?? 1000;
-        if (attempt < retries - 1) {
-          await sleep(delay);
-        }
-      }
-    }
-    throw lastError;
-  });
+  return lazy<T>(() => loadWithRetry(factory, cacheKey, retries, backoffMs));
 }
 
 /**
