@@ -10,6 +10,9 @@
 
 import { secureInvoke } from '@/lib/security';
 import type { AgendaEvent } from '@/engines/time/types';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AgendaService');
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -18,6 +21,39 @@ import type { AgendaEvent } from '@/engines/time/types';
 export interface AgendaServiceConfig {
   autoSync: boolean;
   syncInterval: number;
+}
+
+type AgendaEventsEnvelope = {
+  ok?: boolean;
+  content?: AgendaEvent[] | null;
+  error?: unknown;
+  fallback?: boolean;
+};
+
+function extractAgendaEvents(response: unknown): AgendaEvent[] {
+  if (Array.isArray(response)) {
+    return response;
+  }
+
+  if (!response || typeof response !== 'object') {
+    return [];
+  }
+
+  const envelope = response as AgendaEventsEnvelope;
+  if (Array.isArray(envelope.content)) {
+    return envelope.content;
+  }
+
+  if (envelope.ok === false || envelope.fallback === true) {
+    logger.warn('[AgendaService] Agenda load fallback/empty envelope; returning []', {
+      hasError: Boolean(envelope.error),
+      fallback: envelope.fallback === true,
+    });
+    return [];
+  }
+
+  logger.warn('[AgendaService] Agenda load returned unexpected shape; returning []');
+  return [];
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -35,7 +71,10 @@ export async function saveAllEvents(events: AgendaEvent[]): Promise<void> {
  * Charger tous les événements
  */
 export async function loadAllEvents(): Promise<AgendaEvent[]> {
-  return secureInvoke<AgendaEvent[]>('agenda_load_events');
+  const response = await secureInvoke<AgendaEvent[] | AgendaEventsEnvelope>(
+    'agenda_load_events'
+  );
+  return extractAgendaEvents(response);
 }
 
 export async function syncAgenda(): Promise<void> {
