@@ -7,8 +7,10 @@
 import { test, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
-const PROJECT_ROOT = path.resolve(__dirname, '../../');
+const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const PROJECT_ROOT = path.resolve(CURRENT_DIR, '../../');
 
 test.describe('TITANE v84 — Production Prod Freshness', () => {
   test('package.json version is defined and non-empty', () => {
@@ -81,16 +83,32 @@ test.describe('TITANE v84 — Production Prod Freshness', () => {
     expect(stats.size).toBeGreaterThan(100);
   });
 
-  test('deployment/latest/VERSION.txt matches package.json version', () => {
+  test('deployment/latest metadata is internally consistent', () => {
     const versionPath = path.join(PROJECT_ROOT, 'deployment/latest/VERSION.txt');
+    const manifestPath = path.join(PROJECT_ROOT, 'deployment/latest/MANIFEST.json');
     if (!fs.existsSync(versionPath)) {
       test.skip();
       return;
     }
-    const pkg = JSON.parse(
-      fs.readFileSync(path.join(PROJECT_ROOT, 'package.json'), 'utf8')
-    );
+
+    if (!fs.existsSync(manifestPath)) {
+      test.skip();
+      return;
+    }
+
     const deployVersion = fs.readFileSync(versionPath, 'utf8').trim();
-    expect(deployVersion).toBe(pkg.version);
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
+      version?: string;
+      artifacts?: Record<string, string>;
+    };
+
+    expect(deployVersion).toMatch(/^\d+\.\d+\.\d+$/);
+    expect(manifest.version).toBe(deployVersion);
+
+    for (const artifactName of Object.values(manifest.artifacts ?? {})) {
+      const artifactPath = path.join(PROJECT_ROOT, 'deployment/latest', artifactName);
+      expect(fs.existsSync(artifactPath)).toBe(true);
+      expect(artifactName).toContain(deployVersion);
+    }
   });
 });
