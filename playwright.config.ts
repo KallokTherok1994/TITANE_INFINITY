@@ -1,7 +1,7 @@
 /**
  * Playwright Configuration for TITANE∞ v22.0.0
  *
- * E2E testing for Vite dev server (http://localhost:5173)
+ * E2E testing for an isolated Vite dev server (default: http://127.0.0.1:4173)
  * Critical Path Tests: App Launch, Chat, Visual Engine, Navigation, Resilience
  */
 
@@ -14,6 +14,10 @@ const E2E_WATCH_SCRIPT = resolve(CONFIG_DIR, 'scripts/e2e/vite-e2e-watch.cjs');
 // Start local dev server by default for deterministic E2E runs.
 // Set TITANE_E2E_USE_WEBSERVER=0 when using an externally managed server.
 const useWebServer = process.env.TITANE_E2E_USE_WEBSERVER !== '0';
+const e2eHost = process.env.TITANE_E2E_HOST || '127.0.0.1';
+const e2ePort = process.env.TITANE_E2E_PORT || '4173';
+const e2eBaseURL = `http://${e2eHost}:${e2ePort}`;
+const reuseExistingServer = process.env.TITANE_E2E_REUSE_SERVER === '1';
 const includeExperimentalTests = process.env.TITANE_E2E_INCLUDE_EXPERIMENTAL === '1';
 const includeRemoteStrictTests = process.env.TITANE_E2E_REMOTE_STRICT === '1';
 const remoteStrictIgnore = includeRemoteStrictTests ? [] : ['**/remote-*.spec.ts'];
@@ -64,9 +68,7 @@ export default defineConfig({
 
   // Browser options
   use: {
-    baseURL: process.env.TITANE_E2E_PORT
-      ? `http://127.0.0.1:${process.env.TITANE_E2E_PORT}`
-      : 'http://127.0.0.1:5173',
+    baseURL: e2eBaseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -136,12 +138,10 @@ export default defineConfig({
   // Keep Vite-only in CI where GUI/Tauri may be unavailable.
   webServer: useWebServer
     ? {
-        command: `${process.execPath} ${E2E_WATCH_SCRIPT} --host 127.0.0.1 --port 5173 --strictPort`,
+        command: `${process.execPath} ${E2E_WATCH_SCRIPT} --host ${e2eHost} --port ${e2ePort} --strictPort`,
         cwd: CONFIG_DIR,
-        url: process.env.TITANE_E2E_PORT
-          ? `http://localhost:${process.env.TITANE_E2E_PORT}`
-          : 'http://localhost:5173',
-        reuseExistingServer: true,
+        url: e2eBaseURL,
+        reuseExistingServer,
         timeout: 180000, // 3min to start (CI heavy load)
         stdout: 'pipe',
         stderr: 'pipe',
