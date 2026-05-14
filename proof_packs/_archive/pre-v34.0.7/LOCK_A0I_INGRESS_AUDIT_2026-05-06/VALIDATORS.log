@@ -1,0 +1,4 @@
+verify_instructions.sh: SUMMARY: PASS=51 FAIL=0
+verify_autopilot_lock_bounds.sh: SUMMARY: FAIL=0
+verify_copilot_instruction_source_map.sh: SUMMARY: FAIL=0
+detect_recurrence.sh: PASS entries=1641

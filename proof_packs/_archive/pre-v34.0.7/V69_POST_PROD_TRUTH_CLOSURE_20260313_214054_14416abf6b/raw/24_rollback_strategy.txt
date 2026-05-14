@@ -1,0 +1,6 @@
+TS_UTC=2026-03-13T21:46:15Z
+ROLLBACK_SCOPE=documentation_and_governance_only_for_V69
+DOC_ROLLBACK_NON_DESTRUCTIVE=git restore -- proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b
+GIT_ROLLBACK_IF_NEEDED=git revert 14416abf6b5a5b3e92341941766e69c30c68f61b && git push origin HEAD:MAIN
+ARTIFACT_ROLLBACK=rm -rf /tmp/titane_v15_wt_20260311_080118/deployment/v68_prod_20260313_212452 && re-link previous deployment target if policy requires
+RISK_NOTE=No product-code fix applied in V69; rollback mainly concerns proof docs and optional governance revert.

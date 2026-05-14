@@ -1,5 +1,73 @@
 # [Unreleased] - 2026-05-06 — Advanced Intelligence Program (A0I–D5 SEALED) + Z0 Post-Seal Integrity Audit
 
+## [34.0.12] - 2026-05-13 (BUILD ALL SEALED — Clippy idiom modernization + Prettier normalisation + Repo cleanup)
+
+> **Mode:** DURABLE | **Scope:** Rust clippy modernization (-17 warnings) + Prettier 68 files + BUILD ALL Tauri (deb/rpm/AppImage) + repo cleanup (32 checksums + 181 proof_packs + 4 legacy deployments archived) | **Rule 13 bump:** 34.0.11 → 34.0.12
+
+### Added
+
+- `docs/release-history/checksums/INDEX.md` — historical index of 33 archived `RELEASE_ARTIFACTS_CHECKSUMS_*.txt` (v32.0.0 → v34.0.11).
+- `proof_packs/_archive/pre-v34.0.7/INDEX.md` — index of 181 archived proof packs.
+- `deployment/archive/legacy/` — 4 legacy deployment dirs (`v26.4.0`, `v27.0.0-PRODUCTION`, `v27.0.3`, `v27.4.1`) + sha256 manifests.
+- `RELEASE_ARTIFACTS_CHECKSUMS_34.0.12.txt` — 4 artefacts SHA256.
+- `deployment/latest/MANIFEST.json` v34.0.12 + `SHA256SUMS.txt` + `SIZES.txt` + `VERSION.txt`.
+- `proof_packs/v34.0.12-final/` — audit log, vitest, vite-build, build, checksums, AppImage smoke, SUMMARY.
+
+### Changed
+
+- **Clippy idiom modernization** (commits `6ef397d2d` → `70fba7c25`) : 30 → 13 warnings (-17), 11 mechanical fixes Rule 1 across 8 Rust files (`display_system_commands.rs`, `doc_engine/{export,legal,generator,versioning}.rs`, `meta_energy/predictor.rs`, `remote_gateway/server.rs`, `conversation_engine/commands.rs`, `agi_core/{abstraction,strategy}.rs`). Preserved 13 warnings : Sobel symétrie, ollama champion/challenger registry, `Auto*` prefix domaine (Rule 1).
+- **Prettier normalisation** (commit `fc509b6f9`) : 68 files `src/**/*.{ts,tsx,json,css,md}` formatted, no behavior change.
+- **README.md** : version banner v33.0.9 → v34.0.12, Audit Status table added, SHA256 release artifacts table, link to historical checksums index.
+- **Version bump** (commit `44c627d6f`) : 34.0.11 → 34.0.12 via `bump-version.mjs` + `sync-versions.mjs` (9 files synced).
+- **`RELEASE_SURFACE_INVENTORY.md`** : v34.0.12 entry prepended.
+
+### Build
+
+- **BUILD ALL Rule 14** (commit `bdfd1cc2c`) : `pnpm exec tauri build` 10m02s → 3 bundles + raw binary in `deployment/latest/`.
+- **AppImage smoke** : PID 1965856 ALIVE 20s, BOOT:READY reached, audio SUCCESS, 0 fatal (proof : `proof_packs/v34.0.12-final/appimage-smoke.log`).
+
+### Audit (zero-tolerance, all green)
+
+- `pnpm exec tsc --noEmit` → exit 0
+- `pnpm exec eslint src` → exit 0
+- `pnpm exec prettier --check 'src/**'` → ALL CLEAN
+- `pnpm vitest run --reporter=default` → **9247/9247 PASS** on 602 files (303.26s)
+- `cargo test --bin titane-infinity` → **806/806 PASS** (3 ignored)
+- `bash scripts/autoheal/detect_recurrence.sh` → PASS (entries=1915)
+- `bash scripts/verify_instructions.sh` → PASS=52 FAIL=0
+
+### Release artifacts SHA256
+
+| Artifact | Size | SHA256 |
+|----------|------|--------|
+| `titane-infinity_34.0.12_amd64.deb` | 24.9 MB | `539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4` |
+| `titane-infinity-34.0.12-1.x86_64.rpm` | 24.9 MB | `2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169` |
+| `titane-infinity_34.0.12_amd64.AppImage` | 95 MB  | `35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2` |
+| `titane-infinity-34.0.12` (raw binary) | 53 MB  | `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2` |
+
+### Cleanup (post-seal, repo hygiene)
+
+- 32 × `RELEASE_ARTIFACTS_CHECKSUMS_v*.txt` moved (`git mv`) from repo root → `docs/release-history/checksums/`.
+- 4 × `deployment/v2{6,7}*` + 3 legacy sha256 manifests moved → `deployment/archive/legacy/`.
+- 181 × `proof_packs/<old>` (pre-v34.0.7) moved → `proof_packs/_archive/pre-v34.0.7/` (164 tracked via `git mv` + 17 untracked via `mv`).
+- Caches purged : `dist/`, `node_modules/.vite`, `.vite-cache/`, `playwright-report/`, `.turbo/`, `/tmp/titane_*`, `/tmp/appimage-*`.
+- Preserved : `node_modules/`, `src-tauri/target/` (dev active, long rebuild).
+
+### AutoHeal
+
+- `BUILD-ALL-v34_0_12-2026-05-13` (entries=1915)
+- `CLEANUP-REPO-v34_0_12-2026-05-13` (entries=1916, post-cleanup)
+
+### System install
+
+- `BLOCKED_APPROVAL` for `sudo dpkg -i` (operator offline). Artefacts ready in [`deployment/latest/`](deployment/latest/) for next session. Procedure : `sudo dpkg -i deployment/latest/titane-infinity_34.0.12_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`.
+
+### Rollback
+
+- `sudo dpkg -i deployment/archive/v34.0.11/titane-infinity_34.0.11_amd64.deb` ; `git revert bdfd1cc2c..HEAD`.
+
+---
+
 ## [34.0.8] - 2026-05-13 (UI Vivante + E2E Coverage Expansion + React.memo — 100/100 PASS)
 
 > **Mode:** DURABLE | **Scope:** Live dashboards (useAgentLiveSnapshot) + 4 nouvelles familles E2E (keyboard / theme / i18n / web-vitals) + React.memo perf + aggregator v2 (9 gates) | **Rule 13 bump:** 34.0.7 → 34.0.8

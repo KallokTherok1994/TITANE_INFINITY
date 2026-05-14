@@ -1,0 +1,3 @@
+# ROLLBACK
+
+- `git restore -- .github/prompts/audit-instructions.prompt.md .github/prompts/fix-instructions-drift.prompt.md docs/COPILOT_SETUP.md scripts/autoheal/autoheal_rules.jsonl reports/INSTRUCTIONS_DRIFT_PROMPTS_2026-04-18.md proof_packs/INSTRUCTIONS_DRIFT_PROMPTS_2026-04-18/GATE_REPORT.md proof_packs/INSTRUCTIONS_DRIFT_PROMPTS_2026-04-18/VERDICT.md proof_packs/INSTRUCTIONS_DRIFT_PROMPTS_2026-04-18/ROLLBACK.md`

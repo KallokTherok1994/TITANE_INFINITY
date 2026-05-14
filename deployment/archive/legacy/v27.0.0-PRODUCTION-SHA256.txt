@@ -1,0 +1,3 @@
+f68862ab10188c85cd49c56a17e8568d04acc0449274a5a1ab3e77f95b2c1a9d  src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.0.0_amd64.AppImage
+9ba9d31152ce4a6a79d25c38b78db9269ce686bca9cfd9caac4eca1938f394df  src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb
+bb3c9d7faccdb9c7cc0cae17b67b719e91379c34686ac5b6beb666d186f9d2f1  src-tauri/target/release/bundle/rpm/TITANE-Infinity-27.0.0-1.x86_64.rpm

@@ -1,0 +1,9 @@
+PHASE=2_REAL_TOKEN_AUTHORIZATION_AUDIT
+UTC_TIMESTAMP=2026-03-13T15:09:53Z
+
+GO_FOR_PROD_BUILD__TITANE_INFINITY=not_authorized_to_use
+GO_FOR_PROD_DEPLOY__TITANE_INFINITY=not_authorized_to_use
+
+TOKEN_CLASSIFICATION_SET={absent,present_invalid,present_valid,not_authorized_to_use}
+TOKEN_GATE_RULE=PROD token gate is PASS only if both tokens are present_valid and реально utilisables in this exact repo/shell/context.
+PROD_TOKEN_GATE_OPEN=FAIL

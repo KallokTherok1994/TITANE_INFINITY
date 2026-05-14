@@ -1,0 +1,3 @@
+# ROLLBACK
+
+git restore -- src-tauri/src/conversation_os/style.rs src-tauri/src/conversation_os/adapter.rs src/__tests__/hooks/useConversationEngine.test.ts src/components/sections/__tests__/ConversationSection.render.test.tsx UI_SURFACE_MAP.md ARCHITECTURE.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/CONVERSATION_COMPLETENESS_ROOT_CAUSE_2026-04-19.md proof_packs/CONVERSATION_COMPLETENESS_ROOT_CAUSE_2026-04-19/GATE_REPORT.md proof_packs/CONVERSATION_COMPLETENESS_ROOT_CAUSE_2026-04-19/VERDICT.md proof_packs/CONVERSATION_COMPLETENESS_ROOT_CAUSE_2026-04-19/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl

@@ -1,0 +1,13 @@
+# Files Changed — B2
+
+- src/services/observability/IntelligenceObservabilityContract.ts
+- src/services/observability/__tests__/IntelligenceObservabilityContract.test.ts
+- docs/intelligence/INTELLIGENCE_OBSERVABILITY_CONTRACT.md
+- docs/roadmap/TITANE_ADVANCED_INTELLIGENCE_PROGRAM_STATUS.md
+- proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/ROLLBACK.md
+- proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/VALIDATORS.log
+- proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/FILES_CHANGED.md
+- proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/AUTHORITY_MAP.md
+- proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/RISK_REGISTER.md
+- proof_packs/LOCK_B2_INTELLIGENCE_OBSERVABILITY_CONTRACT_2026-05-06/NEXT_LOCK.md
+- scripts/autoheal/autoheal_rules.jsonl

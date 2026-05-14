@@ -1,0 +1,3 @@
+# ROLLBACK — ADVANCED AGENT SECURITY FEDERATION FILTER EXPORT — 2026-04-16
+
+git restore -- src/services/agents/advancedAgentCatalog.ts src/services/security_active/index.ts src/services/security_active/SecurityDashboard.tsx src/services/__tests__/advancedAgentCatalog.test.tsx e2e/agents/security-dashboard.e2e.ts ARCHITECTURE.md UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/ADVANCED_AGENT_SECURITY_FEDERATION_FILTER_EXPORT_2026-04-16.md proof_packs/ADVANCED_AGENT_SECURITY_FEDERATION_FILTER_EXPORT_2026-04-16/GATE_REPORT.md proof_packs/ADVANCED_AGENT_SECURITY_FEDERATION_FILTER_EXPORT_2026-04-16/VERDICT.md proof_packs/ADVANCED_AGENT_SECURITY_FEDERATION_FILTER_EXPORT_2026-04-16/ROLLBACK.md

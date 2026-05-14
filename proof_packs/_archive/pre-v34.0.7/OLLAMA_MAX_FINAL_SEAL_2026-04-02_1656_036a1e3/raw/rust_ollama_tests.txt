@@ -1,0 +1,1 @@
+   Compiling titane-infinity v29.0.0 (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri)

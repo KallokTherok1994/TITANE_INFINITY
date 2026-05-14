@@ -1,0 +1,10 @@
+PHASE=3_RELEASE_PRECHECK_GATE
+UTC_TIMESTAMP=2026-03-13T12:01:40Z
+
+PRECHECK_clean_promotion_deltas=FAIL
+PRECHECK_repo_can_be_made_clean_without_unapproved_destructive_actions=FAIL
+PRECHECK_prod_tokens_available=FAIL
+PRECHECK_build_deploy_executable_in_current_context=PARTIAL
+
+INTERIM_DECISION=HOLD
+WHY=Promotion execution cannot proceed safely with mixed parasitic deltas, detached/divergent main state, and closed PROD token gate.

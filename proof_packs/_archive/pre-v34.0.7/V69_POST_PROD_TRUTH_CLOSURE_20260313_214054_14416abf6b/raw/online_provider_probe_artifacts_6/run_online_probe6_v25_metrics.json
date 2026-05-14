@@ -1,0 +1,128 @@
+{
+  "runId": "run_online_probe6",
+  "mode": "VISIBLE_REAL_CHAT_FUNCTIONAL_TRUTH",
+  "question": "Parle-moi de tes modules actifs et de l'etat de ton orchestrateur.",
+  "currentUrl": "tauri://localhost/titane",
+  "uiVisible": true,
+  "whiteScreen": false,
+  "inputPresent": true,
+  "sendPresent": true,
+  "inputTyped": true,
+  "sendEnabledBeforeTyping": false,
+  "sendEnabledAfterTyping": true,
+  "sendActivationPath": "NATIVE_SETTER_INPUTEVENT",
+  "sendHarnessDiagnosis": "HARNESS_LIMITATION_JS_VALUE_NOT_REACT",
+  "sendClicked": true,
+  "processingVisible": true,
+  "processingSignals": [
+    "chat-loading",
+    "reasoning-progress"
+  ],
+  "reasoningVisible": true,
+  "reasoningState": "done",
+  "reasoningTestIdPresent": true,
+  "reasoningTopologyCount": 5,
+  "responseReceived": true,
+  "responseText": "Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.",
+  "userText": "Parle-moi de tes modules actifs et de l'etat de ton orchestrateur.",
+  "assistantMessagesCountBeforeSend": 11,
+  "assistantMessagesCountAfterSend": 12,
+  "runtimeBadgesText": [
+    "timeout-degraded",
+    "REMOTE",
+    "remote",
+    "TIMEOUT",
+    "degraded",
+    "timeout",
+    "online"
+  ],
+  "runtimeAttrs": {
+    "providerReason": "TIMEOUT",
+    "providerNetworkUsed": "true",
+    "providerCacheHit": "false",
+    "providerUsed": "timeout-degraded",
+    "providerClass": "remote",
+    "providerMode": "REMOTE"
+  },
+  "healthButtonTitle": "Santé: Healthy",
+  "chatErrorText": null,
+  "debugVisible": false,
+  "debugText": null,
+  "fallbackDetected": false,
+  "timeoutDetected": true,
+  "degradedDetected": false,
+  "correspondence": [
+    {
+      "problem": "send path",
+      "symptom": "send enabled after typing",
+      "runtimeProof": "sendActivationPath=NATIVE_SETTER_INPUTEVENT; sendHarnessDiagnosis=HARNESS_LIMITATION_JS_VALUE_NOT_REACT",
+      "verdict": "NON_BLOCKING"
+    },
+    {
+      "problem": "runtime badges vs attrs",
+      "symptom": "badges=timeout-degraded,REMOTE,remote,TIMEOUT,degraded,timeout,online",
+      "runtimeProof": "attrs={\"providerReason\":\"TIMEOUT\",\"providerNetworkUsed\":\"true\",\"providerCacheHit\":\"false\",\"providerUsed\":\"timeout-degraded\",\"providerClass\":\"remote\",\"providerMode\":\"REMOTE\"}",
+      "verdict": "MAPPED"
+    },
+    {
+      "problem": "reasoning progress",
+      "symptom": "reasoningState=done; topology=5",
+      "runtimeProof": "signals=chat-loading,reasoning-progress",
+      "verdict": "VISIBLE"
+    }
+  ],
+  "classifications": [
+    "BACKEND_TIMEOUT",
+    "HARNESS_LIMITATION",
+    "NON_BLOCKING"
+  ],
+  "blockers": [
+    "BACKEND_TIMEOUT_VISIBLE"
+  ],
+  "frictions": [
+    "WEBDRIVER_SETVALUE_FAILED"
+  ],
+  "verdict": "FAIL",
+  "screenshots": [
+    {
+      "label": "s1_before_typing",
+      "file": "run_online_probe6_s1_before_typing.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s1_before_typing.png"
+    },
+    {
+      "label": "s2_input_filled",
+      "file": "run_online_probe6_s2_input_filled.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s2_input_filled.png"
+    },
+    {
+      "label": "s3_just_after_send",
+      "file": "run_online_probe6_s3_just_after_send.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s3_just_after_send.png"
+    },
+    {
+      "label": "s4_processing_state",
+      "file": "run_online_probe6_s4_processing_state.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s4_processing_state.png"
+    },
+    {
+      "label": "s5_final_response",
+      "file": "run_online_probe6_s5_final_response.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s5_final_response.png"
+    },
+    {
+      "label": "s6_runtime_badges",
+      "file": "run_online_probe6_s6_runtime_badges.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s6_runtime_badges.png"
+    },
+    {
+      "label": "s7_debug_absent",
+      "file": "run_online_probe6_s7_debug_absent.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s7_debug_absent.png"
+    },
+    {
+      "label": "s8_final_stable",
+      "file": "run_online_probe6_s8_final_stable.png",
+      "path": "proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_6/screens/run_online_probe6_s8_final_stable.png"
+    }
+  ]
+}

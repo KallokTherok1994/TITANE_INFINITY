@@ -1,0 +1,63 @@
+TS_UTC=2026-03-13T22:14:26Z
+MINI_CYCLE=TIMEOUT_DEGRADED_TARGETED
+SCOPE=Quality degradation only (connectivity already proven)
+SOURCE_METRICS=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_3/run_online_probe3_v25_metrics.json
+V25_VERDICT=FAIL
+RUNTIME_PROVIDER_USED=timeout-degraded
+RUNTIME_PROVIDER_MODE=REMOTE
+RUNTIME_PROVIDER_REASON=TIMEOUT
+RUNTIME_PROVIDER_NETWORK_USED=true
+ASSISTANT_RESPONSE_TEXT=Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.
+CONNECTIVITY_REOPENED=NO
+CODE_EVIDENCE_TIMEOUT_PATH=src-tauri/src/conversation_engine/mod.rs:170
+CODE_EVIDENCE_TIMEOUT_FALLBACK=src-tauri/src/conversation_engine/mod.rs:242
+CODE_EVIDENCE_TIMEOUT_MESSAGE=src-tauri/src/conversation_engine/mod.rs:259
+CODE_EVIDENCE_PROVIDER_USED=src-tauri/src/conversation_engine/mod.rs:281
+PRIMARY_FINDING=Backend/provider pipeline exceeded 20s guard and emitted deterministic timeout-degraded response while network remained available.
+RISK_CLASS=QUALITY_DEGRADATION_NON_CONNECTIVITY
+NEXT_ACTION_30MIN=Run one controlled probe with increased conversation timeout guard via env/flag to separate provider latency from hard timeout guard behavior.
+TARGET_VERIFICATION=Preserve providerNetworkUsed=true and eliminate timeout-degraded response in bounded run.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T22:19:41Z
+CONTROLLED_PROBE_SUMMARY=raw/31_controlled_probe_timeout45_summary.txt
+CONTROLLED_PROBE_TIMEOUT_SECS=45
+CONTROLLED_PROBE_RESULT=TIMEOUT_DEGRADED_PERSISTS
+CONTROLLED_PROBE_CONNECTIVITY=providerNetworkUsed=true (preserved)
+CONTROLLED_PROBE_QUALITY=providerUsed=timeout-degraded; providerReason=TIMEOUT; V25_VERDICT=FAIL
+INTERPRETATION=Increasing conversation timeout guard to 45s did not clear degraded timeout response in this bounded run.
+NEXT_ACTION_30MIN=Instrument provider attempt timings inside process_message_internal/omega path to localize timeout source before increasing guard further.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T22:43:10Z
+FRESH_PROCESS_VALIDATION_SUMMARY=raw/41_probe_fresh_trace_text_plain_summary.txt
+WRAPPER_ENV_PROOF=raw/online_provider_probe_artifacts_12/tauri-wrapper.log
+FRESH_WRAPPER_SELECTED_BINARY=/tmp/titane_v15_wt_20260311_080118/src-tauri/target/debug/titane-infinity
+FRESH_WRAPPER_TIMEOUT_ENV=45
+FRESH_WRAPPER_TRACE_ENV=1
+FRESH_RUN_V25_VERDICT=PASS
+FRESH_RUN_PROVIDER_USED=Ollama
+FRESH_RUN_PROVIDER_REASON=OK
+FRESH_RUN_PROVIDER_NETWORK_USED=false
+FRESH_RUN_TIMEOUT_DEGRADED_PRESENT=NO
+DIFF_INTERPRETATION=Timeout-degraded is reproducible on deployed artifact path but not on fresh debug binary path under the same probe scaffold; root-cause likely tied to artifact/runtime lane differences and provider routing context.
+TARGET_STATUS_NETWORK_AND_NO_TIMEOUT=NOT_CLOSED (network=true was not preserved in fresh PASS run)
+NEXT_ACTION_30MIN=Execute one fresh process probe forcing remote/network lane (providerNetworkUsed=true target) on debug binary to test if timeout-degraded remains absent.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T23:04:25Z
+TAURI_DEV_REMOTE_REPRO=raw/43_tauri_dev_node_blocker_repro.txt
+TAURI_DEV_REMOTE_STATUS=BLOCKED_ENV_NODE_VERSION
+TAURI_DEV_REMOTE_BLOCKER=Node.js 18.19.1 in beforeDevCommand; Vite 7 requires Node >=20.19
+PROBE16_SUMMARY=raw/44_probe16_remote_debug_nondev_summary.txt
+PROBE16_V25_VERDICT=PASS
+PROBE16_PROVIDER_USED=Ollama
+PROBE16_PROVIDER_REASON=OK
+PROBE16_PROVIDER_NETWORK_USED=false
+PROBE16_TIMEOUT_DEGRADED_PRESENT=NO
+PROBE17_SUMMARY=raw/45_probe17_force_gemini_summary.txt
+PROBE17_FORCED_PROVIDER=gemini
+PROBE17_V25_VERDICT=PASS
+PROBE17_PROVIDER_USED=Ollama
+PROBE17_PROVIDER_REASON=OK
+PROBE17_PROVIDER_NETWORK_USED=false
+PROBE17_TIMEOUT_DEGRADED_PRESENT=NO
+INTERPRETATION_CONTINUATION=Fresh debug lane remains stable without timeout-degraded, but remote/network usage cannot be co-proven in the same PASS run under current environment constraints.
+NEXT_ACTION_30MIN=Either provision Node>=20 for tauri-dev remote lane or capture backend provider-selection logs proving why forced-remote resolves to local despite gate intent.

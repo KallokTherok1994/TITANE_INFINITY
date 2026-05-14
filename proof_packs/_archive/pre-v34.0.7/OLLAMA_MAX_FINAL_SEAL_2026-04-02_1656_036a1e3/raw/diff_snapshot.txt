@@ -1,0 +1,24 @@
+]633;E;echo "### git status --short";91224214-703d-4297-a9ba-7ebbe8074a41]633;C### git status --short
+ M src-tauri/src/commands/ollama_command.rs
+ M src-tauri/src/main.rs
+ M src-tauri/src/ollama.rs
+ M src/services/ai/providers/ollama.ts
+ M src/services/ai/transports/ollamaTransport.ts
+?? src-tauri/src/commands/capability_commands.rs
+?? src/__tests__/services/operator/
+?? src/services/operator/
+
+### git diff --name-only
+src-tauri/src/commands/ollama_command.rs
+src-tauri/src/main.rs
+src-tauri/src/ollama.rs
+src/services/ai/providers/ollama.ts
+src/services/ai/transports/ollamaTransport.ts
+
+### git diff --stat
+ src-tauri/src/commands/ollama_command.rs      | 106 ++++++-
+ src-tauri/src/main.rs                         |  11 +
+ src-tauri/src/ollama.rs                       | 420 +++++++++++++++++++++++++-
+ src/services/ai/providers/ollama.ts           |   5 +
+ src/services/ai/transports/ollamaTransport.ts |  12 +
+ 5 files changed, 549 insertions(+), 5 deletions(-)

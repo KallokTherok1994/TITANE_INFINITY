@@ -1,0 +1,6 @@
+PHASE=4_POST_CLEANUP_SNAPSHOT
+UTC_TIMESTAMP=2026-03-13T12:01:40Z
+CLEANUP_ACTION=NO_OP
+REPO_CLEAN_FOR_PROMOTION=FAIL
+ONLY_EXPECTED_PROMOTION_DELTAS=FAIL
+REASON=Unrelated tracked/untracked deltas remain; no destructive/stash action executed automatically.

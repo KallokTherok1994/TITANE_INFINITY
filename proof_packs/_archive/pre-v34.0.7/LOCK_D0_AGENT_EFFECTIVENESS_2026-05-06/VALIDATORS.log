@@ -1,0 +1,28 @@
+# LOCK D0 — VALIDATORS.log
+# Date: 2026-05-06
+
+## Gate 1: vitest — AgentEffectivenessContract.test.ts
+pnpm vitest run src/services/agent_effectiveness
+RESULT: 1 passed (1) — Tests: 79 passed (79)
+EXIT: 0
+
+## Gate 2: verify_agent_effectiveness_scorecard.sh
+bash scripts/verify/verify_agent_effectiveness_scorecard.sh
+PASS=21 FAIL=0
+VERDICT: PASS
+EXIT: 0
+
+## Gate 3: detect_recurrence.sh
+bash scripts/autoheal/detect_recurrence.sh
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=1667
+EXIT: 0
+
+## Gate 4: verify_instructions.sh
+bash scripts/verify_instructions.sh
+SUMMARY: PASS=51 FAIL=0
+EXIT: 0
+
+## Final
+ALL_GATES: PASS

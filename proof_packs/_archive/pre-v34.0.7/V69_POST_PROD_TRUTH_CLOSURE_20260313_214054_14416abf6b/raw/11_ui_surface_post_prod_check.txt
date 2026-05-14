@@ -1,0 +1,5 @@
+TS_UTC=2026-03-13T21:44:39Z
+SPEC=e2e/desktop/v22_visible_real_ui_cert.wdio.test.js
+EXIT_CODE=0
+UI_SURFACE_VALID=PASS
+LOG_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/11_ui_surface_post_prod_check.log

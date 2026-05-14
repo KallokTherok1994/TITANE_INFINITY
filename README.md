@@ -14,16 +14,38 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
-![Release v33.0.8](https://img.shields.io/badge/release-v33.0.8-brightgreen?logo=github)
+![Release v34.0.12](https://img.shields.io/badge/release-v34.0.12-brightgreen?logo=github)
 
-**Version:** v33.0.9 (package.json — bumped; latest proven release: v33.0.8)
-**Status:** ⚠️ v33.0.9 bumped in code — no release artifacts yet; last sealed release = v33.0.8 (SEAL proof pack 2026-05-05)
+**Version:** v34.0.12 (BUILD ALL SEALED 2026-05-13 — audit zero-tolerance + 3 bundles + AppImage smoke PASS)
+**Status:** ✅ v34.0.12 SEALED — pushed origin/MAIN (commit `bdfd1cc2c`), deployment/latest/ promoted, AutoHeal entries=1915
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
-**Latest certified deployment:** `2026-05-05` via `deployment/latest/MANIFEST.json` (v33.0.7/v33.0.8)
+**Latest certified deployment:** `2026-05-13` via [`deployment/latest/MANIFEST.json`](deployment/latest/MANIFEST.json) (v34.0.12)
 **Last published GitHub release:** [v30.1.25](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.1.25) (last public binary)
-**Prior major release tag:** [v30.0.0-release-20260406](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v30.0.0-release-20260406) (historical)
 
-**Canal de release canonique:** v33.0.8 (dernière release prouvée) / v33.0.9 (code bumped, pas encore release)
+### Audit Status (v34.0.12 — 2026-05-13)
+
+| Gate | Result |
+|------|--------|
+| `pnpm exec tsc --noEmit` | exit 0 |
+| `pnpm exec eslint src` | exit 0 |
+| `pnpm exec prettier --check 'src/**'` | ALL CLEAN |
+| `pnpm vitest run --reporter=default` | **9247/9247 PASS** (602 files, 303s) |
+| `cargo test --bin titane-infinity` | **806/806 PASS** |
+| `cargo clippy --no-deps` | 13 warnings (Rule 1 preserved : Sobel, ollama, Auto*) |
+| `bash scripts/autoheal/detect_recurrence.sh` | PASS (entries=1915) |
+| `bash scripts/verify_instructions.sh` | PASS=52 FAIL=0 |
+| AppImage smoke (20s nohup) | BOOT:READY, audio SUCCESS, 0 fatal |
+
+### Release artifacts SHA256 (v34.0.12)
+
+| Artifact | Size | SHA256 |
+|----------|------|--------|
+| `titane-infinity_34.0.12_amd64.deb` | 24.9 MB | `539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4` |
+| `titane-infinity-34.0.12-1.x86_64.rpm` | 24.9 MB | `2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169` |
+| `titane-infinity_34.0.12_amd64.AppImage` | 95 MB | `35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2` |
+| `titane-infinity-34.0.12` (raw binary) | 53 MB | `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2` |
+
+Full historical checksums : [`docs/release-history/checksums/INDEX.md`](docs/release-history/checksums/INDEX.md) (v32 → v34.0.11).
 
 ---
 

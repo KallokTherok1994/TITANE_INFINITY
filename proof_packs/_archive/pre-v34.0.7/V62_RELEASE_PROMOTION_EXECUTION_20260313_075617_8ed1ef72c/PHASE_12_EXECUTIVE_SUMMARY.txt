@@ -1,0 +1,7 @@
+V62 EXECUTIVE SUMMARY
+- TECHNICAL_BASELINE: FRONTEND_CERTIFIABLE_STRONG (inherited from V61)
+- GOVERNANCE_GATES: PASS (autoheal recurrence, verify instructions, verify registry)
+- RELEASE_OPERATIONAL_GATES: HOLD
+- BLOCKERS: dirty promotion window; detached/divergent main; PROD token gate closed
+- EXECUTION: COMMIT/MAIN/BUILD/DEPLOY skipped under hold
+- FINAL_RELEASE_READY: HOLD

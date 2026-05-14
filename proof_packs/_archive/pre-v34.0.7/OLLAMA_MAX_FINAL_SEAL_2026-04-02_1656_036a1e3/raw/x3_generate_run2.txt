@@ -1,0 +1,2 @@
+{"model":"gemma2:2b","created_at":"2026-04-02T21:08:58.638624211Z","response":"Let's break down the \"bounded","done":true,"done_reason":"length","context":[106,1645,108,235297,235304,37463,26515,107,108,106,2516,108,5331,235303,235256,3376,1706,573,664,73127],"total_duration":1045602393,"load_duration":139661570,"prompt_eval_count":13,"prompt_eval_duration":191262549,"eval_count":8,"eval_duration":697316335}
+HTTP_CODE=200

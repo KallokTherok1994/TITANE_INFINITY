@@ -1,0 +1,2 @@
+{"model":"gemma2:2b","created_at":"2026-04-02T21:08:56.518300217Z","response":"Let's break down the concept of","done":true,"done_reason":"length","context":[106,1645,108,235297,235304,37463,26515,107,108,106,2516,108,5331,235303,235256,3376,1706,573,7819,576],"total_duration":3218962871,"load_duration":2255160050,"prompt_eval_count":13,"prompt_eval_duration":277895495,"eval_count":8,"eval_duration":668934540}
+HTTP_CODE=200

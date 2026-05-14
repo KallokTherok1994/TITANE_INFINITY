@@ -1,0 +1,13 @@
+PHASE=6_FINAL_RELEASE_GATE_MATRIX
+UTC_TIMESTAMP=2026-03-13T12:27:20Z
+
+gate_frontend_certification_strong=PASS
+gate_repo_clean_for_promotion=PASS
+gate_only_expected_promotion_deltas=PASS
+gate_main_sync_status=PASS
+gate_build_script_ready=PASS
+gate_deploy_script_ready=PASS
+gate_prod_token_gate_open=FAIL
+
+FINAL_GATE_SUMMARY=HOLD
+FINAL_BLOCKER=prod_token_gate_closed

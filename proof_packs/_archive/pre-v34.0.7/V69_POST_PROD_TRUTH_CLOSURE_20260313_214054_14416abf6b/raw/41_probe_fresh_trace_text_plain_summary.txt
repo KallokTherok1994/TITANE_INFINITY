@@ -1,0 +1,27 @@
+TS_UTC=2026-03-13T22:42:07Z
+RUN_TYPE=FRESH_TRACE_TEXT_PLAIN_VALIDATION
+EXIT_CODE=0
+LOG_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/41_probe_fresh_trace_text_plain.log
+WRAPPER_LOG_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_13/tauri-wrapper.log
+WRAPPER_SELECTED_BINARY=/tmp/titane_v15_wt_20260311_080118/src-tauri/target/debug/titane-infinity
+METRICS_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_13/run_online_probe13_v25_metrics.json
+METRICS_EXISTS=YES
+RESPONSE_TEXT=Kevin, je suis TITANE∞, votre assistant IA personnel. 
+
+Bien que mon service soit en dégradation, je peux toujours vous aider !  Je traite votre demande avec mes ressources locales. 
+
+Mes modules actifs sont :
+
+* **Titane Core:** Ce module est la base de ma communication et d'apprentissage. Il gère les informations essentielles.
+* **Route /titane:**  Cette route est dédiée à la communication interne et assure la flexibilité de mon fonctionnement.
+
+
+Mon orchestrateur est en dégradation, mais je continue à travailler. 
+
+
+
+.
+WITNESS_TRACE_TIMEOUT_GUARD_45S_IN_RESPONSE=NO
+RUNTIME_PROVIDER_USED=Ollama
+RUNTIME_PROVIDER_REASON=OK
+RUNTIME_PROVIDER_NETWORK_USED=false

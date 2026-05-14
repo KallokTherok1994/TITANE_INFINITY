@@ -1,0 +1,13 @@
+TS_UTC=2026-03-13T22:39:24Z
+RUN_TYPE=FRESH_PROCESS_TRACE_VALIDATION
+EXIT_CODE=0
+LOG_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/40_probe_fresh_process_trace_validation.log
+GLOBAL_WRAPPER_LOG=/tmp/e2e-wrapper-last.log
+GLOBAL_WRAPPER_TRACE=<missing_global_wrapper_log>
+METRICS_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_12/run_online_probe12_v25_metrics.json
+METRICS_EXISTS=YES
+RUNTIME_PROVIDER_USED=timeout-degraded
+RUNTIME_PROVIDER_REASON=TIMEOUT
+RUNTIME_PROVIDER_NETWORK_USED=true
+RESPONSE_TEXT=Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.
+WITNESS_TRACE_TIMEOUT_GUARD_45S_IN_RESPONSE=NO

@@ -1,0 +1,26 @@
+PHASE=1_RERUN_EVIDENCE_CONSOLIDATION
+DATE_UTC=2026-03-13T11:43:30Z
+SOURCE_V60_PACK=proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90
+
+EVIDENCE_1_RUNTIME_RERUN_EXIT=raw/13_runtime_proof_rerun.exit -> WDIO_V60_RERUN_EXIT=0
+EVIDENCE_2_RUNTIME_PROOF_JSON=raw/phase6_artifacts_rerun/v60_runtime_proof.json
+EVIDENCE_3_AUTOHEAL_RERUN_EXIT=raw/23_autoheal_detect_recurrence_rerun.exit -> AUTOHEAL_RERUN_EXIT=0
+EVIDENCE_4_VERIFY_INSTRUCTIONS_RERUN_EXIT=raw/24_verify_instructions_rerun.exit -> VERIFY_INSTRUCTIONS_RERUN_EXIT=0
+EVIDENCE_5_VERIFY_REGISTRY_RERUN_EXIT=raw/25_verify_registry_rerun.exit -> VERIFY_REGISTRY_RERUN_EXIT=0
+EVIDENCE_6_VERDICT_RERUN=VERDICT_RERUN.md -> VERDICT_UNIQUE=PASS, FINAL_CERTIFICATION=FRONTEND_CERTIFIABLE_STRONG
+
+CRITICAL_GATE_SNAPSHOT_FROM_JSON:
+- gates.realUiSendProven=true
+- gates.ipcEntryCaptureProven=true
+- gates.linkedCaptureProven=true
+- gates.uiActivePayloadRouteContextPresent=true
+- gates.uiActivePayloadModuleContextPresent=true
+
+LINKED_PAYLOAD_FROM_JSON:
+- linkedCapture.cmd=conversation_generate
+- linkedCapture.entrySource=payload_tap
+- linkedCapture.payload.args.routeContext=/titane
+- linkedCapture.payload.args.moduleContext=titane
+
+CONSOLIDATION_STATUS=PASS
+NOTES=V60 rerun evidence is complete and internally consistent for strict closure gates.

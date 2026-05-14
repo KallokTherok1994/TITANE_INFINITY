@@ -1,0 +1,13 @@
+# 11 - Final Release Gate
+
+Final gate result:
+- `RELEASE_READY=HOLD`
+
+Root blocker:
+- `PROD_TOKEN_GATE_OPEN=FAIL`
+
+Execution statuses:
+- `COMMIT_STATUS=SKIPPED_HOLD`
+- `MAIN_STATUS=SKIPPED_HOLD`
+- `PROD_BUILD_STATUS=SKIPPED_HOLD`
+- `PROD_DEPLOY_STATUS=SKIPPED_HOLD`

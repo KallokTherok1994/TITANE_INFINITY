@@ -1,0 +1,16 @@
+TS_UTC=2026-03-13T23:04:25Z
+RUN_ID=run_online_probe17_force_gemini
+LANE=debug_binary_nondev_force_provider_gemini
+SOURCE_METRICS=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_17/run_online_probe17_force_gemini_v25_metrics.json
+METRICS_LINE=4:  "forcedProvider": "gemini",
+METRICS_LINE=40:    "providerReason": "OK",
+METRICS_LINE=41:    "providerNetworkUsed": "false",
+METRICS_LINE=43:    "providerUsed": "Ollama",
+METRICS_LINE=45:    "providerMode": "LOCAL"
+METRICS_LINE=52:  "timeoutDetected": false,
+METRICS_LINE=53:  "degradedDetected": false,
+METRICS_LINE=59:      "verdict": "NON_BLOCKING"
+METRICS_LINE=65:      "verdict": "MAPPED"
+METRICS_LINE=71:      "verdict": "VISIBLE"
+METRICS_LINE=82:  "verdict": "PASS",
+WRAPPER_LOG=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_17/tauri-wrapper.log

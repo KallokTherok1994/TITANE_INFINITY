@@ -1,0 +1,4 @@
+# PHASE 4 - Promotion Window Cleanup Diff
+# NO_OP_MINIMAL_CLEANUP
+# Rationale: destructive cleanup/stash of unrelated user deltas was not auto-applied without explicit per-delta approval.
+# Promotion window remains unclean; execution stays HOLD.

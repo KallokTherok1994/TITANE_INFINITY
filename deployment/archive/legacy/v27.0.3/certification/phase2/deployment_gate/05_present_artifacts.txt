@@ -1,0 +1,3 @@
+OK: reports/ai_local_vΩ3/P2_POST_MERGE_BUILD_PROOF_97b566d3_20260216_133237
+OK: reports/ai_local_vΩ3/P2_POST_MERGE_CI_PROOF_97b566d3_20260216_140514
+INFO: deployment/latest/certification/phase2 (referenced but not yet archived)

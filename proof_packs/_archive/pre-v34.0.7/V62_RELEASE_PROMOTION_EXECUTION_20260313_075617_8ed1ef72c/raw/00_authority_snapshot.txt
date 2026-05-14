@@ -1,0 +1,37 @@
+PHASE=0_AUTHORITY_SNAPSHOT
+UTC_TIMESTAMP=2026-03-13T11:56:17Z
+REPO_AUTORITAIRE_UNIQUE=/tmp/titane_v15_wt_20260311_080118
+HEAD=8ed1ef72c64abd9042f32c3c3abddf71f2e4fb66
+HEAD_SHORT=8ed1ef72c
+BRANCH=HEAD
+ORIGIN_MAIN=1b714d2f539b27eb9d95047edc897a7a7cc7dfaf
+
+GIT_STATUS_PORCELAIN_BEGIN
+ M scripts/autoheal/autoheal_rules.jsonl
+ M scripts/e2e/tauri-wrapper.sh
+ M src-tauri/src/conversation_engine/commands.rs
+ M src/lib/ipcContract.ts
+ M src/services/conversationEngine.ts
+?? .v54_pack_path
+?? .v55_pack_path
+?? .v56_pack_path
+?? .v57_pack_path
+?? .v58_pack_path
+?? .v59_pack_path
+?? e2e/desktop/v54_authoritative_v53_verification.wdio.test.js
+?? e2e/desktop/v56_patched_runtime_proof.wdio.test.js
+?? e2e/desktop/v57_live_runtime_memory_ui_closure.wdio.test.js
+?? e2e/desktop/v58_real_ui_payload_final_proof.wdio.test.js
+?? e2e/desktop/v59_ui_surface_discovery_and_real_send_proof.wdio.test.js
+?? e2e/desktop/v60_ipc_entry_capture_real_ui_strong_closure.wdio.test.js
+?? proof_packs/V54_AUTHORITATIVE_V53_VERIFICATION_20260312_165413_8ed1ef72c/
+?? proof_packs/V55_ACTIVE_CHAT_PATH_CONVERGENCE_20260312_172724_8ed1ef72c/
+?? proof_packs/V56_PATCHED_RUNTIME_PROOF_20260312_220845_8ed1ef72c64a/
+?? proof_packs/V57_LIVE_RUNTIME_MEMORY_UI_CLOSURE_20260312_223228_8ed1ef72c64a/
+?? proof_packs/V58_REAL_UI_PAYLOAD_FINAL_PROOF_20260312_225922_8ed1ef72c64abd90/
+?? proof_packs/V59_UI_SURFACE_DISCOVERY_REAL_SEND_CLOSURE_20260312_232506_8ed1ef72c64abd90/
+?? proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90/
+?? proof_packs/V60_RUNTIME_ASSET_RESOLUTION_REAL_UI_CLOSURE_20260312_234524_8ed1ef72c64abd90/
+?? proof_packs/V61_PROMOTION_CLOSURE_RELEASE_GOVERNANCE_20260313_074108_8ed1ef72c/
+?? proof_packs/V62_RELEASE_PROMOTION_EXECUTION_20260313_075617_8ed1ef72c/
+GIT_STATUS_PORCELAIN_END

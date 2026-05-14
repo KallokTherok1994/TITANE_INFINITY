@@ -1,0 +1,7 @@
+# TITANE∞ v33.0.7 — Release Artifact Checksums
+# Generated: 2026-05-05
+# Scope: WDIO desktop coverage expansion + tab labels fix
+
+36fdb4a7a14480323b1cea8ede51f4eb328ac975f4550f7a41ce38d548a16f90  titane-infinity_33.0.7_amd64.AppImage
+17942a673265f4903c627d591dfe3132049faf9d2428b172acb3174449649c70  titane-infinity_33.0.7_amd64.deb
+098834c85f1d301ea1e47a832e3df779dac3c3abc511d431ed8026c066d7b101  titane-infinity-33.0.7-1.x86_64.rpm

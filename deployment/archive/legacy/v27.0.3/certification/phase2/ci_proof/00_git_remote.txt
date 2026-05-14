@@ -1,0 +1,4 @@
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (fetch)
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (push)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (fetch)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (push)

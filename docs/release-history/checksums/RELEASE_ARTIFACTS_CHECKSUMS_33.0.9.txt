@@ -1,0 +1,3 @@
+79cc7a9fc7852ee9a3d67782114aa582d0a894b1ee7216758d4d911c9d0ae3b3  deb/titane-infinity_33.0.9_amd64.deb
+e460b3e7ccfbf52c44eab070807d48938f39b9d02a481a72052ef1042457885c  rpm/titane-infinity-33.0.9-1.x86_64.rpm
+c9a83cbfc7754cd79c5e6cfbfe4e5efec53395eefa8fa6c14e2b380fc5ab7f14  appimage/titane-infinity_33.0.9_amd64.AppImage

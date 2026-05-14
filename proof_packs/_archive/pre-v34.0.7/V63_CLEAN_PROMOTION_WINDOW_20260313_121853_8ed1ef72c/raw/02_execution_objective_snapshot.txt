@@ -1,0 +1,22 @@
+PHASE=0_EXECUTION_OBJECTIVE
+UTC_TIMESTAMP=2026-03-13T12:18:53Z
+MODE=AUTHORITATIVE_STRICT_EXECUTION_STOPLINE_APPEND_ONLY
+
+OBJECTIF_UNIQUE=Obtenir une fenetre de promotion propre, resync main de maniere safe, puis decider honnetement RELEASE_READY=PASS (execution) ou RELEASE_READY=HOLD (blocker traceable).
+
+IN_SCOPE=
+- hygiene promotion window
+- delta inventory and classification
+- safe cleanup minimal
+- main resync strategy
+- prod token audit
+- release gate recheck
+- governance closure
+- conditional execution only if all required gates PASS
+
+OUT_OF_SCOPE=
+- debug produit
+- reruns de confort
+- modifications metier hors necessite stricte release
+
+STOPLINE_RULE=No fake GO. No commit/main/build/deploy if any required gate remains FAIL.

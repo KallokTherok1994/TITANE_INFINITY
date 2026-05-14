@@ -1,0 +1,15 @@
+commit 97b566d3bcb70aa8dca53c63e735008737604c92
+Author:     KallokTherok1994 <investissement.kevin@gmail.com>
+AuthorDate: Mon Feb 16 13:00:50 2026 -0500
+Commit:     GitHub <noreply@github.com>
+CommitDate: Mon Feb 16 13:00:50 2026 -0500
+
+    feat(p2): Phase 2A bundle split (lazy registry + manualChunks)
+    
+    feat(p2): Phase 2A bundle split (lazy registry + manualChunks)
+    
+    Includes:
+    - src/services/lazy.ts
+    - vite.config.ts chunk split
+    - No archive modifications
+    - Certification P2 already sealed

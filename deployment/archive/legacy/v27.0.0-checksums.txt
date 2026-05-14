@@ -1,0 +1,1 @@
+99e478faa9727a14088c4141f06a604fdc81fcc24614206349f1593b36098fa9  src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb

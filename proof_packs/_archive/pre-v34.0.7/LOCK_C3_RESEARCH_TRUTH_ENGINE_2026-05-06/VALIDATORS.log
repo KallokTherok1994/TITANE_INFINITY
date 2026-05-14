@@ -1,0 +1,125 @@
+# Validators Log — LOCK C3 Research Truth Engine
+
+**Date:** 2026-05-06  
+**Branch:** MAIN  
+**Mode:** DURABLE  
+
+---
+
+## Gate 1 — Vitest (C3 contract tests)
+
+```
+Command: pnpm vitest run src/services/research_truth/__tests__/ResearchTruthContract.test.ts
+Exit: 0
+
+ RUN  v4.1.4 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+ ✓  core  src/services/research_truth/__tests__/ResearchTruthContract.test.ts (77 tests) 18ms
+
+ Test Files  1 passed (1)
+      Tests  77 passed (77)
+   Start at  14:56:50
+   Duration  542ms
+```
+
+**Result: PASS (77/77)**
+
+---
+
+## Gate 2 — verify_research_truth_engine.sh (C3 validator)
+
+```
+Command: bash scripts/verify/verify_research_truth_engine.sh
+Exit: 0
+
+=== verify_research_truth_engine.sh (C3) ===
+  PASS  ResearchTruthContract.ts exists
+  PASS  ResearchTruthContract.test.ts exists
+  PASS  RESEARCH_UNAVAILABLE state defined in contract
+  PASS  requiresResearchForClaim exported
+  PASS  canPresentAsFact exported
+  PASS  isResearchUnavailable exported
+  PASS  hasContradictions exported
+  PASS  buildCitationSummary exported
+  PASS  validateResearchUnavailableHonesty exported
+  PASS  mapC2RequiresWebValidationToResearchState exported
+  PASS  RESEARCH_UNAVAILABLE_IS_TERMINAL exported
+  PASS  ResearchSourceSchema exported
+  PASS  ResearchClaimSchema exported
+  PASS  ResearchTruthResultSchema exported
+  PASS  RESEARCH_TRUTH_ENGINE_CONTRACT.md exists
+  PASS  RESEARCH_TRUTH_POLICY.md exists
+  PASS  AI-DESKTOP-09 in Desktop registry
+  PASS  AI-DESKTOP-10 in Desktop registry
+  PASS  REG-AI-C3 in Advanced Intelligence Registry
+  PASS  C3 proof pack directory exists
+  PASS  C3 AutoHeal entry in autoheal_rules.jsonl
+
+=== RESULT: PASS=21 FAIL=0 ===
+STATUS: PASS
+```
+
+**Result: PASS (21/21)**
+
+---
+
+## Gate 3 — verify_instructions.sh
+
+```
+Command: bash scripts/verify_instructions.sh
+Exit: 0
+
+PASS: G_SOURCE_MAP_SCRIPT_PRESENT
+PASS: G_SOURCE_MAP_PASS
+PASS: G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT
+PASS: G_AUTOPILOT_BOUNDS_PASS
+SUMMARY: PASS=51 FAIL=0
+```
+
+**Result: PASS (51/51)**
+
+---
+
+## Gate 4 — detect_recurrence.sh
+
+```
+Command: bash scripts/autoheal/detect_recurrence.sh
+Exit: 0
+
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=1666
+```
+
+**Result: PASS (entries=1666, monotonic)**
+
+---
+
+## Gate 5 — verify_advanced_intelligence_registry.sh
+
+```
+Command: bash scripts/verify/verify_advanced_intelligence_registry.sh
+Exit: 0
+
+PASS: REG_DESKTOP_20_IDS_PRESENT
+PASS: REG_FLAG_D1
+PASS: REG_FLAG_D5
+PASS: REG_STATUS_REFERENCES_B1_5
+SUMMARY: PASS=16 FAIL=0
+```
+
+**Result: PASS (16/16)**
+
+---
+
+## Summary
+
+| Gate | Command | Result |
+|------|---------|--------|
+| vitest C3 | `pnpm vitest run ...ResearchTruthContract.test.ts` | PASS 77/77 |
+| verify_research_truth_engine | `bash scripts/verify/verify_research_truth_engine.sh` | PASS 21/21 |
+| verify_instructions | `bash scripts/verify_instructions.sh` | PASS 51/51 |
+| detect_recurrence | `bash scripts/autoheal/detect_recurrence.sh` | PASS entries=1666 |
+| verify_advanced_intelligence_registry | `bash scripts/verify/verify_advanced_intelligence_registry.sh` | PASS 16/16 |
+
+**ALL GATES PASS — LOCK C3 READY FOR COMMIT**

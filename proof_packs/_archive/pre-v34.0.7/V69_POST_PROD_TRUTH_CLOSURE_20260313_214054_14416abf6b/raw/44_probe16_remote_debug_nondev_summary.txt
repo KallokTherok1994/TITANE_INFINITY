@@ -1,0 +1,15 @@
+TS_UTC=2026-03-13T23:04:25Z
+RUN_ID=run_online_probe16_remote_debug_nondev
+LANE=debug_binary_nondev
+SOURCE_METRICS=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_16/run_online_probe16_remote_debug_nondev_v25_metrics.json
+METRICS_LINE=39:    "providerReason": "OK",
+METRICS_LINE=40:    "providerNetworkUsed": "false",
+METRICS_LINE=42:    "providerUsed": "Ollama",
+METRICS_LINE=44:    "providerMode": "LOCAL"
+METRICS_LINE=51:  "timeoutDetected": false,
+METRICS_LINE=52:  "degradedDetected": false,
+METRICS_LINE=58:      "verdict": "NON_BLOCKING"
+METRICS_LINE=64:      "verdict": "MAPPED"
+METRICS_LINE=70:      "verdict": "VISIBLE"
+METRICS_LINE=81:  "verdict": "PASS",
+WRAPPER_LOG=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_16/tauri-wrapper.log

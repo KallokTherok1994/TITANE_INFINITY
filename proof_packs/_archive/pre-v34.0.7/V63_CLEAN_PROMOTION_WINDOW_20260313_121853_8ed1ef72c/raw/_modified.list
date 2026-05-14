@@ -1,0 +1,5 @@
+scripts/autoheal/autoheal_rules.jsonl
+scripts/e2e/tauri-wrapper.sh
+src-tauri/src/conversation_engine/commands.rs
+src/lib/ipcContract.ts
+src/services/conversationEngine.ts

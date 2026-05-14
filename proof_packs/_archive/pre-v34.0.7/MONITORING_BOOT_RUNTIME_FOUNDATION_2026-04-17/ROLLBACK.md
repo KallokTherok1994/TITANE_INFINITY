@@ -1,0 +1,3 @@
+# ROLLBACK
+
+`git restore -- src/services/monitoring/monitoringLazyLoader.ts src/services/monitoring/index.ts src/hooks/useAppInitialization.ts src/services/monitoring/__tests__/monitoringLazyLoader.test.ts e2e/agents/monitoring-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl reports/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17.md proof_packs/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17/GATE_REPORT.md proof_packs/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17/VERDICT.md proof_packs/MONITORING_BOOT_RUNTIME_FOUNDATION_2026-04-17/ROLLBACK.md scripts/autoheal/autoheal_rules.jsonl`

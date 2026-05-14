@@ -1,0 +1,20 @@
+2026-05-05 — SEAL v33.0.8 — Gates Results
+
+[G1] detect_recurrence.sh
+  PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+  PASS: G_AH_RECURRENCE_GUARD_PASS
+  INFO: entries=1612
+  EXIT=0
+
+[G2] verify_instructions.sh
+  SUMMARY: PASS=33 FAIL=0
+  EXIT=0
+
+[G3] verify:final100 (check + lint + format:check + verify:tauri-only)
+  check: PASS (tsc --noEmit clean after fix oauthService + memory.ts)
+  lint: PASS (ESLint 0 errors)
+  format:check: PASS (Prettier 0 issues after pnpm run format)
+  verify:tauri-only: PASS (0 erreurs)
+  EXIT=0
+
+ALL GATES: PASS

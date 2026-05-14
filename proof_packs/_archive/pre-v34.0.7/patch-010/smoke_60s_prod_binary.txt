@@ -1,0 +1,87 @@
+[2026-03-20T22:50:06.255Z INFO  titane_infinity::security::secrets_engine] [SecretsEngine] Secure secrets engine initialised (encrypted)
+[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)
+[2026-03-20T22:50:06.255Z INFO  titane_infinity] ✅ Chat orchestrator initialized (API keys will be loaded in setup)
+[2026-03-20T22:50:06.255Z INFO  titane_infinity] ✅ Copilot state initialized (key configured: false)
+[2026-03-20T22:50:06.255Z INFO  titane_infinity] ✅ HeliosCore and MemoryCore initialized successfully
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+[2026-03-20T22:50:06.354Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisation...
+[2026-03-20T22:50:06.354Z INFO  titane_infinity::auth] ✓ Keystore chargé: 1 secrets configurés
+[2026-03-20T22:50:06.354Z INFO  titane_infinity::auth::roles] ✓ Role Owner déjà présent pour Kevin Thibault
+[2026-03-20T22:50:06.354Z INFO  titane_infinity::auth] ✓ Owner role vérifié: Kevin Thibault
+[2026-03-20T22:50:06.354Z INFO  titane_infinity::auth] ✓ Dev Token présent
+[2026-03-20T22:50:06.354Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisé avec succès
+[2026-03-20T22:50:06.354Z INFO  titane_infinity] ✅ AUTH OS v∞ initialized successfully
+[2026-03-20T22:50:06.355Z INFO  titane_infinity::ai::ollama] [OllamaClient] new() | resolved_model=gemma2:2b
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] [AI Router] Initialized with default Ollama model: gemma2:2b
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] ✅ OMEGA Conversation Engine v19.5.2 initialized
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] ✅ PersistentMemoryState v19.2Ω initialized
+[2026-03-20T22:50:06.355Z INFO  titane_infinity]  [main.rs] Spawning bootstrap_api_keys task...
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] 📱 Main window found in app context
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] [main.rs] bootstrap_api_keys task started
+[2026-03-20T22:50:06.355Z INFO  titane_infinity::overdrive::chat_orchestrator] [ChatOrchestrator] 🔑 bootstrap_api_keys() called - loading keys from SecureSecretsEngine
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] [Ollama] ═══════════════════════════════════════════════════
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] ✅ Main window shown successfully
+[2026-03-20T22:50:06.355Z INFO  titane_infinity::overdrive::chat_orchestrator] [ChatOrchestrator] ✅ Gemini API key loaded from SecureSecretsEngine
+[2026-03-20T22:50:06.356Z INFO  titane_infinity::overdrive::chat_orchestrator] [ChatOrchestrator] ✅ OpenAI API key loaded from SecureSecretsEngine
+[2026-03-20T22:50:06.355Z INFO  titane_infinity] [Ollama] PROD FIX v27.0.2: Enhanced Auto-Start Routine
+[2026-03-20T22:50:06.356Z INFO  titane_infinity] [Ollama] ═══════════════════════════════════════════════════
+[2026-03-20T22:50:06.356Z INFO  titane_infinity::overdrive::chat_orchestrator] [ChatOrchestrator] ✅ Anthropic API key loaded from SecureSecretsEngine
+[2026-03-20T22:50:06.356Z INFO  titane_infinity::overdrive::chat_orchestrator] [ChatOrchestrator] 🔑 bootstrap_api_keys() completed
+[2026-03-20T22:50:06.356Z INFO  titane_infinity] [main.rs] ✅ Chat orchestrator: API keys bootstrapped from SecureSecretsEngine
+[2026-03-20T22:50:06.357Z INFO  titane_infinity] [Ollama] ✅ Endpoint already available
+[2026-03-20T22:50:06.424Z INFO  ui] page_load label=avatar-floating url=tauri://localhost
+[2026-03-20T22:50:06.426Z INFO  ui] page_load label=main url=tauri://localhost
+[2026-03-20T22:50:06.472Z INFO  ui] page_load label=avatar-floating url=tauri://localhost
+[2026-03-20T22:50:06.474Z INFO  ui] page_load label=main url=tauri://localhost
+[2026-03-20T22:50:09.336Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:ENTRY_START
+[2026-03-20T22:50:09.478Z INFO  ui] [UI] frontend.boot — BOOT:START
+[2026-03-20T22:50:09.483Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:START
+[2026-03-20T22:50:09.504Z INFO  ui] [UI] frontend.boot — BOOT:AFTER_STORE
+[2026-03-20T22:50:09.504Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:AFTER_STORE
+[2026-03-20T22:50:09.504Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-03-20T22:50:09.517Z INFO  titane_infinity::runtime_config] CMD:START get_runtime_config
+[2026-03-20T22:50:09.517Z INFO  titane_infinity::runtime_config] CMD:END get_runtime_config ok
+[2026-03-20T22:50:09.818Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:ENTRY_MAIN_IMPORTED
+[2026-03-20T22:50:09.819Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:START","ts":1774047009818}
+[2026-03-20T22:50:09.819Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:AFTER_STORE","ts":1774047009818}
+[2026-03-20T22:50:10.236Z INFO  titane_infinity::commands::ollama_command] [OLLAMA_CMD] Request: model=gemma2:2b, prompt_len=4, timeout=5s
+[2026-03-20T22:50:10.246Z INFO  ui] [UI] frontend.boot — BOOT:AFTER_ROUTER
+[2026-03-20T22:50:10.252Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:AFTER_ROUTER
+[2026-03-20T22:50:10.259Z INFO  ui] [UI] frontend.boot — BOOT:BEFORE_ORCHESTRATOR
+[2026-03-20T22:50:10.264Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:BEFORE_ORCHESTRATOR
+[2026-03-20T22:50:10.271Z INFO  ui] [UI] frontend.boot — BOOT:BEFORE_ORCHESTRATOR_INIT
+[2026-03-20T22:50:10.276Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:BEFORE_ORCHESTRATOR_INIT
+[2026-03-20T22:50:10.290Z INFO  titane_infinity::commands::ollama_command] [OLLAMA_CMD] Request: model=gemma2:2b, prompt_len=4, timeout=5s
+[2026-03-20T22:50:10.349Z INFO  titane_infinity::persistence] [PersistenceEngine] 🚀 Initialisation...
+[2026-03-20T22:50:10.350Z INFO  titane_infinity::persistence::database] [PersistenceDB] 📂 Opening DB: "/home/titane-os/.local/share/TITANE_INFINITY/persistence/titan_events.db"
+[2026-03-20T22:50:10.350Z INFO  titane_infinity::persistence::database] [PersistenceDB] ✅ Schéma vérifié/créé
+[2026-03-20T22:50:10.350Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] 🔄 Démarrage de la récupération...
+[2026-03-20T22:50:10.350Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 événements récupérés
+[2026-03-20T22:50:10.350Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 snapshots trouvés
+[2026-03-20T22:50:10.350Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ Récupération terminée en 0ms
+[2026-03-20T22:50:10.350Z INFO  titane_infinity::persistence] [PersistenceEngine] ✅ Initialisé avec succès
+[2026-03-20T22:50:10.389Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:AFTER_ROUTER","ts":1774047010388}
+[2026-03-20T22:50:10.389Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:BEFORE_ORCHESTRATOR","ts":1774047010389}
+[2026-03-20T22:50:10.389Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:BEFORE_ORCHESTRATOR_INIT","ts":1774047010389}
+[2026-03-20T22:50:10.995Z INFO  ui] [UI] frontend.boot — BOOT:AFTER_ORCHESTRATOR
+[2026-03-20T22:50:10.998Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:AFTER_ORCHESTRATOR
+[2026-03-20T22:50:11.004Z INFO  ui] [UI] frontend.boot — BOOT:AFTER_ORCHESTRATOR_INIT
+[2026-03-20T22:50:11.007Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:AFTER_ORCHESTRATOR_INIT
+[2026-03-20T22:50:11.011Z INFO  ui] [UI] frontend.boot — BOOT:READY
+[2026-03-20T22:50:11.015Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER label=main BOOT:READY
+[2026-03-20T22:50:11.027Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:AFTER_ORCHESTRATOR","ts":1774047011026}
+[2026-03-20T22:50:11.027Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:AFTER_ORCHESTRATOR_INIT","ts":1774047011027}
+[2026-03-20T22:50:11.027Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:READY","ts":1774047011027}
+[2026-03-20T22:50:12.240Z INFO  titane_infinity::persistent_memory_v19] [PersistentMemory] get_stats
+[2026-03-20T22:50:12.556Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000 device_id=None
+[2026-03-20T22:50:12.556Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-03-20T22:50:12.556Z INFO  titane_infinity::audio::commands] [Audio] No device_id, using arecord with OS default
+[2026-03-20T22:50:13.615Z INFO  titane_infinity::audio::commands] [Audio] File size: 32044 bytes, expected min: 8000
+[2026-03-20T22:50:13.615Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS (device=None)
+[2026-03-20T22:50:14.712Z INFO  titane_infinity::commands::ollama_command] [OLLAMA_CMD] Success: 41 chars, 4476 ms
+[2026-03-20T22:50:15.292Z WARN  titane_infinity::commands::ollama_command] [OLLAMA_CMD] Ollama offline or timeout (5001ms): error sending request for url (http://127.0.0.1:11434/api/generate): operation timed out
+[CHAT] ⚠️ Provider ollama temporairement désactivé (3 échecs)
+[CHAT] ⚠️ Provider ollama temporairement désactivé (3 échecs)
+[2026-03-20T22:50:40.252Z INFO  titane_infinity::commands::ollama_command] [OLLAMA_CMD] Request: model=gemma2:2b, prompt_len=4, timeout=5s
+[2026-03-20T22:50:42.569Z INFO  titane_infinity::commands::ollama_command] [OLLAMA_CMD] Success: 45 chars, 2317 ms

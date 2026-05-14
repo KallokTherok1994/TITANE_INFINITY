@@ -1,0 +1,37 @@
+PHASE=1_PROMOTION_READINESS_AUDIT
+UTC_TIMESTAMP=2026-03-13T11:57:21Z
+HEAD=8ed1ef72c64abd9042f32c3c3abddf71f2e4fb66
+HEAD_SHORT=8ed1ef72c
+BRANCH=HEAD
+ORIGIN_MAIN=1b714d2f539b27eb9d95047edc897a7a7cc7dfaf
+
+STATUS_COUNTS=modified_tracked:5,untracked:22+
+
+FILES_MODIFIED_TRACKED_BEGIN
+scripts/autoheal/autoheal_rules.jsonl
+scripts/e2e/tauri-wrapper.sh
+src-tauri/src/conversation_engine/commands.rs
+src/lib/ipcContract.ts
+src/services/conversationEngine.ts
+FILES_MODIFIED_TRACKED_END
+
+DELTA_CLASS_PROMOTIONAL_LEGIT_BEGIN
+scripts/autoheal/autoheal_rules.jsonl
+proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90/VERDICT.md
+proof_packs/V61_PROMOTION_CLOSURE_RELEASE_GOVERNANCE_20260313_074108_8ed1ef72c
+proof_packs/V62_RELEASE_PROMOTION_EXECUTION_20260313_075617_8ed1ef72c
+DELTA_CLASS_PROMOTIONAL_LEGIT_END
+
+DELTA_CLASS_PARASITIC_BEGIN
+- tracked code deltas unrelated to release packet (wrapper + src-tauri + src/lib + src/services)
+- large historical untracked proof packs V54..V60
+- untracked E2E specs v54..v60 and pointer files .v54_pack_path.. .v59_pack_path
+DELTA_CLASS_PARASITIC_END
+
+PROOF_PACKS_NON_COMMITABLE_NOTE=Historical untracked packs are append-only evidence but not promotion-commit scope.
+TEMP_FILES_PRESENT_NOTE=.v54_pack_path.. .v59_pack_path present.
+MAIN_SYNC_AHEAD_BEHIND=3 1
+BUILD_SCRIPT_CANDIDATES=package.json:scripts.build and scripts.build:production
+DEPLOY_SCRIPT_CANDIDATES=DEPLOYMENT_DISTRIBUTION_v27.2.0.sh|mega-deploy.sh|titane.sh deploy
+PROD_TOKEN_GATE_REQUIREMENT=GO_FOR_PROD_BUILD__TITANE_INFINITY + GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+PROD_TOKEN_GATE_OBSERVATION=required tokens not provided in execution context and not present as env authorization.

@@ -82,3 +82,5 @@ GStreamer element appsink not found. Please install it.
 [2026-05-14T00:39:38.688Z INFO  titane_infinity::audio::commands] [Audio] No device_id, using arecord with OS default
 [2026-05-14T00:39:39.725Z INFO  titane_infinity::audio::commands] [Audio] File size: 32044 bytes, expected min: 8000
 [2026-05-14T00:39:39.725Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS (device=None)
+[2026-05-14T03:06:21.187Z INFO  titane_infinity::commands_v21::persistent_memory_v30] [PersistentMemory] get_stats
+[2026-05-14T03:06:51.197Z INFO  titane_infinity::commands_v21::persistent_memory_v30] [PersistentMemory] get_stats

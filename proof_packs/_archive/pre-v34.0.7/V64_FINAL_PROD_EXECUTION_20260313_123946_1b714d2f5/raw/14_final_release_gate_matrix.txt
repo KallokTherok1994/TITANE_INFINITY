@@ -1,0 +1,18 @@
+PHASE=8_FINAL_RELEASE_GATE_MATRIX
+UTC_TIMESTAMP=2026-03-13T12:45:10Z
+
+| Gate | Status | Evidence |
+|---|---|---|
+| FRONTEND_UI_CERTIFICATION_STATUS | PASS | V63 anchored baseline = FRONTEND_CERTIFIABLE_STRONG (raw/01_v63_anchor_snapshot.txt) |
+| REPO_CLEAN_FOR_PROMOTION | PASS | raw/03_final_precondition_snapshot.txt |
+| ONLY_EXPECTED_PROMOTION_DELTAS | PASS | raw/_modified.list + raw/_untracked.list |
+| MAIN_SYNC_STATUS | PASS | origin/MAIN...HEAD = 0 0 (raw/03_final_precondition_snapshot.txt) |
+| BUILD_SCRIPT_READY | PASS | raw/03_final_precondition_snapshot.txt |
+| DEPLOY_SCRIPT_READY | PASS | raw/03_final_precondition_snapshot.txt |
+| PROD_TOKEN_GATE_OPEN | FAIL | raw/05_prod_token_gate_audit.txt |
+| GOVERNANCE_RECURRENCE_GUARD | PASS | raw/11_autoheal_detect_recurrence.log |
+| GOVERNANCE_INSTRUCTIONS_VERIFY | PASS | raw/12_verify_instructions.log |
+| GOVERNANCE_REGISTRY_VERIFY | PASS | raw/13_verify_registry.log |
+
+RELEASE_READY=HOLD
+ROOT_BLOCKER=PROD_TOKEN_GATE_OPEN=FAIL

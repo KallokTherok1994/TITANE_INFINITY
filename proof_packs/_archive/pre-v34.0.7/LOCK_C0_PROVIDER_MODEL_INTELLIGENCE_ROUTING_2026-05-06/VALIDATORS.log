@@ -1,0 +1,9 @@
+[2026-05-06] Historical runtime lock evidence (from VERDICT.md)
+- Rust smoke_tests: PASS=5 FAIL=0
+- Vitest ProviderRoutingContract: PASS=22 FAIL=0
+- verify_instructions.sh: PASS=51 FAIL=0
+- detect_recurrence.sh: PASS entries=1648
+
+[2026-05-06] Current audit normalization gates
+- verify_instructions.sh: PASS=51 FAIL=0
+- detect_recurrence.sh: PASS (entries=1662)

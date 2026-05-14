@@ -1,0 +1,2 @@
+[MAIN ca3d7c36] docs(governance): append DEPLOYMENT_READY for 97b566d3 (CI optional, local-first)
+ 1 file changed, 13 insertions(+)

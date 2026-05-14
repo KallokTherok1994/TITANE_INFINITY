@@ -1,0 +1,5 @@
+TS_UTC=2026-03-13T21:44:39Z
+SPEC=e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js
+EXIT_CODE=0
+CHAT_MINIMAL_VALID=PASS
+LOG_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/12_chat_minimal_post_prod_check.log

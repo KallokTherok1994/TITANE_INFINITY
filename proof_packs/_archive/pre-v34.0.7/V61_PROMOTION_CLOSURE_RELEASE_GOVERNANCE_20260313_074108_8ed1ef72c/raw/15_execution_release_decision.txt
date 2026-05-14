@@ -1,0 +1,13 @@
+PHASE=8_EXECUTION_RELEASE_DECISION
+DATE_UTC=2026-03-13T11:47:00Z
+
+DECISION=HOLD
+WHY=
+- Technical V60 rerun closure is strong and governed.
+- Promotion execution is blocked by non-clean git state.
+- PROD path remains token-gated by kernel doctrine.
+
+ALLOW_COMMIT=no
+ALLOW_MAIN=no
+ALLOW_PROD_BUILD=no
+ALLOW_PROD_DEPLOY=no

@@ -1,3 +1,0 @@
-6532cd5b8097cce0958fa564af1e6fcf9f09344adef44224d1d4a0ad8a676c2b  titane-infinity_34.0.4_amd64.deb
-3a7ca3ff4a1da80d2074e3bfd455e87b16c2266bbf5950fd94eceafb460b826a  titane-infinity-34.0.4-1.x86_64.rpm
-9a4b58aa593f9fa35977536a8d959776448da77885a58325b6dc2fb7b41484cb  titane-infinity_34.0.4_amd64.AppImage

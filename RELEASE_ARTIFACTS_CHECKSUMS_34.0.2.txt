@@ -1,3 +1,0 @@
-8d2d82dea94f42952f5e6e82a4da6f792d73f9be866476ea445ae61c6e93675a  deployment/latest/titane-infinity_34.0.2_amd64.deb
-9d0c9029a7fbddc1577c7f351af34727d8d9d19c2a180195cf6c7b420ccead7b  deployment/latest/titane-infinity_34.0.2_amd64.AppImage
-a82e9ba902d17754045f576b19dd1fc1de364b42c85ecd99ccac94478b9132a3  deployment/latest/titane-infinity-34.0.2-1.x86_64.rpm

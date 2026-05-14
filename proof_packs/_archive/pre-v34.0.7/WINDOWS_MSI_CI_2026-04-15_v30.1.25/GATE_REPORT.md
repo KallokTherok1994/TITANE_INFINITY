@@ -1,0 +1,15 @@
+# GATE REPORT
+
+- WINDOWS_CI_WORKFLOW_DISPATCHED: PASS
+- WINDOWS_CI_RUN_24465327619_COMPLETED: PASS
+- WINDOWS_CI_JOB_BUILD_MSI: PASS
+- WINDOWS_CI_ARTIFACT_UPLOADED: PASS
+- WINDOWS_CI_ARTIFACT_DOWNLOADED: PASS
+- WINDOWS_CI_MSI_SHA256_VERIFIED: PASS
+- WINDOWS_CI_RELEASE_UPLOAD: BLOCKED
+- WINDOWS_WORKFLOW_NODE24_ACTION_REFRESH_LOCAL: PASS
+
+Notes:
+
+- `WINDOWS_CI_RELEASE_UPLOAD` remains `BLOCKED` because the successful run did not receive a `release_tag` input and therefore did not publish release assets.
+- `WINDOWS_WORKFLOW_NODE24_ACTION_REFRESH_LOCAL` is a local repo hardening change only until a future pushed run confirms the GitHub annotation is gone.

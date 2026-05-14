@@ -1,0 +1,29 @@
+PHASE=2_DELTA_TRIAGE_DECISION
+UTC_TIMESTAMP=2026-03-13T12:01:40Z
+
+TRIAGE_RULE=No promotion commit should include non-release noise.
+
+CLASS_COMMITABLE_PROMOTION_SCOPE=
+- proof_packs/V62_RELEASE_PROMOTION_EXECUTION_20260313_075617_8ed1ef72c/**
+- proof_packs/V61_PROMOTION_CLOSURE_RELEASE_GOVERNANCE_20260313_074108_8ed1ef72c/**
+- proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90/VERDICT.md
+- scripts/autoheal/autoheal_rules.jsonl (append-only entries AH-2026-03-13-0812 and AH-2026-03-13-1145)
+
+CLASS_EXCLUDED_FROM_PROMOTION=
+- scripts/e2e/tauri-wrapper.sh
+- src-tauri/src/conversation_engine/commands.rs
+- src/lib/ipcContract.ts
+- src/services/conversationEngine.ts
+- proof_packs/V54..V59 untracked historical packs
+- e2e/desktop/v54..v60 untracked proof specs
+- .v54_pack_path.. .v59_pack_path pointers
+
+CLASS_APPEND_ONLY_KEEP=
+- historical proof packs kept in worktree for traceability, excluded from release promotion commit scope.
+
+CLASS_BLOCKER=
+- dirty mixed worktree with non-promotion deltas
+- detached HEAD and origin/MAIN divergence (3 1)
+- prod token gate closed
+
+TRIAGE_DECISION=HOLD_EXECUTION_UNTIL_CLEAN_PROMOTION_WINDOW_AND_TOKENS

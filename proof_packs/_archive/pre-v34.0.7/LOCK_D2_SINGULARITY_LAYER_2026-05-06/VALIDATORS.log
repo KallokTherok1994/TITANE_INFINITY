@@ -1,0 +1,77 @@
+# VALIDATORS LOG — Lock D2 Singularity Measured Layer
+# Verbatim gate outputs — 2026-05-06
+
+## 1. pnpm vitest run src/services/singularity_layer
+```
+ RUN  v4.1.4 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+ ✓  core  src/services/singularity_layer/__tests__/SingularityMeasuredLayerContract.test.ts (69 tests) 15ms
+
+ Test Files  1 passed (1)
+      Tests  69 passed (69)
+   Start at  16:14:31
+   Duration  537ms (transform 85ms, setup 190ms, import 50ms, tests 15ms, environment 187ms)
+```
+**EXIT: 0 — PASS=69 FAIL=0**
+
+## 2. bash scripts/verify/verify_singularity_measured_layer.sh
+```
+── Contract & Test Files ──
+[PASS] SingularityMeasuredLayerContract.ts exists
+[PASS] SingularityMeasuredLayerContract.test.ts exists
+── v13 Sidecar Exports ──
+[PASS] D2_SELECTED_MEASUREMENT_TARGET exported
+[PASS] D2_MEASUREMENT_DEFAULT_MODE exported
+[PASS] D2_MEASUREMENT_KNOWN_LIMITS exported
+[PASS] SINGULARITY_D2_EMISSION_ACTIVE exported
+[PASS] D2MeasurementModeSchema exported
+[PASS] D2MeasurementAdapterSchema exported
+[PASS] getD2MeasurementAdapter exported
+[PASS] validateSingularityMeasurement exported
+[PASS] isD2EmissionActive exported
+[PASS] buildPassiveMeasurementResult exported
+[PASS] D2_OMEGA_TRACE_SCHEMA_CONTRACT exported
+── D2-UNIT Tests ──
+[PASS] D2-UNIT-01..10 present in test file (10/10)
+── Documentation ──
+[PASS] D2_SINGULARITY_MEASURED_LAYER.md exists
+[PASS] D2_SELECTED_MEASUREMENT_TARGET.md exists
+[PASS] D2_INGRESS_AUDIT.md exists
+── Feature Flag ──
+[PASS] D2 emission flag declared
+[PASS] D2 base measurement flag declared
+── Registries ──
+[PASS] REG-AI-D2 in intelligence registry
+[PASS] TREG-013 in test registry
+[PASS] AI-DESKTOP-12 SCAFFOLDED in desktop registry
+── AutoHeal ──
+[PASS] D2 AutoHeal entry present
+── Proof Pack ──
+[PASS] D2 proof pack directory exists
+[PASS] D2 VERDICT.md exists
+
+RESULT: PASS=25 FAIL=0 TOTAL=25
+VERDICT: PASS
+```
+**EXIT: 0 — PASS=25 FAIL=0**
+
+## 3. bash scripts/autoheal/detect_recurrence.sh
+```
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=1669
+```
+**EXIT: 0 — PASS**
+
+## 4. bash scripts/verify_instructions.sh
+```
+PASS: G_SOURCE_MAP_SCRIPT_PRESENT
+PASS: G_SOURCE_MAP_PASS
+PASS: G_AUTOPILOT_BOUNDS_SCRIPT_PRESENT
+PASS: G_AUTOPILOT_BOUNDS_PASS
+SUMMARY: PASS=51 FAIL=0
+```
+**EXIT: 0 — PASS=51 FAIL=0**
+
+## Summary
+All 4 gates PASS. D2 normalization complete.

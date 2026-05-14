@@ -1,0 +1,2 @@
+{"model":"gemma2:2b","created_at":"2026-04-02T21:09:00.604482501Z","response":"Let's talk about how to manage","done":true,"done_reason":"length","context":[106,1645,108,235297,235304,37463,26515,107,108,106,2516,108,5331,235303,235256,5063,1105,1368,577,12607],"total_duration":895781851,"load_duration":107411405,"prompt_eval_count":13,"prompt_eval_duration":92571066,"eval_count":8,"eval_duration":679189737}
+HTTP_CODE=200

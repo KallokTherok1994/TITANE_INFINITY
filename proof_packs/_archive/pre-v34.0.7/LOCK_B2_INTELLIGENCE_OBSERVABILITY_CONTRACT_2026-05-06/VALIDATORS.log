@@ -1,0 +1,11 @@
+[2026-05-06] pnpm vitest run src/services/observability/__tests__/IntelligenceObservabilityContract.test.ts
+Test Files: 1 passed
+Tests: 26 passed, 0 failed
+
+[2026-05-06] bash scripts/verify_instructions.sh
+SUMMARY: PASS=51 FAIL=0
+
+[2026-05-06] bash scripts/autoheal/detect_recurrence.sh
+PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+PASS: G_AH_RECURRENCE_GUARD_PASS
+INFO: entries=1660

@@ -1,0 +1,1 @@
+SEALED | v33.0.18 | 2026-05-12 | AH-v87→AH-v92 | Rule 1–18 COMPLET | PASS=52 FAIL=0 | entries=1874
