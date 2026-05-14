@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# TITANE_INFINITY v35.1.x — pre-push tag convention guard
+#
+# Doctrine: avoid collision with legacy semver tags (v36.0.0, v37.1.0 already on origin).
+# Required convention for new release tags: release/vX.Y.Z-<scope>-<YYYY-MM-DD>
+#
+# Install locally (opt-in, never global):
+#   git config core.hooksPath scripts/git-hooks
+#
+# Bypass (governance audit trail required):
+#   TITANE_ALLOW_LEGACY_TAG=1 git push origin <tag>
+#
+set -euo pipefail
+
+remote="${1:-}"
+url="${2:-}"
+
+# stdin format: <local_ref> <local_sha> <remote_ref> <remote_sha>
+fail=0
+while read -r local_ref _ remote_ref _; do
+  case "$remote_ref" in
+    refs/tags/release/v*-*-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9])
+      # Canonical scoped tag — allowed.
+      ;;
+    refs/tags/v[0-9]*)
+      # Plain semver tag — block unless explicitly bypassed.
+      if [[ "${TITANE_ALLOW_LEGACY_TAG:-0}" != "1" ]]; then
+        echo "TITANE pre-push: refusing plain semver tag '$remote_ref'" >&2
+        echo "  Required convention: refs/tags/release/vX.Y.Z-<scope>-<YYYY-MM-DD>" >&2
+        echo "  Bypass (if intentional): TITANE_ALLOW_LEGACY_TAG=1 git push $remote $remote_ref" >&2
+        fail=1
+      fi
+      ;;
+    refs/tags/*)
+      # Other tag namespaces (e.g. windows-pr292-launcher-pack-20260412) — allowed.
+      ;;
+  esac
+done
+
+exit "$fail"
