@@ -47,13 +47,13 @@ describe('Chat query/mutation hooks (v34.4.0)', () => {
     expect(mockedSecureInvoke).toHaveBeenCalledWith('chat_get_conversation', { conversationId: 'conv-1' });
   });
 
-  it('useChatSendMutation invokes chat_generate and invalidates conversation cache', async () => {
+  it('useChatSendMutation invokes conversation_generate and invalidates conversation cache', async () => {
     const invalidateSpy = vi.spyOn(QueryClient.prototype, 'invalidateQueries');
     const { result } = renderHook(() => useChatSendMutation());
-    await result.current.mutateAsync({ conversationId: 'conv-9', prompt: 'hello' });
-    expect(mockedSecureInvoke).toHaveBeenCalledWith('chat_generate', {
+    await result.current.mutateAsync({ conversationId: 'conv-9', message: 'hello' });
+    expect(mockedSecureInvoke).toHaveBeenCalledWith('conversation_generate', {
       conversationId: 'conv-9',
-      prompt: 'hello',
+      message: 'hello',
     });
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: queryKeys.chat.conversation('conv-9'),

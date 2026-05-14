@@ -2554,3 +2554,8 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 - Probe canonique `quick_health_check` (5s polling, timeout 2s) via `safeInvokeCanonical`.
 - Visibilité runtime instantanée : pulse animé sur états non-LIVE pour faire émerger toute dérive backend.
 - AutoHeal : AH-v100.
+
+## v34.5.0 (2026-05-14) — Phase A audit interim
+- `scripts/ui-audit/tag-orphan-pages.mjs` : audit additif `src/pages` × `src/App.tsx` → `reports/ui-orphan-pages.{json,md}` (baseline LIVE=24, ALIAS=0, ORPHAN_DEAD=23 / 47).
+- `scripts/ui-audit/test-coverage-matrix.mjs` : matrice Rule 16 source × tests → `reports/test-coverage-matrix.{json,md}` (baseline 22.90 % = 554/2419).
+- `src/hooks/queries/useChatSendMutation.ts` : rewiré vers `conversation_generate` (OMEGA Pipeline v2 PROD). `chat_generate` reste mock smoke surface.

@@ -1725,3 +1725,7 @@ Source: `src-tauri/src/commands/temporal_commands.rs` (section `TIME-IPC v3`). A
 Note: le callback/frontend path `agenda_export_ical` a été retiré du stockage agenda injecté tant qu'aucune commande backend canonique n'est enregistrée pour cette capacité.
 
 Runtime truth note (2026-05-08): `titan_force_snapshot_current` est la voie frontend canonique pour la création de snapshot depuis `/time`. Les commandes `list_snapshots` et `get_travel_stats` publient désormais des données persistence-backed sérialisées en `camelCase`, et `restore_snapshot` / `delete_snapshot` retournent une erreur explicite tant que cette capacité n'est pas supportée par le runtime persistence-backed actuel.
+
+## v34.5.0 — Chat IPC clarification (2026-05-14)
+- `conversation_generate` (Ring 0 `src-tauri/src/conversation_engine/commands.rs`) = **chat IPC canonique PROD** (OMEGA Pipeline v2). Consommé par `src/hooks/queries/useChatSendMutation.ts`. Payload `ConversationGenerateArgs` (serde camelCase). Modèle PROD = `gemma2:2b`.
+- `chat_generate` (Ring 0 `src-tauri/src/mock_commands.rs`) = **surface mock smoke-test only** (echo `titane-echo-v∞`). Non-canonique pour le chat utilisateur. Conservé pour `TotalDevPage` et tests de canal.

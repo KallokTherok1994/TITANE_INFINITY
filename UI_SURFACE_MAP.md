@@ -1549,3 +1549,11 @@ AutoHeal : `SHADCN-CMDK-PALETTE-v34_3_0-2026-05-15`.
 
 Tests: `src/__tests__/hooks/queries/chat.test.tsx` (5/5 PASS — IPC contract + invalidation spy on `QueryClient.prototype.invalidateQueries`).
 Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 minimal patch. Migration of consumers will land in later paliers under the same direct-to-main discipline (Rule 18).
+
+## v34.5.0 (2026-05-14) — Phase A audit interim
+
+- **Scripts d'audit additifs** sous `scripts/ui-audit/` :
+  - `tag-orphan-pages.mjs` croise `src/pages/*.tsx` × `src/App.tsx` et publie `reports/ui-orphan-pages.json` + `.md`. Classifications LIVE / ALIAS / ORPHAN_DEAD. Drapeau `--apply` pour tagger `@deprecated UI_DEAD v34.5` (dry-run par défaut). Baseline initiale: **LIVE=24, ALIAS=0, ORPHAN_DEAD=23** sur 47 pages.
+  - `test-coverage-matrix.mjs` scanne `src/**/*.{ts,tsx}` + `src-tauri/src/**/*.rs`, croise avec `*.test.{ts,tsx}` et `#[cfg(test)]`. Publie `reports/test-coverage-matrix.json` + `.md`. Baseline initiale: **22.90 % de couverture déclarative** (554 / 2419 fichiers source).
+- **Tests** : `tests/unit/scripts/tag-orphan-pages.test.ts` (7) + `tests/unit/scripts/test-coverage-matrix.test.ts` (4) — 11/11 PASS.
+- **Chat IPC canonique** : `useChatSendMutation` (v34.4.0 additif) rewiré de `chat_generate` (mock_commands echo) vers `conversation_generate` (OMEGA Pipeline v2). Payload `{ conversationId, message, mode?, provider?, systemPrompt? }` aligné sur `ConversationGenerateArgs` (serde camelCase). 5/5 `chat.test.tsx` PASS. `chat_generate` reste enregistré comme surface mock smoke-test.
