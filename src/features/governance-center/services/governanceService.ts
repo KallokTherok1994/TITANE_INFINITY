@@ -8,7 +8,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { safeInvoke } from '@/utils/invoke';
+import { safeInvoke, safeInvokeCanonical } from '@/utils/invoke';
 import { StatusCache } from '@/services/ai/statusCache';
 import type {
   SecureResponse,
@@ -147,7 +147,7 @@ function makeGetKeyStatus(
     keyStatusCaches[provider].get(
       async () =>
         normalizeResponse<GeminiKeyStatus>(
-          await safeInvoke<unknown>(PROVIDER_STATUS_CMDS[provider]),
+          await safeInvokeCanonical<GeminiKeyStatus>(PROVIDER_STATUS_CMDS[provider]),
           `Impossible de récupérer le statut ${PROVIDER_DISPLAY[provider]}`
         ),
       () => backoffKeyStatusFallback(provider)
@@ -181,7 +181,7 @@ async function getOllamaStatus(): Promise<SecureResponse<OllamaStatus>> {
   return keyStatusCaches.ollama.get(
     async () =>
       normalizeResponse<OllamaStatus>(
-        await safeInvoke<unknown>('ai_check_ollama_status'),
+        await safeInvokeCanonical<OllamaStatus>('ai_check_ollama_status'),
         'Impossible de récupérer le statut Ollama'
       ),
     () => backoffOllamaFallback()
@@ -210,7 +210,7 @@ async function storeSecret(
  * Obtenir le statut de tous les secrets configurés
  */
 async function getSecretsStatus(): Promise<SecureResponse<SecretStatus[]>> {
-  const raw = await safeInvoke<unknown>('get_secrets_status');
+  const raw = await safeInvokeCanonical<SecretStatus[]>('get_secrets_status');
   return normalizeResponse<SecretStatus[]>(
     raw,
     'Impossible de récupérer les statuts des secrets'
@@ -241,7 +241,7 @@ async function deleteSecret(key: string): Promise<SecureResponse<void>> {
  * Obtenir toutes les politiques
  */
 async function getPolicies(): Promise<SecureResponse<IAPolicy[]>> {
-  const raw = await safeInvoke<unknown>('get_ia_policies');
+  const raw = await safeInvokeCanonical<IAPolicy[]>('get_ia_policies');
   return normalizeResponse<IAPolicy[]>(raw, 'Impossible de récupérer les politiques');
 }
 
@@ -290,7 +290,7 @@ async function deletePolicy(policyId: string): Promise<SecureResponse<void>> {
  * Obtenir la matrice de permissions
  */
 async function getPermissionMatrix(): Promise<SecureResponse<PermissionMatrix>> {
-  const raw = await safeInvoke<unknown>('get_permission_matrix');
+  const raw = await safeInvokeCanonical<PermissionMatrix>('get_permission_matrix');
   return normalizeResponse<PermissionMatrix>(
     raw,
     'Impossible de récupérer la matrice de permissions'
@@ -301,7 +301,7 @@ async function getPermissionMatrix(): Promise<SecureResponse<PermissionMatrix>> 
  * Obtenir le journal d'audit des permissions
  */
 async function getPermissionAudit(): Promise<SecureResponse<PermissionAudit[]>> {
-  const raw = await safeInvoke<unknown>('get_permission_audit');
+  const raw = await safeInvokeCanonical<string>('get_permission_audit');
 
   // Le backend retourne le JSON sous forme de string, on le parse
   const response = normalizeResponse<string>(raw, "Impossible de récupérer l'audit");
@@ -336,7 +336,7 @@ async function clearPermissionAudit(): Promise<SecureResponse<void>> {
 async function getSecurityLog(
   filters?: SecurityLogFilters
 ): Promise<SecureResponse<SecurityLogEntry[]>> {
-  const raw = await safeInvoke<unknown>('get_security_log', { filters });
+  const raw = await safeInvokeCanonical<SecurityLogEntry[]>('get_security_log', { filters });
   return normalizeResponse<SecurityLogEntry[]>(
     raw,
     'Impossible de récupérer le journal de sécurité'

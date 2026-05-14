@@ -1643,3 +1643,9 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **`/time?tab=snapshots`** : `src/pages/TimePage.tsx` normalise maintenant la reponse de `listSnapshots()` avant `map`, en acceptant le tableau brut legacy, `content` et `snapshots`, puis en retombant sur `[]` pour tout fallback browser non-tableau.
 - **Preuve unitaire ciblee** : `src/__tests__/pages/TimePage.test.tsx` couvre explicitement un payload `{ success:false, fallback:true, error }` et verrouille que `page-time` reste rendue sur l onglet snapshots.
 - **Preuve browser ciblee** : `pnpm exec playwright test e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture time' --reporter=line` repasse sans le bruit `response.map is not a function` precedemment vu sur la surface Time.
+
+## v35.1.5 (2026-05-14) — Admin governance neutralise les lectures NO_TRANSPORT au bootstrap
+
+- **`/admin?tab=governance`** : `src/features/governance-center/services/governanceService.ts` route maintenant les lectures de bootstrap `get_*_status`, `ai_check_ollama_status`, `get_ia_policies`, `get_permission_matrix`, `get_permission_audit` et `get_security_log` via `safeInvokeCanonical`, ce qui conserve les surfaces de gouvernance vivantes sans bruit console `NO_TRANSPORT` en browser.
+- **Preuve unitaire ciblee** : `src/features/governance-center/services/__tests__/governanceService.transportGuard.test.ts` verrouille que ces lectures utilisent la voie canonique silencieuse et non `safeInvoke`, y compris sur le cas `NO_TRANSPORT`.
+- **Preuve browser ciblee** : `pnpm exec playwright test e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture admin-governance' --reporter=line` repasse sans les erreurs console precedentes sur les statuts secrets, Ollama, policies et permissions.
