@@ -61,6 +61,14 @@ export function SurfaceTruthBadge({
 
   if (!enabled) return null;
 
+  // v35.1.2 — In mobile viewport (≤479px), anchor toggle to top-right to avoid
+  // intercepting bottom-right chat-send button (E2E proof: e2e/critical/
+  // chat-bubble-desktop-width.spec.ts mobile≤479px).
+  const isMobileViewport =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 479px)').matches;
+
   return (
     <>
       <button
@@ -70,8 +78,9 @@ export function SurfaceTruthBadge({
         onClick={() => setOpen(prev => !prev)}
         style={{
           position: 'fixed',
-          bottom: 8,
-          right: 8,
+          ...(isMobileViewport
+            ? { top: 8, right: 8 }
+            : { bottom: 8, right: 8 }),
           zIndex: 9999,
           fontFamily: 'monospace',
           fontSize: 10,
