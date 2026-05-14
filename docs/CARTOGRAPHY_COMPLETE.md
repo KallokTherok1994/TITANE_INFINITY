@@ -2559,3 +2559,13 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 - `scripts/ui-audit/tag-orphan-pages.mjs` : audit additif `src/pages` × `src/App.tsx` → `reports/ui-orphan-pages.{json,md}` (baseline LIVE=24, ALIAS=0, ORPHAN_DEAD=23 / 47).
 - `scripts/ui-audit/test-coverage-matrix.mjs` : matrice Rule 16 source × tests → `reports/test-coverage-matrix.{json,md}` (baseline 22.90 % = 554/2419).
 - `src/hooks/queries/useChatSendMutation.ts` : rewiré vers `conversation_generate` (OMEGA Pipeline v2 PROD). `chat_generate` reste mock smoke surface.
+
+## v35.0.0 (2026-05-14) — Sprint B.1 : TanStack Query offline persistence
+
+- **NEW** `src/lib/queryPersister.ts` : module additif d'installation de la persistance disque pour le QueryClient canonique (`src/lib/queryClient.ts`).
+- **Stack** : `@tanstack/query-sync-storage-persister@5.100.10` + `@tanstack/react-query-persist-client@5.100.10`.
+- **Allow-list** : préfixes `system|engines|providers|conversation|chat` uniquement. Tout autre `queryKey` est ignoré au niveau `dehydrateOptions.shouldDehydrateQuery`. Aucun cache mutation, aucun secret.
+- **Storage** : `window.localStorage`, clé `titane.tanstack.query.cache.v1`. No-op si `window` absent.
+- **Buster** : `titane-${__APP_VERSION__}` → toute bump invalide la snapshot disque (cohérent avec `vite.config.ts` define + `scripts/bump-version.mjs`).
+- **Tests** : `src/__tests__/lib/queryPersister.test.ts` (5/5 PASS) — couvre allow-list, mode no-storage, persistance d'une query allow-listée, exclusion d'une query hors allow-list.
+- **Rule 1 (additif)** : `QueryClientProvider` inchangé, hooks de domaine v34.4.0 (`useChatSendMutation`, `useChatConversationQuery`, etc.) inchangés. Aucun consommateur impacté.

@@ -15,6 +15,7 @@
  */
 
 import { QueryClient } from '@tanstack/react-query';
+import { installQueryPersister } from './queryPersister';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,3 +30,7 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+// v35.0.0 — installation offline-first du cache (localStorage allow-listé).
+// No-op si storage indisponible (Tauri sans DOM, tests headless).
+export const queryPersisterStatus = installQueryPersister(queryClient);

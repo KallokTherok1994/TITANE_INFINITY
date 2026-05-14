@@ -1557,3 +1557,12 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
   - `test-coverage-matrix.mjs` scanne `src/**/*.{ts,tsx}` + `src-tauri/src/**/*.rs`, croise avec `*.test.{ts,tsx}` et `#[cfg(test)]`. Publie `reports/test-coverage-matrix.json` + `.md`. Baseline initiale: **22.90 % de couverture déclarative** (554 / 2419 fichiers source).
 - **Tests** : `tests/unit/scripts/tag-orphan-pages.test.ts` (7) + `tests/unit/scripts/test-coverage-matrix.test.ts` (4) — 11/11 PASS.
 - **Chat IPC canonique** : `useChatSendMutation` (v34.4.0 additif) rewiré de `chat_generate` (mock_commands echo) vers `conversation_generate` (OMEGA Pipeline v2). Payload `{ conversationId, message, mode?, provider?, systemPrompt? }` aligné sur `ConversationGenerateArgs` (serde camelCase). 5/5 `chat.test.tsx` PASS. `chat_generate` reste enregistré comme surface mock smoke-test.
+
+## v35.0.0 (2026-05-14) — Sprint B.1 offline-first cache
+
+- **Persistance TanStack additive** : `src/lib/queryPersister.ts` (NEW) installe `@tanstack/query-sync-storage-persister` + `@tanstack/react-query-persist-client` une seule fois via `installQueryPersister(queryClient)` appelé dans `src/lib/queryClient.ts`.
+- **Allow-list stricte** des préfixes de queryKey persistés : `system`, `engines`, `providers`, `conversation`, `chat`. Aucune autre clé n'est sérialisée sur disque. Aucune mutation n'est persistée.
+- **Buster** lié à `__APP_VERSION__` (injecté par Vite) → tout `bump:version` invalide automatiquement le cache disque. `maxAge` = 24h.
+- **Comportement no-op** explicite si `window.localStorage` n'est pas disponible (Tauri remote sans DOM, tests headless sans storage stub) : `installed=false`, `reason="no-storage"`.
+- **Surface UI inchangée** : aucun composant React modifié. `QueryClientProvider` continue à wrapper l'App.
+- **Tests** : `src/__tests__/lib/queryPersister.test.ts` (5 PASS) — allow-list, no-storage, persistance + filtrage out-of-list.
