@@ -83,6 +83,32 @@ interface OrchestrationState {
   };
 }
 
+const normalizeTestSuites = (value: unknown): TestSuite[] => {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (!value || typeof value !== 'object') {
+    return [];
+  }
+
+  const raw = value as {
+    ok?: boolean;
+    content?: unknown;
+    suites?: unknown;
+  };
+
+  if (Array.isArray(raw.content)) {
+    return raw.content as TestSuite[];
+  }
+
+  if (Array.isArray(raw.suites)) {
+    return raw.suites as TestSuite[];
+  }
+
+  return [];
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPER COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -720,7 +746,7 @@ function DevPageContent(): JSX.Element {
       setOneCoreState(oneCore.state);
       setQAState(qaStateData);
       setMetrics(metricsData);
-      setSuites(suitesData);
+      setSuites(normalizeTestSuites(suitesData));
       setAlerts(alertsData);
 
       // Load orchestration state

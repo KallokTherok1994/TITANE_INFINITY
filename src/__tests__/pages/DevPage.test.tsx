@@ -191,4 +191,35 @@ describe('DevPage', () => {
     );
     expect(screen.getByText('Aucun centre disponible')).toBeVisible();
   });
+
+  it('keeps the validation tab renderable when QA suites payload is not an array', async () => {
+    qaGetStateMock.mockResolvedValue({
+      health_score: 92,
+      test_coverage: 88,
+      active_monitors: 1,
+      hardening_level: 'standard',
+    });
+    qaGetSystemMetricsMock.mockResolvedValue({});
+    qaListTestSuitesMock.mockResolvedValue({
+      success: false,
+      fallback: true,
+      error: 'No Tauri transport available',
+    });
+    qaListAlertsMock.mockResolvedValue([]);
+
+    render(
+      <MemoryRouter initialEntries={['/dev?tab=validation']}>
+        <Routes>
+          <Route path="/dev" element={<DevPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByTestId('page-dev')).toHaveAttribute(
+      'data-dev-state',
+      'ready'
+    );
+    expect(screen.getByTestId('tab-dev-validation')).toBeVisible();
+    expect(screen.queryByText(/Erreur dans DevPage/i)).not.toBeInTheDocument();
+  });
 });

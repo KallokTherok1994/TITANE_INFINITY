@@ -2639,3 +2639,9 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > `src/pages/ConfigurationHub.tsx` n utilise plus le snapshot `getAllConfigs()` comme source bloquante complète. La normalisation runtime accepte `runtime: null`; la branche snapshot accepte un `chat_engine` absent ou partiel avec defaults canoniques; et les appels secondaires `getChatEngineConfig` / `getChatRequestDefaults` tolèrent à la fois une enveloppe IPC canonique, un payload direct et un fallback browser `{ success:false, fallback:true }`. La surface `page-configuration-hub` reste donc prouvable en browser même hors transport Tauri.
 
 > `src/modules/optimization/WebAssemblyCompute.ts` conserve le même fallback JS mais reclasse l échec de compilation WASM en avertissement attendu. La correction protège les surfaces `/optimization` et `dev-operations` contre un faux signal `console.error` tout en gardant la preuve technique du fallback dans le log et dans le test unitaire du module.
+
+## v35.1.5 (2026-05-14) — Dev validation normalise les suites QA dégradées
+
+> `src/pages/DevPage.tsx` consommait encore le retour de `qa.listTestSuites()` comme un tableau certain. En mode browser partiel, ce contrat pouvait dériver vers une enveloppe, un objet `suites`, ou un fallback générique, ce qui faisait planter `QATestsSection` sur `suites.map is not a function` quand l onglet `/dev?tab=validation` devenait actif.
+
+> La correction est volontairement locale au point de mutation: `DevPage` normalise le payload `suites` avant `setSuites(...)` et retombe sur `[]` si le backend/browser ne fournit pas de tableau exploitable. La surface validation reste donc visible et honnête, sans faux ready state ni crash React.
