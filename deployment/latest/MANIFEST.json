@@ -5,7 +5,17 @@
     "deb": "titane-infinity_34.0.12_amd64.deb",
     "rpm": "titane-infinity-34.0.12-1.x86_64.rpm",
     "appimage": "titane-infinity_34.0.12_amd64.AppImage",
-    "binary": "titane-infinity-34.0.12"
+    "binary": "titane-infinity-34.0.12",
+    "msi": {
+      "filename": "titane-infinity_34.0.12_x64_en-US.msi",
+      "size_bytes": 21639168,
+      "size_human": "20.6 MB",
+      "sha256": "3197383127849031a0c9ac58b326367b2e788c3a0d8565877a18e00602a8979c",
+      "platform": "windows-x64",
+      "installer_type": "wix-3.14",
+      "built_via": ".github/workflows/windows-msi-on-demand.yml run 25839922852",
+      "built_at": "2026-05-14T04:04Z"
+    }
   },
   "sha256": {
     "deb": "539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4",
@@ -14,5 +24,5 @@
     "binary": "2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2"
   },
   "supersedes": "34.0.11",
-  "notes": "BUILD ALL v34.0.12 — clippy idiom modernization (-17 warnings) + prettier normalisation 68 files + audit clean (TSC/ESLint/Prettier/Vitest 9247 PASS/Rust 806 PASS)"
+  "notes": "BUILD ALL v34.0.12 \u2014 clippy idiom modernization (-17 warnings) + prettier normalisation 68 files + audit clean (TSC/ESLint/Prettier/Vitest 9247 PASS/Rust 806 PASS)"
 }

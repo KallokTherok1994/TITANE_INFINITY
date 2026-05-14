@@ -44,6 +44,15 @@
 | `titane-infinity-34.0.12-1.x86_64.rpm` | 24.9 MB | `2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169` |
 | `titane-infinity_34.0.12_amd64.AppImage` | 95 MB  | `35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2` |
 | `titane-infinity-34.0.12` (raw binary) | 53 MB  | `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2` |
+| `titane-infinity_34.0.12_x64_en-US.msi` (Windows MSI, WiX 3.14) | 21 MB  | `3197383127849031a0c9ac58b326367b2e788c3a0d8565877a18e00602a8979c` |
+
+### Windows MSI (2026-05-13 23:28 UTC, on-demand)
+
+- **Fix prérequis** : `src-tauri/icons/icon.ico` régénéré multi-résolution (8 frames : 16, 24, 32, 48, 64, 96, 128, 256) via Pillow 10.2 — l'ICO précédent (209 bytes, 1 frame 16×16) rendait le launcher MSI/Start Menu/Add-Remove Programs flou ou cassé.
+- **Build** : GitHub Actions run [`25839922852`](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/runs/25839922852), workflow `.github/workflows/windows-msi-on-demand.yml`, runner `windows-latest`, durée **35m56s** ✓ SUCCESS.
+- **WiX Toolset** : 3.14.1.8722, Template `x64;0`, Subject `titane-infinity`, Code page 1252.
+- **Artefact** : [`deployment/windows/v34.0.12/titane-infinity_34.0.12_x64_en-US.msi`](deployment/windows/v34.0.12/) (21 MB) + `SHA256SUMS.txt`.
+- **AutoHeal** : `WIN-MSI-ICO-MULTIRES-v34_0_12-2026-05-13` (entries=1918, fix icon) + `WIN-MSI-BUILD-v34_0_12-2026-05-13` (entries=1919, build success).
 
 ### Cleanup (post-seal, repo hygiene)
 
@@ -58,6 +67,8 @@
 - `BUILD-ALL-v34_0_12-2026-05-13` (entries=1915)
 - `CLEANUP-REPO-v34_0_12-2026-05-13` (entries=1916, post-cleanup)
 - `INSTALL-SYS-v34_0_12-2026-05-13` (entries=1917, system install verified)
+- `WIN-MSI-ICO-MULTIRES-v34_0_12-2026-05-13` (entries=1918, icon.ico 1→8 frames)
+- `WIN-MSI-BUILD-v34_0_12-2026-05-13` (entries=1919, Windows MSI built via GH Actions)
 
 ### System install (DONE — 2026-05-13 23:09)
 

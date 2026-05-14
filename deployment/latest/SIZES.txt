@@ -2,3 +2,4 @@
 24981482	titane-infinity-34.0.12-1.x86_64.rpm
 99125752	titane-infinity_34.0.12_amd64.AppImage
 54916000	titane-infinity-34.0.12
+21639168	titane-infinity_34.0.12_x64_en-US.msi

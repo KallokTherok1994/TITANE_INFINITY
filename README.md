@@ -44,6 +44,7 @@ Voir la documentation interne et les logs pour la preuve d’exécution, la conf
 | `titane-infinity-34.0.12-1.x86_64.rpm` | 24.9 MB | `2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169` |
 | `titane-infinity_34.0.12_amd64.AppImage` | 95 MB | `35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2` |
 | `titane-infinity-34.0.12` (raw binary) | 53 MB | `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2` |
+| `titane-infinity_34.0.12_x64_en-US.msi` (Windows) | 21 MB | `3197383127849031a0c9ac58b326367b2e788c3a0d8565877a18e00602a8979c` |
 
 Full historical checksums : [`docs/release-history/checksums/INDEX.md`](docs/release-history/checksums/INDEX.md) (v32 → v34.0.11).
 
