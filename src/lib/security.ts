@@ -1151,7 +1151,15 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // HYPER CENTER (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'hyper_init',
+  'hyper_get_state',
+  'hyper_get_thoughts',
+  'hyper_get_insights',
   'hyper_set_mode',
+  'hyper_think',
+  'hyper_reason',
+  'hyper_imagine',
+  'hyper_generate_insight',
 
   // ═══════════════════════════════════════════════════════════════
   // NEXUS & SENTINEL (v24.4+)

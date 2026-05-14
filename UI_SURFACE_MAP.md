@@ -1673,3 +1673,9 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **`/orchestration-center`** : `src/lib/security.ts` allowliste maintenant `orchestrator_get_state`, `orchestrator_init`, `multi_ai_get_state` et `cognitive_get_state`, ce qui supprime les rejets L1 visibles sur la surface Meta Orchestrator browser.
 - **Preuve unitaire ciblee** : `src/__tests__/security/allowed-commands-legacy-prune-v34_0_6.test.ts` verrouille ces commandes dans `ALLOWED_COMMANDS` pour eviter un retour du drift whitelist.
 - **Preuve browser ciblee** : `pnpm exec playwright test e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture orchestration-center' --reporter=line` repasse sans les erreurs console de commande non allowlistee qui polluaient la surface orchestration.
+
+## v35.1.5 (2026-05-14) — Hyper Center realigne la famille de commandes active sur la whitelist frontend
+
+- **`/hyper-center`** : `src/lib/security.ts` allowliste maintenant toute la famille active de la surface Hyper Center: `hyper_init`, `hyper_get_state`, `hyper_get_thoughts`, `hyper_get_insights`, `hyper_set_mode`, `hyper_think`, `hyper_reason`, `hyper_imagine` et `hyper_generate_insight`.
+- **Preuve unitaire ciblee** : `src/__tests__/security/allowed-commands-legacy-prune-v34_0_6.test.ts` verrouille ces commandes dans `ALLOWED_COMMANDS` pour eviter un retour progressif des rejets L1 sur Hyper Center.
+- **Preuve browser ciblee** : `pnpm exec playwright test e2e/critical/ui-prod-capture-v34_0_7.spec.ts --grep 'capture hyper-center' --reporter=line` repasse sans les erreurs console `Command "hyper_*" is not in whitelist` qui polluaient le bootstrap de la surface.
