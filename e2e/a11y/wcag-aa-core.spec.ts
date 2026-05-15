@@ -23,13 +23,10 @@ interface A11ySurface {
   url: string;
 }
 
-// 34 critical routes — covers chat, titane shell, experience, admin system,
-// admin governance, admin audio, dev overview, dev diagnostics, time, fusion,
-// total-dev, memory, orchestration, orchestration-intelligence, research,
-// reality-center, quantum-center, singularity, multiproject, optimization,
-// evolution, creation, skills, twins, cloud, plus the autonomous-resilience
-// cluster (sentinel, watchdog, selfheal, adaptive), the cognition cluster
-// (hyper-center, knowledge, performance), doc-center and htf.
+// 44 critical routes — canonical core + tranche A admin/dev tabs expansion.
+// Includes chat, shell, product routes, resilience/cognition clusters, htf,
+// plus admin monitoring/diagnostic/security/explainability/orchestrator/log-analysis
+// and dev ipc/engines/registry/devtools tabs.
 const SURFACES: A11ySurface[] = [
   { name: 'titane-conversation', url: '/titane?tab=conversation' },
   { name: 'titane-home', url: '/titane' },
@@ -37,8 +34,18 @@ const SURFACES: A11ySurface[] = [
   { name: 'admin-system', url: '/admin?tab=system' },
   { name: 'admin-governance', url: '/admin?tab=governance' },
   { name: 'admin-audio', url: '/admin?tab=audio' },
+  { name: 'admin-monitoring', url: '/admin?tab=monitoring' },
+  { name: 'admin-diagnostic', url: '/admin?tab=diagnostic' },
+  { name: 'admin-security', url: '/admin?tab=security' },
+  { name: 'admin-explainability', url: '/admin?tab=explainability' },
+  { name: 'admin-orchestrator', url: '/admin?tab=orchestrator' },
+  { name: 'admin-log-analysis', url: '/admin?tab=log-analysis' },
   { name: 'dev-overview', url: '/dev?tab=overview' },
   { name: 'dev-diagnostics', url: '/dev?tab=diagnostics' },
+  { name: 'dev-ipc', url: '/dev?tab=ipc' },
+  { name: 'dev-engines', url: '/dev?tab=engines' },
+  { name: 'dev-registry', url: '/dev?tab=registry' },
+  { name: 'dev-devtools', url: '/dev?tab=devtools' },
   { name: 'time', url: '/time' },
   { name: 'fusion', url: '/fusion' },
   { name: 'total-dev', url: '/total-dev' },
@@ -71,17 +78,17 @@ const SURFACES: A11ySurface[] = [
 const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 
 /**
- * Regression baseline — total blocking violations (critical+serious) summed
- * across all 34 routes. Initial measurement on 2026-05-13: 25 blocking.
-* Tightened further to 3 after a second governed tranche confirmed
+  * Regression baseline — total blocking violations (critical+serious) summed
+ * across all 44 routes. Initial measurement on 2026-05-13: 25 blocking.
+ * Tightened further to 3 after a second governed tranche confirmed
  * sustained zero-blocking inventory across audited and candidate routes.
-  * land. Never increase without an explicit AutoHeal governance entry.
+ * Never increase without an explicit AutoHeal governance entry.
   */
 const AGGREGATE_BLOCKING_BASELINE = 3;
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('v34.0.7 A11y WCAG 2.1 AA (34 critical routes)', () => {
+test.describe('v34.0.7 A11y WCAG 2.1 AA (44 critical routes)', () => {
   for (const surface of SURFACES) {
     test(`a11y ${surface.name}`, async ({ page }) => {
       await page.goto(surface.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
@@ -133,7 +140,7 @@ test.describe('v34.0.7 A11y WCAG 2.1 AA (34 critical routes)', () => {
 });
 
 test('v34.0.7 a11y aggregate baseline regression guard', () => {
-  // Sum blocking violations across all 34 routes; assert <= baseline.
+  // Sum blocking violations across all 44 routes; assert <= baseline.
   let aggregate = 0;
   const breakdown: Record<string, number> = {};
   for (const surface of SURFACES) {
@@ -170,5 +177,5 @@ test('v34.0.7 a11y aggregate baseline regression guard', () => {
 });
 
 test('v34.0.7 a11y inventory invariant', () => {
-  expect(SURFACES.length).toBe(34);
+  expect(SURFACES.length).toBe(44);
 });

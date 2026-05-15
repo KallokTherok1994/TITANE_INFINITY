@@ -1,3 +1,10 @@
+## 2026-05-15 — WCAG tranche A expansion 34 -> 44 (delta cartographie)
+
+- Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) ajoute 10 routes admin/dev tabs déjà qualifiées sans modifier les surfaces runtime UI.
+- Inventaire canonique passe à 44 routes; invariant verrouillé (`SURFACES.length === 44`).
+- Preuve canonique: toutes les nouvelles routes ajoutées publient `blocking=0`; agrégat global maintenu à `blocking=0 baseline=3`.
+- Aucune mutation Ring 0/1/2/3 ni IPC.
+
 ## 2026-05-15 — WCAG aggregate baseline tightening 5 -> 3 (delta cartographie)
 
 - Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre la garde d agrégat de `5` à `3` sans modifier l inventaire des routes (34/34) ni les surfaces UI runtime.

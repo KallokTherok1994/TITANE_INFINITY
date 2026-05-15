@@ -1,3 +1,10 @@
+## 2026-05-15 — A11Y tranche A gate expansion (44 routes: admin/dev tabs)
+
+- **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire canonique de 34 à 44 routes en ajoutant 10 tabs déjà validés sur `/admin` et `/dev`.
+- **Routes ajoutées** : `/admin?tab=monitoring`, `/admin?tab=diagnostic`, `/admin?tab=security`, `/admin?tab=explainability`, `/admin?tab=orchestrator`, `/admin?tab=log-analysis`, `/dev?tab=ipc`, `/dev?tab=engines`, `/dev?tab=registry`, `/dev?tab=devtools`.
+- **Preuve gate** : Playwright canonique `46 passed`, toutes les nouvelles surfaces à `blocking=0`, agrégat `blocking=0 baseline=3`.
+- **Rollback** : `git restore -- e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_TRANCHE_A_ADMIN_DEV_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_TRANCHE_A_ADMIN_DEV_GATE_EXPANSION`
+
 ## 2026-05-15 — A11Y aggregate baseline tightening (5 -> 3) on canonical WCAG gate
 
 - **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre uniquement `AGGREGATE_BLOCKING_BASELINE` de `5` à `3` sur l'inventaire canonique déjà stabilisé à `blocking=0`.
