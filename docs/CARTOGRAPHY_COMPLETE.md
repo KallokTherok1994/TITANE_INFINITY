@@ -1,3 +1,9 @@
+## 2026-05-15 — WCAG aggregate baseline tightening 5 -> 3 (delta cartographie)
+
+- Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre la garde d agrégat de `5` à `3` sans modifier l inventaire des routes (34/34) ni les surfaces UI runtime.
+- Nouveau garde unitaire: [src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts](src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts) verrouille la constante canonique et empêche la réouverture silencieuse de marge.
+- Preuve canonique conservée: `blocking=0 baseline=3` sur le rerun Playwright complet; aucune mutation Ring 1/2/3, aucun changement IPC.
+
 ## 2026-05-15 — WCAG aggregate baseline tightening 30 -> 5 (delta cartographie)
 
 - Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre la garde d agrégat de `30` à `5` sans modifier l inventaire des routes (34/34) ni les surfaces UI runtime.

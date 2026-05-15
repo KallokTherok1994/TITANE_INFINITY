@@ -1,3 +1,10 @@
+## 2026-05-15 — A11Y aggregate baseline tightening (5 -> 3) on canonical WCAG gate
+
+- **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre uniquement `AGGREGATE_BLOCKING_BASELINE` de `5` à `3` sur l'inventaire canonique déjà stabilisé à `blocking=0`.
+- **Test Vitest** : [src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts](src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts) verrouille la constante `= 3` et interdit le retour à `= 5` ou `= 30`.
+- **Preuve gate** : rerun Playwright canonique sur 34 routes, `36 passed`, `[a11y:aggregate] blocking=0 baseline=3`.
+- **Rollback** : `git restore -- e2e/a11y/wcag-aa-core.spec.ts src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_BASELINE_TIGHTEN_5_TO_3.md proof_packs/A11Y_REDUCTION_2026-05-15_BASELINE_TIGHTEN_5_TO_3`
+
 ## 2026-05-15 — A11Y aggregate baseline tightening (30 -> 5) on canonical WCAG gate
 
 - **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre uniquement `AGGREGATE_BLOCKING_BASELINE` de `30` à `5` sur l'inventaire canonique déjà stabilisé à `blocking=0`.
