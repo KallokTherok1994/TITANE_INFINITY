@@ -23,20 +23,20 @@ interface A11ySurface {
   url: string;
 }
 
-// 15 critical routes — covers chat, experience, admin, dev, time,
-// monitoring, dashboard, total-dev, memory, governance, orchestration, research,
-// quantum-center, multiproject, and optimization.
+// 15 critical routes — covers chat, titane shell, experience, admin system,
+// admin governance, dev overview, dev diagnostics, time, total-dev, memory,
+// orchestration, research, quantum-center, multiproject, and optimization.
 const SURFACES: A11ySurface[] = [
   { name: 'titane-conversation', url: '/titane?tab=conversation' },
+  { name: 'titane-home', url: '/titane' },
   { name: 'experience', url: '/experience' },
   { name: 'admin-system', url: '/admin?tab=system' },
+  { name: 'admin-governance', url: '/admin?tab=governance' },
   { name: 'dev-overview', url: '/dev?tab=overview' },
+  { name: 'dev-diagnostics', url: '/dev?tab=diagnostics' },
   { name: 'time', url: '/time' },
-  { name: 'monitoring', url: '/monitoring' },
-  { name: 'dashboard', url: '/dashboard' },
   { name: 'total-dev', url: '/total-dev' },
   { name: 'memory', url: '/memory' },
-  { name: 'governance-center', url: '/governance-center' },
   { name: 'orchestration-center', url: '/orchestration-center' },
   { name: 'research', url: '/research' },
   { name: 'quantum-center', url: '/quantum-center' },

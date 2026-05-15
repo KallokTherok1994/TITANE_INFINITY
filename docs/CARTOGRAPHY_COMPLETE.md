@@ -81,6 +81,15 @@ Le delta ferme une unique violation sérieuse sur `/quantum-center` sans changer
 
 Le delta ferme un cluster contraste partagé sur deux surfaces visibles sans toucher à la logique métier ni aux composants de base: seuls les textes secondaires réellement signalés par Axe sont relevés. La preuve courante publie `multiproject=0`, `optimization=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `13` à `15` routes critiques auditées.
 
+## 2026-05-15 — WCAG canonical route anti-drift realignment (delta cartographie)
+
+| Couche | Surface modifiée | Fichier |
+|---|---|---|
+| Ring 4 | Inventaire WCAG réaligné vers les routes canoniques réelles | e2e/a11y/wcag-aa-core.spec.ts |
+| Tests | Normalisation des alias `/dashboard`, `/monitoring`, `/governance-center` verrouillée | src/__tests__/ui/app-router-canonical-surfaces.test.tsx |
+
+Le delta ne corrige pas une dette visuelle supplémentaire; il supprime un drift de preuve. Le gate WCAG n audite plus trois aliases legacy mais leurs vérités runtime canoniques: `/titane`, `/dev?tab=diagnostics` et `/admin?tab=governance`. La preuve courante publie `titane-home=0`, `dev-diagnostics=0`, `admin-governance=0` et maintient `aggregate blocking=0 baseline=30` sur un inventaire toujours fixé à 15 routes critiques.
+
 
 
 | Couche | Surface ajoutée | Fichier |

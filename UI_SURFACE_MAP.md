@@ -270,6 +270,13 @@
 - Gardes locales: [src/__tests__/pages/MultiProjectDashboard.test.tsx](src/__tests__/pages/MultiProjectDashboard.test.tsx) et [src/__tests__/pages/UltimateOptimizationDashboard.test.tsx](src/__tests__/pages/UltimateOptimizationDashboard.test.tsx) verrouillent les tokens relevés.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 15 routes critiques avec ajout de `multiproject` et `optimization`, et publie `multiproject=0`, `optimization=0` puis `aggregate blocking=0 baseline=30`.
 
+# [2026-05-15] WCAG canonical route anti-drift realignment
+
+- Surfaces concernées: alias historiques `/dashboard`, `/monitoring`, `/governance-center` et leurs cibles canoniques `/titane`, `/dev?tab=diagnostics`, `/admin?tab=governance`.
+- Vérité runtime: le gate WCAG audite désormais les URL canoniques réellement actives au runtime au lieu de passer implicitement par des redirects legacy.
+- Points de contrôle canoniques: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) remplace `dashboard`, `monitoring` et `governance-center` par `titane-home`, `dev-diagnostics` et `admin-governance` sans changer la taille de l inventaire; [src/__tests__/ui/app-router-canonical-surfaces.test.tsx](src/__tests__/ui/app-router-canonical-surfaces.test.tsx) verrouille la normalisation des trois alias vers leurs cibles canoniques.
+- Preuve canonique: la suite Playwright officielle publie `titane-home=0`, `dev-diagnostics=0`, `admin-governance=0` et conserve `aggregate blocking=0 baseline=30` avec 17 tests passés.
+
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
 - Surface canonique de gestion de fenêtre: [src/services/ai/contextManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/contextManager.ts) reconnaît maintenant explicitement `DEFAULT_OLLAMA_MODEL` et la famille `gemma2`, ce qui réaligne les calculs d overflow et la surface utilisateur de contexte sur la même vérité locale.
 - Preuves associées: [src/services/chat/**tests**/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/**tests**/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).

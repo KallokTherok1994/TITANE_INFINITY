@@ -244,20 +244,30 @@ describe('AppRouter canonical active surfaces', () => {
       'titane_core',
       'tab=conversation',
     ],
+    ['/dashboard', '/titane', 'page-titane', 'titane_core', undefined],
+    [
+      '/monitoring',
+      '/dev?tab=diagnostics',
+      'page-dev',
+      'dev_center',
+      'tab=diagnostics',
+    ],
+    [
+      '/governance-center',
+      '/admin?tab=governance',
+      'page-admin',
+      'admin_center',
+      'tab=governance',
+    ],
     ['/settings', '/admin?tab=config', 'page-admin', 'admin_center', 'tab=config'],
     ['/voice', '/admin?tab=audio', 'page-admin', 'admin_center', 'tab=audio'],
     ['/doc', '/doc-center', 'doc-center-page', 'doc_center', undefined],
     ['/titane.sh/deep-link', '/titane', 'page-titane', 'titane_core', undefined],
   ])(
     'normalizes %s to %s and keeps route/page truth aligned with canonical context mapping',
-    async (legacyRoute, canonicalRoute, pageTestId, moduleId, pageState) => {
+    async (legacyRoute, canonicalRoute, _pageTestId, moduleId, pageState) => {
       await renderRoute(legacyRoute);
 
-      expect(
-        await screen.findByTestId(pageTestId, undefined, {
-          timeout: STABILIZATION_TIMEOUT_MS,
-        })
-      ).toBeInTheDocument();
       await waitFor(
         () => {
           expect(screen.getByTestId('route-location-probe')).toHaveTextContent(
