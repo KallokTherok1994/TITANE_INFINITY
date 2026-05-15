@@ -307,7 +307,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
           <Card variant="solid" padding={4}>
             <p className="text-xs text-gray-400 mb-1">Latence moyenne</p>
             <p className="text-2xl font-bold text-white">{avgLatency.toFixed(0)}ms</p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-300 mt-1">
               {avgLatency < 15 ? '🟢 Excellent' : avgLatency < 30 ? '🟡 Bon' : '🔴 Lent'}
             </p>
           </Card>
@@ -344,7 +344,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-white">{engine.name}</p>
-                      <p className="text-xs text-gray-500">{engine.domain}</p>
+                      <p className="text-xs text-gray-300">{engine.domain}</p>
                     </div>
                   </div>
                   {engine.syncScore >= 0.95 ? (
@@ -376,12 +376,21 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center justify-between text-xs text-gray-300">
                   <span className="flex items-center gap-1">
                     <Link2 className="w-3 h-3" />
                     Latence: {engine.latencyMs}ms
                   </span>
-                  <Badge variant={engine.active ? 'success' : 'error'} size="sm" dot>
+                  <Badge
+                    variant={engine.active ? 'success' : 'error'}
+                    size="sm"
+                    dot
+                    className={
+                      engine.active
+                        ? 'bg-green-500/25 text-green-200 border-green-400/50'
+                        : 'bg-red-500/25 text-red-200 border-red-400/50'
+                    }
+                  >
                     {engine.active ? 'Actif' : 'Inactif'}
                   </Badge>
                 </div>

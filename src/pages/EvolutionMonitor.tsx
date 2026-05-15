@@ -132,7 +132,7 @@ function MetricDelta({ value, label }: { value: number; label: string }) {
     <div className="text-center">
       <div
         className={`flex items-center justify-center gap-1 text-sm font-bold ${
-          value > 0 ? 'text-green-400' : value < 0 ? 'text-red-400' : 'text-gray-400'
+          value > 0 ? 'text-green-400' : value < 0 ? 'text-red-400' : 'text-gray-300'
         }`}
       >
         {value > 0 ? (
@@ -145,7 +145,7 @@ function MetricDelta({ value, label }: { value: number; label: string }) {
         {value > 0 ? '+' : ''}
         {value}%
       </div>
-      <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+      <p className="text-xs text-gray-300 mt-0.5">{label}</p>
     </div>
   );
 }
@@ -237,7 +237,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
               <span className="text-xs text-gray-400">Δ Performance cumulé</span>
             </div>
             <p className="text-3xl font-bold text-green-400">+{totalPerformanceDelta}%</p>
-            <p className="text-xs text-gray-500 mt-1">sur {TIMELINE.length} versions</p>
+            <p className="text-xs text-gray-300 mt-1">sur {TIMELINE.length} versions</p>
           </Card>
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
@@ -245,7 +245,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
               <span className="text-xs text-gray-400">Δ Stabilité cumulée</span>
             </div>
             <p className="text-3xl font-bold text-yellow-400">+{totalStabilityDelta}%</p>
-            <p className="text-xs text-gray-500 mt-1">sur {TIMELINE.length} versions</p>
+            <p className="text-xs text-gray-300 mt-1">sur {TIMELINE.length} versions</p>
           </Card>
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
@@ -253,7 +253,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
               <span className="text-xs text-gray-400">Δ Capacités cumulées</span>
             </div>
             <p className="text-3xl font-bold text-violet-400">+{totalCapabilityDelta}%</p>
-            <p className="text-xs text-gray-500 mt-1">sur {TIMELINE.length} versions</p>
+            <p className="text-xs text-gray-300 mt-1">sur {TIMELINE.length} versions</p>
           </Card>
         </div>
 
@@ -275,7 +275,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
               {state && (
                 <>
                   <div>
-                    <p className="text-xs text-gray-500">Cycles</p>
+                    <p className="text-xs text-gray-300">Cycles</p>
                     <p className="text-white font-mono">
                       {typeof state.total_evolutions === 'number'
                         ? String(state.total_evolutions)
@@ -283,7 +283,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Santé moteur</p>
+                    <p className="text-xs text-gray-300">Santé moteur</p>
                     <p className="text-white font-mono">
                       {typeof state.last_evolution?.health_score === 'number'
                         ? `${state.last_evolution.health_score.toFixed(1)}`
@@ -294,7 +294,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
               )}
               {lastReport && (
                 <div>
-                  <p className="text-xs text-gray-500">Dernier rapport</p>
+                  <p className="text-xs text-gray-300">Dernier rapport</p>
                   <Badge
                     variant={
                       lastReport.health_score >= 80
@@ -361,7 +361,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
                         </div>
                         <p className="text-sm font-medium text-white">{entry.title}</p>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500">
+                      <div className="flex items-center gap-1 text-xs text-gray-300">
                         <Clock className="w-3 h-3" />
                         {entry.date}
                       </div>
@@ -395,21 +395,21 @@ export const EvolutionMonitor: React.FC = memo(() => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
-              <p className="text-xs text-gray-500">Version</p>
+              <p className="text-xs text-gray-300">Version</p>
               <p className="text-white font-mono font-bold">v30.1.0</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Statut</p>
+              <p className="text-xs text-gray-300">Statut</p>
               <Badge variant="success" size="sm">
                 Stable
               </Badge>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Versions trackées</p>
+              <p className="text-xs text-gray-300">Versions trackées</p>
               <p className="text-white">{TIMELINE.length}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Alertes actives</p>
+              <p className="text-xs text-gray-300">Alertes actives</p>
               <Badge variant="success" size="sm" dot>
                 0
               </Badge>

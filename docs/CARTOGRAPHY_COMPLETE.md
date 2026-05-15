@@ -90,6 +90,17 @@ Le delta ferme un cluster contraste partagé sur deux surfaces visibles sans tou
 
 Le delta ne corrige pas une dette visuelle supplémentaire; il supprime un drift de preuve. Le gate WCAG n audite plus trois aliases legacy mais leurs vérités runtime canoniques: `/titane`, `/dev?tab=diagnostics` et `/admin?tab=governance`. La preuve courante publie `titane-home=0`, `dev-diagnostics=0`, `admin-governance=0` et maintient `aggregate blocking=0 baseline=30` sur un inventaire toujours fixé à 15 routes critiques.
 
+## 2026-05-15 — Fusion + Evolution contrast hardening + WCAG inventory 17/17 (delta cartographie)
+
+| Couche | Surface modifiée | Fichier |
+|---|---|---|
+| Ring 4 | Contraste relevé sur badges et méta-textes Fusion | src/pages/PerfectFusionDashboard.tsx |
+| Ring 4 | Contraste relevé sur méta-labels Evolution | src/pages/EvolutionMonitor.tsx |
+| Tests | Gardes unitaires contraste Fusion + Evolution | src/__tests__/pages/PerfectFusionDashboard.test.tsx, src/__tests__/pages/EvolutionMonitor.test.tsx |
+| E2E | Gate Axe canonique étendu à `/fusion` et `/evolution` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta ferme deux clusters contraste purement locaux sur des surfaces visibles déjà canoniques, sans toucher à leur logique métier ni à leur wiring runtime. La preuve courante publie `fusion=0`, `evolution=0`, `aggregate blocking=0 baseline=30` et un inventaire passé de `15` à `17` routes critiques auditées.
+
 
 
 | Couche | Surface ajoutée | Fichier |

@@ -88,4 +88,12 @@ describe('PerfectFusionDashboard', () => {
     // La page ne doit pas générer de données aléatoires au rendu initial
     expect(spy).not.toHaveBeenCalled();
   });
+
+  it('keeps fusion helper labels above low-contrast tokens', async () => {
+    renderPage();
+
+    expect(await screen.findByText('🟢 Excellent')).toHaveClass('text-gray-300');
+    expect((await screen.findAllByText('cognitive'))[0]).toHaveClass('text-gray-300');
+    expect((await screen.findAllByText('Actif'))[0]).toHaveClass('text-green-200');
+  });
 });

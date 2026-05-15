@@ -277,6 +277,14 @@
 - Points de contrôle canoniques: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) remplace `dashboard`, `monitoring` et `governance-center` par `titane-home`, `dev-diagnostics` et `admin-governance` sans changer la taille de l inventaire; [src/__tests__/ui/app-router-canonical-surfaces.test.tsx](src/__tests__/ui/app-router-canonical-surfaces.test.tsx) verrouille la normalisation des trois alias vers leurs cibles canoniques.
 - Preuve canonique: la suite Playwright officielle publie `titane-home=0`, `dev-diagnostics=0`, `admin-governance=0` et conserve `aggregate blocking=0 baseline=30` avec 17 tests passés.
 
+# [2026-05-15] Fusion + Evolution contrast hardening
+
+- Surfaces canoniques: `/fusion` et `/evolution`.
+- Vérité runtime: ces deux routes visibles hors gate WCAG partageaient une dette contraste purement locale sur leurs méta-textes et badges secondaires, sans dette clavier supplémentaire.
+- Points de contrôle canoniques: [src/pages/PerfectFusionDashboard.tsx](src/pages/PerfectFusionDashboard.tsx) relève les textes secondaires `text-gray-500` et les badges d activité dans la grille des moteurs; [src/pages/EvolutionMonitor.tsx](src/pages/EvolutionMonitor.tsx) relève les méta-labels `text-gray-500` dans les KPI, le résumé d état, la timeline et le résumé de version.
+- Gardes locales: [src/__tests__/pages/PerfectFusionDashboard.test.tsx](src/__tests__/pages/PerfectFusionDashboard.test.tsx) et [src/__tests__/pages/EvolutionMonitor.test.tsx](src/__tests__/pages/EvolutionMonitor.test.tsx) verrouillent les tokens relevés.
+- Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 17 routes critiques avec ajout de `fusion` et `evolution`, et publie `fusion=0`, `evolution=0` puis `aggregate blocking=0 baseline=30`.
+
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
 - Surface canonique de gestion de fenêtre: [src/services/ai/contextManager.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/ai/contextManager.ts) reconnaît maintenant explicitement `DEFAULT_OLLAMA_MODEL` et la famille `gemma2`, ce qui réaligne les calculs d overflow et la surface utilisateur de contexte sur la même vérité locale.
 - Preuves associées: [src/services/chat/**tests**/tokenCounter.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/__tests__/tokenCounter.test.ts), [src/**tests**/services/ai/contextManager.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/contextManager.test.ts).
