@@ -87,4 +87,11 @@ describe('SingularityMonitor', () => {
     renderPage();
     expect(screen.getByTestId('meta-energy-panel')).toBeInTheDocument();
   });
+
+  it('keeps singularity meta labels above low-contrast tokens', () => {
+    renderPage();
+
+    expect(screen.getByText('Énergie normalisée')).toHaveClass('text-gray-300');
+    expect(screen.getByText('Historique')).toHaveClass('text-gray-300');
+  });
 });

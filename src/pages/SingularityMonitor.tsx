@@ -256,7 +256,7 @@ const SingularityMonitor = memo(() => {
                     .slice(0, 6)
                     .map(([key, value]) => (
                       <div key={key}>
-                        <p className="text-xs text-gray-500">{key}</p>
+                        <p className="text-xs text-gray-300">{key}</p>
                         <p className="text-sm text-white font-mono">
                           {typeof value === 'number' ? value.toFixed(3) : String(value)}
                         </p>
@@ -277,7 +277,7 @@ const SingularityMonitor = memo(() => {
                     .slice(0, 6)
                     .map(([key, value]) => (
                       <div key={key}>
-                        <p className="text-xs text-gray-500">{key}</p>
+                        <p className="text-xs text-gray-300">{key}</p>
                         <p className="text-sm text-white font-mono">
                           {typeof value === 'boolean'
                             ? value
@@ -317,7 +317,7 @@ const SingularityMonitor = memo(() => {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div data-testid="meta-energy-level">
-                <p className="text-xs text-gray-500 mb-1">Énergie normalisée</p>
+                <p className="text-xs text-gray-300 mb-1">Énergie normalisée</p>
                 <p className="text-2xl font-bold text-lime-400">
                   {metaEnergy.state
                     ? `${(metaEnergy.state.normalized * 100).toFixed(0)}%`
@@ -334,7 +334,7 @@ const SingularityMonitor = memo(() => {
               </div>
 
               <div data-testid="meta-energy-fatigue">
-                <p className="text-xs text-gray-500 mb-1">Niveau fatigue</p>
+                <p className="text-xs text-gray-300 mb-1">Niveau fatigue</p>
                 <Badge
                   variant={
                     metaEnergy.state?.fatigue_level === 'Fresh'
@@ -355,7 +355,7 @@ const SingularityMonitor = memo(() => {
               </div>
 
               <div data-testid="meta-energy-homeostasis">
-                <p className="text-xs text-gray-500 mb-1">Homéostasie</p>
+                <p className="text-xs text-gray-300 mb-1">Homéostasie</p>
                 {metaEnergy.diagnostics ? (
                   <>
                     <Badge
@@ -381,7 +381,7 @@ const SingularityMonitor = memo(() => {
               </div>
 
               <div data-testid="meta-energy-history">
-                <p className="text-xs text-gray-500 mb-1">Historique</p>
+                <p className="text-xs text-gray-300 mb-1">Historique</p>
                 <p className="text-xl font-bold text-teal-400">
                   {metaEnergy.diagnostics?.history_entries ?? '—'}
                 </p>
@@ -448,7 +448,7 @@ const SingularityMonitor = memo(() => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               {signature && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Signature</p>
+                  <p className="text-xs text-gray-300 mb-1">Signature</p>
                   <p className="font-mono text-xs text-cyan-400 break-all">{signature}</p>
                 </div>
               )}

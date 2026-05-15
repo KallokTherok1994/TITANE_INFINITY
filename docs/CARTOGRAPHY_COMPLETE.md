@@ -1,3 +1,14 @@
+## 2026-05-15 — Singularity + Reality Center contrast hardening + WCAG inventory 19/19 (delta cartographie)
+
+| Couche | Surface modifiee | Fichier |
+|---|---|---|
+| Ring 4 | Meta-libelles Singularity a contraste conforme | src/pages/SingularityMonitor.tsx |
+| Ring 4 | Labels KPI, en-tetes et meta-infra Reality Center a contraste conforme | src/pages/RealityCenter.tsx |
+| Tests | Gardes Vitest des tokens corriges et du cas `modules` repete | src/__tests__/pages/SingularityMonitor.test.tsx, src/__tests__/pages/RealityCenter.test.tsx |
+| E2E | Gate Axe canonique etendu a `/singularity` et `/reality-center` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta reste minimal: deux surfaces visibles hors gate officiel referment uniquement leurs meta-textes secondaires sous le seuil Axe, sans mutation de layout ni de logique runtime. La preuve courante publie `singularity=0`, `reality-center=0`, `aggregate blocking=0 baseline=30` et un inventaire passe de `17` a `19` routes critiques auditees.
+
 ## 2026-05-14 — v34.2.0 — TanStack Query pilots (palier 1/3) (delta cartographie)
 
 | Couche | Surface ajoutée | Fichier |

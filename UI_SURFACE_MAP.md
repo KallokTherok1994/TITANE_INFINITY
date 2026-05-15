@@ -1,3 +1,12 @@
+## 2026-05-15 — A11Y singularity + reality-center gate expansion
+
+- **Surfaces modifiées** : [src/pages/SingularityMonitor.tsx](src/pages/SingularityMonitor.tsx) et [src/pages/RealityCenter.tsx](src/pages/RealityCenter.tsx) relèvent uniquement les meta-libelles secondaires et en-tetes encore sous le seuil sur les surfaces `/singularity` et `/reality-center`.
+- **Singularity** : les libelles `Energie normalisee`, `Niveau fatigue`, `Homeostasie`, `Historique` et `Signature` quittent les tokens `text-gray-500` pour un contraste conforme sans changer la structure du dashboard.
+- **Reality Center** : `Derniere mise a jour`, les KPI `modules`, les labels `Conversation`, `Memoire`, `Singularite`, `Systeme`, les en-tetes de table et les meta-indicateurs infra passent sur des tokens plus lisibles.
+- **Tests Vitest** : [src/__tests__/pages/SingularityMonitor.test.tsx](src/__tests__/pages/SingularityMonitor.test.tsx) et [src/__tests__/pages/RealityCenter.test.tsx](src/__tests__/pages/RealityCenter.test.tsx) verrouillent les tokens corriges et la presence tolerante des libelles repetes `modules`.
+- **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `17` a `19` routes avec `/singularity` et `/reality-center`, puis conserve `blocking=0 baseline=30`.
+- **Rollback** : `git restore -- src/pages/SingularityMonitor.tsx src/pages/RealityCenter.tsx src/__tests__/pages/SingularityMonitor.test.tsx src/__tests__/pages/RealityCenter.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_SINGULARITY_REALITY_CENTER_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_SINGULARITY_REALITY_CENTER_GATE_EXPANSION`
+
 ## 2026-05-14 — v34.2.0 — TanStack Query pilots (system / engines / providers / conversation / devtools)
 
 - **Surface ajoutée** : [src/pages/MonitoringDashboard.tsx](src/pages/MonitoringDashboard.tsx) reçoit un strip additif `<QueryPilotsLiveStatus />` au-dessus du header.

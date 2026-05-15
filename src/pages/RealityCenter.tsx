@@ -250,7 +250,7 @@ export const RealityCenter: React.FC = memo(() => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-300">
               Dernière mise à jour : {lastRefresh.toLocaleTimeString()}
             </span>
             <Button
@@ -290,7 +290,7 @@ export const RealityCenter: React.FC = memo(() => {
               <span className="text-xs text-gray-400">Nominaux</span>
             </div>
             <p className="text-3xl font-bold text-green-400">{nominalCount}</p>
-            <p className="text-xs text-gray-500 mt-1">modules</p>
+            <p className="text-xs text-gray-300 mt-1">modules</p>
           </Card>
 
           <Card variant="glass" elevation="md" padding={4}>
@@ -299,7 +299,7 @@ export const RealityCenter: React.FC = memo(() => {
               <span className="text-xs text-gray-400">Dégradés</span>
             </div>
             <p className="text-3xl font-bold text-yellow-400">{degradedCount}</p>
-            <p className="text-xs text-gray-500 mt-1">modules</p>
+            <p className="text-xs text-gray-300 mt-1">modules</p>
           </Card>
 
           <Card variant="glass" elevation="md" padding={4}>
@@ -308,7 +308,7 @@ export const RealityCenter: React.FC = memo(() => {
               <span className="text-xs text-gray-400">Critiques</span>
             </div>
             <p className="text-3xl font-bold text-red-400">{criticalCount}</p>
-            <p className="text-xs text-gray-500 mt-1">modules</p>
+            <p className="text-xs text-gray-300 mt-1">modules</p>
           </Card>
         </div>
 
@@ -328,7 +328,7 @@ export const RealityCenter: React.FC = memo(() => {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-xs text-gray-500">Conversation</p>
+                    <p className="text-xs text-gray-300">Conversation</p>
                 <Badge
                   variant={
                     health.conversation?.status === 'healthy' ? 'success' : 'warning'
@@ -339,7 +339,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </Badge>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Mémoire</p>
+                    <p className="text-xs text-gray-300">Mémoire</p>
                 <Badge
                   variant={health.memory?.status === 'healthy' ? 'success' : 'warning'}
                   size="sm"
@@ -348,7 +348,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </Badge>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Singularité</p>
+                    <p className="text-xs text-gray-300">Singularité</p>
                 <Badge
                   variant={
                     health.singularity?.status === 'healthy' ? 'success' : 'warning'
@@ -359,7 +359,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </Badge>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Système</p>
+                <p className="text-xs text-gray-300">Système</p>
                 <Badge
                   variant={health.system?.status === 'healthy' ? 'success' : 'warning'}
                   size="sm"
@@ -382,7 +382,7 @@ export const RealityCenter: React.FC = memo(() => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-700 text-xs text-gray-500 uppercase">
+                <tr className="border-b border-gray-700 text-xs text-gray-300 uppercase">
                   <th className="text-left p-3">Module</th>
                   <th className="text-left p-3">Attendu</th>
                   <th className="text-left p-3">Réel</th>
@@ -474,19 +474,19 @@ export const RealityCenter: React.FC = memo(() => {
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">IPC One Door</span>
+                <span className="text-gray-300">IPC One Door</span>
                 <Badge variant="success" size="sm">
                   OK
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">Backend Rust</span>
+                <span className="text-gray-300">Backend Rust</span>
                 <Badge variant="success" size="sm">
                   OK
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">AI Gateway</span>
+                <span className="text-gray-300">AI Gateway</span>
                 <Badge variant="success" size="sm">
                   OK
                 </Badge>
@@ -501,7 +501,7 @@ export const RealityCenter: React.FC = memo(() => {
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">Uptime</span>
+                <span className="text-gray-300">Uptime</span>
                 <span className="text-white font-mono">
                   {health?.system?.uptime_ms
                     ? `${Math.floor(health.system.uptime_ms / 3600000)}h ${Math.floor((health.system.uptime_ms % 3600000) / 60000)}m`
@@ -509,7 +509,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">CPU</span>
+                <span className="text-gray-300">CPU</span>
                 <span className="text-white font-mono">
                   {health?.system?.cpu_usage != null
                     ? `${health.system.cpu_usage.toFixed(1)}%`
@@ -517,7 +517,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">Refresh auto</span>
+                <span className="text-gray-300">Refresh auto</span>
                 <Badge variant="info" size="sm">
                   30s
                 </Badge>

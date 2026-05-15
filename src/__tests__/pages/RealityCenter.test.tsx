@@ -103,4 +103,12 @@ describe('RealityCenter', () => {
     renderPage();
     expect(screen.getByText('Reality Center')).toBeInTheDocument();
   });
+
+  it('keeps reality meta labels above low-contrast tokens', () => {
+    renderPage();
+
+    expect(screen.getByText(/Dernière mise à jour/i)).toHaveClass('text-gray-300');
+    expect(screen.getAllByText('modules')[0]).toHaveClass('text-gray-300');
+    expect(screen.getByText('Module').closest('tr')).toHaveClass('text-gray-300');
+  });
 });

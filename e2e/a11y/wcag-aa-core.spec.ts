@@ -1,7 +1,7 @@
 /**
  * A11y WCAG 2.1 AA — UI 100/100 plan phase B
  *
- * Runs @axe-core/playwright on 17 critical routes and writes a per-route
+ * Runs @axe-core/playwright on 19 critical routes and writes a per-route
  * JSON report. The aggregate test enforces a regression baseline: total
  * serious + critical violations across all 10 routes must not exceed
  * AGGREGATE_BLOCKING_BASELINE. New a11y debt thus fails the gate, while
@@ -23,10 +23,10 @@ interface A11ySurface {
   url: string;
 }
 
-// 17 critical routes — covers chat, titane shell, experience, admin system,
+// 19 critical routes — covers chat, titane shell, experience, admin system,
 // admin governance, dev overview, dev diagnostics, time, fusion, total-dev,
-// memory, orchestration, research, quantum-center, multiproject, optimization,
-// and evolution.
+// memory, orchestration, research, reality-center, quantum-center, singularity,
+// multiproject, optimization, and evolution.
 const SURFACES: A11ySurface[] = [
   { name: 'titane-conversation', url: '/titane?tab=conversation' },
   { name: 'titane-home', url: '/titane' },
@@ -41,7 +41,9 @@ const SURFACES: A11ySurface[] = [
   { name: 'memory', url: '/memory' },
   { name: 'orchestration-center', url: '/orchestration-center' },
   { name: 'research', url: '/research' },
+  { name: 'reality-center', url: '/reality-center' },
   { name: 'quantum-center', url: '/quantum-center' },
+  { name: 'singularity', url: '/singularity' },
   { name: 'multiproject', url: '/multiproject' },
   { name: 'optimization', url: '/optimization' },
   { name: 'evolution', url: '/evolution' },
@@ -52,7 +54,7 @@ const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 
 /**
  * Regression baseline — total blocking violations (critical+serious) summed
- * across all 17 routes. Initial measurement on 2026-05-13: 25 blocking.
+ * across all 19 routes. Initial measurement on 2026-05-13: 25 blocking.
  * Locked at 30 to allow tiny flake margin; phase D will lower it as fixes
  * land. Never increase without an explicit AutoHeal governance entry.
  */
@@ -60,7 +62,7 @@ const AGGREGATE_BLOCKING_BASELINE = 30;
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('v34.0.7 A11y WCAG 2.1 AA (17 critical routes)', () => {
+test.describe('v34.0.7 A11y WCAG 2.1 AA (19 critical routes)', () => {
   for (const surface of SURFACES) {
     test(`a11y ${surface.name}`, async ({ page }) => {
       await page.goto(surface.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
@@ -112,7 +114,7 @@ test.describe('v34.0.7 A11y WCAG 2.1 AA (17 critical routes)', () => {
 });
 
 test('v34.0.7 a11y aggregate baseline regression guard', () => {
-  // Sum blocking violations across all 17 routes; assert <= baseline.
+  // Sum blocking violations across all 19 routes; assert <= baseline.
   let aggregate = 0;
   const breakdown: Record<string, number> = {};
   for (const surface of SURFACES) {
@@ -149,5 +151,5 @@ test('v34.0.7 a11y aggregate baseline regression guard', () => {
 });
 
 test('v34.0.7 a11y inventory invariant', () => {
-  expect(SURFACES.length).toBe(17);
+  expect(SURFACES.length).toBe(19);
 });
