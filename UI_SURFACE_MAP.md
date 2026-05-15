@@ -1,3 +1,11 @@
+## 2026-05-14 — A11Y clean-routes batch gate expansion (23 -> 31)
+
+- **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `23` a `31` routes, sans patch UI source.
+- **Routes ajoutees au gate** : `/sentinel`, `/watchdog`, `/selfheal`, `/adaptive`, `/hyper-center`, `/doc-center`, `/knowledge`, `/performance`.
+- **Preuve gate** : rerun Playwright canonique `33 passed`, avec `blocking=0` pour les 8 nouvelles routes et `aggregate blocking=0 baseline=30`.
+- **Nature du lot** : tranche gate-only (aucune mutation sous `src/**`), donc pas de nouveau test Vitest/Rust; seule la couverture E2E canonique est etendue.
+- **Rollback** : `git restore -- e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-14_CLEAN_BATCH_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-14_CLEAN_BATCH_GATE_EXPANSION`
+
 ## 2026-05-14 — A11Y cloud center CTA contrast hardening + gate expansion
 
 - **Surface modifiée** : [src/pages/CloudCenter/CloudCenter.css](src/pages/CloudCenter/CloudCenter.css) durcit uniquement le fond du CTA principal `.btn-primary` scopé sous `.cloud-center` / `.cc-container`, qui rendait à `#8899aa` (~3.2:1) via le fallback `--cloud-accent` et faisait échouer Axe `color-contrast` sur `/cloud`.

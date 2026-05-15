@@ -1,3 +1,12 @@
+## 2026-05-14 — Clean-routes batch + WCAG inventory 31/31 (delta cartographie)
+
+| Couche | Surface modifiee | Fichier |
+|---|---|---|
+| E2E | Gate Axe canonique etendu a 8 routes deja conformes | e2e/a11y/wcag-aa-core.spec.ts |
+| Mapping | Trace de surface UI mise a jour pour la tranche gate-only | UI_SURFACE_MAP.md |
+
+Le delta est strictement de couverture: aucune surface `src/**` n est modifiee. Les routes `/sentinel`, `/watchdog`, `/selfheal`, `/adaptive`, `/hyper-center`, `/doc-center`, `/knowledge` et `/performance` sont integrees a l inventaire officiel. La preuve canonique publie `blocking=0` pour chaque nouvelle route, conserve `aggregate blocking=0 baseline=30`, et fait passer l inventaire de `23` a `31` routes critiques auditees.
+
 ## 2026-05-14 — Cloud Center CTA contrast hardening + WCAG inventory 23/23 (delta cartographie)
 
 | Couche | Surface modifiee | Fichier |
