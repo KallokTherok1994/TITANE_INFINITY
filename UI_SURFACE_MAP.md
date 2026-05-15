@@ -1,3 +1,11 @@
+## 2026-05-14 — A11Y cloud center CTA contrast hardening + gate expansion
+
+- **Surface modifiée** : [src/pages/CloudCenter/CloudCenter.css](src/pages/CloudCenter/CloudCenter.css) durcit uniquement le fond du CTA principal `.btn-primary` scopé sous `.cloud-center` / `.cc-container`, qui rendait à `#8899aa` (~3.2:1) via le fallback `--cloud-accent` et faisait échouer Axe `color-contrast` sur `/cloud`.
+- **Contraste local** : le bouton `Initialiser le Cloud Sync` et les autres CTA `.btn-primary` du Cloud Center utilisent désormais `var(--accent-primary, #1d4ed8)` (~8:1 contre blanc), sans toucher au scope `.cloud-center` global ni aux autres tokens.
+- **Test Vitest** : [src/__tests__/pages/CloudCenterA11yContrast.test.tsx](src/__tests__/pages/CloudCenterA11yContrast.test.tsx) verrouille la présence de la règle scoped hardenée dans la feuille de styles.
+- **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire WCAG officiel de `22` à `23` routes avec `/cloud`, puis conserve `blocking=0 baseline=30`.
+- **Rollback** : `git restore -- src/pages/CloudCenter/CloudCenter.css src/__tests__/pages/CloudCenterA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-14_CLOUD_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-14_CLOUD_GATE_EXPANSION`
+
 ## 2026-05-14 — A11Y twins contrast hardening + gate expansion
 
 - **Surface modifiée** : [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx) relève uniquement le libellé secondaire `Thèmes propriétaire` signalé par Axe sur `/twins`.

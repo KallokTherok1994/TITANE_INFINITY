@@ -165,6 +165,14 @@
   transition: var(--cloud-transition);
 }
 
+/* A11y WCAG AA: force AA-compliant contrast on cloud primary CTA buttons.
+   The token --cloud-accent falls back to #8899aa (3.2:1 with white), which
+   fails serious color-contrast for the "Initialiser le Cloud Sync" CTA. */
+.cloud-center .btn-primary,
+.cc-container .btn-primary {
+  background: var(--accent-primary, #1d4ed8);
+}
+
 .btn-primary:hover:not(:disabled) {
   filter: brightness(1.1);
 }

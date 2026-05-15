@@ -1,3 +1,13 @@
+## 2026-05-14 — Cloud Center CTA contrast hardening + WCAG inventory 23/23 (delta cartographie)
+
+| Couche | Surface modifiee | Fichier |
+|---|---|---|
+| Ring 4 | CTA `.btn-primary` du Cloud Center à contraste conforme | src/pages/CloudCenter/CloudCenter.css |
+| Tests | Garde Vitest de la règle CSS scoped hardenée | src/__tests__/pages/CloudCenterA11yContrast.test.tsx |
+| E2E | Gate Axe canonique étendu à `/cloud` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta reste minimal: la surface `/cloud` referme uniquement le fond du CTA `.btn-primary` qui chutait à ~3.2:1 via le fallback `--cloud-accent`. La preuve canonique publie `cloud=0`, `aggregate blocking=0 baseline=30` et un inventaire passe de `22` à `23` routes critiques auditees.
+
 ## 2026-05-14 — Twins contrast hardening + WCAG inventory 22/22 (delta cartographie)
 
 | Couche | Surface modifiee | Fichier |

@@ -23,10 +23,10 @@ interface A11ySurface {
   url: string;
 }
 
-// 22 critical routes — covers chat, titane shell, experience, admin system,
+// 23 critical routes — covers chat, titane shell, experience, admin system,
 // admin governance, dev overview, dev diagnostics, time, fusion, total-dev,
 // memory, orchestration, research, reality-center, quantum-center, singularity,
-// multiproject, optimization, evolution, creation, skills, and twins.
+// multiproject, optimization, evolution, creation, skills, twins, and cloud.
 const SURFACES: A11ySurface[] = [
   { name: 'titane-conversation', url: '/titane?tab=conversation' },
   { name: 'titane-home', url: '/titane' },
@@ -50,6 +50,7 @@ const SURFACES: A11ySurface[] = [
   { name: 'creation', url: '/creation' },
   { name: 'skills', url: '/skills' },
   { name: 'twins', url: '/twins' },
+  { name: 'cloud', url: '/cloud' },
 ];
 
 // Impact levels considered blocking for this gate.
@@ -65,7 +66,7 @@ const AGGREGATE_BLOCKING_BASELINE = 30;
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('v34.0.7 A11y WCAG 2.1 AA (22 critical routes)', () => {
+test.describe('v34.0.7 A11y WCAG 2.1 AA (23 critical routes)', () => {
   for (const surface of SURFACES) {
     test(`a11y ${surface.name}`, async ({ page }) => {
       await page.goto(surface.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
@@ -117,7 +118,7 @@ test.describe('v34.0.7 A11y WCAG 2.1 AA (22 critical routes)', () => {
 });
 
 test('v34.0.7 a11y aggregate baseline regression guard', () => {
-  // Sum blocking violations across all 22 routes; assert <= baseline.
+  // Sum blocking violations across all 23 routes; assert <= baseline.
   let aggregate = 0;
   const breakdown: Record<string, number> = {};
   for (const surface of SURFACES) {
@@ -154,5 +155,5 @@ test('v34.0.7 a11y aggregate baseline regression guard', () => {
 });
 
 test('v34.0.7 a11y inventory invariant', () => {
-  expect(SURFACES.length).toBe(22);
+  expect(SURFACES.length).toBe(23);
 });
