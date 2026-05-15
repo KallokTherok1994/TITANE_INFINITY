@@ -61,24 +61,24 @@ const VoiceCard: React.FC<VoiceCardProps> = ({ voice, isSelected, onSelect, onTe
       <span
         className={`px-2 py-0.5 text-xs rounded ${
           voice.engine === 'piper'
-            ? 'bg-purple-500/20 text-purple-400'
+            ? 'bg-purple-500/20 text-purple-200'
             : voice.engine === 'elevenlabs'
-              ? 'bg-amber-500/20 text-amber-400'
-              : 'bg-neutral-600/50 text-neutral-400'
+              ? 'bg-amber-500/20 text-amber-200'
+              : 'bg-neutral-600/50 text-neutral-200'
         }`}
       >
         {voice.engine.toUpperCase()}
       </span>
-      <span className="text-xs text-neutral-500">{voice.language}</span>
-      <span className="text-xs text-neutral-500">•</span>
-      <span className="text-xs text-neutral-500 capitalize">{voice.gender}</span>
+      <span className="text-xs text-neutral-400">{voice.language}</span>
+      <span className="text-xs text-neutral-400">•</span>
+      <span className="text-xs text-neutral-400 capitalize">{voice.gender}</span>
 
       <button
         onClick={e => {
           e.stopPropagation();
           onTest();
         }}
-        className="ml-auto px-3 py-1 text-xs bg-cyan-600 hover:bg-cyan-500 text-white rounded transition-colors"
+        className="ml-auto px-3 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 text-white rounded transition-colors"
       >
         🔊 Test
       </button>
@@ -119,6 +119,7 @@ const Slider: React.FC<SliderProps> = ({
     </div>
     <input
       type="range"
+      aria-label={label}
       min={min}
       max={max}
       step={step}
@@ -376,7 +377,7 @@ export const AudioCenterPage: React.FC = () => {
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-cyan-600 text-white'
+                  ? 'bg-cyan-700 text-white'
                   : 'bg-neutral-800 text-neutral-400 hover:text-white'
               }`}
             >

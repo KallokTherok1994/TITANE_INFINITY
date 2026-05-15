@@ -1,3 +1,14 @@
+## 2026-05-15 — A11Y admin?tab=audio contrast + form-label hardening + gate expansion (33 -> 34)
+
+- **Surface modifiée** : [src/features/audio-center/AudioCenterPage.tsx](src/features/audio-center/AudioCenterPage.tsx) durcit 4 zones du panneau audio rendu sous `/admin?tab=audio`.
+  - Onglet actif + bouton "Test" : `bg-cyan-600 text-white` (3.61:1) → `bg-cyan-700 text-white` (~5.0:1, AA).
+  - Badge moteur voix (PIPER / ELEVENLABS / autre) : `text-purple-400`/`text-amber-400`/`text-neutral-400` (4.18:1 et moins) → `text-purple-200`/`text-amber-200`/`text-neutral-200` (>=5.5:1, AA stable sur le bleed alpha-20).
+  - Méta voix `language` / séparateur / `gender` : `text-neutral-500` (2.97:1 sur `bg-neutral-800/50`) → `text-neutral-400` (~7:1, AA).
+  - Slider `<input type="range">` : ajout `aria-label={label}` pour corriger `axe:label` (critical) sur les 3 instances Pitch/Volume/Rate du panneau Voix.
+- **Test Vitest** : [src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx](src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx) verrouille les 4 zones (tab/bouton cyan-700, badges -200, méta neutral-400, slider aria-label) et l'absence des tokens fautifs (`bg-cyan-600 text-white`, `text-purple-400`, `text-amber-400`).
+- **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire WCAG officiel de `33` à `34` routes avec `/admin?tab=audio` (surface `admin-audio`), et conserve `blocking=0 baseline=30`.
+- **Rollback** : `git restore -- src/features/audio-center/AudioCenterPage.tsx src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_ADMIN_AUDIO_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_ADMIN_AUDIO_GATE_EXPANSION`
+
 ## 2026-05-15 — A11Y SurfaceTruthBadge PARTIAL contrast hardening + gate expansion (32 -> 33)
 
 - **Surface modifiée** : [src/components/system/SurfaceTruthBadge.tsx](src/components/system/SurfaceTruthBadge.tsx) durcit la variante `PARTIAL` en remplaçant `bg-amber-900/60 text-amber-300 border border-amber-700/50` par `bg-amber-900 text-amber-100 border border-amber-700/50`. Le combo précédent mesurait ~`2.26:1` sur `/htf` (Axe `color-contrast` serious, `text-amber-300` #fcd34d sur fond blendé #b0856a), sous le seuil WCAG AA `4.5:1`.

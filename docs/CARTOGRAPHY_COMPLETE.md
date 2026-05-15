@@ -1,3 +1,10 @@
+## 2026-05-15 — admin?tab=audio contrast/labels + WCAG inventory 34/34 (delta cartographie)
+
+- Module `src/features/audio-center/AudioCenterPage.tsx` durcit (Rule 1) le panneau audio rendu sous `/admin?tab=audio` : onglet actif + bouton Test (`bg-cyan-700`), badges moteur (`text-{purple,amber,neutral}-200`), méta `language`/`gender` (`text-neutral-400`), et `aria-label` sur les sliders `Slider` (Pitch/Volume/Rate).
+- Inventaire WCAG canonique `e2e/a11y/wcag-aa-core.spec.ts` passe de `33` à `34` routes en ajoutant la surface `admin-audio` (`/admin?tab=audio`), `blocking=0 baseline=30`, invariant `SURFACES.length === 34` lock.
+- Guard Vitest `src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx` verrouille les 4 zones (tab/bouton, badges, méta, slider) et l'absence des classes fautives.
+- Aucune autre surface UI ni IPC modifiés ; pas d'ajout/retrait de routeur ni d'engine. Mapping inchangé pour Ring 0..3.
+
 ## 2026-05-15 — SurfaceTruthBadge PARTIAL contrast + WCAG inventory 33/33 (delta cartographie)
 
 - Couverture WCAG: l'inventaire canonique passe de 32 à 33 routes avec l'ajout de `/htf`, désormais `blocking=0` après durcissement de la variante `PARTIAL` de `SurfaceTruthBadge` (Axe `color-contrast` serious éliminé).
