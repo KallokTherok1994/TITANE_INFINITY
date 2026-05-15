@@ -1,3 +1,11 @@
+## 2026-05-15 — A11Y skills contrast hardening + gate expansion
+
+- **Surface modifiée** : [src/ui/pages/Skills/SkillManager.tsx](src/ui/pages/Skills/SkillManager.tsx) relève uniquement le bouton d action principal de `/skills` signalé par Axe.
+- **Contraste local** : le bouton `+ Importer une Skill` passe de `#6366f1` vers `#4f46e5` pour refermer le seuil WCAG AA sans changer la logique Skill OS.
+- **Test Vitest** : [src/ui/pages/Skills/__tests__/SkillManager.test.tsx](src/ui/pages/Skills/__tests__/SkillManager.test.tsx) verrouille le token de contraste du bouton et la stabilité du root `page-skills`.
+- **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `20` a `21` routes avec `/skills`, puis conserve `blocking=0 baseline=30`.
+- **Rollback** : `git restore -- src/ui/pages/Skills/SkillManager.tsx src/ui/pages/Skills/__tests__/SkillManager.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_SKILLS_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_SKILLS_GATE_EXPANSION`
+
 ## 2026-05-15 — A11Y creation contrast hardening + gate expansion
 
 - **Surface modifiée** : [src/pages/CreationStudio.tsx](src/pages/CreationStudio.tsx) relève uniquement les meta-libelles secondaires encore sous le seuil Axe sur `/creation`.

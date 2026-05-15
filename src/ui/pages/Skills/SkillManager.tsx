@@ -119,7 +119,7 @@ const SkillManager: React.FC = () => {
           onClick={() => setShowImporter(true)}
           style={{
             padding: '10px 20px',
-            background: '#6366f1',
+            background: '#4f46e5',
             color: 'white',
             border: 'none',
             borderRadius: '8px',

@@ -1,3 +1,13 @@
+## 2026-05-15 — Skills contrast hardening + WCAG inventory 21/21 (delta cartographie)
+
+| Couche | Surface modifiee | Fichier |
+|---|---|---|
+| Ring 4 | Bouton principal Skills a contraste conforme | src/ui/pages/Skills/SkillManager.tsx |
+| Tests | Garde Vitest du contraste du bouton Skills | src/ui/pages/Skills/__tests__/SkillManager.test.tsx |
+| E2E | Gate Axe canonique etendu a `/skills` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta reste minimal: la surface `/skills` referme uniquement la dette contraste du bouton principal d import, sans mutation fonctionnelle de Skill OS. La preuve canonique publie `skills=0`, `aggregate blocking=0 baseline=30` et un inventaire passe de `20` a `21` routes critiques auditees.
+
 ## 2026-05-15 — Creation Studio contrast hardening + WCAG inventory 20/20 (delta cartographie)
 
 | Couche | Surface modifiee | Fichier |
