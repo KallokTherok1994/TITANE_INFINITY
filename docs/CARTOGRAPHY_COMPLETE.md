@@ -1,3 +1,10 @@
+## 2026-05-15 — WCAG tranche B expansion 44 -> 56 (delta cartographie)
+
+- Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) ajoute 12 routes produit/audio deja conformes sans modifier les surfaces runtime UI.
+- Inventaire canonique passe a 56 routes; invariant verrouille (`SURFACES.length === 56`).
+- Preuve canonique: toutes les nouvelles routes ajoutees publient `blocking=0`; agregat global maintenu a `blocking=0 baseline=3`.
+- Aucune mutation Ring 0/1/2/3 ni IPC.
+
 ## 2026-05-15 — WCAG tranche A expansion 34 -> 44 (delta cartographie)
 
 - Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) ajoute 10 routes admin/dev tabs déjà qualifiées sans modifier les surfaces runtime UI.

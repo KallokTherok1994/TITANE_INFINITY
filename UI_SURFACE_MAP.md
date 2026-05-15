@@ -1,3 +1,10 @@
+## 2026-05-15 — A11Y tranche B gate expansion (56 routes: product/audio)
+
+- **Surface modifiee** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire canonique de 44 a 56 routes en ajoutant 12 routes produit/audio deja qualifiees.
+- **Routes ajoutees** : /agenda, /cognitive, /evo, /harmonia, /helios, /nexus, /psyche, /cosmic, /audio-center, /persistent-memory, /voice, /audio.
+- **Preuve gate** : Playwright canonique `58 passed`, toutes les nouvelles surfaces a `blocking=0`, agregat `blocking=0 baseline=3`.
+- **Rollback** : `git restore -- e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_TRANCHE_B_PRODUCT_AUDIO_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_TRANCHE_B_PRODUCT_AUDIO_GATE_EXPANSION`
+
 ## 2026-05-15 — A11Y tranche A gate expansion (44 routes: admin/dev tabs)
 
 - **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire canonique de 34 à 44 routes en ajoutant 10 tabs déjà validés sur `/admin` et `/dev`.

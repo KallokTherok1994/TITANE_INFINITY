@@ -23,10 +23,9 @@ interface A11ySurface {
   url: string;
 }
 
-// 44 critical routes — canonical core + tranche A admin/dev tabs expansion.
-// Includes chat, shell, product routes, resilience/cognition clusters, htf,
-// plus admin monitoring/diagnostic/security/explainability/orchestrator/log-analysis
-// and dev ipc/engines/registry/devtools tabs.
+// 56 critical routes — canonical core + tranche A and tranche B expansions.
+// Includes prior admin/dev tabs plus product routes agenda/cognitive/evo/harmonia,
+// helios/nexus/psyche/cosmic and audio-center/persistent-memory/voice/audio.
 const SURFACES: A11ySurface[] = [
   { name: 'titane-conversation', url: '/titane?tab=conversation' },
   { name: 'titane-home', url: '/titane' },
@@ -72,6 +71,18 @@ const SURFACES: A11ySurface[] = [
   { name: 'knowledge', url: '/knowledge' },
   { name: 'performance', url: '/performance' },
   { name: 'htf', url: '/htf' },
+  { name: 'agenda', url: '/agenda' },
+  { name: 'cognitive', url: '/cognitive' },
+  { name: 'evo', url: '/evo' },
+  { name: 'harmonia', url: '/harmonia' },
+  { name: 'helios', url: '/helios' },
+  { name: 'nexus', url: '/nexus' },
+  { name: 'psyche', url: '/psyche' },
+  { name: 'cosmic', url: '/cosmic' },
+  { name: 'audio-center', url: '/audio-center' },
+  { name: 'persistent-memory', url: '/persistent-memory' },
+  { name: 'voice', url: '/voice' },
+  { name: 'audio', url: '/audio' },
 ];
 
 // Impact levels considered blocking for this gate.
@@ -79,7 +90,7 @@ const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 
 /**
   * Regression baseline — total blocking violations (critical+serious) summed
- * across all 44 routes. Initial measurement on 2026-05-13: 25 blocking.
+ * across all 56 routes. Initial measurement on 2026-05-13: 25 blocking.
  * Tightened further to 3 after a second governed tranche confirmed
  * sustained zero-blocking inventory across audited and candidate routes.
  * Never increase without an explicit AutoHeal governance entry.
@@ -88,7 +99,7 @@ const AGGREGATE_BLOCKING_BASELINE = 3;
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('v34.0.7 A11y WCAG 2.1 AA (44 critical routes)', () => {
+test.describe('v34.0.7 A11y WCAG 2.1 AA (56 critical routes)', () => {
   for (const surface of SURFACES) {
     test(`a11y ${surface.name}`, async ({ page }) => {
       await page.goto(surface.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
@@ -140,7 +151,7 @@ test.describe('v34.0.7 A11y WCAG 2.1 AA (44 critical routes)', () => {
 });
 
 test('v34.0.7 a11y aggregate baseline regression guard', () => {
-  // Sum blocking violations across all 44 routes; assert <= baseline.
+  // Sum blocking violations across all 56 routes; assert <= baseline.
   let aggregate = 0;
   const breakdown: Record<string, number> = {};
   for (const surface of SURFACES) {
@@ -177,5 +188,5 @@ test('v34.0.7 a11y aggregate baseline regression guard', () => {
 });
 
 test('v34.0.7 a11y inventory invariant', () => {
-  expect(SURFACES.length).toBe(44);
+  expect(SURFACES.length).toBe(56);
 });
