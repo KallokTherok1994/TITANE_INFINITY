@@ -1,3 +1,11 @@
+## 2026-05-15 — A11Y creation contrast hardening + gate expansion
+
+- **Surface modifiée** : [src/pages/CreationStudio.tsx](src/pages/CreationStudio.tsx) relève uniquement les meta-libelles secondaires encore sous le seuil Axe sur `/creation`.
+- **Contraste local** : `Outils de création`, `Studio actif` et `Statistiques` passent de `text-gray-500` à `text-gray-300` sans mutation de layout ni de logique.
+- **Test Vitest** : [src/__tests__/pages/CreationStudio.test.tsx](src/__tests__/pages/CreationStudio.test.tsx) verrouille le non-retour des tokens `text-gray-500` sur ces libelles critiques.
+- **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `19` a `20` routes avec `/creation`, puis conserve `blocking=0 baseline=30`.
+- **Rollback** : `git restore -- src/pages/CreationStudio.tsx src/__tests__/pages/CreationStudio.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_CREATION_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_CREATION_GATE_EXPANSION`
+
 ## 2026-05-15 — A11Y singularity + reality-center gate expansion
 
 - **Surfaces modifiées** : [src/pages/SingularityMonitor.tsx](src/pages/SingularityMonitor.tsx) et [src/pages/RealityCenter.tsx](src/pages/RealityCenter.tsx) relèvent uniquement les meta-libelles secondaires et en-tetes encore sous le seuil sur les surfaces `/singularity` et `/reality-center`.

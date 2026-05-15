@@ -41,4 +41,24 @@ describe('CreationStudio', () => {
     );
     expect(screen.getByText('Creation Studio')).toBeInTheDocument();
   });
+
+  it('keeps creation meta labels above low-contrast tokens', () => {
+    render(
+      <MemoryRouter>
+        <CreationStudio />
+      </MemoryRouter>
+    );
+
+    const toolsLabel = screen.getByText('Outils de création');
+    expect(toolsLabel).toHaveClass('text-gray-300');
+    expect(toolsLabel).not.toHaveClass('text-gray-500');
+
+    const activeRow = screen.getByText('Studio actif').parentElement;
+    expect(activeRow).not.toBeNull();
+    expect(activeRow).toHaveClass('text-gray-300');
+
+    const statsLabel = screen.getByText('Statistiques');
+    expect(statsLabel).toHaveClass('text-gray-300');
+    expect(statsLabel).not.toHaveClass('text-gray-500');
+  });
 });

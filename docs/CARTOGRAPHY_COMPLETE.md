@@ -1,3 +1,13 @@
+## 2026-05-15 — Creation Studio contrast hardening + WCAG inventory 20/20 (delta cartographie)
+
+| Couche | Surface modifiee | Fichier |
+|---|---|---|
+| Ring 4 | Meta-libelles Creation Studio a contraste conforme | src/pages/CreationStudio.tsx |
+| Tests | Garde Vitest des tokens corriges | src/__tests__/pages/CreationStudio.test.tsx |
+| E2E | Gate Axe canonique etendu a `/creation` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta reste minimal: la surface `/creation` referme uniquement ses libelles secondaires sous le seuil Axe (`Outils de création`, `Studio actif`, `Statistiques`) sans changer son comportement. La preuve canonique publie `creation=0`, `aggregate blocking=0 baseline=30` et un inventaire passe de `19` a `20` routes critiques auditees.
+
 ## 2026-05-15 — Singularity + Reality Center contrast hardening + WCAG inventory 19/19 (delta cartographie)
 
 | Couche | Surface modifiee | Fichier |
