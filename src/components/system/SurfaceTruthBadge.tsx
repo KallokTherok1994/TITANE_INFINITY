@@ -41,7 +41,10 @@ const BADGE_META: Record<
   PARTIAL: {
     label: 'PARTIAL',
     verbose: 'Partial — some backend, some static',
-    colorClass: 'bg-amber-900/60 text-amber-300 border border-amber-700/50',
+    // a11y WCAG AA: previously `bg-amber-900/60 text-amber-300` blended to ~2.26:1
+    // against light surface bleed-through (Axe color-contrast serious on /htf).
+    // Solid amber-900 + amber-100 yields ~10:1, AA across all page backgrounds.
+    colorClass: 'bg-amber-900 text-amber-100 border border-amber-700/50',
     icon: '◑',
   },
   FALLBACK: {

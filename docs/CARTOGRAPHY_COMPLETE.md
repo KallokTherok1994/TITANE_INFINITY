@@ -1,3 +1,10 @@
+## 2026-05-15 — SurfaceTruthBadge PARTIAL contrast + WCAG inventory 33/33 (delta cartographie)
+
+- Couverture WCAG: l'inventaire canonique passe de 32 à 33 routes avec l'ajout de `/htf`, désormais `blocking=0` après durcissement de la variante `PARTIAL` de `SurfaceTruthBadge` (Axe `color-contrast` serious éliminé).
+- Modification source ciblée et minimale: un seul `colorClass` dans [src/components/system/SurfaceTruthBadge.tsx](src/components/system/SurfaceTruthBadge.tsx) (`bg-amber-900/60 text-amber-300` → `bg-amber-900 text-amber-100`). Aucune mutation des autres variantes (LIVE/FALLBACK/DEGRADED/SIMULATED/DISPLAY_ONLY/LEGACY/NOT_WIRED/ERROR/UNKNOWN), aucune mutation des routes, services ou IPC.
+- Test Vitest associé: [src/__tests__/components/system/SurfaceTruthBadgeA11yContrast.test.tsx](src/__tests__/components/system/SurfaceTruthBadgeA11yContrast.test.tsx) verrouille le `colorClass` durci et l'absence des tokens fautifs.
+- Stabilité testid: `data-testid="surface-truth-badge-partial"` conservé; les suites existantes (AdminPage, Nexus, Helios, TwinsPage, PerfectFusionDashboard, CognitivePage, EvoPage, AgendaPage, Harmonia) restent vertes.
+
 ## 2026-05-14 — Orchestration Intelligence contrast + WCAG inventory 32/32 (delta cartographie)
 
 - Couverture WCAG: l'inventaire canonique passe de 31 à 32 routes avec l'ajout de `/orchestration-intelligence`, désormais `blocking=0` après retrait du `opacity-70` sur les descriptions d'onglets du `OrchestrationIntelligenceCenter`.
