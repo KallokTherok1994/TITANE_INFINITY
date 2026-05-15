@@ -1,3 +1,22 @@
+## v35.1.6 - 2026-05-15 - BUILD + RELEASE + DEPLOYMENT LATEST SYNC (BLOCKED_APPROVAL system install)
+
+- **Mode** : DURABLE | **Bump Rule 13** : 35.1.5 -> 35.1.6 (patch)
+- **Build frontend** : `corepack pnpm run build` PASS.
+- **Build release Linux** : `corepack pnpm run build:tauri` PASS (cargo release + bundles).
+- **Artifacts produits** :
+  - `src-tauri/target/release/bundle/appimage/titane-infinity_35.1.6_amd64.AppImage`
+    sha256 `b8767f46b0d4f45e16bf34748ddf7a4c833e11c9b8fe10f1c909860e8944cced`
+  - `src-tauri/target/release/bundle/deb/titane-infinity_35.1.6_amd64.deb`
+    sha256 `3521feb402fc6c590967ff8e90bcb5227339f1906cf6082e88ae34809c04fb70`
+  - `src-tauri/target/release/bundle/rpm/titane-infinity-35.1.6-1.x86_64.rpm`
+    sha256 `9c4322c95b49ac150824f1a6536d4afdf1d7ec45ab674d1ff9e57096d9168474`
+- **Android artifact truth** : `corepack pnpm run android:artifact:check` PASS (`apk_count=1`, `aab_count=1`).
+- **deployment/latest** : synchronise sur v35.1.6 (AppImage + DEB + RPM) avec regeneration `MANIFEST.json`, `SHA256SUMS.txt`, `SIZES.txt`, `VERSION.txt`.
+- **Desktop/user sync** : `bash scripts/post-build/update-desktop-icons.sh` PASS partiel; caches user refresh OK.
+- **System install** : `BLOCKED_APPROVAL` (sudo interactif requis pour `dpkg -i` et sync systeme).
+- **Fallback local** : `bash scripts/install-appimage.sh` PASS (`~/.local/bin/titane-infinity-appimage`).
+- **Rollback** : revert commit + reinstall DEB precedent + refresh launchers via `scripts/post-build/update-desktop-icons.sh`.
+
 ## v35.1.1 — 2026-05-14 — BUILD ALL (Rule 14) — Sprint C+D+E consolidation
 
 - **Mode** : DURABLE | **Bump Rule 13** : 35.1.0 → 35.1.1 (patch) | **BUILD ALL** Linux (AppImage + DEB + RPM)
