@@ -1,6 +1,8 @@
 import { act, renderHook, waitFor } from '@/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
+import { buildChatContextEnvelope } from '@/services/chat/chatMemorySingleDoor';
+import { readActiveModuleContext } from '@/services/chat/moduleRouteContext';
 
 const saveResolvers: Array<() => void> = [];
 const saveMessageMock = vi.fn(() => {
@@ -86,6 +88,19 @@ vi.mock('@/services/chatMemoryCompactor', () => ({
   },
 }));
 
+const recordTwinChatReviewItemsMock = vi.fn();
+
+vi.mock('@/services/twin_chat', async () => {
+  const actual = await vi.importActual<typeof import('@/services/twin_chat')>(
+    '@/services/twin_chat'
+  );
+
+  return {
+    ...actual,
+    recordTwinChatReviewItems: recordTwinChatReviewItemsMock,
+  };
+});
+
 vi.mock('@/services/experienceService', () => ({
   awardExperience: awardExperienceMock,
   getExperienceState: getExperienceStateMock,
@@ -108,6 +123,7 @@ describe('useConversationEngine fallback meta truth', () => {
         cognitive: { xp: 25 },
       },
     });
+    recordTwinChatReviewItemsMock.mockReset();
   });
 
   afterEach(() => {
@@ -734,6 +750,91 @@ describe('useConversationEngine fallback meta truth', () => {
     await waitFor(() => {
       expect(chatMemoryCompactor.flushPendingSaves).toHaveBeenCalled();
     });
+  });
+
+  it('passes D3 shadow verdict counts to processMessage without enabling writes', async () => {
+    vi.mocked(readActiveModuleContext).mockReturnValue({
+      moduleId: 'conversation',
+      moduleName: 'Conversation',
+      moduleType: 'chat',
+      pageTitle: 'Chat',
+      capabilities: ['chat'],
+      dataTruthClass: 'runtime',
+      actions: ['send'],
+      limits: ['none'],
+      memoryKeys: ['conversation'],
+    });
+    vi.mocked(buildChatContextEnvelope).mockReturnValue({
+      routeContext: {
+        route: '/titane',
+        updatedAt: 1,
+      },
+      moduleContext: {
+        moduleId: 'conversation',
+        moduleName: 'Conversation',
+        moduleType: 'chat',
+        pageTitle: 'Chat',
+        capabilities: ['chat'],
+        dataTruthClass: 'runtime',
+        actions: ['send'],
+        limits: ['none'],
+        memoryKeys: ['conversation'],
+      },
+      continuity: {
+        sequence: 1,
+        changeType: 'initial',
+        staleGuard: 'steady',
+      },
+      memorySingleDoor: {
+        conversationId: 'conv-1',
+        mode: 'default',
+        providerRequested: 'auto',
+        tags: ['route:/titane'],
+        recentMessages: [],
+        scopeDecision: {
+          kept: 0,
+          purged: 0,
+          recalculated: false,
+        },
+      },
+      runtimeMetadata: {},
+      generatedAt: 1,
+    } as never);
+
+    const { useConversationEngine } = await import('@/hooks/useConversationEngine');
+    const { result } = renderHook(() =>
+      useConversationEngine({ autoHealthCheck: false })
+    );
+
+    await act(async () => {
+      await result.current.sendMessage('Reponds de maniere directe avec clarte.');
+    });
+
+    expect(processMessageMock).toHaveBeenCalledWith(
+      'Reponds de maniere directe avec clarte.',
+      expect.objectContaining({
+        twinChatShadowSummary: expect.objectContaining({
+          candidateCount: 2,
+          kinds: expect.arrayContaining(['style', 'value']),
+          verdictCounts: expect.objectContaining({
+            downgraded: 1,
+            review_required: 1,
+          }),
+        }),
+      })
+    );
+    expect(recordTwinChatReviewItemsMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        candidates: expect.arrayContaining([
+          expect.objectContaining({ kind: 'style', contentCompact: 'style_direct' }),
+          expect.objectContaining({ kind: 'value', contentCompact: 'clarte' }),
+        ]),
+        decisions: expect.arrayContaining([
+          expect.objectContaining({ verdict: 'downgraded' }),
+          expect.objectContaining({ verdict: 'review_required' }),
+        ]),
+      })
+    );
   });
 
   it('clears persisted mode history when the chat is reset', async () => {

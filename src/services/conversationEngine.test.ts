@@ -122,6 +122,7 @@ vi.mock('@/services/security_active', () => ({
 
 import { secureInvoke } from '@/lib/security';
 import { aiOrchestrator } from '@/services/ai/orchestrator';
+import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import {
   getStaticPromptContext,
   processMessage,
@@ -171,6 +172,7 @@ describe('conversationEngine.processMessage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetStaticPromptContextCache();
+    userPreferencesEngine.resetPreferences();
     localStorage.clear();
     (window as Record<string, unknown>).__TITANE_E2E_CHAT_MOCK__ = false;
     delete (window as Record<string, unknown>).__TITANE_E2E_CHAT_SCENARIO__;
@@ -939,6 +941,148 @@ describe('conversationEngine.processMessage', () => {
     );
   });
 
+  it('injects UCM shadow status in the canonical prompt and metadata without activating behavior changes', async () => {
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmCore', true);
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmPromptProjection', true);
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmRuntimeObservability', true);
+    userPreferencesEngine.setCustomPreference('ucm_consent_granted', true);
+    userPreferencesEngine.setCustomPreference('ucm_can_use_personal_data', true);
+    userPreferencesEngine.setCustomPreference('ucm_internal_user', true);
+
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        content: 'Ok UCM shadow',
+        conversationId: 'c11',
+        messageId: 'm11',
+        metadata: { timestamp: 1111 },
+      });
+
+    const response = await processMessage('Donne un état UCM', {
+      conversationId: 'c11',
+      providerPreference: 'ollama',
+    });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          systemPrompt: expect.stringContaining('## USER_CORE_MODEL_SHADOW_CONTEXT'),
+        }),
+      })
+    );
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          systemPrompt: expect.stringContaining('mode=shadow-read-only'),
+        }),
+      })
+    );
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          systemPrompt: expect.stringContaining('core=enabled'),
+        }),
+      })
+    );
+
+    expect(response.cognitive_tags).toEqual(
+      expect.arrayContaining([
+        'ucm-core:enabled',
+        'ucm-prompt-projection:enabled',
+        'ucm-observability:enabled',
+      ])
+    );
+    expect(response.metadata.links_to_contexts).toEqual(
+      expect.arrayContaining([
+        'ucm_core:enabled',
+        'ucm_prompt_projection:enabled',
+        'ucm_observability:enabled',
+      ])
+    );
+  });
+
+  it('keeps memory flow unchanged when UCM core is disabled in shadow mode', async () => {
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmCore', false);
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmRuntimeObservability', true);
+
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return {
+          context: 'Mémoire persistante inchangée',
+          usedEntries: ['entry-shadow-1'],
+        };
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok UCM off',
+          conversationId: 'c12',
+          messageId: 'm12',
+          metadata: { timestamp: 1212 },
+        };
+      }
+
+      return null;
+    });
+
+    const response = await processMessage('Valide le flux standard sans rappel explicite', {
+      conversationId: 'c12',
+      providerPreference: 'ollama',
+    });
+
+    expect(
+      vi
+        .mocked(secureInvoke)
+        .mock.calls.some(([command]) => command === 'persistent_memory_get_context')
+    ).toBe(true);
+    expect(response.metadata.links_to_contexts).toEqual(
+      expect.arrayContaining(['persistent_memory:loaded'])
+    );
+    expect(response.cognitive_tags).toEqual(
+      expect.arrayContaining(['persistent-memory:loaded'])
+    );
+    expect(response.metadata.links_to_contexts.some(link => link.startsWith('ucm_'))).toBe(
+      false
+    );
+    expect(response.cognitive_tags.some(tag => tag.startsWith('ucm-'))).toBe(false);
+  });
+
+  it('does not expose UCM shadow prompt and tags when runtime observability is disabled', async () => {
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmCore', true);
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmPromptProjection', true);
+    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmRuntimeObservability', false);
+
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        content: 'Ok hidden UCM shadow',
+        conversationId: 'c13',
+        messageId: 'm13',
+        metadata: { timestamp: 1313 },
+      });
+
+    const response = await processMessage('Etat shadow masqué', {
+      conversationId: 'c13',
+      providerPreference: 'ollama',
+    });
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+    const prompt = String((generateCall?.[1] as { args?: { systemPrompt?: string } })?.args?.systemPrompt ?? '');
+
+    expect(prompt).not.toContain('## USER_CORE_MODEL_SHADOW_CONTEXT');
+    expect(prompt).not.toContain('## USER_CORE_MODEL_SHADOW_STATUS');
+    expect(response.cognitive_tags.some(tag => tag.startsWith('ucm-'))).toBe(false);
+    expect(response.metadata.links_to_contexts.some(link => link.startsWith('ucm_'))).toBe(
+      false
+    );
+  });
+
   it('marks twins, cognitive, and time context when the active route passes a context envelope', async () => {
     vi.mocked(secureInvoke).mockImplementation(async command => {
       if (command === 'persistent_memory_get_context') {
@@ -1033,6 +1177,98 @@ describe('conversationEngine.processMessage', () => {
         'cognitive_context:present',
         'time_context:present',
       ])
+    );
+  });
+
+  it('adds twin chat shadow observability markers without surfacing twins context', async () => {
+    vi.mocked(secureInvoke).mockImplementation(async command => {
+      if (command === 'persistent_memory_get_context') {
+        return null;
+      }
+
+      if (command === 'conversation_generate') {
+        return {
+          content: 'Ok shadow markers',
+          conversationId: 'c10shadow',
+          messageId: 'm10shadow',
+          metadata: { timestamp: 1012 },
+        };
+      }
+
+      return null;
+    });
+
+    const response = await processMessage('Analyse mon style de reponse', {
+      conversationId: 'c10shadow',
+      providerPreference: 'ollama',
+      twinChatShadowSummary: {
+        candidateCount: 2,
+        kinds: ['style', 'cognitive'],
+        verdictCounts: {
+          downgraded: 1,
+          review_required: 1,
+        },
+      },
+      contextEnvelope: {
+        routeContext: {
+          route: '/titane',
+          updatedAt: 1,
+        },
+        moduleContext: {
+          moduleId: 'conversation',
+          moduleName: 'Conversation',
+          moduleType: 'chat',
+          pageTitle: 'Chat',
+          capabilities: ['chat'],
+          dataTruthClass: 'runtime',
+          actions: ['send'],
+          limits: ['none'],
+          memoryKeys: ['conversation'],
+        },
+        continuity: {
+          sequence: 1,
+          changeType: 'initial',
+          staleGuard: 'steady',
+        },
+        memorySingleDoor: {
+          conversationId: 'c10shadow',
+          mode: 'default',
+          providerRequested: 'ollama',
+          tags: ['route:/titane'],
+          recentMessages: [],
+          scopeDecision: {
+            kept: 0,
+            purged: 0,
+            recalculated: false,
+          },
+        },
+        runtimeMetadata: {},
+        generatedAt: 1,
+      },
+    });
+
+    expect(response.cognitive_tags).toEqual(
+      expect.arrayContaining([
+        'twin-chat-shadow:present',
+        'twin-chat-candidates:2',
+        'twin-chat-kind:style',
+        'twin-chat-kind:cognitive',
+        'twin-chat-verdict:downgraded:1',
+        'twin-chat-verdict:review_required:1',
+      ])
+    );
+    expect(response.metadata.links_to_contexts).toEqual(
+      expect.arrayContaining([
+        'twin_chat_shadow:present',
+        'twin_chat_candidates:2',
+        'twin_chat_kind:style',
+        'twin_chat_kind:cognitive',
+        'twin_chat_verdict:downgraded:1',
+        'twin_chat_verdict:review_required:1',
+      ])
+    );
+    expect(response.metadata.links_to_contexts).not.toEqual(
+      expect.arrayContaining(['twins:present'])
     );
   });
 

@@ -1,3 +1,25 @@
+## 2026-05-15 — UCM shadow progressive activation gate (phase P2)
+
+- **Surface modifiee** : [src/services/conversationEngine.ts](src/services/conversationEngine.ts) applique un gate runtime `ucmRuntimeObservability` pour exposer (ou masquer) les blocs shadow UCM dans le prompt et les tags/links metadata.
+- **Activation progressive** : si observability est `disabled`, aucun bloc `USER_CORE_MODEL_SHADOW_*` ni tag/link `ucm-*` n est projete; si `enabled`, la projection shadow reste read-only.
+- **Tests integration** : [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) ajoute la preuve de non-exposition quand observability est OFF, et conserve la non-regression memoire.
+- **Rollback** : `git restore -- src/services/conversationEngine.ts src/services/conversationEngine.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md scripts/autoheal/autoheal_rules.jsonl`
+
+## 2026-05-15 — UCM shadow wiring on canonical conversation path (phase P1)
+
+- **Surface modifiee** : [src/services/conversationEngine.ts](src/services/conversationEngine.ts) resolve le registre UCM en mode `shadow-read-only` sur la voie canonique `processMessage`, puis publie l etat UCM dans le prompt systeme (`USER_CORE_MODEL_SHADOW_CONTEXT` / `USER_CORE_MODEL_SHADOW_STATUS`) sans activer de comportement mutationnel.
+- **Couplage memoire conserve** : la prefetch memoire persistante et les statuts runtime/default KB restent inchanges; seuls des tags/links metadata additionnels UCM sont projetes (`ucm_core`, `ucm_prompt_projection`, `ucm_enabled_count`).
+- **Tests integration** : [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) couvre l injection shadow UCM dans le prompt/metadata et la non-regression du flux memoire quand `ucmCore` est desactive.
+- **Rollback** : `git restore -- src/services/conversationEngine.ts src/services/conversationEngine.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md scripts/autoheal/autoheal_rules.jsonl`
+
+## 2026-05-15 — UCM feature decision registry bootstrap (phase P0)
+
+- **Surface modifiee** : [src/features/identity/userCoreModelFeatureDecisions.ts](src/features/identity/userCoreModelFeatureDecisions.ts) ajoute un registre centralise de decisions UCM (core/evidence/replay/recall/prompt-projection/consent/subsystem/channel/observability) sans ouverture de nouvelle route UI.
+- **Politique appliquee** : priorite `runtime > env > default` puis garde de politique (`ucmCore` maitre, consentement requis pour les flags donnees personnelles, `internalUser` requis pour convergence/unification).
+- **Tests Vitest** : [src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts](src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts) couvre OFF par defaut, precedence runtime, env toggles, garde consentement et garde internal-only.
+- **Export feature** : [src/features/identity/index.ts](src/features/identity/index.ts) expose le registre et ses resolvers pour integration progressive UCM.
+- **Rollback** : `git restore -- src/features/identity/userCoreModelFeatureDecisions.ts src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts src/features/identity/index.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md scripts/autoheal/autoheal_rules.jsonl`
+
 ## 2026-05-15 — A11Y tranche B gate expansion (56 routes: product/audio)
 
 - **Surface modifiee** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire canonique de 44 a 56 routes en ajoutant 12 routes produit/audio deja qualifiees.
@@ -1242,6 +1264,14 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Min response: 80 chars
 - Compatible TITANE_E2E_TAURI=1
 
+## 2026-05-15 — Twin chat shadow extraction on canonical conversation path (phase A1)
+
+- **Surface modifiee** : [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) produit maintenant un resume shadow `twinChatShadowSummary` a partir du message utilisateur sur la voie canonique `sendMessage -> processMessage`, sans write TWIN ni mutation du snapshot `titane_twin_fusion_v1`.
+- **Service additif** : [src/services/twin_chat/extractTwinChatObservationCandidates.ts](src/services/twin_chat/extractTwinChatObservationCandidates.ts) et [src/services/twin_chat/types.ts](src/services/twin_chat/types.ts) introduisent un extracteur pur, borne aux familles `value`, `cognitive`, `style`, `emotional`, avec `data minimization` stricte (aucun raw message persiste).
+- **Observabilite runtime** : [src/services/conversationEngine.ts](src/services/conversationEngine.ts) projette uniquement des marqueurs techniques `twin-chat-shadow:*` et `twin_chat_*` dans les tags cognitifs et `links_to_contexts`, sans exposer de contenu utilisateur brut et sans ajouter `twins:present` tant qu il n y a pas de write valide.
+- **Tests cibles** : [src/services/twin_chat/__tests__/extractTwinChatObservationCandidates.test.ts](src/services/twin_chat/__tests__/extractTwinChatObservationCandidates.test.ts), [src/services/twin_chat/__tests__/types.test.ts](src/services/twin_chat/__tests__/types.test.ts) et [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) verrouillent respectivement l extraction, le contrat shadow read-only et la non-pollution du contexte TWIN runtime.
+- **Rollback** : `git restore -- src/services/twin_chat src/hooks/useConversationEngine.ts src/services/conversationEngine.ts src/services/conversationEngine.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md ARCHITECTURE.md scripts/autoheal/autoheal_rules.jsonl`
+
 ### Tests Vitest — Services IA
 
 #### src/**tests**/services/ai/chatModes-full-coverage.test.ts
@@ -1853,3 +1883,20 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Region scrollable DEV focusable** : `src/pages/DevPage.tsx` rend `main.dev-main` explicitement focusable au clavier via `tabIndex={0}` et un `aria-label`, ce qui ferme `scrollable-region-focusable` sur `/dev?tab=overview` sans changer la navigation existante.
 - **Sous-libelles TIME rehausses** : `src/pages/TimePage.tsx` releve le contraste des descriptions d onglets et des aides `time-current-segment` / `Fuseau & charge`, ce qui supprime les 9 noeuds `color-contrast` restants de `/time`.
 - **Preuves cibles** : `src/__tests__/pages/DevPage.test.tsx` et `src/__tests__/pages/TimePage.test.tsx` passent avec les nouvelles assertions locales; le diagnostic Axe cible passe a `admin-system=0`, `dev-overview=0`, `time=0`; la spec canonique `e2e/a11y/wcag-aa-core.spec.ts` ramene l aggregate blocking de `12` a `3`.
+# [2026-05-15] Governance Anthropic-only truth: la surface canonique `/admin?tab=governance` expose maintenant Anthropic comme seule carte API premium externe primaire, avec statuts `key_stored`, `runtime_loaded`, `chat_path_connected`, `cloud_use_mode`, `budget_status` et `last_real_test_status` rendus sans secret. Gemini, OpenAI et Copilot restent accessibles uniquement dans une section repliée de providers dormants, et la sauvegarde de clé Anthropic n'exécute ni test de connexion ni appel cloud automatique.
+
+## 2026-05-15 — Twin chat D3 shadow policy on canonical conversation path (phase B1)
+
+- **Surface modifiee** : [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) remplace le simple resume de candidats twin_chat par le resultat de [src/services/twin_chat/orchestrator.ts](src/services/twin_chat/orchestrator.ts), qui applique une policy D3 shadow-only avant projection runtime.
+- **Service additif** : [src/services/twin_chat/createTwinConsentShadowEntry.ts](src/services/twin_chat/createTwinConsentShadowEntry.ts) transforme les candidats derives en entrees compatibles avec [src/services/twin_consent/TwinConsentLedgerContract.ts](src/services/twin_consent/TwinConsentLedgerContract.ts), puis [src/services/twin_chat/policy.ts](src/services/twin_chat/policy.ts) publie des verdicts `allowed`, `review_required`, `blocked`, `downgraded` sans write TWIN.
+- **Observabilite runtime** : [src/services/conversationEngine.ts](src/services/conversationEngine.ts) ajoute uniquement des marqueurs techniques `twin-chat-verdict:*` et `twin_chat_verdict:*` dans les tags cognitifs et `links_to_contexts`, sans exposer de contenu brut et sans activer `submitObservation` ni `refreshChatContextSnapshot`.
+- **Tests cibles** : [src/services/twin_chat/__tests__/policy.test.ts](src/services/twin_chat/__tests__/policy.test.ts), [src/services/twin_chat/__tests__/orchestrator.test.ts](src/services/twin_chat/__tests__/orchestrator.test.ts), [src/__tests__/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts) et [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) verrouillent le mapping D3, les verdicts et leur transport sur la voie canonique.
+- **Rollback** : `git restore -- src/services/twin_chat src/hooks/useConversationEngine.ts src/services/conversationEngine.ts src/services/conversationEngine.test.ts src/__tests__/hooks/useConversationEngine.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md ARCHITECTURE.md scripts/autoheal/autoheal_rules.jsonl`
+
+## 2026-05-15 — Twin chat review queue + limited Twin write on `/twins` (phase C1)
+
+- **Surface canonique** : [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx) expose maintenant le panneau `twin-chat-review-queue` avec `twin-chat-review-count`, `twin-chat-review-item-*`, `twin-chat-review-approve-*`, `twin-chat-review-reject-*` pour la validation humaine explicite des observations shadow derivees du chat.
+- **Runtime source** : [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) pousse les verdicts `review_required` et `downgraded` dans [src/services/twin_chat/reviewQueue.ts](src/services/twin_chat/reviewQueue.ts), qui conserve une file locale gouvernee sans contenu brut et sans write automatique.
+- **Write path limite** : la validation explicite depuis `/twins` appelle seulement les methodes haut niveau existantes de [src/services/api/numericTwin.ts](src/services/api/numericTwin.ts), puis `refreshChatContextSnapshot()`. Aucun write n est lance depuis la voie canonique du chat elle-meme.
+- **Preuves cibles** : [src/services/twin_chat/__tests__/reviewQueue.test.ts](src/services/twin_chat/__tests__/reviewQueue.test.ts), [src/__tests__/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts), [src/__tests__/pages/TwinsPage.test.tsx](src/__tests__/pages/TwinsPage.test.tsx), [e2e/critical/twin-chat-review.spec.ts](e2e/critical/twin-chat-review.spec.ts).
+- **Rollback** : `git restore -- src/services/twin_chat src/hooks/useConversationEngine.ts src/pages/TwinsPage.tsx src/__tests__/hooks/useConversationEngine.test.ts src/__tests__/pages/TwinsPage.test.tsx e2e/critical/twin-chat-review.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md ARCHITECTURE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl`

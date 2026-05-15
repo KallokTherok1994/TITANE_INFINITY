@@ -1,3 +1,24 @@
+## 2026-05-15 — UCM progressive observability gate on conversation lane (delta cartographie)
+
+- Delta Ring 3 additif sur [src/services/conversationEngine.ts](src/services/conversationEngine.ts): la projection shadow UCM est maintenant conditionnee par `ucmRuntimeObservability`.
+- Mode progressif: `observability=disabled` masque totalement les blocs prompt shadow UCM et les marqueurs metadata/tags UCM; `observability=enabled` conserve la projection shadow read-only.
+- Aucun changement IPC, aucune mutation Ring 0/1/2, aucun impact sur la logique de generation backend.
+- Couverture de non-regression dans [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) avec preuve explicite de non-exposition UCM quand observability est OFF.
+
+## 2026-05-15 — UCM shadow wiring on canonical conversation lane (delta cartographie)
+
+- Delta Ring 3 additif: [src/services/conversationEngine.ts](src/services/conversationEngine.ts) integre la resolution des decisions UCM sur la voie canonique `processMessage` en mode shadow/read-only.
+- Le prompt systeme publie des blocs d etat UCM (`USER_CORE_MODEL_SHADOW_CONTEXT`, `USER_CORE_MODEL_SHADOW_STATUS`) sans changer la decision metier backend, l orchestration provider, ni les contrats IPC.
+- Les metadonnees runtime projetent des marqueurs UCM (`ucm_core`, `ucm_enabled_count`, `ucm_prompt_projection`) en complement des statuts memoire/KB deja presents.
+- Non-regression couverte dans [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) avec un test de conservation explicite du flux memoire quand `ucmCore=disabled`.
+
+## 2026-05-15 — UCM feature decision registry bootstrap (delta cartographie)
+
+- Ajout d un registre centralise de decisions UCM dans [src/features/identity/userCoreModelFeatureDecisions.ts](src/features/identity/userCoreModelFeatureDecisions.ts) avec 9 flags cibles (release/permission/observability).
+- Resolution canonique des flags: `runtime > env > default`, puis application de garde de politique (`ucmCore` maitre, consentement obligatoire pour donnees personnelles, internal-user obligatoire pour convergence/unification).
+- Aucun ajout de route UI, aucun changement IPC, aucun changement Ring 0/1/2: le delta est Ring 3/4 preparatoire et strictement additif.
+- Couverture de non-regression par [src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts](src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts).
+
 ## 2026-05-15 — WCAG tranche B expansion 44 -> 56 (delta cartographie)
 
 - Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) ajoute 12 routes produit/audio deja conformes sans modifier les surfaces runtime UI.
@@ -2881,3 +2902,25 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > La correction est volontairement minimale et ancree sur les composants proprietaires des nœuds fautifs. `src/App.tsx` remonte le contraste du footer runtime partage, ce qui nettoie la meme faute sur plusieurs routes sans toucher a leur logique. `src/pages/DevPage.tsx` rend `main.dev-main` focusable et nomme la region pour satisfaire `scrollable-region-focusable`. `src/pages/TimePage.tsx` releve les couleurs des descriptions d onglets et de deux aides statistiques qui restaient sous le seuil WCAG.
 
 > Effet mesure: le diagnostic Axe cible passe a `admin-system=0`, `dev-overview=0`, `time=0`; le rerun complet `e2e/a11y/wcag-aa-core.spec.ts` ramene l aggregate blocking de `12` a `3`. Ce batch n est donc pas une retouche cosmetique isolee, mais l absorption du reliquat systeme le plus proche de zero via un composant shell partage et deux surfaces locales.
+> 2026-05-15 — Anthropic-only governance/runtime lock: la cartographie active relie désormais la saisie Governance `chat_set_anthropic_key` au même `ChatOrchestratorState` canonique que `conversation_generate`, avec migration legacy `claude_api_key -> anthropic_api_key`, mode cloud `OFF` par défaut et providers Gemini/OpenAI/Copilot rétrogradés au rang dormant côté UI. La preuve ciblée passe par `cargo check --bin titane-infinity`, les tests Rust de migration/policy Anthropic et les Vitest de `featureFlags` + `SecretsTab`. Le runbook operateur associe est maintenant `docs/ANTHROPIC_LIVE_ACTIVATION_RUNBOOK.md` pour l activation manuelle sans cout cache, tandis que `docs/ANTHROPIC_RELEASE_READINESS.md`, `docs/ANTHROPIC_MANUAL_LIVE_TEST_ROUTER.md`, `docs/ANTHROPIC_FINAL_RELEASE_SEAL.md` et `docs/ANTHROPIC_LIVE_TEST_EVIDENCE_TEMPLATE.md` routent la preparation release, le protocole live unique et la capture de preuve future sans automatisation.
+
+## 2026-05-15 — Twin chat shadow extraction A1 (delta cartographie)
+
+- Delta Ring 3 additif: nouveau service [src/services/twin_chat/extractTwinChatObservationCandidates.ts](src/services/twin_chat/extractTwinChatObservationCandidates.ts) branche sur la voie canonique [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) pour produire des candidats TWIN derives par tour de chat, sans write TWIN ni persistance brute.
+- Le transport runtime reste strictement canonique: `sendMessage -> processMessage -> conversation_generate`. Le nouveau resume `twinChatShadowSummary` voyage uniquement comme metadonnee frontend vers [src/services/conversationEngine.ts](src/services/conversationEngine.ts), ou il devient un marqueur d observabilite technique.
+- Aucune mutation Ring 0/1/2, aucun changement IPC, aucune injection supplementaire dans `twinsContext`: le delta reste `shadow/read-only` et n affecte pas le backend [src-tauri/src/conversation_engine/commands.rs](src-tauri/src/conversation_engine/commands.rs).
+- Couverture de non-regression: [src/services/twin_chat/__tests__/extractTwinChatObservationCandidates.test.ts](src/services/twin_chat/__tests__/extractTwinChatObservationCandidates.test.ts), [src/services/twin_chat/__tests__/types.test.ts](src/services/twin_chat/__tests__/types.test.ts) et [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts).
+
+## 2026-05-15 — Twin chat D3 shadow policy B1 (delta cartographie)
+
+- Delta Ring 3 additif: [src/services/twin_chat/createTwinConsentShadowEntry.ts](src/services/twin_chat/createTwinConsentShadowEntry.ts), [src/services/twin_chat/policy.ts](src/services/twin_chat/policy.ts) et [src/services/twin_chat/orchestrator.ts](src/services/twin_chat/orchestrator.ts) ajoutent une couche de policy D3 shadow-only au-dessus de l extracteur twin_chat existant.
+- Le transport runtime canonique reste inchangé: `sendMessage -> processMessage -> conversation_generate`. Seuls changent le contenu du resume `twinChatShadowSummary` et ses marqueurs de verdict `twin-chat-verdict:*` / `twin_chat_verdict:*` pour observabilite gouvernee.
+- Aucune mutation Ring 0/1/2, aucun changement IPC, aucune ecriture TWIN: l integration reuse [src/services/twin_consent/TwinConsentLedgerContract.ts](src/services/twin_consent/TwinConsentLedgerContract.ts) comme gate frontend strict et maintient `canWriteTwin=false` sur toutes les decisions.
+- Couverture de non-regression: [src/services/twin_chat/__tests__/policy.test.ts](src/services/twin_chat/__tests__/policy.test.ts), [src/services/twin_chat/__tests__/orchestrator.test.ts](src/services/twin_chat/__tests__/orchestrator.test.ts), [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) et [src/__tests__/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts).
+
+## 2026-05-15 — Twin chat review queue C1 (delta cartographie)
+
+- Delta Ring 3 additif: [src/services/twin_chat/reviewQueue.ts](src/services/twin_chat/reviewQueue.ts) introduit une file locale de review explicite pour les verdicts `review_required` et `downgraded`, alimentee par [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts).
+- Delta Ring 4 visible: [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx) publie la surface canonique `twin-chat-review-queue` sur `/twins`, avec validate/reject explicites et erreurs visibles en cas d echec du write limite.
+- Le write path reste borne: seule l action utilisateur depuis `/twins` peut appeler [src/services/api/numericTwin.ts](src/services/api/numericTwin.ts) pour observer `value`, `cognitive`, `style` ou `emotional`, puis rehydrater le snapshot de chat. Aucun write automatique n est ajoute au flux `sendMessage -> processMessage -> conversation_generate`.
+- Couverture de non-regression: [src/services/twin_chat/__tests__/reviewQueue.test.ts](src/services/twin_chat/__tests__/reviewQueue.test.ts), [src/__tests__/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts), [src/__tests__/pages/TwinsPage.test.tsx](src/__tests__/pages/TwinsPage.test.tsx) et [e2e/critical/twin-chat-review.spec.ts](e2e/critical/twin-chat-review.spec.ts).

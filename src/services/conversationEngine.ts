@@ -16,6 +16,11 @@ import { getSystemPrompt } from '@/config/chatModes.config';
 import { memoryService } from '@/services/api/memory';
 import { getRelevantPromptContext as getDefaultKbPromptContext } from '@/services/api/defaultKnowledgeBase';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
+import {
+  resolveUserCoreModelDecisions,
+  type UserCoreModelDecisionActor,
+  type UserCoreModelDecisionKey,
+} from '@/features/identity/userCoreModelFeatureDecisions';
 import { getMonitoringAgentStatus } from '@/services/monitoring';
 import { getDiagnosticAgentStatus } from '@/services/diagnostic';
 import { getExplainabilityAgentStatus } from '@/services/explainability';
@@ -60,6 +65,7 @@ import {
   formatContextEnvelopeForSystemPrompt,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
+import type { TwinChatShadowSummary } from '@/services/twin_chat';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { useEvolutionStore } from '@/stores/evolutionStore';
 import { aiOrchestrator } from '@/services/ai/orchestrator';
@@ -489,6 +495,112 @@ function formatAdvancedAgentRuntimeBlock(statuses: RuntimeAdvancedAgentStatus[])
   ].join('\n');
 }
 
+type UserCoreModelShadowState = {
+  isExposed: boolean;
+  coreStatus: 'enabled' | 'disabled';
+  enabledCount: number;
+  promptProjectionStatus: 'enabled' | 'disabled';
+  observabilityStatus: 'enabled' | 'disabled';
+  promptContext: string;
+  statusContext: string;
+};
+
+const USER_CORE_MODEL_DECISION_KEYS: UserCoreModelDecisionKey[] = [
+  'ucmCore',
+  'ucmEvidenceCapture',
+  'ucmEventReplay',
+  'ucmGovernedRecall',
+  'ucmPromptProjection',
+  'ucmConsentFeedbackLoop',
+  'ucmSubsystemConvergence',
+  'ucmChannelUnification',
+  'ucmRuntimeObservability',
+];
+
+function readBooleanPreference(
+  customPreferences: Record<string, string | number | boolean>,
+  key: string
+): boolean | undefined {
+  const value = customPreferences[key];
+  return typeof value === 'boolean' ? value : undefined;
+}
+
+function resolveUserCoreModelShadowState(
+  customPreferences: Record<string, string | number | boolean>
+): UserCoreModelShadowState {
+  const runtime: Partial<Record<UserCoreModelDecisionKey, boolean>> = {};
+
+  for (const key of USER_CORE_MODEL_DECISION_KEYS) {
+    const runtimeValue = readBooleanPreference(customPreferences, `ucm.runtime.${key}`);
+    if (typeof runtimeValue === 'boolean') {
+      runtime[key] = runtimeValue;
+    }
+  }
+
+  const actor: UserCoreModelDecisionActor = {
+    internalUser: readBooleanPreference(customPreferences, 'ucm_internal_user'),
+    consentGranted: readBooleanPreference(customPreferences, 'ucm_consent_granted'),
+    canUsePersonalData: readBooleanPreference(
+      customPreferences,
+      'ucm_can_use_personal_data'
+    ),
+  };
+
+  const env = (import.meta as { env?: Record<string, string | undefined> }).env ?? {};
+  const resolved = resolveUserCoreModelDecisions({
+    env,
+    runtime,
+    actor,
+  });
+
+  const enabledDecisions = USER_CORE_MODEL_DECISION_KEYS.filter(
+    key => resolved.values[key]
+  );
+  const coreStatus: 'enabled' | 'disabled' = resolved.values.ucmCore
+    ? 'enabled'
+    : 'disabled';
+  const promptProjectionStatus: 'enabled' | 'disabled' = resolved.values.ucmPromptProjection
+    ? 'enabled'
+    : 'disabled';
+  const observabilityStatus: 'enabled' | 'disabled' = resolved.values
+    .ucmRuntimeObservability
+    ? 'enabled'
+    : 'disabled';
+  const isExposed = observabilityStatus === 'enabled';
+
+  const promptContext = [
+    '## USER_CORE_MODEL_SHADOW_CONTEXT',
+    'mode=shadow-read-only',
+    `core=${coreStatus}`,
+    `enabled_decisions=${enabledDecisions.join(',') || 'none'}`,
+    `sources=${USER_CORE_MODEL_DECISION_KEYS.map(
+      key => `${key}:${resolved.sources[key]}`
+    ).join(',')}`,
+  ]
+    .join('\n')
+    .trim();
+
+  const statusContext = [
+    '## USER_CORE_MODEL_SHADOW_STATUS',
+    'mode=shadow-read-only',
+    `core=${coreStatus}`,
+    `enabled_count=${enabledDecisions.length}`,
+    `prompt_projection=${promptProjectionStatus}`,
+  ]
+    .join('\n')
+    .trim();
+
+  return {
+    isExposed,
+    coreStatus,
+    enabledCount: enabledDecisions.length,
+    promptProjectionStatus,
+    observabilityStatus,
+    promptContext: isExposed ? promptContext : '',
+    statusContext: isExposed ? statusContext : '',
+  };
+}
+
 function buildContextStatusTags(input: {
   runtimeKnowledgeStatus: 'loaded' | 'empty' | 'unavailable';
   defaultKnowledgeStatus: 'loaded' | 'empty' | 'unavailable';
@@ -502,6 +614,7 @@ function buildContextStatusTags(input: {
   taskType: 'question' | 'instruction' | 'multi-step' | 'code' | 'data';
   canonicalDecision: CanonicalDecision;
   kernelProviderPreference: ConversationProviderPreference;
+  userCoreModelShadowState: UserCoreModelShadowState;
   contextEnvelope?: ChatContextEnvelope;
 }): string[] {
   const tags = [
@@ -517,6 +630,15 @@ function buildContextStatusTags(input: {
     `kernel-provider:${input.kernelProviderPreference}`,
     `kernel-truth:${input.canonicalDecision.truthStatus.toLowerCase()}`,
   ];
+
+  if (input.userCoreModelShadowState.isExposed) {
+    tags.push(
+      `ucm-core:${input.userCoreModelShadowState.coreStatus}`,
+      `ucm-enabled-count:${input.userCoreModelShadowState.enabledCount}`,
+      `ucm-prompt-projection:${input.userCoreModelShadowState.promptProjectionStatus}`,
+      `ucm-observability:${input.userCoreModelShadowState.observabilityStatus}`
+    );
+  }
 
   if (input.activeSkillId) {
     tags.push(`skill-id:${input.activeSkillId}`);
@@ -1266,6 +1388,7 @@ export async function processMessage(
     emotionContext?: EmotionState;
     providerPreference?: ConversationProviderPreference;
     contextEnvelope?: ChatContextEnvelope;
+    twinChatShadowSummary?: TwinChatShadowSummary;
   }
 ): Promise<ConversationResponse> {
   let conversationId = options?.conversationId;
@@ -1425,6 +1548,10 @@ export async function processMessage(
     activeSkillId ? `\nskill_id=${activeSkillId}` : ''
   }`;
   const taskType = detectTaskType(userMessage);
+  const userPreferences = userPreferencesEngine.getPreferences();
+  const userCoreModelShadowState = resolveUserCoreModelShadowState(
+    userPreferences.customPreferences
+  );
   const availableSkills = activeSkillId
     ? [
         {
@@ -1479,8 +1606,7 @@ export async function processMessage(
   const defaultKnowledgeStatusContext = `## DEFAULT_KNOWLEDGE_BASE_STATUS\nstatus=${defaultKnowledgeStatus}`;
 
   const deepAnalysisStatus: 'enabled' | 'disabled' =
-    userPreferencesEngine.getPreferences().customPreferences['deep_internet_analysis'] ===
-    true
+    userPreferences.customPreferences['deep_internet_analysis'] === true
       ? 'enabled'
       : 'disabled';
   const onlineCapabilityStatus: 'available' | 'offline' =
@@ -1578,6 +1704,8 @@ export async function processMessage(
     governedToolLaneStatusContext,
     canonicalDecisionContext,
     canonicalDecisionStatusContext,
+    userCoreModelShadowState.promptContext,
+    userCoreModelShadowState.statusContext,
     advancedAgentRuntimeContext,
     advancedAgentRuntimeStatusContext,
     persistentMemoryContext,
@@ -1923,6 +2051,7 @@ export async function processMessage(
         taskType,
         canonicalDecision,
         kernelProviderPreference,
+        userCoreModelShadowState,
         contextEnvelope: options?.contextEnvelope,
       }),
     ])
@@ -1998,6 +2127,14 @@ export async function processMessage(
       `kernel_profile:${canonicalDecision.profileId}`,
       `kernel_provider:${kernelProviderPreference}`,
       `kernel_truth:${canonicalDecision.truthStatus.toLowerCase()}`,
+      ...(userCoreModelShadowState.isExposed
+        ? [
+            `ucm_core:${userCoreModelShadowState.coreStatus}`,
+            `ucm_enabled_count:${userCoreModelShadowState.enabledCount}`,
+            `ucm_prompt_projection:${userCoreModelShadowState.promptProjectionStatus}`,
+            `ucm_observability:${userCoreModelShadowState.observabilityStatus}`,
+          ]
+        : []),
       ...(canonicalDecision.skillId ? [`kernel_skill:${canonicalDecision.skillId}`] : []),
       ...(advancedAgentStatuses.length > 0
         ? [
@@ -2047,7 +2184,20 @@ export async function processMessage(
     `memory-action:${discernmentDecision.memoryAction}`,
     `ask-act-hold:${discernmentDecision.askActHold}`,
   ];
-  const finalCognitiveTags = Array.from(new Set([...cognitiveTags, ...discernmentTags]));
+  const twinChatShadowTags =
+    options?.twinChatShadowSummary && options.twinChatShadowSummary.candidateCount > 0
+      ? [
+          'twin-chat-shadow:present',
+          `twin-chat-candidates:${options.twinChatShadowSummary.candidateCount}`,
+          ...options.twinChatShadowSummary.kinds.map(kind => `twin-chat-kind:${kind}`),
+          ...Object.entries(options.twinChatShadowSummary.verdictCounts ?? {}).map(
+            ([verdict, count]) => `twin-chat-verdict:${verdict}:${count}`
+          ),
+        ]
+      : [];
+  const finalCognitiveTags = Array.from(
+    new Set([...cognitiveTags, ...discernmentTags, ...twinChatShadowTags])
+  );
   normalizedMetadata.links_to_contexts = Array.from(
     new Set([
       ...normalizedMetadata.links_to_contexts,
@@ -2061,6 +2211,18 @@ export async function processMessage(
       `web_action:${discernmentDecision.webAction}`,
       `memory_action:${discernmentDecision.memoryAction}`,
       `ask_act_hold:${discernmentDecision.askActHold}`,
+      ...(options?.twinChatShadowSummary && options.twinChatShadowSummary.candidateCount > 0
+        ? [
+            'twin_chat_shadow:present',
+            `twin_chat_candidates:${options.twinChatShadowSummary.candidateCount}`,
+            ...options.twinChatShadowSummary.kinds.map(
+              kind => `twin_chat_kind:${kind}`
+            ),
+            ...Object.entries(options.twinChatShadowSummary.verdictCounts ?? {}).map(
+              ([verdict, count]) => `twin_chat_verdict:${verdict}:${count}`
+            ),
+          ]
+        : []),
     ])
   );
 

@@ -658,6 +658,13 @@ L’agent d’explicabilité assure la traçabilité des décisions IA, la gén�
 - `src-tauri/src/conversation_engine/commands.rs` accepte aussi le payload hérité `aiConfig` comme source de compatibilité descendante lorsque le frontend vivant n'a pas encore convergé sur le contrat top-level.
 - `src-tauri/src/conversation_engine/omega_integration.rs` ne doit plus utiliser de fallback local/Ollama court; le plancher backend implicite est aligné sur la génération longue pour éviter la troncature des réponses lorsque le budget explicite manque.
 
+## [2026-05-15] Anthropic-only governance/runtime lock
+
+- `src/features/governance-center/tabs/SecretsTab.tsx` et `src-tauri/src/secure_commands.rs` publient maintenant Anthropic comme seule surface premium externe primaire; Gemini, OpenAI et Copilot restent dormants dans la gouvernance active.
+- `src-tauri/src/security/secrets_engine.rs` canonise `anthropic_api_key` comme vérité secrète active et ne conserve `claude_api_key` qu en lecture legacy/migration.
+- `src-tauri/src/main.rs` ne duplique plus `ChatOrchestratorState` entre le binaire et la librairie: la même instance canonique est bootstrappee puis relue par `conversation_generate`.
+- `src-tauri/src/conversation_engine/commands.rs` n autorise la voie Anthropic Messages API que sur demande explicite et après gates `CloudUseMode`, budget et secret; la réponse publie ensuite `metadata.providerTruth` pour exposer `provider_used`, `network_used`, `fallback_reason`, `cloud_use_mode` et `secret_status`.
+
 ---
 
 ## Conformité allowlist Tauri/IPC (avril 2026)
@@ -911,3 +918,27 @@ Conformité validée par tests 100/100 (avril 2026).
 > Signal runtime natif confirmé: IPC `READY`, send trace `RESPONDED`, provider local `Ollama (OMEGA+Singularity)`, réponse assistant effective sur session Tauri.
 
 > La persistance envelope montre `timeContext.runtimeSource=global-publisher` et `routeContext.route=/titane`; la visibilité live de `contextBinding` reste dépendante du trace hook UI, donc la vérité backend TIME summary reste qualifiée par le test Rust ciblé.
+
+## 2026-05-15 — Twin chat shadow extraction A1
+
+> Nouveau service Ring 3 [src/services/twin_chat/index.ts](src/services/twin_chat/index.ts) branché sur la voie canonique Ring 3 [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts). Le service produit des candidats TWIN derives depuis le tour utilisateur (`value`, `cognitive`, `style`, `emotional`) via [src/services/twin_chat/extractTwinChatObservationCandidates.ts](src/services/twin_chat/extractTwinChatObservationCandidates.ts), sans appel IPC ni write vers NumericTwin.
+
+> Flux canonique: UI conversation -> `useConversationEngine.sendMessage()` -> twin_chat shadow extractor -> `processMessage()` -> `conversation_generate`. Le resume shadow voyage uniquement comme metadonnee frontend `twinChatShadowSummary`; [src/services/conversationEngine.ts](src/services/conversationEngine.ts) expose ensuite des marqueurs techniques `twin-chat-shadow:*` / `twin_chat_*` pour observabilite.
+
+> Invariant de cette phase: zero mutation Ring 0/1/2, zero stockage de message brut, zero write TWIN, zero pollution `twinsContext`. La phase suivante D3 devra reutiliser [src/services/twin_consent/TwinConsentLedgerContract.ts](src/services/twin_consent/TwinConsentLedgerContract.ts) avant toute activation d ecriture.
+
+## 2026-05-15 — Twin chat D3 shadow policy B1
+
+> La couche Ring 3 `src/services/twin_chat/` ajoute maintenant une policy D3 shadow-only au-dessus de l extraction initiale. [src/services/twin_chat/createTwinConsentShadowEntry.ts](src/services/twin_chat/createTwinConsentShadowEntry.ts) convertit les candidats twin_chat en `TwinIdentityObservationEntry` derives, puis [src/services/twin_chat/policy.ts](src/services/twin_chat/policy.ts) applique les helpers de [src/services/twin_consent/TwinConsentLedgerContract.ts](src/services/twin_consent/TwinConsentLedgerContract.ts) pour produire des verdicts gouvernes.
+
+> Flux canonique: UI conversation -> `useConversationEngine.sendMessage()` -> twin_chat extractor -> twin_chat orchestrator -> `processMessage()` -> `conversation_generate`. La lane frontend transporte uniquement un resume shadow enrichi (`candidateCount`, `kinds`, `verdictCounts`) et publie des marqueurs techniques `twin-chat-verdict:*` / `twin_chat_verdict:*` cote [src/services/conversationEngine.ts](src/services/conversationEngine.ts).
+
+> Invariants de la phase B1: zero write TWIN, zero `submitObservation`, zero `refreshChatContextSnapshot`, zero activation identitaire, `canWriteTwin=false` pour toutes les decisions. Les types sensibles ou equivalents (`value`, `emotional_pattern`) basculent en `review_required`; les categories non natives au ledger twin_chat (`cognitive`, `style`) sont degradees en `preference` avec verdict `downgraded` tant qu aucune autorite superieure n existe.
+
+## 2026-05-15 — Twin chat review queue C1
+
+> La phase C1 ajoute une passerelle de validation humaine explicite sans casser l invariant `no automatic Twin write`. [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) enregistre uniquement les verdicts actionnables dans [src/services/twin_chat/reviewQueue.ts](src/services/twin_chat/reviewQueue.ts), sous forme de file locale gouvernee et sans stockage du message brut.
+
+> La surface utilisateur canonique devient [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx): les observations shadow y sont visibles, puis validables ou rejetables explicitement. Le write path est donc deplace hors du chat et borne a une action Kevin sur `/twins`.
+
+> Le write limite reuse exclusivement les methodes haut niveau existantes de [src/services/api/numericTwin.ts](src/services/api/numericTwin.ts), suivies de `refreshChatContextSnapshot()`. Aucun changement Ring 0/1/2, aucun IPC nouveau, aucun write depuis `processMessage()`. La queue locale sert de tampon de gouvernance entre detection chat et mutation TWIN.

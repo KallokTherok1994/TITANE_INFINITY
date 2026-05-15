@@ -61,6 +61,12 @@ import {
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
 import { readActiveModuleContext } from '@/services/chat/moduleRouteContext';
+import {
+  recordTwinChatReviewItems,
+  extractTwinChatObservationCandidates,
+  orchestrateTwinChatShadow,
+  type TwinChatShadowSummary,
+} from '@/services/twin_chat';
 import { DEFAULT_OLLAMA_URL } from '@/config/ollamaDefaults';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -304,6 +310,7 @@ export interface ConversationMessage {
     cognitiveTraceBuildError?: { stage: string; message: string; name?: string };
     contextBinding?: ConversationContextBinding;
     singleDoorTags?: string[];
+    twinChatShadowSummary?: TwinChatShadowSummary;
   };
 }
 
@@ -653,6 +660,22 @@ export function useConversationEngine(
 
       const contextEnvelope = buildSingleDoorEnvelope();
       const contextBinding = toContextBinding(contextEnvelope);
+      const twinChatShadowCandidates = extractTwinChatObservationCandidates({
+        message: content,
+        route: contextEnvelope?.routeContext.route,
+        moduleId: contextEnvelope?.moduleContext.moduleId,
+      });
+      const twinChatShadowSummary: TwinChatShadowSummary | undefined =
+        twinChatShadowCandidates.length > 0
+          ? orchestrateTwinChatShadow(twinChatShadowCandidates).summary
+          : undefined;
+      if (twinChatShadowCandidates.length > 0) {
+        const twinChatShadowResult = orchestrateTwinChatShadow(twinChatShadowCandidates);
+        recordTwinChatReviewItems({
+          candidates: twinChatShadowCandidates,
+          decisions: twinChatShadowResult.decisions,
+        });
+      }
 
       // Ajouter message utilisateur immédiatement
       const userMessage: ConversationMessage = {
@@ -663,6 +686,7 @@ export function useConversationEngine(
         metadata: {
           contextBinding,
           singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
+          twinChatShadowSummary,
         },
       };
 
@@ -694,6 +718,7 @@ export function useConversationEngine(
           emotionContext: options.emotionContext,
           providerPreference: options.providerPreference,
           contextEnvelope: contextEnvelope || undefined,
+          twinChatShadowSummary,
         });
 
         // Mettre à jour conversation ID

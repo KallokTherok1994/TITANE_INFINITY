@@ -35,6 +35,12 @@ import {
 } from 'lucide-react';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { safeInvokeCanonical } from '@/utils/invoke';
+import {
+  approveTwinChatReviewItem,
+  listTwinChatReviewItems,
+  rejectTwinChatReviewItem,
+  type TwinChatReviewItem,
+} from '@/services/twin_chat';
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -65,6 +71,15 @@ export const TwinsPage: React.FC = () => {
 
   const isLoading = identityLoading || evolutionLoading;
   const [liveConnected, setLiveConnected] = useState(false);
+  const [reviewItems, setReviewItems] = useState<TwinChatReviewItem[]>([]);
+  const [reviewBusyId, setReviewBusyId] = useState<string | null>(null);
+  const [reviewError, setReviewError] = useState<string | null>(null);
+
+  const pendingReviewItems = reviewItems.filter(item => item.writeStatus === 'pending');
+
+  const refreshReviewItems = () => {
+    setReviewItems(listTwinChatReviewItems());
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -89,6 +104,48 @@ export const TwinsPage: React.FC = () => {
   useEffect(() => {
     void handleRefresh();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    refreshReviewItems();
+
+    const handleQueueChange = () => {
+      refreshReviewItems();
+    };
+
+    window.addEventListener('titane:twin-chat-review-queue-changed', handleQueueChange);
+    return () => {
+      window.removeEventListener(
+        'titane:twin-chat-review-queue-changed',
+        handleQueueChange
+      );
+    };
+  }, []);
+
+  const handleApproveReview = async (reviewId: string) => {
+    setReviewBusyId(reviewId);
+    setReviewError(null);
+
+    try {
+      await approveTwinChatReviewItem(reviewId);
+      refreshReviewItems();
+      await handleRefresh();
+    } catch (error) {
+      setReviewError(
+        error instanceof Error
+          ? error.message
+          : 'Validation Twin limitee indisponible'
+      );
+      refreshReviewItems();
+    } finally {
+      setReviewBusyId(null);
+    }
+  };
+
+  const handleRejectReview = (reviewId: string) => {
+    setReviewError(null);
+    rejectTwinChatReviewItem(reviewId);
+    refreshReviewItems();
+  };
 
   return (
     <div
@@ -183,6 +240,100 @@ export const TwinsPage: React.FC = () => {
             </p>
           </Card>
         </div>
+
+        <Card variant="solid" padding={4} data-testid="twin-chat-review-queue">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-200">
+                Review chat → Twin
+              </h2>
+              <p className="mt-1 text-sm text-gray-400" data-testid="twin-chat-review-summary">
+                {pendingReviewItems.length > 0
+                  ? `${pendingReviewItems.length} observation${pendingReviewItems.length > 1 ? 's' : ''} en attente de validation explicite Kevin avant ecriture limitee.`
+                  : 'Aucune observation twin_chat en attente de validation explicite.'}
+              </p>
+            </div>
+            <Badge
+              variant={pendingReviewItems.length > 0 ? 'warning' : 'success'}
+              size="sm"
+              data-testid="twin-chat-review-count"
+            >
+              pending:{pendingReviewItems.length}
+            </Badge>
+          </div>
+
+          {reviewError ? (
+            <div
+              className="mb-4 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-200"
+              data-testid="twin-chat-review-error"
+            >
+              {reviewError}
+            </div>
+          ) : null}
+
+          {pendingReviewItems.length === 0 ? (
+            <div
+              className="rounded-lg border border-gray-700 bg-gray-800/60 px-4 py-3 text-sm text-gray-400"
+              data-testid="twin-chat-review-empty"
+            >
+              Les observations shadow derivees du chat apparaissent ici uniquement si la policy D3 demande une validation humaine avant write TWIN.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {pendingReviewItems.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-gray-700 bg-gray-800/80 p-4"
+                  data-testid={`twin-chat-review-item-${index}`}
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="info" size="sm">{item.candidate.kind}</Badge>
+                    <Badge
+                      variant={
+                        item.decision.verdict === 'review_required' ? 'warning' : 'primary'
+                      }
+                      size="sm"
+                    >
+                      {item.decision.verdict}
+                    </Badge>
+                    <Badge variant="neutral" size="sm">
+                      confidence:{Math.round(item.candidate.confidence * 100)}%
+                    </Badge>
+                  </div>
+                  <p
+                    className="mt-3 text-base font-medium text-white"
+                    data-testid={`twin-chat-review-item-content-${index}`}
+                  >
+                    {item.candidate.contentCompact}
+                  </p>
+                  <p className="mt-1 text-sm text-gray-400">
+                    contexte:{item.candidate.context} · source:{item.candidate.evidenceSource}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => void handleApproveReview(item.id)}
+                      disabled={reviewBusyId === item.id}
+                      data-testid={`twin-chat-review-approve-${index}`}
+                    >
+                      {reviewBusyId === item.id ? 'Validation...' : 'Valider et ecrire'}
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleRejectReview(item.id)}
+                      disabled={reviewBusyId === item.id}
+                      data-testid={`twin-chat-review-reject-${index}`}
+                    >
+                      Rejeter
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
 
         {/* ── Twin Identity + Profile ── */}
         {isLoading ? (
