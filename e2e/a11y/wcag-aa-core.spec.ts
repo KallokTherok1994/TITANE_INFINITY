@@ -1,7 +1,7 @@
 /**
  * A11y WCAG 2.1 AA — UI 100/100 plan phase B
  *
- * Runs @axe-core/playwright on 31 critical routes and writes a per-route
+ * Runs @axe-core/playwright on 32 critical routes and writes a per-route
  * JSON report. The aggregate test enforces a regression baseline: total
  * serious + critical violations across all routes must not exceed
  * AGGREGATE_BLOCKING_BASELINE. New a11y debt thus fails the gate, while
@@ -23,12 +23,13 @@ interface A11ySurface {
   url: string;
 }
 
-// 31 critical routes — covers chat, titane shell, experience, admin system,
+// 32 critical routes — covers chat, titane shell, experience, admin system,
 // admin governance, dev overview, dev diagnostics, time, fusion, total-dev,
-// memory, orchestration, research, reality-center, quantum-center, singularity,
-// multiproject, optimization, evolution, creation, skills, twins, cloud, plus
-// the autonomous-resilience cluster (sentinel, watchdog, selfheal, adaptive),
-// the cognition cluster (hyper-center, knowledge, performance) and doc-center.
+// memory, orchestration, orchestration-intelligence, research, reality-center,
+// quantum-center, singularity, multiproject, optimization, evolution, creation,
+// skills, twins, cloud, plus the autonomous-resilience cluster (sentinel,
+// watchdog, selfheal, adaptive), the cognition cluster (hyper-center, knowledge,
+// performance) and doc-center.
 const SURFACES: A11ySurface[] = [
   { name: 'titane-conversation', url: '/titane?tab=conversation' },
   { name: 'titane-home', url: '/titane' },
@@ -42,6 +43,7 @@ const SURFACES: A11ySurface[] = [
   { name: 'total-dev', url: '/total-dev' },
   { name: 'memory', url: '/memory' },
   { name: 'orchestration-center', url: '/orchestration-center' },
+  { name: 'orchestration-intelligence', url: '/orchestration-intelligence' },
   { name: 'research', url: '/research' },
   { name: 'reality-center', url: '/reality-center' },
   { name: 'quantum-center', url: '/quantum-center' },
@@ -68,7 +70,7 @@ const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 
 /**
  * Regression baseline — total blocking violations (critical+serious) summed
- * across all 31 routes. Initial measurement on 2026-05-13: 25 blocking.
+ * across all 32 routes. Initial measurement on 2026-05-13: 25 blocking.
  * Locked at 30 to allow tiny flake margin; phase D will lower it as fixes
  * land. Never increase without an explicit AutoHeal governance entry.
  */
@@ -76,7 +78,7 @@ const AGGREGATE_BLOCKING_BASELINE = 30;
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('v34.0.7 A11y WCAG 2.1 AA (31 critical routes)', () => {
+test.describe('v34.0.7 A11y WCAG 2.1 AA (32 critical routes)', () => {
   for (const surface of SURFACES) {
     test(`a11y ${surface.name}`, async ({ page }) => {
       await page.goto(surface.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
@@ -165,5 +167,5 @@ test('v34.0.7 a11y aggregate baseline regression guard', () => {
 });
 
 test('v34.0.7 a11y inventory invariant', () => {
-  expect(SURFACES.length).toBe(31);
+  expect(SURFACES.length).toBe(32);
 });

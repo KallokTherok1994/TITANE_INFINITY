@@ -1,3 +1,11 @@
+## 2026-05-14 — A11Y orchestration-intelligence contrast hardening + gate expansion (31 -> 32)
+
+- **Surface modifiée** : [src/modules/OrchestrationIntelligenceCenter.tsx](src/modules/OrchestrationIntelligenceCenter.tsx) retire le modificateur `opacity-70` sur le span `text-xs` de description d'onglet (7 onglets), qui faisait chuter le contraste à `3.26:1` (état actif `bg-purple-600`) et `3.52:1` (état inactif `bg-gray-800`), sous le seuil WCAG AA 4.5:1.
+- **Contraste local** : le span hérite désormais de la couleur d'état parent à alpha plein — `text-white` sur `bg-purple-600` (~5.9:1, AA) en actif, `text-gray-400` sur `bg-gray-800` (~4.83:1, AA) en inactif. La hiérarchie visuelle est conservée via `text-xs` seul.
+- **Test Vitest** : [src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx](src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx) verrouille l'absence du combo `text-xs opacity-70` dans le module source.
+- **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire WCAG officiel de `31` à `32` routes avec `/orchestration-intelligence`, et conserve `blocking=0 baseline=30`.
+- **Rollback** : `git restore -- src/modules/OrchestrationIntelligenceCenter.tsx src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-14_ORCHESTRATION_INTELLIGENCE_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-14_ORCHESTRATION_INTELLIGENCE_GATE_EXPANSION`
+
 ## 2026-05-14 — A11Y clean-routes batch gate expansion (23 -> 31)
 
 - **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `23` a `31` routes, sans patch UI source.

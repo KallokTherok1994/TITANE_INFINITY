@@ -1,3 +1,10 @@
+## 2026-05-14 — Orchestration Intelligence contrast + WCAG inventory 32/32 (delta cartographie)
+
+- Couverture WCAG: l'inventaire canonique passe de 31 à 32 routes avec l'ajout de `/orchestration-intelligence`, désormais `blocking=0` après retrait du `opacity-70` sur les descriptions d'onglets du `OrchestrationIntelligenceCenter`.
+- Modification source ciblée et minimale: un seul span dans [src/modules/OrchestrationIntelligenceCenter.tsx](src/modules/OrchestrationIntelligenceCenter.tsx), aucune mutation des routes, services, IPC ou modules cousins.
+- Test Vitest associé: [src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx](src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx) verrouille la suppression de `opacity-70` dans le module.
+- Gate Playwright canonique: `34 passed` sur 32 routes (32 spec routes + agrégat + invariant inventaire) avec `blocking=0 baseline=30`.
+
 ## 2026-05-14 — Clean-routes batch + WCAG inventory 31/31 (delta cartographie)
 
 | Couche | Surface modifiee | Fichier |

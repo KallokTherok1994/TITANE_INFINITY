@@ -130,7 +130,10 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
           >
             <div className="flex flex-col items-start">
               <span className="font-semibold">{tab.label}</span>
-              <span className="text-xs opacity-70">{tab.desc}</span>
+              {/* a11y WCAG AA: remove opacity-70 which dropped contrast below 4.5:1
+                  on both bg-purple-600 (active) and bg-gray-800 (inactive).
+                  Smaller text-xs already provides visual hierarchy. */}
+              <span className="text-xs">{tab.desc}</span>
             </div>
           </button>
         ))}
