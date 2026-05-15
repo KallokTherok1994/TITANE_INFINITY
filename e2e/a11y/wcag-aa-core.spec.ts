@@ -73,10 +73,10 @@ const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 /**
  * Regression baseline — total blocking violations (critical+serious) summed
  * across all 34 routes. Initial measurement on 2026-05-13: 25 blocking.
- * Locked at 30 to allow tiny flake margin; phase D will lower it as fixes
+ * Tightened to 5 now that the audited inventory is stable at zero blocking.
  * land. Never increase without an explicit AutoHeal governance entry.
  */
-const AGGREGATE_BLOCKING_BASELINE = 30;
+const AGGREGATE_BLOCKING_BASELINE = 5;
 
 test.describe.configure({ mode: 'serial' });
 

@@ -1,3 +1,9 @@
+## 2026-05-15 — WCAG aggregate baseline tightening 30 -> 5 (delta cartographie)
+
+- Delta strictement gate-only: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre la garde d agrégat de `30` à `5` sans modifier l inventaire des routes (34/34) ni les surfaces UI runtime.
+- Nouveau garde unitaire: [src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts](src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts) verrouille la constante canonique et empêche la réouverture silencieuse de marge.
+- Preuve canonique conservée: `blocking=0 baseline=5` sur le rerun Playwright complet; aucune mutation Ring 1/2/3, aucun changement IPC.
+
 ## 2026-05-15 — admin?tab=audio contrast/labels + WCAG inventory 34/34 (delta cartographie)
 
 - Module `src/features/audio-center/AudioCenterPage.tsx` durcit (Rule 1) le panneau audio rendu sous `/admin?tab=audio` : onglet actif + bouton Test (`bg-cyan-700`), badges moteur (`text-{purple,amber,neutral}-200`), méta `language`/`gender` (`text-neutral-400`), et `aria-label` sur les sliders `Slider` (Pitch/Volume/Rate).
