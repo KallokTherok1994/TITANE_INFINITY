@@ -9,9 +9,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { TwinsPage } from '@/pages/TwinsPage';
 
-const approveTwinChatReviewItemMock = vi.fn();
-const rejectTwinChatReviewItemMock = vi.fn();
-const listTwinChatReviewItemsMock = vi.fn(() => []);
+const twinChatReviewMocks = vi.hoisted(() => ({
+  approveTwinChatReviewItemMock: vi.fn(),
+  rejectTwinChatReviewItemMock: vi.fn(),
+  listTwinChatReviewItemsMock: vi.fn(() => []),
+}));
 
 // ── Mock useTwinIdentity ─────────────────────────────────────────
 vi.mock('../hooks/useTwinIdentity', () => ({
@@ -51,9 +53,9 @@ vi.mock('@/services/twin_chat', async () => {
 
   return {
     ...actual,
-    approveTwinChatReviewItem: approveTwinChatReviewItemMock,
-    rejectTwinChatReviewItem: rejectTwinChatReviewItemMock,
-    listTwinChatReviewItems: listTwinChatReviewItemsMock,
+    approveTwinChatReviewItem: twinChatReviewMocks.approveTwinChatReviewItemMock,
+    rejectTwinChatReviewItem: twinChatReviewMocks.rejectTwinChatReviewItemMock,
+    listTwinChatReviewItems: twinChatReviewMocks.listTwinChatReviewItemsMock,
   };
 });
 
@@ -70,7 +72,7 @@ function renderPage() {
 describe('TwinsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    listTwinChatReviewItemsMock.mockReturnValue([]);
+    twinChatReviewMocks.listTwinChatReviewItemsMock.mockReturnValue([]);
   });
 
   it('renders the page container', () => {
@@ -84,7 +86,7 @@ describe('TwinsPage', () => {
   });
 
   it('renders pending twin chat reviews and validates them explicitly', async () => {
-    listTwinChatReviewItemsMock.mockReturnValue([
+    twinChatReviewMocks.listTwinChatReviewItemsMock.mockReturnValue([
       {
         id: 'value:clarte',
         candidate: {
@@ -112,7 +114,7 @@ describe('TwinsPage', () => {
         writeStatus: 'pending',
       },
     ]);
-    approveTwinChatReviewItemMock.mockResolvedValue({
+    twinChatReviewMocks.approveTwinChatReviewItemMock.mockResolvedValue({
       id: 'value:clarte',
       writeStatus: 'approved',
     });
@@ -125,7 +127,99 @@ describe('TwinsPage', () => {
     fireEvent.click(screen.getByTestId('twin-chat-review-approve-0'));
 
     await waitFor(() => {
-      expect(approveTwinChatReviewItemMock).toHaveBeenCalledWith('value:clarte');
+      expect(twinChatReviewMocks.approveTwinChatReviewItemMock).toHaveBeenCalledWith(
+        'value:clarte'
+      );
+    });
+  });
+
+  it('rejects a pending twin chat review and keeps the queue consistent', async () => {
+    twinChatReviewMocks.listTwinChatReviewItemsMock.mockReturnValue([
+      {
+        id: 'style:clarte_directe',
+        candidate: {
+          id: 'style:clarte_directe',
+          kind: 'style',
+          contentCompact: 'clarte directe',
+          context: 'conversation',
+          confidence: 0.84,
+          evidenceSource: 'chat_turn',
+          consentRisk: 'low',
+          status: 'shadow',
+          canWriteTwin: false,
+        },
+        decision: {
+          candidateId: 'style:clarte_directe',
+          verdict: 'downgraded',
+          observationType: 'preference',
+          validationStatus: 'system_observed',
+          riskLevel: 'low',
+          canWriteTwin: false,
+          requiresKevinValidation: false,
+        },
+        recordedAt: '2026-05-15T12:05:00.000Z',
+        lastSeenAt: '2026-05-15T12:05:00.000Z',
+        writeStatus: 'pending',
+      },
+    ]);
+
+    renderPage();
+
+    fireEvent.click(screen.getByTestId('twin-chat-review-reject-0'));
+
+    await waitFor(() => {
+      expect(twinChatReviewMocks.rejectTwinChatReviewItemMock).toHaveBeenCalledWith(
+        'style:clarte_directe'
+      );
+    });
+  });
+
+  it('surfaces a visible error when the limited Twin write fails', async () => {
+    twinChatReviewMocks.listTwinChatReviewItemsMock.mockReturnValue([
+      {
+        id: 'value:clarté-limitée',
+        candidate: {
+          id: 'value:clarté-limitée',
+          kind: 'value',
+          contentCompact: 'clarté limitée',
+          context: 'conversation',
+          confidence: 0.81,
+          evidenceSource: 'chat_turn',
+          consentRisk: 'medium',
+          status: 'shadow',
+          canWriteTwin: false,
+        },
+        decision: {
+          candidateId: 'value:clarté-limitée',
+          verdict: 'review_required',
+          observationType: 'value',
+          validationStatus: 'requires_kevin_validation',
+          riskLevel: 'medium',
+          canWriteTwin: false,
+          requiresKevinValidation: true,
+        },
+        recordedAt: '2026-05-15T12:10:00.000Z',
+        lastSeenAt: '2026-05-15T12:10:00.000Z',
+        writeStatus: 'pending',
+      },
+    ]);
+    twinChatReviewMocks.approveTwinChatReviewItemMock.mockRejectedValueOnce(
+      new Error('backend unavailable')
+    );
+
+    renderPage();
+
+    fireEvent.click(screen.getByTestId('twin-chat-review-approve-0'));
+
+    await waitFor(() => {
+      expect(twinChatReviewMocks.approveTwinChatReviewItemMock).toHaveBeenCalledWith(
+        'value:clarté-limitée'
+      );
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('twin-chat-review-error')).toHaveTextContent(
+        'backend unavailable'
+      );
     });
   });
 });
