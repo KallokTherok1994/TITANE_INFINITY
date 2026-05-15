@@ -33,10 +33,28 @@ test('v34.0.8 all 6 advanced dashboards expose canonical Live indicator contract
   await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 30_000 });
   await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
 
-  await page.locator('[data-testid="agent-dashboards-panel-toggle"]').click();
+  const toggle = page.locator('[data-testid="agent-dashboards-panel-toggle"]');
+  await expect(toggle).toBeVisible({ timeout: 5_000 });
+  await toggle.click();
   await expect(page.locator('[data-testid="agent-dashboards-panel-content"]')).toBeVisible({
     timeout: 5_000,
   });
+
+  const dashboards = [
+    'monitoring-dashboard',
+    'diagnostic-panel',
+    'explainability-dashboard',
+    'orchestrator-dashboard',
+    'security-dashboard',
+    'log-analysis-dashboard',
+  ] as const;
+
+  for (const dashboardTestId of dashboards) {
+    await expect(
+      page.locator(`[data-testid="${dashboardTestId}"]`),
+      `${dashboardTestId}: dashboard container present`
+    ).toHaveCount(1, { timeout: 5_000 });
+  }
 
   for (const { id, prefix } of DASHBOARDS) {
     const live = page.locator(`[data-testid="${prefix}-live"]`);
@@ -55,6 +73,10 @@ test('v34.0.8 all 6 advanced dashboards expose canonical Live indicator contract
     expect(labelText ?? '', `${id}: label contains refresh interval`).toMatch(/refresh\s+\d+s/);
   }
 
+  await expect(page.locator('[data-testid="monitoring-dashboard"]')).toContainText('Monitoring');
+  await expect(page.locator('[data-testid="log-analysis-dashboard-service-state"]')).toHaveCount(1);
+  await expect(page.locator('[data-testid="log-analysis-dashboard-report"]')).toHaveCount(1);
+
   await page.screenshot({
     path: resolve(OUTPUT_DIR, 'agent-live-indicators.png'),
     fullPage: true,
@@ -63,7 +85,9 @@ test('v34.0.8 all 6 advanced dashboards expose canonical Live indicator contract
 
 test('v34.0.8 refresh-now button triggers clock update on a canonical dashboard', async ({ page }) => {
   await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 30_000 });
-  await page.locator('[data-testid="agent-dashboards-panel-toggle"]').click();
+  const toggle = page.locator('[data-testid="agent-dashboards-panel-toggle"]');
+  await expect(toggle).toBeVisible({ timeout: 5_000 });
+  await toggle.click();
 
   // Use explainability dashboard as canonical witness (sync snapshot fn).
   const labelLocator = page.locator('[data-testid="explainability-dashboard-live-label"]');
