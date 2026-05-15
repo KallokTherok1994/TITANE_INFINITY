@@ -1,3 +1,13 @@
+## 2026-05-14 — Twins contrast hardening + WCAG inventory 22/22 (delta cartographie)
+
+| Couche | Surface modifiee | Fichier |
+|---|---|---|
+| Ring 4 | Libelle secondaire Twins a contraste conforme | src/pages/TwinsPage.tsx |
+| Tests | Garde Vitest du token de contraste Twins | src/__tests__/pages/TwinsPageA11yContrast.test.tsx |
+| E2E | Gate Axe canonique etendu a `/twins` | e2e/a11y/wcag-aa-core.spec.ts |
+
+Le delta reste minimal: la surface `/twins` referme uniquement un libelle secondaire sous le seuil Axe sans modifier le comportement fonctionnel. La preuve canonique publie `twins=0`, `aggregate blocking=0 baseline=30` et un inventaire passe de `21` a `22` routes critiques auditees.
+
 ## 2026-05-15 — Skills contrast hardening + WCAG inventory 21/21 (delta cartographie)
 
 | Couche | Surface modifiee | Fichier |

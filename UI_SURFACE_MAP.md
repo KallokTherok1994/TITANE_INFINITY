@@ -1,3 +1,11 @@
+## 2026-05-14 — A11Y twins contrast hardening + gate expansion
+
+- **Surface modifiée** : [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx) relève uniquement le libellé secondaire `Thèmes propriétaire` signalé par Axe sur `/twins`.
+- **Contraste local** : le libellé passe de `text-gray-500` vers `text-gray-300` sans mutation fonctionnelle du module Twins.
+- **Test Vitest** : [src/__tests__/pages/TwinsPageA11yContrast.test.tsx](src/__tests__/pages/TwinsPageA11yContrast.test.tsx) verrouille le token de contraste durci du libellé propriétaire.
+- **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `21` a `22` routes avec `/twins`, puis conserve `blocking=0 baseline=30`.
+- **Rollback** : `git restore -- src/pages/TwinsPage.tsx src/__tests__/pages/TwinsPageA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-14_TWINS_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-14_TWINS_GATE_EXPANSION`
+
 ## 2026-05-15 — A11Y skills contrast hardening + gate expansion
 
 - **Surface modifiée** : [src/ui/pages/Skills/SkillManager.tsx](src/ui/pages/Skills/SkillManager.tsx) relève uniquement le bouton d action principal de `/skills` signalé par Axe.

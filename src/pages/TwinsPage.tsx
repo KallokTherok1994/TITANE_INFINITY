@@ -268,7 +268,7 @@ export const TwinsPage: React.FC = () => {
                   )}
                   {ownerThemes.length > 0 && (
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Thèmes propriétaire</p>
+                      <p className="text-xs text-gray-300 mb-1">Thèmes propriétaire</p>
                       <div className="flex flex-wrap gap-1">
                         {ownerThemes.slice(0, 4).map((theme, i) => (
                           <Badge key={i} variant="info" size="sm">
