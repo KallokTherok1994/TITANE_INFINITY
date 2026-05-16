@@ -74,7 +74,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
       case 'Info':
         return 'text-blue-400 bg-blue-500/20 border-blue-500/50';
       default:
-        return 'text-gray-400 bg-gray-500/20 border-gray-500/50';
+        return 'text-titanium-text-tertiary bg-titanium-bg-overlay/20 border-gray-500/50';
     }
   }, []);
 
@@ -114,21 +114,21 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-red-400 to-orange-600">
           Introspection Dashboard
         </h1>
-        <p className="text-gray-400 mt-2">
+        <p className="text-titanium-text-tertiary mt-2">
           Phase 9 : Analyse de santé du code & correction auto
         </p>
       </div>
 
       {/* Control Panel */}
-      <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30 mb-6">
+      <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm text-gray-400 mb-2">Chemin du projet</label>
+            <label className="block text-sm text-titanium-text-tertiary mb-2">Chemin du projet</label>
             <input
               type="text"
               value={projectPath}
               onChange={e => setProjectPath(e.target.value)}
-              className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-white font-mono text-sm"
+              className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-2 text-white font-mono text-sm"
               placeholder="/path/to/project"
             />
           </div>
@@ -158,26 +158,26 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
           {/* Statistics Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-              <div className="text-gray-400 text-sm mb-2">Fichiers analysés</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Fichiers analysés</div>
               <div className="text-3xl font-bold text-white">
                 {report.total_files_scanned}
               </div>
             </div>
 
             <div className="bg-linear-to-br from-red-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
-              <div className="text-gray-400 text-sm mb-2">Problèmes totaux</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Problèmes totaux</div>
               <div className="text-3xl font-bold text-white">{report.total_issues}</div>
             </div>
 
             <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <div className="text-gray-400 text-sm mb-2">Auto-corrigés</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Auto-corrigés</div>
               <div className="text-3xl font-bold text-white">
                 {report.auto_fixes_applied}
               </div>
             </div>
 
             <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-              <div className="text-gray-400 text-sm mb-2">Score de santé</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Score de santé</div>
               <div className="text-3xl font-bold text-white">
                 {(
                   (1 - report.total_issues / (report.total_files_scanned * 10)) *
@@ -189,7 +189,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
           </div>
 
           {/* Severity Breakdown */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30 mb-6">
+          <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30 mb-6">
             <h2 className="text-xl font-semibold text-white mb-4">
               Problèmes par sévérité
             </h2>
@@ -200,7 +200,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
                 className={`px-4 py-2 rounded-lg border transition-all ${
                   selectedSeverity === 'all'
                     ? 'border-white bg-white/10 text-white'
-                    : 'border-gray-600 bg-gray-700/30 text-gray-400'
+                    : 'border-titanium-border-strong bg-titanium-bg-interactive/30 text-titanium-text-tertiary'
                 }`}
               >
                 Tout ({report.total_issues})
@@ -213,7 +213,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
                   className={`px-4 py-2 rounded-lg border transition-all ${
                     selectedSeverity === severity
                       ? getSeverityColor(severity)
-                      : 'border-gray-600 bg-gray-700/30 text-gray-400'
+                      : 'border-titanium-border-strong bg-titanium-bg-interactive/30 text-titanium-text-tertiary'
                   }`}
                 >
                   {severity} ({count})
@@ -223,7 +223,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
           </div>
 
           {/* Issues List */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
+          <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
             <h2 className="text-xl font-semibold text-white mb-4">
               Problèmes ({filteredIssues.length})
             </h2>
@@ -239,7 +239,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
                       <span className="text-2xl">{getCategoryIcon(issue.category)}</span>
                       <div>
                         <div className="text-white font-semibold">{issue.category}</div>
-                        <div className="text-sm text-gray-400">{issue.severity}</div>
+                        <div className="text-sm text-titanium-text-tertiary">{issue.severity}</div>
                       </div>
                     </div>
 
@@ -255,12 +255,12 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
                       {issue.file_path}:
                       <span className="text-yellow-400">{issue.line}</span>
                     </div>
-                    <div className="text-gray-300 text-sm">{issue.description}</div>
+                    <div className="text-titanium-text-secondary text-sm">{issue.description}</div>
                   </div>
 
                   {issue.suggestion && (
-                    <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                      <div className="text-gray-400 mb-1">💡 Suggestion:</div>
+                    <div className="bg-titanium-bg-base/50 rounded-lg p-3 text-sm">
+                      <div className="text-titanium-text-tertiary mb-1">💡 Suggestion:</div>
                       <div className="text-green-300">{issue.suggestion}</div>
                     </div>
                   )}
@@ -268,7 +268,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
               ))}
 
               {filteredIssues.length === 0 && (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-titanium-text-disabled">
                   <div className="text-4xl mb-4">✅</div>
                   <div>Aucun problème trouvé dans cette catégorie</div>
                 </div>
@@ -277,12 +277,12 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
           </div>
         </>
       ) : (
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-red-500/30 text-center">
+        <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-12 border border-red-500/30 text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h2 className="text-2xl font-semibold text-white mb-2">
             Démarrer l&apos;introspection de code
           </h2>
-          <p className="text-gray-400">
+          <p className="text-titanium-text-tertiary">
             Analysez votre base de code pour détecter les problèmes et améliorer la santé
             du code
           </p>

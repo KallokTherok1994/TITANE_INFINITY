@@ -32,10 +32,12 @@ export function EventStream({ events, maxEvents = 50 }: EventStreamProps) {
             <div className="flex-1">
               <p className="text-sm font-medium text-white">{event.message}</p>
               {event.source && (
-                <p className="text-xs text-gray-400 mt-1">Source: {event.source}</p>
+                <p className="text-xs text-titanium-text-tertiary mt-1">
+                  Source: {event.source}
+                </p>
               )}
             </div>
-            <span className="text-xs text-gray-500 ml-2">
+            <span className="text-xs text-titanium-text-disabled ml-2">
               {new Date(event.timestamp).toLocaleTimeString('fr-FR', {
                 hour: '2-digit',
                 minute: '2-digit',

@@ -137,7 +137,9 @@ import { RemoteGatewayLayout } from './pages/RemoteGatewayLayout';
 // ✨ v34.2.0 — TanStack Query DevTools (DEV-only, lazy-loaded so it is tree-shaken in prod)
 const ReactQueryDevtools = import.meta.env.DEV
   ? React.lazy(() =>
-      import('@tanstack/react-query-devtools').then((m) => ({ default: m.ReactQueryDevtools }))
+      import('@tanstack/react-query-devtools').then(m => ({
+        default: m.ReactQueryDevtools,
+      }))
     )
   : null;
 
@@ -250,7 +252,10 @@ const TotalDevPage = lazyWithRetry(
 );
 
 const AdminPage = lazyWithRetry(
-  () => import('./pages/AdminPage').then(m => ({ default: m.default as React.ComponentType<any> })),
+  () =>
+    import('./pages/AdminPage').then(m => ({
+      default: m.default as React.ComponentType<any>,
+    })),
   'AdminPage'
 );
 const PerfectFusionDashboard = lazy(() => import('./pages/PerfectFusionDashboard'));
@@ -378,9 +383,9 @@ export const AppRouter: React.FC = () => {
         />
       }
       footer={
-        <span className="select-none text-xs tracking-widest font-mono text-slate-200">
+        <span className="select-none text-xs tracking-widest font-mono text-titanium-text-secondary">
           TITANE∞ <span className="text-emerald-200">V{__APP_VERSION__}</span>{' '}
-          <span className="text-slate-300">· Living Pulse</span>
+          <span className="text-titanium-text-secondary">· Living Pulse</span>
         </span>
       }
     >
@@ -851,77 +856,77 @@ const App: React.FC = () => {
     }
   }
 
-    const isAutomatedBrowser =
-      typeof navigator !== 'undefined' &&
-      (navigator.webdriver || /HeadlessChrome|Playwright/i.test(navigator.userAgent || ''));
+  const isAutomatedBrowser =
+    typeof navigator !== 'undefined' &&
+    (navigator.webdriver || /HeadlessChrome|Playwright/i.test(navigator.userAgent || ''));
 
   return (
     <QueryClientProvider client={queryClient}>
       {import.meta.env.DEV && !isAutomatedBrowser && ReactQueryDevtools && (
-      <Suspense fallback={null}>
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
-      </Suspense>
-    )}
-    <ToastProvider>
-      {/* ✨ Remote browser mode — wrap entire app in auth guard */}
-      {isRemoteContext() ? (
-        <RemoteGatewayLayout>
-          <ThemeProvider>
-            <UIThemeProvider>
-              <LoggingProvider>
-                <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
-                  <TitanStateProvider>
-                    <BrowserRouter basename={routerBase}>
-                      <AutoHealErrorBoundary>
-                        <AppRouter />
-                      </AutoHealErrorBoundary>
-                    </BrowserRouter>
-                  </TitanStateProvider>
-                </AnimationProvider>
-              </LoggingProvider>
-            </UIThemeProvider>
-          </ThemeProvider>
-        </RemoteGatewayLayout>
-      ) : (
-        <>
-          {/* ✨ P0.Ω∞ - Splash Watchdog: Diagnostic si boot timeout (10s) — Tauri only */}
-          <SplashWatchdog />
-
-          <ThemeProvider>
-            <UIThemeProvider>
-              <LoggingProvider>
-                <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
-                  <TitanStateProvider>
-                    {/* ✨ v30.0.0 - Console Monitor Dashboard (Dev only) */}
-                    {import.meta.env.DEV && (
-                      <Suspense fallback={null}>
-                        <ConsoleMonitorDashboard />
-                      </Suspense>
-                    )}
-
-                    {/* ✨ v30.0.0 - Predictive AI Dashboard (Dev only) */}
-                    {import.meta.env.DEV && (
-                      <Suspense fallback={null}>
-                        <PredictiveDashboard />
-                      </Suspense>
-                    )}
-
-                    {/* ✨ v30.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
-                    <AuraConnectedParticles />
-
-                    <BrowserRouter basename={routerBase}>
-                      <AutoHealErrorBoundary>
-                        <AppRouter />
-                      </AutoHealErrorBoundary>
-                    </BrowserRouter>
-                  </TitanStateProvider>
-                </AnimationProvider>
-              </LoggingProvider>
-            </UIThemeProvider>
-          </ThemeProvider>
-        </>
+        <Suspense fallback={null}>
+          <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+        </Suspense>
       )}
-    </ToastProvider>
+      <ToastProvider>
+        {/* ✨ Remote browser mode — wrap entire app in auth guard */}
+        {isRemoteContext() ? (
+          <RemoteGatewayLayout>
+            <ThemeProvider>
+              <UIThemeProvider>
+                <LoggingProvider>
+                  <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+                    <TitanStateProvider>
+                      <BrowserRouter basename={routerBase}>
+                        <AutoHealErrorBoundary>
+                          <AppRouter />
+                        </AutoHealErrorBoundary>
+                      </BrowserRouter>
+                    </TitanStateProvider>
+                  </AnimationProvider>
+                </LoggingProvider>
+              </UIThemeProvider>
+            </ThemeProvider>
+          </RemoteGatewayLayout>
+        ) : (
+          <>
+            {/* ✨ P0.Ω∞ - Splash Watchdog: Diagnostic si boot timeout (10s) — Tauri only */}
+            <SplashWatchdog />
+
+            <ThemeProvider>
+              <UIThemeProvider>
+                <LoggingProvider>
+                  <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+                    <TitanStateProvider>
+                      {/* ✨ v30.0.0 - Console Monitor Dashboard (Dev only) */}
+                      {import.meta.env.DEV && (
+                        <Suspense fallback={null}>
+                          <ConsoleMonitorDashboard />
+                        </Suspense>
+                      )}
+
+                      {/* ✨ v30.0.0 - Predictive AI Dashboard (Dev only) */}
+                      {import.meta.env.DEV && (
+                        <Suspense fallback={null}>
+                          <PredictiveDashboard />
+                        </Suspense>
+                      )}
+
+                      {/* ✨ v30.0.0 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
+                      <AuraConnectedParticles />
+
+                      <BrowserRouter basename={routerBase}>
+                        <AutoHealErrorBoundary>
+                          <AppRouter />
+                        </AutoHealErrorBoundary>
+                      </BrowserRouter>
+                    </TitanStateProvider>
+                  </AnimationProvider>
+                </LoggingProvider>
+              </UIThemeProvider>
+            </ThemeProvider>
+          </>
+        )}
+      </ToastProvider>
     </QueryClientProvider>
   );
 };

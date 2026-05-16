@@ -214,7 +214,10 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-6" data-testid="page-fusion">
+    <div
+      className="bg-titanium-bg-base text-white min-h-screen p-6"
+      data-testid="page-fusion"
+    >
       <div className="max-w-7xl mx-auto space-y-6">
         <SurfaceTruthBadge
           variant={liveConnected ? 'LIVE' : isInitialized ? 'PARTIAL' : 'DEGRADED'}
@@ -225,7 +228,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
             <GitMerge className="w-7 h-7 text-violet-400" />
             <div>
               <h1 className="text-2xl font-bold text-white">Perfect Fusion Dashboard</h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-titanium-text-tertiary">
                 Fusion des moteurs cognitifs — Synchronisation &amp; Cohérence
               </p>
             </div>
@@ -254,7 +257,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <InfinityIcon className="w-4 h-4 text-violet-400" />
-              <span className="text-xs text-gray-400">Cohérence auto</span>
+              <span className="text-xs text-titanium-text-tertiary">Cohérence auto</span>
             </div>
             <p className="text-3xl font-bold text-white">
               {isInitialized ? `${(autoCoherence * 100).toFixed(0)}%` : '—'}
@@ -264,7 +267,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Heart className="w-4 h-4 text-pink-400" />
-              <span className="text-xs text-gray-400">Harmonie globale</span>
+              <span className="text-xs text-titanium-text-tertiary">
+                Harmonie globale
+              </span>
             </div>
             <p className="text-3xl font-bold text-pink-400">
               {isInitialized ? `${(globalHarmony * 100).toFixed(0)}%` : '—'}
@@ -274,7 +279,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Brain className="w-4 h-4 text-blue-400" />
-              <span className="text-xs text-gray-400">Conscience</span>
+              <span className="text-xs text-titanium-text-tertiary">Conscience</span>
             </div>
             <p className="text-3xl font-bold text-blue-400">
               {isInitialized ? `${consciousness}/4` : '—'}
@@ -284,7 +289,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Zap className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs text-gray-400">Entropie globale</span>
+              <span className="text-xs text-titanium-text-tertiary">
+                Entropie globale
+              </span>
             </div>
             <p className="text-3xl font-bold text-yellow-400">
               {isInitialized ? `${(globalEntropy * 100).toFixed(1)}%` : '—'}
@@ -295,9 +302,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
         {/* ── Sync overview ── */}
         <div className="grid grid-cols-3 gap-4">
           <Card variant="solid" padding={4}>
-            <p className="text-xs text-gray-400 mb-1">Sync moyen</p>
+            <p className="text-xs text-titanium-text-tertiary mb-1">Sync moyen</p>
             <p className="text-2xl font-bold text-white">{(avgSync * 100).toFixed(1)}%</p>
-            <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+            <div className="w-full bg-titanium-bg-interactive rounded-full h-2 mt-2">
               <div
                 className="bg-violet-500 h-2 rounded-full transition-all"
                 style={{ width: `${avgSync * 100}%` }}
@@ -305,14 +312,14 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
             </div>
           </Card>
           <Card variant="solid" padding={4}>
-            <p className="text-xs text-gray-400 mb-1">Latence moyenne</p>
+            <p className="text-xs text-titanium-text-tertiary mb-1">Latence moyenne</p>
             <p className="text-2xl font-bold text-white">{avgLatency.toFixed(0)}ms</p>
-            <p className="text-xs text-gray-300 mt-1">
+            <p className="text-xs text-titanium-text-secondary mt-1">
               {avgLatency < 15 ? '🟢 Excellent' : avgLatency < 30 ? '🟡 Bon' : '🔴 Lent'}
             </p>
           </Card>
           <Card variant="solid" padding={4}>
-            <p className="text-xs text-gray-400 mb-1">Moteurs actifs</p>
+            <p className="text-xs text-titanium-text-tertiary mb-1">Moteurs actifs</p>
             <p className="text-2xl font-bold text-white">
               {activeCount}/{engines.length}
             </p>
@@ -329,8 +336,8 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
         {/* ── Engine Grid ── */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <Layers className="w-4 h-4 text-gray-400" />
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+            <Layers className="w-4 h-4 text-titanium-text-tertiary" />
+            <h2 className="text-sm font-semibold text-titanium-text-secondary uppercase tracking-wider">
               Moteurs cognitifs — État de fusion
             </h2>
           </div>
@@ -344,7 +351,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-white">{engine.name}</p>
-                      <p className="text-xs text-gray-300">{engine.domain}</p>
+                      <p className="text-xs text-titanium-text-secondary">
+                        {engine.domain}
+                      </p>
                     </div>
                   </div>
                   {engine.syncScore >= 0.95 ? (
@@ -356,7 +365,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
 
                 {/* Sync Bar */}
                 <div className="mb-3">
-                  <div className="flex justify-between text-xs text-gray-400 mb-1">
+                  <div className="flex justify-between text-xs text-titanium-text-tertiary mb-1">
                     <span>Synchronisation</span>
                     <span
                       className={
@@ -366,7 +375,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
                       {(engine.syncScore * 100).toFixed(0)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-1.5">
+                  <div className="w-full bg-titanium-bg-interactive rounded-full h-1.5">
                     <div
                       className={`h-1.5 rounded-full transition-all ${
                         engine.syncScore >= 0.95 ? 'bg-green-500' : 'bg-yellow-500'
@@ -376,7 +385,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-gray-300">
+                <div className="flex items-center justify-between text-xs text-titanium-text-secondary">
                   <span className="flex items-center gap-1">
                     <Link2 className="w-3 h-3" />
                     Latence: {engine.latencyMs}ms

@@ -80,7 +80,7 @@ const TopicBadge: React.FC<{ topic: MemoryTopic | string }> = ({ topic }) => {
   };
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-gray-700/50 text-gray-300">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-titanium-bg-interactive/50 text-titanium-text-secondary">
       {config.icon} {config.label}
     </span>
   );
@@ -132,7 +132,7 @@ const MemoryEntryCard: React.FC<{
         ${
           selected
             ? 'border-blue-500 bg-blue-500/10'
-            : 'border-gray-700 bg-gray-800/50 hover:border-gray-600 hover:bg-gray-800'
+            : 'border-titanium-border-default bg-titanium-bg-elevated/50 hover:border-titanium-border-strong hover:bg-titanium-bg-elevated'
         }
         ${compact ? 'p-2' : 'p-3'}
       `}
@@ -156,7 +156,7 @@ const MemoryEntryCard: React.FC<{
 
       {/* Contenu */}
       <p
-        className={`text-gray-400 ${compact ? 'text-xs line-clamp-2' : 'text-sm line-clamp-3'}`}
+        className={`text-titanium-text-tertiary ${compact ? 'text-xs line-clamp-2' : 'text-sm line-clamp-3'}`}
       >
         {truncatedContent}
       </p>
@@ -167,13 +167,13 @@ const MemoryEntryCard: React.FC<{
           {entry.tags.slice(0, 3).map(tag => (
             <span
               key={tag}
-              className="px-1.5 py-0.5 text-xs rounded bg-gray-700/50 text-gray-400"
+              className="px-1.5 py-0.5 text-xs rounded bg-titanium-bg-interactive/50 text-titanium-text-tertiary"
             >
               #{tag}
             </span>
           ))}
           {entry.tags.length > 3 && (
-            <span className="px-1.5 py-0.5 text-xs text-gray-500">
+            <span className="px-1.5 py-0.5 text-xs text-titanium-text-disabled">
               +{entry.tags.length - 3}
             </span>
           )}
@@ -181,9 +181,11 @@ const MemoryEntryCard: React.FC<{
       )}
 
       {/* Footer */}
-      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-700/50">
-        <span className="text-xs text-gray-500">{date}</span>
-        <span className="text-xs text-gray-500">{entry.metadata.accessCount} accès</span>
+      <div className="flex items-center justify-between mt-2 pt-2 border-t border-titanium-border-default/50">
+        <span className="text-xs text-titanium-text-disabled">{date}</span>
+        <span className="text-xs text-titanium-text-disabled">
+          {entry.metadata.accessCount} accès
+        </span>
       </div>
     </div>
   );
@@ -196,9 +198,9 @@ const StatsPanel: React.FC<{ stats: MemoryStats | null; isLoading: boolean }> = 
 }) => {
   if (isLoading || !stats) {
     return (
-      <div className="grid grid-cols-3 gap-2 p-3 bg-gray-800/30 rounded-lg animate-pulse">
+      <div className="grid grid-cols-3 gap-2 p-3 bg-titanium-bg-elevated/30 rounded-lg animate-pulse">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-16 bg-gray-700/30 rounded" />
+          <div key={i} className="h-16 bg-titanium-bg-interactive/30 rounded" />
         ))}
       </div>
     );
@@ -207,7 +209,7 @@ const StatsPanel: React.FC<{ stats: MemoryStats | null; isLoading: boolean }> = 
   const levels = ['session', 'intermediate', 'long_term'] as const;
 
   return (
-    <div className="grid grid-cols-3 gap-2 p-3 bg-gray-800/30 rounded-lg">
+    <div className="grid grid-cols-3 gap-2 p-3 bg-titanium-bg-elevated/30 rounded-lg">
       {levels.map(level => {
         const config = MEMORY_LEVEL_LABELS[level];
         const count = stats.countByLevel[level] || 0;
@@ -223,8 +225,8 @@ const StatsPanel: React.FC<{ stats: MemoryStats | null; isLoading: boolean }> = 
             <span className="text-lg font-bold" style={{ color: config.color }}>
               {count}
             </span>
-            <span className="text-xs text-gray-400">{config.label}</span>
-            <span className="text-xs text-gray-500 mt-1">
+            <span className="text-xs text-titanium-text-tertiary">{config.label}</span>
+            <span className="text-xs text-titanium-text-disabled mt-1">
               {(size / 1024).toFixed(1)} KB
             </span>
           </div>
@@ -265,7 +267,7 @@ const FilterBar: React.FC<{
   onSearchChange,
 }) => {
   return (
-    <div className="flex flex-col gap-2 p-3 bg-gray-800/30 rounded-lg">
+    <div className="flex flex-col gap-2 p-3 bg-titanium-bg-elevated/30 rounded-lg">
       {/* Recherche */}
       <div className="relative">
         <input
@@ -275,10 +277,10 @@ const FilterBar: React.FC<{
           placeholder="Rechercher dans la mémoire..."
           disabled={disabled}
           aria-disabled={disabled}
-          className="w-full px-3 py-2 pl-9 bg-gray-900/50 border border-gray-700 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+          className="w-full px-3 py-2 pl-9 bg-titanium-bg-base/50 border border-titanium-border-default rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
         />
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-titanium-text-disabled"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -301,7 +303,7 @@ const FilterBar: React.FC<{
           disabled={disabled}
           aria-disabled={disabled}
           aria-label="Filtrer le dashboard mémoire par niveau"
-          className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
+          className="px-2 py-1 bg-titanium-bg-base/50 border border-titanium-border-default rounded text-sm text-titanium-text-secondary focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les niveaux</option>
           <option value="session">⏱️ Session</option>
@@ -316,7 +318,7 @@ const FilterBar: React.FC<{
           disabled={disabled}
           aria-disabled={disabled}
           aria-label="Filtrer le dashboard mémoire par sujet"
-          className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
+          className="px-2 py-1 bg-titanium-bg-base/50 border border-titanium-border-default rounded text-sm text-titanium-text-secondary focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les sujets</option>
           {Object.entries(MEMORY_TOPIC_LABELS).map(([key, value]) => (
@@ -333,7 +335,7 @@ const FilterBar: React.FC<{
           disabled={disabled}
           aria-disabled={disabled}
           aria-label="Filtrer le dashboard mémoire par importance minimale"
-          className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
+          className="px-2 py-1 bg-titanium-bg-base/50 border border-titanium-border-default rounded text-sm text-titanium-text-secondary focus:outline-none focus:border-blue-500"
         >
           <option value={0}>Toute importance</option>
           <option value={1}>★ Trivial+</option>
@@ -350,7 +352,7 @@ const FilterBar: React.FC<{
           disabled={disabled}
           aria-disabled={disabled}
           aria-label="Trier le dashboard mémoire"
-          className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
+          className="px-2 py-1 bg-titanium-bg-base/50 border border-titanium-border-default rounded text-sm text-titanium-text-secondary focus:outline-none focus:border-blue-500"
         >
           <option value="date">📅 Date</option>
           <option value="importance">⭐ Importance</option>
@@ -362,7 +364,7 @@ const FilterBar: React.FC<{
         <div className="flex-1" />
 
         {/* Vue */}
-        <div className="flex items-center gap-1 bg-gray-900/50 rounded p-0.5">
+        <div className="flex items-center gap-1 bg-titanium-bg-base/50 rounded p-0.5">
           {(['grid', 'list', 'timeline'] as ViewMode[]).map(mode => (
             <button
               key={mode}
@@ -372,7 +374,7 @@ const FilterBar: React.FC<{
               className={`p-1.5 rounded text-sm transition-colors ${
                 viewMode === mode
                   ? 'bg-blue-500/20 text-blue-400'
-                  : 'text-gray-500 hover:text-gray-300'
+                  : 'text-titanium-text-disabled hover:text-titanium-text-secondary'
               }`}
             >
               {mode === 'grid' && '⊞'}
@@ -582,7 +584,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
         <button
           onClick={refresh}
           disabled={isLoading}
-          className="px-3 py-1.5 text-sm bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 disabled:opacity-50 transition-colors"
+          className="px-3 py-1.5 text-sm bg-titanium-bg-interactive/50 text-titanium-text-secondary rounded-lg hover:bg-titanium-bg-interactive disabled:opacity-50 transition-colors"
         >
           {isLoading ? '⟳' : '↻'} Actualiser
         </button>
@@ -619,13 +621,13 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
           </div>
           <p
             data-testid="memory-dashboard-hybrid-operator-hint"
-            className="mt-2 text-sm text-gray-300"
+            className="mt-2 text-sm text-titanium-text-secondary"
           >
             {hybridDiagnostics.shadowReadCanaryOperatorHint}
           </p>
           <p
             data-testid="memory-dashboard-hybrid-preset-history"
-            className="mt-2 text-xs text-gray-400"
+            className="mt-2 text-xs text-titanium-text-tertiary"
           >
             {hybridDiagnostics.recentShadowReadPresetChanges.length > 0
               ? hybridDiagnostics.recentShadowReadPresetChanges
@@ -657,7 +659,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       />
 
       {isEmptyPersistentMemory && (
-        <div className="px-3 py-2 text-sm text-gray-400 bg-gray-800/30 rounded-lg border border-dashed border-gray-700/80">
+        <div className="px-3 py-2 text-sm text-titanium-text-tertiary bg-titanium-bg-elevated/30 rounded-lg border border-dashed border-titanium-border-default/80">
           Le dashboard mémoire restera inactif tant qu&apos;aucune entrée mémoire réelle
           n&apos;aura été consolidée.
         </div>
@@ -668,17 +670,20 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
         className={`
           ${viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3' : ''}
           ${viewMode === 'list' ? 'flex flex-col gap-2' : ''}
-          ${viewMode === 'timeline' ? 'flex flex-col gap-2 pl-4 border-l-2 border-gray-700' : ''}
+          ${viewMode === 'timeline' ? 'flex flex-col gap-2 pl-4 border-l-2 border-titanium-border-default' : ''}
         `}
       >
         {isLoading && filteredEntries.length === 0 ? (
           // Skeleton loading
           Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-32 bg-gray-800/30 rounded-lg animate-pulse" />
+            <div
+              key={i}
+              className="h-32 bg-titanium-bg-elevated/30 rounded-lg animate-pulse"
+            />
           ))
         ) : filteredEntries.length === 0 ? (
           // Empty state
-          <div className="col-span-full py-12 text-center text-gray-500">
+          <div className="col-span-full py-12 text-center text-titanium-text-disabled">
             <span className="text-4xl mb-2 block">📭</span>
             <p>
               {isEmptyPersistentMemory
@@ -716,14 +721,14 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
 
       {/* Compteurs rapides */}
       {!compact && (
-        <div className="flex items-center justify-center gap-4 pt-2 border-t border-gray-800">
-          <span className="text-xs text-gray-500">
+        <div className="flex items-center justify-center gap-4 pt-2 border-t border-titanium-border-subtle">
+          <span className="text-xs text-titanium-text-disabled">
             Session: {Math.max(sessionCount, derivedCounts.session)}
           </span>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-titanium-text-disabled">
             Intermédiaire: {Math.max(intermediateCount, derivedCounts.intermediate)}
           </span>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-titanium-text-disabled">
             Long terme: {Math.max(longTermCount, derivedCounts.long_term)}
           </span>
         </div>

@@ -220,6 +220,32 @@ const AdminPageComponent: React.FC = () => {
     [setSearchParams]
   );
 
+  const handleTabListKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const tabIds = ADMIN_TABS.map(t => t.id);
+      const currentIndex = tabIds.indexOf(activeTab);
+      const navigate = (targetId: AdminTab | undefined) => {
+        if (!targetId) return;
+        handleTabChange(targetId);
+        document.getElementById(`admin-tab-${targetId}`)?.focus();
+      };
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        navigate(tabIds[(currentIndex + 1) % tabIds.length]);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigate(tabIds[(currentIndex - 1 + tabIds.length) % tabIds.length]);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        navigate(tabIds[0]);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        navigate(tabIds[tabIds.length - 1]);
+      }
+    },
+    [activeTab, handleTabChange]
+  );
+
   useEffect(() => {
     const requestedTab = searchParams.get('tab');
     if (ADMIN_TABS.some(tab => tab.id === requestedTab) && requestedTab !== activeTab) {
@@ -291,32 +317,41 @@ const AdminPageComponent: React.FC = () => {
       </motion.header>
 
       {/* Tab Navigation */}
-      <nav className="admin-tabs" role="tablist" aria-label="Onglets Administration">
-        {ADMIN_TABS.map(tab => (
-          <button
-            key={tab.id}
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            aria-controls={`admin-tabpanel-${tab.id}`}
-            id={`admin-tab-${tab.id}`}
-            data-testid={`tab-admin-${tab.id}`}
-            className={`admin-tab ${activeTab === tab.id ? 'admin-tab--active' : ''}`}
-            onClick={() => handleTabChange(tab.id)}
-            title={tab.description}
-          >
-            <span className="admin-tab-icon" aria-hidden="true">
-              {tab.icon}
-            </span>
-            <div className="admin-tab-content">
-              <span className="admin-tab-label">{tab.label}</span>
-              {tab.badge && (
-                <span className="admin-tab-badge" aria-hidden="true">
-                  {tab.badge}
-                </span>
-              )}
-            </div>
-          </button>
-        ))}
+      <nav
+        className="admin-tabs"
+        role="tablist"
+        aria-label="Onglets Administration"
+        onKeyDown={handleTabListKeyDown}
+      >
+        {ADMIN_TABS.map(tab => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`admin-tabpanel-${tab.id}`}
+              id={`admin-tab-${tab.id}`}
+              data-testid={`tab-admin-${tab.id}`}
+              className={`admin-tab ${isActive ? 'admin-tab--active' : ''}`}
+              onClick={() => handleTabChange(tab.id)}
+              tabIndex={isActive ? 0 : -1}
+              title={tab.description}
+            >
+              <span className="admin-tab-icon" aria-hidden="true">
+                {tab.icon}
+              </span>
+              <div className="admin-tab-content">
+                <span className="admin-tab-label">{tab.label}</span>
+                {tab.badge && (
+                  <span className="admin-tab-badge" aria-hidden="true">
+                    {tab.badge}
+                  </span>
+                )}
+              </div>
+            </button>
+          );
+        })}
       </nav>
 
       {/* Tab Content */}

@@ -70,10 +70,10 @@ export function SentinelAlerts() {
       {/* Protection Score */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400">Niveau de Protection</span>
+          <span className="text-sm text-titanium-text-tertiary">Niveau de Protection</span>
           <span className="text-lg font-semibold">{protectionPct}%</span>
         </div>
-        <div className="w-full bg-gray-700 rounded-full h-3">
+        <div className="w-full bg-titanium-bg-interactive rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all duration-500 ${
               protectionPct >= 90
@@ -98,25 +98,25 @@ export function SentinelAlerts() {
         <div className="grid grid-cols-2 gap-4 text-center">
           <div>
             <div className="text-2xl font-bold text-red-500">{sentinel.alert_count}</div>
-            <div className="text-xs text-gray-400">Alertes détectées</div>
+            <div className="text-xs text-titanium-text-tertiary">Alertes détectées</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-blue-500">
               {sentinel.active_monitors}
             </div>
-            <div className="text-xs text-gray-400">Moniteurs actifs</div>
+            <div className="text-xs text-titanium-text-tertiary">Moniteurs actifs</div>
           </div>
         </div>
       </Card>
 
       {/* Status */}
-      <Card className="p-4 bg-gray-800">
+      <Card className="p-4 bg-titanium-bg-elevated">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-400">Moniteurs actifs:</span>
+          <span className="text-titanium-text-tertiary">Moniteurs actifs:</span>
           <span className="font-semibold">{sentinel.active_monitors}</span>
         </div>
         <div className="flex items-center justify-between text-sm mt-2">
-          <span className="text-gray-400">Initialisé:</span>
+          <span className="text-titanium-text-tertiary">Initialisé:</span>
           <span className="font-semibold">
             {sentinel.initialized ? '✅ Oui' : '⏳ Non'}
           </span>
@@ -124,7 +124,7 @@ export function SentinelAlerts() {
       </Card>
 
       {/* Last Update */}
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-xs text-titanium-text-disabled text-center">
         Dernière vérification:{' '}
         {sentinel.last_check_ms > 0
           ? new Date(sentinel.last_check_ms).toLocaleTimeString()

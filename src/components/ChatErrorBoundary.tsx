@@ -398,18 +398,18 @@ export class ChatErrorBoundary extends Component<
     if (isAutoHealing) {
       return (
         <div className="flex items-center justify-center h-full w-full">
-          <div className="max-w-md p-8 bg-gray-800 rounded-lg border border-gray-700">
+          <div className="max-w-md p-8 bg-titanium-bg-elevated rounded-lg border border-titanium-border-default">
             <div className="flex items-center justify-center mb-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
             </div>
-            <h2 className="text-xl font-bold text-center mb-2 text-gray-100">
+            <h2 className="text-xl font-bold text-center mb-2 text-titanium-text-primary">
               🔧 Auto-réparation en cours...
             </h2>
-            <p className="text-center text-gray-400">
+            <p className="text-center text-titanium-text-tertiary">
               Tentative {healingAttempts}/{ChatErrorBoundary.MAX_AUTO_HEAL_ATTEMPTS}
             </p>
             {errorContext?.pipelineStep && (
-              <p className="text-sm text-center text-gray-500 mt-2">
+              <p className="text-sm text-center text-titanium-text-disabled mt-2">
                 Étape: {errorContext.pipelineStep}
               </p>
             )}
@@ -421,7 +421,7 @@ export class ChatErrorBoundary extends Component<
     // Error fallback UI
     return (
       <div className="flex items-center justify-center h-full w-full p-4">
-        <div className="max-w-2xl w-full bg-gray-800 rounded-lg border-2 border-red-500/50 p-6 shadow-xl">
+        <div className="max-w-2xl w-full bg-titanium-bg-elevated rounded-lg border-2 border-red-500/50 p-6 shadow-xl">
           {/* Header */}
           <div className="flex items-start mb-4">
             <div className="shrink-0 text-4xl mr-4">⚠️</div>
@@ -429,7 +429,7 @@ export class ChatErrorBoundary extends Component<
               <h2 className="text-2xl font-bold text-red-400 mb-2">
                 Erreur dans le Chat IA
               </h2>
-              <p className="text-gray-300">
+              <p className="text-titanium-text-secondary">
                 Une erreur inattendue s&apos;est produite dans le système de conversation.
                 Vos données sont sécurisées et la conversation a été isolée.
               </p>
@@ -438,8 +438,8 @@ export class ChatErrorBoundary extends Component<
 
           {/* Pipeline Step */}
           {errorContext?.pipelineStep && (
-            <div className="mb-4 p-3 bg-gray-900 rounded border border-gray-700">
-              <p className="text-sm text-gray-400">
+            <div className="mb-4 p-3 bg-titanium-bg-base rounded border border-titanium-border-default">
+              <p className="text-sm text-titanium-text-tertiary">
                 <span className="font-semibold">Étape de pipeline:</span>{' '}
                 {errorContext.pipelineStep}
               </p>
@@ -453,7 +453,7 @@ export class ChatErrorBoundary extends Component<
                 Détails techniques
               </summary>
               <div className="bg-black p-4 rounded overflow-auto max-h-48">
-                <pre className="text-xs text-gray-400 whitespace-pre-wrap">
+                <pre className="text-xs text-titanium-text-tertiary whitespace-pre-wrap">
                   {error.message}
                   {'\n\n'}
                   {error.stack}
@@ -464,7 +464,7 @@ export class ChatErrorBoundary extends Component<
 
           {/* Context Info */}
           {errorContext && (
-            <div className="mb-4 text-sm text-gray-500">
+            <div className="mb-4 text-sm text-titanium-text-disabled">
               <p>Mode: {errorContext.mode || 'default'}</p>
               <p>Conversation ID: {errorContext.conversationId || 'N/A'}</p>
               <p>Timestamp: {new Date(errorContext.timestamp).toLocaleString()}</p>
@@ -489,7 +489,7 @@ export class ChatErrorBoundary extends Component<
 
             <button
               onClick={this.handleReportError}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded font-medium transition-colors"
+              className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay text-white rounded font-medium transition-colors"
             >
               Signaler l&apos;erreur
             </button>
@@ -512,7 +512,7 @@ export class ChatErrorBoundary extends Component<
           )}
 
           {/* Help Text */}
-          <div className="mt-4 pt-4 border-t border-gray-700 text-sm text-gray-500">
+          <div className="mt-4 pt-4 border-t border-titanium-border-default text-sm text-titanium-text-disabled">
             <p className="mb-2">
               <strong>Que faire ?</strong>
             </p>

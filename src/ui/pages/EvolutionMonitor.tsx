@@ -90,7 +90,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
       case 'P3':
         return 'bg-red-500/20 text-red-300 border-red-500/50';
       default:
-        return 'bg-gray-500/20 text-gray-300 border-gray-500/50';
+        return 'bg-titanium-bg-overlay/20 text-titanium-text-secondary border-gray-500/50';
     }
   }, []);
 
@@ -123,7 +123,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-600">
             Moniteur d&apos;Évolution
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="text-titanium-text-tertiary mt-2">
             Phase 10 : Suivi & Contrôle de l&apos;Auto-Évolution
           </p>
         </div>
@@ -142,13 +142,13 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
           {/* Heuristics Dashboard */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-              <div className="text-gray-400 text-sm mb-2">Stabilité</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Stabilité</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.stability, 90)}`}
               >
                 {stats.current_metrics.stability.toFixed(1)}%
               </div>
-              <div className="mt-3 bg-gray-600 rounded-full h-2">
+              <div className="mt-3 bg-titanium-bg-overlay rounded-full h-2">
                 <div
                   className={`${getMetricBg(stats.current_metrics.stability)} rounded-full h-2 transition-all`}
                   style={{ width: `${stats.current_metrics.stability}%` }}
@@ -157,13 +157,13 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
             </div>
 
             <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-              <div className="text-gray-400 text-sm mb-2">Cohérence</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Cohérence</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.coherence, 95)}`}
               >
                 {stats.current_metrics.coherence.toFixed(1)}%
               </div>
-              <div className="mt-3 bg-gray-600 rounded-full h-2">
+              <div className="mt-3 bg-titanium-bg-overlay rounded-full h-2">
                 <div
                   className={`${getMetricBg(stats.current_metrics.coherence)} rounded-full h-2 transition-all`}
                   style={{ width: `${stats.current_metrics.coherence}%` }}
@@ -172,13 +172,13 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
             </div>
 
             <div className="bg-linear-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
-              <div className="text-gray-400 text-sm mb-2">Performance</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Performance</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.performance, 85)}`}
               >
                 {stats.current_metrics.performance.toFixed(1)}%
               </div>
-              <div className="mt-3 bg-gray-600 rounded-full h-2">
+              <div className="mt-3 bg-titanium-bg-overlay rounded-full h-2">
                 <div
                   className={`${getMetricBg(stats.current_metrics.performance)} rounded-full h-2 transition-all`}
                   style={{ width: `${stats.current_metrics.performance}%` }}
@@ -187,13 +187,13 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
             </div>
 
             <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <div className="text-gray-400 text-sm mb-2">Profondeur Cognitive</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">Profondeur Cognitive</div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.cognitive_depth, 80)}`}
               >
                 {stats.current_metrics.cognitive_depth.toFixed(1)}%
               </div>
-              <div className="mt-3 bg-gray-600 rounded-full h-2">
+              <div className="mt-3 bg-titanium-bg-overlay rounded-full h-2">
                 <div
                   className={`${getMetricBg(stats.current_metrics.cognitive_depth)} rounded-full h-2 transition-all`}
                   style={{ width: `${stats.current_metrics.cognitive_depth}%` }}
@@ -204,21 +204,21 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
           {/* Evolution Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+            <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <h2 className="text-xl font-semibold text-white mb-4">
                 Statistiques d&apos;Évolution
               </h2>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Cycles Totaux</span>
+                  <span className="text-titanium-text-tertiary">Cycles Totaux</span>
                   <span className="text-white text-xl font-bold">
                     {stats.total_cycles}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Mutations Totales</span>
+                  <span className="text-titanium-text-tertiary">Mutations Totales</span>
                   <span className="text-white text-xl font-bold">
                     {stats.total_mutations}
                   </span>
@@ -226,16 +226,16 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
                 {lastReport && (
                   <>
-                    <div className="border-t border-gray-700 pt-4">
-                      <div className="text-gray-400 text-sm mb-2">Dernier Cycle</div>
+                    <div className="border-t border-titanium-border-default pt-4">
+                      <div className="text-titanium-text-tertiary text-sm mb-2">Dernier Cycle</div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Proposées</span>
+                        <span className="text-titanium-text-tertiary">Proposées</span>
                         <span className="text-yellow-400 font-bold">
                           {lastReport.mutations_proposed}
                         </span>
                       </div>
                       <div className="flex justify-between items-center mt-2">
-                        <span className="text-gray-400">Appliquées</span>
+                        <span className="text-titanium-text-tertiary">Appliquées</span>
                         <span className="text-green-400 font-bold">
                           {lastReport.mutations_applied}
                         </span>
@@ -247,13 +247,13 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
             </div>
 
             {/* Improvement Tracking */}
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+            <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <h2 className="text-xl font-semibold text-white mb-4">Améliorations</h2>
 
               <div className="space-y-3">
                 {Object.entries(stats.improvement_history).length > 0 ? (
                   Object.entries(stats.improvement_history).map(([metric, delta]) => (
-                    <div key={metric} className="bg-gray-700/30 rounded-lg p-3">
+                    <div key={metric} className="bg-titanium-bg-interactive/30 rounded-lg p-3">
                       <div className="flex justify-between items-center">
                         <span className="text-white capitalize">{metric}</span>
                         <span className={delta >= 0 ? 'text-green-400' : 'text-red-400'}>
@@ -263,7 +263,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-titanium-text-disabled">
                     Aucune amélioration enregistrée
                   </div>
                 )}
@@ -273,38 +273,38 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
           {/* Last Evolution Report */}
           {lastReport && (
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+            <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
               <h2 className="text-xl font-semibold text-white mb-4">
                 Dernier Cycle d&apos;Évolution #{lastReport.cycle}
               </h2>
 
               <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="bg-gray-700/30 rounded-lg p-4">
-                  <div className="text-gray-400 text-sm mb-1">Stabilité</div>
+                <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
+                  <div className="text-titanium-text-tertiary text-sm mb-1">Stabilité</div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.stability, 90)}`}
                   >
                     {lastReport.metrics.stability.toFixed(1)}%
                   </div>
                 </div>
-                <div className="bg-gray-700/30 rounded-lg p-4">
-                  <div className="text-gray-400 text-sm mb-1">Cohérence</div>
+                <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
+                  <div className="text-titanium-text-tertiary text-sm mb-1">Cohérence</div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.coherence, 95)}`}
                   >
                     {lastReport.metrics.coherence.toFixed(1)}%
                   </div>
                 </div>
-                <div className="bg-gray-700/30 rounded-lg p-4">
-                  <div className="text-gray-400 text-sm mb-1">Performance</div>
+                <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
+                  <div className="text-titanium-text-tertiary text-sm mb-1">Performance</div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.performance, 85)}`}
                   >
                     {lastReport.metrics.performance.toFixed(1)}%
                   </div>
                 </div>
-                <div className="bg-gray-700/30 rounded-lg p-4">
-                  <div className="text-gray-400 text-sm mb-1">Profondeur Cognitive</div>
+                <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
+                  <div className="text-titanium-text-tertiary text-sm mb-1">Profondeur Cognitive</div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.cognitive_depth, 80)}`}
                   >
@@ -313,26 +313,26 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
                 </div>
               </div>
 
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-titanium-text-tertiary">
                 Timestamp: {new Date(lastReport.timestamp).toLocaleString()}
               </div>
             </div>
           )}
         </>
       ) : (
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-green-500/30 text-center">
+        <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-12 border border-green-500/30 text-center">
           <div className="text-6xl mb-4">🧬</div>
           <h2 className="text-2xl font-semibold text-white mb-2">
             Moteur d&apos;Évolution Prêt
           </h2>
-          <p className="text-gray-400">
+          <p className="text-titanium-text-tertiary">
             Lancez un cycle d&apos;évolution pour démarrer le suivi des améliorations
           </p>
         </div>
       )}
 
       {/* Risk Level Legend */}
-      <div className="mt-6 bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+      <div className="mt-6 bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
         <h3 className="text-lg font-semibold text-white mb-3">
           Guide des Niveaux de Risque
         </h3>

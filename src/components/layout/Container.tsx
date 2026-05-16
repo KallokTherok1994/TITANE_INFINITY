@@ -15,7 +15,7 @@
 
 import { type HTMLAttributes, forwardRef, type ReactNode } from 'react';
 import { clsx } from 'clsx';
-import { spacing } from '@themes/tokens';
+import { type SpacingKey } from './Stack';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -26,7 +26,7 @@ export type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   size?: ContainerSize;
   centered?: boolean;
-  padding?: keyof typeof spacing;
+  padding?: SpacingKey;
   children: ReactNode;
 }
 
@@ -55,7 +55,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
       width: '100%',
       ...sizeStyles[size],
       ...(centered && { marginLeft: 'auto', marginRight: 'auto' }),
-      padding: spacing[padding],
+      padding: padding === 0 ? '0' : `var(--space-${padding})`,
       ...style,
     };
 

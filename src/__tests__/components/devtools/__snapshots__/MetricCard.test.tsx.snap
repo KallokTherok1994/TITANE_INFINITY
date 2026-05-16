@@ -2,10 +2,10 @@
 
 exports[`MetricCard Component > Snapshot > should match snapshot 1`] = `
 <div
-  class="p-4 rounded-lg border-l-4 border-green-500 bg-gray-800"
+  class="p-4 rounded-lg border-l-4 border-green-500 bg-titanium-bg-elevated"
 >
   <div
-    class="text-sm text-gray-400 mb-1"
+    class="text-sm text-titanium-text-tertiary mb-1"
   >
     Test
   </div>
@@ -18,7 +18,7 @@ exports[`MetricCard Component > Snapshot > should match snapshot 1`] = `
       100
     </div>
     <span
-      class="text-sm text-gray-500"
+      class="text-sm text-titanium-text-disabled"
     >
       %
     </span>

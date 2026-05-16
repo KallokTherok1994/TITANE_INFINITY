@@ -39,6 +39,9 @@ vi.mock('@/components/monitoring/ServiceMetricsPanel', () => ({
 vi.mock('@/components/monitoring/CommandStatsTable', () => ({
   CommandStatsTable: () => <div data-testid="command-stats-stub" />,
 }));
+vi.mock('@/components/runtime/QueryPilotsLiveStatus', () => ({
+  QueryPilotsLiveStatus: () => <div data-testid="query-pilots-stub" />,
+}));
 
 import { MonitoringDashboard } from '../../../src/pages/MonitoringDashboard';
 

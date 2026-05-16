@@ -6,7 +6,6 @@
  */
 
 import { motion } from 'framer-motion';
-import { colors, spacing, radius } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
@@ -42,14 +41,14 @@ export const XPProgressBar = ({
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            marginBottom: spacing[2],
+            marginBottom: 'var(--space-2)',
             fontSize: '0.875rem',
           }}
         >
-          <span style={{ color: colors.rubis.primary[400], fontWeight: 600 }}>
+          <span style={{ color: 'var(--color-text-muted)', fontWeight: 600 }}>
             Niveau {level}
           </span>
-          <span style={{ color: colors.neutral[400] }}>
+          <span style={{ color: 'var(--color-text-muted)' }}>
             {currentXP.toLocaleString()} / {requiredXP.toLocaleString()} XP
           </span>
         </div>
@@ -60,10 +59,10 @@ export const XPProgressBar = ({
         style={{
           position: 'relative',
           height: '24px',
-          background: colors.neutral[900],
-          borderRadius: radius.full,
+          background: 'var(--color-bg-primary)',
+          borderRadius: 'var(--radius-full)',
           overflow: 'hidden',
-          border: `1px solid ${colors.rubis.primary[900]}`,
+          border: '1px solid var(--color-bg-secondary)',
         }}
       >
         {/* Progress Fill */}
@@ -78,8 +77,9 @@ export const XPProgressBar = ({
           }}
           style={{
             height: '100%',
-            background: `linear-gradient(90deg, ${colors.rubis.primary[600]}, ${colors.rubis.primary[500]})`,
-            borderRadius: radius.full,
+            background:
+              'linear-gradient(90deg, var(--color-text-disabled), var(--color-text-secondary))',
+            borderRadius: 'var(--radius-full)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -100,7 +100,8 @@ export const XPProgressBar = ({
               left: '-100%',
               width: '100%',
               height: '100%',
-              background: `linear-gradient(90deg, transparent, ${colors.neutral[100]}33, transparent)`,
+              background:
+                'linear-gradient(90deg, transparent, var(--color-text-primary)33, transparent)',
             }}
           />
         </motion.div>
@@ -114,7 +115,8 @@ export const XPProgressBar = ({
             transform: 'translate(-50%, -50%)',
             fontSize: '0.75rem',
             fontWeight: 700,
-            color: progress > 50 ? colors.neutral[900] : colors.neutral[100],
+            color:
+              progress > 50 ? 'var(--color-bg-primary)' : 'var(--color-text-primary)',
             textShadow: progress > 50 ? 'none' : '0 1px 2px rgba(0,0,0,0.5)',
             zIndex: 1,
           }}

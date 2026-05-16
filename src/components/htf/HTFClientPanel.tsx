@@ -54,7 +54,7 @@ export function HTFClientPanel() {
             placeholder="Nom complet *"
             value={nom}
             onChange={e => setNom(e.target.value)}
-            className="w-full rounded border border-gray-300 p-2 text-sm"
+            className="w-full rounded border border-titanium-border-default p-2 text-sm"
           />
           <input
             data-testid="htf-input-courriel"
@@ -62,14 +62,14 @@ export function HTFClientPanel() {
             placeholder="Courriel"
             value={courriel}
             onChange={e => setCourriel(e.target.value)}
-            className="w-full rounded border border-gray-300 p-2 text-sm"
+            className="w-full rounded border border-titanium-border-default p-2 text-sm"
           />
           <input
             data-testid="htf-input-telephone"
             placeholder="Téléphone"
             value={telephone}
             onChange={e => setTelephone(e.target.value)}
-            className="w-full rounded border border-gray-300 p-2 text-sm"
+            className="w-full rounded border border-titanium-border-default p-2 text-sm"
           />
           <button
             type="submit"
@@ -83,7 +83,9 @@ export function HTFClientPanel() {
 
       <ul data-testid="htf-client-list" className="space-y-2">
         {clients.length === 0 && (
-          <li className="text-sm text-gray-400 italic">Aucun client enregistré</li>
+          <li className="text-sm text-titanium-text-tertiary italic">
+            Aucun client enregistré
+          </li>
         )}
         {clients.map((c: HTFClient) => (
           <li
@@ -93,13 +95,17 @@ export function HTFClientPanel() {
             className={`rounded-lg border p-3 cursor-pointer text-sm flex items-center justify-between ${
               activeClient?.id === c.id
                 ? 'border-blue-400 bg-blue-50'
-                : 'border-gray-200 bg-white hover:bg-gray-50'
+                : 'border-titanium-border-subtle bg-white hover:bg-titanium-bg-base'
             }`}
           >
             <div>
-              <p className="font-semibold text-gray-800">{c.nom}</p>
-              {c.courriel && <p className="text-gray-500 text-xs">{c.courriel}</p>}
-              <p className="text-xs text-gray-400">{c.nbSoumissions} soumission(s)</p>
+              <p className="font-semibold text-titanium-text-primary">{c.nom}</p>
+              {c.courriel && (
+                <p className="text-titanium-text-disabled text-xs">{c.courriel}</p>
+              )}
+              <p className="text-xs text-titanium-text-tertiary">
+                {c.nbSoumissions} soumission(s)
+              </p>
             </div>
             <button
               data-testid={`htf-btn-delete-client-${c.id}`}

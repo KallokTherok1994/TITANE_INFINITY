@@ -6,7 +6,6 @@
  */
 
 import { motion } from 'framer-motion';
-import { colors, spacing, radius, shadows } from '@themes/tokens';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -36,11 +35,11 @@ export const TypingIndicator = ({
   };
 
   const providerColors = {
-    gemini: colors.saphir.primary[500],
-    openai: colors.rubis.primary[500],
-    claude: colors.emeraude.primary[600],
-    ollama: colors.emeraude.primary[500],
-    local: colors.neutral[500],
+    gemini: 'var(--color-info-500)',
+    openai: 'var(--color-text-secondary)',
+    claude: 'var(--color-violet-500)',
+    ollama: 'var(--color-success-500)',
+    local: 'var(--color-text-muted)',
   };
 
   const dotVariants = {
@@ -54,6 +53,8 @@ export const TypingIndicator = ({
     repeatType: 'reverse' as const,
   };
 
+  const color = providerColors[provider];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -62,21 +63,21 @@ export const TypingIndicator = ({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: spacing[3],
-        padding: spacing[3],
-        backgroundColor: `${colors.neutral[900]}cc`,
-        borderRadius: radius.lg,
-        border: `1px solid ${providerColors[provider]}40`,
-        boxShadow: shadows.md,
+        gap: 'var(--space-3)',
+        padding: 'var(--space-3)',
+        backgroundColor: 'var(--bg-card)',
+        borderRadius: 'var(--radius-lg)',
+        border: `1px solid ${color}40`,
+        boxShadow: 'var(--shadow-md)',
         backdropFilter: 'blur(10px)',
-        marginBottom: spacing[4],
+        marginBottom: 'var(--space-4)',
       }}
     >
       {/* Label */}
       <span
         style={{
-          fontSize: '0.875rem',
-          color: providerColors[provider],
+          fontSize: 'var(--text-sm)',
+          color,
           fontWeight: 600,
         }}
       >
@@ -87,7 +88,7 @@ export const TypingIndicator = ({
       <div
         style={{
           display: 'flex',
-          gap: spacing[1],
+          gap: 'var(--space-1)',
           alignItems: 'center',
         }}
       >
@@ -104,8 +105,8 @@ export const TypingIndicator = ({
             style={{
               width: '8px',
               height: '8px',
-              borderRadius: radius.full,
-              backgroundColor: providerColors[provider],
+              borderRadius: 'var(--radius-full)',
+              backgroundColor: color,
             }}
           />
         ))}

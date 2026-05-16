@@ -188,9 +188,9 @@ describe('TimePage', () => {
     });
 
     expect(await screen.findByText("Aujourd'hui")).toHaveClass('text-blue-50');
-    expect(screen.getByText('Planning')).toHaveClass('text-gray-300');
+    expect(screen.getByText('Planning')).toHaveClass('text-titanium-text-secondary');
     expect(screen.getByText(/1 événement\(s\) synchronisé\(s\) aujourd'hui/i)).toHaveClass(
-      'text-gray-400'
+      'text-titanium-text-tertiary'
     );
   });
 

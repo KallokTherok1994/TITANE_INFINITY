@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { TitanePage } from '@/pages/TitanePage';
 import { processMessage, healthCheck } from '@/services/conversationEngine';
@@ -20,6 +21,8 @@ vi.mock('@/services/conversationEngine', async () => {
   };
 });
 
+
+const makeQC = () => new QueryClient({ defaultOptions: { queries: { retry: false } } });
 describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -46,9 +49,11 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
 
   it('répond à une question de connaissance (capitale)', async () => {
     render(
-      <MemoryRouter>
-        <TitanePage />
-      </MemoryRouter>
+      <QueryClientProvider client={makeQC()}>
+        <MemoryRouter>
+          <TitanePage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     const chatTab = screen.getByRole('tab', { name: /chat/i });
     fireEvent.click(chatTab);
@@ -70,9 +75,11 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
 
   it('répond à une question de compétence (calcul)', async () => {
     render(
-      <MemoryRouter>
-        <TitanePage />
-      </MemoryRouter>
+      <QueryClientProvider client={makeQC()}>
+        <MemoryRouter>
+          <TitanePage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     const input = screen.getByPlaceholderText(/tapez votre message/i);
     fireEvent.change(input, { target: { value: 'Combien font 2 + 2 ?' } });
@@ -90,9 +97,11 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
 
   it('démontre la mémoire de session', async () => {
     render(
-      <MemoryRouter>
-        <TitanePage />
-      </MemoryRouter>
+      <QueryClientProvider client={makeQC()}>
+        <MemoryRouter>
+          <TitanePage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     const input = screen.getByPlaceholderText(/tapez votre message/i);
     // Prénom donné
@@ -109,9 +118,11 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
 
   it('répond à une question d’identité', async () => {
     render(
-      <MemoryRouter>
-        <TitanePage />
-      </MemoryRouter>
+      <QueryClientProvider client={makeQC()}>
+        <MemoryRouter>
+          <TitanePage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     const input = screen.getByPlaceholderText(/tapez votre message/i);
     fireEvent.change(input, { target: { value: 'Qui es-tu ?' } });
@@ -128,9 +139,11 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
 
   it('explique son raisonnement (métacognition)', async () => {
     render(
-      <MemoryRouter>
-        <TitanePage />
-      </MemoryRouter>
+      <QueryClientProvider client={makeQC()}>
+        <MemoryRouter>
+          <TitanePage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     const input = screen.getByPlaceholderText(/tapez votre message/i);
     fireEvent.change(input, { target: { value: 'Explique ton raisonnement.' } });

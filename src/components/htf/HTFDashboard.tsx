@@ -29,7 +29,7 @@ export function HTFDashboard() {
         <h2 className="text-xl font-bold text-green-700">
           🏡 L'Humain à tout faire — Tableau de bord
         </h2>
-        <p className="text-sm text-gray-500">Kevin Thibault · Saguenay</p>
+        <p className="text-sm text-titanium-text-disabled">Kevin Thibault · Saguenay</p>
       </div>
 
       <div className="htf-dashboard__metrics grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -38,7 +38,7 @@ export function HTFDashboard() {
           className="htf-metric rounded-lg bg-green-50 p-4 border border-green-200"
         >
           <p className="text-2xl font-bold text-green-700">{submissions.length}</p>
-          <p className="text-sm text-gray-600">Soumissions</p>
+          <p className="text-sm text-titanium-text-disabled">Soumissions</p>
         </div>
 
         <div
@@ -46,7 +46,7 @@ export function HTFDashboard() {
           className="htf-metric rounded-lg bg-blue-50 p-4 border border-blue-200"
         >
           <p className="text-2xl font-bold text-blue-700">{clients.length}</p>
-          <p className="text-sm text-gray-600">Clients</p>
+          <p className="text-sm text-titanium-text-disabled">Clients</p>
         </div>
 
         <div
@@ -54,7 +54,7 @@ export function HTFDashboard() {
           className="htf-metric rounded-lg bg-amber-50 p-4 border border-amber-200"
         >
           <p className="text-2xl font-bold text-amber-700">{tauxConversion}%</p>
-          <p className="text-sm text-gray-600">Taux conversion</p>
+          <p className="text-sm text-titanium-text-disabled">Taux conversion</p>
         </div>
 
         <div
@@ -62,7 +62,7 @@ export function HTFDashboard() {
           className="htf-metric rounded-lg bg-purple-50 p-4 border border-purple-200"
         >
           <p className="text-2xl font-bold text-purple-700">{totalRevenu.toFixed(0)} $</p>
-          <p className="text-sm text-gray-600">Revenu accepté</p>
+          <p className="text-sm text-titanium-text-disabled">Revenu accepté</p>
         </div>
       </div>
 
@@ -78,12 +78,12 @@ export function HTFDashboard() {
       {insights.nbrEntrees > 0 && (
         <div
           data-testid="htf-learning-insights"
-          className="rounded-lg bg-gray-50 border border-gray-200 p-3 text-sm"
+          className="rounded-lg bg-titanium-bg-base border border-titanium-border-subtle p-3 text-sm"
         >
-          <p className="font-semibold text-gray-700">
+          <p className="font-semibold text-titanium-text-secondary">
             Apprentissage continu — {insights.nbrEntrees} travaux complétés
           </p>
-          <p className="text-gray-500">
+          <p className="text-titanium-text-disabled">
             Facteur de précision global : {(insights.facteurMoyenGlobal * 100).toFixed(1)}
             %
           </p>

@@ -79,9 +79,9 @@ describe('MultiProjectDashboard', () => {
 
     renderPage();
 
-    expect(screen.getByText(/Aucun projet actif/i)).toHaveClass('text-slate-300');
+    expect(screen.getByText(/Aucun projet actif/i)).toHaveClass('text-titanium-text-secondary');
     expect(screen.getByText(/Synchronisation registry ready/i).closest('ul')).toHaveClass(
-      'text-slate-300'
+      'text-titanium-text-secondary'
     );
   });
 });

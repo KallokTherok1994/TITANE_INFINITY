@@ -15,19 +15,19 @@
 
 import { type HTMLAttributes, forwardRef, type ReactNode } from 'react';
 import { clsx } from 'clsx';
-import { spacing } from '@themes/tokens';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
 
+export type SpacingKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12 | 16 | 20 | 24;
 export type StackDirection = 'horizontal' | 'vertical';
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
 
 export interface StackProps extends HTMLAttributes<HTMLDivElement> {
   direction?: StackDirection;
-  gap?: keyof typeof spacing;
+  gap?: SpacingKey;
   align?: StackAlign;
   justify?: StackJustify;
   wrap?: boolean;
@@ -76,7 +76,7 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
     const stackStyles: React.CSSProperties = {
       display: 'flex',
       flexDirection: direction === 'horizontal' ? 'row' : 'column',
-      gap: spacing[gap],
+      gap: gap === 0 ? '0' : `var(--space-${gap})`,
       alignItems: alignMap[align],
       justifyContent: justifyMap[justify],
       ...(wrap && { flexWrap: 'wrap' }),

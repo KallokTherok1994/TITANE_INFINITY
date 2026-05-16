@@ -28,8 +28,8 @@ export const CustomLegend: React.FC<{
               transition-all duration-200
               ${
                 isVisible
-                  ? 'bg-slate-700/50 text-white'
-                  : 'bg-slate-800/50 text-slate-500'
+                  ? 'bg-titanium-bg-interactive/50 text-white'
+                  : 'bg-titanium-bg-elevated/50 text-titanium-text-disabled'
               }
             `}
           >
@@ -45,7 +45,7 @@ export const CustomLegend: React.FC<{
                   ? 'text-red-400'
                   : trend === 'down'
                     ? 'text-green-400'
-                    : 'text-slate-400'
+                    : 'text-titanium-text-tertiary'
               }
             />
           </motion.button>
@@ -356,9 +356,9 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-slate-800/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-slate-700"
+          className="bg-titanium-bg-elevated/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-titanium-border-default"
         >
-          <p className="text-slate-400 text-xs mb-2">{label}</p>
+          <p className="text-titanium-text-tertiary text-xs mb-2">{label}</p>
           {payload.map((entry, index) => {
             const metric = metrics.find(m => m.key === entry.dataKey);
             return (
@@ -367,7 +367,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: entry.color }}
                 />
-                <span className="text-slate-300">{metric?.label}:</span>
+                <span className="text-titanium-text-secondary">{metric?.label}:</span>
                 <span className="text-white font-medium">
                   {formatMetricValue(entry.value, metric?.unit || '')}
                 </span>
@@ -502,16 +502,16 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className={`
-        bg-slate-800/50 backdrop-blur-md rounded-xl border border-slate-700/50
+        bg-titanium-bg-elevated/50 backdrop-blur-md rounded-xl border border-titanium-border-default/50
         ${isFullscreen ? 'fixed inset-4 z-50' : ''}
         ${className}
       `}
     >
       {/* Header avec contrôles */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+      <div className="flex items-center justify-between p-4 border-b border-titanium-border-default/50">
         <div className="flex items-center gap-2">
           {/* Sélecteur de plage de temps */}
-          <div className="flex bg-slate-700/50 rounded-lg p-1">
+          <div className="flex bg-titanium-bg-interactive/50 rounded-lg p-1">
             {TIME_RANGES.slice(0, 5).map(range => (
               <button
                 key={range.value}
@@ -521,7 +521,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
                   ${
                     selectedRange === range.value
                       ? 'bg-blue-500 text-white'
-                      : 'text-slate-400 hover:text-white'
+                      : 'text-titanium-text-tertiary hover:text-white'
                   }
                 `}
               >
@@ -535,22 +535,24 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={handleZoomOut}
-            className="p-2 text-slate-400 hover:text-white transition-colors"
+            className="p-2 text-titanium-text-tertiary hover:text-white transition-colors"
             title="Zoom arrière"
           >
             <ZoomOut size={18} />
           </button>
-          <span className="text-slate-400 text-sm">{Math.round(zoomLevel * 100)}%</span>
+          <span className="text-titanium-text-tertiary text-sm">
+            {Math.round(zoomLevel * 100)}%
+          </span>
           <button
             onClick={handleZoomIn}
-            className="p-2 text-slate-400 hover:text-white transition-colors"
+            className="p-2 text-titanium-text-tertiary hover:text-white transition-colors"
             title="Zoom avant"
           >
             <ZoomIn size={18} />
           </button>
           <button
             onClick={handleFullscreen}
-            className="p-2 text-slate-400 hover:text-white transition-colors"
+            className="p-2 text-titanium-text-tertiary hover:text-white transition-colors"
             title="Plein écran"
           >
             <Maximize2 size={18} />
@@ -558,7 +560,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
           {onExport && (
             <button
               onClick={onExport}
-              className="p-2 text-slate-400 hover:text-white transition-colors"
+              className="p-2 text-titanium-text-tertiary hover:text-white transition-colors"
               title="Exporter"
             >
               <Download size={18} />
@@ -581,7 +583,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
             />
           </>
         ) : (
-          <div className="flex items-center justify-center h-64 text-slate-400">
+          <div className="flex items-center justify-center h-64 text-titanium-text-tertiary">
             <div className="text-center">
               <Settings size={48} className="mx-auto mb-2 opacity-50" />
               <p>Aucune donnée disponible</p>

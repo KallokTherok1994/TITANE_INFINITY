@@ -34,7 +34,11 @@ interface PilotTileProps {
   errorMessage?: string;
 }
 
-function deriveState(args: { isLoading: boolean; isError: boolean; isSuccess: boolean }): PilotState {
+function deriveState(args: {
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
+}): PilotState {
   if (args.isError) return 'error';
   if (args.isSuccess) return 'success';
   if (args.isLoading) return 'loading';
@@ -49,7 +53,7 @@ function PilotTile({ id, label, state, updatedAt, errorMessage }: PilotTileProps
         ? 'bg-rose-500'
         : state === 'loading'
           ? 'bg-amber-300 animate-pulse'
-          : 'bg-slate-500';
+          : 'bg-titanium-bg-overlay';
 
   const stateLabel =
     state === 'success'
@@ -69,15 +73,21 @@ function PilotTile({ id, label, state, updatedAt, errorMessage }: PilotTileProps
     <div
       data-testid={`query-pilot-${id}`}
       data-state={state}
-      className="flex items-center justify-between rounded-md border border-slate-700/60 bg-slate-900/40 px-3 py-2 text-xs text-slate-200"
+      className="flex items-center justify-between rounded-md border border-titanium-border-default/60 bg-titanium-bg-base/40 px-3 py-2 text-xs text-titanium-text-secondary"
     >
       <div className="flex items-center gap-2">
-        <span className={`inline-block h-2 w-2 rounded-full ${dotClass}`} aria-hidden="true" />
+        <span
+          className={`inline-block h-2 w-2 rounded-full ${dotClass}`}
+          aria-hidden="true"
+        />
         <span className="font-medium">{label}</span>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-slate-400">{stateLabel}</span>
-        <span className="text-slate-500" data-testid={`query-pilot-${id}-updated`}>
+        <span className="text-titanium-text-tertiary">{stateLabel}</span>
+        <span
+          className="text-titanium-text-disabled"
+          data-testid={`query-pilot-${id}-updated`}
+        >
           {updatedText}
         </span>
       </div>
@@ -134,18 +144,19 @@ export function QueryPilotsLiveStatus(): React.ReactElement {
     <section
       data-testid="query-pilots-live-status"
       aria-label="TanStack Query pilots live status"
-      className="rounded-lg border border-slate-800 bg-slate-900/30 p-4"
+      className="rounded-lg border border-titanium-border-subtle bg-titanium-bg-base/30 p-4"
     >
       <header className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-100">
-          TanStack Query pilots <span className="text-slate-500 font-normal">(v34.2.0)</span>
+        <h2 className="text-sm font-semibold text-titanium-text-primary">
+          TanStack Query pilots{' '}
+          <span className="text-titanium-text-disabled font-normal">(v34.2.0)</span>
         </h2>
-        <span className="text-[10px] uppercase tracking-wide text-slate-500">
+        <span className="text-[10px] uppercase tracking-wide text-titanium-text-disabled">
           additive — read-only
         </span>
       </header>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {pilots.map((p) => (
+        {pilots.map(p => (
           <PilotTile key={p.id} {...p} />
         ))}
       </div>

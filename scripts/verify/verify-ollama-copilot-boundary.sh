@@ -31,6 +31,7 @@ rg_has 'gemma2:2b' .github/copilot-instructions.md .github/instructions/titane.i
 rg_has 'verify:ollama:boundary' package.json || fail 'package.json missing verify:ollama:boundary script'
 [ -f .vscode/mcp.json ] || fail '.vscode/mcp.json missing (Ollama Dev MCP config not present)'
 rg_has 'chat\.mcp' .vscode/settings.json || fail '.vscode/settings.json missing chat.mcp configuration'
+rg_has '"chat\.mcp\.enabled"' .vscode/settings.json || fail 'chat.mcp.enabled is not true in .vscode/settings.json'
 # v35.1.x: accept either chat.mcp.enabled OR chat.mcp.access (broader access:"all" implies MCP enabled)
 rg_has '"chat\.mcp\.(enabled|access)"' .vscode/settings.json || fail '.vscode/settings.json chat.mcp config missing'
 rg_has 'ollama-dev' .vscode/mcp.json || fail '.vscode/mcp.json missing ollama-dev server entry'

@@ -16,7 +16,6 @@ import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import { Container, Stack } from '@components/layout';
 import { Card } from '../ui';
-import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { knowledgeVault } from '@/cognitive/knowledge/knowledgeVault';
 import { evolutionEngine } from '@/cognitive/evolution/evolutionEngine';
@@ -78,7 +77,7 @@ const StatCard = memo(function StatCard({
         background: `linear-gradient(135deg, ${color}20, ${color}10)`,
         border: `1px solid ${color}40`,
         borderRadius: '12px',
-        padding: spacing[4],
+        padding: 'var(--space-4)',
         minWidth: '150px',
       }}
     >
@@ -86,8 +85,8 @@ const StatCard = memo(function StatCard({
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: spacing[2],
-          marginBottom: spacing[2],
+          gap: 'var(--space-2)',
+          marginBottom: 'var(--space-2)',
         }}
       >
         <span
@@ -104,19 +103,17 @@ const StatCard = memo(function StatCard({
         >
           {icon}
         </span>
-        <span style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
           {title}
         </span>
       </div>
-      <div style={{ fontSize: fontSizes['2xl'], fontWeight: fontWeights.bold, color }}>
-        {value}
-      </div>
+      <div style={{ fontSize: 'var(--text-2xl)', fontWeight: '700', color }}>{value}</div>
       {subtitle && (
         <div
           style={{
-            fontSize: fontSizes.xs,
-            color: colors.neutral[500],
-            marginTop: spacing[1],
+            fontSize: 'var(--text-xs)',
+            color: 'var(--color-text-muted)',
+            marginTop: 'var(--space-1)',
           }}
         >
           {subtitle}
@@ -142,7 +139,7 @@ const ProgressBar = memo(function ProgressBar({
       style={{
         width: '100%',
         height: '8px',
-        background: colors.neutral[800],
+        background: 'var(--color-border-subtle)',
         borderRadius: '4px',
       }}
     >
@@ -178,20 +175,18 @@ const TabButton = memo(function TabButton({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: spacing[2],
-        padding: `${spacing[2]} ${spacing[4]}`,
+        gap: 'var(--space-2)',
+        padding: 'var(--space-2) var(--space-4)',
         background: active
-          ? `linear-gradient(135deg, ${colors.emeraude.primary[500]}30, ${colors.emeraude.primary[600]}20)`
+          ? 'linear-gradient(135deg, var(--color-success-500)30, var(--color-success-500)20)'
           : 'transparent',
-        border: active
-          ? `1px solid ${colors.emeraude.primary[500]}50`
-          : '1px solid transparent',
+        border: active ? '1px solid var(--color-success-500)50' : '1px solid transparent',
         borderRadius: '8px',
-        color: active ? colors.emeraude.primary[400] : colors.neutral[400],
+        color: active ? 'var(--color-success-500)' : 'var(--color-text-muted)',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
-        fontSize: fontSizes.sm,
-        fontWeight: active ? fontWeights.semibold : fontWeights.normal,
+        fontSize: 'var(--text-sm)',
+        fontWeight: active ? '600' : '400',
       }}
     >
       <span>{icon}</span>
@@ -271,33 +266,33 @@ function EvolutionCenterPageContent(): JSX.Element {
     () => (
       <Stack gap={6}>
         {/* Stats Row */}
-        <div style={{ display: 'flex', gap: spacing[4], flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
           <StatCard
             title="Niveau"
             value={stats.level}
             icon="📊"
-            color={colors.emeraude.primary[500]}
-            subtitle={`${stats.totalXP} XP total`}
+            color={'var(--color-success-500)'}
+            subtitle={'${stats.totalXP} XP total'}
           />
           <StatCard
             title="Connaissances"
             value={stats.knowledgeCount}
             icon="📚"
-            color={colors.saphir.primary[500]}
+            color={'var(--color-info-500)'}
             subtitle="Documents indexés"
           />
           <StatCard
             title="Mémoires"
             value={stats.memoriesCount}
             icon="🧠"
-            color={colors.rubis.primary[500]}
+            color={'var(--color-text-secondary)'}
             subtitle="Souvenirs actifs"
           />
           <StatCard
             title="Phase"
             value={stats.evolutionPhase}
             icon="🌱"
-            color={colors.emeraude.primary[400]}
+            color={'var(--color-success-500)'}
           />
         </div>
 
@@ -312,17 +307,24 @@ function EvolutionCenterPageContent(): JSX.Element {
                   alignItems: 'center',
                 }}
               >
-                <span style={{ color: colors.neutral[300], fontSize: fontSizes.sm }}>
+                <span
+                  style={{
+                    color: 'var(--color-text-secondary)',
+                    fontSize: 'var(--text-sm)',
+                  }}
+                >
                   Niveau {progression.level}
                 </span>
-                <span style={{ color: colors.neutral[500], fontSize: fontSizes.xs }}>
+                <span
+                  style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-xs)' }}
+                >
                   {progression.xpInCurrentLevel} / {progression.xpToNextLevel} XP
                 </span>
               </div>
               <ProgressBar
                 value={progression.xpInCurrentLevel}
                 max={progression.xpToNextLevel}
-                color={colors.emeraude.primary[500]}
+                color={'var(--color-success-500)'}
               />
             </Stack>
           </Card>
@@ -330,42 +332,45 @@ function EvolutionCenterPageContent(): JSX.Element {
 
         {/* Quick Actions */}
         <Card title="Actions Rapides">
-          <div style={{ display: 'flex', gap: spacing[3], flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
             <button
               style={{
-                padding: `${spacing[2]} ${spacing[4]}`,
-                background: `linear-gradient(135deg, ${colors.emeraude.primary[600]}, ${colors.emeraude.primary[700]})`,
+                padding: 'var(--space-2) var(--space-4)',
+                background:
+                  'linear-gradient(135deg, var(--color-success-500), var(--color-success-700))',
                 border: 'none',
                 borderRadius: '8px',
-                color: colors.neutral[100],
+                color: 'var(--color-text-primary)',
                 cursor: 'pointer',
-                fontSize: fontSizes.sm,
+                fontSize: 'var(--text-sm)',
               }}
             >
               🎯 Définir Objectif
             </button>
             <button
               style={{
-                padding: `${spacing[2]} ${spacing[4]}`,
-                background: `linear-gradient(135deg, ${colors.saphir.primary[600]}, ${colors.saphir.primary[700]})`,
+                padding: 'var(--space-2) var(--space-4)',
+                background:
+                  'linear-gradient(135deg, var(--color-info-500), var(--color-border-default))',
                 border: 'none',
                 borderRadius: '8px',
-                color: colors.neutral[100],
+                color: 'var(--color-text-primary)',
                 cursor: 'pointer',
-                fontSize: fontSizes.sm,
+                fontSize: 'var(--text-sm)',
               }}
             >
               📖 Ajouter Connaissance
             </button>
             <button
               style={{
-                padding: `${spacing[2]} ${spacing[4]}`,
-                background: `linear-gradient(135deg, ${colors.rubis.primary[600]}, ${colors.rubis.primary[700]})`,
+                padding: 'var(--space-2) var(--space-4)',
+                background:
+                  'linear-gradient(135deg, var(--color-text-disabled), var(--color-border-default))',
                 border: 'none',
                 borderRadius: '8px',
-                color: colors.neutral[100],
+                color: 'var(--color-text-primary)',
                 cursor: 'pointer',
-                fontSize: fontSizes.sm,
+                fontSize: 'var(--text-sm)',
               }}
             >
               💾 Créer Mémoire
@@ -387,34 +392,34 @@ function EvolutionCenterPageContent(): JSX.Element {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                  gap: spacing[4],
+                  gap: 'var(--space-4)',
                 }}
               >
                 <StatCard
                   title="XP Total"
                   value={progression.totalXP.toLocaleString()}
                   icon="⭐"
-                  color={colors.emeraude.primary[500]}
+                  color={'var(--color-success-500)'}
                 />
                 <StatCard
                   title="Niveau"
                   value={progression.level}
                   icon="📈"
-                  color={colors.saphir.primary[500]}
+                  color={'var(--color-info-500)'}
                 />
                 <StatCard
                   title="Streak"
-                  value={`${progression.streakDays} jours`}
+                  value={'${progression.streakDays} jours'}
                   icon="🔥"
-                  color={colors.rubis.primary[500]}
+                  color={'var(--color-text-secondary)'}
                 />
               </div>
 
               {/* XP Progress */}
               <div
                 style={{
-                  background: colors.neutral[900],
-                  padding: spacing[4],
+                  background: 'var(--color-bg-primary)',
+                  padding: 'var(--space-4)',
                   borderRadius: '12px',
                 }}
               >
@@ -422,13 +427,13 @@ function EvolutionCenterPageContent(): JSX.Element {
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    marginBottom: spacing[2],
+                    marginBottom: 'var(--space-2)',
                   }}
                 >
-                  <span style={{ color: colors.neutral[300] }}>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
                     Niveau {progression.level}
                   </span>
-                  <span style={{ color: colors.neutral[500] }}>
+                  <span style={{ color: 'var(--color-text-muted)' }}>
                     {Math.round(
                       (progression.xpInCurrentLevel / progression.xpToNextLevel) * 100
                     )}
@@ -438,13 +443,13 @@ function EvolutionCenterPageContent(): JSX.Element {
                 <ProgressBar
                   value={progression.xpInCurrentLevel}
                   max={progression.xpToNextLevel}
-                  color={colors.emeraude.primary[500]}
+                  color={'var(--color-success-500)'}
                 />
                 <div
                   style={{
-                    marginTop: spacing[2],
-                    fontSize: fontSizes.xs,
-                    color: colors.neutral[500],
+                    marginTop: 'var(--space-2)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--color-text-muted)',
                   }}
                 >
                   {progression.xpToNextLevel - progression.xpInCurrentLevel} XP
@@ -456,38 +461,38 @@ function EvolutionCenterPageContent(): JSX.Element {
               <div>
                 <h4
                   style={{
-                    color: colors.neutral[300],
-                    marginBottom: spacing[3],
-                    margin: `0 0 ${spacing[3]} 0`,
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: 'var(--space-3)',
+                    margin: '0 0 var(--space-3) 0',
                   }}
                 >
                   🏆 Jalons Récents
                 </h4>
-                <div style={{ display: 'flex', gap: spacing[2], flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
                   {progression.milestones.slice(0, 5).map(milestone => (
                     <div
                       key={milestone.id}
                       style={{
-                        padding: `${spacing[2]} ${spacing[3]}`,
+                        padding: 'var(--space-2) var(--space-3)',
                         background: milestone.unlockedAt
-                          ? `linear-gradient(135deg, ${colors.emeraude.primary[600]}30, ${colors.emeraude.primary[700]}20)`
-                          : colors.neutral[800],
+                          ? 'linear-gradient(135deg, var(--color-success-500)30, var(--color-success-700)20)'
+                          : 'var(--color-border-subtle)',
                         border: milestone.unlockedAt
-                          ? `1px solid ${colors.emeraude.primary[500]}40`
-                          : `1px solid ${colors.neutral[700]}`,
+                          ? '1px solid var(--color-success-500)40'
+                          : '1px solid var(--color-border-default)',
                         borderRadius: '8px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: spacing[2],
+                        gap: 'var(--space-2)',
                       }}
                     >
                       <span>{milestone.icon}</span>
                       <span
                         style={{
-                          fontSize: fontSizes.xs,
+                          fontSize: 'var(--text-xs)',
                           color: milestone.unlockedAt
-                            ? colors.neutral[200]
-                            : colors.neutral[500],
+                            ? 'var(--color-text-secondary)'
+                            : 'var(--color-text-muted)',
                         }}
                       >
                         {milestone.name}
@@ -500,9 +505,9 @@ function EvolutionCenterPageContent(): JSX.Element {
           ) : (
             <div
               style={{
-                color: colors.neutral[500],
+                color: 'var(--color-text-muted)',
                 textAlign: 'center',
-                padding: spacing[6],
+                padding: 'var(--space-6)',
               }}
             >
               Chargement de la progression...
@@ -524,26 +529,26 @@ function EvolutionCenterPageContent(): JSX.Element {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                  gap: spacing[4],
+                  gap: 'var(--space-4)',
                 }}
               >
                 <StatCard
                   title="Documents"
                   value={knowledge.totalDocuments}
                   icon="📄"
-                  color={colors.saphir.primary[500]}
+                  color={'var(--color-info-500)'}
                 />
                 <StatCard
                   title="Taille Totale"
-                  value={`${Math.round(knowledge.totalSizeBytes / 1024)} KB`}
+                  value={'${Math.round(knowledge.totalSizeBytes / 1024)} KB'}
                   icon="💾"
-                  color={colors.emeraude.primary[500]}
+                  color={'var(--color-success-500)'}
                 />
                 <StatCard
                   title="Catégories"
                   value={Object.keys(knowledge.categoryCounts).length}
                   icon="📁"
-                  color={colors.rubis.primary[500]}
+                  color={'var(--color-text-secondary)'}
                 />
               </div>
 
@@ -551,39 +556,39 @@ function EvolutionCenterPageContent(): JSX.Element {
               <div>
                 <h4
                   style={{
-                    color: colors.neutral[300],
-                    marginBottom: spacing[3],
-                    margin: `0 0 ${spacing[3]} 0`,
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: 'var(--space-3)',
+                    margin: '0 0 var(--space-3) 0',
                   }}
                 >
                   📁 Répartition par Catégorie
                 </h4>
-                <div style={{ display: 'flex', gap: spacing[2], flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
                   {Object.entries(knowledge.categoryCounts)
                     .filter(([, count]) => count > 0)
                     .map(([category, count]) => (
                       <div
                         key={category}
                         style={{
-                          padding: `${spacing[2]} ${spacing[3]}`,
-                          background: colors.neutral[800],
-                          border: `1px solid ${colors.neutral[700]}`,
+                          padding: 'var(--space-2) var(--space-3)',
+                          background: 'var(--color-border-subtle)',
+                          border: '1px solid var(--color-border-default)',
                           borderRadius: '6px',
-                          fontSize: fontSizes.sm,
-                          color: colors.neutral[300],
+                          fontSize: 'var(--text-sm)',
+                          color: 'var(--color-text-secondary)',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: spacing[2],
+                          gap: 'var(--space-2)',
                         }}
                       >
                         <span>{category}</span>
                         <span
                           style={{
-                            background: colors.saphir.primary[500] + '30',
-                            padding: `${spacing[1]} ${spacing[2]}`,
+                            background: 'var(--color-info-500)' + '30',
+                            padding: 'var(--space-1) var(--space-2)',
                             borderRadius: '4px',
-                            fontSize: fontSizes.xs,
-                            color: colors.saphir.primary[400],
+                            fontSize: 'var(--text-xs)',
+                            color: 'var(--color-info-500)',
                           }}
                         >
                           {count}
@@ -597,9 +602,9 @@ function EvolutionCenterPageContent(): JSX.Element {
               <div>
                 <h4
                   style={{
-                    color: colors.neutral[300],
-                    marginBottom: spacing[3],
-                    margin: `0 0 ${spacing[3]} 0`,
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: 'var(--space-3)',
+                    margin: '0 0 var(--space-3) 0',
                   }}
                 >
                   📝 Entrées Récentes
@@ -610,9 +615,9 @@ function EvolutionCenterPageContent(): JSX.Element {
                       <div
                         key={entry.id}
                         style={{
-                          padding: spacing[3],
-                          background: colors.neutral[900],
-                          border: `1px solid ${colors.neutral[800]}`,
+                          padding: 'var(--space-3)',
+                          background: 'var(--color-bg-primary)',
+                          border: '1px solid var(--color-border-subtle)',
                           borderRadius: '8px',
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -621,12 +626,18 @@ function EvolutionCenterPageContent(): JSX.Element {
                       >
                         <div>
                           <div
-                            style={{ color: colors.neutral[200], fontSize: fontSizes.sm }}
+                            style={{
+                              color: 'var(--color-text-secondary)',
+                              fontSize: 'var(--text-sm)',
+                            }}
                           >
                             {entry.title}
                           </div>
                           <div
-                            style={{ color: colors.neutral[500], fontSize: fontSizes.xs }}
+                            style={{
+                              color: 'var(--color-text-muted)',
+                              fontSize: 'var(--text-xs)',
+                            }}
                           >
                             {entry.category} •{' '}
                             {new Date(entry.indexedAt).toLocaleDateString()}
@@ -634,11 +645,11 @@ function EvolutionCenterPageContent(): JSX.Element {
                         </div>
                         <div
                           style={{
-                            padding: `${spacing[1]} ${spacing[2]}`,
-                            background: `${colors.emeraude.primary[500]}20`,
+                            padding: 'var(--space-1) var(--space-2)',
+                            background: 'var(--color-success-500)20',
                             borderRadius: '4px',
-                            fontSize: fontSizes.xs,
-                            color: colors.emeraude.primary[400],
+                            fontSize: 'var(--text-xs)',
+                            color: 'var(--color-success-500)',
                           }}
                         >
                           {entry.status}
@@ -649,10 +660,10 @@ function EvolutionCenterPageContent(): JSX.Element {
                 ) : (
                   <div
                     style={{
-                      padding: spacing[6],
+                      padding: 'var(--space-6)',
                       textAlign: 'center',
-                      color: colors.neutral[500],
-                      background: colors.neutral[900],
+                      color: 'var(--color-text-muted)',
+                      background: 'var(--color-bg-primary)',
                       borderRadius: '8px',
                     }}
                   >
@@ -664,9 +675,9 @@ function EvolutionCenterPageContent(): JSX.Element {
           ) : (
             <div
               style={{
-                color: colors.neutral[500],
+                color: 'var(--color-text-muted)',
                 textAlign: 'center',
-                padding: spacing[6],
+                padding: 'var(--space-6)',
               }}
             >
               Chargement des connaissances...
@@ -687,18 +698,19 @@ function EvolutionCenterPageContent(): JSX.Element {
               {/* Current Phase */}
               <div
                 style={{
-                  background: `linear-gradient(135deg, ${colors.emeraude.primary[600]}20, ${colors.emeraude.primary[700]}10)`,
-                  border: `1px solid ${colors.emeraude.primary[500]}40`,
+                  background:
+                    'linear-gradient(135deg, var(--color-success-500)20, var(--color-success-700)10)',
+                  border: '1px solid var(--color-success-500)40',
                   borderRadius: '12px',
-                  padding: spacing[4],
+                  padding: 'var(--space-4)',
                 }}
               >
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: spacing[3],
-                    marginBottom: spacing[3],
+                    gap: 'var(--space-3)',
+                    marginBottom: 'var(--space-3)',
                   }}
                 >
                   <span style={{ fontSize: '2rem' }}>
@@ -707,14 +719,19 @@ function EvolutionCenterPageContent(): JSX.Element {
                   <div>
                     <div
                       style={{
-                        color: colors.neutral[200],
-                        fontSize: fontSizes.lg,
-                        fontWeight: fontWeights.semibold,
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: '600',
                       }}
                     >
                       Phase: {phaseDisplayInfo[evolution.phase]?.label || evolution.phase}
                     </div>
-                    <div style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+                    <div
+                      style={{
+                        color: 'var(--color-text-muted)',
+                        fontSize: 'var(--text-sm)',
+                      }}
+                    >
                       Version {evolution.version}
                     </div>
                   </div>
@@ -726,64 +743,74 @@ function EvolutionCenterPageContent(): JSX.Element {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                  gap: spacing[4],
+                  gap: 'var(--space-4)',
                 }}
               >
                 <StatCard
                   title="Cycles"
                   value={evolution.totalCycles}
                   icon="🔄"
-                  color={colors.emeraude.primary[500]}
+                  color={'var(--color-success-500)'}
                 />
                 <StatCard
                   title="Mutations"
                   value={evolution.totalMutations}
                   icon="🧬"
-                  color={colors.saphir.primary[500]}
+                  color={'var(--color-info-500)'}
                 />
                 <StatCard
                   title="Stabilité"
-                  value={`${Math.round(evolution.currentMetrics.stability * 100)}%`}
+                  value={'${Math.round(evolution.currentMetrics.stability * 100)}%'}
                   icon="⚖️"
-                  color={colors.rubis.primary[500]}
+                  color={'var(--color-text-secondary)'}
                 />
               </div>
 
               {/* Metrics */}
               <div
                 style={{
-                  background: colors.neutral[900],
-                  padding: spacing[4],
+                  background: 'var(--color-bg-primary)',
+                  padding: 'var(--space-4)',
                   borderRadius: '12px',
                 }}
               >
                 <h4
                   style={{
-                    color: colors.neutral[300],
-                    marginBottom: spacing[3],
-                    margin: `0 0 ${spacing[3]} 0`,
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: 'var(--space-3)',
+                    margin: '0 0 var(--space-3) 0',
                   }}
                 >
                   📊 Métriques Actuelles
                 </h4>
                 <div
-                  style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 'var(--space-3)',
+                  }}
                 >
                   <div>
                     <div
                       style={{
                         display: 'flex',
                         justifyContent: 'space-between',
-                        marginBottom: spacing[1],
+                        marginBottom: 'var(--space-1)',
                       }}
                     >
                       <span
-                        style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}
+                        style={{
+                          color: 'var(--color-text-muted)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         Cohérence
                       </span>
                       <span
-                        style={{ color: colors.neutral[300], fontSize: fontSizes.sm }}
+                        style={{
+                          color: 'var(--color-text-secondary)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         {Math.round(evolution.currentMetrics.coherence * 100)}%
                       </span>
@@ -791,7 +818,7 @@ function EvolutionCenterPageContent(): JSX.Element {
                     <ProgressBar
                       value={evolution.currentMetrics.coherence * 100}
                       max={100}
-                      color={colors.emeraude.primary[500]}
+                      color={'var(--color-success-500)'}
                     />
                   </div>
                   <div>
@@ -799,16 +826,22 @@ function EvolutionCenterPageContent(): JSX.Element {
                       style={{
                         display: 'flex',
                         justifyContent: 'space-between',
-                        marginBottom: spacing[1],
+                        marginBottom: 'var(--space-1)',
                       }}
                     >
                       <span
-                        style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}
+                        style={{
+                          color: 'var(--color-text-muted)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         Performance
                       </span>
                       <span
-                        style={{ color: colors.neutral[300], fontSize: fontSizes.sm }}
+                        style={{
+                          color: 'var(--color-text-secondary)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         {Math.round(evolution.currentMetrics.performance * 100)}%
                       </span>
@@ -816,7 +849,7 @@ function EvolutionCenterPageContent(): JSX.Element {
                     <ProgressBar
                       value={evolution.currentMetrics.performance * 100}
                       max={100}
-                      color={colors.saphir.primary[500]}
+                      color={'var(--color-info-500)'}
                     />
                   </div>
                   <div>
@@ -824,16 +857,22 @@ function EvolutionCenterPageContent(): JSX.Element {
                       style={{
                         display: 'flex',
                         justifyContent: 'space-between',
-                        marginBottom: spacing[1],
+                        marginBottom: 'var(--space-1)',
                       }}
                     >
                       <span
-                        style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}
+                        style={{
+                          color: 'var(--color-text-muted)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         Profondeur Cognitive
                       </span>
                       <span
-                        style={{ color: colors.neutral[300], fontSize: fontSizes.sm }}
+                        style={{
+                          color: 'var(--color-text-secondary)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         {Math.round(evolution.currentMetrics.cognitiveDepth * 100)}%
                       </span>
@@ -841,7 +880,7 @@ function EvolutionCenterPageContent(): JSX.Element {
                     <ProgressBar
                       value={evolution.currentMetrics.cognitiveDepth * 100}
                       max={100}
-                      color={colors.rubis.primary[500]}
+                      color={'var(--color-text-secondary)'}
                     />
                   </div>
                 </div>
@@ -850,9 +889,9 @@ function EvolutionCenterPageContent(): JSX.Element {
           ) : (
             <div
               style={{
-                color: colors.neutral[500],
+                color: 'var(--color-text-muted)',
                 textAlign: 'center',
-                padding: spacing[6],
+                padding: 'var(--space-6)',
               }}
             >
               Chargement de l&apos;évolution...
@@ -875,89 +914,104 @@ function EvolutionCenterPageContent(): JSX.Element {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                  gap: spacing[4],
+                  gap: 'var(--space-4)',
                 }}
               >
                 <StatCard
                   title="Mémoires Totales"
                   value={memory.stats.totalMemories}
                   icon="🧠"
-                  color={colors.emeraude.primary[500]}
+                  color={'var(--color-success-500)'}
                 />
                 <StatCard
                   title="Court Terme"
                   value={memory.stats.shortTermCount}
                   icon="⚡"
-                  color={colors.saphir.primary[500]}
+                  color={'var(--color-info-500)'}
                 />
                 <StatCard
                   title="Long Terme"
                   value={memory.stats.longTermCount}
                   icon="💾"
-                  color={colors.rubis.primary[500]}
+                  color={'var(--color-text-secondary)'}
                 />
               </div>
 
               {/* Memory Type Distribution */}
               <div
                 style={{
-                  background: colors.neutral[900],
-                  padding: spacing[4],
+                  background: 'var(--color-bg-primary)',
+                  padding: 'var(--space-4)',
                   borderRadius: '12px',
                 }}
               >
                 <h4
                   style={{
-                    color: colors.neutral[300],
-                    marginBottom: spacing[3],
-                    margin: `0 0 ${spacing[3]} 0`,
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: 'var(--space-3)',
+                    margin: '0 0 var(--space-3) 0',
                   }}
                 >
                   🧠 Types de Mémoire
                 </h4>
-                <div style={{ display: 'flex', gap: spacing[3], flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
                   <div
                     style={{
-                      padding: `${spacing[2]} ${spacing[3]}`,
-                      background: colors.neutral[800],
+                      padding: 'var(--space-2) var(--space-3)',
+                      background: 'var(--color-border-subtle)',
                       borderRadius: '8px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: spacing[2],
+                      gap: 'var(--space-2)',
                     }}
                   >
                     <span>📖</span>
-                    <span style={{ color: colors.neutral[300], fontSize: fontSizes.sm }}>
+                    <span
+                      style={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 'var(--text-sm)',
+                      }}
+                    >
                       Épisodique: {memory.stats.episodicCount}
                     </span>
                   </div>
                   <div
                     style={{
-                      padding: `${spacing[2]} ${spacing[3]}`,
-                      background: colors.neutral[800],
+                      padding: 'var(--space-2) var(--space-3)',
+                      background: 'var(--color-border-subtle)',
                       borderRadius: '8px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: spacing[2],
+                      gap: 'var(--space-2)',
                     }}
                   >
                     <span>🔤</span>
-                    <span style={{ color: colors.neutral[300], fontSize: fontSizes.sm }}>
+                    <span
+                      style={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 'var(--text-sm)',
+                      }}
+                    >
                       Sémantique: {memory.stats.semanticCount}
                     </span>
                   </div>
                   <div
                     style={{
-                      padding: `${spacing[2]} ${spacing[3]}`,
-                      background: colors.neutral[800],
+                      padding: 'var(--space-2) var(--space-3)',
+                      background: 'var(--color-border-subtle)',
                       borderRadius: '8px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: spacing[2],
+                      gap: 'var(--space-2)',
                     }}
                   >
                     <span>⚙️</span>
-                    <span style={{ color: colors.neutral[300], fontSize: fontSizes.sm }}>
+                    <span
+                      style={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 'var(--text-sm)',
+                      }}
+                    >
                       Procédurale: {memory.stats.proceduralCount}
                     </span>
                   </div>
@@ -968,9 +1022,9 @@ function EvolutionCenterPageContent(): JSX.Element {
               <div>
                 <h4
                   style={{
-                    color: colors.neutral[300],
-                    marginBottom: spacing[3],
-                    margin: `0 0 ${spacing[3]} 0`,
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: 'var(--space-3)',
+                    margin: '0 0 var(--space-3) 0',
                   }}
                 >
                   💭 Mémoires Récentes
@@ -981,9 +1035,9 @@ function EvolutionCenterPageContent(): JSX.Element {
                       <div
                         key={mem.id}
                         style={{
-                          padding: spacing[3],
-                          background: colors.neutral[900],
-                          border: `1px solid ${colors.neutral[800]}`,
+                          padding: 'var(--space-3)',
+                          background: 'var(--color-bg-primary)',
+                          border: '1px solid var(--color-border-subtle)',
                           borderRadius: '8px',
                         }}
                       >
@@ -992,13 +1046,13 @@ function EvolutionCenterPageContent(): JSX.Element {
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'flex-start',
-                            marginBottom: spacing[2],
+                            marginBottom: 'var(--space-2)',
                           }}
                         >
                           <div
                             style={{
-                              color: colors.neutral[200],
-                              fontSize: fontSizes.sm,
+                              color: 'var(--color-text-secondary)',
+                              fontSize: 'var(--text-sm)',
                               flex: 1,
                             }}
                           >
@@ -1007,18 +1061,18 @@ function EvolutionCenterPageContent(): JSX.Element {
                           </div>
                           <div
                             style={{
-                              padding: `${spacing[1]} ${spacing[2]}`,
+                              padding: 'var(--space-1) var(--space-2)',
                               background:
                                 mem.type === 'short-term'
-                                  ? `${colors.saphir.primary[500]}20`
-                                  : `${colors.emeraude.primary[500]}20`,
+                                  ? 'var(--color-info-500)20'
+                                  : 'var(--color-success-500)20',
                               borderRadius: '4px',
-                              fontSize: fontSizes.xs,
+                              fontSize: 'var(--text-xs)',
                               color:
                                 mem.type === 'short-term'
-                                  ? colors.saphir.primary[400]
-                                  : colors.emeraude.primary[400],
-                              marginLeft: spacing[2],
+                                  ? 'var(--color-info-500)'
+                                  : 'var(--color-success-500)',
+                              marginLeft: 'var(--space-2)',
                               whiteSpace: 'nowrap',
                             }}
                           >
@@ -1028,9 +1082,9 @@ function EvolutionCenterPageContent(): JSX.Element {
                         <div
                           style={{
                             display: 'flex',
-                            gap: spacing[3],
-                            fontSize: fontSizes.xs,
-                            color: colors.neutral[500],
+                            gap: 'var(--space-3)',
+                            fontSize: 'var(--text-xs)',
+                            color: 'var(--color-text-muted)',
                           }}
                         >
                           <span>Importance: {Math.round(mem.importance * 100)}%</span>
@@ -1043,10 +1097,10 @@ function EvolutionCenterPageContent(): JSX.Element {
                 ) : (
                   <div
                     style={{
-                      padding: spacing[6],
+                      padding: 'var(--space-6)',
                       textAlign: 'center',
-                      color: colors.neutral[500],
-                      background: colors.neutral[900],
+                      color: 'var(--color-text-muted)',
+                      background: 'var(--color-bg-primary)',
                       borderRadius: '8px',
                     }}
                   >
@@ -1060,28 +1114,34 @@ function EvolutionCenterPageContent(): JSX.Element {
               <div
                 style={{
                   display: 'flex',
-                  gap: spacing[4],
-                  padding: spacing[3],
-                  background: colors.neutral[900],
+                  gap: 'var(--space-4)',
+                  padding: 'var(--space-3)',
+                  background: 'var(--color-bg-primary)',
                   borderRadius: '8px',
                   flexWrap: 'wrap',
                 }}
               >
-                <div style={{ fontSize: fontSizes.xs, color: colors.neutral[500] }}>
+                <div
+                  style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}
+                >
                   Force moyenne:{' '}
-                  <span style={{ color: colors.neutral[300] }}>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
                     {Math.round(memory.stats.averageStrength * 100)}%
                   </span>
                 </div>
-                <div style={{ fontSize: fontSizes.xs, color: colors.neutral[500] }}>
+                <div
+                  style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}
+                >
                   Taux consolidation:{' '}
-                  <span style={{ color: colors.neutral[300] }}>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
                     {Math.round(memory.stats.consolidationRate * 100)}%
                   </span>
                 </div>
-                <div style={{ fontSize: fontSizes.xs, color: colors.neutral[500] }}>
+                <div
+                  style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}
+                >
                   Total rappels:{' '}
-                  <span style={{ color: colors.neutral[300] }}>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
                     {memory.stats.totalRecalls}
                   </span>
                 </div>
@@ -1090,9 +1150,9 @@ function EvolutionCenterPageContent(): JSX.Element {
           ) : (
             <div
               style={{
-                color: colors.neutral[500],
+                color: 'var(--color-text-muted)',
                 textAlign: 'center',
-                padding: spacing[6],
+                padding: 'var(--space-6)',
               }}
             >
               Chargement des mémoires...
@@ -1118,9 +1178,13 @@ function EvolutionCenterPageContent(): JSX.Element {
     return (
       <Container
         size="xl"
-        style={{ paddingTop: spacing[6], paddingBottom: spacing[6], textAlign: 'center' }}
+        style={{
+          paddingTop: 'var(--space-6)',
+          paddingBottom: 'var(--space-6)',
+          textAlign: 'center',
+        }}
       >
-        <div style={{ fontSize: fontSizes['2xl'], color: colors.neutral[400] }}>
+        <div style={{ fontSize: 'var(--text-2xl)', color: 'var(--color-text-muted)' }}>
           🔄 Chargement du Centre d&apos;Évolution...
         </div>
       </Container>
@@ -1128,19 +1192,22 @@ function EvolutionCenterPageContent(): JSX.Element {
   }
 
   return (
-    <Container size="xl" style={{ paddingTop: spacing[6], paddingBottom: spacing[6] }}>
+    <Container
+      size="xl"
+      style={{ paddingTop: 'var(--space-6)', paddingBottom: 'var(--space-6)' }}
+    >
       <Stack gap={6}>
         {/* Header */}
-        <div style={{ marginBottom: spacing[4] }}>
+        <div style={{ marginBottom: 'var(--space-4)' }}>
           <h1
             style={{
               margin: 0,
-              fontSize: fontSizes['3xl'],
-              fontWeight: fontWeights.bold,
-              color: colors.neutral[100],
+              fontSize: 'var(--text-3xl)',
+              fontWeight: '700',
+              color: 'var(--color-text-primary)',
               display: 'flex',
               alignItems: 'center',
-              gap: spacing[3],
+              gap: 'var(--space-3)',
             }}
           >
             <span style={{ fontSize: '2rem' }}>🧠</span>
@@ -1148,9 +1215,9 @@ function EvolutionCenterPageContent(): JSX.Element {
           </h1>
           <p
             style={{
-              margin: `${spacing[2]} 0 0`,
-              color: colors.neutral[400],
-              fontSize: fontSizes.base,
+              margin: 'var(--space-2) 0 0',
+              color: 'var(--color-text-muted)',
+              fontSize: 'var(--text-base)',
             }}
           >
             OPUS #4 — Fusion Progression + Knowledge + Evolution + Memory
@@ -1161,12 +1228,12 @@ function EvolutionCenterPageContent(): JSX.Element {
         <div
           style={{
             display: 'flex',
-            gap: spacing[2],
+            gap: 'var(--space-2)',
             flexWrap: 'wrap',
-            padding: spacing[2],
-            background: colors.neutral[900],
+            padding: 'var(--space-2)',
+            background: 'var(--color-bg-primary)',
             borderRadius: '12px',
-            border: `1px solid ${colors.neutral[800]}`,
+            border: '1px solid var(--color-border-subtle)',
           }}
         >
           <TabButton

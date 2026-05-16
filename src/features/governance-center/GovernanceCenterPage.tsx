@@ -40,7 +40,7 @@ function GovernanceCenterPageContent(): JSX.Element {
         data-testid="page-governance-center"
       >
         <Spinner />
-        <span className="ml-3 text-gray-400">Chargement du Centre Gouvernance...</span>
+        <span className="ml-3 text-titanium-text-tertiary">Chargement du Centre Gouvernance...</span>
       </div>
     );
   }
@@ -53,7 +53,7 @@ function GovernanceCenterPageContent(): JSX.Element {
         data-testid="page-governance-center"
       >
         <div className="text-red-400 text-xl mb-4">⚠️ Erreur de chargement</div>
-        <p className="text-gray-400 mb-6">{governance.error}</p>
+        <p className="text-titanium-text-tertiary mb-6">{governance.error}</p>
         <button
           onClick={() => window.location.reload()}
           className="px-6 py-3 bg-titanium-600 hover:bg-titanium-700 rounded-lg transition-colors"

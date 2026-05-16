@@ -7,6 +7,7 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, act, fireEvent, cleanup } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, MemoryRouter, useLocation } from 'react-router-dom';
 import { AppRouter } from '../../App';
 import { ChatPage } from '../../pages/ChatPage';
@@ -61,9 +62,18 @@ const primeChatStorage = () => {
   );
 };
 
+const makeQueryClient = () =>
+  new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
 const renderWithRouter = async (ui: React.ReactElement) => {
   primeChatStorage();
-  render(React.createElement(BrowserRouter, null, ui));
+  render(
+    React.createElement(
+      QueryClientProvider,
+      { client: makeQueryClient() },
+      React.createElement(BrowserRouter, null, ui)
+    )
+  );
 
   await act(async () => {
     await Promise.resolve();
@@ -455,13 +465,17 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
 
     render(
       React.createElement(
-        MemoryRouter,
-        { initialEntries: ['/chat'] },
+        QueryClientProvider,
+        { client: makeQueryClient() },
         React.createElement(
-          React.Fragment,
-          null,
-          React.createElement(AppRouter, null),
-          React.createElement(RouteLocationProbe, null)
+          MemoryRouter,
+          { initialEntries: ['/chat'] },
+          React.createElement(
+            React.Fragment,
+            null,
+            React.createElement(AppRouter, null),
+            React.createElement(RouteLocationProbe, null)
+          )
         )
       )
     );

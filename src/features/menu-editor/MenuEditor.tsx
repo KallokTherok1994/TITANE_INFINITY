@@ -129,21 +129,21 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="relative h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl border border-gray-700 bg-gray-900 shadow-2xl">
+      <div className="relative h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl border border-titanium-border-default bg-titanium-bg-base shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-700 bg-gray-800/50 p-6">
+        <div className="flex items-center justify-between border-b border-titanium-border-default bg-titanium-bg-elevated/50 p-6">
           <div className="flex items-center gap-3">
             <Edit2 className="h-6 w-6 text-blue-400" />
             <div>
               <h2 className="text-2xl font-bold text-white">Éditeur de Menu</h2>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-titanium-text-tertiary">
                 Glissez-déposez pour réorganiser, cliquez pour modifier
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
+            className="rounded-lg p-2 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white"
           >
             <X className="h-6 w-6" />
           </button>
@@ -162,8 +162,8 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                 draggedIndex === index
                   ? 'scale-105 border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/20'
                   : section.visible
-                    ? 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
-                    : 'border-gray-800 bg-gray-900/30 opacity-60'
+                    ? 'border-titanium-border-default bg-titanium-bg-elevated/50 hover:border-titanium-border-strong'
+                    : 'border-titanium-border-subtle bg-titanium-bg-base/30 opacity-60'
               }`}
             >
               {editingId === section.id ? (
@@ -175,14 +175,14 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                       value={editForm.icon || ''}
                       onChange={e => setEditForm({ ...editForm, icon: e.target.value })}
                       placeholder="Icône (emoji)"
-                      className="rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-center text-2xl text-white outline-none focus:border-blue-500"
+                      className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-center text-2xl text-white outline-none focus:border-blue-500"
                     />
                     <input
                       type="text"
                       value={editForm.label || ''}
                       onChange={e => setEditForm({ ...editForm, label: e.target.value })}
                       placeholder="Titre"
-                      className="rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white outline-none focus:border-blue-500"
+                      className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-white outline-none focus:border-blue-500"
                     />
                   </div>
                   <input
@@ -192,14 +192,14 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                       setEditForm({ ...editForm, description: e.target.value })
                     }
                     placeholder="Description"
-                    className="w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-white outline-none focus:border-blue-500"
                   />
                   <input
                     type="text"
                     value={editForm.route || ''}
                     onChange={e => setEditForm({ ...editForm, route: e.target.value })}
                     placeholder="Route (ex: /ma-page)"
-                    className="w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-white outline-none focus:border-blue-500"
                   />
                   <div className="flex gap-2">
                     <button
@@ -211,7 +211,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                     </button>
                     <button
                       onClick={cancelEdit}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-gray-700 py-2 font-bold text-white transition-colors hover:bg-gray-600"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-titanium-bg-interactive py-2 font-bold text-white transition-colors hover:bg-titanium-bg-overlay"
                     >
                       <X className="h-4 w-4" />
                       Annuler
@@ -222,7 +222,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                 /* Display Mode */
                 <div className="flex items-center gap-4 p-4">
                   {/* Drag Handle */}
-                  <button className="cursor-grab text-gray-500 transition-colors active:cursor-grabbing group-hover:text-gray-300">
+                  <button className="cursor-grab text-titanium-text-disabled transition-colors active:cursor-grabbing group-hover:text-titanium-text-secondary">
                     <GripVertical className="h-5 w-5" />
                   </button>
 
@@ -232,8 +232,8 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                   {/* Content */}
                   <div className="flex-1">
                     <div className="font-bold text-white">{section.label}</div>
-                    <div className="text-sm text-gray-400">{section.description}</div>
-                    <code className="mt-1 text-xs text-gray-500">{section.route}</code>
+                    <div className="text-sm text-titanium-text-tertiary">{section.description}</div>
+                    <code className="mt-1 text-xs text-titanium-text-disabled">{section.route}</code>
                   </div>
 
                   {/* Actions */}
@@ -241,7 +241,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                     <button
                       onClick={() => moveUp(index)}
                       disabled={index === 0}
-                      className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white disabled:opacity-30"
+                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white disabled:opacity-30"
                       title="Monter"
                     >
                       ↑
@@ -249,14 +249,14 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                     <button
                       onClick={() => moveDown(index)}
                       disabled={index === editableSections.length - 1}
-                      className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white disabled:opacity-30"
+                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white disabled:opacity-30"
                       title="Descendre"
                     >
                       ↓
                     </button>
                     <button
                       onClick={() => toggleVisibility(section.id)}
-                      className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
+                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white"
                       title={section.visible ? 'Masquer' : 'Afficher'}
                     >
                       {section.visible ? (
@@ -288,7 +288,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
           {/* Add Button */}
           <button
             onClick={addNewSection}
-            className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 py-8 text-gray-400 transition-all hover:border-blue-500 hover:bg-blue-500/10 hover:text-blue-400"
+            className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-titanium-border-default bg-titanium-bg-elevated/30 py-8 text-titanium-text-tertiary transition-all hover:border-blue-500 hover:bg-blue-500/10 hover:text-blue-400"
           >
             <Plus className="h-6 w-6" />
             <span className="font-bold">Ajouter une section</span>
@@ -296,15 +296,15 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-gray-700 bg-gray-800/50 p-6">
-          <div className="text-sm text-gray-400">
+        <div className="flex items-center justify-between border-t border-titanium-border-default bg-titanium-bg-elevated/50 p-6">
+          <div className="text-sm text-titanium-text-tertiary">
             {editableSections.length} section(s) •{' '}
             {editableSections.filter(s => s.visible).length} visible(s)
           </div>
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg bg-gray-700 px-6 py-2 font-bold text-white transition-colors hover:bg-gray-600"
+              className="rounded-lg bg-titanium-bg-interactive px-6 py-2 font-bold text-white transition-colors hover:bg-titanium-bg-overlay"
             >
               Annuler
             </button>

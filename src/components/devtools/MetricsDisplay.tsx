@@ -127,17 +127,19 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-gray-900 rounded-lg">
-        <div className="text-gray-400">Loading metrics...</div>
+      <div className="flex items-center justify-center h-64 bg-titanium-bg-base rounded-lg">
+        <div className="text-titanium-text-tertiary">Loading metrics...</div>
       </div>
     );
   }
 
   return (
-    <div className="metrics-display bg-gray-900 rounded-lg border border-gray-700 p-4">
+    <div className="metrics-display bg-titanium-bg-base rounded-lg border border-titanium-border-default p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-200">📊 System Metrics</h3>
-        <span className="text-xs text-gray-500">
+        <h3 className="text-lg font-semibold text-titanium-text-secondary">
+          📊 System Metrics
+        </h3>
+        <span className="text-xs text-titanium-text-disabled">
           Updated: {new Date().toLocaleTimeString()}
         </span>
       </div>
@@ -146,18 +148,22 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
       <div className="space-y-6">
         {categories.map(category => (
           <div key={category.name}>
-            <h4 className="text-sm font-medium text-gray-400 mb-3">{category.name}</h4>
+            <h4 className="text-sm font-medium text-titanium-text-tertiary mb-3">
+              {category.name}
+            </h4>
             <div
               className={`grid ${compact ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-4`}
             >
               {category.metrics.map(metric => (
                 <div
                   key={metric.name}
-                  className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition"
+                  className="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default hover:border-titanium-border-strong transition"
                 >
                   {/* Metric Name */}
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-400">{metric.name}</span>
+                    <span className="text-sm text-titanium-text-tertiary">
+                      {metric.name}
+                    </span>
                     {metric.trend && (
                       <span className="text-xs">{getTrendIcon(metric.trend)}</span>
                     )}
@@ -170,13 +176,15 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
                         ? metric.value.toFixed(1)
                         : metric.value}
                     </span>
-                    <span className="text-sm text-gray-500">{metric.unit}</span>
+                    <span className="text-sm text-titanium-text-disabled">
+                      {metric.unit}
+                    </span>
                   </div>
 
                   {/* Threshold Bar */}
                   {metric.threshold && (
                     <div className="mt-3">
-                      <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-1 bg-titanium-bg-interactive rounded-full overflow-hidden">
                         <div
                           className={`h-full ${
                             metric.value >= metric.threshold.critical
@@ -190,7 +198,7 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
                           }}
                         />
                       </div>
-                      <div className="flex justify-between text-xs text-gray-600 mt-1">
+                      <div className="flex justify-between text-xs text-titanium-text-disabled mt-1">
                         <span>0</span>
                         <span className="text-yellow-600">
                           {metric.threshold.warning}
@@ -207,7 +215,7 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-6 pt-4 border-t border-gray-700 flex gap-3">
+      <div className="mt-6 pt-4 border-t border-titanium-border-default flex gap-3">
         <button
           onClick={() => window.location.reload()}
           className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white transition"
@@ -216,7 +224,7 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
         </button>
         <button
           onClick={() => console.warn('Export metrics', categories)}
-          className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white transition"
+          className="px-4 py-2 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition"
         >
           💾 Export
         </button>

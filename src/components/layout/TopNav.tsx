@@ -27,7 +27,10 @@ import {
   ZapOff,
   ZoomIn,
   ZoomOut,
+  Sun,
+  Moon,
 } from 'lucide-react';
+import { useUIThemeOptional } from '@/features/design-center/providers/UIThemeProvider';
 import {
   applyZoomScale,
   readCurrentZoomScale,
@@ -90,6 +93,34 @@ export function deriveAiStatus(providers: ProviderStatus[]): {
   const percent = Math.round((available / total) * 100);
 
   return { percent, available, total };
+}
+
+// ─────────────────────────────────────────────────────────────────
+// COLOR MODE TOGGLE
+// ─────────────────────────────────────────────────────────────────
+
+function ColorModeToggle() {
+  const theme = useUIThemeOptional();
+  if (!theme) return null;
+
+  const isDark = theme.colorMode === 'dark';
+
+  return (
+    <button
+      type="button"
+      onClick={theme.toggleColorMode}
+      aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
+      title={isDark ? 'Mode clair' : 'Mode sombre'}
+      className={cn(
+        'flex items-center justify-center w-8 h-8 rounded-lg',
+        'text-titanium-text-secondary hover:text-titanium-text-primary',
+        'hover:bg-titanium-bg-interactive transition-colors duration-150',
+        'focus:outline-none focus:ring-2 focus:ring-titanium-accent-cool focus:ring-offset-1'
+      )}
+    >
+      {isDark ? <Sun size={16} /> : <Moon size={16} />}
+    </button>
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -376,6 +407,8 @@ export const TopNav: React.FC<TopNavProps> = ({
 
       {/* Actions secondaires */}
       <div className="flex items-center gap-3 shrink-0">
+        {/* Color mode toggle */}
+        <ColorModeToggle />
         {/* Zoom controls — masqués sur mobile (inutile sur tactile) */}
         <div
           className="hidden sm:flex items-center gap-1 px-1.5 py-1 rounded-lg bg-titanium-bg-elevated border border-titanium-border-default"
@@ -437,7 +470,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           <div
             data-testid="topnav-ai-status"
             data-state="offline"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-500/10 text-gray-500 border border-gray-500/20"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-titanium-bg-overlay/10 text-titanium-text-disabled border border-gray-500/20"
             title="Statut IA indisponible"
           >
             <ZapOff size={14} />

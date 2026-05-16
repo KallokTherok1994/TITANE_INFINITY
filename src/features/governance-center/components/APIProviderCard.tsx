@@ -127,19 +127,19 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
   return (
     <div
       data-testid={`provider-card-${provider}`}
-      className={`relative overflow-hidden rounded-xl border-2 bg-gray-900/50 backdrop-blur-sm transition-all duration-300 ${
+      className={`relative overflow-hidden rounded-xl border-2 bg-titanium-bg-base/50 backdrop-blur-sm transition-all duration-300 ${
         isEnabled
           ? `border-${config.color}-500/50 shadow-lg shadow-${config.color}-500/20`
-          : 'border-gray-700/50 hover:border-gray-600/50'
+          : 'border-titanium-border-default/50 hover:border-titanium-border-strong/50'
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-700/50 bg-gray-800/50 p-4">
+      <div className="flex items-center justify-between border-b border-titanium-border-default/50 bg-titanium-bg-elevated/50 p-4">
         <div className="flex items-center gap-3">
           <span className="text-3xl">{config.icon}</span>
           <div>
             <h3 className="font-bold text-white">{config.name}</h3>
-            <p className="text-xs text-gray-400">{config.description}</p>
+            <p className="text-xs text-titanium-text-tertiary">{config.description}</p>
           </div>
         </div>
 
@@ -148,7 +148,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
           className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${
             isEnabled
               ? `bg-${config.color}-500/20 text-${config.color}-400`
-              : 'bg-gray-700/50 text-gray-400'
+              : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary'
           }`}
         >
           {loading ? (
@@ -180,10 +180,10 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
               className={`rounded-lg border p-3 ${
                 isEnabled
                   ? 'border-amber-500/30 bg-amber-500/10'
-                  : 'border-gray-700/50 bg-gray-800/30'
+                  : 'border-titanium-border-default/50 bg-titanium-bg-elevated/30'
               }`}
             >
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-titanium-text-secondary">
                 {isEnabled ? (
                   <>✅ Ollama est joignable via un endpoint {ollamaEndpointLabel}</>
                 ) : (
@@ -195,7 +195,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
               </p>
             </div>
 
-            <div className="grid gap-2 rounded-lg border border-gray-700/50 bg-gray-800/30 p-3 text-xs text-gray-300 sm:grid-cols-2">
+            <div className="grid gap-2 rounded-lg border border-titanium-border-default/50 bg-titanium-bg-elevated/30 p-3 text-xs text-titanium-text-secondary sm:grid-cols-2">
               <div data-testid="ollama-provider-url">
                 <span className="font-semibold text-white">Endpoint:</span>{' '}
                 {ollamaStatus?.url || 'non vérifié'}
@@ -225,7 +225,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
             {Boolean(ollamaStatus?.models?.length) && (
               <div
                 data-testid="ollama-provider-model-list"
-                className="rounded-lg border border-gray-700/50 bg-gray-800/20 p-3 text-xs text-gray-300"
+                className="rounded-lg border border-titanium-border-default/50 bg-titanium-bg-elevated/20 p-3 text-xs text-titanium-text-secondary"
               >
                 <span className="font-semibold text-white">Modèles détectés:</span>{' '}
                 {ollamaStatus?.models.join(', ')}
@@ -234,8 +234,8 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
 
             {!isEnabled && (
               <div className="space-y-2">
-                <p className="text-xs text-gray-400">Installation:</p>
-                <code className="block rounded bg-gray-800/50 p-2 text-xs text-gray-300">
+                <p className="text-xs text-titanium-text-tertiary">Installation:</p>
+                <code className="block rounded bg-titanium-bg-elevated/50 p-2 text-xs text-titanium-text-secondary">
                   # Linux/Mac
                   <br />
                   curl -fsSL https://ollama.com/install.sh | sh
@@ -259,11 +259,11 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* Current Status */}
             {isConfigured && isGeminiStatus(status) && status.masked_key && (
-              <div className="rounded-lg border border-gray-700/50 bg-gray-800/30 p-3">
+              <div className="rounded-lg border border-titanium-border-default/50 bg-titanium-bg-elevated/30 p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Key className="h-4 w-4 text-gray-400" />
-                    <code className="text-sm text-gray-300">{status.masked_key}</code>
+                    <Key className="h-4 w-4 text-titanium-text-tertiary" />
+                    <code className="text-sm text-titanium-text-secondary">{status.masked_key}</code>
                   </div>
                   {status.env_purged && (
                     <span className="rounded bg-green-500/20 px-2 py-0.5 text-xs text-green-400">
@@ -282,16 +282,16 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
                 onChange={e => setInputValue(e.target.value)}
                 placeholder={config.placeholder}
                 disabled={isSubmitting}
-                className={`w-full rounded-lg border bg-gray-800/50 px-4 py-3 pr-12 text-sm text-white placeholder-gray-500 outline-none transition-colors ${
+                className={`w-full rounded-lg border bg-titanium-bg-elevated/50 px-4 py-3 pr-12 text-sm text-white placeholder-gray-500 outline-none transition-colors ${
                   error
                     ? 'border-red-500/50 focus:border-red-500'
-                    : `border-gray-700/50 focus:border-${config.color}-500`
+                    : `border-titanium-border-default/50 focus:border-${config.color}-500`
                 } disabled:opacity-50`}
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-titanium-text-tertiary hover:text-titanium-text-secondary"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -310,7 +310,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
               disabled={!inputValue.trim() || isSubmitting}
               className={`w-full rounded-lg py-2.5 font-bold text-white transition-all ${
                 isSubmitting
-                  ? 'cursor-not-allowed bg-gray-700 opacity-50'
+                  ? 'cursor-not-allowed bg-titanium-bg-interactive opacity-50'
                   : `bg-${config.color}-600 hover:bg-${config.color}-700 active:scale-95`
               } disabled:cursor-not-allowed disabled:opacity-50`}
             >

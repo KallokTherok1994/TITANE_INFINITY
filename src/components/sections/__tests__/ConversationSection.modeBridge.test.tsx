@@ -1,4 +1,6 @@
+import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const conversationModeBridgeFixtures = vi.hoisted(() => ({
@@ -149,6 +151,13 @@ vi.mock('@/services/tts/messageSpeechController', () => ({
 
 import { ConversationSection } from '../ConversationSection';
 
+function renderWithQuery(ui: React.ReactElement) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+}
+
 describe('ConversationSection modern mode bridge', () => {
   beforeEach(() => {
     conversationModeBridgeFixtures.currentMode = 'default';
@@ -158,7 +167,7 @@ describe('ConversationSection modern mode bridge', () => {
   });
 
   it('bridges the modern selector to the conversation engine and the chat mode store', async () => {
-    render(<ConversationSection fullscreen />);
+    renderWithQuery(<ConversationSection fullscreen />);
 
     expect(screen.queryByTestId('select-conversation-mode')).not.toBeInTheDocument();
 
@@ -176,7 +185,7 @@ describe('ConversationSection modern mode bridge', () => {
     conversationModeBridgeFixtures.currentMode = 'planning';
     conversationModeBridgeFixtures.currentModeId = 'planning';
 
-    render(<ConversationSection fullscreen />);
+    renderWithQuery(<ConversationSection fullscreen />);
 
     expect(screen.getByTestId('page-conversation')).toHaveAttribute(
       'data-conversation-mode',

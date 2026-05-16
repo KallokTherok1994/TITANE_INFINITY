@@ -104,7 +104,7 @@ const SingularityMonitor = memo(() => {
 
   return (
     <div
-      className="bg-gray-900 text-white min-h-screen p-6"
+      className="bg-titanium-bg-base text-white min-h-screen p-6"
       data-testid="page-singularity-monitor"
     >
       <div className="max-w-7xl mx-auto space-y-6">
@@ -125,7 +125,7 @@ const SingularityMonitor = memo(() => {
             <Atom className="w-7 h-7 text-cyan-400" />
             <div>
               <h1 className="text-2xl font-bold text-white">Singularity Monitor</h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-titanium-text-tertiary">
                 État avancé — Convergence &amp; Connexions
               </p>
             </div>
@@ -154,7 +154,7 @@ const SingularityMonitor = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Brain className="w-4 h-4 text-blue-400" />
-              <span className="text-xs text-gray-400">Conscience</span>
+              <span className="text-xs text-titanium-text-tertiary">Conscience</span>
             </div>
             <p className="text-3xl font-bold text-white">
               {isInitialized ? `${consciousness}/4` : '—'}
@@ -164,7 +164,7 @@ const SingularityMonitor = memo(() => {
                 <div
                   key={i}
                   className={`flex-1 h-1.5 rounded-full ${
-                    i < consciousness ? 'bg-blue-500' : 'bg-gray-700'
+                    i < consciousness ? 'bg-blue-500' : 'bg-titanium-bg-interactive'
                   }`}
                 />
               ))}
@@ -174,7 +174,7 @@ const SingularityMonitor = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <InfinityIcon className="w-4 h-4 text-violet-400" />
-              <span className="text-xs text-gray-400">Cohérence auto</span>
+              <span className="text-xs text-titanium-text-tertiary">Cohérence auto</span>
             </div>
             <p className="text-3xl font-bold text-violet-400">
               {isInitialized ? `${(autoCoherence * 100).toFixed(0)}%` : '—'}
@@ -184,7 +184,7 @@ const SingularityMonitor = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Shield className="w-4 h-4 text-green-400" />
-              <span className="text-xs text-gray-400">Stabilité forme</span>
+              <span className="text-xs text-titanium-text-tertiary">Stabilité forme</span>
             </div>
             <p className="text-3xl font-bold text-green-400">
               {isInitialized ? `${(formStability * 100).toFixed(0)}%` : '—'}
@@ -194,7 +194,7 @@ const SingularityMonitor = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-gray-400">Santé système</span>
+              <span className="text-xs text-titanium-text-tertiary">Santé système</span>
             </div>
             <p className="text-3xl font-bold text-cyan-400">
               {isInitialized ? `${(systemHealth * 100).toFixed(0)}%` : '—'}
@@ -207,7 +207,7 @@ const SingularityMonitor = memo(() => {
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <Heart className="w-3 h-3 text-pink-400" />
-              <span className="text-xs text-gray-400">Harmonie</span>
+              <span className="text-xs text-titanium-text-tertiary">Harmonie</span>
             </div>
             <p className="text-xl font-bold text-pink-400">
               {isInitialized ? `${(globalHarmony * 100).toFixed(0)}%` : '—'}
@@ -216,7 +216,7 @@ const SingularityMonitor = memo(() => {
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <Waves className="w-3 h-3 text-orange-400" />
-              <span className="text-xs text-gray-400">Entropie</span>
+              <span className="text-xs text-titanium-text-tertiary">Entropie</span>
             </div>
             <p className="text-xl font-bold text-orange-400">
               {isInitialized ? `${(globalEntropy * 100).toFixed(1)}%` : '—'}
@@ -225,7 +225,9 @@ const SingularityMonitor = memo(() => {
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <Eye className="w-3 h-3 text-yellow-400" />
-              <span className="text-xs text-gray-400">Qualité expression</span>
+              <span className="text-xs text-titanium-text-tertiary">
+                Qualité expression
+              </span>
             </div>
             <p className="text-xl font-bold text-yellow-400">
               {isInitialized ? `${(expressionQuality * 100).toFixed(0)}%` : '—'}
@@ -234,7 +236,7 @@ const SingularityMonitor = memo(() => {
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <Globe className="w-3 h-3 text-teal-400" />
-              <span className="text-xs text-gray-400">Convergence</span>
+              <span className="text-xs text-titanium-text-tertiary">Convergence</span>
             </div>
             <p className="text-xl font-bold text-teal-400">
               {isInitialized ? `${(convergenceLevel * 100).toFixed(0)}%` : '—'}
@@ -247,7 +249,7 @@ const SingularityMonitor = memo(() => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {field && (
               <Card variant="solid" padding={4}>
-                <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-titanium-text-secondary mb-3 flex items-center gap-2">
                   <Atom className="w-4 h-4 text-cyan-400" />
                   Champ de Singularité
                 </h3>
@@ -256,7 +258,7 @@ const SingularityMonitor = memo(() => {
                     .slice(0, 6)
                     .map(([key, value]) => (
                       <div key={key}>
-                        <p className="text-xs text-gray-300">{key}</p>
+                        <p className="text-xs text-titanium-text-secondary">{key}</p>
                         <p className="text-sm text-white font-mono">
                           {typeof value === 'number' ? value.toFixed(3) : String(value)}
                         </p>
@@ -268,7 +270,7 @@ const SingularityMonitor = memo(() => {
 
             {overmind && (
               <Card variant="solid" padding={4}>
-                <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-titanium-text-secondary mb-3 flex items-center gap-2">
                   <Brain className="w-4 h-4 text-violet-400" />
                   Overmind
                 </h3>
@@ -277,7 +279,7 @@ const SingularityMonitor = memo(() => {
                     .slice(0, 6)
                     .map(([key, value]) => (
                       <div key={key}>
-                        <p className="text-xs text-gray-300">{key}</p>
+                        <p className="text-xs text-titanium-text-secondary">{key}</p>
                         <p className="text-sm text-white font-mono">
                           {typeof value === 'boolean'
                             ? value
@@ -301,7 +303,7 @@ const SingularityMonitor = memo(() => {
             <div className="flex items-center gap-2">
               <Battery className="w-4 h-4 text-lime-400" />
               <h2
-                className="text-sm font-semibold text-gray-300"
+                className="text-sm font-semibold text-titanium-text-secondary"
                 data-testid="meta-energy-title"
               >
                 Énergie Cognitive — MetaEnergy
@@ -317,14 +319,16 @@ const SingularityMonitor = memo(() => {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div data-testid="meta-energy-level">
-                <p className="text-xs text-gray-300 mb-1">Énergie normalisée</p>
+                <p className="text-xs text-titanium-text-secondary mb-1">
+                  Énergie normalisée
+                </p>
                 <p className="text-2xl font-bold text-lime-400">
                   {metaEnergy.state
                     ? `${(metaEnergy.state.normalized * 100).toFixed(0)}%`
                     : '—'}
                 </p>
                 {metaEnergy.state && (
-                  <div className="w-full bg-gray-700 rounded-full h-1.5 mt-1">
+                  <div className="w-full bg-titanium-bg-interactive rounded-full h-1.5 mt-1">
                     <div
                       className="h-1.5 rounded-full bg-lime-500 transition-all"
                       style={{ width: `${metaEnergy.state.normalized * 100}%` }}
@@ -334,7 +338,9 @@ const SingularityMonitor = memo(() => {
               </div>
 
               <div data-testid="meta-energy-fatigue">
-                <p className="text-xs text-gray-300 mb-1">Niveau fatigue</p>
+                <p className="text-xs text-titanium-text-secondary mb-1">
+                  Niveau fatigue
+                </p>
                 <Badge
                   variant={
                     metaEnergy.state?.fatigue_level === 'Fresh'
@@ -349,13 +355,13 @@ const SingularityMonitor = memo(() => {
                 >
                   {metaEnergy.state?.fatigue_level ?? '—'}
                 </Badge>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-titanium-text-tertiary mt-1">
                   ×{metaEnergy.state?.cognitive_multiplier?.toFixed(2) ?? '—'} cognitif
                 </p>
               </div>
 
               <div data-testid="meta-energy-homeostasis">
-                <p className="text-xs text-gray-300 mb-1">Homéostasie</p>
+                <p className="text-xs text-titanium-text-secondary mb-1">Homéostasie</p>
                 {metaEnergy.diagnostics ? (
                   <>
                     <Badge
@@ -370,22 +376,22 @@ const SingularityMonitor = memo(() => {
                         ? 'Équilibrée'
                         : 'Dérive'}
                     </Badge>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-titanium-text-tertiary mt-1">
                       Δ {metaEnergy.diagnostics.homeostasis_deviation > 0 ? '+' : ''}
                       {(metaEnergy.diagnostics.homeostasis_deviation * 100).toFixed(1)}%
                     </p>
                   </>
                 ) : (
-                  <span className="text-gray-600">—</span>
+                  <span className="text-titanium-text-disabled">—</span>
                 )}
               </div>
 
               <div data-testid="meta-energy-history">
-                <p className="text-xs text-gray-300 mb-1">Historique</p>
+                <p className="text-xs text-titanium-text-secondary mb-1">Historique</p>
                 <p className="text-xl font-bold text-teal-400">
                   {metaEnergy.diagnostics?.history_entries ?? '—'}
                 </p>
-                <p className="text-xs text-gray-400">entrées</p>
+                <p className="text-xs text-titanium-text-tertiary">entrées</p>
               </div>
             </div>
           )}
@@ -394,17 +400,19 @@ const SingularityMonitor = memo(() => {
         {/* ── Connections ── */}
         <Card variant="solid" padding={4}>
           <div className="flex items-center gap-2 mb-4">
-            <GitBranch className="w-4 h-4 text-gray-400" />
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+            <GitBranch className="w-4 h-4 text-titanium-text-tertiary" />
+            <h2 className="text-sm font-semibold text-titanium-text-secondary uppercase tracking-wider">
               Visualisation des connexions
             </h2>
           </div>
           <div className="space-y-2">
             {connections.map((conn, i) => (
               <div key={i} className="flex items-center gap-4">
-                <span className="text-xs text-gray-300 w-24 text-right">{conn.from}</span>
+                <span className="text-xs text-titanium-text-secondary w-24 text-right">
+                  {conn.from}
+                </span>
                 <div className="flex-1 flex items-center gap-2">
-                  <div className="flex-1 bg-gray-700 rounded-full h-2">
+                  <div className="flex-1 bg-titanium-bg-interactive rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all ${
                         conn.type === 'sync'
@@ -416,7 +424,7 @@ const SingularityMonitor = memo(() => {
                       style={{ width: `${conn.strength * 100}%` }}
                     />
                   </div>
-                  <span className="text-xs text-gray-400 w-8 text-right">
+                  <span className="text-xs text-titanium-text-tertiary w-8 text-right">
                     {(conn.strength * 100).toFixed(0)}%
                   </span>
                   <Badge
@@ -432,7 +440,9 @@ const SingularityMonitor = memo(() => {
                     {conn.type}
                   </Badge>
                 </div>
-                <span className="text-xs text-gray-300 w-24">{conn.to}</span>
+                <span className="text-xs text-titanium-text-secondary w-24">
+                  {conn.to}
+                </span>
               </div>
             ))}
           </div>
@@ -443,18 +453,20 @@ const SingularityMonitor = memo(() => {
           <Card variant="bordered" padding={4}>
             <div className="flex items-center gap-2 mb-3">
               <Zap className="w-4 h-4 text-violet-400" />
-              <h2 className="text-sm font-semibold text-gray-300">Identité singulière</h2>
+              <h2 className="text-sm font-semibold text-titanium-text-secondary">
+                Identité singulière
+              </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               {signature && (
                 <div>
-                  <p className="text-xs text-gray-300 mb-1">Signature</p>
+                  <p className="text-xs text-titanium-text-secondary mb-1">Signature</p>
                   <p className="font-mono text-xs text-cyan-400 break-all">{signature}</p>
                 </div>
               )}
               {essence && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Essence</p>
+                  <p className="text-xs text-titanium-text-disabled mb-1">Essence</p>
                   <p className="text-white italic">{essence}</p>
                 </div>
               )}

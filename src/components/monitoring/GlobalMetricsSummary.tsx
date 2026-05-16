@@ -62,7 +62,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
   if (!stats) {
     return (
       <div
-        className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}
+        className={`rounded-lg border border-titanium-border-default bg-titanium-bg-elevated/50 p-6 ${className}`}
       >
         <div className="flex items-center justify-center h-40">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
@@ -72,7 +72,9 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
   }
 
   return (
-    <div className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}>
+    <div
+      className={`rounded-lg border border-titanium-border-default bg-titanium-bg-elevated/50 p-6 ${className}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -144,7 +146,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
       </div>
 
       {/* Services List */}
-      <div className="mt-6 pt-6 border-t border-gray-700">
+      <div className="mt-6 pt-6 border-t border-titanium-border-default">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp className="w-5 h-5 text-blue-400" />
           <h3 className="text-lg font-semibold text-white">Services Monitorés</h3>
@@ -178,7 +180,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
                   )}
                 </div>
 
-                <div className="space-y-1 text-xs text-gray-400">
+                <div className="space-y-1 text-xs text-titanium-text-tertiary">
                   <div className="flex justify-between">
                     <span>Appels:</span>
                     <span className="font-medium text-white">
@@ -203,13 +205,15 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
       </div>
 
       {/* System Health Summary */}
-      <div className="mt-6 pt-6 border-t border-gray-700">
+      <div className="mt-6 pt-6 border-t border-titanium-border-default">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Health Score */}
           <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-4">
             <div className="flex items-center gap-2 mb-2">
               <BarChart3 className="w-5 h-5 text-blue-400" />
-              <span className="text-sm font-medium text-gray-400">Score Santé</span>
+              <span className="text-sm font-medium text-titanium-text-tertiary">
+                Score Santé
+              </span>
             </div>
             <div className="text-2xl font-bold text-blue-400">
               {Math.round((1 - stats.globalErrorRate) * 100)}%
@@ -220,7 +224,9 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
           <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
             <div className="flex items-center gap-2 mb-2">
               <RefreshCw className="w-5 h-5 text-yellow-400" />
-              <span className="text-sm font-medium text-gray-400">Taux Retry</span>
+              <span className="text-sm font-medium text-titanium-text-tertiary">
+                Taux Retry
+              </span>
             </div>
             <div className="text-2xl font-bold text-yellow-400">
               {stats.totalMetrics > 0
@@ -234,7 +240,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
           <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
             <div className="flex items-center gap-2 mb-2">
               <AlertCircle className="w-5 h-5 text-red-400" />
-              <span className="text-sm font-medium text-gray-400">
+              <span className="text-sm font-medium text-titanium-text-tertiary">
                 Services Critiques
               </span>
             </div>

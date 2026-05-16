@@ -6,6 +6,7 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@/test-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { MessageList } from '../components/chat/MessageList';
 import { TitanePage } from '../pages/TitanePage';
@@ -13,11 +14,15 @@ import Chat from '../ui/pages/Chat';
 import { setupE2ETest, teardownE2ETest } from './e2e-setup';
 import { createTestMessage } from './e2e-test-utils';
 
+const makeQueryClient = () => new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
 const renderCanonicalChat = () =>
   render(
-    <BrowserRouter>
-      <TitanePage />
-    </BrowserRouter>
+    <QueryClientProvider client={makeQueryClient()}>
+      <BrowserRouter>
+        <TitanePage />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 
 describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
@@ -37,9 +42,11 @@ describe('🟣 OMEGA Phase 7Ω - E2E: UI Integration Tests', () => {
 
   it('should route the legacy Chat page export to the canonical conversation surface', () => {
     const { container } = render(
-      <BrowserRouter>
-        <Chat />
-      </BrowserRouter>
+      <QueryClientProvider client={makeQueryClient()}>
+        <BrowserRouter>
+          <Chat />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
 
     expect(container).toBeTruthy();

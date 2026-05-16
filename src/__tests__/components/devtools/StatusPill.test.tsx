@@ -47,7 +47,7 @@ describe('StatusPill Component', () => {
     it('should render inactive status', () => {
       render(<StatusPill status="inactive" label="Idle" />);
       const pill = screen.getByText('Idle');
-      expect(pill.className).toMatch(/bg-gray-700/);
+      expect(pill.className).toMatch(/bg-titanium-bg-interactive/);
     });
   });
 

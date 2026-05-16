@@ -1,5 +1,4 @@
 import React from 'react';
-import { colors, spacing, fontSizes } from '@themes/tokens';
 
 interface SectionLoadingFallbackProps {
   label: string;
@@ -18,16 +17,18 @@ export const SectionLoadingFallback: React.FC<SectionLoadingFallbackProps> = ({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: spacing[2],
-        padding: spacing[4],
-        borderRadius: '0.75rem',
-        border: `1px solid ${colors.neutral[700]}`,
-        background: colors.neutral[900],
-        color: colors.neutral[200],
+        gap: 'var(--space-2)',
+        padding: 'var(--space-4)',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--color-border-default)',
+        background: 'var(--color-bg-primary)',
+        color: 'var(--color-text-secondary)',
       }}
     >
-      <strong style={{ fontSize: fontSizes.sm }}>{label}</strong>
-      <span style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>{note}</span>
+      <strong style={{ fontSize: 'var(--text-sm)' }}>{label}</strong>
+      <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+        {note}
+      </span>
     </div>
   );
 };

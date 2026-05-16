@@ -8,7 +8,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, Badge, Button, Modal } from '../../ui';
-import { colors, spacing, radius, shadows } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
@@ -39,11 +38,11 @@ export interface TalentTreeProps {
 // ─────────────────────────────────────────────────────────────────
 
 const categoryColors: Record<TalentNode['category'], string> = {
-  chat: colors.rubis.primary[500],
-  voice: colors.saphir.primary[500],
-  code: colors.emeraude.primary[500],
-  projects: colors.diamant.primary[400],
-  system: colors.neutral[500],
+  chat: 'var(--color-text-secondary)',
+  voice: 'var(--color-info-500)',
+  code: 'var(--color-success-500)',
+  projects: 'var(--color-text-muted)',
+  system: 'var(--color-text-muted)',
 };
 
 const categoryLabels: Record<TalentNode['category'], string> = {
@@ -95,8 +94,8 @@ export const TalentTree = ({
         ctx.moveTo(requirement.x + 30, requirement.y + 30);
         ctx.lineTo(talent.x + 30, talent.y + 30);
         ctx.strokeStyle = talent.unlocked
-          ? colors.rubis.primary[600]
-          : colors.neutral[800];
+          ? 'var(--color-text-disabled)'
+          : 'var(--color-border-subtle)';
         ctx.lineWidth = talent.unlocked ? 3 : 2;
         ctx.stroke();
       });
@@ -138,7 +137,7 @@ export const TalentTree = ({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: spacing[6],
+            marginBottom: 'var(--space-6)',
           }}
         >
           <h3
@@ -146,7 +145,7 @@ export const TalentTree = ({
               margin: 0,
               fontSize: '1.5rem',
               fontWeight: 600,
-              color: colors.neutral[100],
+              color: 'var(--color-text-primary)',
             }}
           >
             🌳 Arbre de Talents
@@ -162,9 +161,9 @@ export const TalentTree = ({
             position: 'relative',
             width: '100%',
             height: '600px',
-            background: colors.neutral[950],
-            borderRadius: radius.lg,
-            border: `1px solid ${colors.rubis.primary[900]}`,
+            background: 'var(--color-bg-primary)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-bg-secondary)',
             overflow: 'hidden',
           }}
         >
@@ -215,12 +214,12 @@ export const TalentTree = ({
                       borderRadius: '50%',
                       background: talent.unlocked
                         ? categoryColors[talent.category]
-                        : colors.neutral[800],
-                      border: `3px solid ${isUnlockable ? colors.rubis.primary[500] : talent.unlocked ? colors.neutral[100] : colors.neutral[700]}`,
+                        : 'var(--color-border-subtle)',
+                      border: `3px solid ${isUnlockable ? 'var(--color-text-secondary)' : talent.unlocked ? 'var(--color-text-primary)' : 'var(--color-border-default)'}`,
                       boxShadow: talent.unlocked
-                        ? shadows.glowRubis
+                        ? 'var(--shadow-sm)'
                         : isUnlockable
-                          ? shadows.focusRubis
+                          ? '0 0 0 2px var(--color-violet-500)'
                           : 'none',
                       display: 'flex',
                       alignItems: 'center',
@@ -243,13 +242,13 @@ export const TalentTree = ({
                       height: '20px',
                       borderRadius: '50%',
                       background: categoryColors[talent.category],
-                      border: `2px solid ${colors.neutral[950]}`,
+                      border: '2px solid var(--color-bg-primary)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '0.75rem',
                       fontWeight: 'bold',
-                      color: colors.neutral[100],
+                      color: 'var(--color-text-primary)',
                     }}
                   >
                     {talent.tier}
@@ -265,11 +264,11 @@ export const TalentTree = ({
                         top: '70px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        padding: spacing[3],
-                        background: colors.rubis.surface.solid,
-                        border: `1px solid ${colors.rubis.primary[700]}`,
-                        borderRadius: radius.md,
-                        boxShadow: shadows.lg,
+                        padding: 'var(--space-3)',
+                        background: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border-default)',
+                        borderRadius: 'var(--radius-md)',
+                        boxShadow: 'var(--shadow-lg)',
                         whiteSpace: 'nowrap',
                         zIndex: 1000,
                       }}
@@ -278,7 +277,7 @@ export const TalentTree = ({
                         style={{
                           fontSize: '0.875rem',
                           fontWeight: 600,
-                          color: colors.neutral[100],
+                          color: 'var(--color-text-primary)',
                         }}
                       >
                         {talent.name}
@@ -286,8 +285,8 @@ export const TalentTree = ({
                       <div
                         style={{
                           fontSize: '0.75rem',
-                          color: colors.neutral[400],
-                          marginTop: spacing[1],
+                          color: 'var(--color-text-muted)',
+                          marginTop: 'var(--space-1)',
                         }}
                       >
                         Coût: {talent.cost} points
@@ -303,9 +302,9 @@ export const TalentTree = ({
         {/* Legend */}
         <div
           style={{
-            marginTop: spacing[6],
+            marginTop: 'var(--space-6)',
             display: 'flex',
-            gap: spacing[4],
+            gap: 'var(--space-4)',
             flexWrap: 'wrap',
           }}
         >
@@ -315,9 +314,9 @@ export const TalentTree = ({
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: spacing[2],
+                gap: 'var(--space-2)',
                 fontSize: '0.875rem',
-                color: colors.neutral[300],
+                color: 'var(--color-text-secondary)',
               }}
             >
               <div
@@ -343,7 +342,7 @@ export const TalentTree = ({
       >
         {selectedTalent && (
           <div>
-            <div style={{ marginBottom: spacing[4] }}>
+            <div style={{ marginBottom: 'var(--space-4)' }}>
               <Badge
                 variant="primary"
                 size="md"
@@ -359,9 +358,9 @@ export const TalentTree = ({
             <p
               style={{
                 fontSize: '0.875rem',
-                color: colors.neutral[300],
+                color: 'var(--color-text-secondary)',
                 lineHeight: 1.6,
-                marginBottom: spacing[4],
+                marginBottom: 'var(--space-4)',
               }}
             >
               {selectedTalent.description}
@@ -369,22 +368,29 @@ export const TalentTree = ({
 
             <div
               style={{
-                padding: spacing[4],
-                background: colors.neutral[900],
-                borderRadius: radius.md,
-                marginBottom: spacing[4],
+                padding: 'var(--space-4)',
+                background: 'var(--color-bg-primary)',
+                borderRadius: 'var(--radius-md)',
+                marginBottom: 'var(--space-4)',
               }}
             >
-              <div style={{ marginBottom: spacing[2] }}>
-                <strong style={{ color: colors.neutral[100] }}>Coût:</strong>{' '}
-                <span style={{ color: colors.rubis.primary[400] }}>
+              <div style={{ marginBottom: 'var(--space-2)' }}>
+                <strong style={{ color: 'var(--color-text-primary)' }}>Coût:</strong>{' '}
+                <span style={{ color: 'var(--color-text-muted)' }}>
                   {selectedTalent.cost} points
                 </span>
               </div>
               {selectedTalent.requirements.length > 0 && (
                 <div>
-                  <strong style={{ color: colors.neutral[100] }}>Prérequis:</strong>
-                  <ul style={{ margin: `${spacing[2]} 0 0`, paddingLeft: spacing[5] }}>
+                  <strong style={{ color: 'var(--color-text-primary)' }}>
+                    Prérequis:
+                  </strong>
+                  <ul
+                    style={{
+                      margin: 'var(--space-2) 0 0',
+                      paddingLeft: 'var(--space-5)',
+                    }}
+                  >
                     {selectedTalent.requirements.map(reqId => {
                       const req = talents.find(t => t.id === reqId);
                       return (
@@ -392,8 +398,8 @@ export const TalentTree = ({
                           key={reqId}
                           style={{
                             color: req?.unlocked
-                              ? colors.emeraude.primary[400]
-                              : colors.semantic.error[400],
+                              ? 'var(--color-success-500)'
+                              : 'var(--color-error-500)',
                           }}
                         >
                           {req?.name} {req?.unlocked ? '✓' : '✗'}

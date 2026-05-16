@@ -164,19 +164,19 @@ export const CreationStudio: React.FC = memo(() => {
 
   return (
     <div
-      className="min-h-screen bg-gray-900 text-white"
+      className="min-h-screen bg-titanium-bg-base text-white"
       data-testid="page-creation-studio"
     >
       {/* Runtime Truth Badge — DISPLAY_ONLY: UI statique, pas de store projets */}
       <SurfaceTruthBadge variant="DISPLAY_ONLY" className="px-6 pt-4" />
       {/* ── Header ── */}
-      <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+      <div className="bg-titanium-bg-elevated border-b border-titanium-border-default px-6 py-4">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
             <Layers className="w-7 h-7 text-violet-400" />
             <div>
               <h1 className="text-2xl font-bold text-white">Creation Studio</h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-titanium-text-tertiary">
                 Créez du contenu, des projets et des assets avec l'IA TITANE∞
               </p>
             </div>
@@ -196,8 +196,8 @@ export const CreationStudio: React.FC = memo(() => {
       {/* ── Main Layout ── */}
       <div className="flex max-w-7xl mx-auto h-[calc(100vh-73px)]">
         {/* Sidebar d'outils */}
-        <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4 flex flex-col gap-2 overflow-y-auto">
-          <p className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
+        <aside className="w-64 bg-titanium-bg-elevated border-r border-titanium-border-default p-4 flex flex-col gap-2 overflow-y-auto">
+          <p className="text-xs font-semibold text-titanium-text-secondary uppercase tracking-wider mb-2">
             Outils de création
           </p>
           {TOOLS.map(tool => (
@@ -209,7 +209,7 @@ export const CreationStudio: React.FC = memo(() => {
                 'w-full text-left p-3 rounded-lg transition-colors flex items-start gap-3',
                 activeTool === tool.id
                   ? 'bg-violet-900/60 border border-violet-600'
-                  : 'hover:bg-gray-700 border border-transparent',
+                  : 'hover:bg-titanium-bg-interactive border border-transparent',
                 tool.status === 'coming' ? 'opacity-40 cursor-not-allowed' : '',
               ].join(' ')}
             >
@@ -223,15 +223,15 @@ export const CreationStudio: React.FC = memo(() => {
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-gray-400 mt-0.5 truncate">
+                <p className="text-xs text-titanium-text-tertiary mt-0.5 truncate">
                   {tool.description}
                 </p>
               </div>
             </button>
           ))}
 
-          <div className="mt-auto pt-4 border-t border-gray-700">
-            <div className="flex items-center gap-2 text-xs text-gray-300">
+          <div className="mt-auto pt-4 border-t border-titanium-border-default">
+            <div className="flex items-center gap-2 text-xs text-titanium-text-secondary">
               <Zap className="w-3 h-3 text-yellow-400" />
               <span>Studio actif</span>
               <Badge variant="success" size="sm" dot />
@@ -276,7 +276,7 @@ export const CreationStudio: React.FC = memo(() => {
                 <h2 className="text-xl font-bold text-white mb-1">
                   Bienvenue dans le Creation Studio
                 </h2>
-                <p className="text-gray-400 text-sm">
+                <p className="text-titanium-text-tertiary text-sm">
                   Sélectionnez un outil dans la sidebar pour commencer à créer.
                 </p>
               </div>
@@ -299,7 +299,9 @@ export const CreationStudio: React.FC = memo(() => {
                       </div>
                       <div>
                         <p className="font-medium text-white text-sm">{tool.label}</p>
-                        <p className="text-xs text-gray-400">{tool.description}</p>
+                        <p className="text-xs text-titanium-text-tertiary">
+                          {tool.description}
+                        </p>
                       </div>
                     </div>
                   </Card>
@@ -309,8 +311,8 @@ export const CreationStudio: React.FC = memo(() => {
               {/* Projets récents */}
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <Clock className="w-4 h-4 text-gray-400" />
-                  <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                  <Clock className="w-4 h-4 text-titanium-text-tertiary" />
+                  <h3 className="text-sm font-semibold text-titanium-text-secondary uppercase tracking-wider">
                     Projets récents
                   </h3>
                 </div>
@@ -325,12 +327,14 @@ export const CreationStudio: React.FC = memo(() => {
                       className="cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-gray-400">{TOOL_ICONS[project.type]}</span>
+                        <span className="text-titanium-text-tertiary">
+                          {TOOL_ICONS[project.type]}
+                        </span>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-white truncate">
                             {project.name}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-titanium-text-disabled">
                             Modifié le {project.updatedAt}
                           </p>
                         </div>
@@ -347,14 +351,14 @@ export const CreationStudio: React.FC = memo(() => {
         </main>
 
         {/* Sidebar droite - Stats */}
-        <aside className="w-56 bg-gray-800 border-l border-gray-700 p-4 flex flex-col gap-4">
-          <p className="text-xs font-semibold text-gray-300 uppercase tracking-wider">
+        <aside className="w-56 bg-titanium-bg-elevated border-l border-titanium-border-default p-4 flex flex-col gap-4">
+          <p className="text-xs font-semibold text-titanium-text-secondary uppercase tracking-wider">
             Statistiques
           </p>
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <Star className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs text-gray-400">Projets actifs</span>
+              <span className="text-xs text-titanium-text-tertiary">Projets actifs</span>
             </div>
             <p className="text-2xl font-bold text-white">
               {RECENT_PROJECTS.filter(p => p.status === 'active').length}
@@ -363,14 +367,14 @@ export const CreationStudio: React.FC = memo(() => {
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <FolderOpen className="w-4 h-4 text-blue-400" />
-              <span className="text-xs text-gray-400">Total projets</span>
+              <span className="text-xs text-titanium-text-tertiary">Total projets</span>
             </div>
             <p className="text-2xl font-bold text-white">{RECENT_PROJECTS.length}</p>
           </Card>
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-4 h-4 text-violet-400" />
-              <span className="text-xs text-gray-400">Outils dispo</span>
+              <span className="text-xs text-titanium-text-tertiary">Outils dispo</span>
             </div>
             <p className="text-2xl font-bold text-white">
               {TOOLS.filter(t => t.status !== 'coming').length}

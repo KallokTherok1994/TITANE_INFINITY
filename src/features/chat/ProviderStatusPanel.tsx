@@ -8,7 +8,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from '../../ui';
-import { colors, spacing, radius, shadows, fontSizes } from '@themes/tokens';
+
 import { apiResponseCache } from '@/services/ai/apiCache';
 import { useProviderStatus } from '@/hooks/useProviderStatus';
 import type { ProviderStatus as BackendProviderStatus } from '@/services/tauriClient';
@@ -30,27 +30,27 @@ const PROVIDER_PRESENTATION: Record<
   anthropic: {
     name: 'Claude',
     emoji: '🧠',
-    color: colors.emeraude.primary[600],
+    color: 'var(--color-violet-500)',
   },
   gemini: {
     name: 'Gemini',
     emoji: '✨',
-    color: colors.saphir.primary[500],
+    color: 'var(--color-info-500)',
   },
   local: {
     name: 'Fallback local',
     emoji: '🛟',
-    color: colors.neutral[400],
+    color: 'var(--color-text-muted)',
   },
   ollama: {
     name: 'Ollama',
     emoji: '🦙',
-    color: colors.emeraude.primary[500],
+    color: 'var(--color-success-500)',
   },
   openai: {
     name: 'GPT-4o',
     emoji: '🤖',
-    color: colors.rubis.primary[500],
+    color: 'var(--color-text-secondary)',
   },
 };
 
@@ -69,7 +69,7 @@ export function mapBackendProviderStatus(
   const presentation = PROVIDER_PRESENTATION[provider.provider] ?? {
     name: titleCaseProvider(provider.provider),
     emoji: '🤖',
-    color: colors.neutral[300],
+    color: 'var(--color-text-secondary)',
   };
 
   const status: RuntimeProviderCard['status'] = !provider.available
@@ -143,11 +143,11 @@ export const ProviderStatusPanel = (): JSX.Element => {
   const getStatusColor = (status: RuntimeProviderCard['status']) => {
     switch (status) {
       case 'online':
-        return colors.emeraude.primary[500];
+        return 'var(--color-success-500)';
       case 'degraded':
-        return colors.rubis.primary[500];
+        return 'var(--color-text-secondary)';
       case 'offline':
-        return colors.neutral[600];
+        return 'var(--color-text-disabled)';
     }
   };
 
@@ -165,11 +165,11 @@ export const ProviderStatusPanel = (): JSX.Element => {
   return (
     <div
       style={{
-        padding: spacing[4],
-        backgroundColor: colors.neutral[900],
-        borderRadius: radius.lg,
-        border: `1px solid ${colors.neutral[800]}`,
-        boxShadow: shadows.lg,
+        padding: 'var(--space-4)',
+        backgroundColor: 'var(--color-bg-primary)',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--color-border-subtle)',
+        boxShadow: 'var(--shadow-lg)',
       }}
     >
       <div
@@ -177,14 +177,14 @@ export const ProviderStatusPanel = (): JSX.Element => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: spacing[4],
+          marginBottom: 'var(--space-4)',
         }}
       >
         <h3
           style={{
-            fontSize: fontSizes.lg,
+            fontSize: 'var(--text-lg)',
             fontWeight: 600,
-            color: colors.neutral[100],
+            color: 'var(--color-text-primary)',
             margin: 0,
           }}
         >
@@ -197,14 +197,16 @@ export const ProviderStatusPanel = (): JSX.Element => {
               : 'Snapshot backend au dernier contrôle explicite'
           }
           style={{
-            fontSize: fontSizes.xs,
+            fontSize: 'var(--text-xs)',
             padding: '2px 8px',
-            borderRadius: radius.full ?? '9999px',
+            borderRadius: 'var(--radius-full)',
             backgroundColor: pollingActive
-              ? `${colors.emeraude.primary[500]}20`
-              : `${colors.neutral[600]}20`,
-            color: pollingActive ? colors.emeraude.primary[400] : colors.neutral[400],
-            border: `1px solid ${pollingActive ? colors.emeraude.primary[500] : colors.neutral[600]}40`,
+              ? 'rgba(16, 185, 129, 0.12)'
+              : 'rgba(100, 116, 139, 0.12)',
+            color: pollingActive ? 'var(--color-success-500)' : 'var(--color-text-muted)',
+            border: pollingActive
+              ? '1px solid rgba(16, 185, 129, 0.4)'
+              : '1px solid rgba(100, 116, 139, 0.4)',
             whiteSpace: 'nowrap',
           }}
         >
@@ -215,9 +217,9 @@ export const ProviderStatusPanel = (): JSX.Element => {
       {error && (
         <div
           style={{
-            marginBottom: spacing[3],
-            color: colors.rubis.primary[400],
-            fontSize: fontSizes.xs,
+            marginBottom: 'var(--space-3)',
+            color: 'var(--color-warning-500)',
+            fontSize: 'var(--text-xs)',
           }}
           data-testid="provider-status-panel-error"
         >
@@ -228,8 +230,8 @@ export const ProviderStatusPanel = (): JSX.Element => {
       {displayProviders.length === 0 ? (
         <div
           style={{
-            color: colors.neutral[400],
-            fontSize: fontSizes.sm,
+            color: 'var(--color-text-muted)',
+            fontSize: 'var(--text-sm)',
           }}
           data-testid="provider-status-panel-empty"
         >
@@ -241,7 +243,7 @@ export const ProviderStatusPanel = (): JSX.Element => {
         <div
           style={{
             display: 'grid',
-            gap: spacing[3],
+            gap: 'var(--space-3)',
           }}
         >
           {displayProviders.map(provider => (
@@ -253,25 +255,32 @@ export const ProviderStatusPanel = (): JSX.Element => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: spacing[3],
+                padding: 'var(--space-3)',
                 backgroundColor: `${provider.color}10`,
-                borderRadius: radius.md,
+                borderRadius: 'var(--radius-md)',
                 border: `1px solid ${provider.color}30`,
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
-                <span style={{ fontSize: fontSizes.xl }}>{provider.emoji}</span>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}
+              >
+                <span style={{ fontSize: 'var(--text-xl)' }}>{provider.emoji}</span>
                 <div>
                   <div
                     style={{
-                      fontSize: fontSizes.sm,
+                      fontSize: 'var(--text-sm)',
                       fontWeight: 600,
                       color: provider.color,
                     }}
                   >
                     {provider.name}
                   </div>
-                  <div style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
+                  <div
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--color-text-muted)',
+                    }}
+                  >
                     {provider.latency
                       ? `${provider.latency}ms`
                       : provider.error || 'Indisponible'}
@@ -279,13 +288,15 @@ export const ProviderStatusPanel = (): JSX.Element => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}
+              >
                 {provider.status !== 'offline' && (
                   <Badge
                     style={{
-                      backgroundColor: `${colors.saphir.primary[500]}20`,
-                      color: colors.saphir.primary[400],
-                      fontSize: fontSizes.xs,
+                      backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                      color: 'var(--color-info-500)',
+                      fontSize: 'var(--text-xs)',
                     }}
                   >
                     📦 {provider.cacheHitRate?.toFixed(0) ?? '0'}% cache
@@ -297,7 +308,7 @@ export const ProviderStatusPanel = (): JSX.Element => {
                     backgroundColor: `${getStatusColor(provider.status)}20`,
                     color: getStatusColor(provider.status),
                     borderColor: getStatusColor(provider.status),
-                    fontSize: fontSizes.xs,
+                    fontSize: 'var(--text-xs)',
                   }}
                 >
                   {getStatusLabel(provider.status)}

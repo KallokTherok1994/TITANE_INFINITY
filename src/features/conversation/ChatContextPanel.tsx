@@ -7,7 +7,6 @@
 
 import { motion } from 'framer-motion';
 import { Card, Badge } from '../../ui';
-import { colors, spacing, radius, fontSizes, fontWeights } from '@themes/tokens';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -42,20 +41,20 @@ export interface ChatContextPanelProps {
 // ─────────────────────────────────────────────────────────────────
 
 const memoryTypeColors: Record<ActiveMemory['type'], string> = {
-  fact: colors.emeraude.primary[500],
-  conversation: colors.saphir.primary[500],
-  skill: colors.rubis.primary[500],
-  experience: colors.diamant.primary[400],
+  fact: 'var(--color-success-500)',
+  conversation: 'var(--color-info-500)',
+  skill: 'var(--color-text-secondary)',
+  experience: 'var(--color-text-muted)',
 };
 
 const getMetricColor = (value: number): string => {
   if (value >= 0.7) {
-    return colors.semantic.success[500];
+    return 'var(--color-success-500)';
   }
   if (value >= 0.4) {
-    return colors.semantic.warning[500];
+    return 'var(--color-warning-500)';
   }
-  return colors.semantic.error[500];
+  return 'var(--color-error-500)';
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -76,12 +75,12 @@ export const ChatContextPanel = ({
         animate={{ width: '60px' }}
         style={{
           height: '100%',
-          background: colors.rubis.surface.solid,
-          borderLeft: `1px solid ${colors.rubis.primary[800]}`,
+          background: 'var(--color-bg-secondary)',
+          borderLeft: '1px solid var(--color-border-subtle)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          padding: spacing[2],
+          padding: 'var(--space-2)',
         }}
       >
         <button
@@ -89,10 +88,10 @@ export const ChatContextPanel = ({
           style={{
             background: 'none',
             border: 'none',
-            color: colors.neutral[400],
+            color: 'var(--color-text-muted)',
             fontSize: '1.5rem',
             cursor: 'pointer',
-            padding: spacing[2],
+            padding: 'var(--space-2)',
           }}
         >
           ◀
@@ -107,8 +106,8 @@ export const ChatContextPanel = ({
       animate={{ width: '320px' }}
       style={{
         height: '100%',
-        background: colors.rubis.surface.solid,
-        borderLeft: `1px solid ${colors.rubis.primary[800]}`,
+        background: 'var(--color-bg-secondary)',
+        borderLeft: '1px solid var(--color-border-subtle)',
         display: 'flex',
         flexDirection: 'column',
         overflowY: 'auto',
@@ -120,16 +119,16 @@ export const ChatContextPanel = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: spacing[4],
-          borderBottom: `1px solid ${colors.rubis.primary[800]}`,
+          padding: 'var(--space-4)',
+          borderBottom: '1px solid var(--color-border-subtle)',
         }}
       >
         <h3
           style={{
             margin: 0,
-            fontSize: fontSizes.lg,
-            fontWeight: fontWeights.semibold,
-            color: colors.neutral[100],
+            fontSize: 'var(--text-lg)',
+            fontWeight: '600',
+            color: 'var(--color-text-primary)',
           }}
         >
           🧠 Contexte
@@ -140,10 +139,10 @@ export const ChatContextPanel = ({
             style={{
               background: 'none',
               border: 'none',
-              color: colors.neutral[400],
+              color: 'var(--color-text-muted)',
               fontSize: '1.25rem',
               cursor: 'pointer',
-              padding: spacing[1],
+              padding: 'var(--space-1)',
             }}
           >
             ▶
@@ -152,16 +151,16 @@ export const ChatContextPanel = ({
       </div>
 
       {/* Content */}
-      <div style={{ flex: 1, padding: spacing[4], overflowY: 'auto' }}>
+      <div style={{ flex: 1, padding: 'var(--space-4)', overflowY: 'auto' }}>
         {/* Cognitive State */}
-        <section style={{ marginBottom: spacing[6] }}>
+        <section style={{ marginBottom: 'var(--space-6)' }}>
           <h4
             style={{
               margin: 0,
-              marginBottom: spacing[3],
-              fontSize: fontSizes.sm,
-              fontWeight: fontWeights.semibold,
-              color: colors.neutral[300],
+              marginBottom: 'var(--space-3)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: '600',
+              color: 'var(--color-text-secondary)',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}
@@ -169,18 +168,20 @@ export const ChatContextPanel = ({
             État Cognitif
           </h4>
           <Card variant="translucent" padding={3}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}
+            >
               {/* Stress */}
               <div>
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    marginBottom: spacing[1],
-                    fontSize: fontSizes.xs,
+                    marginBottom: 'var(--space-1)',
+                    fontSize: 'var(--text-xs)',
                   }}
                 >
-                  <span style={{ color: colors.neutral[400] }}>Stress</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>Stress</span>
                   <span style={{ color: getMetricColor(1 - cognitiveState.stress) }}>
                     {(cognitiveState.stress * 100).toFixed(0)}%
                   </span>
@@ -188,8 +189,8 @@ export const ChatContextPanel = ({
                 <div
                   style={{
                     height: '6px',
-                    background: colors.neutral[900],
-                    borderRadius: radius.full,
+                    background: 'var(--color-bg-primary)',
+                    borderRadius: 'var(--radius-full)',
                     overflow: 'hidden',
                   }}
                 >
@@ -210,11 +211,11 @@ export const ChatContextPanel = ({
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    marginBottom: spacing[1],
-                    fontSize: fontSizes.xs,
+                    marginBottom: 'var(--space-1)',
+                    fontSize: 'var(--text-xs)',
                   }}
                 >
-                  <span style={{ color: colors.neutral[400] }}>Clarté</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>Clarté</span>
                   <span style={{ color: getMetricColor(cognitiveState.clarity) }}>
                     {(cognitiveState.clarity * 100).toFixed(0)}%
                   </span>
@@ -222,8 +223,8 @@ export const ChatContextPanel = ({
                 <div
                   style={{
                     height: '6px',
-                    background: colors.neutral[900],
-                    borderRadius: radius.full,
+                    background: 'var(--color-bg-primary)',
+                    borderRadius: 'var(--radius-full)',
                     overflow: 'hidden',
                   }}
                 >
@@ -244,11 +245,11 @@ export const ChatContextPanel = ({
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    marginBottom: spacing[1],
-                    fontSize: fontSizes.xs,
+                    marginBottom: 'var(--space-1)',
+                    fontSize: 'var(--text-xs)',
                   }}
                 >
-                  <span style={{ color: colors.neutral[400] }}>Focus</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>Focus</span>
                   <span style={{ color: getMetricColor(cognitiveState.focus) }}>
                     {(cognitiveState.focus * 100).toFixed(0)}%
                   </span>
@@ -256,8 +257,8 @@ export const ChatContextPanel = ({
                 <div
                   style={{
                     height: '6px',
-                    background: colors.neutral[900],
-                    borderRadius: radius.full,
+                    background: 'var(--color-bg-primary)',
+                    borderRadius: 'var(--radius-full)',
                     overflow: 'hidden',
                   }}
                 >
@@ -278,11 +279,11 @@ export const ChatContextPanel = ({
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    marginBottom: spacing[1],
-                    fontSize: fontSizes.xs,
+                    marginBottom: 'var(--space-1)',
+                    fontSize: 'var(--text-xs)',
                   }}
                 >
-                  <span style={{ color: colors.neutral[400] }}>Énergie</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>Énergie</span>
                   <span style={{ color: getMetricColor(cognitiveState.energy) }}>
                     {(cognitiveState.energy * 100).toFixed(0)}%
                   </span>
@@ -290,8 +291,8 @@ export const ChatContextPanel = ({
                 <div
                   style={{
                     height: '6px',
-                    background: colors.neutral[900],
-                    borderRadius: radius.full,
+                    background: 'var(--color-bg-primary)',
+                    borderRadius: 'var(--radius-full)',
                     overflow: 'hidden',
                   }}
                 >
@@ -309,9 +310,9 @@ export const ChatContextPanel = ({
               {/* Emotional Tone */}
               <div
                 style={{
-                  marginTop: spacing[2],
-                  paddingTop: spacing[3],
-                  borderTop: `1px solid ${colors.neutral[800]}`,
+                  marginTop: 'var(--space-2)',
+                  paddingTop: 'var(--space-3)',
+                  borderTop: '1px solid var(--color-border-subtle)',
                 }}
               >
                 <div
@@ -323,8 +324,8 @@ export const ChatContextPanel = ({
                 >
                   <span
                     style={{
-                      fontSize: fontSizes.xs,
-                      color: colors.neutral[400],
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--color-text-muted)',
                     }}
                   >
                     Ton émotionnel
@@ -339,28 +340,30 @@ export const ChatContextPanel = ({
         </section>
 
         {/* Active Memories */}
-        <section style={{ marginBottom: spacing[6] }}>
+        <section style={{ marginBottom: 'var(--space-6)' }}>
           <h4
             style={{
               margin: 0,
-              marginBottom: spacing[3],
-              fontSize: fontSizes.sm,
-              fontWeight: fontWeights.semibold,
-              color: colors.neutral[300],
+              marginBottom: 'var(--space-3)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: '600',
+              color: 'var(--color-text-secondary)',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}
           >
             Mémoires Actives ({activeMemories.length})
           </h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[2] }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
+          >
             {activeMemories.length === 0 ? (
               <Card variant="translucent" padding={3}>
                 <p
                   style={{
                     margin: 0,
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[500],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
                     textAlign: 'center',
                   }}
                 >
@@ -374,8 +377,8 @@ export const ChatContextPanel = ({
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: spacing[2],
-                      marginBottom: spacing[2],
+                      gap: 'var(--space-2)',
+                      marginBottom: 'var(--space-2)',
                     }}
                   >
                     <Badge
@@ -390,8 +393,8 @@ export const ChatContextPanel = ({
                     </Badge>
                     <span
                       style={{
-                        fontSize: fontSizes.xs,
-                        color: colors.neutral[500],
+                        fontSize: 'var(--text-xs)',
+                        color: 'var(--color-text-muted)',
                       }}
                     >
                       {(memory.relevance * 100).toFixed(0)}% pertinent
@@ -400,8 +403,8 @@ export const ChatContextPanel = ({
                   <p
                     style={{
                       margin: 0,
-                      fontSize: fontSizes.sm,
-                      color: colors.neutral[300],
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--color-text-secondary)',
                       lineHeight: 1.4,
                     }}
                   >
@@ -421,24 +424,26 @@ export const ChatContextPanel = ({
             <h4
               style={{
                 margin: 0,
-                marginBottom: spacing[3],
-                fontSize: fontSizes.sm,
-                fontWeight: fontWeights.semibold,
-                color: colors.neutral[300],
+                marginBottom: 'var(--space-3)',
+                fontSize: 'var(--text-sm)',
+                fontWeight: '600',
+                color: 'var(--color-text-secondary)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
               }}
             >
               Suggestions
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[2] }}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
+            >
               {suggestions.map((suggestion, index) => (
                 <Card key={index} variant="translucent" padding={3}>
                   <p
                     style={{
                       margin: 0,
-                      fontSize: fontSizes.sm,
-                      color: colors.neutral[200],
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--color-text-secondary)',
                     }}
                   >
                     {suggestion}

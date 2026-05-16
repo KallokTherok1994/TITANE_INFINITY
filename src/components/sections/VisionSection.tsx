@@ -15,7 +15,6 @@ import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { CameraPreview } from '@/components/vision/CameraPreview';
 import { TMetric, TSectionHeader } from '@/design-system';
 import { Camera } from 'lucide-react';
-import { colors, spacing, fontSizes } from '@themes/tokens';
 import {
   useVisionStore,
   selectIsCameraActive,
@@ -152,7 +151,7 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
       <Grid columns={2} gap={4}>
         {/* Camera Preview avec Detection Overlay */}
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Caméra & Détections</h3>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>Caméra & Détections</h3>
           <StatusIndicator active={isCameraActive} label="Caméra Active" />
 
           <div className="vision-camera-container">
@@ -160,15 +159,19 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
               <div style={{ position: 'relative' }}>
                 {!isCameraActive && (
                   <div
-                    style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 'var(--space-3)',
+                    }}
                   >
-                    <div style={{ color: colors.neutral[400] }}>
+                    <div style={{ color: 'var(--color-text-muted)' }}>
                       Opt-in requis: activez Vision puis démarrez la caméra.
                     </div>
                     {error && (
-                      <div style={{ color: colors.semantic.error[400] }}>{error}</div>
+                      <div style={{ color: 'var(--color-error-500)' }}>{error}</div>
                     )}
-                    <div style={{ display: 'flex', gap: spacing[3] }}>
+                    <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
                       <Button
                         variant="primary"
                         size="sm"
@@ -196,17 +199,25 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
               </div>
             ) : (
               <div className="vision-placeholder">
-                <Camera size={48} color={colors.neutral[400]} />
-                <p style={{ color: colors.neutral[400], marginTop: spacing[4] }}>
+                <Camera size={48} color="var(--color-text-muted)" />
+                <p
+                  style={{
+                    color: 'var(--color-text-muted)',
+                    marginTop: 'var(--space-4)',
+                  }}
+                >
                   Disponible en mode Tauri uniquement
                 </p>
               </div>
             )}
           </div>
 
-          <div className="vision-ethical-disclaimer" style={{ marginTop: spacing[4] }}>
+          <div
+            className="vision-ethical-disclaimer"
+            style={{ marginTop: 'var(--space-4)' }}
+          >
             <h4>⚠️ Information Importante</h4>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
               Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est
               envoyée vers le cloud.
             </p>
@@ -215,7 +226,7 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
 
         {/* Vision Stats */}
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Métriques Vision</h3>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>Métriques Vision</h3>
 
           <Stack direction="vertical" gap={3}>
             <TMetric
@@ -248,8 +259,8 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
       </Grid>
 
       {/* Vision Metrics Charts */}
-      <div style={{ marginTop: spacing[6] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>📈 Graphiques de Métriques</h3>
+      <div style={{ marginTop: 'var(--space-6)' }}>
+        <h3 style={{ marginBottom: 'var(--space-4)' }}>📈 Graphiques de Métriques</h3>
         <React.Suspense
           fallback={
             <SectionLoadingFallback

@@ -2,18 +2,18 @@
 
 exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
 <div
-  class="metrics-display bg-gray-900 rounded-lg border border-gray-700 p-4"
+  class="metrics-display bg-titanium-bg-base rounded-lg border border-titanium-border-default p-4"
 >
   <div
     class="flex items-center justify-between mb-4"
   >
     <h3
-      class="text-lg font-semibold text-gray-200"
+      class="text-lg font-semibold text-titanium-text-secondary"
     >
       📊 System Metrics
     </h3>
     <span
-      class="text-xs text-gray-500"
+      class="text-xs text-titanium-text-disabled"
     >
       Updated: 
       12:00:00 PM
@@ -24,7 +24,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
   >
     <div>
       <h4
-        class="text-sm font-medium text-gray-400 mb-3"
+        class="text-sm font-medium text-titanium-text-tertiary mb-3"
       >
         System Health
       </h4>
@@ -32,13 +32,13 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <div
-          class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition"
+          class="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default hover:border-titanium-border-strong transition"
         >
           <div
             class="flex items-center justify-between mb-2"
           >
             <span
-              class="text-sm text-gray-400"
+              class="text-sm text-titanium-text-tertiary"
             >
               Overall Health
             </span>
@@ -57,7 +57,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               100.0
             </span>
             <span
-              class="text-sm text-gray-500"
+              class="text-sm text-titanium-text-disabled"
             >
               %
             </span>
@@ -66,7 +66,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
             class="mt-3"
           >
             <div
-              class="h-1 bg-gray-700 rounded-full overflow-hidden"
+              class="h-1 bg-titanium-bg-interactive rounded-full overflow-hidden"
             >
               <div
                 class="h-full bg-red-500 transition-all duration-300"
@@ -74,7 +74,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               />
             </div>
             <div
-              class="flex justify-between text-xs text-gray-600 mt-1"
+              class="flex justify-between text-xs text-titanium-text-disabled mt-1"
             >
               <span>
                 0
@@ -93,13 +93,13 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
           </div>
         </div>
         <div
-          class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition"
+          class="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default hover:border-titanium-border-strong transition"
         >
           <div
             class="flex items-center justify-between mb-2"
           >
             <span
-              class="text-sm text-gray-400"
+              class="text-sm text-titanium-text-tertiary"
             >
               Active Cores
             </span>
@@ -113,7 +113,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               4.0
             </span>
             <span
-              class="text-sm text-gray-500"
+              class="text-sm text-titanium-text-disabled"
             >
               cores
             </span>
@@ -123,7 +123,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
     </div>
     <div>
       <h4
-        class="text-sm font-medium text-gray-400 mb-3"
+        class="text-sm font-medium text-titanium-text-tertiary mb-3"
       >
         Logs & Errors
       </h4>
@@ -131,13 +131,13 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <div
-          class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition"
+          class="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default hover:border-titanium-border-strong transition"
         >
           <div
             class="flex items-center justify-between mb-2"
           >
             <span
-              class="text-sm text-gray-400"
+              class="text-sm text-titanium-text-tertiary"
             >
               Total Logs
             </span>
@@ -151,20 +151,20 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               123.0
             </span>
             <span
-              class="text-sm text-gray-500"
+              class="text-sm text-titanium-text-disabled"
             >
               entries
             </span>
           </div>
         </div>
         <div
-          class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition"
+          class="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default hover:border-titanium-border-strong transition"
         >
           <div
             class="flex items-center justify-between mb-2"
           >
             <span
-              class="text-sm text-gray-400"
+              class="text-sm text-titanium-text-tertiary"
             >
               Warnings
             </span>
@@ -178,7 +178,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               2.0
             </span>
             <span
-              class="text-sm text-gray-500"
+              class="text-sm text-titanium-text-disabled"
             >
               warnings
             </span>
@@ -187,7 +187,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
             class="mt-3"
           >
             <div
-              class="h-1 bg-gray-700 rounded-full overflow-hidden"
+              class="h-1 bg-titanium-bg-interactive rounded-full overflow-hidden"
             >
               <div
                 class="h-full bg-green-500 transition-all duration-300"
@@ -195,7 +195,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               />
             </div>
             <div
-              class="flex justify-between text-xs text-gray-600 mt-1"
+              class="flex justify-between text-xs text-titanium-text-disabled mt-1"
             >
               <span>
                 0
@@ -214,13 +214,13 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
           </div>
         </div>
         <div
-          class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition"
+          class="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default hover:border-titanium-border-strong transition"
         >
           <div
             class="flex items-center justify-between mb-2"
           >
             <span
-              class="text-sm text-gray-400"
+              class="text-sm text-titanium-text-tertiary"
             >
               Errors
             </span>
@@ -234,7 +234,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               0.0
             </span>
             <span
-              class="text-sm text-gray-500"
+              class="text-sm text-titanium-text-disabled"
             >
               errors
             </span>
@@ -243,7 +243,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
             class="mt-3"
           >
             <div
-              class="h-1 bg-gray-700 rounded-full overflow-hidden"
+              class="h-1 bg-titanium-bg-interactive rounded-full overflow-hidden"
             >
               <div
                 class="h-full bg-green-500 transition-all duration-300"
@@ -251,7 +251,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
               />
             </div>
             <div
-              class="flex justify-between text-xs text-gray-600 mt-1"
+              class="flex justify-between text-xs text-titanium-text-disabled mt-1"
             >
               <span>
                 0
@@ -273,7 +273,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
     </div>
   </div>
   <div
-    class="mt-6 pt-4 border-t border-gray-700 flex gap-3"
+    class="mt-6 pt-4 border-t border-titanium-border-default flex gap-3"
   >
     <button
       class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white transition"
@@ -281,7 +281,7 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
       🔄 Refresh
     </button>
     <button
-      class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white transition"
+      class="px-4 py-2 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition"
     >
       💾 Export
     </button>

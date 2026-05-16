@@ -159,21 +159,25 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
   const Icon = mode === 'volume' ? Activity : mode === 'latency' ? Clock : AlertCircle;
 
   return (
-    <div className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}>
+    <div
+      className={`rounded-lg border border-titanium-border-default bg-titanium-bg-elevated/50 p-6 ${className}`}
+    >
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <Icon className="w-6 h-6 text-blue-400" />
         <h3 className="text-xl font-bold text-white">{title}</h3>
-        <span className="text-sm text-gray-400">({stats.length} entrées)</span>
+        <span className="text-sm text-titanium-text-tertiary">
+          ({stats.length} entrées)
+        </span>
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-700">
+            <tr className="border-b border-titanium-border-default">
               <th
-                className="text-left py-3 px-4 text-sm font-medium text-gray-400 cursor-pointer hover:text-white transition-colors"
+                className="text-left py-3 px-4 text-sm font-medium text-titanium-text-tertiary cursor-pointer hover:text-white transition-colors"
                 onClick={() => handleSort('command')}
               >
                 <div className="flex items-center gap-2">
@@ -186,7 +190,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
                 </div>
               </th>
               <th
-                className="text-right py-3 px-4 text-sm font-medium text-gray-400 cursor-pointer hover:text-white transition-colors"
+                className="text-right py-3 px-4 text-sm font-medium text-titanium-text-tertiary cursor-pointer hover:text-white transition-colors"
                 onClick={() => handleSort('calls')}
               >
                 <div className="flex items-center justify-end gap-2">
@@ -199,7 +203,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
                 </div>
               </th>
               <th
-                className="text-right py-3 px-4 text-sm font-medium text-gray-400 cursor-pointer hover:text-white transition-colors"
+                className="text-right py-3 px-4 text-sm font-medium text-titanium-text-tertiary cursor-pointer hover:text-white transition-colors"
                 onClick={() => handleSort('avgLatency')}
               >
                 <div className="flex items-center justify-end gap-2">
@@ -212,7 +216,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
                 </div>
               </th>
               <th
-                className="text-right py-3 px-4 text-sm font-medium text-gray-400 cursor-pointer hover:text-white transition-colors"
+                className="text-right py-3 px-4 text-sm font-medium text-titanium-text-tertiary cursor-pointer hover:text-white transition-colors"
                 onClick={() => handleSort('errorRate')}
               >
                 <div className="flex items-center justify-end gap-2">
@@ -224,7 +228,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
                   />
                 </div>
               </th>
-              <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">
+              <th className="text-right py-3 px-4 text-sm font-medium text-titanium-text-tertiary">
                 Dernier Appel
               </th>
             </tr>
@@ -232,7 +236,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
           <tbody>
             {sortedStats.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-8 text-gray-500">
+                <td colSpan={5} className="text-center py-8 text-titanium-text-disabled">
                   Aucune donnée disponible
                 </td>
               </tr>
@@ -240,12 +244,12 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
               sortedStats.map((stat, index) => (
                 <tr
                   key={stat.command}
-                  className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors"
+                  className="border-b border-titanium-border-default/50 hover:bg-titanium-bg-interactive/30 transition-colors"
                 >
                   {/* Command */}
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-gray-500">
+                      <span className="text-xs font-mono text-titanium-text-disabled">
                         #{index + 1}
                       </span>
                       <span className="font-medium text-white text-sm">
@@ -295,7 +299,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
 
                   {/* Last Call */}
                   <td className="py-3 px-4 text-right">
-                    <span className="text-sm text-gray-400">
+                    <span className="text-sm text-titanium-text-tertiary">
                       {formatTime(stat.lastCall)}
                     </span>
                   </td>

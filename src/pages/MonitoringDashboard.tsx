@@ -71,7 +71,7 @@ const ProjectHealthCard: React.FC = () => {
     if (v === 'PASS') return 'text-green-400';
     if (v === 'FAIL') return 'text-red-400';
     if (v === 'BLOCKED') return 'text-yellow-400';
-    return 'text-gray-400';
+    return 'text-titanium-text-tertiary';
   };
   const VerdictIcon =
     consensus?.aggregated === 'PASS'
@@ -83,7 +83,7 @@ const ProjectHealthCard: React.FC = () => {
   return (
     <div
       data-testid="project-health-metrics"
-      className="bg-gray-800 rounded-xl p-5 border border-gray-700"
+      className="bg-titanium-bg-elevated rounded-xl p-5 border border-titanium-border-default"
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-white flex items-center gap-2">
@@ -93,7 +93,7 @@ const ProjectHealthCard: React.FC = () => {
         <button
           onClick={() => void refresh()}
           disabled={loading}
-          className="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-white transition-colors disabled:opacity-40"
+          className="p-1.5 rounded-lg hover:bg-titanium-bg-interactive text-titanium-text-tertiary hover:text-white transition-colors disabled:opacity-40"
           title="Rafraîchir les métriques"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -104,34 +104,41 @@ const ProjectHealthCard: React.FC = () => {
 
       {metrics && (
         <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="bg-gray-900 rounded-lg p-3">
-            <p className="text-xs text-gray-500 mb-1">Récurrence incidents</p>
+          <div className="bg-titanium-bg-base rounded-lg p-3">
+            <p className="text-xs text-titanium-text-disabled mb-1">
+              Récurrence incidents
+            </p>
             <p className="text-xl font-bold text-white">
               {(metrics.incidentRecurrenceRate * 100).toFixed(1)}
-              <span className="text-sm font-normal text-gray-400">%</span>
+              <span className="text-sm font-normal text-titanium-text-tertiary">%</span>
             </p>
           </div>
-          <div className="bg-gray-900 rounded-lg p-3">
-            <p className="text-xs text-gray-500 mb-1">Ring le plus impacté</p>
+          <div className="bg-titanium-bg-base rounded-lg p-3">
+            <p className="text-xs text-titanium-text-disabled mb-1">
+              Ring le plus impacté
+            </p>
             <p className="text-xl font-bold text-blue-300">{metrics.mostImpactedRing}</p>
           </div>
-          <div className="bg-gray-900 rounded-lg p-3">
-            <p className="text-xs text-gray-500 mb-1">Lead time moyen</p>
+          <div className="bg-titanium-bg-base rounded-lg p-3">
+            <p className="text-xs text-titanium-text-disabled mb-1">Lead time moyen</p>
             <p className="text-xl font-bold text-white">
               {metrics.avgLeadTimeMinutes.toFixed(0)}
-              <span className="text-sm font-normal text-gray-400"> min</span>
+              <span className="text-sm font-normal text-titanium-text-tertiary">
+                {' '}
+                min
+              </span>
             </p>
           </div>
         </div>
       )}
 
       {consensus && (
-        <div className="flex items-center gap-3 bg-gray-900 rounded-lg p-3">
+        <div className="flex items-center gap-3 bg-titanium-bg-base rounded-lg p-3">
           <VerdictIcon
             className={`w-5 h-5 flex-shrink-0 ${verdictColor(consensus.aggregated)}`}
           />
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-titanium-text-secondary">
               Consensus agents :{' '}
               <span className={`font-bold ${verdictColor(consensus.aggregated)}`}>
                 {consensus.aggregated}
@@ -153,7 +160,7 @@ const ProjectHealthCard: React.FC = () => {
       )}
 
       {metrics && (
-        <p className="text-xs text-gray-600 mt-3">
+        <p className="text-xs text-titanium-text-disabled mt-3">
           {metrics.evidenceNote} · Calculé à{' '}
           {new Date(metrics.computedAt).toLocaleTimeString()}
         </p>
@@ -261,7 +268,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
   }, []);
 
   return (
-    <div data-testid="monitoring-dashboard-page" className="bg-gray-900 p-6">
+    <div data-testid="monitoring-dashboard-page" className="bg-titanium-bg-base p-6">
       <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} />
       <div className="max-w-450 mx-auto space-y-6">
         {/* Project Health Metrics — Phase B2/B1 surface */}
@@ -274,7 +281,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">Monitoring Dashboard</h1>
-            <p className="text-gray-400">
+            <p className="text-titanium-text-tertiary">
               Métriques de performance en temps réel - Refresh auto toutes les 5s
             </p>
           </div>

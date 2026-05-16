@@ -65,7 +65,8 @@ const STATUS_META: Record<
   PROBING: {
     icon: '◌',
     label: 'PROBING',
-    colorClass: 'bg-slate-800/80 text-slate-300 border-slate-500/60',
+    colorClass:
+      'bg-titanium-bg-elevated/80 text-titanium-text-secondary border-slate-500/60',
     pulse: true,
   },
 };

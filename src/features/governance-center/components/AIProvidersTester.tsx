@@ -119,7 +119,7 @@ export const AIProvidersTester: React.FC = () => {
       case 'error':
         return <XCircle className="h-5 w-5 text-red-400" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-gray-400" />;
+        return <AlertCircle className="h-5 w-5 text-titanium-text-tertiary" />;
     }
   };
 
@@ -132,7 +132,7 @@ export const AIProvidersTester: React.FC = () => {
       case 'error':
         return 'border-red-500/50 bg-red-500/10';
       default:
-        return 'border-gray-700/50 bg-gray-800/50';
+        return 'border-titanium-border-default/50 bg-titanium-bg-elevated/50';
     }
   };
 
@@ -153,7 +153,7 @@ export const AIProvidersTester: React.FC = () => {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white">Test des Providers IA</h2>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-titanium-text-tertiary">
               Validation et métriques de performance
             </p>
           </div>
@@ -181,12 +181,12 @@ export const AIProvidersTester: React.FC = () => {
               className={`relative overflow-hidden rounded-xl border-2 transition-all ${getStatusColor(test.status)}`}
             >
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-gray-700/50 bg-gray-800/50 p-4">
+              <div className="flex items-center justify-between border-b border-titanium-border-default/50 bg-titanium-bg-elevated/50 p-4">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{config.icon}</span>
                   <div>
                     <h3 className="font-bold text-white">{config.name}</h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <div className="flex items-center gap-2 text-sm text-titanium-text-tertiary">
                       {getStatusIcon(test.status)}
                       <span>
                         {test.status === 'idle' && 'Non testé'}
@@ -211,19 +211,19 @@ export const AIProvidersTester: React.FC = () => {
               <div className="space-y-3 p-4">
                 {/* Metrics */}
                 {test.latency !== undefined && (
-                  <div className="flex items-center justify-between rounded-lg bg-gray-900/50 p-3">
-                    <span className="text-sm text-gray-400">Latence</span>
+                  <div className="flex items-center justify-between rounded-lg bg-titanium-bg-base/50 p-3">
+                    <span className="text-sm text-titanium-text-tertiary">Latence</span>
                     <span className="font-bold text-white">{test.latency}ms</span>
                   </div>
                 )}
 
                 {/* Response */}
                 {test.response && (
-                  <div className="rounded-lg bg-gray-900/50 p-3">
-                    <div className="mb-1 text-xs font-bold uppercase text-gray-400">
+                  <div className="rounded-lg bg-titanium-bg-base/50 p-3">
+                    <div className="mb-1 text-xs font-bold uppercase text-titanium-text-tertiary">
                       Réponse
                     </div>
-                    <div className="text-sm text-gray-300">{test.response}</div>
+                    <div className="text-sm text-titanium-text-secondary">{test.response}</div>
                   </div>
                 )}
 
@@ -239,14 +239,14 @@ export const AIProvidersTester: React.FC = () => {
 
                 {/* Timestamp */}
                 {test.timestamp && (
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-titanium-text-disabled">
                     Testé le {new Date(test.timestamp).toLocaleString('fr-FR')}
                   </div>
                 )}
 
                 {/* Idle state */}
                 {test.status === 'idle' && (
-                  <div className="py-8 text-center text-sm text-gray-500">
+                  <div className="py-8 text-center text-sm text-titanium-text-disabled">
                     Cliquez sur &quot;Tester&quot; pour vérifier ce provider
                   </div>
                 )}
@@ -257,25 +257,25 @@ export const AIProvidersTester: React.FC = () => {
       </div>
 
       {/* Summary */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
+      <div className="rounded-xl border border-titanium-border-default bg-titanium-bg-elevated/50 p-6">
         <h3 className="mb-4 flex items-center gap-2 font-bold text-white">
           <CheckCircle className="h-5 w-5 text-green-400" />
           Résumé des tests
         </h3>
         <div className="grid gap-4 md:grid-cols-4">
-          <div className="rounded-lg bg-gray-900/50 p-4 text-center">
+          <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
             <div className="text-3xl font-bold text-white">
               {Object.values(tests).filter(t => t.status === 'success').length}
             </div>
-            <div className="text-sm text-gray-400">Opérationnels</div>
+            <div className="text-sm text-titanium-text-tertiary">Opérationnels</div>
           </div>
-          <div className="rounded-lg bg-gray-900/50 p-4 text-center">
+          <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
             <div className="text-3xl font-bold text-white">
               {Object.values(tests).filter(t => t.status === 'error').length}
             </div>
-            <div className="text-sm text-gray-400">En erreur</div>
+            <div className="text-sm text-titanium-text-tertiary">En erreur</div>
           </div>
-          <div className="rounded-lg bg-gray-900/50 p-4 text-center">
+          <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
             <div className="text-3xl font-bold text-white">
               {Object.values(tests)
                 .filter(t => t.latency)
@@ -283,9 +283,9 @@ export const AIProvidersTester: React.FC = () => {
                 Math.max(Object.values(tests).filter(t => t.latency).length, 1) || 0}
               ms
             </div>
-            <div className="text-sm text-gray-400">Latence moyenne</div>
+            <div className="text-sm text-titanium-text-tertiary">Latence moyenne</div>
           </div>
-          <div className="rounded-lg bg-gray-900/50 p-4 text-center">
+          <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
             <div className="text-3xl font-bold text-white">
               {Math.round(
                 (Object.values(tests).filter(t => t.status === 'success').length /
@@ -294,7 +294,7 @@ export const AIProvidersTester: React.FC = () => {
               )}
               %
             </div>
-            <div className="text-sm text-gray-400">Taux de succès</div>
+            <div className="text-sm text-titanium-text-tertiary">Taux de succès</div>
           </div>
         </div>
       </div>

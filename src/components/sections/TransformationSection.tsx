@@ -15,7 +15,6 @@ import { Grid, Stack } from '@components/layout';
 import { Card } from '@/ui';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
-import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { createLogger } from '@/utils/logger';
 
@@ -122,7 +121,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
 
         {/* ═══ TRANSFORMATION: Roadmap ═══ */}
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutive</h3>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>Roadmap Évolutive</h3>
           <React.Suspense
             fallback={
               <SectionLoadingFallback
@@ -138,7 +137,9 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
 
         {/* ═══ ÉVOLUTION MÉMOIRE (fusionnée depuis MemoryEvolutionSection) ═══ */}
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Centre d&apos;Évolution Mémoire</h3>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>
+            Centre d&apos;Évolution Mémoire
+          </h3>
           {env.isTauri ? (
             <React.Suspense
               fallback={
@@ -153,11 +154,13 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
             </React.Suspense>
           ) : (
             <div>
-              <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
                 Disponible en mode Tauri uniquement
               </p>
-              <div style={{ marginTop: spacing[4] }}>
-                <h4 style={{ marginBottom: spacing[3] }}>Timeline d&apos;Évolution</h4>
+              <div style={{ marginTop: 'var(--space-4)' }}>
+                <h4 style={{ marginBottom: 'var(--space-3)' }}>
+                  Timeline d&apos;Évolution
+                </h4>
                 <React.Suspense
                   fallback={
                     <SectionLoadingFallback
@@ -175,17 +178,17 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
         </Card>
 
         {/* ═══ TRANSFORMATION: Lignes d'Évolution + Indicateurs ═══ */}
-        <Grid columns={2} gap={4} style={{ marginTop: spacing[4] }}>
+        <Grid columns={2} gap={4} style={{ marginTop: 'var(--space-4)' }}>
           <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Lignes d&apos;Évolution</h3>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>Lignes d&apos;Évolution</h3>
             <Stack direction="vertical" gap={3}>
               <div>
                 <TBadge variant="info">Cognitif</TBadge>
                 <p
                   style={{
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[400],
-                    marginTop: spacing[2],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
+                    marginTop: 'var(--space-2)',
                   }}
                 >
                   Capacités de raisonnement et apprentissage
@@ -196,9 +199,9 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
                 <TBadge variant="success">Social</TBadge>
                 <p
                   style={{
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[400],
-                    marginTop: spacing[2],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
+                    marginTop: 'var(--space-2)',
                   }}
                 >
                   Interaction et communication
@@ -209,9 +212,9 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
                 <TBadge variant="info">Technique</TBadge>
                 <p
                   style={{
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[400],
-                    marginTop: spacing[2],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
+                    marginTop: 'var(--space-2)',
                   }}
                 >
                   Architecture et optimisation
@@ -221,12 +224,12 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
           </Card>
 
           <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Indicateurs Synchronisés</h3>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>Indicateurs Synchronisés</h3>
             <p
               style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[500],
-                marginBottom: spacing[3],
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
+                marginBottom: 'var(--space-3)',
               }}
             >
               Calculés depuis l&apos;état réel TITANE — XP, mémoire et activité
@@ -252,13 +255,13 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
               <TMetric
                 label="Messages synchronisés"
                 value={stats.chatMessageCount.toString()}
-                color={colors.saphir.primary[500]}
+                color={'var(--color-info-500)'}
               />
               <p
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 La transformation progresse selon le niveau, les souvenirs consolidés et

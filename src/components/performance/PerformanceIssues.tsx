@@ -167,8 +167,8 @@ const IssueCard: React.FC<IssueCardProps> = ({
         rounded-lg border overflow-hidden
         ${
           isResolved
-            ? 'bg-slate-800/30 border-slate-700/30'
-            : `${config.bgColor} border-slate-700/50`
+            ? 'bg-titanium-bg-elevated/30 border-titanium-border-default/30'
+            : `${config.bgColor} border-titanium-border-default/50`
         }
       `}
     >
@@ -181,18 +181,18 @@ const IssueCard: React.FC<IssueCardProps> = ({
           animate={{ rotate: expanded ? 90 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <ChevronRight size={16} className="text-slate-400" />
+          <ChevronRight size={16} className="text-titanium-text-tertiary" />
         </motion.div>
 
         <SeverityIcon
           size={20}
-          className={isResolved ? 'text-slate-500' : config.color}
+          className={isResolved ? 'text-titanium-text-disabled' : config.color}
         />
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`font-medium ${isResolved ? 'text-slate-400 line-through' : 'text-white'}`}
+              className={`font-medium ${isResolved ? 'text-titanium-text-tertiary line-through' : 'text-white'}`}
             >
               {issue.title}
             </span>
@@ -202,7 +202,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2 mt-1 text-xs text-slate-400">
+          <div className="flex items-center gap-2 mt-1 text-xs text-titanium-text-tertiary">
             <span>{MODULE_LABELS[issue.module]}</span>
             <span>•</span>
             <span>{formatTimestamp(issue.detectedAt)}</span>
@@ -232,29 +232,35 @@ const IssueCard: React.FC<IssueCardProps> = ({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 pt-2 border-t border-slate-700/30">
+            <div className="px-4 pb-4 pt-2 border-t border-titanium-border-default/30">
               {/* Description */}
               <div className="mb-4">
-                <p className="text-sm text-slate-300">{issue.description}</p>
+                <p className="text-sm text-titanium-text-secondary">
+                  {issue.description}
+                </p>
               </div>
 
               {/* Détails de l'issue */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <span className="text-xs text-slate-500">Type</span>
-                  <p className="text-sm text-slate-300">{issue.type}</p>
+                  <span className="text-xs text-titanium-text-disabled">Type</span>
+                  <p className="text-sm text-titanium-text-secondary">{issue.type}</p>
                 </div>
                 <div>
-                  <span className="text-xs text-slate-500">Module</span>
-                  <p className="text-sm text-slate-300">{MODULE_LABELS[issue.module]}</p>
+                  <span className="text-xs text-titanium-text-disabled">Module</span>
+                  <p className="text-sm text-titanium-text-secondary">
+                    {MODULE_LABELS[issue.module]}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-xs text-slate-500">Métrique</span>
-                  <p className="text-sm text-slate-300">{issue.threshold.metric}</p>
+                  <span className="text-xs text-titanium-text-disabled">Métrique</span>
+                  <p className="text-sm text-titanium-text-secondary">
+                    {issue.threshold.metric}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-xs text-slate-500">Valeur</span>
-                  <p className="text-sm text-slate-300">
+                  <span className="text-xs text-titanium-text-disabled">Valeur</span>
+                  <p className="text-sm text-titanium-text-secondary">
                     {issue.threshold.actual.toFixed(2)} / {issue.threshold.threshold}
                     <span className="text-red-400 ml-1">
                       (+{issue.threshold.percentage.toFixed(1)}%)
@@ -266,14 +272,14 @@ const IssueCard: React.FC<IssueCardProps> = ({
               {/* Recommandations */}
               {issue.recommendations && issue.recommendations.length > 0 && (
                 <div className="mb-4">
-                  <span className="text-xs text-slate-500 block mb-2">
+                  <span className="text-xs text-titanium-text-disabled block mb-2">
                     Recommandations
                   </span>
                   <ul className="space-y-1">
                     {issue.recommendations.map((recommendation, idx) => (
                       <li
                         key={idx}
-                        className="flex items-start gap-2 text-sm text-slate-300"
+                        className="flex items-start gap-2 text-sm text-titanium-text-secondary"
                       >
                         <span className="text-blue-400">→</span>
                         {recommendation}
@@ -293,7 +299,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
 
               {/* Actions */}
               {!isResolved && (
-                <div className="flex items-center gap-2 pt-2 border-t border-slate-700/30">
+                <div className="flex items-center gap-2 pt-2 border-t border-titanium-border-default/30">
                   {onResolve && (
                     <button
                       onClick={e => {
@@ -314,7 +320,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
                         onIgnore();
                       }}
                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg
-                        bg-slate-700/50 text-slate-400 hover:bg-slate-700 transition-colors"
+                        bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:bg-titanium-bg-interactive transition-colors"
                     >
                       <EyeOff size={14} />
                       <span className="text-sm">Ignorer</span>
@@ -481,23 +487,23 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className={`
-        bg-slate-800/50 backdrop-blur-md rounded-xl border border-slate-700/50
+        bg-titanium-bg-elevated/50 backdrop-blur-md rounded-xl border border-titanium-border-default/50
         ${className}
       `}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+      <div className="flex items-center justify-between p-4 border-b border-titanium-border-default/50">
         <div className="flex items-center gap-3">
           {collapsible && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="p-1 hover:bg-slate-700/50 rounded transition-colors"
+              className="p-1 hover:bg-titanium-bg-interactive/50 rounded transition-colors"
             >
               <motion.div
                 animate={{ rotate: isExpanded ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <ChevronRight size={20} className="text-slate-400" />
+                <ChevronRight size={20} className="text-titanium-text-tertiary" />
               </motion.div>
             </button>
           )}
@@ -544,7 +550,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
             onClick={() => setShowResolved(!showResolved)}
             className={`
               p-2 rounded-lg transition-colors
-              ${showResolved ? 'bg-green-500/20 text-green-400' : 'text-slate-400 hover:text-white'}
+              ${showResolved ? 'bg-green-500/20 text-green-400' : 'text-titanium-text-tertiary hover:text-white'}
             `}
             title={showResolved ? 'Masquer résolus' : 'Afficher résolus'}
           >
@@ -563,23 +569,23 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
           >
             {/* Filtres et recherche */}
             {(showFilters || showSearch) && (
-              <div className="p-4 border-b border-slate-700/30">
+              <div className="p-4 border-b border-titanium-border-default/30">
                 <div className="flex flex-wrap items-center gap-3">
                   {/* Recherche */}
                   {showSearch && (
                     <div className="relative flex-1 min-w-[200px]">
                       <Search
                         size={16}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-titanium-text-tertiary"
                       />
                       <input
                         type="text"
                         placeholder="Rechercher..."
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 bg-slate-700/50 rounded-lg
+                        className="w-full pl-10 pr-4 py-2 bg-titanium-bg-interactive/50 rounded-lg
                           text-sm text-white placeholder-slate-400
-                          border border-slate-600 focus:border-blue-500 outline-none"
+                          border border-titanium-border-default focus:border-blue-500 outline-none"
                       />
                     </div>
                   )}
@@ -587,7 +593,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                   {/* Filtres sévérité */}
                   {showFilters && (
                     <div className="flex items-center gap-2">
-                      <Filter size={16} className="text-slate-400" />
+                      <Filter size={16} className="text-titanium-text-tertiary" />
                       {(['critical', 'major', 'warning', 'info'] as SeverityLevel[]).map(
                         severity => {
                           const config = SEVERITY_CONFIG[severity];
@@ -601,7 +607,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                               ${
                                 isActive
                                   ? `${config.bgColor} ${config.color}`
-                                  : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                                  : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
                               }
                             `}
                             >
@@ -622,7 +628,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                         ${
                           sortField === 'detectedAt'
                             ? 'bg-blue-500/20 text-blue-400'
-                            : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                            : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
                         }
                       `}
                     >
@@ -637,7 +643,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                         ${
                           sortField === 'severity'
                             ? 'bg-blue-500/20 text-blue-400'
-                            : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                            : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
                         }
                       `}
                     >
@@ -671,10 +677,10 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                   ))}
                 </AnimatePresence>
               ) : (
-                <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                <div className="flex flex-col items-center justify-center py-12 text-titanium-text-tertiary">
                   <CheckCircle size={48} className="mb-3 text-green-400 opacity-50" />
                   <p className="text-lg">Aucun problème détecté</p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-titanium-text-disabled">
                     Le système fonctionne normalement
                   </p>
                 </div>
@@ -682,7 +688,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
 
               {/* Indicateur de troncature */}
               {filteredIssues.length > maxVisible && (
-                <div className="text-center text-sm text-slate-400 pt-4">
+                <div className="text-center text-sm text-titanium-text-tertiary pt-4">
                   Affichage de {sortedIssues.length} sur {filteredIssues.length} problèmes
                 </div>
               )}

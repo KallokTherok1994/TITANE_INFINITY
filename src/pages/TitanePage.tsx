@@ -103,6 +103,15 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   transformation: 'titane-tab-transformation',
 };
 
+const TAB_TEST_IDS: Record<TabId, string> = {
+  conversation: 'tab-conversation',
+  vision: 'tab-vision',
+  overview: 'tab-overview',
+  'memory-map': 'tab-memory',
+  progression: 'tab-progression',
+  transformation: 'tab-transformation',
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
@@ -246,6 +255,33 @@ export const TitanePage: React.FC = () => {
 
   const isConversationTab = activeTab === 'conversation';
 
+  // Arrow-key navigation for tablist (ARIA tab pattern)
+  const handleTabListKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const tabOrder = VALID_TABS;
+      const currentIndex = tabOrder.indexOf(activeTab);
+      const navigate = (targetTab: TabId | undefined) => {
+        if (!targetTab) return;
+        updateActiveTab(targetTab);
+        document.getElementById(TAB_LABEL_IDS[targetTab])?.focus();
+      };
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        navigate(tabOrder[(currentIndex + 1) % tabOrder.length]);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigate(tabOrder[(currentIndex - 1 + tabOrder.length) % tabOrder.length]);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        navigate(tabOrder[0]);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        navigate(tabOrder[tabOrder.length - 1]);
+      }
+    },
+    [activeTab, updateActiveTab]
+  );
+
   // ═══ RENDER ACTIVE SECTION ═══
   const renderActiveSection = useCallback(() => {
     switch (activeTab) {
@@ -320,97 +356,59 @@ export const TitanePage: React.FC = () => {
               className={`titane-inline-tabs${isConversationTab ? ' titane-inline-tabs--conversation' : ''}`}
               role="tablist"
               aria-label="Sections principales TITANE"
+              onKeyDown={handleTabListKeyDown}
             >
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'conversation'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-conversation"
-                onClick={tabHandlers.conversation}
-                role="tab"
-                aria-selected={activeTab === 'conversation'}
-                aria-controls={TAB_PANEL_IDS.conversation}
-                id={TAB_LABEL_IDS.conversation}
-              >
-                💬 Chat
-              </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'overview'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-overview"
-                onClick={tabHandlers.overview}
-                role="tab"
-                aria-selected={activeTab === 'overview'}
-                aria-controls={TAB_PANEL_IDS.overview}
-                id={TAB_LABEL_IDS.overview}
-              >
-                📊 Dashboard
-              </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'vision'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-vision"
-                onClick={tabHandlers.vision}
-                role="tab"
-                aria-selected={activeTab === 'vision'}
-                aria-controls={TAB_PANEL_IDS.vision}
-                id={TAB_LABEL_IDS.vision}
-              >
-                📷 Vision
-              </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'memory-map'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-memory"
-                onClick={tabHandlers.memoryMap}
-                role="tab"
-                aria-selected={activeTab === 'memory-map'}
-                aria-controls={TAB_PANEL_IDS['memory-map']}
-                id={TAB_LABEL_IDS['memory-map']}
-              >
-                💾 Mémoire
-              </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'progression'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-progression"
-                onClick={tabHandlers.progression}
-                role="tab"
-                aria-selected={activeTab === 'progression'}
-                aria-controls={TAB_PANEL_IDS.progression}
-                id={TAB_LABEL_IDS.progression}
-              >
-                ⚡ Progression
-              </button>
-              <button
-                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                  activeTab === 'transformation'
-                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-                }`}
-                data-testid="tab-transformation"
-                onClick={tabHandlers.transformation}
-                role="tab"
-                aria-selected={activeTab === 'transformation'}
-                aria-controls={TAB_PANEL_IDS.transformation}
-                id={TAB_LABEL_IDS.transformation}
-              >
-                🌱 Évolution
-              </button>
+              {(
+                [
+                  {
+                    id: 'conversation',
+                    label: '💬 Chat',
+                    handler: tabHandlers.conversation,
+                  },
+                  {
+                    id: 'overview',
+                    label: '📊 Dashboard',
+                    handler: tabHandlers.overview,
+                  },
+                  { id: 'vision', label: '📷 Vision', handler: tabHandlers.vision },
+                  {
+                    id: 'memory-map',
+                    label: '💾 Mémoire',
+                    handler: tabHandlers.memoryMap,
+                  },
+                  {
+                    id: 'progression',
+                    label: '⚡ Progression',
+                    handler: tabHandlers.progression,
+                  },
+                  {
+                    id: 'transformation',
+                    label: '🌱 Évolution',
+                    handler: tabHandlers.transformation,
+                  },
+                ] as Array<{ id: TabId; label: string; handler: () => void }>
+              ).map(tab => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    className={`px-4 py-2 text-sm font-medium rounded transition-colors duration-150 ${
+                      isActive
+                        ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                        : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                    }`}
+                    data-testid={TAB_TEST_IDS[tab.id]}
+                    onClick={tab.handler}
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls={TAB_PANEL_IDS[tab.id]}
+                    id={TAB_LABEL_IDS[tab.id]}
+                    tabIndex={isActive ? 0 : -1}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

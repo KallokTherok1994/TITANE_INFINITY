@@ -67,7 +67,13 @@
 }
 
 .time-block.active {
-  animation: pulse-glow 2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .time-block.active {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════

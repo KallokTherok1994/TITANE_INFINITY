@@ -65,32 +65,32 @@ const CreationStudio = memo(function CreationStudio() {
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-600">
           Creation Studio
         </h1>
-        <p className="text-gray-400 mt-2">Phase 8 : Génération de code par IA</p>
+        <p className="text-titanium-text-tertiary mt-2">Phase 8 : Génération de code par IA</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Configuration */}
         <div className="space-y-6">
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+          <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
             <h2 className="text-xl font-semibold text-white mb-4">
               Que souhaitez-vous créer ?
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">
+                <label className="block text-sm text-titanium-text-tertiary mb-2">
                   Description de l&apos;intention
                 </label>
                 <textarea
                   value={intent}
                   onChange={e => setIntent(e.target.value)}
                   placeholder="Décrivez ce que vous voulez créer... Exemple : 'Créer un module d'authentification utilisateur avec tokens JWT'"
-                  className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white h-32 resize-none focus:border-purple-500 focus:outline-none"
+                  className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-3 text-white h-32 resize-none focus:border-purple-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Type de cible</label>
+                <label className="block text-sm text-titanium-text-tertiary mb-2">Type de cible</label>
                 <div className="grid grid-cols-2 gap-2">
                   {TARGET_TYPES.map(type => (
                     <button
@@ -99,7 +99,7 @@ const CreationStudio = memo(function CreationStudio() {
                       className={`p-3 rounded-lg border-2 transition-all text-left ${
                         targetType === type.value
                           ? 'border-purple-500 bg-purple-500/20'
-                          : 'border-gray-600 bg-gray-700/30 hover:border-gray-500'
+                          : 'border-titanium-border-strong bg-titanium-bg-interactive/30 hover:border-gray-500'
                       }`}
                     >
                       <div className="text-white font-medium text-sm">{type.label}</div>
@@ -125,9 +125,9 @@ const CreationStudio = memo(function CreationStudio() {
           </div>
 
           {/* Templates Info */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+          <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
             <h3 className="text-lg font-semibold text-white mb-3">Modèles disponibles</h3>
-            <div className="space-y-2 text-sm text-gray-400">
+            <div className="space-y-2 text-sm text-titanium-text-tertiary">
               <div>
                 • <span className="text-orange-400">Rust Modules</span> - Structs, traits,
                 implementations
@@ -161,7 +161,7 @@ const CreationStudio = memo(function CreationStudio() {
           {artifact ? (
             <>
               {/* Code Preview */}
-              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+              <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-white">
                     Généré : {artifact.name}
@@ -174,8 +174,8 @@ const CreationStudio = memo(function CreationStudio() {
                   </button>
                 </div>
 
-                <div className="bg-gray-900/50 rounded-lg p-4 max-h-96 overflow-auto">
-                  <pre className="text-sm text-gray-300 font-mono whitespace-pre-wrap">
+                <div className="bg-titanium-bg-base/50 rounded-lg p-4 max-h-96 overflow-auto">
+                  <pre className="text-sm text-titanium-text-secondary font-mono whitespace-pre-wrap">
                     {artifact.code}
                   </pre>
                 </div>
@@ -183,13 +183,13 @@ const CreationStudio = memo(function CreationStudio() {
 
               {/* Dependencies */}
               {artifact.dependencies.length > 0 && (
-                <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+                <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                   <h3 className="text-lg font-semibold text-white mb-3">Dépendances</h3>
                   <div className="space-y-2">
                     {artifact.dependencies.map((dep, idx) => (
                       <div
                         key={idx}
-                        className="bg-gray-700/30 rounded-lg p-3 font-mono text-sm text-green-400"
+                        className="bg-titanium-bg-interactive/30 rounded-lg p-3 font-mono text-sm text-green-400"
                       >
                         {dep}
                       </div>
@@ -200,7 +200,7 @@ const CreationStudio = memo(function CreationStudio() {
 
               {/* Tests */}
               {artifact.tests && (
-                <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+                <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-white">
                       Tests auto-générés
@@ -213,8 +213,8 @@ const CreationStudio = memo(function CreationStudio() {
                       📋 Copier
                     </button>
                   </div>
-                  <div className="bg-gray-900/50 rounded-lg p-4 max-h-48 overflow-auto">
-                    <pre className="text-sm text-gray-300 font-mono whitespace-pre-wrap">
+                  <div className="bg-titanium-bg-base/50 rounded-lg p-4 max-h-48 overflow-auto">
+                    <pre className="text-sm text-titanium-text-secondary font-mono whitespace-pre-wrap">
                       {artifact.tests}
                     </pre>
                   </div>
@@ -222,20 +222,20 @@ const CreationStudio = memo(function CreationStudio() {
               )}
 
               {/* Documentation */}
-              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+              <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                 <h3 className="text-lg font-semibold text-white mb-3">Documentation</h3>
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <p className="text-gray-300 whitespace-pre-wrap">
+                  <p className="text-titanium-text-secondary whitespace-pre-wrap">
                     {artifact.documentation}
                   </p>
                 </div>
               </div>
             </>
           ) : (
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-purple-500/30 text-center">
+            <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-12 border border-purple-500/30 text-center">
               <div className="text-6xl mb-4">✨</div>
               <h2 className="text-2xl font-semibold text-white mb-2">Prêt à créer</h2>
-              <p className="text-gray-400">
+              <p className="text-titanium-text-tertiary">
                 Décrivez votre intention et sélectionnez un type de cible pour générer le
                 code
               </p>

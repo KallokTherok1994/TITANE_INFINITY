@@ -176,7 +176,30 @@ function withIpcTimeout<T>(
   });
 }
 
+const STORAGE_KEY_COLOR_MODE = 'titane-color-mode';
+
+function getInitialColorMode(): 'dark' | 'light' {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY_COLOR_MODE);
+    if (stored === 'light' || stored === 'dark') return stored;
+  } catch {
+    // localStorage unavailable
+  }
+  // Respect system preference
+  if (
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-color-scheme: light)').matches
+  ) {
+    return 'light';
+  }
+  return 'dark';
+}
+
 export function UIThemeProvider({ children }: UIThemeProviderProps) {
+  const [colorMode, setColorModeState] = React.useState<'dark' | 'light'>(
+    getInitialColorMode
+  );
+
   const [state, dispatch] = useReducer(uiThemeReducer, {
     tokens: DEFAULT_UI_THEME_TOKENS,
     isLoading: true,
@@ -236,6 +259,34 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   useEffect(() => {
     loadTokens();
   }, [loadTokens]);
+
+  // ────────────────────────────────────────────────────────────
+  // Color mode toggle (dark / light)
+  // ────────────────────────────────────────────────────────────
+  const setColorMode = useCallback((mode: 'dark' | 'light') => {
+    setColorModeState(mode);
+    try {
+      localStorage.setItem(STORAGE_KEY_COLOR_MODE, mode);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const toggleColorMode = useCallback(() => {
+    setColorMode(colorMode === 'dark' ? 'light' : 'dark');
+  }, [colorMode, setColorMode]);
+
+  // Apply/remove .light class on html element whenever colorMode changes
+  useEffect(() => {
+    const root = document.documentElement;
+    if (colorMode === 'light') {
+      root.classList.add('light');
+      root.classList.remove('dark');
+    } else {
+      root.classList.remove('light');
+      root.classList.add('dark');
+    }
+  }, [colorMode]);
 
   // ────────────────────────────────────────────────────────────
   // Appliquer les tokens au DOM
@@ -407,8 +458,42 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
       root.classList.remove('reduced-motion');
     }
 
+    // Light mode inline overrides — applied after token application so they take priority
+    if (colorMode === 'light') {
+      root.style.setProperty('--color-bg-primary', '#ffffff');
+      root.style.setProperty('--color-bg-secondary', '#f8fafc');
+      root.style.setProperty('--color-bg-tertiary', '#f1f5f9');
+      root.style.setProperty('--color-bg-elevated', '#e2e8f0');
+      root.style.setProperty('--color-bg-overlay', '#cbd5e1');
+      root.style.setProperty('--color-text-primary', '#0f172a');
+      root.style.setProperty('--color-text-secondary', '#334155');
+      root.style.setProperty('--color-text-muted', '#64748b');
+      root.style.setProperty('--color-text-disabled', '#94a3b8');
+      root.style.setProperty('--color-border-default', '#e2e8f0');
+      root.style.setProperty('--color-border-subtle', '#f1f5f9');
+      root.style.setProperty('--color-border-strong', '#cbd5e1');
+      root.style.setProperty('--color-background', '#ffffff');
+      root.style.setProperty('--color-surface', '#f8fafc');
+      root.style.setProperty('--color-surface-elevated', '#e2e8f0');
+      root.style.setProperty('--color-text', '#0f172a');
+      root.style.setProperty('--background', '#ffffff');
+      root.style.setProperty('--surface', '#f8fafc');
+      root.style.setProperty('--surface-elevated', '#e2e8f0');
+      root.style.setProperty('--text-primary', '#0f172a');
+      root.style.setProperty('--text-muted', '#64748b');
+      root.style.setProperty('--border', '#e2e8f0');
+      root.style.setProperty('--bg-primary', '#ffffff');
+      root.style.setProperty('--bg-secondary', '#f8fafc');
+      root.style.setProperty('--bg-card', 'rgba(255,255,255,0.9)');
+      root.style.setProperty('--bg-panel', 'rgba(255,255,255,0.98)');
+      root.style.setProperty('--bg-input', 'rgba(255,255,255,0.95)');
+      root.style.setProperty('--bg-hover', 'rgba(226,232,240,0.7)');
+      root.style.setProperty('--admin-bg-start', '#f8fafc');
+      root.style.setProperty('--admin-bg-end', '#f1f5f9');
+    }
+
     logger.debug('Tokens appliqués au DOM', { component: 'UIThemeProvider' });
-  }, [state]); // Fixed deps: include state
+  }, [state, colorMode]);
 
   // Appliquer automatiquement quand les tokens changent
   useEffect(() => {
@@ -544,6 +629,9 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const contextValue = useMemo<UIThemeContext>(
     () => ({
       ...state,
+      colorMode,
+      toggleColorMode,
+      setColorMode,
       updateToken,
       updateCategory,
       saveTokens,
@@ -554,6 +642,9 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     }),
     [
       state,
+      colorMode,
+      toggleColorMode,
+      setColorMode,
       updateToken,
       updateCategory,
       saveTokens,

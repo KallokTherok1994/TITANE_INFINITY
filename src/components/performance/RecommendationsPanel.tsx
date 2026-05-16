@@ -103,8 +103,8 @@ const CATEGORY_CONFIG: Record<
   },
   general: {
     label: 'Général',
-    color: 'text-slate-400',
-    bgColor: 'bg-slate-500/20',
+    color: 'text-titanium-text-tertiary',
+    bgColor: 'bg-titanium-bg-overlay/20',
     icon: Settings,
   },
 };
@@ -203,7 +203,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
         ${
           isApplied
             ? 'bg-green-500/10 border-green-500/30'
-            : 'bg-slate-800/50 border-slate-700/50'
+            : 'bg-titanium-bg-elevated/50 border-titanium-border-default/50'
         }
       `}
     >
@@ -216,7 +216,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
           animate={{ rotate: expanded ? 90 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <ChevronRight size={16} className="text-slate-400" />
+          <ChevronRight size={16} className="text-titanium-text-tertiary" />
         </motion.div>
 
         <div className={`p-2 rounded-lg ${categoryConfig.bgColor}`}>
@@ -237,13 +237,13 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
               </span>
             )}
           </div>
-          <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
-            <span className={categoryConfig?.color ?? 'text-slate-400'}>
+          <div className="flex items-center gap-3 mt-1 text-xs text-titanium-text-tertiary">
+            <span className={categoryConfig?.color ?? 'text-titanium-text-tertiary'}>
               {categoryConfig?.label ?? 'General'}
             </span>
             <span>•</span>
             <span
-              className={`flex items-center gap-1 ${impactConfig?.color ?? 'text-slate-400'}`}
+              className={`flex items-center gap-1 ${impactConfig?.color ?? 'text-titanium-text-tertiary'}`}
             >
               <Target size={10} />
               Impact {impactConfig?.label ?? 'Low'}
@@ -276,23 +276,25 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 pt-2 border-t border-slate-700/30">
+            <div className="px-4 pb-4 pt-2 border-t border-titanium-border-default/30">
               {/* Description */}
               <div className="mb-4">
-                <p className="text-sm text-slate-300">{recommendation.description}</p>
+                <p className="text-sm text-titanium-text-secondary">
+                  {recommendation.description}
+                </p>
               </div>
 
               {/* Code snippet si disponible */}
               {recommendation.code && (
                 <div className="mb-4">
-                  <span className="text-xs text-slate-500 block mb-2">
+                  <span className="text-xs text-titanium-text-disabled block mb-2">
                     Exemple de code ({recommendation.code.language})
                   </span>
-                  <pre className="text-xs bg-slate-900/70 rounded-lg p-3 overflow-x-auto text-slate-300 border border-slate-700/50">
+                  <pre className="text-xs bg-titanium-bg-base/70 rounded-lg p-3 overflow-x-auto text-titanium-text-secondary border border-titanium-border-default/50">
                     {recommendation.code.after}
                   </pre>
                   {recommendation.code.file && (
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-titanium-text-disabled mt-1">
                       Fichier: {recommendation.code.file}
                       {recommendation.code.line && ` (ligne ${recommendation.code.line})`}
                     </p>
@@ -304,7 +306,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
               {recommendation.relatedIssues &&
                 recommendation.relatedIssues.length > 0 && (
                   <div className="mb-4">
-                    <span className="text-xs text-slate-500 block mb-2">
+                    <span className="text-xs text-titanium-text-disabled block mb-2">
                       Issues liées
                     </span>
                     <ul className="space-y-1">
@@ -312,7 +314,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                         (issueId: string, idx: number) => (
                           <li
                             key={idx}
-                            className="flex items-center gap-2 text-xs text-slate-400"
+                            className="flex items-center gap-2 text-xs text-titanium-text-tertiary"
                           >
                             <Code size={12} />
                             {issueId}
@@ -325,8 +327,10 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
 
               {/* Priorité */}
               {recommendation.priority && (
-                <div className="mb-4 p-3 bg-slate-900/50 rounded-lg">
-                  <span className="text-xs text-slate-500 block mb-2">Priorité</span>
+                <div className="mb-4 p-3 bg-titanium-bg-base/50 rounded-lg">
+                  <span className="text-xs text-titanium-text-disabled block mb-2">
+                    Priorité
+                  </span>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                       <Target size={14} className="text-amber-400" />
@@ -334,7 +338,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                         {recommendation.priority}/10
                       </span>
                     </div>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-titanium-text-tertiary">
                       {recommendation.reversible ? 'Réversible' : 'Non réversible'}
                     </span>
                   </div>
@@ -351,7 +355,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
 
               {/* Actions */}
               {!isApplied && (
-                <div className="flex items-center gap-2 pt-2 border-t border-slate-700/30">
+                <div className="flex items-center gap-2 pt-2 border-t border-titanium-border-default/30">
                   {onApply && recommendation.autoApplicable && (
                     <button
                       onClick={e => {
@@ -393,7 +397,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                         onDismiss();
                       }}
                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg
-                        bg-slate-700/50 text-slate-400 hover:bg-slate-700 transition-colors"
+                        bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:bg-titanium-bg-interactive transition-colors"
                     >
                       <X size={14} />
                       <span className="text-sm">Ignorer</span>
@@ -574,23 +578,23 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className={`
-        bg-slate-800/50 backdrop-blur-md rounded-xl border border-slate-700/50
+        bg-titanium-bg-elevated/50 backdrop-blur-md rounded-xl border border-titanium-border-default/50
         ${className}
       `}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+      <div className="flex items-center justify-between p-4 border-b border-titanium-border-default/50">
         <div className="flex items-center gap-3">
           {collapsible && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="p-1 hover:bg-slate-700/50 rounded transition-colors"
+              className="p-1 hover:bg-titanium-bg-interactive/50 rounded transition-colors"
             >
               <motion.div
                 animate={{ rotate: isExpanded ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <ChevronRight size={20} className="text-slate-400" />
+                <ChevronRight size={20} className="text-titanium-text-tertiary" />
               </motion.div>
             </button>
           )}
@@ -602,7 +606,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
           <div>
             <h3 className="font-semibold text-white">Recommandations</h3>
             <div className="flex items-center gap-3 mt-1 text-xs">
-              <span className="text-slate-400">
+              <span className="text-titanium-text-tertiary">
                 {stats.total - stats.applied} en attente
               </span>
               {stats.critical > 0 && (
@@ -637,11 +641,11 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
           >
             {/* Filtres */}
             {showFilters && (
-              <div className="p-4 border-b border-slate-700/30 space-y-3">
+              <div className="p-4 border-b border-titanium-border-default/30 space-y-3">
                 {/* Filtres par catégorie */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <Filter size={14} className="text-slate-400" />
-                  <span className="text-xs text-slate-400">Catégorie:</span>
+                  <Filter size={14} className="text-titanium-text-tertiary" />
+                  <span className="text-xs text-titanium-text-tertiary">Catégorie:</span>
                   {(Object.keys(CATEGORY_CONFIG) as RecommendationCategory[]).map(
                     category => {
                       const config = CATEGORY_CONFIG[category];
@@ -656,7 +660,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                           ${
                             isActive
                               ? `${config.bgColor} ${config.color}`
-                              : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                              : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
                           }
                         `}
                         >
@@ -670,7 +674,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
 
                 {/* Filtres par impact et tri */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs text-slate-400">Impact:</span>
+                  <span className="text-xs text-titanium-text-tertiary">Impact:</span>
                   {(['critical', 'high', 'medium', 'low'] as RecommendationImpact[]).map(
                     impact => {
                       const config = IMPACT_CONFIG[impact];
@@ -684,7 +688,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                           ${
                             isActive
                               ? `${config.bgColor} ${config.color}`
-                              : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                              : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
                           }
                         `}
                         >
@@ -704,7 +708,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                       ${
                         sortField === 'impact'
                           ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                          : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
                       }
                     `}
                   >
@@ -719,7 +723,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                       ${
                         sortField === 'effort'
                           ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                          : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
                       }
                     `}
                   >
@@ -752,16 +756,18 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                   ))}
                 </AnimatePresence>
               ) : (
-                <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                <div className="flex flex-col items-center justify-center py-12 text-titanium-text-tertiary">
                   <Check size={48} className="mb-3 text-green-400 opacity-50" />
                   <p className="text-lg">Aucune recommandation</p>
-                  <p className="text-sm text-slate-500">Le système est optimisé</p>
+                  <p className="text-sm text-titanium-text-disabled">
+                    Le système est optimisé
+                  </p>
                 </div>
               )}
 
               {/* Indicateur de troncature */}
               {filteredRecs.length > maxVisible && (
-                <div className="text-center text-sm text-slate-400 pt-4">
+                <div className="text-center text-sm text-titanium-text-tertiary pt-4">
                   Affichage de {sortedRecs.length} sur {filteredRecs.length}{' '}
                   recommandations
                 </div>

@@ -11,31 +11,38 @@
   border-width: 0;
 }
 
-/* Focus visible for keyboard navigation */
+/* Focus visible for keyboard navigation — uses design system violet */
 *:focus-visible {
-  outline: 3px solid var(--focus-color, #0056b3);
+  outline: 2px solid var(--color-violet-500, #a855f7);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm, 4px);
 }
 
 *:focus:not(:focus-visible) {
   outline: none;
 }
 
-/* Skip link */
+/* Skip link — appears on Tab focus, invisible otherwise */
 .skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  padding: 8px;
+  position: fixed;
+  top: -60px;
+  left: var(--space-4, 16px);
+  background: var(--color-bg-secondary, #1e293b);
+  color: var(--color-text-primary, #f1f5f9);
+  border: 1px solid var(--color-border-default, #334155);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--space-2, 8px) var(--space-4, 16px);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
   text-decoration: none;
-  z-index: 100;
+  z-index: 10000;
+  transition: top 150ms ease-out;
 }
 
 .skip-link:focus {
-  top: 0;
+  top: var(--space-4, 16px);
+  outline: 2px solid var(--color-violet-500, #a855f7);
+  outline-offset: 2px;
 }
 
 /* Color contrast WCAG AA */
@@ -128,10 +135,12 @@ h4 {
   font-size: 1rem;
 }
 
-/* Minimum touch target size (44x44px) */
-button,
-a,
-[role='button'] {
-  min-height: 44px;
-  min-width: 44px;
+/* Minimum touch target size (44x44px) — touch devices only */
+@media (pointer: coarse) {
+  button,
+  a,
+  [role='button'] {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

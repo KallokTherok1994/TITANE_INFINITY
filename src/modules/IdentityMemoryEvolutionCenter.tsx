@@ -69,14 +69,14 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">
           🧠 TWINS & Memory Evolution Center
         </h1>
-        <p className="text-gray-400">
+        <p className="text-titanium-text-tertiary">
           Le noyau intérieur du double numérique — Qui je suis, ce que je garde, comment
           ça me transforme
         </p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="tabs flex gap-2 border-b border-gray-700 pb-4 overflow-x-auto">
+      <div className="tabs flex gap-2 border-b border-titanium-border-default pb-4 overflow-x-auto">
         {[
           {
             id: 'twins',
@@ -101,7 +101,7 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
             className={`px-4 py-2 rounded-lg transition-all ${
               activeTab === tab.id
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-titanium-bg-elevated text-titanium-text-tertiary hover:bg-titanium-bg-interactive'
             }`}
           >
             <div className="flex flex-col items-start">
@@ -136,7 +136,7 @@ const ModuleTwinsSection: React.FC = () => {
       />
 
       {/* Matrice Identitaire */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🎯 Matrice Identitaire</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
@@ -149,12 +149,14 @@ const ModuleTwinsSection: React.FC = () => {
             { dimension: 'Écoute', value: 0.91 },
             { dimension: 'Leadership', value: 0.83 },
           ].map(dim => (
-            <div key={dim.dimension} className="bg-gray-900 p-4 rounded-lg">
-              <div className="text-sm text-gray-400 mb-2">{dim.dimension}</div>
+            <div key={dim.dimension} className="bg-titanium-bg-base p-4 rounded-lg">
+              <div className="text-sm text-titanium-text-tertiary mb-2">
+                {dim.dimension}
+              </div>
               <div className="text-2xl font-bold text-blue-400">
                 {(dim.value * 100).toFixed(0)}%
               </div>
-              <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+              <div className="w-full bg-titanium-bg-interactive rounded-full h-2 mt-2">
                 <div
                   className="h-2 rounded-full bg-blue-500"
                   style={{ width: `${dim.value * 100}%` }}
@@ -167,7 +169,7 @@ const ModuleTwinsSection: React.FC = () => {
 
       {/* Modes de Fonctionnement */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🎭 Modes de Fonctionnement</h3>
           <div className="space-y-3">
             {[
@@ -176,18 +178,18 @@ const ModuleTwinsSection: React.FC = () => {
               { mode: 'Créateur de Contenu', active: false, usage: 18 },
               { mode: 'Analyste Profond', active: false, usage: 12 },
             ].map(mode => (
-              <div key={mode.mode} className="bg-gray-900 p-3 rounded">
+              <div key={mode.mode} className="bg-titanium-bg-base p-3 rounded">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">{mode.mode}</span>
                   <TBadge variant={mode.active ? 'success' : 'default'}>
                     {mode.active ? 'Actif' : 'Disponible'}
                   </TBadge>
                 </div>
-                <div className="flex justify-between text-sm text-gray-400 mb-1">
+                <div className="flex justify-between text-sm text-titanium-text-tertiary mb-1">
                   <span>Usage</span>
                   <span>{mode.usage}%</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
                   <div
                     className="h-2 rounded-full bg-blue-500"
                     style={{ width: `${mode.usage}%` }}
@@ -198,7 +200,7 @@ const ModuleTwinsSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">📜 Pacte Kevin ↔ TITANE</h3>
           <div className="space-y-3">
             <div className="bg-blue-900/30 border border-blue-500 rounded-lg p-4">
@@ -224,19 +226,23 @@ const ModuleTwinsSection: React.FC = () => {
       </div>
 
       {/* Préférences Système */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">⚙️ Préférences Système</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gray-900 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-2">Style de réponse</div>
+          <div className="bg-titanium-bg-base p-4 rounded">
+            <div className="text-sm text-titanium-text-tertiary mb-2">
+              Style de réponse
+            </div>
             <div className="font-semibold">Approfondi & Structuré</div>
           </div>
-          <div className="bg-gray-900 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-2">Niveau profondeur</div>
+          <div className="bg-titanium-bg-base p-4 rounded">
+            <div className="text-sm text-titanium-text-tertiary mb-2">
+              Niveau profondeur
+            </div>
             <div className="font-semibold">Maximum (9/10)</div>
           </div>
-          <div className="bg-gray-900 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-2">Ton</div>
+          <div className="bg-titanium-bg-base p-4 rounded">
+            <div className="text-sm text-titanium-text-tertiary mb-2">Ton</div>
             <div className="font-semibold">Expert & Précis</div>
           </div>
         </div>
@@ -267,41 +273,54 @@ const MemoryMapSection: React.FC = () => {
       {/* 3 Couches */}
       <div className="space-y-4">
         {/* Court Terme */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">⚡ Court Terme (Contexte Vivant)</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h4 className="font-semibold mb-2 text-gray-300">Sessions Récentes</h4>
+              <h4 className="font-semibold mb-2 text-titanium-text-secondary">
+                Sessions Récentes
+              </h4>
               <div className="space-y-2">
                 {[
                   { title: 'Fusion modules UI', time: '2h ago', size: '34 items' },
                   { title: 'Architecture v24', time: '5h ago', size: '28 items' },
                   { title: 'Tests backend', time: '1d ago', size: '42 items' },
                 ].map((session, i) => (
-                  <div key={i} className="bg-gray-900 p-3 rounded flex justify-between">
+                  <div
+                    key={i}
+                    className="bg-titanium-bg-base p-3 rounded flex justify-between"
+                  >
                     <div>
                       <div className="font-semibold">{session.title}</div>
-                      <div className="text-sm text-gray-400">{session.time}</div>
+                      <div className="text-sm text-titanium-text-tertiary">
+                        {session.time}
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-400">{session.size}</div>
+                    <div className="text-sm text-titanium-text-tertiary">
+                      {session.size}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="font-semibold mb-2 text-gray-300">Projets Actifs</h4>
+              <h4 className="font-semibold mb-2 text-titanium-text-secondary">
+                Projets Actifs
+              </h4>
               <div className="space-y-2">
                 {[
                   { project: 'TITANE∞ v24', progress: 100 },
                   { project: 'Design System', progress: 95 },
                   { project: 'Backend Hardening', progress: 88 },
                 ].map(proj => (
-                  <div key={proj.project} className="bg-gray-900 p-3 rounded">
+                  <div key={proj.project} className="bg-titanium-bg-base p-3 rounded">
                     <div className="flex justify-between mb-2">
                       <span className="font-semibold">{proj.project}</span>
-                      <span className="text-sm text-gray-400">{proj.progress}%</span>
+                      <span className="text-sm text-titanium-text-tertiary">
+                        {proj.progress}%
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
                       <div
                         className="h-2 rounded-full bg-cyan-500"
                         style={{ width: `${proj.progress}%` }}
@@ -315,7 +334,7 @@ const MemoryMapSection: React.FC = () => {
         </div>
 
         {/* Moyen Terme */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">📊 Moyen Terme (Indexation)</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
@@ -328,16 +347,19 @@ const MemoryMapSection: React.FC = () => {
               { theme: 'Performance', count: 142 },
               { theme: 'Documentation', count: 128 },
             ].map(theme => (
-              <div key={theme.theme} className="bg-gray-900 p-3 rounded text-center">
+              <div
+                key={theme.theme}
+                className="bg-titanium-bg-base p-3 rounded text-center"
+              >
                 <div className="text-2xl font-bold text-cyan-400">{theme.count}</div>
-                <div className="text-sm text-gray-400">{theme.theme}</div>
+                <div className="text-sm text-titanium-text-tertiary">{theme.theme}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Long Terme */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🏛️ Long Terme (Mémoire Hiérarchique)</h3>
           <div className="space-y-3">
             {[
@@ -362,11 +384,11 @@ const MemoryMapSection: React.FC = () => {
                 items: 143,
               },
             ].map(pillar => (
-              <div key={pillar.pillar} className="bg-gray-900 p-4 rounded">
+              <div key={pillar.pillar} className="bg-titanium-bg-base p-4 rounded">
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <h4 className="font-bold">{pillar.pillar}</h4>
-                    <p className="text-sm text-gray-400">{pillar.desc}</p>
+                    <p className="text-sm text-titanium-text-tertiary">{pillar.desc}</p>
                   </div>
                   <TBadge variant="info">{pillar.items}</TBadge>
                 </div>
@@ -377,7 +399,7 @@ const MemoryMapSection: React.FC = () => {
       </div>
 
       {/* Santé Mémoire */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">💚 Santé de la Mémoire</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <TMetric label="Intégrité" value="99.7%" icon="✅" />
@@ -403,7 +425,7 @@ const MemoryEvolutionSection: React.FC = () => {
       />
 
       {/* Opérations Automatiques */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🔄 Opérations Automatiques</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -432,12 +454,12 @@ const MemoryEvolutionSection: React.FC = () => {
               lastRun: '12d ago',
             },
           ].map(op => (
-            <div key={op.operation} className="bg-gray-900 p-4 rounded">
+            <div key={op.operation} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold">{op.operation}</span>
                 <TBadge variant="success">{op.status}</TBadge>
               </div>
-              <div className="text-sm text-gray-400 space-y-1">
+              <div className="text-sm text-titanium-text-tertiary space-y-1">
                 <div>Fréquence: {op.frequency}</div>
                 <div>Dernier: {op.lastRun}</div>
               </div>
@@ -447,7 +469,7 @@ const MemoryEvolutionSection: React.FC = () => {
       </div>
 
       {/* Journal d'Évolution */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">📜 Journal d&apos;Évolution Mémoire</h3>
         <div className="space-y-3">
           {[
@@ -476,11 +498,11 @@ const MemoryEvolutionSection: React.FC = () => {
               impact: 'Low',
             },
           ].map((event, i) => (
-            <div key={i} className="bg-gray-900 p-4 rounded">
+            <div key={i} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <h4 className="font-bold">{event.event}</h4>
-                  <p className="text-sm text-gray-400 mt-1">{event.desc}</p>
+                  <p className="text-sm text-titanium-text-tertiary mt-1">{event.desc}</p>
                 </div>
                 <TBadge
                   variant={
@@ -494,14 +516,14 @@ const MemoryEvolutionSection: React.FC = () => {
                   {event.impact}
                 </TBadge>
               </div>
-              <div className="text-xs text-gray-500 mt-2">{event.time}</div>
+              <div className="text-xs text-titanium-text-disabled mt-2">{event.time}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Paramètres Memory Core */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">⚙️ Paramètres Memory Core</h3>
         <div className="space-y-4">
           {[
@@ -525,13 +547,13 @@ const MemoryEvolutionSection: React.FC = () => {
               <div className="flex justify-between mb-2">
                 <div>
                   <div className="font-semibold">{param.param}</div>
-                  <div className="text-sm text-gray-400">{param.desc}</div>
+                  <div className="text-sm text-titanium-text-tertiary">{param.desc}</div>
                 </div>
                 <div className="text-cyan-400 font-bold">
                   {(param.value * 100).toFixed(0)}%
                 </div>
               </div>
-              <div className="w-full bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
                 <div
                   className="h-2 rounded-full bg-cyan-500"
                   style={{ width: `${param.value * 100}%` }}
@@ -558,7 +580,7 @@ const CognitiveEvolutionSection: React.FC = () => {
       />
 
       {/* Lignes d'Évolution */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🌱 Lignes d&apos;Évolution par Thème</h3>
         <div className="space-y-4">
           {[
@@ -587,22 +609,22 @@ const CognitiveEvolutionSection: React.FC = () => {
               progress: 64,
             },
           ].map(line => (
-            <div key={line.theme} className="bg-gray-900 p-4 rounded">
+            <div key={line.theme} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-bold">{line.theme}</h4>
                 <span className="text-cyan-400 font-bold">{line.progress}%</span>
               </div>
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Avant</div>
+                  <div className="text-xs text-titanium-text-disabled mb-1">Avant</div>
                   <div className="text-sm text-red-400">{line.before}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Après</div>
+                  <div className="text-xs text-titanium-text-disabled mb-1">Après</div>
                   <div className="text-sm text-green-400">{line.after}</div>
                 </div>
               </div>
-              <div className="w-full bg-gray-700 rounded-full h-3">
+              <div className="w-full bg-titanium-bg-interactive rounded-full h-3">
                 <div
                   className="h-3 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
                   style={{ width: `${line.progress}%` }}
@@ -614,7 +636,7 @@ const CognitiveEvolutionSection: React.FC = () => {
       </div>
 
       {/* Paliers Franchis */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">
           🎯 Paliers Franchis (Changements Incarnés)
         </h3>
@@ -641,14 +663,19 @@ const CognitiveEvolutionSection: React.FC = () => {
               desc: "Passage du contrôle total à l'orchestration",
             },
           ].map((milestone, i) => (
-            <div key={i} className="bg-gray-900 p-4 rounded flex items-start gap-4">
+            <div
+              key={i}
+              className="bg-titanium-bg-base p-4 rounded flex items-start gap-4"
+            >
               <div className="text-3xl">✨</div>
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
                   <h4 className="font-bold">{milestone.milestone}</h4>
-                  <span className="text-sm text-gray-400">{milestone.date}</span>
+                  <span className="text-sm text-titanium-text-tertiary">
+                    {milestone.date}
+                  </span>
                 </div>
-                <p className="text-sm text-gray-400">{milestone.desc}</p>
+                <p className="text-sm text-titanium-text-tertiary">{milestone.desc}</p>
               </div>
             </div>
           ))}
@@ -656,7 +683,7 @@ const CognitiveEvolutionSection: React.FC = () => {
       </div>
 
       {/* Projection */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🔮 Projection (Tendances Actuelles)</h3>
         <div className="bg-blue-900/30 border border-blue-500 rounded-lg p-6">
           <h4 className="font-bold mb-4 text-xl">Vers quoi tu évolues:</h4>
@@ -665,7 +692,7 @@ const CognitiveEvolutionSection: React.FC = () => {
               <span className="text-2xl">🎯</span>
               <div>
                 <div className="font-semibold">Architecte de Systèmes Vivants</div>
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-titanium-text-tertiary">
                   Capacité à créer des écosystèmes autonomes
                 </div>
               </div>
@@ -674,7 +701,7 @@ const CognitiveEvolutionSection: React.FC = () => {
               <span className="text-2xl">🧠</span>
               <div>
                 <div className="font-semibold">Pensée Multi-Dimensionnelle Native</div>
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-titanium-text-tertiary">
                   Intégration naturelle de multiples perspectives simultanées
                 </div>
               </div>
@@ -683,7 +710,7 @@ const CognitiveEvolutionSection: React.FC = () => {
               <span className="text-2xl">🌊</span>
               <div>
                 <div className="font-semibold">Leadership par Flux</div>
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-titanium-text-tertiary">
                   Direction par influence et alignement plutôt que contrôle
                 </div>
               </div>

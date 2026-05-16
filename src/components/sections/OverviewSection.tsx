@@ -14,7 +14,6 @@ import { QuickStatCard } from '@/features/dashboard';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { TMetric, TSectionHeader } from '@/design-system';
-import { spacing } from '@themes/tokens';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -58,8 +57,8 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: spacing[4],
-          marginBottom: spacing[6],
+          gap: 'var(--space-4)',
+          marginBottom: 'var(--space-6)',
         }}
       >
         <QuickStatCard
@@ -124,9 +123,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
       </React.Suspense>
 
       {/* Memory System Stats */}
-      <div style={{ marginTop: spacing[6] }}>
+      <div style={{ marginTop: 'var(--space-6)' }}>
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Mémoire Système</h3>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>Mémoire Système</h3>
           <Grid columns={3} gap={4}>
             <TMetric label="Court Terme" value={stats.memoryShortTerm.toString()} />
             <TMetric label="Moyen Terme" value={stats.memoryMidTerm.toString()} />
@@ -136,7 +135,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
       </div>
 
       {/* Persona Mood */}
-      <div style={{ marginTop: spacing[6] }}>
+      <div style={{ marginTop: 'var(--space-6)' }}>
         <PersonaMoodIndicator />
       </div>
     </div>

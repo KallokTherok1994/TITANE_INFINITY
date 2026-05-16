@@ -930,11 +930,11 @@ describe('J — Knowledge Base Count Synchronization', () => {
     expect(entries.length).toBeGreaterThanOrEqual(100);
   });
 
-  it('J2: getAllEntries() canonical count runtime (valeur exacte 273)', async () => {
+  it('J2: getAllEntries() canonical count runtime (valeur exacte 283)', async () => {
     const { DEFAULT_KB_CANONICAL_ENTRY_COUNT, getAllEntries } =
       await import('../services/api/defaultKnowledgeBase');
     const entries = await getAllEntries();
-    expect(DEFAULT_KB_CANONICAL_ENTRY_COUNT).toBe(273);
+    expect(DEFAULT_KB_CANONICAL_ENTRY_COUNT).toBe(283);
     expect(entries.length).toBe(DEFAULT_KB_CANONICAL_ENTRY_COUNT);
   });
 

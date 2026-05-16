@@ -102,14 +102,14 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
           </h1>
           <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'DEGRADED'} />
         </div>
-        <p className="text-gray-400">
+        <p className="text-titanium-text-tertiary">
           La salle des machines consciente de TITANE∞ — Orchestration cognitive,
           technique, IA hybrides & flux internes
         </p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="tabs flex gap-2 border-b border-gray-700 pb-4 overflow-x-auto">
+      <div className="tabs flex gap-2 border-b border-titanium-border-default pb-4 overflow-x-auto">
         {[
           { id: 'overview', label: '🎯 Overview', desc: "Vue d'ensemble" },
           { id: 'meta', label: '🧠 Meta-Orchestration', desc: 'Priorités cognitives' },
@@ -125,13 +125,13 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
             className={`px-4 py-2 rounded-lg transition-all ${
               activeTab === tab.id
                 ? 'bg-purple-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-titanium-bg-elevated text-titanium-text-tertiary hover:bg-titanium-bg-interactive'
             }`}
           >
             <div className="flex flex-col items-start">
               <span className="font-semibold">{tab.label}</span>
               {/* a11y WCAG AA: remove opacity-70 which dropped contrast below 4.5:1
-                  on both bg-purple-600 (active) and bg-gray-800 (inactive).
+                  on both bg-purple-600 (active) and bg-titanium-bg-elevated (inactive).
                   Smaller text-xs already provides visual hierarchy. */}
               <span className="text-xs">{tab.desc}</span>
             </div>
@@ -192,7 +192,7 @@ const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({
 
       {/* Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
             🎯 Moteurs Critiques
           </h3>
@@ -213,21 +213,23 @@ const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({
             ].map(engine => (
               <div
                 key={engine.name}
-                className="flex items-center justify-between bg-gray-900 p-3 rounded"
+                className="flex items-center justify-between bg-titanium-bg-base p-3 rounded"
               >
                 <span className="font-semibold">{engine.name}</span>
                 <div className="flex items-center gap-2">
                   <TBadge variant={engine.status === 'Running' ? 'success' : 'warning'}>
                     {engine.status}
                   </TBadge>
-                  <span className="text-sm text-gray-400">P{engine.priority}</span>
+                  <span className="text-sm text-titanium-text-tertiary">
+                    P{engine.priority}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
             🤖 Système Multi-IA
           </h3>
@@ -240,14 +242,14 @@ const OverviewSection: React.FC<{ liveState: SingularityLiveState | null }> = ({
             ].map(ai => (
               <div
                 key={ai.model}
-                className="flex items-center justify-between bg-gray-900 p-3 rounded"
+                className="flex items-center justify-between bg-titanium-bg-base p-3 rounded"
               >
                 <span className="font-semibold">{ai.model}</span>
                 <div className="flex items-center gap-2">
                   <TBadge variant={ai.status === 'Active' ? 'success' : 'default'}>
                     {ai.status}
                   </TBadge>
-                  <span className="text-sm text-gray-400">{ai.usage}</span>
+                  <span className="text-sm text-titanium-text-tertiary">{ai.usage}</span>
                 </div>
               </div>
             ))}
@@ -270,13 +272,15 @@ const MetaOrchestrationSection: React.FC = () => {
         subtitle="Priorités cognitives, moteurs dominants, décisions méta"
       />
 
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🧠 Moteur Dominant</h3>
         <div className="bg-purple-900/30 border border-purple-500 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
               <h4 className="text-2xl font-bold text-purple-400">CognitiveEngine</h4>
-              <p className="text-gray-400">Traitement cognitif profond activé</p>
+              <p className="text-titanium-text-tertiary">
+                Traitement cognitif profond activé
+              </p>
             </div>
             <TBadge variant="success">Dominant</TBadge>
           </div>
@@ -284,7 +288,7 @@ const MetaOrchestrationSection: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">📊 Lanes Métacognitives</h3>
           <div className="space-y-3">
             {[
@@ -296,11 +300,11 @@ const MetaOrchestrationSection: React.FC = () => {
               <div key={lane.lane} className="space-y-1">
                 <div className="flex justify-between text-sm">
                   <span>{lane.lane}</span>
-                  <span className="text-gray-400">{lane.load}%</span>
+                  <span className="text-titanium-text-tertiary">{lane.load}%</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
                   <div
-                    className={`h-2 rounded-full ${lane.active ? 'bg-purple-500' : 'bg-gray-600'}`}
+                    className={`h-2 rounded-full ${lane.active ? 'bg-purple-500' : 'bg-titanium-bg-overlay'}`}
                     style={{ width: `${lane.load}%` }}
                   />
                 </div>
@@ -309,7 +313,7 @@ const MetaOrchestrationSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🎯 Règles Méta Actives</h3>
           <div className="space-y-2">
             {[
@@ -318,7 +322,10 @@ const MetaOrchestrationSection: React.FC = () => {
               'Memory: Compression progressive',
               'Identity: Alignement continu',
             ].map(rule => (
-              <div key={rule} className="bg-gray-900 p-3 rounded flex items-center gap-2">
+              <div
+                key={rule}
+                className="bg-titanium-bg-base p-3 rounded flex items-center gap-2"
+              >
                 <span className="text-green-400">✓</span>
                 <span>{rule}</span>
               </div>
@@ -342,7 +349,7 @@ const OrchestrationSection: React.FC = () => {
         subtitle="Flux moteurs, synchronisation, états actifs"
       />
 
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🔧 Flux Actifs</h3>
         <div className="space-y-3">
           {[
@@ -366,7 +373,10 @@ const OrchestrationSection: React.FC = () => {
               latency: '3ms',
             },
           ].map(flow => (
-            <div key={`${flow.from}-${flow.to}`} className="bg-gray-900 p-4 rounded">
+            <div
+              key={`${flow.from}-${flow.to}`}
+              className="bg-titanium-bg-base p-4 rounded"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="font-semibold">{flow.from}</span>
@@ -377,7 +387,9 @@ const OrchestrationSection: React.FC = () => {
                   <TBadge variant={flow.status === 'Active' ? 'success' : 'warning'}>
                     {flow.status}
                   </TBadge>
-                  <span className="text-sm text-gray-400">{flow.latency}</span>
+                  <span className="text-sm text-titanium-text-tertiary">
+                    {flow.latency}
+                  </span>
                 </div>
               </div>
             </div>
@@ -406,7 +418,7 @@ const QuantumLayerSection: React.FC = () => {
         <TMetric label="Intensité Processus" value="73%" icon="🔥" />
       </div>
 
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🧪 Signaux Faibles Récents</h3>
         <div className="space-y-2">
           {[
@@ -416,14 +428,14 @@ const QuantumLayerSection: React.FC = () => {
           ].map((sig, i) => (
             <div
               key={i}
-              className="bg-gray-900 p-3 rounded flex items-center justify-between"
+              className="bg-titanium-bg-base p-3 rounded flex items-center justify-between"
             >
               <span>{sig.signal}</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-titanium-text-tertiary">
                   {(sig.confidence * 100).toFixed(0)}%
                 </span>
-                <span className="text-xs text-gray-500">{sig.time}</span>
+                <span className="text-xs text-titanium-text-disabled">{sig.time}</span>
               </div>
             </div>
           ))}
@@ -480,11 +492,11 @@ const MultiIASection: React.FC = () => {
             requests: 0,
           },
         ].map(ai => (
-          <div key={ai.name} className="bg-gray-800 rounded-lg p-6">
+          <div key={ai.name} className="bg-titanium-bg-elevated rounded-lg p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <h3 className="text-xl font-bold">{ai.name}</h3>
-                <p className="text-sm text-gray-400">{ai.type}</p>
+                <p className="text-sm text-titanium-text-tertiary">{ai.type}</p>
               </div>
               <TBadge variant={ai.status === 'Active' ? 'success' : 'default'}>
                 {ai.status}
@@ -492,15 +504,15 @@ const MultiIASection: React.FC = () => {
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-400">Latency:</span>
+                <span className="text-titanium-text-tertiary">Latency:</span>
                 <span>{ai.latency}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Cost:</span>
+                <span className="text-titanium-text-tertiary">Cost:</span>
                 <span>{ai.cost}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Requests:</span>
+                <span className="text-titanium-text-tertiary">Requests:</span>
                 <span>{ai.requests}</span>
               </div>
             </div>
@@ -523,11 +535,13 @@ const RealityRendererSection: React.FC = () => {
         subtitle="Visualisation du système, flows internes"
       />
 
-      <div className="bg-gray-800 rounded-lg p-6 h-96 flex items-center justify-center">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6 h-96 flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">🌀</div>
           <h3 className="text-2xl font-bold mb-2">Visualisation 3D</h3>
-          <p className="text-gray-400">Représentation 3D en développement</p>
+          <p className="text-titanium-text-tertiary">
+            Représentation 3D en développement
+          </p>
           <div className="mt-6 space-y-2">
             <TBadge variant="info">État cognitif global: Optimal</TBadge>
             <TBadge variant="success">Flux internes: 18 actifs</TBadge>
@@ -559,7 +573,7 @@ const QAMonitoringSection: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🔴 Erreurs Récentes</h3>
           <div className="space-y-2">
             {[
@@ -582,21 +596,21 @@ const QAMonitoringSection: React.FC = () => {
                 severity: 'Medium',
               },
             ].map((err, i) => (
-              <div key={i} className="bg-gray-900 p-3 rounded">
+              <div key={i} className="bg-titanium-bg-base p-3 rounded">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-semibold">{err.module}</span>
                   <TBadge variant={err.severity === 'Low' ? 'default' : 'warning'}>
                     {err.severity}
                   </TBadge>
                 </div>
-                <p className="text-sm text-gray-400">{err.error}</p>
-                <p className="text-xs text-gray-500 mt-1">{err.time}</p>
+                <p className="text-sm text-titanium-text-tertiary">{err.error}</p>
+                <p className="text-xs text-titanium-text-disabled mt-1">{err.time}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🟢 Santé Modules</h3>
           <div className="space-y-2">
             {[
@@ -608,9 +622,9 @@ const QAMonitoringSection: React.FC = () => {
               <div key={mod.module} className="space-y-1">
                 <div className="flex justify-between text-sm">
                   <span>{mod.module}</span>
-                  <span className="text-gray-400">{mod.health}%</span>
+                  <span className="text-titanium-text-tertiary">{mod.health}%</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
                   <div
                     className="h-2 rounded-full bg-green-500"
                     style={{ width: `${mod.health}%` }}
@@ -622,7 +636,7 @@ const QAMonitoringSection: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
           🔧 Auto-Heal / Repair
         </button>

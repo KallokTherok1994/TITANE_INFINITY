@@ -97,12 +97,14 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
     <div className="space-y-6">
       {/* Header Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg border-2 border-gray-200 p-4">
+        <div className="bg-white rounded-lg border-2 border-titanium-border-subtle p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-5 h-5 text-gray-600" />
-            <span className="text-sm font-medium text-gray-600">Total Alertes</span>
+            <Activity className="w-5 h-5 text-titanium-text-disabled" />
+            <span className="text-sm font-medium text-titanium-text-disabled">
+              Total Alertes
+            </span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+          <div className="text-2xl font-bold text-titanium-text-primary">{stats.total}</div>
         </div>
 
         <div className="bg-red-50 rounded-lg border-2 border-red-200 p-4">
@@ -138,7 +140,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
 
       {/* Alerts List */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-titanium-text-primary flex items-center gap-2">
           <TrendingUp className="w-5 h-5" />
           Alertes Prédictives ({alerts.length})
         </h3>
@@ -222,28 +224,32 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
 
       {/* Metrics Distribution */}
       {stats.total > 0 && (
-        <div className="bg-white rounded-lg border-2 border-gray-200 p-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+        <div className="bg-white rounded-lg border-2 border-titanium-border-subtle p-4">
+          <h4 className="text-sm font-semibold text-titanium-text-secondary mb-3">
             Distribution par métrique
           </h4>
           <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">
+            <div className="text-center p-3 bg-titanium-bg-base rounded-lg">
+              <div className="text-2xl font-bold text-titanium-text-primary">
                 {stats.byMetric.latency}
               </div>
-              <div className="text-xs text-gray-600 mt-1">Latence</div>
+              <div className="text-xs text-titanium-text-disabled mt-1">Latence</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">
+            <div className="text-center p-3 bg-titanium-bg-base rounded-lg">
+              <div className="text-2xl font-bold text-titanium-text-primary">
                 {stats.byMetric.errorRate}
               </div>
-              <div className="text-xs text-gray-600 mt-1">Taux d&apos;erreur</div>
+              <div className="text-xs text-titanium-text-disabled mt-1">
+                Taux d&apos;erreur
+              </div>
             </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">
+            <div className="text-center p-3 bg-titanium-bg-base rounded-lg">
+              <div className="text-2xl font-bold text-titanium-text-primary">
                 {stats.byMetric.retryRate}
               </div>
-              <div className="text-xs text-gray-600 mt-1">Taux de retry</div>
+              <div className="text-xs text-titanium-text-disabled mt-1">
+                Taux de retry
+              </div>
             </div>
           </div>
         </div>

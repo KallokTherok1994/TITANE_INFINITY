@@ -17,7 +17,6 @@ import { Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
 import { KnowledgeDomains } from '../components/progression/KnowledgeDomains';
 import { useExperience } from '../hooks/useExperience';
-import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
 import AgentDashboardsPanel from '../components/AgentDashboardsPanel';
@@ -33,7 +32,7 @@ export const ProgressionPage = (): JSX.Element => {
 
   if (isLoading) {
     return (
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: 'var(--space-6)' }}>
         <div style={{ textAlign: 'center', padding: '48px', color: '#727b81' }}>
           Chargement du système d&apos;expérience...
         </div>
@@ -51,16 +50,16 @@ export const ProgressionPage = (): JSX.Element => {
   return (
     <div
       data-testid="page-progression"
-      style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}
+      style={{ maxWidth: '1280px', margin: '0 auto', padding: 'var(--space-6)' }}
     >
       <SurfaceTruthBadge variant={badgeVariant} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[6] }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: spacing[4] }}>
+        <div style={{ textAlign: 'center', marginBottom: 'var(--space-4)' }}>
           <h1
             style={{
-              fontSize: fontSizes['4xl'],
-              fontWeight: fontWeights.bold,
+              fontSize: 'var(--text-4xl)',
+              fontWeight: '700',
               background: 'linear-gradient(135deg, #c4c4c4, #93b399)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -72,9 +71,9 @@ export const ProgressionPage = (): JSX.Element => {
           </h1>
           <p
             style={{
-              fontSize: fontSizes.lg,
-              color: colors.neutral[400],
-              marginTop: spacing[2],
+              fontSize: 'var(--text-lg)',
+              color: 'var(--color-text-muted)',
+              marginTop: 'var(--space-2)',
             }}
           >
             Système de cartographie des connaissances
@@ -101,18 +100,18 @@ export const ProgressionPage = (): JSX.Element => {
             <div style={{ textAlign: 'center' }}>
               <div
                 style={{
-                  fontSize: fontSizes['3xl'],
-                  fontWeight: fontWeights.bold,
+                  fontSize: 'var(--text-3xl)',
+                  fontWeight: '700',
                   color: '#93b399',
-                  marginBottom: spacing[1],
+                  marginBottom: 'var(--space-1)',
                 }}
               >
                 {totalXp.toLocaleString()}
               </div>
               <div
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
                 }}
               >
                 XP Total
@@ -123,25 +122,25 @@ export const ProgressionPage = (): JSX.Element => {
               style={{
                 width: '1px',
                 height: '40px',
-                background: colors.neutral[800],
+                background: 'var(--color-border-subtle)',
               }}
             />
 
             <div style={{ textAlign: 'center' }}>
               <div
                 style={{
-                  fontSize: fontSizes['3xl'],
-                  fontWeight: fontWeights.bold,
+                  fontSize: 'var(--text-3xl)',
+                  fontWeight: '700',
                   color: '#c4c4c4',
-                  marginBottom: spacing[1],
+                  marginBottom: 'var(--space-1)',
                 }}
               >
                 {level}
               </div>
               <div
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
                 }}
               >
                 Niveau Global
@@ -152,25 +151,25 @@ export const ProgressionPage = (): JSX.Element => {
               style={{
                 width: '1px',
                 height: '40px',
-                background: colors.neutral[800],
+                background: 'var(--color-border-subtle)',
               }}
             />
 
             <div style={{ textAlign: 'center' }}>
               <div
                 style={{
-                  fontSize: fontSizes['3xl'],
-                  fontWeight: fontWeights.bold,
+                  fontSize: 'var(--text-3xl)',
+                  fontWeight: '700',
                   color: '#727b81',
-                  marginBottom: spacing[1],
+                  marginBottom: 'var(--space-1)',
                 }}
               >
                 {domains.length}
               </div>
               <div
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
                 }}
               >
                 Domaines Actifs

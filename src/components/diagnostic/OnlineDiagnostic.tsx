@@ -136,7 +136,7 @@ export const OnlineDiagnostic: React.FC = () => {
           className={cn(
             'px-3 py-1 rounded text-xs font-medium transition-colors',
             refreshing
-              ? 'bg-gray-500/20 text-gray-500 cursor-wait'
+              ? 'bg-titanium-bg-overlay/20 text-titanium-text-disabled cursor-wait'
               : 'bg-blue-500/20 text-blue-500 hover:bg-blue-500/30'
           )}
         >
@@ -240,7 +240,7 @@ export const OnlineDiagnostic: React.FC = () => {
                     ? 'text-green-500'
                     : provider.configured
                       ? 'text-yellow-500'
-                      : 'text-gray-500'
+                      : 'text-titanium-text-disabled'
                 )}
               >
                 {provider.can_reach

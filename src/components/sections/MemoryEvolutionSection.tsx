@@ -10,7 +10,6 @@
 import React, { memo } from 'react';
 import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
-import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
 
@@ -54,7 +53,9 @@ export const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = mem
       />
 
       <Card>
-        <h3 style={{ marginBottom: spacing[4] }}>Centre d&apos;Évolution Mémoire</h3>
+        <h3 style={{ marginBottom: 'var(--space-4)' }}>
+          Centre d&apos;Évolution Mémoire
+        </h3>
         {env.isTauri ? (
           <React.Suspense
             fallback={
@@ -69,11 +70,13 @@ export const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = mem
           </React.Suspense>
         ) : (
           <div>
-            <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
               Disponible en mode Tauri uniquement
             </p>
-            <div style={{ marginTop: spacing[4] }}>
-              <h4 style={{ marginBottom: spacing[3] }}>Timeline d&apos;Évolution</h4>
+            <div style={{ marginTop: 'var(--space-4)' }}>
+              <h4 style={{ marginBottom: 'var(--space-3)' }}>
+                Timeline d&apos;Évolution
+              </h4>
               <React.Suspense
                 fallback={
                   <SectionLoadingFallback

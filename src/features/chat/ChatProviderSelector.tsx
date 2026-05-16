@@ -45,17 +45,17 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
 
     return (
       <div className="flex items-center gap-2">
-        <Bot className="h-4 w-4 text-gray-400" />
+        <Bot className="h-4 w-4 text-titanium-text-tertiary" />
         <select
           data-testid="select-chat-provider"
           aria-label="Selection du provider IA"
           value={selectedProvider}
           onChange={e => onChange(e.target.value)}
-          className="rounded-lg border border-gray-600 bg-gray-700 px-3 py-1.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
+          className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-1.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
         >
           {options}
         </select>
-        <div className="flex items-center gap-1 text-xs text-gray-500">
+        <div className="flex items-center gap-1 text-xs text-titanium-text-disabled">
           <Sparkles className="h-3 w-3" />
           <span>
             IA ({availableCount}/{providers.length})

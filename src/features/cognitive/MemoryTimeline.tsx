@@ -9,7 +9,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, Input, Badge } from '../../ui';
 import { Stack } from '../../components/layout';
-import { colors, spacing } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
@@ -37,10 +36,10 @@ export interface MemoryTimelineProps {
 // ─────────────────────────────────────────────────────────────────
 
 const typeColors: Record<MemoryEntry['type'], string> = {
-  conversation: colors.rubis.primary[500],
-  fact: colors.saphir.primary[500],
-  skill: colors.emeraude.primary[500],
-  experience: colors.diamant.primary[400],
+  conversation: 'var(--color-text-secondary)',
+  fact: 'var(--color-info-500)',
+  skill: 'var(--color-success-500)',
+  experience: 'var(--color-text-muted)',
 };
 
 const formatDate = (date: Date): string => {
@@ -88,10 +87,10 @@ export const MemoryTimeline = ({
       >
         <h3
           style={{
-            margin: `0 0 ${spacing[4]} 0`,
+            margin: '0 0 var(--space-4) 0',
             fontSize: '1.25rem',
             fontWeight: 600,
-            color: colors.neutral[100],
+            color: 'var(--color-text-primary)',
           }}
         >
           💾 Memory Core - Timeline
@@ -103,7 +102,7 @@ export const MemoryTimeline = ({
           value={searchQuery}
           onChange={e => handleSearch(e.target.value)}
           size="md"
-          style={{ marginBottom: spacing[6] }}
+          style={{ marginBottom: 'var(--space-6)' }}
         />
 
         {/* Timeline */}
@@ -118,7 +117,7 @@ export const MemoryTimeline = ({
                 transition={{ duration: 0.3 }}
                 style={{
                   position: 'relative',
-                  paddingLeft: spacing[6],
+                  paddingLeft: 'var(--space-6)',
                   borderLeft: `2px solid ${typeColors[entry.type]}`,
                   cursor: onEntryClick ? 'pointer' : 'default',
                 }}
@@ -134,26 +133,26 @@ export const MemoryTimeline = ({
                     height: '10px',
                     borderRadius: '50%',
                     background: typeColors[entry.type],
-                    border: `2px solid ${colors.neutral[950]}`,
+                    border: '2px solid var(--color-bg-primary)',
                   }}
                 />
 
                 {/* Entry card */}
                 <div
                   style={{
-                    padding: spacing[4],
-                    background: colors.neutral[900],
+                    padding: 'var(--space-4)',
+                    background: 'var(--color-bg-primary)',
                     borderRadius: '8px',
-                    border: `1px solid ${colors.neutral[800]}`,
+                    border: '1px solid var(--color-border-subtle)',
                     transition: 'all 0.2s',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = colors.rubis.surface.translucent;
-                    e.currentTarget.style.borderColor = colors.rubis.primary[800];
+                    e.currentTarget.style.background = 'rgba(148,163,184,0.08)';
+                    e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = colors.neutral[900];
-                    e.currentTarget.style.borderColor = colors.neutral[800];
+                    e.currentTarget.style.background = 'var(--color-bg-primary)';
+                    e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
                   }}
                 >
                   {/* Header */}
@@ -162,11 +161,15 @@ export const MemoryTimeline = ({
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      marginBottom: spacing[2],
+                      marginBottom: 'var(--space-2)',
                     }}
                   >
                     <div
-                      style={{ display: 'flex', gap: spacing[2], alignItems: 'center' }}
+                      style={{
+                        display: 'flex',
+                        gap: 'var(--space-2)',
+                        alignItems: 'center',
+                      }}
                     >
                       <Badge
                         variant="neutral"
@@ -187,7 +190,7 @@ export const MemoryTimeline = ({
                     <span
                       style={{
                         fontSize: '0.75rem',
-                        color: colors.neutral[500],
+                        color: 'var(--color-text-muted)',
                       }}
                     >
                       {formatDate(entry.timestamp)}
@@ -197,9 +200,9 @@ export const MemoryTimeline = ({
                   {/* Content */}
                   <p
                     style={{
-                      margin: `0 0 ${spacing[2]} 0`,
+                      margin: '0 0 var(--space-2) 0',
                       fontSize: '0.875rem',
-                      color: colors.neutral[200],
+                      color: 'var(--color-text-secondary)',
                       lineHeight: 1.5,
                     }}
                   >
@@ -208,15 +211,17 @@ export const MemoryTimeline = ({
 
                   {/* Tags */}
                   {entry.tags.length > 0 && (
-                    <div style={{ display: 'flex', gap: spacing[2], flexWrap: 'wrap' }}>
+                    <div
+                      style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}
+                    >
                       {entry.tags.map(tag => (
                         <span
                           key={tag}
                           style={{
-                            padding: `${spacing[1]} ${spacing[2]}`,
+                            padding: 'var(--space-1) var(--space-2)',
                             fontSize: '0.75rem',
-                            color: colors.neutral[400],
-                            background: colors.neutral[800],
+                            color: 'var(--color-text-muted)',
+                            background: 'var(--color-border-subtle)',
                             borderRadius: '4px',
                           }}
                         >
@@ -229,9 +234,9 @@ export const MemoryTimeline = ({
                   {/* Importance indicator */}
                   <div
                     style={{
-                      marginTop: spacing[2],
+                      marginTop: 'var(--space-2)',
                       height: '3px',
-                      background: colors.neutral[800],
+                      background: 'var(--color-border-subtle)',
                       borderRadius: '2px',
                       overflow: 'hidden',
                     }}
@@ -253,9 +258,9 @@ export const MemoryTimeline = ({
         {entries.length === 0 && (
           <div
             style={{
-              padding: spacing[8],
+              padding: 'var(--space-8)',
               textAlign: 'center',
-              color: colors.neutral[500],
+              color: 'var(--color-text-muted)',
             }}
           >
             Aucune entrée mémoire

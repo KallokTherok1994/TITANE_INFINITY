@@ -20,7 +20,7 @@ exports[`EventStream Component > Snapshot > should match snapshot 1`] = `
         </p>
       </div>
       <span
-        class="text-xs text-gray-500 ml-2"
+        class="text-xs text-titanium-text-disabled ml-2"
       >
         22:13:20
       </span>
@@ -42,7 +42,7 @@ exports[`EventStream Component > Snapshot > should match snapshot 1`] = `
         </p>
       </div>
       <span
-        class="text-xs text-gray-500 ml-2"
+        class="text-xs text-titanium-text-disabled ml-2"
       >
         22:13:20
       </span>
@@ -64,7 +64,7 @@ exports[`EventStream Component > Snapshot > should match snapshot 1`] = `
         </p>
       </div>
       <span
-        class="text-xs text-gray-500 ml-2"
+        class="text-xs text-titanium-text-disabled ml-2"
       >
         22:13:20
       </span>

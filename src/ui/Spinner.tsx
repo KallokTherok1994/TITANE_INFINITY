@@ -15,7 +15,6 @@
 
 import { type HTMLAttributes, forwardRef } from 'react';
 import { clsx } from 'clsx';
-import { colors } from '@themes/tokens';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -41,9 +40,9 @@ const sizeStyles: Record<SpinnerSize, { size: string; border: string }> = {
 };
 
 const variantStyles: Record<SpinnerVariant, { color: string }> = {
-  primary: { color: colors.rubis.primary[500] },
-  secondary: { color: colors.rubis.primary.accent },
-  white: { color: colors.neutral[100] },
+  primary: { color: 'var(--color-violet-600)' },
+  secondary: { color: 'var(--color-text-secondary)' },
+  white: { color: '#ffffff' },
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -59,7 +58,7 @@ export const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
       display: 'inline-block',
       width: spinnerSize,
       height: spinnerSize,
-      border: `${border} solid ${colors.neutral[800]}`,
+      border: `${border} solid var(--color-border-default)`,
       borderTopColor: color,
       borderRadius: '50%',
       animation: 'spin 0.6s linear infinite',

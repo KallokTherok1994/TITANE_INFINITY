@@ -75,7 +75,7 @@ export function MemoryGraph() {
       {/* Header */}
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">MemoryCore Legacy — Memoire systeme</h2>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-titanium-text-tertiary">
           Surface systeme snapshots/logs/timeline, distincte de la memoire persistante
           conversationnelle.
         </p>
@@ -88,21 +88,21 @@ export function MemoryGraph() {
             <div className="text-4xl font-bold text-blue-500">
               {state.snapshots_count}
             </div>
-            <div className="text-sm text-gray-400 mt-2">Snapshots</div>
+            <div className="text-sm text-titanium-text-tertiary mt-2">Snapshots</div>
           </div>
         </Card>
 
         <Card className="p-6">
           <div className="text-center">
             <div className="text-4xl font-bold text-green-500">{logCount}</div>
-            <div className="text-sm text-gray-400 mt-2">Logs</div>
+            <div className="text-sm text-titanium-text-tertiary mt-2">Logs</div>
           </div>
         </Card>
 
         <Card className="p-6">
           <div className="text-center">
             <div className="text-4xl font-bold text-purple-500">{timelineCount}</div>
-            <div className="text-sm text-gray-400 mt-2">Événements</div>
+            <div className="text-sm text-titanium-text-tertiary mt-2">Événements</div>
           </div>
         </Card>
       </div>
@@ -113,21 +113,21 @@ export function MemoryGraph() {
           <div>
             <h3 className="font-semibold mb-2">🧬 Mode disque</h3>
             <div className="text-2xl font-bold">{diskModeLabel}</div>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-titanium-text-tertiary mt-1">
               {state.synthetic_mode
                 ? 'Mode synthétique (aucune écriture persistante)'
                 : 'Persistance disque active'}
             </p>
           </div>
-          <div className="space-y-1 text-sm text-gray-300">
+          <div className="space-y-1 text-sm text-titanium-text-secondary">
             <div className="flex items-center gap-2">
-              <span className="text-gray-400">Dernière validation:</span>
+              <span className="text-titanium-text-tertiary">Dernière validation:</span>
               <Badge color="blue" size="sm">
                 {lastValidation}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-gray-400">Dernière compaction:</span>
+              <span className="text-titanium-text-tertiary">Dernière compaction:</span>
               <Badge color="purple" size="sm">
                 {lastCompaction}
               </Badge>
@@ -153,19 +153,19 @@ export function MemoryGraph() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <div className="text-xs text-gray-400">CPU</div>
+              <div className="text-xs text-titanium-text-tertiary">CPU</div>
               <div className="font-semibold">
                 {state.last_snapshot.helios.cpu_usage.toFixed(1)}%
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-400">RAM</div>
+              <div className="text-xs text-titanium-text-tertiary">RAM</div>
               <div className="font-semibold">
                 {state.last_snapshot.helios.ram_usage.toFixed(1)}%
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-400">Cohérence</div>
+              <div className="text-xs text-titanium-text-tertiary">Cohérence</div>
               <div className="font-semibold">
                 {/* [FIX-005b] coherence_score not in NexusEngineState — guard undefined */}
                 {(
@@ -175,7 +175,7 @@ export function MemoryGraph() {
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-400">Équilibre</div>
+              <div className="text-xs text-titanium-text-tertiary">Équilibre</div>
               <div className="font-semibold">
                 {state.last_snapshot.harmonia.balance_score.toFixed(0)}%
               </div>
@@ -193,8 +193,10 @@ export function MemoryGraph() {
               {state.last_event.event_type}
             </Badge>
           </h3>
-          <p className="text-sm text-gray-300">{state.last_event.description}</p>
-          <div className="text-xs text-gray-500 mt-2">
+          <p className="text-sm text-titanium-text-secondary">
+            {state.last_event.description}
+          </p>
+          <div className="text-xs text-titanium-text-disabled mt-2">
             {new Date(state.last_event.timestamp).toLocaleString()}
           </div>
         </Card>
@@ -206,12 +208,14 @@ export function MemoryGraph() {
 
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {logs.length === 0 ? (
-            <div className="text-center text-gray-400 py-8">Aucun log disponible</div>
+            <div className="text-center text-titanium-text-tertiary py-8">
+              Aucun log disponible
+            </div>
           ) : (
             logs.slice(0, 20).map(log => (
               <div
                 key={log.id}
-                className="p-3 bg-gray-800 rounded-lg hover:bg-gray-750 transition-colors"
+                className="p-3 bg-titanium-bg-elevated rounded-lg hover:bg-titanium-bg-interactive transition-colors"
               >
                 <div className="flex items-start gap-3">
                   <Badge color={getLogLevelColor(log.level)} size="sm">
@@ -223,11 +227,11 @@ export function MemoryGraph() {
                       <span className="text-xs text-blue-400 font-mono">
                         {log.module}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-titanium-text-disabled">
                         {new Date(log.timestamp).toLocaleTimeString()}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-300">{log.message}</p>
+                    <p className="text-sm text-titanium-text-secondary">{log.message}</p>
                   </div>
                 </div>
               </div>
@@ -237,18 +241,18 @@ export function MemoryGraph() {
       </Card>
 
       {/* Memory Usage */}
-      <Card className="p-6 bg-gray-800">
+      <Card className="p-6 bg-titanium-bg-elevated">
         <div className="grid grid-cols-3 gap-4 text-sm">
           <div className="flex justify-between">
-            <span className="text-gray-400">Snapshots:</span>
+            <span className="text-titanium-text-tertiary">Snapshots:</span>
             <span className="font-semibold">{state.snapshots_count} / 100</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Logs:</span>
+            <span className="text-titanium-text-tertiary">Logs:</span>
             <span className="font-semibold">{logCount} / 1000</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-400">Timeline:</span>
+            <span className="text-titanium-text-tertiary">Timeline:</span>
             <span className="font-semibold">{timelineCount}</span>
           </div>
         </div>
@@ -258,12 +262,14 @@ export function MemoryGraph() {
       {telemetry && (
         <Card className="p-6">
           <h3 className="font-semibold mb-2">📂 Audit disque</h3>
-          <p className="text-xs text-gray-400 mb-4">
+          <p className="text-xs text-titanium-text-tertiary mb-4">
             {telemetry.base_path} — {telemetry.files.length} fichiers —{' '}
             {(telemetry.total_size_bytes / (1024 * 1024)).toFixed(2)} MB
           </p>
           {telemetry.files.length === 0 ? (
-            <div className="text-sm text-gray-400">Aucun fichier mémoire détecté</div>
+            <div className="text-sm text-titanium-text-tertiary">
+              Aucun fichier mémoire détecté
+            </div>
           ) : (
             <div className="space-y-2">
               {telemetry.files.slice(0, 5).map(file => (
@@ -271,8 +277,10 @@ export function MemoryGraph() {
                   key={file.name}
                   className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-sm"
                 >
-                  <div className="font-mono text-gray-200">{file.name}</div>
-                  <div className="text-gray-400">
+                  <div className="font-mono text-titanium-text-secondary">
+                    {file.name}
+                  </div>
+                  <div className="text-titanium-text-tertiary">
                     {(file.size_bytes / 1024).toFixed(1)} KB ·{' '}
                     {new Date(file.modified_ts).toLocaleString()}
                     {file.version && ` · v${file.version}`}

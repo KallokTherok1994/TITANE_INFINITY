@@ -56,98 +56,97 @@ const config: Config = {
       /* COLORS — TITANIUM DARK MONOCHROME SYSTEM                        */
       /* ═══════════════════════════════════════════════════════════════ */
       colors: {
-        // Titanium Dark - Monochrome premium palette
+        // Titanium — wired to CSS custom properties so dark/light mode works automatically
         titanium: {
-          // Backgrounds (layered depth)
-          'bg-base': '#0f0f0f',
-          'bg-elevated': '#1a1a1a',
-          'bg-interactive': '#242424',
-          'bg-overlay': '#2e2e2e',
+          // Backgrounds — respond to html.light / html.dark via CSS vars
+          'bg-base': 'var(--color-bg-primary)',
+          'bg-elevated': 'var(--color-bg-secondary)',
+          'bg-interactive': 'var(--color-bg-tertiary)',
+          'bg-overlay': 'var(--color-bg-elevated)',
 
-          // Text (high contrast)
-          'text-primary': '#f5f5f5',
-          'text-secondary': '#b8b8b8',
-          'text-tertiary': '#8a8a8a',
-          'text-disabled': '#5a5a5a',
-          'text-inverse': '#0f0f0f',
+          // Text
+          'text-primary': 'var(--color-text-primary)',
+          'text-secondary': 'var(--color-text-secondary)',
+          'text-tertiary': 'var(--color-text-muted)',
+          'text-disabled': 'var(--color-text-disabled)',
+          'text-inverse': 'var(--color-text-inverse)',
 
           // Borders
-          'border-subtle': 'rgba(255, 255, 255, 0.06)',
-          'border-default': 'rgba(255, 255, 255, 0.12)',
-          'border-strong': 'rgba(255, 255, 255, 0.18)',
+          'border-subtle': 'var(--color-border-subtle)',
+          'border-default': 'var(--color-border-default)',
+          'border-strong': 'var(--color-border-strong)',
 
-          // Accent (minimal cool gray)
-          'accent-cool': '#9ca3af',
-          'accent-bright': '#d1d5db',
-          'accent-bg-subtle': 'rgba(156, 163, 175, 0.1)',
-          'accent-bg-default': 'rgba(156, 163, 175, 0.2)',
-          'accent-bg-strong': 'rgba(156, 163, 175, 0.3)',
+          // Accent — violet primary, works on both dark and light
+          'accent-cool': 'var(--color-violet-600)',
+          'accent-bright': 'var(--color-violet-400)',
+          'accent-bg-subtle': 'var(--bg-active)',
+          'accent-bg-default': 'var(--bg-hover)',
+          'accent-bg-strong': 'var(--bg-active)',
         },
 
-        // Legacy color support (will be deprecated)
-        // Keep for gradual migration, remove in v27.0.0
+        // Legacy color support (will be deprecated in v27.0.0)
         titane: {
-          500: '#727b81',
-          600: '#5a6267',
-          700: '#495057',
-          800: '#343a40',
-          900: '#212529',
+          500: 'var(--color-titane-500)',
+          600: 'var(--color-titane-600)',
+          700: 'var(--color-titane-700)',
+          800: 'var(--color-titane-800)',
+          900: 'var(--color-titane-900)',
         },
 
         violet: {
-          300: '#d8b4fe',
-          400: '#c084fc',
-          500: '#a855f7',
-          600: '#7c3aed',
+          300: 'var(--color-violet-300)',
+          400: 'var(--color-violet-400)',
+          500: 'var(--color-violet-500)',
+          600: 'var(--color-violet-600)',
         },
 
         // Semantic colors (preserved for status/feedback)
         success: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          500: '#10b981',
-          700: '#047857',
-          900: '#064e3b',
+          50: 'var(--color-success-50)',
+          100: 'var(--color-success-100)',
+          500: 'var(--color-success-500)',
+          700: 'var(--color-success-700)',
+          900: 'var(--color-success-900)',
         },
         error: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          500: '#ef4444',
-          700: '#b91c1c',
-          900: '#7f1d1d',
+          50: 'var(--color-error-50)',
+          100: 'var(--color-error-100)',
+          500: 'var(--color-error-500)',
+          700: 'var(--color-error-700)',
+          900: 'var(--color-error-900)',
         },
         warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          500: '#f59e0b',
-          700: '#b45309',
-          900: '#78350f',
+          50: 'var(--color-warning-50)',
+          100: 'var(--color-warning-100)',
+          500: 'var(--color-warning-500)',
+          700: 'var(--color-warning-700)',
+          900: 'var(--color-warning-900)',
         },
         info: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          500: '#3b82f6',
-          700: '#1d4ed8',
-          900: '#1e3a8a',
+          50: 'var(--color-info-50)',
+          100: 'var(--color-info-100)',
+          500: 'var(--color-info-500)',
+          700: 'var(--color-info-700)',
+          900: 'var(--color-info-900)',
         },
 
-        // Legacy aliases (deprecated - use titanium.* instead)
+        // Legacy aliases — also wired to CSS vars for light mode
         bg: {
-          primary: '#0f0f0f',
-          secondary: '#1a1a1a',
-          tertiary: '#242424',
-          elevated: '#2e2e2e',
+          primary: 'var(--color-bg-primary)',
+          secondary: 'var(--color-bg-secondary)',
+          tertiary: 'var(--color-bg-tertiary)',
+          elevated: 'var(--color-bg-elevated)',
         },
         text: {
-          primary: '#f5f5f5',
-          secondary: '#b8b8b8',
-          muted: '#8a8a8a',
-          disabled: '#5a5a5a',
+          primary: 'var(--color-text-primary)',
+          secondary: 'var(--color-text-secondary)',
+          muted: 'var(--color-text-muted)',
+          disabled: 'var(--color-text-disabled)',
         },
         border: {
-          default: 'rgba(255, 255, 255, 0.12)',
-          subtle: 'rgba(255, 255, 255, 0.06)',
-          strong: 'rgba(255, 255, 255, 0.18)',
+          default: 'var(--color-border-default)',
+          subtle: 'var(--color-border-subtle)',
+          strong: 'var(--color-border-strong)',
         },
       },
 

@@ -8,15 +8,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from '../../ui';
-import {
-  colors,
-  spacing,
-  radius,
-  shadows,
-  fontSizes,
-  fontWeights,
-  lineHeights,
-} from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 import { useTTS } from '@/hooks/useTTS';
 
@@ -29,7 +20,7 @@ export interface ChatMessageProps {
   content: string;
   timestamp: Date;
   streaming?: boolean;
-  provider?: 'gemini' | 'openai' | 'claude' | 'ollama' | 'local'; // ✨ v21 Phase 4: Provider badge
+  provider?: 'gemini' | 'openai' | 'claude' | 'ollama' | 'local';
   metadata?: {
     cognitiveState?: {
       stress: number;
@@ -51,23 +42,23 @@ export interface ChatMessageProps {
 
 const roleConfig = {
   user: {
-    bgColor: colors.rubis.primary[900],
-    borderColor: colors.rubis.primary[700],
-    textColor: colors.neutral[100],
+    bgColor: 'var(--chat-bubble-user)',
+    borderColor: 'var(--color-violet-700)',
+    textColor: 'var(--color-text-primary)',
     align: 'flex-end' as const,
     label: 'Vous',
   },
   assistant: {
-    bgColor: colors.saphir.primary[900],
-    borderColor: colors.saphir.primary[800],
-    textColor: colors.neutral[100],
+    bgColor: 'var(--chat-bubble-ai)',
+    borderColor: 'var(--color-border-default)',
+    textColor: 'var(--color-text-primary)',
     align: 'flex-start' as const,
     label: 'TITANE∞',
   },
   system: {
-    bgColor: colors.neutral[900],
-    borderColor: colors.neutral[700],
-    textColor: colors.neutral[300],
+    bgColor: 'var(--color-bg-secondary)',
+    borderColor: 'var(--color-border-subtle)',
+    textColor: 'var(--color-text-secondary)',
     align: 'center' as const,
     label: 'Système',
   },
@@ -81,13 +72,12 @@ const formatTime = (date: Date): string => {
   });
 };
 
-// ✨ v21 Phase 4: Provider badge config
 const providerConfig = {
-  gemini: { emoji: '🤖', label: 'Gemini', color: colors.saphir.primary[500] },
-  openai: { emoji: '✨', label: 'GPT-4o', color: colors.rubis.primary[500] },
-  claude: { emoji: '🧠', label: 'Claude', color: colors.emeraude.primary[600] },
-  ollama: { emoji: '🦉', label: 'Ollama', color: colors.emeraude.primary[500] },
-  local: { emoji: '🏠', label: 'Local', color: colors.neutral[500] },
+  gemini: { emoji: '🤖', label: 'Gemini', color: 'var(--color-info-500)' },
+  openai: { emoji: '✨', label: 'GPT-4o', color: 'var(--color-text-secondary)' },
+  claude: { emoji: '🧠', label: 'Claude', color: 'var(--color-violet-500)' },
+  ollama: { emoji: '🦉', label: 'Ollama', color: 'var(--color-success-500)' },
+  local: { emoji: '🏠', label: 'Local', color: 'var(--color-text-muted)' },
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -99,7 +89,7 @@ export const ChatMessage = ({
   content,
   timestamp,
   streaming = false,
-  provider, // ✨ v21 Phase 4
+  provider,
   metadata,
 }: ChatMessageProps): JSX.Element => {
   const { animationConfig } = useAnimation();
@@ -117,7 +107,6 @@ export const ChatMessage = ({
     }
   };
 
-  // Streaming animation
   useEffect(() => {
     if (!streaming) {
       setDisplayedContent(content);
@@ -137,7 +126,6 @@ export const ChatMessage = ({
     return () => clearInterval(interval);
   }, [content, streaming]);
 
-  // Auto-scroll during streaming
   useEffect(() => {
     if (streaming && contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -153,7 +141,7 @@ export const ChatMessage = ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: config.align,
-        marginBottom: spacing[4],
+        marginBottom: 'var(--space-4)',
       }}
     >
       {/* Message Header */}
@@ -161,16 +149,15 @@ export const ChatMessage = ({
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: spacing[2],
-          marginBottom: spacing[2],
-          fontSize: fontSizes.sm,
-          color: colors.neutral[400],
+          gap: 'var(--space-2)',
+          marginBottom: 'var(--space-2)',
+          fontSize: 'var(--text-sm)',
+          color: 'var(--color-text-muted)',
         }}
       >
-        <span style={{ fontWeight: fontWeights.semibold }}>{config.label}</span>
+        <span style={{ fontWeight: 600 }}>{config.label}</span>
         <span>•</span>
         <span>{formatTime(timestamp)}</span>
-        {/* ✨ v21 Phase 4: Provider badge */}
         {provider && role === 'assistant' && (
           <Badge
             variant="info"
@@ -178,8 +165,8 @@ export const ChatMessage = ({
               backgroundColor: `${providerConfig[provider].color}20`,
               color: providerConfig[provider].color,
               borderColor: providerConfig[provider].color,
-              fontSize: fontSizes.xs,
-              padding: `${spacing[1]} ${spacing[2]}`,
+              fontSize: 'var(--text-xs)',
+              padding: 'var(--space-1) var(--space-2)',
             }}
           >
             {providerConfig[provider].emoji} {providerConfig[provider].label}
@@ -189,22 +176,22 @@ export const ChatMessage = ({
           <motion.span
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            style={{ color: colors.saphir.primary[400] }}
+            style={{ color: 'var(--color-violet-400)' }}
           >
             ⚡
           </motion.span>
         )}
-        {/* TTS Button - Only for assistant messages */}
         {role === 'assistant' && !streaming && (
           <button
             onClick={handleSpeak}
             title={isSpeaking ? 'Arrêter' : 'Écouter'}
+            aria-label={isSpeaking ? 'Arrêter la lecture' : 'Lire le message'}
             style={{
               background: isSpeaking
-                ? colors.rubis.primary[600]
-                : colors.saphir.primary[800],
+                ? 'var(--color-violet-700)'
+                : 'var(--color-bg-elevated)',
               border: 'none',
-              borderRadius: radius.full,
+              borderRadius: 'var(--radius-full)',
               width: '24px',
               height: '24px',
               display: 'flex',
@@ -212,8 +199,8 @@ export const ChatMessage = ({
               justifyContent: 'center',
               cursor: 'pointer',
               fontSize: '12px',
-              transition: 'all 0.2s',
-              marginLeft: spacing[2],
+              transition: 'background-color 150ms ease',
+              marginLeft: 'var(--space-2)',
             }}
           >
             {isSpeaking ? '⏹️' : '🔊'}
@@ -226,14 +213,14 @@ export const ChatMessage = ({
         ref={contentRef}
         style={{
           maxWidth: role === 'system' ? '80%' : '70%',
-          padding: spacing[4],
+          padding: 'var(--space-4)',
           background: config.bgColor,
           border: `1px solid ${config.borderColor}`,
-          borderRadius: radius.lg,
-          boxShadow: shadows.md,
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-md)',
           color: config.textColor,
-          fontSize: fontSizes.base,
-          lineHeight: lineHeights.relaxed,
+          fontSize: 'var(--text-base)',
+          lineHeight: 'var(--leading-relaxed)',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
         }}
@@ -248,7 +235,7 @@ export const ChatMessage = ({
               width: '2px',
               height: '1em',
               marginLeft: '2px',
-              background: colors.saphir.primary[400],
+              background: 'var(--color-violet-400)',
               verticalAlign: 'middle',
             }}
           />
@@ -257,18 +244,19 @@ export const ChatMessage = ({
 
       {/* Metadata (collapsible) */}
       {metadata && role === 'assistant' && (
-        <div style={{ marginTop: spacing[2] }}>
+        <div style={{ marginTop: 'var(--space-2)' }}>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
             style={{
               background: 'none',
               border: 'none',
-              color: colors.neutral[500],
-              fontSize: fontSizes.xs,
+              color: 'var(--color-text-muted)',
+              fontSize: 'var(--text-xs)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: spacing[1],
+              gap: 'var(--space-1)',
               padding: 0,
             }}
           >
@@ -282,32 +270,27 @@ export const ChatMessage = ({
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               style={{
-                marginTop: spacing[2],
-                padding: spacing[3],
-                background: colors.neutral[950],
-                border: `1px solid ${colors.neutral[800]}`,
-                borderRadius: radius.md,
-                fontSize: fontSizes.sm,
+                marginTop: 'var(--space-2)',
+                padding: 'var(--space-3)',
+                background: 'var(--color-bg-primary)',
+                border: '1px solid var(--color-border-subtle)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-sm)',
               }}
             >
-              {/* Cognitive State */}
               {metadata.cognitiveState && (
-                <div style={{ marginBottom: spacing[3] }}>
+                <div style={{ marginBottom: 'var(--space-3)' }}>
                   <div
                     style={{
-                      fontWeight: fontWeights.semibold,
-                      color: colors.neutral[300],
-                      marginBottom: spacing[2],
+                      fontWeight: 600,
+                      color: 'var(--color-text-secondary)',
+                      marginBottom: 'var(--space-2)',
                     }}
                   >
                     État Cognitif:
                   </div>
                   <div
-                    style={{
-                      display: 'flex',
-                      gap: spacing[2],
-                      flexWrap: 'wrap',
-                    }}
+                    style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}
                   >
                     <Badge variant="neutral" size="sm">
                       Stress: {(metadata.cognitiveState.stress * 100).toFixed(0)}%
@@ -322,33 +305,26 @@ export const ChatMessage = ({
                 </div>
               )}
 
-              {/* Memory References */}
               {metadata.memoryReferences && metadata.memoryReferences.length > 0 && (
-                <div style={{ marginBottom: spacing[3] }}>
+                <div style={{ marginBottom: 'var(--space-3)' }}>
                   <div
                     style={{
-                      fontWeight: fontWeights.semibold,
-                      color: colors.neutral[300],
-                      marginBottom: spacing[2],
+                      fontWeight: 600,
+                      color: 'var(--color-text-secondary)',
+                      marginBottom: 'var(--space-2)',
                     }}
                   >
                     Références Mémoire ({metadata.memoryReferences.length}):
                   </div>
                   <div
-                    style={{
-                      display: 'flex',
-                      gap: spacing[2],
-                      flexWrap: 'wrap',
-                    }}
+                    style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}
                   >
                     {metadata.memoryReferences.map((ref, index) => (
                       <Badge
                         key={`${ref.id}-${index}`}
                         variant="primary"
                         size="sm"
-                        style={{
-                          opacity: ref.relevance,
-                        }}
+                        style={{ opacity: ref.relevance }}
                       >
                         {ref.type} ({(ref.relevance * 100).toFixed(0)}%)
                       </Badge>
@@ -357,13 +333,12 @@ export const ChatMessage = ({
                 </div>
               )}
 
-              {/* Processing Time */}
               {metadata.processingTime && (
                 <div>
-                  <span style={{ color: colors.neutral[400] }}>
+                  <span style={{ color: 'var(--color-text-muted)' }}>
                     Temps de traitement:{' '}
                   </span>
-                  <span style={{ color: colors.emeraude.primary[400] }}>
+                  <span style={{ color: 'var(--color-success-500)' }}>
                     {metadata.processingTime.toFixed(2)}ms
                   </span>
                 </div>

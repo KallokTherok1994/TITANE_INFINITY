@@ -97,7 +97,7 @@ export function EvolutionPipeline() {
               <div className="text-3xl font-bold text-blue-500">
                 {state.total_evolutions}
               </div>
-              <div className="text-sm text-gray-400 mt-1">Évolutions totales</div>
+              <div className="text-sm text-titanium-text-tertiary mt-1">Évolutions totales</div>
             </div>
 
             <div className="text-center">
@@ -107,7 +107,7 @@ export function EvolutionPipeline() {
                   : '-'}
                 %
               </div>
-              <div className="text-sm text-gray-400 mt-1">Score de santé</div>
+              <div className="text-sm text-titanium-text-tertiary mt-1">Score de santé</div>
             </div>
 
             <div className="text-center">
@@ -116,7 +116,7 @@ export function EvolutionPipeline() {
                   ? state.history[state.history.length - 1]?.repairs_count
                   : '-'}
               </div>
-              <div className="text-sm text-gray-400 mt-1">Réparations</div>
+              <div className="text-sm text-titanium-text-tertiary mt-1">Réparations</div>
             </div>
           </div>
         </Card>
@@ -137,20 +137,20 @@ export function EvolutionPipeline() {
             </h3>
 
             {lastReport.issues.length === 0 ? (
-              <div className="text-center text-gray-400 py-4">
+              <div className="text-center text-titanium-text-tertiary py-4">
                 ✅ Aucun problème détecté
               </div>
             ) : (
               <div className="space-y-3">
                 {lastReport.issues.map((issue: Issue, idx: number) => (
-                  <div key={idx} className="p-4 bg-gray-800 rounded-lg">
+                  <div key={idx} className="p-4 bg-titanium-bg-elevated rounded-lg">
                     <div className="flex items-start gap-3">
                       <Badge color={getSeverityColor(issue.severity)} size="sm">
                         {issue.severity}
                       </Badge>
                       <div className="flex-1">
-                        <div className="text-xs text-gray-400 mb-1">{issue.category}</div>
-                        <p className="text-sm text-gray-300">{issue.description}</p>
+                        <div className="text-xs text-titanium-text-tertiary mb-1">{issue.category}</div>
+                        <p className="text-sm text-titanium-text-secondary">{issue.description}</p>
                         {issue.affected_module && (
                           <div className="text-xs text-blue-400 mt-1">
                             Module: {issue.affected_module}
@@ -171,7 +171,7 @@ export function EvolutionPipeline() {
             </h3>
 
             {lastReport.recommendations.length === 0 ? (
-              <div className="text-center text-gray-400 py-4">Aucune recommandation</div>
+              <div className="text-center text-titanium-text-tertiary py-4">Aucune recommandation</div>
             ) : (
               <div className="space-y-3">
                 {lastReport.recommendations
@@ -187,7 +187,7 @@ export function EvolutionPipeline() {
                         </Badge>
                         <div className="flex-1">
                           <div className="font-semibold text-sm mb-1">{rec.action}</div>
-                          <p className="text-xs text-gray-400 mb-2">{rec.reason}</p>
+                          <p className="text-xs text-titanium-text-tertiary mb-2">{rec.reason}</p>
                           <div className="text-xs text-green-400">
                             Impact estimé: {rec.estimated_impact}
                           </div>
@@ -205,20 +205,20 @@ export function EvolutionPipeline() {
           </Card>
 
           {/* Report Info */}
-          <Card className="p-4 bg-gray-800">
+          <Card className="p-4 bg-titanium-bg-elevated">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-400">Score de santé:</span>
+                <span className="text-titanium-text-tertiary">Score de santé:</span>
                 <span className="font-semibold">
                   {lastReport.health_score.toFixed(1)}%
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Durée:</span>
+                <span className="text-titanium-text-tertiary">Durée:</span>
                 <span className="font-semibold">{lastReport.duration_ms}ms</span>
               </div>
             </div>
-            <div className="text-xs text-gray-500 text-center mt-3">
+            <div className="text-xs text-titanium-text-disabled text-center mt-3">
               Dernière évolution: {new Date(lastReport.timestamp).toLocaleString()}
             </div>
           </Card>
@@ -234,14 +234,14 @@ export function EvolutionPipeline() {
               <div className="flex-1 text-center">
                 <div
                   className={`w-12 h-12 mx-auto rounded-full flex items-center justify-center text-xl ${
-                    running ? 'bg-blue-600 animate-pulse' : 'bg-gray-700'
+                    running ? 'bg-blue-600 animate-pulse' : 'bg-titanium-bg-interactive'
                   }`}
                 >
                   {idx + 1}
                 </div>
-                <div className="text-xs text-gray-400 mt-2">{step}</div>
+                <div className="text-xs text-titanium-text-tertiary mt-2">{step}</div>
               </div>
-              {idx < 4 && <div className="w-8 h-0.5 bg-gray-700" />}
+              {idx < 4 && <div className="w-8 h-0.5 bg-titanium-bg-interactive" />}
             </React.Fragment>
           ))}
         </div>
@@ -258,9 +258,9 @@ export function EvolutionPipeline() {
               .map((entry: EvolutionHistory, idx: number) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3 bg-gray-800 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-titanium-bg-elevated rounded-lg"
                 >
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-titanium-text-tertiary">
                     {new Date(entry.timestamp).toLocaleString()}
                   </span>
                   <div className="flex items-center gap-4 text-sm">

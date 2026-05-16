@@ -12,7 +12,6 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useCallback } from 'react';
-import { colors, spacing } from '@themes/tokens';
 import './ModeBuilder.css';
 
 export interface CustomMode {
@@ -243,7 +242,9 @@ Principes de communication:
         return (
           <div className="mode-builder-step">
             <h3>🎯 Décrivez votre Mode Personnalisé</h3>
-            <p style={{ color: colors.neutral[400], marginBottom: spacing[4] }}>
+            <p
+              style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--space-4)' }}
+            >
               Quelle spécialisation souhaitez-vous pour TITANE ?
             </p>
 

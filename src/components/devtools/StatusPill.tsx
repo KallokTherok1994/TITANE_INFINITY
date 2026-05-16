@@ -11,7 +11,7 @@ export interface StatusPillProps {
 export function StatusPill({ status, label }: StatusPillProps) {
   const colors = {
     active: 'bg-green-900 text-green-300 border-green-500',
-    inactive: 'bg-gray-700 text-gray-300 border-gray-500',
+    inactive: 'bg-titanium-bg-interactive text-titanium-text-secondary border-gray-500',
     error: 'bg-red-900 text-red-300 border-red-500',
     warning: 'bg-yellow-900 text-yellow-300 border-yellow-500',
   };

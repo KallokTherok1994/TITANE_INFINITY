@@ -79,9 +79,9 @@ const SEVERITY_COLORS: Record<SeverityLevel, string> = {
 
 const TREND_ICONS: Record<TrendDirection, React.ReactNode> = {
   improving: <TrendingDown className="w-4 h-4 text-green-400" />,
-  stable: <Minus className="w-4 h-4 text-gray-400" />,
+  stable: <Minus className="w-4 h-4 text-titanium-text-tertiary" />,
   degrading: <TrendingUp className="w-4 h-4 text-red-400" />,
-  unknown: <Minus className="w-4 h-4 text-gray-500" />,
+  unknown: <Minus className="w-4 h-4 text-titanium-text-disabled" />,
 };
 
 // ════════════════════════════════════════════════════════════════════════════════
@@ -102,7 +102,7 @@ const GradeIndicator: React.FC<{
     >
       {grade}
     </div>
-    <div className="mt-2 text-sm text-gray-400">Score: {score}/100</div>
+    <div className="mt-2 text-sm text-titanium-text-tertiary">Score: {score}/100</div>
   </div>
 );
 
@@ -151,15 +151,15 @@ const MetricCard: React.FC<{
 
   return (
     <motion.div
-      className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50"
+      className="bg-titanium-bg-elevated/50 rounded-xl p-4 border border-titanium-border-default/50"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="text-gray-400">{icon}</div>
-          <span className="text-sm text-gray-300">{label}</span>
+          <div className="text-titanium-text-tertiary">{icon}</div>
+          <span className="text-sm text-titanium-text-secondary">{label}</span>
         </div>
         {trend && TREND_ICONS[trend]}
       </div>
@@ -168,11 +168,11 @@ const MetricCard: React.FC<{
         <span className="text-2xl font-bold text-white">
           {typeof value === 'number' ? value.toFixed(1) : value}
         </span>
-        <span className="text-sm text-gray-400 mb-1">{unit}</span>
+        <span className="text-sm text-titanium-text-tertiary mb-1">{unit}</span>
       </div>
 
       {/* Barre de progression */}
-      <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+      <div className="h-2 bg-titanium-bg-interactive rounded-full overflow-hidden">
         <motion.div
           className={`h-full ${getColor()} rounded-full`}
           initial={{ width: 0 }}
@@ -193,7 +193,7 @@ const IssuesList: React.FC<{
 }> = ({ issues, onIssueClick }) => {
   if (issues.length === 0) {
     return (
-      <div className="flex items-center justify-center py-8 text-gray-500">
+      <div className="flex items-center justify-center py-8 text-titanium-text-disabled">
         <CheckCircle className="w-5 h-5 mr-2" />
         Aucun problème détecté
       </div>
@@ -243,7 +243,7 @@ const RecommendationsPanel: React.FC<{
 }> = ({ recommendations, onApply }) => {
   if (recommendations.length === 0) {
     return (
-      <div className="flex items-center justify-center py-8 text-gray-500">
+      <div className="flex items-center justify-center py-8 text-titanium-text-disabled">
         <Zap className="w-5 h-5 mr-2" />
         Aucune recommandation
       </div>
@@ -262,7 +262,9 @@ const RecommendationsPanel: React.FC<{
           <div className="flex items-start justify-between">
             <div>
               <div className="font-medium text-sm text-blue-300">{rec.title}</div>
-              <div className="text-xs text-gray-400 mt-1">{rec.description}</div>
+              <div className="text-xs text-titanium-text-tertiary mt-1">
+                {rec.description}
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <span
@@ -274,7 +276,7 @@ const RecommendationsPanel: React.FC<{
                       ? 'bg-orange-500/20 text-orange-400'
                       : rec.impact === 'medium'
                         ? 'bg-yellow-500/20 text-yellow-400'
-                        : 'bg-gray-500/20 text-gray-400'
+                        : 'bg-titanium-bg-overlay/20 text-titanium-text-tertiary'
                 }`}
               >
                 {rec.impact}
@@ -402,7 +404,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
   }
 
   return (
-    <div className={`bg-gray-900 rounded-2xl p-6 ${className}`}>
+    <div className={`bg-titanium-bg-base rounded-2xl p-6 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -412,7 +414,9 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
         <div className="flex items-center gap-2">
           <button
             className={`p-2 rounded-lg transition-colors ${
-              autoRefresh ? 'bg-blue-500/20 text-blue-400' : 'bg-gray-800 text-gray-400'
+              autoRefresh
+                ? 'bg-blue-500/20 text-blue-400'
+                : 'bg-titanium-bg-elevated text-titanium-text-tertiary'
             }`}
             onClick={() => setAutoRefresh(!autoRefresh)}
             title={autoRefresh ? 'Désactiver auto-refresh' : 'Activer auto-refresh'}
@@ -420,14 +424,14 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             <Gauge className="w-4 h-4" />
           </button>
           <button
-            className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-titanium-bg-elevated text-titanium-text-tertiary hover:text-white transition-colors"
             onClick={handleManualRefresh}
             disabled={isRefreshing}
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           <button
-            className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-titanium-bg-elevated text-titanium-text-tertiary hover:text-white transition-colors"
             title="Paramètres"
           >
             <Settings className="w-4 h-4" />
@@ -485,16 +489,16 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 
       {/* Graphiques historiques */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-gray-800/50 rounded-lg p-3">
-          <div className="text-xs text-gray-400 mb-2">CPU History</div>
+        <div className="bg-titanium-bg-elevated/50 rounded-lg p-3">
+          <div className="text-xs text-titanium-text-tertiary mb-2">CPU History</div>
           <Sparkline data={data.history.cpu} color="#ef4444" />
         </div>
-        <div className="bg-gray-800/50 rounded-lg p-3">
-          <div className="text-xs text-gray-400 mb-2">RAM History</div>
+        <div className="bg-titanium-bg-elevated/50 rounded-lg p-3">
+          <div className="text-xs text-titanium-text-tertiary mb-2">RAM History</div>
           <Sparkline data={data.history.ram} color="#f59e0b" />
         </div>
-        <div className="bg-gray-800/50 rounded-lg p-3">
-          <div className="text-xs text-gray-400 mb-2">FPS History</div>
+        <div className="bg-titanium-bg-elevated/50 rounded-lg p-3">
+          <div className="text-xs text-titanium-text-tertiary mb-2">FPS History</div>
           <Sparkline data={data.history.fps} color="#22c55e" />
         </div>
       </div>
@@ -502,7 +506,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       {/* Issues et Recommandations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Issues */}
-        <div className="bg-gray-800/30 rounded-xl p-4">
+        <div className="bg-titanium-bg-elevated/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-5 h-5 text-orange-400" />
             <h3 className="font-medium text-white">Problèmes ({data.issues.length})</h3>
@@ -512,7 +516,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 
         {/* Recommandations */}
         {showRecommendations && (
-          <div className="bg-gray-800/30 rounded-xl p-4">
+          <div className="bg-titanium-bg-elevated/30 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-5 h-5 text-blue-400" />
               <h3 className="font-medium text-white">
@@ -528,8 +532,8 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       </div>
 
       {/* Footer avec tendance globale */}
-      <div className="mt-4 pt-4 border-t border-gray-700/50 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+      <div className="mt-4 pt-4 border-t border-titanium-border-default/50 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm text-titanium-text-tertiary">
           <Box className="w-4 h-4" />
           <span>Tendance globale:</span>
           {TREND_ICONS[data.trends.overall]}
@@ -539,7 +543,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
                 ? 'text-green-400'
                 : data.trends.overall === 'degrading'
                   ? 'text-red-400'
-                  : 'text-gray-400'
+                  : 'text-titanium-text-tertiary'
             }
           >
             {data.trends.overall === 'improving'
@@ -551,7 +555,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
                   : 'Inconnu'}
           </span>
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-titanium-text-disabled">
           Dernière mise à jour: {new Date(data.timestamp).toLocaleTimeString()}
         </div>
       </div>

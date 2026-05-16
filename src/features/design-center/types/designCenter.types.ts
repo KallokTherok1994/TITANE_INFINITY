@@ -220,6 +220,12 @@ export interface UIThemeContextActions {
   undoChanges: () => void;
   /** Appliquer les tokens au DOM */
   applyTokensToDOM: () => void;
+  /** Mode de couleur actuel */
+  colorMode: 'dark' | 'light';
+  /** Basculer entre dark et light */
+  toggleColorMode: () => void;
+  /** Définir le mode de couleur explicitement */
+  setColorMode: (mode: 'dark' | 'light') => void;
 }
 
 /**

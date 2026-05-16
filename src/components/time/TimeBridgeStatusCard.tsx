@@ -48,7 +48,7 @@ function renderRunningTone(label: string): string {
     case 'paused':
       return 'bg-amber-700/40 text-amber-200 border-amber-600';
     default:
-      return 'bg-gray-700/40 text-gray-300 border-gray-600';
+      return 'bg-titanium-bg-interactive/40 text-titanium-text-secondary border-titanium-border-strong';
   }
 }
 
@@ -88,10 +88,10 @@ export const TimeBridgeStatusCard: React.FC<TimeBridgeStatusCardProps> = ({
   return (
     <div
       data-testid="time-bridge-status"
-      className="grid grid-cols-2 md:grid-cols-4 gap-3 rounded-md border border-gray-800 bg-gray-950/40 p-3 text-xs text-gray-200"
+      className="grid grid-cols-2 md:grid-cols-4 gap-3 rounded-md border border-titanium-border-subtle bg-titanium-bg-base/40 p-3 text-xs text-titanium-text-secondary"
     >
       <div className="flex flex-col">
-        <span className="text-[10px] uppercase tracking-wide text-gray-400">
+        <span className="text-[10px] uppercase tracking-wide text-titanium-text-tertiary">
           Pont TIME→Twin
         </span>
         <span
@@ -102,18 +102,24 @@ export const TimeBridgeStatusCard: React.FC<TimeBridgeStatusCardProps> = ({
         </span>
       </div>
       <div className="flex flex-col">
-        <span className="text-[10px] uppercase tracking-wide text-gray-400">
+        <span className="text-[10px] uppercase tracking-wide text-titanium-text-tertiary">
           Dernier pulse
         </span>
-        <span data-testid="time-bridge-last-pulse" className="mt-1 text-gray-100">
+        <span
+          data-testid="time-bridge-last-pulse"
+          className="mt-1 text-titanium-text-primary"
+        >
           {formatTimestamp(status?.lastPulseAt ?? null)}
         </span>
       </div>
       <div className="flex flex-col">
-        <span className="text-[10px] uppercase tracking-wide text-gray-400">
+        <span className="text-[10px] uppercase tracking-wide text-titanium-text-tertiary">
           Observations poussées
         </span>
-        <span data-testid="time-bridge-pushed-count" className="mt-1 text-gray-100">
+        <span
+          data-testid="time-bridge-pushed-count"
+          className="mt-1 text-titanium-text-primary"
+        >
           {status?.totalPushed ?? 0}
           {status && status.totalFailed > 0 ? (
             <span className="ml-1 text-amber-300">(erreurs: {status.totalFailed})</span>
@@ -121,12 +127,12 @@ export const TimeBridgeStatusCard: React.FC<TimeBridgeStatusCardProps> = ({
         </span>
       </div>
       <div className="flex flex-col">
-        <span className="text-[10px] uppercase tracking-wide text-gray-400">
+        <span className="text-[10px] uppercase tracking-wide text-titanium-text-tertiary">
           Dernière erreur
         </span>
         <span
           data-testid="time-bridge-last-error"
-          className={`mt-1 truncate ${status?.lastError ? 'text-amber-200' : 'text-gray-400'}`}
+          className={`mt-1 truncate ${status?.lastError ? 'text-amber-200' : 'text-titanium-text-tertiary'}`}
           title={status?.lastError ?? ''}
         >
           {status?.lastError ?? '—'}

@@ -4,11 +4,8 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-/* Import Tech Fonts & Aura Effects (v30.0.0 active stack) */
+/* Tech Fonts only — aura/tech effects are scoped to dev/diagnostic pages */
 @import '../styles/tech-fonts.css';
-@import '../styles/tech-effects.css';
-@import '../styles/aura-effects.css';
-@import '../styles/aura-advanced.css';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    VARIABLES TITANE

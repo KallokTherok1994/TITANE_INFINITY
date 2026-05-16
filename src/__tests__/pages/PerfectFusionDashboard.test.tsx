@@ -92,8 +92,8 @@ describe('PerfectFusionDashboard', () => {
   it('keeps fusion helper labels above low-contrast tokens', async () => {
     renderPage();
 
-    expect(await screen.findByText('🟢 Excellent')).toHaveClass('text-gray-300');
-    expect((await screen.findAllByText('cognitive'))[0]).toHaveClass('text-gray-300');
+    expect(await screen.findByText('🟢 Excellent')).toHaveClass('text-titanium-text-secondary');
+    expect((await screen.findAllByText('cognitive'))[0]).toHaveClass('text-titanium-text-secondary');
     expect((await screen.findAllByText('Actif'))[0]).toHaveClass('text-green-200');
   });
 });

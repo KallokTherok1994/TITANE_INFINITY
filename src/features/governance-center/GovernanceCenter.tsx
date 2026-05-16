@@ -125,7 +125,7 @@ export const GovernanceCenter: React.FC = () => {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Centre de Gouvernance IA</h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-titanium-text-tertiary">
                 Configuration des providers d&apos;intelligence artificielle
               </p>
             </div>
@@ -177,12 +177,12 @@ export const GovernanceCenter: React.FC = () => {
 
         <div className="flex items-center gap-4">
           {/* Stats Badge */}
-          <div className="rounded-xl border border-gray-700/50 bg-gray-800/50 p-4 backdrop-blur-sm">
+          <div className="rounded-xl border border-titanium-border-default/50 bg-titanium-bg-elevated/50 p-4 backdrop-blur-sm">
             <div className="flex items-center gap-3">
               <Zap className="h-5 w-5 text-yellow-400" />
               <div>
                 <p className="text-2xl font-bold text-white">{activeProviders}/4</p>
-                <p className="text-xs text-gray-400">Providers actifs</p>
+                <p className="text-xs text-titanium-text-tertiary">Providers actifs</p>
               </div>
             </div>
           </div>
@@ -269,27 +269,27 @@ export const GovernanceCenter: React.FC = () => {
         </div>
 
         {/* Footer Info */}
-        <div className="rounded-xl border border-gray-700/50 bg-gray-800/30 p-6">
+        <div className="rounded-xl border border-titanium-border-default/50 bg-titanium-bg-elevated/30 p-6">
           <h3 className="mb-4 flex items-center gap-2 font-bold text-white">
             <Shield className="h-5 w-5 text-green-400" />
             Sécurité & Confidentialité
           </h3>
-          <div className="grid gap-4 text-sm text-gray-300 md:grid-cols-3">
+          <div className="grid gap-4 text-sm text-titanium-text-secondary md:grid-cols-3">
             <div>
               <p className="mb-1 font-semibold text-white">🔒 Chiffrement AES-256-GCM</p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-titanium-text-tertiary">
                 Toutes les clés API sont chiffrées avant stockage
               </p>
             </div>
             <div>
               <p className="mb-1 font-semibold text-white">🧹 Purge environnement</p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-titanium-text-tertiary">
                 Variables d&apos;environnement nettoyées automatiquement
               </p>
             </div>
             <div>
               <p className="mb-1 font-semibold text-white">👁️ Affichage masqué</p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-titanium-text-tertiary">
                 Seuls les 4 derniers caractères affichés
               </p>
             </div>

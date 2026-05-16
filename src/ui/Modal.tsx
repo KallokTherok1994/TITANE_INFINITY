@@ -15,7 +15,6 @@
 
 import { type HTMLAttributes, useEffect, forwardRef, useRef } from 'react';
 import { clsx } from 'clsx';
-import { colors, spacing, radius, shadows } from '@themes/tokens';
 import { trapFocus } from '@/lib/accessibility';
 
 // ─────────────────────────────────────────────────────────────────
@@ -44,23 +43,25 @@ const overlayStyles: React.CSSProperties = {
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(0, 0, 0, 0.75)',
-  backdropFilter: 'blur(8px)',
+  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  backdropFilter: 'blur(6px)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  zIndex: 9999,
-  padding: spacing[4],
+  zIndex: 'var(--z-modal-backdrop)' as unknown as number,
+  padding: 'var(--space-4)',
 };
 
 const modalBaseStyles: React.CSSProperties = {
-  background: colors.rubis.surface.solid,
-  border: `1px solid ${colors.rubis.primary[800]}`,
-  borderRadius: radius.xl,
-  boxShadow: shadows['2xl'],
-  maxHeight: 'calc(100% - 2rem)',
+  background: 'var(--color-bg-secondary)',
+  border: '1px solid var(--color-border-default)',
+  borderRadius: 'var(--radius-xl)',
+  boxShadow: 'var(--shadow-2xl)',
+  maxHeight: 'calc(100vh - 2rem)',
   overflow: 'auto',
   position: 'relative',
+  zIndex: 'var(--z-modal)' as unknown as number,
+  animation: 'modalEnter 200ms cubic-bezier(0, 0, 0.2, 1) forwards',
 };
 
 const sizeStyles: Record<ModalSize, React.CSSProperties> = {
@@ -68,44 +69,44 @@ const sizeStyles: Record<ModalSize, React.CSSProperties> = {
   md: { maxWidth: '600px', width: '100%' },
   lg: { maxWidth: '800px', width: '100%' },
   xl: { maxWidth: '1200px', width: '100%' },
-  full: { maxWidth: '100%', width: '100%', maxHeight: '100%' },
+  full: { maxWidth: '100%', width: '100%', maxHeight: '100vh' },
 };
 
 const headerStyles: React.CSSProperties = {
-  padding: spacing[6],
-  borderBottom: `1px solid ${colors.neutral[800]}`,
+  padding: 'var(--space-6)',
+  borderBottom: '1px solid var(--color-border-subtle)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
 };
 
 const titleStyles: React.CSSProperties = {
-  fontSize: '1.5rem',
+  fontSize: 'var(--text-xl)',
   fontWeight: 600,
-  color: colors.neutral[100],
+  color: 'var(--color-text-primary)',
   margin: 0,
 };
 
 const contentStyles: React.CSSProperties = {
-  padding: spacing[6],
+  padding: 'var(--space-6)',
 };
 
 const closeButtonStyles: React.CSSProperties = {
   position: 'absolute',
-  top: spacing[4],
-  right: spacing[4],
+  top: 'var(--space-4)',
+  right: 'var(--space-4)',
   background: 'transparent',
   border: 'none',
-  color: colors.neutral[400],
-  fontSize: '1.5rem',
+  color: 'var(--color-text-muted)',
+  fontSize: '1.25rem',
   cursor: 'pointer',
   width: '32px',
   height: '32px',
-  borderRadius: radius.base,
+  borderRadius: 'var(--radius-md)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transition: 'all 0.2s',
+  transition: 'color 150ms ease, background-color 150ms ease',
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -230,16 +231,9 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
               type="button"
               style={closeButtonStyles}
               onClick={onClose}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = colors.neutral[800];
-                e.currentTarget.style.color = colors.neutral[100];
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.color = colors.neutral[400];
-              }}
               aria-label="Fermer la fenêtre modale"
               title="Fermer (Esc)"
+              className="titane-modal-close"
             >
               <span aria-hidden="true">×</span>
             </button>

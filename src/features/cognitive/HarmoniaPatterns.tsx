@@ -8,7 +8,6 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Card, Badge } from '../../ui';
-import { colors, spacing } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
@@ -35,10 +34,10 @@ export interface HarmoniaPatternsProps {
 // ─────────────────────────────────────────────────────────────────
 
 const categoryColors: Record<HarmoniaPattern['category'], string> = {
-  productivity: colors.rubis.primary[500],
-  learning: colors.saphir.primary[500],
-  rest: colors.emeraude.primary[500],
-  creative: colors.diamant.primary[400],
+  productivity: 'var(--color-text-secondary)',
+  learning: 'var(--color-info-500)',
+  rest: 'var(--color-success-500)',
+  creative: 'var(--color-text-muted)',
 };
 
 const categoryLabels: Record<HarmoniaPattern['category'], string> = {
@@ -91,7 +90,7 @@ export const HarmoniaPatterns = ({
       const y = height - barHeight - 30;
 
       // Bar background
-      ctx.fillStyle = colors.neutral[800];
+      ctx.fillStyle = 'var(--color-border-subtle)';
       ctx.fillRect(x + 5, y, barWidth - 10, barHeight);
 
       // Bar fill
@@ -105,7 +104,7 @@ export const HarmoniaPatterns = ({
       ctx.save();
       ctx.translate(x + barWidth / 2, height - 10);
       ctx.rotate(-Math.PI / 6);
-      ctx.fillStyle = colors.neutral[400];
+      ctx.fillStyle = 'var(--color-text-muted)';
       ctx.font = '10px Inter, sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText(pattern.name, 0, 0);
@@ -122,10 +121,10 @@ export const HarmoniaPatterns = ({
       >
         <h3
           style={{
-            margin: `0 0 ${spacing[4]} 0`,
+            margin: '0 0 var(--space-4) 0',
             fontSize: '1.25rem',
             fontWeight: 600,
-            color: colors.neutral[100],
+            color: 'var(--color-text-primary)',
           }}
         >
           🎵 Harmonia - Patterns Comportementaux
@@ -140,23 +139,23 @@ export const HarmoniaPatterns = ({
 
         <div
           style={{
-            marginTop: spacing[6],
+            marginTop: 'var(--space-6)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-            gap: spacing[3],
+            gap: 'var(--space-3)',
           }}
         >
           {patterns.map(pattern => (
             <motion.div
               key={pattern.id}
               style={{
-                padding: spacing[4],
+                padding: 'var(--space-4)',
                 background:
                   selectedPattern === pattern.id
-                    ? colors.rubis.surface.translucent
-                    : colors.neutral[900],
+                    ? 'rgba(148,163,184,0.08)'
+                    : 'var(--color-bg-primary)',
                 borderRadius: '8px',
-                border: `1px solid ${selectedPattern === pattern.id ? colors.rubis.primary[700] : colors.neutral[800]}`,
+                border: `1px solid ${selectedPattern === pattern.id ? 'var(--color-border-default)' : 'var(--color-border-subtle)'}`,
                 cursor: onPatternSelect ? 'pointer' : 'default',
                 transition: 'all 0.2s',
               }}
@@ -169,14 +168,14 @@ export const HarmoniaPatterns = ({
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'start',
-                  marginBottom: spacing[2],
+                  marginBottom: 'var(--space-2)',
                 }}
               >
                 <span
                   style={{
                     fontSize: '0.875rem',
                     fontWeight: 600,
-                    color: colors.neutral[100],
+                    color: 'var(--color-text-primary)',
                   }}
                 >
                   {pattern.name}
@@ -196,9 +195,9 @@ export const HarmoniaPatterns = ({
               <div
                 style={{
                   display: 'flex',
-                  gap: spacing[4],
+                  gap: 'var(--space-4)',
                   fontSize: '0.75rem',
-                  color: colors.neutral[400],
+                  color: 'var(--color-text-muted)',
                 }}
               >
                 <span>Fréquence: {pattern.frequency}</span>

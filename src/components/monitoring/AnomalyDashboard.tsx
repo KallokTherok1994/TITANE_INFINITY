@@ -129,20 +129,22 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
       {/* Header Stats */}
       <div className="grid grid-cols-4 gap-4">
         {/* Total Anomalies */}
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+        <div className="bg-titanium-bg-base border border-titanium-border-default rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <AlertTriangle className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm text-gray-400">Total Anomalies</span>
+            <span className="text-sm text-titanium-text-tertiary">Total Anomalies</span>
           </div>
           <div className="text-2xl font-bold text-white">{stats.total}</div>
-          <div className="text-xs text-gray-500 mt-1">{stats.last24h} dernières 24h</div>
+          <div className="text-xs text-titanium-text-disabled mt-1">
+            {stats.last24h} dernières 24h
+          </div>
         </div>
 
         {/* Critical */}
-        <div className="bg-gray-900 border border-red-700 rounded-lg p-4">
+        <div className="bg-titanium-bg-base border border-red-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-2 h-2 rounded-full bg-red-500" />
-            <span className="text-sm text-gray-400">Critiques</span>
+            <span className="text-sm text-titanium-text-tertiary">Critiques</span>
           </div>
           <div className="text-2xl font-bold text-red-400">
             {stats.bySeverity.critical || 0}
@@ -151,10 +153,10 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
         </div>
 
         {/* High */}
-        <div className="bg-gray-900 border border-orange-700 rounded-lg p-4">
+        <div className="bg-titanium-bg-base border border-orange-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-2 h-2 rounded-full bg-orange-500" />
-            <span className="text-sm text-gray-400">Élevées</span>
+            <span className="text-sm text-titanium-text-tertiary">Élevées</span>
           </div>
           <div className="text-2xl font-bold text-orange-400">
             {stats.bySeverity.high || 0}
@@ -163,10 +165,10 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
         </div>
 
         {/* Medium */}
-        <div className="bg-gray-900 border border-yellow-700 rounded-lg p-4">
+        <div className="bg-titanium-bg-base border border-yellow-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-2 h-2 rounded-full bg-yellow-500" />
-            <span className="text-sm text-gray-400">Moyennes</span>
+            <span className="text-sm text-titanium-text-tertiary">Moyennes</span>
           </div>
           <div className="text-2xl font-bold text-yellow-400">
             {stats.bySeverity.medium || 0}
@@ -176,12 +178,14 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
       </div>
 
       {/* Anomalies List */}
-      <div className="bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+      <div className="bg-titanium-bg-base border border-titanium-border-default rounded-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-titanium-border-default flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Activity className="w-5 h-5 text-blue-500" />
             <h3 className="text-lg font-semibold text-white">Anomalies Détectées</h3>
-            <span className="text-sm text-gray-400">({anomalies.length})</span>
+            <span className="text-sm text-titanium-text-tertiary">
+              ({anomalies.length})
+            </span>
           </div>
         </div>
 
@@ -192,7 +196,7 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
               return (
                 <div
                   key={index}
-                  className={`p-4 hover:bg-gray-800/50 transition-colors ${colors.bg} border-l-4 ${colors.border}`}
+                  className={`p-4 hover:bg-titanium-bg-elevated/50 transition-colors ${colors.bg} border-l-4 ${colors.border}`}
                 >
                   <div className="flex items-start justify-between">
                     {/* Left: Info */}
@@ -206,17 +210,17 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
                         </span>
 
                         {/* Service */}
-                        <span className="text-sm font-mono text-gray-300">
+                        <span className="text-sm font-mono text-titanium-text-secondary">
                           {anomaly.service}
                         </span>
 
                         {/* Metric */}
-                        <span className="text-sm text-gray-400">
+                        <span className="text-sm text-titanium-text-tertiary">
                           {formatMetric(anomaly.metric)}
                         </span>
 
                         {/* Time */}
-                        <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <span className="text-xs text-titanium-text-disabled flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {formatTime(anomaly.timestamp)}
                         </span>
@@ -225,33 +229,33 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
                       {/* Values */}
                       <div className="grid grid-cols-4 gap-4 text-sm">
                         <div>
-                          <span className="text-gray-500">Valeur:</span>
+                          <span className="text-titanium-text-disabled">Valeur:</span>
                           <span className={`ml-2 font-semibold ${colors.text}`}>
                             {formatValue(anomaly.value, anomaly.metric)}
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-500">Baseline:</span>
-                          <span className="ml-2 text-gray-300">
+                          <span className="text-titanium-text-disabled">Baseline:</span>
+                          <span className="ml-2 text-titanium-text-secondary">
                             {formatValue(anomaly.baseline, anomaly.metric)}
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-500">Z-score:</span>
+                          <span className="text-titanium-text-disabled">Z-score:</span>
                           <span className={`ml-2 font-semibold ${colors.text}`}>
                             {anomaly.zScore.toFixed(2)}σ
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-500">Confiance:</span>
-                          <span className="ml-2 text-gray-300">
+                          <span className="text-titanium-text-disabled">Confiance:</span>
+                          <span className="ml-2 text-titanium-text-secondary">
                             {(anomaly.confidence * 100).toFixed(0)}%
                           </span>
                         </div>
                       </div>
 
                       {/* Deviation */}
-                      <div className="mt-2 text-xs text-gray-400">
+                      <div className="mt-2 text-xs text-titanium-text-tertiary">
                         Déviation:{' '}
                         <span className={colors.text}>
                           {anomaly.value > anomaly.baseline ? '+' : ''}
@@ -275,10 +279,10 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
             })}
           </div>
         ) : (
-          <div className="p-12 text-center text-gray-400">
+          <div className="p-12 text-center text-titanium-text-tertiary">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-30" />
             <p>Aucune anomalie détectée</p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-titanium-text-disabled mt-2">
               Le système surveille les déviations Z-score &gt; 2.0
             </p>
           </div>

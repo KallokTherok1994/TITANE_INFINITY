@@ -546,7 +546,9 @@ const OrchestrationSection = memo<{
           </div>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Nœuds Actifs</span>
-            <span className="dev-orch-value">{toDevFiniteNumber(state.nexus?.activeNodes)}</span>
+            <span className="dev-orch-value">
+              {toDevFiniteNumber(state.nexus?.activeNodes)}
+            </span>
           </div>
         </div>
 
@@ -570,9 +572,10 @@ const OrchestrationSection = memo<{
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Health</span>
             <span className="dev-orch-value">
-              {(toDevFiniteNumber(state.meta?.system_health?.overall_score) * 100).toFixed(
-                1
-              )}%
+              {(
+                toDevFiniteNumber(state.meta?.system_health?.overall_score) * 100
+              ).toFixed(1)}
+              %
             </span>
           </div>
         </div>
@@ -657,7 +660,7 @@ const MetricsSection = memo<{
         <h3>⚡ Core Web Vitals</h3>
         <p
           className="dev-coming-soon"
-          style={{ color: 'rgba(203,213,225,0.6)', fontSize: '0.8rem' }}
+          style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}
         >
           Monitoring Web Vitals non disponible — nécessite intégration IPC
           system_metrics_live (DISPLAY_ONLY)
@@ -902,12 +905,13 @@ function DevPageContent(): JSX.Element {
   ];
 
   return (
-    <div className="dev-page" data-testid="page-dev" data-dev-state="ready">
+    <div
+      className="dev-page dev-only-animations"
+      data-testid="page-dev"
+      data-dev-state="ready"
+    >
       {/* Runtime Truth Badge — ACTIVE — v97 */}
-      <SurfaceTruthBadge
-        variant={surfaceTruthVariant}
-        className="mb-4"
-      />
+      <SurfaceTruthBadge variant={surfaceTruthVariant} className="mb-4" />
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Cockpit</h1>
@@ -924,21 +928,36 @@ function DevPageContent(): JSX.Element {
         </button>
       </header>
 
-      <nav className="dev-tabs">
-        {sections.map(section => (
-          <button
-            key={section.id}
-            data-testid={`tab-dev-${section.id}`}
-            className={`dev-tab ${activeSection === section.id ? 'dev-tab--active' : ''}`}
-            onClick={() => updateActiveSection(section.id)}
-          >
-            <span className="dev-tab-icon">{section.icon}</span>
-            <span className="dev-tab-label">{section.label}</span>
-          </button>
-        ))}
+      <nav className="dev-tabs" role="tablist" aria-label="Sections DEV">
+        {sections.map(section => {
+          const isActive = activeSection === section.id;
+          return (
+            <button
+              key={section.id}
+              data-testid={`tab-dev-${section.id}`}
+              className={`dev-tab ${isActive ? 'dev-tab--active' : ''}`}
+              onClick={() => updateActiveSection(section.id)}
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`dev-panel-${section.id}`}
+              id={`dev-tab-${section.id}`}
+              tabIndex={isActive ? 0 : -1}
+            >
+              <span className="dev-tab-icon">{section.icon}</span>
+              <span className="dev-tab-label">{section.label}</span>
+            </button>
+          );
+        })}
       </nav>
 
-      <main className="dev-main" tabIndex={0} aria-label="Contenu principal DEV">
+      <main
+        className="dev-main"
+        tabIndex={0}
+        aria-label="Contenu principal DEV"
+        id={`dev-panel-${activeSection}`}
+        role="tabpanel"
+        aria-labelledby={`dev-tab-${activeSection}`}
+      >
         {activeSection === 'overview' && (
           <OverviewSection
             oneCoreState={oneCoreState}
@@ -970,9 +989,9 @@ function DevPageContent(): JSX.Element {
                   marginBottom: '8px',
                   background: 'rgba(245,158,11,0.12)',
                   border: '1px solid rgba(245,158,11,0.4)',
-                  borderRadius: '6px',
-                  color: '#f59e0b',
-                  fontSize: '0.8rem',
+                  borderRadius: 'var(--radius-md)',
+                  color: 'var(--color-warning-500)',
+                  fontSize: 'var(--text-sm)',
                 }}
               >
                 ⚠️ Orchestration — données statiques (IPC indisponible)

@@ -130,7 +130,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg',
+        'flex flex-col items-center gap-4 p-6 bg-white dark:bg-titanium-bg-elevated rounded-lg shadow-lg',
         className
       )}
     >
@@ -142,7 +142,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
             'px-4 py-2 rounded-lg font-medium transition-all',
             mode === 'push_to_talk'
               ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              : 'bg-gray-200 dark:bg-titanium-bg-interactive text-titanium-text-secondary dark:text-titanium-text-secondary'
           )}
         >
           🎤 Push-to-Talk
@@ -154,7 +154,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
             'px-4 py-2 rounded-lg font-medium transition-all',
             mode === 'wake_word'
               ? 'bg-purple-500 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              : 'bg-gray-200 dark:bg-titanium-bg-interactive text-titanium-text-secondary dark:text-titanium-text-secondary'
           )}
         >
           👂 Wake Word
@@ -193,7 +193,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
             {voiceEngine.status.isRecording ? '⏸️' : '🎤'}
           </button>
 
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="text-sm text-titanium-text-disabled dark:text-titanium-text-tertiary">
             {voiceEngine.status.isRecording ? 'Maintenez...' : 'Appuyez pour parler'}
           </span>
         </div>
@@ -201,7 +201,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
 
       {/* Status Text */}
       <div className="text-center space-y-1">
-        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <p className="text-sm font-medium text-titanium-text-secondary dark:text-titanium-text-secondary">
           {voiceEngine.status.state === 'idle' &&
             (mode === 'wake_word' ? 'Dites "Titane" pour m\'activer' : 'Prêt à écouter')}
           {voiceEngine.status.state === 'listening' && 'Écoute en cours...'}
@@ -210,7 +210,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
         </p>
 
         {voiceEngine.status.transcript && (
-          <p className="text-xs text-gray-500 dark:text-gray-400 italic">
+          <p className="text-xs text-titanium-text-disabled dark:text-titanium-text-tertiary italic">
             &quot;{voiceEngine.status.transcript}&quot;
           </p>
         )}

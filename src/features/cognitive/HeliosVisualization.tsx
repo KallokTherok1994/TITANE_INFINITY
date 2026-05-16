@@ -8,7 +8,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../../ui';
-import { colors, spacing } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
@@ -62,7 +61,7 @@ export const HeliosVisualization = ({
     // Draw background circle
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.strokeStyle = colors.rubis.primary[900];
+    ctx.strokeStyle = 'var(--color-bg-secondary)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -92,16 +91,16 @@ export const HeliosVisualization = ({
       }
     });
     ctx.closePath();
-    ctx.fillStyle = `${colors.rubis.primary[500]}33`;
+    ctx.fillStyle = 'var(--color-text-secondary)33';
     ctx.fill();
-    ctx.strokeStyle = colors.rubis.primary[500];
+    ctx.strokeStyle = 'var(--color-text-secondary)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // Draw axis lines and labels
-    ctx.strokeStyle = colors.neutral[700];
+    ctx.strokeStyle = 'var(--color-border-default)';
     ctx.lineWidth = 1;
-    ctx.fillStyle = colors.neutral[300];
+    ctx.fillStyle = 'var(--color-text-secondary)';
     ctx.font = '12px Inter, sans-serif';
     ctx.textAlign = 'center';
 
@@ -125,7 +124,7 @@ export const HeliosVisualization = ({
     // Draw center point
     ctx.beginPath();
     ctx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
-    ctx.fillStyle = colors.rubis.primary[500];
+    ctx.fillStyle = 'var(--color-text-secondary)';
     ctx.fill();
   }, [metrics, dimensions]);
 
@@ -138,10 +137,10 @@ export const HeliosVisualization = ({
       >
         <h3
           style={{
-            margin: `0 0 ${spacing[4]} 0`,
+            margin: '0 0 var(--space-4) 0',
             fontSize: '1.25rem',
             fontWeight: 600,
-            color: colors.neutral[100],
+            color: 'var(--color-text-primary)',
           }}
         >
           🌅 Helios - État Cognitif
@@ -156,13 +155,19 @@ export const HeliosVisualization = ({
 
         <div
           style={{
-            marginTop: spacing[4],
-            padding: spacing[4],
-            background: colors.rubis.surface.translucent,
+            marginTop: 'var(--space-4)',
+            padding: 'var(--space-4)',
+            background: 'rgba(148,163,184,0.08)',
             borderRadius: '8px',
           }}
         >
-          <p style={{ margin: 0, color: colors.neutral[300], fontSize: '0.875rem' }}>
+          <p
+            style={{
+              margin: 0,
+              color: 'var(--color-text-secondary)',
+              fontSize: '0.875rem',
+            }}
+          >
             <strong>Tone émotionnel:</strong> {metrics.emotional_tone}
           </p>
         </div>

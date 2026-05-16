@@ -12,7 +12,6 @@ import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TMetric, TSectionHeader } from '@/design-system';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
-import { colors, spacing, fontSizes } from '@themes/tokens';
 import { createLogger } from '@/utils/logger';
 import { usePersistentMemory } from '@/hooks/usePersistentMemory';
 import { useLTMContext } from '@/hooks/useLTMContext';
@@ -1088,9 +1087,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         <div
           style={{
             display: 'flex',
-            gap: spacing[2],
-            marginBottom: spacing[6],
-            padding: `${spacing[1]} ${spacing[2]}`,
+            gap: 'var(--space-2)',
+            marginBottom: 'var(--space-6)',
+            padding: 'var(--space-1) var(--space-2)',
             borderRadius: '12px',
             background: 'rgba(30, 30, 40, 0.4)',
             flexWrap: 'wrap',
@@ -1119,14 +1118,14 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 }
               }}
               style={{
-                padding: `${spacing[2]} ${spacing[4]}`,
+                padding: 'var(--space-2) var(--space-4)',
                 borderRadius: '8px',
                 border: 'none',
                 background:
                   activeTab === tab.id ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
-                color: activeTab === tab.id ? '#60a5fa' : colors.neutral[400],
+                color: activeTab === tab.id ? '#60a5fa' : 'var(--color-text-muted)',
                 cursor: 'pointer',
-                fontSize: fontSizes.sm,
+                fontSize: 'var(--text-sm)',
                 fontWeight: activeTab === tab.id ? 600 : 400,
                 transition: 'all 0.2s ease',
               }}
@@ -1139,7 +1138,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         {/* Stats Cards — always visible */}
         <Grid columns={3} gap={4}>
           <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Court Terme</h3>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>Court Terme</h3>
             <TMetric
               label="Entrées"
               value={
@@ -1151,9 +1150,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             />
             <p
               style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[500],
-                marginTop: spacing[4],
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
+                marginTop: 'var(--space-4)',
               }}
             >
               Contexte immédiat et conversation active
@@ -1161,7 +1160,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
 
           <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Moyen Terme</h3>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>Moyen Terme</h3>
             <TMetric
               label="Entrées"
               value={
@@ -1173,9 +1172,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             />
             <p
               style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[500],
-                marginTop: spacing[4],
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
+                marginTop: 'var(--space-4)',
               }}
             >
               Sessions récentes et apprentissages temporaires
@@ -1183,7 +1182,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
 
           <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Long Terme</h3>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>Long Terme</h3>
             <TMetric
               label="Entrées"
               value={
@@ -1196,9 +1195,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             {ltmConvCount > 0 && (
               <p
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 🗂 {ltmConvCount} message{ltmConvCount > 1 ? 's' : ''} dans
@@ -1207,9 +1206,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             )}
             <p
               style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[500],
-                marginTop: spacing[4],
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
+                marginTop: 'var(--space-4)',
               }}
             >
               Connaissances permanentes et identité
@@ -1221,14 +1220,14 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           (isBootstrappingPersistentMemory || isBootstrappingKnowledgeSurface) && (
             <Card
               style={{
-                marginTop: spacing[6],
-                border: `1px solid ${colors.neutral[500]}`,
+                marginTop: 'var(--space-6)',
+                border: '1px solid var(--color-text-muted)',
               }}
             >
-              <h3 style={{ marginBottom: spacing[2] }}>
+              <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 Chargement de la mémoire persistante
               </h3>
-              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
                 TITANE synchronise actuellement les entrées locales et persistantes avant
                 d&apos;afficher le dashboard, l&apos;arbre et la recherche.
               </p>
@@ -1241,23 +1240,23 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           !hasPersistentMemory && (
             <Card
               style={{
-                marginTop: spacing[6],
-                border: `1px solid ${colors.neutral[500]}`,
+                marginTop: 'var(--space-6)',
+                border: '1px solid var(--color-text-muted)',
               }}
             >
-              <h3 style={{ marginBottom: spacing[2] }}>
+              <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 Aucune mémoire persistante consolidée
               </h3>
-              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
                 La LTM persistante n&apos;a pas encore reçu d&apos;entrée réelle pour ce
                 contexte. Les cartes, l&apos;arbre et la recherche restent donc
                 volontairement vides.
               </p>
               <p
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[500],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 Pour amorcer la mémoire, utilisez une interaction chat de type
@@ -1270,16 +1269,16 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         {activeTab === 'overview' && knowledgeLoadWarning && (
           <Card
             style={{
-              marginTop: spacing[6],
+              marginTop: 'var(--space-6)',
               border: '1px solid rgba(245, 158, 11, 0.45)',
               background: 'rgba(245, 158, 11, 0.08)',
             }}
           >
             <div role="alert" aria-live="polite">
-              <h3 style={{ marginBottom: spacing[2], color: '#f59e0b' }}>
+              <h3 style={{ marginBottom: 'var(--space-2)', color: '#f59e0b' }}>
                 ⚠️ Surface connaissance partiellement dégradée
               </h3>
-              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
                 {knowledgeLoadWarning}
               </p>
             </div>
@@ -1289,13 +1288,13 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         {activeTab === 'overview' && (
           <Card
             style={{
-              marginTop: spacing[6],
-              border: `1px solid ${colors.neutral[500]}`,
+              marginTop: 'var(--space-6)',
+              border: '1px solid var(--color-text-muted)',
             }}
           >
             <div data-testid="memory-hybrid-overview-summary">
-              <h3 style={{ marginBottom: spacing[2] }}>Hybrid memory rollout</h3>
-              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              <h3 style={{ marginBottom: 'var(--space-2)' }}>Hybrid memory rollout</h3>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
                 Preset actif:{' '}
                 <span data-testid="memory-hybrid-overview-active-preset">
                   {hybridDiagnostics.shadowReadActivePresetLabel}
@@ -1304,9 +1303,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p
                 data-testid="memory-hybrid-overview-orchestration-status"
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 Orchestration hybride:{' '}
@@ -1317,9 +1316,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p
                 data-testid="memory-hybrid-overview-operator-hint"
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 {hybridDiagnostics.shadowReadCanaryOperatorHint}
@@ -1327,9 +1326,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p
                 data-testid="memory-hybrid-overview-orchestration-preview"
                 style={{
-                  fontSize: fontSizes.xs,
-                  color: colors.neutral[500],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 {hybridDiagnostics.lastHybridOrchestrationPreview.length > 0
@@ -1339,9 +1338,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p
                 data-testid="memory-hybrid-overview-preset-history"
                 style={{
-                  fontSize: fontSizes.xs,
-                  color: colors.neutral[500],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 {hybridPresetHistorySummary}
@@ -1349,10 +1348,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <div
                 style={{
                   display: 'flex',
-                  gap: spacing[2],
+                  gap: 'var(--space-2)',
                   alignItems: 'center',
                   flexWrap: 'wrap',
-                  marginTop: spacing[3],
+                  marginTop: 'var(--space-3)',
                 }}
               >
                 <button
@@ -1362,11 +1361,11 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     void handleExportHybridReport();
                   }}
                   style={{
-                    padding: `${spacing[2]} ${spacing[3]}`,
+                    padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: `1px solid ${colors.neutral[500]}`,
+                    border: '1px solid var(--color-text-muted)',
                     background: 'transparent',
-                    color: colors.neutral[400],
+                    color: 'var(--color-text-muted)',
                     cursor: 'pointer',
                   }}
                 >
@@ -1375,8 +1374,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 <span
                   data-testid="memory-hybrid-overview-export-status"
                   style={{
-                    fontSize: fontSizes.xs,
-                    color: colors.neutral[500],
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--color-text-muted)',
                   }}
                 >
                   {hybridReportStatus ?? 'Aucun export recent.'}
@@ -1387,12 +1386,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         )}
 
         {activeTab === 'overview' && recentChatMemoryEntries.length > 0 && (
-          <div style={{ marginTop: spacing[6] }}>
+          <div style={{ marginTop: 'var(--space-6)' }}>
             <Card>
-              <h3 style={{ marginBottom: spacing[2] }}>
+              <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 💬 Mémoires récentes issues du chat
               </h3>
-              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
                 Les dernières informations mémorisées depuis les conversations sont
                 affichées ici et restent sauvegardées de façon persistante.
               </p>
@@ -1400,8 +1399,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                  gap: spacing[3],
-                  marginTop: spacing[4],
+                  gap: 'var(--space-3)',
+                  marginTop: 'var(--space-4)',
                 }}
               >
                 {recentChatMemoryEntries.map(entry => {
@@ -1419,18 +1418,23 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       onClick={() => selectPersistentEntry(entry)}
                       style={{
                         textAlign: 'left',
-                        padding: spacing[3],
+                        padding: 'var(--space-3)',
                         borderRadius: '10px',
-                        border: `1px solid ${colors.neutral[500]}`,
+                        border: '1px solid var(--color-text-muted)',
                         background: 'transparent',
                         cursor: 'pointer',
                       }}
                     >
-                      <strong style={{ color: colors.neutral[400], display: 'block' }}>
+                      <strong
+                        style={{ color: 'var(--color-text-muted)', display: 'block' }}
+                      >
                         {'title' in entry ? entry.title : entry.id}
                       </strong>
                       <span
-                        style={{ color: colors.neutral[500], fontSize: fontSizes.sm }}
+                        style={{
+                          color: 'var(--color-text-muted)',
+                          fontSize: 'var(--text-sm)',
+                        }}
                       >
                         {preview.slice(0, 140)}
                         {preview.length > 140 ? '…' : ''}
@@ -1444,12 +1448,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         )}
 
         {activeTab === 'overview' && consolidatedMemoryEntries.length > 0 && (
-          <div style={{ marginTop: spacing[6] }}>
+          <div style={{ marginTop: 'var(--space-6)' }}>
             <Card>
-              <h3 style={{ marginBottom: spacing[2] }}>
+              <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 🧩 Mémoire consolidée et synchronisée
               </h3>
-              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
                 {summaryEntries.length} résumé{summaryEntries.length > 1 ? 's' : ''} et{' '}
                 {bundleEntries.length} bundle{bundleEntries.length > 1 ? 's' : ''}{' '}
                 enrichissent la mémoire affichée pour refléter la totalité de la mémoire
@@ -1457,9 +1461,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               </p>
               <p
                 style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[500],
-                  marginTop: spacing[2],
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: 'var(--space-2)',
                 }}
               >
                 Dernière synchro visible: {lastSurfaceSyncLabel}. La page reste active et
@@ -1473,12 +1477,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 }}
                 disabled={isSurfaceSyncing}
                 style={{
-                  marginTop: spacing[3],
-                  padding: `${spacing[2]} ${spacing[3]}`,
+                  marginTop: 'var(--space-3)',
+                  padding: 'var(--space-2) var(--space-3)',
                   borderRadius: '8px',
-                  border: `1px solid ${colors.neutral[500]}`,
+                  border: '1px solid var(--color-text-muted)',
                   background: 'transparent',
-                  color: colors.neutral[400],
+                  color: 'var(--color-text-muted)',
                   cursor: isSurfaceSyncing ? 'wait' : 'pointer',
                   opacity: isSurfaceSyncing ? 0.7 : 1,
                 }}
@@ -1491,8 +1495,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                  gap: spacing[3],
-                  marginTop: spacing[4],
+                  gap: 'var(--space-3)',
+                  marginTop: 'var(--space-4)',
                 }}
               >
                 {consolidatedMemoryEntries.map(entry => (
@@ -1502,17 +1506,24 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     onClick={() => selectPersistentEntry(entry)}
                     style={{
                       textAlign: 'left',
-                      padding: spacing[3],
+                      padding: 'var(--space-3)',
                       borderRadius: '10px',
-                      border: `1px solid ${colors.neutral[500]}`,
+                      border: '1px solid var(--color-text-muted)',
                       background: 'transparent',
                       cursor: 'pointer',
                     }}
                   >
-                    <strong style={{ color: colors.neutral[400], display: 'block' }}>
+                    <strong
+                      style={{ color: 'var(--color-text-muted)', display: 'block' }}
+                    >
                       {'title' in entry ? entry.title : entry.id}
                     </strong>
-                    <span style={{ color: colors.neutral[500], fontSize: fontSizes.sm }}>
+                    <span
+                      style={{
+                        color: 'var(--color-text-muted)',
+                        fontSize: 'var(--text-sm)',
+                      }}
+                    >
                       {entry.content.slice(0, 140)}
                       {entry.content.length > 140 ? '…' : ''}
                     </span>
@@ -1524,12 +1535,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         )}
 
         {activeTab === 'overview' && knowledgeEntries.length > 0 && (
-          <div style={{ marginTop: spacing[6] }}>
+          <div style={{ marginTop: 'var(--space-6)' }}>
             <Card>
-              <h3 style={{ marginBottom: spacing[2] }}>
+              <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 📚 Bases de connaissances visibles dans la Mémoire
               </h3>
-              <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
                 {knowledgeSourceCounts.contextual} connaissance
                 {knowledgeSourceCounts.contextual > 1 ? 's' : ''} contextuelle
                 {knowledgeSourceCounts.contextual > 1 ? 's' : ''},{' '}
@@ -1544,9 +1555,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               {knowledgeDuplicateCount > 0 && (
                 <p
                   style={{
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[500],
-                    marginTop: spacing[2],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
+                    marginTop: 'var(--space-2)',
                   }}
                 >
                   {knowledgeDuplicateCount} doublon
@@ -1561,8 +1572,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 style={{
                   display: 'flex',
                   flexWrap: 'wrap',
-                  gap: spacing[2],
-                  marginTop: spacing[4],
+                  gap: 'var(--space-2)',
+                  marginTop: 'var(--space-4)',
                   alignItems: 'center',
                 }}
               >
@@ -1574,12 +1585,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   data-testid="knowledge-search-input"
                   style={{
                     flex: '1 1 200px',
-                    padding: `${spacing[2]} ${spacing[3]}`,
+                    padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: `1px solid ${colors.neutral[500]}`,
+                    border: '1px solid var(--color-text-muted)',
                     background: 'rgba(0,0,0,0.2)',
-                    color: colors.neutral[300],
-                    fontSize: fontSizes.sm,
+                    color: 'var(--color-text-secondary)',
+                    fontSize: 'var(--text-sm)',
                   }}
                 />
                 <select
@@ -1590,12 +1601,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   data-testid="knowledge-topic-filter"
                   aria-label="Filtrer les connaissances par sujet"
                   style={{
-                    padding: `${spacing[2]} ${spacing[3]}`,
+                    padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: `1px solid ${colors.neutral[500]}`,
+                    border: '1px solid var(--color-text-muted)',
                     background: 'rgba(0,0,0,0.2)',
-                    color: colors.neutral[300],
-                    fontSize: fontSizes.sm,
+                    color: 'var(--color-text-secondary)',
+                    fontSize: 'var(--text-sm)',
                   }}
                 >
                   <option value="all">Tous les sujets ({knowledgeEntries.length})</option>
@@ -1614,8 +1625,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 {filteredKnowledgeEntries.length !== knowledgeEntries.length && (
                   <span
                     style={{
-                      fontSize: fontSizes.sm,
-                      color: colors.neutral[400],
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--color-text-muted)',
                     }}
                   >
                     {filteredKnowledgeEntries.length} / {knowledgeEntries.length} affiché
@@ -1629,8 +1640,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                  gap: spacing[3],
-                  marginTop: spacing[4],
+                  gap: 'var(--space-3)',
+                  marginTop: 'var(--space-4)',
                 }}
               >
                 {visibleKnowledgeEntries.map(entry => {
@@ -1642,9 +1653,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       onClick={() => selectPersistentEntry(entry)}
                       style={{
                         textAlign: 'left',
-                        padding: spacing[3],
+                        padding: 'var(--space-3)',
                         borderRadius: '10px',
-                        border: `1px solid ${colors.neutral[500]}`,
+                        border: '1px solid var(--color-text-muted)',
                         background: 'transparent',
                         cursor: 'pointer',
                         transition: 'border-color 0.2s ease, background 0.2s ease',
@@ -1653,9 +1664,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       {/* Title */}
                       <strong
                         style={{
-                          color: colors.neutral[300],
+                          color: 'var(--color-text-secondary)',
                           display: 'block',
-                          marginBottom: spacing[1],
+                          marginBottom: 'var(--space-1)',
                         }}
                       >
                         {'title' in entry ? entry.title : entry.id}
@@ -1664,20 +1675,20 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       <div
                         style={{
                           display: 'flex',
-                          gap: spacing[1],
+                          gap: 'var(--space-1)',
                           alignItems: 'center',
-                          marginBottom: spacing[2],
+                          marginBottom: 'var(--space-2)',
                           flexWrap: 'wrap',
                         }}
                       >
                         {topicConfig && (
                           <span
                             style={{
-                              fontSize: fontSizes.xs,
-                              padding: `1px ${spacing[2]}`,
+                              fontSize: 'var(--text-xs)',
+                              padding: '1px var(--space-2)',
                               borderRadius: '9999px',
                               background: 'rgba(100, 100, 120, 0.3)',
-                              color: colors.neutral[400],
+                              color: 'var(--color-text-muted)',
                             }}
                           >
                             {topicConfig.icon} {topicConfig.label}
@@ -1685,8 +1696,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                         )}
                         <span
                           style={{
-                            fontSize: fontSizes.xs,
-                            color: colors.neutral[500],
+                            fontSize: 'var(--text-xs)',
+                            color: 'var(--color-text-muted)',
                           }}
                         >
                           {'★'.repeat(entry.importance)}
@@ -1696,8 +1707,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       {/* Content preview */}
                       <span
                         style={{
-                          color: colors.neutral[500],
-                          fontSize: fontSizes.sm,
+                          color: 'var(--color-text-muted)',
+                          fontSize: 'var(--text-sm)',
                           display: 'block',
                         }}
                       >
@@ -1709,9 +1720,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                         <div
                           style={{
                             display: 'flex',
-                            gap: spacing[1],
+                            gap: 'var(--space-1)',
                             flexWrap: 'wrap',
-                            marginTop: spacing[2],
+                            marginTop: 'var(--space-2)',
                           }}
                         >
                           {entry.tags.slice(0, MAX_VISIBLE_TAGS).map(tag => (
@@ -1719,10 +1730,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                               key={tag}
                               style={{
                                 fontSize: '10px',
-                                padding: `0 ${spacing[1]}`,
+                                padding: '0 var(--space-1)',
                                 borderRadius: '4px',
                                 background: 'rgba(60, 60, 80, 0.4)',
-                                color: colors.neutral[500],
+                                color: 'var(--color-text-muted)',
                               }}
                             >
                               #{tag}
@@ -1730,7 +1741,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                           ))}
                           {entry.tags.length > MAX_VISIBLE_TAGS && (
                             <span
-                              style={{ fontSize: '10px', color: colors.neutral[600] }}
+                              style={{
+                                fontSize: '10px',
+                                color: 'var(--color-text-disabled)',
+                              }}
                             >
                               +{entry.tags.length - MAX_VISIBLE_TAGS}
                             </span>
@@ -1746,9 +1760,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               {filteredKnowledgeEntries.length === 0 && knowledgeEntries.length > 0 && (
                 <p
                   style={{
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[500],
-                    marginTop: spacing[4],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
+                    marginTop: 'var(--space-4)',
                     textAlign: 'center',
                   }}
                 >
@@ -1762,12 +1776,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   type="button"
                   onClick={() => setShowAllKnowledge(value => !value)}
                   style={{
-                    marginTop: spacing[4],
-                    padding: `${spacing[2]} ${spacing[3]}`,
+                    marginTop: 'var(--space-4)',
+                    padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: `1px solid ${colors.neutral[500]}`,
+                    border: '1px solid var(--color-text-muted)',
                     background: 'transparent',
-                    color: colors.neutral[400],
+                    color: 'var(--color-text-muted)',
                     cursor: 'pointer',
                   }}
                 >
@@ -1781,9 +1795,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         )}
 
         {(activeTab === 'overview' || activeTab === 'dashboard') && (
-          <div style={{ marginTop: spacing[6] }}>
+          <div style={{ marginTop: 'var(--space-6)' }}>
             <Card>
-              <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
+              <h3 style={{ marginBottom: 'var(--space-4)' }}>📚 Dashboard Mémoire</h3>
               <React.Suspense
                 fallback={
                   <SectionLoadingFallback
@@ -1808,8 +1822,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
 
         {/* Memory Tree Visualization */}
         {(activeTab === 'overview' || activeTab === 'tree') && (
-          <div style={{ marginTop: spacing[6] }}>
-            <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
+          <div style={{ marginTop: 'var(--space-6)' }}>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>🌳 Arbre de la Mémoire</h3>
             <React.Suspense
               fallback={
                 <SectionLoadingFallback
@@ -1836,20 +1850,25 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               />
             </React.Suspense>
             {selectedNode && (
-              <Card style={{ marginTop: spacing[4] }}>
-                <h4 style={{ marginBottom: spacing[2] }}>
+              <Card style={{ marginTop: 'var(--space-4)' }}>
+                <h4 style={{ marginBottom: 'var(--space-2)' }}>
                   {selectedEntry ? 'Entrée mémoire sélectionnée' : 'Nœud sélectionné'}
                 </h4>
                 {selectedEntry ? (
                   <>
-                    <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                    <p
+                      style={{
+                        fontSize: 'var(--text-sm)',
+                        color: 'var(--color-text-muted)',
+                      }}
+                    >
                       {selectedEntry.content}
                     </p>
                     <p
                       style={{
-                        fontSize: fontSizes.xs,
-                        color: colors.neutral[500],
-                        marginTop: spacing[2],
+                        fontSize: 'var(--text-xs)',
+                        color: 'var(--color-text-muted)',
+                        marginTop: 'var(--space-2)',
                       }}
                     >
                       Niveau: {selectedEntry.level} | Sujet: {selectedEntry.topic} |
@@ -1858,7 +1877,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     </p>
                   </>
                 ) : (
-                  <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
+                  <pre
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--color-text-muted)',
+                    }}
+                  >
                     {JSON.stringify(selectedNode, null, 2)}
                   </pre>
                 )}
@@ -1869,8 +1893,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
 
         {/* Memory Search */}
         {(activeTab === 'overview' || activeTab === 'search') && (
-          <div style={{ marginTop: spacing[6] }}>
-            <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
+          <div style={{ marginTop: 'var(--space-6)' }}>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>🔍 Recherche Sémantique</h3>
             <React.Suspense
               fallback={
                 <SectionLoadingFallback

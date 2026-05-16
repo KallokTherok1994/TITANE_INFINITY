@@ -69,11 +69,11 @@ export function HarmoniaFlow() {
       {/* Balance Score */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-gray-400">Score d&apos;Équilibre</span>
+          <span className="text-sm text-titanium-text-tertiary">Score d&apos;Équilibre</span>
           <span className="text-2xl font-bold">{balancePct}%</span>
         </div>
 
-        <div className="w-full bg-gray-700 rounded-full h-4 mb-2">
+        <div className="w-full bg-titanium-bg-interactive rounded-full h-4 mb-2">
           <div
             className={`h-4 rounded-full transition-all duration-500 ${
               balancePct >= 85
@@ -86,7 +86,7 @@ export function HarmoniaFlow() {
           />
         </div>
 
-        <div className="flex justify-between text-xs text-gray-500">
+        <div className="flex justify-between text-xs text-titanium-text-disabled">
           <span>Critique</span>
           <span>Ajustement</span>
           <span>Stable</span>
@@ -101,7 +101,7 @@ export function HarmoniaFlow() {
           <div className="text-center">
             <div className="text-4xl mb-2">🟢</div>
             <div className="font-semibold">Stable</div>
-            <div className="text-xs text-gray-500 mt-1">Système équilibré</div>
+            <div className="text-xs text-titanium-text-disabled mt-1">Système équilibré</div>
           </div>
         </Card>
 
@@ -111,7 +111,7 @@ export function HarmoniaFlow() {
           <div className="text-center">
             <div className="text-4xl mb-2">🟡</div>
             <div className="font-semibold">Ajustement</div>
-            <div className="text-xs text-gray-500 mt-1">Corrections en cours</div>
+            <div className="text-xs text-titanium-text-disabled mt-1">Corrections en cours</div>
           </div>
         </Card>
 
@@ -121,7 +121,7 @@ export function HarmoniaFlow() {
           <div className="text-center">
             <div className="text-4xl mb-2">🔴</div>
             <div className="font-semibold">Critique</div>
-            <div className="text-xs text-gray-500 mt-1">Intervention requise</div>
+            <div className="text-xs text-titanium-text-disabled mt-1">Intervention requise</div>
           </div>
         </Card>
       </div>
@@ -129,7 +129,7 @@ export function HarmoniaFlow() {
       {/* Harmony Index */}
       <Card className="p-6">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-400">Indice d&apos;Harmonie</span>
+          <span className="text-sm text-titanium-text-tertiary">Indice d&apos;Harmonie</span>
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold">{harmonyPct}%</span>
             <Badge color="blue" size="sm">
@@ -138,10 +138,10 @@ export function HarmoniaFlow() {
           </div>
         </div>
 
-        <div className="mt-4 p-4 bg-gray-800 rounded-lg">
-          <div className="text-xs text-gray-400 mb-2">Niveau d&apos;harmonie système</div>
+        <div className="mt-4 p-4 bg-titanium-bg-elevated rounded-lg">
+          <div className="text-xs text-titanium-text-tertiary mb-2">Niveau d&apos;harmonie système</div>
           <div className="flex items-center gap-2">
-            <div className="flex-1 bg-gray-700 rounded-full h-2">
+            <div className="flex-1 bg-titanium-bg-interactive rounded-full h-2">
               <div
                 className="bg-blue-500 h-2 rounded-full transition-all"
                 style={{ width: `${harmonyPct}%` }}
@@ -155,7 +155,7 @@ export function HarmoniaFlow() {
       {/* Status Description */}
       <Card className="p-6">
         <h3 className="font-semibold mb-3">État du Système</h3>
-        <div className="space-y-2 text-sm text-gray-300">
+        <div className="space-y-2 text-sm text-titanium-text-secondary">
           {stabilizationLevel === 'Stable' && (
             <p>
               ✅ Le système fonctionne de manière optimale. Tous les flux sont équilibrés.
@@ -173,7 +173,7 @@ export function HarmoniaFlow() {
       </Card>
 
       {/* Last Update */}
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-xs text-titanium-text-disabled text-center">
         Dernière mise à jour:{' '}
         {harmonia.last_check_ms > 0
           ? new Date(harmonia.last_check_ms).toLocaleTimeString()

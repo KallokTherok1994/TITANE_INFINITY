@@ -103,7 +103,7 @@ export const AppShellWithDevTools = ({
           'border-2',
           devToolsOpen
             ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
-            : 'bg-gray-700/80 border-gray-600/50 text-gray-300 hover:bg-gray-600/80'
+            : 'bg-titanium-bg-interactive/80 border-titanium-border-strong/50 text-titanium-text-secondary hover:bg-titanium-bg-overlay/80'
         )}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

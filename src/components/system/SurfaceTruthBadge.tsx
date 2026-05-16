@@ -68,7 +68,8 @@ const BADGE_META: Record<
   DISPLAY_ONLY: {
     label: 'DISPLAY',
     verbose: 'Display only — static content, no backend',
-    colorClass: 'bg-slate-800/60 text-slate-400 border border-slate-600/50',
+    colorClass:
+      'bg-titanium-bg-elevated/60 text-titanium-text-tertiary border border-titanium-border-strong/50',
     icon: '□',
   },
   LEGACY: {
@@ -92,7 +93,8 @@ const BADGE_META: Record<
   UNKNOWN: {
     label: 'UNKNOWN',
     verbose: 'Unknown truth status — not yet classified',
-    colorClass: 'bg-gray-800/60 text-gray-400 border border-gray-600/50',
+    colorClass:
+      'bg-titanium-bg-elevated/60 text-titanium-text-tertiary border border-titanium-border-strong/50',
     icon: '?',
   },
 };

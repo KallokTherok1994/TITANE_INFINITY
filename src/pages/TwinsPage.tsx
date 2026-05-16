@@ -131,9 +131,7 @@ export const TwinsPage: React.FC = () => {
       await handleRefresh();
     } catch (error) {
       setReviewError(
-        error instanceof Error
-          ? error.message
-          : 'Validation Twin limitee indisponible'
+        error instanceof Error ? error.message : 'Validation Twin limitee indisponible'
       );
       refreshReviewItems();
     } finally {
@@ -149,7 +147,7 @@ export const TwinsPage: React.FC = () => {
 
   return (
     <div
-      className="twins-root flex min-h-full w-full flex-col bg-gray-900 p-6 text-white"
+      className="twins-root flex min-h-full w-full flex-col bg-titanium-bg-base p-6 text-white"
       data-testid="page-twins"
     >
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
@@ -161,7 +159,7 @@ export const TwinsPage: React.FC = () => {
             <Users className="w-7 h-7 text-violet-400" />
             <div>
               <h1 className="text-2xl font-bold text-white">Twins — Digital Twins</h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-titanium-text-tertiary">
                 Gestion et visualisation des jumeaux numériques — Symbiose Kevin ↔ TITANE∞
               </p>
             </div>
@@ -197,7 +195,7 @@ export const TwinsPage: React.FC = () => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Link2 className="w-4 h-4 text-violet-400" />
-              <span className="text-xs text-gray-400">Score de sync</span>
+              <span className="text-xs text-titanium-text-tertiary">Score de sync</span>
             </div>
             <p className="text-3xl font-bold text-violet-400">
               {syncScore > 0 ? `${(syncScore * 100).toFixed(0)}%` : '—'}
@@ -207,7 +205,7 @@ export const TwinsPage: React.FC = () => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <GitMerge className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-gray-400">Index de fusion</span>
+              <span className="text-xs text-titanium-text-tertiary">Index de fusion</span>
             </div>
             <p className="text-3xl font-bold text-cyan-400">
               {evolutionFusion != null
@@ -225,7 +223,7 @@ export const TwinsPage: React.FC = () => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Star className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs text-gray-400">Sources connues</span>
+              <span className="text-xs text-titanium-text-tertiary">Sources connues</span>
             </div>
             <p className="text-3xl font-bold text-yellow-400">{sourceCount}</p>
           </Card>
@@ -233,7 +231,7 @@ export const TwinsPage: React.FC = () => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-4 h-4 text-green-400" />
-              <span className="text-xs text-gray-400">Phase actuelle</span>
+              <span className="text-xs text-titanium-text-tertiary">Phase actuelle</span>
             </div>
             <p className="text-lg font-bold text-green-400 truncate">
               {currentPhase ? String(currentPhase) : '—'}
@@ -244,10 +242,13 @@ export const TwinsPage: React.FC = () => {
         <Card variant="solid" padding={4} data-testid="twin-chat-review-queue">
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-sm font-semibold text-gray-200">
+              <h2 className="text-sm font-semibold text-titanium-text-secondary">
                 Review chat → Twin
               </h2>
-              <p className="mt-1 text-sm text-gray-400" data-testid="twin-chat-review-summary">
+              <p
+                className="mt-1 text-sm text-titanium-text-tertiary"
+                data-testid="twin-chat-review-summary"
+              >
                 {pendingReviewItems.length > 0
                   ? `${pendingReviewItems.length} observation${pendingReviewItems.length > 1 ? 's' : ''} en attente de validation explicite Kevin avant ecriture limitee.`
                   : 'Aucune observation twin_chat en attente de validation explicite.'}
@@ -273,24 +274,29 @@ export const TwinsPage: React.FC = () => {
 
           {pendingReviewItems.length === 0 ? (
             <div
-              className="rounded-lg border border-gray-700 bg-gray-800/60 px-4 py-3 text-sm text-gray-400"
+              className="rounded-lg border border-titanium-border-default bg-titanium-bg-elevated/60 px-4 py-3 text-sm text-titanium-text-tertiary"
               data-testid="twin-chat-review-empty"
             >
-              Les observations shadow derivees du chat apparaissent ici uniquement si la policy D3 demande une validation humaine avant write TWIN.
+              Les observations shadow derivees du chat apparaissent ici uniquement si la
+              policy D3 demande une validation humaine avant write TWIN.
             </div>
           ) : (
             <div className="space-y-3">
               {pendingReviewItems.map((item, index) => (
                 <div
                   key={item.id}
-                  className="rounded-xl border border-gray-700 bg-gray-800/80 p-4"
+                  className="rounded-xl border border-titanium-border-default bg-titanium-bg-elevated/80 p-4"
                   data-testid={`twin-chat-review-item-${index}`}
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="info" size="sm">{item.candidate.kind}</Badge>
+                    <Badge variant="info" size="sm">
+                      {item.candidate.kind}
+                    </Badge>
                     <Badge
                       variant={
-                        item.decision.verdict === 'review_required' ? 'warning' : 'primary'
+                        item.decision.verdict === 'review_required'
+                          ? 'warning'
+                          : 'primary'
                       }
                       size="sm"
                     >
@@ -306,8 +312,9 @@ export const TwinsPage: React.FC = () => {
                   >
                     {item.candidate.contentCompact}
                   </p>
-                  <p className="mt-1 text-sm text-gray-400">
-                    contexte:{item.candidate.context} · source:{item.candidate.evidenceSource}
+                  <p className="mt-1 text-sm text-titanium-text-tertiary">
+                    contexte:{item.candidate.context} · source:
+                    {item.candidate.evidenceSource}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Button
@@ -340,7 +347,9 @@ export const TwinsPage: React.FC = () => {
           <Card variant="solid" padding={6}>
             <div className="flex items-center justify-center gap-3">
               <Spinner size="sm" />
-              <span className="text-gray-400">Chargement identité Twin...</span>
+              <span className="text-titanium-text-tertiary">
+                Chargement identité Twin...
+              </span>
             </div>
           </Card>
         ) : (
@@ -349,26 +358,30 @@ export const TwinsPage: React.FC = () => {
             <Card variant="solid" padding={4}>
               <div className="flex items-center gap-2 mb-3">
                 <User className="w-4 h-4 text-violet-400" />
-                <h2 className="text-sm font-semibold text-gray-300">Identité du Twin</h2>
+                <h2 className="text-sm font-semibold text-titanium-text-secondary">
+                  Identité du Twin
+                </h2>
               </div>
               {identity ? (
                 <div className="space-y-3">
                   {identity.name && (
                     <div>
-                      <p className="text-xs text-gray-500">Nom</p>
+                      <p className="text-xs text-titanium-text-disabled">Nom</p>
                       <p className="text-white font-medium">{identity.name}</p>
                     </div>
                   )}
                   {identity.signature && (
                     <div>
-                      <p className="text-xs text-gray-500">Signature</p>
-                      <p className="text-gray-300 italic text-sm">{identity.signature}</p>
+                      <p className="text-xs text-titanium-text-disabled">Signature</p>
+                      <p className="text-titanium-text-secondary italic text-sm">
+                        {identity.signature}
+                      </p>
                     </div>
                   )}
                   {humanStyle && (
                     <div>
-                      <p className="text-xs text-gray-500">Style humain</p>
-                      <p className="text-gray-300 text-sm">
+                      <p className="text-xs text-titanium-text-disabled">Style humain</p>
+                      <p className="text-titanium-text-secondary text-sm">
                         Précision {Math.round(humanStyle.calmPrecision * 100)}% · Fluidité{' '}
                         {Math.round(humanStyle.organicFluidity * 100)}% · Sincérité{' '}
                         {Math.round(humanStyle.sincerity * 100)}%
@@ -377,7 +390,9 @@ export const TwinsPage: React.FC = () => {
                   )}
                   {coreValues.length > 0 && (
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Valeurs fondamentales</p>
+                      <p className="text-xs text-titanium-text-disabled mb-1">
+                        Valeurs fondamentales
+                      </p>
                       <div className="flex flex-wrap gap-1">
                         {coreValues.slice(0, 5).map((v, i) => (
                           <Badge key={i} variant="primary" size="sm">
@@ -389,7 +404,9 @@ export const TwinsPage: React.FC = () => {
                   )}
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm">Identité non disponible</p>
+                <p className="text-titanium-text-disabled text-sm">
+                  Identité non disponible
+                </p>
               )}
             </Card>
 
@@ -397,7 +414,7 @@ export const TwinsPage: React.FC = () => {
             <Card variant="solid" padding={4}>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp className="w-4 h-4 text-green-400" />
-                <h2 className="text-sm font-semibold text-gray-300">
+                <h2 className="text-sm font-semibold text-titanium-text-secondary">
                   Profil d'évolution
                 </h2>
               </div>
@@ -409,7 +426,7 @@ export const TwinsPage: React.FC = () => {
                         .slice(0, 4)
                         .map(([key, val]) => (
                           <div key={key}>
-                            <p className="text-xs text-gray-500">{key}</p>
+                            <p className="text-xs text-titanium-text-disabled">{key}</p>
                             <p className="text-sm text-white font-mono">
                               {typeof val === 'number' ? val.toFixed(2) : String(val)}
                             </p>
@@ -419,7 +436,9 @@ export const TwinsPage: React.FC = () => {
                   )}
                   {ownerThemes.length > 0 && (
                     <div>
-                      <p className="text-xs text-gray-300 mb-1">Thèmes propriétaire</p>
+                      <p className="text-xs text-titanium-text-secondary mb-1">
+                        Thèmes propriétaire
+                      </p>
                       <div className="flex flex-wrap gap-1">
                         {ownerThemes.slice(0, 4).map((theme, i) => (
                           <Badge key={i} variant="info" size="sm">
@@ -431,7 +450,9 @@ export const TwinsPage: React.FC = () => {
                   )}
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm">Profil non disponible</p>
+                <p className="text-titanium-text-disabled text-sm">
+                  Profil non disponible
+                </p>
               )}
             </Card>
           </div>
@@ -442,7 +463,9 @@ export const TwinsPage: React.FC = () => {
           <Card variant="solid" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Heart className="w-4 h-4 text-pink-400" />
-              <h3 className="text-sm font-semibold text-gray-300">Comportements</h3>
+              <h3 className="text-sm font-semibold text-titanium-text-secondary">
+                Comportements
+              </h3>
             </div>
             <div className="space-y-2 text-sm">
               {[
@@ -452,7 +475,7 @@ export const TwinsPage: React.FC = () => {
                 { label: 'Adaptation', active: syncScore > 0.8 },
               ].map(b => (
                 <div key={b.label} className="flex items-center justify-between">
-                  <span className="text-gray-300">{b.label}</span>
+                  <span className="text-titanium-text-secondary">{b.label}</span>
                   <Badge variant={b.active ? 'success' : 'neutral'} size="sm" dot>
                     {b.active ? 'Actif' : 'Inactif'}
                   </Badge>
@@ -464,15 +487,17 @@ export const TwinsPage: React.FC = () => {
           <Card variant="solid" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Cpu className="w-4 h-4 text-blue-400" />
-              <h3 className="text-sm font-semibold text-gray-300">Synchronisation</h3>
+              <h3 className="text-sm font-semibold text-titanium-text-secondary">
+                Synchronisation
+              </h3>
             </div>
             <div className="space-y-3">
               <div>
-                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-titanium-text-tertiary mb-1">
                   <span>Mémoire partagée</span>
                   <span>87%</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-1.5">
+                <div className="w-full bg-titanium-bg-interactive rounded-full h-1.5">
                   <div
                     className="bg-blue-500 h-1.5 rounded-full"
                     style={{ width: '87%' }}
@@ -480,11 +505,11 @@ export const TwinsPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-titanium-text-tertiary mb-1">
                   <span>Cohérence valeurs</span>
                   <span>{syncScore > 0 ? `${(syncScore * 100).toFixed(0)}%` : '—'}</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-1.5">
+                <div className="w-full bg-titanium-bg-interactive rounded-full h-1.5">
                   <div
                     className="bg-violet-500 h-1.5 rounded-full"
                     style={{ width: `${syncScore > 0 ? syncScore * 100 : 80}%` }}
@@ -497,11 +522,13 @@ export const TwinsPage: React.FC = () => {
           <Card variant="solid" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-gray-300">État chat</h3>
+              <h3 className="text-sm font-semibold text-titanium-text-secondary">
+                État chat
+              </h3>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">Contexte chat</span>
+                <span className="text-titanium-text-tertiary">Contexte chat</span>
                 <Badge
                   variant={
                     chatContextStatus === 'active'
@@ -516,13 +543,13 @@ export const TwinsPage: React.FC = () => {
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">Twin actif</span>
+                <span className="text-titanium-text-tertiary">Twin actif</span>
                 <Badge variant="success" size="sm" dot>
                   Oui
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">Sources</span>
+                <span className="text-titanium-text-tertiary">Sources</span>
                 <span className="text-white">{sourceCount}</span>
               </div>
             </div>
@@ -531,9 +558,9 @@ export const TwinsPage: React.FC = () => {
 
         {/* ── Twin Evolution Panel ── */}
         <Card variant="solid" padding={0}>
-          <div className="p-4 border-b border-gray-700 flex items-center gap-2">
+          <div className="p-4 border-b border-titanium-border-default flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-green-400" />
-            <h2 className="text-sm font-semibold text-gray-300">
+            <h2 className="text-sm font-semibold text-titanium-text-secondary">
               Panneau d'évolution du Twin
             </h2>
           </div>

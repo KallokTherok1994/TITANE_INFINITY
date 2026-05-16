@@ -229,7 +229,7 @@ export const RealityCenter: React.FC = memo(() => {
 
   return (
     <div
-      className="bg-gray-900 text-white min-h-screen p-6"
+      className="bg-titanium-bg-base text-white min-h-screen p-6"
       data-testid="page-reality-center"
     >
       <div className="max-w-7xl mx-auto space-y-6">
@@ -244,13 +244,13 @@ export const RealityCenter: React.FC = memo(() => {
             <Target className="w-7 h-7 text-cyan-400" />
             <div>
               <h1 className="text-2xl font-bold text-white">Reality Center</h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-titanium-text-tertiary">
                 Monitoring état réel vs état attendu — Drift Detection
               </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-300">
+            <span className="text-xs text-titanium-text-secondary">
               Dernière mise à jour : {lastRefresh.toLocaleTimeString()}
             </span>
             <Button
@@ -270,7 +270,9 @@ export const RealityCenter: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Shield className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-gray-400">Conformité globale</span>
+              <span className="text-xs text-titanium-text-tertiary">
+                Conformité globale
+              </span>
             </div>
             <p className="text-3xl font-bold text-white">
               {globalConformance.toFixed(0)}%
@@ -287,28 +289,28 @@ export const RealityCenter: React.FC = memo(() => {
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-green-400" />
-              <span className="text-xs text-gray-400">Nominaux</span>
+              <span className="text-xs text-titanium-text-tertiary">Nominaux</span>
             </div>
             <p className="text-3xl font-bold text-green-400">{nominalCount}</p>
-            <p className="text-xs text-gray-300 mt-1">modules</p>
+            <p className="text-xs text-titanium-text-secondary mt-1">modules</p>
           </Card>
 
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs text-gray-400">Dégradés</span>
+              <span className="text-xs text-titanium-text-tertiary">Dégradés</span>
             </div>
             <p className="text-3xl font-bold text-yellow-400">{degradedCount}</p>
-            <p className="text-xs text-gray-300 mt-1">modules</p>
+            <p className="text-xs text-titanium-text-secondary mt-1">modules</p>
           </Card>
 
           <Card variant="glass" elevation="md" padding={4}>
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-4 h-4 text-red-400" />
-              <span className="text-xs text-gray-400">Critiques</span>
+              <span className="text-xs text-titanium-text-tertiary">Critiques</span>
             </div>
             <p className="text-3xl font-bold text-red-400">{criticalCount}</p>
-            <p className="text-xs text-gray-300 mt-1">modules</p>
+            <p className="text-xs text-titanium-text-secondary mt-1">modules</p>
           </Card>
         </div>
 
@@ -317,18 +319,20 @@ export const RealityCenter: React.FC = memo(() => {
           <Card variant="solid" elevation="sm" padding={6}>
             <div className="flex items-center justify-center gap-3">
               <Spinner size="sm" />
-              <span className="text-gray-400">Chargement santé système...</span>
+              <span className="text-titanium-text-tertiary">
+                Chargement santé système...
+              </span>
             </div>
           </Card>
         ) : health ? (
           <Card variant="solid" elevation="sm" padding={4}>
-            <h2 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-titanium-text-secondary mb-3 flex items-center gap-2">
               <Cpu className="w-4 h-4 text-cyan-400" />
               Santé système en temps réel
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                    <p className="text-xs text-gray-300">Conversation</p>
+                <p className="text-xs text-titanium-text-secondary">Conversation</p>
                 <Badge
                   variant={
                     health.conversation?.status === 'healthy' ? 'success' : 'warning'
@@ -339,7 +343,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </Badge>
               </div>
               <div>
-                    <p className="text-xs text-gray-300">Mémoire</p>
+                <p className="text-xs text-titanium-text-secondary">Mémoire</p>
                 <Badge
                   variant={health.memory?.status === 'healthy' ? 'success' : 'warning'}
                   size="sm"
@@ -348,7 +352,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </Badge>
               </div>
               <div>
-                    <p className="text-xs text-gray-300">Singularité</p>
+                <p className="text-xs text-titanium-text-secondary">Singularité</p>
                 <Badge
                   variant={
                     health.singularity?.status === 'healthy' ? 'success' : 'warning'
@@ -359,7 +363,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </Badge>
               </div>
               <div>
-                <p className="text-xs text-gray-300">Système</p>
+                <p className="text-xs text-titanium-text-secondary">Système</p>
                 <Badge
                   variant={health.system?.status === 'healthy' ? 'success' : 'warning'}
                   size="sm"
@@ -373,16 +377,16 @@ export const RealityCenter: React.FC = memo(() => {
 
         {/* ── Module Drift Table ── */}
         <Card variant="solid" elevation="md" padding={0}>
-          <div className="p-4 border-b border-gray-700 flex items-center gap-2">
+          <div className="p-4 border-b border-titanium-border-default flex items-center gap-2">
             <Database className="w-4 h-4 text-cyan-400" />
-            <h2 className="text-sm font-semibold text-gray-300">
+            <h2 className="text-sm font-semibold text-titanium-text-secondary">
               État des modules — Réel vs Attendu
             </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-700 text-xs text-gray-300 uppercase">
+                <tr className="border-b border-titanium-border-default text-xs text-titanium-text-secondary uppercase">
                   <th className="text-left p-3">Module</th>
                   <th className="text-left p-3">Attendu</th>
                   <th className="text-left p-3">Réel</th>
@@ -395,12 +399,12 @@ export const RealityCenter: React.FC = memo(() => {
                 {modules.map((mod, i) => (
                   <tr
                     key={mod.name}
-                    className={`border-b border-gray-800 hover:bg-gray-800/50 transition-colors ${
-                      i % 2 === 0 ? 'bg-gray-900/30' : ''
+                    className={`border-b border-titanium-border-subtle hover:bg-titanium-bg-elevated/50 transition-colors ${
+                      i % 2 === 0 ? 'bg-titanium-bg-base/30' : ''
                     }`}
                   >
                     <td className="p-3 font-medium text-white">{mod.name}</td>
-                    <td className="p-3 text-gray-300 font-mono text-xs">
+                    <td className="p-3 text-titanium-text-secondary font-mono text-xs">
                       {mod.expected}
                     </td>
                     <td className="p-3 font-mono text-xs">
@@ -416,7 +420,7 @@ export const RealityCenter: React.FC = memo(() => {
                     </td>
                     <td className="p-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <div className="w-20 bg-gray-700 rounded-full h-1.5">
+                        <div className="w-20 bg-titanium-bg-interactive rounded-full h-1.5">
                           <div
                             className={`h-1.5 rounded-full ${
                               mod.conformance >= 90
@@ -470,23 +474,25 @@ export const RealityCenter: React.FC = memo(() => {
           <Card variant="solid" padding={4}>
             <div className="flex items-center gap-2 mb-3">
               <Wifi className="w-4 h-4 text-green-400" />
-              <h3 className="text-sm font-semibold text-gray-300">Connectivité</h3>
+              <h3 className="text-sm font-semibold text-titanium-text-secondary">
+                Connectivité
+              </h3>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-gray-300">IPC One Door</span>
+                <span className="text-titanium-text-secondary">IPC One Door</span>
                 <Badge variant="success" size="sm">
                   OK
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-300">Backend Rust</span>
+                <span className="text-titanium-text-secondary">Backend Rust</span>
                 <Badge variant="success" size="sm">
                   OK
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-300">AI Gateway</span>
+                <span className="text-titanium-text-secondary">AI Gateway</span>
                 <Badge variant="success" size="sm">
                   OK
                 </Badge>
@@ -497,11 +503,13 @@ export const RealityCenter: React.FC = memo(() => {
           <Card variant="solid" padding={4}>
             <div className="flex items-center gap-2 mb-3">
               <Clock className="w-4 h-4 text-blue-400" />
-              <h3 className="text-sm font-semibold text-gray-300">Horloge système</h3>
+              <h3 className="text-sm font-semibold text-titanium-text-secondary">
+                Horloge système
+              </h3>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-gray-300">Uptime</span>
+                <span className="text-titanium-text-secondary">Uptime</span>
                 <span className="text-white font-mono">
                   {health?.system?.uptime_ms
                     ? `${Math.floor(health.system.uptime_ms / 3600000)}h ${Math.floor((health.system.uptime_ms % 3600000) / 60000)}m`
@@ -509,7 +517,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-300">CPU</span>
+                <span className="text-titanium-text-secondary">CPU</span>
                 <span className="text-white font-mono">
                   {health?.system?.cpu_usage != null
                     ? `${health.system.cpu_usage.toFixed(1)}%`
@@ -517,7 +525,7 @@ export const RealityCenter: React.FC = memo(() => {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-300">Refresh auto</span>
+                <span className="text-titanium-text-secondary">Refresh auto</span>
                 <Badge variant="info" size="sm">
                   30s
                 </Badge>

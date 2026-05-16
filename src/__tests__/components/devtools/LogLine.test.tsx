@@ -68,7 +68,7 @@ describe('LogLine Component', () => {
       const debugLog = { ...mockLog, level: 'debug' };
       render(<LogLine log={debugLog} />);
       const level = screen.getByText('DEBUG');
-      expect(level.className).toMatch(/text-gray-400/);
+      expect(level.className).toMatch(/text-titanium-text-tertiary/);
     });
   });
 

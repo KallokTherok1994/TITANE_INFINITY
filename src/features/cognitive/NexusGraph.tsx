@@ -8,7 +8,6 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../../ui';
-import { colors, spacing } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
@@ -40,10 +39,10 @@ export interface NexusGraphProps {
 // ─────────────────────────────────────────────────────────────────
 
 const nodeColors: Record<NexusNode['type'], string> = {
-  concept: colors.rubis.primary[500],
-  fact: colors.saphir.primary[500],
-  skill: colors.emeraude.primary[500],
-  memory: colors.diamant.primary[500],
+  concept: 'var(--color-text-secondary)',
+  fact: 'var(--color-info-500)',
+  skill: 'var(--color-success-500)',
+  memory: 'var(--color-text-muted)',
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -92,7 +91,7 @@ export const NexusGraph = ({
     });
 
     // Draw edges
-    ctx.strokeStyle = colors.neutral[700];
+    ctx.strokeStyle = 'var(--color-border-default)';
     ctx.lineWidth = 1;
     edges.forEach(edge => {
       const source = positions.find(p => p.id === edge.source);
@@ -119,7 +118,7 @@ export const NexusGraph = ({
       ctx.fill();
 
       // Node border
-      ctx.strokeStyle = colors.neutral[100];
+      ctx.strokeStyle = 'var(--color-text-primary)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -127,10 +126,10 @@ export const NexusGraph = ({
       if (node.connections > 0) {
         ctx.beginPath();
         ctx.arc(x + nodeRadius - 4, y - nodeRadius + 4, 8, 0, 2 * Math.PI);
-        ctx.fillStyle = colors.rubis.primary[700];
+        ctx.fillStyle = 'var(--color-border-default)';
         ctx.fill();
 
-        ctx.fillStyle = colors.neutral[100];
+        ctx.fillStyle = 'var(--color-text-primary)';
         ctx.font = 'bold 10px Inter, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -138,7 +137,7 @@ export const NexusGraph = ({
       }
 
       // Label
-      ctx.fillStyle = colors.neutral[300];
+      ctx.fillStyle = 'var(--color-text-secondary)';
       ctx.font = '11px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
@@ -155,10 +154,10 @@ export const NexusGraph = ({
       >
         <h3
           style={{
-            margin: `0 0 ${spacing[4]} 0`,
+            margin: '0 0 var(--space-4) 0',
             fontSize: '1.25rem',
             fontWeight: 600,
-            color: colors.neutral[100],
+            color: 'var(--color-text-primary)',
           }}
         >
           🧠 Nexus - Graphe de Connaissances
@@ -177,9 +176,9 @@ export const NexusGraph = ({
 
         <div
           style={{
-            marginTop: spacing[4],
+            marginTop: 'var(--space-4)',
             display: 'flex',
-            gap: spacing[4],
+            gap: 'var(--space-4)',
             flexWrap: 'wrap',
           }}
         >
@@ -189,9 +188,9 @@ export const NexusGraph = ({
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: spacing[2],
+                gap: 'var(--space-2)',
                 fontSize: '0.875rem',
-                color: colors.neutral[300],
+                color: 'var(--color-text-secondary)',
               }}
             >
               <div

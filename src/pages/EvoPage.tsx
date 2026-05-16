@@ -34,7 +34,6 @@ import { Stack } from '@components/layout/Stack';
 import { Grid } from '@components/layout/Grid';
 import { Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
-import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { TitaneLogo } from '@components/branding/TitaneLogo';
@@ -133,23 +132,23 @@ export const EvoPage: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: spacing[4],
+              marginBottom: 'var(--space-4)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: spacing[4] }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
               <TitaneLogo size={56} />
               <div>
                 <h1
                   style={{
                     margin: 0,
                     fontSize: '3rem',
-                    fontWeight: fontWeights.bold,
+                    fontWeight: '700',
                     background:
                       'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    marginBottom: spacing[2],
+                    marginBottom: 'var(--space-2)',
                   }}
                 >
                   🧬 EVO — Centre d&apos;Évolution Totale
@@ -157,8 +156,8 @@ export const EvoPage: React.FC = () => {
                 <p
                   style={{
                     margin: 0,
-                    fontSize: fontSizes.lg,
-                    color: colors.neutral[400],
+                    fontSize: 'var(--text-lg)',
+                    color: 'var(--color-text-muted)',
                   }}
                 >
                   Fusion ultime: Dashboard + TWINS + Mémoire + Évolution + Progression
@@ -205,9 +204,9 @@ export const EvoPage: React.FC = () => {
           <div
             style={{
               display: 'flex',
-              gap: spacing[2],
-              borderBottom: `2px solid ${colors.neutral[800]}`,
-              paddingBottom: spacing[2],
+              gap: 'var(--space-2)',
+              borderBottom: '2px solid var(--color-border-subtle)',
+              paddingBottom: 'var(--space-2)',
               overflowX: 'auto',
               flexWrap: 'nowrap',
             }}
@@ -225,22 +224,22 @@ export const EvoPage: React.FC = () => {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabId)}
                   style={{
-                    padding: `${spacing[3]} ${spacing[5]}`,
+                    padding: 'var(--space-3) var(--space-5)',
                     background:
                       activeTab === tab.id
                         ? 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)'
-                        : colors.neutral[800],
+                        : 'var(--color-border-subtle)',
                     border: 'none',
                     borderRadius: '12px 12px 0 0',
-                    color: activeTab === tab.id ? 'white' : colors.neutral[400],
+                    color: activeTab === tab.id ? 'white' : 'var(--color-text-muted)',
                     fontWeight: activeTab === tab.id ? '700' : '500',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: spacing[2],
+                    gap: 'var(--space-2)',
                     whiteSpace: 'nowrap',
-                    fontSize: fontSizes.sm,
+                    fontSize: 'var(--text-sm)',
                   }}
                 >
                   <Icon size={18} />
@@ -293,9 +292,9 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
             <h3
               style={{
                 margin: 0,
-                fontSize: fontSizes.xl,
-                fontWeight: fontWeights.bold,
-                color: colors.neutral[100],
+                fontSize: 'var(--text-xl)',
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
               }}
             >
               294 Modules
@@ -303,8 +302,8 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
             <p
               style={{
                 margin: 0,
-                fontSize: fontSizes.sm,
-                color: colors.neutral[400],
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
               }}
             >
               Backend Rust (Tauri)
@@ -318,9 +317,9 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
             <h3
               style={{
                 margin: 0,
-                fontSize: fontSizes.xl,
-                fontWeight: fontWeights.bold,
-                color: colors.neutral[100],
+                fontSize: 'var(--text-xl)',
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
               }}
             >
               407 Commandes
@@ -328,8 +327,8 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
             <p
               style={{
                 margin: 0,
-                fontSize: fontSizes.sm,
-                color: colors.neutral[400],
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
               }}
             >
               API Tauri
@@ -343,9 +342,9 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
             <h3
               style={{
                 margin: 0,
-                fontSize: fontSizes.xl,
-                fontWeight: fontWeights.bold,
-                color: colors.neutral[100],
+                fontSize: 'var(--text-xl)',
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
               }}
             >
               355 Fichiers
@@ -353,8 +352,8 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
             <p
               style={{
                 margin: 0,
-                fontSize: fontSizes.sm,
-                color: colors.neutral[400],
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
               }}
             >
               Frontend TypeScript
@@ -384,30 +383,32 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
         <Card variant="glass" elevation="md">
           <h3
             style={{
-              margin: `0 0 ${spacing[4]} 0`,
-              fontSize: fontSizes.lg,
-              fontWeight: fontWeights.semibold,
-              color: colors.neutral[100],
+              margin: '0 0 var(--space-4) 0',
+              fontSize: 'var(--text-lg)',
+              fontWeight: '600',
+              color: 'var(--color-text-primary)',
             }}
           >
             🧠 État Cognitif
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: colors.neutral[400] }}>Créativité</span>
-              <span style={{ color: colors.emeraude.primary[400], fontWeight: '700' }}>
+              <span style={{ color: 'var(--color-text-muted)' }}>Créativité</span>
+              <span style={{ color: 'var(--color-success-500)', fontWeight: '700' }}>
                 92%
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: colors.neutral[400] }}>Rigueur</span>
-              <span style={{ color: colors.saphir.primary[400], fontWeight: '700' }}>
+              <span style={{ color: 'var(--color-text-muted)' }}>Rigueur</span>
+              <span style={{ color: 'var(--color-info-500)', fontWeight: '700' }}>
                 88%
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: colors.neutral[400] }}>Empathie</span>
-              <span style={{ color: colors.rubis.primary[400], fontWeight: '700' }}>
+              <span style={{ color: 'var(--color-text-muted)' }}>Empathie</span>
+              <span style={{ color: 'var(--color-text-muted)', fontWeight: '700' }}>
                 85%
               </span>
             </div>
@@ -417,30 +418,32 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats, progression })
         <Card variant="glass" elevation="md">
           <h3
             style={{
-              margin: `0 0 ${spacing[4]} 0`,
-              fontSize: fontSizes.lg,
-              fontWeight: fontWeights.semibold,
-              color: colors.neutral[100],
+              margin: '0 0 var(--space-4) 0',
+              fontSize: 'var(--text-lg)',
+              fontWeight: '600',
+              color: 'var(--color-text-primary)',
             }}
           >
             💾 Distribution Mémoire
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: colors.neutral[400] }}>Court Terme</span>
-              <span style={{ color: colors.emeraude.primary[400], fontWeight: '700' }}>
+              <span style={{ color: 'var(--color-text-muted)' }}>Court Terme</span>
+              <span style={{ color: 'var(--color-success-500)', fontWeight: '700' }}>
                 {stats.memoryShortTerm}
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: colors.neutral[400] }}>Moyen Terme</span>
-              <span style={{ color: colors.saphir.primary[400], fontWeight: '700' }}>
+              <span style={{ color: 'var(--color-text-muted)' }}>Moyen Terme</span>
+              <span style={{ color: 'var(--color-info-500)', fontWeight: '700' }}>
                 {stats.memoryMidTerm.toLocaleString()}
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: colors.neutral[400] }}>Long Terme</span>
-              <span style={{ color: colors.rubis.primary[400], fontWeight: '700' }}>
+              <span style={{ color: 'var(--color-text-muted)' }}>Long Terme</span>
+              <span style={{ color: 'var(--color-text-muted)', fontWeight: '700' }}>
                 {stats.memoryLongTerm.toLocaleString()}
               </span>
             </div>
@@ -464,7 +467,7 @@ const EvoTwinsSection: React.FC = () => {
       />
 
       {/* Matrice Identitaire */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🎯 Matrice Identitaire (8 Dimensions)</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
@@ -477,12 +480,17 @@ const EvoTwinsSection: React.FC = () => {
             { dimension: 'Vision', value: 0.89, color: 'corail' },
             { dimension: 'Exécution', value: 0.86, color: 'jade' },
           ].map(dim => (
-            <div key={dim.dimension} className="bg-gray-900 p-4 rounded text-center">
+            <div
+              key={dim.dimension}
+              className="bg-titanium-bg-base p-4 rounded text-center"
+            >
               <div className="text-2xl font-bold text-cyan-400">
                 {(dim.value * 100).toFixed(0)}%
               </div>
-              <div className="text-sm text-gray-400 mt-2">{dim.dimension}</div>
-              <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
+              <div className="text-sm text-titanium-text-tertiary mt-2">
+                {dim.dimension}
+              </div>
+              <div className="w-full bg-titanium-bg-interactive rounded-full h-2 mt-3">
                 <div
                   className="h-2 rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
                   style={{ width: `${dim.value * 100}%` }}
@@ -494,7 +502,7 @@ const EvoTwinsSection: React.FC = () => {
       </div>
 
       {/* Valeurs Fondamentales */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">💎 Valeurs Fondamentales</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -519,12 +527,12 @@ const EvoTwinsSection: React.FC = () => {
               icon: '⚖️',
             },
           ].map(val => (
-            <div key={val.value} className="bg-gray-900 p-4 rounded">
+            <div key={val.value} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-start gap-3">
                 <span className="text-3xl">{val.icon}</span>
                 <div>
                   <h4 className="font-bold text-lg mb-1">{val.value}</h4>
-                  <p className="text-sm text-gray-400">{val.desc}</p>
+                  <p className="text-sm text-titanium-text-tertiary">{val.desc}</p>
                 </div>
               </div>
             </div>
@@ -534,7 +542,7 @@ const EvoTwinsSection: React.FC = () => {
 
       {/* Modes de Fonctionnement */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🎭 Modes de Fonctionnement</h3>
           <div className="space-y-3">
             {[
@@ -543,14 +551,14 @@ const EvoTwinsSection: React.FC = () => {
               { mode: 'Créateur de Contenu', active: false, usage: 18 },
               { mode: 'Analyste Profond', active: false, usage: 12 },
             ].map(mode => (
-              <div key={mode.mode} className="bg-gray-900 p-3 rounded">
+              <div key={mode.mode} className="bg-titanium-bg-base p-3 rounded">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">{mode.mode}</span>
                   <TBadge variant={mode.active ? 'success' : 'default'}>
                     {mode.active ? 'ACTIF' : 'Idle'}
                   </TBadge>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
                   <div
                     className="h-2 rounded-full bg-blue-500"
                     style={{ width: `${mode.usage}%` }}
@@ -561,7 +569,7 @@ const EvoTwinsSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">📜 Pacte Kevin ↔ TITANE</h3>
           <div className="space-y-3">
             <div className="bg-blue-900/30 border border-blue-500 rounded-lg p-4">
@@ -627,37 +635,48 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
       {/* 3 Couches */}
       <div className="space-y-4">
         {/* Court Terme */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">⚡ Court Terme (Contexte Vivant)</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h4 className="font-semibold mb-2 text-gray-300">Sessions Récentes</h4>
+              <h4 className="font-semibold mb-2 text-titanium-text-secondary">
+                Sessions Récentes
+              </h4>
               <div className="space-y-2">
                 {[
                   { title: 'Fusion modules UI → EVO', time: '2h ago', size: '34 items' },
                   { title: 'Architecture v25', time: '5h ago', size: '28 items' },
                   { title: 'Tests backend', time: '1d ago', size: '42 items' },
                 ].map((session, i) => (
-                  <div key={i} className="bg-gray-900 p-3 rounded flex justify-between">
+                  <div
+                    key={i}
+                    className="bg-titanium-bg-base p-3 rounded flex justify-between"
+                  >
                     <div>
                       <div className="font-semibold">{session.title}</div>
-                      <div className="text-sm text-gray-400">{session.time}</div>
+                      <div className="text-sm text-titanium-text-tertiary">
+                        {session.time}
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-400">{session.size}</div>
+                    <div className="text-sm text-titanium-text-tertiary">
+                      {session.size}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="font-semibold mb-2 text-gray-300">Capacité</h4>
-              <div className="bg-gray-900 p-4 rounded">
+              <h4 className="font-semibold mb-2 text-titanium-text-secondary">
+                Capacité
+              </h4>
+              <div className="bg-titanium-bg-base p-4 rounded">
                 <div className="flex justify-between mb-2">
-                  <span className="text-gray-400">Utilisé</span>
+                  <span className="text-titanium-text-tertiary">Utilisé</span>
                   <span className="text-cyan-400 font-bold">
                     {stats.memoryShortTerm} / 500
                   </span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-3">
+                <div className="w-full bg-titanium-bg-interactive rounded-full h-3">
                   <div
                     className="h-3 rounded-full bg-linear-to-r from-cyan-500 to-blue-500"
                     style={{ width: `${(stats.memoryShortTerm / 500) * 100}%` }}
@@ -669,7 +688,7 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
         </div>
 
         {/* Moyen Terme */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">📊 Moyen Terme (Contexte Structuré)</h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {[
@@ -679,16 +698,19 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
               { theme: 'Frontend', count: 176 },
               { theme: 'IA & Cognition', count: 917 },
             ].map(theme => (
-              <div key={theme.theme} className="bg-gray-900 p-3 rounded text-center">
+              <div
+                key={theme.theme}
+                className="bg-titanium-bg-base p-3 rounded text-center"
+              >
                 <div className="text-2xl font-bold text-cyan-400">{theme.count}</div>
-                <div className="text-sm text-gray-400">{theme.theme}</div>
+                <div className="text-sm text-titanium-text-tertiary">{theme.theme}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Long Terme */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🏛️ Long Terme (Mémoire Hiérarchique)</h3>
           <div className="space-y-3">
             {[
@@ -713,11 +735,11 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
                 items: 143,
               },
             ].map(pillar => (
-              <div key={pillar.pillar} className="bg-gray-900 p-4 rounded">
+              <div key={pillar.pillar} className="bg-titanium-bg-base p-4 rounded">
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <h4 className="font-bold">{pillar.pillar}</h4>
-                    <p className="text-sm text-gray-400">{pillar.desc}</p>
+                    <p className="text-sm text-titanium-text-tertiary">{pillar.desc}</p>
                   </div>
                   <TBadge variant="info">{pillar.items}</TBadge>
                 </div>
@@ -756,9 +778,9 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: fontSizes['2xl'],
-                    fontWeight: fontWeights.bold,
-                    color: colors.neutral[100],
+                    fontSize: 'var(--text-2xl)',
+                    fontWeight: '700',
+                    color: 'var(--color-text-primary)',
                   }}
                 >
                   {progression.totalXP.toLocaleString()}
@@ -766,8 +788,8 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                 <p
                   style={{
                     margin: 0,
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[400],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
                   }}
                 >
                   XP Total
@@ -781,9 +803,9 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: fontSizes['2xl'],
-                    fontWeight: fontWeights.bold,
-                    color: colors.neutral[100],
+                    fontSize: 'var(--text-2xl)',
+                    fontWeight: '700',
+                    color: 'var(--color-text-primary)',
                   }}
                 >
                   Niveau {progression.level}
@@ -791,8 +813,8 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                 <p
                   style={{
                     margin: 0,
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[400],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
                   }}
                 >
                   Niveau Actuel
@@ -806,9 +828,9 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: fontSizes['2xl'],
-                    fontWeight: fontWeights.bold,
-                    color: colors.neutral[100],
+                    fontSize: 'var(--text-2xl)',
+                    fontWeight: '700',
+                    color: 'var(--color-text-primary)',
                   }}
                 >
                   {progression.streakDays} jours
@@ -816,8 +838,8 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                 <p
                   style={{
                     margin: 0,
-                    fontSize: fontSizes.sm,
-                    color: colors.neutral[400],
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-muted)',
                   }}
                 >
                   Streak
@@ -830,39 +852,39 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
           <Card variant="glass" elevation="md">
             <h3
               style={{
-                margin: `0 0 ${spacing[4]} 0`,
-                fontSize: fontSizes.xl,
-                fontWeight: fontWeights.bold,
-                color: colors.neutral[100],
+                margin: '0 0 var(--space-4) 0',
+                fontSize: 'var(--text-xl)',
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
               }}
             >
               🏆 Jalons Récents
             </h3>
-            <div style={{ display: 'flex', gap: spacing[2], flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
               {progression.milestones.slice(0, 8).map(milestone => (
                 <div
                   key={milestone.id}
                   style={{
-                    padding: `${spacing[3]} ${spacing[4]}`,
+                    padding: 'var(--space-3) var(--space-4)',
                     background: milestone.unlockedAt
                       ? 'linear-gradient(135deg, #10b98130, #10b98120)'
-                      : colors.neutral[800],
+                      : 'var(--color-border-subtle)',
                     border: milestone.unlockedAt
-                      ? `1px solid ${colors.emeraude.primary[500]}40`
-                      : `1px solid ${colors.neutral[700]}`,
+                      ? '1px solid var(--color-success-500)40'
+                      : '1px solid var(--color-border-default)',
                     borderRadius: '8px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: spacing[2],
+                    gap: 'var(--space-2)',
                   }}
                 >
                   <span style={{ fontSize: '1.5rem' }}>{milestone.icon}</span>
                   <span
                     style={{
-                      fontSize: fontSizes.sm,
+                      fontSize: 'var(--text-sm)',
                       color: milestone.unlockedAt
-                        ? colors.neutral[200]
-                        : colors.neutral[500],
+                        ? 'var(--color-text-secondary)'
+                        : 'var(--color-text-muted)',
                       fontWeight: milestone.unlockedAt ? '600' : '400',
                     }}
                   >
@@ -877,10 +899,10 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
           <Card variant="glass" elevation="md">
             <h3
               style={{
-                margin: `0 0 ${spacing[4]} 0`,
-                fontSize: fontSizes.xl,
-                fontWeight: fontWeights.bold,
-                color: colors.neutral[100],
+                margin: '0 0 var(--space-4) 0',
+                fontSize: 'var(--text-xl)',
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
               }}
             >
               🎯 Talents Débloqués
@@ -889,7 +911,7 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                gap: spacing[3],
+                gap: 'var(--space-3)',
               }}
             >
               {progression.milestones
@@ -899,16 +921,16 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
                   <div
                     key={milestone.id}
                     style={{
-                      padding: spacing[3],
+                      padding: 'var(--space-3)',
                       background: 'linear-gradient(135deg, #3b82f630, #8b5cf620)',
-                      border: `1px solid ${colors.saphir.primary[500]}40`,
+                      border: '1px solid var(--color-info-500)40',
                       borderRadius: '8px',
                     }}
                   >
                     <div
                       style={{
-                        fontSize: fontSizes.sm,
-                        color: colors.neutral[200],
+                        fontSize: 'var(--text-sm)',
+                        color: 'var(--color-text-secondary)',
                         fontWeight: '600',
                       }}
                     >
@@ -923,9 +945,9 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({ progression }) 
         <Card variant="glass" elevation="md">
           <p
             style={{
-              color: colors.neutral[400],
+              color: 'var(--color-text-muted)',
               textAlign: 'center',
-              padding: spacing[6],
+              padding: 'var(--space-6)',
             }}
           >
             Chargement des données de progression...
@@ -949,7 +971,7 @@ const TransformationSection: React.FC = () => {
       />
 
       {/* Lignes d'Évolution */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🌱 Lignes d&apos;Évolution par Thème</h3>
         <div className="space-y-4">
           {[
@@ -978,22 +1000,22 @@ const TransformationSection: React.FC = () => {
               progress: 64,
             },
           ].map(line => (
-            <div key={line.theme} className="bg-gray-900 p-4 rounded">
+            <div key={line.theme} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-bold">{line.theme}</h4>
                 <span className="text-cyan-400 font-bold">{line.progress}%</span>
               </div>
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Avant</div>
+                  <div className="text-xs text-titanium-text-disabled mb-1">Avant</div>
                   <div className="text-sm text-red-400">{line.before}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Après</div>
+                  <div className="text-xs text-titanium-text-disabled mb-1">Après</div>
                   <div className="text-sm text-green-400">{line.after}</div>
                 </div>
               </div>
-              <div className="w-full bg-gray-700 rounded-full h-3">
+              <div className="w-full bg-titanium-bg-interactive rounded-full h-3">
                 <div
                   className="h-3 rounded-full bg-linear-to-r from-red-500 via-yellow-500 to-green-500"
                   style={{ width: `${line.progress}%` }}
@@ -1005,7 +1027,7 @@ const TransformationSection: React.FC = () => {
       </div>
 
       {/* Paliers Franchis */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">
           🎯 Paliers Franchis (Changements Incarnés)
         </h3>
@@ -1032,14 +1054,14 @@ const TransformationSection: React.FC = () => {
               desc: 'Confiance dans l&apos;automatisation des processus mémoire',
             },
           ].map((milestone, i) => (
-            <div key={i} className="bg-gray-900 p-4 rounded">
+            <div key={i} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h4 className="font-bold">{milestone.milestone}</h4>
                     <TBadge variant="success">{milestone.date}</TBadge>
                   </div>
-                  <p className="text-sm text-gray-400">{milestone.desc}</p>
+                  <p className="text-sm text-titanium-text-tertiary">{milestone.desc}</p>
                 </div>
               </div>
             </div>
@@ -1049,7 +1071,7 @@ const TransformationSection: React.FC = () => {
 
       {/* Métriques d'Évolution */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">📈 Croissance Continue</h3>
           <div className="space-y-3">
             {[
@@ -1058,17 +1080,17 @@ const TransformationSection: React.FC = () => {
               { metric: 'Qualité décisions', value: '+76%', period: '6 mois' },
             ].map(m => (
               <div key={m.metric} className="flex justify-between items-center">
-                <span className="text-gray-300">{m.metric}</span>
+                <span className="text-titanium-text-secondary">{m.metric}</span>
                 <div className="text-right">
                   <div className="text-green-400 font-bold text-lg">{m.value}</div>
-                  <div className="text-xs text-gray-500">{m.period}</div>
+                  <div className="text-xs text-titanium-text-disabled">{m.period}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">🔮 Capacités Émergentes</h3>
           <div className="space-y-2">
             {[
@@ -1077,7 +1099,10 @@ const TransformationSection: React.FC = () => {
               'Synthèse créative complexe',
               'Orchestration automatisée',
             ].map((capability, i) => (
-              <div key={i} className="bg-gray-900 p-3 rounded flex items-center gap-2">
+              <div
+                key={i}
+                className="bg-titanium-bg-base p-3 rounded flex items-center gap-2"
+              >
                 <span className="text-green-400">✓</span>
                 <span className="text-sm">{capability}</span>
               </div>
@@ -1089,7 +1114,7 @@ const TransformationSection: React.FC = () => {
       {/* ═══ ÉVOLUTION MÉMOIRE (fusionnée depuis Section 4) ═══ */}
 
       {/* Opérations Automatiques */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">🔄 Opérations Automatiques Actives</h3>
         <div className="space-y-4">
           {[
@@ -1118,14 +1143,14 @@ const TransformationSection: React.FC = () => {
               lastRun: '5d ago',
             },
           ].map(op => (
-            <div key={op.operation} className="bg-gray-900 p-4 rounded">
+            <div key={op.operation} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-bold">{op.operation}</h4>
                 <TBadge variant={op.status === 'Actif' ? 'success' : 'warning'}>
                   {op.status}
                 </TBadge>
               </div>
-              <div className="text-sm text-gray-400 space-y-1">
+              <div className="text-sm text-titanium-text-tertiary space-y-1">
                 <div>Fréquence: {op.frequency}</div>
                 <div>Dernier: {op.lastRun}</div>
               </div>
@@ -1135,7 +1160,7 @@ const TransformationSection: React.FC = () => {
       </div>
 
       {/* Journal d'Évolution */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">📜 Journal d&apos;Évolution Mémoire</h3>
         <div className="space-y-3">
           {[
@@ -1164,11 +1189,11 @@ const TransformationSection: React.FC = () => {
               impact: 'Low',
             },
           ].map((event, i) => (
-            <div key={i} className="bg-gray-900 p-4 rounded">
+            <div key={i} className="bg-titanium-bg-base p-4 rounded">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <h4 className="font-bold">{event.event}</h4>
-                  <p className="text-sm text-gray-400 mt-1">{event.desc}</p>
+                  <p className="text-sm text-titanium-text-tertiary mt-1">{event.desc}</p>
                 </div>
                 <TBadge
                   variant={
@@ -1182,14 +1207,14 @@ const TransformationSection: React.FC = () => {
                   {event.impact}
                 </TBadge>
               </div>
-              <div className="text-xs text-gray-500 mt-2">{event.time}</div>
+              <div className="text-xs text-titanium-text-disabled mt-2">{event.time}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Paramètres Memory Core */}
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">⚙️ Paramètres Memory Core</h3>
         <div className="space-y-4">
           {[
@@ -1213,13 +1238,13 @@ const TransformationSection: React.FC = () => {
               <div className="flex justify-between mb-2">
                 <div>
                   <div className="font-semibold">{param.param}</div>
-                  <div className="text-sm text-gray-400">{param.desc}</div>
+                  <div className="text-sm text-titanium-text-tertiary">{param.desc}</div>
                 </div>
                 <div className="text-cyan-400 font-bold">
                   {(param.value * 100).toFixed(0)}%
                 </div>
               </div>
-              <div className="w-full bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
                 <div
                   className="h-2 rounded-full bg-cyan-500"
                   style={{ width: `${param.value * 100}%` }}

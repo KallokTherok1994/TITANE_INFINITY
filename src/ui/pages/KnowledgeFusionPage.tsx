@@ -96,7 +96,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
       case 'json':
         return 'text-green-400';
       case 'plaintext':
-        return 'text-gray-400';
+        return 'text-titanium-text-tertiary';
       default:
         return 'text-yellow-400';
     }
@@ -113,7 +113,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
       case 'documentation':
         return 'bg-yellow-500/20 text-yellow-300';
       default:
-        return 'bg-gray-500/20 text-gray-300';
+        return 'bg-titanium-bg-overlay/20 text-titanium-text-secondary';
     }
   }, []);
 
@@ -127,7 +127,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-600">
           Fusion des Connaissances
         </h1>
-        <p className="text-gray-400 mt-2">
+        <p className="text-titanium-text-tertiary mt-2">
           Phase 6 : Ingestion & Classification Universelle de Documents
         </p>
       </div>
@@ -136,7 +136,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
         {/* Left Panel - Ingestion */}
         <div className="space-y-6">
           {/* File Selection */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
+          <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
             <h2 className="text-xl font-semibold text-white mb-4">
               Ingestion de Documents
             </h2>
@@ -154,8 +154,8 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
               </div>
 
               {selectedFile && (
-                <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50">
-                  <div className="text-gray-400 text-sm mb-1">Chemin saisi</div>
+                <div className="bg-titanium-bg-interactive/30 rounded-xl p-4 border border-titanium-border-strong/50">
+                  <div className="text-titanium-text-tertiary text-sm mb-1">Chemin saisi</div>
                   <div className="text-white font-mono text-sm break-all">
                     {selectedFile}
                   </div>
@@ -163,8 +163,8 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
               )}
 
               {detectedFormat && (
-                <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50">
-                  <div className="text-gray-400 text-sm mb-2">Format détecté</div>
+                <div className="bg-titanium-bg-interactive/30 rounded-xl p-4 border border-titanium-border-strong/50">
+                  <div className="text-titanium-text-tertiary text-sm mb-2">Format détecté</div>
                   <div className={`text-lg font-bold ${getFormatColor(detectedFormat)}`}>
                     {detectedFormat.toUpperCase()}
                   </div>
@@ -205,17 +205,17 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
 
           {/* Parsed Document Preview */}
           {parsedDoc && (
-            <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
+            <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
               <h2 className="text-xl font-semibold text-white mb-4">Document Analysé</h2>
 
               <div className="space-y-4">
                 <div>
-                  <div className="text-gray-400 text-sm mb-1">Titre</div>
+                  <div className="text-titanium-text-tertiary text-sm mb-1">Titre</div>
                   <div className="text-white font-semibold">{parsedDoc.title}</div>
                 </div>
 
                 <div>
-                  <div className="text-gray-400 text-sm mb-2">Catégories</div>
+                  <div className="text-titanium-text-tertiary text-sm mb-2">Catégories</div>
                   <div className="flex flex-wrap gap-2">
                     {parsedDoc.categories.map((cat, idx) => (
                       <span
@@ -229,9 +229,9 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
                 </div>
 
                 <div>
-                  <div className="text-gray-400 text-sm mb-1">Confiance</div>
+                  <div className="text-titanium-text-tertiary text-sm mb-1">Confiance</div>
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 bg-gray-600 rounded-full h-2">
+                    <div className="flex-1 bg-titanium-bg-overlay rounded-full h-2">
                       <div
                         className="bg-linear-to-r from-green-500 to-emerald-500 rounded-full h-2 transition-all"
                         style={{ width: `${parsedDoc.confidence * 100}%` }}
@@ -244,9 +244,9 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
                 </div>
 
                 <div>
-                  <div className="text-gray-400 text-sm mb-2">Aperçu du contenu</div>
-                  <div className="bg-gray-900/50 rounded-lg p-3 max-h-48 overflow-y-auto">
-                    <pre className="text-gray-300 text-xs whitespace-pre-wrap font-mono">
+                  <div className="text-titanium-text-tertiary text-sm mb-2">Aperçu du contenu</div>
+                  <div className="bg-titanium-bg-base/50 rounded-lg p-3 max-h-48 overflow-y-auto">
+                    <pre className="text-titanium-text-secondary text-xs whitespace-pre-wrap font-mono">
                       {parsedDoc.content.slice(0, 500)}
                       {parsedDoc.content.length > 500 && '...'}
                     </pre>
@@ -255,7 +255,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
 
                 {parsedDoc.metadata.keywords.length > 0 && (
                   <div>
-                    <div className="text-gray-400 text-sm mb-2">Mots-clés</div>
+                    <div className="text-titanium-text-tertiary text-sm mb-2">Mots-clés</div>
                     <div className="flex flex-wrap gap-2">
                       {parsedDoc.metadata.keywords.map((kw, idx) => (
                         <span
@@ -274,13 +274,13 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
         </div>
 
         {/* Right Panel - Knowledge Vault */}
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
+        <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
           <h2 className="text-xl font-semibold text-white mb-4">
             Coffre de Connaissances
           </h2>
 
           {vault.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-titanium-text-disabled">
               <div className="text-4xl mb-4">📚</div>
               <div>Aucun document</div>
               <div className="text-sm mt-2">
@@ -292,7 +292,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
               {vault.map(doc => (
                 <div
                   key={doc.id}
-                  className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50 hover:border-indigo-500/50 transition-all cursor-pointer"
+                  className="bg-titanium-bg-interactive/30 rounded-xl p-4 border border-titanium-border-strong/50 hover:border-indigo-500/50 transition-all cursor-pointer"
                   onClick={() => setParsedDoc(doc)}
                 >
                   <div className="flex items-start justify-between mb-2">
@@ -302,7 +302,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
                         {doc.format.toUpperCase()}
                       </div>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-titanium-text-disabled">
                       {new Date(doc.timestamp).toLocaleTimeString()}
                     </div>
                   </div>
@@ -318,7 +318,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <div className="flex items-center gap-2 text-xs text-titanium-text-tertiary">
                     <span>Confidence: {(doc.confidence * 100).toFixed(0)}%</span>
                     <span>•</span>
                     <span>{(doc.metadata.size_bytes / 1024).toFixed(1)} KB</span>
@@ -331,7 +331,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
       </div>
 
       {/* Supported Formats Info */}
-      <div className="mt-6 bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
+      <div className="mt-6 bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
         <h3 className="text-lg font-semibold text-white mb-3">Supported Formats</h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {[
@@ -346,7 +346,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
             'Audio',
             'Video',
           ].map(format => (
-            <div key={format} className="bg-gray-700/30 rounded-lg p-3 text-center">
+            <div key={format} className="bg-titanium-bg-interactive/30 rounded-lg p-3 text-center">
               <div className={`font-semibold ${getFormatColor(format)}`}>{format}</div>
             </div>
           ))}

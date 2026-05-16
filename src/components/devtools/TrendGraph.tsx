@@ -21,10 +21,10 @@ export function TrendGraph({
   if (data.length === 0) {
     return (
       <div
-        className="flex items-center justify-center bg-gray-800 rounded"
+        className="flex items-center justify-center bg-titanium-bg-elevated rounded"
         style={{ width, height }}
       >
-        <span className="text-sm text-gray-500">No data</span>
+        <span className="text-sm text-titanium-text-disabled">No data</span>
       </div>
     );
   }
@@ -40,7 +40,7 @@ export function TrendGraph({
   });
 
   return (
-    <svg width={width} height={height} className="bg-gray-800 rounded">
+    <svg width={width} height={height} className="bg-titanium-bg-elevated rounded">
       <polyline points={points.join(' ')} fill="none" stroke={color} strokeWidth="2" />
       {data.map((d, i) => {
         const x = (i / (data.length - 1)) * width;

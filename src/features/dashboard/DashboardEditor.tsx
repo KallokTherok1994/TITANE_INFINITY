@@ -458,7 +458,7 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     {!isEditing && (
-                      <GripVertical className="h-5 w-5 text-gray-400 cursor-grab" />
+                      <GripVertical className="h-5 w-5 text-titanium-text-tertiary cursor-grab" />
                     )}
 
                     <IconComponent style={{ color: widget.color }} className="h-5 w-5" />
@@ -533,7 +533,7 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
                         {widget.visible ? (
                           <Eye className="h-4 w-4 text-green-400" />
                         ) : (
-                          <EyeOff className="h-4 w-4 text-gray-500" />
+                          <EyeOff className="h-4 w-4 text-titanium-text-disabled" />
                         )}
                       </button>
                       {isEditing ? (
@@ -560,7 +560,7 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
                             }}
                             title="Annuler"
                           >
-                            <X className="h-4 w-4 text-gray-400" />
+                            <X className="h-4 w-4 text-titanium-text-tertiary" />
                           </button>
                         </>
                       ) : (

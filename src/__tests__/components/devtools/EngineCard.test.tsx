@@ -44,7 +44,7 @@ describe('EngineCard Component', () => {
       const inactiveEngine = { ...mockEngine, status: 'inactive' };
       render(<EngineCard engine={inactiveEngine} />);
       const status = screen.getByText(/inactive/i);
-      expect(status.className).toMatch(/bg-gray-700/);
+      expect(status.className).toMatch(/bg-titanium-bg-interactive/);
     });
 
     it('should show error status', () => {

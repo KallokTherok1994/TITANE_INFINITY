@@ -15,14 +15,14 @@
 
 import { type HTMLAttributes, forwardRef, type ReactNode } from 'react';
 import { clsx } from 'clsx';
-import { spacing } from '@themes/tokens';
+import { type SpacingKey } from './Stack';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
 
 export type GridColumns = 1 | 2 | 3 | 4 | 6 | 12;
-export type GridGap = keyof typeof spacing;
+export type GridGap = SpacingKey;
 export type ColSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto';
 
 export interface GridProps extends HTMLAttributes<HTMLDivElement> {
@@ -48,7 +48,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
     const gridStyles: React.CSSProperties = {
       display: 'grid',
       gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gap: spacing[gap],
+      gap: gap === 0 ? '0' : `var(--space-${gap})`,
       ...style,
     };
 

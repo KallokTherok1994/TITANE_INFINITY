@@ -167,7 +167,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
           )}
 
           {/* 5-Layer Scanner */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30 mb-6">
+          <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30 mb-6">
             <h2 className="text-xl font-semibold text-white mb-4">
               Scanner système 5 couches
             </h2>
@@ -176,7 +176,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
               {layers.map(layer => (
                 <div
                   key={layer.layer_id}
-                  className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50 hover:border-blue-500/50 transition-all"
+                  className="bg-titanium-bg-interactive/30 rounded-xl p-4 border border-titanium-border-strong/50 hover:border-blue-500/50 transition-all"
                 >
                   <div className="text-center mb-3">
                     <div className="text-white font-semibold mb-2">{layer.name}</div>
@@ -187,8 +187,8 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
 
                   <div className="space-y-2">
                     <div>
-                      <div className="text-gray-400 text-xs mb-1">Charge</div>
-                      <div className="bg-gray-600 rounded-full h-2">
+                      <div className="text-titanium-text-tertiary text-xs mb-1">Charge</div>
+                      <div className="bg-titanium-bg-overlay rounded-full h-2">
                         <div
                           className="bg-blue-500 rounded-full h-2 transition-all"
                           style={{ width: `${layer.load}%` }}
@@ -207,12 +207,12 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
           </div>
 
           {/* Metrics History Graph */}
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+          <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
             <h2 className="text-xl font-semibold text-white mb-4">
               Historique des métriques
             </h2>
 
-            <div className="relative h-64 bg-gray-900/50 rounded-xl p-4">
+            <div className="relative h-64 bg-titanium-bg-base/50 rounded-xl p-4">
               {history.length > 1 ? (
                 <svg className="w-full h-full">
                   {/* CPU Line */}
@@ -244,7 +244,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
                   />
                 </svg>
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">
+                <div className="flex items-center justify-center h-full text-titanium-text-disabled">
                   Collecte des données...
                 </div>
               )}
@@ -253,11 +253,11 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
             <div className="flex gap-4 mt-4 justify-center">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-0.5 bg-blue-500" />
-                <span className="text-sm text-gray-400">CPU</span>
+                <span className="text-sm text-titanium-text-tertiary">CPU</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-0.5 bg-purple-500" />
-                <span className="text-sm text-gray-400">Mémoire</span>
+                <span className="text-sm text-titanium-text-tertiary">Mémoire</span>
               </div>
             </div>
           </div>
@@ -265,23 +265,23 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
           {/* Additional Metrics */}
           {metrics && (
             <div className="grid grid-cols-3 gap-4 mt-6">
-              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">Utilisation disque</div>
+              <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+                <div className="text-titanium-text-tertiary text-sm mb-2">Utilisation disque</div>
                 <div className="text-2xl font-bold text-white">
                   {metrics.disk_usage.toFixed(1)}%
                 </div>
               </div>
 
-              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">Réseau RX/TX</div>
+              <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+                <div className="text-titanium-text-tertiary text-sm mb-2">Réseau RX/TX</div>
                 <div className="text-lg font-bold text-white">
                   ↓{(metrics.network_rx / 1024).toFixed(1)} / ↑
                   {(metrics.network_tx / 1024).toFixed(1)} KB/s
                 </div>
               </div>
 
-              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">Processus actifs</div>
+              <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+                <div className="text-titanium-text-tertiary text-sm mb-2">Processus actifs</div>
                 <div className="text-2xl font-bold text-white">
                   {metrics.active_processes}
                 </div>

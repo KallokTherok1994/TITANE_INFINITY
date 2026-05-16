@@ -42,7 +42,7 @@ function verdictColor(verdict: string | undefined): string {
   if (verdict === 'PASS') return 'text-green-400';
   if (verdict === 'FAIL') return 'text-red-400';
   if (verdict === 'BLOCKED') return 'text-yellow-400';
-  return 'text-slate-400';
+  return 'text-titanium-text-tertiary';
 }
 
 function statusBadgeClass(status: MultiProject['status']): string {
@@ -54,9 +54,9 @@ function statusBadgeClass(status: MultiProject['status']): string {
     case 'blocked':
       return 'bg-red-700/30 text-red-300 border border-red-600/40';
     case 'archived':
-      return 'bg-slate-700/30 text-slate-400 border border-slate-600/40';
+      return 'bg-titanium-bg-interactive/30 text-titanium-text-tertiary border border-titanium-border-strong/40';
     default:
-      return 'bg-slate-700/30 text-slate-400';
+      return 'bg-titanium-bg-interactive/30 text-titanium-text-tertiary';
   }
 }
 
@@ -71,23 +71,23 @@ interface RollupCardProps {
 const RollupCard: React.FC<RollupCardProps> = ({ rollup }) => (
   <div
     data-testid="multiproject-rollup"
-    className="rounded-xl border border-slate-700 bg-slate-800/60 p-4 mb-4 grid grid-cols-2 sm:grid-cols-4 gap-3"
+    className="rounded-xl border border-titanium-border-default bg-titanium-bg-elevated/60 p-4 mb-4 grid grid-cols-2 sm:grid-cols-4 gap-3"
   >
     <div className="text-center">
-      <div className="text-2xl font-bold text-slate-100">{rollup.total}</div>
-      <div className="text-xs text-slate-400 mt-1">Total</div>
+      <div className="text-2xl font-bold text-titanium-text-primary">{rollup.total}</div>
+      <div className="text-xs text-titanium-text-tertiary mt-1">Total</div>
     </div>
     <div className="text-center">
       <div className="text-2xl font-bold text-green-400">{rollup.active}</div>
-      <div className="text-xs text-slate-400 mt-1">Actifs</div>
+      <div className="text-xs text-titanium-text-tertiary mt-1">Actifs</div>
     </div>
     <div className="text-center">
       <div className="text-2xl font-bold text-green-300">{rollup.healthyCount}</div>
-      <div className="text-xs text-slate-400 mt-1">Sains</div>
+      <div className="text-xs text-titanium-text-tertiary mt-1">Sains</div>
     </div>
     <div className="text-center">
       <div className="text-2xl font-bold text-red-400">{rollup.failingCount}</div>
-      <div className="text-xs text-slate-400 mt-1">En échec</div>
+      <div className="text-xs text-titanium-text-tertiary mt-1">En échec</div>
     </div>
   </div>
 );
@@ -99,26 +99,28 @@ interface AgentStatusCardProps {
 const AgentStatusCard: React.FC<AgentStatusCardProps> = ({ status }) => (
   <div
     data-testid="multiproject-agent-status"
-    className="rounded-xl border border-slate-700 bg-slate-800/60 p-4 mb-4"
+    className="rounded-xl border border-titanium-border-default bg-titanium-bg-elevated/60 p-4 mb-4"
   >
     <div className="flex items-center gap-2 mb-2">
       <Zap size={16} className="text-cyan-400" />
-      <span className="text-sm font-semibold text-slate-200">{status.title}</span>
+      <span className="text-sm font-semibold text-titanium-text-secondary">
+        {status.title}
+      </span>
       <span
         className={`ml-auto text-xs px-2 py-0.5 rounded font-mono ${
           status.readiness === 'qualified'
             ? 'bg-green-700/40 text-green-300'
             : status.readiness === 'partial'
               ? 'bg-yellow-700/40 text-yellow-300'
-              : 'bg-slate-700/40 text-slate-400'
+              : 'bg-titanium-bg-interactive/40 text-titanium-text-tertiary'
         }`}
       >
         {status.readinessLabel}
       </span>
     </div>
-    <p className="text-xs text-slate-400 mb-2">{status.serviceState}</p>
+    <p className="text-xs text-titanium-text-tertiary mb-2">{status.serviceState}</p>
     {status.evidence.length > 0 && (
-      <ul className="text-xs text-slate-300 space-y-0.5 list-disc list-inside">
+      <ul className="text-xs text-titanium-text-secondary space-y-0.5 list-disc list-inside">
         {status.evidence.map((e, i) => (
           <li key={i}>{e}</li>
         ))}
@@ -155,13 +157,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <div
       data-testid={`multiproject-project-card-${project.id}`}
-      className="rounded-xl border border-slate-700 bg-slate-800/60 p-4 flex flex-col gap-2"
+      className="rounded-xl border border-titanium-border-default bg-titanium-bg-elevated/60 p-4 flex flex-col gap-2"
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-slate-100 truncate">{project.name}</span>
+            <span className="font-semibold text-titanium-text-primary truncate">
+              {project.name}
+            </span>
             <span
               className={`text-xs px-2 py-0.5 rounded-full font-mono ${statusBadgeClass(
                 project.status
@@ -169,10 +173,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             >
               {project.status}
             </span>
-            <span className="text-xs text-slate-500">P{project.priority}</span>
+            <span className="text-xs text-titanium-text-disabled">
+              P{project.priority}
+            </span>
           </div>
           {project.description && (
-            <p className="text-xs text-slate-400 mt-1 truncate">{project.description}</p>
+            <p className="text-xs text-titanium-text-tertiary mt-1 truncate">
+              {project.description}
+            </p>
           )}
         </div>
 
@@ -191,7 +199,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           {project.tags.map(tag => (
             <span
               key={tag}
-              className="text-xs px-1.5 py-0.5 rounded bg-slate-700/60 text-slate-400 font-mono"
+              className="text-xs px-1.5 py-0.5 rounded bg-titanium-bg-interactive/60 text-titanium-text-tertiary font-mono"
             >
               {tag}
             </span>
@@ -201,7 +209,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
       {/* Resources */}
       {project.resources.length > 0 && (
-        <div className="text-xs text-slate-500">
+        <div className="text-xs text-titanium-text-disabled">
           {project.resources.length} agent(s) assigné(s)
         </div>
       )}
@@ -221,7 +229,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           aria-label={`Rafraîchir la santé du projet ${project.name}`}
           onClick={() => onRefreshHealth(project.id)}
           disabled={isRefreshing}
-          className="flex items-center gap-1 text-xs px-2 py-1 rounded bg-slate-700/60 hover:bg-slate-600/60 text-slate-300 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-1 text-xs px-2 py-1 rounded bg-titanium-bg-interactive/60 hover:bg-titanium-bg-overlay/60 text-titanium-text-secondary disabled:opacity-50 transition-colors"
         >
           <RefreshCw size={12} className={isRefreshing ? 'animate-spin' : ''} />
           Santé
@@ -231,7 +239,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <button
             aria-label={`Archiver le projet ${project.name}`}
             onClick={() => onArchive(project.id)}
-            className="flex items-center gap-1 text-xs px-2 py-1 rounded bg-slate-700/60 hover:bg-slate-600/60 text-slate-300 transition-colors"
+            className="flex items-center gap-1 text-xs px-2 py-1 rounded bg-titanium-bg-interactive/60 hover:bg-titanium-bg-overlay/60 text-titanium-text-secondary transition-colors"
           >
             <Archive size={12} />
             Archiver
@@ -248,7 +256,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </button>
       </div>
 
-      <div className="text-xs text-slate-600 mt-1">
+      <div className="text-xs text-titanium-text-disabled mt-1">
         Créé {new Date(project.createdAt).toLocaleString('fr-FR')}
       </div>
     </div>
@@ -315,14 +323,16 @@ const CreateForm: React.FC<CreateFormProps> = ({ onCreated }) => {
     <form
       data-testid="multiproject-create-form"
       onSubmit={handleSubmit}
-      className="rounded-xl border border-cyan-700/40 bg-slate-800/80 p-4 mb-4 space-y-3"
+      className="rounded-xl border border-cyan-700/40 bg-titanium-bg-elevated/80 p-4 mb-4 space-y-3"
     >
-      <div className="font-semibold text-slate-200 text-sm mb-1">Nouveau projet</div>
+      <div className="font-semibold text-titanium-text-secondary text-sm mb-1">
+        Nouveau projet
+      </div>
 
       {error && <div className="text-xs text-red-400">{error}</div>}
 
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-slate-400" htmlFor="mp-name">
+        <label className="text-xs text-titanium-text-tertiary" htmlFor="mp-name">
           Nom *
         </label>
         <input
@@ -331,13 +341,13 @@ const CreateForm: React.FC<CreateFormProps> = ({ onCreated }) => {
           onChange={e => setName(e.target.value)}
           placeholder="Nom du projet (1–80 caractères)"
           maxLength={80}
-          className="bg-slate-700/60 border border-slate-600/50 rounded px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-600/60"
+          className="bg-titanium-bg-interactive/60 border border-titanium-border-strong/50 rounded px-3 py-1.5 text-sm text-titanium-text-primary placeholder-slate-500 focus:outline-none focus:border-cyan-600/60"
           required
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-slate-400" htmlFor="mp-desc">
+        <label className="text-xs text-titanium-text-tertiary" htmlFor="mp-desc">
           Description
         </label>
         <input
@@ -345,13 +355,13 @@ const CreateForm: React.FC<CreateFormProps> = ({ onCreated }) => {
           value={description}
           onChange={e => setDescription(e.target.value)}
           placeholder="Description optionnelle"
-          className="bg-slate-700/60 border border-slate-600/50 rounded px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-600/60"
+          className="bg-titanium-bg-interactive/60 border border-titanium-border-strong/50 rounded px-3 py-1.5 text-sm text-titanium-text-primary placeholder-slate-500 focus:outline-none focus:border-cyan-600/60"
         />
       </div>
 
       <div className="flex gap-3">
         <div className="flex flex-col gap-1 flex-1">
-          <label className="text-xs text-slate-400" htmlFor="mp-priority">
+          <label className="text-xs text-titanium-text-tertiary" htmlFor="mp-priority">
             Priorité (1–10)
           </label>
           <input
@@ -361,12 +371,12 @@ const CreateForm: React.FC<CreateFormProps> = ({ onCreated }) => {
             max={10}
             value={priority}
             onChange={e => setPriority(Number(e.target.value))}
-            className="bg-slate-700/60 border border-slate-600/50 rounded px-3 py-1.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-600/60 w-20"
+            className="bg-titanium-bg-interactive/60 border border-titanium-border-strong/50 rounded px-3 py-1.5 text-sm text-titanium-text-primary focus:outline-none focus:border-cyan-600/60 w-20"
           />
         </div>
 
         <div className="flex flex-col gap-1 flex-1">
-          <label className="text-xs text-slate-400" htmlFor="mp-tags">
+          <label className="text-xs text-titanium-text-tertiary" htmlFor="mp-tags">
             Tags (virgule)
           </label>
           <input
@@ -374,7 +384,7 @@ const CreateForm: React.FC<CreateFormProps> = ({ onCreated }) => {
             value={tags}
             onChange={e => setTags(e.target.value)}
             placeholder="ex: frontend, IA, urgent"
-            className="bg-slate-700/60 border border-slate-600/50 rounded px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-600/60"
+            className="bg-titanium-bg-interactive/60 border border-titanium-border-strong/50 rounded px-3 py-1.5 text-sm text-titanium-text-primary placeholder-slate-500 focus:outline-none focus:border-cyan-600/60"
           />
         </div>
       </div>
@@ -390,7 +400,7 @@ const CreateForm: React.FC<CreateFormProps> = ({ onCreated }) => {
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="px-4 py-1.5 rounded bg-slate-700/60 hover:bg-slate-600/60 text-slate-300 text-sm transition-colors"
+          className="px-4 py-1.5 rounded bg-titanium-bg-interactive/60 hover:bg-titanium-bg-overlay/60 text-titanium-text-secondary text-sm transition-colors"
         >
           Annuler
         </button>
@@ -476,7 +486,7 @@ const MultiProjectDashboard: React.FC = () => {
   return (
     <div
       data-testid="multiproject-dashboard"
-      className="min-h-screen bg-slate-900 text-slate-100 p-4 sm:p-6"
+      className="min-h-screen bg-titanium-bg-base text-titanium-text-primary p-4 sm:p-6"
     >
       <SurfaceTruthBadge variant={rollup != null ? 'LIVE' : 'PARTIAL'} />
       {/* Header */}
@@ -484,8 +494,10 @@ const MultiProjectDashboard: React.FC = () => {
         <div className="flex items-center gap-3">
           <Activity className="text-cyan-400" size={24} />
           <div>
-            <h1 className="text-xl font-bold text-slate-100">Gestion Multi-Projets</h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <h1 className="text-xl font-bold text-titanium-text-primary">
+              Gestion Multi-Projets
+            </h1>
+            <p className="text-xs text-titanium-text-tertiary mt-0.5">
               Agent de coordination et allocation des ressources agents
             </p>
           </div>
@@ -493,7 +505,7 @@ const MultiProjectDashboard: React.FC = () => {
         <button
           onClick={refresh}
           aria-label="Rafraîchir le tableau de bord"
-          className="p-2 rounded-lg bg-slate-700/60 hover:bg-slate-600/60 text-slate-300 transition-colors"
+          className="p-2 rounded-lg bg-titanium-bg-interactive/60 hover:bg-titanium-bg-overlay/60 text-titanium-text-secondary transition-colors"
         >
           <RefreshCw size={16} />
         </button>
@@ -511,7 +523,7 @@ const MultiProjectDashboard: React.FC = () => {
       {/* Project list */}
       <div data-testid="multiproject-project-list">
         {nonArchivedProjects.length === 0 ? (
-          <div className="text-center text-slate-300 text-sm py-12">
+          <div className="text-center text-titanium-text-secondary text-sm py-12">
             Aucun projet actif. Créez votre premier projet pour commencer.
           </div>
         ) : (
@@ -533,7 +545,7 @@ const MultiProjectDashboard: React.FC = () => {
       {/* Archived section */}
       {archivedProjects.length > 0 && (
         <details className="mt-6">
-          <summary className="text-xs text-slate-300 cursor-pointer hover:text-slate-200 transition-colors">
+          <summary className="text-xs text-titanium-text-secondary cursor-pointer hover:text-titanium-text-secondary transition-colors">
             {archivedProjects.length} projet(s) archivé(s)
           </summary>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mt-3">

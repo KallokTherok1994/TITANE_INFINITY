@@ -2,7 +2,7 @@
 
 exports[`EngineCard Component > Snapshot > should match snapshot 1`] = `
 <div
-  class="p-4 rounded-lg border border-gray-700 bg-gray-800 hover:bg-gray-750 cursor-pointer"
+  class="p-4 rounded-lg border border-titanium-border-default bg-titanium-bg-elevated hover:bg-titanium-bg-interactive cursor-pointer"
   role="button"
   tabindex="0"
 >
@@ -21,7 +21,7 @@ exports[`EngineCard Component > Snapshot > should match snapshot 1`] = `
     </span>
   </div>
   <div
-    class="mt-2 text-sm text-gray-400"
+    class="mt-2 text-sm text-titanium-text-tertiary"
   >
     <div>
       Requests: 

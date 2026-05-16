@@ -14,14 +14,14 @@ export interface LogFiltersProps {
 
 export function LogFilters({ filters, onFilterChange }: LogFiltersProps) {
   return (
-    <div className="flex gap-4 p-4 bg-gray-800 rounded-lg">
+    <div className="flex gap-4 p-4 bg-titanium-bg-elevated rounded-lg">
       <div className="flex-1">
         <input
           type="text"
           placeholder="Search logs..."
           value={filters.search}
           onChange={e => onFilterChange({ ...filters, search: e.target.value })}
-          className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 outline-none"
+          className="w-full px-3 py-2 bg-titanium-bg-interactive text-white rounded border border-titanium-border-strong focus:border-blue-500 outline-none"
         />
       </div>
       <div className="flex gap-2">
@@ -37,7 +37,7 @@ export function LogFilters({ filters, onFilterChange }: LogFiltersProps) {
             className={`px-3 py-2 rounded text-sm font-medium ${
               filters.level.includes(level)
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300'
+                : 'bg-titanium-bg-interactive text-titanium-text-secondary'
             }`}
           >
             {level}

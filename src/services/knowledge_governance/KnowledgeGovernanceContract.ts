@@ -278,6 +278,7 @@ export const KNOWLEDGE_DOMAINS = [
   'financial',
   'spiritual_symbolic',
   'business_strategy',
+  'biodiversity',
   'unknown',
 ] as const;
 export type KnowledgeDomain = (typeof KNOWLEDGE_DOMAINS)[number];

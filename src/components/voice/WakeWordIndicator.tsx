@@ -92,7 +92,7 @@ const STATE_CONFIG: Record<
     icon: '💬',
   },
   cooldown: {
-    color: 'bg-gray-500',
+    color: 'bg-titanium-bg-overlay',
     glow: 'shadow-[0_0_10px_rgba(107,114,128,0.4)]',
     animation: 'animate-pulse',
     label: 'Repos',
@@ -161,7 +161,7 @@ export const WakeWordIndicator: React.FC<WakeWordIndicatorProps> = ({
 
       {/* Label */}
       {showLabel && (
-        <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+        <span className="text-xs font-medium text-titanium-text-disabled dark:text-titanium-text-tertiary">
           {config.label}
         </span>
       )}

@@ -87,8 +87,8 @@ async function runAction(action: PaletteAction): Promise<void> {
 }
 
 export function CommandPalette(): React.ReactElement {
-  const open = useCommandPaletteStore((s) => s.open);
-  const setOpen = useCommandPaletteStore((s) => s.setOpen);
+  const open = useCommandPaletteStore(s => s.open);
+  const setOpen = useCommandPaletteStore(s => s.setOpen);
   const navigate = useNavigate();
 
   useGlobalShortcut(open, setOpen);
@@ -124,7 +124,7 @@ export function CommandPalette(): React.ReactElement {
       <CommandList data-testid="command-palette-root">
         <CommandEmpty>Aucun résultat.</CommandEmpty>
         <CommandGroup heading="Routes" data-testid="command-group-routes">
-          {PALETTE_ROUTES.map((route) => {
+          {PALETTE_ROUTES.map(route => {
             const Icon = route.icon;
             return (
               <CommandItem
@@ -142,7 +142,7 @@ export function CommandPalette(): React.ReactElement {
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Agents avancés" data-testid="command-group-agents">
-          {PALETTE_AGENTS.map((agent) => {
+          {PALETTE_AGENTS.map(agent => {
             const Icon = agent.icon;
             return (
               <CommandItem
@@ -160,7 +160,7 @@ export function CommandPalette(): React.ReactElement {
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Actions IPC (safe)" data-testid="command-group-actions">
-          {PALETTE_ACTIONS.map((action) => {
+          {PALETTE_ACTIONS.map(action => {
             const Icon = action.icon;
             return (
               <CommandItem

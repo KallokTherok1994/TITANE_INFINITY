@@ -59,7 +59,6 @@ import { useChatModeStore } from '@/stores/useChatModeStore';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
-import { colors } from '@themes/tokens';
 import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
@@ -1269,7 +1268,10 @@ const ConversationMessage = memo(
           </div>
           {message.role === 'assistant' &&
             (providerLabel || latencyLabel || omegaStagesLabel) && (
-              <div className="conversation-message-meta" data-testid="chat-message-meta-strip">
+              <div
+                className="conversation-message-meta"
+                data-testid="chat-message-meta-strip"
+              >
                 {providerLabel && (
                   <span data-testid="chat-message-meta-provider">{providerLabel}</span>
                 )}
@@ -3482,11 +3484,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                     <span></span>
                     <span></span>
                   </div>
-                  <small style={{ color: colors.neutral[400] }}>
+                  <small style={{ color: 'var(--color-text-muted)' }}>
                     TITANE traite votre message...
                   </small>
                   <small
-                    style={{ color: colors.neutral[500], display: 'block', marginTop: 4 }}
+                    style={{
+                      color: 'var(--color-text-disabled)',
+                      display: 'block',
+                      marginTop: 4,
+                    }}
                     data-testid="chat-loading-summary"
                   >
                     {loadingSummary}

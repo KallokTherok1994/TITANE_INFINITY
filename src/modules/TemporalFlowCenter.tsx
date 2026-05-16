@@ -122,7 +122,7 @@ const TemporalFlowCenter: React.FC = () => {
   return (
     <div
       data-testid="module-temporal-flow-center"
-      className="temporal-flow-center p-6 space-y-6 bg-gray-900 text-gray-100"
+      className="temporal-flow-center p-6 space-y-6 bg-titanium-bg-base text-titanium-text-primary"
     >
       <SurfaceTruthBadge variant={badgeVariant} />
       {/* Header */}
@@ -130,14 +130,14 @@ const TemporalFlowCenter: React.FC = () => {
         <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">
           ⏳ Centre Temps & Navigation Temporelle
         </h1>
-        <p className="text-gray-400">
+        <p className="text-titanium-text-tertiary">
           Le cœur du temps de TITANE∞ — Agenda intelligent, navigation temporelle,
           optimisation énergie & priorités
         </p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="tabs flex gap-2 border-b border-gray-700 pb-4 overflow-x-auto">
+      <div className="tabs flex gap-2 border-b border-titanium-border-default pb-4 overflow-x-auto">
         {[
           { id: 'now', label: '⚡ Maintenant', desc: "Vue aujourd'hui" },
           { id: 'agenda', label: '📅 Agenda', desc: 'Semaine / Mois' },
@@ -150,7 +150,7 @@ const TemporalFlowCenter: React.FC = () => {
             className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-titanium-bg-elevated text-titanium-text-tertiary hover:bg-titanium-bg-interactive'
             }`}
           >
             <div className="font-medium">{tab.label}</div>
@@ -219,15 +219,15 @@ const NowSection: React.FC<NowSectionProps> = ({
       />
 
       {/* Contexte actuel */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">📍 Contexte Actuel</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gray-900 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-1">Date</div>
+          <div className="bg-titanium-bg-base p-4 rounded">
+            <div className="text-sm text-titanium-text-tertiary mb-1">Date</div>
             <div className="text-lg font-medium">{formatDate(currentDate)}</div>
           </div>
-          <div className="bg-gray-900 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-1">Heure</div>
+          <div className="bg-titanium-bg-base p-4 rounded">
+            <div className="text-sm text-titanium-text-tertiary mb-1">Heure</div>
             <div className="text-lg font-medium">
               {currentDate.toLocaleTimeString('fr-FR', {
                 hour: '2-digit',
@@ -235,11 +235,11 @@ const NowSection: React.FC<NowSectionProps> = ({
               })}
             </div>
           </div>
-          <div className="bg-gray-900 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-1">Énergie</div>
+          <div className="bg-titanium-bg-base p-4 rounded">
+            <div className="text-sm text-titanium-text-tertiary mb-1">Énergie</div>
             <div className="flex items-center gap-2">
               <div className="text-lg font-medium">{currentEnergy}%</div>
-              <div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-titanium-bg-interactive rounded-full overflow-hidden">
                 <div
                   className={`h-full ${currentEnergy > 70 ? 'bg-green-500' : currentEnergy > 40 ? 'bg-yellow-500' : 'bg-red-500'}`}
                   style={{ width: `${currentEnergy}%` }}
@@ -284,15 +284,15 @@ const NowSection: React.FC<NowSectionProps> = ({
       )}
 
       {/* Blocs de la journée */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">📋 Planning du Jour</h3>
         <div className="space-y-3">
           {todayBlocks.map(block => (
             <div
               key={block.id}
-              className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg hover:bg-gray-850 transition-colors"
+              className="flex items-center gap-4 p-4 bg-titanium-bg-base rounded-lg hover:bg-titanium-bg-base transition-colors"
             >
-              <div className="text-sm font-mono text-gray-400 w-24">
+              <div className="text-sm font-mono text-titanium-text-tertiary w-24">
                 {block.start} - {block.end}
               </div>
               <div className="flex-1">
@@ -313,7 +313,7 @@ const NowSection: React.FC<NowSectionProps> = ({
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-sm text-gray-400">Énergie requise</div>
+                <div className="text-sm text-titanium-text-tertiary">Énergie requise</div>
                 <div className="text-lg font-semibold">{block.energy}%</div>
               </div>
             </div>
@@ -354,13 +354,13 @@ const AgendaSection: React.FC = () => {
       <div className="flex gap-2">
         <button
           onClick={() => setView('week')}
-          className={`px-4 py-2 rounded ${view === 'week' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+          className={`px-4 py-2 rounded ${view === 'week' ? 'bg-blue-600 text-white' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
         >
           📅 Semaine
         </button>
         <button
           onClick={() => setView('month')}
-          className={`px-4 py-2 rounded ${view === 'month' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+          className={`px-4 py-2 rounded ${view === 'month' ? 'bg-blue-600 text-white' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
         >
           📆 Mois
         </button>
@@ -368,16 +368,16 @@ const AgendaSection: React.FC = () => {
 
       {/* Vue Semaine */}
       {view === 'week' && (
-        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
           <h3 className="text-xl font-semibold mb-4 text-blue-400">
             Semaine du 2-8 Décembre 2025
           </h3>
           <div className="grid grid-cols-7 gap-2">
             {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, index) => (
               <div key={day} className="text-center">
-                <div className="text-sm text-gray-400 mb-2">{day}</div>
+                <div className="text-sm text-titanium-text-tertiary mb-2">{day}</div>
                 <div
-                  className={`p-4 rounded-lg ${index === 2 ? 'bg-blue-900 border-2 border-blue-500' : 'bg-gray-900'}`}
+                  className={`p-4 rounded-lg ${index === 2 ? 'bg-blue-900 border-2 border-blue-500' : 'bg-titanium-bg-base'}`}
                 >
                   <div className="text-lg font-bold mb-2">{index + 2}</div>
                   <div className="space-y-1 text-xs">
@@ -400,9 +400,9 @@ const AgendaSection: React.FC = () => {
 
       {/* Vue Mois */}
       {view === 'month' && (
-        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
           <h3 className="text-xl font-semibold mb-4 text-blue-400">Décembre 2025</h3>
-          <div className="text-gray-400 text-center py-12">
+          <div className="text-titanium-text-tertiary text-center py-12">
             <div className="text-6xl mb-4">📆</div>
             <div>Vue calendrier mois avec jalons et projets majeurs</div>
             <div className="text-sm mt-2">
@@ -413,7 +413,7 @@ const AgendaSection: React.FC = () => {
       )}
 
       {/* Création intelligente */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">
           🤖 Création Intelligente
         </h3>
@@ -421,13 +421,13 @@ const AgendaSection: React.FC = () => {
           <input
             type="text"
             placeholder="Ex: Planifie 3 blocs de 90min pour TITANE v25 cette semaine"
-            className="w-full p-3 bg-gray-900 rounded border border-gray-700 text-gray-100 placeholder-gray-500"
+            className="w-full p-3 bg-titanium-bg-base rounded border border-titanium-border-default text-titanium-text-primary placeholder-gray-500"
           />
           <div className="flex gap-2">
             <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
               ✨ Générer avec IA
             </button>
-            <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white transition-colors">
+            <button className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition-colors">
               ➕ Ajouter manuellement
             </button>
           </div>
@@ -501,13 +501,13 @@ const TimelineSection: React.FC = () => {
 
       {/* Timeline Controls */}
       <div className="flex gap-4 items-center">
-        <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white transition-colors">
+        <button className="px-4 py-2 bg-titanium-bg-elevated hover:bg-titanium-bg-interactive rounded text-white transition-colors">
           ⏪ Passé
         </button>
         <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
           📍 Présent
         </button>
-        <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white transition-colors">
+        <button className="px-4 py-2 bg-titanium-bg-elevated hover:bg-titanium-bg-interactive rounded text-white transition-colors">
           ⏩ Futur
         </button>
         <div className="flex-1" />
@@ -520,7 +520,7 @@ const TimelineSection: React.FC = () => {
       </div>
 
       {/* Timeline Visualization */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <div className="relative">
           {/* Ligne centrale */}
           <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-blue-500 via-cyan-500 to-purple-500" />
@@ -554,13 +554,13 @@ const TimelineSection: React.FC = () => {
                         isPresent
                           ? 'bg-cyan-900/30 border-cyan-500'
                           : isPast
-                            ? 'bg-gray-900 border-gray-700'
+                            ? 'bg-titanium-bg-base border-titanium-border-default'
                             : 'bg-purple-900/30 border-purple-700'
                       }`}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <div className="text-sm text-gray-400 mb-1">
+                          <div className="text-sm text-titanium-text-tertiary mb-1">
                             {event.date.toLocaleDateString('fr-FR', {
                               day: 'numeric',
                               month: 'long',
@@ -583,7 +583,9 @@ const TimelineSection: React.FC = () => {
                           {event.type}
                         </TBadge>
                       </div>
-                      <p className="text-sm text-gray-400">{event.description}</p>
+                      <p className="text-sm text-titanium-text-tertiary">
+                        {event.description}
+                      </p>
                     </div>
                   </div>
                 );
@@ -627,39 +629,39 @@ const IntelligenceSection: React.FC = () => {
       />
 
       {/* Analyses */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">
           📊 Analyses de Patterns
         </h3>
         <div className="space-y-4">
-          <div className="bg-gray-900 p-4 rounded">
+          <div className="bg-titanium-bg-base p-4 rounded">
             <div className="flex items-center justify-between mb-2">
               <div className="font-medium">Pic d&apos;efficacité</div>
               <TBadge variant="success">Optimal</TBadge>
             </div>
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-titanium-text-tertiary">
               Tu es le plus efficace entre 9h-11h et 14h-16h. 85% de tes meilleures
               sessions sont dans ces créneaux.
             </div>
           </div>
 
-          <div className="bg-gray-900 p-4 rounded">
+          <div className="bg-titanium-bg-base p-4 rounded">
             <div className="flex items-center justify-between mb-2">
               <div className="font-medium">Surcharge détectée</div>
               <TBadge variant="warning">Attention</TBadge>
             </div>
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-titanium-text-tertiary">
               Tu compresses trop de tâches importantes en fin de journée (après 17h).
               Risque de fatigue cognitive.
             </div>
           </div>
 
-          <div className="bg-gray-900 p-4 rounded">
+          <div className="bg-titanium-bg-base p-4 rounded">
             <div className="flex items-center justify-between mb-2">
               <div className="font-medium">Récupération insuffisante</div>
               <TBadge variant="error">Critique</TBadge>
             </div>
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-titanium-text-tertiary">
               Tu manques de plages de récupération après les gros blocs cognitifs
               (90min+). Recommandé: pause 15min tous les 90min.
             </div>
@@ -706,12 +708,12 @@ const IntelligenceSection: React.FC = () => {
       </div>
 
       {/* Rituels & Routines */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">🔄 Rituels Temporels</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-gray-900 p-4 rounded">
+          <div className="bg-titanium-bg-base p-4 rounded">
             <div className="text-lg font-medium mb-2">🌅 Matin de Création</div>
-            <div className="text-sm text-gray-400 space-y-1">
+            <div className="text-sm text-titanium-text-tertiary space-y-1">
               <div>• 08:00-08:30 : Réveil énergétique</div>
               <div>• 08:30-09:00 : Capture intentions</div>
               <div>• 09:00-11:00 : Deep work</div>
@@ -719,9 +721,9 @@ const IntelligenceSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-gray-900 p-4 rounded">
+          <div className="bg-titanium-bg-base p-4 rounded">
             <div className="text-lg font-medium mb-2">🌆 Après-midi de Gestion</div>
-            <div className="text-sm text-gray-400 space-y-1">
+            <div className="text-sm text-titanium-text-tertiary space-y-1">
               <div>• 14:00-16:00 : Stratégie & décisions</div>
               <div>• 16:00-16:15 : Pause transition</div>
               <div>• 16:15-17:30 : Admin & communication</div>

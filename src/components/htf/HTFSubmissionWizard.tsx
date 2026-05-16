@@ -80,12 +80,12 @@ export function HTFSubmissionWizard() {
 
       {step === 'description' && (
         <div data-testid="htf-step-description" className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-titanium-text-secondary">
             Description du projet *
           </label>
           <textarea
             data-testid="htf-input-description"
-            className="w-full rounded border border-gray-300 p-2 text-sm"
+            className="w-full rounded border border-titanium-border-default p-2 text-sm"
             rows={4}
             placeholder="Ex: Pose d'une terrasse en dalles béton 60×60 de 24m², accès latéral..."
             value={description}
@@ -104,14 +104,14 @@ export function HTFSubmissionWizard() {
 
       {step === 'surface' && (
         <div data-testid="htf-step-surface" className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-titanium-text-secondary">
             Superficie estimée (m²) — facultatif
           </label>
           <input
             data-testid="htf-input-surface"
             type="number"
             min={1}
-            className="rounded border border-gray-300 p-2 text-sm w-40"
+            className="rounded border border-titanium-border-default p-2 text-sm w-40"
             placeholder="24"
             value={surfaceM2}
             onChange={e =>
@@ -121,7 +121,7 @@ export function HTFSubmissionWizard() {
           <div className="flex gap-3">
             <button
               onClick={() => setStep('description')}
-              className="rounded border border-gray-300 px-3 py-2 text-sm"
+              className="rounded border border-titanium-border-default px-3 py-2 text-sm"
             >
               ← Retour
             </button>
@@ -138,7 +138,9 @@ export function HTFSubmissionWizard() {
 
       {step === 'options' && (
         <div data-testid="htf-step-options" className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700">Options</label>
+          <label className="block text-sm font-medium text-titanium-text-secondary">
+            Options
+          </label>
           <label className="flex items-center gap-2 text-sm">
             <input
               data-testid="htf-opt-urgence"
@@ -160,7 +162,7 @@ export function HTFSubmissionWizard() {
           <div className="flex gap-3">
             <button
               onClick={() => setStep('surface')}
-              className="rounded border border-gray-300 px-3 py-2 text-sm"
+              className="rounded border border-titanium-border-default px-3 py-2 text-sm"
             >
               ← Retour
             </button>
@@ -182,7 +184,7 @@ export function HTFSubmissionWizard() {
           className="space-y-2 rounded-lg bg-green-50 p-4 border border-green-200"
         >
           <p className="font-bold text-green-700">✅ Soumission générée</p>
-          <p className="text-sm text-gray-700">N° {estimation.numero}</p>
+          <p className="text-sm text-titanium-text-secondary">N° {estimation.numero}</p>
           <p className="text-lg font-bold text-green-800">
             {estimation.totalAvecTaxes.toFixed(2)} $
           </p>

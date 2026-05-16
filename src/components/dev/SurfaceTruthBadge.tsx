@@ -78,9 +78,7 @@ export function SurfaceTruthBadge({
         onClick={() => setOpen(prev => !prev)}
         style={{
           position: 'fixed',
-          ...(isMobileViewport
-            ? { top: 8, right: 8 }
-            : { bottom: 8, right: 8 }),
+          ...(isMobileViewport ? { top: 8, right: 8 } : { bottom: 8, right: 8 }),
           zIndex: 9999,
           fontFamily: 'monospace',
           fontSize: 10,
@@ -116,9 +114,7 @@ export function SurfaceTruthBadge({
             boxShadow: '0 6px 24px rgba(0,0,0,0.5)',
           }}
         >
-          <div style={{ color: '#10b981', marginBottom: 4 }}>
-            TITANE∞ surface truth
-          </div>
+          <div style={{ color: '#10b981', marginBottom: 4 }}>TITANE∞ surface truth</div>
           <div data-testid="surface-truth-version">version: {truth.appVersion}</div>
           <div data-testid="surface-truth-build">build: {truth.buildTimestamp}</div>
           <div data-testid="surface-truth-store">

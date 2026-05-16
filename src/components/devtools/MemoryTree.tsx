@@ -24,20 +24,22 @@ function TreeNode({
   return (
     <div>
       <div
-        className="p-2 hover:bg-gray-800 cursor-pointer"
+        className="p-2 hover:bg-titanium-bg-elevated cursor-pointer"
         style={{ paddingLeft: `${indent + 12}px` }}
         onClick={() => onNodeClick?.(node)}
       >
         <div className="flex items-center gap-2">
           {node.children && node.children.length > 0 && (
-            <span className="text-gray-500">▶</span>
+            <span className="text-titanium-text-disabled">▶</span>
           )}
           <span className="text-sm font-medium text-white">{node.type}</span>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-titanium-text-tertiary">
             {new Date(node.timestamp).toLocaleString()}
           </span>
         </div>
-        <div className="text-xs text-gray-500 mt-1 truncate">{node.content}</div>
+        <div className="text-xs text-titanium-text-disabled mt-1 truncate">
+          {node.content}
+        </div>
       </div>
       {node.children?.map(child => (
         <TreeNode
@@ -53,7 +55,7 @@ function TreeNode({
 
 export function MemoryTree({ root, onNodeClick }: MemoryTreeProps) {
   return (
-    <div className="border border-gray-700 rounded-lg overflow-hidden">
+    <div className="border border-titanium-border-default rounded-lg overflow-hidden">
       <TreeNode node={root} onNodeClick={onNodeClick} />
     </div>
   );

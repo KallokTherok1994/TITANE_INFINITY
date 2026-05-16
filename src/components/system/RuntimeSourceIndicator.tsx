@@ -31,7 +31,7 @@ const SOURCE_META: Record<
   },
   STATIC: {
     label: 'STATIC',
-    colorClass: 'text-slate-400',
+    colorClass: 'text-titanium-text-tertiary',
     title: 'Données statiques — pas de backend',
   },
   SIMULATED: {
@@ -56,7 +56,7 @@ const SOURCE_META: Record<
   },
   UNKNOWN: {
     label: '?',
-    colorClass: 'text-gray-500',
+    colorClass: 'text-titanium-text-disabled',
     title: 'Source de données inconnue',
   },
 };

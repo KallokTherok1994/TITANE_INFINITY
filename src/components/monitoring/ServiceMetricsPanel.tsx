@@ -64,7 +64,7 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
   if (!stats) {
     return (
       <div
-        className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}
+        className={`rounded-lg border border-titanium-border-default bg-titanium-bg-elevated/50 p-6 ${className}`}
       >
         <div className="flex items-center justify-center h-40">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
@@ -90,7 +90,9 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
   }[service];
 
   return (
-    <div className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}>
+    <div
+      className={`rounded-lg border border-titanium-border-default bg-titanium-bg-elevated/50 p-6 ${className}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -173,11 +175,11 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
       </div>
 
       {/* Stats détaillées */}
-      <div className="mt-6 pt-6 border-t border-gray-700">
+      <div className="mt-6 pt-6 border-t border-titanium-border-default">
         <div className="grid grid-cols-2 gap-4 text-sm">
           {/* Successful Calls */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2 text-titanium-text-tertiary">
               <CheckCircle className="w-4 h-4 text-green-500" />
               <span>Succès</span>
             </div>
@@ -186,7 +188,7 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
 
           {/* Failed Calls */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2 text-titanium-text-tertiary">
               <XCircle className="w-4 h-4 text-red-500" />
               <span>Échecs</span>
             </div>
@@ -195,7 +197,7 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
 
           {/* Total Retries */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2 text-titanium-text-tertiary">
               <RefreshCw className="w-4 h-4 text-yellow-500" />
               <span>Retries</span>
             </div>
@@ -204,7 +206,7 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
 
           {/* P99 Latency */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2 text-titanium-text-tertiary">
               <Activity className="w-4 h-4 text-purple-500" />
               <span>P99 Latency</span>
             </div>

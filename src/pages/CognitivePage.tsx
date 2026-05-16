@@ -24,7 +24,6 @@ import {
   HarmoniaPatterns,
   MemoryTimeline,
 } from '@features/cognitive';
-import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 
 interface CognitionProbe {
   load?: number;
@@ -218,9 +217,9 @@ export const CognitivePage = (): JSX.Element => {
               style={{
                 margin: 0,
                 fontSize: '2.5rem',
-                fontWeight: fontWeights.bold,
-                color: colors.neutral[100],
-                marginBottom: spacing[2],
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
+                marginBottom: 'var(--space-2)',
               }}
             >
               État Cognitif
@@ -228,8 +227,8 @@ export const CognitivePage = (): JSX.Element => {
             <p
               style={{
                 margin: 0,
-                fontSize: fontSizes.lg,
-                color: colors.neutral[400],
+                fontSize: 'var(--text-lg)',
+                color: 'var(--color-text-muted)',
               }}
             >
               Analyse approfondie de vos capacités et patterns mentaux
@@ -242,10 +241,10 @@ export const CognitivePage = (): JSX.Element => {
               <h2
                 style={{
                   margin: 0,
-                  marginBottom: spacing[4],
-                  fontSize: fontSizes.xl,
-                  fontWeight: fontWeights.semibold,
-                  color: colors.neutral[100],
+                  marginBottom: 'var(--space-4)',
+                  fontSize: 'var(--text-xl)',
+                  fontWeight: '600',
+                  color: 'var(--color-text-primary)',
                 }}
               >
                 Métriques Cognitives
@@ -257,10 +256,10 @@ export const CognitivePage = (): JSX.Element => {
               <h2
                 style={{
                   margin: 0,
-                  marginBottom: spacing[4],
-                  fontSize: fontSizes.xl,
-                  fontWeight: fontWeights.semibold,
-                  color: colors.neutral[100],
+                  marginBottom: 'var(--space-4)',
+                  fontSize: 'var(--text-xl)',
+                  fontWeight: '600',
+                  color: 'var(--color-text-primary)',
                 }}
               >
                 Graphe de Connaissances
@@ -274,10 +273,10 @@ export const CognitivePage = (): JSX.Element => {
             <h2
               style={{
                 margin: 0,
-                marginBottom: spacing[4],
-                fontSize: fontSizes.xl,
-                fontWeight: fontWeights.semibold,
-                color: colors.neutral[100],
+                marginBottom: 'var(--space-4)',
+                fontSize: 'var(--text-xl)',
+                fontWeight: '600',
+                color: 'var(--color-text-primary)',
               }}
             >
               Patterns Comportementaux
@@ -290,10 +289,10 @@ export const CognitivePage = (): JSX.Element => {
             <h2
               style={{
                 margin: 0,
-                marginBottom: spacing[4],
-                fontSize: fontSizes.xl,
-                fontWeight: fontWeights.semibold,
-                color: colors.neutral[100],
+                marginBottom: 'var(--space-4)',
+                fontSize: 'var(--text-xl)',
+                fontWeight: '600',
+                color: 'var(--color-text-primary)',
               }}
             >
               Timeline des Mémoires

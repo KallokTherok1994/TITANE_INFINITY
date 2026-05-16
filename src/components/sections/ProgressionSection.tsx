@@ -18,7 +18,6 @@ import {
   resolveTalents,
 } from '@/features/progression/achievements';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
-import { spacing, fontSizes } from '@themes/tokens';
 import type { ProgressionState } from '@/cognitive/types';
 import { useCurrentChatModeId } from '@/stores/useChatModeStore';
 
@@ -98,7 +97,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
         />
 
         {/* XP Progress Bar */}
-        <div style={{ marginBottom: spacing[6] }}>
+        <div style={{ marginBottom: 'var(--space-6)' }}>
           <XPProgressBar
             currentXP={stats.totalXP}
             level={stats.level}
@@ -107,9 +106,9 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
         </div>
 
         {/* Milestones & Talents */}
-        <Grid columns={2} gap={4} style={{ marginBottom: spacing[6] }}>
+        <Grid columns={2} gap={4} style={{ marginBottom: 'var(--space-6)' }}>
           <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Milestones</h3>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>Milestones</h3>
             <Stack direction="vertical" gap={3}>
               <TMetric
                 label="Niveau Atteint"
@@ -129,8 +128,8 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
           </Card>
 
           <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Talents Débloqués</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing[2] }}>
+            <h3 style={{ marginBottom: 'var(--space-4)' }}>Talents Débloqués</h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
               {talents.map(t => (
                 <TBadge
                   key={t.label}
@@ -149,15 +148,15 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
         </Grid>
 
         {/* Achievements Grid */}
-        <div style={{ marginBottom: spacing[6] }}>
-          <h3 style={{ marginBottom: spacing[4] }}>🏆 Achievements</h3>
+        <div style={{ marginBottom: 'var(--space-6)' }}>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>🏆 Achievements</h3>
 
           {/* Mastery (Legendary) */}
-          <div style={{ marginBottom: spacing[6] }}>
+          <div style={{ marginBottom: 'var(--space-6)' }}>
             <h4
               style={{
-                fontSize: fontSizes.sm,
-                marginBottom: spacing[3],
+                fontSize: 'var(--text-sm)',
+                marginBottom: 'var(--space-3)',
               }}
             >
               👑 Maîtrise
@@ -166,7 +165,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
+                gap: 'var(--space-4)',
               }}
             >
               {categories.mastery.map(achievement => (
@@ -180,11 +179,11 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
           </div>
 
           {/* Progression */}
-          <div style={{ marginBottom: spacing[6] }}>
+          <div style={{ marginBottom: 'var(--space-6)' }}>
             <h4
               style={{
-                fontSize: fontSizes.sm,
-                marginBottom: spacing[3],
+                fontSize: 'var(--text-sm)',
+                marginBottom: 'var(--space-3)',
               }}
             >
               ⚡ Progression
@@ -193,7 +192,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
+                gap: 'var(--space-4)',
               }}
             >
               {categories.progression.map(achievement => (
@@ -207,11 +206,11 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
           </div>
 
           {/* Conversation */}
-          <div style={{ marginBottom: spacing[6] }}>
+          <div style={{ marginBottom: 'var(--space-6)' }}>
             <h4
               style={{
-                fontSize: fontSizes.sm,
-                marginBottom: spacing[3],
+                fontSize: 'var(--text-sm)',
+                marginBottom: 'var(--space-3)',
               }}
             >
               💬 Communication
@@ -220,7 +219,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
+                gap: 'var(--space-4)',
               }}
             >
               {categories.conversation.map(achievement => (
@@ -237,8 +236,8 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
           <div>
             <h4
               style={{
-                fontSize: fontSizes.sm,
-                marginBottom: spacing[3],
+                fontSize: 'var(--text-sm)',
+                marginBottom: 'var(--space-3)',
               }}
             >
               🧭 Exploration
@@ -247,7 +246,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
+                gap: 'var(--space-4)',
               }}
             >
               {categories.exploration.map(achievement => (

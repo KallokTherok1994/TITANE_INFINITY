@@ -43,7 +43,7 @@ describe('TwinsPage a11y contrast', () => {
     );
 
     const label = screen.getByText('Thèmes propriétaire');
-    expect(label).toHaveClass('text-gray-300');
+    expect(label).toHaveClass('text-titanium-text-secondary');
     expect(label).not.toHaveClass('text-gray-500');
   });
 });

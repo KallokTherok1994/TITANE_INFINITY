@@ -2,13 +2,13 @@
 
 exports[`LogLine Component > Snapshot > should match snapshot 1`] = `
 <div
-  class="p-2 font-mono text-sm hover:bg-gray-800 border-b border-gray-800"
+  class="p-2 font-mono text-sm hover:bg-titanium-bg-elevated border-b border-titanium-border-subtle"
 >
   <div
     class="flex gap-3"
   >
     <span
-      class="text-gray-500 text-xs"
+      class="text-titanium-text-disabled text-xs"
     >
       12:00:00
     </span>
@@ -18,7 +18,7 @@ exports[`LogLine Component > Snapshot > should match snapshot 1`] = `
       INFO
     </span>
     <span
-      class="text-gray-400 text-xs"
+      class="text-titanium-text-tertiary text-xs"
     >
       [
       system

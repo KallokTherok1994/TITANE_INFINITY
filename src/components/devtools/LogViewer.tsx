@@ -111,19 +111,23 @@ export const LogViewer: React.FC<LogViewerProps> = ({
       case 'info':
         return 'text-blue-400';
       case 'debug':
-        return 'text-gray-400';
+        return 'text-titanium-text-tertiary';
       default:
-        return 'text-gray-300';
+        return 'text-titanium-text-secondary';
     }
   };
 
   return (
-    <div className="log-viewer flex flex-col h-full bg-gray-900 rounded-lg border border-gray-700">
+    <div className="log-viewer flex flex-col h-full bg-titanium-bg-base rounded-lg border border-titanium-border-default">
       {/* Header Controls */}
-      <div className="flex items-center justify-between p-3 border-b border-gray-700">
+      <div className="flex items-center justify-between p-3 border-b border-titanium-border-default">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold text-gray-200">📋 Logs</span>
-          <span className="text-xs text-gray-500">({filteredLogs.length})</span>
+          <span className="text-sm font-semibold text-titanium-text-secondary">
+            📋 Logs
+          </span>
+          <span className="text-xs text-titanium-text-disabled">
+            ({filteredLogs.length})
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -133,14 +137,14 @@ export const LogViewer: React.FC<LogViewerProps> = ({
             placeholder="Search logs..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="px-3 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-gray-200 focus:outline-none focus:border-blue-500"
+            className="px-3 py-1 text-sm bg-titanium-bg-elevated border border-titanium-border-strong rounded text-titanium-text-secondary focus:outline-none focus:border-blue-500"
           />
 
           {/* Level Filter */}
           <select
             value={filter}
             onChange={e => setFilter(e.target.value as typeof filter)}
-            className="px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-gray-200 focus:outline-none"
+            className="px-2 py-1 text-sm bg-titanium-bg-elevated border border-titanium-border-strong rounded text-titanium-text-secondary focus:outline-none"
           >
             <option value="all">All</option>
             <option value="debug">Debug</option>
@@ -155,7 +159,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
             className={`px-3 py-1 text-sm rounded ${
               isPaused
                 ? 'bg-green-600 hover:bg-green-700'
-                : 'bg-gray-700 hover:bg-gray-600'
+                : 'bg-titanium-bg-interactive hover:bg-titanium-bg-overlay'
             } text-white transition`}
           >
             {isPaused ? '▶️ Resume' : '⏸️ Pause'}
@@ -164,7 +168,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
           {/* Export */}
           <button
             onClick={exportLogs}
-            className="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded text-white transition"
+            className="px-3 py-1 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition"
           >
             💾 Export
           </button>
@@ -185,15 +189,17 @@ export const LogViewer: React.FC<LogViewerProps> = ({
         className={`flex-1 overflow-y-auto p-3 space-y-1 ${compact ? 'text-xs' : 'text-sm'} font-mono`}
       >
         {filteredLogs.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">No logs to display</div>
+          <div className="text-center text-titanium-text-disabled py-8">
+            No logs to display
+          </div>
         ) : (
           filteredLogs.map((log, idx) => (
             <div
               key={`${log.timestamp}-${idx}`}
-              className="flex gap-3 hover:bg-gray-800 px-2 py-1 rounded transition"
+              className="flex gap-3 hover:bg-titanium-bg-elevated px-2 py-1 rounded transition"
             >
               {/* Timestamp */}
-              <span className="text-gray-500 flex-shrink-0">
+              <span className="text-titanium-text-disabled flex-shrink-0">
                 {new Date(log.timestamp).toLocaleTimeString()}
               </span>
 
@@ -210,7 +216,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
               </span>
 
               {/* Message */}
-              <span className="text-gray-300 flex-1">{log.message}</span>
+              <span className="text-titanium-text-secondary flex-1">{log.message}</span>
             </div>
           ))
         )}

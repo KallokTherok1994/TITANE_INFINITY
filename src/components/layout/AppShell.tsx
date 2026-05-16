@@ -47,6 +47,11 @@ export const AppShell = ({
         className
       )}
     >
+      {/* Skip to main content — keyboard accessibility */}
+      <a href="#app-main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
+
       {/* TopNav (remplace header + sidebar) */}
       {topNav && (
         <div className="relative z-10000" style={{ zIndex: 'var(--z-dev-tools)' }}>
@@ -56,6 +61,7 @@ export const AppShell = ({
 
       {/* Main Content (plein écran, sans sidebar) */}
       <main
+        id="app-main-content"
         data-testid="app-shell-main"
         role="main"
         className="relative flex h-full min-h-0 max-w-full min-w-0 flex-1 flex-col overflow-hidden"

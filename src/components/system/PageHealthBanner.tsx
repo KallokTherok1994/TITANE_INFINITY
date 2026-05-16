@@ -27,11 +27,13 @@ const BANNER_COLORS: Record<BadgeVariant, string> = {
   FALLBACK: 'bg-orange-950/40 border-orange-800/30 text-orange-200',
   DEGRADED: 'bg-red-950/40 border-red-800/30 text-red-200',
   SIMULATED: 'bg-violet-950/50 border-violet-700/40 text-violet-200',
-  DISPLAY_ONLY: 'bg-slate-900/40 border-slate-700/30 text-slate-300',
+  DISPLAY_ONLY:
+    'bg-titanium-bg-base/40 border-titanium-border-default/30 text-titanium-text-secondary',
   LEGACY: 'bg-zinc-900/40 border-zinc-700/30 text-zinc-300',
   NOT_WIRED: 'bg-red-950/50 border-red-800/40 text-red-300',
   ERROR: 'bg-red-900/60 border-red-700/60 text-red-100',
-  UNKNOWN: 'bg-gray-900/40 border-gray-700/30 text-gray-300',
+  UNKNOWN:
+    'bg-titanium-bg-base/40 border-titanium-border-default/30 text-titanium-text-secondary',
 };
 
 export function PageHealthBanner({

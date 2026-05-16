@@ -11,10 +11,12 @@ export interface SectionHeaderProps {
 
 export function SectionHeader({ title, subtitle, action }: SectionHeaderProps) {
   return (
-    <div className="flex items-center justify-between p-4 border-b border-gray-700">
+    <div className="flex items-center justify-between p-4 border-b border-titanium-border-default">
       <div>
         <h2 className="text-lg font-semibold text-white">{title}</h2>
-        {subtitle && <p className="text-sm text-gray-400 mt-1">{subtitle}</p>}
+        {subtitle && (
+          <p className="text-sm text-titanium-text-tertiary mt-1">{subtitle}</p>
+        )}
       </div>
       {action && <div>{action}</div>}
     </div>

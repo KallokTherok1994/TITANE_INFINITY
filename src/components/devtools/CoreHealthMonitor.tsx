@@ -159,9 +159,9 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
       case 'failing':
         return 'text-red-400';
       case 'unknown':
-        return 'text-gray-400';
+        return 'text-titanium-text-tertiary';
       default:
-        return 'text-gray-600';
+        return 'text-titanium-text-disabled';
     }
   };
 
@@ -174,8 +174,8 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-gray-900 rounded-lg">
-        <div className="text-gray-400">Loading core health...</div>
+      <div className="flex items-center justify-center h-64 bg-titanium-bg-base rounded-lg">
+        <div className="text-titanium-text-tertiary">Loading core health...</div>
       </div>
     );
   }
@@ -188,12 +188,14 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
   const healthPercentage = (healthyCores / totalCores) * 100;
 
   return (
-    <div className="core-health-monitor bg-gray-900 rounded-lg border border-gray-700 p-4">
+    <div className="core-health-monitor bg-titanium-bg-base rounded-lg border border-titanium-border-default p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-200">⚙️ Core Engine Health</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="text-lg font-semibold text-titanium-text-secondary">
+            ⚙️ Core Engine Health
+          </h3>
+          <p className="text-sm text-titanium-text-disabled">
             {healthyCores}/{totalCores} cores healthy ({healthPercentage.toFixed(0)}%)
           </p>
         </div>
@@ -212,7 +214,7 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
 
       {/* Overall Health Bar */}
       <div className="mb-6">
-        <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+        <div className="h-2 bg-titanium-bg-interactive rounded-full overflow-hidden">
           <div
             className={`h-full transition-all duration-500 ${
               healthPercentage >= 80
@@ -235,13 +237,15 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
           return (
             <div
               key={coreName}
-              className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition"
+              className="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default hover:border-titanium-border-strong transition"
             >
               {/* Core Name & Status */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{getStatusIndicator(health.status)}</span>
-                  <span className="text-sm font-medium text-gray-200">{health.name}</span>
+                  <span className="text-sm font-medium text-titanium-text-secondary">
+                    {health.name}
+                  </span>
                 </div>
                 <span
                   className={`text-xs font-semibold ${getStatusColor(health.status)}`}
@@ -253,25 +257,27 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
               {/* Metrics (if showDetails) */}
               {showDetails && (
                 <div className="space-y-2 text-xs">
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-titanium-text-tertiary">
                     <span>Uptime:</span>
-                    <span className="text-gray-300">{formatUptime(health.uptime)}</span>
+                    <span className="text-titanium-text-secondary">
+                      {formatUptime(health.uptime)}
+                    </span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-titanium-text-tertiary">
                     <span>CPU:</span>
-                    <span className="text-gray-300">
+                    <span className="text-titanium-text-secondary">
                       {health.metrics.cpu_percent.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-titanium-text-tertiary">
                     <span>Memory:</span>
-                    <span className="text-gray-300">
+                    <span className="text-titanium-text-secondary">
                       {health.metrics.memory_mb.toFixed(0)} MB
                     </span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-titanium-text-tertiary">
                     <span>Operations:</span>
-                    <span className="text-gray-300">
+                    <span className="text-titanium-text-secondary">
                       {health.metrics.operations_total}
                     </span>
                   </div>
@@ -280,7 +286,7 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
 
               {/* Last Error */}
               {health.lastError && (
-                <div className="mt-3 pt-3 border-t border-gray-700">
+                <div className="mt-3 pt-3 border-t border-titanium-border-default">
                   <p className="text-xs text-red-400 truncate" title={health.lastError}>
                     ⚠️ {health.lastError}
                   </p>
@@ -292,7 +298,7 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-6 pt-4 border-t border-gray-700 flex gap-3">
+      <div className="mt-6 pt-4 border-t border-titanium-border-default flex gap-3">
         <button
           onClick={() => window.location.reload()}
           className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white transition"

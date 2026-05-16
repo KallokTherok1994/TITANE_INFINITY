@@ -92,12 +92,12 @@ export function HeliosView() {
         {/* CPU Usage */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">Utilisation CPU</span>
+            <span className="text-sm text-titanium-text-tertiary">Utilisation CPU</span>
             <Badge color={getCPUColor(helios.cpu_usage)} size="sm">
               {helios.cpu_usage.toFixed(1)}%
             </Badge>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-2">
+          <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
             <div
               className={`h-2 rounded-full transition-all duration-300 ${
                 helios.cpu_usage >= 90
@@ -114,12 +114,12 @@ export function HeliosView() {
         {/* RAM Usage */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">Utilisation RAM</span>
+            <span className="text-sm text-titanium-text-tertiary">Utilisation RAM</span>
             <Badge color={getRAMColor(helios.ram_usage)} size="sm">
               {helios.ram_usage.toFixed(1)}%
             </Badge>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-2">
+          <div className="w-full bg-titanium-bg-interactive rounded-full h-2">
             <div
               className={`h-2 rounded-full transition-all duration-300 ${
                 helios.ram_usage >= 90
@@ -136,12 +136,12 @@ export function HeliosView() {
         {/* Disk Usage */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">Utilisation disque</span>
+            <span className="text-sm text-titanium-text-tertiary">Utilisation disque</span>
             <Badge color="blue" size="sm">
               {helios.disk_usage[0].toFixed(1)} GB
             </Badge>
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-titanium-text-disabled">
             Total: {helios.disk_usage[1].toFixed(1)} GB ({helios.disk_usage[2].toFixed(1)}
             %)
           </div>
@@ -150,29 +150,29 @@ export function HeliosView() {
         {/* Uptime */}
         <Card className="p-6">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-400">Disponibilité</span>
+            <span className="text-sm text-titanium-text-tertiary">Disponibilité</span>
             <span className="text-lg font-semibold">{formatUptime(helios.uptime)}</span>
           </div>
         </Card>
 
         {/* Load Average */}
         <Card className="p-6 col-span-1 md:col-span-2">
-          <div className="text-sm text-gray-400 mb-2">Charge moyenne</div>
+          <div className="text-sm text-titanium-text-tertiary mb-2">Charge moyenne</div>
           <div className="flex items-center gap-6">
             <div>
-              <div className="text-xs text-gray-500">1 min</div>
+              <div className="text-xs text-titanium-text-disabled">1 min</div>
               <div className="text-lg font-semibold">
                 {helios.load_average[0].toFixed(2)}
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-500">5 min</div>
+              <div className="text-xs text-titanium-text-disabled">5 min</div>
               <div className="text-lg font-semibold">
                 {helios.load_average[1].toFixed(2)}
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-500">15 min</div>
+              <div className="text-xs text-titanium-text-disabled">15 min</div>
               <div className="text-lg font-semibold">
                 {helios.load_average[2].toFixed(2)}
               </div>
@@ -182,7 +182,7 @@ export function HeliosView() {
       </div>
 
       {/* Last Update */}
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-xs text-titanium-text-disabled text-center">
         Dernière mise à jour: {new Date(helios.timestamp).toLocaleTimeString()}
       </div>
     </div>

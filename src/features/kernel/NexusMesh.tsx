@@ -62,10 +62,10 @@ export function NexusMesh() {
       {/* Coherence Score (derived) */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400">Cohérence estimée</span>
+          <span className="text-sm text-titanium-text-tertiary">Cohérence estimée</span>
           <span className="text-lg font-semibold">{coherenceScore}%</span>
         </div>
-        <div className="w-full bg-gray-700 rounded-full h-3">
+        <div className="w-full bg-titanium-bg-interactive rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all duration-500 ${
               coherenceScore >= 90
@@ -85,26 +85,26 @@ export function NexusMesh() {
           <div className="text-3xl font-bold text-blue-400">
             {nexus.coordination_count}
           </div>
-          <div className="text-sm text-gray-400 mt-1">Coordinations</div>
+          <div className="text-sm text-titanium-text-tertiary mt-1">Coordinations</div>
         </Card>
         <Card className="p-6 text-center">
           <div className="text-3xl font-bold text-green-400">
             {nexus.active_connections}
           </div>
-          <div className="text-sm text-gray-400 mt-1">Connexions actives</div>
+          <div className="text-sm text-titanium-text-tertiary mt-1">Connexions actives</div>
         </Card>
         <Card className="p-6 text-center">
           <div className="text-3xl font-bold text-purple-400">
             {nexus.initialized ? '✅' : '⏳'}
           </div>
-          <div className="text-sm text-gray-400 mt-1">Initialisé</div>
+          <div className="text-sm text-titanium-text-tertiary mt-1">Initialisé</div>
         </Card>
       </div>
 
       {/* Status */}
-      <Card className="p-4 bg-gray-800">
+      <Card className="p-4 bg-titanium-bg-elevated">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-400">Dernière coordination:</span>
+          <span className="text-titanium-text-tertiary">Dernière coordination:</span>
           <span className="font-semibold">
             {nexus.last_coordination_ms > 0
               ? new Date(nexus.last_coordination_ms).toLocaleTimeString()

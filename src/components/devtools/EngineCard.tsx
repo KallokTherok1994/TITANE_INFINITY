@@ -13,7 +13,7 @@ export interface EngineCardProps {
 export function EngineCard({ engine, onClick }: EngineCardProps) {
   return (
     <div
-      className="p-4 rounded-lg border border-gray-700 bg-gray-800 hover:bg-gray-750 cursor-pointer"
+      className="p-4 rounded-lg border border-titanium-border-default bg-titanium-bg-elevated hover:bg-titanium-bg-interactive cursor-pointer"
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -26,14 +26,14 @@ export function EngineCard({ engine, onClick }: EngineCardProps) {
               ? 'bg-green-900 text-green-300'
               : engine.status === 'error'
                 ? 'bg-red-900 text-red-300'
-                : 'bg-gray-700 text-gray-300'
+                : 'bg-titanium-bg-interactive text-titanium-text-secondary'
           }`}
         >
           {engine.status}
         </span>
       </div>
       {engine.metrics && (
-        <div className="mt-2 text-sm text-gray-400">
+        <div className="mt-2 text-sm text-titanium-text-tertiary">
           <div>Requests: {engine.metrics.requests}</div>
           <div>Errors: {engine.metrics.errors}</div>
           <div>Latency: {engine.metrics.latency}ms</div>

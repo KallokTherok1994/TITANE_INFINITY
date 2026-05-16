@@ -43,7 +43,7 @@ export function HTFPage() {
       {/* Tabs */}
       <div
         data-testid="htf-tabs"
-        className="htf-page__tabs flex overflow-x-auto border-b border-gray-200 bg-gray-50"
+        className="htf-page__tabs flex overflow-x-auto border-b border-titanium-border-subtle bg-titanium-bg-base"
       >
         {tabs.map(tab => (
           <button
@@ -53,7 +53,7 @@ export function HTFPage() {
             className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeTab === tab.id
                 ? 'border-green-600 text-green-700 bg-white'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-titanium-text-disabled hover:text-titanium-text-secondary'
             }`}
           >
             <span>{tab.icon}</span>
@@ -83,11 +83,11 @@ export function HTFPage() {
 
         {activeTab === 'historique' && (
           <div data-testid="htf-historique" className="p-4 space-y-3">
-            <h3 className="text-lg font-bold text-gray-700">
+            <h3 className="text-lg font-bold text-titanium-text-secondary">
               🗂️ Historique des soumissions
             </h3>
             {submissions.length === 0 && (
-              <p className="text-sm text-gray-400 italic">
+              <p className="text-sm text-titanium-text-tertiary italic">
                 Aucune soumission enregistrée
               </p>
             )}
@@ -95,14 +95,18 @@ export function HTFPage() {
               <div
                 key={sub.id}
                 data-testid={`htf-historique-item-${sub.id}`}
-                className="rounded-lg border border-gray-200 p-3 flex items-center justify-between"
+                className="rounded-lg border border-titanium-border-subtle p-3 flex items-center justify-between"
               >
                 <div>
-                  <p className="font-semibold text-gray-800 text-sm">{sub.numero}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-semibold text-titanium-text-primary text-sm">
+                    {sub.numero}
+                  </p>
+                  <p className="text-xs text-titanium-text-disabled">
                     {sub.clientNom ?? 'Client non spécifié'}
                   </p>
-                  <p className="text-xs text-gray-400">{sub.dateCreation.slice(0, 10)}</p>
+                  <p className="text-xs text-titanium-text-tertiary">
+                    {sub.dateCreation.slice(0, 10)}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-green-700 text-sm">
@@ -116,7 +120,7 @@ export function HTFPage() {
                           ? 'bg-yellow-100 text-yellow-700'
                           : sub.statut === 'refusee'
                             ? 'bg-red-100 text-red-700'
-                            : 'bg-gray-100 text-gray-500'
+                            : 'bg-titanium-bg-elevated text-titanium-text-disabled'
                     }`}
                   >
                     {sub.statut}
@@ -129,21 +133,21 @@ export function HTFPage() {
 
         {activeTab === 'connaissance' && (
           <div data-testid="htf-connaissance" className="p-4 space-y-3">
-            <h3 className="text-lg font-bold text-gray-700">
+            <h3 className="text-lg font-bold text-titanium-text-secondary">
               📚 Base de connaissance HTF
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-titanium-text-disabled">
               La base de connaissance HTF est chargée automatiquement dans le contexte
               TITANE∞. Elle comprend 5 modules :
             </p>
-            <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+            <ul className="list-disc list-inside text-sm text-titanium-text-disabled space-y-1">
               <li>Identité de L'Humain à tout faire</li>
               <li>Manuel de formation T1/T2/T3 avec POS</li>
               <li>Règles de tarification et calcul</li>
               <li>Catalogue complet des services et matériaux</li>
               <li>Modèle officiel de soumission</li>
             </ul>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-titanium-text-tertiary mt-2">
               Activez le mode chat « HTF — Soumission » pour générer des soumissions par
               IA.
             </p>

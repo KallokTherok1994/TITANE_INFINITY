@@ -50,15 +50,15 @@ describe('CreationStudio', () => {
     );
 
     const toolsLabel = screen.getByText('Outils de création');
-    expect(toolsLabel).toHaveClass('text-gray-300');
+    expect(toolsLabel).toHaveClass('text-titanium-text-secondary');
     expect(toolsLabel).not.toHaveClass('text-gray-500');
 
     const activeRow = screen.getByText('Studio actif').parentElement;
     expect(activeRow).not.toBeNull();
-    expect(activeRow).toHaveClass('text-gray-300');
+    expect(activeRow).toHaveClass('text-titanium-text-secondary');
 
     const statsLabel = screen.getByText('Statistiques');
-    expect(statsLabel).toHaveClass('text-gray-300');
+    expect(statsLabel).toHaveClass('text-titanium-text-secondary');
     expect(statsLabel).not.toHaveClass('text-gray-500');
   });
 });

@@ -37,23 +37,23 @@ export const ConsoleMonitorDashboard: React.FC = () => {
         : 'text-green-500';
 
   return (
-    <div className="fixed top-4 right-4 bg-gray-950 text-white rounded-xl shadow-2xl border-2 border-gray-700 z-50 min-w-105 backdrop-blur-sm">
+    <div className="fixed top-4 right-4 bg-titanium-bg-base text-white rounded-xl shadow-2xl border-2 border-titanium-border-default z-50 min-w-105 backdrop-blur-sm">
       {/* Header - Always visible */}
       <div
-        className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/80 transition-all duration-200 rounded-t-xl"
+        className="flex items-center justify-between p-4 cursor-pointer hover:bg-titanium-bg-elevated/80 transition-all duration-200 rounded-t-xl"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-4">
           <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50" />
           <span className="font-bold text-base tracking-wide">Console Monitor</span>
           <span
-            className={`text-sm font-mono font-bold px-3 py-1 rounded ${errorRateClass} bg-gray-800/60`}
+            className={`text-sm font-mono font-bold px-3 py-1 rounded ${errorRateClass} bg-titanium-bg-elevated/60`}
           >
             {stats.errorRate} err/min
           </span>
         </div>
         <button
-          className="p-2 hover:bg-gray-700/50 rounded-lg transition-all"
+          className="p-2 hover:bg-titanium-bg-interactive/50 rounded-lg transition-all"
           aria-label={isExpanded ? 'Réduire' : 'Agrandir'}
           onClick={e => {
             e.stopPropagation();
@@ -78,7 +78,7 @@ export const ConsoleMonitorDashboard: React.FC = () => {
 
       {/* Expanded content */}
       {isExpanded && (
-        <div className="border-t-2 border-gray-700">
+        <div className="border-t-2 border-titanium-border-default">
           {/* Stats Grid */}
           <div className="grid grid-cols-3 gap-4 p-4 bg-linear-to-br from-gray-800/60 to-gray-900/60">
             <StatCard label="Logs" value={stats.totalLogs} icon="📝" />
@@ -98,18 +98,18 @@ export const ConsoleMonitorDashboard: React.FC = () => {
 
           {/* Top Errors */}
           {stats.topErrors.length > 0 && (
-            <div className="p-4 border-t-2 border-gray-700">
-              <h4 className="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+            <div className="p-4 border-t-2 border-titanium-border-default">
+              <h4 className="text-sm font-bold text-titanium-text-secondary mb-3 flex items-center gap-2">
                 <span>🔥</span> Top Errors
               </h4>
               <div className="space-y-2 max-h-56 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                 {stats.topErrors.slice(0, 5).map((error, i) => (
                   <div
                     key={i}
-                    className="flex justify-between items-center text-sm bg-gray-800/70 p-3 rounded-lg hover:bg-gray-700/70 transition-colors border border-gray-700/50"
+                    className="flex justify-between items-center text-sm bg-titanium-bg-elevated/70 p-3 rounded-lg hover:bg-titanium-bg-interactive/70 transition-colors border border-titanium-border-default/50"
                   >
                     <span
-                      className="truncate flex-1 text-gray-200 font-medium"
+                      className="truncate flex-1 text-titanium-text-secondary font-medium"
                       title={error.message}
                     >
                       {error.message.substring(0, 50)}...
@@ -125,26 +125,26 @@ export const ConsoleMonitorDashboard: React.FC = () => {
 
           {/* Recent Errors */}
           {recentErrors.length > 0 && (
-            <div className="p-4 border-t-2 border-gray-700">
-              <h4 className="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+            <div className="p-4 border-t-2 border-titanium-border-default">
+              <h4 className="text-sm font-bold text-titanium-text-secondary mb-3 flex items-center gap-2">
                 <span>🕐</span> Recent Errors
               </h4>
               <div className="space-y-2 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
                 {recentErrors.slice(0, 5).map((entry, i) => (
                   <div
                     key={i}
-                    className="text-sm bg-gray-800/70 p-3 rounded-lg space-y-2 border border-gray-700/50 hover:border-gray-600/50 transition-colors"
+                    className="text-sm bg-titanium-bg-elevated/70 p-3 rounded-lg space-y-2 border border-titanium-border-default/50 hover:border-titanium-border-strong/50 transition-colors"
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-red-400 font-bold text-xs px-2 py-1 bg-red-900/30 rounded">
                         {entry.level.toUpperCase()}
                       </span>
-                      <span className="text-gray-400 font-mono text-xs">
+                      <span className="text-titanium-text-tertiary font-mono text-xs">
                         {new Date(entry.timestamp).toLocaleTimeString()}
                       </span>
                     </div>
                     <div
-                      className="text-gray-200 font-mono text-xs leading-relaxed wrap-break-word"
+                      className="text-titanium-text-secondary font-mono text-xs leading-relaxed wrap-break-word"
                       title={entry.message}
                     >
                       {entry.message}
@@ -156,13 +156,13 @@ export const ConsoleMonitorDashboard: React.FC = () => {
           )}
 
           {/* Actions */}
-          <div className="p-4 border-t-2 border-gray-700 flex gap-3 bg-gray-900/50 rounded-b-xl">
+          <div className="p-4 border-t-2 border-titanium-border-default flex gap-3 bg-titanium-bg-base/50 rounded-b-xl">
             <button
               onClick={e => {
                 e.stopPropagation();
                 consoleMonitor.clear();
               }}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold bg-gray-700 hover:bg-gray-600 rounded-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 border border-gray-600 hover:border-gray-500"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 border border-titanium-border-strong hover:border-gray-500"
               title="Effacer tous les logs"
             >
               <span>🗑️</span>
@@ -230,10 +230,10 @@ const StatCard: React.FC<{
   color?: string;
   icon?: string;
 }> = ({ label, value, color = 'text-blue-400', icon }) => (
-  <div className="text-center p-3 bg-gray-800/40 rounded-lg border border-gray-700/50 hover:border-gray-600/50 transition-all hover:scale-105">
+  <div className="text-center p-3 bg-titanium-bg-elevated/40 rounded-lg border border-titanium-border-default/50 hover:border-titanium-border-strong/50 transition-all hover:scale-105">
     {icon && <div className="text-2xl mb-1">{icon}</div>}
     <div className={`text-2xl font-bold ${color} mb-1`}>{value.toLocaleString()}</div>
-    <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">
+    <div className="text-xs text-titanium-text-tertiary font-semibold uppercase tracking-wider">
       {label}
     </div>
   </div>

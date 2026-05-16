@@ -17,7 +17,6 @@ import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
 import { SectionLoadingFallback } from './SectionLoadingFallback';
-import { colors, spacing, fontSizes } from '@themes/tokens';
 import { useChatModeStore, useCurrentChatModeId } from '@/stores/useChatModeStore';
 import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
 import { useTwinEvolution } from '@/hooks/useTwinEvolution';
@@ -102,24 +101,24 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       />
 
       {/* ═══ CHAT IA CONNECTION STATUS ═══ */}
-      <Card style={{ marginBottom: spacing[4], padding: spacing[3] }}>
+      <Card style={{ marginBottom: 'var(--space-4)', padding: 'var(--space-3)' }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: spacing[2],
+            gap: 'var(--space-2)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <span
               data-testid="twins-context-status"
               style={{
                 display: 'inline-block',
-                padding: `${spacing[1]} ${spacing[3]}`,
+                padding: 'var(--space-1) var(--space-3)',
                 borderRadius: '20px',
-                fontSize: fontSizes.xs,
+                fontSize: 'var(--text-xs)',
                 fontWeight: 600,
                 color: chatStatusMeta.color,
                 background: chatStatusMeta.bg,
@@ -129,7 +128,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
               {chatStatusMeta.label}
             </span>
             <span
-              style={{ fontSize: fontSizes.xs, color: colors.neutral[500] }}
+              style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}
               data-testid="twins-context-meta"
             >
               {lastSyncDisplay ? `Dernière sync : ${lastSyncDisplay}` : 'Sync en attente'}
@@ -143,12 +142,12 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
             data-testid="twins-go-to-chat"
             onClick={goToChat}
             style={{
-              padding: `${spacing[2]} ${spacing[4]}`,
+              padding: 'var(--space-2) var(--space-4)',
               background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
               border: 'none',
               borderRadius: '8px',
               color: 'white',
-              fontSize: fontSizes.sm,
+              fontSize: 'var(--text-sm)',
               fontWeight: 600,
               cursor: 'pointer',
               transition: 'opacity 0.2s',
@@ -160,15 +159,15 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       </Card>
 
       {/* ═══ TWINS EVOLUTION PANEL — Kevin ↔ TITANE ═══ */}
-      <Card style={{ marginBottom: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>
+      <Card style={{ marginBottom: 'var(--space-4)' }}>
+        <h3 style={{ marginBottom: 'var(--space-4)' }}>
           🧬 TWINS — Jumeau Numérique de Kevin Thibault
         </h3>
         <p
           style={{
-            color: colors.neutral[400],
-            fontSize: fontSizes.sm,
-            marginBottom: spacing[3],
+            color: 'var(--color-text-muted)',
+            fontSize: 'var(--text-sm)',
+            marginBottom: 'var(--space-3)',
           }}
         >
           TITANE est le TWINS numérique de Kevin Thibault. Personnalité, valeurs, ton et
@@ -181,14 +180,14 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       {/* ═══ MODE MATRIX + PERSONA ═══ */}
       <Grid columns={2} gap={4}>
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>
             🎯 Orchestration IA — Matrice de Modes
           </h3>
           <p
             style={{
-              color: colors.neutral[400],
-              fontSize: fontSizes.xs,
-              marginBottom: spacing[2],
+              color: 'var(--color-text-muted)',
+              fontSize: 'var(--text-xs)',
+              marginBottom: 'var(--space-2)',
             }}
           >
             Sélection automatique du mode le plus adapté à chaque demande. Toujours
@@ -211,12 +210,14 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         </Card>
 
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>👤 Personnalité TITANE × Kevin</h3>
+          <h3 style={{ marginBottom: 'var(--space-4)' }}>
+            👤 Personnalité TITANE × Kevin
+          </h3>
           <p
             style={{
-              color: colors.neutral[400],
-              fontSize: fontSizes.xs,
-              marginBottom: spacing[2],
+              color: 'var(--color-text-muted)',
+              fontSize: 'var(--text-xs)',
+              marginBottom: 'var(--space-2)',
             }}
           >
             Traits de personnalité synchronisés avec le mode Twins. Réponses étendues,
@@ -237,11 +238,11 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       </Grid>
 
       {/* ═══ PACTE FONDATEUR ═══ */}
-      <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>
+      <Card style={{ marginTop: 'var(--space-4)' }}>
+        <h3 style={{ marginBottom: 'var(--space-4)' }}>
           📜 Pacte Fondateur — Alignement TWINS
         </h3>
-        <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
           <strong>🏗️ Excellence Systémique</strong>
           <br />
           Architecture cohérente et maintenable — Orchestration IA automatique optimale
@@ -261,22 +262,22 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       </Card>
 
       {/* ═══ TWINS SURFACE SUMMARY ═══ */}
-      <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>⚙️ Surface TWINS canonique</h3>
-        <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
+      <Card style={{ marginTop: 'var(--space-4)' }}>
+        <h3 style={{ marginBottom: 'var(--space-4)' }}>⚙️ Surface TWINS canonique</h3>
+        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
           Les anciennes surfaces <strong>Identity</strong> et <strong>Symbiose</strong>
           sont maintenant consolidées ici. Toute navigation legacy redirige vers le point
           d&apos;entrée unique <code>/twins</code>.
         </p>
         <ul
           style={{
-            marginTop: spacing[3],
-            paddingLeft: spacing[4],
-            color: colors.neutral[300],
-            fontSize: fontSizes.sm,
+            marginTop: 'var(--space-3)',
+            paddingLeft: 'var(--space-4)',
+            color: 'var(--color-text-secondary)',
+            fontSize: 'var(--text-sm)',
           }}
         >
-          <li>🧭 Routing public unique : `/twins`</li>
+          <li>🧭 Routing public unique : '/twins'</li>
           <li>💬 Contexte TWINS injecté explicitement dans le Chat IA</li>
           <li>🎯 Orchestration et personnalité pilotées depuis cette section</li>
         </ul>
