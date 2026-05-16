@@ -1,3 +1,14 @@
+## 2026-05-16 — UI Chat Omnisync v1.1: primitives, bridge, audit completion (delta cartographie)
+
+- Delta Ring 4 minimal: [src/components/system/PageFrame.tsx](src/components/system/PageFrame.tsx) — `PageFrame` + `PageSection` canoniques pour layout pleine-largeur sans zone morte.
+- Delta Ring 4 minimal: [src/components/system/LiveMetricCard.tsx](src/components/system/LiveMetricCard.tsx) — `LiveMetricCard` (avec source `live/cached/static_curated/degraded`), `ModuleHealthStrip`, `RuntimeStatusPill`.
+- Delta Ring 4 minimal: [src/services/modules/moduleContextBridge.ts](src/services/modules/moduleContextBridge.ts) — `buildModuleContextInjection()` + `getActiveModuleContext()` pour injection prompt-safe dans le chat.
+- Delta Ring 4 minimal: [scripts/orchestrate/ui-chat-omnisync-autofix.sh](scripts/orchestrate/ui-chat-omnisync-autofix.sh) — script d'autofix borné (max 5 passes, --verify-only mode).
+- Amélioration: [scripts/audit/audit-ui-chat-omnisync.mjs](scripts/audit/audit-ui-chat-omnisync.mjs) — ajout classification `LIVE_WITH_STATIC_CURATED_BLOCKS` (disclosure CuratedDataBanner reconnue).
+- Résultat audit: 4 LIVE + 7 LIVE_WITH_STATIC_CURATED_BLOCKS + 0 ACTIVE_PARTIAL + 0 SIMULATED.
+- Nouveaux tests: PageFrame.test.tsx, LiveMetricCard.test.tsx, moduleContextBridge.test.ts — 9503/9503 PASS.
+- autofix --verify-only: PASS=10 FAIL=0. Rule 15: CARTOGRAPHY_COMPLETE.md mis à jour.
+
 ## 2026-05-16 — Module Context Registry page wiring (delta cartographie)
 
 - Delta Ring 4 minimal: [src/pages/TitanePage.tsx](src/pages/TitanePage.tsx) — publie snapshot `titane.dashboard` (level, XP, messages, memory STM/MTM/LTM, evolutionScore, activeTab) via `moduleContextRegistry.publish()`.

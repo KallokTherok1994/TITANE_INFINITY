@@ -118,13 +118,22 @@ function classifySurface(surface) {
     } catch { /* ok */ }
   }
 
+  // Check if hardcoded sections are properly disclosed via CuratedDataBanner or moduleContextRegistry
+  const hasProperDisclosure = grepInFile(content, /CuratedDataBanner|static_curated|curated_sections|DONNÉES EXEMPLES|(Exemples)/);
+  const hasModuleContextPublish = grepInFile(content, /moduleContextRegistry\.publish|moduleContextRegistry/);
+
   // Classify status
   if (result.hasHardcodedData && result.liveDataSources.length === 0) {
     result.status = 'SIMULATED_UI';
     result.warnings.push('All visible data appears hardcoded — no live service connection detected');
+  } else if (result.hasHardcodedData && result.liveDataSources.length > 0 && hasProperDisclosure) {
+    result.status = 'LIVE_WITH_STATIC_CURATED_BLOCKS';
+    if (!hasModuleContextPublish) {
+      result.warnings.push('Curated sections disclosed but module context not yet published to registry');
+    }
   } else if (result.hasHardcodedData && result.liveDataSources.length > 0) {
     result.status = 'ACTIVE_PARTIAL';
-    result.warnings.push('Mix of live and hardcoded data — hardcoded sections should be marked as curated/demo');
+    result.warnings.push('Mix of live and hardcoded data — add CuratedDataBanner to disclose hardcoded sections');
   } else if (result.liveDataSources.length > 0) {
     result.status = 'LIVE';
   } else {
@@ -143,8 +152,9 @@ function classifySurface(surface) {
 // ─── MAIN ──────────────────────────────────────────────────────────────────
 const inventory = SURFACES.map(classifySurface);
 
-const staleSurfaces = inventory.filter(s => s.status === 'SIMULATED_UI' || s.hasHardcodedData);
+const staleSurfaces = inventory.filter(s => s.status === 'SIMULATED_UI' || s.status === 'ACTIVE_PARTIAL');
 const liveSurfaces = inventory.filter(s => s.status === 'LIVE');
+const curatedSurfaces = inventory.filter(s => s.status === 'LIVE_WITH_STATIC_CURATED_BLOCKS');
 const partialSurfaces = inventory.filter(s => s.status === 'ACTIVE_PARTIAL');
 
 // Write inventory JSON
@@ -167,6 +177,7 @@ const md = [
   `## Summary`,
   `- Total surfaces: ${inventory.length}`,
   `- LIVE: ${liveSurfaces.length}`,
+  `- LIVE_WITH_STATIC_CURATED_BLOCKS: ${curatedSurfaces.length}`,
   `- ACTIVE_PARTIAL: ${partialSurfaces.length}`,
   `- SIMULATED_UI: ${inventory.filter(s => s.status === 'SIMULATED_UI').length}`,
   `- UNKNOWN: ${inventory.filter(s => s.status === 'UNKNOWN').length}`,
@@ -203,7 +214,7 @@ fs.writeFileSync(path.join(REPORT_DIR, 'UI_CHAT_OMNISYNC_AUDIT.md'), md);
 // Console output
 console.log('\n📊 TITANE∞ UI Chat Omnisync Audit\n');
 console.log(`Total surfaces: ${inventory.length}`);
-console.log(`LIVE: ${liveSurfaces.length} | PARTIAL: ${partialSurfaces.length} | SIMULATED: ${inventory.filter(s => s.status === 'SIMULATED_UI').length}`);
+console.log(`LIVE: ${liveSurfaces.length} | CURATED_DISCLOSED: ${curatedSurfaces.length} | PARTIAL: ${partialSurfaces.length} | SIMULATED: ${inventory.filter(s => s.status === 'SIMULATED_UI').length}`);
 console.log('\nStale/Simulated surfaces:');
 for (const s of staleSurfaces) {
   console.log(`  ⚠️  ${s.id} (${s.status}) — symptoms: ${s.hardcodedSymptoms.join(', ')}`);
