@@ -92,6 +92,7 @@ import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import { ToolSelectorPanel } from '@/components/chat/ToolSelectorPanel';
 import { type ChatTool } from '@/features/chat/chatToolsRegistry';
 import { routeChatToolInvocation } from '@/features/chat/chatToolRouter';
+import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -2051,6 +2052,48 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         cancelled = true;
       };
     }, []);
+
+    // ═══ MODULE CONTEXT REGISTRY ═══
+    useEffect(() => {
+      const availableProviders = buildConversationProviders(providerReadiness)
+        .filter(p => p.available)
+        .map(p => p.id);
+
+      moduleContextRegistry.publish('titane.chat', {
+        moduleId: 'titane.chat',
+        route: '/titane?tab=conversation',
+        title: 'TITANE — Chat IA',
+        status: healthReport?.status === 'Healthy' ? 'live' : isLoading ? 'partial' : 'degraded',
+        source: 'tauri_ipc',
+        capabilities: [
+          'send_message',
+          'provider_routing',
+          'memory_context',
+          'web_research',
+          'tool_invocation',
+          'mode_switching',
+          'streaming',
+        ],
+        visibleMetrics: {
+          messageCount: messages.length,
+          selectedProvider,
+          availableProviders: availableProviders.join(','),
+          currentMode,
+          healthStatus: healthReport?.status ?? 'unknown',
+          conversationId: conversationId ?? null,
+        },
+        actions: [
+          { id: 'send_message', label: 'Envoyer un message', status: 'wired' },
+          { id: 'switch_provider', label: 'Changer de fournisseur', status: 'wired' },
+          { id: 'switch_mode', label: 'Changer de mode', status: 'wired' },
+          { id: 'web_research', label: 'Recherche web', status: 'wired', command: 'web_research' },
+          { id: 'clear_history', label: 'Effacer l\'historique', status: 'wired' },
+        ],
+        warnings: healthReport?.status !== 'Healthy' && !isLoading
+          ? [`Provider health: ${healthReport?.status ?? 'unknown'}`]
+          : [],
+      });
+    }, [messages.length, selectedProvider, currentMode, providerReadiness, healthReport, isLoading, conversationId]);
 
     // ═══ COMPUTED VALUES ═══
     const conversationModes = useMemo(() => {

@@ -53,6 +53,7 @@ import type { TitaneStats } from '@/components/sections';
 // UI Components
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
+import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 
 import './TitanePage.css';
 import './TitanePage-local.css';
@@ -199,6 +200,35 @@ export const TitanePage: React.FC = () => {
     }),
     [progression, memoryStats]
   );
+
+  // ═══ MODULE CONTEXT REGISTRY ═══
+  useEffect(() => {
+    moduleContextRegistry.publish('titane.dashboard', {
+      moduleId: 'titane.dashboard',
+      route: '/titane',
+      title: 'TITANE — Le Cœur du Système',
+      status: memoryStats != null ? 'live' : 'partial',
+      source: 'tauri_ipc',
+      capabilities: ['chat', 'progression', 'memory', 'provider-routing'],
+      visibleMetrics: {
+        level: stats.level,
+        totalXP: stats.totalXP,
+        chatMessages: stats.chatMessageCount,
+        memorySTM: stats.memoryShortTerm,
+        memoryMTM: stats.memoryMidTerm,
+        memoryLTM: stats.memoryLongTerm,
+        evolutionScore: stats.evolutionScore,
+        activeTab,
+      },
+      actions: [
+        { id: 'send_message', label: 'Envoyer un message', status: 'wired' },
+        { id: 'switch_tab', label: 'Changer d\'onglet', status: 'wired' },
+        { id: 'refresh_memory', label: 'Rafraîchir mémoire', status: 'wired' },
+      ],
+      memoryRefs: ['titane_active_conversation_id', 'titane_chat_mode_*'],
+      warnings: memoryStats == null ? ['Memory stats unavailable — tauri IPC may be degraded'] : [],
+    });
+  }, [stats, memoryStats, activeTab]);
 
   const updateActiveTab = useCallback(
     (nextTab: TabId) => {

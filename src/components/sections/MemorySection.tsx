@@ -36,6 +36,7 @@ import {
   type MemoryTreeNodeData,
 } from '@/features/memory/memoryTreeData';
 import { dedupeMemoryEntries } from '@/features/memory/dedupeMemoryEntries';
+import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 import { MEMORY_TOPIC_LABELS } from '@/services/memory/persistentMemory.config';
 import type {
   MemoryBundle,
@@ -820,6 +821,41 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
     useEffect(() => {
       setShowAllKnowledge(false);
     }, [knowledgeSearch, knowledgeTopicFilter]);
+
+    // Module context registry — publish memory snapshot
+    useEffect(() => {
+      const stm = surfaceStats?.countByLevel?.session ?? stats.memoryShortTerm;
+      const mtm = surfaceStats?.countByLevel?.intermediate ?? stats.memoryMidTerm;
+      const ltm = surfaceStats?.countByLevel?.long_term ?? stats.memoryLongTerm;
+      moduleContextRegistry.publish('titane.memory', {
+        moduleId: 'titane.memory',
+        route: '/titane?tab=memory-map',
+        title: 'Mémoire Triple TITANE',
+        status: persistentMemoryLoading ? 'partial' : 'live',
+        source: 'tauri_ipc',
+        capabilities: ['stm-read', 'mtm-read', 'ltm-read', 'knowledge-base-search', 'memory-write'],
+        visibleMetrics: {
+          stmCount: stm,
+          mtmCount: mtm,
+          ltmCount: ltm,
+          ltmConversationCount: ltmConvCount,
+          knowledgeEntryCount: knowledgeEntries.length,
+          lastSyncTimestamp: surfaceSyncTimestamp ?? persistentMemoryLastUpdate ?? null,
+        },
+        actions: [
+          { id: 'read_stm', label: 'Lire mémoire court terme', status: 'wired' },
+          { id: 'read_ltm', label: 'Lire mémoire long terme', status: 'wired' },
+          { id: 'search_knowledge', label: 'Rechercher dans la base de connaissances', status: 'wired' },
+          { id: 'sync_memory', label: 'Synchroniser la mémoire', status: 'wired' },
+        ],
+        memoryRefs: ['titane_memory_session', 'titane_memory_intermediate', 'titane_memory_long_term'],
+        warnings: persistentMemoryLoading ? ['Memory loading'] : [],
+      });
+    }, [
+      stats.memoryShortTerm, stats.memoryMidTerm, stats.memoryLongTerm,
+      surfaceStats, ltmConvCount, knowledgeEntries.length,
+      surfaceSyncTimestamp, persistentMemoryLastUpdate, persistentMemoryLoading,
+    ]);
 
     const lastSurfaceSyncLabel = useMemo(() => {
       const timestamp = surfaceSyncTimestamp ?? persistentMemoryLastUpdate;

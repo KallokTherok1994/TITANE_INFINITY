@@ -1,3 +1,12 @@
+## 2026-05-16 — Module Context Registry page wiring (delta cartographie)
+
+- Delta Ring 4 minimal: [src/pages/TitanePage.tsx](src/pages/TitanePage.tsx) — publie snapshot `titane.dashboard` (level, XP, messages, memory STM/MTM/LTM, evolutionScore, activeTab) via `moduleContextRegistry.publish()`.
+- Delta Ring 4 minimal: [src/pages/TimePage.tsx](src/pages/TimePage.tsx) — publie snapshot `time.now` (snapshotCount, agendaEventCount, travelStats, activeTab) avec curated sections déclarées.
+- Delta Ring 4 minimal: [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx) — publie snapshot `twin.main` (fusionIndex, syncScore, sourceCount, chatContextStatus, liveConnected, pendingReviewItems).
+- Delta Ring 4 minimal: [src/components/sections/ConversationSection.tsx](src/components/sections/ConversationSection.tsx) — publie snapshot `titane.chat` (messageCount, selectedProvider, availableProviders, currentMode, healthStatus, conversationId).
+- Delta Ring 4 minimal: [src/components/sections/MemorySection.tsx](src/components/sections/MemorySection.tsx) — publie snapshot `titane.memory` (stmCount, mtmCount, ltmCount, ltmConvCount, knowledgeEntryCount, lastSyncTimestamp).
+- 9485/9485 tests PASS. pnpm check + lint PASS. Rule 15: docs/CARTOGRAPHY_COMPLETE.md mis à jour.
+
 ## 2026-05-16 — UI Chat Omnisync Completion Program v1 (delta cartographie)
 
 - Delta Ring 4 minimal: [src/components/system/EmptyStateTruth.tsx](src/components/system/EmptyStateTruth.tsx) — `EmptyStateTruth` composant canonique d'état vide/dégradé avec `EmptyStateReason`; `CuratedDataBanner` pour les sections à données exemples.

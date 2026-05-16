@@ -29,6 +29,7 @@ import './TimePage.css';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { CuratedDataBanner } from '@/components/system/EmptyStateTruth';
 import { TimeBridgeStatusCard } from '@/components/time/TimeBridgeStatusCard';
+import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -588,6 +589,34 @@ export const TimePage: React.FC = () => {
       setSyncError('Impossible de synchroniser les métriques temporelles.');
     }
   }, []);
+
+  // Module context registry — publish TIME snapshot when data changes
+  useEffect(() => {
+    moduleContextRegistry.publish('time.now', {
+      moduleId: 'time.now',
+      route: `/time?tab=${activeTab}`,
+      title: 'TIME — Centre Temporel',
+      status: snapshots.length > 0 || agendaEvents.length > 0 ? 'partial' : 'live',
+      source: 'tauri_ipc',
+      capabilities: ['temporal-awareness', 'agenda-sync', 'snapshot-list', 'travel-stats', 'cognitive-flow'],
+      visibleMetrics: {
+        activeTab,
+        snapshotCount: snapshots.length,
+        agendaEventCount: agendaEvents.length,
+        travelTotalSnapshots: stats?.totalSnapshots ?? null,
+        travelRamCacheSizeBytes: stats?.ramCacheSize ?? null,
+      },
+      actions: [
+        { id: 'list_snapshots', label: 'Lister les snapshots', status: 'wired' },
+        { id: 'create_snapshot', label: 'Créer un snapshot', status: 'wired' },
+        { id: 'restore_snapshot', label: 'Restaurer un snapshot', status: 'wired', command: 'restore_snapshot' },
+        { id: 'sync_agenda', label: 'Synchroniser l\'agenda', status: snapshots.length > 0 ? 'wired' : 'blocked', reason: syncError ?? undefined },
+      ],
+      curatedSections: ['time.cognitive.sessions_deep_work', 'time.cognitive.flow_kpis', 'time.cognitive.intelligence_kpis'],
+      memoryRefs: ['titane_time_runtime_context_v1', 'titane_cognitive_state'],
+      warnings: syncError ? [syncError] : [],
+    });
+  }, [activeTab, snapshots, agendaEvents, stats, syncError]);
 
   // Load snapshots & stats
   useEffect(() => {

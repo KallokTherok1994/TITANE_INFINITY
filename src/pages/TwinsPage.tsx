@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { safeInvokeCanonical } from '@/utils/invoke';
+import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 import {
   approveTwinChatReviewItem,
   listTwinChatReviewItems,
@@ -120,6 +121,33 @@ export const TwinsPage: React.FC = () => {
       );
     };
   }, []);
+
+  // Module context registry — publish TWIN snapshot
+  useEffect(() => {
+    moduleContextRegistry.publish('twin.main', {
+      moduleId: 'twin.main',
+      route: '/twins',
+      title: 'Twins — Jumeaux Numériques',
+      status: isLoading ? 'partial' : liveConnected ? 'live' : 'partial',
+      source: 'tauri_ipc',
+      capabilities: ['twin-identity', 'fusion-index', 'evolution-profile', 'sync-status', 'chat-context-status'],
+      visibleMetrics: {
+        fusionIndex: fusionIndex ?? evolutionFusion ?? null,
+        syncScore: syncScore ?? null,
+        sourceCount: sourceCount ?? null,
+        currentPhase: currentPhase ?? null,
+        chatContextStatus: chatContextStatus ?? null,
+        liveConnected,
+        pendingReviewItems: pendingReviewItems.length,
+      },
+      actions: [
+        { id: 'refresh', label: 'Rafraîchir', status: 'wired' },
+        { id: 'inspect_sources', label: 'Inspecter les sources', status: sourceCount != null ? 'wired' : 'blocked' },
+        { id: 'sync_now', label: 'Synchroniser maintenant', status: liveConnected ? 'wired' : 'blocked', reason: liveConnected ? undefined : 'Singularity engine not connected' },
+      ],
+      warnings: isLoading ? ['Twin data loading'] : reviewError ? [reviewError] : [],
+    });
+  }, [isLoading, liveConnected, fusionIndex, evolutionFusion, syncScore, sourceCount, currentPhase, chatContextStatus, pendingReviewItems.length, reviewError]);
 
   const handleApproveReview = async (reviewId: string) => {
     setReviewBusyId(reviewId);
