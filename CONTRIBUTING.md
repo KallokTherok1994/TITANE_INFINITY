@@ -177,3 +177,17 @@ En mode direct MAIN autorise, chaque phase corrigee avec preuves vertes doit etr
 ## Licence
 
 Voir [LICENSE.md](LICENSE.md). Propriétaire — pas de contribution externe sans accord écrit.
+
+## Design system (UI contributions)
+
+Pour les contributions frontend, consulter :
+
+- [docs/ui/DESIGN_SYSTEM.md](docs/ui/DESIGN_SYSTEM.md) — tokens, light/dark, a11y, animations
+- [.claude/frontend-ui-ux-guidelines.md](.claude/frontend-ui-ux-guidelines.md) — règles de codage
+
+Règles essentielles :
+
+- Utiliser les classes `titanium-*` (jamais `text-gray-*`, `bg-slate-*` hardcodées)
+- Gater toute animation sur `prefers-reduced-motion`
+- Tester les assertions de classe dans les tests après migration token
+- Mettre à jour les snapshots uniquement pour des diffs token intentionnels et vérifiés

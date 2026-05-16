@@ -1,9 +1,8 @@
 # Changelog TITANE∞
 
-Toutes les modifications notables de ce projet seront documentées dans ce fichier.
-
-Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
-et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+> Ce fichier couvre les versions historiques (avant v28). Pour les versions récentes, voir [`../CHANGELOG.md`](../CHANGELOG.md).
+>
+> **Dernière version:** v35.1.6 (2026-05-16) — Frontend UI/UX Redesign Sealed — 9471/9471 tests PASS
 
 ---
 

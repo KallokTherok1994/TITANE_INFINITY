@@ -1,3 +1,52 @@
+# Changelog
+
+## [35.1.6] — 2026-05-16 (Frontend UI/UX Redesign Seal)
+
+> **Mode:** SEAL | **Scope:** Frontend/UI-UX certification + test gate repair | **Branch:** MAIN | **Commit:** `558119238`
+
+### Added
+- Light/dark mode complet via `UIThemeProvider` + `html.light` + toggle Sun/Moon dans `TopNav`
+- Proof pack: `proof_packs/frontend-ui-ux-redesign-seal-2026-05-15/` (VERDICT, TEST_RESULTS, STATIC_AUDIT, FILES_CHANGED, ROLLBACK, RISKS_AND_LIMITS, COMMIT_SUMMARY)
+- `docs/ui/ui-ux-research-notes.md` — notes de recherche UX macOS-level
+- `.claude/frontend-ui-ux-guidelines.md` — guide de référence design system
+- Section "Frontend/UI seal rules" dans `AGENTS.md`
+- Domaine `biodiversity` ajouté au schéma Zod `KNOWLEDGE_DOMAINS`
+- D4 proof pack `proof_packs/LOCK_D4_SELF_IMPROVEMENT_LAB_2026-05-06/VERDICT.md`
+
+### Changed
+- **tailwind.config.ts** : toutes les classes `titanium-*` branchées sur CSS custom properties (var(--color-*))
+- **150+ fichiers source** migrés de `text-gray-*`/`bg-slate-*` vers tokens sémantiques titanium
+- **`src/styles/animations.css`** : transitions 500ms→200ms, animations décoratives dans `.dev-only-animations`
+- **`src/styles/css-vars.css`** : bloc `html.light` ajouté (40+ overrides CSS vars)
+- **`src/styles/a11y.css`** : focus ring violet `#a855f7`, skip-link, touch targets `pointer:coarse`
+- **`src/components/layout/AppShell.tsx`** : skip-to-content + `id="app-main-content"`
+- **`src/pages/TitanePage.tsx`**, **AdminPage**, **DevPage** : navigation clavier Arrow/Home/End, `aria-selected`, `role="tab"`, `tabIndex`
+- **`src/ui/Modal.tsx`** : migration complète CSS vars + animation `modalEnter 200ms`
+- **`src/ui/components/Button.css`** : variant `danger` (`--color-error-500`), shine gated sur `prefers-reduced-motion`
+- **`.vscode/settings.json`** : `"chat.mcp.enabled": true` ajouté
+- **`scripts/verify/verify-ollama-copilot-boundary.sh`** : check `chat.mcp.enabled` ajouté
+
+### Fixed
+- 38 tests réparés : wrappers `QueryClientProvider`, assertions de classe token, snapshots, testid `tab-memory`, count KB 273→283, nav-projects inventory, D4 proof pack
+- ZodError `KnowledgeRegistry` causé par domaine `biodiversity` absent du schema Zod
+- `TitanePage.tabs.test.tsx` : `TAB_TEST_IDS` map (testid `tab-memory` pour tab id `memory-map`)
+
+### Audit (v35.1.6 — 2026-05-16)
+
+| Gate | Résultat |
+|---|---|
+| `pnpm run check` | PASS — 0 erreurs TypeScript |
+| `pnpm run lint` | PASS — 0 erreurs ESLint |
+| `pnpm run test --run` | PASS — **9471/9471** tests, 653 fichiers |
+| `pnpm run build` | PASS — built in 17.27s |
+| Targeted former-failure lanes | PASS — 5 lanes, 370 tests |
+
+## [35.1.5] — 2026-05-14 (Twins local portrait + AppShell hardening)
+
+> Sprint précédent — voir CHANGELOG complet pour détails.
+
+---
+
 # [Unreleased] - 2026-05-06 — Advanced Intelligence Program (A0I–D5 SEALED) + Z0 Post-Seal Integrity Audit
 
 ## [34.0.12] - 2026-05-13 (BUILD ALL SEALED — Clippy idiom modernization + Prettier normalisation + Repo cleanup)

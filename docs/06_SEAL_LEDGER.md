@@ -1,6 +1,22 @@
 # 06 — SEAL_LEDGER — TITANE_INFINITY
 
-> Generated: 2026-04-02 | Mode: AUDIT_PLUS_SENTINEL
+> Mis à jour: 2026-05-16 | Dernière entrée: FRONTEND_UI_UX_REDESIGN
+
+## Seal récent (2026-05-16)
+
+### FRONTEND_UI_UX_REDESIGN — v35.1.6
+- **Claimed:** LOCAL_SEALED
+- **Observed:** LOCAL_SEALED
+- **Commit:** `558119238` (seal) + `d19007bda` (agents docs)
+- **Base du sceau:** `proof_packs/frontend-ui-ux-redesign-seal-2026-05-15/VERDICT.md`
+- **Gates:** check ✅ lint ✅ 9471/9471 tests ✅ build 17.27s ✅
+- **Scope:** Light mode, tailwind CSS vars, @themes/tokens eliminated, 150+ files migrated, a11y hardening
+- **Stale risk:** LOW
+- **Reopen policy:** Forbidden sauf nouveau failing proof ou demande produit explicite
+
+---
+
+> Historique — Generated: 2026-04-02 | Mode: AUDIT_PLUS_SENTINEL
 
 ---
 

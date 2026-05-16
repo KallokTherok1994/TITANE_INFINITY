@@ -1,414 +1,277 @@
-# TITANE∞ Design System — "Titanium Dark" Quick Reference
+# TITANE∞ Design System — Référence Contributeur
 
-**Version:** 26.2.0  
-**Last Updated:** 2026-01-03  
-**Status:** ✅ Production Ready  
-**Compliance:** WCAG 2.2 AA
-
-> **Complete documentation:** See `titanium-dark-tokens.css` for all token definitions.
-> **Research basis:** See `RESEARCH_NOTES.md` for design rationale.
-> **Migration plan:** See `IMPLEMENTATION_PLAN.md` for rollout strategy.
+**Version:** v35.1.6 | **Dernière mise à jour:** 2026-05-16 | **Statut:** Production | **Conformité:** WCAG 2.2 AA
 
 ---
 
-## Philosophy
+## 1. Vue d'ensemble du système de tokens
 
-**Titanium Dark** is a monochrome premium design system built on three principles:
+TITANE∞ utilise un design system basé sur des **CSS custom properties** (`var(--color-*)`) exposées via des classes Tailwind CSS personnalisées préfixées `titanium-*`.
 
-1. **Minimal = Intentional** — Every element serves a purpose
-2. **Monochrome Premium** — Hierarchy through opacity, not color
-3. **Accessibility First** — WCAG 2.2 AA compliance is mandatory
+La configuration vit dans `tailwind.config.ts`. Chaque classe `titanium-*` pointe vers une variable CSS définie dans `src/styles/css-vars.css`. Ne jamais écrire de valeur de couleur directement dans un composant — toujours passer par les tokens.
+
+```css
+/* src/styles/css-vars.css — extrait */
+:root {
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #111118;
+  --color-bg-tertiary: #1a1a24;
+  --color-text-primary: #e8e8f0;
+  --color-text-secondary: #9898b0;
+  --color-text-muted: #5a5a78;
+  --color-accent: #a855f7;
+  --color-border-default: rgba(255, 255, 255, 0.08);
+  --color-error-500: #ef4444;
+  --color-success-500: #22c55e;
+}
+```
+
+```ts
+// tailwind.config.ts — extrait
+colors: {
+  titanium: {
+    'bg-primary':    'var(--color-bg-primary)',
+    'bg-secondary':  'var(--color-bg-secondary)',
+    'text-primary':  'var(--color-text-primary)',
+    'text-secondary':'var(--color-text-secondary)',
+    'accent':        'var(--color-accent)',
+    // ...
+  }
+}
+```
 
 ---
 
-## Quick Start
+## 2. Tokens de couleur
 
-### Import Tokens
+| Token Tailwind | Variable CSS | Valeur dark (défaut) | Usage |
+|---|---|---|---|
+| `bg-titanium-bg-primary` | `--color-bg-primary` | `#0a0a0f` | Surface principale |
+| `bg-titanium-bg-secondary` | `--color-bg-secondary` | `#111118` | Surface secondaire, cards |
+| `bg-titanium-bg-tertiary` | `--color-bg-tertiary` | `#1a1a24` | Inputs, panneaux |
+| `text-titanium-text-primary` | `--color-text-primary` | `#e8e8f0` | Corps de texte principal |
+| `text-titanium-text-secondary` | `--color-text-secondary` | `#9898b0` | Labels, métadonnées |
+| `text-titanium-text-muted` | `--color-text-muted` | `#5a5a78` | Texte désactivé |
+| `border-titanium-border-default` | `--color-border-default` | `rgba(255,255,255,0.08)` | Bordures standard |
+| `text-titanium-accent` | `--color-accent` | `#a855f7` | Accent violet, focus ring |
+| `bg-titanium-error` | `--color-error-500` | `#ef4444` | Erreurs, actions danger |
+| `bg-titanium-success` | `--color-success-500` | `#22c55e` | Succès, confirmations |
+
+---
+
+## 3. Light/dark mode
+
+Le thème est contrôlé par la présence de la classe `html.light` sur l'élément `<html>`.
+
+**Provider :** `UIThemeProvider` (`src/providers/UIThemeProvider.tsx`)
+**Hook :** `useColorMode()` — retourne `{ colorMode, toggleColorMode }`
+**Toggle :** composant Sun/Moon dans `TopNav`
+
+En mode light, les CSS vars sont surchargées dans `src/styles/css-vars.css` :
+
+```css
+html.light {
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f4f4f8;
+  --color-bg-tertiary: #eaeaf0;
+  --color-text-primary: #0a0a0f;
+  --color-text-secondary: #4a4a6a;
+  --color-text-muted: #8888a8;
+  --color-border-default: rgba(0, 0, 0, 0.08);
+  /* 40+ overrides... */
+}
+```
+
+Lire le mode couleur dans un composant :
 
 ```tsx
-// Tokens are auto-imported via src/index.css
-import '../index.css';
+// Correct
+const { colorMode } = useColorMode()
+const isDark = colorMode === 'dark'
 
-// Use Tailwind classes directly
-<div className="bg-titanium-bg-elevated text-titanium-text-primary">
-  Content
-</div>
-```
-
-### Core Pattern
-
-```tsx
-// Standard Card
-<div className="bg-titanium-bg-elevated rounded-lg p-4 shadow border border-titanium-border-default">
-  <h2 className="text-xl font-semibold text-titanium-text-primary mb-2">
-    Title
-  </h2>
-  <p className="text-base text-titanium-text-secondary">
-    Description
-  </p>
-</div>
+// Interdit — ne pas lire le DOM directement
+document.documentElement.classList.contains('light')
 ```
 
 ---
 
-## Color Palette
+## 4. Typographie
 
-### Backgrounds (Layered Depth)
+**Police principale :** Inter (variable font, chargée via `@fontsource/inter`)
+
+| Usage | Poids | Classe Tailwind |
+|---|---|---|
+| Corps de texte | 400 Regular | `font-normal` |
+| Labels, boutons, sous-titres | 500 Medium | `font-medium` |
+| Titres de section, headings | 600 SemiBold | `font-semibold` |
+
+Règle : **3 poids maximum** (400/500/600). Ne pas utiliser 700 Bold ou 300 Light sur les surfaces de l'application.
+
+Echelle de tailles recommandée :
+
+| Tailwind | Taille | Usage typique |
+|---|---|---|
+| `text-xs` | 0.75rem | Métadonnées, badges, timestamps |
+| `text-sm` | 0.875rem | Labels, descriptions, texte secondaire |
+| `text-base` | 1rem | Corps de texte principal |
+| `text-lg` | 1.125rem | Sous-titres de section |
+| `text-xl` | 1.25rem | Headings de page |
+
+Eviter `text-2xl` et au-dessus sauf cas exceptionnel justifié.
+
+---
+
+## 5. Espacement
+
+L'échelle d'espacement suit le système Tailwind standard (multiples de 4px). Les valeurs sémantiques sont exposées via :
 
 ```css
---titanium-bg-base: #0f0f0f          /* Page root */
---titanium-bg-elevated: #1a1a1a      /* Cards, panels */
---titanium-bg-interactive: #242424   /* Hover states */
---titanium-bg-overlay: #2e2e2e       /* Modals */
+:root {
+  --space-xs:  0.25rem;  /*  4px */
+  --space-sm:  0.5rem;   /*  8px */
+  --space-md:  1rem;     /* 16px */
+  --space-lg:  1.5rem;   /* 24px */
+  --space-xl:  2rem;     /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+}
 ```
 
-**Tailwind:** `bg-titanium-bg-base`, `bg-titanium-bg-elevated`, etc.
+Utiliser les classes Tailwind (`p-4`, `gap-6`, `mt-8`, etc.) en priorité. Pour du CSS custom, référencer `var(--space-*)`.
 
-### Text (High Contrast)
+---
+
+## 6. Règles d'animation
+
+**Durée standard : `200ms`** pour toutes les transitions d'interface (hover, focus, ouverture).
 
 ```css
---titanium-text-primary: #f5f5f5     /* 7:1 contrast (AAA) */
---titanium-text-secondary: #b8b8b8   /* 4.8:1 contrast (AA+) */
---titanium-text-tertiary: #8a8a8a    /* Muted */
---titanium-text-disabled: #5a5a5a    /* Disabled */
+/* Correct */
+transition: background-color 200ms ease, color 200ms ease;
+
+/* Interdit sur les surfaces principales */
+transition: all 500ms ease;
 ```
 
-**Tailwind:** `text-titanium-text-primary`, `text-titanium-text-secondary`, etc.
-
-### Accent (Minimal Cool Gray)
+**`prefers-reduced-motion` est obligatoire** pour toute animation non-essentielle à la compréhension du contenu :
 
 ```css
---titanium-accent-cool: #9ca3af      /* Primary CTAs */
---titanium-accent-bright: #d1d5db    /* Focus rings */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animated-element {
+    animation: fadeIn 200ms ease-out;
+  }
+}
 ```
 
-**Tailwind:** `bg-titanium-accent-cool`, `text-titanium-accent-bright`
+**Animations décoratives** (particules, glows, shines, rotations) : exclusivement dans le scope `.dev-only-animations`. Ne s'appliquent pas en production si la classe n'est pas présente sur l'ancêtre.
 
-### Semantic (Status Only)
-
-```css
---titanium-success: #10b981     /* Green */
---titanium-error: #ef4444       /* Red */
---titanium-warning: #f59e0b     /* Orange */
---titanium-info: #3b82f6        /* Blue */
-```
-
-**Tailwind:** `text-success-500`, `bg-error-500`, etc.
+**Entrée de Modal :** `modalEnter 200ms ease-out` — défini dans `src/styles/animations.css`, géré par le composant `Modal`.
 
 ---
 
-## Typography
-
-### Scale (1.250 Ratio)
-
-| Size | Rem | Pixels | Tailwind | Use Case |
-|------|-----|--------|----------|----------|
-| xs | 0.75rem | 12px | `text-xs` | Labels, metadata |
-| sm | 0.875rem | 14px | `text-sm` | Secondary text |
-| base | 1rem | 16px | `text-base` | **Body text** |
-| lg | 1.125rem | 18px | `text-lg` | Subheadings |
-| xl | 1.25rem | 20px | `text-xl` | H2/H3 |
-| 2xl | 1.563rem | 25px | `text-2xl` | **H1 Page titles** |
-| 3xl | 1.953rem | 31px | `text-3xl` | Hero text |
-
-### Fonts
-
-```css
---titanium-font-sans: 'Inter', sans-serif
---titanium-font-mono: 'JetBrains Mono', monospace
-```
-
-**Tailwind:** `font-sans`, `font-mono`
-
-### Weights
-
-| Weight | Value | Tailwind | Use Case |
-|--------|-------|----------|----------|
-| Normal | 400 | `font-normal` | Body text |
-| Medium | 500 | `font-medium` | Labels |
-| Semibold | 600 | `font-semibold` | Buttons, H2/H3 |
-| Bold | 700 | `font-bold` | H1 |
-
----
-
-## Spacing (4px Rhythm)
-
-| Token | Pixels | Tailwind | Use Case |
-|-------|--------|----------|----------|
-| space-2 | 8px | `p-2`, `gap-2` | Tight |
-| space-3 | 12px | `p-3`, `gap-3` | **Flex/grid gap** |
-| space-4 | 16px | `p-4`, `gap-4` | **Card padding** |
-| space-6 | 24px | `p-6`, `mb-6` | **Section spacing** |
-| space-8 | 32px | `p-8` | Large padding |
-| space-12 | 48px | `mb-12` | Page sections |
-
----
-
-## Elevation (Shadows)
-
-| Level | Tailwind | Use Case |
-|-------|----------|----------|
-| none | `shadow-none` | Flat buttons |
-| sm | `shadow-sm` | Subtle cards |
-| base | `shadow` | **Default cards** |
-| md | `shadow-md` | **Elevated panels** |
-| lg | `shadow-lg` | **Modals, dropdowns** |
-| xl | `shadow-xl` | Hero sections |
-| focus | `shadow-focus` | **Focus indicator (WCAG)** |
-
-**Focus Ring (WCAG 2.2):**
-
-```tsx
-<button className="focus-visible:shadow-focus focus-visible:outline-none">
-  Accessible Button
-</button>
-```
-
----
-
-## Border Radius
-
-| Size | Pixels | Tailwind | Use Case |
-|------|--------|----------|----------|
-| sm | 8px | `rounded-sm` | Badges |
-| base | 16px | `rounded` | **Buttons, inputs** |
-| lg | 24px | `rounded-lg` | **Cards** |
-| xl | 32px | `rounded-xl` | Hero sections |
-| full | 9999px | `rounded-full` | **Avatars, pills** |
-
----
-
-## Component Patterns
+## 7. Conventions de composants
 
 ### Button
 
-```tsx
-// Primary CTA
-<button className="
-  bg-titanium-accent-cool 
-  text-titanium-bg-base 
-  hover:bg-titanium-accent-bright 
-  focus-visible:shadow-focus focus-visible:outline-none
-  rounded px-4 py-2 font-medium
-  transition-colors duration-200
-  disabled:opacity-50 disabled:cursor-not-allowed
-">
-  Primary Action
-</button>
+Variants disponibles (`src/ui/components/Button.css`) :
 
-// Ghost (Default)
-<button className="
-  bg-transparent 
-  text-titanium-text-secondary 
-  hover:bg-titanium-bg-interactive hover:text-titanium-text-primary
-  focus-visible:shadow-focus focus-visible:outline-none
-  rounded px-4 py-2 font-medium
-  transition-colors duration-200
-">
-  Ghost Button
-</button>
+| Variant | Usage |
+|---|---|
+| `primary` | Action principale — un seul par zone d'action |
+| `secondary` | Action secondaire, annulation |
+| `ghost` | Navigation, actions tertiaires, inline |
+| `danger` | Suppression ou action irréversible — utilise `--color-error-500` |
 
-// Destructive
-<button className="
-  bg-error-500 
-  text-white 
-  hover:bg-error-700
-  focus-visible:shadow-focus focus-visible:outline-none
-  rounded px-4 py-2 font-medium
-  transition-colors duration-200
-">
-  Delete
-</button>
-```
-
-### Card
+L'effet shine (`::after`) est gated sur `prefers-reduced-motion: no-preference`.
 
 ```tsx
-// Standard Card
-<div className="
-  bg-titanium-bg-elevated 
-  border border-titanium-border-default 
-  rounded-lg p-4 shadow
-  hover:shadow-md transition-shadow
-">
-  <h3 className="text-xl font-semibold text-titanium-text-primary mb-2">
-    Card Title
-  </h3>
-  <p className="text-base text-titanium-text-secondary">
-    Card content goes here.
-  </p>
-</div>
-```
-
-### Input
-
-```tsx
-<div className="flex flex-col gap-2">
-  <label htmlFor="input-id" className="text-sm font-medium text-titanium-text-primary">
-    Label
-  </label>
-  <input
-    id="input-id"
-    type="text"
-    className="
-      bg-titanium-bg-interactive 
-      border border-titanium-border-default 
-      text-titanium-text-primary 
-      placeholder:text-titanium-text-tertiary
-      rounded px-4 py-2
-      focus:outline-none focus:shadow-focus focus:border-titanium-accent-bright
-      disabled:opacity-50 disabled:cursor-not-allowed
-      transition-colors duration-200
-    "
-    placeholder="Enter text..."
-  />
-</div>
+<Button variant="primary" onClick={handleSave}>Enregistrer</Button>
+<Button variant="danger" onClick={handleDelete}>Supprimer</Button>
 ```
 
 ### Modal
 
 ```tsx
-<dialog className="
-  fixed inset-0 z-modal
-  flex items-center justify-center
-  bg-black/50 backdrop-blur-sm
-">
-  <div className="
-    bg-titanium-bg-overlay 
-    rounded-lg shadow-lg p-6 
-    max-w-md w-full
-    border border-titanium-border-default
-  ">
-    <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
-      Modal Title
-    </h2>
-    <p className="text-base text-titanium-text-secondary mb-6">
-      Modal content.
-    </p>
-    <div className="flex gap-3 justify-end">
-      <button className="bg-transparent border border-titanium-border-default rounded px-4 py-2">
-        Cancel
-      </button>
-      <button className="bg-titanium-accent-cool text-titanium-bg-base rounded px-4 py-2">
-        Confirm
-      </button>
-    </div>
-  </div>
-</dialog>
+<Modal isOpen={open} onClose={handleClose} title="Confirmation">
+  <p>Contenu du modal</p>
+</Modal>
 ```
 
----
+- Animation d'entrée : `modalEnter 200ms`
+- Toujours fournir un `title` — il est rendu dans un `<h2>` et référencé par `aria-labelledby`
+- Fermeture au clic sur l'overlay et sur `Escape` : géré par le composant, ne pas réimplémenter
 
-## Accessibility Checklist
-
-### WCAG 2.2 AA Requirements
-
-- [ ] **Text Contrast:** 4.5:1 minimum (7:1 for primary)
-- [ ] **Focus Indicators:** 3px solid ring on ALL interactive elements
-- [ ] **Keyboard Navigation:** Tab order logical, no traps
-- [ ] **ARIA Labels:** Icon-only buttons have `aria-label`
-- [ ] **Semantic HTML:** Use `<button>`, not `<div onClick>`
-- [ ] **Form Labels:** Associate `<label>` with `<input>` via `htmlFor`/`id`
-- [ ] **Error States:** Use `aria-invalid` + `aria-describedby`
-- [ ] **Reduced Motion:** Respect `prefers-reduced-motion`
-
-### Focus Ring Pattern (Mandatory)
+### Badge
 
 ```tsx
-<button className="focus-visible:shadow-focus focus-visible:outline-none">
-  Always use this pattern
-</button>
+<Badge variant="success">Actif</Badge>
+<Badge variant="error">Erreur</Badge>
+<Badge variant="default">Brouillon</Badge>
 ```
 
-### Icon-Only Button Pattern
+Ne pas créer de badges avec des couleurs hardcodées. Utiliser les variants `success`, `warning`, `error`, `default`.
+
+---
+
+## 8. Checklist accessibilité (a11y)
+
+Avant tout PR modifiant l'UI :
+
+- [ ] **Skip link** : `<a href="#app-main-content" className="skip-link">` présent dans `AppShell`, `id="app-main-content"` sur le `<main>`
+- [ ] **Navigation clavier tabs** : `ArrowLeft`/`ArrowRight`/`Home`/`End` gérés sur les groupes `role="tablist"`
+- [ ] **aria-selected** : présent et mis à jour dynamiquement sur chaque `role="tab"` actif (`true`/`false`)
+- [ ] **tabIndex** : onglets non-actifs ont `tabIndex={-1}`, onglet actif a `tabIndex={0}`
+- [ ] **aria-label** : sur tous les boutons icône sans texte visible adjacent
+- [ ] **Focus ring** : visible, violet `#a855f7`, outline 2px, offset 2px — défini dans `src/styles/a11y.css`
+- [ ] **Contraste** : minimum 4.5:1 pour le texte courant, 3:1 pour les grands textes (WCAG AA)
+- [ ] **Touch targets** : minimum 44x44px sur appareils `pointer:coarse`
+- [ ] **prefers-reduced-motion** : toute animation non-essentielle est gated
+
+---
+
+## 9. Ce qu'il ne faut PAS faire
+
+```css
+/* INTERDIT — valeurs hex hardcodées */
+color: #6b7280;
+background-color: #1f2937;
+border-color: #374151;
+
+/* INTERDIT — classes Tailwind gray / slate / zinc / stone */
+/* Ces classes bypassent le design system et cassent le thème light/dark */
+```
 
 ```tsx
-{/* ❌ BAD */}
-<button><Icon /></button>
+// INTERDIT — classes hardcodées dans les composants
+<div className="text-gray-400 bg-slate-800 border-zinc-700">
 
-{/* ✅ GOOD */}
-<button aria-label="Close modal"><XIcon /></button>
+// CORRECT
+<div className="text-titanium-text-secondary bg-titanium-bg-secondary border-titanium-border-default">
 ```
 
----
+```css
+/* INTERDIT — neon glow non-gated (hors .dev-only-animations) */
+box-shadow: 0 0 20px #a855f7, 0 0 40px #a855f7;
 
-## Migration Guide
+/* INTERDIT — animations longues sur surfaces principales */
+transition: all 500ms ease;
+animation: pulse 2s infinite;
+```
 
-### From Legacy Colors
+```tsx
+// INTERDIT — tokens de themes déprécés
+import { rubisTokens } from '@themes/tokens/rubis'
+import { saphirColors } from '@themes/tokens/saphir'
 
-| Old | New |
-|-----|-----|
-| `bg-primary` | `bg-titanium-bg-base` |
-| `bg-secondary` | `bg-titanium-bg-elevated` |
-| `text-primary` | `text-titanium-text-primary` |
-| `violet-600` | `titanium-accent-cool` |
-| `border-default` | `border-titanium-border-default` |
+// INTERDIT — lecture directe du DOM pour le mode couleur
+const isLight = document.documentElement.classList.contains('light')
 
-### From Hardcoded Values
+// CORRECT
+const { colorMode } = useColorMode()
+```
 
-| Hardcoded | Token |
-|-----------|-------|
-| `#1a1a1a` | `bg-titanium-bg-elevated` |
-| `#f5f5f5` | `text-titanium-text-primary` |
-| `rgba(255,255,255,0.12)` | `border-titanium-border-default` |
-| `padding: 16px` | `p-4` |
-| `border-radius: 16px` | `rounded` |
-
----
-
-## Do's and Don'ts
-
-### DO ✅
-
-- ✅ Use `bg-titanium-bg-elevated` for cards
-- ✅ Use `text-titanium-text-primary` for body text
-- ✅ Use `p-4` (16px) for card padding
-- ✅ Use `shadow-focus` for all interactive elements
-- ✅ Use `rounded-lg` for cards, `rounded` for buttons
-- ✅ Add `aria-label` to icon-only buttons
-
-### DON'T ❌
-
-- ❌ Use hardcoded hex colors (#1a1a1a)
-- ❌ Use pure black (#000) backgrounds
-- ❌ Use deprecated violet/sage colors
-- ❌ Remove focus outlines without replacement
-- ❌ Use `<div onClick>` instead of `<button>`
-- ❌ Use text smaller than 14px for body content
-
----
-
-## Resources
-
-- **Tokens:** `src/styles/titanium-dark-tokens.css`
-- **Tailwind Config:** `tailwind.config.ts`
-- **Research:** `docs/ui/RESEARCH_NOTES.md`
-- **Audit Report:** `docs/ui/UI_AUDIT_REPORT.md`
-- **Implementation Plan:** `docs/ui/IMPLEMENTATION_PLAN.md`
-- **WCAG 2.2:** https://www.w3.org/WAI/WCAG22/quickref/
-- **Contrast Checker:** https://webaim.org/resources/contrastchecker/
-
----
-
-## Changelog
-
-### v26.2.0 (2026-01-03)
-
-- ✅ Initial Titanium Dark design system
-- ✅ Monochrome color palette with cool gray accent
-- ✅ 4px spacing rhythm
-- ✅ 16px base border radius
-- ✅ WCAG 2.2 AA compliant focus indicators
-- ✅ Comprehensive token system (11KB CSS)
-- ✅ Tailwind integration complete
-
----
-
-**Next Steps:**
-
-1. Update primitive components (Button, Card, Input)
-2. Build UI Showcase page at `/design-system`
-3. Begin Sidebar accessibility fixes
-4. Migrate pages module-by-module
-
-**Questions?** Reference `IMPLEMENTATION_PLAN.md` for detailed rollout strategy.
+Toute violation de couleur hardcodée est détectée par ESLint et bloque le CI.

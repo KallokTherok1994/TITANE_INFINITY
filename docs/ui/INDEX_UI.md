@@ -1,90 +1,21 @@
-# UI Index
+# TITANE∞ UI Documentation Index
 
-Last Updated: 2026-02-09
+**Version:** v35.1.6 | **Mise à jour:** 2026-05-16
 
-UI registry: every UI change requires an append-only entry in [registry/ui-events.jsonl](../../registry/ui-events.jsonl).
+## Documents actifs
 
-## Entry Points
-- src/main.tsx (UI bootstrap)
-- src/App.tsx (routing + shell)
+| Document | Description |
+|---|---|
+| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Référence complète du design system (tokens, light/dark, a11y, animations) |
+| [ui-ux-research-notes.md](ui-ux-research-notes.md) | Notes de recherche UX — macOS HIG, WCAG 2.2, références produit |
+| [A11Y_CHECKLIST.md](A11Y_CHECKLIST.md) | Checklist accessibilité WCAG 2.2 AA |
+| [INDEX_UI.md](INDEX_UI.md) | Ce fichier — index UI/UX |
 
-## Pages (src/pages)
-- AdaptiveEngine.tsx
-- AgendaPage.tsx
-- CameraPage.tsx
-- ChatPage.tsx
-- CognitivePage.tsx
-- ConfigurationHub.tsx
-- DashboardPage.tsx
-- DesignSystemPage.tsx
-- DevPage.tsx
-- DevTools.tsx
-- EvoPage.tsx
-- EvolutionCenterPage.tsx
-- Experience.tsx
-- Harmonia.tsx
-- Helios.tsx
-- Memory.tsx
-- MonitoringDashboard.tsx
-- Nexus.tsx
-- OrchestrationMetaCenter.tsx
-- PerformanceTest.tsx
-- ProgressionPage.tsx
-- SecureSettings.tsx
-- SelfHeal.tsx
-- Sentinel.tsx
-- Settings.tsx
-- Stats.tsx
-- TimeNavigator.tsx
-- TimePage.tsx
-- TitanePage.tsx
-- Watchdog.tsx
+## Proof packs UI/UX
 
-## Features (src/features)
-- admin/
-- audio-center/
-- chat/
-- cognitive/
-- conversation/
-- dashboard/
-- design-center/
-- developer-mode/
-- evolution/
-- governance-center/
-- identity/
-- kernel/
-- memory/
-- menu-editor/
-- meta-dashboard/
-- one-core/
-- progression/
-- qa-monitoring/
-- system-center/
-- transformation/
-- vision/
+- `proof_packs/frontend-ui-ux-redesign-seal-2026-05-15/` — Seal complet du redesign UI/UX (Mai 2026)
+- Archives A11y : `proof_packs/_archive/a11y-reduction-2026-05/` (22 packs)
 
-## Components (src/components)
-- Core UI: chat/, layout/, system/, diagnostics/, providers/
-- Centers: HyperCenter/, IdentityCenter/, QuantumCenter/, RealityCenter/
-- Audio: audio/, tts/, voice/, vocal console
-- Monitoring: monitoring/, performance/, optimization/, devtools/
+## Guidelines contributeurs
 
-## Hooks (src/hooks)
-- Chat: useChat*, useConversation*, useAIChat*
-- Memory: useMemory*, useUnifiedMemory
-- Audio/Voice: useAudio*, useVoice*, useTTS*
-- Visual: useVisual*, useAura*
-- System: useSystem*, useEngine*, usePresence*
-
-## UI Kit (src/ui)
-- primitives: Button, Card, Modal, Menu, Input, Badge
-- utilities: motion/, styles/, components/
-
-## Services (src/services)
-- tauri: tauriBridge.ts, tauriClient.ts, tauriCommands.ts
-- ai providers: services/ai/
-- memory, security, monitoring, governance
-
-## Engines + Types
-- engines: src/engines/ (Ring 2)
-- types: src/types/ (Ring 1)
+Voir `.claude/frontend-ui-ux-guidelines.md` pour les règles de codage design system.

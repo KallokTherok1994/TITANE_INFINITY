@@ -1,290 +1,84 @@
-# TITANE∞ v33.0.0
-
-![Version](https://img.shields.io/badge/version-33.0.0-blue)
-![Rust](https://img.shields.io/badge/rust-2021-orange)
-![React](https://img.shields.io/badge/react-18-61dafb)
-![TypeScript](https://img.shields.io/badge/typescript-5.5-3178c6)
-![Tauri](https://img.shields.io/badge/tauri-2.0-ffc131)
-![Modules](https://img.shields.io/badge/modules-60+-green)
-![Status](https://img.shields.io/badge/status-production%20ready-success)
-
-**Plateforme Cognitive Avancée - Intelligence Émergente Complète**
-
-TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinity) est une plateforme cognitive de nouvelle génération avec **60+ modules intelligents** organisés en **10+ stacks hiérarchiques**, construite pour l'auto-régulation, l'adaptation intelligente et l'évolution continue.
-
-## Statut canonique de version (mode B2)
-
-- Verite version repo: `33.0.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
-- `README.md` et ce fichier sont les surfaces canoniques de navigation (`PROVEN_BY_CANON_DOC`)
-- Les lignes binaires `v28.90.0`, `v28.88.0` et `v27.0.5` sont conservees comme historique documente
-- `CHANGELOG.md` + `deployment/latest/MANIFEST.json` portent la reference de release canonique courante
-
-> Note de vérité: les sections détaillées ci-dessous décrivent en grande partie le socle documentaire V30 historique. L'autorité de version active du repo et du flux `deployment/latest` est désormais `v33.0.0`.
-
-
-## Navigation canonique
-
-- Entrée racine: [`../README.md`](../README.md)
-- Documentation principale: ce fichier (`README.md`)
-- **Tous les anciens index** (`INDEX.md`, `INDEX_MASTER.md`, `INDEX_DOCUMENTATION*`) sont archivés dans [`99_ARCHIVE/`](99_ARCHIVE)
-- **Tous les fichiers .md.md** sont archivés dans [`99_ARCHIVE/`](99_ARCHIVE)
-- Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
----
-
-## 🗂️ Migration documentaire 2026-04-24
-
-Une opération de nettoyage et d'archivage a été réalisée sur l'ensemble du dossier `docs/` :
-
-- **Tous les fichiers `.md.md`** ont été déplacés dans [`docs/99_ARCHIVE/`](99_ARCHIVE)
-- **Tous les anciens index** (`INDEX.md`, `INDEX_MASTER.md`, `INDEX_DOCUMENTATION*`) sont archivés dans [`99_ARCHIVE/`](99_ARCHIVE)
-- **Tous les dossiers d'archive** ont été centralisés dans [`99_ARCHIVE/`](99_ARCHIVE)
-- **audit/audits** : un seul dossier archivé, voir `99_ARCHIVE/`
-- **Preuves et inventaires** : voir [`docs/92_maintenance/`](92_maintenance)
-
-La navigation documentaire canonique passe désormais exclusivement par ce `README.md`.
-
-## 🌟 Caracteristiques v30.0.0
-
-- **60+ Modules Intelligents** : Architecture modulaire complète avec stacks hiérarchiques
-- **Auto-Régulation** : Governor et Autonomic Evolution pour homéostasie cognitive
-- **Auto-Conscience** : Conscience Engine avec clarity, coherence et insight
-- **Direction Stratégique** : Mission, Taskflow et Self-Alignment pour planification long terme
-- **Synthèse Cognitive** : Resonance v2, Meaning et Identity pour cognition profonde
-- **Plasticité** : Adaptive Intelligence pour absorption tensions et adaptation
-- **Architecture Consultatif** : Observation pure sans actions directes
-- **Sécurité Maximale** : Online-first gouverné, fallback local obligatoire, chiffrement multi-niveaux
-- **Performance Native** : Backend Rust 2021 optimisé (~75,000 lignes)
-- **Interface Moderne** : React 18 + TypeScript strict
-- **DevTools Intégrés** : Monitoring et dashboard en temps réel
-
-## 🏗️ Architecture v30.0.0
-
-```
-TITANE∞ - 10+ Stacks Hiérarchiques
-═══════════════════════════════════════════════════════════
-
-┌─────────────────────────────────────────────────────────┐
-│  Strategic Direction Layer (#52-54)                     │
-│  → Mission, Taskflow, Self-Alignment                    │
-└─────────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────────┐
-│  Cognitive Synthesis Layer (#49-51)                     │
-│  → Resonance v2, Meaning, Identity                      │
-└─────────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────────┐
-│  Advanced Cognitive Layer (#55-57,59)                   │
-│  → Governor, Conscience, Adaptive, Autonomic Evolution  │
-└─────────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────────┐
-│  Executive + Sentient Layers                            │
-│  → 6 modules exécutifs + 5 modules sentients            │
-└─────────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────────┐
-│  Monitoring + Neural Mesh                               │
-│  → Stability, Integrity, Balance + NeuroMesh, CoreMesh  │
-└─────────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────────┐
-│  Perception + Advanced Stacks                           │
-│  → 4 modules perception + 3 modules advanced            │
-└─────────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────────┐
-│  Security + Core (24+)                                  │
-│  → Kernel, SecureFlow, LowFlow + modules fondamentaux   │
-└─────────────────────────────────────────────────────────┘
-```
-
-## 📋 Prérequis
-
-### Système
-- **OS** : Linux (Ubuntu 20.04+), macOS 11+, Windows 10+
-- **RAM** : 4 GB minimum, 8 GB recommandé
-- **Disque** : 2 GB disponible
-
-### Développement
-- **Node.js** : 20.0.0+
-- **npm** : 10.0.0+
-- **Rust** : 1.70+ (edition 2021)
-- **Cargo** : 1.70+
-
-### Linux uniquement
-```bash
-sudo apt-get update
-sudo apt-get install -y \
-    libwebkit2gtk-4.1-dev \
-    build-essential \
-    curl \
-    wget \
-    file \
-    libssl-dev \
-    libgtk-3-dev \
-    libayatana-appindicator3-dev \
-    librsvg2-dev
-```
-
-## 🚀 Installation
-
-### 1. Cloner le projet
-```bash
-git clone https://github.com/titane/infinity.git
-cd TITANE_INFINITY
-```
-
-### 2. Installer Rust (si nécessaire)
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source $HOME/.cargo/env
-```
-
-### 3. Installer les dépendances
-```bash
-corepack enable
-pnpm install
-```
-
-## ▶️ Utilisation
-
-### Mode Développement
-```bash
-pnpm run dev:tauri
-```
-
-### Build Production
-```bash
-# Build production — on demand (Rule 11)
-corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
-```
-
-### Native Desktop Freshness Gate (preprod/prod)
-```bash
-bash scripts/verify/verify-native-binary-freshness.sh
-```
-
-This gate must pass before native desktop certification and before any production build/deploy authorization.
-
-### Nettoyage
-```bash
-pnpm run clean:all
-```
-
-## 🧩 Modules
-
-### ☀️ Helios
-Monitoring système en temps réel (CPU, mémoire, disque).
-
-### 🔗 Nexus
-Gestionnaire du graphe cognitif et des connexions neuronales.
-
-### 🎼 Harmonia
-Orchestrateur de processus et synchronisation.
-
-### 🛡️ Sentinel
-Système de sécurité et contrôle d'accès.
-
-### 🐕 Watchdog
-Surveillance système et logging.
-
-### 🔧 SelfHeal
-Auto-réparation et récupération d'erreurs.
-
-### 🧠 AdaptiveEngine
-Moteur d'apprentissage et d'adaptation.
-
-### 💾 Memory
-Stockage persistant et gestion mémoire.
-
-## 🔐 Sécurité
-
-- ✅ Online-first gouverné (surfaces réseau contrôlées)
-- ✅ Fallback local obligatoire (Tauri/Ollama)
-- ✅ Sandbox activé
-- ✅ CSP stricte
-- ✅ Pas d'eval()
-- ✅ Chiffrement des données sensibles
-
-## 📚 Documentation
-
-### Documentation Principale
-
-- [Architecture Complète](MAP_ARCHITECTURE_4RING.md)
-- [Guide des Modules](MODULES.md)
-- [Sécurité](SECURITY.md)
-- [Guide Développeur](DEVELOPER_GUIDE.md)
-- [Changelog App](../CHANGELOG.md)
-
-### 🧬 Super Prompts (Chirurgie Frontend/Backend)
-
-**NOUVEAU** : Collection de Super Prompts pour GitHub Copilot Chat, optimisés pour finaliser rapidement TITANE∞.
-
-- **[📚 Index Super Prompts](super-prompts/README.md)** - Vue d'ensemble + Roadmap
-- **[⚡ Quick Start](super-prompts/QUICK_START.md)** - Démarrage en 5 étapes
-- **[🎨 Guide Visuel](super-prompts/VISUAL_GUIDE.md)** - Diagrammes + Workflows
-- **[⚡ Cheat Sheet](super-prompts/CHEAT_SHEET.md)** - Aide-mémoire rapide
-
-**Prompts disponibles** (7/7 - Collection complète ✅) :
-- ✅ [#1 - Frontend Final Form](super-prompts/frontend/SUPER_PROMPT_01_FRONTEND_FINAL_FORM.md) — UI/UX + Design System
-- ✅ [#2 - Rust Backend Cleanup](super-prompts/backend/SUPER_PROMPT_02_RUST_BACKEND_CLEANUP.md) — Code quality + Error handling
-- ✅ [#3 - API Consolidation](super-prompts/backend/SUPER_PROMPT_03_API_CONSOLIDATION.md) — API standardization
-- ✅ [#4 - Cognitive Optimization](super-prompts/cognitive/SUPER_PROMPT_04_COGNITIVE_OPTIMIZATION.md) — Engine performance
-- ✅ [#5 - Memory Refinement](super-prompts/cognitive/SUPER_PROMPT_05_MEMORY_REFINEMENT.md) — Memory system
-- ✅ [#6 - Security Hardening](super-prompts/security/SUPER_PROMPT_06_SECURITY_HARDENING.md) — OWASP + Encryption
-- ✅ [#7 - Performance Audit](super-prompts/performance/SUPER_PROMPT_07_PERFORMANCE_AUDIT.md) — Profiling + Optimization
-
-**ROI estimé global** : ~90% de réduction du temps (135-270h gagnées sur 150-300h)
-
-## 🛠️ Développement
-
-### Structure du Projet
-```
-TITANE_INFINITY/
-├── core/
-│   ├── backend/     # Rust backend
-│   └── frontend/    # React frontend
-├── system/
-│   ├── config/      # Configurations
-│   └── scripts/     # Scripts utilitaires
-└── docs/            # Documentation
-```
-
-### Commandes Utiles
-```bash
-# Type check TypeScript
-pnpm run check
-
-# Lint
-pnpm run lint
-
-# Build frontend uniquement
-pnpm run build
-
-# Dev Tauri
-pnpm run dev:tauri
-
-# Build Tauri
-# Build Tauri
-corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # on demand (Rule 11)
-```
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Voir [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md).
-
-## 📄 License
-
-MIT © 2025 TITANE Team
-
-## 🔮 Roadmap
-
-- [x] v8.0 - Architecture de base
-- [ ] v8.1 - Jumeau cognitif
-- [ ] v8.2 - API externe sécurisée
-- [ ] v8.3 - Plugins système
-- [ ] v9.0 - Multi-agents
-
-## 📧 Contact
-
-- **Issues** : [GitHub Issues](https://github.com/titane/infinity/issues)
-- **Documentation** : [Wiki](https://github.com/titane/infinity/wiki)
+# TITANE∞ — Documentation Index
+
+> **Version:** v35.1.6 — Mise à jour 2026-05-16
+
+## Guides essentiels
+
+| Document | Description |
+|----------|-------------|
+| [`../README.md`](../README.md) | Vue d'ensemble, audit status, démarrage rapide |
+| [`../DEVELOPER_SETUP.md`](../DEVELOPER_SETUP.md) | Installation développeur complète |
+| [`../CHANGELOG.md`](../CHANGELOG.md) | Historique des versions (v28→v35) |
+| [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Guide de contribution et gouvernance |
+| [`../AGENTS.md`](../AGENTS.md) | Règles pour agents IA (Claude, Copilot, Codex) |
+| [`../ARCHITECTURE.md`](../ARCHITECTURE.md) | Architecture détaillée (4-Ring, IPC, moteurs) |
+
+## Frontend UI/UX (v35.1.6 — Design System v2)
+
+| Document | Description |
+|----------|-------------|
+| [`ui/ui-ux-research-notes.md`](ui/ui-ux-research-notes.md) | Notes de recherche UX (Apple HIG, Nielsen, WCAG 2.2) |
+| [`../.claude/frontend-ui-ux-guidelines.md`](../.claude/frontend-ui-ux-guidelines.md) | Guidelines design system — référence authoritative |
+
+**État du design system :**
+- Tokens sémantiques `titanium-*` — toutes les classes branchées sur `var(--color-*)`
+- Light mode complet via `UIThemeProvider` + `html.light`
+- ARIA tablist (ArrowKey, aria-selected, tabIndex) sur tous les tablists
+- `prefers-reduced-motion` gating sur toutes les animations
+- Zéro import `@themes/tokens` en production
+
+## Architecture et cartographie
+
+| Document | Description |
+|----------|-------------|
+| [`00_SYSTEME/`](00_SYSTEME/) | Documentation système centrale |
+| [`01_architecture/`](01_architecture/) | Specs d'architecture |
+| [`02_ARCHITECTURE/`](02_ARCHITECTURE/) | Architecture par module |
+| [`03_REPO_TAXONOMY.md`](03_REPO_TAXONOMY.md) | Taxonomie du repo |
+| [`../UI_SURFACE_MAP.md`](../UI_SURFACE_MAP.md) | Cartographie des surfaces UI |
+| [`../OLLAMA_RUNTIME_MAP.md`](../OLLAMA_RUNTIME_MAP.md) | Surface Ollama Dev |
+
+## Guides de développement
+
+| Document | Description |
+|----------|-------------|
+| [`04_guides/quickstart/`](04_guides/quickstart/) | Démarrage rapide |
+| [`04_guides/development/`](04_guides/development/) | Guides de développement |
+| [`04_guides/features/`](04_guides/features/) | Documentation des features |
+| [`04_guides/advanced/`](04_guides/advanced/) | Guides avancés |
+| [`05_modules/backend/`](05_modules/backend/) | Documentation modules Rust |
+| [`05_modules/frontend/`](05_modules/frontend/) | Documentation modules React |
+| [`06_api/`](06_api/) | Référence API (TypeDoc) |
+
+## Gouvernance et certification
+
+| Document | Description |
+|----------|-------------|
+| [`04_AUTHORITY_MATRIX.md`](04_AUTHORITY_MATRIX.md) | Matrice d'autorité |
+| [`06_SEAL_LEDGER.md`](06_SEAL_LEDGER.md) | Registre des seals |
+| [`07_PROOF_LEDGER.md`](07_PROOF_LEDGER.md) | Registre des preuves |
+| [`11_PROOF_PACK_INDEX.md`](11_PROOF_PACK_INDEX.md) | Index des proof packs |
+| [`../proof_packs/`](../proof_packs/) | Tous les proof packs de certification |
+
+## Releases
+
+| Document | Description |
+|----------|-------------|
+| [`../RELEASE_SURFACE_INVENTORY.md`](../RELEASE_SURFACE_INVENTORY.md) | Inventaire des releases |
+| [`release-history/checksums/INDEX.md`](release-history/checksums/INDEX.md) | Checksums historiques |
 
 ---
 
-**TITANE∞ v8.0** - *Cognitive Platform of the Future*
+## Résumé état courant
+
+| Attribut | Valeur |
+|----------|--------|
+| Version | v35.1.6 |
+| Date seal | 2026-05-16 |
+| Commits | `558119238` (seal) + `d19007bda` (agents) |
+| Tests Vitest | 9471/9471 PASS |
+| Build Vite | ✅ 17.27s |
+| TypeScript | ✅ 0 erreur |
+| ESLint | ✅ 0 erreur |
+| Backup branch | `backup/frontend-before-ui-redesign` |
+| Proof pack | `proof_packs/frontend-ui-ux-redesign-seal-2026-05-15/` |

@@ -2,6 +2,27 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1778874769526-7e0j6y8m",
+      "timestamp": 1778874769526,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1778867087798-x4ht73nj",
+      "timestamp": 1778867087798,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1778857336540-f6z6e76t",
+      "timestamp": 1778857336540,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1778530054271-qoigm1wu",
       "timestamp": 1778530054271,
       "level": "Info",
@@ -611,7 +632,7 @@
   ],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1778530054279,
+    "last_validation_ts": 1778874769528,
     "last_compaction_ts": null
   }
 }

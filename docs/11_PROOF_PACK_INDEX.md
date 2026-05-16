@@ -1,6 +1,24 @@
 # 11 — PROOF_PACK_INDEX — TITANE_INFINITY
 
-> Generated: 2026-04-02 | Mode: AUDIT_PLUS_SENTINEL
+> Mis à jour: 2026-05-16 | Dernière entrée: frontend-ui-ux-redesign-seal-2026-05-15
+
+## Packs récents (v35.x)
+
+| Pack | Famille | Date | Verdict | Commit |
+|------|---------|------|---------|--------|
+| `frontend-ui-ux-redesign-seal-2026-05-15` | UI/UX SEAL | 2026-05-16 | **PASS** — 9471/9471 tests | `558119238` |
+| `BUILD_ALL_2026-05-15_v35_1_6` | BUILD | 2026-05-15 | PASS | `41544b718` |
+| `PHASE_G_BUILD_v35_1_5` | BUILD | 2026-05-14 | PASS | — |
+| `PHASE_BCE_AUDITS_v35_1_4` | AUDIT | 2026-05-14 | PASS | — |
+| `LOCK_D4_SELF_IMPROVEMENT_LAB_2026-05-06` | CONTRACT | 2026-05-06 | PASS — 122 tests | `5844e7ea3` |
+| `2026-05-14_v35_0_0_seal` | SEAL | 2026-05-14 | PASS | — |
+| `KB_QUEBEC_NATURALIST_2026-05-14` | KB | 2026-05-14 | PASS | — |
+
+Pour l'historique complet des packs antérieurs à v34, voir `proof_packs/_archive/`.
+
+---
+
+> Historique ancien — Generated: 2026-04-02 | Mode: AUDIT_PLUS_SENTINEL
 
 ---
 

@@ -1,24 +1,31 @@
 # TITANE∞ — Guide d'installation développeur
 
-## Environnement requis
+**Version:** v35.1.6 | **Dernière mise à jour:** 2026-05-16
 
-| Outil        | Version minimum | Installation                             |
-| ------------ | --------------- | ---------------------------------------- |
-| Node.js      | 20 LTS          | `fnm install 20` ou `nvm install 20`     |
-| pnpm         | 8+              | `corepack enable pnpm`                   |
-| Rust         | 1.77 stable     | `rustup update stable`                   |
-| Tauri CLI v2 | ^2.0            | `cargo install tauri-cli --version '^2'` |
-| Ollama       | 0.4+            | [ollama.ai](https://ollama.ai)           |
-| Git          | 2.40+           | Gestionnaire de paquets OS               |
+---
 
-### Linux — Dépendances système (Ubuntu/Debian)
+## Prérequis
+
+| Outil | Version minimum | Installation recommandée |
+|---|---|---|
+| Node.js | 20 LTS | `fnm install 20` ou `nvm install 20` |
+| pnpm | 9+ | `corepack enable && corepack prepare pnpm@9 --activate` |
+| Rust | 1.77 stable | `rustup update stable` |
+| Tauri CLI v2 | ^2.0 | `cargo install tauri-cli --version '^2'` |
+| Git | 2.40+ | gestionnaire de paquets OS |
+| Ollama | 0.4+ | [ollama.ai](https://ollama.ai) |
+
+---
+
+## Dépendances système Linux (Ubuntu/Debian)
 
 ```bash
 sudo apt install -y \
   libwebkit2gtk-4.1-dev \
   build-essential \
   curl wget file \
-  libssl-dev libgtk-3-dev \
+  libssl-dev \
+  libgtk-3-dev \
   libayatana-appindicator3-dev \
   librsvg2-dev \
   libglib2.0-dev \
@@ -27,242 +34,171 @@ sudo apt install -y \
   xdg-utils
 ```
 
+---
+
 ## Installation du projet
 
 ```bash
-# 1. Cloner
 git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
-
-# 2. Installer les dépendances Node
 pnpm install
-
-# 3. Vérifier Rust
-cargo check --manifest-path src-tauri/Cargo.toml 2>&1 | tail -3
-# Attendu : "Finished ... target(s) in ..."
 ```
 
-## Préparer Ollama
+---
+
+## Configuration de l'environnement
 
 ```bash
-# Démarrer Ollama (si pas en service)
-ollama serve &
-
-# Télécharger le modèle officiel TITANE∞
-ollama pull gemma2:2b
-
-# Vérifier la connectivité
-curl -s http://127.0.0.1:11434/api/version | python3 -m json.tool
+cp .env.example .env
 ```
 
-## Lancer l'application
+Éditez `.env` pour configurer les clés API (providers IA externes optionnels) :
 
-### Mode développement (recommandé)
+```
+# Providers IA externes (optionnels — fallback vers Ollama local si absent)
+ANTHROPIC_API_KEY=...
+OPENAI_API_KEY=...
+
+# Ollama (local — valeurs par défaut si Ollama tourne sur 127.0.0.1:11434)
+VITE_OLLAMA_BASE_URL=http://127.0.0.1:11434
+```
+
+Pour activer les providers externes en dev :
 
 ```bash
-pnpm run tauri dev
-# Ouvre la fenêtre Tauri avec hot-reload Vite
+VITE_ENABLE_EXTERNAL_AI=1 pnpm run dev
 ```
 
-### Vite seul (tests frontend rapides)
+---
+
+## Commandes de développement
 
 ```bash
-pnpm run dev
-# Accessible sur http://localhost:1420
+pnpm run dev            # Lancer l'app en mode développement (Vite + Tauri)
+pnpm run check          # Vérification TypeScript (tsc --noEmit)
+pnpm run lint           # ESLint
+pnpm run test --run     # Tests Vitest (non-interactif, tous les fichiers)
+pnpm run build          # Build Vite frontend
+pnpm run format:check   # Vérification Prettier (sans modification)
 ```
 
-### Storybook (développement composants)
+Build natif Tauri (binaire desktop — on demand) :
 
 ```bash
-pnpm storybook
-# Accessible sur http://localhost:6006
+cargo tauri build --config src-tauri/tauri.conf.json
 ```
 
-## Build production
+---
+
+## Configuration VS Code (recommandée)
+
+Extensions à installer :
+
+| Extension | Identifiant |
+|---|---|
+| Tauri | `tauri-apps.tauri-vscode` |
+| Rust Analyzer | `rust-lang.rust-analyzer` |
+| ESLint | `dbaeumer.vscode-eslint` |
+| Prettier | `esbenp.prettier-vscode` |
+| Tailwind CSS IntelliSense | `bradlc.vscode-tailwindcss` |
+
+Le fichier `.vscode/settings.json` du projet configure automatiquement :
+- `editor.formatOnSave` avec Prettier
+- `chat.mcp.enabled: true` pour les agents MCP
+
+---
+
+## Configuration MCP et Ollama (développement)
+
+Le fichier `.vscode/mcp.json` définit les serveurs MCP disponibles pour GitHub Copilot et les agents Claude Code. Aucune configuration manuelle requise si vous utilisez VS Code avec les extensions ci-dessus.
+
+Vérification de la frontière Ollama :
 
 ```bash
-# Build complet AppImage + DEB
-pnpm run tauri build
-
-# Artefacts générés :
-# src-tauri/target/release/bundle/appimage/titane-infinity_*.AppImage
-# src-tauri/target/release/bundle/deb/titane-infinity_*_amd64.deb
+pnpm run verify:ollama:boundary
 ```
 
-## Structure du projet
+Modèles Ollama utilisés :
+- **Chat TITANE (runtime produit)** : `gemma2:2b`
+- **Dev/Copilot (VS Code conversation)** : `qwen3.5:9b`
 
-```
-TITANE_INFINITY/
-├── src/                    # Frontend React/TypeScript (Ring 3/4)
-│   ├── components/         # Composants UI (194 fichiers)
-│   ├── contexts/           # React contexts (AnimationContext, LoggingContext)
-│   ├── engines/            # Moteurs frontend (Ring 3)
-│   ├── hooks/              # React hooks
-│   ├── services/           # Services métier (Ring 3)
-│   ├── stores/             # État global (Zustand)
-│   ├── types/              # Types TypeScript partagés
-│   └── utils/              # Utilitaires (invoke.ts = One Door)
-├── src-tauri/              # Backend Rust (Ring 1/2)
-│   └── src/
-│       ├── audio/          # Commandes audio IPC
-│       ├── cognitive/      # Moteur cognitif
-│       ├── knowledge_base/ # Base de connaissances (211+ domaines)
-│       ├── meta/           # Monitoring + explainability
-│       └── operators/      # Operators (browser, desktop, ide)
-├── data/                   # Données statiques JSON (@data alias)
-├── config/                 # Configurations JSON (@config alias)
-├── docs/                   # Documentation technique
-│   ├── api/                # Typedoc HTML généré
-│   └── diagrams/           # Diagrammes Mermaid
-├── e2e/                    # Tests E2E Playwright
-├── scripts/                # Scripts build/autoheal/governance
-│   └── autoheal/           # AutoHeal JSONL + detect_recurrence
-└── src/stories/            # Stories Storybook
-```
+---
 
-## Alias d'import configurés
+## Design system (référence)
 
-```ts
-import { Component } from '@/components/MyComponent'; // → src/components/
-import { useHook } from '@/hooks/useHook'; // → src/hooks/
-import { safeInvokeCanonical } from '@/utils/invoke'; // ONE DOOR obligatoire
-import data from '@data/knowledge_base/entry.json'; // → data/
-import cfg from '@config/championChallenger.json'; // → config/
-```
+Avant de modifier des composants ou du CSS, consultez :
 
-## Tests
+- [`.claude/frontend-ui-ux-guidelines.md`](.claude/frontend-ui-ux-guidelines.md) — règles du design system
+- [`docs/ui/DESIGN_SYSTEM.md`](docs/ui/DESIGN_SYSTEM.md) — référence tokens + a11y
+
+Règle principale : ne jamais utiliser de valeurs hex hardcodées ou de classes `gray-*`/`slate-*`. Utiliser exclusivement les tokens `titanium-*` ou les CSS custom properties `var(--color-*)`.
+
+---
+
+## Guide de tests
 
 ```bash
-# Vitest (tous les tests frontend)
-pnpm vitest run
+# Tous les tests (mode non-interactif)
+pnpm run test --run
 
-# Test ciblé
-pnpm vitest run src/__tests__/omega-provider-tests.test.ts
+# Un fichier spécifique
+pnpm vitest run src/__tests__/services/ai/canonicalDiscernmentKernel.test.ts
 
-# Tests Rust
-cargo test --manifest-path src-tauri/Cargo.toml
+# Avec coverage
+pnpm vitest run --coverage
 
-# Tests Rust ciblés (knowledge base)
-cargo test --manifest-path src-tauri/Cargo.toml --lib -- knowledge_base_default::tests
-
-# E2E Playwright (dev server requis dans un autre terminal)
-pnpm run test:e2e
+# Watch mode (développement)
+pnpm vitest
 ```
 
-## Decision de scope (Rule 1)
-
-Avant de commencer, classer la modification dans un des deux chemins:
-
-### PATH_SIMPLE
-
-- Critere: changement local et borne (pas de nouvelle IPC, pas de build/release, pas de changement cross-ring).
-- Exemples: correction de documentation, typo, petite constante, ajustement non fonctionnel.
-- Minimum requis:
-  - verifier la coherence locale,
-  - executer les checks strictement necessaires au scope,
-  - garder un patch minimal.
-
-### PATH_HEAVY
-
-- Critere: changement architecture, IPC, runtime critique, build/release, UI visible, ou cross-ring.
-- Exemples: nouvelle commande Tauri, modification pipeline chat, evolution de surfaces utilisateur.
-- Requis:
-  - tests adaptes au scope (Rule 16),
-  - update des mappings/carto (Rule 15),
-  - AutoHeal complet si code dans `src/`, `src-tauri/`, `tests/`, `e2e/`, `scripts/`, `.github/` (Rule 10),
-  - gates obligatoires PASS avant verdict.
-
-## Session opener (Rule 20)
-
-Au debut de chaque session de travail:
+Tests Rust :
 
 ```bash
-# 1) Restaurer le contexte de session si disponible
-cat /memories/session/plan.md 2>/dev/null || echo "Plan session absent"
-
-# 2) Snapshot worktree
-git status --short
-
-# 3) Declarer explicitement le mode
-export MODE=DURABLE
-# ou: export MODE=EXPLORATION
-
-# 4) Identifier les phases finies non committees (Rule 18)
-git log --oneline -10
+cargo test --bin titane-infinity
 ```
 
-## Modes de travail (Rule 19)
+---
 
-- DURABLE (defaut sur MAIN/feature/\*): discipline complete Rule 1-18.
-- EXPLORATION (branche explore/\* ou declaration explicite): discipline allegee pour code jetable.
-- Promotion EXPLORATION -> DURABLE avant merge MAIN:
-  - tests complets,
-  - AutoHeal full-schema,
-  - version bump si build avance,
-  - preuves suffisantes selon le scope.
+## Troubleshooting
 
-## Gouvernance (obligatoire avant tout commit)
+**pnpm install échoue avec des erreurs Rust/native**
 
 ```bash
-# 1. Détecter les régressions AutoHeal
-bash scripts/autoheal/detect_recurrence.sh
-# Attendu : PASS: G_AH_RECURRENCE_GUARD_PASS
-
-# 2. Vérifier les instructions kernel
-bash scripts/verify_instructions.sh
-# Attendu : SUMMARY avec FAIL=0
+rustup update stable
+cargo clean
+pnpm install
 ```
 
-## Mise a jour mapping (Rule 15)
+**L'app ne démarre pas (WebKit/GTK manquant)**
 
-| Scope modifie                        | Mapping a mettre a jour                                                    |
-| ------------------------------------ | -------------------------------------------------------------------------- |
-| `src/components/**`, `src/pages/**`  | `UI_SURFACE_MAP.md` + `docs/CARTOGRAPHY_COMPLETE.md`                       |
-| `src/services/**`, `src/engines/**`  | `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md`                         |
-| nouvelle commande `src-tauri/src/**` | `docs/IPC_CATALOG.md` + `ARCHITECTURE.md` + `docs/CARTOGRAPHY_COMPLETE.md` |
-| integration Ollama                   | `OLLAMA_RUNTIME_MAP.md`                                                    |
-| build/version/release                | `RELEASE_SURFACE_INVENTORY.md`                                             |
+Vérifier que toutes les dépendances système Linux sont installées (voir section ci-dessus).
 
-## Sortie de phase en direct sur MAIN (Rule 18)
-
-Si le travail direct sur MAIN est autorise:
-
-- chaque lot coherent termine doit etre committe apres preuves vertes,
-- eviter d accumuler plusieurs correctifs sans commit de phase,
-- garder des commits scopes et rollbackables.
-
-## Variables d'environnement
-
-| Variable                    | Valeur par défaut        | Usage                        |
-| --------------------------- | ------------------------ | ---------------------------- |
-| `VITE_OLLAMA_URL`           | `http://127.0.0.1:11434` | URL serveur Ollama           |
-| `VITE_OLLAMA_MODEL`         | `gemma2:2b`              | Modèle Ollama                |
-| `VITE_APP_ENV`              | `development`            | Environnement                |
-| `TITANE_E2E_ANDROID_DEVICE` | `0`                      | Active les tests E2E Android |
-
-## Erreurs courantes
-
-### `typedoc: not found`
+**Erreur `EPERM` ou conflit node_modules**
 
 ```bash
-# Utiliser npx pour la génération des docs
-npx --yes typedoc --options typedoc.json
+rm -rf node_modules
+pnpm install
 ```
 
-### `cargo check` échoue avec `E0603`
+**Tauri ne trouve pas le binaire Rust**
 
-Vérifier que les modules Rust sont correctement déclarés dans `mod.rs` et `lib.rs`.
-
-### Port 1420 déjà utilisé
+Vérifier que `~/.cargo/bin` est dans le `PATH`, puis :
 
 ```bash
-lsof -ti :1420 | xargs kill -9
+cargo tauri dev --config src-tauri/tauri.conf.json
 ```
 
-### Ollama non accessible
+**Tests échouent après un merge**
 
 ```bash
-systemctl --user start ollama  # si service systemd
-# ou
-ollama serve &                  # démarrage manuel
+pnpm run check   # Vérifier les erreurs TypeScript en premier
+pnpm run test --run
+```
+
+**Reset complet de l'environnement de dev**
+
+```bash
+rm -rf node_modules dist src-tauri/target
+pnpm install
+cargo build --manifest-path src-tauri/Cargo.toml
 ```
