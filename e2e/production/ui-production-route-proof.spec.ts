@@ -166,7 +166,12 @@ const CANONICAL_ROUTES = [
     rootTestId: 'page-performance-test',
     mainMenuSurface: false,
   },
-  { route: '/htf', pageId: 'htf', rootTestId: 'page-htf', mainMenuSurface: false },
+  {
+    route: '/htf',
+    pageId: 'htf',
+    rootTestId: 'htf-module-page',
+    mainMenuSurface: false,
+  },
 ] as const;
 
 const LEGACY_REDIRECTS = [

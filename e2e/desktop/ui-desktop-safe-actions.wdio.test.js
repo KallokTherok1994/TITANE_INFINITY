@@ -31,9 +31,9 @@ describe('TITANE Desktop — Safe Actions (v50)', () => {
   // ──────────────────────────────────────────────────────
 
   describe('L1 Static — Safe Action Policies', () => {
-    it('has 35 safe actions from manifest', () => {
+    it('has 38 safe actions from manifest', () => {
       const safeActions = getAllSafeActions();
-      expect(safeActions.length).toBe(35);
+      expect(safeActions.length).toBe(38);
     });
 
     it('all safe actions have actionId', () => {

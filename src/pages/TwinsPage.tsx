@@ -150,7 +150,10 @@ export const TwinsPage: React.FC = () => {
       className="twins-root flex min-h-full w-full flex-col bg-titanium-bg-base p-6 text-white"
       data-testid="page-twins"
     >
-      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6">
+      <div
+        className="mx-auto flex w-full max-w-7xl flex-1 flex-col space-y-6"
+        data-testid="page-twins-content"
+      >
         {/* Runtime Truth Badge — ACTIVE — v97 */}
         <SurfaceTruthBadge variant={liveConnected ? 'LIVE' : 'PARTIAL'} />
         {/* ── Header ── */}

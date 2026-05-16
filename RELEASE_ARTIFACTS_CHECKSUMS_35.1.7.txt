@@ -1,0 +1,20 @@
+# TITANE∞ — Release Artifacts Checksums v35.1.7
+
+Build date: 2026-05-16
+Build host: TITANE-OS (Linux x86_64)
+Trunk HEAD pre-build: 2b8ffdd9a
+Scope: BUILD ALL Rule 14 — UI desktop/browser proof sync + production release refresh
+
+## Artefacts Linux (3/3)
+
+| Artifact | SHA-256 | Size |
+|---|---|---|
+| `titane-infinity_35.1.7_amd64.AppImage` | `3d050a88b094e8439873c93a11c26e938f9e652668d2cff380f5fc02b2d24f25` | 95M |
+| `titane-infinity_35.1.7_amd64.deb` | `0e97bbbdc205d39f763b35c7e778d0032c1161fb4db58122e3bfc435675f4f99` | 25M |
+| `titane-infinity-35.1.7-1.x86_64.rpm` | `1d3625ac9a5f15be7eab1ceb993c42c9ac564c699b69cb5808676b6542957d08` | 25M |
+
+## Bundle paths
+
+- AppImage: `src-tauri/target/release/bundle/appimage/titane-infinity_35.1.7_amd64.AppImage`
+- DEB: `src-tauri/target/release/bundle/deb/titane-infinity_35.1.7_amd64.deb`
+- RPM: `src-tauri/target/release/bundle/rpm/titane-infinity-35.1.7-1.x86_64.rpm`

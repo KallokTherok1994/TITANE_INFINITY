@@ -1,6 +1,6 @@
 # TITANE Desktop Test Coverage Matrix v50
 
-Generated: 2026-05-10T04:31:07.055Z  
+Generated: 2026-05-16T04:43:30.675Z  
 Mission: UI_DESKTOP_FULL_COVERAGE_v50
 
 > L1=Static | L2=Unit | L3=Browser E2E | L4=Desktop WDIO | L5=Agent/Chat
@@ -26,6 +26,7 @@ Mission: UI_DESKTOP_FULL_COVERAGE_v50
 | /cloud | cloud_center | LIVE_TAURI | ACTIVE_PARTIAL | 0 | ✅ | ✅ | ✅ v48 | PENDING_v50 | - |
 | /memory | memory_page | LIVE_TAURI_SERVICE_BRIDGE | ACTIVE_PARTIAL | 0 | ✅ | ✅ | ✅ v48 | PENDING_v50 | - |
 | /research | research_page | LIVE_TAURI_GOVERNED | ACTIVE_PARTIAL | 0 | ✅ | ✅ | ✅ v48 | PENDING_v50 | - |
+| /multiproject | multiproject_dashboard | MIXED_LIVE_AND_STATIC | ACTIVE_PARTIAL | 0 | ✅ | ✅ | ✅ v48 | PENDING_v50 | - |
 | /doc-center | doc_center | LIVE_TAURI_GOVERNED | ACTIVE_PARTIAL | 0 | ✅ | ✅ | ✅ v48 | PENDING_v50 | - |
 | /singularity | singularity_monitor | LIVE_TAURI_WITH_FALLBACK | ACTIVE_PARTIAL | 0 | ✅ | ✅ | ✅ v48 | PENDING_v50 | - |
 | /sentinel | sentinel_guard | LIVE_TAURI_WITH_FALLBACK | ACTIVE_PARTIAL | 0 | ✅ | ✅ | ✅ v48 | PENDING_v50 | - |
@@ -70,8 +71,8 @@ Mission: UI_DESKTOP_FULL_COVERAGE_v50
 
 | Category | Count | Desktop Tested | Status |
 |---|---|---|---|
-| Routes | 29 | PENDING | After v50 desktop run |
+| Routes | 30 | PENDING | After v50 desktop run |
 | Tabs | 22 | PENDING | After v50 desktop run |
 | Aliases | 65 | PENDING | After v50 desktop run |
-| Safe actions | 35 | PENDING | After v50 desktop run |
+| Safe actions | 38 | PENDING | After v50 desktop run |
 | Sensitive actions | 13 | PENDING | After v50 desktop run |

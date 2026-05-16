@@ -1,6 +1,6 @@
 # TITANE Desktop Action Classification v50
 
-Generated: 2026-05-10T04:31:07.055Z  
+Generated: 2026-05-16T04:43:30.675Z  
 
 ## Safe Action Policy Definitions
 
@@ -59,6 +59,9 @@ Generated: 2026-05-10T04:31:07.055Z
 | /memory | delete_entry | Delete memory entry | WIRED_LIVE | REQUIRES_CONFIRMATION | ⚠️ YES | persistent_memory_delete_entry |
 | /memory | get_stats | Get memory stats | WIRED_LIVE | SAFE_CLICK | No | persistent_memory_get_stats |
 | /research | run_research | Run web research | WIRED_LIVE | SAFE_CLICK | No | web_research |
+| /multiproject | create_project | Create project | WIRED_LIVE | SAFE_CLICK | No | - |
+| /multiproject | refresh_health | Refresh project health | WIRED_FALLBACK | FALLBACK_EXPECTED | No | - |
+| /multiproject | assign_agent | Assign agent to project | WIRED_LIVE | SAFE_CLICK | No | - |
 | /doc-center | export_docx | Export DOCX | WIRED_LIVE | REQUIRES_CONFIRMATION | ⚠️ YES | export_docx_file |
 | /singularity | get_state | Get singularity state | WIRED_FALLBACK | FALLBACK_EXPECTED | No | singularity_get_state |
 | /sentinel | subscribe | Subscribe sentinel events | WIRED_FALLBACK | FALLBACK_EXPECTED | No | sentinel_subscribe |

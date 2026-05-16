@@ -22,6 +22,7 @@ const canonicalRoutes = [
   '/quantum-center',
   '/twins',
   '/doc-center',
+  '/multiproject',
   '/optimization',
   '/total-dev',
   '/orchestration-intelligence',

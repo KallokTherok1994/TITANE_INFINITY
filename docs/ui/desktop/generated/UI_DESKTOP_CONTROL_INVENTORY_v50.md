@@ -1,6 +1,6 @@
 # TITANE Desktop Control Inventory v50
 
-Generated: 2026-05-10T04:31:07.054Z  
+Generated: 2026-05-16T04:43:30.674Z  
 Mission: UI_DESKTOP_FULL_COVERAGE_v50  
 
 > Static shape from registry. Dynamic DOM inventory from `ui-desktop-control-inventory.wdio.test.js`.
@@ -9,10 +9,10 @@ Mission: UI_DESKTOP_FULL_COVERAGE_v50
 
 | Metric | Count |
 |---|---|
-| Routes | 29 |
+| Routes | 30 |
 | Tab buttons | 22 |
-| Visible actions (from registry) | 48 |
-| Safe actions | 35 |
+| Visible actions (from registry) | 51 |
+| Safe actions | 38 |
 | Sensitive/guarded actions | 13 |
 
 ## Per-Route Control Inventory
@@ -206,6 +206,16 @@ Truth: LIVE_TAURI_GOVERNED | Status: ACTIVE_PARTIAL
 **Actions (1)**:
 - ✅ `run_research` → "Run web research" [WIRED_LIVE] → SAFE_CLICK
 
+### /multiproject (MultiProjectDashboard)
+
+Root: `[data-testid="multiproject-dashboard"]`  
+Truth: MIXED_LIVE_AND_STATIC | Status: ACTIVE_PARTIAL
+
+**Actions (3)**:
+- ✅ `create_project` → "Create project" [WIRED_LIVE] → SAFE_CLICK
+- ✅ `refresh_health` → "Refresh project health" [WIRED_FALLBACK] → FALLBACK_EXPECTED
+- ✅ `assign_agent` → "Assign agent to project" [WIRED_LIVE] → SAFE_CLICK
+
 ### /doc-center (DocCenterPage)
 
 Root: `[data-testid="doc-center-page"]`  
@@ -299,6 +309,6 @@ Truth: MIXED_LIVE_AND_STATIC | Status: DISPLAY_ONLY
 
 ### /htf (HTFPage)
 
-Root: `[data-testid="page-htf"]`  
+Root: `[data-testid="htf-module-page"]`  
 Truth: MIXED_LIVE_AND_STATIC | Status: ACTIVE_PARTIAL
 

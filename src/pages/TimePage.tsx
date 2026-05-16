@@ -710,6 +710,7 @@ export const TimePage: React.FC = () => {
       {/* Content Sections */}
       <div
         className="content"
+        data-testid="page-time-content"
         role="tabpanel"
         id={`time-panel-${activeTab}`}
         aria-labelledby={`time-tab-${activeTab}`}

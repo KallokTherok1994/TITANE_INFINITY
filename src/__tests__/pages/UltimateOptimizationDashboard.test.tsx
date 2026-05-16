@@ -47,6 +47,7 @@ describe('UltimateOptimizationDashboard', () => {
   it('renders the page container', () => {
     renderPage();
     expect(screen.getByTestId('page-optimization')).toBeInTheDocument();
+    expect(screen.getByTestId('page-optimization-content')).toBeInTheDocument();
   });
 
   it('renders title', () => {

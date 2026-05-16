@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { PageHealthBanner } from '../components/system/PageHealthBanner';
 import { SurfaceTruthBadge } from '../components/system/SurfaceTruthBadge';
 import { safeInvokeCanonical } from '@/utils/invoke';
 
@@ -83,6 +84,11 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
       className="orchestration-intelligence-center p-6 space-y-6"
       data-testid="page-orchestration-intelligence"
     >
+      <PageHealthBanner
+        route="/orchestration-intelligence"
+        variant="SIMULATED"
+        message="Surface simulee: la vue reste visible, mais ses signaux backend ne sont pas qualifies comme runtime live."
+      />
       {/* Header */}
       <div className="header mb-8">
         <div

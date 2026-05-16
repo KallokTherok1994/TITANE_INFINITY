@@ -167,6 +167,7 @@ describe('TimePage', () => {
       renderTimePage('/time?tab=agenda');
     });
 
+    expect(await screen.findByTestId('page-time-content')).toBeInTheDocument();
     expect(await screen.findByText('Sync TITANE sprint')).toBeInTheDocument();
     expect(screen.queryByText(/à implémenter/i)).not.toBeInTheDocument();
   });

@@ -16,6 +16,11 @@ const MANIFEST_PATH = resolve(
   ROOT,
   'docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json'
 );
+const EXPECTED_ROUTE_COUNT = 30;
+const EXPECTED_TAB_COUNT = 22;
+const EXPECTED_ALIAS_COUNT = 65;
+const EXPECTED_SAFE_ACTION_COUNT = 38;
+const EXPECTED_SENSITIVE_ACTION_COUNT = 13;
 
 const VALID_TRUTH_CLASSES = [
   'MIXED_LIVE_AND_STATIC',
@@ -74,24 +79,24 @@ describe('UI Desktop Manifest Gate (v50)', () => {
   });
 
   describe('Route counts', () => {
-    it('routeCount = 29', () => {
+    it(`routeCount = ${EXPECTED_ROUTE_COUNT}`, () => {
       const m = loadManifest();
-      expect(m.routeCount).toBe(29);
+      expect(m.routeCount).toBe(EXPECTED_ROUTE_COUNT);
     });
 
-    it('routes array has 29 entries', () => {
+    it(`routes array has ${EXPECTED_ROUTE_COUNT} entries`, () => {
       const m = loadManifest();
-      expect(m.routes.length).toBe(29);
+      expect(m.routes.length).toBe(EXPECTED_ROUTE_COUNT);
     });
 
-    it('tabCount = 22', () => {
+    it(`tabCount = ${EXPECTED_TAB_COUNT}`, () => {
       const m = loadManifest();
-      expect(m.tabCount).toBe(22);
+      expect(m.tabCount).toBe(EXPECTED_TAB_COUNT);
     });
 
-    it('aliasCount = 65', () => {
+    it(`aliasCount = ${EXPECTED_ALIAS_COUNT}`, () => {
       const m = loadManifest();
-      expect(m.aliasCount).toBe(65);
+      expect(m.aliasCount).toBe(EXPECTED_ALIAS_COUNT);
     });
   });
 
@@ -255,22 +260,22 @@ describe('UI Desktop Manifest Gate (v50)', () => {
       }
     });
 
-    it('safe actions total = 35', () => {
+    it(`safe actions total = ${EXPECTED_SAFE_ACTION_COUNT}`, () => {
       const m = loadManifest();
       const total = m.routes.reduce(
         (s: number, r: any) => s + (r.safeActions?.length || 0),
         0
       );
-      expect(total).toBe(35);
+      expect(total).toBe(EXPECTED_SAFE_ACTION_COUNT);
     });
 
-    it('sensitive actions total = 13', () => {
+    it(`sensitive actions total = ${EXPECTED_SENSITIVE_ACTION_COUNT}`, () => {
       const m = loadManifest();
       const total = m.routes.reduce(
         (s: number, r: any) => s + (r.sensitiveActions?.length || 0),
         0
       );
-      expect(total).toBe(13);
+      expect(total).toBe(EXPECTED_SENSITIVE_ACTION_COUNT);
     });
 
     it('all sensitive actions have isSensitive=true', () => {

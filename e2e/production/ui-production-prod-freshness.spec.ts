@@ -12,6 +12,26 @@ import { fileURLToPath } from 'url';
 const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(CURRENT_DIR, '../../');
 
+function extractArtifactNames(
+  artifacts:
+    | Record<string, string>
+    | Array<string | { file?: string; name?: string }>
+    | undefined
+): string[] {
+  if (!artifacts) return [];
+  if (Array.isArray(artifacts)) {
+    return artifacts
+      .map(entry => {
+        if (typeof entry === 'string') return entry;
+        return entry.file ?? entry.name ?? '';
+      })
+      .filter(Boolean);
+  }
+  return Object.values(artifacts).filter(
+    (value): value is string => typeof value === 'string' && value.length > 0
+  );
+}
+
 test.describe('TITANE v84 — Production Prod Freshness', () => {
   test('package.json version is defined and non-empty', () => {
     const pkg = JSON.parse(
@@ -99,13 +119,13 @@ test.describe('TITANE v84 — Production Prod Freshness', () => {
     const deployVersion = fs.readFileSync(versionPath, 'utf8').trim();
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
       version?: string;
-      artifacts?: Record<string, string>;
+      artifacts?: Record<string, string> | Array<string | { file?: string; name?: string }>;
     };
 
     expect(deployVersion).toMatch(/^\d+\.\d+\.\d+$/);
     expect(manifest.version).toBe(deployVersion);
 
-    for (const artifactName of Object.values(manifest.artifacts ?? {})) {
+    for (const artifactName of extractArtifactNames(manifest.artifacts)) {
       const artifactPath = path.join(PROJECT_ROOT, 'deployment/latest', artifactName);
       expect(fs.existsSync(artifactPath)).toBe(true);
       expect(artifactName).toContain(deployVersion);

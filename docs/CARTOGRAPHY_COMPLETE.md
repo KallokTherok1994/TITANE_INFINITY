@@ -1,3 +1,11 @@
+## 2026-05-16 — Desktop/browser proof sync on canonical UI surfaces (delta cartographie)
+
+- Delta Ring 4 minimal: [src/modules/OrchestrationIntelligenceCenter.tsx](src/modules/OrchestrationIntelligenceCenter.tsx) publie maintenant un `PageHealthBanner` `SIMULATED` sur `/orchestration-intelligence`, refermant le drift entre `simulationDisclosureApplied=true` dans le registre et la verite UI visible.
+- Delta Ring 4 minimal: [src/pages/TimePage.tsx](src/pages/TimePage.tsx), [src/pages/DevPage.tsx](src/pages/DevPage.tsx), [src/pages/PerfectFusionDashboard.tsx](src/pages/PerfectFusionDashboard.tsx), [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx), [src/pages/UltimateOptimizationDashboard.tsx](src/pages/UltimateOptimizationDashboard.tsx) exposent des ancres desktop `*-content` stables pour la reconciliation menu principal et les preuves WDIO.
+- Delta preuve/gates: le manifest desktop v50 regenere couvre 30 routes canoniques (ajout effectif `/multiproject` dans la chaine de verite), 22 tabs, 38 safe actions et 13 sensitive actions; [scripts/verify/verify-ui-desktop-coverage.mjs](scripts/verify/verify-ui-desktop-coverage.mjs), [src/services/agent/__tests__/uiDesktopManifestGate.test.ts](src/services/agent/__tests__/uiDesktopManifestGate.test.ts), [e2e/desktop/ui-desktop-control-inventory.wdio.test.js](e2e/desktop/ui-desktop-control-inventory.wdio.test.js) et [e2e/desktop/ui-desktop-safe-actions.wdio.test.js](e2e/desktop/ui-desktop-safe-actions.wdio.test.js) sont realignes sur cet inventaire.
+- Delta browser proof: [e2e/production/ui-production-route-proof.spec.ts](e2e/production/ui-production-route-proof.spec.ts) et [scripts/verify/verify-ui-production-route-proof.mjs](scripts/verify/verify-ui-production-route-proof.mjs) alignent `/htf` sur `htf-module-page` et incluent `/multiproject` dans la couverture canonique 30/30.
+- Aucun changement IPC ni Ring 0/1/2; le lot referme uniquement un drift de surface UI visible et de preuves associees.
+
 ## 2026-05-15 — UCM progressive observability gate on conversation lane (delta cartographie)
 
 - Delta Ring 3 additif sur [src/services/conversationEngine.ts](src/services/conversationEngine.ts): la projection shadow UCM est maintenant conditionnee par `ucmRuntimeObservability`.

@@ -1,8 +1,8 @@
 {
-  "generated": "2026-05-10T04:40:10.750Z",
+  "generated": "2026-05-16T04:43:30.672Z",
   "mission": "UI_DESKTOP_FULL_COVERAGE_v50",
   "version": "1.0.0",
-  "routeCount": 29,
+  "routeCount": 30,
   "tabCount": 22,
   "aliasCount": 65,
   "routes": [
@@ -199,12 +199,12 @@
         {
           "from": "/memory-evo",
           "to": "/titane?tab=transformation",
-          "notes": "Memory evo \u2192 transformation tab"
+          "notes": "Memory evo → transformation tab"
         },
         {
           "from": "/memory-evolution",
           "to": "/titane?tab=transformation",
-          "notes": "Memory evolution \u2192 transformation tab"
+          "notes": "Memory evolution → transformation tab"
         }
       ],
       "fallbackPolicy": "Provider quality conditional; browser mode shows BackendDownIndicator",
@@ -682,7 +682,7 @@
         {
           "from": "/secure",
           "to": "/admin?tab=governance",
-          "notes": "Secure alias \u2192 governance"
+          "notes": "Secure alias → governance"
         },
         {
           "from": "/audio-center",
@@ -836,12 +836,12 @@
         {
           "from": "/cognitive",
           "to": "/dev?tab=diagnostics",
-          "notes": "Cognitive \u2192 diagnostics tab"
+          "notes": "Cognitive → diagnostics tab"
         },
         {
           "from": "/stats",
           "to": "/dev?tab=diagnostics",
-          "notes": "Stats \u2192 diagnostics tab"
+          "notes": "Stats → diagnostics tab"
         },
         {
           "from": "/one-core",
@@ -1164,7 +1164,7 @@
         ]
       },
       "knownBlockers": [
-        "SIMULATED_UI \u2014 no live backend data"
+        "SIMULATED_UI — no live backend data"
       ],
       "testCoverage": {
         "routeTest": "ui-desktop-all-routes.wdio.test.js",
@@ -1525,7 +1525,7 @@
         ]
       },
       "knownBlockers": [
-        "SIMULATED_UI \u2014 no live backend data"
+        "SIMULATED_UI — no live backend data"
       ],
       "testCoverage": {
         "routeTest": "ui-desktop-all-routes.wdio.test.js",
@@ -1907,6 +1907,99 @@
         "tabs": [],
         "actions": [
           "[data-testid=\"run_research\"]"
+        ]
+      },
+      "knownBlockers": [],
+      "testCoverage": {
+        "routeTest": "ui-desktop-all-routes.wdio.test.js",
+        "tabTest": "N/A",
+        "controlInventory": "ui-desktop-control-inventory.wdio.test.js",
+        "safeActionsTest": "ui-desktop-safe-actions.wdio.test.js",
+        "sensitiveActionsTest": "N/A",
+        "errorBoundaryTest": "ui-desktop-error-boundary-and-empty-state.wdio.test.js",
+        "agentChatTest": "ui-desktop-agent-chat-context.wdio.test.js"
+      }
+    },
+    {
+      "route": "/multiproject",
+      "pageId": "multiproject_dashboard",
+      "pageComponent": "MultiProjectDashboard",
+      "rootTestId": "multiproject-dashboard",
+      "navOwner": "projects",
+      "truthClass": "MIXED_LIVE_AND_STATIC",
+      "status": "ACTIVE_PARTIAL",
+      "isSimulated": false,
+      "isDisplayOnly": false,
+      "tabs": [],
+      "tabCount": 0,
+      "visibleActions": [
+        {
+          "actionId": "create_project",
+          "label": "Create project",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "refresh_health",
+          "label": "Refresh project health",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "assign_agent",
+          "label": "Assign agent to project",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "safeActions": [
+        {
+          "actionId": "create_project",
+          "label": "Create project",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        },
+        {
+          "actionId": "refresh_health",
+          "label": "Refresh project health",
+          "wiringStatus": "WIRED_FALLBACK",
+          "ipcCommand": null,
+          "safeActionPolicy": "FALLBACK_EXPECTED",
+          "isSensitive": false
+        },
+        {
+          "actionId": "assign_agent",
+          "label": "Assign agent to project",
+          "wiringStatus": "WIRED_LIVE",
+          "ipcCommand": null,
+          "safeActionPolicy": "SAFE_CLICK",
+          "isSensitive": false
+        }
+      ],
+      "sensitiveActions": [],
+      "backendCommands": [],
+      "sourceFiles": [
+        "src/pages/MultiProjectDashboard.tsx"
+      ],
+      "aliases": [],
+      "fallbackPolicy": "Local registry can be empty; health rollup and agent readiness degrade visibly",
+      "desktopProofRequired": true,
+      "browserProofStatus": "PASS_v48",
+      "selectors": {
+        "root": "[data-testid=\"multiproject-dashboard\"]",
+        "tabs": [],
+        "actions": [
+          "[data-testid=\"create_project\"]",
+          "[data-testid=\"refresh_health\"]",
+          "[data-testid=\"assign_agent\"]"
         ]
       },
       "knownBlockers": [],
@@ -2601,7 +2694,7 @@
         ]
       },
       "knownBlockers": [
-        "DISPLAY_ONLY \u2014 read-only state, no interactive writes"
+        "DISPLAY_ONLY — read-only state, no interactive writes"
       ],
       "testCoverage": {
         "routeTest": "ui-desktop-all-routes.wdio.test.js",

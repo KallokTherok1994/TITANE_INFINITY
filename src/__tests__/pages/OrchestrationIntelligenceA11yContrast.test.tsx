@@ -18,6 +18,18 @@ import { resolve } from 'node:path';
  * Smaller `text-xs` font alone still provides visual hierarchy with the label.
  */
 describe('OrchestrationIntelligenceCenter A11y — tab desc contrast hardening', () => {
+  it('keeps the simulated disclosure banner wired on the canonical route', () => {
+    const tsxPath = resolve(
+      process.cwd(),
+      'src/modules/OrchestrationIntelligenceCenter.tsx',
+    );
+    const src = readFileSync(tsxPath, 'utf-8');
+
+    expect(src).toMatch(/PageHealthBanner/);
+    expect(src).toMatch(/route="\/orchestration-intelligence"/);
+    expect(src).toMatch(/variant="SIMULATED"/);
+  });
+
   it('tab description span does not use opacity-70 (would drop below AA 4.5:1)', () => {
     const tsxPath = resolve(
       process.cwd(),

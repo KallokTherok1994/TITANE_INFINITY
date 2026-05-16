@@ -218,7 +218,7 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
       className="bg-titanium-bg-base text-white min-h-screen p-6"
       data-testid="page-fusion"
     >
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6" data-testid="page-fusion-content">
         <SurfaceTruthBadge
           variant={liveConnected ? 'LIVE' : isInitialized ? 'PARTIAL' : 'DEGRADED'}
         />

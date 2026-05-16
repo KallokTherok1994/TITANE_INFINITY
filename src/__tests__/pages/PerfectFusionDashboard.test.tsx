@@ -66,6 +66,7 @@ describe('PerfectFusionDashboard', () => {
   it('renders the page container', () => {
     renderPage();
     expect(screen.getByTestId('page-fusion')).toBeInTheDocument();
+    expect(screen.getByTestId('page-fusion-content')).toBeInTheDocument();
   });
 
   it('shows SurfaceTruthBadge (LIVE, PARTIAL, or DEGRADED — not SIMULATED)', () => {

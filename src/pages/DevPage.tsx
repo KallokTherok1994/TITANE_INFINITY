@@ -952,6 +952,7 @@ function DevPageContent(): JSX.Element {
 
       <main
         className="dev-main"
+        data-testid="page-dev-content"
         tabIndex={0}
         aria-label="Contenu principal DEV"
         id={`dev-panel-${activeSection}`}

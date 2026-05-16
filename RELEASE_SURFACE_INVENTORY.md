@@ -1,3 +1,34 @@
+## v35.1.7 - 2026-05-16 - BUILD ALL + UI DESKTOP/BROWSER PROOFS (BLOCKED_SUDO_REQUIRED system install)
+
+- **Mode** : DURABLE | **Bump Rule 13** : 35.1.6 -> 35.1.7 (patch)
+- **UI proof lock** : alignement runtime `PageHealthBanner` simule `/orchestration-intelligence`, ancres `*-content` stables pour `DEV`, `FUSION`, `TWINS`, `TIME`, `OPTIMIZATION`, manifeste desktop v50 et preuve production `/htf` + `/multiproject`.
+- **Audit frontend** : `pnpm run check` PASS, `pnpm run lint` PASS, `pnpm run test -- --run` PASS (`653` fichiers / `9473` tests), `pnpm run build` PASS.
+- **Build release Linux** : `pnpm run build:tauri` PASS. Link release `11m06s`, 3 bundles produits.
+- **Artifacts produits** :
+  - `src-tauri/target/release/bundle/appimage/titane-infinity_35.1.7_amd64.AppImage`
+    sha256 `3d050a88b094e8439873c93a11c26e938f9e652668d2cff380f5fc02b2d24f25`
+  - `src-tauri/target/release/bundle/deb/titane-infinity_35.1.7_amd64.deb`
+    sha256 `0e97bbbdc205d39f763b35c7e778d0032c1161fb4db58122e3bfc435675f4f99`
+  - `src-tauri/target/release/bundle/rpm/titane-infinity-35.1.7-1.x86_64.rpm`
+    sha256 `1d3625ac9a5f15be7eab1ceb993c42c9ac564c699b69cb5808676b6542957d08`
+- **Checksums fichier canonique** : `RELEASE_ARTIFACTS_CHECKSUMS_35.1.7.txt`.
+- **deployment/latest** : normalise sur `35.1.7` avec `AppImage + DEB + RPM`, regeneration `MANIFEST.json`, `SHA256SUMS.txt`, `SIZES.txt`, `VERSION.txt`.
+- **Desktop proofs** :
+  - `verify:ui-desktop-main-menu-reconciliation:current` PASS (`8` surfaces, `WARN=0 FAIL=0`).
+  - WDIO explicit `TAURI_BINARY_PATH=src-tauri/target/release/titane-infinity` PASS sur `main-menu-capture-reconciliation`, `functional-core`, `functional-utility`, `safe-actions`, `sensitive-actions-guarded`.
+- **Browser/HTTP proofs** :
+  - `playwright e2e/production/ui-production-route-proof.spec.ts` PASS.
+  - `playwright e2e/production/ui-production-prod-freshness.spec.ts` PASS apres durcissement du spec pour accepter le format reel de `deployment/latest/MANIFEST.json`.
+- **Host/install truth** :
+  - `bash scripts/install-appimage.sh` PASS (`~/.local/bin/titane-infinity-appimage`).
+  - `bash scripts/post-build/update-desktop-icons.sh` PASS partiel, `Exec=/usr/bin/titane-infinity` confirme sur launchers local/system, caches refresh OK.
+  - `sudo -n dpkg -i src-tauri/target/release/bundle/deb/titane-infinity_35.1.7_amd64.deb` = `BLOCKED_SUDO_REQUIRED`; `dpkg -s titane-infinity` reste `35.1.6`.
+- **Registry / governance** : `pnpm verify:registry` PASS, `bash scripts/autoheal/detect_recurrence.sh` PASS, `bash scripts/verify_instructions.sh` PASS, `pnpm run verify:ollama:boundary` PASS.
+- **Rollback** :
+  - Code/docs: `git restore -- .vscode/settings.json UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md RELEASE_SURFACE_INVENTORY.md RELEASE_ARTIFACTS_CHECKSUMS_35.1.7.txt e2e/production/ui-production-prod-freshness.spec.ts scripts/autoheal/autoheal_rules.jsonl src modules/pages/tests/scripts touched in this lot`
+  - Release surface: `git restore -- deployment/latest/MANIFEST.json deployment/latest/SHA256SUMS.txt deployment/latest/SIZES.txt deployment/latest/VERSION.txt && rm -f deployment/latest/titane-infinity_35.1.7_amd64.AppImage deployment/latest/titane-infinity_35.1.7_amd64.deb deployment/latest/titane-infinity-35.1.7-1.x86_64.rpm`
+  - Installed host: `sudo dpkg -i deployment/latest/titane-infinity_35.1.6_amd64.deb && bash scripts/post-build/update-desktop-icons.sh`
+
 ## v35.1.6 - 2026-05-15 - BUILD + RELEASE + DEPLOYMENT LATEST SYNC (BLOCKED_APPROVAL system install)
 
 - **Mode** : DURABLE | **Bump Rule 13** : 35.1.5 -> 35.1.6 (patch)

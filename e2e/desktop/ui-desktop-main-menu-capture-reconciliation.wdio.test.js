@@ -82,7 +82,7 @@ const SURFACES = [
     rootTestId: 'page-titane',
     tabsExpected: [
       'tab-conversation',
-      'tab-dashboard',
+      'tab-overview',
       'tab-vision',
       'tab-memory',
       'tab-progression',
@@ -94,7 +94,12 @@ const SURFACES = [
     route: '/time',
     topNavItem: 'TIME',
     rootTestId: 'page-time',
-    tabsExpected: ['tab-now', 'tab-agenda', 'tab-timeline', 'tab-snapshots'],
+    tabsExpected: [
+      'tab-time-now',
+      'tab-time-agenda',
+      'tab-time-timeline',
+      'tab-time-snapshots',
+    ],
     controlsExpected: ['page-time-content'],
   },
   {
@@ -102,7 +107,7 @@ const SURFACES = [
     route: '/admin',
     topNavItem: 'ADMIN',
     rootTestId: 'page-admin',
-    tabsExpected: ['tab-system', 'tab-configuration', 'tab-audio'],
+    tabsExpected: ['tab-admin-system', 'tab-admin-config', 'tab-admin-audio'],
     controlsExpected: ['page-admin-content'],
   },
   {
@@ -110,7 +115,7 @@ const SURFACES = [
     route: '/dev',
     topNavItem: 'DEV',
     rootTestId: 'page-dev',
-    tabsExpected: ['tab-overview', 'tab-diagnostics'],
+    tabsExpected: ['tab-dev-overview', 'tab-dev-diagnostics'],
     controlsExpected: ['page-dev-content'],
   },
   {

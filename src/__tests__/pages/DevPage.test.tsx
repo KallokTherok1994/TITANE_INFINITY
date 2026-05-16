@@ -244,4 +244,23 @@ describe('DevPage', () => {
     expect(main).toHaveAttribute('tabindex', '0');
     expect(main).toHaveAttribute('aria-label', 'Contenu principal DEV');
   });
+
+  it('exposes the canonical desktop content anchor once ready', async () => {
+    qaGetStateMock.mockResolvedValue({
+      health_score: 92,
+      test_coverage: 88,
+      active_monitors: 1,
+      hardening_level: 'standard',
+    });
+    qaGetSystemMetricsMock.mockResolvedValue({});
+    qaListTestSuitesMock.mockResolvedValue([]);
+    qaListAlertsMock.mockResolvedValue([]);
+
+    renderDevPage();
+
+    expect(await screen.findByTestId('page-dev-content')).toHaveAttribute(
+      'role',
+      'tabpanel'
+    );
+  });
 });

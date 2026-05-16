@@ -1,18 +1,21 @@
 {
-  "version": "35.1.6",
-  "timestamp": "2026-05-15T14:42:47Z",
+  "version": "35.1.7",
+  "timestamp": "2026-05-16T05:21:27.134Z",
   "artifacts": [
     {
-      "type": "appimage",
-      "file": "titane-infinity_35.1.6_amd64.AppImage"
+      "name": "titane-infinity_35.1.7_amd64.AppImage",
+      "sha256": "3d050a88b094e8439873c93a11c26e938f9e652668d2cff380f5fc02b2d24f25",
+      "size": 99564024
     },
     {
-      "type": "deb",
-      "file": "titane-infinity_35.1.6_amd64.deb"
+      "name": "titane-infinity_35.1.7_amd64.deb",
+      "sha256": "0e97bbbdc205d39f763b35c7e778d0032c1161fb4db58122e3bfc435675f4f99",
+      "size": 25434100
     },
     {
-      "type": "rpm",
-      "file": "titane-infinity-35.1.6-1.x86_64.rpm"
+      "name": "titane-infinity-35.1.7-1.x86_64.rpm",
+      "sha256": "1d3625ac9a5f15be7eab1ceb993c42c9ac564c699b69cb5808676b6542957d08",
+      "size": 25434150
     }
   ]
 }

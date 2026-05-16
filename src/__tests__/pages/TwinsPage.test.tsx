@@ -78,6 +78,7 @@ describe('TwinsPage', () => {
   it('renders the page container', () => {
     renderPage();
     expect(screen.getByTestId('page-twins')).toBeInTheDocument();
+    expect(screen.getByTestId('page-twins-content')).toBeInTheDocument();
   });
 
   it('shows SurfaceTruthBadge with PARTIAL variant', () => {

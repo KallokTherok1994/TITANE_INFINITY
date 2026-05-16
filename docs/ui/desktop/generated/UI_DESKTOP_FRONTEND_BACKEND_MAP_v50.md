@@ -1,6 +1,6 @@
 # TITANE Desktop Frontend/Backend Action Map v50
 
-Generated: 2026-05-10T04:31:07.055Z  
+Generated: 2026-05-16T04:43:30.675Z  
 Mission: UI_DESKTOP_FULL_COVERAGE_v50
 
 > Mapping from visible UI actions to IPC commands. Source: uiSurfaceRegistry + docs/IPC_CATALOG.md.
@@ -46,6 +46,9 @@ Mission: UI_DESKTOP_FULL_COVERAGE_v50
 | /memory | - | Delete memory entry | delete_entry | persistent_memory_delete_entry | WIRED_LIVE | REQUIRES_CONFIRMATION | ui-desktop-sensitive-actions-guarded.wdio.test.js |
 | /memory | - | Get memory stats | get_stats | persistent_memory_get_stats | WIRED_LIVE | SAFE_CLICK | ui-desktop-safe-actions.wdio.test.js |
 | /research | - | Run web research | run_research | web_research | WIRED_LIVE | SAFE_CLICK | ui-desktop-safe-actions.wdio.test.js |
+| /multiproject | - | Create project | create_project | UNMAPPED_HANDLER | WIRED_LIVE | SAFE_CLICK | ui-desktop-safe-actions.wdio.test.js |
+| /multiproject | - | Refresh project health | refresh_health | UNMAPPED_HANDLER | WIRED_FALLBACK | FALLBACK_EXPECTED | ui-desktop-safe-actions.wdio.test.js |
+| /multiproject | - | Assign agent to project | assign_agent | UNMAPPED_HANDLER | WIRED_LIVE | SAFE_CLICK | ui-desktop-safe-actions.wdio.test.js |
 | /doc-center | - | Export DOCX | export_docx | export_docx_file | WIRED_LIVE | REQUIRES_CONFIRMATION | ui-desktop-sensitive-actions-guarded.wdio.test.js |
 | /singularity | - | Get singularity state | get_state | singularity_get_state | WIRED_FALLBACK | FALLBACK_EXPECTED | ui-desktop-safe-actions.wdio.test.js |
 | /sentinel | - | Subscribe sentinel events | subscribe | sentinel_subscribe | WIRED_FALLBACK | FALLBACK_EXPECTED | ui-desktop-safe-actions.wdio.test.js |
@@ -80,6 +83,7 @@ Mission: UI_DESKTOP_FULL_COVERAGE_v50
 | /cloud | cloud_get_status, cloud_sync_push, cloud_sync_pull, cloud_verify_integrity | uiSurfaceRegistry |
 | /memory | persistent_memory_read, persistent_memory_get_stats, persistent_memory_write_entry, persistent_memory_delete_entry | uiSurfaceRegistry |
 | /research | web_research | uiSurfaceRegistry |
+| /multiproject | - | uiSurfaceRegistry |
 | /doc-center | export_docx_file | uiSurfaceRegistry |
 | /singularity | singularity_get_state, singularity_sync_state | uiSurfaceRegistry |
 | /sentinel | sentinel_subscribe | uiSurfaceRegistry |

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-10T04:31:07.053Z",
+  "generated": "2026-05-16T04:43:30.673Z",
   "mission": "UI_DESKTOP_FULL_COVERAGE_v50",
   "note": "Static shape from registry. Dynamic DOM discovery is done by ui-desktop-control-inventory.wdio.test.js",
   "controls": [
@@ -904,6 +904,54 @@
       "safeActionPolicy": "SAFE_CLICK"
     },
     {
+      "page": "/multiproject",
+      "tab": null,
+      "selector": "[data-testid=\"multiproject-dashboard\"]",
+      "dataTestId": "multiproject-dashboard",
+      "text": "MultiProjectDashboard",
+      "type": "page-root",
+      "enabled": true,
+      "visible": true,
+      "actionClass": "PAGE_ROOT",
+      "safeActionPolicy": "READ_ONLY_CLICK"
+    },
+    {
+      "page": "/multiproject",
+      "tab": null,
+      "selector": "[data-testid=\"create_project\"]",
+      "dataTestId": "create_project",
+      "text": "Create project",
+      "type": "action-button",
+      "enabled": true,
+      "visible": true,
+      "actionClass": "WIRED_LIVE",
+      "safeActionPolicy": "SAFE_CLICK"
+    },
+    {
+      "page": "/multiproject",
+      "tab": null,
+      "selector": "[data-testid=\"refresh_health\"]",
+      "dataTestId": "refresh_health",
+      "text": "Refresh project health",
+      "type": "action-button",
+      "enabled": true,
+      "visible": true,
+      "actionClass": "WIRED_FALLBACK",
+      "safeActionPolicy": "FALLBACK_EXPECTED"
+    },
+    {
+      "page": "/multiproject",
+      "tab": null,
+      "selector": "[data-testid=\"assign_agent\"]",
+      "dataTestId": "assign_agent",
+      "text": "Assign agent to project",
+      "type": "action-button",
+      "enabled": true,
+      "visible": true,
+      "actionClass": "WIRED_LIVE",
+      "safeActionPolicy": "SAFE_CLICK"
+    },
+    {
       "page": "/doc-center",
       "tab": null,
       "selector": "[data-testid=\"doc-center-page\"]",
@@ -1182,8 +1230,8 @@
     {
       "page": "/htf",
       "tab": null,
-      "selector": "[data-testid=\"page-htf\"]",
-      "dataTestId": "page-htf",
+      "selector": "[data-testid=\"htf-module-page\"]",
+      "dataTestId": "htf-module-page",
       "text": "HTFPage",
       "type": "page-root",
       "enabled": true,

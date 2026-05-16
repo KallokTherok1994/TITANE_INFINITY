@@ -16,6 +16,7 @@ import {
   getAllRoutes,
   getRouteEntry,
   getSimulatedRoutes,
+  getSummary,
 } from './helpers/uiDesktopManifest.js';
 import {
   scanInteractiveElements,
@@ -41,8 +42,10 @@ describe('TITANE Desktop — Control Inventory (v50)', () => {
   // ──────────────────────────────────────────────────────
 
   describe('L1 Static — Static Control Inventory', () => {
-    it('29 routes are in manifest', () => {
-      expect(getAllRoutes().length).toBe(29);
+    it('manifest route inventory matches the canonical summary', () => {
+      const summary = getSummary();
+      expect(getAllRoutes().length).toBe(summary.routeCount);
+      expect(summary.routeCount).toBe(30);
     });
 
     it('all routes have rootTestId defined', () => {
