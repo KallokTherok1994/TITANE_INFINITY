@@ -183,3 +183,11 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Product behavior details owned by local `src/**/AGENTS.md`.
 - Local sandbox, approval, model, and network posture.
 - Full constitutional doctrine duplication.
+
+## Frontend/UI seal rules
+- Do not restart UI redesign without a new failing proof or explicit product request.
+- Prefer semantic `titanium-*` Tailwind tokens over hardcoded `text-gray-*`/`bg-slate-*` classes.
+- Run `pnpm run check`, `pnpm run lint`, `pnpm run test --run`, and `pnpm run build` before claiming completion.
+- Update snapshots only for reviewed, intentional UI token diffs — never broad repo-wide.
+- Keep proof packs under `proof_packs/` for certification cycles (force-add required, gitignored by default).
+- Backup branch before any redesign: `git branch backup/frontend-before-<scope>`.
