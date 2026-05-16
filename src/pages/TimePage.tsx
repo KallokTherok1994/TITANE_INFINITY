@@ -27,6 +27,7 @@ import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import './TimePage.css';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { CuratedDataBanner } from '@/components/system/EmptyStateTruth';
 import { TimeBridgeStatusCard } from '@/components/time/TimeBridgeStatusCard';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -2195,10 +2196,13 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
         </div>
       </div>
 
+      {/* ── DONNÉES EXEMPLES DISCLOSURE ── */}
+      <CuratedDataBanner source="habitudes cognitives types — connectez vos sessions réelles" />
+
       {/* ── SESSIONS DEEP WORK ── */}
       <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">
-          📊 Sessions Deep Work Récentes
+          📊 Sessions Deep Work (Exemples)
         </h3>
         <div className="space-y-3">
           {[
@@ -2268,7 +2272,7 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
       {/* ── ANALYSES DE PATTERNS ── */}
       <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">
-          📊 Analyses de Patterns
+          📊 Analyses de Patterns (Exemples)
         </h3>
         <div className="space-y-4">
           <div className="bg-titanium-bg-base p-4 rounded">
@@ -2346,7 +2350,7 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
 
       {/* ── RITUELS TEMPORELS ── */}
       <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
-        <h3 className="text-xl font-semibold mb-4 text-blue-400">🔄 Rituels Temporels</h3>
+        <h3 className="text-xl font-semibold mb-4 text-blue-400">🔄 Rituels Temporels (Exemples)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-titanium-bg-base p-4 rounded">
             <div className="text-lg font-medium mb-2">🌅 Matin de Création</div>

@@ -1,3 +1,34 @@
+## 2026-05-16 — UI Chat Omnisync Completion Program v1 (delta cartographie)
+
+- Delta Ring 4 minimal: [src/components/system/EmptyStateTruth.tsx](src/components/system/EmptyStateTruth.tsx) — `EmptyStateTruth` composant canonique d'état vide/dégradé avec `EmptyStateReason`; `CuratedDataBanner` pour les sections à données exemples.
+- Delta Ring 4 minimal: [src/services/modules/moduleContextTypes.ts](src/services/modules/moduleContextTypes.ts) — contrat `ModuleContextSnapshot` pour le registre des modules.
+- Delta Ring 4 minimal: [src/services/modules/moduleContextRegistry.ts](src/services/modules/moduleContextRegistry.ts) — registre singleton pour publication/consommation de snapshots par le chat et les pages.
+- Delta Ring 4 minimal: [scripts/audit/audit-ui-chat-omnisync.mjs](scripts/audit/audit-ui-chat-omnisync.mjs) — audit non-mutatif des 13 surfaces UI avec classification LIVE/ACTIVE_PARTIAL/SIMULATED/UNKNOWN.
+- Delta Ring 4 minimal: `CuratedDataBanner` ajouté dans [src/pages/TimePage.tsx](src/pages/TimePage.tsx) — sections hardcodées du Cognitive Engine tab marquées "Données exemples".
+- Nouveaux tests: `EmptyStateTruth.test.tsx` (4 assertions), `moduleContextRegistry.test.ts` (5 assertions) — 9485/9485 PASS.
+- Preuve supplémentaire: `reports/ui-chat-omnisync-completion-2026-05-16/UI_CHAT_OMNISYNC_AUDIT.md`, `frontend-ui-omnisync-inventory.json`.
+- Aucun changement Ring 0/1/2; delta strictement Ring 4 / composants système / services modules.
+- Rule 15: FRONTEND_UI_TRUTH.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour.
+
+## 2026-05-16 — Installed launcher & SurfaceTruth final seal (delta cartographie)
+
+- Delta Ring 4 minimal: [e2e/desktop/stable-surface-truth.wdio.test.js](e2e/desktop/stable-surface-truth.wdio.test.js) prouve DOM SurfaceTruth via WDIO/tauri-driver: `data-app-version=35.1.7`, `data-build-timestamp` non-zéro, `data-surface-truth=app-root`, `data-surface-ring=core` — 3/3 assertions passées.
+- Delta Ring 4 minimal: mise à jour `.desktop` utilisateur local (`~/.local/share/applications/titane-infinity.desktop`) pointant vers AppImage stable 35.1.7 via `Exec=...Titan-Stable_35.1.7_amd64.AppImage --appimage-extract-and-run --no-sandbox`.
+- Delta Ring 4 minimal: [scripts/verify/gate-stable-launcher-truth.sh](scripts/verify/gate-stable-launcher-truth.sh) étendu pour émettre `USER_LOCAL_LAUNCHER_FRESH`, `SYSTEM_INSTALL_STALE`, `BLOCKED_SUDO_REQUIRED` en sus de `INSTALLED_LAUNCHER_FRESH/STALE`.
+- Preuve supplémentaire: `reports/runtime-proof/stable-surface-truth-proof.json`, `reports/e2e-desktop/wdio.log`, `reports/installed_launcher_surfacetruth_final_seal_report.md`.
+- Verdict: STABLE_ARTIFACT_FRESH + STABLE_WINDOW_OBSERVED + SURFACE_TRUTH_CONFIRMED + USER_LOCAL_LAUNCHER_FRESH + SYSTEM_INSTALL_STALE + BLOCKED_SUDO_REQUIRED.
+- Aucun changement Ring 0/1/2; delta strictement Ring 4 / E2E / launcher user-local / docs gouvernance.
+- Rule 15: FRONTEND_UI_TRUTH.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour.
+
+## 2026-05-16 — Stable window & launcher truth seal: runtime proof gates (delta cartographie)
+
+- Delta Ring 4 minimal: [scripts/verify/gate-stable-launcher-truth.sh](scripts/verify/gate-stable-launcher-truth.sh) valide la vérité du lanceur installé (fichier .desktop, cible Exec, version du binaire /usr/bin vs package.json).
+- Delta Ring 4 minimal: [scripts/verify/gate-stable-window-truth.sh](scripts/verify/gate-stable-window-truth.sh) tente un lancement borné de l'AppImage stable et observe la fenêtre via wmctrl; classe SURFACE_TRUTH_HARNESS comme BLOCKED si Ollama n'est pas actif.
+- Preuve supplémentaire: `reports/stable_window_launcher_truth_report.md`, `reports/runtime-proof/wmctrl-windows.txt`, `bash scripts/verify_instructions.sh`.
+- Verdict: STABLE_ARTIFACT_FRESH + STABLE_WINDOW_OBSERVED + INSTALLED_LAUNCHER_STALE (35.1.6 vs 35.1.7) + BLOCKED_SUDO_REQUIRED.
+- Aucun changement Ring 0/1/2; delta strictement Ring 4 / scripts validate-only / docs gouvernance.
+- Rule 15: FRONTEND_UI_TRUTH.md + docs/CARTOGRAPHY_COMPLETE.md mis à jour.
+
 ## 2026-05-16 — Canonical SurfaceRoot UI truth and build metadata governance (delta cartographie)
 
 - Delta Ring 4 minimal: [src/components/system/SurfaceRoot.tsx](src/components/system/SurfaceRoot.tsx) introduit un wrapper shell canonique exposant `data-surface-truth`, `data-surface-ring`, `data-app-version` et `data-build-timestamp` sur la boundary principale de l'application.

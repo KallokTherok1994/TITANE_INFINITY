@@ -81,6 +81,8 @@
     "verify:version-truth": "bash scripts/verify/gate-version-truth.sh",
     "verify:surface-root": "bash scripts/verify/gate-surface-root.sh",
     "verify:stable-artifact-freshness": "bash scripts/verify/gate-stable-artifact-freshness.sh",
+    "verify:stable-launcher-truth": "bash scripts/verify/gate-stable-launcher-truth.sh",
+    "verify:stable-window-truth": "bash scripts/verify/gate-stable-window-truth.sh",
     "render:docs:mermaid": "bash scripts/verify/mermaid-render-sync.sh",
     "verify:docs:mermaid": "bash scripts/verify/verify-mermaid-diagrams.sh",
     "verify:docs:mermaid:change": "bash scripts/verify/mermaid-change-request-guard.sh",
