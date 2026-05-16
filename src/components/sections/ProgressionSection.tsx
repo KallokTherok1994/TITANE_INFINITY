@@ -7,7 +7,8 @@
  * Handles: XP progression, achievements, talents, milestones
  */
 
-import React, { useMemo, memo } from 'react';
+import React, { useMemo, memo, useEffect } from 'react';
+import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 import { Grid, Stack } from '@components/layout';
 import { Card } from '@/ui';
 import { XPProgressBar } from '@features/progression';
@@ -77,6 +78,34 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
 
     // Resolve talents from real level threshold
     const talents = useMemo(() => resolveTalents(stats.level), [stats.level]);
+
+    // Module context registry — publish progression snapshot
+    useEffect(() => {
+      const unlockedAchievements = resolvedAchievements.filter(a => a.unlocked).length;
+      moduleContextRegistry.publish('titane.progression', {
+        moduleId: 'titane.progression',
+        route: '/titane?tab=progression',
+        title: 'Progression & XP',
+        status: progression != null ? 'live' : 'partial',
+        source: 'tauri_ipc',
+        capabilities: ['xp-progression', 'achievement-tracking', 'talent-system', 'milestone-visibility'],
+        visibleMetrics: {
+          level: stats.level,
+          totalXP: stats.totalXP,
+          chatMessageCount,
+          evolutionScore: stats.evolutionScore,
+          unlockedAchievements,
+          totalAchievements: resolvedAchievements.length,
+          talentCount: talents.length,
+        },
+        actions: [
+          { id: 'read_progression', label: 'Lire la progression', status: 'wired' },
+          { id: 'read_achievements', label: 'Voir les achievements', status: 'wired' },
+        ],
+        memoryRefs: ['xp_progression_filters'],
+        warnings: progression == null ? ['Progression state loading'] : [],
+      });
+    }, [stats.level, stats.totalXP, stats.evolutionScore, chatMessageCount, progression, resolvedAchievements.length, talents.length]);
 
     // Filter achievements by category
     const categories = useMemo(

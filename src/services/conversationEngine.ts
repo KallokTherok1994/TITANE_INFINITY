@@ -53,6 +53,7 @@ import type {
   Mode,
   ReasonCode,
 } from '@/types/providerMeta';
+import { buildModuleContextInjection } from '@/services/modules/moduleContextBridge';
 import {
   validateProviderDecisionMeta,
   validatePromptBudget,
@@ -1685,6 +1686,14 @@ export async function processMessage(
   // Use useLTMContext() in UI components for display purposes only.
   // The backend dedup guard in convert_to_conversation_response() ensures no duplication.
 
+  // MODULE CONTEXT INJECTION — bounded, prompt-safe snapshot from moduleContextRegistry.
+  // Chat reads live snapshots published by pages; never scrapes DOM.
+  const moduleContextInjection = buildModuleContextInjection({
+    activeRoute: options?.contextEnvelope?.routeContext?.route,
+    maxChars: 800,
+  });
+  const moduleContextBlock = moduleContextInjection.promptBlock || '';
+
   const systemPrompt = [
     staticPromptContext.systemPrompt,
     contextualPrompt,
@@ -1712,6 +1721,7 @@ export async function processMessage(
     persistentMemoryStatusContext,
     runtimeTruthDirectiveContext,
     progressionContext,
+    moduleContextBlock,
     staticPromptContext.cognitiveContext,
   ]
     .filter(Boolean)

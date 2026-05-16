@@ -10,7 +10,8 @@
  * Ce composant unifie Transformation + Évolution Mémoire en un seul onglet.
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
+import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 import { Grid, Stack } from '@components/layout';
 import { Card } from '@/ui';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
@@ -107,6 +108,34 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
 
     const totalMemories =
       stats.memoryShortTerm + stats.memoryMidTerm + stats.memoryLongTerm;
+
+    // Module context registry — publish evolution snapshot
+    useEffect(() => {
+      moduleContextRegistry.publish('titane.evolution', {
+        moduleId: 'titane.evolution',
+        route: '/titane?tab=transformation',
+        title: 'Transformation & Évolution',
+        status: mode === 'tauri' ? 'live' : 'partial',
+        source: mode === 'tauri' ? 'tauri_ipc' : 'local_cache',
+        capabilities: ['evolution-roadmap', 'transformation-phase', 'memory-evolution'],
+        visibleMetrics: {
+          evolutionScore: stats.evolutionScore,
+          transformationPhase,
+          totalMemories,
+          memorySTM: stats.memoryShortTerm,
+          memoryMTM: stats.memoryMidTerm,
+          memoryLTM: stats.memoryLongTerm,
+          level: stats.level,
+          totalXP: stats.totalXP,
+          mode,
+        },
+        actions: [
+          { id: 'read_evolution_state', label: 'Lire l\'état d\'évolution', status: 'wired' },
+          { id: 'read_transformation_phase', label: 'Phase de transformation', status: 'wired' },
+        ],
+        warnings: mode !== 'tauri' ? ['Running in browser mode — some evolution data may be limited'] : [],
+      });
+    }, [stats.evolutionScore, stats.level, stats.totalXP, totalMemories, mode, transformationPhase, stats.memoryShortTerm, stats.memoryMidTerm, stats.memoryLongTerm]);
 
     return (
       <div
