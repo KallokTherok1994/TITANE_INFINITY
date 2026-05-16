@@ -33,6 +33,7 @@ import { AppShell, TopNav } from '@components/layout';
 import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
 import { UpdateAvailableToast } from '@/components/system/UpdateAvailableToast'; // ✨ v34.0.13 - SW update prompt (stale-pages hotfix)
 import { SurfaceTruthBadge } from '@/components/dev/SurfaceTruthBadge'; // ✨ v34.0.13 - Canonical surface truth overlay (Ctrl+Alt+T)
+import { SurfaceRoot } from '@/components/system/SurfaceRoot';
 import { GlobalRuntimePulse } from '@/components/system/GlobalRuntimePulse'; // ✨ v34.0.3 - Living Pulse runtime visible
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
@@ -415,8 +416,9 @@ export const AppRouter: React.FC = () => {
       <CommandPalette />
 
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
-      <Suspense fallback={<PageLoadingFallback />}>
-        <Routes>
+      <SurfaceRoot id="app-root" ring="core">
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Routes>
           {/* Main Routes — TITANE Homepage */}
           <Route path="/" element={<Navigate to="/titane" replace />} />
           <Route path="/titane.sh" element={<Navigate to="/titane" replace />} />
@@ -773,6 +775,7 @@ export const AppRouter: React.FC = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
+      </SurfaceRoot>
 
       {/* ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION ⚡🧠) */}
       {/* DÉSACTIVÉ v19.5.0 - Doublon avec le chat de page dédié */}

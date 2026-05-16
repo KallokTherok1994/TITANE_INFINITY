@@ -1,6 +1,6 @@
 ---
 name: release-proof
-description: Evaluates release readiness with strict evidence (no token gate required)
+description: Evaluates release readiness with strict evidence and no token gating requirement
 model: GPT-5.3-Codex
 tools: ['search', 'run_in_terminal', 'fetch']
 ---
@@ -31,7 +31,7 @@ Assess release readiness with explicit gate evidence.
 
 ## Policy
 
-- Production builds and deploys require **no token gate** (Rule 11).
+- Production builds and deploys must not rely on token gating (Rule 11).
 - Rule 14 in the kernel remains the single authority for the `BUILD ALL` sequence; this agent only evaluates the resulting release evidence.
 - Pre-build checks: version bump (Rule 13) + test gates + `detect_recurrence.sh` (Rule 10).
 

@@ -1,5 +1,5 @@
 ---
-description: Evaluate release readiness (GO/NO-GO) via release-proof specialist agent. No token gate. Evidence-only assessment.
+description: Evaluate release readiness (GO/NO-GO) via release-proof specialist agent. No gate token requirement. Evidence-only assessment.
 mode: agent
 ---
 
@@ -22,7 +22,7 @@ Assess release readiness without performing unauthorized PROD actions.
 1. If the `release-proof` specialist agent is unavailable, continue immediately with canonical local release evidence checks instead of blocking on the delegation itself; classify the delegation failure as external truth when applicable.
 2. Verify version synchronization.
 3. Verify mandatory gates and status checks.
-4. Confirm no token gate is required — production builds run on demand (Rule 11).
+4. Confirm no gate token is required — production builds run on demand (Rule 11).
 5. Produce GO/NO-GO with evidence only.
 
 ## Output

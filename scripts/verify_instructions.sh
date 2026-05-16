@@ -142,6 +142,12 @@ run_subgate "G_AH_RECURRENCE_GUARD_PASS" "scripts/autoheal/detect_recurrence.sh"
 # prompt frontmatter guard
 run_subgate "G_PROMPT_FRONTMATTER_PASS" "scripts/verify/verify_prompt_frontmatter.sh"
 
+# frontend truth and build metadata gates
+run_subgate "G_BUILD_TRUTH_PASS" "scripts/verify/gate-build-truth.sh"
+run_subgate "G_VERSION_TRUTH_PASS" "scripts/verify/gate-version-truth.sh"
+run_subgate "G_SURFACE_ROOT_PASS" "scripts/verify/gate-surface-root.sh"
+run_subgate "G_STABLE_ARTIFACT_FRESHNESS_PASS" "scripts/verify/gate-stable-artifact-freshness.sh"
+
 # vscode agent workflow guard
 run_subgate "G_VSCODE_AGENT_WORKFLOW_PASS" "scripts/verify/verify-vscode-agent-workflow.sh"
 

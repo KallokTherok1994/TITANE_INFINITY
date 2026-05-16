@@ -134,13 +134,30 @@ function mainEntryMapPlugin(): Plugin {
 
         const selectedMain =
           mainCandidates.length > 0 ? mainCandidates[mainCandidates.length - 1] : null;
-        const targetFile = resolve(outDirAbs, 'main-entry.json');
+        const mainEntry = selectedMain ? `assets/${selectedMain}` : null;
+        const mainEntryTarget = resolve(outDirAbs, 'main-entry.json');
+        const buildTruthTarget = resolve(outDirAbs, 'build-truth.json');
 
         await writeFile(
-          targetFile,
+          mainEntryTarget,
           JSON.stringify(
             {
-              main: selectedMain ? `assets/${selectedMain}` : null,
+              main: mainEntry,
+            },
+            null,
+            2
+          )
+        );
+
+        await writeFile(
+          buildTruthTarget,
+          JSON.stringify(
+            {
+              appVersion: _appVersion,
+              buildTimestamp: new Date().toISOString(),
+              mainEntry,
+              viteBase: resolvedConfig.base,
+              buildMode: resolvedConfig.mode ?? 'production',
             },
             null,
             2

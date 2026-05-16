@@ -43,14 +43,14 @@
     "resources": [],
     "copyright": "© 2025 TITANE∞",
     "category": "Productivity",
-    "shortDescription": "TITANE∞ v31.0.0 - Cognitive Operating System (Stable Runtime)",
-    "longDescription": "TITANE∞ Stable Runtime v31.0.0 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
+    "shortDescription": "TITANE∞ v35.1.7 - Cognitive Operating System (Stable Runtime)",
+    "longDescription": "TITANE∞ Stable Runtime v35.1.7 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "Titan-Stable v31.0.0 — TITANE∞ Cognitive OS",
+        "title": "Titan-Stable v35.1.7 — TITANE∞ Cognitive OS",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

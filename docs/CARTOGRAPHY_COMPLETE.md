@@ -1,3 +1,10 @@
+## 2026-05-16 — Canonical SurfaceRoot UI truth and build metadata governance (delta cartographie)
+
+- Delta Ring 4 minimal: [src/components/system/SurfaceRoot.tsx](src/components/system/SurfaceRoot.tsx) introduit un wrapper shell canonique exposant `data-surface-truth`, `data-surface-ring`, `data-app-version` et `data-build-timestamp` sur la boundary principale de l'application.
+- Delta Ring 4 minimal: [src/hooks/useSurfaceTruth.ts](src/hooks/useSurfaceTruth.ts) collecte la vérité de surface à partir du nœud DOM le plus proche `data-surface-truth` et des constantes build-time `__APP_VERSION__` / `__BUILD_TIMESTAMP__`.
+- Preuve supplémentaire: `dist/build-truth.json` émis par Vite, `scripts/verify/gate-build-truth.sh`, `scripts/verify/gate-surface-root.sh`, `scripts/verify/gate-version-truth.sh`, `scripts/verify/gate-stable-artifact-freshness.sh`, et `bash scripts/verify_instructions.sh`.
+- Aucun changement Ring 0/1/2; le delta est strictement Ring 4 / shell UI / build metadata.
+
 ## 2026-05-16 — Desktop/browser proof sync on canonical UI surfaces (delta cartographie)
 
 - Delta Ring 4 minimal: [src/modules/OrchestrationIntelligenceCenter.tsx](src/modules/OrchestrationIntelligenceCenter.tsx) publie maintenant un `PageHealthBanner` `SIMULATED` sur `/orchestration-intelligence`, refermant le drift entre `simulationDisclosureApplied=true` dans le registre et la verite UI visible.

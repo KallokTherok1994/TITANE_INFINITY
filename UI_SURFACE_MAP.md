@@ -1,3 +1,10 @@
+## 2026-05-16 — Canonical surface truth wrapper and build metadata proof
+
+- **Surfaces modifiees** : [src/components/system/SurfaceRoot.tsx](src/components/system/SurfaceRoot.tsx), [src/App.tsx](src/App.tsx), [src/hooks/useSurfaceTruth.ts](src/hooks/useSurfaceTruth.ts), [vite.config.ts](vite.config.ts), [package.json](package.json), [scripts/verify_instructions.sh](scripts/verify_instructions.sh).
+- **Contrat visible** : `SurfaceRoot` expose `data-surface-truth`, `data-surface-ring`, `data-app-version`, `data-build-timestamp` on the app shell boundary; `useSurfaceTruth` collects the nearest `data-surface-truth` node and build-time truth constants.
+- **Proofs** : `dist/build-truth.json` emitted by Vite; new verification gate scripts `scripts/verify/gate-build-truth.sh`, `scripts/verify/gate-surface-root.sh`, `scripts/verify/gate-version-truth.sh`, `scripts/verify/gate-stable-artifact-freshness.sh`; `pnpm run verify:version-truth`; `pnpm run verify:surface-root`; `bash scripts/verify_instructions.sh`; `pnpm exec vitest run src/components/system/__tests__/SurfaceRoot.test.tsx`.
+- **Rollback** : `git restore -- src/components/system/SurfaceRoot.tsx src/App.tsx src/hooks/useSurfaceTruth.ts vite.config.ts package.json scripts/verify_instructions.sh scripts/verify/gate-build-truth.sh scripts/verify/gate-surface-root.sh scripts/verify/gate-version-truth.sh scripts/verify/gate-stable-artifact-freshness.sh UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md`.
+
 ## 2026-05-16 — Desktop/browser proof sync on canonical UI surfaces
 
 - **Surfaces modifiees** : [src/modules/OrchestrationIntelligenceCenter.tsx](src/modules/OrchestrationIntelligenceCenter.tsx), [src/pages/TimePage.tsx](src/pages/TimePage.tsx), [src/pages/DevPage.tsx](src/pages/DevPage.tsx), [src/pages/PerfectFusionDashboard.tsx](src/pages/PerfectFusionDashboard.tsx), [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx), [src/pages/UltimateOptimizationDashboard.tsx](src/pages/UltimateOptimizationDashboard.tsx).
