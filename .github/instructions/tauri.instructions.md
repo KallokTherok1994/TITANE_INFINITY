@@ -67,6 +67,22 @@ bash scripts/verify_instructions.sh          # must exit 0
 - Missing IPC test OR missing mapping update → BLOCKED.
 - Missing `detect_recurrence.sh` PASS → FAIL.
 
+## Pre-BUILD Backend / Tauri / IPC / HTTP Gate
+
+For any `src-tauri/**`, IPC, capability, config, Rust service, launcher, backend, network, provider, runtime, or Tauri change:
+
+- validate `pnpm run dev:tauri`
+- confirm the Tauri DEV window opens and loads the expected current dev URL
+- confirm DevTools are available in debug/dev mode
+- run Rust/Tauri checks and IPC contract gates
+- verify the frontend invoke path matches backend command truth
+- verify no permission or capability mismatch
+- verify no stale backend binary or runtime state
+- verify One Door network and Tauri-only production constraints
+- capture terminal logs, DevTools Console, and HTTP/Network traces
+- block build on unresolved IPC errors, invoke errors, permission errors, failed local HTTP requests, wrong dev URL, stale preview server, uncontrolled network paths, or backend/frontend mismatch
+- update AutoHeal and the proof pack
+
 ## Rollback
 
 - git restore -- src-tauri runtime tauri\*.json

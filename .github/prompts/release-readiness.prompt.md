@@ -20,10 +20,11 @@ Assess release readiness without performing unauthorized PROD actions.
 ## Steps
 
 1. If the `release-proof` specialist agent is unavailable, continue immediately with canonical local release evidence checks instead of blocking on the delegation itself; classify the delegation failure as external truth when applicable.
-2. Verify version synchronization.
-3. Verify mandatory gates and status checks.
-4. Confirm no gate token is required — production builds run on demand (Rule 11).
-5. Produce GO/NO-GO with evidence only.
+2. If build permission is part of the scope, consume `.github/agents/pre-build-certifier.agent.md`, `.github/prompts/pre-build-certification.prompt.md`, `BUILD_PERMISSION_MATRIX.md`, `DEVTOOLS_CONSOLE.json`, `HTTP_NETWORK.log`, `DEV_TAURI_RUNTIME.log`, `VISIBLE_UI_PROOF.md`, and `RELEASE_SURFACE_PRECHECK.md` before any GO verdict.
+3. Verify version synchronization.
+4. Verify mandatory gates and status checks.
+5. Confirm no gate token is required — production builds run on demand (Rule 11).
+6. Produce GO/NO-GO with evidence only.
 
 ## Output
 

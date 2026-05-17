@@ -76,6 +76,35 @@ Must be present before any E2E gate can PASS:
 - Missing test for new feature/capability ⇒ `BLOCKED` until test exists (Rule 16).
 - Gate recurrence obligatoire: `G_AH_RECURRENCE_GUARD_PASS`.
 
+## Pre-BUILD E2E Runtime Truth Gate
+
+E2E owns runtime proof before BUILD ALL.
+
+Required capture where the harness supports it:
+
+- `page.on('console')`
+- `page.on('pageerror')`
+- `page.on('requestfailed')`
+- `page.on('response')` with HTTP status audit
+- `page.on('websocket')` when relevant
+- screenshot and assertion for touched visible UI
+- route proof
+- stable `data-testid`
+- terminal and runtime logs
+
+Required artifacts:
+
+- `DEVTOOLS_CONSOLE.json`
+- `PAGE_ERRORS.json`
+- `FAILED_REQUESTS.json`
+- `HTTP_BAD_RESPONSES.json`
+- `HTTP_NETWORK.log` or HAR when supported
+- `WEBUI_ROUTE_PROOF.md`
+- `VISIBLE_UI_PROOF.md`
+- screenshots for touched UI
+
+Any unexpected error, warning, or failed request blocks BUILD ALL.
+
 ## Rollback
 
 - git restore -- e2e scripts/e2e wdio*.conf*

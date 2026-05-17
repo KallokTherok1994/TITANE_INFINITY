@@ -35,6 +35,10 @@ Ring 4 UI/module local discipline.
 - Relevant UI tests or E2E logs.
 - If UI behavior changed, include registry evidence.
 
+## Frontend Pre-BUILD Truth
+
+Frontend/UI changes must prove clean DevTools Console, clean HTTP/Network, current WebUI route, fresh visible UI, stable selectors, UI mapping, E2E/visual proof, and AutoHeal before BUILD ALL.
+
 ## Not in scope
 
 - Global status doctrine and production build policy (kernel-owned, Rule 11).

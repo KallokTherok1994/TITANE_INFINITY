@@ -89,9 +89,35 @@ applyTo: 'src/**, src-tauri/**, tests/**, scripts/**'
   - `bash scripts/verify/verify_no_doctrine_duplication.sh`
   - `bash scripts/verify/verify_status_vocabulary.sh`
   - `bash scripts/verify/verify_agents_index.sh`
-  - `bash scripts/verify/verify_prompt_files_index.sh`
-  - `bash scripts/verify/verify_local_markers_consistency.sh`
-  - `bash scripts/verify/verify_kernel_budget.sh`
+- `bash scripts/verify/verify_prompt_files_index.sh`
+- `bash scripts/verify/verify_local_markers_consistency.sh`
+- `bash scripts/verify/verify_kernel_budget.sh`
+
+## Cross-Ring Pre-BUILD Certification
+
+Any change touching build, packaging, release, frontend/backend sync, IPC, runtime, HTTP/network, WebUI, E2E, visible UI, Tauri config, launcher freshness, AutoHeal, validators, or proof-pack logic is `PATH_HEAVY`.
+
+`PATH_HEAVY` requires the Pre-BUILD Certifier Agent or equivalent full certification:
+
+- authority map
+- worktree proof
+- instruction and agent proof
+- toolchain proof
+- DEV `pnpm run dev:tauri` proof
+- DevTools Console proof
+- HTTP/Network proof
+- frontend proof
+- backend/Rust/Tauri proof
+- IPC proof
+- WebUI and visible UI proof where applicable
+- E2E/Desktop proof
+- clean/stale cache proof
+- release surface proof
+- AutoHeal proof
+- proof pack
+- rollback
+
+BUILD ALL remains blocked until all required lanes are PASS and `BUILD_ALLOWED=YES`.
 
 ## Rollback
 

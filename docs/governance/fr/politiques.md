@@ -90,6 +90,8 @@
 
 **Règle :** Les builds et déploiements production sont exécutés sur demande utilisateur ou au besoin. Aucun token gate requis. Utiliser la commande `BUILD ALL` (Rule 14) pour la séquence complète automatisée.
 
+**Note :** pour les changements frontend/UI/réseau, `BUILD ALL` doit aussi mettre à jour/reconstruire le pipeline de dev Tauri (`pnpm run dev:tauri` ou équivalent), vérifier que le serveur HTTP réseau est opérationnel, et confirmer que l’interface visible reflète les modifications.
+
 **Statut :** PROVEN par règle
 
 ---

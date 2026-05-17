@@ -18,6 +18,7 @@ required=(
   .github/prompts/temporal-modules.prompt.md
   .github/prompts/simple-fast-session.prompt.md
   .github/prompts/heavy-runtime-session.prompt.md
+  .github/prompts/pre-build-certification.prompt.md
   .github/prompts/ollama-dev-session.prompt.md
   .github/prompts/session-router.prompt.md
   .github/prompts/start-hybrid-memory-dispatch.prompt.md
@@ -54,6 +55,7 @@ done
 # Scaling note: marker + validator array sufficient while agent-driven prompts <= 4 and no multi-agent collisions.
 # At 5+ entries or any multi-agent collision, add a human-visible mapping table to .github/prompts/OWNERSHIP.md.
 declare -A AGENT_DRIVEN_PROMPTS=(
+  [".github/prompts/pre-build-certification.prompt.md"]="pre-build-certifier"
   [".github/prompts/release-readiness.prompt.md"]="release-proof"
   [".github/prompts/temporal-modules.prompt.md"]="temporal-modules"
   [".github/prompts/start-hybrid-memory-dispatch.prompt.md"]="memory-root-commander"

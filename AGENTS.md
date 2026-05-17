@@ -165,6 +165,12 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - `bash scripts/verify/verify_no_doctrine_duplication.sh`
 - `bash scripts/autoheal/detect_recurrence.sh`
 
+## Pre-BUILD Certifier Agent
+
+Before BUILD ALL, route through `.github/agents/pre-build-certifier.agent.md` or an equivalent full pre-build workflow. The certifier owns authority discovery, DEV runtime, DevTools Console, HTTP/Network, frontend, backend, IPC, WebUI, visible UI/interface, clean cache, toolchain, release surfaces, AutoHeal, anti-regression, proof pack, rollback, and build permission matrix.
+
+If the certifier does not return `BUILD_ALLOWED=YES` with evidence, build is blocked.
+
 ## Proof Discipline
 
 - Report real commands, real outputs, and explicit limits.

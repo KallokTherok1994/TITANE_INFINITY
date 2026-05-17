@@ -85,7 +85,7 @@ Operational authority: only one active execution authority and one active E2E au
 
 ## Rule 14 - BUILD ALL command
 
-When the user issues `BUILD ALL`, execute the full automated sequence without token gate: bump version; production build + deploy; build AppImage/DEB/RPM; build Android APK; build Windows installer if applicable; uninstall existing installations and dock icons; clean caches; reinstall; update release notes, checksums, and `RELEASE_SURFACE_INVENTORY`; verify and fix regressions, errors, warnings, and blockers; run AutoHeal; update all relevant mapping docs.
+When the user issues `BUILD ALL`, execute the full automated sequence without token gate: bump version; production build + deploy; build AppImage/DEB/RPM; build Android APK; build Windows installer if applicable; ensure the Tauri/frontend pipeline is also updated and rebuilt when relevant (`pnpm run dev:tauri` or equivalent), verify the HTTP network server surface is refreshed and reachable, and confirm that visible UI/frontend interface changes are present before sealing the build; uninstall existing installations and dock icons; clean caches; reinstall; update release notes, checksums, and `RELEASE_SURFACE_INVENTORY`; verify and fix regressions, errors, warnings, and blockers; run AutoHeal; update all relevant mapping docs.
 
 ## Rule 15 - Auto-update mapping and cartography
 

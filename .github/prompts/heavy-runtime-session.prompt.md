@@ -9,6 +9,8 @@ mode: agent
 
 Use PATH_HEAVY for instruction architecture, runtime, IPC, E2E, release, or contradiction tasks.
 
+For build-readiness work, route through `.github/agents/pre-build-certifier.agent.md` and produce `BUILD_PERMISSION_MATRIX.md` plus the runtime proof artifacts (`DEVTOOLS_CONSOLE.json`, `HTTP_NETWORK.log`, `DEV_TAURI_RUNTIME.log`, `VISIBLE_UI_PROOF.md`, `RELEASE_SURFACE_PRECHECK.md`) before any build handoff.
+
 ## Steps
 
 1. Full bootstrap reality capture.

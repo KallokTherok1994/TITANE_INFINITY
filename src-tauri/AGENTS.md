@@ -62,6 +62,10 @@ bash scripts/verify_instructions.sh          # must exit 0
 - `docs/IPC_CATALOG.md` updated (Rule 15).
 - Unit + contract test present (Rule 16).
 
+## Backend/Tauri Pre-BUILD Truth
+
+Backend/Tauri/IPC/network changes must prove `pnpm run dev:tauri`, Rust/Tauri checks, IPC contract sync, frontend invoke sync, clean DevTools Console, clean HTTP/Network, Tauri-only production, and One Door network compliance before BUILD ALL.
+
 ## Not in scope
 
 - Global governance wording and final verdict taxonomy (kernel-owned).

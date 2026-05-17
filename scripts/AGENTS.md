@@ -57,6 +57,10 @@ bash scripts/verify_instructions.sh          # must exit 0
 - References to touched files.
 - `scripts/verify_instructions.sh` still exits 0 after changes.
 
+## Pre-BUILD Validator Ownership
+
+Scripts and validators must mechanically enforce the Pre-BUILD Zero-Defect Certification Gate. A prose-only pre-build rule without validator coverage is incomplete.
+
 ## Not in scope
 
 - UI design or product content policy.

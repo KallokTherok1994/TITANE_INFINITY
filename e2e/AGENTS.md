@@ -33,6 +33,10 @@ E2E harness local discipline.
 - E2E logs with wrapper markers.
 - Required export artifacts in `reports/`.
 
+## E2E Runtime Proof Ownership
+
+E2E owns automated capture of console messages, page errors, failed requests, HTTP statuses, WebUI route proof, visible UI proof, screenshots/assertions, and anti-regression recurrence prevention.
+
 ## Not in scope
 
 - Non-E2E architecture policy.

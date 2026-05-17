@@ -158,6 +158,7 @@ run_subgate "G_NO_DOCTRINE_DUPLICATION_PASS" "scripts/verify/verify_no_doctrine_
 run_subgate "G_STATUS_VOCAB_PASS" "scripts/verify/verify_status_vocabulary.sh"
 run_subgate "G_AGENTS_INDEX_PASS" "scripts/verify/verify_agents_index.sh"
 run_subgate "G_PROMPT_FILES_INDEX_PASS" "scripts/verify/verify_prompt_files_index.sh"
+run_subgate "G_PRE_BUILD_CERTIFIER_AGENT_PASS" "scripts/verify/verify-pre-build-certifier-agent.sh"
 run_subgate "G_LOCAL_MARKERS_PASS" "scripts/verify/verify_local_markers_consistency.sh"
 run_subgate "G_ADVANCED_AGENTS_PASS" "scripts/verify/verify-advanced-agents.sh"
 run_subgate "G_OLLAMA_BOUNDARY_PASS" "scripts/verify/verify-ollama-copilot-boundary.sh"

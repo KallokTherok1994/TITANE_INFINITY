@@ -118,6 +118,8 @@ bash scripts/autoheal/detect_recurrence.sh
 bash scripts/verify_instructions.sh
 ```
 
+Pour les modifications front-end, UI ou réseau, la séquence `BUILD ALL` doit aussi inclure la mise à jour/reconstruction du pipeline Tauri/dev (`pnpm run dev:tauri` ou équivalent), la vérification du serveur HTTP réseau et la confirmation que l’interface visible reflète bien les changements avant de sceller la publication.
+
 ## Commit message
 
 Format : `type(scope): résumé court`

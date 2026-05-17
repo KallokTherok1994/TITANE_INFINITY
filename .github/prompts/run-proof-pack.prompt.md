@@ -15,6 +15,8 @@ Produce a complete proof pack for one governed session.
 - Commands executed
 - Check outputs
 - Gates summary
+- `BUILD_PERMISSION_MATRIX.md` when build-readiness or pre-build certification is in scope
+- Runtime evidence files such as `DEVTOOLS_CONSOLE.json`, `HTTP_NETWORK.log`, `DEV_TAURI_RUNTIME.log`, `VISIBLE_UI_PROOF.md`, and `RELEASE_SURFACE_PRECHECK.md` when captured
 
 ## Steps
 
