@@ -129,6 +129,46 @@ if (fs.existsSync(runtimeStableTauriConfPath)) {
   console.warn('  ⚠️  runtime/stable/tauri.conf.json not found, skipping');
 }
 
+// ── 4b. Sync runtime/dev/tauri.conf.json (dev build config) ────────────────
+
+const runtimeDevTauriConfPath = path.join(root, 'runtime', 'dev', 'tauri.conf.json');
+if (fs.existsSync(runtimeDevTauriConfPath)) {
+  const conf = JSON.parse(fs.readFileSync(runtimeDevTauriConfPath, 'utf8'));
+  const devVersion = `${version}-dev`;
+
+  let devChanged = false;
+
+  if (conf.version !== undefined && conf.version !== devVersion) {
+    conf.version = devVersion;
+    devChanged = true;
+  }
+
+  // Keep window title in sync: "Titan-Dev vX.Y.Z [DEV] — TITANE∞ Development"
+  if (conf.app?.windows) {
+    for (const win of conf.app.windows) {
+      if (win.label === 'main' && win.title) {
+        const updated = win.title.replace(/v\d+\.\d+\.\d+(?:-dev)?/, `v${version}`);
+        if (updated !== win.title) {
+          win.title = updated;
+          devChanged = true;
+        }
+      }
+    }
+  }
+
+  if (devChanged) {
+    if (!dryRun) {
+      fs.writeFileSync(runtimeDevTauriConfPath, JSON.stringify(conf, null, 2) + '\n');
+    }
+    console.log(`  ✅ runtime/dev/tauri.conf.json → ${devVersion}`);
+    changed++;
+  } else {
+    console.log(`  ✓  runtime/dev/tauri.conf.json already at ${devVersion}`);
+  }
+} else {
+  console.warn('  ⚠️  runtime/dev/tauri.conf.json not found, skipping');
+}
+
 // ── 5. Sync tauri.base.json templates (root + legacy src-tauri copy) ───────
 
 const tauriBasePaths = [

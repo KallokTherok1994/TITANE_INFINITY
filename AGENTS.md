@@ -124,6 +124,8 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Scope: Build, packaging, deploy workflows, post-build system integration.
 - Gate: After every build (dev/prod/tauri), mandatory launcher/icon refresh sequence must run (Rule 13.1).
 - Required: run `bash scripts/post-build/update-desktop-icons.sh`, refresh desktop/icon caches, verify `Exec=/usr/bin/titane-infinity` and icon mapping in local/system `.desktop` launchers.
+- **DEV Tauri version sync**: after every version bump, run `pnpm run sync:versions` — this propagates the new version to `runtime/dev/tauri.conf.json` (as `{version}-dev`) and its window title. A stale dev version in `runtime/dev/tauri.conf.json` is FAIL.
+- **BUILD and BUILD ALL**: always update and rebuild the DEV Tauri runtime (`pnpm run dev:tauri` or `tauri build --config runtime/dev/tauri.conf.json`) to verify the dev config is at the correct version before proceeding to stable/production builds.
 - Mapping: update `RELEASE_SURFACE_INVENTORY.md` when build/release surfaces change.
 
 ### Monitoring Agent (monitoring/, src/services/monitoring/)
