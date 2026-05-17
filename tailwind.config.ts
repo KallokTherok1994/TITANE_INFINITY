@@ -56,6 +56,42 @@ const config: Config = {
       /* COLORS — TITANIUM DARK MONOCHROME SYSTEM                        */
       /* ═══════════════════════════════════════════════════════════════ */
       colors: {
+        // shadcn/Radix bridge — maps shadcn CSS variable semantics to titanium design tokens
+        // Required by: src/components/shadcn/*.tsx (badge, button, dialog, input, select, tabs, etc.)
+        primary: {
+          DEFAULT: 'var(--color-violet-600)',
+          foreground: '#ffffff',
+        },
+        secondary: {
+          DEFAULT: 'var(--color-bg-tertiary)',
+          foreground: 'var(--color-text-primary)',
+        },
+        destructive: {
+          DEFAULT: 'var(--color-error-500)',
+          foreground: '#ffffff',
+        },
+        muted: {
+          DEFAULT: 'var(--color-bg-secondary)',
+          foreground: 'var(--color-text-muted)',
+        },
+        accent: {
+          DEFAULT: 'var(--color-bg-tertiary)',
+          foreground: 'var(--color-text-primary)',
+        },
+        background: 'var(--color-bg-primary)',
+        foreground: 'var(--color-text-primary)',
+        card: {
+          DEFAULT: 'var(--color-bg-secondary)',
+          foreground: 'var(--color-text-primary)',
+        },
+        popover: {
+          DEFAULT: 'var(--color-bg-elevated)',
+          foreground: 'var(--color-text-primary)',
+        },
+        border: 'var(--color-border-default)',
+        input: 'var(--color-border-default)',
+        ring: 'var(--color-violet-600)',
+
         // Titanium — wired to CSS custom properties so dark/light mode works automatically
         titanium: {
           // Backgrounds — respond to html.light / html.dark via CSS vars

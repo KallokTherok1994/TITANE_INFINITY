@@ -192,4 +192,39 @@
   --z-tooltip: 1600;
   --z-toast: 1700;
   --z-max: 9999;
+
+  /* ═══════════════════════════════════════════════════════════════
+     SHADCN/RADIX BRIDGE — maps shadcn CSS vars to titanium tokens
+     Required by: src/components/shadcn/*.tsx (badge, button, dialog,
+     dropdown-menu, input, select, skeleton, tabs, tooltip, command)
+     ═══════════════════════════════════════════════════════════════ */
+
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-text-primary);
+
+  --card: var(--color-bg-secondary);
+  --card-foreground: var(--color-text-primary);
+
+  --popover: var(--color-bg-elevated);
+  --popover-foreground: var(--color-text-primary);
+
+  --primary: var(--color-violet-600);
+  --primary-foreground: #ffffff;
+
+  --secondary: var(--color-bg-tertiary);
+  --secondary-foreground: var(--color-text-primary);
+
+  --muted: var(--color-bg-secondary);
+  --muted-foreground: var(--color-text-muted);
+
+  --accent: var(--color-bg-tertiary);
+  --accent-foreground: var(--color-text-primary);
+
+  --destructive: var(--color-error-500);
+  --destructive-foreground: #ffffff;
+
+  --border: var(--color-border-default);
+  --input: var(--color-border-default);
+  --ring: var(--color-violet-600);
+  --ring-offset-background: var(--color-bg-primary);
 }
