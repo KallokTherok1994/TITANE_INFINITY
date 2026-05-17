@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v30.0.0 — Proprietary License
+ * TITANE_INFINITY v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — AUDIO DIAGNOSTICS PANEL
+ *   TITANE∞ v35.1.8 — AUDIO DIAGNOSTICS PANEL
  *   Panneau de diagnostic et réglages audio unifié
  *   Design System TITANE∞ Monochrome v∞
  * ═══════════════════════════════════════════════════════════════════

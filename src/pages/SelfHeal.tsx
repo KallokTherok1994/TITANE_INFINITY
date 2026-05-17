@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — SELFHEAL PAGE (FIXED)
+ *   TITANE∞ v35.1.8 — SELFHEAL PAGE (FIXED)
  *   Auto-réparation avec sérialisation sécurisée
  * ═══════════════════════════════════════════════════════════════
  */

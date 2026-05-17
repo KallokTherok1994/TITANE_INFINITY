@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — MemoryTree Component
+ * TITANE∞ v35.1.8 — MemoryTree Component
  * Hierarchical memory visualization
  */
 

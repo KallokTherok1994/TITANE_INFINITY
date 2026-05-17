@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 - Standardized Loading States
+ * TITANE∞ v35.1.8 - Standardized Loading States
  * Phase 4 - Week 6: Standardize loading states
  * ═══════════════════════════════════════════════════════════════
  */

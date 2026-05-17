@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — TTSControls Component
+ * TITANE∞ v35.1.8 — TTSControls Component
  * © 2025 TITANE Team. All rights reserved.
  *
  * Contrôles TTS simplifiés.

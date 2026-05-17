@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — MetricCard Component
+ * TITANE∞ v35.1.8 — MetricCard Component
  * Display single performance metric
  */
 

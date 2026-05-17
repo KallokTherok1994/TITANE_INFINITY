@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 — SINGULARITY ENGINE MONITOR
- * Composant pour monitorer le SingularityEngine v30.0.0 en temps réel
+ * TITANE∞ v35.1.8 — SINGULARITY ENGINE MONITOR
+ * Composant pour monitorer le SingularityEngine v35.1.8 en temps réel
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -91,7 +91,7 @@ export function SingularityMonitor() {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h2 style={styles.title}>🌟 SingularityEngine v30.0.0</h2>
+          <h2 style={styles.title}>🌟 SingularityEngine v35.1.8</h2>
           <span style={styles.badge}>Initialisation...</span>
         </div>
         <p style={styles.loading}>Démarrage du moteur unifié...</p>
@@ -103,7 +103,7 @@ export function SingularityMonitor() {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h2 style={styles.title}>🌌 SingularityEngine v30.0.0</h2>
+        <h2 style={styles.title}>🌌 SingularityEngine v35.1.8</h2>
         <span
           style={{
             ...styles.badge,

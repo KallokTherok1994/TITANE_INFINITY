@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 - Chat Error Boundary Component
+ * TITANE∞ v35.1.8 - Chat Error Boundary Component
  * Specialized error boundary for Chat IA with OMEGA Pipeline integration
  * Phase 4 - Week 6: Error boundaries for ChatIA
  *

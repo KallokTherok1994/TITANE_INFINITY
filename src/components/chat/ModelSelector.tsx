@@ -2,7 +2,7 @@
  * TITANE∞ — Model Selector Component
  * Permet de sélectionner le modèle AI à utiliser
  *
- * v30.0.0 (Sprint 6)
+ * v35.1.8 (Sprint 6)
  */
 
 import React, { useState, useMemo } from 'react';

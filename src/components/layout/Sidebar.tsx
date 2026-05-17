@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License (Titanium Dark)
+ * TITANE∞ v35.1.8 — Proprietary License (Titanium Dark)
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,9 +8,9 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 - Sidebar Component (Titanium Dark + WCAG 2.2)
+ * TITANE∞ v35.1.8 - Sidebar Component (Titanium Dark + WCAG 2.2)
  * Sidebar intelligente avec navigation adaptive
- * v30.0.0: Titanium Dark design system, WCAG 2.2 AA compliant
+ * v35.1.8: Titanium Dark design system, WCAG 2.2 AA compliant
  * CRITICAL FIX: div → button for keyboard accessibility
  * ═══════════════════════════════════════════════════════════════
  */
@@ -48,7 +48,7 @@ export interface SidebarProps {
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────
 
-// v30.0.0: Breakpoint-based sidebar widths
+// v35.1.8: Breakpoint-based sidebar widths
 const SIDEBAR_WIDTHS = {
   mobile: '100%',
   tablet: '240px',
@@ -70,7 +70,7 @@ export const Sidebar = ({
   const isTablet = useIsTablet();
   const { width } = useResponsive();
 
-  // v30.0.0: Adaptive sidebar width based on exact breakpoint
+  // v35.1.8: Adaptive sidebar width based on exact breakpoint
   const _sidebarWidth = useMemo(() => {
     if (isMobile) return SIDEBAR_WIDTHS.mobile;
     if (isTablet) return SIDEBAR_WIDTHS.tablet;
@@ -79,7 +79,7 @@ export const Sidebar = ({
     return SIDEBAR_WIDTHS.desktop;
   }, [isMobile, isTablet, width]);
 
-  // v30.0.0: Memoized render function for performance
+  // v35.1.8: Memoized render function for performance
   const renderItem = useCallback(
     (item: SidebarItem): JSX.Element => {
       const handleClick = (item: SidebarItem): void => {
@@ -96,10 +96,10 @@ export const Sidebar = ({
           aria-label={item.label}
           aria-current={isActive ? 'page' : undefined}
           className={cn(
-            // Base styles - v30.0.0: Titanium Dark + WCAG 2.2
+            // Base styles - v35.1.8: Titanium Dark + WCAG 2.2
             'w-full flex items-center gap-3 px-4 py-3 rounded cursor-pointer',
             'transition-all duration-200 text-sm font-medium',
-            'min-h-11', // v30.0.0: WCAG touch target
+            'min-h-11', // v35.1.8: WCAG touch target
             // Focus indicator (WCAG 2.2: 3px solid, 3:1 contrast)
             'focus-visible:outline-none focus-visible:shadow-focus',
             // Inactive state

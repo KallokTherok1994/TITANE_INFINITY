@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — StatusPill Component
+ * TITANE∞ v35.1.8 — StatusPill Component
  * Status indicator pill
  */
 

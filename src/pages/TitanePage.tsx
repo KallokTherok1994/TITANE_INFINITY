@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 — TITANE — LE CŒUR DU SYSTÈME (REFACTORED - Phase 3C)
+ * TITANE∞ v35.1.8 — TITANE — LE CŒUR DU SYSTÈME (REFACTORED - Phase 3C)
  *
  * FUSION ULTIME de 3 modules majeurs:
  * - Chat IA (/chat) → Communication & Intelligence Conversationnelle

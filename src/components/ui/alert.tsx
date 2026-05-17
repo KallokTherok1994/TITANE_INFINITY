@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Alert Component (Titanium Dark)
+ * TITANE∞ v35.1.8 — Alert Component (Titanium Dark)
  * Alert/callout component with Titanium Dark design system
  * Monochrome default + semantic color variants
  * @license MIT

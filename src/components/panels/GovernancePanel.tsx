@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Governance Panel
+ * TITANE∞ v35.1.8 — Governance Panel
  * System governance & integrity monitoring
  *
  * Features v21:

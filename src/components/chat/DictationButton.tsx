@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v30.0.0 — Proprietary License
+ * TITANE_INFINITY v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — DICTATION BUTTON
+ *   TITANE∞ v35.1.8 — DICTATION BUTTON
  *   Bouton discret de dictée micro → texte (sans IA, sans TTS)
  *   À placer à côté du bouton d'import de fichiers dans le Chat
  * ═══════════════════════════════════════════════════════════════════

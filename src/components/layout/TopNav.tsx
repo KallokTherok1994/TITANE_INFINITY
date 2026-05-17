@@ -172,7 +172,7 @@ export const TopNav: React.FC<TopNavProps> = ({
     };
   }, []);
 
-  // ✨ v30.0.0 AI Provider Status Indicator
+  // ✨ v35.1.8 AI Provider Status Indicator
   const [aiStatus, setAiStatus] = useState<{
     percent: number | null;
     available: number;
@@ -187,7 +187,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   const visibleItems = items.slice(0, maxVisibleItems);
   const moreItems = items.slice(maxVisibleItems);
 
-  // ✨ v30.0.0 - Polling providers status every 30s
+  // ✨ v35.1.8 - Polling providers status every 30s
   useEffect(() => {
     let active = true;
 
@@ -441,7 +441,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             <ZoomIn size={14} />
           </button>
         </div>
-        {/* ✨ v30.0.0 AI Provider Status Indicator */}
+        {/* ✨ v35.1.8 AI Provider Status Indicator */}
         {aiStatus.percent !== null && (
           <div
             data-testid="topnav-ai-status"

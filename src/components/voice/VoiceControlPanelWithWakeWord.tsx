@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v30.0.0 — Proprietary License
+ * TITANE_INFINITY v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — VOICE CONTROL PANEL WITH WAKE WORD
+ *   TITANE∞ v35.1.8 — VOICE CONTROL PANEL WITH WAKE WORD
  *
  *   Panneau de contrôle unifié pour la voix:
  *   - Mode push-to-talk classique
@@ -130,7 +130,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-4 p-6 bg-white dark:bg-titanium-bg-elevated rounded-lg shadow-lg',
+        'flex flex-col items-center gap-4 p-6 bg-titanium-bg-elevated rounded-lg shadow-lg',
         className
       )}
     >
@@ -142,7 +142,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
             'px-4 py-2 rounded-lg font-medium transition-all',
             mode === 'push_to_talk'
               ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 dark:bg-titanium-bg-interactive text-titanium-text-secondary dark:text-titanium-text-secondary'
+              : 'bg-titanium-bg-interactive text-titanium-text-secondary'
           )}
         >
           🎤 Push-to-Talk
@@ -154,7 +154,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
             'px-4 py-2 rounded-lg font-medium transition-all',
             mode === 'wake_word'
               ? 'bg-purple-500 text-white'
-              : 'bg-gray-200 dark:bg-titanium-bg-interactive text-titanium-text-secondary dark:text-titanium-text-secondary'
+              : 'bg-titanium-bg-interactive text-titanium-text-secondary'
           )}
         >
           👂 Wake Word
@@ -187,7 +187,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
                 ? 'bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.8)] animate-pulse'
                 : canRecord
                   ? 'bg-blue-500 hover:bg-blue-600 shadow-lg'
-                  : 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-titanium-bg-overlay opacity-60 cursor-not-allowed'
             )}
           >
             {voiceEngine.status.isRecording ? '⏸️' : '🎤'}
@@ -220,7 +220,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
       {isProcessing && (
         <button
           onClick={handleCancel}
-          className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
+          className="px-4 py-2 rounded-lg bg-error-500 text-titanium-text-inverse hover:bg-error-700 transition-colors"
         >
           🛑 Annuler
         </button>

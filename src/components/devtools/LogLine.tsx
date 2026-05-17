@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — LogLine Component
+ * TITANE∞ v35.1.8 — LogLine Component
  * Single log entry display
  */
 

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — TTSButton Component
+ * TITANE∞ v35.1.8 — TTSButton Component
  * © 2025 TITANE Team. All rights reserved.
  *
  * Bouton de lecture TTS simplifié.

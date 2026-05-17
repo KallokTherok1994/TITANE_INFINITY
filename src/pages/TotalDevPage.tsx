@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 — TOTAL_DEV PAGE
+ * TITANE∞ v35.1.8 — TOTAL_DEV PAGE
  * TOTAL_DEV — Cockpit gouverne
  *
  * Architecture: Ring 1 → IPC canonique → Rust backends

@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v30.0.0 — Proprietary License
+ * TITANE_INFINITY v35.1.8 — Proprietary License
  * © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -44,7 +44,7 @@ import './config/logLevelConfig';
 import { initE2EProbeBridge } from './e2e/desktop/registerE2eProbeBridge';
 initE2EProbeBridge();
 
-// TITANE∞ v30.0.0 - Main Entry Point - Certification P10.4→P11 PASS
+// TITANE∞ v35.1.8 - Main Entry Point - Certification P10.4→P11 PASS
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { isTauriAvailable } from '@/api/tauriClient';
@@ -58,13 +58,13 @@ import { SingularityBridge } from './services/singularityBridge';
 import { SingularityConnections } from './services/singularityConnections';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
 
-// ✨ v30.0.0 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
+// ✨ v35.1.8 OPT-9 - Monitoring lazy-loaded (non-blocking initialization)
 // Moved to async initialization in bootstrap() below
 
 // ✅ v8.0 DESIGN SYSTEM - Tailwind CSS + TITANE∞ Tokens
 import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
 
-// ✨ v30.0.0 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
+// ✨ v35.1.8 RESPONSIVE DESIGN SYSTEM - Mobile-First Tokens & Utilities
 import './design-system/responsive-tokens.css'; // 🎯 Fluid spacing, typography, layout
 import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (grid-responsive, btn-touch, etc.)
 
@@ -961,7 +961,7 @@ logger.info(`║  🌌 TITANE∞ v${__APP_VERSION__} - BOOT SEQUENCE            
 logger.info('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 logger.info('╚════════════════════════════════════════════════════════════════╝\n');
 
-// ✨ v30.0.0 Phase 5 - Monitoring Infrastructure (Priority 1)
+// ✨ v35.1.8 Phase 5 - Monitoring Infrastructure (Priority 1)
 logger.info('[1/7] 🔍 Monitoring: Initializing (Web Vitals, Errors, Performance)...');
 if (import.meta.env.PROD) {
   // Load monitoring in background after First Contentful Paint

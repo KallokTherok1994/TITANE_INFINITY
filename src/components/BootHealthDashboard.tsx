@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Boot Health Dashboard Component
+ * TITANE∞ v35.1.8 — Boot Health Dashboard Component
  * © 2025 TITANE Team. All rights reserved.
  *
  * 📊 TABLEAU DE BORD DE SANTÉ DU SYSTÈME

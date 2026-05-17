@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Keyboard Shortcuts Manager
+ * TITANE∞ v35.1.8 — Keyboard Shortcuts Manager
  *
  * Gestion centralisée des raccourcis clavier pour l'accessibilité
  */

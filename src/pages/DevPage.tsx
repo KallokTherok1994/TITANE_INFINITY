@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 — DEV PAGE (Fusion Complete)
+ * TITANE∞ v35.1.8 — DEV PAGE (Fusion Complete)
  * Centre unifié développement: Dev Mode + ONE CORE + QA & Tests + Orchestration
  *
  * Fusion de 4 modules → 1 module DEV (8 sections)
@@ -24,8 +24,8 @@ import type {
   SystemMetrics,
 } from '@/features/qa-monitoring/types';
 import type { OneCoreState } from '@/features/one-core/types';
-// ✨ v30.0.0 - Web Vitals monitoring remains deferred until a dedicated proof-backed rollout
-// ✨ v30.0.0 - Ultimate Optimization Dashboard (Phase 12)
+// ✨ v35.1.8 - Web Vitals monitoring remains deferred until a dedicated proof-backed rollout
+// ✨ v35.1.8 - Ultimate Optimization Dashboard (Phase 12)
 import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
 import { StatsSystemPanels } from './Stats';

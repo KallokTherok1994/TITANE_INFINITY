@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -10,7 +10,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 — EVO — CENTRE D'ÉVOLUTION TOTALE
+ * TITANE∞ v35.1.8 — EVO — CENTRE D'ÉVOLUTION TOTALE
  *
  * Fusion ultime de 5 modules en un seul centre hyper-puissant:
  * - Tableau de bord (métriques système, stats)

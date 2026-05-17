@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * 📊 PERFORMANCE DASHBOARD
@@ -125,7 +125,7 @@ export const PerformanceDashboard: React.FC<{ compact?: boolean }> = ({
     <div className="performance-dashboard">
       {/* Header */}
       <div className="dashboard-header">
-        <h3>⚡ Performance Dashboard v30.0.0</h3>
+        <h3>⚡ Performance Dashboard v35.1.8</h3>
         <button onClick={refreshMetrics} disabled={isRefreshing} className="refresh-btn">
           {isRefreshing ? '🔄 Refreshing...' : '🔄 Refresh'}
         </button>

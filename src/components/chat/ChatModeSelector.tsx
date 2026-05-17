@@ -1,11 +1,11 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — CHAT MODE SELECTOR
+ *   TITANE∞ v35.1.8 — CHAT MODE SELECTOR
  *   Sélecteur de modes élégant et compact
  * ═══════════════════════════════════════════════════════════════════════════════
  */

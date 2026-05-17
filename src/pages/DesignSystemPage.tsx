@@ -1,12 +1,12 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v30.0.0 - Design System Demo Page
+// TITANE∞ v35.1.8 - Design System Demo Page
 import { useState } from 'react';
 import { Panel } from '@/ui/components/Panel';
 import { Button } from '@/ui/components/Button';

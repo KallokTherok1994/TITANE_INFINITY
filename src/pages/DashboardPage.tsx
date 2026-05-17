@@ -2,7 +2,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 import { safeInvokeCanonical } from '@/utils/invoke';
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -11,7 +11,7 @@ import { safeInvokeCanonical } from '@/utils/invoke';
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 - Dashboard Page
+ * TITANE∞ v35.1.8 - Dashboard Page
  * Vue d&apos;ensemble du système avec métriques réelles
  * + INTÉGRATION: PersonaMoodIndicator + Visual Engines
  * Real stats: 407 Tauri commands, 294 Rust modules, 355 TS files
@@ -126,7 +126,7 @@ export const DashboardPage = (): JSX.Element => {
               showDetails
             />
 
-            {/* Stats Grid - TITANE∞ v30.0.0 Real Metrics */}
+            {/* Stats Grid - TITANE∞ v35.1.8 Real Metrics */}
             <div className="dashboard-grid">
               <Card variant="glass" elevation="lg" hoverable>
                 <Stack direction="vertical" gap={2}>

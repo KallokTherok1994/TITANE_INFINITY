@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 - CoreHealthMonitor Component
+ * TITANE∞ v35.1.8 - CoreHealthMonitor Component
  * Real-time monitoring of 9 core engines health status
  */
 

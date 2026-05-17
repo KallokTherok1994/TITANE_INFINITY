@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v30.0.0 — Advanced Performance Dashboard
+ * TITANE∞ v35.1.8 — Advanced Performance Dashboard
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Dashboard de monitoring de performance avancé avec:
@@ -241,7 +241,7 @@ export const AdvancedPerformanceDashboard: React.FC = () => {
       <div className="dashboard-header">
         <h1 className="dashboard-title">
           ⚡ Advanced Performance Monitor
-          <span className="dashboard-version">v30.0.0</span>
+          <span className="dashboard-version">v35.1.8</span>
         </h1>
 
         <div className="dashboard-controls">

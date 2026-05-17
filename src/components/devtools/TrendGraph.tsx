@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — TrendGraph Component
+ * TITANE∞ v35.1.8 — TrendGraph Component
  * Simplified trend graph for metrics
  */
 

@@ -1,12 +1,12 @@
 import { ErrorBoundary } from '../ErrorBoundary';
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — CHAT INPUT OMEGA (UI ANTI-CRASH)
+ *   TITANE∞ v35.1.8 — CHAT INPUT OMEGA (UI ANTI-CRASH)
  *   Validation input • Anti-spam • Sanitisation sécurisée
  *   Zone de saisie avec protection + Import fichiers pour analyse IA
  *   v22Ω AI Performance Optimizations Compatible

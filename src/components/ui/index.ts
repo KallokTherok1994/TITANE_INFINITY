@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — UI Components Export
+ * TITANE∞ v35.1.8 — UI Components Export
  * Super Prompt #2: Frontend Polish & UX Mastering
  */
 
@@ -15,7 +15,7 @@ export * from './icon-button';
 export * from './switch';
 export * from './tabs';
 
-// v30.0.0 UI/UX Enhancement Components
+// v35.1.8 UI/UX Enhancement Components
 export { Toast } from './Toast';
 export { ToastContainer, useToast } from './ToastContainer';
 export {

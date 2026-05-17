@@ -3,7 +3,7 @@
  * Renders message content with markdown support (bold, italic, code, lists, etc.)
  * Integrates with CodeBlock for syntax highlighting
  *
- * v30.0.0 (Sprint 6)
+ * v35.1.8 (Sprint 6)
  */
 
 import React, { useMemo } from 'react';

@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v30.0.0 — Proprietary License
+ * TITANE_INFINITY v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — WAKE WORD INDICATOR
+ *   TITANE∞ v35.1.8 — WAKE WORD INDICATOR
  *
  *   Indicateur visuel pour les états d'attention wake word:
  *   - inactive: transparent
@@ -50,7 +50,7 @@ const STATE_CONFIG: Record<
   }
 > = {
   inactive: {
-    color: 'bg-gray-400',
+    color: 'bg-titanium-bg-overlay',
     glow: '',
     animation: '',
     label: 'Inactif',
@@ -155,7 +155,7 @@ export const WakeWordIndicator: React.FC<WakeWordIndicatorProps> = ({
           )}
         >
           {/* Icône */}
-          <span className="text-white text-lg font-bold">{config.icon}</span>
+          <span className="text-titanium-text-inverse text-lg font-bold">{config.icon}</span>
         </div>
       </div>
 
@@ -198,8 +198,8 @@ export const WakeWordBadge: React.FC<{
       )}
       title={config.label}
     >
-      <span className="text-white text-sm">{config.icon}</span>
-      <span className="text-white text-xs font-medium">{config.label}</span>
+      <span className="text-titanium-text-inverse text-sm">{config.icon}</span>
+      <span className="text-titanium-text-inverse text-xs font-medium">{config.label}</span>
     </button>
   );
 };

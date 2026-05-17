@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Sphere Core Component
+ * TITANE∞ v35.1.8 — Sphere Core Component
  * Noyau visuel central avec polish signature
  *
  * Features:

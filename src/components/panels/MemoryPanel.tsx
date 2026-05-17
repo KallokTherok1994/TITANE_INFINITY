@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Adaptive Memory Panel
+ * TITANE∞ v35.1.8 — Adaptive Memory Panel
  * Memory visualization with animated progress bars
  *
  * Features v21:

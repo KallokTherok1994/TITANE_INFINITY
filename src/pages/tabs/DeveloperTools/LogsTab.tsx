@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Logs Tab
+ * TITANE∞ v35.1.8 — Logs Tab
  */
 
 import { LazyLogsCard, LazyErrorsCard } from '../../DevToolsLazy';

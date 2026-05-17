@@ -29,7 +29,7 @@ const BANNER_COLORS: Record<BadgeVariant, string> = {
   SIMULATED: 'bg-violet-950/50 border-violet-700/40 text-violet-200',
   DISPLAY_ONLY:
     'bg-titanium-bg-base/40 border-titanium-border-default/30 text-titanium-text-secondary',
-  LEGACY: 'bg-zinc-900/40 border-zinc-700/30 text-zinc-300',
+  LEGACY: 'bg-titanium-bg-overlay/40 border-titanium-border-default/30 text-titanium-text-secondary',
   NOT_WIRED: 'bg-red-950/50 border-red-800/40 text-red-300',
   ERROR: 'bg-red-900/60 border-red-700/60 text-red-100',
   UNKNOWN:

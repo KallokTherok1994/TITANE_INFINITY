@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — VitalsPanel Component
+ * TITANE∞ v35.1.8 — VitalsPanel Component
  * Unified DEV cockpit: mode, messages, connection truth, metrics availability.
  * Single bottom-strip surface for runtime diagnosis — no behavior change.
  */

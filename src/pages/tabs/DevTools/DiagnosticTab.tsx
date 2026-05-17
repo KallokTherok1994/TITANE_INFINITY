@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Diagnostic Tab
+ * TITANE∞ v35.1.8 — Diagnostic Tab
  */
 
 import { LazyChatDiagnostic } from '../../DevToolsLazy';

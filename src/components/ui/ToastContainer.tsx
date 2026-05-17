@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Toast Container & Manager (Titanium Dark)
+ * TITANE∞ v35.1.8 — Toast Container & Manager (Titanium Dark)
  * Toast notification system with Titanium Dark design system
  * @license MIT
  */

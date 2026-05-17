@@ -2,7 +2,7 @@
  * TITANE∞ — Code Block with Syntax Highlighting
  * Wraps code with Highlight.js for colored syntax
  *
- * v30.0.0 (Sprint 6)
+ * v35.1.8 (Sprint 6)
  */
 
 import React, { useEffect, useRef, useState } from 'react';

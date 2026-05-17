@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 — Proprietary License
+ * TITANE∞ v35.1.8 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -7,7 +7,7 @@
  */
 
 /**
- * TITANE∞ v30.0.0 — PersonaMoodIndicator Component
+ * TITANE∞ v35.1.8 — PersonaMoodIndicator Component
  *
  * Indicateur visuel du mood du Persona Engine
  * Première intégration visible du PersonaEngine dans l'UI

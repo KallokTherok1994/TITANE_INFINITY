@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v30.0.0 - Memory Viewer Component
+ * TITANE∞ v35.1.8 - Memory Viewer Component
  * Composant de visualisation détaillée des entrées mémoire
  */
 
