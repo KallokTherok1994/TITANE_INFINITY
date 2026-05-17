@@ -452,7 +452,7 @@ export class ChatErrorBoundary extends Component<
               <summary className="cursor-pointer text-blue-400 hover:text-blue-300 mb-2">
                 Détails techniques
               </summary>
-              <div className="bg-black p-4 rounded overflow-auto max-h-48">
+              <div className="bg-titanium-bg-base p-4 rounded overflow-auto max-h-48">
                 <pre className="text-xs text-titanium-text-tertiary whitespace-pre-wrap">
                   {error.message}
                   {'\n\n'}
@@ -475,28 +475,28 @@ export class ChatErrorBoundary extends Component<
           <div className="flex flex-wrap gap-3">
             <button
               onClick={this.handleReset}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-titanium-text-primary rounded font-medium transition-colors"
             >
               Réessayer
             </button>
 
             <button
               onClick={this.handleClearConversation}
-              className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded font-medium transition-colors"
+              className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-titanium-text-primary rounded font-medium transition-colors"
             >
               Nouvelle Conversation
             </button>
 
             <button
               onClick={this.handleReportError}
-              className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay text-white rounded font-medium transition-colors"
+              className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay text-titanium-text-primary rounded font-medium transition-colors"
             >
               Signaler l&apos;erreur
             </button>
 
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-colors"
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-titanium-text-primary rounded font-medium transition-colors"
             >
               Recharger l&apos;application
             </button>

@@ -303,7 +303,7 @@ export const DashboardEditor: React.FC<DashboardEditorProps> = ({
               (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')
             }
           >
-            <X className="h-5 w-5 text-white" />
+            <X className="h-5 w-5 text-titanium-text-primary" />
           </button>
         </div>
 

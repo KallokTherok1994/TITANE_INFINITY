@@ -86,14 +86,14 @@ const ProjectHealthCard: React.FC = () => {
       className="bg-titanium-bg-elevated rounded-xl p-5 border border-titanium-border-default"
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-titanium-text-primary flex items-center gap-2">
           <Activity className="w-5 h-5 text-blue-400" />
           Santé Cross-Session
         </h2>
         <button
           onClick={() => void refresh()}
           disabled={loading}
-          className="p-1.5 rounded-lg hover:bg-titanium-bg-interactive text-titanium-text-tertiary hover:text-white transition-colors disabled:opacity-40"
+          className="p-1.5 rounded-lg hover:bg-titanium-bg-interactive text-titanium-text-tertiary hover:text-titanium-text-primary transition-colors disabled:opacity-40"
           title="Rafraîchir les métriques"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -108,7 +108,7 @@ const ProjectHealthCard: React.FC = () => {
             <p className="text-xs text-titanium-text-disabled mb-1">
               Récurrence incidents
             </p>
-            <p className="text-xl font-bold text-white">
+            <p className="text-xl font-bold text-titanium-text-primary">
               {(metrics.incidentRecurrenceRate * 100).toFixed(1)}
               <span className="text-sm font-normal text-titanium-text-tertiary">%</span>
             </p>
@@ -121,7 +121,7 @@ const ProjectHealthCard: React.FC = () => {
           </div>
           <div className="bg-titanium-bg-base rounded-lg p-3">
             <p className="text-xs text-titanium-text-disabled mb-1">Lead time moyen</p>
-            <p className="text-xl font-bold text-white">
+            <p className="text-xl font-bold text-titanium-text-primary">
               {metrics.avgLeadTimeMinutes.toFixed(0)}
               <span className="text-sm font-normal text-titanium-text-tertiary">
                 {' '}
@@ -280,7 +280,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Monitoring Dashboard</h1>
+            <h1 className="text-3xl font-bold text-titanium-text-primary mb-2">Monitoring Dashboard</h1>
             <p className="text-titanium-text-tertiary">
               Métriques de performance en temps réel - Refresh auto toutes les 5s
             </p>
@@ -291,7 +291,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
             <button
               onClick={handleExportJSON}
               disabled={isExporting}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-titanium-text-primary font-medium transition-colors disabled:opacity-50"
             >
               <Download className="w-4 h-4" />
               Export JSON
@@ -300,7 +300,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
             <button
               onClick={handleExportCSV}
               disabled={isExporting}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-titanium-text-primary font-medium transition-colors disabled:opacity-50"
             >
               <Download className="w-4 h-4" />
               Export CSV
@@ -308,7 +308,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
 
             <button
               onClick={handleClearMetrics}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-titanium-text-primary font-medium transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               Clear
@@ -321,7 +321,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
 
         {/* Services Grid */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-4">Services Monitoring</h2>
+          <h2 className="text-2xl font-bold text-titanium-text-primary mb-4">Services Monitoring</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             <ServiceMetricsPanel service="memory" autoRefresh refreshInterval={5000} />
             <ServiceMetricsPanel service="chat" autoRefresh refreshInterval={5000} />

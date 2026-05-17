@@ -36,7 +36,7 @@ export function HTFClientPanel() {
         <button
           data-testid="htf-btn-nouveau-client"
           onClick={() => setShowForm(v => !v)}
-          className="rounded bg-blue-600 px-3 py-1.5 text-sm text-white"
+          className="rounded bg-blue-600 px-3 py-1.5 text-sm text-titanium-text-primary"
         >
           + Nouveau client
         </button>
@@ -74,7 +74,7 @@ export function HTFClientPanel() {
           <button
             type="submit"
             data-testid="htf-btn-save-client"
-            className="rounded bg-blue-600 px-4 py-2 text-sm text-white"
+            className="rounded bg-blue-600 px-4 py-2 text-sm text-titanium-text-primary"
           >
             Enregistrer
           </button>
@@ -95,7 +95,7 @@ export function HTFClientPanel() {
             className={`rounded-lg border p-3 cursor-pointer text-sm flex items-center justify-between ${
               activeClient?.id === c.id
                 ? 'border-blue-400 bg-blue-50'
-                : 'border-titanium-border-subtle bg-white hover:bg-titanium-bg-base'
+                : 'border-titanium-border-subtle bg-titanium-bg-base hover:bg-titanium-bg-base'
             }`}
           >
             <div>

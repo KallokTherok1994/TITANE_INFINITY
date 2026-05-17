@@ -120,7 +120,7 @@ export function LogLine({ log, onFilter, onCopy, className = '' }: LogLineProps)
         {onCopy && (
           <button
             onClick={() => onCopy(log.message)}
-            className="px-2 py-1 text-xs rounded hover:bg-white hover:bg-opacity-10 transition-colors"
+            className="px-2 py-1 text-xs rounded hover:bg-titanium-bg-base hover:bg-opacity-10 transition-colors"
             style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
             title="Copy message"
           >

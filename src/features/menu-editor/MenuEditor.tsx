@@ -128,14 +128,14 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-titanium-bg-base/80 backdrop-blur-sm">
       <div className="relative h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl border border-titanium-border-default bg-titanium-bg-base shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-titanium-border-default bg-titanium-bg-elevated/50 p-6">
           <div className="flex items-center gap-3">
             <Edit2 className="h-6 w-6 text-blue-400" />
             <div>
-              <h2 className="text-2xl font-bold text-white">Éditeur de Menu</h2>
+              <h2 className="text-2xl font-bold text-titanium-text-primary">Éditeur de Menu</h2>
               <p className="text-sm text-titanium-text-tertiary">
                 Glissez-déposez pour réorganiser, cliquez pour modifier
               </p>
@@ -143,7 +143,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white"
+            className="rounded-lg p-2 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-titanium-text-primary"
           >
             <X className="h-6 w-6" />
           </button>
@@ -175,14 +175,14 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                       value={editForm.icon || ''}
                       onChange={e => setEditForm({ ...editForm, icon: e.target.value })}
                       placeholder="Icône (emoji)"
-                      className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-center text-2xl text-white outline-none focus:border-blue-500"
+                      className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-center text-2xl text-titanium-text-primary outline-none focus:border-blue-500"
                     />
                     <input
                       type="text"
                       value={editForm.label || ''}
                       onChange={e => setEditForm({ ...editForm, label: e.target.value })}
                       placeholder="Titre"
-                      className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-white outline-none focus:border-blue-500"
+                      className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-titanium-text-primary outline-none focus:border-blue-500"
                     />
                   </div>
                   <input
@@ -192,26 +192,26 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                       setEditForm({ ...editForm, description: e.target.value })
                     }
                     placeholder="Description"
-                    className="w-full rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-white outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-titanium-text-primary outline-none focus:border-blue-500"
                   />
                   <input
                     type="text"
                     value={editForm.route || ''}
                     onChange={e => setEditForm({ ...editForm, route: e.target.value })}
                     placeholder="Route (ex: /ma-page)"
-                    className="w-full rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-white outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-2 text-titanium-text-primary outline-none focus:border-blue-500"
                   />
                   <div className="flex gap-2">
                     <button
                       onClick={saveEdit}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-green-600 py-2 font-bold text-white transition-colors hover:bg-green-700"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-green-600 py-2 font-bold text-titanium-text-primary transition-colors hover:bg-green-700"
                     >
                       <Save className="h-4 w-4" />
                       Enregistrer
                     </button>
                     <button
                       onClick={cancelEdit}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-titanium-bg-interactive py-2 font-bold text-white transition-colors hover:bg-titanium-bg-overlay"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-titanium-bg-interactive py-2 font-bold text-titanium-text-primary transition-colors hover:bg-titanium-bg-overlay"
                     >
                       <X className="h-4 w-4" />
                       Annuler
@@ -231,7 +231,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
 
                   {/* Content */}
                   <div className="flex-1">
-                    <div className="font-bold text-white">{section.label}</div>
+                    <div className="font-bold text-titanium-text-primary">{section.label}</div>
                     <div className="text-sm text-titanium-text-tertiary">{section.description}</div>
                     <code className="mt-1 text-xs text-titanium-text-disabled">{section.route}</code>
                   </div>
@@ -241,7 +241,7 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                     <button
                       onClick={() => moveUp(index)}
                       disabled={index === 0}
-                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white disabled:opacity-30"
+                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-titanium-text-primary disabled:opacity-30"
                       title="Monter"
                     >
                       ↑
@@ -249,14 +249,14 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
                     <button
                       onClick={() => moveDown(index)}
                       disabled={index === editableSections.length - 1}
-                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white disabled:opacity-30"
+                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-titanium-text-primary disabled:opacity-30"
                       title="Descendre"
                     >
                       ↓
                     </button>
                     <button
                       onClick={() => toggleVisibility(section.id)}
-                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-white"
+                      className="rounded p-1.5 text-titanium-text-tertiary transition-colors hover:bg-titanium-bg-interactive hover:text-titanium-text-primary"
                       title={section.visible ? 'Masquer' : 'Afficher'}
                     >
                       {section.visible ? (
@@ -304,13 +304,13 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="rounded-lg bg-titanium-bg-interactive px-6 py-2 font-bold text-white transition-colors hover:bg-titanium-bg-overlay"
+              className="rounded-lg bg-titanium-bg-interactive px-6 py-2 font-bold text-titanium-text-primary transition-colors hover:bg-titanium-bg-overlay"
             >
               Annuler
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 font-bold text-white transition-colors hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 font-bold text-titanium-text-primary transition-colors hover:bg-blue-700"
             >
               <Save className="h-4 w-4" />
               Enregistrer le menu

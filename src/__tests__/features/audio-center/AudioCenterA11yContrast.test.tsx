@@ -26,10 +26,12 @@ describe('AudioCenterPage A11y — contrast + form-label hardening', () => {
   );
 
   it('cyan tab + Test button use bg-cyan-700 (no bg-cyan-600 active class)', () => {
-    expect(SRC).toMatch(/bg-cyan-700\s+text-white/);
-    expect(SRC).toMatch(/bg-cyan-700\s+hover:bg-cyan-600\s+text-white/);
-    expect(SRC).not.toMatch(/'bg-cyan-600\s+text-white'/);
-    expect(SRC).not.toMatch(/bg-cyan-600\s+hover:bg-cyan-500\s+text-white/);
+    // text-titanium-text-primary replaces text-white per design system migration:
+    // dark mode → #f1f5f9 (~5:1 on cyan-700, AA), light mode → #0f172a (~8:1, AAA)
+    expect(SRC).toMatch(/bg-cyan-700\s+text-titanium-text-primary/);
+    expect(SRC).toMatch(/bg-cyan-700\s+hover:bg-cyan-600\s+text-titanium-text-primary/);
+    expect(SRC).not.toMatch(/'bg-cyan-600\s+text-titanium-text-primary'/);
+    expect(SRC).not.toMatch(/bg-cyan-600\s+hover:bg-cyan-500\s+text-titanium-text-primary/);
   });
 
   it('voice engine badges and meta spans use AA-compliant tokens', () => {

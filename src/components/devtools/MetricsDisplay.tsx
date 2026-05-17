@@ -218,13 +218,13 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
       <div className="mt-6 pt-4 border-t border-titanium-border-default flex gap-3">
         <button
           onClick={() => window.location.reload()}
-          className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white transition"
+          className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-titanium-text-primary transition"
         >
           🔄 Refresh
         </button>
         <button
           onClick={() => console.warn('Export metrics', categories)}
-          className="px-4 py-2 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition"
+          className="px-4 py-2 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-titanium-text-primary transition"
         >
           💾 Export
         </button>

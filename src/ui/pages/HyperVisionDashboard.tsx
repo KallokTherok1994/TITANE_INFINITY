@@ -168,7 +168,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
 
           {/* 5-Layer Scanner */}
           <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30 mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
               Scanner système 5 couches
             </h2>
 
@@ -179,7 +179,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
                   className="bg-titanium-bg-interactive/30 rounded-xl p-4 border border-titanium-border-strong/50 hover:border-blue-500/50 transition-all"
                 >
                   <div className="text-center mb-3">
-                    <div className="text-white font-semibold mb-2">{layer.name}</div>
+                    <div className="text-titanium-text-primary font-semibold mb-2">{layer.name}</div>
                     <div className={`text-2xl font-bold ${getHealthColor(layer.health)}`}>
                       {layer.health.toFixed(0)}%
                     </div>
@@ -208,7 +208,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
 
           {/* Metrics History Graph */}
           <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
               Historique des métriques
             </h2>
 
@@ -267,14 +267,14 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
             <div className="grid grid-cols-3 gap-4 mt-6">
               <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
                 <div className="text-titanium-text-tertiary text-sm mb-2">Utilisation disque</div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-titanium-text-primary">
                   {metrics.disk_usage.toFixed(1)}%
                 </div>
               </div>
 
               <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
                 <div className="text-titanium-text-tertiary text-sm mb-2">Réseau RX/TX</div>
-                <div className="text-lg font-bold text-white">
+                <div className="text-lg font-bold text-titanium-text-primary">
                   ↓{(metrics.network_rx / 1024).toFixed(1)} / ↑
                   {(metrics.network_tx / 1024).toFixed(1)} KB/s
                 </div>
@@ -282,7 +282,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
 
               <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
                 <div className="text-titanium-text-tertiary text-sm mb-2">Processus actifs</div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-titanium-text-primary">
                   {metrics.active_processes}
                 </div>
               </div>

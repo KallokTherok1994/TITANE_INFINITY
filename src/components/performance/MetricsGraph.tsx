@@ -28,7 +28,7 @@ export const CustomLegend: React.FC<{
               transition-all duration-200
               ${
                 isVisible
-                  ? 'bg-titanium-bg-interactive/50 text-white'
+                  ? 'bg-titanium-bg-interactive/50 text-titanium-text-primary'
                   : 'bg-titanium-bg-elevated/50 text-titanium-text-disabled'
               }
             `}
@@ -368,7 +368,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
                   style={{ backgroundColor: entry.color }}
                 />
                 <span className="text-titanium-text-secondary">{metric?.label}:</span>
-                <span className="text-white font-medium">
+                <span className="text-titanium-text-primary font-medium">
                   {formatMetricValue(entry.value, metric?.unit || '')}
                 </span>
               </div>
@@ -520,7 +520,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
                   px-2 py-1 text-xs rounded-md transition-all
                   ${
                     selectedRange === range.value
-                      ? 'bg-blue-500 text-white'
+                      ? 'bg-blue-500 text-titanium-text-primary'
                       : 'text-titanium-text-tertiary hover:text-white'
                   }
                 `}

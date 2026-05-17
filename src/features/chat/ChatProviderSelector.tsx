@@ -51,7 +51,7 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
           aria-label="Selection du provider IA"
           value={selectedProvider}
           onChange={e => onChange(e.target.value)}
-          className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-1.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
+          className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-1.5 text-sm text-titanium-text-primary outline-none transition-colors focus:border-blue-500"
         >
           {options}
         </select>

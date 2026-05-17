@@ -109,7 +109,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
       {/* Initialization Panel */}
       {!isInitialized && (
         <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 mb-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-white mb-4">
+          <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
             Initialiser la couche Mesh
           </h2>
           <div className="grid grid-cols-2 gap-4 mb-4">
@@ -119,7 +119,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
                 type="text"
                 value={nodeId}
                 onChange={e => setNodeId(e.target.value)}
-                className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-2 text-white"
+                className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-2 text-titanium-text-primary"
                 placeholder="node-12345"
               />
             </div>
@@ -129,14 +129,14 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
                 type="number"
                 value={port}
                 onChange={e => setPort(parseInt(e.target.value))}
-                className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-2 text-white"
+                className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-2 text-titanium-text-primary"
                 placeholder="9999"
               />
             </div>
           </div>
           <button
             onClick={initialize}
-            className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-lg transition-all"
+            className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-titanium-text-primary font-semibold py-3 rounded-lg transition-all"
           >
             Démarrer le réseau Mesh
           </button>
@@ -153,7 +153,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">ID du nœud</div>
-            <div className="text-white text-xl font-bold truncate">{stats.node_id}</div>
+            <div className="text-titanium-text-primary text-xl font-bold truncate">{stats.node_id}</div>
           </div>
           <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">Rôle</div>
@@ -163,11 +163,11 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
           </div>
           <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">Pairs</div>
-            <div className="text-white text-xl font-bold">{stats.peer_count}</div>
+            <div className="text-titanium-text-primary text-xl font-bold">{stats.peer_count}</div>
           </div>
           <div className="bg-linear-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">Charge moy.</div>
-            <div className="text-white text-xl font-bold">
+            <div className="text-titanium-text-primary text-xl font-bold">
               {stats.avg_load.toFixed(1)}%
             </div>
           </div>
@@ -177,7 +177,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
       {/* Peer List */}
       {isInitialized && (
         <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-white mb-4">Pairs actifs</h2>
+          <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">Pairs actifs</h2>
           <div className="space-y-3">
             {peers.map(peer => (
               <div
@@ -186,7 +186,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <div className="text-white font-semibold">{peer.id}</div>
+                    <div className="text-titanium-text-primary font-semibold">{peer.id}</div>
                     <div className="text-titanium-text-tertiary text-sm">{peer.addr}</div>
                   </div>
                   <div
@@ -206,7 +206,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
                           style={{ width: `${peer.health}%` }}
                         />
                       </div>
-                      <span className="text-white text-sm font-medium">
+                      <span className="text-titanium-text-primary text-sm font-medium">
                         {peer.health}%
                       </span>
                     </div>
@@ -220,7 +220,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
                           style={{ width: `${peer.load}%` }}
                         />
                       </div>
-                      <span className="text-white text-sm font-medium">{peer.load}%</span>
+                      <span className="text-titanium-text-primary text-sm font-medium">{peer.load}%</span>
                     </div>
                   </div>
                 </div>
@@ -244,7 +244,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
       {/* Network Visualization Placeholder */}
       {isInitialized && (
         <div className="mt-6 bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-white mb-4">Network Topology</h2>
+          <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">Network Topology</h2>
           <div className="bg-titanium-bg-base/50 rounded-xl h-64 flex items-center justify-center text-titanium-text-disabled">
             Topology visualization (coming soon with D3.js)
           </div>

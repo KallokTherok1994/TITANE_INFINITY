@@ -1,4 +1,6 @@
 {
     "chat.agent.maxRequests": 25000,
-    "chat.mcp.access": "all"
+    "chat.mcp.enabled": true,
+    "chat.mcp.access": "all",
+    "chat.mcp.autoStart": "newAndOutdated"
 }

@@ -2,6 +2,10 @@
 
 > v34.1.0 ne touche **AUCUN** runtime Ollama. Dev `qwen3.5:9b` (Copilot/MCP, `http://127.0.0.1:11434`) et Chat PROD `gemma2:2b` (Tauri OMEGA pipeline) restent strictement séparés. Aucun default partagé, aucun fallback contaminé, aucun champion registry muté. Validateur `pnpm run verify:ollama:boundary` reste autorité d'alignement.
 
+## 2026-05-17 — OLLAMA_DEV_STACK_CERTIFIED static boundary upgrade
+
+> `.vscode/mcp.json` n'appelle plus `pnpm dlx` directement. La surface DEV passe par `scripts/mcp/start-ollama-dev-mcp.sh`, qui préflight `OLLAMA_HOST`, le modèle `qwen3.5:9b`, puis lance le serveur MCP piné `ollama-mcp@2.1.0`. Les probes live/perf exposent maintenant un fine-tuning borné via `TITANE_OLLAMA_DEV_*` pour ajuster timeouts, `keep_alive`, `num_ctx`, `num_predict` et `temperature` sans toucher au runtime produit. La provenance du package piné est enregistrée sous `reports/mcp-package-provenance/ollama-mcp-2.1.0.md`, et le profil machine local recommandé est publié dans `docs/dev/OLLAMA_DEV_LOCAL_PROFILE.md`. Nouveaux gates: `pnpm run verify:mcp:security`, `pnpm run verify:ollama:dev:live`, `pnpm run verify:ollama:dev:performance`, `pnpm run verify:ollama:dev:stack`, plus les preuves `pnpm run proof:ollama:dev:session` et `pnpm run proof:ollama:dev:hardening`. Le runtime produit reste verrouillé sur `gemma2:2b`.
+
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
 ## CURRENT CANONICAL STATE — 2026-05-08

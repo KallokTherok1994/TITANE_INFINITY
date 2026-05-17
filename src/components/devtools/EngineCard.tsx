@@ -19,7 +19,7 @@ export function EngineCard({ engine, onClick }: EngineCardProps) {
       tabIndex={0}
     >
       <div className="flex items-center justify-between">
-        <h3 className="font-medium text-white">{engine.name}</h3>
+        <h3 className="font-medium text-titanium-text-primary">{engine.name}</h3>
         <span
           className={`px-2 py-1 rounded text-xs ${
             engine.status === 'active'

@@ -10,7 +10,7 @@ exports[`EngineCard Component > Snapshot > should match snapshot 1`] = `
     class="flex items-center justify-between"
   >
     <h3
-      class="font-medium text-white"
+      class="font-medium text-titanium-text-primary"
     >
       Fusion Engine
     </h3>

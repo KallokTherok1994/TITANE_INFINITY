@@ -47,7 +47,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({ voice, isSelected, onSelect, onTe
   >
     <div className="flex justify-between items-start mb-2">
       <div>
-        <h4 className="font-medium text-white">{voice.name}</h4>
+        <h4 className="font-medium text-titanium-text-primary">{voice.name}</h4>
         <p className="text-sm text-neutral-400">{voice.description}</p>
       </div>
       {voice.isRealistic && (
@@ -78,7 +78,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({ voice, isSelected, onSelect, onTe
           e.stopPropagation();
           onTest();
         }}
-        className="ml-auto px-3 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 text-white rounded transition-colors"
+        className="ml-auto px-3 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 text-titanium-text-primary rounded transition-colors"
       >
         🔊 Test
       </button>
@@ -168,7 +168,7 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         value={selectedId}
         onChange={e => onSelect(e.target.value)}
         disabled={isLoading || safeDevices.length === 0}
-        className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white
+        className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-titanium-text-primary
                    focus:border-cyan-500 focus:outline-none disabled:opacity-50"
       >
         {safeDevices.length === 0 ? (
@@ -337,7 +337,7 @@ export const AudioCenterPage: React.FC = () => {
 
   return (
     <div
-      className="h-full overflow-auto bg-neutral-900 text-white"
+      className="h-full overflow-auto bg-neutral-900 text-titanium-text-primary"
       data-testid="page-audio-center"
     >
       {/* Header */}
@@ -377,7 +377,7 @@ export const AudioCenterPage: React.FC = () => {
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-cyan-700 text-white'
+                  ? 'bg-cyan-700 text-titanium-text-primary'
                   : 'bg-neutral-800 text-neutral-400 hover:text-white'
               }`}
             >
@@ -661,7 +661,7 @@ export const AudioCenterPage: React.FC = () => {
                   data-testid="input-elevenlabs-api-key"
                   placeholder="sk-..."
                   className="w-full md:w-96 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
-                           text-white placeholder-neutral-500 focus:border-cyan-500 focus:outline-none"
+                           text-titanium-text-primary placeholder-neutral-500 focus:border-cyan-500 focus:outline-none"
                 />
                 <p className="text-xs text-neutral-500 mt-1">
                   Optionnel. Permet d&apos;utiliser les voix ElevenLabs ultra-réalistes.
@@ -678,7 +678,7 @@ export const AudioCenterPage: React.FC = () => {
                   value={config.tts.language}
                   onChange={e => updateTTSSettings({ language: e.target.value })}
                   className="w-full md:w-64 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
-                           text-white focus:border-cyan-500 focus:outline-none"
+                           text-titanium-text-primary focus:border-cyan-500 focus:outline-none"
                 >
                   <option value="fr-FR">🇫🇷 Français (France)</option>
                   <option value="en-US">🇺🇸 English (US)</option>
@@ -742,7 +742,7 @@ export const AudioCenterPage: React.FC = () => {
                     );
                   }}
                   className="w-full md:w-96 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
-                           text-white focus:border-cyan-500 focus:outline-none"
+                           text-titanium-text-primary focus:border-cyan-500 focus:outline-none"
                 >
                   <option value="">Aucun profil vocal TITANE forcé</option>
                   {titaneVoiceProfiles.map(profile => (
@@ -761,7 +761,7 @@ export const AudioCenterPage: React.FC = () => {
 
               {/* Engine Info */}
               <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-700">
-                <h3 className="font-medium text-white mb-2">
+                <h3 className="font-medium text-titanium-text-primary mb-2">
                   ℹ️ Moteurs TTS disponibles
                 </h3>
                 <ul className="space-y-1 text-sm text-neutral-400">

@@ -100,7 +100,7 @@ const IdentityMemoryEvolutionCenter: React.FC = () => {
             onClick={() => setActiveTab(tab.id as Tab)}
             className={`px-4 py-2 rounded-lg transition-all ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white'
+                ? 'bg-blue-600 text-titanium-text-primary'
                 : 'bg-titanium-bg-elevated text-titanium-text-tertiary hover:bg-titanium-bg-interactive'
             }`}
           >

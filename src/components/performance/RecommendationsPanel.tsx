@@ -210,7 +210,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
       {/* Header */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center gap-3 p-4 text-left hover:bg-white/5 transition-colors"
+        className="w-full flex items-center gap-3 p-4 text-left hover:bg-titanium-bg-base/5 transition-colors"
       >
         <motion.div
           animate={{ rotate: expanded ? 90 : 0 }}
@@ -226,7 +226,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`font-medium ${isApplied ? 'text-green-400' : 'text-white'}`}
+              className={`font-medium ${isApplied ? 'text-green-400' : 'text-titanium-text-primary'}`}
             >
               {recommendation.title}
             </span>
@@ -604,7 +604,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
           </div>
 
           <div>
-            <h3 className="font-semibold text-white">Recommandations</h3>
+            <h3 className="font-semibold text-titanium-text-primary">Recommandations</h3>
             <div className="flex items-center gap-3 mt-1 text-xs">
               <span className="text-titanium-text-tertiary">
                 {stats.total - stats.applied} en attente
@@ -660,7 +660,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                           ${
                             isActive
                               ? `${config.bgColor} ${config.color}`
-                              : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
+                              : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-titanium-text-primary'
                           }
                         `}
                         >
@@ -688,7 +688,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                           ${
                             isActive
                               ? `${config.bgColor} ${config.color}`
-                              : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
+                              : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-titanium-text-primary'
                           }
                         `}
                         >
@@ -708,7 +708,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                       ${
                         sortField === 'impact'
                           ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
+                          : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-titanium-text-primary'
                       }
                     `}
                   >
@@ -723,7 +723,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                       ${
                         sortField === 'effort'
                           ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
+                          : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-titanium-text-primary'
                       }
                     `}
                   >

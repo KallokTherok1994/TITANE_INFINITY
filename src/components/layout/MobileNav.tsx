@@ -149,7 +149,7 @@ export const MobileNav = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="lg:hidden fixed inset-0 bg-black/50 z-modal-backdrop"
+            className="lg:hidden fixed inset-0 bg-titanium-bg-base/50 z-modal-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

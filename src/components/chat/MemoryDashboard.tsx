@@ -149,7 +149,7 @@ const MemoryEntryCard: React.FC<{
 
       {/* Titre (si disponible) */}
       {'title' in entry && entry.title && (
-        <h4 className="text-sm font-medium text-white mb-1 line-clamp-1">
+        <h4 className="text-sm font-medium text-titanium-text-primary mb-1 line-clamp-1">
           {entry.title}
         </h4>
       )}
@@ -277,7 +277,7 @@ const FilterBar: React.FC<{
           placeholder="Rechercher dans la mémoire..."
           disabled={disabled}
           aria-disabled={disabled}
-          className="w-full px-3 py-2 pl-9 bg-titanium-bg-base/50 border border-titanium-border-default rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+          className="w-full px-3 py-2 pl-9 bg-titanium-bg-base/50 border border-titanium-border-default rounded-lg text-sm text-titanium-text-primary placeholder-gray-500 focus:outline-none focus:border-blue-500"
         />
         <svg
           className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-titanium-text-disabled"
@@ -574,7 +574,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🧠</span>
-          <h2 className="text-lg font-semibold text-white">Mémoire 3 niveaux</h2>
+          <h2 className="text-lg font-semibold text-titanium-text-primary">Mémoire 3 niveaux</h2>
           <span className="px-2 py-0.5 text-xs bg-blue-500/20 text-blue-400 rounded-full">
             {isEmptyPersistentMemory
               ? '0 entrée mémoire'
@@ -605,7 +605,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
               </p>
               <p
                 data-testid="memory-dashboard-hybrid-active-preset"
-                className="text-sm text-white"
+                className="text-sm text-titanium-text-primary"
               >
                 Preset actif: {hybridDiagnostics.shadowReadActivePresetLabel}
               </p>

@@ -719,8 +719,8 @@ export const TimePage: React.FC = () => {
             id={`time-tab-${tab.id}`}
             className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-titanium-bg-elevated text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-white'
+                ? 'bg-blue-600 text-titanium-text-primary'
+                : 'bg-titanium-bg-elevated text-titanium-text-secondary hover:bg-titanium-bg-interactive hover:text-titanium-text-primary'
             }`}
           >
             <div className="font-medium">{tab.label}</div>
@@ -821,13 +821,13 @@ const TemporalMemorySection: React.FC = () => {
       className="space-y-4 rounded-lg border border-titanium-border-subtle bg-titanium-bg-base/40 p-4"
     >
       <header className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">🧬 Mémoire temporelle</h2>
+        <h2 className="text-lg font-semibold text-titanium-text-primary">🧬 Mémoire temporelle</h2>
         <div className="flex gap-2">
           <button
             type="button"
             data-testid="time-memory-refresh"
             onClick={() => void refresh()}
-            className="rounded bg-titanium-bg-interactive px-3 py-1 text-xs text-white hover:bg-titanium-bg-overlay"
+            className="rounded bg-titanium-bg-interactive px-3 py-1 text-xs text-titanium-text-primary hover:bg-titanium-bg-overlay"
           >
             Refresh
           </button>
@@ -835,7 +835,7 @@ const TemporalMemorySection: React.FC = () => {
             type="button"
             data-testid="time-memory-consolidate"
             onClick={() => void consolidateMemory()}
-            className="rounded bg-blue-600 px-3 py-1 text-xs text-white hover:bg-blue-500"
+            className="rounded bg-blue-600 px-3 py-1 text-xs text-titanium-text-primary hover:bg-blue-500"
           >
             Consolider
           </button>
@@ -897,13 +897,13 @@ const TemporalTwinSection: React.FC = () => {
       className="space-y-4 rounded-lg border border-titanium-border-subtle bg-titanium-bg-base/40 p-4"
     >
       <header className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">🪞 Twin & Health</h2>
+        <h2 className="text-lg font-semibold text-titanium-text-primary">🪞 Twin & Health</h2>
         <div className="flex gap-2">
           <button
             type="button"
             data-testid="time-twin-refresh"
             onClick={() => void refresh()}
-            className="rounded bg-titanium-bg-interactive px-3 py-1 text-xs text-white hover:bg-titanium-bg-overlay"
+            className="rounded bg-titanium-bg-interactive px-3 py-1 text-xs text-titanium-text-primary hover:bg-titanium-bg-overlay"
           >
             Refresh
           </button>
@@ -911,7 +911,7 @@ const TemporalTwinSection: React.FC = () => {
             type="button"
             data-testid="time-twin-tick"
             onClick={() => void tick()}
-            className="rounded bg-emerald-600 px-3 py-1 text-xs text-white hover:bg-emerald-500"
+            className="rounded bg-emerald-600 px-3 py-1 text-xs text-titanium-text-primary hover:bg-emerald-500"
           >
             Tick
           </button>
@@ -1000,7 +1000,7 @@ const Metric: React.FC<{
     <div className="text-[10px] uppercase tracking-wider text-titanium-text-tertiary">
       {label}
     </div>
-    <div className="mt-1 text-base font-semibold text-white">{value}</div>
+    <div className="mt-1 text-base font-semibold text-titanium-text-primary">{value}</div>
   </div>
 );
 
@@ -1264,14 +1264,14 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
         <button
           data-testid="btn-time-view-week"
           onClick={() => setView('week')}
-          className={`px-4 py-2 rounded ${currentView === 'week' ? 'bg-blue-600 text-white' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
+          className={`px-4 py-2 rounded ${currentView === 'week' ? 'bg-blue-600 text-titanium-text-primary' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
         >
           📅 Semaine
         </button>
         <button
           data-testid="btn-time-view-month"
           onClick={() => setView('month')}
-          className={`px-4 py-2 rounded ${currentView === 'month' ? 'bg-blue-600 text-white' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
+          className={`px-4 py-2 rounded ${currentView === 'month' ? 'bg-blue-600 text-titanium-text-primary' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
         >
           📆 Mois
         </button>
@@ -1286,7 +1286,7 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
         <button
           data-testid="btn-time-today"
           onClick={onGoToToday}
-          className="px-3 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+          className="px-3 py-2 rounded bg-blue-600 text-titanium-text-primary hover:bg-blue-700"
         >
           Aujourd&apos;hui
         </button>
@@ -1303,7 +1303,7 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
         <button
           data-testid="btn-time-toggle-energy"
           onClick={onToggleEnergyOverlay}
-          className={`px-3 py-2 rounded ${agendaMeta.showEnergyOverlay ? 'bg-emerald-700 text-white' : 'bg-titanium-bg-elevated text-titanium-text-secondary'}`}
+          className={`px-3 py-2 rounded ${agendaMeta.showEnergyOverlay ? 'bg-emerald-700 text-titanium-text-primary' : 'bg-titanium-bg-elevated text-titanium-text-secondary'}`}
         >
           {agendaMeta.showEnergyOverlay
             ? '🔋 Overlay énergie actif'
@@ -1312,7 +1312,7 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
         <button
           data-testid="btn-time-toggle-focus"
           onClick={onToggleFocusBlocks}
-          className={`px-3 py-2 rounded ${agendaMeta.showFocusBlocks ? 'bg-purple-700 text-white' : 'bg-titanium-bg-elevated text-titanium-text-secondary'}`}
+          className={`px-3 py-2 rounded ${agendaMeta.showFocusBlocks ? 'bg-purple-700 text-titanium-text-primary' : 'bg-titanium-bg-elevated text-titanium-text-secondary'}`}
         >
           {agendaMeta.showFocusBlocks
             ? '🎯 Blocs focus visibles'
@@ -1348,7 +1348,7 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
                   <div className="text-sm text-titanium-text-tertiary">
                     {date.toLocaleDateString('fr-FR', { weekday: 'long' })}
                   </div>
-                  <div className="text-base font-semibold text-white">
+                  <div className="text-base font-semibold text-titanium-text-primary">
                     {date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                   </div>
                 </div>
@@ -1365,7 +1365,7 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
                         className="rounded border border-blue-800 bg-blue-900/20 p-3"
                         data-testid="time-agenda-event"
                       >
-                        <div className="text-sm font-semibold text-white">
+                        <div className="text-sm font-semibold text-titanium-text-primary">
                           {event.title}
                         </div>
                         <div className="text-xs text-blue-200">
@@ -1394,7 +1394,7 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
                 className="flex items-start justify-between gap-4 rounded-lg border border-titanium-border-default bg-titanium-bg-base p-4"
               >
                 <div>
-                  <div className="font-semibold text-white">{event.title}</div>
+                  <div className="font-semibold text-titanium-text-primary">{event.title}</div>
                   <div className="text-sm text-titanium-text-tertiary">
                     {new Date(event.startDateTime).toLocaleDateString('fr-FR', {
                       weekday: 'long',
@@ -1430,14 +1430,14 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
             <button
               data-testid="btn-time-generate-plan"
               onClick={() => void handleGeneratePlan()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-titanium-text-primary transition-colors"
             >
               ✨ Générer avec IA
             </button>
             <button
               data-testid="btn-time-add-manual"
               onClick={() => void onCreateQuickEvent('Nouvel événement manuel', 30)}
-              className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition-colors"
+              className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-titanium-text-primary transition-colors"
             >
               ➕ Ajouter manuellement
             </button>
@@ -1636,7 +1636,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ agendaEvents, snapsho
             key={p.id}
             data-testid={p.testId}
             onClick={() => setFilterPeriod(p.id)}
-            className={`px-4 py-2 rounded text-white transition-colors ${
+            className={`px-4 py-2 rounded text-titanium-text-primary transition-colors ${
               filterPeriod === p.id
                 ? 'bg-blue-600 hover:bg-blue-700'
                 : 'bg-titanium-bg-elevated hover:bg-titanium-bg-interactive'
@@ -1880,7 +1880,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
         <button
           data-testid="btn-time-create-snapshot"
           onClick={handleCreateSnapshot}
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded text-white transition-colors"
+          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded text-titanium-text-primary transition-colors"
         >
           ➕ Créer Snapshot
         </button>
@@ -2048,20 +2048,20 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
             <button
               data-testid="btn-time-restore-snapshot"
               onClick={() => handleRestore(selectedSnapshot)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-titanium-text-primary transition-colors"
             >
               🔄 Restaurer
             </button>
             <button
               data-testid="btn-time-compare-snapshot"
-              className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition-colors"
+              className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-titanium-text-primary transition-colors"
             >
               🔍 Comparer
             </button>
             <button
               data-testid="btn-time-delete-snapshot"
               onClick={() => handleDelete(selectedSnapshot)}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white transition-colors"
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-titanium-text-primary transition-colors"
             >
               🗑️ Supprimer
             </button>
@@ -2170,7 +2170,7 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
       {/* ── SESSION FLOW TOGGLE ── */}
       <div className="bg-titanium-bg-elevated rounded-lg p-4 border border-titanium-border-default flex items-center justify-between">
         <div>
-          <div className="font-semibold text-white">
+          <div className="font-semibold text-titanium-text-primary">
             {cognitiveState.flowActive
               ? '🌊 Session Flow active'
               : '⏸️ Aucune session Flow'}
@@ -2187,7 +2187,7 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
         <button
           data-testid="btn-time-flow-toggle"
           onClick={handleToggleFlow}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${cognitiveState.flowActive ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-green-700 hover:bg-green-600 text-white'}`}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${cognitiveState.flowActive ? 'bg-red-700 hover:bg-red-600 text-titanium-text-primary' : 'bg-green-700 hover:bg-green-600 text-titanium-text-primary'}`}
         >
           {cognitiveState.flowActive ? '⏹ Arrêter Session' : '▶ Démarrer Session Flow'}
         </button>
@@ -2202,7 +2202,7 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
           {flowState.isInFlow ? '🌊 EN FLOW ACTUELLEMENT' : '⏸️ Pas en Flow'}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-black/20 p-4 rounded">
+          <div className="bg-titanium-bg-base/20 p-4 rounded">
             <div className="text-sm text-titanium-text-tertiary mb-1">Intensité</div>
             <div className="text-2xl font-bold">{flowState.flowIntensity}%</div>
             <div className="h-2 bg-titanium-bg-interactive rounded-full mt-2 overflow-hidden">
@@ -2212,11 +2212,11 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
               />
             </div>
           </div>
-          <div className="bg-black/20 p-4 rounded">
+          <div className="bg-titanium-bg-base/20 p-4 rounded">
             <div className="text-sm text-titanium-text-tertiary mb-1">Durée Session</div>
             <div className="text-2xl font-bold">{flowState.flowDuration} min</div>
           </div>
-          <div className="bg-black/20 p-4 rounded">
+          <div className="bg-titanium-bg-base/20 p-4 rounded">
             <div className="text-sm text-titanium-text-tertiary mb-1">
               Flow Aujourd&apos;hui
             </div>

@@ -37,7 +37,7 @@ export const ConsoleMonitorDashboard: React.FC = () => {
         : 'text-green-500';
 
   return (
-    <div className="fixed top-4 right-4 bg-titanium-bg-base text-white rounded-xl shadow-2xl border-2 border-titanium-border-default z-50 min-w-105 backdrop-blur-sm">
+    <div className="fixed top-4 right-4 bg-titanium-bg-base text-titanium-text-primary rounded-xl shadow-2xl border-2 border-titanium-border-default z-50 min-w-105 backdrop-blur-sm">
       {/* Header - Always visible */}
       <div
         className="flex items-center justify-between p-4 cursor-pointer hover:bg-titanium-bg-elevated/80 transition-all duration-200 rounded-t-xl"

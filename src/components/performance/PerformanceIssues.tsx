@@ -175,7 +175,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
       {/* Header */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center gap-3 p-4 text-left hover:bg-white/5 transition-colors"
+        className="w-full flex items-center gap-3 p-4 text-left hover:bg-titanium-bg-base/5 transition-colors"
       >
         <motion.div
           animate={{ rotate: expanded ? 90 : 0 }}
@@ -192,7 +192,7 @@ const IssueCard: React.FC<IssueCardProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`font-medium ${isResolved ? 'text-titanium-text-tertiary line-through' : 'text-white'}`}
+              className={`font-medium ${isResolved ? 'text-titanium-text-tertiary line-through' : 'text-titanium-text-primary'}`}
             >
               {issue.title}
             </span>
@@ -509,7 +509,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
           )}
 
           <div>
-            <h3 className="font-semibold text-white">Problèmes détectés</h3>
+            <h3 className="font-semibold text-titanium-text-primary">Problèmes détectés</h3>
             <div className="flex items-center gap-3 mt-1 text-xs">
               {stats.critical > 0 && (
                 <span className="flex items-center gap-1 text-red-400">
@@ -584,7 +584,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 bg-titanium-bg-interactive/50 rounded-lg
-                          text-sm text-white placeholder-slate-400
+                          text-sm text-titanium-text-primary placeholder-slate-400
                           border border-titanium-border-default focus:border-blue-500 outline-none"
                       />
                     </div>
@@ -607,7 +607,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                               ${
                                 isActive
                                   ? `${config.bgColor} ${config.color}`
-                                  : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
+                                  : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-titanium-text-primary'
                               }
                             `}
                             >
@@ -628,7 +628,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                         ${
                           sortField === 'detectedAt'
                             ? 'bg-blue-500/20 text-blue-400'
-                            : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
+                            : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-titanium-text-primary'
                         }
                       `}
                     >
@@ -643,7 +643,7 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
                         ${
                           sortField === 'severity'
                             ? 'bg-blue-500/20 text-blue-400'
-                            : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-white'
+                            : 'bg-titanium-bg-interactive/50 text-titanium-text-tertiary hover:text-titanium-text-primary'
                         }
                       `}
                     >

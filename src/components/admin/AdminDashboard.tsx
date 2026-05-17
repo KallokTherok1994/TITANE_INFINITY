@@ -211,7 +211,7 @@ const NavBar: React.FC<{
           onClick={() => onViewChange(view.id)}
           className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
             activeView === view.id
-              ? 'bg-[#333] text-white'
+              ? 'bg-[#333] text-titanium-text-primary'
               : 'text-[#727B81] hover:text-[#C4C4C4] hover:bg-[#1a1a1a]'
           }`}
         >

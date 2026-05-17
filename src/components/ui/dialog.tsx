@@ -41,7 +41,7 @@ export function Dialog({ open = false, onOpenChange, children }: DialogProps) {
     <div className="fixed inset-0 z-modal flex items-center justify-center p-4">
       {/* Backdrop with glass morphism */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+        className="fixed inset-0 bg-titanium-bg-base/70 backdrop-blur-sm"
         onClick={() => onOpenChange?.(false)}
         aria-hidden="true"
       />

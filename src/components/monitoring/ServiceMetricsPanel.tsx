@@ -97,7 +97,7 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <ServiceIcon className="w-6 h-6 text-blue-400" />
-          <h3 className="text-xl font-bold text-white">{serviceName}</h3>
+          <h3 className="text-xl font-bold text-titanium-text-primary">{serviceName}</h3>
         </div>
 
         {/* Badge status */}

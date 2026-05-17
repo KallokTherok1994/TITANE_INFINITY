@@ -160,7 +160,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
               isPaused
                 ? 'bg-green-600 hover:bg-green-700'
                 : 'bg-titanium-bg-interactive hover:bg-titanium-bg-overlay'
-            } text-white transition`}
+            } text-titanium-text-primary transition`}
           >
             {isPaused ? '▶️ Resume' : '⏸️ Pause'}
           </button>
@@ -168,7 +168,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
           {/* Export */}
           <button
             onClick={exportLogs}
-            className="px-3 py-1 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition"
+            className="px-3 py-1 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-titanium-text-primary transition"
           >
             💾 Export
           </button>
@@ -176,7 +176,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
           {/* Clear */}
           <button
             onClick={clearLogs}
-            className="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 rounded text-white transition"
+            className="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 rounded text-titanium-text-primary transition"
           >
             🗑️ Clear
           </button>

@@ -301,13 +301,13 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
       <div className="mt-6 pt-4 border-t border-titanium-border-default flex gap-3">
         <button
           onClick={() => window.location.reload()}
-          className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white transition"
+          className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-titanium-text-primary transition"
         >
           🔄 Refresh Status
         </button>
         <button
           onClick={() => console.warn('Restart failing cores')}
-          className="px-4 py-2 text-sm bg-orange-600 hover:bg-orange-700 rounded text-white transition"
+          className="px-4 py-2 text-sm bg-orange-600 hover:bg-orange-700 rounded text-titanium-text-primary transition"
           disabled={healthPercentage === 100}
         >
           🔧 Restart Failing

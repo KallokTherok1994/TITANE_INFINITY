@@ -6,7 +6,7 @@ exports[`SectionHeader Component > Snapshot > should match snapshot 1`] = `
 >
   <div>
     <h2
-      class="text-lg font-semibold text-white"
+      class="text-lg font-semibold text-titanium-text-primary"
     >
       Test Section
     </h2>

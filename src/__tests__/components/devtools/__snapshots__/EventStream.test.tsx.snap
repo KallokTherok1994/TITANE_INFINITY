@@ -14,7 +14,7 @@ exports[`EventStream Component > Snapshot > should match snapshot 1`] = `
         class="flex-1"
       >
         <p
-          class="text-sm font-medium text-white"
+          class="text-sm font-medium text-titanium-text-primary"
         >
           System started
         </p>
@@ -36,7 +36,7 @@ exports[`EventStream Component > Snapshot > should match snapshot 1`] = `
         class="flex-1"
       >
         <p
-          class="text-sm font-medium text-white"
+          class="text-sm font-medium text-titanium-text-primary"
         >
           User action
         </p>
@@ -58,7 +58,7 @@ exports[`EventStream Component > Snapshot > should match snapshot 1`] = `
         class="flex-1"
       >
         <p
-          class="text-sm font-medium text-white"
+          class="text-sm font-medium text-titanium-text-primary"
         >
           Error occurred
         </p>

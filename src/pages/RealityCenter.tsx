@@ -229,7 +229,7 @@ export const RealityCenter: React.FC = memo(() => {
 
   return (
     <div
-      className="bg-titanium-bg-base text-white min-h-screen p-6"
+      className="bg-titanium-bg-base text-titanium-text-primary min-h-screen p-6"
       data-testid="page-reality-center"
     >
       <div className="max-w-7xl mx-auto space-y-6">
@@ -243,7 +243,7 @@ export const RealityCenter: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <Target className="w-7 h-7 text-cyan-400" />
             <div>
-              <h1 className="text-2xl font-bold text-white">Reality Center</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">Reality Center</h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Monitoring état réel vs état attendu — Drift Detection
               </p>
@@ -274,7 +274,7 @@ export const RealityCenter: React.FC = memo(() => {
                 Conformité globale
               </span>
             </div>
-            <p className="text-3xl font-bold text-white">
+            <p className="text-3xl font-bold text-titanium-text-primary">
               {globalConformance.toFixed(0)}%
             </p>
             <Badge
@@ -403,7 +403,7 @@ export const RealityCenter: React.FC = memo(() => {
                       i % 2 === 0 ? 'bg-titanium-bg-base/30' : ''
                     }`}
                   >
-                    <td className="p-3 font-medium text-white">{mod.name}</td>
+                    <td className="p-3 font-medium text-titanium-text-primary">{mod.name}</td>
                     <td className="p-3 text-titanium-text-secondary font-mono text-xs">
                       {mod.expected}
                     </td>
@@ -432,7 +432,7 @@ export const RealityCenter: React.FC = memo(() => {
                             style={{ width: `${mod.conformance}%` }}
                           />
                         </div>
-                        <span className="text-white w-10 text-right">
+                        <span className="text-titanium-text-primary w-10 text-right">
                           {mod.conformance.toFixed(0)}%
                         </span>
                       </div>
@@ -510,7 +510,7 @@ export const RealityCenter: React.FC = memo(() => {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
                 <span className="text-titanium-text-secondary">Uptime</span>
-                <span className="text-white font-mono">
+                <span className="text-titanium-text-primary font-mono">
                   {health?.system?.uptime_ms
                     ? `${Math.floor(health.system.uptime_ms / 3600000)}h ${Math.floor((health.system.uptime_ms % 3600000) / 60000)}m`
                     : '—'}
@@ -518,7 +518,7 @@ export const RealityCenter: React.FC = memo(() => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-titanium-text-secondary">CPU</span>
-                <span className="text-white font-mono">
+                <span className="text-titanium-text-primary font-mono">
                   {health?.system?.cpu_usage != null
                     ? `${health.system.cpu_usage.toFixed(1)}%`
                     : '—'}

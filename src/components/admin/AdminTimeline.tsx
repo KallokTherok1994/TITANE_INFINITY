@@ -467,7 +467,7 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
                       onClick={() => toggleSeverity(severity)}
                       className={`px-3 py-1 rounded text-sm transition-colors ${
                         selectedSeverities.has(severity)
-                          ? 'text-white'
+                          ? 'text-titanium-text-primary'
                           : 'bg-[#333] text-[#727B81]'
                       }`}
                       style={

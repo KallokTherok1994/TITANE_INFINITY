@@ -46,7 +46,7 @@ export function Alert({
           type="button"
           onClick={onDismiss}
           aria-label="Close"
-          className="absolute top-3 right-3 p-1 rounded hover:bg-black/10 transition-colors"
+          className="absolute top-3 right-3 p-1 rounded hover:bg-titanium-bg-base/10 transition-colors"
         >
           <svg
             className="w-4 h-4"

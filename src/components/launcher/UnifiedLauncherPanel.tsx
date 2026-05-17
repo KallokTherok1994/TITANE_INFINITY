@@ -89,8 +89,8 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
       data-testid="unified-launcher-panel"
       className={[
         'flex flex-col gap-4 p-5 rounded-2xl',
-        'bg-black/60 backdrop-blur-sm border border-white/10',
-        'text-white max-w-sm w-full mx-auto',
+        'bg-titanium-bg-base/60 backdrop-blur-sm border border-white/10',
+        'text-titanium-text-primary max-w-sm w-full mx-auto',
         className,
       ].join(' ')}
     >
@@ -101,7 +101,7 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
         </span>
         <div>
           <h2 className="font-bold text-lg leading-tight">TITANE∞ Launcher</h2>
-          <p className="text-xs text-white/50" data-testid="unified-launcher-platform">
+          <p className="text-xs text-titanium-text-primary/50" data-testid="unified-launcher-platform">
             {platform !== 'unknown' ? platformLabel[platform] : 'Détection…'}
           </p>
         </div>
@@ -143,7 +143,7 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
             <OAuthProfileCard />
           ) : (
             <div>
-              <p className="text-xs text-white/50 mb-2">Connexion optionnelle</p>
+              <p className="text-xs text-titanium-text-primary/50 mb-2">Connexion optionnelle</p>
               <FacebookLoginButton label="Facebook (optionnel)" />
             </div>
           )}
@@ -172,7 +172,7 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
       {step !== 'ready' && step !== 'error' && (
         <div
           data-testid="unified-launcher-loading"
-          className="flex items-center gap-2 text-xs text-white/50"
+          className="flex items-center gap-2 text-xs text-titanium-text-primary/50"
           aria-live="polite"
           aria-busy="true"
         >
@@ -212,7 +212,7 @@ const StepBadge: React.FC<StepBadgeProps> = ({ label, done, active }) => (
         ? 'bg-green-500/20 border-green-500/40 text-green-400'
         : active
           ? 'bg-violet-500/20 border-violet-500/40 text-violet-400 animate-pulse'
-          : 'bg-white/5 border-white/10 text-white/30',
+          : 'bg-titanium-bg-base/5 border-white/10 text-titanium-text-primary/30',
     ].join(' ')}
   >
     {done ? `✓ ${label}` : label}

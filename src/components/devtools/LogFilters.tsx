@@ -21,7 +21,7 @@ export function LogFilters({ filters, onFilterChange }: LogFiltersProps) {
           placeholder="Search logs..."
           value={filters.search}
           onChange={e => onFilterChange({ ...filters, search: e.target.value })}
-          className="w-full px-3 py-2 bg-titanium-bg-interactive text-white rounded border border-titanium-border-strong focus:border-blue-500 outline-none"
+          className="w-full px-3 py-2 bg-titanium-bg-interactive text-titanium-text-primary rounded border border-titanium-border-strong focus:border-blue-500 outline-none"
         />
       </div>
       <div className="flex gap-2">
@@ -36,7 +36,7 @@ export function LogFilters({ filters, onFilterChange }: LogFiltersProps) {
             }}
             className={`px-3 py-2 rounded text-sm font-medium ${
               filters.level.includes(level)
-                ? 'bg-blue-600 text-white'
+                ? 'bg-blue-600 text-titanium-text-primary'
                 : 'bg-titanium-bg-interactive text-titanium-text-secondary'
             }`}
           >

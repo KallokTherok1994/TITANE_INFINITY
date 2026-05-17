@@ -95,12 +95,16 @@ describe('ollama dev/chat boundary doctrine', () => {
     expect(mcpConfig).toContain('http://127.0.0.1:11434');
   });
 
-  it('keeps MCP runtime settings aligned with chat.mcp.enabled and stdio transport checks', () => {
-    expect(vscodeSettings).toContain('"chat.mcp.enabled": true');
-    expect(boundaryValidator).toContain('chat\\.mcp\\.enabled');
-    expect(boundaryValidator).toContain('chat.mcp.enabled is not true');
+  it('keeps MCP runtime settings aligned with enabled/access settings and stdio transport checks', () => {
+    expect(
+      vscodeSettings.includes('"chat.mcp.enabled": true') ||
+        vscodeSettings.includes('"chat.mcp.access": "all"')
+    ).toBe(true);
+    expect(vscodeSettings).toContain('"chat.mcp.access": "all"');
+    expect(boundaryValidator).toContain('chat\\.mcp\\.(enabled|access)');
     expect(boundaryValidator).toContain('OLLAMA_HOST');
     expect(boundaryValidator).toContain('stdio transport declaration');
+    expect(boundaryValidator).toContain('scripts/mcp/start-ollama-dev-mcp.sh');
     expect(boundaryValidator).toContain(
       'MCP runtime settings and transport wired correctly'
     );

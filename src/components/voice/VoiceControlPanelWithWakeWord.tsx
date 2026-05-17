@@ -141,7 +141,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
           className={cn(
             'px-4 py-2 rounded-lg font-medium transition-all',
             mode === 'push_to_talk'
-              ? 'bg-blue-500 text-white'
+              ? 'bg-blue-500 text-titanium-text-primary'
               : 'bg-titanium-bg-interactive text-titanium-text-secondary'
           )}
         >
@@ -153,7 +153,7 @@ export const VoiceControlPanelWithWakeWord: React.FC<
           className={cn(
             'px-4 py-2 rounded-lg font-medium transition-all',
             mode === 'wake_word'
-              ? 'bg-purple-500 text-white'
+              ? 'bg-purple-500 text-titanium-text-primary'
               : 'bg-titanium-bg-interactive text-titanium-text-secondary'
           )}
         >

@@ -60,7 +60,7 @@ function MemoryTreeNode({
           if (hasChildren) setExpanded(!expanded);
           onNodeClick?.(node);
         }}
-        className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-white hover:bg-opacity-5 transition-colors duration-150"
+        className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-titanium-bg-base hover:bg-opacity-5 transition-colors duration-150"
         style={{
           paddingLeft: `${level * 20 + 12}px`,
         }}

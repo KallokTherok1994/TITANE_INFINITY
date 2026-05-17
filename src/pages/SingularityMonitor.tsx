@@ -104,7 +104,7 @@ const SingularityMonitor = memo(() => {
 
   return (
     <div
-      className="bg-titanium-bg-base text-white min-h-screen p-6"
+      className="bg-titanium-bg-base text-titanium-text-primary min-h-screen p-6"
       data-testid="page-singularity-monitor"
     >
       <div className="max-w-7xl mx-auto space-y-6">
@@ -124,7 +124,7 @@ const SingularityMonitor = memo(() => {
           <div className="flex items-center gap-3">
             <Atom className="w-7 h-7 text-cyan-400" />
             <div>
-              <h1 className="text-2xl font-bold text-white">Singularity Monitor</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">Singularity Monitor</h1>
               <p className="text-sm text-titanium-text-tertiary">
                 État avancé — Convergence &amp; Connexions
               </p>
@@ -156,7 +156,7 @@ const SingularityMonitor = memo(() => {
               <Brain className="w-4 h-4 text-blue-400" />
               <span className="text-xs text-titanium-text-tertiary">Conscience</span>
             </div>
-            <p className="text-3xl font-bold text-white">
+            <p className="text-3xl font-bold text-titanium-text-primary">
               {isInitialized ? `${consciousness}/4` : '—'}
             </p>
             <div className="flex gap-1 mt-2">
@@ -259,7 +259,7 @@ const SingularityMonitor = memo(() => {
                     .map(([key, value]) => (
                       <div key={key}>
                         <p className="text-xs text-titanium-text-secondary">{key}</p>
-                        <p className="text-sm text-white font-mono">
+                        <p className="text-sm text-titanium-text-primary font-mono">
                           {typeof value === 'number' ? value.toFixed(3) : String(value)}
                         </p>
                       </div>
@@ -280,7 +280,7 @@ const SingularityMonitor = memo(() => {
                     .map(([key, value]) => (
                       <div key={key}>
                         <p className="text-xs text-titanium-text-secondary">{key}</p>
-                        <p className="text-sm text-white font-mono">
+                        <p className="text-sm text-titanium-text-primary font-mono">
                           {typeof value === 'boolean'
                             ? value
                               ? 'true'
@@ -467,7 +467,7 @@ const SingularityMonitor = memo(() => {
               {essence && (
                 <div>
                   <p className="text-xs text-titanium-text-disabled mb-1">Essence</p>
-                  <p className="text-white italic">{essence}</p>
+                  <p className="text-titanium-text-primary italic">{essence}</p>
                 </div>
               )}
             </div>

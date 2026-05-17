@@ -164,7 +164,7 @@ export const CreationStudio: React.FC = memo(() => {
 
   return (
     <div
-      className="min-h-screen bg-titanium-bg-base text-white"
+      className="min-h-screen bg-titanium-bg-base text-titanium-text-primary"
       data-testid="page-creation-studio"
     >
       {/* Runtime Truth Badge — DISPLAY_ONLY: UI statique, pas de store projets */}
@@ -175,7 +175,7 @@ export const CreationStudio: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <Layers className="w-7 h-7 text-violet-400" />
             <div>
-              <h1 className="text-2xl font-bold text-white">Creation Studio</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">Creation Studio</h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Créez du contenu, des projets et des assets avec l'IA TITANE∞
               </p>
@@ -216,7 +216,7 @@ export const CreationStudio: React.FC = memo(() => {
               <span className="text-violet-400 mt-0.5">{tool.icon}</span>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-white">{tool.label}</span>
+                  <span className="text-sm font-medium text-titanium-text-primary">{tool.label}</span>
                   {tool.status !== 'available' && (
                     <Badge variant={STATUS_COLORS[tool.status]} size="sm">
                       {tool.status}
@@ -262,7 +262,7 @@ export const CreationStudio: React.FC = memo(() => {
               </div>
               <Card variant="glass" elevation="md" padding={0} className="flex-1">
                 <textarea
-                  className="w-full h-full bg-transparent text-white placeholder-gray-500 p-4 resize-none outline-none font-mono text-sm"
+                  className="w-full h-full bg-transparent text-titanium-text-primary placeholder-gray-500 p-4 resize-none outline-none font-mono text-sm"
                   placeholder={`Contenu ${TOOLS.find(t => t.id === activeTool)?.label.toLowerCase()}...`}
                   value={workspaceContent}
                   onChange={e => setWorkspaceContent(e.target.value)}
@@ -273,7 +273,7 @@ export const CreationStudio: React.FC = memo(() => {
             <div className="flex-1 p-6">
               {/* Welcome + récents */}
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-white mb-1">
+                <h2 className="text-xl font-bold text-titanium-text-primary mb-1">
                   Bienvenue dans le Creation Studio
                 </h2>
                 <p className="text-titanium-text-tertiary text-sm">
@@ -298,7 +298,7 @@ export const CreationStudio: React.FC = memo(() => {
                         {tool.icon}
                       </div>
                       <div>
-                        <p className="font-medium text-white text-sm">{tool.label}</p>
+                        <p className="font-medium text-titanium-text-primary text-sm">{tool.label}</p>
                         <p className="text-xs text-titanium-text-tertiary">
                           {tool.description}
                         </p>
@@ -331,7 +331,7 @@ export const CreationStudio: React.FC = memo(() => {
                           {TOOL_ICONS[project.type]}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-white truncate">
+                          <p className="text-sm font-medium text-titanium-text-primary truncate">
                             {project.name}
                           </p>
                           <p className="text-xs text-titanium-text-disabled">
@@ -360,7 +360,7 @@ export const CreationStudio: React.FC = memo(() => {
               <Star className="w-4 h-4 text-yellow-400" />
               <span className="text-xs text-titanium-text-tertiary">Projets actifs</span>
             </div>
-            <p className="text-2xl font-bold text-white">
+            <p className="text-2xl font-bold text-titanium-text-primary">
               {RECENT_PROJECTS.filter(p => p.status === 'active').length}
             </p>
           </Card>
@@ -369,14 +369,14 @@ export const CreationStudio: React.FC = memo(() => {
               <FolderOpen className="w-4 h-4 text-blue-400" />
               <span className="text-xs text-titanium-text-tertiary">Total projets</span>
             </div>
-            <p className="text-2xl font-bold text-white">{RECENT_PROJECTS.length}</p>
+            <p className="text-2xl font-bold text-titanium-text-primary">{RECENT_PROJECTS.length}</p>
           </Card>
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">
               <Zap className="w-4 h-4 text-violet-400" />
               <span className="text-xs text-titanium-text-tertiary">Outils dispo</span>
             </div>
-            <p className="text-2xl font-bold text-white">
+            <p className="text-2xl font-bold text-titanium-text-primary">
               {TOOLS.filter(t => t.status !== 'coming').length}
             </p>
           </Card>

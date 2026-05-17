@@ -39,7 +39,7 @@ export const PredictiveDashboard: React.FC = () => {
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className="fixed bottom-24 right-4 z-9999 bg-linear-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all font-mono text-sm"
+        className="fixed bottom-24 right-4 z-9999 bg-linear-to-r from-purple-600 to-pink-600 text-titanium-text-primary px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all font-mono text-sm"
       >
         🔮 Predictive AI
       </button>
@@ -112,7 +112,7 @@ export const PredictiveDashboard: React.FC = () => {
             <div className="bg-red-900/30 border border-red-500/30 rounded p-3">
               <div className="flex items-center gap-2">
                 <span className="text-red-400">⚠️ Predicted Failure:</span>
-                <span className="text-white font-bold">
+                <span className="text-titanium-text-primary font-bold">
                   {Math.round(healthPrediction.timeToFailure / 60000)}min
                 </span>
               </div>

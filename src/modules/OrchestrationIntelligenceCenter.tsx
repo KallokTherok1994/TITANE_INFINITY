@@ -130,7 +130,7 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
             onClick={() => setActiveTab(tab.id as Tab)}
             className={`px-4 py-2 rounded-lg transition-all ${
               activeTab === tab.id
-                ? 'bg-purple-600 text-white'
+                ? 'bg-purple-600 text-titanium-text-primary'
                 : 'bg-titanium-bg-elevated text-titanium-text-tertiary hover:bg-titanium-bg-interactive'
             }`}
           >
@@ -643,7 +643,7 @@ const QAMonitoringSection: React.FC = () => {
       </div>
 
       <div className="bg-titanium-bg-elevated rounded-lg p-6">
-        <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+        <button className="w-full bg-green-600 hover:bg-green-700 text-titanium-text-primary font-bold py-3 px-6 rounded-lg transition-colors">
           🔧 Auto-Heal / Repair
         </button>
       </div>

@@ -121,10 +121,10 @@ export const GovernanceCenter: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-3 shadow-lg shadow-blue-500/25">
-              <Brain className="h-8 w-8 text-white" />
+              <Brain className="h-8 w-8 text-titanium-text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Centre de Gouvernance IA</h1>
+              <h1 className="text-3xl font-bold text-titanium-text-primary">Centre de Gouvernance IA</h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Configuration des providers d&apos;intelligence artificielle
               </p>
@@ -181,7 +181,7 @@ export const GovernanceCenter: React.FC = () => {
             <div className="flex items-center gap-3">
               <Zap className="h-5 w-5 text-yellow-400" />
               <div>
-                <p className="text-2xl font-bold text-white">{activeProviders}/4</p>
+                <p className="text-2xl font-bold text-titanium-text-primary">{activeProviders}/4</p>
                 <p className="text-xs text-titanium-text-tertiary">Providers actifs</p>
               </div>
             </div>
@@ -205,7 +205,7 @@ export const GovernanceCenter: React.FC = () => {
         <div className="flex justify-end">
           <button
             onClick={() => setShowTester(!showTester)}
-            className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 font-bold text-white transition-colors hover:bg-purple-700"
+            className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 font-bold text-titanium-text-primary transition-colors hover:bg-purple-700"
           >
             <TestTube className="h-5 w-5" />
             {showTester ? 'Masquer les tests' : 'Tester les providers'}
@@ -270,25 +270,25 @@ export const GovernanceCenter: React.FC = () => {
 
         {/* Footer Info */}
         <div className="rounded-xl border border-titanium-border-default/50 bg-titanium-bg-elevated/30 p-6">
-          <h3 className="mb-4 flex items-center gap-2 font-bold text-white">
+          <h3 className="mb-4 flex items-center gap-2 font-bold text-titanium-text-primary">
             <Shield className="h-5 w-5 text-green-400" />
             Sécurité & Confidentialité
           </h3>
           <div className="grid gap-4 text-sm text-titanium-text-secondary md:grid-cols-3">
             <div>
-              <p className="mb-1 font-semibold text-white">🔒 Chiffrement AES-256-GCM</p>
+              <p className="mb-1 font-semibold text-titanium-text-primary">🔒 Chiffrement AES-256-GCM</p>
               <p className="text-xs text-titanium-text-tertiary">
                 Toutes les clés API sont chiffrées avant stockage
               </p>
             </div>
             <div>
-              <p className="mb-1 font-semibold text-white">🧹 Purge environnement</p>
+              <p className="mb-1 font-semibold text-titanium-text-primary">🧹 Purge environnement</p>
               <p className="text-xs text-titanium-text-tertiary">
                 Variables d&apos;environnement nettoyées automatiquement
               </p>
             </div>
             <div>
-              <p className="mb-1 font-semibold text-white">👁️ Affichage masqué</p>
+              <p className="mb-1 font-semibold text-titanium-text-primary">👁️ Affichage masqué</p>
               <p className="text-xs text-titanium-text-tertiary">
                 Seuls les 4 derniers caractères affichés
               </p>

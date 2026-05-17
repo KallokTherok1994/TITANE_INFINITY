@@ -36,7 +36,7 @@ export function MetricCard({
     >
       <div className="text-sm text-titanium-text-tertiary mb-1">{title}</div>
       <div className="flex items-baseline gap-2">
-        <div className="text-2xl font-bold text-white">{value}</div>
+        <div className="text-2xl font-bold text-titanium-text-primary">{value}</div>
         {unit && <span className="text-sm text-titanium-text-disabled">{unit}</span>}
         {trend && (
           <span

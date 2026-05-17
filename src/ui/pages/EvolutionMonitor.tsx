@@ -131,7 +131,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
         <button
           onClick={runEvolutionCycle}
           disabled={isEvolving}
-          className="bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition-all"
+          className="bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-titanium-text-primary font-semibold px-6 py-3 rounded-lg transition-all"
         >
           {isEvolving ? '⏳ Évolution...' : '🧬 Lancer un Cycle d’Évolution'}
         </button>
@@ -205,21 +205,21 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
           {/* Evolution Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <h2 className="text-xl font-semibold text-white mb-4">
+              <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
                 Statistiques d&apos;Évolution
               </h2>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-titanium-text-tertiary">Cycles Totaux</span>
-                  <span className="text-white text-xl font-bold">
+                  <span className="text-titanium-text-primary text-xl font-bold">
                     {stats.total_cycles}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <span className="text-titanium-text-tertiary">Mutations Totales</span>
-                  <span className="text-white text-xl font-bold">
+                  <span className="text-titanium-text-primary text-xl font-bold">
                     {stats.total_mutations}
                   </span>
                 </div>
@@ -248,14 +248,14 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
             {/* Improvement Tracking */}
             <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <h2 className="text-xl font-semibold text-white mb-4">Améliorations</h2>
+              <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">Améliorations</h2>
 
               <div className="space-y-3">
                 {Object.entries(stats.improvement_history).length > 0 ? (
                   Object.entries(stats.improvement_history).map(([metric, delta]) => (
                     <div key={metric} className="bg-titanium-bg-interactive/30 rounded-lg p-3">
                       <div className="flex justify-between items-center">
-                        <span className="text-white capitalize">{metric}</span>
+                        <span className="text-titanium-text-primary capitalize">{metric}</span>
                         <span className={delta >= 0 ? 'text-green-400' : 'text-red-400'}>
                           {delta >= 0 ? '↑' : '↓'} {Math.abs(delta).toFixed(2)}%
                         </span>
@@ -274,7 +274,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
           {/* Last Evolution Report */}
           {lastReport && (
             <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <h2 className="text-xl font-semibold text-white mb-4">
+              <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
                 Dernier Cycle d&apos;Évolution #{lastReport.cycle}
               </h2>
 
@@ -322,7 +322,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
       ) : (
         <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-12 border border-green-500/30 text-center">
           <div className="text-6xl mb-4">🧬</div>
-          <h2 className="text-2xl font-semibold text-white mb-2">
+          <h2 className="text-2xl font-semibold text-titanium-text-primary mb-2">
             Moteur d&apos;Évolution Prêt
           </h2>
           <p className="text-titanium-text-tertiary">
@@ -333,7 +333,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
       {/* Risk Level Legend */}
       <div className="mt-6 bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-        <h3 className="text-lg font-semibold text-white mb-3">
+        <h3 className="text-lg font-semibold text-titanium-text-primary mb-3">
           Guide des Niveaux de Risque
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

@@ -135,7 +135,7 @@ export const Toast: React.FC<ToastProps> = ({
         className="
           flex-shrink-0 text-lg leading-none rounded p-1
           transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]
-          hover:opacity-70 hover:bg-black/10
+          hover:opacity-70 hover:bg-titanium-bg-base/10
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2
         "
       >

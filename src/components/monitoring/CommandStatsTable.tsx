@@ -165,7 +165,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <Icon className="w-6 h-6 text-blue-400" />
-        <h3 className="text-xl font-bold text-white">{title}</h3>
+        <h3 className="text-xl font-bold text-titanium-text-primary">{title}</h3>
         <span className="text-sm text-titanium-text-tertiary">
           ({stats.length} entrées)
         </span>
@@ -252,7 +252,7 @@ export const CommandStatsTable: React.FC<CommandStatsTableProps> = ({
                       <span className="text-xs font-mono text-titanium-text-disabled">
                         #{index + 1}
                       </span>
-                      <span className="font-medium text-white text-sm">
+                      <span className="font-medium text-titanium-text-primary text-sm">
                         {stat.command}
                       </span>
                     </div>

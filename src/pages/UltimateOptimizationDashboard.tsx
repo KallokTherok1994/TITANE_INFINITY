@@ -154,7 +154,7 @@ function BenchmarkRow({ entry }: { entry: BenchmarkEntry }) {
 
   return (
     <tr className="border-b border-titanium-border-subtle hover:bg-titanium-bg-elevated/40">
-      <td className="p-3 text-sm text-white">{entry.name}</td>
+      <td className="p-3 text-sm text-titanium-text-primary">{entry.name}</td>
       <td className="p-3 text-sm font-mono text-titanium-text-secondary text-right">
         {entry.before} {entry.unit}
       </td>
@@ -228,7 +228,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
 
   return (
     <div
-      className="bg-titanium-bg-base text-white min-h-screen p-6"
+      className="bg-titanium-bg-base text-titanium-text-primary min-h-screen p-6"
       data-testid="page-optimization"
     >
       <div
@@ -241,7 +241,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
             <Gauge className="w-7 h-7 text-yellow-400" />
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-2xl font-bold text-titanium-text-primary">
                   Ultimate Optimization Dashboard
                 </h1>
                 <SurfaceTruthBadge variant={engineLoad !== null ? 'LIVE' : 'PARTIAL'} />
@@ -453,7 +453,7 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                         <Badge variant={PRIORITY_COLORS[rec.priority]} size="sm">
                           {rec.priority}
                         </Badge>
-                        <p className="text-sm font-medium text-white">{rec.title}</p>
+                        <p className="text-sm font-medium text-titanium-text-primary">{rec.title}</p>
                         {rec.applied && (
                           <Badge variant="success" size="sm">
                             ✓ Appliquée

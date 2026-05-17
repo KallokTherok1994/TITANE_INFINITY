@@ -158,7 +158,7 @@ export const AppShellWithDevTools = ({
             <>
               {/* Overlay */}
               <motion.div
-                className="absolute inset-0 bg-black/50 z-9990"
+                className="absolute inset-0 bg-titanium-bg-base/50 z-9990"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

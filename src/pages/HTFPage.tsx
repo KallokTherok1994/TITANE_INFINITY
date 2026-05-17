@@ -30,10 +30,10 @@ export function HTFPage() {
   ];
 
   return (
-    <div data-testid="htf-module-page" className="htf-page min-h-screen bg-white">
+    <div data-testid="htf-module-page" className="htf-page min-h-screen bg-titanium-bg-base">
       <SurfaceTruthBadge variant={submissions.length > 0 ? 'LIVE' : 'PARTIAL'} />
       {/* Header */}
-      <div className="htf-page__header bg-green-700 text-white px-6 py-4">
+      <div className="htf-page__header bg-green-700 text-titanium-text-primary px-6 py-4">
         <h1 className="text-2xl font-bold">🏡 L'Humain à tout faire</h1>
         <p className="text-green-100 text-sm">
           Kevin Thibault · Saguenay · www.humainatoutfaire.com
@@ -52,7 +52,7 @@ export function HTFPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-green-600 text-green-700 bg-white'
+                ? 'border-green-600 text-green-700 bg-titanium-bg-base'
                 : 'border-transparent text-titanium-text-disabled hover:text-titanium-text-secondary'
             }`}
           >

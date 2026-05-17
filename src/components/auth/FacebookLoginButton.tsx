@@ -47,7 +47,7 @@ export const FacebookLoginButton: React.FC<FacebookLoginButtonProps> = ({
         aria-label={label}
         aria-busy={isLoading}
         className={[
-          'flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-white',
+          'flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-titanium-text-primary',
           'bg-[#1877F2] hover:bg-[#166FE5] active:bg-[#1459C2]',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           'transition-colors duration-150 select-none',

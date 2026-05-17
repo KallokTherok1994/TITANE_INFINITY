@@ -32,7 +32,7 @@ function TreeNode({
           {node.children && node.children.length > 0 && (
             <span className="text-titanium-text-disabled">▶</span>
           )}
-          <span className="text-sm font-medium text-white">{node.type}</span>
+          <span className="text-sm font-medium text-titanium-text-primary">{node.type}</span>
           <span className="text-xs text-titanium-text-tertiary">
             {new Date(node.timestamp).toLocaleString()}
           </span>

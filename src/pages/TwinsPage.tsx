@@ -175,7 +175,7 @@ export const TwinsPage: React.FC = () => {
 
   return (
     <div
-      className="twins-root flex min-h-full w-full flex-col bg-titanium-bg-base p-6 text-white"
+      className="twins-root flex min-h-full w-full flex-col bg-titanium-bg-base p-6 text-titanium-text-primary"
       data-testid="page-twins"
     >
       <div
@@ -189,7 +189,7 @@ export const TwinsPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <Users className="w-7 h-7 text-violet-400" />
             <div>
-              <h1 className="text-2xl font-bold text-white">Twins — Digital Twins</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">Twins — Digital Twins</h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Gestion et visualisation des jumeaux numériques — Symbiose Kevin ↔ TITANE∞
               </p>
@@ -338,7 +338,7 @@ export const TwinsPage: React.FC = () => {
                     </Badge>
                   </div>
                   <p
-                    className="mt-3 text-base font-medium text-white"
+                    className="mt-3 text-base font-medium text-titanium-text-primary"
                     data-testid={`twin-chat-review-item-content-${index}`}
                   >
                     {item.candidate.contentCompact}
@@ -398,7 +398,7 @@ export const TwinsPage: React.FC = () => {
                   {identity.name && (
                     <div>
                       <p className="text-xs text-titanium-text-disabled">Nom</p>
-                      <p className="text-white font-medium">{identity.name}</p>
+                      <p className="text-titanium-text-primary font-medium">{identity.name}</p>
                     </div>
                   )}
                   {identity.signature && (
@@ -458,7 +458,7 @@ export const TwinsPage: React.FC = () => {
                         .map(([key, val]) => (
                           <div key={key}>
                             <p className="text-xs text-titanium-text-disabled">{key}</p>
-                            <p className="text-sm text-white font-mono">
+                            <p className="text-sm text-titanium-text-primary font-mono">
                               {typeof val === 'number' ? val.toFixed(2) : String(val)}
                             </p>
                           </div>
@@ -581,7 +581,7 @@ export const TwinsPage: React.FC = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-titanium-text-tertiary">Sources</span>
-                <span className="text-white">{sourceCount}</span>
+                <span className="text-titanium-text-primary">{sourceCount}</span>
               </div>
             </div>
           </Card>

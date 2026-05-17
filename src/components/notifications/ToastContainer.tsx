@@ -70,7 +70,7 @@ export const ToastContainer: React.FC = () => {
     priority: Notification['priority']
   ): string => {
     if (priority === 'critical') {
-      return 'bg-red-600 text-white border-red-700';
+      return 'bg-red-600 text-titanium-text-primary border-red-700';
     }
 
     switch (type) {

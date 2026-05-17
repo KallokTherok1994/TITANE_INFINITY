@@ -201,6 +201,7 @@ require_all_patterns \
 
 require_pattern "MCP_OLLAMA_DEV_WIRED" 'ollama-dev' .vscode/mcp.json
 require_pattern "MCP_MODEL_QWEN_PRESENT" 'qwen3\.5:9b' .vscode/mcp.json
+require_pattern "MCP_WRAPPER_WIRED" 'scripts/mcp/start-ollama-dev-mcp\.sh' .vscode/mcp.json
 require_pattern "MCP_ENABLED_IN_SETTINGS" 'chat\.mcp\.(enabled|access)' .vscode/settings.json
 
 require_all_patterns \

@@ -150,6 +150,7 @@ run_subgate "G_STABLE_ARTIFACT_FRESHNESS_PASS" "scripts/verify/gate-stable-artif
 
 # vscode agent workflow guard
 run_subgate "G_VSCODE_AGENT_WORKFLOW_PASS" "scripts/verify/verify-vscode-agent-workflow.sh"
+run_subgate "G_MCP_SECURITY_BOUNDARY_PASS" "scripts/verify/verify-mcp-security-boundary.sh"
 
 # Extended execution gates (all offline-safe — static file checks only, no network/build)
 run_subgate "G_KERNEL_BUDGET_PASS" "scripts/verify/verify_kernel_budget.sh"

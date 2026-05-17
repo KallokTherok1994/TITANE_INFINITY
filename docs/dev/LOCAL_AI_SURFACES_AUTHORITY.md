@@ -37,6 +37,15 @@ Allowed capabilities must remain:
 Documentation is not proof.
 Runtime logs, validators, E2E output, and test output decide final verdict.
 
+## DEV stack certification gates
+
+- `pnpm run verify:ollama:boundary`
+- `pnpm run verify:mcp:security`
+- `pnpm run verify:ollama:dev:live`
+- `pnpm run verify:ollama:dev:performance`
+- `pnpm run verify:ollama:dev:stack`
+- `pnpm run proof:ollama:dev:session`
+
 ## Verdict vocabulary
 
 - PASS: exact proof obtained for exact scope

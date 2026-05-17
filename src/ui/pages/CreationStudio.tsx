@@ -72,7 +72,7 @@ const CreationStudio = memo(function CreationStudio() {
         {/* Left Panel - Configuration */}
         <div className="space-y-6">
           <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
               Que souhaitez-vous créer ?
             </h2>
 
@@ -85,7 +85,7 @@ const CreationStudio = memo(function CreationStudio() {
                   value={intent}
                   onChange={e => setIntent(e.target.value)}
                   placeholder="Décrivez ce que vous voulez créer... Exemple : 'Créer un module d'authentification utilisateur avec tokens JWT'"
-                  className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-3 text-white h-32 resize-none focus:border-purple-500 focus:outline-none"
+                  className="w-full bg-titanium-bg-interactive/50 border border-titanium-border-strong rounded-lg px-4 py-3 text-titanium-text-primary h-32 resize-none focus:border-purple-500 focus:outline-none"
                 />
               </div>
 
@@ -102,7 +102,7 @@ const CreationStudio = memo(function CreationStudio() {
                           : 'border-titanium-border-strong bg-titanium-bg-interactive/30 hover:border-gray-500'
                       }`}
                     >
-                      <div className="text-white font-medium text-sm">{type.label}</div>
+                      <div className="text-titanium-text-primary font-medium text-sm">{type.label}</div>
                     </button>
                   ))}
                 </div>
@@ -111,7 +111,7 @@ const CreationStudio = memo(function CreationStudio() {
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating || !intent.trim()}
-                className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-3 rounded-lg transition-all"
+                className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-500 disabled:to-gray-600 text-titanium-text-primary font-semibold py-3 rounded-lg transition-all"
               >
                 {isGenerating ? '⏳ Génération...' : '✨ Générer le code'}
               </button>
@@ -126,7 +126,7 @@ const CreationStudio = memo(function CreationStudio() {
 
           {/* Templates Info */}
           <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-            <h3 className="text-lg font-semibold text-white mb-3">Modèles disponibles</h3>
+            <h3 className="text-lg font-semibold text-titanium-text-primary mb-3">Modèles disponibles</h3>
             <div className="space-y-2 text-sm text-titanium-text-tertiary">
               <div>
                 • <span className="text-orange-400">Rust Modules</span> - Structs, traits,
@@ -163,7 +163,7 @@ const CreationStudio = memo(function CreationStudio() {
               {/* Code Preview */}
               <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-white">
+                  <h2 className="text-xl font-semibold text-titanium-text-primary">
                     Généré : {artifact.name}
                   </h2>
                   <button
@@ -184,7 +184,7 @@ const CreationStudio = memo(function CreationStudio() {
               {/* Dependencies */}
               {artifact.dependencies.length > 0 && (
                 <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-                  <h3 className="text-lg font-semibold text-white mb-3">Dépendances</h3>
+                  <h3 className="text-lg font-semibold text-titanium-text-primary mb-3">Dépendances</h3>
                   <div className="space-y-2">
                     {artifact.dependencies.map((dep, idx) => (
                       <div
@@ -202,7 +202,7 @@ const CreationStudio = memo(function CreationStudio() {
               {artifact.tests && (
                 <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-titanium-text-primary">
                       Tests auto-générés
                     </h3>
                     <button
@@ -223,7 +223,7 @@ const CreationStudio = memo(function CreationStudio() {
 
               {/* Documentation */}
               <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-                <h3 className="text-lg font-semibold text-white mb-3">Documentation</h3>
+                <h3 className="text-lg font-semibold text-titanium-text-primary mb-3">Documentation</h3>
                 <div className="prose prose-invert prose-sm max-w-none">
                   <p className="text-titanium-text-secondary whitespace-pre-wrap">
                     {artifact.documentation}
@@ -234,7 +234,7 @@ const CreationStudio = memo(function CreationStudio() {
           ) : (
             <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-12 border border-purple-500/30 text-center">
               <div className="text-6xl mb-4">✨</div>
-              <h2 className="text-2xl font-semibold text-white mb-2">Prêt à créer</h2>
+              <h2 className="text-2xl font-semibold text-titanium-text-primary mb-2">Prêt à créer</h2>
               <p className="text-titanium-text-tertiary">
                 Décrivez votre intention et sélectionnez un type de cible pour générer le
                 code

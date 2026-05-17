@@ -165,7 +165,7 @@ const MetricCard: React.FC<{
       </div>
 
       <div className="flex items-end gap-1 mb-2">
-        <span className="text-2xl font-bold text-white">
+        <span className="text-2xl font-bold text-titanium-text-primary">
           {typeof value === 'number' ? value.toFixed(1) : value}
         </span>
         <span className="text-sm text-titanium-text-tertiary mb-1">{unit}</span>
@@ -409,7 +409,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Activity className="w-6 h-6 text-blue-400" />
-          <h2 className="text-xl font-semibold text-white">Performance Monitor</h2>
+          <h2 className="text-xl font-semibold text-titanium-text-primary">Performance Monitor</h2>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -424,14 +424,14 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             <Gauge className="w-4 h-4" />
           </button>
           <button
-            className="p-2 rounded-lg bg-titanium-bg-elevated text-titanium-text-tertiary hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-titanium-bg-elevated text-titanium-text-tertiary hover:text-titanium-text-primary transition-colors"
             onClick={handleManualRefresh}
             disabled={isRefreshing}
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
           <button
-            className="p-2 rounded-lg bg-titanium-bg-elevated text-titanium-text-tertiary hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-titanium-bg-elevated text-titanium-text-tertiary hover:text-titanium-text-primary transition-colors"
             title="Paramètres"
           >
             <Settings className="w-4 h-4" />
@@ -509,7 +509,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
         <div className="bg-titanium-bg-elevated/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-5 h-5 text-orange-400" />
-            <h3 className="font-medium text-white">Problèmes ({data.issues.length})</h3>
+            <h3 className="font-medium text-titanium-text-primary">Problèmes ({data.issues.length})</h3>
           </div>
           <IssuesList issues={data.issues} onIssueClick={onIssueClick} />
         </div>
@@ -519,7 +519,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
           <div className="bg-titanium-bg-elevated/30 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-5 h-5 text-blue-400" />
-              <h3 className="font-medium text-white">
+              <h3 className="font-medium text-titanium-text-primary">
                 Recommandations ({data.recommendations.length})
               </h3>
             </div>

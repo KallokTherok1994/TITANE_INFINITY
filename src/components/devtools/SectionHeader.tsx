@@ -13,7 +13,7 @@ export function SectionHeader({ title, subtitle, action }: SectionHeaderProps) {
   return (
     <div className="flex items-center justify-between p-4 border-b border-titanium-border-default">
       <div>
-        <h2 className="text-lg font-semibold text-white">{title}</h2>
+        <h2 className="text-lg font-semibold text-titanium-text-primary">{title}</h2>
         {subtitle && (
           <p className="text-sm text-titanium-text-tertiary mt-1">{subtitle}</p>
         )}

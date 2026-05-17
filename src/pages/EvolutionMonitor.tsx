@@ -191,7 +191,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
 
   return (
     <div
-      className="bg-titanium-bg-base text-white min-h-screen p-6"
+      className="bg-titanium-bg-base text-titanium-text-primary min-h-screen p-6"
       data-testid="page-evolution-monitor"
     >
       <div className="max-w-7xl mx-auto space-y-6">
@@ -205,7 +205,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <TrendingUp className="w-7 h-7 text-green-400" />
             <div>
-              <h1 className="text-2xl font-bold text-white">Evolution Monitor</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">Evolution Monitor</h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Timeline d'évolution — Historique des changements &amp; Métriques
               </p>
@@ -294,7 +294,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
                 <>
                   <div>
                     <p className="text-xs text-titanium-text-secondary">Cycles</p>
-                    <p className="text-white font-mono">
+                    <p className="text-titanium-text-primary font-mono">
                       {typeof state.total_evolutions === 'number'
                         ? String(state.total_evolutions)
                         : '—'}
@@ -302,7 +302,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
                   </div>
                   <div>
                     <p className="text-xs text-titanium-text-secondary">Santé moteur</p>
-                    <p className="text-white font-mono">
+                    <p className="text-titanium-text-primary font-mono">
                       {typeof state.last_evolution?.health_score === 'number'
                         ? `${state.last_evolution.health_score.toFixed(1)}`
                         : '—'}
@@ -359,7 +359,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
                         : 'bg-titanium-bg-interactive border border-titanium-border-strong'
                     }`}
                   >
-                    <GitCommit className="w-4 h-4 text-white" />
+                    <GitCommit className="w-4 h-4 text-titanium-text-primary" />
                   </div>
 
                   {/* Entry card */}
@@ -379,7 +379,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm font-medium text-white">{entry.title}</p>
+                        <p className="text-sm font-medium text-titanium-text-primary">{entry.title}</p>
                       </div>
                       <div className="flex items-center gap-1 text-xs text-titanium-text-secondary">
                         <Clock className="w-3 h-3" />
@@ -418,7 +418,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
               <p className="text-xs text-titanium-text-secondary">Version</p>
-              <p className="text-white font-mono font-bold">v30.1.0</p>
+              <p className="text-titanium-text-primary font-mono font-bold">v30.1.0</p>
             </div>
             <div>
               <p className="text-xs text-titanium-text-secondary">Statut</p>
@@ -428,7 +428,7 @@ export const EvolutionMonitor: React.FC = memo(() => {
             </div>
             <div>
               <p className="text-xs text-titanium-text-secondary">Versions trackées</p>
-              <p className="text-white">{TIMELINE.length}</p>
+              <p className="text-titanium-text-primary">{TIMELINE.length}</p>
             </div>
             <div>
               <p className="text-xs text-titanium-text-secondary">Alertes actives</p>

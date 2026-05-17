@@ -101,20 +101,13 @@ describe('Ollama Dev — MCP server structure', () => {
     expect(mcpConfig.servers['ollama-dev'].type).toBe('stdio');
   });
 
-  it('utilise pnpm comme commande', () => {
-    const cmd = mcpConfig.servers['ollama-dev'].command;
-    expect(cmd === 'pnpm' || cmd === '/usr/local/bin/pnpm' || cmd.endsWith('/pnpm')).toBe(
-      true
-    );
+  it('utilise bash comme commande pour appeler le wrapper repo-owned', () => {
+    expect(mcpConfig.servers['ollama-dev'].command).toBe('bash');
   });
 
-  it('transmet les args dlx + package ollama mcp', () => {
+  it('transmet le wrapper MCP repo-owned dans args', () => {
     const { args } = mcpConfig.servers['ollama-dev'];
-    expect(args).toContain('dlx');
-    const argsStr = args.join(' ');
-    expect(argsStr.includes('mcp-server-ollama') || argsStr.includes('ollama-mcp')).toBe(
-      true
-    );
+    expect(args).toContain('scripts/mcp/start-ollama-dev-mcp.sh');
   });
 
   it('expose OLLAMA_HOST=http://127.0.0.1:11434 dans env', () => {
@@ -123,24 +116,24 @@ describe('Ollama Dev — MCP server structure', () => {
     );
   });
 
-  it('expose OLLAMA_MODEL=qwen3.5:9b dans env', () => {
-    expect(mcpConfig.servers['ollama-dev'].env['OLLAMA_MODEL']).toBe('qwen3.5:9b');
+  it('expose TITANE_OLLAMA_DEV_MODEL=qwen3.5:9b dans env', () => {
+    expect(mcpConfig.servers['ollama-dev'].env['TITANE_OLLAMA_DEV_MODEL']).toBe(
+      'qwen3.5:9b'
+    );
   });
 
-  it('autorise plusieurs serveurs MCP mais avec une allowlist contrôlée', () => {
-    const serverNames = Object.keys(mcpConfig.servers);
-    const allowedServerNames = [
-      'ollama-dev',
-      'memory',
-      'sequential-thinking',
-      'filesystem',
-      'playwright',
-      'github',
-    ];
+  it('ne garde qu’un serveur MCP repo-owned et local pour cette boundary', () => {
+    expect(Object.keys(mcpConfig.servers)).toEqual(['ollama-dev']);
+  });
 
-    expect(serverNames.length).toBeGreaterThanOrEqual(1);
-    expect(serverNames).toContain('ollama-dev');
-    expect(serverNames.every(name => allowedServerNames.includes(name))).toBe(true);
+  it('référence un wrapper exécutable qui exporte OLLAMA_MODEL côté script', () => {
+    const wrapperPath = path.join(rootDir, 'scripts/mcp/start-ollama-dev-mcp.sh');
+    const wrapperRaw = fs.readFileSync(wrapperPath, 'utf8');
+    expect(fs.existsSync(wrapperPath)).toBe(true);
+    expect(wrapperRaw).toContain('TITANE_OLLAMA_DEV_MODEL');
+    expect(wrapperRaw).toContain('export OLLAMA_MODEL="$TITANE_OLLAMA_DEV_MODEL"');
+    expect(wrapperRaw).toContain('ollama-mcp@2.1.0');
+    expect(wrapperRaw).not.toContain('@latest');
   });
 });
 
@@ -228,9 +221,10 @@ describe('Ollama Dev — boundary agent (.github/agents/ollama-dev-chat-boundary
     expect(boundaryAgentRaw).toContain('Configuration MCP VS Code');
   });
 
-  it('contient le bloc JSON du serveur ollama-dev', () => {
+  it('contient le bloc JSON du serveur ollama-dev et la doctrine wrapperisée', () => {
     expect(boundaryAgentRaw).toContain('"ollama-dev"');
-    expect(boundaryAgentRaw).toContain('"mcp-server-ollama');
+    expect(boundaryAgentRaw).toContain('scripts/mcp/start-ollama-dev-mcp.sh');
+    expect(boundaryAgentRaw).toContain('ollama-mcp@2.1.0');
   });
 
   it('contient une section capacités qwen3.5:9b avec contexte long et tool-calling', () => {
@@ -292,14 +286,14 @@ describe('Ollama Dev — boundary validator (verify-ollama-copilot-boundary.sh)'
     expect(boundaryValidatorRaw).toContain('qwen3\\.5:9b');
   });
 
-  it('vérifie chat.mcp.enabled=true dans .vscode/settings.json', () => {
-    expect(boundaryValidatorRaw).toContain('chat\\.mcp\\.enabled');
-    expect(boundaryValidatorRaw).toContain('chat.mcp.enabled is not true');
+  it('vérifie chat.mcp.enabled/access dans .vscode/settings.json', () => {
+    expect(boundaryValidatorRaw).toContain('chat\\.mcp\\.(enabled|access)');
   });
 
   it('vérifie OLLAMA_HOST et le transport stdio dans .vscode/mcp.json', () => {
     expect(boundaryValidatorRaw).toContain('OLLAMA_HOST');
     expect(boundaryValidatorRaw).toContain('stdio transport declaration');
+    expect(boundaryValidatorRaw).toContain('scripts/mcp/start-ollama-dev-mcp.sh');
   });
 
   it('vérifie gemma2:2b dans les defaults produit', () => {
@@ -336,8 +330,12 @@ describe('Ollama Dev — vscode-agent-workflow validator', () => {
     expect(vscodeWorkflowValidatorRaw).toContain('MCP_MODEL_QWEN_PRESENT');
   });
 
-  it('vérifie MCP_ENABLED_IN_SETTINGS (chat.mcp.enabled dans settings)', () => {
+  it('vérifie MCP_ENABLED_IN_SETTINGS (chat.mcp.enabled/access dans settings)', () => {
     expect(vscodeWorkflowValidatorRaw).toContain('MCP_ENABLED_IN_SETTINGS');
+  });
+
+  it('vérifie MCP_WRAPPER_WIRED (wrapper repo-owned dans mcp.json)', () => {
+    expect(vscodeWorkflowValidatorRaw).toContain('MCP_WRAPPER_WIRED');
   });
 
   it('vérifie la présence du prompt Ollama Dev session', () => {
@@ -431,6 +429,24 @@ describe('Ollama Dev — cohérence package.json', () => {
   it('verify:agents:workflow pointe vers le script vscode-agent-workflow', () => {
     expect(packageJson.scripts['verify:agents:workflow']).toContain(
       'verify-vscode-agent-workflow.sh'
+    );
+  });
+
+  it('déclare les nouveaux scripts live/security/performance/stack/proof', () => {
+    expect(packageJson.scripts['verify:mcp:security']).toBe(
+      'bash scripts/verify/verify-mcp-security-boundary.sh'
+    );
+    expect(packageJson.scripts['verify:ollama:dev:live']).toBe(
+      'bash scripts/verify/verify-ollama-dev-live.sh'
+    );
+    expect(packageJson.scripts['verify:ollama:dev:performance']).toBe(
+      'bash scripts/verify/verify-ollama-dev-performance.sh'
+    );
+    expect(packageJson.scripts['verify:ollama:dev:stack']).toBe(
+      'bash scripts/verify/verify-ollama-dev-stack.sh'
+    );
+    expect(packageJson.scripts['proof:ollama:dev:session']).toBe(
+      'bash scripts/proof/generate-ollama-dev-session-proof.sh'
     );
   });
 });

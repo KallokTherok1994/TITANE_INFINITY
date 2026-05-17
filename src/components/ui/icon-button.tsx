@@ -24,7 +24,7 @@ const variantStyles = {
     'bg-titanium-accent-cool text-titanium-bg-base hover:bg-titanium-accent-bright',
 
   // Destructive - error color
-  destructive: 'bg-error-500 text-white hover:bg-error-700',
+  destructive: 'bg-error-500 text-titanium-text-primary hover:bg-error-700',
 
   // Outline - border with transparent background
   outline:

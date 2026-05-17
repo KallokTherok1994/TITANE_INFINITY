@@ -25,8 +25,8 @@ export const OAuthProfileCard: React.FC<OAuthProfileCardProps> = ({ className = 
       data-testid="oauth-profile-card"
       className={[
         'flex items-center gap-3 p-3 rounded-xl',
-        'bg-white/5 border border-white/10',
-        'text-sm text-white',
+        'bg-titanium-bg-base/5 border border-white/10',
+        'text-sm text-titanium-text-primary',
         className,
       ].join(' ')}
     >
@@ -43,7 +43,7 @@ export const OAuthProfileCard: React.FC<OAuthProfileCardProps> = ({ className = 
       ) : (
         <div
           aria-label={profile.name}
-          className="w-10 h-10 rounded-full bg-[#1877F2] flex items-center justify-center text-white font-bold text-lg select-none"
+          className="w-10 h-10 rounded-full bg-[#1877F2] flex items-center justify-center text-titanium-text-primary font-bold text-lg select-none"
           data-testid="oauth-profile-avatar-placeholder"
         >
           {profile.name.charAt(0).toUpperCase()}
@@ -56,7 +56,7 @@ export const OAuthProfileCard: React.FC<OAuthProfileCardProps> = ({ className = 
           {profile.name}
         </p>
         {profile.email && (
-          <p className="text-xs text-white/60 truncate" data-testid="oauth-profile-email">
+          <p className="text-xs text-titanium-text-primary/60 truncate" data-testid="oauth-profile-email">
             {profile.email}
           </p>
         )}
@@ -77,7 +77,7 @@ export const OAuthProfileCard: React.FC<OAuthProfileCardProps> = ({ className = 
         data-testid="oauth-logout-button"
         className={[
           'shrink-0 text-xs px-2 py-1 rounded-lg',
-          'bg-white/10 hover:bg-white/20 active:bg-white/30',
+          'bg-titanium-bg-base/10 hover:bg-titanium-bg-base/20 active:bg-titanium-bg-base/30',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           'transition-colors duration-150',
         ].join(' ')}

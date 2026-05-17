@@ -97,7 +97,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
     <div className="space-y-6">
       {/* Header Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg border-2 border-titanium-border-subtle p-4">
+        <div className="bg-titanium-bg-base rounded-lg border-2 border-titanium-border-subtle p-4">
           <div className="flex items-center gap-2 mb-2">
             <Activity className="w-5 h-5 text-titanium-text-disabled" />
             <span className="text-sm font-medium text-titanium-text-disabled">
@@ -165,7 +165,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       {getSeverityIcon(alert.severity)}
-                      <span className="inline-block px-2 py-1 bg-white/50 rounded text-xs font-semibold">
+                      <span className="inline-block px-2 py-1 bg-titanium-bg-base/50 rounded text-xs font-semibold">
                         {alert.service.toUpperCase()}
                       </span>
                       <span className="text-sm font-medium">
@@ -205,7 +205,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
 
                   {/* Right: Time Badge */}
                   <div className="flex flex-col items-end gap-2 ml-4">
-                    <div className="flex items-center gap-1 bg-white/60 px-3 py-1 rounded-full">
+                    <div className="flex items-center gap-1 bg-titanium-bg-base/60 px-3 py-1 rounded-full">
                       <Clock className="w-4 h-4" />
                       <span className="text-sm font-semibold">
                         {alert.timeToThreshold}min
@@ -224,7 +224,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
 
       {/* Metrics Distribution */}
       {stats.total > 0 && (
-        <div className="bg-white rounded-lg border-2 border-titanium-border-subtle p-4">
+        <div className="bg-titanium-bg-base rounded-lg border-2 border-titanium-border-subtle p-4">
           <h4 className="text-sm font-semibold text-titanium-text-secondary mb-3">
             Distribution par métrique
           </h4>

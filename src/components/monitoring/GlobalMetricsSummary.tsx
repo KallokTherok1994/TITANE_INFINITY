@@ -79,7 +79,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <BarChart3 className="w-6 h-6 text-blue-400" />
-          <h2 className="text-2xl font-bold text-white">Métriques Globales</h2>
+          <h2 className="text-2xl font-bold text-titanium-text-primary">Métriques Globales</h2>
         </div>
 
         {/* Badge System Status */}
@@ -149,7 +149,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
       <div className="mt-6 pt-6 border-t border-titanium-border-default">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp className="w-5 h-5 text-blue-400" />
-          <h3 className="text-lg font-semibold text-white">Services Monitorés</h3>
+          <h3 className="text-lg font-semibold text-titanium-text-primary">Services Monitorés</h3>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -170,7 +170,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
                 `}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-white capitalize">
+                  <span className="text-sm font-medium text-titanium-text-primary capitalize">
                     {service}
                   </span>
                   {isHealthy ? (
@@ -183,7 +183,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
                 <div className="space-y-1 text-xs text-titanium-text-tertiary">
                   <div className="flex justify-between">
                     <span>Appels:</span>
-                    <span className="font-medium text-white">
+                    <span className="font-medium text-titanium-text-primary">
                       {serviceStats.totalCalls}
                     </span>
                   </div>

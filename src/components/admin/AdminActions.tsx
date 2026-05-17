@@ -204,7 +204,7 @@ const ActionCard: React.FC<{
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 px-4 py-2 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-[#ef4444] text-titanium-text-primary rounded-lg hover:bg-[#dc2626] transition-colors flex items-center justify-center gap-2"
             >
               <CheckCircle size={16} />
               Confirmer

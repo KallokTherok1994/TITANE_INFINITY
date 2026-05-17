@@ -37,7 +37,7 @@ export function LogLine({ log, highlight }: LogLineProps) {
         {log.category && (
           <span className="text-titanium-text-tertiary text-xs">[{log.category}]</span>
         )}
-        <span className="flex-1 text-white">{log.message}</span>
+        <span className="flex-1 text-titanium-text-primary">{log.message}</span>
       </div>
       {log.details && (
         <div className="mt-1 ml-20 text-titanium-text-tertiary text-xs">

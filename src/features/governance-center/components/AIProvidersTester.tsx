@@ -149,10 +149,10 @@ export const AIProvidersTester: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 p-3 shadow-lg">
-            <Zap className="h-6 w-6 text-white" />
+            <Zap className="h-6 w-6 text-titanium-text-primary" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">Test des Providers IA</h2>
+            <h2 className="text-2xl font-bold text-titanium-text-primary">Test des Providers IA</h2>
             <p className="text-sm text-titanium-text-tertiary">
               Validation et métriques de performance
             </p>
@@ -162,7 +162,7 @@ export const AIProvidersTester: React.FC = () => {
         <button
           onClick={testAll}
           disabled={isTestingAll}
-          className="flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-bold text-white transition-all hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-bold text-titanium-text-primary transition-all hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Play className="h-5 w-5" />
           {isTestingAll ? 'Test en cours...' : 'Tester tous les providers'}
@@ -185,7 +185,7 @@ export const AIProvidersTester: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{config.icon}</span>
                   <div>
-                    <h3 className="font-bold text-white">{config.name}</h3>
+                    <h3 className="font-bold text-titanium-text-primary">{config.name}</h3>
                     <div className="flex items-center gap-2 text-sm text-titanium-text-tertiary">
                       {getStatusIcon(test.status)}
                       <span>
@@ -201,7 +201,7 @@ export const AIProvidersTester: React.FC = () => {
                 <button
                   onClick={() => testProvider(test.provider)}
                   disabled={test.status === 'testing'}
-                  className={`rounded-lg bg-${config.color}-600 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-${config.color}-700 disabled:cursor-not-allowed disabled:opacity-50`}
+                  className={`rounded-lg bg-${config.color}-600 px-4 py-2 text-sm font-bold text-titanium-text-primary transition-all hover:bg-${config.color}-700 disabled:cursor-not-allowed disabled:opacity-50`}
                 >
                   {test.status === 'testing' ? 'Test...' : 'Tester'}
                 </button>
@@ -213,7 +213,7 @@ export const AIProvidersTester: React.FC = () => {
                 {test.latency !== undefined && (
                   <div className="flex items-center justify-between rounded-lg bg-titanium-bg-base/50 p-3">
                     <span className="text-sm text-titanium-text-tertiary">Latence</span>
-                    <span className="font-bold text-white">{test.latency}ms</span>
+                    <span className="font-bold text-titanium-text-primary">{test.latency}ms</span>
                   </div>
                 )}
 
@@ -258,25 +258,25 @@ export const AIProvidersTester: React.FC = () => {
 
       {/* Summary */}
       <div className="rounded-xl border border-titanium-border-default bg-titanium-bg-elevated/50 p-6">
-        <h3 className="mb-4 flex items-center gap-2 font-bold text-white">
+        <h3 className="mb-4 flex items-center gap-2 font-bold text-titanium-text-primary">
           <CheckCircle className="h-5 w-5 text-green-400" />
           Résumé des tests
         </h3>
         <div className="grid gap-4 md:grid-cols-4">
           <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
-            <div className="text-3xl font-bold text-white">
+            <div className="text-3xl font-bold text-titanium-text-primary">
               {Object.values(tests).filter(t => t.status === 'success').length}
             </div>
             <div className="text-sm text-titanium-text-tertiary">Opérationnels</div>
           </div>
           <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
-            <div className="text-3xl font-bold text-white">
+            <div className="text-3xl font-bold text-titanium-text-primary">
               {Object.values(tests).filter(t => t.status === 'error').length}
             </div>
             <div className="text-sm text-titanium-text-tertiary">En erreur</div>
           </div>
           <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
-            <div className="text-3xl font-bold text-white">
+            <div className="text-3xl font-bold text-titanium-text-primary">
               {Object.values(tests)
                 .filter(t => t.latency)
                 .reduce((sum, t) => sum + (t.latency || 0), 0) /
@@ -286,7 +286,7 @@ export const AIProvidersTester: React.FC = () => {
             <div className="text-sm text-titanium-text-tertiary">Latence moyenne</div>
           </div>
           <div className="rounded-lg bg-titanium-bg-base/50 p-4 text-center">
-            <div className="text-3xl font-bold text-white">
+            <div className="text-3xl font-bold text-titanium-text-primary">
               {Math.round(
                 (Object.values(tests).filter(t => t.status === 'success').length /
                   Object.keys(tests).length) *

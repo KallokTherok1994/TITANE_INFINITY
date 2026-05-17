@@ -190,7 +190,7 @@ export const ChatFallback: React.FC<ChatFallbackProps> = ({
             onClick={onRetry}
             className={cn(
               'flex items-center justify-center gap-2 px-4 py-2 rounded-lg',
-              'bg-titanium-accent-cool text-white font-medium text-sm',
+              'bg-titanium-accent-cool text-titanium-text-primary font-medium text-sm',
               'hover:bg-titanium-accent-cool/90 transition-colors',
               'focus:outline-none focus:ring-2 focus:ring-titanium-accent-cool focus:ring-offset-2'
             )}

@@ -95,7 +95,7 @@ export function HTFSubmissionWizard() {
             data-testid="htf-btn-next-surface"
             disabled={description.trim().length < 10}
             onClick={() => setStep('surface')}
-            className="rounded bg-green-600 px-4 py-2 text-sm text-white disabled:opacity-40"
+            className="rounded bg-green-600 px-4 py-2 text-sm text-titanium-text-primary disabled:opacity-40"
           >
             Suivant →
           </button>
@@ -128,7 +128,7 @@ export function HTFSubmissionWizard() {
             <button
               data-testid="htf-btn-next-options"
               onClick={() => setStep('options')}
-              className="rounded bg-green-600 px-4 py-2 text-sm text-white"
+              className="rounded bg-green-600 px-4 py-2 text-sm text-titanium-text-primary"
             >
               Suivant →
             </button>
@@ -170,7 +170,7 @@ export function HTFSubmissionWizard() {
               data-testid="htf-btn-generate"
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="rounded bg-green-600 px-4 py-2 text-sm text-white disabled:opacity-40"
+              className="rounded bg-green-600 px-4 py-2 text-sm text-titanium-text-primary disabled:opacity-40"
             >
               {isGenerating ? 'Génération...' : '⚡ Générer la soumission'}
             </button>

@@ -41,18 +41,33 @@ Le fichier `.vscode/mcp.json` déclare le serveur MCP `ollama-dev` qui expose qw
   "servers": {
     "ollama-dev": {
       "type": "stdio",
-      "command": "pnpm",
-      "args": ["dlx", "mcp-server-ollama@latest"],
+      "command": "bash",
+      "args": ["scripts/mcp/start-ollama-dev-mcp.sh"],
       "env": {
         "OLLAMA_HOST": "http://127.0.0.1:11434",
-        "OLLAMA_MODEL": "qwen3.5:9b"
+        "TITANE_OLLAMA_DEV_MODEL": "qwen3.5:9b"
       }
     }
   }
 }
 ```
 
-Activation : `"chat.mcp.enabled": true` dans `.vscode/settings.json`.
+Activation : `"chat.mcp.enabled": true`, `"chat.mcp.access": "all"` et `"chat.mcp.autoStart": "newAndOutdated"` dans `.vscode/settings.json`.
+Le wrapper `scripts/mcp/start-ollama-dev-mcp.sh` préflight l'API locale et le modèle, puis lance le serveur MCP piné `ollama-mcp@2.1.0`.
+
+## Fine-tuning borné des probes DEV
+
+- `TITANE_OLLAMA_DEV_SMOKE_TIMEOUT_SEC` : timeout strict du smoke live (défaut `30`)
+- `TITANE_OLLAMA_DEV_COMPAT_TIMEOUT_SEC` : timeout du retry de compatibilité (défaut `15`)
+- `TITANE_OLLAMA_DEV_KEEP_ALIVE` : conservation en mémoire du modèle pour le smoke live (défaut `10m`)
+- `TITANE_OLLAMA_DEV_SMOKE_NUM_CTX` : contexte du smoke live (défaut `2048`)
+- `TITANE_OLLAMA_DEV_SMOKE_NUM_PREDICT` : budget de sortie du smoke live (défaut `8`)
+- `TITANE_OLLAMA_DEV_PERF_TIMEOUT_SEC` : timeout strict du smoke perf (défaut `60`)
+- `TITANE_OLLAMA_DEV_PERF_COMPAT_TIMEOUT_SEC` : timeout du retry perf (défaut `30`)
+- `TITANE_OLLAMA_DEV_PERF_KEEP_ALIVE` : maintien mémoire pendant le bench (défaut `15m`)
+- `TITANE_OLLAMA_DEV_PERF_NUM_CTX` : contexte du bench (défaut `4096`)
+- `TITANE_OLLAMA_DEV_PERF_NUM_PREDICT` : budget de sortie du bench (défaut `48`)
+- `TITANE_OLLAMA_DEV_TEMPERATURE` : température partagée des probes live/perf (défaut `0`)
 
 ## Checklist de vérification Ollama Dev
 
@@ -62,15 +77,20 @@ Activation : `"chat.mcp.enabled": true` dans `.vscode/settings.json`.
 4. Vérifier que les defaults produit sont intacts : `pnpm run verify:ollama:boundary`
 5. Démarrer Ollama si nécessaire : `ollama serve` (background)
 6. Télécharger le modèle si absent : `ollama pull qwen3.5:9b`
+7. Vérifier la boundary de sécurité MCP : `pnpm run verify:mcp:security`
+8. Vérifier la readiness live : `pnpm run verify:ollama:dev:live`
+9. Vérifier la provenance du package MCP : `pnpm run verify:ollama:dev:provenance`
+10. Vérifier la matrice de tuning locale : `pnpm run verify:ollama:dev:tuning`
 
 ## Diagnostic et Recovery MCP
 
 1. Vérifier la disponibilité Ollama locale : `curl -s http://127.0.0.1:11434/api/version`
 2. Vérifier la présence du modèle : `ollama list | grep qwen3.5:9b`
-3. Vérifier la config MCP active : `cat .vscode/mcp.json | grep -E "ollama-dev|OLLAMA_HOST|OLLAMA_MODEL"`
-4. Si modèle absent : `ollama pull qwen3.5:9b`
-5. Si serveur arrêté : `ollama serve`
-6. Si port occupé : `ss -tlnp | grep 11434` puis arrêter uniquement le process non-Ollama en conflit
+3. Vérifier la config MCP active : `cat .vscode/mcp.json | grep -E "ollama-dev|OLLAMA_HOST|TITANE_OLLAMA_DEV_MODEL"`
+4. Vérifier le wrapper repo-owned : `test -x scripts/mcp/start-ollama-dev-mcp.sh`
+5. Si modèle absent : `ollama pull qwen3.5:9b`
+6. Si serveur arrêté : `ollama serve`
+7. Si port occupé : `ss -tlnp | grep 11434` puis arrêter uniquement le process non-Ollama en conflit
 
 ## Comportements interdits
 

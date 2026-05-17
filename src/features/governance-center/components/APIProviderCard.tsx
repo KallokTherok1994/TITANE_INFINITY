@@ -138,7 +138,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
         <div className="flex items-center gap-3">
           <span className="text-3xl">{config.icon}</span>
           <div>
-            <h3 className="font-bold text-white">{config.name}</h3>
+            <h3 className="font-bold text-titanium-text-primary">{config.name}</h3>
             <p className="text-xs text-titanium-text-tertiary">{config.description}</p>
           </div>
         </div>
@@ -197,27 +197,27 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
 
             <div className="grid gap-2 rounded-lg border border-titanium-border-default/50 bg-titanium-bg-elevated/30 p-3 text-xs text-titanium-text-secondary sm:grid-cols-2">
               <div data-testid="ollama-provider-url">
-                <span className="font-semibold text-white">Endpoint:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">Endpoint:</span>{' '}
                 {ollamaStatus?.url || 'non vérifié'}
               </div>
               <div data-testid="ollama-provider-model">
-                <span className="font-semibold text-white">Modèle:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">Modèle:</span>{' '}
                 {ollamaStatus?.model || 'non vérifié'}
               </div>
               <div data-testid="ollama-provider-endpoint-kind">
-                <span className="font-semibold text-white">Type:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">Type:</span>{' '}
                 {ollamaEndpointLabel}
               </div>
               <div data-testid="ollama-provider-endpoint-source">
-                <span className="font-semibold text-white">Source:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">Source:</span>{' '}
                 {ollamaSourceLabel}
               </div>
               <div data-testid="ollama-provider-health">
-                <span className="font-semibold text-white">Santé:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">Santé:</span>{' '}
                 {ollamaStatus?.health || 'non vérifiée'}
               </div>
               <div data-testid="ollama-provider-network-used">
-                <span className="font-semibold text-white">Réseau:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">Réseau:</span>{' '}
                 {ollamaStatus?.network_used ? 'oui' : 'non'}
               </div>
             </div>
@@ -227,7 +227,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
                 data-testid="ollama-provider-model-list"
                 className="rounded-lg border border-titanium-border-default/50 bg-titanium-bg-elevated/20 p-3 text-xs text-titanium-text-secondary"
               >
-                <span className="font-semibold text-white">Modèles détectés:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">Modèles détectés:</span>{' '}
                 {ollamaStatus?.models.join(', ')}
               </div>
             )}
@@ -282,7 +282,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
                 onChange={e => setInputValue(e.target.value)}
                 placeholder={config.placeholder}
                 disabled={isSubmitting}
-                className={`w-full rounded-lg border bg-titanium-bg-elevated/50 px-4 py-3 pr-12 text-sm text-white placeholder-gray-500 outline-none transition-colors ${
+                className={`w-full rounded-lg border bg-titanium-bg-elevated/50 px-4 py-3 pr-12 text-sm text-titanium-text-primary placeholder-gray-500 outline-none transition-colors ${
                   error
                     ? 'border-red-500/50 focus:border-red-500'
                     : `border-titanium-border-default/50 focus:border-${config.color}-500`
@@ -308,7 +308,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
             <button
               type="submit"
               disabled={!inputValue.trim() || isSubmitting}
-              className={`w-full rounded-lg py-2.5 font-bold text-white transition-all ${
+              className={`w-full rounded-lg py-2.5 font-bold text-titanium-text-primary transition-all ${
                 isSubmitting
                   ? 'cursor-not-allowed bg-titanium-bg-interactive opacity-50'
                   : `bg-${config.color}-600 hover:bg-${config.color}-700 active:scale-95`

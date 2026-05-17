@@ -149,7 +149,7 @@ const TemporalFlowCenter: React.FC = () => {
             onClick={() => setActiveTab(tab.id as Tab)}
             className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white'
+                ? 'bg-blue-600 text-titanium-text-primary'
                 : 'bg-titanium-bg-elevated text-titanium-text-tertiary hover:bg-titanium-bg-interactive'
             }`}
           >
@@ -354,13 +354,13 @@ const AgendaSection: React.FC = () => {
       <div className="flex gap-2">
         <button
           onClick={() => setView('week')}
-          className={`px-4 py-2 rounded ${view === 'week' ? 'bg-blue-600 text-white' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
+          className={`px-4 py-2 rounded ${view === 'week' ? 'bg-blue-600 text-titanium-text-primary' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
         >
           📅 Semaine
         </button>
         <button
           onClick={() => setView('month')}
-          className={`px-4 py-2 rounded ${view === 'month' ? 'bg-blue-600 text-white' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
+          className={`px-4 py-2 rounded ${view === 'month' ? 'bg-blue-600 text-titanium-text-primary' : 'bg-titanium-bg-elevated text-titanium-text-tertiary'}`}
         >
           📆 Mois
         </button>
@@ -424,10 +424,10 @@ const AgendaSection: React.FC = () => {
             className="w-full p-3 bg-titanium-bg-base rounded border border-titanium-border-default text-titanium-text-primary placeholder-gray-500"
           />
           <div className="flex gap-2">
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
+            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-titanium-text-primary transition-colors">
               ✨ Générer avec IA
             </button>
-            <button className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition-colors">
+            <button className="px-4 py-2 bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-titanium-text-primary transition-colors">
               ➕ Ajouter manuellement
             </button>
           </div>
@@ -501,13 +501,13 @@ const TimelineSection: React.FC = () => {
 
       {/* Timeline Controls */}
       <div className="flex gap-4 items-center">
-        <button className="px-4 py-2 bg-titanium-bg-elevated hover:bg-titanium-bg-interactive rounded text-white transition-colors">
+        <button className="px-4 py-2 bg-titanium-bg-elevated hover:bg-titanium-bg-interactive rounded text-titanium-text-primary transition-colors">
           ⏪ Passé
         </button>
-        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
+        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-titanium-text-primary transition-colors">
           📍 Présent
         </button>
-        <button className="px-4 py-2 bg-titanium-bg-elevated hover:bg-titanium-bg-interactive rounded text-white transition-colors">
+        <button className="px-4 py-2 bg-titanium-bg-elevated hover:bg-titanium-bg-interactive rounded text-titanium-text-primary transition-colors">
           ⏩ Futur
         </button>
         <div className="flex-1" />
