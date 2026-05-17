@@ -1,6 +1,6 @@
 {
   "name": "titane-infinity-stable",
-  "version": "35.1.7",
+  "version": "35.1.8",
   "stable_snapshot_note": "Titan-Stable artifacts at 35.1.7 — v35.1.7 production build is now reflected in runtime/stable. deployment/latest/ is canonical for v35.1.7.",
   "build_target": "production",
   "certification_level": "P3_STABLE_BUILD",
@@ -53,11 +53,11 @@
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },
-  "last_validation": 1778979441.006928,
+  "last_validation": 1778981804.585526,
   "certification_status": "FORBIDDEN_SCAN_PASSED",
   "p3_3_forbidden_scan": {
     "status": "PASS",
-    "last_run": 1778979441.006937,
+    "last_run": 1778981804.585539,
     "violations": 0
   }
 }
