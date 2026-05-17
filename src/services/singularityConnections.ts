@@ -127,7 +127,7 @@ export class SingularityConnections {
       return;
     }
 
-    logger.info('🔗 Starting SingularityConnections v30.0.0 (event-driven mode)');
+    logger.info(`🔗 Starting SingularityConnections v${__APP_VERSION__} (event-driven mode)`);
     this.isRunning = true;
 
     // Initial sync

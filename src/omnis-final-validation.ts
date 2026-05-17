@@ -448,7 +448,7 @@ class OMNISFinalValidator {
         '🟢 ═══════════════════════════════════════════════════════════════════'
       );
       logger.info('✅ DÉPLOIEMENT AUTORISÉ - OMNIS ARCHITECTURE CERTIFIÉE');
-      logger.info('🚀 TITANE∞ v30.0.0 PRÊT POUR PRODUCTION');
+      logger.info(`🚀 TITANE∞ v${__APP_VERSION__} PRÊT POUR PRODUCTION`);
       logger.info(
         '🎯 "Moteur parfait Chat IA - Mathematically impossible to break" RÉALISÉ'
       );

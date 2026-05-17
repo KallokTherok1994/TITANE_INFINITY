@@ -63,7 +63,7 @@ class LocalAgentEngine {
   private readonly CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
   private constructor() {
-    logger.info('[LocalAgentEngine] Initialized v30.0.0');
+    logger.info(`[LocalAgentEngine] Initialized v${__APP_VERSION__}`);
   }
 
   public static getInstance(): LocalAgentEngine {

@@ -91,6 +91,20 @@ applyTo: 'src/**'
 - Ship a new UI surface without E2E test and `UI_SURFACE_MAP.md` update.
 - Utiliser `npm`/`npx` (pnpm uniquement, `npm` interdit).
 
+## Pre-BUILD Frontend / WebUI / DevTools Gate
+
+For any `src/**`, WebUI, route, page, component, CSS, asset, visual state, hook/store, or user-facing change:
+
+- run or validate DEV mode through `pnpm run dev:tauri`
+- confirm the visible runtime surface is current, not a stale route, stale DOM, stale asset, stale HMR state, or compatibility alias
+- capture DevTools Console and HTTP/Network
+- fail on unresolved `console.error`, unresolved `console.warn`, `pageerror`, unhandled rejection, failed critical request, HTTP 4xx/5xx, asset 404, chunk/module load failure, source map blocker, blank screen, wrong route, stale DOM, or missing `data-testid`
+- warnings must be fixed or explicitly classified with source, risk, reason, and removal condition
+- if UI changed, prove visible UI with assertion plus screenshot, log, or route proof
+- update `registry/ui-events.jsonl`, `UI_SURFACE_MAP.md`, and `docs/CARTOGRAPHY_COMPLETE.md` when the surface changes
+- add or update Vitest, E2E, and desktop proofs
+- block BUILD ALL until the frontend lane is PASS
+
 ## Preuves attendues
 
 - E2E logs + screenshots, `registry/ui-events.jsonl` entry if UI changed.
@@ -104,6 +118,40 @@ applyTo: 'src/**'
 - Missing E2E test for new UI surface ⇒ BLOCKED (Rule 16).
 - Remaining live router/preloading/tooling references to a stale UI surface after a route/page regression fix ⇒ FAIL.
 - UI work closed without the mandatory UI procedure, proof updates, and recurrence/instruction validators ⇒ FAIL.
+
+## RUNTIME_VISIBILITY_PROTOCOL — MANDATORY AFTER EVERY UI CHANGE
+
+Every visible UI/frontend change requires the full proof chain before commit.
+
+Required chain:
+```
+source change
+→ static tests (TypeScript, ESLint, Vitest)
+→ web UI capture (Playwright)
+→ pnpm exec vite build
+→ gate-build-truth.sh
+→ gate-no-stale-visible-version.sh
+→ bash runtime/stable/build.sh
+→ gate-stable-artifact-freshness.sh
+→ gate-stable-launcher-truth.sh (reapply AppImage launcher if overwritten)
+→ gate-runtime-identity-truth.sh
+→ gate-stable-window-truth.sh
+→ SurfaceTruth DOM proof (WDIO e2e/desktop/stable-surface-truth.wdio.test.js)
+→ gate-console-runtime-noise.sh
+→ screenshot proof (proof_packs/)
+→ AutoHeal entry + governance validators
+→ commit only after all gates PASS
+```
+
+Hard rules:
+- Browser preview proof is NOT Tauri proof.
+- dist/ is NOT the embedded binary. Rebuild Tauri after every UI change.
+- Launcher must be re-pointed to the fresh AppImage after stable build (update-desktop-icon.sh).
+- Console must not show `v30.0.0` or `browser runtime detected` in Tauri stable proof.
+- `react-dom-client.development.js` in stable artifact = FAIL.
+- Use `__APP_VERSION__` for all runtime-visible version strings. Never hardcode old version numbers.
+
+Validator: `bash scripts/verify/verify_frontend_ui_visible_change_protocol.sh`
 
 ## Rollback
 

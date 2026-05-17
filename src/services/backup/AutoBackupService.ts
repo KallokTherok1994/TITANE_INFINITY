@@ -12,6 +12,9 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('AutoBackupService');
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -70,13 +73,13 @@ class AutoBackupService {
   private listeners: Set<(state: BackupState) => void> = new Set();
 
   async initialize(): Promise<void> {
-    console.warn('[AutoBackup] Initializing Auto-Backup Service v30.0.0...');
+    logger.info(`[AutoBackup] Initializing Auto-Backup Service v${__APP_VERSION__}...`);
     this.loadState();
     this.startBackupTimer();
     this.checkImmediateBackup();
-    console.warn(
-      '[AutoBackup] Initialized - Next backup:',
-      new Date(this.state.nextBackupTime).toLocaleString()
+    logger.debug(
+      '[AutoBackup] Initialized - Next backup: ' +
+        new Date(this.state.nextBackupTime).toLocaleString()
     );
   }
 

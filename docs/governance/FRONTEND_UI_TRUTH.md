@@ -119,3 +119,37 @@ When a page has layout or data truth issues:
 - missing E2E proof for new user-facing surfaces
 - hardcoded data presented as live without `CuratedDataBanner` disclosure
 - module context snapshot not published for canonical pages
+- stale version string (e.g. `v30.0.0`) in runtime-visible console logs
+- `browser runtime detected` in Tauri stable console proof
+- React dev build (`react-dom-client.development.js`) in stable artifact
+
+## Runtime Visibility Truth Chain
+
+The full proof chain for a visible UI/frontend change is:
+
+```
+source change
+→ static tests (tsc, eslint, vitest)
+→ web UI capture (Playwright)
+→ pnpm exec vite build  ← dist/ is updated here
+→ gate-build-truth.sh
+→ gate-no-stale-visible-version.sh
+→ bash runtime/stable/build.sh  ← AppImage/DEB embeds dist/ here
+→ gate-stable-artifact-freshness.sh
+→ gate-stable-launcher-truth.sh  ← re-run after stable build
+→ gate-runtime-identity-truth.sh
+→ gate-stable-window-truth.sh
+→ WDIO SurfaceTruth DOM proof
+→ gate-console-runtime-noise.sh
+→ screenshot proof
+→ AutoHeal + governance
+→ commit only after all gates PASS
+```
+
+**Critical invariants:**
+- Browser preview proof is NOT Tauri proof.
+- `dist/` on disk is NOT the embedded binary. Rebuilding the Tauri binary is required after every vite build.
+- The stable build may overwrite `~/.local/share/applications/titane-infinity.desktop`. Re-run `scripts/update-desktop-icon.sh` after every stable build.
+- Runtime console must not show `v30.0.0` or old version strings. Use `__APP_VERSION__` for all runtime-visible version strings.
+
+Validator: `bash scripts/verify/verify_frontend_ui_visible_change_protocol.sh`

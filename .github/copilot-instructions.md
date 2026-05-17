@@ -88,7 +88,25 @@ Operational authority: only one active execution authority and one active E2E au
 
 ## Rule 14 - BUILD ALL command
 
-When the user issues `BUILD ALL`, execute the full automated sequence without token gate: bump version; production build + deploy; build AppImage/DEB/RPM; build Android APK; build Windows installer if applicable; uninstall existing installations and dock icons; clean caches; reinstall; update release notes, checksums, and `RELEASE_SURFACE_INVENTORY`; verify and fix regressions, errors, warnings, and blockers; run AutoHeal; update all relevant mapping docs.
+When the user issues `BUILD ALL`, execute the full automated sequence without token gate: bump version; production build + deploy; build AppImage/DEB/RPM; build Android APK; build Windows installer if applicable; ensure the Tauri/frontend pipeline is also updated and rebuilt when relevant (`pnpm run dev:tauri` or equivalent), verify the HTTP network server surface is refreshed and reachable, and confirm that visible UI/frontend interface changes are present before sealing the build; uninstall existing installations and dock icons; clean caches; reinstall; update release notes, checksums, and `RELEASE_SURFACE_INVENTORY`; verify and fix regressions, errors, warnings, and blockers; run AutoHeal; update all relevant mapping docs.
+
+## Rule 14.1 - PRE-BUILD CERTIFIER AND ZERO-DEFECT BUILD PERMISSION
+
+`BUILD ALL`, advanced build, production build, native packaging, release packaging, deploy, artifact certification, or `deployment/latest` sync is forbidden until the canonical pre-build certifier returns `BUILD_ALLOWED=YES`.
+
+The Pre-BUILD Certifier does not build. It certifies whether build is allowed.
+
+Required before build:
+1. Discover current build authority and prevent duplicate pipeline authority.
+2. Validate worktree, branch, version, release surface truth, rollback, and proof pack readiness.
+3. Run or validate `pnpm run dev:tauri`, expected DEV URL, current visible frontend/WebUI, backend/Tauri/IPC sync, and One Door network truth.
+4. Capture DevTools Console, HTTP/Network, page errors, failed requests, stale route/DOM proof, and visible UI proof where applicable.
+5. Treat unresolved errors, warnings, failed requests, stale assets, route mismatches, IPC mismatches, capability mismatches, network mismatches, launcher mismatches, or UI mismatches as BUILD_BLOCKING.
+6. Auto-correct bounded failures, add recurrence tests, append AutoHeal, emit `BUILD_PERMISSION_MATRIX.md`, and complete the proof pack.
+
+No BUILD ALL while any required lane is FAIL, BLOCKED, BLOCKED_ENV, BLOCKED_APPROVAL, BLOCKED_SUDO_REQUIRED, UNKNOWN, PARTIAL, stale, missing, warning-unclassified, or narrative-only.
+
+No narrative PASS. No screenshot-only PASS. No source-only PASS. No build before proof.
 
 ## Rule 15 - Auto-update mapping and cartography
 
@@ -116,7 +134,9 @@ Ollama Dev / Ollama Chat boundary truth: keep the governed local development sta
 
 When direct work on `MAIN` is authorized, every completed correction phase or coherent fix batch must end with a targeted commit on `MAIN` after proofs pass. Do not accumulate unrelated finished fixes in an uncommitted worktree. Each direct-to-main commit must stay scope-limited, mention the corrected surface or subsystem, and wait for AutoHeal plus mandatory validators. If proof is incomplete, do not commit the phase yet.
 
-## Rule 20 - Session continuity
+## Session continuity (Rule 20)
+
+Rule 20 - Session continuity remains mandatory for every governed session.
 
 At the start of every session working on this repo: (1) read available session plan or conversation summary to restore context; (2) run `git status --short` to identify pending uncommitted work; (3) declare operating MODE explicitly (DURABLE or EXPLORATION); (4) identify any Rule 18 phase that completed proofs but was not yet committed and commit it before starting new work. Never carry credentials, tokens, or private keys in session notes, plans, or proof files.
 
@@ -129,3 +149,23 @@ Every coding session operates in one of two modes. Declare the mode explicitly b
 **Durable Mode** — the default for all work on `MAIN` and `feature/*` branches. Full Rule 1–18 discipline applies: AutoHeal full schema, version bump at BUILD, proof_pack, mapping updates, tests (Rule 16), rollback plan.
 
 **Promotion gate**: before merging Exploration code to MAIN, classify the code as `durable` explicitly, run full test gates, append AutoHeal full schema entry, and bump version. Undeclared Exploration code merged to MAIN = FAIL.
+
+## Runtime Visibility Protocol (Rule 20; mandatory after every visible UI/frontend change)
+
+Any visible UI/frontend change must pass the **Runtime Visibility Protocol** before commit to MAIN.
+
+Required chain:
+source change → static tests → web UI capture → Vite dist → build-truth → no stale visible version → Tauri stable build → stable artifact freshness → launcher truth after stable build → runtime identity proof → stable window proof → SurfaceTruth DOM proof → console-noise gate → screenshot proof → AutoHeal / governance → commit only after proof.
+
+Gates that must pass:
+- `gate-build-truth.sh`
+- `gate-version-truth.sh`
+- `gate-surface-root.sh`
+- `gate-no-stale-visible-version.sh`
+- `gate-runtime-identity-truth.sh`
+- `gate-stable-artifact-freshness.sh`
+- `gate-stable-launcher-truth.sh`
+- `gate-console-runtime-noise.sh`
+- `verify_frontend_ui_visible_change_protocol.sh`
+
+Browser preview proof is NOT Tauri proof. dist proof is NOT artifact proof. Artifact proof is NOT launcher proof. Launcher proof is NOT DOM SurfaceTruth.

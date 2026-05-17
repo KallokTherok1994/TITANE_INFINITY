@@ -55,7 +55,7 @@ class VisualDevOpsEngine {
   private readonly _MAX_SESSION_DURATION_MS = 8 * 60 * 60 * 1000; // 8 heures
 
   private constructor() {
-    logger.info('[VisualDevOpsEngine] Initialized v30.0.0');
+    logger.info(`[VisualDevOpsEngine] Initialized v${__APP_VERSION__}`);
   }
 
   public static getInstance(): VisualDevOpsEngine {

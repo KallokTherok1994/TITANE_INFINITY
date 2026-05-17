@@ -183,7 +183,7 @@ class ChatMemoryCompactor {
       });
 
       if (!stored) {
-        logger.warn(`No stored messages found for ${mode}`, {
+        logger.debug(`No stored messages found for ${mode}`, {
           component: 'MemoryCompactor',
           key,
         });

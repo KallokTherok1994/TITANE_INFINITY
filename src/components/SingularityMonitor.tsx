@@ -24,7 +24,7 @@ export function SingularityMonitor() {
       try {
         await tauriClient.engineInit();
         if (mounted) {
-          console.warn('✅ SingularityEngine v30.0.0 initialized');
+          logger.info(`✅ SingularityEngine v${__APP_VERSION__} initialized`);
         }
 
         // Poll engine state

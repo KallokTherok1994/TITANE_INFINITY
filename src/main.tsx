@@ -957,7 +957,7 @@ if (typeof window !== 'undefined') {
 // 🚀 BOOT SEQUENCE START
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 logger.info('\n╔════════════════════════════════════════════════════════════════╗');
-logger.info('║  🌌 TITANE∞ v30.0.0 - BOOT SEQUENCE                             ║');
+logger.info(`║  🌌 TITANE∞ v${__APP_VERSION__} - BOOT SEQUENCE                          ║`);
 logger.info('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 logger.info('╚════════════════════════════════════════════════════════════════╝\n');
 
@@ -1267,6 +1267,19 @@ if (_titaneCurrentWindowLabel !== 'main') {
 
   logger.info('✅ Root element found');
   logger.info('🎨 Starting React 18 render...');
+
+  // Bootstrap conversationStorage before React renders to prevent fallback-ID race.
+  // useChat reads getActiveConversationId() synchronously in useState initializer;
+  // without this, it fires before the async initialize() in useConversations completes.
+  try {
+    const { conversationStorage } = await import(
+      '@/services/conversation/conversationStorage'
+    );
+    await conversationStorage.initialize();
+    logger.info('✅ conversationStorage pre-initialized');
+  } catch (err) {
+    logger.warn('conversationStorage pre-init failed (non-fatal)', { err });
+  }
 
   try {
     logger.info('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');

@@ -1066,7 +1066,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       // Force flush all pending saves to localStorage (critical for tab switch)
       try {
         chatMemoryCompactor.flushPendingSaves();
-        chatLogger.info('🔒 Forced memory flush on tab switch/unmount');
+        chatLogger.debug('🔒 Forced memory flush on tab switch/unmount');
       } catch (error) {
         chatLogger.error('❌ Failed to force flush', { error });
       }

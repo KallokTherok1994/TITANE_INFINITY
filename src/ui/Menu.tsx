@@ -156,7 +156,7 @@ export const Menu: React.FC<MenuProps> = ({
       localStorage.removeItem('sidebar_config');
       localStorage.setItem('titane_menu_version', MENU_VERSION);
 
-      logger.info('🔧 Menu v30.0.0 - Migration one-time completed');
+      logger.info(`🔧 Menu v${appVersion} - Migration one-time completed`);
       logger.info(
         '📋 Sections actives:',
         MENU_SECTIONS.length,
