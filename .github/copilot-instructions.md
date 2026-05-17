@@ -94,19 +94,86 @@ When the user issues `BUILD ALL`, execute the full automated sequence without to
 
 `BUILD ALL`, advanced build, production build, native packaging, release packaging, deploy, artifact certification, or `deployment/latest` sync is forbidden until the canonical pre-build certifier returns `BUILD_ALLOWED=YES`.
 
-The Pre-BUILD Certifier does not build. It certifies whether build is allowed.
+The Pre-BUILD Certifier does not build. It certifies whether build is allowed. Route through `.github/agents/pre-build-certifier.agent.md` or an equivalent full pre-build workflow.
 
-Required before build:
-1. Discover current build authority and prevent duplicate pipeline authority.
-2. Validate worktree, branch, version, release surface truth, rollback, and proof pack readiness.
-3. Run or validate `pnpm run dev:tauri`, expected DEV URL, current visible frontend/WebUI, backend/Tauri/IPC sync, and One Door network truth.
-4. Capture DevTools Console, HTTP/Network, page errors, failed requests, stale route/DOM proof, and visible UI proof where applicable.
-5. Treat unresolved errors, warnings, failed requests, stale assets, route mismatches, IPC mismatches, capability mismatches, network mismatches, launcher mismatches, or UI mismatches as BUILD_BLOCKING.
-6. Auto-correct bounded failures, add recurrence tests, append AutoHeal, emit `BUILD_PERMISSION_MATRIX.md`, and complete the proof pack.
+Lifecycle: `DISCOVER → CERTIFY → FIX → RE-CERTIFY → BUILD_PERMISSION → BUILD_HANDOFF → POST_BUILD_SEAL`
 
-No BUILD ALL while any required lane is FAIL, BLOCKED, BLOCKED_ENV, BLOCKED_APPROVAL, BLOCKED_SUDO_REQUIRED, UNKNOWN, PARTIAL, stale, missing, warning-unclassified, or narrative-only.
+### Mandatory BUILD_PERMISSION_MATRIX lanes (all must be PASS or NOT_APPLICABLE_WITH_PROOF)
 
-No narrative PASS. No screenshot-only PASS. No source-only PASS. No build before proof.
+**Lane 0 — WORKTREE**: `git status --short`, `git branch --show-current`, `git rev-parse --short HEAD`, `node -p "require('./package.json').version"`. Dirty worktree requires explicit continuation approval.
+
+**Lane 1 — AUTHORITY_MAP / PIPELINE_AUTHORITY**: single canonical build authority, no pipeline conflict. Classify `BLOCKED_AUTHORITY_CONFLICT` if plural.
+
+**Lane 2 — INSTRUCTIONS / AGENT_CONFIG**: run all validators:
+```bash
+bash scripts/verify/verify-pre-build-certifier-agent.sh
+bash scripts/verify/verify_instruction_layers.sh
+bash scripts/verify/verify_no_doctrine_duplication.sh
+bash scripts/verify/verify_status_vocabulary.sh
+bash scripts/verify/verify_agents_index.sh
+bash scripts/verify/verify_prompt_files_index.sh
+bash scripts/verify/verify_local_markers_consistency.sh
+bash scripts/verify/verify-vscode-agent-workflow.sh
+bash scripts/verify/gate-build-truth.sh
+bash scripts/verify/gate-version-truth.sh
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+pnpm run verify:instructions
+```
+
+**Lane 3 — TOOLCHAIN**: `pnpm -v`, `node -v`, `rustc --version`, `cargo --version`, `pnpm exec tauri --version`.
+
+**Lane 4 — FRONTEND_STATIC**: `pnpm run check` (0 TypeScript errors) + `pnpm run lint` (0 ESLint errors). Both must be zero-error.
+
+**Lane 5 — FRONTEND_TESTS**: `pnpm run test --run` → all tests PASS (baseline 9514/9514). Any regression is FAIL.
+
+**Lane 6 — BACKEND_RUST_TAURI**: `pnpm run test:rust`, `pnpm run verify:tauri-configs`, `pnpm run verify:tauri-only`.
+
+**Lane 7 — IPC_CONTRACT**: `pnpm run guard:ipc-contract` → PASS. IPC contract `{ ok, content, error }` must be preserved.
+
+**Lane 8 — NETWORK_GOVERNANCE**: `pnpm run verify:online-first`, `pnpm run verify:network-guard`. One Door network: UI → IPC → services → gateway → external must be intact.
+
+**Lane 9 — CLEAN_STALE_CACHE**: `pnpm run dev:cleanup || true`, `pnpm run clean:vite || true`. No stale dist/ artifacts from a previous session.
+
+**Lane 10 — DEV_TAURI_RUNTIME** *(mandatory — added 2026-05-17)*:
+1. Run `pnpm run sync:versions` — must propagate `{version}-dev` to `runtime/dev/tauri.conf.json` and window title.
+2. Verify `runtime/dev/tauri.conf.json` version == `{package.json version}-dev` (e.g. `35.1.8-dev`). Mismatch = FAIL.
+3. Run `pnpm run dev:tauri` and wait for `BOOT:READY` in logs.
+4. Confirm window title shows correct version (`Titan-Dev vX.Y.Z [DEV]`).
+5. Confirm `warn=0 error=0` in TAURI_MONITOR summary. Required proof fields:
+   ```
+   DEV_TAURI_VERSION={version}-dev  BOOT:READY=YES  ERRORS=0  WARNS=0
+   ```
+
+**Lane 11 — DEVTOOLS_CONSOLE**: 0 `console.error`, 0 unresolved `console.warn` in DevTools. Block on unresolved errors.
+
+**Lane 12 — PAGE_ERRORS**: 0 `pageerror`, 0 `unhandledrejection`. Block on any uncaught rejection.
+
+**Lane 13 — HTTP_NETWORK**: 0 `requestfailed`, 0 HTTP 400+, 0 CORS, 0 mixed content, 0 asset 404, 0 chunk load error. Block on any failed request.
+
+**Lane 14 — WEBUI_ROUTE**: canonical routes verified (`pnpm run verify:ui-desktop-main-menu-reconciliation:current`), no stale assets, no wrong server/port.
+
+**Lane 15 — VISIBLE_UI**: visible UI confirms correct version in footer, no blank screens, no wrong route. `pnpm run verify:ui-visual-capture` or equivalent screenshot proof.
+
+**Lane 16 — RUNTIME_PROMOTION**: no `ACTIVE_PARTIAL`, `MIXED_LIVE_AND_STATIC`, simulated, or mock-gated surfaces promoted without live proof.
+
+**Lane 17 — E2E_DESKTOP_WEBUI**: `pnpm run test:e2e` or `pnpm run e2e:desktop` → PASS.
+
+**Lane 18 — AUTOHEAL**: `bash scripts/autoheal/detect_recurrence.sh` → PASS. No unaddressed recurrence.
+
+**Lane 19 — VALIDATORS**: `pnpm run verify` → all verify:* scripts PASS.
+
+**Lane 20 — RELEASE_SURFACE_PRECHECK**: `bash scripts/verify/gate-stable-artifact-freshness.sh` → PASS. `package.json`, `runtime/stable/manifest.json`, `runtime/stable/tauri.conf.json`, `deployment/latest/MANIFEST.json` all at same version. Stable AppImage/DEB present in `runtime/stable/`.
+
+**Lane 21 — ROLLBACK**: rollback path documented, previous stable artifact reachable, rollback steps verified.
+
+**Lane 22 — PROOF_PACK**: `BUILD_PERMISSION_MATRIX.md` complete inside proof pack with all 26 lanes classified. `BUILD_ALLOWED=YES` only if every required lane is `PASS` or `NOT_APPLICABLE_WITH_PROOF`.
+
+### Blocking rules
+
+- No BUILD ALL while any required lane is `FAIL`, `BLOCKED`, `BLOCKED_ENV`, `BLOCKED_APPROVAL`, `BLOCKED_SUDO_REQUIRED`, `UNKNOWN`, `PARTIAL`, `NOT_RUN`, stale, missing, warning-unclassified, or narrative-only.
+- No narrative PASS. No screenshot-only PASS. No source-only PASS. No build before proof.
+- Auto-correct bounded failures, add recurrence tests, append AutoHeal, emit `BUILD_PERMISSION_MATRIX.md`, and complete the proof pack before declaring `BUILD_ALLOWED=YES`.
 
 ## Rule 15 - Auto-update mapping and cartography
 

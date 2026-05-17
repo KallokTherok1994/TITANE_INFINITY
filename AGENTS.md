@@ -169,9 +169,69 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 
 ## Pre-BUILD Certifier Agent
 
-Before BUILD ALL, route through `.github/agents/pre-build-certifier.agent.md` or an equivalent full pre-build workflow. The certifier owns authority discovery, DEV runtime, DevTools Console, HTTP/Network, frontend, backend, IPC, WebUI, visible UI/interface, clean cache, toolchain, release surfaces, AutoHeal, anti-regression, proof pack, rollback, and build permission matrix.
+Before BUILD ALL, route through `.github/agents/pre-build-certifier.agent.md` or an equivalent full pre-build workflow.
+
+Lifecycle: `DISCOVER → CERTIFY → FIX → RE-CERTIFY → BUILD_PERMISSION → BUILD_HANDOFF → POST_BUILD_SEAL`
 
 If the certifier does not return `BUILD_ALLOWED=YES` with evidence, build is blocked.
+
+### Mandatory BUILD_PERMISSION_MATRIX lanes
+
+The certifier must classify every lane in `BUILD_PERMISSION_MATRIX.md`. `BUILD_ALLOWED=YES` requires all lanes `PASS` or `NOT_APPLICABLE_WITH_PROOF`. `NOT_RUN` is treated as FAIL.
+
+| Lane | ID | Key commands / checks |
+|------|----|-----------------------|
+| 0 | WORKTREE | `git status --short`, branch, commit, version |
+| 1 | AUTHORITY_MAP / PIPELINE_AUTHORITY | single build authority, no conflict |
+| 2 | INSTRUCTIONS / AGENT_CONFIG | `bash scripts/verify/verify-pre-build-certifier-agent.sh`, `verify_instruction_layers.sh`, `verify_no_doctrine_duplication.sh`, `verify_status_vocabulary.sh`, `verify_agents_index.sh`, `verify_prompt_files_index.sh`, `verify_local_markers_consistency.sh`, `verify-vscode-agent-workflow.sh`, `gate-build-truth.sh`, `gate-version-truth.sh`, `detect_recurrence.sh`, `verify_instructions.sh` |
+| 3 | TOOLCHAIN | `pnpm -v`, `node -v`, `rustc --version`, `cargo --version`, `tauri --version` |
+| 4 | FRONTEND_STATIC | `pnpm run check` (0 TS errors) + `pnpm run lint` (0 ESLint errors) |
+| 5 | FRONTEND_TESTS | `pnpm run test --run` → all tests PASS (baseline 9514/9514) |
+| 6 | BACKEND_RUST_TAURI | `pnpm run test:rust`, `pnpm run verify:tauri-configs`, `pnpm run verify:tauri-only` |
+| 7 | IPC_CONTRACT | `pnpm run guard:ipc-contract` → PASS |
+| 8 | NETWORK_GOVERNANCE | `pnpm run verify:online-first`, `pnpm run verify:network-guard` |
+| 9 | CLEAN_STALE_CACHE | `pnpm run dev:cleanup \|\| true`, `pnpm run clean:vite \|\| true` |
+| 10 | DEV_TAURI_RUNTIME | `pnpm run sync:versions` → verify `runtime/dev/tauri.conf.json` == `{version}-dev` → `pnpm run dev:tauri` → BOOT:READY + warn=0 + error=0 |
+| 11 | DEVTOOLS_CONSOLE | 0 `console.error`, 0 unresolved `console.warn` |
+| 12 | PAGE_ERRORS | 0 `pageerror`, 0 `unhandledrejection` |
+| 13 | HTTP_NETWORK | 0 `requestfailed`, 0 HTTP 400+, 0 CORS, 0 asset 404 |
+| 14 | WEBUI_ROUTE | canonical routes verified, no stale assets |
+| 15 | VISIBLE_UI | correct version in footer, no blank screens |
+| 16 | RUNTIME_PROMOTION | no unproven ACTIVE_PARTIAL or simulated surfaces |
+| 17 | E2E_DESKTOP_WEBUI | `pnpm run test:e2e` or `pnpm run e2e:desktop` → PASS |
+| 18 | AUTOHEAL | `bash scripts/autoheal/detect_recurrence.sh` → PASS |
+| 19 | VALIDATORS | `pnpm run verify` → all verify:* PASS |
+| 20 | RELEASE_SURFACE_PRECHECK | `gate-stable-artifact-freshness.sh` → PASS, all manifests at same version |
+| 21 | ROLLBACK | rollback path documented, previous artifact reachable |
+| 22 | PROOF_PACK | `BUILD_PERMISSION_MATRIX.md` complete with all lanes in proof pack |
+
+### DEV_TAURI_RUNTIME detail (Lane 10 — added 2026-05-17)
+
+This lane is mandatory on every BUILD and BUILD ALL:
+1. `pnpm run sync:versions` — propagates `{version}-dev` to `runtime/dev/tauri.conf.json` and window title.
+2. Assert `runtime/dev/tauri.conf.json` `.version == "{package.json version}-dev"`. Stale dev version = FAIL.
+3. `pnpm run dev:tauri` → wait for `BOOT:READY` in logs.
+4. Confirm window title `Titan-Dev vX.Y.Z [DEV]` — must match current version exactly.
+5. `warn=0 error=0` in TAURI_MONITOR. Any backend error = FAIL.
+
+### Validator commands quick-reference
+
+All must exit 0 before build:
+```bash
+bash scripts/verify/verify-pre-build-certifier-agent.sh
+bash scripts/verify/gate-build-truth.sh
+bash scripts/verify/gate-version-truth.sh
+bash scripts/verify/gate-stable-artifact-freshness.sh
+bash scripts/verify/verify_instruction_layers.sh
+bash scripts/verify/verify_no_doctrine_duplication.sh
+bash scripts/verify/verify_status_vocabulary.sh
+bash scripts/verify/verify_agents_index.sh
+bash scripts/verify/verify_prompt_files_index.sh
+bash scripts/verify/verify_local_markers_consistency.sh
+bash scripts/verify/verify-vscode-agent-workflow.sh
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+```
 
 ## Proof Discipline
 
