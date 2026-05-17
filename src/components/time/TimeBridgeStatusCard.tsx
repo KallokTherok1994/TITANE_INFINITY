@@ -44,7 +44,7 @@ function renderRunningLabel(s: TimeToTwinObserverStatus | null): string {
 function renderRunningTone(label: string): string {
   switch (label) {
     case 'running':
-      return 'bg-emerald-700/40 text-emerald-200 border-emerald-600';
+      return 'bg-success-700/40 text-success-100 border-success-600';
     case 'paused':
       return 'bg-amber-700/40 text-amber-200 border-amber-600';
     default:

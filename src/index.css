@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@config '../tailwind.config.ts';
 @import 'tw-animate-css';
 @import './styles/local-fonts.css';
 @import './styles/titanium-dark-tokens.css' layer(tokens);
@@ -91,7 +92,7 @@ body,
   margin-top: auto !important;
 }
 /**
- * TITANE∞ v30.0.0 — MAIN STYLESHEET (TITANIUM DARK)
+ * TITANE∞ v35.1.9 — MAIN STYLESHEET (TITANIUM DARK)
  *
  * CRITICAL: ALL @import statements MUST be at the TOP of this file
  * PostCSS strict mode requires @import before any other rules

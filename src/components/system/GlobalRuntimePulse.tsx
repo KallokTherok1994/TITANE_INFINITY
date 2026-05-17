@@ -47,7 +47,7 @@ const STATUS_META: Record<
     icon: '●',
     label: 'LIVE',
     colorClass:
-      'bg-emerald-900/80 text-emerald-200 border-emerald-500/60 shadow-emerald-500/20',
+      'bg-success-900/80 text-success-100 border-success-500/60 shadow-success-500/20',
     pulse: false,
   },
   PARTIAL: {
