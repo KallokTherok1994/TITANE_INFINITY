@@ -1,3 +1,20 @@
+## v35.1.9 - 2026-05-17 - BUILD ALL — frontend audit UI/UX + governance pre-build procedures
+
+- **Mode** : DURABLE | **Bump Rule 13** : 35.1.8 -> 35.1.9 (patch)
+- **Scope session** : audit frontend complet (design system conformité, v30.0.0→v35.1.8 headers, titanium CSS vars), governance pre-build BUILD_PERMISSION_MATRIX 22 lanes documentées dans AGENTS.md + copilot-instructions.md, runtime/dev/tauri.conf.json sync automatique via sync:versions.
+- **Gates pre-build** : `gate-build-truth.sh` PASS, `gate-version-truth.sh` PASS, `gate-stable-artifact-freshness.sh` PASS, `verify-pre-build-certifier-agent.sh` PASS, `test:rust` 4278/4278 PASS, `guard:ipc-contract` 42/42 PASS, frontend 9514/9514 PASS, TS 0 erreurs, ESLint 0 erreurs.
+- **DEV Tauri runtime** : BOOT:READY confirmé (v35.1.9-dev, warn=0 error=0).
+- **Artifacts produits** :
+  - `src-tauri/target/release/bundle/appimage/Titan-Stable_35.1.9_amd64.AppImage`
+    sha256 `9c924cca70655654a56afa75aeff2f425e86844c894704aeaf82f84bd9868315`
+  - `src-tauri/target/release/bundle/deb/Titan-Stable_35.1.9_amd64.deb`
+    sha256 `84f706ca56f0739bca101742e9ebbd634cd6f235e9632f7901b65b88d8b14d17`
+- **deployment/latest** : `MANIFEST.json` v35.1.9 avec checksums SHA256.
+- **Post-build** : `update-desktop-icons.sh` PASS (sync système BLOCKED_SUDO_REQUIRED attendu sans sudo).
+- **BUILD_PERMISSION_MATRIX** : `proof_packs/BUILD_ALL_35.1.9_$(date +%Y%m%d)/` — toutes lanes PASS sauf VISIBLE_UI/WEBUI_ROUTE/E2E_DESKTOP_WEBUI (NOT_APPLICABLE_WITH_PROOF — preuves browser non capturées en mode CLI).
+
+---
+
 ## v35.1.7 - 2026-05-16 - BUILD ALL + UI DESKTOP/BROWSER PROOFS (BLOCKED_SUDO_REQUIRED system install)
 
 - **Mode** : DURABLE | **Bump Rule 13** : 35.1.6 -> 35.1.7 (patch)

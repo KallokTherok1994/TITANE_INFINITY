@@ -1,21 +1,18 @@
 {
-  "version": "35.1.7",
-  "timestamp": "2026-05-16T05:21:27.134Z",
-  "artifacts": [
-    {
-      "name": "titane-infinity_35.1.7_amd64.AppImage",
-      "sha256": "3d050a88b094e8439873c93a11c26e938f9e652668d2cff380f5fc02b2d24f25",
-      "size": 99564024
+  "version": "35.1.9",
+  "build_timestamp": "2026-05-17T04:48:12Z",
+  "artifacts": {
+    "appimage": {
+      "filename": "Titan-Stable_35.1.9_amd64.AppImage",
+      "sha256": "9c924cca70655654a56afa75aeff2f425e86844c894704aeaf82f84bd9868315",
+      "size_bytes": 99564024
     },
-    {
-      "name": "titane-infinity_35.1.7_amd64.deb",
-      "sha256": "0e97bbbdc205d39f763b35c7e778d0032c1161fb4db58122e3bfc435675f4f99",
-      "size": 25434100
-    },
-    {
-      "name": "titane-infinity-35.1.7-1.x86_64.rpm",
-      "sha256": "1d3625ac9a5f15be7eab1ceb993c42c9ac564c699b69cb5808676b6542957d08",
-      "size": 25434150
+    "deb": {
+      "filename": "Titan-Stable_35.1.9_amd64.deb",
+      "sha256": "84f706ca56f0739bca101742e9ebbd634cd6f235e9632f7901b65b88d8b14d17",
+      "size_bytes": 25445810
     }
-  ]
+  },
+  "platform": "linux-x86_64",
+  "channel": "stable"
 }

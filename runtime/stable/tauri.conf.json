@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "Titan-Stable",
-  "version": "35.1.8",
+  "version": "35.1.9",
   "identifier": "com.titane.infinity.stable",
   "build": {
     "beforeDevCommand": "",
@@ -43,14 +43,14 @@
     "resources": [],
     "copyright": "© 2025 TITANE∞",
     "category": "Productivity",
-    "shortDescription": "TITANE∞ v35.1.7 - Cognitive Operating System (Stable Runtime)",
-    "longDescription": "TITANE∞ Stable Runtime v35.1.7 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
+    "shortDescription": "TITANE∞ v35.1.9 - Cognitive Operating System (Stable Runtime)",
+    "longDescription": "TITANE∞ Stable Runtime v35.1.9 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "Titan-Stable v35.1.7 — TITANE∞ Cognitive OS",
+        "title": "Titan-Stable v35.1.9 — TITANE∞ Cognitive OS",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,
