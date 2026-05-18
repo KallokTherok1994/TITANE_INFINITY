@@ -1,4 +1,6 @@
 ## 2026-05-14 — v34.1.0 — `clear_webview_cache` IPC + Remote Gateway whitelist +12
+> 2026-05-18 — Progression/XP fusion truth: aucun nouveau contrat IPC n est ajoute. Les surfaces Progression consomment la verite persistante existante `experience_get_state` / `experience_update_state`; `exp_get_global_state` et `progression_save_state` restent des surfaces legacy/compatibilite, mais la voie frontend active ne cree plus de persistance XP separee.
+
 
 ### Nouvelle commande IPC
 

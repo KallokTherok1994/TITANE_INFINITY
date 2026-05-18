@@ -1,3 +1,7 @@
+## 2026-05-18 — Progression/XP canonical fusion truth
+
+> Ring 3-4: `/progression` redirige maintenant vers la surface canonique `/titane?tab=progression`, tandis que `/experience` reste la page detail XP/historique. La verite runtime XP est unifiee autour de `src/services/experienceService.ts` (`ExperienceState`) et des calculs `src/services/xp/xpCanonical.ts`; `src/cognitive/progression/xpEngine.ts` devient un adaptateur de compatibilite et `src/core/experience/XP_ENGINE.ts` un miroir legacy sans persistance `xp_state` divergente. Aucun default Ollama n est modifie.
+
 ## 2026-05-14 — v34.2.0 — TanStack Query migration (palier 1/3) : queryKeys factory + 5 hooks pilotes IPC + DevTools
 
 > Patch bump 34.1.0 → 34.2.0. Premier palier de la MAJ MAJEUR UI v35.0.0 ; mise en place de la fondation TanStack Query côté client sans toucher aux surfaces Zustand existantes (additif uniquement).

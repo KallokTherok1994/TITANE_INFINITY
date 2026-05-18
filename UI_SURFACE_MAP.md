@@ -729,6 +729,14 @@
   - `experience-history-item`
 - Preuve associée: Vitest `src/pages/__tests__/Experience.test.tsx` + Playwright `e2e/desktop/xp-history-stats.e2e.spec.ts`
 
+# [2026-05-18] Progression/XP canonical fusion truth
+
+- Surface canonique Progression: `/titane?tab=progression`; alias `/progression` redirige directement vers cet onglet.
+- Surface detail XP: `/experience`, conserve les statistiques, domaines et historique.
+- Verite runtime: `experienceService` + `ExperienceState`; `xpEngine` et `XP_ENGINE` sont des facades de compatibilite sans persistance XP divergente.
+- Selectors stables: `tab-progression`, `titane-panel-progression`, `progression-section`, `progression-chat-message-count`, `page-experience`.
+- Preuve E2E ciblee: `e2e/features/progression-xp-fusion.spec.ts` verifie `/progression` -> `/titane?tab=progression`, `/experience` et le reflet du gain chat depuis `ExperienceState`.
+
 # [2026-04-23] Monitoring sync supervisor runtime truth
 
 - Surface canonique: `monitoring-dashboard`
