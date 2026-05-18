@@ -1101,6 +1101,13 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - Read-only truth marker: `total-dev-git-readonly-note`
 - Runtime truth: le panneau Git TOTAL_DEV n expose plus d actions d ecriture et documente explicitement une surface d inspection locale seulement. La voie canonique backend `total_dev_git_op` accepte maintenant uniquement les operations read-only qualifiees et leurs arguments exacts.
 
+## TOTAL_DEV Ollama DEV Certification Surface
+
+- Route canonique: `/total-dev` onglet `certification`
+- Root shell test id: `total-dev-certification-panel`
+- Action selectors stables: `total-dev-certification-profile-ollama-global-awareness`, `total-dev-certification-profile-ollama-live`, `total-dev-certification-profile-ollama-performance`, `total-dev-certification-profile-ollama-stack`, `total-dev-certification-profile-browser-total-dev-proof`, `total-dev-certification-profile-desktop-total-dev-proof`
+- Runtime truth: la surface affiche Product Chat `gemma2:2b`, Ollama DEV `qwen3.5:9b`, et le chemin du manifest `reports/ollama-dev-awareness/latest.json`. Les actions passent exclusivement par `total_dev_run_certification_profile` et publient `PASS`, `FAIL` ou `BLOCKED` sans champ de commande libre.
+
 ## Conversation Fullscreen Shell
 
 - Root shell contract: la chaîne fullscreen `AppShell -> titane-page--conversation -> titane-content--conversation -> conversation-container` doit rester parent-bound (`flex/min-height:0/max-height:100%`) et non pilotée par un double offset ou une hauteur viewport forcée.

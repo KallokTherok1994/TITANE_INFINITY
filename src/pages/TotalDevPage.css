@@ -748,6 +748,181 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
+   OLLAMA DEV CERTIFICATION
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-cert-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid #1e2a3a;
+}
+
+.total-dev-cert-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px;
+  background: #0a1019;
+  border: 1px solid #1f3854;
+  border-radius: 6px;
+}
+
+.total-dev-cert-label {
+  color: #91a7c5;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.total-dev-cert-card strong {
+  color: #cbe3ff;
+  font-size: 12px;
+  word-break: break-word;
+}
+
+.total-dev-cert-card small {
+  color: #8ba3c0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.total-dev-cert-note {
+  margin: 0;
+  padding: 10px 14px;
+  border-bottom: 1px solid #1a2230;
+  color: #a9b6c9;
+  background: #080d14;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.total-dev-cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  padding: 14px;
+  border-bottom: 1px solid #1e2a3a;
+}
+
+.total-dev-cert-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 92px;
+  padding: 10px;
+  text-align: left;
+  background: #101620;
+  border: 1px solid #1e2a3a;
+  border-radius: 6px;
+  color: #c9d1d9;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.total-dev-cert-profile:hover:not(:disabled) {
+  border-color: #2d5fa8;
+  background: #121c2a;
+}
+
+.total-dev-cert-profile:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.total-dev-cert-profile-label {
+  color: #79c0ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.total-dev-cert-profile-desc {
+  flex: 1;
+  color: #8ba3c0;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.total-dev-cert-profile-status {
+  align-self: flex-start;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #161c27;
+  color: #9fb2ca;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.total-dev-cert-profile--pass .total-dev-cert-profile-status {
+  background: #122813;
+  color: #56d364;
+}
+
+.total-dev-cert-profile--fail .total-dev-cert-profile-status {
+  background: #2d1919;
+  color: #ff7b72;
+}
+
+.total-dev-cert-profile--blocked .total-dev-cert-profile-status {
+  background: #2d2200;
+  color: #d29922;
+}
+
+.total-dev-cert-profile--running .total-dev-cert-profile-status {
+  background: #13263d;
+  color: #79c0ff;
+}
+
+.total-dev-cert-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px;
+  background: #060810;
+}
+
+.total-dev-cert-empty {
+  color: #8ba3c0;
+  margin: 0;
+}
+
+.total-dev-cert-output-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #9fb2ca;
+  font-size: 10px;
+}
+
+.total-dev-cert-output pre {
+  margin: 0;
+  color: #c9d1d9;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.total-dev-cert-artifacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.total-dev-cert-artifacts span {
+  padding: 3px 7px;
+  background: #101620;
+  border: 1px solid #1e2a3a;
+  border-radius: 4px;
+  color: #9fb2ca;
+  font-size: 10px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
    DEV ACTIONS
 ───────────────────────────────────────────────────────────────── */
 
@@ -846,6 +1021,7 @@
 .total-dev-console-output::-webkit-scrollbar,
 .total-dev-git-output::-webkit-scrollbar,
 .total-dev-file-result::-webkit-scrollbar,
+.total-dev-cert-output::-webkit-scrollbar,
 .total-dev-actions-output::-webkit-scrollbar {
   width: 5px;
 }
@@ -854,6 +1030,7 @@
 .total-dev-console-output::-webkit-scrollbar-thumb,
 .total-dev-git-output::-webkit-scrollbar-thumb,
 .total-dev-file-result::-webkit-scrollbar-thumb,
+.total-dev-cert-output::-webkit-scrollbar-thumb,
 .total-dev-actions-output::-webkit-scrollbar-thumb {
   background: #2a3a50;
   border-radius: 3px;
@@ -871,5 +1048,9 @@
 
   .total-dev-actions-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .total-dev-cert-summary {
+    grid-template-columns: 1fr;
   }
 }

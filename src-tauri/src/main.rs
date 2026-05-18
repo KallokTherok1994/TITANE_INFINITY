@@ -2979,6 +2979,7 @@ fn main() {
             commands::total_dev_commands::total_dev_revoke,
             commands::total_dev_commands::total_dev_git_op,
             commands::total_dev_commands::total_dev_run_command,
+            commands::total_dev_commands::total_dev_run_certification_profile,
             commands::total_dev_commands::total_dev_read_file,
 
             // Governed network gateway — frontend httpClient now routes via IPC

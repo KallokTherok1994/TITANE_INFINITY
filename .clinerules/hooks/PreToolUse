@@ -30,6 +30,34 @@ if [[ "$tool_name" == "execute_command" ]]; then
   fi
 fi
 
+# Ollama Dev readiness check
+if [[ "$tool_name" == "execute_command" ]]; then
+  command=$(echo "$input" | jq -r '.preToolUse.parameters.command // ""')
+  if echo "$command" | grep -qiE 'ollama run|curl.*11434|api/generate|ollama.*generate'; then
+    if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+      context="OLLAMA_DEV_DEGRADED: Ollama Dev server (http://127.0.0.1:11434) is DOWN.\n"
+      context+="Command will run but may fail if it requires Ollama.\n"
+      context+="Start Ollama: 'ollama serve' or check ~/.clinerules/50-ollama-dev.md"
+
+      jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
+      exit 0
+    fi
+  fi
+fi
+
+# Warning if writing to Ollama Dev config files
+if [[ "$tool_name" == "write_to_file" ]]; then
+  file_path=$(echo "$input" | jq -r '.preToolUse.parameters.path // ""')
+  if [[ "$file_path" =~ \.clinerules/(50-ollama-dev|hooks/) ]] || [[ "$file_path" == "OLLAMA_RUNTIME_MAP.md" ]]; then
+    context="OLLAMA_DEV_CONFIG_CHANGE: Modifying Ollama Dev configuration.\n"
+    context+="Ensure alignment with VSCode (.vscode/mcp.json) and Total Dev (total_dev_commands.rs).\n"
+    context+="After change, run: bash scripts/dev/ollama-dev-verify.sh --router=cline"
+
+    jq -n --arg ctx "$context" '{"cancel": false, "contextModification": $ctx}'
+    exit 0
+  fi
+fi
+
 # Écriture de fichiers — vérification secrets uniquement
 if [[ "$tool_name" == "write_to_file" ]]; then
   # Empêcher l'écriture de secrets dans src/** (avertissement non-bloquant)

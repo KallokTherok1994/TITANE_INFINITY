@@ -84,6 +84,20 @@ interface FileResult {
   error?: string;
 }
 
+type CertificationStatus = 'PASS' | 'FAIL' | 'BLOCKED' | 'RUNNING' | 'IDLE';
+
+interface CertificationResult {
+  ok: boolean;
+  profile_id: string;
+  status: CertificationStatus;
+  command: string;
+  exit_code: number;
+  duration_ms: number;
+  output_tail: string;
+  artifact_paths: string[];
+  error?: string;
+}
+
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -102,6 +116,39 @@ interface ConsoleEntry {
 
 const APP_RUNTIME_VERSION = __APP_VERSION__;
 
+const OLLAMA_DEV_CERTIFICATION_PROFILES = [
+  {
+    id: 'ollama-global-awareness',
+    label: 'Awareness',
+    description: 'Manifest global repo + gates instructions',
+  },
+  {
+    id: 'ollama-live',
+    label: 'Live',
+    description: 'Serveur Ollama + modèle qwen3.5:9b + boundary',
+  },
+  {
+    id: 'ollama-performance',
+    label: 'Performance',
+    description: 'Smoke perf avec métriques Ollama API',
+  },
+  {
+    id: 'ollama-stack',
+    label: 'Stack',
+    description: 'Gate complet Ollama DEV scellé',
+  },
+  {
+    id: 'browser-total-dev-proof',
+    label: 'WebUI',
+    description: 'Preuve visible Playwright /total-dev',
+  },
+  {
+    id: 'desktop-total-dev-proof',
+    label: 'Desktop',
+    description: 'Preuve native WDIO avec unlock token env',
+  },
+] as const;
+
 // ─────────────────────────────────────────────────────────────────
 // ARCHITECTURE CONTEXT INJECTION
 // Used as system prompt prefix for QWEN-Coder
@@ -115,6 +162,8 @@ ARCHITECTURE CANONIQUE:
 - Provider runtime: Tauri uniquement (prd). Pas de fetch autonome en production.
 - Capability Tauri active: developer_mode, total_dev, self_heal, persistence, chat_ai
 - Stack: React + TypeScript + Tauri 2.10 + Rust 1.94 + pnpm 10 + Node 24
+- Awareness Ollama DEV: reports/ollama-dev-awareness/latest.json est le manifeste compact repo-owned.
+- Certification visible: onglet Certification via profils fixes total_dev_run_certification_profile.
 
 IDENTITÉ DE L'AGENT:
 - Architecte + Intégrateur + Auditeur + Réparateur + Certificateur
@@ -366,28 +415,21 @@ const ChatDevPanel = memo<{ lockState: LockState }>(({ lockState }) => {
         content: m.content,
       }));
 
-      // Utiliser la commande chat canonique avec provider Ollama + modele qwen
+      // Utiliser la commande Ollama unifiée (production) via la voie IPC canonique
       const result = await secureInvoke<{
-        ok?: boolean;
-        content?: string;
-        message?: string;
-        error?: string;
-        response?: string;
-      }>(TAURI_COMMANDS.CHAT_GENERATE, {
-        message: txt,
-        context: {
-          system_prompt: systemPrompt,
-          history: chatHistory,
-          provider: 'ollama',
-          model: 'qwen3.5:9b',
-          mode: 'total_dev',
-        },
+        ok: boolean;
+        content: string;
+        error?: string | null;
+      }>(TAURI_COMMANDS.OLLAMA_GENERATE, {
+        model: 'qwen3.5:9b',
+        prompt: txt,
+        timeout_secs: 90,
+        system_prompt: systemPrompt,
+        temperature: 0.7,
       });
 
       const responseText =
-        result.content ??
-        result.message ??
-        result.response ??
+        result.content ||
         (result.error
           ? `[Erreur provider: ${result.error}]`
           : '[Aucune réponse du provider QWEN Dev. Verifiez que Ollama est actif avec qwen3.5:9b]');
@@ -844,6 +886,157 @@ const FileInspectorPanel = memo<{ lockState: LockState }>(({ lockState }) => {
 FileInspectorPanel.displayName = 'FileInspectorPanel';
 
 // ─────────────────────────────────────────────────────────────────
+// OLLAMA DEV CERTIFICATION
+// ─────────────────────────────────────────────────────────────────
+const CertificationPanel = memo<{ lockState: LockState }>(({ lockState }) => {
+  const [results, setResults] = useState<Record<string, CertificationResult>>({});
+  const [runningProfile, setRunningProfile] = useState<string | null>(null);
+
+  const runProfile = useCallback(
+    async (profileId: string) => {
+      if (lockState !== 'UNLOCKED' || runningProfile) return;
+
+      setRunningProfile(profileId);
+      setResults(prev => ({
+        ...prev,
+        [profileId]: {
+          ok: false,
+          profile_id: profileId,
+          status: 'RUNNING',
+          command: 'pending',
+          exit_code: -1,
+          duration_ms: 0,
+          output_tail: 'Profil de certification en cours...',
+          artifact_paths: [],
+        },
+      }));
+
+      try {
+        const result = await secureInvoke<CertificationResult>(
+          TAURI_COMMANDS.TOTAL_DEV_RUN_CERTIFICATION_PROFILE,
+          { profileId }
+        );
+        setResults(prev => ({ ...prev, [profileId]: result }));
+      } catch (e) {
+        setResults(prev => ({
+          ...prev,
+          [profileId]: {
+            ok: false,
+            profile_id: profileId,
+            status: 'FAIL',
+            command: 'total_dev_run_certification_profile',
+            exit_code: -1,
+            duration_ms: 0,
+            output_tail: '',
+            artifact_paths: [],
+            error: String(e),
+          },
+        }));
+      } finally {
+        setRunningProfile(null);
+      }
+    },
+    [lockState, runningProfile]
+  );
+
+  const resultValues = Object.values(results);
+  const latestResult = runningProfile
+    ? results[runningProfile]
+    : resultValues[resultValues.length - 1];
+
+  return (
+    <div className="total-dev-panel" data-testid="total-dev-certification-panel">
+      <div className="total-dev-panel-header">
+        <span>Ollama DEV Certification</span>
+        <span className="total-dev-provider-badge">qwen3.5:9b · loopback MCP</span>
+      </div>
+
+      <div className="total-dev-cert-summary">
+        <div className="total-dev-cert-card" data-testid="ollama-dev-model-status">
+          <span className="total-dev-cert-label">DEV model</span>
+          <strong>qwen3.5:9b</strong>
+          <small>VS Code MCP + TOTAL_DEV uniquement</small>
+        </div>
+        <div className="total-dev-cert-card" data-testid="ollama-product-boundary-status">
+          <span className="total-dev-cert-label">Product Chat</span>
+          <strong>gemma2:2b</strong>
+          <small>Aucun fallback DEV autorisé</small>
+        </div>
+        <div className="total-dev-cert-card" data-testid="ollama-dev-awareness-status">
+          <span className="total-dev-cert-label">Awareness manifest</span>
+          <strong>reports/ollama-dev-awareness/latest.json</strong>
+          <small>Généré par le profil Awareness</small>
+        </div>
+      </div>
+
+      <p className="total-dev-cert-note">
+        Profils fixes seulement: aucune commande shell libre, aucune lecture .env, preuve
+        classée PASS / FAIL / BLOCKED avec chemins d artefacts.
+      </p>
+
+      <div className="total-dev-cert-grid">
+        {OLLAMA_DEV_CERTIFICATION_PROFILES.map(profile => {
+          const result = results[profile.id];
+          const status = result?.status ?? 'IDLE';
+          const isRunning = runningProfile === profile.id;
+          return (
+            <button
+              key={profile.id}
+              type="button"
+              className={`total-dev-cert-profile total-dev-cert-profile--${status.toLowerCase()}`}
+              data-testid={`total-dev-certification-profile-${profile.id}`}
+              disabled={lockState !== 'UNLOCKED' || Boolean(runningProfile)}
+              onClick={() => runProfile(profile.id)}
+              title={profile.description}
+            >
+              <span className="total-dev-cert-profile-label">{profile.label}</span>
+              <span className="total-dev-cert-profile-desc">{profile.description}</span>
+              <span className="total-dev-cert-profile-status">
+                {isRunning ? 'RUNNING' : status}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="total-dev-cert-output" data-testid="total-dev-certification-output">
+        {!latestResult && (
+          <p className="total-dev-cert-empty">
+            Sélectionnez un profil pour produire une preuve visible.
+          </p>
+        )}
+        {latestResult && (
+          <>
+            <div className="total-dev-cert-output-meta">
+              <span
+                className={
+                  latestResult.status === 'PASS'
+                    ? 'total-dev-exit-ok'
+                    : 'total-dev-exit-err'
+                }
+              >
+                {latestResult.profile_id}: {latestResult.status}
+              </span>
+              <span>exit: {latestResult.exit_code}</span>
+              <span>{latestResult.duration_ms}ms</span>
+            </div>
+            <pre>{latestResult.output_tail || latestResult.error || 'Aucun output.'}</pre>
+            {latestResult.artifact_paths.length > 0 && (
+              <div className="total-dev-cert-artifacts">
+                {latestResult.artifact_paths.map(pathName => (
+                  <span key={pathName}>{pathName}</span>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+});
+CertificationPanel.displayName = 'CertificationPanel';
+
+// ─────────────────────────────────────────────────────────────────
 // DEV ACTIONS
 // ─────────────────────────────────────────────────────────────────
 const DevActionsPanel = memo<{ lockState: LockState }>(({ lockState }) => {
@@ -931,7 +1124,7 @@ DevActionsPanel.displayName = 'DevActionsPanel';
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────────
 
-type TabId = 'chat' | 'console' | 'git' | 'files' | 'actions';
+type TabId = 'chat' | 'certification' | 'console' | 'git' | 'files' | 'actions';
 
 export const TotalDevPage: React.FC = () => {
   const { lockState, expiresAt, setLockState, setExpiresAt } = useLockState();
@@ -962,6 +1155,7 @@ export const TotalDevPage: React.FC = () => {
 
   const tabs: { id: TabId; label: string }[] = [
     { id: 'chat', label: '💬 CHAT DEV' },
+    { id: 'certification', label: '✅ CERTIFICATION' },
     { id: 'console', label: '🖥️ CONSOLE' },
     { id: 'git', label: '🌿 GIT' },
     { id: 'files', label: '📂 FICHIERS' },
@@ -1036,6 +1230,9 @@ export const TotalDevPage: React.FC = () => {
           {/* TAB CONTENT */}
           <div className="total-dev-tab-content">
             {activeTab === 'chat' && <ChatDevPanel lockState={lockState} />}
+            {activeTab === 'certification' && (
+              <CertificationPanel lockState={lockState} />
+            )}
             {activeTab === 'console' && <ConsoleDevPanel lockState={lockState} />}
             {activeTab === 'git' && <GitPanel lockState={lockState} />}
             {activeTab === 'files' && <FileInspectorPanel lockState={lockState} />}

@@ -5,7 +5,7 @@
 - scoped_stack_status: OLLAMA_DEV_STACK_SEALED
 - tuning_matrix_verdict: LOCAL_TUNING_PROFILE_RECORDED
 - warm_result_note: WARM_MODEL_RESULT
-- generated_at_utc: 2026-05-17T17:51:58Z
+- generated_at_utc: 2026-05-18T02:56:24Z
 
 ## Model
 
@@ -28,7 +28,7 @@ export TITANE_OLLAMA_DEV_TEMPERATURE=0
 
 ## Fast smoke profile
 
-- ctx=4096 predict=32 timeout=60 elapsed=1s
+- ctx=1024 predict=16 timeout=30 elapsed=0s
 
 ## Stable work profile
 

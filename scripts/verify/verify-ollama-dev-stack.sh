@@ -13,6 +13,9 @@ pnpm run verify:ollama:dev:live
 echo "[STACK] Static boundary"
 pnpm run verify:ollama:boundary
 
+echo "[STACK] Cross-router unification (VSCode / Cline / Total Dev / Console)"
+bash scripts/dev/ollama-dev-verify.sh --router=all
+
 echo "[STACK] Performance smoke"
 pnpm run verify:ollama:dev:performance
 
@@ -22,9 +25,8 @@ pnpm vitest run tests/unit/scripts/ollamaDevConfig.test.ts
 echo "[STACK] Boundary doctrine tests"
 pnpm vitest run tests/unit/scripts/ollamaBoundaryDoctrine.test.ts tests/unit/scripts/ollamaDevLiveScript.test.ts
 
-if [ -f tests/unit/scripts/ollamaDevLiveScript.test.ts ]; then
-  :
-fi
+echo "[STACK] Cross-router test suite (6 lanes, 35+ checks)"
+pnpm vitest run tests/unit/scripts/ollamaDevAllRouters.test.ts
 
 echo "[STACK] Agent stack"
 pnpm run audit:agents:stack

@@ -13,8 +13,10 @@
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::path::{Component, Path, PathBuf};
-use std::process::Command as ProcessCommand;
+use std::process::{Command as ProcessCommand, Stdio};
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::thread;
+use std::time::{Duration, Instant};
 
 // ─────────────────────────────────────────────────────────────────
 // SHA-256 hash of the super-admin unlock token.
@@ -97,6 +99,31 @@ pub struct TotalDevFileResult {
     pub error: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TotalDevCertificationProfileResult {
+    pub ok: bool,
+    pub profile_id: String,
+    pub status: String, // "PASS" | "FAIL" | "BLOCKED"
+    pub command: String,
+    pub exit_code: i32,
+    pub duration_ms: u64,
+    pub output_tail: String,
+    pub artifact_paths: Vec<String>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone)]
+struct CertificationProfile {
+    profile_id: &'static str,
+    command: &'static str,
+    program: &'static str,
+    args: &'static [&'static str],
+    env: &'static [(&'static str, &'static str)],
+    required_env: &'static [&'static str],
+    timeout_secs: u64,
+    artifact_paths: &'static [&'static str],
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -154,6 +181,206 @@ const ALLOWED_TOTAL_DEV_COMMANDS: &[&str] = &[
     "pnpm run build:tauri:e2e",
     "pnpm run build:production",
 ];
+
+fn certification_profile(profile_id: &str) -> Option<CertificationProfile> {
+    match profile_id {
+        "ollama-live" => Some(CertificationProfile {
+            profile_id: "ollama-live",
+            command: "pnpm run verify:ollama:dev:live",
+            program: "pnpm",
+            args: &["run", "verify:ollama:dev:live"],
+            env: &[],
+            required_env: &[],
+            timeout_secs: 180,
+            artifact_paths: &["reports/ollama-dev-awareness/latest.json"],
+        }),
+        "ollama-performance" => Some(CertificationProfile {
+            profile_id: "ollama-performance",
+            command: "pnpm run verify:ollama:dev:performance",
+            program: "pnpm",
+            args: &["run", "verify:ollama:dev:performance"],
+            env: &[],
+            required_env: &[],
+            timeout_secs: 240,
+            artifact_paths: &[
+                "reports/ollama-dev-performance/latest.json",
+                "reports/ollama-dev-performance/latest.md",
+            ],
+        }),
+        "ollama-stack" => Some(CertificationProfile {
+            profile_id: "ollama-stack",
+            command: "pnpm run verify:ollama:dev:stack",
+            program: "pnpm",
+            args: &["run", "verify:ollama:dev:stack"],
+            env: &[],
+            required_env: &[],
+            timeout_secs: 600,
+            artifact_paths: &[
+                "reports/ollama-dev-awareness/latest.json",
+                "reports/ollama-dev-performance/latest.json",
+            ],
+        }),
+        "ollama-global-awareness" => Some(CertificationProfile {
+            profile_id: "ollama-global-awareness",
+            command: "pnpm run verify:ollama:dev:global-awareness",
+            program: "pnpm",
+            args: &["run", "verify:ollama:dev:global-awareness"],
+            env: &[],
+            required_env: &[],
+            timeout_secs: 240,
+            artifact_paths: &[
+                "reports/ollama-dev-awareness/latest.json",
+                "reports/ollama-dev-awareness/latest.md",
+            ],
+        }),
+        "browser-total-dev-proof" => Some(CertificationProfile {
+            profile_id: "browser-total-dev-proof",
+            command: "PLAYWRIGHT_JSON_OUTPUT_NAME=reports/playwright-total-dev/results.chromium.json pnpm exec playwright test e2e/total-dev-smoke.spec.ts --project=chromium --reporter=list,json --output=reports/playwright-total-dev",
+            program: "pnpm",
+            args: &[
+                "exec",
+                "playwright",
+                "test",
+                "e2e/total-dev-smoke.spec.ts",
+                "--project=chromium",
+                "--reporter=list,json",
+                "--output=reports/playwright-total-dev",
+            ],
+            env: &[(
+                "PLAYWRIGHT_JSON_OUTPUT_NAME",
+                "reports/playwright-total-dev/results.chromium.json",
+            )],
+            required_env: &[],
+            timeout_secs: 300,
+            artifact_paths: &[
+                "reports/playwright-total-dev",
+                "reports/playwright-total-dev/results.chromium.json",
+            ],
+        }),
+        "desktop-total-dev-proof" => Some(CertificationProfile {
+            profile_id: "desktop-total-dev-proof",
+            command: "WDIO_SPEC=e2e/desktop/total-dev.wdio.test.js pnpm run e2e:desktop:run",
+            program: "pnpm",
+            args: &["run", "e2e:desktop:run"],
+            env: &[("WDIO_SPEC", "e2e/desktop/total-dev.wdio.test.js")],
+            required_env: &["TITANE_TOTAL_DEV_E2E_UNLOCK_TOKEN"],
+            timeout_secs: 900,
+            artifact_paths: &["reports/e2e-desktop"],
+        }),
+        _ => None,
+    }
+}
+
+fn redact_total_dev_output(input: &str) -> String {
+    input
+        .lines()
+        .map(|line| {
+            let upper = line.to_ascii_uppercase();
+            if upper.contains("TOKEN")
+                || upper.contains("SECRET")
+                || upper.contains("PASSWORD")
+                || upper.contains("GITHUB_TOKEN")
+                || upper.contains("OPENAI")
+                || upper.contains("ANTHROPIC")
+                || upper.contains("GEMINI")
+            {
+                "[REDACTED_TOTAL_DEV_CERTIFICATION_LINE]".to_string()
+            } else {
+                line.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn tail_output(input: &str, max_chars: usize) -> String {
+    let sanitized = redact_total_dev_output(input);
+    let char_count = sanitized.chars().count();
+    if char_count <= max_chars {
+        return sanitized;
+    }
+
+    let tail = sanitized
+        .chars()
+        .skip(char_count.saturating_sub(max_chars))
+        .collect::<String>();
+    format!("[...truncated...]\n{}", tail)
+}
+
+fn classify_certification_status(exit_code: i32, output: &str) -> String {
+    if exit_code == 0 {
+        return "PASS".to_string();
+    }
+
+    if output.contains("BLOCKED")
+        || output.contains("BLOCKER")
+        || output.contains("WORKSPACE_AHEAD_OF_RUNTIME")
+        || output.contains("NO_VALID_BINARY")
+        || output.contains("tauri-driver")
+        || output.contains("appsink")
+    {
+        "BLOCKED".to_string()
+    } else {
+        "FAIL".to_string()
+    }
+}
+
+fn run_certification_process(
+    profile: &CertificationProfile,
+) -> Result<(i32, u64, String), String> {
+    let workspace = workspace_dir();
+    let start = Instant::now();
+    let mut command = ProcessCommand::new(profile.program);
+    command
+        .args(profile.args)
+        .current_dir(&workspace)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+
+    for (key, value) in profile.env {
+        command.env(key, value);
+    }
+
+    let mut child = command
+        .spawn()
+        .map_err(|e| format!("certification profile spawn error: {}", e))?;
+
+    loop {
+        if child
+            .try_wait()
+            .map_err(|e| format!("certification profile wait error: {}", e))?
+            .is_some()
+        {
+            let output = child
+                .wait_with_output()
+                .map_err(|e| format!("certification profile output error: {}", e))?;
+            let duration_ms = start.elapsed().as_millis() as u64;
+            let exit_code = output.status.code().unwrap_or(-1);
+            let combined = format!(
+                "{}{}",
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr)
+            );
+            return Ok((exit_code, duration_ms, combined));
+        }
+
+        if start.elapsed() > Duration::from_secs(profile.timeout_secs) {
+            let _ = child.kill();
+            let output = child
+                .wait_with_output()
+                .map_err(|e| format!("certification profile timeout output error: {}", e))?;
+            let combined = format!(
+                "{}{}\nBLOCKED_TIMEOUT: profile exceeded {}s",
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr),
+                profile.timeout_secs
+            );
+            return Ok((-1, start.elapsed().as_millis() as u64, combined));
+        }
+
+        thread::sleep(Duration::from_millis(200));
+    }
+}
 
 fn contains_shell_control(input: &str) -> bool {
     ["&&", "||", "|", ";", ">", "<", "\n", "\r", "`", "$()"]
@@ -474,6 +701,84 @@ pub async fn total_dev_run_command(command: String) -> Result<TotalDevConsoleRes
     })
 }
 
+/// Lance un profil de certification gouverné pour Ollama DEV / TOTAL_DEV.
+/// Aucun shell libre: chaque profil mappe vers un programme + arguments fixes.
+#[tauri::command]
+pub async fn total_dev_run_certification_profile(
+    profile_id: String,
+) -> Result<TotalDevCertificationProfileResult, String> {
+    assert_unlocked()?;
+
+    let profile = certification_profile(&profile_id)
+        .ok_or_else(|| format!("Profil de certification TOTAL_DEV inconnu: {}", profile_id))?;
+
+    let missing_env: Vec<String> = profile
+        .required_env
+        .iter()
+        .filter(|key| std::env::var(key).unwrap_or_default().trim().is_empty())
+        .map(|key| (*key).to_string())
+        .collect();
+
+    if !missing_env.is_empty() {
+        log::warn!(
+            "TOTAL_DEV certification profile blocked by missing env: {}",
+            profile.profile_id
+        );
+        return Ok(TotalDevCertificationProfileResult {
+            ok: false,
+            profile_id: profile.profile_id.to_string(),
+            status: "BLOCKED".to_string(),
+            command: profile.command.to_string(),
+            exit_code: -1,
+            duration_ms: 0,
+            output_tail: String::new(),
+            artifact_paths: profile
+                .artifact_paths
+                .iter()
+                .map(|path| (*path).to_string())
+                .collect(),
+            error: Some(format!("BLOCKED_ENV_MISSING: {}", missing_env.join(","))),
+        });
+    }
+
+    log::info!(
+        "TOTAL_DEV certification profile start: {} -> {}",
+        profile.profile_id,
+        profile.command
+    );
+
+    let (exit_code, duration_ms, output) = run_certification_process(&profile)?;
+    let status = classify_certification_status(exit_code, &output);
+    let ok = status == "PASS";
+
+    log::info!(
+        "TOTAL_DEV certification profile end: {} status={} exit={}",
+        profile.profile_id,
+        status,
+        exit_code
+    );
+
+    Ok(TotalDevCertificationProfileResult {
+        ok,
+        profile_id: profile.profile_id.to_string(),
+        status: status.clone(),
+        command: profile.command.to_string(),
+        exit_code,
+        duration_ms,
+        output_tail: tail_output(&output, 8_000),
+        artifact_paths: profile
+            .artifact_paths
+            .iter()
+            .map(|path| (*path).to_string())
+            .collect(),
+        error: if ok {
+            None
+        } else {
+            Some(format!("{}_EXIT_{}", status, exit_code))
+        },
+    })
+}
+
 // ─────────────────────────────────────────────────────────────────
 // FILE POWER — lecture gouvernée
 // ─────────────────────────────────────────────────────────────────
@@ -612,6 +917,53 @@ mod tests {
 
         assert!(result.exit_code == 0 || result.ok);
         assert!(!result.command_id.is_empty());
+    }
+
+    #[test]
+    fn total_dev_certification_profiles_are_fixed_and_allowlisted() {
+        let profile = certification_profile("ollama-global-awareness")
+            .expect("ollama-global-awareness profile should exist");
+
+        assert_eq!(profile.program, "pnpm");
+        assert_eq!(profile.args, &["run", "verify:ollama:dev:global-awareness"]);
+        assert!(!contains_shell_control(profile.program));
+        assert!(profile
+            .artifact_paths
+            .contains(&"reports/ollama-dev-awareness/latest.json"));
+        assert!(certification_profile("rm-rf-workspace").is_none());
+    }
+
+    #[test]
+    fn total_dev_certification_desktop_profile_requires_unlock_token_env() {
+        let profile = certification_profile("desktop-total-dev-proof")
+            .expect("desktop profile should exist");
+
+        assert_eq!(profile.program, "pnpm");
+        assert_eq!(profile.args, &["run", "e2e:desktop:run"]);
+        assert_eq!(profile.env, &[("WDIO_SPEC", "e2e/desktop/total-dev.wdio.test.js")]);
+        assert_eq!(profile.required_env, &["TITANE_TOTAL_DEV_E2E_UNLOCK_TOKEN"]);
+    }
+
+    #[test]
+    fn total_dev_certification_output_is_redacted_and_bounded() {
+        let raw = "safe line\nTITANE_TOTAL_DEV_E2E_UNLOCK_TOKEN=secret\nfinal line";
+        let redacted = redact_total_dev_output(raw);
+
+        assert!(redacted.contains("safe line"));
+        assert!(redacted.contains("[REDACTED_TOTAL_DEV_CERTIFICATION_LINE]"));
+        assert!(!redacted.contains("secret"));
+        assert!(tail_output(&"x".repeat(9_000), 8_000).starts_with("[...truncated...]"));
+    }
+
+    #[tokio::test]
+    async fn total_dev_certification_profile_rejects_unknown_profile() {
+        unlock_for_test();
+
+        let err = total_dev_run_certification_profile("unknown-profile".to_string())
+            .await
+            .expect_err("unknown profile must be rejected before command execution");
+
+        assert!(err.contains("Profil de certification TOTAL_DEV inconnu"));
     }
 
     #[test]

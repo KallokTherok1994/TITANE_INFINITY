@@ -951,6 +951,9 @@
               "command": "total_dev_run_command"
             },
             {
+              "command": "total_dev_run_certification_profile"
+            },
+            {
               "command": "total_dev_read_file"
             },
             {

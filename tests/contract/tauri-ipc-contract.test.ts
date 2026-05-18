@@ -478,6 +478,34 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     ).toBe(true);
   });
 
+  it('should expose total_dev_run_certification_profile in Rust, TAURI_COMMANDS, and security allowlists', () => {
+    expect(TAURI_COMMANDS.TOTAL_DEV_RUN_CERTIFICATION_PROFILE).toBe(
+      'total_dev_run_certification_profile'
+    );
+    expect(
+      rustCommands.has('total_dev_run_certification_profile') ||
+        rustNormalized.has(normalize('total_dev_run_certification_profile')),
+      'Missing Rust handler: total_dev_run_certification_profile'
+    ).toBe(true);
+
+    const securityContent = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/security.ts'),
+      'utf-8'
+    );
+    const totalDevCapability = fs.readFileSync(
+      path.join(process.cwd(), 'src-tauri/capabilities/total_dev.json'),
+      'utf-8'
+    );
+    const tauriConfig = fs.readFileSync(
+      path.join(process.cwd(), 'src-tauri/tauri.conf.json'),
+      'utf-8'
+    );
+
+    for (const content of [securityContent, totalDevCapability, tauriConfig]) {
+      expect(content).toContain('total_dev_run_certification_profile');
+    }
+  });
+
   // Test de performance du contrat
   it('should maintain contract performance', () => {
     const startTime = Date.now();

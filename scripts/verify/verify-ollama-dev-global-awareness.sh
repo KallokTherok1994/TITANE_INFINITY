@@ -5,10 +5,20 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 TMP_OUTPUT="$(mktemp)"
+TMP_AWARENESS="$(mktemp)"
 cleanup() {
   rm -f "$TMP_OUTPUT"
+  rm -f "$TMP_AWARENESS"
 }
 trap cleanup EXIT
+
+if ! node scripts/verify/generate-ollama-dev-awareness.mjs --check >"$TMP_AWARENESS" 2>&1; then
+  echo "FAIL: OLLAMA_DEV_AWARENESS_MANIFEST_FAIL"
+  sed -n '1,220p' "$TMP_AWARENESS"
+  exit 1
+fi
+
+sed -n '1,20p' "$TMP_AWARENESS"
 
 if bash scripts/verify_instructions.sh >"$TMP_OUTPUT" 2>&1; then
   echo "PASS: GLOBAL_REPO_GATES_PASS"
@@ -44,6 +54,7 @@ done
 
 if [[ ${#UNKNOWN_FAILURES[@]} -eq 0 ]]; then
   echo "PASS: GLOBAL_REPO_GATES_PARTIAL known_failures=${FAILURES[*]}"
+  echo "INFO: scoped_status=GLOBAL_AWARENESS_MANIFEST_PASS_WITH_KNOWN_GLOBAL_BLOCKERS"
   exit 0
 fi
 

@@ -118,6 +118,7 @@ export const TAURI_COMMANDS = {
   // CHAT AI - Unified Command (v∞)
   // ═══════════════════════════════════════════════════════════════
   CHAT_GENERATE: 'chat_generate', // v∞ Commande unifiée simplifiée
+  OLLAMA_GENERATE: 'ollama_generate', // v35.1.8 — Ollama unifiée (production)
 
   // ═══════════════════════════════════════════════════════════════
   // CHAT AI - Orchestrator Hybride (Gemini + Ollama + Local)
@@ -214,6 +215,7 @@ export const TAURI_COMMANDS = {
   TOTAL_DEV_REVOKE: 'total_dev_revoke',
   TOTAL_DEV_GIT_OP: 'total_dev_git_op',
   TOTAL_DEV_RUN_COMMAND: 'total_dev_run_command',
+  TOTAL_DEV_RUN_CERTIFICATION_PROFILE: 'total_dev_run_certification_profile',
   TOTAL_DEV_READ_FILE: 'total_dev_read_file',
 } as const;
 

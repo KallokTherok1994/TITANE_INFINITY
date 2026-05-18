@@ -20,6 +20,22 @@ if [[ -f "src-tauri/Cargo.toml" ]] && [[ -f "package.json" ]]; then
   context+="- DEPLOYMENT: NEVER deploy without explicit authorization from Kevin Thibault\n"
   context+="- BUILD_GATE: NEVER run production builds without explicit request\n"
   context+="- DEV_ONLY: Use '🟢 Launch Titan-Dev' task for development\n"
+
+  # Ollama Dev context injection
+  if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+    OLLAMA_DEV_MODEL=$(curl -sf http://127.0.0.1:11434/api/tags | jq -r '.models[] | select(.name | startswith("qwen3.5")) | .name' 2>/dev/null || echo "qwen3.5:9b")
+    if [[ -z "$OLLAMA_DEV_MODEL" ]]; then
+      OLLAMA_DEV_MODEL="qwen3.5:9b"
+    fi
+    context+="OLLAMA_DEV_AVAILABLE=true\n"
+    context+="OLLAMA_DEV_MODEL=${OLLAMA_DEV_MODEL}\n"
+    context+="OLLAMA_DEV_HOST=http://127.0.0.1:11434\n"
+  else
+    context+="OLLAMA_DEV_AVAILABLE=false\n"
+    context+="OLLAMA_DEV_MODEL=qwen3.5:9b\n"
+    context+="OLLAMA_DEV_HOST=http://127.0.0.1:11434\n"
+    context+="OLLAMA_DEV_STATUS=Ollama Dev server is DOWN. Falling back to cloud providers.\n"
+  fi
 fi
 
 if [[ -n "$context" ]]; then

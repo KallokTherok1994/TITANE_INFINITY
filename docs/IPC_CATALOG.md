@@ -1,6 +1,8 @@
 ## 2026-05-14 — v34.1.0 — `clear_webview_cache` IPC + Remote Gateway whitelist +12
+
 > 2026-05-18 — Progression/XP fusion truth: aucun nouveau contrat IPC n est ajoute. Les surfaces Progression consomment la verite persistante existante `experience_get_state` / `experience_update_state`; `exp_get_global_state` et `progression_save_state` restent des surfaces legacy/compatibilite, mais la voie frontend active ne cree plus de persistance XP separee.
 
+> 2026-05-17 — TOTAL_DEV Ollama DEV certification profile truth: `total_dev_run_certification_profile` expose une voie IPC gouvernée pour lancer uniquement des profils fixes (`ollama-global-awareness`, `ollama-live`, `ollama-performance`, `ollama-stack`, `browser-total-dev-proof`, `desktop-total-dev-proof`). La commande refuse les profils inconnus, ne passe pas par un shell libre, borne l execution par timeout, redige les lignes d output potentiellement sensibles, et retourne `{ ok, profile_id, status, command, exit_code, duration_ms, output_tail, artifact_paths, error }` avec status `PASS`, `FAIL` ou `BLOCKED`.
 
 ### Nouvelle commande IPC
 

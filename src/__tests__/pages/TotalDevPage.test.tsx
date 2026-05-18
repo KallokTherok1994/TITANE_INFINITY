@@ -169,4 +169,61 @@ describe('TotalDevPage', () => {
       args: [],
     });
   });
+
+  it('exposes fixed Ollama DEV certification profiles without free shell input', async () => {
+    secureInvokeMock
+      .mockResolvedValueOnce({
+        lock_state: 'UNLOCKED',
+        expires_at_unix: 1712271600,
+        now_unix: 1712268000,
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        profile_id: 'ollama-global-awareness',
+        status: 'PASS',
+        command: 'pnpm run verify:ollama:dev:global-awareness',
+        exit_code: 0,
+        duration_ms: 1200,
+        output_tail:
+          'PASS: OLLAMA_DEV_AWARENESS_MANIFEST\nPASS: GLOBAL_REPO_GATES_PASS',
+        artifact_paths: [
+          'reports/ollama-dev-awareness/latest.json',
+          'reports/ollama-dev-awareness/latest.md',
+        ],
+      });
+
+    await act(async () => {
+      renderTotalDevPage();
+    });
+
+    await act(async () => {
+      fireEvent.click(await screen.findByTestId('total-dev-tab-certification'));
+    });
+
+    expect(await screen.findByTestId('total-dev-certification-panel')).toBeVisible();
+    expect(screen.getByTestId('ollama-dev-model-status')).toHaveTextContent(
+      /qwen3\.5:9b/
+    );
+    expect(screen.getByTestId('ollama-product-boundary-status')).toHaveTextContent(
+      /gemma2:2b/
+    );
+    expect(screen.queryByPlaceholderText(/pnpm run|cargo check|commande/i)).not.toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(
+        screen.getByTestId(
+          'total-dev-certification-profile-ollama-global-awareness'
+        )
+      );
+    });
+
+    expect(secureInvokeMock).toHaveBeenNthCalledWith(
+      2,
+      TAURI_COMMANDS.TOTAL_DEV_RUN_CERTIFICATION_PROFILE,
+      { profileId: 'ollama-global-awareness' }
+    );
+    expect(await screen.findByTestId('total-dev-certification-output')).toHaveTextContent(
+      /PASS: OLLAMA_DEV_AWARENESS_MANIFEST/
+    );
+  });
 });

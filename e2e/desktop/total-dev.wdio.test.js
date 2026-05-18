@@ -25,6 +25,7 @@ const UNLOCK_ERROR = '.total-dev-unlock-error';
 const TOTAL_DEV_UNLOCK_TOKEN = process.env.TITANE_TOTAL_DEV_E2E_UNLOCK_TOKEN || '';
 
 const TAB_CHAT = '[data-testid="total-dev-tab-chat"]';
+const TAB_CERTIFICATION = '[data-testid="total-dev-tab-certification"]';
 const TAB_CONSOLE = '[data-testid="total-dev-tab-console"]';
 const TAB_GIT = '[data-testid="total-dev-tab-git"]';
 const TAB_FILES = '[data-testid="total-dev-tab-files"]';
@@ -32,6 +33,10 @@ const TAB_FILES = '[data-testid="total-dev-tab-files"]';
 const REVOKE_BUTTON = '.total-dev-btn--revoke';
 const PROVIDER_BADGE = '.total-dev-provider-badge';
 const CHAT_MODEL_BADGE = '.total-dev-chat-model';
+const CERT_PANEL = '[data-testid="total-dev-certification-panel"]';
+const CERT_AWARENESS_BUTTON =
+  '[data-testid="total-dev-certification-profile-ollama-global-awareness"]';
+const CERT_OUTPUT = '[data-testid="total-dev-certification-output"]';
 
 const CONSOLE_INPUT = '.total-dev-console-input';
 const CONSOLE_RUN_BUTTON = '.total-dev-btn--console';
@@ -423,7 +428,42 @@ describe('TOTAL_DEV Native Desktop (WDIO/Tauri)', () => {
     );
   });
 
-  it('11. Session revoke transitions lock state honestly', async function () {
+  it('11. Certification panel runs a governed Ollama DEV awareness profile visibly', async function () {
+    this.timeout(360000);
+
+    if (!TOTAL_DEV_UNLOCK_TOKEN) {
+      this.skip();
+      return;
+    }
+
+    await ensureUnlocked();
+    const certificationTab = await $(TAB_CERTIFICATION);
+    await certificationTab.waitForExist({ timeout: 10000 });
+    await certificationTab.click();
+
+    const panel = await $(CERT_PANEL);
+    await panel.waitForDisplayed({ timeout: 10000 });
+
+    const awarenessButton = await $(CERT_AWARENESS_BUTTON);
+    await awarenessButton.waitForEnabled({ timeout: 10000 });
+    await awarenessButton.click();
+
+    const output = await $(CERT_OUTPUT);
+    await output.waitForDisplayed({ timeout: 10000 });
+    await browser.waitUntil(
+      async () => {
+        const text = await output.getText();
+        return /ollama-global-awareness:\s*(PASS|FAIL|BLOCKED)/i.test(text);
+      },
+      {
+        timeout: 300000,
+        interval: 1000,
+        timeoutMsg: 'Ollama DEV awareness profile did not publish a visible verdict',
+      }
+    );
+  });
+
+  it('12. Session revoke transitions lock state honestly', async function () {
     this.timeout(45000);
 
     if (!TOTAL_DEV_UNLOCK_TOKEN) {

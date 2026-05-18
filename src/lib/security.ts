@@ -372,6 +372,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'create_conversation',
   'list_conversations',
   'load_conversation',
+  'load_conversation_history',
   'chat_set_gemini_key',
   'chat_stream_message',
   'chat_mode_change', // ✅ v30.0.0 — Chat mode switching
@@ -566,6 +567,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'total_dev_revoke',
   'total_dev_git_op',
   'total_dev_run_command',
+  'total_dev_run_certification_profile',
   'total_dev_read_file',
 
   // ═══════════════════════════════════════════════════════════════

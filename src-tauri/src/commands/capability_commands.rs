@@ -144,6 +144,20 @@ fn build_static_registry() -> Vec<CapabilityInfo> {
             block_reason: None,
         },
         CapabilityInfo {
+            name: "ollama_dev_certification_profiles".into(),
+            status: CapabilityStatus::RuntimeProven,
+            reason_code: "total_dev_run_certification_profile avec profils fixes".into(),
+            source_of_truth: SourceOfTruth::RuntimeProbe,
+            last_checked_at: now.clone(),
+            scope: CapabilityScope::System,
+            risk_class: RiskClass::High,
+            description:
+                "Certification Ollama DEV/TOTAL_DEV via profils fixes sans shell libre".into(),
+            ipc_commands: Some(vec!["total_dev_run_certification_profile".into()]),
+            required_permissions: Some(vec!["total-dev".into()]),
+            block_reason: None,
+        },
+        CapabilityInfo {
             name: "governed_git_ops".into(),
             status: CapabilityStatus::RuntimeProven,
             reason_code: "total_dev_git_op avec allowlist read-only et args exacts".into(),

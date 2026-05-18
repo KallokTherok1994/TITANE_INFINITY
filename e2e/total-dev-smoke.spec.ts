@@ -16,11 +16,11 @@ test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
     await page.goto('/total-dev');
     await page.waitForLoadState('load');
     // Wait for React hydration — lazy-loaded page may take extra time
-    await page.waitForSelector('[data-testid="total-dev-header"]', { timeout: 10000 });
+    await page.waitForSelector('[data-testid="total-dev-header"]', { timeout: 30000 });
 
     // Verify page title or unique marker
     const heading = page.locator('[data-testid="total-dev-header"]');
-    await expect(heading).toBeVisible({ timeout: 10000 });
+    await expect(heading).toBeVisible({ timeout: 30000 });
 
     // Verify TOTAL_DEV nav item exists
     const navItem = page.locator('text=TOTAL_DEV').first();

@@ -24,6 +24,35 @@ pnpm run verify:ollama:dev:stack
 Keep the wrapper package pinned through `scripts/mcp/start-ollama-dev-mcp.sh` on `ollama-mcp@2.1.0`.
 Use the generated local recommendation profile: `docs/dev/OLLAMA_DEV_LOCAL_PROFILE.md`.
 
+## Global awareness manifest
+
+Before asking Ollama DEV to reason about the full repo, generate the compact manifest instead of pasting raw repo content:
+
+```bash
+pnpm run verify:ollama:dev:awareness
+```
+
+Outputs:
+
+- `reports/ollama-dev-awareness/latest.json`
+- `reports/ollama-dev-awareness/latest.md`
+- `docs/dev/OLLAMA_DEV_GLOBAL_AWARENESS_MAP.md`
+
+The manifest indexes architecture, cartography, instructions, memory/log surfaces, frontend/backend/API files, tests, gates, and proof artifacts as metadata/hashes. It excludes `.env`, `.key`, `.pem`, and `.secret` paths.
+
+## Visible UI certification
+
+Use `/total-dev` -> `Certification` after governed unlock to run fixed proof profiles directly in the app:
+
+- `ollama-global-awareness`
+- `ollama-live`
+- `ollama-performance`
+- `ollama-stack`
+- `browser-total-dev-proof`
+- `desktop-total-dev-proof`
+
+The UI calls `total_dev_run_certification_profile`; it does not expose a free command field for these proof profiles.
+
 ## Trust MCP intentionally
 
 - Open `.vscode/mcp.json`.
@@ -73,6 +102,7 @@ git status --short
 
 ```bash
 pnpm run verify:ollama:dev:stack
+pnpm run verify:ollama:dev:awareness
 pnpm run verify:ollama:dev:tuning
 pnpm run proof:ollama:dev:session
 pnpm run proof:ollama:dev:hardening

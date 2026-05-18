@@ -41,6 +41,18 @@ if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
   echo "$timestamp: $tool_name (${execution_time}ms) success=$success" >> "$log_dir/operations.log"
 fi
 
+# OLLAMA_DEV usage logging
+if [[ "$tool_name" == "execute_command" ]]; then
+  command=$(echo "$input" | jq -r '.postToolUse.parameters.command // ""' 2>/dev/null || echo "")
+  if echo "$command" | grep -qiE 'ollama|11434|api/generate'; then
+    ollama_log=".clinerules/logs/ollama-dev.log"
+    mkdir -p "$(dirname "$ollama_log")"
+    status="ok"
+    [[ "$success" == "false" ]] && status="fail"
+    echo "${timestamp} | ROUTER=cline | MODEL=qwen3.5:9b | ACTION=command | STATUS=${status} | CMD=${command:0:120}" >> "$ollama_log"
+  fi
+fi
+
 # Anti-loop: si l'outil a réussi, confirmer explicitement que
 # le résultat est terminal. Vide = repo propre = décision finale.
 if [[ "$success" == "true" && "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then

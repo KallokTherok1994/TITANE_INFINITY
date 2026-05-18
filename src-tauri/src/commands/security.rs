@@ -363,6 +363,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("total_dev_revoke");
     commands.insert("total_dev_git_op");
     commands.insert("total_dev_run_command");
+    commands.insert("total_dev_run_certification_profile");
     commands.insert("total_dev_read_file");
 
     // ═══════════════════════════════════════════════════════════════

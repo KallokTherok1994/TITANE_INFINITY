@@ -6,6 +6,43 @@
 
 > `.vscode/mcp.json` n'appelle plus `pnpm dlx` directement. La surface DEV passe par `scripts/mcp/start-ollama-dev-mcp.sh`, qui préflight `OLLAMA_HOST`, le modèle `qwen3.5:9b`, puis lance le serveur MCP piné `ollama-mcp@2.1.0`. Les probes live/perf exposent maintenant un fine-tuning borné via `TITANE_OLLAMA_DEV_*` pour ajuster timeouts, `keep_alive`, `num_ctx`, `num_predict` et `temperature` sans toucher au runtime produit. La provenance du package piné est enregistrée sous `reports/mcp-package-provenance/ollama-mcp-2.1.0.md`, et le profil machine local recommandé est publié dans `docs/dev/OLLAMA_DEV_LOCAL_PROFILE.md`. Nouveaux gates: `pnpm run verify:mcp:security`, `pnpm run verify:ollama:dev:live`, `pnpm run verify:ollama:dev:performance`, `pnpm run verify:ollama:dev:stack`, plus les preuves `pnpm run proof:ollama:dev:session` et `pnpm run proof:ollama:dev:hardening`. Le runtime produit reste verrouillé sur `gemma2:2b`.
 
+## 2026-05-17 — OLLAMA_DEV_AWARENESS_VISIBLE_CERTIFICATION
+
+> Ollama DEV gagne un manifeste compact repo-owned via `scripts/verify/generate-ollama-dev-awareness.mjs`, publié sous `reports/ollama-dev-awareness/latest.json` et documenté dans `docs/dev/OLLAMA_DEV_GLOBAL_AWARENESS_MAP.md`. `/total-dev` expose maintenant un onglet Certification qui lance uniquement des profils fixes via `total_dev_run_certification_profile`: awareness, live, performance, stack, preuve WebUI et preuve desktop. Cette surface ne change aucun default produit: Product Chat reste `gemma2:2b`, Ollama DEV reste `qwen3.5:9b`, et les profils visibles classent honnêtement `PASS`, `FAIL` ou `BLOCKED`.
+
+## 2026-05-17 — OLLAMA_DEV_4_ROUTER_UNIFICATION — Cline + Console CLI activés
+
+> La stack Ollama Dev est maintenant operationnelle depuis 4 routeurs unifies:
+> - **VSCode/Copilot** (MCP) : `.vscode/mcp.json` -> `scripts/mcp/start-ollama-dev-mcp.sh` -> `qwen3.5:9b`
+> - **Cline** : `.clinerules/50-ollama-dev.md` + hooks TaskStart/PreToolUse/PostToolUse -> `qwen3.5:9b`
+> - **Total Dev** : `/total-dev` route + IPC `total_dev_*` -> `qwen3.5:9b`
+> - **Console CLI** : `scripts/dev/ollama-dev-cli.sh` -> `ollama run qwen3.5:9b`
+>
+> Nouveaux gates:
+> - `bash scripts/dev/ollama-dev-verify.sh --router=all` (verification cross-routeur statique)
+> - `pnpm vitest run tests/unit/scripts/ollamaDevAllRouters.test.ts` (6 lanes, 35+ checks)
+> - `bash scripts/dev/ollama-dev-cli.sh status` (verification runtime live)
+> - Nouvelles lanes dans `scripts/verify/verify-ollama-dev-stack.sh`
+>
+> Integration Cline renforcee:
+> - TaskStart injecte `OLLAMA_DEV_AVAILABLE`, `OLLAMA_DEV_MODEL`, `OLLAMA_DEV_HOST`
+> - PreToolUse verifie la disponibilite Ollama avant les commandes liees
+> - PostToolUse logue les operations Ollama dans `.clinerules/logs/ollama-dev.log`
+> - Fallback documente vers cloud providers si Ollama Dev est DOWN
+>
+> Product runtime reste verrouille sur `gemma2:2b`. Frontiere Dev/Chat preservee.
+
+## 2026-05-17 — TOTAL_DEV_CHAT_FIX — ollama_generate remplace chat_generate
+
+> Le panneau CHAT DEV de `/total-dev` utilisait `chat_generate` (mock-only, `input: String`) au lieu de la commande Ollama unifiee de production `ollama_generate` (`OllamaRequest { model, prompt, timeout_secs, system_prompt, temperature }`). Ceci causait l'erreur `[Erreur provider: invalid args 'input' for command 'chat_generate': command chat_generate missing required key input]`.
+>
+> Correction:
+> - `src/core/commands/TAURI_COMMANDS.ts`: ajout constante `OLLAMA_GENERATE: 'ollama_generate'`
+> - `src/pages/TotalDevPage.tsx` `sendMessage()`: remplacement de `secureInvoke(TAURI_COMMANDS.CHAT_GENERATE, { message, context })` par `secureInvoke(TAURI_COMMANDS.OLLAMA_GENERATE, { model: 'qwen3.5:9b', prompt, timeout_secs: 90, system_prompt, temperature: 0.7 })`
+> - Le type de retour `OllamaResponse { ok, content, error?, ... }` est strict et Rule 6-compliant
+>
+> La 4e route (TOTAL DEV) est maintenant operationnelle via la voie IPC `ollama_generate` au lieu d'une commande mock uniquement.
+
 # OLLAMA RUNTIME MAP — TITANE_INFINITY
 
 ## CURRENT CANONICAL STATE — 2026-05-08
@@ -91,22 +128,24 @@
 
 ---
 
-## 2. OLLAMA MODELS AVAILABLE
+## 2. OLLAMA MODELS AVAILABLE — 2026-05-17
 
-| Model                    | Size   | Modified     | Status                       |
-| ------------------------ | ------ | ------------ | ---------------------------- |
-| gemma2:2b                | 1.6 GB | 6 weeks ago  | ✅ ACTIVE (loaded in memory) |
-| llama3:latest            | 4.7 GB | 2 weeks ago  | ⚠️ Available                 |
-| qwen2.5:latest           | 4.7 GB | 2 months ago | ⚠️ Available                 |
-| codellama:latest         | 3.8 GB | 3 months ago | ⚠️ Available                 |
-| deepseek-coder-v2:latest | 8.9 GB | 3 months ago | ⚠️ Available                 |
-| gemma2:latest            | 5.4 GB | 3 months ago | ⚠️ Available                 |
-| llama3.2:1b              | 1.3 GB | 3 months ago | ⚠️ Available                 |
-| llama3.2:latest          | 2.0 GB | 3 months ago | ⚠️ Available                 |
-| llama3.1:latest          | 4.9 GB | 3 months ago | ⚠️ Available                 |
-| phi3.5:latest            | 2.2 GB | 3 months ago | ⚠️ Available                 |
+| Model                    | Size   | Modified    | Status                       |
+| ------------------------ | ------ | ----------- | ---------------------------- |
+| qwen3.5:9b               | 6.6 GB | 2026-05-17  | ✅ ACTIVE (dev model)        |
+| qwen2.5-coder:7b         | 4.7 GB | 2026-05-17  | ✅ Available                 |
+| qwen2.5:latest           | 4.7 GB | 2026-05-17  | ✅ Available                 |
+| llama3.1:8b              | 4.9 GB | 2026-05-17  | ✅ Available                 |
+| llama3.1:latest          | 4.9 GB | 2026-05-17  | ✅ Available                 |
+| mistral:7b               | 4.4 GB | 2026-05-17  | ✅ Available                 |
+| gemma2:2b                | 1.6 GB | 2026-05-17  | ✅ ACTIVE (runtime product)  |
+| titane-key-agent:latest  | 1.6 GB | 2026-04-27  | ⚠️ Available (custom agent)  |
+| qwen2.5:cline-fr         | 4.7 GB | 2026-04-16  | ⚠️ Available (dev legacy)    |
+| qwen2.5:latest-fr        | 4.7 GB | 2026-04-16  | ⚠️ Available (dev legacy)    |
+| gemma2:2b-fr             | 1.6 GB | 2026-04-16  | ⚠️ Available (dev legacy)    |
 
-**Active Model**: gemma2:2b (2.1 GB loaded, 100% CPU, 4096 context)
+**Active Models**: `qwen3.5:9b` (dev/Cline/Copilot) + `gemma2:2b` (runtime product chat)
+**Runtime boundary** intacte : aucun modèle DEV dans les defaults produit.
 
 ---
 
