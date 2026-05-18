@@ -34,7 +34,7 @@ describe('TimeToTwinObserver', () => {
     expect(res.pushed).toBe(true);
     expect(submit).toHaveBeenCalledTimes(1);
     const payload = submit.mock.calls[0][0];
-    expect(payload.observation_type).toBe('cognitive');
+    expect(payload.observationType).toBe('cognitive');
     expect(payload.context).toBe('temporal_engine');
     expect(payload.confidence).toBeCloseTo(0.65, 2);
     expect(payload.content).toMatch(/temporal\.health\.overall=0\.80/);

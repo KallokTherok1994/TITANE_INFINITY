@@ -34,7 +34,7 @@ export interface TimeToTwinObserverOptions {
 }
 
 export interface TwinObservationPayload {
-  observation_type: 'cognitive' | 'value' | 'style' | 'emotional';
+  observationType: 'cognitive' | 'value' | 'style' | 'emotional';
   content: string;
   context: string;
   confidence: number;
@@ -144,7 +144,7 @@ export function createTimeToTwinObserver(
     try {
       const [health, alignment] = await Promise.all([fetchHealth(), fetchAlignment()]);
       const payload: TwinObservationPayload = {
-        observation_type: 'cognitive',
+        observationType: 'cognitive',
         content: buildContent(health, alignment),
         context: 'temporal_engine',
         confidence: clampConfidence(health, alignment),
