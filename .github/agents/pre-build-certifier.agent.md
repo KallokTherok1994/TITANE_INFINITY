@@ -61,6 +61,18 @@ grep -RIn "BUILD ALL\|Rule 14\|Rule 13\|dev:tauri\|DevTools\|HTTP\|Network\|proo
 
 Discover canonical build authority without creating a competing pipeline. If authority remains plural or contradictory, classify `BLOCKED_AUTHORITY_CONFLICT`.
 
+### Lane 1.5 — Frontend Runtime Pre-BUILD Gate (mandatory when frontend/runtime files changed)
+
+When any of `src/**`, `index.html`, `public/**`, `tailwind.config.*`, `vite.config.*`,
+`src-tauri/tauri.conf.json`, or `runtime/stable/**` are in the worktree diff, run:
+
+```bash
+bash scripts/verify/prebuild-frontend-runtime-certifier.sh
+```
+
+`BUILD_ALLOWED=YES` requires `FRONTEND_RUNTIME_PREBUILD=PASS` from this script.
+If it returns FAIL or BLOCKED: classify `FRONTEND_RUNTIME_GATE=FAIL` and stop.
+
 ### Lane 2 — Instructions and agents
 
 Run available equivalents:

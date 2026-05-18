@@ -4,6 +4,32 @@ applyTo: 'src/**'
 
 # Frontend Instructions
 
+## Mandatory Frontend Runtime Pre-BUILD Execution Gate
+
+The frontend runtime certifier procedure is not advisory.
+
+Before any build, package, Tauri build, stable runtime build, release, deploy, or BUILD ALL
+after frontend/runtime-visible changes, run:
+
+```bash
+bash scripts/verify/prebuild-frontend-runtime-certifier.sh
+```
+
+Build may continue only when it emits:
+
+```
+FRONTEND_RUNTIME_PREBUILD=PASS
+BUILD_ALLOWED=YES
+```
+
+If missing, skipped, partially executed, blocked, or replaced by narrative proof:
+**BUILD is BLOCKED.**
+
+Also available as package scripts:
+- `pnpm run prebuild` — runs automatically before `pnpm run build`
+- `pnpm run prebuild:frontend-runtime` — explicit invocation
+- `pnpm run verify:frontend-runtime-prebuild` — verify-only alias
+
 ## Invariants rappeles
 
 - Ring impacte: Ring 4 (UI/Modules) and Ring 3 (Orchestration/Stores/Hooks).

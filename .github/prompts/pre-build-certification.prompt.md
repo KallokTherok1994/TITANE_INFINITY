@@ -23,6 +23,9 @@ Required lifecycle:
 1. Discover authority.
 2. Detect canonical pipeline.
 3. Verify worktree.
+3.5. Run frontend runtime pre-build gate if frontend/runtime files changed:
+   `bash scripts/verify/prebuild-frontend-runtime-certifier.sh`
+   Stop if `FRONTEND_RUNTIME_PREBUILD` != PASS.
 4. Verify instructions.
 5. Verify agent config.
 6. Verify toolchain.

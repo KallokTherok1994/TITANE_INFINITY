@@ -90,6 +90,14 @@ Operational authority: only one active execution authority and one active E2E au
 
 When the user issues `BUILD ALL`, execute the full automated sequence without token gate: bump version; run `pnpm run sync:versions` (propagates version to `runtime/dev/tauri.conf.json` as `{version}-dev`, `runtime/stable/tauri.conf.json`, `src-tauri/tauri.conf.json`, and all tauri base configs); production build + deploy; build AppImage/DEB/RPM; build Android APK; build Windows installer if applicable; **update and rebuild the DEV Tauri build** (`pnpm run dev:tauri` or `tauri build --config runtime/dev/tauri.conf.json`) to confirm the dev runtime is at the correct version before any stable build; verify the HTTP network server surface is refreshed and reachable, and confirm that visible UI/frontend interface changes are present before sealing the build; uninstall existing installations and dock icons; clean caches; reinstall; update release notes, checksums, and `RELEASE_SURFACE_INVENTORY`; verify and fix regressions, errors, warnings, and blockers; run AutoHeal; update all relevant mapping docs.
 
+## Rule 14.2 — Frontend Runtime Pre-BUILD Gate
+
+`bash scripts/verify/prebuild-frontend-runtime-certifier.sh` must return `FRONTEND_RUNTIME_PREBUILD=PASS / BUILD_ALLOWED=YES` before any build touching `src/**`, `index.html`, `public/**`, `tailwind.config.*`, `vite.config.*`, `src-tauri/tauri.conf.json`, `runtime/stable/**`, or `.github/**`. Block on FAIL, BLOCKED, UNKNOWN, PARTIAL, STALE, or NARRATIVE_ONLY. Proof chain: source → active route → Vite build → dist → CSS → Tauri → AppImage → launcher → DOM SurfaceTruth.
+
+## Rule 14.3 — IPC Security Whitelist Synchronisation
+
+Every new `#[tauri::command]` added to Rust MUST be registered in BOTH `src/lib/tauriCommands.ts` (string value) AND `ALLOWED_COMMANDS` in `src/lib/security.ts`. Omission = silent runtime block. Lane 8.6 (`gate-ipc-whitelist-completeness.sh`) enforces this pre-build.
+
 ## Rule 14.1 - PRE-BUILD CERTIFIER AND ZERO-DEFECT BUILD PERMISSION
 
 `BUILD ALL`, advanced build, production build, native packaging, release packaging, deploy, artifact certification, or `deployment/latest` sync is forbidden until the canonical pre-build certifier returns `BUILD_ALLOWED=YES`.

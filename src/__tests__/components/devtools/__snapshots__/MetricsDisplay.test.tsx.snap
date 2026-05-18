@@ -276,12 +276,12 @@ exports[`MetricsDisplay Component > Snapshot > should match snapshot 1`] = `
     class="mt-6 pt-4 border-t border-titanium-border-default flex gap-3"
   >
     <button
-      class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white transition"
+      class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-titanium-text-primary transition"
     >
       🔄 Refresh
     </button>
     <button
-      class="px-4 py-2 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-white transition"
+      class="px-4 py-2 text-sm bg-titanium-bg-interactive hover:bg-titanium-bg-overlay rounded text-titanium-text-primary transition"
     >
       💾 Export
     </button>

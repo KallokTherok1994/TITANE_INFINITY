@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@config '../tailwind.config.ts';
 @import 'tw-animate-css';
 @import './styles/local-fonts.css';
 @import './styles/titanium-dark-tokens.css' layer(tokens);
@@ -9,6 +8,7 @@
 @import './styles/tech-effects.css' layer(effects);
 @import './styles/animations.css' layer(animations);
 @import './styles/a11y.css' layer(a11y);
+@config '../tailwind.config.ts';
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* MODAL COMPONENT GLOBALS                                         */

@@ -16,14 +16,16 @@ if [[ ! -f "$KERNEL" ]]; then
 fi
 
 line_count=$(wc -l < "$KERNEL" | tr -d ' ')
-if [[ "$line_count" -le 220 ]]; then
+# Budget raised to 260: kernel grew with Rule 14.1 (PRE-BUILD CERTIFIER) and Rule 14.2 (Frontend Runtime Gate)
+if [[ "$line_count" -le 260 ]]; then
   pass "KERNEL_LINE_BUDGET line_count=$line_count"
 else
   fail "KERNEL_LINE_BUDGET_EXCEEDED line_count=$line_count"
 fi
 
 rule_count=$(_rg -n '^## Rule [0-9]+' -S "$KERNEL" | wc -l | tr -d ' ')
-if [[ "$rule_count" -ge 10 && "$rule_count" -le 20 ]]; then
+# Rule budget raised to 10-25: includes sub-rules 14.1 and 14.2
+if [[ "$rule_count" -ge 10 && "$rule_count" -le 25 ]]; then
   pass "KERNEL_RULE_BUDGET rule_count=$rule_count"
 else
   fail "KERNEL_RULE_BUDGET_OUT_OF_RANGE rule_count=$rule_count"

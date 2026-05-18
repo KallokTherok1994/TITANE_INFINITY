@@ -1,11 +1,31 @@
 /**
- * Setup global test environment
- * Configuration pour @testing-library/jest-dom et autres extensions Vitest
+ * TITANE∞ — Canonical Global Test Setup (Rule 16 Compliant)
+ * Unified setup file for all Vitest configurations
+ * FIX: Consolidated from 4 scattered setup files into 1 canonical location
+ *
+ * Includes:
+ * - Jest-dom matchers + vitest integration
+ * - DOM polyfills (ArrayBuffer, SharedArrayBuffer)
+ * - React cleanup after each test
+ * - Global mocks (window.matchMedia, IntersectionObserver, Tauri, Fetch)
+ * - Test wrapper (QueryClientProvider)
  */
 
-import '@testing-library/jest-dom/vitest';
-import { expect, beforeAll, afterAll } from 'vitest';
+import '@testing-library/jest-dom';
+import { expect, beforeAll, afterAll, afterEach, vi } from 'vitest';
+import { cleanup } from '@testing-library/react';
+import React from 'react';
 import * as matchers from '@testing-library/jest-dom/matchers';
+
+const tauriCoreInvokeMock = vi.hoisted(() =>
+  vi.fn(async (cmd: string, args?: unknown) =>
+    (
+      globalThis as typeof globalThis & {
+        __TAURI__?: { core: { invoke: (cmd: string, args?: unknown) => Promise<unknown> } };
+      }
+    ).__TAURI__?.core.invoke(cmd, args)
+  )
+);
 
 // Extend Vitest's expect with jest-dom matchers
 expect.extend(matchers);
@@ -55,9 +75,6 @@ afterAll(() => {
   console.error = originalError;
 });
 
-// Mock stores Zustand globalement
-import { vi } from 'vitest';
-
 // Mock store DevTools avec données réalistes (chemin correct)
 vi.mock('../apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: vi.fn(() => ({
@@ -78,6 +95,27 @@ vi.mock('../apps/devtools/store/devtools.store', () => ({
     },
   })),
 }));
+
+let testMetaSyncCount = 0;
+let testFusionState = {
+  fusion_integrity: 0.92,
+  sync_score: 0.93,
+  pipeline_health: 0.94,
+  total_syncs: 0,
+};
+
+const createFusionState = () => ({
+  ...testFusionState,
+});
+
+const resetFusionState = () => {
+  testFusionState = {
+    fusion_integrity: 0.92,
+    sync_score: 0.93,
+    pipeline_health: 0.94,
+    total_syncs: 0,
+  };
+};
 
 // Mock Tauri invoke pour tous les tests
 type TauriMock = {
@@ -125,6 +163,18 @@ global.__TAURI__ = {
         case 'get_system_health':
         case 'get_helios_metrics':
           return { cpu: 34, memory: 512, fps: 60, status: 'healthy' };
+        case 'health_check':
+          return {
+            providers_online: ['ollama'],
+            providers_degraded: [],
+            provider_errors: {},
+            memory_entries: 0,
+            memory_tokens: 0,
+            auto_tts_enabled: true,
+            timestamp: new Date().toISOString(),
+          };
+        case 'memory_get_stats':
+          return { totalInteractions: 0, totalEntries: 0 };
         case 'memory_get_active_projects':
         case 'memory_get_recent_decisions':
         case 'memory_get_knowledge':
@@ -140,7 +190,52 @@ global.__TAURI__ = {
             symbolic: { alignment: 0.85 },
             adaptive: { plasticity: 0.75 },
             meta: { awareness: 0.7 },
+            global_coherence: 0.88,
           };
+        case 'singularity_get_global_coherence':
+          return 0.88;
+        case 'singularity_get_fusion_state':
+          return createFusionState();
+        case 'singularity_perform_sync':
+          testFusionState.total_syncs += 1;
+          testFusionState.sync_score = Math.min(1, testFusionState.sync_score + 0.01);
+          return testFusionState.sync_score;
+        case 'singularity_check_integrity':
+          return testFusionState.fusion_integrity;
+        case 'singularity_create_snapshot':
+          return `snapshot-${Date.now()}`;
+        case 'singularity_get_metrics':
+          return { uptime: 1, total_events: testFusionState.total_syncs };
+        case 'singularity_get_diagnostics':
+          return createFusionState();
+        case 'singularity_reset':
+          resetFusionState();
+          return undefined;
+        case 'singularity_restore_snapshot':
+          resetFusionState();
+          return undefined;
+        case 'cognitive_get_map':
+          return { nodes: [], edges: [] };
+        case 'meta_get_state':
+          return { focus: 0.82, stability: 0.9, syncCount: testMetaSyncCount };
+        case 'meta_trigger_sync':
+          testMetaSyncCount += 1;
+          return { syncCount: testMetaSyncCount };
+        case 'meta_get_alignment':
+          return { cognitive: true, symbolic: true, physical: true };
+        case 'get_timeline':
+          return [
+            { id: 'timeline-1', timestamp: '2026-01-01T00:00:00.000Z' },
+            { id: 'timeline-2', timestamp: '2026-01-01T00:00:01.000Z' },
+          ];
+        case 'add_timeline_event':
+          return { id: 'timeline-test' };
+        case 'parse_document':
+          return { ok: true };
+        case 'chat_get_providers_status':
+          return { ollama: { available: true, model: 'gemma2:2b' } };
+        case 'qa_run_all':
+          return { ok: true };
         case 'get_ai_status':
           return { status: 'ready', providers: ['gemini', 'ollama'] };
         case 'get_logs':
@@ -148,8 +243,49 @@ global.__TAURI__ = {
         case 'experience_get_state':
         case 'xp_get_state':
           return { level: 1, xp: 0, categories: {} };
+        case 'pipeline_analyze_intention':
+          return { primary: 'question', confidence: 0.9 };
+        case 'pipeline_generate_cognitive_response':
+          return { text: 'Réponse test TITANE', confidence: 0.9 };
+        case 'pipeline_prepare_tts':
+          return { duration: 1, audio_data: 'base64-audio' };
+        case 'pipeline_get_stats':
+          return { total_processed: 1, success_rate: 1 };
+        case 'pipeline_validate':
+          return true;
+        case 'autofix_detect_rust_warnings':
+        case 'autofix_detect_typescript_errors':
+        case 'autofix_get_history':
+        case 'autoheal_detect_broken_modules':
+        case 'autoheal_get_history':
+        case 'crashguard_detect_threats':
+        case 'crashguard_get_active_threats':
+          return [];
+        case 'autofix_get_stats':
+          return { total_issues_detected: 0, total_issues_fixed: 0, fix_success_rate: 1 };
+        case 'autoheal_heal_cognitive_module':
+          return { module_type: 'cognitive', success: true };
+        case 'autoheal_resync_state':
+        case 'autofix_reset':
+        case 'autoheal_reset':
+        case 'performance_reset_optimizations':
+        case 'performance_throttle_cpu':
+        case 'performance_optimize_gpu':
+        case 'performance_compress_memory':
+        case 'speak_text':
+          return undefined;
+        case 'performance_get_metrics':
+          return { cpu_usage: 12, gpu_usage: 4, memory_usage: 38, fps: 120 };
+        case 'crashguard_get_stats':
+          return 'stable';
+        case 'test_invalid':
+          throw new Error('test_invalid failed');
+        case 'test_1':
+        case 'test_2':
+        case 'test_3':
+          return {};
         case 'conversation_generate': {
-          const payload = (args ?? {}) as {
+          const payload = (_args ?? {}) as {
             conversationId?: string;
             conversation_id?: string;
           };
@@ -178,3 +314,166 @@ global.__TAURI__ = {
     emit: async () => {},
   },
 } as TauriMock;
+
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: tauriCoreInvokeMock,
+}));
+
+vi.mock('@tauri-apps/api/event', () => ({
+  listen: async () => () => undefined,
+  once: async () => () => undefined,
+  emit: async () => undefined,
+}));
+
+// ─────────────────────────────────────────────────────────────────
+// DOM Polyfills (ArrayBuffer, SharedArrayBuffer)
+// ─────────────────────────────────────────────────────────────────
+(() => {
+  const defineGetter = (proto: object, key: string, getter: () => unknown) => {
+    const desc = Object.getOwnPropertyDescriptor(proto, key);
+    if (!desc) {
+      Object.defineProperty(proto, key, {
+        configurable: true,
+        enumerable: false,
+        get: getter,
+      });
+    }
+  };
+
+  if (typeof ArrayBuffer !== 'undefined' && ArrayBuffer.prototype) {
+    defineGetter(ArrayBuffer.prototype, 'resizable', () => false);
+    defineGetter(ArrayBuffer.prototype, 'maxByteLength', function (this: ArrayBuffer) {
+      return this.byteLength;
+    });
+  }
+
+  if (typeof SharedArrayBuffer !== 'undefined' && SharedArrayBuffer.prototype) {
+    defineGetter(SharedArrayBuffer.prototype, 'growable', () => false);
+    defineGetter(
+      SharedArrayBuffer.prototype,
+      'maxByteLength',
+      function (this: SharedArrayBuffer) {
+        return this.byteLength;
+      }
+    );
+  }
+})();
+
+(() => {
+  const identityMatrix = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
+
+  if (typeof SVGElement !== 'undefined') {
+    Object.defineProperty(SVGElement.prototype, 'transform', {
+      configurable: true,
+      get() {
+        return {
+          baseVal: {
+            consolidate: () => ({ matrix: identityMatrix }),
+          },
+        };
+      },
+    });
+
+    if (typeof SVGElement.prototype.getBBox !== 'function') {
+      SVGElement.prototype.getBBox = () =>
+        ({ x: 0, y: 0, width: 1024, height: 768 }) as DOMRect;
+    }
+  }
+
+  if (typeof SVGSVGElement !== 'undefined') {
+    Object.defineProperty(SVGSVGElement.prototype, 'width', {
+      configurable: true,
+      get() {
+        return { baseVal: { value: 1024 } };
+      },
+    });
+    Object.defineProperty(SVGSVGElement.prototype, 'height', {
+      configurable: true,
+      get() {
+        return { baseVal: { value: 768 } };
+      },
+    });
+  }
+})();
+
+// Mark environment for React ACT
+(globalThis as Record<string, unknown>).IS_REACT_ACT_ENVIRONMENT = true;
+
+// ─────────────────────────────────────────────────────────────────
+// React Cleanup + Stylesheet Isolation
+// ─────────────────────────────────────────────────────────────────
+afterEach(() => {
+  cleanup();
+  // Clear CSS variables and classes to prevent test bleed
+  document.documentElement.removeAttribute('style');
+  document.documentElement.removeAttribute('class');
+});
+
+// ─────────────────────────────────────────────────────────────────
+// Fetch Mock (Node.js compatibility)
+// ─────────────────────────────────────────────────────────────────
+type MockResponseInit = {
+  status?: number;
+  headers?: Record<string, string>;
+};
+
+const createMockResponse = (body: string, init: MockResponseInit = {}) => {
+  const status = init.status ?? 200;
+  const headers = init.headers ?? { 'Content-Type': 'application/json' };
+
+  if (typeof Response !== 'undefined') {
+    return new Response(body, { status, headers });
+  }
+
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    headers: {
+      get: (key: string) => headers[key] ?? null,
+    },
+    json: async () => JSON.parse(body),
+    text: async () => body,
+    blob: async () => new Blob([body], { type: headers['Content-Type'] ?? 'text/plain' }),
+  };
+};
+
+const getFetchUrl = (input: any): string => {
+  if (typeof input === 'string') return input;
+  if (typeof URL !== 'undefined' && input instanceof URL) return input.toString();
+  if (input?.url) return String(input.url);
+  return String(input);
+};
+
+global.fetch = vi.fn((url: any, _options?: any) => {
+  const urlStr = getFetchUrl(url);
+  // Mock common API endpoints
+  if (urlStr.includes('/api/')) {
+    return Promise.resolve(createMockResponse(JSON.stringify({ ok: true })));
+  }
+  return Promise.resolve(createMockResponse(JSON.stringify({ error: 'Not mocked' })));
+});
+
+// ─────────────────────────────────────────────────────────────────
+// React Query Test Wrapper
+// ─────────────────────────────────────────────────────────────────
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const globalQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      gcTime: 0,
+      staleTime: 0,
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
+
+const TestWrapper = ({ children }: { children: React.ReactNode }) =>
+  React.createElement(QueryClientProvider, { client: globalQueryClient }, children);
+
+TestWrapper.displayName = 'TestWrapper';
+
+(globalThis as any).__TEST_WRAPPER__ = TestWrapper;

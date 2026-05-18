@@ -103,9 +103,6 @@ export const sharedTestConfig = defineConfig({
     fileParallelism: false,
     setupFiles: [
       './src/__tests__/setup.ts',
-      './src/setupTests.ts',
-      './src/test/setup.ts',
-      './src/test-utils/setup.ts',
     ],
     // Variables d'environnement pour les tests
     env: {

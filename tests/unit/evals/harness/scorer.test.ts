@@ -38,11 +38,17 @@ describe('eval harness structural checks', () => {
   });
 
   it('uses the direct Ollama path for CLI evals outside Tauri', () => {
+    vi.stubGlobal('__TAURI__', undefined);
+    vi.stubGlobal('__TAURI_INTERNALS__', undefined);
+
     expect(shouldUseDirectOllamaEvalPath('ollama')).toBe(true);
     expect(shouldUseDirectOllamaEvalPath('gemini')).toBe(false);
   });
 
   it('can generate through direct Ollama in CLI eval mode', async () => {
+    vi.stubGlobal('__TAURI__', undefined);
+    vi.stubGlobal('__TAURI_INTERNALS__', undefined);
+
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
