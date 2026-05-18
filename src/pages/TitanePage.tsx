@@ -28,7 +28,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Container, Stack } from '@components/layout';
 import { useVisualEngines } from '@hooks/useVisualEngines';
@@ -55,6 +55,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
 import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 import { ConversationHistorySidebar } from '@/components/chat/ConversationHistorySidebar';
+import { useConversations } from '@/hooks/useConversations';
 
 import './TitanePage.css';
 import './TitanePage-local.css';
@@ -156,6 +157,40 @@ export const TitanePage: React.FC = () => {
   });
   // Used to force remount of ConversationSection on new conversation
   const [chatKey, setChatKey] = useState<number>(0);
+
+  // ═══ CONVERSATION TITLE BAR STATE ═══
+  const { activeConversation, renameConversation } = useConversations();
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState('');
+  const titleInputRef = useRef<HTMLInputElement>(null);
+
+  const handleStartTitleEdit = useCallback(() => {
+    const currentTitle = activeConversation?.title ?? '';
+    const isGeneric = !currentTitle || currentTitle === 'Untitled' || currentTitle === 'Nouvelle conversation';
+    setTitleDraft(isGeneric ? '' : currentTitle);
+    setEditingTitle(true);
+  }, [activeConversation]);
+
+  const handleCommitTitleEdit = useCallback(async () => {
+    const id = activeConversation?.id;
+    if (id && titleDraft.trim()) {
+      try { await renameConversation(id, titleDraft.trim()); } catch { /* non-fatal */ }
+    }
+    setEditingTitle(false);
+    setTitleDraft('');
+  }, [activeConversation, titleDraft, renameConversation]);
+
+  const handleCancelTitleEdit = useCallback(() => {
+    setEditingTitle(false);
+    setTitleDraft('');
+  }, []);
+
+  useEffect(() => {
+    if (editingTitle && titleInputRef.current) {
+      titleInputRef.current.focus();
+      titleInputRef.current.select();
+    }
+  }, [editingTitle]);
 
   const handleSidebarToggle = useCallback(() => {
     setSidebarOpen(prev => {
@@ -407,6 +442,53 @@ export const TitanePage: React.FC = () => {
             id={TAB_PANEL_IDS['conversation']}
             aria-labelledby={TAB_LABEL_IDS['conversation']}
           >
+            {/* ── CONVERSATION TITLE BAR ── */}
+            <div className="titane-chat-title-bar" data-testid="chat-title-bar">
+              <div className="titane-chat-title-bar-left">
+                {editingTitle ? (
+                  <input
+                    ref={titleInputRef}
+                    type="text"
+                    className="titane-chat-title-bar-input"
+                    value={titleDraft}
+                    onChange={e => setTitleDraft(e.target.value)}
+                    onBlur={() => void handleCommitTitleEdit()}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') { e.preventDefault(); void handleCommitTitleEdit(); }
+                      else if (e.key === 'Escape') handleCancelTitleEdit();
+                    }}
+                    placeholder="Nom de la conversation…"
+                    maxLength={80}
+                    aria-label="Titre de la conversation"
+                    data-testid="chat-title-input"
+                  />
+                ) : (
+                  <button
+                    className="titane-chat-title-bar-name"
+                    onClick={handleStartTitleEdit}
+                    title="Cliquer pour renommer"
+                    aria-label="Titre de la conversation — cliquer pour renommer"
+                    data-testid="chat-title-btn"
+                  >
+                    {activeConversation?.title && activeConversation.title !== 'Untitled' && activeConversation.title !== 'Nouvelle conversation'
+                      ? activeConversation.title
+                      : 'Nouvelle conversation'}
+                  </button>
+                )}
+              </div>
+              <div className="titane-chat-title-bar-actions">
+                <button
+                  className="titane-chat-title-bar-action-btn"
+                  onClick={handleNewConversation}
+                  title="Nouvelle conversation (Ctrl+N)"
+                  aria-label="Nouvelle conversation"
+                  data-testid="chat-title-new-btn"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+            </div>
+
             <ErrorBoundary context="TitaneTab:conversation">
               <ConversationSection
                 key={chatKey}

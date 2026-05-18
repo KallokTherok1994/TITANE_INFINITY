@@ -69,7 +69,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
           trendValue={
             stats.level > 1 ? `Niveau ${stats.level} synchronisé` : 'Initialisation'
           }
-          color="#3b82f6"
+          color="var(--titanium-accent-blue, #3b82f6)"
         />
         <QuickStatCard
           icon={<span style={{ fontSize: '1.5rem' }}>✨</span>}
@@ -81,7 +81,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
               ? `${stats.totalXP.toLocaleString()} XP enregistrés`
               : 'Aucun XP synchronisé'
           }
-          color="#10b981"
+          color="var(--titanium-status-success, #10b981)"
         />
         <QuickStatCard
           icon={<span style={{ fontSize: '1.5rem' }}>💬</span>}
@@ -93,7 +93,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
               ? 'Historique conversationnel synchronisé'
               : 'Aucune conversation enregistrée'
           }
-          color="#f59e0b"
+          color="var(--titanium-status-warning, #f59e0b)"
         />
         <QuickStatCard
           icon={<span style={{ fontSize: '1.5rem' }}>🎯</span>}
@@ -105,7 +105,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
               ? 'Calculé depuis XP et mémoire'
               : 'En attente de progression'
           }
-          color="#8b5cf6"
+          color="var(--titanium-accent-cool, #8b5cf6)"
         />
       </div>
 

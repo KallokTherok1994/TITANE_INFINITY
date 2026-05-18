@@ -58,7 +58,7 @@ import { registerCustomMode } from '@/config/chatModes.config';
 import { useChatModeStore } from '@/stores/useChatModeStore';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
-import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
+import { Download, FileText, Copy, Trash2, Search, Volume2, VolumeX, Mic, Settings, CheckCircle, AlertCircle, Share2 } from 'lucide-react';
 import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
@@ -186,13 +186,12 @@ export const CONVERSATION_MODERN_MODE_IDS: ModernChatModeId[] = [
 ];
 
 const CONVERSATION_SUGGESTIONS = [
-  {
-    label: '💡 Brainstorm ideas',
-    value: 'Help me brainstorm some ideas for...',
-  },
-  { label: '📝 Summarize', value: 'Please summarize the key points...' },
-  { label: '🔍 Analyze', value: 'Analyze this for me...' },
-  { label: '💬 Explain', value: 'Explain this concept...' },
+  { label: '💡 Brainstormer', value: "Aide-moi à brainstormer des idées pour..." },
+  { label: '📝 Résumer', value: 'Résume les points clés de...' },
+  { label: '🔍 Analyser', value: 'Analyse ceci pour moi : ' },
+  { label: '🧠 Expliquer', value: 'Explique-moi le concept de...' },
+  { label: '✍️ Rédiger', value: 'Rédige un texte sur le sujet suivant : ' },
+  { label: '⚡ Planifier', value: 'Aide-moi à planifier...' },
 ];
 
 const LOADING_INDICATOR_GRACE_MS = 1200;
@@ -1699,6 +1698,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [showExportMenu, setShowExportMenu] = useState(false);
+    const exportMenuRef = useRef<HTMLDivElement>(null);
     const [generatedFiles, setGeneratedFiles] = useState<GeneratedFileEntry[]>([]);
     const [showToolSelector, setShowToolSelector] = useState(false);
 
@@ -3128,6 +3129,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       return () => clearTimeout(timer);
     }, [fullscreen]);
 
+    // ═══ Close export menu on outside click ═══
+    useEffect(() => {
+      if (!showExportMenu) return;
+      const h = (e: MouseEvent) => {
+        if (!exportMenuRef.current?.contains(e.target as Node)) setShowExportMenu(false);
+      };
+      document.addEventListener('mousedown', h);
+      return () => document.removeEventListener('mousedown', h);
+    }, [showExportMenu]);
+
     // ═══ RENDER ═══
     return (
       <div
@@ -3183,38 +3194,45 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   <Search size={16} />
                 </button>
 
-                {/* Export JSON */}
-                <button
-                  className="conversation-icon-btn"
-                  data-testid="btn-export-json"
-                  onClick={handleExportJson}
-                  title="Exporter en JSON"
-                  disabled={!hasMessages}
-                >
-                  <Download size={16} />
-                </button>
-
-                {/* Export Markdown */}
-                <button
-                  className="conversation-icon-btn"
-                  data-testid="btn-export-markdown"
-                  onClick={handleExportMarkdown}
-                  title="Exporter en Markdown"
-                  disabled={!hasMessages}
-                >
-                  <FileText size={16} />
-                </button>
-
-                {/* Copy to Clipboard */}
-                <button
-                  className="conversation-icon-btn"
-                  data-testid="btn-copy-chat"
-                  onClick={handleCopyAll}
-                  title="Copier dans le presse-papier"
-                  disabled={!hasMessages}
-                >
-                  <Copy size={16} />
-                </button>
+                {/* Export dropdown (JSON + Markdown + Copier) */}
+                <div className="conversation-export-menu-container" ref={exportMenuRef}>
+                  <button
+                    className={`conversation-icon-btn${showExportMenu ? ' active' : ''}`}
+                    data-testid="btn-export-menu"
+                    onClick={() => setShowExportMenu(p => !p)}
+                    title="Exporter la conversation"
+                    aria-label="Exporter la conversation"
+                    aria-expanded={showExportMenu}
+                    disabled={!hasMessages}
+                  >
+                    <Share2 size={16} />
+                  </button>
+                  {showExportMenu && (
+                    <div className="conversation-export-menu" role="menu" data-testid="export-dropdown">
+                      <button
+                        role="menuitem"
+                        onClick={() => { handleExportJson(); setShowExportMenu(false); }}
+                        disabled={!hasMessages}
+                      >
+                        <Download size={13} /> JSON
+                      </button>
+                      <button
+                        role="menuitem"
+                        onClick={() => { handleExportMarkdown(); setShowExportMenu(false); }}
+                        disabled={!hasMessages}
+                      >
+                        <FileText size={13} /> Markdown
+                      </button>
+                      <button
+                        role="menuitem"
+                        onClick={() => { void handleCopyAll(); setShowExportMenu(false); }}
+                        disabled={!hasMessages}
+                      >
+                        <Copy size={13} /> Copier
+                      </button>
+                    </div>
+                  )}
+                </div>
 
                 {/* Audio Toggle */}
                 <button
@@ -3229,7 +3247,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   aria-checked={audioEnabled}
                   role="switch"
                 >
-                  {audioEnabled ? '🔊' : '🔇'}
+                  {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
                 </button>
 
                 {/* Voice Input */}
@@ -3245,7 +3263,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   }
                   aria-pressed={isRecording}
                 >
-                  🎤
+                  <Mic size={16} />
                 </button>
 
                 {/* Mode Builder */}
@@ -3256,7 +3274,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   title="Créer un mode personnalisé"
                   aria-label="Créer un mode personnalisé"
                 >
-                  ⚙️
+                  <Settings size={16} />
                 </button>
 
                 {/* Health Check */}
@@ -3267,7 +3285,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   title={`Santé: ${healthReport?.status || 'Unknown'}`}
                   aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
                 >
-                  {isHealthy ? '✅' : '⚠️'}
+                  {isHealthy ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
                 </button>
 
                 {/* Clear Chat */}
@@ -3307,7 +3325,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                         disabled={!hasMessages}
                         role="menuitem"
                       >
-                        📥 Export JSON
+                        Export JSON
                       </button>
                       <button
                         onClick={() => {
@@ -3317,17 +3335,17 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                         disabled={!hasMessages}
                         role="menuitem"
                       >
-                        📄 Export MD
+                        Export Markdown
                       </button>
                       <button
                         onClick={() => {
-                          handleCopyAll();
+                          void handleCopyAll();
                           setShowMoreMenu(false);
                         }}
                         disabled={!hasMessages}
                         role="menuitem"
                       >
-                        📋 Copier
+                        Copier
                       </button>
                       <button
                         onClick={() => {
@@ -3336,7 +3354,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                         }}
                         role="menuitem"
                       >
-                        ⚙️ Modes
+                        Modes personnalisés
                       </button>
                       <button
                         onClick={() => {
@@ -3345,16 +3363,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                         }}
                         role="menuitem"
                       >
-                        {isHealthy ? '✅' : '⚠️'} Santé
+                        Santé système
                       </button>
                       <button
                         onClick={() => {
-                          handleClearChat();
+                          void handleClearChat();
                           setShowMoreMenu(false);
                         }}
                         role="menuitem"
                       >
-                        🗑️ Effacer
+                        Effacer
                       </button>
                     </div>
                   )}
@@ -3472,8 +3490,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             )}
           </div>
 
-          {/* ═══ THINKING PANEL ═══ */}
-          <ThinkingPanel
+          {/* ═══ THINKING PANEL (conditionnel — masqué si aucune étape ni génération active) ═══ */}
+          {(thinking.isThinking || thinking.steps.length > 0) && <ThinkingPanel
             steps={thinking.steps}
             isThinking={thinking.isThinking}
             state={thinkingState}
@@ -3510,7 +3528,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 : undefined)
             }
             cognitiveTrace={latestAssistantRuntime?.cognitiveTrace ?? null}
-          />
+          />}
 
           {/* ═══ MESSAGES AREA ═══ */}
           <div
@@ -3529,6 +3547,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 </div>
                 <p>Comment puis-je vous aider aujourd'hui&nbsp;?</p>
                 <div className="conversation-empty-suggestions">{suggestionButtons}</div>
+                {fullscreen && (
+                  <div className="conversation-empty-shortcuts">
+                    <kbd>Ctrl</kbd><span>+</span><kbd>N</kbd>
+                    <span className="conversation-empty-shortcut-label">Nouvelle conversation</span>
+                    <span className="conversation-empty-shortcut-sep">·</span>
+                    <kbd>Ctrl</kbd><span>+</span><kbd>B</kbd>
+                    <span className="conversation-empty-shortcut-label">Historique</span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -3594,6 +3621,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             </button>
           )}
 
+          {/* ═══ BOTTOM CHROME: toolbar + input groupés ═══ */}
+          <div className="conversation-bottom-chrome">
           {/* ═══ CHAT TOOLBAR (v35.1.8) ═══ */}
           <ChatToolbar
             onFilesAnalyzed={handleFilesAnalyzed}
@@ -3668,6 +3697,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               <span>{isLoading ? 'Envoi…' : 'Envoyer'}</span>
             </button>
           </div>
+
+          </div>{/* end conversation-bottom-chrome */}
 
           {/* ═══ MODE BUILDER MODAL ═══ */}
           {showModeBuilder && (

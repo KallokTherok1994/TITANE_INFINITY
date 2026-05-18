@@ -36,6 +36,7 @@ export interface UseConversationsReturn {
   archiveConversation: (conversationId: string) => Promise<void>;
   restoreConversation: (conversationId: string) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<void>;
+  renameConversation: (conversationId: string, newTitle: string) => Promise<void>;
   refreshConversations: () => Promise<void>;
 }
 
@@ -200,6 +201,26 @@ export function useConversations(): UseConversationsReturn {
   );
 
   /**
+   * Renommer une conversation (modifie le titre persisté)
+   */
+  const renameConversation = useCallback(
+    async (conversationId: string, newTitle: string): Promise<void> => {
+      const trimmed = newTitle.trim();
+      if (!trimmed) return;
+      const conv = await conversationStorage.loadConversation(conversationId);
+      if (!conv) return;
+      conv.title = trimmed;
+      await conversationStorage.saveConversation(conv);
+      const updatedList = await conversationStorage.listConversations();
+      const updatedActive = await conversationStorage.getActiveConversation();
+      setConversations(updatedList);
+      setActiveConversation(updatedActive);
+      logger.info('Conversation renamed', { id: conversationId, title: trimmed });
+    },
+    []
+  );
+
+  /**
    * Rafraîchir la liste des conversations
    */
   const refreshConversations = useCallback(async (): Promise<void> => {
@@ -223,6 +244,7 @@ export function useConversations(): UseConversationsReturn {
     archiveConversation,
     restoreConversation,
     deleteConversation,
+    renameConversation,
     refreshConversations,
   };
 }

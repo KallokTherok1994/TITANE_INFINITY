@@ -3,10 +3,10 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ConversationHistorySidebar — ChatGPT/Claude style sidebar
- * Uses conversationStorage via useConversations hook for proper data access.
+ * Features: conversation list, rename inline, archive, delete, context menu
  */
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useConversations } from '@/hooks/useConversations';
 import type { ConversationSummary } from '@/types/conversation';
 
@@ -102,25 +102,124 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
     isLoading,
     setActiveConversation,
     activeConversationId,
+    renameConversation,
+    archiveConversation,
+    deleteConversation,
   } = useConversations();
 
   const [searchQuery, setSearchQuery] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
 
+  // Context menu state
+  const [contextMenuId, setContextMenuId] = useState<string | null>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  // Inline rename state
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState('');
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  // Close context menu on outside click
+  useEffect(() => {
+    if (!contextMenuId) return;
+    const handleClick = (e: MouseEvent) => {
+      if (!contextMenuRef.current?.contains(e.target as Node)) {
+        setContextMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [contextMenuId]);
+
+  // Auto-focus the rename input when editing
+  useEffect(() => {
+    if (editingId && editInputRef.current) {
+      editInputRef.current.focus();
+      editInputRef.current.select();
+    }
+  }, [editingId]);
+
   const handleNewConversation = useCallback(() => {
     setSearchQuery('');
+    setContextMenuId(null);
     onNewConversation();
   }, [onNewConversation]);
 
   const handleSelectConversation = useCallback(async (convId: string) => {
+    if (editingId) return; // Don't switch during rename
+    setContextMenuId(null);
     try {
       await setActiveConversation(convId);
     } catch {
       // non-fatal
     }
-    // Notify parent to remount ConversationSection with the new conversation
     onConversationSelect?.(convId);
-  }, [setActiveConversation, onConversationSelect]);
+  }, [setActiveConversation, onConversationSelect, editingId]);
+
+  const handleContextMenu = useCallback((e: React.MouseEvent, convId: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setContextMenuId(prev => prev === convId ? null : convId);
+  }, []);
+
+  const handleStartRename = useCallback((conv: ConversationSummary) => {
+    setContextMenuId(null);
+    setEditingId(conv.id);
+    const rawTitle = conv.title && conv.title !== 'Untitled' && conv.title !== 'Nouvelle conversation'
+      ? conv.title
+      : '';
+    setEditDraft(rawTitle);
+  }, []);
+
+  const handleCommitRename = useCallback(async (convId: string) => {
+    const trimmed = editDraft.trim();
+    if (trimmed) {
+      try {
+        await renameConversation(convId, trimmed);
+      } catch {
+        // non-fatal
+      }
+    }
+    setEditingId(null);
+    setEditDraft('');
+  }, [editDraft, renameConversation]);
+
+  const handleCancelRename = useCallback(() => {
+    setEditingId(null);
+    setEditDraft('');
+  }, []);
+
+  const handleRenameKeyDown = useCallback(
+    (e: React.KeyboardEvent, convId: string) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        void handleCommitRename(convId);
+      } else if (e.key === 'Escape') {
+        handleCancelRename();
+      }
+    },
+    [handleCommitRename, handleCancelRename]
+  );
+
+  const handleArchive = useCallback(async (convId: string) => {
+    setContextMenuId(null);
+    try {
+      await archiveConversation(convId);
+    } catch {
+      // non-fatal
+    }
+  }, [archiveConversation]);
+
+  const handleDelete = useCallback(async (convId: string, title: string) => {
+    setContextMenuId(null);
+    const label = title.length > 40 ? title.slice(0, 40) + '…' : title;
+    if (!window.confirm(`Supprimer "${label}" ? Cette action est irréversible.`)) return;
+    try {
+      await deleteConversation(convId);
+    } catch {
+      // non-fatal
+    }
+  }, [deleteConversation]);
 
   // Filter to active conversations only, sorted by most recent
   const activeConversations = conversations
@@ -129,13 +228,13 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
 
   const filtered = searchQuery.trim()
     ? activeConversations.filter(c =>
+        (c.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         formatConvTitle(c).toLowerCase().includes(searchQuery.toLowerCase())
       )
     : activeConversations;
 
   const groups = groupConversationsByDate(filtered);
 
-  // Resolve active ID (from hook or prop)
   const resolvedActiveId = activeConversationId ?? currentConversationId ?? null;
 
   return (
@@ -166,7 +265,7 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
         <button
           className="titane-chat-sidebar-new-btn"
           onClick={handleNewConversation}
-          title="Nouvelle conversation"
+          title="Nouvelle conversation (Ctrl+N)"
           aria-label="Démarrer une nouvelle conversation"
           data-testid="btn-new-conversation"
         >
@@ -231,29 +330,115 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
             )}
             {group.items.map(conv => {
               const isActive = conv.id === resolvedActiveId;
+              const isEditing = editingId === conv.id;
+              const showContextMenu = contextMenuId === conv.id;
+              const displayTitle = formatConvTitle(conv);
+
               return (
-                <button
+                <div
                   key={conv.id}
-                  className={`titane-chat-sidebar-item${isActive ? ' titane-chat-sidebar-item--active' : ''}`}
+                  className={`titane-chat-sidebar-item-wrapper${isActive ? ' titane-chat-sidebar-item-wrapper--active' : ''}`}
                   role="listitem"
-                  onClick={() => handleSelectConversation(conv.id)}
-                  title={`${formatConvTitle(conv)} · ${conv.message_count} msg`}
-                  aria-label={`Conversation: ${formatConvTitle(conv)}`}
-                  aria-current={isActive ? 'true' : undefined}
-                  data-testid={`conversation-item-${conv.id}`}
                 >
-                  <span className="titane-chat-sidebar-item-icon">💬</span>
-                  {isOpen ? (
-                    <>
-                      <span className="titane-chat-sidebar-item-label">
-                        {formatConvTitle(conv)}
-                      </span>
-                      <span className="titane-chat-sidebar-item-meta">
-                        {formatRelativeTime(conv.updated_at)}
-                      </span>
-                    </>
-                  ) : null}
-                </button>
+                  {isEditing && isOpen ? (
+                    /* ── INLINE RENAME INPUT ── */
+                    <div className="titane-chat-sidebar-item titane-chat-sidebar-item--editing">
+                      <span className="titane-chat-sidebar-item-icon">✏️</span>
+                      <input
+                        ref={editInputRef}
+                        type="text"
+                        className="titane-chat-sidebar-rename-input"
+                        value={editDraft}
+                        onChange={e => setEditDraft(e.target.value)}
+                        onBlur={() => void handleCommitRename(conv.id)}
+                        onKeyDown={e => handleRenameKeyDown(e, conv.id)}
+                        placeholder={displayTitle}
+                        aria-label="Nouveau titre"
+                        maxLength={80}
+                        data-testid={`rename-input-${conv.id}`}
+                      />
+                    </div>
+                  ) : (
+                    /* ── CONVERSATION ITEM ── */
+                    <button
+                      className={`titane-chat-sidebar-item${isActive ? ' titane-chat-sidebar-item--active' : ''}`}
+                      onClick={() => void handleSelectConversation(conv.id)}
+                      title={`${displayTitle} · ${conv.message_count} msg`}
+                      aria-label={`Conversation: ${displayTitle}`}
+                      aria-current={isActive ? 'true' : undefined}
+                      data-testid={`conversation-item-${conv.id}`}
+                    >
+                      <span className="titane-chat-sidebar-item-icon">💬</span>
+                      {isOpen ? (
+                        <>
+                          <span className="titane-chat-sidebar-item-label">
+                            {displayTitle}
+                          </span>
+                          <span className="titane-chat-sidebar-item-footer">
+                            <span className="titane-chat-sidebar-item-meta">
+                              {formatRelativeTime(conv.updated_at)}
+                            </span>
+                            {conv.message_count > 0 && (
+                              <span className="titane-chat-sidebar-item-count">
+                                {conv.message_count}
+                              </span>
+                            )}
+                          </span>
+                        </>
+                      ) : null}
+                    </button>
+                  )}
+
+                  {/* ── CONTEXT MENU TRIGGER ── */}
+                  {isOpen && !isEditing && (
+                    <div className="titane-chat-sidebar-item-menu" ref={showContextMenu ? contextMenuRef : undefined}>
+                      <button
+                        className="titane-chat-sidebar-item-menu-btn"
+                        onClick={e => handleContextMenu(e, conv.id)}
+                        title="Options"
+                        aria-label="Options de la conversation"
+                        aria-expanded={showContextMenu}
+                        data-testid={`conv-menu-btn-${conv.id}`}
+                      >
+                        ⋯
+                      </button>
+
+                      {showContextMenu && (
+                        <div
+                          className="titane-chat-context-menu"
+                          role="menu"
+                          data-testid={`conv-context-menu-${conv.id}`}
+                        >
+                          <button
+                            className="titane-chat-context-menu-item"
+                            role="menuitem"
+                            onClick={() => handleStartRename(conv)}
+                            data-testid={`conv-rename-${conv.id}`}
+                          >
+                            <span>✏️</span> Renommer
+                          </button>
+                          <button
+                            className="titane-chat-context-menu-item"
+                            role="menuitem"
+                            onClick={() => void handleArchive(conv.id)}
+                            data-testid={`conv-archive-${conv.id}`}
+                          >
+                            <span>📦</span> Archiver
+                          </button>
+                          <div className="titane-chat-context-menu-separator" />
+                          <button
+                            className="titane-chat-context-menu-item titane-chat-context-menu-item--danger"
+                            role="menuitem"
+                            onClick={() => void handleDelete(conv.id, displayTitle)}
+                            data-testid={`conv-delete-${conv.id}`}
+                          >
+                            <span>🗑️</span> Supprimer
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>

@@ -158,28 +158,25 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
             {env.isTauri ? (
               <div style={{ position: 'relative' }}>
                 {!isCameraActive && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 'var(--space-3)',
-                    }}
-                  >
-                    <div style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
-                      Opt-in requis: activez Vision puis démarrez la caméra.
+                  <div className="vision-optin-panel">
+                    <div className="vision-optin-icon">📷</div>
+                    <div className="vision-optin-title">Vision & Perception</div>
+                    <div className="vision-optin-desc">
+                      Activez Vision pour analyser votre environnement en temps réel via la caméra — estimation d&apos;énergie, engagement et état cognitif.
                     </div>
                     {error && (
-                      <div style={{ color: 'var(--titanium-status-error, #f87171)' }}>{error}</div>
+                      <div className="vision-optin-error">{error}</div>
                     )}
-                    <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={handleStartVision}
-                        disabled={isStarting}
-                      >
-                        {isStarting ? 'Activation...' : 'Activer Vision & Caméra'}
-                      </Button>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={handleStartVision}
+                      disabled={isStarting}
+                    >
+                      {isStarting ? 'Activation en cours…' : 'Activer la Vision'}
+                    </Button>
+                    <div className="vision-optin-note">
+                      Une permission caméra sera demandée par votre système.
                     </div>
                   </div>
                 )}
