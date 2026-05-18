@@ -35,7 +35,7 @@ import {
   ChatResponse,
   StreamConfig,
 } from '@/services/api/chat';
-import { XPSource, XP_REWARDS } from '../types/experience';
+import { XPSource } from '../types/experience';
 import {
   calculateQualityXPReward,
   calculateTitaneResponseXP,
@@ -91,7 +91,6 @@ const loadUserPreferencesEngine = async () => {
 };
 
 type ExperienceTools = {
-  gainXP: (amount: number, source?: string, description?: string) => void;
   awardExperience: (
     domainId: string,
     amount: number,
@@ -102,20 +101,10 @@ type ExperienceTools = {
 
 let _experienceToolsPromise: Promise<ExperienceTools> | null = null;
 
-type ExperienceXPModule = {
-  XP: {
-    gain: (amount: number, source?: string, description?: string) => void;
-  };
-};
-
 const loadExperienceTools = async (): Promise<ExperienceTools> => {
   if (!_experienceToolsPromise) {
-    _experienceToolsPromise = import('@/core/experience/XP_ENGINE').then(xp => {
-      const XP = (xp as unknown as ExperienceXPModule).XP;
-      return {
-        gainXP: XP.gain.bind(XP),
-        awardExperience: awardExperienceToDomain,
-      };
+    _experienceToolsPromise = Promise.resolve({
+      awardExperience: awardExperienceToDomain,
     });
   }
   return _experienceToolsPromise;
@@ -2076,7 +2065,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
           // Système XP qualité: points proportionnels à la qualité de l'interaction
           try {
-            const { gainXP, awardExperience } = await loadExperienceTools();
+            const { awardExperience } = await loadExperienceTools();
 
             // Construire le contexte conversationnel pour l'évaluation
             const conversationCtx: ConversationContext = {
@@ -2092,13 +2081,6 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
             // Évaluer la qualité du message et calculer les XP
             const qualityReward = calculateQualityXPReward(cleanMessage, conversationCtx);
-
-            // XP Global Engine (base + bonus qualité)
-            gainXP(
-              qualityReward.totalXP,
-              'chat_message',
-              `Message [${qualityReward.tier}]: ${cleanMessage.substring(0, 50)}...`
-            );
 
             // XP Domaine Chat: base XP + bonus qualité séparé
             await awardExperience('chat', qualityReward.baseXP, XPSource.ChatMessage, {

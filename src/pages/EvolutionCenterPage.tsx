@@ -16,10 +16,11 @@ import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import { Container, Stack } from '@components/layout';
 import { Card } from '../ui';
-import { xpEngine } from '@/cognitive/progression/xpEngine';
+import { createProgressionStateFromExperience } from '@/cognitive/progression/xpEngine';
 import { knowledgeVault } from '@/cognitive/knowledge/knowledgeVault';
 import { evolutionEngine } from '@/cognitive/evolution/evolutionEngine';
 import { MemoryEngine } from '@/cognitive/memory/memoryEngine';
+import { getExperienceState, initExperienceService } from '@/services/experienceService';
 import type {
   ProgressionState,
   KnowledgeVaultState,
@@ -222,8 +223,9 @@ function EvolutionCenterPageContent(): JSX.Element {
       try {
         setLoading(true);
 
-        // Get progression state
-        const progressionState = xpEngine.getState();
+        // Get progression state from canonical ExperienceState
+        await initExperienceService();
+        const progressionState = createProgressionStateFromExperience(getExperienceState());
         setProgression(progressionState);
 
         // Get knowledge state

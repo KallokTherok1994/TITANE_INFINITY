@@ -31,13 +31,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Container, Stack } from '@components/layout';
-import { createLogger } from '@/utils/logger';
 import { useVisualEngines } from '@hooks/useVisualEngines';
-import { xpEngine } from '@/cognitive/progression/xpEngine';
+import { createProgressionStateFromExperience } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
+import { useExperience } from '@/hooks/useExperience';
 
 // Section Components (Phase 3C Extracted)
 import {
@@ -59,7 +59,6 @@ import './TitanePage.css';
 import './TitanePage-local.css';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
 
-const pageLogger = createLogger('TitanePage');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
@@ -138,8 +137,8 @@ export const TitanePage: React.FC = () => {
     const requestedTab = searchParams.get('tab');
     return isTabId(requestedTab) ? requestedTab : 'conversation';
   });
-  const [progression, setProgression] = useState<ProgressionState | null>(null);
   const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
+  const { state: experienceState } = useExperience();
 
   // LOCK2: titane_active_conversation_id is canonical; legacy key migrated on boot.
   const [conversationId] = useState<string>(() => {
@@ -154,21 +153,11 @@ export const TitanePage: React.FC = () => {
     mode: 'stable',
   });
 
-  // ═══ PROGRESSION LOADING + LIVE SUBSCRIPTION ═══
-  useEffect(() => {
-    const loadProgression = async () => {
-      try {
-        const state = await xpEngine.getState();
-        setProgression(state);
-      } catch (error) {
-        pageLogger.error('Erreur chargement progression', error);
-      }
-    };
-    loadProgression();
-    // Live subscription — updates whenever XP is earned (e.g. per chat message)
-    const unsubscribe = xpEngine.subscribe(state => setProgression({ ...state }));
-    return () => unsubscribe();
-  }, []);
+  // ═══ PROGRESSION SNAPSHOT FROM CANONICAL EXPERIENCE STATE ═══
+  const progression = useMemo<ProgressionState>(
+    () => createProgressionStateFromExperience(experienceState),
+    [experienceState]
+  );
 
   // ═══ MEMORY STATS LOADING ═══
   useEffect(() => {

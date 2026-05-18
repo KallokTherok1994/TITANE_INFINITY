@@ -67,7 +67,7 @@ import {
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
 import type { TwinChatShadowSummary } from '@/services/twin_chat';
-import { xpEngine } from '@/cognitive/progression/xpEngine';
+import { getExperienceState, initExperienceService } from '@/services/experienceService';
 import { useEvolutionStore } from '@/stores/evolutionStore';
 import { aiOrchestrator } from '@/services/ai/orchestrator';
 import { MCPOrchestrator } from '@/services/mcp/MCPOrchestrator';
@@ -1667,11 +1667,12 @@ export async function processMessage(
   // Inject XP + Evolution context (non-blocking, best-effort)
   let progressionContext = '';
   try {
-    const xpState = xpEngine.getState();
+    await initExperienceService();
+    const xpState = getExperienceState();
     const evolutionState = useEvolutionStore.getState();
     const evolutionScore = evolutionState.state?.last_evolution?.health_score ?? null;
     const parts: string[] = [
-      `Niveau XP: ${xpState.level} | Total XP: ${xpState.totalXP}`,
+      `Niveau XP: ${xpState.level} | Total XP: ${xpState.totalXp}`,
     ];
     if (evolutionScore !== null) {
       parts.push(`Score Evolution: ${Math.round(evolutionScore)}`);

@@ -75,16 +75,44 @@ export const loadUserPreferencesEngine = async () => {
 let _experienceToolsPromise: Promise<{
   recordXPGain: (
     amount: number,
-    source: any,
+    source: string,
     description: string,
     metadata?: Record<string, unknown>
   ) => Promise<any>;
 }> | null = null;
 
+const mapXPSourceToDomain = (source: string): string => {
+  const map: Record<string, string> = {
+    chat_message: 'chat',
+    chat_quality_bonus: 'chat',
+    chat_titane_response: 'cognitive',
+    chat_conversation_streak: 'chat',
+    file_import: 'memory',
+    knowledge_ingest: 'memory',
+    memory_ingestion: 'memory',
+    automation_success: 'system',
+    diagnostic_pass: 'system',
+    self_repair: 'system',
+    system_fix: 'system',
+    evolution_cycle: 'system',
+    daily_login: 'system',
+  };
+  return map[source] ?? 'system';
+};
+
 export const loadExperienceTools = async () => {
   if (!_experienceToolsPromise) {
-    _experienceToolsPromise = import('@/cognitive/progression/xpEngine').then(m => ({
-      recordXPGain: m.xpEngine.addXP.bind(m.xpEngine),
+    _experienceToolsPromise = import('@/services/experienceService').then(m => ({
+      recordXPGain: (
+        amount: number,
+        source: string,
+        description: string,
+        metadata?: Record<string, unknown>
+      ) =>
+        m.awardExperience(mapXPSourceToDomain(source), amount, source, {
+          ...metadata,
+          description,
+        }),
     }));
   }
   return _experienceToolsPromise;

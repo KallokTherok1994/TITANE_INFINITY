@@ -49,7 +49,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
   ({ progression, stats }) => {
     const currentModeId = useCurrentChatModeId();
 
-    // Real chatMessageCount from xpEngine state (canonical source — incremented per chat_message XP event)
+    // Real chatMessageCount from canonical ExperienceState history.
     const chatMessageCount = progression?.chatMessageCount ?? stats.chatMessageCount ?? 0;
     const modesUsed = currentModeId ? 1 : 0;
 
@@ -65,7 +65,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
       [stats, chatMessageCount, modesUsed]
     );
 
-    // Resolve achievements from real stats (level/XP/messages computed from xpEngine)
+    // Resolve achievements from real stats (level/XP/messages from ExperienceState).
     const resolvedAchievements = useMemo(
       () =>
         resolveAchievements(ACHIEVEMENTS, {
@@ -119,7 +119,7 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
     );
 
     return (
-      <div className="titane-section titane-section-progression">
+      <div className="titane-section titane-section-progression" data-testid="progression-section">
         <TSectionHeader
           title="⚡ Progression & XP"
           subtitle="Système XP, milestones, talents et achievements"
@@ -148,6 +148,12 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
                 label="Total XP"
                 value={stats.totalXP.toLocaleString()}
                 color="success"
+              />
+              <TMetric
+                label="Messages Chat"
+                value={chatMessageCount.toLocaleString()}
+                color="info"
+                data-testid="progression-chat-message-count"
               />
               <TMetric
                 label="Prochain Niveau"

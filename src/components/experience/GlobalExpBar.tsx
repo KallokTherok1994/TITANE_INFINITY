@@ -6,51 +6,15 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// 🎮 GlobalExpBar — Barre XP toujours visible (HUD premium)
+// GlobalExpBar — Barre XP toujours visible (HUD premium)
 // Cliquer → ouvre ExpPanel complet
 
-import React, { useState, useEffect } from 'react';
-import { tauriClient } from '@/lib/tauriClient';
-import { logger } from '@/lib/logger';
-import { REFRESH_INTERVALS } from '@/constants/timeouts';
+import React from 'react';
+import { useExperience } from '@/hooks/useExperience';
 import '../../styles/exp-fusion.css';
 
-interface GlobalExpState {
-  total_exp: number;
-  level: number;
-  exp_to_next_level: number;
-  exp_current_level: number;
-  level_progress: number;
-}
-
 export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPanel }) => {
-  const [expState, setExpState] = useState<GlobalExpState>({
-    total_exp: 0,
-    level: 1,
-    exp_to_next_level: 100,
-    exp_current_level: 0,
-    level_progress: 0,
-  });
-
-  useEffect(() => {
-    fetchExpState();
-    const interval = setInterval(fetchExpState, REFRESH_INTERVALS.NORMAL); // Refresh toutes les 5s
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchExpState = async () => {
-    try {
-      const state = (await tauriClient.expGetGlobalState()) as GlobalExpState;
-      setExpState(state);
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      logger.error(
-        'Failed to fetch EXP state',
-        { component: 'GlobalExpBar', action: 'fetchExpState' },
-        err
-      );
-    }
-  };
+  const { totalXp, level, xpForNextLevel, progress } = useExperience();
 
   return (
     <div
@@ -59,20 +23,19 @@ export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPane
       title="Cliquer pour ouvrir le panneau EXP"
     >
       <div className="exp-level-badge">
-        <span>💎</span>
-        <span>NIV {expState.level}</span>
+        <span>XP</span>
+        <span>NIV {level}</span>
       </div>
 
       <div className="exp-progress-container">
         <div
           className="exp-progress-fill"
-          style={{ width: `${expState.level_progress * 100}%` }}
+          style={{ width: `${Math.min(progress * 100, 100)}%` }}
         />
       </div>
 
       <div className="exp-progress-text">
-        {expState.exp_current_level.toLocaleString()} /{' '}
-        {expState.exp_to_next_level.toLocaleString()} XP
+        {totalXp.toLocaleString()} / {xpForNextLevel.toLocaleString()} XP
       </div>
     </div>
   );

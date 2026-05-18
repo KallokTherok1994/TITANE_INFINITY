@@ -22,10 +22,31 @@ vi.mock('@/utils/logger', () => ({
 }));
 vi.mock('@hooks/useVisualEngines', () => ({ useVisualEngines: vi.fn() }));
 vi.mock('@/cognitive/progression/xpEngine', () => ({
+  createProgressionStateFromExperience: vi.fn().mockReturnValue({
+    totalXP: 0,
+    level: 1,
+    chatMessageCount: 0,
+    xpInCurrentLevel: 0,
+    xpToNextLevel: 100,
+    lastQualityTier: null,
+    qualityTierCounts: {},
+    milestones: [],
+    unlockedMilestones: [],
+    lastXPGain: null,
+    streakDays: 0,
+    lastActiveDate: '2026-05-18',
+    createdAt: 1,
+    updatedAt: 1,
+  }),
   xpEngine: {
     getState: vi.fn().mockResolvedValue({ totalXP: 0, level: 1, chatMessageCount: 0 }),
     subscribe: vi.fn().mockReturnValue(vi.fn()),
   },
+}));
+vi.mock('@/hooks/useExperience', () => ({
+  useExperience: () => ({
+    state: { totalXp: 0, level: 0, domains: {}, history: [], lastUpdated: 1, version: '1.0.0' },
+  }),
 }));
 vi.mock('@/lib/tauriClient', () => ({
   tauriClient: {

@@ -10,38 +10,32 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { XP } from '../../core/experience/XP_ENGINE';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useExperience } from '../../hooks/useExperience';
 import './XPBar.css';
 
 export const XPBar = (): JSX.Element => {
   const navigate = useNavigate();
-  const [progress, setProgress] = useState(0);
-  const [level, setLevel] = useState(1);
-  const [xpToNext, setXpToNext] = useState(500);
+  const { level, progress, xpForNextLevel, totalXp } = useExperience();
+  const [previousLevel, setPreviousLevel] = useState(level);
   const [isLevelUp, setIsLevelUp] = useState(false);
+  const progressPercent = progress * 100;
+  const xpToNext = Math.max(0, xpForNextLevel - totalXp);
 
-  // Mettre à jour la barre toutes les secondes
   useEffect(() => {
-    const updateBar = () => {
-      const newLevel = XP.state.level;
-      const oldLevel = level;
+    if (level > previousLevel) {
+      setIsLevelUp(true);
+      const timeout = setTimeout(() => setIsLevelUp(false), 600);
+      setPreviousLevel(level);
+      return () => clearTimeout(timeout);
+    }
 
-      setProgress(XP.getProgressToNextLevel());
-      setLevel(newLevel);
-      setXpToNext(XP.getXPToNextLevel());
+    if (level !== previousLevel) {
+      setPreviousLevel(level);
+    }
 
-      // Détection level up
-      if (newLevel > oldLevel) {
-        setIsLevelUp(true);
-        setTimeout(() => setIsLevelUp(false), 600);
-      }
-    };
-
-    updateBar();
-    const interval = setInterval(updateBar, 1000);
-    return () => clearInterval(interval);
-  }, [level]);
+    return undefined;
+  }, [level, previousLevel]);
 
   return (
     <div
@@ -56,7 +50,7 @@ export const XPBar = (): JSX.Element => {
       title={`Niveau ${level} • ${xpToNext} XP vers niveau ${level + 1}`}
       role="button"
       tabIndex={0}
-      aria-label={`Progression XP : Niveau ${level}, ${progress.toFixed(0)}% vers niveau ${level + 1}`}
+      aria-label={`Progression XP : Niveau ${level}, ${progressPercent.toFixed(0)}% vers niveau ${level + 1}`}
     >
       <div className="xp-bar-info">
         <span className="xp-level" aria-hidden="true">
@@ -69,11 +63,11 @@ export const XPBar = (): JSX.Element => {
       <div
         className="xp-bar-container"
         role="progressbar"
-        aria-valuenow={progress}
+        aria-valuenow={progressPercent}
         aria-valuemin={0}
         aria-valuemax={100}
       >
-        <div className="xp-bar" style={{ width: `${progress}%` }} />
+        <div className="xp-bar" style={{ width: `${progressPercent}%` }} />
       </div>
     </div>
   );

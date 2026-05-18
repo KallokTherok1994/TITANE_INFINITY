@@ -23,10 +23,38 @@ vi.mock('@/utils/invoke', () => ({
 }));
 
 vi.mock('@/cognitive/progression/xpEngine', () => ({
+  createProgressionStateFromExperience: vi.fn().mockReturnValue({
+    totalXP: 0,
+    level: 0,
+    xpInCurrentLevel: 0,
+    xpToNextLevel: 100,
+    chatMessageCount: 0,
+    lastQualityTier: null,
+    qualityTierCounts: {},
+    milestones: [],
+    unlockedMilestones: [],
+    lastXPGain: null,
+    streakDays: 0,
+    lastActiveDate: '2026-05-18',
+    createdAt: 1,
+    updatedAt: 1,
+  }),
   xpEngine: {
     getProgressionState: vi.fn().mockReturnValue(null),
     getState: vi.fn().mockReturnValue(null),
   },
+}));
+
+vi.mock('@/services/experienceService', () => ({
+  initExperienceService: vi.fn().mockResolvedValue(undefined),
+  getExperienceState: vi.fn().mockReturnValue({
+    totalXp: 0,
+    level: 0,
+    domains: {},
+    history: [],
+    lastUpdated: 1,
+    version: '1.0.0',
+  }),
 }));
 
 vi.mock('@/hooks/useVisualEngines', () => ({

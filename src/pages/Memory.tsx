@@ -6,7 +6,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { MemorySection, type TitaneStats } from '@/components/sections';
-import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
@@ -58,12 +57,13 @@ export const Memory = () => {
       try {
         await initExperienceService();
         const state = getExperienceState();
-        const progression = xpEngine.getState();
         if (isMounted && state) {
           setXpState({
             totalXp: state.totalXp ?? 0,
             level: state.level ?? 1,
-            chatMessageCount: progression?.chatMessageCount ?? 0,
+            chatMessageCount: state.history.filter(
+              event => event.source === 'chat_message'
+            ).length,
           });
         }
       } catch {

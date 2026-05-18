@@ -22,11 +22,12 @@ export interface XPState {
   history: XPEvent[];
 }
 
+let unsubscribeExperienceMirror: (() => void) | null = null;
+
 /**
  * Moteur XP global TITANE∞
  *
- * Gère l'expérience, la progression et l'historique
- * Tous les gains XP passent par ce système unifié
+ * Facade legacy. La verite persistante est maintenant experienceService.
  */
 export const XP = {
   state: {
@@ -42,44 +43,25 @@ export const XP = {
    * @param description Description optionnelle
    */
   gain(amount: number, source = 'system', description?: string) {
-    const event: XPEvent = {
-      source,
-      amount,
-      timestamp: Date.now(),
-      description,
-    };
-
-    XP.state.total += amount;
-    XP.state.history.push(event);
-
-    // Limiter l'historique à 1000 événements pour éviter la saturation mémoire
-    if (XP.state.history.length > 1000) {
-      XP.state.history = XP.state.history.slice(-1000);
+    if (amount <= 0) {
+      return;
     }
 
-    const previousLevel = XP.state.level;
-    XP.updateLevel();
-
-    // Log level-up
-    if (XP.state.level > previousLevel) {
-      console.warn(`🎉 [XP] Level UP! ${previousLevel} → ${XP.state.level}`);
-    }
-
-    // Synchroniser avec experienceService (Tauri backend)
     try {
       import('../../services/experienceService')
         .then(({ awardExperience }) => {
           const domain = XP.mapSourceToDomain(source);
-          void awardExperience(domain, amount, source, { description });
+          return awardExperience(domain, amount, source, { description });
+        })
+        .then(() => {
+          XP.load();
         })
         .catch(() => {
-          // Fallback silencieux si experienceService non disponible
+          // Legacy facade: XP gain is non-critical for callers.
         });
     } catch {
-      // Ignorer les erreurs de synchronisation
+      // Legacy facade: keep runtime stable if dynamic import is unavailable.
     }
-
-    XP.persist();
   },
 
   /**
@@ -101,43 +83,126 @@ export const XP = {
   },
 
   /**
-   * Calculer le niveau actuel basé sur l'XP total
-   * Formule: Level = 1 + floor(total_xp / 500)
+   * Recharger le miroir depuis la source canonique.
    */
   updateLevel() {
-    XP.state.level = Math.floor(1 + XP.state.total / 500);
+    XP.load();
   },
 
   /**
-   * Sauvegarder l'état dans localStorage
+   * Compat: aucune persistance propre; la persistance est experienceService.
    */
   persist() {
-    try {
-      localStorage.setItem('xp_state', JSON.stringify(XP.state));
-    } catch (e) {
-      console.error('[XP] Erreur sauvegarde localStorage:', e);
-    }
+    XP.load();
   },
 
   /**
-   * Charger l'état depuis localStorage
+   * Charger le miroir depuis experienceService.
    */
   load() {
     try {
-      const s = localStorage.getItem('xp_state');
-      if (s) {
-        const loaded = JSON.parse(s);
-        XP.state = {
-          total: loaded.total || 0,
-          level: loaded.level || 1,
-          history: loaded.history || [],
-        };
-        console.warn(`[XP] État chargé: Level ${XP.state.level}, ${XP.state.total} XP`);
-      } else {
-        console.warn('[XP] Nouvel état initialisé');
+      import('../../services/experienceService')
+        .then(({ getExperienceState, subscribeToExperience }) => {
+          XP.syncFromExperienceState(getExperienceState());
+
+          if (unsubscribeExperienceMirror === null) {
+            unsubscribeExperienceMirror = subscribeToExperience(state => {
+              XP.syncFromExperienceState(state);
+            });
+          }
+        })
+        .catch(() => {
+          // Keep previous mirror if the canonical service is unavailable.
+        });
+    } catch {
+      // Keep previous mirror if dynamic import is unavailable.
+    }
+  },
+
+  syncFromExperienceState(state: {
+    totalXp: number;
+    level: number;
+    history: Array<{
+      source: string;
+      amount: number;
+      timestamp: number;
+      metadata?: Record<string, unknown>;
+      domainId?: string;
+    }>;
+  }) {
+    XP.state = {
+      total: state.totalXp,
+      level: state.level,
+      history: state.history.slice(0, 1000).map(event => ({
+        source: event.source,
+        amount: event.amount,
+        timestamp: event.timestamp,
+        description:
+          typeof event.metadata?.description === 'string'
+            ? event.metadata.description
+            : event.domainId,
+      })),
+    };
+  },
+
+  getLevelStartXP(): number {
+    return XP.state.level * XP.state.level * 100;
+  },
+
+  getNextLevelXP(): number {
+    return (XP.state.level + 1) * (XP.state.level + 1) * 100;
+  },
+
+  getXPInCurrentLevel(): number {
+    return Math.max(0, XP.state.total - XP.getLevelStartXP());
+  },
+
+  getXPSpanForLevel(): number {
+    return Math.max(1, XP.getNextLevelXP() - XP.getLevelStartXP());
+  },
+
+  getStats() {
+    try {
+      import('../../services/experienceService')
+        .then(({ getExperienceState }) => {
+          XP.syncFromExperienceState(getExperienceState());
+        })
+        .catch(() => undefined);
+    } catch {
+      // no-op
+    }
+
+    return {
+      total: XP.state.total,
+      level: XP.state.level,
+      history: XP.state.history,
+      progress: XP.getProgressToNextLevel(),
+      xpToNext: XP.getXPToNextLevel(),
+    };
+  },
+
+  teardown() {
+    if (unsubscribeExperienceMirror !== null) {
+      unsubscribeExperienceMirror();
+      unsubscribeExperienceMirror = null;
+    }
+  },
+
+  getCanonicalStorageKey(): string {
+    return 'titane_experience';
+  },
+
+  getLegacyStorageKey(): string {
+    return 'xp_state';
+  },
+
+  clearLegacyLocalStorage() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(XP.getLegacyStorageKey());
       }
-    } catch (e) {
-      console.error('[XP] Erreur chargement localStorage:', e);
+    } catch {
+      // no-op
     }
   },
 
@@ -145,15 +210,14 @@ export const XP = {
    * Obtenir la progression vers le prochain niveau (0-100%)
    */
   getProgressToNextLevel(): number {
-    const xpInCurrentLevel = XP.state.total % 500;
-    return (xpInCurrentLevel / 500) * 100;
+    return (XP.getXPInCurrentLevel() / XP.getXPSpanForLevel()) * 100;
   },
 
   /**
    * Obtenir l'XP nécessaire pour le prochain niveau
    */
   getXPToNextLevel(): number {
-    return 500 - (XP.state.total % 500);
+    return Math.max(0, XP.getNextLevelXP() - XP.state.total);
   },
 
   /**
@@ -180,13 +244,14 @@ export const XP = {
    * Réinitialiser l'état (dev uniquement)
    */
   reset() {
-    XP.state = {
-      total: 0,
-      level: 1,
-      history: [],
-    };
-    XP.persist();
-    console.warn('[XP] État réinitialisé');
+    try {
+      import('../../services/experienceService')
+        .then(({ resetExperienceState }) => resetExperienceState())
+        .then(() => XP.load())
+        .catch(() => undefined);
+    } catch {
+      // no-op
+    }
   },
 };
 
@@ -203,10 +268,10 @@ function startAutoSave() {
   if (autoSaveIntervalId !== null) return; // Already running
 
   autoSaveIntervalId = setInterval(() => {
-    XP.persist();
+      XP.load();
   }, 60000); // Every 60s
 
-  console.warn('[XP] Auto-save activé (60s)');
+  console.warn('[XP] Miroir experienceService activé (60s)');
 }
 
 /**
@@ -216,7 +281,7 @@ export function stopAutoSave() {
   if (autoSaveIntervalId !== null) {
     clearInterval(autoSaveIntervalId);
     autoSaveIntervalId = null;
-    console.warn('[XP] Auto-save désactivé');
+    console.warn('[XP] Miroir experienceService désactivé');
   }
 }
 

@@ -39,13 +39,14 @@ import { useVisualEngines } from '@hooks/useVisualEngines';
 import { TitaneLogo } from '@components/branding/TitaneLogo';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import { xpEngine } from '@/cognitive/progression/xpEngine';
+import { createProgressionStateFromExperience } from '@/cognitive/progression/xpEngine';
 import { Settings, TrendingUp, Brain, Database, Sprout } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
+import { getExperienceState, initExperienceService } from '@/services/experienceService';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -84,8 +85,8 @@ export const EvoPage: React.FC = () => {
   useEffect(() => {
     const loadProgression = async () => {
       try {
-        const state = await xpEngine.getState();
-        setProgression(state);
+        await initExperienceService();
+        setProgression(createProgressionStateFromExperience(getExperienceState()));
       } catch (error) {
         console.error('❌ Erreur chargement progression:', error);
       }

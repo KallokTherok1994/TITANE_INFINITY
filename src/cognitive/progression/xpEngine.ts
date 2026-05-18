@@ -1,111 +1,87 @@
 /**
- * TITANE_INFINITY v30.0.0 — Proprietary License
- * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * TITANE_INFINITY v30.0.0 - Proprietary License
+ * Copyright 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v30.0.0 — XP ENGINE (Progression)
- *   Moteur d'expérience unifié avec persistence Tauri
- * ═══════════════════════════════════════════════════════════════════════════════
+ * XP Engine compatibility adapter.
+ *
+ * Runtime XP truth is owned by `experienceService` (`ExperienceState`) and the
+ * canonical XP math in `services/xp/xpCanonical`. This adapter keeps legacy
+ * callers on `xpEngine.*` without creating a second persisted progression
+ * state.
  */
 
-import { secureInvoke } from '@/lib/security';
+import type {
+  ProgressionMilestone,
+  ProgressionState,
+  XPEvent,
+  XPSource,
+} from '@/cognitive/types';
+import {
+  awardExperience,
+  getExperienceState,
+  initExperienceService,
+  resetExperienceState,
+  subscribeToExperience,
+} from '@/services/experienceService';
+import type { ExperienceGain, ExperienceState } from '@/types/experience';
 import { createLogger } from '@/utils/logger';
 import {
   calculateLevel as canonicalCalculateLevel,
+  calculateProgress as canonicalCalculateProgress,
+  xpForLevel as canonicalXpForLevel,
   xpInCurrentLevel as canonicalXpInCurrentLevel,
   xpToNextLevel as canonicalXpToNextLevel,
-  calculateProgress as canonicalCalculateProgress,
-  MAX_LEVEL as CANONICAL_MAX_LEVEL,
 } from '@/services/xp/xpCanonical';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// LOGGER
-// ─────────────────────────────────────────────────────────────────────────────
 
 const logger = createLogger('XPEngine');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TYPES (Inline pour éviter les problèmes d'import circulaire)
-// ─────────────────────────────────────────────────────────────────────────────
-
-export type XPSource =
-  | 'chat_message'
-  | 'chat_quality_bonus'
-  | 'chat_titane_response'
-  | 'chat_conversation_streak'
-  | 'file_import'
-  | 'automation_success'
-  | 'diagnostic_pass'
-  | 'self_repair'
-  | 'system_fix'
-  | 'milestone_unlock'
-  | 'daily_login'
-  | 'evolution_cycle'
-  | 'knowledge_ingest'
-  | 'manual';
-
-export interface XPEvent {
-  id: string;
-  timestamp: number;
-  amount: number;
-  source: XPSource;
-  description: string;
-  metadata?: Record<string, unknown>;
-}
-
-export interface ProgressionMilestone {
-  id: string;
-  name: string;
-  description: string;
-  requiredXP: number;
-  requiredLevel: number;
-  unlockedAt?: number;
-  icon: string;
-  reward?: string;
-}
-
-export interface ProgressionState {
-  level: number;
-  totalXP: number;
-  xpInCurrentLevel: number;
-  xpToNextLevel: number;
-  chatMessageCount: number; // incremented on every 'chat_message' XP event
-  /** Dernier tier de qualité du message (pour feedback UI) */
-  lastQualityTier: string | null;
-  /** Compteur de messages par tier de qualité */
-  qualityTierCounts: Record<string, number>;
-  milestones: ProgressionMilestone[];
-  unlockedMilestones: string[];
-  lastXPGain: XPEvent | null;
-  streakDays: number;
-  lastActiveDate: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// CONSTANTS
-// ─────────────────────────────────────────────────────────────────────────────
-
 const XP_PER_LEVEL = 500;
-const MAX_LEVEL = 100;
 const MAX_HISTORY = 100;
-const STORAGE_KEY = 'titane_progression_state';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MILESTONES DEFINITION
-// ─────────────────────────────────────────────────────────────────────────────
+const XP_SOURCES = new Set<string>([
+  'chat_message',
+  'chat_quality_bonus',
+  'chat_titane_response',
+  'chat_conversation_streak',
+  'file_import',
+  'automation_success',
+  'diagnostic_pass',
+  'self_repair',
+  'system_fix',
+  'milestone_unlock',
+  'daily_login',
+  'evolution_cycle',
+  'knowledge_ingest',
+  'manual',
+]);
+
+const XP_AMOUNTS: Record<XPSource, number> = {
+  chat_message: 5,
+  chat_quality_bonus: 0,
+  chat_titane_response: 3,
+  chat_conversation_streak: 8,
+  file_import: 20,
+  automation_success: 15,
+  diagnostic_pass: 10,
+  self_repair: 50,
+  system_fix: 25,
+  milestone_unlock: 0,
+  daily_login: 10,
+  evolution_cycle: 30,
+  knowledge_ingest: 15,
+  manual: 0,
+};
 
 const DEFAULT_MILESTONES: ProgressionMilestone[] = [
   {
     id: 'first_message',
     name: 'Premier Contact',
-    description: 'Envoyez votre premier message à TITANE',
+    description: 'Envoyez votre premier message a TITANE',
     requiredXP: 5,
     requiredLevel: 1,
-    icon: '💬',
+    icon: 'message',
     reward: '+10 XP bonus',
   },
   {
@@ -114,7 +90,7 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
     description: 'Importez votre premier fichier',
     requiredXP: 20,
     requiredLevel: 1,
-    icon: '📁',
+    icon: 'file',
     reward: '+25 XP bonus',
   },
   {
@@ -123,17 +99,17 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
     description: 'Atteignez le niveau 5',
     requiredXP: 2500,
     requiredLevel: 5,
-    icon: '🌱',
+    icon: 'level',
     reward: 'Badge Apprenti',
   },
   {
     id: 'level_10',
-    name: 'Initié',
+    name: 'Initie',
     description: 'Atteignez le niveau 10',
     requiredXP: 5000,
     requiredLevel: 10,
-    icon: '⭐',
-    reward: 'Badge Initié',
+    icon: 'level',
+    reward: 'Badge Initie',
   },
   {
     id: 'level_25',
@@ -141,161 +117,275 @@ const DEFAULT_MILESTONES: ProgressionMilestone[] = [
     description: 'Atteignez le niveau 25',
     requiredXP: 12500,
     requiredLevel: 25,
-    icon: '🌟',
+    icon: 'expert',
     reward: 'Badge Expert',
   },
   {
     id: 'level_50',
-    name: 'Maître TITANE',
+    name: 'Maitre TITANE',
     description: 'Atteignez le niveau 50',
     requiredXP: 25000,
     requiredLevel: 50,
-    icon: '💎',
-    reward: 'Badge Maître',
+    icon: 'master',
+    reward: 'Badge Maitre',
   },
   {
     id: 'streak_7',
-    name: 'Persévérant',
-    description: "7 jours consécutifs d'utilisation",
+    name: 'Perseverant',
+    description: "7 jours consecutifs d'utilisation",
     requiredXP: 0,
     requiredLevel: 1,
-    icon: '🔥',
+    icon: 'streak',
     reward: '+100 XP bonus',
   },
   {
     id: 'knowledge_10',
-    name: 'Bibliothécaire',
+    name: 'Bibliothecaire',
     description: 'Importez 10 documents',
     requiredXP: 200,
     requiredLevel: 1,
-    icon: '📚',
+    icon: 'knowledge',
     reward: '+50 XP bonus',
   },
   {
     id: 'auto_repair',
-    name: 'Auto-guérison',
-    description: "TITANE s'auto-répare avec succès",
+    name: 'Auto-guerison',
+    description: "TITANE s'auto-repare avec succes",
     requiredXP: 0,
     requiredLevel: 1,
-    icon: '🔧',
+    icon: 'repair',
     reward: '+75 XP bonus',
   },
   {
     id: 'evolution_cycle',
-    name: 'Évolution',
-    description: "Complétez un cycle d'évolution",
+    name: 'Evolution',
+    description: "Completez un cycle d'evolution",
     requiredXP: 0,
     requiredLevel: 1,
-    icon: '🧬',
+    icon: 'evolution',
     reward: '+100 XP bonus',
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// XP AMOUNTS BY SOURCE
-// ─────────────────────────────────────────────────────────────────────────────
+function normalizeSource(source: string): XPSource {
+  return XP_SOURCES.has(source) ? (source as XPSource) : 'manual';
+}
 
-const XP_AMOUNTS: Record<XPSource, number> = {
-  chat_message: 5,
-  chat_quality_bonus: 0, // Variable selon qualité (géré par le caller)
-  chat_titane_response: 3,
-  chat_conversation_streak: 8,
-  file_import: 20,
-  automation_success: 15,
-  diagnostic_pass: 10,
-  self_repair: 50,
-  system_fix: 25,
-  milestone_unlock: 0, // Variable selon milestone
-  daily_login: 10,
-  evolution_cycle: 30,
-  knowledge_ingest: 15,
-  manual: 0, // Variable
-};
+function mapSourceToDomain(source: string): string {
+  const map: Record<string, string> = {
+    message_user: 'chat',
+    chat_message: 'chat',
+    chat_quality_bonus: 'chat',
+    chat_conversation_streak: 'chat',
+    response_ai: 'cognitive',
+    chat_titane_response: 'cognitive',
+    file_import: 'memory',
+    file_analysis: 'memory',
+    memory_ingestion: 'memory',
+    memory_promote: 'memory',
+    memory_archive: 'memory',
+    knowledge_ingest: 'memory',
+    system_event: 'system',
+    system_update: 'system',
+    engine_load: 'system',
+    automation_success: 'system',
+    diagnostic_pass: 'system',
+    self_repair: 'system',
+    system_fix: 'system',
+    evolution_cycle: 'system',
+    daily_login: 'system',
+  };
+  return map[source] || 'system';
+}
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DEFAULT STATE
-// ─────────────────────────────────────────────────────────────────────────────
+function toProgressionEvent(event: ExperienceGain): XPEvent {
+  return {
+    id: event.id,
+    timestamp: event.timestamp,
+    amount: event.amount,
+    source: normalizeSource(event.source),
+    description:
+      typeof event.metadata?.description === 'string'
+        ? event.metadata.description
+        : event.domainId,
+    metadata: event.metadata,
+  };
+}
 
-const createDefaultState = (): ProgressionState => ({
-  level: 1,
-  totalXP: 0,
-  xpInCurrentLevel: 0,
-  xpToNextLevel: XP_PER_LEVEL,
-  chatMessageCount: 0,
-  lastQualityTier: null,
-  qualityTierCounts: {},
-  milestones: DEFAULT_MILESTONES,
-  unlockedMilestones: [],
-  lastXPGain: null,
-  streakDays: 0,
-  lastActiveDate:
-    new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString(),
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
-});
+function countChatMessages(history: ExperienceGain[]): number {
+  return history.filter(event => event.source === 'chat_message').length;
+}
 
-// ─────────────────────────────────────────────────────────────────────────────
-// XP ENGINE CLASS
-// ─────────────────────────────────────────────────────────────────────────────
+function countKnowledgeEvents(history: ExperienceGain[]): number {
+  return history.filter(event =>
+    ['knowledge_ingest', 'file_import', 'memory_ingestion'].includes(event.source)
+  ).length;
+}
 
-class XPEngine {
-  private state: ProgressionState;
-  private history: XPEvent[] = [];
-  private initialized = false;
-  private listeners: Set<(state: ProgressionState) => void> = new Set();
+function countConsecutiveActiveDays(history: ExperienceGain[]): number {
+  const days = Array.from(
+    new Set(
+      history.map(event => new Date(event.timestamp).toISOString().slice(0, 10))
+    )
+  ).sort((a, b) => b.localeCompare(a));
 
-  constructor() {
-    this.state = createDefaultState();
+  if (days.length === 0) {
+    return 0;
   }
 
-  // ─────────────────────────────────────────────────────────────────
-  // INITIALIZATION
-  // ─────────────────────────────────────────────────────────────────
+  let streak = 1;
+  let cursor = new Date(`${days[0]}T00:00:00.000Z`).getTime();
 
-  async initialize(): Promise<void> {
-    if (this.initialized) return;
+  for (let index = 1; index < days.length; index += 1) {
+    const expected = new Date(cursor - 86_400_000).toISOString().slice(0, 10);
+    if (days[index] !== expected) {
+      break;
+    }
+    streak += 1;
+    cursor -= 86_400_000;
+  }
 
-    try {
-      // ✅ IPC FIX (Ω∞.v1): xp_get_state → exp_get_global_state (backend command name)
-      // Essayer de charger depuis Tauri backend
-      const backendState = await secureInvoke<ProgressionState>('exp_get_global_state');
-      if (backendState) {
-        this.state = { ...createDefaultState(), ...backendState };
-        logger.info(
-          'État chargé depuis backend:',
-          this.state.level,
-          'XP:',
-          this.state.totalXP
-        );
-      }
-    } catch {
-      // Fallback: charger depuis localStorage
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          this.state = { ...createDefaultState(), ...parsed };
-          logger.info('État chargé depuis localStorage');
-        }
-      } catch (e) {
-        logger.warn('Erreur chargement localStorage:', e);
-      }
+  return streak;
+}
+
+function deriveQualityState(history: ExperienceGain[]): {
+  lastQualityTier: string | null;
+  qualityTierCounts: Record<string, number>;
+} {
+  const qualityTierCounts: Record<string, number> = {};
+  let lastQualityTier: string | null = null;
+
+  for (const event of history) {
+    if (event.source !== 'chat_quality_bonus') {
+      continue;
     }
 
-    // Vérifier le streak
-    this.checkStreak();
+    const tier = event.metadata?.qualityTier;
+    if (typeof tier !== 'string') {
+      continue;
+    }
+
+    qualityTierCounts[tier] = (qualityTierCounts[tier] ?? 0) + 1;
+    if (lastQualityTier === null) {
+      lastQualityTier = tier;
+    }
+  }
+
+  return { lastQualityTier, qualityTierCounts };
+}
+
+function deriveMilestones(input: {
+  state: ExperienceState;
+  level: number;
+  totalXP: number;
+  chatMessageCount: number;
+  streakDays: number;
+}): { milestones: ProgressionMilestone[]; unlockedMilestones: string[] } {
+  const knowledgeEvents = countKnowledgeEvents(input.state.history);
+  const hasFileImport = input.state.history.some(event => event.source === 'file_import');
+  const sourceSet = new Set(input.state.history.map(event => event.source));
+
+  const unlockedMilestones: string[] = [];
+  const milestones = DEFAULT_MILESTONES.map(milestone => {
+    let unlocked = input.level >= milestone.requiredLevel && input.totalXP >= milestone.requiredXP;
+
+    if (milestone.id === 'first_message') {
+      unlocked = input.chatMessageCount >= 1;
+    } else if (milestone.id === 'first_file') {
+      unlocked = hasFileImport;
+    } else if (milestone.id === 'streak_7') {
+      unlocked = input.streakDays >= 7;
+    } else if (milestone.id === 'knowledge_10') {
+      unlocked = knowledgeEvents >= 10;
+    } else if (milestone.id === 'auto_repair') {
+      unlocked = sourceSet.has('self_repair');
+    } else if (milestone.id === 'evolution_cycle') {
+      unlocked = sourceSet.has('evolution_cycle');
+    }
+
+    if (unlocked) {
+      unlockedMilestones.push(milestone.id);
+    }
+
+    return {
+      ...milestone,
+      unlockedAt: unlocked ? input.state.lastUpdated : undefined,
+    };
+  });
+
+  return { milestones, unlockedMilestones };
+}
+
+export function createProgressionStateFromExperience(
+  experienceState: ExperienceState
+): ProgressionState {
+  const totalXP = experienceState.totalXp;
+  const level = canonicalCalculateLevel(totalXP);
+  const chatMessageCount = countChatMessages(experienceState.history);
+  const streakDays = countConsecutiveActiveDays(experienceState.history);
+  const qualityState = deriveQualityState(experienceState.history);
+  const milestoneState = deriveMilestones({
+    state: experienceState,
+    level,
+    totalXP,
+    chatMessageCount,
+    streakDays,
+  });
+
+  return {
+    level,
+    totalXP,
+    xpInCurrentLevel: canonicalXpInCurrentLevel(totalXP, level),
+    xpToNextLevel: canonicalXpToNextLevel(totalXP, level),
+    chatMessageCount,
+    lastQualityTier: qualityState.lastQualityTier,
+    qualityTierCounts: qualityState.qualityTierCounts,
+    milestones: milestoneState.milestones,
+    unlockedMilestones: milestoneState.unlockedMilestones,
+    lastXPGain: experienceState.history[0]
+      ? toProgressionEvent(experienceState.history[0])
+      : null,
+    streakDays,
+    lastActiveDate:
+      experienceState.history[0] != null
+        ? new Date(experienceState.history[0].timestamp).toISOString().slice(0, 10)
+        : new Date(experienceState.lastUpdated).toISOString().slice(0, 10),
+    createdAt:
+      experienceState.history[experienceState.history.length - 1]?.timestamp ??
+      experienceState.lastUpdated,
+    updatedAt: experienceState.lastUpdated,
+  };
+}
+
+function createDefaultState(): ProgressionState {
+  return createProgressionStateFromExperience(getExperienceState());
+}
+
+class XPEngine {
+  private state: ProgressionState = createDefaultState();
+  private initialized = false;
+  private serviceUnsubscribe: (() => void) | null = null;
+  private listeners: Set<(state: ProgressionState) => void> = new Set();
+
+  async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
+    }
+
+    await initExperienceService();
+    this.syncFromExperience(getExperienceState());
+
+    if (this.serviceUnsubscribe === null) {
+      this.serviceUnsubscribe = subscribeToExperience(state => {
+        this.syncFromExperience(state);
+        this.notifyListeners();
+      });
+    }
 
     this.initialized = true;
     this.notifyListeners();
   }
 
-  // ─────────────────────────────────────────────────────────────────
-  // CORE XP METHODS
-  // ─────────────────────────────────────────────────────────────────
-
-  /**
-   * Ajouter de l'XP
-   */
   async addXP(
     amount: number,
     source: XPSource,
@@ -308,284 +398,119 @@ class XPEngine {
       throw new Error('Amount must be positive');
     }
 
-    const event: XPEvent = {
-      id: `xp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
-      timestamp: Date.now(),
-      amount: actualAmount,
-      source,
+    await initExperienceService();
+    await awardExperience(mapSourceToDomain(source), actualAmount, source, {
+      ...metadata,
       description,
-      metadata,
-    };
-
-    // Mettre à jour l'état
-    this.state.totalXP += actualAmount;
-    this.state.lastXPGain = event;
-    this.state.updatedAt = Date.now();
-
-    // Track canonical message count for achievement computation
-    if (source === 'chat_message') {
-      this.state.chatMessageCount = (this.state.chatMessageCount ?? 0) + 1;
-    }
-
-    // Track quality tier when quality bonus is awarded
-    if (source === 'chat_quality_bonus' && metadata?.qualityTier) {
-      const tier = String(metadata.qualityTier);
-      this.state.lastQualityTier = tier;
-      if (!this.state.qualityTierCounts) {
-        this.state.qualityTierCounts = {};
-      }
-      this.state.qualityTierCounts[tier] = (this.state.qualityTierCounts[tier] ?? 0) + 1;
-    }
-
-    // Calculer le nouveau niveau
-    this.updateLevel();
-
-    // Vérifier les milestones
-    this.checkMilestones();
-
-    // Ajouter à l'historique
-    this.history.unshift(event);
-    if (this.history.length > MAX_HISTORY) {
-      this.history.pop();
-    }
-
-    // Persister
-    await this.persist();
-
-    // Notifier les listeners
+    });
+    this.syncFromExperience(getExperienceState());
     this.notifyListeners();
 
-    logger.info(
-      `+${actualAmount} XP (${source}) → Level ${this.state.level}, Total: ${this.state.totalXP}`
-    );
+    const event =
+      this.state.lastXPGain ??
+      ({
+        id: `xp_${Date.now()}`,
+        timestamp: Date.now(),
+        amount: actualAmount,
+        source,
+        description,
+        metadata,
+      } satisfies XPEvent);
 
+    logger.info(
+      `+${actualAmount} XP (${source}) -> Level ${this.state.level}, Total: ${this.state.totalXP}`
+    );
     return event;
   }
 
-  /**
-   * Raccourci pour gain XP avec source
-   */
   async gain(source: XPSource, description?: string): Promise<XPEvent> {
     const amount = XP_AMOUNTS[source] ?? 0;
     return this.addXP(amount, source, description || `Gain XP: ${source}`);
   }
 
-  // ─────────────────────────────────────────────────────────────────
-  // LEVEL CALCULATION
-  // ─────────────────────────────────────────────────────────────────
-
-  private updateLevel(): void {
-    const newLevel = canonicalCalculateLevel(this.state.totalXP);
-
-    if (newLevel !== this.state.level) {
-      logger.info(`🎉 Level Up! ${this.state.level} → ${newLevel}`);
-      this.state.level = newLevel;
-    }
-
-    // Calculer XP dans le niveau actuel (formule canonique)
-    this.state.xpInCurrentLevel = canonicalXpInCurrentLevel(this.state.totalXP, newLevel);
-    this.state.xpToNextLevel = canonicalXpToNextLevel(this.state.totalXP, newLevel);
-  }
-
-  /**
-   * Obtenir la progression vers le prochain niveau (0-100%)
-   */
   getProgressToNextLevel(): number {
-    return (this.state.xpInCurrentLevel / XP_PER_LEVEL) * 100;
+    this.refreshSnapshot();
+    return canonicalCalculateProgress(this.state.totalXP, this.state.level) * 100;
   }
-
-  // ─────────────────────────────────────────────────────────────────
-  // MILESTONES
-  // ─────────────────────────────────────────────────────────────────
-
-  private checkMilestones(): void {
-    for (const milestone of this.state.milestones) {
-      if (this.state.unlockedMilestones.includes(milestone.id)) {
-        continue;
-      }
-
-      const levelMet = this.state.level >= milestone.requiredLevel;
-      const xpMet = this.state.totalXP >= milestone.requiredXP;
-
-      // Vérifications spéciales
-      let specialMet = true;
-      if (milestone.id === 'streak_7') {
-        specialMet = this.state.streakDays >= 7;
-      }
-
-      if (levelMet && xpMet && specialMet) {
-        this.unlockMilestone(milestone);
-      }
-    }
-  }
-
-  private unlockMilestone(milestone: ProgressionMilestone): void {
-    if (this.state.unlockedMilestones.includes(milestone.id)) return;
-
-    milestone.unlockedAt = Date.now();
-    this.state.unlockedMilestones.push(milestone.id);
-
-    logger.info(`🏆 Milestone débloqué: ${milestone.name}`);
-
-    // Bonus XP pour certains milestones
-    const bonusXP = this.getMilestoneBonus(milestone.id);
-    if (bonusXP > 0) {
-      // Ajouter le bonus sans déclencher de récursion
-      this.state.totalXP += bonusXP;
-      this.updateLevel();
-    }
-  }
-
-  private getMilestoneBonus(milestoneId: string): number {
-    const bonuses: Record<string, number> = {
-      first_message: 10,
-      first_file: 25,
-      streak_7: 100,
-      knowledge_10: 50,
-      auto_repair: 75,
-      evolution_cycle: 100,
-    };
-    return bonuses[milestoneId] ?? 0;
-  }
-
-  // ─────────────────────────────────────────────────────────────────
-  // STREAK
-  // ─────────────────────────────────────────────────────────────────
-
-  private checkStreak(): void {
-    const today =
-      new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString();
-    const lastDate = this.state.lastActiveDate;
-
-    if (lastDate === today) {
-      // Déjà actif aujourd'hui
-      return;
-    }
-
-    const yesterday =
-      new Date(Date.now() - 86400000).toISOString().split('T')[0] ??
-      new Date(Date.now() - 86400000).toLocaleDateString();
-
-    if (lastDate === yesterday) {
-      // Streak continue
-      this.state.streakDays++;
-      logger.info(`🔥 Streak: ${this.state.streakDays} jours`);
-    } else {
-      // Streak reset
-      this.state.streakDays = 1;
-    }
-
-    this.state.lastActiveDate = today;
-
-    // Bonus XP journalier
-    this.state.totalXP += XP_AMOUNTS.daily_login;
-  }
-
-  // ─────────────────────────────────────────────────────────────────
-  // PERSISTENCE
-  // ─────────────────────────────────────────────────────────────────
-
-  private async persist(): Promise<void> {
-    // Sauvegarder dans localStorage (fallback)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-    } catch (e) {
-      logger.warn('Erreur sauvegarde localStorage:', e);
-    }
-
-    // Sauvegarder dans Tauri backend
-    try {
-      await secureInvoke('progression_save_state', { state: this.state });
-    } catch {
-      // Backend non disponible, localStorage suffit
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────────────
-  // GETTERS
-  // ─────────────────────────────────────────────────────────────────
 
   getState(): ProgressionState {
+    this.refreshSnapshot();
     return { ...this.state };
   }
 
+  getStats(): ProgressionState {
+    return this.getState();
+  }
+
   getLevel(): number {
-    return this.state.level;
+    return this.getState().level;
   }
 
   getTotalXP(): number {
-    return this.state.totalXP;
+    return this.getState().totalXP;
   }
 
   getHistory(): XPEvent[] {
-    return [...this.history];
+    return getExperienceState().history.slice(0, MAX_HISTORY).map(toProgressionEvent);
   }
 
   getMilestones(): ProgressionMilestone[] {
-    return this.state.milestones.map(m => ({
-      ...m,
-      unlockedAt: this.state.unlockedMilestones.includes(m.id) ? m.unlockedAt : undefined,
-    }));
+    return this.getState().milestones.map(milestone => ({ ...milestone }));
   }
 
   getUnlockedMilestones(): string[] {
-    return [...this.state.unlockedMilestones];
+    return [...this.getState().unlockedMilestones];
   }
 
   getStreak(): number {
-    return this.state.streakDays;
+    return this.getState().streakDays;
   }
-
-  // ─────────────────────────────────────────────────────────────────
-  // LISTENERS
-  // ─────────────────────────────────────────────────────────────────
 
   subscribe(listener: (state: ProgressionState) => void): () => void {
     this.listeners.add(listener);
+    void this.initialize().catch(error =>
+      logger.warn('Unable to initialize XP adapter subscription', error)
+    );
     return () => this.listeners.delete(listener);
+  }
+
+  async reset(): Promise<void> {
+    await resetExperienceState();
+    this.syncFromExperience(getExperienceState());
+    this.notifyListeners();
+    logger.info('Etat XP reinitialise via experienceService');
+  }
+
+  private refreshSnapshot(): void {
+    this.syncFromExperience(getExperienceState());
+  }
+
+  private syncFromExperience(state: ExperienceState): void {
+    this.state = createProgressionStateFromExperience(state);
   }
 
   private notifyListeners(): void {
     const state = this.getState();
     this.listeners.forEach(listener => listener(state));
   }
-
-  // ─────────────────────────────────────────────────────────────────
-  // RESET (Admin only)
-  // ─────────────────────────────────────────────────────────────────
-
-  async reset(): Promise<void> {
-    this.state = createDefaultState();
-    this.history = [];
-    await this.persist();
-    this.notifyListeners();
-    logger.info('État réinitialisé');
-  }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SINGLETON EXPORT
-// ─────────────────────────────────────────────────────────────────────────────
 
 export const xpEngine = new XPEngine();
 
-// Auto-initialize
 if (typeof window !== 'undefined') {
-  xpEngine.initialize().catch(err => logger.error('Erreur initialisation:', err));
+  void xpEngine.initialize().catch(error =>
+    logger.error('Erreur initialisation XP adapter:', error)
+  );
 }
 
 export default xpEngine;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// HELPER FUNCTIONS
-// ─────────────────────────────────────────────────────────────────────────────
 
 export function calculateLevel(totalXP: number): number {
   return canonicalCalculateLevel(totalXP);
 }
 
 export function xpForLevel(level: number): number {
-  return level * level * 100;
+  return canonicalXpForLevel(level);
 }
 
 export function xpToNextLevel(totalXP: number): number {
@@ -597,3 +522,5 @@ export function levelProgress(totalXP: number): number {
   const level = canonicalCalculateLevel(totalXP);
   return canonicalCalculateProgress(totalXP, level) * 100;
 }
+
+export { XP_PER_LEVEL };
