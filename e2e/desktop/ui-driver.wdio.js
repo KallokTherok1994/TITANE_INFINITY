@@ -460,6 +460,7 @@ async function getSelectorSnapshot(selector) {
 }
 
 function isSelectorActive(snapshot) {
+  // ✅ FIXED: Use data-state and aria attributes instead of hardcoded Tailwind classes
   if (snapshot.ariaSelected !== null && snapshot.ariaSelected !== undefined) {
     return snapshot.ariaSelected === 'true';
   }
@@ -469,12 +470,14 @@ function isSelectorActive(snapshot) {
   if (snapshot.dataState !== null && snapshot.dataState !== undefined) {
     return snapshot.dataState === 'active' || snapshot.dataState === 'selected';
   }
+  // Fallback: Check for active class markers only (not Tailwind color classes)
   const className = snapshot.className || '';
   return (
     className.includes('active') ||
-    className.includes('--active') ||
-    className.includes('bg-blue-600')
+    className.includes('--active')
   );
+  // NOTE: Removed 'bg-blue-600' hardcoded class check (brittle if Tailwind tokens change)
+  // Target elements must use data-state='active' or aria-selected='true'
 }
 
 export async function clickDeclaredTabs(tabSelectors = [], options = {}) {

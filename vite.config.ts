@@ -195,11 +195,19 @@ export default defineConfig(({ command }) => ({
   // 🔧 Server configuration with proper headers + Network + Ollama Proxy
   server: {
     host: '0.0.0.0', // Listen on all network interfaces for WiFi access
+    // NOTE: port 4000 is the Vite default here, but runtime/dev/tauri.conf.json
+    // overrides it to 5173 via beforeDevCommand: "vite dev --port 5173 --strictPort".
+    // The Tauri dev window connects to http://127.0.0.1:5173.
+    // Do not change devUrl in tauri.conf.json without also updating beforeDevCommand.
     port: 4000,
     strictPort: false,
     allowedHosts: ['.trycloudflare.com'], // Allow Cloudflare quick tunnel hosts for remote dev access
     cors: true,
     open: false, // Don't auto-open browser
+    // NOTE: No explicit hmr.port here. When beforeDevCommand starts Vite with
+    // --port 5173, HMR WebSocket automatically uses the same port (5173). A separate
+    // hmr.port would claim 5173 even when Vite runs on a different port (e.g. 4000
+    // for standalone dev), causing a port conflict that blocks beforeDevCommand.
     headers: {
       // Vite gère automatiquement Content-Type selon l'extension (.tsx → application/javascript)
       'X-Content-Type-Options': 'nosniff',

@@ -8,8 +8,35 @@
 import { defineConfig, devices } from '@playwright/test';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execSync } from 'node:child_process';
 
 const CONFIG_DIR = dirname(fileURLToPath(import.meta.url));
+
+// ✅ FIX: Conditional browser detection
+// Enable Firefox/WebKit only if system dependencies are available
+function getBrowsersAvailable() {
+  const browsers = ['chromium']; // Always available
+
+  try {
+    // Check if Firefox libs are available (libavif16)
+    execSync('ldconfig -p | grep -i libavif', { stdio: 'pipe' });
+    browsers.push('firefox');
+  } catch {
+    // Firefox deps not available, skip
+  }
+
+  try {
+    // Check if WebKit libs are available (libavif16)
+    execSync('ldconfig -p | grep -i libavif', { stdio: 'pipe' });
+    browsers.push('webkit');
+  } catch {
+    // WebKit deps not available, skip
+  }
+
+  return browsers;
+}
+
+const availableBrowsers = getBrowsersAvailable();
 const E2E_WATCH_SCRIPT = resolve(CONFIG_DIR, 'scripts/e2e/vite-e2e-watch.cjs');
 // Start local dev server by default for deterministic E2E runs.
 // Set TITANE_E2E_USE_WEBSERVER=0 when using an externally managed server.
@@ -110,27 +137,31 @@ export default defineConfig({
         ...devices['Pixel 7'],
       },
     },
-    // Firefox DISABLED: Requires libavif16 system dependency (cannot install in container)
-    // Uncomment when running with: sudo npx playwright install-deps
-    // Firefox DISABLED: Requires libavif16 system dependency (cannot install in container)
-    // Uncomment when running with: sudo npx playwright install-deps
-    // {
-    //   name: 'firefox',
-    //   use: {
-    //     ...devices['Desktop Firefox'],
-    //     viewport: { width: 1280, height: 720 },
-    //   },
-    // },
+    // ✅ FIX: Firefox conditional (requires libavif16, auto-detected)
+    ...(availableBrowsers.includes('firefox')
+      ? [
+          {
+            name: 'firefox',
+            use: {
+              ...devices['Desktop Firefox'],
+              viewport: { width: 1280, height: 720 },
+            },
+          },
+        ]
+      : []),
 
-    // WebKit DISABLED: Requires libavif16 system dependency (cannot install in container)
-    // Uncomment when running with: sudo npx playwright install-deps
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari'],
-    //     viewport: { width: 1280, height: 720 },
-    //   },
-    // },
+    // ✅ FIX: WebKit conditional (requires libavif16, auto-detected)
+    ...(availableBrowsers.includes('webkit')
+      ? [
+          {
+            name: 'webkit',
+            use: {
+              ...devices['Desktop Safari'],
+              viewport: { width: 1280, height: 720 },
+            },
+          },
+        ]
+      : []),
   ],
 
   // Dev server configuration
