@@ -60,7 +60,7 @@ const ROUTE_ALIASES: Record<string, string> = {
   '/evolution-center': '/titane',
   '/cognitive-evolution': '/titane',
   '/identity-memory-evolution': '/titane',
-  '/progression': '/titane',
+  '/progression': '/titane?tab=progression',
   '/xp': '/experience',
   '/cognitive': '/dev?tab=diagnostics',
   '/stats': '/dev?tab=diagnostics',

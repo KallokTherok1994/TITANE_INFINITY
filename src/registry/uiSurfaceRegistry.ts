@@ -41,7 +41,11 @@ const SURFACES: UiSurfaceDefinition[] = [
         to: '/titane',
         notes: 'Legacy identity-memory-evo',
       },
-      { from: '/progression', to: '/titane', notes: 'Legacy progression alias' },
+      {
+        from: '/progression',
+        to: '/titane?tab=progression',
+        notes: 'Legacy progression alias -> canonical TITANE progression tab',
+      },
       {
         from: '/memory-evo',
         to: '/titane?tab=transformation',
@@ -105,8 +109,9 @@ const SURFACES: UiSurfaceDefinition[] = [
         selector: '[data-testid="tab-progression"]',
         status: 'ACTIVE_PARTIAL',
         truthClass: 'MIXED_LIVE_AND_STATIC',
-        backendCommands: [],
-        notes: 'XP/level progression; mostly derived from local state',
+        backendCommands: ['experience_get_state', 'experience_update_state'],
+        notes:
+          'XP/level progression derived from canonical ExperienceState via experienceService',
       },
       {
         tabId: 'transformation',

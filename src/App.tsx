@@ -449,7 +449,10 @@ export const AppRouter: React.FC = () => {
             path="/identity-memory-evolution"
             element={<Navigate to="/titane" replace />}
           />
-          <Route path="/progression" element={<Navigate to="/titane" replace />} />
+          <Route
+            path="/progression"
+            element={<Navigate to="/titane?tab=progression" replace />}
+          />
           <Route path="/xp" element={<Navigate to="/experience" replace />} />
           {/* /cognitive redirigé vers DEV Cockpit > Diagnostics */}
           <Route
