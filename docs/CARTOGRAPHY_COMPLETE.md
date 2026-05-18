@@ -2997,3 +2997,11 @@ Gates: pnpm run check 0 errors + 4896/4896 vitest PASS + detect_recurrence PASS 
 > La surface Ollama DEV ajoute un manifeste global compact (`reports/ollama-dev-awareness/latest.json`) généré par `scripts/verify/generate-ollama-dev-awareness.mjs`, documenté par `docs/dev/OLLAMA_DEV_GLOBAL_AWARENESS_MAP.md`, et validé par `pnpm run verify:ollama:dev:awareness`.
 
 > `/total-dev` ajoute l onglet `certification` et le sélecteur `total-dev-certification-panel`. Les profils visibles sont gouvernés par `total_dev_run_certification_profile` côté Rust, avec uniquement des profils fixes et une sortie structurée `PASS` / `FAIL` / `BLOCKED`. La frontière produit reste inchangée: Product Chat `gemma2:2b`, Ollama DEV `qwen3.5:9b`.
+
+## 2026-05-18 — Titane chat fullscreen sidebar
+
+> `/titane` et `/titane?tab=conversation` sont desormais la surface chat plein ecran canonique: `TitanePage` publie `data-layout="chat-fullscreen"`, `ConversationHistorySidebar` porte l historique/recherche/creation/selection, et le tablist historique reste reserve aux routes non conversation comme `/titane?tab=overview`.
+
+> Le delta ne change pas l IPC ni les defaults Ollama. Il referme surtout la divergence UI: meme surface `ConversationSection`, meme etat conversation via hooks existants, scroll host stabilise par `SurfaceRoot`, et migration des sections Titane touchees vers les tokens `--titanium-*`.
+
+> Preuves: 56 tests Vitest cibles passent sur `TitanePage.tabs`, `ui-navigation` et `MessageBubble.desktopWidth`; `pnpm run check`, `pnpm run lint` et `pnpm run verify:frontend-runtime-prebuild` passent avec `BUILD_ALLOWED=YES`.

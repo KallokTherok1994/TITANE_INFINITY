@@ -183,7 +183,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
             </React.Suspense>
           ) : (
             <div>
-              <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
+              <p style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', fontSize: 'var(--text-sm)' }}>
                 Disponible en mode Tauri uniquement
               </p>
               <div style={{ marginTop: 'var(--space-4)' }}>
@@ -216,7 +216,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
                 <p
                   style={{
                     fontSize: 'var(--text-sm)',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     marginTop: 'var(--space-2)',
                   }}
                 >
@@ -229,7 +229,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
                 <p
                   style={{
                     fontSize: 'var(--text-sm)',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     marginTop: 'var(--space-2)',
                   }}
                 >
@@ -242,7 +242,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
                 <p
                   style={{
                     fontSize: 'var(--text-sm)',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     marginTop: 'var(--space-2)',
                   }}
                 >
@@ -257,7 +257,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
             <p
               style={{
                 fontSize: 'var(--text-sm)',
-                color: 'var(--color-text-muted)',
+                color: 'var(--titanium-text-tertiary, #8a8a8a)',
                 marginBottom: 'var(--space-3)',
               }}
             >
@@ -284,12 +284,12 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
               <TMetric
                 label="Messages synchronisés"
                 value={stats.chatMessageCount.toString()}
-                color={'var(--color-info-500)'}
+                color={'var(--titanium-accent-bright, #d1d5db)'}
               />
               <p
                 style={{
                   fontSize: 'var(--text-sm)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >

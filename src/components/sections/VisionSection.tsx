@@ -165,11 +165,11 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
                       gap: 'var(--space-3)',
                     }}
                   >
-                    <div style={{ color: 'var(--color-text-muted)' }}>
+                    <div style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                       Opt-in requis: activez Vision puis démarrez la caméra.
                     </div>
                     {error && (
-                      <div style={{ color: 'var(--color-error-500)' }}>{error}</div>
+                      <div style={{ color: 'var(--titanium-status-error, #f87171)' }}>{error}</div>
                     )}
                     <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
                       <Button
@@ -199,10 +199,10 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
               </div>
             ) : (
               <div className="vision-placeholder">
-                <Camera size={48} color="var(--color-text-muted)" />
+                <Camera size={48} color="var(--titanium-text-tertiary, #8a8a8a)" />
                 <p
                   style={{
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     marginTop: 'var(--space-4)',
                   }}
                 >
@@ -217,7 +217,7 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
             style={{ marginTop: 'var(--space-4)' }}
           >
             <h4>⚠️ Information Importante</h4>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
               Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est
               envoyée vers le cloud.
             </p>

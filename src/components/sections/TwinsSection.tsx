@@ -128,7 +128,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
               {chatStatusMeta.label}
             </span>
             <span
-              style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}
+              style={{ fontSize: 'var(--text-xs)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}
               data-testid="twins-context-meta"
             >
               {lastSyncDisplay ? `Dernière sync : ${lastSyncDisplay}` : 'Sync en attente'}
@@ -165,7 +165,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         </h3>
         <p
           style={{
-            color: 'var(--color-text-muted)',
+            color: 'var(--titanium-text-tertiary, #8a8a8a)',
             fontSize: 'var(--text-sm)',
             marginBottom: 'var(--space-3)',
           }}
@@ -185,7 +185,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
           </h3>
           <p
             style={{
-              color: 'var(--color-text-muted)',
+              color: 'var(--titanium-text-tertiary, #8a8a8a)',
               fontSize: 'var(--text-xs)',
               marginBottom: 'var(--space-2)',
             }}
@@ -215,7 +215,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
           </h3>
           <p
             style={{
-              color: 'var(--color-text-muted)',
+              color: 'var(--titanium-text-tertiary, #8a8a8a)',
               fontSize: 'var(--text-xs)',
               marginBottom: 'var(--space-2)',
             }}
@@ -242,7 +242,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         <h3 style={{ marginBottom: 'var(--space-4)' }}>
           📜 Pacte Fondateur — Alignement TWINS
         </h3>
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
+        <p style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', fontSize: 'var(--text-sm)' }}>
           <strong>🏗️ Excellence Systémique</strong>
           <br />
           Architecture cohérente et maintenable — Orchestration IA automatique optimale
@@ -264,7 +264,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       {/* ═══ TWINS SURFACE SUMMARY ═══ */}
       <Card style={{ marginTop: 'var(--space-4)' }}>
         <h3 style={{ marginBottom: 'var(--space-4)' }}>⚙️ Surface TWINS canonique</h3>
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
+        <p style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', fontSize: 'var(--text-sm)' }}>
           Les anciennes surfaces <strong>Identity</strong> et <strong>Symbiose</strong>
           sont maintenant consolidées ici. Toute navigation legacy redirige vers le point
           d&apos;entrée unique <code>/twins</code>.
@@ -273,7 +273,7 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
           style={{
             marginTop: 'var(--space-3)',
             paddingLeft: 'var(--space-4)',
-            color: 'var(--color-text-secondary)',
+            color: 'var(--titanium-text-secondary, #b8b8b8)',
             fontSize: 'var(--text-sm)',
           }}
         >

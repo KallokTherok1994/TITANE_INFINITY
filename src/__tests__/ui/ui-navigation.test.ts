@@ -65,8 +65,9 @@ const primeChatStorage = () => {
 const makeQueryClient = () =>
   new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-const renderWithRouter = async (ui: React.ReactElement) => {
+const renderWithRouter = async (ui: React.ReactElement, route = '/titane') => {
   primeChatStorage();
+  window.history.pushState({}, '', route);
   render(
     React.createElement(
       QueryClientProvider,
@@ -499,7 +500,7 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
   });
 
   it('TitanePage tabs do not have TopNav-like backdrop-filter', async () => {
-    await renderWithRouter(React.createElement(TitanePage, null));
+    await renderWithRouter(React.createElement(TitanePage, null), '/titane?tab=overview');
 
     const tablist = screen.getByRole('tablist', {
       name: /sections principales titane/i,
@@ -512,7 +513,7 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
   });
 
   it('TitanePage tabs do not have excessive box-shadow', async () => {
-    await renderWithRouter(React.createElement(TitanePage, null));
+    await renderWithRouter(React.createElement(TitanePage, null), '/titane?tab=overview');
 
     const tablist = screen.getByRole('tablist');
     const styles = window.getComputedStyle(tablist);
@@ -526,7 +527,7 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
   });
 
   it('TitanePage tabs are not sticky by default', async () => {
-    await renderWithRouter(React.createElement(TitanePage, null));
+    await renderWithRouter(React.createElement(TitanePage, null), '/titane?tab=overview');
 
     const tablist = screen.getByRole('tablist');
     const styles = window.getComputedStyle(tablist);

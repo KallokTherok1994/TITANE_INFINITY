@@ -1159,7 +1159,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 border: 'none',
                 background:
                   activeTab === tab.id ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
-                color: activeTab === tab.id ? '#60a5fa' : 'var(--color-text-muted)',
+                color: activeTab === tab.id ? '#60a5fa' : 'var(--titanium-text-tertiary, #8a8a8a)',
                 cursor: 'pointer',
                 fontSize: 'var(--text-sm)',
                 fontWeight: activeTab === tab.id ? 600 : 400,
@@ -1187,7 +1187,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <p
               style={{
                 fontSize: 'var(--text-sm)',
-                color: 'var(--color-text-muted)',
+                color: 'var(--titanium-text-tertiary, #8a8a8a)',
                 marginTop: 'var(--space-4)',
               }}
             >
@@ -1209,7 +1209,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <p
               style={{
                 fontSize: 'var(--text-sm)',
-                color: 'var(--color-text-muted)',
+                color: 'var(--titanium-text-tertiary, #8a8a8a)',
                 marginTop: 'var(--space-4)',
               }}
             >
@@ -1232,7 +1232,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p
                 style={{
                   fontSize: 'var(--text-sm)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >
@@ -1243,7 +1243,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <p
               style={{
                 fontSize: 'var(--text-sm)',
-                color: 'var(--color-text-muted)',
+                color: 'var(--titanium-text-tertiary, #8a8a8a)',
                 marginTop: 'var(--space-4)',
               }}
             >
@@ -1257,13 +1257,13 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <Card
               style={{
                 marginTop: 'var(--space-6)',
-                border: '1px solid var(--color-text-muted)',
+                border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
               }}
             >
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 Chargement de la mémoire persistante
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                 TITANE synchronise actuellement les entrées locales et persistantes avant
                 d&apos;afficher le dashboard, l&apos;arbre et la recherche.
               </p>
@@ -1277,13 +1277,13 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <Card
               style={{
                 marginTop: 'var(--space-6)',
-                border: '1px solid var(--color-text-muted)',
+                border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
               }}
             >
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 Aucune mémoire persistante consolidée
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                 La LTM persistante n&apos;a pas encore reçu d&apos;entrée réelle pour ce
                 contexte. Les cartes, l&apos;arbre et la recherche restent donc
                 volontairement vides.
@@ -1291,7 +1291,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p
                 style={{
                   fontSize: 'var(--text-sm)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >
@@ -1314,7 +1314,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)', color: '#f59e0b' }}>
                 ⚠️ Surface connaissance partiellement dégradée
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                 {knowledgeLoadWarning}
               </p>
             </div>
@@ -1325,12 +1325,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           <Card
             style={{
               marginTop: 'var(--space-6)',
-              border: '1px solid var(--color-text-muted)',
+              border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
             }}
           >
             <div data-testid="memory-hybrid-overview-summary">
               <h3 style={{ marginBottom: 'var(--space-2)' }}>Hybrid memory rollout</h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                 Preset actif:{' '}
                 <span data-testid="memory-hybrid-overview-active-preset">
                   {hybridDiagnostics.shadowReadActivePresetLabel}
@@ -1340,7 +1340,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 data-testid="memory-hybrid-overview-orchestration-status"
                 style={{
                   fontSize: 'var(--text-sm)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >
@@ -1353,7 +1353,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 data-testid="memory-hybrid-overview-operator-hint"
                 style={{
                   fontSize: 'var(--text-sm)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >
@@ -1363,7 +1363,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 data-testid="memory-hybrid-overview-orchestration-preview"
                 style={{
                   fontSize: 'var(--text-xs)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >
@@ -1375,7 +1375,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 data-testid="memory-hybrid-overview-preset-history"
                 style={{
                   fontSize: 'var(--text-xs)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >
@@ -1399,9 +1399,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   style={{
                     padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: '1px solid var(--color-text-muted)',
+                    border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                     background: 'transparent',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     cursor: 'pointer',
                   }}
                 >
@@ -1411,7 +1411,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   data-testid="memory-hybrid-overview-export-status"
                   style={{
                     fontSize: 'var(--text-xs)',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   }}
                 >
                   {hybridReportStatus ?? 'Aucun export recent.'}
@@ -1427,7 +1427,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 💬 Mémoires récentes issues du chat
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                 Les dernières informations mémorisées depuis les conversations sont
                 affichées ici et restent sauvegardées de façon persistante.
               </p>
@@ -1456,19 +1456,19 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                         textAlign: 'left',
                         padding: 'var(--space-3)',
                         borderRadius: '10px',
-                        border: '1px solid var(--color-text-muted)',
+                        border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                         background: 'transparent',
                         cursor: 'pointer',
                       }}
                     >
                       <strong
-                        style={{ color: 'var(--color-text-muted)', display: 'block' }}
+                        style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', display: 'block' }}
                       >
                         {'title' in entry ? entry.title : entry.id}
                       </strong>
                       <span
                         style={{
-                          color: 'var(--color-text-muted)',
+                          color: 'var(--titanium-text-tertiary, #8a8a8a)',
                           fontSize: 'var(--text-sm)',
                         }}
                       >
@@ -1489,7 +1489,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 🧩 Mémoire consolidée et synchronisée
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                 {summaryEntries.length} résumé{summaryEntries.length > 1 ? 's' : ''} et{' '}
                 {bundleEntries.length} bundle{bundleEntries.length > 1 ? 's' : ''}{' '}
                 enrichissent la mémoire affichée pour refléter la totalité de la mémoire
@@ -1498,7 +1498,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <p
                 style={{
                   fontSize: 'var(--text-sm)',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   marginTop: 'var(--space-2)',
                 }}
               >
@@ -1516,9 +1516,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   marginTop: 'var(--space-3)',
                   padding: 'var(--space-2) var(--space-3)',
                   borderRadius: '8px',
-                  border: '1px solid var(--color-text-muted)',
+                  border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                   background: 'transparent',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
                   cursor: isSurfaceSyncing ? 'wait' : 'pointer',
                   opacity: isSurfaceSyncing ? 0.7 : 1,
                 }}
@@ -1544,19 +1544,19 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       textAlign: 'left',
                       padding: 'var(--space-3)',
                       borderRadius: '10px',
-                      border: '1px solid var(--color-text-muted)',
+                      border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                       background: 'transparent',
                       cursor: 'pointer',
                     }}
                   >
                     <strong
-                      style={{ color: 'var(--color-text-muted)', display: 'block' }}
+                      style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', display: 'block' }}
                     >
                       {'title' in entry ? entry.title : entry.id}
                     </strong>
                     <span
                       style={{
-                        color: 'var(--color-text-muted)',
+                        color: 'var(--titanium-text-tertiary, #8a8a8a)',
                         fontSize: 'var(--text-sm)',
                       }}
                     >
@@ -1576,7 +1576,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 📚 Bases de connaissances visibles dans la Mémoire
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                 {knowledgeSourceCounts.contextual} connaissance
                 {knowledgeSourceCounts.contextual > 1 ? 's' : ''} contextuelle
                 {knowledgeSourceCounts.contextual > 1 ? 's' : ''},{' '}
@@ -1592,7 +1592,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 <p
                   style={{
                     fontSize: 'var(--text-sm)',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     marginTop: 'var(--space-2)',
                   }}
                 >
@@ -1623,9 +1623,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     flex: '1 1 200px',
                     padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: '1px solid var(--color-text-muted)',
+                    border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                     background: 'rgba(0,0,0,0.2)',
-                    color: 'var(--color-text-secondary)',
+                    color: 'var(--titanium-text-secondary, #b8b8b8)',
                     fontSize: 'var(--text-sm)',
                   }}
                 />
@@ -1639,9 +1639,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   style={{
                     padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: '1px solid var(--color-text-muted)',
+                    border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                     background: 'rgba(0,0,0,0.2)',
-                    color: 'var(--color-text-secondary)',
+                    color: 'var(--titanium-text-secondary, #b8b8b8)',
                     fontSize: 'var(--text-sm)',
                   }}
                 >
@@ -1662,7 +1662,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   <span
                     style={{
                       fontSize: 'var(--text-sm)',
-                      color: 'var(--color-text-muted)',
+                      color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     }}
                   >
                     {filteredKnowledgeEntries.length} / {knowledgeEntries.length} affiché
@@ -1691,7 +1691,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                         textAlign: 'left',
                         padding: 'var(--space-3)',
                         borderRadius: '10px',
-                        border: '1px solid var(--color-text-muted)',
+                        border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                         background: 'transparent',
                         cursor: 'pointer',
                         transition: 'border-color 0.2s ease, background 0.2s ease',
@@ -1700,7 +1700,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       {/* Title */}
                       <strong
                         style={{
-                          color: 'var(--color-text-secondary)',
+                          color: 'var(--titanium-text-secondary, #b8b8b8)',
                           display: 'block',
                           marginBottom: 'var(--space-1)',
                         }}
@@ -1724,7 +1724,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                               padding: '1px var(--space-2)',
                               borderRadius: '9999px',
                               background: 'rgba(100, 100, 120, 0.3)',
-                              color: 'var(--color-text-muted)',
+                              color: 'var(--titanium-text-tertiary, #8a8a8a)',
                             }}
                           >
                             {topicConfig.icon} {topicConfig.label}
@@ -1733,7 +1733,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                         <span
                           style={{
                             fontSize: 'var(--text-xs)',
-                            color: 'var(--color-text-muted)',
+                            color: 'var(--titanium-text-tertiary, #8a8a8a)',
                           }}
                         >
                           {'★'.repeat(entry.importance)}
@@ -1743,7 +1743,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       {/* Content preview */}
                       <span
                         style={{
-                          color: 'var(--color-text-muted)',
+                          color: 'var(--titanium-text-tertiary, #8a8a8a)',
                           fontSize: 'var(--text-sm)',
                           display: 'block',
                         }}
@@ -1769,7 +1769,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                                 padding: '0 var(--space-1)',
                                 borderRadius: '4px',
                                 background: 'rgba(60, 60, 80, 0.4)',
-                                color: 'var(--color-text-muted)',
+                                color: 'var(--titanium-text-tertiary, #8a8a8a)',
                               }}
                             >
                               #{tag}
@@ -1779,7 +1779,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                             <span
                               style={{
                                 fontSize: '10px',
-                                color: 'var(--color-text-disabled)',
+                                color: 'var(--titanium-text-disabled, #5a5a5a)',
                               }}
                             >
                               +{entry.tags.length - MAX_VISIBLE_TAGS}
@@ -1797,7 +1797,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 <p
                   style={{
                     fontSize: 'var(--text-sm)',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     marginTop: 'var(--space-4)',
                     textAlign: 'center',
                   }}
@@ -1815,9 +1815,9 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     marginTop: 'var(--space-4)',
                     padding: 'var(--space-2) var(--space-3)',
                     borderRadius: '8px',
-                    border: '1px solid var(--color-text-muted)',
+                    border: '1px solid var(--titanium-text-tertiary, #8a8a8a)',
                     background: 'transparent',
-                    color: 'var(--color-text-muted)',
+                    color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     cursor: 'pointer',
                   }}
                 >
@@ -1895,7 +1895,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     <p
                       style={{
                         fontSize: 'var(--text-sm)',
-                        color: 'var(--color-text-muted)',
+                        color: 'var(--titanium-text-tertiary, #8a8a8a)',
                       }}
                     >
                       {selectedEntry.content}
@@ -1903,7 +1903,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     <p
                       style={{
                         fontSize: 'var(--text-xs)',
-                        color: 'var(--color-text-muted)',
+                        color: 'var(--titanium-text-tertiary, #8a8a8a)',
                         marginTop: 'var(--space-2)',
                       }}
                     >
@@ -1916,7 +1916,7 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   <pre
                     style={{
                       fontSize: 'var(--text-xs)',
-                      color: 'var(--color-text-muted)',
+                      color: 'var(--titanium-text-tertiary, #8a8a8a)',
                     }}
                   >
                     {JSON.stringify(selectedNode, null, 2)}

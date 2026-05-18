@@ -9,6 +9,7 @@ export interface SurfaceRootProps {
 export function SurfaceRoot({ id, ring = 'feature', children }: SurfaceRootProps) {
   return (
     <main
+      className="flex w-full min-h-0 flex-1 flex-col"
       data-surface-truth={id}
       data-surface-ring={ring}
       data-app-version={typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev'}

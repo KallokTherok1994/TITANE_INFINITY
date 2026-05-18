@@ -54,11 +54,11 @@ import type { TitaneStats } from '@/components/sections';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
 import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
+import { ConversationHistorySidebar } from '@/components/chat/ConversationHistorySidebar';
 
 import './TitanePage.css';
 import './TitanePage-local.css';
 import { SurfaceTruthBadge } from '@/components/system/SurfaceTruthBadge';
-
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
@@ -145,6 +145,35 @@ export const TitanePage: React.FC = () => {
     if (typeof window === 'undefined') return '';
     return window.localStorage.getItem('titane_active_conversation_id') ?? '';
   });
+
+  // ═══ SIDEBAR STATE ═══
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('titane_chat_sidebar_open') !== 'false';
+    } catch {
+      return true;
+    }
+  });
+  // Used to force remount of ConversationSection on new conversation
+  const [chatKey, setChatKey] = useState<number>(0);
+
+  const handleSidebarToggle = useCallback(() => {
+    setSidebarOpen(prev => {
+      const next = !prev;
+      try { localStorage.setItem('titane_chat_sidebar_open', String(next)); } catch { /* ignore */ }
+      return next;
+    });
+  }, []);
+
+  const handleNewConversation = useCallback(() => {
+    try { localStorage.removeItem('titane_active_conversation_id'); } catch { /* ignore */ }
+    setChatKey(k => k + 1);
+  }, []);
+
+  const handleSelectConversation = useCallback((convId: string) => {
+    try { localStorage.setItem('titane_active_conversation_id', convId); } catch { /* ignore */ }
+    setChatKey(k => k + 1);
+  }, []);
 
   // ═══ VISUAL ENGINES INITIALIZATION ═══
   useVisualEngines({
@@ -274,6 +303,25 @@ export const TitanePage: React.FC = () => {
 
   const isConversationTab = activeTab === 'conversation';
 
+  // ═══ KEYBOARD SHORTCUTS (chat mode only) ═══
+  useEffect(() => {
+    if (!isConversationTab) return;
+    const handler = (e: KeyboardEvent) => {
+      const mod = e.ctrlKey || e.metaKey;
+      if (!mod) return;
+      if (e.key === 'b' || e.key === 'B') {
+        e.preventDefault();
+        handleSidebarToggle();
+      }
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        handleNewConversation();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isConversationTab, handleSidebarToggle, handleNewConversation]);
+
   // Arrow-key navigation for tablist (ARIA tab pattern)
   const handleTabListKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -331,80 +379,97 @@ export const TitanePage: React.FC = () => {
     }
   }, [activeTab, isConversationTab, progression, stats]);
 
-  // ═══ RENDER ═══
+  // ═══ RENDER — CHAT FULLSCREEN MODE (sidebar + main) ═══
+  if (isConversationTab) {
+    return (
+      <ErrorBoundary context="TitanePage">
+        <div
+          className="titane-chat-fullscreen-layout"
+          data-testid="page-titane"
+          data-layout="chat-fullscreen"
+        >
+          {/* ── SIDEBAR ── */}
+          <ConversationHistorySidebar
+            isOpen={sidebarOpen}
+            onToggle={handleSidebarToggle}
+            activeTab={activeTab}
+            onTabChange={updateActiveTab}
+            onNewConversation={handleNewConversation}
+            onConversationSelect={handleSelectConversation}
+            currentConversationId={conversationId || null}
+          />
+
+          {/* ── MAIN CHAT AREA ── */}
+          <div
+            className="titane-chat-fullscreen-main"
+            data-testid="page-titane-content"
+            role="main"
+            id={TAB_PANEL_IDS['conversation']}
+            aria-labelledby={TAB_LABEL_IDS['conversation']}
+          >
+            <ErrorBoundary context="TitaneTab:conversation">
+              <ConversationSection
+                key={chatKey}
+                showSectionHeader={false}
+                fullscreen={true}
+              />
+            </ErrorBoundary>
+          </div>
+        </div>
+      </ErrorBoundary>
+    );
+  }
+
+  // ═══ RENDER — STANDARD MODE (tabs layout) ═══
   return (
     <ErrorBoundary context="TitanePage">
       <Container
         size="full"
-        centered={!isConversationTab}
-        padding={isConversationTab ? 0 : 4}
-        className={`titane-page${isConversationTab ? ' titane-page--conversation' : ''}`}
+        centered
+        padding={4}
+        className="titane-page"
         data-testid="page-titane"
-        data-layout={isConversationTab ? 'chat-fullscreen' : 'standard'}
+        data-layout="standard"
       >
         <Stack
           direction="vertical"
-          gap={isConversationTab ? 2 : 4}
-          className={`titane-page-shell${isConversationTab ? ' titane-page-shell--conversation' : ''}`}
+          gap={4}
+          className="titane-page-shell"
         >
-          {/* Runtime Truth Badge — ACTIVE — v97 */}
+          {/* Runtime Truth Badge */}
           <SurfaceTruthBadge
             variant={memoryStats != null ? 'LIVE' : 'PARTIAL'}
             className="mb-2"
           />
-          {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
-          <div
-            className={`titane-page-header${isConversationTab ? ' titane-page-header--conversation' : ''}`}
-          >
-            {!isConversationTab && (
-              <div className="titane-page-header-brand flex items-center gap-3 mb-4">
-                <TitaneLogo size={36} />
-                <div>
-                  <h1 className="text-xl font-semibold text-titanium-text-primary">
-                    ⚡ TITANE
-                  </h1>
-                  <p className="text-xs text-titanium-text-secondary">
-                    Le Cœur du Système
-                  </p>
-                </div>
+          {/* ═══ PAGE HEADER ═══ */}
+          <div className="titane-page-header">
+            <div className="titane-page-header-brand flex items-center gap-3 mb-4">
+              <TitaneLogo size={36} />
+              <div>
+                <h1 className="text-xl font-semibold text-titanium-text-primary">
+                  ⚡ TITANE
+                </h1>
+                <p className="text-xs text-titanium-text-secondary">
+                  Le Cœur du Système
+                </p>
               </div>
-            )}
+            </div>
 
-            {/* ═══ SECTION TABS (Inline Content Navigation) ═══ */}
+            {/* ═══ SECTION TABS ═══ */}
             <div
-              className={`titane-inline-tabs${isConversationTab ? ' titane-inline-tabs--conversation' : ''}`}
+              className="titane-inline-tabs"
               role="tablist"
               aria-label="Sections principales TITANE"
               onKeyDown={handleTabListKeyDown}
             >
               {(
                 [
-                  {
-                    id: 'conversation',
-                    label: '💬 Chat',
-                    handler: tabHandlers.conversation,
-                  },
-                  {
-                    id: 'overview',
-                    label: '📊 Dashboard',
-                    handler: tabHandlers.overview,
-                  },
+                  { id: 'conversation', label: '💬 Chat', handler: tabHandlers.conversation },
+                  { id: 'overview', label: '📊 Dashboard', handler: tabHandlers.overview },
                   { id: 'vision', label: '📷 Vision', handler: tabHandlers.vision },
-                  {
-                    id: 'memory-map',
-                    label: '💾 Mémoire',
-                    handler: tabHandlers.memoryMap,
-                  },
-                  {
-                    id: 'progression',
-                    label: '⚡ Progression',
-                    handler: tabHandlers.progression,
-                  },
-                  {
-                    id: 'transformation',
-                    label: '🌱 Évolution',
-                    handler: tabHandlers.transformation,
-                  },
+                  { id: 'memory-map', label: '💾 Mémoire', handler: tabHandlers.memoryMap },
+                  { id: 'progression', label: '⚡ Progression', handler: tabHandlers.progression },
+                  { id: 'transformation', label: '🌱 Évolution', handler: tabHandlers.transformation },
                 ] as Array<{ id: TabId; label: string; handler: () => void }>
               ).map(tab => {
                 const isActive = activeTab === tab.id;
@@ -431,9 +496,9 @@ export const TitanePage: React.FC = () => {
             </div>
           </div>
 
-          {/* ═══ CONTENT AREA (A11Y Enhanced) ═══ */}
+          {/* ═══ CONTENT AREA ═══ */}
           <div
-            className={`titane-content${isConversationTab ? ' titane-content--conversation' : ''}`}
+            className="titane-content"
             data-testid="page-titane-content"
             role="tabpanel"
             id={TAB_PANEL_IDS[activeTab]}

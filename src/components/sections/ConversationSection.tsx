@@ -1436,9 +1436,11 @@ const ConversationMessage = memo(
               type="button"
               className="conversation-message-action"
               onClick={handleCopy}
-              title="Copier le message"
+              title="Copier"
+              aria-label="Copier le message"
             >
-              📋 Copier
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copier
             </button>
 
             {message.role === 'user' && (
@@ -1446,10 +1448,12 @@ const ConversationMessage = memo(
                 type="button"
                 className="conversation-message-action"
                 onClick={handleRetry}
-                title="Renvoyer ce message"
+                title="Renvoyer"
+                aria-label="Renvoyer ce message"
                 disabled={isLoading}
               >
-                🔄 Retry
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.58"/></svg>
+                Retry
               </button>
             )}
 
@@ -1457,9 +1461,10 @@ const ConversationMessage = memo(
               type="button"
               className="conversation-message-action danger"
               onClick={handleDelete}
-              title="Supprimer ce message"
+              title="Supprimer"
+              aria-label="Supprimer ce message"
             >
-              🗑️
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
             </button>
           </div>
         </div>
@@ -3100,8 +3105,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     const handleInputChange = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        inputValueRef.current = e.target.value;
-        updateInputValue(e.target.value);
+        const el = e.target;
+        inputValueRef.current = el.value;
+        updateInputValue(el.value);
+        // Auto-resize: shrink to auto first, then grow to scrollHeight
+        el.style.height = 'auto';
+        el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
       },
       [updateInputValue]
     );
@@ -3109,6 +3118,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const handleCloseModeBuilder = useCallback(() => {
       setShowModeBuilder(false);
     }, []);
+
+    // ═══ AUTO-FOCUS input on mount (fullscreen mode) ═══
+    useEffect(() => {
+      if (!fullscreen) return;
+      const timer = setTimeout(() => {
+        conversationInputRef.current?.focus({ preventScroll: true });
+      }, 150);
+      return () => clearTimeout(timer);
+    }, [fullscreen]);
 
     // ═══ RENDER ═══
     return (
@@ -3503,12 +3521,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             {messages.length === 0 && !thinking.isThinking && (
               <div className="conversation-empty">
                 <div className="conversation-empty-icon">🧠⚡∞</div>
-                <h3>TITANE∞ est prêt à converser</h3>
-                <p>
-                  Mode actuel: <strong>{currentModeLabel}</strong>
-                  <br />
-                  Provider: <strong>{selectedProviderLabel}</strong>
-                </p>
+                <h3>TITANE∞</h3>
+                <div className="conversation-empty-badges">
+                  <span className="conversation-empty-badge">{currentModeLabel}</span>
+                  <span className="conversation-empty-badge-sep">·</span>
+                  <span className="conversation-empty-badge conversation-empty-badge--provider">{selectedProviderLabel}</span>
+                </div>
+                <p>Comment puis-je vous aider aujourd'hui&nbsp;?</p>
                 <div className="conversation-empty-suggestions">{suggestionButtons}</div>
               </div>
             )}
@@ -3527,12 +3546,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                     <span></span>
                     <span></span>
                   </div>
-                  <small style={{ color: 'var(--color-text-muted)' }}>
+                  <small style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
                     TITANE traite votre message...
                   </small>
                   <small
                     style={{
-                      color: 'var(--color-text-disabled)',
+                      color: 'var(--titanium-text-disabled, #5a5a5a)',
                       display: 'block',
                       marginTop: 4,
                     }}
@@ -3625,7 +3644,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               ref={conversationInputRef}
               className="conversation-input"
               data-testid="chat-input"
-              placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
+              placeholder="Message… (Entrée ↵ envoyer · Shift+Entrée nouvelle ligne)"
               value={inputValue}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
@@ -3633,13 +3652,20 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               rows={compactConversationLayout ? 2 : 3}
             />
             <button
-              className="conversation-send-btn"
+              className={`conversation-send-btn${isLoading ? ' conversation-send-btn--loading' : ''}`}
               data-testid="chat-send"
               onClick={handleSend}
               disabled={!sendButtonReady || isLoading}
               aria-disabled={!sendButtonReady || isLoading}
+              aria-label={isLoading ? 'Envoi en cours…' : 'Envoyer le message'}
+              title={isLoading ? 'Envoi en cours…' : 'Envoyer (Entrée)'}
             >
-              {isLoading ? '⏳' : '📤'} Envoyer
+              {isLoading ? (
+                <span className="conversation-send-spinner" aria-hidden="true" />
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              )}
+              <span>{isLoading ? 'Envoi…' : 'Envoyer'}</span>
             </button>
           </div>
 

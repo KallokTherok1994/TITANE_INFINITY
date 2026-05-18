@@ -70,7 +70,7 @@ export const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = mem
           </React.Suspense>
         ) : (
           <div>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
+            <p style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', fontSize: 'var(--text-sm)' }}>
               Disponible en mode Tauri uniquement
             </p>
             <div style={{ marginTop: 'var(--space-4)' }}>

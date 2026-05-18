@@ -91,6 +91,19 @@ vi.mock('@/components/ErrorBoundary', () => ({
 vi.mock('@/components/branding/TitaneLogo', () => ({
   TitaneLogo: () => <div data-testid="titane-logo" />,
 }));
+vi.mock('@/components/chat/ConversationHistorySidebar', () => ({
+  ConversationHistorySidebar: ({
+    onTabChange,
+  }: {
+    onTabChange: (tab: 'conversation' | 'vision' | 'overview' | 'memory-map' | 'progression' | 'transformation') => void;
+  }) => (
+    <aside data-testid="conversation-history-sidebar" aria-label="Historique des conversations">
+      <button data-testid="sidebar-tab-overview" onClick={() => onTabChange('overview')}>
+        Dashboard
+      </button>
+    </aside>
+  ),
+}));
 vi.mock('@components/layout', () => ({
   Container: ({
     children,
@@ -110,7 +123,7 @@ vi.mock('@components/layout', () => ({
 
 import { TitanePage } from '@/pages/TitanePage';
 
-const renderPage = (initialEntry = '/titane') =>
+const renderPage = (initialEntry = '/titane?tab=overview') =>
   render(
     <MemoryRouter initialEntries={[initialEntry]}>
       <TitanePage />
@@ -159,17 +172,20 @@ describe('TitanePage — Tab data-testids & a11y', () => {
     expect(titaneTabs).toHaveLength(6);
   });
 
-  // ─── A4: conversation tab is aria-selected=true by default ───
-  it('A4 — conversation tab is aria-selected by default', () => {
+  // ─── A4: overview tab is aria-selected=true in standard tab layout ───
+  it('A4 — overview tab is aria-selected in standard tab layout', () => {
     renderPage();
-    const convTab = screen.getByTestId('tab-conversation');
-    expect(convTab).toHaveAttribute('aria-selected', 'true');
+    const overviewTab = screen.getByTestId('tab-overview');
+    expect(overviewTab).toHaveAttribute('aria-selected', 'true');
   });
 
   // ─── A5: other tabs are aria-selected=false by default ───
-  it('A5 — non-active tabs are aria-selected=false', () => {
+  it('A5 — non-active tabs are aria-selected=false in standard tab layout', () => {
     renderPage();
-    expect(screen.getByTestId('tab-overview')).toHaveAttribute('aria-selected', 'false');
+    expect(screen.getByTestId('tab-conversation')).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
     expect(screen.getByTestId('tab-vision')).toHaveAttribute('aria-selected', 'false');
     expect(screen.getByTestId('tab-memory')).toHaveAttribute('aria-selected', 'false');
     expect(screen.getByTestId('tab-progression')).toHaveAttribute(
@@ -183,11 +199,11 @@ describe('TitanePage — Tab data-testids & a11y', () => {
   });
 
   // ─── A6: aria-controls points to correct panel id ───
-  it('A6 — conversation tab aria-controls = titane-panel-conversation', () => {
+  it('A6 — overview tab aria-controls = titane-panel-overview', () => {
     renderPage();
-    expect(screen.getByTestId('tab-conversation')).toHaveAttribute(
+    expect(screen.getByTestId('tab-overview')).toHaveAttribute(
       'aria-controls',
-      'titane-panel-conversation'
+      'titane-panel-overview'
     );
   });
 
@@ -196,14 +212,28 @@ describe('TitanePage — Tab data-testids & a11y', () => {
     renderPage();
     const panel = screen.getByTestId('page-titane-content');
     expect(panel).toHaveAttribute('role', 'tabpanel');
-    expect(panel).toHaveAttribute('id', 'titane-panel-conversation');
+    expect(panel).toHaveAttribute('id', 'titane-panel-overview');
   });
 
-  // ─── A8: data-layout=chat-fullscreen for conversation tab ───
-  it('A8 — page-titane has data-layout=chat-fullscreen when conversation is active', () => {
+  // ─── A8: data-layout=standard for non-conversation tabs ───
+  it('A8 — page-titane has data-layout=standard in tab layout', () => {
     renderPage();
     const page = screen.getByTestId('page-titane');
-    expect(page).toHaveAttribute('data-layout', 'chat-fullscreen');
+    expect(page).toHaveAttribute('data-layout', 'standard');
+  });
+
+  it('A9 — /titane opens chat fullscreen with sidebar and no inline tablist', () => {
+    renderPage('/titane');
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('conversation-history-sidebar')).toBeInTheDocument();
+    expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
+    expect(screen.getByTestId('page-titane-content')).toHaveAttribute(
+      'role',
+      'main'
+    );
   });
 });
 
@@ -271,16 +301,19 @@ describe('TitanePage — URL param routing', () => {
 
   it('U3 — invalid ?tab= falls back to conversation', () => {
     renderPage('/titane?tab=INVALID_TAB');
-    expect(screen.getByTestId('tab-conversation')).toHaveAttribute(
-      'aria-selected',
-      'true'
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
     );
+    expect(screen.getByTestId('conversation-history-sidebar')).toBeInTheDocument();
   });
 
   it('U4 — ?tab=identity (legacy) falls back to conversation', () => {
     renderPage('/titane?tab=identity');
-    // Either conversation is selected by default or the legacy redirect fires
-    const convTab = screen.getByTestId('tab-conversation');
-    expect(convTab).toBeInTheDocument();
+    expect(screen.getByTestId('page-titane')).toHaveAttribute(
+      'data-layout',
+      'chat-fullscreen'
+    );
+    expect(screen.getByTestId('conversation-history-sidebar')).toBeInTheDocument();
   });
 });
