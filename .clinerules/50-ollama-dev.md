@@ -68,6 +68,20 @@ ollama run qwen3.5:9b "Hello, are you running?"
 
 ---
 
+## DEFAULT VS CODE COPILOT MODELS
+
+This repository's local VS Code Copilot integration is explicitly bound to Ollama Dev `qwen3.5:9b` via `.vscode/mcp.json` and the `ollama-dev` MCP server.
+
+GitHub Copilot cloud defaults such as `sonnet-4.5`, `Sonnet 4.5`, `gpt-4.1`, and other Copilot-hosted models are considered external to this repo. They are managed by the GitHub Copilot extension and the user's GitHub account, not by TITANE_INFINITY's local repo model installation.
+
+- Local Dev model: `qwen3.5:9b` (repo-managed Ollama Dev for VS Code/Copilot and Cline)
+- Product runtime default: `gemma2:2b` (repo-managed TITANE runtime chat)
+- Copilot cloud defaults: `sonnet-4.5`, `Sonnet 4.5`, `gpt-4.1`, etc. — external and not installed by this repo
+
+Keep the boundary strict: do not migrate cloud Copilot default model names into the repo's product defaults, and do not leak `qwen3.5:9b` into runtime production defaults.
+
+---
+
 ## BOUNDARY PROTECTION
 
 > Dev model `qwen3.5:9b` must NEVER enter product defaults.

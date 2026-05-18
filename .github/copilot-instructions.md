@@ -197,6 +197,8 @@ For every UI/runtime correction involving route alias, legacy surface, fullscree
 Advanced agent runtime truth: monitoring, diagnostic, explainability, orchestrator, and security dashboards must consume real runtime/configuration signals when available; derive `serviceState`, `evidence`, `blockers`, and `nextStep` from verifiable truth; classify partial implementations honestly; and keep dashboards and compatibility aliases aligned to one runtime truth source.
 Ollama Dev / Ollama Chat boundary truth: keep the governed local development stack aligned on `http://127.0.0.1:11434` + `qwen3.5:9b` for GitHub Copilot VS Code conversation, while the TITANE product chat runtime stays aligned on `gemma2:2b`, canonical IPC, and no token gate. Ollama Dev and Ollama Chat must remain independent with zero contamination through shared defaults, champion registries, prompts, or backend fallbacks. Controlled communication between them is allowed only through explicit, traced, bounded interfaces such as repo-owned validators, documentation, proofs, or neutral config exchange. Any Ollama Dev / Ollama Chat boundary change must rerun the dedicated boundary validator and update `OLLAMA_RUNTIME_MAP.md` plus the relevant instructions/docs.
 
+Note: GitHub Copilot cloud default names such as `sonnet-4.5`, `Sonnet 4.5`, and `gpt-4.1` are external to the repo-managed TITANE workflow. These cloud models are configured by the GitHub Copilot extension and user account, not by TITANE_INFINITY's local Ollama Dev stack.
+
 ## Discipline anti-dérive TITANE (Synthèse 2026-04-16)
 
 - Synchronisation artefacts/launchers avec preuve sur launchers système et utilisateur
