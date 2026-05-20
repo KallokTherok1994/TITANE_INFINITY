@@ -1,5 +1,5 @@
 #!/bin/sh
-# Correction PATH pour environnements limités (GitHub Desktop, Pop!_OS, Flatpak…)
+# Correction PATH pour environnements limités (GitHub Desktop, Pop!_OS, Flatpak, Windows Git Bash…)
 
 BASE_PATH="/usr/local/bin:/usr/bin:/bin"
 
@@ -9,7 +9,23 @@ if command -v node >/dev/null 2>&1; then
 	exit 0
 fi
 
-# Fallback: try to locate the newest NVM-managed Node install.
+# Windows: nvm-windows symlink (default C:\Program Files\nodejs).
+if [ -x "/c/Program Files/nodejs/node.exe" ]; then
+	export PATH="/c/Program Files/nodejs:$BASE_PATH:$PATH"
+	exit 0
+fi
+
+# Windows: nvm-windows per-user versions directory (any version).
+WIN_NVM_DIR="$HOME/AppData/Roaming/nvm"
+if [ -d "$WIN_NVM_DIR" ]; then
+	WIN_NODE_BIN="$(ls -1d "$WIN_NVM_DIR"/v*/  2>/dev/null | sort -V | tail -n 1)"
+	if [ -n "$WIN_NODE_BIN" ] && { [ -x "${WIN_NODE_BIN}node.exe" ] || [ -x "${WIN_NODE_BIN}node" ]; }; then
+		export PATH="${WIN_NODE_BIN%/}:$BASE_PATH:$PATH"
+		exit 0
+	fi
+fi
+
+# Linux/macOS: try to locate the newest NVM-managed Node install.
 if [ -d "$HOME/.nvm/versions/node" ]; then
 	NVM_NODE_BIN="$(ls -1d "$HOME/.nvm/versions/node"/v*/bin 2>/dev/null | sort -V | tail -n 1)"
 	if [ -n "$NVM_NODE_BIN" ] && [ -x "$NVM_NODE_BIN/node" ]; then
