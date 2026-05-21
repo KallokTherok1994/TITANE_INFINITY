@@ -247,7 +247,7 @@ describe('eval harness structural checks', () => {
   it('resolves the real orchestrator module inside this workspace', () => {
     const orchestratorPath = getOrchestratorModulePath();
 
-    expect(orchestratorPath).toContain(
+    expect(orchestratorPath.replace(/\\/g, '/')).toContain(
       '/TITANE_INFINITY/src/services/ai/orchestrator.ts'
     );
     expect(existsSync(orchestratorPath)).toBe(true);

@@ -34,9 +34,13 @@ describe('🔍 Audit System Verification', () => {
     it.each(requiredScripts)('should have executable $name', ({ name }) => {
       const scriptPath = path.join(AUDIT_SCRIPTS_DIR, name);
       if (fs.existsSync(scriptPath)) {
-        const stats = fs.statSync(scriptPath);
-        // Check if executable bit is set (mode & 0o111)
-        expect(stats.mode & 0o111).toBeGreaterThan(0);
+        if (process.platform === 'win32') {
+          // Windows doesn't support POSIX executable bits — verify file exists and is readable
+          expect(fs.statSync(scriptPath).isFile()).toBe(true);
+        } else {
+          const stats = fs.statSync(scriptPath);
+          expect(stats.mode & 0o111).toBeGreaterThan(0);
+        }
       }
     });
 

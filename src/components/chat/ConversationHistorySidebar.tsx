@@ -9,6 +9,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useConversations } from '@/hooks/useConversations';
 import type { ConversationSummary } from '@/types/conversation';
+import './ConversationHistorySidebar.css';
 
 type TitaneTabId = 'conversation' | 'vision' | 'overview' | 'memory-map' | 'progression' | 'transformation';
 

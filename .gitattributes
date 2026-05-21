@@ -28,7 +28,11 @@
 *.yaml text eol=lf
 *.yml text eol=lf
 *.sh text eol=lf
+*.ps1 text eol=lf
 *.py text eol=lf
+# Husky hooks — must always be LF on disk (bash execution requirement)
+.husky/*   text eol=lf
+.husky/_/* text eol=lf
 # ═══════════════════════════════════════════════════════════════════
 # GitHub Linguist — exclusions des stats de langage
 # Empêche les vendeurs/artefacts de fausser la répartition des langages

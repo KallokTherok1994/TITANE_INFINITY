@@ -4,13 +4,61 @@
  * Styles du panneau d'évolution Numeric Twin
  */
 
+/* ── Sync status block + force-sync button ── */
+.twin-sync-status-block {
+  transition: opacity 0.15s ease;
+}
+
+.twin-sync-force-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.65rem;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.08);
+  color: rgba(167, 139, 250, 0.9);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.twin-sync-force-btn:hover:not(:disabled) {
+  background: rgba(139, 92, 246, 0.18);
+  border-color: rgba(167, 139, 250, 0.6);
+  color: #c4b5fd;
+  transform: scale(1.03);
+}
+
+.twin-sync-force-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.twin-sync-force-btn:disabled:first-child {
+  animation: twinSyncSpin 1s linear infinite;
+}
+
+@keyframes twinSyncSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    BASE PANEL
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .twin-panel {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.96) 0%,
+    rgba(30, 41, 59, 0.92) 100%
+  );
+  border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 16px;
   padding: 24px;
   color: #ffffff;
@@ -19,6 +67,8 @@
     -apple-system,
     BlinkMacSystemFont,
     sans-serif;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .twin-panel--loading {

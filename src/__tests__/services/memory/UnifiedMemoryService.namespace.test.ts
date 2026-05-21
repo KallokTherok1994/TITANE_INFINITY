@@ -32,24 +32,26 @@ describe('UnifiedMemoryService namespace isolation', () => {
     expect(namespace).toBe('prod');
   });
 
+  const norm = (p: string) => p.replace(/\\/g, '/');
+
   it('resolves namespaced test paths under memory/test', () => {
     const paths = resolveUnifiedMemoryPaths('/workspace', 'test');
-    expect(paths.STM).toBe('/workspace/memory/test/stm.json');
-    expect(paths.MTM).toBe('/workspace/memory/test/mtm.json');
-    expect(paths.LTM).toBe('/workspace/memory/test/ltm.json');
+    expect(norm(paths.STM)).toBe('/workspace/memory/test/stm.json');
+    expect(norm(paths.MTM)).toBe('/workspace/memory/test/mtm.json');
+    expect(norm(paths.LTM)).toBe('/workspace/memory/test/ltm.json');
   });
 
   it('keeps production paths under memory root', () => {
     const paths = resolveUnifiedMemoryPaths('/workspace', 'prod');
-    expect(paths.STM).toBe('/workspace/memory/stm.json');
-    expect(paths.MTM).toBe('/workspace/memory/mtm.json');
-    expect(paths.LTM).toBe('/workspace/memory/ltm.json');
+    expect(norm(paths.STM)).toBe('/workspace/memory/stm.json');
+    expect(norm(paths.MTM)).toBe('/workspace/memory/mtm.json');
+    expect(norm(paths.LTM)).toBe('/workspace/memory/ltm.json');
   });
 
   it('resolves dev paths under memory/dev', () => {
     const paths = resolveUnifiedMemoryPaths('/workspace', 'dev');
-    expect(paths.STM).toBe('/workspace/memory/dev/stm.json');
-    expect(paths.MTM).toBe('/workspace/memory/dev/mtm.json');
-    expect(paths.LTM).toBe('/workspace/memory/dev/ltm.json');
+    expect(norm(paths.STM)).toBe('/workspace/memory/dev/stm.json');
+    expect(norm(paths.MTM)).toBe('/workspace/memory/dev/mtm.json');
+    expect(norm(paths.LTM)).toBe('/workspace/memory/dev/ltm.json');
   });
 });

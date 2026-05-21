@@ -61,9 +61,12 @@ describe('Lane A: Config file structure & consistency', () => {
     for (const hook of ['TaskStart', 'PreToolUse', 'PostToolUse']) {
       const hookPath = path.resolve(PROJECT_ROOT, '.clinerules/hooks', hook);
       expect(fs.existsSync(hookPath)).toBe(true);
-      // Check if executable (on Unix-like systems)
       const stat = fs.statSync(hookPath);
-      expect((stat.mode & 0o111) !== 0).toBe(true);
+      if (process.platform !== 'win32') {
+        expect((stat.mode & 0o111) !== 0).toBe(true);
+      } else {
+        expect(stat.isFile()).toBe(true);
+      }
     }
   });
 
@@ -74,13 +77,21 @@ describe('Lane A: Config file structure & consistency', () => {
   it('A6: Console CLI script exists and is executable', () => {
     expect(exists('scripts/dev/ollama-dev-cli.sh')).toBe(true);
     const stat = fs.statSync(path.resolve(PROJECT_ROOT, 'scripts/dev/ollama-dev-cli.sh'));
-    expect((stat.mode & 0o111) !== 0).toBe(true);
+    if (process.platform !== 'win32') {
+      expect((stat.mode & 0o111) !== 0).toBe(true);
+    } else {
+      expect(stat.isFile()).toBe(true);
+    }
   });
 
   it('A7: Cross-router verify script exists and is executable', () => {
     expect(exists('scripts/dev/ollama-dev-verify.sh')).toBe(true);
     const stat = fs.statSync(path.resolve(PROJECT_ROOT, 'scripts/dev/ollama-dev-verify.sh'));
-    expect((stat.mode & 0o111) !== 0).toBe(true);
+    if (process.platform !== 'win32') {
+      expect((stat.mode & 0o111) !== 0).toBe(true);
+    } else {
+      expect(stat.isFile()).toBe(true);
+    }
   });
 
   it('A8: MCP start script (Copilot/VSCode router) exists', () => {
@@ -259,7 +270,11 @@ describe('Lane D: Dev script presence & executability', () => {
   it('D4: CI stack verification script exists', () => {
     expect(exists('scripts/verify/verify-ollama-dev-stack.sh')).toBe(true);
     const stat = fs.statSync(path.resolve(PROJECT_ROOT, 'scripts/verify/verify-ollama-dev-stack.sh'));
-    expect((stat.mode & 0o111) !== 0).toBe(true);
+    if (process.platform !== 'win32') {
+      expect((stat.mode & 0o111) !== 0).toBe(true);
+    } else {
+      expect(stat.isFile()).toBe(true);
+    }
   });
 });
 

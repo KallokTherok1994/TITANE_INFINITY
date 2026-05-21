@@ -779,7 +779,19 @@
       rgba(168, 85, 247, 0.06) 24%,
       transparent 44%
     ),
+    radial-gradient(
+      ellipse 78% 40% at 50% 96%,
+      rgba(124, 58, 237, 0.22) 0%,
+      rgba(6, 182, 212, 0.13) 44%,
+      transparent 74%
+    ),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 42%);
+  animation: ambientChatBreathe 5s ease-in-out infinite;
+}
+
+@keyframes ambientChatBreathe {
+  0%, 100% { opacity: 0.72; }
+  50%       { opacity: 1; }
 }
 
 .conversation-top-chrome {
@@ -832,7 +844,7 @@
 }
 
 .conversation-filters {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 0.75rem;
   padding: 0.25rem 0 0;
@@ -840,6 +852,11 @@
   background: transparent;
   position: relative;
   z-index: 1;
+}
+
+/* Visible uniquement quand la recherche est activée */
+.conversation-filters.search-visible {
+  display: flex;
 }
 
 .conversation-container[data-fullscreen='true'] .conversation-filters {
@@ -900,12 +917,17 @@
   border: 1px solid var(--titanium-border-subtle, rgba(255,255,255,0.06));
   border-radius: 8px;
   background: var(--titanium-bg-elevated, #1a1a1a);
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem 0.6rem;
   opacity: 0.7;
   transition: opacity 0.15s;
+}
+
+/* Ré-activer uniquement en mode dev-runtime explicite */
+[data-dev-runtime-visible='true'] .conversation-runtime-panel {
+  display: flex;
 }
 
 .conversation-runtime-panel:hover {
@@ -973,6 +995,32 @@
   flex-shrink: 0;
 }
 
+/* ── Provider status dot ── */
+.conversation-provider-status-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.conversation-provider-status-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.9);
+  box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  animation: statusPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(0.8); }
+}
+
 .conversation-mode-select {
   padding: 0.5rem 1rem;
   background: rgba(59, 130, 246, 0.1);
@@ -1010,6 +1058,19 @@
   background: var(--titanium-bg-interactive, rgba(255,255,255,0.06));
   border-color: var(--titanium-border-subtle, rgba(255,255,255,0.06));
   color: var(--titanium-text-secondary, #b8b8b8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255,255,255,0.05);
+  transform: translateY(-1px);
+  transition: background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.12s, transform 0.12s;
+}
+
+.conversation-icon-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.conversation-icon-btn:focus-visible {
+  outline: 2px solid rgba(139, 92, 246, 0.7);
+  outline-offset: 2px;
 }
 
 .conversation-icon-btn.active {
@@ -1106,8 +1167,8 @@
   gap: 0.875rem;
   scroll-padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
   scrollbar-gutter: stable both-edges;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(96, 165, 250, 0.6) transparent;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(96, 165, 250, 0.9) rgba(15, 23, 42, 0.72);
 }
 
 /* Bottom-anchor spacer: pushes messages to bottom when few messages.
@@ -1131,6 +1192,20 @@
   );
 }
 
+/* Fondu progressif bas : transition douce messages → bottom-chrome */
+.conversation-container[data-fullscreen='true'] .conversation-messages::after {
+  content: '';
+  display: block;
+  position: sticky;
+  bottom: 0;
+  flex-shrink: 0;
+  height: 52px;
+  margin-top: -52px;
+  background: linear-gradient(to bottom, transparent, rgba(7, 11, 20, 0.86));
+  pointer-events: none;
+  z-index: 2;
+}
+
 .conversation-messages > * {
   width: min(100%, var(--conversation-stream-max-width));
   max-width: 100%;
@@ -1138,17 +1213,17 @@
   margin-inline: auto;
 }
 
-/* Slim scrollbar — subtle, not distracting */
+/* Visible scrollbar on the canonical chat scroll region. */
 .conversation-messages::-webkit-scrollbar {
-  width: 6px;
+  width: 12px;
 }
 
 .conversation-messages::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(15, 23, 42, 0.72);
 }
 
 .conversation-messages::-webkit-scrollbar-thumb {
-  background: rgba(96, 165, 250, 0.25);
+  background: rgba(96, 165, 250, 0.9);
   border-radius: 999px;
   transition: background 0.2s ease;
 }
@@ -1170,7 +1245,8 @@
 
 .conversation-empty-icon {
   font-size: 4rem;
-  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.3));
+  animation: float 3s ease-in-out infinite, iconGlow 2.5s ease-in-out infinite;
 }
 
 @keyframes float {
@@ -1183,15 +1259,28 @@
   }
 }
 
+@keyframes iconGlow {
+  0%, 100% { filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.3)); }
+  50%       { filter: drop-shadow(0 0 32px rgba(6, 182, 212, 0.45)); }
+}
+
 .conversation-empty h3 {
   margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   background: var(--titane-gradient);
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: titleGradientShift 6s ease-in-out infinite;
+  will-change: background-position;
+}
+
+@keyframes titleGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
 }
 
 /* ── Empty state badges ── */
@@ -1202,18 +1291,20 @@
 }
 
 .conversation-empty-badge {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 500;
-  color: var(--titanium-text-tertiary, #8a8a8a);
-  background: var(--titanium-bg-interactive, rgba(255,255,255,0.06));
-  border: 1px solid var(--titanium-border-subtle, rgba(255,255,255,0.06));
+  letter-spacing: 0.03em;
+  color: rgba(96, 165, 250, 0.9);
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.22);
   border-radius: 999px;
-  padding: 0.15rem 0.6rem;
+  padding: 0.15rem 0.65rem;
 }
 
 .conversation-empty-badge--provider {
-  color: var(--titanium-accent-cool, #9ca3af);
-  border-color: var(--titanium-border-default, rgba(255,255,255,0.12));
+  color: rgba(34, 211, 238, 0.9);
+  background: rgba(6, 182, 212, 0.08);
+  border-color: rgba(6, 182, 212, 0.2);
 }
 
 .conversation-empty-badge-sep {
@@ -1229,29 +1320,60 @@
 }
 
 .conversation-empty-suggestions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
   margin-top: 1rem;
+  width: 100%;
+  max-width: 520px;
 }
 
 .conversation-empty-suggestions button {
-  padding: 0.65rem 1.1rem;
-  background: var(--titanium-accent-bg-subtle, rgba(156, 163, 175, 0.08));
-  border: 1px solid var(--titanium-border-default, rgba(255, 255, 255, 0.12));
+  padding: 0.65rem 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.22);
   border-radius: 8px;
   color: var(--titanium-text-secondary, #b8b8b8);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
   font-size: 0.8125rem;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.conversation-empty-suggestions button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.07) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  pointer-events: none;
+}
+
+.conversation-empty-suggestions button:hover::after {
+  transform: translateX(100%);
 }
 
 .conversation-empty-suggestions button:hover {
-  background: var(--titanium-accent-bg-default, rgba(156, 163, 175, 0.15));
-  border-color: var(--titanium-border-strong, rgba(255, 255, 255, 0.18));
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.4);
   color: var(--titanium-text-primary, #f5f5f5);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.conversation-empty-suggestions button:focus-visible {
+  outline: 2px solid var(--titane-accent, #06b6d4);
+  outline-offset: 2px;
+  border-color: var(--titane-accent, #06b6d4);
+}
+
+.conversation-empty-suggestions button:active {
+  transform: translateY(1px) scale(0.97);
+  opacity: 0.82;
+  transition: transform 0.08s, opacity 0.08s;
 }
 
 /* ── Keyboard shortcuts hint ── */
@@ -1353,7 +1475,7 @@
 }
 
 .conversation-message.user .conversation-message-content {
-  max-width: 72%;
+  max-width: 94%;
 }
 
 .conversation-message.user .conversation-message-content {
@@ -1610,9 +1732,10 @@
 }
 
 .conversation-message-action:hover {
-  background: var(--titanium-bg-overlay, rgba(46,46,46,0.95));
-  color: var(--titanium-text-primary, #f5f5f5);
-  border-color: var(--titanium-border-default, rgba(255,255,255,0.12));
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(96, 165, 250, 0.4);
+  color: #93c5fd;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.18);
 }
 
 .conversation-message-action:disabled {
@@ -1630,16 +1753,31 @@
 
 .conversation-message-action.danger {
   background: transparent;
-  border-color: transparent;
-  color: var(--titanium-text-disabled, #5a5a5a);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: rgba(239, 68, 68, 0.75);
   padding: 0.25rem 0.35rem;
 }
 
 .conversation-message-action.danger:hover {
   background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.22);
-  color: rgba(239, 68, 68, 0.85);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.18);
 }
+
+/* ── Character counter ── */
+.conversation-input-counter {
+  font-size: 0.68rem;
+  color: var(--titanium-text-disabled, #5a5a5a);
+  white-space: nowrap;
+  align-self: flex-end;
+  margin-bottom: 0.2rem;
+  transition: color 0.2s;
+  user-select: none;
+  pointer-events: none;
+}
+.conversation-input-counter--warning { color: rgba(251, 146, 60, 0.9); }
+.conversation-input-counter--danger  { color: rgba(239, 68, 68, 0.9); }
 
 .meta-intention {
   padding: 0.125rem 0.5rem;
@@ -1661,10 +1799,11 @@
 }
 
 .conversation-typing span {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: var(--titanium-accent-cool, #9ca3af);
+  background: linear-gradient(135deg, var(--titane-secondary, #8b5cf6), var(--titane-accent, #06b6d4));
+  box-shadow: 0 0 7px rgba(139, 92, 246, 0.45);
   animation: typing-bounce 1.2s ease-in-out infinite;
 }
 
@@ -1673,13 +1812,24 @@
 
 @keyframes typing-bounce {
   0%, 60%, 100% {
-    opacity: 0.25;
-    transform: translateY(0);
+    opacity: 0.3;
+    transform: translateY(0) scale(0.85);
   }
   30% {
-    opacity: 0.9;
-    transform: translateY(-4px);
+    opacity: 1;
+    transform: translateY(-5px) scale(1);
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
   }
+}
+
+/* Shimmer envoi — uniquement sur le dernier message utilisateur */
+.conversation-message.user:last-child .conversation-message-text {
+  animation: messageSentGlow 0.7s ease-out;
+}
+
+@keyframes messageSentGlow {
+  0%   { box-shadow: 0 0 24px rgba(168, 85, 247, 0.55), 0 4px 12px rgba(2, 6, 23, 0.12); }
+  100% { box-shadow: 0 4px 12px rgba(2, 6, 23, 0.1); }
 }
 
 .conversation-error {
@@ -1736,6 +1886,25 @@
   );
   border-top-color: rgba(96, 165, 250, 0.16);
   z-index: 5;
+  overflow: visible;
+}
+
+/* Ligne de glow ambiant au sommet du bloc input — synchronisée avec l'orbe */
+.conversation-container[data-fullscreen='true'] .conversation-input-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(139, 92, 246, 0.55) 30%,
+    rgba(6, 182, 212, 0.55) 70%,
+    transparent
+  );
+  pointer-events: none;
 }
 
 /* ── Unify ChatToolbar with input area — remove separate glass panel ── */
@@ -2344,13 +2513,16 @@
   }
 
   .conversation-empty-suggestions {
-    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 360px;
+    gap: 0.5rem;
+    padding: 0 0.25rem;
   }
 
   .conversation-empty-suggestions button {
-    width: calc(50% - 0.375rem);
     min-height: 42px;
-    padding: 0.625rem 0.75rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.78rem;
   }
 
   .conversation-input-container {
@@ -2473,8 +2645,9 @@
     display: none;
   }
 
-  .conversation-empty-suggestions button {
-    width: 100%;
+  .conversation-empty-suggestions {
+    grid-template-columns: 1fr;
+    max-width: 300px;
   }
 
   /* Galaxy S25 Ultra portrait : runtime caché, toolbar 1 rang */
@@ -3838,5 +4011,67 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   ENRICHISSEMENTS v35.1.9 — Curseur streaming + scroll-to-bottom mobile
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Curseur clignotant sur le dernier message assistant pendant le streaming
+   Détecté via :has() — fonctionnel sur Chromium/WebKit (Tauri) */
+.conversation-messages:has(.conversation-message.assistant.loading)
+  .conversation-message.assistant:not(.loading):last-of-type
+  .conversation-message-text::after {
+  content: '\258B'; /* ▋ */
+  display: inline-block;
+  color: var(--titane-accent, #06b6d4);
+  animation: streamingCursor 0.75s step-start infinite;
+  margin-left: 2px;
+  vertical-align: middle;
+  font-size: 0.82em;
+  line-height: 1;
+}
+
+@keyframes streamingCursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Scroll-to-bottom — éviter chevauchement sur écrans très courts (landscape mobile) */
+@media (max-height: 600px) {
+  .conversation-scroll-to-bottom {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 7.5rem);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    END AURA ADVANCED APPLICATION v30.0.0
    ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITÉ — prefers-reduced-motion (Round 1 & 2 animations)
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .conversation-empty h3 {
+    animation: none;
+    background-size: 100% 100%;
+    background-position: 0% 50%;
+    will-change: auto;
+  }
+
+  .conversation-empty-icon {
+    animation: none;
+    filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.3));
+  }
+
+  .conversation-provider-status-dot {
+    animation: none;
+    opacity: 1;
+  }
+
+  .conversation-empty-suggestions button::after {
+    display: none;
+  }
+
+  .conversation-icon-btn:hover {
+    transform: none;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+  }
+}

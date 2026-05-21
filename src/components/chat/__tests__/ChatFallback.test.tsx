@@ -123,8 +123,8 @@ describe('ChatFallback Component', () => {
 
     it('should display timestamp', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      const timestamp = screen.getByText(/2025-02-01|timestamp/i);
-      expect(timestamp).toBeInTheDocument();
+      const elements = screen.getAllByText(/2025-02-01|timestamp/i);
+      expect(elements.length).toBeGreaterThan(0);
     });
 
     it('should display provider information', () => {

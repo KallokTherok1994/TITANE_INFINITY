@@ -14,7 +14,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo, useState, useRef, useEffect } from 'react';
 import './MessageBubble.css';
 import { MarkdownContent } from './MarkdownContent';
 import { ChatFallback } from './ChatFallback';
@@ -51,11 +51,15 @@ const formatTime = (ts: number): string => {
  * Mapping des avatars par rôle
  */
 const AVATARS: Record<MessageBubbleProps['role'], React.ReactNode> = {
-  user: <div className="message-avatar-user">👤</div>,
+  user: (
+    <div className="message-avatar-user" aria-label="Vous">
+      <span className="message-avatar-initials">K</span>
+    </div>
+  ),
   system: <div className="message-avatar-system">⚙️</div>,
   assistant: (
-    <div className="message-avatar-ai">
-      <span className="message-avatar-icon">🤖</span>
+    <div className="message-avatar-ai" aria-label="TITANE∞">
+      <span className="message-avatar-initials">T∞</span>
     </div>
   ),
 };
@@ -202,6 +206,8 @@ export const MessageBubble = memo(function MessageBubble({
 }: MessageBubbleProps) {
   // État pour gérer le retry loading
   const [isRetrying, setIsRetrying] = useState(false);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (retryTimerRef.current) clearTimeout(retryTimerRef.current); }, []);
   const messageId = `${role}-${timestamp}`;
   const speechState = useMessageSpeechState(
     messageId,
@@ -249,7 +255,8 @@ export const MessageBubble = memo(function MessageBubble({
       await onRetry();
     } finally {
       // Reset après un délai pour permettre de voir l'état
-      setTimeout(() => setIsRetrying(false), 500);
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = setTimeout(() => setIsRetrying(false), 500);
     }
   }, [onRetry, isRetrying]);
 

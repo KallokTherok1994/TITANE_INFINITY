@@ -2,8 +2,9 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = path.resolve(new URL('../..', import.meta.url).pathname);
+const ROOT = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const OUT_DIR = process.env.TITANE_OLLAMA_DEV_AWARENESS_OUT_DIR
   ? path.resolve(process.env.TITANE_OLLAMA_DEV_AWARENESS_OUT_DIR)
   : path.join(ROOT, 'reports/ollama-dev-awareness');

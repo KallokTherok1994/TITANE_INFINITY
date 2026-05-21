@@ -13,8 +13,12 @@ describe('verify-ollama-dev-live.sh', () => {
 
   it('is executable', () => {
     const stat = fs.statSync(scriptPath);
-    // eslint-disable-next-line no-bitwise
-    expect(stat.mode & 0o111).toBeGreaterThan(0);
+    if (process.platform !== 'win32') {
+      // eslint-disable-next-line no-bitwise
+      expect(stat.mode & 0o111).toBeGreaterThan(0);
+    } else {
+      expect(stat.isFile()).toBe(true);
+    }
   });
 
   it('contains the required live-readiness probes and prompt contract', () => {

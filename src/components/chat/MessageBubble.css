@@ -52,6 +52,16 @@
   position: relative;
 }
 
+/* Initiales premium — utilisées par user et AI */
+.message-avatar-initials {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-family: 'Inter', -apple-system, sans-serif;
+  user-select: none;
+}
+
 /* Avatar User - Violet Tech Aura */
 .message-avatar-user {
   width: 46px;
@@ -59,7 +69,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
   /* Glass morphism violet */
   background: linear-gradient(
     135deg,

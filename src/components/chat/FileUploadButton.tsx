@@ -318,7 +318,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                   }
                 );
               } catch (vaultError) {
-                console.warn(
+                isDev && console.warn(
                   '[FileUpload] Knowledge vault ingestion warning (non-blocking):',
                   vaultError
                 );
@@ -364,7 +364,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                 );
             } catch (memoryError) {
               // Non-bloquant : l'analyse locale reste disponible même si la mémoire échoue
-              console.warn(
+              isDev && console.warn(
                 '[FileUpload] Memory ingestion warning (non-blocking):',
                 memoryError
               );
@@ -382,7 +382,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                     result.name
                   );
               } catch (xpError) {
-                console.warn('[FileUpload] XP award warning:', xpError);
+                isDev && console.warn('[FileUpload] XP award warning:', xpError);
               }
             }
           }

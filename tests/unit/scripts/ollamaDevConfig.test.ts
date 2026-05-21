@@ -270,8 +270,12 @@ describe('Ollama Dev — boundary validator (verify-ollama-copilot-boundary.sh)'
     const stat = fs.statSync(
       path.join(rootDir, 'scripts/verify/verify-ollama-copilot-boundary.sh')
     );
-    // eslint-disable-next-line no-bitwise
-    expect(stat.mode & 0o111).toBeGreaterThan(0);
+    if (process.platform !== 'win32') {
+      // eslint-disable-next-line no-bitwise
+      expect(stat.mode & 0o111).toBeGreaterThan(0);
+    } else {
+      expect(stat.isFile()).toBe(true);
+    }
   });
 
   it('vérifie la présence de .vscode/mcp.json', () => {

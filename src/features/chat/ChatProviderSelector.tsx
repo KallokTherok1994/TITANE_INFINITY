@@ -45,13 +45,19 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
 
     return (
       <div className="flex items-center gap-2">
-        <Bot className="h-4 w-4 text-titanium-text-tertiary" />
+        <div className="conversation-provider-status-icon">
+          <Bot className="h-4 w-4 text-titanium-text-tertiary" />
+          <span className="conversation-provider-status-dot" aria-hidden="true" />
+        </div>
         <select
           data-testid="select-chat-provider"
           aria-label="Selection du provider IA"
           value={selectedProvider}
           onChange={e => onChange(e.target.value)}
-          className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-1.5 text-sm text-titanium-text-primary outline-none transition-colors focus:border-blue-500"
+          className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-1.5 text-sm text-titanium-text-primary outline-none transition-colors"
+          style={{ '--tw-ring-color': 'var(--titane-accent, #06b6d4)' } as React.CSSProperties}
+          onFocus={e => { e.currentTarget.style.borderColor = 'var(--titane-accent, #06b6d4)'; }}
+          onBlur={e => { e.currentTarget.style.borderColor = ''; }}
         >
           {options}
         </select>

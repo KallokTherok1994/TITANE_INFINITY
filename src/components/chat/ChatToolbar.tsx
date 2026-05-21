@@ -49,6 +49,7 @@ import { useTTSPreference, useAudioConversationPreference } from '@/hooks/usePre
 import { useToast } from '@/hooks/useToast';
 import { APISupport } from '@/utils/APISupport';
 import { audioTranscriptionService } from '@/services/audioTranscriptionService';
+import { resolveImportedFileContent } from './fileImportSupport';
 import { RecordingTimer } from './RecordingTimer';
 import type { AnalyzedFile } from './FileUploadButton';
 import './ChatToolbar.css';
@@ -178,6 +179,16 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     const enableVision = useEnableVision();
     const disableVision = useDisableVision();
 
+    // Cleanup au démontage : arrêter tout enregistrement en cours
+    useEffect(() => {
+      return () => {
+        if (mediaRecorderRef.current?.state === 'recording') {
+          mediaRecorderRef.current.stop();
+        }
+        mediaRecorderRef.current = null;
+      };
+    }, []);
+
     const voiceEngine = useVoiceEngine({
       onTranscript: text => {
         if (text.trim() && onDictationResult) {
@@ -185,6 +196,17 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         }
       },
     });
+
+    // ═══ HELPERS - FICHIERS ═══
+    function detectAnalyzedFileCategory(name: string, mime: string): AnalyzedFile['category'] {
+      const ext = name.slice(name.lastIndexOf('.')).toLowerCase();
+      if (['.pdf', '.doc', '.docx', '.txt', '.md', '.log'].includes(ext)) return 'document';
+      if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'].includes(ext)) return 'image';
+      if (['.json', '.yaml', '.yml', '.csv', '.xml'].includes(ext)) return 'data';
+      if (['.ts', '.tsx', '.js', '.jsx', '.py', '.rs', '.go', '.java', '.cpp', '.c'].includes(ext)) return 'code';
+      if (mime.startsWith('image/')) return 'image';
+      return 'document';
+    }
 
     // ═══ HANDLERS - FICHIERS ═══
     const handleFileImportClick = useCallback(() => {
@@ -200,12 +222,10 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
             const analyzedFiles: AnalyzedFile[] = [];
 
             for (const file of filesArray) {
-              // Analyse simple des fichiers
-              const content = await file.text().catch((err: unknown) => {
-                logger.debug('File text read failed', {
-                  error: String(err),
-                  file: file.name,
-                });
+              // Utilise resolveImportedFileContent pour PDF/DOCX (parsing Tauri)
+              // et détection binaire intégrée — fallback metadata si non parsable
+              const content = await resolveImportedFileContent(file).catch((err: unknown) => {
+                logger.debug('File content resolution failed', { error: String(err), file: file.name });
                 return null;
               });
 
@@ -214,7 +234,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 name: file.name,
                 size: file.size,
                 type: file.type,
-                category: 'document', // Catégorie par défaut
+                category: detectAnalyzedFileCategory(file.name, file.type),
                 content,
                 preview: content ? content.slice(0, 200) : '',
                 status: 'done',
@@ -243,18 +263,15 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     const handleScreenCapture = useCallback(async () => {
       if (!onScreenCapture) return;
 
-      try {
-        // ✅ NOUVEAU - Vérifier support Screen Capture
-        const supported = await APISupport.supportsScreenCapture();
-        if (!supported) {
-          const errorMsg = APISupport.getErrorMessage('screen-capture');
-          error(errorMsg);
-          isDev && logger.warn('[ChatToolbar] Screen capture not supported:', errorMsg);
-          return;
-        }
+      const supported = await APISupport.supportsScreenCapture();
+      if (!supported) {
+        error(APISupport.getErrorMessage('screen-capture'));
+        return;
+      }
 
-        // Utiliser l'API Screen Capture
-        const stream = await navigator.mediaDevices.getDisplayMedia({
+      let stream: MediaStream | null = null;
+      try {
+        stream = await navigator.mediaDevices.getDisplayMedia({
           video: { displaySurface: 'monitor' } as MediaTrackConstraints,
         });
 
@@ -262,32 +279,29 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         video.srcObject = stream;
         await video.play();
 
-        // Capturer le frame
         const canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(video, 0, 0);
+        canvas.getContext('2d')?.drawImage(video, 0, 0);
 
-        // Arrêter le stream
-        stream.getTracks().forEach(track => track.stop());
-
-        // Convertir en base64
         const imageData = canvas.toDataURL('image/png');
         onScreenCapture(imageData);
-
         isDev && logger.info('[ChatToolbar] Screenshot captured');
       } catch (err) {
-        const errorCode = err instanceof Error ? err.name : 'Unknown';
-        if (errorCode === 'NotAllowedError') {
+        const code = err instanceof Error ? err.name : 'Unknown';
+        if (code === 'NotAllowedError') {
           logger.info('[ChatToolbar] Screen capture cancelled by user');
-        } else if (errorCode === 'NotFoundError') {
+        } else if (code === 'NotFoundError') {
           error('Aucun écran à capturer trouvé');
+        } else if (code === 'NotSecureError') {
+          error('La capture d\'écran nécessite une connexion HTTPS');
         } else {
           logger.error('[ChatToolbar] Screen capture error:', err);
         }
+      } finally {
+        stream?.getTracks().forEach(track => track.stop());
       }
-    }, [onScreenCapture]);
+    }, [onScreenCapture, error]);
 
     // ═══ HANDLERS - IMAGE/VISION ═══
     const handleImageUploadClick = useCallback(() => {
@@ -315,26 +329,20 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     const handleCameraCapture = useCallback(async () => {
       if (!onImageAnalysis) return;
 
+      const supported = await APISupport.supportsGetUserMedia();
+      if (!supported) {
+        error(APISupport.getErrorMessage('camera'));
+        return;
+      }
+      const hasCamera = await APISupport.hasCamera();
+      if (!hasCamera) {
+        error('Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.');
+        return;
+      }
+
+      let stream: MediaStream | null = null;
       try {
-        // ✅ NOUVEAU - Vérifier support et disponibilité caméra
-        const supported = await APISupport.supportsGetUserMedia();
-        if (!supported) {
-          const errorMsg = APISupport.getErrorMessage('camera');
-          error(errorMsg);
-          isDev && logger.warn('[ChatToolbar] Camera not supported:', errorMsg);
-          return;
-        }
-
-        const hasCamera = await APISupport.hasCamera();
-        if (!hasCamera) {
-          error(
-            'Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.'
-          );
-          isDev && logger.warn('[ChatToolbar] No camera found');
-          return;
-        }
-
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.createElement('video');
         video.srcObject = stream;
         await video.play();
@@ -345,19 +353,25 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         const canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(video, 0, 0);
-
-        stream.getTracks().forEach(track => track.stop());
+        canvas.getContext('2d')?.drawImage(video, 0, 0);
 
         const imageData = canvas.toDataURL('image/jpeg', 0.8);
         onImageAnalysis(imageData, 'Analyse cette capture de ma caméra');
-
         isDev && logger.info('[ChatToolbar] Camera snapshot captured');
       } catch (err) {
-        logger.error('[ChatToolbar] Camera capture error:', err);
+        const code = err instanceof Error ? err.name : 'Unknown';
+        if (code === 'NotAllowedError') {
+          error('Permission caméra refusée. Autorisez l\'accès dans les paramètres du navigateur.');
+        } else if (code === 'NotFoundError') {
+          error('Aucune caméra trouvée ou caméra non accessible.');
+        } else {
+          logger.error('[ChatToolbar] Camera capture error:', err);
+          error(`Erreur caméra: ${(err as Error).message || 'Erreur inconnue'}`);
+        }
+      } finally {
+        stream?.getTracks().forEach(track => track.stop());
       }
-    }, [onImageAnalysis]);
+    }, [onImageAnalysis, error]);
 
     // ═══ HANDLERS - DICTÉE ═══
     const handleDictationToggle = useCallback(async () => {
@@ -403,68 +417,75 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     });
 
     // ═══ HANDLERS - ENREGISTREMENT AUDIO ═══
+
+    /** Détecte le meilleur MIME type supporté par le navigateur/OS */
+    const detectAudioMimeType = (): string => {
+      const candidates = [
+        'audio/webm;codecs=opus',
+        'audio/webm',
+        'audio/mp4',
+        'audio/ogg;codecs=opus',
+      ];
+      return candidates.find(t => MediaRecorder.isTypeSupported(t)) ?? '';
+    };
+
     const handleAudioRecordToggle = useCallback(async () => {
       if (isRecordingAudio) {
-        // Arrêter l'enregistrement
         setIsRecordingAudio(false);
         mediaRecorderRef.current?.stop();
-      } else {
-        // Démarrer l'enregistrement
-        try {
-          // ✅ NOUVEAU - Vérifier support MediaRecorder
-          if (!APISupport.supportsMediaRecorder()) {
-            const errorMsg = APISupport.getErrorMessage('media-recorder');
-            error(errorMsg);
-            isDev && logger.warn('[ChatToolbar] MediaRecorder not supported');
-            return;
-          }
+        return;
+      }
 
-          // ✅ NOUVEAU - Vérifier microphone disponible
-          const hasMic = await APISupport.hasMicrophone();
-          if (!hasMic) {
-            error(
-              'Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.'
-            );
-            isDev && logger.warn('[ChatToolbar] No microphone found for recording');
-            return;
-          }
+      if (!APISupport.supportsMediaRecorder()) {
+        error(APISupport.getErrorMessage('media-recorder'));
+        return;
+      }
+      const hasMic = await APISupport.hasMicrophone();
+      if (!hasMic) {
+        error('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+        return;
+      }
 
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          const mediaRecorder = new MediaRecorder(stream);
-          mediaRecorderRef.current = mediaRecorder;
-          audioChunksRef.current = [];
+      let stream: MediaStream | null = null;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mimeType = detectAudioMimeType();
+        const mediaRecorder = mimeType
+          ? new MediaRecorder(stream, { mimeType })
+          : new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
 
-          mediaRecorder.ondataavailable = e => {
-            if (e.data.size > 0) {
-              audioChunksRef.current.push(e.data);
-            }
-          };
+        mediaRecorder.ondataavailable = e => {
+          if (e.data.size > 0) audioChunksRef.current.push(e.data);
+        };
 
-          mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-            stream.getTracks().forEach(track => track.stop());
+        mediaRecorder.onstop = () => {
+          const blobType = mimeType || 'audio/webm';
+          const audioBlob = new Blob(audioChunksRef.current, { type: blobType });
+          // Libérer le micro dès l'arrêt — quelle que soit la suite
+          stream?.getTracks().forEach(track => track.stop());
+          stream = null;
+          onAudioRecorded?.(audioBlob);
+          isDev && logger.info('[ChatToolbar] Audio recorded:', audioBlob.size, 'bytes', blobType);
+        };
 
-            if (onAudioRecorded) {
-              onAudioRecorded(audioBlob);
-            }
-
-            isDev &&
-              logger.info('[ChatToolbar] Audio recorded:', audioBlob.size, 'bytes');
-          };
-
-          mediaRecorder.start();
-          setIsRecordingAudio(true);
-
-          isDev && logger.info('[ChatToolbar] Audio recording started');
-        } catch (err) {
-          setIsRecordingAudio(false);
+        mediaRecorder.start();
+        setIsRecordingAudio(true);
+        isDev && logger.info('[ChatToolbar] Audio recording started, mimeType:', mimeType || '(default)');
+      } catch (err) {
+        // Libérer le stream si start() a échoué avant onstop
+        stream?.getTracks().forEach(track => track.stop());
+        setIsRecordingAudio(false);
+        const code = err instanceof Error ? err.name : 'Unknown';
+        if (code === 'NotAllowedError') {
+          error('Permission microphone refusée. Autorisez l\'accès dans les paramètres du navigateur.');
+        } else {
           logger.error('[ChatToolbar] Audio recording error:', err);
-          error(
-            `Erreur enregistrement audio: ${(err as Error).message || 'Erreur inconnue'}`
-          );
+          error(`Erreur enregistrement: ${(err as Error).message || 'Erreur inconnue'}`);
         }
       }
-    }, [isRecordingAudio, onAudioRecorded]);
+    }, [isRecordingAudio, onAudioRecorded, error]);
 
     // ✅ NOUVEAU - Auto-stop recording après 5 minutes
     useAutoTimeout({

@@ -58,7 +58,7 @@ import { registerCustomMode } from '@/config/chatModes.config';
 import { useChatModeStore } from '@/stores/useChatModeStore';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
-import { Download, FileText, Copy, Trash2, Search, Volume2, VolumeX, Mic, Settings, CheckCircle, AlertCircle, Share2 } from 'lucide-react';
+import { Download, FileText, Copy, Trash2, Search, Volume2, VolumeX, Mic, Share2 } from 'lucide-react';
 import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
@@ -93,6 +93,7 @@ import { ToolSelectorPanel } from '@/components/chat/ToolSelectorPanel';
 import { type ChatTool } from '@/features/chat/chatToolsRegistry';
 import { routeChatToolInvocation } from '@/features/chat/chatToolRouter';
 import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
+import { AutoHealErrorBoundary } from '@/components/AutoHealErrorBoundary';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -200,6 +201,9 @@ const SCROLL_TO_BOTTOM_THRESHOLD_PX = 96;
 const SCROLL_TO_BOTTOM_VISIBILITY_OFFSET_PX = 180;
 
 const MIN_CONVERSATION_VIEWPORT_HEIGHT = 320;
+
+const normalizeForSearch = (s: string): string =>
+  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 function readConversationViewportScale(): number {
   if (typeof window === 'undefined') {
@@ -1452,7 +1456,7 @@ const ConversationMessage = memo(
                 disabled={isLoading}
               >
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.58"/></svg>
-                Retry
+                Renvoyer
               </button>
             )}
 
@@ -1490,6 +1494,29 @@ const FILE_EXT_ICONS: Record<string, string> = {
   html: '🌐',
   css: '🎨',
   sh: '🖥️',
+  bash: '🖥️',
+  pdf: '📄',
+  csv: '📊',
+  xlsx: '📊',
+  xls: '📊',
+  docx: '📝',
+  doc: '📝',
+  sql: '🗄️',
+  yaml: '⚙️',
+  yml: '⚙️',
+  toml: '⚙️',
+  env: '🔐',
+  lock: '🔒',
+  log: '📋',
+  xml: '📰',
+  go: '🐹',
+  java: '☕',
+  cpp: '⚙️',
+  c: '⚙️',
+  kt: '🟣',
+  swift: '🍎',
+  rb: '💎',
+  php: '🐘',
 };
 
 const MIME_MAP: Record<string, string> = {
@@ -1666,7 +1693,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     // warm view before the engine completes its first probe.
     // Disabled by default — only `enabled: true` once engine declares ready.
     const chatProvidersHealthQuery = useChatProvidersHealthQuery({
-      enabled: Boolean(conversationId),
+      // Toujours actif — cache warm en continu (pas conditionnel au conversationId)
+      // Primary source: useConversationEngine.healthReport; TanStack = fallback offline-first
     });
     // Side-effect-free read: keep cache warm. Diagnostic exposure happens via
     // a data-testid attribute on the conversation root for E2E observability.
@@ -1681,10 +1709,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const [audioEnabled, setAudioEnabled] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [customModes, setCustomModes] = useState<CustomMode[]>([]);
-    const [_attachedImages, setAttachedImages] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
-    const [_cameraActive, setCameraActive] = useState(false);
     const [loadingVisibleUntil, setLoadingVisibleUntil] = useState(0);
     const [sendTraceState, setSendTraceState] = useState<
       'idle' | 'dispatching' | 'responded' | 'errored'
@@ -2390,7 +2416,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     const searchNeedle = useMemo(() => {
       const trimmed = deferredSearchQuery.trim();
-      return trimmed ? trimmed.toLowerCase() : '';
+      return trimmed ? normalizeForSearch(trimmed) : '';
     }, [deferredSearchQuery]);
 
     const sendButtonReady =
@@ -2408,7 +2434,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       let result = messages;
 
       if (searchNeedle) {
-        result = result.filter(m => m.content.toLowerCase().includes(searchNeedle));
+        result = result.filter(m => normalizeForSearch(m.content).includes(searchNeedle));
       }
 
       if (filterRole !== 'all') {
@@ -2443,13 +2469,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           <button
             key={suggestion.value}
             type="button"
+            className="conversation-empty-suggestion-btn"
             data-value={suggestion.value}
+            aria-label={`Suggestion : ${suggestion.value}`}
             onClick={handleSuggestionClick}
           >
             {suggestion.label}
           </button>
         )),
-      []
+      [handleSuggestionClick]
     );
 
     // ═══ EFFECTS ═══
@@ -2501,6 +2529,24 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       showLoadingIndicator,
       compactConversationLayout,
     ]);
+
+    // ─── Draft persistence ───────────────────────────────────────────────────
+    const draftKey = `titane_chat_draft_${conversationId || 'default'}`;
+
+    useEffect(() => {
+      const saved = localStorage.getItem(draftKey);
+      if (saved && !inputValue) setInputValue(saved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversationId]);
+
+    useEffect(() => {
+      if (inputValue) {
+        const t = setTimeout(() => localStorage.setItem(draftKey, inputValue), 500);
+        return () => clearTimeout(t);
+      } else {
+        localStorage.removeItem(draftKey);
+      }
+    }, [inputValue, draftKey]);
 
     // ═══ MORE HANDLERS ═══
     const handleSaveCustomMode = useCallback((mode: CustomMode) => {
@@ -3037,7 +3083,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     const handleScreenCapture = useCallback(
       (imageData: string) => {
-        setAttachedImages(prev => [...prev, imageData]);
         sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
       },
       [sendMessage]
@@ -3045,7 +3090,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     const handleImageAnalysis = useCallback(
       (imageData: string, prompt?: string) => {
-        setAttachedImages(prev => [...prev, imageData]);
         sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
       },
       [sendMessage]
@@ -3101,7 +3145,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     }, []);
 
     const handleToggleCameraLive = useCallback(() => {
-      setCameraActive(prev => !prev);
+      // camera live toggle — state tracked by ChatToolbar
     }, []);
 
     const handleInputChange = useCallback(
@@ -3264,28 +3308,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   aria-pressed={isRecording}
                 >
                   <Mic size={16} />
-                </button>
-
-                {/* Mode Builder */}
-                <button
-                  className="conversation-icon-btn"
-                  data-testid="btn-mode-builder"
-                  onClick={toggleModeBuilder}
-                  title="Créer un mode personnalisé"
-                  aria-label="Créer un mode personnalisé"
-                >
-                  <Settings size={16} />
-                </button>
-
-                {/* Health Check */}
-                <button
-                  className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
-                  data-testid="btn-health-check"
-                  onClick={refreshHealth}
-                  title={`Santé: ${healthReport?.status || 'Unknown'}`}
-                  aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
-                >
-                  {isHealthy ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
                 </button>
 
                 {/* Clear Chat */}
@@ -3542,7 +3564,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 <h3>TITANE∞</h3>
                 <div className="conversation-empty-badges">
                   <span className="conversation-empty-badge">{currentModeLabel}</span>
-                  <span className="conversation-empty-badge-sep">·</span>
+                  <span className="conversation-empty-badge-sep" aria-hidden="true">·</span>
                   <span className="conversation-empty-badge conversation-empty-badge--provider">{selectedProviderLabel}</span>
                 </div>
                 <p>Comment puis-je vous aider aujourd'hui&nbsp;?</p>
@@ -3559,7 +3581,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               </div>
             )}
 
-            {messageItems}
+            <AutoHealErrorBoundary>
+              {messageItems}
+            </AutoHealErrorBoundary>
 
             {showLoadingIndicator && (
               <div
@@ -3680,6 +3704,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
               disabled={isLoading}
               rows={compactConversationLayout ? 2 : 3}
             />
+            {inputValue.length > 0 && (
+              <div
+                className={`conversation-input-counter${inputValue.length > 3500 ? ' conversation-input-counter--warning' : ''}${inputValue.length > 4000 ? ' conversation-input-counter--danger' : ''}`}
+                aria-live="polite"
+              >
+                {inputValue.length.toLocaleString('fr-FR')}
+              </div>
+            )}
             <button
               className={`conversation-send-btn${isLoading ? ' conversation-send-btn--loading' : ''}`}
               data-testid="chat-send"

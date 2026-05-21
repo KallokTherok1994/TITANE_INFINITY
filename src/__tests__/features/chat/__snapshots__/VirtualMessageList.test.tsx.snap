@@ -2,7 +2,11 @@
 
 exports[`VirtualMessageList Component > Snapshot > should match snapshot 1`] = `
 <div
+  aria-atomic="false"
+  aria-label="Messages de la conversation"
+  aria-live="polite"
   class="virtual-message-list "
+  role="list"
   style="overflow-y: auto; height: 100%;"
 >
   <div>
