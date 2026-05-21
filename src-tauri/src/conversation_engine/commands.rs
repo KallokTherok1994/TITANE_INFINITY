@@ -73,12 +73,17 @@ fn resolve_conversation_os_db_path_from_env(
         return path.join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db");
     }
 
+    // On Windows, HOME/.local/share is a Linux convention — skip it and fall through to data_local_dir().
+    #[cfg(not(target_os = "windows"))]
     if let Some(home) = env_home
         .filter(|value| !value.trim().is_empty())
         .map(std::path::PathBuf::from)
     {
         return home.join(".local/share/TITANE_INFINITY/runtime/memory/conversation_os_v1.db");
     }
+    // Suppress unused-variable warning on Windows
+    #[cfg(target_os = "windows")]
+    let _ = env_home;
 
     // Last-resort fallback: use persistent app data dir (correct on Android & desktop).
     dirs::data_local_dir()

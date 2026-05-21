@@ -3,6 +3,11 @@
 # Transforme tous les warnings en erreurs de compilation
 # ═══════════════════════════════════════════════════════════════
 
+# RUST_MIN_STACK: prevents rustc crashes (STATUS_ACCESS_VIOLATION) on ICU4X SIMD crates (tinystr, zerotrie)
+# These crates use large stack frames during monomorphization; 64MB prevents the overflow.
+[env]
+RUST_MIN_STACK = { value = "67108864", force = false }
+
 [target.'cfg(all())']
 # rustflags = ["-Dwarnings"]  # Temporarily disabled for development
 

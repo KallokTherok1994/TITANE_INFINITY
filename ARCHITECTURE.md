@@ -496,9 +496,13 @@ L’agent orchestrateur dynamique répartit intelligemment les tâches entre les
 
 - **Linux** : `scripts/launch/launch-titane.sh`, `scripts/launch/start_dev.sh`
 - **Windows** :
+  - `scripts/windows/TitaneWindowsEnv.ps1` (bootstrap PATH canonique Node/Corepack/Git/Cargo/Ollama pour shells Windows bornés + `CARGO_HOME` isolé repo-local utilisateur)
   - `scripts/launch/launch-titane.ps1` (lancement principal)
   - `scripts/launch/launch-titane.bat` (batch)
-  - `scripts/launch/launch-ollama.ps1` (**installation Ollama + modèles IA**)
+  - `scripts/launch/launch-ollama.ps1` (**installation Ollama + modèles gouvernés `gemma2:2b`, `qwen3.5:9b`, `nomic-embed-text`**)
+- **Scripts npm portables Windows** : `pnpm run test:rust` passe par `scripts/windows/run-rust-tests.mjs`; `pnpm run clean*` passe par `scripts/windows/clean-paths.mjs` afin d'éviter `mkdir -p` et `rm -rf` sous `cmd.exe`.
+- **Tauri Dev Windows** : `scripts/launch/dev_tauri_monitor.mjs` appelle explicitement `bash scripts/launch/deploy_full_local_dev.sh` sur Windows afin de garder la surface shell canonique sans dépendre de l'association de fichiers `.sh`. Le `beforeDevCommand` du runtime dev passe par `scripts/launch/run-vite-dev.mjs` pour éviter les quoting traps `bash -lc` dans `runtime/dev/tauri.conf.json`; le smoke publie `BOOT:READY` seulement après observation réelle des logs Vite/Tauri.
+- **Audio Windows Dev** : `src-tauri/src/audio/commands.rs::test_microphone` ne tente pas les backends Linux `arecord`/`pw-record` sous Windows; il renvoie un résultat explicite non-success sans `log::error` tant que la capture native Windows n'est pas câblée.
 - **Backend Ollama** : la boucle locale canonique cote Rust utilise `127.0.0.1:11434` et le fallback streaming gouverne `gemma2:2b` pour eviter les derives de resolution `localhost` ou de modele dans les lanes desktop gouvernees.
 - **Android** : voir `titane-android/`
 

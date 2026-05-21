@@ -34,6 +34,10 @@ export function classifyMonitorLine(line = '') {
     isCargoProgressLine(lower);
 
   const bootSeen =
+    (lower.includes('boot:ready') &&
+      !lower.includes('non observ') &&
+      !lower.includes('not observed') &&
+      !lower.includes('frontend.boot')) ||
     lower.includes('tauri app started') ||
     lower.includes('running dev command') ||
     lower.includes('vite v') ||

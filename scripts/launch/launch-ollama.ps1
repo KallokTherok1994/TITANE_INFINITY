@@ -7,8 +7,14 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$OLLAMA_URL = "http://localhost:11434"
-$MODELS = @('qwen2.5:latest', 'llama3.1:8b', 'mistral:7b')
+$ROOT = Resolve-Path (Join-Path $PSScriptRoot '..\..')
+$windowsEnv = Join-Path $ROOT 'scripts\windows\TitaneWindowsEnv.ps1'
+if (Test-Path -LiteralPath $windowsEnv) {
+    . $windowsEnv
+}
+
+$OLLAMA_URL = "http://127.0.0.1:11434"
+$MODELS = @('gemma2:2b', 'qwen3.5:9b', 'nomic-embed-text')
 
 function Assert-Tool {
     param([string]$Tool, [string]$HintUrl = '')
@@ -20,49 +26,101 @@ function Assert-Tool {
 }
 
 function Install-Ollama {
+    if (Get-Command 'ollama' -ErrorAction SilentlyContinue) {
+        Write-Host "[OK] Ollama déjà installé." -ForegroundColor Green
+        return
+    }
+
     Write-Host "[INFO] Installation d'Ollama pour Windows..." -ForegroundColor Cyan
-    $ollamaUrl = "https://ollama.com/download/OllamaSetup.exe"
-    $installer = "$env:TEMP\OllamaSetup.exe"
-    Invoke-WebRequest -Uri $ollamaUrl -OutFile $installer
-    Start-Process -FilePath $installer -Wait
-    Remove-Item $installer
-    Write-Host "[OK] Ollama installé. Relancez ce script si besoin."
+    if (Get-Command 'winget' -ErrorAction SilentlyContinue) {
+        & winget install -e --id Ollama.Ollama --accept-package-agreements --accept-source-agreements
+        if ($LASTEXITCODE -ne 0) {
+            throw "winget install Ollama.Ollama a échoué (exit $LASTEXITCODE)"
+        }
+    } else {
+        $ollamaUrl = "https://ollama.com/download/OllamaSetup.exe"
+        $installer = Join-Path $env:TEMP 'OllamaSetup.exe'
+        Invoke-WebRequest -Uri $ollamaUrl -OutFile $installer
+        Start-Process -FilePath $installer -Wait
+        Remove-Item $installer -Force
+    }
+
+    if (Test-Path -LiteralPath $windowsEnv) {
+        . $windowsEnv
+    }
+    Assert-Tool 'ollama' 'https://ollama.com/download'
+    Write-Host "[OK] Ollama installé." -ForegroundColor Green
 }
 
 function Start-Ollama {
+    Assert-Tool 'ollama' 'https://ollama.com/download'
     Write-Host "[INFO] Démarrage du service Ollama..." -ForegroundColor Cyan
+    try {
+        Invoke-RestMethod "$OLLAMA_URL/api/version" -TimeoutSec 2 | Out-Null
+        Write-Host "[OK] Ollama répond déjà sur $OLLAMA_URL" -ForegroundColor Green
+        return
+    } catch {
+        # Start hidden below.
+    }
     Start-Process -FilePath "ollama" -ArgumentList "serve" -WindowStyle Hidden
     Start-Sleep -Seconds 5
 }
 
 function Wait-Ollama {
-    $maxTries = 10
+    $maxTries = 30  # 30 × 2s = 60s
+    Write-Host "[INFO] Attente démarrage Ollama (max 60s)..." -ForegroundColor Cyan
     for ($i=0; $i -lt $maxTries; $i++) {
         try {
             Invoke-RestMethod "$OLLAMA_URL/api/version" -TimeoutSec 2 | Out-Null
+            Write-Host "[OK] Ollama actif." -ForegroundColor Green
             return
         } catch {
+            Write-Host "[INFO] Tentative $($i+1)/$maxTries..." -ForegroundColor DarkGray
             Start-Sleep -Seconds 2
         }
     }
-    Write-Host "[ERROR] Ollama ne répond pas sur $OLLAMA_URL" -ForegroundColor Red
+    Write-Host "[ERROR] Ollama ne répond pas sur $OLLAMA_URL après $maxTries essais." -ForegroundColor Red
     exit 1
 }
 
 function Pull-Models {
+    Assert-Tool 'ollama' 'https://ollama.com/download'
+
+    # Vérifier espace disque : ~7 GB requis pour les modèles par défaut
+    try {
+        $freeGB = [math]::Round((Get-PSDrive C -ErrorAction SilentlyContinue).Free / 1GB, 1)
+        if ($freeGB -lt 7) {
+            Write-Host "[ERROR] Espace disque insuffisant : ${freeGB} GB disponibles, 7 GB requis." -ForegroundColor Red
+            Write-Host "        Libérez de l'espace puis relancez." -ForegroundColor Yellow
+            exit 1
+        }
+        Write-Host "[OK] Espace disque : ${freeGB} GB disponibles." -ForegroundColor Green
+    } catch {
+        Write-Host "[WARN] Impossible de vérifier l'espace disque — on continue." -ForegroundColor Yellow
+    }
+
+    $failed = @()
     foreach ($model in $MODELS) {
         Write-Host "[INFO] Téléchargement modèle: $model" -ForegroundColor Cyan
         & ollama pull $model
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "[ERROR] Échec téléchargement $model" -ForegroundColor Red
-            exit 1
+            Write-Host "[WARN] Échec téléchargement $model — on continue avec les autres." -ForegroundColor Yellow
+            $failed += $model
+        } else {
+            Write-Host "[OK] $model installé." -ForegroundColor Green
         }
     }
-    Write-Host "[OK] Tous les modèles sont installés." -ForegroundColor Green
+    if ($failed.Count -gt 0) {
+        Write-Host "[WARN] Modèles non installés : $($failed -join ', ')" -ForegroundColor Yellow
+        Write-Host "       Relancez : .\launch-ollama.ps1 pull" -ForegroundColor Yellow
+    } else {
+        Write-Host "[OK] Tous les modèles sont installés." -ForegroundColor Green
+    }
     & ollama list
 }
 
 function Status-Ollama {
+    Assert-Tool 'ollama' 'https://ollama.com/download'
     try {
         $tags = Invoke-RestMethod "$OLLAMA_URL/api/tags"
         Write-Host "[OK] Ollama actif. Modèles installés :" -ForegroundColor Green
@@ -71,9 +129,6 @@ function Status-Ollama {
         Write-Host "[ERROR] Ollama non actif ou inaccessible." -ForegroundColor Red
     }
 }
-
-Assert-Tool 'curl' 'https://curl.se/windows/'
-Assert-Tool 'ollama' 'https://ollama.com/download'
 
 switch ($Action) {
     'install' {

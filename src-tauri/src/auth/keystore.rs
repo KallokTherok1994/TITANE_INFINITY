@@ -37,13 +37,25 @@ impl ApiKeysStore {
 impl Keystore {
     /// Chemin du keystore
     pub fn path() -> AuthResult<PathBuf> {
-        let home =
-            std::env::var("HOME").map_err(|_| AuthError::IoError("HOME env var not set".into()))?;
-        Ok(PathBuf::from(home)
-            .join(".local")
-            .join("share")
-            .join("titane")
-            .join("keystore.json"))
+        #[cfg(target_os = "windows")]
+        {
+            let base = dirs::data_local_dir()
+                .or_else(|| std::env::var("LOCALAPPDATA").ok().map(PathBuf::from))
+                .ok_or_else(|| {
+                    AuthError::IoError("LOCALAPPDATA not available on Windows".into())
+                })?;
+            return Ok(base.join("TITANE_INFINITY").join("keystore.json"));
+        }
+        #[allow(unreachable_code)]
+        {
+            let home = std::env::var("HOME")
+                .map_err(|_| AuthError::IoError("HOME env var not set".into()))?;
+            Ok(PathBuf::from(home)
+                .join(".local")
+                .join("share")
+                .join("titane")
+                .join("keystore.json"))
+        }
     }
 
     /// Charger le keystore (ou créer par défaut)

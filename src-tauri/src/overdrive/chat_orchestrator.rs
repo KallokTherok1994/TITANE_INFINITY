@@ -307,21 +307,21 @@ pub async fn bootstrap_api_keys(
         *state.gemini_api_key.write().await = Some(key);
         log::info!("[ChatOrchestrator] ✅ Gemini API key loaded from SecureSecretsEngine");
     } else {
-        log::warn!("[ChatOrchestrator] ⚠️  No Gemini API key found in SecureSecretsEngine");
+        log::info!("[ChatOrchestrator] Gemini API key not configured in SecureSecretsEngine");
     }
 
     if let Some(key) = openai_key {
         *state.openai_api_key.write().await = Some(key);
         log::info!("[ChatOrchestrator] ✅ OpenAI API key loaded from SecureSecretsEngine");
     } else {
-        log::warn!("[ChatOrchestrator] ⚠️  No OpenAI API key found in SecureSecretsEngine");
+        log::info!("[ChatOrchestrator] OpenAI API key not configured in SecureSecretsEngine");
     }
 
     if let Some(key) = anthropic_key {
         *state.anthropic_api_key.write().await = Some(key);
         log::info!("[ChatOrchestrator] ✅ Anthropic API key loaded from SecureSecretsEngine");
     } else {
-        log::warn!("[ChatOrchestrator] ⚠️  No Anthropic API key found in SecureSecretsEngine");
+        log::info!("[ChatOrchestrator] Anthropic API key not configured in SecureSecretsEngine");
     }
 
     log::info!("[ChatOrchestrator] 🔑 bootstrap_api_keys() completed");

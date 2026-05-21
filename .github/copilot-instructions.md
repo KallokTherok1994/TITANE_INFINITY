@@ -246,3 +246,17 @@ Gates that must pass:
 - `verify_frontend_ui_visible_change_protocol.sh`
 
 Browser preview proof is NOT Tauri proof. dist proof is NOT artifact proof. Artifact proof is NOT launcher proof. Launcher proof is NOT DOM SurfaceTruth.
+
+## Windows Primary Rail Doctrine
+
+For documentation, setup, and agent instructions work assume the following bounded doctrine:
+
+- **Primary rail**: Windows native is the default primary DEV and PROD packaging rail (MSI/EXE) for day-to-day developer workflows and Windows installer certification.
+- **Source of truth**: The GitHub clone is the working source of truth. External-drive copies are strictly recovery-only.
+- **Fallback rails**: WSL2 Ubuntu is a fallback compatibility rail. Linux native remains the packaging and cross-platform compatibility rail (AppImage/DEB).
+- **Command style**: Default commands and quickstarts should be PowerShell-first for Windows; use `corepack pnpm` rather than `npm`.
+- **Do not** remove Linux/WSL support or convert Bash-only docs into PowerShell without a scoped mission.
+- **Do not** claim Windows PROD is SEALED without explicit Windows build/artifact proofs and logs (classify as `UNKNOWN` until proven).
+- **Stoplines**: Do not suggest `npm install`, do not change `pnpm-lock.yaml` in docs-only patches, and do not touch runtime/source files during documentation updates.
+
+When adding or editing documentation, explicitly link to the canonical Windows guide at `docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md` and update `docs/windows/WINDOWS_PRIMARY_MIGRATION_NOTE.md` when migration language is relevant.

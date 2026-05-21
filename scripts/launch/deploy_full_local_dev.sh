@@ -10,6 +10,85 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
+bootstrap_windows_dev_env() {
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*) ;;
+    *) return 0 ;;
+  esac
+
+  if [[ -z "${HOME:-}" && -n "${USERPROFILE:-}" ]]; then
+    export HOME="$USERPROFILE"
+  fi
+
+  HOST_APPDATA="${APPDATA:-$HOME/AppData/Roaming}"
+  export TITANE_HOST_APPDATA="$HOST_APPDATA"
+  if command -v cygpath >/dev/null 2>&1; then
+    HOST_APPDATA_UNIX="$(cygpath -u "$HOST_APPDATA")"
+    DEV_APPDATA_UNIX="$HOST_APPDATA_UNIX/TITANE_INFINITY/dev/appdata"
+    mkdir -p "$DEV_APPDATA_UNIX"
+    export TITANE_DEV_APPDATA_ROOT="${TITANE_DEV_APPDATA_ROOT:-$(cygpath -w "$DEV_APPDATA_UNIX")}"
+  else
+    export TITANE_DEV_APPDATA_ROOT="${TITANE_DEV_APPDATA_ROOT:-$HOST_APPDATA/TITANE_INFINITY/dev/appdata}"
+    mkdir -p "$TITANE_DEV_APPDATA_ROOT"
+  fi
+  export APPDATA="$TITANE_DEV_APPDATA_ROOT"
+  if command -v cygpath >/dev/null 2>&1; then
+    export TITANE_SECRETS_PATH="${TITANE_SECRETS_PATH:-$(cygpath -w "$(cygpath -u "$TITANE_DEV_APPDATA_ROOT")/titane_infinity/secrets.enc")}"
+  else
+    export TITANE_SECRETS_PATH="${TITANE_SECRETS_PATH:-$TITANE_DEV_APPDATA_ROOT/titane_infinity/secrets.enc}"
+  fi
+
+  export TITANE_DEV_AUTO_TOKEN="${TITANE_DEV_AUTO_TOKEN:-1}"
+  export RUST_MIN_STACK="${RUST_MIN_STACK:-67108864}"
+  export RUSTFLAGS="${RUSTFLAGS:--C panic=abort -C link-arg=/STACK:67108864}"
+
+  if [[ -z "${TITANE_SECRETS_PASSPHRASE:-}" ]]; then
+    TITANE_SECRETS_PASSPHRASE="$(
+      node -e "
+        const { randomBytes } = require('node:crypto');
+        const { existsSync, mkdirSync, readFileSync, writeFileSync } = require('node:fs');
+        const path = require('node:path');
+        const home = process.env.HOME || process.env.USERPROFILE;
+        const appData = process.env.TITANE_HOST_APPDATA || process.env.APPDATA || path.join(home, 'AppData', 'Roaming');
+        const devDir = path.join(appData, 'TITANE_INFINITY', 'dev');
+        const file = path.join(devDir, 'secrets-passphrase.txt');
+        mkdirSync(devDir, { recursive: true });
+        if (!existsSync(file)) writeFileSync(file, randomBytes(32).toString('hex'), { encoding: 'ascii', mode: 0o600 });
+        process.stdout.write(readFileSync(file, 'utf8').trim());
+      "
+    )"
+    export TITANE_SECRETS_PASSPHRASE
+  fi
+}
+
+bootstrap_windows_dev_env
+
+cleanup_windows_dev_processes() {
+  if ! command -v powershell.exe >/dev/null 2>&1; then
+    return 0
+  fi
+
+  local win_root="$ROOT_DIR"
+  if command -v cygpath >/dev/null 2>&1; then
+    win_root="$(cygpath -w "$ROOT_DIR")"
+  fi
+
+  TITANE_CLEANUP_ROOT="$win_root" powershell.exe -NoProfile -ExecutionPolicy Bypass -Command '
+    $root = $env:TITANE_CLEANUP_ROOT
+    Get-CimInstance Win32_Process |
+      Where-Object {
+        $_.Name -eq "titane-infinity.exe" -or
+        ($_.CommandLine -and $_.CommandLine.Contains($root) -and (
+          $_.Name -eq "cargo.exe" -or
+          (($_.Name -eq "node.exe" -or $_.Name -eq "pnpm.exe" -or $_.Name -eq "cmd.exe") -and $_.CommandLine -match "vite|run-vite-dev|tauri")
+        ))
+      } |
+      ForEach-Object {
+        Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+      }
+  ' >/dev/null 2>&1 || true
+}
+
 # Basic sanity: must be run from repo
 if [[ ! -f package.json ]]; then
   echo "❌ Erreur: exécute ce script depuis le repo TITANE_INFINITY."
@@ -28,7 +107,7 @@ if [[ -r /proc/sys/fs/inotify/max_user_watches ]]; then
 fi
 
 POLLING=0
-SMOKE_SECONDS=""
+SMOKE_SECONDS="${SMOKE_SECONDS:-}"
 PASSTHRU=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -37,8 +116,13 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --smoke)
-      SMOKE_SECONDS="$2"
-      shift 2
+      if [[ $# -ge 2 && ! "$2" =~ ^-- ]]; then
+        SMOKE_SECONDS="$2"
+        shift 2
+      else
+        SMOKE_SECONDS="${SMOKE_SECONDS:-30}"
+        shift
+      fi
       ;;
     --)
       shift
@@ -65,15 +149,36 @@ if [[ -n "${SMOKE_SECONDS:-}" ]]; then
 
   mkdir -p runtime/dev/logs
   : > runtime/dev/logs/tauri.log
+  ./runtime/dev/cleanup.sh >/dev/null 2>&1 || true
+  cleanup_windows_dev_processes
 
   PID=""
   smoke_cleanup() {
     set +e
     if [[ -n "${PID:-}" ]]; then
       kill -INT "$PID" >/dev/null 2>&1 || true
+      for _ in {1..10}; do
+        if ! kill -0 "$PID" >/dev/null 2>&1; then
+          break
+        fi
+        sleep 0.5
+      done
+      if kill -0 "$PID" >/dev/null 2>&1; then
+        kill -TERM "$PID" >/dev/null 2>&1 || true
+      fi
+      for _ in {1..10}; do
+        if ! kill -0 "$PID" >/dev/null 2>&1; then
+          break
+        fi
+        sleep 0.5
+      done
+      if kill -0 "$PID" >/dev/null 2>&1; then
+        kill -KILL "$PID" >/dev/null 2>&1 || true
+      fi
       wait "$PID" >/dev/null 2>&1 || true
     fi
     ./runtime/dev/cleanup.sh >/dev/null 2>&1 || true
+    cleanup_windows_dev_processes
 
     # Le runtime peut écrire dans ce fichier (tracké) pendant un dev/smoke.
     # On le restaure pour garder un workspace propre et éviter des échecs Prettier.
@@ -114,7 +219,44 @@ if [[ -n "${SMOKE_SECONDS:-}" ]]; then
     exit 2
   fi
 
-  sleep "$SMOKE_SECONDS"
+  BOOT_READY=0
+  BOOT_TIMEOUT_SECONDS="${TAURI_BOOT_TIMEOUT_SECONDS:-300}"
+  BOOT_DEADLINE=$((SECONDS + BOOT_TIMEOUT_SECONDS))
+  while [[ "$SECONDS" -lt "$BOOT_DEADLINE" ]]; do
+    if ! kill -0 "$PID" >/dev/null 2>&1; then
+      echo "❌ Smoke: Tauri s'est arrêté avant BOOT:READY." >&2
+      echo "--- tail runtime/dev/logs/tauri.log ---" >&2
+      tail -n 120 runtime/dev/logs/tauri.log | cat >&2
+      exit 2
+    fi
+
+    if grep -Eiq 'finished.*`dev` profile|running.*target.*titane|tauri app started|ui_boot_marker' runtime/dev/logs/tauri.log 2>/dev/null; then
+      echo "✅ BOOT:READY Tauri dev runtime ready"
+      BOOT_READY=1
+      break
+    fi
+
+    sleep 1
+  done
+
+  if [[ "$BOOT_READY" -ne 1 ]]; then
+    echo "❌ Smoke: BOOT:READY non observé en ${BOOT_TIMEOUT_SECONDS}s." >&2
+    echo "--- tail runtime/dev/logs/tauri.log ---" >&2
+    tail -n 160 runtime/dev/logs/tauri.log | cat >&2
+    exit 2
+  fi
+
+  DEADLINE=$((SECONDS + SMOKE_SECONDS))
+  while [[ "$SECONDS" -lt "$DEADLINE" ]]; do
+    if ! kill -0 "$PID" >/dev/null 2>&1; then
+      echo "❌ Smoke: Tauri s'est arrêté après BOOT:READY." >&2
+      echo "--- tail runtime/dev/logs/tauri.log ---" >&2
+      tail -n 120 runtime/dev/logs/tauri.log | cat >&2
+      exit 2
+    fi
+    sleep 1
+  done
+
   exit 0
 fi
 

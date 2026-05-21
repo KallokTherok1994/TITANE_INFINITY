@@ -1,5 +1,7 @@
 # 🛠️ TITANE∞ — Guide de Configuration Développement
 
+> Status after Windows migration: this guide is retained for cross-platform setup and Linux packaging. Windows native is the canonical primary development rail — see `docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md` for the Windows-first quickstart and proof gates.
+
 **Version:** v24.2.0  
 **Date:** 15 décembre 2025  
 **Audience:** Développeurs
@@ -157,11 +159,11 @@ cd TITANE_INFINITY
 #### e) Installer Dépendances Projet
 
 ```bash
-# Installer dépendances npm
-pnpm install
+# Sous Windows native, utilisez toujours corepack pnpm pour installer les dépendances.
+corepack pnpm install
 
 # Ou avec legacy peer deps (si conflits)
-pnpm install --legacy-peer-deps
+corepack pnpm install --legacy-peer-deps
 
 # Compiler backend Rust (première fois)
 cd src-tauri

@@ -374,6 +374,13 @@ impl SecureSecretsEngine {
     }
 
     fn resolve_secrets_path() -> Result<PathBuf, SecretsError> {
+        if let Ok(path) = std::env::var("TITANE_SECRETS_PATH") {
+            let trimmed = path.trim();
+            if !trimmed.is_empty() {
+                return Ok(PathBuf::from(trimmed));
+            }
+        }
+
         let base = dirs::config_dir().unwrap_or_else(|| PathBuf::from("."));
         let path = base.join("titane_infinity").join("secrets.enc");
         Ok(path)
@@ -456,6 +463,10 @@ impl Default for SecureSecretsEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use once_cell::sync::Lazy;
+    use std::sync::Mutex;
+
+    static ENV_LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
 
     #[test]
     fn test_set_secret_rejects_invalid_key() {
@@ -504,5 +515,22 @@ mod tests {
         assert!(!engine
             .has_secret(KEY_GEMINI)
             .expect("has_secret should succeed after clear"));
+    }
+
+    #[test]
+    fn test_resolve_secrets_path_uses_env_override() {
+        let _guard = ENV_LOCK.lock().expect("env lock");
+        let previous = std::env::var("TITANE_SECRETS_PATH").ok();
+        let expected = PathBuf::from("target").join("test-secrets").join("secrets.enc");
+
+        std::env::set_var("TITANE_SECRETS_PATH", &expected);
+        let resolved = SecureSecretsEngine::resolve_secrets_path().expect("path");
+
+        match previous {
+            Some(value) => std::env::set_var("TITANE_SECRETS_PATH", value),
+            None => std::env::remove_var("TITANE_SECRETS_PATH"),
+        }
+
+        assert_eq!(resolved, expected);
     }
 }

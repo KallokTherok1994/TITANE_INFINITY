@@ -1,5 +1,7 @@
 # TITANE∞ — Windows Spin-Up Procedure
 
+> NOTE: Historical Windows spin-up guide. Canonical current guide: [WINDOWS_PRIMARY_DEV_PROD_GUIDE.md](WINDOWS_PRIMARY_DEV_PROD_GUIDE.md). This document is retained for historical context; follow the canonical guide for new setups and proofs.
+
 > Version: 30.1.5 · Runtime: Tauri 2 · Node: 24 · pnpm engine-strict
 
 ---
@@ -19,6 +21,33 @@
 
 ---
 
+## Bootstrap PATH Windows canonique
+
+Les launchers Windows chargent `scripts/windows/TitaneWindowsEnv.ps1` avant toute vérification. Ce bootstrap ajoute seulement les chemins locaux déjà installés quand ils existent :
+
+- `C:\Program Files\nodejs`
+- `C:\Program Files\nodejs\node_modules\corepack\shims`
+- `C:\Program Files\Git\bin`
+- `%USERPROFILE%\.cargo\bin`
+- `C:\Program Files\Ollama`
+- `%LOCALAPPDATA%\Programs\Ollama`
+
+Cette étape rend `node`, `pnpm`, `git` et `cargo` disponibles dans les shells lancés depuis VS Code, Codex, GitHub Desktop ou PowerShell sans modifier le PATH machine. Pour diagnostiquer une session manuelle :
+
+```powershell
+. .\scripts\windows\TitaneWindowsEnv.ps1
+node --version
+pnpm --version
+git --version
+cargo --version
+```
+
+Le bootstrap définit aussi `CARGO_HOME=%LOCALAPPDATA%\TITANE_INFINITY\cargo-home` pour isoler TITANE de toute configuration Cargo globale utilisateur. Cela évite qu'une configuration expérimentale hors repo force un linker ou des flags non certifiés pendant les preuves Windows.
+
+Les scripts `pnpm run test:rust`, `pnpm run clean`, `pnpm run clean:vite` et `pnpm run clean:all` utilisent des wrappers Node portables afin d'éviter les commandes POSIX (`mkdir -p`, `rm -rf`) sous `cmd.exe`.
+
+---
+
 ## Étape 1 — Installer les dépendances système
 
 ### 1.1 Installer Node.js 24 via nvm-windows
@@ -34,7 +63,7 @@ node --version  # doit afficher v24.x
 
 ```powershell
 corepack enable
-corepack prepare pnpm@latest --activate
+corepack prepare pnpm@10.30.2 --activate
 pnpm --version
 ```
 
@@ -56,6 +85,12 @@ Sélectionner les composants :
 - **C++ build tools** (workload complet)
 - **Windows 10/11 SDK**
 - **MSVC v143 toolchain**
+
+Installation automatisée recommandée :
+
+```powershell
+winget install -e --id Microsoft.VisualStudio.2022.BuildTools --accept-package-agreements --accept-source-agreements --override "--wait --passive --norestart --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+```
 
 ### 1.5 Vérifier WebView2 Runtime
 
@@ -134,6 +169,10 @@ scripts\launch\launch-titane.bat
 pnpm run dev:tauri
 ```
 
+Le runtime dev Windows lance Vite via `scripts/launch/run-vite-dev.mjs` depuis `runtime/dev/tauri.conf.json`. Cette voie évite les incompatibilités de quoting `bash -lc` dans `beforeDevCommand` et journalise Vite dans `runtime/dev/logs/vite.log`. En smoke, `scripts/launch/deploy_full_local_dev.sh` observe les logs Vite/Tauri et ne publie `BOOT:READY` qu'après un signal de démarrage réel.
+
+Note audio Windows Dev : le test microphone backend ne lance pas `arecord`/`pw-record` sous Windows. Tant que la capture native Windows n'est pas câblée, il retourne un résultat non-success explicite sans erreur runtime afin de préserver un smoke honnête.
+
 ---
 
 
@@ -153,7 +192,7 @@ cd scripts\launch
 Ce script :
 - Installe Ollama (si absent)
 - Démarre le service Ollama
-- Télécharge tous les modèles nécessaires à TITANE∞
+- Télécharge les modèles gouvernés nécessaires à TITANE∞ : `gemma2:2b`, `qwen3.5:9b`, `nomic-embed-text`
 - Vérifie la disponibilité de l’API et des modèles
 
 > **Remarque** : Pour démarrer Ollama manuellement :

@@ -506,11 +506,89 @@ pub async fn test_tts(text: String, settings: TTSSettings) -> CommandResult<Audi
 }
 
 // ─────────────────────────────────────────────────────────────────
+//  Windows audio device enumeration via PowerShell/WMI
+// ─────────────────────────────────────────────────────────────────
+
+#[cfg(target_os = "windows")]
+async fn get_windows_audio_devices(direction: &str) -> Result<Vec<AudioDevice>, String> {
+    // Use PowerShell + WMI to list sound devices.
+    // Win32_SoundDevice doesn't distinguish input vs output well, but gives us real device names.
+    let ps_cmd = r#"
+$d = Get-WmiObject Win32_SoundDevice | Where-Object {$_.Status -eq 'OK'};
+if ($d) { $d | Select-Object @{N='name';E={$_.Name}},@{N='id';E={$_.DeviceID}} | ConvertTo-Json -Compress }
+else { '[]' }
+"#;
+
+    let output = tokio::process::Command::new("powershell")
+        .args(["-NoProfile", "-NonInteractive", "-Command", ps_cmd])
+        .output()
+        .await
+        .map_err(|e| format!("PowerShell spawn error: {}", e))?;
+
+    if !output.status.success() {
+        return Err(format!(
+            "PowerShell exit {}: {}",
+            output.status,
+            String::from_utf8_lossy(&output.stderr)
+        ));
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    if stdout.is_empty() || stdout == "[]" || stdout == "null" {
+        return Ok(vec![]);
+    }
+
+    let json_val: serde_json::Value = serde_json::from_str(&stdout)
+        .map_err(|e| format!("JSON parse: {} — raw: {}", e, &stdout[..stdout.len().min(300)]))?;
+
+    let arr = if json_val.is_array() {
+        json_val.as_array().cloned().unwrap_or_default()
+    } else {
+        vec![json_val]
+    };
+
+    let devices = arr
+        .iter()
+        .enumerate()
+        .filter_map(|(i, item)| {
+            let name = item["name"].as_str()?.to_string();
+            let id = item["id"].as_str().unwrap_or("").to_string();
+            Some(AudioDevice {
+                id: if id.is_empty() { format!("win_{}", i) } else { id },
+                name,
+                device_type: direction.to_string(),
+                is_default: i == 0,
+                is_active: true,
+                driver: "Windows WMI".to_string(),
+                is_muted: false,
+            })
+        })
+        .collect();
+
+    Ok(devices)
+}
+
+// ─────────────────────────────────────────────────────────────────
 //  Audio Device Commands
 // ─────────────────────────────────────────────────────────────────
 
 #[tauri::command]
 pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
+    // Windows: use PowerShell/WMI — Linux tools (wpctl/pactl/aplay) don't exist on Windows
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(devices) = get_windows_audio_devices("output").await {
+            if !devices.is_empty() {
+                log::info!(
+                    "[Audio] get_audio_output_devices: {} device(s) via PowerShell/WMI",
+                    devices.len()
+                );
+                return Ok(devices);
+            }
+        }
+        log::warn!("[Audio] get_audio_output_devices: PowerShell/WMI returned no devices");
+    }
+
     // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
     if let Ok(devices) = get_wpctl_devices("output").await {
         if !devices.is_empty() {
@@ -567,6 +645,21 @@ pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
 
 #[tauri::command]
 pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
+    // Windows: use PowerShell/WMI — Linux tools don't exist on Windows
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(devices) = get_windows_audio_devices("input").await {
+            if !devices.is_empty() {
+                log::info!(
+                    "[Audio] get_audio_input_devices: {} device(s) via PowerShell/WMI",
+                    devices.len()
+                );
+                return Ok(devices);
+            }
+        }
+        log::warn!("[Audio] get_audio_input_devices: PowerShell/WMI returned no devices");
+    }
+
     // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
     if let Ok(devices) = get_wpctl_devices("input").await {
         if !devices.is_empty() {
@@ -867,149 +960,169 @@ pub async fn test_microphone(
         device_id
     );
 
-    let duration_secs = (duration_ms as f64 / 1000.0).max(1.0);
     let output_path = std::env::temp_dir().join("titane_mic_test.wav");
     let output_str = output_path.to_string_lossy().to_string();
 
     log::info!("[Audio] Recording to: {}", output_str);
 
-    // Use pw-record when a device_id is provided (PipeWire native, supports --target=<wpctl_id>)
-    // CRITICAL: pw-record never exits on its own — wrap with `timeout` to bound duration.
-    // Fallback to arecord (uses OS default) when no device is specified.
-    let record_result = if let Some(ref id) = device_id {
-        // timeout exits with 124 on expiry (SIGTERM to child), non-zero is acceptable —
-        // the output file will have real audio data captured up to that point.
-        let duration_arg = format!("{:.0}", duration_secs + 1.0);
-        log::info!("[Audio] Using timeout+pw-record --target={}", id);
-        Command::new("timeout")
-            .args([
-                duration_arg.as_str(),
-                "pw-record",
-                "--target",
-                id.as_str(),
-                "--rate",
-                "16000",
-                "--channels",
-                "1",
-                "--format",
-                "s16",
-                output_str.as_str(),
-            ])
-            .output()
-            .or_else(|_| {
-                // timeout or pw-record not available: fall back to arecord using OS default.
-                // set_audio_input_device (wpctl set-default) was already called so routing
-                // is correct even without -D.
-                log::info!(
-                    "[Audio] timeout+pw-record unavailable, falling back to arecord (OS default)"
-                );
-                Command::new("arecord")
-                    .args([
-                        "-d",
-                        &format!("{:.0}", duration_secs),
-                        "-f",
-                        "S16_LE",
-                        "-r",
-                        "16000",
-                        "-c",
-                        "1",
-                        &output_str,
-                    ])
-                    .output()
-            })
-    } else {
-        log::info!("[Audio] No device_id, using arecord with OS default");
-        Command::new("arecord")
-            .args([
-                "-d",
-                &format!("{:.0}", duration_secs),
-                "-f",
-                "S16_LE",
-                "-r",
-                "16000",
-                "-c",
-                "1",
-                &output_str,
-            ])
-            .output()
-    };
-
-    // pw-record doesn't stop on its own — kill it after duration and check result
-    // The file will have content even if pw-record exits non-zero (SIGTERM from timeout)
-    let record_output = match record_result {
-        Ok(o) => o,
-        Err(e) => {
-            log::error!("[Audio] record process error: {}", e);
-            return Ok(MicrophoneTestResult {
-                success: false,
-                peak_level: 0.0,
-                noise_floor: 0.0,
-                signal_to_noise: 0.0,
-                error_message: Some(format!("Erreur démarrage enregistrement: {}", e)),
-            });
-        }
-    };
-
-    // For pw-record: exit code may be non-zero (SIGTERM) but file still contains audio.
-    // Accept non-zero exit if file has data.
-    if !record_output.status.success() {
-        let stderr = String::from_utf8_lossy(&record_output.stderr).to_string();
-        // Only fail if file is also missing or empty
-        let file_ok = std::fs::metadata(&output_path)
-            .map(|m| m.len() > 0)
-            .unwrap_or(false);
-        if !file_ok {
-            log::error!("[Audio] record failed and no output file: {}", stderr);
-            return Ok(MicrophoneTestResult {
-                success: false,
-                peak_level: 0.0,
-                noise_floor: 0.0,
-                signal_to_noise: 0.0,
-                error_message: Some(format!("Échec enregistrement: {}", stderr)),
-            });
-        }
-        log::warn!("[Audio] record exited non-zero but file has data (likely SIGTERM ok)");
-    }
-
-    // Check file size
-    if let Ok(metadata) = std::fs::metadata(&output_path) {
-        let file_size = metadata.len();
-        let expected_min_size = (16000u64 * 2 * duration_secs as u64) / 4; // 25% of expected
-
+    #[cfg(target_os = "windows")]
+    {
         log::info!(
-            "[Audio] File size: {} bytes, expected min: {}",
-            file_size,
-            expected_min_size
+            "[Audio] Windows microphone test skipped: native capture backend not configured"
         );
-
-        if file_size > expected_min_size {
-            log::info!("[Audio] Microphone test SUCCESS (device={:?})", device_id);
-            Ok(MicrophoneTestResult {
-                success: true,
-                peak_level: 0.5,
-                noise_floor: 0.1,
-                signal_to_noise: 14.0,
-                error_message: None,
-            })
-        } else {
-            log::warn!("[Audio] File too small, no signal detected");
-            Ok(MicrophoneTestResult {
-                success: false,
-                peak_level: 0.0,
-                noise_floor: 0.0,
-                signal_to_noise: 0.0,
-                error_message: Some("Aucun signal audio détecté".to_string()),
-            })
-        }
-    } else {
-        log::error!("[Audio] File not created");
-        Ok(MicrophoneTestResult {
+        return Ok(MicrophoneTestResult {
             success: false,
             peak_level: 0.0,
             noise_floor: 0.0,
             signal_to_noise: 0.0,
-            error_message: Some("Fichier audio non créé".to_string()),
-        })
+            error_message: Some(
+                "Test microphone natif Windows non configuré dans ce runtime".to_string(),
+            ),
+        });
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        let duration_secs = (duration_ms as f64 / 1000.0).max(1.0);
+
+        // Use pw-record when a device_id is provided (PipeWire native, supports --target=<wpctl_id>)
+        // CRITICAL: pw-record never exits on its own — wrap with `timeout` to bound duration.
+        // Fallback to arecord (uses OS default) when no device is specified.
+        let record_result = if let Some(ref id) = device_id {
+            // timeout exits with 124 on expiry (SIGTERM to child), non-zero is acceptable —
+            // the output file will have real audio data captured up to that point.
+            let duration_arg = format!("{:.0}", duration_secs + 1.0);
+            log::info!("[Audio] Using timeout+pw-record --target={}", id);
+            Command::new("timeout")
+                .args([
+                    duration_arg.as_str(),
+                    "pw-record",
+                    "--target",
+                    id.as_str(),
+                    "--rate",
+                    "16000",
+                    "--channels",
+                    "1",
+                    "--format",
+                    "s16",
+                    output_str.as_str(),
+                ])
+                .output()
+                .or_else(|_| {
+                    // timeout or pw-record not available: fall back to arecord using OS default.
+                    // set_audio_input_device (wpctl set-default) was already called so routing
+                    // is correct even without -D.
+                    log::info!(
+                        "[Audio] timeout+pw-record unavailable, falling back to arecord (OS default)"
+                    );
+                    Command::new("arecord")
+                        .args([
+                            "-d",
+                            &format!("{:.0}", duration_secs),
+                            "-f",
+                            "S16_LE",
+                            "-r",
+                            "16000",
+                            "-c",
+                            "1",
+                            &output_str,
+                        ])
+                        .output()
+                })
+        } else {
+            log::info!("[Audio] No device_id, using arecord with OS default");
+            Command::new("arecord")
+                .args([
+                    "-d",
+                    &format!("{:.0}", duration_secs),
+                    "-f",
+                    "S16_LE",
+                    "-r",
+                    "16000",
+                    "-c",
+                    "1",
+                    &output_str,
+                ])
+                .output()
+        };
+
+        // pw-record doesn't stop on its own — kill it after duration and check result
+        // The file will have content even if pw-record exits non-zero (SIGTERM from timeout)
+        let record_output = match record_result {
+            Ok(o) => o,
+            Err(e) => {
+                log::error!("[Audio] record process error: {}", e);
+                return Ok(MicrophoneTestResult {
+                    success: false,
+                    peak_level: 0.0,
+                    noise_floor: 0.0,
+                    signal_to_noise: 0.0,
+                    error_message: Some(format!("Erreur démarrage enregistrement: {}", e)),
+                });
+            }
+        };
+
+        // For pw-record: exit code may be non-zero (SIGTERM) but file still contains audio.
+        // Accept non-zero exit if file has data.
+        if !record_output.status.success() {
+            let stderr = String::from_utf8_lossy(&record_output.stderr).to_string();
+            // Only fail if file is also missing or empty
+            let file_ok = std::fs::metadata(&output_path)
+                .map(|m| m.len() > 0)
+                .unwrap_or(false);
+            if !file_ok {
+                log::error!("[Audio] record failed and no output file: {}", stderr);
+                return Ok(MicrophoneTestResult {
+                    success: false,
+                    peak_level: 0.0,
+                    noise_floor: 0.0,
+                    signal_to_noise: 0.0,
+                    error_message: Some(format!("Échec enregistrement: {}", stderr)),
+                });
+            }
+            log::warn!("[Audio] record exited non-zero but file has data (likely SIGTERM ok)");
+        }
+
+        // Check file size
+        if let Ok(metadata) = std::fs::metadata(&output_path) {
+            let file_size = metadata.len();
+            let expected_min_size = (16000u64 * 2 * duration_secs as u64) / 4; // 25% of expected
+
+            log::info!(
+                "[Audio] File size: {} bytes, expected min: {}",
+                file_size,
+                expected_min_size
+            );
+
+            if file_size > expected_min_size {
+                log::info!("[Audio] Microphone test SUCCESS (device={:?})", device_id);
+                Ok(MicrophoneTestResult {
+                    success: true,
+                    peak_level: 0.5,
+                    noise_floor: 0.1,
+                    signal_to_noise: 14.0,
+                    error_message: None,
+                })
+            } else {
+                log::warn!("[Audio] File too small, no signal detected");
+                Ok(MicrophoneTestResult {
+                    success: false,
+                    peak_level: 0.0,
+                    noise_floor: 0.0,
+                    signal_to_noise: 0.0,
+                    error_message: Some("Aucun signal audio détecté".to_string()),
+                })
+            }
+        } else {
+            log::error!("[Audio] File not created");
+            Ok(MicrophoneTestResult {
+                success: false,
+                peak_level: 0.0,
+                noise_floor: 0.0,
+                signal_to_noise: 0.0,
+                error_message: Some("Fichier audio non créé".to_string()),
+            })
+        }
     }
 }
 

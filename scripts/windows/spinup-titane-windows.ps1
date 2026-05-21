@@ -1,6 +1,14 @@
 # TITANE_INFINITY — SPINUP Windows (installation complète)
 # Usage : Exécuter en tant qu’administrateur
 
+$ErrorActionPreference = 'Stop'
+$ROOT = Resolve-Path (Join-Path $PSScriptRoot '..\..')
+$windowsEnv = Join-Path $ROOT 'scripts\windows\TitaneWindowsEnv.ps1'
+if (Test-Path -LiteralPath $windowsEnv) {
+    . $windowsEnv
+}
+Set-Location $ROOT
+
 Write-Host "=== TITANE_INFINITY — Installation complète Windows ===" -ForegroundColor Cyan
 
 # 1. Dépendances système
@@ -27,9 +35,12 @@ pnpm run gen:tauri-config
 
 # 6. Installation et activation Ollama + modèles
 Write-Host "→ Installation Ollama + modèles..." -ForegroundColor Yellow
-cd scripts/launch
-./launch-ollama.ps1 install
-cd ../..
+Push-Location (Join-Path $ROOT 'scripts\launch')
+try {
+    ./launch-ollama.ps1 install
+} finally {
+    Pop-Location
+}
 
 # 7. Build production (optionnel)
 # pnpm run build:production

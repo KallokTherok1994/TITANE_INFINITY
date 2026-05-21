@@ -28,7 +28,14 @@ if ! command -v node >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! command -v pnpm >/dev/null 2>&1 && [[ ! -x "$ROOT_DIR/.tools/node/current/bin/pnpm" ]]; then
+PNPM_CMD=()
+if command -v pnpm >/dev/null 2>&1; then
+  PNPM_CMD=(pnpm)
+elif [[ -x "$ROOT_DIR/.tools/node/current/bin/pnpm" ]]; then
+  PNPM_CMD=("$ROOT_DIR/.tools/node/current/bin/pnpm")
+elif command -v corepack >/dev/null 2>&1; then
+  PNPM_CMD=(corepack pnpm)
+else
   echo "❌ pnpm non trouvé. Installez-le avec: corepack enable"
   exit 1
 fi
@@ -39,7 +46,7 @@ if pgrep -f "vite.*dev.*5173" >/dev/null 2>&1; then
 fi
 
 echo "✅ Node.js: $(node --version)"
-echo "✅ pnpm: $(pnpm --version 2>/dev/null || echo 'bundle-local')"
+echo "✅ pnpm: $("${PNPM_CMD[@]}" --version 2>/dev/null || echo 'bundle-local')"
 echo ""
 
 BASE_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
@@ -88,31 +95,15 @@ if [[ "${#CMD[@]}" -eq 0 ]]; then
   CMD=(tauri dev --config runtime/dev/tauri.conf.json --no-watch)
 fi
 
-PNPM_BIN=""
-if command -v pnpm >/dev/null 2>&1; then
-  PNPM_BIN="pnpm"
-elif [[ -x "$ROOT_DIR/.tools/node/current/bin/pnpm" ]]; then
-  PNPM_BIN="$ROOT_DIR/.tools/node/current/bin/pnpm"
-fi
-
 # Tauri CLI est une dépendance Node (@tauri-apps/cli). En shell direct, `tauri` n'est pas
 # forcément dans PATH; on force donc la résolution via pnpm.
 if [[ "${CMD[0]}" == "tauri" ]]; then
-  if [[ -z "${PNPM_BIN:-}" ]]; then
-    echo "❌ 'tauri' demandé, mais pnpm est introuvable (impossible d'utiliser pnpm exec)." >&2
-    exit 2
-  fi
-  CMD=("$PNPM_BIN" exec -- "${CMD[@]}")
+  CMD=("${PNPM_CMD[@]}" exec -- "${CMD[@]}")
 fi
 
 if ! command -v "${CMD[0]}" >/dev/null 2>&1; then
-  if [[ -n "${PNPM_BIN:-}" ]]; then
-    echo "ℹ️  Commande '${CMD[0]}' non trouvée dans PATH; fallback via 'pnpm exec'."
-    CMD=("$PNPM_BIN" exec -- "${CMD[@]}")
-  else
-    echo "❌ Commande '${CMD[0]}' introuvable (et pnpm indisponible pour pnpm exec)." >&2
-    exit 2
-  fi
+  echo "ℹ️  Commande '${CMD[0]}' non trouvée dans PATH; fallback via 'pnpm exec'."
+  CMD=("${PNPM_CMD[@]}" exec -- "${CMD[@]}")
 fi
 
 ollama_is_running() {

@@ -1,3 +1,14 @@
+## v35.1.9-dev - 2026-05-20 - Windows native Dev migration + local install rail
+
+- **Mode** : DURABLE | **Scope** : Windows native Dev only, no external deploy, no stable/prod release.
+- **Windows gate fixes** : `NODE_OPTIONS` scripts now use Windows-safe double-quoted values; Tauri-only/config validators use Node JSON parsing when `jq` is unavailable; Dev Tauri `beforeBuildCommand` uses `node scripts/launch/run-vite-build.mjs` instead of inline Bash; `--smoke` accepts `SMOKE_SECONDS` env/default; `launch-titane.ps1` is ASCII-safe for Windows PowerShell 5.1 parsing.
+- **Dev local install surface** : `scripts/windows/install-dev-shortcut.ps1` creates `Titan-Dev.lnk` for the current user and targets `scripts\launch\launch-titane.ps1 -Mode dev`.
+- **Dev clean bootstrap** : Windows Dev launchers now provide `HOME`, `TITANE_DEV_AUTO_TOKEN=1`, and a generated user-local `%APPDATA%\TITANE_INFINITY\dev\secrets-passphrase.txt`; missing optional provider API keys log as info, not runtime warnings.
+- **Dev runtime proof closure** : Bash launchers resolve `corepack pnpm` when no global `pnpm` exists; Rust unit tests use an isolated target-local `CARGO_HOME` to avoid user Cargo `crt_stub_exe` contamination; Dev runtime secrets use `TITANE_SECRETS_PATH` under the Dev appdata rail; Dev smoke sets an explicit 64MB Windows stack.
+- **Dev prebuild rail** : `TITANE_CERTIFIER_RAIL=dev` is the Windows local default; stable-only prebuild lanes are `N/A_WITH_PROOF`, and launcher truth verifies `Titan-Dev.lnk`.
+- **Proof target** : `sync:versions`, `check`, `lint`, `guard:ipc-contract`, `verify:tauri-only`, `verify:tauri-configs`, `test:rust`, AutoHeal, Dev build, Dev smoke (`BOOT:READY`, warn=0, error=0), shortcut verification.
+- **Rollback** : `git restore -- package.json runtime/dev/tauri.conf.json scripts/verify/enforce-tauri-only.sh scripts/verify/validate-tauri-configs.sh scripts/launch/deploy_full_local_dev.sh scripts/launch/launch-titane.ps1 docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md docs/windows/WINDOWS_PRIMARY_AUTHORITY_MAP.md RELEASE_SURFACE_INVENTORY.md scripts/autoheal/autoheal_rules.jsonl && rm -f scripts/windows/install-dev-shortcut.ps1 scripts/launch/run-vite-build.mjs`.
+
 ## v35.1.9 - 2026-05-17 - BUILD ALL — frontend audit UI/UX + governance pre-build procedures
 
 - **Mode** : DURABLE | **Bump Rule 13** : 35.1.8 -> 35.1.9 (patch)

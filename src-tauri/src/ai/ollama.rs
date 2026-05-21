@@ -467,8 +467,10 @@ pub async fn ai_generate_local_stream(
     use futures_util::StreamExt;
     let mut stream = response.bytes_stream();
     let mut buffer = String::new();
+    let mut stream_done = false;
 
     while let Some(chunk) = stream.next().await {
+        if stream_done { break; }
         let chunk = chunk.map_err(|e| format!("Stream error: {}", e))?;
         buffer.push_str(&String::from_utf8_lossy(&chunk));
 
@@ -494,6 +496,7 @@ pub async fn ai_generate_local_stream(
                 );
 
                 if chunk_response.done {
+                    stream_done = true;
                     break;
                 }
             }
@@ -580,7 +583,7 @@ pub async fn ai_set_local_model(model_name: String) -> Result<String, String> {
 pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     // ✨ v27.2.1: Check cache first (anti-flapping)
     {
-        let cache = OLLAMA_STATUS_CACHE.lock().unwrap();
+        let cache = match OLLAMA_STATUS_CACHE.lock() { Ok(c) => c, Err(p) => p.into_inner() };
         if let Some((status, timestamp)) = cache.as_ref() {
             let elapsed = timestamp.elapsed().as_secs();
             if elapsed < OLLAMA_STATUS_CACHE_TTL_SECS {
@@ -603,31 +606,18 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
         .timeout(std::time::Duration::from_secs(3))
         .build()
         .ok();
-    let ollama_version: Option<String> = if let Some(vc) = version_client {
-        vc.get(format!("{}/api/version", runtime.base_url))
+    let ollama_version: Option<String> = 'version: {
+        let Some(vc) = version_client else { break 'version None };
+        let Ok(resp) = vc
+            .get(format!("{}/api/version", runtime.base_url))
             .send()
             .await
+        else { break 'version None };
+        if !resp.status().is_success() { break 'version None; }
+        let Ok(body) = resp.text().await else { break 'version None };
+        serde_json::from_str::<serde_json::Value>(&body)
             .ok()
-            .and_then(|r| {
-                if r.status().is_success() {
-                    Some(r)
-                } else {
-                    None
-                }
-            })
-            .and_then(|r| {
-                let text = tokio::task::block_in_place(|| {
-                    tokio::runtime::Handle::current().block_on(r.text()).ok()
-                });
-                text
-            })
-            .and_then(|body| {
-                serde_json::from_str::<serde_json::Value>(&body)
-                    .ok()
-                    .and_then(|v| v["version"].as_str().map(str::to_string))
-            })
-    } else {
-        None
+            .and_then(|v| v["version"].as_str().map(|s| s.to_string()))
     };
 
     // Test de disponibilité
@@ -681,7 +671,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
         }
         Err(e) => {
             // Ollama non disponible
-            log::debug!("[OLLAMA] Health check failed | error={}", e);
+            log::warn!("[OLLAMA] Health check failed | error={}", e);
             OllamaStatus {
                 available: false,
                 version: ollama_version,
@@ -699,7 +689,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 
     // ✨ Update cache
     {
-        let mut cache = OLLAMA_STATUS_CACHE.lock().unwrap();
+        let mut cache = match OLLAMA_STATUS_CACHE.lock() { Ok(c) => c, Err(p) => p.into_inner() };
         *cache = Some((status.clone(), Instant::now()));
     }
 

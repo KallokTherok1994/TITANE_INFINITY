@@ -36,16 +36,23 @@ Proof pack : `proof_packs/frontend-ui-ux-redesign-seal-2026-05-15/VERDICT.md`
 
 ---
 
-## Installation rapide
+## Default development system: Windows native
 
-```bash
-# Prérequis : Node 20 LTS, pnpm 9+, Rust 1.77+, Tauri CLI v2
+This repository's primary, canonical development rail is **Windows native**. Use PowerShell-first commands and `corepack pnpm` as the canonical package manager. WSL2 and Linux remain supported as fallback and packaging rails; do not share the same working tree between Windows and WSL.
+
+## Installation rapide (PowerShell-first)
+
+```powershell
+# Prérequis : Git, Node LTS (see .nvmrc), corepack, pnpm, Rust (MSVC), Visual Studio Build Tools, WebView2
 git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
-pnpm install
-cp .env.example .env   # configurer les clés API si nécessaire
-pnpm run dev           # lance l'app en mode développement (Tauri + Vite)
+corepack enable
+corepack pnpm install
+Copy-Item .env.example .env  # edit .env if needed
+.\scripts\launch\launch-titane.ps1  # recommended PowerShell launcher for dev
 ```
+
+See [docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md](docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md) for the canonical Windows setup and proof gates. For Linux/WSL fallback instructions see the legacy Linux sections lower in this README and [DEVELOPER_SETUP.md](DEVELOPER_SETUP.md).
 
 Voir [DEVELOPER_SETUP.md](DEVELOPER_SETUP.md) pour le guide complet (Linux deps, Ollama, VS Code).
 

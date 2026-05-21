@@ -1,3 +1,10 @@
+# Deployment
+
+> Status after Windows migration: this deployment guide remains the canonical reference for Linux packaging (AppImage/DEB/RPM). For Windows MSI/EXE certification and Windows-first guidance, see `docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`.
+
+---
+
+## 📋 Table des Matières
 # 🚀 TITANE∞ — Production Deployment Guide
 
 **Guide complet pour déployer TITANE∞ en production**
@@ -55,7 +62,7 @@ pnpm store prune
 cargo clean
 
 # Lock versions
-pnpm install --frozen-lockfile  # Uses pnpm-lock.yaml exactly
+corepack pnpm install --frozen-lockfile  # Uses pnpm-lock.yaml exactly
 cargo build --locked
 ```
 

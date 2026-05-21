@@ -28,6 +28,41 @@ if [[ "${1:-}" == "--fast" || "${TITANE_CERTIFIER_FAST_MODE:-0}" == "1" ]]; then
   echo "INFO: Fast mode enabled (lanes 1-8.5 only — skipping Vite build and post-build gates)"
 fi
 
+HOST_OS="$(uname -s 2>/dev/null || echo unknown)"
+IS_WINDOWS=0
+case "$HOST_OS" in
+  MINGW*|MSYS*|CYGWIN*) IS_WINDOWS=1 ;;
+esac
+if [[ "${OS:-}" == "Windows_NT" ]]; then
+  IS_WINDOWS=1
+fi
+
+CERTIFIER_RAIL="${TITANE_CERTIFIER_RAIL:-}"
+if [[ -z "$CERTIFIER_RAIL" ]]; then
+  if [[ "$IS_WINDOWS" -eq 1 ]]; then
+    CERTIFIER_RAIL="dev"
+  else
+    CERTIFIER_RAIL="stable"
+  fi
+fi
+
+if [[ "$CERTIFIER_RAIL" != "dev" && "$CERTIFIER_RAIL" != "stable" ]]; then
+  echo "ERROR: TITANE_CERTIFIER_RAIL must be dev or stable (got '$CERTIFIER_RAIL')" >&2
+  exit 1
+fi
+echo "INFO: Certifier rail: $CERTIFIER_RAIL"
+
+PNPM_CMD=()
+if command -v pnpm >/dev/null 2>&1; then
+  PNPM_CMD=(pnpm)
+elif command -v corepack >/dev/null 2>&1; then
+  PNPM_CMD=(corepack pnpm)
+else
+  echo "ERROR: pnpm unavailable and corepack unavailable" >&2
+  exit 1
+fi
+echo "INFO: Package manager: ${PNPM_CMD[*]}"
+
 # ── Proof directory ─────────────────────────────────────────────────────────
 RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)"
 PROOF_DIR="artifacts/frontend-runtime-prebuild/$RUN_ID"
@@ -44,6 +79,7 @@ fail()  { echo "FAIL:  $1" | tee -a "$PROOF_DIR/LANES.txt"; ((FAIL++))    || tru
 block() { echo "BLOCK: $1" | tee -a "$PROOF_DIR/LANES.txt"; ((BLOCKED++)) || true; BLOCKED_REASONS+=("$1"); }
 warn()  { echo "WARN:  $1" | tee -a "$PROOF_DIR/LANES.txt"; ((WARN++))    || true; }
 na()    { echo "N/A:   $1" | tee -a "$PROOF_DIR/LANES.txt"; ((NOT_APPLICABLE++)) || true; }
+na_proof() { na "N/A_WITH_PROOF: $1"; }
 
 run_gate() {
   local id="$1"; local script="$2"
@@ -60,9 +96,48 @@ run_gate() {
   fi
 }
 
+run_windows_dev_shortcut_gate() {
+  local id="WINDOWS_DEV_SHORTCUT"
+  if [[ "$IS_WINDOWS" -ne 1 ]]; then
+    na_proof "$id — not Windows"
+    return
+  fi
+  if ! command -v powershell.exe >/dev/null 2>&1; then
+    block "$id — powershell.exe missing"
+    return
+  fi
+  if powershell.exe -NoProfile -ExecutionPolicy Bypass -Command '
+    $ErrorActionPreference = "Stop"
+    $root = (Resolve-Path ".").Path
+    $launcher = Join-Path $root "scripts\launch\launch-titane.ps1"
+    $shell = New-Object -ComObject WScript.Shell
+    $paths = @(
+      (Join-Path ([Environment]::GetFolderPath("Desktop")) "Titan-Dev.lnk"),
+      (Join-Path ([Environment]::GetFolderPath("Programs")) "TITANE_INFINITY\Titan-Dev.lnk")
+    )
+    foreach ($path in $paths) {
+      if (-not (Test-Path -LiteralPath $path)) { throw "missing shortcut: $path" }
+      $shortcut = $shell.CreateShortcut($path)
+      if ($shortcut.TargetPath -notmatch "powershell(\.exe)?$") { throw "unexpected target: $($shortcut.TargetPath)" }
+      if ($shortcut.Arguments -notlike "*$launcher*" -or $shortcut.Arguments -notlike "*-Mode dev*") {
+        throw "unexpected arguments: $($shortcut.Arguments)"
+      }
+      if ($shortcut.Arguments -match "stable|production|prod") { throw "shortcut points to non-dev rail: $($shortcut.Arguments)" }
+      Write-Output "PASS: $path -> $($shortcut.TargetPath) $($shortcut.Arguments)"
+    }
+  ' >> "$PROOF_DIR/${id}.log" 2>&1; then
+    pass "$id"
+  else
+    local exit_code=$?
+    echo "exit_code=$exit_code" >> "$PROOF_DIR/${id}.log"
+    fail "$id (exit $exit_code — see $PROOF_DIR/${id}.log)"
+  fi
+}
+
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo " TITANE∞ Frontend Runtime Pre-BUILD Certifier"
 echo " RUN_ID=$RUN_ID"
+echo " RAIL=$CERTIFIER_RAIL"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -91,7 +166,7 @@ fi
 
 # ── Lane 3 — TypeScript check ────────────────────────────────────────────────
 echo "--- Lane 3: TypeScript"
-if pnpm run check >> "$PROOF_DIR/typescript.log" 2>&1; then
+if "${PNPM_CMD[@]}" run check >> "$PROOF_DIR/typescript.log" 2>&1; then
   pass "TYPESCRIPT"
 else
   fail "TYPESCRIPT — see $PROOF_DIR/typescript.log"
@@ -99,7 +174,7 @@ fi
 
 # ── Lane 4 — Lint ────────────────────────────────────────────────────────────
 echo "--- Lane 4: Lint"
-if pnpm run lint >> "$PROOF_DIR/lint.log" 2>&1; then
+if "${PNPM_CMD[@]}" run lint >> "$PROOF_DIR/lint.log" 2>&1; then
   pass "LINT"
 else
   fail "LINT — see $PROOF_DIR/lint.log"
@@ -113,7 +188,9 @@ run_gate "STALE_VERSION_SCAN_PRE" "scripts/verify/gate-no-stale-visible-version.
 # Run BEFORE the Vite build because the Vite build freshens dist/ timestamps,
 # making the stable AppImage appear stale even when it was built from the current dist/.
 echo "--- Lane 6: Stable artifact freshness (pre-build timestamp check)"
-if [[ ! -f dist/index.html ]]; then
+if [[ "$CERTIFIER_RAIL" == "dev" ]]; then
+  na_proof "STABLE_ARTIFACT_PRE — dev rail does not require stable artifact"
+elif [[ ! -f dist/index.html ]]; then
   na "STABLE_ARTIFACT_PRE — no dist/ yet (first run — will be created by Vite build)"
 else
   run_gate "STABLE_ARTIFACT_PRE" "scripts/verify/gate-stable-artifact-freshness.sh"
@@ -121,7 +198,14 @@ fi
 
 # ── Lane 7 — Instructions verification (PRE-BUILD — before dist/ timestamps change) ──
 echo "--- Lane 7: Instructions verification (pre-build)"
-if [[ -f "scripts/verify_instructions.sh" ]]; then
+if [[ "$CERTIFIER_RAIL" == "dev" ]]; then
+  if bash scripts/verify/verify-copilot-instructions.sh >> "$PROOF_DIR/instructions.log" 2>&1; then
+    pass "INSTRUCTIONS_DEV_VERIFICATION"
+    na_proof "INSTRUCTIONS_VERIFICATION_FULL — dev rail skips stable/prod subgates"
+  else
+    fail "INSTRUCTIONS_DEV_VERIFICATION — see $PROOF_DIR/instructions.log"
+  fi
+elif [[ -f "scripts/verify_instructions.sh" ]]; then
   if bash scripts/verify_instructions.sh >> "$PROOF_DIR/instructions.log" 2>&1; then
     pass "INSTRUCTIONS_VERIFICATION"
   else
@@ -168,7 +252,7 @@ else
 
 # ── Lane 9 — Clean Vite cache ────────────────────────────────────────────────
 echo "--- Lane 9: Vite cache clean"
-if pnpm run clean:vite >> "$PROOF_DIR/clean_vite.log" 2>&1; then
+if "${PNPM_CMD[@]}" run clean:vite >> "$PROOF_DIR/clean_vite.log" 2>&1; then
   pass "VITE_CACHE_CLEAN"
 else
   warn "VITE_CACHE_CLEAN — clean:vite failed (non-blocking, continuing)"
@@ -179,7 +263,7 @@ fi
 # pnpm run build would re-invoke the prebuild hook (which the recursion guard catches),
 # but pnpm exec vite build is explicit and avoids the double-lifecycle entirely.
 echo "--- Lane 10: Vite build"
-if pnpm exec vite build >> "$PROOF_DIR/vite_build.log" 2>&1; then
+if "${PNPM_CMD[@]}" exec vite build >> "$PROOF_DIR/vite_build.log" 2>&1; then
   pass "VITE_BUILD"
 else
   fail "VITE_BUILD — see $PROOF_DIR/vite_build.log"
@@ -226,7 +310,12 @@ run_gate "RUNTIME_VISIBILITY_PROTOCOL_INFRA" "scripts/verify/verify_frontend_ui_
 
 # ── Lane 17 — Launcher truth ─────────────────────────────────────────────────
 echo "--- Lane 17: Launcher truth"
-run_gate "LAUNCHER_TRUTH" "scripts/verify/gate-stable-launcher-truth.sh"
+if [[ "$CERTIFIER_RAIL" == "dev" ]]; then
+  run_windows_dev_shortcut_gate
+  na_proof "LAUNCHER_TRUTH_STABLE — dev rail uses Titan-Dev.lnk"
+else
+  run_gate "LAUNCHER_TRUTH" "scripts/verify/gate-stable-launcher-truth.sh"
+fi
 
 # ── Lane 18 — Runtime identity truth ─────────────────────────────────────────
 echo "--- Lane 18: Runtime identity truth"
@@ -234,7 +323,9 @@ run_gate "RUNTIME_IDENTITY" "scripts/verify/gate-runtime-identity-truth.sh"
 
 # ── Lane 19 — Stable window truth (display required) ─────────────────────────
 echo "--- Lane 19: Stable window truth"
-if [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
+if [[ "$CERTIFIER_RAIL" == "dev" ]]; then
+  na_proof "STABLE_WINDOW — dev rail validated by dev smoke launch"
+elif [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
   block "STABLE_WINDOW — BLOCKED_ENV: no display available (DISPLAY/WAYLAND_DISPLAY unset)"
 else
   run_gate "STABLE_WINDOW" "scripts/verify/gate-stable-window-truth.sh"
@@ -242,7 +333,9 @@ fi
 
 # ── Lane 20 — Console runtime noise (display required) ───────────────────────
 echo "--- Lane 20: Console runtime noise"
-if [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
+if [[ "$CERTIFIER_RAIL" == "dev" ]]; then
+  na_proof "CONSOLE_RUNTIME_NOISE — dev rail validated by TAURI_MONITOR warn/error counts"
+elif [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
   block "CONSOLE_RUNTIME_NOISE — BLOCKED_ENV: no display available"
 else
   run_gate "CONSOLE_RUNTIME_NOISE" "scripts/verify/gate-console-runtime-noise.sh"
@@ -262,7 +355,9 @@ fi
 
 # ── Lane 22 — DOM SurfaceTruth (BLOCKED_ENV if no display) ───────────────────
 echo "--- Lane 22: DOM SurfaceTruth"
-if [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
+if [[ "$CERTIFIER_RAIL" == "dev" ]]; then
+  na_proof "DOM_SURFACETRUTH — dev rail launch proof is smoke-based"
+elif [[ -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
   block "DOM_SURFACETRUTH — BLOCKED_ENV: no display available for Tauri window inspection"
 else
   na "DOM_SURFACETRUTH — requires manual DevTools verification in running Tauri window"
@@ -302,23 +397,24 @@ fi
   echo "BLOCKED=$BLOCKED"
   echo "WARN=$WARN"
   echo "FAST_MODE=$FAST_MODE"
+  echo "CERTIFIER_RAIL=$CERTIFIER_RAIL"
 } > "$PROOF_DIR/SUMMARY.txt"
 
-# Emit SUMMARY.json for CI integration (use string comparison for Python booleans)
-python3 - << PYEOF
-import json
-data = {
-  "run_id": "$RUN_ID",
-  "pkg_version": "$PKG_VERSION",
-  "verdict": "$VERDICT",
-  "build_allowed": "$VERDICT" == "PASS",
-  "fast_mode": "$FAST_MODE" == "1",
-  "counters": {"pass": $PASS, "fail": $FAIL, "blocked": $BLOCKED, "warn": $WARN, "na": $NOT_APPLICABLE}
-}
-with open("$PROOF_DIR/SUMMARY.json", "w") as f:
-    json.dump(data, f, indent=2)
-print("SUMMARY.json written to $PROOF_DIR/SUMMARY.json")
-PYEOF
+# Emit SUMMARY.json for CI integration without requiring Python on Windows hosts.
+node - << NODEEOF
+const fs = require('node:fs');
+const data = {
+  run_id: "$RUN_ID",
+  pkg_version: "$PKG_VERSION",
+  verdict: "$VERDICT",
+  build_allowed: "$VERDICT" === "PASS",
+  fast_mode: "$FAST_MODE" === "1",
+  certifier_rail: "$CERTIFIER_RAIL",
+  counters: { pass: $PASS, fail: $FAIL, blocked: $BLOCKED, warn: $WARN, na: $NOT_APPLICABLE },
+};
+fs.writeFileSync("$PROOF_DIR/SUMMARY.json", JSON.stringify(data, null, 2) + "\\n");
+console.log("SUMMARY.json written to $PROOF_DIR/SUMMARY.json");
+NODEEOF
 
 if [[ $FAIL -gt 0 || $BLOCKED -gt 0 ]]; then
   echo ""

@@ -1,8 +1,8 @@
 # TITANE∞ — Guide d'installation développeur
+> Status after Windows migration: Windows native is now the default primary development rail. Use `docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md` as the canonical Windows setup and proof guide. This document remains a cross-platform reference; for Windows-first quickstart follow the Windows guide.
 
 **Version:** v35.1.6 | **Dernière mise à jour:** 2026-05-16
 
----
 
 ## Prérequis
 
@@ -41,7 +41,7 @@ sudo apt install -y \
 ```bash
 git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
-pnpm install
+corepack pnpm install
 ```
 
 ---
