@@ -301,12 +301,13 @@ class HybridTTSService {
       logger.info(`   Device: ${result.device}`);
 
       // [v19.5.0 ANTI-ECHO] Register TTS fingerprint AVANT playback
-      // Extract audio as Float32Array for fingerprinting
-      const audioContext = new AudioContext();
-      const arrayBuffer = await result.audioBlob.arrayBuffer();
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      const _audioData = audioBuffer.getChannelData(0); // Mono channel
-      const _sampleRate = audioBuffer.sampleRate;
+      // Extract audio as Float32Array for fingerprinting — close context immédiatement
+      const _fpCtx = new AudioContext();
+      const _arrayBuffer = await result.audioBlob.arrayBuffer();
+      const _audioBuffer = await _fpCtx.decodeAudioData(_arrayBuffer);
+      const _audioData = _audioBuffer.getChannelData(0); // Mono channel
+      const _sampleRate = _audioBuffer.sampleRate;
+      await _fpCtx.close().catch(() => { /* ignore */ });
 
       const ttsId = antiEchoShield.startTTS(text, result.durationSeconds * 1000);
 

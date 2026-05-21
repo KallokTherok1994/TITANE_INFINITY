@@ -3,6 +3,7 @@
  * Universal Parser - Ingestion PDF/DOCX/JSON/OCR/Audio
  */
 use serde::{Deserialize, Serialize};
+use std::io::Read;
 use std::path::{Component, Path, PathBuf};
 use std::process::Stdio;
 use tokio::time::{timeout, Duration};
@@ -391,9 +392,17 @@ impl UniversalParser {
     }
 
     async fn extract_docx_text(&self, file_path: &str) -> Result<String, String> {
-        let raw_xml = self
-            .run_external_parser("unzip", &["-p", file_path, "word/document.xml"])
-            .await?;
+        let file =
+            std::fs::File::open(file_path).map_err(|e| format!("Failed to open DOCX: {}", e))?;
+        let mut archive = zip::ZipArchive::new(file)
+            .map_err(|e| format!("Failed to read DOCX archive: {}", e))?;
+        let mut document_xml = archive
+            .by_name("word/document.xml")
+            .map_err(|e| format!("Failed to read DOCX body: {}", e))?;
+        let mut raw_xml = String::new();
+        document_xml
+            .read_to_string(&mut raw_xml)
+            .map_err(|e| format!("Failed to decode DOCX body: {}", e))?;
 
         if raw_xml.trim().is_empty() {
             return Ok(String::new());

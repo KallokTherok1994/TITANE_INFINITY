@@ -16,9 +16,8 @@ type Story = StoryObj<typeof meta>;
 
 export const LoggedOut: Story = {};
 
-// NOTE: Interaction testing requires @storybook/test package
-// Install with: corepack pnpm add -D @storybook/test
+  // NOTE: Interaction testing uses the Storybook 10 `storybook/test` export.
 // Then uncomment the LoggedIn story below
 export const LoggedIn: Story = {
-  // Placeholder - interaction tests disabled until @storybook/test is installed
+  // Placeholder - interaction tests intentionally disabled for this story.
 };

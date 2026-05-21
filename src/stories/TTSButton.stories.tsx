@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TTSButton } from '@/components/tts/TTSButton';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 
 const meta = {
   title: 'TTS/TTSButton',

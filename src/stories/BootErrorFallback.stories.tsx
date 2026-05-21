@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { BootErrorFallback } from '@/components/BootErrorFallback';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 
 const meta = {
   title: 'System/BootErrorFallback',

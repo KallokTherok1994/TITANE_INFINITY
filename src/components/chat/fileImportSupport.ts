@@ -86,16 +86,24 @@ function looksBinaryLike(content: string): boolean {
 }
 
 function buildStructuredFallbackContent(file: File): string {
-  const extension = getFileExtension(file.name);
-  const typeLabel = extension ? extension.slice(1).toUpperCase() : 'DOCUMENT';
+  const ext = getFileExtension(file.name);
+  const typeLabel = ext ? ext.slice(1).toUpperCase() : 'DOCUMENT';
   const sizeLabel = `${(file.size / 1024).toFixed(1)} KB`;
+  const isPdf = ext === '.pdf';
+  const isDocx = ext === '.docx' || ext === '.doc';
+
+  const note = isPdf
+    ? 'Note: extraction texte PDF indisponible dans ce runtime (pdftotext requis sur le système hôte). Exportez le document en .docx ou .txt pour une analyse complète du contenu.'
+    : isDocx
+    ? 'Note: le texte du document DOCX n\'a pas pu être extrait (parsing Tauri indisponible). Vérifiez que le backend Tauri est actif.'
+    : 'Note: le texte complet n\'a pas pu être extrait automatiquement dans ce runtime.';
 
   return [
     `Document importé: ${file.name}`,
     `Type: ${typeLabel}`,
     `Taille: ${sizeLabel}`,
-    'Note: le texte complet n’a pas pu être extrait automatiquement dans ce runtime.',
-    'Le document et ses métadonnées restent néanmoins enregistrés dans la mémoire TITANE pour suivi et réouverture.',
+    note,
+    'Le document et ses métadonnées sont enregistrés dans la mémoire TITANE pour suivi et réouverture.',
   ].join('\n');
 }
 

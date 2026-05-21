@@ -1,0 +1,93 @@
+M  .gitattributes
+MM .vscode/settings.json
+ M docs/contracts/tauri-stable-allowlist.json
+ M scripts/autoheal/autoheal_rules.jsonl
+ M scripts/e2e/verify_online_chat_proof_markers.mjs
+ M scripts/ui-audit/tag-orphan-pages.mjs
+ M scripts/ui-audit/test-coverage-matrix.mjs
+ M scripts/verify/generate-ollama-dev-awareness.mjs
+ M src-tauri/src/control_panel_commands/tests.rs
+ M src-tauri/src/knowledge/parser.rs
+ M src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap
+ M src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap
+ M src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap
+ M src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap
+ M src/__tests__/apps/devtools/sections/__snapshots__/Errors.test.tsx.snap
+ M src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap
+ M src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap
+ M src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap
+ M src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/EngineCard.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/EventStream.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/LogFilters.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/LogLine.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/MetricCard.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/MetricsDisplay.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/SectionHeader.test.tsx.snap
+ M src/__tests__/components/devtools/__snapshots__/StatusPill.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Alert.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Badge.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Button.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Card.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Dialog.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Input.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Switch.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Tabs.test.tsx.snap
+ M src/__tests__/components/ui/__snapshots__/Toast.test.tsx.snap
+ M src/__tests__/e2e/ChatKnowledgeCompetenceMemory.e2e.test.tsx
+ M src/__tests__/features/chat/__snapshots__/ChatMessage.test.tsx.snap
+ M src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap
+ M src/__tests__/features/chat/__snapshots__/TypingIndicator.test.tsx.snap
+ M src/__tests__/features/chat/__snapshots__/VirtualMessageList.test.tsx.snap
+ M src/__tests__/features/memory/__snapshots__/MemoryCard.test.tsx.snap
+ M src/__tests__/features/memory/__snapshots__/MemorySearch.test.tsx.snap
+ M src/__tests__/features/memory/__snapshots__/MemoryVisualization.test.tsx.snap
+ M src/__tests__/features/monitoring/__snapshots__/SystemHealthMonitor.test.tsx.snap
+ M src/__tests__/features/voice/__snapshots__/VoiceControl.test.tsx.snap
+ M src/__tests__/panels/__snapshots__/ChatPanel.test.tsx.snap
+ M src/__tests__/panels/__snapshots__/CommandPalette.test.tsx.snap
+ M src/__tests__/services/memory/UnifiedMemoryService.namespace.test.ts
+ M src/components/AgentDashboardsPanel.css
+ M src/components/chat/ChatToolbar.css
+ M src/components/chat/ChatToolbar.tsx
+ M src/components/chat/ConversationHistorySidebar.tsx
+ M src/components/chat/FileUploadButton.tsx
+ M src/components/chat/MessageBubble.css
+ M src/components/chat/MessageBubble.tsx
+ M src/components/chat/MessageReactions.tsx
+ M src/components/chat/VirtualMessageList.tsx
+ M src/components/chat/__tests__/ChatFallback.test.tsx
+ M src/components/chat/fileImportSupport.ts
+ M src/components/sections/ConversationSection.tsx
+ M src/components/twin/TwinEvolutionPanel.css
+ M src/components/twin/TwinEvolutionPanel.tsx
+ M src/features/chat/ChatProviderSelector.tsx
+ M src/features/chat/ThinkingPanel.css
+ M src/lib/security.ts
+ M src/pages/TitanePage.css
+ M src/services/audio/audioHealthCheck.ts
+ M src/services/audioTranscriptionService.ts
+ M src/services/chat/chatMemorySingleDoor.ts
+ M src/services/tts/hybridTTS.ts
+ M src/stories/Alert.stories.tsx
+ M src/stories/BootErrorFallback.stories.tsx
+ M src/stories/Button.stories.tsx
+ M src/stories/EmptyState.stories.tsx
+ M src/stories/EngineCard.stories.tsx
+ M src/stories/Page.stories.ts
+ M src/stories/TTSButton.stories.tsx
+ M tests/integration/audit-system.test.ts
+ M tests/unit/evals/harness/scorer.test.ts
+ M tests/unit/scripts/ollamaDevAllRouters.test.ts
+ M tests/unit/scripts/ollamaDevConfig.test.ts
+ M tests/unit/scripts/ollamaDevLiveScript.test.ts
+?? artifacts/frontend-runtime-prebuild/20260520T144054Z/
+?? artifacts/frontend-runtime-prebuild/20260520T221024Z/
+?? artifacts/frontend-runtime-prebuild/20260520T221218Z/
+?? artifacts/frontend-runtime-prebuild/20260520T224145Z/
+?? artifacts/frontend-runtime-prebuild/20260521T002201Z/
+?? artifacts/frontend-runtime-prebuild/20260521T002514Z/
+?? artifacts/frontend-runtime-prebuild/20260521T002729Z/
+?? artifacts/frontend-runtime-prebuild/20260521T142842Z/
+?? src/components/chat/ConversationHistorySidebar.css
+?? src/components/chat/MessageReactions.css

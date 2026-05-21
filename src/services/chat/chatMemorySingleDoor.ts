@@ -520,6 +520,35 @@ export function readLastChatContextEnvelope(): ChatContextEnvelope | null {
   return readJson<ChatContextEnvelope>(LAST_ENVELOPE_KEY);
 }
 
+/** Bloc narratif TWIN actionnable — plus lisible pour l'IA que le format clé=valeur */
+function formatTwinsNarrativeBlock(ctx: ChatContextEnvelope['twinsContext']): string {
+  if (!ctx) return '';
+  const score = Math.round((ctx.globalScore ?? 0) * 100);
+  const syncScore = Math.round((ctx.syncScore ?? 0) * 100);
+  const phase = ctx.currentPhase ?? 'Observation';
+  const themes = (ctx.ownerThemes ?? []).join(', ') || 'non identifiés';
+  const axis = ctx.reflectionAxis ?? 'non défini';
+  const coreValues = (ctx.identityCore?.coreValues ?? [])
+    .map(v => v.name).filter(Boolean).join(', ') || 'non renseignées';
+  const confirmedValues = (ctx.valueMap?.confirmedValues ?? []).join(', ') || 'aucune';
+  const identity = ctx.identityCore?.name ?? 'TITANE∞';
+  const signature = ctx.identityCore?.signature ?? '';
+  const trend = ctx.trend ?? 'stable';
+
+  return [
+    '## TWIN_PERSONALITY_CONTEXT',
+    `TITANE∞ est en symbiose avec Kevin Thibault — fusion : ${score}%, synchronisation : ${syncScore}%, tendance : ${trend}.`,
+    `Phase d'évolution actuelle : ${phase}.`,
+    `Identité twin : ${identity}${signature ? ` — "${signature}"` : ''}.`,
+    `Thèmes de résonance Kevin ↔ TITANE : ${themes}.`,
+    `Axe de réflexion principal : ${axis}.`,
+    `Valeurs fondamentales : ${coreValues}.`,
+    `Valeurs confirmées par l'observation : ${confirmedValues}.`,
+    `Sources d'observation : ${ctx.sourceCount ?? 0}.`,
+    'TITANE doit adapter la profondeur, le style et les thèmes de ses réponses à ce profil de symbiose.',
+  ].join('\n');
+}
+
 export function formatContextEnvelopeForSystemPrompt(
   envelope: ChatContextEnvelope
 ): string {
@@ -531,7 +560,7 @@ export function formatContextEnvelopeForSystemPrompt(
     ? temporalSummary.keyMoments.filter(moment => typeof moment === 'string')
     : [];
 
-  const recent = envelope.memorySingleDoor.recentMessages.slice(-6);
+  const recent = envelope.memorySingleDoor.recentMessages.slice(-12);
   const recentLines = recent.map(msg => {
     const compact = msg.content.replace(/\s+/g, ' ').trim().slice(0, 220);
     return `- [${msg.role}] ${compact}`;
@@ -619,6 +648,7 @@ export function formatContextEnvelopeForSystemPrompt(
       : []),
     'recent_memory:',
     ...recentLines,
+    ...(envelope.twinsContext ? [formatTwinsNarrativeBlock(envelope.twinsContext)] : []),
   ].join('\n');
 }
 

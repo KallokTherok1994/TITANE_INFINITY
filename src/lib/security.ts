@@ -637,6 +637,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_calibrate_microphone',
   'voice_cancel_recording',
   'voice_is_recording',
+  'force_reset_voice',        // Réinitialisation d'urgence moteur vocal
+  'conversation_reset',       // Reset conversation d'urgence
   'voice_enable_duplex',
   'voice_disable_duplex',
   'voice_check_interruption',
@@ -1301,6 +1303,10 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // AI EXTENDED (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'ai_check_ollama_status',
+  'ai_generate_local',        // Génération Ollama sans streaming
+  'ai_scan_local_models',     // Lister les modèles Ollama disponibles
+  'ai_set_local_model',       // Sélectionner le modèle Ollama actif
+  'ai_status',                // Statut global système AI
   'ai_chat_send', // v34.0.6 phase 3 — RAG service caller (replaces legacy ai_chat)
   'ai_generate_local_stream',
   'cognitive_get_map',

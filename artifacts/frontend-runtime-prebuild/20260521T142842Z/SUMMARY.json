@@ -1,0 +1,15 @@
+{
+  "run_id": "20260521T142842Z",
+  "pkg_version": "35.1.9",
+  "verdict": "PASS",
+  "build_allowed": true,
+  "fast_mode": false,
+  "certifier_rail": "dev",
+  "counters": {
+    "pass": 19,
+    "fail": 0,
+    "blocked": 0,
+    "warn": 1,
+    "na": 6
+  }
+}

@@ -9,11 +9,18 @@
   gap: 0.5rem;
   max-width: min(420px, calc(100vw - 1.5rem));
   pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.agent-dashboards-panel:hover {
+  opacity: 1;
 }
 
 .agent-dashboards-panel--compact {
   top: auto;
   bottom: calc((6.5rem + env(safe-area-inset-bottom, 0px)) / var(--titane-ui-scale, 1));
+  max-width: 260px;
 }
 
 .agent-dashboards-panel__toggle,

@@ -61,6 +61,10 @@ mod control_panel_tests {
 
     #[tokio::test]
     async fn test_cp_get_design_config() {
+        let _guard = TEST_ENV_MUTEX.lock().await;
+        let temp_dir = tempfile::TempDir::new().expect("temp dir");
+        std::env::set_var("TITANE_CONFIG_DIR", temp_dir.path());
+
         let result = cp_get_design_config().await;
         assert!(result.is_ok());
 
@@ -70,10 +74,16 @@ mod control_panel_tests {
             config.density.as_str(),
             "compact" | "normal" | "comfortable"
         ));
+
+        std::env::remove_var("TITANE_CONFIG_DIR");
     }
 
     #[tokio::test]
     async fn test_cp_set_design_config() {
+        let _guard = TEST_ENV_MUTEX.lock().await;
+        let temp_dir = tempfile::TempDir::new().expect("temp dir");
+        std::env::set_var("TITANE_CONFIG_DIR", temp_dir.path());
+
         let config = DesignSystemConfig {
             mode: "dark".to_string(),
             density: "compact".to_string(),
@@ -83,6 +93,8 @@ mod control_panel_tests {
 
         let result = cp_set_design_config(config).await;
         assert!(result.is_ok());
+
+        std::env::remove_var("TITANE_CONFIG_DIR");
     }
 
     // ═══════════════════════════════════════════════════════════

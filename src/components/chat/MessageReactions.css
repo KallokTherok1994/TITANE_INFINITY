@@ -1,0 +1,20 @@
+/**
+ * TITANE∞ v35.1.9 — Message Reactions CSS
+ * Design system tokens + animations picker
+ */
+
+/* Fade-in + scale du picker au moment de l'ouverture */
+.message-reaction-picker {
+  animation: reactionPickerFadeIn 0.14s ease-out;
+}
+
+@keyframes reactionPickerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

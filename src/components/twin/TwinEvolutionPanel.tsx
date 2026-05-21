@@ -50,6 +50,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     reflectionAxis,
     portraitUrl,
     portraitFallbackUrl,
+    refresh: refreshTwin,
     recalculateFusion,
     transitionPhase,
     reinforceValue,
@@ -59,6 +60,18 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
   const [activeTab, setActiveTab] = useState<'fusion' | 'values' | 'evolution' | 'admin'>(
     'fusion'
   );
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleForceSync = async () => {
+    if (isSyncing) return;
+    setIsSyncing(true);
+    try {
+      await refreshTwin();
+      await recalculateFusion();
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const isLoading = identityLoading || evolutionLoading;
   const hookError = identityError ?? evolutionError ?? null;
@@ -152,6 +165,8 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
 
       <div
         data-testid="twin-context-status"
+        className="twin-sync-status-block"
+        data-sync-status={chatContextStatus}
         style={{
           margin: '0 0 12px',
           padding: '8px 12px',
@@ -159,7 +174,18 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
           ...contextStatusMeta.style,
         }}
       >
-        <strong>{contextStatusMeta.label}</strong>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+          <strong>{contextStatusMeta.label}</strong>
+          <button
+            className="twin-sync-force-btn"
+            onClick={() => { void handleForceSync(); }}
+            disabled={isSyncing}
+            title="Forcer la synchronisation TWIN maintenant"
+            aria-label="Forcer la synchronisation TWIN"
+          >
+            {isSyncing ? '⟳' : '↺'} {isSyncing ? 'Sync…' : 'Sync'}
+          </button>
+        </div>
         <span
           style={{ display: 'block', marginTop: 4, fontSize: '0.9rem', opacity: 0.92 }}
         >

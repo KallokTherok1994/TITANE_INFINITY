@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * TITANE_INFINITY v34.5.0 — scripts/ui-audit/tag-orphan-pages.mjs
  *

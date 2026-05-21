@@ -857,3 +857,59 @@
 .oj-section--memory .oj-section-title {
   color: rgba(99, 178, 246, 0.9);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ENRICHISSEMENTS v35.1.9 — scrollbar + topology hover + streaming
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Scrollbar slim sur le corps du journal */
+.oj-journal-body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.2) transparent;
+}
+
+.oj-journal-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.oj-journal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.oj-journal-body::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.25);
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+
+.oj-journal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+/* Topology node hover state */
+.thinking-topology-node {
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+}
+
+.thinking-topology-node:hover {
+  border-color: rgba(96, 165, 250, 0.55) !important;
+  background: rgba(59, 130, 246, 0.12) !important;
+  transform: translateY(-1px);
+}
+
+/* Streaming badge pulse animation */
+.thinking-panel-streaming-badge {
+  animation: thinkingStreamPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes thinkingStreamPulse {
+  0%, 100% { opacity: 0.75; }
+  50%       { opacity: 1; box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
+}
+
+/* Panel body scrollable area — ensure overflow */
+.thinking-panel-body,
+.oj-panel-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

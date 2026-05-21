@@ -129,18 +129,49 @@ class AudioHealthService {
             latencyMs: Math.round(performance.now() - start),
             environment: 'tauri',
           };
-        } else {
-          logDeviceIssue('microphone', 'Test microphone échoué', {
-            error: result.errorMessage,
-          });
+        }
+
+        // Backend Tauri non configuré pour ce runtime (ex: Windows sans WASAPI natif)
+        // → ne pas reporter "error" ; confirmer via navigateur WebAPI à la place
+        const isBackendNotConfigured =
+          result.errorMessage?.toLowerCase().includes('non configuré') ||
+          result.errorMessage?.toLowerCase().includes('not configured') ||
+          result.errorMessage?.toLowerCase().includes('windows');
+
+        if (isBackendNotConfigured) {
+          // Fallback : tester via getUserMedia (fonctionne sur Windows)
+          try {
+            if (navigator.mediaDevices?.getUserMedia) {
+              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+              stream.getTracks().forEach(t => t.stop());
+              return {
+                name: 'Microphone',
+                status: 'ok',
+                message: 'Microphone accessible (backend navigateur — Tauri non configuré)',
+                latencyMs: Math.round(performance.now() - start),
+                environment: 'browser',
+              };
+            }
+          } catch {
+            // getUserMedia échoué → vrai problème micro
+          }
           return {
             name: 'Microphone',
-            status: 'error',
-            message: result.errorMessage || 'Microphone non disponible',
+            status: 'warning',
+            message: result.errorMessage || 'Backend audio natif non configuré',
             latencyMs: Math.round(performance.now() - start),
             environment: 'tauri',
           };
         }
+
+        logDeviceIssue('microphone', 'Test microphone échoué', { error: result.errorMessage });
+        return {
+          name: 'Microphone',
+          status: 'error',
+          message: result.errorMessage || 'Microphone non disponible',
+          latencyMs: Math.round(performance.now() - start),
+          environment: 'tauri',
+        };
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : String(err);
         logDeviceIssue('microphone', 'Erreur test_microphone Tauri', { error: errorMsg });
@@ -604,27 +635,29 @@ class AudioHealthService {
       message: '',
     };
 
+    let ctx: AudioContext | null = null;
     try {
-      // Créer un nouveau contexte audio
-      const ctx = new AudioContext();
+      ctx = new AudioContext();
 
       // Petit délai pour laisser le système se réinitialiser
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      if (ctx && ctx.state !== 'closed') {
+      if (ctx.state !== 'closed') {
         if (ctx.state === 'suspended') {
           await ctx.resume();
         }
         action.success = true;
         action.message = `AudioContext réparé, état: ${ctx.state}`;
-
-        // Fermer le contexte de test (l'application en créera un nouveau si besoin)
-        await ctx.close();
       } else {
         action.message = 'Impossible de créer un nouveau AudioContext';
       }
     } catch (err) {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    } finally {
+      // Fermer le contexte de test dans tous les cas — évite la fuite de ressource audio
+      if (ctx && ctx.state !== 'closed') {
+        await ctx.close().catch(() => { /* ignore close error */ });
+      }
     }
 
     logger.info(

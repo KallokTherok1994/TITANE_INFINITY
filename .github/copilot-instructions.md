@@ -247,6 +247,31 @@ Gates that must pass:
 
 Browser preview proof is NOT Tauri proof. dist proof is NOT artifact proof. Artifact proof is NOT launcher proof. Launcher proof is NOT DOM SurfaceTruth.
 
+## Rule 14.4 — OS-Aware Build Proof and Windows 11 Primary DEV_HOST
+
+Windows 11 is the primary local development host. Every build proof claim must identify the OS on which it was produced. Linux CI proof does not substitute for local Windows proof and vice versa.
+
+**Windows 11 mandatory prerequisites for Tauri development:**
+- Microsoft C++ Build Tools 2022 (C++ workload + Windows SDK + MSVC toolchain)
+- Microsoft Edge WebView2 Runtime (included on Windows 11; install manually on Windows 10)
+- Rust stable MSVC toolchain: `x86_64-pc-windows-msvc` (install via `rustup`)
+- WiX Toolset v3 for MSI builds
+- Windows VBSCRIPT optional feature may be required for WiX installer compilation
+- `icon.ico` must contain multi-resolution ICO layers (Windows icon authority)
+
+**OS-Aware proof rules:**
+- Linux artifacts (AppImage/DEB/RPM) are proof only on Linux. They do not prove Windows installer behavior.
+- Windows MSI is proven only when: built on Windows or `windows-latest` CI, artifact downloaded, SHA256 verified, smoke-installed.
+- CI `windows-latest` runner proof must log actual runner OS, toolchain versions, and artifact SHA256. GitHub Actions runner proof alone is not local Windows install proof.
+- Old Windows MSI proof (v34.0.12) does not prove v35.x. Each version requires its own Windows artifact proof.
+- `BUILD ALL` claiming Windows completion requires: MSI artifact path, SHA256 checksum, smoke-test exit code. Without these three, classify Windows status as `UNKNOWN`.
+- PowerShell-first commands are mandatory for Windows instructions. Use `corepack pnpm` — never `npm install`.
+
+**Maximum verdict tiers (cannot be upgraded without proof):**
+- `WINDOWS_11_INSTRUCTION_ALIGNMENT_PATCHED` — docs and instructions updated, no MSI artifact required.
+- `WINDOWS_11_MSI_RELEASE_PROVEN` — requires MSI v35.x artifact + SHA256 + smoke-test proof.
+- `WINDOWS_11_MIGRATION_SEALED` — requires full Windows runtime + MSI + local install proof.
+
 ## Windows Primary Rail Doctrine
 
 For documentation, setup, and agent instructions work assume the following bounded doctrine:

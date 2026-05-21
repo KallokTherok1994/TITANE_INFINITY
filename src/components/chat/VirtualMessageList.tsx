@@ -128,6 +128,14 @@ export const VirtualMessageList = memo(function VirtualMessageList({
     }
   }, [messages.length]);
 
+  // Nettoyage measurementsRef : supprimer les entrées d'index hors liste
+  useEffect(() => {
+    const count = messages.length;
+    for (const key of measurementsRef.current.keys()) {
+      if (key >= count) measurementsRef.current.delete(key);
+    }
+  }, [messages.length]);
+
   // ═══════════════════════════════════════════════════════════════════
   // CALCULATE VISIBLE RANGE
   // ═══════════════════════════════════════════════════════════════════
@@ -230,6 +238,10 @@ export const VirtualMessageList = memo(function VirtualMessageList({
         className={`virtual-message-list ${className}`}
         onScroll={handleScroll}
         style={{ overflowY: 'auto', height: '100%' }}
+        role="list"
+        aria-live="polite"
+        aria-atomic="false"
+        aria-label="Messages de la conversation"
       >
         {messages.map((message, index) => {
           const uiId = message.metadata?.uiId;
@@ -259,6 +271,10 @@ export const VirtualMessageList = memo(function VirtualMessageList({
       className={`virtual-message-list ${className}`}
       onScroll={handleScroll}
       style={{ overflowY: 'auto', height: '100%' }}
+      role="list"
+      aria-live="polite"
+      aria-atomic="false"
+      aria-label="Messages de la conversation"
     >
       {/* Total height spacer */}
       <div style={{ height: totalHeight, position: 'relative' }}>
