@@ -47,13 +47,25 @@ jobs:
         with:
           workspaces: src-tauri
 
-      - name: Frontend build
-        run: pnpm run build
+      - name: Prebuild Windows proof
+        shell: pwsh
+        run: |
+          systeminfo
+          node --version
+          pnpm --version
+          rustc -vV
+          cargo --version
+          pnpm exec tauri --version
+          pnpm run sync:versions
+          pnpm run verify:tauri-configs
+          pnpm run verify:windows:icon
+          pnpm run verify:windows:toolchain
+          pnpm run verify:windows:release-readiness -- -Mode PreBuild
 
       - name: Build MSI
-        run: pnpm exec tauri build --bundles msi
+        run: pnpm run build:windows:msi
 
-      - name: Generate MSI checksums
+      - name: Generate MSI proof manifests
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path src-tauri/target/release/bundle/msi | Out-Null
@@ -66,6 +78,45 @@ jobs:
             "{0}  {1}" -f $_.Hash.ToLower(), (Split-Path $_.Path -Leaf)
           } | Out-File src-tauri/target/release/bundle/msi/SHA256SUMS.txt -Encoding ascii
           Get-Content src-tauri/target/release/bundle/msi/SHA256SUMS.txt
+          if (-not (Test-Path src-tauri/target/release/bundle/msi/SHA256SUMS.txt)) {
+            Write-Error "SHA256SUMS.txt was not generated"
+            exit 1
+          }
+
+          $version = node -p "require('./package.json').version"
+          $primaryMsi = $msiFiles | Select-Object -First 1
+          $primaryHash = (Get-FileHash -LiteralPath $primaryMsi.FullName -Algorithm SHA256).Hash.ToLower()
+          $builtAt = (Get-Date).ToUniversalTime().ToString("o")
+          $manifest = [ordered]@{
+            platform = "windows-x64"
+            version = $version
+            artifact = $primaryMsi.Name
+            installer_type = "wix-msi"
+            github_run_id = $env:GITHUB_RUN_ID
+            runner_os = $env:RUNNER_OS
+            runner_arch = $env:RUNNER_ARCH
+            sha256 = $primaryHash
+            built_at = $builtAt
+            local_install_proof = "NOT_CLAIMED_FROM_CI"
+          }
+          $runnerManifest = [ordered]@{
+            runner_os = $env:RUNNER_OS
+            runner_name = $env:RUNNER_NAME
+            runner_arch = $env:RUNNER_ARCH
+            node = (node --version)
+            pnpm = (pnpm --version)
+            rustc = (rustc --version)
+            cargo = (cargo --version)
+            tauri = (pnpm exec tauri --version)
+          }
+          $manifest | ConvertTo-Json -Depth 4 | Out-File src-tauri/target/release/bundle/msi/WINDOWS_MANIFEST.json -Encoding utf8
+          $runnerManifest | ConvertTo-Json -Depth 4 | Out-File src-tauri/target/release/bundle/msi/WINDOWS_RUNNER_MANIFEST.json -Encoding utf8
+          foreach ($required in @("WINDOWS_MANIFEST.json", "WINDOWS_RUNNER_MANIFEST.json")) {
+            if (-not (Test-Path "src-tauri/target/release/bundle/msi/$required")) {
+              Write-Error "$required was not generated"
+              exit 1
+            }
+          }
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7.0.1
@@ -74,6 +125,8 @@ jobs:
           path: |
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/msi/SHA256SUMS.txt
+            src-tauri/target/release/bundle/msi/WINDOWS_MANIFEST.json
+            src-tauri/target/release/bundle/msi/WINDOWS_RUNNER_MANIFEST.json
           if-no-files-found: error
           retention-days: 30
 
@@ -89,7 +142,7 @@ jobs:
           else
             gh release create "$RELEASE_TAG" --title "TITANE∞ $RELEASE_TAG" --notes "Automated Windows MSI upload"
           fi
-          find src-tauri/target/release/bundle/msi -type f \( -name "*.msi" -o -name "SHA256SUMS.txt" \) -print0 | while IFS= read -r -d '' f; do
+          find src-tauri/target/release/bundle/msi -type f \( -name "*.msi" -o -name "SHA256SUMS.txt" -o -name "WINDOWS_MANIFEST.json" -o -name "WINDOWS_RUNNER_MANIFEST.json" \) -print0 | while IFS= read -r -d '' f; do
             gh release upload "$RELEASE_TAG" "$f" --clobber
           done
 
@@ -97,6 +150,15 @@ jobs:
         if: always()
         shell: pwsh
         run: |
+          $msiCount = (Get-ChildItem src-tauri/target/release/bundle/msi/*.msi -ErrorAction SilentlyContinue | Measure-Object).Count
+          $checksumExists = Test-Path src-tauri/target/release/bundle/msi/SHA256SUMS.txt
+          $manifestExists = (Test-Path src-tauri/target/release/bundle/msi/WINDOWS_MANIFEST.json) -and (Test-Path src-tauri/target/release/bundle/msi/WINDOWS_RUNNER_MANIFEST.json)
+          $buildStatus = if ($msiCount -gt 0 -and $manifestExists) { "PASS" } else { "FAIL" }
+          $checksumStatus = if ($checksumExists) { "PASS" } else { "FAIL" }
           "### Windows MSI On-Demand" >> $env:GITHUB_STEP_SUMMARY
-          "- Workflow run: $env:GITHUB_RUN_ID" >> $env:GITHUB_STEP_SUMMARY
-          "- MSI files: $((Get-ChildItem src-tauri/target/release/bundle/msi/*.msi -ErrorAction SilentlyContinue | Measure-Object).Count)" >> $env:GITHUB_STEP_SUMMARY
+          "WINDOWS_MSI_BUILD=$buildStatus" >> $env:GITHUB_STEP_SUMMARY
+          "WINDOWS_MSI_CHECKSUMS=$checksumStatus" >> $env:GITHUB_STEP_SUMMARY
+          "LOCAL_INSTALL_PROOF=NOT_CLAIMED_FROM_CI" >> $env:GITHUB_STEP_SUMMARY
+          "MSI_COUNT=$msiCount" >> $env:GITHUB_STEP_SUMMARY
+          "CHECKSUM_FILE=src-tauri/target/release/bundle/msi/SHA256SUMS.txt" >> $env:GITHUB_STEP_SUMMARY
+          "GITHUB_RUN_ID=$env:GITHUB_RUN_ID" >> $env:GITHUB_STEP_SUMMARY

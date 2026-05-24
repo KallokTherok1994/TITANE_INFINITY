@@ -1,22 +1,23 @@
 # TITANE∞ — Installation (FR)
 
-**Version :** 28.0.0  
-**Statut :** PARTIAL  
-**Date :** 2026-03-17
+**Version :** 35.1.9  
+**Statut :** CURRENT  
+**Date :** 2026-05-21
 
 ---
 
 ## Systèmes supportés
 
-> Statut : PROVEN pour v27.0.5 (dernière release binaire publiée)
+> Version courante : v35.1.9 | DEV_HOST primaire : Windows 11
 
 | Système | Support | Notes |
 |---|---|---|
-| Ubuntu 20.04+ | ✅ PROVEN | AppImage + DEB testés |
+| Windows 11 | ✅ DEV_HOST PRIMAIRE | Rail de développement local principal |
+| Ubuntu 20.04+ | ✅ PROVEN | AppImage + DEB testés (v35.1.9) |
 | Debian 11+ | ✅ PROVEN | DEB testé |
 | Linux Mint 20+ | ✅ PROVEN | AppImage testé |
 | Pop!_OS 20.04+ | ✅ PROVEN | AppImage testé |
-| Windows | ⚠️ PARTIAL | Support déclaré, non prouvé en CI |
+| Windows | ⚠️ MSI v35.x non encore prouvé | MSI prouvé à v34.0.12 ; voir Rule 14.4 |
 | macOS | ⚠️ PARTIAL | Support déclaré, non prouvé en CI |
 
 ---

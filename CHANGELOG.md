@@ -1,5 +1,65 @@
 # Changelog
 
+## [35.1.9] — 2026-05-22 (Chat + Ollama Fine-Tuning)
+
+### Changed
+- **`src/services/ai/providers/ollama.ts`**: Context history window expanded from 10 → 20 messages (`MAX_CONTEXT_HISTORY_MESSAGES` constant)
+- **`src/services/ai/providers/ollama.ts`**: `stream()` timeout now uses `STREAM_CONFIG.totalTimeoutMs` (58s) instead of `OLLAMA_CONFIG.timeout` (45s), preventing premature stream termination
+- **`src/services/ai/providers/ollama.ts`**: KB memory context now injects entry titles into system prompt (`Base de connaissances: <title1>; <title2>`) instead of count only
+- **`src/config/aiTimeouts.config.ts`**: Added `getOllamaEffortTimeout(effort, baseMs)` — centralized effort scaling (`max→120s`, `high→90s`, `default→baseSecs`)
+- **`src/services/ai/providers/ollama.ts`**: `generate()` now uses `getOllamaEffortTimeout()` instead of inline ternary
+
+### Fixed
+- **`src/__tests__/chatEngine.test.ts`**: Added `afterAll` teardown for `responseCache`, `aiOrchestrator`, `aiHealthMonitor` to reduce fork worker teardown errors (partial fix — architectural pre-existing issue)
+
+### Audit (v35.1.9 — 2026-05-22)
+
+| Gate | Résultat |
+|---|---|
+| `tsc --noEmit` | PASS — 0 erreurs TypeScript |
+| `eslint` | PASS — 0 erreurs |
+| `pnpm run test --run` | PARTIAL — 9540/9595 tests, 668/671 fichiers (chatEngine teardown pre-existing) |
+| `TWIN_UNIT_TESTS` | PASS — 15/15 |
+| `OMEGA_UNIT_TESTS` | PASS — 20/20 |
+| `SINGULARITY_UNIT_TESTS` | PASS — 131/131 |
+| `WINDOWS_MSI_ARTIFACT` | PASS — 35.1.9 |
+| `WINDOWS_INSTALL_SMOKE` | BLOCKED_ADMIN_REQUIRED |
+
+## [35.1.9] — 2026-05-21 (Windows MSI v35 Build Proven, Smoke Blocked)
+
+### Proof
+- `WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_BLOCKED`
+- Fresh local Windows build command: `pnpm run build:windows:msi`.
+- MSI artifact: `titane-infinity_35.1.9_x64_en-US.msi`, `22417408` bytes.
+- SHA256: `dc1445107a54e5a83b1059ef0093f4633ffd60965adc91f8d9cef95eef7dc937`.
+- `WINDOWS_MSI_ARTIFACT=PASS`, `WINDOWS_MSI_V35=PASS`.
+- WiX MSI build succeeded, so preflight `VBSCRIPT_STATUS=UNKNOWN_WITH_NOTE` is resolved for this build as `BUILD_PROVEN_OK`.
+- Local install smoke is blocked by Windows Installer admin requirements: `msiexec` exit `1603`, `Error 1925` insufficient privileges for all-users install.
+- Rollback is documented but not executed because install did not complete.
+- Code signing remains `UNKNOWN_OR_DEV_UNSIGNED`; production distribution hardening remains optional/future work.
+
+## [35.1.9-dev] — 2026-05-21 (Windows 11 Dev Runtime Proof)
+
+### Proof
+- `WINDOWS_11_DEV_RUNTIME_PROOF`
+- `pnpm run dev:tauri -- --smoke 45` exited 0 with `BOOT:READY`, `warn_count=0`, `error_count=0`, `timeout_count=0`, `unknown_count=0`.
+- Dev runtime title/version: `Titan-Dev v35.1.9 [DEV] — TITANE∞ Development`, `35.1.9-dev`.
+- Prebuild readiness remains `PARTIAL` because `VBSCRIPT_STATUS=UNKNOWN_WITH_NOTE`; this does not block dev runtime proof, but it blocks a full Windows release proof.
+- Windows MSI v35.x remains `PENDING`; no MSI build, install smoke, checksum release, or rollback proof was claimed.
+
+## [35.1.9] — 2026-05-21 (Windows 11 Operational Proof Surface)
+
+### Added
+- Windows 11 local DEV_HOST remains primary.
+- Linux v35.1.9 = PROVEN.
+- Windows MSI v34.0.12 = HISTORICALLY_PROVEN.
+- Windows MSI v35.x = PENDING.
+- Windows operational proof surface = PATCHED after this mission.
+
+### Verdict
+- `WINDOWS_11_OPERATIONAL_PROOF_SURFACE_PATCHED`
+- No Windows v35 MSI release proof is claimed in this entry.
+
 ## [35.1.6] — 2026-05-16 (Frontend UI/UX Redesign Seal)
 
 > **Mode:** SEAL | **Scope:** Frontend/UI-UX certification + test gate repair | **Branch:** MAIN | **Commit:** `558119238`

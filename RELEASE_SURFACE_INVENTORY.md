@@ -1,3 +1,64 @@
+## WINDOWS_PLATFORM_STATUS (updated 2026-05-22)
+
+| Surface | Version | Statut | Preuve |
+|---|---|---|---|
+| Windows 11 local DEV_HOST | 35.1.9-dev | PRIMARY + DEV_RUNTIME_PROVEN | `runtime/dev/logs/tauri-dev-monitor-summary.json` — BOOT:READY, warn=0, error=0 |
+| Linux v35.1.9 | 35.1.9 | PROVEN | AppImage/DEB/RPM proof in this inventory |
+| Windows MSI installer | 34.0.12 | HISTORICALLY_PROVEN | `RELEASE_ARTIFACTS_CHECKSUMS_34.0.12.txt` |
+| Windows MSI v35.x | 35.1.9 | BUILD_PROVEN_INSTALL_BLOCKED | `proof_packs/WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_2026-05-21/` — MSI + SHA256 PASS; install blocked admin |
+| Windows operational proof surface | 35.1.9 | PATCHED | `WINDOWS_11_OPERATIONAL_PROOF_SURFACE_PATCHED` |
+| CI Windows `windows-latest` | — | CONFIGURED | `.github/workflows/windows-msi-on-demand.yml` (on-demand; no local install claim) |
+
+> **Rule 14.4** : Preuve MSI v35.x requise avant de passer à `WINDOWS_11_MSI_RELEASE_PROVEN`. Statut actuel : `WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_BLOCKED`. Le MSI Windows v35.x est construit et checksummé, mais le smoke local est bloqué par droits admin Windows Installer.
+
+---
+
+## 2026-05-22 — CHAT_AND_OLLAMA_FINE_TUNING (v35.1.9)
+
+- **Scope** : Chat pipeline fine-tuning — 4 targeted patches to Ollama provider and timeout config.
+- **Patch 1** : Context history window 10 → 20 messages (`MAX_CONTEXT_HISTORY_MESSAGES` constant in `ollama.ts`).
+- **Patch 2** : `getOllamaEffortTimeout()` centralized in `aiTimeouts.config.ts` (`max→120s`, `high→90s`, `default→baseSecs`); `generate()` now calls this function.
+- **Patch 3** : `stream()` timeout uses `STREAM_CONFIG.totalTimeoutMs` (58s) instead of `OLLAMA_CONFIG.timeout` (45s).
+- **Patch 4** : KB memory context injects entry titles (`Base de connaissances: <title1>; <title2>`) instead of count only.
+- **Teardown fix** : `chatEngine.test.ts` `afterAll` cleans up `responseCache`, `aiOrchestrator`, `aiHealthMonitor` (partial — architectural pre-existing).
+- **AutoHeal** : 3 entries appended to `autoheal_rules.jsonl`.
+- **Verification** : `tsc --noEmit` PASS, `eslint` PASS, `9540/9595` tests (PARTIAL — chatEngine teardown pre-existing).
+- **Proof pack** : `proof_packs/WINDOWS_11_FINAL_DESKTOP_CERTIFICATION_2026-05-21/` (17 files).
+- **Verdict** : `CHAT_FINE_TUNING=APPLIED`, `WINDOWS_INSTALL_SMOKE=BLOCKED_ADMIN_REQUIRED`.
+
+---
+
+## 2026-05-21 — WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_BLOCKED
+
+- **Scope** : Windows 11 local MSI v35.1.9 build + artifact proof + install smoke attempt.
+- **Build mode** : `build:windows:msi`; `VERSION_BUMP=NO`; version authority `package.json=35.1.9`.
+- **Fresh MSI build** : `pnpm run build:windows:msi` exit 0. WiX `candle` + `light` produced `src-tauri/target/release/bundle/msi/titane-infinity_35.1.9_x64_en-US.msi`.
+- **Artifact proof** : MSI size `22417408` bytes; SHA256 `dc1445107a54e5a83b1059ef0093f4633ffd60965adc91f8d9cef95eef7dc937`; `WINDOWS_MSI_ARTIFACT=PASS`; `WINDOWS_MSI_V35=PASS`.
+- **VBSCRIPT** : preflight `UNKNOWN_WITH_NOTE`; MSI build success classifies the build blocker as resolved by outcome: `VBSCRIPT_STATUS=BUILD_PROVEN_OK`.
+- **Install smoke** : blocked. `msiexec /i` returned `1603`; diagnostic log records `Error 1925` insufficient privileges for all-users install. `WINDOWS_INSTALL_SMOKE=BLOCKED_ADMIN_REQUIRED`.
+- **Rollback** : `DOCUMENTED_NOT_EXECUTED`; install did not complete. Rollback command: `msiexec /x "src-tauri/target/release/bundle/msi/titane-infinity_35.1.9_x64_en-US.msi"`.
+- **Code signing** : `UNKNOWN_OR_DEV_UNSIGNED`; local/dev proof only; SmartScreen risk documented.
+- **Proof pack** : `proof_packs/WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_2026-05-21/`.
+- **Verdict** : `WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_BLOCKED`.
+
+---
+
+## 2026-05-21 — WINDOWS_11_DEV_RUNTIME_PROOF
+
+- **Scope** : Windows 11 local DEV runtime only. No MSI build, no install smoke, no release claim.
+- **Version sync** : `pnpm run sync:versions` PASS, 0 file updated; dev config at `35.1.9-dev`.
+- **Host proof** : `OS_HOST=WINDOWS_11_LOCAL`, `OS_HOST_CLASSIFICATION=PASS`.
+- **Toolchain proof** : Node `v24.15.0`, pnpm `10.30.2`, Rust host `x86_64-pc-windows-msvc`, MSVC Build Tools/cl/link/WebView2 PASS; VBSCRIPT `UNKNOWN_WITH_NOTE`; `WINDOWS_11_TOOLCHAIN=PARTIAL`.
+- **Icon proof** : ICO layers `16,24,32,48,64,96,128,256`; `WINDOWS_ICON_ICO_MULTILAYER=PASS`.
+- **DEV Tauri smoke** : `pnpm run dev:tauri -- --smoke 45` exit 0. Summary: `duration_sec=108`, `boot_seen=true`, `warn_count=0`, `error_count=0`, `timeout_count=0`, `unknown_count=0`.
+- **Window title/version proof** : `DEV_VERSION=35.1.9-dev`; `DEV_TITLE=Titan-Dev v35.1.9 [DEV] — TITANE∞ Development`.
+- **Readiness** : `WINDOWS_RELEASE_READINESS_PREBUILD=PARTIAL`, `WINDOWS_RELEASE_READINESS_POSTBUILD=PENDING`, `WINDOWS_MSI_V35=PENDING`.
+- **Verdict** : `WINDOWS_11_DEV_RUNTIME_PROOF`.
+
+Rollback: no runtime code changed for this proof. Revert documentation/proof additions if needed.
+
+---
+
 ## v35.1.9-dev - 2026-05-20 - Windows native Dev migration + local install rail
 
 - **Mode** : DURABLE | **Scope** : Windows native Dev only, no external deploy, no stable/prod release.

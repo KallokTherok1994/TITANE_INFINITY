@@ -1,6 +1,10 @@
 # TITANE∞ — Windows Spin-Up Procedure
 
-> Version: 30.1.5 · Runtime: Tauri 2 · Node: 24 · pnpm engine-strict
+> ⚠️ **DUPLICATE_SNAPSHOT** — Cette copie date de v30.1.5. Le document canonique actuel est :
+> [`docs/windows/SPINUP_WINDOWS.md`](../../windows/SPINUP_WINDOWS.md)
+> Pour le guide principal Windows 11 : [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](../../windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md)
+
+> Version: 30.1.5 (SNAPSHOT — voir guide canonique ci-dessus)
 
 ---
 

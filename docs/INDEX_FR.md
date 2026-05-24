@@ -1,10 +1,12 @@
 # TITANE∞ — Index de Documentation (FR)
 
-**Version :** 28.0.0  
-**Statut :** PROVEN  
-**Date :** 2026-03-17
+**Version :** 35.1.9  
+**Statut :** CURRENT  
+**Date :** 2026-05-21
 
 > Index canonique de navigation documentaire en français.
+> **Windows 11 DEV_HOST primaire :** [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md)
+> **Windows install/rollback :** [`docs/windows/WINDOWS_INSTALL_AND_ROLLBACK.md`](windows/WINDOWS_INSTALL_AND_ROLLBACK.md)
 
 ---
 
@@ -73,6 +75,7 @@
 | [README.md](../README.md) | Entrée principale canonique |
 | [CHANGELOG.md](../CHANGELOG.md) | Historique des changements |
 | [docs/README.md](./README.md) | Hub documentaire |
+| [docs/release/PLATFORM_RELEASE_MATRIX.md](./release/PLATFORM_RELEASE_MATRIX.md) | Matrice release par plateforme |
 
 ---
 

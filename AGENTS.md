@@ -119,11 +119,18 @@ Heavy doctrine belongs to the local Codex rules file, not to the repo.
 - Gate: no uncontrolled network; capabilities locked.
 - Required: SBOM update on dependency change; audit log entry.
 
-### Build Agent (scripts/, .github/workflows/)
+### Build Agent — OS-Aware Build Authority
 
 - Scope: Build, packaging, deploy workflows, post-build system integration.
-- Gate: After every build (dev/prod/tauri), mandatory launcher/icon refresh sequence must run (Rule 13.1).
-- Required: run `bash scripts/post-build/update-desktop-icons.sh`, refresh desktop/icon caches, verify `Exec=/usr/bin/titane-infinity` and icon mapping in local/system `.desktop` launchers.
+- Gate: Before any build/deploy/release proof, detect and report `OS_HOST`.
+- Accepted `OS_HOST` values: `WINDOWS_11_LOCAL`, `GITHUB_ACTIONS_WINDOWS`, `LINUX_LOCAL`, `GITHUB_ACTIONS_LINUX`, `ANDROID_DEVICE`, `MACOS_LOCAL`, `UNKNOWN`.
+- **Windows 11 local proof profile**: PowerShell-first execution; Node 24 or current project policy; `pnpm` must match `packageManager`; Rust stable-msvc / `x86_64-pc-windows-msvc`; MSVC Build Tools; `cl.exe` and `link.exe` when available; WebView2 Runtime checked; VBSCRIPT status checked for MSI readiness; `pnpm run sync:versions`; DEV Tauri `BOOT:READY`; window title/version proof; console clean proof; MSI artifact + SHA256 + install smoke only when Windows release proof is requested.
+- **GitHub Actions Windows proof profile**: runner/toolchain summary; MSI artifact; SHA256; `WINDOWS_MANIFEST.json`; `WINDOWS_RUNNER_MANIFEST.json`; no local install claim.
+- **Linux local proof profile**: AppImage / DEB / RPM; `.desktop`; hicolor icon cache; `dpkg` / `sudo` where applicable.
+- **GitHub Actions Linux proof profile**: Linux artifact/checksum proof only; no Windows claim.
+- **Android proof profile**: APK/AAB/device proof separate from desktop release proof.
+- **macOS proof profile**: inactive unless explicitly scoped and proved on macOS.
+- **Anti-contamination rule**: Linux proof cannot satisfy Windows lanes. Windows CI artifact proof cannot satisfy local install lanes. Historical proof cannot satisfy current version lanes. Generated or legacy docs cannot satisfy current authority lanes.
 - **DEV Tauri version sync**: after every version bump, run `pnpm run sync:versions` — this propagates the new version to `runtime/dev/tauri.conf.json` (as `{version}-dev`) and its window title. A stale dev version in `runtime/dev/tauri.conf.json` is FAIL.
 - **BUILD and BUILD ALL**: always update and rebuild the DEV Tauri runtime (`pnpm run dev:tauri` or `tauri build --config runtime/dev/tauri.conf.json`) to verify the dev config is at the correct version before proceeding to stable/production builds.
 - Mapping: update `RELEASE_SURFACE_INVENTORY.md` when build/release surfaces change.

@@ -12,7 +12,7 @@ import { secureInvoke } from '@/lib/security';
 import { createLogger } from '@/utils/logger';
 import type { AiResult, AiOk, AiErr } from '../types';
 import { classifyError, isAbortError } from '@/lib/errorClassification';
-import { getProviderTimeout } from '@/config/aiTimeouts.config';
+import { getProviderTimeout, AVAILABILITY_CACHE } from '@/config/aiTimeouts.config';
 import { tauriClient } from '@/lib/tauriClient';
 import { isRemoteContext } from '@/lib/transport';
 
@@ -44,7 +44,7 @@ const TRANSPORT_MODE: string =
         ? 'REMOTE_GATEWAY'
         : 'BROWSER_PROXY';
 
-const HEALTH_CACHE_TTL_MS = 10_000;
+const HEALTH_CACHE_TTL_MS = AVAILABILITY_CACHE.ttlMs; // Aligned with orchestrator availability cache (300s)
 let lastHealthCheckTs = 0;
 let lastHealthCheckOk = false;
 let lastHealthError: string | null = null;

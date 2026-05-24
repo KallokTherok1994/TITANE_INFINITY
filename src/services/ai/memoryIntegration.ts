@@ -1012,7 +1012,7 @@ export class MemoryIntegration {
       includeDecisions = true,
       includeKnowledge = true,
       includeRituals = true,
-      includeTimeline = false,
+      includeTimeline = true,
       maxProjects = 5,
       maxDecisions = 10,
       maxKnowledge = 20,

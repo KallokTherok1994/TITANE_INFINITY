@@ -1,0 +1,14 @@
+C:\Dev\TITANE_INFINITY\runtime\windows\cargo-check-target\release\deps\serde-b5c9f981cbff815b.d: C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Dev\TITANE_INFINITY\runtime\windows\cargo-check-target\release\build\serde-97dce4dcd3fc19fe\out/private.rs
+
+C:\Dev\TITANE_INFINITY\runtime\windows\cargo-check-target\release\deps\libserde-b5c9f981cbff815b.rlib: C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Dev\TITANE_INFINITY\runtime\windows\cargo-check-target\release\build\serde-97dce4dcd3fc19fe\out/private.rs
+
+C:\Dev\TITANE_INFINITY\runtime\windows\cargo-check-target\release\deps\libserde-b5c9f981cbff815b.rmeta: C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Dev\TITANE_INFINITY\runtime\windows\cargo-check-target\release\build\serde-97dce4dcd3fc19fe\out/private.rs
+
+C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs:
+C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs:
+C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs:
+C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs:
+C:\Users\Kevin\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs:
+C:\Dev\TITANE_INFINITY\runtime\windows\cargo-check-target\release\build\serde-97dce4dcd3fc19fe\out/private.rs:
+
+# env-dep:OUT_DIR=C:\\Dev\\TITANE_INFINITY\\runtime\\windows\\cargo-check-target\\release\\build\\serde-97dce4dcd3fc19fe\\out

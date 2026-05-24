@@ -1,6 +1,12 @@
 # TITANE_INFINITY - Guide de Configuration Développement
 
-**Version:** 1.0.0  
+> ⚠️ **LEGACY_REDIRECT** — Ce guide date de v1.0.0 (2025-12-20) et est dépassé. Consultez les documents canoniques ci-dessous.
+>
+> - **Guide développeur actuel :** [`DEVELOPER_SETUP.md`](../../../DEVELOPER_SETUP.md)
+> - **Windows 11 (DEV_HOST primaire) :** [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](../../windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md)
+> - **Setup environnement FR :** [`docs/dev/fr/setup-environnement.md`](../../../docs/dev/fr/setup-environnement.md)
+
+**Version:** 1.0.0 (LEGACY)  
 **Dernière mise à jour:** 2025-12-20  
 **Compatibilité:** Windows, macOS, Linux
 

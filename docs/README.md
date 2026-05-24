@@ -1,6 +1,6 @@
 # TITANE∞ — Documentation Index
 
-> **Version:** v35.1.6 — Mise à jour 2026-05-16
+> **Version:** v35.1.9 — Mise à jour 2026-05-21
 
 ## Guides essentiels
 
@@ -8,12 +8,15 @@
 |----------|-------------|
 | [`../README.md`](../README.md) | Vue d'ensemble, audit status, démarrage rapide |
 | [`../DEVELOPER_SETUP.md`](../DEVELOPER_SETUP.md) | Installation développeur complète |
+| [`windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md) | **Windows 11 DEV_HOST primaire** — guide canonique |
+| [`windows/WINDOWS_INSTALL_AND_ROLLBACK.md`](windows/WINDOWS_INSTALL_AND_ROLLBACK.md) | **Windows MSI** — installation, smoke, rollback |
+| [`release/PLATFORM_RELEASE_MATRIX.md`](release/PLATFORM_RELEASE_MATRIX.md) | Matrice de vérité par plateforme |
 | [`../CHANGELOG.md`](../CHANGELOG.md) | Historique des versions (v28→v35) |
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Guide de contribution et gouvernance |
 | [`../AGENTS.md`](../AGENTS.md) | Règles pour agents IA (Claude, Copilot, Codex) |
 | [`../ARCHITECTURE.md`](../ARCHITECTURE.md) | Architecture détaillée (4-Ring, IPC, moteurs) |
 
-## Frontend UI/UX (v35.1.6 — Design System v2)
+## Frontend UI/UX (v35.1.9 — Design System v2)
 
 | Document | Description |
 |----------|-------------|

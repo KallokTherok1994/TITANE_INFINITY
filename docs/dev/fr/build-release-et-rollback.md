@@ -1,8 +1,8 @@
 # TITANE∞ — Build, Release et Rollback (FR)
 
-**Version :** 28.0.0  
-**Statut :** PARTIAL  
-**Date :** 2026-03-17
+**Version :** 35.1.9  
+**Statut :** CURRENT  
+**Date :** 2026-05-21
 
 ---
 
@@ -41,13 +41,19 @@ pnpm run build:production
 
 | Version | Type | Artefacts | Statut |
 |---|---|---|---|
-| v27.0.5 | Binaire production | AppImage, DEB, RPM | PROVEN — disponible sur GitHub Releases |
-| v28.0.0 | Governance + docs | Aucun binaire public | PARTIAL |
+| v35.1.9 | Binaire production | AppImage, DEB (Linux) | PROVEN — `deployment/latest/` |
+| v35.1.7 | Binaire production | AppImage, DEB, RPM (Linux) | PROVEN — checksums vérifiés |
+| v34.0.12 | MSI Windows | MSI installer | PROVEN (Windows v34 uniquement) |
+| v35.1.x | MSI Windows | MSI installer | UNKNOWN — non encore prouvé (voir Rule 14.4) |
 
-**Téléchargements v27.0.5 :**
+> **Statut MSI Windows :** Le MSI v35.x n'est pas encore prouvé. Pour le générer, utiliser le workflow `.github/workflows/windows-msi-on-demand.yml` et fournir : artefact MSI + SHA256 + preuve smoke-test.
+
+**Artefacts Linux v35.1.9 (prouvés) :**
 ```bash
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.deb
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/Titan-Stable_27.0.5_amd64.AppImage
+# AppImage
+sha256: 9c924cca70655654a56afa75aeff2f425e86844c894704aeaf82f84bd9868315
+# DEB
+sha256: 84f706ca56f0739bca101742e9ebbd634cd6f235e9632f7901b65b88d8b14d17
 ```
 
 ---

@@ -11,11 +11,26 @@
  * - Test wrapper (QueryClientProvider)
  */
 
+/* eslint-disable no-console */
+
 import '@testing-library/jest-dom';
 import { expect, beforeAll, afterAll, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import React from 'react';
 import * as matchers from '@testing-library/jest-dom/matchers';
+
+const happyDomApi = (globalThis as { happyDOM?: { settings?: Record<string, unknown> } })
+  .happyDOM;
+if (happyDomApi?.settings) {
+  happyDomApi.settings.disableCSSFileLoading = true;
+  happyDomApi.settings.handleDisabledFileLoadingAsSuccess = true;
+}
+
+console.log = vi.fn();
+console.info = vi.fn();
+console.debug = vi.fn();
+console.warn = vi.fn();
+console.error = vi.fn();
 
 const tauriCoreInvokeMock = vi.hoisted(() =>
   vi.fn(async (cmd: string, args?: unknown) =>
@@ -361,19 +376,38 @@ vi.mock('@tauri-apps/api/event', () => ({
 
 (() => {
   const identityMatrix = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
+  const transformValue = {
+    baseVal: {
+      consolidate: () => ({ matrix: identityMatrix }),
+      createSVGTransformFromMatrix: () => ({ matrix: identityMatrix }),
+      getItem: () => ({ matrix: identityMatrix }),
+      numberOfItems: 1,
+    },
+  };
 
-  if (typeof SVGElement !== 'undefined') {
-    Object.defineProperty(SVGElement.prototype, 'transform', {
+  const installTransformPolyfill = (proto: object | undefined) => {
+    if (!proto) return;
+    Object.defineProperty(proto, 'transform', {
       configurable: true,
       get() {
-        return {
-          baseVal: {
-            consolidate: () => ({ matrix: identityMatrix }),
-          },
-        };
+        return transformValue;
       },
     });
+  };
 
+  installTransformPolyfill(
+    typeof SVGElement !== 'undefined' ? SVGElement.prototype : undefined
+  );
+  installTransformPolyfill(
+    typeof SVGGraphicsElement !== 'undefined'
+      ? SVGGraphicsElement.prototype
+      : undefined
+  );
+  installTransformPolyfill(
+    typeof SVGGElement !== 'undefined' ? SVGGElement.prototype : undefined
+  );
+
+  if (typeof SVGElement !== 'undefined') {
     if (typeof SVGElement.prototype.getBBox !== 'function') {
       SVGElement.prototype.getBBox = () =>
         ({ x: 0, y: 0, width: 1024, height: 768 }) as DOMRect;
@@ -381,6 +415,13 @@ vi.mock('@tauri-apps/api/event', () => ({
   }
 
   if (typeof SVGSVGElement !== 'undefined') {
+    if (typeof SVGSVGElement.prototype.createSVGMatrix !== 'function') {
+      SVGSVGElement.prototype.createSVGMatrix = () => identityMatrix as DOMMatrix;
+    }
+    if (typeof SVGSVGElement.prototype.createSVGTransformFromMatrix !== 'function') {
+      SVGSVGElement.prototype.createSVGTransformFromMatrix = () =>
+        ({ matrix: identityMatrix }) as SVGTransform;
+    }
     Object.defineProperty(SVGSVGElement.prototype, 'width', {
       configurable: true,
       get() {
@@ -402,11 +443,53 @@ vi.mock('@tauri-apps/api/event', () => ({
 // ─────────────────────────────────────────────────────────────────
 // React Cleanup + Stylesheet Isolation
 // ─────────────────────────────────────────────────────────────────
+(() => {
+  const shouldBlockStylesheet = (node: Node): boolean => {
+    if (!(node instanceof HTMLLinkElement)) return false;
+    if (node.rel !== 'stylesheet') return false;
+    const href = node.href || node.getAttribute('href') || '';
+    return (
+      href.includes('fonts.googleapis.com') ||
+      href.includes('localhost:3000/assets/') ||
+      href.includes('127.0.0.1:3000/assets/')
+    );
+  };
+
+  const originalAppendChild = Node.prototype.appendChild;
+  const originalInsertBefore = Node.prototype.insertBefore;
+
+  Node.prototype.appendChild = function appendChildPatched<T extends Node>(
+    this: Node,
+    node: T
+  ): T {
+    if (shouldBlockStylesheet(node)) return node;
+    return originalAppendChild.call(this, node) as T;
+  };
+
+  Node.prototype.insertBefore = function insertBeforePatched<T extends Node>(
+    this: Node,
+    node: T,
+    child: Node | null
+  ): T {
+    if (shouldBlockStylesheet(node)) return node;
+    return originalInsertBefore.call(this, node, child) as T;
+  };
+})();
+
 afterEach(() => {
   cleanup();
+  [console.log, console.info, console.debug, console.warn, console.error].forEach(
+    method => {
+      if ('mockClear' in method && typeof method.mockClear === 'function') {
+        method.mockClear();
+      }
+    }
+  );
   // Clear CSS variables and classes to prevent test bleed
   document.documentElement.removeAttribute('style');
   document.documentElement.removeAttribute('class');
+  // Clear fake timers to prevent fork worker hangs on Windows
+  vi.clearAllTimers();
 });
 
 // ─────────────────────────────────────────────────────────────────
@@ -444,14 +527,27 @@ const getFetchUrl = (input: any): string => {
   return String(input);
 };
 
-global.fetch = vi.fn((url: any, _options?: any) => {
+const testFetch = vi.fn((url: any, _options?: any) => {
   const urlStr = getFetchUrl(url);
+  if (
+    urlStr.includes('localhost:3000/assets/') ||
+    urlStr.includes('fonts.googleapis.com') ||
+    urlStr.endsWith('.css')
+  ) {
+    return Promise.resolve(
+      createMockResponse('', { headers: { 'Content-Type': 'text/css' } })
+    );
+  }
   // Mock common API endpoints
   if (urlStr.includes('/api/')) {
     return Promise.resolve(createMockResponse(JSON.stringify({ ok: true })));
   }
   return Promise.resolve(createMockResponse(JSON.stringify({ error: 'Not mocked' })));
 });
+global.fetch = testFetch;
+if (typeof window !== 'undefined') {
+  window.fetch = testFetch as unknown as typeof window.fetch;
+}
 
 // ─────────────────────────────────────────────────────────────────
 // React Query Test Wrapper

@@ -6,6 +6,8 @@
 - GitHub clone is the working source of truth.
 - External backups are recovery-only.
 - WSL2/Linux are fallback/compatibility rails.
+- This file is the canonical Windows 11 local DEV_HOST guide.
+- Windows install, MSI release, and rollback procedures are canonical in [`WINDOWS_INSTALL_AND_ROLLBACK.md`](WINDOWS_INSTALL_AND_ROLLBACK.md).
 
 ## 2. Required Windows prerequisites
 
@@ -34,25 +36,25 @@ git log -1 --oneline
 Run the following checks (PowerShell):
 
 ```powershell
-node -v
 corepack enable
-corepack pnpm -v
-rustc -V
-cargo -V
 corepack pnpm install
-corepack pnpm run gen:tauri-config
+corepack pnpm run verify:os-host
+corepack pnpm run verify:windows:toolchain
+corepack pnpm run verify:windows:icon
+corepack pnpm run verify:windows:release-readiness -- -Mode PreBuild
 corepack pnpm run check
 corepack pnpm run lint
 corepack pnpm run guard:ipc-contract
 corepack pnpm run verify:tauri-only
 corepack pnpm run verify:tauri-configs
-.\scripts\launch\launch-titane.ps1
+.\scripts\launch\launch-titane.ps1 -Mode verify-windows
 ```
 
 Notes:
 - Do not run `npm install`. Use `corepack pnpm install` only.
 - Stop immediately if `pnpm-lock.yaml` changes unexpectedly.
 - `jq` is not a Windows prerequisite for the Tauri-only/config gates; the validators fall back to Node JSON parsing.
+- `pnpm run build:production` is Linux-shaped and remains available for the Linux release rail. The canonical Windows MSI command is `pnpm run build:windows:msi`; the governed release wrapper is `pnpm run release:windows:msi`.
 - Windows Dev launchers bootstrap a user-local Dev environment automatically: `HOME` is set from the Windows profile if missing, `TITANE_DEV_AUTO_TOKEN=1` enables debug-only Dev Token creation, and `TITANE_SECRETS_PASSPHRASE` is loaded from `%APPDATA%\TITANE_INFINITY\dev\secrets-passphrase.txt`.
 - The generated Dev passphrase is local runtime state only. It is not a stable/prod secret, not committed, and not written under `Program Files`.
 
@@ -86,7 +88,16 @@ The frontend prebuild certifier defaults to `TITANE_CERTIFIER_RAIL=dev` on Windo
 - Do not run production build first. Prove dev rail before any MSI/EXE build.
 - Use a dedicated branch for certification: `chore/windows-native-certification`.
 - MSI/EXE proof belongs to Windows native or GitHub Actions `windows-latest`.
-- Windows PROD is UNKNOWN until artifact + logs exist.
+- Local Windows MSI v35.x proof is PENDING until MSI artifact + SHA256 + install smoke + rollback are documented.
+- GitHub Actions Windows MSI proof can prove artifact/checksum quality, but it does not prove local Windows install.
+
+PowerShell entrypoints:
+
+```powershell
+.\scripts\launch\launch-titane.ps1 -Mode verify-windows
+.\scripts\launch\launch-titane.ps1 -Mode build-msi
+.\scripts\launch\launch-titane.ps1 -Mode release-msi
+```
 
 ## 8. WSL2 fallback
 

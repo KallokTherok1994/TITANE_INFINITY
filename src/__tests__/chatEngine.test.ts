@@ -10,8 +10,9 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
 import { chatEngine } from '@/services/ai/chatEngine';
+import { cleanupAiSingletons } from './helpers/aiCleanup';
 import { memoryIntegration } from '@/services/ai/memoryIntegration';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
@@ -31,6 +32,10 @@ const EMPTY_MEMORY_CONTEXT = {
 afterEach(() => {
   vi.restoreAllMocks();
 });
+
+// Stop background interval loops started by imported singletons so the
+// fork worker can exit cleanly after all tests complete.
+afterAll(() => cleanupAiSingletons());
 
 describe('ChatEngine — calculateImportance', () => {
   test('reflection mode returns high importance (0.8)', () => {

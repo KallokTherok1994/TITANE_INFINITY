@@ -15,7 +15,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
+import { cleanupAiSingletons } from './helpers/aiCleanup';
+
+afterAll(() => cleanupAiSingletons());
 import { unifiedMemory } from '../core/services/unifiedMemory';
 
 describe('Legacy UnifiedMemory helper behavior', () => {

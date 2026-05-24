@@ -1,8 +1,10 @@
 # TITANE∞ — Setup de l'Environnement (FR)
 
-**Version :** 28.0.0  
-**Statut :** PROVEN  
-**Date :** 2026-03-17
+**Version :** 35.1.9  
+**Statut :** CURRENT  
+**Date :** 2026-05-21
+
+> **DEV_HOST primaire : Windows 11.** Pour le guide complet : [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](../../windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md)
 
 ---
 
@@ -10,11 +12,13 @@
 
 | Outil | Version requise | Installation | Source |
 |---|---|---|---|
-| Node.js | ≥ 20.x | https://nodejs.org/ ou nvm | `.nvmrc` présent |
-| pnpm | ≥ 9.x | `npm install -g pnpm` | `.npmrc` impose pnpm |
+| Node.js | ≥ 20.x | https://nodejs.org/ ou fnm/nvm | `.nvmrc` présent |
+| pnpm | 10.30.2 | `corepack enable && corepack prepare pnpm@10.30.2 --activate` | `package.json` packageManager |
 | Rust | Édition 2021 (stable) | https://rustup.rs/ | `src-tauri/Cargo.toml` |
 | Cargo | Stable récent | Inclus avec Rust | — |
 | Tauri CLI v2 | v2.x | `cargo install tauri-cli` | `src-tauri/` |
+
+> **Ne jamais utiliser `npm install -g pnpm`.** Toujours passer par `corepack`.
 
 **Outils optionnels :**
 - Ollama (modèles IA locaux) : https://ollama.com/
@@ -35,6 +39,16 @@ sudo apt-get install -y \
 
 > Source : `.github/workflows/rust.yml` (CI workflow — PROVEN)
 
+### Prérequis système Windows 11 (DEV_HOST primaire)
+
+| Composant | Requis | Notes |
+|---|---|---|
+| Microsoft C++ Build Tools 2022 | Obligatoire | Charge de travail C++ + Windows SDK + chaîne MSVC |
+| Microsoft Edge WebView2 Runtime | Obligatoire | Inclus Windows 11 |
+| Rust MSVC toolchain | Obligatoire | `x86_64-pc-windows-msvc` via `rustup` |
+| WiX Toolset v3 | Pour MSI | `pnpm exec tauri build --bundles msi` |
+| `icon.ico` multi-résolution | Obligatoire | Autorité icône Windows |
+
 ---
 
 ## Installation
@@ -45,8 +59,8 @@ git clone https://github.com/KallokTherok1994/TITANE_INFINITY.git
 cd TITANE_INFINITY
 
 # 2. Installer les dépendances frontend
-# NOTE : pnpm est obligatoire — npm et yarn sont bloqués
-pnpm install
+# NOTE : corepack pnpm est obligatoire — npm et yarn sont bloqués
+corepack pnpm install
 
 # 3. Vérifier l'installation
 pnpm run check

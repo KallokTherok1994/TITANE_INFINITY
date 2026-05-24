@@ -13,7 +13,7 @@
 ```bash
 # Error: "This project requires pnpm"
 # Solution: use pnpm exclusively
-npm install -g pnpm
+# Use corepack instead: corepack enable && corepack prepare pnpm@10.30.2 --activate
 pnpm install
 ```
 

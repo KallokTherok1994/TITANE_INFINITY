@@ -12,9 +12,10 @@
 
 ```bash
 # Erreur : "This project requires pnpm"
-# Solution : utiliser pnpm exclusivement
-npm install -g pnpm
-pnpm install
+# Solution : utiliser corepack pnpm exclusivement
+corepack enable
+corepack prepare pnpm@10.30.2 --activate
+corepack pnpm install
 ```
 
 ### Erreurs de dépendances TypeScript

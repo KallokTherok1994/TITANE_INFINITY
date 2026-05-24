@@ -1,10 +1,12 @@
 # TITANE∞ — Documentation Index (EN)
 
-**Version:** 28.0.0  
-**Status:** PROVEN  
-**Date:** 2026-03-17
+**Version:** 35.1.9  
+**Status:** CURRENT  
+**Date:** 2026-05-21
 
 > Canonical documentation navigation index in English.
+> **Windows 11 primary DEV_HOST:** [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md)
+> **Windows install/rollback:** [`docs/windows/WINDOWS_INSTALL_AND_ROLLBACK.md`](windows/WINDOWS_INSTALL_AND_ROLLBACK.md)
 
 ---
 
@@ -73,6 +75,7 @@
 | [README.md](../README.md) | Main canonical entry point |
 | [CHANGELOG.md](../CHANGELOG.md) | Change history |
 | [docs/README.md](./README.md) | Documentation hub |
+| [docs/release/PLATFORM_RELEASE_MATRIX.md](./release/PLATFORM_RELEASE_MATRIX.md) | Platform release matrix |
 
 ---
 

@@ -1,6 +1,12 @@
 # 📦 System Dependencies - TITANE∞ v26.2.3
 
-**Last Updated:** 2026-01-03  
+> ⚠️ **LEGACY_REDIRECT** — This document is from v26.2.3 (2026-01-03) and is outdated. Use the current canonical guides:
+>
+> - **Developer setup:** [`DEVELOPER_SETUP.md`](../../../DEVELOPER_SETUP.md)
+> - **Windows 11 prerequisites:** [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](../../windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md)
+> - **Environment setup EN:** [`docs/dev/en/environment-setup.md`](../../dev/en/environment-setup.md)
+
+**Last Updated:** 2026-01-03 (LEGACY)  
 **Platform Support:** Linux (Ubuntu/Debian), macOS, Windows
 
 ---

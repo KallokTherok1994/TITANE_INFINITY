@@ -1,22 +1,23 @@
 # TITANE∞ — Installation (EN)
 
-**Version:** 28.0.0  
-**Status:** PARTIAL  
-**Date:** 2026-03-17
+**Version:** 35.1.9  
+**Status:** CURRENT  
+**Date:** 2026-05-21
 
 ---
 
 ## Supported systems
 
-> Status: PROVEN for v27.0.5 (last published binary release)
+> Current version: v35.1.9 | Primary DEV_HOST: Windows 11
 
 | System | Support | Notes |
 |---|---|---|
-| Ubuntu 20.04+ | ✅ PROVEN | AppImage + DEB tested |
+| Windows 11 | ✅ PRIMARY DEV_HOST | Default primary local development rail |
+| Ubuntu 20.04+ | ✅ PROVEN | AppImage + DEB tested (v35.1.9) |
 | Debian 11+ | ✅ PROVEN | DEB tested |
 | Linux Mint 20+ | ✅ PROVEN | AppImage tested |
 | Pop!_OS 20.04+ | ✅ PROVEN | AppImage tested |
-| Windows | ⚠️ PARTIAL | Declared, not CI-verified |
+| Windows | ⚠️ MSI v35.x not yet proven | MSI proven at v34.0.12 only; see Rule 14.4 |
 | macOS | ⚠️ PARTIAL | Declared, not CI-verified |
 
 ---

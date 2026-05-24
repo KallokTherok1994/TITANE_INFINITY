@@ -42,6 +42,7 @@ import type {
   DecisionSummary,
   KnowledgeEntry,
   RitualInfo,
+  TimelineEntry,
 } from '@/services/memory/types';
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
@@ -150,6 +151,7 @@ import {
   resolveFinalVerdict,
   type CognitiveRuntimeTrace,
 } from './cognitiveRuntimeTrace';
+import { listTwinChatReviewItems } from '@/services/twin_chat/reviewQueue';
 
 const logger = createLogger('ChatEngine');
 const DEBUG_CHAT_ENGINE_TRACES = Boolean(
@@ -3249,28 +3251,39 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       const sources: string[] = [];
       const data: Record<string, unknown> = {};
 
-      // Projets actifs
+      // Projets actifs — titre + statut + priorité + progression + description courte
       if (memory.activeProjects.length > 0) {
         sources.push('projets');
         data.projects = memory.activeProjects
-          .map((p: ProjectSummary) => `[${p.status}] ${p.title} (P: ${p.priority})`)
+          .map((p: ProjectSummary) => {
+            const base = `[${p.status}] ${p.title} (P: ${p.priority}, ${p.progress}%)`;
+            return p.description ? `${base} — ${p.description.slice(0, 80)}` : base;
+          })
           .join(', ');
       }
 
-      // Décisions récentes
+      // Décisions récentes — titre + statut + rationale (jusqu'à 5)
       if (memory.recentDecisions.length > 0) {
         sources.push('decisions');
         data.decisions = memory.recentDecisions
-          .map((d: DecisionSummary) => `${d.title} (${d.status})`)
+          .slice(0, 5)
+          .map((d: DecisionSummary) => {
+            const base = `${d.title} (${d.status})`;
+            return d.rationale ? `${base}: ${d.rationale.slice(0, 100)}` : base;
+          })
           .join('; ');
       }
 
-      // Connaissances
+      // Connaissances — titre + extrait de contenu (jusqu'à 5)
       if (memory.relevantKnowledge.length > 0) {
         sources.push('knowledge');
         data.knowledge = memory.relevantKnowledge
-          .map((k: KnowledgeEntry) => k.title)
-          .join(', ');
+          .slice(0, 5)
+          .map((k: KnowledgeEntry) => {
+            const excerpt = k.content?.slice(0, 100);
+            return excerpt ? `${k.title}: ${excerpt}` : k.title;
+          })
+          .join(' | ');
       }
 
       if ((memory.hybridSupplementalKnowledge?.length ?? 0) > 0) {
@@ -3280,10 +3293,24 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
           .join(', ');
       }
 
-      // Rituels
+      // Rituels — nom + statut + taux de complétion
       if (memory.activeRituals.length > 0) {
         sources.push('rituals');
-        data.rituals = memory.activeRituals.map((r: RitualInfo) => r.name).join(', ');
+        data.rituals = memory.activeRituals
+          .map((r: RitualInfo) => `${r.name} (${r.status}, ${r.completionRate}%)`)
+          .join(', ');
+      }
+
+      // Timeline — 5 entrées récentes
+      if (memory.timeline && memory.timeline.length > 0) {
+        sources.push('timeline');
+        data.timeline = memory.timeline
+          .slice(0, 5)
+          .map((t: TimelineEntry) => {
+            const date = t.timestamp ? t.timestamp.slice(0, 10) : '';
+            return `[${date}] [${t.type}] ${t.title}${t.description ? ` — ${t.description.slice(0, 80)}` : ''}`;
+          })
+          .join('\n');
       }
 
       return { sources, data };
@@ -3451,6 +3478,31 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       if (context.sources.length > 0) {
         const memoryBlock = this.formatMemoryBlock(context);
         volatileSuffix += `\n\n${memoryBlock}`;
+      }
+
+      // Emotion state (per-request, if available)
+      if (contextPayload.emotionState) {
+        const es = this.convertEmotionState(contextPayload.emotionState);
+        if (es) {
+          const valenceStr = es.valence > 0 ? `+${Math.round(es.valence * 100)}%` : `${Math.round(es.valence * 100)}%`;
+          volatileSuffix += `\n\n🎭 État émotionnel: ${es.dominant_emotion} (activation: ${Math.round(es.activation * 100)}%, valence: ${valenceStr})`;
+        }
+      }
+
+      // TWIN insights — observations comportementales et cognitives récentes (localStorage)
+      try {
+        const twinItems = listTwinChatReviewItems();
+        const relevantItems = twinItems
+          .filter(item => item.writeStatus === 'approved' || (item.writeStatus === 'pending' && item.candidate.confidence >= 0.7))
+          .slice(0, 5);
+        if (relevantItems.length > 0) {
+          const twinLines = relevantItems.map(
+            item => `[${item.candidate.kind}] ${item.candidate.contentCompact}`
+          );
+          volatileSuffix += `\n\n🧬 Observations TWIN récentes:\n${twinLines.map(l => `• ${l}`).join('\n')}`;
+        }
+      } catch {
+        // TWIN insights are non-blocking — ignore if unavailable
       }
 
       // Return stable + volatile

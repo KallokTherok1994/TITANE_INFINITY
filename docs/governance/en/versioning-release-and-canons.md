@@ -1,8 +1,8 @@
 # TITANE∞ — Versioning, Release and Canons (EN)
 
-**Version:** 28.0.0  
-**Status:** PROVEN  
-**Date:** 2026-03-17
+**Version:** 35.1.9  
+**Status:** CURRENT  
+**Date:** 2026-05-21
 
 > See also: `docs/reference/en/version-authority-report.md`
 
@@ -12,10 +12,10 @@
 
 | Source | Value | Status |
 |---|---|---|
-| `package.json` → `version` | `28.0.0` | PRIMARY SOURCE |
-| `src-tauri/Cargo.toml` → `version` | `28.0.0` | Must match |
-| `CHANGELOG.md` | `[28.0.0]` | Corroborates |
-| `README.md` | `v28.0.0` | Canonical surface |
+| `package.json` → `version` | `35.1.9` | PRIMARY SOURCE |
+| `src-tauri/Cargo.toml` → `version` | `35.1.9` | Must match |
+| `CHANGELOG.md` | `[35.1.9]` | Corroborates |
+| `README.md` | `v35.1.9` | Canonical surface |
 
 **Rule:** `package.json` is the single version authority.
 

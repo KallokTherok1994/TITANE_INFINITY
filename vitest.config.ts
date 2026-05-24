@@ -97,6 +97,14 @@ export const sharedTestConfig = defineConfig({
     name: 'core',
     globals: true,
     environment: 'happy-dom',
+    environmentOptions: {
+      happyDOM: {
+        settings: {
+          disableCSSFileLoading: true,
+          handleDisabledFileLoadingAsSuccess: true,
+        },
+      },
+    },
     // Memory stability: avoid forking many workers; run files sequentially.
     pool: 'forks',
     maxWorkers: 1,

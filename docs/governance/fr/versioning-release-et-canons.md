@@ -1,8 +1,8 @@
 # TITANE∞ — Versioning, Release et Canons (FR)
 
-**Version :** 28.0.0  
-**Statut :** PROVEN  
-**Date :** 2026-03-17
+**Version :** 35.1.9  
+**Statut :** CURRENT  
+**Date :** 2026-05-21
 
 > Voir aussi : `docs/reference/fr/rapport-autorite-version.md`
 
@@ -12,10 +12,10 @@
 
 | Source | Valeur | Statut |
 |---|---|---|
-| `package.json` → `version` | `28.0.0` | SOURCE PRIMAIRE |
-| `src-tauri/Cargo.toml` → `version` | `28.0.0` | Doit correspondre |
-| `CHANGELOG.md` | `[28.0.0]` | Corrobore |
-| `README.md` | `v28.0.0` | Surface canonique |
+| `package.json` → `version` | `35.1.9` | SOURCE PRIMAIRE |
+| `src-tauri/Cargo.toml` → `version` | `35.1.9` | Doit correspondre |
+| `CHANGELOG.md` | `[35.1.9]` | Corrobore |
+| `README.md` | `v35.1.9` | Surface canonique |
 
 **Règle :** `package.json` est l'autorité de version unique.
 

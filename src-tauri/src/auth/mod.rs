@@ -42,7 +42,10 @@ pub fn init_auth() -> AuthResult<()> {
     info!("✓ Owner role vérifié: Kevin Thibault");
 
     // Vérifier dev token (créer si absent)
+    #[cfg(debug_assertions)]
     let mut dev_token_present = keystore.dev_token.is_some();
+    #[cfg(not(debug_assertions))]
+    let dev_token_present = keystore.dev_token.is_some();
     #[cfg(debug_assertions)]
     if !dev_token_present
         && std::env::var("TITANE_DEV_AUTO_TOKEN")

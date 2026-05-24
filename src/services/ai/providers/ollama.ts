@@ -18,7 +18,7 @@ import type { EffortLevel } from '../omegaModeClassifier';
 import { createLogger } from '@/utils/logger';
 import { memoryIntegration } from '../memoryIntegration';
 import type { MemoryContext } from '../memoryIntegration';
-import { PROVIDER_TIMEOUTS, AVAILABILITY_CACHE } from '@/config/aiTimeouts.config';
+import { PROVIDER_TIMEOUTS, AVAILABILITY_CACHE, STREAM_CONFIG, getOllamaEffortTimeout } from '@/config/aiTimeouts.config';
 import { DEFAULT_OLLAMA_MODEL as GOVERNED_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 import {
   ollamaCheckHealth,
@@ -54,6 +54,10 @@ const OLLAMA_CONFIG = {
   // per-model: llama3.2/3.3/mistral/qwen/deepseek → 32 768; llama3.1/phi4 → 16 384; others → 8 192
   numCtx: undefined as number | undefined,
 };
+
+// Max conversation turns fed to Ollama. gemma2:2b context is 8192 tokens;
+// 20 turns ≈ 4000-6000 tokens — leaves headroom without truncating useful context.
+const MAX_CONTEXT_HISTORY_MESSAGES = 20;
 
 // ═══════════════════════════════════════════════════════════════
 // HEALTH TRACKING
@@ -140,7 +144,7 @@ function buildOllamaMessages(
   memoryContext: MemoryContext | null
 ): Array<{ role: string; content: string }> {
   const messages: Array<{ role: string; content: string }> = [];
-  const recentHistory = history.slice(-10);
+  const recentHistory = history.slice(-MAX_CONTEXT_HISTORY_MESSAGES);
   const injectedSystemMessages = recentHistory
     .filter(msg => msg.role === 'system' && msg.content.trim().length > 0)
     .map(msg => msg.content.trim());
@@ -166,8 +170,11 @@ function buildOllamaMessages(
 
     if (memoryContext.recentDecisions?.length > 0) {
       const decisions = memoryContext.recentDecisions
-        .slice(0, 3)
-        .map(d => d.title)
+        .slice(0, 5)
+        .map(d => {
+          const base = d.title;
+          return d.rationale ? `${base} (${d.rationale.slice(0, 80)})` : base;
+        })
         .filter(Boolean)
         .join('; ');
       if (decisions) {
@@ -176,9 +183,20 @@ function buildOllamaMessages(
     }
 
     if (memoryContext.relevantKnowledge?.length > 0) {
-      memoryParts.push(
-        `Base de connaissances: ${memoryContext.relevantKnowledge.length} entrées`
-      );
+      const kbItems = memoryContext.relevantKnowledge
+        .slice(0, 5)
+        .map((k: { title?: string; content?: string }) => {
+          const title = k.title || '?';
+          const excerpt = k.content?.slice(0, 80);
+          return excerpt ? `${title}: ${excerpt}` : title;
+        })
+        .filter(Boolean)
+        .join(' | ');
+      const kbSuffix =
+        memoryContext.relevantKnowledge.length > 5
+          ? ` (+${memoryContext.relevantKnowledge.length - 5} autres)`
+          : '';
+      memoryParts.push(`Base de connaissances: ${kbItems}${kbSuffix}`);
     }
 
     if (memoryParts.length > 0) {
@@ -331,12 +349,7 @@ export const ollamaProvider: AIProvider = {
     // Scale timeout based on reasoning effort so DEEP_REASONING/ARCHITECT/CERTIFY chains never cut off
     const reasoningEffort = (finalConfig as { reasoningEffort?: EffortLevel })
       .reasoningEffort;
-    const effortTimeoutSecs =
-      reasoningEffort === 'max'
-        ? Math.max(120, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
-        : reasoningEffort === 'high'
-          ? Math.max(90, Math.ceil(OLLAMA_CONFIG.timeout / 1000))
-          : Math.ceil(OLLAMA_CONFIG.timeout / 1000);
+    const effortTimeoutSecs = getOllamaEffortTimeout(reasoningEffort, OLLAMA_CONFIG.timeout);
 
     // Retry loop
     for (let attempt = 1; attempt <= OLLAMA_CONFIG.maxRetries; attempt++) {
@@ -494,7 +507,7 @@ export const ollamaProvider: AIProvider = {
         prompt,
         system,
         temperature: OLLAMA_CONFIG.temperature,
-        timeout_secs: Math.ceil(OLLAMA_CONFIG.timeout / 1000),
+        timeout_secs: Math.ceil(STREAM_CONFIG.totalTimeoutMs / 1000),
       });
 
       if (!response.ok) {
@@ -505,7 +518,8 @@ export const ollamaProvider: AIProvider = {
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logger.error('Ollama stream error', { error: errorMsg });
-      yield `⚠️ Erreur Ollama: ${errorMsg}`;
+      // Re-throw so callers can distinguish stream errors from normal completion
+      throw error instanceof Error ? error : new Error(errorMsg);
     }
   },
 

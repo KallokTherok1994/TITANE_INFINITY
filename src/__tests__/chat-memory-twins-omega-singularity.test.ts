@@ -12,7 +12,10 @@
  *   8. memoryIntegration — loadPreferences() retourne tableau sans Tauri
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
+import { cleanupAiSingletons } from './helpers/aiCleanup';
+
+afterAll(() => cleanupAiSingletons());
 
 // ═══════════════════════════════════════════════════════════════════
 // MOCKS — pipeline complet sans Tauri

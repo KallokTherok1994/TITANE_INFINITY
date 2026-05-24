@@ -1,8 +1,10 @@
 # TITANE∞ — Rapport d'Autorité de Version
 
-**Statut :** PROVEN  
-**Date :** 2026-03-17  
+**Statut :** CURRENT  
+**Date :** 2026-05-21  
 **Mode :** AUDIT
+
+> **Note :** Ce rapport a été généré à la version 28.0.0. La version canonique courante est `35.1.9` (voir `package.json`). Pour un audit complet à jour, ré-exécuter les gates de version.
 
 ---
 

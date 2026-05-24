@@ -31,7 +31,7 @@ export const PROVIDER_TIMEOUTS = {
  */
 export const REQUEST_BUDGETS = {
   globalRequestMs: 52_000, // Aligned with BALANCED response_timeout
-  providerAttemptMs: 50_000, // Single attempt gets most of the budget
+  providerAttemptMs: 45_000, // Single attempt — 7s margin reserved for routing + validation overhead
   maxAttempts: 2, // Primary + one fallback only
 } as const;
 
@@ -82,7 +82,7 @@ export const CIRCUIT_BREAKER = {
 export const STREAM_CONFIG = {
   chunkBatchSize: 5, // Batch N chunks before yielding
   chunkBatchDelayMs: 50, // Max delay before flushing batch
-  totalTimeoutMs: 58_000, // BALANCED streaming budget — headroom above 52s worst-case (was 52_000)
+  totalTimeoutMs: 50_000, // Aligned under globalRequestMs (52s) — prevents stream outliving global budget
   perChunkTimeoutMs: 7_000, // BALANCED first-token window
 } as const;
 
@@ -103,6 +103,20 @@ export function getProviderTimeout(providerName: string): number {
     PROVIDER_TIMEOUTS[providerName as keyof typeof PROVIDER_TIMEOUTS] ??
     PROVIDER_TIMEOUTS.default
   );
+}
+
+/**
+ * Returns Ollama timeout (seconds) scaled by reasoning effort.
+ * max → 120s | high → 90s | else → base derived from baseTimeoutMs
+ */
+export function getOllamaEffortTimeout(
+  effort: string | undefined,
+  baseTimeoutMs: number
+): number {
+  const baseSecs = Math.ceil(baseTimeoutMs / 1000);
+  if (effort === 'max') return Math.max(120, baseSecs);
+  if (effort === 'high') return Math.max(90, baseSecs);
+  return baseSecs;
 }
 
 /**

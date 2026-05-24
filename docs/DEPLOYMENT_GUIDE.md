@@ -1,8 +1,14 @@
 # TITANE∞ Deployment Guide — Complete Reference
 
-**Version:** 26.2.0  
-**Last Updated:** 2024-12-22  
-**Compliance Score:** 100/100 (A+)
+> ⚠️ **LEGACY_REDIRECT** — This guide is from v26.2.0 (2024-12-22) and is superseded. Current authoritative references:
+>
+> - **Build & Release EN:** [`docs/dev/en/build-release-and-rollback.md`](dev/en/build-release-and-rollback.md)
+> - **Build & Release FR:** [`docs/dev/fr/build-release-et-rollback.md`](dev/fr/build-release-et-rollback.md)
+> - **Windows MSI on-demand CI:** [`.github/workflows/windows-msi-on-demand.yml`](../.github/workflows/windows-msi-on-demand.yml)
+> - **Current artifacts:** `deployment/latest/MANIFEST.json`
+
+**Version:** 26.2.0 (LEGACY)  
+**Last Updated:** 2024-12-22
 
 ---
 

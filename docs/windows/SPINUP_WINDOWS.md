@@ -209,16 +209,18 @@ Pour installer ou mettre à jour uniquement les modèles :
 
 ---
 
-## Étape 7 — Build production Windows
+## Étape 7 — Build MSI Windows
 
 ```powershell
-# Bumper la version patch avant tout build distributable
-pnpm run bump:version
-pnpm run sync:versions
+# Preuve prebuild Windows
+pnpm run verify:windows:release-readiness -- -Mode PreBuild
 
-# Build Tauri (génère un installateur .msi / .exe dans src-tauri/target/release/bundle/)
-pnpm run build:production
+# Build MSI sans bump
+pnpm run build:windows:msi
+pnpm run verify:windows:msi-artifact
 ```
+
+`pnpm run build:production` est la voie Linux-shaped historique. Elle n'est pas le chemin canonique Windows MSI v35.x.
 
 L'artefact final se trouve dans :
 

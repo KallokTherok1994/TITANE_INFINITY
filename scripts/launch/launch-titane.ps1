@@ -8,20 +8,23 @@
     ou execute les verifications de sante selon le parametre Mode.
 
 .PARAMETER Mode
-    dev     - Demarre Tauri + Vite en mode developpement HMR (defaut)
-    build   - Build production Windows (bump version + sync + tauri build)
-    check   - TypeScript, lint et tests unitaires/Rust
-    clean   - Supprime les artefacts (node_modules, target, dist)
+    dev            - Demarre Tauri + Vite en mode developpement HMR (defaut)
+    verify-windows - Verifie le host, la toolchain et la readiness Windows prebuild
+    build-msi      - Build MSI Windows sans bump de version
+    release-msi    - Bump + build MSI + verification artefact
+    check          - TypeScript, lint et tests unitaires/Rust
+    clean          - Supprime les artefacts (node_modules, target, dist)
 
 .EXAMPLE
     .\launch-titane.ps1
-    .\launch-titane.ps1 -Mode build
+    .\launch-titane.ps1 -Mode verify-windows
+    .\launch-titane.ps1 -Mode build-msi
     .\launch-titane.ps1 -Mode check
 #>
 
 [CmdletBinding()]
 param (
-    [ValidateSet('dev', 'build', 'check', 'clean')]
+    [ValidateSet('dev', 'check', 'verify-windows', 'build-msi', 'release-msi', 'clean')]
     [string]$Mode = 'dev'
 )
 
@@ -76,8 +79,8 @@ if (-not (Get-Command 'cargo' -ErrorAction SilentlyContinue)) {
 # Cargo
     Write-Host "[WARN] Cargo introuvable - build Tauri impossible." -ForegroundColor Yellow
     Write-Host "       Installez Rust via https://rustup.rs" -ForegroundColor Yellow
-    if ($Mode -in @('dev', 'build')) {
-        Write-Host "[ERROR] Cargo est requis pour les modes dev/build. Abandon." -ForegroundColor Red
+    if ($Mode -in @('dev', 'build-msi', 'release-msi')) {
+        Write-Host "[ERROR] Cargo est requis pour les modes dev/build-msi/release-msi. Abandon." -ForegroundColor Red
         exit 1
     }
 } else {
@@ -90,7 +93,7 @@ $wv2Key = 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2
 if (-not (Test-Path $wv2Key)) {
     Write-Host "[WARN] WebView2 Runtime non detecte." -ForegroundColor Yellow
     Write-Host "       Telechargez : https://developer.microsoft.com/microsoft-edge/webview2/" -ForegroundColor Yellow
-    if ($Mode -in @('dev', 'build')) {
+    if ($Mode -in @('dev', 'build-msi', 'release-msi')) {
         Write-Host "[ERROR] WebView2 est requis pour executer TITANE. Abandon." -ForegroundColor Red
         exit 1
     }
@@ -123,18 +126,36 @@ switch ($Mode) {
         Write-Host " >> Demarrage en mode developpement (Tauri + Vite HMR)" -ForegroundColor Cyan
         Write-Host ""
         try { Invoke-Pnpm 'run', 'gen:tauri-config' } catch { Write-Host "[WARN] gen:tauri-config: $_" -ForegroundColor Yellow }
-        Invoke-Pnpm 'run', 'dev:tauri'
+        Invoke-Pnpm 'run', 'dev:windows'
     }
 
-    'build' {
-        Write-Host " >> Build production Windows" -ForegroundColor Cyan
+    'verify-windows' {
+        Write-Host " >> Verifications Windows prebuild" -ForegroundColor Cyan
         Write-Host ""
-        Invoke-Pnpm 'run', 'bump:version'
-        Invoke-Pnpm 'run', 'sync:versions'
-        Invoke-Pnpm 'run', 'build:production'
+        Invoke-Pnpm 'run', 'verify:os-host'
+        Invoke-Pnpm 'run', 'verify:windows:toolchain'
+        Invoke-Pnpm 'run', 'verify:windows:icon'
+        Invoke-Pnpm 'run', 'verify:windows:release-readiness', '--', '-Mode', 'PreBuild'
+        Write-Host ""
+        Write-Host "[DONE] Verifications Windows prebuild terminees." -ForegroundColor Green
+    }
+
+    'build-msi' {
+        Write-Host " >> Build MSI Windows (sans bump version)" -ForegroundColor Cyan
+        Write-Host ""
+        Invoke-Pnpm 'run', 'build:windows:msi'
+        Invoke-Pnpm 'run', 'verify:windows:msi-artifact'
         $bundleDir = Join-Path $ROOT 'src-tauri\target\release\bundle'
         Write-Host ""
         Write-Host "[DONE] Artefacts dans : $bundleDir" -ForegroundColor Green
+    }
+
+    'release-msi' {
+        Write-Host " >> Release MSI Windows (bump + build + verification artefact)" -ForegroundColor Cyan
+        Write-Host ""
+        Invoke-Pnpm 'run', 'release:windows:msi'
+        Write-Host ""
+        Write-Host "[DONE] Release MSI Windows terminee." -ForegroundColor Green
     }
 
     'check' {

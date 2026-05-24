@@ -9,6 +9,7 @@ import {
   PROVIDER_TIMEOUTS,
   UI_TIMEOUTS,
   STREAM_CONFIG,
+  REQUEST_BUDGETS,
   getProviderTimeout,
   getAdaptiveUITimeout,
 } from '../config/aiTimeouts.config';
@@ -90,18 +91,16 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
 
   describe('Streaming Timeouts', () => {
     it('should enforce streaming timeouts', () => {
-      // Total stream timeout should be 58s (OMEGA_CHAT_PERF)
-      expect(STREAM_CONFIG.totalTimeoutMs).toBe(58000);
+      // Total stream timeout is 50s (aligned under globalRequestMs=52s budget)
+      expect(STREAM_CONFIG.totalTimeoutMs).toBe(50000);
 
       // Per-chunk timeout should be 7s
       expect(STREAM_CONFIG.perChunkTimeoutMs).toBe(7000);
     });
 
-    it('should ensure streaming timeout > provider timeout', () => {
-      const allProviders = Object.values(PROVIDER_TIMEOUTS);
-      const maxProviderTimeout = Math.max(...allProviders);
-
-      expect(STREAM_CONFIG.totalTimeoutMs).toBeGreaterThan(maxProviderTimeout);
+    it('should ensure streaming timeout fits within global budget', () => {
+      // Streaming timeout (50s) must be strictly less than globalRequestMs (52s)
+      expect(STREAM_CONFIG.totalTimeoutMs).toBeLessThan(REQUEST_BUDGETS.globalRequestMs);
     });
   });
 
