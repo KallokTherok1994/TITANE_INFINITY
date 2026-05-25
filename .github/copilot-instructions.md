@@ -1,12 +1,7 @@
 ## Exigences agents avancés (Monitoring, Diagnostic, Explainability, Orchestrateur, Sécurité, Log Analysis)
 
-- Dashboard UI avec `data-testid` stable + E2E Playwright
-- Service dédié dans `src/services/<agent>`
-- Mapping à jour dans `UI_SURFACE_MAP.md`, `CARTOGRAPHY_COMPLETE.md`, `ARCHITECTURE.md`
-- Preuve visible: capture, alerte, log ou rapport
-- Rollback documenté
-- Pour l agent `log_analysis`: produire un rapport intelligent attitré (anomalies, erreurs, incohérences, améliorations) et vérifier ce rapport via le gate dédié quand une demande de vérification de rapport agent est faite.
-  Tout agent non mappé, non testé ou sans preuve = BLOCKED (Rule 15/16).
+- Dashboard `data-testid` E2E + service `src/services/<agent>` + mapping (UI_SURFACE_MAP, CARTOGRAPHY_COMPLETE, ARCHITECTURE) + preuve visible + rollback documenté.
+- `log_analysis`: rapport intelligent (anomalies, erreurs, incohérences, améliorations) vérifié via gate dédié. Tout agent non mappé/non testé/sans preuve = BLOCKED (Rule 15/16).
 
 # TITANE_INFINITY - Copilot Kernel (Governed)
 
@@ -81,8 +76,7 @@ If contradiction remains unresolved after minimal patch: classify `BLOCKED_DOCTR
 ## Rule 13 - Version bump at each advanced BUILD
 
 At each advanced BUILD, increment patch by 0.0.1 in `package.json`, run `node scripts/bump-version.mjs` or `pnpm run bump:version`, then `node scripts/sync-versions.mjs` or `pnpm run sync:versions`, and keep the current version visible in the TITANE footer. `sync:versions` also syncs `runtime/dev/tauri.conf.json` to `{version}-dev` — **never leave dev config on a stale version**. After any version bump, immediately run `pnpm run sync:versions` to propagate the new version to dev, stable, and all tauri configs in one step.
-Desktop launcher freshness after every build: run `bash scripts/post-build/update-desktop-icons.sh`, refresh icon/desktop caches, and verify both launcher files expose `Exec=/usr/bin/titane-infinity` and `Icon=titane-infinity` or the latest explicit icon path.
-If old icons persist, purge obsolete launchers, replace the hicolor icon if needed, and refresh caches again.
+Desktop/launcher freshness: run `bash scripts/post-build/update-desktop-icons.sh`, verify launcher icon paths; purge and refresh caches if stale.
 Android freshness: treat `dist/`, backend, packaged artifact, and installed device runtime as four truths. Rebuild frontend first, keep `scripts/android/vite-network-server.sh` as the sole stable Vite authority, prove `http://127.0.0.1:1420` stays reachable before browser proof, run `corepack pnpm run android:artifact:check`, and only claim device truth with `adb shell dumpsys package com.titane.infinity` evidence. Any frontend/backend IPC mismatch such as `CONTRACT_VIOLATION_CLAMPED` or `tauri_protector_ipc_fallback` is FAIL until rebuilt and reverified.
 Operational authority: only one active execution authority and one active E2E authority at a time.
 
@@ -197,25 +191,18 @@ For every UI/runtime correction involving route alias, legacy surface, fullscree
 Advanced agent runtime truth: monitoring, diagnostic, explainability, orchestrator, and security dashboards must consume real runtime/configuration signals when available; derive `serviceState`, `evidence`, `blockers`, and `nextStep` from verifiable truth; classify partial implementations honestly; and keep dashboards and compatibility aliases aligned to one runtime truth source.
 Ollama Dev / Ollama Chat boundary truth: keep the governed local development stack aligned on `http://127.0.0.1:11434` + `qwen3.5:9b` for GitHub Copilot VS Code conversation, while the TITANE product chat runtime stays aligned on `gemma2:2b`, canonical IPC, and no token gate. Ollama Dev and Ollama Chat must remain independent with zero contamination through shared defaults, champion registries, prompts, or backend fallbacks. Controlled communication between them is allowed only through explicit, traced, bounded interfaces such as repo-owned validators, documentation, proofs, or neutral config exchange. Any Ollama Dev / Ollama Chat boundary change must rerun the dedicated boundary validator and update `OLLAMA_RUNTIME_MAP.md` plus the relevant instructions/docs.
 
-Note: GitHub Copilot cloud default names such as `sonnet-4.5`, `Sonnet 4.5`, and `gpt-4.1` are external to the repo-managed TITANE workflow. These cloud models are configured by the GitHub Copilot extension and user account, not by TITANE_INFINITY's local Ollama Dev stack.
-
 ## Discipline anti-dérive TITANE (Synthèse 2026-04-16)
 
-- Synchronisation artefacts/launchers avec preuve sur launchers système et utilisateur
-- Toute évolution UI/backend impose des tests E2E sur flows critiques et secondaires avec `data-testid` stables
-- Toute modification de surface impose mapping à jour, bump de version, rollback documenté, scripts post-build idempotents ou fallback documenté, et logs de preuve pour chaque étape `sudo`
-- Le backend doit être qualifié par des tests d’isolation d’environnement et des checks automatiques sur les variables critiques
-- Chaque correction/rollback doit être tracé dans `autoheal_rules.jsonl` et `registry/ui-events.jsonl`- Session start checklist: (1) consulter plan.md ou summary de la session précédente; (2) `git status --short` pour connaître l'état du worktree; (3) déclarer MODE (DURABLE ou EXPLORATION) explicitement; (4) identifier les commits en attente (Rule 18 phases not yet committed).
+- Artefacts/launchers: preuve sur launchers système et utilisateur. UI/backend: tests E2E `data-testid`. Surfaces: mapping + bump + rollback documenté. Backend: isolation + checks variables critiques.
+- Rollback/corrections tracés dans `autoheal_rules.jsonl`. Session: (1) plan précédent; (2) `git status`; (3) déclarer MODE; (4) commits Rule 18 en attente.
 
 ## Rule 18 - Direct-to-main phase commits
 
 When direct work on `MAIN` is authorized, every completed correction phase or coherent fix batch must end with a targeted commit on `MAIN` after proofs pass. Do not accumulate unrelated finished fixes in an uncommitted worktree. Each direct-to-main commit must stay scope-limited, mention the corrected surface or subsystem, and wait for AutoHeal plus mandatory validators. If proof is incomplete, do not commit the phase yet.
 
-## Session continuity (Rule 20)
+## Rule 20 - Session continuity
 
-Rule 20 - Session continuity remains mandatory for every governed session.
-
-At the start of every session working on this repo: (1) read available session plan or conversation summary to restore context; (2) run `git status --short` to identify pending uncommitted work; (3) declare operating MODE explicitly (DURABLE or EXPLORATION); (4) identify any Rule 18 phase that completed proofs but was not yet committed and commit it before starting new work. Never carry credentials, tokens, or private keys in session notes, plans, or proof files.
+At the start of every session: (1) read session plan or summary to restore context; (2) run `git status --short`; (3) declare MODE (DURABLE or EXPLORATION); (4) commit any Rule 18 phases whose proofs passed but were not yet committed. Never carry credentials, tokens, or private keys in session notes, plans, or proof files.
 
 ## Rule 19 - Exploration Mode vs Durable Mode
 
@@ -234,16 +221,7 @@ Any visible UI/frontend change must pass the **Runtime Visibility Protocol** bef
 Required chain:
 source change → static tests → web UI capture → Vite dist → build-truth → no stale visible version → Tauri stable build → stable artifact freshness → launcher truth after stable build → runtime identity proof → stable window proof → SurfaceTruth DOM proof → console-noise gate → screenshot proof → AutoHeal / governance → commit only after proof.
 
-Gates that must pass:
-- `gate-build-truth.sh`
-- `gate-version-truth.sh`
-- `gate-surface-root.sh`
-- `gate-no-stale-visible-version.sh`
-- `gate-runtime-identity-truth.sh`
-- `gate-stable-artifact-freshness.sh`
-- `gate-stable-launcher-truth.sh`
-- `gate-console-runtime-noise.sh`
-- `verify_frontend_ui_visible_change_protocol.sh`
+Gates that must pass: `gate-build-truth.sh`, `gate-version-truth.sh`, `gate-surface-root.sh`, `gate-no-stale-visible-version.sh`, `gate-runtime-identity-truth.sh`, `gate-stable-artifact-freshness.sh`, `gate-stable-launcher-truth.sh`, `gate-console-runtime-noise.sh`, `verify_frontend_ui_visible_change_protocol.sh`.
 
 Browser preview proof is NOT Tauri proof. dist proof is NOT artifact proof. Artifact proof is NOT launcher proof. Launcher proof is NOT DOM SurfaceTruth.
 
@@ -259,13 +237,7 @@ Windows 11 is the primary local development host. Every build proof claim must i
 - Windows VBSCRIPT optional feature may be required for WiX installer compilation
 - `icon.ico` must contain multi-resolution ICO layers (Windows icon authority)
 
-**OS-Aware proof rules:**
-- Linux artifacts (AppImage/DEB/RPM) are proof only on Linux. They do not prove Windows installer behavior.
-- Windows MSI is proven only when: built on Windows or `windows-latest` CI, artifact downloaded, SHA256 verified, smoke-installed.
-- CI `windows-latest` runner proof must log actual runner OS, toolchain versions, and artifact SHA256. GitHub Actions runner proof alone is not local Windows install proof.
-- Old Windows MSI proof (v34.0.12) does not prove v35.x. Each version requires its own Windows artifact proof.
-- `BUILD ALL` claiming Windows completion requires: MSI artifact path, SHA256 checksum, smoke-test exit code. Without these three, classify Windows status as `UNKNOWN`.
-- PowerShell-first commands are mandatory for Windows instructions. Use `corepack pnpm` — never `npm install`.
+**OS-Aware proof rules:** Linux artifacts prove Linux only; Windows MSI proven only when built on Windows/`windows-latest` CI with artifact + SHA256 + smoke-install. CI runner proof ≠ local install proof. Each version requires own proof. `BUILD ALL` Windows = MSI path + SHA256 + smoke exit code (else `UNKNOWN`). PowerShell-first; `corepack pnpm`; never `npm install`.
 
 **Maximum verdict tiers (cannot be upgraded without proof):**
 - `WINDOWS_11_INSTRUCTION_ALIGNMENT_PATCHED` — docs and instructions updated, no MSI artifact required.
