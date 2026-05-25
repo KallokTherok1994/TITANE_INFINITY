@@ -1,7 +1,7 @@
 {
   "version": "v20.0Ω",
-  "last_updated": "2026-03-26T15:22:00Z",
-  "total_entries": 28,
+  "last_updated": "2026-05-25T00:00:00-04:00",
+  "total_entries": 33,
   "stm": {
     "count": 3,
     "byId": [
@@ -48,9 +48,15 @@
       ]
     ],
     "byType": {
-      "preference": ["stm-001"],
-      "conversation": ["stm-002"],
-      "context": ["stm-003"]
+      "preference": [
+        "stm-001"
+      ],
+      "conversation": [
+        "stm-002"
+      ],
+      "context": [
+        "stm-003"
+      ]
     }
   },
   "mtm": {
@@ -166,14 +172,27 @@
       ]
     ],
     "byType": {
-      "knowledge": ["mtm-001"],
-      "preference": ["mtm-002", "mtm-003", "mtm-004"],
-      "context": ["mtm-005", "mtm-006"],
-      "strategy": ["mtm-007", "mtm-008", "mtm-009"]
+      "knowledge": [
+        "mtm-001"
+      ],
+      "preference": [
+        "mtm-002",
+        "mtm-003",
+        "mtm-004"
+      ],
+      "context": [
+        "mtm-005",
+        "mtm-006"
+      ],
+      "strategy": [
+        "mtm-007",
+        "mtm-008",
+        "mtm-009"
+      ]
     }
   },
   "ltm": {
-    "count": 16,
+    "count": 21,
     "byId": [
       [
         "ltm-001",
@@ -367,10 +386,72 @@
           "lastAccessed": 1743000000000,
           "accessCount": 1
         }
+      ],
+      [
+        "ltm-017",
+        {
+          "id": "ltm-017",
+          "content": "Kevin Thibault — Identité préférée: entrepreneur créatif, auteur, architecte de clarté et de cohérence. Signature professionnelle: « Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer. » Repères symboliques: KAwen, Awen, passeur, gardien de seuil.",
+          "type": "identity",
+          "importance": 0.98,
+          "timestamp": 1779681600000,
+          "lastAccessed": 1779681600000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-018",
+        {
+          "id": "ltm-018",
+          "content": "Langue et style Kevin: français québécois naturel, humain, fluide et professionnel par défaut; anglais accessible utile pour IA, développement, documentation, prompts et ponts simples avec une audience partiellement située en Inde.",
+          "type": "preference",
+          "importance": 0.92,
+          "timestamp": 1779681600000,
+          "lastAccessed": 1779681600000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-019",
+        {
+          "id": "ltm-019",
+          "content": "Écosystème Kevin: Humain Total, Humain à tout faire Inc., TITANE_INFINITY, Kallok’s Arts, Là où tout s’éclaircit!, offres Clarté Express, Séance Clarté & Reconfiguration Vivante, plans structurants et accompagnements humains.",
+          "type": "knowledge",
+          "importance": 0.92,
+          "timestamp": 1779681600000,
+          "lastAccessed": 1779681600000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-020",
+        {
+          "id": "ltm-020",
+          "content": "Préférences persistantes: agir comme copilote de cohérence, miroir lucide et architecte de clarté; identifier l’axe réel, séparer l’essentiel du bruit, simplifier sans appauvrir, éviter jargon, flatterie vide, expansions non qualifiées et refactors gratuits.",
+          "type": "preference",
+          "importance": 0.95,
+          "timestamp": 1779681600000,
+          "lastAccessed": 1779681600000,
+          "accessCount": 1
+        }
+      ],
+      [
+        "ltm-021",
+        {
+          "id": "ltm-021",
+          "content": "Récit fondateur TITANE pour Kevin: « Je n’ai pas créé TITANE pour aller plus vite. Je l’ai créé pour pouvoir continuer. » TITANE doit rester un allié de continuité, mémoire, clarté et cohérence, jamais un sauveur.",
+          "type": "knowledge",
+          "importance": 0.9,
+          "timestamp": 1779681600000,
+          "lastAccessed": 1779681600000,
+          "accessCount": 1
+        }
       ]
     ],
     "byType": {
-      "license": ["ltm-001"],
+      "license": [
+        "ltm-001"
+      ],
       "knowledge": [
         "ltm-002",
         "ltm-003",
@@ -384,10 +465,21 @@
         "ltm-011",
         "ltm-013",
         "ltm-015",
-        "ltm-016"
+        "ltm-016",
+        "ltm-019",
+        "ltm-021"
       ],
-      "identity": ["ltm-012"],
-      "methodology": ["ltm-014"]
+      "identity": [
+        "ltm-012",
+        "ltm-017"
+      ],
+      "methodology": [
+        "ltm-014"
+      ],
+      "preference": [
+        "ltm-018",
+        "ltm-020"
+      ]
     }
   }
 }

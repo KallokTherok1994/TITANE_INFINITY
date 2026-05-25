@@ -649,11 +649,27 @@
       "source": "knowledge_base",
       "relevance": 0.8,
       "timestamp": "2026-05-03T00:00:00Z"
+    },
+    {
+      "id": "k-kevin-identity-20260525",
+      "topic": "Kevin Thibault — identité et positionnement",
+      "content": "Kevin Thibault se présente comme entrepreneur créatif, auteur et architecte de clarté et de cohérence. Signature: « Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer. » Repères symboliques: KAwen, Awen, passeur, gardien de seuil.",
+      "source": "kevin_owner_profile_2026-05-25",
+      "relevance": 0.98,
+      "timestamp": "2026-05-25T00:00:00-04:00"
+    },
+    {
+      "id": "k-kevin-preferences-20260525",
+      "topic": "Kevin Thibault — préférences de réponse persistantes",
+      "content": "Répondre en français québécois naturel; agir comme copilote de cohérence, miroir lucide et architecte de clarté; identifier l’axe réel, séparer l’essentiel du bruit, simplifier sans appauvrir, éviter jargon inutile, flatterie vide, expansions non qualifiées et refactors gratuits.",
+      "source": "kevin_owner_profile_2026-05-25",
+      "relevance": 0.96,
+      "timestamp": "2026-05-25T00:00:00-04:00"
     }
   ],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1779128694810,
+    "last_validation_ts": 1779681600000,
     "last_compaction_ts": null
   }
 }

@@ -8,48 +8,60 @@
       "creator",
       "primary_user",
       "architecte de cohérence vivante",
-      "vision_holder"
+      "vision_holder",
+      "entrepreneur créatif",
+      "auteur",
+      "architecte de clarté et de cohérence",
+      "coach en ikigai en formation"
     ],
     "relationship_to_titane": "Créateur, pilote produit et utilisateur principal du système.",
     "public_positioning": {
-      "signature": "Architecte de cohérence vivante, bâtisseur humain, artisan du réel.",
-      "core_mission": "Transformer la confusion en clarté, la dispersion en structure, l’intuition en système, et le chaos en cadre habitable.",
+      "signature": "Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer.",
+      "core_mission": "Transformer la confusion en clarté, la dispersion en axe, l’intuition en structures durables, et aider les personnes et organisations à retrouver autonomie, cohérence et impact réel.",
       "public_axes": [
         "clarté stratégique",
+        "cohérence vivante",
         "structure durable",
         "transformation humaine",
-        "cohérence entre vécu, système et action"
+        "autonomie et impact réel",
+        "mémoire, continuité et durabilité humaine"
       ],
       "content_streams": [
-        "blog transformationnel",
-        "poésie et textes courts",
+        "publications Facebook profondes et humaines",
+        "poésie et textes biographiques",
         "modules Humain Total",
-        "méditations et hypnoses guidées",
-        "Codex Vivant et rituels symboliques",
-        "outils de clarté et matrices d'accompagnement"
+        "Là où tout s’éclaircit!",
+        "offres de clarté et plans structurants",
+        "prompts, cadres de gouvernance et systèmes IA"
       ],
-      "current_offer_signature": "Clarté Express — ton premier plan sur mesure"
+      "current_offer_signature": "Clarté Express; Séance Clarté & Reconfiguration Vivante; plans structurants et accompagnements humains",
+      "alternate_signature": "Architecte de cohérence vivante, bâtisseur humain, artisan du réel.",
+      "founding_titane_story": "Je n’ai pas créé TITANE pour aller plus vite. Je l’ai créé pour pouvoir continuer."
     },
     "project_ecosystem": [
       {
         "name": "Humain Total",
         "url": "https://www.humaintotal.ca",
-        "focus": "Clarté, axe, cohérence, structure et transformation humaine."
+        "focus": "Écosystème vivant reliant accompagnement humain, structuration stratégique, création de modèles, contenus éditoriaux et intelligence artificielle."
       },
       {
         "name": "TITANE_INFINITY",
         "url": "https://github.com/KallokTherok1994/TITANE_INFINITY",
-        "focus": "IA personnalisée, mémoire vivante, architecture de cognition et symbiose Kevin↔TITANE via TWINS."
+        "focus": "Système logiciel gouverné, exosquelette cognitif et opérationnel dédié à la mémoire, à la clarté, à la cohérence, à la sécurité, à la certification et à la durabilité humaine."
       },
       {
-        "name": "Humain à tout faire",
+        "name": "Humain à tout faire Inc.",
         "url": "https://www.humainatoutfaire.com",
-        "focus": "Services humains, maintenance légère, aide concrète, approche locale bienveillante et professionnelle."
+        "focus": "Services manuels, soumissions, finition, charpenterie, peinture, planchers, aménagement, relation client et aide concrète locale."
       },
       {
-        "name": "Kallok's Arts",
-        "status": "paused",
-        "focus": "Boutique créative d’objets et décoration à citations positives — actuellement en pause."
+        "name": "Kallok’s Arts",
+        "status": "durable",
+        "focus": "Projet artistique et commercial print-on-demand créé en 2019, avec plus de 60 articles et des designs réalisés par Kevin."
+      },
+      {
+        "name": "Là où tout s’éclaircit!",
+        "focus": "Projet éditorial important lié à la clarté, au récit, à l’écriture et à la transmission."
       }
     ],
     "public_sources": {
@@ -63,24 +75,32 @@
       "local_fallback_asset": "/kevin-owner-portrait.svg"
     },
     "working_preferences": {
-      "language_default": "français",
+      "language_default": "français québécois naturel",
       "interaction_style": [
-        "direct",
-        "structuré",
-        "profond",
-        "utile",
-        "sans faux-semblants"
+        "copilote de cohérence",
+        "miroir lucide",
+        "architecte de clarté",
+        "motivant sans hype",
+        "poétique mais précis",
+        "dense",
+        "sobre",
+        "rigoureux"
       ],
       "decision_model": [
-        "proof-first",
-        "minimal patch",
-        "diagnose -> plan -> apply -> verify -> report"
+        "identifier l’axe réel derrière la demande",
+        "séparer l’essentiel du bruit",
+        "révéler alignement, dérive, contradiction ou potentiel",
+        "simplifier radicalement sans appauvrir",
+        "renforcer l’autonomie de Kevin"
       ],
       "response_expectations": [
-        "contexte clair",
-        "preuves vérifiables",
-        "zéro fake PASS",
-        "actions concrètes"
+        "zéro jargon inutile",
+        "zéro flatterie vide",
+        "réponses structurées, concrètes, utiles et directement exploitables",
+        "messages clients et publics prêts à envoyer",
+        "documents Humain Total sobres, premium, clairs, structurés, humains, inspirants et pratiques",
+        "réponses TITANE en prompts exécutables, audits, routers, gates, preuves, contrats de sortie et gouvernance stricte lorsque pertinent",
+        "éviter expansions non qualifiées, refactors gratuits et complexifications inutiles"
       ]
     },
     "alignment_targets": [
@@ -88,6 +108,166 @@
       "préserver la vérité et la cohérence",
       "soutenir la symbiose Kevin↔TITANE",
       "prioriser les solutions réellement exécutables"
-    ]
+    ],
+    "preferred_names": {
+      "legal_or_public_name": "Kevin Thibault",
+      "professional_identity": "Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer.",
+      "symbolic_markers": [
+        "KAwen",
+        "Awen",
+        "passeur",
+        "gardien de seuil"
+      ],
+      "self_descriptors": [
+        "entrepreneur créatif",
+        "auteur",
+        "architecte de cohérence et de clarté"
+      ]
+    },
+    "language_profile": {
+      "primary_language": "français",
+      "preferred_public_style": "Français québécois naturel, humain, fluide et professionnel.",
+      "english_usage": "Anglais utile pour outils IA, développement logiciel, documentation, prompts et certains contenus publics.",
+      "audience_note": "Une grande partie de l’audience actuelle se trouve en Inde; l’anglais accessible et des ponts culturels simples peuvent aider sans diluer l’identité de Kevin."
+    },
+    "location": {
+      "region": "Québec",
+      "public_anchor": "Chicoutimi",
+      "timezone": "America/Montreal"
+    },
+    "education_and_learning": {
+      "current_training": [
+        "coach en ikigai"
+      ],
+      "long_term_study": "Depuis plus de neuf ans: développement personnel, psychologie, médecines holistiques, disciplines de régulation et systèmes vivants.",
+      "other_information": "Aucune autre information disponible."
+    },
+    "responsibilities": [
+      "Transformer la confusion en clarté, la dispersion en axe et l’intuition en structures durables.",
+      "Aider les individus et les organisations à retrouver autonomie, cohérence et impact réel.",
+      "Concevoir des plans, offres, séances, contenus, documents, prompts, systèmes IA, formations et cadres de gouvernance.",
+      "Développer l’écosystème Humain Total: pages Facebook, contenus publics, offres, modules, master documents, outils numériques et structures associées.",
+      "Concevoir TITANE comme un allié de continuité, de mémoire, de clarté et de cohérence, jamais comme un sauveur."
+    ],
+    "professional_skills": {
+      "human_and_strategy": [
+        "accompagnement humain",
+        "clarté stratégique",
+        "structuration de projets",
+        "création d’offres",
+        "écriture",
+        "poésie",
+        "contenu éditorial",
+        "publication Facebook",
+        "architecture de systèmes",
+        "conception de modèles"
+      ],
+      "ai_and_software": [
+        "orchestration IA",
+        "prompts et super-prompts exécutables",
+        "agents",
+        "mémoire",
+        "documentation",
+        "gouvernance",
+        "audit",
+        "conception d’environnements structurés",
+        "gates bloquants",
+        "preuves de complétion",
+        "gouvernance anti-dérive",
+        "tests automatisés",
+        "cadres de certification"
+      ],
+      "tools_and_environments": [
+        "VS Code",
+        "GitHub",
+        "Tauri",
+        "Firebase",
+        "Google AI Studio",
+        "Claude Console",
+        "architectures multi-agents"
+      ],
+      "craft_and_manual": [
+        "finition",
+        "charpenterie",
+        "peinture",
+        "pose de plancher",
+        "électricité",
+        "aménagement paysager",
+        "décoration",
+        "travail du bois",
+        "mélamine",
+        "sculpture",
+        "béton",
+        "art abstrait",
+        "art mural",
+        "art vivant"
+      ],
+      "other": [
+        "survie intermédiaire",
+        "tir à l’arc intermédiaire",
+        "lyre"
+      ]
+    },
+    "personal_context": {
+      "family_and_household": "Kevin a mentionné une locataire et la fille de celle-ci dans un contexte artistique et émotionnel lié au garage. Aucune autre information disponible sur la famille proche.",
+      "pets": "Aucune information disponible.",
+      "life_transition": "Transition liée à la maison, au garage, au détachement matériel et à la reconstruction de base."
+    },
+    "interests_and_symbols": {
+      "writing": "Écriture, longs poèmes inspirants et textes biographiques comme outils d’expression, de régulation, de connexion et de relance intérieure.",
+      "preferred_text_quality": "Profond, universel, humanisant, sans ego, capable de toucher largement et de créer une interaction authentique.",
+      "art": "Importance forte de l’art, des espaces créatifs, des œuvres visuelles, de l’art vivant et du print-on-demand; l’analyse artistique doit privilégier le ressenti énergétique et symbolique, sans jugement esthétique ou technique.",
+      "neurocognitive": [
+        "EEG",
+        "Muse/MindMonitor",
+        "Alpha",
+        "Theta",
+        "Beta",
+        "régulation",
+        "présence",
+        "tests cognitifs"
+      ],
+      "symbolic_references": [
+        "Ganesh",
+        "Gaïa",
+        "Apollon",
+        "Hermès",
+        "Awen",
+        "loup",
+        "corbeau",
+        "montagne",
+        "soleil",
+        "lyre",
+        "cycles lunaires",
+        "passeur",
+        "gardien de seuil"
+      ],
+      "indigenous_identity": "Kevin s’identifie comme Métis autochtone, plus précisément Métis montagnais / Innu, avec un lien symbolique au maikan, au Nitassinan et à une vision animée du monde.",
+      "motivation_sources": "Grands projets, visions structurantes et initiatives à forte signification."
+    },
+    "communication_model": {
+      "observed_patterns": [
+        "cherche à transformer l’intuition en structure durable",
+        "fonctionne par axe, cohérence, clarté, symboles, plans et intégration vivante",
+        "forte capacité de vision et de création avec besoin de protéger l’énergie contre la dispersion, la surabondance de systèmes, la multiplication des agents et le refactor émotionnel",
+        "transition entre un mode guerrier/survie et un mode architecte conscient",
+        "valorise lucidité, éthique, simplicité durable, responsabilité, autonomie et impact réel",
+        "préfère l’analyse profonde avant la stratégie, sauf demande explicite",
+        "aime les formulations denses, sobres, précises, parfois poétiques, mais jamais creuses",
+        "réagit bien aux cadres qui distinguent l’essentiel du bruit, l’alignement de la dérive, la vision de l’action immédiate",
+        "a besoin que la charge mentale soit protégée par simplification, recentrage, priorisation et suppression du superflu",
+        "se motive par récits fondateurs, formulations puissantes, mantras et synthèses reliant vécu, mission et action concrète",
+        "maintient généralement une stabilité intérieure importante même sous pression financière, logistique ou existentielle"
+      ],
+      "inner_axes": [
+        "Je libère mon plein potentiel",
+        "Je débloque mon plein potentiel"
+      ]
+    },
+    "memory_update": {
+      "requested_by": "Kevin Thibault",
+      "date": "2026-05-25T00:00:00-04:00",
+      "scope": "Profil propriétaire, préférences persistantes, identité professionnelle, projets, compétences, symboles et modèle de communication."
+    }
   }
 }

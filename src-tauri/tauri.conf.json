@@ -20,6 +20,7 @@
       {
         "label": "main",
         "title": "TITANE Infinity",
+        "url": "/",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,
@@ -1492,6 +1493,7 @@
     }
   },
   "build": {
-    "frontendDist": "../dist"
+    "frontendDist": "../dist",
+    "features": ["custom-protocol"]
   }
 }
