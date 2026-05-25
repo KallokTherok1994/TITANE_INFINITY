@@ -1,8 +1,8 @@
 # TITANE∞ — Build, Release et Rollback (FR)
 
-**Version :** 35.1.9  
+**Version :** 35.2.0  
 **Statut :** CURRENT  
-**Date :** 2026-05-21
+**Date :** 2026-05-25
 
 ---
 
@@ -17,7 +17,10 @@ pnpm run build
 
 > **Note CI :** Le CI Tauri (`rust.yml`) nécessite un placeholder `dist/` avant le build cargo :
 > ```bash
+> # Linux/CI (bash)
 > mkdir -p dist && echo "CI placeholder" > dist/index.html
+> # Windows (PowerShell)
+> New-Item -ItemType Directory -Force dist | Out-Null; "CI placeholder" | Out-File dist/index.html
 > ```
 > Source : `scripts/autoheal/autoheal_rules.jsonl` AH-2026-03-07-0092 (PROVEN)
 
@@ -25,8 +28,28 @@ pnpm run build
 
 ## Build Tauri (binaire)
 
+### Windows (primaire — MSI + NSIS)
+
+```powershell
+# Build MSI + NSIS installer (commande canonique Windows)
+pnpm run build:windows:msi
+# Artefacts : src-tauri/target/release/bundle/msi/*.msi
+#             src-tauri/target/release/bundle/nsis/*.exe (perUser, sans admin)
+
+# Via script launcher (avec vérification) :
+.\scripts\launch\launch-titane.ps1 -Mode build-msi
+
+# Release gouvernée (bump + build + vérification artefact) :
+.\scripts\launch\launch-titane.ps1 -Mode release-msi
+```
+
+> **CI (on-demand) :** Déclencher `.github/workflows/windows-msi-on-demand.yml` manuellement.
+> Produit MSI + NSIS EXE + SHA256SUMS.txt + WINDOWS_MANIFEST.json en artefact `windows-msi-<run>`.
+
+### Linux (AppImage/DEB)
+
 ```bash
-# Build production Tauri
+# Build production Tauri (rail Linux)
 pnpm run build:production
 
 # Ordre : lint → format:check → ollama:bundle → vite build → tauri build
@@ -105,9 +128,13 @@ Chaque entrée autoheal dans `scripts/autoheal/autoheal_rules.jsonl` contient un
 |---|---|---|---|
 | CI principal | `.github/workflows/ci.yml` | push/PR | PROVEN |
 | CI Rust | `.github/workflows/rust.yml` | push/PR | PROVEN |
+| Windows MSI + NSIS | `.github/workflows/windows-msi-on-demand.yml` | déclenchement manuel | PROVEN |
 | Mermaid verify | `.github/workflows/mermaid-verify.yml` | push | PROVEN |
 
 **Note :** Les workflows CI nécessitent l'approbation du propriétaire du dépôt pour les PRs externes.
+
+> **Windows MSI on-demand :** GitHub → Actions → "TITANE∞ Windows MSI On-Demand" → Run workflow.
+> L'entrée optionnelle `release_tag` uploade automatiquement les artefacts vers une GitHub Release.
 
 ---
 

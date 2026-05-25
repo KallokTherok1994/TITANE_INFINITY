@@ -1,8 +1,8 @@
 # TITANE∞ — Build, Release and Rollback (EN)
 
-**Version:** 35.1.9  
+**Version:** 35.2.0  
 **Status:** CURRENT  
-**Date:** 2026-05-21
+**Date:** 2026-05-25
 
 ---
 
@@ -17,7 +17,10 @@ pnpm run build
 
 > **CI note:** The Tauri CI (`rust.yml`) requires a `dist/` placeholder before the cargo build:
 > ```bash
+> # Linux/CI (bash)
 > mkdir -p dist && echo "CI placeholder" > dist/index.html
+> # Windows (PowerShell)
+> New-Item -ItemType Directory -Force dist | Out-Null; "CI placeholder" | Out-File dist/index.html
 > ```
 > Source: `scripts/autoheal/autoheal_rules.jsonl` AH-2026-03-07-0092 (PROVEN)
 
@@ -25,8 +28,28 @@ pnpm run build
 
 ## Tauri build (binary)
 
+### Windows (primary — MSI + NSIS)
+
+```powershell
+# Build MSI + NSIS installer (canonical Windows command)
+pnpm run build:windows:msi
+# Artifacts: src-tauri/target/release/bundle/msi/*.msi
+#            src-tauri/target/release/bundle/nsis/*.exe (perUser, no admin)
+
+# Via launcher script (with verification):
+.\scripts\launch\launch-titane.ps1 -Mode build-msi
+
+# Governed release (bump + build + artifact verification):
+.\scripts\launch\launch-titane.ps1 -Mode release-msi
+```
+
+> **CI (on-demand):** Trigger `.github/workflows/windows-msi-on-demand.yml` manually.
+> Produces MSI + NSIS EXE + SHA256SUMS.txt + WINDOWS_MANIFEST.json as artifact `windows-msi-<run>`.
+
+### Linux (AppImage/DEB)
+
 ```bash
-# Full production Tauri build
+# Full production Tauri build (Linux rail)
 pnpm run build:production
 
 # Order: lint → format:check → ollama:bundle → vite build → tauri build
@@ -108,9 +131,13 @@ Each autoheal entry in `scripts/autoheal/autoheal_rules.jsonl` contains a `rollb
 |---|---|---|---|
 | Main CI | `.github/workflows/ci.yml` | push/PR | PROVEN |
 | Rust CI | `.github/workflows/rust.yml` | push/PR | PROVEN |
+| Windows MSI + NSIS | `.github/workflows/windows-msi-on-demand.yml` | manual dispatch | PROVEN |
 | Mermaid verify | `.github/workflows/mermaid-verify.yml` | push | PROVEN |
 
 **Note:** CI workflows require repository owner approval for external PRs.
+
+> **Windows MSI on-demand:** Go to GitHub → Actions → "TITANE∞ Windows MSI On-Demand" → Run workflow.
+> Optional `release_tag` input uploads artifacts to a GitHub Release automatically.
 
 ---
 

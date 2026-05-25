@@ -95,28 +95,69 @@ PowerShell entrypoints:
 
 ```powershell
 .\scripts\launch\launch-titane.ps1 -Mode verify-windows
-.\scripts\launch\launch-titane.ps1 -Mode build-msi
+.\scripts\launch\launch-titane.ps1 -Mode build-msi      # produces MSI + NSIS EXE
 .\scripts\launch\launch-titane.ps1 -Mode release-msi
 ```
 
-## 8. WSL2 fallback
+> **CI on-demand:** GitHub → Actions → "TITANE∞ Windows MSI On-Demand" → Run workflow.
+> Produces `windows-msi-<run>` artifact: MSI (perMachine, admin) + NSIS EXE (perUser, no admin) + SHA256SUMS.txt + WINDOWS_MANIFEST.json.
+
+## 8. HTTP Network Server (Remote Gateway)
+
+TITANE includes an Axum HTTP server (`src-tauri/src/remote_gateway/server.rs`) on port 7420 that exposes the chat API over the network with JWT authentication.
+
+**Activate via launcher (recommended):**
+
+```powershell
+# Auto-generates strong secret, shows LAN URLs, offers firewall rule
+.\scripts\launch\launch-titane.ps1 -Mode server
+```
+
+**Manual activation:**
+
+```powershell
+$env:TITANE_REMOTE_ENABLED = "1"
+$env:TITANE_REMOTE_SECRET  = "your_strong_secret_min_32_chars"
+$env:TITANE_REMOTE_PORT    = "7420"          # optional, default 7420
+$env:TITANE_REMOTE_ORIGIN  = "*"             # or restrict to specific origin
+.\scripts\launch\launch-titane.ps1 -Mode dev
+```
+
+**Network URLs (displayed by launcher):**
+- Local: `http://localhost:7420`
+- LAN: `http://<your-LAN-IP>:7420`
+- Health check: `GET /health`
+- Auth: `POST /auth/token` with `{"shared_secret":"..."}` → JWT Bearer token
+
+**Ports summary:**
+
+| Service | Port | Protocol | Auth |
+|---|---|---|---|
+| Vite dev server | 5173 | HTTP | None |
+| Tauri IPC | — | Tauri IPC | Tauri |
+| Remote Gateway | 7420 | HTTP/WS | JWT Bearer |
+| Ollama | 11434 | HTTP | None (local only) |
+
+> Set `TITANE_REMOTE_SECRET` in `.env` for a persistent secret. The launcher generates an ephemeral secret at each startup if the variable is absent or shorter than 32 characters.
+
+## 9. WSL2 fallback
 
 - WSL2 remains supported as a fallback only.
 - Use a separate clone under WSL (`/home/<user>/dev/TITANE_INFINITY`).
 - Never share the same working tree between Windows native and WSL.
 
-## 9. Linux-native rail
+## 10. Linux-native rail
 
 - Linux remains supported for AppImage/DEB and cross-platform testing.
 - Linux is no longer the default daily dev path.
 
-## 10. Ollama boundary
+## 11. Ollama boundary
 
 - Ollama is optional for base launch proof.
 - Use `scripts/launch/launch-ollama.ps1` for Windows-based Ollama operations.
 - Model downloads are not part of the initial dev proof unless explicitly required.
 
-## 11. Decision protocol
+## 12. Decision protocol
 
 Windows proof state values:
 - `UNKNOWN` — not proved

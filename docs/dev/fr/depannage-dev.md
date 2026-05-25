@@ -1,8 +1,8 @@
 # TITANE∞ — Dépannage Développeur (FR)
 
-**Version :** 28.0.0  
-**Statut :** PARTIAL  
-**Date :** 2026-03-17
+**Version :** 35.2.0  
+**Statut :** CURRENT  
+**Date :** 2026-05-25
 
 ---
 
@@ -71,8 +71,13 @@ sudo apt-get install -y \
 ### Erreur "dist/ not found" lors du build cargo
 
 ```bash
-# Créer un placeholder dist/ (requis pour le build Tauri)
+# Linux/CI (bash)
 mkdir -p dist && echo "placeholder" > dist/index.html
+```
+```powershell
+# Windows (PowerShell)
+New-Item -ItemType Directory -Force dist | Out-Null
+"placeholder" | Out-File dist/index.html -Encoding ascii
 ```
 
 ### tauri.conf.json introuvable
@@ -119,6 +124,52 @@ bash scripts/verify_instructions.sh
 ```bash
 bash scripts/autoheal/detect_recurrence.sh
 # Si un pattern de récurrence est détecté, créer une entrée autoheal corrective
+```
+
+---
+
+## Problèmes serveur HTTP réseau
+
+### launch-titane.ps1 -Mode server — secret trop court
+
+```powershell
+# Erreur : [WARN] TITANE_REMOTE_SECRET non defini ou trop court
+# Solution : définir un secret persistant dans .env ou en ligne
+$env:TITANE_REMOTE_SECRET = "secret_minimum_32_caracteres_ici"
+.\scripts\launch\launch-titane.ps1 -Mode server
+```
+
+### Création de règle firewall échoue (admin requis)
+
+```powershell
+# Lancer PowerShell en administrateur, puis :
+New-NetFirewallRule -DisplayName "TITANE Remote Gateway port 7420" `
+  -Direction Inbound -Protocol TCP -LocalPort 7420 `
+  -Action Allow -Profile Private,Domain
+```
+
+### Remote Gateway ne répond pas sur le LAN
+
+```powershell
+# 1. Vérifier que TITANE est lancé avec TITANE_REMOTE_ENABLED=1
+# 2. Contrôler les logs Tauri : "🌐 [RemoteGateway] Starting on http://0.0.0.0:7420"
+# 3. Tester en local d'abord :
+curl http://localhost:7420/health
+# 4. Vérifier que la règle firewall existe :
+Get-NetFirewallRule -DisplayName "TITANE Remote Gateway port 7420"
+# 5. Vérifier que Windows Defender / antivirus ne bloque pas le port 7420
+```
+
+### Référence des modes launch-titane.ps1
+
+```powershell
+.\scripts\launch\launch-titane.ps1 -Mode dev            # Tauri + Vite HMR
+.\scripts\launch\launch-titane.ps1 -Mode server         # dev + gateway HTTP port 7420
+.\scripts\launch\launch-titane.ps1 -Mode verify-windows # vérifications prebuild
+.\scripts\launch\launch-titane.ps1 -Mode build-msi      # build MSI + NSIS
+.\scripts\launch\launch-titane.ps1 -Mode release-msi    # bump + build + vérification
+.\scripts\launch\launch-titane.ps1 -Mode check          # TS + lint + tests
+.\scripts\launch\launch-titane.ps1 -Mode clean          # supprime les artefacts
 ```
 
 ---

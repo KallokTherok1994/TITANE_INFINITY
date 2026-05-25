@@ -1,8 +1,8 @@
 # TITANE∞ — Environment Setup (EN)
 
-**Version:** 35.1.9  
+**Version:** 35.2.0  
 **Status:** CURRENT  
-**Date:** 2026-05-21
+**Date:** 2026-05-25
 
 > **Primary DEV_HOST: Windows 11.** For the full guide: [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](../../windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md)
 
@@ -77,16 +77,41 @@ pnpm run check
 | `GOOGLE_API_KEY` | Gemini API key | `.env` | NO |
 | `TITANE_E2E` | Enable E2E mode | Runtime env | NO (CI only) |
 | `FULL_E2E_ENABLED` | Enable full E2E | Runtime env | NO (disabled by default) |
+| `TITANE_REMOTE_ENABLED` | Activate HTTP network gateway | Runtime env | NO (`1` to enable) |
+| `TITANE_REMOTE_PORT` | HTTP gateway port | Runtime env | NO (default: `7420`) |
+| `TITANE_REMOTE_SECRET` | Shared secret for JWT auth | `.env` or env | NO (auto-generated if absent) |
+| `TITANE_REMOTE_ORIGIN` | Allowed CORS origin | Runtime env | NO (default: `*`) |
 
-```bash
-# Copy example file
-cp .env.example .env
+```powershell
+# Windows: copy example file
+Copy-Item .env.example .env
 # Edit .env with your keys (never commit .env!)
+```
+```bash
+# Linux/macOS
+cp .env.example .env
 ```
 
 ---
 
 ## Launch dev mode
+
+### Via PowerShell launcher (recommended on Windows)
+
+```powershell
+# Standard dev mode (Tauri + Vite HMR)
+.\scripts\launch\launch-titane.ps1
+.\scripts\launch\launch-titane.ps1 -Mode dev
+
+# With HTTP network server (Remote Gateway on port 7420)
+.\scripts\launch\launch-titane.ps1 -Mode server
+# → generates strong secret, displays LAN URLs, offers firewall rule, starts TITANE_REMOTE_ENABLED=1
+
+# With a persistent secret:
+$env:TITANE_REMOTE_SECRET = "your_secret_min_32_chars"; .\scripts\launch\launch-titane.ps1 -Mode server
+```
+
+### Via pnpm (cross-platform)
 
 ```bash
 # Full Tauri mode (frontend + Rust backend)
