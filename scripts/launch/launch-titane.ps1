@@ -14,17 +14,20 @@
     release-msi    - Bump + build MSI + verification artefact
     check          - TypeScript, lint et tests unitaires/Rust
     clean          - Supprime les artefacts (node_modules, target, dist)
+    server         - Lance TITANE avec Remote Gateway HTTP actif (port 7420)
 
 .EXAMPLE
     .\launch-titane.ps1
     .\launch-titane.ps1 -Mode verify-windows
     .\launch-titane.ps1 -Mode build-msi
     .\launch-titane.ps1 -Mode check
+    .\launch-titane.ps1 -Mode server
+    $env:TITANE_REMOTE_SECRET = "monsecret"; .\launch-titane.ps1 -Mode server
 #>
 
 [CmdletBinding()]
 param (
-    [ValidateSet('dev', 'check', 'verify-windows', 'build-msi', 'release-msi', 'clean')]
+    [ValidateSet('dev', 'check', 'verify-windows', 'build-msi', 'release-msi', 'clean', 'server')]
     [string]$Mode = 'dev'
 )
 
@@ -173,6 +176,73 @@ switch ($Mode) {
         Write-Host ""
         Invoke-Pnpm 'run', 'clean:all'
         Write-Host "[DONE] Nettoyage termine." -ForegroundColor Green
+    }
+
+    'server' {
+        Write-Host " >> Lancement TITANE avec Remote Gateway HTTP (port 7420)" -ForegroundColor Cyan
+        Write-Host ""
+
+        # Generate a strong ephemeral secret if not provided or too short
+        $remoteSecret = $env:TITANE_REMOTE_SECRET
+        if (-not $remoteSecret -or $remoteSecret.Length -lt 32) {
+            $bytes = [byte[]]::new(32)
+            [System.Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+            $remoteSecret = [System.Convert]::ToBase64String($bytes)
+            Write-Host "[WARN] TITANE_REMOTE_SECRET non defini ou trop court — secret ephemere genere." -ForegroundColor Yellow
+            Write-Host "       Definissez TITANE_REMOTE_SECRET dans .env pour un secret persistant." -ForegroundColor Yellow
+        }
+
+        $remotePort   = if ($env:TITANE_REMOTE_PORT)   { $env:TITANE_REMOTE_PORT }   else { "7420" }
+        $remoteOrigin = if ($env:TITANE_REMOTE_ORIGIN) { $env:TITANE_REMOTE_ORIGIN } else { "*" }
+
+        # Display network URLs
+        $localIPs = (Get-NetIPAddress -AddressFamily IPv4 |
+                     Where-Object { $_.IPAddress -notmatch '^127\.' -and $_.PrefixOrigin -ne 'WellKnown' } |
+                     Select-Object -ExpandProperty IPAddress)
+        Write-Host ""
+        Write-Host "[INFO] Remote Gateway active :" -ForegroundColor Cyan
+        Write-Host "       http://localhost:$remotePort" -ForegroundColor Green
+        foreach ($ip in $localIPs) {
+            Write-Host "       http://${ip}:$remotePort" -ForegroundColor Green
+        }
+        Write-Host ""
+        Write-Host "[INFO] CORS origin : $remoteOrigin" -ForegroundColor Cyan
+        Write-Host "[INFO] Secret      : $(if ($remoteSecret.Length -gt 8) { $remoteSecret.Substring(0,8) + '...' } else { '***' })" -ForegroundColor Cyan
+        Write-Host ""
+
+        # Windows Firewall rule (optional — requires admin)
+        $fwRuleName = "TITANE Remote Gateway port $remotePort"
+        $existingRule = Get-NetFirewallRule -DisplayName $fwRuleName -ErrorAction SilentlyContinue
+        if (-not $existingRule) {
+            $answer = Read-Host "  Creer regle firewall Windows pour port $remotePort ? [o/N]"
+            if ($answer -eq 'o' -or $answer -eq 'O' -or $answer -eq 'oui') {
+                try {
+                    New-NetFirewallRule -DisplayName $fwRuleName `
+                        -Direction Inbound -Protocol TCP -LocalPort $remotePort `
+                        -Action Allow -Profile Private,Domain `
+                        -Description "TITANE Remote Gateway HTTP server" | Out-Null
+                    Write-Host "[OK] Regle firewall creee : $fwRuleName" -ForegroundColor Green
+                } catch {
+                    Write-Host "[WARN] Impossible de creer la regle firewall (admin requis ?): $_" -ForegroundColor Yellow
+                    Write-Host "       Lancez PowerShell en tant qu administrateur ou creez manuellement." -ForegroundColor Yellow
+                }
+            } else {
+                Write-Host "[INFO] Regle firewall ignoree — connexions LAN peuvent etre bloquees." -ForegroundColor Yellow
+            }
+        } else {
+            Write-Host "[OK] Regle firewall deja presente : $fwRuleName" -ForegroundColor Green
+        }
+        Write-Host ""
+
+        # Export env vars for child process
+        $env:TITANE_REMOTE_ENABLED = "1"
+        $env:TITANE_REMOTE_PORT    = $remotePort
+        $env:TITANE_REMOTE_ORIGIN  = $remoteOrigin
+        $env:TITANE_REMOTE_SECRET  = $remoteSecret
+
+        # Start TITANE dev with active gateway
+        try { Invoke-Pnpm 'run', 'gen:tauri-config' } catch { Write-Host "[WARN] gen:tauri-config: $_" -ForegroundColor Yellow }
+        Invoke-Pnpm 'run', 'dev:windows'
     }
 }
 

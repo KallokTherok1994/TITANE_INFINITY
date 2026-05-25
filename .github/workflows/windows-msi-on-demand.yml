@@ -62,7 +62,7 @@ jobs:
           pnpm run verify:windows:toolchain
           pnpm run verify:windows:release-readiness -- -Mode PreBuild
 
-      - name: Build MSI
+      - name: Build MSI + NSIS
         run: pnpm run build:windows:msi
 
       - name: Generate MSI proof manifests
@@ -118,6 +118,24 @@ jobs:
             }
           }
 
+          # NSIS artifact (perUser installer — no admin required)
+          $nsisDir = "src-tauri/target/release/bundle/nsis"
+          $nsisFiles = Get-ChildItem "$nsisDir/*.exe" -ErrorAction SilentlyContinue
+          if ($nsisFiles.Count -gt 0) {
+            $primaryNsis = $nsisFiles | Select-Object -First 1
+            $nsisHash = (Get-FileHash -LiteralPath $primaryNsis.FullName -Algorithm SHA256).Hash.ToLower()
+            "{0}  {1}" -f $nsisHash, $primaryNsis.Name |
+              Add-Content src-tauri/target/release/bundle/msi/SHA256SUMS.txt -Encoding ascii
+            $manifestPatched = Get-Content src-tauri/target/release/bundle/msi/WINDOWS_MANIFEST.json | ConvertFrom-Json
+            $manifestPatched | Add-Member -NotePropertyName nsis_artifact -NotePropertyValue $primaryNsis.Name -Force
+            $manifestPatched | Add-Member -NotePropertyName nsis_sha256   -NotePropertyValue $nsisHash         -Force
+            $manifestPatched | ConvertTo-Json -Depth 4 |
+              Out-File src-tauri/target/release/bundle/msi/WINDOWS_MANIFEST.json -Encoding utf8
+            Write-Host "[NSIS] $($primaryNsis.Name) sha256=$nsisHash"
+          } else {
+            Write-Host "[NSIS] No .exe artifact found (NSIS may require NSIS toolchain on runner)"
+          }
+
       - name: Upload artifact
         uses: actions/upload-artifact@v7.0.1
         with:
@@ -127,6 +145,7 @@ jobs:
             src-tauri/target/release/bundle/msi/SHA256SUMS.txt
             src-tauri/target/release/bundle/msi/WINDOWS_MANIFEST.json
             src-tauri/target/release/bundle/msi/WINDOWS_RUNNER_MANIFEST.json
+            src-tauri/target/release/bundle/nsis/*.exe
           if-no-files-found: error
           retention-days: 30
 
@@ -153,12 +172,14 @@ jobs:
           $msiCount = (Get-ChildItem src-tauri/target/release/bundle/msi/*.msi -ErrorAction SilentlyContinue | Measure-Object).Count
           $checksumExists = Test-Path src-tauri/target/release/bundle/msi/SHA256SUMS.txt
           $manifestExists = (Test-Path src-tauri/target/release/bundle/msi/WINDOWS_MANIFEST.json) -and (Test-Path src-tauri/target/release/bundle/msi/WINDOWS_RUNNER_MANIFEST.json)
+          $nsisCount = (Get-ChildItem src-tauri/target/release/bundle/nsis/*.exe -ErrorAction SilentlyContinue | Measure-Object).Count
           $buildStatus = if ($msiCount -gt 0 -and $manifestExists) { "PASS" } else { "FAIL" }
           $checksumStatus = if ($checksumExists) { "PASS" } else { "FAIL" }
-          "### Windows MSI On-Demand" >> $env:GITHUB_STEP_SUMMARY
+          "### Windows MSI + NSIS On-Demand" >> $env:GITHUB_STEP_SUMMARY
           "WINDOWS_MSI_BUILD=$buildStatus" >> $env:GITHUB_STEP_SUMMARY
           "WINDOWS_MSI_CHECKSUMS=$checksumStatus" >> $env:GITHUB_STEP_SUMMARY
           "LOCAL_INSTALL_PROOF=NOT_CLAIMED_FROM_CI" >> $env:GITHUB_STEP_SUMMARY
           "MSI_COUNT=$msiCount" >> $env:GITHUB_STEP_SUMMARY
+          "NSIS_COUNT=$nsisCount" >> $env:GITHUB_STEP_SUMMARY
           "CHECKSUM_FILE=src-tauri/target/release/bundle/msi/SHA256SUMS.txt" >> $env:GITHUB_STEP_SUMMARY
           "GITHUB_RUN_ID=$env:GITHUB_RUN_ID" >> $env:GITHUB_STEP_SUMMARY
