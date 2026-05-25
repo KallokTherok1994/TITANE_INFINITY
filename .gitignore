@@ -242,4 +242,5 @@ titane-infinity.desktop
 /data/research/index/
 /artifacts/ui-desktop/current-*.jsonl
 /artifacts/ui-desktop/v*-*-smoke*.jsonl
+/artifacts/frontend-runtime-prebuild/
 memory/test/
