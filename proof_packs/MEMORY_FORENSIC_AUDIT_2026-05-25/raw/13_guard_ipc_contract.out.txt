@@ -1,0 +1,13 @@
+
+> titane-infinity@35.1.9 guard:ipc-contract C:\Dev\TITANE_INFINITY
+> cross-env NODE_OPTIONS="--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs" vitest run tests/contract/tauri-ipc-contract.test.ts
+
+
+ RUN  v4.1.4 C:/Dev/TITANE_INFINITY
+
+
+ Test Files  1 passed (1)
+      Tests  43 passed (43)
+   Start at  09:43:29
+   Duration  1.20s (transform 200ms, setup 297ms, import 336ms, tests 90ms, environment 319ms)
+

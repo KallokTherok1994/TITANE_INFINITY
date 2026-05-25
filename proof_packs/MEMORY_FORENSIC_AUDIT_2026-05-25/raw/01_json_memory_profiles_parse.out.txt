@@ -1,0 +1,18 @@
+JSON_OK data\knowledge_base\default\identity_profile.json
+JSON_OK data\knowledge_base\default\kevin_owner_profile_v30.json
+JSON_OK data\knowledge_base\default\memory_os_detail.json
+JSON_OK data\knowledge_base\default\memory_system_deep.json
+JSON_OK memory\cognitive.json
+JSON_OK memory\harmonics.json
+JSON_OK memory\ltm.json
+JSON_OK memory\memory-index.json
+JSON_OK memory\memory_core_state.json
+JSON_OK memory\mtm.json
+JSON_OK memory\optimization-report.json
+JSON_OK memory\singularity.json
+JSON_OK memory\stm.json
+JSON_OK memory\system_state.json
+JSON_OK memory\test\ltm.json
+JSON_OK memory\test\mtm.json
+JSON_OK memory\test\stm.json
+TOTAL_JSON=17

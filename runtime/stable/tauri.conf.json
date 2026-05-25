@@ -6,7 +6,8 @@
   "build": {
     "beforeDevCommand": "",
     "beforeBuildCommand": "bash -lc 'if [[ \"${TITANE_SKIP_FRONTEND_BUILD:-0}\" == \"1\" ]]; then echo \"[tauri.stable] frontend deja prepare — skip beforeBuildCommand\"; exit 0; fi; corepack pnpm exec vite build'",
-    "frontendDist": "../dist"
+    "frontendDist": "../dist",
+    "features": ["custom-protocol"]
   },
   "bundle": {
     "active": true,
@@ -53,6 +54,7 @@
       {
         "label": "main",
         "title": "Titan-Stable v35.1.9 — TITANE∞ Cognitive OS",
+        "url": "/",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

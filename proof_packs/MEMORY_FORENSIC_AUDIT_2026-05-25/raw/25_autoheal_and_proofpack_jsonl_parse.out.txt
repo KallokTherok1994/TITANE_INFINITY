@@ -1,0 +1,2 @@
+JSONL_OK scripts/autoheal/autoheal_rules.jsonl lines=2130
+JSONL_OK registry/proofpack-index.jsonl lines=63

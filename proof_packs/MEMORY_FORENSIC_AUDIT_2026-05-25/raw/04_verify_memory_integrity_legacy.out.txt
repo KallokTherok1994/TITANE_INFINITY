@@ -1,0 +1,6 @@
+🧠 Verifying Memory Integrity...
+[0;32m✅[0m Memory directories present
+[1;33m⚠️[0m  jq not installed (JSON validation skipped)
+[1;33m⚠️[0m  3 duplicate memory files
+
+[0;32m✅ MEMORY INTEGRITY: CLEAN[0m

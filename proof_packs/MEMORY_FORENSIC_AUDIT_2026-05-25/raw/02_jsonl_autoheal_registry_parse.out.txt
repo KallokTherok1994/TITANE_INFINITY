@@ -1,0 +1,121 @@
+JSONL_OK registry\REGISTRY_APPEND_TITANE_FINAL.jsonl lines=1
+JSONL_OK registry\REGISTRY_APPEND_TITANE_Ω∞.jsonl lines=1
+JSONL_OK registry\autofix-autoheal-rules.jsonl lines=29
+JSONL_OK registry\canon-events.jsonl lines=1
+JSONL_OK registry\chat-events.jsonl lines=1
+JSONL_OK registry\chat-mem-phases.jsonl lines=5
+JSONL_OK registry\closure-events.jsonl lines=9
+JSONL_OK registry\heavy-artifacts-manifest.jsonl lines=3
+JSONL_OK registry\local-only-historical-residue.jsonl lines=3
+JSONL_OK registry\proofpack-index.jsonl lines=62
+JSONL_FAIL registry\repo-events.jsonl:25 :: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+JSONL_FAIL registry\repo-events.jsonl:26 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:27 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:28 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:29 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:30 :: Unexpected non-whitespace character after JSON at position 15 (line 1 column 16)
+JSONL_FAIL registry\repo-events.jsonl:31 :: Unexpected non-whitespace character after JSON at position 11 (line 1 column 12)
+JSONL_FAIL registry\repo-events.jsonl:32 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:33 :: Unexpected non-whitespace character after JSON at position 17 (line 1 column 18)
+JSONL_FAIL registry\repo-events.jsonl:34 :: Unexpected non-whitespace character after JSON at position 13 (line 1 column 14)
+JSONL_FAIL registry\repo-events.jsonl:35 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:36 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:37 :: Unexpected non-whitespace character after JSON at position 14 (line 1 column 15)
+JSONL_FAIL registry\repo-events.jsonl:38 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:39 :: Unexpected non-whitespace character after JSON at position 19 (line 1 column 20)
+JSONL_FAIL registry\repo-events.jsonl:40 :: Unexpected token '}', "  }," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:41 :: Unexpected non-whitespace character after JSON at position 26 (line 1 column 27)
+JSONL_FAIL registry\repo-events.jsonl:42 :: Unexpected non-whitespace character after JSON at position 25 (line 1 column 26)
+JSONL_FAIL registry\repo-events.jsonl:43 :: Unexpected non-whitespace character after JSON at position 21 (line 1 column 22)
+JSONL_FAIL registry\repo-events.jsonl:44 :: Unexpected non-whitespace character after JSON at position 28 (line 1 column 29)
+JSONL_FAIL registry\repo-events.jsonl:45 :: Unexpected non-whitespace character after JSON at position 28 (line 1 column 29)
+JSONL_FAIL registry\repo-events.jsonl:46 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:47 :: Unexpected token '}', "  }," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:48 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:49 :: Unexpected token '}', "}" is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:50 :: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+JSONL_FAIL registry\repo-events.jsonl:51 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:52 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:53 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:54 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:55 :: Unexpected non-whitespace character after JSON at position 15 (line 1 column 16)
+JSONL_FAIL registry\repo-events.jsonl:56 :: Unexpected non-whitespace character after JSON at position 11 (line 1 column 12)
+JSONL_FAIL registry\repo-events.jsonl:57 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:58 :: Unexpected non-whitespace character after JSON at position 17 (line 1 column 18)
+JSONL_FAIL registry\repo-events.jsonl:59 :: Unexpected non-whitespace character after JSON at position 23 (line 1 column 24)
+JSONL_FAIL registry\repo-events.jsonl:60 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:61 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:62 :: Unexpected non-whitespace character after JSON at position 14 (line 1 column 15)
+JSONL_FAIL registry\repo-events.jsonl:63 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:64 :: Unexpected non-whitespace character after JSON at position 15 (line 1 column 16)
+JSONL_FAIL registry\repo-events.jsonl:65 :: Unexpected non-whitespace character after JSON at position 19 (line 1 column 20)
+JSONL_FAIL registry\repo-events.jsonl:66 :: Unexpected token '}', "  }," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:67 :: Unexpected non-whitespace character after JSON at position 15 (line 1 column 16)
+JSONL_FAIL registry\repo-events.jsonl:68 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:69 :: Unexpected token '}', "}" is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:70 :: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+JSONL_FAIL registry\repo-events.jsonl:71 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:72 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:73 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:74 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:75 :: Unexpected non-whitespace character after JSON at position 15 (line 1 column 16)
+JSONL_FAIL registry\repo-events.jsonl:76 :: Unexpected non-whitespace character after JSON at position 11 (line 1 column 12)
+JSONL_FAIL registry\repo-events.jsonl:77 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:78 :: Unexpected non-whitespace character after JSON at position 17 (line 1 column 18)
+JSONL_FAIL registry\repo-events.jsonl:79 :: Unexpected non-whitespace character after JSON at position 21 (line 1 column 22)
+JSONL_FAIL registry\repo-events.jsonl:80 :: Unexpected non-whitespace character after JSON at position 19 (line 1 column 20)
+JSONL_FAIL registry\repo-events.jsonl:81 :: Unexpected non-whitespace character after JSON at position 18 (line 1 column 19)
+JSONL_FAIL registry\repo-events.jsonl:82 :: Unexpected token '}', "  }," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:83 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:84 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:85 :: Unexpected token '}', "}" is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:86 :: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+JSONL_FAIL registry\repo-events.jsonl:87 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:88 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:89 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:90 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:91 :: Unexpected non-whitespace character after JSON at position 15 (line 1 column 16)
+JSONL_FAIL registry\repo-events.jsonl:92 :: Unexpected non-whitespace character after JSON at position 11 (line 1 column 12)
+JSONL_FAIL registry\repo-events.jsonl:93 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:94 :: Unexpected non-whitespace character after JSON at position 17 (line 1 column 18)
+JSONL_FAIL registry\repo-events.jsonl:95 :: Unexpected non-whitespace character after JSON at position 19 (line 1 column 20)
+JSONL_FAIL registry\repo-events.jsonl:96 :: Unexpected non-whitespace character after JSON at position 14 (line 1 column 15)
+JSONL_FAIL registry\repo-events.jsonl:97 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:98 :: Unexpected non-whitespace character after JSON at position 11 (line 1 column 12)
+JSONL_FAIL registry\repo-events.jsonl:99 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:100 :: Unexpected token '}', "  }," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:101 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:102 :: Unexpected non-whitespace character after JSON at position 18 (line 1 column 19)
+JSONL_FAIL registry\repo-events.jsonl:103 :: Unexpected non-whitespace character after JSON at position 18 (line 1 column 19)
+JSONL_FAIL registry\repo-events.jsonl:104 :: Unexpected non-whitespace character after JSON at position 21 (line 1 column 22)
+JSONL_FAIL registry\repo-events.jsonl:105 :: Unexpected token '}', "  }," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:106 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:107 :: Unexpected token '}', "}" is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:109 :: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+JSONL_FAIL registry\repo-events.jsonl:110 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:111 :: Unexpected non-whitespace character after JSON at position 6 (line 1 column 7)
+JSONL_FAIL registry\repo-events.jsonl:112 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:113 :: Unexpected non-whitespace character after JSON at position 9 (line 1 column 10)
+JSONL_FAIL registry\repo-events.jsonl:114 :: Unexpected non-whitespace character after JSON at position 15 (line 1 column 16)
+JSONL_FAIL registry\repo-events.jsonl:115 :: Unexpected non-whitespace character after JSON at position 11 (line 1 column 12)
+JSONL_FAIL registry\repo-events.jsonl:116 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:117 :: Unexpected non-whitespace character after JSON at position 17 (line 1 column 18)
+JSONL_FAIL registry\repo-events.jsonl:118 :: Unexpected non-whitespace character after JSON at position 20 (line 1 column 21)
+JSONL_FAIL registry\repo-events.jsonl:119 :: Unexpected non-whitespace character after JSON at position 47 (line 1 column 48)
+JSONL_FAIL registry\repo-events.jsonl:121 :: Unexpected token ']', "  ]," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:122 :: Unexpected non-whitespace character after JSON at position 13 (line 1 column 14)
+JSONL_FAIL registry\repo-events.jsonl:123 :: Unexpected non-whitespace character after JSON at position 20 (line 1 column 21)
+JSONL_FAIL registry\repo-events.jsonl:124 :: Unexpected non-whitespace character after JSON at position 41 (line 1 column 42)
+JSONL_FAIL registry\repo-events.jsonl:125 :: Unexpected non-whitespace character after JSON at position 22 (line 1 column 23)
+JSONL_FAIL registry\repo-events.jsonl:126 :: Unexpected non-whitespace character after JSON at position 48 (line 1 column 49)
+JSONL_FAIL registry\repo-events.jsonl:128 :: Unexpected token ']', "  ]," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:129 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:130 :: Unexpected non-whitespace character after JSON at position 53 (line 1 column 54)
+JSONL_FAIL registry\repo-events.jsonl:132 :: Unexpected token ']', "  ]," is not valid JSON
+JSONL_FAIL registry\repo-events.jsonl:133 :: Unexpected non-whitespace character after JSON at position 14 (line 1 column 15)
+JSONL_FAIL registry\repo-events.jsonl:134 :: Unexpected non-whitespace character after JSON at position 12 (line 1 column 13)
+JSONL_FAIL registry\repo-events.jsonl:135 :: Unexpected non-whitespace character after JSON at position 10 (line 1 column 11)
+JSONL_FAIL registry\repo-events.jsonl:136 :: Unexpected token '}', "}" is not valid JSON
+JSONL_OK registry\repo-events.jsonl lines=31
+JSONL_OK registry\ui-events.jsonl lines=389
+JSONL_OK scripts/autoheal/autoheal_rules.jsonl lines=2129

@@ -1,0 +1,5 @@
+
+> titane-infinity@35.1.9 verify:instructions C:\Dev\TITANE_INFINITY
+> bash scripts/verify/verify-copilot-instructions.sh
+
+PASS: verify-copilot-instructions

@@ -1,0 +1,31 @@
+══════════════════════════════════════════════════════════════
+  TITANE∞ — VALIDATORS CHAT/MEMORY REPORT
+  Timestamp : 2026-05-25T09:42:22
+  Directory : /c/Dev/TITANE_INFINITY/scripts/validators
+══════════════════════════════════════════════════════════════
+
+▶ V1 Ghost Commands (active:true sans handler Rust)      [PASS]
+
+▶ V2 Persistance mémoire active (compactor + flush)     [PASS]
+
+▶ V3 send_message stub contradictoire                    [PASS]
+
+▶ V4 IPC mocks silencieux (memory_get/set/list)          [PASS]
+
+▶ V5 conversation_id stable (pas de regen mount)         [PASS]
+
+▶ V6 Restore no-duplication guard (list_restorable + dedup) [PASS]
+
+══════════════════════════════════════════════════════════════
+  RAPPORT CONSOLIDÉ
+══════════════════════════════════════════════════════════════
+  PASS    | V1 Ghost Commands (active:true sans handler Rust)
+  PASS    | V2 Persistance mémoire active (compactor + flush)
+  PASS    | V3 send_message stub contradictoire
+  PASS    | V4 IPC mocks silencieux (memory_get/set/list)
+  PASS    | V5 conversation_id stable (pas de regen mount)
+  PASS    | V6 Restore no-duplication guard (list_restorable + dedup)
+
+  Résultat : PASS=6  FAIL=0  BLOCKED=0
+══════════════════════════════════════════════════════════════
+  GLOBAL: PASS (tous les 6 validators réussis)

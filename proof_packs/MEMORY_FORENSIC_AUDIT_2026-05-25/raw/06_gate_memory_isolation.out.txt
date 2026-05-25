@@ -1,0 +1,1 @@
+bash: scripts/checks/check_memory_isolation.sh: No such file or directory

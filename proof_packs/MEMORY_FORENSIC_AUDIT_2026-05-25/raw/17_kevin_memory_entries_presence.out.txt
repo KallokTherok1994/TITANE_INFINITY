@@ -1,0 +1,33 @@
+src-tauri/memory/memory_core_state.json:424:      "id": "k-kevin-identity-20260525",
+src-tauri/memory/memory_core_state.json:426:      "content": "Kevin Thibault se présente comme entrepreneur créatif, auteur et architecte de clarté et de cohérence. Signature: « Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer. » Repères symboliques: KAwen, Awen, passeur, gardien de seuil.",
+src-tauri/memory/memory_core_state.json:432:      "id": "k-kevin-preferences-20260525",
+src-tauri/memory/memory_core_state.json:434:      "content": "Répondre en français québécois naturel; agir comme copilote de cohérence, miroir lucide et architecte de clarté; identifier l’axe réel, séparer l’essentiel du bruit, simplifier sans appauvrir, éviter jargon inutile, flatterie vide, expansions non qualifiées et refactors gratuits.",
+memory/memory-index.json:391:        "ltm-017",
+memory/memory-index.json:393:          "id": "ltm-017",
+memory/memory-index.json:394:          "content": "Kevin Thibault — Identité préférée: entrepreneur créatif, auteur, architecte de clarté et de cohérence. Signature professionnelle: « Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer. » Repères symboliques: KAwen, Awen, passeur, gardien de seuil.",
+memory/memory-index.json:403:        "ltm-018",
+memory/memory-index.json:405:          "id": "ltm-018",
+memory/memory-index.json:415:        "ltm-019",
+memory/memory-index.json:417:          "id": "ltm-019",
+memory/memory-index.json:427:        "ltm-020",
+memory/memory-index.json:429:          "id": "ltm-020",
+memory/memory-index.json:430:          "content": "Préférences persistantes: agir comme copilote de cohérence, miroir lucide et architecte de clarté; identifier l’axe réel, séparer l’essentiel du bruit, simplifier sans appauvrir, éviter jargon, flatterie vide, expansions non qualifiées et refactors gratuits.",
+memory/memory-index.json:439:        "ltm-021",
+memory/memory-index.json:441:          "id": "ltm-021",
+memory/memory-index.json:442:          "content": "Récit fondateur TITANE pour Kevin: « Je n’ai pas créé TITANE pour aller plus vite. Je l’ai créé pour pouvoir continuer. » TITANE doit rester un allié de continuité, mémoire, clarté et cohérence, jamais un sauveur.",
+memory/memory-index.json:469:        "ltm-019",
+memory/memory-index.json:470:        "ltm-021"
+memory/memory-index.json:474:        "ltm-017"
+memory/memory-index.json:480:        "ltm-018",
+memory/memory-index.json:481:        "ltm-020"
+memory/memory_core_state.json:654:      "id": "k-kevin-identity-20260525",
+memory/memory_core_state.json:656:      "content": "Kevin Thibault se présente comme entrepreneur créatif, auteur et architecte de clarté et de cohérence. Signature: « Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer. » Repères symboliques: KAwen, Awen, passeur, gardien de seuil.",
+memory/memory_core_state.json:662:      "id": "k-kevin-preferences-20260525",
+memory/memory_core_state.json:664:      "content": "Répondre en français québécois naturel; agir comme copilote de cohérence, miroir lucide et architecte de clarté; identifier l’axe réel, séparer l’essentiel du bruit, simplifier sans appauvrir, éviter jargon inutile, flatterie vide, expansions non qualifiées et refactors gratuits.",
+data/knowledge_base/default/kevin_owner_profile_v30.json:19:      "signature": "Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer.",
+data/knowledge_base/default/kevin_owner_profile_v30.json:39:      "founding_titane_story": "Je n’ai pas créé TITANE pour aller plus vite. Je l’ai créé pour pouvoir continuer."
+data/knowledge_base/default/kevin_owner_profile_v30.json:80:        "copilote de cohérence",
+data/knowledge_base/default/kevin_owner_profile_v30.json:114:      "professional_identity": "Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer.",
+data/knowledge_base/default/kevin_owner_profile_v30.json:116:        "KAwen",
+data/knowledge_base/default/kevin_owner_profile_v30.json:136:      "timezone": "America/Montreal"
+scripts/autoheal/autoheal_rules.jsonl:2128:{"id":"AH-2026-05-25-KEVIN-OWNER-MEMORY-PROFILE-0012","date":"2026-05-25","scope":["data/knowledge_base/default/kevin_owner_profile_v30.json","memory/memory-index.json","memory/memory_core_state.json","src-tauri/memory/memory_core_state.json"],"symptom":"Le profil memoire de Kevin ne contenait pas encore les informations persistantes recentes sur son identite preferee, sa langue, son ecosysteme, ses projets, ses competences, ses symboles et ses preferences de reponse.","root_cause":"La memoire canonique existante etait plus ancienne et fragmentaire; les nouveaux faits fournis devaient etre consolides dans le profil proprietaire et les surfaces de rappel LTM/runtime.","fix":"Ajouter les champs structures au profil proprietaire Kevin, ajouter cinq entrees LTM dans memory-index, et publier deux entrees knowledge runtime dans les memory_core_state racine et Tauri.","prevention_test":"Validation JSON des fichiers modifies + recherche des marqueurs cles + bash scripts/autoheal/detect_recurrence.sh","commands":["node -e \"JSON.parse(...)\"","rg -n \"Architecte de clarté|Je n’ai pas créé TITANE|KAwen|America/Montreal|copilote de cohérence\" ...","bash scripts/autoheal/detect_recurrence.sh"],"files_changed":["data/knowledge_base/default/kevin_owner_profile_v30.json","memory/memory-index.json","memory/memory_core_state.json","src-tauri/memory/memory_core_state.json","scripts/autoheal/autoheal_rules.jsonl"],"rollback":"git restore -- data/knowledge_base/default/kevin_owner_profile_v30.json memory/memory-index.json memory/memory_core_state.json scripts/autoheal/autoheal_rules.jsonl && git restore -- src-tauri/memory/memory_core_state.json si le fichier est suivi dans la cible locale"}
