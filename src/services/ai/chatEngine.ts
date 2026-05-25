@@ -132,6 +132,9 @@ import {
   applyReflectiveCorrections,
   REFLECTIVE_VERIFIER_ENABLED,
 } from './reflectiveVerifier';
+// v35.2.0: Web enrichment pré-génération
+import { evaluateWebTruthPolicy } from './webTruthPolicy';
+import { webSearch } from '@/services/webResearchService';
 // v31.2.33: Working Memory Compressor
 import {
   compress as compressHistory,
@@ -1106,6 +1109,38 @@ Format: [Audit complet] + [Réponse utilisateur]
       const preferencePrompt = buildPreferencePrompt(memoryIntegration.loadPreferences());
       if (preferencePrompt) {
         systemPrompt = `${systemPrompt}\n\n${preferencePrompt}`;
+      }
+
+      // ═══ PHASE 1.25: WEB ENRICHMENT PRÉ-GÉNÉRATION ═══
+      // Enrichit le prompt AVANT le LLM pour les requêtes de fraîcheur ou web-explicites.
+      pipelineSteps.push('web-enrichment-check');
+      const webPolicy = evaluateWebTruthPolicy({ userMessage: validatedMessage });
+      if (webPolicy.shouldUseWeb) {
+        try {
+          const webTimeout = new Promise<null>(resolve => setTimeout(() => resolve(null), 4000));
+          const webResult = await Promise.race([webSearch(validatedMessage, 5), webTimeout]);
+          if (webResult && webResult.ok && webResult.content && webResult.content.length > 0) {
+            const webBlock = webResult.content
+              .map((r: { title: string; snippet: string }) => `• ${r.title}: ${r.snippet}`)
+              .join('\n');
+            systemPrompt = `${systemPrompt}\n\n🌐 Sources web récentes (${webPolicy.need}):\n${webBlock}`;
+            pipelineSteps.push(`web-enrichment:injected:${webResult.content.length}`);
+            attachWebResearchResult(cogTrace, {
+              needed: true,
+              attempted: true,
+              available: true,
+              sourceCount: webResult.content.length,
+              limitations: [],
+              reasonCode: webPolicy.need === 'freshness_required' ? 'freshness_required' : 'web_success',
+            });
+          } else {
+            pipelineSteps.push('web-enrichment:empty');
+          }
+        } catch {
+          pipelineSteps.push('web-enrichment:failed');
+        }
+      } else {
+        pipelineSteps.push(`web-enrichment:skipped:${webPolicy.need}`);
       }
 
       const backendResponse = await this.tryBackendPipeline({
@@ -3503,6 +3538,38 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         }
       } catch {
         // TWIN insights are non-blocking — ignore if unavailable
+      }
+
+      // TWIN fusion state — phase d'évolution, alignement et valeurs (localStorage snapshot)
+      try {
+        const twinSnapshotRaw = localStorage.getItem('titane_twin_fusion_v1');
+        if (twinSnapshotRaw) {
+          const snap = JSON.parse(twinSnapshotRaw) as {
+            globalScore?: number;
+            trend?: string;
+            currentPhase?: string;
+            identityCore?: { coreValues?: string[]; humanStyle?: string };
+            valueMap?: { confirmedValues?: string[] };
+            cognitivePatterns?: { reasoningStyle?: string };
+          };
+          const score = snap.globalScore != null ? `${Math.round(snap.globalScore * 100)}%` : null;
+          const phase = snap.currentPhase ?? null;
+          const trend = snap.trend ?? null;
+          const values = (snap.valueMap?.confirmedValues ?? snap.identityCore?.coreValues ?? [])
+            .slice(0, 3)
+            .join(', ');
+          const style = snap.cognitivePatterns?.reasoningStyle ?? snap.identityCore?.humanStyle ?? null;
+          const parts: string[] = [];
+          if (phase) parts.push(`Phase: ${phase}`);
+          if (score) parts.push(`Fusion: ${score}${trend ? ` (${trend})` : ''}`);
+          if (values) parts.push(`Valeurs: ${values}`);
+          if (style) parts.push(`Cognitif: ${style}`);
+          if (parts.length > 0) {
+            volatileSuffix += `\n\n🧬 TWIN Profil (Kevin): ${parts.join(' | ')}`;
+          }
+        }
+      } catch {
+        // TWIN fusion snapshot non-blocking
       }
 
       // Return stable + volatile

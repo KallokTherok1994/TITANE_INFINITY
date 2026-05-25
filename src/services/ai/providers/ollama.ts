@@ -60,6 +60,28 @@ const OLLAMA_CONFIG = {
 const MAX_CONTEXT_HISTORY_MESSAGES = 20;
 
 // ═══════════════════════════════════════════════════════════════
+// AUTO-MODEL SELECTION
+// ═══════════════════════════════════════════════════════════════
+
+// Populated by checkOllamaHealth() — used by initializeOllama() to pick best model
+let detectedModels: string[] = [];
+
+// Priority: largest context window first, then capability ranking
+const MODEL_PRIORITY: string[] = [
+  'qwen3', 'qwen2.5', 'deepseek', 'llama3.3',
+  'llama3.2', 'mixtral', 'mistral', 'llama3.1',
+  'phi4', 'gemma2',
+];
+
+export function pickBestModel(available: string[]): string {
+  for (const preferred of MODEL_PRIORITY) {
+    const match = available.find(m => m === preferred || m.startsWith(`${preferred}:`));
+    if (match) return match;
+  }
+  return available[0] ?? OLLAMA_CONFIG.model;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // HEALTH TRACKING
 // ═══════════════════════════════════════════════════════════════
 
@@ -81,6 +103,15 @@ export async function initializeOllama(): Promise<boolean> {
     errorCount = 0;
     lastError = null;
     logger.info(`✅ Ollama initialization succeeded (${OLLAMA_CONFIG.model})`);
+    if (detectedModels.length > 0) {
+      const best = pickBestModel(detectedModels);
+      if (best !== OLLAMA_CONFIG.model) {
+        logger.info(`Ollama auto-select: ${OLLAMA_CONFIG.model} → ${best} (${detectedModels.length} modèles disponibles)`);
+        OLLAMA_CONFIG.model = best;
+      } else {
+        logger.debug(`Ollama auto-select: ${OLLAMA_CONFIG.model} est déjà optimal`);
+      }
+    }
   } else {
     errorCount = Math.max(errorCount, 1);
     logger.warn(
@@ -231,6 +262,7 @@ async function checkOllamaHealth(): Promise<boolean> {
     const health = await ollamaCheckHealth();
     if (health.ok) {
       const models = health.content.models || [];
+      detectedModels = models.map((m: { name: string }) => m.name);
       const configuredModelFamily =
         OLLAMA_CONFIG.model.split(':')[0] ?? OLLAMA_CONFIG.model;
       const hasModel = models.some(

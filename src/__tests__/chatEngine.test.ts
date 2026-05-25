@@ -20,6 +20,13 @@ import * as defaultKnowledgeBase from '@/services/api/defaultKnowledgeBase';
 import * as skillActivator from '@/services/skills/activation/skillActivator';
 import userPreferencesEngine from '@/services/userPreferencesEngine';
 import { chatValidator } from '@/services/chatValidator';
+import * as webResearchServiceModule from '@/services/webResearchService';
+
+// Default mock: returns no results — prevents real network calls in all tests.
+// Web enrichment tests override this per-test with vi.mocked().mockResolvedValueOnce().
+vi.mock('@/services/webResearchService', () => ({
+  webSearch: vi.fn().mockResolvedValue({ ok: false, content: null, error: null }),
+}));
 
 const EMPTY_MEMORY_CONTEXT = {
   activeProjects: [],
@@ -764,5 +771,54 @@ describe('ChatEngine — default knowledge base integration', () => {
     expect(
       response.omegaMetadata?.pipelineSteps.some(step => step.startsWith('memory-write-'))
     ).toBe(true);
+  });
+});
+
+describe('ChatEngine — Web Enrichment Pré-Génération (Phase 1.25)', () => {
+  beforeEach(() => {
+    vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
+    vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
+    vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
+    vi.spyOn(defaultKnowledgeBase, 'getCompactIndex').mockResolvedValue('');
+    vi.spyOn(defaultKnowledgeBase, 'getRelevantPromptContext').mockResolvedValue('');
+    vi.spyOn(chatEngineCommands, 'generateResponse').mockResolvedValue({
+      content: 'Réponse web enrichment test',
+      provider: 'ollama',
+      conversationId: 'conv-web-test',
+      messageId: 'msg-web-test',
+      timestamp: Date.now(),
+      tokenCount: 10,
+      latencyMs: 5,
+    });
+  });
+
+  test('injecte les sources web dans le prompt pour une requête de fraîcheur', async () => {
+    vi.mocked(webResearchServiceModule.webSearch).mockResolvedValueOnce({
+      ok: true,
+      content: [
+        { title: 'Actualité IA', url: 'https://example.com/ai', snippet: 'Avancée LLM récente' },
+      ],
+      error: null,
+    });
+
+    const response = await chatEngine.generate(
+      "Quelles sont les dernières nouvelles en IA aujourd'hui?",
+      []
+    );
+
+    expect(
+      response.omegaMetadata?.pipelineSteps.some(s => s.startsWith('web-enrichment:injected'))
+    ).toBe(true);
+  });
+
+  test('skips web enrichment pour un message sans signal de fraîcheur', async () => {
+    const response = await chatEngine.generate('Raconte-moi une histoire courte', []);
+
+    expect(
+      response.omegaMetadata?.pipelineSteps.some(s => s.startsWith('web-enrichment:skipped'))
+    ).toBe(true);
+    expect(
+      response.omegaMetadata?.pipelineSteps.some(s => s.startsWith('web-enrichment:injected'))
+    ).toBe(false);
   });
 });
