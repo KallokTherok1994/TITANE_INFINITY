@@ -1,3 +1,4 @@
+import { getTwinKindRejectionPenalty } from './reviewQueue';
 import type {
   TwinChatExtractionInput,
   TwinChatObservationCandidate,
@@ -6,84 +7,64 @@ import type {
 } from './types';
 
 const VALUE_PATTERNS = [
-  {
-    matcher: /(authenticit[eé]|authentique)/i,
-    contentCompact: 'authenticite',
-  },
-  {
-    matcher: /(clart[eé]|clair)/i,
-    contentCompact: 'clarte',
-  },
-  {
-    matcher: /(alignement|align[eé])/i,
-    contentCompact: 'alignement',
-  },
-  {
-    matcher: /(libert[eé]|autonomie)/i,
-    contentCompact: 'autonomie',
-  },
-  {
-    matcher: /(simplicit[eé]|simple)/i,
-    contentCompact: 'simplicite',
-  },
+  { matcher: /(authenticit[eé]|authentique)/i, contentCompact: 'authenticite' },
+  { matcher: /(clart[eé]|clair)/i, contentCompact: 'clarte' },
+  { matcher: /(alignement|align[eé])/i, contentCompact: 'alignement' },
+  { matcher: /(libert[eé]|autonomie)/i, contentCompact: 'autonomie' },
+  { matcher: /(simplicit[eé]|simple)/i, contentCompact: 'simplicite' },
+  { matcher: /\b(impact|impacter|avoir un impact)\b/i, contentCompact: 'impact' },
+  { matcher: /\b(excellence|excellent)\b/i, contentCompact: 'excellence' },
+  { matcher: /\b(rigueur|rigoureux|rigoureuse)\b/i, contentCompact: 'rigueur' },
+  { matcher: /\b(int[eé]grit[eé])\b/i, contentCompact: 'integrite' },
+  { matcher: /\b(qualit[eé])\b/i, contentCompact: 'qualite' },
+  { matcher: /\b(profondeur|profond|en profondeur)\b/i, contentCompact: 'profondeur' },
+  { matcher: /\b(passion|passionn[eé])\b/i, contentCompact: 'passion' },
+  { matcher: /\b(mission|raison d.?[eê]tre|sens)\b/i, contentCompact: 'mission' },
 ] as const;
 
 const COGNITIVE_PATTERNS = [
-  {
-    matcher: /(pas [àa] pas|step by step|[ée]tape par [ée]tape)/i,
-    contentCompact: 'reasoning_stepwise',
-  },
-  {
-    matcher: /(structure|structur[eé]|cadre|framework)/i,
-    contentCompact: 'reasoning_structured',
-  },
-  {
-    matcher: /(synth[eè]se|vue d[' ]ensemble|big picture)/i,
-    contentCompact: 'reasoning_synthesis',
-  },
-  {
-    matcher: /(analyse|analyser|diagnostic)/i,
-    contentCompact: 'reasoning_analytical',
-  },
+  { matcher: /(pas [àa] pas|step by step|[ée]tape par [ée]tape)/i, contentCompact: 'reasoning_stepwise' },
+  { matcher: /(structure|structur[eé]|cadre|framework)/i, contentCompact: 'reasoning_structured' },
+  { matcher: /(synth[eè]se|vue d[' ]ensemble|big picture)/i, contentCompact: 'reasoning_synthesis' },
+  { matcher: /(analyse|analyser|diagnostic)/i, contentCompact: 'reasoning_analytical' },
+  { matcher: /\b(strat[eé]gique|strat[eé]gie)\b/i, contentCompact: 'reasoning_strategic' },
+  { matcher: /\b(vision|visionnaire)\b/i, contentCompact: 'reasoning_vision' },
+  { matcher: /\b(pragmatique|concret|applicable|actionnable)\b/i, contentCompact: 'reasoning_pragmatic' },
+  { matcher: /\b(syst[eé]mique|syst[eè]me|global|holistique)\b/i, contentCompact: 'reasoning_systemic' },
 ] as const;
 
 const STYLE_PATTERNS = [
-  {
-    matcher: /(direct|franc|sans fluff|sans bla bla)/i,
-    contentCompact: 'style_direct',
-  },
-  {
-    matcher: /(concis|court|bref|va [àa] l[' ]essentiel)/i,
-    contentCompact: 'style_concis',
-  },
-  {
-    matcher: /(d[eé]taill[eé]|approfondi|complet)/i,
-    contentCompact: 'style_detaille',
-  },
-  {
-    matcher: /(structur[eé]|bullet|liste|tableau)/i,
-    contentCompact: 'style_structure',
-  },
+  { matcher: /(direct|franc|sans fluff|sans bla bla)/i, contentCompact: 'style_direct' },
+  { matcher: /(concis|court|bref|va [àa] l[' ]essentiel)/i, contentCompact: 'style_concis' },
+  { matcher: /(d[eé]taill[eé]|approfondi|complet)/i, contentCompact: 'style_detaille' },
+  { matcher: /(structur[eé]|bullet|liste|tableau)/i, contentCompact: 'style_structure' },
+  { matcher: /\b(pr[eé]cis|pr[eé]cision)\b/i, contentCompact: 'style_precis' },
+  { matcher: /\b(efficace|efficient)\b/i, contentCompact: 'style_efficace' },
+  { matcher: /\b(synth[eé]tique)\b/i, contentCompact: 'style_synthetique' },
 ] as const;
 
 const EMOTIONAL_PATTERNS = [
-  {
-    matcher: /(fatigu[eé]|[ée]puis[eé])/i,
-    contentCompact: 'emotion_fatigue',
-  },
-  {
-    matcher: /(stress[eé]?|anxieux|anxieuse|angoiss[eé])/i,
-    contentCompact: 'emotion_anxiete',
-  },
-  {
-    matcher: /(calme|apais[eé]|serein)/i,
-    contentCompact: 'emotion_apaisement',
-  },
-  {
-    matcher: /(frustr[eé]|agac[eé]|en col[eè]re)/i,
-    contentCompact: 'emotion_frustration',
-  },
+  { matcher: /(fatigu[eé]|[ée]puis[eé])/i, contentCompact: 'emotion_fatigue' },
+  { matcher: /(stress[eé]?|anxieux|anxieuse|angoiss[eé])/i, contentCompact: 'emotion_anxiete' },
+  { matcher: /(calme|apais[eé]|serein)/i, contentCompact: 'emotion_apaisement' },
+  { matcher: /(frustr[eé]|agac[eé]|en col[eè]re)/i, contentCompact: 'emotion_frustration' },
 ] as const;
+
+const EMPHASIS_PATTERN =
+  /\b(vraiment|absolument|toujours|jamais|[eé]norm[eé]ment|profond[eé]ment|fondamentalement|essentiel|par-dessus tout|[àa] vie)\b/i;
+
+function computeConfidence(
+  base: number,
+  message: string,
+  patternMatchCount: number,
+  rejectionPenalty: number
+): number {
+  let confidence = base;
+  if (EMPHASIS_PATTERN.test(message)) confidence += 0.05;
+  if (patternMatchCount > 1) confidence += 0.03;
+  confidence -= rejectionPenalty;
+  return Math.min(0.95, Math.max(0.40, confidence));
+}
 
 function normalizeMessage(message: string): string {
   return message.trim().replace(/\s+/g, ' ');
@@ -126,20 +107,20 @@ function collectMatches(
   input: TwinChatExtractionInput,
   patterns: ReadonlyArray<{ matcher: RegExp; contentCompact: string }>,
   kind: TwinChatObservationKind,
-  confidence: number,
+  baseConfidence: number,
   risk: TwinChatObservationRisk
 ): TwinChatObservationCandidate[] {
-  return patterns
-    .filter(pattern => pattern.matcher.test(input.message))
-    .map(pattern =>
-      buildCandidate({
-        kind,
-        contentCompact: pattern.contentCompact,
-        confidence,
-        risk,
-        input,
-      })
-    );
+  const matched = patterns.filter(pattern => pattern.matcher.test(input.message));
+  if (matched.length === 0) return [];
+  const confidence = computeConfidence(
+    baseConfidence,
+    input.message,
+    matched.length,
+    getTwinKindRejectionPenalty(kind)
+  );
+  return matched.map(pattern =>
+    buildCandidate({ kind, contentCompact: pattern.contentCompact, confidence, risk, input })
+  );
 }
 
 function dedupeCandidates(

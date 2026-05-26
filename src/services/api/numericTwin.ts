@@ -49,34 +49,36 @@ export function persistTwinChatContextSnapshot(params: {
   }
 
   const { state, fusion, profile } = params;
-  window.localStorage.setItem(
-    'titane_twin_fusion_v1',
-    JSON.stringify({
-      globalScore: fusion.globalScore,
-      trend: fusion.trend,
-      currentPhase: profile.currentPhase ?? null,
-      syncScore: profile.syncScore ?? 0,
-      identityCore: state.identityCore,
-      valueMap: state.valueMap,
-      cognitivePatterns: state.cognitivePatterns,
-      therapeuticModel: state.therapeuticModel,
-      creativeSignature: state.creativeSignature,
-      fusionComponents: {
-        valueAlignment: fusion.valueAlignment,
-        cognitiveAlignment: fusion.cognitiveAlignment,
-        styleAlignment: fusion.styleAlignment,
-        therapeuticAlignment: fusion.therapeuticAlignment,
-        creativeAlignment: fusion.creativeAlignment,
-        evolutionAlignment: fusion.evolutionAlignment,
-      },
-      ownerThemes: [...OWNER_TWIN_RESONANCE.ownerThemes],
-      sourceCount: OWNER_TWIN_RESONANCE.sourceCount,
-      reflectionAxis: OWNER_TWIN_RESONANCE.reflectionAxis,
-      portraitUrl: OWNER_TWIN_RESONANCE.portraitUrl,
-      portraitFallbackUrl: OWNER_TWIN_RESONANCE.portraitFallbackUrl,
-      updatedAt: Date.now(),
-    })
-  );
+  try {
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: fusion.globalScore,
+        trend: fusion.trend,
+        currentPhase: profile.currentPhase ?? null,
+        syncScore: profile.syncScore ?? 0,
+        identityCore: state.identityCore,
+        valueMap: state.valueMap,
+        cognitivePatterns: state.cognitivePatterns,
+        therapeuticModel: state.therapeuticModel,
+        creativeSignature: state.creativeSignature,
+        fusionComponents: {
+          valueAlignment: fusion.valueAlignment,
+          cognitiveAlignment: fusion.cognitiveAlignment,
+          styleAlignment: fusion.styleAlignment,
+          therapeuticAlignment: fusion.therapeuticAlignment,
+          creativeAlignment: fusion.creativeAlignment,
+          evolutionAlignment: fusion.evolutionAlignment,
+        },
+        ownerThemes: [...OWNER_TWIN_RESONANCE.ownerThemes],
+        sourceCount: OWNER_TWIN_RESONANCE.sourceCount,
+        reflectionAxis: OWNER_TWIN_RESONANCE.reflectionAxis,
+        portraitUrl: OWNER_TWIN_RESONANCE.portraitUrl,
+        portraitFallbackUrl: OWNER_TWIN_RESONANCE.portraitFallbackUrl,
+        updatedAt: Date.now(),
+      })
+    );
+  } catch { /* localStorage quota exceeded or unavailable */ }
 }
 
 /**

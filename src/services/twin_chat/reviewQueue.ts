@@ -2,6 +2,7 @@ import { numericTwinService } from '@/services/api/numericTwin';
 
 import type {
   TwinChatObservationCandidate,
+  TwinChatObservationKind,
   TwinChatPolicyDecision,
   TwinChatReviewItem,
 } from './types';
@@ -11,6 +12,29 @@ const STORAGE_EVENT = 'titane:twin-chat-review-queue-changed';
 const REVIEW_ITEM_TTL_DAYS = 30;
 const FAILED_ITEM_TTL_HOURS = 48;
 const MAX_REVIEW_QUEUE_SIZE = 200;
+const REJECTION_COUNTS_KEY = 'titane:twin_kind_rejections';
+
+function incrementRejectionCount(kind: TwinChatObservationKind): void {
+  if (!canPersist()) return;
+  try {
+    const raw = window.localStorage.getItem(REJECTION_COUNTS_KEY);
+    const counts = raw ? (JSON.parse(raw) as Record<string, number>) : {};
+    counts[kind] = (counts[kind] ?? 0) + 1;
+    window.localStorage.setItem(REJECTION_COUNTS_KEY, JSON.stringify(counts));
+  } catch { /* ignore */ }
+}
+
+export function getTwinKindRejectionPenalty(kind: TwinChatObservationKind): number {
+  if (!canPersist()) return 0;
+  try {
+    const raw = window.localStorage.getItem(REJECTION_COUNTS_KEY);
+    if (!raw) return 0;
+    const counts = JSON.parse(raw) as Record<string, number>;
+    return Math.min(0.15, (counts[kind] ?? 0) * 0.05);
+  } catch {
+    return 0;
+  }
+}
 
 function canPersist(): boolean {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
@@ -236,6 +260,8 @@ export function rejectTwinChatReviewItem(reviewId: string): TwinChatReviewItem {
   if (target.writeStatus !== 'pending') {
     throw new Error('Cette review twin_chat a déjà été traitée');
   }
+
+  incrementRejectionCount(target.candidate.kind);
 
   const updated = {
     ...target,
