@@ -57,6 +57,26 @@ const blockedDecision: TwinChatPolicyDecision = {
   requiresKevinValidation: true,
 };
 
+function buildReviewDecision(candidateId: string): TwinChatPolicyDecision {
+  return {
+    candidateId,
+    verdict: 'review_required',
+    observationType: 'value',
+    validationStatus: 'requires_kevin_validation',
+    riskLevel: 'medium',
+    canWriteTwin: false,
+    requiresKevinValidation: true,
+  };
+}
+
+function buildValueCandidate(id: string): TwinChatObservationCandidate {
+  return {
+    ...valueCandidate,
+    id,
+    contentCompact: id,
+  };
+}
+
 describe('twin_chat reviewQueue', () => {
   beforeEach(() => {
     window.localStorage.clear();
@@ -64,6 +84,7 @@ describe('twin_chat reviewQueue', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     window.localStorage.clear();
   });
 
@@ -161,5 +182,50 @@ describe('twin_chat reviewQueue', () => {
 
     expect(rejected.writeStatus).toBe('rejected');
     expect(numericTwinService.observeValue).not.toHaveBeenCalled();
+  });
+
+  it('drops review items older than the retention window', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-05-15T12:00:00.000Z'));
+    window.localStorage.setItem(
+      'titane_twin_chat_review_queue_v1',
+      JSON.stringify([
+        {
+          id: 'value:old',
+          candidate: buildValueCandidate('value:old'),
+          decision: buildReviewDecision('value:old'),
+          recordedAt: '2026-04-14T12:00:00.000Z',
+          lastSeenAt: '2026-04-14T12:00:00.000Z',
+          writeStatus: 'pending',
+        },
+        {
+          id: 'value:fresh',
+          candidate: buildValueCandidate('value:fresh'),
+          decision: buildReviewDecision('value:fresh'),
+          recordedAt: '2026-04-16T12:00:00.000Z',
+          lastSeenAt: '2026-04-16T12:00:00.000Z',
+          writeStatus: 'pending',
+        },
+      ])
+    );
+
+    expect(listTwinChatReviewItems()).toEqual([
+      expect.objectContaining({ id: 'value:fresh' }),
+    ]);
+  });
+
+  it('caps the persisted review queue to the newest 200 items', () => {
+    const candidates = Array.from({ length: 205 }, (_, index) =>
+      buildValueCandidate(`value:item-${index.toString().padStart(3, '0')}`)
+    );
+
+    const items = recordTwinChatReviewItems({
+      candidates,
+      decisions: candidates.map(candidate => buildReviewDecision(candidate.id)),
+      now: '2026-05-15T12:00:00.000Z',
+    });
+
+    expect(items).toHaveLength(200);
+    expect(listTwinChatReviewItems()).toHaveLength(200);
   });
 });

@@ -8,6 +8,8 @@ import type {
 
 const STORAGE_KEY = 'titane_twin_chat_review_queue_v1';
 const STORAGE_EVENT = 'titane:twin-chat-review-queue-changed';
+const REVIEW_ITEM_TTL_DAYS = 30;
+const MAX_REVIEW_QUEUE_SIZE = 200;
 
 function canPersist(): boolean {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
@@ -46,7 +48,10 @@ function readQueue(): TwinChatReviewItem[] {
 
   try {
     const parsed = JSON.parse(raw) as TwinChatReviewItem[];
-    return Array.isArray(parsed) ? sortQueue(parsed) : [];
+    if (!Array.isArray(parsed)) return [];
+    const cutoff = Date.now() - REVIEW_ITEM_TTL_DAYS * 24 * 60 * 60 * 1000;
+    const fresh = parsed.filter(item => new Date(item.recordedAt).getTime() >= cutoff);
+    return sortQueue(fresh);
   } catch {
     return [];
   }
@@ -57,7 +62,7 @@ function writeQueue(items: TwinChatReviewItem[]): TwinChatReviewItem[] {
     return sortQueue(items);
   }
 
-  const sorted = sortQueue(items);
+  const sorted = sortQueue(items).slice(0, MAX_REVIEW_QUEUE_SIZE);
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
   emitQueueChanged();
   return sorted;
