@@ -33,8 +33,11 @@ export function evaluateTwinChatShadowPolicy(
     verdict = 'review_required';
   } else if (wasDowngraded) {
     verdict = 'downgraded';
-  } else if (hasBehaviorAuthority || hasMemoryAuthority || hasIdentityAuthority) {
-    verdict = 'allowed';
+  } else if (
+    typeof normalizedEntry.confidence === 'number' &&
+    normalizedEntry.confidence < 0.5
+  ) {
+    verdict = 'downgraded';
   } else {
     verdict = 'allowed';
   }

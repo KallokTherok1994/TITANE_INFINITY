@@ -441,6 +441,20 @@ export class UnifiedMemoryService {
       }
     }
 
+    // Promote high-importance MTM entries to LTM before eviction
+    if (tier === 'MTM') {
+      const promotable = tierArray.filter(entry => {
+        const isOld = now - entry.timestamp > 7 * 24 * 60 * 60 * 1000;
+        return isOld && entry.importance >= 0.7;
+      });
+      if (promotable.length > 0) {
+        this.ltm.push(...promotable);
+        if (this.config.persistenceEnabled) {
+          await this.saveToFile('LTM');
+        }
+      }
+    }
+
     // Remove expired entries
     const filtered = tierArray.filter(entry => {
       // Remove TTL-expired entries

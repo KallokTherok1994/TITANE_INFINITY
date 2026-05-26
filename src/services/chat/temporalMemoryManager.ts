@@ -3,8 +3,8 @@
  * Governs temporal context summarization for safe prompt injection.
  */
 
-const TEMPORAL_MEMORY_MAX_ITEMS = 4;
-const TEMPORAL_MEMORY_MAX_CHARS = 260;
+const TEMPORAL_MEMORY_MAX_ITEMS = 8;
+const TEMPORAL_MEMORY_MAX_CHARS = 480;
 
 export interface TemporalMemoryMessage {
   role: 'user' | 'assistant';

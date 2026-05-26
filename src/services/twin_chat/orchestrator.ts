@@ -21,9 +21,21 @@ function buildVerdictCounts(
 export function orchestrateTwinChatShadow(
   candidates: TwinChatObservationCandidate[]
 ): TwinChatOrchestrationResult {
-  const decisions = candidates.map(candidate =>
-    evaluateTwinChatShadowPolicy(createTwinConsentShadowEntry(candidate))
-  );
+  const decisions = candidates.map(candidate => {
+    try {
+      return evaluateTwinChatShadowPolicy(createTwinConsentShadowEntry(candidate));
+    } catch {
+      return {
+        candidateId: candidate.id ?? 'unknown',
+        verdict: 'blocked' as const,
+        observationType: candidate.kind,
+        validationStatus: 'unknown' as const,
+        riskLevel: 'high' as const,
+        canWriteTwin: false as const,
+        requiresKevinValidation: true,
+      };
+    }
+  });
   const verdictCounts = buildVerdictCounts(decisions.map(decision => decision.verdict));
 
   return {
