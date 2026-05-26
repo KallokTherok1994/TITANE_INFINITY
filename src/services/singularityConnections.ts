@@ -70,21 +70,11 @@ export class SingularityConnections {
   private static isRunning: boolean = false;
   private static disabledCommands: Set<string> = new Set();
 
-  // ═══ v∞.A THROTTLE GLOBAL ═══
+  // ═══ v∞.A DEBOUNCE GLOBAL ═══
   private static lastCall: number = 0;
-  private static readonly THROTTLE_DELAY = 2000; // 2000ms entre chaque sync
-
-  /**
-   * Throttle global pour éviter spam (2000ms minimum entre appels)
-   */
-  private static throttle(delay: number = this.THROTTLE_DELAY): boolean {
-    const now = Date.now();
-    if (now - this.lastCall < delay) {
-      return false; // Trop tôt, skip
-    }
-    this.lastCall = now;
-    return true; // OK pour continuer
-  }
+  private static readonly THROTTLE_DELAY = 2000; // 2000ms minimum between syncs
+  private static pendingSync: boolean = false;
+  private static syncTimer: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * Safe invoke wrapper with "command not found" handling
@@ -166,13 +156,36 @@ export class SingularityConnections {
 
   /**
    * Sync all subsystems → SingularityState
+   * D2: Debounce — rapid calls queue the latest sync instead of silently dropping it.
    */
   static async syncAll(): Promise<void> {
-    // v∞.A: Check throttle avant sync
-    if (!this.throttle()) {
-      return; // Skip si appelé trop tôt
+    const now = Date.now();
+    const remaining = this.THROTTLE_DELAY - (now - this.lastCall);
+
+    if (remaining > 0) {
+      // Within debounce window: mark pending and schedule deferred sync if not already scheduled
+      this.pendingSync = true;
+      if (!this.syncTimer) {
+        this.syncTimer = setTimeout(async () => {
+          this.syncTimer = null;
+          if (this.pendingSync) {
+            this.pendingSync = false;
+            this.lastCall = Date.now();
+            await Promise.all([
+              this.syncHelios(),
+              this.syncMemory(),
+              this.syncPersona(),
+              this.syncAutoHeal(),
+              this.syncUIState(),
+            ]);
+          }
+        }, remaining);
+      }
+      return;
     }
 
+    this.pendingSync = false;
+    this.lastCall = now;
     await Promise.all([
       this.syncHelios(),
       this.syncMemory(),

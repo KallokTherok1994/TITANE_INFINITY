@@ -62,7 +62,7 @@ export const UI_TIMEOUTS = {
  * ✨ v30.0.0: Further optimizations for LTM integration and recovery boost
  */
 export const CACHE_TTL = {
-  metrics: 10000, // ✨ v30.0.0: Increased from 5s to 10s - further reduce metric calls by 50%
+  metrics: 30_000, // ✨ v30.0.0: 5s→10s→30s - reduces metric polling 66% during active generation
   providerAvailability: 300000, // ✨ v30.0.0: Increased from 60s to 5min (already 5min in AVAILABILITY_CACHE)
   quickFailCooldown: 30000, // ✨ v30.0.0: Increased from 10s to 30s - reduce retry noise, allow recovery
 } as const;
@@ -92,7 +92,7 @@ export const STREAM_CONFIG = {
  */
 export const AVAILABILITY_CACHE = {
   ttlMs: 300000, // ✨ v24.3.6: Increased from 60s to 5min - reduces API calls by 80%
-  checkTimeoutMs: 1500, // ✨ v24.3.6: Reduced from 2s to 1.5s - faster failover
+  checkTimeoutMs: 2_500, // was 1.5s — 2.5s prevents false-positives on Windows under load
 } as const;
 
 /**

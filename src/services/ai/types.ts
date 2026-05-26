@@ -161,6 +161,8 @@ export interface AIProvider<TConfig = unknown> {
   description?: string;
   // AUTOFIX v19.3Ω: Added testConnection method
   testConnection?: () => Promise<{ success: boolean; message: string }>;
+  // E3: Optional model warmup to preload weights before first user request
+  warmup?: () => Promise<void>;
 }
 
 export interface AIConfig {

@@ -42,6 +42,7 @@ import {
   STREAM_CONFIG,
   AVAILABILITY_CACHE,
   REQUEST_BUDGETS,
+  getPerChunkTimeout,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
 import { getChampion } from './championChallenger'; // ← OMEGA Champion/Challenger
 import type { CanonicalMode } from './omegaModeClassifier'; // ← for champion scoring cast
@@ -1938,7 +1939,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
               }
               streamTimeout = setTimeout(() => {
                 streamAborted = true;
-              }, STREAM_CONFIG.perChunkTimeoutMs);
+              }, getPerChunkTimeout());
 
               if (chunk && typeof chunk === 'string') {
                 // OPT11: Add to buffer instead of yielding immediately

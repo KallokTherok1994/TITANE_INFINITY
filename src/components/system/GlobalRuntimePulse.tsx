@@ -85,6 +85,8 @@ export function GlobalRuntimePulse(): React.ReactElement {
     lastProbeAt: 0,
   });
   const cancelRef = useRef(false);
+  // E1: Sliding window to avoid false DEGRADED on single whitelist rejection
+  const whitelistRejectionsRef = useRef<number[]>([]);
 
   useEffect(() => {
     cancelRef.current = false;
@@ -118,9 +120,17 @@ export function GlobalRuntimePulse(): React.ReactElement {
       // so operators see the broken layer (L1 TS whitelist) instead of silent partial.
       const isWhitelistRejection = /^Security:/i.test(message);
       const effectiveCode = isWhitelistRejection ? 'L1_WHITELIST_REJECT' : code;
-      const status: PulseStatus = TRANSPORT_PARTIAL_CODES.has(effectiveCode)
-        ? 'PARTIAL'
-        : 'DEGRADED';
+      let status: PulseStatus;
+      if (isWhitelistRejection) {
+        // E1: Require ≥3 whitelist rejections in 60s before escalating to DEGRADED
+        const nowMs = Date.now();
+        whitelistRejectionsRef.current = whitelistRejectionsRef.current
+          .concat(nowMs)
+          .filter(ts => nowMs - ts < 60_000);
+        status = whitelistRejectionsRef.current.length >= 3 ? 'DEGRADED' : 'PARTIAL';
+      } else {
+        status = TRANSPORT_PARTIAL_CODES.has(effectiveCode) ? 'PARTIAL' : 'DEGRADED';
+      }
       setState({
         status,
         latencyMs: status === 'PARTIAL' ? null : dt,

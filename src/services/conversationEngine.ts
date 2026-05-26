@@ -1468,8 +1468,13 @@ export async function processMessage(
     activeRituals: [],
     timeline: [],
   };
-  try {
-    kernelMemoryContext = await memoryIntegration.loadContext({
+  let providerHealthForKernel: Record<string, number> | undefined;
+  let runtimeKnowledgeContext = '';
+  let runtimeKnowledgeStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
+
+  // B1: Parallelize the 3 independent async context loads (was ~1-2s sequential)
+  const [_memCtxResult, _providerStatusResult, _knowledgeResult] = await Promise.allSettled([
+    memoryIntegration.loadContext({
       includeProjects: true,
       includeDecisions: true,
       includeKnowledge: true,
@@ -1479,13 +1484,45 @@ export async function processMessage(
       maxDecisions: 6,
       maxKnowledge: 12,
       timeWindow: '7d',
-    });
-  } catch (error) {
+    }),
+    aiOrchestrator.getProvidersStatus(),
+    memoryService.getKnowledge(5),
+  ]);
+
+  if (_memCtxResult.status === 'fulfilled') {
+    kernelMemoryContext = _memCtxResult.value;
+  } else {
     logger.warn(
       '[conversationEngine] canonical kernel memory context unavailable',
-      error
+      _memCtxResult.reason
     );
   }
+
+  if (_providerStatusResult.status === 'fulfilled') {
+    providerHealthForKernel = Object.fromEntries(
+      _providerStatusResult.value.providers.map(providerEntry => [
+        providerEntry.name,
+        providerEntry.reliability / 100,
+      ])
+    );
+  } else {
+    logger.debug('[conversationEngine] canonical kernel provider health unavailable', {
+      error: String(_providerStatusResult.reason),
+    });
+  }
+
+  if (_knowledgeResult.status === 'fulfilled') {
+    const knowledgeEntries = _knowledgeResult.value;
+    if (knowledgeEntries.length > 0) {
+      runtimeKnowledgeContext = formatRuntimeKnowledgeBlock(knowledgeEntries);
+      runtimeKnowledgeStatus = 'loaded';
+    } else {
+      runtimeKnowledgeStatus = 'empty';
+    }
+  } else {
+    logger.warn('[conversationEngine] runtime knowledge unavailable', _knowledgeResult.reason);
+  }
+
   const hybridMemoryDiagnostics = memoryIntegration.getHybridMemoryDiagnostics();
   const hybridMemoryContext = formatHybridMemoryBlock(
     kernelMemoryContext.hybridSupplementalKnowledge ?? []
@@ -1498,40 +1535,10 @@ export async function processMessage(
     `reason=${hybridMemoryDiagnostics.lastHybridOrchestrationReason}`,
   ].join('\n');
 
-  let providerHealthForKernel: Record<string, number> | undefined;
-  try {
-    const providerStatus = await aiOrchestrator.getProvidersStatus();
-    providerHealthForKernel = Object.fromEntries(
-      providerStatus.providers.map(providerEntry => [
-        providerEntry.name,
-        providerEntry.reliability / 100,
-      ])
-    );
-  } catch (error) {
-    logger.debug('[conversationEngine] canonical kernel provider health unavailable', {
-      error: String(error),
-    });
-  }
-
   const userDepthPreference = resolveConversationDepthPref(
     memoryIntegration.getDepthPreference()
   );
   const singularityCoherence = SingularityBridge.getCachedCoherence();
-
-  let runtimeKnowledgeContext = '';
-  let runtimeKnowledgeStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
-  try {
-    const knowledgeEntries = await memoryService.getKnowledge(5);
-    if (knowledgeEntries.length > 0) {
-      runtimeKnowledgeContext = formatRuntimeKnowledgeBlock(knowledgeEntries);
-      runtimeKnowledgeStatus = 'loaded';
-    } else {
-      runtimeKnowledgeStatus = 'empty';
-    }
-  } catch (error) {
-    runtimeKnowledgeStatus = 'unavailable';
-    logger.warn('[conversationEngine] runtime knowledge unavailable', error);
-  }
 
   const runtimeKnowledgeStatusContext = `## RUNTIME_KNOWLEDGE_STATUS\nstatus=${runtimeKnowledgeStatus}`;
 

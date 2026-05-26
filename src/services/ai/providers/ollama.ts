@@ -115,6 +115,19 @@ export async function initializeOllama(): Promise<boolean> {
     errorCount = 0;
     lastError = null;
     logger.info(`✅ Ollama initialization succeeded (${OLLAMA_CONFIG.model})`);
+    // E3: Fire-and-forget warmup — preloads model weights so first user request is fast
+    void ollamaGenerate({
+      model: OLLAMA_CONFIG.model,
+      prompt: '.',
+      system: '',
+      temperature: 0,
+      max_tokens: 1,
+      timeout_secs: 30,
+    }).then(() => {
+      logger.info(`[OLLAMA] warmup done — weights preloaded (${OLLAMA_CONFIG.model})`);
+    }).catch(() => {
+      logger.debug('[OLLAMA] warmup skipped (model not ready yet)');
+    });
     if (detectedModels.length > 0) {
       const best = pickBestModel(detectedModels);
       if (best !== OLLAMA_CONFIG.model) {
@@ -214,7 +227,10 @@ function buildOllamaMessages(
     }
 
     if (memoryContext.recentDecisions?.length > 0) {
-      const decisions = memoryContext.recentDecisions
+      // C2: Sort by impact (high>medium>low) so most important decisions are injected first
+      const impactOrder: Record<string, number> = { high: 3, medium: 2, low: 1 };
+      const decisions = [...memoryContext.recentDecisions]
+        .sort((a, b) => (impactOrder[b.impact] ?? 0) - (impactOrder[a.impact] ?? 0))
         .slice(0, 5)
         .map(d => {
           const base = d.title;
@@ -228,7 +244,12 @@ function buildOllamaMessages(
     }
 
     if (memoryContext.relevantKnowledge?.length > 0) {
-      const kbItems = memoryContext.relevantKnowledge
+      // C1: Filter low-relevance KB entries (< 0.6) to avoid context dilution
+      // C2: Sort descending so highest-relevance entries benefit from LLM position bias
+      const filteredKb = memoryContext.relevantKnowledge
+        .filter(k => (k.relevance ?? 1) >= 0.6)
+        .sort((a, b) => (b.relevance ?? 0) - (a.relevance ?? 0));
+      const kbItems = filteredKb
         .slice(0, 5)
         .map((k: { title?: string; content?: string }) => {
           const title = k.title || '?';
@@ -237,11 +258,10 @@ function buildOllamaMessages(
         })
         .filter(Boolean)
         .join(' | ');
-      const kbSuffix =
-        memoryContext.relevantKnowledge.length > 5
-          ? ` (+${memoryContext.relevantKnowledge.length - 5} autres)`
-          : '';
-      memoryParts.push(`Base de connaissances: ${kbItems}${kbSuffix}`);
+      if (kbItems) {
+        const kbSuffix = filteredKb.length > 5 ? ` (+${filteredKb.length - 5} autres)` : '';
+        memoryParts.push(`Base de connaissances: ${kbItems}${kbSuffix}`);
+      }
     }
 
     if (memoryParts.length > 0) {
@@ -616,6 +636,24 @@ export const ollamaProvider: AIProvider = {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       return { success: false, message: `Ollama test failed: ${message}` };
+    }
+  },
+
+  // E3: Preload model weights at startup to reduce first-token latency by ~3-8s
+  async warmup(): Promise<void> {
+    if (!endpointHealthy) return;
+    try {
+      await ollamaGenerate({
+        model: OLLAMA_CONFIG.model,
+        prompt: '.',
+        system: '',
+        temperature: 0,
+        max_tokens: 1,
+        timeout_secs: 30,
+      });
+      logger.info(`[OLLAMA] warmup completed — model weights preloaded (${OLLAMA_CONFIG.model})`);
+    } catch {
+      logger.debug('[OLLAMA] warmup skipped (Ollama not ready yet)');
     }
   },
 };

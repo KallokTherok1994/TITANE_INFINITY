@@ -676,16 +676,21 @@ export function useConversationEngine(
         route: contextEnvelope?.routeContext.route,
         moduleId: contextEnvelope?.moduleContext.moduleId,
       });
-      const twinChatShadowSummary: TwinChatShadowSummary | undefined =
+      const twinChatShadowResult =
         twinChatShadowCandidates.length > 0
-          ? orchestrateTwinChatShadow(twinChatShadowCandidates).summary
+          ? orchestrateTwinChatShadow(twinChatShadowCandidates)
           : undefined;
-      if (twinChatShadowCandidates.length > 0) {
-        const twinChatShadowResult = orchestrateTwinChatShadow(twinChatShadowCandidates);
-        recordTwinChatReviewItems({
-          candidates: twinChatShadowCandidates,
-          decisions: twinChatShadowResult.decisions,
-        });
+      const twinChatShadowSummary: TwinChatShadowSummary | undefined =
+        twinChatShadowResult?.summary;
+      if (twinChatShadowResult) {
+        try {
+          recordTwinChatReviewItems({
+            candidates: twinChatShadowCandidates,
+            decisions: twinChatShadowResult.decisions,
+          });
+        } catch {
+          logger.warn('[TWIN] recordTwinChatReviewItems failed silently');
+        }
       }
 
       // Ajouter message utilisateur immédiatement
