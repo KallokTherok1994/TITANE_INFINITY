@@ -426,6 +426,21 @@ export class UnifiedMemoryService {
 
     const beforeCount = tierArray.length;
 
+    // Promote STM entries with importance >= 0.3 to MTM before deleting
+    if (tier === 'STM') {
+      const promotable = tierArray.filter(entry => {
+        const expiredByTtl = entry.ttl != null && now - entry.timestamp > entry.ttl;
+        const expiredByAge = now - entry.timestamp > 60 * 60 * 1000;
+        return (expiredByTtl || expiredByAge) && entry.importance >= 0.3;
+      });
+      if (promotable.length > 0) {
+        this.mtm.push(...promotable);
+        if (this.config.persistenceEnabled) {
+          await this.saveToFile('MTM');
+        }
+      }
+    }
+
     // Remove expired entries
     const filtered = tierArray.filter(entry => {
       // Remove TTL-expired entries
@@ -464,6 +479,11 @@ export class UnifiedMemoryService {
 
   clearSTMBeforeConversation(conversationStartMs: number): void {
     const before = this.stm.length;
+    const promotable = this.stm.filter(e => e.timestamp < conversationStartMs && e.importance >= 0.3);
+    if (promotable.length > 0) {
+      this.mtm.push(...promotable);
+      void this.saveToFile('MTM');
+    }
     this.stm = this.stm.filter(e => e.timestamp >= conversationStartMs);
     if (this.stm.length < before) {
       void this.saveToFile('STM');

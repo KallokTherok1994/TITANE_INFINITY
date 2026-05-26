@@ -204,6 +204,17 @@ class CognitiveKernel {
     // Cartographie cognitive (relations internes)
     logger.debug('Cognitive map established', this.cognitiveMap);
 
+    // Restore provider health scores from previous session
+    try {
+      const stored = window.localStorage.getItem('titane:provider_health');
+      if (stored) {
+        const parsed = JSON.parse(stored) as Record<string, number>;
+        Object.entries(parsed).forEach(([provider, health]) => {
+          this.environmentState.providerHealth.set(provider, health);
+        });
+      }
+    } catch { /* localStorage unavailable or corrupted — start fresh */ }
+
     this.initialized = true;
     logger.info('Cognitive field initialized');
   }
@@ -640,6 +651,13 @@ class CognitiveKernel {
     );
 
     this.environmentState.providerHealth.set(provider, newHealth);
+
+    try {
+      window.localStorage.setItem(
+        'titane:provider_health',
+        JSON.stringify(Object.fromEntries(this.environmentState.providerHealth))
+      );
+    } catch { /* localStorage quota exceeded or unavailable */ }
 
     // Enregistrer dans la mémoire
     if (success) {
