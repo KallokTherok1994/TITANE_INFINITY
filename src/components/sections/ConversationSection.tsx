@@ -3307,6 +3307,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   selectedProvider={selectedProvider}
                   onChange={handleProviderChange}
                   providers={availableProviders}
+                  lastLatencyMs={
+                    latestAssistantMetadata?.latencyMs ??
+                    (lastResponse?.metadata?.latency_ms as number | undefined)
+                  }
+                  isLoading={isLoading}
                 />
 
                 <ChatModeSelector
@@ -3665,6 +3670,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   : undefined)
               }
               cognitiveTrace={latestAssistantRuntime?.cognitiveTrace ?? null}
+              cognitiveTraceBuildError={
+                latestAssistantMetadata?.cognitiveTraceBuildError ?? null
+              }
             />
           )}
 

@@ -102,6 +102,8 @@ interface ThinkingPanelProps {
   modelRequested?: string;
   /** CognitiveRuntimeTrace sanitized — trace observable runtime (sans CoT brut) */
   cognitiveTrace?: CognitiveRuntimeTrace | null;
+  /** Error details if cognitive trace build failed (buildCognitiveTraceFromResponse) */
+  cognitiveTraceBuildError?: { stage: string; message: string } | null;
 }
 
 type ViewMode = 'essentiel' | 'detaille' | 'expert';
@@ -132,6 +134,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   modelUsed,
   modelRequested,
   cognitiveTrace,
+  cognitiveTraceBuildError,
 }) => {
   const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
     state ??
@@ -990,6 +993,23 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           )}
 
           {/* ── Trace Cognitive (Expert uniquement) ─────────────────── */}
+          {viewMode === 'expert' && !cognitiveTrace && cognitiveTraceBuildError && (
+            <div
+              className="oj-section oj-section--cognitive-trace"
+              data-testid="reasoning-cognitive-trace-error"
+            >
+              <div className="oj-section-title">
+                <Brain size={14} /> Trace cognitive
+              </div>
+              <div className="oj-step-placeholder oj-quality-warn">
+                Indisponible — échec à l'étape{' '}
+                <strong>{cognitiveTraceBuildError.stage}</strong>
+                {cognitiveTraceBuildError.message
+                  ? ` : ${cognitiveTraceBuildError.message}`
+                  : ''}
+              </div>
+            </div>
+          )}
           {viewMode === 'expert' && cognitiveTrace && (
             <div
               className="oj-section oj-section--cognitive-trace"

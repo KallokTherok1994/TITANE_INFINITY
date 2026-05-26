@@ -176,6 +176,13 @@ pub async fn query_ollama(params: OllamaParams) -> Result<OllamaResult, String> 
     let effective_ctx = params
         .num_ctx
         .unwrap_or_else(|| model_context_window(&preferred_model));
+    if params.num_ctx.is_none() {
+        log::info!(
+            "[OLLAMA] numCtx auto-selected: model={} ctx={}",
+            preferred_model,
+            effective_ctx
+        );
+    }
 
     let response = send_generate(
         &client,

@@ -399,6 +399,7 @@ export interface UseConversationEngineReturn {
 
   // Actions
   sendMessage: (content: string) => Promise<ConversationResponse | null>;
+  cancelRequest: () => void;
   appendLocalExchange: (
     userContent: string,
     assistantContent: string,
@@ -443,6 +444,7 @@ export function useConversationEngine(
   const healthCheckPromiseRef = useRef<Promise<ConversationHealthReport | null> | null>(
     null
   );
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // ✅ IMPORT MEMORY SYSTEM
   const {
@@ -654,6 +656,15 @@ export function useConversationEngine(
         return null;
       }
 
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error('timeout: TITANE_REQUEST_TIMEOUT')),
+          55_000 // under globalRequestMs (52s) + overhead margin
+        )
+      );
+
       isProcessingRef.current = true;
       setIsLoading(true);
       setError(null);
@@ -712,14 +723,17 @@ export function useConversationEngine(
 
       try {
         // Traiter le message via Conversation Engine
-        const response = await processMessage(content, {
-          conversationId: conversationId || undefined,
-          mode: currentMode,
-          emotionContext: options.emotionContext,
-          providerPreference: options.providerPreference,
-          contextEnvelope: contextEnvelope || undefined,
-          twinChatShadowSummary,
-        });
+        const response = await Promise.race([
+          processMessage(content, {
+            conversationId: conversationId || undefined,
+            mode: currentMode,
+            emotionContext: options.emotionContext,
+            providerPreference: options.providerPreference,
+            contextEnvelope: contextEnvelope || undefined,
+            twinChatShadowSummary,
+          }),
+          timeoutPromise,
+        ]);
 
         // Mettre à jour conversation ID
         if (!conversationId) {
@@ -1135,6 +1149,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
       } finally {
         setIsLoading(false);
         isProcessingRef.current = false;
+        abortControllerRef.current = null;
       }
     },
     [
@@ -1272,6 +1287,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
     currentMode,
     setMode: setModeCallback,
     sendMessage,
+    cancelRequest: () => { abortControllerRef.current?.abort(); },
     appendLocalExchange,
     clearMessages,
     deleteMessage,

@@ -21,7 +21,7 @@ const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 const OLLAMA_FALLBACK_MODELS: &[&str] = &["llama3.2", "llama3.1", "mistral"];
 /// Env var governing the Ollama HTTP client request timeout (seconds, bounded 10..300).
 const OLLAMA_REQUEST_TIMEOUT_SECS_ENV: &str = "OLLAMA_REQUEST_TIMEOUT_SECS";
-const OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT: u64 = 120;
+const OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT: u64 = 60; // aligned with frontend 45s + overhead margin
 
 // ✨ v27.2.1: Ollama status cache (anti-flapping)
 // Cache TTL: 10s to avoid repeated health checks

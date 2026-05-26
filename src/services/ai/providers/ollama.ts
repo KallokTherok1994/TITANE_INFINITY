@@ -62,7 +62,7 @@ const OLLAMA_CONFIG = {
 
 // Max conversation turns fed to Ollama. gemma2:2b context is 8192 tokens;
 // 20 turns ≈ 4000-6000 tokens — leaves headroom without truncating useful context.
-const MAX_CONTEXT_HISTORY_MESSAGES = 20;
+const MAX_CONTEXT_HISTORY_MESSAGES = 30; // 30 turns × ~200 tokens ≈ 6K — fits gemma2:2b (8K ctx)
 
 // ═══════════════════════════════════════════════════════════════
 // AUTO-MODEL SELECTION
@@ -322,9 +322,10 @@ export const ollamaProvider: AIProvider = {
       return endpointHealthy;
     }
 
-    // If too many errors, consider unavailable with extended cooldown
+    // If too many errors, consider unavailable with short cooldown (60s)
+    // Allows fast recovery after Ollama restart without waiting 600s
     if (errorCount >= OLLAMA_CONFIG.maxErrors) {
-      if (now - lastHealthCheck > OLLAMA_CONFIG.healthCheckInterval * 2) {
+      if (now - lastHealthCheck > 60_000) {
         errorCount = 0;
         endpointHealthy = null;
       } else {

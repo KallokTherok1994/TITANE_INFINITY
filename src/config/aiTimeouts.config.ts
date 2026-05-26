@@ -120,6 +120,16 @@ export function getOllamaEffortTimeout(
 }
 
 /**
+ * Returns per-chunk streaming timeout scaled by reasoning effort.
+ * max → 20s | high → 12s | else → BALANCED 7s
+ */
+export function getPerChunkTimeout(effort?: string): number {
+  if (effort === 'max') return 20_000;
+  if (effort === 'high') return 12_000;
+  return STREAM_CONFIG.perChunkTimeoutMs;
+}
+
+/**
  * Get adaptive UI timeout based on provider and message length
  */
 export function getAdaptiveUITimeout(

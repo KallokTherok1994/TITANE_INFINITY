@@ -18,10 +18,12 @@ interface ChatProviderSelectorProps {
     icon: string;
     available: boolean;
   }>;
+  lastLatencyMs?: number;
+  isLoading?: boolean;
 }
 
 export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.memo(
-  ({ selectedProvider = 'auto', onChange, providers }) => {
+  ({ selectedProvider = 'auto', onChange, providers, lastLatencyMs, isLoading }) => {
     // Mémoriser le nombre de providers disponibles
     const availableCount = useMemo(
       () => providers.filter(p => p.available).length,
@@ -72,6 +74,20 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
           <span>
             IA ({availableCount}/{providers.length})
           </span>
+          {isLoading && (
+            <span className="animate-pulse" aria-label="Requête en cours">…</span>
+          )}
+          {!isLoading && lastLatencyMs !== undefined && (
+            <span
+              className="tabular-nums"
+              aria-label={`Latence dernière réponse: ${lastLatencyMs}ms`}
+              title="Latence dernière réponse"
+            >
+              {lastLatencyMs < 1000
+                ? `${lastLatencyMs}ms`
+                : `${(lastLatencyMs / 1000).toFixed(1)}s`}
+            </span>
+          )}
         </div>
       </div>
     );
