@@ -173,16 +173,23 @@ pub async fn query_ollama(params: OllamaParams) -> Result<OllamaResult, String> 
     });
 
     let system_ref = params.system_prompt.as_deref();
-    let effective_ctx = params
-        .num_ctx
-        .unwrap_or_else(|| model_context_window(&preferred_model));
-    if params.num_ctx.is_none() {
+    let model_max_ctx = model_context_window(&preferred_model);
+    let effective_ctx = if let Some(explicit_ctx) = params.num_ctx {
+        explicit_ctx
+    } else {
+        // C3: Adaptive num_ctx — allocate only what the conversation needs (saves VRAM on short convos)
+        let prompt_chars = params.prompt.len()
+            + params.system_prompt.as_deref().unwrap_or("").len();
+        let estimated_tokens = (prompt_chars / 4) as u32;
+        // 3× headroom for response, rounded up to nearest 512
+        let needed = ((estimated_tokens.saturating_mul(3) / 512) + 1) * 512;
+        let adaptive = needed.clamp(512, model_max_ctx);
         log::info!(
-            "[OLLAMA] numCtx auto-selected: model={} ctx={}",
-            preferred_model,
-            effective_ctx
+            "[OLLAMA] numCtx adaptive: model={} prompt_chars={} est_tokens={} ctx={} (max={})",
+            preferred_model, prompt_chars, estimated_tokens, adaptive, model_max_ctx
         );
-    }
+        adaptive
+    };
 
     let response = send_generate(
         &client,
