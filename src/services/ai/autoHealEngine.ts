@@ -122,6 +122,7 @@ class AutoHealEngine {
 
   private isHealing = false;
   private healingQueue: AutoHealError[] = [];
+  private readonly healingQueueKeys = new Set<string>();
   private healWaiters: Map<
     string,
     {
@@ -317,9 +318,13 @@ class AutoHealEngine {
    */
 
   private async triggerHeal(error: AutoHealError): Promise<void> {
-    // Ajouter à la queue si healing en cours
+    // Ajouter à la queue si healing en cours (B1: déduplication source+type, B2: cap=5)
     if (this.isHealing) {
-      this.healingQueue.push(error);
+      const healKey = `${error.source}:${error.type}`;
+      if (!this.healingQueueKeys.has(healKey) && this.healingQueue.length < 5) {
+        this.healingQueueKeys.add(healKey);
+        this.healingQueue.push(error);
+      }
       return;
     }
 
@@ -367,6 +372,7 @@ class AutoHealEngine {
       if (this.healingQueue.length > 0) {
         const nextError = this.healingQueue.shift();
         if (nextError) {
+          this.healingQueueKeys.delete(`${nextError.source}:${nextError.type}`);
           setTimeout(() => this.triggerHeal(nextError), this.config.retryDelay);
         }
       }

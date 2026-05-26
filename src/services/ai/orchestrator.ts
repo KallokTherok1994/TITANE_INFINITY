@@ -44,7 +44,14 @@ import {
   REQUEST_BUDGETS,
   getPerChunkTimeout,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
-import { getChampion } from './championChallenger'; // ← OMEGA Champion/Challenger
+import {
+  getChampion,
+  getChallengers,
+  loadRegistry,
+  recordComparison,
+  shouldPromoteChallenger,
+  promoteChallenger,
+} from './championChallenger'; // ← OMEGA Champion/Challenger
 import type { CanonicalMode } from './omegaModeClassifier'; // ← for champion scoring cast
 
 const logger = createLogger('Orchestrator');
@@ -1380,6 +1387,35 @@ class AIOrchestrator {
             { contentLength: response.content.length }
           );
           logger.groupEnd();
+
+          // C2: Champion/Challenger tracking — record metrics after Ollama success
+          if (providerName === 'ollama' && canonicalModeFromConfig) {
+            const ccRegistry = loadRegistry();
+            if (ccRegistry.comparison.enabled) {
+              const challengers = getChallengers(canonicalModeFromConfig as CanonicalMode);
+              if (challengers[0]) {
+                recordComparison({
+                  mode: canonicalModeFromConfig as CanonicalMode,
+                  champion: {
+                    provider: 'ollama',
+                    model: ccRegistry.champions[canonicalModeFromConfig]?.model ?? 'unknown',
+                    latency_ms: providerLatency,
+                    token_count: response.tokens ?? 0,
+                  },
+                  challenger: {
+                    provider: challengers[0].provider,
+                    model: challengers[0].model,
+                    latency_ms: 0,
+                    token_count: 0,
+                  },
+                  divergence: false,
+                });
+                if (shouldPromoteChallenger(canonicalModeFromConfig as CanonicalMode)) {
+                  promoteChallenger(canonicalModeFromConfig as CanonicalMode);
+                }
+              }
+            }
+          }
 
           const fallbackUsed = attempts > 1 || providerName !== finalProvider;
           logger.info(

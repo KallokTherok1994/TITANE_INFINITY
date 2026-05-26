@@ -14,6 +14,7 @@ import { tauriClient } from '@/lib/tauriClient';
 import { ALLOWED_COMMANDS } from '@/lib/security';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { memoryService } from '@/services/api/memory';
+import { getUnifiedMemory } from '@/services/memory/UnifiedMemoryService';
 import { getRelevantPromptContext as getDefaultKbPromptContext } from '@/services/api/defaultKnowledgeBase';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import {
@@ -1424,6 +1425,7 @@ export async function processMessage(
   }
 
   if (!conversationId) {
+    getUnifiedMemory().clearSTMBeforeConversation(Date.now() - 60_000);
     try {
       conversationId = (await tauriClient.createNewConversation()) as string;
     } catch (error) {

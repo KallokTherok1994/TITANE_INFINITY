@@ -462,6 +462,14 @@ export class UnifiedMemoryService {
     }
   }
 
+  clearSTMBeforeConversation(conversationStartMs: number): void {
+    const before = this.stm.length;
+    this.stm = this.stm.filter(e => e.timestamp >= conversationStartMs);
+    if (this.stm.length < before) {
+      void this.saveToFile('STM');
+    }
+  }
+
   /**
    * Appliquer les limites de taille pour chaque niveau
    */

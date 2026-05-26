@@ -91,6 +91,14 @@ export function loadRegistry(): ChampionChallengerRegistry {
   if (cachedRegistry) return cachedRegistry;
 
   cachedRegistry = championChallengerRegistry as ChampionChallengerRegistry;
+  // Apply session-level champion overrides from localStorage
+  try {
+    const overrides = window.localStorage.getItem('titane:champion_overrides');
+    if (overrides) {
+      const parsed = JSON.parse(overrides) as Record<string, ChampionEntry>;
+      cachedRegistry = { ...cachedRegistry, champions: { ...cachedRegistry.champions, ...parsed } };
+    }
+  } catch { /* ignore */ }
   return cachedRegistry;
 }
 
@@ -216,6 +224,30 @@ export function shouldPromoteChallenger(mode: CanonicalMode): boolean {
 
   // Challenger promoted if win rate >= 70% and latency is acceptable
   return winRate >= 0.7 && latencyOk;
+}
+
+/**
+ * Promote the first challenger to champion for a given mode (session-level).
+ * Persists override to localStorage for session continuity across reloads.
+ */
+export function promoteChallenger(mode: CanonicalMode): boolean {
+  const [topChallenger] = getChallengers(mode);
+  if (!topChallenger) return false;
+  const registry = loadRegistry();
+  registry.champions[mode] = {
+    provider: topChallenger.provider,
+    model: topChallenger.model,
+    confidence_threshold: registry.champions[mode]?.confidence_threshold ?? 0.7,
+  };
+  try {
+    window.localStorage.setItem(
+      'titane:champion_overrides',
+      JSON.stringify(registry.champions)
+    );
+  } catch { /* storage quota exceeded — non-blocking */ }
+  comparisonHistory.delete(mode);
+  logger.info(`[CHAMPION] Promoted ${topChallenger.provider}/${topChallenger.model} for mode=${mode}`);
+  return true;
 }
 
 /**

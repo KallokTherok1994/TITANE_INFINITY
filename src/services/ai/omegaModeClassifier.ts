@@ -704,7 +704,7 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
     );
   }
   if (codeReviewHits.length === 1) {
-    return buildResult('DEEP_REASONING', 0.72, 'CODE_REVIEW_SIGNAL', codeReviewHits);
+    return buildResult('ARCHITECT', 0.72, 'CODE_REVIEW_SIGNAL', codeReviewHits);
   }
 
   // ── RULE 5c: TEST signals → CERTIFY ──
