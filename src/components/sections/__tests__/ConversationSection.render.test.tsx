@@ -23,6 +23,7 @@ const conversationRenderFixtures = vi.hoisted(() => ({
       reason_code: 'OK',
     },
   })),
+  clearMessages: vi.fn(),
 }));
 
 vi.mock('@/hooks/useToast', () => ({
@@ -64,7 +65,7 @@ vi.mock('@hooks/useConversationEngine', () => ({
     setMode: vi.fn(),
     sendMessage: conversationRenderFixtures.sendMessage,
     appendLocalExchange: vi.fn(),
-    clearMessages: vi.fn(),
+    clearMessages: conversationRenderFixtures.clearMessages,
     deleteMessage: vi.fn(),
     healthReport: { status: 'Healthy' },
     refreshHealth: vi.fn(),
@@ -237,6 +238,7 @@ describe('ConversationSection rendering truth', () => {
 
   beforeEach(() => {
     conversationRenderFixtures.sendMessage.mockClear();
+    conversationRenderFixtures.clearMessages.mockClear();
     localStorage.clear();
   });
 
@@ -305,5 +307,16 @@ describe('ConversationSection rendering truth', () => {
     expect(conversationRenderFixtures.sendMessage).toHaveBeenCalledWith('Allo, Titane');
     expect(input.value).toBe('');
     expect(localStorage.getItem('titane_chat_draft_conv-render-1')).toBeNull();
+  });
+
+  it('calls clearMessages when the clear chat button is clicked and confirmed', async () => {
+    renderConversationSection();
+
+    const clearBtn = screen.getByTestId('btn-clear-chat');
+    fireEvent.click(clearBtn);
+
+    await waitFor(() => {
+      expect(conversationRenderFixtures.clearMessages).toHaveBeenCalledTimes(1);
+    });
   });
 });

@@ -55,6 +55,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
 import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 import { ConversationHistorySidebar } from '@/components/chat/ConversationHistorySidebar';
+import { clearAllChatPersistence } from '@/services/chatMemoryCompactor';
 import { useConversations } from '@/hooks/useConversations';
 
 import './TitanePage.css';
@@ -213,7 +214,15 @@ export const TitanePage: React.FC = () => {
 
   const handleNewConversation = useCallback(() => {
     try {
+      clearAllChatPersistence();
       localStorage.removeItem('titane_active_conversation_id');
+      const draftPattern = ['omega-conversation-draft-', 'titane_chat_draft_'];
+      const draftKeys: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && draftPattern.some(p => k.startsWith(p))) draftKeys.push(k);
+      }
+      draftKeys.forEach(k => localStorage.removeItem(k));
     } catch {
       /* ignore */
     }
@@ -412,6 +421,7 @@ export const TitanePage: React.FC = () => {
       case 'conversation':
         return (
           <ConversationSection
+            key={chatKey}
             showSectionHeader={!isConversationTab}
             fullscreen={isConversationTab}
           />
@@ -429,6 +439,7 @@ export const TitanePage: React.FC = () => {
       default:
         return (
           <ConversationSection
+            key={chatKey}
             showSectionHeader={!isConversationTab}
             fullscreen={isConversationTab}
           />

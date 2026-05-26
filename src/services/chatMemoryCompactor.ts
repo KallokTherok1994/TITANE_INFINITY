@@ -695,6 +695,27 @@ class ChatMemoryCompactor {
 
 export const chatMemoryCompactor = new ChatMemoryCompactor();
 export default chatMemoryCompactor;
+
+export function clearAllChatPersistence(): void {
+  const prefixes = [
+    STORAGE_KEY_PREFIX,
+    STORAGE_CONVERSATION_KEY_PREFIX,
+    DEV_STORAGE_KEY_PREFIX,
+    DEV_STORAGE_CONVERSATION_KEY_PREFIX,
+  ];
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && prefixes.some(p => key.startsWith(p))) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+  } catch {
+    /* ignore */
+  }
+}
 // Phase 5: Flush pending saves before tab/window closes to prevent data loss.
 // flushPendingSaves() writes to localStorage synchronously — safe in beforeunload.
 if (typeof window !== 'undefined' && !IS_VITEST) {
